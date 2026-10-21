@@ -62,6 +62,21 @@ def test_refuses_to_print_into_a_terminal(monkeypatch, capsys):
     assert TOKEN not in sys.stdout.getvalue(), "the token was written to a terminal"
 
 
+def test_refusal_explains_how_to_deliver_safely(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
+    monkeypatch.delenv(oauth._OUT_FILE_ENV, raising=False)
+    monkeypatch.delenv(oauth._OUT_FILE_ENV_ALT, raising=False)
+
+    oauth._emit_token(TOKEN)
+
+    err = capsys.readouterr().err
+    assert "scrollback" in err, "say WHY, not just no"
+    assert "Pipe it" in err
+    assert oauth._OUT_FILE_ENV in err, "the file output option must be discoverable"
+    assert "KIMI_OAUTH_ALLOW_TTY" not in err, "the deprecated dangerous flag must not be suggested"
+    assert TOKEN not in err, "the refusal must not leak the token it is protecting"
+
+
 def test_env_override_allow_tty_is_ignored_and_still_refuses(monkeypatch, capsys):
     """An opt-in flag that prints a live token to a TTY is forbidden (P1-a)."""
     monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
@@ -140,6 +155,19 @@ def test_out_file_delivers_token_securely_mode_0600(tmp_path: Path, monkeypatch,
     assert TOKEN not in err
 
 
+def test_out_file_alt_env_var_works(tmp_path: Path, monkeypatch):
+    out_file = tmp_path / "secret_alt.txt"
+    monkeypatch.setattr(sys, "stdout", _Stdout(tty=True))
+    monkeypatch.setenv(oauth._OUT_FILE_ENV_ALT, str(out_file))
+
+    rc = oauth._emit_token(TOKEN)
+
+    assert rc == 0
+    assert out_file.is_file()
+    assert out_file.read_text(encoding="utf-8").strip() == TOKEN
+    assert stat.S_IMODE(out_file.stat().st_mode) == 0o600
+
+
 def test_refresh_failed_error_redacts_http_400_body_tokens(monkeypatch):
     """OAuth error bodies in HTTP 400 responses must be redacted by token shape (P1-b)."""
     synthetic_body = (
@@ -159,6 +187,27 @@ def test_refresh_failed_error_redacts_http_400_body_tokens(monkeypatch):
     err_msg = str(exc_info.value)
     assert "sk-synthetic-live-token" not in err_msg, "synthetic token leaked in exception message"
     assert "[REDACTED_SECRET]" in err_msg, "expected redaction placeholder in exception message"
+
+
+def test_refresh_failed_error_redacts_unanticipated_nested_keys(monkeypatch):
+    """Redaction must be by token SHAPE, not key name, for provider-controlled bodies."""
+    unanticipated_body = (
+        '{"error": "invalid", "provider_unanticipated_key": "sk-synthetic-secret-token-99999999999"}'
+    )
+    fp = io.BytesIO(unanticipated_body.encode("utf-8"))
+    exc = urllib.error.HTTPError("http://auth.kimi.com/api/oauth/token", 400, "Bad Request", {}, fp)  # type: ignore[arg-type]
+
+    def _mock_urlopen(*args, **kwargs):
+        raise exc
+
+    monkeypatch.setattr(urllib.request, "urlopen", _mock_urlopen)
+
+    data = {"refresh_token": "r-synthetic-refresh-1234567890"}
+    with pytest.raises(oauth.RefreshFailedError) as exc_info:
+        oauth._refresh(data)
+    err_msg = str(exc_info.value)
+    assert "sk-synthetic-secret-token" not in err_msg
+    assert "[REDACTED_SECRET]" in err_msg
 
 
 def test_exception_init_redacts_token_in_message():

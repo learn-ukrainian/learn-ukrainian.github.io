@@ -336,6 +336,18 @@ def test_launcher_imports_bundle_before_prelease_scan_and_lease_claim(tmp_path: 
     ]
 
 
+def test_launcher_normalizes_equals_form_epic_suffix(tmp_path: Path) -> None:
+    values, forwarded, _, _, _ = _launch(
+        tmp_path,
+        ["--epic=atlas", "--model", "gpt-6.1-sol"],
+        driver=True,
+    )
+
+    assert values["epic"] == "atlas"
+    assert values["handoff_agent"] == "codex-atlas"
+    assert "--epic=atlas" not in forwarded
+
+
 @pytest.mark.parametrize("epic_args", [["--epic"], ["--epic="], ["--epic", "Atlas"]])
 def test_launcher_rejects_missing_or_invalid_epic_before_codex_starts(
     tmp_path: Path,

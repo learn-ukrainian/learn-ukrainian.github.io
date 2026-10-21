@@ -12,6 +12,7 @@ import os
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -140,6 +141,25 @@ def test_popen_git_worktree_add_with_config_and_cd_is_recorded_after_success(
         if proc.poll() is None:
             proc.wait(timeout=30)
     assert dest.is_dir()
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert key in message
+
+
+@pytest.mark.parametrize("invoke", ["run", "check_call", "check_output"])
+def test_popen_helpers_record_git_worktree_add(tmp_path: Path, guarded_root: Path, invoke: str) -> None:
+    dest = _scaffold(guarded_root, f"from-{invoke}")
+    git = _fake_git(tmp_path / invoke, status=0)
+    argv = [str(git), "-c", "k=v", "worktree", "add", str(dest)]
+    kwargs = {"cwd": tmp_path, "env": _git_env(dest), "timeout": 30}
+    runners: dict[str, Callable[..., object]] = {
+        "run": subprocess.run,
+        "check_call": subprocess.check_call,
+        "check_output": subprocess.check_output,
+    }
+    runners[invoke](argv, **kwargs)
+    assert dest.is_dir()
+    key = worktree_guard._worktree_entry_key(dest)
     message = worktree_guard._worktree_guard_teardown_message()
     assert message is not None
     assert key in message
@@ -281,6 +301,23 @@ def test_failed_mkdir_after_external_create_is_not_attributed(guarded_root: Path
     assert worktree_guard._worktree_guard_teardown_message() is None
 
 
+def test_later_symlink_is_recorded_from_the_call_that_created_it(
+    tmp_path: Path, guarded_root: Path
+) -> None:
+    dest = _scaffold(guarded_root, "link-again")
+    target = tmp_path / "target"
+    target.mkdir()
+    worktree_guard._ORIGINAL_OS_SYMLINK(target, dest)
+    with pytest.raises(FileExistsError):
+        os.symlink(target, dest)
+    key = worktree_guard._worktree_entry_key(dest)
+    assert key is not None
+    assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    os.unlink(dest)
+    os.symlink(target, dest)
+    assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
+
+
 def test_symlink_records_the_link_path_not_the_target(tmp_path: Path, guarded_root: Path) -> None:
     target = tmp_path / "target-dir"
     target.mkdir()
@@ -375,6 +412,26 @@ def test_real_checkout_acp_execution_does_not_mkdir_dispatch() -> None:
         assert not dispatch.exists()
 
 
+def test_recorded_creation_names_the_test_and_caller(guarded_root: Path) -> None:
+    dest = _scaffold(guarded_root, "attributed")
+    os.mkdir(dest)
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert "test_recorded_creation_names_the_test_and_caller" in message
+    assert "PYTEST_CURRENT_TEST=" in message
+    assert "(call)" in message
+    assert "tests/test_conftest_worktree_guard.py:" in message
+    assert "caller=" in message
+
+
+def test_nested_directory_inside_an_entry_is_ignored(guarded_root: Path) -> None:
+    entry = _scaffold(guarded_root, "checkout")
+    os.mkdir(entry)
+    worktree_guard._CREATED_WORKTREE_ENTRIES.clear()
+    os.mkdir(entry / "src")
+    assert not worktree_guard._CREATED_WORKTREE_ENTRIES
+
+
 def test_classify_error_falls_through_and_is_reported_at_teardown(
     tmp_path: Path, guarded_root: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -389,6 +446,24 @@ def test_classify_error_falls_through_and_is_reported_at_teardown(
     message = worktree_guard._worktree_guard_teardown_message()
     assert message is not None
     assert message.startswith("guard could not classify")
+
+
+def test_worktree_guard_honours_env_switch(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LU_WORKTREE_GUARD", raising=False)
+    assert worktree_guard._worktree_guard_enabled() is True
+    monkeypatch.setenv("LU_WORKTREE_GUARD", "0")
+    assert worktree_guard._worktree_guard_enabled() is False
+    monkeypatch.setenv("LU_WORKTREE_GUARD", "1")
+    assert worktree_guard._worktree_guard_enabled() is True
+
+
+def test_github_guard_has_independent_switch(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LU_WORKTREE_GUARD", "0")
+    monkeypatch.delenv("LU_GH_GUARD", raising=False)
+    assert worktree_guard._worktree_guard_enabled() is False
+    assert worktree_guard._gh_guard_enabled() is True
+    monkeypatch.setenv("LU_GH_GUARD", "0")
+    assert worktree_guard._gh_guard_enabled() is False
 
 
 def test_real_gh_cannot_be_exempted_by_agent_backend(
@@ -429,6 +504,37 @@ def test_runtime_gh_shim_allows_explicit_fake_backend(tmp_path: Path, monkeypatc
     )
 
 
+def test_runtime_gh_shim_with_real_backend_is_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_gh = tmp_path / "real-gh"
+    shim = tmp_path / "agent_runtime" / "shims" / "gh"
+    for path in (real_gh, shim):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(worktree_guard, "_REAL_GH_BINARY", os.path.realpath(real_gh))
+
+    with pytest.raises(pytest.fail.Exception, match="spawned real gh"):
+        worktree_guard._guard_live_github_spawn(
+            [str(shim), "issue", "view", "1"],
+            {"env": {"AGENT_REAL_GH": str(real_gh)}},
+        )
+
+
+def test_runtime_git_shim_is_not_a_github_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_gh = tmp_path / "real-gh"
+    shim = tmp_path / "agent_runtime" / "shims" / "git"
+    for path in (real_gh, shim):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(worktree_guard, "_REAL_GH_BINARY", os.path.realpath(real_gh))
+
+    worktree_guard._guard_live_github_spawn(
+        [str(shim), "checkout", "some-branch"],
+        {"env": {}},
+    )
+
+
 def test_popen_hook_blocks_real_gh_and_path_stub_exits_127(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -449,3 +555,19 @@ def test_popen_hook_blocks_real_gh_and_path_stub_exits_127(
 
     stub = subprocess.run(["gh"], check=False, capture_output=True, text=True, timeout=30)
     assert stub.returncode == 127
+
+
+def test_runtime_gh_shim_without_backend_is_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_gh = tmp_path / "real-gh"
+    shim = tmp_path / "agent_runtime" / "shims" / "gh"
+    for path in (real_gh, shim):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(worktree_guard, "_REAL_GH_BINARY", os.path.realpath(real_gh))
+
+    with pytest.raises(pytest.fail.Exception, match="spawned real gh"):
+        worktree_guard._guard_live_github_spawn(
+            [str(shim), "issue", "view", "1"],
+            {"env": {}},
+        )

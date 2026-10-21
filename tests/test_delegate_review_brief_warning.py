@@ -39,6 +39,20 @@ def _review_args(*extra: str) -> object:
 @pytest.mark.parametrize(
     "brief",
     [
+        WITH_DISPOSITIONS,
+        "# Dispositions\nin_scope_blocker only.\n",
+        "Intro.\n\n   ### Disposition rules (frozen in round 1)\n- follow_up: wording.\n",
+        "Context.\n\n## Outcome, threat model and dispositions\n",
+    ],
+    ids=["template", "h1", "indented-h3-singular", "combined-heading"],
+)
+def test_a_disposition_heading_satisfies_the_check(brief):
+    assert delegate._review_brief_warnings(_review_args(), brief) == []
+
+
+@pytest.mark.parametrize(
+    "brief",
+    [
         WITHOUT_DISPOSITIONS,
         "Dispositions: in_scope_blocker, follow_up, stop_and_escalate.\n",
         "Review the brief quoted below.\n\n```markdown\n## Dispositions\n- follow_up: all\n```\n",
@@ -62,6 +76,12 @@ def test_a_formal_review_attempt_is_exempt():
     # Its rendered template fixes the severities and the validator computes the verdict.
     args = _review_args("--review-attempt", "manifest.yaml")
     assert delegate._review_brief_warnings(args, WITHOUT_DISPOSITIONS) == []
+
+
+def test_the_warning_line_names_the_code_and_never_refuses():
+    line = delegate._review_brief_warning_line(CODE)
+    assert line.startswith(f"⚠ {CODE}: ")
+    assert "Dispatch continues." in line
 
 
 def _section(relative: str, start: str, end: str) -> str:
@@ -98,6 +118,16 @@ def test_shared_review_texts_pass_read_only_admission_and_carry_no_verdict(name)
     assert delegate._read_only_write_intent_error(mode="read-only", prompt=text) is None
     assert recognized_verdicts(text) == []
     assert delegate.parse_review_verdict(text) is None
+
+
+def test_shared_review_texts_state_the_rules():
+    texts = _shared_review_texts()
+    for disposition in ("in_scope_blocker", "follow_up", "stop_and_escalate"):
+        assert disposition in texts["review brief template"]
+        assert disposition in texts["review-deep instructions"]
+    assert "inconclusive: give the BLOCKED token" in texts["ask verdict preamble"]
+    assert "approval may carry tracked non-blocking follow-ups" in texts["ask verdict preamble"]
+    assert "fail-closed" in texts["security brief"] and "second rejected review round" in texts["security brief"]
 
 
 @pytest.fixture

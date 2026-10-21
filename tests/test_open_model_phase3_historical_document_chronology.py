@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_historical_document_chronology as chronology
 from scripts.projects.open_model_data import phase3_historical_materialization as materialization
@@ -35,6 +36,23 @@ def _record(raw_date: str | None = "1413") -> dict:
 def _reseal_record(record: dict) -> dict:
     record["record_sha256"] = chronology._body_sha256(record, "record_sha256")
     return record
+
+
+def test_tracked_contracts_are_strict_and_runtime_bindings_are_current():
+    for path in (chronology.RECORD_SCHEMA_PATH, chronology.RECEIPT_SCHEMA_PATH):
+        schema = json.loads(path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        assert schema["additionalProperties"] is False
+
+    assert chronology.file_sha256(Path(periodization.__file__)) == (
+        chronology.EXPECTED_PERIODIZATION_IMPLEMENTATION_SHA256
+    )
+    assert chronology.file_sha256(Path(materialization.__file__)) == (
+        chronology.EXPECTED_MATERIALIZATION_IMPLEMENTATION_SHA256
+    )
+    assert chronology.file_sha256(chronology.PERIODIZATION_FREEZE_PATH) == (
+        chronology.EXPECTED_PERIODIZATION_FREEZE_SHA256
+    )
 
 
 def test_exact_year_projects_every_attributed_framework_without_semantic_gold():

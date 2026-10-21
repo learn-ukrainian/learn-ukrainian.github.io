@@ -322,6 +322,18 @@ def test_regression_d5_partial_start_never_wakes(live_driver, monkeypatch):
     send.assert_not_called()
 
 
+def test_regression_d5_malformed_before_completion_never_wakes(live_driver, monkeypatch):
+    _, _, rollout, *_, remote = live_driver
+    with rollout.open("ab") as stream:
+        stream.write(b'{"broken":}\n')
+    _append_event(rollout, "task_complete")
+    send = Mock(side_effect=_completed_resume(rollout))
+    monkeypatch.setattr(ui, "send", send)
+    with pytest.raises(RuntimeError, match="codex_wake_busy:decode_error:"):
+        _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
+    send.assert_not_called()
+
+
 def test_regression_d5_idless_abort_allows_completed_restart(live_driver, monkeypatch):
     _, _, rollout, *_, remote = live_driver
     _append_event(rollout, "task_started", turn_id="a")

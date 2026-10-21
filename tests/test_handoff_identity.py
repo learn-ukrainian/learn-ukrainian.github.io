@@ -224,6 +224,19 @@ def test_legacy_epic_suffix_normalizes_before_selector_resolution(arguments: lis
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_unknown_selector_fails_closed() -> None:
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; launcher_selector_resolve unknown', "bash", str(_HANDOFF_IDENTITY)],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 1
+    assert result.stdout == ""
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
     ("launcher", "arguments", "expected_code"),
     [

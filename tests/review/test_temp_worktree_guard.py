@@ -93,6 +93,23 @@ def test_review_cleanup_refuses_symlink_to_worktree(
     assert _git(repo, "worktree", "list", "--porcelain") == registration
 
 
+def test_review_orphan_sweep_reports_retained_worktree(
+    linked_review_tree: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, root, output = linked_review_tree
+    payload = output.read_bytes()
+    registration = _git(repo, "worktree", "list", "--porcelain")
+    monkeypatch.setattr(isolation, "scratch_scan_roots", lambda: [tmp_path])
+    monkeypatch.setattr(isolation, "_is_disk_pressure_active", lambda *args, **kwargs: False)
+    os.utime(root, (1, 1))
+
+    result = isolation.sweep_review_temp_orphans(now=100000)
+
+    assert result == {"roots_reaped": 0, "bytes_freed": 0, "errors": 1, "disk_pressure": False}
+    assert output.read_bytes() == payload
+    assert _git(repo, "worktree", "list", "--porcelain") == registration
+
+
 def test_review_cleanup_refuses_parent_of_linked_worktree(
     linked_review_tree: tuple[Path, Path, Path], tmp_path: Path
 ) -> None:
@@ -109,3 +126,18 @@ def test_review_cleanup_refuses_parent_of_linked_worktree(
 
     assert output.read_bytes() == payload
     assert _git(repo, "worktree", "list", "--porcelain") == registration
+
+
+def test_review_cleanup_retains_worktree_after_permission_repair(linked_review_tree: tuple[Path, Path, Path]) -> None:
+    repo, root, output = linked_review_tree
+    payload = output.read_bytes()
+    registration = _git(repo, "worktree", "list", "--porcelain")
+    output.parent.chmod(0o000)
+
+    try:
+        with pytest.raises(OSError, match="Git checkout retained; use guarded worktree cleanup"):
+            isolation._remove_review_temp_orphan(root)
+        assert output.read_bytes() == payload
+        assert _git(repo, "worktree", "list", "--porcelain") == registration
+    finally:
+        output.parent.chmod(0o700)

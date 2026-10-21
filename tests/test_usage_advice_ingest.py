@@ -80,6 +80,24 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertIsNotNone(res)
         self.assertGreater(res, 0.0)
 
+    def test_polite_get_success(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        mock_resp = MagicMock(spec=requests.Response)
+        mock_resp.status_code = 200
+        mock_resp.text = "<html>OK</html>"
+        session.get.return_value = mock_resp
+
+        sleep_calls: list[float] = []
+        resp = polite_get(
+            session,
+            "https://example.com/test",
+            delay=1.5,
+            sleep_fn=sleep_calls.append,
+        )
+        self.assertEqual(resp.status_code, 200)
+        session.get.assert_called_once_with("https://example.com/test", timeout=20.0, allow_redirects=False)
+        self.assertEqual(sleep_calls, [1.5])
+
     def test_polite_get_circuit_breaker_403(self) -> None:
         session = MagicMock(spec=requests.Session)
         mock_resp = MagicMock(spec=requests.Response)
@@ -224,6 +242,27 @@ class TestUsageAdviceIngest(unittest.TestCase):
             polite_get(session, "https://example.com/start", delay=0)
         self.assertIn("Unsafe redirect scheme refused", str(ctx.exception))
 
+    def test_polite_get_delay_zero_has_minimum_backoff(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        r500 = MagicMock(spec=requests.Response)
+        r500.status_code = 500
+        r500.headers = {}
+        r200 = MagicMock(spec=requests.Response)
+        r200.status_code = 200
+        r200.text = "ok"
+
+        session.get.side_effect = [r500, r200]
+        sleep_calls: list[float] = []
+        resp = polite_get(
+            session,
+            "https://example.com/zero-delay",
+            delay=0,
+            retry_backoff=2.0,
+            sleep_fn=sleep_calls.append,
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(sleep_calls, [1.0])
+
     def test_extract_movne_word_pairs(self) -> None:
         html = """
         <div class="post_text">
@@ -356,6 +395,43 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(stats2.total_manifest, 3)
         self.assertEqual(stats2.cached_existing, 2)
         self.assertEqual(stats2.fetched_new, 1)  # Only issue 3 fetched!
+        self.assertEqual(session.get.call_count, 1)
+
+    def test_ingest_movaua_incremental(self) -> None:
+        manifest = [
+            {"url": "https://ukr-mova.in.ua/item1", "section": "antusurzhuk"},
+            {"url": "https://ukr-mova.in.ua/item2", "section": "paronimu"},
+        ]
+        session = MagicMock(spec=requests.Session)
+        r = MagicMock(spec=requests.Response)
+        r.status_code = 200
+        r.text = "<html><title>Title | Мова – ДНК нації</title><div class='text'>Body</div></html>"
+        session.get.return_value = r
+
+        stats1 = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            limit=1,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats1.fetched_new, 1)
+        self.assertEqual(session.get.call_count, 1)
+
+        # Run 2: Item 1 cached, only Item 2 fetched
+        session.get.reset_mock()
+        stats2 = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats2.cached_existing, 1)
+        self.assertEqual(stats2.fetched_new, 1)
         self.assertEqual(session.get.call_count, 1)
 
     def test_export_summaries_json(self, tmp_path: Path | None = None) -> None:
@@ -1155,6 +1231,65 @@ class TestUsageAdviceIngest(unittest.TestCase):
         pairs = extract_movne_word_pairs(1, 1, html)
         self.assertEqual(len(pairs), 1)
         self.assertEqual(pairs[0]["question_num"], 1)
+
+    def test_movaua_non_200_error_status_recording(self) -> None:
+        ensure_movaua_schema(self.conn)
+        session = MagicMock(spec=requests.Session)
+        r404 = MagicMock(spec=requests.Response)
+        r404.status_code = 404
+        session.get.return_value = r404
+
+        manifest = [{"url": "https://ukr-mova.in.ua/not-found", "section": "antusurzhuk", "title": "Missing"}]
+        stats = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=False,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats.errors, 1)
+        self.assertEqual(stats.fetched_new, 0)
+
+        row = self.conn.execute(
+            "SELECT url, error_status FROM movaua_articles WHERE url = ?",
+            ("https://ukr-mova.in.ua/not-found",),
+        ).fetchone()
+        self.assertIsNotNone(row)
+        self.assertEqual(row[1], "http_404")
+
+        # In incremental mode without retry_errors, it is skipped
+        session.get.reset_mock()
+        stats_inc = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=False,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats_inc.cached_existing, 1)
+        self.assertEqual(session.get.call_count, 0)
+
+        # With retry_errors=True, it is retried
+        r200 = MagicMock(spec=requests.Response)
+        r200.status_code = 200
+        r200.text = "<html><div class='field-item even'>Текст статті</div></html>"
+        session.get.return_value = r200
+
+        stats_retry = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=True,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats_retry.fetched_new, 1)
+        self.assertEqual(session.get.call_count, 1)
 
     def test_cli_exit_on_errors(self) -> None:
         with tempfile.TemporaryDirectory(dir=ensure_scratch_root()) as tmpdir:

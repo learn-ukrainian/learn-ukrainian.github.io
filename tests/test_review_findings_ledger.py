@@ -60,6 +60,14 @@ def test_apply_succeeds_after_in_scope_blocker_adjudication():
     assert ledger.is_applied("F1") is True
 
 
+def test_stop_and_escalate_cannot_be_applied():
+    ledger = FindingsLedger()
+    ledger.raise_finding("F1", summary="bug", source="reviewer:grok")
+    ledger.adjudicate("F1", disposition="stop_and_escalate", rationale="fix crosses owner boundary")
+    with pytest.raises(FindingsLedgerError):
+        ledger.apply("F1")
+
+
 def test_re_adjudication_preserves_prior_history_not_overwrite():
     ledger = FindingsLedger()
     ledger.raise_finding("F1", summary="bug", source="reviewer:grok")

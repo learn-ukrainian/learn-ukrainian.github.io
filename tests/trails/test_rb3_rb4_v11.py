@@ -10,11 +10,24 @@ import yaml
 
 from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables
 from scripts.orchestration.validate_trailspec import (
+    DEFAULT_DECISION_TABLES_V1_PATH,
     PROJECT_ROOT,
+    validate_trailspec,
 )
 
 RB3_PATH = PROJECT_ROOT / "scripts/config/trails/rb3-pr-lifecycle.trail.yaml"
 RB4_PATH = PROJECT_ROOT / "scripts/config/trails/rb4-red-ci-triage.trail.yaml"
+
+REVIEW_GATE_INPUTS = {
+    "is_draft",
+    "current_head_reviews_terminal_published",
+    "reviewer_is_independent",
+    "requested_changes_resolved",
+    "has_stale_approval",
+    "verdicts_conflict",
+    "blocking_ci",
+    "has_current_cross_family_approval",
+}
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -52,6 +65,19 @@ def _assert_rb3_babysit_routing(spec: dict[str, Any]) -> None:
         "still_armed": "observe_babysit_state",
         "babysit_state_unreadable": "STOP-precondition-failed",
     }
+
+
+@pytest.mark.parametrize(
+    ("path", "trail_id", "version"),
+    [(RB3_PATH, "rb3-pr-lifecycle", "2.3.0"), (RB4_PATH, "rb4-red-ci-triage", "0.5.0")],
+)
+def test_migrated_trails_validate_v11(path: Path, trail_id: str, version: str) -> None:
+    """Both P9 rails are execution-eligible v1.1 specifications."""
+    result = validate_trailspec(spec_path=path)
+    assert result["ok"] is True
+    assert result["spec"]["trail_id"] == trail_id
+    assert result["spec"]["version"] == version
+    assert result["spec"]["execution_eligible"] is True
 
 
 @pytest.mark.parametrize("path", [RB3_PATH, RB4_PATH])
@@ -126,6 +152,26 @@ def test_rb3_refusal_rows_cannot_reach_gate_passed(
     rb3 = _steps(_load(RB3_PATH))["evaluate_review_gate"]
     label = "stop_contested" if outcome == "STOP-contested" else outcome.replace("-", "_")
     assert rb3["transitions"][label]["target"] != "arm_automerge"
+
+
+def test_rb3_review_gate_evaluates_all_eight_typed_inputs() -> None:
+    """Every RB-3 review-gate evaluation consumes the complete P2 input contract."""
+    rb3 = _steps(_load(RB3_PATH))
+    observation = rb3["observe_gate_inputs"]
+    evaluation = rb3["evaluate_review_gate"]
+    observation_program = _command_text(observation)
+    evaluation_program = _command_text(evaluation)
+
+    tables = load_decision_tables()
+    assert set(tables["tables"]["review-gate-arm"]["inputs"]) == REVIEW_GATE_INPUTS
+    for input_name in REVIEW_GATE_INPUTS:
+        assert input_name in observation_program
+    assert evaluation["command"]["environment"]["TABLE_ID"] == "review-gate-arm"
+    assert evaluation["command"]["environment"]["TABLES_PATH"] == str(
+        DEFAULT_DECISION_TABLES_V1_PATH.relative_to(PROJECT_ROOT)
+    )
+    assert "evaluate_named_table" in evaluation_program
+    assert evaluation["command"]["environment"]["GATE_FACTS_RECEIPT"] == "{gate_facts_receipt}"
 
 
 def test_rb3_babysit_registration_continues_to_bounded_state_observation() -> None:

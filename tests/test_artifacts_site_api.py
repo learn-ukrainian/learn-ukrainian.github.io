@@ -134,6 +134,49 @@ def test_module_artifact_flags_stale_plan(tmp_path, monkeypatch):
     assert body["ship_ready"] is False
 
 
+def test_module_artifact_flags_missing_frontmatter(tmp_path, monkeypatch):
+    track_dir, plans = _set_env(tmp_path, monkeypatch)
+    content_path = track_dir / "hello.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text("No frontmatter here.\n", encoding="utf-8")
+    plan_path = plans / "hello.yaml"
+    plan_path.write_text("slug: hello\n", encoding="utf-8")
+
+    _stub_gates(monkeypatch)
+    monkeypatch.setattr(
+        artifacts_router, "find_content_file",
+        lambda _track_dir, slug: content_path if slug == "hello" else None,
+    )
+
+    body = client.get("/api/artifacts/a1/hello").json()
+    assert body["gates"]["frontmatter_valid"] is False
+    assert body["ship_ready"] is False
+
+
+def test_module_artifact_404_on_unknown_track(tmp_path, monkeypatch):
+    _set_env(tmp_path, monkeypatch)
+    resp = client.get("/api/artifacts/does-not-exist/foo")
+    assert resp.status_code == 404
+
+
+def test_module_artifact_fails_when_final_review_missing(tmp_path, monkeypatch):
+    track_dir, plans = _set_env(tmp_path, monkeypatch)
+    content_path = track_dir / "hello.md"
+    _valid_mdx(content_path)
+    plan_path = plans / "hello.yaml"
+    plan_path.write_text("slug: hello\n", encoding="utf-8")
+
+    _stub_gates(monkeypatch, final_verdict=None)
+    monkeypatch.setattr(
+        artifacts_router, "find_content_file",
+        lambda _track_dir, slug: content_path if slug == "hello" else None,
+    )
+
+    body = client.get("/api/artifacts/a1/hello").json()
+    assert body["gates"]["final_review_pass"] is False
+    assert body["ship_ready"] is False
+
+
 # ---------------------------------------------------------------------
 # /api/artifacts/ship-ready
 # ---------------------------------------------------------------------
@@ -180,6 +223,23 @@ def test_ship_ready_aggregates(monkeypatch):
 # ---------------------------------------------------------------------
 # /api/site/deployments
 # ---------------------------------------------------------------------
+
+
+def test_deployments_surfaces_gh_error_gracefully(monkeypatch):
+    """gh not authed / not installed → error field, not 500."""
+
+    class FakeProc:
+        returncode = 1
+        stdout = ""
+        stderr = "gh: command not found"
+
+    monkeypatch.setattr(site_router, "_run", lambda *_a, **_kw: FakeProc())
+
+    resp = client.get("/api/site/deployments")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["runs"] == []
+    assert "gh: command not found" in body["error"]
 
 
 def test_deployments_returns_parsed_runs(monkeypatch):

@@ -9,6 +9,7 @@ import signal
 import sqlite3
 import subprocess
 import sys
+import textwrap
 import time
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
@@ -95,6 +96,14 @@ class TestBatchFixReviewExtractSection:
         assert result is not None
         assert "content" in result
 
+    def test_multiple_sections(self, tmp_path):
+        extract_section = self._import()
+        p = tmp_path / "out.txt"
+        content = "===A_START===\nfirst\n===A_END===\n===B_START===\nsecond\n===B_END===\n"
+        p.write_text(content)
+        assert extract_section(p, "===A_START===", "===A_END===") == "first"
+        assert extract_section(p, "===B_START===", "===B_END===") == "second"
+
 
 class TestBatchFixReviewExtractScore:
     """Tests for extract_score."""
@@ -105,6 +114,15 @@ class TestBatchFixReviewExtractScore:
 
     def test_bold_overall_score(self):
         assert self._import()("**Overall Score:** 8.5/10") == 8.5
+
+    def test_plain_overall_score(self):
+        assert self._import()("Overall Score: 9.0/10") == 9.0
+
+    def test_bold_score_alone(self):
+        assert self._import()("**7.5/10**") == 7.5
+
+    def test_equals_bold(self):
+        assert self._import()("= **8.0/10**") == 8.0
 
     def test_no_score(self):
         assert self._import()("no score here") is None
@@ -148,6 +166,33 @@ class TestBatchFixReviewCountItems:
         assert count_items(p, "items") == 2
 
 
+class TestBatchFixReviewCountEngagement:
+    """Tests for count_engagement."""
+
+    def _import(self):
+        from batch.batch_fix_review import count_engagement
+        return count_engagement
+
+    def test_callout_boxes(self, tmp_path):
+        count_engagement = self._import()
+        p = tmp_path / "content.md"
+        p.write_text("> [!note]\ntext\n> [!tip]\nmore\n")
+        assert count_engagement(p) == 2
+
+    def test_emoji_boxes(self, tmp_path):
+        count_engagement = self._import()
+        p = tmp_path / "content.md"
+        # Use raw text with actual emoji patterns
+        p.write_text(textwrap.dedent("""\
+            Some text
+            > \U0001f4a1 Fun fact
+            more text
+            > \U0001f50d Let's explore
+            even more
+        """))
+        assert count_engagement(p) == 2
+
+
 class TestBatchFixReviewGetWordTarget:
     """Tests for get_word_target."""
 
@@ -161,6 +206,13 @@ class TestBatchFixReviewGetWordTarget:
         p.write_text("title: Test\nword_target: 4000\nobjectives:\n  - learn\n")
         files = {"plan": p}
         assert get_word_target(files) == 4000
+
+    def test_invalid_value(self, tmp_path):
+        get_word_target = self._import()
+        p = tmp_path / "plan.yaml"
+        p.write_text("word_target: not_a_number\n")
+        files = {"plan": p}
+        assert get_word_target(files) == 0
 
 
 class TestBatchFixReviewGetAuditMetrics:
@@ -506,6 +558,14 @@ class TestBatchOtamanShouldInclude:
 class TestBatchOtamanRuntimeExceeded:
     @patch("batch.batch_otaman.load_state", return_value={"tracks": {}, "history": [], "running_tracks": [], "stats": {"total_dispatches": 0, "total_modules_passed": 0, "total_quota_hits": 0}})
     @patch("batch.batch_otaman.STATE_FILE")
+    def test_no_limit(self, mock_sf, mock_load, tmp_path):
+        mock_sf.parent = tmp_path
+        from batch.batch_otaman import BatchOtaman
+        bo = BatchOtaman(dry_run=True)
+        assert bo._runtime_exceeded() is False
+
+    @patch("batch.batch_otaman.load_state", return_value={"tracks": {}, "history": [], "running_tracks": [], "stats": {"total_dispatches": 0, "total_modules_passed": 0, "total_quota_hits": 0}})
+    @patch("batch.batch_otaman.STATE_FILE")
     def test_not_exceeded(self, mock_sf, mock_load, tmp_path):
         mock_sf.parent = tmp_path
         from batch.batch_otaman import BatchOtaman
@@ -560,6 +620,16 @@ class TestBatchDispatcherShouldInclude:
 
 
 class TestBatchDispatcherRuntimeExceeded:
+    @patch("batch_dispatcher.load_dispatcher_state", return_value={
+        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
+        "stats": {}, "last_updated": None
+    })
+    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
+    def test_no_limit(self, mock_load):
+        from batch_dispatcher import BatchDispatcher
+        d = BatchDispatcher()
+        assert d._runtime_exceeded() is False
+
     @patch("batch_dispatcher.load_dispatcher_state", return_value={
         "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
         "stats": {}, "last_updated": None
@@ -847,6 +917,13 @@ class TestAgentWatcherStopDaemon:
             result = tools.agent_watcher.stop_daemon()
         assert result is True
         mock_kill.assert_called_with(12345, signal.SIGTERM)
+
+    def test_stop_no_pid(self, tmp_path, capsys):
+        import tools.agent_watcher
+        with patch.object(tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"):
+            result = tools.agent_watcher.stop_daemon()
+        assert result is False
+        assert "No watcher running" in capsys.readouterr().out
 # ═══════════════════════════════════════════════════════════════════════
 # Additional edge case tests
 # ═══════════════════════════════════════════════════════════════════════
@@ -892,6 +969,19 @@ class TestBatchFixReviewCheckExistingReviews:
         status, score = _check_existing_reviews(files, result)
         assert status == "continue"
         assert score is None
+class TestBatchOtamanResourceExhausted:
+    @patch("batch.batch_otaman.subprocess.run")
+    def test_resource_exhausted_detection(self, mock_run):
+        from batch.batch_otaman import dispatch_otaman
+        mock_run.return_value = MagicMock(
+            returncode=1,
+            stderr="resource_exhausted: too many requests",
+            stdout=""
+        )
+        result = dispatch_otaman("a1", 1, "test-slug", timeout=5)
+        assert result["quota_hit"] is True
+
+
 class TestBatchDispatcherUpdateTrackStates:
     """Test _update_track_states edge cases."""
 

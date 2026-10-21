@@ -19,8 +19,11 @@ from scripts.build.fresh.prompt import (
     CARDS_DIR,
     CITED_RECORDS_BEGIN,
     CITED_RECORDS_END,
+    EVIDENCE_PACK_SCHEMA,
     LEARNER_STATE_BEGIN,
     LEARNER_STATE_END,
+    RECORD_ID_RE,
+    RECORD_KINDS,
     SCHEMA_EXEMPLAR_BEGIN,
     SCHEMA_EXEMPLAR_END,
     check_rendered_prompt,
@@ -589,6 +592,53 @@ def test_read_only_constrained_resolution_prompt_contract(
     assert _read_only_write_intent_error(mode="read-only", prompt=prompts[0]) is None
 
 
+@pytest.mark.parametrize("recap", [False, True])
+def test_prompt_lists_every_letter_grammar_point_and_word(
+    sample_plan_entry, full_learner_state, sample_cited_records, recap
+):
+    """Both writer paths render the whole state in a fixed order and pass the check with it."""
+    prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records, recap=recap)
+    block = _state_block(prompt)
+
+    assert "**Letters taught** (5, in taught order): О А І Г М" in block
+    assert "  - `G-a1-001`: A sound and a letter are different units.\n  - `G-a1-002`: Vowels" in block
+    assert "**Allowed words** (5; any form of each may be used)" in block
+    assert "  - Base layer (2): `W-2` я, `W-10` і\n" in block
+    assert "  - Core words of earlier lessons (2): `W-3` привіт, `W-11` день\n" in block
+    assert "  - Names admitted for use (1): `W-40` Оксана\n" in block
+    assert "Recycle earlier words and grammar wherever a step allows." in prompt
+    assert "write read and copy items only with letters taught above" in prompt
+    assert "**Cumulative Core Count**: 2" in prompt
+    assert "**Allowed Word IDs**: 5 words" in prompt
+
+    check = check_rendered_prompt(
+        prompt,
+        sample_plan_entry,
+        CARDS_DIR / "a1.md",
+        is_recap=recap,
+        learner_state=full_learner_state,
+        **STATE_SOURCES,
+    )
+    assert check.errors == []
+
+
+@pytest.mark.parametrize("plan_order", [("О", "А"), ("А", "О")])
+def test_letters_of_one_lesson_render_in_the_plans_order(
+    sample_plan_entry, full_learner_state, sample_cited_records, plan_order
+):
+    """Letters introduced in the same lesson keep the plan's order in the writer block and the rebuilt block."""
+    letters = {letter: {"position": 1, "lesson": 2} for letter in plan_order}
+    state = dataclasses.replace(full_learner_state, letters=letters)
+    prompt = _render_state_prompt(sample_plan_entry, state, sample_cited_records)
+    block = _state_block(prompt)
+
+    assert f"**Letters taught** (2, in taught order): {' '.join(plan_order)}" in block
+    assert block == learner_state_block(state, STATE_WORD_STORE, STATE_GRAMMAR)
+    assert block == learner_state_block(state.to_dict(), STATE_WORD_STORE, STATE_GRAMMAR)
+    assert learner_state_view(state, STATE_WORD_STORE, STATE_GRAMMAR)["letters"] == list(plan_order)
+    assert _state_errors(prompt, sample_plan_entry, state, **STATE_SOURCES) == []
+
+
 @pytest.mark.parametrize("plan_order", [("Б", "А"), ("А", "Б")])
 def test_the_reviewer_reads_the_taught_order_the_writer_saw(
     tmp_path, sample_plan_entry, full_learner_state, sample_cited_records, plan_order
@@ -874,6 +924,16 @@ def test_an_unknown_or_incomplete_record_fails_the_render(sample_plan_entry, sam
         _render(_citing(sample_plan_entry, cited), sample_learner_state, cited)
 
 
+def test_record_kinds_cover_every_record_kind_of_the_pack_schema():
+    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
+    schema_kinds = {
+        spec["properties"]["id"]["pattern"].removeprefix("^").split("-", 1)[0]: name.removesuffix("_record")
+        for name, spec in defs.items()
+        if name.endswith("_record")
+    }
+    assert schema_kinds == {prefix: kind for prefix, kind in RECORD_KINDS.items() if prefix != "W"}
+
+
 def test_video_models_are_rendered_as_structured_data(sample_plan_entry, sample_learner_state):
     models = {"letters": ["А"], "words": ["W-001"], "segment": "00:05–00:12"}
     record = {**VIDEO_RECORD, "models": models}
@@ -920,6 +980,25 @@ def test_lesson_numbers_the_plan_entry_states_are_its_own_input(sample_plan_entr
 
     tampered = prompt.replace("the review shape.", "the review shape of lesson 4.")
     assert any("lesson number 4" in e for e in _check(tampered, plan, sample_learner_state).errors)
+
+
+def test_record_id_scan_matches_only_schema_id_shapes(sample_plan_entry, sample_learner_state):
+    assert RECORD_ID_RE.findall("Latin P-looking shape; watch?v=W-1rCu0indE; T-4, G-a1-001, EX-12x, W-11.") == [
+        "T-4",
+        "G-a1-001",
+        "W-11",
+    ]
+    plan = _citing(sample_plan_entry, ALL_KINDS, rationale="Override the Latin P-looking shape.")
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+
+def test_lesson_without_consolidation_renders(sample_plan_entry, sample_learner_state):
+    """A lesson plan entry may omit `consolidation` (module-plan-v2 does not require it for any lesson kind)."""
+    plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS).items() if k != "consolidation"}
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "### Consolidation" not in prompt
+    assert _check(prompt, plan, sample_learner_state).errors == []
 
 
 @pytest.mark.parametrize("recap", [False, True])

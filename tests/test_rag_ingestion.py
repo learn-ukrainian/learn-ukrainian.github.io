@@ -30,6 +30,15 @@ class TestUkrlibChunkText:
 
         self.chunk_text = chunk_text
 
+    def test_chunks_have_required_fields(self):
+        text = "Перший абзац.\n\nДругий абзац."
+        chunks = self.chunk_text(text, "work", "http://example.com")
+        for chunk in chunks:
+            assert "chunk_id" in chunk
+            assert "text" in chunk
+            assert "source_url" in chunk
+            assert "token_count" in chunk
+
     def test_chunk_ids_unique(self):
         paras = [f"Абзац {i}. " * 30 for i in range(10)]
         text = "\n\n".join(paras)
@@ -46,6 +55,12 @@ class TestUkrlibTextExtractor:
         from scrape_ukrlib import UkrlibTextExtractor
 
         self.Extractor = UkrlibTextExtractor
+
+    def test_basic_html(self):
+        html = '<article class="prose"><p>Привіт світе!</p></article>'
+        ext = self.Extractor()
+        ext.feed(html)
+        assert "Привіт світе!" in ext.get_text()
 
     def test_strips_noise_classes(self):
         html = '<article class="prose"><p>Зміст</p><div class="readalser">Реклама</div></article>'
@@ -105,6 +120,19 @@ class TestLitopysFindNextLink:
 # ── scrape_wikisource: is_skip_page, chunk_text ──────────────
 
 
+class TestWikisourceChunkText:
+    def setup_method(self):
+        from scrape_wikisource import chunk_text
+
+        self.chunk_text = chunk_text
+
+    def test_chunk_metadata(self):
+        chunks = self.chunk_text("Текст вірша.", "Заповіт", {"author": "Шевченко"})
+        assert len(chunks) == 1
+        assert chunks[0]["author"] == "Шевченко"
+        assert "ws_" in chunks[0]["chunk_id"]
+
+
 # ── extract_text: split_into_sections, estimate_tokens, check_quality ──
 
 
@@ -113,6 +141,14 @@ class TestSplitIntoSections:
         from scripts.rag.extract_text import split_into_sections
 
         self.split_into_sections = split_into_sections
+
+    def test_h1_sections(self):
+        md = "# Розділ 1\n\nТекст першого розділу.\n\n# Розділ 2\n\nТекст другого."
+        sections = self.split_into_sections(md)
+        assert len(sections) == 2
+        assert sections[0]["title"] == "Розділ 1"
+        assert sections[0]["level"] == 1
+        assert sections[1]["title"] == "Розділ 2"
 
     def test_intro_before_heading(self):
         md = "Вступний текст.\n\n# Перший\n\nЗміст."

@@ -163,6 +163,12 @@ class TestExemptions:
         violations = check_euphony_violations(content, file_path="/curriculum/l2-uk-en/oes/module.md")
         assert len(violations) == 0
 
+    def test_a1_track_not_exempt(self):
+        """Core tracks should NOT be exempt."""
+        content = "вона і Олена"
+        violations = check_euphony_violations(content, file_path="/curriculum/l2-uk-en/a1/module.md")
+        assert len(violations) > 0
+
 
 class TestEdgeCases:
 

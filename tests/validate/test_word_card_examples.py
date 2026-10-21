@@ -315,6 +315,17 @@ def test_ambiguous_spelling_level_evidence_never_satisfies_eligibility() -> None
     assert kliuch["identity"]["confidence"] == "medium" and any("identity medium" in r for r in meaning["reasons"])
 
 
+def test_unambiguous_corroboration_is_counted_separately(gen) -> None:
+    castle = _card("zamok-castle")
+    assert castle["fields"]["stress"]["mapping_evidenced"] is True
+    assert castle["fields"]["stress"]["independence_groups_evidenced"] == 3
+    kliuch = _card(
+        "kliuch-1"
+    )  # kaikki stress is ambiguous across the two ключ cards: it displays, it does not evidence
+    assert kliuch["fields"]["stress"]["independence_groups_agreeing"] == 2
+    assert kliuch["fields"]["stress"]["independence_groups_evidenced"] == 1
+
+
 # ---------------------------------------------------------------- links (Astra gap 6)
 
 
@@ -689,6 +700,20 @@ def test_keyed_evidence_is_per_proposition_not_pooled_across_slots(gen) -> None:
         "rod.sg=замку": True,
         "dav.sg=замкові": False,
     }
+
+
+def test_every_value_entry_carries_its_own_evidence() -> None:
+    castle, kliuch = _card("zamok-castle"), _card("kliuch-1")
+    for card in (castle, kliuch):
+        for f in list(card["fields"].values()) + [f for s in card["senses"] for f in s["fields"].values()]:
+            for v in f["values"]:
+                assert {"mapping_evidenced", "independence_groups_evidenced"} <= set(v)
+    # text class: the shown gloss is its own proposition
+    assert castle["fields"]["english_gloss"]["values"][0]["mapping_evidenced"] is True  # kaikki, basis sense
+    assert kliuch["fields"]["english_gloss"]["mapping_evidenced"] is False  # kaikki, spelling-ambiguous
+    # scalar class: ключ stress is one proposition stated by ULIF (evidenced) and kaikki (ambiguous)
+    (stress,) = kliuch["fields"]["stress"]["values"]
+    assert stress["mapping_evidenced"] is True and stress["independence_groups_evidenced"] == 1
 
 
 # ---------------------------------------------------------------- resolver: declarations and overlay (Astra r2 gap 5)

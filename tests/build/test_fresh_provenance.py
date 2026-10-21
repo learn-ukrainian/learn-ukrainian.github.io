@@ -462,6 +462,153 @@ def test_live_runner_quiz_typed_distractors_provenance(tmp_path: Path, monkeypat
     assert distractors[0]["text"] == "слова"
 
 
+def test_check_4_error_text_mismatch_and_ambiguous() -> None:
+    draft, plan, pack, words = _fixture()
+    pack["errors"] = [
+        {
+            "id": "E-001",
+            "source": {"table": "ua_gec_errors", "id": 1},
+            "incorrect": "слове",
+            "correct": "слово",
+            "error_type": "form",
+            "pattern": "fixture",
+        }
+    ]
+    plan["lessons"][0]["activities"] = [
+        {
+            "id": "a1",
+            "type": "error-correction",
+            "placement": "inline",
+            "focus": "Correct",
+            "error_refs": ["E-001"],
+        }
+    ]
+    item = {
+        "sentence": "слове",
+        "error": "слове",
+        "correction": "слово",
+        "explanation": "Correct",
+        "error_ref": "E-001",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Correct", "items": [item]}]
+
+    # Valid item passes
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert res["status"] == "passed"
+
+    # error field does not match record incorrect
+    bad_error = copy.deepcopy(draft)
+    bad_error["activities"][0]["items"][0]["error"] = "слова"
+    res, _ = runner.check_4_activities(bad_error, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "error_text_mismatch", "writer")
+
+    # record incorrect does not occur in sentence
+    bad_sentence = copy.deepcopy(draft)
+    bad_sentence["activities"][0]["items"][0]["sentence"] = "слово"
+    res, _ = runner.check_4_activities(bad_sentence, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "error_text_mismatch", "writer")
+
+    # record incorrect occurs twice in sentence
+    bad_ambiguous = copy.deepcopy(draft)
+    orig_sentence = bad_ambiguous["activities"][0]["items"][0]["sentence"]
+    bad_ambiguous["activities"][0]["items"][0]["sentence"] = f"{orig_sentence} {orig_sentence}"
+    res, _ = runner.check_4_activities(bad_ambiguous, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "error_text_ambiguous", "writer")
+
+    # error-correction: correction and answer conflict
+    bad_conflict = copy.deepcopy(draft)
+    bad_conflict["activities"][0]["items"][0]["answer"] = "слова"
+    res, _ = runner.check_4_activities(bad_conflict, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_conflict", "writer")
+
+
+def test_check_4_key_failure_reasons() -> None:
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
+
+    # Index out of range
+    item_oor = {
+        "question": "слово",
+        "options": ["слово", "слова"],
+        "correct": 5,
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_oor]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_index_out_of_range", "writer")
+
+    # Ambiguous key in dict options (two correct: true)
+    item_amb = {
+        "question": "слово",
+        "options": [
+            {"text": "слово", "correct": True},
+            {"text": "слова", "correct": True},
+        ],
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_amb]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_ambiguous", "writer")
+
+    # Ambiguous key via duplicate matching string options
+    item_dup_str = {
+        "question": "слово",
+        "options": ["слово", "слово"],
+        "answer": "слово",
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_dup_str]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_ambiguous", "writer")
+
+    # Conflicting key styles (correct=0 points to слово, answer="слова")
+    item_conf = {
+        "question": "слово",
+        "options": ["слово", "слова"],
+        "correct": 0,
+        "answer": "слова",
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_conf]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_conflict", "writer")
+
+    # Conflicting key styles (correct index vs dict option)
+    item_conf_dict = {
+        "question": "слово",
+        "options": [
+            {"text": "слово", "correct": True},
+            {"text": "слова", "correct": False},
+        ],
+        "correct": 1,
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_conf_dict]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_conflict", "writer")
+
+    # Missing key
+    item_miss = {
+        "question": "слово",
+        "options": ["слово", "слова"],
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_miss]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_missing", "writer")
+
+    # Answer string not in options
+    item_notin = {
+        "question": "слово",
+        "options": ["слово", "слова"],
+        "answer": "інше",
+        "explanation": "Exp",
+    }
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_notin]}]
+    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_not_in_options", "writer")
+
+
 def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     draft, plan, pack, words = _fixture()
     form_a = {
@@ -1606,6 +1753,21 @@ def test_live_runner_duplicate_heading_removed_by_generate_mdx_is_not_reattached
     assert not (tmp_path / "site" / "1.mdx").exists()
 
 
+def test_live_runner_heading_inside_prose_unit_rewritten_by_generate_mdx_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The same heading as the first line of a longer prose unit: the page keeps the rest of the
+    # unit, so the unit is rewritten (not removed) and the reason names the transform.
+    draft, plan, pack, words = _fixture(text="# слово\n\n" + "слово " * 10)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = _check_9_row(report)
+    assert c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_text_not_in_rendered_output: unit 0 at ('urok', 's1', None, None, 0): ")
+    assert "transform 'remove_duplicate_h1' rewrote the bytes of unit 0" in c9["reason"]
+    assert not (tmp_path / "site" / "1.mdx").exists()
+
+
 def _video_fixture() -> tuple[dict, dict, dict, dict]:
     from tests.build.test_fresh_assemble import make_video_record
 
@@ -1637,6 +1799,33 @@ def test_live_runner_youtube_link_becomes_component_and_lead_in_unit_keeps_its_l
     lead_text = "".join(s["text"] for s in lead)
     assert lesson.count(lead_text) == 1
     assert lesson.index(lead_text) < lesson.index(component)
+    _assert_spans_partition_units(prov)
+
+
+@pytest.mark.needs_sparse_tree("site/src/content")
+def test_live_runner_readings_block_insertion_keeps_unit_locations(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # generate_mdx inserts the reading list in front of the Lesson content; every unit after
+    # it is verified at its shifted location.
+    from scripts.generate_mdx.reading_links import reading_href_for
+
+    href = reading_href_for("duma-marusia-bohuslavka")
+    assert href, "hosted reading fixture missing"
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["reading_passages"] = [
+        {"title": "Маруся Богуславка", "reading_slug": "duma-marusia-bohuslavka", "genre": "дума"}
+    ]
+    validate_fixture_plan(plan)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    lesson = _lesson_tab(mdx)
+    block = f"**Тексти для читання**\n\n- [Маруся Богуславка]({href}) — дума"
+    assert block in lesson
+    prose = _spans_by_unit(prov)[("urok", "s1", None, None, 0)]
+    assert [s["text"] for s in prose] == [("сло́во " * 11).rstrip()]
+    assert lesson.index(block) < lesson.index(prose[0]["text"])
     _assert_spans_partition_units(prov)
 
 
@@ -1682,6 +1871,21 @@ def test_live_runner_dialogue_units_live_in_the_dialogue_box_payload(
     assert [(e["speaker"], e["text"]) for e in exchanges] == [("Оксана", line_texts[0]), ("Оксана", line_texts[1])]
     assert decode_js_json_string(payload.split('"text":"')[2].split('"}')[0]) == line_texts[1]
     _assert_spans_partition_units(prov)
+
+
+def test_live_runner_end_of_line_whitespace_is_dropped_at_assembly(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The page's normalizer strips whitespace at the end of a line; unit text is taken from the
+    # draft the same way (page_text), so the spans and the page agree byte for byte.
+    draft, plan, pack, words = _fixture(text="слово " * 6 + "\t\n" + "слово " * 5)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    prose = _spans_by_unit(prov)[("urok", "s1", None, None, 0)]
+    expected = ("сло́во " * 6).rstrip() + "\n" + ("сло́во " * 5).rstrip()
+    assert [(s["text"], s["start"], s["end"]) for s in prose] == [(expected, 0, len(expected))]
+    assert expected in _lesson_tab(mdx)
 
 
 def test_live_runner_callout_and_table_units_keep_locations_through_generate_mdx(

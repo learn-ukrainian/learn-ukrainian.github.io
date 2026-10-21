@@ -276,3 +276,33 @@ def test_undoing_observed_staged_only_edit_is_recent_activity(repo: Path, free_f
     assert outcome.action == "skipped"
     assert outcome.reason == "last activity 0 min ago (< 60 min)"
     assert tree.is_dir()
+
+
+def test_inspection_preserves_dry_run_apply_set(repo: Path, free_fuser: Path) -> None:
+    eligible = {helpers.dispatch_tree(repo, f"idle-{i}") for i in range(3)}
+    dirty = helpers.dispatch_tree(repo, "dirty")
+    (dirty / "README.md").write_text("uncommitted\n", encoding="utf-8")
+    unpushed = helpers.dispatch_tree(repo, "unpushed")
+    (unpushed / "README.md").write_text("unique commit\n", encoding="utf-8")
+    helpers.git(unpushed, "commit", "-am", "unique")
+    helpers.age_tree(unpushed, repo, "unpushed")
+    active = helpers.dispatch_tree(repo, "active", status="running")
+    recent = helpers.dispatch_tree(repo, "recent")
+    # A write restored the original bytes. It is clean but genuinely recent.
+    original = (recent / "README.md").read_bytes()
+    (recent / "README.md").write_bytes(original)
+
+    before = rw.reap_clean_pushed(repo_root=repo)
+    expected = {p.relative_to(repo).as_posix() for p in eligible}
+    assert {item.path for item in before.removed} == expected
+    for tree in (*eligible, dirty, unpushed, active, recent):
+        helpers.git(tree, "status", "--porcelain")
+        subprocess.run(["du", "-s", str(tree)], capture_output=True, check=True, timeout=30)
+    inspected = rw.reap_clean_pushed(repo_root=repo)
+    assert {item.path for item in inspected.removed} == expected
+    after = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert {item.path for item in after.removed} == expected
+    assert all(not tree.exists() for tree in eligible)
+    assert all(tree.is_dir() for tree in (dirty, unpushed, active, recent))
+    assert (dirty / "README.md").read_text() == "uncommitted\n"
+    assert {item["path"] for item in helpers.abandon_log(repo)} == expected

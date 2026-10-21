@@ -9,9 +9,17 @@ import pytest
 
 from scripts.ai_agent_bridge import _review_safety as safety
 from scripts.ai_agent_bridge._dispatch_wrappers import (
+    _list_review_path_names,
     _write_review_deep_path_prompt,
     _write_review_deep_pr_prompt,
 )
+
+
+def test_list_review_path_names_no_content(tmp_path: Path) -> None:
+    (tmp_path / "a.py").write_text("secret_payload_xyz\n", encoding="utf-8")
+    listing = _list_review_path_names(tmp_path)
+    assert "a.py" in listing
+    assert "secret_payload_xyz" not in listing
 
 
 def test_path_prompt_is_pointer_only(tmp_path: Path) -> None:

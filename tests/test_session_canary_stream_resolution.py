@@ -60,3 +60,24 @@ def test_unknown_and_retired_selectors_raise_typed_error(lane, selector, monkeyp
     with pytest.raises(grok_lane.StreamResolutionError, match="unresolved-stream-selector") as error:
         lane._stream_id(argparse.Namespace(epic=selector, stream=None))
     assert error.value.reason == "unresolved-stream-selector"
+
+
+def test_resolver_reads_registry_changes_and_new_keys(tmp_path, monkeypatch) -> None:
+    registry = tmp_path / "streams.yaml"
+    registry.write_text("streams:\n  open-model-data:\n    epics: [12345]\n  new-lane:\n    epics:\n      - 23456\n")
+    monkeypatch.setenv("HANDOFF_ISSUE_STREAMS_YAML", str(registry))
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    for selector in ("open-model-data", "infra.open-model-data", "new-lane", "infra.new-lane"):
+        assert grok_lane.resolve_stream_id(selector) == _shell_stream(selector)
+
+
+@pytest.mark.parametrize("failure", [OSError("unavailable"), subprocess.TimeoutExpired("bash", 1)])
+def test_unavailable_resolver_raises_typed_error(failure, monkeypatch) -> None:
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+
+    def unavailable(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(grok_lane.subprocess, "run", unavailable)
+    with pytest.raises(grok_lane.StreamResolutionError):
+        grok_lane.resolve_stream_id("open-model-data")

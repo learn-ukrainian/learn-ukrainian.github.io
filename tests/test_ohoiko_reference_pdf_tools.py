@@ -1,5 +1,6 @@
 """Synthetic layout regressions; the owned PDF is never a CI dependency."""
 
+import json
 import sqlite3
 from collections import Counter
 from pathlib import Path
@@ -197,3 +198,9 @@ def test_proof_comparison_detects_boundary_metadata_and_multiplicity_drift(tmp_p
     result = proof.compare(Path("unused"), path)
     assert result["unexplained_differences"] == 3
     assert proof.main(["--pdf", "unused", "--inventory", str(path)]) == 1
+
+
+def test_proof_cli_input_error_is_typed(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(proof, "compare", lambda *args: (_ for _ in ()).throw(ValueError("private details")))
+    assert proof.main(["--pdf", "unused", "--inventory", str(tmp_path / "missing")]) == 2
+    assert json.loads(capsys.readouterr().out) == {"error": "ValueError"}

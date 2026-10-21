@@ -215,6 +215,22 @@ def test_base_deleted_and_nothing_resolvable_fails_closed(tmp_tasks_dir, repo):
     assert state["no_deliverable_reason"] == "commit_count_unknown"
 
 
+@pytest.mark.parametrize(
+    ("merged_into_main", "recorded"),
+    [(False, "reachable"), (True, "unreachable")],
+    ids=["recorded-base-commit", "default-branch-merge-base"],
+)
+def test_base_deleted_with_zero_new_commits_is_not_a_delivery(tmp_tasks_dir, repo, merged_into_main, recorded):
+    repo.delete_base_branch(merged_into_main=merged_into_main)
+    base_sha = repo.base_sha if recorded == "reachable" else UNREACHABLE_SHA
+
+    state = _settle(repo, f"base-deleted-zero-{recorded}", base_sha=base_sha)
+
+    assert state["status"] == "no_deliverable"
+    assert state["no_deliverable_reason"] == "no_commits_no_changes"
+    assert state["commits_ahead"] == 0
+
+
 def test_recorded_commit_that_is_not_an_ancestor_is_not_trusted(repo):
     """A rebased-off base SHA must not inflate the count with commits that are not the worker's."""
     repo.deliver()
@@ -458,6 +474,65 @@ def test_advisory_ceiling_check_resolves_when_base_present_or_fallback_available
     assert verdict["exceeded"] == []
 
 
+def test_advisory_ceiling_check_fails_closed_when_nothing_resolves(isolated_repo):
+    verdict = delegate._advisory_ceiling_check(
+        isolated_repo, "origin/deleted-base", ENVELOPE, base_sha=UNREACHABLE_SHA
+    )
+    assert verdict["measured"] is False
+    assert verdict["error"] == "merge-base with the base branch is unknown"
+
+
+@pytest.mark.parametrize(
+    "state_name",
+    ["base_present", "base_deleted_recorded_reachable", "base_deleted_default_fallback"],
+)
+def test_exempt_change_check_resolves_when_base_present_or_fallback_available(repo, state_name):
+    repo.deliver()
+    if state_name == "base_present":
+        base_sha = repo.base_sha
+    elif state_name == "base_deleted_recorded_reachable":
+        repo.delete_base_branch(merged_into_main=False)
+        base_sha = repo.base_sha
+    else:
+        repo.delete_base_branch(merged_into_main=True)
+        base_sha = UNREACHABLE_SHA
+
+    check = delegate._exempt_change_check(repo.worktree, BASE_BRANCH, base_sha=base_sha)
+    assert check["measured"] is True
+    assert "fix.py" in check["changed_paths"]
+
+
+def test_exempt_change_check_fails_closed_when_nothing_resolves(isolated_repo):
+    check = delegate._exempt_change_check(isolated_repo, "origin/deleted-base", base_sha=UNREACHABLE_SHA)
+    assert check["measured"] is False
+    assert check["error"] == "merge-base with the base branch is unknown"
+
+
+@pytest.mark.parametrize(
+    "state_name",
+    ["base_present", "base_deleted_recorded_reachable", "base_deleted_default_fallback"],
+)
+def test_kimi_diff_refusal_resolves_clean_diff_when_fallback_available(repo, state_name):
+    repo.deliver()
+    if state_name == "base_present":
+        base_sha = repo.base_sha
+    elif state_name == "base_deleted_recorded_reachable":
+        repo.delete_base_branch(merged_into_main=False)
+        base_sha = repo.base_sha
+    else:
+        repo.delete_base_branch(merged_into_main=True)
+        base_sha = UNREACHABLE_SHA
+
+    # Clean diff without Cyrillic content -> None
+    assert delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=base_sha) is None
+
+
+def test_kimi_diff_refusal_fails_closed_when_nothing_resolves(isolated_repo):
+    refusal = delegate._kimi_diff_refusal(isolated_repo, "origin/deleted-base", "kimi", base_sha=UNREACHABLE_SHA)
+    assert refusal is not None
+    assert "could not be read" in refusal
+
+
 def test_kimi_diff_refusal_with_deleted_base_refuses_cyrillic(repo):
     """Kimi diff refusal catches Cyrillic additions even when the base branch was deleted."""
     repo.deliver()
@@ -622,6 +697,41 @@ def test_present_unrelated_base_fails_closed_across_all_checks(tmp_path):
     refusal = delegate._kimi_diff_refusal(worktree, "origin/unrelated-base", "kimi", base_sha=None)
     assert refusal is not None
     assert "could not be read" in refusal
+
+
+def test_git_computation_failure_fails_closed_across_all_checks(repo, monkeypatch):
+    """When git merge-base fails with an OS/timeout error on a present base, fail closed."""
+    repo.deliver()
+    envelope = {"max_changed_files": 2, "max_non_test_loc": 20}
+
+    original_run = subprocess.run
+
+    def mock_run(args, **kwargs):
+        if len(args) >= 2 and args[0] == "git" and args[1] == "merge-base":
+            raise subprocess.TimeoutExpired(cmd=args, timeout=30)
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", mock_run)
+
+    # 1. _run_merge_base returns (None, False)
+    sha, base_missing = delegate._run_merge_base(repo.worktree, BASE_BRANCH)
+    assert sha is None
+    assert base_missing is False
+
+    # 2. _resolve_merge_base fails closed
+    assert delegate._resolve_merge_base(repo.worktree, BASE_BRANCH, base_sha=repo.base_sha) is None
+
+    # 3. Ceiling check fails closed
+    verdict = delegate._advisory_ceiling_check(repo.worktree, BASE_BRANCH, envelope, base_sha=repo.base_sha)
+    assert verdict["measured"] is False
+
+    # 4. Exemption check fails closed
+    check = delegate._exempt_change_check(repo.worktree, BASE_BRANCH, base_sha=repo.base_sha)
+    assert check["measured"] is False
+
+    # 5. Kimi diff refusal fails closed
+    refusal = delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)
+    assert refusal is not None
 
 
 @pytest.mark.parametrize(

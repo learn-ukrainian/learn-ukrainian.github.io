@@ -22,6 +22,32 @@ from scripts.projects.open_model_data.validate_source_records import validate_pa
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_cli_default_config_opens_registry_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    opened: list[Path] = []
+    real_read = admission._read_json
+
+    def spy(path: Path) -> dict:
+        opened.append(Path(path))
+        if Path(path) == admission.DEFAULT_CONFIG:
+            return real_read(path)
+        raise admission.AdmissionError("stop-after-config")
+
+    monkeypatch.setattr(admission, "_read_json", spy)
+    with pytest.raises(SystemExit) as caught:
+        admission.main(
+            [
+                "--manifest-output",
+                str(tmp_path / "manifest.json"),
+                "--receipt-output",
+                str(tmp_path / "receipt.json"),
+            ]
+        )
+    assert caught.value.code == 2
+    assert opened[0] == admission.DEFAULT_CONFIG
+    assert admission.DEFAULT_CONFIG.is_file()
+    assert "registry/projects/open_model_data" in admission.DEFAULT_CONFIG.as_posix()
+
+
 def _json(path: Path, value: object) -> None:
     path.write_text(admission.canonical_json(value) + "\n", encoding="utf-8")
 
@@ -620,6 +646,35 @@ def test_source_record_validation_failure_leaves_no_final_artifacts(
 
     assert not manifest.exists()
     assert not source_records.exists()
+    assert not receipt.exists()
+
+
+def test_receipt_validation_failure_leaves_no_final_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _database(tmp_path / "sources.db", [("s1", "w1", "два слова", "Автор")])
+    _json(tmp_path / "profile.json", _profile(expected_rows=1, expected_words=2))
+    _json(tmp_path / "config.json", _config())
+    manifest = tmp_path / "manifest.jsonl"
+    receipt = tmp_path / "receipt.json"
+    original_validate = admission._validate
+
+    def fail_receipt(value: object, validator: object, label: str) -> None:
+        if label == "admission receipt":
+            raise admission.AdmissionError("forced receipt validation failure")
+        original_validate(value, validator, label)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(admission, "_validate", fail_receipt)
+    with pytest.raises(admission.AdmissionError, match="forced receipt validation failure"):
+        admission.admit_corpus(
+            config_path=tmp_path / "config.json",
+            input_root=tmp_path,
+            manifest_output=manifest,
+            receipt_output=receipt,
+        )
+
+    assert not manifest.exists()
     assert not receipt.exists()
 
 

@@ -133,6 +133,20 @@ def _pin_a1_letter_prompt_inputs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     _pin_base_level_manifest(monkeypatch, curriculum_root / "curriculum.yaml")
 
 
+def _a1_letter_prompt_size() -> int:
+    prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+    return len(prompt.encode("utf-8"))
+
+
+def test_a1_letter_module_writer_prompt_stays_under_ceiling(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+
+    assert _a1_letter_prompt_size() <= WRITER_PROMPT_CEILING_BYTES
+
+
 def test_a1_letter_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

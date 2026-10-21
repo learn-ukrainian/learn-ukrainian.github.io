@@ -207,6 +207,95 @@ def test_extract_plan_vocab():
 # --- verify_exercises ---
 
 
+def test_verify_all_grounded():
+    content = """\
+## Розділ
+
+Це моя книга і мій стіл. Мій зошит тут.
+
+:::fill-in
+title: "Test"
+---
+- sentence: "Це ___ книга."
+  answer: "моя"
+- sentence: "Це ___ стіл."
+  answer: "мій"
+:::
+"""
+    result = verify_exercises(content)
+    assert result.all_grounded
+    assert result.total_items > 0
+    assert len(result.ungrounded) == 0
+
+
+def test_verify_ungrounded_items():
+    content = """\
+## Розділ
+
+Це моя книга.
+
+:::fill-in
+title: "Test"
+---
+- sentence: "Це ___ олівець."
+  answer: "мій"
+:::
+"""
+    result = verify_exercises(content)
+    # "олівець" is NOT in the prose, so it should be ungrounded
+    ungrounded_words = {u["word"] for u in result.ungrounded}
+    assert "олівець" in ungrounded_words
+
+
+def test_verify_with_plan_vocab():
+    content = """\
+## Розділ
+
+Це моя книга. Мій олівець тут.
+
+:::fill-in
+title: "Test"
+---
+- sentence: "Це ___ олівець."
+  answer: "мій"
+:::
+"""
+    plan = {
+        "vocabulary_hints": {
+            "required": ["олівець (pencil)"],
+        }
+    }
+    result = verify_exercises(content, plan)
+    # All exercise words are in prose + plan vocab, so should be grounded
+    assert result.all_grounded
+
+
+def test_verify_vocab_coverage():
+    content = """\
+## Розділ
+
+Це моя книга і стіл.
+
+:::quiz
+title: "Test"
+---
+- q: "Що це? **книга**"
+  o: ["книга", "стіл"]
+  a: 0
+:::
+"""
+    plan = {
+        "vocabulary_hints": {
+            "required": ["книга (book)", "стіл (table)", "вікно (window)"],
+        }
+    }
+    result = verify_exercises(content, plan)
+    vc = result.vocab_coverage
+    assert vc["plan_vocab_total"] == 3
+    assert vc["tested_in_exercises"] >= 1  # at least книга + стіл
+    assert "вікно" in vc["not_tested"]
+
+
 # --- format_verify_result ---
 
 

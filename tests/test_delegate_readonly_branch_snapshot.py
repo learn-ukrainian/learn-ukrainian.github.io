@@ -210,6 +210,51 @@ def test_snapshot_refuses_invalid_branch_before_fetch_or_success(review_repo, mo
     assert repo.snapshot()[:3] == before
 
 
+@pytest.mark.parametrize("branch", ["main", "master", "unsafe..branch", "feature", "  feature  "])
+def test_snapshot_branch_name_validation_is_subprocess_free(review_repo, monkeypatch, branch):
+    def refuse_subprocess(*args, **kwargs):
+        pytest.fail("branch-name validation must not run subprocesses")
+
+    monkeypatch.setattr(subprocess, "run", refuse_subprocess)
+    monkeypatch.setattr(subprocess, "Popen", refuse_subprocess)
+    if branch.strip() == "feature":
+        assert delegate._validate_branch_reuse_name(branch) == "feature"
+    else:
+        with pytest.raises(ValueError):
+            delegate._validate_branch_reuse_name(branch)
+
+
+@pytest.mark.parametrize("branch", ["feature", "  feature  "])
+def test_snapshot_valid_branch_dry_run_keeps_base_unresolved(review_repo, monkeypatch, branch):
+    repo, head = review_repo
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+    args = review_args(head, dry_run=True)
+    args.branch = branch
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    snapshot = repo.root / ".worktrees/dispatch/grok/snapshot-review"
+    record = json.loads(delegate._state_path("snapshot-review").read_text())
+    assert record["status"] == "dry_run"
+    assert record["cwd"] == record["worktree_path"] == str(snapshot)
+    assert record["worktree_base_sha"] is None
+    assert record["worktree_branch"] is None
+    assert record["worktree_reused"] is False
+    assert record["review_branch"] == "feature"
+    assert not snapshot.exists()
+    assert repo.launches == []
+    assert not any("fetch" in command[1:] for command in git_commands)
+    assert not any("worktree" in command and "add" in command for command in git_commands)
+
+
 @pytest.mark.parametrize("condition", ["clean", "dirty", "unattributed"])
 @pytest.mark.parametrize("explicit_path", [False, True])
 def test_direct_review_dry_run_plans_new_snapshot_without_touching_author(
@@ -372,6 +417,23 @@ def test_remote_moves_after_admission_refuses_before_provider_start(review_repo,
     assert record["worktree_branch"] is None
 
 
+@pytest.mark.parametrize("has_dispositions", [False, True], ids=["without", "with"])
+def test_live_review_record_carries_the_brief_warning(review_repo, capsys, has_dispositions):
+    """#10665: the launched review records the typed warning; the brief is never refused for it."""
+    repo, head = review_repo
+    brief = "Review the exact branch head.\n" + ("\n## Dispositions\n- follow_up: wording.\n" if has_dispositions else "")
+    args = review_args(head)
+    args.prompt = brief
+    assert delegate.cmd_dispatch(args) == 0
+    assert len(repo.launches) == 1
+    record = json.loads(delegate._state_path("snapshot-review").read_text())
+    warned = f"⚠ {delegate.REVIEW_BRIEF_NO_DISPOSITIONS}: " in capsys.readouterr().err
+    if has_dispositions:
+        assert not warned and "review_brief_warnings" not in record
+    else:
+        assert warned and record["review_brief_warnings"] == [delegate.REVIEW_BRIEF_NO_DISPOSITIONS]
+
+
 def test_write_branch_continuation_reuses_the_existing_attached_tree(review_repo):
     repo, head = review_repo
     author = repo.root / ".worktrees/dispatch/codex/author"
@@ -391,6 +453,29 @@ def test_write_branch_continuation_reuses_the_existing_attached_tree(review_repo
     assert record["worktree_reused"] is True
     assert record["worktree_base_sha"] == head
     assert author_state(repo, author) == before
+    assert len(repo.launches) == 1
+
+
+@pytest.mark.parametrize("pinned", [False, True])
+def test_ordinary_read_only_branch_continuation_keeps_attached_tree(review_repo, pinned):
+    repo, head = review_repo
+    target = repo.root / ".worktrees/dispatch/codex/continuation"
+    repo.git("worktree", "add", str(target), "feature")
+    before = author_state(repo, target)
+    args = _write_args(
+        task_id="continuation", mode="read-only", branch="feature", worktree=str(target),
+        pinned_head=head if pinned else None, prompt="Inspect the existing task checkout.",
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    record = json.loads(delegate._state_path("continuation").read_text())
+    assert record["worktree_path"] == record["cwd"] == str(target)
+    assert record["worktree_branch"] == "feature"
+    assert record["worktree_reused"] is True
+    assert record["worktree_base_sha"] == head
+    assert repo.git("-C", str(target), "symbolic-ref", "HEAD") == "refs/heads/feature"
+    assert author_state(repo, target) == before
     assert len(repo.launches) == 1
 
 
@@ -594,6 +679,18 @@ def test_snapshot_contained_symlink_uses_canonical_destination(
     if target_exists or dry_run:
         assert not any("fetch" in command[1:] for command in git_commands)
         assert not any("worktree" in command and "add" in command for command in git_commands)
+
+
+def test_snapshot_accepts_remote_without_local_branch(review_repo):
+    repo, head = review_repo
+    repo.git("branch", "-D", "feature")
+
+    assert delegate.cmd_dispatch(review_args(head)) == 0
+
+    snapshot = repo.root / ".worktrees/dispatch/grok/snapshot-review"
+    assert repo.git("-C", str(snapshot), "rev-parse", "HEAD") == head
+    assert repo.git("show-ref", "--verify", "refs/heads/feature", check=False) == ""
+    assert len(repo.launches) == 1
 
 
 @pytest.mark.parametrize("failure", ["missing-remote", "fetch-failure", "unresolved-commit"])

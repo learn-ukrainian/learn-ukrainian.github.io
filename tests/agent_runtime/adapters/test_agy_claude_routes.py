@@ -45,6 +45,13 @@ def build(tmp_path, model, mode="read-only", config=None):
     )
 
 
+@pytest.mark.parametrize("slug,label", zip(SLUGS, LABELS, strict=True))
+def test_exact_slug_and_display_label_resolve(slug, label):
+    adapter = agy.AgyAdapter()
+    assert adapter._resolve_model_flag(slug) == slug
+    assert adapter._resolve_model_flag(label) == slug
+
+
 @pytest.mark.parametrize("slug,label,backend", zip(SLUGS, LABELS, BACKEND_IDS, strict=True))
 def test_reported_forms_use_agy_slug_map(slug, label, backend):
     assert [agy.AgyAdapter.resolve_model_slug(value) for value in (slug, label, backend)] == [slug] * 3
@@ -337,6 +344,30 @@ def test_claude_reported_identity_fails_closed(tmp_path, slug, label, backend, f
         assert parsed.stderr_excerpt == "agy_model_event_mismatch"
     else:
         assert parsed.substitution is None
+
+
+@pytest.mark.parametrize("slug", SLUGS)
+@pytest.mark.parametrize("nested_matches", [True, False])
+def test_conflicting_init_model_values_fail_closed(tmp_path, slug, nested_matches):
+    plan, terminal = _identity_stream_plan(tmp_path, slug)
+    different = "gemini-3.8-flash-high"
+    init = {
+        "event": "init",
+        "init": {"model": slug if nested_matches else different},
+        "model": different if nested_matches else slug,
+    }
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, [init, terminal])),
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+    assert parsed.ok is False
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert parsed.stderr_excerpt == "agy_model_event_mismatch"
+    assert parsed.model_identity is None
+    assert parsed.substitution is None
 
 
 def mock_agy_provider(monkeypatch, tmp_path, runner, *, stdout, exit_kind="complete", version="1.4.0"):

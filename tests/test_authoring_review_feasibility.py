@@ -1325,6 +1325,36 @@ def test_a_pr_that_does_not_head_the_target_branch_binds_nothing(github, row, re
     assert str(unknown.value) == reason
 
 
+def test_undeterminable_review_base_is_unknown_authorship(boundary, github, capsys, repo, tasks):
+    repo.commit(OPUS)
+    repo.publish()
+    github.failure = "unavailable"
+    receipt = assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary("--branch", "feature", "--owned-path", "docs/a.md"),
+        delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+    )
+    assert receipt["head_branch"] == "feature" and "api.github.com" not in json.dumps(receipt)
+
+
+def test_adding_openai_to_an_anthropic_and_xai_branch_refuses(boundary, capsys, repo, tasks):
+    repo.commit(OPUS)
+    repo.commit(GROK)
+    repo.publish()
+    receipt = assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary("--branch", "feature", "--owned-path", "docs/a.md", writer=SOL),
+        delegate.AUTHORING_REVIEW_NO_ROUTE,
+    )
+    assert receipt["incoming_family"] == "openai"
+
+
 def test_budget_substitution_checks_the_substituted_writer(boundary, capsys, repo, tasks, monkeypatch):
     repo.commit(OPUS)
     repo.commit(GROK)
@@ -1503,6 +1533,21 @@ def test_branch_fix_writer_is_admitted_with_unknown_committed_author(
     assert repo.snapshot() == before and boundary.calls == []
 
 
+def test_dry_run_refusal_writes_nothing(boundary, capsys, repo, tasks):
+    repo.commit(OPUS)
+    repo.commit(SOL)
+    repo.commit(GROK)
+    repo.publish()
+    assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary("--branch", "feature", "--owned-path", "docs/a.md", "--dry-run"),
+        delegate.AUTHORING_REVIEW_NO_ROUTE,
+    )
+
+
 def assert_moved_refusal(rc, capsys, tasks):
     """A6: a moved head is refused like the initial refusals: exit 2, one JSON receipt line, no task record."""
     err = capsys.readouterr().err
@@ -1637,6 +1682,22 @@ def test_new_branch_enumerates_the_custom_base_it_starts_at_not_a_stale_local_co
     assert receipt["target"] == "new-branch" and receipt["creation_base"] == "custom"
     assert receipt["creation_sha"] == receipt["head_sha"] == tip
     assert receipt["existing_families"] == ["anthropic", "xai"] and receipt["incoming_family"] == "openai"
+
+
+def test_the_stale_custom_base_alone_would_have_been_feasible(repo, tasks):
+    """Control for reproduction 2: on the stale local copy the same writer and scope do have a reviewer."""
+    repo.publish("trunk", to="custom")
+    stale = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=repo.sha("origin/main"),
+        head_sha=repo.sha("origin/custom"),
+        task_root=tasks,
+        incoming_agent="codex",
+        incoming_model="gpt-6.1-sol",
+        owned_paths=(CODEX_ADAPTER,),
+    )
+    assert selected(stale, "critical") == "claude-opus-5-5"
 
 
 @pytest.mark.parametrize("mode", [(), ("--dry-run",)], ids=["dispatch", "dry-run"])
@@ -1792,6 +1853,22 @@ def test_a_detached_checkout_has_no_known_pr_and_refuses(boundary, capsys, repo,
     assert f"❌ {delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN}: the checkout has a detached HEAD" in err
     assert last_receipt(err)["target"] == "existing-worktree"
     assert repo.snapshot() == before and list(tasks.rglob("*")) == [] and boundary.calls == []
+
+
+def test_a_same_named_fork_pr_does_not_refuse_the_dispatch(
+    boundary, github, capsys, repo, tasks, monkeypatch, dry_run_telemetry
+):
+    """M6: a fork's PR from a branch also named ``feature`` is not this branch's PR; it must not block dispatch."""
+    repo.commit(OPUS)
+    head = repo.publish()
+    github.prs = [pr_row(9, "main", "c" * 40, fork=True)]
+    worktree = repo.root / "wt"
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
+    monkeypatch.setattr(delegate, "_ensure_worktree", lambda **_kwargs: (worktree, "feature", {"base_sha": head}))
+    with _admitted_host(monkeypatch):
+        rc, _ = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--dry-run")
+    assert rc == 0, capsys.readouterr().err
+    assert dry_run_admission(tasks)["review_base"]["source"] == "default-branch"
 
 
 def test_an_admitted_new_branch_is_created_at_the_frozen_creation_commit(boundary, capsys, repo, tasks, monkeypatch):
@@ -2014,6 +2091,17 @@ def test_main_target_rebase_onto_non_main_base_does_not_exclude_imported_authors
     assert receipt["rebase_onto"] == stacked and receipt["rebase_planned"] is True
     assert receipt["rebase_existing_families"] == ["anthropic", "openai", "xai"]
     assert MiniRepo(checkout).sha("HEAD") == head
+
+
+def test_rebase_still_refuses_forbidden_branch_authors(boundary, github, capsys, repo, tasks, monkeypatch):
+    checkout, _, _ = reused_main_target_worktree_behind_main(repo, github, main_trailer=None)
+    MiniRepo(checkout).commit(SOL, message="other branch author")
+    MiniRepo(checkout).commit(GROK, message="third branch author")
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        result = boundary("--worktree", "--owned-path", "docs/a.md")
+    receipt = assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_NO_ROUTE, reused=True)
+    assert receipt["existing_families"] == ["anthropic", "openai", "xai"]
 
 
 def test_rebase_preserves_main_side_protected_scope(boundary, github, capsys, repo, tasks, monkeypatch):
@@ -2298,6 +2386,39 @@ def test_a_main_merge_with_no_branch_commit_still_refuses(repo, tasks, monkeypat
         recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
 
 
+def test_github_sha_filter_uses_one_bounded_enumeration(repo, monkeypatch):
+    base = repo.sha("HEAD")
+    own = repo.commit(OPUS, message="branch author")
+    repo.git("checkout", "-q", "trunk")
+    later = repo.commit(SOL, path="src/app.py", message="later main")
+    calls: list[tuple] = []
+    real = recorder._facts_git
+
+    def spy(repo_root, args, **kwargs):
+        calls.append((args, kwargs.get("deadline"), kwargs.get("input_bytes")))
+        return real(repo_root, args, **kwargs)
+
+    monkeypatch.setattr(recorder, "_facts_git", spy)
+    assert recorder._shas_not_reachable_from(repo.root, [own, "not-a-sha"], None) == [own, "not-a-sha"]
+    assert calls == []
+
+    kept = recorder._shas_not_reachable_from(repo.root, [base, own, later, "not-a-sha", later], later)
+    assert len(calls) == 1
+    args, deadline, payload = calls[0]
+    assert args == ["rev-list", "--no-walk", "--stdin"]
+    assert deadline is not None
+    assert payload == f"{base}\n{own}\n{later}\n{later}\n^{later}\n".encode("ascii")
+    assert kept == [own, "not-a-sha"]
+
+    def timed_out(repo_root, args, **kwargs):
+        raise recorder.BranchFactsError(recorder.FACTS_AUTHORSHIP_UNKNOWN, "git rev-list timed out", timed_out=True)
+
+    monkeypatch.setattr(recorder, "_facts_git", timed_out)
+    with pytest.raises(recorder.BranchFactsError, match="timed out") as refused:
+        recorder._shas_not_reachable_from(repo.root, [own, base], later)
+    assert refused.value.timed_out
+
+
 @pytest.mark.parametrize(
     "spelling",
     ["main", "origin/main", "remotes/origin/main", "refs/remotes/origin/main", "refs/heads/main"],
@@ -2470,6 +2591,15 @@ def listing_with_authors(repo: MiniRepo, authors: dict[str, dict]) -> list[dict]
     return listing
 
 
+def test_agent_trailer_never_consults_github(repo, tasks, monkeypatch):
+    repo.commit(OPUS)
+    requested = serve_github_commits(monkeypatch, {})
+    fact = facts(repo, tasks)
+    assert [commit.source for commit in fact.commits] == ["trailer-model"]
+    assert fact.existing_families == {"anthropic"} and fact.app_bot_commits == ()
+    assert requested == []
+
+
 def test_verified_dependabot_branch_is_attributed_reviewed_and_recorded_without_a_model(
     repo, tasks, monkeypatch, tmp_path
 ):
@@ -2557,6 +2687,21 @@ def test_dispatch_admits_a_writer_onto_a_verified_dependabot_branch(
     assert admission["app_bot_commits"] == [head] and admission["applicable"] is True
     assert admission["reviewer"]["family"] != "anthropic" and admission["head_sha"] == head
     assert repo.snapshot() == before and boundary.calls == []
+
+
+def test_dispatch_refuses_a_writer_onto_an_untrailered_human_branch(boundary, capsys, repo, tasks, monkeypatch):
+    head = repo.commit(None, message=BUMP)
+    repo.publish()
+    requested = serve_github_commits(monkeypatch, {head: human_commit(head)})
+    receipt = assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary("--branch", "feature", "--owned-path", "docs/a.md"),
+        delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+    )
+    assert "app_bot_commits" not in receipt and requested == [head]
 
 
 def test_human_commit_without_trailer_keeps_its_refusal(repo, tasks, monkeypatch, tmp_path):

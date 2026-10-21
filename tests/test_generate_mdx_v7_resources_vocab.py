@@ -38,6 +38,35 @@ def test_vocab_items_to_components_emits_flashcards_and_vocab_card():
     assert '"example":"Я прокидаюся о сьомій."' in mdx
 
 
+def test_format_resources_for_mdx_uses_author_description_and_role_icon():
+    mdx = format_resources_for_mdx({
+        "books": [
+            {
+                "title": "Караман Grade 10, p.176",
+                "source_ref": "Караман Grade 10, p.176",
+                "author": "Караман",
+                "pages": "176",
+                "description": "Reflexive verbs with -ся.",
+                "role": "textbook",
+            },
+            {
+                "title": "Wikipedia overview",
+                "source_ref": "Ukrainian Wikipedia",
+                "author": "Вікіпедія",
+                "description": "Background article.",
+                "role": "wiki",
+            },
+        ],
+    })
+
+    assert "by Unknown" not in mdx
+    assert "📚 Books" in mdx
+    assert "🔗 Online resources" in mdx
+    assert "📚 **Караман Grade 10, p.176**" in mdx
+    assert "Reflexive verbs with -ся." in mdx
+    assert "🔗 **Wikipedia overview**" in mdx
+
+
 def test_format_resources_for_mdx_textbook_shows_title_not_source_ref_path():
     """B1 regression: a textbook citation must render its human `title`, never its
     internal `source_ref` repo path; a public `url` makes it a clickable link."""
@@ -57,3 +86,187 @@ def test_format_resources_for_mdx_textbook_shows_title_not_source_ref_path():
         "[9 клас: підрядні обставинні речення]"
         "(https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html)"
     ) in mdx
+
+
+def test_format_resources_for_mdx_textbook_without_url_shows_bold_title():
+    mdx = format_resources_for_mdx({
+        "books": [
+            {
+                "title": "11 клас: пунктуація",
+                "role": "textbook",
+                "source_ref": "docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt",
+            },
+        ],
+    })
+    assert "docs/references/textbooks-txt" not in mdx
+    assert "📚 **11 клас: пунктуація**" in mdx
+
+
+def test_format_resources_for_mdx_groups_mixed_roles_with_icons():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "Караман Grade 10, p.176",
+            "author": "Караман",
+            "pages": "176",
+            "description": "Reflexive verbs with -ся.",
+            "role": "textbook",
+        },
+        {
+            "title": "Morning routine clip",
+            "url": "https://www.youtube.com/watch?v=abc12345678",
+            "channel": "Speak Ukrainian",
+            "role": "youtube",
+        },
+        {
+            "title": "Grammar documentary",
+            "url": "https://example.com/video",
+            "description": "Documentary excerpt.",
+            "role": "video",
+        },
+        {
+            "title": "Morning vocabulary blog",
+            "url": "https://example.com/blog",
+            "description": "Blog post.",
+            "role": "blog",
+        },
+        {
+            "title": "Audio drill",
+            "url": "https://example.com/audio",
+            "description": "Pronunciation practice.",
+            "role": "audio",
+        },
+        {
+            "title": "Wikipedia article",
+            "url": "https://uk.wikipedia.org/wiki/Ранок",
+            "role": "wiki",
+        },
+    ])
+
+    assert "📚 Books" in mdx
+    assert "📺 Videos" in mdx
+    assert "📝 Articles" in mdx
+    assert "🎧 Audio" in mdx
+    assert "🔗 Online resources" in mdx
+    assert "📚 **Караман Grade 10, p.176**" in mdx
+    assert "📺 [Morning routine clip](https://www.youtube.com/watch?v=abc12345678)" in mdx
+    assert "🎥 [Grammar documentary](https://example.com/video)" in mdx
+    assert "📝 [Morning vocabulary blog](https://example.com/blog)" in mdx
+    assert "🎧 [Audio drill](https://example.com/audio)" in mdx
+    assert "🔗 [Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx
+
+
+def test_format_resources_for_mdx_filters_internal_wiki_references():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "Wiki: pedagogy/a1/sounds-letters-and-hello, locked 2026-04-23",
+            "url": "wiki/pedagogy/a1/sounds-letters-and-hello.md",
+            "notes": "AI-facing pedagogical brief.",
+            "role": "wiki",
+        },
+        {
+            "title": "Wikipedia article",
+            "url": "https://uk.wikipedia.org/wiki/Ранок",
+            "role": "wiki",
+        },
+    ])
+
+    assert "pedagogy/a1/sounds-letters-and-hello" not in mdx
+    assert "AI-facing pedagogical brief" not in mdx
+    assert "[Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx
+
+
+def test_format_resources_for_mdx_preserves_parenthesized_titles():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "ULP: Genitive Case (Родовий відмінок)",
+            "url": "https://www.ukrainianlessons.com/genitive-case/",
+            "notes": "Learner-facing overview.",
+            "role": "article",
+        },
+    ])
+
+    assert "[ULP: Genitive Case (Родовий відмінок)]" in mdx
+
+
+def test_format_resources_for_mdx_strips_pipeline_metadata_from_public_text():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "Захарійчук Grade 1 (chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024)",
+            "source_ref": "Knowledge Packet anchor S1 (chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024): Захарійчук Grade 1",
+            "pages": "24",
+            "notes": (
+                "writer telemetry retrieved chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024\n"
+                "Ранкова рутина у підручнику."
+            ),
+            "packet_chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0024",
+            "role": "textbook",
+        },
+        {
+            "title": "Morning routine article (wiki_query_id: wiki-123)",
+            "url": "https://example.com/morning",
+            "match_reason": "retrieved chunk_id: wiki-123",
+            "description": "Background article.",
+            "wiki_query_id": "wiki-123",
+            "role": "article",
+        },
+    ])
+
+    assert "Захарійчук Grade 1, p. 24" in mdx
+    assert "Ранкова рутина у підручнику." in mdx
+    assert "[Morning routine article](https://example.com/morning)" in mdx
+    assert "Background article." in mdx
+    assert "chunk_id" not in mdx
+    assert "retrieved chunk" not in mdx
+    assert "writer telemetry" not in mdx
+    assert "wiki_query_id" not in mdx
+    assert "vesum_query_id" not in mdx
+
+
+def test_format_resources_for_mdx_strips_build_speak_notes_from_public_text():
+    resources = [
+        {
+            "title": "Morning routine article",
+            "url": "https://example.com/morning",
+            "notes": (
+                "Plan reference; Used only as grounding for a simple daily plan. "
+                "No Grade 1 blockquote surfaced in module.md. "
+                "chunk_id:abc123 surfaced in module.md"
+            ),
+            "role": "article",
+        },
+    ]
+
+    for is_ukrainian_forced in (False, True):
+        mdx = format_resources_for_mdx(resources, is_ukrainian_forced=is_ukrainian_forced)
+
+        assert "[Morning routine article](https://example.com/morning)" in mdx
+        assert "> - 📄 [Morning routine article](https://example.com/morning)" in mdx
+        assert "Plan reference" not in mdx
+        assert "Used only as grounding" not in mdx
+        assert "No Grade 1 blockquote surfaced" not in mdx
+        assert "surfaced in module.md" not in mdx
+        assert "chunk_id" not in mdx
+
+
+def test_youtube_url_without_role_is_a_video_not_a_book():
+    mdx = format_resources_for_mdx([
+        {"title": "Alphabet song", "url": "https://www.youtube.com/watch?v=abc12345678"},
+        {"title": "Short clip", "url": "https://youtu.be/abc12345678"},
+        {"title": "Караман Grade 10", "author": "Караман", "role": "textbook"},
+    ])
+
+    assert "📺 Videos" in mdx
+    books = mdx.split("📺 Videos")[0]  # everything filed above the Videos group
+    assert "Alphabet song" not in books
+    assert "Short clip" not in books
+    assert "📺 [Alphabet song](https://www.youtube.com/watch?v=abc12345678)" in mdx
+    assert "📺 [Short clip](https://youtu.be/abc12345678)" in mdx
+
+
+def test_youtube_url_in_legacy_books_bucket_without_role_is_a_video():
+    from scripts.generate_mdx.resources import _resource_role
+
+    assert _resource_role({"url": "https://youtube.com/watch?v=x"}, "books") == "youtube"
+    assert _resource_role({"url": "https://m.youtube.com/watch?v=x"}) == "youtube"
+    assert _resource_role({"url": "https://example.com/youtube.com"}) == "textbook"
+    assert _resource_role({"url": "https://example.com/a", "role": "textbook"}) == "textbook"

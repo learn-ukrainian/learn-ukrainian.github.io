@@ -249,6 +249,15 @@ def test_pdf_hash_mismatch_fails_closed(tmp_path: Path, monkeypatch: pytest.Monk
         _freeze(inputs, tmp_path / "out")
 
 
+def test_retrieval_provenance_fails_closed_before_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    inputs = _inputs(tmp_path, monkeypatch)
+    inputs["pravopys_2026_retrieved_at"] = "2026-08-05"
+    output = tmp_path / "out"
+    with pytest.raises(freezer.FreezeError, match="retrieval time must be canonical UTC"):
+        _freeze(inputs, output)
+    assert not output.exists() or not list(output.iterdir())
+
+
 def test_database_drift_fails_against_frozen_count(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     inputs = _inputs(tmp_path, monkeypatch)
     _freeze(inputs, tmp_path / "first")

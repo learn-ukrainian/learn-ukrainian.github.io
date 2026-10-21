@@ -84,6 +84,26 @@ def test_empty_groups_and_rule_boundaries():
 
 
 @pytest.mark.parametrize(
+    "text,expected",
+    [
+        (
+            "SYNTHETIC rule conditions: a) in sentences with direct speech; b) in another condition.",
+            ["in sentences with direct speech", "in another condition"],
+        ),
+        (
+            "SYNTHETIC combinations: 1) ?! (label), !? (label); 2) ...?.",
+            ["?! (label), !? (label)", "...?"],
+        ),
+        ("SYNTHETIC examples: 1) FIRST, SECOND; 2) THIRD, FOURTH.", ["FIRST, SECOND", "THIRD, FOURTH"]),
+    ],
+)
+def test_numbered_rule_conditions_and_multi_example_groups_are_withheld(text, expected):
+    decisions = bindings.example_boundaries(text)
+    assert [text[slice(*span)] for span, _ in decisions] == expected
+    assert all(reason == "example_boundary_ambiguous" for _, reason in decisions)
+
+
+@pytest.mark.parametrize(
     "body",
     [
         "FIRST, SECOND, THIRD (A. Writer)",

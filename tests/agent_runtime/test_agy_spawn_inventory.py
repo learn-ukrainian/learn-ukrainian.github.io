@@ -308,3 +308,122 @@ def test_every_agy_start_has_a_current_inventory_row():
     assert not candidates & NON_CANDIDATES
     assert {status for status, _ in SPAWN_INVENTORY.values()} == STATUSES
     _assert_inventory(ROOT, candidates, SPAWN_INVENTORY, GENERIC_HELPERS)
+
+
+DETECTED_CONTROLS = [
+    pytest.param(".py", 'subprocess.run(["agy", "--help"])', id="direct-argv"),
+    pytest.param(".py", 'binary = shutil.which("agy")\nsubprocess.run([binary])', id="which-bound-argv"),
+    pytest.param(".py", "def launch(agy_bin):\n subprocess.Popen([agy_bin])", id="agy-bin-parameter"),
+    pytest.param(".py", 'binary = shutil.which("agy")\nalias = binary\nsubprocess.run([alias])', id="which-alias-argv"),
+    pytest.param(".py", 'if agent == "agy":\n subprocess.run([cmd[0]])', id="guarded-cmd-element"),
+    pytest.param(".py", 'def launch(binary):\n subprocess.run([binary])\nlaunch("agy")', id="literal-helper-argument"),
+    pytest.param(".py", 'argv = ["agy"]\ndef closure():\n subprocess.run(argv)', id="closure-bound-argv"),
+    pytest.param(
+        ".mjs",
+        'import {spawn} from "node:child_process";\nconst argv = ["agy"];\nspawn(argv[0], argv.slice(1));',
+        id="mjs-bound-argv",
+    ),
+    pytest.param(".sh", 'cmd=(agy --help)\nexec "${cmd[@]}"', id="shell-array-exec"),
+]
+
+
+@pytest.mark.parametrize("suffix,source", DETECTED_CONTROLS)
+def test_synthetic_controls_are_unclassified(tmp_path, suffix, source):
+    relative = f"scripts/synthetic{suffix}"
+    path = tmp_path / relative
+    path.parent.mkdir()
+    path.write_text(source, encoding="utf-8")
+    candidates = _candidate_files(tmp_path, [relative])
+    assert candidates == {relative}
+    with pytest.raises(AssertionError, match=r"unclassified candidates:.*scripts/synthetic"):
+        _assert_inventory(tmp_path, candidates, {}, frozenset())
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'import subprocess as sp\nsp.run(["/bin/agy"])',
+        'from subprocess import run as launch\nlaunch(["agy"])',
+        'import os as system\nsystem.execv("agy", [])',
+        'from os import spawnv as launch\nlaunch(0, "agy", [])',
+        'import pty\npty.spawn(["agy"])',
+        'import asyncio as aio\naio.create_subprocess_exec("agy")',
+        'from asyncio import create_subprocess_shell as launch\nlaunch("agy")',
+    ],
+)
+def test_python_process_apis(source):
+    assert _python_facts(source) == (True, True, True)
+
+
+@pytest.mark.parametrize(
+    "suffix,source",
+    [
+        (".py", "import subprocess\nAGY_BINARY = None"),
+        (".py", "import subprocess\ndef use(prefix_agy_binary_suffix):\n pass"),
+        (".py", 'import subprocess\nif enabled:\n "agy"'),
+        (".sh", 'exec "/bin/agy" # agy-cli'),
+        (".js", 'const {spawn} = require("child_process"); spawn("/bin/agy");'),
+        (".js", 'child_process.spawn("agy");'),
+    ],
+)
+def test_synthetic_candidate_tokens(tmp_path, suffix, source):
+    relative = f"scripts/synthetic{suffix}"
+    path = tmp_path / relative
+    path.parent.mkdir()
+    path.write_text(source, encoding="utf-8")
+    assert _candidate_files(tmp_path, [relative, relative]) == {relative}
+
+
+@pytest.mark.parametrize(
+    "defect,match",
+    [
+        ("unknown-status", "unknown status"),
+        ("empty-reason", "empty reason"),
+        ("disappeared-candidate", "no longer candidates"),
+        ("missing-helper", "disappeared generic helper"),
+        ("helper-without-start", "no longer defines a process start"),
+        ("helper-status", "generic-helper row mismatch"),
+    ],
+)
+@pytest.mark.parametrize("suffix", [".py", ".sh"])
+def test_inventory_refuses_invalid_rows_and_helpers(tmp_path, defect, match, suffix):
+    relative = f"scripts/helper{suffix}"
+    path = tmp_path / relative
+    path.parent.mkdir()
+    source = 'launch() {\n exec "$@"\n}' if suffix == ".sh" else "def launch(binary):\n subprocess.run([binary])"
+    path.write_text(source, encoding="utf-8")
+    candidates = {relative}
+    helpers = frozenset()
+    inventory = {relative: ("probe-exempt", "Version check.")}
+    if defect == "unknown-status":
+        inventory[relative] = ("unknown", "Reason.")
+    elif defect == "empty-reason":
+        inventory[relative] = ("probe-exempt", " ")
+    elif defect == "disappeared-candidate":
+        candidates.clear()
+    else:
+        helpers = frozenset({relative})
+        if defect != "helper-status":
+            inventory[relative] = ("generic-helper", "Callers are classified by their own rows.")
+        if defect == "missing-helper":
+            path.unlink()
+        elif defect == "helper-without-start":
+            source = 'printf "exec agy"\n# exec "$@"' if suffix == ".sh" else "import subprocess"
+            path.write_text(source, encoding="utf-8")
+    with pytest.raises(AssertionError, match=match):
+        _assert_inventory(tmp_path, candidates, inventory, helpers)
+
+
+@pytest.mark.parametrize("suffix", [".py", ".sh"])
+def test_generic_helper_without_agy_token_is_still_required(tmp_path, suffix):
+    relative = f"scripts/helper{suffix}"
+    path = tmp_path / relative
+    path.parent.mkdir()
+    source = 'launch() {\n exec "$@"\n}' if suffix == ".sh" else "def launch(binary):\n subprocess.run([binary])"
+    path.write_text(source, encoding="utf-8")
+    candidates = _candidate_files(tmp_path, [relative])
+    assert candidates == set()
+    row = {relative: ("generic-helper", "Callers are classified by their own rows.")}
+    _assert_inventory(tmp_path, candidates, row, frozenset({relative}))
+    with pytest.raises(AssertionError, match="unclassified candidates"):
+        _assert_inventory(tmp_path, candidates, {}, frozenset({relative}))

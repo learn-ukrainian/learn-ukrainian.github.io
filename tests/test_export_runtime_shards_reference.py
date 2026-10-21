@@ -15,6 +15,7 @@ import pytest
 from scripts.atlas import export_runtime_shards as exporter
 from scripts.atlas.export_runtime_shards import (
     EntryReplay,
+    ExportError,
     compress_stream_bounded,
     compute_data_version,
     gzip_bytes,
@@ -207,6 +208,25 @@ def test_stream_compression_matches_one_shot_gzip(level: int) -> None:
         source = lambda chunks=chunks: chunks  # noqa: E731
         assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected)) is not None
         assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected) - 1) is None
+
+
+def test_oversized_entry_leaf_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=9, entry_max=300, search_max=524_288)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", entry_max_gzip_bytes=300)
+    assert str(actual.value) == str(expected.value)
+    assert "single entry record exceeds" in str(actual.value)
+    assert not (tmp_path / "out" / "atlas" / "current.json").exists()
+
+
+def test_unsplittable_search_shard_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=9, entry_max=1_048_576, search_max=150)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", search_max_gzip_bytes=150)
+    assert str(actual.value) == str(expected.value)
+    assert "cannot split" in str(actual.value)
 
 
 def test_failed_first_export_publishes_nothing(edge_db: Path, tmp_path: Path, monkeypatch) -> None:

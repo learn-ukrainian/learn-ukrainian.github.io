@@ -341,6 +341,13 @@ def test_synonym_collision_fires() -> None:
     assert "SYNONYM_DISTRACTOR" in _issue_ids(evidence)
 
 
+def test_clean_lesson_has_no_findings() -> None:
+    report = run_fixtures(FIXTURE_FILE)
+    clean = _by_id(report)["clean-b1-lesson"]
+    assert clean["actual_verdict"] == "PASS"
+    assert all_findings(clean["evidence"]) == []
+
+
 def test_proper_noun_and_capitalized_name_not_invented() -> None:
     """Invented-form must not flag place names / names (Львів-type)."""
     # Ensure these are ABSENT from controlled VESUM for this assertion.
@@ -508,6 +515,19 @@ def test_adapter_excludes_internal_fields_and_keeps_learner_surface(tmp_path: Pa
     assert meta["rule_set"] == RULE_SET_ID
 
 
+def test_adapter_content_hash_stable() -> None:
+    lesson = {
+        "title": "Стабільний",
+        "level": "A2",
+        "anchor": {"text": "Ми вчимося."},
+        "blocks": [],
+    }
+    a = adapt_lesson_json(lesson, slug="stable")
+    b = adapt_lesson_json(lesson, slug="stable")
+    assert a.content_hash == b.content_hash
+    assert a.level == "a2"
+
+
 def test_harness_rule_set_dispatch_selects_hramatka(tmp_path: Path) -> None:
     """Curriculum harness must route rule_set=hramatka to the separate module."""
     lesson = {
@@ -640,6 +660,35 @@ def test_curriculum_phrase_rules_do_not_rubber_stamp_hramatka_faults(tmp_path: P
     assert "RUSSICISM_DETECTED" in _issue_ids(hramatka) or "RUSSIAN_SHADOW_RUSSICISM" in _issue_ids(
         hramatka
     )
+
+
+def test_stripped_cefr_and_synonym_tables_mark_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Real CEFR / synonym SQL against a table-less DB records detector_unavailable."""
+    stripped = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(stripped))
+    conn.execute("CREATE TABLE unrelated (id INTEGER)")
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setattr(hq, "_SOURCES_DB_OVERRIDE", stripped)
+
+    unavailable: dict[str, str] = {}
+    token = hq._ACTIVE_UNAVAILABLE.set(unavailable)
+    try:
+        assert hq._cefr_level_for("слово") is None
+        assert hq._synonym_lemmas("великий") == set()
+        assert hq._antonenko_title_hit("приймати участь") == []
+    finally:
+        hq._ACTIVE_UNAVAILABLE.reset(token)
+
+    assert "puls_cefr" in unavailable
+    assert "ukrajinet_synonyms" in unavailable
+    assert "antonenko_style_guide" in unavailable
+    for name in ("puls_cefr", "ukrajinet_synonyms", "antonenko_style_guide"):
+        assert "no such table" in unavailable[name].casefold()
 
 
 def test_vesum_unavailable_does_not_flood_invented_forms(

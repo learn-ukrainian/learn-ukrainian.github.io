@@ -330,6 +330,28 @@ def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> No
     assert "would claim lease" not in result.stdout
 
 
+@pytest.mark.parametrize(
+    "arguments",
+    (("--help",), ("--governor", "--help")),
+)
+def test_codex_driver_help_succeeds_before_or_after_governor(arguments: tuple[str, ...]) -> None:
+    result = run_launcher("start-codex-driver.sh", *arguments)
+    assert result.returncode == 0, result.stderr
+    assert "Usage:" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    (("not-a-selector",), ("--governor", "not-a-selector")),
+)
+def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
+    arguments: tuple[str, ...],
+) -> None:
+    result = run_launcher("start-codex-driver.sh", *arguments)
+    assert result.returncode == 2
+    assert "unknown lane selector 'not-a-selector'" in result.stderr
+
+
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
     result = run_launcher("start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol", "--verbose", "--foo=bar")
     assert result.returncode == 0, result.stderr

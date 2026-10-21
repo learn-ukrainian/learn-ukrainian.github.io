@@ -248,6 +248,13 @@ def test_resumed_transcript_cannot_supply_previous_trigger(tmp_path, recorded_tr
     assert attempt["denied_tool_name"] is None
 
 
+def test_parent_traversal_is_classified_outside(tmp_path, recorded_transcript):
+    plan, _ = denial_plan(tmp_path, recorded_transcript, "../outside.txt")
+    attempt = record(parse(plan))
+    assert attempt["permission_target"] == "outside:repo-root"
+    assert attempt["via_symlink"] is False
+
+
 @pytest.mark.parametrize("direction", ["outward", "inward", "within", "parent"])
 def test_symlink_preserves_requested_classification(tmp_path, recorded_transcript, direction):
     plan, events = denial_plan(tmp_path, recorded_transcript, "evidence.txt")
@@ -419,6 +426,24 @@ def test_cli_notice_target_fills_missing_transcript_target(tmp_path, recorded_tr
     assert "private?q=x" not in json.dumps(attempt) + result.stderr_excerpt
 
 
+@pytest.mark.parametrize("target", ["transcript.txt", "https://fixture.internal/private"])
+def test_matching_cli_notice_preserves_transcript_target_sanitization(tmp_path, recorded_transcript, target):
+    kind = "read_url" if "://" in target else "read_file"
+    tool, arg = ("view_file", "AbsolutePath") if kind == "read_file" else ("read_url_content", "Url")
+    plan, _ = denial_plan(tmp_path, recorded_transcript, target, tool=tool, arg=arg)
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial(f"{kind}({target})"),
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+    attempt = record(result)
+    assert attempt["permission_target"] == ("workspace:transcript.txt" if kind == "read_file" else "unknown")
+    assert attempt["permission_target_unknown_reason"] == (None if kind == "read_file" else "url_host_private")
+    assert attempt["denied_tool_name"] == tool
+
+
 @pytest.mark.parametrize(
     "host",
     [
@@ -556,6 +581,23 @@ def test_deep_argument_on_other_call_does_not_block_notice_attribution(tmp_path)
     assert attempt["permission_target_unknown_reason"] is None
 
 
+@pytest.mark.parametrize("concrete_notice", [False, True])
+def test_deep_argument_on_attributed_call_stays_uncertain(tmp_path, concrete_notice):
+    planner = _planner(("view_file", "AbsolutePath", "unused"))
+    planner["tool_calls"][0]["args"]["AbsolutePath"] = "[" * 20000
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(x.txt)" if concrete_notice else "read_file"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, [planner]),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] == (None if concrete_notice else "view_file")
+    assert attempt["permission_target"] == ("workspace:x.txt" if concrete_notice else "unknown")
+    assert attempt["permission_target_unknown_reason"] == ("trigger_ambiguous" if concrete_notice else "target_missing")
+
+
 def test_leftover_without_current_turn_results_is_attributed(tmp_path):
     events = [
         _planner(("list_dir", "DirectoryPath", "done-dir")),
@@ -647,6 +689,24 @@ def test_cli_notice_attributes_only_one_matching_call(tmp_path, notice_target):
     assert attempt["permission_target_unknown_reason"] == (None if notice_target == "x.txt" else "trigger_ambiguous")
 
 
+def test_cli_notice_without_matching_call_keeps_target_and_ambiguity(tmp_path):
+    events = [
+        _planner(("list_dir", "DirectoryPath", "done-dir")),
+        _result("DONE", "Directory listing completed."),
+    ]
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(really-denied.txt)"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, events),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "workspace:really-denied.txt"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
 def _git_metadata_chain(tmp_path):
     """git refused by command(*), then the worktree pointer, then primary Git metadata."""
     workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
@@ -731,6 +791,19 @@ def test_denial_with_two_matching_calls_is_ambiguous(tmp_path, same_tool, comple
         _planner(("read_file", "Path", "actually-denied.txt"), (*second, "actually-denied.txt")),
         *([_result("DONE", "Earlier read completed.")] if completed_first else []),
         _result("ERROR", _headless_read_denial("actually-denied.txt")),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+@pytest.mark.parametrize("reverse_results", [False, True])
+def test_two_headless_denials_are_ambiguous(tmp_path, reverse_results):
+    targets = ["first.txt", "second.txt"]
+    events = [
+        _planner(("read_file", "Path", targets[0]), ("view_file", "AbsolutePath", targets[1])),
+        *[_result("ERROR", _headless_read_denial(target)) for target in targets[:: -1 if reverse_results else 1]],
     ]
     attempt = record(parse(review_plan(tmp_path, events)))
     assert attempt["denied_tool_name"] is None
@@ -828,6 +901,24 @@ def test_malformed_transcript_status_stays_typed_unknown(tmp_path, status, event
     assert bound.malformed_status_lines == 1
     details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
     assert details["transcript_unreadable_lines"] == 0
+    assert details["transcript_malformed_status_lines"] == 1
+
+
+def test_malformed_status_and_unreadable_lines_are_counted_separately(tmp_path):
+    plan = review_plan(tmp_path, [_planner(("read_file", "Path", "evidence.txt")), _result(None, "Bad status.")])
+    transcript = agy._transcript_path_from_plan(plan)
+    with transcript.open("ab") as handle:
+        handle.write(b"\n{truncated\n17\n\xff\n")
+    bound = agy._invocation_transcript(plan)
+    assert bound.unreadable_lines == 3
+    assert bound.malformed_status_lines == 1
+    result = parse(plan)
+    attempt = record(result)
+    assert attempt["permission_target_unknown_reason"] == "transcript_corrupt"
+    assert attempt["denied_tool_name"] is None
+    assert attempt["evidence_complete"] is False
+    details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
+    assert details["transcript_unreadable_lines"] == 3
     assert details["transcript_malformed_status_lines"] == 1
 
 

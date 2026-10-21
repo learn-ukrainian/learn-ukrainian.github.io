@@ -26,6 +26,20 @@ title: fixture
     return path
 
 
+def test_wordcount_passes_at_template_floor(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    monkeypatch.setattr(check_dossier_wordcount, "PROJECT_ROOT", tmp_path)
+    dossier = _write_dossier(tmp_path, "passing-fixture", 1200)
+
+    assert check_dossier_wordcount.main(["--paths", str(dossier)]) == 0
+
+    output = capsys.readouterr().out
+    assert "docs/research/bio/passing-fixture.md" in output
+    assert "1200   1200  PASS" in output
+    assert "All checked dossiers meet the 1200-word floor." in output
+
+
 def test_non_dossier_research_subdirs_are_exempt(
     tmp_path: Path, monkeypatch, capsys
 ) -> None:

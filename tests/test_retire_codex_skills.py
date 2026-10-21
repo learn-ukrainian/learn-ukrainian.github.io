@@ -193,6 +193,20 @@ def test_open_file_descriptor_write_after_success_survives(repo: Path) -> None:
     assert retained.read_bytes() == b"Late writer content"
 
 
+def test_open_file_descriptor_write_during_capture_survives_with_error(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    original = migration.rename_exclusive
+    with (repo / ".codex/skills/example/SKILL.md").open("r+b", buffering=0) as writer:
+        def capture_then_write(*args: object) -> None:
+            original(*args)
+            writer.seek(0)
+            writer.write(b"Concurrent writer content")
+            writer.truncate()
+
+        monkeypatch.setattr(migration, "rename_exclusive", capture_then_write)
+        assert migration.migrate(repo, "apply") == 1
+    assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == b"Concurrent writer content"
+
+
 @pytest.mark.parametrize("component", [".codex", ".codex/skills", ".codex/skills/example"])
 @pytest.mark.parametrize("during_capture", [False, True])
 def test_symlink_swaps_never_touch_external_victim(

@@ -78,6 +78,16 @@ def test_module_by_slug_compact_default(monkeypatch):
     assert "phases" not in body
 
 
+def test_module_by_slug_404_on_unknown_slug(monkeypatch):
+    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
+    monkeypatch.setattr(state_router, "LEVELS", fake_levels)
+    monkeypatch.setattr(state_router, "get_plan_slugs", lambda _t, *args, **kwargs: [(1, "one")])
+
+    resp = client.get("/api/state/module/a1/slug/nope")
+    assert resp.status_code == 404
+    assert "not found" in resp.json()["error"]
+
+
 # ---------------------------------------------------------------------
 # /api/artifacts/{track}/{slug}/files
 # ---------------------------------------------------------------------
@@ -172,6 +182,27 @@ def test_review_snapshot_flags_empty_findings_with_high_score(tmp_path, monkeypa
     assert body["main_review"]["findings_count"] == 0
     assert body["main_review"]["empty_findings_flag"] is True
     assert body["any_empty_findings_flag"] is True
+
+
+def test_review_snapshot_no_flag_when_low_score_or_findings(tmp_path, monkeypatch):
+    proj = tmp_path
+    base = proj / "curriculum" / "l2-uk-en" / "a1"
+    (base / "review").mkdir(parents=True, exist_ok=True)
+    (base / "review" / "hi-review.md").write_text(
+        "# Issue #1\nCorrect this.\n**Overall Score:** 9.1/10\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        artifacts_router,
+        "LEVELS",
+        [{"id": "a1", "path": "l2-uk-en/a1"}],
+    )
+    _set_test_ctx(proj, monkeypatch)
+
+    body = client.get("/api/artifacts/a1/hi/review-snapshot").json()
+    assert body["main_review"]["findings_count"] == 1
+    assert body["main_review"]["empty_findings_flag"] is False
 
 
 def test_review_snapshot_does_not_pick_final_review_as_main(tmp_path, monkeypatch):

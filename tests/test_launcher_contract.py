@@ -121,6 +121,44 @@ def run_launcher(
     return result
 
 
+def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) -> None:
+    """Keep the real startup deploy and assert its actual output, not a stub."""
+    checkout = tmp_path / "checkout with spaces"
+    copy_interactive_launcher_checkout(checkout)
+    _install_claude_usage_fixture(checkout)
+    install_scope_sandbox(checkout)
+    binary = tmp_path / "bin" / "claude"
+    binary.parent.mkdir()
+    binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
+    binary.chmod(0o755)
+    result = run_launcher(
+        "start-claude.sh",
+        dry_run=False,
+        root=checkout,
+        env={
+            "PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+            "HOME": str(tmp_path / "home"),
+            "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
+        },
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Agent extensions deployed (agents:deploy)" in result.stdout
+    assert f"provider cwd={checkout}" in result.stdout
+    sources = checkout / "agents_extensions/shared/skills"
+    deployed = checkout / ".agents/skills"
+    expected = {path.relative_to(sources) for path in sources.rglob("*") if path.is_file()}
+    actual = {path.relative_to(deployed) for path in deployed.rglob("*") if path.is_file()}
+    assert actual == expected
+    assert any(path.name == "SKILL.md" for path in actual)
+    for relative in expected:
+        assert (deployed / relative).read_bytes() == (sources / relative).read_bytes()
+    for name in ("session-setup.sh", "post-compact.sh"):
+        canonical = (checkout / "agents_extensions/shared/hooks" / name).read_bytes()
+        for destination in (".claude", ".codex", ".agent"):
+            assert (checkout / destination / "hooks" / name).read_bytes() == canonical
+    assert not (checkout / ".codex/skills").exists()
+
+
 @pytest.mark.parametrize("name", PUBLIC)
 def test_help_is_machine_usable(name: str) -> None:
     result = run_launcher(name, "--help")
@@ -192,6 +230,13 @@ def test_driver_help_lists_force(name: str) -> None:
     assert result.returncode == 0, result.stderr
     assert "--force" in result.stdout
     assert "Attributed operator release" in result.stdout
+
+
+def test_driver_dry_run_force_announces_release_then_claim() -> None:
+    result = run_launcher("start-grok-driver.sh", "--epic", "infra", "--force")
+    assert result.returncode == 0, result.stderr
+    assert "would force-release any live holder on epic:" in result.stdout
+    assert "then claim" in result.stdout
 
 
 def test_driver_requires_certified_model_and_valid_epic() -> None:
@@ -854,6 +899,54 @@ def test_provider_nonzero_with_close_failure_keeps_provider_exit_and_classifies(
     assert close_attempts.read_text(encoding="utf-8").strip() == "1"
     assert "close_failure_reason=lease-fenced" in result.stderr
     assert "`id`" not in (result.stdout + result.stderr)
+
+
+@pytest.mark.parametrize(
+    ("termination_signal", "expected_exit"),
+    ((signal.SIGTERM, 143), (signal.SIGHUP, 129)),
+)
+def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
+    tmp_path: Path,
+    termination_signal: signal.Signals,
+    expected_exit: int,
+) -> None:
+    """#671: a forwarded TERM/HUP exit code must not become the close failure's."""
+    signal_marker = tmp_path / "signal-received"
+    child_ready = tmp_path / "child-ready"
+    forward_ready = tmp_path / "forward-ready"
+    hostile_stderr = "session-supervisor: Monitor API unreachable; no remote claim was made\n$(evil)\n"
+    launcher, close_attempts, close_marker, _child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=_blocking_signal_provider(signal_marker, child_ready),
+        failed_close_attempts=100,
+        close_stderr=hostile_stderr,
+        forward_ready=forward_ready,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env["LC_DRIVER_CLOSE_RETRY_SECONDS"] = "1"
+    original_handler = signal.signal(termination_signal, signal.SIG_DFL)
+    try:
+        process = subprocess.Popen(
+            ["bash", os.fspath(launcher), "--epic", "devops"],
+            cwd=launcher.parent,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        _wait_for_launcher_readiness(process, [child_ready, forward_ready])
+        process.send_signal(termination_signal)
+        stdout, stderr = process.communicate(timeout=_LAUNCHER_READY_TIMEOUT_S)
+        assert signal_marker.is_file(), (
+            f"provider child never received forwarded signal (rc={process.returncode}):\n{stdout}{stderr}"
+        )
+        assert process.returncode == expected_exit, stdout + stderr
+        assert not close_marker.is_file()
+        assert int(close_attempts.read_text(encoding="utf-8").strip()) in {1, 2}
+        assert "close_failure_reason=monitor-unreachable" in stderr
+        assert "$(evil)" not in (stdout + stderr)
+    finally:
+        signal.signal(termination_signal, original_handler)
 
 
 def test_renew_loops_spawn_no_orphanable_sleeps() -> None:

@@ -936,6 +936,14 @@ def test_cli_fresh_init_reports_malformed_identity_without_remote_reads(
     assert "error" in json.loads(capsys.readouterr().err)
 
 
+def test_cli_identity_file_rejects_fresh_options_before_remote_reads(tmp_path: Path, capsys) -> None:
+    identity = _write_json(tmp_path / "identity.json", _identity_dict())
+    args = _init_args(tmp_path, identity)
+    args.role = "driver"
+    with pytest.raises(task_lifecycle.LifecycleError, match="require --fresh-task-id"):
+        task_closeout.cmd_init(args)
+
+
 def _stub_read_issue(*, parent_epic: int | None) -> object:
     def _read_issue(self, repository: str, issue_number: int) -> dict:
         return {
@@ -1135,6 +1143,21 @@ def test_cmd_init_accepts_native_chain_through_unregistered_sub_epic(
     assert task_closeout.cmd_init(_init_args(tmp_path, identity_path)) == 0
     ledger = task_lifecycle.load_lifecycle(tmp_path / "lifecycle.json")
     assert ledger["identity"]["stream_epic"] == 10
+
+
+def test_cmd_init_rejects_native_chain_to_a_different_registered_epic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=30))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: _native_chain_audit([20])
+    )
+
+    with pytest.raises(task_lifecycle.LifecycleError, match="different registered epic"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
 
 
 def test_cmd_init_accepts_unique_body_membership(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1769,6 +1792,19 @@ def test_9794_second_invocation_refuses_changed_checklist(tmp_path, change, tran
     receipt = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
     assert receipt["status"] == "failed"
     assert receipt["remote_mutation_performed"] is False
+
+
+def test_9794_init_refuses_unresolved_unread_root_checklist(tmp_path, monkeypatch):
+    identity_path = _write_json(tmp_path / "identity.json", _identity_dict())
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=None))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue_parent", lambda self, repo, number: None)
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 20])
+    report = _body_audit()
+    report["warnings"] = [{"code": "unresolved_subissue", "issue": 20}]
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "membership_audit_report", lambda self: report)
+    with pytest.raises(task_lifecycle.LifecycleError, match="unresolved unread root checklist"):
+        task_closeout.cmd_init(_init_args(tmp_path, identity_path))
+    assert not (tmp_path / "lifecycle.json").exists()
 
 
 @pytest.mark.parametrize("number", [True, 1.0, "1"])

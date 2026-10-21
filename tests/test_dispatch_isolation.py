@@ -287,6 +287,235 @@ def test_forced_fallback_skips_the_probe(tmp_path: Path, capsys: pytest.CaptureF
     assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize("value", ["popen", "off", "0"])
+def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
+    bindir = _install_fakes(tmp_path)
+    result = _probe(_env(bindir, LU_DISPATCH_ISOLATION=value), _subtree(tmp_path))
+
+    assert result.ready
+    assert result.reason is None
+
+
+_GRANDCHILD_READY_DEADLINE_S = 5.0
+_GRANDCHILD_SYSTEMCTL = """
+import os, time
+from pathlib import Path
+
+time.sleep(float(os.environ.get("FAKE_START_DELAY", "0")))
+if os.fork() == 0:
+    # Written by the grandchild itself, after fork; stdout stays inherited.
+    Path(os.environ["FAKE_GRANDCHILD_PID"]).write_text(str(os.getpid()), encoding="ascii")
+time.sleep(30)
+"""
+_GRANDCHILD_HELPER_CODE = (
+    "import json, runpy, sys\n"
+    "ns = runpy.run_path(sys.argv[1])\n"
+    "report = ns['_grandchild_probe_helper'](ns['Path'](sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]))\n"
+    "print(json.dumps(report))\n"
+)
+
+
+def _wait_for_child_ready(pidfile: Path, deadline_s: float) -> int:
+    """Wait for the controlled grandchild's acknowledgement, without inspecting processes."""
+    deadline = time.monotonic() + deadline_s
+    while True:
+        try:
+            text = pidfile.read_text(encoding="ascii").strip()
+        except OSError:
+            text = ""
+        if text.isdigit():
+            return int(text)
+        if time.monotonic() >= deadline:
+            raise AssertionError(f"grandchild was not ready within {deadline_s:.1f}s")
+        time.sleep(0.01)
+
+
+def _reap_owned_probe_children() -> list[dict[str, int]]:
+    """Kill and wait for our children, including newly adopted descendants.
+
+    Called only in the single-threaded subreaper helper. The kernel's own
+    child list supplies *owned*, unreaped PIDs, whose identities cannot be
+    reused before our waitpid. No tag, liveness scan or PID identity heuristic
+    participates in cleanup. Killing a parent can adopt more children, so
+    repeat until waitpid proves ECHILD, including absence of zombies.
+    """
+    children_path = Path(f"/proc/self/task/{os.getpid()}/children")
+    reaped = []
+    while True:
+        children = [int(pid) for pid in children_path.read_text(encoding="ascii").split()]
+        for pid in children:
+            with suppress(ProcessLookupError):
+                os.kill(pid, signal.SIGKILL)
+        for pid in children:
+            waited, status = os.waitpid(pid, 0)
+            reaped.append({"pid": waited, "returncode": os.waitstatus_to_exitcode(status)})
+        try:
+            waited, status = os.waitpid(-1, os.WNOHANG)
+        except ChildProcessError:
+            return reaped
+        if waited:
+            reaped.append({"pid": waited, "returncode": os.waitstatus_to_exitcode(status)})
+
+
+def _grandchild_probe_helper(tmp_path: Path, start_delay_s: float, ready_deadline_s: float) -> dict:
+    """Own the entire scenario and report only after all descendants are reaped.
+
+    Linux subreaper and signal settings are confined to this subprocess;
+    importing this module or running pytest never changes the worker's state.
+    """
+    import ctypes
+
+    if sys.platform != "linux":
+        return {"skip": "grandchild ownership proof requires Linux child-subreaper support"}
+    libc = ctypes.CDLL(None, use_errno=True)
+    if not hasattr(libc, "prctl"):
+        return {"skip": "PR_SET_CHILD_SUBREAPER is unavailable in libc"}
+    libc.prctl.argtypes = [ctypes.c_int, *([ctypes.c_ulong] * 4)]
+    libc.prctl.restype = ctypes.c_int
+    if libc.prctl(36, 1, 0, 0, 0) != 0:  # PR_SET_CHILD_SUBREAPER
+        return {"skip": f"PR_SET_CHILD_SUBREAPER is unavailable: errno {ctypes.get_errno()}"}
+
+    try:
+        Path(f"/proc/self/task/{os.getpid()}/children").read_text(encoding="ascii")
+    except OSError:
+        return {"skip": "Linux owned-child inventory is unavailable for subreaper cleanup"}
+
+    def timed_out(_signum, _frame):
+        raise TimeoutError("grandchild helper exceeded its deadline")
+
+    signal.signal(signal.SIGALRM, timed_out)
+    signal.setitimer(signal.ITIMER_REAL, start_delay_s + ready_deadline_s + 35.0)
+    report: dict = {"error": None}
+    held: list[subprocess.Popen] = []
+    ready: dict[str, float | int] = {}
+    try:
+        pidfile = tmp_path / "grandchild.pid"
+        bindir = tmp_path / "bin"
+        bindir.mkdir()
+        _write_exe(bindir / "systemctl", _GRANDCHILD_SYSTEMCTL)
+        env = _env(bindir, FAKE_GRANDCHILD_PID=str(pidfile), FAKE_START_DELAY=str(start_delay_s))
+        env.pop(iso.ENV_ISOLATION, None)
+        timeout_s = 0.2
+        fallback: list[list[str]] = []
+        real_popen = iso._Popen
+
+        def probe_popen(argv, *args, **kwargs):
+            proc = real_popen(argv, *args, **kwargs)
+            held.append(proc)  # Keep Popen destructors from reaping during cleanup.
+            real_wait = proc.wait
+
+            def wait(*wait_args, **wait_kwargs):
+                if "at" not in ready:
+                    ready["pid"] = _wait_for_child_ready(pidfile, ready_deadline_s)
+                    ready["at"] = time.monotonic()
+                return real_wait(*wait_args, **wait_kwargs)
+
+            proc.wait = wait  # type: ignore[method-assign]
+            return proc
+
+        def fallback_popen(argv, **_kwargs):
+            fallback.append(list(argv))
+
+            class _Proc:
+                pid = 4
+                stdin = None
+
+            return _Proc()
+
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setattr(iso, "_Popen", probe_popen)
+            patch.setattr(iso, "_caller_in_driver_scope", lambda: False)
+            spawned = time.monotonic()
+            _proc, launch = iso.spawn_detached_worker(
+                [_PY, "-c", "print('fallback')"],
+                task_id="hold-pipes",
+                run_nonce="nonce-hold",
+                popen=fallback_popen,
+                env=env,
+                probe_env=env,
+                subtree_path=_subtree(tmp_path),
+                timeout_s=timeout_s,
+            )
+            elapsed = time.monotonic() - ready["at"]
+            grandchild = int(ready["pid"])
+            # The probe has killed/reaped its parent. Adoption plus waitpid
+            # proves this is our still-running child, not an observed PID.
+            waited, _status = os.waitpid(grandchild, os.WNOHANG)
+            report.update(
+                grandchild_pid=grandchild,
+                grandchild_running=waited == 0,
+                elapsed=elapsed,
+                startup_elapsed=ready["at"] - spawned,
+                launch_mode=launch.mode,
+                fallback_reason=launch.fallback_reason,
+                fallback=fallback,
+                elapsed_limit=timeout_s + iso._REAP_TIMEOUT_S + 2.0,
+            )
+    except Exception as exc:
+        report["error"] = f"{type(exc).__name__}: {exc}"
+    finally:
+        # Also runs when readiness fails, before the grandchild PID is known.
+        signal.setitimer(signal.ITIMER_REAL, 5.0)
+        report["reaped"] = _reap_owned_probe_children()
+        report["no_children"] = True  # Only after waitpid returned ECHILD.
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        # Cleanup may have waited directly for a Popen-owned child.
+        for proc in held:
+            if proc.returncode is None:
+                proc.returncode = next(item["returncode"] for item in report["reaped"] if item["pid"] == proc.pid)
+        report["probe_pids"] = [proc.pid for proc in held]
+        report["probe_returncodes"] = [proc.returncode for proc in held]
+    return report
+
+
+def _run_grandchild_probe_helper(
+    tmp_path: Path, *, start_delay_s: float = 0.0, ready_deadline_s: float | None = None
+) -> dict:
+    deadline_s = start_delay_s + _GRANDCHILD_READY_DEADLINE_S if ready_deadline_s is None else ready_deadline_s
+    completed = subprocess.run(
+        [_PY, "-c", _GRANDCHILD_HELPER_CODE, __file__, str(tmp_path), str(start_delay_s), str(deadline_s)],
+        capture_output=True,
+        text=True,
+        timeout=start_delay_s + deadline_s + 45.0,
+        check=True,
+    )
+    report = json.loads(completed.stdout)
+    if "skip" in report:
+        pytest.skip(report["skip"])
+    assert report["no_children"] is True, report
+    # Cleanup's ECHILD is the proof. A PID existence assertion after reaping
+    # would reintroduce a race with unrelated processes reusing those PIDs.
+    print(json.dumps({key: value for key, value in report.items() if key != "fallback"}, sort_keys=True))
+    return report
+
+
+def _assert_fallback_does_not_wait_on_grandchild(tmp_path: Path, *, start_delay_s: float = 0.0) -> None:
+    report = _run_grandchild_probe_helper(tmp_path, start_delay_s=start_delay_s)
+    assert report["error"] is None, report
+    assert report["launch_mode"] == iso.LAUNCH_FALLBACK, report
+    assert "timed out" in report["fallback_reason"], report
+    assert report["fallback"] == [[_PY, "-c", "print('fallback')"]], report
+    assert report["grandchild_running"], report
+    assert report["probe_returncodes"] == [-signal.SIGKILL], report
+    assert {item["pid"] for item in report["reaped"]} == {report["grandchild_pid"]}, report
+    assert report["reaped"][0]["returncode"] == -signal.SIGKILL, report
+    assert report["elapsed"] < report["elapsed_limit"], report
+    if start_delay_s:
+        assert report["startup_elapsed"] >= start_delay_s, report
+        assert report["elapsed"] < start_delay_s, report
+
+
+def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path) -> None:
+    """The inherited stdout holder must still run when fallback returns.
+
+    The helper owns and reaps the fake probe and its orphaned grandchild.
+    Pipe capture with post-kill communicate() instead of file capture/wait
+    would wait for the grandchild's exit and fail both alive/timing checks.
+    The measured interval starts only after the grandchild acknowledges fork.
+    """
+    _assert_fallback_does_not_wait_on_grandchild(tmp_path)
+
+
 def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="fail")
@@ -550,6 +779,65 @@ def test_unreadable_proc_image_does_not_relaunch():
     assert fallback == []
 
 
+def test_permission_denied_proc_image_does_not_relaunch(monkeypatch: pytest.MonkeyPatch):
+    fallback: list[list[str]] = []
+    pid_max = int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii"))
+    real_open = os.open
+    real_readlink = os.readlink
+
+    def open_blocked(path: str | os.PathLike[str], *args: object, **kwargs: object):
+        if str(path).startswith("/proc/"):
+            raise PermissionError(13, "Permission denied", str(path))
+        return real_open(path, *args, **kwargs)
+
+    def readlink_blocked(path: str | os.PathLike[str], *args: object, **kwargs: object):
+        if "/proc/" in str(path):
+            raise PermissionError(13, "Permission denied", str(path))
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", open_blocked)
+    monkeypatch.setattr(os, "readlink", readlink_blocked)
+
+    class _Scope:
+        def __init__(self) -> None:
+            self.pid = pid_max + 1001
+            self.returncode: int | None = None
+
+        def poll(self) -> int | None:
+            return self.returncode
+
+        def kill(self) -> None:
+            self.returncode = -signal.SIGKILL
+
+        def wait(self, timeout: float | None = None) -> int:
+            self.returncode = -signal.SIGKILL
+            return self.returncode
+
+    def popen(argv, **_kwargs):
+        if argv[0] == "systemd-run":
+            return _Scope()
+        fallback.append(list(argv))
+
+        class _Unused:
+            pid = 6
+            stdin = None
+
+        return _Unused()
+
+    with pytest.raises(iso.DispatchIsolationError, match="startup is ambiguous") as raised:
+        iso.spawn_detached_worker(
+            [_PY, "-c", "print('fallback')"],
+            task_id="denied",
+            run_nonce="nonce-denied",
+            popen=popen,
+            check_probe=False,
+            timeout_s=0,
+        )
+
+    assert "will not be relaunched" in str(raised.value)
+    assert fallback == []
+
+
 def test_late_start_marker_runs_exactly_one_worker(tmp_path: Path):
     """A marker written between the timeout and the kill must not start a second worker."""
     stamp = tmp_path / "worker-ran"
@@ -697,6 +985,73 @@ def test_scope_unit_names_differ_for_the_same_task_and_nonce():
     assert len(long_name) + len(".scope") <= 255
     assert "t" * 40 in long_name
     assert "/" not in long_name
+
+
+def test_scope_start_failure_reads_a_bounded_stderr_excerpt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    bindir = _install_fakes(tmp_path)
+    env = _env(bindir, FAKE_SYSTEMD_RUN="fail")
+    log = tmp_path / "stderr.log"
+    token = b"PREEXISTING-LOG-MUST-NOT-BE-READ\n"
+    prefix_len = 8 * 1024 * 1024
+    log.write_bytes(token + b"x" * (prefix_len - len(token)))
+    stderr_fd = os.open(str(log), os.O_CREAT | os.O_APPEND | os.O_WRONLY, 0o644)
+    reads: list[int] = []
+    real_open = Path.open
+
+    def tracking_open(self: Path, mode: str = "r", *args: object, **kwargs: object):
+        handle = real_open(self, mode, *args, **kwargs)
+        if self == log and "b" in str(mode):
+            original = handle.read
+
+            def bounded(n: int = -1) -> bytes:
+                blob = original(n)
+                if isinstance(blob, bytes):
+                    reads.append(len(blob))
+                    if n < 0 or len(blob) > iso._STDERR_EXCERPT_BYTES:
+                        raise AssertionError(f"unbounded stderr read ({len(blob)} bytes, n={n})")
+                return blob
+
+            handle.read = bounded  # type: ignore[method-assign]
+        return handle
+
+    monkeypatch.setattr(Path, "open", tracking_open)
+    fallback: list[list[str]] = []
+    real_popen = subprocess.Popen
+
+    def popen(argv, **kwargs):
+        if argv[0] == "systemd-run":
+            return real_popen(argv, **kwargs)
+        fallback.append(list(argv))
+
+        class _Proc:
+            pid = 13
+            stdin = None
+
+        return _Proc()
+
+    try:
+        _proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", "print('should-not-run')"],
+            task_id="big-log",
+            run_nonce="nonce-big",
+            popen=popen,
+            env=env,
+            probe_env=env,
+            stderr=stderr_fd,
+            stderr_log=log,
+            subtree_path=_subtree(tmp_path),
+            timeout_s=2,
+        )
+    finally:
+        os.close(stderr_fd)
+
+    assert launch.mode == iso.LAUNCH_FALLBACK
+    assert launch.fallback_reason is not None
+    assert "Unit name already exists" in launch.fallback_reason
+    assert "PREEXISTING-LOG-MUST-NOT-BE-READ" not in launch.fallback_reason
+    assert reads
+    assert sum(reads) <= iso._STDERR_EXCERPT_BYTES
+    assert fallback == [[_PY, "-c", "print('should-not-run')"]]
 
 
 def test_launch_fields_remain_beside_peak_rss(monkeypatch: pytest.MonkeyPatch):
@@ -1110,6 +1465,57 @@ def test_scope_launch_reaches_the_user_manager_and_keeps_the_worker_env(
     assert json.loads(out) == json.loads(baseline.stdout)
 
 
+def test_real_nested_scope_without_bus_variables(monkeypatch: pytest.MonkeyPatch):
+    """A caller with no user-bus variables still gets a scope, and the worker still has none.
+
+    Skipped when this host has no reachable user manager. Uses a throwaway
+    slice; does not load or modify lu-dispatch.slice.
+    """
+    _require_user_manager(monkeypatch)
+    nonce = uuid.uuid4().hex[:12]
+    slice_unit = f"probe9514n{nonce}.slice"
+    code = (
+        "import os, sys\n"
+        "from pathlib import Path\n"
+        "names = ('XDG_RUNTIME_DIR', 'DBUS_SESSION_BUS_ADDRESS')\n"
+        "sys.stdout.write(repr([name for name in names if name in os.environ]) + '\\n')\n"
+        "sys.stdout.write(Path('/proc/self/cgroup').read_text().strip() + '\\n')\n"
+    )
+    env = _without_bus(os.environ.copy())
+    proc: subprocess.Popen[bytes] | None = None
+    try:
+        proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", code],
+            task_id=f"probe9514n{nonce}",
+            run_nonce=nonce,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            slice_unit=slice_unit,
+            check_probe=False,
+            allow_fallback=False,
+        )
+        out, _err = proc.communicate(timeout=10)
+        lines = out.decode().splitlines()
+        assert launch.mode == iso.LAUNCH_SCOPE
+        assert lines[0] == "[]"
+        assert slice_unit.removesuffix(".slice") in lines[1]
+    finally:
+        if proc is not None and proc.poll() is None:
+            with suppress(ProcessLookupError):
+                os.kill(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=5)
+        for verb in ("stop", "reset-failed"):
+            subprocess.run(
+                ["systemctl", "--user", verb, slice_unit],
+                capture_output=True,
+                text=True,
+                timeout=iso.PROBE_TIMEOUT_S,
+                check=False,
+            )
+
+
 @pytest.mark.parametrize(
     "cgroup",
     [
@@ -1185,6 +1591,17 @@ def test_slice_usage_reads_live_memory_and_swap(monkeypatch):
 )
 def test_slice_usage_refuses_invalid_live_cgroup(monkeypatch, show):
     monkeypatch.setattr(iso, "_run", lambda *a, **kw: subprocess.CompletedProcess([], 0, show))
+    assert iso.slice_usage_clause() is None
+
+
+def test_slice_usage_missing_counters_is_unknown(monkeypatch):
+    monkeypatch.setattr(
+        iso,
+        "_run",
+        lambda *a, **kw: subprocess.CompletedProcess(
+            [], 0, "ActiveState=active\nControlGroup=/nonexistent-scope-test\n"
+        ),
+    )
     assert iso.slice_usage_clause() is None
 
 

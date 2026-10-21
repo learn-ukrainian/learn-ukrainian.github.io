@@ -63,6 +63,25 @@ def test_invalid_run_disposition_requires_private_retention_and_semantic_publica
         hf_jobs_baseline.load_disposition(drifted)
 
 
+def test_balanced_canary_is_deterministic_category_balanced_and_track_covering() -> None:
+    config = hf_jobs_baseline.load_config()
+    cases = suite_cli.read_jsonl(suite_cli.CASES_PATH)
+    first = hf_jobs_baseline.balanced_canary(cases, config)
+    second = hf_jobs_baseline.balanced_canary(cases, config)
+    assert first == second
+    assert first["case_count"] == 100
+    assert len(first["item_ids"]) == len(set(first["item_ids"])) == 100
+    assert first["category_counts"] == {
+        "correct_control": 25,
+        "error": 25,
+        "protected": 25,
+        "unresolved": 25,
+    }
+    assert set(first["track_membership_counts"]) == set(config["suite"]["tracks"])
+    unsigned = {key: value for key, value in first.items() if key != "selection_sha256"}
+    assert first["selection_sha256"] == hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(unsigned))
+
+
 def test_worker_prompt_and_parser_accept_one_json_object_only() -> None:
     source = "У записі сказано: «Текст»."
     assert hf_jobs_worker.format_prompt(source) == (
@@ -173,6 +192,13 @@ def test_worker_structured_output_schema_keeps_the_strict_response_contract() ->
         "backend": "xgrammar",
         "disable_any_whitespace": True,
     }
+
+
+def test_worker_error_keeps_raw_diagnostics_private() -> None:
+    diagnostic = {"item_id": "uaw-request-0001", "attempts": [{"raw_generation": "private"}]}
+    error = hf_jobs_worker.WorkerError("parse failed", private_diagnostic=diagnostic)
+    assert str(error) == "parse failed"
+    assert error.private_diagnostic == diagnostic
 
 
 def test_worker_source_packet_and_selection_stay_gold_blind(tmp_path: Path) -> None:

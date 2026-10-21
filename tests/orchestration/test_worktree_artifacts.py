@@ -244,6 +244,20 @@ def test_copy_refuses_symlink_swapped_in_between_check_and_copy(tmp_path, monkey
         assert leaked == []
 
 
+def test_fingerprint_refuses_symlink_swapped_in_between_check_and_open(tmp_path, monkeypatch):
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"OUTSIDE-SECRET")
+    source = tmp_path / "evidence.bin"
+    source.write_bytes(b"inside-bytes")
+    _swap_regular_file_for_outside_symlink(monkeypatch, source, outside)
+
+    with pytest.raises(ValueError, match="changed during preservation"):
+        wa._fingerprint(source, root=source.parent)
+
+    assert os.path.islink(source)
+    assert outside.read_bytes() == b"OUTSIDE-SECRET"
+
+
 _OUTSIDE_SECRET = b"OUTSIDE-SECRET"
 
 
@@ -274,6 +288,16 @@ def _preserved_outside_bytes(root: Path) -> list[Path]:
     return [path for path in root.rglob("*") if path.is_file() and _OUTSIDE_SECRET in path.read_bytes()]
 
 
+def _fingerprint_anchored(path: Path, *, root: Path) -> tuple[int, str]:
+    """Call the anchored fingerprint. The pre-fix signature had no root."""
+    try:
+        return wa._fingerprint(path, root=root)
+    except TypeError as exc:
+        if "root" not in str(exc):
+            raise
+        return wa._fingerprint(path)
+
+
 def _copy_anchored(source: Path, destination: Path, *, source_root: Path, destination_root: Path) -> None:
     """Call the anchored copy. The pre-fix signature had no roots."""
     try:
@@ -282,6 +306,18 @@ def _copy_anchored(source: Path, destination: Path, *, source_root: Path, destin
         if "source_root" not in str(exc):
             raise
         wa._copy_verified(source, destination)
+
+
+def test_fingerprint_refuses_ancestor_directory_symlink(tmp_path: Path) -> None:
+    worktree, source, outside_file = _ancestor_swapped_file(tmp_path)
+    try:
+        _fingerprint_anchored(source, root=worktree)
+    except ValueError as exc:
+        assert "symlink" in str(exc)
+    else:
+        pytest.fail("ancestor symlink was followed and outside bytes were read")
+    assert outside_file.read_bytes() == _OUTSIDE_SECRET
+    assert (tmp_path / "real-batch" / "sub" / "report.bin").read_bytes() == b"inside-bytes"
 
 
 def test_copy_verified_refuses_ancestor_directory_symlink(tmp_path: Path) -> None:
@@ -362,6 +398,22 @@ def test_directory_walk_records_symlinks_without_following(checkout, tmp_path):
     assert outside.read_bytes() == b"outside-only"
 
 
+def test_primary_task_sidecar_is_not_copied(checkout):
+    shared = checkout[2] / "artifact-task.result"
+    shared.write_bytes(b"already durable")
+    source = artifact(checkout)
+    source.unlink()
+    source.symlink_to(shared)
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry["type"] == "symlink" and entry["target"] == str(shared)
+    copied = checkout[1] / metadata["location"] / entry["path"]
+    assert copied.is_file() and not copied.is_symlink()
+    assert b"already durable" not in copied.read_bytes()
+    assert shared.read_bytes() == b"already durable"
+
+
 @pytest.mark.parametrize(
     "reference",
     [
@@ -418,6 +470,19 @@ def test_batch_state_symlink_cannot_hide_local_artifacts(checkout):
     receipt = json.loads((checkout[2] / "artifact-task.json").read_text())["preserved_artifacts"]
     assert (checkout[1] / receipt["location"] / "ignored/hidden.txt").read_bytes() == source.read_bytes()
     assert source.exists()
+
+
+def test_batch_state_link_loop_is_preserved_without_resolving(checkout):
+    bound_record(checkout, {"status": "done"})
+    (checkout[0] / "batch_state").mkdir()
+    (checkout[0] / "batch_state/loop").symlink_to("loop")
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason, reason
+    entry = metadata["paths"][0]
+    assert entry == {**entry, "path": "batch_state/loop", "type": "symlink", "target": "loop"}
+    copied = checkout[1] / metadata["location"] / "batch_state/loop"
+    assert copied.is_file() and not copied.is_symlink()
+    assert copied.read_bytes() == b"symlink\nloop"
 
 
 @pytest.mark.parametrize(
@@ -483,6 +548,16 @@ def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeyp
     assert saved["other_writer"] is True
     assert "stale_field" not in saved
     assert saved["preserved_artifacts"]["count"] == 1
+
+
+def test_missing_record_is_not_created(checkout):
+    source = artifact(checkout)
+    ok, reason, metadata = guard(checkout, task_id=None)
+    assert not ok and "missing canonical task attribution" in reason
+    assert metadata["retention_disposition"] == "retained"
+    assert source.read_bytes() == b"proof\x00\xff"
+    assert not (checkout[1] / "batch_state/preserved").exists()
+    assert not (checkout[2] / "artifact-task.json").exists()
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)
@@ -576,6 +651,23 @@ _GIT_ENV = {
     "GIT_CONFIG_SYSTEM": "/dev/null",
     "GIT_CONFIG_NOSYSTEM": "1",
 }
+
+
+def test_ignored_artifact_directory_of_regular_files(checkout):
+    """Denominator row 2: a directory of regular files has its files discovered and preserved."""
+    bound_record(checkout, {"status": "done"})
+    f1 = artifact(checkout, "batch_state/reports/probe/report1.json", payload=b'{"metric": 1}')
+    f2 = artifact(checkout, "batch_state/reports/probe/report2.json", payload=b'{"metric": 2}')
+    (checkout[0] / "batch_state/reports/probe/__pycache__").mkdir(parents=True, exist_ok=True)
+    (checkout[0] / "batch_state/reports/probe/__pycache__/cached.pyc").write_bytes(b"disposable")
+
+    ok, reason, metadata = guard(checkout)
+    assert ok and not reason
+    assert metadata["count"] == 2
+    location = checkout[1] / metadata["location"]
+    assert (location / "batch_state/reports/probe/report1.json").read_bytes() == f1.read_bytes()
+    assert (location / "batch_state/reports/probe/report2.json").read_bytes() == f2.read_bytes()
+    assert not (location / "batch_state/reports/probe/__pycache__").exists()
 
 
 def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):
@@ -722,6 +814,36 @@ def test_ignored_artifact_nested_repo_corrupt_fails_closed(checkout):
     assert "artifact is an invalid nested git repository" in reason
 
 
+def test_ignored_artifact_nested_repo_detached_head_unpushed_never_discarded(checkout):
+    """AC-02 & P1: unpushed commits on a detached HEAD must refuse without a cleanup command."""
+    detached_dir = checkout[0] / "batch_state/reports/detached_unpushed"
+    detached_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "init", str(detached_dir)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    (detached_dir / "unpushed.txt").write_text("detached unpushed data\n")
+    subprocess.run(["git", "add", "unpushed.txt"], cwd=detached_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "detached commit"], cwd=detached_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(
+        ["git", "checkout", "--detach", "HEAD"],
+        cwd=detached_dir,
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata["retention_disposition"] == "retained"
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
 def test_ignored_artifact_nested_repo_shell_quoting_in_cleanup_recommendation(checkout, tmp_path):
     """P1: paths with apostrophes or spaces in cleanup recommendations are safely shell-quoted."""
     upstream = tmp_path / "upstream"
@@ -770,6 +892,95 @@ def test_ignored_artifact_nested_repo_shell_quoting_in_cleanup_recommendation(ch
     assert tokens[:2] == ["rm", "-rf"]
     assert len(tokens) == 3, f"Expected exactly 1 target path, got: {tokens[2:]}"
     assert tokens[2] == "batch_state/reports/probe' 'valuable"
+
+
+def test_ignored_artifact_nested_repo_unpushed_tag_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by a local tag refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+
+    repo_dir = checkout[0] / "batch_state/reports/tag_repo"
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"],
+        cwd=repo_dir,
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add commit on tag only, then move branch back to base
+    (repo_dir / "tagged.txt").write_text("tagged commit\n")
+    subprocess.run(["git", "add", "tagged.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "tagged commit"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "tag", "v0.9.0"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata["retention_disposition"] == "retained"
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_unpushed_stash_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by refs/stash refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+
+    repo_dir = checkout[0] / "batch_state/reports/stash_repo"
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"],
+        cwd=repo_dir,
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Modify file and stash changes
+    (repo_dir / "base.txt").write_text("stashed modification\n")
+    subprocess.run(["git", "stash"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata["retention_disposition"] == "retained"
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
 
 
 def test_ignored_artifact_nested_repo_dirty_working_tree_never_discarded(checkout, tmp_path):
@@ -876,6 +1087,53 @@ def test_ignored_artifact_nested_repo_ignored_evidence_never_discarded(checkout,
     assert not ok and metadata["retention_disposition"] == "retained"
     assert "artifact is a nested git repository with uncommitted or ignored changes" in reason
     assert "uncommitted work must not be discarded" in reason
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_reflog_only_commits_never_discarded(checkout, tmp_path):
+    """P1: unpushed commits referenced only by reflogs must refuse removal without recommending deletion."""
+    upstream = tmp_path / "upstream"
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+
+    repo_dir = checkout[0] / "batch_state/reports/reflog_repo"
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    (repo_dir / "base.txt").write_text("base\n")
+    subprocess.run(["git", "add", "base.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"],
+        cwd=repo_dir,
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
+
+    # Add unpushed commit then reset --hard back to base
+    (repo_dir / "reflog_work.txt").write_text("unpushed reflog work\n")
+    subprocess.run(["git", "add", "reflog_work.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "unpushed reflog commit"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30
+    )
+    subprocess.run(["git", "reset", "--hard", "HEAD~1"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata["retention_disposition"] == "retained"
+    assert "artifact is a nested git repository with unpushed commits" in reason
+    assert "unpushed work must not be discarded" in reason
     assert "clear with: rm -rf" not in reason
 
 
@@ -1649,6 +1907,28 @@ def test_ignored_artifact_nested_repo_global_clean_filter_rejected_without_execu
     assert not ok and metadata["retention_disposition"] == "retained"
     assert "uncommitted or ignored changes" in reason
     assert not marker.exists(), "global clean filter was executed!"
+    assert "clear with: rm -rf" not in reason
+
+
+def test_ignored_artifact_nested_repo_trustctime_config_rejected(checkout):
+    """P1: nested repository with core.trustctime configured is rejected before deletion advice."""
+    repo_dir = checkout[0] / "batch_state/reports/trustctime_repo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)],
+        check=True,
+        capture_output=True,
+        env=_GIT_ENV,
+        timeout=30,
+    )
+    subprocess.run(["git", "config", "core.trustctime", "false"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    (repo_dir / "file.txt").write_text("hello\n")
+    subprocess.run(["git", "add", "file.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
+
+    ok, reason, metadata = guard(checkout)
+    assert not ok and metadata["retention_disposition"] == "retained"
+    assert "executable or filter configuration" in reason
     assert "clear with: rm -rf" not in reason
 
 

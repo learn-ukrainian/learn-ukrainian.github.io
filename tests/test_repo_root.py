@@ -123,6 +123,16 @@ def test_project_interpreter_rejects_another_checkouts_venv(tmp_path, monkeypatc
         project_interpreter(Path("/no-such-checkout"))
 
 
+def test_project_interpreter_accepts_running_python3_of_the_primary_checkout(tmp_path, monkeypatch):
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
+    _link_worktree(primary, worktree)
+    python3 = _write_venv_python(primary, "python3")
+    monkeypatch.setattr(sys, "executable", str(python3))
+
+    assert project_interpreter(worktree) == python3
+
+
 def _toolchain_python(tmp_path: Path) -> Path:
     toolchain = tmp_path / "toolchain" / "python3.12"
     toolchain.parent.mkdir(parents=True, exist_ok=True)
@@ -234,6 +244,19 @@ def test_project_interpreter_refuses_a_final_link_that_vanishes_before_readlink(
         project_interpreter(tmp_path / "requested")
 
 
+def test_project_interpreter_refuses_a_final_path_that_vanishes_before_the_link_check(tmp_path, monkeypatch):
+    """A path gone before the link check is refused, not accepted as hosted Python (#9201)."""
+    vanished = tmp_path / "hosted" / "python3.12"
+    vanished.parent.mkdir()
+    vanished.symlink_to(_toolchain_python(tmp_path))
+    vanished.unlink()
+    monkeypatch.setattr(sys, "executable", str(vanished))
+
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: ") as excinfo:
+        project_interpreter(tmp_path / "requested")
+    assert isinstance(excinfo.value.__cause__, FileNotFoundError)
+
+
 def test_project_interpreter_rejects_another_checkouts_versioned_python(tmp_path, monkeypatch):
     """A missing checkout must not inherit another checkout's ``python3.12``.
 
@@ -241,6 +264,15 @@ def test_project_interpreter_rejects_another_checkouts_versioned_python(tmp_path
     ``.venv/bin/python3.12`` was returned as if it were a hosted interpreter.
     """
     foreign = _write_venv_python(tmp_path / "other-checkout", "python3.12")
+    monkeypatch.setattr(sys, "executable", str(foreign))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(Path("/no-such-checkout"))
+
+
+def test_project_interpreter_rejects_a_versioned_symlink_out_of_another_checkouts_venv(tmp_path, monkeypatch):
+    """``python3.12`` still belongs to its venv when the file is a symlink to the toolchain."""
+    foreign = _symlink_venv_python(tmp_path / "other-checkout", _toolchain_python(tmp_path))
     monkeypatch.setattr(sys, "executable", str(foreign))
 
     with pytest.raises(FileNotFoundError, match="not the requested checkout"):
@@ -279,6 +311,31 @@ def test_project_interpreter_rejects_when_parent_resolution_names_another_checko
 
     with pytest.raises(FileNotFoundError, match="not the requested checkout"):
         project_interpreter(requested)
+
+
+def test_project_interpreter_accepts_a_symlink_into_the_requested_checkouts_venv(tmp_path, monkeypatch):
+    """A symlink that resolves into the requested checkout's ``.venv/bin`` is accepted."""
+    requested = tmp_path / "requested"
+    python312 = _write_venv_python(requested, "python3.12")
+    alias = tmp_path / "runner"
+    alias.symlink_to(python312)
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    assert project_interpreter(requested) == alias
+
+
+def test_project_interpreter_accepts_hosted_python3_12(tmp_path, monkeypatch):
+    """A versioned interpreter outside any checkout ``.venv/bin`` is the CI fallback."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    hosted = tmp_path / "hostedtoolcache" / "Python" / "3.12.14" / "x64" / "bin" / "python3.12"
+    hosted.parent.mkdir(parents=True)
+    hosted.write_text("", encoding="utf-8")
+    alias = tmp_path / "hosted-alias"
+    alias.symlink_to(hosted)
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    assert project_interpreter(checkout) == alias
 
 
 def test_project_interpreter_accepts_the_requested_worktree_venv_when_primary_has_none(tmp_path, monkeypatch):

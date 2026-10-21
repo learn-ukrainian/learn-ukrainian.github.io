@@ -91,6 +91,19 @@ ADMITTERS = frozenset(
 # ``require_admitted(x)`` is admitted exactly when ``x`` is.
 PASS_THROUGH = frozenset({"require_admitted"})
 
+# Every delivery, insertion, wake and launch sink, and the parameter that takes the target.
+REQUIRED_SINKS = {
+    "_insert_message": "target",  # bridge message row
+    "_insert_delivery": "target",  # channel delivery row
+    "_touch_wake_file": "target",  # channel wake file
+    "_run_single_acp_job": "target",  # ACP job enqueue and invocation
+    "maybe_forward_compat_ask": "target",  # job-host ask forward
+    "build_ask_review_dispatch_command": "target",  # headless review launch argv
+    "_worker_route_argv": "target",  # delegate worker launch argv
+    "_subscribe_tx": "target",  # fleet-comms subscriber row
+    "_publish_message_tx": "targets",  # fleet-comms message and delivery rows
+}
+
 
 def _rel(path: Path) -> str:
     return path.relative_to(REPO_ROOT).as_posix()
@@ -291,6 +304,15 @@ def _admitted_names(path: Path, function: ast.AST | None, scan: Scan, cache: dic
     return cache[key]
 
 
+def test_every_required_sink_is_annotated_to_take_an_admitted_target(scan):
+    missing = {
+        name: param
+        for name, param in REQUIRED_SINKS.items()
+        if name not in scan.sinks or scan.sinks[name].param != param
+    }
+    assert not missing, f"sinks without an AdmittedTarget-annotated parameter: {missing}"
+
+
 def test_every_named_admitter_calls_resolve_and_admit_or_another_admitter(scan):
     defined: dict[str, list[ast.AST]] = {}
     for _path, node in scan.functions():
@@ -356,4 +378,73 @@ def test_named_resolver_and_gate_calls_appear_only_in_target_admission(scan):
     assert not violations, "\n".join(violations)
 
 
+def test_imported_compat_targets_are_read_only_in_target_admission(scan):
+    violations = []
+    for path, tree in scan.trees.items():
+        if path == HOME:
+            continue
+        aliases = {
+            alias.asname or alias.name
+            for node in ast.walk(tree)
+            if isinstance(node, ast.ImportFrom)
+            for alias in node.names
+            if alias.name == "COMPAT_TARGETS"
+        }
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name) and node.id in aliases and isinstance(node.ctx, ast.Load):
+                violations.append(f"{_rel(path)}:{node.lineno} compat names resolved outside resolve_and_admit")
+    assert not violations, "\n".join(violations)
+
+
 # --- the scanner itself catches the failure shapes ---------------------------------
+
+
+def _admitted_in(source: str, expr: str) -> bool:
+    tree = ast.parse(source)
+    function = next(node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef))
+    return AdmittedNames(function, None).is_admitted(ast.parse(expr, mode="eval").body)
+
+
+@pytest.mark.parametrize(
+    ("source", "expr", "admitted"),
+    [
+        ("def f(x):\n    t = resolve_and_admit((x,), mode=m)\n", "t", True),
+        ("def f(x):\n    (t,) = resolve_and_admit((x,), mode=m)\n", "t", True),
+        ("def f(x):\n    for t in resolve_and_admit(x, mode=m):\n        pass\n", "t", True),
+        # re-resolution after the gate: the name has a non-admitted binding
+        ("def f(x):\n    t = resolve_and_admit((x,), mode=m)\n    t = _resolve_delivery_agent(t)\n", "t", False),
+        ("def f(x):\n    t = resolve_and_admit((x,), mode=m)\n", "t.recipient", False),
+        ("def f(x):\n    return x\n", "x", False),
+        ("def f(x: AdmittedTarget):\n    return x\n", "x", True),
+        ("def f(x):\n    w = []\n    for t in resolve_and_admit(x, mode=m):\n        w.append(t)\n", "w", True),
+        ("def f(x):\n    w = []\n    w.append(x)\n", "w", False),
+        ("def f(x):\n    return 0\n", "require_admitted(x)", False),
+    ],
+)
+def test_the_bounded_scanner_tells_admitted_local_values_from_raw_ones(source, expr, admitted):
+    assert _admitted_in(source, expr) is admitted
+
+
+def _named_resolver_calls(source: str) -> list[str]:
+    return [
+        name
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.Call) and (name := _call_name(node) or "") in RESOLVERS
+    ]
+
+
+@pytest.mark.parametrize(
+    ("source", "seen"),
+    [
+        ("load_dispatch_fallbacks(path)\n", ["load_dispatch_fallbacks"]),
+        ("fallback_substitutions.load_dispatch_fallbacks(path)\n", ["load_dispatch_fallbacks"]),
+        ("resolve_retired_agent_alias(agent)\n", ["resolve_retired_agent_alias"]),
+        # The bound: an aliased name, a callback or a getattr lookup is not seen. The
+        # runtime gate in resolve_and_admit and the execution re-check cover these.
+        ("load = load_dispatch_fallbacks\nload(path)\n", []),
+        ("run(callback=resolve_retired_agent_alias)\n", []),
+        ("getattr(module, 'load_dispatch_fallbacks')(path)\n", []),
+    ],
+)
+def test_the_resolver_scan_sees_named_calls_only(source, seen):
+    assert _named_resolver_calls(source) == seen

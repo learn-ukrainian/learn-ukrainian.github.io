@@ -135,6 +135,25 @@ def test_all_removers_preserve_output_or_retain_checkout(tmp_path, monkeypatch, 
     assert hashlib.sha256(copies[0].read_bytes()).digest() == hashlib.sha256(payload).digest()
 
 
+def test_active_claim_prevents_preservation_and_removal(tmp_path, monkeypatch):
+    primary = _primary(tmp_path)
+    checkout = _linked(primary, "codex/active")
+    _record(primary, "active", status="running", worktree_path=str(checkout))
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("preservation ran before active-claim refusal")
+
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", forbidden)
+    result = worktree_claims.remove_unclaimed_worktree(
+        checkout,
+        repo_root=primary,
+        reason="test",
+        owner_task_id=None,
+    )
+    assert result.action == "skipped" and checkout.exists()
+    assert "active task" in result.reason
+
+
 def test_raw_removal_checks_preservation_without_adapter(tmp_path, monkeypatch):
     primary = _primary(tmp_path)
     checkout = _linked(primary, "codex/raw")
@@ -464,6 +483,28 @@ def test_callers_without_record_argument_honor_keep_intent(tmp_path, monkeypatch
     assert checkout.exists() and source.read_bytes() == b"only corpus copy"
 
 
+@pytest.mark.parametrize("suffix", ["md", "txt", "json", "jsonl", "yaml"])
+@pytest.mark.parametrize(
+    "parent", ["ignored", "ignored/deep/more", ".cache/transcripts", ".venv/cache", "node_modules/corpus"]
+)
+def test_transcript_extensions_outside_disposable_directories_are_output(boundary_tree, suffix, parent):
+    repo, tree, tasks, record = boundary_tree
+    source = tree / parent / ("corpus." + suffix)
+    source.parent.mkdir(parents=True, exist_ok=True)
+    source.write_bytes(b"unique output")
+    assert not ignored_task_output.artifacts.is_disposable_path(source.relative_to(tree), worktree=tree, primary=repo)
+    record["ignored_output_baseline"] = None
+    (tasks / "boundary.json").write_text(json.dumps(record))
+    result = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
+    assert result.action == "removed"
+    receipt = result.preserved_artifacts
+    assert receipt["paths"][0]["class"] == "unknown_baseline"
+    assert (
+        hashlib.sha256((repo / receipt["location"] / source.relative_to(tree)).read_bytes()).hexdigest()
+        == hashlib.sha256(b"unique output").hexdigest()
+    )
+
+
 @pytest.mark.parametrize("failure", [None, "corrupt_copy", "changed_source", "reused", "wrong_nonce", "dry_run"])
 def test_post_task_release_cli_requires_owner_and_current_retrieval(boundary_tree, monkeypatch, capsys, failure):
     from scripts.fleet import post_task_reap
@@ -536,6 +577,21 @@ def test_untrusted_creation_inventory_never_shrinks_preservation(boundary_tree, 
     assert (repo / receipt["location"] / "ignored/preexisting.txt").read_bytes() == b"old corpus bytes"
 
 
+def test_empty_kept_tree_still_requires_explicit_retrieved_owner_release(boundary_tree, monkeypatch):
+    from scripts.fleet import post_task_reap
+
+    repo, tree, tasks, record = boundary_tree
+    record["keep_worktree"] = True
+    (tasks / "boundary.json").write_text(json.dumps(record))
+    first = boundary_remove("claims", boundary_tree, monkeypatch)
+    assert first["action"] == "skipped" and tree.exists()
+    assert first["preserved_artifacts"]["count"] == 0
+    assert first["preserved_artifacts"]["retrieval_proof_sha256"]
+    assert post_task_reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
+    result = boundary_remove("claims", boundary_tree, monkeypatch)
+    assert result["action"] == "removed" and not tree.exists()
+
+
 @pytest.mark.parametrize("name", ["__pycache__", ".pytest_cache", ".entire/logs"])
 def test_regular_files_with_cache_directory_names_are_preserved(boundary_tree, name):
     repo, tree, tasks, record = boundary_tree
@@ -566,6 +622,21 @@ def test_retention_in_finished_reference_cannot_be_hidden_by_newer_record(bounda
     assert source.read_bytes() == b"retained corpus"
     assert result.preserved_artifacts["retention_disposition"] == "retained"
     assert result.preserved_artifacts["owner"] and result.preserved_artifacts["next_condition"]
+
+
+def test_ambiguous_non_kept_output_retains_unknown_attribution(boundary_tree):
+    repo, tree, tasks, record = boundary_tree
+    record.pop("worktree_reused")
+    (tasks / "boundary.json").write_text(json.dumps(record))
+    (tasks / "other.json").write_text(json.dumps({"task_id": "other", "status": "done", "worktree_path": str(tree)}))
+    source = tree / "ignored/output.md"
+    source.parent.mkdir()
+    source.write_bytes(b"unknown owner")
+    result = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
+    assert result.action == "skipped" and tree.exists()
+    assert result.preserved_artifacts["owner"] == "infra lane"
+    assert result.preserved_artifacts["next_condition"]
+    assert not (repo / "batch_state/preserved").exists()
 
 
 def test_malformed_worktree_field_cannot_hide_cwd_bound_retention(boundary_tree):
@@ -614,3 +685,78 @@ def test_kept_record_path_spellings_refuse_removal(boundary_tree, monkeypatch, s
     assert json.loads(path.read_text())["preserved_artifacts"] == receipt
     if has_output:
         assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == source.read_bytes()
+
+
+@pytest.mark.parametrize("spelling", ["relative", "tilde"])
+@pytest.mark.parametrize("has_output", [False, True], ids=["empty", "output"])
+def test_release_retention_cli_matches_record_path_spellings(boundary_tree, monkeypatch, capsys, spelling, has_output):
+    from scripts.fleet import post_task_reap
+
+    repo, tree, tasks, record = boundary_tree
+    monkeypatch.setenv("HOME", str(repo.parent))
+    # The real CLI must remove the tree after release from an unrelated cwd.
+    monkeypatch.chdir(repo.parent)
+    location = (
+        tree.relative_to(repo).as_posix() if spelling == "relative" else "~/" + tree.relative_to(repo.parent).as_posix()
+    )
+    record.update({"worktree_path": location, "keep_worktree": True})
+    path = tasks / "boundary.json"
+    path.write_text(json.dumps(record))
+    if has_output:
+        source = tree / "ignored/output.txt"
+        source.parent.mkdir()
+        source.write_bytes(b"released output")
+    first = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
+    assert first.action == "skipped" and tree.exists()
+    receipt = first.preserved_artifacts
+    argv = [
+        "--task-id",
+        "boundary",
+        "--tasks-dir",
+        str(tasks),
+        "--repo-root",
+        str(repo),
+        "--release-retention",
+        "--apply",
+    ]
+    assert post_task_reap.main(argv) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["main_worktree"]["action"] == "removed", report
+    assert not tree.exists()
+    saved = json.loads(path.read_text())
+    assert saved["keep_worktree"] is False
+    release = saved["preserved_artifacts"]["retention_release"]
+    assert release["owner"] == "boundary"
+    assert release["retrieval_proof_sha256"] == receipt["retrieval_proof_sha256"]
+    assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    if has_output:
+        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"released output"
+
+
+@pytest.mark.parametrize("spelling", ["relative", "tilde"])
+def test_record_path_spellings_publish_copy_failure(boundary_tree, monkeypatch, spelling):
+    repo, tree, tasks, record = boundary_tree
+    monkeypatch.setenv("HOME", str(repo.parent))
+    monkeypatch.chdir(tree)
+    location = (
+        tree.relative_to(repo).as_posix() if spelling == "relative" else "~/" + tree.relative_to(repo.parent).as_posix()
+    )
+    record.update({"worktree_path": location, "keep_worktree": True})
+    path = tasks / "boundary.json"
+    path.write_text(json.dumps(record))
+    source = tree / "ignored/output.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"uncopied output")
+
+    def fail_copy(*_args, **_kwargs):
+        raise OSError("injected copy failure")
+
+    monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)
+    result = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
+    assert result.action == "skipped" and tree.exists()
+    saved = json.loads(path.read_text())
+    assert "injected copy failure" in saved["artifact_preservation_error"]
+    assert saved["keep_worktree"] is True
+    assert saved["preserved_artifacts"] == result.preserved_artifacts
+    assert result.preserved_artifacts["owner"] == "boundary"
+    assert source.read_bytes() == b"uncopied output"

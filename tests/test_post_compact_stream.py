@@ -12,6 +12,8 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 HOOK = Path("agents_extensions/shared/hooks/post-compact.sh")
 
@@ -211,6 +213,23 @@ def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> N
     assert "--stream epic:6321" in head_args[0]  # allow-hardcoded-epic: #9956 pre-fix launcher lease fixture
     assert head_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: #9956 pre-fix lease fixture
     print("unfixed condition: invalid-stream-id BLOCKED; head: --stream epic:6321 READY")
+
+
+@pytest.mark.parametrize(
+    "selector,stream",
+    [
+        ("infra", "epic:6943"),
+        ("infra.devops", "epic:5703"),
+        ("curriculum-upgrade", "epic:7994"),
+        ("open-model-data", "epic:6321"),
+    ],
+)
+def test_hook_valid_launcher_lane_classes_are_ready(tmp_path, selector, stream) -> None:
+    context, args, requests = _run_hook(tmp_path, selector=selector, stream=stream)
+    assert "HYDRATION BLOCKED" not in context
+    assert '"execution_allowed": true' in context
+    assert f"--stream {stream}" in args[0]
+    assert requests == [f"/api/epics/v1/{stream}?limit=1"]
 
 
 def test_hook_prefers_exact_launcher_stream_over_selector(tmp_path) -> None:

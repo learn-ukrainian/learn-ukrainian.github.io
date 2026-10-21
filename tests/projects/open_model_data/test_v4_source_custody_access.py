@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_source_custody_access as custody
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -24,11 +25,15 @@ from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 from tests._host_path_guard import (
     FIXTURE_HOME,
     FIXTURE_USER,
+    assert_no_checkout_paths,
+    assert_no_host_templates,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_CUSTODY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "custody"
 CONFIG_PATH = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_config_v1.json"
+CONFIG_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_config_v1.schema.json")
+ITEM_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
 SYNTHETIC_PROVENANCE = Path(__file__).parent / "fixtures/v4_source_custody_provenance.jsonl"
 
 
@@ -118,6 +123,29 @@ def repo_root() -> Path:
     return Path.cwd()
 
 
+def test_config_passes_schema() -> None:
+    config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    schema = json.loads(CONFIG_SCHEMA.read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    errors = list(validator.iter_errors(config))
+    assert not errors, f"Config schema errors: {errors}"
+
+
+def test_schema_cache_reloads_changed_content_at_same_path(tmp_path: Path) -> None:
+    schema_path = tmp_path / "schema.json"
+    first = {"type": "object", "required": ["first"]}
+    second = {"type": "object", "required": ["second"]}
+    schema_path.write_text(json.dumps(first), encoding="utf-8")
+    validator = custody._load_schema(schema_path, [tmp_path])
+    assert not list(validator.iter_errors({"first": 1}))
+
+    schema_path.write_text(json.dumps(second), encoding="utf-8")
+    updated = custody._load_schema(schema_path, [tmp_path])
+    assert updated is not validator
+    assert list(updated.iter_errors({"first": 1}))
+    assert not list(updated.iter_errors({"second": 1}))
+
+
 def test_schema_cache_preserves_utf8_bom_rejection(tmp_path: Path) -> None:
     schema_path = tmp_path / "schema.json"
     schema_path.write_bytes(b'\xef\xbb\xbf{"type": "object"}')
@@ -154,10 +182,52 @@ def test_verify_passes_on_committed_artifacts(
     assert custody.verify(CONFIG_PATH, input_root=hydrated_root, output_root=output_root, require_database=True) is True
 
 
+def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
+    production_paths = (
+        Path("scripts/projects/open_model_data/v4_source_custody_access.py"),
+        Path("scripts/projects/open_model_data/v4_language_usage_separation.py"),
+        Path("scripts/projects/open_model_data/v4_native_extraction_validation.py"),
+        Path("scripts/projects/open_model_data/validate_source_records.py"),
+        Path("scripts/projects/open_model_data/model_view_exporter.py"),
+        Path("docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md"),
+        Path("scripts/config/fleet_repos.yaml"),
+    )
+    for path in production_paths:
+        text = path.read_text(encoding="utf-8")
+        assert_no_checkout_paths(text, f"{path} bakes a host run-root")
+        assert_no_host_templates(text, f"{path} documents a host path template")
+
+
 def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, str(tmp_path / "missing"))
     with pytest.raises(custody.CustodyAccessError, match=custody.PRIMARY_REPO_ROOT_ENV):
         custody._primary_repo_root()
+
+
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+)
+def test_index_records_pass_schema_and_have_no_corpus_text() -> None:
+    index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    schema = json.loads(ITEM_SCHEMA.read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+
+    with index_path.open(encoding="utf-8") as f:
+        header = json.loads(f.readline())
+        assert header["schema_version"] == "v4_source_custody_access_index_v1"
+        assert header["records"] == 351
+
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            errors = list(validator.iter_errors(row))
+            assert not errors, f"Row error: {errors}"
+            # Ensure no corpus text leaked
+            assert "text" not in row
+            assert "content" not in row
+            assert "raw" not in row
 
 
 def test_check_chunk_file_lineage_native(tmp_path: Path) -> None:
@@ -575,6 +645,32 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
         custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"
     ):
         synthetic_bundle.verify()
+
+
+def test_verify_allows_missing_report_valid_prose_with_reserved_words(
+    synthetic_bundle: SyntheticCustodyBundle, tmp_path: Path
+) -> None:
+    # Use valid prose containing reserved words ('root', 'temp', 'private') in scope
+    prose = "root cause analysis: temp failure investigation for private archive reachability"
+    cfg_data = json.loads(Path(CONFIG_PATH).read_text(encoding="utf-8"))
+    cfg_data["ownership"]["blocks_scope"] = prose
+    test_cfg_path = tmp_path / "test_config.json"
+    test_cfg_path.write_text(json.dumps(cfg_data, indent=2), encoding="utf-8")
+
+    header, records = synthetic_bundle.read_index()
+    header_dict = json.loads(header)
+    header_dict["config_sha256"] = custody.sha256_file(test_cfg_path)
+    synthetic_bundle.write_index(custody.canonical_json(header_dict), records)
+
+    missing_data = synthetic_bundle.read_missing()
+    missing_data["scope"] = prose
+    synthetic_bundle.write_missing(missing_data)
+
+    receipt = synthetic_bundle.read_receipt()
+    receipt["config_sha256"] = custody.sha256_file(test_cfg_path)
+    synthetic_bundle.rehash_receipt(receipt)
+
+    assert synthetic_bundle.verify(test_cfg_path) is True
 
 
 def _fake_bulk_root(root: Path) -> Path:

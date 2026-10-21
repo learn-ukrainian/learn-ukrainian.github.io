@@ -144,6 +144,19 @@ def test_runtime_data_available_when_7d_usage_exists_but_ledger_empty(monkeypatc
     assert any("ledger empty" in w and "runtime usage" in w for w in data["recommendation"]["warnings"])
 
 
+def test_runtime_data_unavailable_when_no_usage_anywhere(monkeypatch, tmp_path):
+    now = datetime(2026, 8, 22, 12, 0, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, runtime_records_7d=0)
+
+    data = state_router.compute_routing_budget(now)
+
+    diag = data["diagnostics"]
+    assert diag["budget_ledger_empty"] is True
+    assert diag["runtime_data_available"] is False
+    assert diag["runtime_usage_records_7d"] == 0
+    assert not any("runtime usage has" in w for w in data["recommendation"]["warnings"])
+
+
 def test_runtime_probe_failure_degrades_without_breaking_budget(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, runtime_records_7d=0)
 

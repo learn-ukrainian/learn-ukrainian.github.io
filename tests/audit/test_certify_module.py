@@ -22,6 +22,27 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def test_qg_artifacts_match_only_known_direct_files(tmp_path: Path) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    expected = {
+        "llm_qg.json": "{}\n",
+        "python_qg.json": "{}\n",
+        "llm-qg-naturalness-prompt.md": "prompt\n",
+        "llm-qg-tone-response.raw.md": "raw\n",
+    }
+    for name, content in expected.items():
+        (module_dir / name).write_text(content, encoding="utf-8")
+    (module_dir / "llm-qg-notes.txt").write_text("keep\n", encoding="utf-8")
+    nested = module_dir / "nested"
+    nested.mkdir()
+    (nested / "llm_qg.json").write_text("{}\n", encoding="utf-8")
+
+    artifacts = certify_module.qg_artifacts(module_dir)
+
+    assert {path.name for path in artifacts} == set(expected)
+
+
 def test_inspect_qg_artifacts_flags_empty_and_malformed_outputs(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()

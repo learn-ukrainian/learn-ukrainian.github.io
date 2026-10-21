@@ -23,7 +23,7 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.report import save_status_cache
-from scripts.audit.status_cache import read_status
+from scripts.audit.status_cache import StatusResult, get_source_paths, read_status
 from scripts.generate_level_status import get_json_cache
 
 # =============================================================================
@@ -84,6 +84,31 @@ class TestPlanMtimePopulated:
             data = json.load(f)
 
         assert data["source_mtimes"]["plan"] is None
+
+    def test_plan_path_resolves_for_core_track(self):
+        """Plan mtime works for core tracks too (e.g., a1)."""
+        # Create a1 structure
+        a1_dir = self.l2_dir / "a1"
+        a1_dir.mkdir(parents=True)
+        (a1_dir / "status").mkdir()
+
+        plans_a1 = self.l2_dir / "plans" / "a1"
+        plans_a1.mkdir(parents=True)
+        plan = plans_a1 / "01-basics.yaml"
+        plan.write_text("title: Basics\n")
+
+        md = a1_dir / "01-basics.md"
+        md.write_text("# Basics\nContent.")
+
+        path = save_status_cache(
+            str(md), "A1", "01-basics",
+            results={}, has_critical_failure=False,
+            critical_failure_reasons=[],
+        )
+        with open(path) as f:
+            data = json.load(f)
+
+        assert data["source_mtimes"]["plan"] is not None
 
 
 # =============================================================================
@@ -183,6 +208,13 @@ class TestMultiFileFreshness:
         assert result is not None
         assert result["cached"] is True
 
+    def test_cache_stale_when_plan_is_newer(self):
+        """Cache should be stale when plan yaml changes after audit."""
+        time.sleep(0.05)
+        self.plan_file.write_text("title: Updated Plan\nword_target: 4000\n")
+        result = get_json_cache("b1", "06-test-module", self.md_file)
+        assert result is None
+
 
 # =============================================================================
 # #561: Shared status cache access layer
@@ -218,6 +250,10 @@ class TestReadStatus:
     def teardown_method(self):
         shutil.rmtree(self.tmpdir)
 
+    def test_returns_none_for_missing_file(self):
+        missing = self.status_dir / "nonexistent.json"
+        assert read_status(missing) is None
+
     def test_returns_none_for_corrupt_json(self):
         corrupt = self.status_dir / "corrupt.json"
         corrupt.write_text("not valid json{{{")
@@ -230,6 +266,18 @@ class TestReadStatus:
         assert result.status == "pass"
         assert result.module == "test-module"
         assert result.level == "A1"
+
+    def test_fresh_when_sources_older(self):
+        """Status file newer than all sources → fresh."""
+        # Create source files, then touch status to be newer
+        src = Path(self.tmpdir) / "source.md"
+        src.write_text("old content")
+        time.sleep(0.05)
+        self.status_file.write_text(json.dumps(self.status_data))
+
+        result = read_status(self.status_file, source_paths={"md": src})
+        assert result.is_fresh is True
+        assert result.stale_sources == []
 
     def test_stale_when_source_newer(self):
         """Source file newer than status → stale."""
@@ -246,3 +294,46 @@ class TestReadStatus:
         missing = Path(self.tmpdir) / "does-not-exist.yaml"
         result = read_status(self.status_file, source_paths={"meta": missing})
         assert result.is_fresh is True
+
+
+class TestStatusResult:
+    """Test StatusResult wrapper properties."""
+
+    def test_has_issues_stale_fail(self):
+        """Stale failures are not authoritative."""
+        r = StatusResult(data={"overall": {"status": "fail"}}, is_fresh=False, stale_sources=["md"])
+        assert r.has_issues is False
+
+
+class TestGetSourcePaths:
+    """Test get_source_paths() path resolution."""
+
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.track_dir = Path(self.tmpdir) / "curriculum" / "l2-uk-en" / "a1"
+        self.track_dir.mkdir(parents=True)
+        (self.track_dir / "meta").mkdir()
+        (self.track_dir / "activities").mkdir()
+        (self.track_dir / "vocabulary").mkdir()
+        plans_dir = self.track_dir.parent / "plans" / "a1"
+        plans_dir.mkdir(parents=True)
+
+    def teardown_method(self):
+        shutil.rmtree(self.tmpdir)
+
+    def test_resolves_bare_slug(self):
+        md = self.track_dir / "test-module.md"
+        md.write_text("content")
+        paths = get_source_paths(self.track_dir, "test-module")
+        assert paths["md"] == md
+
+    def test_resolves_numeric_prefix(self):
+        md = self.track_dir / "05-test-module.md"
+        md.write_text("content")
+        paths = get_source_paths(self.track_dir, "test-module")
+        assert paths["md"] == md
+
+    def test_plan_path_correct(self):
+        paths = get_source_paths(self.track_dir, "test-module")
+        expected = self.track_dir.parent / "plans" / "a1" / "test-module.yaml"
+        assert paths["plan"] == expected

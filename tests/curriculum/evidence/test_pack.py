@@ -361,6 +361,63 @@ def test_lock_fails_only_when_cited_content_changes(
         assert any(codes.QUOTE_MISMATCH in e for e in res["errors"])
 
 
+@pytest.mark.parametrize(
+    ("section", "request_key", "record", "table", "drift_sql"),
+    [
+        (
+            "errors",
+            {
+                "id": "E-001",
+                "source": {"table": "ua_gec_errors", "error": "synthetic-bad", "correct": "synthetic-good"},
+                "pattern": "p",
+            },
+            "E-001",
+            "ua_gec_errors",
+            "UPDATE ua_gec_errors SET error_type = 'Relabelled' WHERE id = 1",
+        ),
+        (
+            "notes",
+            {"id": "N-001", "source": {"table": "style_guide", "id": 1}},
+            "N-001",
+            "style_guide",
+            "UPDATE style_guide SET section = 'renamed section' WHERE id = 1",
+        ),
+    ],
+)
+def test_metadata_only_drift_on_errors_and_notes(
+    synthetic_sources,
+    synthetic_standard,
+    synthetic_word_store,
+    tmp_path,
+    section,
+    request_key,
+    record,
+    table,
+    drift_sql,
+):
+    req_file = tmp_path / "req.yaml"
+    req_file.write_text(
+        yaml.safe_dump({"request_schema": 1, "module": "a1/test-mod", section: [request_key]}), encoding="utf-8"
+    )
+    res = _build(synthetic_sources, synthetic_standard, synthetic_word_store, req_file)
+    source = res["pack"][section][0]["source"]
+    assert source["table"] == table and len(source["row_sha256"]) == 64
+    assert res["pack"]["built_with"]["sources_db"] == sources.aggregate_digest([(f"{table}:1", source["row_sha256"])])
+
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert (res["status"], res["warnings"]) == ("ok", [])
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(drift_sql)
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []  # the copied values still match; only the row's identity moved
+    assert any(codes.SOURCE_CHANGED in w and record in w for w in res["warnings"])
+    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert res["status"] == "failed"
+    assert res["cited_rows_drifted"] == [record]
+
+
 def test_legacy_pack_and_tampered_identities(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
     _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
     pack_path = synthetic_word_store / "test-mod.yaml"
@@ -809,6 +866,41 @@ def test_db_opened_readonly(synthetic_sources):
     with pytest.raises(sqlite3.OperationalError):
         conn.execute("INSERT INTO style_guide (id, word, text) VALUES (99, 'fail', 'fail')")
     conn.close()
+
+
+def test_file_modes(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
+    """Atomic write sets file modes to 0o644."""
+    req_file = tmp_path / "req.yaml"
+    req_file.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "module": "a1/test-mod",
+                "texts": [
+                    {
+                        "id": "T-001",
+                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
+                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
+                        "supports": "Mode test.",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    src = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
+    res = pack.build_pack(
+        "a1",
+        "test-mod",
+        req_file,
+        evidence_dir=synthetic_word_store,
+        sources_instance=src,
+        offline=True,
+    )
+    p = Path(res["pack_path"])
+    mode = oct(p.stat().st_mode & 0o777)
+    assert mode == "0o644"
 
 
 def _texts_only_request(tmp_path) -> Path:

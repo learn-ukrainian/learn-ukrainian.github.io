@@ -230,3 +230,28 @@ def test_valid_unicode_and_blank_lines_are_not_corrupt(reader, isolated_usage, c
         _assert_rows(reader, result, record)
     assert counts == {"files": 0, "lines": 0, "records": 0}
     assert not caplog.records
+
+
+@pytest.mark.parametrize("reader", READERS)
+def test_missing_usage_directory_is_empty(reader, isolated_usage, monkeypatch):
+    missing = isolated_usage / "missing"
+    monkeypatch.setattr(_cli.runtime_usage, "_usage_dir", lambda: missing)
+    counts = {"files": 0, "lines": 0, "records": 0}
+    assert not _read(reader, missing, counts)
+    assert counts == {"files": 0, "lines": 0, "records": 0}
+
+
+def test_codex_reader_counts_stat_failure(isolated_usage, monkeypatch):
+    path = _path(isolated_usage, "codex-report")
+    path.write_bytes(_line(_record()))
+    real_stat = Path.stat
+
+    def denied(candidate, *args, **kwargs):
+        if candidate == path:
+            raise PermissionError("unreadable fixture")
+        return real_stat(candidate, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", denied)
+    counts = {"files": 0, "lines": 0, "records": 0}
+    assert _read("codex-report", isolated_usage, counts) == []
+    assert counts == {"files": 1, "lines": 0, "records": 0}

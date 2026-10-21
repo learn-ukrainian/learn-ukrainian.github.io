@@ -171,6 +171,28 @@ def test_seed_emits_one_entry_per_obligation_in_manifest_order() -> None:
     ]
 
 
+def test_artifact_mapping_matches_obligation_type_and_treatment() -> None:
+    payload = seed_implementation_map(_fixture_manifest())
+    artifacts = {entry["obligation_id"]: entry["artifact"] for entry in payload["entries"]}
+
+    assert artifacts == {
+        "step-1": "module.md",
+        "step-2": "module.md",
+        "step-3": "module.md",
+        "step-4": "module.md",
+        "l2-1": "activities.yaml",
+        "l2-2": "activities.yaml",
+        "l2-3": "module.md",
+        "phon-1": "module.md",
+        "phon-2": "module.md",
+        "ban-1": "module.md",
+        "ban-2": "module.md",
+        "ban-3": "module.md",
+        "ban-4": "module.md",
+        "ban-5": "module.md",
+    }
+
+
 def test_manifest_payload_round_trips_verbatim() -> None:
     manifest = _fixture_manifest()
     payload = seed_implementation_map(manifest)
@@ -201,6 +223,15 @@ def test_write_read_round_trip_identity(tmp_path: Path) -> None:
     assert read_implementation_map(path) == payload
 
 
+def test_seeder_is_byte_deterministic() -> None:
+    manifest = _fixture_manifest()
+
+    first = json.dumps(seed_implementation_map(manifest), ensure_ascii=False, indent=2, sort_keys=True)
+    second = json.dumps(seed_implementation_map(manifest), ensure_ascii=False, indent=2, sort_keys=True)
+
+    assert first == second
+
+
 def test_m20_real_world_manifest_seeds_gate_obligation_count() -> None:
     manifest = extract_manifest(PROJECT_ROOT / "wiki/pedagogy/a1/my-morning.md")
     payload = seed_implementation_map(manifest)
@@ -217,6 +248,10 @@ def test_classify_ban_substance_required_with_substitution_pairs() -> None:
 def test_classify_ban_absence_required_pure_prohibition() -> None:
     for rule in (M20_BAN_1_RULE, M20_BAN_2_RULE, M20_BAN_3_RULE):
         assert classify_decolonization_ban_subtype(rule) == "absence_required"
+
+
+def test_classify_ban_edge_case_empty_rule() -> None:
+    assert classify_decolonization_ban_subtype("") == "absence_required"
 
 
 def test_seed_stamps_decolonization_ban_subtype() -> None:

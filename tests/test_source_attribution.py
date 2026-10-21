@@ -6,16 +6,22 @@ from scripts.lexicon.enrich_manifest import _merge_homonym_relations, _relation_
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
     KARAVANSKY_LABEL,
+    KHRESHCHATYK_LABEL,
+    LINGUISTIC_NORM_LABEL,
     MIYKLAS_LABEL,
     SUM20_ACADEMIC_LABEL,
+    academic_label_for_slug,
     apply_entry_attribution,
     cites_soviet_dictionary_outside_context,
     learner_facing_mirror_violations,
     learner_facing_unmapped_source_violations,
     normalize_academic_label,
+    official_url_for_slug,
+    official_url_from_mirror,
     soviet_citation_learner_violation,
     withhold_legacy_soviet_citations,
 )
+from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
 
 
 def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
@@ -134,6 +140,21 @@ def test_literary_quote_mentions_dictionary_without_citing_it() -> None:
     assert report["citations_withheld"] == 0
     entry["enrichment"]["literary_attestation"]["source"] = quote
     assert soviet_citation_learner_violation(entry) == "outside soviet_colonization_context"
+
+
+def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> None:
+    """#6460: reuse slovnyk.me labels; do not invent official edition URLs."""
+    assert SLOVNYK_ME_DICTS["linguistic_norm"] == LINGUISTIC_NORM_LABEL
+    assert SLOVNYK_ME_DICTS["khreshchatyk"] == KHRESHCHATYK_LABEL
+    assert academic_label_for_slug("linguistic_norm") == LINGUISTIC_NORM_LABEL
+    assert academic_label_for_slug("khreshchatyk") == KHRESHCHATYK_LABEL
+    assert official_url_for_slug("linguistic_norm", "що") is None
+    assert official_url_for_slug("khreshchatyk", "казати") is None
+    assert official_url_from_mirror("https://slovnyk.me/dict/linguistic_norm/%D1%89%D0%BE") is None
+    assert (
+        official_url_from_mirror("https://slovnyk.me/dict/khreshchatyk/%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8")
+        is None
+    )
 
 
 def test_apply_entry_attribution_moves_mirror_urls_internal() -> None:

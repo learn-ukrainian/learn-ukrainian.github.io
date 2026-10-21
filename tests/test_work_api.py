@@ -188,6 +188,62 @@ def test_projection_rejects_private_filter_keys(monkeypatch):
     assert bad.json()["detail"]["error"] == "invalid_saved_view"
 
 
+def test_projection_rejects_oversized_repeated_filters(monkeypatch):
+    """Endpoint 400 when raw multivalue exceeds the finite per-key domain bound."""
+    from scripts.work.schema import FILTER_MAX_RAW_ITEMS
+
+    cache_invalidate("work:v1:projection")
+
+    def fake_build(**_kwargs):
+        raise AssertionError("build must not run after oversized filter rejection")
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+    qs = "&".join(["health=ON_TRACK"] * (FILTER_MAX_RAW_ITEMS["health"] + 1))
+    response = client.get(f"/api/work/v1/projection?{qs}&stream=infra-harness")
+    assert response.status_code == 400
+    detail = response.json()["detail"]
+    assert detail["error"] == "invalid_saved_view"
+    assert "exceeds max" in detail["message"]
+
+    # Singleton repository_id also 400s on raw repetition.
+    dup_repo = client.get(f"/api/work/v1/projection?repository_id={REPO}&repository_id={REPO}&stream=infra-harness")
+    assert dup_repo.status_code == 400
+    assert dup_repo.json()["detail"]["error"] == "invalid_saved_view"
+
+
+def test_independent_degradation_when_one_section_fails(monkeypatch):
+    """FX-02 adjacent: optional section failure degrades the public envelope, not unavailable."""
+    cache_invalidate("work:v1:projection")
+    sections = _sections_with_canary()
+    sections["fleet_reviews"] = SectionResult("fleet_reviews", "timeout", reason="fleet_reviews_timeout")
+    sections["streams"] = SectionResult(
+        "streams",
+        "stale",
+        payload={"stale": True, "orphans": [], "multi_homed": [], "pending_native_link": [], "open_total": 0},
+        reason="stale",
+    )
+
+    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+        return build_projection(sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
+
+    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
+    response = client.get("/api/work/v1/projection?stream=infra-harness")
+    assert response.status_code == 200
+    data = response.json()
+    # Healthy GH issues still present
+    assert data["denominator"]["issues_open"] == 1
+    assert data["denominator"]["class4"]["fleet_reviews"] is False
+    assert any(o["class"] == "fleet_reviews" for o in data["denominator"]["omissions"])
+    assert any(o["class"] == "streams" for o in data["denominator"]["omissions"])
+    # Source status must be degraded (NOT unavailable) when core enumerations succeed
+    public_source = next(s for s in data["sources"] if s["source_id"] == "public-monitor")
+    assert public_source["status"] == "degraded"
+    assert public_source["sections"]["fleet_reviews"]["status"] == "timeout"
+    assert public_source["sections"]["streams"]["status"] == "stale"
+    assert public_source["sections"]["issues"]["status"] == "ok"
+    assert public_source["sections"]["prs"]["status"] == "ok"
+
+
 # ---------------------------------------------------------------------------
 # GET /api/work/v1/next — stream-scoped pick list (#6880)
 # ---------------------------------------------------------------------------
@@ -623,6 +679,24 @@ def test_next_registry_unavailable_503(monkeypatch):
     assert "detail" not in body
     assert "queue" not in body
     assert response.headers.get("retry-after") == "3"
+
+
+def test_projection_membership_and_epic_status():
+    """Homed issues carry public-safe stream membership; epics get status=epic."""
+    projection = build_projection(_next_sections(), repository_id=REPO)
+    by_id = {i["work_id"]: i for i in projection["items"]}
+
+    homed = by_id[_wid(6001)]["projections"]["stream"]
+    assert homed["status"] == "homed"
+    assert homed["streams"] == ["infra-harness"]
+
+    epic = by_id[_wid(6900)]["projections"]["stream"]
+    assert epic["status"] == "epic"
+    assert epic["streams"] == ["infra-harness"]
+
+    orphan = by_id[_wid(6003)]["projections"]["stream"]
+    assert orphan["status"] == "orphan"
+    assert orphan["streams"] == []
 
 
 def test_streams_loader_derives_public_membership_and_strips_private_index():
@@ -1533,6 +1607,92 @@ def test_work_next_counts_in_stream_unknown_source(monkeypatch):
     assert nxt["queue"] == []
     assert nxt["digest"]["unscoped_unknown"]["count"] == 1
     assert nxt["digest"]["unscoped_unknown"]["reason_counts"] == {"source_unavailable": 1}
+
+
+def test_projection_timeout_fallback_downgrades_decision_fields(monkeypatch):
+    import time
+
+    from scripts.api.state_helpers import cache_get_with_age, cache_set
+
+    key = work_router.projection_cache_key({})
+    stored = {
+        "schema_version": "work-projection.v1",
+        "generated_at": "2026-08-16T00:00:00Z",
+        "cache_age_s": 0.0,
+        "budget": {"warm_target_s": 2, "timeout_s": 5},
+        "sources": [],
+        "items": [
+            {
+                "work_id": "wp1:pr:77",
+                "health": "ON_TRACK",
+                "safe_next_action": {
+                    "code": "MERGE_WHEN_READY",
+                    "reason_codes": ["ci_passed_current_head"],
+                    "state": "ready",
+                },
+                "flags": {"attention": True},
+                "projections": {
+                    "stream": {"status": "homed", "streams": ["infra-harness"], "fresh": True},
+                    "dispatch": {"alive": [True]},
+                    "review": {"review_decision": "APPROVED"},
+                    "verification": {
+                        "kind": "gh_checks",
+                        "state": "passing",
+                        "ci_state": "passing",
+                        "merge_evidence": {"state": "ready", "reason": "ci_passed_current_head"},
+                    },
+                },
+                "authority": [{"domain": "github", "observed_at": "2026-08-16T00:00:00Z", "age_s": 1, "stale": False}],
+            }
+        ],
+        "attention": [
+            {
+                "work_id": "wp1:pr:77",
+                "health": "ON_TRACK",
+                "safe_next_action": {
+                    "code": "MERGE_WHEN_READY",
+                    "reason_codes": ["ci_passed_current_head"],
+                    "state": "ready",
+                },
+            }
+        ],
+        "denominator": {"issues_open": 0, "prs_open": 1, "streams_complete": True, "omissions": []},
+        "capabilities": {"mutation": False},
+        "foundation_status": "FOUNDATION_COMPLETE",
+    }
+    cache_set(key, stored)
+
+    def aged(cache_key, max_age):
+        if max_age <= work_router.CACHE_TTL_S:
+            return None
+        return stored, 301.0
+
+    monkeypatch.setattr(work_router, "cache_get_with_age", aged)
+    monkeypatch.setattr(work_router, "TIMEOUT_S", 0.01)
+    monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: time.sleep(0.05))
+
+    response = client.get("/api/work/v1/projection?stream=infra-harness")
+    assert response.status_code == 200, response.text
+    data = response.json()
+    item = data["items"][0]
+    assert data["cache_age_s"] == 301.0
+    assert item["health"] == "UNKNOWN"
+    assert item["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert item["safe_next_action"]["reason_codes"] == ["projection_cache_past_freshness"]
+    assert item["safe_next_action"]["state"] == "unknown"
+    assert item["flags"]["attention"] is False
+    assert item["projections"]["stream"]["status"] == "unknown"
+    assert item["projections"]["stream"]["streams"] == []
+    assert item["projections"]["verification"]["ci_state"] == "unknown"
+    assert item["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
+    assert item["projections"]["review"]["review_decision"] == "UNKNOWN"
+    assert item["projections"]["dispatch"]["alive"] == [None]
+    assert data["denominator"]["streams_complete"] is False
+    assert data["attention"][0]["health"] == "UNKNOWN"
+    # The cached object itself is not poisoned.
+    assert stored["items"][0]["health"] == "ON_TRACK"
+    assert stored["denominator"]["streams_complete"] is True
+    assert cache_get_with_age is not None
 
 
 def test_ledger_contents_never_reach_projection_or_next(monkeypatch):

@@ -161,6 +161,23 @@ def test_monitor_api_failure_warns_but_does_not_block_dispatch(monkeypatch, caps
     assert events[0][0] == "monitor_api_unreachable_pre_dispatch"
 
 
+def test_healthy_monitor_api_emits_no_dispatch_warning(monkeypatch, capsys):
+    class Response:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", lambda *_args, **_kwargs: Response())
+
+    delegate._warn_if_monitor_api_unreachable()
+
+    assert capsys.readouterr().err == ""
+
+
 # ---------------------------------------------------------------------------
 # instructive fetch failure (no silent stale-base fallback)
 # ---------------------------------------------------------------------------
@@ -199,6 +216,27 @@ def test_ensure_worktree_fetch_failure_is_actionable_error(tmp_tasks_dir, tmp_pa
             agent="codex",
             task_id="5803-offline",
             raw_path=str(target),
+            base="main",
+        )
+
+
+def test_ensure_worktree_fetch_failure_mentions_canonical_remote(tmp_tasks_dir, tmp_path, monkeypatch):
+    _pin_single_remote_host(monkeypatch)
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(cmd, 1, "", "fatal: unable to access")
+        if cmd[:2] == ["git", "rev-parse"] and "--verify" in cmd:
+            return subprocess.CompletedProcess(cmd, 1, "", "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(RuntimeError, match="canonical remote"):
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="5803-offline-2",
+            raw_path=str(tmp_path / "wt2"),
             base="main",
         )
 
@@ -424,6 +462,20 @@ def test_fetch_existing_branch_canonical_failure_never_falls_back_to_mirror(tmp_
     assert "origin" in message and "git remote -v" in message
 
 
+def test_base_branch_name_strips_remote_prefixes():
+    assert delegate._base_branch_name("main") == "main"
+    assert delegate._base_branch_name("origin/main") == "main"
+    assert delegate._base_branch_name("github/main") == "main"
+    assert delegate._origin_base_ref("main") == "origin/main"
+    assert delegate._origin_base_ref("origin/main") == "origin/main"
+    assert delegate._origin_base_ref("github/main") == "origin/main"
+
+
+def test_validate_branch_reuse_name_rejects_github_prefix():
+    with pytest.raises(ValueError, match="github/"):
+        delegate._validate_branch_reuse_name("github/feature")
+
+
 def test_worktree_base_pins_canonical_github_sha_when_origin_mirror_lags(tmp_path, monkeypatch, capsys):
     """#7522 acceptance, real git end to end: a host whose origin is a mirror
     1+ commits behind GitHub and whose `github` remote is canonical must get a
@@ -511,9 +563,30 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------------
 
 
+def test_worktree_prompt_teaches_in_worktree_fetch():
+    prompt = delegate._augment_prompt_with_worktree("do the thing", Path("/tmp/wt"))
+    assert "git fetch origin main" in prompt
+    assert "INSIDE this worktree" in prompt
+    assert "primary checkout" in prompt
+
+
 # ---------------------------------------------------------------------------
 # GIT_CEILING_DIRECTORIES damage reduction
 # ---------------------------------------------------------------------------
+
+
+def test_git_ceiling_env_set_to_worktree_parent():
+    env: dict[str, str] = {}
+    worktree = Path("/repo/.worktrees/dispatch/codex/task-1")
+    delegate._apply_worktree_git_ceiling(env, worktree)
+    assert env["GIT_CEILING_DIRECTORIES"] == "/repo/.worktrees/dispatch/codex"
+
+
+def test_git_ceiling_env_appends_to_existing():
+    env = {"GIT_CEILING_DIRECTORIES": "/elsewhere"}
+    worktree = Path("/repo/.worktrees/dispatch/codex/task-1")
+    delegate._apply_worktree_git_ceiling(env, worktree)
+    assert env["GIT_CEILING_DIRECTORIES"] == f"/elsewhere{os.pathsep}/repo/.worktrees/dispatch/codex"
 
 
 def test_git_ceiling_keeps_linked_worktree_ops_working(tmp_path):

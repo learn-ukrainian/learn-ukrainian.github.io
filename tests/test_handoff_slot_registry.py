@@ -292,6 +292,23 @@ def test_every_registered_slot_is_reachable_from_a_selector_for_its_provider() -
     assert not unminted, f"roster slots no launcher selector can mint: {unminted}"
 
 
+def test_generic_registry_keys_are_registered_or_refused_for_every_provider() -> None:
+    """A registry key is accepted only when its provider slot is registered."""
+    keys = _registry_stream_keys()
+    lanes, gate = _gate_matrix()
+    for selector in [*keys, *(f"infra.{key}" for key in keys)]:
+        if selector not in lanes:
+            continue
+        lane = lanes[selector]
+        for provider in PROVIDERS:
+            expected = 0 if registry.is_registered_slot(f"{provider}-{lane}") else 3
+            assert gate[provider][lane] == expected, f"{selector}: {provider}-{lane} gate disagrees with roster"
+            if lane in {"folk", "bio", "hramatka"}:
+                assert (expected == 0) == (provider in {"claude", "codex", "gemini"}), (
+                    f"{selector}: {provider}-{lane} violates operator order"
+                )
+
+
 def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> None:
     """grok-monitor receives its own inbox; Muse keeps its monitor identity; other monitor names stay legacy."""
     roster = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))

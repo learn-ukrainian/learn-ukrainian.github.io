@@ -98,6 +98,14 @@ def test_invalid_yaml_and_duplicate_keys(retired, raw):
         retirement_record(path.parent)
 
 
+def test_discovery_without_record_and_cross_checks_remain_strict(tmp_path):
+    (tmp_path / "ordinary.yaml").write_text("slug: ordinary\narc_ref: {position: 1}\n")
+    (tmp_path / "_scope.yaml").write_text("ignored: true")
+    assert retirement_record(tmp_path)["plans"] == []
+    assert [path.stem for path in active_plan_paths(tmp_path)] == ["ordinary"]
+    assert cross.load_level_plans(tmp_path).by_position[1][0] == "ordinary"
+
+
 def test_real_three_exact_plan_hashes_are_retired():
     directory = Path(__file__).resolve().parents[2] / "curriculum/l2-uk-en/lesson-plans/a1"
     record = retirement_record(directory)

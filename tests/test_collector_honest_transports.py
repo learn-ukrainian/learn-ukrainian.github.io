@@ -192,6 +192,21 @@ def test_curl_response_physical_headers_and_capture_metadata(curl_capture, eol, 
 
 
 @pytest.mark.parametrize("eol", [b"\r\n", b"\n"], ids=["crlf", "lf"])
+@pytest.mark.parametrize("value,expected", [
+    (b"safe\x85Cf-Mitigated: challenge", "safe\x85Cf-Mitigated: challenge"),
+    (b"safe\x85Location: /private", "safe\x85Location: /private"),
+    (b"safe\x85Retry-After: 999", "safe\x85Retry-After: 999"),
+    (b"safe\x85HTTP/1.1 200 OK", "safe\x85HTTP/1.1 200 OK"),
+], ids=["challenge-field", "redirect-field", "retry-field", "status-reset"])
+def test_curl_response_nel_cannot_invent_fields_or_reset_block(curl_capture, eol, value, expected):
+    # Literal controls and expectations are independent of the parser's framing.
+    raw = eol.join([b"HTTP/1.1 200 OK", b"Cf-Mitigated: challenge", b"X-Opaque: " + value, b"X-After: retained", b"", b""])
+    status, headers, _body, _rc = curl_capture(raw)
+    assert status == 200
+    assert headers == {"cf-mitigated": "challenge", "x-opaque": expected, "x-after": "retained"}
+
+
+@pytest.mark.parametrize("eol", [b"\r\n", b"\n"], ids=["crlf", "lf"])
 @pytest.mark.parametrize("octet", range(0x80, 0x100), ids=lambda octet: f"{octet:02x}")
 def test_curl_response_preserves_every_opaque_octet(curl_capture, eol, octet):
     opaque = bytes([octet])
@@ -238,6 +253,13 @@ def test_denial_stops_run_without_retry_redirect_or_later_page(server, status, b
     assert list(server.tmp_path.glob("page-*.html")) == []
 
 
+def test_robots_denial_requests_no_source_page(server):
+    server.responses["https://source.test/robots.txt"] = [Response(b"Forbidden", 403)]
+    with pytest.raises(server.module.AccessStopped):
+        server.fetch("https://source.test/first")
+    assert len(server.calls) == 1 and server.source_calls() == []
+
+
 @pytest.mark.parametrize("status", [404, 503])
 def test_ordinary_errors_do_not_latch_a_denial(server, status):
     server.responses["https://source.test/bad"] = [Response(b"ordinary error", status)] * 3
@@ -246,6 +268,19 @@ def test_ordinary_errors_do_not_latch_a_denial(server, status):
     assert server.module._access_stopped is False
     server.fetch("https://source.test/good")
     assert server.source_calls()[-1][1] == "https://source.test/good"
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("body,expected", [
+    ("User-agent: *\nCrawl-delay: 1.25", 1.25),
+    ("User-agent: Other\nCrawl-delay: 99\nUser-agent: *\nCrawl-delay: 2.75", 99),
+    ("User-agent: *\nCrawl-delay: 99\nUser-agent: LearnUkrainianBot\nCrawl-delay: 1.25", 99),
+    ("User-agent: LearnUkrainianBot\nDisallow: /x\nCrawl-delay: .75\nUser-agent: learnukrainianbot\nCrawl-delay: 3.5", 3.5),
+    ("User-agent: *\nCrawl-delay: nan\nCrawl-delay: inf\nCrawl-delay: -1\nCrawl-delay: wrong", 0),
+    ("User-agent: Other\nCrawl-delay: 5", 0),
+])
+def test_observed_robots_delay_uses_applicable_finite_groups(module, body, expected):
+    assert module._robots_crawl_delay(body) == expected
 
 
 def test_zno_cache_is_byte_conserved_and_requires_no_network(tmp_path, monkeypatch):
@@ -399,6 +434,35 @@ def test_confirmation_html_remains_bounded(monkeypatch, tmp_path, isolate_policy
     with pytest.raises(textbook.DownloadValidationError, match="confirmation HTML exceeds"):
         textbook.download_from_gdrive("ID", tmp_path / "new.pdf", max_size_bytes=50)
     assert not (tmp_path / "new.pdf").exists() and len(srv.source_calls()) == 1
+
+
+def test_urllib_redirect_handler_prevents_implicit_followup(monkeypatch, tmp_path):
+    import urllib.request
+    import urllib.response
+    calls = []
+    class FakeHTTP(urllib.request.HTTPHandler):
+        def http_open(self, request):
+            calls.append(request.full_url)
+            response = urllib.response.addinfourl(io.BytesIO(CHALLENGE), {"Location": "/later"}, request.full_url, 302)
+            response.msg = "fixture"
+            return response
+    opener = urllib.request.build_opener(zno._NoRedirect(), FakeHTTP())
+    monkeypatch.setattr(zno, "_open", lambda request: opener.open(request, timeout=30))
+    monkeypatch.setattr(zno, "_robots_delays", {"http://source.test": 0.0})
+    monkeypatch.setattr(zno, "_robots_states", {"http://source.test": zno._robots_parse(b"", zno.USER_AGENT)})
+    with pytest.raises(zno.AccessStopped):
+        zno.fetch_page_with_rate_limit("http://source.test/first", tmp_path / "page")
+    assert calls == ["http://source.test/first"]
+
+
+def test_drive_html_content_type_cannot_truncate_a_valid_pdf(monkeypatch, tmp_path, isolate_policy):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    payload = b"%PDF-1.7\n" + b"fixture bytes\n" * 900
+    srv.responses["https://docs.google.com/uc"] = [Response(payload, headers={"Content-Type": "text/html"})]
+    dest = tmp_path / "book.pdf"
+    assert textbook.download_from_gdrive("ID", dest, retained_store=tmp_path)
+    assert dest.read_bytes() == payload
+    assert len(srv.source_calls()) == 1
 
 
 # Disclosed controls, handwritten here. They are regression evidence, never
@@ -1116,6 +1180,50 @@ def test_zno_content_strict_utf8_and_robots_raw_bytes(monkeypatch, tmp_path, iso
     assert not server.module._access_stopped
     server.fetch("https://source.test/good")
     assert len(server.source_calls()) == 2
+
+
+def test_three_retained_synthetic_inputs_fresh_conservation(monkeypatch, tmp_path, isolate_policy):
+    cache, pdf, jsonl = tmp_path / "cache.html", tmp_path / "retained.pdf", tmp_path / "ukrlib-test.jsonl"
+    cache.write_bytes(NORMAL)
+    pdf.write_bytes(b"%PDF-1.7\nretained fixture")
+    row = {"chunk_id": "kept", "text": "retained", "source_url": "https://source.test/old", "work": "kept", "author": "kept", "year": 1900, "genre": "prose", "language_period": "modern"}
+    jsonl.write_text(json.dumps(row) + "\n")
+    paths = [cache, pdf, jsonl]
+    def snapshot():
+        rows = []
+        for p in paths:
+            stat = p.stat()
+            rows.append({"path": str(p), "size": stat.st_size, "device": stat.st_dev,
+                         "inode": stat.st_ino, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()})
+        return rows
+    before = snapshot()
+    srv = Server(monkeypatch, ukrlib, tmp_path, isolate_policy)
+    assert zno.fetch_page_with_rate_limit("https://source.test/cache", cache) == NORMAL.decode()
+    assert not textbook.download_pdf("https://source.test/pdf", pdf)
+    assert not srv.calls
+    monkeypatch.setattr(ukrlib, "LITERARY_DIR", tmp_path)
+    monkeypatch.setattr(ukrlib, "PROGRESS_DIR", tmp_path / "progress")
+    monkeypatch.setattr(ukrlib, "get_author_works", lambda _id: ([{"tid": 1, "title": "first"}, {"tid": 2, "title": "second"}], []))
+    srv.robots = group(b"Disallow: /books/printit.php?tid=1")
+    with pytest.raises(ukrlib.AccessStopped, match=DENY):
+        ukrlib.scrape_author("test", {"id": 999, "name": "Fixture", "full_name": "Fixture", "years": "1900-1950", "genre_default": "prose", "period": "modern"})
+    after = snapshot()
+    assert before == after
+    assert not list(tmp_path.glob("*.building")) and not list(tmp_path.glob("*.part"))
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, "synthetic-conservation.json").write_text(json.dumps({"before": before, "after": after, "equal": before == after, "requests": srv.calls}, indent=2))
+
+
+@pytest.mark.parametrize("module", MODULES)
+def test_target_path_without_authority_and_orphan_delay(module):
+    assert module._robots_target("/a;p?x=%2F#fragment") == b"/a;p?x=%2F"
+    state = module._robots_parse(b"Crawl-delay: 99\nUser-agent: *\nCrawl-delay 90\n", module.USER_AGENT)
+    assert state["delay"] == 0
+    assert state["unresolved"] is True
+    module._robots_states["https://source.test"] = state
+    with pytest.raises(module.AccessStopped, match=UNRESOLVED):
+        module._robots_check_target("https://source.test/public")
+    assert module._access_stopped is True
 
 
 @pytest.mark.parametrize("status", [301, 302, 303, 307, 308])

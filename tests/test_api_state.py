@@ -31,6 +31,24 @@ class TestGetReviewScore:
         assert result["verdict"] == "PASS"
 
 
+class TestComputeShippable:
+    def test_pass_and_good_score(self):
+        from scripts.api.state_compute import _compute_shippable
+        assert _compute_shippable("pass", 8.7) is True
+
+    def test_pass_but_low_score(self):
+        from scripts.api.state_compute import _compute_shippable
+        assert _compute_shippable("pass", 7.9) is False
+
+    def test_fail_audit(self):
+        from scripts.api.state_compute import _compute_shippable
+        assert _compute_shippable("fail", 9.0) is False
+
+    def test_no_review(self):
+        from scripts.api.state_compute import _compute_shippable
+        assert _compute_shippable("pass", None) is False
+
+
 class TestPlanRevisionLog:
     def test_block_style_plan_fixes_count_as_enriched(self, tmp_path):
         from scripts.api.state_helpers import plan_has_revision_log

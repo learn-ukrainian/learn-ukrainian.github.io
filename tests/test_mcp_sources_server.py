@@ -40,6 +40,13 @@ VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
 
 
+def test_session_fixture_isolates_request_log(server_module, sources_log_dir: Path) -> None:
+    server_module._log_tool_call("session-isolation-probe", {})
+    log_path = sources_log_dir / "mcp-sources-requests.jsonl"
+    entries = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
+    assert entries[-1]["tool"] == "session-isolation-probe"
+
+
 @pytest.fixture
 def server_module():
     """Import the server module fresh."""
@@ -274,6 +281,31 @@ class TestListTools:
         identity_tool = next(tool for tool in tools if tool.name == "mcp_server_identity")
         assert identity_tool.input_schema["properties"]["include_sources_db_sha256"]["type"] == "boolean"
 
+    def test_all_tools_have_input_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        for tool in tools:
+            assert tool.input_schema is not None, f"{tool.name} missing input_schema"
+            assert tool.input_schema.get("type") == "object", f"{tool.name} schema not object type"
+
+    def test_verify_word_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        vw = next(t for t in tools if t.name == "verify_word")
+        assert "word" in vw.input_schema["required"]
+        assert "word" in vw.input_schema["properties"]
+
+    def test_query_ulif_schema_accepts_structured_sections(self, server_module):
+        tools = _run(server_module.list_tools())
+        ulif = next(tool for tool in tools if tool.name == "query_ulif")
+        sections = ulif.input_schema["properties"]["sections"]
+        assert "default" not in sections
+        assert sections["items"]["enum"] == [
+            "paradigm",
+            "synonyms",
+            "antonyms",
+            "phraseology",
+        ]
+        assert "When supplied" in sections["description"]
+
 
 class TestUlifHandlers:
     def test_query_ulif_without_sections_renders_legacy_paradigm(self, server_module):
@@ -284,6 +316,13 @@ class TestUlifHandlers:
         query.assert_called_once_with("великий")
         assert result[0].text == "Paradigm for 'великий':\n\nНазивний | великий"
 
+    def test_query_ulif_without_sections_renders_legacy_no_result(self, server_module):
+        with patch("rag.source_query.ulif_paradigm", return_value=None) as query:
+            result = _run(server_module.handle_query_ulif({"word": "відсутнє"}))
+
+        query.assert_called_once_with("відсутнє")
+        assert result[0].text == "No ULIF paradigm found for: 'відсутнє'"
+
     def test_query_ulif_without_sections_unavailable_is_not_no_result(self, server_module):
         """A DictUA outage must not render as 'No ULIF paradigm found' (#9005)."""
         unavailable = {"status": "unavailable", "word": "великий"}
@@ -292,6 +331,30 @@ class TestUlifHandlers:
 
         assert "unavailable" in result[0].text
         assert "No ULIF paradigm found" not in result[0].text
+
+    def test_query_ulif_renders_structured_source_metadata(self, server_module):
+        expected = {
+            "source_id": "ulif_dictua",
+            "official_url": "https://lcorp.ulif.org.ua/dictua",
+            "attribution_label": "«Словники України» (Український мовно-інформаційний фонд НАН України)",
+            "retrieved_at": "2026-07-15T00:00:00+00:00",
+            "content_sha256": "a" * 64,
+            "parser_version": "ulif-dictua-v1",
+            "status": "ok",
+            "sections": {"paradigm": {"rows": [["Називний", "великий"]]}},
+        }
+        with patch("rag.source_query.query_ulif", return_value=expected) as query:
+            result = _run(
+                server_module.handle_query_ulif(
+                    {
+                        "word": "великий",
+                        "sections": ["paradigm"],
+                    }
+                )
+            )
+
+        query.assert_called_once_with("великий", ["paradigm"])
+        assert json.loads(result[0].text) == expected
 
     def test_query_ulif_with_explicit_sections_transient_error_is_unavailable(self, server_module):
         """query_ulif with explicit sections renders unavailable prose on outage (#9016)."""
@@ -342,6 +405,22 @@ class TestUlifHandlers:
 
 
 class TestQueryUlifRecordsHandler:
+    def test_query_ulif_records_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        record_tool = next(t for t in tools if t.name == "query_ulif_records")
+        assert record_tool.input_schema["required"] == ["words"]
+        assert record_tool.input_schema["properties"]["words"]["type"] == "array"
+        assert record_tool.input_schema["properties"]["detail"]["enum"] == ["full", "compact"]
+
+    def test_query_ulif_records_invalid_inputs(self, server_module):
+        res1 = _run(server_module.handle_query_ulif_records({}))
+        assert "invalid_input" in res1[0].text
+
+        res2 = _run(server_module.handle_query_ulif_records({"words": []}))
+        assert "invalid_input" in res2[0].text
+
+        res3 = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "invalid"}))
+        assert "invalid_input" in res3[0].text
 
     def test_query_ulif_records_full_detail(self, server_module):
         mock_records = [
@@ -374,6 +453,111 @@ class TestQueryUlifRecordsHandler:
         assert data["source"]["source_id"] == "ulif_dictua"
         assert data["records"][0]["entries"][0]["sections"]["paradigm"][0]["raw_html"] == "<table>...</table>"
 
+    def test_query_ulif_records_compact_detail_strips_raw_html(self, server_module):
+        mock_records = [
+            {
+                "word": "стіл",
+                "normalized_query": "стіл",
+                "status": "ok",
+                "verified": True,
+                "entries": [
+                    {
+                        "entry_id": 1,
+                        "sections": {
+                            "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
+                        },
+                    }
+                ],
+            }
+        ]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records):
+            result = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "compact"}))
+
+        data = json.loads(result[0].text)
+        assert data["detail"] == "compact"
+        assert "detail_note" in data
+        assert "raw_html" not in data["records"][0]["entries"][0]["sections"]["paradigm"][0]
+
+    def test_query_ulif_records_truncates_at_200(self, server_module):
+        words = [f"word_{i}" for i in range(250)]
+        mock_records = [{"word": w, "status": "not_found", "verified": False, "entries": []} for w in words[:200]]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records) as mock_fn:
+            result = _run(server_module.handle_query_ulif_records({"words": words}))
+            assert len(mock_fn.call_args[0][0]) == 200
+
+        data = json.loads(result[0].text)
+        assert data["record_count"] == 200
+        assert "warning" in data
+        assert "truncated" in data["warning"]
+
+    def test_search_text_subject_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        search_text = next(t for t in tools if t.name == "search_text")
+        subject = search_text.input_schema["properties"]["subject"]
+        assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
+        assert "ukrmova" in subject["description"]
+        assert "grade" not in search_text.input_schema["properties"]
+        assert "trust_tier" not in search_text.input_schema["properties"]
+        assert "BGE-M3" not in search_text.description
+
+    def test_search_images_not_in_live_inventory(self, server_module):
+        """Image search is deferred; do not advertise a no-op stub (#7026)."""
+        tools = _run(server_module.list_tools())
+        tool_names = {t.name for t in tools}
+        assert "search_images" not in tool_names
+
+    def test_search_literary_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        search_literary = next(t for t in tools if t.name == "search_literary")
+        assert "work" not in search_literary.input_schema["properties"]
+        assert "genre" not in search_literary.input_schema["properties"]
+        assert "period" not in search_literary.input_schema["properties"]
+        assert search_literary.input_schema["required"] == ["query"]
+
+    def test_get_chunk_context_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        chunk_context = next(t for t in tools if t.name == "get_chunk_context")
+        assert "window" not in chunk_context.input_schema["properties"]
+        assert chunk_context.input_schema["required"] == ["chunk_id"]
+
+    def test_get_full_text_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        full_text = next(t for t in tools if t.name == "get_full_text")
+        assert "RAG" not in full_text.description
+        assert full_text.input_schema["required"] == ["work"]
+
+    def test_collection_stats_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        stats = next(t for t in tools if t.name == "collection_stats")
+        assert "RAG" not in stats.description
+
+    def test_verify_words_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        vw = next(t for t in tools if t.name == "verify_words")
+        assert "words" in vw.input_schema["required"]
+        props = vw.input_schema["properties"]["words"]
+        assert props["type"] == "array"
+        assert props["items"]["type"] == "string"
+
+    def test_vet_vocabulary_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(tool for tool in tools if tool.name == "vet_vocabulary")
+        assert tool.input_schema["required"] == ["words"]
+        assert tool.input_schema["properties"]["words"]["type"] == "array"
+        assert tool.input_schema["properties"]["include_definitions"]["default"] is False
+        assert "contrast only" in tool.description
+
+    def test_sum11_tool_description_bans_verification(self, server_module):
+        tools = _run(server_module.list_tools())
+        definition = next(tool for tool in tools if tool.name == "search_definitions")
+        attribution = next(tool for tool in tools if tool.name == "verify_source_attribution")
+        synonyms = next(tool for tool in tools if tool.name == "search_synonyms")
+        assert definition.description.startswith("Soviet-occupation СУМ-11")
+        assert "NEVER a source for meaning, stress, part of speech or word validity" in definition.description
+        assert "query_sum20 / ВТС / query_ulif / VESUM / Грінченко" in definition.description
+        assert "verification_authority=false" in attribution.description
+        assert "search_definitions" not in synonyms.description
+
     def test_live_sum11_entry_is_labelled_contrast_only(self, server_module):
         hit = {
             "dict_label": "СУМ-11",
@@ -384,6 +568,34 @@ class TestQueryUlifRecordsHandler:
             result = _run(server_module.handle_query_slovnyk_me({"word": "тест", "dict": "sum"}))
         assert "verification_authority: false" in result[0].text
         assert "contrast only" in result[0].text
+
+    def test_verify_quote_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        vq = next(t for t in tools if t.name == "verify_quote")
+        assert vq.input_schema["required"] == ["author", "text"]
+        assert vq.input_schema["properties"]["min_confidence"]["default"] == 0.80
+
+    def test_verify_source_attribution_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(t for t in tools if t.name == "verify_source_attribution")
+        assert tool.input_schema["required"] == ["source", "claim"]
+        assert set(tool.input_schema["properties"]["source"]["enum"]) == {
+            "grinchenko_1907",
+            "esum",
+            "sum11",
+            "antonenko_davydovych",
+            "literary",
+            "heritage",
+            "wikipedia",
+            "style_guide",
+        }
+
+    def test_verify_stress_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(t for t in tools if t.name == "verify_stress")
+        assert tool.input_schema["required"] == ["word"]
+        assert "pos" in tool.input_schema["properties"]
+        assert "tags" in tool.input_schema["properties"]
 
 
 # The live-site outage tests run as if no official edition were stored (#9610).
@@ -429,6 +641,12 @@ class TestLiveSourceUnavailable:
         assert "HTTP 200" in text
         assert "Cloudflare challenge detected" in text
 
+    def test_slovnyk_me_not_found_still_renders_no_entry(self, server_module):
+        not_found = {"status": "not_found", "word": "жжжнемає", "dict": "vts", "url": "https://slovnyk.me/dict/vts/жжжнемає"}
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=not_found):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "жжжнемає", "dict": "vts"}))
+        assert "No entry found" in result[0].text
+
     def test_search_slovnyk_me_names_the_use_role_of_restricted_rows(self, server_module):
         rows = [
             {"word": "шуба", "dictionary_slug": "newsum", "dictionary_label": "СУМ-20", "use_role": "candidate-discovery",
@@ -454,6 +672,37 @@ class TestLiveSourceUnavailable:
         assert "unavailable" in result[0].text
         assert "No r2u translation found" not in result[0].text
 
+    def test_r2u_not_found_still_renders_no_translation(self, server_module):
+        from rag.source_query import R2ULookupStatus
+
+        with patch(
+            "rag.source_query.r2u_translate_with_status",
+            return_value=(R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
+            result = _run(server_module.handle_query_r2u({"word": "жжжнемає"}))
+        assert "No r2u translation found" in result[0].text
+
+    def test_e2u_unavailable_is_not_rendered_as_no_translation(self, server_module):
+        from rag.source_query import E2ULookupStatus
+
+        with patch(
+            "rag.source_query.e2u_translate_with_status",
+            return_value=(E2ULookupStatus.SOURCE_UNAVAILABLE, []),
+        ):
+            result = _run(server_module.handle_query_e2u({"word": "house"}))
+        assert "unavailable" in result[0].text
+        assert "No e2u translation found" not in result[0].text
+
+    def test_e2u_not_found_still_renders_no_translation(self, server_module):
+        from rag.source_query import E2ULookupStatus
+
+        with patch(
+            "rag.source_query.e2u_translate_with_status",
+            return_value=(E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []),
+        ):
+            result = _run(server_module.handle_query_e2u({"word": "zzznotaword"}))
+        assert "No e2u translation found" in result[0].text
+
     def test_grac_concordance_unavailable_is_not_rendered_as_no_results(self, server_module):
         with patch("rag.source_query.grac_concordance", return_value=None):
             result = _run(
@@ -461,6 +710,21 @@ class TestLiveSourceUnavailable:
             )
         assert "unavailable" in result[0].text
         assert "No concordance results" not in result[0].text
+
+    def test_grac_concordance_not_found_still_renders_no_results(self, server_module):
+        with patch("rag.source_query.grac_concordance", return_value=[]):
+            result = _run(
+                server_module.handle_query_grac({"query": "zzznotaword", "mode": "concordance"})
+            )
+        assert "No concordance results" in result[0].text
+
+    def test_grac_collocations_unavailable_is_not_rendered_as_no_results(self, server_module):
+        with patch("rag.source_query.grac_collocations", return_value=None):
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "collocations"})
+            )
+        assert "unavailable" in result[0].text
+        assert "No collocations found" not in result[0].text
 
     def test_grac_frequency_unavailable_is_not_rendered_as_zero_freq(self, server_module):
         with patch("rag.source_query.grac_frequency", return_value=None):
@@ -478,6 +742,114 @@ class TestCallToolDispatch:
         assert len(result) == 1
         assert "Unknown tool" in result[0].text
 
+    def test_verify_word_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("verify_word", {"word": "тест"}))
+            mock.assert_called_once_with({"word": "тест"})
+
+    def test_verify_source_attribution_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_source_attribution", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            args = {"source": "grinchenko_1907", "claim": "коза"}
+            _run(server_module.call_tool("verify_source_attribution", args))
+            mock.assert_called_once_with(args)
+
+    def test_verify_words_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_words", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("verify_words", {"words": ["тест"]}))
+            mock.assert_called_once_with({"words": ["тест"]})
+
+    def test_inspect_word_dispatches(self, server_module):
+        with patch.object(server_module, "handle_inspect_word", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("inspect_word", {"word": "тест"}))
+            mock.assert_called_once_with({"word": "тест"})
+
+    def test_inspect_words_dispatches(self, server_module):
+        with patch.object(server_module, "handle_inspect_words", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("inspect_words", {"words": ["тест"]}))
+            mock.assert_called_once_with({"words": ["тест"]})
+
+    def test_inspect_lemma_dispatches(self, server_module):
+        with patch.object(server_module, "handle_inspect_lemma", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("inspect_lemma", {"lemma": "тест"}))
+            mock.assert_called_once_with({"lemma": "тест"})
+
+    def test_vet_vocabulary_dispatches(self, server_module):
+        with patch.object(server_module, "handle_vet_vocabulary", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            args = {"words": ["тест"], "include_definitions": True}
+            _run(server_module.call_tool("vet_vocabulary", args))
+            mock.assert_called_once_with(args)
+
+    def test_verify_quote_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_quote", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("verify_quote", {"author": "Шевченко", "text": "Та в Сибір загнали"}))
+            mock.assert_called_once_with({"author": "Шевченко", "text": "Та в Сибір загнали"})
+
+    def test_search_sources_dispatches(self, server_module):
+        with patch.object(server_module, "handle_search_sources", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_sources", {"query": "голосні звуки"}))
+            mock.assert_called_once_with({"query": "голосні звуки"})
+
+    def test_search_text_handler_passes_subject_filter(self, server_module):
+        hit = {
+            "chunk_id": "chunk-1",
+            "title": "Родовий відмінок",
+            "section_title": "Родовий відмінок",
+            "grade": "5",
+            "author": "Авраменко",
+            "subject": "ukrmova",
+            "text": "Родовий відмінок у шкільному підручнику.",
+        }
+        with patch("wiki.sources_db.search_textbooks", return_value=[hit]) as mock:
+            content, _envelope = _run(
+                server_module.handle_search_text({"query": "родовий відмінок", "subject": "ukrmova", "limit": 3})
+            )
+
+        assert "Subject**: ukrmova" in content[0].text
+        mock.assert_called_once()
+        args, kwargs = mock.call_args
+        assert "родовий" in args[0]
+        assert args[1] == 3
+        assert kwargs["subject"] == "ukrmova"
+
+    def test_search_grinchenko_1907_dispatches(self, server_module):
+        with patch.object(server_module, "handle_dict_search", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_grinchenko_1907", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"}, "grinchenko_dict", "Грінченко")
+
+    def test_search_slovnyk_me_dispatches(self, server_module):
+        with patch.object(server_module, "handle_search_slovnyk_me", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_slovnyk_me", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"})
+
+    def test_search_heritage_dispatches(self, server_module):
+        with patch.object(server_module, "handle_search_heritage", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_heritage", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"})
+
+    def test_check_modern_form_dispatches(self, server_module):
+        with patch.object(server_module, "handle_check_modern_form", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("check_modern_form", {"word": "звір"}))
+            mock.assert_called_once_with({"word": "звір"})
+
+    def test_verify_stress_dispatches(self, server_module):
+        with patch.object(server_module, "handle_verify_stress", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("verify_stress", {"word": "замок", "pos": "VERB"}))
+            mock.assert_called_once_with({"word": "замок", "pos": "VERB"})
+
     def test_handler_exception_returns_error_text(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:
             mock.side_effect = RuntimeError("test error")
@@ -485,6 +857,13 @@ class TestCallToolDispatch:
             assert len(result) == 1
             assert "RuntimeError" in result[0].text
             assert "test error" in result[0].text
+
+    def test_search_esum_placeholder_hint(self, server_module):
+        with patch("wiki.sources_db.search_esum", return_value=[]):
+            result = _run(server_module.handle_search_esum({"query": "тест"}))
+            assert len(result) == 1
+            assert '"status": "not_implemented"' in result[0].text
+            assert "goroh.pp.ua/Етимологія/тест" in result[0].text
 
     def test_query_sum20_formats_offline_official_records(self, server_module):
         record = {
@@ -554,6 +933,14 @@ class TestVerifyWordHandler:
             pytest.raises(server_module.v4_handlers.OperationRefused, match="Sources version unproved"),
         ):
             _run(server_module.handle_verify_word({"word": "читай"}))
+
+    def test_passes_pos_filter(self, server_module):
+        with patch("scripts.verification.vesum.verify_word", return_value=[]) as mock:
+            content, outcome = _run(server_module.handle_verify_word({"word": "тест", "pos_filter": "noun"}))
+            mock.assert_called_once_with("тест", "noun")
+            assert "NOT FOUND" in content[0].text
+            assert outcome["disposition"] == "not_found"
+            assert outcome["success"] is False
 
 
 class TestVerifyWordsHandler:
@@ -674,6 +1061,18 @@ class TestVerifyStressHandler:
             assert outcome["disposition"] == "ambiguous"
             assert outcome["success"] is False
 
+    def test_passes_pos_and_tags(self, server_module):
+        with patch("scripts.verification.stress.verify_stress", return_value={}) as mock:
+            content, outcome = _run(
+                server_module.handle_verify_stress({"word": "замок", "pos": "VERB", "tags": "Number=Sing"})
+            )
+            mock.assert_called_once_with("замок", "VERB", "Number=Sing")
+            assert outcome["result"] == {}
+            assert outcome["summary_prose"] == content[0].text
+            assert not content[0].text.lstrip().startswith("{")
+            assert outcome["disposition"] == "negative"
+            assert outcome["success"] is False
+
 
 @pytest.fixture
 def vocabulary_vet_fixtures():
@@ -738,6 +1137,44 @@ class TestVetVocabularyHandler:
         search_definitions.assert_called_once_with(["кіт", "вигадане"])
         check_shadow.assert_called_once_with(["кіт", "вигадане"], verified_words={"кіт"})
 
+    def test_omits_gloss_without_definitions_toggle(self, server_module, vocabulary_vet_fixtures):
+        fixtures = vocabulary_vet_fixtures
+        with (
+            patch("scripts.verification.vesum.verify_words", return_value=fixtures["vesum"]),
+            patch("wiki.sources_db.query_cefr_levels", return_value=fixtures["cefr"]),
+            patch(
+                "scripts.verification.check_ru_morph.check_russian_patterns_batch",
+                return_value=fixtures["shadow"],
+            ),
+            patch("wiki.sources_db.search_definitions_batch") as search_definitions,
+        ):
+            result = _run(server_module.handle_vet_vocabulary({"words": ["кіт"]}))
+
+        assert "Gloss:" not in result[0].text
+        assert "Russian-shadow: not flagged (suspicion only, not a verdict)" in result[0].text
+        search_definitions.assert_not_called()
+
+    def test_honestly_truncates_after_500_words(self, server_module):
+        words = [f"слово-{index}" for index in range(501)]
+        first_500 = words[:500]
+        with (
+            patch(
+                "scripts.verification.vesum.verify_words", return_value={word: [] for word in first_500}
+            ) as verify_words,
+            patch("wiki.sources_db.query_cefr_levels", return_value={}),
+            patch(
+                "scripts.verification.check_ru_morph.check_russian_patterns_batch",
+                return_value={word: {"matches_russian": False} for word in first_500},
+            ),
+        ):
+            result = _run(server_module.handle_vet_vocabulary({"words": words}))
+
+        text = result[0].text
+        assert text.startswith("Note: received 501 words; processed the first 500 (hard cap).")
+        assert "**слово-499**" in text
+        assert "**слово-500**" not in text
+        verify_words.assert_called_once_with(first_500)
+
 
 def _shevchenko_quote_hits():
     # Known-good source confirmed with mcp__sources__search_literary:
@@ -795,6 +1232,23 @@ class TestVerifyQuoteHandler:
         assert len(data["matched_lines"]) == 3
         assert data["matched_lines"][0]["confidence"] < 0.80
 
+    def test_author_variants_find_same_line(self, server_module):
+        matched_ids = []
+        for author in ["Шевченко", "Т. Г. Шевченко", "Тарас Шевченко"]:
+            with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
+                result = _run(
+                    server_module.handle_verify_quote({"author": author, "text": "Та в Сибір загнали Свою шляхту"})
+                )
+            data = json.loads(result[0].text)
+            assert data["matched"] is True
+            matched_ids.append(data["matched_lines"][0]["context_chunk_id"])
+        assert matched_ids == ["d1b5c8a6_c0084"] * 3
+
+    def test_empty_text_returns_clean_error(self, server_module):
+        result = _run(server_module.call_tool("verify_quote", {"author": "Шевченко", "text": ""}))
+        assert "ValueError: text is required" in result[0].text
+        assert "Traceback" not in result[0].text
+
 
 class TestVerifySourceAttributionHandler:
     """Test verify_source_attribution handler routing and verdicts."""
@@ -842,9 +1296,69 @@ class TestVerifySourceAttributionHandler:
         assert "contrast only" in data["notice"]
         assert "sovietization_risk" in data["completeness_note"]
 
+    def test_invalid_source_returns_clean_error(self, server_module):
+        result = _run(
+            server_module.call_tool(
+                "verify_source_attribution",
+                {"source": "not_a_source", "claim": "коза"},
+            )
+        )
+
+        assert len(result) == 1
+        assert "Invalid source" in result[0].text
+        assert "Traceback" not in result[0].text
+
+    def test_empty_claim_returns_clean_error(self, server_module):
+        result = _run(
+            server_module.call_tool(
+                "verify_source_attribution",
+                {"source": "grinchenko_1907", "claim": " "},
+            )
+        )
+
+        assert len(result) == 1
+        assert "claim must be a non-empty string" in result[0].text
+        assert "Traceback" not in result[0].text
+
+    def test_wikipedia_route_uses_query_wikipedia_handler(self, server_module):
+        text = "Wikipedia search: 'тест' — 1 results\n\n1. **Тест** — тестова сторінка"
+        with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text=text)]
+            result = _run(
+                server_module.handle_verify_source_attribution({"source": "wikipedia", "claim": "тест", "limit": 2})
+            )
+
+        mock.assert_called_once_with({"query": "тест", "mode": "search", "limit": 2})
+        assert json.loads(result[0].text)["discusses"] is True
+
+    def test_wikipedia_route_failure_returns_completeness_note(self, server_module):
+        with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
+            mock.side_effect = RuntimeError("network down")
+            result = _run(
+                server_module.handle_verify_source_attribution({"source": "wikipedia", "claim": "тест", "limit": 2})
+            )
+
+        data = json.loads(result[0].text)
+        assert data["discusses"] is False
+        assert data["evidence_count"] == 0
+        assert data["completeness_note"] == "Wikipedia query failed: network down"
+
 
 class TestSearchSourcesHandler:
     """Test search_sources handler formatting."""
+
+    def test_empty_results(self, server_module):
+        with patch("wiki.sources_db.search_sources", return_value=[]):
+            content, envelope = _run(server_module.handle_search_sources({"query": "голосні звуки"}))
+            assert content[0].text == "No results found."
+            assert envelope["status"] == "empty"
+            assert envelope["match_count"] == 0
+            assert envelope["hits"] == []
+
+    def test_defaults_track_to_empty_string(self, server_module):
+        with patch("wiki.sources_db.search_sources", return_value=[]) as mock:
+            _run(server_module.handle_search_sources({"query": "голосні звуки"}))
+            mock.assert_called_once_with("голосні звуки", track="", limit=10)
 
     def test_returns_summary_and_structured_hits(self, server_module):
         mock_hits = [
@@ -917,6 +1431,39 @@ class TestSearchSourcesHandler:
         assert envelope["hits"] == [expected]
         assert hit == original
 
+    def test_summary_is_bounded_and_keeps_returned_order(self, server_module):
+        hits = [
+            {"chunk_id": f"source:{i}", "title": "Long title " * 500, "text": f"body:{i}"}
+            for i in range(20)
+        ]
+        with patch("wiki.sources_db.search_sources", return_value=hits):
+            content, envelope = _run(server_module.handle_search_sources({"query": "fixture", "limit": 20}))
+        summary = content[0].text
+        assert len(summary) < 1500
+        assert summary.startswith("Found 20 results")
+        assert "15 more results in structured hits." in summary
+        assert [line.split(" — ")[0] for line in summary.splitlines()[1:6]] == [
+            f"{i + 1}. source:{i}" for i in range(5)
+        ]
+        assert envelope["hits"] == hits
+
+    def test_top_level_ranking_is_mixed_when_hits_differ(self, server_module):
+        mock_hits = [
+            {"corpus": "textbook_sections", "text": "Textbook hit", "ranking": "dense"},
+            {"corpus": "modern_literary", "text": "Literary hit", "ranking": "keyword_rrf"},
+        ]
+        with patch("wiki.sources_db.search_sources", return_value=mock_hits):
+            _, envelope = _run(server_module.handle_search_sources({"query": "слово"}))
+
+        assert envelope["ranking"] == "mixed"
+
+    def test_top_level_ranking_is_omitted_without_hit_metadata(self, server_module):
+        archaic_hit = {"corpus": "archaic_literary", "text": "Archaic hit"}
+        with patch("wiki.sources_db.search_sources", return_value=[archaic_hit]):
+            _, envelope = _run(server_module.handle_search_sources({"query": "слово"}))
+
+        assert "ranking" not in envelope
+
 
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):
@@ -977,9 +1524,55 @@ class TestIntegrationSmoke:
         assert outcome["disposition"] == "supported"
         assert outcome["success"] is True
 
+    def test_smoke_check_modern_form_modern_only(self, server_module):
+        """Test check_modern_form with a modern-only word."""
+        content, outcome = _run(server_module.handle_check_modern_form({"word": "Сибір"}))
+        data = json.loads(content[0].text)
+        assert data["is_modern_codified"] is True
+        assert data["has_archaic_form"] is False
+        assert data["has_only_archaic_form"] is False
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "supported"
+        assert outcome["success"] is True
+
+    def test_smoke_check_modern_form_archaic_only(self, server_module):
+        """Test check_modern_form with an archaic-only word."""
+        content, outcome = _run(server_module.handle_check_modern_form({"word": "аби-де"}))
+        data = json.loads(content[0].text)
+        assert data["is_modern_codified"] is False
+        assert data["has_archaic_form"] is True
+        assert data["has_only_archaic_form"] is True
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "negative"
+        assert outcome["success"] is False
+
 
 class TestDictSearchQuoteBalance:
     """Test _quote_balanced_clip and handle_dict_search quote balancing (#7026)."""
+
+    def test_clip_short_text_unchanged(self, server_module):
+        short = "Короткий текст"
+        assert server_module._quote_balanced_clip(short, 500) == short
+
+    def test_clip_without_quotes_adds_ellipsis(self, server_module):
+        long_text = "а" * 600
+        clipped = server_module._quote_balanced_clip(long_text, 500)
+        assert len(clipped) == 501  # 500 + '…'
+        assert clipped.endswith("…")
+
+    def test_clip_preserves_guillemets_lookahead(self, server_module):
+        # Open quote inside first 500 chars, closing quote within lookahead (at 520)
+        base = "Початок " + "а" * 470 + " «цитата на двадцять слів» продовження"
+        clipped = server_module._quote_balanced_clip(base, 500)
+        assert "«цитата на двадцять слів»" in clipped
+        assert clipped.count("«") == clipped.count("»")
+
+    def test_clip_trims_before_unclosed_quote_when_closing_too_far(self, server_module):
+        # Open quote at char 480, but closing quote is 300 chars away
+        base = "Початок " + "а" * 470 + " «дуже довга цитата " + "б" * 300 + "»"
+        clipped = server_module._quote_balanced_clip(base, 500)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
 
     def test_clip_opener_at_cut_start_trimmed_when_unclosed(self, server_module):
         # Opening quote at index 0 when cut is before closing quote (#7026, #7038)
@@ -988,6 +1581,14 @@ class TestDictSearchQuoteBalance:
         assert "«" not in clipped
         assert clipped.count("«") == clipped.count("»")
         assert clipped == "…"
+
+    def test_clip_nested_unclosed_quotes_iteratively_trimmed(self, server_module):
+        # Nested unclosed quotes are iteratively trimmed until balanced (#7026, #7038)
+        text = "Початок «перша «друга " + "а" * 600 + "»»"
+        clipped = server_module._quote_balanced_clip(text, 100)
+        assert "«" not in clipped
+        assert clipped.count("«") == clipped.count("»")
+        assert clipped == "Початок…"
 
     def test_handle_dict_search_clips_long_definitions(self, server_module):
         hit = {
@@ -1137,6 +1738,18 @@ class TestWikipediaExtractPaging:
             content = _run(server_module.handle_query_wikipedia({"query": "Стаття", "mode": "extract", **args}))
         return content[0].text, extract
 
+    def test_tool_schema_documents_paging(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(item for item in tools if item.name == "query_wikipedia")
+        assert (
+            "long articles are returned in pages; request the next page with offset=<Next offset>"
+            in tool.description
+        )
+        assert "offset" in tool.input_schema["properties"]
+        assert "max_chars" in tool.input_schema["properties"]
+        assert tool.input_schema["properties"]["offset"]["default"] == 0
+        assert tool.input_schema["properties"]["max_chars"]["default"] == 6000
+
     def test_pages_concatenate_and_do_not_split_the_cyrillic_word(self, server_module):
         article, word_at, paragraph_cut = _multi_page_cyrillic_article()
         page = server_module._WIKIPEDIA_EXTRACT_PAGE_MIN
@@ -1201,6 +1814,57 @@ class TestWikipediaExtractPaging:
         assert "**Next offset**" not in cached
         assert "**Truncated**" not in cached
         assert server_module._split_cached_wikipedia_extract(cached)[2] == article
+
+    def test_last_page_reports_end_and_past_the_end_is_empty(self, server_module):
+        article, _, _ = _multi_page_cyrillic_article()
+        cache, _store = self._memory_cache()
+        text, _extract = self._fetch(
+            server_module,
+            article,
+            {"offset": 0, "max_chars": 1000},
+            cache=cache,
+        )
+        assert _wikipedia_header_value(text, "Next offset") != "end"
+
+        past = len(article) + 40
+        empty, extract = self._fetch(
+            server_module,
+            article,
+            {"offset": past, "max_chars": 1000},
+            cache=cache,
+        )
+        extract.assert_not_called()
+        assert _wikipedia_header_value(empty, "Next offset") == "end"
+        assert (
+            f"This page is empty: offset {past} is past the end of the article "
+            f"({len(article)} characters)."
+        ) in empty
+        assert "Київщина" not in _wikipedia_page_body(empty)
+
+    def test_sentence_boundary_in_the_last_fifth_ends_the_page(self, server_module):
+        prefix = "мова " * 160
+        ending = "кінець речення. "
+        article = prefix + ending + ("б" * 400)
+        cut = server_module._wikipedia_extract_page_end(article, 0, 1000)
+        assert cut == len(prefix) + len(ending)
+        assert article[cut - 2:cut] == ". "
+
+    def test_max_chars_is_clamped(self, server_module):
+        body = "слово " * 5000
+        cache, _store = self._memory_cache()
+        low, _extract = self._fetch(server_module, body, {"max_chars": 10}, cache=cache)
+        default, _extract = self._fetch(server_module, body, {}, cache=cache)
+        high, _extract = self._fetch(server_module, body, {"max_chars": 999999}, cache=cache)
+        spans = []
+        for text in (low, default, high):
+            start_s, end_s = _wikipedia_header_value(text, "Chars").split(" of ")[0].split("–")
+            spans.append(int(end_s) - int(start_s))
+        low_span, default_span, high_span = spans
+        assert server_module._WIKIPEDIA_EXTRACT_PAGE_MIN - len("слово ") < low_span <= 1000
+        assert low_span > 10
+        assert 6000 - len("слово ") < default_span <= 6000
+        assert 20000 - len("слово ") < high_span <= 20000
+        assert high_span > 6000
 
     def test_cache_stores_the_full_article_and_serves_any_page(self, server_module):
         article, word_at, _paragraph_cut = _multi_page_cyrillic_article()
@@ -1278,9 +1942,80 @@ class TestHealthEndpoint:
         assert "db_path" in data
         assert "sources.db" in data["db_path"]
 
+    def test_repeated_health_calls_do_not_spawn_git(self, server_module):
+        app = server_module.create_http_app()
+        while not hasattr(app, "routes"):
+            app = app.app
+        endpoint = next(route.endpoint for route in app.routes if getattr(route, "path", None) == "/health")
+        with patch("subprocess.run") as spawned:
+            first = _run(endpoint(None))
+            second = _run(endpoint(None))
+        assert spawned.call_count == 0
+        first_body = json.loads(first.body)
+        second_body = json.loads(second.body)
+        assert first_body["commit_sha"] == second_body["commit_sha"] == server_module._SERVER_GIT_COMMIT
+        assert first_body["commit_sha"]
+
+    def test_git_commit_failure_is_unknown(self, server_module, monkeypatch):
+        def boom(*args, **kwargs):
+            raise OSError("git missing")
+
+        monkeypatch.setattr("subprocess.run", boom)
+        assert server_module._detect_git_commit() == "unknown"
+
+
+class TestCollectionStatsHandler:
+    """Test collection_stats handler (#7026)."""
+
+    def test_handle_collection_stats_dispatches(self, server_module):
+        mock_stats = {
+            "textbooks": 10,
+            "esum_etymology": 20,
+            "ua_gec_errors": 30,
+            "sum20_articles": 40,
+            "slovnyk_me_entries": 50,
+            "wikipedia": 60,
+        }
+        with patch("wiki.sources_db.list_tables", return_value=mock_stats):
+            result = _run(server_module.handle_collection_stats({}))
+            data = json.loads(result[0].text)
+            assert data["esum_etymology"] == 20
+            assert data["ua_gec_errors"] == 30
+            assert data["sum20_articles"] == 40
+            assert data["slovnyk_me_entries"] == 50
+            assert data["wikipedia"] == 60
+
 
 class TestFileHashCaching:
     """Test _sha256_of_file caching, invalidation, replacement, and concurrency (#8221)."""
+
+    def test_sha256_of_file_caches_across_invocations(self, server_module, tmp_path):
+        test_file = tmp_path / "test_cache.bin"
+        test_file.write_bytes(b"content-version-1")
+
+        h1 = server_module._sha256_of_file(test_file)
+        assert len(h1) == 64
+
+        # Calling second time should return from cache without disk I/O
+        with patch("builtins.open", side_effect=AssertionError("Should not re-read from disk")):
+            h2 = server_module._sha256_of_file(test_file)
+            assert h2 == h1
+
+    def test_sha256_of_file_invalidates_on_mtime_change(self, server_module, tmp_path):
+        import os
+
+        test_file = tmp_path / "test_mtime.bin"
+        test_file.write_bytes(b"data_version_1__")  # 16 bytes
+        h1 = server_module._sha256_of_file(test_file)
+
+        # Write same-length content so size remains strictly identical
+        test_file.write_bytes(b"data_version_2__")  # 16 bytes
+        # Explicitly update mtime by 1 second to isolate mtime invalidation from size
+        st = test_file.stat()
+        os.utime(test_file, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
+
+        h2 = server_module._sha256_of_file(test_file)
+        assert h2 != h1
 
     def test_sha256_of_file_invalidates_on_replacement_with_preserved_mtime(self, server_module, tmp_path):
         """Atomic replacement with preserved mtime/size must invalidate via inode/ctime (#8221)."""
@@ -1394,6 +2129,11 @@ class TestSlovnykMeSearchOutage:
         assert "UNAVAILABLE" in result[0].text
         assert "vts (HTTP 403)" in result[0].text
         assert "No slovnyk.me results" not in result[0].text
+
+    def test_no_hits_and_no_outage_is_a_real_miss(self, server_module):
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=([], [])):
+            result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
+        assert result[0].text.startswith("No slovnyk.me results")
 
     def test_hits_with_an_outage_are_marked_partial(self, server_module):
         hit = {"word": "тест", "dictionary_slug": "sum20", "source_url": "https://example.invalid", "text": "x"}
@@ -1511,6 +2251,14 @@ class TestWikipediaPravopysHeritageOutage:
         hit = {"source_family": "slovnyk_me", "source": "x", "word": "тест", "score": 1.0}
         text = self._heritage(server_module, [hit], [{"dictionary_slug": "vts", "error": "HTTP 403"}])
         assert "Partial results" in text and "### Evidence 1" in text
+
+    def test_heritage_real_miss_is_unchanged(self, server_module):
+        assert self._heritage(server_module, [], []).startswith("No heritage evidence found")
+
+    def test_heritage_200_challenge_is_unavailable(self, server_module):
+        text = self._heritage(server_module, [], [{"dictionary_slug": "vts", "error": "HTTP 200"}])
+        assert "UNAVAILABLE" in text and "No heritage evidence found" not in text
+        assert "vts (HTTP 200)" in text
 
 
 def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):

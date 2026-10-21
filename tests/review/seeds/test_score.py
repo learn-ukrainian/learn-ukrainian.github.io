@@ -22,6 +22,7 @@ clean-4          FAILED                                          0, not blocked 
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import date
 from pathlib import Path
@@ -34,6 +35,11 @@ from scripts.review.seeds import score
 from tests.review.seeds.fixtures import SEATS, Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 TODAY = date(2026, 9, 25)
+NEAR = pytest.approx
+
+
+def near(value: float, expected: float) -> bool:
+    return abs(value - expected) < 5e-4
 
 
 @pytest.fixture
@@ -94,10 +100,48 @@ def build_first_set(env: Env, *, source: str = "real_built") -> dict[str, tuple[
     return ids
 
 
+@pytest.fixture
+def fixture_score(env: Env):
+    """Scores the table. Two more units are frozen as the confirmation set, so the freeze assigns the table to ``first``."""
+    for name in ("conf-1", "conf-2"):
+        env.add(mechanical_seed(f"seed-{name}"))
+    ids = build_first_set(env)
+    sm.freeze_confirmation(["seed-conf-1", "seed-conf-2"], env.root)
+    return env, ids, run(env)
+
+
 # --- the interval arithmetic ---------------------------------------------------------------------------------------------
 
 
 # --- the hand-computed fixture ------------------------------------------------------------------------------------------
+
+
+def test_recall_per_dimension_counts_failed_and_rejected_first_attempts_as_not_detected(fixture_score) -> None:
+    _, _, result = fixture_score
+    report = result.report
+    job, activity = report["recall_by_dimension"]["job"], report["recall_by_dimension"]["activity"]
+    # job: seed-job-1 and -2 found; -3 missed; -4's FIRST attempt failed (its retry does not count) -> 2 of 4
+    assert (job["k"], job["n"], job["method"]) == (2, 4, "wilson") and job["point"] == 0.5
+    assert near(job["low"], 0.1500) and near(job["high"], 0.8500)
+    # activity: seed-act-1 was rejected by the validator (not detected), seed-act-2 found -> 1 of 2, Wilson(1, 2)
+    assert (activity["k"], activity["n"]) == (1, 2)
+    assert near(activity["low"], 0.0945) and near(activity["high"], 0.9055)
+    pooled = report["recall_pooled"]
+    assert (pooled["k"], pooled["n"]) == (3, 6) and near(pooled["low"], 0.1876) and near(pooled["high"], 0.8124)
+
+
+def test_the_report_is_computed_only_from_the_first_attempt_by_the_seat(env: Env) -> None:
+    unit = mechanical_seed("seed-x1")
+    env.add(unit, "first")
+    other = env.attempt(unit, "agy", "REVISE", [finding("F-01")])  # another seat's attempt is not this seat's
+    env.seed_result("seed-x1", other, True, True, {"F-01": "planted"})
+    mine = env.attempt(unit, "codex", "REVISE", [finding("F-01")])
+    env.seed_result("seed-x1", mine, False, False, {"F-01": "false"})
+    env.add(mechanical_seed("seed-x2"))
+    sm.freeze_confirmation(["seed-x2"], env.root)
+    report = run(env).report
+    assert report["recall_by_dimension"]["job"]["k"] == 0
+    assert report["recall_by_dimension"]["job"]["n"] == 1
 
 
 # --- exploratory vs threshold-eligible ------------------------------------------------------------------------------
@@ -148,6 +192,14 @@ def test_one_short_of_the_size_is_exploratory(env: Env, per_dimension: int, clea
     assert result.report["threshold_eligible"] is False
     assert len(result.report["exploratory_reasons"]) == (8 if per_dimension == 21 else 1)
     assert score.render_report(result).splitlines()[0].startswith("# EXPLORATORY")
+
+
+def test_the_sizes_are_parameters_not_constants(env: Env) -> None:
+    _big_set(env, per_dimension=2, cleans=3)
+    assert run(env).report["threshold_eligible"] is False
+    small = {**findings_db.load_parameters(), "min_planted_per_dimension": 2, "min_clean_lessons": 3}
+    assert run(env, params=small).report["threshold_eligible"] is True
+    assert run(env, params={**small, "min_clean_lessons": 4}).report["threshold_eligible"] is False
 
 
 def test_a_canary_or_fixture_unit_keeps_the_report_exploratory_even_at_full_size(env: Env) -> None:
@@ -263,6 +315,16 @@ def test_a_seat_with_attempts_under_two_models_must_name_one(env: Env) -> None:
     assert run(env, model="gpt-6.1-sol", allow_partial=True).report["models"] == ["gpt-6.1-sol"]
 
 
+def test_a_seat_with_no_attempts_has_nothing_to_score(env: Env) -> None:
+    env.add(mechanical_seed("seed-a1"), "first")
+    env.add(mechanical_seed("seed-held-out"))
+    sm.freeze_confirmation(["seed-held-out"], env.root)
+    with pytest.raises(score.ScoreError) as caught:
+        run(env, seat="agy")
+    assert caught.value.code == score.NO_ATTEMPTS
+    assert not env.path_for("a1").exists()
+
+
 def test_a_seed_whose_recorded_identity_drifted_from_its_manifest_is_not_scored(env: Env) -> None:
     unit = mechanical_seed("seed-a1")
     env.add(unit, "first")
@@ -349,6 +411,26 @@ def test_a_first_report_never_contains_a_confirmation_unit(env: Env) -> None:
 
 
 # --- the paired comparison ------------------------------------------------------------------------------------------------
+
+
+def test_two_seats_are_paired_on_the_seeds_both_may_review(env: Env) -> None:
+    units = [mechanical_seed(f"seed-p{i}") for i in range(3)]
+    for unit in units:
+        env.add(unit, "first")
+    for seat, found in (("codex", (True, True, False)), ("agy", (False, True, True))):
+        for unit, hit in zip(units, found, strict=True):
+            ids = env.attempt(unit, seat, "REVISE", [finding("F-01")])
+            env.seed_result(unit.seed_id, ids, hit, hit, {"F-01": "planted" if hit else "false"})
+    env.add(mechanical_seed("seed-held-out"))
+    sm.freeze_confirmation(["seed-held-out"], env.root)
+    paired = score.paired_comparison(run(env, "codex"), run(env, "agy"))
+    assert (paired["paired_seeds"], paired["both_detected"], paired["only_a_detected"], paired["only_b_detected"]) == (
+        3,
+        1,
+        1,
+        1,
+    )
+    assert paired["p_value"] == NEAR(1.0)
 
 
 # --- agreement per seat pair -------------------------------------------------------------------------------------------
@@ -452,6 +534,19 @@ def test_an_attempt_id_reused_on_another_lesson_does_not_confuse_the_seat_pair(e
 
 
 # --- the CLI ---------------------------------------------------------------------------------------------------------------
+
+
+def test_the_cli_prints_the_report_or_refuses_with_a_code(
+    env: Env, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    confirmation_world(env)
+    monkeypatch.setattr(findings_db, "db_path", lambda level, repo_root=None: env.db)
+    assert score.main(["--seat", "codex", "--set", "confirmation", "--repo-root", str(env.root)]) == 0
+    assert "EXPLORATORY" in capsys.readouterr().out
+    assert score.main(["--seat", "codex", "--set", "confirmation", "--json", "--repo-root", str(env.root)]) == 0
+    assert json.loads(capsys.readouterr().out)["set"] == "confirmation"
+    assert score.main(["--seat", "agy", "--set", "confirmation", "--repo-root", str(env.root)]) == 2
+    assert "no_attempts" in capsys.readouterr().err
 
 
 def test_agreement_with_missing_database_does_not_create_it(env: Env) -> None:

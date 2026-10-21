@@ -180,6 +180,32 @@ def test_outside_and_traversal_are_refused(files):
         safe_read_attempt_file(target, trusted_root=Path("relative"))
 
 
+def test_missing_is_optional_and_refusal_closes_all_fds(files, monkeypatch):
+    _, target, forbidden = files
+    target.unlink()
+    original_open, original_close = os.open, os.close
+    active = set()
+
+    def open_fd(*args, **kwargs):
+        fd = original_open(*args, **kwargs)
+        active.add(fd)
+        return fd
+
+    def close_fd(fd):
+        active.remove(fd)
+        original_close(fd)
+
+    monkeypatch.setattr(boundary.os, "open", open_fd)
+    monkeypatch.setattr(boundary.os, "close", close_fd)
+    with pytest.raises(FileNotFoundError):
+        safe_read_attempt_file(target)
+    assert not active
+    os.link(forbidden, target)
+    with pytest.raises(AttemptReadError, match="link_count"):
+        safe_read_attempt_file(target)
+    assert not active
+
+
 @pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "oversized", "component", "nul"])
 def test_codex_output_swap_refuses_without_sentinel(files, attack):
     root, target, forbidden = files
@@ -521,6 +547,42 @@ def test_ordinary_codex_resume_never_reads_rollouts(tmp_path, monkeypatch, large
         plan.output_file.unlink()
 
 
+def test_ordinary_codex_symlinked_temp_and_home_ancestors(tmp_path, monkeypatch):
+
+    real = tmp_path / "real"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    home = alias / "home"
+    home.mkdir()
+    adapter = CodexAdapter()
+    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.tempfile.gettempdir", lambda: str(alias))
+    plan = adapter.build_invocation(
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"codex_home_override": str(home)},
+    )
+    try:
+        directory = adapter._candidate_rollout_dirs()
+        assert not directory
+        from datetime import UTC, datetime
+
+        day = datetime.now(UTC)
+        (real / "home" / "sessions" / day.strftime("%Y/%m/%d")).mkdir(parents=True)
+        assert adapter._candidate_rollout_dirs()
+        (alias / plan.output_file.name).write_text("valid answer")
+        result = adapter.parse_response(
+            stdout=completed_stream(thread_id=UUID), stderr="", returncode=0, output_file=plan.output_file, plan=plan
+        )
+        assert result.ok and result.response == "valid answer" and result.session_id == UUID
+    finally:
+        plan.output_file.unlink()
+
+
 def test_agy_resume_baseline_and_reads_under_symlinked_ancestor(tmp_path, monkeypatch):
     import json
 
@@ -604,6 +666,31 @@ def test_agy_log_override_keeps_attempt_containment(files, attempt):
         plan.env_overrides[agy._AGY_LOG_ENV] = str(root.parent / "other-worktree" / "log")
         with pytest.raises(AttemptReadError, match="outside_root"):
             agy._bound_conversation(plan)
+
+
+@pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "dotdot"])
+def test_agy_ordinary_log_override_keeps_safe_read_refusals(files, attack):
+    root, target, forbidden = files
+    target.unlink()
+    if attack == "symlink":
+        target.symlink_to(forbidden)
+    elif attack == "hardlink":
+        os.link(forbidden, target)
+    elif attack == "fifo":
+        os.mkfifo(target)
+    else:
+        target = root / ".." / forbidden.name
+    plan = InvocationPlan(
+        cmd=[],
+        cwd=root,
+        env_overrides={agy._AGY_LOG_ENV: str(target)},
+        liveness_paths=(root / "original.log",),
+        metadata={
+            "log_read_root": str(root),
+        },
+    )
+    with pytest.raises(AttemptReadError, match="attempt_read_"):
+        agy._bound_conversation(plan)
 
 
 @pytest.mark.parametrize("workspace_path", ["relative", "symlink"])

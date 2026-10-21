@@ -84,6 +84,28 @@ def test_preserve_existing_metadata_restores_cefr_and_wiki_reference() -> None:
     assert entry["wiki_reference"] == {"wikipedia": {"title": "Помішувати"}}
 
 
+def test_preserve_existing_metadata_drops_redirect_wiki_reference() -> None:
+    entry = {
+        "lemma": "безмежжя",
+        "url_slug": "безмежжя",
+        "enrichment": {},
+    }
+
+    _preserve_existing_metadata(
+        entry,
+        existing_cefr=None,
+        existing_wiki_reference={
+            "wikipedia": {
+                "title": "Нескінченність",
+                "summary": "Нескі́нченність — ...",
+                "url": "https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D1%81%D0%BA%D1%96%D0%BD%D1%87%D0%B5%D0%BD%D0%BD%D1%96%D1%81%D1%82%D1%8C",
+            }
+        },
+    )
+
+    assert "wiki_reference" not in entry
+
+
 def test_wiki_reference_passes_exact_title_gate_accepts_stress_variant() -> None:
     entry = {"lemma": "ампір", "url_slug": "ампір"}
     wiki_reference = {"wikipedia": {"title": "Ампі́р"}}
@@ -440,6 +462,58 @@ def test_write_target_snapshot(tmp_path: Path) -> None:
     assert data["slugs"] == ["вода", "хліб"]
     assert data["count"] == 2
     assert data["sha256"] == info["sha256"]
+
+
+def test_full_catalog_target_and_categorical_binning(monkeypatch) -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "вода",
+                "url_slug": "вода",
+                "pos": "noun",
+                "enrichment": {
+                    "translation": {"en": ["water"], "source": "slovnyk"},
+                    "morphology": {"forms": [{"form": "вода"}]},
+                },
+                "sections": {"proverbs": {"items": ["Вода"]}},
+            },
+            {
+                "lemma": "Київ",
+                "url_slug": "київ",
+                "pos": "proper noun",
+                "enrichment": {},
+            },
+            {
+                "lemma": "невідоме",
+                "url_slug": "невідоме",
+                "pos": "noun",
+                "enrichment": {},
+            },
+        ]
+    }
+
+    def noop_enrich(entry, conn, me_lookup):
+        pass
+
+    monkeypatch.setattr(enrich_manifest, "enrich_entry", noop_enrich)
+
+    with sqlite3.connect(":memory:") as conn:
+        summary = reenrich.reenrich_thin_entries(
+            manifest,
+            conn=conn,
+            kaikki_lookup={},
+            target="full-catalog",
+        )
+
+    assert summary["target"] == "full-catalog"
+    assert summary["targets"] == 3
+    bins = summary["categorical_binning"]
+    assert bins["ENRICHED"] == 1
+    assert bins["DETERMINISTIC_EXCLUSION"] == 1
+    assert bins["UNRESOLVED_RESIDUAL"] == 1
+    layers = summary["layer_counters"]
+    assert layers["proverbs"] == 1
+    assert layers["forms"] == 1
 
 
 def test_deadjectival_adverb_fallback_fills_abstractly(monkeypatch) -> None:

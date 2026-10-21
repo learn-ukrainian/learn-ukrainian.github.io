@@ -89,6 +89,19 @@ def _patch_governance_paths(monkeypatch, tmp_path: Path) -> tuple[Path, Path]:
     return decisions_file, adr_dir
 
 
+def test_stale_decisions_flagged(tmp_path: Path, monkeypatch) -> None:
+    decisions_file, adr_dir = _patch_governance_paths(monkeypatch, tmp_path)
+    _write_decisions(decisions_file, expires="2026-01-01")
+    _write_adr(adr_dir / "adr-001-fixture.md")
+    _write_adr_readme(adr_dir / "README.md")
+
+    response = client.get("/api/state/governance")
+
+    assert response.status_code == 200
+    stale = response.json()["decisions"]["stale"]
+    assert [decision["id"] for decision in stale] == ["dec-test"]
+
+
 def test_adr_broken_chain_flagged(tmp_path: Path, monkeypatch) -> None:
     decisions_file, adr_dir = _patch_governance_paths(monkeypatch, tmp_path)
     _write_decisions(decisions_file)

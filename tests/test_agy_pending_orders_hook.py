@@ -211,6 +211,23 @@ def test_alias_only_supervisory_consumption_is_silent(stores, roster, monkeypatc
     assert snapshot(stores) == before
 
 
+@pytest.mark.parametrize("slot", ["gemini", "gemini-no-such-lane", "kimi-monitor", ""])
+def test_unknown_or_unavailable_authority_admission(stores, roster, monkeypatch, slot):
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", slot)
+    add_legacy(stores[0], recipient="gemini")
+    add_authority(stores[1], recipient="gemini-monitor")
+    before = snapshot(stores)
+    assert run_cli(slot) == {
+        "count": 0,
+        "ids": [],
+        "truncated": False,
+        "stores": {"legacy": None, "authority": None},
+        "probe": "unknown",
+    }
+    assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    assert snapshot(stores) == before
+
+
 @pytest.mark.parametrize(
     "state",
     [
@@ -352,6 +369,31 @@ def test_interpreter_failure_unknown(stores, tmp_path, monkeypatch, mode):
     assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
     assert snapshot(stores) == before
     assert set(tmp_path.rglob("*")) == files
+
+
+def test_shared_interpreter_resolution(stores, monkeypatch):
+    monkeypatch.delenv("LU_DRIVER_STATE_PYTHON")
+    add_legacy(stores[0])
+    assert "PENDING ORDERS: 1" in run_hook()["injectSteps"][0]["ephemeralMessage"]
+
+
+def test_maximum_ids_and_line_budget(stores):
+    for identifier in range(1, 9):
+        add_legacy(stores[0], identifier=identifier)
+    line = run_hook()["injectSteps"][0]["ephemeralMessage"]
+    assert "ids 1,2,3,4,5; truncated" in line
+    with sqlite3.connect(stores[0]) as conn:
+        conn.execute("DELETE FROM messages")
+    with sqlite3.connect(stores[1]) as conn:
+        for number in range(8):
+            conn.execute(
+                "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) VALUES (?,?,?,'queued','','')",
+                (f"delivery-{number}", f"authority-message_{number:032x}", "gemini-infra"),
+            )
+    line = run_hook()["injectSteps"][0]["ephemeralMessage"]
+    assert "PENDING ORDERS: 8" in line
+    assert "authority-message_00000000000000000000000000000000" in line
+    assert "truncated" in line
 
 
 def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path):

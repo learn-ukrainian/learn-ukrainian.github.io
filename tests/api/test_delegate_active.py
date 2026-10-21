@@ -222,6 +222,62 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     assert retry_delays == [delegate_router.TASK_READ_RETRY_SECONDS]
 
 
+def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+
+    def fake_kill(pid: int, sig: int) -> None:
+        if pid != 111:
+            raise ProcessLookupError
+
+    monkeypatch.setattr(delegate_router.os, "kill", fake_kill)
+    now = datetime.now(UTC)
+
+    # Fixture of 1,500 done task files + 2 active tasks
+    for index in range(1500):
+        _write_task(
+            tasks_dir / f"done-{index:04d}.json",
+            _task_payload(
+                f"done-{index:04d}",
+                started_at=_iso(now - timedelta(minutes=index)),
+            ),
+        )
+    _write_task(
+        tasks_dir / "running-active.json",
+        _task_payload(
+            "running-active",
+            status="running",
+            pid=111,
+            started_at=_iso(now - timedelta(minutes=1)),
+        ),
+    )
+    _write_task(
+        tasks_dir / "spawning-active.json",
+        _task_payload(
+            "spawning-active",
+            status="spawning",
+            pid=None,
+            started_at=_iso(now - timedelta(minutes=2)),
+        ),
+    )
+
+    t0 = datetime.now(UTC)
+    response = client.get("/api/delegate/active")
+    t1 = datetime.now(UTC)
+    duration_s = (t1 - t0).total_seconds()
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 2
+    assert [task["task_id"] for task in data["tasks"]] == ["running-active", "spawning-active"]
+    # Bound assertion: must execute in under 1 second (target < 3s SLA)
+    # Wall-clock bound in shared CI (#7492 class): 1.0s blew at 1.36s on a
+    # loaded merge-queue runner with the endpoint healthy (status 200). 3.0s
+    # still fails a pathological O(N) implementation on 1,500 files while
+    # tolerating runner load noise.
+    assert duration_s < 3.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 3.0s bound)"
+
+
 def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_path, monkeypatch):
     """Cold process restart loads persistent SQLite cache and skips reading terminal files."""
     tasks_dir = tmp_path / "tasks"

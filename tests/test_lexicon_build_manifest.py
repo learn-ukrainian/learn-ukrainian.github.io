@@ -2,6 +2,7 @@ import unicodedata
 
 import scripts.lexicon.build_data_manifest as build_data_manifest
 from scripts.lexicon.build_data_manifest import (
+    HERITAGE_STATUS_SEEDS,
     SURZHYK_TO_AVOID_SEEDS,
     _atlas_record_for_manifest,
     _lemma_key,
@@ -153,6 +154,12 @@ def test_vesum_alias_leaves_unmapped_form_untouched(monkeypatch) -> None:
     assert "atlas_normalization" not in out
 
 
+def test_slash_particle_not_published_as_atlas_head() -> None:
+    rec = {"lemma": "б/би", "source": "built_vocabulary", "gloss": "conditional particle", "pos": "particle"}
+
+    assert _atlas_record_for_manifest(rec, set()) is None
+
+
 def test_suffixes_abbreviations_and_labels_not_published_as_atlas_heads() -> None:
     for lemma in (
         "-ся",
@@ -204,6 +211,22 @@ def test_surzhyk_to_avoid_seed_group_is_in_manifest() -> None:
         assert entries[lemma]["course_usage"] == []
 
 
+def test_heritage_status_seed_group_is_in_manifest() -> None:
+    manifest = build_manifest()
+    entries = {entry["lemma"]: entry for entry in manifest["entries"]}
+    seed_lemmas = [str(seed["lemma"]) for seed in HERITAGE_STATUS_SEEDS]
+
+    assert manifest["stats"]["from_heritage_status_seed"] == len(seed_lemmas)
+    assert manifest["seed_groups"][1]["lemmas"] == seed_lemmas
+    for lemma in seed_lemmas:
+        assert entries[lemma]["seed_group"] == "heritage-status-samples"
+        if entries[lemma]["primary_source"] == "heritage_status_seed":
+            assert entries[lemma]["course_usage"] == []
+        else:
+            assert entries[lemma]["primary_source"].startswith("built_vocabulary")
+            assert entries[lemma]["course_usage"]
+
+
 def test_manifest_sources_all_vocabulary_files_and_a2_word_field() -> None:
     manifest = build_manifest()
     entries = {entry["lemma"]: entry for entry in manifest["entries"]}
@@ -215,6 +238,23 @@ def test_manifest_sources_all_vocabulary_files_and_a2_word_field() -> None:
     assert "голосний" in entries
     assert any(usage["track"] == "a1-v1" and usage["slug"] == "my-family" for usage in entries["батько"]["course_usage"])
     assert any(usage["track"] == "a2" and usage["slug"] == "a2-bridge" for usage in entries["відмінок"]["course_usage"])
+
+
+def test_manifest_omits_non_lemma_surface_entries() -> None:
+    manifest = build_manifest()
+    entries = {entry["lemma"]: entry for entry in manifest["entries"]}
+
+    for lemma in (
+        "Давай!",
+        "Смачного!",
+        "Ходімо!",
+        "в/у",
+        "у/в",
+        "і/й",
+        "Богдане",
+        "Соломіє",
+    ):
+        assert lemma not in entries
 
 
 def test_manifest_maps_taught_vocatives_to_nominative_lemmas() -> None:

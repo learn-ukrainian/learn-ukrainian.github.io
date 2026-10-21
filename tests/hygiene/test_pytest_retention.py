@@ -310,6 +310,15 @@ def test_existing_sweeper_gates_also_protect_owned_pytest_runs(area, monkeypatch
     assert next(row for row in report["rows"] if row["name"] == runs[0].name)["reason"] == expected
 
 
+@pytest.mark.parametrize("keep", [0, -1, True, 1.5])
+def test_invalid_count_refuses_without_removal(area, keep):
+    root, args = area
+    runs = completed(root, 1)
+    with pytest.raises(ValueError, match="positive integer"):
+        tmp_sweep.sweep(**args, apply=True, pytest_keep=keep)
+    assert (runs[0] / "scratch" / "payload").is_file()
+
+
 def test_repeated_sweep_keeps_retention_and_uses_existing_purge_window(area, monkeypatch):
     root, args = area
     runs = completed(root)
@@ -445,6 +454,20 @@ def test_payload(tmp_path):
     assert "1 passed" in result.stdout
     assert explicit.is_dir()
     assert list(namespace.iterdir()) == runs
+
+
+def test_retention_counts_legacy_and_neutral_namespaces_together(area):
+    root, args = area
+    legacy = completed(root, 4)
+    neutral = completed(root, 4, namespace="runs")
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert report["errors"] == 0
+    assert report["by_decision"] == {"quarantined": 5, "preserve": 3}
+    assert [path for path in legacy + neutral if path.exists()] == neutral[-3:]
+    assert report["quarantine_held_entries"] == 5
+    again = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert again["quarantine_held_entries"] == 5
+    assert again["by_decision"] == {"preserve": 3}
 
 
 @pytest.mark.parametrize("namespace", ["../escape", "a/b", "", ".", "/absolute"])

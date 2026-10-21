@@ -229,6 +229,18 @@ def test_origin_head_delete_also_drops_matching_refspec(tmp_path: Path, monkeypa
     assert fetched.returncode == 0, fetched.stderr or fetched.stdout
 
 
+def test_dry_run_reconcile_does_not_write(tmp_path: Path) -> None:
+    repo = _narrow_clone(tmp_path)
+    spec = _add_stale_refspec(repo, "cursor/stale-dry-run")
+    before = _fetch_refspecs(repo)
+
+    report = fetch_refspecs.reconcile_fetch_refspecs(repo, apply=False)
+
+    assert report["applied"] is False
+    assert spec in report["pruned"]
+    assert _fetch_refspecs(repo) == before
+
+
 def test_scheduled_hygiene_heals_stale_refspec_before_fetch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _narrow_clone(tmp_path)
     spec = _add_stale_refspec(repo, "kimi/infra-7080-audit-dashboard-r2")

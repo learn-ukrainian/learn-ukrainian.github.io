@@ -99,6 +99,17 @@ def test_non_creating_uri_connect_to_a_missing_db_raises_sqlite_error_and_create
     assert not target.exists()
 
 
+def test_memory_mode_connect_opens_in_memory_and_creates_nothing(checkout: Path) -> None:
+    query = "?mode=memory"
+    target = checkout / "data" / "sources.db"
+
+    connection = sqlite3.connect(f"{target.as_uri()}{query}", uri=True)
+    connection.execute("CREATE TABLE t (x)")
+    connection.close()
+
+    assert not target.exists()
+
+
 def test_refusal_is_not_swallowed_by_a_broad_except(checkout: Path) -> None:
     def reader() -> None:
         with contextlib.suppress(Exception):

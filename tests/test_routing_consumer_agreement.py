@@ -635,6 +635,19 @@ def test_budget_guard_agrees_with_owner_route_facts(snapshot, monkeypatch):
 
 
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
+def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
+    """F3 source restriction: only a weekly-pace hot label may be cleared by hidden pace (A3)."""
+    _case, budget = snapshot
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    facts = owner(budget, "cursor")
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
+    if budget["diagnostics"].get("stale") or facts.capacity != credit_lane.CAPACITY_AVOID:
+        assert chosen == "cursor"
+    else:
+        assert chosen == "claude", facts.capacity_reason
+
+
+@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_final_admission_refuses_off_allowlist_models_exactly_when_the_owner_does(snapshot, monkeypatch):
     """A4/F7: an off-allowlist model with credit present ends in CREDIT_PERIOD_MODEL_REFUSED, never a substitution."""
     _case, budget = snapshot
@@ -810,6 +823,24 @@ def _held_out(name: str) -> Any:
     return next(pytest.param(case, id=case.name) for case in CASES if case.name == name)
 
 
+@pytest.mark.parametrize("snapshot", [_held_out("f7_credit_only_seat")], indirect=True)
+def test_credit_relief_control_is_granted_by_every_consumer(snapshot, monkeypatch):
+    """Positive control for the contradictions below: an uncontradicted credit lane is the pick everywhere."""
+    _case, budget = snapshot
+    facts = owner(budget, model=ROUTE_MODEL)
+    assert facts.capacity == credit_lane.CAPACITY_VERIFIED and facts.credit_relief
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
+    )
+    assert result.status != "excluded", result.reason
+    _passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
+    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
+    assert group["available"] == 1 and group["lanes"][0]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
+    assert recommend(budget)["primary_agent_for_code"] == "codex"
+    assert budget["recommendation"]["primary_agent_for_code"] == "codex"
+    assert _guard(budget, monkeypatch, ROUTE_MODEL) == "codex"
+
+
 @pytest.mark.parametrize(
     "snapshot",
     [pytest.param(case, id=case.name) for case in CASES if case.mutate in RELIEF_CONTRADICTIONS],
@@ -842,6 +873,34 @@ def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monke
     assert recommend(budget)["primary_agent_for_code"] != "codex"
     assert _rows(budget)["codex"]["avoid"] is True
     assert _guard(budget, monkeypatch, ROUTE_MODEL) == "claude"
+
+
+@pytest.mark.parametrize("snapshot", [_held_out("f9040_cursor_auto_hot_on_pace")], indirect=True)
+def test_cursor_auto_hot_label_is_not_cleared_by_an_on_pace_weekly_window(snapshot, monkeypatch):
+    """#9040 restriction (A8): the real producer's fresh hot/cursor_auto label stays hot in delegate too."""
+    _case, budget = snapshot
+    assert budget["diagnostics"]["stale"] is False
+    record = budget["agents"]["cursor"]
+    assert (record["status"], record["status_source"]) == ("hot", "cursor_auto")
+    facts = owner(budget, "cursor")
+    assert facts.raw_deficit is False and facts.status == "hot"
+    assert facts.capacity == credit_lane.CAPACITY_AVOID
+    assert _rows(budget)["cursor"]["avoid"] is True
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
+    assert chosen == "claude"
+
+
+@pytest.mark.parametrize("snapshot", [_held_out("missing_snapshot_staleness")], indirect=True)
+def test_missing_snapshot_staleness_is_unknown_in_the_wave_gate(snapshot):
+    """``diagnostics.stale`` removed from a healthy producer snapshot: owner unknown, wave not fresh, no admission."""
+    _case, budget = snapshot
+    assert "stale" not in budget["diagnostics"]
+    assert owner(budget).observation_freshness == credit_lane.UNKNOWN
+    passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
+    assert assessment["fresh"] is False and not passed
+    [lane] = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")["lanes"]
+    assert lane["freshness"] == credit_lane.UNKNOWN and lane["stale"] is False
 
 
 @pytest.mark.parametrize(

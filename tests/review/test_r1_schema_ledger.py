@@ -473,6 +473,30 @@ def test_review_server_advertises_and_accepts_exact_attempt_tools(server_module,
         assert records(ledger)[-1]["tool"] == name and records(ledger)[-1]["status"] == "refused"
 
 
+def test_full_review_server_calls_search_resources_and_ledgers_result(server_module, tmp_path, monkeypatch):
+    from mcp.types import CallToolRequestParams, TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    monkeypatch.setenv("LU_REVIEW_ACCESS", "full")
+    calls = []
+
+    async def catalogue(arguments):
+        calls.append(arguments)
+        return [TextContent(type="text", text="Found 1 catalogue resources (returned ranking order):")]
+
+    monkeypatch.setattr(server_module, "handle_search_resources", catalogue)
+    result = _run(
+        server_module._on_call_tool(
+            None, CallToolRequestParams(name="search_resources", arguments={"query": "alphabet"})
+        )
+    )
+    assert result.is_error is False and calls == [{"query": "alphabet"}]
+    [receipt] = records(ledger)
+    assert receipt["tool"] == "search_resources" and receipt["status"] == "ok"
+    assert receipt["receipt_id"] in result.content[-1].text
+
+
 @pytest.mark.parametrize("access", [None, "", "wildcard"])
 def test_review_server_invalid_access_cannot_advertise_or_call_tools(server_module, tmp_path, monkeypatch, access):
     ledger = tmp_path / "review-1" / "attempt-1.jsonl"
@@ -485,6 +509,29 @@ def test_review_server_invalid_access_cannot_advertise_or_call_tools(server_modu
     refused = server_module._review_before_handler(recorder, "verify_words", {})
     assert refused and refused[1] is True and "misconfigured" in refused[0][0].text
     assert not ledger.exists()
+
+
+def test_ordinary_sources_catalogue_and_calls_unchanged(server_module, monkeypatch):
+    from mcp.types import CallToolRequestParams, TextContent
+
+    _quiet_env(monkeypatch)
+    catalog = _run(server_module._on_list_tools(None, None))
+    assert {tool.name for tool in catalog.tools} == {tool.name for tool in _run(server_module.list_tools())}
+    assert "search_sources" in {tool.name for tool in catalog.tools}
+    calls = []
+
+    async def catalogue(arguments):
+        calls.append(arguments)
+        return [TextContent(type="text", text="ordinary catalogue result")]
+
+    monkeypatch.setattr(server_module, "handle_search_resources", catalogue)
+    result = _run(
+        server_module._on_call_tool(
+            None, CallToolRequestParams(name="search_resources", arguments={"query": "alphabet"})
+        )
+    )
+    assert not result.is_error and calls == [{"query": "alphabet"}]
+    assert result.content == [TextContent(type="text", text="ordinary catalogue result")]
 
 
 def test_valid_plan_and_lesson_reviews(tmp_path: Path) -> None:
@@ -666,6 +713,23 @@ def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> No
             f"mutation {mutate} unexpectedly triggered schema_invalid: "
             f"{[r.message for r in validated.rejections if r.code == codes.SCHEMA_INVALID]}"
         )
+
+
+def test_recap_check_required_when_manifest_says_recap(tmp_path: Path) -> None:
+    paths = _layout(tmp_path, recap=True)
+    _dump(
+        paths["review"],
+        _review(kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(), findings=[]),
+    )
+    missing = _validate(paths)
+    assert codes.CHECK_MISSING in _codes(missing)
+    checks = _lesson_checks()
+    checks["recap"] = "clean"
+    _dump(
+        paths["review"],
+        _review(kind="lesson", manifest_hash=paths["digest"], checks=checks, findings=[]),
+    )
+    assert _validate(paths).ok
 
 
 def test_help_lists_the_code_registry() -> None:
@@ -868,6 +932,23 @@ def test_v4_refusal_unchanged_when_review_recording_is_on(
         server_module._V4_ACTIVE_ATTEMPT.reset(token)
     assert result[0].text == "V4 tool capability refused"
     assert not ledger.exists()
+
+
+def test_review_tool_error_is_recorded(server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+
+    async def boom(_arguments):
+        raise RuntimeError("boom-marker")
+
+    monkeypatch.setattr(server_module, "handle_verify_quote", boom)
+    result = _run(server_module.call_tool("verify_quote", {"quote": "placeholder"}))
+    assert "boom-marker" in result[0].text
+    assert _printed_receipt(result[0].text)[1] == "error"
+    stored = records(ledger)[0]
+    assert stored["status"] == "error"
+    assert "boom-marker" in stored["result"]
+    assert len(stored["result"]) > len("boom-marker")
 
 
 TOOL_NO_RESULT_FIXTURES: list[tuple[str, str]] = [
@@ -1266,6 +1347,39 @@ def test_active_finding_cites_previous_receipt_rejected(tmp_path: Path) -> None:
 
     val_persisting = _validate(paths)
     assert val_persisting.ok
+
+
+def test_v4_and_review_both_record(server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from mcp.types import TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+
+    v4_invocations: list[tuple[str, dict]] = []
+
+    def fake_v4_record(*, name: str, typed_outcome: dict) -> None:
+        v4_invocations.append((name, typed_outcome))
+
+    monkeypatch.setattr(server_module, "_record_v4_typed_invocation", fake_v4_record)
+
+    async def fake_verify_words(_arguments):
+        content = [TextContent(type="text", text="Batch verification: 1 words\nFound: 1/1\n- слово — FOUND")]
+        typed_outcome = {"disposition": "found", "hits": 1}
+        return content, typed_outcome
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
+
+    result = _run(server_module.call_tool("verify_words", {"words": ["слово"]}))
+    assert any("receipt: " in t.text for t in result)
+    receipt, _outcome = _printed_receipt(result[0].text)
+
+    stored = lookup(ledger, receipt)
+    assert stored["tool"] == "verify_words"
+    assert stored["status"] == "ok"
+
+    assert len(v4_invocations) == 1
+    assert v4_invocations[0][0] == "verify_words"
+    assert v4_invocations[0][1] == {"disposition": "found", "hits": 1}
 
 
 def test_server_recording_off_preserves_typed_structured_content(

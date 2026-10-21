@@ -151,6 +151,29 @@ def test_an_absence_finding_uses_a_plan_scope(case: Case) -> None:
         assert code == 1 and rejected(payload) == {codes.LOCATION_NOT_IN_PLAN}, scope
 
 
+@pytest.mark.parametrize(
+    "finding",
+    [
+        {"locations": [{"tab": "urok", "quote": "first letter"}]},  # the lesson shape
+        {"locations": [{"lesson": 0, "quote": "x"}]},
+        {"locations": [{"lesson": 1, "step": "s1", "activity": "a1", "quote": "x"}]},
+        {"locations": [{"step": "s1", "quote": "x"}]},  # a step needs its lesson
+        {"locations": [{"lesson": 1, "field": "has space", "quote": "x"}]},
+        {"locations": [{"lesson": 1}]},  # no quote
+        {"locations": [], "scope": {"tab": "urok"}},  # the lesson scope
+        {"locations": [], "scope": {"lesson": 1, "step": "s1", "activity": "a1"}},
+        {"locations": [], "scope": None},
+    ],
+)
+def test_a_lesson_shaped_or_malformed_plan_location_is_a_schema_error(case: Case, finding: dict) -> None:
+    payload = case.finding(**finding)
+    if payload.get("scope") is None:
+        payload.pop("scope", None)
+    case.write_review([payload])
+    code, result = case.validate()
+    assert code == 1 and codes.SCHEMA_INVALID in rejected(result), finding
+
+
 def test_a_plan_location_in_a_lesson_review_is_a_schema_error(tmp_path: Path) -> None:
     from tests.review.test_r1_schema_ledger import LESSON_CHECKS, _layout
 

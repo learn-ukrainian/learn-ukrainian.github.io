@@ -25,6 +25,33 @@ def test_fixture_reports_typo_and_suppresses_valid_form(tmp_path: Path) -> None:
     assert result.unrecognized_forms[0].example_line == "Мами хибаа слово."
 
 
+def test_human_report_groups_unrecognized_forms_by_file(tmp_path: Path) -> None:
+    first_path = _write_mdx(tmp_path, "Перший рядок з хибаа.", name="first.mdx")
+    second_path = _write_mdx(tmp_path, "Другий рядок з хибб.", name="second.mdx")
+    result = gate.check_content_spelling([second_path, first_path], vesum_lookup=_fake_vesum)
+
+    report = gate.format_human_summary(result, project_root=tmp_path)
+
+    assert "- first.mdx" in report
+    assert "  - хибаа: Перший рядок з хибаа." in report
+    assert "- second.mdx" in report
+    assert "  - хибб: Другий рядок з хибб." in report
+
+
+def test_advisory_cli_exits_zero_when_unrecognized_present(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    mdx_path = _write_mdx(tmp_path, "Мами хибаа.")
+
+    assert gate.main([], vesum_lookup=_fake_vesum, paths=[mdx_path], project_root=tmp_path) == 0
+    output = capsys.readouterr().out
+
+    assert "Content spelling gate" in output
+    assert "Unrecognized forms: 1" in output
+    assert "хибаа" in output
+
+
 def test_strict_cli_exits_nonzero_when_unrecognized_present(tmp_path: Path) -> None:
     mdx_path = _write_mdx(tmp_path, "Мами хибаа.")
 

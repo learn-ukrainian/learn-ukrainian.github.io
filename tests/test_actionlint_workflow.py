@@ -27,6 +27,20 @@ def _load_workflow() -> dict:
     return data
 
 
+def _triggers(workflow: dict) -> dict:
+    # PyYAML (YAML 1.1) parses the bare ``on:`` key as the boolean True.
+    raw = workflow.get("on", workflow.get(True))
+    assert raw is not None, "actionlint workflow has no `on:` triggers"
+    return raw
+
+
+def test_workflow_triggers_on_pull_requests() -> None:
+    triggers = _triggers(_load_workflow())
+    assert "pull_request" in triggers, (
+        "actionlint must run on pull_request so it gates PRs that touch workflows"
+    )
+
+
 def test_workflow_uses_minimal_permissions() -> None:
     workflow = _load_workflow()
     assert workflow.get("permissions") == {"contents": "read"}, (

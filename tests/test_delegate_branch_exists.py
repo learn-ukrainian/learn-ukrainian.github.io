@@ -132,3 +132,12 @@ def test_initial_authoring_head_reuses_observed_remote_sha(branch_repo, monkeypa
         )
         == head
     )
+
+
+def test_branch_help_explains_continue_only_semantics(capsys):
+    with pytest.raises(SystemExit) as exited:
+        delegate.main(["dispatch", "--help"])
+    assert exited.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "Continue an existing remote branch, e.g. codex/fix-123" in help_text
+    assert "For a new branch omit --branch (default: <agent>/<task-id>), optionally with --base" in help_text

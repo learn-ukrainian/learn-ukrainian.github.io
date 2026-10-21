@@ -1,7 +1,50 @@
 from scripts.audit.audit_atlas_thin_enriched import (
+    has_learner_english_anchor,
     summarize_manifest,
     thin_old_gate_entries,
 )
+from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
+
+
+def test_has_learner_english_anchor_accepts_supported_anchor_shapes() -> None:
+    assert has_learner_english_anchor({"gloss": "wow"})
+    assert has_learner_english_anchor({"enrichment": {"translation": {"en": ["stir"]}}})
+    assert has_learner_english_anchor(
+        {
+            "enrichment": {
+                "meaning": {
+                    "definitions": ["alphabet"],
+                    "source": KAIKKI_SOURCE,
+                }
+            }
+        }
+    )
+
+
+def test_has_learner_english_anchor_rejects_ukrainian_only_enrichment() -> None:
+    assert not has_learner_english_anchor({"gloss": "Дієпр. пас. мин. ч. до прийняти."})
+    assert not has_learner_english_anchor(
+        {
+            "enrichment": {
+                "definition_cards": [
+                    {
+                        "source": "СУМ-20",
+                        "definitions": ["помішувати: перемішувати ложкою."],
+                    }
+                ]
+            }
+        }
+    )
+    assert not has_learner_english_anchor(
+        {
+            "enrichment": {
+                "meaning": {
+                    "definitions": ["помішувати, перемішувати"],
+                    "source": "Вікісловник",
+                }
+            }
+        }
+    )
 
 
 def test_thin_old_gate_entries_reports_old_gate_false_positive() -> None:

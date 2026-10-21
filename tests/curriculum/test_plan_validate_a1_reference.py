@@ -174,6 +174,19 @@ def test_reference_unavailable_fails(monkeypatch):
     assert g.report.failures[0].code == codes.A1_REFERENCE_INVALID
 
 
+def test_exception_does_not_disable_print_decodability():
+    g = gates("ґанок", {"class": "letter_example_no_a1_word", "letter": "ґ", "step": "s1"})
+    g.check_a1_reference()
+    assert not g.report.notes
+    assert not g._readable("ґанок", g._taught_at_steps(g.plan["lessons"][0])["s1"])
+
+
+def test_letter_exception_is_case_insensitive():
+    g = gates("Ґанок", {"class": "letter_example_no_a1_word", "letter": "Ґ", "step": "s1"})
+    g.check_a1_reference()
+    assert not g.report.notes
+
+
 def test_malformed_reference_is_a_typed_failure(tmp_path, monkeypatch):
     path = tmp_path / "invalid.yaml"
     path.write_text("sources: [invalid")

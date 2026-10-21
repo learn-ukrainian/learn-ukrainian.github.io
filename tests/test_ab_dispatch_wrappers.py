@@ -418,6 +418,35 @@ def test_ask_non_kimi_review_argv_omits_kimicc_harness():
     assert command[command.index("--mode") + 1] == "read-only"
 
 
+def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
+    result_file = tmp_path / "result.md"
+    result_file.write_text("Reviewed the diff.\nVERDICT: APPROVED\n", encoding="utf-8")
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123", hard_timeout=600)
+    assert state["ok"] is True
+    assert state["status"] == "done"
+    assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
+    assert "--require-review-verdict" in calls[0][0]
+    assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
+    assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
+    assert "--branch" not in calls[0][0]
+
+
 def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
     result_file = tmp_path / "result.md"
     result_file.write_text("VERDICT: APPROVE\n", encoding="utf-8")
@@ -557,6 +586,67 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
     assert Path(serialized["result_file"]).read_text() == response
     if token == "[REDACTED_SECRET]":
         assert "ghp_SYNTHETIC10598TOKENabcdefghij" not in serialized["stderr_excerpt"]
+
+
+@pytest.mark.parametrize(
+    "response,token,expected",
+    [
+        (
+            "VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij\n",
+            "ghp_SYNTHETIC10598TOKENabcdefghij",
+            "review_unsupported_verdict_token: unsupported verdict identifier '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "VERDICT: CHANGES\n",
+            "CHANGES",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "Verdict: Looks good to me overall.", "Looks",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'Looks'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "**Verdict:** I approve this change.", "I",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'I'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+    ],
+    ids=["sensitive", "benign", "prose-looks", "prose-i"],
+)
+def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path, response, token, expected):
+    """Run the CLI output path in a process; fake only dispatch/wait transport."""
+    result = tmp_path / "result.md"
+    result.write_text(response, encoding="utf-8")
+    code = """
+import json, os, subprocess, sys
+from scripts.ai_agent_bridge import _cli, _dispatch_wrappers as wrappers
+os.environ["LU_RUNTIME_TMP_ROOT"] = sys.argv[2]
+def boundary(command, **kwargs):
+    if "dispatch" in command:
+        return subprocess.CompletedProcess(command, 0)
+    assert "wait" in command
+    return subprocess.CompletedProcess(command, 1, stdout=json.dumps({
+        "status": "failed", "result_file": sys.argv[1],
+        "failure_reason": "review_unsupported_verdict_token",
+        "stderr_excerpt": "review_unsupported_verdict_token",
+    }))
+wrappers.subprocess.run = boundary
+_cli._dispatch_headless_review(
+    "claude", "Review the branch", data=None, task_id="review-diagnostic",
+    model=None, effort=None, output_path=None, stdout_only=True, hard_timeout=None,
+)
+"""
+    completed = subprocess.run(
+        [sys.executable, "-c", code, str(result), str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert completed.returncode == 1
+    assert completed.stdout == response + "\n"
+    assert result.read_text() == response
+    assert completed.stderr.strip() == expected
+    if token.startswith("ghp_"):
+        assert token not in completed.stderr
 
 
 def test_ask_unsupported_token_never_replaces_other_terminal_failure(monkeypatch, tmp_path):

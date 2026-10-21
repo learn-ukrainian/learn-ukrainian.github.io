@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -58,3 +59,17 @@ def test_invalid_lock_fails_closed(tmp_path: Path, text: str) -> None:
 def test_invalid_freeze_fails_closed() -> None:
     with pytest.raises(ValueError):
         venv_lock_drift.parse_freeze("editable @ file:///tmp/example\n")
+
+
+def test_main_exits_on_drift(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    interpreter = tmp_path / "interpreter"
+    interpreter.touch()
+    lock = tmp_path / "requirements-lock.txt"
+    lock.write_text("alpha==1\n")
+
+    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(args[0], 0, stdout="alpha==2\n", stderr="")
+
+    monkeypatch.setattr(venv_lock_drift.subprocess, "run", fake_run)
+    assert venv_lock_drift.main(["--python", str(interpreter), "--lock", str(lock)]) == 1
+    assert "version=1 (alpha)" in capsys.readouterr().out

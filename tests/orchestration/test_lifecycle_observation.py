@@ -259,6 +259,16 @@ def test_capture_replays_without_changing_ledger(observation_case):
     assert ledger.read_bytes() == before
 
 
+def test_capture_after_fast_forward_merge_keeps_commits(observation_case):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, *_, head = observation_case
+    git(repo, "merge", "--ff-only", head)
+    git(repo, "update-ref", "refs/remotes/origin/main", head)
+    lo.before_reap(repo, worktree)
+    assert tl._latest_premerge_local(tl.load_lifecycle(ledger))["commits"][0]["sha"] == head
+
+
 def test_post_task_reap_capture_failure_and_explicit_bypass(observation_case, monkeypatch):
     from scripts.fleet import post_task_reap as post
 
@@ -280,6 +290,30 @@ def test_post_task_reap_capture_failure_and_explicit_bypass(observation_case, mo
     result = post._reap_via_canonical(**kwargs, no_lifecycle_observation="operator recovery")
     assert len(calls) == 1
     assert result["lifecycle_observations"] == [{"status": "bypassed", "reason": "operator recovery"}]
+
+
+def test_recovery_cli_appends_without_network(observation_case, capsys):
+    from scripts.orchestration import task_closeout
+
+    repo, worktree, ledger, task, manifest, push, _ = observation_case
+    git(repo, "worktree", "remove", str(worktree))
+    args = [
+        "--repo-root",
+        str(repo),
+        "recover-local",
+        "--state-file",
+        str(ledger),
+        "--task-record",
+        str(task),
+        "--preserved-manifest",
+        str(manifest),
+        "--push-record",
+        str(push),
+    ]
+    assert task_closeout.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["replayed"] is False
+    assert task_closeout.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["replayed"] is True
 
 
 def test_no_ledger_keeps_existing_reap_path(observation_case):

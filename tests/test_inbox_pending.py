@@ -15,6 +15,7 @@ from scripts import inbox_pending
 from scripts.fleet_comms.authority import AuthorityService
 from tests.helpers.agy_inbox_fixtures import (
     BODY_MARKER,
+    CLI_BOOTSTRAP,
     MESSAGE_ID,
     add_authority,
     add_legacy,
@@ -340,6 +341,53 @@ def test_hook_cli_does_not_echo_stdin(stores, monkeypatch, capsys):
     assert json.loads(captured.out) == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
 
 
+@pytest.mark.parametrize(
+    ("failure", "store_index", "pending"),
+    [
+        ("missing-store", 0, True),
+        ("missing-store", 1, True),
+        ("malformed-schema", 0, False),
+        ("malformed-schema", 0, True),
+        ("malformed-schema", 1, False),
+        ("malformed-schema", 1, True),
+        ("garbage-stdin", None, True),
+        ("missing-slot", None, True),
+    ],
+)
+def test_unknown_cli_notice_guides_both_drains(stores, roster, tmp_path, monkeypatch, failure, store_index, pending):
+    if pending:
+        add_legacy(stores[0])
+        add_authority(stores[1], state="running")
+    if failure == "missing-store":
+        stores[store_index].unlink()
+    elif failure == "malformed-schema":
+        with sqlite3.connect(stores[store_index]) as conn:
+            conn.execute("DROP TABLE messages" if store_index == 0 else "DROP TABLE authority_wake_receipts")
+    elif failure == "missing-slot":
+        monkeypatch.delenv("SESSION_HANDOFF_AGENT")
+    existing_stores = [path for path in stores if path.exists()]
+    before = snapshot(existing_stores)
+    files = set(tmp_path.rglob("*"))
+    proc = subprocess.run(
+        [sys.executable, "-c", CLI_BOOTSTRAP, "--agy-hook"],
+        input=BODY_MARKER if failure == "garbage-stdin" else "{}",
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert proc.returncode == 0
+    assert proc.stderr == ""
+    assert BODY_MARKER not in proc.stdout
+    result = json.loads(proc.stdout)
+    assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    line = result["injectSteps"][0]["ephemeralMessage"]
+    assert len(line) <= 200
+    assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
+    assert snapshot(existing_stores) == before
+    assert set(tmp_path.rglob("*")) == files
+
+
 def test_wal_reader_sees_latest_committed_order(stores):
     with sqlite3.connect(stores[0]) as writer:
         writer.execute("PRAGMA journal_mode=WAL")
@@ -348,8 +396,40 @@ def test_wal_reader_sees_latest_committed_order(stores):
         assert inbox_pending.probe("gemini-infra")["ids"] == [1]
 
 
+def test_retired_plane_and_relative_override_are_unknown(stores, monkeypatch, tmp_path):
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW")
+    (tmp_path / "READ_ME_CANONICAL_ON_JOB_HOST.txt").write_text("retired")
+    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
+    monkeypatch.setenv("AB_DB_PATH", "messages.db")
+    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+
+
+@pytest.mark.parametrize("count", [0, 1, 8])
+def test_direct_renderer_behavior(stores, count):
+    for identifier in range(1, count + 1):
+        add_legacy(stores[0], identifier=identifier)
+    result = inbox_pending.hook("{}", "gemini-infra")
+    if not count:
+        assert result == {}
+    else:
+        ids = "1" if count == 1 else "1,2,3,4,5; truncated"
+        assert result == {
+            "injectSteps": [
+                {
+                    "ephemeralMessage": f"PENDING ORDERS: {count} (ids {ids}); legacy: ai_agent_bridge inbox --for gemini-infra"
+                }
+            ]
+        }
+
+
 @pytest.mark.parametrize("payload", ["[]", '{"value": NaN}', BODY_MARKER])
 def test_direct_invalid_payload_is_unknown(stores, payload):
     assert inbox_pending.hook(payload, "gemini-infra") == {
         "injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]
     }
+
+
+def test_negative_legacy_identifier_is_unknown(stores):
+    add_legacy(stores[0], identifier=-1)
+    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"

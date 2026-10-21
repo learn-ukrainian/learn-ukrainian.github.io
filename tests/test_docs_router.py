@@ -187,6 +187,48 @@ def test_docs_router_includes_proposals_and_poc(client: TestClient):
     )
 
 
+def test_docs_router_serves_symlinked_root_with_logical_paths(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    real_docs_root = tmp_path / "real-docs"
+    reports_root = real_docs_root / "reports"
+    logical_root = tmp_path / "runtime" / "release" / ("a" * 40)
+    dashboards_root = logical_root / "dashboards"
+    reports_root.mkdir(parents=True)
+    logical_root.mkdir(parents=True)
+    dashboards_root.mkdir()
+    (reports_root / "report.md").write_text("# Report\n", encoding="utf-8")
+    (dashboards_root / "artifacts.html").write_text(
+        "<!doctype html><title>Artifacts</title>", encoding="utf-8"
+    )
+
+    (logical_root / "docs").symlink_to(real_docs_root, target_is_directory=True)
+
+    roots = {"docs/reports": logical_root / "docs" / "reports"}
+    ctx = fixture_context(logical_root).with_roots(effective_roots=roots, dashboards_dir=dashboards_root)
+    monkeypatch.setattr(app.state, "ctx", ctx)
+
+    client = TestClient(app, raise_server_exceptions=False)
+
+    root_response = client.get("/artifacts/?format=json")
+    assert root_response.status_code == 200
+    assert root_response.json()["roots"] == [
+        {"id": "docs/reports", "path": "docs/reports", "exists": True}
+    ]
+
+    listing_response = client.get("/artifacts/docs/reports?format=json")
+    assert listing_response.status_code == 200
+    listing = listing_response.json()
+    assert listing["items"][0]["path"] == "docs/reports/report.md"
+
+    artifacts_response = client.get("/api/artifacts/html")
+    assert artifacts_response.status_code == 200
+    artifact = artifacts_response.json()["artifacts"][0]
+    assert artifact["path"] == "docs/reports/report.md"
+    assert artifact["url"] == "/artifacts/docs/reports/report.md"
+
+
 @pytest.mark.parametrize(
     "path",
     [
@@ -230,6 +272,24 @@ def test_docs_router_blocks_hidden_file(controlled_client: TestClient):
 
 
 # ── New tests for MD artifact support (#2106) ──
+
+
+def test_artifacts_api_surfaces_md_files(docs_tree_client: TestClient):
+    """MD files in docs/ subdirectories should appear in /api/artifacts/html."""
+    response = docs_tree_client.get("/api/artifacts/html")
+    assert response.status_code == 200
+    body = response.json()
+
+    paths = {a["path"] for a in body["artifacts"]}
+    assert "docs/handoffs/session-1.md" in paths, (
+        "MD file with frontmatter not surfaced in artifacts API"
+    )
+    assert "docs/handoffs/notes.md" in paths, (
+        "MD file without frontmatter not surfaced in artifacts API"
+    )
+    assert "docs/proposals/proposal-2.md" in paths, (
+        "MD file in proposals not surfaced in artifacts API"
+    )
 
 
 def test_artifacts_md_with_yaml_frontmatter(docs_tree_client: TestClient):

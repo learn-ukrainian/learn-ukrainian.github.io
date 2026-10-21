@@ -311,6 +311,21 @@ def test_jsonl_rejects_bare_cr_record_separator(tmp_path):
         projection.load_cards(path, Path("unused"))
 
 
+def test_pilot_manifest_uses_existing_readonly_assembly(tmp_path, monkeypatch):
+    from scripts.atlas import word_card_assembly as assembly
+
+    manifest = tmp_path / "pilot.json"
+    manifest.write_text('{"selection": {}}')
+    calls = []
+    monkeypatch.setattr(assembly, "store_path", lambda name, explicit: tmp_path / f"{name}.db")
+    monkeypatch.setattr(assembly, "load_inputs", lambda *args: calls.append(args) or "inputs")
+    monkeypatch.setattr(assembly, "build", lambda inputs: {"cards": {"fixture": {"card_id": inputs}}})
+    assert projection.load_cards(manifest, tmp_path / "register.yaml") == [{"card_id": "inputs"}]
+    assert calls[0][0] == manifest
+    assert calls[0][2] == tmp_path / "register.yaml"
+    assert all(p.is_absolute() for p in calls[0][3:6])
+
+
 def test_help_and_invalid_cli(tmp_path, capsys):
     with pytest.raises(SystemExit) as help_result:
         projection.main(["--help"])

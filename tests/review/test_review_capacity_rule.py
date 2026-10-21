@@ -38,6 +38,14 @@ def inputs(data):
     return ResolverInputs(author_model="gpt-6.1-sol", risk="critical", language_lane=True, routing_snapshot=data, claude_account=HOST_ACCOUNT)
 
 
+def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
+    result = resolve_reviewer(inputs(snapshot()))
+    assert result.selected.concrete_model == "claude-opus-5-5"
+    # Known allowance does not manufacture verified route health.
+    assert result.selected.health != "healthy"
+    assert result.selected.selection_score[:2] == (0, 9)
+
+
 @pytest.mark.parametrize("key", ["claude", "claude-opus-5-5", "anthropic"])
 @pytest.mark.parametrize("status", ["hot", " HOT ", "near_cap"])
 @pytest.mark.parametrize("remaining", [54, 10])
@@ -71,6 +79,12 @@ def test_tightest_allowance_at_or_below_reserve_excludes(weekly, short):
     result = resolve_reviewer(inputs(snapshot(remaining=weekly, short=short)))
     assert result.selected is None
     assert any(item.health == "near_cap" and "near cap" in item.reason for item in result.trace)
+
+
+def test_policy_threshold_is_used(monkeypatch):
+    policy = replace(credit_lane.load_policy(), near_cap_remaining_pct=55)
+    monkeypatch.setattr(credit_lane, "load_policy", lambda: policy)
+    assert resolve_reviewer(inputs(snapshot())).selected is None
 
 
 def test_capacity_reads_one_fresh_policy_per_call(monkeypatch):
@@ -213,6 +227,12 @@ def test_live_fallback_receipt(tmp_path, capsys, monkeypatch, data, freshness, r
     assert code == 0
     assert result["routing_snapshot"] == {"source": "live", "freshness": freshness, "fallback_reason": reason}
     assert result["selected"]["health"] is None
+
+
+def test_unreadable_policy_keeps_retained_reserve(monkeypatch):
+    monkeypatch.setattr(credit_lane, "load_policy", lambda: (_ for _ in ()).throw(ValueError("unreadable")))
+    assert review_capacity({"remaining_pct": 10}, {"stale": False}).near_cap
+    assert not review_capacity({"remaining_pct": 11}, {"stale": False}).near_cap
 
 
 @pytest.mark.parametrize("remaining,expected_blocked", [(10, True), (11, False)])

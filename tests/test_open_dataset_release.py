@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 
-from scripts.open_dataset.hydrate import OpenDatasetHydrationError, hydrate_open_dataset
+from scripts.open_dataset.hydrate import OpenDatasetHydrationError, _download_with_gh, hydrate_open_dataset
 from scripts.open_dataset.publish import publish_open_dataset, write_pointer
 from tests.word_card_certification_fixtures import certification_fixture  # noqa: F401
 
@@ -97,6 +98,15 @@ def test_open_dataset_hydrate_rejects_digest_mismatch(tmp_path: Path, certificat
             package_path=gzip_path,
             repo="example/repo",
         )
+
+
+def test_open_dataset_gh_download_missing_binary_falls_back(monkeypatch: pytest.MonkeyPatch) -> None:
+    def missing_gh(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[bytes]:
+        raise FileNotFoundError("gh")
+
+    monkeypatch.setattr(subprocess, "run", missing_gh)
+
+    assert _download_with_gh({"release_tag": "atlas-open-dataset"}, repo="example/repo") is None
 
 
 @pytest.fixture(autouse=True)

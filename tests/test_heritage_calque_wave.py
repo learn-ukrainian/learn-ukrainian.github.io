@@ -39,6 +39,10 @@ LONG_CLEAN_SENTENCE = (
 # ---------------------------------------------------------------------------
 
 
+def test_is_clean_sentence_accepts_well_formed_sentence() -> None:
+    assert is_clean_sentence(LONG_CLEAN_SENTENCE) is True
+
+
 def test_is_clean_sentence_rejects_latin_contamination() -> None:
     text = "Учора ввечері вона нарешті знайшла task, яке шукала цілий тиждень поспіль."
     assert is_clean_sentence(text) is False

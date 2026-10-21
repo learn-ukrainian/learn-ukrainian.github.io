@@ -203,6 +203,16 @@ def test_private_mode_preflight_fails_closed_on_version_mismatch(tmp_path: Path,
     assert "checkpoint_route_private" not in receipt["checks"]
 
 
+def test_private_mode_preflight_fails_closed_when_version_command_fails(tmp_path: Path) -> None:
+    _write_config(tmp_path)
+    runner = _with({("entire", "version"): _completed([], "Entire CLI 0.11.5\n", returncode=1)})
+
+    receipt = preflight(tmp_path, runner=runner)
+
+    assert receipt["ready"] is False
+    assert receipt["issues"] == ["pinned_cli_failed"]
+
+
 @pytest.mark.parametrize(
     "status_stdout",
     [

@@ -47,6 +47,48 @@ def _plan(recommended_count: int) -> dict[str, object]:
     }
 
 
+def test_vocab_floor_pads_to_floor_from_recommended_only() -> None:
+    updated, diagnostic = linear_pipeline._correct_vocab_floor(
+        _plan(8),
+        _vocab(20),
+        {"floor": 25},
+    )
+
+    assert len(updated) == 25
+    assert diagnostic["added_count"] == 5
+    assert diagnostic["exhausted"] is False
+    recommended = {
+        item.split("(", 1)[0].strip()
+        for item in _plan(8)["vocabulary_hints"]["recommended"]
+    }
+    assert set(diagnostic["added_lemmas"]) <= recommended
+
+
+def test_vocab_floor_exhaustion_reports_insufficient_plan_recommendations() -> None:
+    updated, diagnostic = linear_pipeline._correct_vocab_floor(
+        _plan(3),
+        _vocab(20),
+        {"floor": 25},
+    )
+
+    assert len(updated) == 23
+    assert diagnostic["added_count"] == 3
+    assert diagnostic["exhausted"] is True
+    assert "plan recommends insufficient" in diagnostic["message"]
+
+
+def test_vocab_floor_noops_when_already_at_floor() -> None:
+    updated, diagnostic = linear_pipeline._correct_vocab_floor(
+        _plan(8),
+        _vocab(25),
+        {"floor": 25},
+    )
+
+    assert len(updated) == 25
+    assert diagnostic["added_count"] == 0
+    assert diagnostic["exhausted"] is False
+
+
 def test_vocab_count_gate_dispatches_deterministic_floor_handler(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()

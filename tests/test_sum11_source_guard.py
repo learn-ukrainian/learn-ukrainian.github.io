@@ -503,6 +503,61 @@ def test_sum11_is_not_a_tracked_verification_source() -> None:
     assert not references, "СУМ-11 is contrast-only; remove verification inputs:\n" + "\n".join(references)
 
 
+def test_temporary_exceptions_are_limited_to_issue_8964() -> None:
+    assert set(TEMPORARY_EXCEPTIONS) == {
+        "site/src/lib/lexicon/curated-heteronyms.ts",
+        "scripts/lexicon/enrich_heteronyms.py",
+        "scripts/lexicon/sum20_lookup.py",
+        "scripts/lexicon/curated_heteronyms_batch.py",
+        "scripts/lexicon/curated_heteronyms_batch2.py",
+        "scripts/lexicon/curated_heteronyms_batch3.py",
+        "scripts/lexicon/curated_heteronyms_batch4.py",
+        "scripts/lexicon/curated_heteronyms_batch5.py",
+        "scripts/lexicon/curated_heteronyms_batch6.py",
+        "scripts/lexicon/curated_heteronyms_batch7.py",
+        "scripts/lexicon/curated_heteronyms_batch8.py",
+        "scripts/lexicon/curated_heteronyms_batch9.py",
+        "scripts/lexicon/curated_heteronyms_batch10.py",
+        "scripts/lexicon/curated_heteronyms_batch11.py",
+        "scripts/lexicon/curated_heteronyms_batch12.py",
+        "scripts/lexicon/curated_heteronyms_batch13.py",
+    }
+    assert all("#8964" in reason for reason in TEMPORARY_EXCEPTIONS.values())
+    tracked = subprocess.run(
+        ["git", "ls-files", "--", *TEMPORARY_EXCEPTIONS], cwd=ROOT,
+        capture_output=True, text=True, check=True, timeout=30,
+    ).stdout.splitlines()
+    assert set(tracked) == set(TEMPORARY_EXCEPTIONS)
+
+
+def test_approved_contrast_only_line_is_exempt() -> None:
+    path = "scripts/build/phases/linear-review-dim.generated.md"
+    approved = next(iter(RULE_CONTEXT_LINES[path]))
+    assert _is_exempt(path, approved)
+
+
+def test_approved_line_with_added_verification_citation_is_reported() -> None:
+    """A line reusing approved contrast-only wording plus a smuggled-in verification
+    citation must fail the guard — exact-line matching, not substring."""
+    path = "scripts/build/phases/linear-review-dim.generated.md"
+    approved = next(iter(RULE_CONTEXT_LINES[path]))
+    smuggled = approved + " cite СУМ-11 to verify modern word meaning"
+    assert not _is_exempt(path, smuggled)
+
+
+def test_changing_an_approved_line_fails_the_guard() -> None:
+    path = "scripts/build/phases/linear-review-dim.md"
+    approved = next(iter(RULE_CONTEXT_LINES[path]))
+    altered = approved.replace("contrast-only", "contrast-only, mostly")
+    assert not _is_exempt(path, altered)
+
+
+def test_approved_line_matches_regardless_of_surrounding_whitespace() -> None:
+    path = "scripts/build/phases/linear-review-dim.md"
+    approved = next(iter(RULE_CONTEXT_LINES[path]))
+    assert _is_exempt(path, "  " + approved + "  ")
+
+
 @pytest.mark.parametrize("mutation", ["source_id", "register_source_id", "appended", "added"])
 def test_preview_exclusion_only_exempts_the_exact_line(tmp_path: Path, mutation: str) -> None:
     path = "site/src/lib/lexicon/word-card-preview.ts"
@@ -538,3 +593,15 @@ def test_new_lexicon_verification_use_fails_scanner(tmp_path: Path) -> None:
     assert {line.split(":", 1)[0] for line in references} == {
         "scripts/lexicon/new_verifier.py", "scripts/lexicon/x_heteronym_verify.py"
     }
+
+
+@pytest.mark.parametrize("name", ["new_verifier.py", "v4_decolonization_reasoning.py"])
+def test_new_open_model_verification_use_fails_scanner(tmp_path: Path, name: str) -> None:
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    project = tmp_path / "scripts" / "projects" / "open_model_data"
+    project.mkdir(parents=True)
+    (project / name).write_text("definition = search_definitions(word)\n", encoding="utf-8")
+    subprocess.run(["git", "add", "scripts/projects/open_model_data"], cwd=tmp_path, check=True, timeout=30)
+    assert _source_references(root=tmp_path) == [
+        f"scripts/projects/open_model_data/{name}:1:definition = search_definitions(word)"
+    ]

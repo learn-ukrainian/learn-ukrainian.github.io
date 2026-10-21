@@ -68,6 +68,20 @@ def test_link_check_local_http_server(monkeypatch, statuses, reject_old, expecte
     assert set(result) == {"http_status", "final_url", "content_type", "date"}
 
 
+def test_retry_after_is_capped(monkeypatch):
+    delays = []
+    monkeypatch.setattr(sources.time, "sleep", delays.append)
+    with link_server([429, 200], retry_after="99999") as (url, _):
+        assert sources.check_url(url, timeout=1)["http_status"] == 200
+    assert delays == [5.0]
+
+
+@pytest.mark.parametrize("retry_after", ["garbage", "-1", "0"])
+def test_retry_after_invalid_or_small_uses_backoff(retry_after):
+    assert sources._url_retry_delay(retry_after, 0) == 0.5
+    assert sources._url_retry_delay(retry_after, 1) == 1.0
+
+
 def test_retry_after_http_date():
     from datetime import UTC, datetime, timedelta
     from email.utils import format_datetime

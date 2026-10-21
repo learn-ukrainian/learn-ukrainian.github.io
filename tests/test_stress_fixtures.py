@@ -26,6 +26,13 @@ def test_captured_ulif_snapshot_is_readonly_and_joins_frozen_identity(ulif_stres
     assert stress._vesum_lookup("мене") == before
 
 
+def test_stress_unit_default_has_no_ambient_ulif_store():
+    assert sources_db.ulif_stress_build() == {"state": "unavailable"}
+    result = stress.verify_stress("село")
+    assert result["stress_source"] == "trie"
+    assert {m["source"] for m in result["matches"]} == {"trie"}
+
+
 def test_missing_ulif_keeps_trie_label_and_withholds_ambiguous_distractor(ulif_stress_db, monkeypatch):
     from scripts.audit.generate_practice_deck import _imperative_display
 

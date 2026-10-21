@@ -33,3 +33,23 @@ def test_fixture_app_orient_git_is_not_production(tmp_path: Path) -> None:
         pass
     if production_head:
         assert git.get("head") != production_head
+
+
+def test_no_router_owns_a_private_resolve_context_copy() -> None:
+    """#7496: byte-identical per-router _resolve_context copies are gone."""
+    import importlib
+    import pkgutil
+
+    import scripts.api as api_pkg
+
+    offenders: list[str] = []
+    for mod in pkgutil.iter_modules(api_pkg.__path__, api_pkg.__name__ + "."):
+        if mod.name.endswith(".monitor_context"):
+            continue
+        try:
+            module = importlib.import_module(mod.name)
+        except Exception:
+            continue
+        if hasattr(module, "_resolve_context"):
+            offenders.append(mod.name)
+    assert offenders == []

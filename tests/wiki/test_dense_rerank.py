@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import sqlite3
 import sys
+import types
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
@@ -36,3 +39,23 @@ def test_iter_textbook_units_includes_unsectioned_chunks():
     assert units[1].text == "unsectioned text"
     assert units[1].parent_key == "ulp-book"
     conn.close()
+
+
+def test_flagembedding_encoder_missing_ml_stack_is_unavailable(monkeypatch):
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.setitem(sys.modules, "FlagEmbedding", None)
+
+    with pytest.raises(dense_rerank.DenseEncoderUnavailableError):
+        dense_rerank.FlagEmbeddingEncoder(device="cpu")
+
+
+def test_flagembedding_encoder_unreachable_weights_are_unavailable(monkeypatch):
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+
+    def offline_model(*_args, **_kwargs):
+        raise OSError("We couldn't connect to 'https://huggingface.co' to load BAAI/bge-m3")
+
+    monkeypatch.setitem(sys.modules, "FlagEmbedding", types.SimpleNamespace(BGEM3FlagModel=offline_model))
+
+    with pytest.raises(dense_rerank.DenseEncoderUnavailableError, match="huggingface"):
+        dense_rerank.FlagEmbeddingEncoder(device="cpu")

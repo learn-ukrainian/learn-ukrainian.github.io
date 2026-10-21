@@ -931,6 +931,38 @@ def test_tracked_mirror_resolves_each_deploy_source(
     assert f"{source_relative} -> {mirror_relative}" in output
 
 
+def test_tracked_agents_skill_declared_orphan_is_skipped(tmp_path: Path) -> None:
+    """Destination-only .agents skills remain governed by their explicit allowlist."""
+    repo = _init_checkout(tmp_path)
+    orphan_config = repo / ORPHAN_PATHS_FILE
+    orphan_config.write_text(
+        orphan_config.read_text(encoding="utf-8").replace(
+            'ORPHAN_PATHS_AGENTS=""',
+            'ORPHAN_PATHS_AGENTS="local-skill"',
+        ),
+        encoding="utf-8",
+    )
+    mirror = repo / ".agents/skills/local-skill/SKILL.md"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    mirror.write_text("destination-only skill\n", encoding="utf-8")
+    _init_git_history(repo)
+
+    result = _run_tracked_mirror_check(repo)
+    assert result.returncode == 0, result.stderr + result.stdout
+
+
+def test_tracked_claude_glob_orphan_is_skipped(tmp_path: Path) -> None:
+    """Glob allowlist entries retain the same semantics as deploy's diff excludes."""
+    repo = _init_checkout(tmp_path)
+    mirror = repo / ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    mirror.write_text("runtime-only handoff\n", encoding="utf-8")
+    _init_git_history(repo)
+
+    result = _run_tracked_mirror_check(repo)
+    assert result.returncode == 0, result.stderr + result.stdout
+
+
 def test_agent_manifest_reaps_retired_hook_without_touching_agent_state(tmp_path: Path) -> None:
     """A recorded hook is reaped; unrecorded .agent runtime paths survive."""
     repo = _init_checkout(tmp_path)
@@ -1159,6 +1191,24 @@ echo "GEMINI:${ORPHAN_PATHS_GEMINI}"
         tokens = [token for token in paths.split() if token]
         sets[label] = frozenset(tokens)
     return sets
+
+
+def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
+    """Two consecutive deploys should leave the Codex target unchanged."""
+    repo = _init_checkout(tmp_path)
+
+    first_result = _run(repo, DEPLOY_SCRIPT)
+    assert first_result.returncode == 0, (
+        f"first deploy failed:\nstdout: {first_result.stdout}\nstderr: {first_result.stderr}"
+    )
+
+    second_result = _run(repo, DEPLOY_SCRIPT)
+    assert second_result.returncode == 0, (
+        f"second deploy failed:\nstdout: {second_result.stdout}\nstderr: {second_result.stderr}"
+    )
+    assert "agents_extensions/shared → .codex: no changes" in second_result.stdout
+    assert "agents_extensions/codex → .codex: no changes" in second_result.stdout
+    assert "No changes to deploy." in second_result.stdout
 
 
 def test_missing_codex_hooks_json_is_drift(tmp_path: Path) -> None:
@@ -1396,6 +1446,53 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     assert brief.exists(), "atlas-3150-brief.md was wiped"
     assert dispatch.exists(), "dispatch-3098-slice3.md was wiped"
     assert collected.exists(), "dispatch-briefs/ brief was wiped"
+
+
+def test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime(
+    tmp_path: Path,
+) -> None:
+    """A retired shared hook is removed, while .agent runtime scratch survives.
+
+    The source-managed set is derived from ``agents_extensions/shared``. This
+    exercises the exact production boundary: ``hooks/`` is mirrored with
+    deletion propagation, but ``thread-rollovers/`` and ``tmp/`` are runtime
+    state outside that source tree and remain preserve-by-default.
+    """
+    repo = _init_checkout(tmp_path)
+    source_hook = repo / "agents_extensions" / "shared" / "hooks" / "auto-audit.sh"
+    source_hook.write_text("#!/usr/bin/env bash\necho auto-audit\n", encoding="utf-8")
+    source_hook.chmod(0o755)
+    for command in (
+        ["git", "init", "--quiet"],
+        ["git", "config", "user.email", "test@example.invalid"],
+        ["git", "config", "user.name", "Deploy test"],
+        ["git", "add", "agents_extensions"],
+        ["git", "commit", "--quiet", "-m", "add source hook"],
+    ):
+        result = _run_command(repo, command)
+        assert result.returncode == 0, result.stderr
+
+    first_deploy = _run(repo, DEPLOY_SCRIPT)
+    assert first_deploy.returncode == 0, first_deploy.stderr + first_deploy.stdout
+    deployed_hook = repo / ".agent" / "hooks" / "auto-audit.sh"
+    assert deployed_hook.exists(), "test fixture hook was not deployed"
+
+    handoff = repo / ".agent" / "thread-rollovers" / "x" / "handoff.md"
+    handoff.parent.mkdir(parents=True)
+    handoff.write_text("live handoff\n", encoding="utf-8")
+    runtime_tmp = repo / ".agent" / "tmp" / "y"
+    runtime_tmp.parent.mkdir(parents=True)
+    runtime_tmp.write_text("live scratch\n", encoding="utf-8")
+
+    deletion = _run_command(repo, ["git", "rm", "agents_extensions/shared/hooks/auto-audit.sh"])
+    assert deletion.returncode == 0, deletion.stderr
+    deletion_commit = _run_command(repo, ["git", "commit", "--quiet", "-m", "retire source hook"])
+    assert deletion_commit.returncode == 0, deletion_commit.stderr
+    second_deploy = _run(repo, DEPLOY_SCRIPT)
+    assert second_deploy.returncode == 0, second_deploy.stderr + second_deploy.stdout
+    assert not deployed_hook.exists(), "deleted source hook still executes from .agent"
+    assert handoff.read_text(encoding="utf-8") == "live handoff\n"
+    assert runtime_tmp.read_text(encoding="utf-8") == "live scratch\n"
 
 
 def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:

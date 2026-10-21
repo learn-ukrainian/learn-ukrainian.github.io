@@ -116,6 +116,26 @@ def test_get_projects_schema_and_unknown_host(monkeypatch: pytest.MonkeyPatch) -
     assert host["services"] == []
 
 
+def test_mapped_host_job_stays_retired(monkeypatch: pytest.MonkeyPatch) -> None:
+    # A leftover prod env can still map a canonical alias at host-job. The
+    # mapping must not resurrect it as a glance row, a queryable id, or an
+    # allowed reporter.
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "atlas-runner=host-job,hramatka=host-teacher")
+    monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
+
+    default_glance = client.get("/api/fleet/projects/v1")
+    assert default_glance.status_code == 200
+    assert sorted(default_glance.json()["hosts"].keys()) == ["host-teacher", "mac-operator"]
+
+    denied = client.get("/api/fleet/projects/v1?host_id=host-job")
+    assert denied.status_code == 400
+    assert denied.json()["detail"] == "unknown host_id"
+
+    posted = _post_report(_document("host-job"))
+    assert posted.status_code == 400
+    assert posted.json()["detail"] == "unknown host_id"
+
+
 def test_post_report_loopback_and_expiry(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     posted = _post_report(_document())

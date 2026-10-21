@@ -55,6 +55,17 @@ def test_report_compares_identity_and_full_payloads_without_writes(tmp_path, mon
     assert {path.name: path.read_bytes() for path in tmp_path.iterdir()} == before
 
 
+def test_cli_emits_only_counts_unless_details_requested(tmp_path, capsys):
+    staging, official = _stores(tmp_path)
+    args = ["--repository-root", str(tmp_path), "--staging", str(staging), "--official", str(official)]
+    assert report.main(args) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["counts"]["differing_after_normalization"] == 2
+    assert set(result) == {"identity", "comparison_fields", "counts"}
+    assert report.main([*args, "--details"]) == 0
+    assert json.loads(capsys.readouterr().out)["missing"] == ["missing"]
+
+
 def test_cli_refuses_invalid_store_without_leaking_paths(tmp_path, capsys):
     assert report.main(["--repository-root", str(tmp_path), "--staging", str(tmp_path / "missing.db")]) == 2
     assert json.loads(capsys.readouterr().out) == {"status": "refused", "reason": "store_missing"}
@@ -104,3 +115,16 @@ def test_comparison_ignores_transport_only_and_preserves_stored_text(tmp_path, m
     assert result["counts"]["differing_after_normalization"] == 2
     assert result["differing_examples"] == ["changed", "duplicate"]
     assert (staging.read_bytes(), official.read_bytes()) == before
+
+
+def test_real_differences_remain_and_examples_are_capped(tmp_path):
+    staging, official = _stores(tmp_path)
+    rows = [(f"difference{i:03}", "HEAD", "mirror sense") for i in range(25)]
+    with sqlite3.connect(staging) as conn:
+        conn.executemany("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?)", rows)
+    with sqlite3.connect(official) as conn:
+        conn.executemany("INSERT INTO sum20_articles VALUES (?, ?, 'official sense')", [(r[0], r[1]) for r in rows])
+    result = report.reconcile_sum20(staging, official, repository_root=tmp_path)
+    assert result["counts"]["matching"] == 1
+    assert result["counts"]["differing_after_normalization"] == 27
+    assert len(result["differing_examples"]) == 20

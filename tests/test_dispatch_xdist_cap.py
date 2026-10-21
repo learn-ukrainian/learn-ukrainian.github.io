@@ -138,13 +138,22 @@ def test_override_ini_addopts_still_caps_when_pytest_plugins_is_set(tmp_path: Pa
     _assert_workers(completed, 2)
 
 
+def test_plugin_loaded_from_addopts_and_pytest_plugins_is_idempotent(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    env["PYTEST_PLUGINS"] = "ci.pytest_dispatch_cap"
+    completed = _run_pytest(tmp_path, ["-n", "8", "-q", "tests/test_sample.py"], env)
+    _assert_workers(completed, 2)
+    assert completed.stdout.count(CAP_LINE) == 1
+
+
 def test_worker_env_resolves_cap_plugin_for_nested_pytest_outside_rootdir(tmp_path: Path) -> None:
     """#8795: a real dispatch-worker env must not break a nested pytest.
 
     ``PYTEST_PLUGINS=ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
-    rootdir-relative ``pythonpath = ["scripts"]``. A test that spawns a nested
-    pytest from ``tmp_path`` with its own bare ini (no ``pythonpath`` entry) used
-    to fail with
+    rootdir-relative ``pythonpath = ["scripts"]``. A test like
+    ``tests/test_pytest_tmp_guard.py`` spawns a nested pytest from ``tmp_path``
+    with its own bare ini (no ``pythonpath`` entry), which used to fail with
     ``ImportError: No module named 'ci'`` once it inherited the worker's
     ``PYTEST_PLUGINS``. This builds a real worker env via
     ``scripts.delegate._build_worker_env`` (not a hand-rolled stand-in) and
@@ -329,6 +338,18 @@ def test_collect_only_full_suite_runs_while_lock_held_and_executes_nothing(tmp_p
     _assert_refused_before_tests(blocked, ran)
 
 
+def _run_repo(cwd: Path, args: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [_PYTEST, "-m", "pytest", *args],
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=90,
+        check=False,
+    )
+
+
 def _foreign_rootdir(tmp_path: Path) -> Path:
     """A real directory outside this checkout, for ``--rootdir`` and invocation dir."""
     foreign = tmp_path / "foreign-rootdir"
@@ -339,6 +360,18 @@ def _foreign_rootdir(tmp_path: Path) -> Path:
     assert repo not in resolved.parents
     assert resolved not in repo.parents
     return foreign
+
+
+def test_scripts_ci_invocation_loads_the_cap(tmp_path: Path) -> None:
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    completed = _run_repo(
+        _REPO_ROOT,
+        ["-n", "1", "-q", "--collect-only", "scripts/ci/test_source_cache.py"],
+        env,
+    )
+    combined = completed.stdout + completed.stderr
+    assert CAP_LINE in combined, combined
+    assert FULL_SUITE_BUSY not in combined
 
 
 class _Args:

@@ -12,6 +12,7 @@ from scripts.fleet_comms.message_plane import (
     MAX_CONTINUATIONS,
     MessagePlane,
     default_plane_root,
+    invocation_digest,
     resolve_plane_mode,
 )
 
@@ -122,6 +123,14 @@ def test_configured_default_fail_open_on_malformed_yaml(
     monkeypatch.setattr(mp, "__file__", str(fake_file))
     assert mp._configured_default_plane_mode() == "off"
     assert mp.resolve_plane_mode(None) == "off"
+
+
+def test_invocation_digest_stable_for_fg_bg_parity() -> None:
+    a = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")
+    b = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")
+    c = invocation_digest(recipient="codex", body="hello!", model="m", mode="read-only", cwd="/tmp/x")
+    assert a == b
+    assert a != c
 
 
 def test_shadow_records_incomplete_without_legacy_replied(tmp_path: Path) -> None:
@@ -249,3 +258,11 @@ def test_length_limited_increments_continuation_budget(tmp_path: Path) -> None:
         assert out.request.completion_state == CompletionState.LENGTH_LIMITED.value
         assert out.continuation_used == 1
         assert out.continuation_used <= MAX_CONTINUATIONS
+
+
+def test_gemini_opens_as_agy_on_plane(tmp_path: Path) -> None:
+    with MessagePlane(mode="shadow", root=tmp_path / "v1") as plane:
+        req = plane.open_ask(recipient="gemini", body="hi")
+        assert req is not None
+        assert req.requested_recipient == "gemini"
+        assert req.resolved_recipient == "agy"

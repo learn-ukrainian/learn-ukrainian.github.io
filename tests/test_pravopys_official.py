@@ -172,6 +172,30 @@ def test_section_readings_use_ordinals_and_preserve_cyrillic_controls() -> None:
     assert section.rows[0].text == "ХХ ст.; І та і, Іван, Х"
 
 
+def test_toc_readings_use_entry_index_and_preserve_other_fields() -> None:
+    entries = [po.TocEntry("part", None, "І. СЛОВА", None), po.TocEntry("paragraph", 82, "ІІ відміна", 112)]
+    readings = [
+        po.ContextReading(0, "title", "І.", "I.", 1, "synthetic part label"),
+        po.ContextReading(1, "title", "ІІ відміна", "II відміна", 1, "synthetic declension label"),
+    ]
+    assert po.apply_context_readings(entries, readings) == [
+        po.TocEntry("part", None, "I. СЛОВА", None),
+        po.TocEntry("paragraph", 82, "II відміна", 112),
+    ]
+    assert entries[1].title == "ІІ відміна"
+
+
+@pytest.mark.parametrize(
+    "target", [po.Section(2, 1, "І. СЛОВА", 11, None), po.TocEntry("part", None, "І. СЛОВА", None)]
+)
+@pytest.mark.parametrize("missing", [False, True])
+def test_metadata_readings_fail_on_wrong_count_or_missing_locator(target, missing: bool) -> None:
+    locator = 2 if isinstance(target, po.Section) else 0
+    reading = po.ContextReading(999 if missing else locator, "title", "І.", "I.", 2, "synthetic drift")
+    with pytest.raises(po.PravopysParseError, match="missing locator" if missing else "expected 2"):
+        po.apply_context_readings([target], [reading])
+
+
 # ── Layout ───────────────────────────────────────────────────────
 
 
@@ -572,6 +596,13 @@ def test_ingest_refuses_a_file_that_is_not_pinned(tmp_path: Path, capsys) -> Non
     code = pravopys_2019_ingest.main(["--pdf", str(pdf), "--retrieved-at", "2026-10-03T00:00:00Z", "--dry-run"])
     assert code == 1
     assert "is not a pinned official file" in capsys.readouterr().err
+
+
+def test_ingest_requires_retrieval_time_and_db(tmp_path: Path) -> None:
+    with pytest.raises(SystemExit):
+        pravopys_2019_ingest.main(["--pdf", str(tmp_path / "x.pdf"), "--dry-run"])
+    with pytest.raises(SystemExit):
+        pravopys_2019_ingest.main(["--pdf", str(tmp_path / "x.pdf"), "--retrieved-at", "2026-10-03T00:00:00Z"])
 
 
 def test_fetch_discards_a_download_with_the_wrong_hash(tmp_path: Path) -> None:

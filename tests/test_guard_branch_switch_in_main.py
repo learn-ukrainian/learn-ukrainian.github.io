@@ -64,6 +64,12 @@ def test_issue_9479_redirect_denominator(repos, redirect, shape):
     assert guard._command_danger_reason(safe, repos["other"]) is None
 
 
+@pytest.mark.parametrize("redirect,verb", [(">/dev/null", "checkout -b"), ("2>&1", "switch -c")])
+def test_issue_9479_reviewer_reproductions(repos, redirect, verb):
+    command = f"cd {repos['public']} {redirect} && git {verb} fixture"
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+
+
 @pytest.mark.parametrize("redirect", REDIRECTS_9479)
 @pytest.mark.parametrize("verb", ["checkout -b", "switch -c"])
 def test_issue_9479_real_bash_cwd_and_argv(repos, tmp_path, redirect, verb):
@@ -166,6 +172,10 @@ def test_issue_9102_executable_payload_stays_visible(repos, shape):
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
 
+def test_issue_9102_real_let_heredoc_body_is_inert():
+    assert _dangerous("let x=1<<EOF\ngit checkout -b feature\nEOF") is None
+
+
 @pytest.mark.parametrize(
     "command",
     [
@@ -181,6 +191,12 @@ def test_issue_9115_nested_and_backtick_switches_blocked(repos, command):
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
 
+def test_issue_9115_escaped_nested_backtick_switch_is_visible(repos):
+    command = r"echo `echo \`git checkout -b feature\``"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
 def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
     monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
     monkeypatch.chdir(repos["public"])
@@ -189,6 +205,10 @@ def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "echo " + body}})))
     assert guard.main() == 2
+
+
+def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
+    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 
 
 @pytest.mark.parametrize(
@@ -468,6 +488,19 @@ def test_quoted_git_in_commit_message_not_blocked(cmd):
     assert _dangerous(cmd) is None
 
 
+def test_branch_force_reason_unit():
+    assert guard._branch_force_reason(["-D", "feature"], "feature") is not None
+    assert guard._branch_force_reason(["-D", "feature"], "main") is None
+    assert guard._branch_force_reason(["-M", "old", "new"], "old") is not None
+    assert guard._branch_force_reason(["-M", "new"], "main") is not None
+    assert guard._branch_force_reason(["-f", "feature", "ref"], "main") is not None
+    assert guard._branch_force_reason(["--force", "feature", "ref"], "main") is not None
+    assert guard._branch_force_reason(["-d", "merged"], "main") is None
+    assert guard._branch_force_reason(["-m", "old", "new"], "main") is None
+    assert guard._branch_force_reason(["feature"], "main") is None
+    assert guard._branch_force_reason([], "main") is None
+
+
 # --- #4876: glued-operator evasion class ------------------------------------
 # Live shapes from 2026-07-10: five `git branch -D` calls rode through the
 # guard because `;`/`|`/newlines glued to neighbouring tokens never became
@@ -505,6 +538,11 @@ def test_glued_operator_evasion_blocked(cmd):
 )
 def test_hardened_segments_no_false_positive(cmd):
     assert _dangerous(cmd) is None
+
+
+def test_heredoc_body_does_not_mask_following_command():
+    cmd = "cat > /tmp/x.md <<'EOF'\nbody text\nEOF\ngit branch -D main"
+    assert _dangerous(cmd) is not None
 
 
 def test_backslash_line_continuation_still_inspected():
@@ -554,6 +592,15 @@ def test_unclosed_heredoc_does_not_hide_trailing_danger():
     # A never-closing marker must NOT drop the real command after it (#4877
     # fail-open): the buffered lines were not a real heredoc body.
     assert _dangerous("cat <<'NOEND'\nbody > fake\ngit branch -D main") is not None
+
+
+def test_attached_dash_heredoc_closes_and_body_dropped():
+    # `<<-EOF` with a tab-indented closer is a REAL heredoc: body dropped
+    # (no false positive on body content), trailing command still scanned.
+    cmd = "cat <<-EOF\n\tgit branch -D fake\n\tEOF\ngit branch -D main"
+    assert _dangerous(cmd) is not None  # the trailing real one
+    # body-only (properly closed) must not trip:
+    assert _dangerous("cat <<-EOF\n\tgit branch -D fake\n\tEOF") is None
 
 
 # --- #4899: target-repo-aware protected-root matching ----------------------
@@ -610,6 +657,30 @@ def test_private_non_current_branch_pruning_is_allowed(repos):
 def test_operations_inside_added_worktrees_are_allowed(repos):
     command = f"git -C {repos['public_worktree']} switch another-topic"
     assert guard._command_danger_reason(command, repos["public"]) is None
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        'bash -c "git branch -D x"',
+        'sh -c "git branch -D x"',
+        'eval "git branch -D x"',
+        "x=`git branch -D x`",  # backtick command substitution
+    ],
+)
+def test_known_boundary_verb_inside_string_or_backticks(cmd):
+    """DOCUMENTED LIMITATION (#4877, grok msg 2334): a verb hidden inside a
+    quoted string arg (`bash -c "…"`, `eval "…"`) or backticks is NOT
+    inspected — a segment guard cannot see it without becoming a recursive
+    shell parser (which would add false positives). The old whole-command
+    guard had the same blind spot. These guards are an honest-mistake safety
+    net, not an adversarial sandbox: an agent does not accidentally wrap a
+    destructive command in `bash -c`. This test PINS the boundary so any
+    future change to it is visible and deliberate. (Note: `$(…)` substitution
+    IS caught — see the dangerous-cases tests — because it leaks bare verb
+    tokens into a segment; only string-args and backticks are blind.)
+    """
+    assert _dangerous(cmd) is None
 
 
 @pytest.mark.parametrize(
@@ -677,6 +748,16 @@ def _assert_r3_bash_decision(repos, tmp_path, command, cwd, verb, expected_cwd):
     assert (guard._command_danger_reason(command, cwd) is not None) == (actual[0] == str(repos["public"]))
 
 
+@pytest.mark.parametrize("parentheses", ["({body})", "( {body} )"])
+@pytest.mark.parametrize("target", [".worktrees/topic", "./.worktrees/topic", "absolute"])
+@pytest.mark.parametrize("verb", ["switch -c", "checkout -b", "checkout", "switch"])
+def test_issue_9479_r3_closed_subshell_cd(repos, tmp_path, parentheses, target, verb):
+    target = str(repos["public_worktree"]) if target == "absolute" else target
+    body = f"cd {target} >$(echo /dev/null)"
+    command = f"{parentheses.format(body=body)} && git {verb} fixture"
+    _assert_r3_bash_decision(repos, tmp_path, command, repos["public"], verb, repos["public"])
+
+
 @pytest.mark.parametrize("verb", ["switch -c", "checkout -b", "checkout", "switch"])
 def test_issue_9479_r3_pending_cd_before_new_subshell(repos, tmp_path, verb):
     command = f"cd ../.. >$(echo /dev/null) &&(git {verb} fixture)"
@@ -723,11 +804,46 @@ def test_issue_9479_r2_unreadable_respects_repository(repos, tmp_path, command, 
     assert (guard._command_danger_reason(command, cwd) is not None) == expected_block
 
 
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "git checkout -b feat && echo $(git rev-parse HEAD)",
+        "git switch -c feat-$(date +%s)",
+        "cd $(git rev-parse --show-toplevel) && git checkout -b x",
+        'git checkout -b feat >"$LOG" 2>&1',
+    ],
+)
+@pytest.mark.parametrize("cd_target", ["primary", "unreadable"])
+def test_issue_9479_r2_unreadable_cd_blocks(repos, tail, cd_target):
+    target = str(repos["public"]) if cd_target == "primary" else '"$ROOT"'
+    assert guard._command_danger_reason(f"cd {target} && {tail}", repos["public_worktree"]) is not None
+
+
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r2_named_fd_cd(repos, target):
+    command = f"cd {repos[target]} {{fd}}>file && git switch -c fixture"
+    assert (guard._command_danger_reason(command, repos["other"]) is not None) == (target == "public")
+
+
+@pytest.mark.parametrize("redirect", ['>"$LOG"', ">$(echo file)", ">`echo file`"])
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r2_literal_cd_dynamic_redirect(repos, redirect, target):
+    command = f"cd {repos[target]} {redirect} && git switch -c fixture"
+    assert (guard._command_danger_reason(command, repos["public_worktree"]) is not None) == (target == "public")
+
+
 def test_issue_9479_r2_redirect_substitution_runs_before_cd(repos):
     command = f"cd {repos['public']} >$(git switch -c fixture) && echo ok"
     assert guard._command_danger_reason(command, repos["public_worktree"]) is None
     command = f"cd {repos['public_worktree']} >$(git switch -c fixture) && echo ok"
     assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9479_r2_operator_boundaries(repos):
+    command = f"cd {repos['public']} &&(git switch -c fixture) && echo ok"
+    rows = guard._segments_with_following_operator(command)
+    assert rows[0][1] == "&&open"
+    assert rows[1][1] == "close&&"
 
 
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
@@ -766,6 +882,13 @@ def test_issue_9479_r4_scope_stack_bash(repos, tmp_path, start, separator, redir
         body += " && false"
     command = body + separator + "git checkout -b fixture"
     _assert_r3_bash_decision(repos, tmp_path, command, repos[start], "checkout -b", repos[start])
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r4_session_cd_bash(repos, tmp_path, start, target):
+    command = f"cd {repos[target]} && git switch -c fixture"
+    _assert_r3_bash_decision(repos, tmp_path, command, repos[start], "switch -c", repos[target])
 
 
 @pytest.mark.parametrize("shape", ["({body})", "x=$({body})", "x=`{body}`", "cat <({body})"])
@@ -847,6 +970,13 @@ def test_issue_9479_r5_reviewer_reproductions_real_bash(repos, tmp_path, start, 
     assert guard._command_danger_reason(command, repos[start]) is not None
 
 
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+def test_issue_9479_r6_branch_before_case_deliberately_overblocks_worktree(repos, tmp_path, start):
+    command = "git checkout -b fixture; case x in x) true;; esac"
+    _assert_r5_bash_record(tmp_path, command, repos[start], repos[start])
+    assert (guard._command_danger_reason(command, repos[start]) is not None) is True
+
+
 @pytest.mark.parametrize(
     "shape", ["case x in x) true;; esac", "(case x in x) true;; esac)", "x=$(case x in x) true;; esac)"]
 )
@@ -888,6 +1018,10 @@ def test_issue_9479_r5_literal_case_and_parameter_controls_allowed(repos, body):
 def test_issue_9479_r5_unmodeled_syntax_is_sticky(repos, body):
     assert guard._command_danger_reason(body + "; git switch -c fixture", repos["public_worktree"]) is not None
     assert guard._command_danger_reason(body + "; git status", repos["public_worktree"]) is None
+
+
+def test_issue_9479_r5_parentheses_in_branch_argument_refuse_current_command(repos):
+    assert guard._command_danger_reason("git switch -c ${x:-(}", repos["public_worktree"]) is not None
 
 
 def test_issue_9479_r6_safe_parameter_does_not_override_later_case(repos, tmp_path):
@@ -947,6 +1081,52 @@ def test_issue_9479_r6_whole_command_reproductions_real_bash(repos, tmp_path, st
     assert guard._command_danger_reason(command, repos[start]) is not None
 
 
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("separator", [";", "&&", "||", "\n"])
+@pytest.mark.parametrize("multiline", [False, True])
+@pytest.mark.parametrize("position", ["before", "after", "inside"])
+@pytest.mark.parametrize(
+    "wrapper",
+    ["{body}", "x=$({body})", 'echo "$({body})"', "echo `{body}`", "cat <({body})"],
+)
+def test_issue_9479_r6_case_anywhere_deliberately_overblocks_worktree(
+    repos, tmp_path, start, separator, multiline, position, wrapper
+):
+    branch = "git checkout -b fixture"
+    case = "case x in\nx) true;;\nesac" if multiline else "case x in x) true;; esac"
+    if position == "inside":
+        body = case.replace("true", branch)
+        command = wrapper.format(body=body)
+    else:
+        body = wrapper.format(body=case)
+        if separator == "||" and position == "after":
+            body = "{ " + body + "; false; }"
+        command = f"{branch}{separator}{body}" if position == "before" else f"{body}{separator}{branch}"
+    _r6_bash_record(tmp_path, command, repos[start], repos[start])
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+@pytest.mark.parametrize(
+    "body",
+    ["echo case", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
+)
+def test_issue_9479_r6_common_worktree_controls_allowed(repos, body):
+    assert guard._command_danger_reason(body + " && git switch -c fixture", repos["public_worktree"]) is None
+
+
+@pytest.mark.parametrize("body", ["case x in x) true;; esac", "echo ${x:-(}", 'echo "$(case x in x) echo;; esac)"'])
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+def test_issue_9479_r6_unmodeled_without_branch_is_unaffected(repos, body, start):
+    assert guard._command_danger_reason(body, repos[start]) is None
+    assert guard._command_danger_reason(body + '; echo "git switch -c literal"', repos[start]) is None
+
+
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r6_absolute_git_cwd_cannot_resolve_whole_command_uncertainty(repos, target):
+    command = f"case x in x) true;; esac; git -C {repos[target]} switch -c fixture"
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is not None
+
+
 @pytest.mark.parametrize("failure", ["detector", "scope"])
 def test_issue_9479_r6_helper_exception_exits_two(monkeypatch, failure):
     def broken(*args, **kwargs):
@@ -971,6 +1151,30 @@ def test_issue_9479_r6_helper_exception_exits_two(monkeypatch, failure):
 )
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
 def test_issue_9479_r6_unknown_repository_branch_variants(repos, command, start):
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("separator", [";", "&&", "||", "\n"])
+@pytest.mark.parametrize("multiline", [False, True])
+@pytest.mark.parametrize("position", ["before", "after", "inside"])
+@pytest.mark.parametrize("parenthesis", ["(", ")"])
+@pytest.mark.parametrize("wrapper", ["{body}", "x=$({body})", 'echo "$({body})"', "echo `{body}`", "cat <({body})"])
+def test_issue_9479_r6_parameter_anywhere_deliberately_overblocks_worktree(
+    repos, tmp_path, start, separator, multiline, position, parenthesis, wrapper
+):
+    branch = "git checkout -b fixture"
+    body = "echo ${x:-" + parenthesis + "}"
+    if multiline:
+        body += "\ntrue"
+    if position == "inside":
+        command = wrapper.format(body=body + "; " + branch)
+    else:
+        body = wrapper.format(body=body)
+        if separator == "||" and position == "after":
+            body = "{ " + body + "; false; }"
+        command = f"{branch}{separator}{body}" if position == "before" else f"{body}{separator}{branch}"
+    _r6_bash_record(tmp_path, command, repos[start], repos[start])
     assert guard._command_danger_reason(command, repos[start]) is not None
 
 
@@ -1059,6 +1263,38 @@ def test_issue_9479_r7_other_heredoc_contexts_bash(repos, tmp_path, start, tail)
         "fixture",
     ]
     assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "git commit -m \"$(cat <<EOF\n'$(case x in x) printf fixture;; esac)'\nEOF\n)\"",
+        'git commit -m "$(cat <<EOF\n`case x in x) printf fixture;; esac`\nEOF\n)"',
+        "cat <<'EOF'\nIt's fixed\nEOF\ncase x in x) true;; esac",
+        'git commit -m "$(cat <<EOF\n${y:-(z)}\nEOF\n)"',
+    ],
+)
+def test_issue_9479_r7_real_expansions_and_later_case_stay_blocked(repos, tmp_path, start, tail):
+    command = "git switch -c fixture && " + tail
+    assert _r7_bash_records(tmp_path, command, repos[start])[0][2:] == ["switch", "-c", "fixture"]
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("opener", ["<<EOF", "<<'EOF'", r"<<\EOF", "<<-EOF"])
+def test_issue_9479_r7_missing_terminator_fails_closed(repos, start, opener):
+    command = f'git switch -c fixture && git commit -m "$(cat {opener}\nIt\'s fixed\nEOF trailing\n)"'
+    assert guard.command_repository_unknown(command)
+    assert guard._command_danger_reason(command, repos[start]) is not None
+
+
+def test_issue_9479_r7_primary_apostrophe_is_still_blocked(repos, tmp_path):
+    command = "git switch -c fixture && git commit -m \"$(cat <<'EOF\n"  # replace with a closed delimiter below
+    command = "git switch -c fixture && git commit -m \"$(cat <<'EOF'\nfix: don't drop the cache\nEOF\n)\""
+    assert _r7_bash_records(tmp_path, command, repos["public"])[0][2:] == ["switch", "-c", "fixture"]
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
 
 
 R8_BODIES = [

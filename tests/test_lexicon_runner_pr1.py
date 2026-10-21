@@ -154,6 +154,22 @@ def test_slice_name_from_dispatch_cgroup() -> None:
     assert "RuntimeMaxSec=3s" in timed
 
 
+@pytest.mark.parametrize(
+    ("cgroup", "expected"),
+    [
+        ("/user.slice/user-1000.slice/user@1000.service/lu-dispatch.slice/caller.scope", "lu-dispatch.slice"),
+        ("/user.slice/user-1000.slice/session-3.scope", None),
+    ],
+)
+def test_caller_slice_name_from_cgroup_path(
+    monkeypatch: pytest.MonkeyPatch, cgroup: str, expected: str | None
+) -> None:
+    from scripts.lexicon.runner import memory
+
+    monkeypatch.setattr(memory, "self_cgroup_relative", lambda: cgroup)
+    assert memory.caller_slice_name() == expected
+
+
 def test_scope_probe_retries_without_unsupported_oom_policy(monkeypatch: pytest.MonkeyPatch) -> None:
     import subprocess
 
@@ -314,6 +330,35 @@ def test_worker_scope_placement_follows_caller_slice(
         assert child_parts[-1] != parent_parts[-1]
 
 
+def test_worker_scope_without_caller_slice(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    monkeypatch.setattr(memory, "self_cgroup_relative", lambda: "/user.slice/user-1000.slice/session-3.scope")
+    assert memory.caller_slice_name() is None
+    launched: list[list[str]] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+        if unit.startswith(f"{scope_unit_prefix()}-"):
+            launched.append(argv)
+        return argv
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    result = run_capped_worker(
+        {"job": "placement", "chunk_id": "placement-no-slice"},
+        result_path=tmp_path / "placement-no-slice.json",
+        timeout_s=30,
+    )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "systemd_scope"
+    assert result.message.split("/")[-1].startswith(f"{scope_unit_prefix()}-")
+    assert len(launched) == 1
+    assert not any(arg.startswith("--slice=") for arg in launched[0])
+
+
 @pytest.mark.parametrize("attempt", range(5))
 def test_scope_sigkill_classified_as_oom(tmp_path: Path, attempt: int) -> None:
     _skip_without_user_scope()
@@ -357,6 +402,116 @@ def test_scope_unit_prefix_is_a_closed_allowlist(
     else:
         monkeypatch.setenv(SCOPE_UNIT_PREFIX_ENV, env_value)
     assert scope_unit_prefix() == expected
+
+
+def test_suite_runs_with_the_test_unit_prefix() -> None:
+    """The session fixture exports the prefix, so workers and subprocesses inherit it."""
+    import os
+
+    assert os.environ.get(SCOPE_UNIT_PREFIX_ENV) == TEST_SCOPE_UNIT_PREFIX
+    assert scope_unit_prefix() == TEST_SCOPE_UNIT_PREFIX
+
+
+def test_suite_test_prefix_literals_match_runner_memory() -> None:
+    """tests/conftest.py cannot import the runner package, so it carries literals."""
+    assert SCOPE_UNIT_PREFIX_ENV == "LEXICON_CAP_UNIT_PREFIX"
+    assert TEST_SCOPE_UNIT_PREFIX == "lexicon-captest"
+
+
+@pytest.mark.parametrize(("env_value", "expected"), [(TEST_SCOPE_UNIT_PREFIX, TEST_SCOPE_UNIT_PREFIX), (None, SCOPE_UNIT_PREFIX)])
+def test_run_bounded_command_names_unit_from_active_prefix(
+    monkeypatch: pytest.MonkeyPatch, env_value: str | None, expected: str
+) -> None:
+    """The generated ``--unit=`` carries the prefix chosen by the env (#9624)."""
+    import os
+    import subprocess
+
+    from scripts.lexicon.runner import memory
+
+    if env_value is None:
+        monkeypatch.delenv(SCOPE_UNIT_PREFIX_ENV, raising=False)
+    units: list[str] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        units.append(unit)
+        return original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+
+    monkeypatch.setattr(memory, "_probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr(memory, "_user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    monkeypatch.setattr(
+        memory.subprocess, "run", lambda argv, **kw: subprocess.CompletedProcess(argv, 0, "", "")
+    )
+    memory.run_bounded_command(["/bin/true"], memory.MemoryPolicy(), cwd=".", timeout_s=5)
+    assert len(units) == 1
+    assert units[0].startswith(f"{expected}-{os.getpid()}-")
+    if expected == SCOPE_UNIT_PREFIX:
+        assert not units[0].startswith(f"{TEST_SCOPE_UNIT_PREFIX}-")
+
+
+def test_real_capped_kill_creates_only_test_prefixed_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A real OOM-killed scope under pytest never carries the production prefix (#9624).
+
+    The scope lives ~0.2 s, so the unit name is also captured from the launch
+    argv; the list-units poll proves systemd never saw a production-named own
+    scope while the worker ran.
+    """
+    import os
+    import threading
+
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    launched: list[str] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        launched.append(unit)
+        return original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    seen: set[str] = set()
+    stop = threading.Event()
+
+    def poll() -> None:
+        while not stop.is_set():
+            seen.update(line.split()[0] for line in _own_lexicon_cap_units())
+
+    watcher = threading.Thread(target=poll, daemon=True)
+    watcher.start()
+    cap = 128 * 1024 * 1024
+    try:
+        result = run_capped_worker(
+            {"job": "inject_oom", "chunk_id": "prefix-oom", "memory_high_bytes": cap, "memory_max_bytes": cap},
+            result_path=tmp_path / "prefix-oom.json",
+            timeout_s=60,
+        )
+    finally:
+        stop.set()
+        watcher.join(timeout=30)
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.memory_mechanism == "systemd_scope"
+    own = f"-{os.getpid()}-"
+    # ``lexicon-probe-*`` scopes are the /bin/true availability probe, not caps.
+    capped = [unit for unit in launched if own in unit and unit.startswith("lexicon-cap")]
+    assert capped, "no capped scope was launched"
+    assert all(unit.startswith(f"{TEST_SCOPE_UNIT_PREFIX}{own}") for unit in capped)
+    assert not any(unit.startswith(f"{SCOPE_UNIT_PREFIX}{own}") for unit in seen)
+
+
+def test_timeout_stops_worker_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    before = _own_lexicon_cap_units()
+    result = run_capped_worker(
+        {"job": "sleep", "chunk_id": "timeout", "sleep_s": 30},
+        result_path=tmp_path / "sleep.json",
+        timeout_s=3,
+    )
+    assert result.error_code == "worker_timeout"
+    assert result.memory_mechanism == "systemd_scope"
+    assert _wait_lexicon_cap_units(before) == before
 
 
 def test_unavailable_scope_records_rlimit_as(
@@ -414,6 +569,20 @@ def test_stray_oom_events_variable_cannot_disable_rlimit(
         result_path=tmp_path / "stray.json", timeout_s=30,
     )
     assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.memory_mechanism == "rlimit_as"
+
+
+def test_timeout_reports_actual_plain_launch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.lexicon.runner import memory
+
+    _enable_probe_jobs(monkeypatch)
+    monkeypatch.setattr(memory, "_probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr(memory, "_user_systemd_environ", lambda: None)
+    result = run_capped_worker(
+        {"job": "sleep", "chunk_id": "bus-disappeared", "sleep_s": 30},
+        result_path=tmp_path / "bus-disappeared.json", timeout_s=0.2,
+    )
+    assert result.error_code == "worker_timeout"
     assert result.memory_mechanism == "rlimit_as"
 
 
@@ -488,6 +657,33 @@ def test_production_payload_rejects_probe_only_jobs(
         assert job in result.message
 
 
+def test_scope_start_failure_includes_stderr_tail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A scope that fails after the probe passed keeps a stderr tail on worker_crash."""
+    import subprocess
+
+    head = "HEAD-MARKER"
+    tail = "TAIL-scope-unit-failed"
+    stderr = head + ("x" * 800) + tail
+
+    def fake_run(argv, **kwargs):
+        failed = bool(argv) and argv[0] == "systemd-run"
+        return subprocess.CompletedProcess(argv, 1 if failed else 0, "", stderr if failed else "")
+
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr("scripts.lexicon.runner.memory._user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr("scripts.lexicon.runner.memory.subprocess.run", fake_run)
+    result = run_capped_worker(
+        {"job": "enrich", "chunk_id": "scope-start"},
+        result_path=tmp_path / "scope-start.json",
+        timeout_s=30,
+    )
+    assert result.error_code == "worker_crash"
+    assert result.memory_mechanism == "systemd_scope"
+    assert "returncode=1" in result.message
+    assert tail in result.message
+    assert head not in result.message
+
+
 def test_recorded_oom_kill_zero_is_not_oom_when_stop_drops_the_record(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -523,6 +719,27 @@ def test_recorded_oom_kill_zero_is_not_oom_when_stop_drops_the_record(
     assert result.error_code == "worker_crash"
     assert result.memory_mechanism == "systemd_scope"
     assert result.oom_kill == 0
+
+
+def test_unreadable_scope_oom_events_do_not_claim_oom(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A missing scope record cannot distinguish external SIGKILL from OOM."""
+    import subprocess
+
+    def fake_run(argv, **kwargs):
+        if argv and argv[0] == "systemd-run":
+            return subprocess.CompletedProcess(argv, -9, "", "")
+        return subprocess.CompletedProcess(argv, 1, "", "")
+
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr("scripts.lexicon.runner.memory._user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr("scripts.lexicon.runner.memory.subprocess.run", fake_run)
+    result = run_capped_worker(
+        {"job": "enrich", "chunk_id": "unreadable-oom"},
+        result_path=tmp_path / "unreadable.json",
+        timeout_s=30,
+    )
+    assert result.error_code == "worker_crash"
+    assert "returncode=-9" in result.message
 
 
 def _kill_new_scope(before: list[str]) -> tuple[bool, int | None]:

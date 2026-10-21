@@ -124,6 +124,13 @@ def test_review_fields_ids_and_order_are_converted():
     assert set(item["protected"][0]) == {"id", "start", "end", "span", "kind"}
 
 
+def test_set_id_and_item_order_follow_the_source():
+    data = convert([v2_writing("W1", "B1"), v2_review("R1"), v2_review("R0"), v2_writing("W0", "A2")], "my-set").data
+    assert data["set_id"] == "my-set"
+    assert [i["id"] for i in data["review"]] == ["R1", "R0"]
+    assert [i["id"] for i in data["writing"]] == ["W1", "W0"]
+
+
 # ---------------------------------------------------------------- refusals
 
 
@@ -271,6 +278,14 @@ def test_writing_appends_topic_genre_and_register_in_one_sentence():
     }
 
 
+def test_writing_without_topic_genre_register_keeps_the_task_verbatim():
+    line = v2_writing("W1", "A2")
+    for key in ("topic", "genre", "register"):
+        del line[key]
+    line["topic"] = "  "
+    assert convert([line]).data["writing"][0]["instruction"] == "Опишіть свій вихідний день."
+
+
 @pytest.mark.parametrize(
     ("changes", "rules"),
     [
@@ -378,6 +393,14 @@ def test_output_must_differ_from_input(outside_dir: Path, capsys):
     before = sha256_file(source)
     assert cli.main(["convert-set", "--input", str(source), "--output", str(source), "--set-id", "s"]) == 2
     assert sha256_file(source) == before
+
+
+def test_missing_input_and_blank_set_id_are_errors(outside_dir: Path, capsys):
+    out = outside_dir / "o.json"
+    assert cli.main(["convert-set", "--input", str(outside_dir / "nope"), "--output", str(out), "--set-id", "s"]) == 2
+    source = write_jsonl(outside_dir / "in.jsonl", full_v2())
+    assert cli.main(["convert-set", "--input", str(source), "--output", str(out), "--set-id", " "]) == 2
+    assert not out.exists()
 
 
 def test_missing_arguments_exit_2_and_help_documents_the_command(capsys):

@@ -149,6 +149,13 @@ def test_prompt_exactly_at_inline_limit_stays_inline(tmp_path: Path) -> None:
         )
 
 
+def test_prompt_one_byte_over_inline_limit_uses_prompt_file(tmp_path: Path) -> None:
+    prompt = "d" * (_inline_limit() + 1)
+    plan = _build(prompt, tmp_path)
+    path = _assert_prompt_file(plan, prompt)
+    _assert_removed(plan, path)
+
+
 def test_hyphen_leading_prompt_still_uses_private_prompt_file(tmp_path: Path) -> None:
     prompt = "--- context: shared\nfix it"
     if len(prompt.encode("utf-8")) >= _MAX_ARG_STRLEN:
@@ -238,6 +245,17 @@ def test_oversized_prompt_failure_leaves_no_prompt_file(
     _assert_no_prompt_files(tmp_path)
 
 
+def test_write_mode_invalid_effort_leaves_no_guard_or_prompt_file(tmp_path: Path) -> None:
+    def invoke() -> None:
+        _build(_OVERSIZED, tmp_path, mode="workspace-write", effort="invalid")
+
+    _expect(invoke, ValueError, _EFFORT_ERROR)
+    _assert_no_prompt_files(tmp_path)
+    guards = _guard_files(tmp_path)
+    if guards:
+        raise AssertionError(f"guard files left behind: {[path.name for path in guards]}")
+
+
 def _raise_after_prompt_file(tmp_path: Path, fn) -> None:
     with patch.object(
         GrokBuildAdapter,
@@ -253,3 +271,10 @@ def _raise_after_prompt_file(tmp_path: Path, fn) -> None:
 
 def test_exception_after_prompt_file_creation_removes_it(tmp_path: Path) -> None:
     _raise_after_prompt_file(tmp_path, lambda: _build(_OVERSIZED, tmp_path, effort="high"))
+
+
+def test_write_mode_exception_after_files_are_created_removes_them(tmp_path: Path) -> None:
+    _raise_after_prompt_file(
+        tmp_path,
+        lambda: _build(_OVERSIZED, tmp_path, mode="workspace-write", effort="high"),
+    )

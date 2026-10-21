@@ -24,11 +24,13 @@ from scripts.review.evidence import (
     OUTCOME_QUOTE_MISSING,
     OUTCOME_VERIFIED,
     EvidenceError,
+    changed_lines_map,
     compute_target_input_fingerprint,
     is_safe_repo_relative_path,
     match_at_line,
     path_surface_bytes,
     resolve_safe_path,
+    verify_finding_evidence,
 )
 from scripts.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
@@ -655,6 +657,40 @@ def test_stale_input_hash_fails_closed(tmp_path):
     assert "stale_input_hash" in (result.error or "")
 
 
+def test_multi_finding_all_preserved_and_ordered(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\nextra = 3\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "overall": {
+            "correctness": "incorrect",
+            "explanation": "two issues",
+            "confidence": 0.8,
+        },
+        "findings": [
+            _finding(fid="F2", start=3, verbatim="extra = 3"),
+            _finding(fid="F1", start=2, verbatim="value = 2"),
+        ],
+    }
+    raw = json.dumps(payload)
+    result = verify_review(
+        raw,
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F1": {"disposition": "in_scope_blocker", "rationale": "a"},
+                "F2": {"disposition": "follow_up", "rationale": "b"},
+            },
+        ),
+    )
+    assert [v.id for v in result.validations] == ["F1", "F2"]
+    assert all(v.outcome == OUTCOME_VERIFIED for v in result.validations)
+    assert result.exit_code == EXIT_ACTIONABLE
+
+
 def test_uncertain_without_findings_is_incomplete(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('x')\n", encoding="utf-8")
@@ -843,6 +879,35 @@ def test_short_range_normalizes_to_canonical_end(tmp_path):
     assert result.validations[0].outcome == OUTCOME_VERIFIED
     assert result.validations[0].matched_line == 1
     assert result.validations[0].detail == "matched_at_line:1"
+
+
+def test_normalize_endpoint_underclaim_only_rejects_inflated(tmp_path):
+    """Verbatim match at start normalizes short claims but rejects inflated endpoints."""
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("a = 1\nb = 2\nc = 3\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    changed_lines = changed_lines_map(repo, target)
+
+    # Under-claim: one-line end for a two-line quote normalizes to verified.
+    under = verify_finding_evidence(
+        _finding(start=1, end=1, verbatim="a = 1\nb = 2"),
+        repo_root=repo,
+        target=target,
+        changed_lines=changed_lines,
+    )
+    assert under.outcome == OUTCOME_VERIFIED
+    assert under.detail == "matched_at_line:1"
+
+    # Inflated claim: verbatim matches at start but end_line covers unquoted lines.
+    inflated = verify_finding_evidence(
+        _finding(start=1, end=3, verbatim="a = 1\nb = 2"),
+        repo_root=repo,
+        target=target,
+        changed_lines=changed_lines,
+    )
+    assert inflated.outcome == OUTCOME_LINE_MISMATCH
+    assert "range_span_mismatch" in inflated.detail
+    assert "expected_end=2" in inflated.detail
 
 
 def test_decode_failure_is_fail_closed_evidence(tmp_path, monkeypatch):

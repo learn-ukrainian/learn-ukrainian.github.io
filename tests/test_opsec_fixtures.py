@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
+
 import pytest
 
 from tests.opsec_fixtures import copy_publisher_scripts
@@ -36,3 +39,24 @@ def test_publisher_sandbox_follows_transitive_imports(tmp_path, dependency):
     assert {path.relative_to(destination).as_posix() for path in destination.rglob("*") if path.is_file()} == (
         set(files) - {"dependency/unrelated.py"}
     )
+
+
+def test_publisher_sandbox_imports_merge_guard_in_isolation(gh_shim_sandbox):
+    root, _shim, _tooling = gh_shim_sandbox
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from scripts.publish.merge_guard import ensure_merge_ready; "
+            "from scripts.ci.advisory_checks import load_advisory_checks; "
+            "assert load_advisory_checks().reason is None",
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert result.returncode == 0, result.stderr
+    assert (root / "scripts/ci/advisory_checks.py").is_file()
+    assert (root / "scripts/common/github_client.py").is_file()

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import sqlite3
 import threading
 import urllib.error
@@ -13,10 +14,12 @@ import pytest
 
 from scripts.ingest import zno_ingest
 from scripts.ingest.zno_ingest import (
+    MINIMUM_COMPLETE_TASK_COUNT,
     assert_session_completeness,
     backfill_topic_norm,
     derive_task_metadata,
     fetch_page_with_rate_limit,
+    ingest,
     ingest_documents,
     init_db,
     parse_and_insert_tasks,
@@ -37,6 +40,13 @@ def isolate_transport(monkeypatch):
 @pytest.fixture
 def db_path(tmp_path: Path) -> Path:
     return tmp_path / "sources.db"
+
+
+@pytest.fixture
+def cache_dir(tmp_path: Path) -> Path:
+    d = tmp_path / "zno_cache"
+    d.mkdir()
+    return d
 
 
 def test_schema_creation_is_idempotent(db_path: Path) -> None:
@@ -403,3 +413,84 @@ def test_robots_programming_failure_is_not_suppressed(tmp_path, monkeypatch, fai
     assert requests == ["https://broken.invalid/robots.txt"]
     assert not zno_ingest._access_stopped
     assert not cache.exists()
+
+
+@pytest.mark.skipif(os.getenv("ZNO_LIVE") != "1", reason="Requires ZNO_LIVE=1 env var")
+def test_task_extraction_live(db_path: Path, cache_dir: Path) -> None:
+    total_tasks = ingest(db_path, cache_dir)
+    assert total_tasks >= MINIMUM_COMPLETE_TASK_COUNT
+
+    conn = sqlite3.connect(db_path)
+    try:
+        tasks_count = conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0]
+        assert tasks_count >= MINIMUM_COMPLETE_TASK_COUNT
+        assert_session_completeness(conn)
+
+        year_counts = dict(conn.execute("SELECT year, count(*) FROM zno_tasks GROUP BY year"))
+        assert year_counts == {
+            2010: 183,
+            2011: 122,
+            2012: 122,
+            2013: 122,
+            2014: 183,
+            2015: 58,
+            2016: 58,
+            2017: 116,
+            2018: 116,
+            2019: 116,
+            2020: 116,
+            2021: 134,
+            2022: 20,
+            2023: 60,
+            2024: 60,
+            2025: 60,
+        }
+
+        # Check real counts for all 6 documents
+        q19_count = conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2019 AND session = 'osnovna'").fetchone()[0]
+        assert q19_count == 58
+
+        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2019 AND session = 'dodatkova'").fetchone()[0] == 58
+        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2020 AND session = 'osnovna'").fetchone()[0] == 58
+        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2020 AND session = 'dodatkova'").fetchone()[0] == 58
+        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2021 AND session = 'osnovna'").fetchone()[0] == 67
+        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2021 AND session = 'dodatkova'").fetchone()[0] == 67
+
+        # Verify task details on real data
+        task = conn.execute(
+            "SELECT task_no, subject, task_format, stem, options_json, correct_json, topic_tag "
+            "FROM zno_tasks WHERE year = 2019 AND session = 'osnovna' AND task_no = 1"
+        ).fetchone()
+        assert task is not None
+        assert task[0] == 1
+        assert task[1] == "mova"
+        assert task[2] == "single-choice"
+        assert "На перший склад падає наголос" in task[3]
+
+        options = json.loads(task[4])
+        assert len(options) == 4
+        assert options[0] == "причіп"
+        assert task[5] == "В"
+        assert "Орфоепія" in task[6]
+
+        task_match = conn.execute(
+            "SELECT task_no, task_format, options_json, correct_json "
+            "FROM zno_tasks WHERE year = 2019 AND session = 'osnovna' AND task_no = 24"
+        ).fetchone()
+        assert task_match is not None
+        assert task_match[1] == "matching"
+
+        opts = json.loads(task_match[2])
+        assert len(opts["left"]) == 4
+        assert len(opts["right"]) == 5
+
+        corr = json.loads(task_match[3])
+        assert corr["1"] == "Г"
+        assert corr["2"] == "В"
+        assert corr["3"] == "Д"
+        assert corr["4"] == "А"
+
+        fts_res = conn.execute("SELECT rowid FROM zno_tasks_fts WHERE zno_tasks_fts MATCH 'причіп'").fetchall()
+        assert len(fts_res) > 0
+    finally:
+        conn.close()

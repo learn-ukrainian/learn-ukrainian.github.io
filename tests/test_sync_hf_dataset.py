@@ -22,6 +22,15 @@ def test_scan_local_files(tmp_path: Path):
     assert names == {"a.opus", "b.opus", "manifest.json"}
 
 
+def test_sync_hf_dataset_dry_run(tmp_path: Path):
+    (tmp_path / "clip.opus").write_bytes(b"OggS" + b"X" * 1500)
+    result = sync_hf_dataset(tmp_path, repo_id="test/repo", dry_run=True)
+    assert result["dry_run"] is True
+    assert result["opus_files"] == 1
+    assert result["total_files"] == 2  # clip.opus + generated README.md
+    assert result["repo_id"] == "test/repo"
+
+
 def test_sync_hf_dataset_requires_token(tmp_path: Path, monkeypatch):
     monkeypatch.delenv("HF_TOKEN", raising=False)
     with pytest.raises(ValueError, match="HF_TOKEN"):

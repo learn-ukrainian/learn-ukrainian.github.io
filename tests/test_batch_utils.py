@@ -29,6 +29,11 @@ class TestAtomicWrite:
         atomic_write(p, "hello world")
         assert p.read_text() == "hello world"
 
+    def test_creates_parent_dirs(self, tmp_path):
+        p = tmp_path / "a" / "b" / "test.txt"
+        atomic_write(p, "nested")
+        assert p.read_text() == "nested"
+
     def test_no_tmp_file_left(self, tmp_path):
         p = tmp_path / "test.txt"
         atomic_write(p, "data")

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
+import time
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import parse_qs
@@ -32,6 +34,26 @@ def test_refuses_at_threshold(tmp_path: Path) -> None:
     line = decision.refusal_line(REPO)
     assert "15 open PRs" in line
     assert "Land your own open PRs first" in line
+
+
+def test_env_override(tmp_path: Path) -> None:
+    fetch, calls = _fetch(20)
+    env = {pr_freeze.THRESHOLD_ENV: "25"}
+    assert not pr_freeze.evaluate(REPO, environ=env, fetch=fetch, cache_file=tmp_path / "c.json").refused
+    assert calls == [REPO]
+    disabled = pr_freeze.evaluate(
+        REPO,
+        environ={pr_freeze.THRESHOLD_ENV: "0"},
+        fetch=fetch,
+        cache_file=tmp_path / "disabled.json",
+    )
+    assert not disabled.refused
+    assert disabled.threshold == 0
+    assert disabled.open_prs is None
+    assert calls == [REPO]
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "15"}) == 15
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "0"}) == 0
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "-3"}) == 0
 
 
 def test_default_is_off() -> None:
@@ -90,6 +112,48 @@ def test_branch_exempt_only_with_open_pr(tmp_path: Path) -> None:
     )
     assert not unknown.refused
     assert unknown.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
+
+
+def test_fresh_cache_count_below_total_is_not_used(tmp_path: Path) -> None:
+    """A fresh cache of count 14 and total 21 must not pass a threshold of 15."""
+    cache = tmp_path / "c.json"
+    cache.write_text(json.dumps({"count": 14, "total": 21, "at": time.time()}))
+    calls: list[str] = []
+
+    def fetch(repo: str) -> pr_freeze.OpenPrCounts:
+        calls.append(repo)
+        return pr_freeze.OpenPrCounts(total=21, counted=21)
+
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=cache)
+    assert calls == [REPO]
+    assert decision.open_prs == 21
+    assert decision.total_open == 21
+    assert decision.open_prs == decision.total_open
+    assert decision.refused
+    assert decision.warning in (None, "")
+    stored = json.loads(cache.read_text())
+    assert stored["count"] == 21
+    assert stored["total"] == 21
+
+
+def test_unequal_fetched_counts_are_not_used(tmp_path: Path) -> None:
+    """A fetched counted value below the total is not the freeze count."""
+    calls: list[str] = []
+
+    def fetch(repo: str) -> pr_freeze.OpenPrCounts:
+        calls.append(repo)
+        return pr_freeze.OpenPrCounts(total=21, counted=14)
+
+    normalized = pr_freeze._as_counts(pr_freeze.OpenPrCounts(total=21, counted=14))
+    assert normalized.counted == 21
+    assert normalized.total == 21
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert calls == [REPO]
+    assert decision.open_prs == 21
+    assert decision.total_open == 21
+    assert decision.open_prs == decision.total_open
+    assert decision.refused
+    assert decision.warning in (None, "")
 
 
 @pytest.mark.parametrize(
@@ -155,6 +219,25 @@ def test_branch_lookup_encodes_head(monkeypatch) -> None:
     monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
     assert pr_freeze.branch_has_open_pr(REPO, "codex/fix+123&x#y%z")
     assert seen[0].endswith("head=example%3Acodex%2Ffix%2B123%26x%23y%25z")
+
+
+def test_force_new_without_prior_record_is_still_refused(monkeypatch, capsys, tmp_path) -> None:
+    from scripts import delegate
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
+    repo = SimpleNamespace(github=REPO, role="public-monorepo")
+    args = argparse.Namespace(
+        mode="workspace-write", branch=None, pr=None, cwd=None, worktree="auto", force_new=True, task_id="fresh-id"
+    )
+    assert delegate._check_open_pr_freeze(args, repo) == 3
+    assert not (tmp_path / "tasks").exists()
+
+    (tmp_path / "tasks").mkdir()
+    (tmp_path / "tasks" / "fresh-id.json").write_text("{}")
+    assert delegate._check_open_pr_freeze(args, repo) == 3
 
 
 @pytest.mark.parametrize("failure", ["count", "branch", "client_cache"])

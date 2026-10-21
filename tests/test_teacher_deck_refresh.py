@@ -86,6 +86,20 @@ def test_a_row_without_english_fails_the_sync() -> None:
 # ----------------------------------------------------------------------------- generator rules
 
 
+def test_overlap_is_equality_or_whole_word_containment() -> None:
+    assert shard.parts_overlap(["wipe"], ["wipe"])
+    assert shard.parts_overlap(["break"], ["break down"])
+    assert not shard.parts_overlap(["cat"], ["catalogue"])
+    entries = [
+        {"entryId": "a", "en": "To read (impf.)"},
+        {"entryId": "b", "en": "To read (pf.)"},
+        {"entryId": "c", "en": "Cat"},
+    ]
+    overlaps, partners = shard.overlap_graph(entries)
+    assert overlaps == {"a": ["b"], "b": ["a"], "c": []}
+    assert partners == {"a": [], "b": [], "c": []}
+
+
 def test_source_aspects_that_differ_split_an_otherwise_identical_pair() -> None:
     entries = [
         {"entryId": "a", "en": "To wipe (impf.)"},
@@ -522,6 +536,23 @@ def test_refresh_builds_a_checked_deck_and_reruns_byte_identically(
     assert _hashes(world) == before
 
 
+def test_refresh_reports_meaning_changes_and_keeps_order_keys(
+    world: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert _refresh(world) == 0
+    capsys.readouterr()
+    changed = [(uk, "Dwelling" if uk == "Будинок" else en) for uk, en in TABLE] + [("Лампа", "Lamp")]
+    changed.insert(0, changed.pop(3))  # move Стіл to the top of the table
+    _write_docx(world["docx"], changed)
+    assert _refresh(world, "--skip-ingest") == 0
+    output = capsys.readouterr().out
+    assert "added entries: 1\n  Лампа = Lamp" in output
+    assert "Будинок: en: 'House' -> 'Dwelling'" in output
+    deck = json.loads((world["out"] / shard.DECK_FILE).read_text(encoding="utf-8"))
+    order = {entry["key"]: entry["firstSeen"] for entry in deck["entries"]}
+    assert order["стіл"] == 4 and order["лампа"] == max(order.values())
+
+
 def _plant(world: dict[str, Path], tmp_path: Path, name: str, mutate, *, with_sources: bool = False) -> tuple[int, str]:
     planted = tmp_path / "planted"
     shutil.copytree(world["out"], planted)
@@ -574,6 +605,17 @@ def test_checker_rederives_aspect_and_rejects_the_teacher_marker_as_authority(
     assert code == 1 and "aspect {" in report and "!= sources" in report
 
 
+def test_checker_fails_on_an_en_uk_card_for_a_dual_aspect_overlap(world: dict[str, Path], tmp_path: Path) -> None:
+    assert _refresh(world) == 0
+
+    def add_production(deck: dict) -> None:
+        entry = next(entry for entry in deck["entries"] if entry["key"] == "женити")
+        entry["cards"]["production"] = {"cardId": f"{entry['entryId']}:production", "choice": None}
+
+    code, report = _plant(world, tmp_path, shard.DECK_FILE, add_production)
+    assert code == 1 and "EN->UK production card although its English overlaps" in report
+
+
 def test_checker_fails_on_a_multiword_cloze_without_the_verbatim_phrase(world: dict[str, Path], tmp_path: Path) -> None:
     assert _refresh(world) == 0
 
@@ -603,6 +645,47 @@ def test_checker_table_comparison_catches_a_changed_meaning(world: dict[str, Pat
     code, report = _check(planted, world)
     assert code == 1
     assert "manifest hash/size mismatch" in report and "!= table meanings" in report
+
+
+def test_checker_matrix_and_residual_lists(world: dict[str, Path]) -> None:
+    assert _refresh(world) == 0
+    args = checker.argparse.Namespace(
+        deck_dir=world["out"],
+        docx=world["docx"],
+        heading=HEADING,
+        expect_keys=17,
+        vesum_db=world["vesum"],
+        sources_db=world["sources"],
+    )
+    report, summary = checker.run(args)
+    assert report.errors == []
+    assert summary["matrix"]["recognition-flashcard"] == {"single": 11, "multiword": 5}
+    assert summary["matrix"]["production-flashcard"] == {"single": 8, "multiword": 4}
+    assert summary["matrix"]["stress"]["multiword"] == 0
+    assert summary["aspect"] == {
+        "single": {"agree:dual": 1, "agree:imperf": 1, "agree:perf": 2, "vesum-only:imperf": 1},
+        "multiword": {"vesum-only:perf": 1},
+    }
+    residuals = summary["residuals"]
+    assert {uk for uk, _reason in residuals["productionOmitted"]} == {
+        "Женити",
+        "Оженити",
+        "Випробування",
+        "Кинути виклик",
+    }
+    assert {uk for uk, _reason in residuals["noAtlas"]} == {
+        "Прочитати",
+        "Чорна кава",
+        "Свіжий хліб",
+        "Теплий дім",
+        "Женити",
+        "Оженити",
+        "Випробування",
+        "Кинути виклик",
+    }
+    assert [uk for uk, _reason in residuals["aspectMarkerDisagreements"]] == ["Писати"]
+    assert residuals["aspectUnknown"] == []
+    assert residuals["refusedGroups"] == []
 
 
 class FakeGh:
@@ -1149,6 +1232,13 @@ def test_publish_runs_the_checker_in_publication_mode(
     assert fake.calls == [] and not world["pointer"].exists() and not world["out"].exists()
 
 
+def test_checker_fails_when_a_withheld_sentence_is_served(world: dict[str, Path]) -> None:
+    assert _refresh(world) == 0
+    _write_ledger(world["withheld"], {"Я п'ю зелений чай щоранку.": "ERR"})
+    code, report = _check(world["out"], world)
+    assert code == 1 and "serves a sentence the language review withheld (ERR)" in report
+
+
 def test_checker_rejects_a_ledger_that_carries_sentence_text(world: dict[str, Path]) -> None:
     assert _refresh(world) == 0
     ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
@@ -1332,6 +1422,41 @@ def test_checker_preserves_required_json_read_failures(
         assert payload["ok"] is False and len(payload["errors"]) == 1
         assert payload["errors"][0].startswith(prefix)
         assert prefix in output.out and "FAIL" in output.out and output.err == ""
+
+
+@pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
+@pytest.mark.parametrize(
+    "payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"]
+)
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+def test_refresh_propagates_required_json_shape_failure(
+    checked_world: dict[str, Path],
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    payload: object,
+    publication: bool,
+) -> None:
+    world = checked_world
+    before = _committed(world)
+    fake = FakeGh(monkeypatch)
+    real_render = shard.render_published_set
+
+    def corrupt_required_artifact(*args, **kwargs):
+        files = real_render(*args, **kwargs)
+        files[artifact] = json.dumps(payload).encode("utf-8")
+        return files
+
+    monkeypatch.setattr(shard, "render_published_set", corrupt_required_artifact)
+    capsys.readouterr()
+    assert _refresh(world, *(["--publish"] if publication else [])) == 1
+    output = capsys.readouterr()
+    assert "independent checker failed; published set left unchanged" in output.err
+    assert f"invalid artifact {artifact}: expected JSON object" in output.err
+    assert fake.calls == []
+    assert _committed(world) == before
+    assert not world["pointer"].exists()
+    assert not world["out"].with_name(f".{world['out'].name}.check").exists()
 
 
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
@@ -1677,3 +1802,32 @@ def test_checker_reports_malformed_manifest_files_json_cli(
     assert f"teacher deck check: FAIL ({len(errors)} errors)" in result.stdout and "PASS" not in result.stdout
     assert all(error in result.stdout for error in errors)
     assert str(checked_world["out"]) not in "".join(errors)
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize("shape", ["files-null", "row-str-appended"])
+def test_missing_required_artifact_outranks_malformed_manifest_files(
+    checked_world: dict[str, Path], tmp_path: Path, shape: str, publication: bool
+) -> None:
+    _set_manifest_files(checked_world, shape)
+    (checked_world["out"] / checker.DECK_FILE).unlink()
+    report = tmp_path / "manifest-precedence.json"
+    result = _manifest_cli(checked_world, report, publication=publication)
+    assert result.returncode == 1 and result.stderr == "", result
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload == {"ok": False, "errors": [f"missing artifact: {checker.DECK_FILE}"]}
+
+
+def test_manifest_without_files_key_keeps_reporting_unreferenced_artifacts(tmp_path: Path) -> None:
+    report = checker.Report()
+    checker.check_manifest(tmp_path, {}, report)
+    assert report.errors == [
+        f"manifest does not reference {name}" for name in (checker.DECK_FILE, checker.CLOZE_FILE, checker.FROZEN_FILE)
+    ]
+
+
+def test_manifest_records_skips_only_the_malformed_rows() -> None:
+    report = checker.Report()
+    good = {"path": "a.json"}
+    assert checker._manifest_records({"files": [None, good, 3, "x", good]}, report) == [good, good]
+    assert report.errors == [f"invalid manifest {checker.MANIFEST_FILE}: files[{i}] must be an object" for i in (0, 2, 3)]

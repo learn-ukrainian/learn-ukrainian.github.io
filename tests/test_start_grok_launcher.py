@@ -111,6 +111,15 @@ def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> 
     assert "--query" in result.stdout
 
 
+def test_grok_hermes_omitted_effort_is_not_attested(tmp_path) -> None:
+    from tests.test_launcher_contract import hermes_stub_env
+
+    result = run_launcher("start-grok.sh", "--harness=hermes", env=hermes_stub_env(tmp_path))
+    assert result.returncode == 0, result.stderr
+    assert "requested_effort=default" in result.stdout
+    assert "--reasoning" not in result.stdout
+
+
 def test_grok_hermes_refuses_unsupported_model_and_effort() -> None:
     model = run_launcher("start-grok.sh", "--harness", "hermes", "--model", "openai-codex")
     effort = run_launcher("start-grok.sh", "--harness", "hermes", "--effort", "max")

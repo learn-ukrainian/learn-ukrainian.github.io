@@ -26,6 +26,24 @@ def _matches(assignment: dict, framework_id: str) -> dict[str, str]:
     return {item["stage_id"]: item["match_status"] for item in framework["matches"]}
 
 
+def test_tracked_freeze_is_exact_and_preserves_three_frameworks():
+    freeze = periodization.load_freeze()
+
+    assert periodization.sha256_file(periodization.FREEZE_PATH) == periodization.EXPECTED_FREEZE_SHA256
+    assert freeze["bindings"] == periodization.EXPECTED_BINDINGS
+    assert freeze["periodization_layer_ready"] is True
+    assert freeze["overall_phase3_source_freeze_ready"] is False
+    assert freeze["scope"]["modern_only"] is False
+    assert freeze["scope"]["canonical_framework_id"] is None
+    assert freeze["scope"]["frameworks_preserved_without_collapse"] is True
+    assert freeze["scope"]["scalar_language_age_claim_allowed"] is False
+
+    frameworks = {item["framework_id"]: item for item in freeze["frameworks"]}
+    assert set(frameworks) == set(periodization.REQUIRED_FRAMEWORKS)
+    assert {key: item["primary_stage_count"] for key, item in frameworks.items()} == (periodization.REQUIRED_FRAMEWORKS)
+    assert len(frameworks["nimchuk_five_stage_with_middle_subperiods"]["stages"]) == 7
+
+
 def test_1413_assignment_keeps_three_attributed_answers():
     assignment = periodization.classify_year(1413)
 
@@ -38,6 +56,14 @@ def test_1413_assignment_keeps_three_attributed_answers():
     assert assignment["canonical_framework_id"] is None
     assert assignment["safeguards"]["historical_forms_protected"] is True
     assert assignment["safeguards"]["modern_correction_eligible"] is False
+
+
+def test_validator_rejects_framework_collapse_even_when_resealed():
+    freeze = copy.deepcopy(_freeze())
+    freeze["scope"]["canonical_framework_id"] = "shevelov_detailed_six_period"
+
+    with pytest.raises(periodization.HistoricalPeriodizationError, match="schema violation"):
+        periodization.validate_freeze(_reseal(freeze))
 
 
 def test_validator_rejects_primary_text_authority_without_bytes():

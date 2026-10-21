@@ -152,6 +152,45 @@ def test_schema_is_valid_and_artifact_is_strictly_metadata_only() -> None:
     }
 
 
+def test_all_required_upstream_bindings_are_exact_and_hash_bound() -> None:
+    contract = _contract()
+    assert {key: value["sha256"] for key, value in contract["bindings"].items()} == EXPECTED_BINDINGS
+    assert contract["controlling_outcome_sha256"] == protection.OUTCOME_SHA256
+    assert (
+        contract["input_state"]["p2_composite_input_sha256"]
+        == "83b59c6b62fff0beaf68dec7c3ca40b70033693dc19c50f26d27c553265352b0"
+    )
+    assert contract["heldout_contract"]["firewall_artifact_sha256"] == EXPECTED_BINDINGS["scope_circularity_firewall"]
+
+
+def test_historical_non_erasure_and_mixed_layer_invariants_are_frozen() -> None:
+    invariants = _contract()["historical_protection"]
+    for key, expected in protection.NON_ERASURE_INVARIANTS.items():
+        assert invariants[key] is expected
+    assert invariants["protected_identity_classes"] == list(protection.HISTORICAL_CLASSES)
+    assert invariants["script_is_not_language_identity"] is True
+    assert invariants["mixed_layers_allowed"] is True
+    assert invariants["forced_single_label_forbidden"] is True
+    assert invariants["no_automatic_successor_mapping"] is True
+
+
+def test_historical_spine_source_inventory_retains_rights_and_review_gaps() -> None:
+    inventory = _contract()["source_inventory"]
+    assert {item["collection_id"] for item in inventory} == {
+        "saint-sophia-inscriptions",
+        "korniienko-spas-na-berestovi-2013",
+        "bobrovskyy-near-caves-dipinto-2010",
+        "ud-old-east-slavic-ruthenian-05a029e00ccf",
+        "plug2-zenodo-19482961",
+    }
+    assert all(item["metadata_only"] is True for item in inventory)
+    assert all(item["semantic_gold"] is False for item in inventory)
+    assert all(item["phase3_historical_training_eligible"] is False for item in inventory)
+    assert any(item["rights_status"] == "publicly_downloadable_license_not_declared" for item in inventory)
+    assert any(item["rights_status"] == "private_research_artifact_only" for item in inventory)
+    assert all("source_text" not in item and "private_locator" not in item for item in inventory)
+
+
 def test_channels_keep_old_east_slavic_middle_church_and_rusyn_distinct() -> None:
     channels = {item["channel_id"]: item for item in _contract()["channels"]}
     assert set(channels) == {
@@ -173,6 +212,49 @@ def test_channels_keep_old_east_slavic_middle_church_and_rusyn_distinct() -> Non
         "ruthenian_is_not_rusyn_alias": True,
         "unresolved_without_source_attestation": True,
     }
+
+
+def test_dialect_amendment_and_historical_channels_do_not_change_denominator() -> None:
+    contract = _contract()
+    assert contract["denominator"] == {
+        "source_units": 57,
+        "unknown_rights_blockers": 39,
+        "p1_base_required_cells": 15,
+        "p1_composite_required_cells": 16,
+        "p2_rule_slots_R": 0,
+        "historical_source_collections": 5,
+        "modern_correction_denominator_unchanged": True,
+        "historical_channels_additive_protection_only": True,
+        "blocked_and_unresolved_remain_denominator_visible": True,
+        "partial_denominator_permitted": False,
+        "cell_status_counts": {"coverage_blocked": 14, "not_applicable_with_evidence": 2},
+    }
+    assert (
+        protection.validate_source_channel(
+            next(item for item in contract["channels"] if item["channel_id"] == "old_east_slavic_kyivan_rus"), contract
+        )
+        is True
+    )
+
+
+def test_current_review_and_heldout_states_are_explicitly_non_admitting() -> None:
+    contract = _contract()
+    assert contract["review_contract"]["semantic_admission_permitted"] is False
+    assert contract["review_contract"]["adjudication_registry_status"] == "FROZEN_NONADMITTING"
+    assert contract["heldout_contract"]["state"] == "evaluation_only"
+    assert contract["heldout_contract"]["builder_receives_membership"] is False
+    assert contract["heldout_contract"]["heldout_cases_selected"] == 0
+    assert contract["heldout_contract"]["zero_heldout_cases_state"] == "BLOCKED_NOT_ZERO"
+    assert contract["heldout_contract"]["split_atomicity"] == [
+        "source",
+        "document",
+        "work",
+        "edition",
+        "exact_duplicate_component",
+        "near_duplicate_connected_component",
+    ]
+    assert "prompts" in contract["heldout_contract"]["deny_namespaces"]
+    assert "synthetic_siblings" in contract["heldout_contract"]["deny_namespaces"]
 
 
 def test_missing_contract_schema_fails_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -273,6 +355,15 @@ def test_current_blocked_unresolved_and_abstention_routes_are_admissible() -> No
     assert protection.validate_record(_coverage_blocked("unresolved_historical_cyrillic")) is True
 
 
+def test_coverage_blocked_metadata_receipts_do_not_emit_dataset_rows() -> None:
+    disposition = _contract()["disposition_contract"]
+    assert disposition["coverage_blocked_emits_record"] is False
+    assert disposition["coverage_blocked_emission_scope"] == "dataset_rows_only"
+    blocked = _coverage_blocked()
+    assert protection.validate_disposition_shape(blocked) is True
+    assert protection.validate_disposition_record(blocked) is True
+
+
 @pytest.mark.parametrize(
     "bad_dimensions",
     [
@@ -296,6 +387,19 @@ def test_semantic_protected_records_remain_non_admitting_until_review(channel_id
     record = _protected_record(channel_id)
     assert protection.validate_disposition_shape(record) is False
     assert protection.validate_disposition_record(record) is False
+
+
+def test_frozen_registry_rejects_bare_adjudication_sha_and_identity_rights_refs() -> None:
+    contract = _contract()
+    record = _protected_record("old_east_slavic_kyivan_rus")
+    assert contract["review_contract"]["adjudication_registry_status"] == "FROZEN_NONADMITTING"
+    assert record["review"]["adjudication_record_sha256"] == SHA256
+    assert {ref["claim_role"] for ref in record["evidence_refs"]} == {
+        "protected_historical_identity",
+        "rights_provenance",
+    }
+    assert protection.validate_disposition_shape(record, contract) is False
+    assert protection.validate_disposition_record(record, contract) is False
 
 
 @pytest.mark.parametrize(
@@ -362,6 +466,20 @@ def test_rusyn_relabeling_requires_the_source_attested_rusyn_channel() -> None:
     record = _protected_record("source_attested_rusyn")
     record["channel_id"] = "old_east_slavic_kyivan_rus"
     assert protection.validate_disposition_shape(record) is False
+
+
+def test_absent_oes_and_church_slavonic_artifacts_remain_blocked() -> None:
+    contract = _contract()
+    unresolved = _channel("unresolved_historical_cyrillic")
+    assert unresolved["status"] == "coverage_blocked"
+    assert unresolved["source_unit_ids"] == []
+    assert "source_artifact_not_frozen" in unresolved["blocker_codes"]
+    church = _channel("church_slavonic_recension")
+    assert "church_slavonic_historical_ukrainian_layer_separation_pending" in church["blocker_codes"]
+    assert not list(DATA.rglob("*church*slavonic*"))
+    assert not list(DATA.rglob("*rusyn*"))
+    assert contract["zero_counters"]["church_slavonic_rows_admitted"] == 0
+    assert contract["zero_counters"]["rusyn_rows_admitted"] == 0
 
 
 @pytest.mark.parametrize("field", ["source_unit_identity_sha256", "source_artifact_sha256", "provenance_sha256"])

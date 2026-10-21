@@ -80,6 +80,25 @@ def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost(
 
 
 @pytest.mark.slow
+def test_shadow_report_is_exactly_reproducible_at_one_source_tree(
+    shadow_report: dict[str, Any],
+) -> None:
+    assert shadow_report == pilot.build_shadow_report(repo_root=REPO_ROOT)
+
+
+@pytest.mark.slow
+def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt(
+    shadow_report: dict[str, Any],
+) -> None:
+    row = next(row for row in shadow_report["rows"] if row["id"] == "bio-built-shadow")
+
+    assert row["passed"] is True
+    assert row["entry"]["state"] == "built-preparation-drift"
+    assert row["disposition"] == "preparation-repair-required"
+    assert row["prompt"]["profile"] == "seminar-bio"
+
+
+@pytest.mark.slow
 def test_fixture_rows_prove_owned_pause_resume_and_qg_modes(
     shadow_report: dict[str, Any],
 ) -> None:

@@ -357,6 +357,15 @@ def test_gemini_code_verdict_refused_before_publication(monkeypatch, tmp_path, r
     assert calls == {"posts": 0, "statuses": 0}
 
 
+@pytest.mark.parametrize("head", ["a" * 7, "b" * 40])
+def test_gemini_stale_or_short_head_refused(monkeypatch, tmp_path, head):
+    tasks, _, calls = setup_record(monkeypatch, tmp_path, head=head)
+    write_task(tasks, agent="agy", model="gemini-3.8-flash-high", review_risk="low")
+    with pytest.raises(recorder.RecordError):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize("sha", ["a" * 7, "a" * 39, "z" * 40])
 def test_gemini_marker_requires_full_commit_sha(sha):
     with pytest.raises(recorder.RecordError, match="full 40-hex"):
@@ -517,6 +526,25 @@ def test_sources_marker_must_match_published_count(replacement):
         review_profile="ukrainian", sources_mcp_call_count=3,
     ).replace("sources_calls=3", replacement)
     assert recorder.parse_marker(body) is None
+
+
+def test_removing_profile_marker_cannot_hide_missing_sources_count():
+    body = recorder.build_comment(
+        sha=SHA, task_id="review-one", started="2026-09-23T12:00:00.000001+00:00",
+        verdict="APPROVED", model="gpt-6.1-sol", family="openai", reply="VERDICT: APPROVE",
+        review_profile="ukrainian", sources_mcp_call_count=3,
+    ).replace(" review_profile=ukrainian sources_calls=3", "")
+    assert recorder.parse_marker(body) is None
+
+
+def test_changed_runtime_count_conflicts_with_existing_marker(monkeypatch, tmp_path):
+    tasks, _, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, review_profile="ukrainian", sources_mcp_call_count=3)
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    write_task(tasks, review_profile="ukrainian", sources_mcp_call_count=4)
+    with pytest.raises(recorder.RecordError, match="conflicts with task"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 1, "statuses": 1}
 
 
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

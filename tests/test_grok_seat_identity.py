@@ -51,6 +51,16 @@ def test_normalize_seat_maps_alias_and_hermes():
     assert tools_writer_runtime_agent("claude-tools") == "claude"
 
 
+def test_tool_config_canonical_order_prefers_native_over_hermes_prefix():
+    from agent_runtime.tool_config import _canonical_agent_name
+
+    assert _canonical_agent_name("grok-build") == "grok"
+    assert _canonical_agent_name("grok-build-review") == "grok"
+    assert _canonical_agent_name("grok") == "grok"
+    assert _canonical_agent_name("grok-hermes") == "grok-hermes"
+    assert _canonical_agent_name("grok-hermes-extra") == "grok-hermes"
+
+
 def test_grok_agent_env_autodetect_returns_canonical(monkeypatch):
     from scripts.ai_agent_bridge import _cli
 

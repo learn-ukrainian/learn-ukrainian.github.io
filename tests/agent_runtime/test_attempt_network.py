@@ -284,3 +284,33 @@ def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, 
     result = subprocess.run([sys.executable, module.__file__, str(missing), "/bin/true"],
                             capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert result.returncode == 125 and "attempt_forwarder_start_failed" in result.stderr
+
+
+def test_dns_oversized_response_is_bounded_and_reaped(proxy, monkeypatch):
+    real_spawn = asyncio.create_subprocess_exec
+    children = []
+
+    async def large(*args, **kwargs):
+        proc = await real_spawn(args[0], "-c", "import sys,time; sys.stdout.write('x'*100000); "
+                                "sys.stdout.flush(); time.sleep(60)", **kwargs)
+        children.append(proc)
+        return proc
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", large)
+    assert request(proxy, b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n").startswith(b"HTTP/1.1 403")
+    assert children and children[0].returncode is not None
+
+
+def test_forwarder_cli_success_refusal_and_argument_contract(proxy, tmp_path, monkeypatch):
+    import sys
+
+    from scripts.agent_runtime import attempt_forwarder
+
+    monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(proxy.endpoint), "/bin/true"])
+    assert attempt_forwarder.main() == 0
+    monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(tmp_path / "missing.sock"), "/bin/true"])
+    assert attempt_forwarder.main() == 125
+    monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(proxy.endpoint)])
+    with pytest.raises(SystemExit) as error:
+        attempt_forwarder.main()
+    assert error.value.code == 2

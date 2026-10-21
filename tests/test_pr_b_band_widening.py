@@ -1,5 +1,6 @@
 """Tests for exact authored-word floors plus the retained callout minimum."""
 
+import pytest
 
 from scripts.build.linear_pipeline import (
     _engagement_floor_gate,
@@ -77,3 +78,18 @@ More prose with a bullet list:
     assert report["callout_min"] == 1
     # If the only failing dimension was callout count, passing now succeeds.
     assert report["callout_count"] >= 1
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        ":::tip\nA mnemonic.\n:::\n\nThis section teaches the alphabet.",
+        ":::tip\nA mnemonic.\n:::\n\nLearners will compare **а** and **о**.",
+        ":::tip\nA mnemonic.\n:::\n\nThe activity asks you to hear **і**.",
+    ],
+)
+def test_engagement_floor_flags_teacher_plan_meta_narration(text: str) -> None:
+    plan = {"word_target": 100, "level": "a1"}
+    report = _engagement_floor_gate(text, plan)
+    assert report["passed"] is False
+    assert len(report["meta_narration_hits"]) == 1

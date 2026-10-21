@@ -249,6 +249,93 @@ def test_missing_raw_blob_records_explicit_failure(tmp_path):
     assert rep["failures_by_reason"].get("missing_raw_paradigm_blob") == 1
 
 
+def test_cli_subcommands_via_subprocess(tmp_path):
+    db_path = tmp_path / "sources_cli.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    rep_path = tmp_path / "build_report.json"
+    raw_cache = ulif_raw_cache.cache_path(db_path)
+
+    # 1. build CLI
+    proc_build = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.ulif_forms",
+            "build",
+            "--db",
+            str(db_path),
+            "--raw-cache",
+            str(raw_cache),
+            "--report",
+            str(rep_path),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert proc_build.returncode == 0
+    assert "Build complete" in proc_build.stdout
+    assert rep_path.is_file()
+
+    # 2. verify CLI
+    proc_verify = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.ulif_forms",
+            "verify",
+            "--db",
+            str(db_path),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert proc_verify.returncode == 0
+    assert "Verification PASSED" in proc_verify.stdout
+
+    # 3. disagreement-report CLI
+    tsv_path = tmp_path / "disagreements.tsv"
+    proc_disagree = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.ulif_forms",
+            "disagreement-report",
+            "--db",
+            str(db_path),
+            "--out",
+            str(tsv_path),
+            "--all",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert proc_disagree.returncode == 0
+    assert tsv_path.is_file()
+    lines = tsv_path.read_text(encoding="utf-8").splitlines()
+    assert len(lines) > 1
+    assert "entry_id\tentry_key" in lines[0]
+
+
 def test_cli_help_standard():
     proc = subprocess.run(
         [sys.executable, "-m", "scripts.lexicon.runner.ulif_forms", "--help"],

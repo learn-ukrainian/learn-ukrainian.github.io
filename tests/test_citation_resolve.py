@@ -24,6 +24,11 @@ def test_plan_compact_form_matches_writer_expanded() -> None:
     assert result["unknown"] == []
 
 
+def test_latin_mixed_author_matches_plan_reference() -> None:
+    assert _result("Karaman Ukrainian language, Grade 10, p.176")["passed"] is True
+    assert _result("Kараман Ukrainian language, Grade 10, p.176")["passed"] is True
+
+
 @pytest.mark.parametrize(
     "author",
     [
@@ -88,6 +93,16 @@ def test_first_name_alone_does_not_satisfy_author_corroboration() -> None:
     assert result["unknown"] == ["Тарас Петренко «Садок вишневий»"]
 
 
+def test_author_word_inside_quoted_title_does_not_corroborate_author() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Шевченко: Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Шевченко: Садок вишневий»"]
+
+
 def test_unquoted_title_does_not_resolve_by_containment() -> None:
     result = linear_pipeline._citation_gate(
         [{"source_ref": "Петренко О. Шевченко: Садок вишневий"}],
@@ -96,6 +111,50 @@ def test_unquoted_title_does_not_resolve_by_containment() -> None:
 
     assert result["passed"] is False
     assert result["unknown"] == ["Петренко О. Шевченко: Садок вишневий"]
+
+
+def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:
+    plan = {
+        "references": [
+            {"title": "Слов'янська міфологія", "author": "Костомаров М."},
+            {"title": "Нарис історії культури України", "author": "Попович М."},
+            {
+                "title": "Історія української літератури",
+                "author": "Чижевський Д.",
+            },
+            {
+                "title": (
+                    "Праці етнографічно-статистичної експедиції "
+                    "в Західно-Руський край"
+                ),
+                "author": "Чубинський П.",
+            },
+        ]
+    }
+    resources = [
+        {"source_ref": "Костомаров М. «Слов'янська міфологія»"},
+        {"source_ref": "Попович М. «Нарис історії культури України»"},
+        {"source_ref": "Чижевський Д. «Історія української літератури»"},
+        {
+            "source_ref": (
+                "Чубинський П. «Праці етнографічно-статистичної експедиції "
+                "в Західно-Руський край»"
+            )
+        },
+    ]
+
+    result = linear_pipeline._citation_gate(resources, plan)
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+    order_variant = linear_pipeline._citation_gate(
+        [{"source_ref": "М. Костомаров «Слов'янська міфологія»"}],
+        plan,
+    )
+
+    assert order_variant["passed"] is True
+    assert order_variant["unknown"] == []
 
 
 def test_unknown_citation_still_rejected() -> None:

@@ -32,6 +32,11 @@ def test_replace_latin_module_refs_formats_ranges_and_lists() -> None:
     assert replace_latin_module_refs("від M27-M35") == "від модулів 27–35"
 
 
+def test_replace_latin_module_refs_leaves_cefr_labels_untouched() -> None:
+    source = "Говорити, звідки ви (A1.1) та що ви робите (A1.3)"
+    assert replace_latin_module_refs(source) == source
+
+
 def test_fix_plan_file_skips_module_and_external_resource_titles(tmp_path: Path) -> None:
     plan_path = tmp_path / "plan.yaml"
     plan_path.write_text(

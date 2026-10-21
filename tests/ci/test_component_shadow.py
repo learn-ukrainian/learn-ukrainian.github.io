@@ -57,6 +57,20 @@ def test_empty_diff_and_missing_base_are_full(repo, static_graph):
         assert result["selected_test_files"] == ["tests/test_sample.py"]
 
 
+def test_historical_subject_can_predate_observer_tools(repo, static_graph):
+    for name in s.TOOLS:
+        (repo / name).unlink()
+    head = commit(repo)
+    result = s.select(head, head, "pull_request", repo)
+    assert result["mode"] == "full"
+    assert set(result["identities"]["tool_hashes"]) == set(s.TOOLS)
+
+
+@pytest.mark.parametrize("event", ["workflow_dispatch", "merge_group", "schedule"])
+def test_non_pr_events_always_full(repo, static_graph, event):
+    assert s.select("", "HEAD", event, repo)["reason"] == "non-pr-event"
+
+
 def test_stacked_pr_diff_includes_parent_and_ignores_new_base_commits(repo, static_graph):
     base = git(repo, "rev-parse", "HEAD")
     parent = repo / "site/parent.ts"
@@ -89,6 +103,44 @@ def test_renames_and_deletions_include_both_sides(repo, static_graph):
     head = commit(repo)
     result = s.select(base, head, "pull_request", repo)
     assert result["changed_paths"] == ["site/deleted.ts", "site/new.ts", "site/old.ts"]
+
+
+@pytest.mark.parametrize("path,reason", [
+    (".github/test.txt", "workflow-tool-or-dependency"),
+    ("site/pnpm-lock.yaml", "workflow-tool-or-dependency"),
+    ("site/nested/package.json", "workflow-tool-or-dependency"),
+    ("site/nested/requirements.in", "workflow-tool-or-dependency"),
+    ("requirements-new.txt", "workflow-tool-or-dependency"),
+    ("scripts/ci/new.py", "workflow-tool-or-dependency"),
+    ("scripts/config.py", "shared-core"),
+    ("unknown/new.txt", "unmapped"),
+])
+def test_full_triggers(repo, static_graph, path, reason):
+    base = git(repo, "rev-parse", "HEAD")
+    file = repo / path
+    file.parent.mkdir(parents=True, exist_ok=True)
+    file.write_text("changed")
+    head = commit(repo)
+    result = s.select(base, head, "pull_request", repo)
+    assert result["mode"] == "full"
+    assert result["reason"] == reason
+
+
+def test_selection_uses_resolved_importers_and_integration(repo, static_graph):
+    source = "scripts/projects/open_model_data/new.py"
+    test = repo / "tests/test_importer.py"
+    test.write_text("import scripts.projects.open_model_data.new\n")
+    base = commit(repo)
+    path = repo / source
+    path.parent.mkdir(parents=True)
+    path.write_text("VALUE=1")
+    head = commit(repo)
+    static_graph["file_edges"] = [("tests/test_importer.py", source)]
+    result = s.select(base, head, "pull_request", repo)
+    assert result["mode"] == "selected"
+    assert result["selected_nodes"] == ["open-model-data"]
+    assert "tests/test_importer.py" in result["selected_test_files"]
+    assert set(c.load_manifest()["shared_integration_tests"]) <= set(result["selected_test_files"])
 
 
 @pytest.fixture
@@ -187,6 +239,12 @@ def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
                    "--receipts", str(window)]) == 1
     registration["minimum_narrowed_cases"] = 43
     assert s.check(registration, window)["status"] == "pass"
+
+
+@pytest.mark.parametrize("minimum", [None, 0, -1, True, "1"])
+def test_missing_or_invalid_registered_narrowing_minimum_is_unresolved(registration, window, minimum):
+    registration["minimum_narrowed_cases"] = minimum
+    assert "minimum-narrowed-cases-not-pre-registered" in s.check(registration, window)["unresolved"]
 
 
 @pytest.mark.parametrize("fields", [

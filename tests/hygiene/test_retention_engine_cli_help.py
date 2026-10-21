@@ -32,3 +32,11 @@ def test_every_argument_has_help() -> None:
             if isinstance(action, argparse._HelpAction):
                 continue
             assert action.help, f"{name} {action.option_strings} has no help"
+
+
+def test_invalid_usage_exits_2(capsys: pytest.CaptureFixture[str]) -> None:
+    for argv in ([], ["apply"], ["plan", "--stale-hours", "soon"]):
+        with pytest.raises(SystemExit) as exc:
+            retention_engine.main(argv)
+        assert exc.value.code == 2, argv
+    capsys.readouterr()

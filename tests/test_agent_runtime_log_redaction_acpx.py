@@ -161,3 +161,16 @@ def test_cleanup_of_a_copy_the_caller_does_not_own_logs_a_constant_message(copy_
     assert error.reason == "cleanup_failed"
     assert _SECRET_COPY in str(error)
     _assert_constant(_only_record(caplog, logging.ERROR), _FAILED)
+
+
+def test_cleanup_failing_to_remove_a_copy_logs_a_constant_message(copy_base, monkeypatch, caplog):
+    def refuse(_fd, _name):
+        raise OSError(errno.EACCES, _SECRET_ERRNO_TEXT)
+
+    monkeypatch.setattr(acpx_module, "_claude_acp_copies_in_use", lambda _base: set())
+    monkeypatch.setattr(acpx_module, "_remove_claude_acp_copy_entry", refuse)
+    error = _cleanup_error(copy_base, caplog)
+    assert error.reason == "cleanup_failed"
+    assert _SECRET_COPY in str(error)
+    assert _SECRET_ERRNO_TEXT in str(error)
+    _assert_constant(_only_record(caplog, logging.ERROR), _FAILED)

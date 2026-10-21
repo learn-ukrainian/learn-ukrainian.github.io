@@ -257,6 +257,22 @@ def test_codex_adapter_maps_typed_mcp_items_to_tool_calls(tmp_path: Path) -> Non
     assert failed["status"] == "failed" and failed["output_summary"] == "server unavailable"
 
 
+def test_tool_call_arguments_are_bounded(tmp_path: Path) -> None:
+    output_file = tmp_path / "codex-output.txt"
+    output_file.write_text("Final answer.", encoding="utf-8")
+
+    result = CodexAdapter().parse_response(
+        stdout=completed_stream(mcp_call("sources", "write", {"file_path": "lesson.md", "content": "x" * 10_000})),
+        stderr="",
+        returncode=0,
+        output_file=output_file,
+    )
+
+    assert result.ok is True
+    assert len(result.tool_calls[0]["arguments"]["content"]) == 500
+    assert result.tool_calls[0]["arguments"]["content"].endswith("[...truncated]")
+
+
 def test_unparseable_tool_event_emits_warning_not_crash(caplog) -> None:
     caplog.set_level(logging.WARNING, logger="agent_runtime.adapters.gemini")
 

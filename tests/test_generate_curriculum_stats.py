@@ -56,6 +56,13 @@ def test_build_stats_counts_modules_and_total() -> None:
     }
 
 
+def test_render_stats_is_stable_two_space_json_with_trailing_newline() -> None:
+    text = gcs.render_stats({"a2": {"modules": 2}, "_total": 2})
+
+    assert text.endswith("}\n")
+    assert text == '{\n  "a2": {\n    "modules": 2\n  },\n  "_total": 2\n}\n'
+
+
 def test_check_passes_for_fresh_output(paths) -> None:
     curriculum, _ = paths
     _write_manifest(curriculum, _manifest(a2=["x"], b1=["y", "z"]))

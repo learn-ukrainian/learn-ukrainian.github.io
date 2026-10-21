@@ -171,6 +171,17 @@ def test_report_refuses_to_treat_missing_or_incomplete_telemetry_as_zero_use(tmp
     ]
 
 
+def test_fleet_broker_report_cli_is_json_and_exit_zero(tmp_path: Path, capsys) -> None:
+    database = tmp_path / "missing.db"
+
+    rc = main(["fleet", "broker-report", "--days", "7", "--routes-db", str(database)])
+
+    assert rc == EXIT_OK
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["schema"] == "fleet-broker-report.v1"
+    assert payload["zero_use_candidate"]["eligible"] is False
+
+
 def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys) -> None:
     rc = main(["fleet", "status", "--root", str(tmp_path / "uninitialized")])
     assert rc == EXIT_OK

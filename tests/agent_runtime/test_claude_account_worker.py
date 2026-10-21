@@ -43,6 +43,7 @@ from scripts.agent_runtime.env_sanitize import (
 from tests.agent_runtime.test_attempt_boundary import (
     ACCOUNT_ORG_UUIDS,
     AUTO_MODE_LISTS,
+    AUTO_MODE_REFUSED,
     AUTO_MODE_SETTINGS,
     BOUND_ACCOUNT_UUID,
     CLAUDE_AMBIENT_AUTH,
@@ -467,6 +468,25 @@ def test_bound_label_inert_user_settings_names_are_admitted(accounts, case):
     seen = _run(accounts)
     assert seen["argv"][seen["argv"].index("--setting-sources") + 1] == "project,local"
     assert "fixture-placeholder" not in repr(seen["argv"]) + repr(records) + repr(result)
+
+
+@pytest.mark.parametrize("case", sorted(AUTO_MODE_REFUSED))
+def test_bound_label_auto_mode_is_refused(accounts, case):
+    """User settings carrying ``autoMode`` refuse value-free before spawn (#10619).
+
+    On d183ad934b the worker ran: the classifier reads ``autoMode`` from the
+    user settings whatever the setting sources (see
+    ``test_real_cli_reads_auto_mode_whatever_the_setting_sources``).
+    """
+    _user_settings(accounts, AUTO_MODE_REFUSED[case])
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == str(refused.value) == "claude_account_settings_credential_source"
+    assert "fixture" not in repr(refused.value) + repr(refused.value.__context__) + repr(refused.value.__cause__)
+    assert not accounts.dump.exists()
+    assert accounts.profile_calls == []
 
 
 @pytest.mark.parametrize(
@@ -984,6 +1004,25 @@ def test_worker_runs_a_default_file_label_only_through_the_launch_guard(
         assert _run(accounts)["env"]["CLAUDE_CONFIG_DIR"] == str(accounts.config_dir)
 
 
+@pytest.mark.parametrize("tool_config", [{}, {"claude_account": "a"}], ids=["omitted", "explicit_default"])
+def test_default_label_environment_keeps_existing_sanitisation(accounts, monkeypatch, tool_config):
+    """The default account keeps the host login and the existing sanitisation, unverified."""
+    other = accounts.home / "elsewhere"
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(other))
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "o" * 30)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "fixture-ambient-" + "k" * 30)
+    monkeypatch.setattr(env_sanitize, "_isolated_git_env", lambda *_a, **_k: {"GIT_CONFIG_NOSYSTEM": "1"})
+
+    plan = _plan(accounts, **tool_config)
+
+    assert "CLAUDE_CONFIG_DIR" not in plan.env_overrides
+    env = build_agent_env(provider="claude", overrides=plan.env_overrides)
+    # Existing default sanitisation: no config directory or OAuth token; the API key passes.
+    assert "CLAUDE_CONFIG_DIR" not in env and "CLAUDE_CODE_OAUTH_TOKEN" not in env
+    assert env["ANTHROPIC_API_KEY"] == "fixture-ambient-" + "k" * 30
+    assert accounts.profile_calls == []
+
+
 @pytest.mark.parametrize("name", [*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"])
 def test_conflicting_ambient_credential_with_bound_label_is_refused(accounts, monkeypatch, name):
     """AC-01: an ambient token, API key or other config directory is refused value-free, before spawn."""
@@ -1152,6 +1191,18 @@ def test_bound_label_admits_only_a_consumer_plan(accounts, monkeypatch, case):
         _invoke(accounts, claude_account="b")
     assert str(refused.value) == refused.value.code == code
     assert _calls(accounts, "auth_status") == [] and _calls(accounts, "run") == []
+
+
+def test_bound_label_organisational_credential_with_consumer_metadata_is_refused(accounts, monkeypatch):
+    """Held-out: the stored plan and account record say Max; the exact credential is a Team organisation's."""
+    _live_plan(monkeypatch, "claude_team")
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_plan_unsupported"
+    assert accounts.profile_calls == [accounts.bound_token]
+    assert _calls(accounts, "run") == []
 
 
 # Cached metadata that disagrees with the live classification of the exact credential.
@@ -1480,6 +1531,22 @@ def test_real_cli_admits_a_clean_bound_login(real_cli):
     plan = _plan(real_cli, claude_account="b")
 
     assert plan.env_overrides["CLAUDE_CONFIG_DIR"] == str(real_cli.config_dir)
+
+
+@pytest.mark.parametrize(
+    ("name", "settings"),
+    [
+        ("settings.local.json", {"apiKeyHelper": "fixture-helper-command"}),
+        ("settings.local.json", {"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}}),
+    ],
+)
+def test_real_cli_checkout_setting_that_changes_auth_is_refused(real_cli, name, settings):
+    _private_json(real_cli.workdir / ".claude" / name, settings)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(real_cli, claude_account="b")
+
+    assert refused.value.code == "claude_account_auth_method_conflict"
 
 
 @pytest.mark.parametrize("case", ["env_api_key", "api_key_helper"])

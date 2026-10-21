@@ -150,6 +150,19 @@ def test_preflight_example_need(clean_word_store, clean_pack):
     assert any(g.need == "example" and g.step == "s1" for g in res_bad.gaps)
 
 
+def test_preflight_quote_need_publication_right_gap(clean_word_store, clean_pack):
+    """An unregistered source remains a publication_right gap."""
+    plan_entry = {
+        "steps": [{"id": "s1", "needs": ["quote"], "explains": ["T-002"]}],
+        "inventory": {"vocabulary": {"core": []}},
+    }
+    res = preflight_lesson(plan_entry, pack=clean_pack, word_store=clean_word_store)
+    assert res.passed is False
+    assert len(res.gaps) == 1
+    assert res.gaps[0].step == "s1"
+    assert res.gaps[0].need == "publication_right"
+
+
 def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word_store):
     """Pack-provided publication rights cannot grant permission."""
     pack_with_allowed = {

@@ -127,6 +127,19 @@ def test_fill_missing_manifest_glosses_updates_only_explicit_blank_targets() -> 
     ]
 
 
+def test_fill_missing_manifest_glosses_strips_terminal_aspect_note() -> None:
+    manifest = {"entries": [{"lemma": "доглянути", "gloss": ""}]}
+
+    result = admission.fill_missing_manifest_glosses(
+        [{"lemma": "Доглянути", "gloss": "To look after / care for (perf)"}],
+        manifest,
+        ["доглянути"],
+    )
+
+    assert result.applied == ("доглянути",)
+    assert manifest["entries"][0]["gloss"] == "To look after / care for"
+
+
 def test_fill_missing_manifest_glosses_rejects_missing_target_seed() -> None:
     manifest = {"entries": [{"lemma": "лоток", "gloss": None}]}
 
@@ -148,6 +161,15 @@ def test_fill_missing_manifest_pos_uses_vesum_for_explicit_blank_target(monkeypa
     assert result == admission.PosFillResult(applied=("помішувати",), skipped_existing=())
     assert manifest["entries"][0]["pos"] == "verb"
     assert manifest["entries"][1]["pos"] == "noun:pl"
+
+
+def test_fill_missing_manifest_pos_preserves_existing_pos(monkeypatch) -> None:
+    manifest = {"entries": [{"lemma": "обставини", "pos": "noun:pl"}]}
+    monkeypatch.setattr(admission, "_vesum_pos", lambda lemma: pytest.fail(f"unexpected VESUM lookup: {lemma}"))
+
+    result = admission.fill_missing_manifest_pos(manifest, ["обставини"])
+
+    assert result == admission.PosFillResult(applied=(), skipped_existing=("обставини",))
 
 
 def test_fill_missing_manifest_pos_rejects_unverified_target(monkeypatch) -> None:
@@ -239,6 +261,24 @@ def test_main_persists_gloss_fill_before_later_pos_fill_failure(tmp_path: Path, 
 
     persisted = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert persisted["entries"][0]["gloss"] == "tray"
+
+
+def test_write_json_uses_shared_atomic_write_helper(tmp_path: Path, monkeypatch) -> None:
+    output = tmp_path / "nested" / "seed.json"
+    observed: dict[str, object] = {}
+
+    def write_atomically(path: Path, content: bytes) -> None:
+        observed["path"] = path
+        observed["content"] = content
+
+    monkeypatch.setattr(admission, "_write_atomically", write_atomically)
+
+    admission._write_json(output, {"lemma": "відомий"})
+
+    assert observed == {
+        "path": output,
+        "content": b'{\n  "lemma": "\xd0\xb2\xd1\x96\xd0\xb4\xd0\xbe\xd0\xbc\xd0\xb8\xd0\xb9"\n}\n',
+    }
 
 
 def test_practice_seed_reports_no_hit_and_retains_duplicate_attestations(tmp_path: Path) -> None:
@@ -404,6 +444,29 @@ def test_private_local_no_route_requires_explicit_vesum_attestation(tmp_path: Pa
     assert report["atlas_failures"] == [{"seedRow": 9, "lemma": "виходити з ладу", "reason": "missing_public_route"}]
 
 
+def test_normalize_rows_preserves_attested_matched_lemmas() -> None:
+    rows = admission.normalize_rows(
+        [
+            {
+                "seedRow": 1,
+                "lemma": "щасливої дороги",
+                "vesumAttestation": {
+                    "attested": True,
+                    "method": "head_token",
+                    "matched_lemmas": ["щасливий"],
+                    "matched_forms": ["щасливої"],
+                },
+            }
+        ]
+    )
+    assert rows[0]["vesumAttestation"] == {
+        "attested": True,
+        "method": "head_token",
+        "matched_lemmas": ["щасливий"],
+        "matched_forms": ["щасливої"],
+    }
+
+
 def test_local_no_route_uses_matched_lemma_for_head_cefr(tmp_path: Path) -> None:
     """Inflected multiword head inherits CEFR via attestation matched_lemmas."""
     manifest = _manifest(
@@ -550,6 +613,40 @@ def test_cli_allows_missing_routes_only_for_local_practice_output(tmp_path: Path
             "--allow-missing-routes",
         ]
     ) == 1
+
+
+def test_practice_seed_reports_rights_gate_separately_from_missing_cefr(tmp_path: Path) -> None:
+    manifest = _manifest(
+        tmp_path / "manifest.json",
+        [{"lemma": "відомий", "url_slug": "відомий", "pos": "adj"}],
+    )
+    rows = [
+        {
+            "seedRow": 1,
+            "lemma": "відомий",
+            "sentenceStatus": "has_candidates",
+            "admission": {
+                "practice": False,
+                "mode": "pending_operator_redistribution_go",
+                "reason": "private_local_rights_require_operator_redistribution_go",
+            },
+        }
+    ]
+
+    seed, report = admission.prepare_practice_seed(rows, manifest)
+
+    assert seed["entries"] == []
+    assert report["counts"]["practice_admitted_rows"] == 0
+    assert report["counts"]["practice_skipped_not_admitted"] == 1
+    assert report["counts"]["practice_skipped_no_cefr"] == 0
+    assert report["practice_skipped_not_admitted"] == [
+        {
+            "seedRow": 1,
+            "lemma": "відомий",
+            "mode": "pending_operator_redistribution_go",
+            "reason": "private_local_rights_require_operator_redistribution_go",
+        }
+    ]
 
 
 @pytest.mark.parametrize("invalid_admission", [pytest.param(None, id="missing"), pytest.param("admitted", id="non_mapping")])

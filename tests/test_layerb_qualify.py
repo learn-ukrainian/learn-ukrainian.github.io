@@ -669,6 +669,17 @@ def test_call_cap_must_exactly_cover_main_plus_probe_rows() -> None:
         _run([main], [probe], {}, collection_call_plan=plan, max_judge_calls=1)
 
 
+def test_six_layer_a_fail_closed_probes_are_serialized_by_production_delimiter() -> None:
+    raw = "serializer source"
+    case = _case("serializer-case", raw)
+    report = _run([case], [], {case["case_id"]: _emission(case, {"candidate-1": raw})})
+
+    layer_a = report["thresholds"]["layer_a_regression"]
+    assert layer_a["status"] == "PASS"
+    assert len(layer_a["serializer_window_sha256"]) == 6
+    assert not layer_a["serializer_errors"]
+
+
 def test_cost_envelopes_use_module_call_grouping_and_p95() -> None:
     raw = "cost source"
     first = _case("cost-one", raw)
@@ -840,6 +851,11 @@ def test_auto_lineage_is_never_qualified(identity, field, family, model):
     row = layerb_qualify.route_eligibility(case, route)
     assert row["eligible"] is False
     assert row["reason"] == "UNKNOWN_LINEAGE"
+
+
+def test_unknown_route_family_still_refused() -> None:
+    with pytest.raises(layerb_qualify.QualificationError, match="unsupported judge route family"):
+        layerb_qualify.EffectiveRoute.from_mapping({**ROUTE.to_dict(), "family": "mistral"})
 
 
 def test_attestation_round_trip_and_serializer_drift_refuses(tmp_path: Path) -> None:

@@ -193,6 +193,18 @@ def test_runner_missing_vesum_orthography_fails_closed(tmp_path, monkeypatch):
     assert (bad["check"], bad["code"], bad["layer"]) == (7, "a1_choice_source_unavailable", "pack")
 
 
+def test_true_false_before_text_and_schema_valid_fixture():
+    draft, plan, _pack, _words = _fixture()
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    draft["steps"][0]["blocks"].insert(0, {"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {"id": "a1", "instruction": "Choose", "items": [{"statement": "слово", "is_true": True, "explanation": "Read"}]}
+    ]
+    row = runner.check_3_structure(draft, plan["lessons"][0])
+    assert row["reason"] == "true_false_before_text" and row["layer"] == "writer"
+
+
 def test_structure_uses_plan_consolidation_list():
     draft, plan, _pack, _words = _fixture()
     plan["lessons"][0]["consolidation"] = ["a1"]
@@ -236,6 +248,22 @@ def test_form_choice_store_options_valid_invented_duplicate_and_tags():
         bad["activities"][0]["items"][0].update(changed)
         row, _ = runner.check_4_activities(bad, plan["lessons"][0], words, pack)
         assert (row["check"], row["reason"], row["layer"]) == (4, "form_choice_options_invalid", "writer")
+
+
+def test_counting_contract_urok_only_with_quoted_term_and_english():
+    units = [
+        {"tab": "urok", "role": "quoted_term", "text": "слово"},
+        {"tab": "urok", "role": "vesum_exempt", "text": "English line"},
+        {"tab": "urok", "role": "narration", "text": "слово"},
+        {"tab": "slovnyk", "role": "record_print", "text": "слово слово"},
+    ]
+    row = runner.check_6_count({"units": units})
+    assert row["status"] == "passed"
+    assert row["details"]["urok_tokens"] == 4
+    assert row["details"]["ukrainian_tokens"] == 2
+    assert row["details"]["ukrainian_share"] == 0.5
+    assert "word_target" not in row["details"]
+    assert row["details"]["not_checked"] == ["lesson_structural_minimums_not_calibrated"]
 
 
 def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_lesson(tmp_path):
@@ -638,6 +666,46 @@ def test_contract_fixture_hyphenated_compound_through_check_9(tmp_path, monkeypa
     assert "сло\u0301во-сло\u0301во" in (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
 
 
+def test_contract_fixture_intentional_error_item_through_check_9(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    pack["errors"] = [
+        {
+            "id": "E-001",
+            "source": {"table": "ua_gec_errors", "id": 1},
+            "incorrect": "слове",
+            "correct": "слово",
+            "error_type": "form",
+            "pattern": "fixture",
+        }
+    ]
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [
+        {"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Correct", "error_refs": ["E-001"]}
+    ]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Correct",
+            "items": [
+                {
+                    "sentence": "слове",
+                    "error": "слове",
+                    "correction": "слово",
+                    "explanation": "Correct",
+                    "error_ref": "E-001",
+                }
+            ],
+        }
+    ]
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    assert "слове" in (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+
+
 def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     draft["steps"][0]["id"] = "s2"
@@ -660,6 +728,21 @@ def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatc
     assert not receipt.exists()
 
 
+def test_runner_true_false_before_text_reports_check_3(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
+    draft["steps"][0]["blocks"].insert(0, {"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {"id": "a1", "instruction": "Read", "items": [{"statement": "слово", "correct": True, "explanation": "Read"}]}
+    ]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["reason"], bad["layer"]) == (3, "true_false_before_text", "writer")
+
+
 def test_runner_check_1_echo_hash_failure(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     report, _, _ = _run_contract(
@@ -667,6 +750,17 @@ def test_runner_check_1_echo_hash_failure(tmp_path, monkeypatch):
     )
     bad = next(row for row in report["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["layer"]) == (1, "writer")
+
+
+def test_runner_check_2_declared_gap(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    draft["status"] = "evidence_gap"
+    draft["gaps"] = [{"step": "s1", "need": "example", "detail": "Missing evidence"}]
+    draft["steps"][0]["blocks"] = []
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (2, "pack")
 
 
 def test_runner_check_5_missing_record(tmp_path, monkeypatch):

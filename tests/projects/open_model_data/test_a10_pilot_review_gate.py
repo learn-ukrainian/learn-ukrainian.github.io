@@ -35,6 +35,8 @@ A8_RECEIPT_PATH = ADMISSION / "dataset_v4_a8_admission_assembly_receipt_v1.json"
 A9_RECEIPT_PATH = ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 
+V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
+
 
 @functools.cache
 def _cached_json(path: Path) -> dict:
@@ -210,6 +212,19 @@ def test_a10_review_readiness_view_fails_closed_on_a_dropped_slot() -> None:
         a10.build_review_readiness_view(_cached_json(MANIFEST_PATH), forged_a9, residuals)
 
 
+def test_a10_review_readiness_view_fails_closed_on_a_scored_row_without_an_admitted_row() -> None:
+    forged_a9 = copy.deepcopy(_cached_json(A9_RECEIPT_PATH))
+    forged_a9["consumer_reproduction_view"][0] = {
+        **forged_a9["consumer_reproduction_view"][0],
+        "scored": True,
+        "row_admitted": False,
+    }
+    gate = a10.check_pilot_review_gate()
+    residuals = a10.derive_a10_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), gate)
+    with pytest.raises(a10.PilotReviewGateError):
+        a10.build_review_readiness_view(_cached_json(MANIFEST_PATH), forged_a9, residuals)
+
+
 # --- review packet (fixed contract) ------------------------------------------
 
 
@@ -227,6 +242,17 @@ def test_a10_review_packet_requires_independent_reviewer_exact_head_cf_and_no_se
     assert packet["review_execution_state"] == "NOT_EXECUTED_NO_ADMITTED_ROWS"
 
 
+def test_a10_review_packet_is_immutable_across_calls() -> None:
+    packet = a10.build_review_packet()
+    packet["self_review_satisfies_gate"] = True
+    assert a10.REVIEW_PACKET_REQUIREMENTS["self_review_satisfies_gate"] is False
+    assert a10.build_review_packet()["self_review_satisfies_gate"] is False
+
+
+def test_a10_required_gate_id_is_the_manifests_own_gate_id_never_invented() -> None:
+    assert a10.REQUIRED_GATE_ID in _cached_json(MANIFEST_PATH)["required_gate_ids"]
+
+
 # --- receipt assembly and independent verification --------------------------------
 
 
@@ -239,6 +265,23 @@ def test_a10_receipt_matches_schema() -> None:
     Draft202012Validator.check_schema(schema)
     errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
     assert not errors, errors[0].message if errors else None
+
+
+def test_a10_receipt_binds_v4_sha_and_control_surfaces() -> None:
+    assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
+    assert _cached_json(RECEIPT)["control_surfaces"] == {
+        "public_control_issue": 7423,
+        "pilot_child_issue": 7430,
+        "private_operational_board": 622,
+    }
+    assert _cached_json(RECEIPT)["bindings"]["a9_evaluation_package"]["sha256"] == a10.sha256_file(A9_RECEIPT_PATH)
+    assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a10.sha256_file(MANIFEST_PATH)
+
+
+def test_a10_receipt_binds_the_merged_a9_receipt_by_its_known_public_sha() -> None:
+    # The merged A9 receipt's public sha256, frozen at dispatch time (PR #7662 repair 3:
+    # A9's content changed under the Repair 2 real-slot-mechanism fix, rippling into A10-A13).
+    assert a10.sha256_file(A9_RECEIPT_PATH) == "3ea541486f0b0007799b1b54833df494c1e1fa55d5d0410e2cd6410d78b60bd8"
 
 
 def test_a10_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_residual_unresolved() -> None:
@@ -282,6 +325,25 @@ def test_a10_receipt_does_not_claim_pilot_review_passed_while_the_gate_is_closed
     assert _cached_json(RECEIPT)["execution_counters"]["slots_blocked"] == 100
 
 
+def test_a10_receipt_never_claims_training_ready_silver_arena_admitted_or_eval_artifact_ready() -> None:
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
+    assert "TRAINING_READY_SILVER" not in serialized
+    assert "ARENA_SLICE_READY" not in serialized
+    assert "ADMITTED_SLICE_READY" not in serialized
+    assert "EVAL_ARTIFACT_READY" not in serialized
+    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["arena_slice_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["admitted_slice_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["eval_artifact_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["pilot_review_passed_claimed"] is False
+
+
+def test_a10_receipt_never_claims_a_review_was_executed_or_a_self_review_occurred() -> None:
+    assert _cached_json(RECEIPT)["safety_assertions"]["self_review_occurred"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["review_executed_against_missing_or_empty_row"] is False
+    assert all(entry["review_executed"] is False for entry in _cached_json(RECEIPT)["review_readiness_view"])
+
+
 def test_a10_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
     assert _cached_json(RECEIPT)["eligibility"] == {
         "gold": False,
@@ -303,6 +365,12 @@ def test_a10_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_so
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
     assert _cached_json(RECEIPT)["a10_residuals"][0]["subject_id"].startswith("v4p-")
+
+
+def test_a10_receipt_never_opens_held_out_membership() -> None:
+    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_referenced"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_opened"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["heldout_family_identity_leaked"] is False
 
 
 def test_a10_bindings_hash_to_disk_for_every_bound_artifact() -> None:
@@ -336,9 +404,48 @@ def test_a10_refuses_a_forged_pilot_review_passed_claim() -> None:
         a10.validate_receipt_independently(receipt)
 
 
+def test_a10_refuses_a_forged_independent_review_recorded_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["review_gate"]["independent_review_recorded"] = True
+    with pytest.raises(a10.PilotReviewGateError):
+        a10.validate_receipt_independently(receipt)
+
+
 def test_a10_refuses_a_dropped_a9_residual() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["a9_residuals_carried_forward"].pop()
+    with pytest.raises(a10.PilotReviewGateError):
+        a10.validate_receipt_independently(receipt)
+
+
+def test_a10_refuses_a_missing_frozen_slot_residual() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["a10_residuals"].pop()
+    with pytest.raises(a10.PilotReviewGateError):
+        a10.validate_receipt_independently(receipt)
+
+
+def test_a10_refuses_a_dropped_review_readiness_view_entry() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["review_readiness_view"].pop()
+    with pytest.raises(a10.PilotReviewGateError):
+        a10.validate_receipt_independently(receipt)
+
+
+def test_a10_refuses_a_forged_executed_review_in_the_readiness_view() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["review_readiness_view"][0] = {
+        **receipt["review_readiness_view"][0],
+        "review_executed": True,
+        "reviewer_family": "fable",
+    }
+    with pytest.raises(a10.PilotReviewGateError):
+        a10.validate_receipt_independently(receipt)
+
+
+def test_a10_refuses_a_nonzero_dataset_rows_emitted_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["execution_counters"]["dataset_rows_emitted"] = 1
     with pytest.raises(a10.PilotReviewGateError):
         a10.validate_receipt_independently(receipt)
 
@@ -348,3 +455,16 @@ def test_a10_refuses_a_weakened_review_packet() -> None:
     receipt["review_packet"]["self_review_satisfies_gate"] = True
     with pytest.raises(a10.PilotReviewGateError):
         a10.validate_receipt_independently(receipt)
+
+
+def test_a10_schema_rejects_a_leaked_gold_label_value() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["eligibility"]["gold"] = True
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    errors = list(Draft202012Validator(schema).iter_errors(receipt))
+    assert errors
+
+
+def test_a10_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
+    assert "gold" not in FORBIDDEN_KEYS
+    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False

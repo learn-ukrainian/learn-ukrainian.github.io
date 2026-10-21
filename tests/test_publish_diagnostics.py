@@ -178,6 +178,21 @@ def test_unsafe_alert_html_paths_refused(html_url):
 
 
 @pytest.mark.parametrize("operation", ["code-scanning-alerts", "check-annotations"])
+def test_empty_diagnostics(operation):
+    result = pub.read(
+        operation,
+        repo="unit/public",
+        number=1,
+        runner=transport([[]], []),
+        capture_output=True,
+        text=True,
+        paginate=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == []
+
+
+@pytest.mark.parametrize("operation", ["code-scanning-alerts", "check-annotations"])
 @pytest.mark.parametrize(
     "path",
     [
@@ -228,6 +243,33 @@ def test_non_relative_diagnostic_paths_fail_closed(operation, path):
 def test_diagnostic_invalid_fields_never_send(operation, fields):
     with pytest.raises(PublishBlocked):
         pub.read(operation, repo="unit/public", runner=lambda *a, **k: pytest.fail("transport called"), **fields)
+
+
+@pytest.mark.parametrize("operation", ["code-scanning-alerts", "check-annotations"])
+def test_diagnostic_slurp_refused_before_transport(operation):
+    with pytest.raises(PublishBlocked, match="slurp is unsupported"):
+        pub.read(
+            operation, repo="unit/public", number=1, slurp=True, runner=lambda *a, **k: pytest.fail("transport called")
+        )
+
+
+@pytest.mark.parametrize(
+    "operation,selector",
+    [
+        ("code-scanning-alerts", ["--number", "9781"]),
+        ("code-scanning-alerts", ["--ref", "refs/heads/main"]),
+        ("check-annotations", ["--number", "123"]),
+    ],
+)
+def test_diagnostic_cli(operation, selector):
+    calls = []
+
+    def run(argv, **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 0)
+
+    assert pub.main(["read", operation, "--repo", "unit/public", *selector], runner=run) == 0
+    assert calls[0][2:4] == ["--method", "GET"]
 
 
 def test_diagnostic_cli_help(capsys):

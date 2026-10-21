@@ -400,6 +400,51 @@ def test_validate_receipt_rejects_implementation_binding_mutation() -> None:
         negrec.validate_receipt(receipt)
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes",
+    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
+)
+def test_validate_receipt_rejects_schema_binding_mutation() -> None:
+    receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
+    receipt["bindings"] = dict(receipt["bindings"])
+    receipt["bindings"]["receipt_schema_sha256"] = "0" * 64
+    receipt["receipt_sha256"] = negrec.receipt_sha256(receipt)
+    with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="schema binding drift"):
+        negrec.validate_receipt(receipt)
+
+
+def test_hermetic_materialize_idempotent_and_refuses_changed_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = _hermetic_fixture(tmp_path)
+    _patch_hermetic(monkeypatch, paths)
+    first = negrec.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-14T01:10:00Z",
+        completed_at="2026-08-14T01:20:00Z",
+    )
+    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.PRIVATE_FILE_MODE
+    second = negrec.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-14T01:10:00Z",
+        completed_at="2026-08-14T01:20:00Z",
+    )
+    assert second["receipt_sha256"] == first["receipt_sha256"]
+    paths["public_receipt"].write_bytes(b'{"tampered":true}\n')
+    with pytest.raises(negrec.SchoolContextNegativeRecoveryError, match="refusing to overwrite changed public receipt"):
+        negrec.materialize(
+            source_jsonl=paths["source_jsonl"],
+            partition_path=paths["partition"],
+            public_receipt_path=paths["public_receipt"],
+            started_at="2026-08-14T01:10:00Z",
+            completed_at="2026-08-14T01:20:00Z",
+        )
+
+
 def test_hermetic_verify_existing_rejects_implementation_binding_mutation(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

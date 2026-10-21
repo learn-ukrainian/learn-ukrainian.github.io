@@ -14,6 +14,7 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.curriculum.validate.placement_table import (
     CORE_LEVELS,
@@ -23,6 +24,7 @@ from scripts.curriculum.validate.placement_table import (
     generate,
     load_placement_table,
     parse_pedagogy_matrix,
+    render_placement_table,
     schema_activity_types,
 )
 from scripts.curriculum.validate.placement_table import (
@@ -94,6 +96,11 @@ def test_schema_activity_types_rejects_missing_suffix(tmp_path: Path) -> None:
         schema_activity_types("a1", schema_path)
 
 
+def test_schema_activity_types_rejects_missing_file(tmp_path: Path) -> None:
+    with pytest.raises(PlacementTableError, match="does not exist"):
+        schema_activity_types("a1", tmp_path / "missing.schema.json")
+
+
 def _build_with_fixture_schemas(tmp_path: Path, per_level: dict[str, list[str]]) -> dict:
     import scripts.curriculum.validate.placement_table as pt_module
 
@@ -163,6 +170,14 @@ def test_agreement_on_forbidden_is_not_a_discrepancy(tmp_path: Path) -> None:
     table = _build_with_fixture_schemas(tmp_path, per_level)
     assert table["levels"]["c2"]["translate"] == "forbidden"
     assert not [d for d in table["discrepancies"] if d["type"] == "translate" and d["level"] == "c2"]
+
+
+def test_render_placement_table_is_deterministic_and_ends_in_newline() -> None:
+    table = {"placement_table_schema": 1, "levels": {"a1": {"quiz": "both"}}, "discrepancies": []}
+    text = render_placement_table(table)
+    assert text.endswith("\n")
+    assert yaml.safe_load(text) == table
+    assert render_placement_table(table) == text
 
 
 def test_generate_round_trips_through_load(tmp_path: Path) -> None:

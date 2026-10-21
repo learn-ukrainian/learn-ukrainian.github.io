@@ -26,6 +26,16 @@ def test_load_vocab_reads_v7_module_layout(tmp_path, monkeypatch):
     assert learner_state._load_vocab("a1", "module-a") == ["тест"]
 
 
+def test_load_vocab_reads_plan_targets_when_built_vocab_is_missing(tmp_path, monkeypatch):
+    root = tmp_path / "curriculum" / "l2-uk-en"
+    _write_yaml(root / "plans" / "a1" / "plan-only.yaml", {
+        "targets": {"new_vocabulary": ["план", "ранок"]},
+    })
+    monkeypatch.setattr(learner_state, "CURRICULUM_ROOT", root)
+
+    assert learner_state._load_vocab("a1", "plan-only") == ["план", "ранок"]
+
+
 def test_load_vocab_merges_plan_targets_required_and_recommended(tmp_path, monkeypatch):
     root = tmp_path / "curriculum" / "l2-uk-en"
     _write_yaml(root / "plans" / "a1" / "merged-plan.yaml", {

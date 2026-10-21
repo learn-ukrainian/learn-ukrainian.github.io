@@ -319,6 +319,33 @@ def test_evidence_is_exported_only_on_request(tmp_path: Path) -> None:
     assert not with_evidence.scratch_path.exists()
 
 
+def test_cli_help_shows_atlas_410k_invocation() -> None:
+    completed = subprocess.run(
+        [sys.executable, str(CLI), "run", "--help"],
+        capture_output=True,
+        text=True,
+        check=True,
+        cwd=str(REPO_ROOT),
+        timeout=30,
+    )
+    for needle in (
+        'export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"',
+        '"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py run --task-id atlas-8307-410k',
+        '"$PRIMARY_REPO/.venv/bin/python" -m scripts.benchmarks.generate_synthetic_atlas',
+        '--source-db "$PRIMARY_REPO/data/atlas.db" --out "$LU_TASK_SCRATCH_DIR/atlas.db"',
+        "--seed 8307 --target 410000",
+        '"$PRIMARY_REPO/.venv/bin/python" -m scripts.atlas.export_runtime_shards',
+        '--out-dir "$LU_TASK_SCRATCH_DIR/export"',
+        '--deck-dir "$PRIMARY_REPO/site/public/lexicon" --verify',
+        "bash -euc",
+        "--evidence-dir",
+    ):
+        assert needle in completed.stdout, needle
+    # No relative interpreter / data paths survive: a dispatch worktree has neither.
+    assert "  .venv/bin/python" not in completed.stdout
+    assert "--source-db data/atlas.db" not in completed.stdout
+
+
 # --------------------------------------------------------------------------
 # launch gate + orphan recovery
 # --------------------------------------------------------------------------
@@ -457,6 +484,15 @@ def test_leader_exit_with_surviving_grandchild_preserves_until_group_dead(tmp_pa
                     _wait_for(lambda: not ts.probe_process_group(pgid).members, what="group to drain")
         finally:
             hold.unlink(missing_ok=True)
+
+
+def test_recovery_never_signals_processes(tmp_path: Path, monkeypatch) -> None:
+    root = tmp_path / "root"
+    _plant_dead_owner(root)
+    monkeypatch.setattr(ts.os, "kill", lambda *_a, **_k: pytest.fail("recovery must not kill"))
+    monkeypatch.setattr(ts.os, "killpg", lambda *_a, **_k: pytest.fail("recovery must not killpg"))
+    report = _recover(root, apply=True)
+    assert report["reaped"] == 1
 
 
 def test_reused_owner_pid_counts_as_dead_but_unknown_start_preserves(tmp_path: Path) -> None:
@@ -909,3 +945,15 @@ def test_owner_cleanup_preserves_when_mount_information_unavailable(tmp_path: Pa
     assert "mount information unavailable" in outcome.detail
     assert (outcome.scratch_path / ts.PAYLOAD_DIRNAME / "f").is_file()
     assert _leases(root)[outcome.invocation_id]["state"] == "preserved"
+
+
+def test_recover_reads_the_env_floor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "root"
+    path = _plant_dead_owner(root)
+    _age_tree(path, ts.DEFAULT_PRESSURE_MIN_AGE_S)
+    monkeypatch.setattr(ts, "free_space_gb", lambda _p: 25.0)
+    assert ts.recover_orphans(root=root, now=time.time())["disk_pressure"] is False
+    monkeypatch.setenv(ts.SCRATCH_MIN_FREE_ENV, "27")
+    report = ts.recover_orphans(root=root, now=time.time())
+    assert report["disk_pressure"] is True
+    assert _entry(report, path.name)["action"] == "would_reap"

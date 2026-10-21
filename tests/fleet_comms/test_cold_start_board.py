@@ -10,6 +10,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from scripts.fleet_comms.cli import EXIT_OK
+from scripts.fleet_comms.cli import main as cli_main
 from scripts.fleet_comms.cold_start_board import (
     MAX_BOARD_BYTES,
     ProbeResult,
@@ -18,6 +20,7 @@ from scripts.fleet_comms.cold_start_board import (
     _probe_inbox,
     _probe_orient_lean,
     build_cold_start_board,
+    cap_data,
     compute_board_status,
     run_fail_open_probe,
 )
@@ -217,6 +220,29 @@ def test_gh_pr_list_success_with_fake_cli(tmp_path: Path, monkeypatch: pytest.Mo
     }
 
 
+def test_size_cap():
+    """Probe data truncates strings >200 chars, lists >5 items, and keeps board <=16KiB."""
+    long_string = "x" * 300
+    long_list = [f"item_{i}" for i in range(20)]
+    sample_data = {
+        "text": long_string,
+        "items": long_list,
+        "nested": {"deep": "y" * 250},
+    }
+
+    capped = cap_data(sample_data, max_str=200, max_list=5)
+
+    assert len(capped["text"]) < 300
+    assert "...[truncated" in capped["text"]
+    assert len(capped["items"]) == 6  # 5 items + 1 truncated marker
+    assert capped["items"][-1] == {"_truncated": "15 items omitted"}
+
+    # Verify overall board JSON output respects 16KiB limit
+    board = build_cold_start_board(stream_id="epic:9999", needle="test")
+    serialized = json.dumps(board, indent=2)
+    assert len(serialized.encode("utf-8")) <= MAX_BOARD_BYTES
+
+
 def test_no_claim_or_write_calls(monkeypatch):
     """Verify that building cold start board makes no session lease claim or write calls."""
     try:
@@ -348,6 +374,18 @@ def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
         resolved = board_mod._resolve_session_streams_db(worktree)
     assert resolved == db
     assert resolved.is_file()
+
+
+def test_cli_cold_start_board(capsys):
+    """CLI subcommand cold-start-board runs cleanly and returns exit code 0."""
+    code = cli_main(["cold-start-board", "--stream-id", "epic:9999", "--agent", "test-agent"])
+    assert code == EXIT_OK
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    assert payload["stream_id"] == "epic:9999"
+    assert payload["agent"] == "test-agent"
+    assert "probes" in payload
 
 
 def test_probe_inbox_legacy_schema_ok(tmp_path: Path, monkeypatch) -> None:
@@ -558,6 +596,24 @@ def test_orient_lean_projects_large_payload(tmp_path: Path, monkeypatch: pytest.
     assert isinstance(capsule_data["plane_mode"], str) and capsule_data["plane_mode"]
     assert board["probes"]["orient_lean"]["status"] == "ok"
     assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES
+
+
+def test_orient_lean_payload_without_issues_key() -> None:
+    """#8737 edge case: orient payload with no issues key still bounds fine."""
+    payload = {"generated_at": "2026-09-24T01:00:00Z", "other": "v" * 30000}
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        return_value=_orient_response(payload),
+    ):
+        probe = _probe_orient_lean()
+
+    assert probe.status == "ok"
+    assert probe.data["api_reachable"] is True
+    orient = probe.data["orient"]
+    assert orient["generated_at"] == "2026-09-24T01:00:00Z"
+    assert orient["issues"] == []
+    assert "other" not in orient
 
 
 def test_board_sheds_bloated_optional_probe_before_fallback(

@@ -35,6 +35,11 @@ def test_resolve_finds_binary_only_under_login_local_bin(tmp_path: Path, monkeyp
     assert shutil.which("cursor-agent", path=minimal_path) is None
 
 
+def test_resolve_returns_none_when_binary_genuinely_absent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: tmp_path / "home"))
+    assert resolve_agent_binary("cursor-agent", path="/usr/bin:/bin") is None
+
+
 def test_prepare_spawn_command_resolves_argv0(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.agent_runtime.runner import _prepare_spawn_command
 

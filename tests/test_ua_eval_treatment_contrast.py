@@ -135,6 +135,13 @@ def test_russification_subset_preserves_complete_pairs_without_mutating_input(co
     assert contrast_pair == before
 
 
+@pytest.mark.parametrize("field", ["pair_id", "sense_id", "distortion_type", "imposed", "norm"])
+def test_russification_subset_refuses_missing_pair_fields(contrast_pair, field) -> None:
+    contrast_pair.pop(field)
+    with pytest.raises(QuarantineError, match="contrast_pair_required"):
+        build_contrastive_subset([contrast_pair], opt_in=True)
+
+
 @pytest.mark.parametrize("side", ["imposed", "norm"])
 @pytest.mark.parametrize("field", ["source_id", "snapshot_id", "locator", "attribution"])
 def test_russification_subset_refuses_incomplete_citations(contrast_pair, side, field) -> None:

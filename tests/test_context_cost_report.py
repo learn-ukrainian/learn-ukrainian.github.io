@@ -206,6 +206,20 @@ def test_totals_separate_categories(tmp_path, harness):
     assert m["totals"]["first_call_cache_creation"] == c.value(11)
 
 
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+def test_reminders_differing_size_and_exclusions(tmp_path, harness):
+    rows = []
+    for kind in c.REMINDERS:
+        rows += [attachment(kind, "initial"), attachment(kind, "é"), attachment(kind, "xyz")]
+    rows += [attachment("hook_success", "ignored"), attachment("unknown-type", "ignored")]
+    m = metrics(tmp_path, harness, rows)
+    expected = sum(
+        len(f'{{"content":"{text}","type":"{kind}"}}'.encode()) for kind in c.REMINDERS for text in ("é", "xyz")
+    )
+    assert amount(m, "reminder_attachments") == (expected if harness == "claude" else "unknown")
+    assert m["counters"]["other"] == (1 if harness == "claude" else 13)
+
+
 def test_codex_negative_delta_and_identical_keys_only(tmp_path):
     def usage(total):
         return {
@@ -330,6 +344,34 @@ def test_error_redaction(tmp_path, capsys):
     with pytest.raises(SystemExit):
         c.main(["report", "--private-url", "https://private.invalid/path"])
     assert "https://" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("command", "shape"),
+    [
+        ("git status --short", "git-status"),
+        ("git diff --stat", "git-diff"),
+        ("git log -1", "git-log"),
+        ("gh pr view 3", "gh-pr-view"),
+        ("gh pr diff 3", "gh-pr-diff"),
+        ("cat /synthetic/file", "file-read"),
+        ("head -n 2 /synthetic/file", "file-read"),
+        ("sed -n '1,2p' /synthetic/file", "file-read"),
+        ("rg needle /synthetic/file", "file-search"),
+        ("pytest test_synthetic.py", "pytest"),
+        ("curl http://localhost/api?secret=yes", "curl-local-api"),
+        ("git status; cat /synthetic/file", "other"),
+        ("git status && gh pr view 3", "other"),
+        ("git statusx", "other"),
+        ("git -C /synthetic -C child status", "other"),
+        ("git -C /synthetic --git-dir /synthetic/repo diff", "other"),
+        ("git --work-tree /synthetic -C child log", "other"),
+        ("git -C -C status", "other"),
+        ("unknown secret", "other"),
+    ],
+)
+def test_closed_command_shapes(command, shape):
+    assert c.command_shape(command, "")[0] == shape
 
 
 def test_js_wrapper_and_help(capsys):

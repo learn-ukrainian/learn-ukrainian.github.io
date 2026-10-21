@@ -193,6 +193,13 @@ class TestLoadLiteraryJsonl:
         chunks = load_literary_jsonl(literary_jsonl)
         assert len(chunks) == 3
 
+    def test_chunk_has_required_fields(self, literary_jsonl):
+        from wiki.sources import load_literary_jsonl
+        chunks = load_literary_jsonl(literary_jsonl)
+        for chunk in chunks:
+            assert "chunk_id" in chunk
+            assert "text" in chunk
+
     def test_empty_lines_skipped(self, tmp_path):
         from wiki.sources import load_literary_jsonl
         path = tmp_path / "empty.jsonl"
@@ -216,6 +223,39 @@ class TestLoadTextbookJsonl:
         assert len(chunks) == 1
 
 
+class TestListTextbookSources:
+    def test_filters_by_grade(self, tmp_path):
+        from wiki.sources import list_textbook_sources
+        # Create grade dirs with files
+        for grade in [5, 6, 7]:
+            d = tmp_path / f"grade-{grade:02d}"
+            d.mkdir()
+            (d / f"{grade}-klas-ukrmova.jsonl").write_text("{}")
+
+        with patch("wiki.sources.TEXTBOOK_CHUNKS_DIR", tmp_path):
+            files = list_textbook_sources(grades=[5, 7])
+        assert len(files) == 2
+        assert all("grade-06" not in str(f) for f in files)
+
+    def test_filters_by_subject(self, tmp_path):
+        from wiki.sources import list_textbook_sources
+        d = tmp_path / "grade-05"
+        d.mkdir()
+        (d / "5-klas-ukrmova-avramenko.jsonl").write_text("{}")
+        (d / "5-klas-istoria-gisem.jsonl").write_text("{}")
+        (d / "5-klas-ukrlit-avramenko.jsonl").write_text("{}")
+
+        with patch("wiki.sources.TEXTBOOK_CHUNKS_DIR", tmp_path):
+            files = list_textbook_sources(subjects=["istoria"])
+        assert len(files) == 1
+        assert "istoria" in files[0].stem
+
+    def test_returns_empty_if_dir_missing(self, tmp_path):
+        from wiki.sources import list_textbook_sources
+        with patch("wiki.sources.TEXTBOOK_CHUNKS_DIR", tmp_path / "nonexistent"):
+            assert list_textbook_sources() == []
+
+
 class TestDiscovery:
     def test_load_discovery(self, discovery_dir):
         from wiki.sources import load_discovery
@@ -224,6 +264,22 @@ class TestDiscovery:
         assert disc is not None
         assert "query_keywords" in disc
         assert len(disc["query_keywords"]) == 6
+
+    def test_load_discovery_missing(self, discovery_dir):
+        from wiki.sources import load_discovery
+        with patch("wiki.sources.CURRICULUM_DIR", discovery_dir):
+            assert load_discovery("folk", "nonexistent") is None
+
+    def test_list_discovery_slugs(self, discovery_dir):
+        from wiki.sources import list_discovery_slugs
+        with patch("wiki.sources.CURRICULUM_DIR", discovery_dir):
+            slugs = list_discovery_slugs("folk")
+        assert slugs == ["dumy-lytsarski", "zahadky"]
+
+    def test_list_discovery_slugs_missing_track(self, discovery_dir):
+        from wiki.sources import list_discovery_slugs
+        with patch("wiki.sources.CURRICULUM_DIR", discovery_dir):
+            assert list_discovery_slugs("nonexistent") == []
 
     def test_list_discovery_slugs_reconciles_new_plans(self, tmp_path):
         """Regression (#2535): a track seeded with SOME discovery files must
@@ -297,6 +353,21 @@ class TestExtractSourceRefs:
         assert refs["textbook"] == ["text1"]
         assert refs["image"] == ["img1"]
 
+    def test_handles_empty_discovery(self):
+        from wiki.sources import extract_source_refs
+        refs = extract_source_refs({})
+        assert refs == {"literary": [], "textbook": [], "image": []}
+
+    def test_skips_empty_chunk_ids(self):
+        from wiki.sources import extract_source_refs
+        disc = {
+            "rag_literary": [{"chunk_id": ""}, {"chunk_id": "valid"}],
+            "rag_chunks": [],
+            "rag_images": [],
+        }
+        refs = extract_source_refs(disc)
+        assert refs["literary"] == ["valid"]
+
 
 class TestFindLiteraryByKeywords:
     def test_matches_by_stem(self, tmp_path):
@@ -313,8 +384,20 @@ class TestFindLiteraryByKeywords:
         assert "ukrlib-shevchenko" in stems
         assert "wave9-shevelov-fonolohiia" in stems
 
+    def test_no_matches(self, tmp_path):
+        from wiki.sources import find_literary_by_keywords
+        (tmp_path / "some-file.jsonl").write_text("{}")
+        with patch("wiki.sources.LITERARY_DIR", tmp_path):
+            assert find_literary_by_keywords(["nonexistent"]) == []
+
 
 class TestGatherDiscoverySources:
+    def test_returns_error_for_missing_slug(self, discovery_dir):
+        from wiki.sources import gather_discovery_sources
+        with patch("wiki.sources.CURRICULUM_DIR", discovery_dir):
+            result = gather_discovery_sources("folk", "nonexistent")
+        assert "error" in result
+
     def test_gathers_inline_chunks(self, discovery_dir):
         from wiki.sources import gather_discovery_sources
         with patch("wiki.sources.CURRICULUM_DIR", discovery_dir), \
@@ -327,6 +410,45 @@ class TestGatherDiscoverySources:
 
 
 # ── Tests: enrichment.py ──────────────────────────────────────────
+
+
+class TestExtractUkrainianKeywords:
+    def test_extracts_cyrillic_words(self):
+        from wiki.enrichment import _extract_ukrainian_keywords
+        sources_info = {
+            "discovery": {
+                "query_keywords": [
+                    "Думи лицарські: Оспівування звитяги",
+                    "Самійло Кішка",
+                    "Heroic dumas — Cossack martial ethos",
+                ],
+            },
+        }
+        keywords = _extract_ukrainian_keywords(sources_info)
+        assert "думи" in keywords
+        assert "лицарські" in keywords
+        assert "звитяги" in keywords
+        assert "самійло" in keywords
+        assert "кішка" in keywords
+        # English words should NOT be present
+        assert "heroic" not in keywords
+        assert "cossack" not in keywords
+
+    def test_skips_short_words(self):
+        from wiki.enrichment import _extract_ukrainian_keywords
+        sources_info = {
+            "discovery": {
+                "query_keywords": ["Це як то так"],
+            },
+        }
+        keywords = _extract_ukrainian_keywords(sources_info)
+        # All words are 3 chars or less
+        assert len(keywords) == 0
+
+    def test_handles_missing_discovery(self):
+        from wiki.enrichment import _extract_ukrainian_keywords
+        assert _extract_ukrainian_keywords({}) == set()
+        assert _extract_ukrainian_keywords({"discovery": {}}) == set()
 
 
 # The `TestLoadRelevantChunks` class used to exercise a now-retired
@@ -346,6 +468,86 @@ class TestLoadFolkMicroGenres:
         assert len(chunks) == 2
         assert "не́бо" in chunks[0]["text"]
         assert chunks[0]["chunk_id"].startswith("folk-micro-")
+
+    def test_loads_prykazky(self, folk_micro_genres_yaml):
+        from wiki.enrichment import _load_folk_micro_genres
+        with patch("wiki.enrichment.PROJECT_ROOT", folk_micro_genres_yaml.parent.parent):
+            chunks = _load_folk_micro_genres("prykazky-ta-pryslivia")
+        assert len(chunks) == 1  # Deduplicated — both keys map to same genre
+        assert "слабіє сила" in chunks[0]["text"]
+
+    def test_no_match_returns_empty(self, folk_micro_genres_yaml):
+        from wiki.enrichment import _load_folk_micro_genres
+        with patch("wiki.enrichment.PROJECT_ROOT", folk_micro_genres_yaml.parent.parent):
+            chunks = _load_folk_micro_genres("dumy-lytsarski")
+        assert chunks == []
+
+    def test_handles_missing_file(self, tmp_path):
+        from wiki.enrichment import _load_folk_micro_genres
+        with patch("wiki.enrichment.PROJECT_ROOT", tmp_path):
+            chunks = _load_folk_micro_genres("zahadky")
+        assert chunks == []
+
+
+class TestEnrichSources:
+    """
+    The empty-query-keywords path: when ``discovery.query_keywords`` is
+    empty, ``enrich_sources`` should skip all FTS5 search branches and
+    only expose the discovery chunks (plus any local/external mappings
+    it can resolve offline). These tests target that invariant — with
+    FTS5 calls guarded off by the empty-keyword condition, no live
+    SQLite fixture is needed.
+    """
+
+    def test_caps_at_80k_chars_for_a1(self):
+        """A1 track cap is 80K chars (see `enrichment.char_caps`)."""
+        from wiki.enrichment import enrich_sources
+        # Huge discovery chunks, no query keywords (so FTS5 branches skipped)
+        big_chunk = {"text": "x" * 50_000, "chunk_id": "big1"}
+        big_chunk2 = {"text": "y" * 50_000, "chunk_id": "big2"}
+        sources_info = {
+            "discovery": {"query_keywords": []},
+            "literary_chunks": [big_chunk, big_chunk2],
+            "textbook_chunks": [],
+            "literary_files": [],
+        }
+        # Track "a1" has the smallest cap (80_000); picking it makes the
+        # assertion tight. Seminar/folk tracks get 150K, which these
+        # 2×50K chunks wouldn't exceed.
+        result = enrich_sources("a1", "test", sources_info)
+        total_chars = sum(len(c.get("text", "")) for c in result)
+        assert total_chars <= 80_001
+
+    def test_includes_discovery_chunks(self):
+        from wiki.enrichment import enrich_sources
+        sources_info = {
+            "discovery": {"query_keywords": []},
+            "literary_chunks": [{"text": "literary text", "chunk_id": "lit1"}],
+            "textbook_chunks": [{"text": "textbook text", "chunk_id": "text1"}],
+            "literary_files": [],
+        }
+        result = enrich_sources("folk", "test", sources_info)
+        # Enrichment may add local/external mapped chunks for the track,
+        # but the two discovery chunks MUST survive — that's the contract.
+        ids = {c["chunk_id"] for c in result}
+        assert "lit1" in ids
+        assert "text1" in ids
+
+    def test_fallback_when_no_sources(self):
+        from wiki.enrichment import enrich_sources
+        sources_info = {
+            "discovery": {"query_keywords": []},
+            "literary_chunks": [],
+            "textbook_chunks": [],
+            "literary_files": [],
+        }
+        result = enrich_sources("folk", "test-slug-without-resources", sources_info)
+        # With empty discovery + empty keywords + a slug that has no
+        # local/external mapping, the fallback ``no-source`` chunk must
+        # be emitted so the compiler has something to chew on.
+        assert any(c.get("chunk_id") == "no-source" for c in result), (
+            f"expected 'no-source' fallback in {[c.get('chunk_id') for c in result]}"
+        )
 
 
 # ── Tests: state.py ───────────────────────────────────────────────
@@ -389,5 +591,72 @@ class TestState:
             progress = load_progress()
             assert "folk/genres/missing-md" not in progress["articles"]
 
+    def test_status_summary(self, tmp_path):
+        from wiki.state import get_status_summary, mark_compiled
+        with patch("wiki.state.WIKI_STATE_DIR", tmp_path / ".state"), \
+             patch("wiki.state.WIKI_DIR", tmp_path):
+            mark_compiled("folk/a", word_count=100)
+            mark_compiled("folk/b", word_count=200)
+            mark_compiled("periods/c", word_count=300)
+
+            summary = get_status_summary()
+            assert summary["total_compiled"] == 3
+            assert summary["total_words"] == 600
+            assert summary["by_domain"]["folk"] == 2
+            assert summary["by_domain"]["periods"] == 1
+
 
 # ── Tests: compile.py (topic generation, domain mapping) ─────────
+
+
+class TestSlugToTopic:
+    def test_uses_discovery_keywords(self):
+        from wiki.compile import _slug_to_topic
+        sources_info = {
+            "discovery": {
+                "query_keywords": [
+                    "Думи лицарські: Оспівування звитяги",
+                    "English fallback",
+                ],
+            },
+        }
+        topic = _slug_to_topic("dumy-lytsarski", "folk", sources_info)
+        assert "Думи лицарські" in topic
+        assert "Український фольклор" in topic
+
+    def test_falls_back_to_slug(self):
+        from wiki.compile import _slug_to_topic
+        topic = _slug_to_topic("dumy-lytsarski", "folk")
+        assert "Dumy Lytsarski" in topic
+        assert "Український фольклор" in topic
+
+    def test_falls_back_when_keywords_english_only(self):
+        from wiki.compile import _slug_to_topic
+        sources_info = {
+            "discovery": {
+                "query_keywords": ["English only topic", "Another English one"],
+            },
+        }
+        topic = _slug_to_topic("some-topic", "hist", sources_info)
+        assert "Some Topic" in topic  # Fell back to slug
+
+
+class TestDomainMapping:
+    def test_folk_domain_map(self):
+        from wiki.compile import _get_domain
+        # Updated for the 27->42 folk SSOT migration (renames/folds + new domain grouping)
+        assert _get_domain("folk", "dumy-nevilnytski-lytsarski") == "folk/genres"
+        assert _get_domain("folk", "koliadky-shchedrivky") == "folk/ritual"
+        assert _get_domain("folk", "kobzarstvo-lirnytstvo") == "folk/genres"
+        assert _get_domain("folk", "prykazky-ta-pryslivia") == "folk/short-forms"
+        assert _get_domain("folk", "narodni-balady") == "folk/lyric"
+        assert _get_domain("folk", "suspilno-pobutovi-pisni") == "folk/lyric"
+
+    def test_other_tracks(self):
+        from wiki.compile import _get_domain
+        assert _get_domain("hist", "some-event") == "periods"
+        assert _get_domain("bio", "shevchenko") == "figures"
+        assert _get_domain("oes", "phonology") == "linguistics/oes"
+        assert _get_domain("ruth", "statutes") == "linguistics/ruthenian"
+        assert _get_domain("lit", "some-work") == "literature/works"
+        assert _get_domain("istorio", "debate") == "historiography"

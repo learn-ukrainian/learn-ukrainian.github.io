@@ -319,3 +319,23 @@ def test_materialization_failure_cleans_staging_directory(
         )
     assert not output_dir.exists()
     assert not list(tmp_path.glob(".private-output.stage-*"))
+
+
+def test_receipt_schema_is_text_free_and_fail_closed() -> None:
+    schema = json.loads(extraction.RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    serialized = json.dumps(schema, ensure_ascii=False)
+
+    assert '"decoded_text"' not in serialized
+    assert '"text_zones"' not in serialized
+    assert schema["properties"]["extraction_scope"]["properties"]["embedded_text_quality_verified"] == {"const": False}
+    assert schema["properties"]["safeguards"]["properties"]["training_eligible"] == {"const": False}
+    assert schema["properties"]["safeguards"]["properties"]["phase3_complete"] == {"const": False}
+    assert schema["properties"]["safeguards"]["properties"]["phase4_blocked"] == {"const": True}
+
+
+def test_receipt_binds_prior_raw_intake_identity() -> None:
+    schema = json.loads(extraction.RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    source_properties = schema["properties"]["source_binding"]["properties"]
+
+    assert source_properties["raw_intake_receipt_file_sha256"]["const"] == extraction.RAW_INTAKE_RECEIPT_FILE_SHA256
+    assert source_properties["raw_intake_receipt_sha256"]["const"] == extraction.RAW_INTAKE_RECEIPT_SHA256

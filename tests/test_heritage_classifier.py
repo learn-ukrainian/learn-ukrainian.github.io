@@ -597,6 +597,13 @@ def test_stale_db_russianism_without_scope_is_unresolved() -> None:
     assert classification_code({"lemma": "другий", "heritage_status": status}) is None
 
 
+def test_stale_severity_alone_never_labels() -> None:
+    for severity in ("russianism_red", "calque_yellow", "treasured"):
+        status = {"classification": "standard", "warning_severity": severity, "attestations": []}
+        assert resolve_usage_label(status)["code"] is None
+        assert classification_code({"lemma": "слово", "heritage_status": status}) is None
+
+
 _SUM20_ATTACHED_HOMONYM = "ДИВА́Н², у, ч., іст. Дорадчий орган у султанській Туреччині."
 _ESUM_HRYD = {
     "source": "esum",
@@ -1076,6 +1083,21 @@ def test_curated_record_without_headword_bound_evidence_is_unresolved(monkeypatc
     # Browse judges the stored record by current proof only; here there is none.
     monkeypatch.setattr(generate_search_index, "_USAGE_SOURCES", {})
     entry = {"lemma": headword, "primary_source": "surzhyk_to_avoid", "heritage_status": status}
+    assert classification_code(entry) is None
+
+
+def test_actual_db_avoid_row_without_bound_evidence_gets_no_browse_code() -> None:
+    """D01: «діюча» has only avoid provenance and a Russian shadow."""
+    status = {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": False,
+        "russian_shadow": True,
+        "vesum_attested": False,
+        "calque_warning": None,
+        "warning_severity": "russianism_red",
+    }
+    entry = {"lemma": "діюча", "primary_source": "surzhyk_to_avoid", "heritage_status": status}
     assert classification_code(entry) is None
 
 

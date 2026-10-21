@@ -63,6 +63,11 @@ def test_u_variant_consciousness_loss(text):
     assert text[findings[0]["start"] : findings[0]["end"]] == findings[0]["form"]
 
 
+@pytest.mark.parametrize("text", ["Хлопчик утратив книжку", "Хлопчик утрачає свідомість свого обов'язку"])
+def test_u_variant_negative_counterparts(text):
+    assert not find_book_calques(text, tokenize(text), MORPHOLOGY)
+
+
 def test_postposed_numeral_in_next_sentence_does_not_erase_duration():
     text = "На протязі години. Дві книжки впали"
     assert len(find_book_calques(text, tokenize(text), MORPHOLOGY)) == 1

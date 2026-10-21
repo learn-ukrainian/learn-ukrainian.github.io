@@ -17,6 +17,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import re
 import shlex
 import shutil
 import subprocess
@@ -88,6 +89,33 @@ def test_round_seven_neighbors_allowed(command):
     assert result.returncode == 0
     assert SENTINEL not in result.stdout
     assert SENTINEL not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command,code",
+    [
+        ("php -r 'echo filter_input(INPUT_ENV, \"HOME\");'", 0),
+        ("php -r 'echo filter_input(INPUT_ENV, \"ARBITRARY_TOKEN\");'", 2),
+        ("python -c 'print(os.popen(\"env\").read())'", 2),
+    ],
+)
+def test_round_seven_literal_decisions_in_process(monkeypatch, capsys, command, code):
+    monkeypatch.setenv("ARBITRARY_TOKEN", SENTINEL)
+    assert _run(monkeypatch, command) == code
+    captured = capsys.readouterr()
+    assert SENTINEL not in captured.out
+    assert SENTINEL not in captured.err
+    assert captured.out == ""
+    assert captured.err.startswith("BLOCKED by guard-secret-print") if code == 2 else captured.err == ""
+
+
+@pytest.mark.parametrize("language,api", [("php", "getenv"), ("lua", "os.getenv")])
+def test_getenv_inventory_rows_deny_without_other_rows(monkeypatch, language, api):
+    row = next(row for row in guard.ENVIRONMENT_API_INVENTORY if row[:2] == (language, api))
+    assert row[2] == "identifier"
+    monkeypatch.setattr(guard, "_ENV_IDENTIFIERS", re.compile("(?:" + row[3] + r")(?![\w$])"))
+    call = "getenv()" if language == "php" else "os.getenv()"
+    assert guard._program_reason(language, call) is not None
 
 
 @pytest.mark.parametrize("command", BENIGN_COMMANDS)
@@ -253,6 +281,14 @@ def test_issue_8896_literal_and_command_braces_allow(monkeypatch, command):
     assert _run(monkeypatch, command) == 0
 
 
+def test_issue_8896_parameter_expansion_stays_one_word():
+    assert guard._tokenize('echo ${x:-$(printf %s "${GH_TOKEN:-x}")}') == [
+        "echo",
+        '${x:-$(printf %s "${GH_TOKEN:-x}")}',
+    ]
+    assert guard._tokenize("echo ${x#y}; cat .env") == ["echo", "${x#y}", ";", "cat", ".env"]
+
+
 @pytest.mark.parametrize(
     "command",
     [
@@ -264,6 +300,13 @@ def test_issue_8896_literal_and_command_braces_allow(monkeypatch, command):
 )
 def test_issue_9088_escaped_double_quote_commands_allow(monkeypatch, command):
     assert _run(monkeypatch, command) == 0
+
+
+def test_issue_9088_double_quote_escapes_keep_quote_preserving_tokens():
+    assert guard._tokenize(r'echo "a \" b"') == ["echo", r'"a \" b"']
+    assert guard._tokenize(r'printf "%s\n" "x\"y"') == ["printf", r'"%s\n"', r'"x\"y"']
+    assert guard._tokenize(r'echo "a \\ \$ \` b"') == ["echo", r'"a \\ \$ \` b"']
+    assert guard._tokenize(r'echo "a \\"') == ["echo", r'"a \\"']
 
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
@@ -328,6 +371,10 @@ def test_issue_9115_substitution_operator_and_comment_boundaries_block_secret_re
     assert _run(monkeypatch, command) == 2
 
 
+def test_issue_9115_escaped_nested_backtick_secret_read_is_visible(monkeypatch):
+    assert _run(monkeypatch, r"echo `echo \`cat .env\``") == 2
+
+
 @pytest.mark.parametrize(
     "command",
     [
@@ -359,6 +406,22 @@ def test_issue_9115_backtick_depth_limit_blocks_secret_hook(monkeypatch):
 def test_issue_9115_malformed_secret_hook_input_blocks(monkeypatch, payload):
     monkeypatch.setattr(sys, "stdin", io.StringIO(payload))
     assert guard.main() == 2
+
+
+@pytest.mark.parametrize(
+    "opener,closer,quoted",
+    [
+        ("<<'EOF'", "EOF", True),
+        ('<<"EOF"', "EOF", True),
+        ("<<EOF", "EOF", False),
+        ("<<-EOF", "\tEOF", False),
+    ],
+)
+def test_issue_9088_standard_heredoc_delimiters(opener, closer, quoted):
+    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF", quoted)]
+    assert guard._strip_heredoc_bodies(f"cat {opener}\ncat .env\n{closer}\necho $GH_TOKEN") == (
+        f"cat {opener}\necho $GH_TOKEN"
+    )
 
 
 @pytest.mark.parametrize(
@@ -414,6 +477,11 @@ def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(monkeypatch):
     assert _run(monkeypatch, command) == 2
 
 
+def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _run(monkeypatch, command) == 2
+
+
 def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)
@@ -449,6 +517,34 @@ def test_issue_8896_nested_shell_quote_concatenation_blocks(monkeypatch):
     for _ in range(4):
         command = f"bash -c {shlex.quote(command)}"
     assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("command", ['source .env; printf %s "$FOO"', '. .env; printf %s "$FOO"'])
+def test_issue_8896_source_data_flow_named_residual(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\nordinary text\nEOF",
+        "cat <<-EOF\n\tordinary text\n\tEOF",
+        "cat <<'EOF'\n$(cat .env)\nEOF",
+        "bash -c 'echo ok'",
+        "while read l; do echo $l; done < notes.txt",
+        "if [ -f x ]; then echo ok; fi",
+        "( cd /tmp && ls )",
+        "{ echo a; echo b; } > /tmp/x",
+        "gh pr view 8896",
+        'eval "$(echo ok)"',
+        "echo '$(cat .env)'",
+    ],
+)
+def test_issue_8896_review_round_two_ordinary_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
 
 
 @pytest.mark.parametrize(
@@ -498,6 +594,27 @@ def test_non_bash_blank_before_hash_keeps_secret_checks_active(monkeypatch, caps
 @pytest.mark.parametrize(
     "command",
     [
+        "\r#; echo $GH_TOKEN",
+        "\v#; cat .env",
+        "\u00a0#; cat .env",
+        "\u2003#; echo $GH_TOKEN",
+        "\f#; cat .env",
+        "\u2028#; echo $GH_TOKEN",
+    ],
+)
+def test_leading_non_bash_blank_does_not_hide_secret_command(monkeypatch, capsys, command):
+    assert _run(monkeypatch, command) == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("blank", [" ", "\t"])
+def test_leading_bash_blank_keeps_comment_inert(monkeypatch, blank):
+    assert _run(monkeypatch, f"{blank}#; echo $GH_TOKEN") == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
         "git status # echo x > AGENTS.md",
         "echo hi # $GH_TOKEN",
         "echo hi\t# $GH_TOKEN",
@@ -511,6 +628,30 @@ def test_non_bash_blank_before_hash_keeps_secret_checks_active(monkeypatch, caps
 )
 def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
     assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git commit -m fix#123 && cat .env",
+        "echo hi#$GH_TOKEN",
+        "echo '#' ; cat .env",
+        "echo hi # <<EOF\ncat .env",
+    ],
+)
+def test_bash_comments_keep_executable_secret_words(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+def test_bash_comment_stripping_keeps_next_line_for_secret_parser():
+    # Parsing newline separators in this hook is tracked separately.
+    assert guard._strip_shell_comments("echo hi # c; cat .env\ncat .env") == "echo hi \ncat .env"
+    assert guard._strip_heredoc_bodies("echo hi # <<EOF\ncat .env") == "echo hi # <<EOF\ncat .env"
+
+
+@pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
+def test_bash_comment_starts_after_control_operator_in_secret_hook(operator):
+    assert guard._strip_shell_comments(f"echo hi{operator}# hidden\ncat .env") == (f"echo hi{operator}\ncat .env")
 
 
 @pytest.mark.parametrize(
@@ -543,6 +684,19 @@ def test_safe_commands_allowed(monkeypatch, cmd):
 
 def test_environment_override_allowed(monkeypatch):
     assert _run(monkeypatch, "env", env_override=True) == 0
+
+
+def test_single_quoted_secret_var_literal_allowed(monkeypatch):
+    assert _run(monkeypatch, "echo '$GH_TOKEN'") == 0
+
+
+def test_unrelated_echo_after_secret_export_allowed(monkeypatch):
+    assert _run(monkeypatch, 'export HCLOUD_TOKEN=placeholder; echo "server=$s"') == 0
+    assert _run(monkeypatch, 'HCLOUD_TOKEN=placeholder echo "server=$s"') == 0
+
+
+def test_echo_of_exported_secret_still_blocked(monkeypatch):
+    assert _run(monkeypatch, 'export HCLOUD_TOKEN=placeholder; echo "$HCLOUD_TOKEN"') == 2
 
 
 @pytest.mark.parametrize(
@@ -638,6 +792,81 @@ def test_audit_shapes(name, shape, secret_exit, other_exit):
 @pytest.mark.parametrize(
     "command",
     [
+        "env | cut -d= -f1",
+        "cat <<'EOF'\n$OPENAI_API_KEY\nEOF",
+        'git commit -m "echo $OPENAI_API_KEY; env | grep OPENAI_API_KEY"',
+        'echo "$HOME"',
+        "echo $PATH",
+        "LEARN_UK_SECRETS_OK=1 env",
+        'git commit -m "document OPENAI_API_KEY handling"',
+        "grep -c API_KEY file",
+        "env -i FOO=bar cmd",
+        "compgen -v",
+        "env > capture.txt",
+        "env | sed 's/=.*//'",
+        "env | awk -F= '{print $1}'",
+        "env | wc -l",
+        "env | cut -d= -f1 | sort | head | tail",
+        "cat .env | jq keys",
+        "cat .env | jq keys_unsorted",
+        "cat .env | jq 'to_entries|map(.key)'",
+        "cat .env | grep -o '^[^=]*'",
+        "python -c 'print(\"OPENAI_API_KEY\")'",
+        "python -c 'import os; print(os.getenv(\"HOME\"))'",
+    ],
+)
+def test_audit_false_positive_controls(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 0
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env | rg ARBITRARY_TOKEN",
+        "env | sed -n '/ARBITRARY_TOKEN/p'",
+        "env | awk '/ARBITRARY_TOKEN/'",
+        "typeset -p ARBITRARY_SECRET",
+        "typeset -p",
+        "declare -px ARBITRARY_PAT",
+        "export -p | head",
+        "env | sort",
+        "env | head",
+        "env | tail",
+        "env | tee dump | cut -d= -f1",
+        "cat /proc/1234/environ",
+        "strings /proc/self/environ",
+        "tr '\\0' '\\n' < /proc/$$/environ",
+        "xargs -0 < /proc/self/environ",
+        "python -c 'print(open(\"/proc/self/environ\").read())'",
+        "cat <<EOF\n${ARBITRARY_SECRET}\nEOF",
+        'cat <<<"$ARBITRARY_PAT"',
+        "python -c 'import os; print(os.getenv(\"ARBITRARY_TOKEN\"))'",
+        "python -c 'import os; k=\"ARBITRARY_SECRET\"; print(os.environ[k])'",
+        "perl -e 'print $ENV{ARBITRARY_TOKEN}'",
+        "ruby -e 'puts ENV[\"ARBITRARY_SECRET\"]'",
+        "node -e 'console.log(process.env[\"ARBITRARY_API_KEY\"])'",
+        "env > /dev/tty",
+        "declare -p > dump; head dump",
+        "env > dump && strings dump",
+        "cat .env | jq '.keys, .[]'",
+        "cat .env | jq 'keys, .[]'",
+        "cat .env | grep -o 'API_KEY=.*'",
+        "env | sed 's/=.*//;p'",
+        "env | awk -F= '{print $0,$1}'",
+        "cat .env | grep -ov KEY",
+    ],
+)
+def test_additional_credential_print_shapes(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
         "export",
         "declare",
         "typeset",
@@ -671,6 +900,34 @@ def test_deny_diagnostic_does_not_echo_candidate_filename():
     ],
 )
 def test_dump_boundaries_across_shell_scopes(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "LEARN_UK_SECRETS_OK=1 cat <<EOF\n$ARBITRARY_TOKEN\nEOF",
+        'LEARN_UK_SECRETS_OK=1 cat <<EOF\n$ARBITRARY_TOKEN\nEOF\necho "$HOME"',
+    ],
+)
+def test_override_on_heredoc_owner(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 0
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env -u HOME | grep ARBITRARY_TOKEN",
+        "env | tee /dev/stdout > dump",
+        "env | grep ARBITRARY_TOKEN > dump",
+        "env > dump | cut -d= -f1; cat dump",
+    ],
+)
+def test_redirect_does_not_hide_unsanitized_pipeline(command):
     result = _subprocess_guard(command)
     assert result.returncode == 2
     assert SENTINEL not in result.stdout + result.stderr
@@ -730,6 +987,30 @@ def test_expanding_heredoc_observes_prior_assignments(prefix, body):
     assert SENTINEL not in result.stdout + result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "python -c 'import os; print(os.environ)'",
+        "python -c 'import os; print([*os.environ.values()])'",
+        "node -e 'console.log(process.env)'",
+        "node -e 'console.log(JSON.stringify(process.env))'",
+        "perl -e 'print %ENV'",
+        "ruby -e 'puts ENV.to_h'",
+        "ruby -e 'puts ENV.to_a'",
+        "ruby -e 'ENV.each { |k,v| puts v }'",
+        "ruby -e 'puts ENV.inspect'",
+        "python -c 'import os; print(os.en''viron)'",
+        "python -c 'import os; print(os.environ[\"ARBITRARY_''TOKEN\"])'",
+        "node -e 'console.log(process.en''v.ARBITRARY_TOKEN)'",
+        "python -c 'import os; print(os.environ.get(\"ARBITRARY_''TOKEN\"))'",
+    ],
+)
+def test_inline_environment_mapping_denied(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
 @pytest.mark.parametrize("path", ["/proc/self/environ", "/proc/$$/environ", "/proc/123/environ", ".env"])
 @pytest.mark.parametrize("reader", ["base64", "xxd", "od -An -tx1", "hexdump -C", "dd if=", "cut -c1-"])
 def test_sensitive_file_operand_denied(path, reader):
@@ -737,6 +1018,11 @@ def test_sensitive_file_operand_denied(path, reader):
     result = _subprocess_guard(reader + separator + path)
     assert result.returncode == 2
     assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("command", ["unknown-reader < .env", "unknown-reader < /proc/self/environ", "wc -L .env"])
+def test_sensitive_file_input_denied(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
 
 
 @pytest.mark.parametrize(
@@ -793,6 +1079,11 @@ def test_structural_dump_rule_neighbors_allowed(monkeypatch, command):
     assert _run(monkeypatch, command) == 0
 
 
+def test_later_substitution_does_not_preempt_earlier_denial(monkeypatch, capsys):
+    assert _run(monkeypatch, 'echo "$ARBITRARY_TOKEN"; echo $(cat .env)') == 2
+    assert "`echo` would print" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize(
     "command",
     [
@@ -802,6 +1093,17 @@ def test_structural_dump_rule_neighbors_allowed(monkeypatch, command):
 )
 def test_nested_input_owner_boundaries_denied(monkeypatch, command):
     assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env > >(wc -c) > capture.txt",
+        "LEARN_UK_SECRETS_OK=1 cat <<'EOF'\nordinary\nEOF\ncat <<EOF\nordinary\nEOF",
+    ],
+)
+def test_nested_input_owner_neighbors_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
 
 
 @pytest.mark.parametrize(
@@ -840,6 +1142,12 @@ def test_interpreter_stdin_variants_denied(consumer, program, redirect):
         f"{consumer} <<< {shlex.quote(program)}" if redirect == "<<<" else f"{consumer} {redirect}\n{program}\nEOF"
     )
     result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+def test_shell_inline_cat_heredoc_current_behavior_denied():
+    result = _subprocess_guard("bash -c 'cat' <<'EOF'\nenv\nEOF")
     assert result.returncode == 2
     assert SENTINEL not in result.stdout + result.stderr
 
@@ -891,6 +1199,31 @@ def test_inline_mapping_flag_variants_denied(consumer, program, flag, attached):
     assert SENTINEL not in result.stdout + result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "ls .env.example",
+        "git diff -- .env.example",
+        "python -c 'print(1)'",
+        "python -c'print(1)'",
+        "node --eval 'console.log(1)'",
+        "file -- .env",
+        "file -- -f .env",
+        "env > >(file -)",
+        'python -c \'import os; print(os["environ"]["PATH"])\'',
+        "python -c 'import os; print(os.environ.get(\"PATH\"))'",
+        "node -e 'console.log(process[\"env\"].PATH)'",
+        'node -e \'console.log(process ["env"] ["PATH"])\'',
+        "ruby -e 'puts ENV.fetch(\"PATH\")'",
+        "ruby -e 'puts ENV.fetch( :PATH )'",
+        "ruby -e 'puts ENV[ :PATH ]'",
+        "perl -E 'say $ENV{PATH}'",
+    ],
+)
+def test_round_four_neighbors_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
 # Each review spelling is a separate subprocess row; no candidate is executed.
 ROUND_FIVE_SPELLINGS = [
     "perl -le 'say %ENV'",
@@ -916,6 +1249,27 @@ ROUND_FIVE_SPELLINGS = [
     "perl -e 'say %::ENV'",
     "perl -e 'say %main::ENV'",
 ]
+
+
+@pytest.mark.parametrize("command", ROUND_FIVE_SPELLINGS)
+def test_round_five_review_spellings_denied(command):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize("redirect", ["<<<", "<<'EOF'", "<<EOF"])
+@pytest.mark.parametrize("command", ROUND_FIVE_SPELLINGS)
+def test_round_five_review_stdin_denied(command, redirect):
+    consumer = command.split()[0]
+    # Drop the inline option, retaining the exact script for stdin inspection.
+    program = command.split("'", 1)[1].rsplit("'", 1)[0]
+    candidate = (
+        f"{consumer} <<< {shlex.quote(program)}" if redirect == "<<<" else f"{consumer} {redirect}\n{program}\nEOF"
+    )
+    result = _subprocess_guard(candidate)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
 
 
 @pytest.mark.parametrize("consumer", ["python3.12", "node", "nodejs", "perl", "ruby", "php", "lua", "deno", "bun"])
@@ -1031,6 +1385,17 @@ def test_round_five_normalization_and_documented_limits(program, code):
     assert result.returncode == code
 
 
+@pytest.mark.parametrize("consumer", ["python", "ruby", "perl", "php", "nodejs", "lua", "deno", "bun"])
+@pytest.mark.parametrize("flag", ["-uc", "-Ic", "-Bc", "-nle", "-ple", "-we", "--unknown-option="])
+@pytest.mark.parametrize(
+    "program,code", [('print(os.environ.get("HOME"))', 0), ("print(os.environ)", 2), ("print(1)", 0)]
+)
+def test_round_five_glued_options_are_opaque(consumer, flag, program, code):
+    result = _subprocess_guard(f"{consumer} {flag}{shlex.quote(program)}")
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code
+
+
 # Independent commands exercise the documented API families, not generated regexes.
 ROUND_SIX_INVENTORY = [
     ("python-environ", "python -c 'import os; print(os.environ)'"),
@@ -1092,6 +1457,43 @@ def test_round_six_inventory_denied(api, command):
     assert result.returncode == 2
 
 
+ROUND_SIX_KEYED = [
+    ("python-environ", "python", 'print(os.environ["{name}"])'),
+    ("python-environb", "python", 'print(os.environb[b"{name}"])'),
+    ("python-getenv", "python", 'print(os.getenv("{name}"))'),
+    ("python-getenvb", "python", 'print(os.getenvb(b"{name}"))'),
+    ("python-posix", "python", 'print(posix.environ[b"{name}"])'),
+    ("node-env", "node", 'console.log(process.env["{name}"])'),
+    ("node-module", "node", 'console.log(require("node:process").env["{name}"])'),
+    ("deno-env", "deno", 'console.log(Deno.env.get("{name}"))'),
+    ("bun-env", "bun", 'console.log(Bun.env["{name}"])'),
+    ("bun-import-meta", "bun", 'console.log(import.meta.env["{name}"])'),
+    ("ruby-env", "ruby", 'puts ENV["{name}"]'),
+    ("perl-env", "perl", "say $ENV{{{name}}}"),
+    ("php-env", "php", 'echo $_ENV["{name}"];'),
+    ("php-server", "php", 'echo $_SERVER["{name}"];'),
+    ("php-getenv", "php", 'echo getenv("{name}");'),
+    ("php-apache", "php", 'echo apache_getenv("{name}");'),
+    ("lua-getenv", "lua", 'print(os.getenv("{name}"))'),
+    ("awk-environ", "awk", 'BEGIN{{print ENVIRON["{name}"]}}'),
+]
+
+
+@pytest.mark.parametrize("api,consumer,program", ROUND_SIX_KEYED, ids=[row[0] for row in ROUND_SIX_KEYED])
+@pytest.mark.parametrize("name,code", [("HOME", 0), ("ARBITRARY_TOKEN", 2)])
+@pytest.mark.parametrize("input_kind", ["argv", "heredoc"])
+def test_round_six_keyed_literal_policy(api, consumer, program, name, code, input_kind):
+    program = program.format(name=name)
+    command = (
+        f"{consumer} --unknown {shlex.quote(program)}"
+        if input_kind == "argv"
+        else f"{consumer} <<'EOF'\n{program}\nEOF"
+    )
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code
+
+
 ROUND_SIX_NEIGHBORS = [
     "python src/env/app.py",
     "node app.js --env production",
@@ -1118,6 +1520,13 @@ ROUND_SIX_NEIGHBORS = [
     "python -c 'print(open(\"env\").read())'",
     "lua -e 'print([[env]])'",
 ]
+
+
+@pytest.mark.parametrize("command", ROUND_SIX_NEIGHBORS)
+def test_round_six_false_positive_neighbors_allowed(command):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 0
 
 
 @pytest.mark.parametrize(
@@ -1156,6 +1565,29 @@ ROUND_SIX_NEIGHBORS = [
 )
 def test_round_six_child_process_api_variants_denied(command):
     result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize(
+    "program",
+    [
+        "os.environb.get(k)",
+        'os.getenvb(b"HO" + b"ME")',
+        "posix.environ[k]",
+        "Deno.env.get(k)",
+        "Bun.env[k]",
+        '$_ENV["HOME"]()',
+        "$_SERVER[$k]",
+        "getenv($k)",
+        "apache_getenv($k)",
+        'getenv("HOME", true)',
+        'apache_getenv("HOME", true)',
+        "ENVIRON[k]",
+    ],
+)
+def test_round_six_nonliteral_lookup_denied(program):
+    result = _subprocess_guard(f"php -r {shlex.quote(program)}")
     assert SENTINEL not in result.stdout + result.stderr
     assert result.returncode == 2
 

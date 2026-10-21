@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import contextlib
 import importlib.util
 import json
 import os
 import subprocess
 import sys
 import tempfile
+import time
 import venv
 from dataclasses import replace
 from pathlib import Path
@@ -120,6 +122,11 @@ def test_no_symlink_component_and_overlap_rejected(guardian: ModuleType, tmp_pat
         guardian._assert_no_symlink_components(link)
     assert guardian._non_overlapping(tmp_path / "one", tmp_path / "two")
     assert not guardian._non_overlapping(tmp_path / "one", tmp_path / "one/child")
+
+
+def test_actual_free_uses_bavail_not_bfree(guardian: ModuleType, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(os, "statvfs", lambda _path: SimpleNamespace(f_bavail=7, f_bfree=99, f_frsize=4096))
+    assert guardian._available_bytes(Path("/unused")) == 7 * 4096
 
 
 def test_permission_drift_is_rejected(guardian: ModuleType, tmp_path: Path) -> None:
@@ -342,6 +349,18 @@ def _seed_ownership_repair_state(
         lock_path.touch(mode=0o600)
         os.chmod(lock_path, 0o600)
     return guardian._digest(stop_raw), privileged_paths
+
+
+def test_normal_actions_require_exact_runtime_owner_context(
+    guardian: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(guardian, tmp_path)
+    monkeypatch.setattr(os, "geteuid", lambda: config.owner_uid + 1)
+    monkeypatch.setattr(os, "getegid", lambda: config.owner_gid)
+    with pytest.raises(guardian.GuardianError, match="runtime_owner_context_mismatch"):
+        guardian._require_runtime_owner_context(config)
 
 
 def test_owner_context_mismatch_stops_before_lock_or_provider(
@@ -779,6 +798,26 @@ def test_explicit_gemini_stop_recovery_preserves_stop_and_authorizes_one_call(
     archived = tmp_path / "backing" / guardian.GEMINI_STOP_RECOVERY_ROOT / stop_sha / "provider-stop.json"
     assert guardian._digest(archived.read_bytes()) == stop_sha
     assert guardian._gemini_stop_recovery(config, mounts=[])["recovered_stop_count"] == 1
+
+
+def test_explicit_gemini_stop_recovery_refuses_unbound_stop(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(
+        guardian,
+        tmp_path,
+        action="recover-gemini-stop",
+        expected_stop_sha256="0" * 64,
+    )
+    output = config.backing_root / guardian.OUTPUT_ROOTS[0]
+    output.mkdir(mode=0o700)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda *_args, **_kwargs: {"stopped": True, "completed_stages": []},
+    )
+    with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
+        guardian._gemini_stop_recovery(config, mounts=[])
 
 
 def test_timeout_retirement_archives_legacy_attempt_without_authorizing_call(
@@ -1503,6 +1542,32 @@ def test_recovery_after_committed_progress_is_content_blind_and_chunk_local(
     assert opaque.read_bytes() == b"opaque-committed-content"
 
 
+def test_recovery_paths_are_chunk_scoped_after_legacy_attempts(
+    guardian: ModuleType, tmp_path: Path
+) -> None:
+    output = tmp_path / "output"
+    attempt_root = output / "clean_label/chunks/packet-0002"
+    first = guardian._recovery_path_candidates(
+        output,
+        attempt_root,
+        lane="clean_label",
+        packet_index=2,
+        chunk_index=1,
+        authorized_attempt=2,
+    )
+    second = guardian._recovery_path_candidates(
+        output,
+        attempt_root,
+        lane="clean_label",
+        packet_index=2,
+        chunk_index=2,
+        authorized_attempt=2,
+    )
+    assert first != second
+    assert first == (attempt_root / "provider-recovery-chunk-01-attempt-2.json",)
+    assert second == (attempt_root / "provider-recovery-chunk-02-attempt-2.json",)
+
+
 def test_stopped_coordinates_ignore_identical_terminal_from_committed_chunk(
     guardian: ModuleType, tmp_path: Path
 ) -> None:
@@ -1646,6 +1711,45 @@ def test_provider_call_count_rejects_orphan_terminal(
     )
     with pytest.raises(guardian.GuardianError, match="stop_recovery_state_drift"):
         guardian._provider_call_count(config, output)
+
+
+def test_occurrence_bound_stop_hash_changes_with_attempt_and_binds_terminal(
+    guardian: ModuleType, tmp_path: Path
+) -> None:
+    base = {
+        "schema_version": "phase3_cycle007_gemini_provider_stop_v2",
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": "clean_label",
+        "terminal_packet_index": 1,
+        "failure_code": "provider_status_timeout",
+        "new_provider_calls_allowed": False,
+        "exact_model": "Gemini 3.6 Flash (High)",
+        "model_family": "google",
+        "harness": "agy",
+        "text_free": True,
+        "failure_stage": "provider_return",
+        "provider_call_started": True,
+        "executable_binding_result": "verified",
+        "provider_return_code": "nonzero",
+        "raw_byte_count": 0,
+        "raw_sha256": guardian._digest(b""),
+        "log_byte_count": 0,
+        "log_sha256": guardian._digest(b""),
+        "init_count": 0,
+        "result_count": 0,
+        "first_event_kind": "empty",
+        "last_event_kind": "empty",
+        "model_binding_result": "not_inspected",
+        "result_status": "not_inspected",
+        "structured_output_type": "not_inspected",
+        "chunk_index": 1,
+        "terminal_marker_sha256": "c" * 64,
+    }
+    third = base | {"attempt": 3}
+    fourth = base | {"attempt": 4}
+    assert guardian._digest(guardian._canonical(third)) != guardian._digest(
+        guardian._canonical(fourth)
+    )
 
 
 def test_legacy_unbound_stop_is_refused_after_installed_attempt_three(
@@ -1955,6 +2059,18 @@ def test_wrong_existing_mount_is_refused_without_mount_command(
     assert not called
 
 
+def test_bind_mount_timeout_has_fixed_failure_code(
+    guardian: ModuleType, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        guardian.subprocess,
+        "run",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(subprocess.TimeoutExpired("mount", 30)),
+    )
+    with pytest.raises(guardian.GuardianError, match="bind_mount_timeout"):
+        guardian._bind_mount(Path("/source"), Path("/target"), ("/usr/bin/mount",))
+
+
 def test_bind_mount_supports_explicit_non_shell_prefix(
     guardian: ModuleType, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1997,6 +2113,30 @@ def test_mount_command_rejects_ambiguous_or_path_discovered_argv(
 ) -> None:
     with pytest.raises(guardian.GuardianError, match="invalid_mount_command"):
         guardian._validate_mount_command(command)
+
+
+def test_mount_cli_builds_exact_noninteractive_sudo_argv(guardian: ModuleType) -> None:
+    args = guardian._parser().parse_args(
+        [
+            "prepare",
+            "--package", "/package",
+            "--backing-root", "/backing",
+            "--guardian-lock", "/locks/guardian",
+            "--controller-lock", "/locks/controller",
+            "--execution-lock", "/locks/execution",
+            "--controller", "/controller",
+            "--owner-uid", "1",
+            "--owner-gid", "1",
+            "--min-free-bytes", "1",
+            "--mount-command", "/usr/bin/mount",
+            "--sudo-command", "/usr/bin/sudo",
+        ]
+    )
+    assert guardian._config(args).mount_command == (
+        "/usr/bin/sudo",
+        "-n",
+        "/usr/bin/mount",
+    )
 
 
 def test_duplicate_guardian_lock_is_nonblocking(guardian: ModuleType, tmp_path: Path) -> None:
@@ -2125,6 +2265,17 @@ def test_controller_accepts_only_bounded_text_free_runner_failure_codes(
     assert controller._runner_failure_code(stdout) == expected
 
 
+def test_controller_stage_subprocess_capture_is_bounded(controller: ModuleType) -> None:
+    command = [sys.executable, "-c", "import sys; sys.stdout.write('x' * 8192); raise SystemExit(2)"]
+    return_code, status = controller._run_stage_subprocess(
+        command,
+        executable=Path(sys.executable).resolve(),
+        pass_fds=(),
+    )
+    assert return_code == 2
+    assert len(status) == controller.MAX_RUNNER_STATUS_BYTES + 1
+
+
 def test_controller_discards_successful_stage_stdout(controller: ModuleType) -> None:
     command = [sys.executable, "-c", "print('ignored')"]
     return_code, status = controller._run_stage_subprocess(
@@ -2134,6 +2285,32 @@ def test_controller_discards_successful_stage_stdout(controller: ModuleType) -> 
     )
     assert return_code == 0
     assert status == b""
+
+
+def test_controller_does_not_wait_for_grandchild_inherited_stdout(
+    controller: ModuleType, tmp_path: Path
+) -> None:
+    pid_file = tmp_path / "grandchild.pid"
+    child = (
+        "import pathlib,subprocess,sys; "
+        "p=subprocess.Popen([sys.executable,'-c',"
+        "\"import os; b=b'x'*65536; exec('while True:\\\\n os.write(1,b)')\"]); "
+        f"pathlib.Path({str(pid_file)!r}).write_text(str(p.pid)); "
+        "raise SystemExit(2)"
+    )
+    started = time.monotonic()
+    try:
+        return_code, _status = controller._run_stage_subprocess(
+            [sys.executable, "-c", child],
+            executable=Path(sys.executable).resolve(),
+            pass_fds=(),
+        )
+        assert return_code == 2
+        assert time.monotonic() - started < 5
+    finally:
+        if pid_file.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(pid_file.read_text(encoding="utf-8")), 15)
 
 
 def test_controller_propagates_safe_runner_failure_code(
@@ -2577,6 +2754,18 @@ def test_plan_uses_status_only_and_reports_next_stage(
     assert calls == [("status", None)]
 
 
+def test_controller_command_forwards_explicit_provider_executables(
+    guardian: ModuleType, tmp_path: Path
+) -> None:
+    config = _config(guardian, tmp_path, action="status")
+    command = guardian._controller_command(config, "status")
+
+    agy_index = command.index("--agy-executable")
+    grok_index = command.index("--grok-executable")
+    assert command[agy_index + 1] == str(config.agy_executable)
+    assert command[grok_index + 1] == str(config.grok_executable)
+
+
 def test_controller_status_drops_ambient_execution_descriptor(
     guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2596,6 +2785,19 @@ def test_controller_status_drops_ambient_execution_descriptor(
     monkeypatch.setattr(guardian.subprocess, "run", run)
     guardian._invoke_controller(config, "status")
     assert guardian.EXECUTION_LOCK_FD_ENV not in captured_environment
+
+
+def test_controller_timeout_has_fixed_failure_code(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="status")
+    monkeypatch.setattr(
+        guardian.subprocess,
+        "run",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(subprocess.TimeoutExpired("controller", 300)),
+    )
+    with pytest.raises(guardian.GuardianError, match="controller_timeout"):
+        guardian._invoke_controller(config, "status")
 
 
 def test_resume_stops_at_requested_boundary(
@@ -2814,3 +3016,44 @@ def test_preflight_receipt_rotation_is_blocked_after_any_stage_seal(
     )
     with pytest.raises(controller.ControllerError, match="preflight_rotation_blocked"):
         controller._install_preflight_receipts(package, successor, canary, canary)
+
+
+def test_prepare_installs_preflight_under_execution_lock(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="prepare")
+    execution = _temporary_file()
+    calls: list[tuple[str, int | None]] = []
+    monkeypatch.setattr(guardian, "_lock", lambda *_args: execution)
+    monkeypatch.setattr(
+        guardian,
+        "_invoke_controller",
+        lambda _config, action, **kwargs: calls.append((action, kwargs.get("execution_fd")))
+        or {"ok": True, "text_free": True},
+    )
+    monkeypatch.setattr(guardian, "_available_bytes", lambda _path: 123)
+    result = guardian._prepare(config, [], provider_bindings=True)
+    assert result["preflight_ready"] is True
+    assert calls == [("preflight", calls[0][1])]
+    assert isinstance(calls[0][1], int)
+
+
+def test_prepare_without_bindings_is_provider_free(
+    guardian: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = _config(guardian, tmp_path, action="prepare")
+    monkeypatch.setattr(guardian, "_available_bytes", lambda _path: 123)
+    result = guardian._prepare(config, [], provider_bindings=False)
+    assert result["preflight_ready"] is False
+
+
+def test_cli_help_is_available() -> None:
+    completed = subprocess.run(
+        [os.sys.executable, str(GUARDIAN_PATH), "--help"],
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert completed.returncode == 0
+    assert b"--execution-lock" in completed.stdout
+    assert b"--through" in completed.stdout

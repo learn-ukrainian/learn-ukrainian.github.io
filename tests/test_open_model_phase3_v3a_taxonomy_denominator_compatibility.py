@@ -145,6 +145,17 @@ def test_missing_source_or_operation_and_inferred_grant_are_rejected() -> None:
     _reject_main(value, "inferred|rights evidence")
 
 
+def test_publication_scope_cannot_turn_metadata_into_body_permission() -> None:
+    value = _main()
+    publication = next(
+        item
+        for item in value["rights_capabilities"]["source_unit_rows"][0]["operations"]
+        if item["operation"] == "publish_text_or_metadata"
+    )
+    publication.pop("scope_qualifier")
+    _reject_main(value, "publication scope conflation|rights evidence")
+
+
 def test_compatibility_omission_and_parent_double_count_are_rejected() -> None:
     value = _matrix()
     value["rows"].pop()

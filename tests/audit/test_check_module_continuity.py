@@ -35,6 +35,30 @@ def test_repeated_concept_without_bridge_is_reported() -> None:
     ]
 
 
+def test_repeated_concept_with_bridge_is_not_reported() -> None:
+    modules = [
+        Module(1, "m1", Path("m1"), "one vowel sound = one склад"),
+        Module(
+            2,
+            "m2",
+            Path("m2"),
+            "You already practiced counting склади in Module 1. "
+            "Now use that skill to read longer words.",
+        ),
+    ]
+
+    assert find_unsignposted_repetition(modules, {"склад": ("склад", "склади")}) == []
+
+
+def test_boundary_safe_matching_avoids_substring_false_positive() -> None:
+    modules = [
+        Module(1, "m1", Path("m1"), "A голосний is a vowel sound."),
+        Module(2, "m2", Path("m2"), "A приголосний is a consonant sound."),
+    ]
+
+    assert find_unsignposted_repetition(modules, {"голосний": ("голосний",)}) == []
+
+
 def test_module_order_sorts_by_num_and_supports_single_quotes(tmp_path: Path) -> None:
     data_path = tmp_path / "site" / "src" / "data"
     data_path.mkdir(parents=True)

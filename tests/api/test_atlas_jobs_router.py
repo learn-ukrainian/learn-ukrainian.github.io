@@ -147,6 +147,18 @@ def test_api_rejects_path_injection_job_id(
     assert list(tmp_path.iterdir()) == []
 
 
+def test_load_and_results_not_swallowed_by_job_id(
+    _isolate: atlas_job.FakeHostAdapter,
+) -> None:
+    load_resp = client.get("/api/atlas-jobs/load")
+    assert load_resp.status_code == 200
+    assert load_resp.json()["schema"] == "atlas-jobs-load.v1"
+
+    results_resp = client.get("/api/atlas-jobs/results")
+    assert results_resp.status_code == 200
+    assert "results" in results_resp.json()
+
+
 def test_load_endpoint_shape_and_cache(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:
@@ -351,6 +363,34 @@ def test_failed_probe_backoff_blocks_ordinary_read(
 
     try:
         asyncio.run(exercise())
+    finally:
+        router_mod.clear_host_load_cache()
+
+
+def test_load_refresh_starts_inside_fresh_window(
+    _isolate: atlas_job.FakeHostAdapter,
+) -> None:
+    router_mod.clear_host_load_cache()
+    router_mod.set_host_load_cache(
+        "atlas-runner",
+        _isolate.host_load("atlas-runner"),
+        mono_ts=time.monotonic() - 20.0,
+    )
+
+    async def exercise() -> tuple[dict, dict]:
+        first = router_mod._get_host_load_entry("atlas-runner")
+        task = router_mod._HOST_LOAD_TASKS.get("atlas-runner")
+        assert task is not None
+        await asyncio.shield(task)
+        second = router_mod._get_host_load_entry("atlas-runner")
+        return first, second
+
+    try:
+        first, second = asyncio.run(exercise())
+        assert first["status"] == "fresh"
+        assert 19.0 <= first["age_seconds"] <= 22.0
+        assert second["status"] == "fresh"
+        assert second["age_seconds"] < 5.0
     finally:
         router_mod.clear_host_load_cache()
 
@@ -637,3 +677,47 @@ def test_results_skips_corrupt_and_non_object_receipts(
     assert data["results"][0]["host"] == "atlas-runner"
     assert data["results"][0]["targets"] == 20
     assert data["results"][0]["filled_translation"] == 18
+
+
+def test_results_and_receipt_resolve_via_monitor_context(
+    tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.api.monitor_context import fixture_context
+
+    monkeypatch.delenv("ATLAS_JOB_REGISTRY", raising=False)
+    ctx_root = tmp_path / "custom_ctx"
+    registry_dir = ctx_root / "batch_state" / "atlas-jobs"
+    registry_dir.mkdir(parents=True)
+
+    receipt = {
+        "schema": "atlas-job-result.v1",
+        "id": "job-ctx",
+        "host": "atlas-runner",
+        "kind": "reenrich",
+        "state": "succeeded",
+        "closed_at": "2026-08-17T15:00:00Z",
+        "issue": 7402,
+        "denominator": 1,
+        "delivery": "ok",
+        "pulled": True,
+        "summary": {
+            "targets": 10,
+            "filled_translation": 10,
+            "circuit_breaker_tripped": False,
+        },
+    }
+    (registry_dir / "job-ctx.result.json").write_text(json.dumps(receipt), encoding="utf-8")
+
+    fctx = fixture_context(ctx_root)
+    monkeypatch.setattr(app.state, "ctx", fctx)
+
+    resp = client.get("/api/atlas-jobs/results")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["count"] == 1
+    assert data["results"][0]["id"] == "job-ctx"
+    assert data["results"][0]["targets"] == 10
+
+    health = client.get("/api/atlas-jobs/health")
+    assert health.status_code == 200
+    assert health.json()["registry"] == "atlas-jobs-fixture"

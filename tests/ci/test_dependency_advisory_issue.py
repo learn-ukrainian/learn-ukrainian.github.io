@@ -106,6 +106,12 @@ def test_collect_npm_findings_fixed_version() -> None:
     assert minimist["ecosystem"] == "npm (site)"
 
 
+def test_collect_npm_findings_honors_suppressions() -> None:
+    findings = helper.collect_npm_findings(_npm_vulns(), ["GHSA-xvch-5gv4-984h"], target="root")
+    # Suppressing the minimist advisory also clears the transitive chain on it.
+    assert findings == []
+
+
 def test_build_issue_body_escapes_pipes_and_newlines() -> None:
     body = helper.build_issue_body(
         [
@@ -210,11 +216,24 @@ def test_run_json_command_unparseable_json_raises(tmp_path: Path) -> None:
             helper._run_json_command(["pip_audit"], cwd=tmp_path, timeout=1, label="pip-audit")
 
 
+def test_run_json_command_non_object_json_raises(tmp_path: Path) -> None:
+    with patch.object(helper.subprocess, "run", return_value=_completed(0, "[1, 2]")):
+        with pytest.raises(RuntimeError, match=r"unexpected report format"):
+            helper._run_json_command(["npm"], cwd=tmp_path, timeout=1, label="npm audit (root)")
+
+
 def test_run_collect_npm_error_payload_raises(tmp_path: Path) -> None:
     repo = _fake_repo(tmp_path / "repo")
     npm = _completed(1, json.dumps({"error": {"summary": "audit endpoint exploded"}}))
     with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, npm)):
         with pytest.raises(RuntimeError, match=r"npm audit reported an error"):
+            helper.run_collect(repo)
+
+
+def test_run_collect_missing_lockfile_raises(tmp_path: Path) -> None:
+    repo = _fake_repo(tmp_path / "repo", site_lock=False)
+    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, _CLEAN_NPM)):
+        with pytest.raises(RuntimeError, match=r"package\.json or package-lock\.json missing"):
             helper.run_collect(repo)
 
 
@@ -254,6 +273,20 @@ def test_plan_writes_body_and_outputs_for_findings(tmp_path: Path, monkeypatch, 
     assert "action=update" in written
     assert "issue_number=42" in written
     assert "action=update" in capsys.readouterr().out
+
+
+def test_plan_close_action_on_empty_findings(tmp_path: Path, monkeypatch) -> None:
+    findings_file = tmp_path / "findings.json"
+    findings_file.write_text(json.dumps({"findings": []}), encoding="utf-8")
+    body_out = tmp_path / "body.md"
+    github_output = tmp_path / "github_output"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(github_output))
+    rc = helper.main(
+        ["plan", "--findings", str(findings_file), "--issue-number", "42", "--body-out", str(body_out)]
+    )
+    assert rc == 0
+    assert "action=close" in github_output.read_text(encoding="utf-8")
+    assert not body_out.exists()
 
 
 def test_plan_rejects_malformed_findings_file(tmp_path: Path, monkeypatch) -> None:

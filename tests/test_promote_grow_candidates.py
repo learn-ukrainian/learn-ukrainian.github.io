@@ -62,6 +62,45 @@ def test_manifest_entry_retains_source_inventory_provenance() -> None:
     assert entry["course_usage"] == []
 
 
+def test_manifest_entry_prefers_curated_candidate_gloss_over_meaning() -> None:
+    entry = promote.manifest_entry_from_candidate(
+        _candidate(
+            lemma="ананас",
+            gloss="pineapple",
+            enrichment={
+                "meaning": {
+                    "definitions": [{"text": "dictionary definition should not win"}]
+                }
+            },
+        )
+    )
+
+    assert entry["gloss"] == "pineapple"
+
+
+def test_manifest_entry_curates_english_pryjnyatyi_gloss() -> None:
+    entry = promote.manifest_entry_from_candidate(
+        _candidate(
+            lemma="прийнятий",
+            pos="adj",
+            gloss="Дієпр. пас. мин. ч. до прийня́ти.",
+            enrichment={
+                "meaning": {
+                    "definitions": ["Дієпр. пас. мин. ч. до прийня́ти."],
+                    "source": "fixture dictionary",
+                },
+                "sources": ["fixture dictionary"],
+            },
+        )
+    )
+
+    assert entry["gloss"] == "accepted; admitted; adopted"
+    assert entry["enrichment"]["translation"] == {
+        "en": ["accepted", "admitted", "adopted"],
+        "source": "Atlas learner curation (#5918)",
+    }
+
+
 def test_promote_dry_run_rejects_cyrillic_only_top_level_gloss(tmp_path: Path) -> None:
     manifest_path = _write_manifest(tmp_path, [_entry("авто")])
     before = manifest_path.read_text(encoding="utf-8")
@@ -519,6 +558,20 @@ def test_dry_run_writes_nothing(tmp_path: Path) -> None:
     assert manifest_path.read_text(encoding="utf-8") == before
     assert not needs_review_path.exists()
     assert not fingerprint_path.exists()
+
+
+def test_missing_candidates_file_is_clean_noop(tmp_path: Path) -> None:
+    result = promote.promote_grow_candidates(
+        candidates_path=tmp_path / "missing.json",
+        manifest_path=tmp_path / "unused-manifest.json",
+        write=True,
+        self_check=lambda _path: 2,
+        fingerprint_writer=_fingerprint_writer,
+    )
+
+    assert result.candidates_found is False
+    assert result.promoted == ()
+    assert "no candidates file" in promote.format_summary(result)
 
 
 def _candidate(lemma: str = "мама", **overrides: object) -> dict[str, object]:

@@ -30,6 +30,24 @@ from audit.checks.yaml_schema_validation import (
 
 
 @pytest.fixture
+def valid_plan_data():
+    return {
+        "module": "01-test-module",
+        "level": "b1",
+        "sequence": 1,
+        "version": "2.0",
+        "title": "Test Module",
+        "focus": "grammar",
+        "pedagogy": "TTT",
+        "objectives": ["Learn something"],
+        "content_outline": [
+            {"section": "Introduction", "words": 500}
+        ],
+        "word_target": 3000,
+    }
+
+
+@pytest.fixture
 def valid_meta_data():
     return {
         "id": "b1-01",
@@ -91,6 +109,22 @@ def _write_yaml(tmp_dir: Path, subdir: str, filename: str, data) -> Path:
 
 class TestPlanYamlSchemaCheck:
 
+    def test_valid_plan_no_errors(self, valid_plan_data, tmp_path):
+        plan_dir = tmp_path / "plans" / "b1"
+        plan_dir.mkdir(parents=True)
+        plan_path = plan_dir / "test-module.yaml"
+        with open(plan_path, "w") as f:
+            yaml.dump(valid_plan_data, f, allow_unicode=True)
+        violations = check_plan_yaml_schema(str(plan_path), "b1", 1)
+        assert all(v["severity"] != "error" for v in violations)
+
+    def test_missing_word_target(self, valid_plan_data, tmp_path):
+        del valid_plan_data["word_target"]
+        path = _write_yaml(tmp_path, "plans/b1", "test.yaml", valid_plan_data)
+        violations = check_plan_yaml_schema(str(path), "b1", 1)
+        error_violations = [v for v in violations if v["severity"] == "error"]
+        assert len(error_violations) > 0
+
     @pytest.mark.repo_wide
     def test_a2_plans_match_module_schema(self):
         plans_dir = (
@@ -131,6 +165,14 @@ class TestMetaYamlSchemaCheck:
         violations = check_meta_yaml_schema(str(meta_path), "b1", 1)
         assert all(v["severity"] != "error" for v in violations)
 
+    def test_missing_required_fields(self, valid_meta_data, tmp_path):
+        del valid_meta_data["id"]
+        del valid_meta_data["title"]
+        path = _write_yaml(tmp_path, "meta", "test.yaml", valid_meta_data)
+        violations = check_meta_yaml_schema(str(path), "b1", 1)
+        error_violations = [v for v in violations if v["severity"] == "error"]
+        assert len(error_violations) > 0
+
 
 # =============================================================================
 # VOCABULARY YAML SCHEMA AUDIT CHECK TESTS
@@ -143,3 +185,28 @@ class TestVocabularyYamlSchemaCheck:
         path = _write_yaml(tmp_path, "vocabulary", "test.yaml", valid_vocab_data)
         violations = check_vocabulary_yaml_schema(str(path), "b1", 1)
         assert all(v["severity"] != "error" for v in violations)
+
+    def test_missing_lemma_fails(self, valid_vocab_data, tmp_path):
+        del valid_vocab_data["items"][0]["lemma"]
+        path = _write_yaml(tmp_path, "vocabulary", "test.yaml", valid_vocab_data)
+        violations = check_vocabulary_yaml_schema(str(path), "b1", 1)
+        error_violations = [v for v in violations if v["severity"] == "error"]
+        assert len(error_violations) > 0
+
+    def test_empty_items_fails(self, valid_vocab_data, tmp_path):
+        valid_vocab_data["items"] = []
+        path = _write_yaml(tmp_path, "vocabulary", "test.yaml", valid_vocab_data)
+        violations = check_vocabulary_yaml_schema(str(path), "b1", 1)
+        assert len(violations) > 0
+
+    def test_minimal_vocab_item(self, tmp_path):
+        """Vocab item with only required fields (no ipa, no gender)."""
+        data = {
+            "items": [
+                {"lemma": "говорити", "translation": "to speak", "pos": "verb"}
+            ]
+        }
+        path = _write_yaml(tmp_path, "vocabulary", "test.yaml", data)
+        violations = check_vocabulary_yaml_schema(str(path), "b1", 1)
+        error_violations = [v for v in violations if v["severity"] == "error"]
+        assert error_violations == []

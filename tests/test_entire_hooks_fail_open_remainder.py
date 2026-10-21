@@ -85,6 +85,44 @@ def _write_inbox_fixture(fixtures: Path, recipient: str, preview: str, *, messag
     )
 
 
+def test_claude_entire_hooks_manifest_structure() -> None:
+    """Claude settings should have 7 composed Entire hooks without exec and ending with || true."""
+    hooks = _claude_entire_hooks()
+    assert len(hooks) == 7
+
+    verbs = {
+        re.search(r"hooks claude-code ([a-z-]+)", hook["command"]).group(1)
+        for hook in hooks
+    }
+    assert verbs == {
+        "session-start",
+        "pre-task",
+        "post-task",
+        "post-todo",
+        "user-prompt-submit",
+        "stop",
+        "session-end",
+    }
+    # Entire 0.11.5's Claude Code template gives stop and post-task 120s, the rest 30s.
+    assert {
+        re.search(r"hooks claude-code ([a-z-]+)", hook["command"]).group(1): hook["timeout"]
+        for hook in hooks
+    } == {
+        "session-start": 30,
+        "pre-task": 30,
+        "post-task": 120,
+        "post-todo": 30,
+        "user-prompt-submit": 30,
+        "stop": 120,
+        "session-end": 30,
+    }
+    assert all("if ! command -v entire" in hook["command"] for hook in hooks)
+    assert all("exec entire" not in hook["command"] for hook in hooks)
+    # Capture runs only behind the guard (version + private route), which always exits 0.
+    assert all("/scripts/entire/capture_guard.sh" in hook["command"] for hook in hooks)
+    assert not any("entire hooks claude-code" in hook["command"] for hook in hooks)
+
+
 def test_claude_entire_hooks_fail_open_when_cli_errors(tmp_path: Path) -> None:
     """Every Claude Entire hook command exits 0 when a fake entire on PATH exits 1."""
     fake_bin = tmp_path / "bin"
@@ -242,6 +280,45 @@ def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tm
     ]
 
 
+def test_inbox_hook_defaults_to_claude_recipient(tmp_path: Path) -> None:
+    """When LEARN_UK_HOOK_RECIPIENT is unset, inbox hook defaults to claude."""
+    fixtures, args_log = _make_fake_inbox_python(tmp_path)
+    _write_inbox_fixture(fixtures, "claude", "claude-default payload")
+
+    env = _hook_env()
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "FAKE_INBOX_FIXTURES": str(fixtures),
+            "FAKE_INBOX_ARGS": str(args_log),
+        }
+    )
+    env.pop("LEARN_UK_HOOK_RECIPIENT", None)
+    env.pop("LEARN_UK_HOOK_SESSION_ID", None)
+    env.pop("LEARN_UKRAINIAN_SESSION_ID", None)
+    env.pop("CODEX_THREAD_ID", None)
+    env.pop("CODEX_SESSION_ID", None)
+
+    completed = subprocess.run(
+        ["bash", str(INBOX_HOOK)],
+        input="{}",
+        text=True,
+        capture_output=True,
+        check=False,
+        env=env,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    output = json.loads(completed.stdout)
+    context = output["hookSpecificOutput"]["additionalContext"]
+
+    assert "CLAUDE INBOX: 1 unread message" in context
+    assert ".venv/bin/python -m scripts.ai_agent_bridge inbox --for claude" in context
+    assert "mcp__message-broker" not in context
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for claude"
+
+
 def test_inbox_hook_fails_open_when_project_interpreter_is_missing(tmp_path: Path) -> None:
     env = _hook_env()
     env.update({"CLAUDE_PROJECT_DIR": str(tmp_path), "LEARN_UK_HOOK_RECIPIENT": "codex"})
@@ -338,6 +415,28 @@ def test_inbox_hook_surfaces_at_most_five_cli_previews(tmp_path: Path) -> None:
     assert context.count("[unread]") == 5
 
 
+def test_stamp_pytest_hook_scoped_to_bash_matcher() -> None:
+    """stamp-pytest only inspects a Bash command; it must not fire for other tools (#8529)."""
+    settings = json.loads(CLAUDE_SETTINGS.read_text(encoding="utf-8"))
+    for event in ("PostToolUse", "PostToolUseFailure"):
+        entries = [
+            entry
+            for entry in settings["hooks"][event]
+            if any("stamp-pytest" in hook.get("command", "") for hook in entry.get("hooks", []))
+        ]
+        assert len(entries) == 1, f"{event}: expected exactly one stamp-pytest entry"
+        assert entries[0].get("matcher") == "Bash", f"{event}: stamp-pytest must be Bash-scoped"
+
+    post_unscoped = [
+        entry for entry in settings["hooks"]["PostToolUse"] if "matcher" not in entry
+    ]
+    unscoped_commands = [
+        hook["command"] for entry in post_unscoped for hook in entry.get("hooks", [])
+    ]
+    assert any("tool-timing.sh" in command for command in unscoped_commands)
+    assert any("context-monitor.sh" in command for command in unscoped_commands)
+
+
 def _make_broker_db(path: Path, rows: list[tuple[str, int, int]]) -> None:
     """Create a broker-shaped messages table: (to_llm, acknowledged, consumed_by_live_driver)."""
     conn = sqlite3.connect(path)
@@ -369,6 +468,50 @@ def _make_broker_db(path: Path, rows: list[tuple[str, int, int]]) -> None:
         conn.commit()
     finally:
         conn.close()
+
+
+def _make_failing_python(tmp_path: Path) -> Path:
+    """A project interpreter that proves the bridge was never started."""
+    python = tmp_path / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True, exist_ok=True)
+    log = tmp_path / "python-invocations.log"
+    python.write_text(
+        "#!/bin/sh\n"
+        "printf '%s\\n' \"$*\" >> \"" + str(log) + "\"\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    python.chmod(0o755)
+    return log
+
+
+@pytest.mark.skipif(shutil.which("sqlite3") is None, reason="fast path uses the sqlite3 CLI")
+def test_inbox_hook_empty_inbox_fast_path_never_starts_bridge(tmp_path: Path) -> None:
+    db_path = tmp_path / "messages.db"
+    _make_broker_db(db_path, [("codex", 1, 1), ("claude", 0, 0)])
+    python_log = _make_failing_python(tmp_path)
+    env = _hook_env()
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "LEARN_UK_HOOK_RECIPIENT": "codex",
+            "AB_DB_PATH": str(db_path),
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", str(INBOX_HOOK)],
+        input="{}",
+        text=True,
+        capture_output=True,
+        check=False,
+        env=env,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout == ""
+    assert not python_log.exists()
 
 
 @pytest.mark.skipif(shutil.which("sqlite3") is None, reason="fast path uses the sqlite3 CLI")

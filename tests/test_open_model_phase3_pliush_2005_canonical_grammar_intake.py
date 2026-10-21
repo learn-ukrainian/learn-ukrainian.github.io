@@ -19,6 +19,13 @@ PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
 
 
+def _drive_staging() -> Path | None:
+    try:
+        return intake.default_staging_root()
+    except intake.Pliush2005CanonicalGrammarIntakeError:
+        return None
+
+
 def _write_private(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     os.chmod(path.parent, 0o700)
@@ -346,6 +353,17 @@ def test_deterministic_cli_mint_and_check(tmp_path: Path) -> None:
     assert check_payload["receipt_sha256"] == mint_payload["receipt_sha256"]
 
 
+def test_check_cli_is_hermetic_without_drive(monkeypatch: pytest.MonkeyPatch) -> None:
+    if not PUBLIC_RECEIPT.is_file():
+        pytest.skip("public receipt not materialized yet")
+
+    def boom() -> Path:
+        raise intake.Pliush2005CanonicalGrammarIntakeError("drive must not be touched")
+
+    monkeypatch.setattr(intake, "default_staging_root", boom)
+    assert intake.main(["--check", str(PUBLIC_RECEIPT)]) == 0
+
+
 def test_committed_receipt_validates_when_present() -> None:
     if not PUBLIC_RECEIPT.is_file():
         pytest.skip("public receipt not materialized yet")
@@ -363,3 +381,23 @@ def test_committed_receipt_validates_when_present() -> None:
     assert "@gmail.com" not in dumped
     assert "/Users/" not in dumped
     assert "page_texts" not in validated
+
+
+def test_private_audit_against_drive_custody() -> None:
+    drive_staging = _drive_staging()
+    if drive_staging is None:
+        pytest.skip("configured Drive mount unavailable")
+    required = [
+        drive_staging / intake.PDF_FILENAME,
+        drive_staging / intake.ITEM_HTML_FILENAME,
+        drive_staging / intake.ONLINE_BOOK_HTML_FILENAME,
+        drive_staging / intake.PDF_HEADERS_FILENAME,
+        drive_staging / intake.ITEM_HEADERS_FILENAME,
+        drive_staging / intake.ONLINE_BOOK_HEADERS_FILENAME,
+    ]
+    if not all(path.exists() for path in required):
+        pytest.skip("Drive custody artifacts unavailable")
+    result = intake.private_audit(drive_staging)
+    assert result["ok"] is True
+    assert result["artifact_count"] == 6
+    assert result["provider_identity_sha256"] == intake.AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256

@@ -96,6 +96,17 @@ def test_existing_databases_answer_ready(tmp_path: Path) -> None:
         assert entry["accessible"] is True, store_id
 
 
+def test_session_streams_probes_the_injected_store(tmp_path: Path) -> None:
+    """#7493: readiness must probe the context's store, not a re-derived path."""
+    ctx = _ready_context(tmp_path)
+    database = ctx.stores.session_streams_database
+    assert database is not None
+    assert Path(database.path).exists()
+
+    data = check_cluster_readiness(ctx)
+    assert data["storage_seam"][StoreId.SESSION_STREAMS.value]["accessible"] is True
+
+
 def test_task_index_is_optional_and_never_blocks(tmp_path: Path) -> None:
     data = check_cluster_readiness(_ready_context(tmp_path))
     entry = data["storage_seam"][StoreId.TASK_INDEX.value]

@@ -9,6 +9,7 @@ from agents_extensions.shared.hooks.shell_shlex import (
     _expose_backtick_bodies,
     collapse_line_continuations,
     preprocess_shell_command,
+    split_operator_run,
 )
 
 
@@ -59,6 +60,25 @@ def test_issue_9115_nested_backtick_body_is_exposed():
 def test_issue_9115_closing_substitution_keeps_following_command(command: str, suffix: str):
     assert collapse_line_continuations(command).endswith(suffix)
     assert preprocess_shell_command(command).endswith(suffix)
+
+
+def test_issue_9115_escaped_nested_backticks_are_exposed():
+    command = r"echo `echo \`gh pr merge 5 --admin\``"
+    assert "$(gh pr merge 5 --admin)" in preprocess_shell_command(command)
+
+
+def test_issue_9115_backtick_depth_limit_is_explicit():
+    with pytest.raises(ShellPreprocessLimit, match="depth exceeded"):
+        _expose_backtick_bodies("`gh pr merge 5 --admin`", depth=16)
+
+
+def test_issue_9115_redirection_operators_stay_whole():
+    assert split_operator_run("2>&1") == ["2>&1"]
+    assert split_operator_run(">&") == [">&"]
+    assert split_operator_run("<&") == ["<&"]
+    assert split_operator_run("&>>") == ["&>>"]
+    assert split_operator_run("|&") == ["|&"]
+    assert split_operator_run(");>&") == [")", ";", ">&"]
 
 
 def test_issue_9115_real_backtick_nesting_crosses_cap(monkeypatch):

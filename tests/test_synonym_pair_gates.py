@@ -56,6 +56,46 @@ def exercise_preserved_ulif_evidence_path(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
 
 
+def test_withdrawal_cases_are_named_and_gemini_verdicts_remain_rejected() -> None:
+    cases = json.loads(WITHDRAWAL_CASES.read_text(encoding="utf-8"))
+    assert len(cases) == 19
+    assert len({case["name"] for case in cases}) == 19
+    assert sum(case["review"] == "gpt-r5" for case in cases) == 9
+    assert sum(case["review"] == "gemini-r3" for case in cases) == 10
+    verdicts = yaml.safe_load(SYNONYM_VERDICTS_YAML.read_text(encoding="utf-8"))
+    rejected = {(row["a"], row["b"]) for row in verdicts["rejected"] if row["polarity"] == "synonym"}
+    # The review IDs pin the card direction; the registry itself stores sorted pairs.
+    reviewed_directions = {
+        "syn_e236ca1c8934": ("обличчя", "вид"),
+        "syn_8e7c05b92713": ("відновлюватися", "повертати"),
+        "syn_561a6a8cce47": ("глагол", "річ"),
+        "syn_425321250dc8": ("далеко", "набагато"),
+        "syn_ea2d41290988": ("дощити", "падати"),
+        "syn_19e2f6d4c8e2": ("квартал", "чверть"),
+        "syn_d991bc2e21ef": ("кравець", "кравчиня"),
+        "syn_99a4abe4bd8a": ("майстер", "митець"),
+        "syn_23233be4d496": ("носити", "нести"),
+        "syn_e7e7f68d1014": ("переказ", "розповідь"),
+    }
+    gemini_cases = [case for case in cases if case["review"] == "gemini-r3"]
+    assert {case["id"] for case in gemini_cases} == set(reviewed_directions)
+    for case in cases:
+        if case["review"] == "gemini-r3":
+            assert (case["prompt"], case["answer"]) == reviewed_directions[case["id"]], case["name"]
+            assert case["displayed_sense"], case["name"]
+            assert tuple(sorted((case["prompt"], case["answer"]))) in rejected, case["name"]
+
+
+def test_python_and_site_synonym_switches_agree() -> None:
+    python_source = (PROJECT_ROOT / "scripts" / "audit" / "generate_practice_deck.py").read_text(encoding="utf-8")
+    site_source = (PROJECT_ROOT / "site" / "src" / "lib" / "lexicon" / "srs.ts").read_text(encoding="utf-8")
+    python_switch = re.search(r"^SYNONYM_MODE_ENABLED = (True|False)$", python_source, re.MULTILINE)
+    site_switch = re.search(r"^export const SYNONYM_MODE_ENABLED = (true|false);$", site_source, re.MULTILINE)
+    assert python_switch is not None and site_switch is not None
+    assert (python_switch.group(1) == "True") == (site_switch.group(1) == "true")
+    assert python_switch.group(1) == "False"  # #8714 withdrawal remains in force.
+
+
 def test_disabled_mode_withholds_every_known_failure(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", False)
     cases = json.loads(WITHDRAWAL_CASES.read_text(encoding="utf-8"))
@@ -72,6 +112,17 @@ def test_disabled_mode_withholds_every_known_failure(monkeypatch: pytest.MonkeyP
     for level_shards in shards.values():
         assert level_shards["synonym"]["synonym"] == []
         assert all("synonym" not in item["modes"] for item in level_shards["index"]["items"])
+
+
+@pytest.mark.parametrize(
+    "case",
+    json.loads(WITHDRAWAL_CASES.read_text(encoding="utf-8")),
+    ids=lambda case: case["name"],
+)
+@pytest.mark.skip(reason="#8984 per-card sense-binding admission path is not built; every case remains withheld")
+def test_sense_binding_rejects_known_failures(case: dict[str, str]) -> None:
+    """Replace the skip with per-card sense-evidence assertions in #8984."""
+    raise NotImplementedError(f"Sense-binding admission missing for {case['name']}")
 
 ZANEPAD = (
     "<b>ЗАНЕ́ПАД</b> (погіршення загального стану, зниження рівня розвитку), <b>РЕГРЕ́С</b>, "
@@ -126,6 +177,18 @@ OBLYCHCHIA = (
     "<b>ОБЛИ́ЧЧЯ</b> (передня частина голови людини), <b>ЛИЦЕ́</b>, <b>ВИД</b>, <b>О́БРАЗ</b> <i>розм.,</i> "
     "<b>ЛИК</b> <i>поет., заст.</i>."
 )
+MAISTER = (
+    "<b>МА́ЙСТЕР</b> (той, хто досяг високої майстерності, досконалості в своїй роботі, творчості), "
+    "<b>ВІРТУО́З</b>, <b>МИТЕ́ЦЬ</b>, <b>МАСТА́К</b> <i>розм.;</i> <b>УМІ́ЛЕЦЬ</b> <b>[ВМІ́ЛЕЦЬ]</b> "
+    "(той, хто досяг найбільшої вмілості в чомусь)."
+)
+VIDNOVLIUVATYSIA = (
+    "<b>ВІДНО́ВЛЮВАТИСЯ</b> (про думки, почуття тощо - появлятися знову, виявлятися з новою силою), "
+    "<b>ВІДНОВЛЯ́ТИСЯ</b>, <b>ОЖИВА́ТИ</b>, <b>ПОВЕРТА́ТИ</b>, <b>ПОВЕРТА́ТИСЯ</b>. - Док.: <b>віднови́тися</b>, "
+    "<b>ожи́ти</b>, <b>поверну́ти</b>, <b>поверну́тися</b>."
+)
+
+
 def _fixture_row(dominant: str, *members: str) -> str:
     """A synthetic core row (not ULIF text): the dominant with a fixture note and plain members."""
     return (
@@ -427,6 +490,31 @@ def test_rejected_verdict_overrides_ulif_core_evidence(capsys: pytest.CaptureFix
     assert items == [] and ledger == {} and summary == (0, 0, 0)
 
 
+@pytest.mark.parametrize(
+    ("rows", "a", "b", "manifest"),
+    [
+        (
+            [MAISTER],
+            "майстер",
+            "митець",
+            [_entry("майстер", "noun", "master"), _entry("митець", "noun", "artist"), *_NOUN_FILLERS],
+        ),
+        (
+            [VIDNOVLIUVATYSIA],
+            "відновлюватися",
+            "повертати",
+            [_entry("відновлюватися", "verb", "recover"), _entry("повертати", "verb", "return"), *_VERB_FILLERS],
+        ),
+    ],
+)
+def test_review_rejected_pairs_are_dictionary_core_pairs(
+    capsys: pytest.CaptureFixture[str], rows: list[str], a: str, b: str, manifest: list[dict[str, Any]]
+) -> None:
+    # Documents why the registry rejection is needed: ULIF alone admits these.
+    items, _ledger, _summary = _build(capsys, manifest, [_approved(a, b)], _ulif(*rows))
+    assert (a, b) in _pairs(items)
+
+
 def test_core_pair_ships_with_ulif_sense_and_evidence(capsys: pytest.CaptureFixture[str]) -> None:
     manifest = [_entry("список", "noun", "list"), _entry("перелік", "noun", "list, enumeration"), *_NOUN_FILLERS]
     items, ledger, summary = _build(capsys, manifest, [_approved("список", "перелік")], _ulif(SPYSOK))
@@ -438,6 +526,14 @@ def test_core_pair_ships_with_ulif_sense_and_evidence(capsys: pytest.CaptureFixt
         assert item["evidence"]["dominant"] == "список"
         assert item["evidence"]["url"] == "https://lcorp.ulif.org.ua/dictua"
         assert len(item["evidence"]["groupId"]) == 16
+
+
+def test_prompt_without_ulif_group_never_ships(capsys: pytest.CaptureFixture[str]) -> None:
+    # Gemini review: одначе is also correct for зате; ULIF has no synonym row for зате yet.
+    manifest = [_entry("зате", "conj", "but, on the other hand"), _entry("одначе", "conj", "but, however")]
+    items, ledger, _summary = _build(capsys, [*manifest, *_CONJ_FILLERS], [_approved("зате", "одначе")], _ulif(SPYSOK))
+    assert items == []
+    assert ledger == {("зате", "одначе"): "not_in_ulif_group", ("одначе", "зате"): "not_in_ulif_group"}
 
 
 def test_distractor_never_shares_a_ulif_group_with_prompt_or_answer(capsys: pytest.CaptureFixture[str]) -> None:

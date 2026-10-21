@@ -9,6 +9,7 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -246,3 +247,20 @@ def test_repeated_mint_and_check_are_byte_identical(tmp_path: Path) -> None:
         intake.write_public_receipt(out, receipt)
         checked = intake.validate_receipt(json.loads(out.read_text(encoding="utf-8")))
         assert out.read_bytes() == intake.canonical_bytes(checked)
+
+
+def test_optional_live_drive_audit() -> None:
+    try:
+        stage = intake.default_staging_root()
+    except intake.Lnu2024PhoneticsPhonologyIntakeError:
+        pytest.skip("configured Drive mount unavailable")
+    if not all((stage / values[0]).is_file() for values in intake.ARTIFACTS.values()):
+        pytest.skip("private Drive packet unavailable")
+    result = intake.private_audit(stage)
+    assert result["ok"] is True
+    assert set(result["provider_identity_sha256"]) == set(intake.ARTIFACTS)
+    serialized = intake.canonical_json(result)
+    assert "provider_item_id" not in serialized
+    with patch.object(intake, "_drive_item_id", return_value="live-id"):
+        with pytest.raises(intake.Lnu2024PhoneticsPhonologyIntakeError, match="provider identity drift"):
+            intake.private_audit(stage)

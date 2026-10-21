@@ -123,6 +123,15 @@ def _stub(root: Path, rel: str) -> None:
     p.write_text("# stub\n", "utf-8")
 
 
+def _write_streams(root: Path, epic: int = REAL_EPIC, stream: str = "core-quality") -> None:
+    path = root / "scripts" / "config" / "issue_streams.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump({"schema_version": 1, "streams": {stream: {"title": stream, "epics": [epic]}}}),
+        "utf-8",
+    )
+
+
 def _write_cache(
     root_or_path: Path,
     membership: dict[str, dict] | None,
@@ -339,6 +348,24 @@ def test_strict_gate_resolves_corpus_consumer_via_atlas_registry(strict_root):
     assert _run_strict(root) == 2
 
 
+def test_default_check_uses_real_corpus_resolver_no_cache_needed(tmp_path):
+    """Gemini review (PR #4998, ACCEPTED): the Atlas intake source-family
+    registry is deterministic, cache-free, and offline, so ordinary --check can
+    safely inject it, unlike the issue resolver (which needs a live cache and
+    stays uninjected here). ``validate_registry(..., corpus_resolver=None)``
+    itself is unchanged and still fails closed for any caller that omits it
+    (see ``test_issue_and_corpus_consumers_fail_closed_without_resolver`` in
+    ``test_research_registry.py``) -- only the CLI's default wiring changes."""
+    root = tmp_path
+    ok = _make_record(root, "ok", state="adopted", consumer={"kind": "corpus", "ref": "textbook"})
+    _write_registry(root, [ok])
+    assert crr.main(["--check", "--quiet"], project_root=root) == 0
+
+    dangling = _make_record(root, "dangling", state="adopted", consumer={"kind": "corpus", "ref": "not-a-real-family"})
+    _write_registry(root, [dangling])
+    assert crr.main(["--check", "--quiet"], project_root=root) == 2
+
+
 # --------------------------------------------------------------------------- #
 # 2. Observability — lifecycle + adoption (raw records + P1 helpers)
 # --------------------------------------------------------------------------- #
@@ -364,6 +391,69 @@ def test_one_drift_is_stale_healthy_remains_visible(obs_env):
     life = _monitor(root)["lifecycle"]
     assert life["stale"] == ["drifted"]
     assert life["counts"]["total"] == 2  # healthy record stays visible
+
+
+def test_issue_consumer_is_unverified_without_fresh_cache(obs_env):
+    """No fresh membership cache in the monitor's env → an issue consumer can be
+    neither proven nor disproven — it must land in unverified, never dead."""
+    root = obs_env
+    ri = _make_record(root, "ri", state="adopted", consumer={"kind": "issue", "ref": "4952"})
+    _write_registry(root, [ri])
+    m = _monitor(root)
+    assert m["dead_consumers"]["unverified"] == ["ri"]
+    assert m["dead_consumers"]["dead"] == []
+    assert m["adoption"]["effective_adopted"] == 0  # unverified never counts as effective
+
+
+def test_issue_consumer_resolved_alive_or_dead_with_fresh_cache(obs_env, monkeypatch):
+    """With a FRESH membership cache, the monitor must use the SAME resolver
+    proof the strict gate uses: open + uniquely owned → alive; closed/orphan/
+    ambiguous → dead. Record ownership and issue-consumer resolution are
+    validated independently (ADR-011 P4 review)."""
+    root = obs_env
+    cache = root / "cache.json"
+    monkeypatch.setattr(isa, "CACHE_PATH", cache)
+    _write_cache(
+        cache,
+        {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"], "via": "native", "unique_stream": True}},
+        open_numbers=[9001],
+        is_file=True,
+    )
+    alive = _make_record(root, "alive", state="adopted", consumer={"kind": "issue", "ref": "9001"})
+    dead = _make_record(root, "dead", state="adopted", consumer={"kind": "issue", "ref": "5"})
+    _write_registry(root, [alive, dead])
+    m = _monitor(root)
+    assert m["dead_consumers"]["dead"] == ["dead"]
+    assert m["dead_consumers"]["unverified"] == []
+    assert m["adoption"]["effective_adopted"] == 1
+
+
+def test_orphaned_vs_ownership_unverified(obs_env):
+    root = obs_env
+    _write_streams(root)  # declares core-quality epic REAL_EPIC
+    # No ownership at all → orphaned.
+    orphan = _make_record(root, "orphan", state="proposed", ownership=None)
+    # Plausible ownership (declared epic) but no fresh cache → ownership_unverified,
+    # NOT falsely orphaned.
+    unver = _make_record(root, "unver", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
+    _write_registry(root, [orphan, unver])
+    life = _monitor(root)["lifecycle"]
+    assert life["orphaned"] == ["orphan"]
+    assert life["ownership_unverified"] == ["unver"]
+    assert life["ownership_cache"] == "missing"
+
+
+def test_semantic_invalid_record_stays_visible(obs_env):
+    """The monitor reads RAW records: a record the runtime loader would reject
+    (superseded with a missing replacement) must still appear in the counts."""
+    root = obs_env
+    bad = _make_record(root, "bad", state="superseded", replacement="nonexistent")
+    _write_registry(root, [bad])
+    # load_runtime_safe would hide the whole registry; the monitor does not.
+    assert reg.load_runtime_safe(root=root) is None
+    m = _monitor(root)
+    assert m["lifecycle"]["counts"]["total"] == 1
+    assert m["lifecycle"]["counts"]["superseded"] == 1
 
 
 def test_degraded_telemetry_fallback_preserves_unknown_ids_schema(obs_env, monkeypatch):
@@ -692,6 +782,16 @@ def endpoint_root(tmp_path, monkeypatch):
     return tmp_path
 
 
+def test_monitor_available_when_discovery_disabled(endpoint_root, monkeypatch):
+    monkeypatch.setenv(reg.ENV_FLAG, "false")  # kill switch OFF
+    _write_registry(endpoint_root, [_make_record(endpoint_root, "r1", state="deferred")])
+    resp = client.get("/api/knowledge/monitor")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["discovery_enabled"] is False  # governance survives serving-off
+    assert body["lifecycle"]["counts"]["total"] == 1
+
+
 def test_monitor_fail_soft_on_broken_registry(endpoint_root, monkeypatch):
     monkeypatch.setenv(reg.ENV_FLAG, "false")
     refs = endpoint_root / "docs" / "references"
@@ -890,6 +990,30 @@ def test_strict_adoption_gate_runs_as_bare_script():
     assert proc.returncode in (0, 1, 2)  # a gated result, never an uncaught crash
     payload = json.loads(proc.stdout)
     assert "ok" in payload
+
+
+def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monkeypatch):
+    from scripts.api import issues_router
+
+    def _fake_read_cache(max_age_s):
+        if max_age_s == 3600:
+            return None  # no fresh cache
+        return dict(_LEAKY_REPORT)  # stale fallback within the 7-day window
+
+    monkeypatch.setattr(issues_router.audit, "read_cache", _fake_read_cache)
+    calls = []
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda *, force: calls.append(force) or dict(_SCHEDULED_REFRESH),
+    )
+    resp = client.get("/api/issues/streams")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["stale"] is True and body["refreshing"] is True
+    assert body["refresh"]["phase"] == "scheduled" and calls == [False]
+    assert "internal-run-id" not in json.dumps(body)
+    _assert_no_private_keys(body)
 
 
 def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch):

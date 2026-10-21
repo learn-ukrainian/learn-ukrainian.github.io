@@ -108,6 +108,16 @@ def test_chat_completions_missing_messages_returns_422():
     _assert_openai_validation_error(response, "messages")
 
 
+def test_chat_completions_invalid_json_body_returns_422():
+    response = _client().post(
+        "/v1/chat/completions",
+        content='{"model": "codex", "messages":',
+        headers={"content-type": "application/json"},
+    )
+
+    _assert_openai_validation_error(response)
+
+
 def test_message_flatten_preserves_role_order(monkeypatch):
     prompts = []
 

@@ -12,7 +12,7 @@ from pathlib import Path
 # Ensure scripts/ on path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from build.activity_renderer import render_activity_to_jsx
+from build.activity_renderer import get_required_imports, render_activity_to_jsx
 
 # ---------------------------------------------------------------------------
 # Core activity types
@@ -394,9 +394,36 @@ class TestDialectComparison:
 # ---------------------------------------------------------------------------
 # Unknown type
 # ---------------------------------------------------------------------------
+
+
+class TestUnknownType:
+    def test_returns_comment(self):
+        act = {"type": "nonexistent-type"}
+        jsx = render_activity_to_jsx(act)
+        assert jsx == "<!-- Unknown activity type: nonexistent-type -->"
+
+
 # ---------------------------------------------------------------------------
 # Import generation
 # ---------------------------------------------------------------------------
+
+
+class TestGetRequiredImports:
+    def test_deduplicates(self):
+        activities = [
+            {"type": "quiz"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+        ]
+        imports = get_required_imports(activities)
+        assert len(imports) == 2
+        assert any("Quiz" in i for i in imports)
+        assert any("FillIn" in i for i in imports)
+
+    def test_unknown_type_skipped(self):
+        activities = [{"type": "nonexistent"}]
+        imports = get_required_imports(activities)
+        assert len(imports) == 0
 
 
 # ---------------------------------------------------------------------------

@@ -423,6 +423,66 @@ def test_cache_hit_replays_grounding_gate_from_stored_tool_events(tmp_path: Path
     assert calls == 0
 
 
+def test_cache_hit_deep_read_retry_requirement_falls_through_to_live_run(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="cache-deep-read",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="folk",
+        slug="cache-deep-read",
+        module_md=(seminar_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(seminar_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(seminar_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(seminar_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    old = llm_qg_store.record_llm_qg(
+        level="folk",
+        slug="cache-deep-read",
+        module_dir=seminar_dir,
+        payload=qg_workflow._payload_from_reviewer_payload(json.loads(_seminar_response())),
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="seminar",
+        reviewer_model="test-reviewer",
+        reviewer_family="test-family",
+        route_name=None,
+        tool_call_count=1,
+        tools_used=("sources_query_wikipedia",),
+        tool_events=(_wiki_event(mode="summary"),),
+        source="test",
+        path=db_path,
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return _seminar_dispatch(events=(_wiki_event(mode="section"),))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="cache-deep-read"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    latest = llm_qg_store.latest_llm_qg("folk", "cache-deep-read", path=db_path)
+    assert _tier(record, 2)["status"] == "ran"
+    assert "cache_regate" not in _tier(record, 2)
+    assert calls == 1
+    assert latest is not None
+    assert latest.run_id != old.run_id
+
+
 def test_pre_change_cache_row_without_tool_events_is_marked_unavailable(tmp_path: Path) -> None:
     seminar_dir = _write_module(
         tmp_path,
@@ -882,6 +942,39 @@ def test_required_ungrounded_finding_status_precedes_inadmissible_citations(tmp_
     assert tier["status"] == llm_reviewer_dispatch.UNGROUNDED_FINDINGS
     assert tier["inadmissible_positive_verdicts"] == 1
     assert calls == 2
+
+
+def test_tier2_theatre_then_deep_read_retry_stays_within_three_calls(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="retry-budget",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    summary_event = _wiki_event(mode="summary")
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        if len(calls) == 1:
+            return _seminar_dispatch(tool_call_count=0)
+        return _seminar_dispatch(events=(summary_event,))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="retry-budget"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "inadmissible_citations"
+    assert len(calls) == 3
+    assert "Tools Required" in calls[1]
+    assert "Deep Read Required" in calls[2]
 
 
 def test_budget_exhaustion_emits_skipped_budget_and_incomplete(tmp_path: Path) -> None:

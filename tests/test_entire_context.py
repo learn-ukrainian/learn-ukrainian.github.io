@@ -100,6 +100,13 @@ def event_count(store: ContextLinkStore) -> int:
 # ── schema: allowlist and forbidden-field rejection ──────────────────────────
 
 
+def test_valid_link_roundtrips_and_validates() -> None:
+    link = make_link()
+    link.validate()
+    parsed = ContextLink.from_dict(link.to_dict())
+    assert parsed.locator_id == link.locator_id
+
+
 def test_long_rollover_link_and_evidence_roundtrip() -> None:
     link = make_link(
         kind=LinkKind.ROLLOVER,
@@ -155,6 +162,24 @@ def test_rollover_link_exemption_does_not_bypass_credential_scan() -> None:
     )
     with pytest.raises(SchemaError, match="credential-token"):
         link.validate()
+
+
+@pytest.mark.parametrize(
+    ("verifier", "evidence_locator"),
+    [
+        ("git", ROLLOVER_EVIDENCE_LOCATOR),
+        ("rollover-registry", "rollover:other/v1/" + ROLLOVER_CANONICAL_ID),
+        ("rollover-registry", ROLLOVER_EVIDENCE_LOCATOR + "/extra"),
+        ("rollover-registry", ROLLOVER_EVIDENCE_LOCATOR.upper()),
+    ],
+)
+def test_rollover_evidence_exemption_requires_exact_typed_pair(
+    verifier: str,
+    evidence_locator: str,
+) -> None:
+    verification = make_verification(verifier=verifier, evidence_locator=evidence_locator)
+    with pytest.raises(SchemaError):
+        verification.validate()
 
 
 @pytest.mark.parametrize(
@@ -249,6 +274,13 @@ def test_locator_id_is_deterministic() -> None:
     first = make_link().locator_id
     second = make_link(facets={"title": "different facets do not matter"}).locator_id
     assert first == second
+
+
+def test_changed_kind_namespace_or_id_produce_new_locator_id() -> None:
+    base = make_link()
+    assert base.locator_id != make_link(kind=LinkKind.GITHUB_ISSUE).locator_id
+    assert base.locator_id != make_link(canonical_namespace="github:learn-ukrainian/learn-ukrainian.github.io").locator_id
+    assert base.locator_id != make_link(canonical_id="6174").locator_id
 
 
 # ── admission lifecycle ──────────────────────────────────────────────────────
@@ -412,6 +444,32 @@ def test_verified_status_with_wrong_digest_cannot_promote(tmp_path: Path) -> Non
     assert result.reason == "digest_mismatch"
 
 
+def test_explain_returns_body_free_audit_trail(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    link = make_link()
+    result = store.admit(link, make_verification(), actor="test", now=NOW)
+    detail = store.explain(result.locator_id)
+    assert detail is not None
+    assert [event["event_type"] for event in detail["events"]] == ["claimed", "promoted"]
+    rendered = json.dumps(detail, ensure_ascii=False).lower()
+    for token in FORBIDDEN_OUTPUT_TOKENS:
+        assert token not in rendered
+
+
+def test_multiple_links_stay_distinct(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    first = store.admit(make_link(), make_verification(), actor="test", now=NOW)
+    second = store.admit(
+        make_link(canonical_digest=DIGEST_B),
+        make_verification(canonical_digest=DIGEST_B),
+        actor="test",
+        now=NOW,
+    )
+    assert first.locator_id != second.locator_id
+    assert store.lookup(first.locator_id)["canonical_digest"] == DIGEST_A
+    assert store.lookup(second.locator_id)["canonical_digest"] == DIGEST_B
+
+
 # ── rebuild parity ───────────────────────────────────────────────────────────
 
 
@@ -479,11 +537,37 @@ def test_cli_status_missing_projection_does_not_create_state(tmp_path: Path) -> 
     assert not db.exists()
 
 
+def test_cli_disabled_projection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(cli.ENV_DISABLED, "1")
+    db = tmp_path / "disabled.sqlite3"
+    code, payload = run_cli(["status", "--db", str(db)])
+    assert code == cli.EXIT_OK
+    assert payload["enabled"] is False
+    assert payload["reason"] == "projection_disabled"
+    link_file = tmp_path / "link.json"
+    link_file.write_text(json.dumps(make_link().to_dict()), encoding="utf-8")
+    code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
+    assert code == cli.EXIT_REFUSED
+    assert payload["reason"] == "projection_disabled"
+    assert not db.exists()
+
+
 def test_cli_corrupt_projection_fails_open(tmp_path: Path) -> None:
     db = tmp_path / "corrupt.sqlite3"
     db.write_bytes(b"not a sqlite database at all")
     code, payload = run_cli(["status", "--db", str(db)])
     assert code == cli.EXIT_OK
+    assert payload["available"] is False
+    assert payload["reason"] == "projection_unreadable"
+
+
+def test_cli_rebuild_corrupt_projection_refuses_without_traceback(tmp_path: Path) -> None:
+    db = tmp_path / "corrupt.sqlite3"
+    db.write_bytes(b"not a sqlite database at all")
+
+    code, payload = run_cli(["rebuild", "--db", str(db)])
+
+    assert code == cli.EXIT_REFUSED
     assert payload["available"] is False
     assert payload["reason"] == "projection_unreadable"
 
@@ -497,6 +581,23 @@ def test_cli_admit_corrupt_projection_fails_closed_without_traceback(tmp_path: P
     code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
 
     assert code == cli.EXIT_REFUSED
+    assert payload["available"] is False
+    assert payload["reason"] == "projection_unreadable"
+
+
+def test_cli_malformed_projection_row_fails_open_without_traceback(tmp_path: Path) -> None:
+    db = tmp_path / "malformed.sqlite3"
+    store = ContextLinkStore(db)
+    result = store.admit(make_link(), make_verification(), actor="test", now=NOW)
+    with sqlite3.connect(db) as connection:
+        connection.execute(
+            "UPDATE context_links SET facets_json = ? WHERE locator_id = ?",
+            ("not-json", result.locator_id),
+        )
+
+    code, payload = run_cli(["lookup", result.locator_id, "--db", str(db)])
+
+    assert code == cli.EXIT_OK
     assert payload["available"] is False
     assert payload["reason"] == "projection_unreadable"
 

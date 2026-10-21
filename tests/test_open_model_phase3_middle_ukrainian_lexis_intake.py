@@ -452,3 +452,15 @@ def test_private_output_is_immutable_and_cannot_live_in_git(
             snapshot_dir=snapshot_dir,
             private_output_dir=checkout / "private-receipt",
         )
+
+
+def test_public_receipt_schema_is_text_free_and_fail_closed() -> None:
+    schema = json.loads(intake.RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    serialized = json.dumps(schema, ensure_ascii=False)
+
+    assert '"source_text"' not in serialized
+    assert '"transcription_text"' not in serialized
+    assert schema["properties"]["safeguards"]["properties"]["training_eligible"] == {"const": False}
+    assert schema["properties"]["safeguards"]["properties"]["semantic_gold"] == {"const": False}
+    assert schema["properties"]["safeguards"]["properties"]["phase3_complete"] == {"const": False}
+    assert schema["properties"]["safeguards"]["properties"]["phase4_blocked"] == {"const": True}

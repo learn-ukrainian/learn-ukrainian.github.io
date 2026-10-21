@@ -100,6 +100,13 @@ def test_malformed_cohorts_are_refused(cohort: dict, message: str) -> None:
         db.evaluate(cohort)
 
 
+def test_report_records_input_digest_and_is_deterministic() -> None:
+    first = db.evaluate(_load("stratum_floor.json"))
+    second = db.evaluate(_load("stratum_floor.json"))
+    assert first == second
+    assert len(first["input_sha256"]) == 64
+
+
 def test_cli_prints_report_and_refuses_bad_input(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     assert db.main([str(FIXTURES / "overlapping_spans.json")]) == 0
     assert json.loads(capsys.readouterr().out)["schema_version"] == "delivery-baseline-report.v1"
@@ -245,6 +252,76 @@ def test_outcome_identifiers_must_be_positive_integers(outcome: dict) -> None:
     report = db.evaluate(cohort)
     assert _record(report, "heldout-before-0")["reasons"] == ["unlinked_outcome"]
     assert report["claims"][0]["status"] == "rejected"
+
+
+@pytest.mark.parametrize(
+    ("cohort", "message"),
+    [
+        ([], "cohort must be a JSON object"),
+        ({"schema_version": db.SCHEMA_VERSION, "records": [None]}, "each record must be an object"),
+        (
+            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "spans": [False]}]},
+            "each span must be an object",
+        ),
+        (
+            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "spans": {"a": 1}}]},
+            "spans must be a list",
+        ),
+        (
+            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "outcome": [1]}]},
+            "outcome must be an object",
+        ),
+        (
+            {
+                "schema_version": db.SCHEMA_VERSION,
+                "records": [{"task_id": "x", "arm": "before", "exclusion": "dry_run", "merge": "yes"}],
+            },
+            "merge must be an object",
+        ),
+        (
+            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "matched_setup": "x"}]},
+            "matched_setup must be an object",
+        ),
+        ({"schema_version": db.SCHEMA_VERSION, "records": [], "claims": {}}, "claims must be a list"),
+        ({"schema_version": db.SCHEMA_VERSION, "records": [], "claims": [None]}, "each claim must be an object"),
+        (
+            {"schema_version": db.SCHEMA_VERSION, "records": [], "claims": [{"stratum": "x", "metric": ["m"]}]},
+            "string metric",
+        ),
+    ],
+)
+def test_malformed_structures_raise_cohort_error(cohort: object, message: str) -> None:
+    with pytest.raises(db.CohortError, match=message):
+        db.evaluate(cohort)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize(
+    "document",
+    [
+        [],
+        {"schema_version": db.SCHEMA_VERSION, "records": [None]},
+        {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "spans": [False]}]},
+    ],
+)
+def test_cli_exits_two_on_malformed_structures(
+    document: object, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    path = tmp_path / "malformed.json"
+    path.write_text(json.dumps(document), encoding="utf-8")
+    assert db.main([str(path)]) == 2
+    assert capsys.readouterr().err.startswith("delivery_baseline: ")
+
+
+def test_unhashable_span_fields_are_non_canonical_not_a_crash() -> None:
+    span = {
+        "stage": "authoring",
+        "kind": "worker_wall",
+        "start_field": ["task.started_at"],
+        "end_field": "task.finished_at",
+        "start": "2026-01-01T10:00:00Z",
+        "end": "2026-01-01T11:00:00Z",
+    }
+    assert db._span_value(span) == (None, "non_canonical_source")
 
 
 def test_actions_job_span_is_a_qualified_check_wall() -> None:

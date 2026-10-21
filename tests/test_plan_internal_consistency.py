@@ -10,6 +10,55 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from add_dialogue_situations import add_situations_to_plan
+from audit.check_plan import check_plan_internal_consistency
+
+
+def test_plan_internal_consistency_flags_pet_shop_vs_room_furniture_mismatch() -> None:
+    plan = {
+        "dialogue_situations": [
+            {
+                "setting": "At a pet shop — use кіт, рибка, черепаха, акваріум.",
+                "speakers": ["Марія", "Оленка"],
+                "motivation": "він/вона/воно with animals and pet items",
+            }
+        ],
+        "content_outline": [
+            {
+                "section": "Діалоги",
+                "words": 300,
+                "points": [
+                    "Dialogue 1 — show your room: стіл, лампа, ліжко, кімната.",
+                    "Dialogue 2 — what is in your bag? книга, телефон, ручка.",
+                ],
+            }
+        ],
+    }
+
+    issues = check_plan_internal_consistency(plan)
+
+    assert len(issues) == 1
+    assert issues[0].check == "plan_internal_consistency"
+
+
+def test_plan_internal_consistency_skips_non_dialogue_seminar_shapes() -> None:
+    plan = {
+        "dialogue_situations": [
+            {
+                "setting": "Formal panel discussion at a conference.",
+                "speakers": ["Модератор", "Історик"],
+                "motivation": "Advanced register control",
+            }
+        ],
+        "content_outline": [
+            {
+                "section": "Історичний контекст",
+                "words": 1200,
+                "subsections": ["Політичне тло", "Джерельна база"],
+            }
+        ],
+    }
+
+    assert check_plan_internal_consistency(plan) == []
 
 
 def test_add_dialogue_situations_rewrites_dialogue_outline_points(tmp_path: Path) -> None:

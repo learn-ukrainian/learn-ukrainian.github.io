@@ -153,6 +153,11 @@ def test_raw_split_precedes_unrelated_inline_alternative(held):
     assert len(result.joins) == 1
 
 
+def test_mixed_resolved_and_unresolved_splits(held):
+    result, _, _ = held("SYNTHETIC-\nmore UNKNOWN-\nmore", ["SYNTHETICmore"], [], ["SYNTHETIC-more", "UNKNOWN-more"])
+    assert len(result.joins) == len(result.unresolved) == 1
+
+
 @pytest.mark.parametrize(
     "forms,witnesses,defect",
     [

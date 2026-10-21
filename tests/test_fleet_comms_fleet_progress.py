@@ -119,3 +119,18 @@ def test_fleet_progress_payload_surfaces_idle_and_work_exceptions(tmp_path: Path
     assert "delegate_failed" in kinds
     assert "delegate_stale_active" in kinds
     assert payload["exception_count"] >= 6
+
+
+def test_fleet_progress_fail_open_when_monitor_down(tmp_path: Path) -> None:
+    payload = fleet_progress_payload(
+        repo_root=tmp_path,
+        idle_store=tmp_path / "missing.jsonl",
+        idle_events=[],
+        work_next={"available": False, "reason": "URLError"},
+        delegate_active={"available": False, "reason": "TimeoutError"},
+        delegate_failed={"available": False, "reason": "TimeoutError"},
+    )
+    assert payload["work_next"]["available"] is False
+    assert payload["delegate"]["active_available"] is False
+    assert payload["delegate"]["failed_available"] is False
+    assert payload["exception_count"] == 0

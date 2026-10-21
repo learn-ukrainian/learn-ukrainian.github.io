@@ -51,6 +51,25 @@ def test_committed_record_equals_fresh_generation(level: str) -> None:
 
 
 @pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.parametrize("record_kind", ("committed", "fresh"))
+def test_shared_accepted_sections_preserve_historical_text(level: str, record_kind: str) -> None:
+    # Independent #10104 reconciliation pins the accepted text, not current document hashes.
+    expected = {
+        "docs/epics/fresh-build-plan-schema.md": "5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646",
+        "docs/epics/fresh-build-writer-contract.md": "285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4",
+        "docs/epics/fresh-build-build-program.md": "39008f5f0ec488a77da91d6b5eb5dfcaac2444564632dba42c761b9f49aa68fa",
+    }
+    text = _committed(level).read_text(encoding="utf-8") if record_kind == "committed" else _fresh(level)
+    record = yaml.safe_load(text)
+    for doc, digest in expected.items():
+        sections = [source for source in record["sources"] if source["doc"] == doc]
+        assert len(sections) == 1, f"{level}/{record_kind}: expected one accepted section from {doc}"
+        assert sections[0]["section_sha256"] == digest, (
+            f"{level}/{record_kind}/{doc}: accepted section is historical; record revisions outside it"
+        )
+
+
+@pytest.mark.parametrize("level", LEVELS)
 def test_record_is_verbatim_copy_of_named_sections(level: str) -> None:
     record = yaml.safe_load(_committed(level).read_text(encoding="utf-8"))
     sources = _real_sources()
@@ -191,6 +210,12 @@ def test_trailing_whitespace_in_a_section_fails_closed(tmp_path: Path) -> None:
 
 def test_check_exits_1_when_the_file_is_missing(tmp_path: Path) -> None:
     assert gd.main(["--level", "a2", "--output", str(tmp_path / "absent.yaml"), "--check"]) == 1
+
+
+def test_check_writes_nothing(tmp_path: Path) -> None:
+    out = tmp_path / "_decisions.yaml"
+    gd.main(["--level", "a2", "--output", str(out), "--check"])
+    assert not out.exists()
 
 
 def test_generated_output_validates_against_the_schema(tmp_path: Path) -> None:

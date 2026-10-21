@@ -33,6 +33,8 @@ REVIEW_ROOT_MISMATCH = getattr(
     "REVIEW_ROOT_MISMATCH: --repo-root origin does not match the catalog repository; "
     "symbolic refs and local mode are refused",
 )
+repository_target_error = getattr(target_resolution, "repository_target_error", None)
+MissingReviewCommit = getattr(target_resolution, "MissingReviewCommit", None)
 def _git(repo, *args, check=True):
     return subprocess.run(
         ["git", *args],
@@ -260,6 +262,22 @@ def test_public_target_still_resolves(review_repositories, tmp_path, entry):
         )
         assert proc.returncode == 0, proc.stderr
         assert json.loads(proc.stdout)["changed_paths"] == ["public.py"]
+
+
+def test_typed_missing_commit_neutralizes_and_wrong_base_stays_specific():
+    """Neutral refusal follows the exception type, not the wording of the message."""
+    if repository_target_error is None or MissingReviewCommit is None:
+        pytest.fail("typed missing-commit refusal is not implemented")
+    neutralized = repository_target_error(
+        "infra-private",
+        MissingReviewCommit("cannot resolve ref 'deadbeef': absent"),
+    )
+    assert str(neutralized) == PRIVATE_REVIEW_TARGET_UNRESOLVED
+    wrong_base = target_resolution.TargetResolutionError("cannot resolve ref 'no-such-base': unknown revision")
+    kept = repository_target_error("infra-private", wrong_base)
+    assert kept is wrong_base
+    assert "no-such-base" in str(kept)
+    assert "PRIVATE_REVIEW_TARGET_UNRESOLVED" not in str(kept)
 
 
 def _mock_pr_view(monkeypatch, private, base, head):
@@ -731,3 +749,16 @@ def test_public_missing_repo_root_has_no_absolute_path(review_repositories, tmp_
     assert str(missing) not in combined
     assert "Errno" not in combined
     assert not state.exists()
+
+
+def test_repository_target_error_hides_unavailable_root_oserror():
+    if repository_target_error is None:
+        pytest.fail("typed missing-checkout refusal is not implemented")
+    error = str(
+        repository_target_error(
+            " infra-private ",
+            FileNotFoundError(2, "No such file or directory", "/hidden/absent-root"),
+        )
+    )
+    _assert_neutral_private_refusal(error)
+    assert "absent-root" not in error

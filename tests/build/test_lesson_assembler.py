@@ -217,6 +217,36 @@ new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', body + '\
     assert (sidebar["progressDone"], sidebar["progressTotal"]) == (2, 3)
 
 
+def test_landing_groups_follow_arc_phase_order():
+    """Execute the real `groupByPhase` (site/src/lib/arc.ts) over the real arc-a1.json."""
+    import json
+    import subprocess
+
+    probe = r'''
+const fs = require('fs');
+const ts = require('typescript');
+const source = fs.readFileSync('site/src/lib/arc.ts', 'utf8')
+  .replace(/^\s*import\s[\s\S]*?;\s*$/gm, '').replaceAll('export ', '');
+const compiled = ts.transpileModule(source, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+}).outputText;
+const data = JSON.parse(fs.readFileSync('site/src/data/arc-a1.json', 'utf8'));
+const groupByPhase = new Function(compiled + '\nreturn groupByPhase;')();
+process.stdout.write(JSON.stringify(groupByPhase(data.positions).map(g => ({phase: g.phase, positions: g.items.map(i => i.position)}))));
+'''
+    groups = json.loads(subprocess.check_output(["node", "-e", probe], text=True, timeout=30))
+    positions = json.loads(Path("site/src/data/arc-a1.json").read_text(encoding="utf-8"))["positions"]
+    arc_phases = list(dict.fromkeys(p["phase"] for p in positions))  # first-seen arc order
+    assert [g["phase"] for g in groups] == arc_phases
+    assert len(groups) > 1
+    flat = [n for g in groups for n in g["positions"]]
+    assert len(flat) == 55
+    assert flat == sorted(flat) == [p["position"] for p in positions]
+    for group in groups:
+        assert group["positions"] == sorted(group["positions"])
+        assert group["positions"] == [p["position"] for p in positions if p["phase"] == group["phase"]]
+
+
 def test_extract_outcomes_keeps_wrapped_by_the_end_bullets():
     """Indented wrap lines after a bullet stay in the outcomes block."""
     from scripts.build.lesson_assembler import _extract_outcomes_block
@@ -240,6 +270,72 @@ def test_extract_outcomes_keeps_wrapped_by_the_end_bullets():
     assert "choose the safer form when a visual habit creates a mistake." in block
     assert "Teacher Oksana" not in block
     assert "Keep the scope small" not in block
+
+
+def test_a1_landing_prose_rejects_previous_edition_banned_text(tmp_path):
+    from scripts.build.lesson_assembler import (
+        _clean_a1_landing_prose,
+        _original_intro,
+        _writer_landing_overview,
+    )
+
+    banned = (
+        "# Special Signs\n\nThis module completes your mastery of all 33 le\u0301tters "
+        "and gives you the soft sign and the apostrophe in real words.\n"
+    )
+    line_breaks = (
+        "# Special Signs\n\nYou read the soft sign and the apostrophe in real words, "
+        "then learn word hyphenation rules for dividing a word across lines.\n"
+    )
+    clean = "# Special Signs\n\nYou read the soft sign and the apostrophe in real Ukrainian words.\n"
+    assert _clean_a1_landing_prose(banned) is None
+    assert _clean_a1_landing_prose(line_breaks) is None
+    assert _clean_a1_landing_prose(clean) == clean.split("\n\n", 1)[1].strip()
+
+    # Neither source may republish it: not the writer overview, not the a1-v1 opening.
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
+    module_dir.mkdir(parents=True)
+    archive.mkdir(parents=True)
+    (module_dir / "landing-overview.md").write_text(banned, encoding="utf-8")
+    (archive / "module.md").write_text(line_breaks + "\n## Section\n\nBody.\n", encoding="utf-8")
+    assert _writer_landing_overview(module_dir) is None
+    assert _original_intro(module_dir, "special-signs") is None
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    [
+        "This module completes your **mastery** of all 33 letters and introduces the soft sign.",
+        "This module completes your mastery of all 33 letters and introduces the soft sign.",
+        "This module completes your _mastery_ of `all 33` le\u0301tters and introduces the soft sign.",
+        "This module completes your mas**tery** of all 33 letters and introduces the soft sign.",
+        "You read the soft sign in real words, then learn **word** *hyphenation* rules for line ends.",
+    ],
+)
+def test_a1_landing_prose_rejects_banned_text_split_by_inline_markdown(tmp_path, sentence):
+    from scripts.build.lesson_assembler import _clean_a1_landing_prose, _original_intro
+
+    assert _clean_a1_landing_prose(f"# Special Signs\n\n{sentence}\n") is None
+
+    # The a1-v1 fallback must not republish it either, from module.md or the published mdx.
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
+    module_dir.mkdir(parents=True)
+    archive.mkdir(parents=True)
+    (archive / "module.md").write_text(
+        f"# Special Signs\n\n{sentence}\n\n## Section\n\nBody.\n", encoding="utf-8"
+    )
+    assert _original_intro(module_dir, "special-signs") is None
+
+    (archive / "module.md").unlink()
+    published = tmp_path / "site/src/content/docs/a1-v1/special-signs.mdx"
+    published.parent.mkdir(parents=True)
+    published.write_text(
+        f'<Tabs>\n<TabItem label="Lesson">\n\n{sentence}\n\n## Section\n\nBody.\n</TabItem>\n</Tabs>\n',
+        encoding="utf-8",
+    )
+    assert _original_intro(module_dir, "special-signs") is None
 
 
 def test_a1_assembler_converts_text_fences_to_bilingual_bullets():

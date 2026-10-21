@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import sqlite3
 from functools import cache
 from pathlib import Path
 from types import SimpleNamespace
@@ -485,6 +486,10 @@ def test_prompt_sentence_is_used_by_offer_question_and_payload() -> None:
     )
 
 
+def test_form_with_empty_rendered_sentence_is_refused() -> None:
+    assert _case_offer("", sentence_field="prompt")["code"] == "form_sentence_missing"
+
+
 def test_shared_accusative_case_does_not_trigger_negation_rule() -> None:
     # Under rev 6.5, options whose learner Case sets are all identical (Acc) do not contrast in case.
     coffee = _record(30, "кава", [("каву", "noun:inanim:f:v_zna")])
@@ -565,6 +570,14 @@ def test_store_without_negation_particle_record_is_named(particle: dict | None) 
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
 
 
+def test_negation_record_rebound_to_another_particle_is_refused() -> None:
+    # W-061 carrying another store particle's lemma and VESUM binding (the real W-062 record).
+    another = _store_record("W-062")
+    other = {**_store_record(NEGATION_PARTICLE_RECORD), "lemma": another["lemma"], "entry": another["entry"]}
+    row = _case_offer("Я не знаю ___.", particle=other)
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
+
+
 @pytest.mark.parametrize(
     "sentence",
     ["Це не хліб, а ___", "Немає ___", "Ні, ___", "Без ___", "Ось ___"],
@@ -585,6 +598,11 @@ def test_a1_case_contrast_accepts_store_finite_analysis_without_vesum() -> None:
 @pytest.mark.parametrize("level", ["a2", "b1"])
 def test_negated_case_contrast_does_not_apply_above_a1(level: str) -> None:
     assert _case_offer("Я не знаю ___", level=level).get("code") != "a1_case_contrast_under_negated_verb"
+
+
+def test_case_contrast_blocker_1_two_options_with_shared_accusative_refused() -> None:
+    row = _case_offer("Я не маю ___.", options=["подарунка", "подарунок"])
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
 
 
 def test_adjacent_preposition_e1_exempts_case_contrast() -> None:
@@ -734,6 +752,24 @@ def test_case_contrast_pins_var_accusative_reading() -> None:
         "a1_case_contrast_under_negated_verb",
         "writer",
     )
+
+
+@pytest.mark.parametrize("exc", [sqlite3.OperationalError("disk I/O error"), OSError("connection lost")])
+def test_choice_checks_vesum_lookup_error_fails_closed_when_store_records_present(exc: Exception) -> None:
+    def failing_lookup(words: list[str]) -> dict:
+        raise exc
+
+    item = _form(["діло", "діла"], DEED, {"Case": "Nom"}, key=0)
+    item["sentence"] = "Я не роблю добре ___."
+    row = check_4_activities(
+        {"activities": [{"id": "a1", "items": [item]}]},
+        {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
+        {"words": [DEED, _store_record(NEGATION_PARTICLE_RECORD), _store_record("W-075")]},
+        {},
+        level="a1",
+        vesum_lookup=failing_lookup,
+    )[0]
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_choice_source_unavailable", "pack")
 
 
 def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:

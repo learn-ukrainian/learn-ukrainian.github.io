@@ -382,3 +382,29 @@ def test_cumulative_source_age_under_threshold_keeps_authorization(
     assert body["recommendation"]["primary_agent_for_code"] == "codex"
     assert body["agents"]["codex"]["eligible"] is True
     assert body["ranked_by_headroom"] == [{"lane": "codex"}]
+
+
+def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = {"n": 0}
+
+    def scan(**_kwargs):
+        calls["n"] += 1
+        return {"total": calls["n"], "tasks": []}
+
+    monkeypatch.setattr(delegate_router, "active_delegate_tasks", scan)
+    app = _mount(tmp_path, delegate_router.router, "/api/delegate")
+    tasks_dir = tmp_path / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True)
+
+    async def scenario() -> None:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get("/api/delegate/active")
+            assert first.json()["total"] == 1
+            (tasks_dir / "one.json").write_text("{}", encoding="utf-8")
+            second = await client.get("/api/delegate/active")
+            assert second.json()["total"] == 2
+
+    asyncio.run(scenario())
+    keys = [key for key in state_helpers._ttl_cache if ":delegate:" in key]
+    assert len(keys) == 1

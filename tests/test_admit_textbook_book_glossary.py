@@ -10,6 +10,16 @@ import yaml
 from scripts.lexicon import admit_textbook_book_glossary as admit
 
 
+def test_dmklinger_gloss_dedupes_and_caps_senses() -> None:
+    index = {
+        "мама": [
+            ("noun", json.dumps(["mother", "mama", "mom", "mum", "extra sense"])),
+        ]
+    }
+    gloss = admit.dmklinger_gloss(index, "мама")
+    assert gloss == "mother; mama; mom"
+
+
 def test_uk_definition_prefers_sum20_over_vts() -> None:
     cache = {
         "lookup_word": "мама",
@@ -133,6 +143,15 @@ def test_resolve_sources_db_fails_closed_when_neither_exists(tmp_path: Path, mon
         admit.resolve_sources_db(project_root=worktree)
 
 
+def test_resolve_sources_db_fails_closed_no_primary_resolved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    worktree = tmp_path / "worktree"
+
+    monkeypatch.setattr(admit, "_resolve_primary_checkout", lambda root=None: None)
+
+    with pytest.raises(FileNotFoundError, match=r"sources\.db not found: checked worktree"):
+        admit.resolve_sources_db(project_root=worktree)
+
+
 def test_resolve_sources_db_refuses_network_path() -> None:
     with pytest.raises(admit.ActiveDatabaseNetworkError, match=r"Active sources\.db must remain on local storage"):
         admit.resolve_sources_db(explicit="/Volumes/UkrainianData/data/sources.db")
@@ -149,6 +168,22 @@ def test_resolve_sources_db_explicit_override(tmp_path: Path) -> None:
 
     with pytest.raises(FileNotFoundError, match=r"sources\.db specified at.*does not exist"):
         admit.resolve_sources_db(explicit=tmp_path / "missing.db")
+
+
+def test_resolve_primary_checkout_matches_git_common_dir() -> None:
+    from scripts.guardrails.worktree_containment import (
+        NotAGitRepositoryError,
+        resolve_main_root,
+    )
+
+    resolved = admit._resolve_primary_checkout()
+    try:
+        expected = resolve_main_root(admit.PROJECT_ROOT)
+    except NotAGitRepositoryError:
+        assert resolved is None
+        return
+    assert resolved == expected
+    assert (resolved / ".git").is_dir()
 
 
 def test_main_runs_with_primary_fallback_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

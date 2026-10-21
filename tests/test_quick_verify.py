@@ -8,6 +8,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from build.quick_verify import (
+    build_correction_directive,
+    has_errors,
     quick_verify,
 )
 
@@ -193,3 +195,28 @@ def test_exercises_unnormalized_markers_count():
 
 
 # --- AC10: Retry catches bad output ---
+
+
+def test_retry_catches_bad_output():
+    """Content missing H2 headers fails quick_verify, and
+    build_correction_directive produces a non-empty directive."""
+    plan = _make_plan(
+        sections=[
+            {"section": "Привітання (Greetings)", "words": 400},
+            {"section": "Знайомство (Introductions)", "words": 400},
+        ],
+        word_target=800,
+    )
+    # Content has NO H2 headers at all — just plain text
+    bad_content = "Українська мова дуже гарна і мелодійна. " * 150
+
+    results = quick_verify(bad_content, plan)
+    assert has_errors(results), "Missing H2 headers should produce ERROR results"
+
+    structure_errors = [r for r in results if r.check == "STRUCTURE"]
+    assert len(structure_errors) == 2, "Both sections should be flagged as missing"
+
+    directive = build_correction_directive(results)
+    assert directive, "Directive should be non-empty"
+    assert "<correction_directive>" in directive
+    assert "Привітання" in directive

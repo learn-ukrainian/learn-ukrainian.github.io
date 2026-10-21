@@ -11,7 +11,7 @@ from scripts.audit.llm_qg_canaries import (
     list_canaries,
 )
 from scripts.audit.llm_qg_store import content_sha_for_module, record_llm_qg
-from scripts.audit.module_quality_audit import audit_modules
+from scripts.audit.module_quality_audit import audit_modules, main, planned_modules
 
 
 def _write_module(root: Path, level: str, slug: str, body: str) -> Path:
@@ -48,6 +48,19 @@ def _payload() -> dict:
         },
         "findings": [],
     }
+
+
+def test_planned_modules_use_manifest_order_and_profiles(tmp_path: Path) -> None:
+    _write_manifest(tmp_path)
+
+    modules = planned_modules(curriculum_root=tmp_path, level_ids=["a1", "b1", "hist"])
+
+    assert [(item.num, item.level, item.slug, item.profile) for item in modules] == [
+        (1, "a1", "intro", "a1"),
+        (1, "b1", "bad-style", "b1_plus"),
+        (2, "b1", "not-built", "b1_plus"),
+        (1, "hist", "seminar", "seminar"),
+    ]
 
 
 def test_audit_modules_reports_surface_and_llm_qg_coverage(tmp_path: Path) -> None:
@@ -165,6 +178,38 @@ def test_audit_modules_counts_compact_qg_evidence_as_current_file_evidence(tmp_p
     assert row["second_review_recommended"] is False
 
 
+def test_cli_includes_canary_results_and_can_fail_on_canary_failure(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    _write_manifest(tmp_path)
+    _write_module(tmp_path, "b1", "bad-style", "**Я тут.**\n")
+    canary_path = tmp_path / "canary.json"
+    canary_path.write_text(
+        json.dumps({"findings": [{"issue_id": "AI_LEAKAGE"}]}),
+        encoding="utf-8",
+    )
+
+    code = main(
+        [
+            "--curriculum-root",
+            str(tmp_path),
+            "--level",
+            "b1",
+            "--format",
+            "json",
+            "--canary-result",
+            f"b1={canary_path}",
+            "--fail-on-canary-failure",
+        ]
+    )
+
+    assert code == 1
+    output = json.loads(capsys.readouterr().out)
+    assert output["canaries"]["b1"]["passed"] is False
+    assert "AWKWARD_PASSIVE_RESULT_STATE" in output["canaries"]["b1"]["missing_issue_ids"]
+
+
 def test_extract_issue_ids_reads_top_level_and_dimensional_findings() -> None:
     result = {
         "issue_ids": ["internal_leakage"],
@@ -212,6 +257,19 @@ def test_evaluator_fails_when_required_issue_ids_are_missing_for_level() -> None
     assert "UNNATURAL_ANTHROPOMORPHISM" in report["missing_issue_ids"]
     assert "UKRAINIAN_GRAMMAR_CALQUE" in report["missing_issue_ids"]
     assert "ENGLISH_LEAKAGE" in report["missing_issue_ids"]
+
+
+def test_evaluator_can_score_one_named_canary() -> None:
+    result = {
+        "canary_id": "b1-passive-result-state",
+        "findings": [{"issue_id": "AWKWARD_PASSIVE_RESULT_STATE"}],
+    }
+
+    report = evaluate_canaries(result, "b1")
+
+    assert report["passed"]
+    assert report["canary_ids"] == ("b1-passive-result-state",)
+    assert report["missing_issue_ids"] == ()
 
 
 def test_evaluator_marks_pass_when_all_required_issue_ids_present() -> None:

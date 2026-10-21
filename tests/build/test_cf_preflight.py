@@ -46,6 +46,23 @@ def test_clearance_file_requires_matching_head(tmp_path: Path):
     assert "!= build HEAD" in bad.reason
 
 
+def test_check_cf_preflight_module_dir_clearance(tmp_path: Path):
+    head = "e" * 40
+    module = tmp_path / "module"
+    module.mkdir()
+    (module / "cf_clearance.json").write_text(
+        json.dumps({"head": head, "verdict": "APPROVED"}),
+        encoding="utf-8",
+    )
+    result = cf.check_cf_preflight(
+        repo_root=tmp_path,
+        head=head,
+        module_dir=module,
+        allow_github=False,
+    )
+    assert result.clear is True
+
+
 def test_chronology_later_request_changes_comment_blocks_earlier_approve_review():
     head = "f" * 40
     t0 = datetime.fromisoformat("2026-09-17T11:00:00+00:00")

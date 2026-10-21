@@ -122,6 +122,34 @@ def test_executescript_preserves_readonly_and_attachment_refusal(database):
             conn.executescript("ATTACH ':memory:' AS side;")
         assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
     assert database.read_bytes() == before
+
+
+def test_helper_installs_no_python_sql_callbacks(monkeypatch, database):
+    registrations = {
+        "set_authorizer",
+        "set_progress_handler",
+        "set_trace_callback",
+        "create_function",
+        "create_collation",
+        "create_aggregate",
+        "create_window_function",
+    }
+
+    class CallbackFreeConnection(sqlite3.Connection):
+        def __getattribute__(self, name):
+            if name in registrations:
+                raise AssertionError(f"helper attempted to register a Python callback: {name}")
+            return super().__getattribute__(name)
+
+    connect = sqlite3.connect
+    with closing(connect(":memory:")) as baseline:
+        functions = baseline.execute("PRAGMA function_list").fetchall()
+        collations = baseline.execute("PRAGMA collation_list").fetchall()
+    monkeypatch.setattr(sqlite3, "connect", lambda *a, **kw: connect(*a, **kw, factory=CallbackFreeConnection))
+    with closing(open_readonly(database)) as conn:
+        assert conn.execute("PRAGMA function_list").fetchall() == functions
+        assert conn.execute("PRAGMA collation_list").fetchall() == collations
+        assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
     # sqlite3 exposes no getters for authorizer, progress, or trace handlers.
     # Interception above covers their registration, including cleared handlers.
 

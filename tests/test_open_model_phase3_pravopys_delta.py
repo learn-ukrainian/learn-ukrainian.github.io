@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_audit_entropy as entropy
 from scripts.projects.open_model_data import phase3_pravopys_delta as delta
@@ -308,3 +309,30 @@ def test_complete_bundle_requires_current_freeze_and_auditor_receipt(
     stale_cycle["audit_action_receipt"]["evaluation_cycle_id"] = "old-cycle"
     with pytest.raises(delta.PravopysDeltaError, match="contract or evaluation-cycle"):
         delta.validate_bundle(stale_cycle, repo_root=tmp_path)
+
+
+def test_public_entropy_verifier_injection_is_not_a_production_api(tmp_path: Path) -> None:
+    freeze, _, _, _, rows, _, _ = _ledger(tmp_path)
+    population = delta.freeze_population(rows)
+    with pytest.raises(TypeError, match="approved_common_entropy_contract"):
+        delta.draw_audit_sample(
+            rows,
+            population,
+            _seed(rows, freeze),
+            source_freeze=freeze,
+            approved_common_entropy_contract=lambda *_args, **_kwargs: None,
+        )
+
+
+def test_schema_is_strict_and_current_contract_shaped() -> None:
+    assert delta.hamilton_allocation({("a", "x"): 7, ("b", "y"): 3, ("c", "z"): 2}, 5) == {
+        ("a", "x"): 3,
+        ("b", "y"): 1,
+        ("c", "z"): 1,
+    }
+    schema = json.loads(Path(delta.SCHEMA_PATH).read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    assert schema["$defs"]["source_freeze"]["properties"]["source_status"]["const"] == delta.CURRENT_SOURCE_FREEZE_STATUS
+    assert schema["$defs"]["source_freeze"]["properties"]["wrapper_schema_version"]["const"] == delta.SOURCE_FREEZE_WRAPPER_SCHEMA_VERSION
+    assert schema["$defs"]["review"]["properties"]["task_id"]["const"] == "phase3-v2-1-ukrainian-source-review"
+    assert schema["additionalProperties"] is False

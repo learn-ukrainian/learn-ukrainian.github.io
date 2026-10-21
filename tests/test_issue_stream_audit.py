@@ -269,6 +269,45 @@ def test_subissue_batch_uses_one_typed_request_for_multiple_parents(monkeypatch)
     assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
 
 
+def test_closed_epic_remains_registered_but_is_not_an_audit_root():
+    path = issue_stream_audit.REGISTRY_PATH
+    registry = load_registry(path)
+    assert "eval-harness" not in registry
+    assert "a1-upgrade" not in registry
+    assert registry["open-model-data"] == [6321, 7423]
+
+    audit_registry = load_registry(path, audit_only=True)
+    assert audit_registry["open-model-data"] == [6321]
+    assert 7423 not in {n for epics in audit_registry.values() for n in epics}
+    report = classify(_issues(*[n for epics in audit_registry.values() for n in epics]), audit_registry, {})
+    assert report["closed_or_missing_epics"] == []
+    assert report["ok"] is True
+
+
+@pytest.mark.parametrize(
+    "selector",
+    ["a1-upgrade", "eval-harness", "infra.a1-upgrade", "infra.eval-harness"],
+)
+def test_retired_stream_launchers_fail_closed(selector):
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; launcher_selector_resolve "$2"',
+            "bash",
+            str(issue_stream_audit.ROOT / "scripts/lib/handoff_identity.sh"),
+            selector,
+        ],
+        cwd=issue_stream_audit.ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    assert result.stdout == ""
+    assert f"retired lane selector: {selector}" in result.stderr
+
+
 # --------------------------------------------------------------------------- #
 # ADR-011 P4 — effective issue→epic membership index + strict-gate resolvers
 # --------------------------------------------------------------------------- #
@@ -349,6 +388,13 @@ def test_issue_resolver_rejects_open_orphan_issue(registry):
         _issues(100, 150, 200, 42), registry, {100: (set(), set()), 150: (set(), set()), 200: (set(), set())}
     )
     assert make_issue_resolver(report)("42") is False
+
+
+def test_issue_resolver_rejects_ambiguously_owned_issue(registry):
+    """An open issue that IS in the open set but is ambiguously multi-homed
+    (unique_stream False) must not resolve — same proof the ownership gate uses."""
+    report = classify(_issues(100, 150, 200, 8), registry, {100: ({8}, set()), 150: (set(), set()), 200: ({8}, set())})
+    assert make_issue_resolver(report)("8") is False
 
 
 def test_read_membership_index_freshness(tmp_path, registry):
@@ -433,6 +479,19 @@ def test_read_membership_index_rejects_malformed_entries(tmp_path):
         assert read_membership_index(3600, cache_path=cache) is None, entry
 
 
+def test_read_membership_index_rejects_non_positive_int_key(tmp_path):
+    import json
+    import time
+
+    cache = tmp_path / "cache.json"
+    report = _valid_report(time.time())
+    report["effective_membership"] = {
+        "-5": {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
+    }
+    cache.write_text(json.dumps(report), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache) is None
+
+
 def test_read_membership_index_rejects_malformed_open_numbers(tmp_path):
     import json
     import time
@@ -442,6 +501,12 @@ def test_read_membership_index_rejects_malformed_open_numbers(tmp_path):
     report["open_issue_numbers"] = [42, "100", -1, True]
     cache.write_text(json.dumps(report), encoding="utf-8")
     assert read_membership_index(3600, cache_path=cache) is None
+
+
+def test_validate_membership_report_rejects_non_dict():
+    assert validate_membership_report(None, 3600) is None
+    assert validate_membership_report("not-a-report", 3600) is None
+    assert validate_membership_report([], 3600) is None
 
 
 # --------------------------------------------------------------------------- #
@@ -636,6 +701,28 @@ def test_9852_audit_records_resolved_repository_in_report_and_cache(tmp_path, mo
     assert len([args for args, _cwd in calls if args[1:3] == ("repo", "view")]) == 1
 
 
+def test_run_audit_default_root_preserves_module_root_behavior(tmp_path, monkeypatch):
+    """Calling ``run_audit()`` with no argument must still resolve against the
+    module's own ``ROOT`` — the fix must not change plain CLI behavior."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    fake_root = tmp_path / "module-root-stand-in"
+    _make_repo(fake_root, epics=[7])
+    monkeypatch.setattr(issue_stream_audit, "ROOT", fake_root)
+
+    calls: list[tuple[tuple, object]] = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _fake_gh_run(calls, owner="acme", name="default-repo", open_issues=[]),
+    )
+
+    report = run_audit()
+
+    assert report["streams"] == {"s": [7]}
+    assert {cwd for _args, cwd in calls} == {fake_root}
+    assert (fake_root / "batch_state" / "issue_stream_audit.json").exists()
+
+
 def test_repo_owner_name_cache_keyed_by_root_does_not_leak(tmp_path, monkeypatch):
     """``_repo_owner_name`` must resolve independently per root — a cache
     warmed for one checkout must not answer for a different one."""
@@ -708,6 +795,15 @@ def _primary_with_linked_worktree(tmp_path):
     worktree.mkdir(parents=True)
     (worktree / ".git").write_text(f"gitdir: {primary / '.git' / 'worktrees' / 'wt'}\n", encoding="utf-8")
     return primary, worktree
+
+
+def test_refresh_sidecars_resolve_to_primary_from_linked_worktree(tmp_path):
+    primary, worktree = _primary_with_linked_worktree(tmp_path)
+
+    state, lock = issue_stream_audit.refresh_sidecar_paths(worktree)
+
+    assert state == primary / "batch_state" / "issue_stream_audit_refresh.json"
+    assert lock == primary / "batch_state" / "issue_stream_audit_refresh.lock"
 
 
 def test_refresh_scheduled_from_worktree_leaves_worktree_batch_state_untouched(tmp_path, monkeypatch):
@@ -923,6 +1019,47 @@ def test_refresh_state_atomic_replace_never_exposes_partial_json(tmp_path, monke
     assert failures == []
 
 
+# --------------------------------------------------------------------------- #
+# #8661 — PR #8660 cross-family review follow-ups: registry validation branch
+# tests, per-node traversal degradation, closed_epics upkeep warning, and the
+# research-registry adoption pointer.
+# --------------------------------------------------------------------------- #
+def _write_streams(tmp_path, body: str):
+    path = tmp_path / "issue_streams.yaml"
+    path.write_text(textwrap.dedent(body), encoding="utf-8")
+    return path
+
+
+def test_registry_rejects_non_bool_retired(tmp_path):
+    path = _write_streams(
+        tmp_path,
+        """
+        streams:
+          broken:
+            title: x
+            epics: [100]
+            retired: "soon"
+        """,
+    )
+    with pytest.raises(ValueError, match=r"broken.*retired"):
+        load_registry(path)
+
+
+def test_registry_rejects_closed_epics_outside_epic_list(tmp_path):
+    path = _write_streams(
+        tmp_path,
+        """
+        streams:
+          broken:
+            title: x
+            epics: [100]
+            closed_epics: [999]
+        """,
+    )
+    with pytest.raises(ValueError, match=r"broken.*closed epics outside"):
+        load_registry(path)
+
+
 def test_tree_membership_skips_unresolved_node_with_warning():
     edges = {100: [10, 11]}
 
@@ -1025,6 +1162,25 @@ def test_subissue_batch_graphql_errors_are_incomplete_not_absent(monkeypatch):
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: None})
     assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
     assert pages[200] is issue_stream_audit.INCOMPLETE_NODE
+
+
+def test_subissue_batch_caps_singleton_retries_with_budget(monkeypatch):
+    """The per-node fallback is bounded (#8661): once the shared budget is
+    spent, remaining parents come back INCOMPLETE_NODE with no ``gh`` call."""
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+    calls = []
+
+    def fake_gh_json(args, *, cwd):
+        calls.append(args)
+        raise RuntimeError("gh api graphql… failed")
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    budget = issue_stream_audit._RetryBudget(limit=2)
+    pages = issue_stream_audit._fetch_subissue_batch({number: None for number in (1, 2, 3, 4, 5)}, retry_budget=budget)
+    # 1 failed batch + exactly 2 singleton retries; parents 3–5 never hit the network.
+    assert len(calls) == 3
+    assert budget.remaining == 0
+    assert all(pages[n] is issue_stream_audit.INCOMPLETE_NODE for n in (1, 2, 3, 4, 5))
 
 
 def _run_audit_fake_gh(calls, *, owner: str, name: str, open_issues: list[dict], tree: dict):
@@ -1294,6 +1450,29 @@ def test_run_audit_warns_when_closed_epic_is_actually_open(tmp_path, monkeypatch
     assert report["streams"] == {"s": [100]}
 
 
+def test_run_audit_quiet_when_closed_epic_is_really_closed(tmp_path, monkeypatch):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo_with_closed_epic(root)
+
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh(
+            [],
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100),
+            tree={100: []},
+        ),
+    )
+
+    report = run_audit(root)
+
+    assert [w for w in report["warnings"] if w["code"] == "closed_epic_reopened"] == []
+    assert report["ok"] is True
+
+
 def test_tree_membership_pagination_truncation_counts_as_incomplete():
     """Finding 4 (#8661): when pagination hits _MAX_SUBISSUE_PAGES with hasNextPage
     still true, the truncation must be marked as traversal_incomplete."""
@@ -1355,6 +1534,28 @@ def test_validate_membership_report_and_read_membership_index_reject_incomplete_
     assert read_membership_index(3600, cache_path=cache_file) is not None
 
 
+def test_absent_or_mistyped_completeness_flag_is_unverified(tmp_path):
+    """A missing flag, the string "false", or a non-list incomplete_nodes is unverified."""
+    import time
+
+    now = time.time()
+    cache = tmp_path / "cache.json"
+
+    absent = _valid_report(now)
+    del absent["membership_complete"]
+    assert validate_membership_report(absent, 3600) is None
+    cache.write_text(json.dumps(absent), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache) is None
+
+    string_false = _valid_report(now)
+    string_false["membership_complete"] = "false"
+    assert validate_membership_report(string_false, 3600) is None
+
+    non_list = _valid_report(now)
+    non_list["incomplete_nodes"] = "false"
+    assert validate_membership_report(non_list, 3600) is None
+
+
 def test_resolvers_refuse_incomplete_report_that_looks_uniquely_owned():
     """Defence in depth: builders must not trust a raw incomplete classify-shaped report."""
     import time
@@ -1369,6 +1570,32 @@ def test_resolvers_refuse_incomplete_report_that_looks_uniquely_owned():
     }
     assert make_membership_resolver(report)(500, 10) is False
     assert make_issue_resolver(report)("500") is False
+
+
+def test_resolve_github_issue_refuses_incomplete_cache_for_traced_case(tmp_path):
+    """#500 is referenced by roots #10 and #20, but #20 was never read.
+
+    The partial index makes #500 look uniquely owned by #10. entire_context
+    must still refuse.
+    """
+    import time
+
+    from scripts.entire_context.resolvers import REASON_RESOLUTION_ERROR, ResolutionError, resolve_github_issue
+
+    report = {
+        "generated_at": time.time(),
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "open_issue_numbers": [10, 20, 500],
+        "effective_membership": {"500": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    }
+    cache = tmp_path / "issue_stream_audit.json"
+    cache.write_text(json.dumps(report), encoding="utf-8")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(500, cache_path=cache, repo=tmp_path, namespace="github:acme/repo")
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert "incomplete" in str(excinfo.value)
 
 
 def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_path, monkeypatch):
@@ -1437,6 +1664,35 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
         resolve_github_issue(500, cache_path=cache, repo=root, namespace="github:acme/repo")
     assert excinfo.value.reason == REASON_RESOLUTION_ERROR
     assert "incomplete" in str(excinfo.value)
+
+
+def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_path, monkeypatch):
+    """Finding 1 (issue #8661): run_audit with incomplete nodes writes membership_complete=False
+    and incomplete_nodes, and the resulting cache fails closed."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[100])
+
+    def fake_fetch_tree(roots, repo_root, warnings):
+        warnings.append({"code": "traversal_incomplete", "issue": 20})
+        return {100: ({42}, set())}
+
+    monkeypatch.setattr(issue_stream_audit, "fetch_tree_membership", fake_fetch_tree)
+    monkeypatch.setattr(issue_stream_audit, "fetch_open_issues", lambda _r: _issues(100, 42))
+    monkeypatch.setattr(
+        issue_stream_audit, "fetch_issue_states", lambda nums, _r, **_k: ({n: "OPEN" for n in nums}, set())
+    )
+
+    report = run_audit(root)
+    assert report["ok"] is False
+    assert report["membership_complete"] is False
+    assert report["incomplete_nodes"] == [20]
+
+    cache_file = root / "batch_state" / "issue_stream_audit.json"
+    assert cache_file.exists()
+    assert read_membership_index(3600, cache_path=cache_file) is None
+    assert validate_membership_report(report, 3600) is None
 
 
 # --------------------------------------------------------------------------- #
@@ -1529,6 +1785,33 @@ def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, 
     assert "multi-homed" in refused["reason"]
 
 
+def test_depth_truncated_audit_refuses_body_path(tmp_path, monkeypatch):
+    """The body path consumes the same completeness contract: epic 10's body
+    names #500, and the unread depth frontier under epic 20 could claim it too."""
+    from scripts.orchestration import task_lifecycle
+
+    report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN, body_refs={10: "Tracked: #500"})
+
+    assert report["effective_membership"]["500"] == {
+        "epics": [10],
+        "streams": ["s"],
+        "via": "body",
+        "unique_stream": True,
+    }
+    result = task_lifecycle.resolve_membership(
+        issue_number=500,
+        stream_epic=10,
+        native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "incomplete" in result["reason"]
+    assert "#208" in result["reason"]
+
+
 def test_shared_walk_closes_each_root_past_the_fetch_depth():
     """A node fetched shallowly from one root can sit deeper than the fetch
     depth below another root. Every adjacency was read, so the traversal is
@@ -1546,6 +1829,36 @@ def test_shared_walk_closes_each_root_past_the_fetch_depth():
     assert membership[20][0] == {*chain, 30, 42}
     report = classify(_issues(10, 20, 30, 42, *chain), {"s": [10, 20]}, membership)
     assert report["effective_membership"]["42"]["unique_stream"] is False
+
+
+def test_truncated_depth_warning_alone_makes_report_incomplete():
+    """A cache claiming completeness while carrying a depth-truncation warning,
+    even one whose frontier is malformed, is unverified."""
+    base = {
+        "generated_at": int(time.time()),
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "effective_membership": {},
+        "open_issue_numbers": [],
+    }
+    truncated = {**base, "warnings": [{"code": "truncated_depth", "depth": 8, "frontier": [208, 209]}]}
+    assert issue_stream_audit.unread_membership_nodes(truncated) == {208, 209}
+    assert issue_stream_audit.membership_report_is_complete(truncated) is False
+    assert validate_membership_report(truncated, 3600) is None
+    assert make_membership_resolver(truncated)(1, 1) is False
+    assert make_issue_resolver(truncated)("1") is False
+
+    malformed = {**base, "warnings": [{"code": "truncated_depth", "depth": 8, "frontier": "208"}]}
+    assert issue_stream_audit.membership_report_is_complete(malformed) is False
+
+    benign = {
+        **base,
+        "warnings": [
+            {"code": "unresolved_subissue", "issue": 7},
+            {"code": "cross_repo_subissue", "parent": 1, "issue": 2, "repository": "other/repo"},
+        ],
+    }
+    assert issue_stream_audit.membership_report_is_complete(benign) is True
 
 
 @pytest.fixture(autouse=True)

@@ -207,6 +207,99 @@ def run_launcher(
     return start_launcher_group(argv, cwd=cwd, env=env).finish(timeout)
 
 
+_LOOPING_STUB = "while :; do sleep 0.1; done"
+
+
+def _pid_running(pid: int) -> bool:
+    try:
+        return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] != "Z"
+    except (OSError, IndexError):
+        return False
+
+
+def _wait_for_pid_file(path: Path) -> int:
+    deadline = time.monotonic() + 30
+    while time.monotonic() < deadline:
+        if path.is_file() and path.read_text().strip():
+            return int(path.read_text())
+        time.sleep(0.02)
+    pytest.fail(f"stub never published its pid at {path}")
+
+
+def test_killing_only_the_launcher_orphans_the_stub_and_group_reap_removes_it(tmp_path: Path) -> None:
+    # The old teardown (killing only the launcher) is the leak premise; LauncherGroup.reap is the fix.
+    pid_file = tmp_path / "stub.pid"
+    group = start_launcher_group(
+        ["bash", "-c", f'bash -c \'echo $$ > "$1"; {_LOOPING_STUB}\' stub "$1" & wait', "launcher", str(pid_file)],
+        cwd=tmp_path,
+        env=dict(os.environ),
+    )
+    try:
+        stub_pid = _wait_for_pid_file(pid_file)
+        group.signal_leader(signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while not group.exited() and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert group.exited()
+        assert _pid_running(stub_pid), "premise: killing only the launcher must orphan the looping stub"
+    finally:
+        group.reap()
+    assert not _pid_running(stub_pid)
+    assert live_group_members(group.pid) == []
+
+
+@pytest.fixture
+def signal_reap_order(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, int, bool]]:
+    """Record group signals and leader reaps, with whether the id was still reserved when signalled."""
+    events: list[tuple[str, int, bool]] = []
+    real_killpg, real_waitpid = os.killpg, os.waitpid
+
+    def spy_killpg(pgid: int, sig: int) -> None:
+        events.append(("killpg", pgid, Path(f"/proc/{pgid}").exists()))
+        real_killpg(pgid, sig)
+
+    def spy_waitpid(pid: int, options: int) -> tuple[int, int]:
+        result = real_waitpid(pid, options)
+        if result[0] == pid and pid > 0:
+            events.append(("reaped", pid, True))
+        return result
+
+    monkeypatch.setattr(os, "killpg", spy_killpg)
+    monkeypatch.setattr(os, "waitpid", spy_waitpid)
+    return events
+
+
+def _assert_signalled_before_reaped(events: list[tuple[str, int, bool]], pid: int) -> None:
+    mine = [event for event in events if event[1] == pid]
+    kinds = [kind for kind, _pid, _reserved in mine]
+    assert "killpg" in kinds and "reaped" in kinds, mine
+    assert kinds.index("killpg") < kinds.index("reaped"), f"group signalled after the leader was reaped: {mine}"
+    assert all(reserved for kind, _pid, reserved in mine if kind == "killpg"), mine
+
+
+def test_run_launcher_signals_the_group_before_reaping_the_leader(
+    tmp_path: Path, signal_reap_order: list[tuple[str, int, bool]]
+) -> None:
+    result = run_launcher(["bash", "-c", "exit 3"], cwd=tmp_path, env=dict(os.environ))
+
+    assert result.returncode == 3
+    reaped = {pid for kind, pid, _reserved in signal_reap_order if kind == "reaped"}
+    assert len(reaped) == 1, signal_reap_order
+    _assert_signalled_before_reaped(signal_reap_order, reaped.pop())
+
+
+def test_run_launcher_timeout_reaps_the_group_and_raises(tmp_path: Path) -> None:
+    pid_file = tmp_path / "stub.pid"
+    with pytest.raises(subprocess.TimeoutExpired):
+        run_launcher(
+            ["bash", "-c", f'echo $$ > "$1"; {_LOOPING_STUB}', "launcher", str(pid_file)],
+            cwd=tmp_path,
+            env=dict(os.environ),
+            timeout=1,
+        )
+    assert not _pid_running(_wait_for_pid_file(pid_file))
+
+
 def test_help_needs_no_provider_or_visibility_probe(muse_env: dict[str, str]) -> None:
     result = launch({**muse_env, "MUSE_TEST_GH_RC": "1"}, "--help", dry=False)
     assert result.returncode == 0, result.stderr

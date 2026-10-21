@@ -12,7 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _acp_compat, _channels, _cli, _db
+from scripts.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
@@ -25,6 +25,21 @@ def isolate_db(tmp_path, monkeypatch):
     with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["post", "topic", "body"],
+        ["channel", "new", "topic"],
+        ["inbox", "ack", "delivery-id"],
+        ["sync", "codex"],
+    ],
+)
+def test_authority_mode_retires_legacy_channel_writers(argv, monkeypatch, capsys):
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
+    assert _run_cli(argv) == 2
+    assert "writes are retired in authority mode" in capsys.readouterr().err
 
 
 def _run_cli(argv: list[str]) -> int:
@@ -223,6 +238,18 @@ def test_post_to_codex_desktop_routes_delivery(capsys):
     assert delivery["to_agent"] == "codex-desktop"
 
 
+def test_channel_set_ttl_persists(capsys):
+    _channels.create_channel("topic")
+
+    exit_code = _run_cli(["channel", "set-ttl", "topic", "6"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert "TTL set to 6h" in captured.out
+    assert _channels.get_channel("topic")["max_age_hours"] == 6
+
+
 def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -332,6 +359,28 @@ def test_post_model_flag_stores_delivery_target_model(capsys):
     captured = capsys.readouterr()
     assert captured.err == ""
     assert delivery["to_model"] == "gemini-3-flash-preview"
+
+
+def test_post_model_flag_applies_to_default_channel_subscribers(capsys):
+    _channels.create_channel("topic", subscribers=["gemini"])
+
+    post_exit = _run_cli(
+        [
+            "post",
+            "topic",
+            "hello subscriber",
+            "--model",
+            "gemini-3-pro-preview",
+            "--no-snapshot",
+        ]
+    )
+    message = _channels.read("topic")[0]
+    delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
+
+    assert post_exit == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert delivery["to_model"] == "gemini-3-pro-preview"
 
 
 def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(monkeypatch, capsys):
@@ -446,6 +495,47 @@ def _clear_identity_env(monkeypatch) -> None:
         monkeypatch.delenv(var, raising=False)
 
 
+def test_detect_caller_identity_grok_agent_maps_to_canonical_grok(monkeypatch):
+    # The native grok CLI exports GROK_AGENT for every tool shell it spawns
+    # (model-independent). It must auto-detect as the canonical `grok` seat
+    # (historical alias: grok-build) so a grok session can `ab ask-claude`
+    # without --from and get the reply back.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+
+    assert _cli._detect_caller_identity_from_env() == "grok"
+
+
+def test_detect_caller_identity_grok_agent_beats_soft_claude_heuristic(monkeypatch):
+    # A grok session that inherited a stray CLAUDE_* var must still resolve to
+    # the canonical `grok` seat, never misroute to the claude inbox.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
+
+    assert _cli._detect_caller_identity_from_env() == "grok"
+
+
+def test_detect_caller_identity_grok_agent_profile_name_is_not_a_false_positive(monkeypatch):
+    # GROK_AGENT doubles as an agent-profile *name* selector; only the tool-shell
+    # sentinel value "1" means "spawned by a grok CLI shell". A profile name must
+    # NOT be mistaken for the grok-build lane — it falls through to normal detect.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "my-custom-agent")
+
+    assert _cli._detect_caller_identity_from_env() is None
+
+
+def test_detect_caller_identity_explicit_handoff_still_wins_over_grok_agent(monkeypatch):
+    # An explicit, validated SESSION_HANDOFF_AGENT is authoritative over the
+    # weaker GROK_AGENT marker.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("GROK_AGENT", "1")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex")
+
+    assert _cli._detect_caller_identity_from_env() == "codex"
+
+
 def test_ask_claude_reads_body_from_stdin_on_dash(monkeypatch):
     # Regression for the grok "empty result" bug: ask-claude used args.content
     # directly, so `ask-claude - < prompt.md` sent the literal "-" as the body.
@@ -541,3 +631,110 @@ def test_open_model_data_slot_bridge_round_trip(provider, isolate_db, capsys):
 
 
 # ── #7597: phantom {provider}-{empty-slots-area} aliases ──────────────
+
+
+def test_curriculum_upgrade_alias_round_trip_keeps_dedicated_inbox(isolate_db, capsys):
+    alias = "codex-curriculum-upgrade"
+    slot = "codex-core"
+    assert _channels.resolve_recipient_alias(slot) == slot
+    assert _channels.resolve_recipient_alias(alias) == slot
+    assert _run_cli(["send", "bare control", "--to", "codex", "--from", "claude-infra"]) == 0
+    assert _run_cli(["send", "curriculum proof", "--to", alias, "--from", "claude-infra"]) == 0
+    capsys.readouterr()
+    with sqlite3.connect(isolate_db) as conn:
+        assert conn.execute("SELECT to_llm, content FROM messages ORDER BY id").fetchall() == [
+            ("codex", "bare control"), (slot, "curriculum proof"),
+        ]
+
+    for recipient in (alias, slot):
+        assert _run_cli(["inbox", "--for", recipient]) == 0
+        inbox = capsys.readouterr().out
+        assert f"Inbox for {slot}: 1 unread" in inbox
+        assert "curriculum proof" in inbox
+        assert "bare control" not in inbox
+    assert _run_cli(["inbox", "--for", "codex"]) == 0
+    inbox = capsys.readouterr().out
+    assert "bare control" in inbox
+    assert "curriculum proof" not in inbox
+
+    assert _run_cli(["ack-all", alias, "--consumed-by-live-driver"]) == 0
+    capsys.readouterr()
+    with sqlite3.connect(isolate_db) as conn:
+        assert conn.execute(
+            "SELECT to_llm, acknowledged, consumed_by_live_driver FROM messages ORDER BY id"
+        ).fetchall() == [("codex", 0, 0), (slot, 1, 1)]
+    assert _run_cli(["inbox", "--for", alias]) == 0
+    inbox = capsys.readouterr().out
+    assert f"Inbox for {slot}: 0 unread | 0 read-but-not-live-consumed | 1 live-consumed" in inbox
+    assert "bare control" not in inbox
+
+
+# grok-monitor is a registered slot since #10835; test_handoff_slot_registry covers its dedicated inbox.
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "kimi", "cursor"])
+def test_mixed_monitor_roster_preserves_legacy_inbox_consumers(provider, monkeypatch, isolate_db, capsys):
+    alias = f"{provider}-monitor"
+    assert "muse-monitor" in _channels._load_registry_slots()
+    assert _channels.resolve_recipient_alias(alias) == provider
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", alias)
+    assert _cli._detect_caller_identity_from_env() == provider
+    parser = _cli._build_parser()
+    assert parser.parse_args(["inbox", "--for", alias]).for_llm == provider
+    assert parser.parse_args(["ack-all", alias]).agent == provider
+    assert parser.parse_args(["send", "hi", "--to", alias]).to_llm == provider
+    assert parser.parse_args(["inbox", "show", alias]).agent == provider
+    assert parser.parse_args(["inbox", "run", alias, "--once"]).agent == provider
+
+    if provider == "kimi":
+        from agent_runtime.kimi_admission import KimiAdmissionRefused
+
+        for recipient in (provider, alias):
+            with pytest.raises(KimiAdmissionRefused):
+                _messaging.send_message("refused new message", to_llm=recipient, quiet=True)
+        # Historical Kimi rows remain readable, but cannot be newly sent or live-acked.
+        with sqlite3.connect(isolate_db) as conn:
+            conn.execute(
+                "INSERT INTO messages (from_llm, to_llm, content, timestamp, message_type) VALUES (?, ?, ?, ?, ?)",
+                ("claude", "kimi", "legacy monitor proof", datetime.now(UTC).isoformat(), "response"),
+            )
+    else:
+        sender = "codex" if provider == "claude" else "claude"
+        _messaging.send_message("legacy monitor proof", from_llm=sender, to_llm=provider, quiet=True)
+    _messaging.send_message("dedicated muse control", from_llm="claude", to_llm="muse-monitor", quiet=True)
+    capsys.readouterr()
+    assert _inbox_watch.canonical_slot(alias) == provider
+    conn = _inbox_watch.open_readonly_db(isolate_db)
+    try:
+        events = _inbox_watch.poll_once(conn, alias, last_seen=0)
+        assert [event.message_id for event in events] == [1]
+        assert [event.message_id for event in _inbox_watch.poll_once(conn, "muse-monitor", last_seen=0)] == [2]
+    finally:
+        conn.close()
+    _messaging.check_inbox(alias)
+    inbox = capsys.readouterr().out
+    assert f"Inbox for {provider}: 1 unread" in inbox
+    assert "legacy monitor proof" in inbox and "dedicated muse control" not in inbox
+    _messaging.acknowledge_all(alias, consumed_by_live_driver=True)
+    acknowledgment = capsys.readouterr().out
+    if provider == "kimi":
+        assert "No unread messages to acknowledge for kimi" in acknowledgment
+        expected = [("kimi", 0, 0), ("muse-monitor", 0, 0)]
+    else:
+        assert "Acknowledged 1 messages" in acknowledgment
+        expected = [(provider, 1, 1), ("muse-monitor", 0, 0)]
+    with sqlite3.connect(isolate_db) as conn:
+        assert (
+            conn.execute("SELECT to_llm, acknowledged, consumed_by_live_driver FROM messages ORDER BY id").fetchall()
+            == expected
+        )
+
+
+def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
+    # A typo of a registered lane (claude-infa) or an unknown provider prefix
+    # must NOT silently read the provider inbox — pass through unchanged so
+    # argparse choices / validators still reject them.
+    assert _channels.resolve_recipient_alias("claude-infa") == "claude-infa"
+    assert _channels.resolve_recipient_alias("nosuch-open-model-data") == "nosuch-open-model-data"
+    assert _channels.resolve_recipient_alias("nosuch") == "nosuch"
+    assert _channels.resolve_recipient_alias("") == ""
+    assert _channels.resolve_recipient_alias("cursor-nosucharea") == "cursor-nosucharea"
+    assert _channels.resolve_recipient_alias("cursor-infa") == "cursor-infa"

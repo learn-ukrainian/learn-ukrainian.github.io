@@ -100,6 +100,21 @@ def test_citation_read_errors_are_not_swallowed(tmp_path, monkeypatch):
         words.find_plans_citing("W-001", tmp_path)
 
 
+@pytest.mark.parametrize("entrypoint", [pack.main, verify.main_pack])
+@pytest.mark.parametrize("invalid_record", [False, True])
+def test_production_clis_report_typed_refusal_and_never_overwrite(retired, entrypoint, invalid_record, capsys):
+    plan, evidence = retired
+    if invalid_record:
+        (plan.parent / "_retired.yaml").write_text("invalid: true")
+    before = snapshot(plan.parent.parent)
+    args = ["a1", "old", "--plans-dir", str(plan.parent), "--evidence-dir", str(evidence), "--json"]
+    if entrypoint is pack.main:
+        args += ["--request", str(evidence / "missing-request.yaml")]
+    assert entrypoint(args) == 1
+    assert ("retirement_record_invalid" if invalid_record else "plan_retired") in capsys.readouterr().out
+    assert snapshot(plan.parent.parent) == before
+
+
 def test_changed_replacement_builds_and_integrity_publication_still_gate(
     retired, synthetic_sources, synthetic_vesum, synthetic_standard
 ):
@@ -131,6 +146,15 @@ def test_changed_replacement_builds_and_integrity_publication_still_gate(
         assert any("publication_plan_unresolved" in error for error in result["errors"])
         assert any("lock_mismatch" in error for error in result["errors"])
     assert (evidence / "old.yaml").read_bytes() == b"protected synthetic pack\xff"
+
+
+def test_raw_text_missing_and_nonretired_invalid_encoding_are_named(tmp_path):
+    with pytest.raises(PlanError, match="plan_not_found"):
+        read_plan_text(tmp_path / "absent.yaml")
+    path = tmp_path / "bad.yaml"
+    path.write_bytes(b"\xff")
+    with pytest.raises(PlanError, match="plan_yaml_invalid"):
+        read_plan_text(path)
 
 
 def test_word_builder_and_verifier_ignore_only_retired_citations(retired, synthetic_sources, synthetic_vesum):

@@ -40,6 +40,13 @@ def test_get_returns_none_when_hash_mismatch(tmp_cache):
     assert cache.get("rules", _h("v2")) is None
 
 
+def test_get_with_empty_hash_returns_none(tmp_cache):
+    """Empty hash means manifest couldn't compute one — can't validate the cache."""
+    body = "v"
+    cache.put("rules", body, body_hash=_h(body), url="/api/rules")
+    assert cache.get("rules", "") is None
+
+
 def test_invalidate_one_key(tmp_cache):
     cache.put("rules", "rules body", body_hash="h1", url="/api/rules")
     cache.put("session", "session body", body_hash="h2", url="/api/session/current")

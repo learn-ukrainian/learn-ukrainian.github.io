@@ -48,6 +48,13 @@ def test_check_passes_on_committed_file() -> None:
     assert generate_arc.main(["--level", "a1", "--check"]) == 0
 
 
+def test_a1_has_55_contiguous_positions_with_unique_slugs() -> None:
+    records = _records()
+    assert [r["position"] for r in records] == list(range(1, 56))
+    slugs = [r["slug"] for r in records]
+    assert len(set(slugs)) == 55
+
+
 def test_literacy_positions_letters_and_lessons() -> None:
     records = _records()
     assert records[0]["slug"] == "introduction-to-ukrainian"
@@ -87,6 +94,12 @@ def test_literacy_row_missing_cell_fails_generation(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.rsplit("|", 2)[0] + "|")
     with pytest.raises(generate_arc.ArcGenerationError, match="cells"):
         generate_arc.generate_yaml(mutated)
+
+
+def test_est_lessons_total_emitted_and_matches_stated_total() -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    assert data["est_lessons_total"] == 162
+    assert data["est_lessons_total"] == sum(r["est_lessons"] for r in data["positions"])
 
 
 def test_stated_total_sentence_removed_fails_generation(tmp_path: Path) -> None:
@@ -149,6 +162,29 @@ def test_loader_roundtrip() -> None:
     assert positions[44].standard_line_refs == [(294, 311), (358, 360), (489, 493)]
 
 
+def test_generated_a1_orientation_loads_all_55_positions(tmp_path: Path) -> None:
+    generated = tmp_path / "_arc.yaml"
+    generated.write_text(generate_arc.generate_yaml(ARC_DOC), encoding="utf-8")
+    positions = loader.load_arc("a1", arc_path=generated)
+    assert [p.position for p in positions] == list(range(1, 56))
+    assert [(p.position, p.band_key) for p in positions if p.band_key is not None] == [(1, "a1-orientation")]
+    assert len([p for p in positions if p.band_key is None]) == 54
+    assert sum(p.est_lessons for p in positions) == 162
+
+
+@pytest.mark.parametrize(
+    "position, band_key",
+    [(1, "a1-m01-03"), (1, "unknown"), (1, ""), (2, "a1-orientation"), (2, "a1-m01-03"), (55, "a1-orientation")],
+)
+def test_loader_rejects_invalid_a1_band_declarations(tmp_path: Path, position: int, band_key: str) -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    data["positions"][position - 1]["band_key"] = band_key
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match=re.escape("fails schemas/arc.schema.json")):
+        loader.load_arc("a1", arc_path=invalid)
+
+
 def test_loader_raises_on_stale_source_sha256(tmp_path: Path) -> None:
     stale = tmp_path / "_arc.yaml"
     text = ARC_YAML.read_text(encoding="utf-8")
@@ -156,6 +192,15 @@ def test_loader_raises_on_stale_source_sha256(tmp_path: Path) -> None:
     stale.write_text(text, encoding="utf-8")
     with pytest.raises(loader.ArcStaleError, match="not regenerated"):
         loader.load_arc("a1", arc_path=stale)
+
+
+def test_loader_raises_on_schema_invalid_yaml(tmp_path: Path) -> None:
+    data = yaml.safe_load(ARC_YAML.read_text(encoding="utf-8"))
+    data["bogus_key"] = 1
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match="bogus_key"):
+        loader.load_arc("a1", arc_path=invalid)
 
 
 def test_loader_raises_on_inverted_line_ref_range(tmp_path: Path) -> None:
@@ -168,6 +213,11 @@ def test_loader_raises_on_inverted_line_ref_range(tmp_path: Path) -> None:
     inverted.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     with pytest.raises(ValueError, match="inverted standard_line_refs range"):
         loader.load_arc("a1", arc_path=inverted)
+
+
+def test_loader_refuses_arc_path_under_plans() -> None:
+    with pytest.raises(ValueError, match="lesson-plans/"):
+        loader.load_arc("a1", arc_path=REPO_ROOT / "curriculum/l2-uk-en/plans/a1/_arc.yaml")
 
 
 def test_loader_never_reads_plans_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

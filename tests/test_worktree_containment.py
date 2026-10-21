@@ -131,6 +131,11 @@ def outside_any_repo() -> Iterator[Path]:
         shutil.rmtree(directory, ignore_errors=True)
 
 
+def test_resolve_main_root_raises_outside_repo(layout: Layout, outside_any_repo: Path):
+    with pytest.raises(wc.NotAGitRepositoryError):
+        wc.resolve_main_root(outside_any_repo)
+
+
 def test_resolve_main_root_uses_filesystem_fallback_when_git_cannot_execute(
     layout: Layout, monkeypatch: pytest.MonkeyPatch
 ):
@@ -388,6 +393,15 @@ def test_missing_path_under_untracked_dir_is_blocked(layout: Layout):
     assert wc.is_write_allowed(missing, cwd=layout.main) == (
         False,
         "untracked_primary_checkout",
+    )
+
+
+def test_missing_path_under_ignored_dir_is_allowed(layout: Layout):
+    missing = layout.main / "build" / "sub" / "artifact.log"
+    assert wc.is_ignored(missing, layout.main) is True
+    assert wc.is_write_allowed(missing, cwd=layout.main) == (
+        True,
+        "gitignored_local_state",
     )
 
 

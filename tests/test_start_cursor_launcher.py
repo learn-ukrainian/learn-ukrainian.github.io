@@ -23,6 +23,15 @@ RETIRED_MODEL_IDS = {
 }
 
 
+def test_cursor_driver_help_mentions_epic() -> None:
+    result = run_launcher(DRIVER, "--help")
+    assert result.returncode == 0, result.stderr
+    assert "--epic" in result.stdout
+    assert "Usage:" in result.stdout
+    assert "./start-cursor-driver.sh" in result.stdout
+    assert "start-cursor.sh" not in result.stdout
+
+
 def test_cursor_driver_rejects_dummy_agent_on_path(tmp_path: Path) -> None:
     """CF #6969: a bare ``agent`` on PATH must not claim the Cursor seat.
 

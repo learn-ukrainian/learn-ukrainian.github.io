@@ -425,6 +425,27 @@ def test_symlinked_back_pointer_file_is_refused(layout: Layout) -> None:
 # --- forged fake primary ------------------------------------------------------
 
 
+def test_fake_primary_without_a_back_pointer_is_refused(layout: Layout) -> None:
+    fake = layout.tmp / "fake-primary"
+    (fake / ".git" / "worktrees" / "worktree").mkdir(parents=True)
+    _stub_python(fake, "EVIL", layout.log)
+    (layout.worktree / ".git").write_text(f"gitdir: {fake}/.git/worktrees/worktree\n", encoding="utf-8")
+    result = _run_sites(layout)
+    _assert_refused_before_any_site(layout, result)
+    assert "does not point back" in result.stderr
+
+
+def test_fake_primary_pointing_back_at_another_worktree_is_refused(layout: Layout) -> None:
+    fake = layout.tmp / "fake-primary"
+    admin = fake / ".git" / "worktrees" / "worktree"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(f"{layout.tmp}/elsewhere/.git\n", encoding="utf-8")
+    (layout.tmp / "elsewhere").mkdir()
+    _stub_python(fake, "EVIL", layout.log)
+    (layout.worktree / ".git").write_text(f"gitdir: {admin}\n", encoding="utf-8")
+    _assert_refused_before_any_site(layout, _run_sites(layout))
+
+
 def test_residual_fully_forged_primary_is_locally_indistinguishable(layout: Layout) -> None:
     """Documented #9121 residual (see scripts/lib/project_interpreter.sh).
 
@@ -567,6 +588,12 @@ def test_override_refuses_a_forged_primary_gitfile(layout: Layout) -> None:
     )
 
 
+def test_override_naming_an_unrelated_repository_is_refused(layout: Layout) -> None:
+    _assert_override_refused(
+        layout, _run_codex_sites(layout, layout.attacker), "is not a checkout of this Git common directory"
+    )
+
+
 def test_override_naming_a_primary_off_main_is_refused(layout: Layout) -> None:
     _git(layout.primary, "checkout", "-q", "-b", "elsewhere")
     _assert_override_refused(layout, _run_codex_sites(layout, layout.primary), "canonical checkout must be on main")
@@ -625,6 +652,27 @@ def test_override_is_read_only_on_codex_launches(layout: Layout) -> None:
 
 
 # --- real launcher entry point -------------------------------------------------
+
+
+def _run_driver(layout: Layout, **env: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [str(layout.worktree / "start-claude-driver.sh"), "--epic", "devops"],
+        cwd=layout.worktree,
+        env=_clean_env(HOME=str(layout.tmp / "home"), LAUNCHER_DRY_RUN="1", **env),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+
+
+def test_real_driver_launcher_refuses_a_hostile_gitfile(layout: Layout) -> None:
+    _git(layout.attacker, "worktree", "add", "-q", "-b", "decoy", str(layout.tmp / "decoy"))
+    (layout.worktree / ".git").write_text(f"gitdir: {layout.attacker}/.git/worktrees/decoy\n", encoding="utf-8")
+    result = _run_driver(layout)
+    assert result.returncode == 3, (result.stdout, result.stderr)
+    assert "git metadata does not validate" in result.stderr
+    assert layout.lines() == []
 
 
 def test_session_supervisor_state_root_ignores_git_redirection(layout: Layout) -> None:

@@ -11,12 +11,15 @@ import yaml
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import components, output
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
+from scripts.projects.open_model_data.review_build.build import artifacts, verify_component_mutations
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import (
+    ComponentContext,
     c1_ua_gec,
     c6a_calque,
     ua_gec_split,
 )
+from scripts.projects.open_model_data.review_build.contract import digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.output import OutputGuard
@@ -447,6 +450,41 @@ year = "2023"
     monkeypatch.setattr(store, "_read", lambda p: "SYNTHETIC incomplete")
     with pytest.raises(BuildError, match="attribution_unresolved"):
         adapter.resolve(ua_gec_split.REGISTER_FORM, citation, row, reader)
+
+
+def test_framework_build_artifacts_with_real_component_specs(store):
+    gate, candidates, config, _ = setup_gate(store)
+    register_bytes = yaml.safe_dump(register_data(sources=("ua_gec",))).encode()
+    pins = {
+        "register": digest(register_bytes),
+        "catalog": "b" * 64,
+        "candidates": "c" * 64,
+        "spec": "d" * 64,
+        "code": {"parser_sha256": "e" * 64, "code_sha": "f" * 40},
+    }
+    files = artifacts(config, candidates, gate.reader, gate.catalog, gate.resolver, pins, register_bytes)
+    assert files["permissions-register.yaml"] == register_bytes
+    assert json.loads(files["accounting.json"])["C1"]["counted"] == 50
+    assert b"gec-fluency" in files["README.md"] and b"Each annotator" in files["README.md"]
+
+
+def test_component_verification_fixtures_are_host_only(store, tmp_path, monkeypatch):
+    gate, candidates, config, data = setup_gate(store)
+    (tmp_path / "SYNTHETIC-catalog.yaml").write_text(yaml.safe_dump(data))
+    (tmp_path / "SYNTHETIC-register.yaml").write_text(yaml.safe_dump(register_data(sources=("ua_gec",))))
+    config.update(catalog=str(tmp_path / "SYNTHETIC-catalog.yaml"), register=str(tmp_path / "SYNTHETIC-register.yaml"))
+    monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
+    with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
+        from scripts.projects.open_model_data.review_build.components import ua_gec_component
+
+        objects = {
+            name: ua_gec_component.UaGecComponent(module) for name, module in (("C1", c1_ua_gec), ("C6a", c6a_calque))
+        }
+        ctx = ComponentContext(gate.reader, {k: v for k, v in config.items() if k != "components"})
+        results = verify_component_mutations(objects, ctx, candidates, out, gate)
+        assert results["C6a"]["mixed_edit"] == "mixed_edit" and results["C1"]["test_source"] == "test_source"
+        assert sum(map(len, results.values())) == 13
+        assert json.loads(out.read("mutation-fixtures/component-results.json")) == results
 
 
 def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):

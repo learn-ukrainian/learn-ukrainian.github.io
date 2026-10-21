@@ -28,6 +28,7 @@ from scripts.audit.layerb_shadow import (
     final_decision,
     main,
     normalize_lineage_family,
+    normalize_seat_key,
 )
 
 RAW = "Іван Франко народився 1856 року."
@@ -119,6 +120,18 @@ def _runner(artifacts: Path, audit_dir: Path, **kwargs: Any) -> ShadowRunner:
         vesum_snapshot=vesum_snapshot,
         **kwargs,
     )
+
+
+def test_seat_key_is_canonical_not_python_dict_order() -> None:
+    first = {"family": "google", "pin": "model", "entrypoint": "runner"}
+    reordered = {"entrypoint": "runner", "pin": "model", "family": "google"}
+
+    first_key, first_metadata = normalize_seat_key(first)
+    second_key, second_metadata = normalize_seat_key(reordered)
+
+    assert first_key == second_key
+    assert first_key.startswith("seat-")
+    assert first_metadata == second_metadata
 
 
 def test_normalize_lineage_family_uses_canonical_vendor_families() -> None:

@@ -112,6 +112,10 @@ def test_cycle_breaker_too_few_cycles_does_not_trigger():
 
 # --- contract/owner boundary + design-decision breakers -----------------------
 
+def test_contract_boundary_breaker_negative():
+    result = check_contract_boundary_breaker(changes_public_contract=False, crosses_owner_boundary=False)
+    assert result.triggered is False
+
 
 def test_contract_boundary_breaker_public_contract():
     result = check_contract_boundary_breaker(changes_public_contract=True, crosses_owner_boundary=False)

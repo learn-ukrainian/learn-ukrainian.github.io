@@ -11,7 +11,9 @@ import pytest
 
 from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
 from wiki.review import (
+    Finding,
     _parse_dim_result,
+    _register_score_from_findings,
 )
 
 pytestmark = pytest.mark.reads_content
@@ -128,6 +130,15 @@ def test_blockquote_preceding_attribution_is_exempt() -> None:
 > У в кругу старших співців текст передавався інакше.
 """
     assert _span_texts(article_text) == ["У в кругу старших співців текст передавався інакше."]
+
+
+def test_guillemet_preceding_attribution_is_exempt() -> None:
+    article_text = """
+Енциклопедія українознавства [S2] зазначає:
+
+«співці виконували під акомпаньямент ліри»
+"""
+    assert _span_texts(article_text) == ["«співці виконували під акомпаньямент ліри»"]
 
 
 def test_blockquote_internal_dash_attribution_is_exempt() -> None:
@@ -267,3 +278,20 @@ def test_parse_dim_result_recomputes_unreliable_gemini_score() -> None:
     assert [f.quote for f in result.findings] == ["виступає"]
     assert result.score == 8
     assert result.verdict == "PASS"
+
+
+def test_register_score_from_findings_table() -> None:
+    def mk(sev: str) -> Finding:
+        return Finding(
+            location="", quote="", issue_type="", severity=sev, description="", raw={}
+        )
+
+    assert _register_score_from_findings([]) == 10
+    assert _register_score_from_findings([mk("minor")]) == 9
+    assert _register_score_from_findings([mk("major")]) == 8
+    assert _register_score_from_findings([mk("major"), mk("major")]) == 7
+    assert _register_score_from_findings([mk("critical")]) == 7
+    assert (
+        _register_score_from_findings([mk("critical"), mk("major"), mk("major")]) == 6
+    )
+    assert _register_score_from_findings([mk("critical"), mk("critical")]) == 5

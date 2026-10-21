@@ -34,3 +34,7 @@ def test_citation_resolution_accepts_visible_source_mapping():
     )
 
     assert check_citation_resolution_text(text) is None
+
+
+def test_citation_resolution_ignores_articles_without_s_markers():
+    assert check_citation_resolution_text("# Стаття\n\nТекст без коротких джерел.\n") is None

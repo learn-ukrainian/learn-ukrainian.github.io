@@ -264,6 +264,36 @@ def test_incidental_id_never_enters_state(tmp_path: Path) -> None:
         assert "W-INC-01" not in state.all_allowed_ids
 
 
+def test_base_ids_present_and_excluded_from_cumulative_core_count(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+
+    s1_1 = planned_state("a1", 1, 1, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert s1_1.base_ids == ("W-BASE-01", "W-BASE-02")
+    # Base layer excluded from cumulative_core_count
+    assert s1_1.cumulative_core_count == 0
+    assert "W-BASE-01" in s1_1.all_allowed_ids
+    assert "W-BASE-02" in s1_1.all_allowed_ids
+
+
+def test_name_ids_present_and_excluded_from_cumulative_core_count(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+
+    # In lesson 1, names from lesson 1 (W-NAME-01, W-NAME-02) are admitted
+    s1_1 = planned_state("a1", 1, 1, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert "W-NAME-01" in s1_1.name_ids
+    assert "W-NAME-02" in s1_1.name_ids
+    assert "W-NAME-03" not in s1_1.name_ids
+    assert s1_1.cumulative_core_count == 0
+
+    # In lesson 2, names from lessons 1 and 2 are admitted
+    s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert "W-NAME-01" in s1_2.name_ids
+    assert "W-NAME-02" in s1_2.name_ids
+    assert "W-NAME-03" in s1_2.name_ids
+    # Names excluded from cumulative count: count is 1 (W-CORE-01 only)
+    assert s1_2.cumulative_core_count == 1
+
+
 def test_missing_earlier_plan_fails_closed_with_positions_listed(tmp_path: Path) -> None:
     plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
 

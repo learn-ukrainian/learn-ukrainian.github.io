@@ -208,6 +208,17 @@ def test_one_pr_omitting_attribution_fails_while_its_neighbour_passes(
     assert out.count("::error title=agent-attribution::") == 1
 
 
+def test_attribution_never_needs_to_be_the_last_paragraph(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
+    queue.open_pr(32, ["fix\n\nX-Agent: codex/impl-32\n"])
+    queue.land(32, _landed(32, "fix", "codex/impl-32"))
+    parsed = _git(queue.repo, "log", "-1", "--format=%(trailers:key=X-Agent,valueonly)", "queue")
+    assert parsed == ""  # git's trailer parser cannot see it: GitHub's co-author block is last
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 0, out
+
+
 def test_two_commit_pr_needs_both_values(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
     queue.open_pr(41, ["part one\n\nX-Agent: codex/impl-41\n", "part two\n\nX-Agent: claude/impl-41-b\n"])
     queue.land(41, _landed(41, "both", "codex/impl-41"))
@@ -352,6 +363,18 @@ def test_forged_bot_name_is_not_exempt(queue: Queue, capsys: pytest.CaptureFixtu
 
     assert code == 1
     assert "MISSING_ATTRIBUTION pr=#112" in out
+
+
+def test_bot_suffix_in_the_git_author_proves_nothing_without_the_api(
+    queue: Queue, capsys: pytest.CaptureFixture[str]
+) -> None:
+    queue.open_pr(113, [("Bump pytest from 8 to 9\n", BOT_AUTHOR)])
+    queue.land(113, "Bump pytest from 8 to 9 (#113)\n")
+
+    for get in (None, _api({})):
+        code, out = _run_group(queue, capsys, get=get)
+        assert code == 1
+        assert "MISSING_ATTRIBUTION pr=#113" in out
 
 
 def test_bot_payload_for_another_sha_proves_nothing(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
@@ -549,6 +572,12 @@ def test_production_getter_is_built_from_the_shared_client(monkeypatch: pytest.M
     assert args == ["gh", "api", "-X", "GET", "repos/owner/repo/commits/abc"]
     assert kwargs["fresh"] is True
     assert "x-token-value" not in " ".join(args)
+
+
+def test_production_getter_needs_a_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+
+    assert check._github_get_from_env() is None
 
 
 @pytest.mark.parametrize("completed", [_completed(1), _completed(0, "not json")], ids=["exit", "body"])

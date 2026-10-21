@@ -75,6 +75,66 @@ def test_registry_provider_credential_matrix(tmp_path, provider, override):
     assert {name: env[name] for name in credentials if name in env} == {name: credentials[name] for name in expected}
 
 
+def test_build_agent_env_passes_only_current_provider_credentials():
+    parent_env = {
+        "PATH": "/usr/bin",
+        "HOME": "/Users/example",
+        "GEMINI_API_KEY": "gemini-key",
+        "GOOGLE_API_KEY": "google-key",
+        "ANTHROPIC_API_KEY": "sk-ant-fake",
+        "CLAUDE_API_KEY": "sk-claude-fake",
+        "OPENAI_API_KEY": "sk-openai-fake",
+        "CODEX_API_KEY": "codex-key",
+        "CURSOR_API_KEY": "cursor-key",
+        "GITHUB_TOKEN": "ghp_fakegithubtoken",
+        "GH_TOKEN": "ghp_fakeghtoken",
+        "LU_AGENT_GITHUB_TOKEN": "ghp_agenttoken",
+    }
+
+    with patch.dict("os.environ", parent_env, clear=True):
+        gemini_env = build_agent_env(provider="gemini", overrides={})
+        claude_env = build_agent_env(provider="claude", overrides={})
+        codex_env = build_agent_env(provider="codex", overrides={})
+        cursor_env = build_agent_env(provider="cursor", overrides={})
+        bridge_env = build_agent_env(provider="bridge", overrides={})
+
+    assert gemini_env["GEMINI_API_KEY"] == "gemini-key"
+    assert gemini_env["GOOGLE_API_KEY"] == "google-key"
+    assert "ANTHROPIC_API_KEY" not in gemini_env
+    assert "OPENAI_API_KEY" not in gemini_env
+    assert "CURSOR_API_KEY" not in gemini_env
+    assert gemini_env["GH_TOKEN"] == "ghp_agenttoken"
+    assert "GITHUB_TOKEN" not in gemini_env
+
+    assert claude_env["ANTHROPIC_API_KEY"] == "sk-ant-fake"
+    assert claude_env["CLAUDE_API_KEY"] == "sk-claude-fake"
+    assert claude_env["GH_TOKEN"] == "ghp_agenttoken"
+    assert "GEMINI_API_KEY" not in claude_env
+    assert "OPENAI_API_KEY" not in claude_env
+    assert "CURSOR_API_KEY" not in claude_env
+
+    assert codex_env["OPENAI_API_KEY"] == "sk-openai-fake"
+    assert codex_env["CODEX_API_KEY"] == "codex-key"
+    assert codex_env["GH_TOKEN"] == "ghp_agenttoken"
+    assert "GEMINI_API_KEY" not in codex_env
+    assert "ANTHROPIC_API_KEY" not in codex_env
+    assert "CURSOR_API_KEY" not in codex_env
+
+    assert cursor_env["CURSOR_API_KEY"] == "cursor-key"
+    assert cursor_env["GH_TOKEN"] == "ghp_agenttoken"
+    assert "GEMINI_API_KEY" not in cursor_env
+    assert "ANTHROPIC_API_KEY" not in cursor_env
+    assert "OPENAI_API_KEY" not in cursor_env
+    assert "CODEX_API_KEY" not in cursor_env
+
+    assert "GEMINI_API_KEY" not in bridge_env
+    assert "ANTHROPIC_API_KEY" not in bridge_env
+    assert "OPENAI_API_KEY" not in bridge_env
+    assert "CURSOR_API_KEY" not in bridge_env
+    assert bridge_env["GH_TOKEN"] == "ghp_agenttoken"
+    assert "GITHUB_TOKEN" not in bridge_env
+
+
 def test_build_agent_env_drops_sensitive_names():
     with patch.dict(
         "os.environ",
@@ -317,6 +377,51 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
             assert outcome.parse.ok is True
             assert json.loads(outcome.stdout_text) == expected_env
+
+
+def test_runner_codex_subprocess_gets_gh_token_for_gh_auth_status(tmp_path):
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    gh = bin_dir / "gh"
+    gh.write_text(
+        '#!/bin/sh\nif [ "$1" = auth ] && [ "$2" = status ] && [ -n "$GH_TOKEN" ]; then\n  exit 0\nfi\nexit 1\n'
+    )
+    gh.chmod(0o755)
+    script = (
+        "import os, subprocess, sys; "
+        "assert os.environ.get('GH_TOKEN') == 'ghp_fakeghtoken'; "
+        "sys.exit(subprocess.run(['gh', 'auth', 'status']).returncode)"
+    )
+    parent_env = {
+        "PATH": f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}",
+        "HOME": str(tmp_path),
+        "GH_TOKEN": "ghp_fakeghtoken",
+    }
+
+    with (
+        patch.dict("os.environ", parent_env, clear=True),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
+    ):
+        outcome = _execute_invocation_plan(
+            agent_name="codex",
+            adapter=_SmokeAdapter(),
+            plan=_SmokePlan(cmd=[_TEST_PYTHON, "-c", script], cwd=tmp_path),
+            prompt="gh auth smoke",
+            mode="read-only",
+            cwd=tmp_path,
+            model="smoke-model",
+            task_id="codex-gh-auth-smoke",
+            session_id=None,
+            entrypoint="runtime-test",
+            hard_timeout=10,
+            stall_timeout=10,
+        )
+
+    assert outcome.returncode == 0
+    assert outcome.parse.ok is True
 
 
 def test_runner_gemini_subprocess_gets_only_resolved_agent_identity(tmp_path):

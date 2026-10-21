@@ -15,6 +15,27 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 
+def test_load_dossier_text_returns_none_for_missing_path(tmp_path, monkeypatch):
+    from wiki import sources
+
+    monkeypatch.setattr(sources, "PROJECT_ROOT", tmp_path)
+
+    assert sources.load_dossier_text("bio", "missing") is None
+
+
+def test_load_dossier_text_returns_existing_dossier(tmp_path, monkeypatch):
+    from wiki import sources
+
+    dossier_path = tmp_path / "docs" / "research" / "bio" / "demo.md"
+    dossier_path.parent.mkdir(parents=True)
+    dossier_path.write_text("# Demo dossier\n\nVerified fact.\n", encoding="utf-8")
+    monkeypatch.setattr(sources, "PROJECT_ROOT", tmp_path)
+
+    assert sources.load_dossier_text("bio", "demo") == (
+        "# Demo dossier\n\nVerified fact.\n"
+    )
+
+
 def test_extract_dossier_cited_chunk_ids_preserves_order_and_dedups():
     from wiki.compiler import _extract_dossier_cited_chunk_ids
 

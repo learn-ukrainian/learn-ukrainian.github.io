@@ -198,6 +198,33 @@ def test_worktrees_parses_porcelain_output(monkeypatch, tmp_path):
     assert feature_wt["last_commit"]["subject"] == "wip: feature work"
 
 
+def test_worktrees_swallows_timeout(monkeypatch):
+    """A timeout on git worktree list becomes an error string, not a 500."""
+    import subprocess
+
+    def raises_timeout(*_a, **_kw):
+        raise subprocess.TimeoutExpired(cmd=["git"], timeout=2.0)
+
+    monkeypatch.setattr(worktrees_router.subprocess, "run", raises_timeout)
+
+    resp = client.get("/api/worktrees")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["worktrees"] == []
+    assert "TimeoutExpired" in body["error"]
+
+
+def test_worktrees_missing_git_binary_degrades(monkeypatch):
+    def raises_not_found(*_a, **_kw):
+        raise FileNotFoundError("git not found")
+
+    monkeypatch.setattr(worktrees_router.subprocess, "run", raises_not_found)
+
+    body = client.get("/api/worktrees").json()
+    assert body["worktrees"] == []
+    assert "FileNotFoundError" in body["error"]
+
+
 # ---------------------------------------------------------------------
 # /api/artifacts/{track}/{slug}/force-preview
 # ---------------------------------------------------------------------

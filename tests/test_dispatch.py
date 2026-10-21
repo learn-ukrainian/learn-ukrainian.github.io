@@ -57,6 +57,23 @@ class TestToolConstants:
 class TestSaveDispatchLog:
     """Verify dispatch logs are written with correct structure."""
 
+    def test_creates_dispatch_dir(self, tmp_path):
+        orch_dir = tmp_path / "orchestration" / "test-slug"
+        _save_dispatch_log(
+            orch_dir, "write", "gemini-tools (gemini-3.1-pro-preview)",
+            model="gemini-3.1-pro-preview",
+            prompt_chars=1000, response_chars=5000,
+            stderr="tool call: verify_words", duration_s=45.3, ok=True,
+        )
+        dispatch_dir = orch_dir / "dispatch"
+        assert dispatch_dir.exists()
+
+        # Should have meta.json and stderr.log
+        meta_files = list(dispatch_dir.glob("*-meta.json"))
+        stderr_files = list(dispatch_dir.glob("*.stderr.log"))
+        assert len(meta_files) == 1
+        assert len(stderr_files) == 1
+
     def test_meta_json_structure(self, tmp_path):
         orch_dir = tmp_path / "orch"
         _save_dispatch_log(
@@ -247,6 +264,26 @@ class TestDispatchAgent:
         assert kwargs["mode"] == "read-only"
         assert kwargs["entrypoint"] == "dispatch"
         assert kwargs["session_id"] is None
+
+    @patch.dict("os.environ", {}, clear=True)
+    @patch("agent_runtime.runner.invoke")
+    def test_codex_tools_dispatch_workspace_write_mode(self, mock_invoke, tmp_path):
+        """Post Phase 3: agent='codex-tools' → mode='workspace-write'."""
+        from agent_runtime.result import Result
+        mock_invoke.return_value = Result(
+            ok=True, agent="codex", model="gpt-5.4", mode="workspace-write",
+            response="OK", stderr_excerpt=None, duration_s=1.0,
+            session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
+        )
+        ok, raw = dispatch_agent(
+            "test prompt", agent="codex-tools", phase="write",
+            orch_dir=tmp_path, timeout=600, model="gpt-5.4",
+        )
+        assert ok is True
+        assert raw == "OK"
+        kwargs = mock_invoke.call_args.kwargs
+        assert kwargs["mode"] == "workspace-write"
 
     @patch.dict("os.environ", {"CODEX_DISPATCH_MODE": "danger"}, clear=False)
     @patch("agent_runtime.runner.invoke")

@@ -1175,6 +1175,20 @@ def test_restore_keeps_a_snapshot_directory_whole_when_a_writer_fills_its_hot_na
     assert (tasks_dir / "revived.result").read_text() == "old reply\n"
 
 
+def test_restore_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir, monkeypatch):
+    _with_snapshots(tasks_dir, "revived")
+    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    hot = tasks_dir / "revived.snapshots"
+    raced = _rename_after_writer(monkeypatch, hot, hot.mkdir)
+
+    report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "restored" and "kept_in_archive" not in row
+    assert _contents(hot) == SNAPSHOT_FILES
+    assert not (tasks_dir / "archive" / "revived.snapshots").exists()
+
+
 def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(tasks_dir, monkeypatch):
     monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
     _with_snapshots(tasks_dir, "clash")
@@ -1575,3 +1589,13 @@ def test_r9_a_delivery_only_record_keeps_its_delivery_check_and_recorded_failure
         assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
         if outcome == "no_deliverable":
             assert record["no_deliverable_reason"] == failure
+
+
+def test_r7_delivery_counts_a_pull_request_merged_since_the_task_started(tasks_dir, repo):
+    """The merged commit is delivery evidence even when the worker exited before committing it itself."""
+    sha = _orphan_record(tasks_dir, repo, "finalized", response=None, commits_ahead=0)
+    pulls = [_merged("codex/finalized", 52, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["finalized.json"]
+
+    assert (row["outcome"], json.loads((tasks_dir / "finalized.json").read_text())["status"]) == ("done", "done")

@@ -301,6 +301,25 @@ def test_alarm_none_when_all_lanes_at_or_over_pace(
         load_mod.clear_host_load_cache()
 
 
+def test_activity_resets_idle_timer(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    load_mod.clear_host_load_cache()
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
+    upsert_report(_document_with_lane_usage())
+    occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
+    occupancy_mod._ever_had_activity["host-worker"] = True
+    occupancy_mod._evaluate_attention(
+        {"host-worker": {"idle_or_empty": False, "status": "fresh"}},
+        now_mono=time.monotonic(),
+    )
+    occupancy_mod._idle_since_mono.pop("host-worker", None)
+    payload = occupancy_mod.occupancy_payload()
+    assert payload["attention"] == []
+
+
 def test_routing_budget_consumes_notebook_report(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(state_router, "_load_agent_budgets", lambda **_kw: ({}, []))
     monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _lane: {"weekly_used_pct": None})

@@ -17,6 +17,7 @@ old behaviour so the guarantee cannot silently regress to path semantics.
 
 from __future__ import annotations
 
+import errno
 import importlib.util
 import os
 from pathlib import Path
@@ -228,3 +229,26 @@ def test_refused_symlinked_leaf_is_preserved_without_failing_reap(
     assert (agent / "leafptr").is_symlink()
     assert external.exists()
     assert "symlinked leaf declared 'f'" in capsys.readouterr().err
+
+
+def test_operational_unlink_error_fails_reap_and_names_entry(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    """Unexpected filesystem failures must not be relabelled as safe refusals."""
+    agent, inner, _external = _fixture(tmp_path)
+    manifest = tmp_path / "m.manifest"
+    manifest.write_text("f\tsub/victim.txt\n", encoding="utf-8")
+    source = tmp_path / "src"
+    source.mkdir()
+
+    def fail_unlink(*_args, **_kwargs) -> None:
+        raise OSError(errno.EIO, "Input/output error")
+
+    monkeypatch.setattr(reaper.os, "unlink", fail_unlink)
+    rc = reaper.main(
+        ["--agent-root", str(agent), "--manifest", str(manifest), "--source-root", str(source)]
+    )
+
+    assert rc == 1, "an operational unlink failure must fail the reap"
+    assert inner.exists(), "the failed unlink must leave its entry intact"
+    assert "operational error reaping 'sub/victim.txt'" in capsys.readouterr().err

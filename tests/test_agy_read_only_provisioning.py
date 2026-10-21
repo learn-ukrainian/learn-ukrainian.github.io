@@ -459,6 +459,34 @@ def test_hook_chain_at_the_kernel_link_limit_is_still_acquired(tmp_path):
     assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (None, f"agy hook snapshot failed: {HOOK}: OSError")
 
 
+def test_hook_behind_a_looping_parent_is_an_error_not_absence(tmp_path):
+    """Only a missing hook is absent; a parent the kernel cannot traverse fails acquisition."""
+    (tmp_path / ".agents").symlink_to(".agents")
+    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
+        None,
+        f"agy hook snapshot failed: {HOOK}: OSError",
+    )
+
+
+def test_hook_lost_between_observations_is_an_error_not_absence(tmp_path, monkeypatch):
+    """A regular hook gone at the target lstat, after the first lstat, fails acquisition."""
+    (tmp_path / ".agents").mkdir()
+    hook = tmp_path / HOOK
+    hook.write_bytes(b"{}\n")
+    original_lstat = os.lstat
+
+    def lost(path, *args, **kwargs):
+        if os.fspath(path) == str(hook):
+            raise FileNotFoundError(path)
+        return original_lstat(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "lstat", lost)
+    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
+        None,
+        f"agy hook snapshot failed: {HOOK}: FileNotFoundError",
+    )
+
+
 def test_hook_replaced_while_it_is_read_is_an_error(tmp_path, monkeypatch):
     """The hashed descriptor must be the observed target, and the links must not move meanwhile."""
     (tmp_path / ".agents").mkdir()
@@ -552,6 +580,9 @@ with open(path, "w", encoding="utf-8") as handle:
     json.dump(data, handle, indent=4)
 """
 _RETARGET_PARENT = "import os\nos.remove('.agents')\nos.symlink('batch_state/guard-b', '.agents')\n"
+_RETARGET_FINAL = "import os\nos.remove('.agents/hooks.json')\nos.symlink('../batch_state/guard-b/hooks.json', '.agents/hooks.json')\n"
+
+
 def _assert_hook_mutation(rc: int, state: dict, launches: list[dict]) -> None:
     """The provider saw a valid guard before and after, Git status did not move, and the task failed."""
     assert len(launches) == 1
@@ -587,6 +618,18 @@ def test_symlinked_parent_retarget_between_identical_guards_fails(primary, tmp_t
     rc, state, launches = _launch(worktree, task_id, _RETARGET_PARENT)
 
     assert os.readlink(worktree / ".agents") == "batch_state/guard-b"
+    _assert_hook_mutation(rc, state, launches)
+
+
+def test_retargeted_final_link_between_identical_guards_fails(primary, tmp_tasks_dir, fake_agy):
+    """F1 sibling: the final link's own retarget stays detected."""
+    task_id = "ro-10727-final-retarget"
+    worktree = _dispatch_worktree(primary, task_id)
+    _final_link_layout(worktree)
+    _guard_dir(worktree, "guard-b")
+
+    rc, state, launches = _launch(worktree, task_id, _RETARGET_FINAL)
+
     _assert_hook_mutation(rc, state, launches)
 
 
@@ -846,6 +889,34 @@ def test_linked_target_lost_around_lstat_fails_closed(primary, tmp_tasks_dir, fa
     assert target.read_bytes() == _GUARD_BYTES
 
 
+def test_middle_link_parent_replaced_by_a_file_around_lstat_fails_closed(primary, tmp_tasks_dir, fake_agy, monkeypatch):
+    """F2 sibling: ENOTDIR while crossing an intermediate link is an acquisition failure."""
+    import errno
+
+    task_id = "ro-10748-middle-enotdir"
+    worktree = _dispatch_worktree(primary, task_id)
+    _final_link_through_a_middle_link_layout(worktree)
+    middle = worktree / "batch_state" / "current.json"
+    directory = worktree / "batch_state"
+    away = worktree / "batch_state.away"
+
+    def lose():
+        os.rename(directory, away)
+        directory.write_text("not a directory\n", encoding="utf-8")
+
+    def restore(_saved):
+        directory.unlink()
+        os.rename(away, directory)
+
+    raised = _race_snapshot_call(
+        monkeypatch, worktree, "lstat", {str(middle), os.path.realpath(middle)}, lose=lose, restore=restore
+    )
+    rc, state, launches = _launch(worktree, task_id, _READ)
+
+    _assert_acquisition_failed(rc, state, launches, raised, errno.ENOTDIR)
+    assert os.readlink(middle) == "effective-hooks.json"
+
+
 def test_hook_leading_nowhere_from_the_start_is_still_refused_by_the_adapter(primary, tmp_tasks_dir, fake_agy):
     """F2 control: a dangling guard link is neither provisioned over nor run; the adapter refuses it."""
     task_id = "ro-10748-dangling-from-start"
@@ -1043,6 +1114,40 @@ def test_guard_directory_reached_through_a_process_cwd_or_root_link_is_acquired(
         fingerprint["target"]["path"]
         == f"/proc/{process.pid}/{entry}" + ("" if entry == "cwd" else str(guard)) + "/hooks.json"
     )
+
+
+@linux_procfs
+def test_hook_behind_the_program_link_of_a_process_whose_binary_was_deleted_is_acquired(tmp_path):
+    """``/proc/<pid>/exe`` keeps naming the running program after its file is removed."""
+    import shutil
+
+    cat = shutil.which("cat")
+    assert cat is not None, "the procfs fixture requires the POSIX cat utility"
+    program = tmp_path / "cat"  # Multi-call utilities select their program by name.
+    shutil.copy2(cat, program)
+    expected = program.read_bytes()
+    process = subprocess.Popen(
+        [str(program)],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        process.stdin.write("ready\n")
+        process.stdin.flush()
+        assert process.stdout.readline() == "ready\n"
+        assert process.poll() is None
+        assert os.path.samefile(f"/proc/{process.pid}/exe", program)
+        program.unlink()
+        (tmp_path / ".agents").mkdir()
+        (tmp_path / HOOK).symlink_to(f"/proc/{process.pid}/exe")
+        assert os.readlink(f"/proc/{process.pid}/exe").endswith(" (deleted)")
+        _assert_procfs_fingerprint(tmp_path, expected)
+        assert process.poll() is None
+    finally:
+        process.kill()
+        process.communicate(timeout=10)
 
 
 @linux_procfs

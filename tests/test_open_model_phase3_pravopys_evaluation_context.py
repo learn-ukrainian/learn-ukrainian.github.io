@@ -10,6 +10,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as eval_manifest
 from scripts.projects.open_model_data import phase3_pravopys_evaluation_context as prav_context
@@ -17,6 +18,7 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from tests.sparse_trees import tree_absent
 
 ROOT = Path(__file__).resolve().parents[1]
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_pravopys_evaluation_context_receipt_v1.schema.json"
 EVAL_RECEIPT = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
 
 
@@ -274,6 +276,20 @@ def _simulate_group_readable_mode(monkeypatch: pytest.MonkeyPatch, target: Path)
 
     monkeypatch.setattr(Path, "lstat", patched_lstat)
     monkeypatch.setattr(Path, "stat", patched_stat)
+
+
+def _simulate_world_readable_lstat(monkeypatch: pytest.MonkeyPatch, target: Path) -> None:
+    original_lstat = Path.lstat
+
+    def patched_lstat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        result = original_lstat(path, *args, **kwargs)
+        if path != target:
+            return result
+        values = list(result)
+        values[0] |= stat.S_IRGRP | stat.S_IROTH
+        return os.stat_result(values)
+
+    monkeypatch.setattr(Path, "lstat", patched_lstat)
 
 
 def _mutate_jsonl_row(
@@ -723,6 +739,16 @@ def test_private_output_rejects_wrong_mode_and_ancestor_symlink(
     assert stat.S_IMODE(real.stat().st_mode) == prav_context.PRIVATE_DIR_MODE
 
 
+def test_text_free_receipt_rejects_world_readable_permissions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt_path = tmp_path / "receipt.json"
+    receipt_path.write_bytes(b"{}\n")
+    os.chmod(receipt_path, prav_context.PRIVATE_FILE_MODE)
+    _simulate_world_readable_lstat(monkeypatch, receipt_path)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="text-free receipt permissions must be 0600"):
+        prav_context._regular_text_free_receipt(receipt_path, "text-free receipt")
+    assert stat.S_IMODE(receipt_path.stat().st_mode) == prav_context.PRIVATE_FILE_MODE
+
+
 def test_duplicate_source_identity_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture_bundle(tmp_path)
     rows = _read_jsonl_rows(paths["source_jsonl"])
@@ -1039,6 +1065,15 @@ def test_materialize_writes_restricted_private_output_and_text_free_receipt(
     assert receipt["gates"]["phase4_blocked"] is True
 
 
+def test_public_schema_is_closed_and_text_free() -> None:
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    serialized = json.dumps(schema, ensure_ascii=False)
+    assert "complete_parent_rule_context" not in serialized
+    assert "unit_id" not in serialized
+    assert schema["additionalProperties"] is False
+
+
 def test_deterministic_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
@@ -1176,6 +1211,35 @@ def test_verify_existing_rejects_tampered_private_jsonl(tmp_path: Path, monkeypa
     paths["private_output"].write_bytes(original + b" ")
     os.chmod(paths["private_output"], prav_context.PRIVATE_FILE_MODE)
     with pytest.raises(prav_context.PravopysEvaluationContextError, match="private context artifact drift"):
+        prav_context.verify_existing(
+            source_jsonl=paths["source_jsonl"],
+            partition_path=paths["partition"],
+            evaluation_manifest_path=paths["evaluation_manifest"],
+            evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+            private_output=paths["private_output"],
+            public_receipt_path=paths["public_receipt"],
+        )
+
+
+def test_verify_existing_rejects_tampered_public_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _skip_without_pravopys_schema()
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
+    prav_context.materialize(
+        source_jsonl=paths["source_jsonl"],
+        partition_path=paths["partition"],
+        evaluation_manifest_path=paths["evaluation_manifest"],
+        evaluation_manifest_receipt_path=paths["evaluation_manifest_receipt"],
+        private_output=paths["private_output"],
+        public_receipt_path=paths["public_receipt"],
+        started_at="2026-08-13T23:00:00Z",
+        completed_at="2026-08-13T23:00:01Z",
+    )
+    receipt = json.loads(paths["public_receipt"].read_text(encoding="utf-8"))
+    receipt["receipt_sha256"] = "0" * 64
+    paths["public_receipt"].write_bytes(prav_context.canonical_bytes(receipt))
+    os.chmod(paths["public_receipt"], prav_context.PRIVATE_FILE_MODE)
+    with pytest.raises(prav_context.PravopysEvaluationContextError, match="receipt body hash drift"):
         prav_context.verify_existing(
             source_jsonl=paths["source_jsonl"],
             partition_path=paths["partition"],

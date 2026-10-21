@@ -73,6 +73,27 @@ def test_bad_marker_in_true_false_statement_is_stripped() -> None:
     assert "дивюся" not in seen[0]
 
 
+def test_bad_marker_in_error_correction_sentence_is_harmless() -> None:
+    seen: list[list[str]] = []
+    activity = {
+        "id": "act-error",
+        "type": "error-correction",
+        "items": [
+            {
+                "sentence": "Я <!-- bad -->дивюся<!-- /bad --> в дзеркало.",
+                "error": "дивюся",
+                "correction": "дивлюся",
+            }
+        ],
+    }
+
+    result = _vesum_gate([activity], missing={"дивюся"}, seen=seen)
+
+    assert result["passed"] is True
+    assert "дивюся" not in seen[0]
+    assert "дивлюся" in seen[0]
+
+
 def test_true_false_ukrainian_negative_example_tail_is_stripped(
     tmp_path: Path,
 ) -> None:
@@ -129,6 +150,28 @@ def test_true_false_english_negative_example_tail_is_stripped(
     assert any(
         event["event"] == "vesum_verified_negative_example_stripped"
         and event["forms"] == ["дивюся"]
+        for event in _events(telemetry)
+    )
+
+
+def test_true_false_without_negative_example_pattern_emits_no_event(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+    activity = {
+        "id": "act-tf",
+        "type": "true-false",
+        "items": [
+            {"statement": "Форма дивлюся правильна.", "answer": True}
+        ],
+    }
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        result = _vesum_gate([activity], missing={"дивюся"})
+
+    assert result["passed"] is True
+    assert not any(
+        event["event"] == "vesum_verified_negative_example_stripped"
         for event in _events(telemetry)
     )
 
@@ -201,6 +244,27 @@ def test_match_activity_bad_form_requires_marker() -> None:
             {
                 "left": "Я <!-- bad -->дивюся<!-- /bad --> в дзеркало.",
                 "right": "I look.",
+            }
+        ],
+    }
+
+    assert _vesum_gate([unmarked], missing={"дивюся"})["missing"] == ["дивюся"]
+    assert _vesum_gate([marked], missing={"дивюся"})["passed"] is True
+
+
+def test_fill_in_sentence_bad_form_requires_marker() -> None:
+    unmarked = {
+        "id": "act-fill",
+        "type": "fill-in",
+        "items": [{"sentence": "Я дивюся в дзеркало.", "answer": "дивлюся"}],
+    }
+    marked = {
+        "id": "act-fill",
+        "type": "fill-in",
+        "items": [
+            {
+                "sentence": "Я <!-- bad -->дивюся<!-- /bad --> в дзеркало.",
+                "answer": "дивлюся",
             }
         ],
     }

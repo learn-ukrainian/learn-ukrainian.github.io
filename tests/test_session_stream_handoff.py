@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.handoff import claim_stream, diagnose_handoff
+from agents_extensions.shared.session_streams.handoff import claim_stream, diagnose_handoff, remote_lease_reason
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 
@@ -48,6 +48,13 @@ def test_remote_diagnosis_is_actionable_without_local_recovery(tmp_path: Path, e
     assert store.dump_stream(lease.stream_id) == before
 
 
+def test_remote_diagnosis_without_expiry_does_not_infer_claimability() -> None:
+    reason = remote_lease_reason(holder_agent="codex", holder_harness="codex-cli", expires_at="", now=NOW)
+    assert "expiry is unknown" in reason
+    assert "local PID recovery refused" in reason
+    assert "claim through Monitor TTL/CAS now" not in reason
+
+
 def _store(tmp_path: Path, process_state: dict[int, bool] | None = None) -> SessionStreamStore:
     state = process_state if process_state is not None else {}
     return SessionStreamStore(
@@ -81,6 +88,24 @@ def test_diagnose_empty_stream_is_claimable_open(tmp_path: Path) -> None:
     assert status.session_id is None
     assert status.claimable_force_close is False
     assert "safe to open" in status.reason
+
+
+def test_diagnose_expired_dead_holder_claimable(tmp_path: Path) -> None:
+    state = {1001: True}
+    store = _store(tmp_path, state)
+    store.open_session(
+        stream_id="epic:4542",
+        holder=_holder(pid=1001),
+        lineage_id="lineage-a",
+        ttl_seconds=60,
+        now=NOW,
+    )
+    # Simulate crash: process gone, time past TTL
+    state[1001] = False
+    status = diagnose_handoff(store, "epic:4542", now=NOW + timedelta(minutes=5))
+    assert status.lease_expired is True
+    assert status.holder_process_alive is False
+    assert status.claimable_force_close is True
 
 
 def test_diagnose_unexpired_dead_holder_claimable(tmp_path: Path) -> None:

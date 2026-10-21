@@ -36,6 +36,18 @@ def expanded(data):
     return document
 
 
+@pytest.mark.parametrize("mutation,reason", [("step", "step_ids_or_order"), ("practice", "step_practice_order")])
+def test_incomplete_lesson_still_fails(mutation, reason):
+    data = held_out()
+    if mutation == "step":
+        data["draft"]["steps"].pop(0)
+    else:
+        step = next(step for step in data["draft"]["steps"] if any(b["kind"] == "activity" for b in step["blocks"]))
+        step["blocks"] = [b for b in step["blocks"] if b["kind"] != "activity"]
+    row = runner.check_3_structure(data["draft"], data["plan"]["lessons"][0])
+    assert (row["check"], row["status"], row["reason"]) == (3, "failed", reason)
+
+
 def test_missing_gloss_still_fails():
     data = held_out()
     doc = expanded(data)

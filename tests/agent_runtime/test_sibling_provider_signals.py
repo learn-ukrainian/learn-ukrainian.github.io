@@ -16,6 +16,7 @@ from agent_runtime.adapters.glm import GlmAdapter
 from agent_runtime.adapters.grok_build import GrokBuildAdapter
 from agent_runtime.adapters.kimi import KimiAdapter
 from agent_runtime.failover import classify_failover_trigger
+from agent_runtime.result import ParseResult
 
 CONTENT = "Investigated rate limit / 429. HTTP 429: too many requests; RESOURCE_EXHAUSTED."
 
@@ -148,6 +149,18 @@ def test_opencode_provider_error_is_classified_even_with_rc_zero(adapter, return
     assert result.failure_code == "rate_limited"
 
 
+@pytest.mark.parametrize("failure_code", [None, "acp_agent_startup", "acp_turn_limit", "github_secondary_rate_limited"])
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_failover_never_reads_raw_stdout_or_excerpt(failure_code, returncode):
+    result = ParseResult(ok=False, response="", stderr_excerpt=CONTENT, failure_code=failure_code)
+    assert (
+        classify_failover_trigger(
+            parse=result, returncode=returncode, kill_reason=None, stdout_text=CONTENT, stderr_text=""
+        )
+        is None
+    )
+
+
 def test_cursor_gh_shim_does_not_trigger_provider_failover():
     stderr = "agent-gh-shim: github_secondary_rate_limited HTTP 403; retries exhausted after 3 attempts."
     result = CursorAdapter().parse_response(stdout="", stderr=stderr, returncode=1, output_file=None)
@@ -157,6 +170,39 @@ def test_cursor_gh_shim_does_not_trigger_provider_failover():
         classify_failover_trigger(parse=result, returncode=1, kill_reason=None, stdout_text=CONTENT, stderr_text=stderr)
         is None
     )
+
+
+@pytest.mark.parametrize("adapter", ADAPTERS)
+def test_success_keeps_reply_despite_retry_diagnostic(adapter, tmp_path):
+    result = ADAPTERS[adapter]().parse_response(
+        stdout=_stdout(adapter, CONTENT),
+        stderr="HTTP 429: Too Many Requests",
+        returncode=0,
+        output_file=None,
+        plan=_agy_plan(tmp_path, CONTENT) if adapter == "agy" else None,
+    )
+    assert result.ok is True
+    assert result.rate_limited is False
+    assert result.failure_code is None
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        json.dumps(
+            {
+                "role": "meta",
+                "type": "turn.step.retrying",
+                "error_message": "HTTP 429: rate limit exceeded",
+                "status_code": 429,
+            }
+        ),
+        json.dumps({"role": "tool", "content": json.dumps({"type": "error", "error": {"data": {"statusCode": 429}}})}),
+    ],
+)
+def test_kimi_retry_notice_and_nested_tool_error_are_not_terminal(stdout):
+    result = KimiAdapter().parse_response(stdout=stdout, stderr="", returncode=1, output_file=None)
+    assert result.rate_limited is False
 
 
 @pytest.mark.parametrize(
@@ -230,6 +276,19 @@ def test_grok_structured_error_not_agent_reply(returncode, session_key):
     assert result.failure_code == "rate_limited"
     assert result.session_id == "failed-session"
     assert result.ok is False
+
+
+@pytest.mark.parametrize("adapter", ADAPTERS)
+@pytest.mark.parametrize("body", ["test_rate_limit.py::test_x FAILED", "... see provider.rate_limit docs"])
+def test_failed_turn_generic_error_tool_text_never_triggers_provider_failover(adapter, body):
+    stderr = f"error: {body}"
+    result = ADAPTERS[adapter]().parse_response(stdout="", stderr=stderr, returncode=1, output_file=None)
+    assert result.ok is False
+    assert result.rate_limited is False
+    assert (
+        classify_failover_trigger(parse=result, returncode=1, kill_reason=None, stdout_text="", stderr_text=stderr)
+        is None
+    )
 
 
 def test_provider_rate_limit_error_class_is_authoritative():

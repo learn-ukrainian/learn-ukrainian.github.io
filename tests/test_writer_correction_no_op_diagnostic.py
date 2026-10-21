@@ -47,6 +47,28 @@ def test_detect_tool_theatre_only_scans_plan_reasoning_blocks() -> None:
     assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
 
 
+def test_detect_tool_theatre_scans_plan_reasoning_attributes() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro" verification="checked with `verify_words`">'
+        "No citation in the body."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == ["verify_words"]
+
+
+def test_detect_tool_theatre_scans_unbackticked_tool_names() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro">'
+        "Verified using search_heritage."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
+        "search_heritage"
+    ]
+
+
 def test_detect_tool_theatre_handles_multiple_blocks() -> None:
     writer_output = (
         '<plan_reasoning section="intro">`verify_words` checked.</plan_reasoning>\n'
@@ -133,6 +155,15 @@ def test_parse_writer_correction_module_only_extracts_single_block() -> None:
     assert body.endswith("\n")
 
 
+def test_parse_writer_correction_module_only_accepts_short_form_label() -> None:
+    """The parser also accepts ``markdown module.md`` and ``module.md``
+    fence-info conventions — writers vary on this minor formatting."""
+    response_short = "```markdown module.md\nbody1\n```"
+    response_bare = "```module.md\nbody2\n```"
+    assert linear_pipeline.parse_writer_correction_module_only(response_short) == "body1\n"
+    assert linear_pipeline.parse_writer_correction_module_only(response_bare) == "body2\n"
+
+
 def test_parse_writer_correction_module_only_unwraps_four_backtick_wrapper() -> None:
     """When the model wraps its 3-backtick fenced block in a 4-backtick
     outer fence (CommonMark convention for "code block containing code
@@ -194,6 +225,25 @@ def test_parse_writer_correction_module_only_rejects_bare_markdown_fence() -> No
     might be a knowledge_packet, a draft excerpt, or unrelated content."""
     response = "```markdown\nsome unrelated markdown content\n```"
     assert linear_pipeline.parse_writer_correction_module_only(response) is None
+
+
+def test_parse_writer_correction_module_only_rejects_full_4_block_response() -> None:
+    """A realistic 4-block writer response that happens to contain a
+    module.md fence MUST NOT parse as module-only. The contract is "the
+    entire response is a single fence" — extra fences disqualify it.
+
+    Caught upstream too: ``_apply_writer_correction`` checks
+    ``all(name in response for name in WRITER_ARTIFACTS)`` before reaching
+    the module-only path. But the parser itself must also reject this
+    case so it can be safely called out of context.
+    """
+    full_response = (
+        "```markdown file=module.md\n## Morning\nProse.\n```\n\n"
+        "```json file=activities.yaml\n[]\n```\n\n"
+        "```json file=vocabulary.yaml\n[]\n```\n\n"
+        "```json file=resources.yaml\n[]\n```\n"
+    )
+    assert linear_pipeline.parse_writer_correction_module_only(full_response) is None
 
 
 def test_parse_writer_correction_module_only_rejects_leading_prose() -> None:

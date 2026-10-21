@@ -108,6 +108,26 @@ def test_cli_verify_vesum_json_failure_exits_and_blocks_export(monkeypatch, tmp_
     assert not out_file.exists(), "Deck must NOT be exported when verification fails"
 
 
+def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
+    """Verify that CLI --verify-vesum --json --export succeeds and writes deck on clean verification."""
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 88,
+        "missing_targets": [],
+        "vesum_verified": True,
+    }
+    monkeypatch.setattr("scripts.practice.numeral_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+
+    out_file = tmp_path / "allowed_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["numeral_mechanics_engine.py", "--verify-vesum", "--json", "--export", "--output", str(out_file)],
+    )
+
+    main()
+    assert out_file.exists(), "Deck should be exported when verification succeeds"
+
+
 def test_cli_verify_vesum_skipped_reports_skip_and_exits_nonzero(capsys, monkeypatch, tmp_path: Path):
     """Regression test for P2 (Round 14): skipped verification must report SKIPPED (not PASSED) and exit 1."""
     fake_res = {

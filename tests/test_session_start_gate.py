@@ -86,6 +86,23 @@ def test_session_record_uses_record_session_id_not_thread_id(monkeypatch: pytest
     assert result["status"] == "ok"
 
 
+def test_session_record_falls_back_to_session_id_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Direct/test invocations that omit --record-session-id still work."""
+    from scripts.lib import session_record
+
+    captured: dict[str, object] = {}
+
+    def _fake_update_session(*, session_id: str, **kwargs: object) -> dict[str, object]:
+        captured["session_id"] = session_id
+        return {"schema_version": 1, "session_id": session_id}
+
+    monkeypatch.delenv("CLAUDE_ENV_FILE", raising=False)
+    monkeypatch.setattr(session_record, "update_session", _fake_update_session)
+    result = gate.phase_session_record(_args(session_id="thread-lease-id", record_session_id=""))
+    assert captured["session_id"] == "thread-lease-id"
+    assert result["status"] == "ok"
+
+
 def test_lease_helper_crash_is_unknown_not_conflict(monkeypatch: pytest.MonkeyPatch) -> None:
     def _boom() -> object:
         raise ImportError("cannot import name 'context_canary' from 'scripts' (unknown location)")
@@ -168,6 +185,37 @@ def test_lease_rc0_malformed_json_is_not_ok(monkeypatch: pytest.MonkeyPatch) -> 
     result = gate.phase_thread_lease(_args())
     assert result["status"] == "crashed"
     assert "UNKNOWN" in result["context"]
+
+
+def test_lease_rc0_without_acquired_status_is_not_ok(monkeypatch: pytest.MonkeyPatch) -> None:
+    """rc == 0 with a parseable but non-"acquired" status (e.g. a stale
+    "conflict" payload on an otherwise clean exit) must not be treated as a
+    successful claim (CF review on #6414 finding 2)."""
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print(json.dumps({"status": "conflict", "owner_thread_id": "other"}))
+            return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "crashed"
+    assert "UNKNOWN" in result["context"]
+
+
+def test_lease_unstructured_failure_is_unknown(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            print("Traceback (most recent call last): boom")
+            return 1
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_thread_lease(_args())
+    assert result["status"] == "crashed"
+    assert "UNKNOWN" in result["context"]
+    assert "DURABLE THREAD LEASE CONFLICT" not in result["context"]
 
 
 def test_lease_acquired_reports_generation_and_takeover(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -313,6 +361,19 @@ def test_live_owner_conflict_preserved_outside_dispatch_context(
     assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
 
 
+def test_marker_with_empty_value_does_not_exempt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A set-but-empty marker is not a dispatch context (the hook exports the
+    variable unconditionally in some test harnesses)."""
+    _write_held_live_lease(tmp_path)
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "")
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
+    result = gate.phase_thread_lease(
+        _args(repo_root=str(tmp_path), project_dir=str(tmp_path), session_id="worker-session-4")
+    )
+    assert result["status"] == "stop"
+    assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
+
+
 def test_detect_crash_is_crashed_not_silent(monkeypatch: pytest.MonkeyPatch) -> None:
     def _boom() -> object:
         raise ModuleNotFoundError("No module named 'scripts'")
@@ -369,6 +430,32 @@ def test_detect_foreign_diagnostic_format_failure_is_not_ok(monkeypatch):
     result = gate.phase_rollover_detect(_args())
     assert result["status"] == "crashed"
     assert result["error"] == "detect --format session-start rc=2"
+
+
+def test_detect_ambiguous_on_stderr_still_formats_stop(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Same stderr-payload guard as the lease phase, for detect (CF review
+    round 2 on #6414, retained finding 3).
+
+    Mutation-check: change ``_parse_protocol_payload`` back to reading only
+    ``out`` -> this test fails because ``detect_status`` never resolves to
+    "ambiguous" and the formatted stop context is never produced. Restore
+    the ``err`` fallback -> passes.
+    """
+
+    class FakeTH:
+        @staticmethod
+        def main(argv: list[str]) -> int:
+            if "--format" in argv and argv[argv.index("--format") + 1] == "json":
+                print(json.dumps({"status": "ambiguous"}), file=sys.stderr)
+            else:
+                print("ROLLOVER PACKET: follow the thread-rollover workflow.")
+            return 0
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: FakeTH)
+    result = gate.phase_rollover_detect(_args())
+    assert result["status"] == "stop"
+    assert "ROLLOVER PACKET" in result["context"]
+    assert result["detect_status"] == "ambiguous"
 
 
 def test_detect_pending_returns_formatted_stop(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -430,6 +517,18 @@ def test_import_bundle_runs_before_detect_and_is_fail_open(monkeypatch: pytest.M
     assert events == ["import", "detect"]
     assert result["rollover_import"]["status"] == "issue"
     assert result["rollover_detect"] == {"status": "ok", "detect_status": "none"}
+
+
+def test_python_version_matches_pin(tmp_path: Path) -> None:
+    # This positive fixture pins the running interpreter, so it also exercises
+    # a baseline runtime during patch-version migrations. The mismatch fixture
+    # below verifies that the production guard stays exact.
+    import platform
+
+    version = platform.python_version()
+    (tmp_path / ".python-version").write_text(f"{version}\n")
+    result = gate.phase_python_version(_args(repo_root=str(tmp_path)))
+    assert result == {"status": "ok"}
 
 
 def test_python_version_mismatch_is_issue(tmp_path: Path) -> None:
@@ -737,6 +836,17 @@ def test_planted_temp_alias_refusal_reports_crashed(
     assert not (drift_dir / "report.json").exists()
     assert str(canonical) not in out
     assert str(worktree) not in out
+
+
+def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:
+    result = dict(BASE_GATE_RESULT)
+    result["thread_lease"] = {
+        "status": "ok",
+        "generation": "9",
+        "takeover_banner": "THREAD LEASE TAKEOVER: this session (generation 9) replaced owner x -- reason: dead.",
+    }
+    context = _run_hook(tmp_path, {"FAKE_GATE_JSON": json.dumps(result)})
+    assert "THREAD LEASE TAKEOVER" in context
 
 
 def test_drift_exception_is_status_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:

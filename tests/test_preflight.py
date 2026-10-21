@@ -25,6 +25,27 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 class TestPreflightParsing:
     """Test that the pipeline correctly parses preflight output."""
 
+    def test_extract_preflight_pass(self):
+        from pipeline_lib import _extract_delimited_content
+        raw = """Some preamble text.
+===PREFLIGHT_START===
+status: PASS
+plan_depth: SUFFICIENT
+research_adequacy: SUFFICIENT
+contradictions: NONE
+vocabulary_fit: OK
+overall: All inputs are adequate.
+===PREFLIGHT_END===
+
+===CONTENT_START===
+# Test Content
+Some content here.
+===CONTENT_END===
+"""
+        preflight = _extract_delimited_content(raw, "===PREFLIGHT_START===", "===PREFLIGHT_END===")
+        assert preflight is not None
+        assert "status: PASS" in preflight
+
     def test_extract_preflight_fail(self):
         from pipeline_lib import _extract_delimited_content
         raw = """===PREFLIGHT_START===

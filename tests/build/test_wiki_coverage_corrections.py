@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,13 @@ def _write_artifacts(module_dir: Path, *, module_text: str = "old text\n") -> No
     (module_dir / "module.md").write_text(module_text, encoding="utf-8")
     (module_dir / "activities.yaml").write_text(
         "- id: act-1\n  type: select\n  prompt: old activity\n",
+        encoding="utf-8",
+    )
+
+
+def _write_sidecar(module_dir: Path, entries: list[dict[str, Any]]) -> None:
+    (module_dir / "implementation_map.json").write_text(
+        json.dumps({"schema_version": 1, "entries": entries}),
         encoding="utf-8",
     )
 
@@ -386,3 +394,26 @@ def test_yaml_invalid_fix_rolls_back_artifact_write(
         if event["event"] == "wiki_coverage_correction_yaml_invalid"
     )
     assert invalid["artifact"] == "activities.yaml"
+
+
+def test_group_key_uses_artifact_when_present_and_falls_back_without_it(
+    tmp_path: Path,
+) -> None:
+    with_artifact = _proposal("err-1", "l2_error", artifact="activities.yaml")
+    without_artifact = _proposal("err-2", "l2_error", artifact=None)
+    without_artifact["expected_treatment"] = {"shape": "opaque local patch"}
+    _write_sidecar(
+        tmp_path,
+        [{"obligation_id": "err-2", "artifact": "activities.yaml"}],
+    )
+
+    groups = linear_pipeline._wiki_coverage_grouped_fix_proposals(
+        [with_artifact, without_artifact],
+        tmp_path,
+    )
+
+    groups_by_key = {group["key"]: group for group in groups}
+    group_keys = set(groups_by_key)
+    assert "(artifact=activities.yaml, obligation_type=l2_error)" in group_keys
+    assert "(obligation_type=l2_error)" in group_keys
+    assert groups_by_key["(obligation_type=l2_error)"]["artifact"] == "activities.yaml"

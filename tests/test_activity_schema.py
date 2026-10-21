@@ -51,9 +51,22 @@ def _doc_with_inline(activities: list[dict]) -> dict:
     return {**MINIMAL_DOC, "inline": activities}
 
 
+def _doc_with_workbook(activities: list[dict]) -> dict:
+    return {**MINIMAL_DOC, "workbook": activities}
+
+
 # ---------------------------------------------------------------------------
 # Top-level structure tests
 # ---------------------------------------------------------------------------
+
+
+class TestTopLevel:
+    def test_minimal_valid(self, validator):
+        assert is_valid(validator, MINIMAL_DOC)
+
+    def test_extra_properties_rejected(self, validator):
+        doc = {**MINIMAL_DOC, "extra_field": "bad"}
+        assert not is_valid(validator, doc)
 
 
 # ---------------------------------------------------------------------------
@@ -73,6 +86,33 @@ class TestInlineId:
             }],
         }])
         assert not is_valid(validator, doc)
+
+    def test_inline_id_pattern(self, validator):
+        """Id must be lowercase alphanumeric with hyphens."""
+        doc = _doc_with_inline([{
+            "id": "UPPERCASE",
+            "type": "quiz",
+            "instruction": "Test",
+            "items": [{
+                "question": "Q?",
+                "options": ["a", "b", "c"],
+                "correct": 0,
+            }],
+        }])
+        assert not is_valid(validator, doc)
+
+    def test_workbook_without_id_valid(self, validator):
+        """Workbook activities do NOT require id."""
+        doc = _doc_with_workbook([{
+            "type": "quiz",
+            "instruction": "Test",
+            "items": [{
+                "question": "Q?",
+                "options": ["a", "b", "c"],
+                "correct": 0,
+            }],
+        }])
+        assert is_valid(validator, doc)
 
 
 # ---------------------------------------------------------------------------

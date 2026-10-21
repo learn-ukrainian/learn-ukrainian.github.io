@@ -58,6 +58,17 @@ def test_ukrainian_content_review_can_still_route_to_agy(monkeypatch):
     assert sent["review_target"] is None
 
 
+def test_data_with_other_keys_but_no_to_model_returns_none():
+    msg = {"id": 3, "data": json.dumps({"from_model": "claude"})}
+    assert _extract_target_model(msg) is None
+
+
+def test_missing_or_empty_data_returns_none():
+    assert _extract_target_model({"id": 4, "data": None}) is None
+    assert _extract_target_model({"id": 5, "data": ""}) is None
+    assert _extract_target_model({"id": 6}) is None
+
+
 def test_malformed_json_returns_none_not_raise():
     assert _extract_target_model({"id": 7, "data": "{not json"}) is None
 

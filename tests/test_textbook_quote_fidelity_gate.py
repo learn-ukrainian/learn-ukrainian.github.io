@@ -162,6 +162,34 @@ def test_seminar_textbook_attributed_fabrication_still_fails(monkeypatch):
     assert calls == {"literary": 0, "textbooks": 1}
 
 
+def test_core_level_matches_default_textbook_behavior(monkeypatch):
+    calls = {"literary": 0, "textbooks": 0}
+
+    def mock_search_literary(keywords, limit=20):
+        calls["literary"] += 1
+        return []
+
+    def mock_search_textbooks(keywords, limit=20):
+        calls["textbooks"] += 1
+        return [{"text": "Це справжня підручникова цитата."}]
+
+    monkeypatch.setattr("scripts.wiki.sources_db.search_literary", mock_search_literary)
+    monkeypatch.setattr("scripts.wiki.sources_db.search_textbooks", mock_search_textbooks)
+
+    module_text = """
+> Це справжня підручникова цитата.
+
+*— Захарійчук, Grade 1, p.24*
+"""
+    default_result = _textbook_quote_fidelity_gate(module_text)
+    core_result = _textbook_quote_fidelity_gate(module_text, level="a1")
+
+    assert core_result == default_result
+    assert core_result["passed"] is True
+    assert core_result["violations"] == []
+    assert calls == {"literary": 0, "textbooks": 2}
+
+
 def test_core_level_does_not_accept_seminar_embedded_attribution(monkeypatch):
     calls = {"textbooks": 0}
 
@@ -277,3 +305,25 @@ def test_seminar_no_verify_fabricated_fragment_with_exemption_warns(monkeypatch)
     assert result["warnings"][0]["exemption"] == exemption
     assert result["verdict"] == "WARN"
     assert result["severity"] == "WARN"
+
+
+def test_core_no_verify_fragment_still_skipped(monkeypatch):
+    calls = {"textbooks": 0}
+
+    def mock_search_textbooks(keywords, limit=20):
+        calls["textbooks"] += 1
+        return []
+
+    monkeypatch.setattr("scripts.wiki.sources_db.search_textbooks", mock_search_textbooks)
+
+    module_text = """
+<!-- NO_VERIFY: orchestrator review pending -->
+> Це цитата без джерела.
+
+*— Захарійчук, Grade 1, p.24*
+"""
+    result = _textbook_quote_fidelity_gate(module_text, level="a1")
+
+    assert result["passed"] is True
+    assert result["violations"] == []
+    assert calls["textbooks"] == 0

@@ -126,6 +126,12 @@ def test_compute_deck_version_fingerprints_all_inputs() -> None:
     assert len(changed_versions) == len(variants)
 
 
+def test_compute_deck_version_hashes_missing_inputs_as_empty_sentinels() -> None:
+    assert practice_deck_io.compute_deck_version(None, None, None, None, None, 1) == (
+        practice_deck_io.compute_deck_version([], [], [], {}, [], 1)
+    )
+
+
 def _request_url(request: object) -> str:
     return getattr(request, "full_url", str(request))
 

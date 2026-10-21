@@ -175,6 +175,22 @@ def test_existing_materialization_rebinds_every_record_to_source_pages(
     }
 
 
+def test_existing_materialization_rejects_private_output_tamper(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _materialize(tmp_path, monkeypatch)
+    _patch_fixture_identity(monkeypatch)
+    output = tmp_path / "private" / materialization.OUTPUT_FILENAME
+    output.write_bytes(output.read_bytes() + b"tamper")
+
+    with pytest.raises(SpasCatalogMaterializationError, match="byte count drift"):
+        materialization.validate_existing_materialization(
+            pdf_path=tmp_path / "not-read.pdf",
+            private_output_dir=tmp_path / "private",
+        )
+
+
 def test_existing_materialization_rejects_same_length_private_output_tamper(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

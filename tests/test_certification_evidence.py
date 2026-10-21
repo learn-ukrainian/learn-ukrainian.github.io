@@ -687,6 +687,26 @@ def test_wrong_target_or_content_hash_fails(qg_capture: dict[str, Any], tmp_path
     assert not _passes(artifact, qg_capture, authorization, identity)
 
 
+@pytest.mark.parametrize(
+    ("container", "key"),
+    [
+        ("qg_workflow", "prompt_hash"),
+        ("qg_workflow", "gate_version"),
+        ("qg_workflow", "checker_version"),
+        ("qg_workflow", "checker_config_hash"),
+        ("level_policy", "family"),
+    ],
+)
+def test_current_qg_contract_fact_mismatches_fail(
+    qg_capture: dict[str, Any], tmp_path: Path, container: str, key: str
+) -> None:
+    identity = _identity()
+    authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
+    artifact = _artifact(qg_capture, authorization, identity)
+    artifact.value["canonical_record"][container][key] = "wrong"
+    assert not _passes(artifact, qg_capture, authorization, identity)
+
+
 @pytest.mark.parametrize("field", ["raw_response_sha256", "workflow_run_id", "tier2_run_id", "attempt_id"])
 def test_raw_response_and_run_linkage_mismatches_fail(qg_capture: dict[str, Any], tmp_path: Path, field: str) -> None:
     identity = _identity()
@@ -1080,6 +1100,30 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     assert resumed["current_identity"]["sha256"] == current_identity["sha256"]
     assert resumed["history"][-1]["details"]["pending_identity_drift"] is False
     assert resumed["history"][-1]["details"]["reconciled_qg_rearming"] is True
+
+
+@pytest.mark.parametrize(
+    "relative_path",
+    [
+        "scripts/audit/curriculum_qg_harness.py",
+        "scripts/audit/qg_adapters.py",
+        "scripts/audit/llm_qg_canaries.py",
+        "scripts/audit/anchor_primitives.py",
+    ],
+    ids=("checker-config", "deterministic-adapter", "canary-definitions", "grounding-normalizer"),
+)
+def test_live_qg_dependency_drift_changes_qg_identity_only(completion_case: CompletionCase, relative_path: str) -> None:
+    repo, config_path, _ledger_root, ledger, inputs = completion_case
+    before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
+    dependency = repo / relative_path
+    dependency.write_text(
+        dependency.read_text(encoding="utf-8") + "\n# qg dependency identity drift\n", encoding="utf-8"
+    )
+    after = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
+
+    assert after["qg_identity"] != before["qg_identity"]
+    assert after["preparation_identity"] == before["preparation_identity"]
+    assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
 
 
 def test_changed_plan_bytes_and_config_reload_are_not_cached(

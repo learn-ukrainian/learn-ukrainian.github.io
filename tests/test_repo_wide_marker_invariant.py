@@ -18,8 +18,14 @@ Two checks keep the marker honest:
    fails if a marked test has no registry row (#9434), so deleting a row cannot
    pass silently. These checks read the marks pytest applies, from a
    collection-only child run. The PR-tier checks collect only the test files a
-   source prefilter says can carry the mark, and ``_candidate_test_files``
-   names the shapes it misses.
+   source prefilter says can carry the mark; that is an early warning, and
+   ``_candidate_test_files`` names the shapes it misses. The exact check,
+   ``test_registry_matches_every_collected_repo_wide_mark`` in
+   ``tests/test_repo_wide_registry_exact.py``, is ``slow`` (the nightly lane):
+   it collects every test file CI collects, with no prefilter, and compares the
+   registry with the collected marks both ways. It lives in its own module,
+   without ``repo_wide``, so a worker's ``pytest -m repo_wide`` never runs a
+   whole-suite collection.
 2. **The heuristic is a best-effort net.** It parses each test module's AST and
    flags test functions that walk a repository source tree (a repo-root path
    expression joined to ``.rglob()``/``.glob()``, ``os.walk``/``os.scandir``,
@@ -74,11 +80,14 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/hygiene/test_tracked_symlink_targets.py",
         "tests/orchestration/test_thread_restart_e2e.py",
         "tests/orchestration/test_worktree_removal_invariant.py",
+        "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
+        "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_dispatch_checkout_size.py",
         "tests/test_docs_catalogue.py",
         "tests/test_docs_catalogue_coverage.py",
+        "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
         "tests/test_issue_template_acceptance_criteria.py",
@@ -88,6 +97,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_model_catalog_literals_guard.py",
         "tests/test_no_rewrite_contract.py",
         "tests/test_post_processor_mutation_invariant.py",
+        "tests/test_public_tree_no_baked_host_run_root.py",
         "tests/test_repo_wide_marker_invariant.py",
         "tests/test_session_identity_env_isolation.py",
         "tests/test_sparse_collection_guard.py",
@@ -112,7 +122,11 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/curriculum/evidence/test_lessons_lock.py::test_committed_lesson_lock_is_fresh",
     "tests/packaging/test_systemd_templates.py::test_data_volume_dropins_cover_all_services_and_preserve_commands",
     "tests/projects/open_model_data/test_k_path_literal_guard.py::test_k_path_literals_are_resolved_or_allowlisted",
+    "tests/projects/open_model_data/test_quarantine.py::test_archive_import_guard_active_code",
     "tests/review/test_prompts.py::test_a_template_that_includes_imports_or_extends_a_file_fails_lint_and_render",
+    "tests/review/test_prompts.py::test_template_lint_refuses_an_unclosed_fence_and_a_template_that_does_not_parse",
+    "tests/review/test_prompts.py::test_template_lint_refuses_unresolved_placeholders_in_what_a_template_renders",
+    "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
     "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
     "tests/test_conftest_task_store_guard.py::test_task_store_consumers_use_call_time_resolver",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
@@ -125,12 +139,16 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_headless_claude_background_controls.py::test_exceptions_are_live_categorised_and_justified",
     "tests/test_headless_claude_background_controls.py::test_shell_launchers_are_proven_by_a_runner_test",
     "tests/test_headless_claude_background_controls.py::test_wrapper_spawns_and_known_callers_are_wired",
+    "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
+    "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
+    "tests/test_no_hardcoded_venv_interpreter.py::test_no_executing_hardcoded_venv_interpreter",
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
     "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
     "tests/test_readonly_source_db_connects.py::test_repo_has_no_unallowlisted_writable_source_db_connect",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_secret_redactor_urls.py::test_ordinary_repository_corpus_is_unchanged_by_url_pass",
     "tests/test_sources_db_hardening.py::test_shared_sqlite_connections_route_through_open_readonly",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
     "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
@@ -204,6 +222,11 @@ NOT_REPO_WIDE = {
         "Scans data/lexicon/source-inventory-review-decisions; data/ changes already force "
         "the full tier, and the module also carries reads_content."
     ),
+    "tests/test_open_model_phase3_historical_protection_channels.py::test_absent_oes_and_church_slavonic_artifacts_remain_blocked": (
+        "Scans data/projects/open_model_data for named artifacts (metadata-only existence "
+        "check, not a content read); data/ is not a test or script candidate, so any change "
+        "already forces the full tier."
+    ),
     "tests/test_source_inventory_intake.py::test_committed_source_inventory_files_are_valid": (
         "Scans data/lexicon/source-inventory; data/ is not a test or script candidate, so "
         "any change already forces the full tier."
@@ -243,11 +266,15 @@ NOT_REPO_WIDE.update(
             "test_codex_legacy_python_cache_does_not_block_driver_deployment",
             "test_agent_transient_briefs_are_preserved",
             "test_gemini_shared_skill_name_collision_fails_closed",
+            "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
             "test_tracked_mirror_drift_is_detected_before_deploy",
+            "test_second_deploy_is_noop_for_codex_target",
             "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
             "test_tracked_mirror_resolves_each_deploy_source",
             "test_claude_epic_dirs_are_preserved",
             "test_driver_runtime_state_is_preserved",
+            "test_tracked_agents_skill_declared_orphan_is_skipped",
+            "test_tracked_claude_glob_orphan_is_skipped",
             "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
             "test_drift_is_caught",
             "test_agent_manifest_keeps_lexically_unsafe_entries_rejected",
@@ -656,7 +683,14 @@ _CHILD_ENV_DROP = frozenset(
     }
 )
 _COLLECT_TIMEOUT_S = 90
+# Collecting the whole suite took 178s on a loaded host (2026-10-03).
+# One child must collect it all: a modifyitems hook sees only its own run's items.
+_EXACT_COLLECT_TIMEOUT_S = 1200
 _MARK_NAME = "repo_wide"
+_EXACT_CHECK_MODULE = "tests/test_repo_wide_registry_exact.py"
+_EXACT_CHECK = f"{_EXACT_CHECK_MODULE}::test_registry_matches_every_collected_repo_wide_mark"
+
+
 def _child_env() -> dict[str, str]:
     return {name: value for name, value in os.environ.items() if name not in _CHILD_ENV_DROP}
 
@@ -855,6 +889,15 @@ def _repository_python_sources() -> list[Path]:
     return sorted(path for path in paths if path.is_file())
 
 
+def _ci_test_files() -> list[Path]:
+    """Every test file CI's shards collect between them (``git ls-files -- tests`` named ``test_*.py``, ci.yml)."""
+    return sorted(
+        path
+        for path in _listed_files("tests")
+        if path.name.startswith("test_") and path.suffix == ".py" and path.is_file()
+    )
+
+
 def _collect_repo_wide_marks(
     root: Path, test_files: Collection[Path], timeout: float = _COLLECT_TIMEOUT_S
 ) -> tuple[frozenset[str], frozenset[str]]:
@@ -949,6 +992,41 @@ def test_every_marked_test_has_a_registry_row() -> None:
         "(module-level marker) or KNOWN_REPO_WIDE_FUNCTIONS (function or class marker). "
         "Add the row:\n" + "\n".join(unregistered)
     )
+
+
+def _selected_node_ids(marker: str, module: str) -> list[str]:
+    """Node ids ``pytest -m <marker> <module>`` selects, from a collection-only child.
+
+    ``--verbosity=-1`` overrides the config's ``-v``, so pytest lists one node id per line.
+    """
+    result = run_in_process_group(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--collect-only",
+            "--verbosity=-1",
+            "-p",
+            "no:cacheprovider",
+            "-m",
+            marker,
+            module,
+        ],
+        cwd=_REPO_ROOT,
+        env=_child_env(),
+        timeout=_COLLECT_TIMEOUT_S,
+    )
+    selected = [line for line in result.stdout.splitlines() if line.startswith(f"{module}::")]
+    # Exit 5 is "no tests collected", here because ``-m`` deselected all of them.
+    assert result.returncode == (0 if selected else 5), (result.stdout + result.stderr)[-4000:]
+    return selected
+
+
+def test_exact_check_is_outside_the_repo_wide_selection() -> None:
+    """``pytest -m repo_wide`` (worker pre-push) never selects the whole-suite collection (#9434)."""
+    assert _selected_node_ids(_MARK_NAME, _EXACT_CHECK_MODULE) == []
+    assert _selected_node_ids("slow", _EXACT_CHECK_MODULE) == [_EXACT_CHECK]
+    assert _EXACT_CHECK_MODULE not in KNOWN_REPO_WIDE_MODULES
 
 
 def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(

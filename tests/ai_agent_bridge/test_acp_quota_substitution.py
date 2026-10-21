@@ -476,6 +476,50 @@ def test_substitute_also_over_quota_fails_loudly_without_second_hop(
     assert result.substitution is None
 
 
+def test_substitute_rate_limited_exception_fails_loudly_without_second_hop(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {
+            "codex": _capacity_result("codex"),
+            "cursor": RateLimitedError("cursor", "auto", "429"),
+        },
+        tmp_path=tmp_path,
+    )
+
+    with pytest.raises(RateLimitedError):
+        _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-double-exc")
+
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
+    assert len(authority.enqueued) == 2
+    assert "ACP substitution exhausted" in capsys.readouterr().err
+
+
+def test_non_quota_error_is_unchanged(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": _non_quota_result("codex")},
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="non-quota")
+
+    assert result.ok is False
+    assert invoke.call_count == 1
+    assert result.substitution is None
+    assert getattr(result, "seat_substitution", None) is None
+    err = capsys.readouterr().err
+    assert "ACP substitution" not in err
+    assert "outcome=error" in err
+
+
 def test_seat_without_mapping_fails_unchanged_with_clear_message(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -890,6 +934,26 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     assert result.substitution is None
     assert [call.args[0] for call in invoke.call_args_list] == ["cursor"]
     assert jobs["job-2"]["state"] == "complete"
+
+
+def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
+    """delegate.py's launch route and the ACP ask path read one loader, not two copies."""
+    import argparse
+
+    import delegate
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+    received: list[object] = []
+
+    def route(request):
+        received.append(request.fallbacks)
+        return request.seat, request.model, "explicit"
+
+    args = argparse.Namespace(agent="codex", model=None, mode="read-only")
+    refusal, _target = delegate._admit_dispatch_target(args, agent="codex", trees=(), route=route)
+    assert refusal is None
+    assert received == [load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)]
+    assert received[0]["codex"] == "cursor"
 
 
 def test_quota_hop_replays_real_durable_fleet_jobs_without_execution(monkeypatch, tmp_path):

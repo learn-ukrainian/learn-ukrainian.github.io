@@ -24,3 +24,20 @@ def test_cursor_priority_follows_headroom_and_load(cursor_remaining, cursor_in_f
     ]
 
     assert [row["lane"] for row in build_pick_order(rows)] == expected
+
+
+@pytest.mark.parametrize(
+    ("headroom", "expected"),
+    [
+        ({"cursor": 95.0, "codex": 95.0, "claude": 95.0}, ["codex", "claude", "cursor"]),
+        ({"cursor": 91.0, "codex": 99.0}, ["codex", "cursor"]),
+        ({"cursor": None, "codex": None, "claude": None}, ["codex", "claude", "cursor"]),
+    ],
+    ids=["equal-band-and-load", "same-band-higher-codex", "missing-headroom"],
+)
+def test_cursor_does_not_lead_without_stronger_evidence(headroom, expected):
+    rows = [
+        {"lane": lane, "status": "cool", "remaining_pct": remaining, "in_flight": 0}
+        for lane, remaining in headroom.items()
+    ]
+    assert [row["lane"] for row in build_pick_order(rows)] == expected

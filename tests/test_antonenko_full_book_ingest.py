@@ -142,6 +142,34 @@ def test_ingest_pages_round_trip_with_section_coverage(tmp_path: Path) -> None:
     conn.close()
 
 
+def test_ingest_pages_uses_three_digit_page_number(tmp_path: Path) -> None:
+    """169 pages — the chunk_id padding must be 3 digits so chunks sort
+    correctly. Regression check: 2-digit padding would produce
+    ``_p10`` < ``_p2`` under string sort."""
+    # Synthesize 12 pages so the padding-needs gap is exercised.
+    fixture = "\f".join(f"Body of page {i}\n" for i in range(1, 13)) + "\f"
+    txt = _write_fixture(tmp_path, "many.txt", fixture)
+    pages = antonenko.parse_book(txt)
+    assert len(pages) == 12
+
+    db_path = tmp_path / "sources.db"
+    conn = _make_textbooks_db(db_path)
+    antonenko.ingest_pages(conn, pages)
+    conn.commit()
+    chunk_ids = [
+        r[0]
+        for r in conn.execute(
+            "SELECT chunk_id FROM textbooks WHERE source_file = ? ORDER BY chunk_id",
+            (antonenko.SOURCE_FILE,),
+        )
+    ]
+    # Sorted string order matches numeric page order — three-digit padding works.
+    assert chunk_ids == [
+        f"{antonenko.SOURCE_FILE}_p{i:03d}" for i in range(1, 13)
+    ]
+    conn.close()
+
+
 def test_ingest_pages_idempotent(tmp_path: Path) -> None:
     txt = _write_fixture(tmp_path, "ok.txt", FIXTURE_3_PAGES)
     pages = antonenko.parse_book(txt)

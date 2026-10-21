@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import subprocess
 from datetime import UTC, datetime, timedelta
 
 import pytest
 
 import scripts.api.main as api_main
+import scripts.api.state_helpers as state_helpers
 
 NOW = datetime(2026, 8, 13, 12, tzinfo=UTC)
 
@@ -126,6 +128,34 @@ def test_cross_workflow_failure_is_not_hidden_by_a_later_success():
     assert api_main._idle_pr_checks_green(pr) is False
 
 
+def test_timestamp_tie_failure_is_not_hidden_by_list_order():
+    pr = _pr(
+        111,
+        updated_at=NOW - timedelta(hours=2),
+        statusCheckRollup=[
+            _gate_run("FAILURE", NOW - timedelta(hours=1), "CI"),
+            _gate_run("SUCCESS", NOW - timedelta(hours=1), "CI"),
+        ],
+    )
+    assert api_main._idle_pr_checks_green(pr) is False
+
+
+def test_cross_workflow_in_progress_is_not_green():
+    """Nightly still running must not read green beside a SUCCESS of the same name."""
+    running = {
+        "name": "CI Gate",
+        "status": "IN_PROGRESS",
+        "workflowName": "Nightly",
+        "startedAt": _iso(NOW - timedelta(hours=1)),
+    }
+    pr = _pr(
+        114,
+        updated_at=NOW - timedelta(hours=2),
+        statusCheckRollup=[running, _gate_run("SUCCESS", NOW - timedelta(hours=2), "CI")],
+    )
+    assert api_main._idle_pr_checks_green(pr) is False
+
+
 def test_8264_rollup_stays_green_for_idle_eligibility():
     import json
     from pathlib import Path
@@ -180,3 +210,18 @@ def test_dirty_merge_state_remains_ineligible():
     pr = _pr(108, updated_at=NOW - timedelta(hours=2), mergeStateStatus="DIRTY")
 
     assert api_main._eligible_idle_pr(pr, now=NOW) is None
+
+
+def test_timeout_refresh_degrades_to_absent_cache():
+    def timed_out(ctx=None):
+        raise subprocess.TimeoutExpired(cmd=["gh", "pr", "list"], timeout=api_main.IDLE_PR_FETCH_TIMEOUT_S)
+
+    api_main._run_idle_pr_refresh(timed_out, "")
+
+    assert state_helpers.cache_get(api_main.IDLE_PR_CACHE_KEY, ttl=api_main.ORIENT_SECTION_TTLS["idle_prs"]) is None
+    assert api_main._idle_pr_last_error.get("") == "gh_timeout"
+
+    result, meta = api_main._cached_idle_pr_section(timed_out, {"idle_prs": []})
+
+    assert result == {"idle_prs": []}
+    assert meta["error"] == "gh_timeout"

@@ -20,9 +20,12 @@ sys.path.insert(
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"),
 )
 
+import pytest
 
 from wiki.review_merger import (
+    DEFAULT_DIM_PRIORITY,
     Fix,
+    apply_fixes,
     merge_fixes,
 )
 
@@ -37,6 +40,29 @@ class TestNonConflict:
         assert len(report.applied) == 1
         assert report.applied[0].replace == "1654"
         assert report.conflicts == []
+
+    def test_multiple_distinct_fixes_all_apply(self):
+        article = "Слово рахувати і на протязі тижня"
+        fixes = [
+            Fix(dim="register", find="рахувати", replace="вважати"),
+            Fix(dim="register", find="на протязі", replace="протягом"),
+        ]
+        report = merge_fixes(fixes, article)
+        assert len(report.applied) == 2
+        assert report.conflicts == []
+
+    def test_apply_fixes_produces_expected_text(self):
+        article = "Слово рахувати і на протязі тижня"
+        fixes = [
+            Fix(dim="register", find="рахувати", replace="вважати"),
+            Fix(dim="register", find="на протязі", replace="протягом"),
+        ]
+        report = merge_fixes(fixes, article)
+        result = apply_fixes(article, report.applied)
+        assert "рахувати" not in result
+        assert "на протязі" not in result
+        assert "вважати" in result
+        assert "протягом" in result
 
 
 # ── Rule 2: identical-replace ──────────────────────────────────────
@@ -60,6 +86,18 @@ class TestIdenticalReplace:
         report = merge_fixes(fixes, article)
         assert len(report.applied) == 1
         assert report.conflicts == []
+
+    def test_higher_priority_dim_credited(self):
+        """When multiple dims agree, the highest-priority dim is credited."""
+        article = "Переяславська рада 1653 року"
+        fixes = [
+            Fix(dim="register", find="1653", replace="1654"),
+            Fix(dim="factual_accuracy", find="1653", replace="1654"),
+        ]
+        report = merge_fixes(fixes, article)
+        assert len(report.applied) == 1
+        # factual_accuracy is higher priority than register
+        assert report.applied[0].dim == "factual_accuracy"
 
 
 # ── Rule 3: different-replace conflict ─────────────────────────────
@@ -91,6 +129,21 @@ class TestDifferentReplaceConflict:
         assert len(report.applied) == 1
         assert report.applied[0].replace == "національний поет"
 
+    def test_override_priority(self):
+        article = "Шевченко — великий поет"
+        fixes = [
+            Fix(dim="register", find="великий поет", replace="A"),
+            Fix(dim="factual_accuracy", find="великий поет", replace="B"),
+        ]
+        # Flipped priority
+        report = merge_fixes(
+            fixes,
+            article,
+            dim_priority=("register", "factual_accuracy"),
+        )
+        assert report.conflicts[0].chosen == "register"
+        assert report.applied[0].replace == "A"
+
 
 # ── Rule 4: span-overlap conflict ──────────────────────────────────
 
@@ -117,6 +170,20 @@ class TestSpanOverlap:
         # The longer find should win
         assert len(report.applied) == 1
         assert report.applied[0].find == "гетьман Тимошенко підписав універсал"
+
+    def test_after_apply_only_one_edit(self):
+        article = "гетьман Тимошенко підписав універсал"
+        fixes = [
+            Fix(dim="factual_accuracy", find="Тимошенко", replace="X"),
+            Fix(
+                dim="ukrainian_perspective",
+                find="гетьман Тимошенко підписав універсал",
+                replace="REPLACED",
+            ),
+        ]
+        report = merge_fixes(fixes, article)
+        result = apply_fixes(article, report.applied)
+        assert result == "REPLACED"
 
     def test_span_overlap_records_conflict_even_when_longest_uncontested(self):
         """Shorter overlapping variants must not silently disappear.
@@ -194,6 +261,15 @@ class TestMissingFind:
         assert len(report.conflicts) == 1
         assert report.conflicts[0].kind == "MISSING"
 
+    def test_apply_fixes_skips_missing(self):
+        article = "Hello world"
+        report_applied = [
+            Fix(dim="register", find="Hello", replace="Привіт"),
+            Fix(dim="register", find="MISSING", replace="X"),
+        ]
+        result = apply_fixes(article, report_applied)
+        assert result == "Привіт world"  # missing skipped cleanly
+
 
 # ── Rule 6: ambiguous-find (multiple occurrences) ──────────────────
 
@@ -216,11 +292,50 @@ class TestAmbiguousFind:
         assert "2×" in report.conflicts[0].reason
         assert report.has_unresolvable_conflicts is True
 
+    def test_disambiguated_find_applies(self):
+        """Widening find-string with surrounding context makes it unique."""
+        article = "У 1991 році відбулося X. У 1991 році відбулося Y."
+        fixes = [
+            Fix(
+                dim="factual_accuracy",
+                find="У 1991 році відбулося X",
+                replace="У 1990 році відбулося X",
+            ),
+        ]
+        report = merge_fixes(fixes, article)
+        assert len(report.applied) == 1
+        assert report.conflicts == []
+
 
 # ── Fix-construction guards ────────────────────────────────────────
 
 
+class TestFixGuards:
+    def test_empty_find_rejected(self):
+        with pytest.raises(ValueError, match="non-empty"):
+            Fix(dim="register", find="", replace="X")
+
+    def test_empty_replace_allowed(self):
+        """Deletion is a legitimate fix."""
+        f = Fix(dim="register", find="bad word", replace="")
+        assert f.replace == ""
+
+
 # ── Default priority sanity ────────────────────────────────────────
+
+
+class TestDefaultPriority:
+    def test_default_priority_covers_all_four_dims(self):
+        assert set(DEFAULT_DIM_PRIORITY) == {
+            "factual_accuracy",
+            "source_grounding",
+            "register",
+            "ukrainian_perspective",
+        }
+
+    def test_factual_accuracy_is_highest(self):
+        """Per design §9 Q3 placeholder: factual errors are highest prio."""
+        assert DEFAULT_DIM_PRIORITY[0] == "factual_accuracy"
 
 
 # ── Unresolvable-conflict flag ─────────────────────────────────────
@@ -232,6 +347,12 @@ class TestUnresolvableFlag:
         fixes = [Fix(dim="register", find="ABSENT", replace="X")]
         report = merge_fixes(fixes, article)
         assert report.has_unresolvable_conflicts is True
+
+    def test_flag_clear_on_simple_apply(self):
+        article = "hello world"
+        fixes = [Fix(dim="register", find="hello", replace="hi")]
+        report = merge_fixes(fixes, article)
+        assert report.has_unresolvable_conflicts is False
 
     def test_flag_clear_on_resolvable_different_replace(self):
         """DIFFERENT_REPLACE conflict with `chosen` set must NOT trip the

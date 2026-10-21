@@ -28,6 +28,12 @@ def test_pause_lifts_by_itself_after_until() -> None:
     mp.refuse_paused_models(["claude-opus-5-5"], policy=POLICY, now=later, used_pct=lambda _l: 10.0)
 
 
+def test_other_models_pass_while_headroom_remains() -> None:
+    mp.refuse_paused_models(
+        ["claude-sonnet-5-5", "gpt-6.1-sol", None], policy=POLICY, now=NOW, used_pct=lambda _l: 84.0
+    )
+
+
 def test_headroom_stop_refuses_matching_models_only() -> None:
     with pytest.raises(mp.ModelPausedRefused, match="MODEL_HEADROOM"):
         mp.refuse_paused_models(["claude-sonnet-5-5"], policy=POLICY, now=NOW, used_pct=lambda _l: 87.0)
@@ -259,6 +265,34 @@ def test_selected_claude_account_reads_only_its_own_fresh_row(monkeypatch, b_row
     for unnamed in (None, unresolved("claude_account_default_file_invalid")):
         assert mp.routing_budget_used_pct("claude", account=unnamed) is None
         assert mp.routing_budget_used_pct("codex", account=unnamed) == 30.0
+
+
+def test_account_reader_holds_only_on_the_selected_accounts_meter(monkeypatch) -> None:
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}
+    _serve(monkeypatch, _accounts_payload(_account(89.0)))
+    reader = mp.account_used_pct(account("b"))
+    assert mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=reader) is None
+    for default in (HOST_ACCOUNT, account("a")):
+        held = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(default))
+        assert held == "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom"
+    # An unnamed or unresolved account has no claude meter, so its headroom never holds.
+    for unnamed in (None, unresolved("claude_account_binding_missing")):
+        unheld = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(unnamed))
+        assert unheld is None
+
+
+def test_usage_readers_require_a_named_claude_account(monkeypatch) -> None:
+    """#10630 row 1: there is no default account; a bare label or a missing account fails loudly."""
+    _serve(monkeypatch, _accounts_payload(_account(89.0)))
+    with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'account'"):
+        mp.routing_budget_used_pct("claude")
+    for bare in ("b", "a"):
+        with pytest.raises(TypeError, match="named ClaudeAccount"):
+            mp.routing_budget_used_pct("claude", account=bare)
+        with pytest.raises(TypeError, match="named ClaudeAccount"):
+            mp.account_used_pct(bare)
+    with pytest.raises(TypeError, match="used_pct"):
+        mp.refuse_paused_models(["claude-opus-5-5"], policy={"headroom": []}, now=NOW)
 
 
 @pytest.mark.parametrize(("label", "refused"), [("b", False), ("a", True), (None, True)])

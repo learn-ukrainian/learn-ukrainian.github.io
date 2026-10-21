@@ -129,6 +129,15 @@ def test_v1_report_workers_unreported(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "unreported:host-worker" in client.get("/api/fleet/workers/v1").json()["attention"]
 
 
+def test_v2_empty_workers_verified_zero(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
+    loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[]))
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
+    assert host["workers_status"] == "reported"
+    assert host["workers"] == []
+
+
 def test_remote_reported_workers_surface(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())

@@ -663,6 +663,17 @@ def test_reconciliation_rejects_archival_without_exact_confirmation(tmp_path: Pa
     assert "predecessor archival lacks exact confirmed-successor proof" in result["discrepancies"]
 
 
+def test_reconciliation_rejects_premature_heartbeat_cleanup_authorization(tmp_path: Path) -> None:
+    record = _sync(tmp_path, _lease(lineage="lineage-premature", rollover_id="rollover-premature"))
+    snapshot = _native_snapshot(record, replacement_id="replacement-premature")
+    snapshot["heartbeat"]["cleanup_authorized"] = True
+
+    result = registry.reconcile_snapshot(record, snapshot)
+
+    assert result["consistent"] is False
+    assert "cleanup authorization precedes" in " ".join(result["discrepancies"])
+
+
 def test_projection_rejects_duplicate_successor_for_exact_rollover(tmp_path: Path) -> None:
     first = _lease(
         lineage="lineage-duplicate",
@@ -1168,6 +1179,33 @@ def test_cold_cleanup_failure_preserves_confirmed_non_live_state(tmp_path: Path)
     assert record["last_successful_boundary"] == registry.RolloverState.CONFIRMED.value
     assert record["blocking_reason"].startswith("native rollover boundary blocked")
     assert registry.is_live_pending(record) is False
+
+
+def test_catchup_to_confirmed_preserves_cleanup_blocker_in_fleet_summary(tmp_path: Path) -> None:
+    _sync(
+        tmp_path,
+        _lease(
+            lineage="lineage-confirmed-catchup",
+            rollover_id="rollover-confirmed-catchup",
+            replacement="replacement-confirmed-catchup",
+            status="resumed",
+        ),
+    )
+    started = _lease(
+        lineage="lineage-confirmed-catchup",
+        rollover_id="rollover-confirmed-catchup",
+        replacement="replacement-confirmed-catchup",
+        status="started",
+    )
+    started["replacement"]["native_lifecycle"]["status"] = "archive_authorization_blocked"
+
+    record = _sync(tmp_path, started)
+    audit = registry.audit_fleet(tmp_path)
+
+    assert record["state"] == registry.RolloverState.CONFIRMED.value
+    assert registry.is_live_pending(record) is False
+    assert record["blocking_reason"] == "native rollover boundary blocked: archive_authorization_blocked"
+    assert audit["entries"][0]["blocking_reason"] == record["blocking_reason"]
 
 
 def test_every_success_boundary_is_idempotent_after_crash_retry(tmp_path: Path) -> None:

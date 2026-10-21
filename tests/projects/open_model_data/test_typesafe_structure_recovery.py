@@ -115,3 +115,44 @@ def test_remote_api_mocking_single(mock_urlopen: MagicMock) -> None:
     assert report.blocks[0].heading_level == 2
     assert "## Тема уроку Продовження теми" in report.rendered_markdown
     assert engine.api_calls >= 2
+
+
+@patch("urllib.request.urlopen")
+def test_remote_api_mocking_batch(mock_urlopen: MagicMock) -> None:
+    """Verify batched remote TypeSafe System One Pass 1 and Pass 2 handling."""
+    resp_pass1_batch = MagicMock()
+    resp_pass1_batch.read.return_value = json.dumps(
+        {
+            "model": "jev-latest",
+            "answers": {
+                "p0_cont": {"type": "noul", "noul": 0.95},
+                "p1_cont": {"type": "noul", "noul": 0.05},
+            },
+        }
+    ).encode("utf-8")
+
+    resp_pass2_batch = MagicMock()
+    resp_pass2_batch.read.return_value = json.dumps(
+        {
+            "model": "jev-latest",
+            "answers": {
+                "b0_type": {"type": "choice", "choice": "heading", "confidence": 0.95},
+                "b0_level": {"type": "score", "score": 0.1, "confidence": 0.90},
+                "b1_type": {"type": "choice", "choice": "paragraph", "confidence": 0.98},
+                "b1_level": {"type": "score", "score": 1.0, "confidence": 0.50},
+            },
+        }
+    ).encode("utf-8")
+
+    mock_urlopen.return_value.__enter__.side_effect = [resp_pass1_batch, resp_pass2_batch]
+
+    engine = TypeSafeStructureRecovery(api_key="ts-fake-key", batch_size=10)
+    raw = "Розділ 1\nТеорія\nПочаток курсу"
+    report = engine.recover(raw)
+
+    assert report.recovered_block_count == 2
+    assert report.blocks[0].block_type == BlockType.HEADING
+    assert report.blocks[0].heading_level == 1
+    assert report.blocks[1].block_type == BlockType.PARAGRAPH
+    assert report.character_preservation_ratio == 1.0
+    assert engine.api_calls >= 2

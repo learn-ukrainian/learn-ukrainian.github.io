@@ -155,6 +155,17 @@ def test_partial_snapshot_cannot_resolve_or_suppress(ledger, empty):
     assert all(i["class"] == "NEW" for i in delta["items"])
 
 
+def test_complete_empty_snapshot_resolves_then_becomes_silent(ledger):
+    baseline = seed(ledger)
+    delta = blockers.compute_delta(observation(), baseline)
+    assert delta["items"] == [{"id": "blocked-build", "class": "RESOLVED"}]
+    body = b"RESOLVED blocked-build"
+    baseline = blockers.record(
+        ledger, EPIC, observation(), receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
+    )
+    assert blockers.compute_delta(observation(), baseline)["post_required"] is False
+
+
 @pytest.mark.parametrize(
     "corruption",
     [
@@ -308,6 +319,20 @@ def test_rejected_record_preserves_bytes_and_resurfaces(ledger, tmp_path, failur
         ]
         == "CHANGED"
     )
+
+
+@pytest.mark.parametrize("flag", ["--epic", "--current", "--receipt", "--body-file", "--expect-generation"])
+def test_record_requires_every_flag(ledger, tmp_path, flag):
+    seed(ledger)
+    before = ledger.read_bytes()
+    paths = record_files(tmp_path, observation(item()), posted(item()))
+    args = record_args(paths)
+    index = args.index(flag)
+    del args[index : index + 2]
+    result = run_cli(ledger, *args)
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert ledger.read_bytes() == before
 
 
 def test_record_rejects_partial_substring_token_matches(ledger):
@@ -768,6 +793,18 @@ def test_atomic_replace_failure_keeps_old_and_cleans_own_temp(ledger, monkeypatc
     assert list(ledger.parent.glob(f".{blockers.LEDGER_NAME}.*")) == []
 
 
+def test_show_absent_present_empty_and_private_paths(ledger):
+    result = run_cli(ledger, "show", "--epic", EPIC)
+    assert result.returncode == 0
+    assert result.stdout.strip() == blockers.UNKNOWN_SUMMARY
+    seed(ledger)
+    result = run_cli(ledger, "show", "--epic", EPIC)
+    assert result.stdout.strip() == "Blocker baseline: generation 1; 1 recorded blockers"
+    ledger.write_text("")
+    assert run_cli(ledger, "show", "--epic", EPIC).stdout.strip() == blockers.UNKNOWN_SUMMARY
+    assert str(ledger.parent) not in result.stdout
+
+
 def test_ledger_path_uses_matching_launcher_state_only(ledger, monkeypatch, tmp_path):
     assert blockers.ledger_path(EPIC) == ledger
     monkeypatch.setattr(driver_state, "_repo_root", lambda: tmp_path)
@@ -790,12 +827,54 @@ def test_cli_help_contract(ledger, command):
     assert "receipt never selects the expected target" in result.stdout
 
 
+def test_successful_cli_record_and_delta(ledger, tmp_path):
+    current = observation(item())
+    paths = record_files(tmp_path, current, posted(item()))
+    result = run_cli(ledger, *record_args(paths, "0"))
+    assert result.returncode == 0
+    assert json.loads(result.stdout) == {"generation": 1, "recorded": True}
+    result = run_cli(ledger, "delta", "--epic", EPIC, "--current", str(paths[0]))
+    assert result.returncode == 0
+    delta = json.loads(result.stdout)
+    assert delta["baseline"] == "valid"
+    assert delta["post_required"] is False
+    assert delta["items"][0]["class"] == "UNCHANGED"
+
+
 def test_boolean_generation_and_nonstring_anchor_cannot_validate(ledger):
     stored = seed(ledger)
     for mutate in (lambda d: d.update(generation=True), lambda d: d["anchor"].update(message_id=1)):
         corrupt = copy.deepcopy(stored)
         mutate(corrupt)
         assert blockers.validate_ledger(corrupt, EPIC) is None
+
+
+def test_in_process_cli_round_trip_and_failure(ledger, tmp_path, capsys):
+    current = observation(item())
+    paths = record_files(tmp_path, current, posted(item()))
+    assert blockers.main(record_args(paths, "0")) == 0
+    assert json.loads(capsys.readouterr().out) == {"generation": 1, "recorded": True}
+    assert blockers.main(["delta", "--epic", EPIC, "--current", str(paths[0])]) == 0
+    assert json.loads(capsys.readouterr().out)["post_required"] is False
+    assert blockers.main(["show", "--epic", EPIC]) == 0
+    assert capsys.readouterr().out.strip() == "Blocker baseline: generation 1; 1 recorded blockers"
+    before = ledger.read_bytes()
+    paths[0].write_text("bad JSON")
+    assert blockers.main(["delta", "--epic", EPIC, "--current", str(paths[0])]) == 1
+    result = capsys.readouterr()
+    assert result.out == ""
+    assert "not valid UTF-8 JSON" in result.err
+    assert ledger.read_bytes() == before
+
+
+@pytest.mark.parametrize("generation", [-1, True])
+def test_invalid_generation_cannot_record(ledger, generation):
+    seed(ledger)
+    before = ledger.read_bytes()
+    body = posted(item())
+    with pytest.raises(ValueError, match="generation"):
+        blockers.record(ledger, EPIC, observation(item()), receipt(body), body, generation)
+    assert ledger.read_bytes() == before
 
 
 @pytest.mark.parametrize("corruption", ["json", "anchor", "map", "epic"])

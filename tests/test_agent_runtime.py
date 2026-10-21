@@ -1012,6 +1012,58 @@ def test_codex_parse_response_takes_the_answer_from_the_final_file_only(tmp_path
     assert "STALE" not in (empty.stderr_excerpt or "")
 
 
+def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
+    """Regression (Gemini 2026-04-10 review): a user prompt containing
+    a legitimate dashes-only line (code block, horizontal rule) used to
+    defeat the naive lazy-regex that tried to strip the prompt block.
+
+    The fix switched from "match between two dividers" to "take the
+    stderr tail after the LAST divider". Whatever's after the last
+    divider is guaranteed to be Codex's own output, never echoed
+    prompt. A prompt with 17 inline dashes lines can't poison
+    classification anymore.
+    """
+    adapter = CodexAdapter()
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("")  # call failed
+
+    stderr = (
+        "OpenAI Codex v0.118.0 (research preview)\n"
+        "--------\n"
+        "workdir: /foo\n"
+        "model: gpt-5.5\n"
+        "--------\n"
+        "user\n"
+        "Review our rate-limit handling code. Example:\n"
+        "\n"
+        "```\n"
+        "--------\n"  # inline divider inside the prompt
+        "if usage limit reached:\n"
+        "    log('rate limit triggered')\n"
+        "--------\n"  # another inline divider
+        "```\n"
+        "\n"
+        "What do you think?\n"
+        "--------\n"  # real closing divider
+        "codex\n"
+        "error: terminated by signal 15\n"
+    )
+
+    result = adapter.parse_response(
+        stdout="",
+        stderr=stderr,
+        returncode=-15,
+        output_file=output_file,
+    )
+    # The real error ("terminated by signal") is not a rate limit.
+    # The prompt's rate-limit phrases must not leak into classification.
+    assert result.rate_limited is False, (
+        f"Prompt with inline dividers + rate-limit phrases poisoned "
+        f"classification. stderr_excerpt={result.stderr_excerpt!r}"
+    )
+    assert result.ok is False
+
+
 def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
     """Regression: Codex CLI echoes the user prompt to stderr. The bridge
     prompts include standing rules mentioning 'usage limit reached' and

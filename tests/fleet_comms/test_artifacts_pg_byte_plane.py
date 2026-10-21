@@ -97,6 +97,19 @@ def test_store_bytes_dedups_by_sha256(pg_authority: str, tmp_path: Path) -> None
 
 
 @pytest.mark.postgres
+def test_materialize_writes_scratch_file_from_postgres_bytes(
+    pg_authority: str,
+    tmp_path: Path,
+) -> None:
+    data = _unique_payload("materialize")
+    with ArtifactStore(root=tmp_path / "plane") as store:
+        rec = store.store_bytes(data, producer="phase0b-test", logical_filename="payload.bin")
+        scratch = tmp_path / "scratch"
+        out = store.materialize(rec.artifact_id, scratch, filename="payload.bin")
+        assert out.read_bytes() == data
+
+
+@pytest.mark.postgres
 def test_get_missing_artifact_raises(pg_authority: str, tmp_path: Path) -> None:
     with ArtifactStore(root=tmp_path / "plane") as store:
         with pytest.raises(ArtifactStoreError, match="not found"):

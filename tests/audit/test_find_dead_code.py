@@ -5,6 +5,7 @@ import pytest
 from scripts.audit.find_dead_code import (
     category_a,
     category_b,
+    category_f,
 )
 
 
@@ -85,4 +86,17 @@ def test_category_a_excludes_worktrees(tmp_path):
     hits = category_a(tmp_path)
 
     assert any("live.py" in h for h in hits)
+    assert not any(".worktrees" in h for h in hits)
+
+
+def test_category_f_excludes_worktrees(tmp_path):
+    # An orphaned orchestration dir in the live tree is a candidate; one inside
+    # .worktrees/ must NOT be (484 of the polluted F hits were worktree copies).
+    (tmp_path / "mod" / "orchestration").mkdir(parents=True)
+    wt_orch = tmp_path / ".worktrees" / "dispatch" / "x" / "mod" / "orchestration"
+    wt_orch.mkdir(parents=True)
+
+    hits = category_f(tmp_path)
+
+    assert any("mod/orchestration" in h and ".worktrees" not in h for h in hits)
     assert not any(".worktrees" in h for h in hits)

@@ -42,6 +42,15 @@ def test_folk_vesum_gate_accepts_attested_foreign_proper_nouns() -> None:
     }
 
 
+def test_folk_vesum_gate_treats_attested_foreign_proper_nouns_consistently() -> None:
+    gate = _gate("Сатурналії Йоль")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["foreign_proper_noun_attested"] == 2
+    assert set(gate["foreign_proper_noun_attested_words"]) == {"Сатурналії", "Йоль"}
+
+
 def test_folk_vesum_gate_rejects_unattested_capitalized_foreign_coinage() -> None:
     gate = _gate("Йолькове")
 
@@ -63,6 +72,22 @@ def test_folk_vesum_gate_rejects_invalid_foreign_proper_noun_case_forms() -> Non
 
     assert gate["passed"] is False
     assert set(gate["missing"]) == {"Ірана", "Ялдаа"}
+    assert gate["foreign_proper_noun_attested"] == 0
+
+
+def test_folk_vesum_gate_rejects_mixed_case_foreign_proper_noun_surfaces(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Corpus-absent boundary: the classifier is unavailable, so nothing is
+    # heritage-attested. The fixture-VESUM test below covers the corpus-present
+    # path where capitalization would otherwise accept «ІРан» (#9344).
+    monkeypatch.setattr(linear_pipeline, "_engine_classifies_authentic", lambda _candidate: False)
+    monkeypatch.setattr(linear_pipeline, "_engine_flags_russianism", lambda _candidate: False)
+
+    gate = _gate("ЙОль ЯЛду ІРан")
+
+    assert gate["passed"] is False
+    assert set(gate["missing"]) == {"ЙОль", "ЯЛду", "ІРан"}
     assert gate["foreign_proper_noun_attested"] == 0
 
 
@@ -175,6 +200,32 @@ def test_folk_vesum_gate_fixture_vesum_rejects_mixed_case_proper_noun(
         assert sibling["passed"] is False
         assert sibling["missing"] == ["ІРан"]
         assert "ІРан" not in sibling["heritage_attested_words"]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "ІРан Іран",
+        "ІРан **Іран**",
+        "ІРан Іра́н",
+    ],
+)
+def test_folk_vesum_gate_fixture_rejects_malformed_casing_beside_sibling(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    text: str,
+) -> None:
+    """A valid sibling must not hide «ІРан», including a decorated sibling (#9344).
+
+    Plain «Іран», bold «**Іран**», and stressed «Іра́н» each share the lowercase
+    key. Decoration matching has to keep «ІРан» so the casing check can reject it.
+    """
+    with _fixture_vesum_gate(tmp_path, monkeypatch) as (_fixture, gate):
+        rejected = gate(text)
+
+    assert rejected["passed"] is False
+    assert rejected["missing"] == ["ІРан"]
+    assert rejected["heritage_attested"] == 0
 
 
 @pytest.mark.parametrize("level", ["bio", "hist"])

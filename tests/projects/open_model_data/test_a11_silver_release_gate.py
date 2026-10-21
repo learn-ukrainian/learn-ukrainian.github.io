@@ -35,6 +35,8 @@ A9_RECEIPT_PATH = ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json"
 A10_RECEIPT_PATH = ADMISSION / "dataset_v4_a10_pilot_review_gate_receipt_v1.json"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 
+V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
+
 
 @functools.cache
 def _cached_json(path: Path) -> dict:
@@ -244,7 +246,41 @@ def test_a11_silver_release_view_fails_closed_on_a_passed_review_without_an_admi
 # --- release packet (fixed contract) ------------------------------------------
 
 
+def test_a11_release_packet_never_treats_model_agreement_arena_vote_or_hypothesis_as_a_silver_basis() -> None:
+    packet = a11.build_release_packet()
+    assert packet == a11.RELEASE_PACKET_REQUIREMENTS
+    assert packet["gate_ids"] == ["MODEL_AGREEMENT_NOT_SILVER_OR_GOLD", "SILVER_FIRST_STABLE_IDS"]
+    assert packet["requires_deterministic_admission_checks_passed"] is True
+    assert packet["requires_upstream_pilot_review_passed"] is True
+    assert packet["model_agreement_admits_silver"] is False
+    assert packet["arena_vote_admits_silver"] is False
+    assert packet["model_vote_admits_silver"] is False
+    assert packet["hypothesis_admits_silver"] is False
+    assert packet["silver_ids_stable_across_gold_upgrade"] is True
+    assert packet["gold_overlay_is_separate_later_stage"] is True
+    assert packet["release_may_execute_against_missing_or_empty_rows"] is False
+    assert packet["release_execution_state"] == "NOT_EXECUTED_NO_ADMITTED_ROWS"
+
+
+def test_a11_release_packet_is_immutable_across_calls() -> None:
+    packet = a11.build_release_packet()
+    packet["model_agreement_admits_silver"] = True
+    assert a11.RELEASE_PACKET_REQUIREMENTS["model_agreement_admits_silver"] is False
+    assert a11.build_release_packet()["model_agreement_admits_silver"] is False
+
+
+def test_a11_required_gate_ids_are_the_manifests_own_gate_ids_never_invented() -> None:
+    for gate_id in a11.REQUIRED_GATE_IDS:
+        assert gate_id in _cached_json(MANIFEST_PATH)["required_gate_ids"]
+
+
 # --- shared engine wiring (real call, zero rows today) -----------------------
+
+
+def test_a11_engine_wiring_reuses_the_shared_admission_engine_unmodified() -> None:
+    receipt = a11.run_engine_admission_check([])
+    assert receipt["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
+    a11.a10.a9.a8.admission.verify_receipt(receipt)
 
 
 def test_a11_engine_still_refuses_a_model_only_basis_for_authorship_evidence_and_rights() -> None:
@@ -280,6 +316,23 @@ def test_a11_receipt_matches_schema() -> None:
     Draft202012Validator.check_schema(schema)
     errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
     assert not errors, errors[0].message if errors else None
+
+
+def test_a11_receipt_binds_v4_sha_and_control_surfaces() -> None:
+    assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
+    assert _cached_json(RECEIPT)["control_surfaces"] == {
+        "public_control_issue": 7423,
+        "pilot_child_issue": 7430,
+        "private_operational_board": 622,
+    }
+    assert _cached_json(RECEIPT)["bindings"]["a10_pilot_review_gate"]["sha256"] == a11.sha256_file(A10_RECEIPT_PATH)
+    assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a11.sha256_file(MANIFEST_PATH)
+
+
+def test_a11_receipt_binds_the_merged_a10_receipt_by_its_known_public_sha() -> None:
+    # The merged A10 receipt's public sha256, frozen at dispatch time (PR #7662 repair 3:
+    # A9's content changed under the Repair 2 real-slot-mechanism fix, rippling into A10-A13).
+    assert a11.sha256_file(A10_RECEIPT_PATH) == "ebf9f2814601195d67a6faac808da579140a7fba6fc767bfb2eedf873236c57f"
 
 
 def test_a11_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_residual_unresolved() -> None:
@@ -320,12 +373,68 @@ def test_a11_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_residual_unr
         assert all(e["status"] == "unresolved_carried_to_a11" for e in _cached_json(RECEIPT)[key])
 
 
+def test_a11_receipt_does_not_claim_training_ready_silver_while_the_gate_is_closed() -> None:
+    assert _cached_json(RECEIPT)["release_gate"]["silver_release_slice_ready"] is False
+    assert _cached_json(RECEIPT)["status"] != "TRAINING_READY_SILVER"
+    assert _cached_json(RECEIPT)["execution_counters"]["slots_release_ready"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["slots_blocked"] == 100
+
+
+def test_a11_receipt_never_claims_arena_admitted_eval_or_pilot_review_ready() -> None:
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
+    assert "ARENA_SLICE_READY" not in serialized
+    assert "ADMITTED_SLICE_READY" not in serialized
+    assert "EVAL_ARTIFACT_READY" not in serialized
+    assert "PILOT_REVIEW_PASSED" not in serialized
+    # Even A11's own "not ready" status string must not contain the literal
+    # completion-vocabulary term as a substring -- mirrors A8/A9/A10's own
+    # wording convention so a naive substring grep for "is this claimed"
+    # cannot be fooled by the blocked-status string itself.
+    assert "TRAINING_READY_SILVER" not in serialized
+    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["arena_slice_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["admitted_slice_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["eval_artifact_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["pilot_review_passed_claimed"] is False
+
+
+def test_a11_receipt_never_claims_a_release_was_executed_or_admitted_by_model_agreement() -> None:
+    assert _cached_json(RECEIPT)["safety_assertions"]["self_review_occurred"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["review_executed_against_missing_or_empty_row"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["model_agreement_admitted_silver"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["arena_vote_admitted_silver"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["hypothesis_admitted_silver"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["silver_released_without_pilot_review_or_admission"] is False
+    assert all(entry["release_executed"] is False for entry in _cached_json(RECEIPT)["silver_release_view"])
+
+
+def test_a11_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
+    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["rows_released_as_silver"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["rows_admitted_and_eligible_for_release"] == 0
+    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
+    assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
+
+
 def test_a11_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
     keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
     assert _cached_json(RECEIPT)["a11_residuals"][0]["subject_id"].startswith("v4p-")
+
+
+def test_a11_receipt_never_opens_held_out_membership() -> None:
+    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_referenced"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_opened"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["heldout_family_identity_leaked"] is False
 
 
 def test_a11_bindings_hash_to_disk_for_every_bound_artifact() -> None:
@@ -363,9 +472,30 @@ def test_a11_refuses_a_forged_training_ready_silver_claim() -> None:
         a11.validate_receipt_independently(receipt)
 
 
+def test_a11_refuses_a_forged_silver_release_executed_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["release_gate"]["silver_release_executed"] = True
+    with pytest.raises(a11.SilverReleaseGateError):
+        a11.validate_receipt_independently(receipt)
+
+
 def test_a11_refuses_a_dropped_a10_residual() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["a10_residuals_carried_forward"].pop()
+    with pytest.raises(a11.SilverReleaseGateError):
+        a11.validate_receipt_independently(receipt)
+
+
+def test_a11_refuses_a_missing_frozen_slot_residual() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["a11_residuals"].pop()
+    with pytest.raises(a11.SilverReleaseGateError):
+        a11.validate_receipt_independently(receipt)
+
+
+def test_a11_refuses_a_dropped_silver_release_view_entry() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["silver_release_view"].pop()
     with pytest.raises(a11.SilverReleaseGateError):
         a11.validate_receipt_independently(receipt)
 
@@ -400,3 +530,16 @@ def test_a11_refuses_a_tampered_model_only_bases_blocked_list() -> None:
     receipt["engine_wiring"]["model_only_bases_blocked"] = ["model_agreement"]
     with pytest.raises(a11.SilverReleaseGateError):
         a11.validate_receipt_independently(receipt)
+
+
+def test_a11_schema_rejects_a_leaked_gold_label_value() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["eligibility"]["gold"] = True
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    errors = list(Draft202012Validator(schema).iter_errors(receipt))
+    assert errors
+
+
+def test_a11_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
+    assert "gold" not in FORBIDDEN_KEYS
+    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False

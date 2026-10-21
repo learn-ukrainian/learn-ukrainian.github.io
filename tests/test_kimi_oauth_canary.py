@@ -7,6 +7,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.canary import kimi_oauth_canary as canary
 from scripts.lib import kimi_coding_oauth
@@ -115,6 +116,34 @@ def test_refresh_failure_is_redacted_even_when_alert_delivery_fails(capsys) -> N
     captured = capsys.readouterr()
     assert "FAIL (refresh)" in captured.err
     assert secret not in captured.out + captured.err
+
+
+def test_failure_alert_uses_action_required_fleet_comms_message() -> None:
+    with patch("scripts.canary.kimi_oauth_canary._channels.post") as post:
+        assert canary.post_failure_alert("refresh") is True
+
+    args, kwargs = post.call_args
+    assert args[0] == "fleet-comms"
+    assert args[1] == "kimi"
+    assert "failure_kind=refresh" in args[2]
+    assert kwargs["to_agents"] == ["claude-infra"]
+    assert kwargs["kind"] == "system"
+    assert kwargs["priority"] == "action_required"
+    assert kwargs["auto_snapshot"] is False
+    assert kwargs["verify_citations"] is False
+
+
+def test_failure_alert_does_not_raise_when_fleet_comms_is_unavailable(capsys) -> None:
+    with patch("scripts.canary.kimi_oauth_canary._channels.post", side_effect=RuntimeError("down")):
+        assert canary.post_failure_alert("local_io") is False
+
+    assert "fleet-comms alert failed: RuntimeError" in capsys.readouterr().err
+
+
+def test_credentials_path_honors_kimi_code_home(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("KIMI_CODE_CREDENTIALS_PATH", raising=False)
+    monkeypatch.setenv("KIMI_CODE_HOME", str(tmp_path / "kimi-home"))
+    assert kimi_coding_oauth._credentials_path() == tmp_path / "kimi-home" / "credentials" / "kimi-code.json"
 
 
 def test_flatten_credential_fields_reads_nested_camel_case() -> None:

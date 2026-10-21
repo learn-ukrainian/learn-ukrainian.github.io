@@ -15,6 +15,7 @@ from scripts.lexicon.sync_teacher_table_deck import (
     SCHEMA,
     TeacherTableSyncError,
     extract_teacher_table,
+    main,
     write_site_data,
 )
 
@@ -123,3 +124,27 @@ def test_site_data_shrink_guard_preserves_the_previous_public_set(tmp_path: Path
         "description": DESCRIPTION,
         "lemma_keys": ["перше"],
     }
+
+
+def test_main_emits_required_report_json(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    path = tmp_path / "teacher-master.docx"
+    report_path = tmp_path / "report.json"
+    _write_docx(
+        path,
+        _paragraph("Combined Master Vocabulary Table (#3)")
+        + _table([["Ukrainian", "English"], ["синє небо", "blue sky"]]),
+    )
+
+    exit_code = main(
+        [
+            "--docx",
+            str(path),
+            "--heading",
+            "Combined Master Vocabulary Table (#3)",
+            "--report",
+            str(report_path),
+        ],
+    )
+
+    assert exit_code == 0
+    assert json.loads(capsys.readouterr().out) == json.loads(report_path.read_text(encoding="utf-8"))

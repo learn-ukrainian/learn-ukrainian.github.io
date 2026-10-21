@@ -573,6 +573,47 @@ def test_seed_allowlist_reasons_and_only_class_a_leaves_git(tmp_path: Path) -> N
     assert split_paths == ["data/class_a.bin"]
 
 
+def test_seed_reads_from_seed_commit_ignoring_worktree_and_branch(tmp_path: Path) -> None:
+    repo = _init_repo(tmp_path)
+    allowlist = repo / DEFAULT_ALLOWLIST
+
+    _create_blob(repo, "data/item.bin", THRESHOLD_BYTES + 100)
+    _write_classification_table(repo, [("data/item.bin", "A")])
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", "Main commit with class A")
+
+    # Checkout branch and alter working tree / branch classification table to class K
+    _git(repo, "checkout", "-b", "feature")
+    _write_classification_table(repo, [("data/item.bin", "K")])
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", "Branch commit with class K")
+
+    # Also make working tree dirty with corrupt classification table
+    (repo / "registry" / "artifacts" / "classification-v1.tsv").write_text("CORRUPTED", encoding="utf-8")
+
+    res = subprocess.run(
+        [
+            _PYTHON,
+            "-m",
+            "scripts.ci.check_large_files",
+            "--seed-allowlist",
+            "--seed-ref",
+            "main",
+            "--repo-root",
+            str(repo),
+            "--allowlist",
+            str(allowlist),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert res.returncode == 0
+    entries = load_allowlist(allowlist)
+    assert entries["data/item.bin"].reason == "existing tracked data; leaves git through the data/ split"
+
+
 def test_seed_fails_and_preserves_allowlist_on_missing_or_malformed_table(tmp_path: Path) -> None:
     repo = _init_repo(tmp_path)
     allowlist = repo / DEFAULT_ALLOWLIST

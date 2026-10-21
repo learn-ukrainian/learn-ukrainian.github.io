@@ -1,11 +1,74 @@
 # OO-50 / #11226 test prune
 
-Status: phase B (apply) done on 2026-10-21 at 17:02Z, on main at 0e0b85c4dc4. The PR removes
-**14,912 of 40,428 test functions (36.9%)** and 49 parametrize cases. 191 test files that had
-no tests left were deleted. Collected items went from 109,888 to 82,100 (-25.3%). Phase A
-(selection) is reported further down, unchanged.
+Status: PR #11329 coverage restore round, 2026-10-21. The final selection removes
+**9,466 test functions and 49 parametrize cases**.
+This round restores **5,444 functions** present in the earlier deletion set.
+The final `tests/` collection contains **92,567 items**. The phase A and original
+phase B reports below are historical counts, not the current selection.
 
-## Phase B: what was applied
+## Restore round for PR #11329
+
+Ties go to keep. The critical review found that the deleted
+`tests/publish/test_merge_guard.py::test_empty_json_check_list_with_exit_code_1_is_refused`
+was the sole test of refusal when `gh` exits 1 with an empty checks list. The earlier
+recheck also found sole branch coverage among both tie-break and unanimous deletions.
+This round applies the prescribed R1-R3 keep rules without new model votes.
+
+- [Final selection](2026-10-21-public-selection-final.jsonl): the remaining deletions.
+- [Restore manifest](2026-10-21-restore-r2.jsonl): one node id and rule per row.
+  A node matching several rules has several rows. Earlier phase B keeps remain kept.
+
+| Keep rule | Matching rows | Newly restored functions, including overlaps | Newly restored functions, R1 then R2 then R3 |
+| --- | ---: | ---: | ---: |
+| R1: every tie-break deletion | 3,670 | 3,609 | 3,609 |
+| R2: security- or Ukrainian-named file | 2,627 | 2,552 | 1,823 |
+| R3: blocker and the named branch coverage | 33 | 30 | 12 |
+
+The manifest covers 5,562 unique rows. Some were already kept or no
+longer exist on current main. R2 uses the prescribed fallback regex, case-insensitive
+against the entire file path:
+
+```text
+secur|secret|opsec|guard|admission|ownership|sandbox|hook|credential|auth|publish|merge|gate|refus|ukrain|vesum|stress|sources|linguist|lexic|pravopys
+```
+
+The report's original executable filename definition was not found in the available
+phase A/B scripts or documentation. This fallback matches 1,880 unanimous
+rows and 747 tie-break rows. It does not reproduce the earlier report's 1,247-row pool.
+
+| Function deletion reconciliation | Count |
+| --- | ---: |
+| Actually absent at the original PR head `de5b87090c7` | 14,911 |
+| Old selected function already removed upstream | 1 |
+| Newly restored by R1-R3 | 5,444 |
+| Remaining in the final selection | 9,466 |
+
+The upstream removal is
+`tests/test_ruff_ci_scope.py::test_pre_commit_cheap_guards_configuration`.
+All 72 original case selections were checked against the restored functions.
+The 49 previously applied case deletions remain applicable; the 23 previously skipped
+shared or generated cases stay kept.
+
+Each of the 1,310 files containing a matched restore starts from
+`origin/main`. The existing apply script reapplies only the final selection to those
+files. Files without a restore keep their existing contents. Repeating reconstruction
+from the same main bytes produces identical outputs. Build tests have a separate
+collection because pytest skips `tests/build/` while recursing through `tests/`.
+
+Registry rows and path lists follow surviving tests. The duration inventory drops
+only files deleted by this selection. The store-access baseline, its counts and
+file-count metadata are unchanged from `origin/main`. All 24 `V011_ARTIFACTS` are
+byte-identical to `origin/main`; the frozen test files remain whole.
+
+Verification: final `pytest --collect-only -q tests/`, separate build collection,
+exact node-id and parameter-value comparison, the requested five test modules plus
+the named R3 behavior tests, and Ruff on all changed Python files. The full suite
+runs in PR CI and the merge queue. For the collection comparison, materializing
+`data/projects` replaces one explicit absent-tree skip with 15 real case-state
+mutation parameters. The test and its parameter helpers have identical ASTs to
+`origin/main`; the comparison uses matching materialized inputs for that group.
+
+## Phase B: original application, before this restore round
 
 ### Files
 
@@ -44,7 +107,7 @@ no tests left were deleted. Collected items went from 109,888 to 82,100 (-25.3%)
      `ruff check --fix --select F401,F811,F841` and `--select I` run on the touched files.
    - It skips a selected test that kept code still calls or imports, a test that no longer
      exists, an inherited test, and any removal that would also remove an unselected test.
-5. Keep what something outside the selection depends on. This PR edits nothing outside
+5. Keep what something outside the selection depends on. The original application edited nothing outside
    `tests/` and `docs/test-prune/`, and the first CI run showed each of these breaking:
    - Six files are kept whole because tooling pins or runs them by path:
      - `scripts/ci/linux_fs_parity.sh` runs `test_hooks_executable.py`;
@@ -79,7 +142,7 @@ no tests left were deleted. Collected items went from 109,888 to 82,100 (-25.3%)
    every count pinned in `scripts/hygiene/sqlite_reference_allowlist.json` matches. `ruff check scripts/ tests/ agents_extensions/ dashboards/ docs/test-prune/` is
    clean. No test was run locally (OO-55); CI runs the full suite.
 
-`scripts/ci/pytest-file-durations.json` is unchanged. No check requires it to match the tree:
+`scripts/ci/pytest-file-durations.json` was unchanged in the original application. No check requires it to match the tree:
 `tests/test_ci_split.py` states that stale entries only cost shard balance. The deleted files
 account for 3,093.3 s of the 30,250.8 s snapshot.
 
@@ -317,44 +380,20 @@ The 80 D-COVERED-check restores are listed in `2026-10-21-phase-b-restores.jsonl
 | `test_ruff_ci_scope.py::test_pre_commit_cheap_guards_configuration` | not collected on current main (moved, renamed or removed since phase A) |
 | `test_writer_plan_projection.py::test_every_plan_projection_is_exact_raw_block_subtraction` | kept code still references it (helper call or import); not removed |
 
-### Residuals and risks
+### Residuals and risks after the restore round
 
-These belong to the #11226 driver unless another owner is named.
+R1-R3 restore the tie-break deletions, every deletion matching the R2 filename rule,
+and all named sole-coverage branches, including the merge-guard fail-closed blocker.
+The old sample miss rates describe the superseded selection. They are not estimates
+for the remaining final selection.
 
-- **The recheck miss rate is high.** 10 of 40 sampled tie-break deletions (25%) should have
-  been kept; the 95% Wilson interval is 14% to 40%. Applied to the 2,906 disputed K-A, K-B,
-  K-D and K-F tie-break deletions, roughly 730 more tests (between 410 and 1,170) may each be
-  the only test of a branch. For the 1,247 unanimous deletions in security- or
-  Ukrainian-named files the sample rate is 4 of 25 (16%; interval 6% to 35%), about 200
-  tests. This PR restores only the sample. The proportionate next step is a restore pass
-  over those 4,153 rows, using this sample's criterion.
-- **Branches the reviewers saw lose all their tests outside the sample:**
-  - the `plan_deletions` selection rules in `tests/test_ci_cache_hygiene.py`;
-  - `slug_utils.to_bare_slug`;
-  - the refusal paths of `resolve_public_commit` in
-    `tests/projects/open_model_data/test_v4_build_assets.py`;
-  - `_prioritize_verb_forms` ordering;
-  - both "fallback must not bypass the substance check" tests of the wiki coverage gate.
+The remaining deletions have unanimous votes and fall outside the R2 filename rule.
+This round performs no new model voting or independent whole-selection coverage
+assessment. Earlier skipped cases and whole-file keeps remain kept. Historical
+briefs and autopsies remain records of the earlier selection.
 
-  They are input for that pass.
-- **Whole invariant modules are deleted by the selection.** Examples:
-  `test_lint_test_assertions.py` (the #8692 scanner), `test_repo_wide_registry_exact.py`
-  (the nightly exact `repo_wide` registry check), `test_public_tree_no_baked_host_run_root.py`,
-  `test_pytest_plugins_not_test_modules.py`, `test_session_state_retired.py`,
-  `test_no_hardcoded_venv_interpreter.py` and the eight `test_docs_find_lookups_part*.py`.
-  They are applied as selected; the reviewer should confirm each.
-- **Stale mentions remain outside `tests/`.** `scripts/ci/pytest-file-durations.json` costs
-  only shard balance until the next refresh. The rest are harmless:
-  - the `.dagger` ignore lists;
-  - the `scripts/hygiene/lint_tmp_paths.py` allowlist (the tmp-path lint reports 0 findings
-    on this tree);
-  - deleted node ids in `scripts/ci/data_tier_selection.json`, which then select nothing
-    (every file it lists still exists). Historical briefs and autopsies under `docs/`, `briefs/` and
-  `audit/` are records and stay. Owner: infra-harness, at the next edit of each file.
-- **Not applied:** 23 parametrize cases whose entries are shared or generated, and the 1,162
-  single-pass case deletes from phase A.
-- **No test was run locally (OO-55).** Collection and the exact diff are the local proof; the
-  PR's CI Gate runs the full suite.
+The #11226 driver owns exact-head independent review and same-head full CI before
+landing. Local targeted checks and collection do not replace those gates.
 
 ## Phase A: selection (2026-10-21)
 

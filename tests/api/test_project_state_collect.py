@@ -11,6 +11,7 @@ from scripts.api import project_state_collect as collect_mod
 from scripts.api.project_state_collect import (
     SERVICE_DEFINITIONS,
     classify_serving_root,
+    collect_local_document,
     collect_primary_state,
     collect_service_row,
     resolve_primary_repo_root,
@@ -212,3 +213,16 @@ def test_running_service_in_checkout_resolves_sha(tmp_path: Path) -> None:
     assert row["checkout_sha"] is not None
     assert "unresolved_reason" not in row
     validate_report_document(_document_with(row))
+
+
+def test_collect_local_document_fixture_repo(tmp_path: Path) -> None:
+    repo = _init_repo(tmp_path)
+    document = collect_local_document(
+        "mac-operator",
+        repo_root=repo,
+        service_state=lambda name: "stopped",
+    )
+    assert document is not None
+    assert document["host_id"] == "mac-operator"
+    assert document["primary"]["head_sha"]
+    assert len(document["services"]) == 4

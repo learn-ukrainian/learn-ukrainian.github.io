@@ -866,6 +866,46 @@ def test_cli_prepare_lane_fixture(tmp_path: Path, capsys: pytest.CaptureFixture[
     assert "filesystem_avail_bytes" not in summary
 
 
+def test_build_public_summary_does_not_emit_live_statvfs() -> None:
+    lane = {
+        "lane_complete": True,
+        "stopped_at": "deletion_authorization_gate",
+        "safe_failure_code": None,
+        "retention_outcome": storage.RETIRE_CYCLE007,
+        "packet_count": 3,
+        "row_count": 7,
+        "object_count": 9,
+        "total_allocated_bytes": 1,
+        "compact_stored_allocated_bytes": 1,
+        "reclaimed_byte_forecast": 1,
+        "deletion_candidate_count": 1,
+        "filesystem_avail_bytes": 123456,
+        "fixture_filesystem_avail_bytes": 123456,
+        "production_filesystem_total_bytes": 123456,
+        "workstation_filesystem": {"total_bytes": 1, "avail_bytes": 1},
+        "peak_temporary_bytes": 1,
+        "capacity_sufficient_for_peak": True,
+        "identity_proof_ok": True,
+        "backup_restore_ok": True,
+        "roundtrip_ok": True,
+        "receipt_sha256": "a" * 64,
+    }
+    reconcile = {
+        "private_binding_state": "UNBOUND",
+        "safe_failure_code": "private_binding_unbound",
+        "receipt_sha256": "b" * 64,
+    }
+    summary = storage.build_public_summary(lane, reconcile)
+    _assert_no_host_filesystem_leak(summary, where="build_public_summary")
+    assert "filesystem_avail_bytes" not in summary
+    assert "workstation_filesystem" not in summary
+    assert "fixture_filesystem_avail_bytes" not in summary
+    assert "production_filesystem_total_bytes" not in summary
+    assert storage.public_summary_forbidden_fs_keys({"nested": {"workstation_filesystem": {"total_bytes": 1}}}) == (
+        "workstation_filesystem",
+    )
+
+
 def test_inventory_counts_overlapping_aliases_once_for_allocation(tmp_path: Path) -> None:
     materialization, _packet_count, _row_count = _build_materialization(tmp_path)
     # The evidence root is nested under materialization, so materialization
@@ -1744,6 +1784,28 @@ def test_deletion_refuses_validly_rehashed_custody_misbinding(tmp_path: Path, mo
     assert all(path.exists() for path in _fixture_source_paths(state))
 
 
+def test_deletion_resume_refuses_validly_rehashed_plan_misbinding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+
+    def stop_before_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "before_intent":
+            raise _SyntheticDeletionCrash("before_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=stop_before_intent)
+    plan_path = state["source_work"] / "cycle007-storage-primary-stage" / "deletion-execution-journal" / "plan.json"
+    plan = json.loads(plan_path.read_bytes())
+    storage._atomic_write_json(
+        plan_path,
+        _rehashed(plan, pre_delete_workstation_response_sha256="e" * 64),
+    )
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        _execute_fixture_deletion(state)
+
+
 def test_deletion_resume_refuses_validly_rehashed_plan_target_substitution(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1955,6 +2017,26 @@ def test_quiescence_rejects_noncanonical_systemd_cmdline(
         deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
 
 
+@pytest.mark.parametrize(
+    "status",
+    [
+        b"Name:\tsystemd\nUid:\t0 0 0 1\n",
+        b"Name:\tsystemd\nUid:\t0 0 0\n",
+        b"Name:\tsystemd\nUid:\t0 0 0 0 0\n",
+    ],
+)
+def test_quiescence_rejects_systemd_status_uid_shape_or_ownership_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, status: bytes
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, status=status)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
+
+
 def test_quiescence_rejects_systemd_ppid_mismatch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     proc, fd_dir = _systemd_proc_fixture(tmp_path, stat_bytes=_systemd_proc_stat(48001, ppid=2))
     descriptor = fd_dir / "0"
@@ -1963,6 +2045,17 @@ def test_quiescence_rejects_systemd_ppid_mismatch(tmp_path: Path, monkeypatch: p
     # PPID is validated on the attestation path, which is entered only when
     # an individual descriptor cannot be inspected.
     _deny_individual_descriptor(monkeypatch, descriptor)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
+
+
+@pytest.mark.parametrize("comm", [b"systemd-user\n", b"Systemd\n", b"systemd \n", b"systemd\r\n"])
+def test_quiescence_rejects_near_systemd_comm(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, comm: bytes) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, comm=comm)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
     with pytest.raises(deletion.DeletionExecutionError):
         deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
 
@@ -1995,6 +2088,53 @@ def test_quiescence_rejects_systemd_pid_start_time_drift_or_disappearance(
     with pytest.raises(deletion.DeletionExecutionError):
         deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
     assert reads >= 2
+
+
+def test_quiescence_rejects_systemd_generation_change_during_fd_enumeration(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+    stat_path = proc / "48001" / "stat"
+    original_iterdir = Path.iterdir
+    original_read_bytes = Path.read_bytes
+    enumerated = False
+
+    def changing_iterdir(path: Path):
+        nonlocal enumerated
+        if path == fd_dir:
+            enumerated = True
+        return original_iterdir(path)
+
+    def changing_read_bytes(path: Path) -> bytes:
+        if path == stat_path and enumerated:
+            return _systemd_proc_stat(48001, start_time=67890)
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "iterdir", changing_iterdir)
+    monkeypatch.setattr(Path, "read_bytes", changing_read_bytes)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
+
+
+def test_quiescence_rejects_systemd_fd_directory_permission_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    original_iterdir = Path.iterdir
+
+    def denied_iterdir(path: Path):
+        if path == fd_dir:
+            raise PermissionError("fixture systemd fd table denied")
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", denied_iterdir)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
 
 
 def _fixture_deletion_journal_root(state: Mapping[str, Any]) -> Path:

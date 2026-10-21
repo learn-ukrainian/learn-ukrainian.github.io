@@ -132,12 +132,62 @@ class TestDiscoveryAndParsing:
 # ---------------------------------------------------------------------------
 
 
+class TestFiltering:
+    def test_level_filter_excludes_non_matching_levels(self, tmp_path: Path) -> None:
+        _write_fragment(tmp_path, "R-A1ONLY", levels=["a1"])
+        _write_fragment(tmp_path, "R-B1ONLY", levels=["b1"])
+        a1_rules = load_applicable_rules("a1", "core", "all", directory=tmp_path)
+        assert [r.id for r in a1_rules] == ["R-A1ONLY"]
+        b1_rules = load_applicable_rules("b1", "core", "all", directory=tmp_path)
+        assert [r.id for r in b1_rules] == ["R-B1ONLY"]
+        c1_rules = load_applicable_rules("c1", "core", "all", directory=tmp_path)
+        assert c1_rules == []
+
+    def test_track_filter(self, tmp_path: Path) -> None:
+        _write_fragment(tmp_path, "R-COREONLY", tracks=["core"])
+        _write_fragment(tmp_path, "R-SEMONLY", tracks=["seminar"])
+        _write_fragment(tmp_path, "R-BOTH", tracks=["all"])
+        core_rules = load_applicable_rules("a1", "core", "all", directory=tmp_path)
+        assert {r.id for r in core_rules} == {"R-COREONLY", "R-BOTH"}
+        sem_rules = load_applicable_rules("a1", "seminar", "all", directory=tmp_path)
+        assert {r.id for r in sem_rules} == {"R-SEMONLY", "R-BOTH"}
+
+    def test_activity_profile_filter(self, tmp_path: Path) -> None:
+        _write_fragment(tmp_path, "R-DEFAULT", activity_profiles=["default"])
+        _write_fragment(tmp_path, "R-CHECKPOINT", activity_profiles=["checkpoint"])
+        _write_fragment(tmp_path, "R-ANY", activity_profiles=["all"])
+        default_rules = load_applicable_rules("a1", "core", "default", directory=tmp_path)
+        assert {r.id for r in default_rules} == {"R-DEFAULT", "R-ANY"}
+
+    def test_slot_filter(self, tmp_path: Path) -> None:
+        _write_fragment(tmp_path, "R-PRE", slot="writer.preamble")
+        _write_fragment(tmp_path, "R-BODY", slot="writer.body")
+        _write_fragment(tmp_path, "R-RUBRIC", slot="reviewer.rubric")
+        _write_fragment(tmp_path, "R-SHARED", slot="shared.contract")
+        # No slot filter — get everything.
+        all_rules = load_applicable_rules("a1", "core", "all", directory=tmp_path)
+        assert len(all_rules) == 4
+        # Slot filter narrows.
+        body_only = load_applicable_rules("a1", "core", "all", slot="writer.body", directory=tmp_path)
+        assert [r.id for r in body_only] == ["R-BODY"]
+        shared_only = load_applicable_rules(
+            "a1", "core", "all", slot="shared.contract", directory=tmp_path
+        )
+        assert [r.id for r in shared_only] == ["R-SHARED"]
+
+
 # ---------------------------------------------------------------------------
 # Topological dependency ordering
 # ---------------------------------------------------------------------------
 
 
 class TestTopologicalSort:
+    def test_simple_chain_orders_correctly(self, tmp_path: Path) -> None:
+        # A depends on B; B should come first.
+        _write_fragment(tmp_path, "R-A", depends_on=["R-B"])
+        _write_fragment(tmp_path, "R-B")
+        ordered = load_applicable_rules("a1", "core", "all", directory=tmp_path)
+        assert [r.id for r in ordered] == ["R-B", "R-A"]
 
     def test_circular_dependency_raises(self, tmp_path: Path) -> None:
         # R-X -> R-Y -> R-X (cycle)
@@ -150,6 +200,40 @@ class TestTopologicalSort:
         _write_fragment(tmp_path, "R-NEEDS", depends_on=["R-GHOST"])
         with pytest.raises(MissingDependencyError, match="R-GHOST"):
             load_applicable_rules("a1", "core", "all", directory=tmp_path)
+
+    def test_filtered_out_parent_does_not_break_ordering(self, tmp_path: Path) -> None:
+        """If a dep is filtered out by predicates, the dependent still appears,
+        and the ordering for the filtered subset is consistent.
+
+        This matters because composition slots may legitimately filter a parent
+        rule out — e.g. R-ACTIVITY-COMPOSITION (shared.contract) depends on
+        R-RENDERER-CHARTER (writer.preamble). Querying shared.contract alone
+        must still return R-ACTIVITY-COMPOSITION (parent is reachable in the
+        full registry, just not in the filtered slice).
+        """
+        _write_fragment(tmp_path, "R-PARENT", slot="writer.preamble")
+        _write_fragment(
+            tmp_path, "R-CHILD", slot="shared.contract", depends_on=["R-PARENT"]
+        )
+        shared = load_applicable_rules(
+            "a1", "core", "all", slot="shared.contract", directory=tmp_path
+        )
+        assert [r.id for r in shared] == ["R-CHILD"]
+
+    def test_missing_dep_still_raises_when_dep_is_filtered_out(
+        self, tmp_path: Path
+    ) -> None:
+        """If a depends_on id does NOT exist in the full registry at all, it must
+        still raise — even when the rule passes the slot filter. The check is
+        against the *full* registry, not just the filtered subset.
+        """
+        _write_fragment(
+            tmp_path, "R-CHILD", slot="shared.contract", depends_on=["R-GHOST"]
+        )
+        with pytest.raises(MissingDependencyError, match="R-GHOST"):
+            load_applicable_rules(
+                "a1", "core", "all", slot="shared.contract", directory=tmp_path
+            )
 
 
 # ---------------------------------------------------------------------------

@@ -41,6 +41,32 @@ One-liner per bug.
     )
 
 
+def test_validates_valid_entry(tmp_path: Path, capsys) -> None:
+    _write_tree(tmp_path, {"cache-invalidation.md": VALID_ENTRY})
+
+    exit_code = check_postmortems.main([], project_root=tmp_path)
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "✅ 1 postmortems validated" in captured.out
+
+
+def test_flags_missing_symptom(tmp_path: Path, capsys) -> None:
+    _write_tree(
+        tmp_path,
+        {"cache-invalidation.md": VALID_ENTRY.replace("## Symptom\n", "")},
+    )
+
+    exit_code = check_postmortems.main(["--regenerate-index"], project_root=tmp_path)
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert (
+        "❌ docs/bug-autopsies/cache-invalidation.md — missing required field: Symptom"
+        in captured.out
+    )
+
+
 def test_index_regeneration_preserves_outer_content(tmp_path: Path) -> None:
     index = """# Bug Autopsy Index
 

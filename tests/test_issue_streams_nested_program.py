@@ -54,6 +54,14 @@ def _audit_report(edges: dict[int, list[int]], open_numbers: list[int]) -> dict:
     return report
 
 
+def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():
+    registry = load_registry(REGISTRY_PATH)
+    assert registry[STREAM] == [PARENT, PROGRAM, OVERFLOW]
+    assert load_registry(REGISTRY_PATH, audit_only=True)[STREAM] == [PARENT, PROGRAM, OVERFLOW]
+    all_epics = [epic for epics in registry.values() for epic in epics]
+    assert len(all_epics) == len(set(all_epics))
+
+
 def test_audit_assigns_program_child_to_exactly_one_epic_and_stream():
     edges = {PARENT: [PROGRAM, 9000], PROGRAM: [CHILD], 9000: []}
     report = _audit_report(edges, [PARENT, PROGRAM, CHILD, 9000])

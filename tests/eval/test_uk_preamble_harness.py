@@ -446,6 +446,24 @@ def test_manifest_freezes_the_complete_plan_and_refuses_plan_drift(env, capsys):
 # --------------------------------------------------------------------------- --review-profile (#9623, #8771)
 
 
+def test_review_profile_is_frozen_marks_review_prompts_only_and_refuses_a_changed_resume(env, capsys):
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
+    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
+    prompts = {p.name: p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md")}
+    review = [text for name, text in prompts.items() if "-review-" in name]
+    writing = [text for name, text in prompts.items() if "-writing-" in name]
+    assert review and writing
+    assert all("VERDICT: APPROVE" in text for text in review)
+    assert not any("VERDICT" in text for text in writing)
+    dispatched = len(env["fake"].dispatched)
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0  # the same value resumes
+    assert len(env["fake"].dispatched) == dispatched
+    capsys.readouterr()
+    assert cli.main(env["run"]) == 2  # dropping the value is a changed frozen term
+    assert "review_profile" in capsys.readouterr().err
+    assert len(env["fake"].dispatched) == dispatched
+
+
 def test_the_review_gate_marker_does_not_break_the_json_answer():
     from scripts.eval.uk_preamble.prompts import validate_response
 
@@ -514,6 +532,18 @@ def test_full_plan_adopts_end_to_end(full_env, capsys):
         assert report["seats"][seat]["complete"] is True
         assert report["seats"][seat]["decision"] == "adapted-v2"
     assert "| lexical-russianism |" in markdown
+
+
+def test_missing_planned_task_makes_the_seat_incomplete(full_env, capsys):
+    victim = tid(full_env, "sol", "adapted-v2", 3, "review", 1)
+    full_env["fake"].refuse.add(victim)
+    assert cli.main(full_env["run"]) == 1
+    assert _score(full_env) == 0
+    report, _ = _report(full_env, capsys)
+    sol = report["seats"]["gpt-6.1-sol"]
+    assert sol["decision"] == "no change" and sol["complete"] is False
+    assert any("not run or not accepted" in r for r in sol["comparisons"]["adapted-v2"]["rule"]["reasons"])
+    assert report["seats"]["claude-opus-5-5"]["decision"] == "adapted-v2"  # other seats are complete
 
 
 # --------------------------------------------------------------------------- finding 5: executed conditions
@@ -687,6 +717,33 @@ def test_score_judge_refuses_a_legacy_manifest_before_any_dispatch(env, capsys):
     assert "dispatch_args_sha256" in err and "--run-tag" in err and "never mixed" in err
     assert env["fake"].dispatched == before
     assert "judge" not in read_json(path)
+
+
+def test_judge_retry_with_different_arguments_is_refused_before_dispatch(env, capsys):
+    """A retry that changes --hard-timeout must not dispatch, or reuse judges frozen earlier."""
+    assert cli.main(env["run"]) == 0
+    assert _score(env, "--judge") == 0
+    manifest = read_json(env["results"] / "manifest.json")
+    frozen_args = manifest["judge"]["dispatch_args_sha256"]
+    assert set(frozen_args) == set(SEATS)
+    judge_ids = [task_id for task_id, _force in env["fake"].dispatched if "-judge-" in task_id]
+    assert judge_ids
+    victim = judge_ids[0]
+    raw_path = env["results"] / "raw" / f"{victim}.json"
+    raw = read_json(raw_path)
+    raw["accepted"] = False
+    raw["status"] = "timeout"
+    raw_path.write_text(json.dumps(raw), encoding="utf-8")
+    before = list(env["fake"].dispatched)
+    capsys.readouterr()
+    assert _score(env, "--judge", "--retry-failed", "--hard-timeout", "17") == 2
+    err = capsys.readouterr().err
+    assert "per seat" in err and "--run-tag" in err and "never mixed" in err
+    assert env["fake"].dispatched == before
+    assert read_json(env["results"] / "manifest.json")["judge"]["dispatch_args_sha256"] == frozen_args
+    # The same frozen arguments still retry only the failed judge.
+    assert _score(env, "--judge", "--retry-failed") == 0
+    assert env["fake"].dispatched == [*before, (victim, True)]
 
 
 def _judge_dispatch_ids(env) -> list[str]:

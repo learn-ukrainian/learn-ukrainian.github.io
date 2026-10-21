@@ -252,6 +252,23 @@ def test_c26_formula_is_a_contiguous_token_run(tmp_path, text, held):
 
 
 @pytest.mark.parametrize(
+    "host,note",
+    [
+        ("host: {kind: dialogue}", codes.COMPREHENSION_TARGET_UNVERIFIED),
+        ("host: {kind: quote, ref: T-002}", codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED),
+    ],
+)
+def test_c26_undecidable_host_notes(tmp_path, host, note):
+    report = run(
+        tmp_path,
+        _all(_quote("[мона]"), _focus(2, "b4", f"kind: comprehension; {host}."), declaration(2, "b4", targets=[MAMA])),
+    )
+    assert any(o.code == note for o in report.notes), report.render_text()
+    if note == codes.COMPREHENSION_TARGET_UNVERIFIED:
+        assert not any("no host" in o.message for o in report.notes if o.code == note)
+
+
+@pytest.mark.parametrize(
     "focus",
     [
         "kind: comprehension; host: {kind: quote, ref: T-002}. Do not score W-206.",
@@ -263,6 +280,17 @@ def test_c26_formula_is_a_contiguous_token_run(tmp_path, text, held):
 def test_c26_prose_cannot_shelter_declared_target(tmp_path, focus):
     report = run(tmp_path, _all(_quote("мама"), _focus(2, "b4", focus), declaration(2, "b4", targets=[MONA])))
     assert any(o.code == codes.COMPREHENSION_TARGET_NOT_IN_HOST for o in report.failures), report.render_text()
+
+
+def test_structured_options_before_first_taught_letter_fail(tmp_path):
+    def mutate(plan, pack, words, prior):
+        _step(plan, 1, "s1")["introduces"]["letters"] = []
+        _activity(plan, 1, "a1")["options"] = ["М"]
+
+    report = run(tmp_path, mutate)
+    assert any(o.code == codes.CHOICE_OPTION_NOT_DECODABLE and o.step == "s1" for o in report.failures), (
+        report.render_text()
+    )
 
 
 @pytest.mark.parametrize("punctuation", [".", "!", "?", "…", '."', ".\n"])
@@ -285,3 +313,10 @@ def test_formula_print_matching_preserves_case_policy_and_wrapping(text, held):
 
     assert _print_holds(text, "добрий день") == held
     assert not _print_holds(text, "добрий день", exact=True)
+
+
+def test_exact_print_match_does_not_normalize_selector():
+    from scripts.curriculum.validate.review_gates import _print_holds
+
+    assert not _print_holds("й", "и\u0306", exact=True)
+    assert _print_holds("й", "и\u0306")

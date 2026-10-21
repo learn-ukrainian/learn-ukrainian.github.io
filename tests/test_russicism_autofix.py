@@ -30,6 +30,28 @@ class TestFixRussianismsInPlan:
         # дім should be untouched
         assert "дім (house)" in content
 
+    def test_no_russicism_issues_returns_zero(self, tmp_path):
+        plan = tmp_path / "plan.yaml"
+        plan.write_text("version: '1.0'\nvocabulary_hints:\n  required:\n  - 'дім (house)'\n")
+        issues = [{"issue_type": "CONTRADICTION", "problem": "something else"}]
+        n, _changelog = fix_russianisms_in_plan(plan, issues)
+        assert n == 0
+        assert _changelog == []
+
+    def test_version_bumped(self, tmp_path):
+        plan = tmp_path / "plan.yaml"
+        plan.write_text(
+            "version: '2.0'\n"
+            "vocabulary_hints:\n"
+            "  required:\n"
+            '  - "город (city) — test"\n'
+        )
+        issues = [{"issue_type": "RUSSICISM", "problem": "город paired with 'city'",
+                    "suggested_fix": "fix it"}]
+        fix_russianisms_in_plan(plan, issues)
+        content = plan.read_text()
+        assert "2.0.1" in content
+
     def test_warning_not_flagged_as_russicism(self, tmp_path):
         """If the issue type is not RUSSICISM, don't touch the plan."""
         plan = tmp_path / "plan.yaml"

@@ -1924,6 +1924,22 @@ def test_bundle_json_refusal_parity(tmp_path, capsys, entry_point, member, inval
     _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob)
 
 
+@pytest.mark.parametrize("entry_point", ["store", "http"])
+@pytest.mark.parametrize("invalid", ["nested", "NaN", "Infinity", "-Infinity", "overflow"])
+def test_supplied_manifest_json_refusal(tmp_path, capsys, entry_point, invalid):
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM)
+    raw_value = "[" * 30000 + "]" * 30000 if invalid == "nested" else ("1e999" if invalid == "overflow" else invalid)
+    raw_manifest = json.dumps(manifest)[:-1] + ', "unused": ' + raw_value + "}"
+    if invalid == "nested":
+        value = []
+        for _ in range(30000):
+            value = [value]
+    else:
+        value = json.loads(raw_value)
+    manifest["unused"] = value
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob, raw_manifest=raw_manifest)
+
+
 @pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
 @pytest.mark.parametrize("field", ["generation", "upload_seq"])
 @pytest.mark.parametrize(

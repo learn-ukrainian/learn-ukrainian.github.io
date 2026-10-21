@@ -97,6 +97,36 @@ def test_listening_word_and_primer_letter_are_admitted(tmp_path, letter):
     assert _check(tmp_path, fixture)["status"] == "passed"
 
 
+@pytest.mark.parametrize("letter", [False, True])
+@pytest.mark.parametrize("declaration", ["absent", "target", "wrong_target"])
+def test_listening_admission_requires_target_model(tmp_path, letter, declaration):
+    """Every scored binding needs its target declared by its host, regardless of pack prose."""
+    fixture = _listening_fixture(letter=letter)
+    draft, _, pack, _ = fixture
+    video = pack["videos"][0]
+    video["use"] = "Arbitrary source prose: never a model declaration."
+    if declaration == "absent":
+        video.pop("models")
+    elif declaration == "wrong_target":
+        video["models"] = {"letters": ["З"] if letter else [], "words": [] if letter else ["W-2"], "segment": None}
+    assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
+    result = _check(tmp_path, fixture)
+    if declaration == "target":
+        assert result["status"] == "passed", result
+    else:
+        assert result["status"] == "failed", result
+        expected = "listening_model_undeclared" if declaration == "absent" else "listening_model_unverified"
+        assert (result["code"], result["layer"]) == (expected, "pack")
+
+
+@pytest.mark.parametrize("letter", [False, True])
+def test_listening_ignores_free_text_when_models_are_declared(tmp_path, letter):
+    fixture = _listening_fixture(letter=letter)
+    fixture[2]["videos"][0]["use"] = "An arbitrary description with no model prefix."
+    fixture[2]["texts"] = []
+    assert _check(tmp_path, fixture)["status"] == "passed"
+
+
 @pytest.mark.parametrize(
     ("target", "distractor"),
     [

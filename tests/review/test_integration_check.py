@@ -102,6 +102,10 @@ CONTROLS = [
 ]
 
 
+def test_the_whole_crafted_suite_passes_before_any_break(tmp_path: Path) -> None:
+    assert [(case.key, case.passed) for case in ic.run_all(tmp_path)] == [(key, True) for key, _, _ in ic.CRAFTED_CASES]
+
+
 def test_layers_refuses_a_receipt_id_absent_from_the_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     build_sources = ic.receipt_source_paths
 

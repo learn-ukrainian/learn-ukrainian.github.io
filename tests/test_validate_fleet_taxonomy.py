@@ -21,6 +21,15 @@ def _write_yaml(path: Any, data: dict[str, Any]) -> None:
     path.write_text(yaml.dump(data), encoding="utf-8")
 
 
+def test_happy_path_real_files() -> None:
+    """Validate real fleet_taxonomy.yaml and area_assignments.yaml."""
+    res = validate_fleet_taxonomy()
+    assert res["ok"] is True
+    assert res["areas_count"] == 11
+    assert res["epics_count"] == 22
+    assert res["assignments_count"] == 11
+
+
 def test_negative_duplicate_alias_across_areas(tmp_path: Any) -> None:
     """Negative invariant test: duplicate alias across areas raises FleetTaxonomyValidationError."""
     tax_data = yaml.safe_load(TAXONOMY_PATH.read_text(encoding="utf-8"))

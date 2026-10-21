@@ -87,6 +87,25 @@ def test_glm_catalog_aliases_resolve_to_the_allowlisted_model(alias: str, tmp_pa
     assert "would exec claude --model glm-5.3" in result.stdout
 
 
+def test_glm52_retired_alias_is_refused(tmp_path: Path) -> None:
+    result = run_launcher(
+        "start-glmcc.sh",
+        "--model",
+        "glm52",
+        env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
+    )
+    assert result.returncode == 2
+    assert "would exec claude" not in result.stdout
+
+
+def test_glm_rejects_unknown_model_endpoint_and_isolation_value(tmp_path: Path) -> None:
+    env = {**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")}
+    model = run_launcher("start-glmcc.sh", "--model", "unknown", env=env)
+    endpoint = run_launcher("start-glmcc.sh", "--endpoint", "unknown", env=env)
+    isolation = run_launcher("start-glmcc.sh", env={**env, "LAUNCHER_ISOLATE_CONFIG": "2"})
+    assert model.returncode == endpoint.returncode == isolation.returncode == 2
+
+
 def test_glm_no_isolate_config_fails_closed_on_route_pins(tmp_path: Path) -> None:
     home = tmp_path / "home"
     config_dir = home / ".claude"

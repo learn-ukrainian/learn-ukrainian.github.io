@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ingest.dictionary_ingest import ADAPTERS, ingest
+from scripts.ingest.dictionary_ingest import ADAPTERS, build_parser, ingest
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -134,3 +134,15 @@ def test_paronym_parser_keeps_meanings_separate() -> None:
 
     assert rows[0].values["meaning_a"] == "письмове привітання"
     assert rows[0].values["meaning_b"] == "місце проживання"
+
+
+def test_help_documents_sources(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc:
+        build_parser().parse_args(["--help"])
+
+    assert exc.value.code == 0
+    out = capsys.readouterr().out
+    for source in ADAPTERS:
+        assert source in out
+    assert "PDF extraction is not" in out
+    assert "handled here" in out

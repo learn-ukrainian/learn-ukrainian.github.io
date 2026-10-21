@@ -438,6 +438,13 @@ def test_materialize_streaming_ledger_writes_a_private_0600_jsonl_file(tmp_path:
     assert [json.loads(line) for line in lines] == rows
 
 
+def test_materialize_streaming_ledger_of_an_empty_stream(tmp_path: Path) -> None:
+    ledger_path = tmp_path / "private" / extraction.A4_LEDGER_FILENAME
+    summary = extraction.materialize_streaming_ledger(iter(()), ledger_path)
+    assert summary == {"row_count": 0, "root_sha256": extraction.EMPTY_LEDGER_ROOT_SHA256, "source_units_extracted": 0}
+    assert ledger_path.is_file()  # still written -- an empty ledger is still a real (empty) private artifact
+
+
 def test_materialize_streaming_ledger_never_links_a_partial_file_on_failure(tmp_path: Path) -> None:
     """If the row stream raises partway through (e.g. MemoryBudgetExceeded),
     no file at all appears at ledger_path -- the temp file is unlinked, never
@@ -489,6 +496,16 @@ def test_unit_commitment_resists_public_enumeration() -> None:
         assert guess != real_commitment
 
 
+def test_builder_eligible_unit_commitments_sorted_by_value_unique_and_reproducible() -> None:
+    salt = secrets.token_bytes(32)
+    ids = ["db.wikipedia", "db.literary_texts", "db.textbooks.public"]
+    commitments = extraction.builder_eligible_unit_commitments(salt, ids)
+    assert commitments == sorted(commitments)
+    assert len(commitments) == len(ids)
+    assert len(set(commitments)) == len(ids)
+    assert extraction.builder_eligible_unit_commitments(salt, ids) == commitments
+
+
 # --- builder-packet gate: public-only ---------------------------------------
 
 
@@ -510,6 +527,18 @@ def test_gate_closed_when_no_packet_receipt_present(tmp_path: Path) -> None:
     assert gate["a3_seal_complete"] is True
 
 
+def test_gate_open_when_packet_receipt_matches_the_live_seal(tmp_path: Path) -> None:
+    root = _write_admission(
+        tmp_path,
+        seal_bytes=REAL_SEAL_RECEIPT_PATH.read_bytes(),
+        packet_bytes=REAL_PACKET_RECEIPT_PATH.read_bytes(),
+    )
+    gate = extraction.check_builder_packet_gate(root)
+    assert gate["gate_open"] is True
+    assert gate["blocked_reason_code"] is None
+    assert gate["builder_eligible_source_unit_ids_known_to_a4"] is True
+
+
 def test_gate_refuses_packet_receipt_bound_to_drifted_seal_bytes(tmp_path: Path) -> None:
     root = _write_admission(
         tmp_path,
@@ -518,6 +547,15 @@ def test_gate_refuses_packet_receipt_bound_to_drifted_seal_bytes(tmp_path: Path)
     )
     with pytest.raises(extraction.ExtractionError, match="does not match the live on-disk"):
         extraction.check_builder_packet_gate(root)
+
+
+def test_gate_never_reads_the_a3_seals_own_eternal_false_temporal_field() -> None:
+    """The A3 seal's own temporal_firewall.builder_packet_issued is a
+    permanent, past-tense fact about the seal event -- always false. The
+    live gate is open anyway, proving it is not sourced from that field."""
+    assert _cached_json(REAL_SEAL_RECEIPT_PATH)["temporal_firewall"]["builder_packet_issued"] is False
+    gate = extraction.check_builder_packet_gate()
+    assert gate["builder_packet_issued"] is True
 
 
 # --- real builder-packet consumption (synthetic private fixtures) ----------
@@ -658,6 +696,18 @@ def test_consume_builder_packet_salt_artifact_refuses_drift_on_rerun(
         extraction.consume_builder_packet(other_seal_receipt_path, other_packet_dir, a4_private_dir)
 
 
+def test_verify_builder_packet_consumption_privately_reproduces(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
+    seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
+    a4_private_dir = tmp_path / "a4-private"
+    summary = extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir)
+
+    receipt = {"builder_packet_consumption": summary}
+    extraction.verify_builder_packet_consumption_privately(receipt, seal_receipt_path, packet_dir, a4_private_dir)
+
+
 def test_verify_builder_packet_consumption_privately_detects_tampered_commitment(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -752,6 +802,36 @@ def test_a4_extraction_algorithm_still_frozen_with_a_real_id_free_ledger_commitm
     assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
     # The private ledger itself is never in this (public) receipt at any size.
     assert "extraction_ledger" not in receipt
+
+
+def test_a4_builder_packet_gate_is_open_and_matches_live_public_state() -> None:
+    receipt = _receipt()
+    gate = receipt["builder_packet_gate"]
+
+    assert gate["a3_seal_complete"] is True
+    assert gate["builder_packet_issued"] is True
+    assert gate["builder_eligible_source_unit_ids_known_to_a4"] is True
+    assert gate["packet_receipt_binding_verified"] is True
+    assert gate["blocked_reason_code"] is None
+    assert gate["owner_role"] == "A3_heldout"
+
+    live_gate = extraction.check_builder_packet_gate()
+    assert live_gate["gate_open"] is True
+    assert live_gate["blocked_reason_code"] is None
+
+
+def test_a4_builder_packet_consumption_is_real_and_id_free() -> None:
+    receipt = _receipt()
+    consumption = receipt["builder_packet_consumption"]
+
+    assert consumption["packet_consumed"] is True
+    assert consumption["consumed_source_unit_count"] == 8
+    assert len(consumption["unit_commitments"]) == 8
+    assert consumption["unit_commitments"] == sorted(consumption["unit_commitments"])
+    assert len(set(consumption["unit_commitments"])) == 8
+
+    packet_receipt = _load(REAL_PACKET_RECEIPT_PATH)
+    assert consumption["consumed_source_unit_count"] == packet_receipt["packet"]["builder_eligible_source_unit_count"]
 
 
 def test_a4_extraction_receipt_never_names_a_held_out_family_or_source_unit_or_source_text() -> None:
@@ -895,6 +975,19 @@ def test_a4_script_refuses_a4_residuals_that_drift_from_a2() -> None:
         extraction.validate_receipt_independently(forged)
 
 
+def test_a4_script_refuses_an_a4_residual_naming_a_plaintext_source_unit_id() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["a4_residuals"][0]["subject_id"] = "0" * 64
+    forged["a4_residuals"][0]["subject_kind"] = "source_unit"
+
+    with pytest.raises(extraction.ExtractionError, match="does not reproduce from A2"):
+        extraction.validate_a4_residuals_derivable_from_a2(forged)
+
+    with pytest.raises(extraction.ExtractionError, match="unknown receipt or incomplete manifest"):
+        extraction.validate_receipt_independently(forged)
+
+
 def test_a4_script_verifies_the_checked_in_receipt() -> None:
     receipt = _receipt()
     extraction.validate_receipt_independently(receipt)  # must not raise
@@ -938,6 +1031,13 @@ def test_validate_extraction_ledger_commitment_shape_refuses_a_tampered_algorith
         extraction.validate_extraction_ledger_commitment_shape(tampered)
 
 
+def test_validate_extraction_ledger_commitment_shape_refuses_a_tampered_descriptor_hash() -> None:
+    tampered = _ledger_commitment()
+    tampered["commitment_algorithm"]["algorithm_descriptor_sha256"] = "0" * 64
+    with pytest.raises(extraction.ExtractionError, match="algorithm_descriptor_sha256"):
+        extraction.validate_extraction_ledger_commitment_shape(tampered)
+
+
 def test_validate_extraction_ledger_commitment_shape_refuses_zero_rows_with_a_non_empty_root() -> None:
     tampered = _ledger_commitment(row_count=0, root_sha256="a" * 64)
     with pytest.raises(extraction.ExtractionError, match="empty-ledger"):
@@ -966,6 +1066,18 @@ def test_validate_ledger_consistency_with_gate_refuses_counter_drift() -> None:
     open_gate = {"gate_open": True}
 
     with pytest.raises(extraction.ExtractionError, match="spans_extracted"):
+        extraction.validate_ledger_consistency_with_gate(forged, open_gate)
+
+
+def test_validate_ledger_consistency_with_gate_refuses_source_units_extracted_exceeding_consumed_count() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["execution_counters"]["source_units_extracted"] = (
+        forged["builder_packet_consumption"]["consumed_source_unit_count"] + 1
+    )
+    open_gate = {"gate_open": True}
+
+    with pytest.raises(extraction.ExtractionError, match="source_units_extracted"):
         extraction.validate_ledger_consistency_with_gate(forged, open_gate)
 
 

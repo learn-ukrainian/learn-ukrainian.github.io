@@ -206,6 +206,12 @@ def test_reviewed_state_fails_on_a_stale_approve_when_a_findings_database_is_pre
         _states(root, _arc("reviewed"))
 
 
+def test_missing_state_directory_is_planned_not_an_error(root: gen.Roots) -> None:
+    _plan(root, "alpha", 1)
+    assert not root.state.exists()
+    assert _states(root, _arc("alpha")) == {"alpha": "planned"}
+
+
 def test_malformed_state_file_fails_loudly(root: gen.Roots) -> None:
     _plan(root, "alpha", 1)
     (root.state / "alpha").mkdir(parents=True)

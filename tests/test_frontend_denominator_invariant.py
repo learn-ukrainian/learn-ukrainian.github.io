@@ -142,6 +142,13 @@ def deny_denominator(monkeypatch: pytest.MonkeyPatch, omitted: str | None) -> No
     monkeypatch.setattr(sys.modules[__name__], "load_denominator", lambda: {"paths": paths})
 
 
+def test_invariant_passes_when_bare_and_raw_targets_are_listed(
+    synthetic_site: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    deny_denominator(monkeypatch, None)
+    test_site_external_reads_are_in_frontend_denominator()
+
+
 @pytest.mark.parametrize("omitted", ["docs/bare.yaml", "docs/raw.yaml", "docs/odd?raw"])
 def test_invariant_fails_when_an_imported_target_is_omitted(
     synthetic_site: Path, monkeypatch: pytest.MonkeyPatch, omitted: str

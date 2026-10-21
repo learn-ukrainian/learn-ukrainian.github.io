@@ -116,6 +116,19 @@ def test_corrupt_first_file_does_not_drop_later_files(tmp_path: Path, corrupt_ki
     assert unreadable == {"files": 0, "lines": 1, "records": 0}
 
 
+def test_reader_without_unreadable_counter_does_not_raise(tmp_path: Path) -> None:
+    """The default call shape keeps working on a corrupt file: no exception,
+    and valid rows are still returned."""
+    first = _record("codex", "ok")
+    path = tmp_path / "usage_default.jsonl"
+    path.write_bytes(_line(first) + _corrupt_line("invalid-json"))
+
+    records = runtime_router._iter_usage_records([path])
+
+    assert records == [first]
+    assert records.unreadable == {"files": 0, "lines": 1, "records": 0, "total": 1}
+
+
 def test_summarize_runtime_usage_totals_over_valid_rows(tmp_path: Path) -> None:
     """The public runtime usage summary never raises on corrupt lines and its
     totals count exactly the valid rows."""
@@ -230,4 +243,51 @@ def test_headroom_api_blocked_decision_still_reports_unreadable(headroom_usage_d
     data = response.json()
     assert data["has_headroom"] is False
     assert data["reason"]
+    assert data["unreadable"] == ONE_UNREADABLE_LINE
+
+
+@CORRUPT_KINDS
+def test_recent_api_reports_unreadable_and_counts_valid_rows(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, corrupt_kind: str
+) -> None:
+    """GET /api/runtime/recent answers 200: valid rows are listed and the bad
+    lines surface on ``unreadable``."""
+    usage_dir = _usage_api_dir(tmp_path)
+    _today_file(usage_dir).write_bytes(_line(_record("codex", "ok")) + _corrupt_line(corrupt_kind))
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
+
+    response = client.get("/api/runtime/recent?limit=5")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["records"]) == 1
+    assert data["records"][0]["agent"] == "codex"
+    assert data["unreadable"] == ONE_UNREADABLE_LINE
+
+
+def test_acpx_api_reports_unreadable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """GET /api/runtime/acpx surfaces the unreadable counts of its evidence read."""
+    usage_dir = _usage_api_dir(tmp_path)
+    _today_file(usage_dir).write_bytes(_line(_record("codex", "ok")) + _corrupt_line("invalid-json"))
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
+
+    response = client.get("/api/runtime/acpx?days=1")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["unreadable"] == ONE_UNREADABLE_LINE
+
+
+def test_agents_api_reports_unreadable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """GET /api/runtime/agents surfaces the unreadable counts of its
+    last-used-model read."""
+    usage_dir = _usage_api_dir(tmp_path)
+    _today_file(usage_dir).write_bytes(_line(_record("codex", "ok")) + _corrupt_line("invalid-json"))
+    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
+
+    response = client.get("/api/runtime/agents")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data["agents"], list)
     assert data["unreadable"] == ONE_UNREADABLE_LINE

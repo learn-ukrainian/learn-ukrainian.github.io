@@ -222,6 +222,29 @@ def test_unmocked_lemma_index_finds_surface_forms_and_shares_probe_expansion(tmp
         assert probe.execute("SELECT chunk_id,title_terms,text_terms FROM lemma_fts ORDER BY rowid").fetchall() == harness.execute("SELECT chunk_id,title,text FROM chunks_fts ORDER BY rowid").fetchall()
 
 
+def test_pool_ids_stable_in_two_hash_seed_subprocesses(tmp_path: Path) -> None:
+    import os
+    import subprocess
+    import sys
+
+    code = '''
+import json, sqlite3, sys
+from pathlib import Path
+from types import SimpleNamespace
+from scripts.wiki.diagnostics import retrieval_bakeoff_9233 as b
+work = Path(sys.argv[1]); work.mkdir()
+with sqlite3.connect(work / "corpus.sqlite3") as c:
+ c.execute("CREATE TABLE chunks(id INTEGER,chunk_id TEXT,title TEXT,text TEXT,source_file TEXT,subject TEXT,parent_section_id INTEGER)")
+ c.executemany("INSERT INTO chunks VALUES (?,?,?,?,?,?,?)", [(i, f"c{i}", "", f"text {i}", "book", "ukrmova", None) for i in range(8)])
+(work / "search-results.json").write_text(json.dumps({"queries": [{"id":"q","family":"G3","query":"query"}], "arms":{"L":{"q":[f"c{i}" for i in range(8)]}}}))
+b.pool(work)
+print((work / "sealed/pool-key.json").read_text())
+print((work / "judging/pool.json").read_text())
+'''
+    outputs = [subprocess.check_output([sys.executable, "-c", code, str(tmp_path / f"seed-{seed}")], env={**os.environ, "PYTHONHASHSEED": str(seed)}, text=True, timeout=60) for seed in (17, 91)]
+    assert outputs[0] == outputs[1]
+
+
 def test_function_filter_preserves_topics_and_content_homonyms(tmp_path: Path) -> None:
     conn = _vesum(tmp_path / "vesum.db")
     conn.executemany("INSERT INTO forms_all(id,word_form,lemma,pos,tags) VALUES (?,?,?,?,?)", [
@@ -254,6 +277,42 @@ def test_cached_corpus_digest_and_missing_source_identity(tmp_path: Path, monkey
     monkeypatch.setattr(bakeoff, "EXTRA_SOURCES", ("pohribnyi-ukrainska-literaturna-vymova-1992",))
     with pytest.raises(ValueError, match="zero rows"):
         bakeoff._copy_subset(source, tmp_path / "empty")
+
+
+def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
+    import sys
+    from types import SimpleNamespace
+
+    class Encoder:
+        def __init__(self, repo, **kwargs):
+            self.max_seq_length = 8192
+            self.tokenizer = SimpleNamespace(truncation_side="left")
+            self.prompts = {"query": "query: ", "document": ""}
+            self.calls = []
+        def encode(self, texts, **kwargs):
+            self.calls.append((texts, kwargs))
+            return [[1.0, 0.0]]
+    class Cross:
+        def __init__(self, *args, **kwargs):
+            assert "max_length" not in kwargs
+            self.tokenizer = SimpleNamespace(model_max_length=8192, truncation_side="left")
+            self.model = SimpleNamespace(config=SimpleNamespace(max_position_embeddings=8194), float=lambda: None)
+    monkeypatch.setitem(sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=Encoder, CrossEncoder=Cross))
+    repo = "Snowflake/snowflake-arctic-embed-l-v2.0"
+    encoder, meta = bakeoff._new_encoder(repo, tmp_path)
+    bakeoff._query_vector(encoder, meta, "query", repo)
+    bakeoff._encode_batch(encoder, meta, ["document"], repo, 1)
+    assert encoder.calls[0][0] == ["query"] and encoder.calls[0][1]["prompt_name"] == "query"
+    assert encoder.calls[1][0] == ["document"] and encoder.calls[1][1]["prompt"] == ""
+    assert meta["prefixes"] == {"query": "query: ", "passage": ""}
+    assert encoder.tokenizer.truncation_side == "right"
+    ranker, rmeta = bakeoff._new_reranker("BAAI/bge-reranker-v2-m3", tmp_path)
+    assert ranker.max_seq_length == rmeta["max_tokens"] == 8192
+    assert ranker.tokenizer.truncation_side == "right"
+    assert bakeoff.EMBEDDERS["Qwen/Qwen3-Embedding-0.6B"]["query_prefix"].endswith("\nQuery:")
+    with pytest.raises(ValueError, match="finite token limit"):
+        bakeoff._model_token_limit(SimpleNamespace(model_max_length=10**30), SimpleNamespace())
 
 
 @pytest.fixture
@@ -397,6 +456,35 @@ def test_flag_frozen_prefixes_on_both_sides_and_passage_budget(tmp_path: Path, m
     monkeypatch.setattr(bakeoff, "_passage_stats", lambda rows, tokenizer, budget, **kw: ([], budgets.append(budget)))
     bakeoff._embedder_passage_stats([], model, meta, repo)
     assert budgets == [8192 - 2]
+
+
+def test_native_jina_limits_are_recorded_without_downloads(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
+    import sys
+    from types import SimpleNamespace
+
+    class Jina:
+        config = SimpleNamespace(max_position_embeddings=131072)
+        _tokenizer = SimpleNamespace(model_max_length=131072, truncation_side="left")
+        def to(self, device):
+            return self
+        def float(self):
+            return self
+
+        def eval(self):
+            return self
+        def _ensure_tokenizer(self):
+            pass
+        def rerank(self, query, documents):
+            max_query_length = 1024
+            max_doc_length = 8192
+            return max_query_length, max_doc_length
+    monkeypatch.setitem(sys.modules, "transformers", SimpleNamespace(AutoModel=SimpleNamespace(from_pretrained=lambda *a, **kw: Jina())))
+    model, meta = bakeoff._new_reranker("jinaai/jina-reranker-v3.5", tmp_path)
+    assert meta["max_query_length"] == 1024 and meta["max_doc_length"] == 8192
+    assert meta["max_tokens"] == 131072
+    assert model._tokenizer.truncation_side == "right"
+    assert "first 128 + last 384" in meta["truncation"]
 
 
 def test_qwen_yes_no_scoring_preserves_template_without_joint_truncation(tmp_path: Path, monkeypatch) -> None:

@@ -36,6 +36,14 @@ from scripts.ai_agent_bridge import _citation_check as cc
 # ─────────────────────────────────────────────────────────────────────
 
 
+def test_detect_antonenko_basic():
+    body = "Антоненко-Давидович flags it as a Russianism."
+    citations = cc.detect_citations(body)
+    assert len(citations) == 1
+    assert citations[0].source == "antonenko_davydovych"
+    assert citations[0].source_label == "Антоненко-Давидович"
+
+
 def test_detect_yak_my_hovorymo_alias_is_collapsed():
     """«Як ми говоримо» (the AD publication) is the same source —
     when both names appear close together, dedup collapses to one
@@ -89,6 +97,11 @@ def test_detect_extracts_imennyk_noun_pattern():
     citations = cc.detect_citations(body)
     assert len(citations) == 1
     assert citations[0].headword == "собака"
+
+
+def test_detect_no_citations_in_plain_message():
+    assert cc.detect_citations("Hello, plain message.") == []
+    assert cc.detect_citations("") == []
 
 
 def test_detect_strips_stress_marks_in_normalize():
@@ -203,6 +216,14 @@ def test_annotation_preserves_agree_tail(monkeypatch):
     result = cc.check_and_annotate(body)
     assert result.annotated_body.rstrip().endswith("[AGREE]")
     assert "<!-- CITATION-UNVERIFIED" in result.annotated_body
+
+
+def test_no_annotation_when_all_verified(monkeypatch):
+    _make_fake_db_present(monkeypatch, style_guide={"учень": [{"id": 1}]})
+    body = "Антоненко-Давидович обговорює *учень*.\n\n[AGREE]"
+    result = cc.check_and_annotate(body)
+    assert "<!-- CITATION-UNVERIFIED" not in result.annotated_body
+    assert result.annotated_body == body  # untouched
 
 
 # ─────────────────────────────────────────────────────────────────────

@@ -243,3 +243,18 @@ def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_clu
         manifest=json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text()),
         a2_receipt=json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").read_text()),
     )
+
+
+@pytest.mark.postgres
+def test_authorization_race_against_start_postgres(tmp_path, monkeypatch, pg_cluster, request) -> None:
+    from test_v4_operation_lifecycle import claim, role_connection
+
+    prepared_binding = request.getfixturevalue("prepared")
+
+    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared_binding)
+    with RequestExecutor(root=tmp_path) as authorizer:
+        with pytest.raises(RequestExecutorError, match="not authorizable"):
+            authorizer.authorize_author_execution(request_id=owned["request_id"], slot_id="v4p-standard-correct-002", expected_seat=FIXTURE_MODEL)
+        with pytest.raises(RequestExecutorError, match="retired"):
+            authorizer.claim_v4_runner_execution(request_id=owned["request_id"])

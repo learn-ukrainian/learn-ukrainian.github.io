@@ -14,6 +14,42 @@ from tests._host_path_guard import FIXTURE_HOME
 
 MANIFEST_PATH = resolve_open_model_path("data/projects/open_model_data/pilot/v4_human_source_pilot_manifest_v1.json")
 _RECEIPT = "data/projects/open_model_data/pilot/v4_human_source_pilot_receipt_v1.json"
+def test_proof_1_of_1_record_fidelity_and_provenance() -> None:
+    """Verify the 1/1 human-source proof record satisfies all acceptance invariants (PILOT-1)."""
+    receipt_path = resolve_open_model_path(_RECEIPT)
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    proof = receipt["user_visible_proof_1_of_1"]
+
+    assert proof["builder_training_cleared"] is True
+    assert proof["verbatim_preserved"] is True
+    assert len(proof["span_sha256"]) == 64
+    assert proof["record_id"].startswith("record.human.")
+    assert proof["work_family_id"] == "work_family.literary.yuriy_andrukhovych_moskoviada"
+
+
+def test_pilot_strata_denominator_and_residual_accounting() -> None:
+    """Check explicit denominator accounting and residual tracking (PILOT-2 & PILOT-3)."""
+    manifest_data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    strata = manifest_data["pilot_denominator"]["strata_coverage"]
+
+    assert strata["literary_prose"] == "covered"
+    assert strata["educational_textbook"] == "covered"
+    assert strata["stem_technical"] == "residual_operator_excluded"
+    assert strata["video_captions"] == "residual_operator_excluded"
+    assert strata["ocr_scans"] == "residual_operator_excluded"
+
+    receipt_path = resolve_open_model_path(_RECEIPT)
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    acct = receipt["pilot_accounting"]
+
+    assert acct["selected_spans"] == 1419
+    assert acct["admitted_spans"] == 1418
+    assert acct["exported_training_spans"] == 614
+    assert acct["rejected_quarantine_spans"] == 1
+    assert acct["abstained_evaluation_spans"] == 559
+    assert acct["abstained_development_spans"] == 245
+
+
 @pytest.mark.needs_artifact(
     "open_model_other_indexes",
     "projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",

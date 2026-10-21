@@ -9,10 +9,14 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+import yaml
 
 from scripts.ci import frontend_change_scope as scope
 
 pytestmark = pytest.mark.repo_invariant
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_CI = _REPO_ROOT / ".github/workflows/ci.yml"
 def _git(cwd: Path, *args: str) -> str:
     env = os.environ | {"AGENT_NO_MERGE": "0"}
     return subprocess.check_output(["git", *args], cwd=cwd, text=True, timeout=30, env=env).strip()
@@ -213,6 +217,37 @@ def test_moved_base_out_of_scope_cheap_exits(tmp_path: Path, monkeypatch: pytest
     )
 
 
+def test_moved_base_branch_touches_denominator_runs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Inverse: branch itself touches site/ after base moved → run."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    shas = _init_fixture_repo(repo)
+    monkeypatch.chdir(repo)
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+
+    scope.main(
+        [
+            "--base",
+            shas["base_tip"],
+            "--head",
+            shas["branch_in"],
+            "--event",
+            "pull_request",
+            "--denominator",
+            shas["denominator"],
+        ],
+    )
+    out = capsys.readouterr().out
+    assert "decision=run" in out
+    assert "matched=" in out
+    assert "matched=0" not in out
+
+
 def test_merge_base_unresolvable_fails_open(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -227,3 +262,30 @@ def test_merge_base_unresolvable_fails_open(
     text = summary.read_text(encoding="utf-8")
     assert "reason=merge_base_unresolvable" in text
     assert "decision=run" in text
+
+
+def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
+    """Every frontend step after the scope decision is gated on its `run` output."""
+    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
+    jobs = workflow["jobs"]
+    assert "frontend-e2e" not in jobs
+    frontend = jobs["frontend"]
+    # Skipped only when the merge queue reuses a green full run of the identical tree.
+    assert frontend["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
+    assert "frontend" in jobs["ci-gate"]["needs"]
+    steps = frontend["steps"]
+    scope_index = next(index for index, step in enumerate(steps) if step.get("id") == "scope")
+    assert "scripts/ci/frontend_change_scope.py" in steps[scope_index]["run"]
+    assert "github.event.merge_group.base_sha" in steps[scope_index]["env"]["BASE_SHA"]
+    for step in steps[scope_index + 1 :]:
+        assert step.get("if") == "steps.scope.outputs.run == 'true'", step
+
+
+def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
+    """Shared/all-node obligations must not replace today's cheap-exit policy."""
+    from scripts.ci import components
+
+    manifest = components.load_manifest()
+    assert set(components.affected(["scripts/config.py"], manifest)["components"]) == set(components.NODE_IDS)
+    run, _, matched = scope.decide_from_changed(["scripts/config.py", "docs/a.md"])
+    assert run is False and matched == []

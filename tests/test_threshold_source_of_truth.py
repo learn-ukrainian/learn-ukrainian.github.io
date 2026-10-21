@@ -11,6 +11,7 @@ Related incident: ISTORIO 3500 vs 4000 drift (Jan 2026), recorded in
 
 from __future__ import annotations
 
+import ast
 import re
 import sys
 from functools import cache
@@ -24,6 +25,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 SCRIPTS_ROOT = Path(__file__).resolve().parent.parent / "scripts"
 SOURCE_OF_TRUTH = SCRIPTS_ROOT / "common" / "thresholds.py"
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content, pytest.mark.repo_wide]
+
+# Canonical names that must never be redeclared outside the source-of-truth.
+# The values are the source-of-truth values — any other file claiming to
+# own these names (at module scope) is a regression.
+_CANONICAL_NAMES: frozenset[str] = frozenset({
+    "REVIEW_PASS_FLOOR",
+    "REVIEW_REJECT_FLOOR",
+    "STYLE_REVIEW_TARGET",
+    "STYLE_REVIEW_DIMENSION_FLOOR",
+    "LEVEL_THRESHOLDS",
+    "SEMINAR_PROMOTE_DIMS",
+    "SEMINAR_PROMOTE_PROFILES",
+})
 
 # Precise content-based allow-list for legitimate non-threshold float
 # literals that happen to look like thresholds. Each entry is
@@ -84,6 +98,32 @@ def _read_script_text(path: Path) -> str:
     return path.read_text("utf-8")
 
 
+@cache
+def _parse_script(path: Path) -> ast.Module | None:
+    """Parse each scanned script once for the module's AST invariants."""
+    try:
+        return ast.parse(_read_script_text(path), filename=str(path))
+    except SyntaxError:
+        return None
+
+
+def _module_level_name_assignments(tree: ast.Module) -> list[tuple[str, int]]:
+    """Return (name, lineno) pairs for module-level ``NAME = ...`` assigns.
+
+    Skips nested functions/classes — only top-level assignments count as
+    "this module claims to own this constant."
+    """
+    results: list[tuple[str, int]] = []
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    results.append((target.id, node.lineno))
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            results.append((node.target.id, node.lineno))
+    return results
+
+
 def _matching_allowlist_patterns(
     rel_path: str,
     stripped_line: str,
@@ -94,6 +134,33 @@ def _matching_allowlist_patterns(
         for path, pat in _FLOAT_LITERAL_ALLOWLIST
         if rel_path == path and pat.search(stripped_line)
     ]
+
+
+def test_no_canonical_name_redeclared_outside_thresholds() -> None:
+    """No file other than thresholds.py defines the canonical names.
+
+    An ``import`` of the name is fine (that's the whole point). Only
+    local re-assignments at module scope are flagged.
+    """
+    offenders: list[str] = []
+    for path in _iter_python_files():
+        if path.resolve() == SOURCE_OF_TRUTH.resolve():
+            continue
+        source = _read_script_text(path)
+        if not any(name in source for name in _CANONICAL_NAMES):
+            continue
+        tree = _parse_script(path)
+        if tree is None:
+            continue
+        for name, lineno in _module_level_name_assignments(tree):
+            if name in _CANONICAL_NAMES:
+                rel = path.relative_to(SCRIPTS_ROOT).as_posix()
+                offenders.append(f"{rel}:{lineno} redeclares {name!r}")
+
+    assert not offenders, (
+        "Canonical threshold names must live only in scripts/common/thresholds.py.\n"
+        + "\n".join(offenders)
+    )
 
 
 def test_no_duplicate_target_words_module_level() -> None:

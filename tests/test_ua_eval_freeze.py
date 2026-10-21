@@ -64,6 +64,19 @@ def test_freeze_fails_closed_on_metadata_edit() -> None:
         validate_freeze(edited)
 
 
+def test_aggregate_reports_expose_no_protected_item_fields() -> None:
+    freeze = build_freeze()
+
+    assert freeze["reporting"]["aggregate_only"] is True
+    assert "source_sha256" in freeze["reporting"]["forbidden_item_fields"]
+    assert "raw_response" in freeze["reporting"]["forbidden_item_fields"]
+    assert freeze["reporting"]["verified_report_paths"] == [
+        "data/projects/ua_eval_harness/baselines/v1/identity.report.json",
+        "data/projects/ua_eval_harness/baselines/v1/fixture-rules.report.json",
+        "data/projects/ua_eval_harness/baselines/v1/gpt-5.6-terra.report.json",
+    ]
+
+
 def test_build_freeze_rejects_report_that_declares_gold(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -124,6 +137,16 @@ def test_historical_runner_archive_tamper_fails_without_active_fallback(tmp_path
     monkeypatch.setattr(freeze_module, "HISTORICAL_RUNNER_SOURCE", tampered)
     with pytest.raises(FreezeError, match="historical source"):
         validate_freeze(freeze)
+
+
+def test_historical_runner_resolution_does_not_certify_active_code():
+    assert freeze_module._frozen_artifact_path(freeze_module.RUNNER) == (
+        freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
+    )
+    assert freeze_module._frozen_artifact_path(freeze_module.EVALUATOR) == freeze_module.ROOT / freeze_module.EVALUATOR
+    assert freeze_module._sha256(freeze_module.ROOT / freeze_module.RUNNER) != freeze_module._sha256(
+        freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
+    )
 
 
 @pytest.mark.parametrize("logical", [

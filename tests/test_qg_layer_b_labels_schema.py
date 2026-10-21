@@ -313,6 +313,13 @@ def test_03_requires_stable_event_output_raw_output_normalized_output_and_segmen
         _assert_contract_valid(invalid, references)
 
 
+def test_05_rejects_anchor_when_candidate_set_is_incomplete() -> None:
+    document, _ = _valid_document()
+    document["cases"][0]["candidate_set_complete"] = False
+
+    assert _schema_errors(document)
+
+
 def test_06_rejects_overlapping_or_out_of_order_segments() -> None:
     overlapping, overlapping_references = _valid_document(ordered_segments=True)
     second_segment = _only_candidate(overlapping)["ordered_segment_spans"][1]
@@ -387,6 +394,23 @@ def test_10_rejects_inconsistent_canonical_source_identity() -> None:
 
     with pytest.raises(AssertionError, match="inconsistent identity material"):
         _assert_contract_valid(document, references)
+
+
+def test_11_accepts_mixed_as_a_human_source_relation() -> None:
+    document, references = _valid_document()
+    candidate = _only_candidate(document)
+    candidate["expected_source_relation"] = "MIXED"
+    candidate["expected_support_spans"].append(
+        {
+            "start": 0,
+            "end": len("Іван"),
+            "role": "CONTRADICTS",
+        }
+    )
+    document["cases"][0]["expected_aggregate_relation"] = "MIXED"
+    document["cases"][0]["expected_fact_check_decision"] = "AUDIT"
+
+    _assert_contract_valid(document, references)
 
 
 def test_15_unresolved_cases_block_qualification() -> None:

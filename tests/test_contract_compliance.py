@@ -203,6 +203,28 @@ def test_activity_order_accepts_descriptive_markers_for_bare_type_contract() -> 
     assert not any(v["type"] == "ACTIVITY_ORDER" for v in violations)
 
 
+def test_activity_order_accepts_swapped_descriptive_markers() -> None:
+    """Activity obligations are a multiset; marker order is incidental."""
+    contract = {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+<!-- INJECT_ACTIVITY: quiz-verb-patterns -->
+<!-- INJECT_ACTIVITY: quiz-modal-choice -->
+<!-- INJECT_ACTIVITY: fill-in-modal-logic -->
+"""
+    violations = check_contract_compliance(content, contract)
+    order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
+    assert order_violations == []
+
+
 def test_activity_order_still_honors_exact_id_match() -> None:
     """When contract pins an exact `id`, the content marker must equal it —
     a bare-type prefix is insufficient."""
@@ -230,6 +252,23 @@ def test_activity_order_still_honors_exact_id_match() -> None:
         v["type"] == "ACTIVITY_ORDER"
         for v in check_contract_compliance(wrong_content, contract)
     )
+
+
+def test_activity_order_reports_single_position_mismatch() -> None:
+    contract = {
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity -->
+<!-- INJECT_ACTIVITY: match-up -->
+"""
+    violations = check_contract_compliance(content, contract)
+    order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
+    assert len(order_violations) == 1
+    assert "Missing required activity obligation markers: ['quiz']" in order_violations[0]["message"]
 
 
 # ====================================================================

@@ -59,6 +59,10 @@ CORRUPT_KINDS = pytest.mark.parametrize(
 # One corrupt line is counted once per usage read the collector makes: agent
 # inventory, usage summary, recent outcomes, and the codex headroom scan.
 READS_WITH_HEADROOM = 4
+# Without a rostered agent there is no headroom scan.
+READS_WITHOUT_HEADROOM = 3
+
+
 def _unreadable(lines: int) -> dict[str, int]:
     return {"files": 0, "lines": lines, "records": 0, "total": lines}
 
@@ -137,6 +141,37 @@ def test_orient_runtime_aggregates_unreadable_across_usage_reads(
     assert runtime["recent_outcomes"] == {"ok": 1, "error": 1, "timeout": 0, "rate_limited": 0}
     # The corrupt line is not a rate-limit event, so headroom stays clear.
     assert runtime["headroom"] == {"codex": True}
+
+
+def test_orient_runtime_reports_zero_unreadable_for_clean_log(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A clean log reports the all-zero shape; the field is never omitted."""
+    root = tmp_path.resolve()
+    _today_file(_usage_dir(root)).write_bytes(_line(_record("codex", "ok")) + _line(_record("codex", "error")))
+    client = _make_client(root, monkeypatch, stub_adapter=True)
+
+    runtime = _get_runtime(client)
+
+    assert runtime["unreadable"] == _unreadable(0)
+    assert runtime["by_agent"]["codex"]["total"] == 2
+    assert runtime["recent_outcomes"] == {"ok": 1, "error": 1, "timeout": 0, "rate_limited": 0}
+    assert runtime["headroom"] == {"codex": True}
+
+
+def test_orient_runtime_aggregation_covers_exactly_the_reads_made(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With no rostered agent there is no headroom scan: the same corrupt line
+    is counted once per remaining read, proving the headroom read contributes
+    to the aggregate instead of the count being a fixed constant."""
+    root = tmp_path.resolve()
+    _today_file(_usage_dir(root)).write_bytes(_line(_record("codex", "ok")) + _corrupt_line("invalid-json"))
+    client = _make_client(root, monkeypatch, stub_adapter=False)
+
+    runtime = _get_runtime(client)
+
+    assert runtime["unreadable"] == _unreadable(READS_WITHOUT_HEADROOM)
+    assert runtime["headroom"] == {}
+    assert runtime["by_agent"]["codex"]["total"] == 1
 
 
 @pytest.fixture(autouse=True)

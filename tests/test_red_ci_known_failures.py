@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,9 @@ from scripts.orchestration.red_ci_known_failures import (
     load_and_validate_registry,
     main,
 )
+from tests.project_python import project_python
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _get_valid_registry_data() -> dict[str, Any]:
@@ -231,6 +235,22 @@ def test_negative_malformed_regex(tmp_path) -> None:
         load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
 
     assert "Malformed regex" in str(exc_info.value)
+
+
+def test_negative_empty_required_matchers(tmp_path) -> None:
+    """Negative schema test (codex re-review F001): an entry whose
+    matcher.lines.required is EMPTY would match on check_name alone, classifying
+    every failure of that check as known — minItems 1 must reject it."""
+    data = _get_valid_registry_data()
+    data["entries"][0]["matcher"]["lines"]["required"] = []
+
+    reg_path = tmp_path / "empty_required.json"
+    reg_path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
+        load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
+
+    assert "Registry schema violation" in str(exc_info.value)
 
 
 def test_negative_receipt_empty_signature_lines(tmp_path) -> None:
@@ -590,6 +610,34 @@ def test_lookup_returns_registered_actions_only_as_data(tmp_path, action, expect
 
     assert main(_lookup_args(registry_path, receipt_path, output_path)) == 0
     assert json.loads(output_path.read_text(encoding="utf-8"))["action"] == expected
+
+
+def test_direct_lookup_cli_handles_a_stop_action_without_stdout(tmp_path) -> None:
+    """The documented script-path CLI has no hidden validator import dependency."""
+    registry = _get_valid_registry_data()
+    registry["entries"][0]["action"] = {
+        "kind": "stop",
+        "stop_code": "STOP-manual-intervention",
+    }
+    registry_path = _write_json(tmp_path / "registry.json", registry)
+    receipt_path = _write_json(tmp_path / "receipt.json", _get_valid_receipt_data())
+    output_path = tmp_path / "lookup.json"
+
+    completed = subprocess.run(
+        [
+            str(project_python()),
+            str(PROJECT_ROOT / "scripts/orchestration/red_ci_known_failures.py"),
+            *_lookup_args(registry_path, receipt_path, output_path),
+        ],
+        capture_output=True,
+        check=False,
+        text=True, timeout=30,
+    )
+
+    assert completed.returncode == 0
+    assert completed.stdout == ""
+    assert completed.stderr == ""
+    assert json.loads(output_path.read_text(encoding="utf-8"))["action"] == registry["entries"][0]["action"]
 
 
 def test_lookup_full_coverage_rejects_an_additional_unknown_failure(tmp_path) -> None:

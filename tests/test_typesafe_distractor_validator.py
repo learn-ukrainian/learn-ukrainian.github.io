@@ -119,6 +119,29 @@ def test_validate_ambiguous_card_mock():
     assert verdict.grounded
 
 
+def test_validate_weak_foils_mock():
+    # Distractors are absurd or non-foils
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "distractor_plausibility": DummyAns(score=0.40, confidence=0.85),
+            "is_unambiguous": DummyAns(noul=0.98),
+            "anti_calque_yield": DummyAns(noul=0.05),
+            "card_quality": DummyAns(choice="pass", confidence=0.75),
+        },
+    }
+    verdict = validate_practice_card(
+        stem="Діти граються на _____ (подвір'я).",
+        target="подвір'ї",
+        distractors=["автомобіль", "комп'ютер", "кіт"],
+        mock_response=mock_resp,
+        ground_hook=_hermetic_ground,
+    )
+    assert verdict.verdict == "warn_weak_foils"
+    assert any("Weak foils" in f for f in verdict.findings)
+    assert verdict.grounded
+
+
 def test_validate_anti_calque_yield_mock():
     mock_resp = {
         "model": "jev-test",

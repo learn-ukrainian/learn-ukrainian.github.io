@@ -188,6 +188,11 @@ def test_iter_yaml_list_maps_skips_nested_evidence_refs(tmp_path: Path) -> None:
     assert "curated source family textbook" not in rows[0].get("lemma", "")
 
 
+def test_iter_manifest_lemmas_from_text_unescapes() -> None:
+    lemmas = list(iter_manifest_lemmas_from_text('{"entries":[{"lemma":"кам\'яниця"},{"lemma":"ліс"}]}'))
+    assert lemmas == ["кам'яниця", "ліс"]
+
+
 def test_iter_manifest_lemmas_ignores_nested_pretty_printed_lemmas() -> None:
     text = """{
   "stats": {

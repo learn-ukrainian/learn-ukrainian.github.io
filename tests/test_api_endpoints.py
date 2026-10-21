@@ -36,6 +36,32 @@ client = TestClient(app, raise_server_exceptions=False)
 class TestHealthEndpoint:
     """GET /api/health returns server status."""
 
+    def test_has_required_fields(self):
+        data = client.get("/api/health").json()
+        assert data["status"] == "ok"
+        assert "version" in data
+        assert "uptime_seconds" in data
+        assert isinstance(data["uptime_seconds"], int)
+        assert "instance" in data
+        instance = data["instance"]
+        assert isinstance(instance["host"], str)
+        assert instance["host"]
+        assert isinstance(instance["git_sha"], str)
+        assert len(instance["git_sha"]) == 40
+        assert instance["checkout_sha"] == instance["git_sha"]
+        assert "serving_mode" in instance
+        assert "serving_sha" in instance
+        assert "codexbar" in data
+        assert "scheduler_running" in data["codexbar"]
+        assert data["codexbar"]["cache_ttl_s"] == 720.0
+
+    def test_health_respects_lu_monitor_host_id(self, monkeypatch):
+        monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")
+        data = client.get("/api/health").json()
+        assert data["instance"]["host"] == "host-explicit"
+        assert "serving_mode" in data["instance"]
+        assert "checkout_sha" in data["instance"]
+
     @pytest.mark.parametrize("non_opaque_host_id", ["teacher.example.org", "host-job"])
     def test_health_never_echoes_a_non_opaque_lu_monitor_host_id(self, monkeypatch, non_opaque_host_id):
         # A real host name (a live FQDN) or a retired batch-host role
@@ -44,6 +70,16 @@ class TestHealthEndpoint:
         monkeypatch.setenv("LU_MONITOR_HOST_ID", non_opaque_host_id)
         data = client.get("/api/health").json()
         assert data["instance"]["host"] == "local"
+
+
+class TestConfigEndpoint:
+    """GET /api/config returns levels and pipeline info."""
+
+    def test_has_levels(self):
+        data = client.get("/api/config").json()
+        assert "levels" in data
+        assert isinstance(data["levels"], list)
+        assert len(data["levels"]) > 0
 
 
 class TestDispatcherScanEndpoint:
@@ -72,8 +108,32 @@ class TestDispatcherScanEndpoint:
         assert resp.json()["detail"] == "Dispatcher scan failed"
 
 
+class TestStateSummaryEndpoint:
+    """GET /api/state/summary returns track data."""
+
+    def test_has_freshness_meta_and_dossier_fields(self):
+        data = client.get("/api/state/summary?fresh=true").json()
+        meta = data["meta"]
+        assert meta["source"] == "fs:plans+orchestration+artifacts+research"
+        assert meta["cache"] == "miss"
+        assert meta["stale_after_s"] == 60.0
+        assert "dossier_done" in data["totals"]
+        assert "published_mdx" in data["totals"]
+        assert data["tracks"]["folk"]["profile"] == "seminar"
+        assert data["tracks"]["folk"]["is_seminar"] is True
+
+
 class TestBuildStatusEndpoint:
     """GET /api/state/build-status agrees with per-track build status."""
+
+    def test_all_tracks_matches_per_track_build_counts(self):
+        all_tracks = client.get("/api/state/build-status").json()["tracks"]
+
+        for track in ["a1", "bio", "folk"]:
+            per_track = client.get(f"/api/state/build-status/{track}").json()
+            assert all_tracks[track]["building"] == per_track["building"]
+            assert all_tracks[track]["queued"] == per_track["queued"]
+            assert all_tracks[track]["failed"] == per_track["failed"]
 
     def test_per_track_counts_failed_audit_before_running_phase(self, tmp_path, monkeypatch):
         from scripts.api import state_build
@@ -98,6 +158,12 @@ class TestBuildStatusEndpoint:
 class TestDashboardOverviewEndpoint:
     """GET /api/dashboard/overview returns tracks."""
 
+    def test_has_tracks_and_totals(self):
+        data = client.get("/api/dashboard/overview").json()
+        assert "tracks" in data
+        assert "totals" in data
+        assert "timestamp" in data
+
     def test_track_counts_match_state_summary(self):
         summary = client.get("/api/state/summary?fresh=true").json()
         overview = client.get("/api/dashboard/overview").json()
@@ -114,6 +180,23 @@ class TestDashboardOverviewEndpoint:
 
 
 # ==================== Router mounting tests ====================
+
+
+class TestRouterMounting:
+    """All routers are properly mounted in the app.
+
+    Uses the generated OpenAPI spec to reliably detect mounted paths
+    (app.routes introspection misses prefixed sub-router paths).
+    """
+
+    def _route_paths(self) -> set[str]:
+        # OpenAPI paths are the source of truth for what the app actually serves.
+        spec = app.openapi()
+        return set(spec.get("paths", {}).keys())
+
+    def test_hramatka_not_mounted_on_public_monitor(self):
+        paths = self._route_paths()
+        assert not any(p.startswith("/api/hramatka") for p in paths)
 
 
 class TestPublicMonitorSurfacesAndBoundaries:
@@ -167,6 +250,20 @@ class TestExtractWordCountFromStatus:
         assert dc == 0
         assert la == "2026-03-01T00:00:00Z"
 
+    def test_handles_deferred_count(self):
+        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
+
+        class FakeResult:
+            def __init__(self):
+                self.data = {
+                    "overall": {"status": "pass", "deferred_count": 3},
+                    "gates": {"lesson": {"message": "500 / 1000 words"}},
+                    "timestamp": None,
+                }
+
+        _, _, dc, _ = _extract_word_count_from_status(FakeResult())
+        assert dc == 3
+
 
 class TestExtractReviewInfo:
     """_extract_review_info reads review files."""
@@ -190,6 +287,64 @@ class TestExtractReviewInfo:
         (tmp_path / "audit").mkdir()
         info = _extract_review_info(tmp_path, "test-slug")
         assert info["has_review"] is True
+
+
+class TestGetOrchestrationInfo:
+    """_get_orchestration_info collects phase data."""
+
+    def test_missing_dir(self, tmp_path):
+        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
+
+        info = _get_orchestration_info(tmp_path / "nonexistent")
+        assert info["orchestration"] == []
+        assert info["pipeline_version"] == "unbuilt"
+        assert info["needs_rebuild"] is True
+        assert info["friction_count"] == 0
+
+    def test_v6_not_needs_rebuild(self, tmp_path):
+        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
+
+        orch = tmp_path / "orch"
+        orch.mkdir()
+        (orch / "state.json").write_text('{"mode":"v6","phases":{}}')
+        info = _get_orchestration_info(orch)
+        assert info["pipeline_version"] == "v6"
+        assert info["needs_rebuild"] is False
+        assert "v4_phases" not in info
+
+
+class TestBuildModuleInfo:
+    """build_module_info keeps only v6 as current."""
+
+    def test_v5_marks_needs_rebuild(self, tmp_path):
+        from scripts.api.dashboard_helpers import build_module_info
+
+        track_dir = tmp_path / "track"
+        plans_dir = tmp_path / "plans"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        plans_dir.mkdir()
+
+        with (
+            patch("scripts.api.dashboard_helpers.get_source_paths", return_value={}),
+            patch("scripts.api.dashboard_helpers.find_research_path", return_value=None),
+            patch(
+                "scripts.api.dashboard_helpers.extract_review_info",
+                return_value={
+                    "has_review": False,
+                    "has_final_review": False,
+                    "review_score": None,
+                    "review_verdict": None,
+                    "has_plan_review": False,
+                    "plan_review_verdict": None,
+                },
+            ),
+            patch("scripts.api.dashboard_helpers.detect_pipeline_version", return_value="v5"),
+        ):
+            result = build_module_info(track_dir, plans_dir, "a1", "test-slug", 0)
+
+        assert result["pipeline_version"] == "v5"
+        assert result["needs_rebuild"] is True
 
 
 class TestDashboardModuleDetail:

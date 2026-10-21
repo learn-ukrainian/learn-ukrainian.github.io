@@ -20,8 +20,10 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 from audit.plan_references_audit import (
     PAGED_CITATION_RE,
+    PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS,
     Citation,
     _audit_citation,
+    _classify_level_mismatch,
     _source_files_for,
 )
 
@@ -105,6 +107,28 @@ def test_paged_citation_regex_accepts_ukrainian_s_dot():
     assert m is not None
     assert m.group(1) == "Варзацька"
     assert m.group(3) == "38"
+
+
+def test_level_mismatch_thresholds():
+    assert _classify_level_mismatch("a1", 7) is True
+    assert _classify_level_mismatch("a1", 6) is False
+    assert _classify_level_mismatch("a2", 10) is True
+    assert _classify_level_mismatch("a2", 9) is False
+    assert _classify_level_mismatch("b1", 10) is False
+
+
+def test_level_mismatch_uses_per_track_threshold_table():
+    """The threshold table is the single source of truth: B1 with
+    Grade 10 must NOT flag (B1 threshold is 11), while A1 with Grade 10
+    DOES flag (A1 threshold is 7)."""
+    assert PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS["a1"] == 7
+    assert PLAN_AUDIT_LEVEL_MISMATCH_THRESHOLDS["b1"] == 11
+    assert _classify_level_mismatch("a1", 10) is True
+    assert _classify_level_mismatch("b1", 10) is False
+    assert _classify_level_mismatch("b1", 11) is True
+    assert _classify_level_mismatch("b2", 10) is False
+    # Unknown track defaults to never-flag (defensive).
+    assert _classify_level_mismatch("seminars", 11) is False
 
 
 def test_source_files_for_cyrillic_query_finds_both_files(fake_db: Path):

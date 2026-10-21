@@ -388,6 +388,16 @@ def test_entire_process_failures_are_silent_and_fail_open(
     assert shim._hook("before-submit-prompt") == 0
 
 
+@pytest.mark.parametrize(
+    "raw",
+    [b"not-json", b"x" * ((1 << 20) + 1)],
+    ids=["malformed", "oversized"],
+)
+def test_malformed_or_oversized_input_is_silent_and_fail_open(monkeypatch: pytest.MonkeyPatch, raw: bytes) -> None:
+    monkeypatch.setattr(shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw)))
+    assert shim._hook("stop") == 0
+
+
 def test_install_uninstall_are_atomic_idempotent_and_preserve_config(tmp_path: Path) -> None:
     path = tmp_path / "hooks.json"
     expected = _native_hooks(extra={"operator": [1, 2, 3]})

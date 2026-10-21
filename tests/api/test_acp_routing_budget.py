@@ -88,6 +88,22 @@ def test_acp_endpoint_passes_transport_and_excludes_unregistered_lanes(monkeypat
         assert client.get("/api/state/routing-budget?transport=bogus").status_code == 422
 
 
+def test_acp_health_adds_missing_ask_lanes(monkeypatch, budget):
+    budget["agents"].pop("agy")
+    budget["agents"].pop("deepseek")
+    monkeypatch.setattr(
+        state_router,
+        "probe_acp_health",
+        lambda _cwd: {
+            "agy": _health(False),
+            "deepseek": _health(False),
+        },
+    )
+    result = state_router.compute_routing_budget(transport="acp")
+    assert result["agents"]["agy"]["eligible"] is False
+    assert result["agents"]["deepseek"]["eligible"] is False
+
+
 def test_acp_capacity_cli_selects_transport(monkeypatch, budget, capsys):
     monkeypatch.setattr(
         state_router, "probe_acp_health", lambda _cwd: {lane: _health(False) for lane in budget["agents"]}

@@ -21,6 +21,7 @@ from scripts.lexicon.ohoiko_paired_headword_split import (
     split_paired_headword,
     strip_trailing_parentheticals,
 )
+from scripts.storage.paths import artifact_path
 
 
 def test_split_basic_gender_pair() -> None:
@@ -65,6 +66,23 @@ def test_analyze_paired_splits_never_promotes_a_no_gloss_leg(monkeypatch) -> Non
     assert result["promote_candidates"] == []
     assert result["leg_counts"]["single_word_vesum_ok_no_gloss"] == 2
     assert "безглосник" in result["legs_by_category"]["single_word_vesum_ok_no_gloss"]
+
+
+def test_analyze_paired_splits_promotes_leg_with_honest_gloss(monkeypatch) -> None:
+    monkeypatch.setattr(paired_split, "classify_split_leg", lambda leg: "single_word_vesum_ok")
+    monkeypatch.setattr(paired_split, "resolve_leg_lemma", lambda leg: leg)
+    monkeypatch.setattr(paired_split, "_vesum_pos", lambda lemma: "noun")
+    monkeypatch.setattr(paired_split.promo, "_sum20_vts_gloss", lambda lemma: None)
+
+    result = analyze_paired_splits(
+        paired_lemmas=["глосник, глосниця"],
+        atlas_keys=set(),
+        inventory_rows_by_lemma={"глосник, глосниця": {"gloss": "a glossed thing"}},
+    )
+
+    assert result["promote_candidate_count"] == 2
+    assert {c["lemma"] for c in result["promote_candidates"]} == {"глосник", "глосниця"}
+    assert "single_word_vesum_ok_no_gloss" not in result["leg_counts"]
 
 
 def test_recover_latin_lookalike_twarina_and_zhinka() -> None:
@@ -170,6 +188,61 @@ def test_ulp_taught_leftovers_heritage_holds(requires_vesum_db, requires_sources
         hs = classify_lemma(lemma)
         assert hs.get("is_russianism") is True or hs.get("classification") == "russianism"
         assert paired_split.classify_split_leg(lemma) == "single_word_heritage_flag"
+
+
+def test_analyze_all_curated_leftovers_disposition(
+    tmp_path, monkeypatch, requires_vesum_db, requires_sources_db
+) -> None:
+    from scripts.lexicon.ohoiko_paired_headword_split import analyze_all_curated_leftovers
+
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {"lemma": "ого"},
+                    {"lemma": "ой"},
+                    {"lemma": "тварина"},
+                    {"lemma": "випити"},
+                    {"lemma": "актор"},
+                    {"lemma": "акторка"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    dummy_inv = tmp_path / "inventory.yaml"
+    import yaml
+
+    dummy_inv.write_text(
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": "ohoiko-bulk",
+                        "headwords": [
+                            {"lemma": "ого!", "locator": "ohoiko-1000-words entry 1"},
+                            {"lemma": "ой!", "locator": "ohoiko-1000-words entry 2"},
+                            {"lemma": "тваринa", "locator": "ohoiko-1000-words entry 3"},
+                            {"lemma": "випити,", "locator": "ohoiko-500-verbs entry 1"},
+                            {"lemma": "актор, акторка", "locator": "ohoiko-1000-words entry 4"},
+                            {"lemma": "переключити", "locator": "ulp-4-00-lesson-notes lesson 1"},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    res = analyze_all_curated_leftovers(inventory_path=dummy_inv, manifest_path=dummy_manifest)
+    assert res["total_keys"] == 6
+    assert res["bucket_counts"]["clean_tokens"] == 3
+    assert res["bucket_counts"]["verbs_500_trailing_comma"] == 1
+    assert res["bucket_counts"]["words_1000_pair_keys"] == 1
+    assert res["bucket_counts"]["ulp_leftovers"] == 1
+    assert res["promote_candidate_count"] == 0
 
 
 def test_live_curated_unit_a_leftovers_census_invariants(requires_vesum_db) -> None:
@@ -381,3 +454,33 @@ def test_taught_residual_census_fails_if_source_files_change(tmp_path: Path, mon
     assert summary["total_taught_records"] == 3
     assert summary["total_taught_records"] != 5938
     assert summary["total_taught_unique_keys"] == 2
+
+
+@pytest.mark.needs_artifact(
+    "lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
+)
+def test_taught_residual_census_artifact_file_integrity() -> None:
+    census_path = artifact_path(
+        "lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
+    )
+    data = json.loads(census_path.read_text(encoding="utf-8"))
+    assert data["schema"] == "atlas-7550-taught-residual-census.v1"
+    summary = data["summary"]
+    source_units = data["taught_source_units"]
+    assert summary["total_taught_records"] == 5938
+    assert summary["total_taught_unique_keys"] == 5934
+    assert summary["taught_present_in_atlas"] == 5684
+    assert summary["residual_missing_candidates"] == 250
+    assert summary["p1_admit_count"] == 0
+    assert summary["candidate_category_counts"]["already_in_atlas"] == 33
+    assert summary["candidate_category_counts"]["pair_key"] == 213
+    assert summary["candidate_category_counts"]["ocr"] == 1
+    assert summary["candidate_category_counts"]["heritage_hold"] == 3
+    assert summary["candidate_category_counts"]["vesum_unrecognized"] == 0
+    assert summary["candidate_category_counts"]["p1_admit"] == 0
+    assert source_units["ohoiko-1000-words"]["records"] == 1073
+    assert source_units["ohoiko-500-verbs"]["records"] == 959
+    assert source_units["ulp-seasons-1-6"]["records"] == 3906
+    assert len(data["table_rows"]) == 250
+    assert len(summary["heritage_holds"]) == 3
+    assert {h["lemma"] for h in summary["heritage_holds"]} == {"переключити", "кримчанин", "просвітитель"}

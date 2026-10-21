@@ -12,6 +12,7 @@ the exact real filter values.
 from __future__ import annotations
 
 import copy
+import inspect
 import json
 import sqlite3
 from pathlib import Path
@@ -56,6 +57,10 @@ def _make_sources_db(tmp_path: Path, *, with_literary: bool = True) -> Path:
 
 
 # --- local store path resolution --------------------------------------------
+
+
+def test_local_sources_db_path_resolves_against_primary_root(tmp_path: Path) -> None:
+    assert admission.local_sources_db_path(tmp_path) == tmp_path / "data/sources.db"
 
 
 # --- byte provider: real, admitted-only, fails closed -----------------------
@@ -131,10 +136,57 @@ def test_iter_admitted_unit_row_texts_yields_nothing_for_a_non_admitted_unit(tmp
     assert list(admission.iter_admitted_unit_row_texts("historical.some-unit", tmp_path)) == []
 
 
+def test_iter_admitted_unit_row_texts_yields_nothing_when_local_store_file_missing(tmp_path: Path) -> None:
+    assert list(admission.iter_admitted_unit_row_texts("db.wikipedia", tmp_path)) == []
+
+
+def test_iter_admitted_unit_row_texts_yields_nothing_when_table_missing(tmp_path: Path) -> None:
+    _make_sources_db(tmp_path, with_literary=False)
+    assert list(admission.iter_admitted_unit_row_texts("db.literary_texts", tmp_path)) == []
+
+
 def test_iter_admitted_unit_row_texts_excludes_private_textbook_sources(tmp_path: Path) -> None:
     _make_sources_db(tmp_path)
     rows = list(admission.iter_admitted_unit_row_texts("db.textbooks.public", tmp_path))
     assert rows == ["Public chunk."]
+
+
+def test_iter_admitted_unit_row_texts_never_raises_on_a_corrupt_file(tmp_path: Path) -> None:
+    db_path = tmp_path / "data" / "sources.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    db_path.write_bytes(b"not a real sqlite file")
+    assert list(admission.iter_admitted_unit_row_texts("db.wikipedia", tmp_path)) == []
+
+
+def test_iter_admitted_unit_row_texts_is_a_generator_function() -> None:
+    """A generator function cannot itself hold a fully-materialized
+    ``.fetchall()``/``.fetchmany()`` result list across the whole call --
+    each ``yield`` suspends with only the current row's text live. (Its
+    body is additionally verified never to call ``sqlite3.Cursor.fetchall``/
+    ``fetchmany`` at all -- see the module source; those C-level cursor
+    methods are immutable and cannot be monkeypatched to assert this
+    behaviourally.)"""
+    assert inspect.isgeneratorfunction(admission.iter_admitted_unit_row_texts)
+
+
+def test_iter_admitted_unit_row_texts_streams_a_large_table_row_by_row(tmp_path: Path) -> None:
+    """Behavioral proxy for "streams, never buffers the whole result set":
+    a few thousand rows, consumed lazily one at a time, in the same
+    ascending-id order the whole-blob provider uses."""
+    db_path = tmp_path / "data" / "sources.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(db_path)
+    connection.execute("CREATE TABLE wikipedia (id INTEGER PRIMARY KEY, text TEXT)")
+    connection.executemany("INSERT INTO wikipedia (text) VALUES (?)", [(f"Row {i}.",) for i in range(5000)])
+    connection.commit()
+    connection.close()
+
+    generator = admission.iter_admitted_unit_row_texts("db.wikipedia", tmp_path)
+    first = next(generator)
+    assert first == "Row 0."  # proves at least one row is available before the rest are consumed
+    remaining = list(generator)
+    assert len(remaining) == 4999
+    assert remaining[-1] == "Row 4999."
 
 
 # --- reachability probe: cheap, content-blind --------------------------------
@@ -146,6 +198,10 @@ def test_local_bytes_reachable_true_only_for_admitted_and_present(tmp_path: Path
     assert admission.local_bytes_reachable("historical.some-unit", tmp_path) is False
 
 
+def test_local_bytes_reachable_false_when_store_missing(tmp_path: Path) -> None:
+    assert admission.local_bytes_reachable("db.wikipedia", tmp_path) is False
+
+
 def test_local_bytes_reachable_false_when_zero_rows(tmp_path: Path) -> None:
     db_path = tmp_path / "data" / "sources.db"
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -154,6 +210,16 @@ def test_local_bytes_reachable_false_when_zero_rows(tmp_path: Path) -> None:
     connection.commit()
     connection.close()
     assert admission.local_bytes_reachable("db.wikipedia", tmp_path) is False
+
+
+def test_local_bytes_reachable_never_returns_row_text() -> None:
+    """Content-blind by construction: the probe SQL is ``SELECT 1 ... LIMIT
+    1``, never the text column."""
+    binding = admission.LOCAL_STORE_BINDINGS["db.wikipedia"]
+    sql, _ = admission._probe_sql(binding)
+    assert sql.startswith("SELECT 1 FROM")
+    assert sql.rstrip().endswith("LIMIT 1")
+    assert f'"{binding["text_column"]}"' not in sql
 
 
 def test_row_count_if_reachable(tmp_path: Path) -> None:
@@ -198,6 +264,20 @@ def test_admitted_source_unit_ids_from_a2_excludes_metadata_only_and_denied() ->
 # --- frozen descriptor --------------------------------------------------------
 
 
+def test_local_store_binding_descriptor_is_frozen_and_hashed() -> None:
+    recomputed = admission.sha256_text(admission.canonical_json(admission.LOCAL_STORE_BINDING_DESCRIPTOR))
+    assert recomputed == admission.LOCAL_STORE_BINDING_DESCRIPTOR_SHA256
+
+
+def test_admitted_source_unit_ids_is_exactly_the_four_real_db_units() -> None:
+    assert {
+        "db.external_articles",
+        "db.literary_texts",
+        "db.textbooks.public",
+        "db.wikipedia",
+    } == admission.ADMITTED_SOURCE_UNIT_IDS
+
+
 # --- real production receipt: schema + independent verification ------------
 
 
@@ -218,6 +298,12 @@ def test_receipt_schema_and_v4_binding() -> None:
     assert receipt["controlling_outcome_sha256"] == admission.V4_SHA256
     assert receipt["text_free"] is True
     assert receipt["admitted_operation"] == "deterministic_local_analysis"
+
+
+def test_receipt_admits_exactly_the_four_real_db_units() -> None:
+    receipt = _receipt()
+    ids = {unit["source_unit_id"] for unit in receipt["admitted_source_units"]}
+    assert ids == admission.ADMITTED_SOURCE_UNIT_IDS
 
 
 def test_receipt_never_carries_source_text() -> None:
@@ -249,6 +335,16 @@ def test_validate_receipt_independently_refuses_a_tampered_descriptor_hash() -> 
     with pytest.raises(admission.ByteIngestionAdmissionError, match="descriptor_sha256"):
         admission.validate_local_store_binding_descriptor(tampered)
     with pytest.raises(admission.ByteIngestionAdmissionError, match="unknown receipt or incomplete manifest"):
+        admission.validate_receipt_independently(tampered)
+
+
+def test_validate_receipt_independently_refuses_a_dropped_admitted_unit() -> None:
+    """Dropping a unit shrinks ``admitted_source_units`` below the schema's
+    ``minItems: 4`` -- caught by schema validation, which runs first; still
+    a refusal either way."""
+    tampered = copy.deepcopy(_receipt())
+    tampered["admitted_source_units"].pop()
+    with pytest.raises(admission.ByteIngestionAdmissionError, match="too short"):
         admission.validate_receipt_independently(tampered)
 
 
@@ -296,3 +392,9 @@ def test_build_receipt_records_unreachable_when_local_store_absent(tmp_path: Pat
 
 
 # --- CLI ---------------------------------------------------------------
+
+
+def test_cli_default_verifies_the_checked_in_receipt(capsys: pytest.CaptureFixture) -> None:
+    admission.main([])
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["status"] == "V4_SOURCE_BYTE_INGESTION_ADMITTED_HASHING_ONLY_TEXT_FREE"

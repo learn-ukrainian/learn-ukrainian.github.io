@@ -144,6 +144,13 @@ def test_oracle_table(case):
     assert counts(item, corrected) == expected
 
 
+def test_oracle_counts_feed_the_scored_record():
+    item, corrected, _ = ORACLE["C5"]
+    record = score_review_item(item, schema_valid(item.text, corrected, []))
+    assert (record["hits"], record["fa_protected"], record["fa_tokens"], record["fa_insertions"]) == (1, 0, 2, 1)
+    assert record["false_alarms"] == 3 and record["fa_inserted_tokens"] == 1
+
+
 # --------------------------------------------------------------------------- the reviewers' and Sol's probes
 
 

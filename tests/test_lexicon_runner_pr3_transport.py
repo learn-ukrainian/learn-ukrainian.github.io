@@ -22,6 +22,7 @@ import pytest
 from scripts.lexicon.runner.bundle_import import import_bundle
 from scripts.lexicon.runner.ledger import (
     CasStatus,
+    DuplicateRunnerError,
     Ledger,
     OperatorActionKind,
     SchedulableState,
@@ -401,6 +402,17 @@ def test_duplicate_network_cache_runner_lock_refused(tmp_path: Path) -> None:
     b.close()
 
 
+def test_duplicate_ledger_runner_lock_refused(tmp_path: Path) -> None:
+    """PR3 crash suite also re-proves coordinator OS lock (shared with PR2)."""
+    path = tmp_path / "shared.ledger.sqlite"
+    a = Ledger(path, owner_id="coord-a")
+    a.open()
+    b = Ledger(path, owner_id="coord-b")
+    with pytest.raises(DuplicateRunnerError, match="duplicate runner refused"):
+        b.open()
+    a.close()
+
+
 # --- 3. 429 cooldown without expiring transport ------------------------------
 
 
@@ -731,6 +743,24 @@ def test_cached_unparsed_recovery_without_refetch(cache: NetworkCache) -> None:
     assert second.status == "cache_hit_parsed"
     assert second.result is not None
     assert second.result["payload"]["lemma"] == "кіт"
+
+
+def test_retries_do_not_double_fetch_cached_request(cache: NetworkCache) -> None:
+    """PROOF: retries after a successful cache commit never re-hit the network."""
+    url = "https://example.test/once"
+    counter = [0]
+    body = b'{"ok":1}'
+    fetch = _fake_fetch_factory({url: (200, {}, body)}, counter)
+    item = NetworkWorkItem(lemma_id="once", method="GET", url=url)
+
+    for i in range(5):
+        out = process_request(cache, item, owner=f"w{i}", fetch=fetch, now=float(i + 1))
+        assert out.result is not None
+
+    assert counter[0] == 1, f"expected single fetch, got {counter[0]}"
+    assert cache.fetch_count == 1
+    hits = cache.list_events(event="cache_hit")
+    assert len(hits) >= 4
 
 
 def test_end_to_end_packet_fetch_bundle_import(

@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import io
 import json
 import os
 import subprocess
 import sys
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -182,6 +184,12 @@ def test_invalid_or_other_profile_record_allows(prepared, mutation):
     _allowed(_run(prepared, LEARN_UKRAINIAN_ROLLOVER_MODE="operator_restart"))
 
 
+@pytest.mark.parametrize("content", ["", " \n\t"])
+def test_empty_handoff_allows(prepared, content):
+    prepared[3].write_text(content)
+    _allowed(_run(prepared))
+
+
 @pytest.mark.parametrize(
     "payload",
     [
@@ -223,6 +231,20 @@ def test_other_harness_workers_or_missing_runtime_allow(prepared, extra_env):
     _allowed(_run(prepared, **extra_env))
 
 
+def test_timeout_allows_and_does_not_trust_partial_prepared_output(prepared, tmp_path):
+    runner = tmp_path / "slow-runner.py"
+    runner.write_text("import time\nprint('prepared', flush=True)\ntime.sleep(30)\n")
+    # Keep the real deadline runner; delay the checker by importing a shadow
+    # module from a temporary project, without replacing any production file.
+    project = tmp_path / "slow-project"
+    module = project / "scripts/orchestration/precompact_handoff_check.py"
+    module.parent.mkdir(parents=True)
+    module.write_bytes(runner.read_bytes())
+    started = time.monotonic()
+    _allowed(_run(prepared, CLAUDE_PROJECT_DIR=os.fspath(project)))
+    assert 2 <= time.monotonic() - started < 8
+
+
 def test_validator_receives_descriptor_read_input_after_lease_redirect(prepared, tmp_path, monkeypatch):
     root, state, lease, _, _ = prepared
     real_open = check.safe_open_below
@@ -255,6 +277,24 @@ def test_validator_receives_descriptor_read_input_after_lease_redirect(prepared,
     assert reads[1][2].st_ino == (tmp_path / "held-lease.json").stat().st_ino
 
 
+def test_every_component_open_uses_nofollow_and_relative_descriptor(prepared, monkeypatch):
+    root, _, _, handoff, _ = prepared
+    real_open = os.open
+    opened = []
+
+    def spy_open(path, flags, *args, dir_fd=None, **kwargs):
+        opened.append((os.fspath(path), flags, dir_fd))
+        return real_open(path, flags, *args, dir_fd=dir_fd, **kwargs)
+
+    monkeypatch.setattr(os, "open", spy_open)
+    assert check.has_prepared_handoff(root, agent=AGENT, session_id=SESSION)
+    assert opened[0][0] == os.fspath(root)
+    assert all(flags & os.O_NOFOLLOW for _, flags, _ in opened)
+    assert all(dir_fd is not None and "/" not in path for path, _, dir_fd in opened[1:])
+    for component in handoff.relative_to(root).parts:
+        assert any(path == component for path, _, _ in opened)
+
+
 def test_permission_error_and_validator_exception_allow(prepared, monkeypatch):
     root = prepared[0]
 
@@ -282,6 +322,16 @@ def test_lineage_retained_from_predecessor_still_matches_current_session(prepare
     assert check.has_prepared_handoff(root, agent=AGENT, session_id="replacement-session")
 
 
+@pytest.mark.parametrize("component", ["root", "sessions"])
+def test_symlinked_root_or_session_directory_allows(prepared, tmp_path, component):
+    root = prepared[0]
+    path = root if component == "root" else root / ".agent/sessions"
+    outside = tmp_path / "outside"
+    path.rename(outside)
+    path.symlink_to(outside, target_is_directory=True)
+    _allowed(_run(prepared))
+
+
 @pytest.mark.parametrize(
     "mutation", ["valid", "foreign", "bad-lease", "empty", "no-lineages", "invalid-agent", "invalid-session"]
 )
@@ -303,3 +353,44 @@ def test_checker_direct_evidence_decisions(prepared, mutation):
     if mutation != "no-lineages":
         lease.write_text(json.dumps(state))
     assert check.has_prepared_handoff(root, agent=agent, session_id=session) is (mutation == "valid")
+
+
+@pytest.mark.parametrize(
+    "payload,expected",
+    [
+        ({"hook_event_name": "PreCompact", "trigger": "auto", "session_id": SESSION}, "prepared\n"),
+        ({"hook_event_name": "PreCompact", "trigger": "manual", "session_id": SESSION}, ""),
+        ({"hook_event_name": "PostCompact", "trigger": "auto", "session_id": SESSION}, ""),
+        ({"hook_event_name": "PreCompact", "trigger": "auto", "session_id": None}, ""),
+        ([], ""),
+        ("{bad json", ""),
+    ],
+)
+def test_checker_main_reads_official_payload_only(prepared, monkeypatch, capsys, payload, expected):
+    monkeypatch.setattr(sys, "argv", ["check", "--state-root", os.fspath(prepared[0]), "--agent", AGENT])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(payload if isinstance(payload, str) else json.dumps(payload)))
+    assert check.main() == 0
+    result = capsys.readouterr()
+    assert (result.out, result.err) == (expected, "")
+
+
+def test_settings_registers_only_auto_guard_and_shell_parses():
+    settings = json.loads((REPO / "agents_extensions/shared/settings.json").read_text())
+    registrations = [
+        (entry.get("matcher"), hook)
+        for entry in settings["hooks"]["PreCompact"]
+        for hook in entry["hooks"]
+        if "precompact-handoff-guard.sh" in hook.get("command", "")
+    ]
+    assert registrations == [
+        (
+            "auto",
+            {
+                "type": "command",
+                "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/precompact-handoff-guard.sh",
+                "timeout": 5,
+            },
+        )
+    ]
+    result = subprocess.run(["bash", "-n", os.fspath(HOOK)], capture_output=True, text=True, check=False, timeout=30)
+    assert (result.returncode, result.stdout, result.stderr) == (0, "", "")

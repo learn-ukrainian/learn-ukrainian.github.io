@@ -155,6 +155,12 @@ class TestE2uTranslateWithStatus:
         assert status == E2ULookupStatus.SOURCE_UNAVAILABLE
         assert entries == []
 
+    def test_5xx_is_source_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _patch_get(monkeypatch, DummyResponse(503))
+        status, entries = e2u_translate_with_status("hello")
+        assert status == E2ULookupStatus.SOURCE_UNAVAILABLE
+        assert entries == []
+
 
 class TestGracConcordanceCollocationsUnavailable:
     def test_concordance_genuine_empty_returns_empty_list(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -166,6 +172,10 @@ class TestGracConcordanceCollocationsUnavailable:
             raise requests.Timeout("timed out")
 
         _patch_get(monkeypatch, raise_timeout)
+        assert grac_concordance("книга") is None
+
+    def test_concordance_5xx_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _patch_get(monkeypatch, DummyResponse(503))
         assert grac_concordance("книга") is None
 
 
@@ -310,6 +320,18 @@ def test_search_heritage_reports_live_slovnyk_outages(monkeypatch):
     outages: list[dict] = []
     sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
     assert outages and all(o["error"] == "HTTP 403" for o in outages)
+
+
+def test_search_heritage_200_challenge_reports_outage(monkeypatch):
+    """An HTTP 200 Cloudflare challenge page in heritage live fallback reports outage (#9016)."""
+    from wiki import slovnyk_me, sources_db
+
+    challenge_html = "<!DOCTYPE html><html><title>Just a moment...</title><body>Checking your browser</body></html>"
+    monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(200, challenge_html))
+    outages: list[dict] = []
+    sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
+    assert outages and all(o["error"] == "HTTP 200" for o in outages)
 
 
 # --- Wikipedia HTTP 200 error documents (#9005 r4: Grok r2) ------------------------------------

@@ -508,6 +508,12 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
     assert json.loads(plan.stdin_payload)["message"]["content"][0]["text"] == prompt
 
 
+def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
+        _build(tmp_path, model="gemini-9.9-pro-preview")
+    assert "gemini-3.8-flash-high" not in str(error.value)
+
+
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
     from scripts import delegate
 
@@ -649,6 +655,37 @@ def test_argon_success_without_provider_identity_is_refused(tmp_path: Path, tier
     assert parsed.model_identity is None
 
 
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("status,error", [("ERROR", "429 Too Many Requests"), ("CANCELLED", "cancelled")])
+def test_argon_pre_identity_provider_failures_keep_flash_classification(tmp_path: Path, tier: str, status: str, error: str):
+    plan = _plan(tmp_path, log_file=tmp_path / "agy.log", app_data=tmp_path / "app",
+                 cmd=["agy", "--output-format", "stream-json", "--model", "gemini-3.8-flash-high"])
+    stdout = json.dumps({"event": "result", "result": {"status": status, "error": error, "response": ""}})
+    baseline = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=1, output_file=None, plan=plan)
+    plan.cmd[-1] = f"gemini-4-argon-{tier}"
+    parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=1, output_file=None, plan=plan)
+    assert parsed == baseline
+    assert parsed.ok is False
+    assert parsed.failure_code != "provider_policy_refusal"
+
+
+@pytest.mark.parametrize(
+    ("requested", "selector"),
+    [
+        ("gemini-3.8-flash-high", "gemini-3.8-flash-high"),
+        ("gemini-3.8-flash-medium", "gemini-3.8-flash-medium"),
+        ("gemini-3.8-flash-low", "gemini-3.8-flash-low"),
+        ("Gemini 3.8 Flash (High)", "gemini-3.8-flash-high"),
+        ("Gemini 3.8 Flash (Medium)", "gemini-3.8-flash-medium"),
+        ("Gemini 3.8 Flash (Low)", "gemini-3.8-flash-low"),
+    ],
+)
+def test_listed_flash_selectors_still_pass_through(tmp_path: Path, requested: str, selector: str) -> None:
+    assert AgyAdapter.resolve_model_slug(requested) == selector
+    plan = _build(tmp_path, model=requested)
+    assert _model_after_flag(plan) == selector
+
+
 @pytest.mark.parametrize("model", [
     "gemini-4-argon", "gemini-4-argon-ultra", "gemini-4-argon-xhigh", "gemini-4-argon-max",
     "gemini-4-argon-high-preview", "gemini-4-argon-minimal", "gemini-4-pro", "gemini-9.9-pro-preview",
@@ -674,6 +711,9 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
 # --- #7994: agy 2026-09 transcript shape (tool results are ``type: GENERIC``) ---
 
 GENERIC_CONVERSATION_ID = "00000000-aaaa-4bbb-8ccc-000000000001"
+GENERIC_PROMPT = "# V7 UPGRADE writer — preserve and expand an existing module\n\nMode: upgrade."
+
+
 def _write_generic_transcript(app_data: Path, conversation_id: str = GENERIC_CONVERSATION_ID) -> Path:
     transcript = agy_module._brain_transcript_path(app_data, conversation_id)
     transcript.parent.mkdir(parents=True)
@@ -768,6 +808,29 @@ def test_conversation_id_recovered_from_alternate_log_phrases(tmp_path: Path, li
     assert agy_module._conversation_id_from_log(log_file) == GENERIC_CONVERSATION_ID
 
 
+@pytest.mark.parametrize("log_text", [None, "I0919 no conversation id in this log\n"])
+def test_log_without_conversation_id_binds_no_transcript(tmp_path: Path, log_text: str | None) -> None:
+    # A brain transcript opening with this run's own prompt is present, but the
+    # runtime log names no conversation: nothing binds, nothing is credited.
+    result = _parse_generic(tmp_path, log_text=log_text, cmd=["agy", "-p", GENERIC_PROMPT])
+    assert result.tool_calls == []
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> None:
+    events = [
+        _planner_intent("query_wikipedia", "Колядки", step_index=1),
+        _planner_intent("query_wikipedia", "Колядки", step_index=2),  # re-emit, still pending
+        {"step_index": 3, "type": "GENERIC", "content": "out-1"},
+        _planner_intent("query_wikipedia", "Колядки", step_index=4),  # genuine repeat
+        {"step_index": 5, "type": "GENERIC", "content": "out-2"},
+        {"step_index": 6, "type": "GENERIC", "content": "not a tool result"},
+    ]
+    calls = agy_module._pair_transcript_generic_results(events, transcript_path=tmp_path / "transcript.jsonl")
+    assert [call["result"][0]["text"] for call in calls] == ["out-1", "out-2"]
+
+
 # --- per-attempt scoped home (#8617) ---------------------------------------------------
 
 
@@ -804,6 +867,14 @@ def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
         tool_config=None,
     )
     assert "--add-dir" not in write_plan.cmd
+
+
+def test_agy_home_override_sets_home_and_app_data_dir(tmp_path: Path) -> None:
+    scoped = tmp_path / "att.agy-home"
+    plan = _build_with(tmp_path, {"agy_home_override": str(scoped)})
+    assert plan.env_overrides["HOME"] == str(scoped)
+    assert plan.env_overrides["AGY_APP_DATA_DIR"] == str(scoped / ".gemini" / "antigravity-cli")
+    assert "AGY_RUNTIME_LOG_FILE" in plan.env_overrides
 
 
 def test_transcript_path_follows_agy_app_data_dir_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1030,6 +1101,21 @@ def test_same_second_retry_never_borrows_earlier_finished_run(
     assert result.ok is False
     assert result.response == ""
     assert result.stderr_excerpt.splitlines()[0] == reason
+
+
+def test_parse_response_rejects_claimed_wait_with_no_task_in_transcript(tmp_path: Path) -> None:
+    plan = _background_plan(tmp_path, CONVERSATION_ID, _fixture_lines("verify_words_transcript.jsonl"))
+
+    result = AgyAdapter().parse_response(
+        stdout="Waiting for task-220 to complete.",
+        stderr=_IDLE_WAIT_STDERR,
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
 
 
 def test_parse_response_rejects_finished_task_with_no_reply_after_it(tmp_path: Path) -> None:
@@ -1281,6 +1367,18 @@ def test_fresh_run_without_its_own_final_reply_is_unconfirmed(tmp_path: Path, li
     assert result.ok is False
     assert result.response == ""
     assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_fresh_completed_run_is_accepted(tmp_path: Path) -> None:
+    plan = _background_plan(
+        tmp_path, _FINISHED_CONVERSATION_ID, _fixture_lines("background_task_finished_transcript.jsonl")
+    )
+
+    result = AgyAdapter().parse_response(stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan)
+
+    assert result.ok is True
+    assert result.response == "PROBE_DONE_7731"
+    assert plan.metadata == {}  # a fresh conversation records no baseline
 
 
 # Ambiguous evidence is unconfirmed (#8502 r7): a slice line that does not
@@ -1535,6 +1633,18 @@ def test_finish_without_step_index_after_the_final_reply_is_unconfirmed(tmp_path
     ]
 
     _assert_unconfirmed(_judge(tmp_path, lines))
+
+
+@pytest.mark.parametrize(
+    "final",
+    [
+        _event("PLANNER_RESPONSE", "", source="MODEL"),
+        _event("PLANNER_RESPONSE", "Running pytest.", source="MODEL", tool_calls=[{"name": "run_command"}]),
+    ],
+    ids=["empty", "tool-call"],
+)
+def test_a_last_planner_turn_that_is_not_a_reply_is_unconfirmed(tmp_path: Path, final: str) -> None:
+    _assert_unconfirmed(_judge(tmp_path, [_prompt(), final]))
 
 
 def test_structured_output_run_keeps_its_result_with_a_warning(tmp_path: Path) -> None:
@@ -1805,6 +1915,14 @@ def test_a_canceled_task_is_rejected_even_when_a_rerun_finishes(tmp_path: Path) 
     _assert_canceled(_judge(tmp_path, lines))
 
 
+def test_a_canceled_timer_task_is_rejected(tmp_path: Path) -> None:
+    timer = _start(_TASK_3, description="Timer: 30s, Prompt: Check task-2")
+    canceled = _task_message(_TASK_3, f'Task id "{_TASK_3}" was canceled with result:')
+    lines = [_prompt(), _start(_TASK_2), timer, _finish(_TASK_2), canceled, _reply("PROBE_DONE_7731")]
+
+    _assert_canceled(_judge(tmp_path, lines))
+
+
 def test_a_progress_message_does_not_close_a_command_task(tmp_path: Path) -> None:
     progress = _task_message(_TASK_2, "The command output has stabilized for 30s.")
 
@@ -1939,6 +2057,20 @@ def test_a_message_from_a_task_after_its_finish_reopens_it(tmp_path: Path, late:
     _assert_unconfirmed(_judge(tmp_path, [_prompt(), _start(_TASK_2), _finish(_TASK_2), *late]))
 
 
+def test_a_cancellation_is_not_undone_by_another_tasks_finish(tmp_path: Path) -> None:
+    # Last-event-wins is per task: task-3 finishing after task-2's cancellation
+    # is a separate task's end.
+    lines = [_prompt(), _start(_TASK_2), _start(_TASK_3), _canceled(_TASK_2), _finish(_TASK_3)]
+
+    _assert_canceled(_judge(tmp_path, [*lines, _reply("PROBE_DONE_7731")]))
+    assert agy_module._open_work([json.loads(line) for line in lines[1:]]) == (
+        {_TASK_2, _TASK_3},
+        {_TASK_3},
+        {_TASK_2},
+        set(),
+    )
+
+
 def test_finished_run_mentioning_an_unrelated_task_is_accepted_without_warning(tmp_path: Path) -> None:
     # #8667: the bare ``task-<digits>`` scan flagged a finished summary that
     # merely names a task this run never started (task-42), a false
@@ -1974,6 +2106,61 @@ def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model)
         _build(tmp_path, model=model)
     with pytest.raises(ValueError, match=r"is retired in the model catalog.*use"):
         AgyAdapter.resolve_model_slug(model)
+
+
+@pytest.mark.parametrize(
+    "pin",
+    [
+        "gemini-3.8-flash-high",
+        "gemini-3.8-flash-medium",
+        "gemini-3.8-flash-low",
+        "gemini-3.1-pro-high",
+        "gemini-3.1-pro-low",
+    ],
+)
+@pytest.mark.parametrize("shape", ["nested", "top-level"])
+@pytest.mark.parametrize("form", ["display", "backend", "different", "whitespace", "non-dict", "non-string"])
+def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape: str, form: str) -> None:
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={CONVERSATION_ID}, sending message\n", encoding="utf-8")
+    _write_transcript(app_data)
+    plan = _plan(
+        tmp_path, log_file=log_file, app_data=app_data, cmd=["agy", "--output-format", "stream-json", "--model", pin]
+    )
+    terminal = json.dumps(
+        {
+            "event": "result",
+            "result": {
+                "conversation_id": CONVERSATION_ID,
+                "status": "SUCCESS",
+                "response": "READY",
+                "usage": {"total_tokens": 27},
+            },
+        }
+    )
+    backend = "gemini-3.1-pro-preview" if "pro" in pin else "gemini-3-flash-preview"
+    value = {
+        "display": "Gemini 3.8 Flash (High)",
+        "backend": backend,
+        "different": "claude-opus-5-5-high",
+        "whitespace": "   ",
+        "non-string": 7,
+        "non-dict": None,
+    }[form]
+    init = {"event": "init"}
+    if form == "non-dict":
+        init["init"] = ["unexpected"]
+    else:
+        init.update({"init": {"model": value}} if shape == "nested" else {"model": value})
+    baseline = AgyAdapter().parse_response(stdout=terminal, stderr="", returncode=0, output_file=None, plan=plan)
+    parsed = AgyAdapter().parse_response(
+        stdout=json.dumps(init) + "\n" + terminal, stderr="", returncode=0, output_file=None, plan=plan
+    )
+    assert parsed == baseline
+    assert parsed.ok is True
+    assert parsed.substitution is None
+    assert parsed.model_identity is None
 
 
 @pytest.mark.parametrize("scoped", [False, True])

@@ -402,6 +402,54 @@ def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
     ).fetchone()[0] == stored_before
 
 
+@pytest.mark.parametrize(
+    ("kind", "fixture", "expected"),
+    [
+        ("synonyms", "privit-synonyms.html", "ВІТА́ННЯ"),
+        ("antonyms", "dobryi-antonyms.html", "ДОБРИЙ"),
+        ("phraseology", "privit-phraseology.html", "ні одві́ту, ні приві́ту,"),
+    ],
+)
+def test_cached_term_correction_is_return_only_and_uses_own_html(
+    tmp_path, kind, fixture, expected
+):
+    html = _fixture(fixture)
+    groups = ulif_parse.parse_ulif_relation_groups(html, kind)
+    term = _first_relation_term(groups, kind)
+    term["text"] = "stale , " + term["text"]
+    groups[0]["unrelated_group_text"] = "preserve group , text"
+    groups[0]["unknown_field"] = {"keep": True}
+    db_path = tmp_path / "sources.db"
+    sources_db.store_ulif_dictua_entry(
+        word="spacing", canonical_headword="spacing", sections={kind: groups},
+        raw_responses={kind: html}, retrieved_at="2026-10-09T00:00:00Z",
+        parser_version="stored-parser-version", status="ok", homonym_index=1,
+        homonym_checked=1, db_path=db_path,
+    )
+    before = db_path.read_bytes()
+    raw_cache_path = ulif_raw_cache.cache_path(db_path)
+    before_raw_cache = raw_cache_path.read_bytes()
+    cached = sources_db.get_ulif_dictua_entry("spacing", db_path=db_path)
+    records = sources_db.get_ulif_word_records("spacing", db_path=db_path)
+    cached_groups = cached["sections"][kind]
+    record_groups = records[0]["entries"][0]["sections"][kind]
+    assert _first_relation_term(cached_groups, kind)["text"] == expected
+    assert _first_relation_term(record_groups, kind)["text"] == expected
+    expected_count = {"synonyms": 43, "antonyms": 38, "phraseology": 3}[kind]
+    source_terms = _relation_terms(groups, kind)
+    for materialized in (cached_groups, record_groups):
+        observed = _relation_terms(materialized, kind)
+        assert len(observed) == expected_count == len(source_terms)
+        assert [term.get("raw_html") for term in observed] == [
+            term.get("raw_html") for term in source_terms
+        ]
+    assert cached_groups[0]["unrelated_group_text"] == "preserve group , text"
+    assert cached_groups[0]["unknown_field"] == {"keep": True}
+    assert records[0]["entries"][0]["parser_version"] == "stored-parser-version"
+    assert db_path.read_bytes() == before
+    assert raw_cache_path.read_bytes() == before_raw_cache
+
+
 def test_cache_term_without_own_valid_html_is_unchanged():
     for raw_html in (None, "<b>unterminated"):
         term = {"text": "stored , text"}
@@ -1322,6 +1370,15 @@ def _store_zamok_entry(db_path: Path, html_name: str, homonym_index: int, sectio
     return parsed
 
 
+def _prechange_section_search(word: str, kind: str, db_path: Path) -> list[dict]:
+    """The search body at 615a864837: one getter, empty on an ambiguous spelling."""
+    record = sources_db.get_ulif_dictua_entry(word, db_path=db_path)
+    if not record or record["status"] != "ok" or not record["sections"].get(kind):
+        return []
+    record["matched_section"] = kind
+    return [record]
+
+
 def test_search_ulif_sections_returns_each_homonym_that_has_the_section(tmp_path):
     db_path = tmp_path / "sources.db"
     first = _store_zamok_entry(
@@ -1388,6 +1445,47 @@ def test_search_ulif_sections_returns_only_the_homonym_with_that_section(tmp_pat
     assert results[0]["sections"]["synonyms"][0]["terms"][0]["text"] == "КРЕМЛЬ"
 
 
+def test_search_ulif_sections_single_entry_matches_prechange_record(tmp_path):
+    db_path = tmp_path / "sources.db"
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-2.html",
+        1,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-2.html"))},
+    )
+
+    current = sources_db.search_ulif_dictua_sections("замок", "paradigm", db_path=db_path)
+    previous = _prechange_section_search("замок", "paradigm", db_path)
+
+    assert len(current) == 1
+    assert current == previous
+    assert set(current[0]) == set(previous[0])
+
+
+def test_search_ulif_sections_limit_one_returns_the_first_matching_homonym(tmp_path):
+    db_path = tmp_path / "sources.db"
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-1.html",
+        1,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-1.html"))},
+    )
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-2.html",
+        2,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-2.html"))},
+    )
+
+    results = sources_db.search_ulif_dictua_sections(
+        "замок", "paradigm", limit=1, db_path=db_path
+    )
+
+    assert len(results) == 1
+    assert results[0]["homonym_index"] == 1
+    assert results[0]["canonical_headword"] == "За́мок"
+
+
 def test_homonym_suspect_report_combines_trie_vesum_and_capitalisation():
     rows = homonym_report.collect_suspects(
         [("замок", "за́мок"), ("бостон", "Бо́стон"), ("стіл", "стіл")],
@@ -1413,6 +1511,25 @@ def test_store_ulif_dictua_entry_unmigrated_raises_and_leaves_sqlite_master(tmp_
             db_path=db_path,
         )
     assert _sqlite_master_bytes(db_path) == before
+
+
+def test_store_ulif_dictua_entry_does_not_mutate_caller_sections(tmp_path):
+    import copy
+
+    db_path = tmp_path / "sources.db"
+    sections = {"synonyms": [{"terms": [{"text": "фортеця"}]}]}
+    snapshot = copy.deepcopy(sections)
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="за́мок",
+        sections=sections,
+        raw_responses={},
+        retrieved_at="2026-09-21T00:00:00+00:00",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        db_path=db_path,
+    )
+    assert sections == snapshot
 
 
 def _entry_table(conn: sqlite3.Connection, columns: str) -> None:

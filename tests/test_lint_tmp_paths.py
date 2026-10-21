@@ -151,6 +151,15 @@ def test_every_tempfile_import_style(method, import_style):
     assert lint.scan_python(prefix + "\n" + name + "(dir=tmp_path)", "tests/probe.py") == []
 
 
+@pytest.mark.parametrize("root", [SYSTEM_TMP, VAR_TMP, "/private" + SYSTEM_TMP, "/dev/" + "shm"])
+@pytest.mark.parametrize("suffix", ["", "/", "/probe"])
+def test_all_temp_roots_in_repository_guard(tmp_path, root, suffix):
+    path = tmp_path / "scripts/probe.py"
+    path.parent.mkdir()
+    path.write_text(f'ROOT = "{root}{suffix}"\n')
+    assert lint.find_literal_tmp_paths(tmp_path) == [("scripts/probe.py", 1)]
+
+
 def test_decoded_python_string_cannot_bypass_guard(tmp_path):
     path = tmp_path / "scripts/probe.py"
     path.parent.mkdir()
@@ -199,6 +208,16 @@ def test_shell_unquoted_heredoc_executes_substitution():
 def test_shell_incomplete_quote_retains_findings():
     findings = lint.scan_shell('mktemp -d\necho "unclosed\n', "scripts/probe.sh")
     assert len(findings) == 1 and findings[0].line == 1
+
+
+def test_repeated_producer_exceeds_counted_baseline(tmp_path, monkeypatch):
+    path = tmp_path / "scripts/probe.py"
+    path.parent.mkdir()
+    path.write_text("import tempfile\ntempfile.mkdtemp()\n")
+    row = lint.scan_lines(tmp_path)[0]
+    monkeypatch.setattr(lint, "ALLOWLIST", ((row[0], "legacy producer (#8755)", lint.line_digest(row[2]) + ":1"),))
+    path.write_text(path.read_text() + "tempfile.mkdtemp()\n")
+    assert lint.find_literal_tmp_paths(tmp_path) == [("scripts/probe.py", 3)]
 
 
 @pytest.mark.parametrize("source", ['echo "<<EOF"\nmktemp -d\n', "if mktemp -d; then :; fi", "f() { mktemp -d; }"])

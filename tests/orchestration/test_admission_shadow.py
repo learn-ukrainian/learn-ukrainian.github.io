@@ -146,6 +146,12 @@ def test_corrupt_history_resets_to_unknown(tmp_path, tail):
     assert shadow.observe(tmp_path, pressure(), context(), now=NOW)["psi"]["decision"] == "unknown"
 
 
+def test_invalid_typed_history_cannot_break_admission(tmp_path):
+    row = {"schema": shadow.SCHEMA, "candidate": shadow.CANDIDATE, "psi": {"decision": []}}
+    (tmp_path / "2026-10-20.jsonl").write_text(json.dumps(row) + "\n")
+    assert shadow.observe(tmp_path, pressure(), context(), now=NOW)["psi"]["decision"] == "unknown"
+
+
 def test_one_day_comparison_keeps_unknowns_and_denominator(tmp_path):
     for minute in range(1440):
         sample = pressure(41) if minute % 2 == 0 else pressure()
@@ -209,6 +215,29 @@ def host(tmp_path, monkeypatch):
     return journal, probe
 
 
+def test_cheap_path_samples_without_scans_or_admission_changes(host, monkeypatch):
+    journal, probe = host
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("shadow added an expensive attribution scan")
+
+    for name in ("scan_task_records", "probe_pool", "probe_test_slots"):
+        monkeypatch.setattr(adm, name, forbidden)
+    monkeypatch.setattr(adm.subprocess, "run", forbidden)
+    monkeypatch.setattr(adm.subprocess, "Popen", forbidden)
+    assert adm.precheck("danger", thresholds=LIMITS) is None  # PSI must not refuse.
+    monkeypatch.setattr(adm, "probe_host", lambda: adm.replace(probe, load1=100))
+    refused = adm.precheck("danger", thresholds=LIMITS)
+    assert refused.admitted is False
+    assert refused.psi_shadow["attribution"]["live_task_ids"] is None
+    assert refused.psi_shadow["psi"]["decision"] == "refuse"
+    rows = list(journal.glob("*.jsonl"))
+    assert len(rows) == 1
+    assert len(rows[0].read_text().splitlines()) == 2
+    assert adm.precheck("read-only", thresholds=LIMITS) is None
+    assert len(rows[0].read_text().splitlines()) == 2
+
+
 def test_evaluation_reuses_bounded_attribution_and_exposes_diagnostics(host, tmp_path, monkeypatch):
     journal, _ = host
     live = ("/private/location", "task-0", "bad\nlabel", "x" * 97, *(f"task-{n}" for n in range(1, 18)))
@@ -239,6 +268,24 @@ def test_evaluation_reuses_bounded_attribution_and_exposes_diagnostics(host, tmp
     assert observation["current_admission_decision"] == "refuse"
     raw = next(journal.glob("*.jsonl")).read_text()
     assert "private" not in raw
+
+
+def test_slot_attribution_reuses_the_single_existing_status_probe(tmp_path, monkeypatch):
+    monkeypatch.setenv(adm.test_slots.DIR_ENV, str(tmp_path / "slots"))
+    holders = [{"task_id": f"holder-{n}", "slots": 1} for n in range(20)]
+    queue = [{"task_id": f"waiter-{n}"} for n in range(20)]
+    calls = []
+
+    def status():
+        calls.append(True)
+        return {"enabled": True, "error": None, "pool_size": 4, "queue_depth": 20, "holders": holders, "queue": queue}
+
+    monkeypatch.setattr(adm.test_slots, "status", status)
+    sample = adm.probe_test_slots()
+    assert calls == [True]
+    assert sample.holders == tuple(holders[:10])
+    assert sample.queued == tuple(queue[:10])
+    assert sample.depth == 20
 
 
 @pytest.mark.parametrize("gate", ["none", "workers", "load", "memory", "pool", "slots", "disk"])
@@ -275,6 +322,11 @@ def test_psi_never_changes_existing_protections(host, tmp_path, monkeypatch, gat
         assert adm.replace(decision, psi_shadow=None) == adm.replace(baseline, psi_shadow=None)
     day = next(journal.glob("*.jsonl")).stem
     assert shadow.compare_day(journal, day)["samples"] == 3
+
+
+@pytest.mark.parametrize("value", ["/private/location", "a\nb", "x" * 97, 4])
+def test_task_labels_cannot_emit_paths_or_unbounded_text(value):
+    assert shadow.label(value) == "unknown"
 
 
 @pytest.mark.parametrize("stage", ["read_pressure", "observe", "label", "transition"])

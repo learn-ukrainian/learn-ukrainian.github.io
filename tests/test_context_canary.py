@@ -30,6 +30,12 @@ def _mint(tmp_path: Path) -> Path:
     return probe
 
 
+def test_mint_writes_anchors(tmp_path: Path):
+    probe = _mint(tmp_path)
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    assert [a["id"] for a in data["anchors"]] == ["safe_env_sha", "agy_pr", "wiki_reason"]
+
+
 def test_perfect_recall_passes_and_logs(tmp_path: Path):
     probe = _mint(tmp_path)
     answers = tmp_path / "ans.json"
@@ -86,6 +92,11 @@ def test_mint_directory_as_facts_is_clean_usage_error(tmp_path: Path):
     a_dir.mkdir()
     rc = context_canary.main(["mint", "--facts", str(a_dir), "--out", str(tmp_path / "p.json")])
     assert rc == 1
+
+
+def test_mint_malformed_inline_json_is_clean_usage_error(tmp_path: Path):
+    rc = context_canary.main(["mint", "--facts", "[{bad json", "--out", str(tmp_path / "p.json")])
+    assert rc == 1  # inline branch JSONDecodeError caught, returns usage error
 
 
 # --- Production v2 tests added after all original legacy tests (no originals replaced, deleted, weakened or inverted) ---

@@ -213,6 +213,11 @@ def test_latin_digits_and_mixed_scripts(sources):
     assert [t["class"] for t in stream.tokens] == ["skipped:latin", "skipped:digits", codes.UNCLASSIFIABLE]
 
 
+def test_phonetics_letters(sources):
+    stream = resolve(document(unit("бз зю ґ", "phonetics")), allowlist([], letters={"Б", "З", "Ю"}), sources)
+    assert [t["class"] for t in stream.tokens] == [codes.LETTER_OR_SYLLABLE] * 2 + [codes.LETTER_OUTSIDE_STATE]
+
+
 def test_gloss_refs(sources):
     allowed = allowlist([BZYUK, SHPROK], gloss_ids={"W-1"})
     stream = resolve(

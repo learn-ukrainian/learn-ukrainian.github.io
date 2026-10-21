@@ -15,8 +15,11 @@ from scripts.fleet_comms.review_publication import (
     HeadFreshness,
     ReviewPublicationError,
     SealedVerdict,
+    assert_head_fresh,
+    build_thin_verdict_comment,
     check_head_freshness,
     map_verdict_to_commit_status,
+    normalize_verdict,
     parse_sealed_verdict_payload,
     parse_verdict_token,
     plan_publication,
@@ -56,6 +59,21 @@ def _approved_evidence() -> dict[str, object]:
 
 
 # ── verdict parsing ──────────────────────────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("APPROVED", "APPROVED"),
+        ("approved", "APPROVED"),
+        ("CHANGES_REQUESTED", "CHANGES_REQUESTED"),
+        ("changes_requested", "CHANGES_REQUESTED"),
+        ("BLOCKED", "BLOCKED"),
+        ("  blocked  ", "BLOCKED"),
+    ],
+)
+def test_normalize_verdict_accepts_canonical_states(raw: str, expected: str) -> None:
+    assert normalize_verdict(raw) == expected
 
 
 def test_parse_verdict_token_from_text() -> None:
@@ -128,6 +146,11 @@ def test_check_head_freshness_stale() -> None:
     result = check_head_freshness(expected_sha=_SHA_A, current_sha=_SHA_B)
     assert result.is_fresh is False
     assert result.is_stale is True
+
+
+def test_assert_head_fresh_raises_on_drift() -> None:
+    with pytest.raises(ReviewPublicationError, match="stale_head"):
+        assert_head_fresh(expected_sha=_SHA_A, current_sha=_SHA_B)
 
 
 # ── idempotency key ──────────────────────────────────────────────────────────
@@ -228,6 +251,51 @@ def test_degenerate_review_evidence_rejects_an_explicit_approved_verdict() -> No
                 }
             )
         )
+
+
+def test_build_verdict_comment_truncates_findings_last_with_record_pointer() -> None:
+    findings = [
+        {
+            "id": f"F{number:03}",
+            "title": f"Finding {number}",
+            "body": "x" * 4_000,
+            "priority": "P2",
+            "confidence": 0.9,
+            "category": "correctness",
+            "location": {
+                "path": "scripts/example.py",
+                "start_line": number,
+                "end_line": number,
+                "claim_type": "present",
+            },
+            "verbatim": "value = shared_state",
+            "why_wrong": "The state is not reset.",
+            "smallest_fix": "Rebuild the state for every call.",
+            "sources": ["none"],
+        }
+        for number in range(1, 32)
+    ]
+    sealed = parse_sealed_verdict_payload(
+        _sealed(
+            verdict="CHANGES_REQUESTED",
+            review_evidence={
+                "schema_version": "code-review-findings.v1",
+                "overall": {
+                    "correctness": "incorrect",
+                    "explanation": "The review found several independent defects.",
+                    "confidence": 0.95,
+                },
+                "findings": findings,
+            }
+        )
+    )
+
+    body = build_thin_verdict_comment(sealed)
+
+    assert len(body) <= 64_000
+    assert "FINDINGS TRUNCATED" in body
+    assert "Full structured review record: review ID `review_deadbeef`" in body
+    assert "The review found several independent defects." in body
 
 
 # ── publication plan (dry-run default, no live mutation) ─────────────────────

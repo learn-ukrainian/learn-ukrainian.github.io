@@ -278,3 +278,16 @@ def test_opencode_plugin_wrappers_fail_open_when_cli_errors(tmp_path: Path) -> N
     )
     assert result.returncode == 0, result.stderr
     assert args_log.read_text(encoding="utf-8").splitlines()[-1] == "hooks opencode session-end"
+
+
+def test_no_public_entire_refs_in_native_onboarding_files() -> None:
+    paths = (
+        CODEX_HOOKS,
+        CLAUDE_SETTINGS,
+        ENTIRE_SETTINGS,
+        OPENCODE_PLUGIN,
+        OPENCODE_EXIT_TRAP,
+    )
+    combined = "\n".join(path.read_text(encoding="utf-8") for path in paths)
+    assert "refs/entire" not in combined
+    assert "learn-ukrainian/entire-checkpoints-private" in combined

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
+from tests.helpers.python import project_python
 
 
 def _write(path: Path, value: object) -> None:
@@ -739,3 +741,63 @@ def test_schema_is_draft_2020_12_and_no_packet_output_may_escape_batch_state(tmp
     paths = _fixture(tmp_path)
     with pytest.raises(packets.PacketCompilerError, match="batch_state"):
         _build(paths, tmp_path / "tracked-packets.json")
+
+
+def test_cli_synthetic_build_and_verify_smoke(tmp_path: Path) -> None:
+    paths = _fixture(tmp_path)
+    executable = project_python()
+    build = subprocess.run(
+        [
+            executable,
+            "-m",
+            "scripts.projects.open_model_data.phase3_rule_author_packets",
+            "build",
+            "--clearance",
+            str(paths["clearance"]),
+            "--source-universe-dir",
+            str(paths["universe"]),
+            "--sources",
+            str(paths["sources"]),
+            "--evaluation-contract",
+            str(paths["evaluation"]),
+            "--coverage-contract",
+            str(paths["coverage"]),
+            "--role-contract",
+            str(paths["role"]),
+            "--output",
+            str(paths["output"]),
+        ],
+        cwd=packets.ROOT,
+        check=False,
+        capture_output=True,
+        text=True, timeout=30,
+    )
+    assert build.returncode == 0, build.stdout
+    verify = subprocess.run(
+        [
+            str(executable),
+            "-m",
+            "scripts.projects.open_model_data.phase3_rule_author_packets",
+            "verify",
+            "--bundle",
+            str(paths["output"]),
+            "--clearance",
+            str(paths["clearance"]),
+            "--source-universe-dir",
+            str(paths["universe"]),
+            "--sources",
+            str(paths["sources"]),
+            "--evaluation-contract",
+            str(paths["evaluation"]),
+            "--coverage-contract",
+            str(paths["coverage"]),
+            "--role-contract",
+            str(paths["role"]),
+        ],
+        cwd=packets.ROOT,
+        check=False,
+        capture_output=True,
+        text=True, timeout=30,
+    )
+    assert verify.returncode == 0, verify.stdout
+    assert json.loads(verify.stdout)["ok"] is True

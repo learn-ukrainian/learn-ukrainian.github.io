@@ -73,6 +73,17 @@ def test_real_gap_replies_validate_and_stop_at_gap_layer(tmp_path, attempt):
     assert all(row["status"] == "not_checked" for row in report["checks"] if row["check"] > 2)
 
 
+@pytest.mark.parametrize("dialogue", [False, True])
+def test_multi_step_quote_gaps_require_each_step_to_have_a_host(tmp_path, dialogue):
+    plan = _plan()
+    for step in plan["lessons"][0]["steps"]:
+        step["evidence"] = ["X-001", "V-001"]
+    if dialogue:
+        plan["lessons"][0]["dialogue"] = {"step": "s1"}
+    bad = next(row for row in _run(tmp_path, yaml.safe_load(_raw(2)), plan)["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (2, "plan")
+
+
 @pytest.mark.parametrize("need", ["quote", "publication_right"])
 @pytest.mark.parametrize("host", ["record", "dialogue"])
 @pytest.mark.parametrize("host_step", ["s1", "s2"])

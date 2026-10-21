@@ -76,6 +76,17 @@ def _set_worktree_config(repo: Path, value: str = "true") -> None:
     )
 
 
+def test_detects_core_bare_true_without_fix(tmp_path):
+    repo = _init_repo(tmp_path)
+    _set_worktree_config(repo, "true")
+    _set_bare(repo, "true")
+    ok, message = check_core_bare(repo, fix=False)
+    assert not ok
+    assert "BROKEN" in message
+    # check-only must NOT mutate the repo
+    assert _core_bare(repo) == "true"
+
+
 def test_fix_resets_core_bare_true(tmp_path):
     repo = _init_repo(tmp_path)
     _set_bare(repo, "true")

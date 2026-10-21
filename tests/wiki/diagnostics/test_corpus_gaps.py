@@ -133,6 +133,24 @@ def test_existence_check_against_synthetic_corpus(tmp_path):
     assert missing["absent_from_corpus"] is True
 
 
+def test_concept_extraction_defaults_to_astra(monkeypatch):
+    import json
+    import subprocess
+
+    seen = []
+
+    def backend(argv, **kwargs):
+        seen.append(argv)
+        Path(argv[argv.index("--output-last-message") + 1]).write_text(json.dumps({"concepts": []}))
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(audit.subprocess, "run", backend)
+    assert audit.run_codex_concept_extraction("fixture") == {"concepts": []}
+    assert seen[0][seen[0].index("-m") + 1] == "gpt-6.1-sol"
+    audit.run_codex_concept_extraction("fixture", model="gpt-6.1-sol")
+    assert len(seen) == 2
+
+
 def test_concept_extraction_rejects_override_before_preparation(monkeypatch):
     import pytest
 
@@ -151,6 +169,13 @@ def test_load_coverage_map_resolves_the_published_artifact() -> None:
     coverage_map = audit.load_coverage_map()
     assert coverage_map["metadata"]["article_count"] == len(coverage_map["articles"])
     assert audit.classify_gap_categories(coverage_map)
+
+
+def test_load_coverage_map_reads_explicit_paths_directly(tmp_path: Path) -> None:
+    explicit = tmp_path / "coverage_map.json"
+    explicit.write_text('{"articles": [], "metadata": {}}', encoding="utf-8")
+    assert audit.load_coverage_map(explicit) == {"articles": [], "metadata": {}}
+    assert audit.load_coverage_map(tmp_path / "missing.json") == {}
 
 
 def test_load_coverage_map_fails_closed_when_the_published_map_is_absent(tmp_path: Path, monkeypatch) -> None:

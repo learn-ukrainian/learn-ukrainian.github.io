@@ -19,6 +19,8 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
+import pytest
+
 from scripts.ingest import ohoiko_books_ingest as obi
 
 FIXTURE_TXT = """Welcome page
@@ -230,3 +232,19 @@ def test_ingest_entries_force_overwrites(tmp_path: Path) -> None:
     total = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
     assert total == 5
     conn.close()
+
+
+@pytest.mark.parametrize(
+    "headword,expected",
+    [
+        ("а", True),
+        ("або́ = чи", True),
+        ("'а́", True),
+        ("Open Anki and create a new deck.", False),
+        ("Anki uses a spaced repetition algorithm", False),
+        ("", False),
+        ("   ", False),
+    ],
+)
+def test_is_cyrillic_headword(headword: str, expected: bool) -> None:
+    assert obi._is_cyrillic_headword(headword) is expected

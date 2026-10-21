@@ -17,11 +17,28 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from pipeline.fixes import (
     _apply_find_replace_fixes,
+    _clean_fix_text,
 )
 
 # =============================================================================
 # _clean_fix_text
 # =============================================================================
+
+class TestCleanFixText:
+    def test_strips_section_metadata(self):
+        text = 'Section: "Introduction"\nActual content here'
+        result = _clean_fix_text(text)
+        assert "Section:" not in result
+        assert "Actual content here" in result
+
+    def test_strips_code_fences(self):
+        text = "```markdown\nSome text\n```"
+        result = _clean_fix_text(text)
+        assert "```" not in result
+        assert "Some text" in result
+
+    def test_strips_guillemets(self):
+        assert _clean_fix_text("«some text»") == "some text"
 
 
 # =============================================================================

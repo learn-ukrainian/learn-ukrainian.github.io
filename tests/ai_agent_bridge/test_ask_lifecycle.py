@@ -515,6 +515,30 @@ def test_watchdog_ignores_stale_launch_records(bridge_db, monkeypatch, tmp_path)
     re_fire_mock.assert_not_called()
 
 
+def test_watchdog_retries_fresh_launch_records(bridge_db, monkeypatch, tmp_path):
+    """Launch records within 2x hard timeout window ARE retried by watchdog (#5893)."""
+    from datetime import UTC, datetime, timedelta
+
+    message_id = _send_ask("task-watchdog-fresh", target="grok")
+    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
+    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-fresh"
+    fresh_timestamp = (datetime.now(UTC) - timedelta(seconds=100)).isoformat()
+    lifecycle._atomic_write_json(
+        state_dir / "launch.json",
+        {
+            "message_id": message_id,
+            "pid": 999_999_999,
+            "agent": "grok",
+            "harness": "grok",
+            "model": "grok-3",
+            "started_at": fresh_timestamp,
+            "timeout_seconds": 1800,
+        },
+    )
+
+    assert lifecycle.should_auto_retry_ask(message_id) is True
+
+
 def test_watchdog_legacy_record_uses_fallback(bridge_db, monkeypatch, tmp_path):
     """Legacy launch record lacking timeout_seconds falls back to 2x1800 = 3600s window."""
     from datetime import UTC, datetime, timedelta

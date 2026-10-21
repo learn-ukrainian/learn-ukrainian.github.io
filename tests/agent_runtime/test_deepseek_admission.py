@@ -57,3 +57,8 @@ def test_resolve_and_admit_refuses_before_launch():
 
 def test_other_seats_are_unaffected():
     assert refuse_deepseek_if_disallowed(("codex",), repo="synthetic-private-role", prompt_file=".codex/brief.md") is None
+
+
+def test_non_language_consult_without_repository_role_remains_admitted():
+    (target,) = resolve_and_admit(("deepseek",), mode="acp", compat=True)
+    assert target.recipient == "deepseek"

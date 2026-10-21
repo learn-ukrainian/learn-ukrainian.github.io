@@ -155,6 +155,14 @@ def test_unavailable_expired_or_stale_inventory_disables_reserve(tmp_path, monke
     assert not codex_reset_reserve_eligible(_reserve(), info, owner_capacity=CAPACITY_VERIFIED, now=NOW)
 
 
+@pytest.mark.parametrize("changes", [{"freshness": "stale_last_good"}, {"age_s": 900}, {"age_s": float("nan")}])
+def test_stale_provider_inventory_fails_closed_in_loader(tmp_path, monkeypatch, changes):
+    info = {**_eligible_codex(), **changes}
+    monkeypatch.setattr(reset_reserve, "get_provider_usage_data", lambda _provider: info)
+    _write_assertion(tmp_path, _assertion())
+    assert load_reset_reserve(tmp_path, now=NOW) == unavailable_reserve()
+
+
 def test_unreadable_provider_inventory_fails_closed(tmp_path, monkeypatch):
     def unreadable(_provider):
         raise OSError("unreadable inventory")

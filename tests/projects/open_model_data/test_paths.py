@@ -58,6 +58,12 @@ def test_resolve_open_model_path_rejects_unclassified_file(tmp_path: Path) -> No
     assert resolve_open_model_path("data/projects/open_model_data/contracts") == CONTRACTS_DIR
 
 
+def test_active_correction_protection_intact() -> None:
+    """Registry half of correction_protection_v1 stays readable without artifacts."""
+    assert REGISTRY_CORRECTION_PROTECTION_DIR.is_dir()
+    assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
+
+
 def test_is_archived_or_quarantined_path() -> None:
     """Verify archive detection logic."""
     from scripts.projects.open_model_data.paths import (

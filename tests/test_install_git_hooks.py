@@ -169,6 +169,37 @@ def test_commit_in_linked_worktree_triggers_tracked_hook(tmp_path: Path) -> None
     assert "post-commit" in hook_log
 
 
+def test_installer_is_idempotent(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+
+    # First run: installed
+    run1 = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    assert run1.returncode == 0
+    for hook_name in REQUIRED_HOOKS:
+        assert f"{hook_name}: installed" in run1.stdout
+
+    # Second run: kept
+    run2 = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    assert run2.returncode == 0
+    for hook_name in REQUIRED_HOOKS:
+        assert f"{hook_name}: kept" in run2.stdout
+
+    check_config = _git(repo, "config", "--get", "core.hooksPath", env=env, check=False)
+    assert check_config.returncode != 0
+
+    # Commit inside a LINKED worktree and verify tracked hooks fire
+    worktree = tmp_path / "worktree"
+    _git(repo, "worktree", "add", "-b", "feature-idempotent", str(worktree), env=env)
+    (worktree / "change.txt").write_text("idempotent change\n", encoding="utf-8")
+    _git(worktree, "add", "change.txt", env=env)
+    _git(worktree, "commit", "-m", "idempotent commit", env=env)
+
+    hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert "pre-commit" in hook_log
+    assert any(line.startswith("commit-msg:") for line in hook_log)
+    assert "post-commit" in hook_log
+
+
 # Wrappers exactly as Entire CLI 0.11.5 writes them (`entire enable --force`; the same
 # bytes 0.8.42 wrote) when no <name>.pre-entire exists yet, and after one exists
 # (chain block appended; canary evidence for #10846).
@@ -494,7 +525,24 @@ def test_every_entire_wrapper_is_guarded_and_check_catches_a_regenerated_one(tmp
     assert _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env).returncode == 0
 
 
+def test_raw_wrapper_without_tmpdir_fails_the_installer_unchanged(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    # An empty TMPDIR is a configuration error; the unset case falls back (see below).
+    env["TMPDIR"] = ""
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+
+    assert install.returncode == 1
+    assert "TMPDIR is set but empty; cannot stage the guarded" in install.stderr
+    for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == content
+
+
 ENTIRE_MANAGED_HOOKS = ("prepare-commit-msg", "commit-msg", "post-commit", "post-rewrite", "pre-push")
+TMPDIR_VARIABLES = ("TMPDIR", "LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT")
+
+
 def test_empty_tmpdir_refuses_before_any_entire_wrapper_changes(tmp_path: Path) -> None:
     """Review reproducer: step 2 used to append chain blocks before step 3 refused the empty TMPDIR."""
     repo, env = _fixture_repository(tmp_path)
@@ -517,6 +565,66 @@ def test_empty_tmpdir_refuses_before_any_entire_wrapper_changes(tmp_path: Path) 
     for hook_name in ENTIRE_MANAGED_HOOKS:
         assert (hooks_dir / hook_name).read_bytes() == before[hook_name], hook_name
     assert _hooks_snapshot(hooks_dir) == snapshot
+
+
+@pytest.mark.parametrize(
+    ("missing", "valid"),
+    [
+        ("LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT"),
+        ("LU_RUNTIME_TMP_ROOT", None),
+    ],
+    ids=["task-scratch-before-runtime-root", "runtime-root-before-git-dir"],
+)
+def test_unset_tmpdir_selects_scratch_roots_in_order(tmp_path: Path, missing: str, valid: str | None) -> None:
+    """With TMPDIR unset the first set scratch root wins: a missing one refuses rather than falling through."""
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    snapshot = _hooks_snapshot(hooks_dir)
+    absent = tmp_path / "absent-scratch"
+    present = tmp_path / "present-scratch"
+    present.mkdir()
+    overrides = {missing: str(absent), **({valid: str(present)} if valid else {})}
+
+    install = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env={**env, **overrides},
+        check=False,
+        unset=tuple(name for name in TMPDIR_VARIABLES if name not in overrides),
+    )
+
+    assert install.returncode == 1
+    assert f"TMPDIR={absent} is not a writable directory" in install.stderr
+    assert _hooks_snapshot(hooks_dir) == snapshot
+
+
+def test_unset_tmpdir_and_scratch_roots_stage_under_the_git_directory(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    task_scratch = tmp_path / "task-scratch"
+    task_scratch.mkdir()
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, unset=TMPDIR_VARIABLES)
+
+    for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
+        assert f"{hook_name}: Entire capture routed through scripts/entire/capture_guard.sh" in install.stdout
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(content)
+    for hook_name in ENTIRE_WRAPPERS:
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(_entire_chained(hook_name))
+    # The per-run directory under the git directory is removed on exit.
+    assert not any(path.name.startswith("install-git-hooks.") for path in (repo / ".git").iterdir())
+    assert not any(".guard." in path.name for path in hooks_dir.iterdir())
+
+    # A set task scratch root wins over the git directory and keeps no residue.
+    _write_executable(hooks_dir / "post-rewrite", ENTIRE_UNCHAINED_WRAPPERS["post-rewrite"])
+    rerun = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env={**env, "LU_TASK_SCRATCH_DIR": str(task_scratch)},
+        unset=("TMPDIR", "LU_RUNTIME_TMP_ROOT"),
+    )
+    assert "post-rewrite: Entire capture routed" in rerun.stdout
+    assert list(task_scratch.iterdir()) == []
 
 
 @pytest.mark.parametrize("kind", ["live-link", "dangling-link", "directory"])
@@ -810,6 +918,33 @@ def test_foreign_hook_is_preserved_and_skipped(tmp_path: Path) -> None:
     assert (hooks_dir / "commit-msg").read_text(encoding="utf-8") == foreign_content
 
 
+def test_preserves_custom_core_hooks_path(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    custom_path = tmp_path / "custom-hooks"
+    _git(repo, "config", "core.hooksPath", str(custom_path), env=env)
+
+    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    assert result.returncode == 0
+    assert f"Found explicit core.hooksPath={custom_path}" in result.stdout
+    assert _git(repo, "config", "--get", "core.hooksPath", env=env).stdout.strip() == str(custom_path)
+
+
+def test_extra_executable_hook_gets_delegator(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    _write_executable(
+        repo / ".githooks/reference-transaction",
+        '#!/usr/bin/env bash\nset -euo pipefail\nprintf "ref-tx:%s\\n" "$1" >> "$HOOK_LOG"\n',
+    )
+
+    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    assert result.returncode == 0
+    assert "reference-transaction: installed" in result.stdout
+
+    delegator = repo / ".git/hooks/reference-transaction"
+    assert delegator.is_file()
+    assert os.access(delegator, os.X_OK)
+
+
 def test_installer_refuses_incomplete_hook_directory_and_leaves_hooks_untouched(tmp_path: Path) -> None:
     repo, env = _fixture_repository(tmp_path)
     (repo / ".githooks/commit-msg").unlink()
@@ -830,3 +965,38 @@ def test_installer_refuses_incomplete_hook_directory_and_leaves_hooks_untouched(
     assert "commit-msg" in result.stderr
     # Validation ran before touching common hooks dir
     assert not hooks_dir.exists()
+
+
+def test_installer_refuses_missing_support_file_and_leaves_hooks_untouched(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/check-pytest-stamp.py").unlink()
+
+    hooks_dir = repo / ".git/hooks"
+    if hooks_dir.exists():
+        shutil.rmtree(hooks_dir)
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "Expected readable hook support file at" in result.stderr
+    assert "check-pytest-stamp.py" in result.stderr
+    assert not hooks_dir.exists()
+
+
+def test_installer_refuses_non_executable_hook(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/pre-push").chmod(0o644)
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "Expected executable hook at" in result.stderr
+    assert "pre-push" in result.stderr

@@ -8,7 +8,25 @@ pytestmark = pytest.mark.reads_content
 repo_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(repo_root))
 
-from scripts.audit.bio_lit_cross_reference import load_exclusions, main
+from scripts.audit.bio_lit_cross_reference import extract_bio_slug, load_exclusions, main
+
+
+def test_slug_derivation():
+    bios = {"oles-honchar", "oleksandr-oles"}
+
+    yaml_data_tychyna = {'title': 'Павло Тичина: «Сонячні кларнети»'}
+    slug1 = extract_bio_slug('tychyna-clarinets', yaml_data_tychyna, bios)
+    assert slug1 == 'pavlo-tychyna'
+
+    slug2 = extract_bio_slug('oles-the-nightingale', {'title': 'Олександр Олесь'}, bios)
+    assert slug2 == 'oleksandr-oles'
+
+    slug3 = extract_bio_slug('oles-honchar-praporonosy', {}, bios)
+    assert slug3 == 'oles-honchar'
+
+    yaml_data_vin = {'title': 'Микола Вінграновський: Поезія'}
+    slug4 = extract_bio_slug('vinhranovskyi-poetry', yaml_data_vin, bios)
+    assert slug4 == 'mykola-vinhranovskyi'
 
 
 def test_exclusion_integration(tmp_path):

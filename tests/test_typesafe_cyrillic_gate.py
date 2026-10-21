@@ -5,6 +5,8 @@ from __future__ import annotations
 import os
 from unittest.mock import patch
 
+import pytest
+
 from scripts.projects.open_model_data.typesafe_cyrillic_gate import (
     CyrillicGateVerdict,
     evaluate_cyrillic_text,
@@ -146,3 +148,38 @@ def test_evaluate_authentic_dialect_high_shadow_regression():
     assert verdict.decision != "use_as_anti_calque"
     assert verdict.needs_review is True
     assert "Authentic dialect with elevated colonial shadow probe" in (verdict.review_reason or "")
+
+
+def test_evaluate_low_confidence_escalation_mock():
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "ocr_corruption": DummyAns(score=0.30, confidence=0.40),
+            "lexical_variety": DummyAns(choice="historical_literary", confidence=0.35),
+            "colonial_shadow": DummyAns(noul=0.30),
+            "curriculum_action": DummyAns(choice="admit_standard", confidence=0.38),
+        },
+    }
+    verdict = evaluate_cyrillic_text(
+        text="Руська правда у списку XIV століття.",
+        mock_response=mock_resp,
+    )
+    assert verdict.needs_review
+    assert "low variety confidence" in (verdict.review_reason or "")
+
+
+@pytest.mark.live_network
+def test_live_cyrillic_gate_smoke():
+    key = resolve_api_key()
+    if not key:
+        pytest.skip("TypeSafe API key not available on host.")
+
+    verdict = evaluate_cyrillic_text(
+        text="Українська мова має багату та самобутню історію.",
+        context="Historical & pedagogical corpus sample",
+    )
+    assert isinstance(verdict, CyrillicGateVerdict)
+    assert verdict.lexical_variety in {"standard_modern", "historical_literary"}
+    assert verdict.ocr_corruption_score < 0.50
+    assert verdict.colonial_shadow_prob < 0.50
+    assert verdict.latency_seconds > 0.0

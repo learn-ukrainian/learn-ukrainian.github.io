@@ -160,6 +160,57 @@ def test_contested_gold_delta_and_per_model_calque_f1(tmp_path: Path) -> None:
     assert report["gold_metrics"]["per_model_calque_f1"]["model-a"]["without_contested"]["f1"] == 1.0
 
 
+def test_workflow_records_count_failures_spend_and_warn_conversion(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path, slug="warn")
+    deterministic_warn = _finding(confidence="deterministic", excerpt="спільний фрагмент")
+    reviewer_confirm = _finding(confidence="llm_judgment", excerpt="спільний фрагмент")
+    pass_record = _workflow_record(
+        module_dir,
+        slug="warn",
+        findings=[deterministic_warn, reviewer_confirm],
+        tier2_status="ran",
+        terminal_verdict="PASS",
+        workflow_verdict="WARN",
+        completion_status="COMPLETE",
+        estimated_cost=0.2,
+        observed_cost=0.4,
+        cache_regate="replayed",
+    )
+    provider_record = _workflow_record(
+        _module(tmp_path, slug="provider"),
+        slug="provider",
+        tier2_status="provider_error",
+        terminal_verdict="FAIL",
+        workflow_verdict="PROVIDER_FAILURE",
+        completion_status="INCOMPLETE",
+        estimated_cost=0.1,
+        observed_cost=0.1,
+    )
+    parse_record = _workflow_record(
+        _module(tmp_path, slug="parse"),
+        slug="parse",
+        tier2_status="parse_failure",
+        terminal_verdict="FAIL",
+        workflow_verdict="PARSE_FAILURE",
+        completion_status="INCOMPLETE",
+    )
+
+    report = qg_corpus_report.build_report(
+        workflow_payloads=[[pass_record, provider_record, parse_record]],
+        db_path=tmp_path / "empty.db",
+    )
+
+    assert report["warn_to_reviewer_confirmed"]["warn_findings"] == 1
+    assert report["warn_to_reviewer_confirmed"]["reviewer_confirmed"] == 1
+    assert report["completion"]["provider_error"] == 1
+    assert report["completion"]["parse_failure"] == 1
+    assert report["completion"]["incomplete"] == 2
+    assert report["completion"]["cache_regate_counts"] == {"replayed": 1}
+    assert report["spend"]["accepted_evidence"] == 1
+    assert report["spend"]["observed_cost_usd"] == 0.5
+    assert report["spend"]["spend_per_accepted_evidence_usd"] == 0.5
+
+
 def test_backfill_inserts_missing_or_stale_but_skips_current(tmp_path: Path) -> None:
     db_path = tmp_path / "qg.db"
     first = _module(tmp_path, slug="first")

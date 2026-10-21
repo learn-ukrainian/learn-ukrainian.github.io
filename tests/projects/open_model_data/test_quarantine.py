@@ -8,6 +8,7 @@ import importlib.abc
 import importlib.util
 import json
 import shutil
+import subprocess
 import sys
 import types
 from collections.abc import Iterator
@@ -50,6 +51,10 @@ HUB_WRITE_CALLS = frozenset(
         "upload_large_folder",
     }
 )
+ARCHIVE_DIR = REPO_ROOT / "archive/code/open_model_data"
+ARCHIVED_MODULES = ("v6_mine_ulif_phraseology", "v6_mine_general_assistant_textbooks", "judge_eval_seat")
+
+
 @pytest.fixture
 def inventory() -> dict[str, Any]:
     return json.loads(QUARANTINE_INVENTORY_PATH.read_text(encoding="utf-8"))
@@ -515,3 +520,63 @@ def test_notebook_first_code_cell_refuses_to_run(notebook: Path) -> None:
 
 
 # AC4 / AC5 — archived generators and their tests cannot be imported by active code.
+
+
+ARCHIVED_FILES = (
+    *(f"scripts/{module}.py" for module in ARCHIVED_MODULES),
+    "tests/test_v6_mine_ulif_phraseology.py",
+    "tests/test_v6_mine_general_assistant_textbooks.py",
+)
+
+
+@pytest.mark.parametrize("relative", ARCHIVED_FILES)
+def test_archive_module_refuses_file_based_loading(relative: str) -> None:
+    spec = importlib.util.spec_from_file_location(f"archived_{Path(relative).stem}", ARCHIVE_DIR / relative)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    with pytest.raises(ImportError, match="#9607"):
+        spec.loader.exec_module(module)
+    assert [name for name, value in vars(module).items() if callable(value) and not name.startswith("__")] == []
+
+
+def _imported_names(tree: ast.AST) -> Iterator[str]:
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            yield from (alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            base = node.module or ""
+            yield base
+            yield from (f"{base}.{alias.name}" for alias in node.names)
+        elif isinstance(node, ast.Call) and getattr(node.func, "attr", getattr(node.func, "id", "")) in {
+            "import_module",
+            "__import__",
+        }:
+            yield from (arg.value for arg in node.args if isinstance(arg, ast.Constant) and isinstance(arg.value, str))
+
+
+@pytest.mark.repo_invariant
+@pytest.mark.repo_wide
+def test_archive_import_guard_active_code() -> None:
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "--", "scripts", "tests"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    ).stdout.split("\0")
+    this_file = Path(__file__).resolve()
+    offenders = []
+    for relative in tracked:
+        path = REPO_ROOT / relative
+        if not relative.endswith(".py") or not path.is_file() or path.resolve() == this_file:
+            continue
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+        except (SyntaxError, UnicodeDecodeError):
+            continue
+        for name in _imported_names(tree):
+            parts = name.split(".")
+            if parts[:2] == ["archive", "code"] or any(module in parts for module in ARCHIVED_MODULES):
+                offenders.append(f"{relative}: {name}")
+    assert offenders == []

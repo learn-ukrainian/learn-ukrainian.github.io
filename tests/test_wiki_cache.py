@@ -76,6 +76,13 @@ class TestWikiCache:
         assert self.cache.get("summary", "Київ") == "summary data"
         assert self.cache.get("extract", "Київ") == "extract data"
 
+    def test_section_key(self):
+        """Section parameter is part of the key."""
+        self.cache.put("section", "Київ", "section 1 data", section="1")
+        self.cache.put("section", "Київ", "section 2 data", section="2")
+        assert self.cache.get("section", "Київ", "1") == "section 1 data"
+        assert self.cache.get("section", "Київ", "2") == "section 2 data"
+
     def test_clear_expired(self):
         self.cache.put("summary", "Fresh", "data")
         # Manually backdate one entry
@@ -175,6 +182,25 @@ class TestStripWikitext:
     def test_links(self):
         assert self.strip_wt("[[Київ]]") == "Київ"
         assert self.strip_wt("[[Київ|столиця]]") == "столиця"
+
+    def test_bold_italic(self):
+        assert self.strip_wt("'''Тарас''' ''Шевченко''") == "Тарас Шевченко"
+
+    def test_references(self):
+        text = "Факт<ref name='a'>джерело</ref> тут."
+        assert "<ref" not in self.strip_wt(text)
+        assert "Факт" in self.strip_wt(text)
+
+    def test_templates(self):
+        text = "Текст {{lang|uk|слово}} далі."
+        result = self.strip_wt(text)
+        assert "{{" not in result
+
+    def test_section_headers(self):
+        text = "== Біографія ==\nТекст біографії."
+        result = self.strip_wt(text)
+        assert "Біографія" in result
+        assert "==" not in result
 
     def test_html_comments(self):
         assert "коментар" not in self.strip_wt("текст <!-- коментар --> далі")

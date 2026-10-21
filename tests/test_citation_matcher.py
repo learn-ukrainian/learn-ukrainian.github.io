@@ -107,3 +107,10 @@ class TestCitationKeysMatchAcrossTransliterations:
 
         assert plan_key is not None and result_key is not None
         assert citation_keys_match(result_key, plan_key)
+
+    def test_result_page_inside_plan_range_matches(self):
+        plan_key = extract_citation_key("Заболотний Grade 8, p.18-21")
+        result_key = extract_citation_key("Zabolotnyi Grade 8, p.20")
+
+        assert plan_key is not None and result_key is not None
+        assert citation_keys_match(result_key, plan_key)

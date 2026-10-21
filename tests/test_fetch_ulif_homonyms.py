@@ -1424,6 +1424,17 @@ def test_resume_command_faithful_options_and_quoting(tmp_path, capsys, monkeypat
     assert "--quiet" in err
 
 
+def test_operator_interrupt_during_setup_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    def fake_prepare(db_path):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms.prepare_database", fake_prepare)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, "", {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+
+
 def test_operator_interrupt_during_lock_acquire_cleans_up_and_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
     lock_file = tmp_path / "state" / "runner.lock"
 
@@ -1437,6 +1448,30 @@ def test_operator_interrupt_during_lock_acquire_cleans_up_and_returns_exit_inter
     err = capsys.readouterr().err
     assert "Reason:               interrupted by operator" in err
     assert not lock_file.exists()
+
+
+def test_operator_interrupt_during_final_accounting_prints_summary_and_returns_exit_interrupted(
+    tmp_path, capsys, monkeypatch
+):
+    page = _register(["інше"], "seed", paging=False)
+    orig_set_requests = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set_requests(self, count):
+        calls[0] += 1
+        # Call 1: mid-run after spelling fetch succeeds
+        # Call 2: final accounting -> raise KeyboardInterrupt
+        if calls[0] >= 2:
+            raise KeyboardInterrupt()
+        orig_set_requests(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set_requests)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, page, {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()
 
 
 def test_requests_made_idempotent_no_double_counting_across_interruption(tmp_path):
@@ -1539,6 +1574,48 @@ def test_final_accounting_retains_requests_on_interruption_after_request_cap(tmp
         check_ledger.close()
 
 
+def test_stop_summary_guaranteed_on_db_setup_failure(tmp_path, capsys):
+    from tests.test_ulif_dictua import _write_old_ulif_db
+
+    db_path = _write_old_ulif_db(tmp_path / "old.db")
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=db_path,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               database error:" in err
+    assert "Resume command:" in err
+
+
+def test_stop_summary_guaranteed_on_lock_refusal(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    lock = state_dir / "runner.lock"
+    lock.write_text(f"{os.getpid()}\n2026-09-21T00:00:00+00:00\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="live pid"):
+        run_fetch(
+            spellings=["тест"],
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            transport=lambda m, d: HttpResult(200, "", {}),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               refusing to start: runner lock held by live pid" in err
+    assert "Resume command:" in err
+
+
 def test_stop_summary_guaranteed_when_summary_printing_interrupted(tmp_path, capsys, monkeypatch):
     page = _register(["інше"], "seed", paging=False)
     handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
@@ -1589,6 +1666,24 @@ def test_interrupt_during_lock_release_cleans_up_lock(tmp_path, capsys, monkeypa
     )
     assert code == EXIT_INTERRUPTED
     assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_invalid_delay_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        delay_seconds=0.5,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
 
 
 def test_final_accounting_database_locked_error_still_produces_stop_summary(tmp_path, capsys, monkeypatch):
@@ -1663,6 +1758,97 @@ def test_interrupted_refetch_restores_pending_state(tmp_path, capsys):
     assert "Pending:              1" in err
     assert "Stored:               0" in err
     assert not (state_dir / "runner.lock").exists()
+
+
+def test_interrupted_resumed_retry_restores_pending_state(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.mark("тест", "retry_scheduled", error="503")
+    assert ledger.state_of("тест") == "retry_scheduled"
+    ledger.close()
+
+    def interrupt_transport(method, data):
+        raise KeyboardInterrupt()
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=interrupt_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("тест") == "pending"
+        counts = ledger.counts()
+        assert counts["pending"] == 1
+        assert counts["retry_scheduled"] == 0
+    finally:
+        ledger.close()
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Pending:              1" in err
+    assert "Retry scheduled:      0" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_interrupted_refetch_preparation_stops_run(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.mark("тест", "stored", entry_count=2)
+    assert ledger.state_of("тест") == "stored"
+    ledger.close()
+
+    orig_clear = SpellingLedger.clear_responses
+
+    def interrupt_clear(self, spelling):
+        orig_clear(self, spelling)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(SpellingLedger, "clear_responses", interrupt_clear)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=True,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_missing_spellings_file_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(tmp_path / "nonexistent.txt"),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "failed to read spellings file" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               failed to read spellings file" in err
+    assert "Resume command:" in err
 
 
 # SIGTERM sent to a child already blocked in the spellings FIFO read. Measured
@@ -2465,6 +2651,58 @@ def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):
     capsys.readouterr()
 
 
+@pytest.mark.parametrize("command", ["run", "walk"])
+def test_pending_sigterm_at_main_install_prints_stop_summary_and_restores_handler(tmp_path, capsys, command):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    if command == "run":
+        argv = [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+        summary = "=== ULIF Fetch Stop Summary ==="
+        reason = "Reason:               interrupted by operator"
+    else:
+        argv = [
+            "walk",
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+        summary = "=== ULIF Walk Stop Summary ==="
+        reason = "Reason:                 interrupted by operator"
+
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+    code = None
+    escaped: BaseException | None = None
+    handler_after = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = main(argv)
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        handler_after = signal.getsignal(signal.SIGTERM)
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    assert handler_after == previous_handler
+    err = capsys.readouterr().err
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
+
+
 def _no_network(_method, _fields):
     raise AssertionError("network")
 
@@ -2725,6 +2963,28 @@ def test_threaded_sigterm_during_registration_restores_handler(tmp_path, capsys,
     assert summary in err
     assert reason in err
     assert "Resume command:" in err
+
+
+def test_install_sigterm_handler_reports_c_previous_handler_as_installed(monkeypatch):
+    """A C-installed previous handler is None, and installation still succeeded."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    real_signal = signal.signal
+    saved = signal.getsignal(signal.SIGTERM)
+
+    def hide_previous(signum, handler):
+        previous = real_signal(signum, handler)
+        if signum == signal.SIGTERM and callable(handler):
+            return None
+        return previous
+
+    monkeypatch.setattr(signal, "signal", hide_previous)
+    try:
+        installed = mod._install_sigterm_handler()
+        assert installed.installed is True
+        assert installed.previous is None
+    finally:
+        real_signal(signal.SIGTERM, saved)
 
 
 @pytest.mark.parametrize("command", ["run", "walk"])

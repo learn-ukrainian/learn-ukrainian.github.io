@@ -8,6 +8,8 @@ from scripts.audit._judge_eval_lib import (
     _antonenko_fulltext_search,
     _ua_gec_calque_search,
     _ua_gec_load_index,
+    build_judge_prompt_h2,
+    retrieve_evidence,
 )
 
 pytestmark = pytest.mark.skipif(
@@ -43,3 +45,14 @@ def test_antonenko_fulltext_search_returns_page_and_snippet() -> None:
         pytest.skip("no Antonenko prose hit for this probe (env-dependent)")
     assert all("page" in h and "snippet" in h for h in hits)
     assert any(isinstance(h["page"], int) for h in hits)
+
+
+def test_build_judge_prompt_h2_preserves_canonical_greeting_protection() -> None:
+    """The default-clean opener and greeting protection must be present —
+    the H1 FP-fix mechanism that survives even when UA-GEC F/Style fuzzes
+    a greeting hit."""
+    ev = retrieve_evidence("Доброго дня!")
+    prompt = build_judge_prompt_h2("Доброго дня!", ev)
+    assert "Default verdict: CLEAN" in prompt
+    assert "Доброго дня!" in prompt
+    assert "stylistic preference of the annotator" in prompt

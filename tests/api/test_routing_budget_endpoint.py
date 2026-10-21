@@ -357,6 +357,74 @@ def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     assert first_sub["lane"]  # smoke
 
 
+def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp_path):
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(
+        monkeypatch,
+        tmp_path,
+        [
+            _record("codex (gpt-5.5)", 800.0, now),
+            _record("claude", 650.0, now),
+            _record("gemini", 480.0, now),
+        ],
+    )
+    monkeypatch.setattr(state_router, "get_freshest_lane_usage", lambda: None)
+    monkeypatch.setattr(
+        state_router,
+        "load_reset_reserve",
+        lambda *_args, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": "2026-05-13T20:00:00Z",
+            "expires_at": "2026-05-14T20:00:00Z",
+        },
+    )
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider: (
+            {
+                "lane": "codex",
+                "primary_used_pct": 70.0,
+                "weekly_used_pct": 80.0,
+                "weekly_pace_delta_pct": 10.0,
+                "weekly_expected_pct": 70.0,
+                "will_last_to_reset": False,
+                "windows": {"primary": {"remaining_pct": 20.0, "window_minutes": 300}},
+                "stale": False,
+                "freshness": "fresh",
+                "age_s": 1.0,
+                "reset_credits": {
+                    "available_count": 2,
+                    "expires_at": ["2026-05-20T00:00:00Z", "2026-05-21T00:00:00Z"],
+                    "fetched_at": now.isoformat(),
+                },
+            }
+            if provider == "codex"
+            else None
+        ),
+    )
+
+    monkeypatch.setattr(
+        state_router,
+        "_recommend_agent",
+        lambda *_args, **_kwargs: {"primary_agent_for_code": "cursor", "rationale": "cooler seat", "warnings": []},
+    )
+    data = state_router.compute_routing_budget(now)
+
+    assert data["reset_reserve"] == {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": "2026-05-13T20:00:00Z",
+        "expires_at": "2026-05-14T20:00:00Z",
+    }
+    assert data["agents"]["codex"]["status"] == "cool"
+    assert data["agents"]["codex"]["pace_deficit"]["covered_by"] == ["free full reset"]
+    assert data["recommendation"]["primary_agent_for_code"] == "codex"
+
+
 @pytest.mark.parametrize(
     ("inventory_overrides", "provider_overrides", "available"),
     [
@@ -1151,6 +1219,18 @@ def test_legacy_claude_lane_is_unchanged_by_account_rows(monkeypatch, tmp_path):
     assert [row["lane"] for row in with_rows["ranked_by_headroom"]].count("claude") == 1
     assert not any(str(lane).startswith("claude:") for lane in with_rows["agents"])
     assert with_rows["recommendation"] == without_rows["recommendation"]
+
+
+def test_withdrawn_snapshot_clears_the_account_preference():
+    payload = {
+        "recommendation": {"primary_agent_for_code": "claude", "warnings": []},
+        "agents": {},
+        "claude_accounts": {"claude:a": {"status": "ok"}},
+        "preferred_claude_account": "a",
+    }
+    withdrawn = state_router._withdraw_routing_authorization(payload)
+    assert withdrawn["preferred_claude_account"] is None
+    assert withdrawn["claude_accounts"] == {"claude:a": {"status": "ok"}}
 
 
 # Fails on b62a4a3243: a warm routing snapshot served the account rows frozen at compute time.

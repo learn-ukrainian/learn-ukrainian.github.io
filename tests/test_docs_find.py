@@ -18,7 +18,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 from scripts.docs import find as find_module
-from scripts.docs.find import FindError, find, main
+from scripts.docs.find import FindError, find, main, query_terms
 
 REPO = Path(__file__).resolve().parents[1]
 SCHEMA = (REPO / 'docs/knowledge/catalogue.schema.json').read_text(encoding='utf-8')
@@ -129,6 +129,13 @@ def hit_for(result, path):
 # ------------------------------------------------------------------ query normalisation
 
 
+def test_terms_drop_stopwords_and_casefold_without_stemming():
+    assert query_terms('Where is the list of Podcast episodes?') == ['list', 'podcast', 'episodes']
+    assert query_terms('the of') == ['the', 'of']  # only stopwords: keep them rather than nothing
+    assert query_terms('ВЕСУМ словники') == ['весум', 'словники']
+    assert query_terms("п'ять") == ["п'ять"]  # the apostrophe stays inside a Ukrainian word
+
+
 # ------------------------------------------------------------------ ranking and statuses
 
 
@@ -184,6 +191,12 @@ def test_hostile_queries_are_literal_text(repo, query):
     assert all(r.startswith('content_search_skipped: ') for r in reasons), reasons
     assert result['outcome'] != 'incomplete' or reasons
     assert not (repo / 'pwned').exists()
+
+
+def test_excerpts_never_carry_raw_controls_or_bidi(repo):
+    hit = hit_for(find('needle', repo=repo), 'docs/guide/escape.md')
+    assert ESC not in hit['excerpt'] and BIDI not in hit['excerpt']
+    assert '\\x1b[31m' in hit['excerpt'] and '\\u202e' in hit['excerpt']
 
 
 @pytest.fixture
@@ -281,6 +294,14 @@ def test_any_failure_after_the_process_starts_kills_and_reaps_it(monkeypatch, er
     assert time.monotonic() - tick < 5
 
 
+def test_any_worker_exception_becomes_an_error_run(monkeypatch):
+    def boom(*_args, **_kwargs):
+        raise RuntimeError('unexpected')
+    monkeypatch.setattr(find_module, '_git_grep', boom)
+    run = find_module._total_grep(Path('.'), [], 0.0, 1)
+    assert (run.outcome, run.detail, run.stdout) == ('error', 'RuntimeError', b'')
+
+
 # ------------------------------------------------------------------ privacy: what git is asked to read
 
 def recorded_greps(monkeypatch):
@@ -322,6 +343,13 @@ def test_results_are_gated_again_whatever_git_returns(repo, monkeypatch):
 SPENT_BUDGET = 1e-9
 
 
+def test_an_exhausted_budget_is_incomplete_not_no_match(repo):
+    result = find('zzqq-qqzz-xxyy', repo=repo, budget_seconds=SPENT_BUDGET)
+    assert result['outcome'] == 'incomplete'
+    assert result['coverage']['incomplete'] and result['coverage']['incomplete_reasons']
+    assert all(reason.startswith('timeout') for reason in result['coverage']['incomplete_reasons'])
+
+
 def test_an_output_cap_is_incomplete(repo, monkeypatch):
     monkeypatch.setattr(find_module, 'GREP_OUTPUT_CAP', 1)
     result = find('hostilename', repo=repo)
@@ -346,6 +374,28 @@ def test_an_invalid_catalogue_reads_no_text_and_says_why(fresh_repo, monkeypatch
 # ------------------------------------------------------------------ determinism and the memo
 
 
+def test_the_memo_follows_the_index_and_the_catalogue(fresh_repo):
+    assert find('freshword', repo=fresh_repo)['outcome'] == 'no_match'
+    (fresh_repo / 'docs/guide/fresh.md').write_text('freshword\n', encoding='utf-8')
+    git(fresh_repo, 'add', 'docs/guide/fresh.md')
+    assert find('freshword', repo=fresh_repo)['hits'][0]['path'] == 'docs/guide/fresh.md'
+    data = fixture_catalogue()
+    data['entries'][1]['keywords'] = ['handbook', 'guide', 'freshkeyword']
+    write_catalogue(fresh_repo, data)
+    assert find('freshkeyword', repo=fresh_repo)['hits'][0]['match'] == 'entrypoint'
+
+
+def test_an_unstaged_or_untracked_file_never_changes_an_answer(fresh_repo):
+    before = find('handbook freshword', repo=fresh_repo, limit=50)
+    (fresh_repo / 'docs/knowledge/catalogue.yaml').write_text('entries: [1]\n', encoding='utf-8')  # unstaged
+    (fresh_repo / 'docs/guide/untracked.md').write_text('handbook freshword\n', encoding='utf-8')
+    (fresh_repo / 'docs/guide/index.md').write_text('# Guide\nhandbook freshword\n', encoding='utf-8')
+    find_module._STATE_CACHE.clear()
+    after = find('handbook freshword', repo=fresh_repo, limit=50)
+    before.pop('timings_ms'), after.pop('timings_ms')
+    assert after == before and not after['coverage']['incomplete']
+
+
 # ------------------------------------------------------------------ CLI
 
 def test_cli_text_output_and_exit_codes(repo, capsys):
@@ -359,6 +409,13 @@ def test_cli_text_output_and_exit_codes(repo, capsys):
     assert 'INCOMPLETE' in capsys.readouterr().out
 
 
+@pytest.mark.parametrize('argv, code', [(['', ], 'empty_query'), (['x', '--limit', '0'], 'limit'),
+                                        (['x', '--family', 'nope'], 'unknown_family')])
+def test_cli_rejects_bad_requests_with_a_typed_error(repo, capsys, argv, code):
+    assert main([*argv, '--repo', str(repo), '--json']) == 2
+    assert json.loads(capsys.readouterr().out)['error']['code'] == code
+
+
 def test_cli_json_is_the_library_result(repo, capsys):
     assert main(['handbook', '--repo', str(repo), '--json', '--limit', '3']) == 0
     result = json.loads(capsys.readouterr().out)
@@ -368,6 +425,15 @@ def test_cli_json_is_the_library_result(repo, capsys):
 def test_cli_reports_an_unreadable_repository(tmp_path, capsys):
     assert main(['x', '--repo', str(tmp_path), '--json']) == 3
     assert json.loads(capsys.readouterr().out)['error']['kind'] == 'unreadable'
+
+
+def test_cli_text_output_escapes_hostile_paths(fresh_repo, capsys):
+    name = f'docs/guide/x{BIDI}y.md'
+    (fresh_repo / name).write_text('bidiword\n', encoding='utf-8')
+    git(fresh_repo, 'add', '.')
+    assert main(['bidiword', '--repo', str(fresh_repo)]) == 0
+    out = capsys.readouterr().out
+    assert BIDI not in out and "'docs/guide/x\\u202ey.md'" in out
 
 
 def test_cli_help_meets_the_standard(capsys):
@@ -396,6 +462,22 @@ def test_route_returns_the_library_result(client):
     assert body['coverage']['families_skipped'] == ['guide-private']
 
 
+def test_route_is_not_behind_the_research_registry_kill_switch(client, monkeypatch):
+    from scripts.research import registry as reg
+    monkeypatch.setenv(reg.ENV_FLAG, 'false')
+    monkeypatch.setattr(reg, 'is_enabled', lambda **_kwargs: False)
+    assert client.get('/api/knowledge/manifest').json().get('enabled') is False  # the registry is off
+    response = client.get('/api/knowledge/find', params={'q': 'handbook'})
+    assert response.status_code == 200 and response.json()['hits'][0]['path'] == 'docs/guide/index.md'
+
+
+@pytest.mark.parametrize('params', [{'q': 'x' * (find_module.MAX_QUERY_CHARS + 1)}, {}, {'q': ''},
+                                    {'q': 'x', 'limit': 0}, {'q': 'x', 'limit': find_module.MAX_LIMIT + 1},
+                                    {'q': 'x', 'family': 'Bad Family'}, {'q': 'x', 'family': 'a' * 65}])
+def test_route_validates_its_parameters(client, params):
+    assert client.get('/api/knowledge/find', params=params).status_code == 422
+
+
 NON_DIGIT_LIMITS = ['5.0', '5e0', '+5', ' 5', '5 ', '-0', '５', '0x5', '5_0']
 
 
@@ -410,6 +492,14 @@ def test_route_rejects_bad_limits_before_any_search(client, no_search_starts, li
 def test_route_checks_every_repeated_limit_before_any_search(client, no_search_starts):
     response = client.get('/api/knowledge/find?q=guide&limit=5.0&limit=5')
     assert response.status_code == 422 and response.json()['detail']['code'] == 'limit'
+
+
+@pytest.mark.parametrize('limit', ['5', '05', str(find_module.MAX_LIMIT)])
+def test_route_accepts_the_digit_limits_the_library_accepts(client, limit):
+    assert find_module.limit_from_text(limit) == int(limit)
+    response = client.get('/api/knowledge/find', params={'q': 'guide', 'limit': limit})
+    assert response.status_code == 200
+    assert len(response.json()['hits']) <= int(limit)
 
 
 @pytest.mark.parametrize('value', NON_DIGIT_LIMITS)
@@ -434,6 +524,19 @@ def test_route_unreadable_repository_is_a_typed_503(client, monkeypatch):
     monkeypatch.setattr(find_module, 'find', broken)
     response = client.get('/api/knowledge/find', params={'q': 'x'})
     assert response.status_code == 503 and response.json()['detail']['code'] == 'CalledProcessError'
+
+
+def test_line_reads_send_git_exactly_one_pattern():
+    # Several -e patterns with -n take tens of seconds on a large file (31.8 s measured on a
+    # 20 MB YAML for two fixed strings, 0.45 s as one alternation), so line reads must
+    # always pass one escaped alternation.
+    import re
+    args = find_module._line_args(['ulp', '02', 'весум', 'a.b(c)'], [':(literal)docs/x.md'], 10)
+    assert args.count('-e') == 1 and '-E' in args and '-F' not in args
+    alternation = args[args.index('-e') + 1]
+    for form in ['ulp', '02', 'весум', 'ВЕСУМ', 'Весум', 'a.b(c)']:
+        assert re.search(alternation, f'x {form} y')
+    assert not re.search(alternation, 'axb(c)')
 
 
 # ------------------------------------------------------------------ status and implementation questions
@@ -549,6 +652,20 @@ def test_the_code_search_never_reads_a_private_path(code_repo, monkeypatch):
     assert not any(arg.startswith(':(literal)docs') or arg.startswith(':(literal)tests') for arg in code_call)
 
 
+def test_a_superseded_hit_is_followed_by_its_replacement(code_repo):
+    result = find('legacy deck still current', repo=code_repo)
+    paths = paths_of(result)
+    old = paths.index('docs/guide/legacy-deck.txt')
+    assert result['hits'][old]['status'] == 'superseded'
+    replacement = result['hits'][old + 1]
+    assert (replacement['path'], replacement['match'], replacement['replaces'], replacement['status']) == (
+        'docs/guide/deck-v2.txt', 'replacement', 'docs/guide/legacy-deck.txt', 'current')
+    assert paths.count('docs/guide/deck-v2.txt') == 1  # never twice
+    text = find_module.format_text(result)
+    assert 'docs/guide/legacy-deck.txt:1  [content; guide; superseded -> docs/guide/deck-v2.txt]' in text
+    assert 'docs/guide/deck-v2.txt  [replacement; guide; current, replaces docs/guide/legacy-deck.txt]' in text
+
+
 # ------------------------------------------------------------------ ranking helpers and lifecycle records
 
 
@@ -613,6 +730,13 @@ def test_a_private_directory_note_is_searched_and_its_bodies_never_are(note_repo
     text_calls = [c for c in calls if ':(literal)docs' in c]
     assert text_calls and all(f':(exclude,literal){PRIVATE}' in c for c in text_calls)
     assert not any(f':(literal){PRIVATE}' in c for c in calls)
+
+
+def test_a_private_file_is_never_spoken_for_by_a_note_above_its_directory(repo):
+    # docs/guide/index.md sits above the private directory and does not know its files.
+    state = find_module.load_state(repo)
+    assert find_module.private_note(state, PRIVATE) is None
+    assert 'docs/guide/index.md' not in paths_of(find('secret', repo=repo))
 def test_a_data_store_purpose_is_the_store_s_own_description(repo):
     # A store has no text (#9531): the words of its record's purpose count like its keywords.
     candidates: dict = {}

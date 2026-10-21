@@ -245,3 +245,9 @@ def test_load_cursor_api_key_from_env_file_formats(tmp_path, content, expected):
     env_file.write_text(content, encoding="utf-8")
     result = _load_cursor_api_key_from_env_file(env_file)
     assert result == expected
+
+
+def test_load_cursor_api_key_from_env_file_missing(tmp_path):
+    """Non-existent file returns None without raising."""
+    non_existent = tmp_path / "does_not_exist.env"
+    assert _load_cursor_api_key_from_env_file(non_existent) is None

@@ -481,6 +481,19 @@ def test_delete_renders_single_explicit_ref_arguments(monkeypatch, name):
     )
 
 
+def test_no_deletion_receipt_is_unknown(monkeypatch):
+    monkeypatch.setattr(m, "git", lambda *args: "=\t:refs/heads/stale\t[up to date]\n")
+    with pytest.raises(m.Unknown, match="no confirmed deletion"):
+        m.delete(m.Candidate("stale", OLD, NOW, False))
+
+
+@pytest.mark.parametrize("failure", [OSError("failed"), subprocess.TimeoutExpired(["git"], 60)])
+def test_git_wrapper_failure(monkeypatch, failure):
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: (_ for _ in ()).throw(failure))
+    with pytest.raises(m.Unknown, match="outcome unknown"):
+        m.git("--version")
+
+
 def test_git_wrapper_no_shell_and_closed_failure(monkeypatch):
     def command(args, **kwargs):
         assert args == ["git", "check-ref-format", "refs/heads/$(false)"]
@@ -862,6 +875,31 @@ def assert_cli_refusal(capsys, summary, expected_deleted):
         assert private not in captured.out
         assert private not in summary.read_text()
     return report
+
+
+@pytest.mark.parametrize("after", [0, 1], ids=["before-delete", "after-confirmed-delete"])
+@pytest.mark.parametrize("endpoint", ["branches", "pulls"])
+@pytest.mark.parametrize(
+    "case",
+    [
+        "out_of_range_port",
+        "nonnumeric_port",
+        "unmatched_bracket",
+        "invalid_bracket_host",
+        "nfkc_netloc",
+        "oversized_page_integer",
+    ],
+)
+def test_cli_parser_refusal_preserves_confirmed_receipts(refusal_wire, capsys, after, endpoint, case):
+    fault, attempts, confirmed, summary, _ = refusal_wire
+    fault.update(after=after, endpoint=endpoint, case=case)
+    assert m.main(["--repo", REPO]) == 1
+    expected = [{"name": "stale", "sha": OLD}] if after else []
+    report = assert_cli_refusal(capsys, summary, expected)
+    assert confirmed == expected
+    assert attempts == ([":refs/heads/stale"] if after else [])
+    assert fault["triggered"] == 1
+    assert report["failures"][0]["reason"] in {"untrusted pagination link", "malformed pagination link"}
 
 
 @pytest.mark.parametrize("after", [0, 1], ids=["before-delete", "after-confirmed-delete"])

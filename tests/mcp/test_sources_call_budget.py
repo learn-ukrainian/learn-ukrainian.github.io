@@ -76,6 +76,70 @@ def test_replaced_db_changes_source_version(server_module, tmp_path, monkeypatch
     ) != immutable_evidence_identifier(namespace="vesum", source_version=second, typed_result=typed)
 
 
+def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(
+    server_module, tmp_path, monkeypatch
+):
+    from scripts.curriculum.evidence.sources import Sources
+
+    data = tmp_path / "data"
+    data.mkdir()
+    sources_db = data / "sources.db"
+    sources_db.write_bytes(b"SQLite format 3\x00" + b"\x00" * (1024 * 1024 - 16))
+    vesum_db = data / "vesum.db"
+    vesum_db.write_bytes(b"vesum-db")
+    monkeypatch.setenv("LU_SOURCES_DB", str(sources_db))
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", vesum_db)
+    server_module._FILE_HASH_CACHE.clear()
+    original_path_open = Path.open
+    header_bytes_read = 0
+
+    class HeaderOnlyReader:
+        def __init__(self, stream):
+            self._stream = stream
+
+        def __enter__(self):
+            self._stream.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self._stream.__exit__(*args)
+
+        def read(self, size=-1):
+            nonlocal header_bytes_read
+            assert size >= 0 and size <= 20 and header_bytes_read + size <= 40, (
+                "sources.db body read exceeded the resolver and identity headers"
+            )
+            result = self._stream.read(size)
+            header_bytes_read += len(result)
+            return result
+
+    def guarded_path_open(path, *args, **kwargs):
+        stream = original_path_open(path, *args, **kwargs)
+        if Path(path).resolve() == sources_db.resolve():
+            return HeaderOnlyReader(stream)
+        return stream
+
+    with (
+        patch.object(
+            server_module,
+            "_sha256_of_file_fresh",
+            side_effect=AssertionError("default must not read sources.db body"),
+        ),
+        patch.object(server_module, "_sha256_of_file", wraps=server_module._sha256_of_file) as cached_hash,
+        patch.object(Path, "open", new=guarded_path_open),
+    ):
+        result = _run(server_module.handle_mcp_server_identity({}))
+    assert sources_db not in [call.args[0] for call in cached_hash.call_args_list]
+    assert header_bytes_read == 40
+    payload = json.loads(result[0].text)
+    assert "sources_db_sha256" not in payload
+    assert payload["sources_db_meta_identity"]["scheme"] == "file-meta-v1"
+    sources = Sources(sources_db=sources_db)
+    expected_digest, _metadata = sources._sources_db_meta_identity()
+    assert payload["sources_db_meta_identity"]["sha256"] == expected_digest
+    assert payload["vesum_db_sha256"] == hashlib.sha256(b"vesum-db").hexdigest()
+
+
 def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime(server_module, tmp_path, monkeypatch):
     data = tmp_path / "data"
     data.mkdir()
@@ -105,6 +169,13 @@ def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime
     assert first["sources_db_sha256"] != second["sources_db_sha256"]
 
 
+def test_mcp_server_identity_rejects_non_boolean_hash_option(server_module):
+    result = _run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": "true"}))
+    payload = json.loads(result[0].text)
+    assert payload["error_code"] == "invalid_input"
+    assert payload["error"] == "invalid_input: include_sources_db_sha256 must be a boolean."
+
+
 def test_verify_stress_summary_is_one_line_and_result_is_kept(server_module):
     payload = {
         "input": "замок",
@@ -125,6 +196,64 @@ def test_verify_stress_summary_is_one_line_and_result_is_kept(server_module):
     assert json.dumps(payload, ensure_ascii=False) not in content[0].text
 
 
+def test_inspect_words_hoists_shared_provenance(server_module):
+    class _Inspection:
+        def __init__(self, word: str):
+            self.word = word
+            self.status = type("Status", (), {"value": "CLEAN"})()
+            self.effective_markers: list[str] = []
+            self.clean_analyses = [{"lemma": word, "pos": "noun", "tags": "noun"}]
+            self.marked_analyses: list[dict] = []
+
+        def as_dict(self):
+            return {
+                "word": self.word,
+                "status": "CLEAN",
+                "clean_analyses": self.clean_analyses,
+                "marked_analyses": [],
+                "effective_markers": [],
+                "source_locations": ["forms_all"],
+                "source_version": "version-once",
+                "pipeline_identity": {"pipeline": "vesum", "step": "inspect"},
+            }
+
+    words = ["кіт", "вода"]
+    results = {word: _Inspection(word) for word in words}
+    with patch("scripts.verification.vesum.inspect_words", return_value=results):
+        content = _run(server_module.handle_inspect_words({"words": words}))
+    text = content[0].text
+    assert text.count("version-once") == 1
+    assert text.count('"pipeline"') == 1
+    raw = text.split("Raw payload:\n", 1)[1]
+    payload = json.loads(raw)
+    assert payload["source_version"] == "version-once"
+    assert payload["pipeline_identity"] == {"pipeline": "vesum", "step": "inspect"}
+    assert payload["words"]["кіт"]["clean_analyses"] == [{"lemma": "кіт", "pos": "noun", "tags": "noun"}]
+    assert "source_version" not in payload["words"]["кіт"]
+    assert "pipeline_identity" not in payload["words"]["вода"]
+    assert "submitted" not in payload
+    assert "checked" not in payload
+
+
+def test_inspect_words_caps_at_500_and_reports_counts(server_module):
+    submitted = [f"слово-{index}" for index in range(501)]
+    seen: dict[str, list[str]] = {}
+
+    def fake(words, pos_filter=None):
+        del pos_filter
+        seen["words"] = list(words)
+        return {}
+
+    with patch("scripts.verification.vesum.inspect_words", side_effect=fake):
+        content = _run(server_module.handle_inspect_words({"words": submitted}))
+    assert seen["words"] == submitted[:500]
+    payload = json.loads(content[0].text.split("Raw payload:\n", 1)[1])
+    assert payload["submitted"] == 501
+    assert payload["checked"] == 500
+    assert content[0].text.startswith("Note: received 501 words; processed the first 500 (hard cap).")
+    assert "Batch inspection: 500 words" in content[0].text
+
+
 def test_query_pravopys_empty_topic_is_a_structured_error(server_module):
     content, envelope = _run(server_module.handle_query_pravopys({"topic": ""}))
     assert envelope["status"] == "error"
@@ -136,6 +265,41 @@ def test_query_pravopys_empty_topic_is_a_structured_error(server_module):
     missing, missing_envelope = _run(server_module.handle_query_pravopys({}))
     assert missing_envelope["error_code"] == "invalid_input"
     assert "Expected arguments: topic." in missing[0].text
+
+
+def test_query_sum20_missing_word_is_a_structured_error(server_module):
+    content = _run(server_module.handle_query_sum20({}))
+    payload = json.loads(content[0].text)
+    assert payload["status"] == "error"
+    assert payload["error_code"] == "invalid_input"
+    assert payload["expected_arguments"] == ["word"]
+    assert "KeyError" not in content[0].text
+
+    blank = _run(server_module.handle_query_sum20({"word": "   "}))
+    assert json.loads(blank[0].text)["error_code"] == "invalid_input"
+
+
+# Tools that persist a live fetch (#9551); tests/mcp/test_sources_tool_side_effects.py
+# proves each attempts a write and every other tool attempts none.
+PERSISTING_TOOLS = {"query_wikipedia", "query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology"}
+
+
+def test_every_sources_tool_advertises_its_read_only_hint(server_module):
+    tools = _run(server_module.list_tools())
+    assert tools
+    for tool in tools:
+        annotations = tool.annotations
+        assert annotations is not None, tool.name
+        assert annotations.read_only_hint is (tool.name not in PERSISTING_TOOLS), tool.name
+        assert annotations.destructive_hint is False, tool.name
+
+
+def test_verify_stresses_tool_documents_the_cap(server_module):
+    tools = _run(server_module.list_tools())
+    tool = next(item for item in tools if item.name == "verify_stresses")
+    assert tool.input_schema["required"] == ["words"]
+    assert "pos" in tool.input_schema["properties"]
+    assert "500" in tool.description
 
 
 def test_stress_context_schema_and_handler_keep_source(server_module, tmp_path, monkeypatch):

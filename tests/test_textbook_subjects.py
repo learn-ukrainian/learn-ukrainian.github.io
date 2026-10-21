@@ -178,6 +178,16 @@ def test_current_textbook_source_files_all_map_to_canonical_subjects() -> None:
     assert set(CURRENT_TEXTBOOK_SOURCE_FILES) == set(KNOWN_SOURCE_FILE_SUBJECTS)
 
 
+def test_subject_aliases_normalize_to_canonical_slugs() -> None:
+    assert normalize_subject_slug("ukrainska-mova") == "ukrmova"
+    assert normalize_subject_slug("ukrajinska-literatura") == "ukrlit"
+    assert normalize_subject_slug("istoriia") == "istoriya"
+    assert normalize_subject_slug("vocabulary") == "lexicon"
+    assert normalize_subject_slug("foreign_language") == "foreign_language"
+    assert normalize_subject_slug("ya_doslidzhuiu_svit") == "ya_doslidzhuiu_svit"
+    assert normalize_subject_slug("unknown") is None
+
+
 def test_future_stem_source_files_map_by_token() -> None:
     assert subject_for_source_file("5-klas-informatyka-example-2026") == "informatyka"
     assert subject_for_source_file("7-klas-geometriya-example-2026") == "heometriya"
@@ -312,6 +322,31 @@ def test_integrated_fizyka_astronomiia_is_physics_but_pure_astronomy_stays() -> 
     # a pure astronomy stem has no fizyk/fizik token → astronomiya.
     assert subject_for_source_file("11-klas-fizika-astronomiia-zasekina-2019-standart") == "fizyka"
     assert subject_for_source_file("11-klas-astronomiya-pryshliak-2019") == "astronomiya"
+
+
+def test_batch3_author_translits_resolve_to_cyrillic() -> None:
+    expected = {
+        "voloshhuk": "Волощук",
+        "guschyna": "Гущина",
+        "gudima": "Гудима",
+        "homiak": "Криховець-Хом'як",
+        "bojko": "Бойко",
+        "barjakhtar": "Бар'яхтар",
+        "merzljak": "Мерзляк",
+        "zadorozhnij": "Задорожний",
+        "zasekina": "Засєкіна",
+        "kovbasenko": "Ковбасенко",
+        "ladychenko": "Ладиченко",
+        "bevz": "Бевз",
+        "bios": "Біос",
+        "kondratova": "Кондратова",
+        "tarasenkova": "Тарасенкова",
+        "yaroshenko": "Ярошенко",
+    }
+    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
+
+    for translit, cyrillic in expected.items():
+        assert AUTHOR_UK_BY_TRANSLIT[translit] == cyrillic
 
 
 def test_known_source_file_subjects_regression() -> None:

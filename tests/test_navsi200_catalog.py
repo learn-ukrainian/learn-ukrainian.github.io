@@ -13,6 +13,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from navsi200_catalog import (
+    PRIORITY_TOPICS,
     load_catalog,
 )
 
@@ -23,6 +24,25 @@ class TestNavsi200Catalog:
     @pytest.fixture(scope="class")
     def catalog(self) -> dict:
         return load_catalog()
+
+    def test_catalog_metadata_shape(self, catalog: dict) -> None:
+        assert catalog.get("version") == 1
+        assert "Анна Огойко" in catalog.get("author", "")
+        assert isinstance(catalog.get("source_urls"), list)
+        assert len(catalog["source_urls"]) >= 2
+        assert "https://navsi200.com/videos/" in catalog["source_urls"]
+        assert "https://www.youtube.com/@navsi200" in catalog["source_urls"]
+        assert catalog.get("scraped_at") is not None
+        assert isinstance(catalog.get("summary"), dict)
+        assert isinstance(catalog.get("priority_topics"), list)
+        assert isinstance(catalog.get("topics"), dict)
+        assert isinstance(catalog.get("lessons"), list)
+
+    def test_priority_topics_defined(self, catalog: dict) -> None:
+        for topic in PRIORITY_TOPICS:
+            assert topic in catalog["priority_topics"]
+            assert topic in catalog["topics"]
+            assert len(catalog["topics"][topic]) > 0
 
     def test_lessons_shape_and_types(self, catalog: dict) -> None:
         dur_pattern = re.compile(r"^\d{1,2}:\d{2}(:\d{2})?$")

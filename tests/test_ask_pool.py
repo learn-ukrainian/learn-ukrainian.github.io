@@ -144,6 +144,16 @@ def test_invoke_opencode_always_separates_content_with_dashdash():
 # --- model override (churn-resistance; tags drift per model-assignment.md) --
 
 
+def test_ask_pool_honors_model_override():
+    with (
+        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
+        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
+        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
+    ):
+        ask_pool("hi", task_id="t", model="openrouter/poolside/laguna-s-2.1")
+        assert inv.call_args[0][1] == "openrouter/poolside/laguna-s-2.1"
+
+
 def test_ask_glm_refuses_openrouter_glm_before_subprocess(monkeypatch):
     """GLM via OpenRouter must fail at the routing guard inside _run_opencode."""
     from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
@@ -191,6 +201,23 @@ def test_parse_ndjson_multi_message_stream_yields_last_substantive_message():
 # --- token budget plumbing for glm/pool (fixes #5123 length deaths) --------
 
 
+def test_get_max_output_tokens_defaults_for_glm_pool():
+    """Sane defaults kick in for the lanes that exhibited reasoning=length."""
+    from scripts.ai_agent_bridge._opencode import (
+        GLM_DEFAULT_MAX_OUTPUT_TOKENS,
+        GLM_MODEL,
+        POOL_DEFAULT_MAX_OUTPUT_TOKENS,
+        POOL_MODEL,
+        _get_max_output_tokens,
+    )
+
+    assert _get_max_output_tokens(GLM_MODEL) == GLM_DEFAULT_MAX_OUTPUT_TOKENS
+    assert _get_max_output_tokens(POOL_MODEL) == POOL_DEFAULT_MAX_OUTPUT_TOKENS
+    # also matches on prefix variants
+    assert _get_max_output_tokens("openrouter/z-ai/glm-5.3") == GLM_DEFAULT_MAX_OUTPUT_TOKENS
+    assert _get_max_output_tokens("poolside/poolside/laguna-s-2.1") == POOL_DEFAULT_MAX_OUTPUT_TOKENS
+
+
 def test_invoke_opencode_glm_pool_sets_experimental_output_token_env(monkeypatch):
     """Hermetic: glm and pool invocations must pass the raised budget via the
     experimental env (the lever that lifts the ~32k cap). Raw pytest evidence.
@@ -218,6 +245,37 @@ def test_invoke_opencode_glm_pool_sets_experimental_output_token_env(monkeypatch
             call_kwargs = run_mock.call_args[1]
             env = call_kwargs["env"]
             assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "131072"
+
+
+def test_invoke_opencode_token_budget_env_overrides(monkeypatch):
+    """Env overrides (global + per-model) take precedence; hermetic."""
+    monkeypatch.setenv("AB_OPENCODE_MAX_OUTPUT_TOKENS", "262144")
+    monkeypatch.delenv("AB_GLM_MAX_OUTPUT_TOKENS", raising=False)
+
+    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
+            _invoke_opencode("x", GLM_MODEL, output_format="json")
+            env = run_mock.call_args[1]["env"]
+            assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "262144"
+
+    # model-specific wins over global
+    monkeypatch.setenv("AB_GLM_MAX_OUTPUT_TOKENS", "65536")
+    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
+            _invoke_opencode("x", GLM_MODEL, output_format="json")
+            env = run_mock.call_args[1]["env"]
+            assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "65536"
+
+    # pool specific
+    monkeypatch.setenv("AB_POOL_MAX_OUTPUT_TOKENS", "98304")
+    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
+            _invoke_opencode("x", POOL_MODEL, output_format="json")
+            env = run_mock.call_args[1]["env"]
+            assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "98304"
 
 
 # --- #5911 lifecycle callback wiring (CI catch) ---

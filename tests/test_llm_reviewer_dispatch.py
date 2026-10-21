@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 from dataclasses import replace
 from pathlib import Path
@@ -595,6 +596,38 @@ def test_fake_grounding_excerpt_absent_from_telemetry_drops_required_finding(tmp
     assert record["terminal_verdict"] == "PASS"
 
 
+def test_fake_grounding_query_without_matching_tool_use_drops_required_finding(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    event = _sources_event(query="Веснянки", output="Веснянки — це весняні обрядові пісні.")
+    finding = {
+        "issue_id": "SEMINAR_FACTUAL_DETAIL",
+        "issue_class": "other",
+        "dimension": "seminar_sensitivity",
+        "severity": "warning",
+        "excerpt": "український текст",
+        "message": "Grounding query is not logged.",
+        "grounding": {
+            "tool": "sources_query_wikipedia",
+            "query": "гаї стрічками",
+            "evidence_excerpt": "весняні обрядові пісні",
+            "tool_call_id": "call_1",
+        },
+    }
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return _seminar_result(_fact_response(findings=[finding]), (event,))
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+    assert "SEMINAR_FACTUAL_DETAIL" not in _issue_ids(record)
+
+
 def test_offline_vesnianky_fixture_exercises_all_fact_check_verdicts(tmp_path: Path) -> None:
     module_dir = _write_module(
         tmp_path,
@@ -1178,6 +1211,59 @@ def test_grounding_matches_ellipsized_excerpt_segments_in_order(ellipsis: str) -
     assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
 
 
+def _ast_call_name(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    return None
+
+
+def _ast_string(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    return None
+
+
+@pytest.mark.repo_wide
+def test_no_production_entrypoint_constructs_bare_bakeoff_arm() -> None:
+    root = Path(__file__).resolve().parents[1]
+    bare_entrypoints = {
+        "BARE_ARM",
+        "BOTH_ARM",
+        "build_bare_factcheck_prompt",
+        "invoke_bakeoff_route_bare",
+        "run_one_bare",
+    }
+    violations: list[str] = []
+    source_paths = [
+        *sorted((root / "scripts" / "build").rglob("*.py")),
+        *sorted((root / "scripts" / "audit").rglob("*.py")),
+    ]
+    for path in source_paths:
+        if path.name == "qg_bakeoff.py":
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and node.module in {
+                "scripts.audit.qg_bakeoff",
+                "audit.qg_bakeoff",
+                "qg_bakeoff",
+            }:
+                for alias in node.names:
+                    if alias.name in bare_entrypoints:
+                        violations.append(f"{path.relative_to(root)} imports {alias.name}")
+            elif isinstance(node, ast.Call):
+                call_name = _ast_call_name(node.func)
+                if call_name in bare_entrypoints:
+                    violations.append(f"{path.relative_to(root)} calls {call_name}")
+                for keyword in node.keywords:
+                    if keyword.arg == "arm" and _ast_string(keyword.value) in {"bare", "both"}:
+                        violations.append(f"{path.relative_to(root)} passes arm={_ast_string(keyword.value)!r}")
+
+    assert violations == []
+
+
 def test_grounding_rejects_out_of_order_ellipsized_segments() -> None:
     events = (
         _sources_event(
@@ -1228,6 +1314,18 @@ def test_grounding_rejects_fabricated_segment_among_real_segments() -> None:
         "tool": "sources_query_wikipedia",
         "query": "Веснянки",
         "evidence_excerpt": "Веснянки … стрічкові гаї … обрядових пісень",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_rejects_ellipsized_excerpt_with_only_short_glue_segments() -> None:
+    events = (_sources_event(output="а в і"),)
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "а…в…і",
         "tool_call_id": "call_1",
     }
 
@@ -1285,6 +1383,15 @@ def test_grounding_matches_spaced_and_bracketed_ellipsis_spellings(ellipsis: str
 def test_grounding_matches_lightly_abridged_excerpt_edge_decoration(excerpt: str) -> None:
     events = (_sources_event(output=_VESNIANKY_OUTPUT),)
     grounding = _vesnianky_grounding(excerpt)
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def test_grounding_matches_segment_closed_with_period_before_ellipsis() -> None:
+    """Observed shadow-baseline shape («…день. ... Наповнені…»): a sentence-final
+    period glued to the ellipsis run is edge decoration, not content."""
+    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
+    grounding = _vesnianky_grounding("Веснянки … обрядових пісень. … Вони звучали")
 
     assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
 
@@ -1555,6 +1662,15 @@ def _enforce_v2(payload):
         policy_family="seminar",
         gate_version="v2",
     )
+
+
+def test_v2_enforcement_recovers_exact_multi_output_abstain(monkeypatch) -> None:
+    _stub_anchor(monkeypatch, anchored=False, abstained=True, similarity=1.0)
+    result = _enforce_v2(json.loads(_fact_response()))
+    assert result.invalid_fact_checks == 0  # recovered as provenance-passed, not dropped
+    fc = result.payload["fact_checks"][0]
+    assert fc["anchor_recovered_ambiguous"] is True
+    assert fc["anchor_abstained"] is True
 
 
 def test_v2_enforcement_fuzzy_abstain_stays_fail_closed(monkeypatch) -> None:

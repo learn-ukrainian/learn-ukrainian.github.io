@@ -1023,6 +1023,39 @@ def test_explicit_config_alternate_server_name_cannot_expose_a_writer(
         assert not _claude_denies(denied, f"mcp__{server}__{name}"), name
 
 
+@pytest.mark.parametrize("tool_config", [None, {"allowed_tools": "mcp__sources_alias__*"}, {"reviewer_tools": True}])
+def test_settings_provided_alternate_server_name_cannot_expose_a_writer(tmp_path: Path, tool_config) -> None:
+    """A checkout's ``.mcp.json`` and settings can register and allow sources under another name.
+
+    The adapter never reads those files for a read-only run; the deny covers every server name instead.
+    """
+    _alias_sources_config(tmp_path / ".mcp.json", "sources_alias")
+    (tmp_path / ".claude").mkdir()
+    (tmp_path / ".claude" / "settings.json").write_text(
+        json.dumps(
+            {
+                "enabledMcpjsonServers": ["sources_alias"],
+                "permissions": {"allow": ["mcp__sources_alias__*"]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    denied = _denied(plan.cmd)
+    for name in SOURCES_PERSISTING_TOOLS:
+        assert _claude_denies(denied, f"mcp__sources_alias__{name}"), name
+    for name in SOURCES_READ_ONLY_TOOLS:
+        assert not _claude_denies(denied, f"mcp__sources_alias__{name}"), name
+
+
 def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("AB_DISCUSS_READONLY", "1")
     plan = ClaudeAdapter().build_invocation(
@@ -1035,6 +1068,37 @@ def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypa
         tool_config=None,
     )
     assert _denied(plan.cmd) == WRITER_DENIES
+
+
+@pytest.mark.parametrize(
+    "tool_config",
+    [
+        None,
+        {"reviewer_tools": True},
+        {"allowed_tools": "mcp__sources__*"},
+        {"allowed_tools": ",".join(PERSISTING_RULES)},
+    ],
+    ids=["none", "reviewer-tools", "explicit-glob", "explicit-writers"],
+)
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_write_and_danger_modes_never_deny_sources_writers(tmp_path: Path, mode: str, tool_config) -> None:
+    """AC-02 (#9560): builds and writers keep their cache access."""
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect",
+        mode=mode,
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert "--disallowedTools" not in plan.cmd
+    if tool_config and "allowed_tools" in tool_config:
+        assert _granted(plan.cmd) == tool_config["allowed_tools"].split(",")
+    elif mode == "danger":
+        assert "--allowedTools" not in plan.cmd
+    else:
+        assert "Bash" in _granted(plan.cmd)
 
 
 @pytest.mark.parametrize("tool_config", [None, {"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}])

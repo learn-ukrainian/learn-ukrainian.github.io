@@ -28,9 +28,32 @@ def fixed_reviewer_headroom(monkeypatch, reviewer_headroom_snapshot):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: deepcopy(reviewer_headroom_snapshot))
 
 
+def test_missing_profile_names_the_flag() -> None:
+    message = gemini_review_profile_error(None)
+    assert message is not None
+    assert "--review-profile" in message
+    assert "ukrainian" in message
+
+
+def test_bridge_code_profile_requires_native_dispatch() -> None:
+    message = gemini_review_profile_error("code")
+    assert message is not None
+    assert "gemini_code_review_forbidden" in message
+    assert "Code review requires native AGY dispatch at low or medium risk" in message
+
+
+def test_ukrainian_profile_is_allowed() -> None:
+    assert gemini_review_profile_error("ukrainian") is None
+
+
 @pytest.mark.parametrize("profile", ["code", " CODE ", "ukrainian"])
 def test_native_profile_check_allows_explicit_code_review(profile) -> None:
     assert gemini_review_profile_error(profile, native_code_review=True) is None
+
+
+@pytest.mark.parametrize("profile", [None, "", "infra", "unknown"])
+def test_native_profile_check_refuses_missing_or_unsupported_profiles(profile) -> None:
+    assert "--review-profile" in gemini_review_profile_error(profile, native_code_review=True)
 
 
 @pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
@@ -394,6 +417,49 @@ def test_delegate_review_verdict_without_profile_is_refused(
     assert delegate.cmd_dispatch(args) == 2
     assert "--review-profile" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path("agy-review-gate")) is None
+
+
+def test_delegate_review_verdict_content_branch_passes_the_gate(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts import delegate
+
+    listed: list[list[str]] = []
+    scripted = _fake_branch_diff("feature", f"{_CONTENT_PATH}\n")
+
+    def fake_run(command: list[str], **kwargs: object):
+        listed.append(command)
+        return scripted(command, **kwargs)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--model",
+            "gemini-3.8-flash-high",
+            "--task-id",
+            "agy-content-ok",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--require-review-verdict",
+            "--review-profile",
+            "ukrainian",
+            "--branch",
+            "feature",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "write-shaped prompt" in err
+    assert "gemini_code_review_forbidden" not in err
+    assert listed == [
+        ["git", "fetch", "origin", _branch_refspec("feature")],
+        ["git", "rev-parse", "--verify", "refs/remotes/origin/feature"],
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{_REMOTE_SHA}"],
+    ]
 
 
 _ADVISOR_TASK = "sol-advisor"

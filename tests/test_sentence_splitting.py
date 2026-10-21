@@ -57,7 +57,17 @@ class TestSplitSentences:
 
     # -- Ellipsis --
 
+    def test_ellipsis_as_boundary(self):
+        result = split_sentences("Він думав... Потім вирішив діяти.")
+        assert len(result) == 2
+
     # -- Multi-paragraph input --
+
+    def test_paragraph_separation(self):
+        """Blank lines between paragraphs are respected."""
+        text = "Перше речення.\n\nДруге речення. Третє речення."
+        result = split_sentences(text)
+        assert len(result) == 3
 
     # -- Regression: old re.split(r'[.!?—:]') was WAY too aggressive --
 
@@ -66,6 +76,14 @@ class TestSplitSentences:
         result = split_sentences("Ось приклад: це важливо. Далі буде.")
         assert len(result) == 2
         assert "Ось приклад: це важливо." in result[0]
+
+    def test_em_dash_does_not_split(self):
+        """Em dashes should NOT create sentence boundaries."""
+        result = split_sentences(
+            "Він — інженер. Вона — вчителька."
+        )
+        assert len(result) == 2
+        assert "—" in result[0]
 
     # -- Edge cases surfaced by Codex review of #1318 --
 
@@ -81,6 +99,17 @@ class TestSplitSentences:
         )
         assert len(result) == 2
         assert "Проф. Іванов" in result[1]
+
+    def test_address_abbreviations_chain(self):
+        """B1 skeleton pattern: 'м. вул. Б. ст. м.' chain stays one sentence."""
+        result = split_sentences(
+            "Музей розміщено в м. Києві на вул. Б. Хмельницького, 11 "
+            "(ст. м. «Театральна»)."
+        )
+        # Whole address must be one sentence; no fragment-per-abbreviation.
+        assert len(result) == 1
+        assert "вул. Б. Хмельницького" in result[0]
+        assert "ст. м." in result[0]
 
     def test_bibliography_initials(self):
         """Surname + single-letter initial (Іванюк С.) must not split.

@@ -21,6 +21,7 @@ from scripts.orchestration.trails.trail_certification import (
     P3Action,
     TrailCertificationError,
     TrailCertificationHarness,
+    UnsupportedTrailSpecError,
     validate_certification_attestation_data,
 )
 
@@ -158,6 +159,36 @@ def test_harness_executes_p3_cases_from_sqlite_and_writes_bound_attestation(tmp_
     ]
     state_db = result.attestation_path.parent / "cases" / "current-head-approval" / "state.sqlite3"
     assert state_db.is_file()
+
+
+def test_harness_refuses_v1_before_constructing_the_p3_runner(tmp_path: Path, monkeypatch) -> None:
+    case = _case(
+        case_id="legacy-refusal",
+        transition="accepted",
+        outcome="terminal",
+        exit_class=ExitClass.OK,
+        state="terminal",
+    )
+
+    def assert_v1_refused(subject: CertificationSubject) -> None:
+        try:
+            _harness(tmp_path).run(
+                certification_id="legacy",
+                subject=subject,
+                fixture=_fixture(),
+                cases=(case,),
+            )
+        except UnsupportedTrailSpecError:
+            return
+        raise AssertionError("the certification harness accepted an execution-ineligible trail")
+
+    assert_v1_refused(_subject(trail_path=FIXTURES / "legacy.trail.yaml", seat="grok-daily"))
+    valid_spec = certification_module._read_trail(
+        FIXTURES / "executable.trail.yaml", seat_registry_path=FIXTURES / "seats.yaml"
+    )
+    monkeypatch.setattr(certification_module, "_read_trail", lambda *args, **kwargs: valid_spec)
+    with pytest.raises(AssertionError):
+        assert_v1_refused(_subject())
 
 
 def test_harness_records_an_injected_crash_without_spawning_a_live_command(tmp_path: Path) -> None:

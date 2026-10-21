@@ -37,6 +37,12 @@ def test_check_reports_set_without_leaking_value():
     assert SENTINEL not in res.stderr
 
 
+def test_empty_var_counts_as_unset():
+    res = _run(["check", "SAFE_ENV_EMPTY"], {"SAFE_ENV_EMPTY": ""})
+    assert res.returncode == 1
+    assert "SAFE_ENV_EMPTY: UNSET" in res.stdout
+
+
 def test_is_set_is_silent_and_uses_exit_code():
     set_res = _run(["is-set", "SAFE_ENV_SENTINEL"], {"SAFE_ENV_SENTINEL": SENTINEL})
     assert set_res.returncode == 0

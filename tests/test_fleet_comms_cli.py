@@ -13,6 +13,7 @@ import pytest
 
 from scripts.fleet_comms.cli import (
     EXIT_ERROR,
+    EXIT_NOT_FOUND,
     EXIT_OK,
     get_formal_review_job,
     main,
@@ -86,6 +87,21 @@ def test_plane_status_cli_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, 
     assert data["parity_telemetry"]["event_count"] == 1
 
 
+def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    root = tmp_path / "custom-root"
+    root.mkdir()
+    rc = main(["plane-status", "--root", str(root)])
+    assert rc == EXIT_OK
+    data = json.loads(capsys.readouterr().out)
+    # Config default is authority; --root only redirects storage, not mode.
+    assert data["mode"] == "authority"
+    assert data["response_schema_version"] == "comms.v2"
+    assert data["store"]["kind"] == "comms-plane"
+    assert "plane_root" not in data
+
+
 def test_get_formal_review_job_helper(tmp_path: Path) -> None:
     root = tmp_path / "plane"
     _seed_plane_db(root)
@@ -95,6 +111,32 @@ def test_get_formal_review_job_helper(tmp_path: Path) -> None:
     assert job["gate_kind"] == "cross-family-review"
     assert len(job["attempts"]) == 1
     assert job["attempts"][0]["review_attempt_id"] == "att-1"
+
+
+def test_formal_job_get_cli(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "plane"
+    _seed_plane_db(root)
+    rc = main(["formal-job", "get", "rev-abc", "--root", str(root)])
+    assert rc == EXIT_OK
+    data = json.loads(capsys.readouterr().out)
+    assert data["review_id"] == "rev-abc"
+    assert data["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
+    assert data["attempts"][0]["completion_state"] == "incomplete"
+
+
+def test_formal_job_get_not_found(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "plane"
+    _seed_plane_db(root)
+    rc = main(["formal-job", "get", "missing", "--root", str(root)])
+    assert rc == EXIT_NOT_FOUND
+    err = capsys.readouterr().err
+    assert "not found" in err
+
+
+def test_formal_job_get_missing_db(tmp_path: Path, capsys) -> None:
+    rc = main(["formal-job", "get", "rev-abc", "--root", str(tmp_path / "empty")])
+    assert rc == EXIT_ERROR
+    assert "plane DB not found" in capsys.readouterr().err
 
 
 def test_acp_discuss_cli_scopes_active_transport_and_restores_environment(

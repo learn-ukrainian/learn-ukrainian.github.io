@@ -20,6 +20,59 @@ def _module_dir(tmp_path: Path) -> Path:
     return module_dir
 
 
+def test_reviewer_correction_without_fixes_block_emits_diagnostic(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        linear_pipeline._apply_reviewer_correction(
+            "russianisms_clean",
+            {"passed": False, "hits": ["bad form"]},
+            qg_report={"gates": {}},
+            module_dir=_module_dir(tmp_path),
+            plan_path=tmp_path / "plan.yaml",
+            candidates=(),
+            reviewer_corrector=lambda _context: "REVISE: please fix the issue.",
+            invoker=None,
+        )
+
+    events = _events(telemetry)
+    assert [event["event"] for event in events] == ["reviewer_fixes_unparseable"]
+    assert events[0]["gate"] == "russianisms_clean"
+    assert events[0]["response_preview"] == "REVISE: please fix the issue."
+
+
+def test_reviewer_correction_unmatched_anchor_emits_diagnostic(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        linear_pipeline._apply_reviewer_correction(
+            "russianisms_clean",
+            {"passed": False, "hits": ["bad form"]},
+            qg_report={"gates": {}},
+            module_dir=_module_dir(tmp_path),
+            plan_path=tmp_path / "plan.yaml",
+            candidates=(),
+            reviewer_corrector=lambda _context: (
+                "<fixes>\n"
+                "- find: Missing anchor\n"
+                "  replace: Replacement text\n"
+                "</fixes>"
+            ),
+            invoker=None,
+        )
+
+    events = _events(telemetry)
+    assert [event["event"] for event in events] == [
+        "reviewer_fixes_anchor_unmatched"
+    ]
+    assert events[0]["gate"] == "russianisms_clean"
+    assert events[0]["anchor_preview"] == "Missing anchor"
+
+
 def test_reviewer_fix_whitespace_normalized_anchor_match_applies_once(
     tmp_path: Path,
 ) -> None:
@@ -45,6 +98,16 @@ def test_reviewer_fix_whitespace_normalized_anchor_match_applies_once(
     assert events[0]["operation"] == "replace"
     assert events[0]["anchor_preview"] == "Alpha beta gamma"
     assert events[0]["matched_preview"] == "Alpha\n  beta   gamma"
+
+
+def test_reviewer_fix_exact_match_replaces_full_trailing_space_span() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "foo  bar",
+        [{"find": "foo  ", "replace": "foo "}],
+    )
+
+    assert result.text == "foo bar"
+    assert result.unmatched_anchors == frozenset()
 
 
 def test_reviewer_fix_ambiguous_normalized_anchor_fails_closed(

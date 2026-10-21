@@ -75,6 +75,11 @@ class TestSemanticFalseFriends:
         result = self._check(content)
         assert len(result) == 0
 
+    def test_blockquote_skipped(self):
+        content = "> **лук** (onion) in a quote."
+        result = self._check(content)
+        assert len(result) == 0
+
     def test_colon_separator(self):
         content = "лук: onion"
         result = self._check(content)

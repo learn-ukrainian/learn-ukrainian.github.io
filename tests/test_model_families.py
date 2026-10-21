@@ -289,6 +289,22 @@ def test_agy_route_fallback_and_other_family_controls(token, expected):
     assert model_families.normalize_family(token).value == expected
 
 
+@pytest.mark.parametrize(
+    "mixed,expected",
+    [
+        ("claude-opus-5-5:gpt-6.1-sol", "openai"),
+        ("gpt-6.1-sol:claude-opus-5-5", "openai"),
+        ("claude-opus-5-5:gemini-3.1-pro-high", "google"),
+        ("gemini-3.1-pro-high:gpt-6.1-sol", "google"),
+        ("deepseek-v4.1-flash:gemini-3.1-pro-high", "deepseek"),
+        ("grok-4.7:claude-opus-5-5", "anthropic"),
+    ],
+)
+def test_agy_does_not_change_existing_mixed_concrete_token_precedence(mixed, expected):
+    for selector in (mixed, f"agy:{mixed}", f"{mixed}-antigravity"):
+        assert model_families.normalize_family(selector).value == expected
+
+
 @pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
 def test_agy_decoration_does_not_override_conflicting_lineage_or_author_family(model, family):
     from scripts.review.reviewer_resolver import resolve_author_family

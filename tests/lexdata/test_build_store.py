@@ -75,6 +75,11 @@ def test_writer_target_refuses_network_and_unknown_filesystems(checkouts, monkey
         build_store.writer_target(checkouts[0])
 
 
+def test_writer_target_requires_an_existing_data_dir(tmp_path) -> None:
+    with pytest.raises(build_store.BuildRefused, match="data_dir_missing"):
+        build_store.writer_target(test_data_dir=tmp_path / "absent")
+
+
 # --- publication ---------------------------------------------------------------------------
 
 def test_published_generation_is_self_contained_and_untouched_after_swap(harness, monkeypatch) -> None:
@@ -330,6 +335,13 @@ def test_disk_admission_refuses_before_writing(harness) -> None:
     assert not harness.target.published.exists()
 
 
+def test_rss_cap_aborts_at_a_batch_commit(harness) -> None:
+    with pytest.raises(build_store.BuildRefused, match="rss_cap_exceeded"):
+        harness.build(admission=build_store.Admission(0, 0, rss_cap_bytes=1, batch_rows=1))
+    assert not harness.target.published.exists()
+    assert list(harness.target.work_dir.glob("lexdata.*.db.tmp*")) == []
+
+
 def test_unmeasurable_rss_fails_closed(monkeypatch) -> None:
     import builtins
     real_import = builtins.__import__
@@ -400,6 +412,13 @@ def test_build_connection_temp_files_stay_in_the_budgeted_dir(harness, monkeypat
     # Outside the pin, the build connection itself refuses to open.
     with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_outside_budget"):
         build_store._open_build_connection(target.work_dir / "probe.db", target.tmp_dir)
+
+
+def test_build_refuses_when_sqlite_temp_dir_cannot_be_pinned(harness, monkeypatch) -> None:
+    monkeypatch.setattr(build_store, "_set_sqlite_temp_dir", lambda directory: None)
+    with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_outside_budget"):
+        harness.build()
+    assert not harness.target.published.exists()
 
 
 def test_build_refuses_when_temp_files_cannot_be_observed(harness, monkeypatch) -> None:

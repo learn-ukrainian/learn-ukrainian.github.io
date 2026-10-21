@@ -173,6 +173,17 @@ def test_review_triage_is_stricter_than_grow_auto_merge() -> None:
     assert triage["needs_publish_review_sample"][0]["reasons"] == ["missing_pos"]
 
 
+def test_review_triage_accepts_enrichment_translation_anchor() -> None:
+    entry = {
+        "lemma": "переклад",
+        "pos": "noun",
+        "source_provenance": [{"source_family": "fixture"}],
+        "enrichment": {"translation": {"en": ["translation"]}},
+    }
+
+    assert review.publish_review_reasons(entry) == []
+
+
 def test_publish_review_queue_includes_auto_merge_and_grow_review_rows() -> None:
     payload = {
         "auto_merge": [
@@ -238,6 +249,49 @@ def test_publish_review_queue_includes_auto_merge_and_grow_review_rows() -> None
     assert rows_by_lemma["жабка"]["source_references"] == ["fixture / source-a / row 2"]
     assert rows_by_lemma["сумнів"]["bucket"] == "needs_review"
     assert rows_by_lemma["сумнів"]["reasons"] == ["grow_needs_review:missing dictionary definition"]
+
+
+def test_publish_review_queue_ids_are_stable_for_duplicate_headwords() -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-z",
+                        "source_locator": "row 2",
+                    }
+                ],
+            },
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-a",
+                        "source_locator": "row 1",
+                    }
+                ],
+            },
+        ],
+        "needs_review": [],
+    }
+
+    queue = review.build_publish_review_queue(payload)
+
+    assert [(row["queue_id"], row["source_references"]) for row in queue["queue"]] == [
+        (
+            "source-inventory-publish-review-0001",
+            ["fixture / source-a / row 1"],
+        ),
+        (
+            "source-inventory-publish-review-0002",
+            ["fixture / source-z / row 2"],
+        ),
+    ]
 
 
 def test_publish_review_queue_report_rejects_repository_paths() -> None:

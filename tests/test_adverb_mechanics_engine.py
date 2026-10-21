@@ -26,6 +26,29 @@ from scripts.practice.adverb_mechanics_engine import (
 )
 
 
+def test_cards_zero_collision_and_unique_options():
+    """Verify that card IDs are unique, each card has 4 unique options, and distractors are well-formed."""
+    cards = build_canonical_adverb_cards()
+    card_ids = [c.card_id for c in cards]
+    assert len(card_ids) == len(set(card_ids)), "Duplicate card IDs detected"
+
+    for card in cards:
+        opts = card.all_options()
+        assert len(opts) == 4, f"Card {card.card_id} does not have exactly 4 options"
+        assert len(set(opts)) == 4, f"Card {card.card_id} contains duplicate options: {opts}"
+        assert card.correct_answer in opts, f"Card {card.card_id} correct answer not in options"
+
+        distractor_texts = [d.text for d in card.distractors]
+        assert len(distractor_texts) == 3
+        assert len(set(distractor_texts)) == 3
+        assert card.correct_answer not in distractor_texts
+
+        for d in card.distractors:
+            assert isinstance(d.interference_key, AdverbInterferenceKey)
+            assert len(d.explanation_ua) > 15
+            assert len(d.explanation_en) > 15
+
+
 def test_adverb_deck_json_export_and_file_parity(tmp_path: Path):
     """Verify JSON export schema and parity with committed artifact."""
     cards = build_canonical_adverb_cards()

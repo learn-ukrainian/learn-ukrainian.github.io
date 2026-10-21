@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -352,6 +353,25 @@ def test_compute_heldout_minhash_similarity_synthetic_distinct(tmp_path: Path) -
 def test_no_private_host_paths_opsec(receipt_data: dict[str, Any]) -> None:
     """Verify OPSEC: zero host paths, usernames, or raw IPs in receipt."""
     assert_no_private_host_paths(receipt_data, "production_release_receipt.json")
+
+
+@pytest.mark.needs_artifact(
+    "open_model_archive_payload",
+    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
+)
+def test_verify_only_cli_execution() -> None:
+    """Run production shards assembly in --verify-only mode and verify exit 0."""
+    script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_production_shards_assembly.py"
+    res = subprocess.run(
+        [sys.executable, str(script_path), "--verify-only"],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert res.returncode == 0, f"--verify-only failed with code {res.returncode}:\n{res.stderr}\n{res.stdout}"
+    assert "[✓] --verify-only checks passed 100% cleanly!" in res.stdout
 
 
 @pytest.mark.needs_artifact(

@@ -84,6 +84,14 @@ def test_pr_check_state_superseded_cancelled_then_success_is_passing():
     assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
 
 
+def test_pr_check_state_success_then_later_cancelled_is_failing():
+    rollup = [
+        _check("Ruff", "SUCCESS", "2026-09-19T02:49:59Z"),
+        _check("Ruff", "CANCELLED", "2026-09-19T02:50:11Z"),
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
 def test_pr_check_state_missing_timestamps_keeps_every_row():
     rollup = [
         {"name": "Ruff", "conclusion": "CANCELLED", "workflowName": "CI"},
@@ -105,6 +113,32 @@ def test_pr_check_state_status_context_keeps_latest_started_at():
         {"context": "ci/circleci", "state": "SUCCESS", "startedAt": "2026-09-19T02:50:11Z"},
     ]
     assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
+def test_pr_check_state_status_context_success_then_failure_on_updated_at_is_failing():
+    rollup = [
+        {
+            "context": "ci/circleci",
+            "state": "SUCCESS",
+            "createdAt": "2026-09-19T02:40:00Z",
+            "updatedAt": "2026-09-19T02:49:59Z",
+        },
+        {
+            "context": "ci/circleci",
+            "state": "FAILURE",
+            "createdAt": "2026-09-19T02:50:00Z",
+            "updatedAt": "2026-09-19T02:50:11Z",
+        },
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
+def test_pr_check_state_timestamp_tie_keeps_both():
+    rollup = [
+        _check("Ruff", "CANCELLED", "2026-09-19T02:50:11Z"),
+        _check("Ruff", "SUCCESS", "2026-09-19T02:50:11Z"),
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
 
 
 def test_pr_check_state_pr_8264_rollup_is_passing():
@@ -266,6 +300,199 @@ def test_public_repository_identity_ignores_env_override(monkeypatch):
     assert caps.status_code == 200
     assert caps.json()["public_repository_id"] == REPO
     assert foreign not in caps.text
+
+
+def test_collector_entry_points_fail_closed_before_runner():
+    """Direct collector invocation must admit repo identity before any runner call.
+
+    Foreign / cased / suffixed / whitespace-padded repository ids must raise and
+    must not touch issues, PRs, reviews, normalization, cache keys, filters, or
+    emitted projection payloads.
+    """
+    from scripts.api.work_router import projection_cache_key
+    from scripts.work.normalize import build_projection, build_public_projection
+    from scripts.work.sources_public import (
+        admit_public_repository_id,
+        collect_public_sections,
+        fetch_fleet_reviews,
+        fetch_open_issues,
+        fetch_open_prs,
+        public_repository_id,
+    )
+
+    foreign_exact = "evil-org/private-infra-must-not-project"
+    # Forms that must fail closed at admit/collector boundaries (exact match only).
+    adversarial_ids = [
+        foreign_exact,
+        "LEARN-UKRAINIAN/learn-ukrainian.github.io",  # casing
+        "learn-ukrainian/learn-ukrainian.github.io-evil",  # suffix
+        "learn-ukrainian/learn-ukrainian.github.io ",  # trailing whitespace
+        " learn-ukrainian/learn-ukrainian.github.io",  # leading whitespace
+        "other-owner/learn-ukrainian.github.io",  # same-name different owner
+        "learn-ukrainian/learn-ukrainian.github.io/extra",  # path suffix
+        "..",
+        "not-a-repo",
+        " ",
+        "\t",
+    ]
+    # Saved-view parser strips then allowlists; whitespace-only becomes a no-op
+    # (not a foreign filter). Non-canonical non-empty strings still reject.
+    saved_view_rejected = [
+        foreign_exact,
+        "LEARN-UKRAINIAN/learn-ukrainian.github.io",
+        "learn-ukrainian/learn-ukrainian.github.io-evil",
+        "other-owner/learn-ukrainian.github.io",
+        "learn-ukrainian/learn-ukrainian.github.io/extra",
+        "..",
+        "not-a-repo",
+    ]
+
+    runner_calls: list[list[str]] = []
+
+    def tracking_runner(args: list[str], timeout_s: float) -> tuple[int, str, str]:
+        runner_calls.append(list(args))
+        return 0, "[]", ""
+
+    def tracking_fleet(limit: int, offset: int, repository: str) -> dict:
+        runner_calls.append(["fleet", str(limit), str(offset), repository])
+        return {
+            "total": 0,
+            "reviews": [],
+            "filters": {"repository": repository},
+        }
+
+    # Canonical / omitted ids still reach the runner with the closed identity.
+    assert admit_public_repository_id() == REPO
+    assert admit_public_repository_id(None) == REPO
+    assert admit_public_repository_id("") == REPO
+    assert admit_public_repository_id(REPO) == REPO
+    assert public_repository_id() == REPO
+
+    issues_ok = fetch_open_issues(REPO, runner=tracking_runner)
+    prs_ok = fetch_open_prs(None, runner=tracking_runner)
+    assert issues_ok.status == "ok"
+    assert prs_ok.status == "ok"
+    assert len(runner_calls) == 2
+    for args in runner_calls:
+        assert "--repo" in args
+        assert args[args.index("--repo") + 1] == REPO
+    runner_calls.clear()
+
+    # Every non-canonical form fails closed with zero runner side effects.
+    for bad in adversarial_ids:
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            admit_public_repository_id(bad)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            fetch_open_issues(bad, runner=tracking_runner)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            fetch_open_prs(bad, runner=tracking_runner)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            fetch_fleet_reviews(loader=tracking_fleet, repository_id=bad)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            collect_public_sections(repository_id=bad, gh_runner=tracking_runner)
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            build_public_projection(repository_id=bad, gh_runner=tracking_runner)
+
+    for bad in saved_view_rejected:
+        with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+            parse_saved_view_params({"repository_id": bad})
+    # Whitespace-only / empty saved-view values cannot install a foreign filter.
+    assert parse_saved_view_params({"repository_id": " "}) == {}
+    assert parse_saved_view_params({"repository_id": "\t"}) == {}
+    assert parse_saved_view_params({"repository_id": ""}) == {}
+
+    assert runner_calls == [], "foreign repository_id must never invoke runners"
+
+    # Normalize / filters / cache keys / projection emit stay pinned when sections
+    # already exist; foreign repository_id cannot re-label or leak into output.
+    clean_sections = {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 9,
+                    "title": "public issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "blocked by #1",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-01T00:00:00Z",
+                    "url": f"https://github.com/{REPO}/issues/9",
+                    "state": "OPEN",
+                }
+            ],
+            count=1,
+        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "open_total": 1,
+                "open_issue_numbers": [9],
+            },
+            count=1,
+        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult(
+            "fleet_reviews",
+            "ok",
+            payload={
+                "total": 1,
+                "reviews": [
+                    {
+                        "review_id": "rev-foreign-try",
+                        "repository": foreign_exact,
+                        "pr_number": 9,
+                        "state": "running",
+                        "sealed_verdict_available": True,
+                    }
+                ],
+            },
+            count=1,
+        ),
+    }
+
+    for bad in adversarial_ids:
+        with pytest.raises(ValueError, match="public repository_id must be exactly"):
+            build_projection(clean_sections, repository_id=bad)
+
+    projection = build_projection(clean_sections, repository_id=REPO)
+    validate_projection(projection)
+    assert {item["repository_id"] for item in projection["items"]} == {REPO}
+    blob = json.dumps(projection)
+    cache_key = projection_cache_key(parse_saved_view_params({"repository_id": REPO}))
+    for bad in adversarial_ids:
+        if not bad.strip():
+            # Whitespace-only forms are not embeddable repository ids; skip
+            # substring checks that would false-positive on normal JSON.
+            continue
+        assert bad not in blob
+        assert bad not in cache_key
+    assert foreign_exact not in blob
+    assert foreign_exact not in cache_key
+
+    ok_filters = parse_saved_view_params({"repository_id": REPO})
+    assert ok_filters["repository_id"] == [REPO]
+    assert projection_cache_key(ok_filters) == projection_cache_key({"repository_id": [REPO]})
+    # Foreign filter values never become cache-key material — including via
+    # direct projection_cache_key calls (self-validating boundary).
+    for bad in saved_view_rejected:
+        with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+            projection_cache_key(parse_saved_view_params({"repository_id": bad}))
+        with pytest.raises(SchemaValidationError, match="invalid repository_id"):
+            projection_cache_key({"repository_id": bad})
+    # Padded canonical forms: parser strips before admit, so exact public id
+    # remains the only cache-key identity.
+    padded = parse_saved_view_params({"repository_id": f"  {REPO}  "})
+    assert padded["repository_id"] == [REPO]
+    assert projection_cache_key(padded) == projection_cache_key(ok_filters)
+    assert projection_cache_key({"repository_id": f"  {REPO}  "}) == projection_cache_key(ok_filters)
 
 
 def test_fleet_reviews_and_projection_reject_mixed_repositories():
@@ -931,6 +1158,30 @@ def test_resolve_live_blockers_ignores_closed_targets():
     assert items[0]["flags"]["has_blocker"] is False
 
 
+def test_resolve_live_blockers_keeps_open_target_blocking():
+    """An open blocker is still live — closed-target handling must not over-clear."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2), "evidence": "issue_body"},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [],
+        },
+    ]
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is True
+
+
 def test_resolve_live_blockers_conservative_when_target_unknown():
     """A blocker target not present in this projection can't be confirmed
     closed (lookup is unknown or omitted), so it must conservatively remain
@@ -961,6 +1212,31 @@ def test_resolve_live_blockers_conservative_when_target_unknown():
     # Lookup says open -> still a live blocker
     resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 999): "open"})
     assert items[0]["flags"]["has_blocker"] is True
+
+
+def test_resolve_live_blockers_absent_target_cleared_by_lifecycle_map():
+    """Absent blocker target is cleared when a provided/fixture lifecycle map confirms it closed."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 999), "evidence": "issue_body"},
+            ],
+        },
+    ]
+    # Target absent from items, but lifecycle map says closed -> has_blocker False
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 999): "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+    # Also cleared when keyed by issue number (int or str)
+    resolve_live_blockers(items, target_lifecycle_by_id={999: "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+    resolve_live_blockers(items, target_lifecycle_by_id={"999": "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
 
 
 def test_fetch_issue_states_batched_runner_handling():
@@ -1180,6 +1456,49 @@ def test_fetch_fleet_reviews_production_default_loader():
     assert isinstance(section.payload, dict)
     assert "reviews" in section.payload
     assert all(r["repository"] == REPO for r in section.payload["reviews"])
+
+
+def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
+    """Multiple concurrent requests on a cold restart share a single background build task (#6859)."""
+    import asyncio
+    import time
+
+    from httpx import ASGITransport, AsyncClient
+
+    import scripts.api.main as api_main
+    import scripts.api.work_router as work_router
+    from scripts.api.state_helpers import cache_invalidate
+
+    cache_invalidate(work_router.CACHE_KEY)
+    api_main.app.state.ctx.stores.work_in_flight.clear()
+
+    build_calls = 0
+    real_build_sync = work_router._build_sync
+
+    def slow_build(filters, *, cache_age_s=0.0):
+        nonlocal build_calls
+        build_calls += 1
+        time.sleep(0.05)
+        return real_build_sync(filters, cache_age_s=cache_age_s)
+
+    monkeypatch.setattr(work_router, "_build_sync", slow_build)
+
+    async def run_concurrent():
+        async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
+            tasks = [ac.get("/api/work/v1/projection?stream=infra-harness") for _ in range(8)]
+            responses = await asyncio.gather(*tasks)
+            return responses
+
+    responses = asyncio.run(run_concurrent())
+
+    for resp in responses:
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["schema_version"] == "work-projection.v1"
+        assert "attention" in data
+
+    # 8 concurrent requests resulted in only 1 build execution
+    assert build_calls == 1
 
 
 # ---------------------------------------------------------------------------
@@ -1489,6 +1808,88 @@ def test_future_dated_receipt_is_not_fresh():
         "state": "unknown",
         "reason": "receipt_observed_at_future",
     }
+
+
+def test_issue_source_unavailable_is_not_qualified_by_pr_section():
+    issue = {
+        "number": 7,
+        "title": "Missing issue source",
+        "labels": [],
+        "assignees": [],
+        "body": "",
+        "state": "OPEN",
+        "url": f"https://github.com/{REPO}/issues/7",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            issues=SectionResult("issues", "unavailable", payload=[issue], count=0, reason="issues_down"),
+            prs=SectionResult(
+                "prs",
+                "ok",
+                payload=[_pr_raw_9741(statusCheckRollup=[{"state": "FAILURE"}], reviewDecision="APPROVED")],
+                count=1,
+            ),
+            streams=SectionResult(
+                "streams",
+                "ok",
+                payload={"streams": {"infra-harness": [10]}, "open_stream_membership": {"7": ["infra-harness"]}},
+                count=1,
+            ),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    issue_row = next(row for row in projection["items"] if row["resource_kind"] == "issue")
+    pr_row = next(row for row in projection["items"] if row["resource_kind"] == "pr")
+    assert issue_row["flags"]["source_ok"] is False
+    assert issue_row["health"] == "UNKNOWN"
+    assert issue_row["safe_next_action"]["reason_codes"] == ["source_unavailable"]
+    assert pr_row["flags"]["source_ok"] is True
+    assert pr_row["health"] == "OFF_TRACK"
+    assert pr_row["safe_next_action"]["code"] == "FIX_CI"
+
+
+def test_incomplete_membership_is_not_homed():
+    issue = {
+        "number": 8,
+        "title": "Would have been an orphan",
+        "labels": [],
+        "assignees": [],
+        "body": "",
+        "state": "OPEN",
+        "url": f"https://github.com/{REPO}/issues/8",
+        "createdAt": "2026-08-01T00:00:00Z",
+        "updatedAt": "2026-08-02T00:00:00Z",
+    }
+    projection = build_projection(
+        _empty_sections_9741(
+            issues=SectionResult("issues", "ok", payload=[issue], count=1),
+            streams=SectionResult(
+                "streams",
+                "ok",
+                payload={
+                    "orphans": [{"number": 8, "title": "Would have been an orphan"}],
+                    "effective_membership": {"8": {"streams": ["infra-harness"]}},
+                    "membership_complete": False,
+                    "incomplete_nodes": [8],
+                },
+                count=1,
+            ),
+        ),
+        repository_id=REPO,
+        lifecycle_ledgers=[],
+    )
+    row = next(item for item in projection["items"] if item["resource_kind"] == "issue")
+    stream = row["projections"]["stream"]
+    assert stream["status"] == "unknown"
+    assert stream["streams"] == []
+    assert stream["membership_reason"] == "membership_incomplete"
+    assert stream["historical_status"] == "orphan"
+    assert row["health"] == "UNKNOWN"
+    assert projection["denominator"]["streams_complete"] is False
+    assert "effective_membership" not in json.dumps(projection)
 
 
 def test_dead_running_task_is_not_healthy_execution():

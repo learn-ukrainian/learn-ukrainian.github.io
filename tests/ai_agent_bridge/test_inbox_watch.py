@@ -149,6 +149,22 @@ def test_cursor_does_not_advance_when_stdout_flush_fails(isolate_db: Path):
     assert last_seen == 0
 
 
+def test_inbox_watcher_tick_invokes_ask_watchdog(isolate_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """The persistent inbox watcher loop invokes run_ask_watchdog on each tick (#5893)."""
+    watchdog_mock = patch("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog").start()
+    try:
+        _inbox_watch.run_watcher(
+            "grok",
+            db_path=isolate_db,
+            lock_dir=tmp_path / "locks",
+            output=io.StringIO(),
+            once=True,
+        )
+        watchdog_mock.assert_called_once()
+    finally:
+        patch.stopall()
+
+
 def test_inbox_watcher_watchdog_failure_warns_and_continues(
     isolate_db: Path, tmp_path: Path, capsys: pytest.CaptureFixture
 ):

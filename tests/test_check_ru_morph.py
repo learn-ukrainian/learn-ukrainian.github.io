@@ -68,6 +68,16 @@ def test_vesum_attested_permanent_quality_adjectives_stay_clean():
         assert res["confidence"] == 0.0
 
 
+def test_documented_calques_still_flag_without_vesum():
+    # Real calques (not VESUM-attested) must still flag despite the VESUM gate
+    # on the actv/Dist heuristic.
+    for word in ["слідуючий", "учбовий"]:
+        res = is_russian_pattern(word)
+        assert res["matches_russian"] is True, f"Expected {word} to flag"
+        assert res["russian_lemma"] is None
+        assert res["confidence"] >= 0.7
+
+
 def test_flagged_words_never_return_an_unverified_lemma():
     # Any word this module returns a russian_lemma for must be a genuinely
     # known RU dictionary word, never an invented DictionaryAnalyzer guess.

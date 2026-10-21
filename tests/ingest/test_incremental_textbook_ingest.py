@@ -320,6 +320,23 @@ def test_live_gate_rechecks_preimage_after_acquiring_write_lock(fixture_env, tmp
         conn.close()
 
 
+def test_dry_run_receipt_proves_database_hash_is_unchanged(fixture_env, tmp_path):
+    db, slug = fixture_env
+    receipt_path = tmp_path / "dry-run-receipt.json"
+
+    iti.ingest(
+        [slug],
+        db_path=db,
+        dry_run=True,
+        receipt_path=receipt_path,
+    )
+
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["status"] == "dry_run_rolled_back"
+    assert receipt["db_sha256_before"] == receipt["db_sha256_after"]
+    assert receipt["after_transaction"]["textbook_rows"] == 3
+
+
 def test_chunks_root_override_is_threaded_without_using_default(fixture_env, tmp_path):
     db, slug = fixture_env
     canonical = tmp_path / "canonical-drive" / "textbook_chunks"
@@ -571,6 +588,28 @@ def test_copied_rehearsal_uses_one_loaded_policy_snapshot(tmp_path, monkeypatch)
     ) == {slug: 1}
 
 
+def test_tracked_university_policy_is_closed_and_default_deny():
+    from projects.open_model_data import university_source_policy as usp
+
+    policy, policy_sha256 = usp.load_policy()
+
+    assert policy["status"] == "ACTIVE_DEFAULT_DENY"
+    assert policy["default_disposition"] == "QUARANTINE_UNTIL_AUDIENCE_PROVEN"
+    assert policy["source_count"] == 14
+    assert len(policy_sha256) == 64
+    by_source = {entry["source_file"]: entry for entry in policy["sources"]}
+    assert by_source["uni-ukrmova-prof-haluzynska-2006"]["allowed_lanes"] == [
+        "contextual_retrieval",
+        "corpus_ingest",
+        "linguistic_rule_evidence",
+    ]
+    assert by_source["uni-ukrmova-vlasova-2023"]["allowed_lanes"] == []
+    assert by_source["uni-ukrmova-syntax-didkivska-shvets-2020"]["allowed_lanes"] == []
+    assert by_source["uni-ukrmova-lexicology-filon-khomik-2010"]["audience_class"] == (
+        "A_ukrainian_university_audience"
+    )
+
+
 def test_v3_content_quarantine_overrides_proven_audience(tmp_path):
     from projects.open_model_data import university_source_policy as usp
 
@@ -737,6 +776,31 @@ def test_title_verified_bilyk_author_mapping_enriches_staged_source() -> None:
     )
 
     assert entry["author_uk"] == "Катерина Білик"
+
+
+def test_bondarenko_informatics_rows_have_author_subject_and_grade(tmp_path) -> None:
+    slug = "6-klas-informatyka-bondarenko-2023"
+    path = tmp_path / "grade-06" / f"{slug}.jsonl"
+    path.parent.mkdir()
+    path.write_text(
+        json.dumps(
+            {
+                "chunk_id": f"{slug}_s0000",
+                "section_title": "Сторінка 1",
+                "text": "Інформатика",
+                "author": "bondarenko",
+                "author_uk": None,
+                "grade": 6,
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    row = iti.build_rows(slug, chunks_root=tmp_path)[0]
+
+    assert row[3:8] == (slug, "informatyka", 6, "bondarenko", "Бондаренко")
 
 
 def test_university_source_without_audience_policy_is_quarantined(tmp_path):
@@ -978,6 +1042,42 @@ def test_hash_bound_native_anomaly_quarantine_removes_only_exact_archived_chunk(
     assert replay["removed_chunk_count"] == 0
     assert replay["already_absent_chunk_count"] == 1
     assert replay["per_source"][0]["section_policy"] == "unchanged_already_absent"
+
+
+def test_quarantine_post_commit_checkpoint_failure_is_receipted(
+    fixture_env,
+    tmp_path,
+    monkeypatch,
+):
+    db, slug = fixture_env
+    iti.ingest([slug], db_path=db, dry_run=False)
+    audit_path = tmp_path / "audit.json"
+    audit_path.write_text("{}\n", encoding="utf-8")
+    quarantine_dir = tmp_path / "quarantine"
+    quarantine_dir.mkdir()
+    monkeypatch.setattr(
+        iti,
+        "load_native_anomaly_quarantine_plan",
+        lambda *_args, **_kwargs: {slug: [f"{slug}_s0001"]},
+    )
+    original_connect = _install_post_commit_checkpoint_failure(monkeypatch, db)
+
+    receipt = iti.quarantine_native_anomaly_chunks(
+        audit_path=audit_path,
+        chunks_root=iti.CHUNKS_DIR,
+        quarantine_dir=quarantine_dir,
+        db_path=db,
+        dry_run=False,
+    )
+
+    assert receipt["status"] == "committed_with_post_commit_error"
+    assert receipt["post_commit_error"] == ("WAL checkpoint did not settle after quarantine: [1, 5, 3]")
+    assert receipt["wal_checkpoint"] == [1, 5, 3]
+    conn = original_connect(str(db))
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 2
+    finally:
+        conn.close()
 
 
 def test_quarantine_cli_writes_post_commit_receipt_before_exit(tmp_path, monkeypatch, capsys):

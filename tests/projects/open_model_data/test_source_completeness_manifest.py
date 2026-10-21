@@ -624,6 +624,25 @@ def test_missing_evidence_defaults_to_missing_and_keeps_denominator(fixture):
     assert fixture.receipt()["supplied_unit_count"] == 144
 
 
+def test_all20_unknown_ranges_and_original123_not_guessed(fixture):
+    fixture.docs["source_manifest"]["ranges"] = []
+    fixture.docs["stage_evidence"]["records"] = []
+    for name in ("lexical_universe", "legacy_membership"):
+        fixture.docs[name].update(membership="UNKNOWN", index=None, members=[])
+    fixture.save()
+    assert fixture.cli().returncode == 2
+    receipt = fixture.receipt()
+    assert receipt["gap_count"] == 22
+    assert receipt["legacy_member_count"] is receipt["lexical_member_count"] is None
+    assert receipt["legacy_expected_obligation"] == 123
+    assert [r["requirement_id"] for r in receipt["requirements"]] == list(IDS)
+    assert all(r["partition_status"] == "UNPARTITIONED" for r in receipt["requirements"])
+    assert all(r["gap_count"] == 1 for r in receipt["requirements"])
+    assert fixture.source_output()["units"] == []
+    assert receipt["stage_counts"] == {}
+    assert receipt["programme_completeness"] == "UNRESOLVED"
+
+
 @pytest.mark.parametrize("drift", ["missing", "extra", "order", "identity", "duplicate", "digest", "boundary"])
 def test_source_index_reconciliation_rejects_drift_before_publication(fixture, drift):
     row = fixture.docs["source_manifest"]["ranges"][0]
@@ -983,6 +1002,12 @@ def test_positive_absent_unit_has_disjoint_unit_partition(fixture):
         "genuinely_absent": 1,
     }
     assert sum(result["ranges"][0]["unit_partitions"].values()) == 3
+
+
+def test_invalid_cli_flags_are_invalid_evidence(fixture):
+    result = subprocess.run([sys.executable, "-m", MODULE], capture_output=True, text=True, check=False, timeout=60)
+    assert result.returncode == 3
+    assert result.stderr == "INVALID_EVIDENCE: invalid CLI arguments; use --help\n"
 
 
 @pytest.mark.parametrize("path", ["capture\x00.txt", "loop"], ids=["embedded-nul", "symlink-loop"])

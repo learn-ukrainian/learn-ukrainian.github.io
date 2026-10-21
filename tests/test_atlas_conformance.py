@@ -137,6 +137,10 @@ def test_pinned_local_manifest_loader_never_downloads(
     assert _pinned_local_manifest(manifest_path, pointer_path) == {"entries": []}
 
 
+def test_clean_fixture_passes_all_gates():
+    assert _gates_for(_entry()) == []
+
+
 def test_lemma_in_vesum_flags_missing_single_word():
     assert _gates_for(_entry(), vesum=set()) == ["lemma_in_vesum"]
 
@@ -430,6 +434,12 @@ def test_wiki_summary_attributed_flags_missing_freshness_date():
     assert _gates_for(entry) == ["wiki_summary_attributed"]
 
 
+def test_pronunciation_ipa_must_be_well_formed_string():
+    entry = _entry(pronunciation={"ipa": ["[slɔˈwɔ]"], "source": KAIKKI_SOURCE})
+
+    assert _gates_for(entry) == ["pronunciation_ipa_well_formed"]
+
+
 def test_pronunciation_requires_kaikki_source_attribution():
     entry = _entry(pronunciation={"ipa": "[slɔˈwɔ]", "source": "Wiktionary"})
 
@@ -486,6 +496,23 @@ def test_mirror_attribution_gate_flags_slovnyk_me_source():
                 "items": ["красивий"],
                 "source": "slovnyk.me: Словник синонімів Караванського",
             }
+        }
+    )
+
+    assert _gates_for(entry) == ["no_mirror_attribution"]
+
+
+def test_mirror_attribution_gate_flags_slovnyk_me_href():
+    entry = _entry(
+        enrichment={
+            "definition_cards": [
+                {
+                    "id": "sum20",
+                    "source": "СУМ-20",
+                    "definitions": ["test"],
+                    "source_url": "https://slovnyk.me/dict/newsum/test",
+                }
+            ]
         }
     )
 

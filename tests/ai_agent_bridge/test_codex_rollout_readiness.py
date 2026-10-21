@@ -142,6 +142,10 @@ def test_incremental_reader_resets_on_replacement(tmp_path, change):
     assert ui.rollout_is_ready(path, reader=reader) == (False, "start_event:task_started")
 
 
+def test_missing_rollout_is_typed_busy(tmp_path):
+    assert ui.rollout_is_ready(tmp_path / "missing") == (False, "read_error:FileNotFoundError")
+
+
 def test_transient_missing_file_is_retried(tmp_path):
     path = tmp_path / "rollout.jsonl"
     reader = ui.RolloutReader()

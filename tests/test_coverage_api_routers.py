@@ -7,7 +7,7 @@ import json
 import os
 import sqlite3
 from datetime import UTC, datetime
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from fastapi import FastAPI
@@ -168,6 +168,18 @@ def rag_client(mock_project_root):
     yield TestClient(app)
 
 
+@pytest.fixture()
+def contracts_client(mock_project_root):
+    """TestClient for contracts router."""
+    from scripts.api.monitor_context import fixture_context
+    from scripts.api.route_contracts import router
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(mock_project_root)
+    app.include_router(router, prefix="/api/contracts")
+    yield TestClient(app)
+
+
 # ===========================================================================
 # COMMS ROUTER TESTS
 # ===========================================================================
@@ -183,6 +195,68 @@ class TestCommsMessages:
         r = comms_client.get("/api/comms/messages")
         assert r.status_code == 200
         assert r.json()["error"] == "Broker DB not found"
+
+    def test_messages_with_data(self, comms_client, broker_db):
+        _insert_messages(broker_db, [
+            {"content": "hello", "from_llm": "claude", "to_llm": "gemini"},
+            {"content": "world", "from_llm": "gemini", "to_llm": "claude"},
+        ])
+        r = comms_client.get("/api/comms/messages")
+        assert r.json()["total"] == 2
+
+    def test_messages_unacked_only(self, comms_client, broker_db):
+        _insert_messages(broker_db, [
+            {"acknowledged": 0},
+            {"acknowledged": 1},
+        ])
+        r = comms_client.get("/api/comms/messages", params={"unacked_only": True})
+        assert r.json()["total"] == 1
+
+
+class TestCommsConversations:
+    """Tests for /api/comms/conversations endpoint."""
+
+    def test_conversations_grouped(self, comms_client, broker_db):
+        _insert_messages(broker_db, [
+            {"task_id": "task-A", "from_llm": "claude"},
+            {"task_id": "task-A", "from_llm": "gemini"},
+            {"task_id": "task-B", "from_llm": "claude"},
+        ])
+        r = comms_client.get("/api/comms/conversations")
+        convos = r.json()["conversations"]
+        assert len(convos) == 2
+
+
+class TestCommsConversationDetail:
+    """Tests for /api/comms/conversation/{task_id} endpoint."""
+
+    def test_conversation_detail(self, comms_client, broker_db):
+        _insert_messages(broker_db, [
+            {"task_id": "task-X", "content": "msg1"},
+            {"task_id": "task-X", "content": "msg2"},
+            {"task_id": "task-Y", "content": "msg3"},
+        ])
+        r = comms_client.get("/api/comms/conversation/task-X")
+        data = r.json()
+        assert data["task_id"] == "task-X"
+        assert data["count"] == 2
+
+    def test_conversation_detail_limited_with_cursor(self, comms_client, broker_db):
+        _insert_messages(broker_db, [
+            {"task_id": "task-X", "content": f"msg{i}"}
+            for i in range(5)
+        ])
+        r = comms_client.get("/api/comms/conversation/task-X", params={"limit": 2})
+        data = r.json()
+        assert data["count"] == 2
+        assert data["total"] == 5
+        assert data["next_cursor"] == 4
+
+        r2 = comms_client.get(
+            "/api/comms/conversation/task-X",
+            params={"limit": 2, "cursor": data["next_cursor"]},
+        )
+        assert [m["id"] for m in r2.json()["messages"]] == [2, 3]
 
 
 class TestCommsActiveProcesses:
@@ -267,6 +341,20 @@ class TestCommsZombies:
         assert len(orphans) == 1
 
 
+class TestCommsBatchProgress:
+    """Tests for /api/comms/batch-progress endpoint."""
+
+    def test_batch_progress_with_logs(self, comms_client, mock_project_root):
+        log_dir = mock_project_root / "logs" / "research-preseed"
+        log_file = log_dir / "hist-20260301-0100.log"
+        log_file.write_text("VERDICT: PASS\nVERDICT: PASS\nVERDICT: FAIL\nBATCH COMPLETE\nPassed: 2\n")
+        with patch("scripts.api.comms_router._check_build_processes", return_value=([], None)):
+            r = comms_client.get("/api/comms/batch-progress")
+        data = r.json()
+        assert "hist" in data["tracks"]
+        assert data["tracks"]["hist"]["health"] == "complete"
+
+
 class TestCommsLiveActivity:
     """Tests for /api/comms/live-activity endpoint."""
 
@@ -335,6 +423,14 @@ class TestAdminHelpers:
 class TestAdminBackup:
     """Tests for backup endpoints."""
 
+    def test_delete_backup(self, admin_client, mock_project_root):
+        backup_dir = mock_project_root / "data" / "backups"
+        (backup_dir / "delete-me.tar").write_bytes(b"x" * 50)
+        r = admin_client.delete("/api/admin/backup/delete-me.tar")
+        assert r.status_code == 200
+        assert r.json()["deleted"] == "delete-me.tar"
+        assert r.json()["freed_bytes"] == 50
+
     def test_delete_backup_traversal(self, admin_client, mock_project_root, tmp_path):
         # Path traversal in the filename component is rejected by the
         # path_safety.safe_join guard inside admin_router (replacement
@@ -352,6 +448,26 @@ class TestAdminDiskUsage:
 class TestAdminMaintenance:
     """Tests for maintenance endpoints."""
 
+    def test_vacuum_broker(self, admin_client, broker_db):
+        r = admin_client.post("/api/admin/maintenance/vacuum-broker")
+        data = r.json()
+        assert data["status"] == "ok"
+
+    def test_annotation_stats_with_data(self, admin_client, mock_project_root):
+        img_dir = mock_project_root / "data" / "textbook_images"
+        grade_dir = img_dir / "grade-1"
+        grade_dir.mkdir()
+        annotations = [
+            {"image_id": "img1", "description_uk": "test", "teaching_value": "high"},
+            {"image_id": "img2", "description_uk": "", "teaching_value": "low"},
+            {"image_id": "img3", "description_uk": "ok", "teaching_value": "medium"},
+        ]
+        (grade_dir / "annotations.json").write_text(json.dumps(annotations))
+        r = admin_client.get("/api/admin/maintenance/annotation-stats")
+        data = r.json()
+        assert data["total_images"] == 3
+        assert data["annotated"] == 2
+
     def test_annotation_stats_dict_format(self, admin_client, mock_project_root):
         img_dir = mock_project_root / "data" / "textbook_images"
         grade_dir = img_dir / "grade-3"
@@ -362,6 +478,14 @@ class TestAdminMaintenance:
         (grade_dir / "annotations.json").write_text(json.dumps(annotations))
         r = admin_client.get("/api/admin/maintenance/annotation-stats")
         assert r.json()["total_images"] == 1
+
+    def test_annotation_stats_corrupt_json(self, admin_client, mock_project_root):
+        img_dir = mock_project_root / "data" / "textbook_images"
+        grade_dir = img_dir / "grade-4"
+        grade_dir.mkdir()
+        (grade_dir / "annotations.json").write_text("not json!")
+        r = admin_client.get("/api/admin/maintenance/annotation-stats")
+        assert r.status_code == 200
 
 
 class TestAdminCollections:
@@ -413,6 +537,22 @@ class TestImageIndex:
         data = r.json()
         assert data["total"] == 2
         assert data["annotated"] == 1
+
+
+class TestImagesAnnotationUpdate:
+    """Tests for PUT /api/images/annotations/{image_id}."""
+
+    def test_update_annotation(self, images_client, mock_project_root):
+        store = images_client.app.state.ctx.stores.image_store
+        store.index._records = {
+            "img1": {"image_id": "img1", "description_uk": "old"},
+        }
+        store.index._loaded = True
+
+        with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
+            r = images_client.put("/api/images/annotations/img1", json={"description_uk": "new"})
+        assert r.status_code == 200
+        assert r.json()["updated_fields"] == ["description_uk"]
 
 
 class TestImagesCleanup:
@@ -474,6 +614,15 @@ class TestRagBrowseImages:
 class TestImagesHelpers:
     """Tests for helper functions in images_router."""
 
+    def test_cache_page_render_eviction(self):
+        from collections import OrderedDict
+
+        from scripts.api.images_router import _PAGE_CACHE_MAX, _cache_page_render
+        page_cache = OrderedDict()
+        for i in range(_PAGE_CACHE_MAX + 5):
+            _cache_page_render(f"key:{i}", b"data", page_cache=page_cache)
+        assert len(page_cache) == _PAGE_CACHE_MAX
+
     def test_remove_from_book_jsonls(self, mock_project_root, _patch_config):
         from scripts.api.images_router import _remove_from_book_jsonls
         img_dir = mock_project_root / "data" / "textbook_images"
@@ -519,6 +668,48 @@ class TestImagesHelpers:
         assert data["image_id"] == "img1"
 
 
+class TestCommsInternalHelpers:
+    """Tests for internal helper functions in comms_router."""
+
+    def test_check_build_processes_failure(self, _patch_config):
+        from scripts.api.comms_router import _check_build_processes
+        with patch("subprocess.run", side_effect=Exception("no ps")):
+            processes, error = _check_build_processes()
+        assert processes == []
+        assert error == "ps: Exception"
+
+
+class TestPDFPool:
+    """Tests for the _PDFPool helper class."""
+
+    @pytest.mark.anyio
+    async def test_pool_eviction(self):
+        from scripts.api.images_router import _PDFPool
+        pool = _PDFPool(max_size=2)
+        # Manually inject mock docs
+        mock_doc1 = MagicMock()
+        mock_doc2 = MagicMock()
+        mock_doc3 = MagicMock()
+        async with pool._lock:
+            pool._pool["a.pdf"] = mock_doc1
+            pool._pool["b.pdf"] = mock_doc2
+
+        with patch("pymupdf.open", return_value=mock_doc3):
+            doc = await pool.get("c.pdf")
+        assert doc == mock_doc3
+        mock_doc1.close.assert_called_once()
+
+    @pytest.mark.anyio
+    async def test_pool_cache_hit(self):
+        from scripts.api.images_router import _PDFPool
+        pool = _PDFPool(max_size=2)
+        mock_doc = MagicMock()
+        async with pool._lock:
+            pool._pool["cached.pdf"] = mock_doc
+        result = await pool.get("cached.pdf")
+        assert result == mock_doc
+
+
 # ===========================================================================
 # ADDITIONAL TESTS TO REACH 150+
 # ===========================================================================
@@ -549,3 +740,24 @@ class TestCommsPreseedLogParsing:
         assert result[0]["failed"] == 2  # FAIL + ERROR
         assert "Last meaningful line" in result[0]["last_line"]
         assert result[0]["complete"] is False
+
+    def test_scan_preseed_logs_no_timestamp_match(self, _patch_config, mock_project_root):
+        from scripts.api.comms_router import _scan_preseed_logs
+        log_dir = mock_project_root / "logs" / "research-preseed"
+        (log_dir / "random.log").write_text("no timestamp\n")
+        result = _scan_preseed_logs(_comms_ctx(mock_project_root))
+        assert result == []
+
+
+class TestContractsRoutes:
+    """Tests for /api/contracts routes (#7329)."""
+
+    def test_get_routes_returns_200(self, contracts_client):
+        r = contracts_client.get("/api/contracts/routes")
+        assert r.status_code == 200
+        data = r.json()
+        assert "generated_at" in data
+        assert "route_contracts" in data
+        assert "page_contracts" in data
+        assert len(data["route_contracts"]) > 0
+        assert len(data["page_contracts"]) > 0

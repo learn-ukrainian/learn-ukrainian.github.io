@@ -1,13 +1,40 @@
+import copy
 import sqlite3
 from dataclasses import replace
 
 import pytest
 
 from scripts.projects.open_model_data.review_build import bindings
+from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.contract import Value
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
 from tests.projects.open_model_data.review_build.conftest import citation, run_gate, selector
+
+
+def test_c2_applicability_requires_source_supported_discrimination_and_safe_empty_sense(bundle):
+    data = copy.deepcopy(bundle["catalog"])
+    lines = data["components"].pop("C1")["instructions"][:2]
+    lines[0].update(
+        id="C2.agreed_form.with",
+        operation="agreed_form",
+        sense_variant="with_sense",
+        template="SYNTHETIC {sentence}: {sense}",
+        slots=["sentence", "sense"],
+    )
+    lines[1].update(id="C2.agreed_form.without", operation="agreed_form", sense_variant="without_sense")
+    data["components"]["C2"] = {"instructions": lines}
+    catalog = Catalog(data)
+    c = bundle["candidates"][0]
+    sense = replace(c.slots[0], slot="sense", text="SYNTHETIC sense")
+    c = replace(c, component="C2", operation="agreed_form", slots=(*c.slots, sense))
+    with pytest.raises(BuildError):
+        catalog.applicable(c)
+    assert catalog.applicable(c, variants={"with_sense"}) == ("C2.agreed_form.with",)
+    c = replace(c, slots=(c.slots[0], replace(sense, text=" ")))
+    with pytest.raises(BuildError):
+        catalog.applicable(c)
+    assert catalog.applicable(c, variants={"without_sense"}) == ("C2.agreed_form.without",)
 
 
 def test_binding_engine_region_group_contiguity_and_unknown_rule(bundle):
@@ -92,6 +119,32 @@ def test_supporting_citation_needs_independent_agreement(bundle):
         }
     )
     assert len(run_gate(bundle)[0]) == 12
+
+
+def test_a_supporting_citation_cannot_authenticate_itself(bundle):
+    candidate = bundle["candidates"][0]
+    other = bundle["rows"][1]
+    value = replace(
+        candidate.response[0], citations=(candidate.response[0].citations[0], citation(other, "target_field"))
+    )
+    bundle["candidates"] = [
+        replace(candidate, response=(value,)),
+        *[
+            replace(c, outcome="excluded", reason="synthetic_excluded", evidence=("synthetic_excluded",))
+            for c in bundle["candidates"][1:]
+        ],
+    ]
+    bundle["spec"]["binding"]["rules"].append(
+        {
+            "op": "equal",
+            "values": [selector("response", "target", citation=1), selector("response", "target", citation=1)],
+        }
+    )
+    with pytest.raises(BuildError, match="supporting_unbound"):
+        run_gate(bundle)
+    bundle["spec"]["binding"]["rules"][-1]["values"][0] = selector("response", "target")
+    with pytest.raises(BuildError, match="binding_equal"):
+        run_gate(bundle)
 
 
 def test_dynamic_page_bounds_use_independent_pinned_query(bundle):

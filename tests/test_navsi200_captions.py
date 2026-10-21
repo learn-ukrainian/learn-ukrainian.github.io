@@ -37,6 +37,16 @@ class TestNavsi200CaptionsLedger:
         return load_catalog()
 
     @CAPTIONS_LEDGER
+    def test_ledger_metadata_shape(self, ledger: dict) -> None:
+        assert ledger.get("version") == 1
+        assert ledger.get("caption_lang") == "uk"
+        assert "generated_at" in ledger
+        assert isinstance(ledger.get("summary"), dict)
+        assert isinstance(ledger.get("lessons"), list)
+        assert isinstance(ledger.get("entries"), list)
+        assert len(ledger["lessons"]) == len(ledger["entries"])
+
+    @CAPTIONS_LEDGER
     def test_privacy_no_teacher_names_in_ledger(self) -> None:
         raw_text = DEFAULT_LEDGER_PATH.read_text(encoding="utf-8").lower()
         forbidden_names = ["огойко", "охойко", "ohoiko", "анни огойко", "анна огойко"]

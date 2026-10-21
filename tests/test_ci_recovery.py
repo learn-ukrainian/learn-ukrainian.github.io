@@ -965,6 +965,15 @@ def test_manual_removal_does_not_refund_spent_reenqueue(setup):
     assert len(transport.writes) == 1
 
 
+def test_same_head_push_never_refunds_a_spent_allowance(setup):
+    _, transport = setup
+    recover(setup, "run-rerun")
+    transport.pushes = [{"afterCommit": {"oid": HEAD}, "createdAt": "2026-10-09T12:00:00Z"}]
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_ALLOWANCE_SPENT"):
+        recover(setup, "direct")
+    assert len(transport.writes) == 1
+
+
 @pytest.mark.parametrize("action", ["direct", "keeper-initial"])
 @pytest.mark.parametrize("removed", [False, True])
 def test_branch_rerun_does_not_block_normal_initial_enqueue(setup, action, removed):

@@ -235,6 +235,27 @@ def test_fixture_loader_rejects_claim_overlapping_canary_sentence(tmp_path: Path
         qg_bakeoff.load_fixture(path)
 
 
+def test_vesnianky_anchor_fixture_shape() -> None:
+    fixture = qg_bakeoff.load_fixture(qg_bakeoff.FIXTURE_DIR / "vesnianky.json")
+    false_claims = {claim.claim_id: claim for claim in fixture.claims if not claim.is_true}
+
+    assert fixture.slug == "vesnianky"
+    assert len(fixture.claims) == 8
+    assert false_claims["vesnianky-04-hai-trees"].fabrication_class == "U"
+    assert false_claims["vesnianky-06-melody"].fabrication_class == "M"
+    assert "Весну зустрічали радісно й пишно" in (
+        false_claims["vesnianky-06-melody"].distractor_evidence or ""
+    )
+
+
+def test_guards_refuse_ci(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CI", "1")
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="CI"):
+        qg_bakeoff.require_offline_opt_in()
+
+
 def test_guards_refuse_without_explicit_opt_in(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.delenv("QG_BAKEOFF", raising=False)
@@ -300,6 +321,21 @@ def test_scoring_counts_missing_claim_and_preserves_model_judgment_on_downgrade(
     false_row = next(row for row in score["claims"] if row["claim_id"] == "c-false")
     assert false_row["model_judgment_points"] == -100
     assert false_row["live_admissible_points"] == 0
+
+
+def test_claim_matching_accepts_standalone_extraction_from_anchor_fragment() -> None:
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="fragment",
+        title="Fragment",
+        passage_md="x",
+        claims=(qg_bakeoff.FixtureClaim("u", "або вигаданий обряд.", False, "U"),),
+    )
+    payload = {"fact_checks": [{"claim": "вигаданий обряд.", "verdict": "UNATTESTED_AFTER_SEARCH"}]}
+
+    score = qg_bakeoff.score_payload(payload, fixture)
+
+    assert score["missing_claims"] == 0
+    assert score["model_judgment_score"] == 10
 
 
 def test_claim_matching_prefers_tightest_containing_row_over_first() -> None:
@@ -410,6 +446,53 @@ def test_resume_skips_existing_artifact(tmp_path: Path, monkeypatch: pytest.Monk
 
     assert runs[0].skipped is True
     assert (tmp_path / qg_bakeoff.SCORECARD_NAME).exists()
+
+
+def test_run_one_uses_scripted_runner_without_live_invocation(tmp_path: Path) -> None:
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(payload, run_route)
+
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] == "ran"
+    assert run.artifact["arm"] == "tooled"
+    assert run.artifact_path.name.endswith("__sample.json")
+    assert not run.artifact_path.name.endswith("__bare.json")
+    assert run.artifact["score"]["model_judgment_score"] == 30
+    assert run.artifact["score"]["live_admissible_score"] == 30
 
 
 def test_run_matrix_is_guarded_on_direct_programmatic_call(
@@ -884,6 +967,67 @@ def test_containment_matching_maps_sentence_quotes_to_subspan_claims(tmp_path: P
     assert by_id["c-m"]["model_judgment_points"] == -100  # confirming the sentence = confirming the fabrication
 
 
+def test_rescore_recomputes_from_stored_payloads_without_model_calls(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    # a stored artifact whose payload quotes the WHOLE sentence (old matcher → missing)
+    artifact = {
+        "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+        "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": len(fixture.claims)},
+        "model": {"pin": "openrouter/test/m", "pin_slug": "openrouter-test-m", "family": "test", "route_name": "bakeoff_test", "bridge_command": []},
+        "status": "ran",
+        "workflow_verdict": "PASS",
+        "attempt_count": 1,
+        "dispatch": {},
+        "gate_outcomes": {"grounding": {"invalid_fact_checks": 0, "inadmissible_positive_verdicts": 0}},
+        "payload": {
+            "fact_checks": [
+                {"claim": "True claim. Додаткові слова навколо.", "verdict": "CONFIRMED"},
+                {"claim": "Fabricated claim. Ще слова.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+            ]
+        },
+        "score": {"model_judgment_score": -999},
+        "tool_call_count": 1,
+        "wall_seconds": 1.0,
+    }
+    fixtures_dir = tmp_path / "fx"
+    fixtures_dir.mkdir()
+    (fixtures_dir / f"{fixture.slug}.json").write_text(
+        json.dumps(
+            {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "passage_md": fixture.passage_md,
+                "claims": [
+                    {
+                        "claim_id": c.claim_id,
+                        "claim": c.claim,
+                        "is_true": c.is_true,
+                        "fabrication_class": c.fabrication_class,
+                        "distractor_evidence": c.distractor_evidence,
+                    }
+                    for c in fixture.claims
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "openrouter-test-m__anchor.json").write_text(json.dumps(artifact, ensure_ascii=False), encoding="utf-8")
+
+    n = qg_bakeoff.rescore_artifacts(out, fixtures_dir)
+
+    assert n == 1
+    updated = json.loads((out / "openrouter-test-m__anchor.json").read_text(encoding="utf-8"))
+    assert updated["score"]["model_judgment_score"] == 30  # 20 + 10, containment matched
+    assert updated["score"]["missing_claims"] == 0
+    assert "rescored_at" in updated
+    assert (out / qg_bakeoff.SCORECARD_NAME).exists()
+
+
 # --- Bare control arm (#2156 step 3: harness-lift measurement) --------------
 
 
@@ -1352,6 +1496,54 @@ def test_gate_tagged_grounding_neutralizes_live_but_keeps_model_judgment() -> No
     assert score["model_judgment_score"] > score["live_admissible_score"]
 
 
+def test_gate_does_not_rescue_excerpt_from_a_different_claims_tool_output() -> None:
+    # STRICT: no cross-claim rescue. An excerpt that happens to appear in SOME
+    # event output does not become admissible unless the row's OWN cited tool+query
+    # match the event that produced it.
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні пісні зимового циклу.",
+            "status": "completed",
+        }
+    ]
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "Веснянки співають навесні.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "mcp__sources__query_wikipedia",
+                    "query": "Веснянки",  # never queried in this run
+                    "evidence_excerpt": "Коля́дки — величальні пісні зимового циклу.",
+                },
+            }
+        ]
+    }
+    gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [dict(event) for event in events]},
+        policy_family=qg_bakeoff.BAKEOFF_POLICY_FAMILY,
+    )
+    assert gate.invalid_fact_checks == 1
+    assert gate.payload["fact_checks"][0].get("grounding_admissible") is False
+
+
+def test_bare_style_row_is_never_neutralized_model_equals_live() -> None:
+    # #4761 Finding 5: a bare row is stripped to {claim, verdict} and carries no
+    # gate tag, so STRICT neutralization can never fire on it. A bare CONFIRMED must
+    # score identically in model_judgment and live_admissible (the two columns only
+    # diverge on the tooled arm, where grounding discipline is measurable).
+    claim_text = "Колядки співають узимку."
+    payload = {"fact_checks": [{"claim": claim_text, "verdict": "CONFIRMED"}]}
+    score = qg_bakeoff.score_payload(payload, _single_claim_fixture(claim_text, is_true=True))
+    per_claim = score["claims"][0]
+    assert per_claim["live_admissible_neutralized"] is False
+    assert per_claim["model_judgment_points"] == per_claim["live_admissible_points"]
+    assert score["model_judgment_score"] == score["live_admissible_score"]
+
+
 def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:
     fixture = _fixture()
     route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/flaky-transport")
@@ -1523,6 +1715,38 @@ def test_harness_lift_computed_over_paired_cells_only() -> None:
     lines = qg_bakeoff._harness_lift_section("Test", [_artifact("a", "tooled", 30)])
     row = next(line for line in lines if line.startswith("| pin/x"))
     assert "n/a" in row and "30" not in row.replace("| 0 |", "")
+
+
+def test_harness_lift_key_includes_transport_and_entrypoint() -> None:
+    """Same pin + fixture but different transport must never fabricate a pair."""
+
+    def _artifact(transport: str, entrypoint: str, arm: str, mj: int) -> dict:
+        return {
+            "model": {
+                "pin": "same/pin",
+                "transport": transport,
+                "entrypoint": entrypoint,
+            },
+            "fixture": {"slug": "same-fixture"},
+            "arm": arm,
+            "score": {
+                "model_judgment_score": mj,
+                "fractions": {"class_m_alignment": {"numerator": 1, "denominator": 1}},
+            },
+        }
+
+    lines = qg_bakeoff._harness_lift_section(
+        "Test",
+        [
+            _artifact("opencode", "qg_bakeoff_opencode", "tooled", 30),
+            _artifact("runtime-codex", "qg_bakeoff_runtime", "bare", -80),
+        ],
+    )
+
+    rows = [line for line in lines if line.startswith("| same/pin")]
+    assert len(rows) == 2
+    assert all("| 0 | n/a | n/a | n/a |" in row for row in rows)
+    assert not any("| 110 |" in row for row in rows)
 
 
 def test_ops_quota_error_cells_are_excluded_from_judgment_aggregates() -> None:

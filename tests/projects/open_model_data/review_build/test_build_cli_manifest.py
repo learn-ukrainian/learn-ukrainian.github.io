@@ -288,6 +288,28 @@ def test_package_has_no_network_or_process_execution_imports():
         assert_no_execution(source)
 
 
+@pytest.mark.parametrize(
+    "source",
+    [
+        'import importlib; importlib.import_module("socket")',
+        'import importlib as i; i.import_module("subprocess")',
+        'from importlib import import_module as load; load("urllib.request")',
+        '__import__("socket")',
+        'import os; getattr(os, "system")("SYNTHETIC")',
+        'import os as o; o.system("SYNTHETIC")',
+        'import os as o; p = o; p.system("SYNTHETIC")',
+        'from os import system as run; run("SYNTHETIC")',
+        "from socket import *",
+        "from os import *",
+        "from urllib import request as r",
+        'import urllib as u; u.request.urlopen("SYNTHETIC")',
+    ],
+)
+def test_semantic_import_guard_refuses_dynamic_and_alias_bypasses(source):
+    with pytest.raises(AssertionError):
+        assert_no_execution(source)
+
+
 def test_synthetic_build_never_calls_network_or_process_execution(bundle, monkeypatch):
     import os
     import socket

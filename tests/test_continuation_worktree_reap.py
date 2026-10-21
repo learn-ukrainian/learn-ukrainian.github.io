@@ -495,6 +495,29 @@ def test_merged_proof_refuses_identity_and_checkout_changes(cohort, monkeypatch,
     assert not any("worktree_reap_proof" in json.loads(p.read_text()) for p in tasks.glob("*.json"))
 
 
+@pytest.mark.parametrize("archived_reuse", [False, True])
+def test_H1_force_new_archive_retention_survives_closeout(cohort, archived_reuse):
+    repo, tree, tasks, _, successor, source = continuation(cohort, "C")
+    archive = tasks / "successor.20261007T140000Z.archived.json"
+    archive.write_text(
+        json.dumps(
+            dict(successor, status="failed", run_nonce="old-run", keep_worktree=True, worktree_reused=archived_reuse)
+        )
+    )
+    result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
+    row = result.reap_results[0]
+    assert row["action"] == "skipped", row
+    assert "keep_worktree" in row["reason"]
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert json.loads(archive.read_text())["keep_worktree"] is True
+    assert not any("worktree_reap_proof" in json.loads(p.read_text()) for p in tasks.glob("*.json"))
+    # Retention remains releasable only through the existing verified receipt.
+    assert reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
+    assert json.loads(archive.read_text())["keep_worktree"] is False
+    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    assert row["action"] == "removed" and not tree.exists(), row
+
+
 def test_H7_single_needs_finalize_owner_keeps_main_behavior(boundary_tree):
     repo, tree, tasks, creator = boundary_tree
     creator.update(
@@ -1109,6 +1132,33 @@ def test_real_origin_parser_refuses_non_github_host_and_illegal_slug(tmp_path, o
     assert reap.reap_worktrees._github_owner_repo(repo) is None
 
 
+def test_lookalike_github_host_does_not_prove_or_reap_switched_checkout(tmp_path, monkeypatch):
+    """A host that only contains the GitHub name must not query that embedded owner/repo or delete."""
+    from pathlib import Path
+
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, _tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://notgithub.com/unrelated/repo.git")
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    proven = reap.reap_worktrees._switched_branch_merge_proven(repo, tree, cohort)
+    assert proven is False
+    assert not any("unrelated/repo" in " ".join(call) for call in calls)
+    results = reap.reap_worktrees.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        merged_pr_only=True,
+        prune_merged_branches=True,
+        safe_only=True,
+        live_cwds=set(),
+    )
+    row = next(item for item in results if Path(item.path).resolve() == tree.resolve())
+    assert row.action == "skipped", row
+    assert "worktree claimed by active task" in row.reason
+    assert tree.exists()
+    assert not any("unrelated/repo" in " ".join(call) for call in calls)
+
+
 def _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, doubtful):
     """An unproven path must not resolve a repository or authorize removal."""
     rw = reap.reap_worktrees
@@ -1209,6 +1259,23 @@ def test_dotdot_hidden_symlink_gitdir_cannot_authorize_switched_removal(tmp_path
     _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
     creator = json.loads((tasks / "cursor-creator.json").read_text(encoding="utf-8"))
     assert "worktree_reap_proof" not in creator
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "https://github.com:abc/acme/widget.git",
+        "https://github.com:99999/acme/widget.git",
+        "https://github.com:-1/acme/widget.git",
+        "https://github.com:65536/acme/widget",
+        "https://github.com:80abc/acme/widget.git",
+        "ssh://git@github.com:notaport/acme/widget.git",
+        "https://user:token@github.com:abc/acme/widget.git",
+    ],
+)
+def test_malformed_origin_port_is_unknown(origin):
+    """A port GitHub's URL parser cannot read is an unknown origin, not an exception."""
+    assert reap.reap_worktrees._parse_github_origin(origin) is None
 
 
 def test_malformed_origin_port_fails_closed_without_aborting_the_sweep(tmp_path, monkeypatch):
@@ -1315,6 +1382,17 @@ def test_git_identity_failure_refuses_before_pr_or_removal(tmp_path, monkeypatch
     assert calls == []
 
 
+@pytest.mark.parametrize("origin", [" https://github.com/acme/widget.git", "https://github.com/acme/widget.git "])
+def test_origin_whitespace_is_not_normalized(tmp_path, monkeypatch, origin):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "config", "remote.origin.url", origin)
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
+    assert calls == []
+
+
 def test_worktree_origin_override_cannot_authorize_primary_pr(tmp_path, monkeypatch):
     from tests.orchestration.test_merge_closeout import git
 
@@ -1325,6 +1403,22 @@ def test_worktree_origin_override_cannot_authorize_primary_pr(tmp_path, monkeypa
     calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
     _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
     assert calls == []
+
+
+def test_git_only_resolver_never_reads_pointer_files(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, _tasks, _cohort, _merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "config", "remote.origin.url", "https://github.com/acme/widget.git")
+
+    def refuse(*_args, **_kwargs):
+        pytest.fail("the identity resolver read a pointer file")
+
+    monkeypatch.setattr(Path, "read_text", refuse)
+    monkeypatch.setattr(Path, "read_bytes", refuse)
+    assert reap.reap_worktrees._checkout_pr_repository(tree) == repo
 
 
 @pytest.fixture
@@ -1348,6 +1442,35 @@ def exact_merged_ambiguous_cohort(same_branch_pending_cohort, monkeypatch, reque
     head = _git(tree, "rev-parse", "HEAD")
     monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(10606, "MERGED", head)], None))
     return repo, tree, tasks, creator, successor, source
+
+
+def test_10606_exact_merged_head_replaces_single_creator(exact_merged_ambiguous_cohort, monkeypatch):
+    repo, tree, tasks, _, _, source = exact_merged_ambiguous_cohort
+    rw = reap.reap_worktrees
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    plan = next(r for r in rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set()) if r.path == str(tree))
+    assert plan.action == "would_remove", plan.reason
+    assert {p: p.read_bytes() for p in before} == before
+    calls = []
+    remove = claims.git_worktree_remove
+
+    def ordinary_remove(*args, **kwargs):
+        calls.append(kwargs["force"])
+        return remove(*args, **kwargs)
+
+    monkeypatch.setattr(claims, "git_worktree_remove", ordinary_remove)
+    row = next(r for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()) if r.path == str(tree))
+    assert row.action == "removed", row.reason
+    assert calls == [False] and not tree.exists()
+    receipt = row.preserved_artifacts
+    assert receipt["merged_head_proof"]["head_relation"] == "exact"
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    for path, data in before.items():
+        current = json.loads(path.read_bytes())
+        prior = json.loads(data)
+        assert current["status"] == prior["status"]
+        assert current["worktree_reused"] == prior["worktree_reused"]
 
 
 @pytest.mark.parametrize(
@@ -1807,6 +1930,27 @@ def test_10303_terminal_abandon_refuses_incomplete_proof(abandon_cohort, monkeyp
         if r.path == str(tree)
     )
     assert row.action == "skipped", row
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("restriction", ["merged_pr_only", "safe_only"])
+def test_10303_abandon_respects_restriction_flags(abandon_cohort, restriction):
+    repo, tree, tasks, _, _, source = abandon_cohort
+    rw = reap.reap_worktrees
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=False,
+            live_cwds=set(),
+            **({} if restriction == "merged_pr_only" else {"merged_pr_only": False, "safe_only": True}),
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped", row
+    assert "terminal-abandon requires merged_pr_only=False and safe_only=False" in row.reason
     assert tree.exists() and source.read_bytes() == b"current output"
     assert {p: p.read_bytes() for p in before} == before
 

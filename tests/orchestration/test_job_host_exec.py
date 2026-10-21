@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -20,6 +21,24 @@ def _clear_occupancy_pin(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(jh.ENV_OCCUPANCY_HOST, raising=False)
     monkeypatch.delenv(jh.ENV_RUNTIME_INITIATOR, raising=False)
     monkeypatch.delenv(jh.ENV_RUNTIME_INITIATOR_SOURCE, raising=False)
+
+
+def test_cli_help_runs_without_pythonpath(tmp_path: Path) -> None:
+    script = Path(jh.__file__).resolve()
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ""
+    proc = subprocess.run(
+        [sys.executable, str(script), "--help"],
+        cwd=tmp_path,
+        env=env,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "Examples:" in proc.stdout
+    assert "Exit codes:" in proc.stdout
 
 
 def _marker_root(tmp_path: Path) -> Path:
@@ -270,6 +289,51 @@ def test_main_help_contract() -> None:
     assert "Issue: #7062" in help_text
 
 
+def test_forward_dispatch_inlines_prompt_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    prompt = tmp_path / "brief.md"
+    prompt.write_text("keep curriculum/l2-uk-en in the worktree\n", encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--prompt-file",
+            str(prompt),
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
+    assert str(prompt) not in recorded
+    assert "keep curriculum/l2-uk-en in the worktree" not in recorded
+    assert "--prompt-file" in script
+    assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
+    assert "$LU_DISPATCH_PROMPT_0" in script
+    assert "\n--prompt\n-\n" not in script
+    assert "keep curriculum/l2-uk-en in the worktree" not in script
+
+
 def test_forward_dispatch_rewrites_prompt_dash(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -313,6 +377,49 @@ def test_forward_dispatch_rewrites_prompt_dash(
     assert "$LU_DISPATCH_PROMPT_0" in script
     assert "\n--prompt\n-\n" not in script
     assert "touch wiki/pages.md" not in recorded
+
+
+def test_forward_dispatch_copies_lifecycle_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    args_file = tmp_path / "ssh.args"
+    fake_ssh = fake_bin / "ssh"
+    fake_ssh.write_text(
+        "#!/usr/bin/env bash\n"
+        f'printf "%s\\n" "$@" > {args_file}\n'
+        f'cat > {args_file}.stdin\n'
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    fake_ssh.chmod(0o755)
+    ledger = tmp_path / "task-lifecycle.json"
+    ledger.write_text('{"schema":"task-lifecycle.v1","task_id":"cf"}\n', encoding="utf-8")
+    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
+    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
+    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    rc = jh.forward_dispatch(
+        host_id="host-job",
+        argv=[
+            "scripts/delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "cf",
+            "--lifecycle-file",
+            str(ledger),
+        ],
+    )
+    assert rc == 0
+    recorded = args_file.read_text(encoding="utf-8")
+    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
+    assert str(ledger) not in recorded
+    assert "--lifecycle-file" in script
+    assert "/tmp/lu-dispatch-lifecycle.XXXXXX" in script
+    assert "$LU_DISPATCH_LIFECYCLE_0" in script
+    assert "base64 -d >" in script
 
 
 def test_forward_dispatch_rejects_notebook_cwd(
@@ -519,3 +626,17 @@ def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     assert "--run-nonce" in script
     assert "nonce-fwd-9876" in script
     assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=" in script
+
+
+def test_job_host_exec_main_refusal_names_both_recovery_paths(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """#7230: job_host_exec.py CLI prints the refusal naming recovery paths and exits rc 2 on config error."""
+    monkeypatch.delenv(jh.ENV_HOST, raising=False)
+    monkeypatch.delenv(jh.ENV_HOST_FALLBACK, raising=False)
+    rc = jh.main(["--host-id", "host-job", "--", "scripts/delegate.py", "dispatch", "--task-id", "t-1"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "❌ VPS forward configuration refusal for host-job:" in captured.err
+    assert "LU_JOB_DISPATCH_HOST" in captured.err
+    assert "LU_ALLOW_NOTEBOOK_DISPATCH=1" in captured.err

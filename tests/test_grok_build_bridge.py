@@ -4,7 +4,7 @@ import json
 from contextlib import contextmanager
 from types import SimpleNamespace
 
-from scripts.ai_agent_bridge import _grok_build
+from scripts.ai_agent_bridge import _cli, _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
@@ -97,6 +97,55 @@ def test_grok_missing_trace_is_typed_error_with_banner(monkeypatch, tmp_path):
     metadata = json.loads(reply["data"])
     assert metadata["turn_outcome"] == "trace_unavailable"
     assert metadata["trace_status"] == "unavailable"
+
+
+def test_ask_grok_build_parser_accepts_first_class_args():
+    parser = _cli._build_parser()
+
+    args = parser.parse_args(
+        [
+            "ask-grok-build",
+            "hello",
+            "--task-id",
+            "task-1",
+            "--type",
+            "query",
+            "--data",
+            "payload.md",
+            "--new-session",
+            "--from",
+            "codex",
+            "--from-model",
+            "gpt-5.5",
+            "--to-model",
+            "grok-4.7",
+            "--no-timeout",
+            "--review",
+        ]
+    )
+
+    assert args.command == "ask-grok-build"
+    assert args.task_id == "task-1"
+    assert args.new_session is True
+    assert args.from_llm == "codex"
+    assert args.from_model == "gpt-5.5"
+    assert args.to_model == "grok-4.7"
+    assert args.no_timeout is True
+    assert args.review is True
+
+
+def test_ask_grok_build_review_flag_runs_as_normal_ask(monkeypatch):
+    # Direct one-round review regime (operator order 2026-08-06): review=True is
+    # a normal ask, never a sealed-path refusal. Mutation guard: re-adding the
+    # formal_review_requires_sealed_snapshot raise fails this test.
+    from scripts.ai_agent_bridge import _acp_compat
+
+    sentinel = object()
+    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", lambda *a, **k: sentinel)
+    result = _acp_compat.run_compat_ask(
+        "grok-build", "hello", task_id="task-1", review=True
+    )
+    assert result is sentinel
 
 
 def test_process_grok_build_invokes_native_registry_key(monkeypatch):

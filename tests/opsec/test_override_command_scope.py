@@ -263,6 +263,13 @@ def test_override_set_after_import_then_a_comment_and_a_push(sandbox):
     assert_one_flagged_publication(sandbox, flagged, outcome)
 
 
+def test_override_set_after_import_then_a_push_and_a_comment(sandbox):
+    flagged = sandbox.commit("subject " + TOKEN)
+    outcome = drive(sandbox, "set_override", "push", "comment", body="body " + TOKEN)
+    assert outcome["push"]["status"] == 0 and "override already consumed" in outcome["comment"], outcome
+    assert_one_flagged_publication(sandbox, flagged, outcome)
+
+
 def test_a_child_process_comment_then_the_parents_push(sandbox):
     """A publisher in a child process claims for the same command as its parent's push."""
     flagged = sandbox.commit("subject " + TOKEN)
@@ -352,6 +359,14 @@ def test_a_second_command_with_the_same_reason_gets_its_own_override(sandbox):
     outcome = drive(sandbox, "push", LU_OPSEC_OVERRIDE=REASON)
     assert outcome["push"]["status"] == 0 and _remote_has(sandbox, first), outcome
     assert len(log_rows(sandbox)) == 2
+
+
+def test_clean_publish_and_push_under_an_override_claim_nothing(sandbox):
+    clean = sandbox.commit("clean subject")
+    outcome = drive(sandbox, "comment", "push", body="clean body", LU_OPSEC_OVERRIDE=REASON)
+    assert outcome["comment"] == 0 and outcome["push"]["status"] == 0, outcome
+    assert _remote_has(sandbox, clean) and sandbox.sent.exists()
+    assert not (sandbox.root / "batch_state/opsec").exists()
 
 
 # --- Only claimants receive the override (review-9681 F2) ---

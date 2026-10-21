@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 import sqlite3
 from contextlib import nullcontext, suppress
@@ -382,6 +383,44 @@ def test_checkpoint_interval_saves_periodically(tmp_path, monkeypatch) -> None:
     assert payload["counts"]["processed"] == 10
     # Final file has all 10 items
     assert len(json.loads(out.read_text(encoding="utf-8"))["auto_merge"]) == 10
+
+
+def test_cli_parsing_and_main(tmp_path, monkeypatch, capsys) -> None:
+    out = tmp_path / "out.json"
+    called_kwargs: dict[str, object] = {}
+
+    def fake_generate_candidates(**kwargs):
+        called_kwargs.update(kwargs)
+        return {
+            "counts": {"total_delta": 5, "processed": 5, "auto_merge": 3, "needs_review": 2},
+            "auto_merge": [],
+            "needs_review": [],
+        }
+
+    monkeypatch.setattr(grow, "generate_candidates", fake_generate_candidates)
+
+    exit_code = grow.main(["--limit", "5", "--out", str(out), "--checkpoint-interval", "2", "--no-resume", "--report", "--quiet"])
+    assert exit_code == 0
+    assert called_kwargs["limit"] == 5
+    assert called_kwargs["out"] == out
+    assert called_kwargs["checkpoint_interval"] == 2
+    assert called_kwargs["resume"] is False
+    assert called_kwargs["quiet"] is True
+
+    captured = capsys.readouterr()
+    assert "total_delta: 5" in captured.out
+    assert "processed: 5" in captured.out
+
+
+def test_enrich_entry_exists_and_enrich_delegates_to_it() -> None:
+    assert callable(enrich_manifest_module.enrich_entry)
+    enrich_source = inspect.getsource(enrich_manifest_module.enrich)
+
+    # enrich() must delegate enrichment to enrich_entry() rather than reimplement it.
+    # Collapse whitespace so the assertion is robust to call formatting (single- vs
+    # multi-line) and to appended kwargs such as pointer_synonym_relations (#4950).
+    compact = "".join(enrich_source.split())
+    assert "enrich_entry(entry,conn,kaikki_lookup" in compact
 
 
 def _patch_enrich_entry_heavy_helpers(monkeypatch) -> None:

@@ -14,6 +14,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import jsonschema
 import pytest
 
 from scripts.build.fresh import assemble
@@ -237,6 +238,52 @@ INVISIBLE_CHOICE_TEXTS = (
 VISIBLE_CHOICE_TEXTS = ("Learner choice", "  Learner choice  ", "\ufeffx\u200b", "\U0001f642", "\U0001d11e")
 
 
+@pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.parametrize(
+    "blank",
+    [
+        " ",
+        "\t",
+        "\n",
+        "\t\n",
+        "\u00a0",
+        "\u2003",
+        "\u2028",
+        "\u202f",
+        "\u3000",
+        "\ufeff",
+        "\u200b",
+        "\u2060",
+        "\u200d",
+        "\U000e0020",
+        "\ufe0f",
+    ],
+)
+def test_translate_whitespace_choice_fails_live_activity_and_draft_schema(level, blank):
+    from scripts.build.fresh.draft_schema import validate_draft
+
+    inputs = maximal_draft(level)
+    draft, plan, *_ = inputs
+    types = {a["id"]: a["type"] for a in plan["lessons"][0]["activities"]}
+    act = next(a for a in draft["activities"] if types[a["id"]] == "translate")
+    definition = json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())["definitions"][
+        f"translate-{level}"
+    ]
+    payload = {
+        key: value
+        for key, value in {**act, "type": "translate", "title": "Learner title"}.items()
+        if key in definition["properties"]
+    }
+    jsonschema.Draft7Validator(definition).validate(payload)
+    act["items"][0]["options"][0]["text"] = blank
+    payload["items"] = act["items"]
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.Draft7Validator(definition).validate(payload)
+    with pytest.raises(jsonschema.ValidationError):
+        draft_validator(level).validate(draft)
+    assert any("pattern" in e.reason or "match" in e.reason for e in validate_draft(draft, level, activity_types=types))
+
+
 def choice_text_schemas(filename):
     def choices(node):
         if isinstance(node, dict):
@@ -348,6 +395,16 @@ def test_fresh_story_spacing_preserves_a_rendered_reading_activity():
     )
 
 
+@pytest.mark.parametrize(
+    "typ", ["cloze", "essay-response", "critical-analysis", "comparative-study", "authorial-intent", "reading"]
+)
+def test_fresh_instruction_lookup_requires_the_exact_visible_title(typ):
+    field = "_heading" if typ == "cloze" else "title"
+    assert assemble.page_field_text(typ, {field: "Read this."}, None, "instruction") == "Read this."
+    assert assemble.page_field_text(typ, {}, None, "instruction") is None
+    assert assemble.page_field_text(typ, {field: "Other words."}, None, "instruction") == "Other words."
+
+
 @pytest.mark.parametrize("with_options", [True, False])
 def test_fresh_translate_candidate_edges_match_the_parser(with_options, render_environment):
     inputs = maximal_draft("a1")
@@ -445,6 +502,15 @@ def test_fresh_every_plan_and_draft_text_field_is_mdx_safe(level, render_environ
     assert result.passed, result.to_dict()
     report = check_mdx_render(result.artifacts["mdx"])
     assert report["passed"] is True, report["failures"]
+
+
+def test_fresh_plan_directives_never_supply_activity_headings(render_environment):
+    inputs = maximal_draft("a1")
+    for activity in inputs[1]["lessons"][0]["activities"]:
+        activity["focus"] = "WRITER DIRECTIVE: consult evidence {kind: dialogue}"
+    result, _ = check_render(inputs, "a1")
+    assert result.passed, result.to_dict()
+    assert "WRITER DIRECTIVE" not in result.artifacts["mdx"]
 
 
 @pytest.mark.parametrize("level", LEVELS)

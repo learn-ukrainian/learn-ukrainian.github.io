@@ -113,3 +113,16 @@ def test_openly_licensed_sources_carry_their_licence_text_verbatim(sources: list
         licence = source["terms"]["licence"]
         if licence["spdx"]:
             assert licence["verbatim_quote"], f"{source['id']}: {licence['spdx']} without its licence text quoted"
+
+
+def test_sum11_register_entry_is_russification_evidence_only(sources: list[dict]) -> None:
+    """Register-wording check only (rule #M-6).
+
+    This does not inspect learner cards. Atlas migration and runtime export
+    reject a СУМ-11 citation outside soviet_colonization_context and a citation
+    that lacks a russification marker on the same card.
+    """
+    sum11 = next(s for s in sources if s["id"] == "sum11")
+    assert all(field.startswith("russification_") for field in sum11["fields_used"])
+    restriction = sum11["usage_restriction"]
+    assert "red-flagged" in restriction and "never" in restriction.lower()

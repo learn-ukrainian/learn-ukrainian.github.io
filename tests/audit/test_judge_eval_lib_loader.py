@@ -10,6 +10,9 @@ read the working tree first.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from scripts.audit._judge_eval_lib import (
     pull_calibration_cases,
 )
@@ -23,3 +26,20 @@ def test_loader_uses_working_tree_when_file_present():
     assert "prompt_id" in first
     assert "gold" in first
     assert "output_text" in first
+
+
+def test_loader_uses_explicit_ref_when_given(tmp_path: Path):
+    """Explicit ``ref=`` bypasses working-tree lookup."""
+    blob_path = tmp_path / "fake-blob.jsonl"
+    payload = {
+        "prompt_id": "ut_only",
+        "gold": {"expected_clean": True, "min_sev2_count": 0},
+        "output_text": "test",
+        "status": "ok",
+        "model": "n/a",
+    }
+    blob_path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+
+    cases = pull_calibration_cases(blob=str(blob_path.name), project_root=tmp_path)
+    assert len(cases) == 1
+    assert cases[0]["prompt_id"] == "ut_only"

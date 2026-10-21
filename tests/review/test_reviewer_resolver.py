@@ -4,6 +4,7 @@ from dataclasses import replace
 
 import pytest
 
+from scripts.review.family_exclusions import family_exclusion
 from scripts.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     ResolverInputs,
@@ -149,6 +150,14 @@ def test_native_endpoint_identity_cannot_be_forged(field, value):
     assert "endpoint identity" in result.reason
 
 
+@pytest.mark.parametrize(
+    "risk,eligible", [(None, False), ("low", True), ("medium", True), ("high", False), ("critical", False)]
+)
+def test_role_family_filter_uses_risk(risk, eligible):
+    result = family_exclusion(family="google", route="agy", transport="agy", risk=risk)
+    assert (result is None) == eligible
+
+
 @pytest.mark.parametrize("outside_available", [True, False])
 def test_red_team_prefers_outside_family_before_same_family(outside_available):
     sol = REVIEW_CANDIDATES["openai_frontier"]
@@ -241,6 +250,22 @@ def test_red_team_seat_rule_uses_canonical_models(reviewer, authors, explicit, e
     assert red_team_seat_refusal((reviewer,), author_models=authors, author_model=explicit) == expected
 
 
+def test_red_team_evaluation_accepts_different_same_family_model():
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6-luna", claude_account=HOST_ACCOUNT), review_mode="red_team")
+    assert result.status == "eligible"
+
+
+def test_red_team_evaluation_accepts_unknown_history_with_known_author():
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    result = evaluate_candidate(
+        sol,
+        ResolverInputs(author_model="", author_models=("gpt-6-luna", None), author_families=frozenset({"openai"}), claude_account=HOST_ACCOUNT),
+        review_mode="red_team",
+    )
+    assert result.status == "eligible"
+
+
 @pytest.mark.parametrize(
     "explicit,expected",
     [
@@ -267,11 +292,18 @@ def test_red_team_flag_conflict_with_validated_author_task(explicit, expected):
 SONNET = REVIEW_CANDIDATES["claude-sonnet-5-5"]
 RISKS = ("low", "medium", "high", "critical")
 D129_AUTHORS = ("claude-opus-5-5", "gpt-6.1-sol", "grok-4.7", "claude-sonnet-5-5")
+SECURITY_PATH = "scripts/review/reviewer_resolver.py"
 FRONTIER_DOWN = {"codex": "unhealthy", "claude": "unhealthy"}
 
 
 def claude_on_cursor(row):
     return row.family == "anthropic" and row.transport == "cursor"
+
+
+def test_no_claude_review_candidate_runs_on_cursor():
+    assert not [name for name, candidate in REVIEW_CANDIDATES.items() if claude_on_cursor(candidate)]
+    grok_cursor = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
+    assert (grok_cursor.family, grok_cursor.transport) == ("xai", "cursor")
 
 
 @pytest.mark.parametrize("author", D129_AUTHORS)
@@ -307,6 +339,20 @@ def test_sonnet_reviews_routine_code_only(author, risk):
     if risk in {"high", "critical"}:
         assert result.selected is None or result.selected.name != SONNET.name
         assert evaluate_candidate(SONNET, ResolverInputs(author_model=author, risk=risk, claude_account=HOST_ACCOUNT)).status == "excluded"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
+def test_security_path_at_routine_risk_resolves_critical_without_sonnet(risk, scope):
+    routine = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, claude_account=HOST_ACCOUNT)
+    # Control: on its own ladder Sonnet reviews routine code.
+    assert resolve_reviewer(routine, ladder=((SONNET,),)).selected.name == SONNET.name
+    secure = replace(routine, **{scope: (SECURITY_PATH,)})
+    assert resolve_reviewer(secure, ladder=((SONNET,),)).selected is None
+    result = resolve_reviewer(secure)
+    assert result.resolved_risk == "critical"
+    assert SONNET.name not in [row.name for row in result.trace]
+    assert result.selected.name != SONNET.name
 
 
 @pytest.mark.parametrize("author", ("claude-opus-5-5", "gpt-6.1-sol", "claude-sonnet-5-5"))

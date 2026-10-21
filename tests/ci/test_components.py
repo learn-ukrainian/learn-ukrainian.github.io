@@ -94,6 +94,37 @@ def test_parity_detects_missing_frontend_consumer_edge(repo, manifest):
     assert c.parity_gaps(["site/new.ts"], manifest, repo) == ["site/new.ts"]
 
 
+@pytest.mark.parametrize("mutation", ["schema", "node", "owner", "test-id", "prefix", "argv", "edge"])
+def test_manifest_validation_rejects_bad_contract(tmp_path, manifest, mutation):
+    if mutation == "schema":
+        manifest["schema_version"] = 2
+    elif mutation == "node":
+        manifest["components"].pop("harness")
+    elif mutation == "owner":
+        manifest["exact_paths"]["a"] = ["unknown"]
+    elif mutation == "test-id":
+        manifest["components"]["harness"]["test_files"] = ["tests/test_a.py::test_one"]
+    elif mutation == "prefix":
+        manifest["path_prefixes"].append({"path": "scripts", "components": ["harness"]})
+    elif mutation == "argv":
+        manifest["components"]["harness"]["verify"][0]["argv"] = []
+    else:
+        manifest["edges"][0]["consumer"] = "unknown"
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError):
+        c.load_manifest(path)
+
+
+def test_test_prefixes_expand_index_and_sparse_census_is_complete(repo, manifest):
+    manifest["shared_integration_tests"] = []
+    manifest["components"]["harness"]["test_files"] = []
+    manifest["components"]["harness"]["test_prefixes"] = ["tests/"]
+    assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
+    (repo / "tests/test_fixture.py").unlink()
+    assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
+
+
 def test_ast_closure_relative_bare_literal_loads_and_nonliteral():
     sources = {
         "scripts/lexicon/source.py": b"X = 1\n",
@@ -188,6 +219,17 @@ def test_unresolved_and_missing_mandatory_edges_force_all(manifest):
     graph["missing_mandatory_edges"] = []
     graph["unresolved_edges"] = [{"path": "scripts/loader.py"}]
     assert c.affected(["site/new.ts"], manifest, graph)["fallback_reasons"] == ["dynamic-unresolved"]
+
+
+@pytest.mark.parametrize(("producer", "consumer"), [
+    ("harness", "curriculum-generation"), ("curriculum-generation", "harness"), ("harness", "atlas-data"),
+])
+def test_review_probes_computed_even_without_unresolved_fallback(manifest, producer, consumer):
+    graph = c.import_graph(manifest)
+    assert (producer, consumer) in graph["node_edges"]
+    graph = graph | {"unresolved_edges": [], "missing_mandatory_edges": []}
+    probes = {"harness": "scripts/agent_runtime/runner.py", "curriculum-generation": "scripts/build/fresh/assemble.py"}
+    assert consumer in c.affected([probes[producer]], manifest, graph)["components"]
 
 
 def test_vitest_files_follow_ownership_and_existing_scripts(repo, manifest):
@@ -349,6 +391,22 @@ def test_inventory_collection_and_identities_and_nul_paths(monkeypatch, tmp_path
     assert c.main(["affected", "--paths-file", str(paths)]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["changed_paths"] == 2 and set(report["components"]) == set(c.NODE_IDS)
+
+
+def test_cli_inventory_affected_and_error_are_structural(monkeypatch, capsys, manifest):
+    assert c.main(["list"]) == 0
+    assert set(json.loads(capsys.readouterr().out)["components"]) == set(c.NODE_IDS)
+    assert c.main(["affected", "never-classified/new.txt"]) == 0
+    assert set(json.loads(capsys.readouterr().out)["components"]) == set(c.NODE_IDS)
+    monkeypatch.setattr(c, "inventory", lambda m: {"unassigned": 1, "ambiguous": 0, "dynamic_unresolved": 0,
+                                                  "unmapped_test_files": 0, "selector_parity_gaps": 0})
+    assert c.main(["inventory", "--check"]) == 1
+    capsys.readouterr()
+    assert c.main(["inventory", "--collect"]) == 2
+    assert "invalid_or_unavailable" in capsys.readouterr().out
+    monkeypatch.setattr(c, "collect_tests", lambda *a: ([], 2))
+    assert c.main(["test", "--component", "atlas-data"]) == 2
+    assert json.loads(capsys.readouterr().out)["fallback_reason"] == "collection-error"
 
 
 def test_cli_help_and_required_build_arguments(capsys):
@@ -536,3 +594,13 @@ def test_unresolved_runtime_edges_force_full_selection(manifest, source, reason)
     assert any(edge["reason"] == reason for edge in graph["unresolved_edges"])
     graph |= {"node_edges": [], "missing_mandatory_edges": []}
     assert set(c.affected(["scripts/projects/open_model_data/reader.py"], manifest, graph)["components"]) == set(c.NODE_IDS)
+
+
+def test_literal_file_read_importer_in_resolved_test_set(repo, manifest):
+    schema = repo / "site/schemas/input.json"
+    schema.parent.mkdir(parents=True)
+    schema.write_text("{}")
+    reader = repo / "tests/test_schema_reader.py"
+    reader.write_text('from pathlib import Path\nPath("site/schemas/input.json").read_text()\n')
+    git(repo, "add", ".")
+    assert "tests/test_schema_reader.py" in c.test_files("atlas-frontend", manifest, repo)

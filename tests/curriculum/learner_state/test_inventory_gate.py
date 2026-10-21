@@ -25,11 +25,13 @@ Verifies:
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
 
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes
@@ -37,6 +39,9 @@ from scripts.curriculum.learner_state.inventory_gate import check_lesson
 from scripts.curriculum.resolver import codes as resolver_codes
 
 pytestmark = pytest.mark.reads_content
+REPO_ROOT = Path(__file__).resolve().parents[3]
+RECEIPTS_SCHEMA_PATH = REPO_ROOT / "schemas/resolution-receipts-v1.schema.json"
+
 EXP_DOC_L2 = {
     "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
     "units": [
@@ -304,6 +309,35 @@ def _make_stream(
         "tokens": tokens,
         "failures": failures or [],
     }
+
+
+def test_receipts_fixture_validates_against_schema() -> None:
+    schema = json.loads(RECEIPTS_SCHEMA_PATH.read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    receipts_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": {
+            "expanded_sha256": "0" * 64,
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+                "offset": 0,
+                "token": "tok1",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-10"],
+                "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    validator.validate(receipts_doc)
 
 
 def test_gate_all_pass_synthetic(tmp_path: Path) -> None:
@@ -619,6 +653,36 @@ def test_gate_taught_form_in_introducing_step_passes(tmp_path: Path) -> None:
     report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
     assert report.ok is True
     assert len(report.failures) == 0
+
+
+def test_gate_taught_form_in_non_introducing_step_fails(tmp_path: Path) -> None:
+    """A taught form in narration fails if unit.step is NOT the introducing step."""
+    paths = _setup_fixture(tmp_path)
+    # W-10 is introduced in step 's1', but here unit carries step='s2' (not s1)
+    tokens = [
+        {
+            "unit": {"tab": "urok", "step": "s2", "activity": None, "item": None, "block": 0},
+            "role": "narration",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        },
+        {
+            "unit": {"tab": "urok", "step": "s2", "activity": None, "item": None, "block": 1},
+            "role": "narration",
+            "offset": 5,
+            "token": "tok2",
+            "sentence": "tok2 sent",
+            "class": "resolved",
+            "selected": {"record": "W-20", "forms": ["tag:nom"], "stressed": "tok2"},
+        },
+    ]
+    report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
+    assert report.ok is False
+    codes_set = {f.code for f in report.failures}
+    assert codes.TAUGHT_FORM_ABSENT in codes_set
 
 
 def test_gate_gloss_token_passes(tmp_path: Path) -> None:
@@ -1205,3 +1269,22 @@ def test_gate_stream_missing_inputs_fails_closed(tmp_path: Path) -> None:
     report_obj_mk = check_lesson("a1", "mod-01", 2, stream_obj_missing_key, **paths)
     assert report_obj_mk.ok is False
     assert any(f.code == codes.INPUT_HASH_MISSING for f in report_obj_mk.failures)
+
+
+def test_gate_stream_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    tokens = [
+        {
+            "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+            "role": "record_print",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        }
+    ]
+    stream = _make_stream(tokens, lesson_n=2, expanded_sha256="f" * 64)
+    report = check_lesson("a1", "mod-01", 2, stream, **paths)
+    assert report.ok is False
+    assert any(f.code == codes.EXPANDED_DOCUMENT_MISMATCH for f in report.failures)

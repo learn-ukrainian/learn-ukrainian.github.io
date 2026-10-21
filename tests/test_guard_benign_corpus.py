@@ -80,6 +80,19 @@ def _probe(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
     return json.loads(result.stdout)
 
 
+def test_baseline_fixture_covers_all_guards_and_commands() -> None:
+    assert BASELINE_FIXTURE["baseline_commit"] == "28a4243544954335d0d6edafa6f727beb1a5981f"
+    assert len(BASELINE_COMMANDS) == 1498
+    assert len(_literal_corpus()) == 1492
+    assert sorted(set(BASELINE_COMMANDS)) == BASELINE_COMMANDS
+    assert set(BASELINE_FIXTURE["baseline_decisions"]) == set(GUARDS)
+    assert all(
+        len(bits) == len(BASELINE_COMMANDS) and set(bits) <= {"0", "1"}
+        for bits in BASELINE_FIXTURE["baseline_decisions"].values()
+    )
+    assert set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS) <= set(BASELINE_COMMANDS)
+
+
 def test_all_literal_commands_have_no_new_guard_blocks() -> None:
     commands = _literal_corpus()
     baseline = _baseline_decisions(commands)

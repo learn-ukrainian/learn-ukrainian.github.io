@@ -3,10 +3,14 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 
 from scripts.api import git_hygiene_router
+from scripts.api.main import app
 
 pytestmark = pytest.mark.reads_content
+
+client = TestClient(app, raise_server_exceptions=False)
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -103,6 +107,39 @@ def test_hygiene_classifies_each_dirty_bucket(tmp_path: Path) -> None:
         "gitignore_pattern",
         "commit_deletions",
     }
+
+
+def test_hygiene_endpoint_is_registered_and_uses_project_root(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _dirty_repo_with_all_buckets(tmp_path)
+    ctx = app.state.ctx.with_roots(live_repo_root=repo, project_root=repo)
+    monkeypatch.setattr(app.state, "ctx", ctx)
+
+    response = client.get("/api/git/hygiene")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["health"] == "dirty"
+    assert body["buckets"]["real_wip"]["files"] == ["wip.py"]
+
+
+def test_hygiene_is_clean_when_all_dirty_files_are_exempt(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    _write(repo / "README.md", "clean base\n")
+    _commit_all(repo, "initial")
+    _write(repo / "wiki" / "draft.md", "wiki output\n")
+    _write(repo / "registry" / "corpus_audit" / "draft_tickets" / "ticket.md", "draft\n")
+
+    result = git_hygiene_router.compute_git_hygiene(repo)
+
+    assert result["health"] == "clean"
+    assert result["dirty_total"] == 0
+    assert result["exempt"]["total"] == 2
+    assert all(bucket["count"] == 0 for bucket in result["buckets"].values())
 
 
 def test_hygiene_marks_deleted_python_as_blocked_imports(tmp_path: Path) -> None:

@@ -127,6 +127,13 @@ def test_mint_and_score_real_ten_anchor_pass_and_fail(
     assert "exit this Muse driver; the launcher closes its lease" in capsys.readouterr().err
 
 
+def test_missing_anchors_is_a_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *a, **kw: [])
+    monkeypatch.setattr(grok_lane, "_load_ranked", lambda *a, **kw: [])
+    assert muse_lane.main(["--repo", str(tmp_path), "mint", "--epic", "devops"]) == 1
+    assert list(tmp_path.iterdir()) == []
+
+
 @pytest.mark.parametrize(
     ("selector", "lane", "stream"),
     [

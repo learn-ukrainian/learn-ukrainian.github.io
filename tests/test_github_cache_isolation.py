@@ -117,6 +117,31 @@ def test_past_reset_is_stored_and_does_not_refuse(tmp_path):
     assert store.request("GET", "user").error is None and calls == ["user"]
 
 
+def test_reset_exactly_at_horizon_still_keeps_the_landing_reserve(tmp_path):
+    """A reset two hours out is still a window. Dropping it would admit this call."""
+    now = 1_700_000_000
+    horizon = now + gh.BUDGET_RESET_HORIZON_SECONDS
+    store, calls = _client(tmp_path, now)
+    with store._db() as db:
+        gh._store_budget(db, store.scope, "core", 77, horizon, now=now)
+    result = store.request("GET", "user")
+    assert result.error == "github_rate_limited" and result.reason == "core_below_landing_reserve"
+    assert result.reset_at == horizon and calls == []
+
+
+def test_primary_reset_one_second_past_the_horizon_is_ignored(tmp_path):
+    """now+7201 is not a primary window, on write or when a row is already stored."""
+    now = 1_700_000_000
+    reset = now + gh.BUDGET_RESET_HORIZON_SECONDS + 1
+    store, calls = _client(tmp_path, now)
+    with store._db() as db:
+        gh._store_budget(db, store.scope, "core", 0, reset, now=now)
+    assert _rows(store) == []
+    with store._db() as db:
+        db.execute("INSERT INTO budget VALUES (?,?,?,?)", (store.scope, "core", 0, reset))
+    assert store.request("GET", "user").error is None and calls == ["user"]
+
+
 def test_healthy_low_core_budget_still_refuses(tmp_path):
     now = 1_700_000_000
     reset = now + 60

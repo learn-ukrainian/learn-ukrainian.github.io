@@ -88,6 +88,27 @@ def test_forbidden_models_refused(model: str) -> None:
         assert_model_routing_allowed(model, context="test")
 
 
+def test_ox_alpha_message_points_to_cursor_not_glm() -> None:
+    with pytest.raises(RoutingGuardError, match="--agent cursor") as excinfo:
+        assert_model_routing_allowed("ox-alpha", context="test")
+    msg = str(excinfo.value)
+    assert "--agent glm" not in msg
+    assert "z.ai" in msg.lower() or "retired" in msg.lower()
+    assert "LU_ROUTING_GUARD_OVERRIDE=1" in msg
+
+
+def test_openrouter_glm_message_points_to_cursor_not_glm() -> None:
+    with pytest.raises(RoutingGuardError, match="--agent cursor") as excinfo:
+        assert_model_routing_allowed("openrouter/z-ai/glm-5.3-flash", context="test")
+    msg = str(excinfo.value)
+    assert "`delegate.py dispatch --agent glm`" not in msg
+    assert "do not dispatch `--agent glm`" in msg
+    assert "OpenRouter glm only" in msg
+    assert "LU_ROUTING_GUARD_OVERRIDE=1" in msg
+    assert "zai/glm-5.3-flash via" not in msg
+    assert "FIRST-PARTY z.ai" not in msg
+
+
 @pytest.mark.parametrize(
     "model",
     [
@@ -111,6 +132,15 @@ def test_allowed_models_pass(model: str | None) -> None:
     assert_model_routing_allowed(model, context="test")
 
 
+def test_deepseek_guard_messages_name_live_provider() -> None:
+    with pytest.raises(RoutingGuardError, match="Use deepseek/<model>"):
+        assert_model_routing_allowed("openrouter/deepseek/deepseek-v4-flash", context="test")
+    with pytest.raises(RoutingGuardError, match="deepseek/ accepts ONLY"):
+        assert_model_routing_allowed("deepseek/gpt-5.5", context="test")
+    with pytest.raises(RoutingGuardError, match="deepseek/deepseek-flash"):
+        assert_model_routing_allowed("deepseek-direct/deepseek-v4-flash", context="test")
+
+
 def test_qwen_agent_refused_and_override_env_allows(monkeypatch: pytest.MonkeyPatch) -> None:
     with pytest.raises(RoutingGuardError):
         assert_agent_routing_allowed("qwen", context="test")
@@ -119,6 +149,24 @@ def test_qwen_agent_refused_and_override_env_allows(monkeypatch: pytest.MonkeyPa
     monkeypatch.setenv("LU_ROUTING_GUARD_OVERRIDE", "1")
     assert_agent_routing_allowed("qwen", context="test")
     assert_model_routing_allowed("openrouter/anthropic/claude-sonnet-5", context="test")
+
+
+def test_opencode_transport_is_wired() -> None:
+    """The guard must sit at the single opencode subprocess choke point."""
+    import inspect
+
+    from scripts.ai_agent_bridge import _opencode
+
+    src = inspect.getsource(_opencode._run_opencode)
+    assert "assert_model_routing_allowed" in src
+
+
+def test_delegate_dispatch_is_wired() -> None:
+    from pathlib import Path
+
+    src = Path("scripts/delegate.py").read_text(encoding="utf-8")
+    assert "assert_agent_routing_allowed" in src
+    assert "assert_model_routing_allowed" in src
 
 
 def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -143,6 +191,26 @@ def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest
     # ask-hermes would error out.
     assert_model_routing_allowed(_hermes.HERMES_DEFAULT_MODEL, context="test")
     assert "qwen" not in _hermes.HERMES_DEFAULT_MODEL.lower()
+
+
+def test_delegate_help_does_not_advertise_qwen() -> None:
+    """Banned agent must not appear ANYWHERE in dispatch --help (UX trap:
+    --help offers it, the guard rejects it at dispatch). Runs the real parser
+    so both argparse choices AND help prose are covered (codex re-review of
+    #4500: the first source-check missed a prose mention)."""
+    import subprocess
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        [sys.executable, str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
+        capture_output=True,
+        text=True,
+        cwd=repo_root,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "qwen" not in result.stdout.lower()
 
 
 def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:

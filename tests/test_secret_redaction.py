@@ -51,6 +51,35 @@ def test_unneeded_env_var_names_drop_cursor_key_except_for_cursor() -> None:
     assert kept["GH_TOKEN"] == "ghp_synthetic"
 
 
+def test_launchers_and_dispatcher_call_the_sanitizer() -> None:
+    launcher = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert "launcher_drop_unneeded_secrets" in launcher
+    assert "env_sanitize.py" in launcher
+    assert '--provider "$LC_PROVIDER"' in launcher
+    delegate = (REPO / "scripts/delegate.py").read_text(encoding="utf-8")
+    assert "without_unneeded_secrets(worker_env, dispatch_agent)" in delegate
+    dispatcher = (REPO / "scripts/batch/batch_dispatcher.py").read_text(encoding="utf-8")
+    assert 'unneeded_env_var_names(os.environ, "dispatcher")' in dispatcher
+    wrapper = (REPO / "run-dispatcher.sh").read_text(encoding="utf-8")
+    assert "--provider dispatcher" in wrapper
+    for name in ("kimi.sh", "glm.sh"):
+        launcher_text = (REPO / "scripts" / "launchers" / name).read_text(encoding="utf-8")
+        assert "launcher_drop_unneeded_secrets" in launcher_text
+
+
+def test_no_print_hook_blocks_seeded_echo() -> None:
+    proc = subprocess.run(
+        [sys.executable, str(HOOK), "--self-test"],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert SYNTHETIC_KEY not in proc.stdout
+    assert SYNTHETIC_KEY not in proc.stderr
+
+
 @pytest.fixture(params=[False, True], ids=["single", "xdist"])
 def xdist_enabled(request: pytest.FixtureRequest) -> bool:
     return request.param
@@ -168,6 +197,18 @@ def test_conftest_redacts_unsuccessful_reports(tmp_path: Path, phase: str, xdist
         assert "AssertionError" in combined if phase == "assertion" else "RuntimeError" in combined
 
 
+def test_collection_cannot_read_inherited_key(tmp_path: Path, xdist_enabled: bool) -> None:
+    proc = _run_secret_probe(
+        tmp_path,
+        "import os\nassert 'CURSOR_API_KEY' not in os.environ\ndef test_sample():\n    pass\n",
+        xdist_enabled=xdist_enabled,
+    )
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert SYNTHETIC_KEY not in combined
+    assert "1 passed" in proc.stdout
+
+
 @pytest.mark.parametrize("secret_in_name", [False, True], ids=["value", "name"])
 def test_conftest_redacts_junit_properties(tmp_path: Path, secret_in_name: bool, xdist_enabled: bool) -> None:
     secret_file = tmp_path / "sample.txt"
@@ -194,6 +235,27 @@ def test_conftest_redacts_junit_properties(tmp_path: Path, secret_in_name: bool,
     assert "scrubbed env var CURSOR_API_KEY" in combined
     assert "1 failed" in proc.stdout
     assert "1 error" not in proc.stdout
+
+
+def test_collection_cannot_read_inherited_password_or_apikey(tmp_path: Path, xdist_enabled: bool) -> None:
+    proc = _run_secret_probe(
+        tmp_path,
+        "import os\n"
+        "assert 'SYNTHETIC_SERVICE_PASSWORD' not in os.environ\n"
+        "assert 'SYNTHETIC_SERVICE_APIKEY' not in os.environ\n"
+        "def test_sample():\n    pass\n",
+        xdist_enabled=xdist_enabled,
+    )
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert SYNTHETIC_KEY not in combined
+    assert "1 passed" in proc.stdout
+
+
+def test_dispatcher_wrapper_is_executable() -> None:
+    import stat
+
+    assert (REPO / "run-dispatcher.sh").stat().st_mode & stat.S_IXUSR
 
 
 @pytest.mark.parametrize(
@@ -566,6 +628,43 @@ def test_interactive_launcher_child_uses_dispatcher_credential_policy(
     assert "synthetic-launcher-credential" not in proc.stdout + proc.stderr
 
 
+@pytest.mark.parametrize(
+    "provider,keys",
+    [
+        ("gemini", {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}),
+        ("claude", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
+        ("codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
+        ("kimi", {"KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
+        ("cursor", {"CURSOR_API_KEY"}),
+        ("acpx-cursor-shadow", {"CURSOR_API_KEY"}),
+    ],
+)
+def test_existing_provider_allowlist_reaches_launcher_and_dispatcher(provider: str, keys: set[str]) -> None:
+    all_keys = {
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "CLAUDE_API_KEY",
+        "CODEX_API_KEY",
+        "OPENAI_API_KEY",
+        "KIMICC_AUTH_TOKEN",
+        "MOONSHOT_API_KEY",
+        "KIMI_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "CURSOR_API_KEY",
+    }
+    parent = dict.fromkeys(all_keys, SYNTHETIC_KEY)
+    assert unneeded_env_var_names(parent, "dispatcher") == []
+    downstream = without_unneeded_secrets(parent, provider)
+    assert all(downstream[name] == SYNTHETIC_KEY for name in keys)
+    dropped = set(unneeded_env_var_names(parent, provider))
+    assert all_keys - dropped == set(downstream)
+    assert all_keys - dropped == keys | (
+        {"KIMICC_AUTH_TOKEN", "ANTHROPIC_AUTH_TOKEN"} if provider != "codex" else {"KIMICC_AUTH_TOKEN"}
+    )
+
+
 @pytest.mark.parametrize("maxsize", [20, 30, 60, 120])
 def test_repr_redaction_preserves_unrelated_ellipsis(maxsize: int) -> None:
     from _pytest._io.saferepr import saferepr
@@ -693,6 +792,37 @@ def test_round2_codex_route_child_auth(tmp_path: Path, harness: str) -> None:
     assert proc.stdout == "route-auth-ok\n"
 
 
+@pytest.mark.parametrize("container", ["list", "tuple", "dict", "set", "nested"])
+def test_round2_container_truncation(tmp_path: Path, xdist_enabled: bool, container: str) -> None:
+    token = "SyntheticKeyPrefix012345" + "m" * 300 + "SyntheticSuffix9876543210"
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    shapes = {
+        "list": ("[v, 'x']", "[v, 'y']"),
+        "tuple": ("(v, 'x')", "(v, 'y')"),
+        "dict": ("{'secret': v, 'safe': 'x'}", "{'secret': v, 'safe': 'y'}"),
+        "set": ("{v, 'x'}", "{v, 'y'}"),
+        "nested": ("[{'secret': (v,), 'safe': 'x'}]", "[{'secret': (v,), 'safe': 'y'}]"),
+    }
+    left, right = shapes[container]
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\nfrom _pytest._io.saferepr import saferepr\ndef test_sample():\n"
+        f"    v = Path({str(secret_file)!r}).read_text()\n"
+        f"    print(saferepr({left}, maxsize=80))\n    assert {left} == {right}\n",
+        xdist_enabled=xdist_enabled,
+        token=token,
+    )
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    terminal = proc.stdout + proc.stderr
+    xml = (tmp_path / "report.xml").read_text()
+    for output in (terminal, xml):
+        assert token[:12] not in output
+        assert token[-13:] not in output
+        assert "AssertionError" in output
+    assert "[REDACTED]" in terminal
+
+
 @pytest.mark.parametrize("kind", ["bytes", "path", "object"])
 def test_round2_property_types(tmp_path: Path, xdist_enabled: bool, kind: str) -> None:
     secret_file = tmp_path / "sample.txt"
@@ -717,6 +847,41 @@ def test_round2_property_types(tmp_path: Path, xdist_enabled: bool, kind: str) -
     assert "[REDACTED]" in xml
     assert '<property name="safe-count" value="7"' in xml
     assert "INTERNALERROR" not in combined
+
+
+@pytest.mark.parametrize("mode", [("--capture=tee-sys",), ("--log-cli-level=INFO",)])
+def test_round2_direct_output_warning(tmp_path: Path, mode: tuple[str, ...]) -> None:
+    proc = _run_secret_probe(
+        tmp_path,
+        "import logging\ndef test_sample():\n    print('safe')\n    logging.info('safe')\n",
+        xdist_enabled=False,
+        extra_args=mode,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert (proc.stdout + proc.stderr).count("credential redaction cannot protect direct terminal output") == 1
+
+
+def test_round2_redactor_single_line_bound() -> None:
+    import time
+
+    source = (
+        "from tests.conftest import _redact_secret_data\n"
+        "line = \"'\" + '.' * 200_000\n"
+        "assert _redact_secret_data(line, ['synthetic-performance-credential-0123456789']) == line\n"
+        "print('bounded-redaction-ok')\n"
+    )
+    start = time.monotonic()
+    proc = subprocess.run(
+        [sys.executable, "-c", source],
+        cwd=REPO,
+        env={name: os.environ[name] for name in ("PATH", "HOME", "TMPDIR") if name in os.environ},
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert proc.stdout == "bounded-redaction-ok\n"
+    assert time.monotonic() - start < 15
 
 
 @pytest.mark.parametrize(
@@ -910,6 +1075,45 @@ def test_round3_embedded_shortened_secret(tmp_path: Path, length: int, shape: st
     assert "[REDACTED]" in proc.stdout
 
 
+@pytest.mark.parametrize("credentials", [False, True])
+def test_round3_wrapper_property_does_not_persist_without_credentials(tmp_path: Path, credentials: bool) -> None:
+    (tmp_path / "conftest.py").write_text(
+        "import pytest\n"
+        "@pytest.hookimpl(wrapper=True)\n"
+        "def pytest_runtest_makereport(item, call):\n"
+        "    report = yield\n"
+        "    if report.when == 'call':\n"
+        "        report.user_properties.append(('wrapper-only', 'safe'))\n"
+        "    return report\n"
+    )
+    proc = _run_secret_probe(tmp_path, "def test_sample():\n    pass\n", xdist_enabled=False, credentials=credentials)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    xml = (tmp_path / "report.xml").read_text()
+    assert 'name="wrapper-only"' not in xml
+
+
+@pytest.mark.parametrize("overlap", [1, 4, 7])
+def test_round3_short_ordinary_overlap_is_preserved(overlap: int) -> None:
+    from tests.conftest import _redact_shortened_secret_reprs
+
+    token = "ABCDEFGH" + "0123456789" * 4 + "ZYXWVUTS"
+    text = repr("ordinary " + token[:overlap] + "..." + token[-overlap:] + " text")
+    assert _redact_shortened_secret_reprs(text, [token]) == text
+
+
+@pytest.mark.parametrize("edge", ["head", "tail", "open-head"])
+def test_round3_embedded_overlap_at_minimum(edge: str) -> None:
+    from tests.conftest import _redact_shortened_secret_reprs
+
+    token = "ABCDEFGH" + "0123456789" * 4 + "ZYXWVUTS"
+    text = {
+        "head": "'Bearer ABCDEFGH...ordinary'",
+        "tail": "'ordinary...ZYXWVUTS&a=1'",
+        "open-head": "'Bearer ABCDEFGH...\n",
+    }[edge]
+    assert "[REDACTED]" in _redact_shortened_secret_reprs(text, [token])
+
+
 @pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "glm", "grok", "cursor"])
 @pytest.mark.parametrize("source", ["GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN"])
 def test_round3_launcher_resolves_synthetic_github_identity(tmp_path: Path, provider: str, source: str) -> None:
@@ -976,6 +1180,44 @@ def test_round3_launcher_preserves_metadata_without_forwarding_worker_lease(tmp_
     if not counter.isdecimal():
         expected.pop("SESSION_STREAM_FENCING_TOKEN")
     assert json.loads(proc.stdout) == expected
+
+
+@pytest.mark.parametrize("length", [40, 108, 325])
+@pytest.mark.parametrize("shape", ["leading", "list", "dict", "trailing", "interior"])
+@pytest.mark.parametrize("mode", [(), ("-v",), ("-l",), ("-n", "2")], ids=["default", "verbose", "locals", "xdist"])
+def test_round4_leading_secret_with_trailer(tmp_path: Path, length: int, shape: str, mode: tuple[str, ...]) -> None:
+    import xml.etree.ElementTree as ET
+
+    token = ("aQbRcSdTeUfVgWhXiYjZkPlOmNnMoLpKqJrIsHtGuFvEwDxCyBzA" * 7)[:length]
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    expression = {
+        "leading": "v + ':x-oauth-basic-trailer'",
+        "list": "[v + ':x-oauth-basic-trailer']",
+        "dict": "{'credential': v + ':x-oauth-basic-trailer'}",
+        "trailing": "'prefix:' + v",
+        "interior": "'prefix:' + v + ':trailer'",
+    }[shape]
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\nfrom _pytest._io.saferepr import saferepr\n"
+        "def test_sample():\n"
+        f"    v = Path({str(secret_file)!r}).read_text()\n"
+        f"    value = {expression}\n"
+        "    print(saferepr(value, maxsize=40))\n"
+        "    assert value == 'expected-safe-value'\n",
+        xdist_enabled=mode == ("-n", "2"),
+        token=token,
+        extra_args=() if mode == ("-n", "2") else mode,
+    )
+    assert proc.returncode == 1
+    xml = (tmp_path / "report.xml").read_text()
+    failure = ET.fromstring(xml).find(".//failure")
+    assert failure is not None
+    outputs = (proc.stdout + proc.stderr, xml, failure.get("message", ""), failure.text or "")
+    for output in outputs:
+        assert "[REDACTED]" in output
+        assert not any(token[index : index + 8] in output for index in range(len(token) - 7))
 
 
 def _round4_launcher_probe(
@@ -1118,6 +1360,27 @@ def test_round4_driver_app_identity_and_worker_key_boundary(tmp_path: Path, key_
     assert json.loads(proc.stdout) == {"driver_can_resolve": mode == "driver", "worker_has_key": False}
 
 
+@pytest.mark.parametrize("forwarded", [("--", "literal"), ("first", "--", "--provider", "glm", "--harness=other")])
+def test_round4_launcher_forwards_literal_argument_separator(tmp_path: Path, forwarded: tuple[str, ...]) -> None:
+    import json
+
+    proc = _round4_launcher_probe(tmp_path, "import json, sys\nprint(json.dumps(sys.argv[1:]))\n", forwarded=forwarded)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == list(forwarded)
+
+
+def test_round4_exec_restores_signal_defaults(tmp_path: Path) -> None:
+    import signal
+
+    if not Path("/proc/self/status").is_file():
+        pytest.skip("Linux signal mask proof requires procfs")
+    proc = _round4_launcher_probe(tmp_path, "", setup="launcher_exec_command cat /proc/self/status\n")
+    assert proc.returncode == 0, proc.stderr
+    ignored = int(next(line.split()[1] for line in proc.stdout.splitlines() if line.startswith("SigIgn:")), 16)
+    for number in (signal.SIGPIPE, signal.SIGXFSZ):
+        assert not ignored & (1 << (number - 1))
+
+
 def test_round4_check_helper_refuses_broken_identity_import(tmp_path: Path) -> None:
     marker = tmp_path / "provider-started"
     proc = _round4_launcher_probe(
@@ -1141,6 +1404,21 @@ def test_round4_check_helper_refuses_broken_identity_import(tmp_path: Path) -> N
     assert not marker.exists()
     assert "could not drop unneeded API keys" in proc.stderr
     assert "synthetic-sensitive-import-diagnostic" not in proc.stderr
+
+
+def test_round4_exec_exception_describes_model_session_boundary() -> None:
+    import yaml
+
+    registry = yaml.safe_load((REPO / "tests/headless_claude_spawn_exceptions.yaml").read_text())
+    entries = registry["exceptions"]
+    entry = next(
+        item
+        for item in entries
+        if item["module"] == "scripts/agent_runtime/env_sanitize.py" and item["program"] == "args.command[0]"
+    )
+    assert "operator-forwarded" in entry["reason"]
+    assert "no worker-controlled value" in entry["reason"]
+    assert "runs no model prompt" not in entry["reason"]
 
 
 @pytest.mark.parametrize(
@@ -1297,6 +1575,26 @@ def test_round5_driver_github_passthrough(tmp_path: Path, provider: str, has_tok
 
 
 @pytest.mark.parametrize("name", ["PATH", "HOME", "PWD"])
+@pytest.mark.parametrize("mode", ["driver", "interactive"])
+def test_round5_launcher_preserves_process_paths(tmp_path: Path, name: str, mode: str) -> None:
+    value = str(tmp_path / "task-ghp_syntheticpath")
+    Path(value).mkdir()
+    proc = _round4_launcher_probe(
+        tmp_path,
+        "import os\n" + f"assert os.environ[{name!r}] == {value!r}\nprint('path-unchanged')\n",
+        # Shells maintain PWD themselves; use an actual directory for that case.
+        setup=f"cd {shlex.quote(value)}\n" if name == "PWD" else f"export {name}={shlex.quote(value)}\n",
+        mode=mode,
+        bootstrap_code=(
+            "import agent_runtime.agent_github_identity as identity\n"
+            "identity.resolve_agent_github_identity = lambda **kwargs: None\n"
+        ),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "path-unchanged\n"
+
+
+@pytest.mark.parametrize("name", ["PATH", "HOME", "PWD"])
 def test_round5_dispatcher_keeps_path_value_filter(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
     from agent_runtime import agent_github_identity as identity
     from agent_runtime.env_sanitize import build_agent_env
@@ -1360,6 +1658,17 @@ def test_round5_fragment_spans_merge_without_losing_safe_neighbors() -> None:
     secrets = ["HeadAbCd0123456789", "TailEfGh9876543210"]
     text = "safe: HeadAbCd012345TailEfGh / 9876543210 safe"
     assert _redact_secret_data(text, secrets) == "safe: [REDACTED] / [REDACTED] safe"
+
+
+@pytest.mark.parametrize("size", range(5, 20))
+def test_round5_retains_tiny_repr_coverage(size: int) -> None:
+    from _pytest._io.saferepr import saferepr
+
+    from tests.conftest import _redact_secret_data
+
+    token = "HeadAbCd0123456789MiddleEfGh9876543210TailIjKl"
+    assert _redact_secret_data(saferepr(token, maxsize=size), [token]) == "'[REDACTED]'"
+    assert _redact_secret_data("'other...ordinary'", [token]) == "'other...ordinary'"
 
 
 @pytest.mark.parametrize(

@@ -3,21 +3,38 @@
 from __future__ import annotations
 
 import json
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
+import scripts.api.main as api_main
+from scripts.api import work_router
 from scripts.api.monitor_context import fixture_context
-from scripts.api.observer_presence import reset_observer_presence
+from scripts.api.observer_presence import _STORE as PRODUCTION_PRESENCE_STORE
+from scripts.api.observer_presence import list_live, reset_observer_presence
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
 from scripts.api.project_state_store import reset_project_state_store
-from scripts.api.state_helpers import cache_invalidate
+from scripts.api.state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 from tests.epics_monitor_stub import epics_app_for_store
 
 pytestmark = pytest.mark.repo_invariant
 
 PLANTED_PATH = "/srv/opsec-canary-root/repo"
+_HEARTBEAT = {
+    "agent": "grok-bot",
+    "kind": "observer",
+    "task_id": "7494",
+    "epic": "7177",
+    "status": "working",
+    "summary": "fixture isolation probe",
+}
+
+
+@asynccontextmanager
+async def _no_lifespan(_app):
+    yield
 
 
 @pytest.fixture(autouse=True)
@@ -29,6 +46,46 @@ def _clear_production_stores() -> None:
     reset_observer_presence()
     reset_project_state_store()
     cache_invalidate()
+
+
+def test_fixture_presence_post_never_touches_production_store(tmp_path: Path) -> None:
+    """#7494 / 4.3: create_app fixture writes land on ctx.stores.presence_store only."""
+    before = len(PRODUCTION_PRESENCE_STORE)
+    app = api_main.create_app(fixture_context(tmp_path), lifespan=_no_lifespan)
+    client = TestClient(
+        app,
+        base_url="http://127.0.0.1",
+        client=("127.0.0.1", 50000),
+        raise_server_exceptions=False,
+    )
+    posted = client.post("/api/observer/presence", json=_HEARTBEAT)
+    assert posted.status_code == 200, posted.text
+    assert posted.json()["agent"] == "grok-bot"
+
+    fixture_store = app.state.ctx.stores.presence_store
+    assert fixture_store is not None
+    assert fixture_store is not PRODUCTION_PRESENCE_STORE
+    assert len(fixture_store) == 1
+    assert len(PRODUCTION_PRESENCE_STORE) == before
+    assert list_live(store=fixture_store)
+    assert not list_live(store=PRODUCTION_PRESENCE_STORE) or all(
+        row.task_id != "7494" for row in list_live(store=PRODUCTION_PRESENCE_STORE)
+    )
+
+
+def test_work_projection_cache_is_scoped_per_context(tmp_path: Path) -> None:
+    """#7494: two apps must not share work projection TTL entries."""
+    a_ctx = fixture_context(tmp_path / "a")
+    b_ctx = fixture_context(tmp_path / "b")
+    key_a = work_router.projection_cache_key({}, a_ctx)
+    key_b = work_router.projection_cache_key({}, b_ctx)
+    assert key_a != key_b
+    assert ctx_cache_scope(a_ctx) in key_a
+    assert ctx_cache_scope(b_ctx) in key_b
+
+    cache_set(key_a, {"items": [], "sentinel": "a-only"})
+    assert cache_get(key_b, ttl=30.0) is None
+    assert cache_get(key_a, ttl=30.0)["sentinel"] == "a-only"
 
 
 def test_epics_stub_runs_create_app_opsec_sanitizer(tmp_path: Path, monkeypatch) -> None:

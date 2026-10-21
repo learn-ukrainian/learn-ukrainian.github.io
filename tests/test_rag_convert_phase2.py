@@ -56,6 +56,17 @@ def test_direct_cli_explicit_paths_and_help(tmp_path):
     assert "require --dmklinger" in result.stderr
 
 
+def test_main_dispatches_selected_converter_only(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(converter, "convert_dmklinger", lambda *args: calls.append(args))
+    for flag in ("--dmklinger", "--all"):
+        for function in ("convert_ukrajinet", "convert_ubertext_freq", "extract_sum11_registers"):
+            monkeypatch.setattr(converter, function, lambda: None)
+        monkeypatch.setattr(sys, "argv", ["converter", flag, "--input", "raw.json", "--output", "out.jsonl"])
+        converter.main()
+    assert calls == [(Path("raw.json"), Path("out.jsonl"))] * 2
+
+
 @pytest.mark.parametrize("payload", ["not JSON", "{}"])
 def test_invalid_source_never_reports_success(tmp_path, payload):
     source = tmp_path / "words.json"

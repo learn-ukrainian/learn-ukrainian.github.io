@@ -93,6 +93,14 @@ def test_inspect_word_known_invalid_bad(inspection_db: Path) -> None:
     assert res.marked_analyses[0]["markers"] == [{"marker": "bad", "origin": "tag", "marker_class": "invalid"}]
 
 
+def test_inspect_word_known_invalid_obsc(inspection_db: Path) -> None:
+    res = inspect_word("obscene", db_path=inspection_db)
+    assert res.status == InspectionStatus.KNOWN_INVALID
+    assert len(res.clean_analyses) == 0
+    assert len(res.marked_analyses) == 1
+    assert res.effective_markers == ["obsc"]
+
+
 def test_inspect_word_nonstandard_subst(inspection_db: Path) -> None:
     res = inspect_word("nonstandard", db_path=inspection_db)
     assert res.status == InspectionStatus.NONSTANDARD
@@ -182,6 +190,10 @@ def test_inspect_words_batch(inspection_db: Path) -> None:
     assert batch["nonexistent"].status == InspectionStatus.NOT_FOUND
 
 
+def test_inspect_words_empty(inspection_db: Path) -> None:
+    assert inspect_words([], db_path=inspection_db) == {}
+
+
 def test_inspect_lemma(inspection_db: Path) -> None:
     res = inspect_lemma("mixed-paradigm", db_path=inspection_db)
     assert isinstance(res, LemmaInspection)
@@ -264,6 +276,75 @@ def test_legacy_verify_word_hides_bad_subst_obsc(inspection_db: Path) -> None:
     assert len(verify_word("alternate", db_path=inspection_db)) == 1
     assert len(verify_word("vulgar", db_path=inspection_db)) == 1
     assert len(verify_word("dialect-pure", db_path=inspection_db)) == 1
+
+
+def test_legacy_verify_words_batch(inspection_db: Path) -> None:
+    words = ["clean", "invalid", "nonstandard", "slangy", "archaic"]
+    results = verify_words(words, db_path=inspection_db)
+
+    assert len(results["clean"]) == 1
+    assert results["invalid"] == []
+    assert results["nonstandard"] == []
+    assert len(results["slangy"]) == 1
+    assert len(results["archaic"]) == 1
+
+
+def test_legacy_verify_lemma(inspection_db: Path) -> None:
+    forms = verify_lemma("clean", db_path=inspection_db)
+    assert len(forms) == 2
+    form_words = {f["word_form"] for f in forms}
+    assert form_words == {"clean", "clean-form"}
+
+
+def test_inspection_fail_closed_on_incomplete_schema(tmp_path: Path) -> None:
+    """Incomplete schemas (e.g. missing entry_id or marker_class columns) must return UNAVAILABLE without error."""
+    db_path = tmp_path / "incomplete.db"
+    conn = sqlite3.connect(db_path)
+    # forms_all missing entry_id, source_comment, source_location
+    conn.execute("CREATE TABLE forms_all (id INTEGER PRIMARY KEY, word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    # form_markers missing marker_class
+    conn.execute("CREATE TABLE form_markers (form_id INT, marker TEXT, origin TEXT)")
+    conn.execute("INSERT INTO forms_all VALUES (1, 'тест', 'тест', 'noun', 'tag')")
+    conn.commit()
+    conn.close()
+
+    res = inspect_word("тест", db_path=db_path)
+    assert res.status == InspectionStatus.UNAVAILABLE
+
+    batch_res = inspect_words(["тест"], db_path=db_path)
+    assert batch_res["тест"].status == InspectionStatus.UNAVAILABLE
+
+    lemma_res = inspect_lemma("тест", db_path=db_path)
+    assert lemma_res.status == InspectionStatus.UNAVAILABLE
+
+
+def test_vesum_cli_global_db_flag(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, inspection_db: Path, capsys: pytest.CaptureFixture
+) -> None:
+    """Ensure --db is honored whether placed before or after the subcommand."""
+    from scripts.verification.vesum import main as vesum_main
+
+    # 1. Global --db before subcommand
+    monkeypatch.setattr(
+        "sys.argv",
+        ["vesum.py", "--db", str(inspection_db), "word", "clean", "--json"],
+    )
+    vesum_main()
+    out1 = capsys.readouterr().out
+    data1 = json.loads(out1)
+    assert len(data1) == 1
+    assert data1[0]["lemma"] == "clean"
+
+    # 2. Local --db after subcommand
+    monkeypatch.setattr(
+        "sys.argv",
+        ["vesum.py", "word", "clean", "--db", str(inspection_db), "--json"],
+    )
+    vesum_main()
+    out2 = capsys.readouterr().out
+    data2 = json.loads(out2)
+    assert len(data2) == 1
+    assert data2[0]["lemma"] == "clean"
 
 
 def test_get_vesum_conn_replacement_detection(tmp_path: Path) -> None:
@@ -440,7 +521,9 @@ def test_apostrophe_spellings_agree_across_all_vesum_apis(inspection_db, apostro
         inspect_lemma,
         inspect_word,
         inspect_words,
+        verify_lemma,
         verify_word,
+        verify_words,
     )
 
     # Lexical values captured from the live VESUM rows in stress-round4.json.

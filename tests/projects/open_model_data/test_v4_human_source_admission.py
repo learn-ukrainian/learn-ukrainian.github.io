@@ -223,6 +223,24 @@ def test_private_admission_cannot_be_replayed_as_public_export(tmp_path):
     assert run_export(tmp_path, record, payload, "public_redistribution")["output"]["records"] == 1
 
 
+def test_materialize_denies_crlf_line_ending_byte_mismatch(tmp_path):
+    record, payload = prepare_inputs(tmp_path)
+    # Write CRLF bytes to source.txt when record content specifies LF hash
+    crlf_text = HUMAN_TEXT.replace("\n", "\r\n")
+    write_jsonl(tmp_path / "sources.jsonl", [record])
+    (tmp_path / "source.txt").write_bytes(crlf_text.encode("utf-8"))
+    metadata = {key: value for key, value in payload.items() if key not in {"text", "text_sha256"}}
+    (tmp_path / "reviewed.json").write_text(json.dumps(metadata), encoding="utf-8")
+    result = subprocess.run([
+        sys.executable, "-m", "scripts.projects.open_model_data.model_view_exporter",
+        "materialize-human-source", "--source-records", str(tmp_path / "sources.jsonl"),
+        "--reviewed-payload", str(tmp_path / "reviewed.json"),
+        "--source-text", str(tmp_path / "source.txt"), "--output", str(tmp_path / "materialized.jsonl"),
+    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
+    assert result.returncode == 2, "materialize must reject exact-byte mismatch from CRLF endings"
+    assert not (tmp_path / "materialized.jsonl").exists()
+
+
 @pytest.mark.parametrize("mutation,reason", [
     (lambda r, p: p.update(origin="machine_generated"), "source_origin_not_human_authored"),
     (lambda r, p: r.update(source_family="synthetic"), "source_origin_not_human_authored"),
@@ -289,6 +307,26 @@ def test_materialization_denies_invalid_input_without_overwriting(tmp_path, muta
             extra_evaluation_artifacts=(),
         )
     assert output.read_bytes() == b"previous artifact\n"
+
+
+@pytest.mark.parametrize("category", ["stem", "video_captions", "video_transcripts", "ocr", "ocr_derived", "private_teaching_material"])
+@pytest.mark.parametrize("field", ["source_family", "genre"])
+def test_cli_preserves_explicit_source_exclusions(tmp_path, category, field):
+    record, payload = prepare_inputs(tmp_path)
+    if field == "source_family":
+        record[field] = category
+    else:
+        record["description"][field] = category
+    receipt = run_export(tmp_path, record, payload)
+    assert receipt["output"]["records"] == 0
+    assert receipt["counts"]["excluded_source_record_not_admitted"] == 1
+
+
+def test_conflicting_public_permission_is_not_local_permission(tmp_path):
+    record, payload = prepare_inputs(tmp_path)
+    record["rights"]["redistribution"]["status"] = "conflicting"
+    assert run_export(tmp_path, record, payload)["output"]["records"] == 1
+    assert run_export(tmp_path, record, payload, "public_redistribution")["output"]["records"] == 0
 
 
 def test_materialization_preserves_crlf_and_denies_line_ending_mutation(tmp_path):

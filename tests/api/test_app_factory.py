@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
@@ -211,6 +212,137 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         assert third_client.get("/api/session-streams/v1/drift").status_code == 404
 
 
+def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    # Set up first isolated instance
+    first_root = tmp_path / "first"
+    first_ctx = fixture_context(first_root)
+    (first_root / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True)
+    (first_root / "curriculum" / "l2-uk-en" / "curriculum.yaml").write_text(
+        "levels:\n  a1:\n    path: a1\n    modules:\n      - id: 01-first-slug\n        title: First Module\n",
+        encoding="utf-8",
+    )
+    (first_root / "curriculum" / "l2-uk-en" / "a1" / "01-first-slug.md").write_text(
+        "# First Content\n", encoding="utf-8"
+    )
+
+    # Set up second isolated instance
+    second_root = tmp_path / "second"
+    second_ctx = fixture_context(second_root)
+    (second_root / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True)
+    (second_root / "curriculum" / "l2-uk-en" / "curriculum.yaml").write_text(
+        "levels:\n  a1:\n    path: a1\n    modules:\n      - id: 01-second-slug\n        title: Second Module\n",
+        encoding="utf-8",
+    )
+    (second_root / "curriculum" / "l2-uk-en" / "a1" / "01-second-slug.md").write_text(
+        "# Second Content\n", encoding="utf-8"
+    )
+
+    (first_root / "curriculum" / "l2-uk-en" / "plans" / "a1").mkdir(parents=True)
+    (first_root / "curriculum" / "l2-uk-en" / "plans" / "a1" / "first-slug.yaml").write_text(
+        "title: First Plan\nplan_fixes:\n  - fix 1\n", encoding="utf-8"
+    )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        # No fresh=true / no manual cache_invalidate: proves ctx-scoped keys.
+        first_summary = first_client.get("/api/state/summary").json()
+        second_summary = second_client.get("/api/state/summary").json()
+        assert first_summary["tracks"]["a1"]["total"] == 1
+        assert second_summary["tracks"]["a1"]["total"] == 1
+        assert first_summary.get("meta", {}).get("cache") == "miss"
+        assert second_summary.get("meta", {}).get("cache") == "miss"
+
+        first_pipeline = first_client.get("/api/state/pipeline/a1").json()
+        second_pipeline = second_client.get("/api/state/pipeline/a1").json()
+        assert first_pipeline["modules"][0]["slug"] == "first-slug"
+        assert second_pipeline["modules"][0]["slug"] == "second-slug"
+
+        first_enrichment = first_client.get("/api/state/enrichment-status?track=a1").json()
+        assert first_enrichment["tracks"]["a1"]["enriched"] == 1
+
+        second_enrichment = second_client.get("/api/state/enrichment-status?track=a1").json()
+        assert second_enrichment["tracks"]["a1"]["enriched"] == 0
+
+        first_summary_hit = first_client.get("/api/state/summary").json()
+        assert first_summary_hit.get("meta", {}).get("cache") == "hit"
+        assert first_summary_hit["tracks"]["a1"]["total"] == 1
+
+        first_manifest = first_client.get("/api/state/manifest").json()
+        second_manifest = second_client.get("/api/state/manifest").json()
+        assert "rules" in first_manifest
+        assert "session" in second_manifest
+
+
+def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
+    """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    first_backups = first_root / "data" / "backups"
+    second_backups = second_root / "data" / "backups"
+    first_backups.mkdir(parents=True)
+    second_backups.mkdir(parents=True)
+    (first_backups / "first.tar").write_bytes(b"first")
+    (second_backups / "second.tar").write_bytes(b"second")
+
+    first_plan = first_root / "batch_state" / "fleet-comms" / "retention"
+    second_plan = second_root / "batch_state" / "fleet-comms" / "retention"
+    first_plan.mkdir(parents=True)
+    second_plan.mkdir(parents=True)
+    (first_plan / "latest.json").write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1", "marker": "first-plan"}),
+        encoding="utf-8",
+    )
+    (second_plan / "latest.json").write_text(
+        json.dumps({"schema": "fleet-comms.retention.plan.v1", "marker": "second-plan"}),
+        encoding="utf-8",
+    )
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_backups_body = first_client.get("/api/admin/backup/list").json()
+        second_backups_body = second_client.get("/api/admin/backup/list").json()
+        assert {item["filename"] for item in first_backups_body["backups"]} == {"first.tar"}
+        assert {item["filename"] for item in second_backups_body["backups"]} == {"second.tar"}
+        assert "first.tar" not in json.dumps(second_backups_body)
+        assert "second.tar" not in json.dumps(first_backups_body)
+
+        first_retention = first_client.get("/api/ops/v1/retention/latest").json()
+        second_retention = second_client.get("/api/ops/v1/retention/latest").json()
+        assert first_retention["marker"] == "first-plan"
+        assert second_retention["marker"] == "second-plan"
+        assert first_retention["missing"] is False
+        assert second_retention["missing"] is False
+
+        first_status = first_client.get("/api/ops/entire-context/status").json()
+        second_status = second_client.get("/api/ops/entire-context/status").json()
+        assert first_status["schema"] == "entire-context-monitor.v1"
+        assert second_status["schema"] == "entire-context-monitor.v1"
+        assert first_status["recall"]["available"] is False
+        assert second_status["recall"]["available"] is False
+
+        first_hygiene = first_client.get("/api/git/hygiene").json()
+        second_hygiene = second_client.get("/api/git/hygiene").json()
+        assert first_hygiene["dirty_total"] == 0
+        assert second_hygiene["dirty_total"] == 0
+        assert "error" in first_hygiene
+        assert "error" in second_hygiene
+
+
 def _seed_sources_db(path: Path, *, rows: int) -> None:
     import sqlite3
 
@@ -408,6 +540,65 @@ def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
         assert first_client.get("/api/work/v1/health").json()["ok"] is True
         assert second_client.get("/api/work/v1/health").json()["ok"] is True
         assert first_client.get("/api/work/v1/capabilities").json()["mutation"] is False
+
+
+def test_step13_core_router_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    # Set up dashboards
+    (first_root / "dashboards").mkdir(parents=True, exist_ok=True)
+    (first_root / "dashboards" / "index.html").write_text("<html>First Dashboard</html>\n", encoding="utf-8")
+    (second_root / "dashboards").mkdir(parents=True, exist_ok=True)
+    (second_root / "dashboards" / "index.html").write_text("<html>Second Dashboard</html>\n", encoding="utf-8")
+
+    # Set up dispatcher state
+    (first_root / "batch_state").mkdir(parents=True, exist_ok=True)
+    (first_root / "batch_state" / "dispatcher_state.json").write_text(
+        json.dumps({"tracks": {"first_track": {"status": "active"}}}),
+        encoding="utf-8",
+    )
+    (second_root / "batch_state").mkdir(parents=True, exist_ok=True)
+    (second_root / "batch_state" / "dispatcher_state.json").write_text(
+        json.dumps({"tracks": {"second_track": {"status": "active"}}}),
+        encoding="utf-8",
+    )
+
+    # Set up dispatcher logs
+    (first_root / "logs").mkdir(parents=True, exist_ok=True)
+    (first_root / "logs" / "dispatcher.log").write_text("First dispatcher log line\n", encoding="utf-8")
+    (second_root / "logs").mkdir(parents=True, exist_ok=True)
+    (second_root / "logs" / "dispatcher.log").write_text("Second dispatcher log line\n", encoding="utf-8")
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        # Static serving isolation
+        first_static = first_client.get("/")
+        second_static = second_client.get("/")
+        assert "First Dashboard" in first_static.text
+        assert "Second Dashboard" not in first_static.text
+        assert "Second Dashboard" in second_static.text
+        assert "First Dashboard" not in second_static.text
+
+        # Batch dispatcher state isolation
+        assert "first_track" in first_client.get("/api/batch/dispatcher").json()["tracks"]
+        assert "second_track" not in first_client.get("/api/batch/dispatcher").json()["tracks"]
+        assert "second_track" in second_client.get("/api/batch/dispatcher").json()["tracks"]
+        assert "first_track" not in second_client.get("/api/batch/dispatcher").json()["tracks"]
+
+        # Batch logs isolation
+        assert "First dispatcher log line" in first_client.get("/api/batch/dispatcher/logs").json()["lines"]
+        assert "Second dispatcher log line" not in first_client.get("/api/batch/dispatcher/logs").json()["lines"]
+        assert "Second dispatcher log line" in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
+        assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
 
 
 def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None:

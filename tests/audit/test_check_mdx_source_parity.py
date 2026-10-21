@@ -225,6 +225,14 @@ def test_check_parity_rejects_hand_edited_arc_generated_pages(mock_legacy_levels
         assert len(violations) == 1 and "arc_kind" in violations[0][1]
 
 
+def test_check_parity_rejects_generated_pages_with_arc_kind_removed(mock_legacy_levels, mock_subprocess, arc_docs):
+    mock_subprocess.return_value = "1 file changed\n"
+    for page in (arc_docs / "a1" / "alpha" / "index.mdx", arc_docs / "a1" / "index.mdx"):
+        page.write_text(page.read_text(encoding="utf-8").replace("arc_kind:", "kind:"), encoding="utf-8")
+        violations = check_parity([page], {page})
+        assert len(violations) == 1 and "arc page" in violations[0][1]
+
+
 def test_check_parity_staged_bytes_decide_not_the_working_tree(mock_legacy_levels, mock_subprocess, arc_docs, monkeypatch):
     monkeypatch.setattr("scripts.audit.check_mdx_source_parity.PROJECT_ROOT", arc_docs)
     page = arc_docs / "a1" / "alpha" / "index.mdx"  # working-tree copy is the corrected one
@@ -274,6 +282,14 @@ def test_check_parity_rejects_arc_kind_outside_arc_levels(mock_legacy_levels, mo
     other.write_text(LANDING_TEXT, encoding="utf-8")
     mock_subprocess.return_value = "1 file changed\n"
     assert len(check_parity([other], {other})) == 1
+
+
+@pytest.mark.needs_sparse_tree("site/src/content")
+def test_real_generated_a1_pages_pass_parity(mock_legacy_levels, mock_subprocess):
+    pages = [MDX_DIR / "a1" / "index.mdx", *sorted(MDX_DIR.glob("a1/*/index.mdx"))]
+    assert pages and all(page.is_file() for page in pages)
+    mock_subprocess.return_value = "1 file changed\n"
+    assert check_parity(pages, set(pages)) == []
 
 
 def test_check_parity_mdx_and_source(mock_legacy_levels, mock_subprocess):

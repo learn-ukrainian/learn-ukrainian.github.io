@@ -484,6 +484,20 @@ def test_claude_boundary_refuses_before_input_reads_or_provisioning(monkeypatch)
         AttemptBoundary(agent="claude", tool_config={})
 
 
+@pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
+def test_runner_refuses_claude_attempt_before_adapter_or_spawn(world, tmp_path, monkeypatch, kind):
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, kind), "claude")
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("pending Claude adapter must refuse before adapter planning or spawn")
+
+    monkeypatch.setattr(runner, "_load_adapter", unexpected)
+    monkeypatch.setattr(subprocess, "Popen", unexpected)
+    with pytest.raises(AgentUnavailableError, match="attempt_boundary_claude_adapter_pending"):
+        runner.invoke("claude", "probe", cwd=root, tool_config=tc, hard_timeout=30)
+
+
 def test_seat_cannot_read_other_attempt_through_host_http_projection(world, tmp_path):
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
@@ -1669,6 +1683,17 @@ def _default_file(tmp_path: Path, monkeypatch, content: bytes, *, mode: int = 0o
     return path
 
 
+@pytest.mark.parametrize(
+    "content,label",
+    [(b"b", "b"), (b"b\n", "b"), (b"  a\r\n", "a"), (b"\tb \n\n", "b"), (b"", None), (b" \n", None)],
+)
+def test_default_account_file_names_one_label_or_none(tmp_path, monkeypatch, content, label):
+    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
+
+    _default_file(tmp_path, monkeypatch, content)
+    assert read_claude_default_account() == label
+
+
 def test_dispatch_resolution_prefers_explicit_then_file_then_builtin(tmp_path, monkeypatch):
     from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_dispatch_claude_account
 
@@ -1719,6 +1744,18 @@ def test_sealed_attempt_selection_records_a_verified_receipt(two_accounts):
     }
     reset_claude_account_receipts()
     assert claude_account_auth_receipt("b", source="explicit")["verified"] is False
+
+
+def test_receipt_is_shared_by_both_import_names_of_the_binding_module():
+    """The worker imports ``scripts.agent_runtime``; the runner loads the same files as ``agent_runtime``."""
+    import agent_runtime.attempt_boundary as short_name
+    import scripts.agent_runtime.attempt_boundary as canonical
+
+    canonical.reset_claude_account_receipts()
+    short_name.note_claude_account_verified("b", "subscription_login")
+    assert canonical.claude_account_auth_receipt("b", source="default-file")["verified"] is True
+    short_name.reset_claude_account_receipts()
+    assert canonical.claude_account_auth_receipt("b", source="default-file")["verified"] is False
 
 
 def test_receipt_carries_only_fixed_vocabulary():

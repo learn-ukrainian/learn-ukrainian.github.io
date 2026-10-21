@@ -32,6 +32,10 @@ def _codex_complete_jsonl() -> str:
     )
 
 
+def _codex_missing_terminal_jsonl() -> str:
+    return json.dumps({"type": "agent_message", "text": "looks done but no terminal"})
+
+
 def test_dual_write_e2e_codex_complete_artifact_and_may_mark_legacy_replied(
     tmp_path: Path,
 ) -> None:
@@ -127,6 +131,78 @@ def test_dual_write_e2e_codex_complete_artifact_and_may_mark_legacy_replied(
         e.get("event") == "plane_complete"
         and e.get("projected_legacy_replied") is True
         and e.get("completion_state") == CompletionState.COMPLETE.value
+        for e in events
+    )
+
+
+def test_dual_write_e2e_codex_missing_terminal_refuses_may_mark_legacy_replied(
+    tmp_path: Path,
+) -> None:
+    """Exit 0 + text without terminal: artifact stored, gate stays closed."""
+    root = tmp_path / "fleet-comms-v1"
+    tele = tmp_path / "plane-parity.jsonl"
+    projected: list[tuple[int, str]] = []
+
+    def legacy_writer(message_id: int, request_id: str) -> None:
+        projected.append((message_id, request_id))
+
+    store = ArtifactStore(root=root)
+    executor = RequestExecutor(store=store)
+    try:
+        with MessagePlane(
+            mode="dual_write",
+            executor=executor,
+            telemetry_path=tele,
+        ) as plane:
+            req = plane.open_ask(
+                recipient="codex",
+                body="e2e incomplete fixture",
+                legacy_message_id=77,
+            )
+            assert req is not None
+
+            stdout = _codex_missing_terminal_jsonl()
+            out = plane.complete_ask(
+                req.request_id,
+                adapter="codex",
+                stdout=stdout,
+                returncode=0,
+                legacy_message_id=77,
+                legacy_status_writer=legacy_writer,
+            )
+
+            assert out.request is not None
+            assert out.request.state == "incomplete"
+            assert out.request.completion_state == CompletionState.UNKNOWN.value
+            assert out.request.envelope is not None
+            assert out.request.envelope.terminal_event_observed is False
+            assert out.request.envelope.is_formal_review_eligible is False
+            assert out.projected_legacy_replied is False
+            assert projected == []
+            assert plane.may_mark_legacy_replied(req.request_id) is False
+
+            # Capture still durable even when incomplete.
+            art_id = out.request.raw_capture_artifact_id
+            assert art_id
+            assert b"looks done" in store.read_bytes(art_id)
+
+            report = plane.compute_parity(
+                req.request_id,
+                legacy_message_id=77,
+                legacy_status="replied:bogus",
+            )
+            assert report.parity_ok is False
+            assert (
+                "incomplete_classified_as_replied" in report.notes
+                or "unproven_completion_marked_replied" in report.notes
+            )
+    finally:
+        executor.close()
+
+    events = [json.loads(line) for line in tele.read_text(encoding="utf-8").splitlines() if line]
+    assert any(e.get("event") == "plane_refuse_legacy_replied" for e in events)
+    assert any(
+        e.get("event") == "plane_complete" and e.get("projected_legacy_replied") is False
         for e in events
     )
 

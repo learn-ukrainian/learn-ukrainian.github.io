@@ -65,6 +65,28 @@ def test_kimi_catalog_aliases_use_the_endpoint_allowlist(endpoint: str, alias: s
     assert f"would exec claude --model {escaped_model}" in result.stdout
 
 
+def test_kimicc_interactive_dry_run_reports_k3_high_and_explicit_override(tmp_path: Path) -> None:
+    env = {**_KIMI_CREDENTIALS, "KIMICC_AUTH_TOKEN": "test-key", "HOME": str(tmp_path / "home")}
+    default = run_launcher("start-kimicc.sh", env=env)
+    k3 = run_launcher("start-kimicc.sh", "--model", "k3", env=env)
+    override = run_launcher("start-kimicc.sh", env={**env, "KIMICC_EFFORT_LEVEL": "max"})
+
+    assert default.returncode == k3.returncode == override.returncode == 0
+    # Operator 2026-08-13: the default model is k3-256k with no forced effort;
+    # the k3-high default applies only when full k3 is explicitly selected.
+    assert "KimiCC route: effort=not-exposed" in default.stdout
+    assert "KimiCC route: effort=high" in k3.stdout
+    assert "KimiCC route: effort=max" in override.stdout
+
+
+def test_kimi_rejects_unknown_model_endpoint_and_isolation_value(tmp_path: Path) -> None:
+    env = {**_KIMI_CREDENTIALS, "KIMICC_AUTH_TOKEN": "test-key", "HOME": str(tmp_path / "home")}
+    model = run_launcher("start-kimi.sh", "--harness", "claude-code", "--model", "unknown", env=env)
+    endpoint = run_launcher("start-kimi.sh", "--harness", "claude-code", "--endpoint", "unknown", env=env)
+    isolation = run_launcher("start-kimi.sh", "--harness", "claude-code", env={**env, "LAUNCHER_ISOLATE_CONFIG": "2"})
+    assert model.returncode == endpoint.returncode == isolation.returncode == 2
+
+
 def test_kimi_no_isolate_config_fails_closed_on_route_pins(tmp_path: Path) -> None:
     home = tmp_path / "home"
     config_dir = home / ".claude"

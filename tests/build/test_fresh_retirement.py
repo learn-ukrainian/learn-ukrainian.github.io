@@ -119,6 +119,24 @@ def test_in_memory_inputs_cannot_bypass_invalid_record_without_disk_plan(tmp_pat
         assert snapshot(tmp_path) == before
 
 
+def test_assembly_invalid_retirement_record_with_disk_plan_precedes_all_other_reads(root, monkeypatch):
+    plans = root / "curriculum/l2-uk-en/lesson-plans/a1"
+    (plans / "_retired.yaml").write_text("invalid: true\n")
+    before = snapshot(root)
+    read_text = Path.read_text
+
+    def guarded_text(path, *args, **kwargs):
+        assert path.name == "_retired.yaml", "other input read before inventory validation"
+        return read_text(path, *args, **kwargs)
+
+    with monkeypatch.context() as guard:
+        guard.setattr(Path, "read_text", guarded_text)
+        guard.setattr(Path, "read_bytes", lambda *_a: pytest.fail("plan bytes read before inventory validation"))
+        with pytest.raises(PlanError, match="retirement_record_invalid"):
+            assemble.assemble_lesson("a1", "old", 1, repo_root=root, plan_dict={})
+    assert snapshot(root) == before
+
+
 def test_changed_retired_bytes_get_ordinary_plan_failure_without_writes(root, monkeypatch):
     path = root / "curriculum/l2-uk-en/lesson-plans/a1/old.yaml"
     path.write_text("plan_schema: 2\nslug: old\nword_target: 10\n")

@@ -8,19 +8,25 @@ generated `$ref`s resolve for every type in each level allowlist; the generate-a
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 import pytest
 import yaml
 
+from scripts.build.fresh import gen_draft_schemas
 from scripts.build.fresh.draft_schema import (
     INLINE_MARKUP_RE,
+    assert_valid_draft,
     validate_draft,
 )
 
 REPO = Path(__file__).resolve().parents[2]
 SCHEMAS = REPO / "schemas"
 FIXTURES = Path(__file__).parent / "fixtures" / "fresh"
+LEVELS = gen_draft_schemas.LEVELS
+
+
 def load_fixture(level: str) -> tuple[dict, dict[str, str]]:
     draft = yaml.safe_load((FIXTURES / f"lesson-draft-{level}-valid.yaml").read_text(encoding="utf-8"))
     types = json.loads((FIXTURES / f"lesson-draft-{level}-types.json").read_text(encoding="utf-8"))
@@ -50,6 +56,15 @@ def checks(errors) -> set[str]:
 
 
 # --- a valid draft per level -------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("level", LEVELS)
+def test_valid_draft_per_level_validates(level: str) -> None:
+    draft, types = load_fixture(level)
+    assert validate_draft(draft, level) == []
+    assert validate_draft(draft, level, activity_types=types) == []
+    assert validate_draft(draft, None) == [], "the level-agnostic schema accepts every level's valid draft"
+    assert_valid_draft(draft, level, activity_types=types)
 
 
 # --- §4 gap invariants ---------------------------------------------------------------------------
@@ -116,4 +131,20 @@ def test_accent_inside_an_activity_item_fails_by_code() -> None:
 # --- activities: the per-type binding -------------------------------------------------------------
 
 
+def test_cloze_blank_markers_are_allowed_inside_activity_strings() -> None:
+    draft, types = load_fixture("a2")
+    cloze = next(a for a in draft["activities"] if types[a["id"]] == "cloze")
+    assert "{{1}}" in cloze["text"]
+    assert validate_draft(draft, "a2", activity_types=types) == []
+
+
 # --- the generated schemas and their references -------------------------------------------------
+
+
+def test_check_fails_when_a_committed_file_is_stale(tmp_path: Path) -> None:
+    shutil.copytree(SCHEMAS, tmp_path / "schemas")
+    target = tmp_path / "schemas" / "lesson-draft-a1-v1.schema.json"
+    target.write_text(target.read_text(encoding="utf-8").replace('"minimum": 1', '"minimum": 2', 1), encoding="utf-8")
+    assert gen_draft_schemas.main(["--check", "--schemas-dir", str(tmp_path / "schemas")]) == 1
+    assert gen_draft_schemas.main(["--write", "--schemas-dir", str(tmp_path / "schemas")]) == 0
+    assert gen_draft_schemas.main(["--check", "--schemas-dir", str(tmp_path / "schemas")]) == 0

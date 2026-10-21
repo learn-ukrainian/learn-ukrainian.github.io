@@ -19,6 +19,7 @@ from scripts.lib.session_record import (
     read_record,
     update_session,
     validate_session_id,
+    validate_transcript_path,
     write_record,
 )
 
@@ -42,9 +43,21 @@ def test_canonical_state_root_uses_git_common_directory() -> None:
     assert canonical_state_root(PROJECT_ROOT) == Path(result.stdout.strip()).parent.resolve()
 
 
+@pytest.mark.parametrize("session_id", ["abc-123", "thread_name", "A" * 128])
+def test_validate_session_id_accepts_bounded_safe_identifiers(session_id: str) -> None:
+    assert validate_session_id(session_id)
+
+
 @pytest.mark.parametrize("session_id", ["", "../other", "has space", "A" * 129])
 def test_validate_session_id_rejects_unsafe_identifiers(session_id: str) -> None:
     assert not validate_session_id(session_id)
+
+
+def test_validate_transcript_path_requires_absolute_non_traversing_path() -> None:
+    assert validate_transcript_path("/tmp/claude/session.jsonl")
+    assert not validate_transcript_path("relative/session.jsonl")
+    assert not validate_transcript_path("/tmp/../secret.jsonl")
+    assert not validate_transcript_path("/tmp/bad\x00name.jsonl")
 
 
 def test_update_session_writes_private_atomic_sol_record(tmp_path: Path) -> None:

@@ -121,6 +121,16 @@ def test_commitment_pool_never_invents_a_commitment_not_published_by_a4() -> Non
 # --- assignment gate -------------------------------------------------------------
 
 
+def test_gate_against_real_production_artifacts_is_structurally_closed_today() -> None:
+    gate = assignment.check_assignment_gate()
+    assert gate["a4_receipt_valid"] is True
+    assert gate["a2_rights_resolved"] is False
+    assert gate["builder_eligible_commitments_available"] == 8
+    assert gate["stratum_commitment_binding_available"] is False
+    assert gate["assignment_ready"] is False
+    assert gate["blocked_reason_code"] == "stratum_commitment_binding_unavailable_content_blind"
+
+
 def test_gate_closed_when_a_required_public_artifact_is_missing(tmp_path: Path) -> None:
     _write_receipt_tree(tmp_path)
     (
@@ -212,6 +222,19 @@ def test_receipt_matches_schema() -> None:
     assert not errors, errors[0].message if errors else None
 
 
+def test_receipt_binds_v4_sha_and_control_surfaces() -> None:
+    assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
+    assert _cached_json(RECEIPT)["control_surfaces"] == {
+        "public_control_issue": 7423,
+        "pilot_child_issue": 7430,
+        "private_operational_board": 622,
+    }
+    assert _cached_json(RECEIPT)["bindings"]["a4_deterministic_extraction"]["sha256"] == assignment.sha256_file(
+        A4_RECEIPT_PATH
+    )
+    assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == assignment.sha256_file(MANIFEST_PATH)
+
+
 def test_receipt_carries_forward_every_a2_and_a4_residual_unresolved() -> None:
     assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
         e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
@@ -223,6 +246,26 @@ def test_receipt_carries_forward_every_a2_and_a4_residual_unresolved() -> None:
         assert all(
             e["status"] == "unresolved_carried_to_public_slot_commitment_assignment" for e in _cached_json(RECEIPT)[key]
         )
+
+
+def test_receipt_denominator_stays_100_slots_never_dropped() -> None:
+    assert _cached_json(RECEIPT)["frozen_slot_denominator"]["total_slots"] == 100
+    assert len(_cached_json(RECEIPT)["assignment_records"]) == 100
+    assert _cached_json(RECEIPT)["execution_counters"]["frozen_slot_count"] == 100
+    assert (
+        _cached_json(RECEIPT)["execution_counters"]["assigned_slot_count"]
+        + _cached_json(RECEIPT)["execution_counters"]["residual_slot_count"]
+        == 100
+    )
+
+
+def test_receipt_never_claims_dataset_rows_or_stronger_release_state() -> None:
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
+    for forbidden in ("TRAINING_READY_SILVER", "ARENA_SLICE_READY", "EVAL_ARTIFACT_READY", "EPIC_DONE"):
+        assert forbidden not in serialized
+    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
+    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["epic_done_claimed"] is False
 
 
 def test_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
@@ -244,6 +287,13 @@ def test_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
     assert _cached_json(RECEIPT)["assignment_records"][0]["slot_id"].startswith("v4p-")
+
+
+def test_receipt_never_binds_a_commitment_to_a_slot_no_stratum_commitment_link() -> None:
+    assert all(record["commitment_sha256"] is None for record in _cached_json(RECEIPT)["assignment_records"])
+    assert _cached_json(RECEIPT)["safety_assertions"]["stratum_to_commitment_binding_published"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["commitment_bound_to_a_slot"] is False
+    assert _cached_json(RECEIPT)["commitment_binding_policy"]["stratum_commitment_binding_ever_public"] is False
 
 
 def test_bindings_hash_to_disk_for_every_bound_artifact() -> None:

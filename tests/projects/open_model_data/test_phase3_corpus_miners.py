@@ -147,6 +147,54 @@ def _restore_synthetic_zno(
 
 
 @pytest.mark.parametrize("mode", ["direct", "cli"])
+@pytest.mark.parametrize("root_env", ["TMPDIR", "LU_TASK_SCRATCH_DIR"])
+def test_zno_cache_defaults_cold_write_warm_read(
+    mode: str,
+    root_env: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zno_cache_consumer: dict,
+) -> None:
+    root = tmp_path / "task-root"
+    root.mkdir()
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv(root_env, str(root))
+    if root_env == "TMPDIR":
+        monkeypatch.setenv("LU_TASK_SCRATCH_DIR", str(tmp_path / "unused-root"))
+    cache = root / "zno_cache" / "fixture_123.html"
+    assert corpus_miner.default_zno_html_cache() == cache.parent
+    assert not cache.parent.exists(), "Resolving a default must not allocate scratch"
+    cold = _restore_synthetic_zno(mode, tmp_path, monkeypatch)
+    assert cache.read_bytes() == zno_cache_consumer["payload"]
+    zno_cache_consumer["warm_only"] = True
+    warm = _restore_synthetic_zno(mode, tmp_path, monkeypatch)
+    assert warm == cold
+    assert zno_cache_consumer["paths"] == [cache, cache]
+    assert zno_cache_consumer["cold_writes"] == 1
+    assert cache.read_bytes() == zno_cache_consumer["payload"]
+    assert sorted(path.relative_to(root).as_posix() for path in root.rglob("*")) == [
+        "zno_cache",
+        "zno_cache/fixture_123.html",
+    ]
+
+
+@pytest.mark.parametrize("mode", ["direct", "cli"])
+def test_zno_cache_explicit_override_without_scratch(
+    mode: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zno_cache_consumer: dict,
+) -> None:
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    cache_dir = tmp_path / "explicit-cache"
+    _restore_synthetic_zno(mode, tmp_path, monkeypatch, cache_dir)
+    assert zno_cache_consumer["paths"] == [cache_dir / "fixture_123.html"]
+    assert (cache_dir / "fixture_123.html").read_bytes() == zno_cache_consumer["payload"]
+
+
+@pytest.mark.parametrize("mode", ["direct", "cli"])
 @pytest.mark.parametrize("root", [None, "", " ", "relative", "missing", "file"])
 def test_zno_cache_invalid_root_fails_before_consumer(
     mode: str,

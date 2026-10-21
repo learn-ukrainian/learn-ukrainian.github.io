@@ -62,6 +62,45 @@ def test_compact_and_full_budgets_are_enforced(
     assert full.main_context_window_tokens == 1_000_000
 
 
+def test_delegated_model_cannot_change_lead_startup_contract(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(cold_start, "_load_source", _successful_loader(1_000))
+
+    terra = cold_start.measure(
+        "terra",
+        profile_id="sol_lead",
+        model_id="gpt-6.1-sol",
+        delegated_model_id="gpt-6.1-sol",
+    )
+    luna = cold_start.measure(
+        "luna",
+        profile_id="sol_lead",
+        model_id="gpt-6.1-sol",
+        delegated_model_id="gpt-6-luna",
+    )
+
+    assert terra.delegated_model_id != luna.delegated_model_id
+    assert (
+        terra.main_model_id,
+        terra.main_context_window_tokens,
+        terra.cold_start_profile,
+        terra.cold_start_budget_tokens,
+        terra.rollover_warning_percentages,
+        terra.estimated_input_tokens,
+    ) == (
+        luna.main_model_id,
+        luna.main_context_window_tokens,
+        luna.cold_start_profile,
+        luna.cold_start_budget_tokens,
+        luna.rollover_warning_percentages,
+        luna.estimated_input_tokens,
+    )
+    assert [(source.name, source.kind, source.provenance, source.bytes, source.tokens) for source in terra.sources] == [
+        (source.name, source.kind, source.provenance, source.bytes, source.tokens) for source in luna.sources
+    ]
+
+
 def test_observed_first_turn_is_gate_when_larger_and_excludes_output(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

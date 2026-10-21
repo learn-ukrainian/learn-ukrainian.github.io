@@ -238,6 +238,18 @@ def test_cli_postcommit_receipt_error_exit_three(staged, monkeypatch, capsys):
     assert captured.err == "  📥 DMKlinger UK→EN: 3 entries\n"
 
 
+def test_missing_files_and_receipt_collision_refused(staged):
+    db, chunks, _, receipt = staged
+    with pytest.raises(ingest.IngestError, match="already exist"):
+        ingest.ingest(db.parent / "missing.db", chunks, input_sha256=ingest.INPUT_SHA256, receipt_path=receipt)
+    for path in (db, chunks):
+        with pytest.raises(ingest.IngestError, match="overwrite"):
+            ingest.ingest(db, chunks, input_sha256=ingest.INPUT_SHA256, receipt_path=path, apply=True)
+    chunks.unlink()
+    with pytest.raises(FileNotFoundError):
+        run(staged)
+
+
 @pytest.mark.parametrize("apply", [False, True], ids=["dry-run", "apply"])
 @pytest.mark.parametrize("entrypoint", ["callable", "cli"])
 @pytest.mark.parametrize("target", ["database", "input", "-wal", "-shm", "-journal"])
@@ -341,6 +353,21 @@ sys.stdin.read()
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT value FROM independent_marker").fetchall() == [(42,)]
         assert conn.execute("PRAGMA integrity_check").fetchall() == [("ok",)]
+
+
+@pytest.mark.parametrize("apply, status", [(False, "dry_run"), (True, "committed")])
+def test_independent_receipt_with_absent_sidecars_succeeds(staged, apply, status):
+    db, chunks, oracle, receipt = staged
+    before = db.read_bytes(), chunks.read_bytes()
+    assert all(not Path(f"{db}{suffix}").exists() for suffix in ("-wal", "-shm", "-journal"))
+    result = run(staged, apply=apply)
+    assert result["status"] == status
+    assert json.loads(receipt.read_text())["status"] == status
+    assert chunks.read_bytes() == before[1]
+    if apply:
+        assert read_rows(db) == read_rows(oracle)
+    else:
+        assert db.read_bytes() == before[0]
 
 
 def test_postimage_pin_and_unexpected_delta_refused(staged, monkeypatch):
@@ -476,6 +503,43 @@ def test_symlinked_database_dry_run_uses_validated_identity(staged, capsys):
     assert db.read_bytes() == before
     assert '"status": "dry_run"' in capsys.readouterr().out
     assert json.loads(receipt.read_text())["status"] == "dry_run"
+
+
+def test_runtime_error_after_path_validation_propagates_from_main(staged, monkeypatch, capsys):
+    db, chunks, _, receipt = staged
+    before = db.read_bytes(), chunks.read_bytes()
+    calls = []
+    original = ingest._resolve_prework_identity
+
+    def spy(path, failure):
+        resolved = original(path, failure)
+        calls.append(failure)
+        return resolved
+
+    def fail(*_args, **_kwargs):
+        assert calls
+        raise RuntimeError("injected after path validation")
+
+    monkeypatch.setattr(ingest, "_resolve_prework_identity", spy)
+    monkeypatch.setattr(ingest, "_ingest_jsonl", fail)
+    argv = ["--db", str(db), "--input", str(chunks), "--input-sha256", ingest.INPUT_SHA256, "--receipt", str(receipt)]
+    with pytest.raises(RuntimeError, match=r"^injected after path validation$") as caught:
+        ingest.main(argv)
+    assert caught.value.__cause__ is None
+    assert calls == [
+        "database path cannot be resolved",
+        "receipt path cannot be resolved",
+        "input path cannot be resolved",
+        "SQLite sidecar path cannot be resolved",
+        "SQLite sidecar path cannot be resolved",
+        "SQLite sidecar path cannot be resolved",
+    ]
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+    assert (db.read_bytes(), chunks.read_bytes()) == before
+    assert not receipt.exists()
+    assert all(not Path(f"{db}{suffix}").exists() for suffix in ("-wal", "-shm", "-journal"))
 
 
 def test_injected_staging_failure_cleans_managed_dir_without_target_writes(staged, monkeypatch):

@@ -50,6 +50,29 @@ def test_registry_lint_rejects_missing_bad_expiry_second_renewal_and_duplicate_r
     assert load_registry(path) == [entry]
 
 
+@pytest.mark.parametrize("change,message", [
+    ({"node_id": "tests/test_sample.py::test_flaky*"}, "invalid pytest node_id"),
+    ({"node_id": "tests/../test_sample.py::test_flaky"}, "invalid pytest node_id"),
+    ({"node_id": "tests/test_sample.py::test_flaky\n"}, "invalid pytest node_id"),
+    ({"equivalent_coverage": {}}, "equivalent_coverage"),
+    ({"equivalent_coverage": {"tests/test_sample.py::test_flaky": "same test"}}, "equivalent_coverage"),
+    ({"equivalent_coverage": {"tests/test_sample.py::test_stable": " "}}, "equivalent_coverage"),
+    ({"equivalent_coverage": {"tests/test_sample.py": "module"}}, "equivalent_coverage"),
+    ({"admission_approval": True}, "admission_approval"),
+    ({"owner": " "}, "owner"),
+    ({"fix_issue": True}, "positive issue"),
+    ({"observed_run_ids": [101, False]}, "positive observed run"),
+    ({"renewals": 1, "renewed_on": date(2026, 10, 29)}, "first 30 days"),
+    ({"renewals": 1, "renewed_on": date(2026, 9, 27)}, "first 30 days"),
+    ({"expires_on": date(2026, 9, 27)}, "30 days"),
+])
+def test_registry_rejects_invalid_admission_fields(tmp_path, change, message):
+    path = tmp_path / "registry.yaml"
+    path.write_text(yaml.safe_dump({"entries": [_entry(date(2026, 9, 28)) | change]}))
+    with pytest.raises(ValueError, match=message):
+        load_registry(path)
+
+
 def test_single_renewal_and_exact_parameterized_class_node(tmp_path):
     entry = _entry(date(2026, 9, 28)) | {
         "node_id": "tests/test_sample.py::TestSample::test_flaky[a*b]",

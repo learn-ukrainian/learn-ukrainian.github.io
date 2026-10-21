@@ -8,12 +8,19 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime import codex_hook_policy
 from scripts.agent_runtime.codex_hook_policy import (
+    ENFORCE_VENV_TIMEOUT,
+    LOCAL_BASH_GUARDS,
+    MERGE_GUARDS,
+    PRIMARY_WRITE_GUARD,
     _result_code,
+    _run_enforce_venv,
     run_guard,
 )
 from tests.helpers.python import project_python
@@ -28,6 +35,7 @@ PRIMARY_ROOT = Path(
     ).strip()
 ).parent
 HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
+PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
 ENTRY = REPO_ROOT / "scripts" / "agent_runtime" / "codex_hook_entry.sh"
 VENV_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "enforce-venv.sh"
 INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
@@ -86,11 +94,63 @@ def _manifest() -> dict:
     return json.loads(HOOKS_CONFIG.read_text(encoding="utf-8"))
 
 
+def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> None:
+    result = subprocess.run(
+        ["bash", str(POST_COMPACT_HOOK)], cwd=tmp_path,
+        env={**os.environ, "GROK_AGENT": "grok", "SESSION_EPIC": "", "CODEX_COMPACT_SESSION_START": ""},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    context = json.loads(result.stdout)["additionalContext"]
+    assert "default eligible code worker = Sol high" in context
+    assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
+    assert "default bounded work = Sol advisory envelope" not in context
+
+
 def test_codex_manifest_uses_only_supported_result_event() -> None:
     hooks = _manifest()["hooks"]
 
     assert "PostToolUse" in hooks
     assert "PostToolUseFailure" not in hooks
+
+
+def test_codex_project_config_leaves_root_model_user_selectable() -> None:
+    config = tomllib.loads(PROJECT_CONFIG.read_text(encoding="utf-8"))
+
+    assert "model" not in config
+    assert "model_reasoning_effort" not in config
+    assert config["features"] == {
+        "hooks": True,
+        "multi_agent": True,
+        "memories": False,
+        "multi_agent_v2": {
+            "enabled": True,
+            "hide_spawn_agent_metadata": False,
+            "tool_namespace": "agents",
+        },
+    }
+    assert config["agents"] == {
+        "enabled": True,
+        "max_concurrent_threads_per_session": 3,
+        "default_subagent_model": "gpt-6.1-sol",
+        "default_subagent_reasoning_effort": "high",
+        "interrupt_message": True,
+    }
+
+
+def test_codex_compaction_has_one_bounded_hydration_path() -> None:
+    hooks = _manifest()["hooks"]
+    session_groups = hooks["SessionStart"]
+    session_group, compact_group = session_groups
+
+    assert session_group["matcher"] == "startup|resume|clear"
+    assert session_group["hooks"][0]["additionalContextLimit"] == 1200
+    assert compact_group["matcher"] == "compact"
+    assert "CODEX_COMPACT_SESSION_START=1" in compact_group["hooks"][0]["command"]
+    assert 'post-compact.sh"' in compact_group["hooks"][0]["command"]
+    assert compact_group["hooks"][0]["timeout"] == 15
+    assert compact_group["hooks"][0]["additionalContextLimit"] == 800
+    assert "PostCompact" not in hooks
 
 
 def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
@@ -366,6 +426,72 @@ def test_ordinary_codex_start_bounds_root_hygiene_names(
     assert compacted.stdout == ""
 
 
+@pytest.mark.parametrize("lane_cli", [True, False], ids=["codex-cli", "no-codex-cli"])
+def test_empty_name_list_is_an_unchanged_control(tmp_path: Path, lane_cli: bool) -> None:
+    """An empty name list must still print no root-hygiene notice."""
+    started, _, _ = _start_with_root_names(tmp_path, [], synthetic=False, lane_cli=lane_cli)
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode("utf-8")) < 500
+    assert _CODEX_SESSION_ID in context
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+    assert ("DISPATCH LANE SELF-TEST FAILED" in context) is not lane_cli
+    assert "ROOT HYGIENE" not in context
+    assert b"ROOT HYGIENE" not in started.stderr
+
+
+@pytest.mark.parametrize(
+    ("names", "shown_names"),
+    [
+        pytest.param([".mypy_cache"], ".mypy_cache", id="inline"),
+        pytest.param(["n" * 139], "names on stderr", id="withheld"),
+    ],
+)
+def test_claude_session_start_keeps_full_notice_layout(tmp_path: Path, names: list[str], shown_names: str) -> None:
+    """The issue formatter is shared; only ordinary Codex is compacted (#10952)."""
+    started, _, _ = _start_with_root_names(tmp_path, names, synthetic=False, lane_cli=False, agent="claude")
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert "\n\nSESSION SETUP CHECK:\nISSUES:\n  - " in context
+    assert "\n  - DISPATCH LANE SELF-TEST FAILED for claude (handoff identity claude): " in context
+    assert (
+        f"\n  - ROOT HYGIENE: 1 unexpected primary-checkout root entries ({shown_names}). "
+        f"Remove manually; never auto-deleted (#6863). {_ROOT_DETAIL}\n"
+    ) in context
+    assert "\nINFO:\n  - Orientation diagnostics: " in context
+
+
+def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Path) -> None:
+    compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
+    compact_hook.parent.mkdir(parents=True)
+    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(tmp_path),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(tmp_path),
+            "SESSION_HANDOFF_AGENT": "codex",
+        }
+    )
+    environment.pop("SESSION_EPIC", None)
+
+    completed = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout == ""
+
+
 def _run_bound_codex_compact(tmp_path: Path, *, block_hydration_import: bool = False) -> str:
     """Exercise the real bounded runner and canary handoff resolver."""
     (tmp_path / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
@@ -482,6 +608,18 @@ def test_bound_codex_driver_without_any_handoff_blocks(tmp_path: Path) -> None:
     assert "No Codex/shared driver handoff selected" in context
 
 
+def test_shared_handoff_selection_does_not_import_hydration_runtime(tmp_path: Path) -> None:
+    fallback = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    fallback.parent.mkdir(parents=True)
+    fallback.write_text("# shared driver state\n", encoding="utf-8")
+
+    context = _run_bound_codex_compact(tmp_path, block_hydration_import=True)
+
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" not in context
+    assert '\"schema_name\":\"HydrationCapsuleV1\"' in context
+    assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+
+
 def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> None:
     hooks = _manifest()["hooks"]
 
@@ -502,6 +640,20 @@ def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> No
     # Optional Entire capture runs behind the capture guard, which exits 0 even
     # when the installed CLI errors, so it can never poison Codex exec (#10846).
     assert "/scripts/entire/capture_guard.sh" in post_groups[0]["hooks"][1]["command"]
+
+
+def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
+    assert ENFORCE_VENV_TIMEOUT == 3
+    assert LOCAL_BASH_GUARDS == (
+        ("heal-core-bare.py", 3),
+        ("guard-branch-switch-in-main.py", 3),
+        ("guard-secret-print.py", 5),
+    )
+    assert PRIMARY_WRITE_GUARD == ("guard-primary-checkout-write.py", 5)
+    assert MERGE_GUARDS == (
+        ("guard-admin-merge.py", 20),
+        ("guard-pr-merge.py", 20),
+    )
 
 
 def test_codex_policy_guard_timeout_fails_closed(tmp_path: Path) -> None:
@@ -538,6 +690,22 @@ def test_non_rewrite_guard_stdout_fails_closed(
     assert captured.out == ""
     assert "unexpected stdout" in captured.err
     assert "not-json" in captured.err
+
+
+def test_codex_policy_venv_guard_timeout_fails_closed(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    guard = tmp_path / "enforce-venv.sh"
+    guard.write_text("#!/bin/bash\nsleep 5\n", encoding="utf-8")
+    monkeypatch.setattr(codex_hook_policy, "ENFORCE_VENV_TIMEOUT", 0.01)
+
+    result = _run_enforce_venv(tmp_path, tmp_path, "{}")
+
+    assert result.returncode == 2
+    assert result.timed_out is True
+    assert "enforce-venv.sh exceeded 0.01s" in result.stderr
+    assert "blocking the tool call fail-closed" in result.stderr
 
 
 def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
@@ -599,6 +767,36 @@ def test_claude_bare_python_is_rejected_without_rewrite_output(tmp_path: Path) -
     assert completed.returncode == 2
     assert completed.stdout == ""
     assert f"{canonical}/.venv/bin/python --version" in completed.stderr
+
+
+def test_python_rejection_shell_quotes_checkout_path_metacharacters(tmp_path: Path) -> None:
+    canonical = tmp_path / "checkout&pipe|root"
+    canonical.mkdir()
+    _make_exact_python_checkout(canonical)
+    payload = {
+        "hook_event_name": "PreToolUse",
+        "cwd": str(canonical),
+        "tool_name": "Bash",
+        "tool_input": {"command": 'python3 -c "print(1)"'},
+    }
+    environment = os.environ.copy()
+    environment["LEARN_UK_CANONICAL_ROOT"] = str(canonical)
+    environment["LEARN_UK_HOOK_PROVIDER"] = "codex"
+
+    completed = subprocess.run(
+        ["bash", str(VENV_HOOK)],
+        cwd=canonical,
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=10,
+    )
+
+    assert completed.returncode == 2
+    assert completed.stdout == ""
+    assert r'checkout\&pipe\|root/.venv/bin/python -c "print(1)"' in completed.stderr
 
 
 def test_qualified_project_python_passes_without_output(tmp_path: Path) -> None:
@@ -886,3 +1084,17 @@ def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Pa
 
     assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
+
+
+def test_compact_hydrate_bound_fits_its_retries() -> None:
+    source = (REPO_ROOT / "agents_extensions/shared/hooks/post-compact.sh").read_text(encoding="utf-8")
+    assert 'HYDRATION=$(run_bounded 6 "$BOUNDED_PYTHON"' in source
+    hooks = json.loads((REPO_ROOT / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
+    compact = [
+        hook
+        for group in hooks["hooks"]["SessionStart"]
+        if group.get("matcher") == "compact"
+        for hook in group["hooks"]
+    ]
+    # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
+    assert compact and compact[0]["timeout"] > 2 + 2 + 6

@@ -46,6 +46,14 @@ def _state_file(project_dir: Path, session_id: str) -> Path:
     return project_dir / ".claude" / "goal-state" / f"{session_id}.json"
 
 
+def test_main_exits_zero_on_empty_stdin(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured = io.StringIO()
+    monkeypatch.setattr(sys, "stdout", captured)
+    rc = stop_hook.main(stdin="")
+    assert rc == 0
+    assert captured.getvalue() == ""
+
+
 def test_main_exits_zero_on_malformed_json(monkeypatch: pytest.MonkeyPatch) -> None:
     captured = io.StringIO()
     monkeypatch.setattr(sys, "stdout", captured)
@@ -153,6 +161,25 @@ def test_goal_done_emits_nothing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     assert out == ""
 
 
+def test_picks_last_status_when_transcript_has_multiple(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    transcript = tmp_path / "session.jsonl"
+    _write_transcript(
+        transcript,
+        [
+            "GOAL_STATUS turn=1/30 blocked=0/3 no_progress=0/3 queue_head=item-a",
+            "GOAL_STATUS turn=2/30 blocked=0/3 no_progress=0/3 queue_head=item-b",
+            'GOAL_WAIT signal=watcher-pr-merge reason="awaiting PR merge"',
+        ],
+    )
+    rc, out = _run(monkeypatch, {"transcript_path": str(transcript)})
+    assert rc == 0
+    payload = json.loads(out)
+    msg = payload["hookSpecificOutput"]["additionalContext"]
+    assert "watcher-pr-merge" in msg
+
+
 def test_goal_wait_persists_state_file(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -218,3 +245,48 @@ def test_goal_abort_deletes_stale_state_file(
     assert rc == 0
     assert out == ""
     assert not state_file.exists()
+
+
+def test_goal_done_deletes_state_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    project_dir = tmp_path / "project"
+    state_file = _state_file(project_dir, "sess-abc-003")
+    state_file.parent.mkdir(parents=True)
+    state_file.write_text(json.dumps({"kind": "GOAL_WAIT"}), encoding="utf-8")
+    transcript = tmp_path / "session.jsonl"
+    _write_transcript(
+        transcript,
+        ['GOAL_DONE reason="all predicates satisfied"'],
+    )
+
+    rc, _ = _run(
+        monkeypatch,
+        {
+            "transcript_path": str(transcript),
+            "session_id": "sess-abc-003",
+            "cwd": str(project_dir),
+        },
+    )
+    assert rc == 0
+    assert not state_file.exists()
+
+
+def test_state_file_cleanup_is_no_op_when_file_absent(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    project_dir = tmp_path / "project"
+    project_dir.mkdir()
+    transcript = tmp_path / "session.jsonl"
+    _write_transcript(transcript, ['GOAL_DONE reason="done"'])
+
+    rc, _ = _run(
+        monkeypatch,
+        {
+            "transcript_path": str(transcript),
+            "session_id": "fresh-session",
+            "cwd": str(project_dir),
+        },
+    )
+    assert rc == 0
+    assert not _state_file(project_dir, "fresh-session").exists()

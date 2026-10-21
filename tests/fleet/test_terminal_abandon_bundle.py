@@ -45,6 +45,16 @@ def _bundles(fixture):
     return sorted(fixture[5].parent.glob("*.bundle"))
 
 
+def test_thin_bundle_excludes_large_history(succession, capsys):
+    fixture, _ = succession
+    _detach(fixture)
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    _, _, manifest = _recorded(fixture)
+    bundle = fixture[0] / manifest["detached_bundle"]["path"]
+    assert bundle.stat().st_size < 64 * 1024, "bundle must exclude the large pre-base history"
+
+
 def test_thin_bundle_restore_after_removal(succession, tmp_path, capsys):
     fixture, _ = succession
     repo, _, _, _, _, _, head = fixture

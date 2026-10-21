@@ -72,6 +72,21 @@ def test_collocation_slice2_sense_restricted_entries_have_guarded_senses():
         assert headword not in PHRASAL_CALQUES
 
 
+def test_single_word_lexical_slice3_entries_have_evidence():
+    """Slice 3 keeps only source-backed single-word lexical calques."""
+    expected = {
+        "слідуючий": "наступний",
+        "багаточисельний": "численний",
+        "міроприємство": "захід",
+        "учбовий": "навчальний",
+    }
+    for headword, correction in expected.items():
+        entry = CURATED_CALQUES[headword]
+        assert correction in entry["corrections"]
+        assert entry["evidence"]
+        assert "search_heritage" in entry["heritage_guard"]
+
+
 def test_buckets_are_disjoint():
     """A headword must not be both warn-worthy and safe, nor double-bucketed."""
     curated = set(CURATED_CALQUES)

@@ -8,6 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
+from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
 from agent_runtime.errors import AgentUnavailableError
 from agent_runtime.runner import invoke
@@ -113,6 +114,35 @@ def test_deepseek_adapter_strips_ansi_codes_from_stdout():
     )
 
     assert result.response == "hello"
+
+
+def test_runner_preserves_unknown_deepseek_tool_call_total(tmp_path, monkeypatch):
+    """Runner round-trip preserves the unknown-vs-zero distinction."""
+    adapter = HermesDeepSeekAdapter()
+
+    def fake_build_invocation(**kwargs):
+        return InvocationPlan(cmd=["/bin/sh", "-c", "printf hello"], cwd=Path(kwargs["cwd"]))
+
+    monkeypatch.setattr(adapter, "build_invocation", fake_build_invocation)
+    monkeypatch.setattr("agent_runtime.runner._load_adapter", lambda _name: adapter)
+
+    with (
+        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
+        patch("agent_runtime.runner.write_record"),
+    ):
+        result = invoke(
+            "deepseek",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="deepseek-v4.1-flash",
+            entrypoint="dispatch",
+            effort="medium",
+        )
+
+    assert result.response == "hello"
+    assert result.tool_calls == []
+    assert result.tool_calls_total is None
 
 
 def test_deepseek_adapter_inband_http_error_is_not_ok():

@@ -356,6 +356,18 @@ def test_observed_lock_check_fails_on_tampered_or_absent_lock(tmp_path: Path) ->
     assert exc_info.value.code == codes.LOCK_MISMATCH
 
 
+def test_observed_tab_keys_validated(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    res_path = paths["resolutions_path"]
+    data = yaml.safe_load(res_path.read_text(encoding="utf-8"))
+    data["tokens"][0]["unit"]["tab"] = "invalid_tab"
+    _write_yaml(res_path, data)
+
+    with pytest.raises(ObservedError) as exc_info:
+        write_observed("a1", "mod-01", 1, **paths)
+    assert exc_info.value.code == codes.RESOLUTIONS_INVALID
+
+
 def test_observed_disk_receipts_schema_break_fails(tmp_path: Path) -> None:
     paths = _setup_fixture(tmp_path)
     res_path = paths["resolutions_path"]

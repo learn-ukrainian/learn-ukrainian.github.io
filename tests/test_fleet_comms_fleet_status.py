@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -326,3 +327,59 @@ def test_fleet_status_cli_emits_overview(
     data = json.loads(out)
     assert data["overview"]["available"] is False
     assert data["overview"]["streams"] == []
+
+
+def test_fleet_facade_status_router(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Monitor API fleet facade status uses injected epic store, not local DB."""
+    from scripts.api.fleet_router import fleet_facade_status
+
+    plane_root = tmp_path / "plane"
+    plane_root.mkdir()
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane_root))
+
+    # Local SQLite has different stream that should NOT be used by facade
+    local_db_path = _init_session_db(tmp_path)
+    conn = SessionStreamDatabase(local_db_path).connect()
+    try:
+        conn.execute(
+            "INSERT INTO streams(stream_id, kind, epic_number, created_at) "
+            "VALUES ('epic:999', 'epic', 999, '2026-09-06T12:00:00Z')"
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    # Injected store has epic:501
+    injected_root = tmp_path / "injected"
+    injected_db_path = _init_session_db(injected_root)
+    injected_store = SessionStreamStore(SessionStreamDatabase(injected_db_path))
+    conn2 = SessionStreamDatabase(injected_db_path).connect()
+    try:
+        conn2.execute(
+            "INSERT INTO streams(stream_id, kind, epic_number, created_at) "
+            "VALUES ('epic:501', 'epic', 501, '2026-09-06T12:00:00Z')"
+        )
+        conn2.commit()
+    finally:
+        conn2.close()
+
+    mock_ctx = MagicMock()
+    mock_ctx.roots.project_root = tmp_path
+    mock_ctx.stores.epics_store = injected_store
+
+    payload = fleet_facade_status(ctx=mock_ctx)
+    assert payload["read_only"] is True
+    assert "overview" in payload
+    assert payload["overview"]["available"] is True
+    assert len(payload["overview"]["streams"]) == 1
+    # Must use injected store, not local DB
+    assert payload["overview"]["streams"][0]["stream_id"] == "epic:501"  # allow-hardcoded-epic: synthetic overview fixture
+
+    # When injected store is None -> available: False
+    mock_ctx_none = MagicMock()
+    mock_ctx_none.roots.project_root = tmp_path
+    mock_ctx_none.stores.epics_store = None
+
+    payload_none = fleet_facade_status(ctx=mock_ctx_none)
+    assert payload_none["overview"]["available"] is False
+    assert payload_none["overview"]["streams"] == []

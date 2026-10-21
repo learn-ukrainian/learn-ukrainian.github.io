@@ -144,3 +144,45 @@ def test_verify_shortlist_rejects_all_when_best_fit_is_weak():
     result = ss.verify_shortlist("post this to mastodon", list(ROSTER), client=client)
     assert result.winner == "xurl"
     assert result.accepted is False
+
+
+def test_suggest_skill_end_to_end_returns_winner():
+    rank_client = _FakeClient(
+        _FakeResponse(
+            nouls={
+                "gate::acts_on_user_system": 0.9,
+                "gate::would_follow_documented_procedure": 0.8,
+                "gate::prose_suffices": 0.1,
+            },
+            choices={
+                "which": {
+                    "choice": "powerpoint",
+                    "probabilities": {"powerpoint": 0.7, "pptx-author": 0.3, "apple-notes": 0.0},
+                }
+            },
+        )
+    )
+    verify_client = _FakeClient(
+        _FakeResponse(
+            choices={"which": {"choice": "pptx-author"}},
+            nouls={
+                "fits::powerpoint": 0.38,
+                "fits::pptx-author": 0.73,
+                "fits::apple-notes": 0.01,
+            },
+        )
+    )
+    # suggest_skill reuses one client across both calls; dispatch by call order.
+    calls = {"n": 0}
+
+    class _TwoCallClient:
+        def system_one(self, state, questions, *, model=None):
+            calls["n"] += 1
+            response = rank_client.response if calls["n"] == 1 else verify_client.response
+            return response
+
+    suggestion = ss.suggest_skill("build a pitch deck", skills=list(ROSTER), client=_TwoCallClient())
+    assert suggestion.names == ("pptx-author",)
+    assert suggestion.rank.needs_skill is True
+    assert suggestion.verify is not None
+    assert suggestion.verify.accepted is True

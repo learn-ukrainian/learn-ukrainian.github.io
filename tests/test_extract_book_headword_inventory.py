@@ -133,6 +133,30 @@ def test_module_mapping_uses_the_latest_header_on_a_page() -> None:
     assert module_count == 2
 
 
+def test_same_lemma_with_multiple_vesum_pos_values_is_ambiguous() -> None:
+    result = extractor.extract_headword_inventory(
+        [extractor.PageText(1, "1 мати\n")], vesum_lookup=_fake_vesum
+    )
+    candidates = [
+        item for item in result.inventory["sources"][0]["headwords"] if item["lemma"] == "мати"
+    ]
+
+    assert [item["pos"] for item in candidates] == ["noun", "verb"]
+    assert all(item["ambiguous"] is True for item in candidates)
+    assert result.stats.ambiguous_forms == 1
+
+
+def test_running_lines_are_removed_before_tokenization() -> None:
+    cleaned = extractor.strip_running_lines(
+        "слово\n"
+        "Inspiring resources for learning Ukrainian — UkrainianLessons.com\n"
+        "Back to Contents\n"
+        "12\n"
+    )
+
+    assert cleaned == "слово"
+
+
 def test_output_order_is_deterministic() -> None:
     first = extractor.extract_headword_inventory(_synthetic_pages(), vesum_lookup=_fake_vesum)
     second = extractor.extract_headword_inventory(_synthetic_pages(), vesum_lookup=_fake_vesum)

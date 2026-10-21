@@ -158,6 +158,9 @@ def _add_ulif_dictua_cache(path: Path) -> None:
 
 
 class TestDbIsPopulated:
+    def test_missing_db_returns_false(self, tmp_path):
+        assert bs._db_is_populated(tmp_path / "nonexistent.db") == (False, 0)
+
     def test_empty_db_returns_false(self, tmp_path):
         p = tmp_path / "empty.db"
         conn = sqlite3.connect(str(p))
@@ -177,6 +180,15 @@ class TestDbIsPopulated:
         populated, total = bs._db_is_populated(p)
         assert populated is True
         assert total == 175  # 100 + 50 + 25
+
+    def test_db_without_main_tables_returns_false(self, tmp_path):
+        p = tmp_path / "wrongtables.db"
+        conn = sqlite3.connect(str(p))
+        conn.executescript("CREATE TABLE not_ours (x INTEGER);")
+        conn.close()
+        populated, total = bs._db_is_populated(p)
+        assert populated is False
+        assert total == 0
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -234,6 +246,35 @@ class TestFileSizeGuard:
         )
         assert total == 0  # diagnostic count is honest; verdict is not gated on it
 
+    def test_large_file_protected_when_sqlite_connect_raises(self, tmp_path, monkeypatch):
+        """File >1 MB but sqlite3.connect() raises → populated=True.
+
+        Defense in depth: if a pathological SQLite state (corrupt header,
+        WAL conflict, file lock) makes connect() raise, we still refuse
+        to destroy a multi-MB file. Original code returned (False, 0)
+        on sqlite3.Error and proceeded to unlink — that is the wipe.
+        """
+        p = tmp_path / "big_unreadable.db"
+        # Write a 2 MB file of arbitrary bytes — connect() will fail to
+        # open it as sqlite (header is wrong).
+        p.write_bytes(b"\x00" * (2 * 1024 * 1024))
+        assert p.stat().st_size > bs.MIN_PROTECTED_DB_BYTES
+
+        # Belt + suspenders: also patch sqlite3.connect to raise even
+        # if the OS magic accepts the file for some reason. Mock with
+        # side_effect avoids unused-arg lint warnings vs a hand-rolled
+        # def _raising_connect(*args, **kwargs).
+        from unittest.mock import MagicMock
+        raising = MagicMock(side_effect=sqlite3.OperationalError("simulated transient lock"))
+        monkeypatch.setattr(bs.sqlite3, "connect", raising)
+
+        populated, total = bs._db_is_populated(p)
+        assert populated is True, (
+            "file >1 MB must be protected even when sqlite errors "
+            "(this is exactly the #1563 wipe vector)"
+        )
+        assert total == 0
+
     def test_small_corrupt_file_returns_false(self, tmp_path):
         """File <1 MB + sqlite errors → populated=False (legacy behavior).
 
@@ -252,10 +293,89 @@ class TestFileSizeGuard:
         assert populated is False
         assert total == 0
 
+    def test_refusal_message_reports_file_size(self, tmp_path, capsys):
+        """Refusal print must include the file size, not just the row count.
+
+        Before the #1563 fix, the message said "(N rows across main tables)".
+        That was misleading when the issue was a transient COUNT error
+        producing N=0 on a real DB. Post-fix it must include MB so an
+        operator can immediately tell the file is non-trivially sized.
+        """
+        p = tmp_path / "big_empty_main.db"
+        conn = sqlite3.connect(str(p))
+        conn.executescript("""
+            CREATE TABLE textbooks (id INTEGER PRIMARY KEY);
+            CREATE TABLE literary_texts (id INTEGER PRIMARY KEY);
+            CREATE TABLE external_articles (id INTEGER PRIMARY KEY);
+            CREATE TABLE bulk (id INTEGER PRIMARY KEY, payload TEXT);
+        """)
+        conn.executemany(
+            "INSERT INTO bulk (payload) VALUES (?)",
+            [("x" * 2048,) for _ in range(1000)],
+        )
+        conn.commit()
+        conn.close()
+        assert p.stat().st_size > bs.MIN_PROTECTED_DB_BYTES
+
+        bs.build(db_path=p, force=False)
+        out = capsys.readouterr().out
+        assert "MB on disk" in out, (
+            f"refusal message must report file size, not just row count.\n"
+            f"got: {out}"
+        )
+        assert "--force" in out
+
 
 # ──────────────────────────────────────────────────────────────────────
 # Wikipedia snapshot + restore
 # ──────────────────────────────────────────────────────────────────────
+
+
+class TestWikipediaSnapshot:
+    def test_extract_from_populated_db(self, tmp_path):
+        p = tmp_path / "with_wiki.db"
+        _make_populated_db(p, with_wiki=True)
+        wiki_rows, neg_rows = bs._extract_wikipedia_snapshot(p)
+        assert len(wiki_rows) == 2
+        assert len(neg_rows) == 1
+        titles = {r[0] for r in wiki_rows}
+        assert titles == {"Київ", "Шевченко"}
+        assert neg_rows[0][0] == "Аналіз: Наслідки"
+
+    def test_extract_from_db_without_wiki_tables(self, tmp_path):
+        p = tmp_path / "no_wiki.db"
+        _make_populated_db(p, with_wiki=False)
+        wiki_rows, neg_rows = bs._extract_wikipedia_snapshot(p)
+        assert wiki_rows == []
+        assert neg_rows == []
+
+    def test_extract_from_missing_db(self, tmp_path):
+        wiki_rows, neg_rows = bs._extract_wikipedia_snapshot(tmp_path / "missing.db")
+        assert wiki_rows == []
+        assert neg_rows == []
+
+    def test_restore_into_fresh_db(self, tmp_path):
+        p = tmp_path / "fresh.db"
+        conn = sqlite3.connect(str(p))
+        # Create just the wikipedia schema
+        conn.executescript("""
+            CREATE TABLE wikipedia (
+                id INTEGER PRIMARY KEY, title TEXT, url TEXT,
+                text TEXT, char_count INTEGER, fetched_at TEXT
+            );
+            CREATE TABLE wikipedia_negative_cache (
+                topic TEXT PRIMARY KEY, tried_at TEXT DEFAULT ''
+            );
+        """)
+        wiki_rows = [("Test", "http://test", "Body", 4, "2026-04-11")]
+        neg_rows = [("dead topic", "2026-04-11")]
+        bs._restore_wikipedia_snapshot(conn, wiki_rows, neg_rows)
+        conn.commit()
+        w_count = conn.execute("SELECT COUNT(*) FROM wikipedia").fetchone()[0]
+        n_count = conn.execute("SELECT COUNT(*) FROM wikipedia_negative_cache").fetchone()[0]
+        conn.close()
+        assert w_count == 1
+        assert n_count == 1
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -297,6 +417,14 @@ class TestBuildSafetyGates:
         out = capsys.readouterr().out
         assert "DRY RUN" in out
         assert "175 rows" in out
+
+    def test_dry_run_on_missing_db(self, tmp_path, capsys):
+        p = tmp_path / "absent.db"
+        bs.build(db_path=p, dry_run=True)
+        assert not p.exists()
+        out = capsys.readouterr().out
+        assert "DRY RUN" in out
+        assert "no existing populated DB" in out
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -414,6 +542,16 @@ class TestBuildValidation:
             bs._validate_build(conn, {"textbooks": 5})
         conn.close()
 
+    def test_passes_on_matching_empty_db(self, tmp_path):
+        db_path = tmp_path / "validate.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.executescript(bs.SCHEMA)
+        conn.commit()
+        # Should not raise: 0 rows expected, 0 rows present, fresh FTS
+        # shadow tables are trivially consistent with empty content.
+        bs._validate_build(conn, {"textbooks": 0, "external_articles": 0})
+        conn.close()
+
 
 class TestForcedRebuildFailureAtomicity:
     """#4859: any failure during a forced rebuild — including a
@@ -447,6 +585,33 @@ class TestForcedRebuildFailureAtomicity:
         leftovers = list(tmp_path.glob(f".{p.name}.*"))
         assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
 
+    def test_ingest_failure_prevents_swap(self, tmp_path):
+        """A raise during ingestion (not just explicit validation) must
+        also leave the live DB untouched — atomicity covers the whole
+        build, not only the final validation call."""
+        p = tmp_path / "populated.db"
+        _make_populated_db(p)
+        original_bytes = p.read_bytes()
+
+        empty_gd = tmp_path / "empty_gd"
+        (empty_gd / "textbook_chunks").mkdir(parents=True)
+        (empty_gd / "literary_texts").mkdir(parents=True)
+        empty_ext = tmp_path / "empty_ext"
+        empty_ext.mkdir()
+
+        def _explode(*_args, **_kwargs):
+            raise ValueError("simulated malformed-JSONL failure mid-ingest")
+
+        with patch.object(bs, "_ingest_jsonl", side_effect=_explode), \
+             patch.object(bs, "GDRIVE_DATA", empty_gd), \
+             patch.object(bs, "EXTERNAL_DIR", empty_ext):
+            with pytest.raises(ValueError, match="simulated malformed-JSONL"):
+                bs.build(db_path=p, force=True)
+
+        assert p.read_bytes() == original_bytes
+        leftovers = list(tmp_path.glob(f".{p.name}.*"))
+        assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
+
 
 # ──────────────────────────────────────────────────────────────────────
 # CLI argument parsing
@@ -454,6 +619,34 @@ class TestForcedRebuildFailureAtomicity:
 
 
 class TestCliParse:
+    def test_default_no_flags(self):
+        args = bs._parse_args([])
+        assert args.force is False
+        assert args.dry_run is False
+        assert args.no_preserve_wiki is False
+        assert args.db_path is None
+
+    def test_force_flag(self):
+        args = bs._parse_args(["--force"])
+        assert args.force is True
+
+    def test_dry_run_flag(self):
+        args = bs._parse_args(["--dry-run"])
+        assert args.dry_run is True
+
+    def test_no_preserve_wiki_flag(self):
+        args = bs._parse_args(["--no-preserve-wiki"])
+        assert args.no_preserve_wiki is True
+
+    def test_db_path_override(self):
+        args = bs._parse_args(["--db-path", "/tmp/test.db"])
+        assert args.db_path == Path("/tmp/test.db")
+
+    def test_combined_flags(self):
+        args = bs._parse_args(["--force", "--dry-run", "--no-preserve-wiki"])
+        assert args.force is True
+        assert args.dry_run is True
+        assert args.no_preserve_wiki is True
 
     def test_help_flag_does_not_touch_disk(self, capsys):
         # Critical safety test: `--help` must exit cleanly without any

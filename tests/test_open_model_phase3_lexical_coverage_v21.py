@@ -7,6 +7,7 @@ from copy import deepcopy
 from typing import Any
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_functional_roles as roles
 from scripts.projects.open_model_data import phase3_lexical_coverage as lexical
@@ -173,6 +174,14 @@ def test_controller_identity_census_is_not_current_evidence() -> None:
         lexical.validate_complete_census(census, population, role_contract=contract)
 
 
+def test_population_freeze_rejects_v1_role_contract_shape() -> None:
+    contract = _role_contract()
+    population = _population(contract)
+    old_contract = {"root": {"controller_identity_id": "controller_root"}, "seats": []}
+    with pytest.raises(lexical.LexicalCoverageError):
+        lexical.validate_complete_census(_census(population, contract), population, role_contract=old_contract)
+
+
 def test_nonagree_and_missing_family_still_fail_closed() -> None:
     contract = _role_contract()
     population = _population(contract)
@@ -212,3 +221,17 @@ def test_population_hash_detects_binding_mutation() -> None:
     candidate["population_freeze_sha256"] = lexical.sha256_value(base)
     with pytest.raises(lexical.LexicalCoverageError):
         lexical.validate_complete_census(census, candidate, role_contract=contract)
+
+
+def test_v21_lexical_schema_is_closed() -> None:
+    contract = _role_contract()
+    population = _population(contract)
+    census = _census(population, contract)
+    schema_path = lexical.DATA / "contracts/phase3_disposition_audit_bundle_v1.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema)
+    validator.validate(population)
+    validator.validate(census)
+    census["action_receipt"]["unexpected"] = True
+    assert not validator.is_valid(census)

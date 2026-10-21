@@ -194,6 +194,23 @@ def test_private_teacher_full_intake_ignores_docx_unit_before_candidate_extracti
     assert "local-private-source" not in serialized
 
 
+def test_private_teacher_candidate_payload_uses_neutral_locators_only(tmp_path: Path) -> None:
+    source = tmp_path / "source.tsv"
+    source.write_text("лема\tприклад\nнова\tфраза\n", encoding="utf-8")
+
+    result = build_private_teacher_lesson_intake([source])
+    payload = candidate_review_payload(result)
+
+    assert payload["production_outputs_updated"] == []
+    assert payload["safety"]["raw_text_included"] is False
+    assert payload["safety"]["source_paths_included"] is False
+    for row in payload["candidates"]:
+        assert row["source_family"] == "teacher_lesson"
+        assert row["classification"] == "review_queue"
+        assert row["source_ids"] == ["private-teacher-lesson-full-source"]
+        assert all(locator.startswith("private source unit 1 row ") for locator in row["locators"])
+
+
 def test_private_teacher_candidate_output_rejects_repository_paths() -> None:
     with pytest.raises(SourceInventoryError, match="outside the repository"):
         resolve_local_review_output_path(PROJECT_ROOT / "private-candidates.json")
@@ -278,6 +295,14 @@ def test_private_source_review_export_guard_blocks_local_payload_marker(tmp_path
     )
 
     assert find_private_source_review_exports([export]) == [export]
+
+
+def test_private_teacher_source_id_must_be_neutral_slug(tmp_path: Path) -> None:
+    source = tmp_path / "source.txt"
+    source.write_text("приватне слово\n", encoding="utf-8")
+
+    with pytest.raises(SourceInventoryError, match="neutral slug"):
+        build_private_teacher_lesson_intake([source], source_id="Private Teacher/Name")
 
 
 @pytest.fixture

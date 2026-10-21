@@ -72,6 +72,73 @@ def test_reconcile_sweep_uses_worker_identity(tmp_path, monkeypatch, apply, iden
         assert path.read_bytes() == before
 
 
+def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    dead_task_id = "dead-task-1"
+    state = {
+        "task_id": dead_task_id,
+        "status": "running",
+        "pid": 999_999_999,
+    }
+    task_file = task_dir / f"{dead_task_id}.json"
+    task_file.write_text(json.dumps(state), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+
+    report = reconcile_sweep.run_reconcile_sweep(
+        apply=False,
+        task_dir=task_dir,
+        ledger=ledger,
+    )
+
+    assert report.mode == "dry_run"
+    assert report.scanned_tasks == 1
+    assert report.zombie_tasks == [dead_task_id]
+    assert report.stale_claims == []
+    assert report.live_tasks == []
+
+    # File on disk must NOT be modified in dry-run
+    unchanged = json.loads(task_file.read_text(encoding="utf-8"))
+    assert unchanged["status"] == "running"
+    assert "reconcile-sweep: mode=dry_run scanned_tasks=1 zombie_tasks=1 stale_claims=0" in report.summary_line()
+
+
+def test_reconcile_sweep_apply_settles_dead_record(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    dead_task_id = "dead-task-2"
+    state = {
+        "task_id": dead_task_id,
+        "status": "running",
+        "pid": 999_999_999,
+    }
+    task_file = task_dir / f"{dead_task_id}.json"
+    task_file.write_text(json.dumps(state), encoding="utf-8")
+
+    ledger_path = tmp_path / "own.sqlite3"
+    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
+
+    report = reconcile_sweep.run_reconcile_sweep(
+        apply=True,
+        task_dir=task_dir,
+        ledger=ledger,
+    )
+
+    assert report.mode == "apply"
+    assert report.scanned_tasks == 1
+    assert report.zombie_tasks == [dead_task_id]
+
+    # File on disk must be marked crashed by the explicit mutating path.
+    healed = json.loads(task_file.read_text(encoding="utf-8"))
+    assert healed["status"] == "crashed"
+    assert "marked crashed by reconcile_sweep probe" in healed.get("stderr_excerpt", "")
+    assert (
+        "reconcile-sweep: mode=apply scanned_tasks=1 zombies_crashed=1 stale_claims_released=0" in report.summary_line()
+    )
+
+
 def test_reconcile_sweep_does_not_touch_live_pid(tmp_path: Path) -> None:
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()

@@ -363,6 +363,158 @@ def test_image_to_letter_validator_rejects_options_without_letter():
 # ---------------------------------------------------------------------------
 
 
+def test_anagram_mdx_contains_all_required_and_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "anagram",
+        "title": "Склади слово",
+        "instruction": "Перестав букви",
+        "items": [{"scrambled": "блуяко", "answer": "яблуко", "hint": "фрукт", "explanation": "Це яблуко."}],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<Anagram" in mdx
+    assert "Склади слово" in mdx
+    assert "Перестав букви" in mdx
+    assert "блуяко" in mdx
+    assert "яблуко" in mdx
+    assert "фрукт" in mdx
+    assert "Це яблуко." in mdx
+
+
+def test_count_syllables_mdx_contains_all_required_and_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "count-syllables",
+        "title": "Порахуй склади",
+        "instruction": "Скільки складів?",
+        "max_count": 5,
+        "items": [{"word": "мама", "correct": 2, "translation": "mother", "explanation": "Два склади: ма-ма."}],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<CountSyllables" in mdx
+    assert "Скільки складів?" in mdx
+    assert "мама" in mdx
+    assert '"correct": 2' in mdx or '"correct":2' in mdx
+    assert "mother" in mdx
+    assert "Два склади: ма-ма." in mdx
+    assert "maxCount={5}" in mdx
+
+
+def test_divide_words_mdx_contains_all_required_and_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "divide-words",
+        "title": "Поділи на склади",
+        "instruction": "Розділи слово дефісом",
+        "items": [{"word": "вода", "answer": "во-да", "hint": "2 склади", "explanation": "Правильно: во-да."}],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<DivideWords" in mdx
+    assert "Розділи слово дефісом" in mdx
+    assert "вода" in mdx
+    assert "во-да" in mdx
+    assert "2 склади" in mdx
+    assert "Правильно: во-да." in mdx
+
+
+def test_unjumble_mdx_contains_all_required_and_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "unjumble",
+        "title": "Віднови порядок",
+        "instruction": "Склади речення",
+        "items": [{"words": ["є", "Це", "кіт"], "answer": "Це є кіт", "hint": "Почніть з Це", "explanation": "Це є кіт."}],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<Unjumble" in mdx
+    assert "Склади речення" in mdx
+    assert "є / Це / кіт" in mdx
+    assert "Це є кіт" in mdx
+    assert "Почніть з Це" in mdx
+    assert "Це є кіт." in mdx
+
+
+def test_watch_and_repeat_mdx_contains_all_required_and_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "watch-and-repeat",
+        "title": "Дивись і повторюй",
+        "instruction": "Повторюй за відео",
+        "items": [{
+            "video": "video.mp4",
+            "letter": "А",
+            "word": "автобус",
+            "sound": "/a/",
+            "note": "голосний",
+            "explanation": "Звук [а] відкритий.",
+        }],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<WatchAndRepeat" in mdx
+    assert "video.mp4" in mdx
+    assert "А" in mdx
+    assert "автобус" in mdx
+    assert "/a/" in mdx
+    assert "голосний" in mdx
+    assert "Звук [а] відкритий." in mdx
+
+
+def test_letter_grid_mdx_without_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "letter-grid",
+        "title": "Алфавіт",
+        "instruction": "Вивчи літери",
+        "letters": [{"upper": "А", "lower": "а"}],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<LetterGrid" in mdx
+    assert '"upper": "А"' in mdx or '"upper":"А"' in mdx
+    assert '"lower": "а"' in mdx or '"lower":"а"' in mdx
+    assert "Алфавіт" in mdx
+    assert "Вивчи літери" in mdx
+
+
+def test_letter_grid_mdx_with_optional_fields():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "letter-grid",
+        "letters": [{"upper": "Б", "lower": "б", "name": "бе", "emoji": "🥖", "key_word": "булка"}],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<LetterGrid" in mdx
+    assert '"name": "бе"' in mdx or '"name":"бе"' in mdx
+    assert '"emoji": "🥖"' in mdx or '"emoji":"🥖"' in mdx
+    assert '"key_word": "булка"' in mdx or '"key_word":"булка"' in mdx
+
+
+def test_phrase_table_mdx_emission():
+    parser = ActivityParser()
+    act = parser._parse_activity({
+        "type": "phrase-table",
+        "title": "Корисні фрази",
+        "instruction": "Запам'ятайте фрази",
+        "groups": [
+            {
+                "label": "Привітання",
+                "phrases": [
+                    "Добрий день",
+                    {"phrase": "Привіт", "context": "неформальне", "emoji": "👋"},
+                ],
+            }
+        ],
+    })
+    mdx = parser.to_mdx([act])
+    assert "<PhraseTable" in mdx
+    assert "Корисні фрази" in mdx
+    assert "Запам'ятайте фрази" in mdx
+    assert "Привітання" in mdx
+    assert "Добрий день" in mdx
+    assert "Привіт" in mdx
+    assert "неформальне" in mdx
+    assert "👋" in mdx
+
+
 # ---------------------------------------------------------------------------
 # quiz: one resolver names the correct option for both emitters and the validator
 # ---------------------------------------------------------------------------

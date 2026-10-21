@@ -5,11 +5,13 @@ from __future__ import annotations
 from copy import deepcopy
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
 from scripts.api.work_router import projection_cache_key
-from scripts.orientation_packet import PACKET_MAX_BYTES, build_packet, json_bytes
+from scripts.orchestration.issue_stream_audit import load_registry
+from scripts.orientation_packet import PACKET_MAX_BYTES, build_packet, cap_projection, json_bytes
 from scripts.work.normalize import build_projection
 from scripts.work.sources_public import SectionResult
 
@@ -36,6 +38,39 @@ def _session() -> dict:
         "observed_at": "2026-10-17T00:00:00Z",
         "freshness": "live",
     }
+
+
+@pytest.mark.parametrize("epic", sorted(load_registry()))
+def test_every_registered_lane_packet_fits(epic, tmp_path, monkeypatch):
+    monkeypatch.delenv("LU_DRIVER_MIN_WORKERS", raising=False)
+    _state(
+        tmp_path,
+        epic,
+        "## Current goals\n- keep the lane inside one packet\n"
+        "## Next\n- read the packet\n"
+        "## Holds\n- a public hold\n"
+        "## Stops\n- a public stop\n",
+    )
+    packet = build_packet(
+        epic,
+        root=tmp_path,
+        orders=_orders(),
+        session=_session(),
+    )
+    raw = json_bytes(packet, newline=True)
+    assert len(raw) <= PACKET_MAX_BYTES
+    assert packet["epic"] == epic
+    assert set(packet["runtime"]) == {"worker_target"}
+    assert packet["runtime"]["worker_target"] == "UNKNOWN"
+    assert [row["id"] for row in packet["holds"]] == ["hold-1"]
+    assert [row["id"] for row in packet["stops"]] == ["stop-1"]
+    assert [row["id"] for row in packet["goals"]] == ["goal-1"]
+    assert [row["id"] for row in packet["orders"]] == ["message_" + f"{0:032x}"]
+    assert "markdown" not in packet["session"]
+    assert packet["freshness"] == "live"
+    assert packet["complete"] is True
+    names = {source["name"] for source in packet["sources"]}
+    assert {"driver_state", "orders", "session", "open_prs", "live_workers", "plane"} <= names
 
 
 def test_overflow_keeps_hold_stop_and_goal_ids(tmp_path, monkeypatch):
@@ -101,6 +136,28 @@ def test_projection_records_unassigned_pr(monkeypatch):
     assert omission["locator"] == "/api/work/v1/projection#/items/0"
     assert body["denominator"]["streams_complete"] is False
     assert payload == before
+
+
+def test_cap_projection_keeps_attention_prefix_and_does_not_mutate():
+    items = []
+    attention = []
+    for index in range(40):
+        work_id = f"wp1:issue:{index}"
+        items.append({"work_id": work_id, "title": "t" * 500})
+        attention.append({"work_id": work_id, "attention_rank": index})
+    payload = {"items": items, "attention": attention, "denominator": {"omissions": []}}
+    capped = cap_projection(payload)
+    assert len(json_bytes(capped)) <= PACKET_MAX_BYTES
+    assert len(capped["items"]) < len(items)
+    assert capped["items"][0]["work_id"] == "wp1:issue:0"
+    assert capped["denominator"]["omissions"][-1] == {
+        "class": "orientation_bound",
+        "reason": "lane_projection_bytes",
+        "count": len(items) - len(capped["items"]),
+        "locator": "/api/work/v1/projection#/items",
+    }
+    assert len(payload["items"]) == 40
+    assert "omissions" not in payload or payload["denominator"]["omissions"] == []
 
 
 def test_projection_lane_filter_caps_and_leaves_the_cache(monkeypatch):

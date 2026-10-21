@@ -173,6 +173,17 @@ def test_cleanup_expire_bulk_expires_dead_lane_regardless_of_age(capsys, monkeyp
     assert _delivery_status(res["delivery_ids"][0]) == "expired"
 
 
+def test_cleanup_without_expire_flag_leaves_channel_deliveries_untouched():
+    _channels.create_channel("shared")
+    res = _channels.post("shared", "user", "stale", to_agents=["claude"], auto_snapshot=False)
+    _set_message_created_at(res["message_id"], _hours_ago(30))
+
+    rc = _run_cli(["cleanup"])
+
+    assert rc == 0
+    assert _delivery_status(res["delivery_ids"][0]) == "pending"
+
+
 def test_action_required_delivery_survives_plain_cleanup_expire_before_escalation_ttl():
     """A review request 3 days old must not be swept by the fast fyi path."""
     _channels.create_channel("shared")

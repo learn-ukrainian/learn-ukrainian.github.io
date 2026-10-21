@@ -163,6 +163,12 @@ def test_headings_only_warns() -> None:
     assert "terminal_goal" in result["missing"]
 
 
+def test_empty_body_warns() -> None:
+    result = score_body("")
+    assert result["verdict"] == "WARN"
+    assert len(result["missing"]) >= 8
+
+
 def test_trivial_exemption() -> None:
     result = score_body("trivial: yes\nFix typo in README\n", trivial=False)
     assert result["verdict"] == "PASS"
@@ -505,6 +511,18 @@ def test_rejected_cache_never_admits_without_live_proof(
         assert result["membership"]["status"] == "WARN"
         assert result["membership"]["errors"][0]["code"] == "membership_audit_incomplete"
         assert result["membership"]["cache_rejection"] == reason
+
+
+def test_canonical_validator_must_accept_cache(monkeypatch, membership_cache, capsys):
+    membership_cache.write_text(json.dumps(audit_report(body=[123])))
+    validator = Mock(return_value=None)
+    monkeypatch.setattr(audit, "validate_membership_report", validator)
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report())
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    result = json.loads(capsys.readouterr().out)
+    assert result["membership"]["cache_rejection"] == "membership_audit_stale"
+    assert validator.call_count == 2
+    assert validator.call_args.args[1] == 3600
 
 
 @pytest.mark.parametrize("stage", ["target_fetch", "cached_audit_validation", "live_audit_open_issues",
@@ -1006,6 +1024,14 @@ def test_comment_refetches_current_issue_and_paginates(monkeypatch, tmp_path):
     assert len([c for c in calls if "comments?" in c[1]]) == 2
     assert calls[-1][0] == "POST"
     assert "STALE_EVENT_CANARY" not in json.dumps(calls)
+
+
+def test_absent_public_registry_is_reported_as_absent(monkeypatch):
+    def missing(*a, **k):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(audit, "load_registry", missing)
+    assert checker.observe_membership({}, REPO, 123)["errors"][0]["code"] == "membership_registry_absent"
 
 
 def test_in_memory_audit_refuses_mismatched_checkout(monkeypatch):

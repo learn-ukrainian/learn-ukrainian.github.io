@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.generate_mdx import core
-from scripts.generate_mdx.reading_links import reading_href_for
+from scripts.generate_mdx.reading_links import normalize_work_title, reading_href_for
 
 
 def _write_reading(
@@ -36,6 +38,20 @@ def _write_reading(
         "---\n",
         encoding="utf-8",
     )
+
+
+@pytest.mark.parametrize(
+    "raw, expected",
+    [
+        ("«Як ще не було початку світа»", "як ще не було початку світа"),
+        ("ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА", "як ще не було початку світа"),
+        ("сві́та", "світа"),
+        ("koliadka-yak-shche-ne-bulo", "koliadka yak shche ne bulo"),
+        ("  “When the world had no beginning”  ", "when the world had no beginning"),
+    ],
+)
+def test_normalize_work_title(raw, expected):
+    assert normalize_work_title(raw) == expected
 
 
 def test_reading_href_ignores_unpublished_or_noncanonical_readings(tmp_path):

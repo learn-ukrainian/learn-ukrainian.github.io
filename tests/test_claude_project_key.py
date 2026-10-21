@@ -27,6 +27,26 @@ def _key(path: str) -> str:
     return re.sub(r"[^A-Za-z0-9-]", "-", path)
 
 
+@pytest.mark.parametrize(
+    ("checkout", "expected"),
+    [
+        ("/work/learn-ukrainian", "learn-ukrainian"),
+        ("/work/learn-ukrainian/.worktrees/dispatch/codex/issue-1", "learn-ukrainian"),
+        ("/work/learn-ukrainian/.claude/worktrees/feature", "learn-ukrainian"),
+        ("/work/kubedojo", "kubedojo"),
+        ("/work/kubedojo/.worktrees/lane", "kubedojo"),
+        # Sibling copies and other checkouts are never counted.
+        ("/work/learn-ukrainian--backup", None),
+        ("/work/learn-ukrainian__backup", None),
+        ("/work/learn-ukrainian/.cache/x", None),
+        ("/work/learn-ukrainian-infra-private", None),
+        ("/work/other", None),
+    ],
+)
+def test_project_name_matches_only_the_checkout_and_its_worktrees(checkout, expected) -> None:
+    assert token_usage.resolve_project_name(_key(checkout)) == expected
+
+
 def _git(*args: str, cwd: Path) -> None:
     subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30)
 

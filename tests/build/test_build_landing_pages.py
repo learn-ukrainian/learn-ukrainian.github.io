@@ -208,6 +208,19 @@ def test_bad_status_refuses_without_creating_output(producer, bad, capsys):
     assert str(producer) not in err
 
 
+@pytest.mark.parametrize('bad', [None, 'bad: [', '[]', 'levels: []',
+                               'levels: {a2: {}}', 'levels: {a2: {modules: [null]}}'])
+def test_bad_manifest_refuses_without_writes(producer, bad):
+    path = gen.CURRICULUM_DIR / 'curriculum.yaml'
+    if bad is None:
+        path.unlink()
+    else:
+        path.write_text(bad)
+    before = snapshot(producer)
+    assert gen.main(['--check']) == 1
+    assert snapshot(producer) == before
+
+
 def test_missing_output_directory_and_unreadable_output(producer, capsys):
     shutil.rmtree(gen.DOCS_DIR)
     before = snapshot(producer)

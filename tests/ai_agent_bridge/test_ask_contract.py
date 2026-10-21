@@ -17,7 +17,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from scripts.ai_agent_bridge import _acp_compat, _cli
 from scripts.ai_agent_bridge._ask_contract import (
     failed_response_provenance,
+    resolve_model_selection,
     response_provenance,
+    unsupported_effort_note,
 )
 
 ASK_SEATS = (
@@ -635,6 +637,34 @@ def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_mis
     assert "hermes binary not found on PATH" not in message
     assert "docs/runbooks/agent-seat-onboarding.md" in message
     assert invoke.call_count == 0
+
+
+def test_to_model_wins_only_when_legacy_alias_agrees() -> None:
+    assert (
+        resolve_model_selection(
+            lane="ask-cursor",
+            to_model="requested",
+            model="requested",
+            default="default",
+        )
+        == "requested"
+    )
+    with pytest.raises(ValueError, match="conflicts with deprecated --model"):
+        resolve_model_selection(
+            lane="ask-cursor",
+            to_model="requested",
+            model="legacy",
+            default="default",
+        )
+
+
+def test_unsupported_effort_emits_note_and_stamps_null(capsys: pytest.CaptureFixture[str]) -> None:
+    applied, reason = unsupported_effort_note(
+        lane="cursor", effort="xhigh", reason="Cursor Agent has no per-invocation effort flag"
+    )
+    assert applied is None
+    assert reason == "Cursor Agent has no per-invocation effort flag"
+    assert "NOTE: cursor cannot apply requested effort=xhigh" in capsys.readouterr().out
 
 
 @pytest.mark.parametrize(

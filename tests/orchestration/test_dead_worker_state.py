@@ -163,6 +163,13 @@ def test_invalid_pid_is_unknown(proc, pid):
     assert d.worker_liveness({"pid": pid}) is None
 
 
+def test_capture_unreadable_identity_keeps_unknown_start_time(proc):
+    (proc / "123" / "stat").write_text("malformed")
+    identity = d.capture_worker_identity(123)
+    assert identity["start_time"] is None
+    assert d.worker_liveness({"pid": 123, "worker_identity": identity}) is None
+
+
 def test_live_same_namespace_worker_hidden_from_proc_is_unknown(proc):
     # A restricted procfs view can omit a process in our own PID namespace.
     # Signal-0 still sees this real process, so absence is not proof of death.

@@ -255,6 +255,16 @@ def test_operation_in_progress_not_touched(tmp_path):
     assert _head_symbolic_target(repo) is None
 
 
+def test_index_lock_not_touched(tmp_path):
+    repo = _init_repo(tmp_path / "repo")
+    _detach(repo)
+    (repo / ".git" / "index.lock").write_text("")
+    ok, message = _check(repo, tmp_path, fix=True)
+    assert ok is False
+    assert "index.lock" in message
+    assert _head_symbolic_target(repo) is None
+
+
 def test_main_moved_unexpectedly_not_touched(tmp_path):
     repo = _init_repo(tmp_path / "repo")
     _detach(repo)
@@ -316,6 +326,28 @@ def test_dead_dispatch_pid_does_not_block_repair(tmp_path):
     ok, message = _check(repo, tmp_path, fix=True, tasks_dir=tasks_dir)
     assert ok is True, message
     assert _head_symbolic_target(repo) == "refs/heads/main"
+
+
+def test_detection_event_names_running_dispatches(tmp_path):
+    repo = _init_repo(tmp_path / "repo")
+    _detach(repo)
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    (tasks_dir / "gemini-suspect.json").write_text(
+        json.dumps(
+            {
+                "task_id": "gemini/suspect",
+                "agent": "gemini",
+                "status": "running",
+                "pid": os.getpid(),
+            }
+        )
+    )
+    _check(repo, tmp_path, fix=True, tasks_dir=tasks_dir)
+    detected = [e for e in _events(tmp_path / "watchdog-state") if e["event"] == "primary_drift_detected"]
+    assert detected
+    running = detected[0]["running_dispatches"]
+    assert any(d["task_id"] == "gemini/suspect" for d in running)
 
 
 # ---------------------------------------------------------------------------

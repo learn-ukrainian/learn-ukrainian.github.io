@@ -56,9 +56,22 @@ class TestBasicDetection:
         assert len(violations) == 1
         assert "приймати участь" in violations[0]['issue']
 
+    def test_detects_получати(self):
+        """Detects 'получати' (should be 'отримувати')."""
+        content = _wrap("Вони будуть получати зарплату вчасно.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
+        assert "получати" in violations[0]['issue']
+
     def test_detects_відноситися(self):
         """Detects 'відноситися' (should be 'стосуватися')."""
         content = _wrap("Це відноситися до граматики.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
+
+    def test_detects_слідуючий(self):
+        """Detects 'слідуючий' (should be 'наступний')."""
+        content = _wrap("Слідуючий урок буде складнішим.")
         violations = check_russicisms(content)
         assert len(violations) == 1
 
@@ -75,6 +88,18 @@ class TestBasicDetection:
         violations = check_russicisms(content)
         assert len(violations) == 1
         assert "довколишній" in str(violations) or "навколишній" in str(violations)
+
+    def test_detects_кушати(self):
+        """Detects 'кушати' (should be 'їсти')."""
+        content = _wrap("Давайте кушати разом.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
+
+    def test_detects_вообще(self):
+        """Detects 'вообще' (should be 'взагалі')."""
+        content = _wrap("Він вообще не розуміє правил.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
 
     def test_detects_нравитися(self):
         """Detects 'нравитися' (should be 'подобатися')."""
@@ -174,6 +199,12 @@ class TestTrackExemptions:
         content = _wrap("Він получати грамоту від князя.")
         violations = check_russicisms(content, file_path="/curriculum/l2-uk-en/oes/module.md")
         assert violations == []
+
+    def test_b1_track_not_exempt(self):
+        """B1 track content is NOT exempt."""
+        content = _wrap("Він получати грамоту.")
+        violations = check_russicisms(content, file_path="/curriculum/l2-uk-en/b1/module.md")
+        assert len(violations) == 1
 
 
 # =============================================================================
@@ -308,9 +339,33 @@ class TestUaGecBulkLookup:
         violations = check_ua_gec_calques(_wrap("Автор залишив коментарій до тексту."))
         assert violations and violations[0]["matched"].casefold() == "коментарій"
 
+    def test_detects_підписників(self):
+        violations = check_ua_gec_calques(_wrap("У блогу вже багато підписників."))
+        assert violations and violations[0]["matched"].casefold() == "підписників"
+
+    def test_detects_посту(self):
+        violations = check_ua_gec_calques(_wrap("Після посту автор відповів на питання."))
+        assert violations and violations[0]["matched"].casefold() == "посту"
+
+    def test_detects_лайки(self):
+        violations = check_ua_gec_calques(_wrap("Цей текст швидко зібрав лайки."))
+        assert violations and violations[0]["matched"].casefold() == "лайки"
+
+    def test_detects_вірно(self):
+        violations = check_ua_gec_calques(_wrap("Вірно пояснити правило важливо."))
+        assert violations and violations[0]["matched"].casefold() == "вірно"
+
+    def test_detects_дозволяє(self):
+        violations = check_ua_gec_calques(_wrap("Цей підхід дозволяє краще бачити структуру."))
+        assert violations and violations[0]["matched"].casefold() == "дозволяє"
+
     def test_detects_як_тільки(self):
         violations = check_ua_gec_calques(_wrap("Як тільки учень читає, він бачить приклад."))
         assert violations and violations[0]["matched"].casefold() == "як тільки"
+
+    def test_detects_у_якості(self):
+        violations = check_ua_gec_calques(_wrap("Це слово використано у якості прикладу."))
+        assert violations and violations[0]["matched"].casefold() == "у якості"
 
     def test_даний_math_context_not_flagged(self):
         violations = check_ua_gec_calques(_wrap("Даний метод у геометрії допомагає довести теорему."))

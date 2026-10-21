@@ -17,6 +17,20 @@ def test_looks_truncated_detects_mid_diff_tail():
     assert _reply_sidecar.looks_truncated(body) is True
 
 
+def test_small_response_stays_inline(tmp_path, monkeypatch):
+    monkeypatch.setattr(_reply_sidecar, "_SIDECAR_ROOT", tmp_path / "asks")
+    monkeypatch.setenv("AB_REPLY_INLINE_MAX_BYTES", "10000")
+    result = _reply_sidecar.maybe_sidecare_response(
+        "short ok",
+        task_id="t-small",
+        from_llm="glm",
+        msg_type="response",
+    )
+    assert result.truncated is False
+    assert result.sidecar_path is None
+    assert result.content == "short ok"
+
+
 def test_large_response_writes_sidecar_and_truncated_footer(tmp_path, monkeypatch):
     monkeypatch.setattr(_reply_sidecar, "_SIDECAR_ROOT", tmp_path / "asks")
     monkeypatch.setenv("AB_REPLY_INLINE_MAX_BYTES", "200")

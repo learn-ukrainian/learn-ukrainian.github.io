@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import shutil
 import sqlite3
 import subprocess
@@ -309,3 +310,38 @@ def test_newline_in_task_record_does_not_inject_a_dropped_file(
     )
     assert uploaded.stdout == '{"selected": true}\n'
     assert "leaked" not in leaked.stdout
+
+
+def test_excluded_task_snapshot_tree_is_not_walked(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    """FIFO and unreadable files inside a task snapshot directory are not visited."""
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    excluded = project / "batch_state" / "tasks" / "archive" / "large.snapshots"
+    excluded.mkdir(parents=True)
+    os.mkfifo(excluded / "writer.pipe")
+    hidden = excluded / "secret.txt"
+    hidden.write_text("do not read\n", encoding="utf-8")
+    hidden.chmod(0)
+    (excluded / "visited.txt").write_text("walked\n", encoding="utf-8")
+    (project / "batch_state" / "tasks" / "job.json").write_text("{}\n", encoding="utf-8")
+    manifest_path = tmp_path / "selection.txt"
+    environment["LU_BACKUP_SELECTION_MANIFEST"] = str(manifest_path)
+    try:
+        result = _run(environment, "backup", "--execute")
+    finally:
+        hidden.chmod(0o600)
+
+    assert result.returncode == 0, result.stderr
+    assert "Unsupported special file type" not in result.stderr
+    assert "Unreadable paths" not in result.stderr
+    _enumerated, seen, staged = parse_selection_manifest(manifest_path)
+    prefix = "batch_state/tasks/archive/large.snapshots/"
+    assert not any(path.startswith(prefix) for path in seen)
+    assert not any(path.startswith(prefix) for path in staged)
+    assert f"{prefix}secret.txt" not in seen
+    assert f"{prefix}writer.pipe" not in seen
+    assert f"{prefix}visited.txt" not in seen

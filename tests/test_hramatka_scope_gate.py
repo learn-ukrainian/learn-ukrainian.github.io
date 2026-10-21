@@ -42,6 +42,15 @@ def _unavailable(_issue_ref: gate.IssueRef) -> gate.IssueObservation:
     raise gate.IssueLookupUnavailable("fixture unavailable")
 
 
+def test_constants_pin_the_approved_hramatka_scope() -> None:
+    config = gate.HRAMATKA_SCOPE_GATE
+
+    assert config.stream_name == "hramatka"
+    assert config.public_epic == 4542
+    assert config.private_board == _issue(PRIVATE, 349)
+    assert config.operator_only_issues == {_issue(PRIVATE, 360), _issue(PRIVATE, 212)}
+
+
 def test_configured_public_epic_allows_without_api_lookup() -> None:
     def must_not_run(_issue_ref: gate.IssueRef) -> gate.IssueObservation:
         pytest.fail("the configured public epic is already exact membership")
@@ -63,6 +72,19 @@ def test_public_native_child_of_hramatka_epic_allows() -> None:
         issue=_issue(PUBLIC, 6001),
         stream_registry=REGISTRY,
         reader=_reader(_observation(parent_number=4542)),
+    )
+
+    assert decision.outcome is gate.Outcome.ALLOW
+
+
+def test_secondary_configured_hramatka_epic_is_still_exact_membership() -> None:
+    registry = {**REGISTRY, "hramatka": [4542, 6999]}
+
+    decision = gate.decide_scope(
+        action="new_scope",
+        issue=_issue(PUBLIC, 6005),
+        stream_registry=registry,
+        reader=_reader(_observation(parent_number=6999)),
     )
 
     assert decision.outcome is gate.Outcome.ALLOW
@@ -212,6 +234,26 @@ def test_non_scope_actions_are_exempt_without_api_lookup(action: str) -> None:
     )
 
     assert decision.outcome is gate.Outcome.ALLOW
+
+
+def test_environment_variable_cannot_bypass_route(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ALLOW_HRAMATKA_SCOPE_GATE", "1")
+
+    decision = gate.decide_scope(
+        action="new_dispatch",
+        issue=_issue(PUBLIC, 6107),
+        stream_registry=REGISTRY,
+        reader=_reader(_observation(parent_number=4707)),
+    )
+
+    assert decision.outcome is gate.Outcome.ROUTE
+
+
+def test_issue_refs_reject_unqualified_or_nonpositive_identifiers() -> None:
+    with pytest.raises(ValueError, match="qualified"):
+        gate.IssueRef("4542", 4542)
+    with pytest.raises(ValueError, match="positive"):
+        gate.IssueRef(PUBLIC, 0)
 
 
 def test_gh_reader_uses_the_repo_qualified_rest_target(github_transport) -> None:

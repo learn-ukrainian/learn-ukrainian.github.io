@@ -154,6 +154,12 @@ def test_rename_into_manifest_runs_audit() -> None:
     assert all(scope.NOT_APPLICABLE_LINE not in line for line in lines)
 
 
+def test_deleted_manifest_runs_audit() -> None:
+    run, _lines, matched = scope.decide_from_changed(["requirements-lock.txt"])
+    assert run is True
+    assert matched == ["requirements-lock.txt"]
+
+
 def test_non_dependency_change_is_not_applicable() -> None:
     run, lines, matched = scope.decide_from_changed(
         ["docs/runbooks/ci-gate.md", "scripts/ci/frontend_change_scope.py"]
@@ -199,6 +205,29 @@ def test_added_manifest_runs_audit(
     assert rc == 0
     assert "decision=run" in out
     assert scope.NOT_APPLICABLE_LINE not in out
+    assert "run=true" in gh_output
+
+
+def test_rename_away_from_site_manifest_runs_audit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    fork = _init_repo(repo)
+    _git(repo, "checkout", "-b", "feature")
+    _git(repo, "mv", "site/package.json", "site/pkg.json")
+    head = _commit_all(repo, "rename manifest away")
+
+    # Direct real-git coverage of changed_paths: both rename sides are reported.
+    changed = scope.changed_paths(f"{fork}..{head}", cwd=repo)
+    assert "site/package.json" in changed
+    assert "site/pkg.json" in changed
+
+    rc, out, _err, gh_output = _run_main(
+        repo, base=fork, head=head, tmp_path=tmp_path, monkeypatch=monkeypatch, capsys=capsys
+    )
+    assert rc == 0
+    assert "decision=run" in out
     assert "run=true" in gh_output
 
 

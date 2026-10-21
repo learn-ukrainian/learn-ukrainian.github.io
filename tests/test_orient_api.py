@@ -175,6 +175,64 @@ def test_health_canaries_do_not_apply_general_repairs(monkeypatch):
     assert fix_values == [False, False]
 
 
+def test_orient_swallows_failing_subquery(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+
+    def broken_git(ctx=None):
+        raise RuntimeError("git failed")
+
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", broken_git)
+
+    response = client.get("/api/orient")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["git"]["error"] == "git failed"
+    assert data["runtime"]["agents"] == ["codex"]
+
+
+def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
+    """A hung ASYNC collector caps at the per-section hard timeout.
+
+    This covers the live-reproduced BLOCKER from the first baseline
+    run: the async pipeline collector could block the whole response.
+    ``asyncio.wait_for`` properly cancels pure-async awaitables.
+
+    Both sections use async collectors here so failure isolation does
+    not depend on sync executor scheduling within the 0.1 s budget.
+    Sync runtime scheduling is covered separately by
+    ``test_orient_runtime_survives_default_executor_saturation``.
+    """
+    import asyncio
+
+    _patch_orient_sources(monkeypatch)
+    monkeypatch.setattr(api_main, "ORIENT_SECTION_HARD_TIMEOUT_S", 0.1)
+
+    async def hang_forever(ctx=None):
+        await asyncio.sleep(5.0)
+        return {"summary": {}}
+
+    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", hang_forever)
+
+    async def immediate_runtime(ctx=None):
+        return {"agents": ["codex"]}
+
+    section_specs = api_main._orient_section_specs()
+    section_specs["runtime"] = (immediate_runtime, {}, True)
+    monkeypatch.setattr(api_main, "_orient_section_specs", lambda: section_specs)
+
+    start = time.perf_counter()
+    response = client.get("/api/orient?sections=pipeline,runtime")
+    elapsed = time.perf_counter() - start
+
+    assert response.status_code == 200
+    assert_under_budget(elapsed, 1.0, f"orient should short-circuit, took {elapsed}s")
+    data = response.json()
+    assert "section_timeout" in data["pipeline"]["error"]
+    # The independent async section must still populate.
+    assert data["runtime"]["agents"] == ["codex"]
+
+
 def test_orient_runtime_survives_default_executor_saturation(monkeypatch):
     """Orient sync sections must not depend on the shared default executor.
 

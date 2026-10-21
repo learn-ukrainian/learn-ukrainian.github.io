@@ -516,12 +516,43 @@ def test_snapshot_manifests_ref_still_proves_disk_against_blob(
     assert not (tmp_path / "store" / hashlib.sha256(b"omega").hexdigest()).exists()
 
 
+def test_snapshot_manifests_ref_missing_ref_or_manifest_is_a_clear_error(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setenv("LU_ARTIFACT_STORE", str(tmp_path / "store"))
+    (repo / "registry/artifacts/raw_source.manifest.json").unlink()
+    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "origin/nope"], repo=repo) == 1
+    err = capsys.readouterr().err
+    assert "'origin/nope' does not resolve to a commit" in err and "git fetch origin <phase-branch>" in err
+    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "HEAD"], repo=repo) == 1
+    assert "manifest missing at" in capsys.readouterr().err
+    assert list((tmp_path / "store").glob("[0-9a-f]*")) == []
+
+
 def test_snapshot_help_documents_manifests_ref(capsys: pytest.CaptureFixture[str]) -> None:
     with pytest.raises(SystemExit, match="0"):
         artifacts._parser().parse_args(["snapshot", "--help"])
     out = capsys.readouterr().out
     assert "--manifests-ref REF" in out
     assert "snapshot --phase P2 --manifests-ref origin/<phase-branch>" in out
+
+
+def test_failed_recovery_names_journal_and_remediation_for_every_command(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    journal = artifacts._journal_path(repo, "raw_source", "raw/source.txt")
+    journal.parent.mkdir(parents=True)
+    journal.write_text("{not json", encoding="utf-8")
+    for argv in (["status"], ["verify"]):
+        assert artifacts.main(argv, repo=repo) == 1
+        err = capsys.readouterr().err
+        assert f"publish recovery failed for journal {journal}" in err
+        assert "remediation: every" in err
+        assert "scripts.storage.artifacts status" in err and "verify --group <group>" in err
+        assert f"mv {journal} {journal}.resolved" in err
+        assert "sha256sum" in err and "cat " in err
+    with pytest.raises(artifacts.RecoveryError, match="remediation"):
+        artifacts.publish(repo, "raw_source", "raw/source.txt", repo / "data/raw/source.txt", "test")
 
 
 def test_recovery_prunes_journals_of_deleted_checkouts_only(
@@ -587,6 +618,20 @@ def test_orphan_journal_kept_when_parent_missing_or_unreadable(
     assert artifacts.recover_incomplete(repo) == 0
     assert journal.exists()
     assert "unreadable" in capsys.readouterr().err
+
+
+def test_orphan_journal_pruned_when_parent_present_and_checkout_absent(repo: Path, tmp_path: Path) -> None:
+    journal = _orphan_journal(repo, tmp_path / "deleted-worktree")
+    assert artifacts.recover_incomplete(repo) == 0
+    assert not journal.exists()
+
+
+def test_orphan_journal_kept_for_live_checkout(repo: Path, tmp_path: Path) -> None:
+    live = tmp_path / "live"
+    live.mkdir()
+    journal = _orphan_journal(repo, live)
+    assert artifacts.recover_incomplete(repo) == 0
+    assert journal.exists()
 
 
 def test_orphan_journal_kept_while_worktree_still_registered(

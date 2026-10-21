@@ -742,6 +742,20 @@ def test_bad_manifest_refusal(tmp_path, entries):
     assert invoke("run", argv, HTTP([], clock), clock) == 2
 
 
+def test_official_range_admission_and_aliases(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "sum20_official")
+    assert invoke("run", [*argv, "--end-wordid", "4"], HTTP([], clock), clock) == 2
+    assert invoke("run", [*argv, "--manifest", "manifest.json"], HTTP([], clock), clock) == 2
+    assert acquisition.dictionary_name("karavansky") == "synonyms_karavansky"
+
+
+@pytest.mark.parametrize("action", ["status", "resume"])
+def test_missing_job_refuses(tmp_path, action):
+    clock = Clock()
+    assert invoke(action, arguments(tmp_path), HTTP([], clock), clock) == 2
+
+
 def test_cli_help_and_argparse_error(capsys):
     with pytest.raises(SystemExit) as help_exit:
         acquisition.main(["--help"])

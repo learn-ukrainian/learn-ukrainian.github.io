@@ -199,6 +199,21 @@ def test_style_guide_sentence_is_not_paired_with_a_fragment():
     assert pairs == [("Головну увагу мною приділено таким явищам", "Головну увагу я приділив таким явищам")]
 
 
+def test_create_error_correction_drill():
+    drill = create_error_correction_drill(
+        error_phrase="на протязі року",
+        correct_phrase="протягом року",
+        explanation="В українській мові про часові проміжки кажуть «протягом року». «На протязі» означає струмінь повітря.",
+        source="Avramenko Gr 11",
+    )
+    assert drill["errorWord"] == "на протязі року"
+    assert drill["correctForm"] == "протягом року"
+    assert "протягом року" in drill["options"]
+    assert "на протязі року" in drill["options"]
+    assert drill["isUkrainian"] is True
+    assert "протягом року" in drill["explanation"]
+
+
 def test_drill_options_are_only_the_forms_the_source_contrasts():
     """#8723: every option list was error / "error (розм.)" / correction / "correction (застаріле)"."""
     drill = create_error_correction_drill("україномовний", "українськомовний", source="Textbook Gr 11 (avramenko)")
@@ -425,6 +440,17 @@ def test_drill_carries_the_typed_answers():
     )
     assert drill["answers"][0] == drill["correctForm"]
     assert drill["options"] == ["брати (узяти) участь", "приймати участь"]
+
+
+def test_committed_reviewed_withholds_are_well_formed():
+    from scripts.practice.extract_textbook_error_corrections import REVIEW_CODES, load_reviewed_withholds
+
+    reviewed = load_reviewed_withholds()
+    assert len(reviewed) == 7
+    for entry in reviewed.values():
+        assert entry["code"] in REVIEW_CODES
+        assert entry["reviewer"] == "gemini-3.8-flash-high (review-8723-lang)"
+    assert ("відпочивати на морі", "відпочивати біля моря") in reviewed
 
 
 @pytest.mark.parametrize(

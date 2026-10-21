@@ -351,6 +351,22 @@ def test_exclusive_lexdata_override_does_not_read_sources(tmp_path: Path, monkey
     assert sources.read_bytes() == before
 
 
+def test_blank_lexdata_override_is_an_empty_miss(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _isolate_store_resolution(monkeypatch, tmp_path)
+    _seed_articles(tmp_path / "data")
+    monkeypatch.setenv("LEXDATA_DB_PATH", " ")
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+
+    def refuse_open(*_args: object, **_kwargs: object) -> sqlite3.Connection:
+        raise AssertionError("blank LEXDATA_DB_PATH opened a database")
+
+    monkeypatch.setattr(sources_db, "_get_conn_for", refuse_open)
+    with pytest.raises(Sum20StoreError, match="empty_override"):
+        lookup_sum20_articles("вода")
+    with pytest.raises(Sum20StoreError, match="empty_override"):
+        sources_db.query_sum20("вода")
+
+
 def test_staging_database_is_not_a_lookup_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _isolate_store_resolution(monkeypatch, tmp_path)
     _seed_articles(tmp_path / "data")
@@ -455,6 +471,23 @@ def test_canonical_generation_connection_cannot_write_or_attach(tmp_path, monkey
             conn.execute("ATTACH ':memory:' AS other")
     finally:
         conn.close()
+
+
+def test_reader_import_does_not_load_a_network_client(tmp_path):
+    import subprocess
+    import sys
+
+    code = '''
+import builtins
+original = builtins.__import__
+def guarded(name, *args, **kwargs):
+    assert name.split('.')[0] not in {'requests', 'httpx', 'aiohttp', 'urllib3'}, name
+    return original(name, *args, **kwargs)
+builtins.__import__ = guarded
+import scripts.lexicon.sum20_lookup
+'''
+    result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=False, timeout=60)
+    assert result.returncode == 0, result.stderr
 
 
 def test_enrichment_reads_canonical_store_without_network_import_or_fallback(tmp_path, monkeypatch):
@@ -746,6 +779,20 @@ def test_invalid_mirror_is_typed_refusal_not_miss(tmp_path, monkeypatch, kind, r
     assert lookup_sum20_articles("вода", mirror_db_path=mirror)[0]["wordid"] == 42
     with pytest.raises(Sum20StoreError, match=reason):
         lookup_sum20_articles("бракує", mirror_db_path=mirror)
+
+
+def test_injected_mirror_binding_and_lexdata_precedence(tmp_path, monkeypatch):
+    _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    injected = mirror.rename(tmp_path / "injected.db")
+    assert lookup_sum20_articles("берег") == []
+    assert lookup_sum20_articles("берег", mirror_db_path=injected)[0]["role"] == "mirror_candidate"
+    lexdata = _seed_articles(tmp_path / "data", name="lexdata.db")
+    with sqlite3.connect(lexdata) as conn:
+        conn.execute("UPDATE sum20_articles SET definition_text='published definition'")
+    _publish_generation(lexdata)
+    assert lookup_sum20_articles("вода", mirror_db_path=injected)[0]["definition"] == "published definition"
+    assert lookup_sum20_articles("берег", mirror_db_path=injected)[0]["role"] == "mirror_candidate"
 
 
 @pytest.mark.parametrize("raw, queries", [

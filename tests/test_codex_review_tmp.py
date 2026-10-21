@@ -140,6 +140,52 @@ def test_sources_prompt_fails_fast_when_read_only_cannot_approve(tmp_path, monke
         )
 
 
+def test_review_gh_shim_read_only_with_readonly_cache(tmp_path, gh_shim_sandbox):
+    _root, shim, _tooling = gh_shim_sandbox
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    lease = tmp_path / "learn-ukrainian" / "review-test"
+    lease.mkdir(parents=True)
+    ro_cache = tmp_path / "ro-cache"
+    ro_cache.mkdir()
+    os.chmod(ro_cache, 0o500)
+    backend = tmp_path / "fake-gh"
+    backend.write_text(
+        '#!/bin/sh\nset -eu\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{\\"number\\": 10108, \\"state\\": \\"OPEN\\", \\"body\\": \\"text\\", \\"url\\": \\"https://github.com/unit/public/issues/10108\\"}"\n'
+    )
+    backend.chmod(0o700)
+    plan = review_plan(checkout, lease)
+    env = {
+        **os.environ,
+        **plan.env_overrides,
+        "AGENT_REAL_GH": str(backend),
+        "AGENT_NO_MERGE": "1",
+        "LU_GITHUB_CACHE_DIR": str(ro_cache),
+    }
+    try:
+        result = subprocess.run(
+            [
+                str(shim),
+                "issue",
+                "view",
+                "10108",
+                "--repo",
+                "unit/public",
+                "--json",
+                "number,state,body,url",
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert '"number": 10108' in result.stdout
+        assert "OPSEC: publishing input unresolved" not in result.stderr
+    finally:
+        os.chmod(ro_cache, 0o700)
+
+
 def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypatch, capsys):
     from scripts.opsec import gh_entry
 

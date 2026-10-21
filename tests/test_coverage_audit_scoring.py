@@ -39,6 +39,45 @@ if SCRIPTS_DIR not in sys.path:
 # 3. audit/checks/activity_validation.py
 # ============================================================================
 
+class TestUnjumbleChecks:
+    def test_check_unjumble_empty_jumbled(self):
+        from audit.checks.activity_validation import check_unjumble_empty_jumbled
+        activities = [
+            {"type": "unjumble", "title": "Test", "items": [{"words": ["a", "b"]}, {}]},
+        ]
+        violations = check_unjumble_empty_jumbled(activities)
+        assert len(violations) == 1
+        assert violations[0]["type"] == "EMPTY_UNJUMBLE_CONTENT"
+
+    def test_check_unjumble_runon_answer(self):
+        from audit.checks.activity_validation import check_unjumble_runon_answer
+        activities = [
+            {"type": "unjumble", "title": "T", "items": [
+                {"answer": "Привіт друже Це маленький подарунок"}
+            ]},
+        ]
+        violations = check_unjumble_runon_answer(activities)
+        assert len(violations) == 1
+        assert violations[0]["type"] == "UNJUMBLE_RUNON_SENTENCE"
+
+    def test_check_unjumble_out_of_scope_dative(self):
+        from audit.checks.activity_validation import check_unjumble_out_of_scope_dative
+        activities = [
+            {"type": "unjumble", "title": "T", "items": [
+                {"words": ["моїй", "сестрі", "подобається"]}
+            ]},
+        ]
+        violations = check_unjumble_out_of_scope_dative(activities)
+        assert len(violations) == 1
+
+
+class TestMdxUnjumbleRendering:
+    def test_check_mdx_unjumble_rendering(self):
+        from audit.checks.activity_validation import check_mdx_unjumble_rendering
+        mdx = '<Unjumble key="1" title="Test" items={JSON.parse(`[{"jumbled":""}]`)}'
+        violations = check_mdx_unjumble_rendering(mdx)
+        assert len(violations) == 1
+
 
 class TestMarkTheWords:
     def test_check_morpheme_patterns(self):
@@ -49,6 +88,152 @@ class TestMarkTheWords:
         ]
         violations = check_morpheme_patterns(activities)
         assert len(violations) == 0
+
+    def test_check_mark_the_words_format_mixed(self):
+        from audit.checks.activity_validation import check_mark_the_words_format
+        activities = [
+            {"type": "mark-the-words", "title": "T",
+             "text": "[слово](noun) and *при*йшов together"},
+        ]
+        violations = check_mark_the_words_format(activities)
+        assert len(violations) == 1
+        assert violations[0]["type"] == "MIXED_MARK_FORMAT"
+
+    def test_check_mark_the_words_answers_in_text(self):
+        from audit.checks.activity_validation import check_mark_the_words_answers_in_text
+        activities = [
+            {"type": "mark-the-words", "title": "T",
+             "text": "This is a test sentence", "answers": ["missing_word"]},
+        ]
+        violations = check_mark_the_words_answers_in_text(activities)
+        assert len(violations) == 1
+
+
+class TestMorphemePedagogy:
+    def test_vague_instruction(self):
+        from audit.checks.activity_validation import check_morpheme_pedagogy
+        activities = [
+            {"type": "mark-the-words", "title": "T",
+             "text": "Click on any morphemes in the text\n\n*при*йшов"},
+        ]
+        violations = check_morpheme_pedagogy(activities)
+        assert any(v["type"] == "VAGUE_MORPHEME_INSTRUCTION" for v in violations)
+
+    def test_too_many_morphemes(self):
+        from audit.checks.activity_validation import check_morpheme_pedagogy
+        # Generate 12 distinct Ukrainian morpheme markers
+        words = ["при", "від", "пере", "над", "під", "роз", "без", "ви", "за", "до", "по", "об"]
+        morphemes = " ".join(f"*{w}*йшов" for w in words)
+        activities = [
+            {"type": "mark-the-words", "title": "T",
+             "text": f"Знайдіть префікси\n\n{morphemes}"},
+        ]
+        violations = check_morpheme_pedagogy(activities)
+        assert any(v["type"] == "TOO_MANY_MORPHEMES" for v in violations)
+
+
+class TestQuizValidation:
+    def test_quiz_single_correct(self):
+        from audit.checks.activity_validation import check_quiz_single_correct
+        activities = [
+            {"type": "quiz", "title": "Q", "items": [
+                {"options": [{"correct": True}, {"correct": True}, {"correct": False}]}
+            ]}
+        ]
+        violations = check_quiz_single_correct(activities)
+        assert len(violations) == 1
+
+
+class TestSelectMinCorrect:
+    def test_mismatch(self):
+        from audit.checks.activity_validation import check_select_min_correct
+        activities = [
+            {"type": "select", "title": "S", "items": [
+                {"min_correct": 2, "options": [{"correct": True}, {"correct": True}, {"correct": True}]}
+            ]}
+        ]
+        violations = check_select_min_correct(activities)
+        assert len(violations) == 1
+
+
+class TestFillInAnswerInOptions:
+    def test_answer_missing(self):
+        from audit.checks.activity_validation import check_fill_in_answer_in_options
+        activities = [
+            {"type": "fill-in", "title": "F", "items": [
+                {"answer": "correct", "options": ["wrong1", "wrong2"]}
+            ]}
+        ]
+        violations = check_fill_in_answer_in_options(activities)
+        assert len(violations) == 1
+
+
+class TestTranslateSingleCorrect:
+    def test_multiple_correct(self):
+        from audit.checks.activity_validation import check_translate_single_correct
+        activities = [
+            {"type": "translate", "title": "T", "items": [
+                {"options": [{"correct": True}, {"correct": True}]}
+            ]}
+        ]
+        violations = check_translate_single_correct(activities)
+        assert len(violations) == 1
+
+
+class TestSeminarReadingPairing:
+    def test_missing_reading_id(self):
+        from audit.checks.activity_validation import check_seminar_reading_pairing
+        activities = [
+            {"type": "reading", "title": "Read 1"},
+            {"type": "essay-response", "title": "Essay", "source_reading": "reading-01"},
+        ]
+        violations = check_seminar_reading_pairing(activities, "lit")
+        assert any(v["type"] == "READING_MISSING_ID" for v in violations)
+
+    def test_invalid_source_reading(self):
+        from audit.checks.activity_validation import check_seminar_reading_pairing
+        activities = [
+            {"type": "reading", "title": "Read 1", "id": "reading-01"},
+            {"type": "critical-analysis", "title": "Analysis", "source_reading": "reading-99"},
+        ]
+        violations = check_seminar_reading_pairing(activities, "hist")
+        assert any(v["type"] == "INVALID_SOURCE_READING" for v in violations)
+
+    def test_orphan_reading(self):
+        from audit.checks.activity_validation import check_seminar_reading_pairing
+        activities = [
+            {"type": "reading", "title": "Orphan", "id": "reading-02"},
+        ]
+        violations = check_seminar_reading_pairing(activities, "bio")
+        assert any(v["type"] == "ORPHAN_READING" for v in violations)
+
+    def test_missing_source_reading(self):
+        from audit.checks.activity_validation import check_seminar_reading_pairing
+        activities = [
+            {"type": "essay-response", "title": "Essay"},
+        ]
+        violations = check_seminar_reading_pairing(activities, "lit")
+        assert any(v["type"] == "MISSING_SOURCE_READING" for v in violations)
+
+
+class TestEnglishHintsInActivities:
+    def test_english_hints_detected(self):
+        from audit.checks.activity_validation import check_english_hints_in_activities
+        activities = [
+            {"type": "cloze", "title": "C", "passage": "Він (big) будинок (small) кімната (old)"}
+        ]
+        violations = check_english_hints_in_activities(activities, "B1", 5)
+        assert len(violations) == 1
+
+    def test_english_hints_a1_lenient(self):
+        from audit.checks.activity_validation import check_english_hints_in_activities
+        activities = [
+            {"type": "fill-in", "title": "F", "items": [
+                {"sentence": "Це (example) слово (hint) тут"}
+            ]}
+        ]
+        violations = check_english_hints_in_activities(activities, "A1", 1)
+        assert len(violations) == 0  # scaffolding hints allowed at A1
 
 
 # ============================================================================
@@ -115,10 +300,86 @@ class TestExtractVocabItems:
         assert len(items) == 2
         assert items[0]["uk"] == "книга"
 
+    def test_a1_format(self):
+        from audit.checks.vocabulary import extract_vocab_items
+        content = """## Vocabulary
+| Word | English | POS | Gender | Note |
+|---|---|---|---|---|
+| книга | book | noun | f | basic |
+"""
+        items = extract_vocab_items(content)
+        assert len(items) == 1
+
+
+class TestCheckVocabViolations:
+    def test_missing_vocab(self):
+        from audit.checks.vocabulary import check_vocab_violations
+        content = "Full content with книга and стіл"
+        core_content = "книга книга стіл стіл новий новий"
+        vocab_words = {"книга"}
+        violations = check_vocab_violations(content, core_content, vocab_words)
+        # "стіл" and "новий" used 2+ times but not in vocab
+        assert len(violations) >= 1
+
+
+class TestCheckMetalanguageScaffolding:
+    def test_a1_metalanguage(self):
+        from audit.checks.vocabulary import check_metalanguage_scaffolding
+        content = "У цьому уроці іменник дуже важливий"
+        vocab = set()
+        violations = check_metalanguage_scaffolding(content, vocab, "A1", 1)
+        assert len(violations) >= 1
+
+
+class TestCheckVocabTableFormat:
+    def test_a1_wrong_header(self):
+        from audit.checks.vocabulary import check_vocab_table_format
+        content = """## Словник
+| Слово | Переклад | Примітка |
+|---|---|---|
+| книга | book | - |
+"""
+        violations = check_vocab_table_format(content, "A1")
+        assert any(v["type"] == "VOCAB_HEADER" for v in violations)
+
+    def test_a1_wrong_columns(self):
+        from audit.checks.vocabulary import check_vocab_table_format
+        content = """## Vocabulary
+| Word | English | Note |
+|---|---|---|
+| книга | book | - |
+"""
+        violations = check_vocab_table_format(content, "A1")
+        assert any(v["type"] == "VOCAB_FORMAT" for v in violations)
+
 
 # ============================================================================
 # 5. pipeline/screen.py
 # ============================================================================
+
+
+class TestScreenFixIpaBrackets:
+    def test_strip_ipa(self):
+        from pipeline.screen import _fix_ipa_brackets
+        text = "слово [slo-vo] (word)"
+        result, count = _fix_ipa_brackets(text)
+        assert count >= 1
+        assert "[slo-vo]" not in result
+
+
+class TestScreenIpaScan:
+    def test_ipa_detection(self):
+        from pipeline.screen import _run_ipa_scan
+        text = "Some text with [ɑɛɪɔʊ] transcription"
+        issues = _run_ipa_scan(text)
+        assert len(issues) >= 1
+        assert issues[0]["type"] == "IPA_BANNED"
+
+    def test_whitelist(self):
+        from pipeline.screen import _run_ipa_scan
+        text = "Zero form: [Ø]"
+        issues = _run_ipa_scan(text)
+        assert len(issues) == 0
 
 
 # ============================================================================

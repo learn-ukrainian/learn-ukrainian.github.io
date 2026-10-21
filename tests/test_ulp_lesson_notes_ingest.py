@@ -204,6 +204,21 @@ def test_parse_book_with_space_anchor_seasons_4_6(tmp_path: Path) -> None:
     assert "Конспект уроку № 121" not in body  # also not the start marker
 
 
+def test_parse_book_strips_page_furniture(tmp_path: Path) -> None:
+    """Footers, Back-to-Contents, season headers, and bare page numbers
+    must NOT appear in lesson bodies."""
+    txt = _write_fixture(tmp_path, "s1.txt", FIXTURE_S1)
+    lessons = ulp.parse_book(txt)
+    for lesson in lessons:
+        blob = lesson.render()
+        assert "Inspiring resources for learning Ukrainian" not in blob
+        assert "Back to Contents" not in blob
+        assert "Ukrainian Lessons Podcast: Season" not in blob
+        # Bare page numbers (single line of digits) — none should land
+        for line in blob.split("\n"):
+            assert not line.strip().isdigit() or len(line.strip()) > 4
+
+
 def test_parse_book_terminates_at_vidpovidi(tmp_path: Path) -> None:
     """``Відповіді до вправ`` (Season 1-3 appendix) finalizes the last
     lesson without absorbing the appendix."""

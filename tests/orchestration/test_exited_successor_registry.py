@@ -318,6 +318,12 @@ def test_existing_maintenance_actions_keep_their_behavior(case, action):
     assert _apply(case, plan)["final_state"] == expected
 
 
+def test_extra_proof_fields_are_refused(case):
+    case.proof["force"] = True
+    with pytest.raises(ValueError, match="unexpected fields"):
+        _plan(case)
+
+
 def test_plan_tamper_is_refused(case):
     plan = _plan(case)
     path = case.root / plan["plan_path"]

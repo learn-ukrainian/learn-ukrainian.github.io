@@ -44,6 +44,50 @@ def test_projection_omits_only_named_keys_and_preserves_unknown_data():
     assert EDITORIAL_KEYS == linear_pipeline.WRITER_PLAN_OMIT_KEYS
 
 
+@pytest.mark.parametrize(
+    "writer,use_generator",
+    [
+        ("claude-tools", False),
+        ("claude-tools", True),
+    ],
+)
+def test_projection_is_writer_only_and_keeps_both_reference_renderings(monkeypatch, tmp_path, writer, use_generator):
+    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+    plan_path = linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello")
+    plan = linear_pipeline.plan_check(plan_path)
+    original = deepcopy(plan)
+    raw = yaml.safe_dump(plan, allow_unicode=True, sort_keys=False)
+    packet = linear_pipeline.build_knowledge_packet(plan=plan)
+    manifest = {"slug": plan["slug"], "sequence_steps": [], "l2_errors": []}
+
+    prompt = linear_pipeline.render_writer_prompt(
+        plan=plan,
+        plan_content=raw,
+        knowledge_packet=packet,
+        wiki_manifest=manifest,
+        writer=writer,
+        use_generator=use_generator,
+    )
+    block = prompt.split("\n## Plan\n", 1)[1].split("```yaml\n", 1)[1].split("\n```", 1)[0]
+    projected = yaml.safe_load(block)
+
+    assert not (EDITORIAL_KEYS & projected.keys())
+    assert projected["references"] == plan["references"]
+    assert prompt.count("\n## Plan References\n") == 1
+    reference_block = packet.split("\n## Plan References\n", 1)[1]
+    for reference in plan["references"]:
+        assert f"**{reference['title']}**" in reference_block
+        for key in ("notes", "url"):
+            if reference.get(key):
+                assert str(reference[key]).strip() in reference_block
+    assert packet in prompt
+    assert plan == original
+    review = linear_pipeline.review_context(plan, raw, "Draft.", "pedagogical", manifest)
+    expected_review = linear_pipeline._plan_content_for_prompt(plan, raw)
+    assert review["PLAN_CONTENT"] == expected_review
+    assert yaml.safe_load(review["PLAN_CONTENT"]).keys() >= EDITORIAL_KEYS
+
+
 @pytest.mark.parametrize("packet", ["Packet without references.", "\n## Plan References\n- **Shared title**\n"])
 def test_writer_context_keeps_raw_comments_and_all_reference_fields(monkeypatch, tmp_path, packet):
     """Both review blockers must fail on the original implementation's behavior."""

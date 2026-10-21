@@ -152,6 +152,46 @@ def test_config_consumer_file_launches_without_pythonpath(
     assert result.stderr == ""
 
 
+def test_shared_policy_import_ignores_bare_config_shadow(tmp_path: Path) -> None:
+    """Qualified policy imports must not resolve an unrelated bare config module."""
+    root = Path(__file__).resolve().parents[2]
+    shadow = tmp_path / "shadow"
+    shadow.mkdir()
+    (shadow / "config.py").write_text("raise AssertionError('bare config shadow imported')\n", encoding="utf-8")
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import sys
+from pathlib import Path
+
+root = Path({str(root)!r})
+blocked = (root, root / 'scripts', root / 'scripts/audit')
+sys.path = [{str(shadow)!r}, str(root), str(root / 'scripts/audit'), str(root / 'scripts')] + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in blocked
+]
+config = importlib.import_module('scripts.audit.config')
+canonical = importlib.import_module('scripts.config')
+assert config._shared_config is canonical
+assert Path(config.shared_get_immersion_range.__code__.co_filename).resolve() == root / 'scripts/config.py'
+assert 'config' not in sys.modules
+print('bare config shadow ignored')
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout == "bare config shadow ignored\n"
+    assert result.stderr == ""
+
+
 def test_track_audit_json_contract_and_llm_qg_exclusion(tmp_path, monkeypatch) -> None:
     patch_roots(monkeypatch, tmp_path)
     write_minimal_module(tmp_path, "test-one", 1)
@@ -174,3 +214,40 @@ def test_track_audit_json_contract_and_llm_qg_exclusion(tmp_path, monkeypatch) -
     assert all("llm_qg_status" not in item for item in result["findings"])
     assert not (tmp_path / "curriculum" / "l2-uk-en" / "b2" / "test-one" / "status").exists()
     assert not (tmp_path / "curriculum" / "l2-uk-en" / "b2" / "test-one" / "audit").exists()
+
+
+def test_surface_gate_reports_b2_english_leak(tmp_path, monkeypatch) -> None:
+    patch_roots(monkeypatch, tmp_path)
+    write_minimal_module(tmp_path, "test-one", 1, english_leak=True)
+
+    paths = audit.select_modules("b2", (1, 1), None)[0]
+    findings = audit.check_surface(paths)
+
+    assert any(item.category == "english_internal_leakage" and item.severity == "high" for item in findings)
+
+
+def test_internal_leakage_skips_resource_provenance_key(tmp_path, monkeypatch) -> None:
+    """`chunk_id:` / `packet_chunk_id:` keys in resources.yaml are non-rendering
+    corpus-provenance metadata (consumed by the plan-reference gate), so a bare
+    provenance-key line must NOT be flagged — but prose mentioning the term still is."""
+    patch_roots(monkeypatch, tmp_path)
+    write_minimal_module(tmp_path, "test-one", 1)
+    resources = tmp_path / "curriculum" / "l2-uk-en" / "b2" / "test-one" / "resources.yaml"
+    resources.write_text(
+        "- title: Буквар 1 клас, с. 24\n"
+        "  role: textbook\n"
+        "  chunk_id: 1-klas-bukvar-2018_s0023\n"
+        "  packet_chunk_id: 1-klas-bukvar-2018_s0024\n"
+        "  notes: retrieved via search_text; no literal chunk_id in plan\n",
+        encoding="utf-8",
+    )
+
+    paths = audit.select_modules("b2", (1, 1), None)[0]
+    findings = audit.check_internal_leakage(paths)
+    leaks = [f for f in findings if f.file and f.file.endswith("resources.yaml")]
+
+    # The bare provenance-key lines are skipped...
+    assert not any(f.line == 3 for f in leaks), "chunk_id: key line should not be flagged"
+    assert not any(f.line == 4 for f in leaks), "packet_chunk_id: key line should not be flagged"
+    # ...but the notes prose that MENTIONS chunk_id still leaks (renders in Resources tab).
+    assert any(f.line == 5 for f in leaks), "notes prose mentioning chunk_id must still be flagged"

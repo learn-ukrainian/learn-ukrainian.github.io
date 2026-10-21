@@ -654,6 +654,47 @@ def test_corrupt_database_does_not_skip_later_databases(
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
+def test_find_permission_error_keeps_reported_paths_and_database_phase(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    (source / "datasets").mkdir(exist_ok=True)
+    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    real_find = shutil.which("find", path=os.environ["PATH"])
+    assert real_find is not None
+    environment["REAL_FIND"] = real_find
+    environment["FAKE_FIND_ROOT"] = str(source.parent / "batch_state" / "fleet-comms")
+    environment["FAKE_FILE_PHASE_EXIT"] = "3"
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "find",
+        """#!/bin/bash
+for argument in "$@"; do
+  if [[ "$1" == "$FAKE_FIND_ROOT" && "$argument" == "-readable" ]]; then
+    printf '%s\\n' "$FAKE_FIND_ROOT/already-found.txt"
+    printf "find: '%s': Permission denied\\n" "$FAKE_FIND_ROOT/denied-dir" >&2
+    exit 1
+  fi
+done
+exec "$REAL_FIND" "$@"
+""",
+    )
+
+    doctor = _run(environment, "doctor")
+    run = _run(environment, "backup", "--execute")
+
+    assert doctor.returncode == 0, doctor.stderr
+    assert "WARNING: 2 path(s) under backup roots are unreadable" in doctor.stderr
+    assert str(source.parent / "batch_state" / "fleet-comms" / "already-found.txt") in doctor.stderr
+    assert str(source.parent / "batch_state" / "fleet-comms" / "denied-dir") in doctor.stderr
+    assert run.returncode != 0
+    assert "batch_state/fleet-comms/already-found.txt" in run.stderr
+    assert "batch_state/fleet-comms/denied-dir" in run.stderr
+    assert "db_file=<data/datasets/healthy.db>" in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+
 def test_receipt_counts_match_post_exclusion_snapshot_contents(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:

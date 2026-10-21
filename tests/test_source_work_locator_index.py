@@ -320,6 +320,20 @@ def test_compact_reader_rejects_oversized_input_before_reading(tmp_path: Path) -
         locators.compact_rows(output)
 
 
+def test_unknown_config_key_and_bad_column_fail_schema(tmp_path: Path) -> None:
+    config, root = _fixture(tmp_path)
+    value = json.loads(config.read_text())
+    value["unexpected"] = True
+    config.write_text(json.dumps(value))
+    with pytest.raises(locators.LocatorError, match="schema failure"):
+        locators.build(config_path=config, input_root=root, output=tmp_path / "out")
+    value.pop("unexpected")
+    value["families"][0]["metadata_columns"] = ["text"]
+    config.write_text(json.dumps(value))
+    with pytest.raises(locators.LocatorError, match="schema failure"):
+        locators.build(config_path=config, input_root=root, output=tmp_path / "out")
+
+
 def test_missing_real_column_and_ambiguous_locator_fail_closed(tmp_path: Path) -> None:
     config, root = _fixture(tmp_path)
     value = json.loads(config.read_text())

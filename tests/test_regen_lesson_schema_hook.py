@@ -8,6 +8,7 @@ from pathlib import Path
 import yaml
 
 from scripts.build import generate_lesson_schema
+from scripts.pre_commit import regen_lesson_schema
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -19,6 +20,20 @@ def _lesson_schema_hook() -> dict[str, object]:
             if hook["id"] == "lesson-schema-drift":
                 return hook
     raise AssertionError("lesson-schema-drift hook is missing")
+
+
+def test_regen_lesson_schema_uses_canonical_generator(monkeypatch, capsys):
+    calls: list[tuple[object, ...]] = []
+
+    def fake_main() -> int:
+        calls.append(())
+        return 0
+
+    monkeypatch.setattr(regen_lesson_schema.generate_lesson_schema, "main", fake_main)
+
+    assert regen_lesson_schema.main() == 0
+    assert calls == [()]
+    assert capsys.readouterr().out == "Lesson schema written: docs/lesson-schema.yaml\n"
 
 
 def test_lesson_schema_hook_regenerates_for_all_schema_inputs():

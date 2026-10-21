@@ -67,6 +67,15 @@ def test_issue_9479_redirect_denominator(monkeypatch, redirect, shape):
     assert seen == ([] if shape == "implicit" else ["5"])
 
 
+@pytest.mark.parametrize("command", ["gh pr merge --admin 2>&1", "gh pr merge 2>&1 5 --admin"])
+def test_issue_9479_reviewer_reproductions(monkeypatch, command):
+    seen = []
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["Test (pytest)"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert seen == ([] if command.endswith("2>&1") else ["5"])
+
+
 @pytest.mark.parametrize("redirect", REDIRECTS_9479)
 @pytest.mark.parametrize("placement", ["before-number", "after-number", "cd"])
 def test_issue_9479_real_bash_argv(tmp_path, monkeypatch, redirect, placement):
@@ -205,6 +214,10 @@ def test_issue_9115_nested_and_backtick_admin_merges_blocked(monkeypatch, comman
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
 
 
+def test_issue_9115_escaped_nested_backtick_admin_merge_is_visible():
+    assert _any_admin(r"echo `echo \`gh pr merge 5 --admin\``")
+
+
 def test_issue_9115_backtick_depth_limit_blocks_in_hook(monkeypatch):
     monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
     body = "gh pr merge 5 --admin"
@@ -255,6 +268,12 @@ def test_issue_9088_crlf_closer_keeps_admin_merge_visible(monkeypatch):
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
 
 
+def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
+    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
+    assert _any_admin(command)
+    assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
 @pytest.mark.parametrize(
     "opener,closer",
     [
@@ -280,6 +299,21 @@ def test_issue_9088_exotic_body_cannot_skip_later_safe_opener(monkeypatch):
     command = "cat <<$'EOF'\ncat <<SAFE\ngh pr merge 5 --admin\nSAFE\nEOF"
     assert _any_admin(command)
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
+def test_issue_9088_missing_shell_helper_blocks(tmp_path):
+    guard_copy = tmp_path / HOOK_PATH.name
+    shutil.copy2(HOOK_PATH, guard_copy)
+    result = subprocess.run(
+        [sys.executable, str(guard_copy)],
+        input=json.dumps({"tool_input": {"command": "gh pr merge 1 --admin"}}),
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_shlex" in result.stderr
 
 
 def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
@@ -319,6 +353,14 @@ def test_quoted_admin_not_detected():
     assert all(guard._admin_merge_args(s) is None for s in segs)
 
 
+def test_is_advisory():
+    assert guard._is_advisory("pip-audit (advisory)")
+    assert guard._is_advisory("npm-audit (advisory)")
+    assert not guard._is_advisory("Test (pytest)")
+    assert not guard._is_advisory("Lint (ruff)")
+    assert not guard._is_advisory("Frontend (build + vitest)")
+
+
 # --- main() decision (fail-closed) -----------------------------------------
 
 
@@ -326,8 +368,16 @@ def test_non_admin_command_is_untouched(monkeypatch):
     assert _run(monkeypatch, "gh pr merge 5 --squash --delete-branch") == 0
 
 
+def test_unrelated_command_is_untouched(monkeypatch):
+    assert _run(monkeypatch, "git push origin main") == 0
+
+
 def test_admin_with_failing_required_check_blocked(monkeypatch):
     assert _run(monkeypatch, "gh pr merge 5 --admin", failing=["Test (pytest)"]) == 2
+
+
+def test_admin_equals_true_with_failing_required_check_blocked(monkeypatch):
+    assert _run(monkeypatch, "gh pr merge 5 --admin=true", failing=["Test (pytest)"]) == 2
 
 
 def test_admin_with_only_green_or_advisory_allowed(monkeypatch):
@@ -404,6 +454,11 @@ def _any_admin(command: str) -> bool:
 )
 def test_glued_operator_admin_merge_detected(cmd):
     assert _any_admin(cmd)
+
+
+def test_heredoc_admin_mention_not_detected():
+    cmd = "cat > /tmp/n.md <<'EOF'\nrun gh pr merge 5 --admin manually\nEOF"
+    assert not _any_admin(cmd)
 
 
 def test_backslash_continuation_admin_detected():
@@ -489,11 +544,30 @@ def test_gh_env_scrubs_color_forcers(monkeypatch):
     assert env["CLICOLOR"] == "0"
 
 
+def test_decolorize_recovers_parseable_json():
+    assert json.loads(guard._decolorize(_COLORIZED_ROWS)) == [
+        {"name": "Test (pytest)", "bucket": "pass", "state": "SUCCESS"}
+    ]
+
+
 def test_colorized_check_rows_still_parse(monkeypatch):
     """The B1 bug itself: colorized rows must not read as undeterminable (None), which
     would fail-close and block a green PR's --admin merge."""
     _fake_gh(monkeypatch, returncode=0, stdout=_COLORIZED_ROWS)
     assert guard._failing_blocking_checks("5") == []
+
+
+def test_colorized_advisory_only_failure_still_allows(monkeypatch):
+    """End-to-end verdict, the user-level consequence: an advisory-only failure is the
+    ONE legitimate --admin case (#M-0.5). Colorized, it was blocked."""
+    rows = (
+        '\x1b[1;37m[\x1b[m{\x1b[1;34m"name"\x1b[m: \x1b[32m"pip-audit (advisory)"\x1b[m, '
+        '\x1b[1;34m"bucket"\x1b[m: \x1b[31m"fail"\x1b[m}\x1b[1;37m]\x1b[m'
+    )
+    _fake_gh(monkeypatch, returncode=0, stdout=rows)
+    monkeypatch.setattr(guard, "_pr_number", lambda args: "5")
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": "gh pr merge 5 --admin"}})))
+    assert guard.main() == 0
 
 
 def test_colorized_blocking_failure_still_blocks(monkeypatch):
@@ -523,6 +597,15 @@ def test_gh_check_lookup_runs_with_scrubbed_env(monkeypatch):
         assert env is not None, f"{cmd} ran without a scrubbed env"
         assert "CLICOLOR_FORCE" not in env and "FORCE_COLOR" not in env
         assert env["NO_COLOR"] == "1" and env["CLICOLOR"] == "0"
+
+
+def test_gh_timeouts_stay_within_hook_budget(monkeypatch):
+    """The only admin lookup must fit the aggregate merge-guard budget."""
+    calls = _capture_gh(monkeypatch, returncode=0, stdout="[]")
+    guard._failing_blocking_checks("5")
+    timeouts = [kwargs["timeout"] for _cmd, kwargs in calls]
+    assert all(t > 0 for t in timeouts)
+    assert sum(timeouts) < 20
 
 
 @pytest.mark.parametrize("shape", ["cd {cwd} &&>file gh pr merge 5 --admin", "{fd}>file gh pr merge 5 --admin"])

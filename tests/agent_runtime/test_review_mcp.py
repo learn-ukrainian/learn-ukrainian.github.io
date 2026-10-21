@@ -379,6 +379,17 @@ def test_prepared_codex_contract_survives_adapter_overrides(manifest_file: Path,
         invocation.output_file.unlink()
 
 
+def test_prepare_review_attempt_refuses_grok(manifest_file: Path, tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match=r"review attempt refused for grok: not yet proven \(#8517\)"):
+        prepare_review_attempt(
+            review_id="rev-001",
+            attempt_id="att-001",
+            manifest_path=manifest_file,
+            harness="grok",
+            receipts_root=tmp_path,
+        )
+
+
 def test_prepare_review_attempt_refuses_reused_attempt_id(manifest_file: Path, tmp_path: Path) -> None:
     receipts_root = tmp_path / "receipts"
     prepare_review_attempt(
@@ -453,6 +464,34 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
     # Kimi admission refuses before the review-attempt harness check.
     assert "KIMI CODING-ONLY" in captured.err
     assert "review dispatches" in captured.err
+
+
+def test_delegate_dispatch_incomplete_review_attempt_flags(
+    manifest_file: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    rc = delegate_cli.main(
+        [
+            "dispatch",
+            "--review-profile",
+            "ukrainian",
+            "--agent",
+            "claude",
+            "--model",
+            "claude-opus-5-5",
+            "--task-id",
+            "review-task-partial",
+            "--prompt",
+            "perform review",
+            "--review-access",
+            "isolated",
+            "--review-attempt",
+            str(manifest_file),
+            # Missing --review-id and --attempt-id
+        ]
+    )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "--review-attempt, --review-id, and --attempt-id must be used together" in captured.err
 
 
 def test_claude_adapter_command_line_contains_review_grant(
@@ -985,6 +1024,19 @@ def test_codex_home_without_user_auth_skips_symlink(
     assert (plan.codex_home / "config.toml").is_file()
 
 
+def test_non_codex_harness_creates_no_codex_home(manifest_file: Path, tmp_path: Path) -> None:
+    plan = prepare_review_attempt(
+        review_id="rev-claude-001",
+        attempt_id="att-claude-001",
+        manifest_path=manifest_file,
+        harness="claude",
+        receipts_root=tmp_path / "receipts",
+    )
+    assert plan.codex_home is None
+    assert "codex_home_override" not in plan.adapter_options
+    assert list(plan.config_path.parent.glob("*.codex-home")) == []
+
+
 def test_failed_codex_preparation_leaves_nothing_behind(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1283,6 +1335,15 @@ def test_agy_missing_user_token_is_refused_before_anything_is_created(
     # The refusal names the variable, never its value (#8652).
     assert str(tmp_path) not in str(refused.value)
     assert not (tmp_path / "receipts").exists()
+
+
+def test_agy_preexisting_dangling_symlink_home_is_refused(manifest_file: Path, tmp_path: Path) -> None:
+    review_dir = tmp_path / "receipts" / "rev-agy-001"
+    review_dir.mkdir(parents=True)
+    (review_dir / "att-agy-001.agy-home").symlink_to(tmp_path / "nowhere")
+    with pytest.raises(FileExistsError, match="already exists"):
+        _prepare_agy(manifest_file, tmp_path)
+    assert sorted(path.name for path in review_dir.iterdir()) == ["att-agy-001.agy-home"]
 
 
 def test_agy_home_race_after_precheck_rolls_back_other_files_and_spares_the_planted_home(
@@ -2255,6 +2316,17 @@ def test_files_follow_the_directory_descriptor_when_the_path_is_swapped_after_th
     ]
 
 
+def test_diagnostics_are_never_written_through_a_planted_directory_symlink(tmp_path: Path) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    planted = tmp_path / "review-dir"
+    planted.symlink_to(outside, target_is_directory=True)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", planted / "att.diagnostics.log")
+    assert "details not saved: unsafe directory or file" in stand_in
+    assert str(tmp_path) not in stand_in
+    assert list(outside.iterdir()) == []
+
+
 # --- #8652 threat model: post-provision writes go via the anchor fd; a pre-launch re-check; anchor ancestors ---
 
 
@@ -2388,6 +2460,19 @@ def test_fallback_refuses_a_receipts_root_swapped_for_a_symlink(manifest_file: P
     assert not list((tmp_path / "receipts-moved").rglob("*.diagnostics.log"))
 
 
+def test_fallback_write_cannot_land_in_a_different_attempt_tree(manifest_file: Path, tmp_path: Path) -> None:
+    """The reported scenario: the swapped root points at another tree that has the same review id."""
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _foreign_process_forgets_provisioning()
+    other = tmp_path / "other-tree"
+    other_attempt = other / "rev-codex-001"
+    other_attempt.mkdir(parents=True)
+    _swap_root_with_symlink(tmp_path, other)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
+    assert "details not saved" in stand_in
+    assert list(other_attempt.iterdir()) == []
+
+
 @pytest.mark.parametrize(("mode", "expected"), [(0o775, 0o755), (0o777, 0o755), (0o770, 0o750), (0o707, 0o705)])
 def test_own_group_or_world_writable_receipts_root_is_tightened(
     mode: int, expected: int, manifest_file: Path, tmp_path: Path
@@ -2449,6 +2534,26 @@ def test_writable_receipts_root_owned_by_another_user_is_refused_untouched(
     assert stat.S_IMODE((tmp_path / "receipts").stat().st_mode) == 0o775
 
 
+def test_receipts_root_owned_by_another_user_fails_the_recheck(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    real_geteuid = os.geteuid
+    monkeypatch.setattr(review_mcp_module.os, "geteuid", lambda: real_geteuid() + 1)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="not owned by the current user"):
+        verify_review_attempt_paths(plan.config_path)
+
+
+def test_fallback_still_works_for_an_attempt_provisioned_elsewhere(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _foreign_process_forgets_provisioning()
+    verify_review_attempt_paths(plan.config_path)
+    diagnostics = review_diagnostics_path(plan.config_path)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
+    assert f"details in {diagnostics.name}" in stand_in
+    assert "secret" in diagnostics.read_text(encoding="utf-8")
+
+
 def test_prepare_refuses_a_server_changed_since_admission_before_writing_anything(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2494,6 +2599,26 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
         "att-x-001.jsonl.sha256",
         "att-x-001.mcp.json",
     ]
+
+
+def test_default_root_uses_the_same_root_check(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    server = tmp_path / ".mcp" / "servers" / "sources" / "server.py"
+    server.parent.mkdir(parents=True)
+    server.write_bytes(SERVER_PATH.read_bytes())
+    monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: tmp_path)
+    kwargs = {"review_id": "rev-x-001", "attempt_id": "att-x-001", "manifest_path": manifest_file, "harness": "codex"}
+    plan = prepare_review_attempt(**kwargs)
+    verify_review_attempt_paths(plan.config_path)
+    root = tmp_path / "batch_state" / "review-receipts"
+    root.chmod(0o775)
+    verify_review_attempt_paths(plan.config_path)
+    assert stat.S_IMODE(root.stat().st_mode) == 0o755
+    root.chmod(0o777)
+    prepare_review_attempt(**{**kwargs, "attempt_id": "att-x-002"})
+    assert stat.S_IMODE(root.stat().st_mode) == 0o755
+    assert (root / "rev-x-001" / "att-x-002.jsonl").exists()
 
 
 # --- #8652 r18: every file below the anchor opens through one no-follow, non-blocking, type- and owner-checked helper ---
@@ -2720,3 +2845,16 @@ def test_tool_requirements_name_every_unsupported_tool_without_fallback(access):
 def test_invalid_tool_requirements_are_typed(declaration):
     with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
         review_mcp_module.check_review_tool_requirements(f"Required-Sources-Tools: {declaration}")
+
+
+def test_defaults_are_requirements_not_derived_from_selected_grants(monkeypatch):
+    monkeypatch.setattr(review_mcp_module, "review_tools", lambda _access: REVIEW_TOOLS - {"verify_word"})
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tools_unsupported: verify_word"):
+        review_mcp_module.check_review_tool_requirements("Required-Sources-Tools: []")
+
+
+def test_declared_catalogue_tool_requires_full_access():
+    brief = 'Required-Sources-Tools: ["search_resources"]'
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tools_unsupported"):
+        review_mcp_module.check_review_tool_requirements(brief, "isolated")
+    assert "search_resources" in review_mcp_module.check_review_tool_requirements(brief, "full")

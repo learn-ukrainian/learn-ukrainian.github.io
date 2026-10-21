@@ -212,6 +212,24 @@ def test_cli_conflicting_components_fail_before_extraction(bundle, monkeypatch, 
     assert json.loads(capsys.readouterr().err)["error"] == "adapter_conflict"
 
 
+def test_cli_unavailable_unselected_component_does_not_poison_selected_build(bundle, monkeypatch, capsys):
+    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
+    bundle["specs"]["C9"] = {}
+    save_bundle(bundle)
+    obj = SimpleNamespace(
+        spec=bundle["spec"],
+        adapters={"synthetic": SyntheticAdapter()},
+        iter_candidates=lambda ctx: iter(bundle["candidates"]),
+    )
+    args = ["--config", str(bundle["root"] / "request.json"), "--out", str(bundle["root"] / "SYNTHETIC-out")]
+    assert cli.main(["build", *args, "--components", "C1"], _test_components={"C1": obj}) == 0
+    capsys.readouterr()
+    assert cli.main(["build", *args, "--components", "C9"], _test_components={"C1": obj}) == 1
+    error = json.loads(capsys.readouterr().err)
+    assert error["error"] == "component_unavailable"
+    assert error["component"] == "C9"
+
+
 def test_component_file_store_is_installed_before_extraction_and_conflicts_refuse(bundle, monkeypatch):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
     bundle["config"]["databases"] = {}
@@ -408,3 +426,22 @@ def test_real_c3_variants_use_source_queries_accept_and_must_fail(bundle, real_c
         )
         with pytest.raises(BuildError, match="applicability_spec"):
             gate.applicable(candidate)
+
+
+def test_real_catalog_version_and_split_component_diagnostics_are_admitted(real_catalog):
+    from scripts.projects.open_model_data.review_build.manifest import private_manifest
+
+    assert (
+        private_manifest(
+            {
+                "hashes": {},
+                "counts": {"C6a.counted": 1, "C6b.counted": 2},
+                "versions": {"catalog": real_catalog.version},
+                "code_sha": "a" * 40,
+                "reason_code_tallies": {},
+            }
+        )["versions"]["catalog"]
+        == real_catalog.version
+    )
+    for component in ("C6a", "C6b"):
+        assert BuildError("component_unavailable", component=component).diagnostic()["component"] == component

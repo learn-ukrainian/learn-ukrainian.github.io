@@ -238,6 +238,27 @@ def test_temp_artifacts_destination_readback_and_lifetime(
     )
 
 
+def test_apply_plan_resolves_default_at_call_time(monkeypatch, tmp_path: Path) -> None:
+    plan = {"counts": {"proposed_additions": 0}}
+    monkeypatch.setattr(ohoiko_repromote.planner, "build_promotion_plan", lambda **kwargs: plan)
+    for name in ("first", "second"):
+        root = tmp_path / name
+        root.mkdir()
+        monkeypatch.setenv("TMPDIR", str(root))
+        assert ohoiko_repromote.apply_plan(
+            candidates=tmp_path / "candidates",
+            decisions=tmp_path / "decisions",
+            manifest=tmp_path / "manifest",
+            fingerprint=tmp_path / "fingerprint",
+            write=False,
+        ) == {
+            "plan": plan["counts"],
+            "wrote": False,
+        }
+        assert json.loads((root / ohoiko_repromote.PLAN_FILENAME).read_text()) == plan
+    assert (tmp_path / "first" / ohoiko_repromote.PLAN_FILENAME).is_file()
+
+
 @pytest.mark.parametrize("tmpdir", [None, "relative", "missing"])
 def test_invalid_temp_root_stops_before_collection(monkeypatch, tmp_path: Path, capsys, tmpdir) -> None:
     if tmpdir is None:

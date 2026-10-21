@@ -20,6 +20,8 @@ every load-bearing path (repair C), the exact project-row rights binding
 from __future__ import annotations
 
 import copy
+import dataclasses
+import inspect
 import json
 from pathlib import Path
 
@@ -210,6 +212,22 @@ def test_no_forbidden_public_terms_leak_into_a7_or_a8_receipts(tmp_path: Path) -
         assert fx.CANDIDATE_UNIT_IDS[1] not in serialized
 
 
+def test_a7_ledger_and_review_receipts_carry_no_source_or_membership_fields(tmp_path: Path) -> None:
+    """Forbidden-field guard for the author/reviewer model packet
+    serializer (non-blocker preserved, PR #7662 repair 4): the private
+    authorship/review receipts -- including the embedded fleet-execution
+    receipt -- never carry a source-unit id, family id, held-out membership
+    boolean, or eligible-unit list."""
+    _, info = fx.build_real_slot_root(tmp_path)
+    stored_ledger = ledger.load_ledger(info["ledger_path"])
+    entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
+    for receipt_key in ("authorship_receipt", "review_receipt"):
+        serialized = json.dumps(entry[receipt_key], ensure_ascii=False, sort_keys=True)
+        for needle in FORBIDDEN_PUBLIC_TERMS:
+            assert needle not in serialized, f"forbidden term leaked into {receipt_key}: {needle}"
+        assert entry[receipt_key]["saw_eligible_unit_ids"] is False
+
+
 # --- tamper: same-family / same-session / same-run author-reviewer ---------
 
 
@@ -276,7 +294,18 @@ def test_author_execution_receipt_refuses_any_saw_flag_true(saw_flag: str) -> No
         fx.build_author_execution_receipt("a" * 64, **{saw_flag: True})
 
 
+@pytest.mark.parametrize("saw_flag", ["saw_source_text", "saw_heldout", "saw_eligible_unit_ids"])
+def test_reviewer_execution_receipt_refuses_any_saw_flag_true(saw_flag: str) -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match=saw_flag):
+        fx.build_reviewer_execution_receipt("a" * 64, "b" * 64, **{saw_flag: True})
+
+
 # --- tamper: public lineage equal to an A4 commitment -----------------------
+
+
+def test_lineage_id_colliding_with_an_a4_commitment_refuses() -> None:
+    with pytest.raises(ledger.PrivateLedgerError, match="unit_commitments"):
+        ledger.validate_lineage_not_equal_to_a4_commitment(["some-a4-commitment-hex"], ["some-a4-commitment-hex"])
 
 
 def test_real_construction_refuses_when_lineage_collides_with_a4_commitment(tmp_path: Path) -> None:
@@ -502,6 +531,20 @@ def test_verifier_attestation_refuses_a_tool_id_outside_the_sanctioned_prefix() 
         )
 
 
+def test_construct_completion_has_no_synthetic_admission_switch() -> None:
+    """PR #7662 repair 6, Sol synthetic-separation requirement: production's
+    ``construct_completion`` no longer exposes an ``allow_synthetic_
+    fixture`` parameter (or any other admission-switch keyword) at all --
+    there is no runtime argument that could ever bypass the ``production_
+    capable`` requirement below."""
+    params = set(inspect.signature(ledger.construct_completion).parameters)
+    assert "trust_policy" not in params
+    assert "allow_synthetic_fixture" not in params
+    assert not hasattr(evidence_binder, "build_synthetic_fixture_evidence_receipt"), (
+        "production evidence binder must expose no synthetic-fixture builder"
+    )
+
+
 def test_construct_completion_refuses_a_non_production_capable_evidence_receipt(tmp_path: Path) -> None:
     tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     sealed = fx.build_sealed_receipt_and_packet(tmp_path)
@@ -573,6 +616,19 @@ def test_d1_transition_validator_refuses_a_single_family_assigned_stratum() -> N
     }
     with pytest.raises(d1_validator.D1TransitionError, match="floor not met"):
         d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, _real_seal_receipt())
+
+
+def test_d1_transition_validator_passes_two_distinct_supporting_families() -> None:
+    manifest = {"slot_series": [{"stratum": "standard_correct", "assignment_state": "ASSIGNED"}]}
+    a2_receipt = {
+        "stratum_coverage_map": [
+            {
+                "stratum": "standard_correct",
+                "supporting_existing_source_unit_ids": ["db.textbooks.public", "db.external_articles"],
+            }
+        ]
+    }
+    d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, _real_seal_receipt())  # no raise
 
 
 def test_d1_transition_validator_ignores_an_unassigned_stratum() -> None:
@@ -824,6 +880,14 @@ def test_derive_project_rights_receipt_id_matches_exact_license_bytes() -> None:
 # --- repair E: authenticated author/reviewer executions --------------------
 
 
+def test_build_authorship_receipt_refuses_a_caller_supplied_signature() -> None:
+    row_content_sha256 = "a" * 64
+    real = fx.build_author_execution_receipt(row_content_sha256)
+    forged = {**real, "model_family": "attacker-controlled-family", "signature_hex": real["signature_hex"]}
+    with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
+        ledger.build_authorship_receipt(author_execution_receipt=forged, row_content_sha256=row_content_sha256)
+
+
 def test_build_authorship_receipt_refuses_missing_signature() -> None:
     row_content_sha256 = "a" * 64
     real = fx.build_author_execution_receipt(row_content_sha256)
@@ -919,6 +983,22 @@ def test_build_review_receipt_refuses_a_rubric_hash_mismatch() -> None:
 
 
 # --- repair 5: the signer is an execution attester, not a passthrough -----
+
+
+def test_issue_execution_receipt_apis_accept_no_caller_supplied_family_or_harness() -> None:
+    """Static guard: neither issuance function, nor either observation
+    dataclass, exposes a keyword a caller could use to assert its own model
+    family/harness -- identity is derived only from
+    ``TaskExecutionState.seat_or_model``/``harness`` (PR #7662 repair 5)."""
+    issue_author_params = set(inspect.signature(fleet_execution.issue_author_execution_receipt).parameters)
+    issue_reviewer_params = set(inspect.signature(fleet_execution.issue_reviewer_execution_receipt).parameters)
+    observation_fields = {f.name for f in dataclasses.fields(fleet_execution.AuthorExecutionObservation)} | {
+        f.name for f in dataclasses.fields(fleet_execution.ReviewerExecutionObservation)
+    }
+    for forbidden in ("model_family", "exact_model", "harness", "author_family"):
+        assert forbidden not in issue_author_params
+        assert forbidden not in issue_reviewer_params
+        assert forbidden not in observation_fields
 
 
 def test_response_envelope_cannot_construct_complete_without_a_terminal_event() -> None:
@@ -1040,6 +1120,47 @@ def test_verify_author_execution_receipt_refuses_an_extra_signed_field_even_when
         )
 
 
+def test_verify_author_execution_receipt_refuses_an_uppercase_hex_hash_even_when_resigned() -> None:
+    row_content_sha256 = "a" * 64
+    real = fx.build_author_execution_receipt(row_content_sha256)
+    body = {k: v for k, v in real.items() if k != "signature_hex"}
+    tampered_body = {**body, "prompt_sha256": "A" * 64}
+    signature_hex = trust.sign(fx.FLEET_SIGNING_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, tampered_body)
+    tampered = {**tampered_body, "signature_hex": signature_hex}
+    with pytest.raises(fleet_execution.FleetExecutionError, match="lowercase-hex"):
+        fleet_execution.verify_author_execution_receipt(
+            tampered,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=row_content_sha256,
+        )
+
+
+def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned() -> None:
+    attestation = sources_authority._issue_verifier_attestation_from_evidence(
+        signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
+        signer_key_id=fx.SOURCES_KEY_ID,
+        outcome_sha256=ledger.V4_SHA256,
+        row_content_sha256="a" * 64,
+        identifier="vesum:lemma-example-001",
+        tool_id="mcp__sources__verify_word",
+        tool_version="v1",
+        request_id="req-1",
+        tool_result_sha256="b" * 64,
+        lookup_ids=["l-1"],
+        invocation_id="inv-1",
+        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
+    )
+    body = {k: v for k, v in attestation.items() if k != "signature_hex"}
+    tampered_body = {**body, "extra_note": "should never be signable"}
+    signature_hex = trust.sign(fx.SOURCES_SIGNING_KEY_HEX, sources_authority.ATTESTATION_DOMAIN, tampered_body)
+    tampered = {**tampered_body, "signature_hex": signature_hex}
+    with pytest.raises(sources_authority.SourcesAuthorityError, match="exactly"):
+        sources_authority.verify_verifier_attestation(
+            tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256="a" * 64
+        )
+
+
 def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_path: Path) -> None:
     tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
@@ -1054,6 +1175,17 @@ def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_p
     }
     with pytest.raises(ledger.PrivateLedgerError):
         ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **_replay_kwargs(tmp_root, info))
+
+
+def test_construct_completion_produces_a_completion_that_validates_empty_receipts_without_a_signer(
+    tmp_path: Path,
+) -> None:
+    """Empty production completion sets continue to verify without
+    requiring a signer -- the frozen 0/100/0 production state."""
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    empty_receipt = a7.build_receipt(tmp_root, a7_completions=[])
+    a7.validate_receipt_independently(empty_receipt, tmp_root)
+    assert empty_receipt["a7_completions"] == []
 
 
 # --- tamper: gap/overlap in completion-residual partition -------------------
@@ -1092,6 +1224,11 @@ def test_real_a7_receipt_refuses_an_overlapping_residual_for_its_own_completed_s
 def test_split_duplicate_check_fails_closed_on_empty_references() -> None:
     with pytest.raises(split_check.SplitDuplicateCheckError, match="nonempty"):
         split_check.check_split_duplicate_safety("some text", {})
+
+
+def test_split_duplicate_check_passes_for_dissimilar_text() -> None:
+    result = split_check.check_split_duplicate_safety(fx.ROW_TEXT, fx.REFERENCE_TEXTS)
+    assert result["passed"] is True
 
 
 def test_split_duplicate_check_fails_for_a_near_duplicate_reference() -> None:
@@ -1185,6 +1322,30 @@ def test_replay_attestation_refuses_when_the_recomputation_does_not_match() -> N
             row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
             replay_invocation_id="bad-replay",
             trust_policy_sha256=fx.TRUST_POLICY_SHA256,
+        )
+
+
+def test_replay_attestation_refuses_an_unknown_a3_signer_key() -> None:
+    receipt = fx.build_reference_check_receipt()
+    attestation = reference_check._issue_replay_attestation_from_evidence(
+        signing_key_hex=fx.A3_SIGNING_KEY_HEX,
+        signer_key_id="unregistered-a3-key",
+        candidate_text=fx.ROW_TEXT,
+        reference_texts=fx.REFERENCE_TEXTS,
+        salt=fx.A3_FIXTURE_SALT,
+        receipt=receipt,
+        outcome_sha256=ledger.V4_SHA256,
+        row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
+        replay_invocation_id="r-1",
+        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
+    )
+    with pytest.raises(reference_check.ReferenceCheckError, match="unregistered"):
+        reference_check.verify_replay_attestation(
+            attestation,
+            receipt=receipt,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
         )
 
 

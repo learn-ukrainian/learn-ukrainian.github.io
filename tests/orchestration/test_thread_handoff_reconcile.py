@@ -1250,6 +1250,72 @@ def test_import_mutation_failure_names_exact_leftovers(newer_bundle, monkeypatch
         assert (bundle.root / HANDOFF_PATH).read_bytes() == original_handoff
 
 
+@pytest.mark.parametrize("cleanup_fails", [False, True])
+def test_publication_failure_keeps_diagnostic_when_temp_unlink_fails(
+    newer_bundle, monkeypatch, capsys, cleanup_fails
+):
+    """A failed publish plus a failed temporary unlink keeps both diagnostics.
+
+    Real link and unlink errors carry errno, so the typed refusal has to copy
+    ``str()`` of each. With or without a stage-cleanup failure, the named
+    leftovers stay exactly the paths still changed on disk.
+    """
+    bundle = newer_bundle
+    before = _disk_snapshot(bundle.root)
+    native_link = os.link
+    native_unlink = os.unlink
+    native_remove = th._BundleReconcileTree.remove_path
+    hit = {"link": False, "unlink": False, "cleanup": False}
+
+    def caller() -> str:
+        return sys._getframe(2).f_code.co_name
+
+    def link(src, dst, *, src_dir_fd=None, dst_dir_fd=None, follow_symlinks=True):
+        if caller() == "write" and src_dir_fd is not None and not hit["link"]:
+            hit["link"] = True
+            raise OSError(errno.EIO, "injected write publication failure")
+        return native_link(
+            src, dst, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd, follow_symlinks=follow_symlinks
+        )
+
+    def unlink(path, *, dir_fd=None):
+        if caller() == "write" and dir_fd is not None and not hit["unlink"]:
+            hit["unlink"] = True
+            raise OSError(errno.EBUSY, "injected temporary unlink failure")
+        if dir_fd is None:
+            return native_unlink(path)
+        return native_unlink(path, dir_fd=dir_fd)
+
+    def remove_path(tree, path):
+        if cleanup_fails and ".import-" in path and not hit["cleanup"]:
+            hit["cleanup"] = True
+            raise OSError("injected stage cleanup failure")
+        return native_remove(tree, path)
+
+    monkeypatch.setattr(os, "link", link)
+    monkeypatch.setattr(os, "unlink", unlink)
+    monkeypatch.setattr(th._BundleReconcileTree, "remove_path", remove_path)
+    rc = th.cmd_import_bundle(_import_args(bundle.root, bundle.bundle))
+    output = json.loads(capsys.readouterr().out)
+    text = output["error"]
+    assert output["status"] == "refused"
+    assert output["code"] == "reconcile_install_failed"
+    assert rc == 2
+    assert hit == {"link": True, "unlink": True, "cleanup": cleanup_fails}
+    publication = str(OSError(errno.EIO, "injected write publication failure"))
+    unlink_diagnostic = str(OSError(errno.EBUSY, "injected temporary unlink failure"))
+    assert publication in text
+    assert unlink_diagnostic in text
+    assert text.index(publication) < text.index(unlink_diagnostic)
+    if cleanup_fails:
+        assert "injected stage cleanup failure" in text
+        assert text.index(unlink_diagnostic) < text.index("injected stage cleanup failure")
+    else:
+        assert "stage cleanup failed" not in text
+    assert str(bundle.root) not in text
+    assert _parse_leftovers(text) == _disk_leftovers(before, _disk_snapshot(bundle.root))
+
+
 @pytest.mark.parametrize('mutation', [
     "os.replace('source', 'target')",
     "os.replace('/source', '/target', src_dir_fd=parent, dst_dir_fd=parent)",

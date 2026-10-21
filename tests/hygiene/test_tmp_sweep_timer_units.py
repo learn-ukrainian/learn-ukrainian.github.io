@@ -90,6 +90,15 @@ def test_installer_refuses_unit_dir_beneath_a_symlinked_ancestor(
     assert (home / ".config").is_symlink()
 
 
+def test_installer_creates_missing_unit_dirs_without_links(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    flags = _installer_fixture(tmp_path, monkeypatch)
+    unit_dir = tmp_path / ".config" / "systemd" / "user"
+    assert installer.main([*flags, "--unit-dir", str(unit_dir), "--check"]) == 1
+    assert not (tmp_path / ".config").exists()
+    assert installer.main([*flags, "--unit-dir", str(unit_dir), "--apply"]) == 0
+    assert sorted(path.name for path in unit_dir.iterdir()) == sorted(installer.UNITS)
+
+
 @pytest.mark.parametrize("mode", ["--check", "--apply"])
 def test_installer_refuses_symlinked_unit_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
     flags = _installer_fixture(tmp_path, monkeypatch)

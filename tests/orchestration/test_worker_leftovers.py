@@ -614,6 +614,15 @@ def test_cursor_versions_dir_follows_the_resolved_cursor_agent(
     assert calls == ["cursor-agent"]
 
 
+def test_cursor_versions_dir_is_none_when_resolution_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    def broken(binary: str, *, path: str | None = None) -> str | None:
+        raise RuntimeError("Symlink loop")
+
+    monkeypatch.setattr(wl, "resolve_agent_binary", broken)
+
+    assert wl.cursor_versions_dir() is None
+
+
 def test_worker_scope_records_the_cgroup_only_when_it_is_this_launch_unit() -> None:
     fake = FakeProcs(own=SCOPE_CGROUP)
     kwargs = {"task_id": TASK_ID, "launch_mode": "scope", "run_nonce": RUN_NONCE, "reader": fake}
@@ -642,6 +651,18 @@ def test_scope_launch_without_its_cgroup_is_unknown_never_scanned_by_marker() ->
     with pytest.raises(wl.ScanUnknown, match="without its cgroup"):
         wl.find_leftovers(scope, reader=fake)
     assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
+
+
+def test_leftovers_state_names_pids_and_truncated_cmdlines() -> None:
+    procs = [wl.LeftoverProcess(pid=FAKE_PID_BASE + i, start_ticks=1, cmdline="x" * 500) for i in range(30)]
+
+    state = wl.leftovers_state(scope_of(), procs)
+
+    assert state["reason"] == wl.BACKGROUND_JOBS_REASON
+    assert state["count"] == 30
+    assert len(state["processes"]) == wl.MAX_RECORDED_PROCESSES
+    assert len(state["processes"][0]["cmdline"]) == wl.CMDLINE_MAX_CHARS
+    assert state["scope"]["task_id"] == TASK_ID
 
 
 # --- launch identity ------------------------------------------------------

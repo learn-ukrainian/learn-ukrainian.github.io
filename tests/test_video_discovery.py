@@ -20,6 +20,7 @@ from video_discovery import (
     VideoCandidate,
     clean_srt,
     read_discovery_yaml,
+    search_blogs,
     search_channel,
     write_discovery_yaml,
 )
@@ -114,6 +115,13 @@ class TestYamlRoundtrip:
             assert v.channel == "Реальна Історія"
             assert v.relevance_score == pytest.approx(0.85)
 
+    def test_write_read_empty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "empty.yaml"
+            write_discovery_yaml(DiscoveryResult(), path)
+            loaded = read_discovery_yaml(path)
+            assert loaded.videos == []
+
 
 # ---------------------------------------------------------------------------
 # format_discovery_for_template
@@ -134,6 +142,44 @@ class TestExtractLemmas:
 # ---------------------------------------------------------------------------
 # Blog discovery
 # ---------------------------------------------------------------------------
+
+class TestSearchBlogs:
+
+    def test_keyword_gate_with_mock_data(self):
+        """Podcast with level match but zero keyword overlap must be rejected."""
+        fake_articles = [
+            {
+                "url": "https://example.com/greetings",
+                "title": "Ukrainian Greetings",
+                "topics": ["greetings", "hello"],
+                "suggested_level": "A1",
+                "content_type": "podcast_episode",
+                "description": "Learn how to say hello in Ukrainian",
+                "source": "ukrainianlessons.com",
+            },
+            {
+                "url": "https://example.com/alphabet",
+                "title": "Ukrainian Alphabet Guide",
+                "topics": ["alphabet", "letters", "cyrillic"],
+                "suggested_level": "A1",
+                "content_type": "blog_article",
+                "description": "Complete guide to the Ukrainian alphabet and letters",
+                "source": "ukrainianlessons.com",
+            },
+        ]
+        with patch("video_discovery._load_blog_dbs", return_value=fake_articles), \
+             patch("video_discovery._load_score_db", return_value={}):
+            results = search_blogs(
+                module_slug="the-cyrillic-code-i",
+                level="A1",
+                topic_title="The Cyrillic Code I",
+                keywords=["alphabet", "letters", "cyrillic"],
+            )
+            urls = [r["url"] for r in results]
+            # Alphabet article matches keywords → included
+            assert "https://example.com/alphabet" in urls
+            # Greetings episode has zero keyword overlap → excluded by gate
+            assert "https://example.com/greetings" not in urls
 
 
 # ---------------------------------------------------------------------------
@@ -208,6 +254,17 @@ def test_video_records_filter_order_limit_and_unterminated(ending):
         assert _yt_dlp_search("synthetic", 8, 9)[-1] == {
             "title": "last", "url": "https://www.youtube.com/watch?v=3",
         }
+
+
+@pytest.mark.parametrize("stdout", ["", "\n\r\n", "malformed\nshort\tid"])
+def test_video_empty_or_malformed_records(stdout):
+    from subprocess import CompletedProcess
+
+    from video_discovery import _yt_dlp_search
+
+    reply = CompletedProcess([], 0, stdout=stdout, stderr="")
+    with patch("video_discovery.subprocess.run", return_value=reply):
+        assert _yt_dlp_search("synthetic", 1, 1) == []
 
 
 @pytest.mark.parametrize("error_kind", ["rate_limit", "timeout", "nonretryable", "missing", "called_process", "unexpected"])

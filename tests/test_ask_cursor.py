@@ -32,6 +32,16 @@ def test_invoke_cursor_refuses_non_pinned_models_before_spawn(model, code):
                 _invoke_cursor("hello", model)
 
 
+def test_ask_cursor_refuses_explicit_auto_before_any_send(monkeypatch):
+    calls: list[str] = []
+    for name in ("send_message", "register_ask", "launch_background_ask", "_invoke_cursor"):
+        monkeypatch.setattr(_cursor, name, lambda *_a, _n=name, **_k: calls.append(_n))
+    for kwargs in ({"model": "auto"}, {"to_model": "Auto"}):
+        with pytest.raises(SystemExit, match=r"\(cursor_auto_outside_coding_task\)"):
+            _cursor.ask_cursor("hello", "t-9274", msg_type="review", **kwargs)
+    assert calls == []
+
+
 def test_invoke_cursor_constructs_correct_argv():
     """Cursor subprocess is invoked with -p PROMPT --model MODEL --output-format text --trust."""
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
@@ -47,6 +57,20 @@ def test_invoke_cursor_constructs_correct_argv():
             assert "--output-format" in argv
             assert "text" in argv
             assert "--trust" in argv
+
+
+def test_invoke_cursor_attaches_data_file(tmp_path):
+    data_file = tmp_path / "context.md"
+    data_file.write_text("# Context\nSome content.")
+    with patch(_RESOLVE, return_value=_CURSOR_BIN):
+        with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
+            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
+            _invoke_cursor("review this", "composer-2.5", data=str(data_file))
+            argv = run_mock.call_args[0][0]
+            # data should be in the prompt, not as a separate flag
+            prompt_arg = argv[argv.index("-p") + 1]
+            assert "Some content." in prompt_arg
+            assert "review this" in prompt_arg
 
 
 def test_invoke_cursor_raises_when_binary_missing():

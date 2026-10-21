@@ -114,6 +114,18 @@ def test_sentinel_fails_closed_on_branch_switch(shim_fixture: dict[str, Path]) -
     assert "fail-closed sentinel" in result.stderr
 
 
+def test_sentinel_passes_readonly_plumbing(shim_fixture: dict[str, Path]) -> None:
+    """Non-switch commands under the sentinel pass through without the guard."""
+    result = _run_shim(
+        shim_fixture,
+        "status",
+        "--porcelain",
+        extra_env={"AGENT_GIT_SHIM_GUARD_ACTIVE": "1"},
+    )
+    assert result.returncode == 0, result.stderr
+    assert not shim_fixture["log"].exists()
+
+
 def test_push_deny_still_active_with_sentinel(shim_fixture: dict[str, Path]) -> None:
     """The push-to-main deny is bash-only and must survive the sentinel path."""
     result = _run_shim(

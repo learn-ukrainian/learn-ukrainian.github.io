@@ -8,6 +8,7 @@ from scripts.etymology.bulk_ocr_gemini import (
     GEMINI_OCR_POLICY,
     Page,
     is_low_quality_output,
+    is_repetition_hallucination,
     run_gemini_once,
     strip_planning_preamble,
 )
@@ -170,6 +171,10 @@ LEGIT_CROSS_REFERENCE_HEAVY_PAGE = "\n".join(
     ]
 )
 
+REPETITION_SHORT_PAGE = "\n".join(
+    ["**крути́тися** «обертатися» — див. *крути́ти*."] * 5
+)
+
 
 def test_is_low_quality_rejects_bare_refusal():
     assert is_low_quality_output(BARE_REFUSAL) is True
@@ -225,6 +230,10 @@ def test_is_low_quality_rejects_repetition_hallucination_extreme():
 
 def test_is_low_quality_accepts_legit_cross_reference_heavy_page():
     assert is_low_quality_output(LEGIT_CROSS_REFERENCE_HEAVY_PAGE) is False
+
+
+def test_is_repetition_hallucination_short_page_skip():
+    assert is_repetition_hallucination(REPETITION_SHORT_PAGE) is False
 
 
 def test_strip_planning_preamble_removes_trailing_update_topic():

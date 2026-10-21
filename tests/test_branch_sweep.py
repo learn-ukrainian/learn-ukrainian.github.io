@@ -65,6 +65,16 @@ def test_git_binary_mode_preserves_input_and_output(repo: Path) -> None:
         sweep._git(repo, "cat-file", "blob", expected)
 
 
+def test_git_failure_keeps_default_text_and_binary_diagnostics(repo: Path) -> None:
+    text = sweep._git(repo, "rev-parse", "--verify", "refs/heads/absent")
+    binary = sweep._git(repo, "rev-parse", "--verify", "refs/heads/absent", text=False)
+    assert text.returncode == binary.returncode == 128
+    assert text.stdout == ""
+    assert binary.stdout == b""
+    assert text.stderr == "fatal: Needed a single revision\n"
+    assert binary.stderr == b"fatal: Needed a single revision\n"
+
+
 def branch(repo: Path, name: str, *, unique: bool = False, remote: bool = True) -> str:
     git(repo, "branch", name, "main")
     if unique:
@@ -322,6 +332,30 @@ def test_remote_head_change_prevents_push_and_local_deletion(repo: Path, monkeyp
     assert "changed" in item.reason
     assert git(repo, "ls-remote", "--heads", "origin", "codex/moved-remotely")
     assert git(repo, "branch", "--list", "codex/moved-remotely")
+
+
+def test_remote_deletion_passes_one_validated_refspec(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    sha = branch(repo, "pr-123")
+    calls: list[tuple[str, ...]] = []
+    original = sweep._git
+
+    def capture(root: Path, *args: str, **kwargs):
+        if args[0] == "push":
+            calls.append(args)
+        return original(root, *args, **kwargs)
+
+    monkeypatch.setattr(sweep, "_git", capture)
+    item = only(repo, "pr-123", apply=True)
+    assert item.classification == "delete-ancestor"
+    assert calls == [
+        (
+            "push",
+            "--porcelain",
+            f"--force-with-lease=refs/heads/pr-123:{sha}",
+            "origin",
+            ":refs/heads/pr-123",
+        )
+    ]
 
 
 def test_remote_advance_during_push_preserves_both_refs(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:

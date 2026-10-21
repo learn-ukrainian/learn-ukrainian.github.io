@@ -76,6 +76,12 @@ def test_rules_etag_matches_returns_304(stub_rules):
     assert resp_304.headers["etag"] == etag
 
 
+def test_rules_etag_mismatch_returns_200(stub_rules):
+    resp = client.get("/api/rules", headers={"If-None-Match": '"not-a-real-hash"'})
+    assert resp.status_code == 200
+    assert "Be careful." in resp.text
+
+
 def test_rules_etag_wildcard_returns_304(stub_rules):
     resp_304 = client.get("/api/rules", headers={"If-None-Match": "*"})
     assert resp_304.status_code == 304
@@ -135,6 +141,13 @@ def test_sdk_second_call_hits_cache(sdk):
     # Same bytes either way.
     assert first.body == second.body
     assert first.hash == second.hash
+
+
+def test_sdk_bootstrap_returns_both_components(sdk):
+    boot = sdk.bootstrap()
+    assert set(boot) == {"rules", "session"}
+    assert "Be careful." in boot["rules"].body
+    assert "Thinking." in boot["session"].body
 
 
 def test_sdk_not_modified_path(sdk, monkeypatch):

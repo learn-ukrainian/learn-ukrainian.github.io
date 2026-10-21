@@ -45,6 +45,44 @@ def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, comma
     assert list(tmp_path.rglob("*")) == [repo]
 
 
+def test_build_facts_exactly_ten_from_stream_and_handoff() -> None:
+    stream = [
+        {"type": "binding_order", "body": f"Binding order number {i} about quality and no shortcuts."}
+        for i in range(1, 5)
+    ]
+    stream += [
+        {"type": "negative_constraint", "body": "Never commit directly to main."},
+        {"type": "negative_constraint", "body": "Never merge drafts."},
+        {"type": "next_action", "body": "Merge offline enrich when CI green."},
+        {"type": "next_action", "body": "Run VPS launch_enrich after merge."},
+        {"type": "decision", "body": "Sol is the designer for practice setup."},
+        {"type": "state", "body": "PR 5496 waiting on pytest."},
+    ]
+    handoff = """
+# Handoff
+## Next drive order
+1. Ship start-grok canary mint at cold-start
+2. Score after auto-compact
+3. End on FAIL-HANDOFF only
+## Hands-off
+- Other lanes' queues
+- Primary checkout writes for product code
+"""
+    facts = gl._build_facts(
+        epic="atlas",
+        stream_id="epic:4387",
+        stream_entries=stream,
+        handoff_text=handoff,
+        handoff_rel=".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
+    )
+    assert len(facts) == 10
+    ids = [f["id"] for f in facts]
+    assert len(set(ids)) == 10
+    assert "lane-stream" in ids
+    assert facts[0]["a"] == "epic:4387"  # allow-hardcoded-epic: session canary stream facts fixture
+    assert all(f["q"] and f["a"] for f in facts)
+
+
 def test_build_facts_fails_when_insufficient(tmp_path: Path) -> None:
     with pytest.raises(SystemExit, match="could only derive"):
         gl._build_facts(

@@ -148,6 +148,63 @@ def _run_script(
     )
 
 
+def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -> None:
+    jobs = _workflow_jobs()
+    assert "freeze-durations" not in jobs
+    refresh = jobs["refresh-pytest-durations"]
+    assert refresh["needs"] == ["reuse"]
+    assert refresh["if"] == "${{ !cancelled() }}"
+    assert refresh["timeout-minutes"] == 10
+    assert refresh["permissions"] == {"contents": "read", "actions": "read"}
+    refresh_steps = [step.get("run", "") for step in refresh["steps"]]
+    assert sum("split_tests refresh" in step for step in refresh_steps) == 1
+    assert sum(
+        "split_tests refresh" in step.get("run", "") for job in jobs.values() for step in job.get("steps", [])
+    ) == 1
+    upload = next(step for step in refresh["steps"] if str(step.get("uses", "")).startswith("actions/upload-artifact@"))
+    assert upload["with"]["name"] == "pytest-duration-input"
+    assert upload["with"]["path"] == "ci-artifacts/pytest-file-durations.json"
+    pytest_job = jobs["pytest"]
+    assert pytest_job["needs"] == ["reuse", "refresh-pytest-durations"]
+    assert pytest_job["timeout-minutes"] == 15
+    assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 17))
+    assert pytest_job["permissions"] == {"contents": "read", "actions": "read"}
+    download = next(step for step in pytest_job["steps"] if step.get("name") == "Download pytest duration snapshot")
+    assert "pytest-duration-input" in download["run"]
+    assert "matrix" not in download["run"]
+    assert "::notice::" in download["run"]
+    assert f'[ "$decision" = "{split.SOURCE_COMMITTED}" ]' in download["run"]
+    assert f'[ "$decision" != "{split.SOURCE_SNAPSHOT}" ]' in download["run"]
+    assert "duration-source --refresh-result" in download["run"]
+    assert "--decide" in download["run"]
+    assert '[ "$attempt" -ge 3 ]' in download["run"]
+    run_pytest = next(step for step in pytest_job["steps"] if step.get("name") == "Run pytest")
+    old_fallback = "duration snapshot unavailable or invalid; using committed weights"
+    assert old_fallback not in download["run"]
+    assert old_fallback not in run_pytest["run"]
+    assert "duration-source" in run_pytest["run"]
+    assert 'validate "$snapshot"' not in run_pytest["run"]
+    assert download["env"]["GH_TOKEN"] == "${{ github.token }}"
+    assert download["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"
+    assert "GH_TOKEN" not in run_pytest["env"]
+    assert pytest_job["steps"].index(download) < pytest_job["steps"].index(run_pytest)
+    report_steps = jobs["pytest-report"]["steps"]
+    proof = next(i for i, step in enumerate(report_steps) if "scripts.ci.pytest_report" in step.get("run", ""))
+    record = next(i for i, step in enumerate(report_steps) if step.get("name") == "Record pytest durations")
+    assert proof < record
+    report_upload = next(
+        step for step in report_steps if step.get("with", {}).get("name") == "pytest-file-durations"
+    )
+    assert report_upload["with"]["name"] != upload["with"]["name"]
+    gate = jobs["ci-gate"]
+    assert gate["name"] == "CI Gate"
+    assert gate["if"] == "always()"
+    assert gate["timeout-minutes"] == 5
+    assert "refresh-pytest-durations" in gate["needs"]
+    verdict = next(step["run"] for step in gate["steps"] if step.get("name") == "Require every job")
+    assert "refresh-pytest-durations" not in verdict
+
+
 def _selected_test_files() -> list[str]:
     files = split.tracked_test_files()
     assert files and len(files) == len(set(files))
@@ -194,6 +251,34 @@ def _assert_exact_partition(files: list[str], snapshot: Path) -> None:
     assert shards == split.assign(files, durations, 16, pinned)
 
 
+def test_tracked_test_files_match_the_workflow_selection() -> None:
+    script = next(
+        step["run"]
+        for step in _workflow_jobs()["pytest"]["steps"]
+        if step.get("name") == "Run pytest"
+    )
+    command = script[script.index("git ls-files") : script.index("| python3")]
+    command = command.replace("\\\n", "\n").strip()
+    root = Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        ["bash", "-c", command], cwd=root, capture_output=True, text=True, check=True, timeout=30
+    )
+    listed = [line for line in result.stdout.splitlines() if line]
+    assert listed == split.tracked_test_files(root)
+
+
+def test_lookup_fallback_snapshot_is_shared_and_covers_every_file_once(tmp_path: Path, monkeypatch) -> None:
+    def unavailable(endpoint: str) -> bytes:
+        raise subprocess.CalledProcessError(1, ["gh", "api", endpoint], stderr="private response")
+
+    monkeypatch.setattr(split, "github_api", unavailable)
+    snapshot = tmp_path / "fallback.json"
+    assert split.refresh_durations("owner/repo", split.DEFAULT_DURATIONS, snapshot) == 0
+    committed = json.loads(split.DEFAULT_DURATIONS.read_text(encoding="utf-8"))
+    assert json.loads(snapshot.read_text(encoding="utf-8")) == committed
+    _assert_exact_partition(_selected_test_files(), snapshot)
+
+
 def test_committed_weights_partition_every_selected_file_once() -> None:
     _assert_exact_partition(_selected_test_files(), split.DEFAULT_DURATIONS)
 
@@ -219,6 +304,37 @@ def test_refresh_job_shell_retains_committed_weights_when_refresh_fails(tmp_path
     assert result.returncode == 0, result.stderr
     assert "::notice::duration refresh failed; retaining committed weights" in result.stdout
     assert produced.read_bytes() == (destination / "pytest-file-durations.json").read_bytes()
+
+
+def test_refresh_job_shell_notices_a_lookup_fallback(tmp_path: Path) -> None:
+    script = next(
+        step["run"]
+        for step in _workflow_jobs()["refresh-pytest-durations"]["steps"]
+        if "split_tests refresh" in step.get("run", "")
+    )
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    fake = bin_dir / "python3"
+    fake.write_text(
+        f"#!{sys.executable}\n"
+        "import sys\n"
+        "from pathlib import Path\n"
+        "args = sys.argv[1:]\n"
+        "if 'validate' in args:\n"
+        "    raise SystemExit(0)\n"
+        "out = Path(args[args.index('--output') + 1])\n"
+        "out.parent.mkdir(parents=True, exist_ok=True)\n"
+        "out.write_text('{\"tests/test_a.py\": 1}\\n')\n"
+        "print('duration lookup unavailable; retaining committed fallback', file=sys.stderr)\n"
+        "raise SystemExit(0)\n"
+    )
+    fake.chmod(0o755)
+    work = tmp_path / "work"
+    work.mkdir()
+    result = _run_script(script, work, extra_env={"REPO": "owner/repo"}, path_prefix=bin_dir)
+    assert result.returncode == 0, result.stderr
+    assert "::notice::duration lookup unavailable; retaining committed weights" in result.stdout
+    assert json.loads((work / "ci-artifacts/pytest-file-durations.json").read_text()) == {"tests/test_a.py": 1}
 
 
 def _download_script() -> str:
@@ -345,6 +461,28 @@ def test_archive_rejects_oversize_or_invalid_timing_member(monkeypatch, kind) ->
         payload = _zip(b'{"tests/test_a.py": true}')
     with pytest.raises(ValueError):
         split.archive_durations(payload)
+
+
+@pytest.mark.parametrize("oversize", [False, True])
+def test_archive_download_is_spooled_and_size_checked(monkeypatch, oversize) -> None:
+    payload = _zip(b'{"tests/test_a.py": 3}')
+    if oversize:
+        monkeypatch.setattr(split, "MAX_ARCHIVE_BYTES", len(payload) - 1)
+
+    def run(command, **kwargs):
+        assert command == ["gh", "api", "repos/owner/repo/actions/artifacts/2/zip"]
+        assert kwargs["timeout"] == 30 and kwargs["check"] is True
+        assert kwargs["max_response_bytes"] == split.MAX_ARCHIVE_BYTES
+        assert kwargs["stderr"] == subprocess.PIPE
+        assert "capture_output" not in kwargs
+        kwargs["stdout"].write(payload)
+
+    monkeypatch.setattr(split.github_client, "run", run)
+    if oversize:
+        with pytest.raises(ValueError, match="size limit"):
+            split.github_api("repos/owner/repo/actions/artifacts/2/zip")
+    else:
+        assert split.github_api("repos/owner/repo/actions/artifacts/2/zip") == payload
 
 
 def test_decide_uses_only_the_shared_refresh_result(capsys) -> None:

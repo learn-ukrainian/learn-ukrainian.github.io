@@ -374,6 +374,16 @@ def test_validate_label_evidence_refs_rejects_cross_phenomenon_reference():
     assert excinfo.value.code == "cross_phenomenon_evidence"
 
 
+def test_validate_label_evidence_refs_rejects_reordered_ids():
+    record_a = _vesum_record(ROW_A)
+    record_b = _shadow_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record_a, record_b])
+    reordered = sorted(row_evidence["evidence_ids"], reverse=True)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence, decision_code="abstention", evidence_ids=reordered)
+    assert excinfo.value.code == "evidence_id_order_drift"
+
+
 # --------------------------------------------------------------------------
 # Amendment step 7: sufficiency ordering — a decisive negative record forces
 # uncertainty even when an unrelated record is attested.
@@ -389,6 +399,17 @@ def test_classify_sufficiency_decisive_unavailable_overrides_an_attested_record_
         ],
     )
     assert validator.classify_sufficiency(row_evidence) == "insufficient_unavailable"
+
+
+def test_classify_sufficiency_decisive_conflicting_overrides_an_attested_record_elsewhere():
+    row_evidence = _row_evidence(
+        ROW_A,
+        [
+            _vesum_record(ROW_A, status="attested", supports="attestation"),
+            _heritage_record(ROW_A, status="ambiguous"),
+        ],
+    )
+    assert validator.classify_sufficiency(row_evidence) == "insufficient_conflicting"
 
 
 def test_classify_sufficiency_decisive_not_found_overrides_an_attested_record_elsewhere():
@@ -414,6 +435,16 @@ def test_validate_label_rejects_positive_when_vesum_is_not_found():
     assert excinfo.value.code == "insufficient_evidence_for_decision"
 
 
+def test_validate_label_evidence_refs_rejects_agree_when_a_decisive_channel_is_unavailable_elsewhere():
+    vesum = _vesum_record(ROW_A, status="attested", supports="attestation")
+    row_evidence = _row_evidence(ROW_A, [vesum, _heritage_record(ROW_A, status="unavailable")])
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_label_evidence_refs(row_evidence, decision_code="agree", evidence_ids=[vesum["evidence_id"]])
+    assert excinfo.value.code == "insufficient_evidence_for_decision"
+    # The uncertainty path remains valid with the same citation.
+    validator.validate_label_evidence_refs(row_evidence, decision_code="abstention", evidence_ids=[vesum["evidence_id"]])
+
+
 def test_classify_sufficiency_is_phenomenon_scoped():
     """A decisive negative bound to a different phenomenon must not block this one."""
     scoped_positive = _vesum_record(ROW_A, status="attested", supports="attestation", phenomenon_id="apostrophe")
@@ -434,6 +465,14 @@ def test_classify_sufficiency_is_phenomenon_scoped():
 # Amendment step 12: raw_payload_publication_allowed / claim_boundary /
 # sidecar_id / manifest_sha256 shape checks.
 # --------------------------------------------------------------------------
+
+
+def test_validate_evidence_record_rejects_a_hand_edited_raw_payload_flag():
+    record = dict(_vesum_record(ROW_A))
+    record["raw_payload_publication_allowed"] = True
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_evidence_record(record)
+    assert excinfo.value.code == "evidence_shape_drift"
 
 
 def test_validate_sidecar_rejects_row_count_mismatch():
@@ -532,6 +571,20 @@ def test_validate_manifest_detects_manifest_sha256_hash_drift():
     assert excinfo.value.code == "manifest_id_hash_drift"
 
 
+def test_validate_manifest_detects_row_count_mismatch():
+    manifest = _full_manifest(row_count=999)
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity())
+    assert excinfo.value.code == "manifest_shape_drift"
+
+
+def test_validate_manifest_detects_identity_hash_drift():
+    manifest = _full_manifest()
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_manifest(manifest, expected_identity=_expected_identity(server_code_sha256="9" * 64))
+    assert excinfo.value.code == "identity_hash_drift"
+
+
 # --------------------------------------------------------------------------
 # Amendment (fixes v3, item 5): private query field required + recomputed.
 # --------------------------------------------------------------------------
@@ -567,6 +620,21 @@ def test_validate_evidence_record_rejects_closed_schema_reprobes(mutate, expecte
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_evidence_record(record)
     assert excinfo.value.code == expected_code
+
+
+def test_validate_row_evidence_rejects_extra_key_and_non_hex_row_identity():
+    record = _vesum_record(ROW_A)
+    row_evidence = _row_evidence(ROW_A, [record])
+    row_evidence["unit_sha256"] = "A" * 64
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "row_identity_drift"
+
+    row_evidence = _row_evidence(ROW_A, [record])
+    row_evidence["extra"] = True
+    with pytest.raises(validator.EvidenceValidationError) as excinfo:
+        validator.validate_row_evidence(row_evidence)
+    assert excinfo.value.code == "row_shape_drift"
 
 
 def test_validate_row_evidence_recomputes_compiler_boolean_summaries():

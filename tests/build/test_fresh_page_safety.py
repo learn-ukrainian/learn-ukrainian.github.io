@@ -15,6 +15,7 @@ import pytest
 from scripts.build import mdx_render_gate as gate
 from scripts.build import verify_shippable as shippable
 from scripts.build.fresh import assemble
+from scripts.build.fresh.regeneration import load_ledger, record_failure
 from scripts.generate_mdx.converters import mdx_safe_text
 
 FIXTURE = Path(__file__).parent / "fixtures/attempt5"
@@ -74,6 +75,13 @@ def test_attempt5_reassembled_page_has_learner_headings_and_no_placeholders():
         assert page.count(activity["instruction"]) == 1
     assert "{{gloss:" not in page and "{{uk:" not in page
     assert gate.check_mdx_render(page)["passed"] is True
+
+
+@pytest.mark.parametrize("page", ["Text {kind: dialogue}", "<Bad>", "<A p={JSON.parse(`[1,2]"])
+@pytest.mark.site_toolchain
+def test_whole_page_compile_rejects_syntax_without_valid_islands(page):
+    report = gate.check_mdx_render(page)
+    assert report["passed"] is False and report["compiled"] is False
 
 
 @pytest.mark.site_toolchain
@@ -151,6 +159,18 @@ def test_build_failure_attribution(tmp_path, monkeypatch, failure):
     assert report["layer"] == ("engine" if failure == "mdx" else "harness")
 
 
+def test_harness_failures_do_not_spend_a_regeneration(tmp_path):
+    ledger = tmp_path / "lesson-1.regeneration.yaml"
+    before = load_ledger(ledger, "sample", 1)
+    for _ in range(3):
+        record_failure(
+            ledger, "sample", 1, {"check": 11, "layer": "harness", "reason": "build environment unavailable"}, {}
+        )
+    assert load_ledger(ledger, "sample", 1) == before
+    assert not ledger.exists()
+    assert (tmp_path / "lesson-1.writer-harness.yaml").is_file()
+
+
 @pytest.mark.parametrize("passed,layer", [(False, "harness"), (None, "harness"), (False, "engine")])
 def test_check11_propagates_the_environment_layer(monkeypatch, passed, layer):
     monkeypatch.setattr(
@@ -163,6 +183,11 @@ def test_check11_propagates_the_environment_layer(monkeypatch, passed, layer):
     )
     report = assemble.check_11_render("a1", "fixture")
     assert report.passed is False and report.layer == layer
+
+
+def test_missing_page_fails_closed(tmp_path):
+    report = gate.check_mdx_render_path(tmp_path / "absent.mdx")
+    assert report["passed"] is False and "not found" in report["message"]
 
 
 @pytest.mark.parametrize("source,exit_code", [("Learner text", 0), ("Text {kind: dialogue}", 1)])
@@ -186,6 +211,29 @@ def test_attempt5_instructions_print_once_and_ids_stay_in_provenance():
         *(data[k] for k in ("draft", "plan", "pack", "words")), "a1", "sounds-letters-and-hello", 1
     )
     assert {u["ref"] for u in provenance["spans"] if u.get("tab") == "resursy"} >= {"T-041", "T-040", "T-035"}
+
+
+@pytest.mark.site_toolchain
+def test_hostile_pack_resource_metadata_compiles(monkeypatch):
+    data = json.loads((FIXTURE / "inputs.json").read_text())
+    hostile = ' {kind: dialogue} <b> ` $ & " \\'
+    for video in data["pack"]["videos"]:
+        video["title"] = "Video title" + hostile
+        video["channel"] += hostile
+        video["use"] = "PACK_AUTHOR_ONLY" + hostile
+    original = assemble.publication.resource_citation
+
+    def citation(record):
+        entry = original(record)
+        return {**entry, "title": entry["title"] + hostile, "description": "Credit" + hostile} if entry else entry
+
+    monkeypatch.setattr(assemble.publication, "resource_citation", citation)
+    page, _ = reassemble_attempt5(data)
+    resources = page.split('label="Ресурси', 1)[1]
+    assert mdx_safe_text("Video title" + hostile) in resources
+    assert mdx_safe_text("Credit" + hostile) in resources
+    assert "PACK_AUTHOR_ONLY" not in page
+    assert gate.check_mdx_render(page)["passed"] is True
 
 
 @pytest.mark.parametrize(
@@ -249,6 +297,17 @@ def test_all_resource_text_fields_use_the_same_mdx_encoder():
     page = format_resources_for_mdx(resources)
     assert page.count(mdx_safe_text(hostile)) == 7
     assert gate.check_mdx_render(page)["passed"] is True
+
+
+def test_any_owned_page_compiler_error_is_an_engine_failure(tmp_path, monkeypatch):
+    owned = "src/content/docs/a1/fixture/1.mdx"
+    foreign = "src/content/docs/a1/other/1.mdx"
+    log = tmp_path / "build.log"
+    log.write_text(f"{foreign}:123:51 MDXError\n{owned}:123:51 MDXError")
+    monkeypatch.setattr(shippable, "_astro_build", lambda _: False)
+    report = shippable._astro_build_step(log, fresh_pages=[shippable.PROJECT_ROOT / "site" / owned])
+    assert report["passed"] is False and report["layer"] == "engine"
+    assert foreign in report["detail"]
 
 
 @pytest.mark.parametrize("role", ["book", "video"])

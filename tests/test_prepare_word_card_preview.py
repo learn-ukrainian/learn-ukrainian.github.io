@@ -660,6 +660,21 @@ def test_verify_dist_refuses_an_inventory_inconsistent_with_the_release(tmp_path
         built.verify()
 
 
+def test_verify_dist_refuses_a_missing_or_malformed_inventory(tmp_path: Path, capsys) -> None:
+    built = Built(tmp_path)
+    assert built.cli("--inventory", str(tmp_path / "absent.json")) == 1
+    assert "route inventory unreadable" in capsys.readouterr().err
+    for raw, message in (
+        (b"{", "route inventory is not valid UTF-8 JSON"),
+        (b"\xff", "route inventory is not valid UTF-8 JSON"),
+        (b"[]", "exactly the keys"),
+        (b'{"schema_version": 1, "schema_version": 2}', "route inventory has duplicate keys"),
+    ):
+        built.inventory_path.write_bytes(raw)
+        with pytest.raises(preview.PreviewError, match=re.escape(message)):
+            built.verify()
+
+
 def _rebuilt_release(built: Built, tmp_path: Path, rows: list[dict], inventory_edit=None) -> None:
     dataset = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode()
     manifest, dataset = _release(card_ids=tuple(r["card_id"] for r in rows), dataset=dataset)
@@ -696,6 +711,26 @@ def test_verify_dist_rechecks_the_release_directory(tmp_path: Path, capsys) -> N
     (built.release / "word-cards.jsonl").unlink()
     assert built.cli("--inventory", str(built.inventory_path)) == 1
     assert "::error title=Word-card preview refused::" in capsys.readouterr().err
+
+
+def test_verify_dist_refuses_a_stale_inventory_or_a_pin_for_another_release(tmp_path: Path) -> None:
+    built = Built(tmp_path)
+    # A new release, pinned and prepared, with the previous release's inventory left in place.
+    rows = [dict(row) for row in VERIFY_ROWS]
+    rows[0]["fields"] = [{}, {}, {}]
+    dataset = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode()
+    manifest, dataset = _release(card_ids=tuple(r["card_id"] for r in rows), dataset=dataset)
+    stale_pin = built.pin
+    built.pin = tmp_path / "new-pin.json"
+    built.pin.write_text(json.dumps(_pin(manifest, dataset)), encoding="utf-8")
+    (built.release / "manifest.json").write_bytes(manifest)
+    (built.release / "word-cards.jsonl").write_bytes(dataset)
+    with pytest.raises(preview.PreviewError, match=r"route inventory release .* does not match the pin"):
+        built.verify()
+    # The previous pin no longer describes the prepared release.
+    built.pin = stale_pin
+    with pytest.raises(preview.PreviewError, match="no longer matches the pin"):
+        built.verify()
 
 
 def test_sentinels_shared_with_the_real_release_are_not_false_positives(tmp_path: Path) -> None:

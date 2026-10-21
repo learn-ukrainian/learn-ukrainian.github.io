@@ -129,6 +129,20 @@ def test_cold_start_unknown_and_missing_role_yield_none(reg_root):
     assert reg.select_cold_start_pointers(runtime, "   ") == ([], [])
 
 
+def test_cold_start_deterministic_order_and_pointer_fields_only(reg_root):
+    # P1 caps cold_start_roles at 5/role, so the max valid set is 5; the selector
+    # returns them deterministically sorted by id, pointer-fields only.
+    five = [_make_record(reg_root, f"cs-{i}", cold_start_roles=["quality"]) for i in (2, 0, 4, 1, 3)]
+    _write_registry(reg_root, five)
+    runtime = reg.load_runtime_safe()
+    pointers, dropped = reg.select_cold_start_pointers(runtime, "quality")
+    assert [p["id"] for p in pointers] == ["cs-0", "cs-1", "cs-2", "cs-3", "cs-4"]
+    assert dropped == []
+    # allowlisted pointer fields only — no title/summary/body/source/provenance.
+    for ptr in pointers:
+        assert set(ptr) == {"id", "state", "content_hash", "routing"}
+
+
 # --------------------------------------------------------------------------- #
 # 2. Orient: role opt-in, default byte compatibility, no shared cache
 # --------------------------------------------------------------------------- #
@@ -204,6 +218,17 @@ def test_cold_start_endpoint_uses_cold_start_roles_not_routing(reg_root):
     body = resp.json()
     assert body["enabled"] is True
     assert [r["id"] for r in body["records"]] == ["announced"]
+
+
+def test_cold_start_endpoint_disabled_and_missing_role(tmp_path, monkeypatch):
+    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
+    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
+    monkeypatch.setenv(reg.ENV_FLAG, "false")
+    _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
+    assert client.get("/api/knowledge/cold-start", params={"role": "quality"}).json() == {
+        "enabled": False,
+        "records": [],
+    }
 
 
 def test_cold_start_endpoint_etag_304(reg_root):
@@ -567,3 +592,20 @@ def test_delegate_injection_is_pointer_only_and_persists_safely(reg_root, monkey
     assert surfaced == [
         (consumption.SURFACED_EVENT, {"task_id": "task-9", "research_id": "cefr", "surface": "dispatch"})
     ]
+
+
+# --------------------------------------------------------------------------- #
+# 6. Byte measurement: automatic body bytes are zero; bounded pointer payloads
+# --------------------------------------------------------------------------- #
+def test_automatic_surface_never_injects_body_bytes(reg_root):
+    _write_registry(
+        reg_root,
+        [_make_record(reg_root, "r1", routing={"roles": ["quality"]}, cold_start_roles=["quality"])],
+    )
+    # Cold-start orient projection carries pointers, never the digest body bytes.
+    body = _orient({"role": "quality"}).json()["research"]
+    projection = json.dumps(body).encode("utf-8")
+    digest = (reg_root / "docs/references/research-digests/r1.md").read_text("utf-8")
+    assert digest.strip() not in json.dumps(body)
+    # And it stays well within the filtered budget.
+    assert len(projection) <= reg.MAX_FILTERED_BYTES

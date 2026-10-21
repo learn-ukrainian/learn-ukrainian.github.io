@@ -75,6 +75,29 @@ def test_unrelated_exhausted_buckets_do_not_block(tmp_path, args):
     assert spent(result, translated, native)
 
 
+@pytest.mark.parametrize(
+    ("bucket", "args"),
+    [
+        ("core", ["gh", "api", "repos/o/r"]),
+        ("graphql", ["gh", "api", "graphql"]),
+        ("search", ["gh", "search", "prs", "x"]),
+        ("code_search", ["gh", "search", "code", "x"]),
+        ("code_search", ["gh", "api", "search/code"]),
+        ("secondary", ["gh", "pr", "status"]),
+        ("core", ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/issues"]),
+        ("graphql", ["gh", "api", "--paginate", "--jq", ".x", "graphql"]),
+        ("search", ["gh", "api", "--paginate", "--jq", ".x", "search/issues?q=x"]),
+        ("code_search", ["gh", "api", "--paginate", "--jq", ".x", "search/code?q=x"]),
+        ("secondary", ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/issues"]),
+    ],
+)
+def test_own_exhausted_bucket_blocks_with_typed_result(tmp_path, bucket, args):
+    store, runner, translated, native = seeded(tmp_path, [bucket])
+    result = gh.run(args, client=store, runner=runner, capture_output=True)
+    assert blocked(result) and result.github_result.reset_at == FUTURE
+    assert not translated and not native
+
+
 @pytest.mark.parametrize("bucket", ["core", "graphql"])
 @pytest.mark.parametrize(
     "args",
@@ -112,6 +135,44 @@ def test_native_rate_limit_stderr_still_stores_secondary_and_exits_75(tmp_path):
         ).fetchone() == (0, NOW + 60)
     again = gh.run(["gh", "issue", "list"], client=store, runner=runner, capture_output=True)
     assert blocked(again) and len(seen) == 1 and not native
+
+
+def test_translated_search_code_uses_code_search_bucket(tmp_path):
+    store, runner, translated, native = seeded(tmp_path, ["search"])
+    assert spent(
+        gh.run(["gh", "api", "search/code"], client=store, runner=runner, capture_output=True), translated, native
+    )
+    store, runner, translated, native = seeded(tmp_path / "other", ["code_search"])
+    assert blocked(gh.run(["gh", "api", "search/code"], client=store, runner=runner, capture_output=True))
+    assert not translated
+    # other search endpoints keep the ``search`` bucket and are not blocked by code_search
+    assert spent(
+        gh.run(["gh", "api", "search/issues?q=x"], client=store, runner=runner, capture_output=True), translated, native
+    )
+
+
+@pytest.mark.parametrize(
+    ("args", "expected"),
+    [
+        (["gh", "api", "repos/o/r"], {"core"}),
+        (["gh", "api", "--jq", ".x", "repos/o/r/issues"], {"core"}),
+        (["gh", "api", "-X", "GET", "-f", "q=search/x", "repos/o/r"], {"core"}),
+        (["gh", "api", "graphql", "-f", "query={viewer{login}}"], {"graphql"}),
+        (["gh", "api", "https://api.github.com/graphql"], {"graphql"}),
+        (["gh", "api", "search/code?q=x"], {"code_search"}),
+        (["gh", "api", "/search/code"], {"code_search"}),
+        (["gh", "api", "search/issues", "-f", "q=x"], {"search"}),
+        (["gh", "api", "https://api.github.com/search/issues?q=x"], {"search"}),
+        (["gh", "api", "https://api.github.com/search/code?q=x"], {"code_search"}),
+        (["gh", "search", "code", "x"], {"code_search"}),
+        (["gh", "search", "prs", "x"], {"search"}),
+        (["gh", "pr", "view", "1"], {"core", "graphql"}),
+        (["gh", "frobnicate"], {"core", "graphql"}),
+        (["gh"], {"core", "graphql"}),
+    ],
+)
+def test_native_buckets_over_the_denominator(args, expected):
+    assert gh._native_buckets(args) == frozenset(expected | {"secondary"})
 
 
 ALL_BUCKETS = ["core", "graphql", "code_search", "search", "secondary"]
@@ -169,6 +230,22 @@ def test_relative_endpoint_spellings_never_select_a_host(tmp_path, endpoint, pat
     assert not translated and not native
 
 
+@pytest.mark.parametrize(
+    "endpoint,path,bucket",
+    [
+        ("https://api.github.com/search/code?q=https://x", "search/code", "code_search"),
+        ("HTTPS://api.github.com/user", "user", "core"),
+    ],
+)
+def test_absolute_scheme_position_preserves_native_admission(tmp_path, endpoint, path, bucket):
+    assert gh._canonical_endpoint(endpoint) == ("api", path)
+    assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
+    store, runner, translated, native = seeded(tmp_path, [])
+    args = api(endpoint, "--template", "{{.}}")
+    assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
+    assert native == [natively_runs(args)] and not translated
+
+
 @pytest.mark.parametrize("native", [False, True])
 @pytest.mark.parametrize(
     "host,endpoint",
@@ -195,6 +272,11 @@ ROOT_ENDPOINTS = [
     api("--paginate", "--jq", ".x", "https://api.github.com/"),
     api("--hostname", "ghe.example", "--paginate", "--jq", ".x", "https://ghe.example/api/v3/"),
 ]
+
+
+@pytest.mark.parametrize("args", ROOT_ENDPOINTS, ids=["relative", "absolute", "absolute-slash", "enterprise"])
+def test_root_endpoint_is_determinable_core(args):
+    assert gh._native_buckets(args) == frozenset({"core", "secondary"})
 
 
 @pytest.mark.parametrize("args", ROOT_ENDPOINTS, ids=["relative", "absolute", "absolute-slash", "enterprise"])

@@ -1059,6 +1059,39 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
 
 
+# Re-pinned for D-129 (#10464): each output loses only its claude-opus-5-5-cursor-fallback trace row.
+@pytest.mark.parametrize(
+    "author,risk,path,digest",
+    [
+        ("gpt-6.1-sol", "medium", "ordinary.py", "9f6974f6b870e24be7758b66ae6467b23d92a5a27fb077fa3a13085f77b1e09b"),
+        ("claude-opus-5-5", "low", "ordinary.py", "25f8e170adc93603389e64c46ed2bc7fc95bfaa1e9c778363f57bad61b2e96d2"),
+        (
+            "gpt-6.1-sol",
+            "low",
+            "scripts/agent_runtime/target_admission.py",
+            "67e4e6295377df3825b821f50b504e9fd57e29cc0ef8e76132be2406c744971d",
+        ),
+    ],
+)
+@pytest.mark.parametrize("mode", [(), ("--review-mode", "cross_family")])
+def test_default_resolver_output_matches_pre_10437_golden(tmp_path, author, risk, path, digest, mode):
+    import hashlib
+
+    result = _run_cli(
+        tmp_path / "state.json",
+        "resolve-reviewer",
+        "--author-model",
+        author,
+        "--risk",
+        risk,
+        "--owned-path",
+        path,
+        *mode,
+    )
+    assert result.returncode == 0, result.stderr
+    assert hashlib.sha256(result.stdout.encode()).hexdigest() == digest
+
+
 @pytest.mark.parametrize("outside_available", [True, False])
 def test_resolver_cli_threads_red_team_and_labels_limitation(tmp_path, outside_available):
     snapshot = tmp_path / "snapshot.json"

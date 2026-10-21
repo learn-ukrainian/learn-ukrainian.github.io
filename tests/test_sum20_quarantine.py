@@ -169,6 +169,13 @@ def test_lookup_read_path_opens_read_only(quarantined_db):
         conn.close()
 
 
+def test_lookup_on_a_missing_database_returns_nothing_and_creates_no_file(tmp_path):
+    missing = tmp_path / "absent.db"
+    with pytest.raises(Sum20StoreError, match="store_missing"):
+        sum20_lookup.lookup_sum20_articles("дух", missing)
+    assert not missing.exists()
+
+
 def test_read_only_uri_caller_cannot_create_a_missing_database(tmp_path):
     missing = tmp_path / "absent.db"
     with pytest.raises(Sum20StoreError, match="uri_override"):
@@ -204,6 +211,26 @@ def test_write_branch_cannot_create_a_file_from_uri(tmp_path):
     with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(uri, write=True)
     assert not (tmp_path / "fresh.db").exists()
+
+
+def test_read_only_uri_parameters_cannot_authorize_access(quarantined_db):
+    for uri in (f"{quarantined_db.as_uri()}?mode=ro", f"{quarantined_db.as_uri()}?cache=shared"):
+        with pytest.raises(Sum20StoreError, match="uri_override"):
+            sum20_lookup._get_db(uri, write=False)
+
+
+def test_path_branch_still_opens_read_only_and_creates_no_file(quarantined_db, tmp_path):
+    conn = sum20_lookup._get_db(quarantined_db)
+    try:
+        conn.execute("PRAGMA query_only = OFF")
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("DELETE FROM sum20_articles")
+    finally:
+        conn.close()
+    missing = tmp_path / "absent.db"
+    with pytest.raises(Sum20StoreError, match="store_missing"):
+        sum20_lookup._get_db(missing)
+    assert not missing.exists()
 
 
 def test_thin_page_report_opens_a_path_with_uri_metacharacters_read_only(quarantined_db, tmp_path):

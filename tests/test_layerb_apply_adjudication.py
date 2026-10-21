@@ -424,6 +424,33 @@ def test_apply_adjudications_tolerates_cosmetic_only_merge_report_cases(
     }
 
 
+def test_apply_ruling_custom_sets_corpus_verification_status() -> None:
+    """CUSTOM ruling can override corpus_verification_status (e.g. UNVERIFIED -> NOT_APPLICABLE for synthetic)."""
+    draft = {
+        "case_id": "synth-1",
+        "corpus_verification_status": "UNVERIFIED",
+    }
+    left = {"case_id": "synth-1", "corpus_verification_status": "UNVERIFIED"}
+    right = {"case_id": "synth-1", "corpus_verification_status": "UNVERIFIED"}
+    ruling = "CUSTOM:corpus_verification_status=NOT_APPLICABLE"
+    digest = {"case_id": "synth-1", "fields": {"corpus_verification_status": {}}}
+
+    result = apply_ruling(
+        draft,
+        left,
+        right,
+        _decision(ruling, "Purely synthetic case with no real corpus content fact; status resolved by adjudicator."),
+        digest,
+    )
+
+    assert result["corpus_verification_status"] == "NOT_APPLICABLE"
+    assert result["adjudication"] == {
+        "status": "ADJUDICATED",
+        "adjudicator": ADJUDICATOR,
+        "note": "Purely synthetic case with no real corpus content fact; status resolved by adjudicator.",
+    }
+
+
 def test_apply_ruling_custom_rejects_invalid_corpus_verification_status() -> None:
     """A CUSTOM ruling with a value outside the registered enum must be rejected."""
     draft = {

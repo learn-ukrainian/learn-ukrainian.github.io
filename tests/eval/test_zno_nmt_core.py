@@ -164,6 +164,45 @@ def test_missing_invalid_and_failed_trials_are_explicit() -> None:
     assert all(item["points"] is None for item in failed["items"])
 
 
+def test_compare_requires_pair_identity_and_reports_descriptive_deltas() -> None:
+    packet, key = _prepared()
+    control = _run(
+        packet,
+        condition="closed-book",
+        responses={"q0001": "B", "q0002": {"r1": "A"}, "q0003": "B"},
+        metrics={"tool_calls": 0, "runtime_ms": 10},
+    )
+    treatment = _run(
+        packet,
+        condition="sources",
+        responses={"q0001": "A", "q0002": {"r1": "A", "r2": "B"}, "q0003": "A"},
+        metrics={"tool_calls": 2, "runtime_ms": 20, "cost_usd": 0.5},
+    )
+    result = compare_runs(packet, key, control, treatment)
+    assert result["score_delta"] == 1
+    assert result["control_points"] == 2
+    assert result["treatment_points"] == 3
+    assert (result["wins"], result["losses"], result["ties"]) == (2, 1, 0)
+    assert result["metrics"]["tool_calls"]["delta"] == 2
+    assert result["metrics"]["cost_usd"] == {"control": None, "treatment": None, "delta": None}
+    assert result["significance"] is None
+
+    drifted = copy.deepcopy(treatment)
+    drifted["packet_sha256"] = "0" * 64
+    with pytest.raises(ExamError, match="different packet"):
+        compare_runs(packet, key, control, drifted)
+
+    mismatched = copy.deepcopy(treatment)
+    mismatched["identity"]["model"] = "other-model"
+    with pytest.raises(ExamError, match="identity field"):
+        compare_runs(packet, key, control, mismatched)
+
+    different_comparison = copy.deepcopy(treatment)
+    different_comparison["comparison"]["prompt_sha256"] = "other"
+    with pytest.raises(ExamError, match="comparison configuration"):
+        compare_runs(packet, key, control, different_comparison)
+
+
 def test_runner_identity_aliases_and_pair_repeat_are_accepted() -> None:
     packet, key = _prepared()
     identity = {

@@ -45,6 +45,19 @@ def test_open_unit_dir_anchors_at_explicit_home(tmp_path: Path, home: Path) -> N
         safe.open_unit_dir(linked_parent / "real-home" / "Library")  # anchored at "/" instead: the link is refused
 
 
+def test_install_unit_skips_identical_content_and_mode_and_repairs_mode(home: Path) -> None:
+    unit = home / "units" / "a.service"
+    assert safe.install_unit(unit, b"one", mode=0o600) is True
+    assert safe.install_unit(unit, b"one", mode=0o600) is False
+    unit.chmod(0o644)
+    assert safe.install_unit(unit, b"one", mode=0o600) is True
+    assert unit.stat().st_mode & 0o777 == 0o600
+    assert safe.install_unit(unit, b"two", mode=0o644) is True
+    assert (unit.read_bytes(), unit.stat().st_mode & 0o777) == (b"two", 0o644)
+    assert safe.load_unit(unit) == (b"two", 0o644)
+    assert sorted(path.name for path in unit.parent.iterdir()) == ["a.service"]
+
+
 def test_load_unit_missing_and_refused(home: Path) -> None:
     assert safe.load_unit(home / "missing" / "a.service") is None
     (home / "units").mkdir()
@@ -88,6 +101,23 @@ def test_read_unit_bounds_file_growth_after_inode_check(home: Path, monkeypatch:
     finally:
         os.close(fd)
     assert reads == [(17, 17)]
+
+
+def test_write_unit_removes_its_temporary_file_on_failure(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    (home / "units").mkdir()
+    fd = safe.open_unit_dir(home / "units")
+    assert fd is not None
+
+    def failing_replace(*_args: object, **_kwargs: object) -> None:
+        raise OSError("rename refused")
+
+    monkeypatch.setattr(safe.os, "replace", failing_replace)
+    try:
+        with pytest.raises(OSError, match="rename refused"):
+            safe.write_unit(fd, "a.service", b"content", mode=0o600)
+    finally:
+        os.close(fd)
+    assert list((home / "units").iterdir()) == []
 
 
 def test_remove_unit_unlinks_a_link_itself_never_its_target(home: Path, tmp_path: Path) -> None:

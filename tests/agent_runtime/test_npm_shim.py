@@ -655,6 +655,15 @@ def test_link_beside_its_own_directory_is_refused(layout):
     assert f"outside {worktree / 'site'}." in proc.stderr
 
 
+def test_one_outward_link_is_enough(layout):
+    worktree = layout["worktree"]
+    (worktree / "node_modules").unlink()
+    (worktree / "node_modules").mkdir()
+    proc = _run(layout, "npm", ["ci"], worktree)
+    _assert_refused(layout, proc)
+    assert f"unlink {worktree / 'site' / 'node_modules'}`" in proc.stderr
+
+
 def test_dangling_outward_link_is_refused(layout):
     worktree = layout["worktree"]
     (worktree / "node_modules").unlink()
@@ -777,6 +786,19 @@ def test_any_call_passes_through_with_real_node_modules(layout, args):
     assert _sentinels_intact(layout)
 
 
+@pytest.mark.parametrize("command", DENOMINATOR, ids=" ".join)
+@pytest.mark.parametrize("location", sorted(LOCATIONS))
+def test_destructive_command_into_real_node_modules_installs(layout, command, location):
+    _make_real(layout)
+    relative_cwd, placement = LOCATIONS[location]
+    cwd = layout["worktree"] / relative_cwd
+    args = [*command, *placement]
+    proc = _run(layout, "npm", args, cwd, {"FAKE_NPM_EXIT": "5"})
+    _assert_passed_through(layout, proc, "npm", args, cwd, 5)
+    assert proc.stderr == "fake-npm-stderr\n"
+    assert _sentinels_intact(layout)
+
+
 def test_symlinks_inside_the_same_worktree_pass(layout):
     """Each link stays inside the directory holding it (``site/node_modules`` inside ``site``).
 
@@ -795,10 +817,119 @@ def test_symlinks_inside_the_same_worktree_pass(layout):
     assert _sentinels_intact(layout)
 
 
+def _elsewhere_outside_protected_trees(preferred_root: Path) -> tuple[Path, bool]:
+    """A directory whose ancestors have no outward ``node_modules`` link.
+
+    Returns the directory and whether the caller must delete it. A child of
+    ``preferred_root`` stays with pytest when that root is already unprotected.
+    """
+    root, relocated = _root_outside_protected_ancestors(preferred_root)
+    if relocated:
+        return root, True
+    elsewhere = root / "elsewhere"
+    elsewhere.mkdir()
+    return elsewhere, False
+
+
+def test_outside_any_worktree_passes_through(layout):
+    """No ancestor has an outward link, so there is nothing to protect and the call runs.
+
+    A local ``node_modules`` stops the fake's parent walk, and ``FAKE_NPM_SAFE_ROOT``
+    is this directory. ``npm ci`` may empty only that directory.
+    """
+    elsewhere, cleanup = _elsewhere_outside_protected_trees(layout["tmp"])
+    try:
+        (elsewhere / "node_modules").mkdir()
+        proc = _run(
+            layout,
+            "npm",
+            ["ci"],
+            elsewhere,
+            {"FAKE_NPM_EXIT": "6", "FAKE_NPM_SAFE_ROOT": str(elsewhere)},
+        )
+        _assert_passed_through(layout, proc, "npm", ["ci"], elsewhere, 6)
+        assert _sentinels_intact(layout)
+    finally:
+        if cleanup:
+            shutil.rmtree(elsewhere, ignore_errors=True)
+
+
 # --- the fake, invoked directly, refuses to delete outside its safe root -------
 
 
 # --- the real npm, harmless calls against scratch directories only -----------
+
+
+def _real_npm() -> str | None:
+    for entry in os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", "")).split(os.pathsep):
+        if not entry or entry.endswith(os.path.join("agent_runtime", "shims")):
+            continue
+        candidate = Path(entry) / "npm"
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    return None
+
+
+def _run_real(
+    layout: dict[str, Path], args: list[str], cwd: Path, tool: str = "npm", *, shim: bool = True
+) -> subprocess.CompletedProcess[str]:
+    real_npm = Path(_real_npm())
+    path_entries = [str(layout["shim_dir"]), str(real_npm.parent), "/usr/bin", "/bin"]
+    env = {
+        "PATH": os.pathsep.join(path_entries if shim else path_entries[1:]),
+        "HOME": str(layout["tmp"]),
+        "npm_config_update_notifier": "false",
+        "npm_config_offline": "true",
+    }
+    return subprocess.run(
+        [str(layout["shim_dir"] / tool) if shim else str(real_npm.parent / tool), *args],
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+
+
+@pytest.mark.skipif(_real_npm() is None, reason="needs a real npm to execute a package.json run-script")
+def test_real_npm_run_script_inner_npm_ci_hits_the_shim(layout):
+    """Real npm builds the run-script PATH from the caller's PATH, keeping the shim first."""
+    worktree = layout["worktree"]
+    _write_json(worktree / "package.json", {"name": "worktree", "scripts": {"reinstall": "npm ci"}})
+    proc = _run_real(layout, ["run", "reinstall"], worktree)
+    assert proc.returncode != 0
+    assert "refused `npm ci`" in proc.stderr
+    assert _sentinels_intact(layout)
+
+
+def _lockable(layout: dict[str, Path]) -> None:
+    """Give the worktree and site/ a package.json and an empty lockfile, so real `npm ci` runs offline."""
+    for folder, name in ((layout["worktree"], "worktree"), (layout["worktree"] / "site", "site")):
+        _write_json(folder / "package.json", {"name": name, "version": "1.0.0"})
+        _write_json(
+            folder / "package-lock.json",
+            {"name": name, "version": "1.0.0", "lockfileVersion": 3, "requires": True, "packages": {"": {}}},
+        )
+
+
+def _escaped_npm_ci(args: list[str], real_npm: Path) -> list[str]:
+    """The review's shell text with the real npm's directory: the shell turns `n\\pm c\\i` into `npm ci`."""
+    return [arg.replace("/usr/bin/", f"{real_npm.parent}/") for arg in args]
+
+
+@pytest.mark.skipif(_real_npm() is None, reason="needs a real npm")
+@pytest.mark.parametrize("case", sorted(REVIEW_SHELL_CALLS))
+@pytest.mark.parametrize("relative_cwd", [".", "site"])
+def test_real_npm_escaped_shell_call_is_refused(layout, case, relative_cwd):
+    """The review's eight reproductions: through the shim real npm never runs and the sentinel survives."""
+    _lockable(layout)
+    tool, args = REVIEW_SHELL_CALLS[case]
+    args = _escaped_npm_ci(args, Path(_real_npm()))
+    proc = _run_real(layout, args, layout["worktree"] / relative_cwd, tool)
+    assert proc.returncode == 1, proc.stderr
+    assert "is refused: as its own options" in proc.stderr
+    assert _sentinels_intact(layout)
 
 
 # --- shim plumbing --------------------------------------------------------------
@@ -825,6 +956,26 @@ def test_missing_project_interpreter_fails_closed(layout, enclosing_checkout):
     assert proc.returncode == 127
     assert "cannot find the project interpreter" in proc.stderr
     assert _fake_calls(layout) == []
+
+
+def test_shim_never_resolves_itself_as_the_real_tool(layout):
+    env = {
+        "PATH": os.pathsep.join([str(layout["shim_dir"]), "/usr/bin", "/bin"]),
+        "AGENT_ORIGINAL_PATH": os.pathsep.join([str(layout["shim_dir"]), "/nonexistent"]),
+        "HOME": str(layout["tmp"]),
+        "AGENT_REAL_NPM": str(layout["shim_dir"] / "npm"),
+    }
+    proc = subprocess.run(
+        [str(layout["shim_dir"] / "npm"), "ls"],
+        cwd=layout["tmp"],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert proc.returncode == 127
+    assert "could not locate the real npm" in proc.stderr
 
 
 # --- unit tests of the guard ---------------------------------------------------
@@ -892,6 +1043,15 @@ def test_missing_project_interpreter_fails_closed(layout, enclosing_checkout):
 )
 def test_refusal_reason(tool, args, allowed):
     assert (npm_guard.refusal_reason(tool, args) is None) is allowed
+
+
+def test_outward_links_reports_the_symlink_and_its_target(layout):
+    worktree, primary = layout["worktree"], layout["primary"]
+    assert npm_guard.outward_links(worktree) == [
+        (worktree / "node_modules", primary / "node_modules"),
+        (worktree / "site" / "node_modules", primary / "site" / "node_modules"),
+    ]
+    assert npm_guard.outward_links(primary) == []
 
 
 def test_outward_link_through_a_symlinked_parent_names_the_parent(layout):
@@ -1051,6 +1211,74 @@ def test_walk_survives_deep_paths_and_unreadable_ancestors(layout):
 # --- the shim's interpreter and real-tool lookup --------------------------------
 
 
+def _linked_shim_checkout(tmp_path: Path) -> tuple[Path, Path]:
+    """A primary checkout holding the shim and a .venv, plus a linked worktree without a .venv."""
+    main_root = tmp_path / "shim-primary"
+    shim_dir = main_root / "scripts" / "agent_runtime" / "shims"
+    shim_dir.mkdir(parents=True)
+    shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
+    shutil.copy2(NPX_SOURCE, shim_dir / "npx")
+    shutil.copy2(GUARD_SOURCE, main_root / "scripts" / "agent_runtime" / "npm_guard.py")
+    (main_root / ".gitignore").write_text(".venv/\n", encoding="utf-8")
+    _git(main_root, "init", "-q", "-b", "main")
+    _git(main_root, "add", ".")
+    _git(main_root, "commit", "-q", "-m", "shim")
+    (main_root / ".venv" / "bin").mkdir(parents=True)
+    (main_root / ".venv" / "bin" / "python").symlink_to(sys.executable)
+    linked = main_root / ".worktrees" / "dispatch" / "agent" / "task"
+    _git(main_root, "worktree", "add", "-q", "--detach", str(linked))
+    assert not (linked / ".venv").exists()
+    return main_root, linked / "scripts" / "agent_runtime" / "shims"
+
+
+@pytest.mark.parametrize("git_env", [{}, {"GIT_DIR": "/nonexistent", "GIT_WORK_TREE": "/nonexistent"}], ids=str)
+def test_linked_worktree_shim_uses_the_main_checkout_interpreter(layout, git_env):
+    _, linked_shims = _linked_shim_checkout(layout["tmp"])
+    env = {
+        "PATH": f"{linked_shims}:{layout['fake_bin']}:/usr/bin:/bin",
+        "HOME": str(layout["tmp"]),
+        "FAKE_NPM_LOG": str(layout["log"]),
+        "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
+        **git_env,
+    }
+    proc = subprocess.run(
+        [str(linked_shims / "npm"), "--version"],
+        cwd=layout["tmp"],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+
+
+@pytest.mark.parametrize("stamped", [True, False], ids=["stamped-interpreter", "common-dir-lookup"])
+def test_runner_merge_guard_npm_version_runs_from_a_linked_worktree(layout, stamped):
+    from scripts.agent_runtime import runner
+
+    _, linked_shims = _linked_shim_checkout(layout["tmp"])
+    env = runner._apply_merge_guard(
+        mode="danger",
+        env={
+            "PATH": f"{layout['fake_bin']}:/usr/bin:/bin",
+            "HOME": str(layout["tmp"]),
+            "FAKE_NPM_LOG": str(layout["log"]),
+            "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
+        },
+    )
+    assert env["AGENT_GIT_SHIM_PYTHON"] == sys.executable
+    if not stamped:
+        env.pop("AGENT_GIT_SHIM_PYTHON")
+    env["PATH"] = env["PATH"].replace(str(runner._SHIMS_DIR), str(linked_shims), 1)
+    npm = shutil.which("npm", path=env["PATH"])
+    assert npm == str(linked_shims / "npm")
+    proc = subprocess.run(
+        [npm, "--version"], cwd=layout["tmp"], env=env, capture_output=True, text=True, check=False, timeout=60
+    )
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+
+
 def test_pinned_real_tool_does_not_bypass_the_guard(layout):
     proc = _run(layout, "npm", ["ci"], layout["worktree"], {"AGENT_REAL_NPM": str(layout["fake_bin"] / "npm")})
     _assert_refused(layout, proc)
@@ -1138,6 +1366,15 @@ def test_copied_npx_beside_anything_but_the_guarded_shim_fails_closed(layout, si
     _assert_npx_unguarded_refused(layout, proc)
 
 
+def test_copied_npx_beside_the_guarded_shim_works_as_before(layout):
+    npx = _copied_npx(layout, "shim")
+    proc = _run_path(layout, npx, NPX_DESTROYER, layout["worktree"])
+    _assert_refused(layout, proc)
+    assert "agent npx shim refused" in proc.stderr
+    proc = _run_path(layout, npx, ["--version"], layout["worktree"])
+    _assert_passed_through(layout, proc, "npx", ["--version"], layout["worktree"], 0)
+
+
 HOSTILE_TOOL_VALUES = ["", "rm", "../npm", "npx; true", "NPX", "npx\n", "/usr/bin/npx"]
 
 
@@ -1185,4 +1422,31 @@ def test_dispatch_worker_path_resolves_npm_and_npx_to_the_shim(monkeypatch):
     assert shutil.which("npx", path=env["PATH"]) == str(shim_dir / "npx")
 
 
+def test_runner_merge_guard_path_resolves_npm_to_the_shim():
+    from scripts.agent_runtime import runner
+
+    env = runner._apply_merge_guard(mode="danger", env={"PATH": "/usr/bin:/bin"})
+    assert shutil.which("npm", path=env["PATH"]) == str(runner._SHIMS_DIR / "npm")
+
+
 # --- git fixture diagnostic reporting (#10408) ---------------------------------
+
+
+def test_git_diagnostics_dg02_fail_alias_rendering(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "config", "alias.diag-fail", "!echo diag-fail-out; echo diag-fail-err >&2; exit 128")
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        _git(tmp_path, "diag-fail")
+    exc = exc_info.value
+    assert (exc.returncode, exc.cmd, exc.stdout, exc.stderr) == (
+        128,
+        ["git", "diag-fail"],
+        b"diag-fail-out\n",
+        b"diag-fail-err\n",
+    )
+    rendered = exc_info.exconly()
+    assert "fixture git stdout: b'diag-fail-out\\n'" in rendered
+    assert "fixture git stderr: b'diag-fail-err\\n'" in rendered
+    traceback_repr = str(exc_info.getrepr())
+    assert "fixture git stdout: b'diag-fail-out\\n'" in traceback_repr
+    assert "fixture git stderr: b'diag-fail-err\\n'" in traceback_repr

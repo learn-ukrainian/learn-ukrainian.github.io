@@ -293,6 +293,32 @@ def test_word_not_in_vesum(tmp_path):
     assert found["cards"][0]["matched_by"] == "spelling"
 
 
+@pytest.mark.parametrize(
+    ("word", "reason"),
+    [
+        ("", "word is empty"),
+        ("   ", "word is empty"),
+        ("language", word_card.SHAPE_REASON),
+        ("мова; DROP TABLE", word_card.SHAPE_REASON),
+        ("'-", word_card.SHAPE_REASON),
+        ("м" * 101, "word is longer than 100 characters"),
+        (None, "word must be a string"),
+        (42, "word must be a string"),
+    ],
+)
+def test_garbage_input_is_an_explicit_invalid_result(tmp_path, word, reason):
+    calls = []
+    result = lookup(word, write_store(tmp_path / "build", candidate_card()), vesum=calls.append)
+
+    assert (result["result"], result["status"], result["reason"], result["cards"]) == (
+        "invalid_input",
+        "invalid_input",
+        reason,
+        [],
+    )
+    assert calls == []  # Nothing is looked up for an unusable query.
+
+
 def test_stress_marks_and_apostrophes_are_normalised(tmp_path):
     card = candidate_card("wc_dddddddddddd", "п'ять")
     store = write_store(tmp_path / "build", candidate_card(), card)
@@ -520,6 +546,18 @@ def test_cards_directory_symlinked_into_network_storage_is_refused(tmp_path, net
     assert result["card_store"] == {"available": False, "reason": "locality_network"}
     assert str(tmp_path) not in json.dumps(result, ensure_ascii=False)
     assert result["per_facet_tools"] == word_card.PER_FACET_TOOLS
+
+
+@pytest.mark.parametrize("name", ["ledger.json", "build-manifest.json"])
+def test_ledger_or_manifest_symlinked_into_network_storage_is_refused(tmp_path, network_dir, name):
+    root = write_store(tmp_path / "build", candidate_card(), ledger={})
+    (network_dir / name).write_bytes((root / name).read_bytes())
+    (root / name).unlink()
+    (root / name).symlink_to(network_dir / name)
+
+    result = lookup("мова", root)
+
+    assert result["card_store"] == {"available": False, "reason": "locality_network"}
 
 
 def test_dangling_child_symlink_is_refused_not_skipped(tmp_path):

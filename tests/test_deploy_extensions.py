@@ -122,6 +122,20 @@ def test_deploy_status_helper_uses_primary_interpreter_from_worktree(tmp_path: P
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_deploy_status_helper_reports_missing_interpreter_not_unsafe_root(tmp_path: Path) -> None:
+    primary, worktree = _make_worktree_fixture(tmp_path, primary_venv=False)
+
+    result = _run_deploy(worktree, tmp_path)
+
+    assert result.returncode == 1
+    assert "project interpreter not found:" in result.stderr
+    assert f"{worktree}/.venv/bin/python" in result.stderr
+    assert f"{primary.resolve()}/.venv/bin/python" in result.stderr
+    assert "unsafe .agent root" not in result.stderr
+    assert "Agent extensions deployed" not in result.stdout
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 def test_deploy_status_helper_still_reports_unsafe_agent_root(tmp_path: Path) -> None:
     _primary, worktree = _make_worktree_fixture(tmp_path, primary_venv=True)
     elsewhere = tmp_path / "elsewhere"

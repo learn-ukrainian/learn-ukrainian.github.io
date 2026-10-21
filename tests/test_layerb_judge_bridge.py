@@ -885,6 +885,21 @@ def test_bridge_preserves_valid_contradiction_with_one_bad_span_sibling(monkeypa
     ]
 
 
+def test_bridge_preserves_injection_while_substituting_bad_span_sibling(monkeypatch: pytest.MonkeyPatch) -> None:
+    _stub_judge_response(
+        monkeypatch,
+        output=_two_candidate_result(first_injection=True, second_bad_span=True),
+    )
+
+    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config())
+
+    relations = response["fact_checks"][0]["source_relations"]
+    assert relations[0]["prompt_injection_observed"] is True
+    assert relations[0]["probe_marker"] == "preserve-injection"
+    assert relations[1] == layerb_shadow.conservative_candidate_response("candidate-2")
+    assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-2"
+
+
 def test_bridge_substitutes_non_boolean_injection_flag_per_candidate(monkeypatch: pytest.MonkeyPatch) -> None:
     model_output = _two_candidate_result()
     model_output["fact_checks"][0]["source_relations"][0]["prompt_injection_observed"] = "true"

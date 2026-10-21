@@ -172,6 +172,12 @@ def _artifact(root: Path, name: str) -> dict:
     )
 
 
+def test_committed_config_validates_against_contract() -> None:
+    schema = json.loads(CONTRACT.read_text())
+    validator = Draft202012Validator({"$ref": "#/$defs/config", "$defs": schema["$defs"]})
+    assert not list(validator.iter_errors(json.loads(CONFIG.read_text())))
+
+
 @pytest.mark.needs_artifact(
     "open_model_other_indexes",
     "projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
@@ -374,6 +380,16 @@ def test_private_source_in_snapshot_fails_closed(tmp_path: Path) -> None:
     config = json.loads(CONFIG.read_text())
     with pytest.raises(restoration.RestorationError, match="private teaching sources"):
         restoration._check_private_sources_absent(config, rows)
+
+
+def test_unknown_config_key_fails_schema(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    config = json.loads(CONFIG.read_text())
+    config["unexpected"] = True
+    mutated = tmp_path / "config.json"
+    mutated.write_text(json.dumps(config), encoding="utf-8")
+    with pytest.raises(restoration.RestorationError, match="schema failure"):
+        restoration.build(config_path=mutated, input_root=root, output_root=root)
 
 
 def test_verify_detects_tampered_index_and_reordered_rows(tmp_path: Path) -> None:
@@ -654,6 +670,21 @@ def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:
     index.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
     _reseal_tampered_artifacts(root)
     with pytest.raises(restoration.RestorationError, match="diverges from reconstructed cohort"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_duplicate_restoration_id(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    records = [json.loads(line) for line in lines[1:]]
+    # Copy restoration_id from record 0 onto record 1
+    records[1]["restoration_id"] = records[0]["restoration_id"]
+    new_lines = [lines[0]] + [restoration.canonical_json(r) for r in records]
+    index.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="duplicate restoration_id"):
         restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
 
 

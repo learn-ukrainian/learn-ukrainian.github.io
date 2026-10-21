@@ -100,6 +100,97 @@ The word **Добре** (Good) is your first positive reply.
     assert len(issues) == 0, f"Expected clean, got: {[str(i) for i in issues]}"
 
 
+def test_alphabet_phase_allows_uk_prose_when_writer_uses_it():
+    """If the writer DOES add a UK paragraph in M01-M03, it's allowed
+    (with the standard translation-block requirement)."""
+    content = """
+---
+title: Test
+---
+
+## Letters
+
+Introduction paragraph in English.
+
+Українська мова має тридцять три літери. Ця абетка — кирилиця. Кожна літера має свій звук.
+
+> *The Ukrainian language has thirty-three letters. This alphabet is Cyrillic. Each letter has its own sound.*
+
+Back to English.
+"""
+    issues = detect_language_salad(content, "a1", 2)
+    error_types = {i.type for i in issues if i.severity == "error"}
+    # Must NOT fire PHASE_UK_PARAGRAPH_TOO_EARLY (that's for Phase 0 / M04+)
+    assert "PHASE_UK_PARAGRAPH_TOO_EARLY" not in error_types
+    # Must NOT fire PHASE_NO_UK_PARAGRAPHS either
+    assert "PHASE_NO_UK_PARAGRAPHS" not in error_types
+
+
+def test_decoding_phase_rejects_uk_prose_paragraphs():
+    """A1 M04-M14 (Decoding) still forbids multi-sentence UK prose."""
+    content = """
+---
+title: Test
+---
+
+## Practice
+
+English explanation.
+
+Це український параграф. Він має два речення.
+
+More English.
+"""
+    issues = detect_language_salad(content, "a1", 5)
+    error_types = {i.type for i in issues if i.severity == "error"}
+    assert "PHASE_UK_PARAGRAPH_TOO_EARLY" in error_types, (
+        f"Expected PHASE_UK_PARAGRAPH_TOO_EARLY to fire on A1 M05, "
+        f"got: {[str(i) for i in issues]}"
+    )
+
+
+def test_phase_1_requires_uk_paragraphs():
+    """A1 M15+ (Phase 1) MUST have Ukrainian prose paragraphs."""
+    content = """
+---
+title: Test
+---
+
+## Section
+
+All English here. No Ukrainian prose at all, just inline like **кіт** (cat).
+
+More English, nothing else.
+"""
+    issues = detect_language_salad(content, "a1", 20)
+    error_types = {i.type for i in issues if i.severity == "error"}
+    assert "PHASE_NO_UK_PARAGRAPHS" in error_types
+
+
+def test_excessive_inline_glosses_detected_outside_alphabet_phase():
+    """Dense `**term** (gloss)` paragraphs are a style problem outside
+    the alphabet phase (A1 M01-M03).
+
+    Alphabet/phonetics modules are term-gloss dense by design — every
+    letter introduction naturally pairs a Ukrainian word with its English
+    gloss. We only flag the pattern from M04 onward where prose density
+    is expected.
+    """
+    content = """
+---
+title: Test
+---
+
+## Section
+
+Today we learn **кіт** (cat), **собака** (dog), **риба** (fish), **пташка** (bird), and **миша** (mouse). These are the most common **тварини** (animals) you'll meet.
+"""
+    # M20 is firmly outside the alphabet phase — the check must fire here.
+    issues = detect_language_salad(content, "a1", 20)
+    error_types = {i.type for i in issues}
+    assert "SALAD_EXCESSIVE_INLINE_GLOSSES" in error_types
+
+
 def test_excessive_inline_glosses_allowed_in_alphabet_phase():
     """A1 M01-M03 (alphabet phase) must tolerate dense term-gloss pairs.
 

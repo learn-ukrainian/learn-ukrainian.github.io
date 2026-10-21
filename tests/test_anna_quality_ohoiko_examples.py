@@ -20,6 +20,7 @@ from scripts.lexicon.ohoiko_quality_enrichment import (
     apply_ohoiko_quality_enrichment,
     build_ohoiko_book_catalog,
     enrich_entry_with_ohoiko,
+    is_duplicate_sense,
     is_plausible_example,
     merge_examples,
     merge_translation,
@@ -397,6 +398,17 @@ def test_parse_1000_words_paired_equal_headword() -> None:
     }
 
 
+def test_parse_1000_words_comma_pair_and_gender() -> None:
+    cid, title, text = SAMPLE_1000_CHUNKS["e0006"]
+    parsed = parse_1000_words_chunk(cid, title, text)
+    assert parsed.entry_number == 6
+    assert parsed.lemmas == ["актор", "акторка"]
+    assert parsed.gloss == "actor, actress"
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Він хо́че ста́ти акто́ром."
+    assert parsed.example["en"] == "He wants to become an actor."
+
+
 def test_parse_1000_words_two_col_wrap_discount() -> None:
     cid, title, text = SAMPLE_1000_CHUNKS["e0007"]
     parsed = parse_1000_words_chunk(cid, title, text)
@@ -488,6 +500,17 @@ def test_parse_500_verbs_reflexive_bracket() -> None:
     assert parsed.example is not None
     assert parsed.example["uk"] == "Я ба́чу вели́кий буди́нок."
     assert parsed.example["en"] == "I see a big house."
+
+
+def test_parse_500_verbs_multiple_perfectives() -> None:
+    cid, title, text = SAMPLE_500_CHUNKS["v0018"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.entry_number == 18
+    assert parsed.lemmas == ["будувати", "збудувати", "побудувати"]
+    assert parsed.gloss == "to build"
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Робітники́ будую́ть но́вий міст."
+    assert parsed.example["en"] == "Workers are building a new bridge."
 
 
 def test_parse_500_verbs_ocr_accent_wrapped_entry_277() -> None:
@@ -635,6 +658,15 @@ def test_is_plausible_example_accepts_valid_sentences() -> None:
 # ---------------------------------------------------------------------------
 # Tests: Translation Duplicate Detection and Merging
 # ---------------------------------------------------------------------------
+
+
+def test_is_duplicate_sense_exact_and_subterms() -> None:
+    assert is_duplicate_sense("to analyze", "to analyze") is True
+    assert is_duplicate_sense("bus (vehicle)", "bus") is True
+    assert is_duplicate_sense("bus, motorbus", "bus") is True
+    assert is_duplicate_sense("coach (long-distance bus)", "bus") is False
+    assert is_duplicate_sense("want (to desire)", "to wish, to desire") is False
+    assert is_duplicate_sense("to desire, to want, to wish", "to wish, to desire") is True
 
 
 def test_merge_translation_preserves_distinct_prior_senses() -> None:

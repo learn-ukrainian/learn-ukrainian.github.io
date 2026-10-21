@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import threading
 from pathlib import Path
 
 import pytest
+from fastapi import HTTPException
 
+from scripts.api import coordination_router
 from scripts.orchestration import agent_ledger
 
 pytestmark = pytest.mark.reads_content
@@ -192,3 +195,30 @@ def test_absolute_owned_path_is_rejected(tmp_path: Path):
             agent="codex",
             owned_paths=[str(tmp_path / "site/src")],
         )
+
+
+def test_coordination_task_rejects_invalid_task_id():
+    with pytest.raises(HTTPException) as exc_info:
+        asyncio.run(coordination_router.coordination_task("bad id"))
+
+    assert exc_info.value.status_code == 400
+
+
+def test_cli_reports_bad_json(tmp_path: Path, capsys):
+    rc = agent_ledger.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "upsert-task",
+            "--task-id",
+            "bad-json",
+            "--agent",
+            "codex",
+            "--metadata",
+            "{",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 2
+    assert "invalid JSON object" in payload["error"]

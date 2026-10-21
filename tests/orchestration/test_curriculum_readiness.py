@@ -298,6 +298,66 @@ def test_missing_only_is_manifest_ordered_and_preparation_safe(
     assert "a1-audit" not in rows
 
 
+def test_inventory_loads_global_contracts_once_and_never_writes_repository(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo_root, _levels = _inventory_fixture(tmp_path)
+    calls = {"manifest": 0, "config": 0, "contract_sources": 0}
+    json_paths: list[Path] = []
+    profile_tracks: list[str] = []
+    original_manifest = readiness.load_active_manifest
+    original_config = readiness.load_config
+    original_contract_sources = readiness._contract_sources
+    original_load_json = readiness._load_json
+    original_select_profile = readiness._select_profile
+
+    def load_manifest(*args, **kwargs):
+        calls["manifest"] += 1
+        return original_manifest(*args, **kwargs)
+
+    def load_config(*args, **kwargs):
+        calls["config"] += 1
+        return original_config(*args, **kwargs)
+
+    def contract_sources(*args, **kwargs):
+        calls["contract_sources"] += 1
+        return original_contract_sources(*args, **kwargs)
+
+    def load_json(path: Path):
+        json_paths.append(path)
+        return original_load_json(path)
+
+    def select_profile(config: Mapping, track: str, manifest_type: str):
+        profile_tracks.append(track)
+        return original_select_profile(config, track, manifest_type)
+
+    monkeypatch.setattr(readiness, "load_active_manifest", load_manifest)
+    monkeypatch.setattr(readiness, "load_config", load_config)
+    monkeypatch.setattr(readiness, "_contract_sources", contract_sources)
+    monkeypatch.setattr(readiness, "_load_json", load_json)
+    monkeypatch.setattr(readiness, "_select_profile", select_profile)
+    passing_validators = {
+        validator_id: lambda _path, _option, _context: readiness.ValidationResult(True, "fixture")
+        for validator_id in readiness.VALIDATORS
+    }
+    before = {path.relative_to(repo_root): path.read_bytes() for path in repo_root.rglob("*") if path.is_file()}
+
+    summary = readiness.evaluate_inventory(
+        mode="summary",
+        repo_root=repo_root,
+        validators=passing_validators,
+    )
+
+    after = {path.relative_to(repo_root): path.read_bytes() for path in repo_root.rglob("*") if path.is_file()}
+    assert summary["module_count"] == 6
+    assert calls == {"manifest": 1, "config": 1, "contract_sources": 1}
+    assert profile_tracks == ["bio", "a1"]
+    assert json_paths.count(repo_root / readiness.CONFIG_SCHEMA_PATH) == 1
+    assert json_paths.count(repo_root / readiness.RESULT_SCHEMA_PATH) == 1
+    assert after == before
+
+
 def test_prepared_unbuilt_bio_uses_real_validators_and_exact_sources(tmp_path: Path) -> None:
     repo_root = _bio_fixture(tmp_path)
 
@@ -712,6 +772,27 @@ def test_partial_bundle_stops_for_built_artifact_recovery(tmp_path: Path) -> Non
     assert result["state"] == "partial-bundle"
     assert result["next_action"] == "stop"
     assert "PARTIAL_LEARNER_BUNDLE" in {item["id"] for item in result["findings"]}
+
+
+def test_config_rejects_raw_prose_and_unknown_selector(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    _copy_contracts(repo_root)
+    config_path = repo_root / readiness.CONFIG_PATH
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    config["profiles"]["core"]["prompt_text"] = "free-form bypass"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(readiness.ReadinessError, match="Additional properties"):
+        readiness.load_config(repo_root=repo_root)
+
+    _copy_contracts(repo_root := tmp_path / "selector")
+    config_path = repo_root / readiness.CONFIG_PATH
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    config["selectors"]["tracks"]["bio"] = "missing-profile"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(readiness.ReadinessError, match="unknown profile"):
+        readiness.load_config(repo_root=repo_root)
 
 
 def test_host_path_only_text_change_ignores_baked_checkout_rewrites() -> None:

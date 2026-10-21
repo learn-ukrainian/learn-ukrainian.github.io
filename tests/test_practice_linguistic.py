@@ -8,22 +8,28 @@ import pytest
 
 from scripts.audit.generate_practice_deck import JsonVesumVerifier
 from scripts.audit.practice_linguistic import (
+    RULE_BLANK_COUNT,
     RULE_CASE_LABEL,
+    RULE_DISTRACTOR_DISTINCT,
     RULE_HOMOGRAPH,
     RULE_IDENTITY_LABEL,
     RULE_INTENTIONAL_ERROR_QUARANTINE,
+    RULE_LEADING_QUIZ,
     RULE_PREP_NOM,
     RULE_PROMPT_CONTEXT,
     RULE_PROMPT_LEVEL,
     RULE_STRESS,
     RULE_UNIQUE_ANSWER,
+    check_cloze_blank_count,
     check_cloze_item,
     check_homograph_oblique,
     check_identity_rule_consistency,
     check_intentional_error_quarantine,
     check_inventory_prompt_context,
     check_inventory_prompt_level,
+    check_leading_quiz,
     check_nominative_only_after_prep,
+    check_options_uniqueness,
     check_stress_item,
     check_unique_answer_evidence,
     identity_blank_case,
@@ -220,6 +226,12 @@ def test_identity_rule_both_directions() -> None:
     )
 
 
+def test_leading_quiz_marker_rejected() -> None:
+    findings = check_leading_quiz("x", "Д Це речення.")
+    assert any(f.rule_id == RULE_LEADING_QUIZ for f in findings)
+    assert check_leading_quiz("x", "Це речення.") == []
+
+
 def test_stress_recompute_is_not_noop() -> None:
     good = {
         "stressId": "або:stress",
@@ -265,6 +277,27 @@ def test_source_attested_blank_join() -> None:
     assert findings
 
 
+def test_validate_mode_items_stress_is_not_noop() -> None:
+    from scripts.audit.generate_practice_deck import validate_mode_items
+
+    assert validate_mode_items("stress", []) == []
+    errors = validate_mode_items(
+        "stress",
+        [
+            {
+                "stressId": "bad:stress",
+                "lemma": "або",
+                "stressed": "або",
+                "unstressed": "або",
+                "stressIndex": 0,
+                "nuclei": [{"index": 0, "label": "а"}, {"index": 2, "label": "о"}],
+            }
+        ],
+    )
+    assert errors
+    assert any("acute" in error or "stress" in error for error in errors)
+
+
 def test_check_assets_vesum_flag_runs_linguistic_pack(tmp_path: Path) -> None:
     """Schema-only stays the default; --vesum-db enables the pack."""
     from scripts.audit.check_static_practice_assets import check_assets
@@ -306,6 +339,26 @@ def test_intentional_error_quarantine_rejected() -> None:
 
     good_sent = "Учитель уважно пояснив, як правильно написати це слово в зошиті."
     assert check_intentional_error_quarantine("item_good", good_sent) == []
+
+
+def test_cloze_blank_count_single_blank() -> None:
+    assert check_cloze_blank_count("item", "Це гарне _____ речення.") == []
+    assert check_cloze_blank_count("item", "Це гарне ___ речення.") == []
+    # 0 blanks
+    findings_0 = check_cloze_blank_count("item", "Тут немає пропущеного місця.")
+    assert any(f.rule_id == RULE_BLANK_COUNT for f in findings_0)
+    # Multiple blanks
+    findings_multi = check_cloze_blank_count("item", "Перше _____ і друге _____ речення.")
+    assert any(f.rule_id == RULE_BLANK_COUNT for f in findings_multi)
+
+
+def test_options_uniqueness_detects_duplicates() -> None:
+    unique_opts = [{"label": "книга"}, {"label": "зошит"}, {"label": "ручка"}]
+    assert check_options_uniqueness("item", unique_opts) == []
+
+    dup_opts = [{"label": "книга"}, {"label": "зошит"}, {"label": "книга"}]
+    findings = check_options_uniqueness("item", dup_opts)
+    assert any(f.rule_id == RULE_DISTRACTOR_DISTINCT for f in findings)
 
 
 # Analyses copied from data/vesum.db (scripts.verification.vesum.verify_words).

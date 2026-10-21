@@ -234,6 +234,13 @@ def test_post_build_partition_retarget_cannot_reuse_old_review_receipt(
         scanner.draw_audit_sample(bundle, entropy_receipt={})
 
 
+def test_entropy_fails_closed_until_approved_helper_exists(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    bundle = _bundle(tmp_path, monkeypatch)
+    monkeypatch.setattr(scanner.importlib, "import_module", lambda name: (_ for _ in ()).throw(ImportError(name)))
+    with pytest.raises(scanner.TextbookNonhitError, match="approved common anti-grinding"):
+        scanner.draw_audit_sample(bundle, entropy_receipt={})
+
+
 def test_audit_recomputes_sample_and_binds_immutable_auditor_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     bundle = _bundle(tmp_path, monkeypatch)
     monkeypatch.setattr(scanner, "_verify_approved_entropy", lambda *args, **kwargs: _entropy())

@@ -10,8 +10,9 @@ import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
+import scripts.api.fleet_board.router as board_routes
 from scripts.api import main as api_main
-from scripts.api.fleet_board import http_sources
+from scripts.api.fleet_board import http_sources, values
 from scripts.api.fleet_board import sources as sources_mod
 from scripts.api.fleet_board.cache import CACHE
 from scripts.api.fleet_board.fetch import _DeadlineRedirect, fetch_json
@@ -214,6 +215,45 @@ def test_alert_timeout_is_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "alerts.example" not in response.text
 
 
+def test_failed_refresh_serves_cached_alerts_as_stale(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = {"n": 0}
+
+    def fetch(_url, **_kwargs):
+        calls["n"] += 1
+        if calls["n"] > 1:
+            raise TimeoutError("slow-token")
+        return [{"labels": {"alertname": "DiskSpace"}, "annotations": {}, "status": {"state": "active"}}]
+
+    monkeypatch.setattr(http_sources, "fetch_json", fetch)
+    monkeypatch.setenv("FLEET_ALERTMANAGER_URL", "https://alerts.example")
+    first = client.get("/api/fleet/v1/alerts")
+    second = client.get("/api/fleet/v1/alerts")
+    assert first.status_code == second.status_code == 200
+    assert calls["n"] == 1
+    assert _source(second.json())["status"] == "ok"
+    monkeypatch.setattr(values, "CACHE_TTL_S", 0)
+    third = client.get("/api/fleet/v1/alerts")
+    assert third.status_code == 200
+    assert calls["n"] == 2
+    assert _source(third.json())["status"] == "stale"
+    assert third.json()["data"]["alerts"][0]["name"] == "DiskSpace"
+    assert "slow-token" not in third.text
+
+
+def test_loader_bug_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    def explode():
+        raise RuntimeError("boom-token")
+
+    monkeypatch.setattr(board_routes, "load_alerts", explode)
+    response = client.get("/api/fleet/v1/alerts")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["schema"] == "fleet.v1.alerts"
+    assert body["data"] == {"alerts": []}
+    assert _source(body)["status"] == "unavailable"
+    assert "boom-token" not in response.text
+
+
 
 def _series(raw: str) -> dict:
     return {
@@ -260,6 +300,37 @@ def test_stats_ignore_client_queries_and_isolate_errors(monkeypatch: pytest.Monk
     assert "userinfo-token" not in response.text
     assert "hidden-query-token" not in response.text
     assert "metrics.example" not in response.text
+
+
+def test_stats_transport_failure_is_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fetch(_url, **_kwargs):
+        raise TimeoutError("slow-token")
+
+    monkeypatch.setattr(http_sources, "fetch_json", fetch)
+    monkeypatch.setenv("FLEET_PROMETHEUS_URL", "https://metrics.example")
+    response = client.get("/api/fleet/v1/stats")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert all(item["status"] == "unavailable" and item["value"] is None for item in body["data"]["stats"])
+    assert "slow-token" not in response.text
+    assert "metrics.example" not in response.text
+
+
+def test_stats_application_failure_without_a_cache_is_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fetch(_url, **_kwargs):
+        return {"status": "error", "error": "hidden-query-token"}
+
+    monkeypatch.setattr(http_sources, "fetch_json", fetch)
+    monkeypatch.setenv("FLEET_PROMETHEUS_URL", "https://metrics.example")
+    response = client.get("/api/fleet/v1/stats")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert all(item["value"] is None for item in body["data"]["stats"])
+    assert "hidden-query-token" not in response.text
 
 
 def test_links_are_built_from_the_base_without_secrets(monkeypatch: pytest.MonkeyPatch) -> None:

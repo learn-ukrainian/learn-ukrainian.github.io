@@ -51,6 +51,39 @@ def test_weekly_status_follows_visible_headroom(used, expected, delta, will_last
     assert credit_lane.pace_deficit_state("claude", info)["status"] == status
 
 
+@pytest.mark.parametrize("reserve", ["credits", "resets"])
+@pytest.mark.parametrize("delta", [1.0, 10.0])
+def test_high_usage_covered_deficit_is_cool(reserve, delta, monkeypatch):
+    now = datetime.now(UTC)
+    info = {
+        "status": "warm",
+        "remaining_pct": 20.0,
+        "freshness": "fresh",
+        "age_s": 0,
+        "fetched_at": now.isoformat(),
+        "credit_balance": 62500.0 if reserve == "credits" else 0.0,
+        "reset_credits": {
+            "available_count": 1,
+            "expires_at": [(now + timedelta(days=7)).isoformat()],
+            "fetched_at": now.isoformat(),
+        }
+        if reserve == "resets"
+        else None,
+        "codexbar": {
+            "weekly_used_pct": 80.0,
+            "weekly_resets_at": (now + timedelta(days=7 * (1 - (80.0 - delta) / 100))).isoformat(),
+            "weekly_expected_pct": 80.0 - delta,
+            "weekly_pace_delta_pct": delta,
+            "will_last_to_reset": False,
+        },
+    }
+    monkeypatch.setattr(
+        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 0, "last_rate_limited_at": None}
+    )
+    assert credit_lane.pace_deficit_state("codex", info, now=now)["status"] == "cool"
+    assert state_router._status_from_weekly_used(80.0, info["codexbar"], lane="codex", info=info, now=now) == "cool"
+
+
 @pytest.mark.parametrize("visible", [True, False])
 def test_claude_headroom_reaches_routing_consumers(visible, monkeypatch, tmp_path):
     now = datetime(2026, 10, 3, 15, 12, tzinfo=UTC)
@@ -284,6 +317,23 @@ def test_reviewer_resolver_covered_deficit(reserve_case, grok_status):
     # Reviews do not require pace coverage while allowance remains above reserve.
     assert sol.status == "selected"
     assert result.selected.concrete_model == "gpt-6.1-sol"
+
+
+@pytest.mark.parametrize("native_only", [False, True])
+def test_capacity_rows_retain_reserve_evidence_for_idle_settle(reserve_case, native_only):
+    info, covered, now = reserve_case
+    info = copy.deepcopy(info)
+    if native_only:
+        for key in ("freshness", "age_s", "fetched_at", "reset_credits", "credit_balance"):
+            info["codexbar"][key] = info.pop(key)
+    rows = capacity_pick.build_lane_rows(
+        {"agents": {"codex": info}, "in_flight": {}},
+        reset_reserve=unavailable_reserve(),
+        now=now,
+    )
+    lanes = idle_settle.lanes_from_capacity_rows(rows)
+    codex = next(lane for lane in lanes if lane.lane == "codex")
+    assert codex.is_healthy_available() is covered
 
 
 @pytest.mark.parametrize("used", [99.0, 100.0])

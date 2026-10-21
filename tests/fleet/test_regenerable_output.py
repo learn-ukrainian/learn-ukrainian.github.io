@@ -179,6 +179,15 @@ def test_invalid_build_paths_are_refused(checkout, name):
     assert not patterns.is_regenerable_ignored_path(name, worktree=checkout[0], tracked=set())
 
 
+def test_real_build_directory_is_not_a_subtree_exemption(checkout):
+    repo, primary, _ = checkout
+    ignore_site(repo)
+    fixtures.artifact(checkout, "site/dist/index.html")
+    fixtures.artifact(checkout, "site/dist/example.db")
+    assert not patterns.is_regenerable_ignored_path("site/dist", worktree=repo, tracked=set())
+    assert output._ignored_output_files(repo, primary, {}) == ["site/dist/example.db"]
+
+
 def test_nonregular_build_output_is_refused(checkout):
     repo = checkout[0]
     name = "site/dist/pipe.json"

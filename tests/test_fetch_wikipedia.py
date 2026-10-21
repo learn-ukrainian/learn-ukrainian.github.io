@@ -61,6 +61,20 @@ class TestIsPedagogicalHeader:
     def test_headers_are_filtered(self, topic):
         assert fw._is_pedagogical_header(topic) is True
 
+    @pytest.mark.parametrize("topic", [
+        "Тарас Шевченко",
+        "Іван Франко",
+        "Київська Русь",
+        "Президентство Дуайта Ейзенхауера",
+        "Голодомор 1932-1933 років",
+        "Пересопницьке Євангеліє",
+        "Ізборник Святослава",
+        # Long-prefixed colon-containing title that is genuinely an article
+        "Pacta et Constitutiones legum libertatumque Exercitus Zaporoviensis: Philippus Orlyk",
+    ])
+    def test_real_topics_are_kept(self, topic):
+        assert fw._is_pedagogical_header(topic) is False
+
 
 # ──────────────────────────────────────────────────────────────────────
 # _extract_topics_from_plans — end-to-end topic list filtering

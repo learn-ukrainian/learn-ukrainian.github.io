@@ -2,6 +2,7 @@
 
 import json
 import sqlite3
+from pathlib import Path
 
 import pytest
 import yaml
@@ -24,6 +25,16 @@ def test_ulif_cited_mezhy_override_is_single_accent():
     assert result["status"] == "ok"
     assert result["matches"][0]["override_applied"] is True
     assert result["matches"][0]["stressed_form"] == "межи́"
+
+
+def test_no_disallowed_dictionary_citations_in_stress_data_or_evidence():
+    repo = Path(__file__).resolve().parents[3]
+    for tree in (repo / "scripts/data", repo / "scripts/curriculum/evidence"):
+        for path in tree.rglob("*"):
+            if path.is_file() and "__pycache__" not in path.parts:
+                content = path.read_bytes()
+                assert "СУМ-11".encode() not in content, path
+                assert b"search_definitions" not in content, path
 
 
 @pytest.mark.parametrize("form", PENDING_FORMS)

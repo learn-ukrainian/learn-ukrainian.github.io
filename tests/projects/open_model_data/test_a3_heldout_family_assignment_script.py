@@ -146,6 +146,14 @@ def test_a3_heldout_assignment_commitment_resists_public_enumeration() -> None:
     assert assignment.assignment_commitment_sha256(salt, result["membership"]) == real_commitment
 
 
+def test_a3_heldout_assignment_commitment_is_domain_separated_from_salt_commitment() -> None:
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    assert assignment.assignment_commitment_sha256(salt, result["membership"]) != assignment.salt_commitment_sha256(
+        salt
+    )
+
+
 def test_a3_heldout_assignment_requires_exact_32_byte_salt() -> None:
     with pytest.raises(assignment.AssignmentError, match="32 bytes"):
         assignment.assign(b"0" * 16, FAMILY_IDS)
@@ -376,6 +384,28 @@ def test_a3_heldout_assignment_rerun_detects_tampered_membership(tmp_path: Path)
         assignment.verify_against_receipt(membership_path, receipt, FAMILY_IDS)
 
 
+def test_a3_heldout_assignment_rerun_detects_tampered_heldout_family_ids_list(tmp_path: Path) -> None:
+    """The persisted ``heldout_family_ids`` list is validated against
+    recomputation independently of ``membership`` -- a tamper that only
+    touches the derived list (leaving ``membership`` itself untouched) must
+    still be caught."""
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    receipt = _fresh_receipt(salt, FAMILY_IDS)
+    membership_path = private_dir / assignment.MEMBERSHIP_FILENAME
+    assignment.write_private_artifact(membership_path, salt, result, assignment.receipt_binding_sha256(receipt))
+
+    payload = json.loads(membership_path.read_text(encoding="utf-8"))
+    payload["heldout_family_ids"] = ["fam-not-really-heldout"]
+    os.chmod(membership_path, 0o600)
+    membership_path.write_text(json.dumps(payload))
+    os.chmod(membership_path, assignment.PRIVATE_FILE_MODE)
+
+    with pytest.raises(assignment.AssignmentError, match="heldout_family_ids"):
+        assignment.verify_against_receipt(membership_path, receipt, FAMILY_IDS)
+
+
 # --- filesystem protections -------------------------------------------------
 
 
@@ -568,6 +598,20 @@ def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_descriptor_sha25
     assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
 
 
+def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_metadata_field(tmp_path: Path) -> None:
+    """A mismatched individual metadata field (heldout_fraction) must be
+    caught independently of the descriptor hash comparison -- not just
+    trusted because some other field still matches."""
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
+    receipt["heldout_partition_seal"]["assignment_algorithm"]["heldout_fraction"] = 0.5
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="assignment_algorithm metadata"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
 def test_a3_heldout_main_refuses_receipt_with_altered_heldout_count(tmp_path: Path) -> None:
     receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["heldout_partition_seal"]["heldout_count"] = 2
@@ -622,6 +666,36 @@ def test_a3_heldout_main_refuses_receipt_with_dropped_cycle007_denial(tmp_path: 
     with pytest.raises(assignment.AssignmentError, match="not denied"):
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
     assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_cycle007_denial_flipped(tmp_path: Path) -> None:
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
+    receipt["cycle007_denial"]["reused_in_v4"] = True
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="reused_in_v4"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_draft_receipt_where_declared_family_count_disagrees_with_array(
+    tmp_path: Path,
+) -> None:
+    """An unsealed draft receipt (which skips schema validation -- see
+    ``validate_receipt_independently``) that declares
+    ``source_family_registry.family_count: 9`` while the ``families`` array
+    actually holds 8 must be refused. Counts are derived from the actual
+    unique ``family_id`` set, never the declared integer."""
+    receipt = _receipt_shape(FAMILY_IDS)
+    removed = receipt["source_family_registry"]["families"].pop()
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="family_count"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+    assert removed  # keep the popped entry referenced so intent is unambiguous
 
 
 def test_a3_heldout_main_refuses_receipt_with_duplicate_family_ids(tmp_path: Path) -> None:
@@ -783,6 +857,31 @@ def test_a3_heldout_assignment_migrate_refuses_when_no_artifact_exists(tmp_path:
 # tests exercise real git worktrees (not mocks) to prove PRIVATE_ROOT
 # resolves to the one shared primary checkout regardless of which checkout
 # invokes this script.
+
+
+def test_package_resources_are_fixed_across_worktree_metadata(tmp_path, monkeypatch) -> None:
+    baseline = assignment.DEFAULT_RECEIPT.read_bytes()
+    worktree = tmp_path / "dispatch-worktree"
+    worktree.mkdir()
+    (worktree / ".git").write_text("gitdir: deliberately-unresolvable-fixture\n")
+    monkeypatch.chdir(worktree)
+    assignment.validate_receipt_independently(json.loads(baseline))
+    assert assignment.DEFAULT_RECEIPT.read_bytes() == baseline
+    assert not (worktree / "batch_state").exists()
+
+
+def test_explicit_private_fixture_directory_is_independent_of_checkout(tmp_path, monkeypatch) -> None:
+    salt = bytes(range(32))
+    receipt = _write_receipt(tmp_path, _fresh_receipt(salt, FAMILY_IDS))
+    private = tmp_path / "explicit-private"
+    unrelated = tmp_path / "unrelated-working-directory"
+    unrelated.mkdir()
+    monkeypatch.chdir(unrelated)
+    _generate(
+        monkeypatch, ["--receipt", str(receipt), "--private-dir", str(private), "--generate"], salt_hex=salt.hex()
+    )
+    assert (private / assignment.MEMBERSHIP_FILENAME).is_file()
+    assert not (unrelated / "batch_state").exists()
 
 
 def test_package_validation_works_without_git_or_a_checkout(tmp_path, monkeypatch) -> None:

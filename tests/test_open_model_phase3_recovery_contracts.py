@@ -166,6 +166,19 @@ def test_near_duplicate_policy_artifact_content_drift_fails_closed(tmp_path: Pat
         contracts.validate_contracts(root)
 
 
+@pytest.mark.parametrize("mutation", ["role_reuse", "root_assignment"])
+def test_role_reuse_and_root_assignment_fail_closed(tmp_path: Path, mutation: str) -> None:
+    root = _isolated_root(tmp_path)
+    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
+    if mutation == "role_reuse":
+        roles["seats"][1]["seat_id"] = roles["seats"][0]["seat_id"]
+    else:
+        roles["root"]["decision_role_ids"] = ["scorer"]
+    _write_json(path, roles)
+    with pytest.raises(contracts.ContractError, match="schema violation"):
+        contracts.validate_contracts(root)
+
+
 def test_weakened_per_phenomenon_threshold_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
@@ -229,6 +242,15 @@ def test_nonlexical_disposition_totals_and_cycle_binding_cannot_drift(tmp_path: 
         contracts.validate_contracts(cycle_root)
 
 
+def test_wrong_current_2026_hash_fails_closed(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
+    coverage["pravopys_2026_authority"]["official_pdf_sha256"] = "0" * 64
+    _write_json(path, coverage)
+    with pytest.raises(contracts.ContractError):
+        contracts.validate_contracts(root)
+
+
 def test_present_hash_on_nonfrozen_universe_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
@@ -255,6 +277,17 @@ def test_lexical_disposition_mode_fails_closed(tmp_path: Path) -> None:
     next(item for item in coverage["mandatory_families"] if item["family_id"] == "lexical_vesum")["coverage_mode"] = (
         "source_conversion"
     )
+    _write_json(path, coverage)
+    with pytest.raises(contracts.ContractError):
+        contracts.validate_contracts(root)
+
+
+@pytest.mark.parametrize("field", ["audit", "scanner_nonhit_audit"])
+def test_both_textbook_audits_are_required(tmp_path: Path, field: str) -> None:
+    root = _isolated_root(tmp_path)
+    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
+    textbook = next(item for item in coverage["mandatory_families"] if item["family_id"] == "school_textbooks")
+    del textbook[field]
     _write_json(path, coverage)
     with pytest.raises(contracts.ContractError):
         contracts.validate_contracts(root)
@@ -308,6 +341,18 @@ def test_partial_local_binding_state_returns_json_error(tmp_path: Path, capsys: 
     result = json.loads(capsys.readouterr().out)
     assert result["ok"] is False
     assert "binding input" in result["error"]
+
+
+def test_all_roles_unlaunched_lie_fails_closed(tmp_path: Path) -> None:
+    root = _isolated_root(tmp_path)
+    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
+    for binding in roles["task_bindings"]:
+        binding["status"] = "reserved_not_launched"
+    _write_json(path, roles)
+    with pytest.raises(
+        contracts.ContractError, match=r"schema violation|approved contract-text review binding changed"
+    ):
+        contracts.validate_contracts(root)
 
 
 @pytest.mark.parametrize(

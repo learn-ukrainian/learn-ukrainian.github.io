@@ -200,6 +200,29 @@ def test_purity_gate_excludes_one_and_two_letter_tokens_for_calibration(tmp_path
     assert result.accepted_records == 4
 
 
+def test_textbook_without_period_metadata_accepts_modern_attestation(tmp_path: Path) -> None:
+    attestation = _attestation(
+        "textbook-source",
+        "chunk-1",
+        "Її зошит лежить на парті.",
+        chunk_text="Її зошит лежить на парті.",
+    )
+    records: list[dict[str, object]] = [
+        _source("textbook-source", language_period=None, source_kind="textbook"),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        attestation,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    _write_jsonl(input_path, records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", [])
+
+    result = projection.build_projection(input_path, tmp_path / "atlas-v2.db", vesum_db=vesum_db)
+
+    assert result.accepted_records == 4
+    assert result.rejection_counts == {}
+
+
 @pytest.mark.parametrize(
     ("source_kind", "source_period", "attestation_period", "expected_reason"),
     [
@@ -295,6 +318,33 @@ def test_mixed_modern_and_heritage_periods_badge_the_heritage_value(tmp_path: Pa
     exported_records = [json.loads(line) for line in export_path.read_text(encoding="utf-8").splitlines()]
     exported_attestation = next(record for record in exported_records if record["record_type"] == "attestation")
     assert exported_attestation["period_badge"] == "middle_ukrainian"
+
+
+def test_old_east_slavic_attestation_is_exported_with_its_period_badge(tmp_path: Path) -> None:
+    attestation = _attestation(
+        "literary-source", "old-1", "Її зошит лежить на парті.", language_period="old_east_slavic"
+    )
+    records: list[dict[str, object]] = [
+        _source("literary-source", language_period=None),
+        {"record_type": "lemma_entry", "entry_slug": "прапор", "lemma": "прапор", "entry_type": "lemma"},
+        {"record_type": "sense", "sense_slug": "прапор:core", "entry_slug": "прапор"},
+        attestation,
+    ]
+    input_path = tmp_path / "input.jsonl"
+    export_path = tmp_path / "export.jsonl"
+    db_path = tmp_path / "atlas-v2.db"
+    _write_jsonl(input_path, records)
+    vesum_db = _vesum_db(tmp_path / "vesum.db", [])
+
+    result = projection.build_projection(input_path, db_path, vesum_db=vesum_db)
+    projection.export_projection(db_path, export_path)
+
+    assert result.accepted_records == 4
+    assert result.admitted_period_rows == 1
+    assert result.admitted_period_counts == {"old_east_slavic": 1}
+    exported_records = [json.loads(line) for line in export_path.read_text(encoding="utf-8").splitlines()]
+    exported_attestation = next(record for record in exported_records if record["record_type"] == "attestation")
+    assert exported_attestation["period_badge"] == "old_east_slavic"
 
 
 def test_textbook_exercise_screening_requires_full_chunk_text(tmp_path: Path) -> None:

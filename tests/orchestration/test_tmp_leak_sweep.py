@@ -94,6 +94,29 @@ def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch) -> None:
     assert report["bytes_freed"] > 0
 
 
+def test_path_has_live_process_matching_and_nonmatching(tmp_path: Path, monkeypatch) -> None:
+    _clear_proc_probe(monkeypatch)
+    target = tmp_path / "review-process-check"
+
+    # returncode == 0 means matching process found -> True
+    monkeypatch.setattr(
+        tls.subprocess,
+        "run",
+        lambda *args, **kwargs: tls.subprocess.CompletedProcess(
+            args=args[0], returncode=0, stdout=b"1234\n", stderr=b""
+        ),
+    )
+    assert tls.path_has_live_process(target) is True
+
+    # returncode == 1 means proven no-match -> False
+    monkeypatch.setattr(
+        tls.subprocess,
+        "run",
+        lambda *args, **kwargs: tls.subprocess.CompletedProcess(args=args[0], returncode=1, stdout=b"", stderr=b""),
+    )
+    assert tls.path_has_live_process(target) is False
+
+
 def test_path_has_live_process_rc3_fails_closed(tmp_path: Path, monkeypatch) -> None:
     """pgrep exit code 3 (fatal error) must fail closed as live (rc 1 is only non-live rc)."""
     target = tmp_path / "review-rc3-check"
@@ -208,6 +231,28 @@ def _clear_proc_probe(monkeypatch) -> None:
     ``ssh-agent``), which the fail-closed probe rightly reports as unknown.
     """
     monkeypatch.setattr(tls, "proc_references", lambda _p, **_kw: False)
+
+
+def test_classify_candidate_name_orders_protected_exact_inventory_pattern() -> None:
+    for name in sorted(tls.LEGACY_EXACT_ALLOWLIST):
+        assert tls.classify_candidate_name(name) == tls.CANDIDATE_KIND_LEGACY_EXACT
+    assert {
+        "atlas-8307-410k-final.db",
+        "atlas-8307-410k-r2.db",
+        "atlas-8307-synthetic-410k.json",
+        "qa-8686-ui-r2",
+        "qa-8686-exercises-r2",
+    } == tls.LEGACY_EXACT_ALLOWLIST
+    assert tls.classify_candidate_name("atlas-8672-ci-pytest3.log") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
+    assert tls.classify_candidate_name("qa-8686-ui-r3") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
+    assert tls.classify_candidate_name("atlas-8307-410k-final.db.bak") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
+    assert tls.classify_candidate_name("review-6621") == tls.CANDIDATE_KIND_PATTERN
+    assert tls.classify_candidate_name("atlas-8307-promotion-plan.md") is None
+    assert tls.classify_candidate_name("atlas-8307-decision.yaml") is None
+    assert tls.classify_candidate_name("qa-1.decision.yml") is None
+    assert tls.classify_candidate_name(tls.NAMESPACE_DIRNAME) is None
+    assert tls.classify_candidate_name("atlas-consult") is None  # no issue number: not a known family
+    assert tls.classify_candidate_name("com.apple.imagent") is None
 
 
 def test_legacy_exact_names_drain_but_other_atlas_qa_residue_is_inventory_only(tmp_path: Path, monkeypatch) -> None:
@@ -374,6 +419,21 @@ def test_proc_probe_unknown_when_same_uid_cwd_or_fd_table_denied(tmp_path: Path,
     assert tls.proc_references(target, proc_root=proc_root) is None
 
 
+def test_proc_probe_unknown_when_a_descriptor_link_is_denied(tmp_path: Path, monkeypatch) -> None:
+    target = tmp_path / "qa-8686-ui-r2"
+    target.mkdir()
+    proc_root = _fake_proc(tmp_path, 4013, cmdline=b"sleep\0", fd=tmp_path / "elsewhere")
+    real_readlink = os.readlink
+
+    def denied_fd(path, *args, **kwargs):
+        if "/fd/" in str(path):
+            raise PermissionError(13, "denied")
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(tls.os, "readlink", denied_fd)
+    assert tls.proc_references(target, proc_root=proc_root) is None
+
+
 def _deny_probe(monkeypatch, *, names: tuple[str, ...]) -> None:
     """Make cwd/environ/fd reads of a fake process fail with EACCES, as a foreign-uid process does."""
     real_readlink = os.readlink
@@ -460,6 +520,20 @@ def test_unreadable_stat_or_cmdline_is_unknown_unless_process_vanished(tmp_path:
 
     monkeypatch.setattr(Path, "read_bytes", vanish_on_stat)
     assert tls.proc_references(target, proc_root=proc_root) is False
+
+
+def test_zombie_process_holds_nothing(tmp_path: Path) -> None:
+    """A zombie has no cwd, no fd table and no environ; its state letter proves it holds nothing."""
+    target = tmp_path / "qa-8686-exercises-r2"
+    target.mkdir()
+    proc_root = _fake_proc(tmp_path, 4022, cmdline=b"", state="Z")
+    entry = proc_root / "4022"
+    (entry / "cwd").unlink()  # readlink -> ENOENT, as on a real zombie
+    (entry / "fd").chmod(0o000)
+    try:
+        assert tls.proc_references(target, proc_root=proc_root) is False
+    finally:
+        (entry / "fd").chmod(0o755)
 
 
 def test_path_liveness_unknown_without_proc_and_negative_pgrep(tmp_path: Path, monkeypatch) -> None:

@@ -213,6 +213,20 @@ def test_missing_explicit_root_uses_project_manifest(tmp_path, monkeypatch):
     assert config.load_seminar_track_ids(tmp_path / "missing") == {"a1"}
 
 
+def test_unreadable_manifest_preserves_fallback(tmp_path, monkeypatch):
+    manifest = _write_manifest(tmp_path, "levels: {}")
+    read_text = Path.read_text
+
+    def denied(self, *args, **kwargs):
+        if self == manifest:
+            raise PermissionError("manifest denied")
+        return read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", denied)
+    assert config.load_levels(tmp_path) == FALLBACK_LEVELS
+    assert config.load_seminar_track_ids(tmp_path) == FALLBACK_SEMINARS
+
+
 def test_empty_levels_is_valid(tmp_path):
     _write_manifest(tmp_path, "levels: {}")
     assert config.load_levels(tmp_path) == []
@@ -227,3 +241,10 @@ def test_nonmapping_track_configs_keep_order_but_are_not_seminars(tmp_path):
         {"id": "custom", "name": "CUSTOM - custom", "path": "custom"},
     ]
     assert config.load_seminar_track_ids(tmp_path) == {"custom"}
+
+
+def test_invalid_level_key_keeps_original_error(tmp_path):
+    _write_manifest(tmp_path, "levels:\n  42: {type: track}\n")
+    with pytest.raises(AttributeError, match="'int' object has no attribute 'upper'"):
+        config.load_levels(tmp_path)
+    assert config.load_seminar_track_ids(tmp_path) == {42}

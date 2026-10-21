@@ -301,6 +301,28 @@ def test_inventory_note_never_changes_reserve_or_admission(
         assert row["credit"]["state"] == "policy_error"
 
 
+def test_recorded_codex_near_cap_reaches_note_without_relaxing(monkeypatch, tmp_path, capsys, payloads):
+    payloads["codex"]["rate_limit"]["primary_window"]["used_percent"] = 95
+    result, _ = _probe(monkeypatch, payloads, "codex")
+    budget, _ = _api_cli(monkeypatch, tmp_path, capsys, "codex", result)
+    reserve = {"remaining_resets": 0, "asserted_at": None}
+    row = next(r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve, now=NOW) if r["lane"] == "codex")
+    assert "free full reset available (2; operator decision)" in row["notes"]
+    # The recorded probe carries a 62500 credit balance fetched at the probe clock (NOW): the
+    # balance (#9518), not the reset inventory, keeps the lane usable.
+    assert not row["avoid"] and not row["reset_reserve_eligible"]
+    assert row["status"] == "credit_balance_present" and row["credit"]["credit_balance"] == 62500.0
+    assert reserve == {"remaining_resets": 0, "asserted_at": None}
+
+    codex = budget["agents"]["codex"]
+    codex["credit_balance"] = None
+    codex["codexbar"]["credit_balance"] = None
+    row = next(r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve, now=NOW) if r["lane"] == "codex")
+    assert "free full reset available (2; operator decision)" in row["notes"]
+    assert row["avoid"] and not row["reset_reserve_eligible"]
+    assert row["credit"]["state"] == "credits_unverified"
+
+
 @pytest.mark.parametrize("raw", [SENTINEL, IDENTIFIER, None])
 def test_window_helper_drops_invalid_reset_text(raw):
     assert probes._window_from_used_pct(0, window_minutes=300, resets_at=raw) == {

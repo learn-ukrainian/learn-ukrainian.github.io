@@ -14,6 +14,7 @@ from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     CalqueCandidate,
     classify_calque_type,
+    compute_id,
     find_dictionary_attestation,
     find_textbook_attestation,
     generate_pipeline,
@@ -69,6 +70,13 @@ def test_classify_calque_type() -> None:
     cat, src, _ = classify_calque_type("холостяк")
     assert cat == "lexical_calque"
     assert "росіянізмом" in src
+
+
+def test_compute_id_deterministic() -> None:
+    id1 = compute_id("traj", "Пилосос")
+    id2 = compute_id("traj", "пилосос ")
+    assert id1 == id2
+    assert id1.startswith("traj.decolonize.")
 
 
 def test_find_textbook_attestation_denies_restricted_sources(tmp_path: Path) -> None:

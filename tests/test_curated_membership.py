@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.audit.generate_practice_deck import BuildConfig, JsonVesumVerifier, _select_practice_lexemes
 from scripts.audit.lexeme_filter import is_practice_eligible, practice_ineligibility_reason
 from scripts.lexicon.curated_membership import apply_membership, build_membership, read_membership
 
@@ -181,3 +182,35 @@ def test_pending_admission_is_recorded_outside_fail_closed_membership() -> None:
     assert unknown["slug"] not in (pending_by_slug.keys() | member_slugs)
     with pytest.raises(ValueError, match="1 unresolved Atlas route"):
         apply_membership([], [unknown])
+
+
+def test_membership_entries_are_selected_before_the_general_practice_pool() -> None:
+    entries = [
+        {
+            "lemma": "книга",
+            "url_slug": "книга",
+            "gloss": "book",
+            "cefr": "A1",
+            "primary_source": "source_inventory_grow",
+            "surface_admission": {"cloze": False},
+        },
+        {
+            "lemma": "школа",
+            "url_slug": "школа",
+            "gloss": "school",
+            "cefr": "A1",
+            "course_usage": [{"module": "fixture"}],
+        },
+    ]
+    merged, _report = apply_membership(
+        entries,
+        [{"lemma": "книга", "slug": "книга", "sources": ["teacher_inventory"]}],
+    )
+
+    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
+        merged,
+        JsonVesumVerifier.from_path(Path("tests/fixtures/lexicon-practice-vesum.json")),
+        BuildConfig(target=1, source_label="fixture"),
+    )
+
+    assert [entry["url_slug"] for entry, _lexeme in selected] == ["книга"]

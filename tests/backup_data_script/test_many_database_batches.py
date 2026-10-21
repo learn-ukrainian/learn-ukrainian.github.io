@@ -253,6 +253,49 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
     )
 
 
+def test_batch_budget_splits_database_uploads(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    for index in range(4):
+        _make_database(project / "batch_state" / "open-model-data" / f"run-{index}" / "sources.db")
+    size = (project / "batch_state" / "open-model-data" / "run-0" / "sources.db").stat().st_size
+    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = str(2 * size)
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    assert backed_up.returncode == 0, backed_up.stderr
+    sizes = [
+        (project / "batch_state" / "open-model-data" / f"run-{index}" / "sources.db").stat().st_size
+        for index in range(4)
+    ]
+    sizes.append((source / "sources.db").stat().st_size)
+    budget = int(environment["LU_BACKUP_DB_BATCH_MAX_BYTES"])
+    db_batches, snapshots = _run_snapshot_bound(sizes, budget)
+    assert _backup_invocations(environment).count("backup lu-part-db") == db_batches
+    assert len(_backup_invocations(environment)) == snapshots
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "1", "0", "0"]
+
+
+@pytest.mark.parametrize("budget", ["0", "-1", "1e9", "abc", "1000000000000000000000"])
+def test_invalid_batch_budget_fails_before_any_upload(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    budget: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _make_database(source / "a.db")
+    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = budget
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "LU_BACKUP_DB_BATCH_MAX_BYTES must be a positive whole number of bytes." in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
 def test_database_batch_upload_failure_fails_every_member_and_never_completes(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:

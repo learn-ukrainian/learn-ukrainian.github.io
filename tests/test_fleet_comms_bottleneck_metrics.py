@@ -437,6 +437,45 @@ def _assert_aggregate_invariant(payload: dict[str, object], scanned: int) -> Non
         assert classified + unclassified + len(errors) == scanned
 
 
+_OVERSIZED_EPICS = [
+    pytest.param("1" + "0" * 5000, id="oversized-string"),
+    pytest.param("9" * 19, id="nineteen-digit-string"),
+    pytest.param(10**18, id="oversized-int-at-bound"),
+    pytest.param(10**4000, id="oversized-int-4000-digits"),
+]
+
+
+@pytest.mark.parametrize("big", _OVERSIZED_EPICS)
+def test_oversized_carrier_epic_falls_back_or_is_unclassified(tmp_path: Path, big: object) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "fallback": {"stream_epic": 6943, "task_lifecycle": {"identity": {"stream_epic": big}}},
+            "bare": {"task_lifecycle": {"identity": {"stream_epic": big}}},
+        },
+    )
+
+    assert list(payload["by_stream_epic"]) == ["6943"]
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
+    _assert_aggregate_invariant(payload, 2)
+
+
+def test_oversized_task_family_is_unclassified_or_falls_back(tmp_path: Path) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "fallback": {"task_family": "infra", "task_lifecycle": {"identity": {"task_family": "x" * 100_000}}},
+            "bare": {"task_lifecycle": {"identity": {"task_family": "x" * 100_000}}},
+            "at-bound": {"task_family": "y" * 128},
+        },
+    )
+
+    assert sorted(payload["by_task_family"]) == ["infra", "y" * 128]
+    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 1
+    _assert_aggregate_invariant(payload, 3)
+
+
 @pytest.mark.parametrize(
     "digits",
     [
@@ -492,6 +531,25 @@ def test_hostile_task_file_is_a_source_error_never_an_abort(tmp_path: Path, raw:
     json.dumps(payload)
 
 
+def test_absurd_hard_timeout_cannot_inflate_the_bottleneck_threshold(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    started = (NOW - timedelta(seconds=5)).isoformat()
+    for name, timeout in (("huge", 10**3000), ("bool", True), ("sane", 9000)):
+        (tasks_dir / f"{name}.json").write_text(
+            json.dumps({"task_id": name, "started_at": started, "hard_timeout": timeout}),
+            encoding="utf-8",
+        )
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    assert payload["threshold_seconds"]["dispatch"] == 9000
+
+
 def _file_level_payload(
     tmp_path: Path, make_hostile: Callable[[Path], None]
 ) -> tuple[dict[str, object], list[str]]:
@@ -520,6 +578,12 @@ def test_fifo_beside_valid_record_is_counted_and_never_opened(tmp_path: Path) ->
     _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
 
 
+def test_looping_symlink_beside_valid_record_is_counted(tmp_path: Path) -> None:
+    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "loop.json").symlink_to("loop.json"))
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
+
+
 def test_symlink_to_a_valid_record_is_still_read(tmp_path: Path) -> None:
     def plant(tasks_dir: Path) -> None:
         (tasks_dir / "alias.json").symlink_to("good.json")
@@ -528,6 +592,22 @@ def test_symlink_to_a_valid_record_is_still_read(tmp_path: Path) -> None:
 
     assert _kinds == []
     assert payload["by_stream_epic"]["4707"]["dispatch"]["n"] == 2
+
+
+def test_file_vanishing_between_listing_and_read_is_counted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    listing = efficiency_metrics._task_record_paths
+
+    def listing_with_ghost(directory: Path, *, optional: bool) -> list[Path]:
+        paths = listing(directory, optional=optional)
+        return [*paths, directory / "vanished.json"] if not optional else paths
+
+    monkeypatch.setattr(efficiency_metrics, "_task_record_paths", listing_with_ghost)
+
+    payload, kinds = _file_level_payload(tmp_path, lambda _d: None)
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
 
 
 @pytest.mark.parametrize(

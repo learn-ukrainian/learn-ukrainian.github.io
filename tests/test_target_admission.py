@@ -16,7 +16,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.agent_runtime import target_admission
+from scripts.agent_runtime import kimi_admission, target_admission
 from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, REVIEW_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
@@ -91,6 +91,12 @@ def test_a_slot_held_by_a_non_kimi_seat_is_delivered_to_and_woken_at_its_holder(
     assert result["warnings"] == []
 
 
+def test_an_explicit_kimi_slot_is_refused_before_the_slot_is_looked_up(channel_db, monkeypatch):
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", _fail)
+    with pytest.raises(KimiAdmissionRefused, match=_TOKEN):
+        resolve_and_admit(("kimi-infra",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS)
+
+
 # --- every resolution step is inside the gate ----------------------------------------
 
 
@@ -111,6 +117,14 @@ def test_slots_resolve_to_the_live_holder_or_keep_the_identity_with_a_warning(mo
 
     (static,) = resolve_and_admit(("claude-infra",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS)
     assert static.recipient == "claude-infra"
+
+
+def test_slot_log_label_comes_from_the_seat_list_and_taxonomy_area():
+    # #9739: log text names a slot by its static seat prefix and taxonomy area.
+    seats = _channels.STATIC_VALID_AGENTS
+    assert target_admission._slot_label("grok-infra", seats, "infra") == "grok slot in area 'infra'"
+    assert target_admission._slot_label("claude-infra-x", seats) == "claude-infra slot"  # longest prefix
+    assert target_admission._slot_label("nobody-infra", seats) == "slot with an unregistered seat prefix"
 
 
 def test_slot_resolver_failure_warning_omits_the_caller_slot_string(monkeypatch, capsys):
@@ -210,6 +224,24 @@ def test_a_launch_route_gets_the_retired_successor_and_the_fallback_table(tmp_pa
     assert (target.recipient, target.model, target.reason) == ("claude", None, "explicit")
 
 
+def test_the_gate_runs_once_when_resolution_adds_no_name(monkeypatch):
+    """An unchanged route is not gated a second time, so a Kimi worker's owned tree is read once."""
+    reads: list[str] = []
+
+    def trees():
+        reads.append("read")
+        return [kimi_admission.DirectoryTree(Path(__file__).resolve().parent.parent)]
+
+    (target,) = resolve_and_admit(
+        ("kimi",),
+        mode="workspace-write",
+        paths=["scripts/agent_runtime/runner.py"],
+        route=lambda request: (request.seat, request.model, "explicit"),
+        trees=trees,
+    )
+    assert target.recipient == "kimi" and reads == ["read"]
+
+
 def test_attached_models_and_recipients_are_gated_and_an_explicit_model_wins():
     with pytest.raises(KimiAdmissionRefused, match=_TOKEN):
         resolve_and_admit(("claude",), mode=BRIDGE_MODE, attachments=('{"to_model": "kimi-code/k3"}',))
@@ -219,6 +251,15 @@ def test_attached_models_and_recipients_are_gated_and_an_explicit_model_wins():
         ("claude",), mode=BRIDGE_MODE, model="claude-opus-5-5", attachments=('{"to_model": "kimi-code/k3"}',)
     )
     assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+
+
+def test_a_non_kimi_request_resolves_unchanged():
+    targets = resolve_and_admit(("claude", "codex"), mode=BRIDGE_MODE, model="m")
+    assert [(t.recipient, t.model, t.reason) for t in targets] == [
+        ("claude", "m", "explicit"),
+        ("codex", "m", "explicit"),
+    ]
+    assert resolve_and_admit((), mode=BRIDGE_MODE) == ()
 
 
 @pytest.mark.parametrize("seat", ["agy", "gemini"])
@@ -241,6 +282,42 @@ def test_explicit_review_risk_dispatch_refuses_before_target_reads(seat, model, 
             review_facts=unexpected,
             review_alias_model_resolver=unexpected,
             route=unexpected,
+            claude_account=HOST_ACCOUNT,
+        )
+    assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
+
+
+@pytest.mark.parametrize("model", [None, "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("risk", [None, "", "invalid"])
+@pytest.mark.parametrize("branch_facts", [False, True])
+def test_explicit_review_risk_direct_agy_requires_valid_declaration(tmp_path, monkeypatch, model, risk, branch_facts):
+    """D1: neither legacy inputs nor complete facts may infer AGY's risk."""
+    from scripts.review.record_cf_verdict import collect_branch_review_facts
+    from tests.test_authoring_review_feasibility import REPOSITORY, SOL, mini_repo
+
+    facts = None
+    if branch_facts:
+        repo = mini_repo(tmp_path, monkeypatch)
+        repo.commit(SOL, message="review author")
+        facts = collect_branch_review_facts(
+            repository=REPOSITORY,
+            repo_root=repo.root,
+            base_tip_sha=repo.sha("origin/main"),
+            head_sha=repo.sha("feature"),
+            task_root=tmp_path / "tasks",
+        )
+        assert facts.author_families == frozenset({"openai"})
+    with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk") as refused:
+        target_admission._resolve_review_target(
+            "agy",
+            model,
+            author_model=None,
+            risk=risk,
+            profile="code",
+            attempt=False,
+            snapshot=None,
+            budget_seat="agy",
+            facts=facts,
             claude_account=HOST_ACCOUNT,
         )
     assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
@@ -348,6 +425,23 @@ def test_sinks_refuse_raw_names():
             require_admitted(raw)
     with pytest.raises(TypeError, match="AdmittedTarget"):
         _channels._touch_wake_file("kimi")
+
+
+def test_a_target_from_either_import_path_is_accepted_by_either_sink_check():
+    import agent_runtime.target_admission as bridge_path
+
+    assert bridge_path is not target_admission  # two module copies, one contract
+    (target,) = bridge_path.resolve_and_admit(("claude",), mode=BRIDGE_MODE)
+    assert target_admission.require_admitted(target) is target
+
+
+def test_delegate_launches_only_the_admitted_route():
+    import delegate
+
+    (target,) = resolve_and_admit(("claude",), mode="read-only", model="claude-opus-5-5")
+    assert delegate._worker_route_argv(target) == ["--agent", "claude", "--model", "claude-opus-5-5"]
+    with pytest.raises(TypeError, match="AdmittedTarget"):
+        delegate._worker_route_argv("kimi")
 
 
 @pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
@@ -549,6 +643,34 @@ def test_red_team_different_same_family_model_keeps_qualification_floor(monkeypa
             claude_account=HOST_ACCOUNT,
         )
     assert reached == []
+
+
+@pytest.mark.parametrize(
+    "seat,reviewer_id,author_id",
+    [
+        ("cursor", "claude-impl-x", "impl-x"),
+        ("claude", "codex/author-one", "codex/author-one"),
+        ("cursor", " CLAUDE-IMPL-X ", "impl-x"),
+    ],
+)
+def test_red_team_cross_seat_author_identity_refused(monkeypatch, seat, reviewer_id, author_id):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_record_cf_verdict import facts_for
+
+    facts = dataclasses.replace(
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(None, "openai", "task-record", author_id),)
+    )
+    with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
+        resolve_and_admit(
+            (seat,),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_mode="red_team",
+            review_task_id=reviewer_id,
+            review_facts=facts,
+            claude_account=HOST_ACCOUNT,
+        )
 
 
 @pytest.mark.parametrize("scope", [{"language_lane": True}, {"research_track": "l2-uk-en"}])

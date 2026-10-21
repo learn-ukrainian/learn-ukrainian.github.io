@@ -273,6 +273,126 @@ def test_context_monitor_advisor_usage_preserves_native_tiers(tmp_path: Path, to
         assert "waits for the operator to restart it" in message
 
 
+def test_statusline_unknown_capacity_does_not_use_auto_compact_fallback(
+    tmp_path: Path,
+) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=None))
+    payload = {
+        "session_id": "status-session",
+        "model": {"id": "unknown-model"},
+        "workspace": {"current_dir": os.fspath(tmp_path)},
+        "context_window": {"total_input_tokens": 180_000},
+    }
+    env = _environment(project, record_path)
+    env["CLAUDE_CODE_AUTO_COMPACT_WINDOW"] = "1000000"
+
+    completed = subprocess.run(
+        [os.fspath(STATUSLINE)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=env,
+        timeout=30,
+    )
+
+    assert "[ctx:" not in completed.stdout
+    assert "1000K" not in completed.stdout
+
+
+def test_context_monitor_uses_record_tiers_and_excludes_output_tokens(
+    tmp_path: Path,
+) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
+    transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=300_000, cache_tokens=6_000)
+    payload = {
+        "session_id": "status-session",
+        "transcript_path": os.fspath(transcript),
+    }
+
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+        timeout=30,
+    )
+
+    hook_output = json.loads(completed.stdout)
+    message = hook_output["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("CRITICAL: Context is at 85%")
+    assert "360000-token context window" in message
+    assert "latest assistant input/cache usage" in message
+    assert "auto-compact window" not in message
+    assert "999999" not in message
+
+
+def test_context_monitor_size_fallback_handles_long_base64_portably(
+    tmp_path: Path,
+) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=100))
+    transcript = tmp_path / "monitor-without-usage.jsonl"
+    transcript.write_text(
+        json.dumps(
+            {
+                "type": "user",
+                "message": {"content": ("word " * 200) + ("A" * 900)},
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    payload = {
+        "session_id": "status-session",
+        "transcript_path": os.fspath(transcript),
+    }
+
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+        timeout=30,
+    )
+
+    hook_output = json.loads(completed.stdout)
+    message = hook_output["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("EMERGENCY: Context is at")
+    assert "transcript-size estimate" in message
+    assert "sed -E 's#[A-Za-z0-9+/]{800,}" not in CONTEXT_MONITOR.read_text(encoding="utf-8")
+
+
+def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _record(actual_window=None))
+    transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=300_000, cache_tokens=6_000)
+    payload = {
+        "session_id": "status-session",
+        "transcript_path": os.fspath(transcript),
+    }
+
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+        timeout=30,
+    )
+
+    assert completed.stdout == ""
+
+
 @pytest.mark.parametrize(
     ("identity_env", "value"),
     [
@@ -308,6 +428,41 @@ def test_context_monitor_is_silent_for_native_codex(
     )
 
     assert completed.stdout == ""
+
+
+def test_statusline_prefer_handoff_over_compaction(tmp_path: Path) -> None:
+    project, record_path = _fake_project(tmp_path, _record())
+    transcript = tmp_path / "transcript_test.jsonl"
+    lines = [
+        json.dumps({"type": "user", "step_index": 1}),
+        json.dumps({"type": "system", "subtype": "compact"}),
+    ]
+    transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    payload = {
+        "session_id": "status-session",
+        "transcript_path": os.fspath(transcript),
+        "model": {"id": "gpt-5.6-sol", "display_name": "GPT-5.6 Sol"},
+        "workspace": {"current_dir": os.fspath(tmp_path)},
+        "context_window": {
+            "context_window_size": 260_000,
+            "total_input_tokens": 50_000,
+        },
+    }
+
+    completed = subprocess.run(
+        [os.fspath(STATUSLINE)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+        timeout=30,
+    )
+
+    assert "[compacts: 1]" in completed.stdout
+    assert "HANDOFF SUGGESTED" in completed.stdout
 
 
 def test_context_monitor_announces_each_tier_once_and_rearms_after_compaction(

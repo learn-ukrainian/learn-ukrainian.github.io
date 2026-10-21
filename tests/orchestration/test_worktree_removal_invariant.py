@@ -307,6 +307,23 @@ def test_scanner_flags_every_python_removal_shape(source: str, kind: str) -> Non
 
 
 @pytest.mark.parametrize(
+    "source",
+    [
+        'print(f"  git worktree remove {path}")',
+        'raise RuntimeError(f"remove it with `git worktree remove {path}`")',
+        '"""Docstring: ``git worktree remove`` is forbidden here."""',
+        "pass  # git worktree remove x",
+        'subprocess.run([python, "-m", "scripts.orchestration.worktree_claims", "remove", path])',
+        "worktree_claims.remove_unclaimed_worktree(path, repo_root=root, reason=r, owner_task_id=None)",
+        'subprocess.run(["git", "worktree", "list", "--porcelain"])',
+    ],
+)
+def test_scanner_ignores_hints_and_the_guarded_entry_points(source: str) -> None:
+    """Printed hints, docs, and calls to the guarded chokepoint or CLI are not call sites."""
+    assert python_sites(f"def helper():\n    {source}\n", "scripts/example.py") == []
+
+
+@pytest.mark.parametrize(
     ("source", "suffix", "flagged"),
     [
         ('git worktree remove "$wt_dir"', ".sh", True),
@@ -364,3 +381,44 @@ def test_production_prefilter_parses_dynamic_action_without_remove_word(tmp_path
     sites = production_sites(tmp_path)
 
     assert [(site.path, site.kind) for site in sites] == [("scripts/cleanup.py", "argv")]
+
+
+from tests.orchestration import test_worktree_output_chokepoint as boundary_fixtures
+
+boundary_tree = boundary_fixtures.boundary_tree
+
+
+@pytest.mark.parametrize("boundary", boundary_fixtures.BOUNDARIES)
+def test_permitted_removal_pipeline_cannot_bypass_refusing_gate(boundary_tree, monkeypatch, boundary):
+    from scripts.fleet import ignored_task_output
+
+    calls = []
+
+    def refuse(worktree, **_kwargs):
+        calls.append(worktree)
+        return False, "artifact preservation failed: invariant refusal; refusing worktree removal", None
+
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", refuse)
+    result = boundary_fixtures.boundary_remove(boundary, boundary_tree, monkeypatch)
+    assert calls == [boundary_tree[1]]
+    assert result["action"] in {"skipped", "retained"}
+    assert boundary_tree[1].exists()
+
+
+@pytest.mark.parametrize("caller", boundary_fixtures.CALLERS)
+def test_other_caller_classes_cannot_bypass_refusing_gate(tmp_path, monkeypatch, capsys, caller):
+    from scripts.fleet import ignored_task_output
+    from tests.orchestration.test_worktree_claims_cli import _linked, _primary
+
+    repo = _primary(tmp_path)
+    tree = _linked(repo, "codex/done-output")
+    calls = []
+
+    def refuse(worktree, **_kwargs):
+        calls.append(worktree)
+        return False, "artifact preservation failed: invariant refusal; refusing worktree removal", None
+
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", refuse)
+    assert boundary_fixtures.remove(caller, repo, tree, capsys, monkeypatch) is False
+    assert calls == [tree]
+    assert tree.exists()

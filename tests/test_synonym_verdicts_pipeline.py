@@ -545,6 +545,58 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
     assert "both legs must be A2 vocabulary" in captured.err
 
 
+def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # One leg B1, one leg A2, flagged: flag must be ignored (loudly) and pair stays B1+.
+    manifest = [
+        make_mock_manifest_entry("приятель", "pryiatel", "friend, pal", ["друг"]),
+        make_a2_mock_manifest_entry("друг", "druh", "friend", ["приятель"]),
+        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade"),
+        make_a2_mock_manifest_entry("книга", "knyha", "book"),
+        make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
+        make_a2_mock_manifest_entry("папір", "papir", "paper"),
+    ]
+    verifier = JsonVesumVerifier(
+        {
+            "приятель": [{"lemma": "приятель", "pos": "noun"}],
+            "друг": [{"lemma": "друг", "pos": "noun"}],
+            "товариш": [{"lemma": "товариш", "pos": "noun"}],
+            "книга": [{"lemma": "книга", "pos": "noun"}],
+            "зошит": [{"lemma": "зошит", "pos": "noun"}],
+            "папір": [{"lemma": "папір", "pos": "noun"}],
+        }
+    )
+    verdicts = {
+        "approved": [
+            {
+                "a": "приятель",
+                "b": "друг",
+                "polarity": "synonym",
+                "sources": ["synonyms"],
+                "a2Exception": True,
+                "curator": "fixture-2026-07-07",
+            }
+        ],
+        "rejected": [],
+    }
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=20),
+        synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
+    )
+    # Flag ignored → stays at B1+ floor (B1 prompt with its A2 target), never at A2.
+    b1_synonyms = shards["B1"]["synonym"]["synonym"]
+    assert any(item["prompt"] == "приятель" and item["answer"] == "друг" for item in b1_synonyms)
+    assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
+    captured = capsys.readouterr()
+    assert "a2Exception ignored" in captured.err
+
+
 def test_invalid_exception_flag_drops_bit_but_keeps_pair_at_b1(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

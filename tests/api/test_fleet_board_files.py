@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
+import scripts.api.fleet_board.router as board_routes
 from scripts.api import main as api_main
-from scripts.api.fleet_board import file_sources
+from scripts.api.fleet_board import file_sources, values
 from scripts.api.fleet_board import sources as sources_mod
 from scripts.api.fleet_board.cache import CACHE
 
@@ -46,6 +47,35 @@ def _write(directory, name: str, payload: dict) -> None:
     (directory / name).write_text(json.dumps(payload), encoding="utf-8")
 
 
+def test_unset_snapshot_sources_are_not_configured() -> None:
+    paths = (
+        ("/api/fleet/v1/backups", "backups", "fleet.v1.backups"),
+        ("/api/fleet/v1/downloads", "downloads", "fleet.v1.downloads"),
+        ("/api/fleet/v1/harness", "harness_snapshot", "fleet.v1.harness"),
+        ("/api/fleet/v1/harness/alpha", "harness_snapshot", "fleet.v1.harness_driver"),
+    )
+    for path, source, schema in paths:
+        response = client.get(path)
+        assert response.status_code == 200
+        body = response.json()
+        assert body["schema"] == schema
+        assert _source(body) == {"name": source, "status": "not_configured", "age_s": None, "error": None}
+        _validate(body)
+
+
+def test_loader_bug_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    def explode():
+        raise RuntimeError("boom-token")
+
+    monkeypatch.setattr(board_routes, "load_backups", explode)
+    response = client.get("/api/fleet/v1/backups")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["data"]["last_result"] is None
+    assert _source(body)["status"] == "unavailable"
+    assert "boom-token" not in response.text
+
+
 def test_backups_ok_drops_extra_fields(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     _write(
         tmp_path,
@@ -72,6 +102,22 @@ def test_backups_ok_drops_extra_fields(tmp_path, monkeypatch: pytest.MonkeyPatch
     assert str(tmp_path) not in response.text
 
 
+def test_backups_older_than_the_window_are_stale(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _write(tmp_path, "last-success.json", {"at": "2026-10-07T00:00:00Z", "status": "failed"})
+    _write(tmp_path, "freshness.json", {"age_h": 40})
+    _write(tmp_path, "receipt.json", {"at": "2026-10-07T02:00:00Z", "ok": False})
+    monkeypatch.setenv("FLEET_BACKUP_STATE_DIR", str(tmp_path))
+    response = client.get("/api/fleet/v1/backups")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "stale"
+    assert body["data"]["stale"] is True
+    assert body["data"]["age_h"] == 40
+    assert body["data"]["last_result"]["status"] == "failed"
+    assert body["data"]["restore_test"]["ok"] is False
+
+
 def test_missing_backup_file_is_unavailable(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     _write(tmp_path, "freshness.json", {"age_h": 2})
     _write(tmp_path, "receipt.json", {"at": "2026-10-09T01:00:00Z", "ok": True})
@@ -85,6 +131,28 @@ def test_missing_backup_file_is_unavailable(tmp_path, monkeypatch: pytest.Monkey
     assert body["data"]["age_h"] == 2
     assert body["data"]["restore_test"]["ok"] is True
     assert str(tmp_path) not in response.text
+
+
+def test_failed_backup_refresh_serves_cache_as_stale(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    _write(state, "last-success.json", {"at": "2026-10-09T00:00:00Z", "status": "ok"})
+    _write(state, "freshness.json", {"age_h": 1})
+    _write(state, "receipt.json", {"at": "2026-10-09T01:00:00Z", "ok": True})
+    monkeypatch.setenv("FLEET_BACKUP_STATE_DIR", str(state))
+    first = client.get("/api/fleet/v1/backups")
+    assert first.status_code == 200
+    assert _source(first.json())["status"] == "ok"
+    for child in state.iterdir():
+        child.unlink()
+    state.rmdir()
+    state.write_text("x", encoding="utf-8")
+    monkeypatch.setattr(values, "CACHE_TTL_S", 0)
+    second = client.get("/api/fleet/v1/backups")
+    assert second.status_code == 200
+    assert _source(second.json())["status"] == "stale"
+    assert second.json()["data"]["last_result"]["status"] == "ok"
+    assert str(tmp_path) not in second.text
 
 
 def test_downloads_stall_and_skip_unsafe_names(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -201,6 +269,32 @@ def _dotted() -> str:
     return ".".join(("198", "51", "100", "7"))
 
 
+def test_cached_download_stall_advances_during_an_outage(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    moment = {"now": _WHEN}
+    monkeypatch.setattr(file_sources, "_now", lambda: moment["now"])
+    payload = {
+        "items": [
+            {"source": "beta", "state": "running", "done": 1, "total": 4, "last_progress_at": "2026-10-09T09:50:00Z"}
+        ]
+    }
+    target = tmp_path / "status.json"
+    target.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setenv("FLEET_DOWNLOAD_STATUS", str(target))
+    first = client.get("/api/fleet/v1/downloads")
+    assert first.json()["data"]["items"][0]["stalled"] is False
+    target.write_text("{", encoding="utf-8")
+    moment["now"] = _WHEN + timedelta(hours=2)
+    monkeypatch.setattr(values, "CACHE_TTL_S", 0)
+    second = client.get("/api/fleet/v1/downloads")
+    assert second.status_code == 200
+    body = second.json()
+    _validate(body)
+    assert _source(body)["status"] == "stale"
+    assert body["data"]["items"][0]["stalled"] is True
+    assert body["data"]["items"][0]["source"] == "beta"
+    assert str(tmp_path) not in second.text
+
+
 def test_snapshot_ids_stay_plain_identifiers(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     marker = "leak-token"
     host = f"{marker}.example"
@@ -279,6 +373,31 @@ def test_non_object_backup_piece_is_unavailable(tmp_path, monkeypatch: pytest.Mo
         assert body["data"]["last_result"] is None
     if filename == "receipt.json":
         assert body["data"]["restore_test"] is None
+
+
+def test_overflowing_download_percentage_is_null(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(file_sources, "_now", lambda: _WHEN)
+    payload = {"items": [{"source": "alpha", "state": "running", "done": 1e308, "total": 1e-308}]}
+    target = tmp_path / "status.json"
+    target.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setenv("FLEET_DOWNLOAD_STATUS", str(target))
+    response = client.get("/api/fleet/v1/downloads")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "ok"
+    assert body["data"]["items"][0]["pct"] is None
+    assert body["data"]["items"][0]["done"] == 1e308
+
+
+def test_approved_driver_aliases_are_the_only_published_driver_ids(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(file_sources, "DRIVER_ALIASES", {"claude": "claude"})
+    snapshot = tmp_path / "harness.json"
+    snapshot.write_text(json.dumps({"drivers": [{"agent_id": "claude"}, {"agent_id": "alpha"}]}), encoding="utf-8")
+    monkeypatch.setenv("FLEET_HARNESS_SNAPSHOT", str(snapshot))
+    listed = client.get("/api/fleet/v1/harness")
+    assert [row["agent_id"] for row in listed.json()["data"]["drivers"]] == ["claude", file_sources.UNLISTED]
+    assert client.get("/api/fleet/v1/harness/alpha").json()["data"]["driver"] is None
 
 
 @pytest.mark.parametrize(

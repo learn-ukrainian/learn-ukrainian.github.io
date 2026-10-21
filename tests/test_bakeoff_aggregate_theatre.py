@@ -232,3 +232,68 @@ def test_reviewer_fixes_unparseable_emits_protocol_broken_banner(tmp_path: Path)
 
     assert "## REVIEWER PROTOCOL BROKEN" in report
     assert "bad-good (bad-good.review.jsonl)" in report
+
+
+def test_suspicious_zero_calls_with_citations_flagged(tmp_path: Path) -> None:
+    bakeoff_dir = _fixture(
+        tmp_path,
+        {
+            "bad": _writer_events("bad", calls=0),
+            "good": _writer_events("good", calls=2),
+        },
+        {
+            "bad": [8, 8, 8, 8, 8, 8],
+            "good": [8, 8, 8, 8, 8, 8],
+        },
+        writer_markdown={"bad": _writer_markdown("bad", tool_citation=True)},
+    )
+
+    report = _run_report(bakeoff_dir)
+
+    assert "writer cites tools but emitted zero calls - suspect cross-contamination/theatre: bad." in report
+    assert "| verify_words density (calls per 100 words) | 0 (0 calls; cites tool names) |" in report
+
+
+def test_winner_ranking_section_present(tmp_path: Path) -> None:
+    bakeoff_dir = _fixture(
+        tmp_path,
+        {
+            "bad": _writer_events("bad", calls=1),
+            "good": _writer_events("good", calls=2),
+        },
+        {
+            "bad": [8, 8, 8, 8, 8, 8],
+            "good": [8, 8, 8, 8, 8, 8],
+        },
+    )
+
+    report = _run_report(bakeoff_dir)
+
+    assert "## Winner ranking by tool-call density" in report
+    assert "| writer | density | theatre violations | min_dim | verdict |" in report
+
+
+def test_summary_tool_call_total_drift_warns_and_summary_wins(tmp_path: Path) -> None:
+    bad_events = _writer_events("bad", calls=1)
+    for event in bad_events:
+        if event.get("event") == "phase_writer_summary":
+            event["tool_calls_total"] = 5
+    bakeoff_dir = _fixture(
+        tmp_path,
+        {
+            "bad": bad_events,
+            "good": _writer_events("good", calls=2),
+        },
+        {
+            "bad": [8, 8, 8, 8, 8, 8],
+            "good": [8, 8, 8, 8, 8, 8],
+        },
+    )
+
+    report = _run_report(bakeoff_dir)
+
+    assert (
+        "writer tool-call total drift for bad: "
+        "phase_writer_summary.tool_calls_total=5, writer_tool_call events=1"
+    ) in report
+    assert "| bad | 3.23 | 0 | 8.00 (immersion) | eligible |" in report

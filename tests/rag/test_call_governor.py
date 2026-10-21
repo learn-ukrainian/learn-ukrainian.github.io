@@ -84,6 +84,54 @@ def test_the_bound_not_the_cpu_count_decides_how_much_thread_work_runs(
         assert governor.abandoned == 0
 
 
+def test_queue_timeout_refuses_as_server_busy(caplog: pytest.LogCaptureFixture) -> None:
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=0.1, call_timeout=5)
+
+    async def main() -> list[object]:
+        release = asyncio.Event()
+
+        async def holder() -> str:
+            await release.wait()
+            return "held"
+
+        first = asyncio.create_task(governor.run("check_text", holder))
+        await asyncio.sleep(0.01)
+        second = await asyncio.gather(governor.run("check_text", holder), return_exceptions=True)
+        release.set()
+        return [await first, *second]
+
+    first, second = asyncio.run(main())
+    assert first == "held"
+    assert isinstance(second, CallRefused) and second.code == "server_busy"
+    assert "outcome=server_busy" in caplog.text
+
+
+def test_call_timeout_returns_typed_refusal_and_frees_the_slot_when_the_work_ends(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=5, call_timeout=0.1)
+
+    async def slow() -> None:
+        await asyncio.sleep(0.4)
+
+    async def quick() -> str:
+        return "ok"
+
+    async def main() -> tuple[object, str]:
+        refused = await asyncio.gather(governor.run("query_wikipedia", slow), return_exceptions=True)
+        while governor.in_flight:
+            await asyncio.sleep(0.02)
+        return refused[0], await governor.run("query_wikipedia", quick)
+
+    started = time.monotonic()
+    refused, after = asyncio.run(main())
+    assert time.monotonic() - started < 5
+    assert isinstance(refused, CallRefused) and refused.code == "call_timeout"
+    assert after == "ok"
+    assert "outcome=call_timeout" in caplog.text
+    assert "call_released id=1 tool=query_wikipedia outcome=ok" in caplog.text
+
+
 class _BlockedWorkers:
     """Thread work that ignores cancellation, like a stuck SQLite query."""
 

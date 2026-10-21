@@ -79,6 +79,21 @@ def test_carry_moves_units_by_position_only() -> None:
     assert m.units["cd"].lost_kind == LOST_REWRITTEN
 
 
+def test_carry_rejects_edits_that_do_not_produce_the_output() -> None:
+    m = LessonUnitMap("abc")
+    m.track("u", 0, 3, "abc")
+    with pytest.raises(ValueError):
+        m.carry("xyz", "abc", "t", [])
+    with pytest.raises(ValueError):
+        m.carry("abc", "ab", "t", [])  # no edits reported, but the text changed
+    with pytest.raises(ValueError):
+        m.verify("abd")
+    with pytest.raises(ValueError):
+        m.track("u", 0, 1, "a")
+    with pytest.raises(ValueError):
+        m.track("v", 0, 2, "ac")
+
+
 def test_js_json_string_codec_round_trips_and_is_verified() -> None:
     text = "а'б\"в\\г\nд `е` ${ж}"
     encoded = encode_js_json_string(text)
@@ -251,6 +266,25 @@ def test_generate_mdx_duplicate_h1_removal_never_reattaches_the_unit() -> None:
     m.track(1, 8, 15, "# слово")
     mdx = generate_mdx(md, 1, meta_data=meta, level="a1", fresh=True, unit_map=m)
     assert m.verify(mdx) == {1: "# слово"}
+
+
+def test_generate_mdx_duplicate_paragraph_in_a_removed_section() -> None:
+    # The Вправи section is stripped; its paragraph is an exact copy of paragraphs before and
+    # after it. Only the unit in the removed section is lost; the others keep their positions.
+    md = "## A\n\nслово\n\n## Вправи\n\nслово\n\n## B\n\nслово\n"
+    m = LessonUnitMap(md)
+    for key, start in zip((1, 2, 3), [i for i in range(len(md)) if md.startswith("слово", i)], strict=True):
+        m.track(key, start, start + 5, "слово")
+    meta = {"title": "T", "subtitle": "", "prev": "/a1/", "next": "/a1/", "lesson": 1, "module_slug": "s"}
+    mdx = generate_mdx(md, 1, meta_data=meta, level="a1", fresh=True, unit_map=m)
+    assert "Вправи" not in mdx.split('<TabItem label="Урок — Lesson">')[1].split("</TabItem>")[0]
+    with pytest.raises(UnitMapError) as exc_info:
+        m.verify(mdx)
+    assert exc_info.value.key == 2 and exc_info.value.kind == LOST_REMOVED
+    assert exc_info.value.transform == "strip_activities_section"
+    del m.units[2]
+    assert m.verify(mdx) == {1: "слово", 3: "слово"}
+    assert m.units[1].start < m.units[3].start
 
 
 # ---------------------------------------------------------------------------

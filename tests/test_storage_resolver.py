@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import subprocess
 from pathlib import Path
@@ -21,6 +22,20 @@ from scripts.storage.topology import (
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+_STORAGE_SCOPE_FILES = (
+    REPO_ROOT / "docs" / "runbooks" / "storage-topology.md",
+    REPO_ROOT / "scripts" / "storage" / "cli.py",
+    REPO_ROOT / "scripts" / "storage" / "topology.py",
+    REPO_ROOT / "scripts" / "storage" / "__init__.py",
+    REPO_ROOT / "scripts" / "storage" / "__main__.py",
+    REPO_ROOT / "scripts" / "storage" / "windows" / "Verify-BulkSources.ps1",
+    REPO_ROOT / "scripts" / "storage" / "windows" / "Copy-BulkSourcesFromDrive.ps1",
+    REPO_ROOT / "scripts" / "storage" / "windows" / "README.md",
+    REPO_ROOT / "agents_extensions" / "shared" / "rules" / "storage-topology.md",
+    REPO_ROOT / "tests" / "test_storage_resolver.py",
+    REPO_ROOT / "tests" / "test_storage_windows_scripts.py",
+)
 
 
 def _project_python() -> str:
@@ -182,6 +197,24 @@ def test_refuse_network_sources_db_override(tmp_path: Path) -> None:
         )
 
 
+def test_topology_status_json_roundtrip(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    (repo / "data").mkdir(parents=True)
+    (repo / "scripts").mkdir()
+    status = resolve_topology(
+        repository_root=repo,
+        env={},
+        smb_candidates=[tmp_path / "missing-smb"],
+        drive_candidates=[tmp_path / "missing-drive"],
+    )
+    payload = status.to_dict()
+    assert payload["schema"] == "storage-topology.status.v1"
+    assert payload["bulk_root"]["available"] is False
+    assert payload["active_database"]["is_local"] is True
+    # Ensure JSON serializable.
+    json.dumps(payload)
+
+
 def test_cli_status_json_subprocess(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "data").mkdir(parents=True)
@@ -212,6 +245,24 @@ def test_cli_status_json_subprocess(tmp_path: Path) -> None:
     assert payload["schema"] == "storage-topology.status.v1"
     assert "active_database" in payload
     assert "bulk_root" in payload
+
+
+def test_storage_topology_scope_has_no_committed_operator_home_paths() -> None:
+    """Regression: do not commit absolute operator-home/project paths in scope."""
+    # Concrete username path only (not the regex character-class source text).
+    concrete = re.compile(
+        r"(?:/Users|/home)/[A-Za-z0-9._-]+/projects/learn-ukrainian(?:/|\b)"
+    )
+    offenders: list[str] = []
+    for path in _STORAGE_SCOPE_FILES:
+        assert path.is_file(), f"missing scope file: {path}"
+        text = path.read_text(encoding="utf-8")
+        for match in concrete.finditer(text):
+            line_no = text.count("\n", 0, match.start()) + 1
+            offenders.append(
+                f"{path.relative_to(REPO_ROOT)}:{line_no}:{match.group(0)}"
+            )
+    assert offenders == [], "committed operator-home paths:\n" + "\n".join(offenders)
 
 
 def test_status_reports_sources_db_size_and_journal_mode(tmp_path: Path) -> None:

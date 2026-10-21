@@ -657,6 +657,23 @@ def test_packet_and_receipt_are_byte_stable(evaluation_registry, tmp_path: Path)
     assert record["export_control"]["qualified_correction_intake"] is False
 
 
+def test_detector_or_model_cannot_emit_gold(evaluation_registry) -> None:
+    candidate = _candidate(
+        evaluation_registry,
+        candidate_id="candidate-not-gold",
+        text="Так звучит неправильно.",
+        span_text="звучит",
+        language="uncertain",
+        layers=["russian_interference"],
+        evidence=_russian_evidence(),
+    )
+    _validate(candidate, evaluation_registry)
+    broken = copy.deepcopy(candidate)
+    broken["detector"]["automatic_error_label"] = True
+    with pytest.raises(factory.FactoryError, match="automatic_error_label"):
+        _validate(broken, evaluation_registry)
+
+
 def test_two_humans_and_distinct_third_reviewer_are_enforced(evaluation_registry) -> None:
     candidate = _candidate(
         evaluation_registry,

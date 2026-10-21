@@ -33,10 +33,106 @@ from scripts.practice.adjective_mechanics_engine import (
     AdjectiveCategory,
     build_canonical_adjective_cards,
     export_adjective_mechanics_deck,
+    resolve_degree_comparison_rule,
+    resolve_derivational_suffix_mutation_rule,
+    resolve_possessive_suffix_rule,
+    resolve_soft_declension_instrumental_rule,
     validate_adjective_card,
     verify_deck_with_vesum,
     verify_distractors_with_vesum,
 )
+
+
+def test_resolve_degree_comparison_rule():
+    """Verify degrees of comparison rules per Правопис 2019 §§ 110, 111."""
+    # -жч- mutation
+    ind_zhch, ua_zhch, en_zhch = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SYNTHETIC_MUTATION_ZHCH)
+    assert ind_zhch == "-жч-"
+    assert "переходять у -жч-" in ua_zhch
+    assert "-zhch-" in en_zhch
+
+    # -щ- mutation
+    ind_shch, ua_shch, en_shch = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH)
+    assert ind_shch == "-щ-"
+    assert "переходять у -щ-" in ua_shch
+    assert "-shch-" in en_shch
+
+    # -ш- suffix dropping -k-/-ok-
+    ind_dropk, ua_dropk, en_dropk = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K)
+    assert "-ш-" in ind_dropk
+    assert "випадають" in ua_dropk
+    assert "drop" in en_dropk
+
+    # -іш- suffix
+    ind_ish, ua_ish, en_ish = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SYNTHETIC_ISH)
+    assert ind_ish == "-іш-"
+    assert "суфікса -іш-" in ua_ish
+    assert "-ish-" in en_ish
+
+    # Suppletive
+    ind_sup, ua_sup, en_sup = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SUPPLETIVE)
+    assert "Суплетивна" in ind_sup
+    assert "інших основ" in ua_sup
+    assert "Suppletive" in en_sup
+
+    # Analytic
+    ind_an, ua_an, _ = resolve_degree_comparison_rule(AdjectiveCategory.COMP_ANALYTIC_FORMATION)
+    assert "більш / менш" in ind_an
+    assert "початковою формою" in ua_an
+
+    # Superlative synthetic
+    ind_sup_syn, ua_sup_syn, _ = resolve_degree_comparison_rule(AdjectiveCategory.SUPER_SYNTHETIC_PREFIX)
+    assert "най-" in ind_sup_syn
+    assert "префікса най-" in ua_sup_syn
+
+    # Superlative emphatic
+    ind_emph, ua_emph, _ = resolve_degree_comparison_rule(AdjectiveCategory.SUPER_EMPHATIC_PREFIX)
+    assert "якнай-" in ind_emph
+    assert "разом" in ua_emph
+
+
+def test_resolve_soft_declension_instrumental_rule():
+    """Verify soft group instrumental ending strictly -ім per Правопис 2019 § 108."""
+    ending, ua, en = resolve_soft_declension_instrumental_rule()
+    assert ending == "-ім"
+    assert "закінчення -ім" in ua
+    assert "ending -im" in en
+
+
+def test_resolve_possessive_suffix_rule():
+    """Verify possessive adjective suffix rules per Правопис 2019 § 107."""
+    # 1st declension
+    suf_i, ua_i, en_i = resolve_possessive_suffix_rule(base_noun_declension=1)
+    assert "-ин" in suf_i
+    assert "Ольжин" in ua_i
+    assert "-yn" in en_i
+
+    # 2nd declension
+    suf_ii, ua_ii, en_ii = resolve_possessive_suffix_rule(base_noun_declension=2)
+    assert "-ів" in suf_ii
+    assert "батьків" in ua_ii
+    assert "-iv" in en_ii
+
+
+def test_resolve_derivational_suffix_mutation_rule():
+    """Verify derivational suffix -ськ- mutations per Правопис 2019 § 22."""
+    # Velars (г, ж, з) -> -зьк-
+    suf_v, ua_v, en_v = resolve_derivational_suffix_mutation_rule("г")
+    assert suf_v == "-зьк-"
+    assert "празький" in ua_v
+    assert "-zk-" in en_v
+
+    # Dentals (к, ч, ц) -> -цьк-
+    suf_d, ua_d, en_d = resolve_derivational_suffix_mutation_rule("к")
+    assert suf_d == "-цьк-"
+    assert "козацький" in ua_d
+    assert "-tsk-" in en_d
+
+    # Sibilants (х, ш, с) -> -ськ-
+    suf_s, ua_s, en_s = resolve_derivational_suffix_mutation_rule("х")
+    assert suf_s == "-ськ-"
+    assert "чеський" in ua_s
+    assert "-skyi" in en_s
 
 
 def test_canonical_deck_validity_and_zero_collisions():

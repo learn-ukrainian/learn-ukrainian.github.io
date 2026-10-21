@@ -19,6 +19,7 @@ import os
 import re
 import subprocess
 import sys
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
@@ -59,6 +60,20 @@ def test_split_ignores_input_order_and_balances_by_duration() -> None:
     assert forward == backward
     # LPT: a(10) | b(6); c(5) joins b (6 < 10); d(1) joins a (10 < 11).
     assert forward == [["tests/test_a.py", "tests/test_d.py"], ["tests/test_b.py", "tests/test_c.py"]]
+
+
+def test_split_gives_unrecorded_files_the_median() -> None:
+    durations = {"tests/test_a.py": 1.0, "tests/test_b.py": 3.0, "tests/test_c.py": 100.0}
+    shards = assign([*durations, "tests/test_new.py"], durations, 2)
+    # median 3.0: the new file is placed like test_b, never dropped.
+    assert shards == [["tests/test_c.py"], ["tests/test_a.py", "tests/test_b.py", "tests/test_new.py"]]
+
+
+def test_split_rejects_duplicates_and_zero_shards() -> None:
+    with pytest.raises(ValueError, match="duplicate"):
+        assign(["tests/test_a.py", "tests/test_a.py"], {}, 2)
+    with pytest.raises(ValueError, match="at least 1"):
+        assign(["tests/test_a.py"], {}, 0)
 
 
 def test_split_pins_history_files_to_the_history_shard() -> None:
@@ -165,6 +180,14 @@ def _clear_allowlist_cache():
     _load_shard_allowlist.cache_clear()
     yield
     _load_shard_allowlist.cache_clear()
+
+
+def test_pytest_ignore_collect_inert_without_env_var(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv(LU_PYTEST_SHARD_FILES_ENV_VAR, raising=False)
+    a_file = tmp_path / "test_x.py"
+    a_file.write_text("", encoding="utf-8")
+    assert pytest_ignore_collect(a_file, config=None) is None
+    assert pytest_ignore_collect(tmp_path, config=None) is None
 
 
 def test_pytest_ignore_collect_directories_never_filtered(tmp_path, monkeypatch) -> None:
@@ -500,6 +523,48 @@ def test_reuse_when_one_green_attempt_tested_the_identical_tree() -> None:
     assert "PR #7" in decision.reason and _MERGE in decision.reason
 
 
+@pytest.mark.parametrize(
+    "shadow",
+    [
+        {"status": "completed", "conclusion": conclusion, "run_attempt": 1}
+        for conclusion in ("success", "failure", "cancelled", "skipped", "timed_out", "neutral", "action_required", "stale")
+    ]
+    + [
+        {"status": "in_progress", "conclusion": None, "run_attempt": 1},
+        {"status": "queued", "conclusion": None, "run_attempt": 1},
+        {"status": "completed", "conclusion": "failure", "run_attempt": 2},
+        {},
+    ],
+)
+@pytest.mark.parametrize(
+    "candidate",
+    [
+        _candidate(),
+        _candidate(jobs=_jobs(_set("Checks", conclusion="failure"))),
+        _candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "pytest (2)"])),
+        _candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[0], name="Unexpected advisory")])),
+        _candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[0], id=7)])),
+        _candidate(jobs=_jobs(_set("Reuse check", conclusion="success"))),
+        _candidate(jobs=_jobs(_set("pytest (3)", run_attempt=2))),
+        _candidate(record=_record(tier="fast")),
+    ],
+    ids=("green", "failed", "missing", "unknown", "duplicate", "queue-job", "rerun", "not-full"),
+)
+def test_component_shadow_leaves_reuse_decision_and_record_byte_identical(candidate, shadow) -> None:
+    record_before = json.dumps(candidate.load_record(), sort_keys=True).encode()
+    baseline = reuse_green_run.decide(_QUEUED, [candidate])
+    listing = candidate.load_jobs()
+    with_shadow = {
+        "total_count": listing["total_count"] + 1,
+        "jobs": [{"name": "Component shadow (advisory)", "id": 900, **shadow}, *listing["jobs"]],
+    }
+    decision = reuse_green_run.decide(_QUEUED, [replace(candidate, load_jobs=lambda: with_shadow)])
+    # Includes the reason and reused job IDs, not just the reuse boolean.
+    assert json.dumps(asdict(decision), sort_keys=True).encode() == json.dumps(asdict(baseline), sort_keys=True).encode()
+    assert json.dumps(candidate.load_record(), sort_keys=True).encode() == record_before
+    assert "Component shadow (advisory)" not in dict(decision.jobs)
+
+
 _OTHER_TREE_COMMIT = {"d" * 40: {"sha": "d" * 40, "tree": "2" * 40, "parents": ["b" * 40, _PR_HEAD]}}
 
 
@@ -766,6 +831,81 @@ def test_metadata_commit_writes_an_empty_diff_commit_on_a_branch(
 
 def _jobs_of_ci() -> dict:
     return yaml.safe_load(_CI.read_text(encoding="utf-8"))["jobs"]
+
+
+def _run_pytest_script() -> str:
+    return next(step["run"] for step in _jobs_of_ci()["pytest"]["steps"] if step.get("name") == "Run pytest")
+
+
+def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
+    script = _run_pytest_script()
+    assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
+    assert "scripts.ci.split_tests duration-source" in script
+    assert '--durations "$durations"' in script
+    assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in script
+    assert "-m 'not atlas_release and not slow and not site_toolchain' --strict-markers" in script
+    assert "not site_toolchain" in script
+    # Frontend selection over tests/ is covered by tests/build/test_fresh_page_safety.py::
+    # test_ci_runs_site_toolchain_tests_in_required_frontend_job.
+    for flag in (
+        "-n logical",
+        "--dist=worksteal",
+        "--max-worker-restart=0",
+        "--timeout=120",
+        "--timeout-method=thread",
+        "--durations=25",
+    ):
+        assert flag in script
+    assert "-n auto" not in script
+    assert "scripts.ci.pg_skip_guard" in script
+    assert (
+        'export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}'
+        + pytest_report.COLLECTED_SUFFIX
+        + '"'
+    ) in script
+
+
+def test_pytest_matrix_is_contiguous_and_counted_by_the_job() -> None:
+    pytest_job = _jobs_of_ci()["pytest"]
+    shards = pytest_job["strategy"]["matrix"]["shard"]
+    assert shards == list(range(1, len(shards) + 1))
+    env = next(step["env"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
+    assert env == {
+        "SHARD": "${{ matrix.shard }}",
+        "SHARDS": "${{ strategy.job-total }}",
+        "REFRESH_RESULT": "${{ needs.refresh-pytest-durations.result }}",
+    }
+
+
+def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
+    jobs = _jobs_of_ci()
+    upload = next(step for step in jobs["pytest"]["steps"] if step.get("name") == "Upload pytest JUnit report")
+    # scripts/ci/flake_ledger.py downloads "pytest-junit-shard-*" from merge_group runs.
+    assert upload["with"]["name"] == "pytest-junit-shard-${{ matrix.shard }}"
+    assert "ci-artifacts/pytest-shard-*.xml" in upload["with"]["path"]
+    assert "ci-artifacts/pytest-shard-*-files.txt" in upload["with"]["path"]
+    assert f"ci-artifacts/pytest-shard-*{pytest_report.COLLECTED_SUFFIX}" in upload["with"]["path"]
+    report = jobs["pytest-report"]
+    assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
+    steps = report["steps"]
+    assert any(step.get("with", {}).get("pattern") == "pytest-junit-shard-*" for step in steps)
+    report_step = next(step for step in steps if "scripts.ci.pytest_report" in str(step.get("run", "")))
+    # The record names the PR it tested; reuse_green_run binds the queued PR to it.
+    assert report_step["env"] == {"PR_NUMBER": "${{ github.event.pull_request.number }}"}
+    assert any(step.get("with", {}).get("name") == reuse_green_run.ARTIFACT for step in steps)
+
+
+def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
+    jobs = _jobs_of_ci()
+    assert jobs["pytest"]["needs"] == ["reuse", "refresh-pytest-durations"]
+    refresh = jobs["refresh-pytest-durations"]
+    assert refresh["needs"] == ["reuse"]
+    assert refresh["if"] == "${{ !cancelled() }}"
+    assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
+    assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
+    assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}
+    # reuse_green_run reads the shard matrix from the queue commit's ci.yml.
+    assert reuse_green_run.WORKFLOW in jobs["reuse"]["steps"][0]["with"]["sparse-checkout"].split()
 
 
 def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:

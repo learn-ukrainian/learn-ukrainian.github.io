@@ -226,3 +226,18 @@ def test_build_mcp_tool_config_codex_without_mcp_servers_key_returns_none(
 
     assert tool_config is None
     assert diagnostics["resolution_status"] == "config_empty"
+
+
+def test_build_mcp_tool_config_unknown_agent_returns_none(tmp_path: Path) -> None:
+    config_path = tmp_path / ".mcp.json"
+    config_path.write_text("{}", encoding="utf-8")
+
+    tool_config, diagnostics = build_mcp_tool_config(
+        "nonexistent",
+        mcp_servers=["sources"],
+        allowed_tools="mcp__sources__*",
+        mcp_config_path=config_path,
+    )
+
+    assert tool_config is None
+    assert diagnostics["resolution_status"] == "servers_not_found"

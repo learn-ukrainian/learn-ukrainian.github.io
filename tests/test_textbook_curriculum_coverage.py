@@ -218,6 +218,14 @@ def test_all_source_groups_require_every_curricular_component() -> None:
     assert report["cells"][0]["status"] == "acquisition_missing"
 
 
+def test_report_is_deterministic() -> None:
+    denominator = coverage.load_denominator(DENOMINATOR)
+    readiness = _readiness(("3090-mystectvo-10-11-klas-nazarenko", "ready"))
+    first = coverage.evaluate(denominator, readiness)
+    second = coverage.evaluate(denominator, readiness)
+    assert coverage.canonical_json(first) == coverage.canonical_json(second)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

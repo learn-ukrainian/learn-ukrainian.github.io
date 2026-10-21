@@ -45,6 +45,10 @@ class TestIsComplete:
         state = {"phases": {"content": {"status": "complete"}}}
         assert is_complete(state, "content") is True
 
+    def test_failed_phase(self):
+        state = {"phases": {"content": {"status": "failed"}}}
+        assert is_complete(state, "content") is False
+
 
 # =============================================================================
 # _fresh_state

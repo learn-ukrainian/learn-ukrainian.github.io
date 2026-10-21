@@ -11,9 +11,10 @@ import json
 
 import pytest
 
-from scripts.generate_mdx import atlas_links
+from scripts.generate_mdx import atlas_links, resources
 from scripts.generate_mdx.atlas_links import (
     atlas_href_for,
+    english_content_words,
     lesson_word_is_proper,
     normalize_lemma,
     slug_from_atlas_href,
@@ -75,9 +76,23 @@ def manifest(tmp_path):
     return str(path)
 
 
+def test_href_exact_match(manifest):
+    assert atlas_href_for("робота", manifest) == "/lexicon/робота/"
+
+
 def test_href_stress_stripped_match(manifest):
     # Stressed surface form must resolve to the unstressed Atlas page.
     assert atlas_href_for("робо́та", manifest) == "/lexicon/робота/"
+
+
+def test_href_case_insensitive_match(manifest):
+    assert atlas_href_for("іван", manifest) == "/lexicon/іван/"
+    assert atlas_href_for("ІВАН", manifest) == "/lexicon/іван/"
+
+
+def test_href_empty_returns_none(manifest):
+    assert atlas_href_for("", manifest) is None
+    assert atlas_href_for("   ", manifest) is None
 
 
 # ── integrity-gating inside the generator ────────────────────────────────────
@@ -122,6 +137,23 @@ def test_href_unique_alias_rewrites_to_canonical_lemma(tmp_path):
         aliases_path=aliases,
         published_slugs=published,
     ) == "/lexicon/студент/"
+
+
+def test_href_alias_preserves_yi(tmp_path):
+    manifest = _write_json(
+        tmp_path / "manifest.json",
+        {"entries": [{"lemma": "їжак", "url_slug": "їжак"}]},
+    )
+    aliases = _write_json(
+        tmp_path / "aliases.json",
+        [{"a": "їжака", "s": "їжак"}],
+    )
+    assert atlas_href_for(
+        "їжака",
+        manifest,
+        aliases_path=aliases,
+        published_slugs={"їжак"},
+    ) == "/lexicon/їжак/"
 
 
 def test_href_ambiguous_alias_returns_none(tmp_path):
@@ -184,6 +216,52 @@ def test_preset_href_is_rewritten_or_dropped(tmp_path):
     ) is None
     assert validated_atlas_href(None, manifest) is None
     assert slug_from_atlas_href("/lexicon/%") is None
+
+
+def test_vocab_component_resolves_preset_href_instead_of_copying_it(monkeypatch):
+    def fake_href(word, manifest_path=None, **kwargs):
+        del manifest_path, kwargs
+        return "/lexicon/студент/" if word == "студентові" else None
+
+    monkeypatch.setattr(resources, "atlas_href_for", fake_href)
+    out = resources.vocab_items_to_components(
+        [
+            {
+                "lemma": "студентові",
+                "translation": "to the student",
+                "atlas_href": "/lexicon/студентові/",
+            },
+            {
+                "lemma": "привид",
+                "translation": "ghost",
+                "atlas_href": "/lexicon/привид/",
+            },
+        ]
+    )
+    assert "/lexicon/студент/" in out
+    assert "/lexicon/студентові/" not in out
+    assert "/lexicon/привид/" not in out
+
+
+def test_vocab_component_links_only_lemmas_with_atlas_pages(monkeypatch):
+    """The generator emits atlas_href for lemmas that have a page, and omits it
+    entirely for lemmas that do not — never a broken link."""
+    def fake_href(word, **_sense):
+        return "/lexicon/робота/" if word == "робота" else None
+
+    monkeypatch.setattr(resources, "atlas_href_for", fake_href)
+
+    out = resources.vocab_items_to_components(
+        [
+            {"lemma": "робота", "translation": "work", "example": "Я люблю роботу."},
+            {"lemma": "абракадабра", "translation": "nonsense"},
+        ]
+    )
+
+    assert "/lexicon/робота/" in out
+    assert "atlas_href" in out
+    # The un-pageable lemma must not carry an atlas_href key/value.
+    assert out.count("/lexicon/") == 1
 
 
 # ── sense check (#9002) ──────────────────────────────────────────────────────
@@ -399,3 +477,32 @@ def test_stemmed_overlap_cannot_confirm_qualified_register_sense(sense_atlas, tr
 def test_preset_href_is_sense_checked_against_the_lesson_word(sense_atlas):
     # The pre-set slug is lowercase; the lesson's capitalised proper noun decides.
     assert sense_atlas("поділля", lesson_word="Поділля", pos="власна назва") is None
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("(colloquial) lowland, valley", {"colloquial", "lowland", "valley"}),
+        ("Kyiv (capital city of Ukraine) (proper noun)", {"kyiv", "capital", "city", "ukraine"}),
+        ("to the student", {"student"}),
+        ("to", {"to"}),
+        ("studies", {"study"}),
+        ("boxes", {"box"}),
+        ("grandmother's", {"grandmother"}),
+        ("tomatoes", {"tomatoe", "tomato"}),
+        ("he/she has to", {"he", "she", "have"}),
+        ("these, whom", {"this", "who"}),
+        ("lived", {"lived", "liv", "live"}),
+        ("shopping", {"shopping", "shopp", "shoppe", "shop"}),
+        ("city centre, colour", {"city", "center", "color"}),
+        ("characterisation", {"characterization"}),
+        ("gone grey", {"gone", "gray"}),
+        # Only the English portion of a mixed-script gloss counts.
+        ("language register (мовний реєстр)", {"language", "register"}),
+        ("to belong; should (impersonal) Conjugation: 2nd (-ать) | ―", {"belong", "should", "impersonal"}),
+        ("to belong (+ до, + genitive) (be a part or member of)", {"belong", "be", "part", "member"}),
+        ("мовний реєстр", set()),
+    ],
+)
+def test_english_content_words(text, expected):
+    assert english_content_words(text) == expected

@@ -397,3 +397,36 @@ def test_download_pdf_rejects_bad_signature_and_cleans_temp(tmp_path):
 
     assert not dest.exists()
     assert list(tmp_path.glob("*.part")) == []
+
+
+def test_download_pdf_rejects_declared_size_limit_before_retain(tmp_path):
+    dest = tmp_path / "book.pdf"
+    response = MockGdriveResponse(
+        b"%PDF-1.7\nlarge",
+        headers={"Content-Length": "100"},
+    )
+
+    with patch("requests.get", return_value=response), pytest.raises(DownloadValidationError, match="declared response size"):
+        download_pdf(
+            "https://example.test/book.pdf",
+            dest,
+            retained_store=tmp_path,
+            max_size_bytes=10,
+        )
+
+    assert not dest.exists()
+    assert list(tmp_path.glob("*.part")) == []
+
+
+def test_download_pdf_removes_temp_after_stream_exception(tmp_path):
+    class RaisingResponse(MockGdriveResponse):
+        def iter_content(self, chunk_size=8192):
+            yield b"%PDF-1.7\npartial"
+            raise RuntimeError("fixture stream failed")
+
+    dest = tmp_path / "book.pdf"
+    with patch("requests.get", return_value=RaisingResponse(b"unused")), pytest.raises(RuntimeError, match="fixture stream failed"):
+        download_pdf("https://example.test/book.pdf", dest, retained_store=tmp_path)
+
+    assert not dest.exists()
+    assert list(tmp_path.glob("*.part")) == []

@@ -207,6 +207,17 @@ def test_textbook_search_excludes_ulp_mirrors(tmp_path) -> None:
     assert rows[0]["provenance"]["locator"] == "language-clean"
 
 
+def test_candidate_sentences_reject_formula_and_worksheet_fragments() -> None:
+    rejected = (
+        ("а", "2) Якщо а > 0, то нерівність перепишемо у вигляді ."),
+        ("ом", "Дано: U = 30 В R R R 1 2 3 = Ом. Знайти I1?"),
+        ("Іван", "У поемі є назви, ОКРІМ А Синопу Б Дніпра В Стамбула Г Царграда."),
+        ("би", "2) Якби знав, де впаду, сінця (б/би) підстелив."),
+    )
+    for lemma, sentence in rejected:
+        assert list(_candidate_sentences(sentence, lemma)) == []
+
+
 def test_candidate_sentences_reject_source_bookkeeping_and_ocr_fragments() -> None:
     rejected = (
         ("де", "33.2 де Сформулюємо означення нескінченної границі функції."),

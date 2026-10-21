@@ -45,6 +45,12 @@ class TestReviewGamingHelpers:
         scores = _extract_all_scores(content)
         assert scores == [9.0]
 
+    def test_extract_h2_headers(self):
+        from audit.checks.review_gaming import _extract_h2_headers
+        content = "# H1\n## Section One\ntext\n## Section Two\nmore\n### H3"
+        headers = _extract_h2_headers(content)
+        assert headers == ["Section One", "Section Two"]
+
 
 class TestCheckScoreUniformity:
     """Tests for check_score_uniformity."""
@@ -69,6 +75,16 @@ class TestCheckCitationDensity:
                                          str(md), str(tmp_path / "b1" / "test.md"), "B1")
         assert any(v['severity'] == 'critical' for v in result)
 
+    def test_warning_low_density(self, tmp_path):
+        from audit.checks.review_gaming import check_citation_density
+        md = tmp_path / "test.md"
+        md.write_text("word " * 1200)
+        # 2 citations for 1200 words: expected_min=2, expected_warn=4
+        review = 'Review: «Це дуже гарне речення яке я бачу тут» and «Ще одне речення тут для тесту»'
+        result = check_citation_density(review, str(md),
+                                         str(tmp_path / "b1" / "test.md"), "B1")
+        assert any(v['severity'] == 'warning' for v in result)
+
 
 class TestCheckReviewSectionCoverage:
     """Tests for check_review_section_coverage."""
@@ -79,6 +95,13 @@ class TestCheckReviewSectionCoverage:
         review = "This review talks about unrelated things."
         violations = check_review_section_coverage(review, headers)
         assert any(v['type'] == 'REVIEW_LOW_SECTION_COVERAGE' for v in violations)
+
+    def test_partial_word_matching(self):
+        from audit.checks.review_gaming import check_review_section_coverage
+        content = "## Дієслова руху\ntext\n## Умовний спосіб\ntext\n## Активні дієприкметники\ntext\n## Пасивний стан\ntext"
+        review = "The дієслова руху section is complete. The умовний спосіб part works well. Активні дієприкметники are covered. Пасивний стан needs work."
+        violations = check_review_section_coverage(review, content)
+        assert not any(v['severity'] == 'critical' for v in violations)
 
 
 class TestCheckScoreDrift:
@@ -169,6 +192,19 @@ class TestCheckCrossAgentReview:
         assert any(v['type'] == 'SELF_REVIEW_DETECTED' for v in violations)
 
 
+class TestModelFamily:
+    """Tests for _model_family."""
+
+    def test_anthropic_family(self):
+        from audit.checks.review_gaming import _model_family
+        assert _model_family("claude-opus-4-6") == "anthropic"
+        assert _model_family("claude-sonnet-4-6") == "anthropic"
+
+    def test_unknown_family(self):
+        from audit.checks.review_gaming import _model_family
+        assert _model_family("llama-3") is None
+
+
 # ============================================================================
 # 2. phases_gates.py — tested via unit-level helpers
 # ============================================================================
@@ -176,6 +212,16 @@ class TestCheckCrossAgentReview:
 
 class TestEvaluateImmersion:
     """Tests for evaluate_immersion function."""
+
+    def test_checkpoint_no_gate(self):
+        from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
+
+        state = AuditState()
+        ctx = _make_ctx(module_focus='checkpoint', level_code='A1', module_num=1)
+        _imm, min_i, max_i = eval_imm(ctx, state)
+        assert min_i == 0
+        assert max_i == 100
             # Just verify it ran without error
 
     def test_very_low_immersion_triggers_failure(self):
@@ -243,6 +289,24 @@ class TestExtractUkrainianCitations:
         content = '«Це дуже гарне речення для тесту»'
         citations = _extract_ukrainian_citations(content)
         assert len(citations) == 1
+
+    def test_straight_quotes(self):
+        from audit.checks.review_validation import _extract_ukrainian_citations
+        content = '"Це дуже гарне речення для тесту"'
+        citations = _extract_ukrainian_citations(content)
+        assert len(citations) == 1
+
+    def test_inline_code(self):
+        from audit.checks.review_validation import _extract_ukrainian_citations
+        content = '`Це дуже гарне речення для тесту`'
+        citations = _extract_ukrainian_citations(content)
+        assert len(citations) == 1
+
+    def test_short_quote_filtered(self):
+        from audit.checks.review_validation import _extract_ukrainian_citations
+        content = '«Так»'
+        citations = _extract_ukrainian_citations(content)
+        assert len(citations) == 0
 
     def test_english_quote_filtered(self):
         from audit.checks.review_validation import _extract_ukrainian_citations
@@ -459,6 +523,68 @@ class TestLoadMetaFile:
             result = _load_meta_file("a1", "test-module")
             assert result.get('title') == 'From Plan'
         _load_meta_file.cache_clear()
+
+
+class TestGetModuleBySlug:
+    """Tests for get_module_by_slug."""
+
+    def test_module_found(self):
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_module_by_slug
+        clear_manifest_cache()
+        _load_meta_file.cache_clear()
+        manifest = {
+            'levels': {
+                'a1': {
+                    'type': 'core',
+                    'modules': ['01-test-module'],
+                }
+            }
+        }
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'Test'}):
+            mod = get_module_by_slug("test-module")
+            assert mod is not None
+            assert mod.slug == "test-module"
+            assert mod.local_num == 1
+
+    def test_track_module(self):
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_module_by_slug
+        clear_manifest_cache()
+        _load_meta_file.cache_clear()
+        manifest = {
+            'levels': {
+                'hist': {
+                    'type': 'track',
+                    'modules': ['bohdan-khmelnytskyi'],
+                }
+            }
+        }
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'Bohdan'}):
+            mod = get_module_by_slug("bohdan-khmelnytskyi")
+            assert mod is not None
+            assert mod.track == "hist"
+            assert mod.global_num == 0
+
+
+class TestGetModulesForLevel:
+    """Tests for get_modules_for_level."""
+
+    def test_core_level(self):
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_modules_for_level
+        clear_manifest_cache()
+        _load_meta_file.cache_clear()
+        manifest = {
+            'levels': {
+                'a1': {'type': 'core', 'modules': ['01-mod-a', '02-mod-b']},
+            }
+        }
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'Test'}):
+            mods = get_modules_for_level("a1")
+            assert len(mods) == 2
+            assert mods[0].global_num == 1
+            assert mods[1].global_num == 2
 
 
 class TestValidateManifest:

@@ -62,6 +62,16 @@ def test_noop_adapter_does_not_claim_a_canary(provider: str, dry_run: str, tmp_p
         assert "would run provider canary" not in result.stdout
 
 
+@pytest.mark.parametrize("provider", PROVIDERS)
+@pytest.mark.parametrize("dry_run", ("0", "1"))
+def test_main_clears_inherited_canary_execution_report(
+    provider: str, dry_run: str, tmp_path: Path,
+) -> None:
+    result = _canary_binding_probe(provider, dry_run, tmp_path, inherited=True)
+    assert "provider canary: not run" in _driver_prompt(result)
+    assert "provider canary: ran" not in result.stdout
+
+
 @pytest.mark.parametrize(
     ("ran", "dry_run", "expected"),
     (("1", "0", "ran"), ("0", "0", "not run"), ("1", "1", "not run")),

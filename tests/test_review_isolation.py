@@ -65,6 +65,7 @@ from scripts.review.snapshot import (
     capture_local_review_state,
     capture_untracked_records,
     cleanup_snapshot_state,
+    compute_source_fingerprint,
     materialize_review_snapshot,
     provision_review_snapshot,
     verify_review_acceptance,
@@ -191,6 +192,27 @@ def _private_review_roots(tmp_path: Path, label: str = "review") -> tuple[Path, 
     marker.write_text(f"lu-review-root-v1:{secrets.token_hex(32)}\n", encoding="ascii")
     marker.chmod(0o400)
     return write, execution
+
+
+def test_review_temp_cleanup_removes_restrictive_view_after_simulated_review(tmp_path: Path) -> None:
+    review_root = create_review_temp_root(prefix="test-view-", dir=tmp_path)
+    restricted = review_root / "context" / "restricted"
+    blocked = restricted / "deeper"
+    blocked.mkdir(parents=True)
+    (blocked / "evidence.txt").write_text("sealed", encoding="utf-8")
+    blocked.chmod(0o000)
+    restricted.chmod(0o000)
+
+    try:
+        remove_review_temp_tree(review_root)
+
+        assert not review_root.exists()
+        assert not tuple(tmp_path.glob("test-view-*"))
+    finally:
+        if blocked.exists():
+            blocked.chmod(0o700)
+        if restricted.exists():
+            restricted.chmod(0o700)
 
 
 def test_review_temp_cleanup_refuses_unmarked_prefixed_directory(tmp_path: Path) -> None:
@@ -973,6 +995,11 @@ def test_macos_clt_python_runs_sealed_reader_inside_sandbox(tmp_path: Path) -> N
     assert any("CommandLineTools" in root for root in sandbox.read_roots)
 
 
+def test_agy_isolated_review_is_explicitly_unsupported() -> None:
+    with pytest.raises(ReviewIsolationError, match="agy_isolated_review_unsupported"):
+        review_isolation_tool_config("agy")
+
+
 # ---------------------------------------------------------------------------
 # Neutral snapshot materialization (F4 / F6)
 # ---------------------------------------------------------------------------
@@ -1019,6 +1046,22 @@ def test_neutral_snapshot_has_no_git_and_keeps_inert_agents(
     finally:
         cleanup_snapshot_state(state)
     assert not snap.path.exists()
+
+
+def test_hostile_agents_cannot_change_isolation_tool_config(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_repo(repo)
+    cfg = review_isolation_tool_config("claude")
+    assert cfg["deny_write_tools"] is True
+    assert cfg["disable_project_instructions"] is True
+    assert cfg["allowed_tools"] == "Read,Grep,Glob"
+    head = _head_sha(repo)
+    with provision_review_snapshot(repo, mode="local", head_sha=head, temp_parent=tmp_path / "tmp") as snap:
+        text = snap.read_evidence("AGENTS.md")
+        assert "HOSTILE" in text
+        cfg2 = review_isolation_tool_config("claude")
+        assert cfg2 == cfg
 
 
 def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -1764,6 +1807,36 @@ def test_cleanup_after_engine_failure(tmp_path: Path) -> None:
             raise RuntimeError("engine boom")
     assert seen is not None
     assert not seen.exists()
+
+
+def test_fingerprint_stable_for_identical_capture(tmp_path: Path) -> None:
+    records = {
+        "a.py": b"x = 1\n",
+        "b.py": b"y = 2\n",
+    }
+    fp1 = compute_source_fingerprint(
+        mode="local",
+        base_sha=None,
+        head_sha="a" * 40,
+        changed_paths=("a.py", "b.py"),
+        file_records=records,
+    )
+    fp2 = compute_source_fingerprint(
+        mode="local",
+        base_sha=None,
+        head_sha="a" * 40,
+        changed_paths=("a.py", "b.py"),
+        file_records=records,
+    )
+    assert fp1 == fp2
+    fp3 = compute_source_fingerprint(
+        mode="local",
+        base_sha=None,
+        head_sha="a" * 40,
+        changed_paths=("a.py", "b.py"),
+        file_records={**records, "a.py": b"x = 2\n"},
+    )
+    assert fp1 != fp3
 
 
 def test_primary_checkout_not_used_as_snapshot_root(tmp_path: Path) -> None:

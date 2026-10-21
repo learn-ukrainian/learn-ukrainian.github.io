@@ -327,6 +327,32 @@ def test_kimi_seat_gets_no_push_credential(tmp_path) -> None:
     assert {"https://", "ssh://", "git@", "/"} <= rewrites
 
 
+def test_dispatch_markers_pass_through_for_every_dispatch_provider() -> None:
+    """#7827: delegate.py exports LEARN_UKRAINIAN_DISPATCH_TASK_ID /
+    LEARN_UKRAINIAN_DISPATCH_AGENT into the worker environment; the markers
+    must survive build_agent_env for every dispatched provider so the
+    SessionStart gate sees the explicit dispatch-worker signal. A task id
+    containing ``sk-`` must not trip the generic secret-value redactor."""
+    for task_id in ("lease-gate-dispatch-7827", "task-7828-sk-something"):
+        with patch.dict(
+            "os.environ",
+            {
+                "PATH": "/usr/bin",
+                "HOME": "/Users/example",
+                "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id,
+                "LEARN_UKRAINIAN_DISPATCH_AGENT": "kimi",
+            },
+            clear=True,
+        ):
+            envs = {
+                provider: build_agent_env(provider=provider) for provider in ("claude", "codex", "kimi", "grok", "agy")
+            }
+
+        for provider, env in envs.items():
+            assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == task_id, provider
+            assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "kimi", provider
+
+
 def test_build_agent_env_keeps_only_the_dispatch_cap_plugin() -> None:
     """#8645: the final CLI env keeps ci.pytest_dispatch_cap only inside a dispatch.
 

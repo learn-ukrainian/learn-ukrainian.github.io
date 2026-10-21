@@ -51,6 +51,44 @@ def test_write_to_real_preflight_fast_fail_is_refused() -> None:
     assert before == after
 
 
+def test_isolate_dispatch_task_store_is_not_the_live_dir(
+    _isolate_dispatch_task_store: Path,
+) -> None:
+    """The autouse redirect is ``<session base>/<n>/tasks``, so its parent is also per-test."""
+    import scripts.api.config as api_config
+    import scripts.api.delegate_router as delegate_router
+    import scripts.api.main as api_main
+    import scripts.delegate as delegate_mod
+    from scripts.common.task_store_paths import tasks_dir
+
+    assert _isolate_dispatch_task_store != _REAL_TASKS_DIR
+    assert _isolate_dispatch_task_store.name == "tasks"
+    assert _isolate_dispatch_task_store == tasks_dir()
+    assert _isolate_dispatch_task_store.parent != _REAL_TASKS_DIR.parent
+    assert _isolate_dispatch_task_store.parent == api_config.BATCH_STATE_DIR
+    assert _isolate_dispatch_task_store.parent == api_main.app.state.ctx.roots.batch_state_dir
+    assert delegate_router._tasks_dir(api_main.app.state.ctx) == _isolate_dispatch_task_store
+    assert delegate_router._tasks_dir(None) == _isolate_dispatch_task_store
+    assert _REAL_TASKS_DIR not in delegate_mod._state_path("t-isolated").parents
+    fast_fail = tasks_dir().parent / "preflight_fast_fail.jsonl"
+    assert _REAL_TASKS_DIR.parent not in fast_fail.resolve().parents
+
+
+def test_test_level_override_wins_over_autouse(
+    _isolate_dispatch_task_store: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A test-level ``LU_TASKS_DIR`` override wins."""
+    from scripts.common.task_store_paths import tasks_dir
+
+    override = _isolate_dispatch_task_store.parent / "override-tasks"
+    override.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(override))
+    assert override == tasks_dir()
+    assert _isolate_dispatch_task_store != tasks_dir()
+    assert tasks_dir() != _REAL_TASKS_DIR
+
+
 def _module_level_tasks_dir_constants(source: str) -> list[str]:
     """Names assigned at module level to a path ending in ``batch_state/tasks``."""
     tree = ast.parse(source)

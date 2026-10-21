@@ -84,6 +84,49 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
 """
 
 
+def test_runtime_panels_paint_independently_and_empty_is_not_error():
+    code = _script("runtime.html", "let runtimeLoading", "\nfunction refreshRuntime")
+    _node(
+        _DOM
+        + r"""
+const calls = [], painted = [], banners = {};
+let resolveAcpx;
+const pendingAcpx = new Promise(resolve => {resolveAcpx = resolve;});
+const fetchJson = async url => {
+  calls.push(url);
+  if (url.includes('/acpx')) return pendingAcpx;
+  if (url.endsWith('/agents')) return {agents: []};
+  if (url.includes('/routing-assignments')) throw new Error('unavailable');
+  return {};
+};
+const setBanner = (id, text) => banners[id] = text;
+const renderAgents = () => painted.push('agents');
+const renderUsage = () => painted.push('usage');
+const renderRecent = () => painted.push('recent');
+const renderAcpx = () => painted.push('acpx');
+const renderRoutingAssignments = () => {};
+const renderHeadroom = () => {};
+"""
+        + code
+        + r"""
+(async () => {
+  const first = loadRuntime();
+  await tick();
+  assert.deepEqual(painted.sort(), ['agents', 'recent', 'usage']);
+  assert.equal(calls.length, 5);
+  await loadRuntime();
+  assert.equal(calls.length, 5, 'overlap must not duplicate requests');
+  assert.match(document.getElementById('headroom-content').innerHTML, /No runtime agents/);
+  assert.equal(banners['headroom-banner'], '');
+  assert.match(document.getElementById('routing-assignments-status').textContent, /unknown/);
+  resolveAcpx({});
+  await first;
+  assert.match(document.getElementById('last-refresh').textContent, /Refresh attempted/);
+})().catch(e => {console.error(e); process.exitCode = 1;});
+"""
+    )
+
+
 def test_fleet_failed_panels_clear_old_data_and_old_refresh_cannot_overwrite():
     code = _script("fleet.html", "let fleetGeneration", "\nfunction queueRefresh")
     _node(

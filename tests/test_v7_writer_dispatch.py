@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 
@@ -146,6 +147,84 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
         assert calls[0][2]["tool_config"]["hermes_mcp_servers"] == ["sources"]
 
 
+@pytest.mark.parametrize(
+    ("alias", "writer"),
+    [
+        ("codex", "codex-tools"),
+        ("grok", "grok-tools"),
+        ("cursor", "cursor-tools"),
+        ("deepseek", "deepseek-tools"),
+        ("qwen", "qwen-tools"),
+    ],
+)
+def test_v7_build_accepts_writer_aliases(alias: str, writer: str) -> None:
+    assert writer in v7_build.WRITER_CHOICES
+    assert alias in v7_build.WRITER_CHOICES
+    assert v7_build._normalize_writer(alias) == writer
+
+
+@pytest.mark.parametrize(
+    ("writer", "expected_cwd"),
+    [
+        ("gemini-tools", v7_build.PROJECT_ROOT),
+        ("claude-tools", None),
+        ("codex-tools", None),
+        ("grok-tools", None),
+        ("cursor-tools", None),
+        ("deepseek-tools", None),
+        ("qwen-tools", None),
+    ],
+)
+def test_v7_build_invokes_gemini_tools_from_project_root(
+    tmp_path: Path,
+    writer: str,
+    expected_cwd: Path | None,
+) -> None:
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text("level: a1\nslug: my-morning\nsequence: 1\n", encoding="utf-8")
+    module_dir = tmp_path / "module"
+    plan = {
+        "level": "a1",
+        "slug": "my-morning",
+        "sequence": 1,
+        "content_outline": [],
+    }
+
+    with (
+        patch.object(v7_build.linear_pipeline, "plan_path_for", return_value=plan_path),
+        patch.object(v7_build.linear_pipeline, "load_plan", return_value=plan),
+        patch.object(v7_build.linear_pipeline, "validate_plan"),
+        patch.object(
+            v7_build.linear_pipeline,
+            "build_knowledge_packet",
+            return_value="knowledge packet",
+        ),
+        patch.object(v7_build, "_writer_prompt", return_value="writer prompt"),
+        patch.object(
+            v7_build.linear_pipeline,
+            "invoke_writer",
+            side_effect=linear_pipeline.LinearPipelineError("stop after writer invoke"),
+        ) as invoke_writer,
+    ):
+        exit_code = v7_build.main(
+            [
+                "a1",
+                "my-morning",
+                "--writer",
+                writer,
+                "--out",
+                str(module_dir),
+            ]
+        )
+
+    assert exit_code == 1
+    assert invoke_writer.call_count == 1
+    assert invoke_writer.call_args.kwargs["cwd"] == (expected_cwd or module_dir)
+    assert invoke_writer.call_args.kwargs["tool_trace_path"] == (
+        module_dir / "writer_tool_calls.json"
+    )
+
+
 def test_v7_build_seminar_stress_path_strips_combining_acute(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -191,6 +270,38 @@ def test_v7_build_core_stress_path_keeps_existing_marks(
     assert "\u0301" in (module_dir / "module.md").read_text(encoding="utf-8")
     assert "\u0301" in (module_dir / "vocabulary.yaml").read_text(encoding="utf-8")
     assert "\u0301" in (module_dir / "activities.yaml").read_text(encoding="utf-8")
+
+
+def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    telemetry = tmp_path / "out.jsonl"
+
+    # --out keeps the wiki gate artifact out of the real curriculum tree (#8631).
+    exit_code = v7_build.main(
+        [
+            "a1",
+            "my-morning",
+            "--writer",
+            "codex-tools",
+            "--dry-run",
+            "--out",
+            str(tmp_path / "module"),
+            "--telemetry-out",
+            str(telemetry),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
+
+    assert exit_code == 0
+    assert captured.out == ""
+    assert events
+    assert {event["event"] for event in events} >= {"module_start", "phase_done", "module_done"}
+    assert events[-1]["event"] == "module_done"
+    assert events[-1]["dry_run"] is True
 
 
 def test_v7_writer_trace_capture_clears_tool_theatre(
@@ -355,6 +466,25 @@ def test_agy_writer_refuses_dispatch_when_catalog_stays_dead(
     assert invoked == []
     preflight = next(event for event in events if event["event"] == "agy_mcp_catalog_preflight")
     assert preflight["ok"] is False
+
+
+def test_tools_writer_without_any_module_ref_is_still_gated(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+
+    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        return SimpleNamespace(response="writer output", tool_calls=[])
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
+        linear_pipeline.invoke_writer(
+            "Write the module.",
+            writer="agy-tools",
+            cwd=tmp_path,
+            invoker=fake_invoker,
+            event_sink=lambda _event, **_fields: None,
+        )
 
 
 def test_shell_vesum_trace_does_not_satisfy_mcp_gate(

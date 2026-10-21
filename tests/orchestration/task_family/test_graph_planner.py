@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from scripts.orchestration.task_family.graph import discover_task_family
+from scripts.orchestration.task_family.graph import discover_task_family, rename_mapping
 from scripts.orchestration.task_family.model import (
     ArchiveSelection,
     LifecycleEvent,
@@ -110,6 +110,20 @@ def test_unknown_relation_endpoint_blocks_without_entering_component() -> None:
     assert graph.included_task_ids == ("root",)
     assert graph.roles_by_task == {"root": ("Lead",)}
     assert any(blocker.code == "unknown_endpoint" for blocker in graph.blockers)
+
+
+def test_rename_mapping_respects_native_codex_title_limit_without_losing_roles() -> None:
+    mapping = {item.task_id: item for item in rename_mapping(_graph(), "A deliberately oversized lifecycle repair title")}
+
+    replacement = mapping["replacement"]
+    assert len(replacement.new_title) <= 60
+    assert "… [" in replacement.new_title
+    assert replacement.new_title.endswith("[Repl. · Gen. 1]")
+    assert replacement.roles == ("Replacement", "Generation 1")
+
+    ukrainian = {item.task_id: item for item in rename_mapping(_graph(), "Завершення надзвичайно довгого життєвого циклу завдання")}
+    assert len(ukrainian["replacement"].new_title) <= 60
+    assert ukrainian["replacement"].new_title.endswith("[Repl. · Gen. 1]")
 
 
 def test_generation_is_transitive_and_relation_order_independent() -> None:

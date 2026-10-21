@@ -77,6 +77,49 @@ def test_manifest_extracts_vocabulary_minimum_tiers_and_glosses(tmp_path: Path) 
     ]
 
 
+def test_manifest_handles_mixed_or_missing_vocabulary_stars(tmp_path: Path) -> None:
+    wiki = tmp_path / "mixed-stars.md"
+    wiki.write_text(
+        """# Mixed stars fixture
+
+## Словниковий мінімум
+
+- кава (★★☆) — coffee.
+- чай () — tea.
+- сік — juice.
+""",
+        encoding="utf-8",
+    )
+
+    manifest = extract_manifest(wiki)
+
+    assert manifest["wiki_vocabulary_minimum"] == [
+        {"lemma": "кава", "frequency_tier": "mid", "gloss": "coffee"},
+        {"lemma": "чай", "frequency_tier": "unknown", "gloss": "tea"},
+        {"lemma": "сік", "frequency_tier": "unknown", "gloss": "juice"},
+    ]
+
+
+def test_manifest_handles_a1_heading_variants() -> None:
+    pages = [
+        "around-the-city",
+        "at-the-cafe",
+        "checkpoint-actions",
+        "checkpoint-first-contact",
+    ]
+    counts = {}
+    for slug in pages:
+        manifest = extract_manifest(ROOT / f"wiki/pedagogy/a1/{slug}.md")
+        counts[slug] = (len(manifest["l2_errors"]), len(manifest["sequence_steps"]))
+
+    assert counts == {
+        "around-the-city": (6, 5),
+        "at-the-cafe": (6, 4),
+        "checkpoint-actions": (6, 6),
+        "checkpoint-first-contact": (7, 6),
+    }
+
+
 def test_manifest_accepts_sequence_heading_variants(tmp_path: Path) -> None:
     wiki = tmp_path / "variant.md"
     wiki.write_text(

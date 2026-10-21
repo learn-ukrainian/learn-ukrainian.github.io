@@ -112,6 +112,14 @@ def test_suppressed_contrast_is_only_a_tombstone(contrast_card):
     assert validate_card_contrasts(projected) == 0
 
 
+def test_duplicate_pair_ids_are_refused(contrast_card):
+    duplicate = deepcopy(contrast_card["assertions"][1])
+    duplicate["assertion_id"] = "wa_other"
+    contrast_card["assertions"].append(duplicate)
+    with pytest.raises(QuarantineError, match="duplicate_contrast_pair"):
+        public_projection(contrast_card)
+
+
 @pytest.mark.parametrize("key,value", [
     ("mapping", {"confidence": "high", "note": "Synthetic imposed quotation."}),
     ("producer", {"kind": "source_extract", "name": "Synthetic imposed quotation."}),
@@ -121,3 +129,11 @@ def test_contrast_metadata_cannot_repeat_the_quote_outside_the_pair(contrast_car
     contrast_card["assertions"][1][key] = value
     with pytest.raises(QuarantineError, match="sum11_outside_contrast_pair"):
         public_projection(contrast_card)
+
+
+@pytest.mark.parametrize("key,value", [("assertions", None), ("assertions", [None]),
+    ("senses", None), ("senses", [None]), ("senses", [{"fields": None}])])
+def test_invalid_card_collections_are_refused(contrast_card, key, value):
+    contrast_card[key] = value
+    with pytest.raises(QuarantineError, match="invalid_contrast_card"):
+        validate_card_contrasts(contrast_card)

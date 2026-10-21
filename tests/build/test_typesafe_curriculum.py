@@ -111,6 +111,37 @@ def test_evaluate_vocab_row_mocked_escalates_russian_shadow():
     assert ev.keep_for_level.decision == "uncertain"
 
 
+def test_preparsed_candidates_and_pick():
+    """#8208 — generators + Choice pick verbatim."""
+    stress = tc.stress_candidates("мята")
+    assert "мята" in stress
+    assert any("\u0301" in s for s in stress)
+    apos = tc.apostrophe_candidates("м'ята")
+    assert any("ʼ" in s or "'" in s for s in apos)
+    soft = tc.soft_sign_candidates("мати")
+    assert any("ь" in s for s in soft)
+
+    client = _FakeClient(
+        _FakeResponse(
+            nouls={"any_adequate": 0.95},
+            choices={
+                "pick": {
+                    "choice": "мʼя́та",
+                    "confidence": 0.9,
+                    "probabilities": {"мʼя́та": 0.9, "мʼята": 0.1},
+                }
+            },
+        )
+    )
+    pick = tc.pick_preparsed_value(
+        question="Correct stressed form with apostrophe",
+        candidates=["мʼята", "мʼя́та"],
+        client=client,
+    )
+    assert pick.selected == "мʼя́та"
+    assert pick.routing == "act"
+
+
 def test_guardrails_block_on_calque():
     """#8209 — clear calque + block severity → block."""
     client = _FakeClient(

@@ -655,6 +655,17 @@ def test_successor_current_custody_rechecked_at_removal(succession, capsys, drif
     assert monitor["calls"] > calls
 
 
+def test_successor_mapping_bytes_rechecked_at_removal(succession, monkeypatch, tmp_path, capsys):
+    fixture, _ = succession
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    changed = tmp_path / "map.yaml"
+    changed.write_bytes(output.SUCCESSION_MAP.read_bytes() + b"\n# mapping revision\n")
+    monkeypatch.setattr(output, "SUCCESSION_MAP", changed)
+    assert output.succession_streams()[0]["claude-monitor"] == MONITOR
+    _refused_removal(fixture, "MAPPING_CHANGED")
+
+
 def test_successor_current_output_rechecked_at_removal(succession, capsys):
     fixture, _ = succession
     repo, tree, *_ = fixture

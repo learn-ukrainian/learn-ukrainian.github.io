@@ -503,6 +503,9 @@ def test_changed_snapshot_and_history_retention(pilot, capsys):
     assert pilot["operation"]("allocate") == 1
     assert "requires correspondence" in capsys.readouterr().err
     assert pilot["registry"].read_bytes() == before
+
+
+ADJUDICATIONS = ("split", "merge", "retire", "sense_split", "sense_merge")
 SENSES = ("owned", "foreign", "minted", "paradigm", "mwe", "candidate")  # Variants naming one sense or held row.
 
 
@@ -520,6 +523,31 @@ def retained(registry, locator, reference):  # Foreign history: a sense on card 
                                 evidence=locator if (reference, target) == ("minted", foreign) else f"Retained note {n}.")
                            for n, (kind, field, target) in enumerate(mints)]
     return owned, foreign, {"from": [dict(owned=owned, candidate=row).get(reference, foreign)]} if reference in SENSES else {}
+
+
+@pytest.mark.parametrize("kind,reference", [(kind, ref) for kind in ADJUDICATIONS for ref in (None, "unit")] +
+                         [("sense_split", ref) for ref in ("card", "locator", "source", "alias", "prose", "encoded")] +
+                         [(kind, ref) for kind in ("sense_split", "sense_merge") for ref in SENSES])
+def test_schema_valid_isolation_events(pilot, kind, reference, capsys):
+    _manifest, registry = prepared(pilot)
+    member, locator = pilot["root"] / "membership.json", pilot["candidate"]["source_records"][0]["locator"]
+    _owned, foreign, endpoint = retained(registry, locator, reference)
+    # Each variant reaches the held-out boundary through one gate only: no overlay_id, cards stay empty except
+    # in the card variant, and only sense variants name one id. The escaped colon hides the locator from prose.
+    evidence = dict(locator=locator, unit=pilot["candidate"]["units"][0]["unit_key"], alias="atlas0:slug:second",
+                    source=registry["source_records"][0]["source_record_id"], prose=f"A reviewed note on ({locator}).",
+                    encoded='{"reference":"' + locator.replace(":", "\\u003a") + '"}').get(reference, "Unrelated note.")
+    registry["events"].append(dict(event_id="ie_9999", kind=kind, build_id="fixture-review", evidence=evidence,
+                                   cards=[registry["entries"][1]["card_id"]] if reference == "card" else [], **endpoint))
+    save(pilot["registry"], registry)
+    assert pilot["operation"]("verify") == 0  # Schema, history and mint binding pass; four retained mints are foreign.
+    assert '"foreign_build_events": 5, "heldout_isolation": "unverified"' in capsys.readouterr().out  # Sorted keys.
+    save(member, dict(heldout=[locator], replay=[foreign] if reference == "foreign" else []))  # Replay-only sense.
+    before, refused = pilot["registry"].read_bytes(), int(reference not in {None, "foreign"})
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == refused
+    assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == refused
+    assert pilot["registry"].read_bytes() == before
+    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches") == 2 * refused
 
 
 @pytest.mark.parametrize("fault,reason", [(None, None), ("self_hash", "Changed manifest bytes/content"),
@@ -971,6 +999,39 @@ def test_provenance_links_only_through_cited_known_keys(tmp_path, field, encodin
 
 
 MARK = json.dumps({"kind": "identity"})  # Decoded marker; may sit in any string field of an owner.
+@pytest.mark.parametrize("case,held", [(c, h) for c in ("settled_by", "note", "raw_row") for h in (True, False)])
+def test_cli_marked_owner_refused_before_write(pilot, case, held, capsys):
+    member, index = pilot["root"] / "membership.json", 2 if held else 140  # Unit 2 shares the held legacy closure.
+    save(member, dict(heldout=[pilot["candidate"]["source_records"][0]["locator"]], replay=[]))
+    if case == "raw_row":  # A literal column named like a marker marks its own row; captured and admitted unchanged.
+        records, row = pilot["candidate"]["source_records"], dict(normalized_query="Other", content_sha256="c" * 64)
+        records[index] = capture("ulif", "ulif_dictua_entries", dict(records[index]["raw_row"], **row))  # Own aliases.
+        records.append(capture("frazeolohichnyi", "frazeolohichnyi", dict(id=7, word="English phrase", mapping="ov_1")))
+        with sqlite3.connect(pilot["paths"]["sources"]) as db:
+            db.execute("UPDATE ulif_dictua_entries SET normalized_query=?, content_sha256=? WHERE id=?", (*row.values(), index))
+            db.execute("CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, mapping TEXT)")
+            db.execute("INSERT INTO frazeolohichnyi VALUES (7, 'English phrase', 'ov_1')")
+        pilot["candidate"]["units"][index]["source_record_keys"].append("frazeolohichnyi:frazeolohichnyi:id:7")
+        pilot["candidate"]["denominator"]["source_records"] += 1
+        pilot["admit"]()
+        assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == int(held)
+        assert pilot["manifest"].exists() is not held and capsys.readouterr().err.count("a marked owner") == int(held)
+        return
+    _manifest, registry = prepared(pilot)
+    retained(registry, pilot["candidate"]["source_records"][0]["locator"], None)  # Adds one unrelated foreign row.
+    marker = dict(settled_by="ov_1") if case == "settled_by" else {}  # Historical correspondence or decoded note.
+    record = registry["source_records"][index if held else -1]
+    record["aliases"].append(dict(kind="content", key="ulif:content:old", snapshot_id="old",
+                                  **({"note": json.dumps({"kind": "merge"})} if case == "note" else {})))
+    record["correspondence"].append(dict(snapshot_id="old", status="missing", **marker))
+    save(pilot["registry"], registry)
+    before = pilot["registry"].read_bytes()
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == int(held)
+    assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == int(held)
+    assert pilot["registry"].read_bytes() == before
+    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches a marked owner") == 2 * held
+
+
 HELD, OTHER = "ulif:ulif_dictua_entries:id:140", "ulif:ulif_dictua_entries:id:0"  # Isolated held row; replay row.
 CONTEXTS = {  # case: (marker beside subject s in candidate c or receipt fields r, outcome when s is held).
     "admission_wrapper": (lambda c, r, s: r.update(review_model=json.dumps(dict(d=dict(kind="identity"), ref=s))), True),
@@ -1025,6 +1086,30 @@ def test_cli_marker_context_refused_before_write(pilot, case, subject, capsys):
     assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == later
     reason = held if isinstance(held, str) else "its enclosing context"
     assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches " + reason) == frozen + 3 * later
+    assert pilot["registry"].read_bytes() == before
+
+
+@pytest.mark.parametrize("case,held", [("admission", False), ("registry_event", False), ("author_field", True),
+                                       ("event_shaped", True)])  # Held weak aliases equal field names.
+def test_cli_only_validator_fixed_field_sets_mask_keys(pilot, case, held, capsys):
+    member = pilot["root"] / "membership.json"
+    with sqlite3.connect(pilot["paths"]["atlas"]) as db:
+        db.executemany("INSERT INTO aliases VALUES (?,'canonical','fixture','first','public')", [("counts",), ("evidence",)])
+    pilot["candidate"].update({"author_field": dict(decision=dict(settled_by="ov_1", counts=1)),
+                               "event_shaped": dict(decoy=dict(event_id="ie_1", kind="merge", build_id="x", evidence=NOTE))
+                               }.get(case, {}))
+    pilot["admit"]()
+    save(pilot["receipt"], json.loads(pilot["receipt"].read_bytes()) | ({"review_model": MARK} if case == "admission" else {}))
+    save(member, dict(heldout=["evidence"], replay=[]))
+    assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == held
+    assert pilot["manifest"].exists() is not held and pilot["operation"]("freeze") == pilot["operation"]("allocate") == 0
+    registry = json.loads(pilot["registry"].read_bytes())
+    if case == "registry_event":
+        registry["events"].append(dict(event_id="ie_9999", kind="merge", build_id="fixture-review", evidence=NOTE, cards=[]))
+    save(pilot["registry"], registry)
+    before = pilot["registry"].read_bytes()
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == held
+    assert capsys.readouterr().err.count("its enclosing context") == 2 * held
     assert pilot["registry"].read_bytes() == before
 
 
@@ -1167,6 +1252,24 @@ def register_parse_spy(monkeypatch):
         foundation._parse_register_bytes.cache_clear()
 
 
+def test_register_cache_copies_first_and_warm_returns(tmp_path, register_parse_spy):
+    content = b"sources: &entries\n  - id: fixture\n    terms: {labels: [original]}\nalias: *entries\n"
+    paths = [tmp_path / name for name in ("first.yaml", "second.yaml")]
+    for path in paths:
+        path.write_bytes(content)
+    first = foundation.load_register(paths[0])
+    assert first["alias"] is first["sources"]  # YAML aliases retain their within-result sharing.
+    first["sources"][0]["terms"]["labels"].append("first caller mutation")
+    second = foundation.load_register(paths[1])
+    assert second == {"sources": [{"id": "fixture", "terms": {"labels": ["original"]}}],
+                      "alias": [{"id": "fixture", "terms": {"labels": ["original"]}}]}
+    assert second["alias"] is second["sources"] and second is not first
+    second["alias"][0]["terms"]["labels"].clear()
+    third = foundation.load_register(paths[0])
+    assert third["sources"][0]["terms"]["labels"] == ["original"]
+    assert register_parse_spy == [content]  # Identical bytes at different paths share one parse.
+
+
 def test_register_cache_fresh_same_length_same_mtime_and_return_to_a(tmp_path, register_parse_spy):
     path = tmp_path / "register.yaml"
     a, b = b"sources: [{id: alpha}]\n", b"sources: [{id: bravo}]\n"
@@ -1213,6 +1316,26 @@ def test_register_cache_invalid_yaml_retries_and_cli_refuses(pilot, register_par
         assert not pilot["manifest"].exists() and db_bytes(pilot) == before
     assert register_parse_spy == [content] * 4
     assert foundation._parse_register_bytes.cache_info().currsize == 0
+
+
+@pytest.mark.parametrize("operation", ["freeze", "allocate", "verify"])
+def test_register_cache_command_output_and_fingerprints_equivalent(pilot, operation, monkeypatch,
+                                                                   register_parse_spy, capsys):
+    prepared(pilot)
+    capsys.readouterr()
+    foundation._parse_register_bytes.cache_clear()
+    register_parse_spy.clear()
+    before = ([pilot[k].read_bytes() for k in ("manifest", "registry")], db_bytes(pilot))
+    assert pilot["operation"](operation) == 0
+    cold = capsys.readouterr()
+    assert len(register_parse_spy) == 1  # Freeze and REGISTER validation share identical bytes.
+    assert pilot["operation"](operation) == 0
+    assert capsys.readouterr() == cold and len(register_parse_spy) == 1
+    with monkeypatch.context() as uncached:
+        uncached.setattr(foundation, "load_register", lambda path: yaml.safe_load(path.read_bytes()))
+        assert pilot["operation"](operation) == 0
+        assert capsys.readouterr() == cold
+    assert before == ([pilot[k].read_bytes() for k in ("manifest", "registry")], db_bytes(pilot))
 
 
 @pytest.mark.parametrize("fault,reason", [

@@ -11,6 +11,15 @@ from unittest.mock import patch
 import pytest
 
 from scripts.orchestration import (
+    curriculum_lifecycle_pilot as clp,
+)
+from scripts.orchestration import (
+    dispatch_settle as ds,
+)
+from scripts.orchestration import (
+    handoff_ready as hr,
+)
+from scripts.orchestration import (
     job_host_exec as jhe,
 )
 from scripts.orchestration import (
@@ -18,6 +27,12 @@ from scripts.orchestration import (
 )
 from scripts.orchestration import (
     reaper_lifecycle as rl,
+)
+from scripts.orchestration import (
+    task_closeout as tc,
+)
+from scripts.orchestration import (
+    task_lifecycle as tl,
 )
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
@@ -185,9 +200,57 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
 # ---------------------------------------------------------------------------
 
 
+def test_handoff_ready_git_timeout() -> None:
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        return _completed(cmd, returncode=0, stdout="clean")
+
+    with patch("subprocess.run", side_effect=fake_run):
+        rc, out = hr._git("status", "--porcelain")
+        assert rc == 0
+        assert out == "clean"
+
+    assert len(calls) == 1
+    assert calls[0]["timeout"] == hr.DEFAULT_GIT_TIMEOUT_SECONDS
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git"], hr.DEFAULT_GIT_TIMEOUT_SECONDS),
+    ):
+        rc, out = hr._git("status", "--porcelain")
+        assert rc == 124
+        assert "git status --porcelain timed out after 30.0s" in out
+
+
 # ---------------------------------------------------------------------------
 # 4. curriculum_lifecycle_pilot.py
 # ---------------------------------------------------------------------------
+
+
+def test_curriculum_lifecycle_pilot_commit_is_ancestor_timeout(tmp_path: Path) -> None:
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        return _completed(cmd, returncode=0)
+
+    with patch("subprocess.run", side_effect=fake_run):
+        assert clp._commit_is_ancestor(tmp_path, "abc1234") is True
+
+    assert len(calls) == 1
+    assert calls[0]["timeout"] == clp.DEFAULT_GIT_TIMEOUT_SECONDS
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git"], clp.DEFAULT_GIT_TIMEOUT_SECONDS),
+    ):
+        with pytest.raises(
+            clp.PilotError,
+            match=r"cannot verify historical commit abc1234: git merge-base timed out after 30\.0s",
+        ):
+            clp._commit_is_ancestor(tmp_path, "abc1234")
 
 
 # ---------------------------------------------------------------------------
@@ -198,6 +261,29 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
 # ---------------------------------------------------------------------------
 # 6. task_closeout.py
 # ---------------------------------------------------------------------------
+
+
+def test_task_closeout_default_runner_timeout(tmp_path: Path) -> None:
+    runner = tc._default_runner(tmp_path)
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        return _completed(cmd, returncode=0, stdout="output\n")
+
+    with patch("subprocess.run", side_effect=fake_run):
+        res = runner(["gh", "pr", "view", "123"])
+        assert res == "output\n"
+
+    assert len(calls) == 1
+    assert calls[0]["timeout"] == tc.DEFAULT_COMMAND_TIMEOUT_SECONDS
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["gh"], tc.DEFAULT_COMMAND_TIMEOUT_SECONDS),
+    ):
+        with pytest.raises(tl.LifecycleError, match=r"gh pr view 123 timed out after 60\.0s"):
+            runner(["gh", "pr", "view", "123"])
 
 
 # ---------------------------------------------------------------------------
@@ -284,6 +370,37 @@ def test_orchestrator_control_cmd_dispatch_timeout(
 # ---------------------------------------------------------------------------
 # 12. dispatch_settle.py
 # ---------------------------------------------------------------------------
+
+
+def test_dispatch_settle_run_timeout() -> None:
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        return _completed(cmd, returncode=0, stdout="main\n")
+
+    with patch("subprocess.run", side_effect=fake_run):
+        res = ds._run(["git", "rev-parse", "HEAD"])
+        assert res.returncode == 0
+        assert res.stdout == "main\n"
+
+    assert len(calls) == 1
+    assert calls[0]["timeout"] == ds.DEFAULT_COMMAND_TIMEOUT_SECONDS
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git"], ds.DEFAULT_COMMAND_TIMEOUT_SECONDS),
+    ):
+        res = ds._run(["git", "rev-parse", "HEAD"])
+        assert res.returncode == 124
+        assert "command timed out after 60.0s" in res.stderr
+
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git"], ds.DEFAULT_COMMAND_TIMEOUT_SECONDS),
+    ):
+        with pytest.raises(subprocess.TimeoutExpired):
+            ds._run(["git", "rev-parse", "HEAD"], check=True)
 
 
 @pytest.fixture(autouse=True)

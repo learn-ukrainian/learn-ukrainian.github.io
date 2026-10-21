@@ -30,6 +30,30 @@ def test_ensure_release_view_timeout_is_publish_error_and_never_creates(
     assert calls[0]["cmd"][:3] == ["gh", "release", "view"]
 
 
+def test_ensure_release_create_timeout_maps_to_called_process_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_run(cmd: list[str], **kwargs: object) -> subprocess.CompletedProcess:
+        calls.append({"cmd": cmd, **kwargs})
+        if cmd[:3] == ["gh", "release", "view"]:
+            return subprocess.CompletedProcess(cmd, 1, stdout=None, stderr=None)
+        raise subprocess.TimeoutExpired(cmd, kwargs["timeout"])
+
+    monkeypatch.setattr(publish_module.subprocess, "run", fake_run)
+
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        publish_module.ensure_release("tag", "owner/repo")
+
+    assert exc_info.value.returncode == 124
+    assert [call["timeout"] for call in calls] == [
+        publish_module.GH_RELEASE_VIEW_TIMEOUT_SECONDS,
+        publish_module.GH_RELEASE_CREATE_TIMEOUT_SECONDS,
+    ]
+    assert calls[1]["cmd"][:3] == ["gh", "release", "create"]
+
+
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""

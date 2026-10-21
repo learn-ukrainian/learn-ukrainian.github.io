@@ -58,6 +58,16 @@ def tokenizer() -> FakeTokenizer:
 # --- Registry guards ---------------------------------------------------------
 
 
+def test_supported_corpora_each_have_a_policy() -> None:
+    """Every corpus in ``SUPPORTED_CORPORA`` must register a chunking
+    policy so ``policy_for`` doesn't raise at runtime."""
+
+    from wiki.dense_rerank import SUPPORTED_CORPORA
+
+    missing = [c for c in SUPPORTED_CORPORA if c not in CHUNKING_POLICIES]
+    assert missing == [], f"corpora missing from CHUNKING_POLICIES: {missing}"
+
+
 def test_paragraph_aware_version_id_encodes_parameters() -> None:
     """version_id must change when target_tokens or overlap changes,
     so the manifest never silently shares vectors across distinct

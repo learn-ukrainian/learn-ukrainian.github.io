@@ -75,6 +75,15 @@ def test_stale_plan_and_stale_overlay_objects_fail_before_any_mutation(index):
     assert manifest == before
 
 
+def test_saved_plan_held_skipped_row_is_also_refused():
+    authority = dispositions.load_dispositions()
+    key = authority.active_holds[1]["origin"]["key"]
+    with pytest.raises(dispositions.DispositionError):
+        applier.apply_promotion_plan(
+            {"entries": []}, {"workflow": planner.WORKFLOW_ID, "skipped_existing": [{"source_inventory_key": key}]}
+        )
+
+
 def test_supplied_candidate_cannot_mask_held_origin_with_independent_key():
     authority = dispositions.load_dispositions()
     row = copy.deepcopy(authority.active_holds[1])
@@ -243,6 +252,25 @@ def test_final_build_check_runs_after_seed_and_collision_boundaries(monkeypatch)
         builder.build_manifest()
 
 
+def test_all_four_producers_reach_the_guarded_central_boundaries():
+    # Their full existing behavioral tests are also selected in the affected run.
+    from scripts.lexicon import (
+        curated_ohoiko_ulp_repromote,
+        curated_textbook_jsonl_repromote,
+        promote_atlas_6370_named_multiword_residual,
+        promote_teacher_lesson_intake,
+    )
+
+    for producer in (
+        curated_ohoiko_ulp_repromote,
+        curated_textbook_jsonl_repromote,
+        promote_atlas_6370_named_multiword_residual,
+        promote_teacher_lesson_intake,
+    ):
+        assert producer.planner is planner
+        assert producer.apply is applier
+
+
 def producer_inputs(tmp_path, *, count=1):
     """Use established public decisions and independent source contributions."""
     from tests.test_source_inventory_promotion_plan import FIRST_BATCH, _candidate_payload_for
@@ -280,6 +308,19 @@ def test_curated_producer_actual_apply_refuses_held_manifest(tmp_path, monkeypat
     assert not dispositions.load_dispositions().holds_source_key(
         plan["proposed_manifest_additions"][0]["source_inventory_key"]
     )
+
+
+def test_named_multiword_producer_actual_main_refuses_held_manifest(tmp_path, monkeypatch, capsys):
+    from scripts.lexicon import promote_atlas_6370_named_multiword_residual as producer
+
+    candidates, decisions, manifest, fingerprint = producer_inputs(tmp_path, count=len(producer.TARGET_ENTRY_TYPES) + 1)
+    original, old_fingerprint = manifest.read_bytes(), fingerprint.read_bytes()
+    # Isolate candidate acquisition, retaining the actual plan/apply/final writer.
+    monkeypatch.setattr(producer, "build_candidates_and_decisions", lambda _scratch: (candidates, [decisions]))
+    assert producer.main(["--manifest", str(manifest), "--fingerprint", str(fingerprint), "--write"]) == 2
+    assert "held inventory contribution" in capsys.readouterr().err
+    assert manifest.read_bytes() == original
+    assert fingerprint.read_bytes() == old_fingerprint
 
 
 @pytest.mark.parametrize("resume", [False, True], ids=["fresh-stage", "resume-staged"])
@@ -383,6 +424,29 @@ def test_overlay_cli_checks_mandatory_authority_before_writing(tmp_path, monkeyp
     assert "error:" in capsys.readouterr().out
 
 
+def test_independent_head_sharing_book_locator_is_conserved():
+    authority = dispositions.load_dispositions()
+    hold = authority.active_holds[2]
+    origin = hold["origin"]
+    entry = {
+        "lemma": "нагорі",
+        "url_slug": "нагорі",
+        "primary_source": "source_inventory_grow",
+        "source_provenance": [
+            {
+                "source_id": origin["source_id"],
+                "inventory_path": origin["historical_path"],
+                "source_locator": origin["source_locator"],
+                "inventory_locator": "sources[1].headwords[934]",
+            }
+        ],
+    }
+    authority.validate_manifest({"entries": [entry]})
+    entry["atlas_normalizations"] = [{"source_lemma": hold["lemma"]}]
+    with pytest.raises(dispositions.DispositionError):
+        authority.guard_entry(entry)
+
+
 def test_loader_skips_nonrecords_and_missing_unrelated_file(tmp_path, monkeypatch):
     monkeypatch.setattr(builder, "CURRICULUM_ROOT", tmp_path)
     module = {"track": "fixture", "slug": "fixture", "module_num": 1}
@@ -391,6 +455,21 @@ def test_loader_skips_nonrecords_and_missing_unrelated_file(tmp_path, monkeypatc
     path.parent.mkdir(parents=True)
     path.write_text("- not a mapping\n- {}\n- lemma: fixture-head\n  translation: opaque\n")
     assert [r["lemma"] for r in builder._load_built_vocab(module)] == ["fixture-head"]
+
+
+def test_overlay_missing_candidate_and_target_are_explicit_residuals():
+    from tests.test_apply_source_inventory_provenance import decision, match
+
+    approved = decision("fixture-head")
+    manifest = {"entries": [{"lemma": approved.lemma}]}
+    result = overlay.apply_existing_provenance_overlay(manifest, {}, [approved])
+    assert result["counts"]["missing_candidates"] == 1 and "source_provenance" not in manifest["entries"][0]
+    result = overlay.apply_existing_provenance_overlay(
+        {"entries": [None, {}]}, {approved.source_key: match(approved.lemma)}, [approved]
+    )
+    assert result["counts"]["missing_manifest_entries"] == 1
+    with pytest.raises(dispositions.DispositionError.__bases__[0]):
+        overlay.apply_existing_provenance_overlay({"entries": None}, {}, [])
 
 
 def test_unchanged_writer_leaves_files_and_callbacks_untouched(tmp_path):

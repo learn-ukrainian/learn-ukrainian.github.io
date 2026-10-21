@@ -170,6 +170,17 @@ def test_base_layer_missing_when_request_file_not_found(tmp_path: Path) -> None:
     assert exc_info.value.code == codes.BASE_LAYER_MISSING
 
 
+def test_base_layer_missing_when_request_has_empty_words(tmp_path: Path) -> None:
+    req_path = tmp_path / "_base.request.yaml"
+    words_path = tmp_path / "_words.yaml"
+    _write_yaml(req_path, {"request_schema": 1, "level": "a1", "words": []})
+    _write_yaml(words_path, {"evidence_schema": 1, "level": "a1", "words": []})
+
+    with pytest.raises(BaseLayerError) as exc_info:
+        resolve_base_ids("a1", base_request_path=req_path, words_path=words_path)
+    assert exc_info.value.code == codes.BASE_LAYER_MISSING
+
+
 def test_base_layer_fails_on_bare_lemma_id(tmp_path: Path) -> None:
     req = {
         "request_schema": 1,

@@ -1091,6 +1091,20 @@ def test_case(tmp_path: Path, case: Case) -> None:
     assert report.ok == (not case.expected)
 
 
+def test_valid_plan_reports_all_not_checked_and_full_gate(tmp_path: Path) -> None:
+    report = run_case(tmp_path, VALID_CASES[0])
+    text = report.render_text()
+    assert "the §6 gate" in text
+    assert "cross_plan_rules_pending" not in text
+    for code in NOT_CHECKED:
+        assert f"NOT_CHECKED {code}" in text
+    payload = report.to_json()
+    assert payload["status"] == "pass"
+    assert "the §6 gate" in payload["validator"]
+    assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
+    assert payload["waivers"] == []
+
+
 def test_render_text_prints_activity_report_per_lesson_not_only_module(tmp_path: Path) -> None:
     # Regression for review finding 4: the printed report must show
     # plan_report per lesson, not only the module-level summary line.
@@ -1148,6 +1162,14 @@ def test_cli_json_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     assert payload["status"] == "pass"
     assert "the §6 gate" in payload["validator"]
     assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
+
+
+def test_cli_failing_plan_exits_nonzero(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
+    plan, pack, words = build_base()
+    plan["minutes"] = 60
+    world = write_world(tmp_path, plan, pack, words)
+    assert validate_main([LEVEL, SLUG, "--plan", str(world.plan_path)]) == 1
+    assert codes.REMOVED_V1_FIELD in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("case", ["permitted", "unregistered", "oversize", "text_field", "exercise", "missing", "selector"])

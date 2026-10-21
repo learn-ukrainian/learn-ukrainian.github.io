@@ -314,6 +314,22 @@ def test_retention_empty_snapshot_list_forgets_nothing_and_fails(
     assert "arg=<prune>" not in log
 
 
+def test_retention_unparsable_snapshot_list_forgets_nothing_and_fails(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "this is not json\n")
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    log = _log(environment)
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
+
+
 def test_retention_unparsable_snapshot_time_forgets_nothing(
     backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
 ) -> None:

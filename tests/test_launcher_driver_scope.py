@@ -331,6 +331,26 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
 
 
 @pytest.mark.parametrize(
+    "provider,model",
+    [
+        ("gemini", "gemini-unknown"),
+        ("gemini", "gemini-3.7-flash-high"),
+        ("claude", "gemini-3.8-flash-high"),
+        ("claude", "gemini:gemini-3.1-pro-high"),
+    ],
+)
+def test_uncertified_gemini_driver_refused_without_entering_scope(tmp_path: Path, provider: str, model: str) -> None:
+    launcher, env = _launcher(tmp_path, provider)
+    result = _run(launcher, env, LAUNCHER_MODEL=model, FAKE_BUS_FAIL="1")
+    assert result.returncode == 4, result.stderr
+    assert f"model '{model}' " in result.stderr
+    assert "(certified: gemini-3.1-pro-high, gemini-3.8-flash-high)." in result.stderr
+    assert result.stdout == ""
+    assert not Path(env["FAKE_STARTS"]).exists()
+    assert "DRIVER_SCOPE_" not in result.stderr
+
+
+@pytest.mark.parametrize(
     "state,fragment,installed",
     [
         ("loaded", "/test/lu-driver.slice", True),
@@ -788,6 +808,28 @@ def test_logger_failure_preserves_exit_and_stderr(tmp_path: Path, rc: int) -> No
     _assert_exit_line(result.stderr, env, rc)
 
 
+def test_missing_logger_preserves_exit_and_stderr(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    bindir = Path(env["PATH"].split(os.pathsep, 1)[0])
+    (bindir / "logger").unlink()
+    # Keep the sandbox utilities available without falling back to host logger.
+    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git", "awk"):
+        executable = shutil.which(name)
+        assert executable is not None
+        (bindir / name).symlink_to(executable)
+    env["PATH"] = str(bindir)
+    result = _run(launcher, env, TEST_RC="137")
+    assert result.returncode == 137, result.stderr
+    assert shutil.which("logger", path=env["PATH"]) is None
+    assert not Path(env["FAKE_LOGGER_MESSAGES"]).exists()
+    lines = [line for line in result.stderr.splitlines() if line.startswith("DRIVER_SCOPE_EXIT")]
+    assert len(lines) == 1, result.stderr
+    assert re.fullmatch(
+        r"DRIVER_SCOPE_EXIT epic=devops rc=137 signal=none ts=\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+        lines[0],
+    )
+
+
 @pytest.mark.parametrize("extra", [{"FAKE_SCOPE_FAIL": "1"}, {"FAKE_OOM_POLICY": "stop"}])
 def test_reaped_scope_refusal_records_exit(tmp_path: Path, extra: dict[str, str]) -> None:
     launcher, env = _launcher(tmp_path)
@@ -909,6 +951,21 @@ def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason
     assert "LEASE" not in result.stdout
 
 
+def test_deployment_limits_from_environment_are_used(tmp_path: Path) -> None:
+    # Deployment values may sit above the generic fallbacks, up to MemTotal.
+    launcher, env = _launcher(tmp_path)
+    result = _run(
+        launcher,
+        env,
+        LU_DRIVER_MEMORY_HIGH="3221225472",
+        LU_DRIVER_MEMORY_MAX="3758096384",
+        LU_DRIVER_MEMORY_SWAP_MAX="0",
+    )
+    assert result.returncode == 0, result.stderr
+    assert "high=3221225472 max=3758096384 swap=0 oom=continue" in result.stderr
+    assert "PROVIDER:stdin survives" in result.stdout
+
+
 def test_deployment_config_file_is_parsed_and_environment_wins(tmp_path: Path) -> None:
     launcher, env = _launcher(tmp_path)
     config = Path(env["LU_DRIVER_SCOPE_CONFIG"])
@@ -971,6 +1028,17 @@ def test_same_pid_forged_identity_refused(tmp_path: Path) -> None:
     )
     assert result.returncode == 6
     assert "cgroup-mismatch" in result.stderr
+    assert not Path(env["FAKE_STARTS"]).exists()
+
+
+def test_same_pid_without_unit_refused(tmp_path: Path) -> None:
+    result, env = _direct_entry(
+        tmp_path,
+        "export LU_DRIVER_SCOPE_PID=$$; unset LU_DRIVER_SCOPE_UNIT",
+        "0::/test/lu.slice/lu-driver.slice/lu-driver-fake.scope\n",
+    )
+    assert result.returncode == 6, result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=unit-mismatch" in result.stderr
     assert not Path(env["FAKE_STARTS"]).exists()
 
 

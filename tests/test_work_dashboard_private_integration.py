@@ -391,6 +391,17 @@ def _public_stale_with_unknown_items() -> dict[str, Any]:
     return doc
 
 
+def _public_streams_unavailable() -> dict[str, Any]:
+    """Public envelope whose streams section is not complete (R-UI-3)."""
+    doc = _public_min()
+    for src in doc["sources"]:
+        if src["source_id"] == "public-monitor":
+            src["sections"]["streams"]["status"] = "unavailable"
+            src["sections"]["streams"]["count"] = 0
+    doc["denominator"]["streams_complete"] = False
+    return doc
+
+
 def _public_with_private_id_collision(private_doc: dict[str, Any]) -> dict[str, Any]:
     pub = _public_min()
     # Duplicate the private work_id into public items so merge detects collision.
@@ -1172,6 +1183,64 @@ def test_browser_identity_collision_keeps_public():
     assert "Public attention item" in snap["listText"]
 
 
+def test_browser_public_failure_private_success():
+    """FX-02 adjacency: public transport failure does not block admitted private rows."""
+    result = _browser_scenario(
+        public_doc=None,
+        public_status=503,
+        private_doc=_private_ok(),
+        filter_query="?view=all",
+    )
+    snap = result["snapshot"]
+    assert snap["rowCount"] == 1
+    assert "private-issue-7" in snap["listText"]
+    assert "status=unavailable" in snap["publicMeta"]
+    assert "status=ok" in snap["privateMeta"]
+    assert "issues=1" in snap["privateMeta"]
+    assert snap["errorHidden"] is True
+
+
+def test_browser_both_failures_typed_banner():
+    """FX-06: both transports fail → typed banner vocabulary only."""
+    result = _browser_scenario(
+        public_doc=None,
+        public_status=503,
+        private_doc=None,
+        private_status=503,
+    )
+    snap = result["snapshot"]
+    assert snap["errorHidden"] is False
+    assert snap["error"] == "Work projection unavailable · public=unreachable · private=unreachable"
+    assert snap["listText"].strip() == "No source projection is available. Retry refresh."
+    assert "HTTP" not in snap["error"]
+    assert "TypeError" not in snap["error"]
+    assert "fetch" not in snap["error"].lower()
+
+
+def test_browser_filters_apply_locally_and_never_hit_private_query():
+    """FX-09: local filters never append a query string to the private GET."""
+    result = _browser_scenario(
+        public_doc=_public_min(),
+        private_doc=_private_ok(),
+        actions=[
+            {"type": "select", "selector": "#filter-health", "value": "AT_RISK"},
+            {"type": "click", "selector": "#btn-apply"},
+            {"type": "wait", "ms": 200},
+        ],
+    )
+    snap = result["snapshot"]
+    obs = result["observed"]
+    # After apply (local only), only public AT_RISK remains.
+    assert snap["rowCount"] == 1
+    assert "Public attention item" in snap["listText"]
+    assert "private-issue-7" not in snap["listText"]
+    for req in obs["private"]:
+        assert req["url"] == PRIVATE_URL
+        assert "?" not in req["url"]
+    # Shareable URL may keep health
+    assert "health=AT_RISK" in snap["search"]
+
+
 def test_browser_private_repo_filter_not_shareable_in_url():
     """FX-09: private repository_id / source_id never enter location.search."""
     result = _browser_scenario(
@@ -1233,6 +1302,18 @@ def test_browser_stale_public_healthy_private_keeps_public_stale():
             assert "UNKNOWN" in text_row
         if row_id.startswith("wp1:private-local-adapter:"):
             assert health == "UNKNOWN"
+
+
+def test_browser_public_streams_not_implied_by_private_list_success():
+    """R-UI-3: private list-enumeration success must not mark public streams complete."""
+    public = _public_streams_unavailable()
+    private = _private_ok()
+    assert private["denominator"]["streams_complete"] is True
+    result = _browser_scenario(public_doc=public, private_doc=private, filter_query="?view=all")
+    snap = result["snapshot"]
+    assert "streams=incomplete" in snap["publicMeta"]
+    assert "streams=" not in snap["privateMeta"]
+    assert "status=ok" in snap["privateMeta"]
 
 
 # ---------------------------------------------------------------------------

@@ -72,6 +72,21 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     assert job["outputs"]["uv-cache-key"] == f"${{{{ steps.{ci_env['id']}.outputs.uv-cache-key }}}}"
 
 
+def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:
+    # #9101: after the save (setup-uv's post step, so a later job) main must
+    # hold the exact key for the current lock, or the run goes red.
+    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
+    verify = warm["jobs"]["verify"]
+    assert verify["needs"] == "warm"
+    assert verify["permissions"] == {"actions": "read"}
+    assert verify["env"]["UV_CACHE_KEY"] == "${{ needs.warm.outputs.uv-cache-key }}"
+    script = verify["steps"][0]["run"]
+    assert "gh cache list --ref refs/heads/main --key" in script
+    assert "grep -Fx" in script
+    assert "exit 1" in script
+    assert "gh cache delete" not in script
+
+
 def test_only_exact_filtered_ml_omission_is_allowed() -> None:
     known = "accelerate 1.14.0 requires torch, which is not installed."
     skew = (
@@ -87,6 +102,20 @@ def test_only_exact_filtered_ml_omission_is_allowed() -> None:
     assert unexpected_diagnostics("unrecognized pip diagnostic") == [
         "unrecognized pip diagnostic"
     ]
+
+
+def test_dependency_check_fails_on_pydantic_skew(monkeypatch, capsys) -> None:
+    skew = (
+        "pydantic 2.13.5 has requirement pydantic-core==2.46.5, "
+        "but you have pydantic-core 2.46.4."
+    )
+    monkeypatch.setattr(
+        check_ci_dependencies.subprocess,
+        "run",
+        lambda *args, **kwargs: CompletedProcess(args, 1, skew, ""),
+    )
+    assert check_ci_dependencies.main() == 1
+    assert skew in capsys.readouterr().err
 
 
 def test_dependency_check_fails_on_empty_pip_failure(monkeypatch) -> None:

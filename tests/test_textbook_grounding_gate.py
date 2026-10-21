@@ -320,6 +320,75 @@ def test_textbook_grounding_gate_accepts_hermes_single_underscore_prefix(
     assert result["matched"] == ["Караман Grade 10, p.176"]
 
 
+def test_textbook_grounding_gate_reads_hermes_hook_jsonl(tmp_path: Path) -> None:
+    """End-to-end pin for the Hermes ``post_tool_call`` shell-hook output.
+
+    The hook (``scripts/agent_runtime/hermes_hooks/log_tool_call.sh``) writes
+    one line per MCP tool call to ``$cwd/hermes.write.jsonl`` with the
+    Hermes single-underscore prefix and an ``event: writer_tool_call`` sentinel
+    so ``_load_jsonl_tool_calls`` picks it up. This test feeds the exact
+    on-disk shape the hook produces and asserts the gate sees the call and
+    matches the reference — closes the observability gap that previously had
+    every Hermes-routed writer build HARD-rejecting on ``textbook_grounding``.
+    """
+    event = {
+        "event": "writer_tool_call",
+        "tool": "mcp_sources_search_text",
+        "args": {"query": "Караман Grade 10 reflexive verbs"},
+        "result": [
+            {
+                "title": "Караман Grade 10, p.176",
+                "source_type": "textbook",
+                "text": SEARCH_TEXT,
+                "page": 176,
+                "grade": 10,
+            }
+        ],
+        "duration_ms": 42,
+        "tool_call_id": "call_00_test",
+        "session_id": "sess_test",
+        "ts": 1779220000,
+    }
+    chunk_event = {
+        "event": "writer_tool_call",
+        "tool": "mcp_sources_get_chunk_context",
+        "args": {"chunk_id": "10-klas-ukrmova-karaman-2018_s0176"},
+        "result": [
+            {
+                "title": "Караман Grade 10, p.176",
+                "source_type": "textbook",
+                "text": SEARCH_TEXT,
+                "page": 176,
+                "grade": 10,
+            }
+        ],
+        "duration_ms": 18,
+        "tool_call_id": "call_01_chunk",
+        "session_id": "sess_test",
+        "ts": 1779220001,
+    }
+    (tmp_path / "hermes.write.jsonl").write_text(
+        json.dumps(event, ensure_ascii=False)
+        + "\n"
+        + json.dumps(chunk_event, ensure_ascii=False)
+        + "\n",
+        encoding="utf-8",
+    )
+    module_text = (FIXTURES / "good-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan(),
+        tmp_path,
+    )
+
+    assert result["passed"] is True
+    assert result["search_text_calls"] == 1
+    assert result["chunk_context_calls"] == 1
+    assert result["textbook_result_hits"] == 2
+    assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
 def test_textbook_grounding_gate_unwraps_hermes_inner_result_shape(
     tmp_path: Path,
 ) -> None:
@@ -956,6 +1025,59 @@ def test_apostrophes_normalized_for_matching(tmp_path: Path) -> None:
     assert result["passed"] is True
 
 
+def test_searched_but_skipped_step_b_gets_diagnostic_reason(tmp_path: Path) -> None:
+    """m20 build a1-my-morning-20260523-184413 failure mode (2026-05-23).
+
+    Writer made 2 ``search_text`` calls by topic keyword, ZERO
+    ``get_chunk_context`` calls, and pasted wrong-chunk text into the
+    blockquote. Existing logic would reject via ``matched=[]`` with
+    ``reason=None`` — opaque to the writer's self-correction loop.
+
+    With the diagnostic-clarity override, the reason is explicitly
+    ``step_b_skipped_no_get_chunk_context`` so the writer (and reviewer)
+    knows to call ``get_chunk_context(chunk_id=...)`` per rule
+    #R-TEXTBOOK-30W Step B before pasting the blockquote.
+    """
+    _write_tool_calls(
+        tmp_path,
+        [
+            {
+                "tool": "mcp__sources__search_text",
+                "args": {
+                    "query": "Захарійчук Христинка чорниці бабуся радіопередача",
+                    "subject": "bukvar",
+                    "limit": 3,
+                },
+                "result": [
+                    {
+                        "title": "Захарійчук Grade 1, p.24",
+                        "source_type": "textbook",
+                        "text": FARMING_TEXT,  # wrong-chunk content; doesn't match the blockquote
+                        "page": 24,
+                        "grade": 1,
+                    }
+                ],
+            }
+        ],
+    )
+    # Module text uses an unrelated blockquote that is NOT in the search result
+    # (mimics the writer pasting wrong-chunk text or paraphrasing).
+    module_text = f"## Morning Routine\n\n> {SEARCH_TEXT}\n\n*— Захарійчук, Grade 1, p.24*\n"
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        _plan("A1", ["Захарійчук Grade 1, p.24"]),
+        tmp_path,
+    )
+
+    assert result["passed"] is False
+    assert result["verdict"] == "REJECT"
+    assert result["severity"] == "HARD"
+    assert result["search_text_calls"] == 1
+    assert result["chunk_context_calls"] == 0
+    assert result["reason"] == "step_b_skipped_no_get_chunk_context"
+
+
 def test_step_b_enforcement_overrides_search_text_blockquote_match(
     tmp_path: Path,
 ) -> None:
@@ -1010,6 +1132,34 @@ def test_step_b_enforcement_overrides_search_text_blockquote_match(
     # writer — the m20 #4 ``matched=[Захарійчук Grade 1, p.24]`` was still
     # informative even while the overall verdict became REJECT.
     assert result["matched"] == ["Караман Grade 10, p.176"]
+
+
+def test_step_b_enforcement_does_not_apply_when_all_refs_corpus_missing(
+    tmp_path: Path,
+) -> None:
+    """Carve-out: writers cannot fetch chunks that do not exist.
+
+    When every plan reference is flagged ``corpus_missing: true``, the
+    writer has nothing to ``get_chunk_context`` against. The Step B
+    enforcement (#2294) must NOT fire in that case — the existing
+    ``missing_corpus`` rejection path is the right signal, and adding a
+    spurious Step B reject would mask the real plan-time corpus gap.
+    """
+    module_text = (FIXTURES / "bad-module.md").read_text(encoding="utf-8")
+
+    result = linear_pipeline._textbook_grounding_gate(
+        module_text,
+        {
+            "level": "B1",
+            "references": [
+                {"title": "Absent Grade 9, p.9", "corpus_missing": True},
+            ],
+        },
+        tmp_path,
+    )
+
+    assert result["passed"] is False
+    assert result["reason"] == "corpus_missing"  # NOT step_b_skipped_no_get_chunk_context
 
 
 def test_empty_references_rejected_for_b1_plus(tmp_path: Path) -> None:

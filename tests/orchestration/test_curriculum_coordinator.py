@@ -471,6 +471,22 @@ def test_near_cap_lane_without_credit_relief_keeps_failing_wave_gate(credit: Any
     assert lane["credit_state"] == expected
 
 
+def test_near_cap_lane_without_credit_field_is_unchanged() -> None:
+    config = coordinator.load_config()
+    passed, assessment = _assess(_health(codex="near_cap")(), config["health"], now=CREDIT_NOW)
+    assert not passed
+    assert _build_group(assessment)["lanes"] == [
+        {
+            "lane": "codex",
+            "status": "near_cap",
+            "healthy": True,
+            "stale": False,
+            "freshness": "fresh",
+            "credit_state": None,
+        }
+    ]
+
+
 def test_old_published_credit_balance_reads_unverified_and_fails_wave_gate() -> None:
     config = coordinator.load_config()
     old = CREDIT_NOW - timedelta(seconds=credit_lane.load_policy().credit_max_age_s + 1)
@@ -676,6 +692,23 @@ def test_expired_lease_requires_exact_resume_and_is_never_stolen(repo: Path, tmp
 
     coordinator.resume_run(ledger["run_id"], owner="sol", repo_root=repo, runtime_root=runtime)
     _path, _ledger, item = _acquire(repo, runtime, ledger["run_id"])
+    assert item and item["slug"] == "alpha"
+
+
+def test_acquired_module_with_expired_lease_requires_resume(repo: Path, tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime, scope="one", module="alpha")
+    run_id = ledger["run_id"]
+    _acquire(repo, runtime, run_id)
+    global_path = runtime / "leases/global/mutation.json"
+    lease = json.loads(global_path.read_text(encoding="utf-8"))
+    lease["expires_at"] = "2000-01-01T00:00:00+00:00"
+    global_path.write_text(json.dumps(lease), encoding="utf-8")
+
+    with pytest.raises(coordinator.CoordinatorError, match="expired"):
+        _acquire(repo, runtime, run_id)
+    coordinator.resume_run(run_id, owner="sol", repo_root=repo, runtime_root=runtime)
+    _path, _ledger, item = _acquire(repo, runtime, run_id)
     assert item and item["slug"] == "alpha"
 
 

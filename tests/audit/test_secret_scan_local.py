@@ -306,6 +306,27 @@ def _adversarial_report() -> tuple[str, list[str]]:
     return "".join(lines), needles
 
 
+def test_console_never_contains_any_finding_field(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    report, needles = _adversarial_report()
+    stub["findings"].write_text(report, encoding="utf-8")
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
+    captured = capfd.readouterr()
+    # Exact match: nothing but the allowlisted totals, detector counts and fixed text.
+    assert _console_body(captured.out) == [
+        "mode: tree, files scanned: 3",
+        "findings: 8",
+        "  AWS: 1",
+        "  Github: 1",
+        "  PrivateKey: 2",
+        "  other: 4",
+    ]
+    assert captured.err == ""
+    _assert_absent(captured, *needles, "ok.txt", "conf/", "a.txt")
+    assert len(captured.out) < 500
+
+
 def test_show_keys_prints_only_closed_set_keys_and_counts(
     stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
@@ -379,6 +400,43 @@ def test_count_by_detector_and_unlocated_findings(tmp_path: Path, capfd: pytest.
     _assert_absent(captured, "tests/", "PrivateKey")
 
 
+@pytest.mark.parametrize("value", [{"x": SENTINEL}, [SENTINEL], 7, None, True])
+@pytest.mark.parametrize("source", sorted(ssl.LOCATION_SOURCES))
+def test_count_rejects_a_non_string_file_with_a_fixed_diagnostic(
+    tmp_path: Path, value: object, source: str, capfd: pytest.CaptureFixture[str]
+) -> None:
+    path = tmp_path / "report.jsonl"
+    path.write_text(
+        _finding("Filesystem", {"file": "ok.txt"}) + _finding(source, {"file": value, "line": SENTINEL}),
+        encoding="utf-8",
+    )
+    # Also when the malformed finding is outside the selected detector.
+    for extra in ([], ["--detector", "AWS"]):
+        assert ssl.main(["count", str(path), "--path", "ok.txt", *extra]) == ssl.EXIT_ERROR
+        captured = capfd.readouterr()
+        assert captured.out == ""
+        assert captured.err.strip() == "secret_scan_local: unexpected report structure at line 2"
+        _assert_absent(captured, "ok.txt")
+
+
+def test_runbook_reads_reports_only_through_the_wrapper() -> None:
+    """The runbook's commands never read a report with a general-purpose tool."""
+    runbook = (ssl.PROJECT_ROOT / "docs" / "runbooks" / "secret-scanning.md").read_text(encoding="utf-8")
+    blocks = re.findall(r"```bash\n(.*?)```", runbook, flags=re.DOTALL)
+    commands = [line.strip() for block in blocks for line in block.splitlines() if line.strip()]
+    assert commands
+    for command in commands:
+        assert command.startswith(("REPORT=$(find ", ".venv/bin/python scripts/audit/secret_scan_local.py ")), command
+    assert not re.search(r"\b(jq|cat|grep|head|tail|less)\b[^\n]*\$REPORT", runbook)
+
+
+def test_detector_closed_set_is_well_formed() -> None:
+    assert len(ssl.KNOWN_DETECTORS) > 1000
+    assert all(re.fullmatch(r"[A-Za-z0-9]{1,64}", name) for name in ssl.KNOWN_DETECTORS)
+    assert ssl.OTHER_DETECTOR.lower() not in {name.lower() for name in ssl.KNOWN_DETECTORS}
+    assert {"AWS", "Github", "PrivateKey", "Lob"} <= ssl.KNOWN_DETECTORS
+
+
 @pytest.mark.skipif(REAL_TRUFFLEHOG is None, reason="TruffleHog is not installed")
 def test_detector_closed_set_matches_the_installed_trufflehog(tmp_path: Path) -> None:
     """Every compiled-in name is a detector type the installed TruffleHog recognizes."""
@@ -430,6 +488,18 @@ def test_real_trufflehog_finding_is_counted_without_printing_it(
 # --- Output location: a fresh private directory under the system temp root -----------------
 
 
+def test_output_location_is_only_the_generated_temp_directory(
+    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    before = _all_paths(tmp_path)
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
+    report = _report_path(capfd.readouterr().out, stub["tmp"])
+    created = _all_paths(tmp_path) - before - {stub["record"]}
+    assert created == {report.parent, report, report.with_name(report.name + ".log")}
+    assert report.parent.parent == stub["tmp"].resolve()
+    assert report.parent.name.startswith(ssl.OUTPUT_PREFIX)
+
+
 UMASKS = [0o777, 0o000, 0o022, 0o077]
 
 
@@ -446,6 +516,23 @@ def test_report_directory_and_files_are_owner_only(
     assert stat.S_IMODE(report.parent.stat().st_mode) == 0o700
     for path in (report, report.with_name(report.name + ".log")):
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("umask", UMASKS, ids=oct)
+@pytest.mark.parametrize("prefix", [ssl.OUTPUT_PREFIX, ssl.MIRROR_PREFIX])
+def test_private_directories_are_0700_whatever_the_umask(tmp_path: Path, umask: int, prefix: str) -> None:
+    previous = os.umask(umask)
+    try:
+        first = ssl._private_dir(tmp_path, prefix)
+        second = ssl._private_dir(tmp_path, prefix)
+    finally:
+        os.umask(previous)
+    assert first != second
+    for directory in (first, second):
+        assert directory.parent == tmp_path
+        assert re.fullmatch(re.escape(prefix) + "[0-9a-f]{16}", directory.name)
+        assert stat.S_IMODE(directory.lstat().st_mode) == 0o700
+        assert stat.S_ISDIR(directory.lstat().st_mode)
 
 
 def test_private_directory_never_reuses_an_existing_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -468,6 +555,15 @@ def test_report_creation_is_exclusive_and_never_follows_a_symlink(tmp_path: Path
             ssl._create_private(path)
     assert existing.read_text(encoding="utf-8") == "keep\n"
     assert not target.exists()
+
+
+def test_tool_stderr_goes_to_owner_only_log_not_console(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    ssl.main(["--repo", str(repo), "tree"])
+    report = _report_path(capfd.readouterr().out, stub["tmp"])
+    log = report.with_name(report.name + ".log")
+    assert SENTINEL in log.read_text(encoding="utf-8")
 
 
 INSIDE_REPO = [
@@ -545,7 +641,35 @@ def test_a_successful_run_writes_only_under_the_temp_root(
     assert _all_paths(repo) == before
 
 
+@pytest.mark.parametrize(
+    ("env", "expected"),
+    [
+        ({"TMPDIR": "a", "TEMP": "b", "TMP": "c"}, "a"),
+        ({"TMPDIR": "", "TEMP": "b", "TMP": "c"}, "b"),
+        ({"TMP": "c"}, "c"),
+        ({}, "/tmp"),
+    ],
+)
+def test_temp_root_is_chosen_by_path_logic_in_tempfile_order(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, env: dict[str, str], expected: str, writes: WriteLog
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    for name in ssl.TEMP_ENV_VARS:
+        monkeypatch.delenv(name, raising=False)
+    for name, value in env.items():
+        monkeypatch.setenv(name, value)
+    with writes:
+        assert ssl.temp_root([tmp_path / "repo"]) == Path(os.path.realpath(expected))
+    assert writes.targets == []
+
+
 # --- Exit codes and fixed diagnostics ------------------------------------------------------
+
+
+def test_no_findings_exit_zero(stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]) -> None:
+    stub["findings"].write_text("", encoding="utf-8")
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_CLEAN
+    assert _console_body(capfd.readouterr().out) == ["mode: tree, files scanned: 3", "findings: 0"]
 
 
 def test_tool_error_exit_two_without_leaking(
@@ -559,6 +683,26 @@ def test_tool_error_exit_two_without_leaking(
         "secret_scan_local: trufflehog exited 1 (scan error); details in the owner-only log beside the report"
     )
     assert len(_console_body(captured.out)) == 0
+
+
+def test_unparseable_report_line_is_not_echoed(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    stub["findings"].write_text(f"not json {SENTINEL}\n", encoding="utf-8")
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured)
+    assert captured.err.strip() == "secret_scan_local: unparseable JSON at report line 1"
+
+
+def test_missing_binary_gives_typed_message(
+    tmp_path: Path, repo: Path, monkeypatch: pytest.MonkeyPatch, capfd: pytest.CaptureFixture[str]
+) -> None:
+    empty = tmp_path / "empty-bin"
+    empty.mkdir()
+    monkeypatch.setenv("PATH", str(empty))
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
+    assert "trufflehog not found on PATH" in capfd.readouterr().err
 
 
 @pytest.mark.parametrize(
@@ -592,6 +736,11 @@ def test_assert_safe_command_rejects_a_missing_safe_flag(dropped: str) -> None:
     cmd = ["trufflehog", "filesystem", *(flag for flag in ssl.SAFE_FLAGS if flag != dropped)]
     with pytest.raises(ssl.ScanError, match="unsafe TruffleHog command"):
         ssl.assert_safe_command(cmd)
+
+
+def test_assert_safe_command_rejects_a_verifier_option() -> None:
+    with pytest.raises(ssl.ScanError, match="refused a verification-style option"):
+        ssl.assert_safe_command(["trufflehog", "git", *ssl.SAFE_FLAGS, "--verifier=https://x"])
 
 
 def test_assert_safe_command_ignores_file_names_after_separator() -> None:
@@ -639,6 +788,19 @@ def test_usage_errors_never_echo_the_supplied_value(
     assert _calls(stub) == []
 
 
+def test_usage_error_from_the_command_line_has_the_fixed_message() -> None:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--timeout-seconds", SENTINEL, "tree"],
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == ssl.EXIT_ERROR
+    assert SENTINEL not in result.stdout + result.stderr
+    assert ssl.MSG_USAGE in result.stderr
+
+
 @pytest.mark.parametrize(
     "option", [f"--verify={SENTINEL}", f"--results={SENTINEL}", f"--{SENTINEL}-verifier", "--VERIFY"]
 )
@@ -667,6 +829,19 @@ def test_path_values_are_never_echoed(
         _assert_absent(captured, str(tmp_path))
         assert captured.err.strip() == f"secret_scan_local: {message}"
     assert _calls(stub) == []
+
+
+def test_show_keys_refuses_a_non_regular_file(tmp_path: Path, capfd: pytest.CaptureFixture[str]) -> None:
+    fifo = tmp_path / f"{SENTINEL}.fifo"
+    os.mkfifo(fifo)
+    fd = os.open(fifo, os.O_RDWR)  # keeps the open from blocking
+    try:
+        assert ssl.main(["show-keys", str(fifo)]) == ssl.EXIT_ERROR
+    finally:
+        os.close(fd)
+    captured = capfd.readouterr()
+    _assert_absent(captured, str(tmp_path))
+    assert captured.err.strip() == "secret_scan_local: the report is not a regular file"
 
 
 def test_unexpected_exception_prints_only_its_type(
@@ -741,6 +916,24 @@ def test_non_utf8_report_is_a_typed_error(
 
 
 # --- Tree candidates -----------------------------------------------------------------------
+
+
+def test_tree_never_scans_denied_areas_or_symlinks(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    ssl.main(["--repo", str(repo), "tree"])
+    (call,) = _calls(stub)
+    files = call["argv"][call["argv"].index("--") + 1 :]
+    assert sorted(files) == [".trufflehogignore", "app.py", "data/notes.txt"]
+    assert Path(call["cwd"]).resolve() == repo.resolve()
+
+
+def test_tree_splits_long_file_lists_into_batches() -> None:
+    paths = [f"dir/file-{i:04d}.txt" for i in range(30)]
+    chunks = ssl.batches(paths, budget=100)
+    assert [p for chunk in chunks for p in chunk] == paths
+    assert all(sum(len(p) + 1 for p in chunk) <= 100 for chunk in chunks)
+    assert len(chunks) > 1
 
 
 def test_tracked_file_beneath_a_symlinked_parent_is_not_scanned(
@@ -868,6 +1061,22 @@ def test_history_removes_mirror_when_a_step_fails(
     _assert_mirror_was_temporary(clone_dests, stub["tmp"])
 
 
+def test_history_removes_mirror_when_interrupted(
+    stub: dict[str, Path],
+    cloned: Path,
+    local_transport: None,
+    clone_dests: list[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def interrupt(*_args: object, **_kwargs: object) -> None:
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(ssl, "_run_trufflehog", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        ssl.main(["--repo", str(cloned), "history"])
+    _assert_mirror_was_temporary(clone_dests, stub["tmp"])
+
+
 DRIVER = (
     "import sys\n"
     "from scripts.audit import secret_scan_local as ssl\n"
@@ -922,6 +1131,14 @@ def _kill_if_alive(pid_file: Path) -> bool:
     return True
 
 
+def test_termination_handlers_are_restored_after_a_run(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    before = {signum: signal.getsignal(signum) for signum in ssl.TERMINATION_SIGNALS}
+    ssl.main(["--repo", str(repo), "tree"])
+    assert {signum: signal.getsignal(signum) for signum in ssl.TERMINATION_SIGNALS} == before
+
+
 def test_tool_failure_messages_are_fixed(
     stub: dict[str, Path], cloned: Path, local_transport: None, capfd: pytest.CaptureFixture[str]
 ) -> None:
@@ -934,6 +1151,15 @@ def test_tool_failure_messages_are_fixed(
         "secret_scan_local: mirror clone of the configured remote failed (exit 128); "
         "details in the owner-only log beside the report"
     )
+
+
+def test_history_option_values_are_never_echoed(
+    stub: dict[str, Path], cloned: Path, local_transport: None, tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    for remote in (SENTINEL, f"{SENTINEL}/../x", f"--upload-pack={SENTINEL}"):
+        assert ssl.main(["--repo", str(cloned), "history", "--remote", remote]) == ssl.EXIT_ERROR
+        _assert_absent(capfd.readouterr(), str(tmp_path))
+    assert _calls(stub) == []
 
 
 @pytest.mark.parametrize(

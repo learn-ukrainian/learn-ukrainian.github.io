@@ -69,6 +69,18 @@ class TestActivityValidation:
         assert len(errors) > 0
         assert "options" in errors[0]
 
+    def test_validate_unknown_type(self, base_schema):
+        bad_data = {"type": "nonexistent-type", "title": "Bad"}
+        errors = validate_activity(bad_data, base_schema)
+        assert len(errors) == 1
+        assert "Unknown activity type" in errors[0]
+
+    def test_validate_missing_type(self, base_schema):
+        bad_data = {"title": "No Type"}
+        errors = validate_activity(bad_data, base_schema)
+        assert len(errors) == 1
+        assert "missing 'type'" in errors[0]
+
 class TestFileValidation:
     """Test full YAML file validation."""
 

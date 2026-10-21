@@ -48,6 +48,19 @@ def test_changed_inputs_are_refused_even_when_otherwise_eligible(key, value):
         mechanical_worker_scope(saved, mode="read-only", model="claude-haiku-5-5", prompt="Inspect this test.")
 
 
+@pytest.mark.parametrize("scope", [[], "not a scope", {}, {"sha256": "incorrect"}])
+def test_malformed_scope_is_typed(scope):
+    with pytest.raises(MechanicalAdmissionRefused):
+        mechanical_worker_scope({"mechanical_task": scope}, mode="read-only", model="claude-haiku-5-5", prompt="Inspect this test.")
+
+
+def test_incomplete_scope_with_valid_digest_is_typed():
+    scope = {"mode": "read-only"}
+    scope["sha256"] = mechanical_scope_digest(scope)
+    with pytest.raises(MechanicalAdmissionRefused):
+        mechanical_worker_scope({"mode": "read-only", "mechanical_task": scope}, mode="read-only", model="claude-haiku-5-5", prompt="Inspect this test.")
+
+
 @pytest.mark.parametrize("file_state", ["changed", "deleted"])
 @pytest.mark.parametrize("model", ["claude-haiku-5-5", "claude-sonnet-5-5", "gpt-6-luna"])
 def test_worker_checks_executed_prompt_without_reading_source_file(tmp_path, file_state, model):
@@ -64,3 +77,34 @@ def test_worker_checks_executed_prompt_without_reading_source_file(tmp_path, fil
         assert scope["prompt_file"] is None
     else:
         assert scope == {}
+
+
+@pytest.mark.parametrize("identity_field", ["model", "requested_model", "actual_model"])
+def test_recorded_mechanical_identity_still_requires_integrity(identity_field):
+    saved = record()
+    if identity_field == "model":
+        saved[identity_field] = "claude-haiku-5-5"
+    else:
+        saved["substitution"] = {identity_field: "claude-haiku-5-5"}
+    with pytest.raises(MechanicalAdmissionRefused, match="persisted admission inputs changed"):
+        mechanical_worker_scope(saved, mode="read-only", model="claude-sonnet-5-5", prompt="Changed prompt")
+
+
+@pytest.mark.parametrize("prompt", ["Changed prompt", ""])
+def test_changed_executed_prompt_is_refused(prompt):
+    with pytest.raises(MechanicalAdmissionRefused, match="persisted admission inputs changed"):
+        mechanical_worker_scope(record(), mode="read-only", model="claude-haiku-5-5[1m]", prompt=prompt)
+
+
+def test_missing_effective_prompt_digest_is_refused():
+    saved = record()
+    saved.pop("effective_prompt_sha256")
+    with pytest.raises(MechanicalAdmissionRefused, match="persisted admission inputs changed"):
+        mechanical_worker_scope(saved, mode="read-only", model="claude-haiku-5-5", prompt="Inspect this test.")
+
+
+def test_non_mechanical_model_ignores_invalid_snapshot():
+    assert mechanical_worker_scope(
+        {"mechanical_task": {"sha256": "invalid"}}, mode="read-only",
+        model="claude-sonnet-5-5", prompt="Inspect this test.",
+    ) == {}

@@ -9,6 +9,7 @@ set; reads are never landing by URL; only vetted in-repo entry points open landi
 
 from __future__ import annotations
 
+import ast
 import email.utils
 import json
 import os
@@ -21,10 +22,12 @@ import pytest
 from scripts.common import github_client as gh
 from tests.opsec_fixtures import CATALOG
 
+ROOT = Path(__file__).resolve().parents[1]
 NOW = 1_000
 OPEN = 2_000  # a reset in the future: the rate-limit window is open
 EXPIRED = NOW - 1
 HEAD = "a" * 40
+REASONS = {"retry_after", "secondary_hold", "core_below_landing_reserve", "pool_exhausted"}
 ENQUEUE = 'mutation { enqueuePullRequest(input: {pullRequestId: "PR_1"}) { clientMutationId } }'
 VIEWER = "query { viewer { login } }"
 
@@ -153,6 +156,18 @@ def test_decision_table_over_every_remaining_value(tmp_path, pool, kind, path, v
         assert wire.sent == []
 
 
+@pytest.mark.parametrize("value", VALUES, ids=str)
+@pytest.mark.parametrize("pool", ["core", "graphql", "search", "code_search"])
+@pytest.mark.parametrize("call_class", ["landing", "exempt", None])
+def test_pure_decision_function_table(pool, value, call_class):
+    rows = {resource: (remaining, reset) for resource, remaining, reset in pool_rows(pool, value)}
+    decision = gh._refusal(rows, {pool}, call_class=call_class, now=NOW)
+    if call_class is not None or value not in (CORE_REFUSES if pool == "core" else POOL_REFUSES):
+        assert decision is None
+    else:
+        assert decision == ("core_below_landing_reserve" if pool == "core" else "pool_exhausted", OPEN)
+
+
 def test_negative_core_remaining_is_not_a_budget_and_never_refuses():
     assert gh._refusal({"core": (-1, OPEN)}, {"core"}, call_class=None, now=NOW) is None
 
@@ -165,6 +180,25 @@ LANDING = {
     "native": _native("pr", "merge", "1", "--repo", "o/r", "--auto"),
     "review": _rest("POST", "repos/o/r/pulls/1/reviews", {"event": "APPROVE"}),
 }
+
+
+@pytest.mark.parametrize("call", list(LANDING))
+def test_authentic_retry_after_hold_refuses_landing_then_expires(tmp_path, call):
+    wire = Wire()
+    client = store(tmp_path, wire, [("retry_after", 0, OPEN), ("core", 5000, 9000)])
+    refused(LANDING[call](client), "retry_after")
+    assert wire.sent == []
+    client.clock = lambda: OPEN + 1
+    admitted(LANDING[call](client))
+    assert len(wire.sent) == 1
+
+
+@pytest.mark.parametrize("call", list(LANDING))
+@pytest.mark.parametrize("budgets", [[("secondary", 0, OPEN)], [("secondary", 0, OPEN), ("core", 0, OPEN)]])
+def test_synthetic_hold_and_core_exhaustion_never_refuse_landing(tmp_path, call, budgets):
+    wire = Wire()
+    admitted(LANDING[call](store(tmp_path, wire, [*budgets, ("graphql", 0, OPEN)])))
+    assert len(wire.sent) == 1
 
 
 def test_a_stored_per_pool_hold_name_carries_no_retry_after_authority(tmp_path):
@@ -244,6 +278,45 @@ def test_github_retry_after_creates_an_authentic_hold(tmp_path, retry_after):
     client.clock = lambda: NOW + 121
     admitted(LANDING["rest"](client))
     assert len(wire.sent) == 2
+
+
+def test_primary_limit_403_is_a_pool_observation_never_a_landing_hold(tmp_path):
+    """GitHub's primary-limit reset is its pool's budget: ordinary calls honour it, landing calls do not."""
+    headers = {"X-RateLimit-Remaining": "0", "X-RateLimit-Reset": str(OPEN), "X-RateLimit-Resource": "core"}
+    wire = Wire(_limited_reply(403, headers, b'{"message":"API rate limit exceeded"}'))
+    client = store(tmp_path, wire)
+    refused(client.request("GET", "repos/o/r/issues/1/timeline"), "pool_exhausted")
+    admitted(LANDING["rest"](client))
+    refused(client.request("GET", "repos/o/r/issues/1/comments"), "core_below_landing_reserve")
+    admitted(LANDING["graphql"](client))
+    assert wire.sent == [
+        ("http", "GET", "repos/o/r/issues/1/timeline"),
+        ("http", "PUT", "repos/o/r/pulls/1/merge"),
+        ("http", "POST", "graphql"),
+    ]
+
+
+@pytest.mark.parametrize(
+    ("status", "headers"),
+    [
+        (403, {"X-RateLimit-Remaining": "50", "X-RateLimit-Reset": str(OPEN)}),
+        (403, {}),
+        (429, {}),
+        (403, {"Retry-After": "soon"}),
+    ],
+    ids=["secondary-with-budget", "secondary-bare", "429-bare", "unparseable-retry-after"],
+)
+def test_limits_without_github_retry_after_are_synthetic(tmp_path, status, headers):
+    wire = Wire(_limited_reply(status, headers))
+    client = store(tmp_path, wire)
+    first = client.request("POST", "repos/o/r/issues/1/comments", payload={"body": "x"})
+    assert first.error == "github_rate_limited" and first.reason == "secondary_hold"
+    for call in LANDING.values():
+        admitted(call(client))
+    assert len(wire.sent) == 1 + len(LANDING)
+    second = client.request("GET", "repos/o/r/issues/1/comments")
+    assert second.error == "github_rate_limited" and second.reason == "secondary_hold"
+    assert len(wire.sent) == 1 + len(LANDING)
 
 
 def test_graphql_rate_limited_body_is_a_typed_pool_refusal(tmp_path):
@@ -386,6 +459,16 @@ def test_native_landing_verbs_and_ci_status_proceed_at_zero(tmp_path, argv):
     assert wire.sent == [("native", *argv)]
 
 
+def test_full_run_rerun_is_not_landing(tmp_path):
+    wire = Wire()
+    client = store(tmp_path, wire, [("core", 0, OPEN)])
+    refused(
+        gh.run(["gh", "run", "rerun", "5", "--repo", "o/r", "--debug"], client=client, capture_output=True),
+        "core_below_landing_reserve",
+    )
+    assert wire.sent == []
+
+
 def test_ci_status_view_reads_proceed_but_a_plain_view_does_not(tmp_path):
     def reply(method, endpoint, body):
         if endpoint == "repos/o/r/pulls/1":
@@ -491,6 +574,14 @@ def test_verdict_publication_entry_point_is_landing_only_while_it_runs(tmp_path,
     assert len(wire.sent) == 1
 
 
+def test_merge_queue_keeper_entry_point_is_landing(tmp_path):
+    wire = Wire(_pull_reply)
+    client = store(tmp_path, wire, [("core", 0, OPEN)])
+    assert _in_keeper_run(_pr_view)(client).returncode == 0
+    refused(_pr_view(client), "core_below_landing_reserve")
+    assert len(wire.sent) == 1
+
+
 def test_lookalike_entry_points_never_exempt(tmp_path):
     """Same function names, other files: neither the name nor a path suffix is the vetting."""
     wire = Wire()
@@ -501,6 +592,79 @@ def test_lookalike_entry_points_never_exempt(tmp_path):
             exec(compile(f"def {name}():\n    return call(client)\n", filename, "exec"), namespace)
             refused(namespace[name](), "core_below_landing_reserve")
     assert wire.sent == []
+
+
+def test_caller_tags_flags_headers_and_environment_never_exempt(tmp_path, monkeypatch):
+    tags = {
+        "LU_GITHUB_LANDING": "1",
+        "LU_GITHUB_OPERATION": "pr-merge",
+        "GITHUB_LANDING_FLOW": "merge-queue-keeper",
+        "LANDING_FLOW": "verdict-publication",
+        "AGENT_GH_LANDING": "ci-status",
+    }
+    for key, value in tags.items():
+        monkeypatch.setenv(key, value)
+    wire = Wire()
+    client = store(tmp_path, wire, [("core", 0, OPEN)], env=tags)
+    headers = {"X-Landing-Flow": "merge-queue-keeper", "X-GitHub-Operation": "pr-merge", "X-Caller": "publish"}
+    refused(client.request("GET", "repos/o/r/pulls/1/reviews", headers=headers), "core_below_landing_reserve")
+    for argv in (
+        ["api", "repos/o/r/pulls/1/reviews", "-H", "X-Landing-Flow: merge-queue-keeper"],
+        ["api", "repos/o/r/pulls/1/reviews", "--template", "{{.}}", "-H", "X-Operation: pr-merge"],
+        ["pr", "view", "1", "--repo", "o/r", "--json", "headRefOid", "--jq", ".landing"],
+        ["issue", "comment", "1", "--repo", "o/r", "--body", "pr merge --failed"],
+        ["run", "view", "1", "--repo", "o/r", "--json", "databaseId"],
+    ):
+        refused(gh.run(["gh", *argv], client=client, capture_output=True), "core_below_landing_reserve")
+
+    @gh.rate_limited_command
+    def publish(verb, **kwargs):
+        return client.request("GET", "repos/o/r/pulls/1/reviews")
+
+    refused(publish("pr-merge"), "core_below_landing_reserve")
+    assert wire.sent == []
+
+
+def test_frozen_landing_entry_points_exist_and_nothing_else_declares_them():
+    assert gh._LANDING_ENTRY_POINTS == {
+        ("scripts/orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
+        ("scripts/fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
+        ("scripts/fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
+        ("scripts/fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
+        ("scripts/review/record_cf_verdict.py", "record"): "verdict-publication",
+    }
+    assert gh._PUBLISHER_ENTRY_POINT == ("scripts/publish/github.py", "publish")
+    assert {
+        "pr-merge",
+        "pr-update-branch",
+        "pr-review",
+        "run-rerun",
+        "commit-status",
+        "pr-dequeue",
+        "pr-disarm",
+    } == gh._PUBLISHER_LANDING_VERBS
+    for path, name in [*gh._LANDING_ENTRY_POINTS, gh._PUBLISHER_ENTRY_POINT]:
+        tree = ast.parse((ROOT / path).read_text())
+        assert name in {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}, (path, name)
+    # Only this module opens a landing operation, and only at these vetted sites.
+    openers = []
+
+    class Openers(ast.NodeVisitor):
+        def __init__(self):
+            self.scope = []
+
+        def visit_FunctionDef(self, node):
+            self.scope.append(node.name)
+            self.generic_visit(node)
+            self.scope.pop()
+
+        def visit_Call(self, node):
+            if getattr(node.func, "id", None) == "_landing_operation":
+                openers.append(".".join(self.scope))
+            self.generic_visit(node)
+
+    Openers().visit(ast.parse((ROOT / "scripts/common/github_client.py").read_text()))
+    assert sorted(openers) == ["queue_read", "rate_limited_command.wrapped", "rest_read", "run"]
 
 
 def test_no_caller_outside_the_client_can_open_a_landing_operation(tmp_path):
@@ -578,6 +742,22 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         "secondary_hold",
     )
     assert len(wire.sent) == 4
+
+
+def test_publisher_merge_honours_only_an_authentic_hold_with_its_reason(publisher):
+    pub, wire = publisher([("retry_after", 0, OPEN), ("core", 0, OPEN)])
+    result = pub.publish(
+        "pr-merge",
+        repo="unit/public",
+        number=1,
+        subject="clean",
+        body="clean",
+        env={"PATH": os.defpath},
+        capture_output=True,
+        text=True,
+    )
+    refused(result, "retry_after")
+    assert wire.sent == []
 
 
 # --- typed reason propagation: REST, native and injected paths -------------------------------------
@@ -673,6 +853,17 @@ def test_landing_flow_adapters_admit_at_zero(tmp_path, monkeypatch):
         ("POST", "graphql"),
         ("GET", "repos/o/r/pulls/1"),
     ]
+
+
+def test_every_refusal_reason_is_from_the_closed_set():
+    assert gh.REFUSAL_REASONS == REASONS
+    assert gh.LANDING_RESERVE == 500 and gh.RESERVE == 10
+    # Every typed result goes through one constructor, which admits only the closed set.
+    for reason in REASONS:
+        assert gh._limited(reason, OPEN).reason == reason
+    for untyped in (None, "", "github_rate_limited", "landing"):
+        with pytest.raises(AssertionError, match="untyped"):
+            gh._limited(untyped, OPEN)
 
 
 # --- fix round 1 (#10730 review): held-out failures, each with an edge beyond the report --------
@@ -1159,6 +1350,28 @@ def test_only_an_unexpired_retry_after_holds_landing(tmp_path, status, headers, 
         for call in LANDING.values():
             admitted(call(client))
         assert len(wire.sent) == 1 + len(LANDING)
+
+
+def test_native_secondary_limit_on_stderr_never_delays_a_merge(tmp_path):
+    wire = Wire(native=_native_limited(b"", b"gh: You have exceeded a secondary rate limit. (HTTP 403)"))
+    client = store(tmp_path, wire)
+    refused(
+        gh.run(["gh", "pr", "list", "--repo", "o/r"], client=client, capture_output=True), "secondary_hold", NOW + 60
+    )
+    assert (
+        gh.run(["gh", "pr", "merge", "1", "--repo", "o/r", "--auto"], client=client, capture_output=True).returncode
+        == 0
+    )
+    assert wire.sent[-1] == ("native", "pr", "merge", "1", "--repo", "o/r", "--auto")
+
+
+def test_graphql_rate_limited_never_delays_an_enqueue(tmp_path):
+    replies = [gh.Response(200, {}, json.dumps({"errors": [{"type": "RATE_LIMITED"}]}).encode())]
+    wire = Wire(lambda method, endpoint, body: replies.pop(0) if replies else gh.Response(200, {}, b'{"data":{}}'))
+    client = store(tmp_path, wire)
+    assert client.request("POST", "graphql", payload={"query": VIEWER}).reason == "pool_exhausted"
+    admitted(client.request("POST", "graphql", payload={"query": ENQUEUE}))
+    assert wire.sent == [("http", "POST", "graphql")] * 2
 
 
 def _page_frame(status, headers=None):

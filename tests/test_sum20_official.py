@@ -291,6 +291,15 @@ def test_nested_group_rejects_incomplete_or_ambiguous_ownership(class_name: str,
         parse_sum20_article(source, 461)
 
 
+@pytest.mark.parametrize("class_name", ["PHRF", "PHRASE", "PHRTXT", "LINK", "LINKTXT", "PHRSYM"])
+@pytest.mark.parametrize("owner", ["WORD", "LPART", "PHRTXT", "LINKTXT"])
+def test_grouped_phrase_reference_rejects_fields_under_formatting_or_wrong_owner(class_name: str, owner: str) -> None:
+    field = PHRASE_FIELDS[class_name].replace("primary phrase", "foreign phrase")
+    source = GROUPED_REFERENCE_HTML.replace(f'class="{owner}">', f'class="{owner}"><b>{field}</b>', 1)
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source, 461)
+
+
 @pytest.mark.parametrize(
     "marker",
     [
@@ -1073,6 +1082,16 @@ def test_official_parser_recursion_stops_one_request(monkeypatch):
     assert result == FetchOutcome("parse_error", error_text="unusable article", http_status=200, terminal=True)
     assert len(calls) == 1
     assert not sleeps
+
+
+@pytest.mark.parametrize("terminal", [3, 4])
+def test_legacy_terminal_exit_precedes_prior_failure(monkeypatch, terminal):
+    counts = sum20_official_ingest.IngestCounts(
+        ok=0, unchanged=0, not_found=0, transient_error=1, parse_error=int(terminal == 4)
+    )
+    counts.exit_code = terminal
+    monkeypatch.setattr(sum20_official_ingest, "ingest_wordids", lambda *_args, **_kwargs: counts)
+    assert sum20_official_ingest.main([]) == terminal
 
 
 def test_legacy_ingest_help_and_failure_exit(monkeypatch, capsys):

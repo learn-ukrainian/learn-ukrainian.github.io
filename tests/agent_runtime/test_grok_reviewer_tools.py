@@ -187,6 +187,22 @@ def test_grok_bridge_keeps_the_plain_guard_path(name: str) -> None:
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "{python} '{hooks}/guard-pr-'merge.py",
+        '"{python}" "{hooks}/guard-pr-merge.py"',
+        "{python} {hooks}/guard\\-pr-merge.py",
+    ],
+)
+def test_grok_bridge_classifies_the_pinned_invocation_after_tokenization(command: str) -> None:
+    from scripts.agent_runtime.grok_hook_bridge import guard_argv
+    from scripts.common.repo_root import project_interpreter
+
+    python = project_interpreter(ROOT)
+    assert guard_argv(command.format(python=python, hooks=_HOOKS)) == [str(python), str(_HOOKS / "guard-pr-merge.py")]
+
+
+@pytest.mark.parametrize(
     ("command", "reason"),
     [
         # Extra arguments, behind split quoting and backslash spellings too.
@@ -544,6 +560,23 @@ def test_read_guard_denies_unavailable_git(tracked_review_root, monkeypatch):
     assert not policy.reviewer_tool_allowed({
         "hook_event_name": "PreToolUse", "toolName": "read_file", "toolInput": {"target_file": "tracked.txt"},
     }, tracked_review_root)
+
+
+@pytest.mark.parametrize("event,expected", [
+    (json.dumps({"hook_event_name": "PreToolUse", "toolName": "Bash", "toolInput": {"command": "pwd"}}), 0),
+    ("broken json", 2),
+    ("{}", 2),
+])
+def test_permission_cli_main_returns_typed_disposition(monkeypatch, capsys, tracked_review_root, event, expected):
+    import io
+
+    from scripts.agent_runtime import grok_reviewer_permissions as policy
+
+    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(event))
+    assert policy.main() == expected
+    captured = capsys.readouterr()
+    assert policy.REFUSAL_CODE in captured.err if expected else captured.err == ""
 
 
 def test_tracked_symlink_loop_is_a_typed_denial(tracked_review_root):

@@ -16,6 +16,7 @@ import sqlite3
 from pathlib import Path
 
 from scripts.ingest import ohoiko_books_ingest as obi
+from scripts.ingest import ulp_lesson_notes_ingest as ulp
 from scripts.ingest._section_coverage import (
     NON_SCHOOL_GRADE,
     LessonSection,
@@ -174,6 +175,15 @@ OHOIKO_FIXTURE = """1.    а                                               and, 
 """
 
 
+ULP_FIXTURE = """                                            Lesson Notes № 1
+
+       Greetings
+                                         Link to audio: ukrainianlessons.com/episode1
+
+Привіт!
+"""
+
+
 def _make_full_db(path: Path) -> sqlite3.Connection:
     """DB with textbooks + textbook_sections schema (full schema match
     for the ingesters which now write to both tables)."""
@@ -226,6 +236,40 @@ def test_ohoiko_ingest_produces_zero_orphans(tmp_path: Path) -> None:
     )
     assert titles[0].startswith("Entry 1: ")
     assert titles[1].startswith("Entry 2: ")
+    conn.close()
+
+
+def test_ulp_ingest_produces_zero_orphans(tmp_path: Path) -> None:
+    """Regression: after the 2026-05-14 section-coverage fix, ULP
+    ingest must produce 0 orphan chunks."""
+    fixture_path = tmp_path / "ulp-fixture.txt"
+    fixture_path.write_text(ULP_FIXTURE, encoding="utf-8")
+    lessons = ulp.parse_book(fixture_path)
+    assert len(lessons) == 1
+
+    db_path = tmp_path / "sources.db"
+    conn = _make_full_db(db_path)
+    book = ulp.BookConfig(
+        slug="test",
+        source_file="test-ulp",
+        txt_filename="ulp-fixture.txt",
+        season=1,
+    )
+    ulp.ingest_lessons(conn, book, lessons)
+    conn.commit()
+
+    n_orphan = conn.execute(
+        "SELECT COUNT(*) FROM textbooks WHERE source_file=? AND parent_section_id IS NULL",
+        (book.source_file,),
+    ).fetchone()[0]
+    assert n_orphan == 0, f"orphans remain: {n_orphan}"
+
+    # Section title matches the ULP convention.
+    title = conn.execute(
+        "SELECT section_title FROM textbook_sections WHERE source_file=?",
+        (book.source_file,),
+    ).fetchone()[0]
+    assert title == "Lesson 1: Greetings"
     conn.close()
 
 
@@ -367,4 +411,28 @@ def test_backfill_dry_run_makes_no_changes(tmp_path: Path) -> None:
     # DB unchanged
     n_sec = conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0]
     assert n_sec == 0
+    conn.close()
+
+
+def test_backfill_idempotent(tmp_path: Path) -> None:
+    """Running backfill twice must not duplicate sections."""
+    from scripts.ingest import backfill_lesson_sections as bf
+
+    db_path = tmp_path / "sources.db"
+    conn = _make_full_db(db_path)
+    conn.execute(
+        """INSERT INTO textbooks (chunk_id, title, text, source_file, char_count)
+           VALUES ('anna-ohoiko-1000-words-2nd-ed_e0001', 'а', 'а — and', 'anna-ohoiko-1000-words-2nd-ed', 8)"""
+    )
+    conn.commit()
+
+    bf.backfill_source_file(conn, "anna-ohoiko-1000-words-2nd-ed", dry_run=False)
+    conn.commit()
+    bf.backfill_source_file(conn, "anna-ohoiko-1000-words-2nd-ed", dry_run=False)
+    conn.commit()
+
+    n_sec = conn.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0]
+    n_orphan = conn.execute("SELECT COUNT(*) FROM textbooks WHERE parent_section_id IS NULL").fetchone()[0]
+    assert n_sec == 1
+    assert n_orphan == 0
     conn.close()

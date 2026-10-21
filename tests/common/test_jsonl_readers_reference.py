@@ -6,7 +6,18 @@ import pytest
 import yaml
 from jsonl_reader_cases import VALUE
 
+from scripts.curriculum.evidence import sense_bindings
 from scripts.ingest import prove_ohoiko_a1_reference as proof
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", ""], ids=["LF", "CRLF", "unterminated"])
+def test_private_entries_preserves_unicode_separators(ending, tmp_path):
+    inventory = [{"locator": "p200 fixture#1", "stressed": "synthetic"}]
+    record = {"locator": inventory[0]["locator"], "printed_label": "synthetic", "meaning": VALUE}
+    path = tmp_path / "meanings.jsonl"
+    path.write_bytes(("\n \t\r\n" + json.dumps(record, ensure_ascii=False) + ending).encode("utf-8"))
+
+    assert sense_bindings.private_entries(path, inventory) == {record["locator"]: record}
 
 
 @pytest.mark.parametrize("ending", ["\n", "\r\n", ""], ids=["LF", "CRLF", "unterminated"])

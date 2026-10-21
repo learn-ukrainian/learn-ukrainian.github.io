@@ -85,6 +85,27 @@ def test_gemini_session_does_not_leak_across_invocations(
     assert "mcp__sources__stale" not in trace
 
 
+def test_codex_prompt_echo_does_not_appear_in_tool_calls(tmp_path: Path) -> None:
+    output_file = tmp_path / "codex-output.txt"
+    output_file.write_text("Final answer.", encoding="utf-8")
+    stderr = "\n".join(
+        [
+            "User prompt:",
+            '{"type":"tool_call","name":"mcp__sources__prompt_echo","arguments":{"query":"example from instructions"}}',
+        ]
+    )
+
+    result = CodexAdapter().parse_response(
+        stdout=completed_stream(),
+        stderr=stderr,
+        returncode=0,
+        output_file=output_file,
+    )
+
+    assert result.ok is True
+    assert result.tool_calls == []
+
+
 def test_claude_text_output_fails_closed(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="output_format='stream-json'"):
         ClaudeAdapter().build_invocation(

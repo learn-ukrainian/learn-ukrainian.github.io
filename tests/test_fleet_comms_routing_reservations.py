@@ -840,6 +840,28 @@ def test_substitution_rejects_non_result_invalid_terminal_prior(tmp_path: Path) 
             ledger.reserve_selection(request, _glm_selection, substitution=evidence)
 
 
+@pytest.mark.parametrize(
+    ("reason", "error"),
+    (
+        ("", "substitution_reason_required"),
+        ("x" * 501, "substitution_reason_too_long"),
+    ),
+)
+def test_substitution_reason_is_required_and_bounded(tmp_path: Path, reason: str, error: str) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        substitute, evidence = _failed_result_invalid_reservation(
+            ledger,
+            authority_key=f"repo:substitution:reason:{len(reason)}",
+        )
+        with pytest.raises(RoutingReservationError, match=error):
+            ledger.reserve_selection(
+                substitute,
+                _glm_selection,
+                now="2035-01-01T00:00:02Z",
+                substitution={**evidence, "reason": reason},
+            )
+
+
 def test_substitution_rejects_stale_link_and_ineligible_selection(tmp_path: Path) -> None:
     with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
         substitute, evidence = _failed_result_invalid_reservation(
@@ -942,6 +964,22 @@ def test_credential_admission_and_completed_bytes_are_independent_of_quota_bucke
         expired = ledger._bucket_usage("codex-weekly", now_iso="2035-01-01T00:02:30Z", rolling_window_seconds=60)
         assert current.completed_window_bytes == 12
         assert expired.completed_window_bytes == 0
+
+
+def test_recent_failures_use_the_same_settlement_window_as_completed_usage(tmp_path: Path) -> None:
+    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
+        old = ledger.reserve_selection(_request("repo:old-failure", "old"), _selection, now="2035-01-01T00:00:00Z")
+        ledger.fail_and_release(old.reservation_id, "provider_unavailable", now="2035-01-01T00:00:00Z")
+
+        current = ledger.reserve_selection(
+            _request("repo:current-failure", "current"),
+            _selection,
+            now="2035-01-01T00:01:01Z",
+        )
+        ledger.fail_and_release(current.reservation_id, "provider_unavailable", now="2035-01-01T00:01:01Z")
+
+        usage = ledger._bucket_usage("codex-weekly", now_iso="2035-01-01T00:01:01Z", rolling_window_seconds=60)
+        assert usage.recent_failures == 1
 
 
 def test_success_heals_circuit_without_erasing_failure_decisions(tmp_path: Path) -> None:

@@ -43,6 +43,20 @@ def test_resolve_ask_forward_target_prefers_job_dispatch_host(
     assert target.remote_repo == _SYNTHETIC_REPO
 
 
+def test_resolve_ask_forward_target_falls_back_to_services_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("LU_JOB_DISPATCH_HOST", raising=False)
+    monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
+    monkeypatch.delenv("LU_JOB_REPO", raising=False)
+    monkeypatch.setenv("LU_SERVICES_SSH_HOST", "services-alias")
+    monkeypatch.setenv("LU_SERVICES_REMOTE_ROOT", _SYNTHETIC_REPO)
+    target = _job_host_forward.resolve_ask_forward_target()
+    assert target is not None
+    assert target.host == "services-alias"
+    assert target.remote_repo == _SYNTHETIC_REPO
+
+
 def test_resolve_ask_forward_target_host_without_repo_fails_closed(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

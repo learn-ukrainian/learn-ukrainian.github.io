@@ -205,6 +205,16 @@ def test_two_word_quote_needs_human_review_without_a_client_call():
     assert v.MIN_QUOTE_WORD_TOKENS == 3
 
 
+def test_zero_word_quote_needs_human_review_without_a_client_call():
+    client = FakeClient()
+    receipt = v.verify_citation(_case(quote="!!!", source="!!!"), client=client)
+    assert client.calls == []
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["decided_by"] == "deterministic"
+    assert receipt["reason"] == "quote_too_short"
+    assert receipt["accepted"] is False
+
+
 def test_combining_mark_does_not_split_a_word_or_open_a_boundary():
     marked = "q\u0301r"
     client = FakeClient()

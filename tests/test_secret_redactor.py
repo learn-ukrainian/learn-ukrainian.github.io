@@ -93,6 +93,18 @@ def test_redact_text_leaves_benign_code_with_secret_named_lhs_untouched():
     assert REDACTION not in redact_text(joined)
 
 
+def test_redact_text_still_redacts_real_secret_shaped_assignments():
+    cases = {
+        "GITHUB_TOKEN=ghp_abcdefghijklmnopqrstuvwxyz1234567890": "ghp_",
+        "AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY": "wJalrXUtn",
+    }
+
+    for line, marker in cases.items():
+        redacted = redact_text(line)
+        assert marker not in redacted, line
+        assert REDACTION in redacted, line
+
+
 def test_redact_text_still_redacts_quoted_and_json_secret_values():
     assert "sk-ant-" not in redact_text("api_key = 'sk-ant-abcdefghijklmnop1234'")
     assert REDACTION in redact_text('{"password": "hunter2secret"}')
@@ -147,6 +159,18 @@ def test_redact_text_preserves_natural_language_and_low_entropy_identifiers():
     assert redact_text(text) == text
 
 
+def test_redact_text_redacts_unquoted_passphrase_but_not_code():
+    # Documented narrow allowance: a bare whitespace-separated passphrase assigned
+    # to a secret-named key is redacted (fail-closed), while code expressions —
+    # which always carry () [] {} , . operators — pass through.
+    redacted = redact_text("PASSWORD=correct horse battery staple")
+    assert "correct horse" not in redacted
+    assert REDACTION in redacted
+
+    code = "secret = compute(a, b) + other[0]"
+    assert redact_text(code) == code
+
+
 # --- Decision-boundary pins (PR #5047 rework) ------------------------------
 #
 # The unquoted-assignment gate was inverted from a secret-shape ALLOWLIST (which
@@ -182,6 +206,23 @@ def test_redact_text_still_redacts_secret_assignments(line):
     # The secret material must be gone.
     for leak in ("p@ssw0rd", "my$uper", "!exclaim", "correct horse", "word1", "hunter2"):
         assert leak not in redacted, line
+
+
+@pytest.mark.parametrize(
+    "code",
+    [
+        # The three original burn lines (regression) ...
+        "token_verdicts = vesum_gate.check_tokens(sentence)",
+        "tokens = [t for t in words if len(t) > 1]",
+        "secret_keys = set(pairwise(parts))",
+        # ... plus mixed-operator and dict-comprehension forms.
+        "secret = compute(a, b) + other[0]",
+        "tokens = {t: 1 for t in words}",
+    ],
+)
+def test_redact_text_leaves_spaced_code_expressions_byte_identical(code):
+    assert redact_text(code) == code, code
+    assert REDACTION not in redact_text(code), code
 
 
 def test_redact_text_expected_fail_closed_over_redacts_spaced_dotted_ref():
@@ -235,6 +276,21 @@ def test_redact_text_redacts_private_key_blocks():
     assert "OPENSSH PRIVATE KEY" not in redacted
     assert "abc" not in redacted
     assert REDACTION in redacted
+
+
+def test_redact_text_handles_quoted_and_spaced_assignments():
+    text = "\n".join(
+        [
+            "DB_PASSWORD = hunter2 with spaces",
+            'OPENAI_API_KEY = "sk-abcdefghijklmnopqrstuvwxyz123456"',
+        ]
+    )
+
+    redacted = redact_text(text)
+
+    assert "hunter2" not in redacted
+    assert "sk-" not in redacted
+    assert redacted.count(REDACTION) == 2
 
 
 def test_github_comment_redacts_body_before_subprocess(monkeypatch):

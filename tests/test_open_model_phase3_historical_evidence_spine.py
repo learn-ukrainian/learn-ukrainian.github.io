@@ -75,6 +75,30 @@ def _full_receipt_fixture() -> dict:
     return body
 
 
+def test_tracked_spine_starts_with_direct_kyiv_epigraphy_and_keeps_frameworks_attributed():
+    value = spine.load_spine()
+
+    assert spine.sha256_file(spine.SPINE_PATH) == spine.EXPECTED_SPINE_SHA256
+    assert value["instructional_sequence"][0]["sequence_id"] == "kyiv_medieval_epigraphy"
+    assert value["instructional_sequence"][0]["evidence_mode"] == "direct_attestation"
+    assert value["instructional_sequence"][-1]["sequence_id"] == "comparative_reconstruction_backlink"
+    assert value["framework_policy"]["canonical_framework_id"] is None
+    assert value["framework_policy"]["instructional_navigation_scope"] == "coarse_navigation_only_not_semantic_gold"
+    assert set(value["framework_policy"]["bound_framework_ids"]) == {
+        "university_five_stage_synthesis",
+        "shevelov_detailed_six_period",
+        "nimchuk_five_stage_with_middle_subperiods",
+    }
+
+
+def test_validator_rejects_framework_collapse_even_when_resealed():
+    value = copy.deepcopy(_tracked())
+    value["framework_policy"]["canonical_framework_id"] = "university_five_stage_synthesis"
+
+    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
+        spine.validate_spine(_reseal(value))
+
+
 def test_validator_rejects_audited_fact_tampering_even_when_resealed():
     value = copy.deepcopy(_tracked())
     sophia = next(item for item in value["collections"] if item["collection_id"] == "saint-sophia-inscriptions")

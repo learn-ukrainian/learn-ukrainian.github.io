@@ -172,3 +172,13 @@ def test_apply_delete_skips_when_delete_guard_refuses(
         }
     ]
     assert old.exists()
+
+
+def test_main_apply_refused_without_environment_gate(
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv(inventory.APPLY_ENV, raising=False)
+
+    assert inventory.main(["--apply"]) == 2
+    assert "LU_HOME_SESSION_APPLY=1" in capsys.readouterr().err

@@ -241,6 +241,24 @@ def test_batch_keeps_teaching_conflict(captured_db):
     assert stress.verify_stresses(["вікна"], tags="noun:n:p:v_naz")["words"][0]["status"] == "ok"
 
 
+def test_comparison_preserves_corpus_case_and_samples_actual_disagreements(tmp_path, captured_db):
+    root = tmp_path / "corpus"
+    store = root / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
+    store.parent.mkdir(parents=True)
+    store.write_text("words: [{forms: [{form: село}, {form: вікна}]}]")
+    for track in ("a1", "a1-v1"):
+        page = root / "site/src/content/docs" / track / "one.mdx"
+        page.parent.mkdir(parents=True)
+        page.write_text("Ки́їв село́")
+    forms, inputs = stress_comparison.corpus_forms(root)
+    assert forms == ["Київ", "вікна", "село"]
+    assert len(inputs) == 3
+    summary = stress_comparison.write_report(root, tmp_path / "report")
+    assert summary["denominator"] == 3
+    assert sum(summary["counts"][k] for k in ("agree", "disagree", "ulif_only", "trie_only", "neither")) == 3
+    assert summary["sample_size"] == min(60, summary["counts"]["disagree"])
+
+
 def test_annotator_refuses_meaning_guess_and_joins_context(captured_db, monkeypatch):
     from scripts.pipeline import stress_annotator as annotator
 
@@ -250,6 +268,25 @@ def test_annotator_refuses_meaning_guess_and_joins_context(captured_db, monkeypa
     assert annotator._oracle_choice("вікна", lemma="вікно", pos="NOUN", tags="Number=Plur|Case=Nom") == "ві́кна"
     assert annotator._oracle_choice("село́") == "село́"
     assert annotator._oracle_choice("розбір") == "ро́збі́р"
+
+
+def test_context_model_loading_is_offline(monkeypatch):
+    import sys
+    from types import SimpleNamespace
+
+    from scripts.pipeline import stress_annotator as annotator
+
+    calls = []
+
+    def pipeline(*args, **kwargs):
+        calls.append(kwargs)
+        if "lemma" in kwargs["processors"]:
+            raise FileNotFoundError("synthetic missing lemma model")
+        return "synthetic morphology parser"
+
+    monkeypatch.setitem(sys.modules, "stanza", SimpleNamespace(Pipeline=pipeline))
+    assert annotator._load_context_parser() == "synthetic morphology parser"
+    assert all(call["download_method"] is None for call in calls)
 
 
 def test_sentence_context_uses_morphology_not_trie_accent(captured_db, monkeypatch):
@@ -271,6 +308,18 @@ def test_sentence_context_uses_morphology_not_trie_accent(captured_db, monkeypat
         {"text": "вікна", "lemma": "вікно", "upos": "NOUN", "feats": "Number=Sing|Case=Gen|Gender=Neut"}
     ]
     assert annotator.annotate_stress("вікна") == ("вікна́", 1)
+
+
+def test_dual_without_teaching_choice_never_invents_one(captured_db):
+    from scripts.curriculum.evidence.words import packed_stress_reason
+    from scripts.pipeline import stress_annotator as annotator
+
+    captured_db.execute("UPDATE ulif_forms SET pedagogical_stressed_form='' WHERE form_unstressed='розбір'")
+    (match,) = stress.verify_stress("розбір")["matches"]
+    assert stress.pedagogical_stressed_form(match) == "ро́збі́р"
+    assert annotator._oracle_choice("розбір") == "ро́збі́р"
+    assert annotator._oracle_choice("розбі́р") == "розбі́р"
+    assert packed_stress_reason(match) == "multiple_stressed_vowels"
 
 
 def test_read_helpers_never_initialize_missing_tables(tmp_path, monkeypatch):

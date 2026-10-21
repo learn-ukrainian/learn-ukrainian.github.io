@@ -182,6 +182,28 @@ def test_a7_receipt_binds_v4_sha_and_control_surfaces() -> None:
     assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a7.sha256_file(MANIFEST_PATH)
 
 
+def test_a7_receipt_carries_forward_every_a2_a4_a5_a6_residual_unresolved() -> None:
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a6_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A6_RECEIPT_PATH)["a6_residuals"]
+    }
+    for key in (
+        "a2_residuals_carried_forward",
+        "a4_residuals_carried_forward",
+        "a5_residuals_carried_forward",
+        "a6_residuals_carried_forward",
+    ):
+        assert all(e["status"] == "unresolved_carried_to_a7" for e in _cached_json(RECEIPT)[key])
+
+
 def test_a7_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
     keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS

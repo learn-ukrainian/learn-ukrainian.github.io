@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from common.thresholds import (
     aggregate_review,
+    terminal_dims_for,
 )
 
 
@@ -89,6 +90,12 @@ def test_aggregate_review_core_profile_keeps_full_reject_terminal_pass() -> None
     assert verdict.failing_dims == ("decolonization",)
     assert verdict.rejected_dims == ("decolonization",)
     assert verdict.warning_dims == ("decolonization",)
+
+
+def test_terminal_dims_for_defaults_to_strict_terminal_set() -> None:
+    assert terminal_dims_for("core") == frozenset()
+    assert terminal_dims_for("seminar") == frozenset({"decolonization"})
+    assert terminal_dims_for(None) == frozenset({"decolonization"})
 
 
 def test_aggregate_review_tolerates_extra_legacy_dims() -> None:

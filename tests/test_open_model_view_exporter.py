@@ -6,6 +6,7 @@ import copy
 import json
 from collections import defaultdict
 from collections.abc import Sequence
+from itertools import product
 from pathlib import Path
 from typing import Any
 
@@ -503,6 +504,34 @@ def test_mixed_source_families_exclude_wikipedia_and_export_eligible_rows(tmp_pa
     assert receipt["counts"]["excluded_source_record_not_admitted"] == 1
 
 
+@pytest.mark.parametrize("view_kind", ["correction_instruction", "preference", "quality_filter"])
+def test_wikipedia_source_family_is_rejected_before_gold_output(tmp_path: Path, view_kind: str) -> None:
+    source_path = tmp_path / "source.jsonl"
+    output = tmp_path / f"{view_kind}.jsonl"
+    receipt = tmp_path / f"{view_kind}.receipt.json"
+    write_jsonl(
+        source_path,
+        [source_record("Synthetic structural fixture only.", source_family="wikipedia")],
+    )
+
+    with pytest.raises(exporter.ExportError, match=exporter.SOURCE_FAMILY_DENIAL):
+        exporter.export_correction_family(
+            view_kind=view_kind,
+            source_records_path=source_path,
+            correction_records_path=tmp_path / "never-read.jsonl",
+            origin="machine_generated",
+            output=output,
+            receipt_output=receipt,
+            allow_test_fixtures=True,
+            v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+            v02_packet=exporter.DEFAULT_V02_PACKET,
+            extra_evaluation_artifacts=(),
+        )
+
+    assert not output.exists()
+    assert not receipt.exists()
+
+
 def test_source_family_is_not_inferred_from_opaque_record_id(tmp_path: Path) -> None:
     text = "Synthetic structural fixture only."
     source_path = tmp_path / "source.jsonl"
@@ -842,11 +871,39 @@ def test_distributed_edits_still_reach_character_sequence_check() -> None:
     assert match.method == "character_sequence"
 
 
+def test_qgram_bound_never_rejects_reachable_short_sequence_ratio() -> None:
+    values = ["".join(characters) for length in range(1, 6) for characters in product("аб", repeat=length)]
+    for first in values:
+        for second in values:
+            ratio = exporter.SequenceMatcher(None, first, second, autojunk=False).ratio()
+            if ratio >= 0.6:
+                assert exporter.sequence_ratio_can_reach(first, second, threshold=0.6) is True
+
+
 def test_long_character_sequence_rejects_anagram_like_frequency_match() -> None:
     first = ("а" * 5000) + ("б" * 5000)
     second = "аб" * 5000
 
     assert exporter.character_sequence_matches(first, second, threshold=0.9) is False
+
+
+@pytest.mark.parametrize("edit_kind", ["insert", "delete"])
+def test_long_character_sequence_detects_realistic_indels(edit_kind: str) -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(50_000))
+    if edit_kind == "insert":
+        chunks = [reference[index : index + 100] for index in range(0, len(reference), 100)]
+        candidate = "я".join(chunks)
+    else:
+        candidate = "".join(character for index, character in enumerate(reference) if index % 100 != 99)
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
+
+
+def test_long_character_sequence_detects_clustered_edit_below_boundary() -> None:
+    reference = "".join(chr(ord("а") + index % 20) for index in range(50_000))
+    candidate = reference[:20_000] + ("я" * 4_500) + reference[24_500:]
+
+    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
 
 
 def test_containment_prefilter_preserves_exact_containment() -> None:
@@ -1180,6 +1237,40 @@ def test_distinct_corrections_sharing_long_context_are_not_near_deduplicated(
     assert not any(reason.startswith("excluded_intra_view_duplicate_") for reason in receipt["counts"])
 
 
+def test_quality_filter_accepts_resolved_acceptable_fixture_only_as_fixture(
+    tmp_path: Path,
+) -> None:
+    text = "У цьому синтетичному реченні є помилку для перевірки."
+    source_path = tmp_path / "source.jsonl"
+    correction_path = tmp_path / "correction.jsonl"
+    output = tmp_path / "output.jsonl"
+    receipt_path = tmp_path / "receipt.json"
+    write_jsonl(source_path, [source_record(text)])
+    write_jsonl(
+        correction_path,
+        [correction_record(text, decision_name="acceptable_as_is", correction=None)],
+    )
+    exporter.export_correction_family(
+        view_kind="quality_filter",
+        source_records_path=source_path,
+        correction_records_path=correction_path,
+        origin="machine_generated",
+        output=output,
+        receipt_output=receipt_path,
+        allow_test_fixtures=True,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+        v02_packet=exporter.DEFAULT_V02_PACKET,
+        extra_evaluation_artifacts=(),
+    )
+    row = read_jsonl(output)[0]
+    assert row["payload"] == {
+        "decision": "acceptable_as_is",
+        "label": "acceptable",
+        "text": text,
+    }
+    assert row["eligibility"]["model_training_eligible"] is False
+
+
 def test_derived_correction_target_is_checked_for_evaluation_contamination(
     tmp_path: Path,
 ) -> None:
@@ -1327,6 +1418,34 @@ def test_recipe_rejects_wrong_objective_and_moving_revision(tmp_path: Path) -> N
         )
 
 
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("learning_rate", "0", "learning_rate"),
+        ("epochs", "0", "epochs"),
+    ],
+)
+def test_recipe_rejects_non_positive_training_values(
+    tmp_path: Path,
+    field: str,
+    value: str,
+    message: str,
+) -> None:
+    view, receipt = export_fixture_pretraining(tmp_path)
+    config = recipe_config()
+    config["hyperparameters"][field] = value
+    config_path = tmp_path / "invalid-hyperparameter.json"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+    with pytest.raises(exporter.ExportError, match=message):
+        exporter.build_recipe_manifest(
+            config_path=config_path,
+            view_path=view,
+            view_receipt_path=receipt,
+            output=tmp_path / "manifest.json",
+            allow_test_fixtures=True,
+        )
+
+
 def test_recipe_rejects_unbound_template_and_invalid_split(tmp_path: Path) -> None:
     view, receipt = export_fixture_pretraining(tmp_path)
     config = recipe_config()
@@ -1414,6 +1533,31 @@ def test_full_source_cannot_relabel_unrelated_text():
     payload["source_content_sha256"] = exporter.sha256_text("Actual source bytes.")
     with pytest.raises(exporter.ExportError, match="full source payload text"):
         exporter.validate_source_payload_semantics(payload)
+
+
+@pytest.mark.parametrize("view_kind", ["correction_instruction", "preference", "quality_filter"])
+@pytest.mark.parametrize("operation,expected", [("local_learning", 1), ("public_redistribution", 0)])
+def test_correction_consumer_permissions_are_operation_specific(tmp_path, view_kind, operation, expected):
+    text = "У цьому синтетичному реченні є помилку для перевірки."
+    record = source_record(text)
+    record["rights"]["redistribution"]["status"] = "denied"
+    write_jsonl(tmp_path / "source.jsonl", [record])
+    write_jsonl(tmp_path / "correction.jsonl", [correction_record(text)])
+    receipt = exporter.export_correction_family(
+        view_kind=view_kind,
+        source_records_path=tmp_path / "source.jsonl",
+        correction_records_path=tmp_path / "correction.jsonl",
+        origin="machine_generated",
+        output=tmp_path / "output.jsonl",
+        receipt_output=tmp_path / "receipt.json",
+        operation=operation,
+        allow_test_fixtures=True,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+        v02_packet=exporter.DEFAULT_V02_PACKET,
+        extra_evaluation_artifacts=(),
+    )
+    assert receipt["output"]["records"] == expected
+    assert receipt["admission"]["operation"] == operation
 
 
 def test_recipe_rejects_machine_view_relabelled_as_training_eligible(tmp_path):

@@ -70,6 +70,31 @@ def test_returns_error_on_runner_failure(tmp_path):
     assert result.error_message == "broken"
 
 
+def test_respects_max_retries(tmp_path):
+    responses = [
+        _result(ok=False, stderr_excerpt="first"),
+        _result(ok=False, stderr_excerpt="second"),
+        _result(ok=True, response="done"),
+    ]
+
+    with patch("ai_llm.agent_runtime_call.runner.invoke", side_effect=responses):
+        result = call_codex_with_fallback(
+            "prompt",
+            task_name="unit-test",
+            cwd=tmp_path,
+            max_retries=3,
+            logger=lambda _msg: None,
+            sleep_fn=lambda _seconds, _reason: None,
+        )
+
+    assert result.response_text == "done"
+    assert [attempt.status for attempt in result.attempts] == [
+        "retryable_error",
+        "retryable_error",
+        "success",
+    ]
+
+
 def test_retry_exhaustion_never_falls_back_to_gpt5(tmp_path):
     with patch(
         "ai_llm.agent_runtime_call.runner.invoke", return_value=_result(ok=False, stderr_excerpt="broken")

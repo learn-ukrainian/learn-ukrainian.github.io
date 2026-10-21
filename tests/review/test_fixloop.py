@@ -396,6 +396,27 @@ def test_the_disputed_object_is_the_expected_value_when_the_finding_has_one(worl
     assert group["claim"] == "no results" and len(group["lessons"]) == 2
 
 
+def test_different_claims_on_identical_quotes_do_not_group(world: World) -> None:
+    for n, text in ((1, "The form is a russianism."), (2, "The stress is wrong."), (3, "The case is wrong.")):
+        world.record(world.make_return(n, [quoted_unsupported(text, PROSE)]))
+    conn = db.connect(world.db)
+    try:
+        assert fixloop.unsupported_claim_counts(conn, 3) == []
+    finally:
+        conn.close()
+
+
+def test_claim_identity_is_dimension_sub_dimension_and_object() -> None:
+    base = {"dimension": "language", "sub_dimension": "calque", "claim": "A  Claim."}
+    assert fixloop.claim_key(base) == fixloop.claim_key({**base, "claim": "a claim"})
+    assert fixloop.claim_key(base) != fixloop.claim_key({**base, "sub_dimension": "surzhyk"})
+    assert fixloop.claim_key(base) != fixloop.claim_key({**base, "dimension": "fact", "sub_dimension": None})
+    assert fixloop.claim_key({**base, "expected": "X"}) == fixloop.claim_key(
+        {**base, "claim": "other", "expected": "x"}
+    )
+    assert fixloop.claim_key({**base, "locations": [{"tab": "urok", "quote": "q"}]}) == fixloop.claim_key(base)
+
+
 def test_claims_that_differ_only_in_stress_are_different_claims(world: World) -> None:
     # built from code points: the acute (U+0301) sits on the first vowel or on the second one
     front = "\u0437\u0430\u0301\u043c\u043e\u043a"
@@ -774,6 +795,13 @@ def test_a_verdict_whose_manifest_of_record_is_gone_or_altered_is_stale(world: W
     assert "missing" in verdict(world)["lessons"][1]["stale"][0]
 
 
+def test_a_verdict_file_that_is_not_a_verdict_is_stale_not_trusted(world: World, promoted: None) -> None:
+    approve_all(world)
+    world.verdict_file(2).write_text("verdict: APPROVE\n", encoding="utf-8")
+    row = verdict(world)["lessons"][1]
+    assert row["state"] == "stale" and row["verdict"] is None
+
+
 def test_a_seeded_review_never_reaches_the_module_verdict(world: World, promoted: None) -> None:
     approve_all(world)
     world.record(
@@ -801,6 +829,15 @@ def test_a_lesson_whose_current_manifest_is_unknown_holds_the_module(world: Worl
 
 def current_of(world: World, n: int) -> fixloop.CurrentManifest:
     return fixloop.establish_current_manifest(world.root, world.state_dir, "lesson", n)
+
+
+def test_an_unreadable_manifest_sidecar_is_an_unknown_current_manifest(world: World) -> None:
+    sidecar = world.state_dir / "lesson-2.manifest.sha256"
+    assert current_of(world, 2).digest == world.digest(2)
+    sidecar.write_text("not a digest\n", encoding="ascii")
+    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
+    sidecar.unlink()
+    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
 
 
 def test_a_well_formed_sidecar_digest_that_names_no_manifest_holds_the_module(world: World, promoted: None) -> None:

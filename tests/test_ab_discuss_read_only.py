@@ -33,3 +33,20 @@ def test_discuss_rejects_single_participant_before_provider_call(monkeypatch) ->
     monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fail_provider)
     assert _channels_cli._handle_discuss(args) == 1
     assert called is False
+
+
+def test_discuss_rejects_five_acp_seats_before_authority_creation(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet"))
+    args = _args()
+    args.with_agents = "codex,cursor,glm,claude,grok"
+
+    assert _channels_cli._handle_discuss(args) == 1
+
+    error = capsys.readouterr().err
+    assert "codex, cursor, glm, claude, grok" in error
+    assert "2 to 4" in error
+    assert "allowed:" in error
+    assert not (tmp_path / "fleet" / "comms.sqlite3").exists()

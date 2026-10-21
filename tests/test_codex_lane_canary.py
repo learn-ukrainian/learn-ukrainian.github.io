@@ -95,6 +95,13 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
     assert "never on compact count" in board
 
 
+def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
+    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "devops"]) == 0
+
+    board = (tmp_path / ".claude" / "devops-epic" / "CODEX-COLD-START.md").read_text(encoding="utf-8")
+    assert "**Stream:** `epic:5703`" in board  # allow-hardcoded-epic: devops stream canary pin
+
+
 def test_devops_alias_resolves_to_dedicated_stream(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
     for selector in ("devops", "infra.devops"):
@@ -203,3 +210,20 @@ def test_hydrate_uses_exact_registered_provider_identity(monkeypatch, capsys, tm
         assert calls == []
         assert output.out == ""
         assert output.err == "ACTION: hydration blocked — unregistered lane identity for this provider.\n"
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
+def test_hydrate_refuses_slot_when_registry_unavailable(monkeypatch, capsys, tmp_path, provider) -> None:
+    from scripts.orchestration import handoff_slot_registry
+    from scripts.session_canary import gemini_lane, glm_lane
+
+    lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[provider]
+    monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", tmp_path / "missing.yaml")
+    monkeypatch.setenv("SESSION_STREAM_AGENT", f"{provider}-core")
+    monkeypatch.setattr(
+        lane.shared_hydration,
+        "build_hydration_capsule_with_retry",
+        lambda *args: pytest.fail("unverified registration must not fetch or retry"),
+    )
+    assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 2
+    assert "unregistered lane identity" in capsys.readouterr().err

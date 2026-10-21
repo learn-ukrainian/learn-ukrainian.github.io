@@ -114,6 +114,12 @@ def test_create_channel_duplicate_exist_ok_returns_existing():
     ch = _channels.create_channel("topic", description="new", exist_ok=True)
     assert ch["description"] == "original"  # Existing row is returned
 
+def test_create_channel_duplicate_exist_ok_false_raises():
+    """Verify duplicate creation raises ValueError if exist_ok=False."""
+    _channels.create_channel("topic")
+    with pytest.raises(ValueError, match="already exists"):
+        _channels.create_channel("topic", exist_ok=False)
+
 def test_create_channel_with_include_and_subscribers():
     """Verify list fields round-trip correctly."""
     ch = _channels.create_channel(
@@ -135,6 +141,15 @@ def test_post_origin_self_references_thread_id():
     _channels.create_channel("topic")
     res = _channels.post("topic", "gemini", "hello")
     assert res["thread_id"] == res["message_id"]
+
+def test_post_with_attachments_roundtrip_json():
+    """Verify attachments are stored and parsed correctly."""
+    _channels.create_channel("topic")
+    atts = [{"name": "file.txt", "content": "data"}]
+    _channels.post("topic", "gemini", "hello", attachments=atts)
+
+    msg = _channels.read("topic")[0]
+    assert msg["attachments"] == atts
 
 
 def test_post_creates_delivery_row_per_recipient():
@@ -557,6 +572,32 @@ def test_concurrent_post_no_data_loss(isolate_db):
     assert len(set(msgs)) == 5  # No duplicates
     assert len(dlvs) == 10      # 5 messages * 2 recipients (claude + codex)
 
+def test_concurrent_reply_to_same_parent():
+    """Verify multiple threads can reply to the same parent safely."""
+    _channels.create_channel("topic")
+    parent = _channels.post("topic", "gemini", "parent")
+
+    threads = []
+    barrier = threading.Barrier(3)
+
+    def worker(i):
+        barrier.wait()
+        _channels.post("topic", "claude", f"reply{i}", parent_id=parent["message_id"])
+
+    for i in range(3):
+        t = threading.Thread(target=worker, args=(i,))
+        t.start()
+        threads.append(t)
+
+    for t in threads:
+        t.join()
+
+    msgs = _channels.read("topic", thread_id=parent["thread_id"])
+    assert len(msgs) == 4
+    # The parent is 0, the replies should all be round_index 1
+    round_indices = [m["round_index"] for m in msgs]
+    assert round_indices == [0, 1, 1, 1]
+
 # 7. context_sha256 helper
 
 
@@ -587,6 +628,34 @@ def test_fetch_monitor_state_returns_none_on_connection_error(monkeypatch):
         raise urllib.error.URLError("connection refused")
     monkeypatch.setattr("urllib.request.urlopen", boom)
     assert _channels.fetch_monitor_state(timeout=0.1) is None
+
+
+def test_truncate_history_by_budget_drops_oldest_first():
+    """Oldest messages are dropped first when over budget."""
+    messages = [
+        {"body": "a" * 100, "round_index": 0},
+        {"body": "b" * 100, "round_index": 1},
+        {"body": "c" * 100, "round_index": 2},
+    ]
+    # Budget fits roughly 1-2 messages (100 body + 80 envelope each)
+    kept, dropped = _channels.truncate_history_by_budget(messages, max_chars=200)
+    assert dropped >= 1
+    # Newest (c) should survive, oldest (a) dropped
+    kept_bodies = [m["body"] for m in kept]
+    assert "c" * 100 in kept_bodies
+    assert "a" * 100 not in kept_bodies
+
+
+def test_truncate_history_by_budget_keeps_at_least_one():
+    """Even with an absurdly small budget, the newest message is kept."""
+    messages = [
+        {"body": "a" * 10_000, "round_index": 0},
+        {"body": "b" * 10_000, "round_index": 1},
+    ]
+    kept, _dropped = _channels.truncate_history_by_budget(messages, max_chars=50)
+    # At least one (the newest) survives — the "and kept_rev" guard
+    assert len(kept) >= 1
+    assert kept[-1]["body"] == "b" * 10_000
 
 
 def test_post_auto_snapshot_captures_context_sha256(isolated_context_root):

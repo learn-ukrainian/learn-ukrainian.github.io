@@ -39,6 +39,30 @@ class _FakeResponse:
         return False
 
 
+def test_normalize_base_urls_various_inputs() -> None:
+    # Single string
+    assert _normalize_base_urls("http://host-a:8765", None) == ("http://host-a:8765",)
+    assert _normalize_base_urls("http://host-a:8765/", None) == ("http://host-a:8765",)
+
+    # Comma-separated string
+    assert _normalize_base_urls("http://host-a:8765, http://host-b:8765", None) == (
+        "http://host-a:8765",
+        "http://host-b:8765",
+    )
+
+    # Sequence of strings
+    assert _normalize_base_urls(["http://host-a:8765", "http://host-b:8765"], None) == (
+        "http://host-a:8765",
+        "http://host-b:8765",
+    )
+
+    # base_urls kwarg
+    assert _normalize_base_urls(None, "http://host-a:8765,http://host-b:8765") == (
+        "http://host-a:8765",
+        "http://host-b:8765",
+    )
+
+
 def _clear_monitor_env(monkeypatch: pytest.MonkeyPatch) -> None:
     for var in ("MONITOR_API_URLS", "AB_MONITOR_URLS", "MONITOR_BASE_URLS", "MONITOR_API_URL", "AB_MONITOR_URL"):
         monkeypatch.delenv(var, raising=False)
@@ -94,6 +118,20 @@ def test_explicit_empty_string_disables_client(monkeypatch: pytest.MonkeyPatch) 
     # An explicit blank constructor arg is the same explicit disable.
     assert MonitorClient(base_url="").base_urls == ()
     assert MonitorClient(base_urls="   ").base_urls == ()
+
+
+def test_canonical_env_var_wins_and_aliases_still_resolve(monkeypatch: pytest.MonkeyPatch) -> None:
+    """MONITOR_API_URLS is canonical; deprecated aliases resolve when it is unset."""
+    _clear_monitor_env(monkeypatch)
+    monkeypatch.setenv("AB_MONITOR_URLS", "http://alias-a:8765")
+    monkeypatch.setenv("MONITOR_API_URLS", "http://canonical:8765")
+    assert _normalize_base_urls(None, None) == ("http://canonical:8765",)
+
+    monkeypatch.delenv("MONITOR_API_URLS")
+    assert _normalize_base_urls(None, None) == ("http://alias-a:8765",)
+
+    # Constructor args always beat every env var.
+    assert _normalize_base_urls("http://arg:8765", None) == ("http://arg:8765",)
 
 
 def test_monitor_client_get_failover_success(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -380,3 +418,28 @@ def test_keyed_mutation_failover_cannot_fire_while_loopback_fence_holds(
             idempotency_key="stable-token-abc",
         )
     assert calls == ["http://host-a:8765/api/epics/v1/epic:test-failover/handoff"]
+
+
+def test_monitor_client_mutation_host_affine_never_retries_even_with_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Host-affine mutations (agent-monitor register/heartbeat, ...) never retry, key or not."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        calls.append(req.full_url)
+        raise urllib.error.URLError("Connection reset")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+
+    with pytest.raises(urllib.error.URLError, match="Connection reset"):
+        client._post(
+            "/api/agent-monitor/register",
+            json_body={"pid": 1234},
+            idempotency_key="stable-token-abc",
+        )
+
+    assert len(calls) == 1
+    assert calls[0] == "http://host-a:8765/api/agent-monitor/register"

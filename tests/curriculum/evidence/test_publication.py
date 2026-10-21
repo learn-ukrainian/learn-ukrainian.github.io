@@ -172,6 +172,28 @@ def test_registry_is_reread_after_permission_withdrawal(tmp_path):
         publication.quote_attribution(record(), publication.load_registry(path))
 
 
+def test_quoted_records_separates_grounding():
+    lesson = {
+        "steps": [
+            {"id": "s1", "needs": ["quote"], "evidence": ["T-001"], "explains": ["T-002"], "ref": "T-003"},
+            {"id": "s2", "needs": ["culture"], "explains": ["T-004"]},
+        ]
+    }
+    expected = {"T-001": "s1", "T-002": "s1", "T-003": "s1"}
+    assert publication.quoted_records(lesson) == expected
+    assert publication.quoted_records({"lessons": [lesson]}) == expected
+
+
+@pytest.mark.parametrize("field", ["grade", "page"])
+@pytest.mark.parametrize("value", [0, -1, True, "1", 1.5, None])
+def test_positive_integer_grade_and_page(field, value):
+    entries = publication.load_registry()
+    rec = record()
+    (entries[BOOK] if field == "grade" else rec["source"])[field] = value
+    with pytest.raises(ValueError, match=r"^publication_attribution:"):
+        publication.quote_attribution(rec, entries)
+
+
 def test_every_allowed_source_has_confirmed_human_bibliography():
     for key, entry in publication.load_registry().items():
         if not entry["publish"]["allowed"]:
@@ -240,6 +262,11 @@ def test_private_credits_are_registry_owned_and_never_quote_rights(file):
     assert "PRIVATE" not in str(citation)
     with pytest.raises(ValueError, match="owned_quote_refused"):
         publication.quote_attribution(rec)
+
+
+@pytest.mark.parametrize("file", ["uni-unregistered", "9-klas-tekhnolohiyi-bilenko-2026"])
+def test_grounding_without_citation_metadata_needs_no_right(file):
+    assert publication.resource_citation(record(file)) is None
 
 
 def test_resource_bibliography_survives_quote_right_withdrawal():

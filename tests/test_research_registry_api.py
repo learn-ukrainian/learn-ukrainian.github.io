@@ -146,6 +146,15 @@ def test_global_hash_stable_under_yaml_reorder_and_format(reg_root):
     assert h1 == h2
 
 
+def test_global_hash_insensitive_to_summary_and_title(reg_root):
+    r1 = _make_record(reg_root, "aaa")
+    _write_registry(reg_root, [r1])
+    h1 = reg.load_runtime(root=reg_root).global_hash()
+    r1b = dict(r1, title="A completely different title", summary="different summary")
+    _write_registry(reg_root, [r1b])
+    assert reg.load_runtime(root=reg_root).global_hash() == h1
+
+
 @pytest.mark.parametrize(
     "mutate",
     [
@@ -359,6 +368,38 @@ def test_record_private_local_is_404(reg_root):
     r1 = _make_record(reg_root, "aaa", access_class="private-local")
     _write_registry(reg_root, [r1])
     assert client.get("/api/knowledge/record/aaa").status_code == 404
+
+
+def test_record_body_cyrillic(reg_root):
+    # Cyrillic is 2 UTF-8 bytes/char; ensure bytes + honest hash are correct.
+    body_text = "# Заголовок\n\nUkrainian paraphrase: приклад тексту.\n"
+    r1 = _make_record(reg_root, "aaa", digest_body=body_text)
+    _write_registry(reg_root, [r1])
+    resp = client.get("/api/knowledge/record/aaa")
+    assert resp.status_code == 200
+    assert "приклад" in resp.content.decode("utf-8")
+    assert resp.headers["etag"].strip('"') == r1["content_hash"].split(":", 1)[1]
+
+
+# --------------------------------------------------------------------------- #
+# 15. No side effects: static guard over the P2 modules
+# --------------------------------------------------------------------------- #
+def test_no_network_or_subprocess_imports():
+    """Static proof: neither P2 module imports network/subprocess/db machinery."""
+    import ast
+
+    forbidden = {"subprocess", "socket", "sqlite3", "requests", "httpx", "urllib", "http"}
+    root = Path(__file__).resolve().parents[1]
+    for rel in ("scripts/research/registry.py", "scripts/api/knowledge_router.py"):
+        tree = ast.parse((root / rel).read_text("utf-8"))
+        imported: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported.update(alias.name.split(".")[0] for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imported.add(node.module.split(".")[0])
+        leaked = imported & forbidden
+        assert not leaked, f"{rel} imports forbidden modules: {leaked}"
 
 
 # --------------------------------------------------------------------------- #

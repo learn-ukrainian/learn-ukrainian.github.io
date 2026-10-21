@@ -89,3 +89,44 @@ def test_wiki_coverage_integration_m20_scenario():
     assert "ніколи" in reason
     # But 'сніданок' should NOT be in the missing list
     assert "сніданок" not in reason
+
+def test_wiki_coverage_integration_l2_error():
+    """Verify l2_error also passes via direct item matching."""
+    manifest = {
+        "l2_errors": [
+            {
+                "id": "err-1",
+                "incorrect": "Вимова: [одягайет'с'а]",
+                "correct": "Вимова: [одягайец':а]",
+                "why": "assimilation",
+                "treatment": "contrast_pair",
+            }
+        ]
+    }
+
+    # In activities.yaml, item-level
+    activities_yaml = """
+- id: act-1
+  type: error-correction
+  items:
+    - sentence: "Я одягаюся."
+      error: "Вимова: [одягайет'с'а]"
+      correction: "Вимова: [одягайец':а]"
+"""
+
+    implementation_map = {
+        "err-1": {
+            "artifact": "activities.yaml",
+            "location": "act-1",
+            "treatment": "contrast_pair",
+        }
+    }
+
+    report = check_wiki_coverage(
+        manifest=manifest,
+        implementation_map=implementation_map,
+        module_md="",
+        activities_yaml=activities_yaml,
+    )
+
+    assert report["obligations"][0]["status"] == "PASS"

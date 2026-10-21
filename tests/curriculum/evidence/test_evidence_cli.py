@@ -8,7 +8,7 @@ from pathlib import Path
 
 import yaml
 
-from scripts.curriculum.evidence import words
+from scripts.curriculum.evidence import __main__, words
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PYTHON = sys.executable
@@ -16,6 +16,17 @@ PYTHON = sys.executable
 
 def _db_flags(sources_db: Path, vesum_db: Path) -> list[str]:
     return ["--sources-db", str(sources_db), "--vesum-db", str(vesum_db)]
+
+
+def test_cli_help(capsys):
+    rc = __main__.main(["--help"])
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert "build-words" in captured.out
+    assert "words-verify" in captured.out
+    assert "build-pack" in captured.out
+    assert "pack-verify" in captured.out
+    assert "invalid_request" in captured.out
 
 
 def test_cli_build_and_verify_subprocess(synthetic_sources, synthetic_vesum, tmp_path):

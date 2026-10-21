@@ -541,6 +541,34 @@ def test_composite_multi_selector_accounts_for_all_body_pages_and_order(bundle):
         run_gate(bundle)
 
 
+def test_set_equality_is_exercised_by_full_admission_gate(bundle):
+    bundle["spec"]["binding"]["rules"].append(
+        {
+            "op": "set_query_equal",
+            "values": [selector("response", "target", match="all", min=1)],
+            "normalizer": "identity",
+            "queries": [
+                {
+                    "query": {
+                        "kind": "sql",
+                        "store": "sources.db",
+                        "sql": "SELECT target_field FROM units WHERE entry_id=?",
+                    },
+                    "parameters": [selector(field="entry_id")],
+                }
+            ],
+        }
+    )
+    records, report = run_gate(bundle)
+    assert len(records) == report["accounting"]["C1"]["accepted"] == 12
+    # The independent dictionary query returns a genuine extra variant.
+    bundle["spec"]["binding"]["rules"][-1]["queries"][0]["query"]["sql"] += (
+        " UNION ALL SELECT target_field FROM units WHERE id=2"
+    )
+    with pytest.raises(BuildError, match="binding_set"):
+        run_gate(bundle)
+
+
 @pytest.mark.parametrize("value", [None, 7])
 def test_set_query_equal_refuses_non_text_source_variants(bundle, value):
     rule = {

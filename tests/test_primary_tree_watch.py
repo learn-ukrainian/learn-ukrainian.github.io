@@ -150,6 +150,20 @@ def test_baseline_dirty_paths_are_not_reported(repo):
     assert watch.maybe_check(force=True) == ["pkg/module.py"]
 
 
+def test_untracked_files_are_out_of_scope(repo):
+    # Untracked pollution belongs to the #6866 root-entry canary; this watch
+    # stays cheap with -uno.
+    watch = _start(repo)
+    (repo.main / "junk.tmp").write_text("junk\n")
+    assert watch.maybe_check(force=True) == []
+
+
+def test_worktree_writes_are_not_reported(repo):
+    watch = _start(repo)
+    (repo.dispatch_wt / "tracked.txt").write_text("legit worker edit\n")
+    assert watch.maybe_check(force=True) == []
+
+
 # ---------------------------------------------------------------------------
 # runner wiring
 # ---------------------------------------------------------------------------

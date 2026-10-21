@@ -87,6 +87,20 @@ def test_unvetted_en_source_fires_when_source_missing() -> None:
     assert findings[0].field == "source"
 
 
+def test_unvetted_en_source_fires_for_unknown_source_label() -> None:
+    manifest = _manifest(
+        {
+            "id": "sense-1",
+            "learner_en": ["glyph"],
+            "source": "web_scrape",
+        }
+    )
+    findings = lint_word_atlas.lint_manifest(manifest)
+    assert len(findings) == 1
+    assert findings[0].rule_id == "LINT-004"
+    assert "web_scrape" in findings[0].detail
+
+
 def test_unvetted_en_source_suppressed_for_ai_minimum() -> None:
     manifest = _manifest(
         {
@@ -210,6 +224,25 @@ def test_report_mode_writes_json_and_stays_advisory(tmp_path: Path) -> None:
     assert "LINT-004" in payload["rule_ids"]
     assert "LINT-101" in payload["rule_ids"]
     assert "LINT-102" in payload["rule_ids"]
+
+
+def test_strict_mode_fails_on_findings(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            _manifest(
+                {
+                    "id": "sense-1",
+                    "learner_en": ["second"],
+                    "en_disambiguation": "",
+                    "source": "sum20_vetted",
+                }
+            )
+        ),
+        encoding="utf-8",
+    )
+
+    assert lint_word_atlas.main(["--manifest", str(manifest_path), "--strict"]) == 1
 
 
 def test_multi_sense_uk_single_en_fires_when_only_one_sense_has_en() -> None:
@@ -352,6 +385,28 @@ def test_pos_transform_mismatch_fires_on_clear_family_disagreement() -> None:
     assert findings[0].field == "pos"
 
 
+def test_pos_transform_mismatch_reads_lexeme_pos() -> None:
+    manifest = {
+        "entries": [
+            {
+                "slug": "біг",
+                "lexeme": {"pos": "noun"},
+                "senses": [
+                    {
+                        "id": "bad-transform",
+                        "pos": "adj",
+                        "learner_en": ["running"],
+                        "source": "sum20_vetted",
+                    }
+                ],
+            }
+        ]
+    }
+    findings = lint_word_atlas.lint_manifest(manifest)
+    assert len(findings) == 1
+    assert findings[0].rule_id == "LINT-102"
+
+
 def test_pos_transform_mismatch_suppressed_when_families_match() -> None:
     manifest = {
         "entries": [
@@ -403,6 +458,26 @@ def test_pos_transform_mismatch_suppressed_without_clear_entry_pos() -> None:
                         "id": "sense-1",
                         "pos": "verb",
                         "learner_en": ["go"],
+                        "source": "sum20_vetted",
+                    }
+                ],
+            }
+        ]
+    }
+    assert lint_word_atlas.lint_manifest(manifest) == []
+
+
+def test_pos_transform_mismatch_suppressed_for_unknown_sense_pos() -> None:
+    manifest = {
+        "entries": [
+            {
+                "slug": "x",
+                "pos": "noun",
+                "senses": [
+                    {
+                        "id": "sense-1",
+                        "pos": "grammar term",
+                        "learner_en": ["x"],
                         "source": "sum20_vetted",
                     }
                 ],

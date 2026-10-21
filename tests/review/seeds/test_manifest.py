@@ -117,6 +117,10 @@ def violations(seed: sm.Seed, *, writer: str = "anthropic", reviewer: str = "ope
     return sm.independence_violations(seed, writer_family=writer, reviewer_family=reviewer)
 
 
+def test_an_independent_linguistic_pair_breaks_no_rule() -> None:
+    assert violations(linguistic_seed("seed-a1")) == []  # writer anthropic, planter google, gold xai, reviewer openai
+
+
 @pytest.mark.parametrize(
     ("seed", "writer", "reviewer", "expected"),
     [
@@ -268,6 +272,15 @@ def test_each_violated_independence_rule_is_refused_with_its_named_code(world: W
     register(world, ling("seed-7", **over))
     error = refused(world, "seed-7", task_id=task)
     assert error.code == code and code in str(error)
+
+
+def test_an_unknown_identity_is_refused_and_nothing_is_recorded(world: World) -> None:
+    assert refused(world, "seed-nobody-registered").code == sm.SEED_IDENTITY_UNKNOWN
+    assert refused(world, "clean-nobody-registered").code == sm.SEED_IDENTITY_UNKNOWN
+    register(world, ling("seed-7", planter_family="anthropic"))  # the resolver says google
+    assert refused(world, "seed-7").code == sm.SEED_IDENTITY_MISMATCH
+    register(world, ling("seed-8", planter_model="a-model-nobody-resolves", planter_family="x"))
+    assert refused(world, "seed-8").code == sm.SEED_IDENTITY_UNKNOWN
 
 
 def test_an_unknown_writer_or_reviewer_is_refused_before_any_seed_rule(world: World) -> None:

@@ -25,8 +25,16 @@ from generate_mdx import (
     fix_html_for_jsx,
     generate_mdx,
     parse_anagram,
+    parse_cloze,
+    parse_error_correction,
+    parse_fill_in,
     parse_frontmatter,
+    parse_group_sort,
+    parse_match_up,
+    parse_quiz,
     parse_translate,
+    parse_true_false,
+    parse_unjumble,
 )
 from yaml_activities import ActivityParser
 
@@ -38,6 +46,10 @@ class TestDumpJsonForJsx:
     def test_escapes_backticks(self):
         result = dump_json_for_jsx({"text": "use `code` here"})
         assert "\\`" in result
+
+    def test_escapes_template_interpolation(self):
+        result = dump_json_for_jsx({"text": "${variable}"})
+        assert "\\${" in result
 
 
 # =============================================================================
@@ -65,6 +77,21 @@ class TestParseFrontmatter:
         assert fm["title"] == "Test"
         assert fm["level"] == "A1"
         assert body.strip() == "Body text here"
+
+
+def test_seminar_description_falls_back_to_ukrainian_title_for_latin_subtitle():
+    mdx = generate_mdx(
+        "# Олександр Білаш: Українська пісня і пам'ять\n\nТекст уроку.",
+        346,
+        meta_data={
+            "title": "Олександр Білаш: Українська пісня і пам'ять",
+            "subtitle": "Oleksandr Bilash: Ukrainian Song and Cultural Memory",
+        },
+        level="bio",
+    )
+
+    assert "description: \"Матеріал до теми «Олександр Білаш: Українська пісня і пам'ять»\"" in mdx
+    assert "Oleksandr Bilash: Ukrainian Song and Cultural Memory" not in mdx
 
 
 def test_v7_tab3_cross_refs_inline_activities_and_keeps_workbook_only(tmp_path):
@@ -202,6 +229,49 @@ Practice here.
     assert "<Quiz" in tab3
 
 
+def test_v7_tab3_all_inline_activities_renders_empty_workbook_message(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: quiz
+  title: Inline one
+  items:
+    - question: Choose hello.
+      options: [привіт, дякую]
+      answer: привіт
+- id: act-2
+  type: quiz
+  title: Inline two
+  items:
+    - question: Choose thanks.
+      options: [привіт, дякую]
+      answer: дякую
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: All Inline
+subtitle: Test
+---
+# All Inline
+
+<!-- INJECT_ACTIVITY: act-1 -->
+
+<!-- INJECT_ACTIVITY: act-2 -->
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
+    tab3 = mdx.split('<TabItem label="Вправи — Activities">', 1)[1].split("</TabItem>", 1)[0]
+
+    assert "No workbook activities for this module; see the Lesson tab." not in tab3
+    assert "### Inline one\n\n*(див. вкладку «Урок»)*" in tab3
+    assert "### Inline two\n\n*(див. вкладку «Урок»)*" in tab3
+    assert "<Quiz" not in tab3
+    assert "*(see lesson)*" not in tab3
+
+
 def test_error_correction_renders_structured_items_for_client_interactivity(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
@@ -271,28 +341,139 @@ subtitle: Test
 # parse_quiz
 # =============================================================================
 
+class TestParseQuiz:
+    def test_numbered_format(self):
+        content = """1. What is "привіт"?
+- [x] Hello
+- [ ] Goodbye
+- [ ] Thank you
+
+2. What is "дякую"?
+- [ ] Hello
+- [x] Thank you
+- [ ] Goodbye"""
+        questions = parse_quiz(content)
+        assert len(questions) == 2
+        assert questions[0].question == 'What is "привіт"?'
+        assert len(questions[0].options) == 3
+        assert questions[0].options[0]["correct"] is True
+        assert questions[0].options[1]["correct"] is False
+
+    def test_separator_format(self):
+        content = """What is "так"?
+- [x] Yes
+- [ ] No
+
+---
+
+What is "ні"?
+- [ ] Yes
+- [x] No"""
+        questions = parse_quiz(content)
+        assert len(questions) == 2
+
 
 # =============================================================================
 # parse_match_up
 # =============================================================================
+
+class TestParseMatchUp:
+    def test_double_colon_format(self):
+        content = """- привіт :: hello
+- дякую :: thank you
+- так :: yes"""
+        pairs = parse_match_up(content)
+        assert len(pairs) == 3
+        assert pairs[0].left == "привіт"
+        assert pairs[0].right == "hello"
+
+    def test_table_format(self):
+        content = """| Ukrainian | English |
+|-----------|---------|
+| привіт | hello |
+| так | yes |"""
+        pairs = parse_match_up(content)
+        assert len(pairs) == 2
+        assert pairs[0].left == "привіт"
+        assert pairs[0].right == "hello"
 
 
 # =============================================================================
 # parse_fill_in
 # =============================================================================
 
+class TestParseFillIn:
+    def test_basic_fill_in(self):
+        content = """1. Я ___ студент.
+> [!answer] є
+> [!options] є | маю | буду
+
+2. Він ___ книгу.
+> [!answer] читає
+> [!options] читає | пише | малює"""
+        items = parse_fill_in(content)
+        assert len(items) == 2
+        assert items[0].sentence == "Я ___ студент."
+        assert items[0].answer == "є"
+        assert len(items[0].options) == 3
+
 
 # =============================================================================
 # parse_true_false
 # =============================================================================
 
+class TestParseTrueFalse:
+    def test_basic_true_false(self):
+        content = """- [x] "Привіт" means "hello"
+> This is the standard greeting
+- [ ] "Так" means "no"
+> "Так" means "yes" """
+        items = parse_true_false(content)
+        assert len(items) == 2
+        assert items[0].is_true is True
+        assert items[0].explanation.strip() != ""
+        assert items[1].is_true is False
+
 
 # =============================================================================
 # parse_unjumble
 # =============================================================================
+
+class TestParseUnjumble:
+    def test_basic_unjumble(self):
+        content = """1. студент Я є
+> [!answer] Я є студент
+
+2. книгу читає Він
+> [!answer] Він читає книгу"""
+        items = parse_unjumble(content)
+        assert len(items) == 2
+        assert items[0].jumbled == "студент Я є"
+        assert items[0].answer == "Я є студент"
+
+
 # =============================================================================
 # parse_group_sort
 # =============================================================================
+
+class TestParseGroupSort:
+    def test_basic_group_sort(self):
+        content = """### Masculine
+- кіт
+- стіл
+- дім
+
+### Feminine
+- книга
+- вода"""
+        result = parse_group_sort(content)
+        assert "Masculine" in result.groups
+        assert "Feminine" in result.groups
+        assert len(result.groups["Masculine"]) == 3
+        assert len(result.groups["Feminine"]) == 2
+        assert "кіт" in result.groups["Masculine"]
+
+
 # =============================================================================
 # parse_anagram
 # =============================================================================
@@ -317,10 +498,47 @@ class TestParseAnagram:
 # parse_error_correction
 # =============================================================================
 
+class TestParseErrorCorrection:
+    def test_basic_error_correction(self):
+        content = """1. Я читаю книгу кожний день.
+> [!error] кожний
+> [!answer] кожного
+> [!options] кожного | кожний | кожному
+> [!explanation] Genitive case needed here"""
+        items = parse_error_correction(content)
+        assert len(items) == 1
+        assert items[0].errorWord == "кожний"
+        assert items[0].correctForm == "кожного"
+        assert len(items[0].options) >= 2
+        assert items[0].explanation != ""
+
+    def test_correct_in_options(self):
+        content = """1. Sentence with помилка.
+> [!error] помилка
+> [!answer] помилку
+> [!options] помилку | помилка | помилці"""
+        items = parse_error_correction(content)
+        assert "помилку" in [o["text"] if isinstance(o, dict) else o for o in items[0].options]
+
 
 # =============================================================================
 # parse_cloze
 # =============================================================================
+
+class TestParseCloze:
+    def test_basic_cloze(self):
+        content = """Я ___(1) студент. Він ___(2) книгу.
+
+1. є | маю | буду
+> [!answer] є
+
+2. читає | пише | малює
+> [!answer] читає"""
+        result = parse_cloze(content)
+        assert result.passage != ""
+        assert len(result.blanks) == 2
+        assert result.blanks[0]["answer"] == "є"
+        assert result.blanks[1]["answer"] == "читає"
 
 
 # =============================================================================
@@ -328,6 +546,17 @@ class TestParseAnagram:
 # =============================================================================
 
 class TestParseTranslate:
+    def test_checkbox_format(self):
+        content = """1. Translate "hello"
+- [x] Привіт
+- [ ] Дякую
+- [ ] Так"""
+        items = parse_translate(content)
+        assert len(items) == 1
+        assert len(items[0].options) == 3
+        assert items[0].options[0]["correct"] is True
+        assert items[0].options[1]["correct"] is False
+
     def test_callout_format(self):
         content = """1. Translate "thank you"
 > [!answer] Дякую
@@ -421,6 +650,11 @@ class TestEmbedYoutubeVideoLinks:
         result = embed_youtube_video_links(body)
         assert '<YouTubeVideo' in result
         assert 'label="Video"' in result
+
+    def test_youtu_be_short_url(self):
+        body = '- Short: https://youtu.be/hvB3VpcR3ZE'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
 
 
 class TestProcessStorySections:

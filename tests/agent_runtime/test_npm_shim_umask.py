@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.agent_runtime.test_npm_shim import _build_layout
+from tests.agent_runtime.test_npm_shim import _build_layout, _make_real
 
 FAKE_TOOL_UMASK = r"""#!/usr/bin/env bash
 umask > "$FAKE_NPM_LOG"
@@ -54,6 +54,23 @@ def _run_with_umask(layout: dict[str, Path], shim_tool: str, args: list[str], ca
         preexec_fn=preexec,
     )
     return proc, created_file
+
+
+@pytest.mark.parametrize("subcommand", ["ci", "install", "i", "add", "update", "up"])
+def test_install_subcommands_apply_umask_022(layout, subcommand):
+    _make_real(layout) # bypass guard refusal
+    proc, created_file = _run_with_umask(layout, "npm", [subcommand], 0o002)
+    assert proc.returncode == 0, proc.stderr
+
+    # Check umask recorded by the fake
+    recorded_umask = layout["log"].read_text(encoding="utf-8").strip()
+    assert recorded_umask == "0022"
+
+    # Check file mode
+    assert created_file.exists()
+    mode = created_file.stat().st_mode
+    # Under umask 022, 666 becomes 644, which is not group writable
+    assert not (mode & 0o020), f"File mode {oct(mode)} should not be group-writable"
 
 def test_existing_refusal_behavior_unchanged(layout):
     proc, _ = _run_with_umask(layout, "npm", ["ci"], 0o002)

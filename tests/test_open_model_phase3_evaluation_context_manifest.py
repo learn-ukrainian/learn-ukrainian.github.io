@@ -380,6 +380,23 @@ def test_text_free_receipt_rejects_world_readable_permissions(
         manifest._regular_text_free_receipt(receipt_path, "text-free receipt")
 
 
+def test_hash_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture_bundle(tmp_path)
+    _patch_fixture_pins(monkeypatch, paths, row_count=3)
+    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
+    paths["partition"].write_bytes(paths["partition"].read_bytes() + b"\n")
+    with pytest.raises(manifest.EvaluationContextManifestError, match="partition"):
+        manifest.build_manifest(
+            source_jsonl=paths["source_jsonl"],
+            materialization_receipt_path=paths["materialization_receipt"],
+            partition_path=paths["partition"],
+            evaluation_freeze_receipt_path=paths["evaluation_freeze_receipt"],
+            ua_gec_context_path=paths["ua_gec_context"],
+            ua_gec_exclusions_path=paths["ua_gec_exclusions"],
+            ua_gec_receipt_path=paths["ua_gec_receipt"],
+        )
+
+
 def test_changed_private_output_is_not_overwritten(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=3)

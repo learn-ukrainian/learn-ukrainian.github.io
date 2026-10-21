@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import random
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -47,13 +48,16 @@ from scripts.audit.generate_practice_deck import (
     read_antonym_pairs,
     read_cloze_sources,
     read_heritage_pairs,
+    read_homonym_pairs,
     read_manifest,
     read_paronym_pairs,
     read_practice_seed,
     read_sentence_inventory,
+    validate_antonym_item,
     validate_antonym_pair,
     validate_heritage_item,
     validate_heritage_pair,
+    validate_homonym_pair,
     validate_option_set,
     validate_paradigm_item,
     validate_paronym_item,
@@ -125,6 +129,42 @@ def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None
         assert lexemes[row["slug"]]["exampleProvenance"] == row["provenance"]
 
 
+def test_local_practice_seed_requires_explicit_opt_in_and_never_creates_a_cloze_example(tmp_path: Path) -> None:
+    seed_path = tmp_path / "local-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 1,
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="requires --local-practice-seed"):
+        read_practice_seed(seed_path)
+
+    merged = merge_practice_seed_entries(
+        [{"lemma": "слово", "url_slug": "слово", "gloss": "word", "enrichment": {"cefr": "A1"}}],
+        read_practice_seed(seed_path, allow_local_private=True),
+    )
+
+    assert merged[0]["surface_admission"] == {"cloze": False, "practice": True}
+    assert merged[0]["local_practice_private_teacher"] is True
+    assert "practice_example" not in merged[0]
+
+
 def test_local_practice_seed_merges_public_route_soft_cefr_without_atlas_enrichment(
     tmp_path: Path,
 ) -> None:
@@ -171,6 +211,47 @@ def test_local_practice_seed_merges_public_route_soft_cefr_without_atlas_enrichm
     assert merged[0]["surface_admission"]["cloze"] is False
     assert merged[0]["surface_admission"]["practice"] is True
     assert "practice_example" not in merged[0]
+
+
+def test_local_practice_seed_materializes_attested_no_route_row_in_memory_only(tmp_path: Path) -> None:
+    seed_path = tmp_path / "local-no-route-seed.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "schema": "curated-v5-practice-seed-v1",
+                "localOnly": True,
+                "entries": [
+                    {
+                        "seedRow": 9,
+                        "lemma": "виходити з ладу",
+                        "gloss": "to break down",
+                        "slug": "local-teacher-9",
+                        "cefr": "A2",
+                        "sentenceStatus": "has_candidates",
+                        "admissionMode": "local_practice_private_teacher",
+                        "localOnly": True,
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    merged = merge_practice_seed_entries([], read_practice_seed(seed_path, allow_local_private=True))
+
+    assert merged == [
+        {
+            "lemma": "виходити з ладу",
+            "url_slug": "local-teacher-9",
+            "gloss": "to break down",
+            "cefr": "A2",
+            "primary_source": "private_teacher_local_only",
+            "surface_admission": {"cloze": False, "practice": True},
+            "local_practice_private_teacher": True,
+            "local_only": True,
+        }
+    ]
 
 
 def test_practice_seed_validates_duplicate_attestations_but_emits_one_route_example(tmp_path: Path) -> None:
@@ -475,6 +556,28 @@ def test_heritage_pair_withheld_without_authentic_sense_never_builds() -> None:
     assert any("missing authenticSense" in error for error in validate_heritage_pair(pair))
 
 
+def test_heritage_builder_fails_closed_without_frames(capsys: pytest.CaptureFixture[str]) -> None:
+    pair = _fixture_heritage_pair()
+    pair.pop("frames")
+    lexemes = _fixture_lexemes()
+
+    assert validate_heritage_pair(pair) == []
+    assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1") == []
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+        [pair],
+    )
+    captured = capsys.readouterr()
+
+    assert shards["A1"]["heritage"]["heritage"] == []
+    assert "1 records without frames — emitted 0 items for them" in captured.err
+
+
 def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
     entries = json.loads(json.dumps(read_manifest(MANIFEST)))
     for entry in entries:
@@ -572,6 +675,41 @@ def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
             break
 
     assert "heritage options must not visually mark the calque pre-answer" in validate_heritage_item(marked)
+
+
+def test_heritage_pair_native_slug_must_resolve_without_native_lemma_fallback(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pair = _fixture_heritage_pair()
+    pair["nativeSlug"] = "missing-slug"
+    pair["nativeLemma"] = "книга"
+    pair["corrections"] = ["книга"]
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+        [pair],
+    )
+    captured = capsys.readouterr()
+
+    assert all(level["heritage"]["heritage"] == [] for level in shards.values())
+    assert "nativeSlug 'missing-slug' not in practice lexemes; emitted 0 items" in captured.err
+
+
+def test_heritage_item_ids_and_options_are_deterministic() -> None:
+    pair = _fixture_heritage_pair()
+    lexemes = _fixture_lexemes()
+
+    first = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
+    second = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
+    changed_version = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v2", source_passages=FIXTURE_PASSAGES)[0]
+
+    assert first["heritageId"] == second["heritageId"]
+    assert first["options"] == second["options"]
+    assert first["heritageId"] != changed_version["heritageId"]
 
 
 def test_stress_position_preserves_non_stress_combining_marks() -> None:
@@ -746,6 +884,30 @@ def test_build_classify_items_records_missing_morphology_aspect_residual() -> No
             "reason": "missing_morphology",
         }
     ]
+
+
+KNYHA_EVIDENCE = VesumLemmaEvidence(frozenset({"noun"}), {"noun": frozenset({"feminine"})})
+
+
+def test_a2_classify_items_do_not_raise_english_labels() -> None:
+    entry = {
+        "lemma": "книга",
+        "pos": "noun",
+        "enrichment": {
+            "morphology": {
+                "pos": "noun",
+                "forms": [{"label": "ім. жін."}],
+                "paradigm": {"cases": {"nominative": {"singular": "книга"}}},
+            }
+        },
+    }
+    lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
+
+    classify = _build_classify_items(entry, lexeme, vesum_evidence=KNYHA_EVIDENCE)[0]
+
+    assert "setLabelEn" not in classify["sets"][0]
+    assert "answerLabelEn" not in classify["sets"][0]
+    assert all("labelEn" not in option for option in classify["sets"][0]["options"])
 
 
 def test_classify_withholds_pos_when_enrichment_analysis_disagrees_with_displayed_reading() -> None:
@@ -1546,6 +1708,138 @@ def test_unverified_paradigm_is_blanked_not_dropped() -> None:
     assert lexeme["paradigm"] == {"cases": {}}  # unverified paradigm blanked
 
 
+def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:
+    entries = read_manifest(MANIFEST)
+    source_entry = json.loads(json.dumps(entries[0]))
+    source_entry["primary_source"] = "source_inventory_grow"
+    source_entry["course_usage"] = []
+    source_entry.pop("surface_admission", None)
+
+    shards = build_practice_shards(
+        [source_entry],
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier.from_path(VESUM),
+        [],
+        BuildConfig(),
+    )
+
+    assert shards == {}
+
+
+def test_source_inventory_antonym_legs_emit_via_curated_pair_admission() -> None:
+    """Curated antonym YAML is practice admission for source-inventory legs."""
+    entries = [
+        {
+            "lemma": "день",
+            "url_slug": "день",
+            "gloss": "day",
+            "pos": "noun",
+            "primary_source": "source_inventory_grow",
+        },
+        {
+            "lemma": "ніч",
+            "url_slug": "ніч",
+            "gloss": "night",
+            "pos": "noun",
+            "primary_source": "source_inventory_grow",
+        },
+    ]
+    pair = {
+        "slugA": "день",
+        "slugB": "ніч",
+        "distinction_gloss_uk": "День протилежний ночі.",
+        "citations": ["fixture-test"],
+        "frames": [
+            {
+                "sentence_with_slot": "Настав ___.",
+                "answer_form": "день",
+                "confusable_form": "ніч",
+                "origin": "t",
+            },
+            {
+                "sentence_with_slot": "Прийшла ___.",
+                "answer_form": "ніч",
+                "confusable_form": "день",
+                "origin": "t2",
+            },
+        ],
+    }
+    # Without curated pairs, browse-only source-inventory rows stay out.
+    empty = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload([]),
+        _gloss_verifier("протилежний", "ночі"),
+        [],
+        BuildConfig(target=10),
+        antonym_pairs=[],
+    )
+    assert empty == {}
+
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload([]),
+        _gloss_verifier("протилежний", "ночі"),
+        [],
+        BuildConfig(target=10),
+        antonym_pairs=[pair],
+    )
+    # Unanchored curated legs fall back to B1 (same as emit-time CEFR fallback).
+    b1_items = shards.get("B1", {}).get("antonym", {}).get("antonym", [])
+    assert len(b1_items) >= 1
+    for item in b1_items:
+        assert validate_antonym_item(item) == []
+
+
+def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
+    entries = read_manifest(MANIFEST)
+    for entry in entries:
+        if entry["lemma"] == "книга":
+            entry["primary_source"] = "source_inventory_grow"
+            entry["course_usage"] = []
+            entry["surface_admission"] = {"practice": True}
+            break
+
+    allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    cloze_sources = [
+        *read_cloze_sources(CLOZE_SOURCES),
+        {
+            "lemma": "школа",
+            "lemmaId": "shkola",
+            "sentence": "Вона у ___.",
+            "blankCase": "locative",
+            "form": "школі",
+            "number": "singular",
+            "caseRule": "locative_static_u",
+            "clozeEn": "She is at school.",
+            "provenance": {
+                "status": "reviewed",
+                "path": "curriculum/l2-uk-en/a1/vocabulary/school.yaml",
+                "cardId": "school-shkola-1",
+            },
+        },
+    ]
+    before_withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(
+        entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=before_withheld
+    )
+    cloze_ids = {item["lemmaId"] for level in shards.values() for item in level["cloze"]["cloze"]}
+    assert "knyha" not in cloze_ids
+    assert not any(row["lemma"] == "книга" for row in before_withheld)
+
+    for entry in entries:
+        if entry["lemma"] == "книга":
+            entry["surface_admission"]["cloze"] = True
+            break
+
+    after_withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(
+        entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=after_withheld
+    )
+    assert shards["A1"]["cloze"]["cloze"] == []
+    assert any(row["lemma"] == "книга" and row["reason"] == "no_unique_answer_evidence" for row in after_withheld)
+
+
 def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1710,6 +2004,57 @@ def test_cloze_blank_agreement_skips_pronoun_like_adjectives() -> None:
     assert _cloze_blank_context_agrees("Ця ___ на палиці.", "прикраси", verifier)
 
 
+def test_sentence_inventory_drops_function_identity_unless_curated(tmp_path: Path) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "та",
+                        "lemmaId": "ta",
+                        "sentence": "Це та.",
+                        "targetForm": "та",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {
+                            "source": "fixture",
+                            "label": "Fixture",
+                            "locator": "function-1",
+                        },
+                        "license": {"status": "fixture"},
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    candidates = read_sentence_inventory(inventory_path)
+    lexeme = _build_lexeme(
+        {
+            "lemma": "та",
+            "url_slug": "ta",
+            "gloss": "and",
+            "pos": "conj",
+            "enrichment": {"cefr": {"level": "A1"}},
+        },
+        JsonVesumVerifier({"та": [{"lemma": "та", "pos": "conj", "tags": "conj"}]}),
+    )
+    assert lexeme is not None
+    allowlist = ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}])
+    verifier = JsonVesumVerifier({"та": [{"lemma": "та", "pos": "conj", "tags": "conj"}]})
+
+    assert _build_cloze_items(lexeme, candidates, allowlist, verifier, "deck-v6") == []
+
+    curated = [{**candidates[0], "curated": True}]
+    withheld: list[dict[str, str]] = []
+    assert _build_cloze_items(lexeme, curated, allowlist, verifier, "deck-v6", withheld=withheld) == []
+    assert any(row["reason"] == "no_unique_answer_evidence" for row in withheld)
+
+
 def test_sentence_inventory_rejects_controls_pua_and_prefers_language_sources(
     tmp_path: Path,
 ) -> None:
@@ -1770,6 +2115,55 @@ def test_sentence_inventory_rejects_controls_pua_and_prefers_language_sources(
     assert next(candidate for candidate in candidates if candidate["lemmaId"] == "kit")["sentence"] == (
         "У школі є ___."
     )
+
+
+def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> None:
+    lexemes = _fixture_lexemes()
+    answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
+    cloze = {
+        "clozeId": "knyha:inventory:normalized-case",
+        "form": "Книга",
+        "lemma": "книга",
+        "provenance": {"status": "sentence_inventory"},
+        "caseRule": {"ruleId": "nominative_identification"},
+    }
+
+    options = generate_practice_deck._make_no_pair_options(cloze, answer, lexemes, random.Random(0))
+
+    assert len(options) == 4
+    assert all(generate_practice_deck._initial_capitalization(option["label"]) for option in options)
+    assert validate_option_set({**cloze, "options": options}) == []
+
+
+@pytest.mark.parametrize(
+    ("manifest_pos", "expected_bucket"),
+    [
+        ("noun", "noun"),
+        ("adjective", "adjective"),
+        ("numeral", "numeral"),
+        ("pronoun", "pronoun"),
+        ("infinitive", "verb"),
+        ("imperative", "verb"),
+        ("adverb", "adverb"),
+        ("preposition", "preposition"),
+        ("conjunction", "conjunction"),
+        ("particle", "particle"),
+        ("numr", "numeral"),
+        ("intj", "interjection"),
+    ],
+)
+def test_option_pos_bucket_normalizes_unambiguous_manifest_aliases(manifest_pos: str, expected_bucket: str) -> None:
+    assert generate_practice_deck._option_pos_bucket(manifest_pos) == expected_bucket
+
+
+def test_option_pos_bucket_uses_the_same_closed_school_set_as_classify() -> None:
+    assert {
+        generate_practice_deck._option_pos_bucket(alias)
+        for aliases in generate_practice_deck._POS_BUCKET_ALIASES.values()
+        for alias in aliases
+    } == set(generate_practice_deck.CLASSIFY_LABELS["pos"])
+    assert generate_practice_deck._option_pos_bucket("predicative") == ""
+    assert generate_practice_deck._option_pos_bucket("noun/verb") == ""
 
 
 def test_validate_option_set_rejects_unknown_or_multi_pos_option() -> None:
@@ -1967,6 +2361,48 @@ def test_sentence_inventory_rejects_nominative_plural_for_dictionary_form(tmp_pa
     assert all(item["clozeId"] != "knyha:inventory:1" for level in shards.values() for item in level["cloze"]["cloze"])
 
 
+@pytest.mark.parametrize("license_status", ["not_openly_licensed", "copyrighted_source"])
+def test_sentence_inventory_rejects_restricted_cloze_without_displayable_attribution(
+    tmp_path: Path, license_status: str
+) -> None:
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    {
+                        "lemma": "книга",
+                        "lemmaId": "knyha",
+                        "sentence": "Це книга.",
+                        "targetForm": "книга",
+                        "cefr": "A1",
+                        "uses": ["example"],
+                        "provenance": {"source": "textbook", "locator": "fixture-1"},
+                        "license": {
+                            "status": license_status,
+                            "useBasis": "short educational quotation with attribution",
+                        },
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
+        JsonVesumVerifier.from_path(VESUM),
+        read_sentence_inventory(inventory_path),
+        BuildConfig(),
+    )
+
+    assert all(item["clozeId"] != "knyha:inventory:1" for level in shards.values() for item in level["cloze"]["cloze"])
+
+
 def test_sentence_inventory_rejects_ambiguous_or_repeated_target_forms(tmp_path: Path) -> None:
     inventory_path = tmp_path / "sentence-inventory.json"
     inventory_path.write_text(
@@ -2138,6 +2574,21 @@ def test_tatoeba_cloze_uses_path_sentence_id_when_field_missing() -> None:
     assert shards["A1"]["cloze"]["cloze"] == []
     assert cloze["provenance"]["sentenceId"] == 101
     assert cloze["attribution"]["uk"]["sentenceId"] == 101
+
+
+def test_tatoeba_cloze_without_attribution_metadata_fails_closed() -> None:
+    source = _tatoeba_cloze_source()
+    source["provenance"] = {"status": "tatoeba", "path": "tatoeba:101"}
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
+        JsonVesumVerifier.from_path(VESUM),
+        [source],
+        BuildConfig(),
+    )
+
+    assert shards["A1"]["cloze"]["cloze"] == []
 
 
 @pytest.mark.needs_sparse_tree("site/src/data")
@@ -2338,6 +2789,17 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate antonym pair key {key}"
         seen_pairs.add(key)
+
+
+def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
+    live_path = Path("registry/lexicon/homonym_pairs.yaml")
+    assert live_path.exists()
+    pairs = read_homonym_pairs(live_path)
+    # 75 base pairs + 22 densified pairs (#8276) = 97 total pairs.
+    assert len(pairs) == 97, f"Expected 97 homonym pairs (75 base + 22 densified, #8276), got {len(pairs)}"
+    for index, pair in enumerate(pairs):
+        errors = validate_homonym_pair(pair)
+        assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
 
 
 def test_vesum_number_key_and_lemma_search_paradigm():
@@ -2654,6 +3116,26 @@ def _load_imperative_verbs_fixture() -> tuple[list[dict[str, Any]], sqlite3.Conn
             to_insert.append((wf, lemma, tags, "verb"))
     conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", to_insert)
     return verbs, conn
+
+
+def test_imperative_scaffolding_immersion_by_level(imperative_conn, imperative_plain_stress):
+    """A1 and A2 cards have English scaffolding; B1+ strictly preserves Ukrainian immersion."""
+    for cefr in ("A1", "A2"):
+        items = _imperative_test_items(imperative_conn, "робити", cefr)
+        for it in items:
+            assert "slotLabelEn" in it
+            assert "cueSentenceEn" in it
+            assert all("explanationEn" in opt for opt in it["options"] if not opt["isCorrect"])
+            assert "Imperative:" in it["notes"]
+
+    for cefr in ("B1", "B2", "C1"):
+        items = _imperative_test_items(imperative_conn, "робити", cefr)
+        for it in items:
+            assert "slotLabelEn" not in it
+            assert "cueSentenceEn" not in it
+            assert all("explanationEn" not in opt for opt in it["options"])
+            assert "Imperative:" not in it["notes"]
+            assert "accepted" not in it["notes"].lower()
 
 
 def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db):
@@ -3410,6 +3892,16 @@ def test_paronym_gloss_provenance_rejects_reconstructed_swapped_and_paraphrased_
     assert paronym_gloss_provenance_errors(_sourced_taktovnyi_pair(), None) == [
         f"glossSources[0] locator {_ZABOLOTNYI_S0200!r} is not readable from the sources database"
     ]
+
+
+def test_paronym_one_sided_gloss_is_withheld(capsys: pytest.CaptureFixture[str]) -> None:
+    """A source-backed definition of only «тактичний» cannot explain either card."""
+    pair = _sourced_taktovnyi_pair("Тактичний — який стосується тактики.")
+    assert paronym_gloss_provenance_errors(pair, JsonSourcePassages(_TAKTOVNYI_CHUNKS)) == [
+        "gloss missing sourced meaning for 'тактовний'"
+    ]
+    assert _build_taktovnyi(pair) == []
+    assert "paronym gloss-provenance gate: withheld" in capsys.readouterr().err
 
 
 def test_paronym_source_linked_gloss_ships() -> None:

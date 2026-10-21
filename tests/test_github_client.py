@@ -314,6 +314,25 @@ def test_host_boundary_refuses_foreign_endpoints(tmp_path, endpoint):
     assert calls == []
 
 
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "search/code?q=https://x/y",
+        "/search/code?q=https://x/y",
+        "search/code#https://x/y",
+        "user?next=https://x",
+        "graphql#https://x",
+        "//graphql?x=http://y",
+        "https://api.github.com/search/code?q=https://x",
+        "HTTPS://api.github.com/user",
+    ],
+)
+def test_endpoint_scheme_position_preserves_translated_path(tmp_path, endpoint):
+    store, calls = client(tmp_path, [response([])])
+    assert store.request("GET", endpoint).value == []
+    assert [(call[0], call[1]) for call in calls] == [("GET", endpoint)]
+
+
 def test_out_of_order_budget_does_not_restore_spent_budget(tmp_path):
     store, _ = client(tmp_path, [])
     with store._db() as db:
@@ -632,6 +651,18 @@ def test_publishing_preflight_returns_typed_limit_without_write(tmp_path, monkey
     assert calls == []
 
 
+def test_keeper_timer_skips_before_actions_and_logs_reset(tmp_path, monkeypatch, capsys):
+    from scripts.orchestration import merge_queue_keeper as keeper
+
+    def deferred(*args, **kwargs):
+        raise gh.GitHubRateLimited(2000)
+
+    monkeypatch.setattr(keeper, "run", deferred)
+    assert keeper.main(["--repo", "o/r", "--repo-root", str(tmp_path)]) == 0
+    assert "skipped reset_at=2000" in capsys.readouterr().out
+    assert not (tmp_path / "batch_state/merge_queue_keeper.json").exists()
+
+
 def test_partial_graphql_error_is_not_success_or_cached(tmp_path):
     store, calls = client(
         tmp_path, [response({"data": {"repository": {"pullRequest": {"id": "PR"}}}, "errors": [{"type": "FORBIDDEN"}]})]
@@ -878,6 +909,35 @@ def test_live_descendant_still_fails_observation():
         proc.wait(timeout=5)
 
 
+def test_descendant_that_exits_is_reaped():
+    import sys
+
+    proc = subprocess.Popen([sys.executable, "-c", "import os; os._exit(0)"])
+    try:
+        assert _observe_reaped_descendant(proc.pid) == "reaped"
+    finally:
+        proc.wait(timeout=5)
+
+
+def test_cli_timeout_reaps_a_real_descendant(tmp_path):
+    import os
+    import sys
+
+    pid_file = tmp_path / "child.pid"
+    executable = tmp_path / "gh"
+    executable.write_text(
+        f'#!{sys.executable}\nimport subprocess,sys,time,os\nchild=subprocess.Popen([sys.executable,"-c","import time; time.sleep(30)"])\nopen(os.environ["CHILD_PID_PATH"],"w").write(str(child.pid))\ntime.sleep(30)\n'
+    )
+    executable.chmod(0o700)
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache",
+        env={**os.environ, "AGENT_REAL_GH": str(executable), "CHILD_PID_PATH": str(pid_file)},
+    )
+    with pytest.raises(subprocess.TimeoutExpired):
+        store.request("GET", "repos/o/r/issues", timeout=1)
+    assert _observe_reaped_descendant(int(pid_file.read_text())) in {"disappeared", "reaped"}
+
+
 def _script(tmp_path, name, body):
     """An executable Python script standing in for a CLI process."""
     import sys
@@ -987,6 +1047,24 @@ def test_output_with_no_frame_end_within_the_frame_limit_is_body(monkeypatch):
     for block in (b"HTTP/2.0 200 OK ", b"and no header end", b"x" * 50):
         kept.write(block)
     assert spool.getvalue() == b"HTTP/2.0 200 OK and no header end" + b"x" * 5
+
+
+def test_a_bounded_cli_request_keeps_its_frame_and_refuses_the_oversized_body(tmp_path):
+    import os
+
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import sys\n"
+        "sys.stdout.buffer.write(b'HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\nX-Ratelimit-Reset: 2000\\r\\n\\r\\n')\n"
+        "sys.stdout.buffer.write(b'b' * 50000)\n",
+    )
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache", env={**os.environ, "AGENT_REAL_GH": executable}, max_response_bytes=100
+    )
+    result = store.request("GET", "repos/o/r/actions/artifacts/1/zip")
+    assert (result.status, result.value) == (413, {"message": "github_response_too_large"})
+    assert result.headers["x-ratelimit-remaining"] == "4000"
 
 
 def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
@@ -1204,6 +1282,18 @@ def test_unresolved_module_repository_keeps_cache_and_budget_in_memory(tmp_path,
     assert store.request("GET", "user").error == "github_rate_limited"
     assert len(calls) == 2
     assert not list(tmp_path.rglob("cache.sqlite3"))
+
+
+def test_absolute_search_url_observes_search_budget(tmp_path):
+    limited = response({"items": []}, remaining=0)
+    limited.headers["X-RateLimit-Resource"] = "search"
+    store, calls = client(tmp_path, [limited, response({"login": "synthetic"})])
+    endpoint = "https://api.github.com/search/issues?q=repo:o/r"
+    store.request("GET", endpoint)
+    assert store.request("GET", endpoint, allow_stale=True).stale
+    assert store.request("GET", "search/issues?q=other").error == "github_rate_limited"
+    assert store.request("GET", "user").value == {"login": "synthetic"}
+    assert len(calls) == 2
 
 
 def test_authorization_prefix_uses_same_credential_budget(tmp_path):
@@ -1453,6 +1543,44 @@ def test_host_boundary_option_normalization_preserves_flag_values(tmp_path):
     assert args[-1] == "GITHUB.COM."
 
 
+def test_asset_hydration_cli_reports_typed_limit(monkeypatch, capsys):
+    from scripts.open_dataset import hydrate
+
+    monkeypatch.setattr("sys.argv", ["hydrate"])
+
+    def unavailable(**kwargs):
+        raise gh.GitHubRateLimited(2000)
+
+    monkeypatch.setattr(hydrate, "hydrate_open_dataset", unavailable)
+    assert hydrate.main() == 75
+    assert json.loads(capsys.readouterr().out) == {"error": "github_rate_limited", "reset_at": 2000}
+
+
+@pytest.mark.parametrize(
+    "module_name,function_name",
+    [("scripts.lexicon.manifest_io", "_download_verified_json"), ("scripts.practice_deck.io", "_download_gzip")],
+)
+def test_release_pointer_limit_never_retries(module_name, function_name, monkeypatch):
+    import importlib
+
+    module = importlib.import_module(module_name)
+    calls = []
+
+    def unavailable(request, **kwargs):
+        calls.append(request)
+        raise gh.GitHubRateLimited(2000)
+
+    monkeypatch.setattr(module.github_client, "http_open", unavailable)
+    with pytest.raises(gh.GitHubRateLimited):
+        getattr(module, function_name)(
+            {
+                "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/v/asset",
+                "gz_sha256": "a" * 64,
+            }
+        )
+    assert len(calls) == 1
+
+
 def test_cli_transport_skips_runtime_shim(tmp_path):
     import os
     import sys
@@ -1520,6 +1648,55 @@ def test_issue_create_resolves_milestone_before_one_write(tmp_path):
     assert proc.returncode == 0
     assert [r[0] for r in calls] == ["GET", "POST"]
     assert json.loads(calls[1][3]) == {"title": "test", "body": "body", "milestone": 7}
+
+
+def test_later_page_stale_reset_is_preserved(tmp_path):
+    first = response([{"number": 1, "state": "open"}])
+    first.headers["Link"] = '<https://api.github.com/repos/o/r/pulls?page=2>; rel="next"'
+    low = response([{"number": 1, "state": "open"}], remaining=5)
+    low.headers["Link"] = first.headers["Link"]
+    store, calls = client(tmp_path, [first, response([{"number": 2, "state": "open"}]), low])
+    args = ["gh", "pr", "list", "--repo", "o/r", "--json", "number", "--limit", "200"]
+    assert gh.run(args, client=store, capture_output=True, text=True).returncode == 0
+    store.clock = lambda: 1020
+    result = gh.run(args, client=store, allow_stale=True, capture_output=True, text=True)
+    assert result.github_result.stale and result.github_result.age_seconds == 20
+    assert json.loads(result.stderr) == {"stale": True, "age_seconds": 20, "reset_at": 2000}
+    assert len(calls) == 3
+
+
+def test_auth_status_falls_through_without_losing_flags(tmp_path):
+    store, calls = client(tmp_path, [])
+    seen = []
+
+    def native(args, **kw):
+        seen.append(args)
+        return subprocess.CompletedProcess(args, 0, b"authenticated", b"")
+
+    args = ["gh", "auth", "status", "--active"]
+    result = gh.run(args, client=store, runner=native, capture_output=True, text=True)
+    assert result.stdout == "authenticated" and seen == [args] and not calls
+
+
+@pytest.mark.parametrize("items", [[], [{"number": 1}]])
+def test_pr_snapshot_preserves_cached_age_and_stale_marker(items, monkeypatch):
+    import time
+    from datetime import UTC, datetime, timedelta
+
+    from scripts import github_rest_cache as rest
+    from scripts.work import sources_public as sources
+
+    now = datetime(2026, 10, 6, tzinfo=UTC)
+    page = rest.RestPage(items, truncated=False, stale=True, age_seconds=90)
+    monkeypatch.setattr(rest, "list_open_prs", lambda *a, **kw: page)
+    monkeypatch.setattr(sources, "_utc_now", lambda: now + timedelta(seconds=5))
+    snapshot = sources._PRSnapshot(sources.DEFAULT_PUBLIC_REPOSITORY, 1000)
+    snapshot._refresh(now.isoformat())
+    snapshot._started_at = time.monotonic()
+    result = snapshot.read()
+    assert result.status == "stale" and result.age_s == 95
+    assert datetime.fromisoformat(result.observed_at) == now - timedelta(seconds=90)
+    assert result.count == len(items)
 
 
 @pytest.mark.parametrize("kind", ["issues", "prs"])
@@ -1849,6 +2026,20 @@ def test_native_fallback_honours_budget_and_never_retries(tmp_path):
     assert len(core_calls) == 1
 
 
+def test_native_fallback_rate_limit_is_typed_and_stops_next_call(tmp_path):
+    store, calls = client(tmp_path, [])
+    seen = []
+
+    def native(args, **kw):
+        seen.append(args)
+        return subprocess.CompletedProcess(args, 1, b"", b"HTTP 429: secondary rate limit")
+
+    for _ in range(2):
+        result = gh.run(["gh", "pr", "status"], client=store, runner=native, capture_output=True)
+        assert result.returncode == 75 and result.github_result.error == "github_rate_limited"
+    assert len(seen) == 1 and not calls
+
+
 @pytest.mark.parametrize("total,limited", [(250, False), (1000, True)])
 def test_flake_ledger_1000_run_read_and_denominator_guard(tmp_path, monkeypatch, total, limited):
     from datetime import date
@@ -2105,6 +2296,20 @@ def test_api_paginate_jq_falls_through_without_merging_pages(tmp_path):
     assert seen == [args] and result.stdout == b"2\n2\n" and calls == []
 
 
+def test_api_paginate_slurp_wraps_object_pages(tmp_path):
+    first = response({"workflow_runs": [1]})
+    first.headers["Link"] = '<https://api.github.com/repos/o/r/actions/runs?page=2>; rel="next"'
+    store, calls = client(tmp_path, [first, response({"workflow_runs": [2]})])
+    result = gh.run(
+        ["gh", "api", "repos/o/r/actions/runs", "--paginate", "--slurp"],
+        client=store,
+        text=True,
+        capture_output=True,
+    )
+    assert json.loads(result.stdout) == [{"workflow_runs": [1]}, {"workflow_runs": [2]}]
+    assert len(calls) == 2
+
+
 def test_pr_view_404_falls_through_with_native_message(tmp_path):
     store, calls = client(tmp_path, [response({"message": "Not Found"}, status=404)])
     args = ["gh", "pr", "view", "8183", "--repo", "o/r", "--json", "number,state,headRefOid"]
@@ -2328,6 +2533,15 @@ def test_repeated_writes_keep_newest_under_size_bound(tmp_path):
                 6,
                 at,
             )
+
+
+def test_out_of_order_large_response_does_not_delete_newer_row(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    with store._db() as db:
+        gh._store_cache(db, store.scope, "key", b'"ok"', {}, 1010)
+        gh._store_cache(db, store.scope, "key", b'"way too big"', {}, 1000)
+    with store._db() as db:
+        assert db.execute("SELECT body,at FROM cache").fetchall() == [(b'"ok"', 1010)]
 
 
 def test_concurrent_304_does_not_refresh_replaced_body_or_headers(tmp_path):

@@ -120,3 +120,27 @@ def test_missing_task_root_does_not_invoke_bridge(serial_environment):
     assert b"Set TMPDIR or LU_TASK_SCRATCH_DIR" in result.stderr
     assert not Path(env["FAKE_ARGV"]).exists()
     assert list(override.iterdir()) == list(scratch.iterdir()) == []
+
+
+@pytest.mark.parametrize("root_kind", ["override", "scratch"])
+def test_invalid_selected_root_does_not_fall_back(serial_environment, root_kind):
+    checkout, script, env, override, scratch = serial_environment
+    root = override if root_kind == "override" else scratch
+    unused_root = scratch if root_kind == "override" else override
+    if root_kind == "scratch":
+        env.pop("TMPDIR")
+    root.rmdir()
+    root.write_bytes(b"not a directory\n")
+    result = subprocess.run(
+        ["bash", str(script)], cwd=checkout, env=env, capture_output=True, timeout=10,
+    )
+    assert result.returncode != 0
+    assert result.stdout == (
+        b"Starting serial otaman execution for A1 modules 12-15\n"
+        b"--- Processing Module 12 ---\n"
+    )
+    assert b"otaman-a1-12-serial.log" in result.stderr
+    assert not Path(env["FAKE_ARGV"]).exists()
+    assert not Path(env["FAKE_SLEEPS"]).exists()
+    assert root.read_bytes() == b"not a directory\n"
+    assert list(unused_root.iterdir()) == []

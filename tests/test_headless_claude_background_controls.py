@@ -1238,6 +1238,30 @@ def test_pipeline_phase_child_is_controlled_without_claudecode(
     assert (call["input"], call["timeout"]) == ("write the content", 44)
 
 
+def test_pipeline_phase_stops_its_heartbeat_on_timeout(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from scripts.pipeline import dispatch
+
+    threads: list[Any] = []
+
+    class RecordedThread(dispatch.threading.Thread):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, **kwargs)
+            threads.append(self)
+
+    def timed_out(argv: list[str], **kwargs: Any) -> None:
+        raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
+
+    monkeypatch.setattr(dispatch.threading, "Thread", RecordedThread)
+    monkeypatch.setattr(claude_adapter.subprocess, "run", timed_out)
+    monkeypatch.setattr(dispatch, "supports_exclude_dynamic_system_prompt_sections", lambda _bin: False)
+    prompt_file = tmp_path / "phase.md"
+    prompt_file.write_text("write the content", encoding="utf-8")
+
+    assert dispatch.dispatch_claude_phase(prompt_file, "B content", timeout=1) == (False, "")
+    (thread,) = threads
+    assert not thread.is_alive(), "the heartbeat thread must stop when the run ends"
+
+
 @pytest.mark.usefixtures("ambient_switch_off")
 @pytest.mark.parametrize("module_name", ["code_review_benchmark", "judge_calibration_matrix"])
 def test_native_claude_benchmark_child_is_controlled(
@@ -1569,6 +1593,37 @@ def test_rule_rejects(body: str) -> None:
     assert _problems(body)
 
 
+_ACCEPTED = {
+    "wrapper": 'def run(p):\n    return run_headless_claude(["claude", "-p", p], base_env={"PATH": "/bin"}, timeout=5)\n',
+    "wrapper-kwargs": 'def run(p, **options):\n    return run_headless_claude([CLAUDE_BIN, "--print", p], **options)\n',
+    "popen-wrapper": (
+        "from scripts.agent_runtime.adapters.claude import popen_headless_claude\n"
+        'def run(p):\n    return popen_headless_claude(["claude", "-p", p], start_new_session=True)\n'
+    ),
+    "builder-then-wrapper": (
+        "from scripts.agent_runtime.adapters.claude import headless_claude_argv\n"
+        'def build(p):\n    return headless_claude_argv(["claude", "-p", p])\n'
+    ),
+    "non-spawn-uses": (
+        "def run(proc):\n    try:\n        return subprocess.PIPE, os.environ.get('CLAUDE_BIN'), os.pathsep\n"
+        "    except subprocess.TimeoutExpired:\n        return getattr(os, 'O_NOFOLLOW', 0)\n"
+    ),
+    "quoted-annotation": 'def run(proc: "subprocess.Popen[str]") -> "subprocess.Popen[str]":\n    return proc\n',
+    "docstring": 'def run():\n    """Start ``claude -p hello`` through the wrapper."""\n',
+    "claude-probe-text": 'MESSAGE = "install claude, then run it"\n',
+    "quoted-annotation-generics": (
+        'def run(procs: "list[subprocess.Popen]", pair: "tuple[subprocess.Popen | None, int]") -> None:\n'
+        "    return None\n"
+    ),
+    "scripts-root-adapter-import": "from agent_runtime.adapters.claude import run_headless_claude\n",
+}
+
+
+@pytest.mark.parametrize("body", list(_ACCEPTED.values()), ids=list(_ACCEPTED))
+def test_rule_accepts(body: str) -> None:
+    assert _problems(body) == []
+
+
 def test_rule_accepts_a_reviewed_exception_and_only_for_its_program() -> None:
     body = 'def status():\n    return subprocess.run(["git", "status"])\n'
     entry = Exception_("scripts/fixture.py", "status", "git", "non-claude", "runs git")
@@ -1682,6 +1737,11 @@ def test_rule_rejects_wrapper_bindings_that_resolve_elsewhere(path: str, body: s
     assert _problems(body, path=path)
 
 
+def test_rule_accepts_the_adapter_by_relative_import_in_its_own_package() -> None:
+    body = "from .claude import popen_headless_claude\nfrom ..adapters.claude import headless_claude_argv\n"
+    assert _problems(body, path="scripts/agent_runtime/adapters/fixture.py") == []
+
+
 def _probe(path: str, function: str, program: str) -> list[Exception_]:
     return [Exception_(path, function, program, "claude-probe", "fixture probe")]
 
@@ -1732,6 +1792,44 @@ def test_claude_probe_exception_clears_only_a_frozen_probe(case: str | tuple[str
     )
 
 
+_PROBE_ACCEPTED = {
+    "version": ("scripts/fixture.py", "def probe(b):\n    return subprocess.run([b, '--version'], timeout=5)\n", "b"),
+    "subcommand-help": (
+        "scripts/fixture.py",
+        "def probe(b):\n    return subprocess.run(args=(b, 'exec', '--help'))\n",
+        "b",
+    ),
+    "npx-constant": (
+        "scripts/fixture.py",
+        "def probe():\n    return subprocess.run(['npx', '@anthropic-ai/claude-code@latest', '--version'])\n",
+        "npx",
+    ),
+    "sandbox-choice": (
+        "scripts/review/isolation.py",
+        "def probe(b, box):\n"
+        "    return subprocess.run(wrap_argv_with_sandbox([b, '--help'], box) if box else [b, '--help'], env={})\n",
+        "b",
+    ),
+    "boundary-binding": (
+        "scripts/agent_runtime/attempt_boundary.py",
+        "class B:\n    def probe(self, cmd, overrides):\n"
+        "        version_cmd, env = self.wrap([cmd[0], '--version'], overrides)\n"
+        "        return subprocess.run(version_cmd, env=env, timeout=5)\n",
+        "version_cmd",
+    ),
+}
+
+
+@pytest.mark.parametrize(("path", "body", "program"), list(_PROBE_ACCEPTED.values()), ids=list(_PROBE_ACCEPTED))
+def test_claude_probe_exception_clears_a_frozen_probe(path: str, body: str, program: str) -> None:
+    findings = check_module(_IMPORT + body, path)
+    assert findings is not None
+    function = next(site.function for site in findings.sites)
+    entries = _probe(path, function, program)
+    assert problems({path: findings}, entries) == []
+    assert exception_errors({path: findings}, entries, set()) == []
+
+
 def test_probe_prefixers_cannot_be_rebound() -> None:
     assert _problems("def run():\n    wrap_argv_with_sandbox = print\n", path="scripts/review/isolation.py")
     assert _problems(
@@ -1774,6 +1872,21 @@ def test_version_probe_runs_only_literal_version_argvs(monkeypatch: pytest.Monke
 )
 def test_shell_scan_finds_print_mode_claude(script: str) -> None:
     assert shell_claude_print_lines(script)
+
+
+@pytest.mark.parametrize(
+    "script",
+    [
+        'mkdir -p "$HOME/.claude/hooks"\n',
+        "# claude -p is how headless runs start\n",
+        'echo "run claude -p yourself"\n',
+        "cat <<EOF\nclaude -p hello\nEOF\n",
+        'exec claude --model "$M" "$@"\n',
+        '"$CLAUDE_DIR/hooks/guard.sh" -p\n',
+    ],
+)
+def test_shell_scan_ignores_other_commands(script: str) -> None:
+    assert shell_claude_print_lines(script) == []
 
 
 def test_shell_launcher_check_requires_a_runner_test_naming_the_script() -> None:

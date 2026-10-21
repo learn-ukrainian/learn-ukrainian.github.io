@@ -249,7 +249,55 @@ def test_a12_gold_overlay_view_fails_closed_on_a_forged_gold_label_tier() -> Non
 # --- overlay packet (fixed contract) ------------------------------------------
 
 
+def test_a12_overlay_packet_never_treats_model_agreement_arena_vote_self_adjudication_or_hypothesis_as_a_gold_basis() -> (
+    None
+):
+    packet = a12.build_overlay_packet()
+    assert packet == a12.OVERLAY_PACKET_REQUIREMENTS
+    assert packet["gate_ids"] == ["MODEL_AGREEMENT_NOT_SILVER_OR_GOLD", "SILVER_FIRST_STABLE_IDS"]
+    assert packet["requires_upstream_silver_release_executed"] is True
+    assert packet["requires_source_qualified_human_adjudicator"] is True
+    assert packet["requires_overlay_bound_to_stable_silver_row_id"] is True
+    assert packet["self_adjudication_admits_gold"] is False
+    assert packet["model_agreement_admits_gold"] is False
+    assert packet["arena_vote_admits_gold"] is False
+    assert packet["model_vote_admits_gold"] is False
+    assert packet["hypothesis_admits_gold"] is False
+    assert packet["gold_ids_never_renumber_the_frozen_silver_slot_ids"] is True
+    assert packet["overlay_fields_are_additive_only"] is True
+    assert packet["overlay_may_execute_against_missing_or_empty_silver_rows"] is False
+    assert packet["overlay_execution_state"] == "NOT_EXECUTED_NO_RELEASED_SILVER_ROWS"
+
+
+def test_a12_overlay_packet_is_immutable_across_calls() -> None:
+    packet = a12.build_overlay_packet()
+    packet["model_agreement_admits_gold"] = True
+    assert a12.OVERLAY_PACKET_REQUIREMENTS["model_agreement_admits_gold"] is False
+    assert a12.build_overlay_packet()["model_agreement_admits_gold"] is False
+
+
+def test_a12_required_gate_ids_are_the_manifests_own_gate_ids_never_invented() -> None:
+    for gate_id in a12.REQUIRED_GATE_IDS:
+        assert gate_id in _cached_json(MANIFEST_PATH)["required_gate_ids"]
+
+
+def test_a12_model_agreement_quarantine_is_fixed_and_immutable() -> None:
+    quarantine = a12.build_model_agreement_quarantine()
+    assert quarantine == a12.MODEL_AGREEMENT_QUARANTINE
+    assert quarantine["status"] == "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"
+    assert quarantine["model_only_bases_excluded"] == ["arena_vote", "model_agreement", "model_vote"]
+    assert quarantine["self_adjudication_admits_gold"] is False
+    quarantine["self_adjudication_admits_gold"] = True
+    assert a12.MODEL_AGREEMENT_QUARANTINE["self_adjudication_admits_gold"] is False
+
+
 # --- shared engine wiring (real call, zero rows today) -----------------------
+
+
+def test_a12_engine_wiring_reuses_the_shared_admission_engine_unmodified() -> None:
+    receipt = a12.run_engine_admission_check([])
+    assert receipt["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
+    a12.a11.a10.a9.a8.admission.verify_receipt(receipt)
 
 
 def test_a12_engine_still_refuses_a_model_only_basis_for_authorship_evidence_and_rights_on_a_gold_row() -> None:
@@ -285,6 +333,23 @@ def test_a12_receipt_matches_schema() -> None:
     Draft202012Validator.check_schema(schema)
     errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
     assert not errors, errors[0].message if errors else None
+
+
+def test_a12_receipt_binds_v4_sha_and_control_surfaces() -> None:
+    assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
+    assert _cached_json(RECEIPT)["control_surfaces"] == {
+        "public_control_issue": 7423,
+        "pilot_child_issue": 7430,
+        "private_operational_board": 622,
+    }
+    assert _cached_json(RECEIPT)["bindings"]["a11_silver_release_gate"]["sha256"] == a12.sha256_file(A11_RECEIPT_PATH)
+    assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a12.sha256_file(MANIFEST_PATH)
+
+
+def test_a12_receipt_binds_the_merged_a11_receipt_by_its_known_public_sha() -> None:
+    # The merged A11 receipt's public sha256, frozen at dispatch time (PR #7662 repair 3:
+    # A9's content changed under the Repair 2 real-slot-mechanism fix, rippling into A10-A13).
+    assert a12.sha256_file(A11_RECEIPT_PATH) == "47567dd2252e0b3155abc76b58b47945f9933efc06cabb075eaed098c085ebeb"
 
 
 def test_a12_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_residual_unresolved() -> None:
@@ -329,12 +394,79 @@ def test_a12_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_residual
         assert all(e["status"] == "unresolved_carried_to_a12" for e in _cached_json(RECEIPT)[key])
 
 
+def test_a12_receipt_does_not_claim_gold_upgrade_ready_while_the_gate_is_closed() -> None:
+    assert _cached_json(RECEIPT)["overlay_gate"]["gold_overlay_slice_ready"] is False
+    assert _cached_json(RECEIPT)["status"] != "GOLD_UPGRADE_READY"
+    assert _cached_json(RECEIPT)["execution_counters"]["slots_overlay_ready"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["slots_blocked"] == 100
+
+
+def test_a12_receipt_never_claims_training_ready_gold_subset() -> None:
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
+    assert "TRAINING_READY_GOLD_SUBSET" not in serialized
+    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_gold_subset_claimed"] is False
+
+
+def test_a12_receipt_never_claims_arena_admitted_eval_pilot_review_or_silver_ready() -> None:
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
+    assert "ARENA_SLICE_READY" not in serialized
+    assert "ADMITTED_SLICE_READY" not in serialized
+    assert "EVAL_ARTIFACT_READY" not in serialized
+    assert "PILOT_REVIEW_PASSED" not in serialized
+    assert "TRAINING_READY_SILVER" not in serialized
+    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["arena_slice_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["admitted_slice_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["eval_artifact_ready_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["pilot_review_passed_claimed"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["gold_upgrade_ready_claimed"] is False
+
+
+def test_a12_receipt_model_agreement_stays_quarantined_not_gold() -> None:
+    assert _cached_json(RECEIPT)["model_agreement_quarantine"]["status"] == "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"
+    assert _cached_json(RECEIPT)["model_agreement_quarantine"]["self_adjudication_admits_gold"] is False
+    assert _cached_json(RECEIPT)["overlay_packet"]["self_adjudication_admits_gold"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["self_adjudication_occurred"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["model_agreement_admitted_gold"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["arena_vote_admitted_gold"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["hypothesis_admitted_gold"] is False
+
+
+def test_a12_receipt_never_claims_an_overlay_was_executed_or_admitted_by_model_agreement() -> None:
+    assert _cached_json(RECEIPT)["safety_assertions"]["self_review_occurred"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["review_executed_against_missing_or_empty_row"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["overlay_executed_against_missing_or_empty_silver_row"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["gold_overlaid_without_silver_release_or_adjudication"] is False
+    assert all(entry["gold_overlay_applied"] is False for entry in _cached_json(RECEIPT)["gold_overlay_view"])
+
+
+def test_a12_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
+    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["rows_overlaid_with_gold"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["rows_released_as_silver_and_eligible_for_overlay"] == 0
+    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
+    assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
+
+
 def test_a12_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
     keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
     assert _cached_json(RECEIPT)["a12_residuals"][0]["subject_id"].startswith("v4p-")
+
+
+def test_a12_receipt_never_opens_held_out_membership() -> None:
+    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_referenced"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_opened"] is False
+    assert _cached_json(RECEIPT)["safety_assertions"]["heldout_family_identity_leaked"] is False
 
 
 def test_a12_bindings_hash_to_disk_for_every_bound_artifact() -> None:
@@ -368,9 +500,55 @@ def test_a12_refuses_a_forged_gold_upgrade_ready_claim() -> None:
         a12.validate_receipt_independently(receipt)
 
 
+def test_a12_refuses_a_forged_training_ready_gold_subset_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["status"] = "TRAINING_READY_GOLD_SUBSET"
+    with pytest.raises(a12.GoldOverlayGateError):
+        a12.validate_receipt_schema(receipt)
+
+
+def test_a12_refuses_a_forged_gold_overlay_executed_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["overlay_gate"]["gold_overlay_executed"] = True
+    with pytest.raises(a12.GoldOverlayGateError):
+        a12.validate_receipt_independently(receipt)
+
+
+def test_a12_refuses_a_forged_human_adjudication_recorded_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["overlay_gate"]["source_qualified_human_adjudication_recorded"] = True
+    with pytest.raises(a12.GoldOverlayGateError):
+        a12.validate_receipt_independently(receipt)
+
+
 def test_a12_refuses_a_dropped_a11_residual() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["a11_residuals_carried_forward"].pop()
+    with pytest.raises(a12.GoldOverlayGateError):
+        a12.validate_receipt_independently(receipt)
+
+
+def test_a12_refuses_a_missing_frozen_slot_residual() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["a12_residuals"].pop()
+    with pytest.raises(a12.GoldOverlayGateError):
+        a12.validate_receipt_independently(receipt)
+
+
+def test_a12_refuses_a_dropped_gold_overlay_view_entry() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["gold_overlay_view"].pop()
+    with pytest.raises(a12.GoldOverlayGateError):
+        a12.validate_receipt_independently(receipt)
+
+
+def test_a12_refuses_a_forged_applied_overlay_in_the_gold_view() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["gold_overlay_view"][0] = {
+        **receipt["gold_overlay_view"][0],
+        "gold_overlay_applied": True,
+        "gold_label_tier": "gold",
+    }
     with pytest.raises(a12.GoldOverlayGateError):
         a12.validate_receipt_independently(receipt)
 
@@ -401,3 +579,16 @@ def test_a12_refuses_a_tampered_model_only_bases_blocked_list() -> None:
     receipt["engine_wiring"]["model_only_bases_blocked"] = ["model_agreement"]
     with pytest.raises(a12.GoldOverlayGateError):
         a12.validate_receipt_independently(receipt)
+
+
+def test_a12_schema_rejects_a_leaked_gold_label_value() -> None:
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
+    receipt["eligibility"]["gold"] = True
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    errors = list(Draft202012Validator(schema).iter_errors(receipt))
+    assert errors
+
+
+def test_a12_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
+    assert "gold" not in FORBIDDEN_KEYS
+    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False

@@ -363,6 +363,21 @@ def test_source_grounded_canary_round_trips_all_text_offsets():
     assert validate_historical_representation(packet) == packet
 
 
+def test_each_derived_bundle_has_rights_bounded_by_its_evidence():
+    packet = _packet()
+    bundle_rights = {
+        item["bundle_id"]: item["rights"]["reuse_scope"]
+        for item in packet["classification"]["derived_bundle_rights"]
+    }
+
+    assert bundle_rights == {
+        "historical_recognition": "public_training",
+        "historical_alignment": "public_training",
+        "periodization": "private_inspection_only",
+        "language_label_disambiguation": "private_inspection_only",
+    }
+
+
 def test_historical_record_is_mechanically_excluded_from_modern_correction_gold():
     packet = _packet()
 

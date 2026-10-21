@@ -65,6 +65,16 @@ def test_above_threshold_has_only_attribution_fields(tmp_path, observed):
     observed.assert_called_once()
 
 
+def test_rate_limit_survives_new_calls_and_allows_next_minute(tmp_path, monkeypatch, observed):
+    assert sampler.sample(tmp_path)
+    monkeypatch.setattr(sampler.time, "time", lambda: 1_800_000_059.9)
+    assert sampler.sample(tmp_path) is False
+    assert observed.call_count == 1
+    monkeypatch.setattr(sampler.time, "time", lambda: 1_800_000_060)
+    assert sampler.sample(tmp_path)
+    assert len(sampler.tail(tmp_path, 500)["samples"]) == 2
+
+
 def test_concurrent_collector_is_skipped(tmp_path, observed):
     directory = tmp_path / "load-samples"
     directory.mkdir()

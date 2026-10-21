@@ -106,6 +106,13 @@ def _tamper_packet(packet_path: Path, mutate) -> None:
 # --- source_unit_id mapping -------------------------------------------------
 
 
+def test_builder_eligible_source_unit_ids_maps_families_sorted() -> None:
+    receipt = _seal_receipt_shape(FAMILY_IDS)
+    subset = sorted(FAMILY_IDS[:3])
+    ids = packet.builder_eligible_source_unit_ids(receipt, subset)
+    assert ids == sorted(f"synthetic.{fid}" for fid in subset)
+
+
 def test_builder_eligible_source_unit_ids_refuses_unknown_family_id() -> None:
     receipt = _seal_receipt_shape(FAMILY_IDS)
     with pytest.raises(packet.BuilderPacketError, match="not present in seal receipt registry"):

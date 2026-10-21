@@ -106,6 +106,19 @@ def test_explicit_command_deny_is_counted_without_failing_completed_reply(tmp_pa
     assert "not-recorded" not in repr(result.agy_attempt)
 
 
+def test_model_prose_and_sources_output_cannot_supply_command_denial_counts(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _event("GENERIC", "Matches user-configured deny rule.", step_index=8, status="ERROR"),
+            _reply("Matches user-configured deny rule."),
+        ],
+    )
+    assert result.ok
+    assert result.agy_attempt.denied_command_count == 0
+
+
 def test_attempt_counts_preserve_mixed_and_external_cancellation_evidence(tmp_path):
     result = _parse(
         tmp_path,
@@ -517,6 +530,23 @@ def test_agy_kill_diagnostics_are_redacted_before_bounding(tmp_path):
     assert len(result.agy_killed_commands[0]) == 500
 
 
+def test_agy_finished_background_work_can_coexist_with_killed_read(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="git grep needle"),
+            _kill(),
+            _canceled(_TASK_2),
+            _start(_TASK_3),
+            _finish(_TASK_3),
+            _reply("Complete reply."),
+        ],
+    )
+    assert result.ok
+    assert result.agy_killed_commands == ["git grep needle"]
+
+
 def test_agy_past_kill_cannot_authorize_a_later_external_cancellation(tmp_path):
     result = _parse(
         tmp_path,
@@ -903,3 +933,89 @@ def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
     assert not result.ok
     assert result.failure_code == "provider_stream_incomplete"
     assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+
+
+def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path, mocker, monkeypatch):
+    import hashlib
+    import json
+
+    from scripts.agent_runtime.adapters import agy
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+    from scripts.delegate import _compose_dispatch_prompt
+
+    home = tmp_path / "ordinary-home"
+    monkeypatch.setenv("HOME", str(home))
+    for path in hook_locations(tmp_path, home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
+
+    mocker.patch("scripts.agent_runtime.adapters.agy.shutil.which", return_value="/fake/agy")
+    mocker.patch("scripts.agent_runtime.adapters.agy._agy_version", return_value=(1, 2, 9))
+    mocker.patch("pathlib.Path.is_file", return_value=True)
+
+    adapter = agy.AgyAdapter()
+    base_prompt = "Do some work."
+
+    for mode in ["workspace-write", "danger"]:
+        prompt = _compose_dispatch_prompt(
+            base_prompt,
+            worktree_path=None,
+            mode=mode,
+            sparse_telemetry=None,
+            delegate_commits=False,
+            research_block="",
+            advisory_block="",
+            advisory_block_kind=None,
+            rules_seat=None,
+            agent="agy",
+        )
+        assert "WRITE MODE CONTRACT" in prompt
+        assert base_prompt in prompt
+
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+        plan = adapter.build_invocation(
+            prompt=prompt,
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="test",
+            session_id=None,
+            tool_config={},
+        )
+        payload = json.loads(plan.stdin_payload)
+        sent_prompt = payload["message"]["content"][0]["text"]
+
+        assert sent_prompt == prompt
+        assert hashlib.sha256(sent_prompt.encode("utf-8")).hexdigest() == effective_prompt_sha256
+
+    # Test read-only
+    prompt_read = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="read-only",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_read
+
+    # Test review_route exclusion
+    prompt_review = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="workspace-write",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+        review_route=True,
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_review

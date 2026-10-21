@@ -129,6 +129,11 @@ class TestDetectModelError:
         assert result is not None
         assert "not available" in result
 
+    def test_no_model_error(self):
+        f = self._import()
+        result = f("some other error", "test-model")
+        assert result is None
+
 
 # ============================================================================
 # 4. vocab_extract_proper.py
@@ -402,6 +407,14 @@ class TestRegenerateVocabIpa:
         assert result == 1
         content = yaml_file.read_text()
         assert "[tɛst]" in content
+
+    def test_same_ipa_no_change(self, tmp_path):
+        f = self._import()
+        yaml_file = tmp_path / "vocab.yaml"
+        yaml_file.write_text("- lemma: слово\n  ipa: '[same]'\n")
+        with patch("generate_ipa.generate_ipa", return_value="[same]"):
+            result = f(yaml_file)
+        assert result == 0
 
 
 class TestReplaceProseIpa:

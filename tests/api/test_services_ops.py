@@ -850,6 +850,38 @@ def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_
     assert _supervisor_was_not_called(env)
 
 
+def test_start_delegates_when_ssh_owns_port(temp_services_sh, mock_lsof_env, tmp_path) -> None:
+    """An ssh LocalForward listener plus explicit host overrides delegates start."""
+    script_path, _port = temp_services_sh
+    set_pids, _, env = mock_lsof_env
+    shim_dir, capture = _ssh_recorder(tmp_path)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = "writer-host"
+    env["LU_SERVICES_REMOTE_ROOT"] = "/srv/writer/learn-ukrainian"
+
+    tunnel = _start_named_ssh_process(tmp_path)
+    set_pids([tunnel.pid])
+    try:
+        result = subprocess.run(
+            [str(script_path), "start", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+        args = capture.read_text(encoding="utf-8")
+        assert "BatchMode=yes" in args
+        assert "writer-host" in args
+        assert "./services.sh start api" in args
+        assert _supervisor_was_not_called(env)
+    finally:
+        tunnel.terminate()
+        tunnel.wait(timeout=5)
+
+
 def test_start_tunnel_without_host_fails_closed(temp_services_sh, mock_lsof_env, tmp_path) -> None:
     """A detected tunnel without LU_SERVICES_SSH_HOST refuses instead of guessing an alias."""
     script_path, _port = temp_services_sh

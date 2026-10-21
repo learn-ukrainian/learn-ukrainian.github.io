@@ -94,6 +94,14 @@ class TestApplyCriticalCaps:
         assert updated['decolonization_perspective'] <= 4.0
         assert any(r.cap_applied and r.cap_name == 'zero_myth_busters' for r in results)
 
+    def test_cap_not_applied_when_above(self):
+        """If metric is above threshold, no cap applied."""
+        metrics = {'total_myth_buster_callouts': 5, 'total_quote_callouts': 5,
+                   'agency_marker_ratio': 0.2, 'total_cross_references': 3}
+        scores = {'decolonization_perspective': 9.0, 'primary_source_integration': 8.0}
+        updated, _results = apply_critical_caps('hist', metrics, scores)
+        assert updated['decolonization_perspective'] == 9.0
+
 
 # =============================================================================
 # TEST: check_cap_violations
@@ -108,6 +116,12 @@ class TestCheckCapViolations:
         cap_names = [v['cap_name'] for v in violations]
         assert 'zero_myth_busters' in cap_names
         assert 'zero_quotes' in cap_names
+
+    def test_no_violations_when_metrics_good(self):
+        metrics = {'total_myth_buster_callouts': 5, 'total_quote_callouts': 5,
+                   'agency_marker_ratio': 0.2, 'total_cross_references': 3}
+        violations = check_cap_violations('hist', metrics)
+        assert len(violations) == 0
 
 
 if __name__ == '__main__':

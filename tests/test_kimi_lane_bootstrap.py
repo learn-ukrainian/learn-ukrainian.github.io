@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.session_canary import kimi_lane
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 @pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
 @pytest.mark.parametrize("command", ["status", "mint", "bootstrap"])
@@ -37,3 +39,9 @@ def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, comma
     assert proc.returncode == 2
     assert "error: epic must be a selector" in proc.stderr
     assert list(tmp_path.rglob("*")) == [repo]
+
+
+@pytest.mark.parametrize("epic", ["x", "0", "infra", "7919", "open-model-data", "a--b"])
+def test_epic_dir_preserves_valid_epic(tmp_path: Path, epic: str) -> None:
+    assert kimi_lane._epic_dir(tmp_path, epic) == tmp_path / ".claude" / f"{epic}-epic"
+    assert not list(tmp_path.iterdir())

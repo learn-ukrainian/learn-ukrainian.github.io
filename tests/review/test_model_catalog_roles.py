@@ -39,6 +39,15 @@ def test_v1_without_extension_and_v11_with_extension_are_accepted(catalog):
     assert expanded_legacy_view(catalog) == APPROVED_BASELINE["catalog"]
 
 
+def test_expansion_is_independent_and_does_not_mutate_catalog(catalog):
+    before = deepcopy(catalog)
+    expanded = expanded_legacy_view(catalog)
+    assert expanded == APPROVED_BASELINE["catalog"]
+    expanded["models"]["gpt-6.1-sol"]["roles"].clear()
+    assert catalog == before
+    assert expanded_legacy_view(BASELINE["catalog"]) == BASELINE["catalog"]
+
+
 def test_roles_and_identity_aliases_remain_distinct():
     assert canonical_model_id("bounded_advisor") is None
     assert canonical_model_id("anthropic_authority") is None
@@ -161,6 +170,15 @@ def test_family_capability_isolation_subject_and_explicit_pin_exclusions():
     assert "isolation_required" in cursor.exclusion_reasons
 
 
+def test_risk_roles_use_existing_hard_gate_evidence():
+    result = resolve_role("code_review_critical", purpose="inspect", context={"isolation_required": True})
+    for row in result.candidates:
+        if row.transport == "cursor":
+            assert row.exclusion_reasons
+    low = resolve_role("code_review_low", purpose="inspect")
+    assert next(row for row in low.candidates if row.seat == "volume_reviewer").exclusion_reasons
+
+
 def test_role_evidence_uses_supplied_catalog_and_egress_policy(catalog):
     catalog["review_scheduler"]["profile_risk_role_order"]["code"]["low"] = ["critical_review"]
     result = resolve_role("code_review_low", catalog=catalog, purpose="inspect")
@@ -177,6 +195,68 @@ def test_catalog_digest_is_exact_and_evidence_is_serializable(catalog):
     digest = hashlib.sha256(json.dumps(validate_catalog(catalog), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     assert result.catalog_digest == digest
     assert json.loads(json.dumps(result.to_dict()))["schema_version"] == "role-resolution.v1"
+
+
+@pytest.mark.parametrize("context", [{"unsafe_override": True}, [], {"isolation_required": "yes"},
+    {"required_capabilities": [1]}, {"excluded_families": ["openai", "openai"]}, {"pinned_model": "bounded_advisor"}])
+def test_context_refuses_unsupported_or_ambiguous_inputs(context):
+    with pytest.raises(ModelCatalogError):
+        resolve_role("bounded_advisor", purpose="launch", context=context)
+
+
+def test_invalid_purpose_and_legacy_catalog_without_roles():
+    with pytest.raises(ModelCatalogError, match="purpose"):
+        resolve_role("bounded_advisor", purpose="execute")
+    with pytest.raises(ModelCatalogError, match="no routing roles"):
+        resolve_role("bounded_advisor", catalog=BASELINE["catalog"], purpose="inspect")
+    with pytest.raises(ValueError, match="unsupported health status"):
+        resolve_role("bounded_advisor", purpose="inspect", health={"codex": "stale"})
+
+
+@pytest.mark.parametrize("field,value", [("schema_version", []), ("schema_version", "model-catalog.v2"),
+    ("routing_schema_version", "model-catalog.v1.2"), ("roles", {}), ("seats", None)])
+def test_invalid_extension_versions_or_empty_sections(catalog, field, value):
+    catalog[field] = value
+    with pytest.raises(ModelCatalogError):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("model", ["unregistered", "gpt-6-astra", "qwen/qwen3.6-plus", "gpt-6.1-sol-high"])
+def test_holder_requires_concrete_registered_routable_identity(catalog, model):
+    catalog["seats"]["bounded_worker"]["model_id"] = model
+    with pytest.raises(ModelCatalogError, match=r"unknown concrete|unroutable"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("value", [[], [1], ["design_approval", "design_approval"], None])
+def test_bindings_must_be_explicit_unique_strings(catalog, value):
+    catalog["seats"]["bounded_worker"]["bindings"] = value
+    with pytest.raises(ModelCatalogError, match="bindings"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("spec,match", [
+    ({"seat": "missing"}, "unknown seat"), ({"role": "missing"}, "unknown routing role"),
+    ({"role": []}, "routing role name"), ({"seat": "bounded_worker", "role": "bounded_advisor"}, "selector"),
+    ({"routes": ["bounded_worker/missing"]}, "unknown seat route"),
+    ({"select_binding": "missing", "order_by": "priority"}, "unheld binding"),
+    ({"select_binding": "legacy_review_candidate"}, "order_by"),
+    ({"select_binding": "legacy_review_candidate", "order_by": "priority", "cardinality": "one"}, "ambiguous singleton"),
+    ({"seat": "bounded_worker", "cardinality": []}, "cardinality"),
+    ({"seat": "bounded_worker", "risk": []}, "unsupported risk"),
+    ({"seat": "bounded_worker", "required_model_roles": ["architecture"]}, "lacks required"),
+    ({"role": "code_review_critical", "required_model_roles": []}, "inherit constraints"),
+])
+def test_invalid_role_references_and_constraints(catalog, spec, match):
+    catalog["roles"]["invalid_role"] = spec
+    with pytest.raises(ModelCatalogError, match=match):
+        validate_catalog(catalog)
+
+
+def test_role_cycle_fails_closed(catalog):
+    catalog["roles"].update({"first": {"role": "second"}, "second": {"role": "first"}})
+    with pytest.raises(ModelCatalogError, match="cycle"):
+        validate_catalog(catalog)
 
 
 def test_authority_family_cannot_have_two_logical_holders(catalog):
@@ -205,6 +285,15 @@ def test_wire_mapping_cannot_come_from_predecessor(catalog):
     catalog = deepcopy(load_model_catalog())
     del catalog["models"]["gpt-6-luna"]["routing_wire_ids"]
     with pytest.raises(ModelCatalogError, match="holder's own"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("field,value", [("effort", "ultra"), ("effort", []), ("transport", "unknown"),
+    ("invocation", "dispatch --model {predecessor}"), ("invocation", "dispatch --model gpt-6-luna"),
+    ("route", None), ("unapproved_flag", True)])
+def test_route_errors_are_typed(catalog, field, value):
+    catalog["seats"]["bounded_worker"]["routes"]["native"][field] = value
+    with pytest.raises(ModelCatalogError):
         validate_catalog(catalog)
 
 

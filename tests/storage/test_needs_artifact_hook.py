@@ -27,9 +27,24 @@ def test_missing_artifact_skips_with_hydration_command(monkeypatch: pytest.Monke
         conftest.pytest_runtest_setup(_item("group-a", "source.json"))
 
 
+def test_present_artifact_runs_without_skipping(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(paths, "find_entry", lambda group, rel: {"path": "data/source.json"})
+    calls = []
+    monkeypatch.setattr(paths, "verify_file", lambda path, entry, **kw: calls.append((path, entry, kw)))
+    assert conftest.pytest_runtest_setup(_item("group-a", "source.json")) is None
+    assert calls == [
+        (paths.DATA_ROOT / "source.json", {"path": "data/source.json"}, {"group": "group-a", "rel": "source.json"})
+    ]
+
+
 def test_corrupt_artifact_fails_instead_of_skipping(monkeypatch: pytest.MonkeyPatch) -> None:
     error = paths.MissingArtifactError("group-a", "source.json", "/exact/hydrate-command", "sha256 mismatch")
     monkeypatch.setattr(paths, "find_entry", lambda group, rel: {"path": "data/source.json"})
     monkeypatch.setattr(paths, "verify_file", lambda path, entry, **kw: (_ for _ in ()).throw(error))
     with pytest.raises(paths.MissingArtifactError, match="sha256 mismatch"):
         conftest.pytest_runtest_setup(_item("group-a", "source.json"))
+
+
+def test_needs_artifact_requires_two_positional_arguments() -> None:
+    with pytest.raises(pytest.UsageError, match=r"exactly \(group, rel\)"):
+        conftest.pytest_runtest_setup(_item("group-a"))

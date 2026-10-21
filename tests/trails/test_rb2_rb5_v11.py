@@ -18,7 +18,7 @@ from scripts.orchestration.trails.closure import TrailClosureGate
 from scripts.orchestration.trails.executor import DefaultReceiptPredicateEvaluator, TrailExecutor
 from scripts.orchestration.trails.models import CommandExecution, ExitClass
 from scripts.orchestration.trails.store import TrailStore
-from scripts.orchestration.validate_trailspec import PROJECT_ROOT
+from scripts.orchestration.validate_trailspec import PROJECT_ROOT, validate_trailspec
 
 RB2_PATH = PROJECT_ROOT / "scripts/config/trails/rb2-dispatch-loop.trail.yaml"
 RB5_PATH = PROJECT_ROOT / "scripts/config/trails/rb5-session-close.trail.yaml"
@@ -39,6 +39,45 @@ DELEGATE_TERMINAL_STATUSES = {
 
 def _load(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def _commands(spec: dict[str, Any]) -> list[dict[str, Any]]:
+    return [step["command"] for step in spec["steps"]]
+
+
+@pytest.mark.parametrize(
+    ("path", "trail_id", "steps"),
+    [(RB2_PATH, "rb2-dispatch-loop", 24), (RB5_PATH, "rb5-session-close", 18)],
+)
+def test_migrated_trails_validate_v11(path: Path, trail_id: str, steps: int) -> None:
+    """Each migration is execution-eligible and has the expected v1.1 identity."""
+    result = validate_trailspec(spec_path=path)
+    assert result["ok"] is True
+    assert result["spec"]["trail_id"] == trail_id
+    assert result["spec"]["version"] == "1.0.0"
+    assert result["spec"]["steps_count"] == steps
+    assert result["spec"]["execution_eligible"] is True
+    assert len(result["spec"]["trail_hash"]) == 64
+
+
+@pytest.mark.parametrize("path", [RB2_PATH, RB5_PATH])
+def test_every_command_binds_the_runner_invocation(path: Path) -> None:
+    """All commands receive the durable invocation ID through their environment."""
+    for command in _commands(_load(path)):
+        assert command["environment"]["TRAIL_INVOCATION_ID"] == "{invocation_id}"
+
+
+@pytest.mark.parametrize("path", [RB2_PATH, RB5_PATH])
+def test_each_transition_has_one_receipt_only_predicate(path: Path) -> None:
+    """Every transition identifies one distinct predicate over its command receipt."""
+    for step in _load(path)["steps"]:
+        predicate_ids = []
+        for transition in step["transitions"].values():
+            evidence = transition["evidence"]
+            predicate_ids.append(evidence["predicate_id"])
+            assert evidence["clauses"]
+            assert {clause["source"] for clause in evidence["clauses"]} == {"command_receipt"}
+        assert len(predicate_ids) == len(set(predicate_ids))
 
 
 def test_finalize_settle_matches_delegate_terminal_status_vocabulary() -> None:
@@ -75,6 +114,20 @@ def test_rb2_cleanup_never_force_deletes_or_removes_the_branch() -> None:
     cleanup = next(step for step in spec["steps"] if step["step_id"] == "cleanup_failed_worktree")
     assert cleanup["transitions"]["worktree_removed"]["target"] == "observe_cleanup"
     assert cleanup["command"]["argv"][:2] == ["sh", "-c"]
+
+
+def test_rb2_cleanup_removes_through_the_guarded_cli_as_the_task_owner() -> None:
+    """#8610 r5: cleanup runs the lock + ownership + claim path, never a raw ``git worktree remove``."""
+    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
+    script = cleanup["command"]["argv"][2]
+
+    assert script.startswith(
+        '.venv/bin/python -m scripts.orchestration.worktree_claims remove ".worktrees/dispatch/$LANE/$TASK_ID" '
+        '--owner-task-id "$TASK_ID" '
+    )
+    assert "git worktree remove" not in script
+    # The CLI's own output goes to stderr so stdout stays one outcome token.
+    assert " >&2 && echo worktree-removed || echo removal-failed" in script
 
 
 def test_mutations_always_have_a_distinct_reobservation_step() -> None:

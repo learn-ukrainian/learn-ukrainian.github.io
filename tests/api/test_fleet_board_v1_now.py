@@ -11,6 +11,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.api import main as api_main
 from scripts.api.fleet_board import activity as activity_mod
+from scripts.api.fleet_board import router as router_mod
 from scripts.api.fleet_board import sources as sources_mod
 from scripts.api.fleet_board import view as view_mod
 from scripts.api.fleet_board.sources import report
@@ -337,6 +338,76 @@ def test_fixture_snapshot_states_and_attention_order(monkeypatch: pytest.MonkeyP
     assert str(tmp_path) not in response.text
 
 
+def test_collector_failure_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    def explode():
+        raise RuntimeError("boom-token")
+
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", explode)
+
+    response = client.get("/api/fleet/v1/agents")
+
+    assert response.status_code == 200
+    occupancy = next(item for item in response.json()["sources"] if item["name"] == "occupancy")
+    assert occupancy["status"] == "unavailable"
+    assert "boom-token" not in response.text
+
+
+@pytest.mark.parametrize(
+    ("path", "schema_name", "data"),
+    [
+        ("/now", "now", {"attention": [], "epics": []}),
+        ("/epics", "epics", {"epics": []}),
+        ("/epics/missing", "epic", None),
+        ("/agents", "agents", {"agents": []}),
+        ("/agents/missing", "agent", None),
+    ],
+)
+def test_board_failure_retains_endpoint_schema(monkeypatch: pytest.MonkeyPatch, path, schema_name, data) -> None:
+    def explode():
+        raise RuntimeError("board-failure-private-marker")
+
+    monkeypatch.setattr(router_mod, "load_board", explode)
+
+    response = client.get("/api/fleet/v1" + path)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["schema"] == "fleet.v1." + schema_name
+    assert body["data"] == data
+    expected = [{"name": "board", "status": "unavailable", "age_s": None, "error": "unavailable"}]
+    if path == "/now":
+        expected.extend(
+            {"name": name, "status": "not_configured", "age_s": None, "error": None}
+            for name in ("github", "mq_state", "stale_prs")
+        )
+    assert body["sources"] == expected
+    assert "board-failure-private-marker" not in response.text
+    document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"][body["schema"]]
+    Draft202012Validator(document).validate(body)
+
+
+def test_role_bot_and_agent_lookup(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    _install(monkeypatch, tmp_path, _roster(), _harness())
+
+    bots = client.get("/api/fleet/v1/agents", params={"role": "bot"})
+    one = client.get("/api/fleet/v1/agents/bot-check")
+    missing = client.get("/api/fleet/v1/agents/missing-agent")
+    rejected = client.get("/api/fleet/v1/agents", params={"role": "other"})
+
+    assert bots.status_code == 200
+    assert [item["agent_id"] for item in bots.json()["data"]["agents"]] == ["bot-check", "bot-sweep"]
+    assert {item["state"] for item in bots.json()["data"]["agents"]} == {"idle", "working"}
+    assert one.status_code == 200
+    assert one.json()["data"]["role"] == "bot"
+    assert one.json()["data"]["last_seen"] == "2026-10-09T11:40:00Z"
+    assert one.json()["data"]["state_reason"]
+    assert missing.status_code == 404
+    assert missing.json()["data"] is None
+    assert missing.json()["schema"] == "fleet.v1.agent"
+    assert rejected.status_code == 400
+    assert rejected.json()["data"] == {"agents": []}
+
+
 def test_unbound_delegate_zombie_cannot_override_snapshot_liveness(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     roster = {
         "generated_at": FRESH,
@@ -369,6 +440,21 @@ def test_unbound_delegate_zombie_cannot_override_snapshot_liveness(monkeypatch: 
     assert SCREEN not in response.text
     harness = next(item for item in response.json()["sources"] if item["name"] == "harness_snapshot")
     assert harness["status"] == "not_configured"
+
+
+def test_harness_health_projects_known_metrics_and_keeps_missing_null(monkeypatch, tmp_path):
+    roster = _roster()
+    roster["epics"][0]["driver"]["agent_id"] = "codex"
+    harness = {"interval_s": 30, "measured_at": FRESH, "drivers": [{
+        "agent_id": "codex", "context_pct": 0, "compactions": 0,
+        "stop_count": 0, "ask_count": 2.5, "idle_min": 0,
+    }]}
+    _install(monkeypatch, tmp_path, roster, harness)
+    health = client.get("/api/fleet/v1/epics/alpha").json()["data"]["health"]
+    assert health == {"agent_id": "codex", "status": "ok", "measured_at": FRESH,
+                      "context_pct": 0, "compactions": 0, "stop_count": 0, "ask_count": 2.5, "idle_min": 0}
+    from scripts.api.fleet_board.file_sources import unknown_health
+    assert client.get("/api/fleet/v1/epics/beta").json()["data"]["health"] == unknown_health()
 
 
 def _markers() -> dict[str, str]:
@@ -591,6 +677,77 @@ def test_malformed_epic_keeps_sibling_records(monkeypatch: pytest.MonkeyPatch, t
     assert by_epic["bad-number"]["task"] == {"kind": "issue", "number": None, "title": "count"}
     kinds = [item["kind"] for item in response.json()["data"]["attention"]]
     assert "dead_driver" in kinds
+
+
+def test_occupancy_presence_without_status_stays_idle(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+    monkeypatch.setattr(
+        activity_mod,
+        "occupancy_payload",
+        lambda: {"hosts": {"row-1": {"status": "fresh", "occupants": [{"agent": "driver-beta"}]}}},
+    )
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "beta",
+                "title": "Beta",
+                "intended": "running",
+                "driver": {"agent_id": "driver-beta", "pid_alive": True, "activity": "idle", "idle_min": 6},
+                "workers": [],
+            }
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+
+    response = client.get("/api/fleet/v1/epics/beta")
+
+    assert response.status_code == 200
+    assert response.json()["data"]["state"] == "idle"
+    assert "row-1" not in response.text
+
+
+def test_stale_occupancy_does_not_override_idle(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+    monkeypatch.setattr(
+        activity_mod,
+        "occupancy_payload",
+        lambda: {
+            "hosts": {
+                "row-1": {
+                    "status": "stale",
+                    "age_seconds": 90,
+                    "occupants": [{"agent": "driver-beta", "status": "working"}],
+                }
+            }
+        },
+    )
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "beta",
+                "title": "Beta",
+                "intended": "running",
+                "driver": {"agent_id": "driver-beta", "pid_alive": True, "activity": "idle", "idle_min": 6},
+                "workers": [],
+            }
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+
+    response = client.get("/api/fleet/v1/epics/beta")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["data"]["state"] == "idle"
+    occupancy = next(item for item in body["sources"] if item["name"] == "occupancy")
+    assert occupancy["status"] == "stale"
+    assert occupancy["age_s"] == 90
+    assert occupancy["error"] is None
+    assert "row-1" not in response.text
 
 
 @pytest.mark.parametrize(
@@ -927,6 +1084,17 @@ def test_canonical_lease_presence_chain_controls_driver_activity(monkeypatch, tm
     assert any(row["kind"] == "stuck_driver" for row in body["data"]["attention"]) == (case == "unknown-pid")
     assert "session-alpha" not in response.text
     assert "instance-alpha" not in response.text
+
+
+@pytest.mark.parametrize("rows", [[], [{"agent_id": "other"}], [{"agent_id": "codex"}, {"agent_id": "codex"}]])
+def test_canonical_health_never_guesses_driver_identity(monkeypatch, tmp_path, rows):
+    roster = _roster()
+    roster["epics"][0]["driver"].update(agent_id="codex", cli="codex", harness="codex")
+    _install(monkeypatch, tmp_path, roster, {"interval_s": 30, "measured_at": FRESH, "drivers": rows})
+    health = client.get("/api/fleet/v1/epics/alpha").json()["data"]["health"]
+    assert health["status"] == "unknown"
+    assert health["agent_id"] is None
+    assert all(health[key] is None for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min"))
 
 
 @pytest.mark.parametrize(

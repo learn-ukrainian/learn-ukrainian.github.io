@@ -38,6 +38,12 @@ class TestTokenizePreservesCyrillicLetters:
         assert "країна" in tokens
         assert "краина" not in tokens
 
+    def test_preserves_Й_uppercase(self):
+        # Uppercase Й (U+0419) is also a separate codepoint that decomposes.
+        # Since the tokenizer lowercases, assertion is on the lowercase form.
+        tokens = _tokenize("ЙОРКШИР")
+        assert "йоркшир" in tokens
+
 
 class TestTokenizeStripsStressMarks:
     """NFKD + combining-strip was the original intent for stress removal

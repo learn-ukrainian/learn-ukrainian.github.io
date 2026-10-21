@@ -32,12 +32,13 @@ from unittest.mock import patch
 import pytest
 
 from scripts.agent_runtime import runner
-from scripts.agent_runtime.adapters import claude, kimicc
+from scripts.agent_runtime.adapters import claude, kimi, kimicc
 from scripts.agent_runtime.adapters.claude import (
     HEADLESS_BACKGROUND_ENV,
     HEADLESS_BACKGROUND_TOOL_DENIES,
     ClaudeAdapter,
 )
+from scripts.agent_runtime.adapters.kimi import KimiAdapter
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
 from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
@@ -435,3 +436,20 @@ def test_every_claude_code_harness_plan_disables_background(
     denied, env_overrides = build(tmp_path, mode, *args)
     assert env_overrides[SWITCH] == "1"
     assert denied == list(HEADLESS_BACKGROUND_TOOL_DENIES)
+
+
+def test_native_kimi_plan_has_neither_control(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The native Kimi CLI plan carries no Claude switch and no Claude denies."""
+    monkeypatch.setattr(kimi, "_resolve_kimi_binary", lambda: "/usr/bin/kimi")
+    for harness in (None, "native"):
+        plan = KimiAdapter().build_invocation(
+            prompt="add a tooltip",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path, {"harness": harness} if harness else None),
+        )
+        assert SWITCH not in plan.env_overrides
+        assert not {"--disallowedTools", "--settings"} & set(plan.cmd)

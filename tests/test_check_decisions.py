@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
@@ -20,6 +20,14 @@ def _row(review_by: str, name: str = "uv") -> dict:
         "review_by": review_by,
         "note": "uv pin",
     }
+
+
+def test_overdue_row_is_reported() -> None:
+    yesterday = (_TODAY - timedelta(days=1)).isoformat()
+
+    found = decisions.find_overdue_reviews([_row(yesterday)], today=_TODAY)
+
+    assert [row["name"] for row in found] == ["uv"]
 
 
 def test_malformed_row_is_rejected() -> None:

@@ -13,6 +13,7 @@ Ukrainian.
 
 from __future__ import annotations
 
+import json
 import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -41,6 +42,58 @@ from tests.curriculum.test_plan_validate_mechanical import (
 )
 
 pytestmark = pytest.mark.reads_content
+
+REVIEW_GATE_CODES = {
+    codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
+    codes.DUPLICATE_ACTIVITY_FOCUS,
+    codes.LISTENING_QUIZ_SINGLE_KEY,
+    codes.INCIDENTAL_NOT_DECODABLE,
+    codes.INCIDENTAL_LEMMA_NOT_DECODABLE,
+    codes.HEARD_WORD_WITHOUT_VIDEO,
+    codes.EARLIER_CORE_NOT_RECYCLED,
+    codes.RECAP_STORY_MISSING,
+    codes.RECAP_COMPREHENSION_NOT_ON_STORY,
+    codes.RECAP_COMPREHENSION_AFTER_PRODUCTION,
+    codes.FOCUS_EVIDENCE_NOT_IN_STEPS,
+    codes.STEP_WORD_NOT_DECODABLE,
+    codes.STEP_WORD_LEMMA_NOT_DECODABLE,
+    codes.RECYCLED_WORD_NOT_DECODABLE_IN_PRINT,
+    codes.ODD_ONE_OUT_ROW_INVALID,
+    codes.ODD_ONE_OUT_FEATURE_NOT_COMPUTED,
+    codes.QUOTE_HOST_PRIVATE_USE,
+    codes.QUOTE_HOST_TRANSCRIPTION_SYMBOL,
+    codes.QUOTE_HOST_WATERMARK,
+    codes.QUOTE_HOST_TOKEN_NOT_IN_VESUM,
+    codes.COMPUTED_KEY_SINGLE_VALUE,
+    codes.COMPUTED_KEY_FORM_DEPENDENT,
+    codes.DUPLICATE_LESSON_VIDEO,
+    codes.ADJACENT_STEP_SAME_DISPLAY,
+    codes.ADJACENT_STEP_DISPLAY_RECALL,
+    codes.INCIDENTAL_NOT_USED,
+    codes.VIDEO_USE_PIPELINE_TOKEN,
+    codes.VIDEO_USE_STEP_MISMATCH,
+    codes.CHOICE_OPTION_UNVERIFIED,
+    codes.SENTENCE_NOT_DECODABLE_AT_HOST,
+    codes.SENTENCE_DECODABLE_EARLIER,
+    codes.WORD_MODEL_WITHOUT_SEGMENT,
+    codes.MODELED_PRINT_NOT_DECODABLE,
+    codes.CHOICE_BINARY_KEYS_REPEATED,
+    codes.CHOICE_BINARY_KEYS_SHARED,
+    codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD,
+    codes.CONSTRUCTION_DISTRACTOR_CUED,
+    codes.ANAGRAM_LETTERS_FORM_OTHER_WORD,
+    codes.RECYCLED_CATEGORY_NOT_IN_LIST,
+    codes.PRACTICE_STEP_EMPTY,
+    codes.COMPREHENSION_TARGET_NOT_IN_HOST,
+    codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED,
+    codes.COMPREHENSION_TARGET_UNKNOWN,
+    codes.COMPREHENSION_TARGET_UNVERIFIED,
+    codes.LETTER_WITHOUT_RECORDING,
+    codes.LETTER_TEACHER_MODELED_ONLY,
+    codes.TEACH_WORD_NOT_IN_INVENTORY,
+    codes.MODELED_PRINT_TEACHER_FRAME,
+    codes.VESUM_UNAVAILABLE,
+}
 
 # extra word ids for these fixtures
 PRIOR_ONE, PRIOR_TWO, MANOK, NOMA = "W-209", "W-210", "W-211", "W-212"
@@ -1178,6 +1231,32 @@ def test_case(tmp_path: Path, case: Case) -> None:
         assert any(case.says in o.message for o in report.failures + report.notes + report.not_checked), text
 
 
+def test_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
+    report = run(tmp_path, next(c for c in CASES if c.name.startswith("c1_dialogue_target")).mutate)
+    outcome = next(o for o in report.notes if o.code != codes.OPTIONS_MISSING)
+    assert (outcome.code, outcome.lesson, outcome.step) == (codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED, 1, "s1")
+
+
+def test_unavailable_base_layer_skips_c1_instead_of_guessing(tmp_path: Path) -> None:
+    plan, pack, words, prior = mechanical_plan(), mechanical_pack(), mechanical_words(), prior_plan()
+    _focus(1, "a1", f"Checks the letter М and the word {NONA}.")(plan, pack, words, prior)
+    world = write_world(tmp_path, plan, pack, words)  # no _base.request.yaml: the base layer is unknown
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    assert codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED not in report.codes(), report.render_text()
+    gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
+    assert "C1" in gates, report.render_text()
+
+
+def test_c4_skips_a_lesson_before_the_first_taught_letter() -> None:
+    plan = mechanical_plan()
+    _lesson(plan, 1)["inventory"]["vocabulary"]["incidental"].append({"lemma": "он", "evidence": ON})
+    store = type("Store", (), {"records": {}})()
+    gates = ReviewGates(Report(LEVEL, SLUG), plan, LEVEL, store, None, None, Path("unused"), pack=None)  # type: ignore[arg-type]
+    gates.__dict__["taught_through"] = {1: set(), 2: {"м", "а", "н", "о"}, 3: {"м", "а", "н", "о"}}
+    gates.check_incidental_decodable()
+    assert gates.report.failures == []
+
+
 def produced_review_gate_codes(root: Path) -> set[str]:
     """Every code the cases produce, with this module's VESUM stub: test_plan_validate's registry test calls this
     outside the autouse fixture, and the set must not depend on whether the host has VESUM."""
@@ -1194,6 +1273,10 @@ def produced_review_gate_codes(root: Path) -> set[str]:
         patch.setattr(quote_bytes, "vesum_lookup", unavailable)
         produced |= run(root / "vesum-unavailable", _quote("мама мамою")).codes()
     return produced
+
+
+def test_every_review_gate_code_is_produced(tmp_path: Path) -> None:
+    assert produced_review_gate_codes(tmp_path) >= REVIEW_GATE_CODES
 
 
 def test_c12_unavailable_vesum_is_not_checked_not_passed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1251,6 +1334,18 @@ def test_strict_cli_fails_an_undecided_vesum_gate_unless_declared(
     assert undecided[0].endswith("no database (declared by --not-checked-when-unavailable vesum)"), undecided
 
 
+def test_declared_vesum_unavailable_lists_each_undecided_gate_in_the_report(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    _vesum_unreadable(monkeypatch)
+    plan_path = _world(tmp_path, _pick("Complete но-на from its syllables; select the missing first syllable."))
+    assert validate_main([LEVEL, SLUG, "--plan", str(plan_path), "--strict", "--json", *DECLARE_NO_VESUM]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "pass"
+    undecided = [entry["message"] for entry in payload["not_checked"] if entry["code"] == codes.VESUM_UNAVAILABLE]
+    assert len(undecided) == 1 and undecided[0].startswith("gate C23 is undecided"), undecided
+
+
 def test_declared_vesum_unavailable_never_hides_another_strict_failure(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
@@ -1260,6 +1355,76 @@ def test_declared_vesum_unavailable_never_hides_another_strict_failure(
     out = capsys.readouterr().out
     assert f"FAIL {codes.QUOTE_HOST_PRIVATE_USE}" in out
     assert "NOT_CHECKED vesum_unavailable: gate C12" in out
+
+
+def test_all_mode_prints_declared_undecided_gates_of_a_passing_plan(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """--all prints only failing plans' reports, so a passing plan's undecided gates get their own lines. The
+    level's prior plan is a schema stub that fails on its own, so this reads the plan's lines, not the exit code
+    (the single-plan test above holds the exit codes)."""
+    _vesum_unreadable(monkeypatch)
+    plan_path = _world(tmp_path, _quote("мама мамою"))
+    command = [LEVEL, "--all", "--level-dir", str(plan_path.parent), "--strict"]
+
+    validate_main(command)
+    out = capsys.readouterr().out
+    assert f"{LEVEL}/{SLUG}: fail (1 failures)" in out
+    assert "FAIL vesum_unavailable: gate C12 is undecided" in out
+
+    validate_main([*command, *DECLARE_NO_VESUM])
+    out = capsys.readouterr().out
+    assert f"{LEVEL}/{SLUG}: pass" in out.splitlines()
+    assert f"{LEVEL}/{SLUG}: NOT_CHECKED vesum_unavailable: gate C12 is undecided" in out
+    assert "FAIL vesum_unavailable" not in out
+
+
+def test_c8_outcome_names_the_comprehension_step(tmp_path: Path) -> None:
+    case = next(c for c in CASES if c.name == "c8_production_linked_before_the_questions_fails")
+    outcome = run(tmp_path, case.mutate).failures[0]
+    assert (outcome.code, outcome.lesson, outcome.step) == (codes.RECAP_COMPREHENSION_AFTER_PRODUCTION, 3, "s1")
+
+
+def test_c18_skips_a_lesson_before_the_first_taught_letter() -> None:
+    plan = mechanical_plan()
+    _activity(plan, 1, "a1")["focus"] = "Checks the options нона and он."
+    store = type("Store", (), {"records": {}})()
+    pack = type("Pack", (), {"video_models": {}})()
+    gates = ReviewGates(Report(LEVEL, SLUG), plan, LEVEL, store, None, None, Path("unused"), pack=pack)  # type: ignore[arg-type]
+    gates.__dict__["taught_through"] = {1: set(), 2: {"м", "а", "н", "о"}, 3: {"м", "а", "н", "о"}}
+    gates.check_choice_options_taught()
+    assert gates.report.failures == gates.report.notes == []
+
+
+def test_c17_and_c15_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
+    case = next(c for c in CASES if c.name == "c15_adjacent_steps_displaying_one_quote_fail")
+    outcome = run(tmp_path / "c15", case.mutate).failures[0]
+    assert (outcome.code, outcome.lesson, outcome.step) == (codes.ADJACENT_STEP_SAME_DISPLAY, 2, "s2")
+    case = next(c for c in CASES if c.name == "c17_video_use_naming_a_step_that_does_not_cite_it_fails")
+    outcome = run(tmp_path / "c17", case.mutate).failures[0]
+    assert (outcome.code, outcome.lesson) == (codes.VIDEO_USE_STEP_MISMATCH, 1)
+
+
+def test_c18_unavailable_arc_is_not_checked_not_passed(tmp_path: Path) -> None:
+    plan, pack, words, prior = mechanical_plan(), mechanical_pack(), mechanical_words(), prior_plan()
+    _focus(1, "a1", "Checks the letter М; the options are мама and нона.")(plan, pack, words, prior)
+    world = write_world(tmp_path, plan, pack, words)
+    (world.plan_path.parent / "_arc.yaml").unlink()
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    assert codes.CHOICE_OPTION_UNVERIFIED not in report.codes(), report.render_text()
+    gates = {o.message.split()[1] for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED}
+    assert "C18" in gates, report.render_text()
+
+
+def test_c23_unavailable_vesum_is_not_checked_not_passed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def unavailable(words: list[str]) -> set[str]:
+        raise quote_bytes.VesumUnavailable("no database")
+
+    monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
+    report = run(tmp_path, _pick("Complete но-на from its syllables; select the missing first syllable."))
+    assert codes.CONSTRUCTION_DISTRACTOR_FORMS_WORD not in report.codes(), report.render_text()
+    undecided = [o.message for o in report.not_checked if o.code == codes.VESUM_UNAVAILABLE]
+    assert undecided and undecided[0].startswith("gate C23 is undecided"), report.render_text()
 
 
 @pytest.mark.parametrize("strict", [False, True])
@@ -1309,6 +1474,76 @@ def test_c23_word_store_completions_survive_unavailable_vesum(
 def test_c11_initial_sound(word: str, sound: str | None) -> None:
     assert review_gates._initial_sound(word) == sound
     assert review_gates._initial_sound(unicodedata.normalize("NFD", word)) == sound
+
+
+# The reviewer's fixtures (#9487 round 8): each phrasing a prose parser misread. Targets and options are read from
+# focus prose, so every one is a note quoting its sentence, never a failure and never a silent pass.
+@pytest.mark.parametrize(
+    ("focus", "code", "span"),
+    [
+        (f"Checks {MAMA}.", codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED, f"«Checks {MAMA}.»"),
+        (
+            f"Checks {MAMA} and do not give hints.",
+            codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED,
+            f"«Checks {MAMA} and do not give hints.»",
+        ),
+        ("The printed options are мама and мало.", codes.CHOICE_OPTION_UNVERIFIED, "«The printed options are"),
+        ("The printed options: мама, мало.", codes.CHOICE_OPTION_UNVERIFIED, "«The printed options: мама, мало.»"),
+        (
+            "The teacher never prints the options мама and мало.",
+            codes.CHOICE_OPTION_UNVERIFIED,
+            "«The teacher never prints the options мама and мало.»",
+        ),
+    ],
+)
+@pytest.mark.parametrize("strict", [False, True])
+def test_prose_targets_and_options_are_notes_with_their_span(
+    tmp_path: Path, focus: str, code: str, span: str, strict: bool
+) -> None:
+    report = run(tmp_path, _focus(1, "a1", focus), strict=strict)
+    assert report.failures == [], report.render_text()
+    noted = [o.message for o in report.notes if o.code == code]
+    assert len(noted) == 1 and span in noted[0], report.render_text()
+    if code == codes.CHOICE_OPTION_UNVERIFIED:
+        assert "'мало' (needs л, о)" in noted[0] and "'мама'" not in noted[0], report.render_text()
+    assert report.status != "fail"
+
+
+def test_evidence_span_is_the_sentence_holding_the_token() -> None:
+    text = f"Score {MAMA}.  Do not   score {NONA} here; it is introduced in s2."
+    assert review_gates._span(text, NONA, review_gates._WORD_ID) == f"«Do not score {NONA} here;»"
+    assert review_gates._span(text, MAMA, review_gates._WORD_ID) == f"«Score {MAMA}.»"
+
+
+# round 10 of the cross-family review (#9487): a span is the sentence where the id or word occurs whole.
+@pytest.mark.parametrize(
+    ("token", "span"),
+    [("W-20", "«Then W-20.»"), ("W-201", "«Checks W-201.»"), ("W-2010", "«Do not score W-2010 here.»")],
+)
+def test_evidence_span_matches_whole_ids(token: str, span: str) -> None:
+    text = "Do not score W-2010 here. Checks W-201. Then W-20."
+    assert review_gates._span(text, token, review_gates._WORD_ID) == span
+
+
+def test_evidence_span_matches_whole_words() -> None:
+    text = "The options are мама and мана. Then ма."
+    assert review_gates._span(text, "ма", review_gates._ROW_TOKEN) == "«Then ма.»"
+
+
+def test_c1_note_quotes_the_sentence_of_its_own_id(tmp_path: Path) -> None:
+    longer = "W-2010"
+    report = run(tmp_path, _all(_word(longer, "нон"), _focus(1, "a1", f"Do not score {longer} here. Checks {MAMA}.")))
+    later = [o.message for o in report.notes if o.code == codes.NAMED_BEFORE_INTRODUCTION_UNVERIFIED]
+    assert any(f"{MAMA} (introduced by step s2) in «Checks {MAMA}.»" in message for message in later), (
+        report.render_text()
+    )
+    assert not any(f"{MAMA} (introduced by step s2) in «Do not" in message for message in later), report.render_text()
+
+
+def test_c15_display_directive_reads_each_id_whole() -> None:
+    step = {"teach": "Recall T-0010, then show T-001."}
+    shown, _recalled = review_gates._displays(step, {"T-001", "T-0010"}, {})
+    assert shown == {"T-001"}
 
 
 # Every W-id of a comprehension focus ends in exactly one C26 outcome (#9487 C26, round 12): an id the store lacks ->
@@ -1435,3 +1670,75 @@ def test_c26_every_focus_id_ends_in_exactly_one_outcome(
         ]
         outcome = found[0] if len(found) == 1 else "nothing" if not found else f"several {found}"
         assert outcome == _c26_expected(item, kinds, config), (item, report.render_text())
+
+
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    [
+        ("c21_exact_print_before_its_letters_are_taught_fails", (codes.MODELED_PRINT_NOT_DECODABLE, 1, "s1")),
+        ("c25_practice_step_with_no_content_fails", (codes.PRACTICE_STEP_EMPTY, 1, "s3")),
+        ("c27_letters_no_recording_models_fail", (codes.LETTER_WITHOUT_RECORDING, 2, "s1")),
+        ("c28_teach_text_naming_a_later_word_fails", (codes.TEACH_WORD_NOT_IN_INVENTORY, 1, "s1")),
+        ("c22_three_choice_activities_on_one_binary_key_set_fail", (codes.CHOICE_BINARY_KEYS_REPEATED, 1, None)),
+    ],
+)
+def test_fourth_round_outcomes_name_lesson_and_step(
+    tmp_path: Path, name: str, expected: tuple[str, int, str | None]
+) -> None:
+    outcome = run(tmp_path, next(c for c in CASES if c.name == name).mutate).failures[0]
+    assert (outcome.code, outcome.lesson, outcome.step) == expected
+
+
+# The wording below is copied from the A1 position 1 plan the fourth review returned (#9487); the syllables are
+# the plan's own rows, and the tests check how the gate reads them, not which completions VESUM lists.
+def test_c22_reads_the_key_sets_the_plans_declare() -> None:
+    def keys(focus: str) -> list[frozenset[str]]:
+        return [
+            frozenset(" ".join(item.split()).casefold() for item in review_gates._KEY_SPLIT.split(match.group(1)))
+            for match in review_gates._KEY_SET.finditer(focus)
+        ]
+
+    assert keys("Both greeting keys Привіт and Добрий день occur; vary substantive keys and option positions.") == [
+        frozenset({"привіт", "добрий день"})
+    ]
+    assert keys("Exactly one member differs in letter identity; keys О, У, И, А vary.") == [
+        frozenset({"о", "у", "и", "а"})
+    ]
+    assert keys("The correction keys 1 and 2 both occur.") == [frozenset({"1", "2"})]
+    assert keys("Both class keys occur, progressing from lesson 4 repair.") == []
+
+
+def test_c23_reads_blanked_rows_named_slots_and_the_activity_syllables() -> None:
+    blanked = review_gates._syllable_swaps(
+        "From the complete X-004 missing-syllable rows, use only core W-082 and W-083: the middle blank in "
+        "ма- __ -на has key ли, and the initial blank in __ -ва has key сли."
+    )
+    assert ("ма-сли-на", "маслина", "малина") in blanked
+    assert ("ва-ва", "вава", "слива") in blanked
+    assert all(made[:2] == "ма" and made[-2:] == "на" for _shown, made, key in blanked if key == "малина")
+
+    final = review_gates._syllable_swaps(
+        "On the exact T-036 source segmentations ма-ма (W-081) and Ко-ло (incidental W-154), select the missing "
+        "final syllables ма and ло. The teacher first models these exact T-036 print forms."
+    )
+    assert {("ма-ло", "мало", "мама"), ("Ко-ма", "кома", "коло")} <= set(final)
+    assert all(made[:2] == key[:2] for _shown, made, key in final)  # only the named final slot is swapped
+
+
+def test_c21_reading_bounds() -> None:
+    learner, teacher, frame = review_gates._reading_bounds(
+        "The teacher demonstrates the exact print in X-001. The teacher reads the instruction while the learner reads "
+        "only мама."
+    )
+    assert (learner, teacher, frame) == ({"мама"}, set(), True)
+    assert review_gates._reading_bounds("The teacher reads Прочитай; learners read мама and ман.") == (
+        {"мама", "ман"},
+        {"прочитай"},
+        False,
+    )
+    assert review_gates._reading_bounds("The teacher demonstrates the exact print in X-001.") == (None, set(), False)
+    assert review_gates._reading_bounds("The teacher reads мало. The learner reads only мало.") == (
+        {"мало"},
+        set(),
+        False,
+    )

@@ -29,6 +29,24 @@ def row(value, index=1, *, word="synthetic", pos="noun"):
 
 
 @pytest.mark.parametrize(
+    "value,expected",
+    [
+        (" To GO (verb). ", "go"),
+        ("to go (figurative)", "go (figurative)"),
+        ("GO [intransitive]", "go"),
+        ("to go (mechanical)", "go (mechanical)"),
+    ],
+)
+def test_normalization_closed_grammar(value, expected):
+    assert matcher.normalize(value, "verb") == expected
+    assert matcher.normalize("to go", "noun") == "to go"
+    assert matcher.normalize("e\u0301", "noun") == "é"
+    for label in matcher.GRAMMATICAL_ANNOTATIONS:
+        assert matcher.normalize(f"target ({label})", "noun") == "target"
+    assert matcher.normalize("target (unlisted grammar)", "noun") == "target (unlisted grammar)"
+
+
+@pytest.mark.parametrize(
     "dictionary,meaning,reason",
     [
         (["arm, lever (mechanical)"], "arm", "reference_no_match"),
@@ -70,6 +88,21 @@ def test_lemma_pos_homonym_and_kaikki_gates():
     assert (
         matcher.select(WORD, [], "target", {"pos": ["noun"], "glosses": ["target"]}).reason == "reference_kaikki_only"
     )
+
+
+def test_span_indexes_follow_existing_parser():
+    r = row(["one, two; three (a definition)", "four"])
+    pool = matcher.candidates(WORD, [r])
+    expected = [
+        span
+        for s in json.loads(r["translations"])
+        for part in sources._sub_senses(s)
+        for span in sources._sense_spans(part)
+    ]
+    assert [span for span, _ in matcher.row_spans(r)] == expected
+    assert [c["span"] for c in pool] == ["one", "two", "three", "four"]
+    assert all(c["atom_index"] == 0 for c in pool)
+    assert [c["span_index"] for c in pool] == list(range(len(expected)))
 
 
 @pytest.fixture
@@ -496,6 +529,37 @@ def test_leak_signals_mapping_wording_and_public_exceptions(bound, tmp_path, mea
     assert result["tracked_bytes"] == len(content.encode())
     assert meaning not in json.dumps(result)
     assert result["pr_text"] == "unverified"
+
+
+def test_leak_scan_accepts_a_store_with_formula_records(bound, tmp_path):
+    """A formula has no lemma; the lexical public maps skip it rather than fail."""
+    root, api, _b = bound
+    repo = tmp_path / "formula-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    git(repo, "commit", "--allow-empty", "-qm", "base")
+    (repo / "note.txt").write_text("nothing private")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    context = bindings.Context.read("a1", root)
+    formula = {
+        "id": "W-099",
+        "kind": "formula",
+        "text": "Синтетика!",
+        "parts": [{"word": WORD["id"], "form": "Синтетика"}],
+        "entry": {"source": "formula"},
+    }
+    result = sense_cli.leak_scan(
+        repo,
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        context,
+        {"words": [WORD, formula]},
+        api,
+        base="HEAD^",
+    )
+    assert result["status"] == "checked", result
 
 
 def test_scan_pattern_overlapping_prefixes_boundaries_and_unicode():
@@ -1096,6 +1160,14 @@ def test_definition_grammar_and_exact_source_atom(dictionary, meaning, display, 
     assert display in dictionary
 
 
+@pytest.mark.parametrize("label", sorted(matcher.GRAMMATICAL_ANNOTATIONS))
+@pytest.mark.parametrize("shape", ["({label}) target, goal", "target ({label}), goal", "target / goal ({label})"])
+def test_grammatical_labels_ignored_at_every_position(label, shape):
+    text = shape.format(label=label)
+    assert matcher.select(WORD, [row([text])], "target").gloss == "target"
+    assert matcher.select(WORD, [row([text])], "goal").gloss == "goal"
+
+
 @pytest.mark.parametrize("labels", [matcher.RESTRICTING_LABELS, matcher.TOPIC_LABELS])
 def test_closed_restricting_and_domain_labels_require_reference_label(labels):
     for label, canonical in labels.items():
@@ -1159,6 +1231,18 @@ def test_unknown_labels_excluded_and_counted(text):
 def test_uncertain_scope_is_not_split(text):
     assert matcher.atoms(text, "noun") == ()
     assert not matcher.candidates(WORD, [row([text])])
+
+
+def test_atom_provenance_rederived_and_missing_index_refused():
+    dictionary = row(["target / Goal (an intended destination)"])
+    result = matcher.select(WORD, [dictionary], "goal")
+    b = bindings.reference_binding(WORD, result.ref, FIXTURE["private"], KEY, "test-key")
+    context = bindings.Context("a1", {"W-001": b}, [{"lemma": "synthetic", "locator": b["locator"]}])
+    assert context.select(WORD, [dictionary], None).gloss == "Goal"
+    b["atom_index"] = 0
+    assert context.select(WORD, [dictionary], None).reason == "reference_binding_invalid"
+    b.pop("atom_index")
+    assert context.select(WORD, [dictionary], None).reason == "reference_binding_invalid"
 
 
 def test_definitions_are_evidence_but_same_display_and_labels_collapse():

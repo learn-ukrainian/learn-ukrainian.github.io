@@ -16,6 +16,23 @@ def test_detects_folder_module_source() -> None:
     assert affected_module_keys([path]) == {("a1", "things-have-gender")}
 
 
+def test_detects_legacy_sibling_sources() -> None:
+    paths = [
+        PROJECT_ROOT / "curriculum/l2-uk-en/a1/activities/things-have-gender.yaml",
+        PROJECT_ROOT / "curriculum/l2-uk-en/a1/vocabulary/things-have-gender.yaml",
+        PROJECT_ROOT / "curriculum/l2-uk-en/a1/meta/things-have-gender.yaml",
+        PROJECT_ROOT / "curriculum/l2-uk-en/a1/discovery/things-have-gender.yaml",
+    ]
+
+    assert affected_module_keys(paths) == {("a1", "things-have-gender")}
+
+
+def test_detects_plan_source() -> None:
+    path = PROJECT_ROOT / "curriculum/l2-uk-en/plans/a1/things-have-gender.yaml"
+
+    assert affected_module_keys([path]) == {("a1", "things-have-gender")}
+
+
 def test_check_targets_fails_when_generation_changes_mdx(
     tmp_path: Path, monkeypatch, capsys
 ) -> None:

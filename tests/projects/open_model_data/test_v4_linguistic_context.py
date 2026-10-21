@@ -153,6 +153,24 @@ def test_reviewer_cannot_substitute_target_evidence_or_author_origin(
         _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, False, transform)
 
 
+@pytest.mark.parametrize("role", sorted(semantic.PROTECTIONS))
+def test_protected_context_selection_is_structural_not_ukrainian_gold(role):
+    value = constraints()
+    value["stratum"] = "quotation_interference"
+    value["target"]["claim_type"] = "acceptable_variant"
+    value["target"]["protections"] = [role]
+    semantic.validate_constraints(value)
+    assert role in value["target"]["protections"]
+
+
+def test_abstention_selection_refuses_unsupported_norm():
+    value = constraints()
+    value["stratum"] = "abstention"
+    value["target"]["claim_type"] = "unresolved"
+    with pytest.raises(OperationRefused, match="linguistic_authority_unresolved"):
+        semantic.validate_constraints(value)
+
+
 def test_current_rubric_is_pinned_v2_and_v1_is_byte_exact():
     assert load_review_rubric_sha256() == digest(semantic.rubric_bytes()) == semantic.REVIEW_RUBRIC_SHA256
     historical = semantic.resource_root() / "data/projects/open_model_data/trust/v4_review_rubric_v1.txt"
@@ -192,6 +210,20 @@ def test_relational_targets_still_require_dependencies(mechanism):
     value["target"]["matcher"]["dependency_constraints"] = []
     with pytest.raises(OperationRefused, match="linguistic_dependencies"):
         semantic.validate_constraints(value)
+
+
+@pytest.mark.parametrize("field", ["row_text", "answer", "instruction", "explanation"])
+@pytest.mark.parametrize("bad_value", [None, "", "   "])
+def test_required_row_fields_are_present_and_nonempty(field, bad_value):
+    value = constraints()
+    value["required_fields"] = ["row_text", "answer", "instruction", "explanation"]
+    row = dict.fromkeys(value["required_fields"], "synthetic fixture")
+    if bad_value is None:
+        del row[field]
+    else:
+        row[field] = bad_value
+    with pytest.raises(OperationRefused, match="author_required_fields"):
+        semantic.validate_authored_row(row, value)
 
 
 def test_frozen_author_output_contract_matches_strict_parser(pg_cluster, prepared):

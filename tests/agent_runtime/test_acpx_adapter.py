@@ -384,6 +384,17 @@ def test_resolve_host_node_prefers_highest_matching_major_on_path(tmp_path, monk
     assert resolved == newer.resolve()
 
 
+def test_resolve_host_node_equal_versions_keep_earlier_candidate(tmp_path, monkeypatch):
+    """#8287: equal matching-major versions keep the earlier candidate."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    first = _fake_node_binary(tmp_path / "first", version=f"v{required}.22.1")
+    second = _fake_node_binary(tmp_path / "second", version=f"v{required}.22.1")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(first.parent, second.parent))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == first.resolve()
+
+
 def test_resolve_host_node_skips_symlink_loop_path_entry(tmp_path, monkeypatch):
     """#8287 CF: cyclic node symlink on PATH is skipped; later matching stub wins."""
     required = acpx_module._required_node_major(adapter_label="test")
@@ -544,6 +555,26 @@ def test_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch
     assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
 
 
+def test_transport_source_accepts_canonical_agent_path_but_rejects_empty_segments():
+    with acpx_module.active_communication_scope(
+        source="codex/orchestrator",
+        agent="kimi",
+        target_agent="kimi",
+    ):
+        provenance = acpx_module.current_communication_provenance()
+        assert provenance is not None
+        assert provenance.source == "codex/orchestrator"
+
+    for invalid in ("/codex", "codex/", "codex//orchestrator"):
+        with pytest.raises(AcpxShadowRefusalError, match="bounded local identifier"):
+            with acpx_module.active_communication_scope(
+                source=invalid,
+                agent="kimi",
+                target_agent="kimi",
+            ):
+                pass
+
+
 # ---------------------------------------------------------------------------
 # Shadow marker + tool_config allowlist
 # ---------------------------------------------------------------------------
@@ -596,6 +627,19 @@ def test_build_invocation_requires_non_empty_task_id(tmp_path, monkeypatch):
 
     with pytest.raises(AcpxShadowRefusalError, match="task_id"):
         _build(adapter, cwd=tmp_path, task_id=None)
+
+
+def test_build_invocation_requires_correlation_id(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="correlation_id"):
+        _build(
+            adapter,
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "idempotency_key": "idem-1"},
+        )
 
 
 def test_build_invocation_stamps_local_metadata_without_forwarding_to_argv_or_stdin(
@@ -730,6 +774,37 @@ def test_build_invocation_non_git_cwd_refuses_without_global_fallback(tmp_path, 
         _build(AcpxAdapter(), cwd=tmp_path)
 
 
+def test_build_invocation_non_git_snapshot_uses_module_checkout_primary(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    module_root = tmp_path / "primary" / ".worktrees" / "dispatch" / "codex" / "acp"
+    module_candidate = module_root / "node_modules" / ".bin" / "acpx"
+    _set_default_binary_candidate(monkeypatch, module_candidate)
+    monkeypatch.setattr(acpx_module, "_REPO_ROOT", module_root)
+    primary = tmp_path / "primary"
+    primary_binary = primary / "node_modules" / ".bin" / "acpx"
+    primary_binary.parent.mkdir(parents=True)
+    primary_binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    primary_binary.chmod(0o755)
+
+    def resolve(root: Path) -> Path:
+        if root == snapshot:
+            raise acpx_module.NotAGitRepositoryError(str(root))
+        assert root == module_root
+        return primary
+
+    monkeypatch.setattr(acpx_module, "resolve_main_root", resolve)
+    monkeypatch.setattr(
+        acpx_module,
+        "_probe_acpx_cli_compatibility",
+        lambda _binary, *, builtin_agent: ("0.13.0", ()),
+    )
+
+    plan = _build(AcpxAdapter(), cwd=snapshot)
+    assert plan.cmd[0] == str(primary_binary)
+
+
 def test_build_invocation_refuses_when_primary_pin_is_missing(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     candidate = tmp_path / "worktree" / "node_modules" / ".bin" / "acpx"
@@ -807,6 +882,20 @@ def test_build_invocation_rejects_write_mode(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------------
 
 
+def test_build_invocation_refuses_protected_primary_checkout(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        acpx_module._worktree_containment,
+        "classify_repo_path",
+        lambda *_args, **_kwargs: "primary_checkout",
+    )
+    adapter = AcpxAdapter()
+
+    with pytest.raises(AcpxShadowRefusalError, match="primary checkout"):
+        _build(adapter, cwd=tmp_path)
+
+
 def test_build_invocation_real_containment_refuses_primary_allows_isolated_root(
     tmp_path, monkeypatch
 ):
@@ -881,6 +970,19 @@ def test_parse_response_unrecognized_stop_reason_fails_closed(stop_reason_json):
     assert result.ok is False
     assert result.response == ""
     assert "unrecognized terminal stopReason schema" in result.stderr_excerpt
+
+
+def test_parse_response_recognizes_max_tokens_stop_reason():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_SUCCESS_NDJSON.replace('"end_turn"', '"max_tokens"'),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Hello world."
+    assert result.stderr_excerpt is None
 
 
 def test_parse_response_rejects_oversized_answer_before_authority_receipt():
@@ -1029,6 +1131,20 @@ def test_parse_response_crash_with_no_terminal_marker_fails_closed():
     assert result.ok is False
     assert result.response == ""
     assert "no terminal response" in result.stderr_excerpt or "rc=-9" in result.stderr_excerpt
+
+
+def test_parse_response_agent_disconnected_fails_closed():
+    adapter = AcpxAdapter()
+    result = adapter.parse_response(
+        stdout=_AGENT_DISCONNECTED_NDJSON,
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+    assert result.ok is False
+    assert result.response == ""
+    assert result.failure_code == "acp_agent_disconnected"
+    assert "AGENT_DISCONNECTED" in result.stderr_excerpt
 
 
 # ---------------------------------------------------------------------------
@@ -1465,6 +1581,18 @@ def test_grok_build_invocation_rejects_wrong_model(tmp_path, monkeypatch):
 
     with pytest.raises(AcpxShadowRefusalError, match="model="):
         _build_grok(adapter, cwd=tmp_path, model="grok-3")
+
+
+def test_grok_build_invocation_accepts_rolling_cli_version(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path, version="0.3.7")
+    adapter = AcpxGrokShadowAdapter()
+
+    plan = _build_grok(adapter, cwd=tmp_path)
+
+    assert plan.metadata["grok_cli_version"] == "0.3.7"
+    assert plan.metadata["grok_cli_compatibility"] == "agent-stdio-v1"
 
 
 def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch):
@@ -2066,6 +2194,26 @@ def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monke
     assert plan.metadata["model"] == "kimi-code/k3"
 
 
+def test_kimicc_rejects_a_caller_model_other_than_its_exact_pin(tmp_path, monkeypatch):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    with acpx_module.active_discussion_scope(), pytest.raises(AcpxShadowRefusalError, match="model="):
+        AcpxKimiCcShadowAdapter().build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model="kimi-code/other",
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "kimi",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+
+
 @pytest.mark.parametrize(
     ("adapter_class", "participant", "provider_binary", "version", "model"),
     [
@@ -2216,6 +2364,18 @@ def test_probe_participant_reachability_flags_deepseek_when_opencode_is_missing(
     assert "opencode binary not found on PATH" in error
     assert "hermes binary not found on PATH" not in error
     assert "docs/runbooks/agent-seat-onboarding.md" in error
+
+
+def test_participant_version_probe_accepts_v_prefix_before_build_stamp(tmp_path):
+    binary = tmp_path / "hermes"
+    binary.write_text(
+        "#!/bin/sh\nprintf '%s\\n' 'Python 3.11.15' "
+        "'Hermes Agent v0.18.2 (2026.7.7.2)'\n",
+        encoding="utf-8",
+    )
+    binary.chmod(0o755)
+
+    assert acpx_module._probe_participant_cli_version(str(binary), "hermes") == "0.18.2"
 
 
 def test_acpx_compatibility_probe_checks_global_and_builtin_exec_surfaces(monkeypatch):

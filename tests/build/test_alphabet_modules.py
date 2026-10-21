@@ -1,11 +1,29 @@
 """#8237: alphabet modules must not receive line-break (перенос) instructions."""
 from __future__ import annotations
 
+import copy
+from pathlib import Path
+
 import pytest
+import yaml
 
 from scripts.build import alphabet_modules as am
+from scripts.build import linear_pipeline
 
 pytestmark = pytest.mark.reads_content
+
+# Pre-M3 published map: L5 still lists «Перенос і письмо» (and a hyphenation
+# title). Post-upgrade live lessons.yaml is synthesis-only; upgrade-prompt
+# tests must not treat that published output as the upgrade *input*.
+_SPECIAL_SIGNS_UPGRADE_INPUT_LESSONS = Path(__file__).resolve().parent / (
+    "fixtures/special_signs_upgrade_input_lessons.yaml"
+)
+
+
+def _special_signs_upgrade_input_lesson_map() -> dict:
+    return copy.deepcopy(
+        yaml.safe_load(_SPECIAL_SIGNS_UPGRADE_INPUT_LESSONS.read_text(encoding="utf-8"))
+    )
 
 
 def test_lesson_map_filter_drops_the_line_break_lesson_but_keeps_budgets():
@@ -30,6 +48,19 @@ def test_lesson_map_filter_drops_the_line_break_lesson_but_keeps_budgets():
     assert out["items_min_exempt"] == [{"id": "act-1", "reason": "r"}]
     assert out["closes_module"] == 2
     assert lesson_map["lessons"][1]["sections"] == ["Перенос і письмо", "Далі"]  # input untouched
+
+
+def test_upgrade_input_lesson_map_still_points_at_the_dropped_original():
+    """The gate must cope with this row as-is; nobody removes it by hand."""
+    from scripts.build.lesson_map import _normalize_activities
+
+    root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
+    source = root / "a1-v1/special-signs"
+    base = _normalize_activities((source / "module.md").read_text(encoding="utf-8"),
+                                 yaml.safe_load((source / "activities.yaml").read_text(encoding="utf-8")))
+    dropped = am.line_break_original_keys(base)
+    lesson_map = _special_signs_upgrade_input_lesson_map()
+    assert dropped and dropped <= {(p["placement"], p["index"]) for p in lesson_map["provenance"]}
 
 
 # --- #8236: the writer never sees a worded empty-sign choice or divide-words as allowed ---
@@ -63,7 +94,27 @@ def test_blank_empty_sign_choices_rewrites_only_options_and_answers():
     assert fill["items"][0]["answer"] == "без знака — no sign"  # input untouched
 
 
+def test_alphabet_type_gate_rejects_divide_words():
+    acts = [{"type": "divide-words"}]
+    assert linear_pipeline._activity_type_gate(acts, "a1", 3, "special-signs")["forbidden"] == ["divide-words"]
+    assert linear_pipeline._activity_type_gate(acts, "a1", 4, "stress-and-melody")["passed"]
+
+
 # ── legal originals: what the upgrade writer may keep (#8236) ────────────────
+
+
+def test_letter_module_floor_is_advisory_only_for_long_uk_and_tab3_four_of_five():
+    def floor(**observed):
+        required = {"uk_dialogue_lines": 0, "uk_tab3_activities": 5}
+        return {"required": required, "observed": {"uk_dialogue_lines": 3, "uk_tab3_activities": 5, **observed}}
+
+    assert am.letter_module_floor_is_advisory("long_uk_ceiling", {"offending_runs": ["— Привіт!"]})
+    assert am.letter_module_floor_is_advisory("l2_exposure_floor", floor(uk_tab3_activities=4))
+    assert not am.letter_module_floor_is_advisory("l2_exposure_floor", floor(uk_tab3_activities=3))
+    both = floor(uk_tab3_activities=4)
+    both["required"]["uk_dialogue_lines"] = 10
+    assert not am.letter_module_floor_is_advisory("l2_exposure_floor", both)
+    assert not am.letter_module_floor_is_advisory("component_density", {})
 
 
 def _chai_is_word(form: str) -> bool:

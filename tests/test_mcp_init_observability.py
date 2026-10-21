@@ -403,6 +403,49 @@ def test_runtime_tool_config_non_codex_tools_no_disable_features(
         )
 
 
+def test_wiki_review_codex_emits_resolution_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _valid_sources_config(tmp_path / ".mcp.json")
+    monkeypatch.setattr(wiki_tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    config = wiki_review._tool_config_for(
+        "codex",
+        needs_mcp=True,
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert config is not None
+    assert config["mcp_servers"]["sources"]["url"].endswith("/mcp")
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["reviewer"] == "codex"
+    assert events[0][1]["resolution_status"] == "ok"
+    assert events[0][1]["resolved_servers"] == ["sources"]
+
+
+def test_wiki_review_codex_raises_when_unconfigured(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
+    monkeypatch.setattr(wiki_tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    with pytest.raises(wiki_review.WikiReviewError, match="tool-less"):
+        wiki_review._tool_config_for(
+            "codex",
+            needs_mcp=True,
+            event_sink=lambda event, **fields: events.append((event, fields)),
+        )
+
+    assert events[0][0] == "mcp_config_resolved"
+    assert events[0][1]["reviewer"] == "codex"
+    assert events[0][1]["resolution_status"] == "config_empty"
+    assert events[0][1]["resolved_servers"] == []
+
+
 def test_wiki_review_claude_no_raise_when_unconfigured(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

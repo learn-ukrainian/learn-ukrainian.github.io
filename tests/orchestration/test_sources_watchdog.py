@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
 import signal
 import subprocess
 import sys
 import textwrap
+import time
 from collections.abc import Callable
 from pathlib import Path
 
@@ -15,6 +17,7 @@ import pytest
 from scripts.orchestration import sources_watchdog as wd
 from scripts.rag import hang_diagnostics as hd
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REAL_HOST = wd.Host
 
 PROC_NET_TCP = textwrap.dedent(
@@ -237,6 +240,18 @@ def test_restart_budget_survives_incident_closure(tmp_path: Path) -> None:
     assert "Action: restart budget exhausted" in fake.published[-1][0]
 
 
+def test_restart_history_keeps_only_the_window(tmp_path: Path) -> None:
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0, restart_window=100)
+    for _ in range(3):
+        _tick(fake, config, False)
+    fake.clock += 200
+    for _ in range(3):
+        _tick(fake, config, False)
+    state = json.loads((tmp_path / "dumps" / wd.STATE_FILE).read_text(encoding="utf-8"))
+    assert state["restart_history"] == [fake.clock - 15]
+    assert len(fake.restarts) == 2
+
+
 def test_recovery_during_capture_aborts_the_restart(tmp_path: Path) -> None:
     """Sol's reproducer: health restored while dumping; the server must not be killed."""
     fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0)
@@ -374,6 +389,36 @@ def test_prune_keeps_newest_incidents_and_drops_dead_pid_logs(tmp_path: Path) ->
     ]
 
 
+def test_resolve_dump_dir_default_and_override(tmp_path: Path) -> None:
+    assert hd.resolve_dump_dir(tmp_path, {}) == tmp_path / "batch_state" / "sources-dumps"
+    assert hd.resolve_dump_dir(tmp_path, {hd.DUMP_DIR_ENV: str(tmp_path / "x")}) == tmp_path / "x"
+
+
+HUNG_CHILD = textwrap.dedent(
+    """\
+    import sys, threading
+    from pathlib import Path
+    sys.path.insert(0, sys.argv[2])
+    from scripts.rag.hang_diagnostics import install_signal_dump
+
+    install_signal_dump(Path(sys.argv[1]))
+    lock = threading.Lock()
+    condition = threading.Condition()
+
+    def worker_blocked_on_shared_lock():
+        with condition:
+            print("hung", flush=True)
+            lock.acquire()
+
+    lock.acquire()
+    with condition:
+        threading.Thread(target=worker_blocked_on_shared_lock, daemon=True).start()
+        # The worker can announce readiness only after the main thread waits.
+        condition.wait()
+    """
+)
+
+
 def _spawn(script: str, *args: str) -> subprocess.Popen[str]:
     return subprocess.Popen(
         [sys.executable, "-c", script, *args],
@@ -381,6 +426,28 @@ def _spawn(script: str, *args: str) -> subprocess.Popen[str]:
         stderr=subprocess.PIPE,
         text=True,
     )
+
+
+def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
+    """AC-02: a hung process yields every thread's Python stack in the incident."""
+    dump_dir = tmp_path / "dumps"
+    child = _spawn(HUNG_CHILD, str(dump_dir), str(PROJECT_ROOT))
+    try:
+        assert child.stdout is not None
+        assert child.stdout.readline().strip() == "hung"
+        incident = wd.capture_incident_dump(child.pid, dump_dir, 1, time.time(), reason="forced hang")
+        stacks = (incident / "python-stacks.txt").read_text(encoding="utf-8")
+        assert "worker_blocked_on_shared_lock" in stacks
+        assert "<string>" in stacks and "Current thread" in stacks
+        assert stacks.count("Thread 0x") + stacks.count("Current thread 0x") >= 2
+        summary = json.loads((incident / "summary.json").read_text(encoding="utf-8"))
+        assert summary["python_stacks"] is True
+        assert "state=S" in (incident / "proc.txt").read_text(encoding="utf-8")
+        assert oct((incident / "python-stacks.txt").stat().st_mode & 0o777) == "0o600"
+        assert child.poll() is None, "the dump must not kill the process"
+    finally:
+        child.kill()
+        child.wait(timeout=10)
 
 
 def test_no_signal_without_a_registered_handler(tmp_path: Path) -> None:
@@ -412,3 +479,9 @@ def test_handles_signal_reads_sigcgt(tmp_path: Path) -> None:
     assert wd.handles_signal(9, signal.SIGUSR1, tmp_path / "proc")
     assert not wd.handles_signal(9, signal.SIGUSR2, tmp_path / "proc")
     assert not wd.handles_signal(10, signal.SIGUSR1, tmp_path / "proc")
+
+
+@pytest.mark.skipif(not Path("/proc/self/task").is_dir(), reason="needs Linux /proc")
+def test_proc_snapshot_of_self_lists_threads() -> None:
+    text = wd.proc_snapshot(os.getpid(), 1)
+    assert f"{os.getpid()} " in text and "== socket states on port 1" in text

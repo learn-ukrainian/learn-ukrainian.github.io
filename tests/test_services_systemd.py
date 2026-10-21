@@ -319,6 +319,18 @@ def test_missing_systemctl_with_unit_fails_closed(harness) -> None:
     assert "unavailable" in result.stderr
 
 
+def test_user_bus_environment_is_exported(harness) -> None:
+    _, env, files, _, run = harness
+    runtime = Path(f"/run/user/{os.getuid()}")
+    if not runtime.is_dir():
+        pytest.skip("user runtime directory is absent")
+    env.pop("XDG_RUNTIME_DIR", None)
+    env.pop("DBUS_SESSION_BUS_ADDRESS", None)
+    result = run("status", "api")
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f"bus=unix:path={runtime}/bus runtime={runtime}" in files["calls"].read_text()
+
+
 def test_not_found_uses_launchd_path(harness) -> None:
     _, env, files, _, run = harness
     env["FAKE_LOAD"] = "not-found"

@@ -217,6 +217,109 @@ def test_offline_falls_back_with_explicit_source(monkeypatch, budget, capsys):
     assert "Monitor snapshot unavailable" in output.err
 
 
+def test_show_does_not_claim_cool_without_allotment_meters():
+    """API-key dispatch cool + NEED_PROBE null windows must display unknown + tip."""
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "cursor": {
+                "status": "cool",
+                "freshness": "fresh",
+                "age_s": 10,
+                "probe_state": "NEED_PROBE",
+                "login_state": "authenticated",
+                "error_kind": "missing_session_token",
+                "provider_windows": {
+                    "auto": {
+                        "window": "monthly",
+                        "label": "Cursor Models (Auto)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "api": {
+                        "window": "monthly",
+                        "label": "Other Models (API)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "grok_bot": {
+                        "window": "weekly",
+                        "label": "Grok Bot",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "cursor | unknown |" in text
+    assert "cursor | cool |" not in text
+    assert "agent login" in text
+    assert "CURSOR_API_KEY alone" in text
+
+
+def test_qa_passes_when_allotments_usable(budget, monkeypatch, capsys):
+    monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
+    monkeypatch.setattr(
+        usage.urllib.request,
+        "urlopen",
+        lambda *a, **kw: io.StringIO(json.dumps(budget)),
+    )
+    assert usage.main(["qa"]) == 0
+    assert "QA PASS" in capsys.readouterr().out
+
+
+def test_qa_fails_when_only_null_quota_windows(monkeypatch, capsys):
+    """Fresh NEED_PROBE with empty Auto/API percentages must not QA PASS."""
+    blind = {
+        "agents": {
+            "cursor": {
+                "status": "unknown",
+                "freshness": "fresh",
+                "age_s": 1,
+                "probe_state": "NEED_PROBE",
+                "provider_windows": {
+                    "auto": {
+                        "window": "monthly",
+                        "label": "Cursor Models (Auto)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "api": {
+                        "window": "monthly",
+                        "label": "Other Models (API)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "grok_bot": {
+                        "window": "weekly",
+                        "label": "Grok Bot",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
+    monkeypatch.setattr(
+        usage.urllib.request,
+        "urlopen",
+        lambda *a, **kw: io.StringIO(json.dumps(blind)),
+    )
+    assert usage.main(["qa"]) == 1
+    assert "QA FAIL" in capsys.readouterr().out
+
+
 def test_prepaid_rejects_non_usd_deepseek():
     from scripts.fleet.prepaid_status import api_lane_status_from_account
 
@@ -251,6 +354,16 @@ def test_refresh_failure_is_nonzero_and_does_not_echo_exception(monkeypatch, cap
     monkeypatch.setattr(usage, "read_budget", lambda **kw: (_ for _ in ()).throw(RuntimeError("secret-marker")))
     assert usage.main(["refresh"]) == 1
     assert "secret-marker" not in capsys.readouterr().err
+
+
+_MUSE_KNOWN_PAYLOAD = {
+    "provider": "muse",
+    "source": "oauth",
+    "usage": {
+        "primary": {"usedPercent": 10, "windowMinutes": 300, "resetsAt": "2026-10-13T18:00:00Z"},
+        "secondary": {"usedPercent": 30, "windowMinutes": 10080, "resetsAt": "2026-10-20T00:00:00Z"},
+    },
+}
 _MUSE_NULL_PAYLOAD = {"provider": "muse", "usage": {"primary": None, "secondary": None}}
 
 
@@ -811,6 +924,157 @@ def test_usage_cli_cold_and_failed_fetch_diagnostics(monkeypatch, capsys, lane, 
     _clear_muse_observation()
 
 
+def test_usage_cli_stale_and_rate_limit_muse_hide_headroom():
+    from scripts.api import subscription_usage
+
+    known = subscription_usage._muse_record_from_codexbar_payload(_MUSE_KNOWN_PAYLOAD)
+    known["freshness"] = "stale_last_good"
+    known["age_s"] = 800
+    stale = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {"muse": subscription_usage.project_muse_for_status(known)},
+            "api_accounts": {},
+        }
+    )
+    assert "muse | unknown | unknown | stale_last_good | 800 | -" in stale
+    assert "quota: remaining=unknown headroom=unknown resets=unknown" in stale
+    assert "70.0" not in stale
+
+    limited = dict(known)
+    limited["freshness"] = "fresh"
+    limited["age_s"] = 1
+    limited["error_kind"] = "rate_limit"
+    limited["error_code"] = 429
+    text = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {"muse": subscription_usage.project_muse_for_status(limited)},
+            "api_accounts": {},
+        }
+    )
+    assert "muse | unknown | unknown | fresh | 1 | rate_limit/429" in text
+    assert "quota: remaining=unknown headroom=unknown resets=unknown" in text
+    assert "70.0" not in text
+
+
+def _agy_split_payload() -> dict:
+    return {
+        "command": {
+            "data": {
+                "groups": [
+                    {
+                        "name": "Gemini Models",
+                        "buckets": [
+                            {
+                                "window": "5h",
+                                "remaining_fraction": 0.5,
+                                "reset_time": "2026-10-13T18:00:00Z",
+                            }
+                        ],
+                    },
+                    {
+                        "name": "Claude and GPT models",
+                        "buckets": [
+                            {
+                                "window": "weekly",
+                                "remaining_fraction": 0.25,
+                                "reset_time": "2026-10-20T00:00:00Z",
+                            }
+                        ],
+                    },
+                ]
+            }
+        }
+    }
+
+
+def test_usage_cli_shows_agy_groups_beside_muse_cursor_and_grok(monkeypatch, capsys):
+    import subprocess
+
+    from scripts.api import state_router, subscription_usage
+
+    _clear_muse_observation()
+    subscription_usage._reset_agy_quota_observation_for_tests()
+    monkeypatch.setattr(subscription_usage, "_agy_cli_bin", lambda: "/usr/bin/agy")
+
+    def fake_run(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_agy_split_payload()), stderr="")
+
+    monkeypatch.setattr(subscription_usage.subprocess, "run", fake_run)
+    probe = subscription_usage._probe_antigravity_native
+
+    def fetch(provider, *, timeout_s=None):
+        if provider in {"gemini", "antigravity"}:
+            return probe(timeout_s=1)
+        if provider == "muse":
+            return subscription_usage._muse_record_from_codexbar_payload(_MUSE_KNOWN_PAYLOAD)
+        return subscription_usage._normalize_provider_error(
+            provider,
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        )
+
+    monkeypatch.setattr(subscription_usage, "fetch_provider_usage", fetch)
+    monkeypatch.setattr(subscription_usage, "refresh_api_account_data", lambda providers: {})
+    monkeypatch.setattr(
+        subscription_usage,
+        "_refresh_cursor_usage_live",
+        lambda: subscription_usage._normalize_provider_error(
+            "cursor",
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        ),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "compute_routing_budget",
+        lambda **kwargs: {
+            "agents": {
+                "cursor": {
+                    "status": "cool",
+                    "freshness": "fresh",
+                    "remaining_pct": 64.0,
+                    "provider_windows": {
+                        "auto": {
+                            "label": "Cursor Models (Auto)",
+                            "window": "monthly",
+                            "used_pct": 36.0,
+                            "remaining_pct": 64.0,
+                            "resets_at": "2026-10-01T00:00:00Z",
+                        }
+                    },
+                },
+                "grok": {
+                    "status": "cool",
+                    "freshness": "fresh",
+                    "remaining_pct": 80.0,
+                    "codexbar": {
+                        "freshness": "fresh",
+                        "windows": {
+                            "secondary": {
+                                "used_pct": 20.0,
+                                "remaining_pct": 80.0,
+                                "resets_at": "2026-10-18T00:00:00Z",
+                                "window_minutes": 10080,
+                            }
+                        },
+                    },
+                },
+            },
+            "api_accounts": {},
+        },
+    )
+    assert usage.main(["show", "--fresh"]) == 0
+    text = capsys.readouterr().out
+    assert "agy | healthy | unknown | fresh |" in text
+    assert "Gemini Models (5h): used=50.0% rem=50.0% resets=2026-10-13T18:00:00Z" in text
+    assert "Claude and GPT models (weekly): used=75.0% rem=25.0% resets=2026-10-20T00:00:00Z" in text
+    assert "Gemini Models (weekly)" not in text
+    assert "Claude and GPT models (5h)" not in text
+    assert "muse | healthy | 70.0 | fresh |" in text
+    assert "Cursor Models (Auto) (monthly): used=36.0% rem=64.0%" in text
+    assert "secondary (weekly): used=20.0% rem=80.0% resets=2026-10-18T00:00:00Z" in text
+
+
 def test_usage_cli_shows_agy_missing_fraction_as_unknown(monkeypatch, capsys):
     import subprocess
 
@@ -874,6 +1138,55 @@ def test_usage_cli_shows_agy_missing_fraction_as_unknown(monkeypatch, capsys):
     assert "Gemini Models (weekly): used=unknown rem=unknown resets=2026-10-20T00:00:00Z" in text
     assert "100.0" not in text
     assert "50.0" not in text
+
+
+def test_usage_cli_stale_and_rate_limit_agy_hide_headroom():
+    from scripts.api import subscription_usage
+
+    groups = subscription_usage._agy_quota_groups_from_payload(_agy_split_payload())
+    stale = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {
+                "agy": subscription_usage.project_agy_for_status(
+                    {
+                        "quota_groups": groups,
+                        "freshness": "stale_last_good",
+                        "age_s": 800,
+                        "error_kind": None,
+                        "error_code": None,
+                    }
+                )
+            },
+            "api_accounts": {},
+        }
+    )
+    assert "agy | unknown | unknown | stale_last_good | 800 | -" in stale
+    assert "used=unknown rem=unknown resets=unknown" in stale
+    assert "50.0" not in stale
+    assert "25.0" not in stale
+    assert "75.0" not in stale
+
+    limited = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {
+                "agy": subscription_usage.project_agy_for_status(
+                    {
+                        "quota_groups": groups,
+                        "freshness": "fresh",
+                        "age_s": 1,
+                        "error_kind": "rate_limit",
+                        "error_code": 429,
+                    }
+                )
+            },
+            "api_accounts": {},
+        }
+    )
+    assert "agy | unknown | unknown | fresh | 1 | rate_limit/429" in limited
+    assert "50.0" not in limited
+    assert "2026-10-13" not in limited
 
 
 @pytest.mark.parametrize("fresh", [False, True], ids=["monitor", "fresh"])

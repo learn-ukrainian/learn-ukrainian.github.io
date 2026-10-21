@@ -18,6 +18,7 @@ remaining, account ``b`` 0.5%.
 
 from __future__ import annotations
 
+import ast
 import copy
 import io
 import json
@@ -26,6 +27,8 @@ import operator
 import pickle
 from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
+from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -34,6 +37,7 @@ from scripts import delegate
 from scripts.agent_runtime import model_pause, target_admission
 from scripts.fleet import claude_account_lane, credit_lane
 from scripts.fleet.claude_account_lane import AccountRequired, AccountSnapshot, bind_snapshot, select_account
+from scripts.lib import claude_weekly_used
 from scripts.orchestration import curriculum_coordinator as coordinator
 from scripts.review import bench_health, closeout_cli, reviewer_resolver, reviewer_scheduler
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
@@ -41,9 +45,13 @@ from tests.claude_route_accounts import HOST_ACCOUNT, account, bound, unresolved
 from tests.test_claude_account_route_key import _agreement_snapshot, _route_key_for
 from tests.test_delegate_check_budget import _account_row
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
 B = account("b")
 A_REMAINING, B_REMAINING = 90.0, 0.5
 CLAUDE = REVIEW_CANDIDATES["claude-opus-5-5"]
+CODEX = next(candidate for candidate in REVIEW_CANDIDATES.values() if candidate.route == "codex")
+
+
 def _reversed() -> dict:
     """Account a: 90% remaining on the lane row and its own row; account b: 0.5% on its row."""
     raw = _agreement_snapshot("healthy", _account_row(B_REMAINING))
@@ -414,6 +422,22 @@ def test_every_reproducer_reads_only_the_bound_accounts_meter(consumer, monkeypa
 # --- the scheduler helper refuses an unbound claude read ----------------------------------------
 
 
+def test_route_record_refuses_an_unbound_claude_read_and_absence_is_not_empty():
+    raw = _reversed()
+    for snapshot in (raw, {**raw, "agents": {"codex": raw["agents"]["codex"]}}, {"agents": {}}):
+        with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
+            reviewer_scheduler._route_record(CLAUDE, snapshot)
+        with pytest.raises(AccountRequired):
+            reviewer_scheduler.metrics_for(CLAUDE, snapshot)
+    # Non-claude candidates and flat health maps hold no claude meter: unchanged.
+    assert reviewer_scheduler._route_record(CODEX, raw) is raw["agents"]["codex"]
+    assert reviewer_scheduler._route_record(CLAUDE, {"claude": "Healthy"}) == {"status": "healthy"}
+    assert reviewer_scheduler._route_record(CLAUDE, None) == {}
+    # A bound snapshot reads its own account, and its absence reads as absent.
+    assert reviewer_scheduler._route_record(CLAUDE, bound(raw, B))["remaining_pct"] == pytest.approx(B_REMAINING)
+    assert reviewer_scheduler._route_record(CLAUDE, bound({"agents": {}}, B)) == {}
+
+
 # --- entry paths ------------------------------------------------------------------------------
 
 
@@ -462,6 +486,22 @@ def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys,
     assert "preferred" not in capsys.readouterr().err
 
 
+def test_model_pause_binds_the_fetched_snapshot_and_lets_account_required_through(monkeypatch):
+    raw = _reversed()
+    monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(raw)))
+    assert model_pause.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == pytest.approx(10.0)
+    assert model_pause.routing_budget_used_pct("claude", account=B) == pytest.approx(100.0 - B_REMAINING)
+    assert model_pause.routing_budget_used_pct("claude", account=None) is None
+    assert model_pause.routing_budget_used_pct("codex", account=None) is None  # fixture codex has no fresh used-%
+
+    def contract_failure(*_a, **_k):
+        raise AccountRequired("unbound read")
+
+    monkeypatch.setattr(model_pause.urllib.request, "urlopen", contract_failure)
+    with pytest.raises(AccountRequired):  # not "unreachable": the (OSError, ValueError, ...) handler lets it through
+        model_pause.routing_budget_used_pct("codex", account=B)
+
+
 def test_credit_lane_reads_credit_lanes_from_a_snapshot_bound_to_no_account(monkeypatch):
     raw = _reversed()
     held: list[Any] = []
@@ -500,6 +540,32 @@ def test_bench_health_binds_injected_and_produced_snapshots(monkeypatch, tmp_pat
         bench_health._bench_inventory(
             None, data_egress_policy="local_interactive", review_profile="code", risk="medium"
         )
+
+
+def test_the_coordinator_binds_probe_snapshots_and_refuses_unbound_or_rebound_ones(monkeypatch, tmp_path):
+    raw = _reversed()
+    health = coordinator.load_config()["health"]
+    with pytest.raises(AccountRequired, match="wave health gate"):
+        coordinator._health_assessment(raw, health)
+    _route_key_for(tmp_path, monkeypatch, None)  # the default account
+    assert coordinator._probe_health(lambda: raw, coordinator.load_config()) == coordinator._health_assessment(
+        bound(raw), health
+    )
+    with pytest.raises(AccountRequired, match="not read as 'a'"):
+        coordinator._probe_health(lambda: bound(raw, B), coordinator.load_config())
+
+    def contract_failure():
+        raise AccountRequired("unbound read")
+
+    with pytest.raises(AccountRequired):  # the probe's ``except Exception`` does not absorb it
+        coordinator._probe_health(contract_failure, coordinator.load_config())
+
+
+@pytest.mark.parametrize(("label", "used"), [("a", 10.0), ("b", 100.0 - B_REMAINING)])
+def test_the_launcher_reader_keeps_its_explicit_launch_account_selection(label, used):
+    raw = _reversed()
+    raw["agents"]["claude"]["codexbar"]["stale"] = False
+    assert claude_weekly_used._weekly_used_pct(raw, label) == pytest.approx(used)
 
 
 # --- round 2 (review-s2b-adbd73eb): derivation, conversion and alias bypasses ---------------------
@@ -912,3 +978,166 @@ def test_claude_alias_records_are_the_host_accounts_and_never_reach_another_acco
     assert set(view["agents"]) == {"claude", "codex", "grok", "cursor"} | kept
     ranked_aliases = [row["lane"] for row in view["ranked_by_headroom"]].count("claude-opus-5-5")
     assert ranked_aliases == (1 if label == "a" else 0)
+
+
+def test_a_candidate_reaching_any_claude_record_reads_only_a_bound_snapshot():
+    """A candidate whose keys name a claude alias, on any route, never reads an unbound payload's claude record."""
+    raw = _reversed()
+    agents = {"claude-opus-5-5": raw["agents"]["claude"], "cursor": raw["agents"]["cursor"]}
+    hosted = SimpleNamespace(
+        name="claude-opus-5-5", route="cursor", concrete_model="claude-opus-5-5", family="", health_keys=()
+    )
+    for candidate in (hosted, CLAUDE):
+        with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
+            reviewer_scheduler._route_record(candidate, {"agents": agents})
+    # Bound to b, the alias is gone: the hosted route reads its own lane.
+    assert reviewer_scheduler._route_record(hosted, bind_snapshot({"agents": agents}, account=B)) == agents["cursor"]
+
+
+# --- source inventory: where a decision module receives a raw routing snapshot -------------------
+
+DECISION_MODULES = (
+    "scripts/agent_runtime/model_pause.py",
+    "scripts/agent_runtime/target_admission.py",
+    "scripts/delegate.py",
+    "scripts/fleet/credit_lane.py",
+    "scripts/lib/claude_weekly_used.py",
+    "scripts/orchestration/curriculum_coordinator.py",
+    "scripts/review/bench_health.py",
+    "scripts/review/closeout_cli.py",
+    "scripts/review/reviewer_resolver.py",
+    "scripts/review/reviewer_scheduler.py",
+)
+FETCHERS = frozenset({"_fetch_routing_budget", "compute_routing_budget", "read_routing_budget"})
+BINDERS = frozenset({"bind_snapshot", "select_account", "account_weekly_used_pct"})
+# (module, function) -> how the raw snapshot it receives is bound. ``None`` marks a fetch helper
+# whose callers are listed here too, or a reader that selects its account itself.
+RAW_SNAPSHOT_SOURCES: dict[tuple[str, str], str | None] = {
+    ("scripts/delegate.py", "_fetch_routing_budget"): None,
+    ("scripts/delegate.py", "_admit_dispatch_target"): "red-team initial snapshot: select_account",
+    ("scripts/delegate.py", "_resolve_agent_with_budget_guard"): (
+        "select_account as the dispatch's account; the raw payload is bound again only for the "
+        "cooler-seat advice, as the account a re-routed claude dispatch would resolve"
+    ),
+    ("scripts/fleet/credit_lane.py", "read_routing_budget"): None,
+    ("scripts/fleet/credit_lane.py", "dispatch_refusal"): "bind_snapshot to no account (credit lanes only)",
+    ("scripts/review/closeout_cli.py", "_cmd_resolve_reviewer"): "live fetch or JSON file: select_account",
+    ("scripts/agent_runtime/model_pause.py", "routing_budget_used_pct"): "bind_snapshot as the named account",
+    ("scripts/review/bench_health.py", "_bench_inventory"): "select_account as a claude review dispatch would run",
+    ("scripts/orchestration/curriculum_coordinator.py", "default_health_probe"): "bind_snapshot as the wave's account",
+    ("scripts/lib/claude_weekly_used.py", "main"): None,  # isolated launcher reader: explicit launch account
+}
+
+
+_FUNCTIONS = (ast.FunctionDef, ast.AsyncFunctionDef)
+
+
+def _fetcher_named(node: ast.AST, names: frozenset[str]) -> str | None:
+    """The fetcher (or alias) ``node`` names: a name, an attribute, or a string such as ``getattr``'s."""
+    if isinstance(node, ast.Name) and node.id in names:
+        return node.id
+    if isinstance(node, ast.Attribute) and node.attr in names:
+        return node.attr
+    if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in names:
+        return node.value
+    return None
+
+
+def _in_scope(scope: ast.AST) -> list[ast.AST]:
+    """Every node of ``scope`` outside its nested functions (which have their own scope)."""
+    nodes: list[ast.AST] = []
+    pending = list(ast.iter_child_nodes(scope))
+    while pending:
+        node = pending.pop()
+        nodes.append(node)
+        if not isinstance(node, _FUNCTIONS):
+            pending.extend(ast.iter_child_nodes(node))
+    return nodes
+
+
+def _aliases(scope: ast.AST, names: frozenset[str]) -> frozenset[str]:
+    """``names`` plus every name ``scope`` binds to a fetcher itself rather than to its result.
+
+    ``fetch = credit_lane.read_routing_budget``, ``import ... as fetch``, a
+    walrus, ``functools.partial(fetcher)`` and ``getattr(module, "fetcher")``
+    bind the reader; ``payload = fetcher()`` binds a payload and is not an
+    alias. Chains (``first = fetcher; second = first``) resolve to a fixpoint.
+    """
+    found = set(names)
+    while True:
+        before = len(found)
+        current = frozenset(found)
+        for node in _in_scope(scope):
+            if isinstance(node, ast.ImportFrom):
+                found.update(alias.asname or alias.name for alias in node.names if alias.name in current)
+                continue
+            if not isinstance(node, ast.Assign | ast.AnnAssign | ast.NamedExpr) or node.value is None:
+                continue
+            called = {id(sub.func) for sub in ast.walk(node.value) if isinstance(sub, ast.Call)}
+            if any(_fetcher_named(sub, current) and id(sub) not in called for sub in ast.walk(node.value)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    found.update(
+                        sub.id if isinstance(sub, ast.Name) else sub.attr
+                        for sub in ast.walk(target)
+                        if isinstance(sub, ast.Name | ast.Attribute)
+                    )
+        if len(found) == before:
+            return frozenset(found)
+
+
+def _raw_snapshot_sources(module: str) -> dict[str, set[str]]:
+    """``{function: names}`` for every fetcher reference (call or alias), routing-budget URL or snapshot-file read.
+
+    A reference to a fetcher, or to a name the scope (or an enclosing one)
+    binds to it, marks the function it appears in, so an aliased fetch
+    (``fetch = credit_lane.read_routing_budget; fetch()``) is found too.
+    """
+    found: dict[str, set[str]] = {}
+
+    def visit(scope: ast.AST, label: str, inherited: frozenset[str]) -> None:
+        names = _aliases(scope, inherited)
+        for node in _in_scope(scope):
+            if isinstance(node, _FUNCTIONS):
+                visit(node, node.name, names)
+                continue
+            source = _fetcher_named(node, names)
+            if (
+                source is None
+                and isinstance(node, ast.JoinedStr | ast.BinOp)
+                and "/routing-budget" in ast.unparse(node)
+            ):
+                source = "routing-budget URL"
+            elif isinstance(node, ast.Attribute) and node.attr == "routing_snapshot_file":
+                source = "routing snapshot file"
+            if source:
+                found.setdefault(label, set()).add(source)
+
+    visit(ast.parse((REPO_ROOT / module).read_text(encoding="utf-8")), "<module>", FETCHERS)
+    return found
+
+
+def _binder_calls(module: str) -> dict[str, set[str]]:
+    calls: dict[str, set[str]] = {}
+    for node in ast.walk(ast.parse((REPO_ROOT / module).read_text(encoding="utf-8"))):
+        if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
+            names = {
+                sub.func.attr if isinstance(sub.func, ast.Attribute) else getattr(sub.func, "id", "")
+                for sub in ast.walk(node)
+                if isinstance(sub, ast.Call)
+            }
+            calls[node.name] = names & BINDERS
+    return calls
+
+
+def test_raw_snapshot_sources_in_decision_modules_are_inventoried():
+    """A tripwire, not the enforcement: a new raw-snapshot source in a decision module must be listed and bound."""
+    found = {
+        (module, function): sources
+        for module in DECISION_MODULES
+        for function, sources in _raw_snapshot_sources(module).items()
+    }
+    assert set(found) == set(RAW_SNAPSHOT_SOURCES), "list the new source here and bind it where it enters"
+    for (module, function), how in RAW_SNAPSHOT_SOURCES.items():
+        if how is not None:
+            assert _binder_calls(module)[function], f"{module}:{function} receives a raw snapshot but never binds it"

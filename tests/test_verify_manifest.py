@@ -44,6 +44,12 @@ def test_html_entity_leak_is_a_hazard(tmp_path, capsys):
     assert "amp" in capsys.readouterr().out
 
 
+def test_gloss_chunk_leak_is_a_hazard(tmp_path, capsys):
+    entries = [{"lemma": "тест", "gloss": "leaked from 7-klas-ukrmova_s0108"}]
+    rc = verify_manifest.run(_write(tmp_path, entries), sample=0, baseline_path=None)
+    assert rc == 2
+
+
 def test_empty_section_is_a_hazard(tmp_path, capsys):
     entries = [{"lemma": "тест", "sections": {"synonyms": {"items": []}}}]
     rc = verify_manifest.run(_write(tmp_path, entries), sample=0, baseline_path=None)
@@ -201,3 +207,14 @@ def test_shrink_gate_ignores_growth_and_equal(tmp_path, capsys):
     out = capsys.readouterr().out
     assert rc == 0
     assert "no unexplained section shrink" in out
+
+
+def test_shrink_gate_off_without_baseline(tmp_path, capsys):
+    cur = _write_named(
+        tmp_path / "cur.json",
+        [{"lemma": "ключ", "sections": {"synonyms": {"items": ["замок"], "source": "s"}}}],
+    )
+    rc = verify_manifest.run(cur, sample=0, baseline_path=None)
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "SHRINK GATE" not in out  # no baseline -> gate cannot run, stays silent

@@ -11,6 +11,7 @@ from scripts.audit.source_inventory_intake import read_source_inventory
 from scripts.lexicon.build_teacher_deck_cloze import (
     EXCLUDED_TEACHER_CLOZE_IDS,
     exclude_private_cloze_cards,
+    public_teacher_lemmas,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -143,6 +144,10 @@ def test_public_teacher_cloze_build_scrubs_private_cards_and_distractors() -> No
     assert exclude_private_cloze_cards(cards) == [
         {"clozeId": "teacher_cloze_safe", "lemma": "слово"},
     ]
+
+
+def test_public_teacher_cloze_build_excludes_private_lemmas_before_distractors() -> None:
+    assert public_teacher_lemmas([{"lemma": "альона"}, {"lemma": "місто"}]) == ["місто"]
 
 
 @pytest.mark.needs_sparse_tree("site/src/data")

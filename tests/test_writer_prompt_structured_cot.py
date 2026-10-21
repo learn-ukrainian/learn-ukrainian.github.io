@@ -43,6 +43,22 @@ verification_trace: mcp__sources__verify_words(["кіт"])
     assert linear_pipeline._reasoning_fields_filled(body) == []
 
 
+def test_verification_trace_tools_are_detected_as_theatre_when_uncalled() -> None:
+    output = """<plan_reasoning section="intro">
+<word_budget>80 words.</word_budget>
+<plan_vocab>кіт: Я бачу кота.</plan_vocab>
+<register>80/20 immersion.</register>
+<teaching_sequence>Knowledge Packet citation A.</teaching_sequence>
+<verification_plan>Use VESUM and textbook search.</verification_plan>
+<verification_trace>mcp__sources__verify_words(["кіт"]); mcp__sources__search_text("відмінок")</verification_trace>
+</plan_reasoning>"""
+
+    assert linear_pipeline.detect_tool_theatre(
+        output,
+        [{"tool": "mcp__sources__verify_words"}],
+    ) == ["search_text"]
+
+
 def test_end_gate_grammar_claims_grounded_requires_structured_key() -> None:
     gate = linear_pipeline._extract_writer_gate(
         "<end_gate>grammar grounding ideas against a textbook</end_gate>"

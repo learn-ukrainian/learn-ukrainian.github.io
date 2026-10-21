@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from scripts.build.linear_pipeline import (
+    PYTHON_QG_GATE_ORDER,
     LinearPipelineError,
     _activity_schema_gate,
     _apply_activity_schema_correction,
@@ -242,6 +243,31 @@ def test_forbidden_alias_incorrect_fails() -> None:
     assert "use 'error:'" in result["violations"][0]["message"]
 
 
+def test_forbidden_alias_wrong_fails() -> None:
+    activities = [
+        {
+            "id": "wrong-field-error-correction",
+            "type": "error-correction",
+            "items": [
+                {
+                    "sentence": "Він <error> пізно.",
+                    "wrong": "прокидаюся",
+                    "answer": "прокидається",
+                }
+            ],
+        }
+    ]
+
+    result = _activity_schema_gate(activities)
+
+    assert result["passed"] is False
+    assert any(
+        violation["offending_field"] == "wrong"
+        and violation["expected_field"] == "error"
+        for violation in result["violations"]
+    )
+
+
 def test_missing_required_error_field_fails() -> None:
     activities = [
         {
@@ -349,6 +375,22 @@ def test_performance_self_check_string_fails_activity_schema() -> None:
     assert "performance activity 'self_check' must be a list, not a str" in result["message"]
 
 
+def test_performance_self_check_list_passes_activity_schema() -> None:
+    activities = [
+        {
+            "id": "folk-performance",
+            "type": "performance",
+            "prompt": "Продекламуйте фрагмент.",
+            "fragment": "Добрий вечір.",
+            "self_check": ["Чітко вимовлено звертання."],
+        }
+    ]
+
+    result = _activity_schema_gate(activities)
+
+    assert result == {"passed": True, "checked": 0, "violations": []}
+
+
 def test_replays_m20_build8_failure_shape() -> None:
     activities = [
         {
@@ -368,4 +410,10 @@ def test_replays_m20_build8_failure_shape() -> None:
         violation["offending_field"] == "incorrect"
         and violation["expected_field"] == "error"
         for violation in result["violations"]
+    )
+
+
+def test_activity_schema_gate_precedes_vesum_verified() -> None:
+    assert PYTHON_QG_GATE_ORDER.index("activity_schema") < PYTHON_QG_GATE_ORDER.index(
+        "vesum_verified"
     )

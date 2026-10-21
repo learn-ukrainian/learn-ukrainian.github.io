@@ -12,9 +12,15 @@ import json
 import os
 from pathlib import Path
 
+from fastapi.testclient import TestClient
+
+import scripts.api.main as api_main
 import scripts.api.state_compute as state_compute
+import scripts.api.state_router as state_router
 from scripts.api.state_router import _read_llm_qg_scores
 from scripts.audit.llm_qg_store import DB_ENV_VAR, record_llm_qg
+
+client = TestClient(api_main.app, raise_server_exceptions=False)
 
 
 def _set_mtime_ns(path: Path, value: int) -> None:
@@ -54,6 +60,11 @@ def test_read_scores_parses_dims_and_aggregate(tmp_path: Path) -> None:
     assert out["aggregate"]["terminal_verdict"] == "REVISE"
     # beauty surfaces generically — no code change needed when the dim lands.
     assert "beauty" in out["dimensions"]
+
+
+def test_read_scores_missing_file_degrades(tmp_path: Path) -> None:
+    out = _read_llm_qg_scores(tmp_path / "does-not-exist")
+    assert out == {"aggregate": None, "dimensions": {}}
 
 
 def test_read_llm_qg_marks_file_fallback_as_non_authoritative(tmp_path: Path) -> None:
@@ -151,3 +162,54 @@ def test_read_scores_uses_persisted_current_qg_without_file(
 # --------------------------------------------------------------------------- #
 # /api/state/scores/{track}[/{slug}] — the endpoints
 # --------------------------------------------------------------------------- #
+
+
+def _fake_track(tmp_path: Path, monkeypatch) -> None:
+    """Wire a one-path fake 'demo' track with a scored + an unscored module."""
+    track_dir = tmp_path / "demo"
+    _write_llm_qg(
+        track_dir / "scored-mod",
+        dims={"pedagogical": 7.0, "engagement": 6.8},
+        aggregate={
+            "verdict": "REVISE",
+            "terminal_verdict": "REVISE",
+            "min_score": 6.8,
+            "min_dim": "engagement",
+            "failing_dims": ["engagement"],
+            "warning_dims": [],
+        },
+    )
+    (track_dir / "unscored-mod").mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(state_router, "LEVELS", [{"id": "demo", "name": "Demo", "path": "demo"}])
+    monkeypatch.setattr(api_main.app.state, "ctx", api_main.app.state.ctx.with_roots(curriculum_root=tmp_path))
+    monkeypatch.setattr(
+        state_router, "get_plan_slugs", lambda _t, *args, **kwargs: [(1, "scored-mod"), (2, "unscored-mod")]
+    )
+
+
+def test_scores_track_lists_modules_with_scored_flag(tmp_path: Path, monkeypatch) -> None:
+    _fake_track(tmp_path, monkeypatch)
+    body = client.get("/api/state/scores/demo").json()
+    assert body["track"] == "demo"
+    assert body["count"] == 2
+    assert body["scored"] == 1
+    by_slug = {m["slug"]: m for m in body["modules"]}
+    assert by_slug["scored-mod"]["scored"] is True
+    assert by_slug["scored-mod"]["dimensions"]["engagement"] == 6.8
+    assert by_slug["scored-mod"]["aggregate"]["min_dim"] == "engagement"
+    assert by_slug["unscored-mod"]["scored"] is False
+    assert by_slug["unscored-mod"]["aggregate"] is None
+    assert "meta" in body
+
+
+def test_scores_one_module(tmp_path: Path, monkeypatch) -> None:
+    _fake_track(tmp_path, monkeypatch)
+    body = client.get("/api/state/scores/demo/scored-mod").json()
+    assert body["slug"] == "scored-mod"
+    assert body["dimensions"]["pedagogical"] == 7.0
+    assert body["aggregate"]["terminal_verdict"] == "REVISE"
+
+
+def test_scores_unknown_track_404(tmp_path: Path, monkeypatch) -> None:
+    _fake_track(tmp_path, monkeypatch)
+    assert client.get("/api/state/scores/nope").status_code == 404

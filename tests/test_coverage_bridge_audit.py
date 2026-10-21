@@ -31,6 +31,23 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
 # 1. _config.py
 # ---------------------------------------------------------------------------
 
+class TestConfig:
+    """Tests for scripts/ai_agent_bridge/_config.py constants."""
+
+    def test_cli_paths_are_correct_types(self):
+        from scripts.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
+        assert isinstance(CLAUDE_CMD, list)
+        # #4875: prefers a native `claude` binary on PATH (single-element
+        # command) and only falls back to the npx shim when none is found —
+        # both are correct depending on the machine running the test.
+        if CLAUDE_CMD[0] == "npx":
+            assert "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
+        else:
+            assert len(CLAUDE_CMD) == 1
+            assert CLAUDE_CMD[0].endswith("claude")
+        assert isinstance(AGY_CLI, str)
+        assert isinstance(GEMINI_CLI, str)
+
 
 # ---------------------------------------------------------------------------
 # 2. _db.py
@@ -54,6 +71,13 @@ class TestDb:
         tables = {row[0] for row in cursor.fetchall()}
         assert "messages" in tables
         assert "sessions" in tables
+        conn.close()
+
+    def test_get_db_creates_if_not_exists(self, tmp_db):
+        from scripts.ai_agent_bridge._db import get_db
+        assert not tmp_db.exists()
+        conn = get_db()
+        assert tmp_db.exists()
         conn.close()
 
     def test_get_db_migration_adds_status(self, tmp_db):
@@ -154,6 +178,11 @@ class TestBroker:
             result = _is_task_locked("gemini", "task-1")
         assert result is False
         assert not pid_file.exists()  # Cleaned up
+
+    def test_check_stale_lock_no_started(self):
+        from scripts.ai_agent_bridge._broker import _check_stale_lock
+        result = _check_stale_lock({}, 12345, Path("/tmp/fake.json"))
+        assert result is True  # Assumes locked
 
     def test_check_stale_lock_young(self):
         from scripts.ai_agent_bridge._broker import _check_stale_lock
@@ -266,6 +295,27 @@ class TestBroker:
         assert conn.execute("SELECT COUNT(*) FROM deliveries").fetchone()[0] == 0
         conn.close()
 
+    def test_broker_retention_cleanup_dry_run(self, tmp_path):
+        from scripts.ai_agent_bridge._broker import broker_retention_cleanup
+        db_path = tmp_path / "test.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("""CREATE TABLE messages (
+            id INTEGER PRIMARY KEY, to_llm TEXT, data TEXT, timestamp TEXT, acknowledged INTEGER DEFAULT 0
+        )""")
+        old_ts = (datetime.now(UTC) - timedelta(days=45)).isoformat()
+        conn.execute(
+            "INSERT INTO messages (id, timestamp, acknowledged) VALUES (?, ?, 1)",
+            (1, old_ts),
+        )
+        conn.commit()
+        conn.close()
+        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+            result = broker_retention_cleanup("30d", True)
+        assert result == 1
+        conn = sqlite3.connect(str(db_path))
+        assert conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
+        conn.close()
+
     def test_categorize_pid_files_dead(self, tmp_path):
         from scripts.ai_agent_bridge._broker import _categorize_pid_files
         pf = tmp_path / "gemini-task-1.json"
@@ -280,6 +330,12 @@ class TestBroker:
         pf.write_text("not json")
         _alive, stale = _categorize_pid_files([pf])
         assert len(stale) == 1
+
+    def test_git_status_snapshot_error(self):
+        from scripts.ai_agent_bridge._broker import _git_status_snapshot
+        with patch("subprocess.run", side_effect=Exception("fail")):
+            result = _git_status_snapshot()
+        assert result == set()
 
 
 # ---------------------------------------------------------------------------
@@ -337,6 +393,14 @@ class TestMessaging:
         row = self._query(msg_db, "SELECT acknowledged FROM messages WHERE id=?", (msg_id,))
         assert row[0] == 1
 
+    def test_send_message_with_json_data(self, msg_db):
+        from scripts.ai_agent_bridge._messaging import send_message
+        with patch("subprocess.run"):
+            msg_id = send_message("hi", data='{"key": "val"}', quiet=True)
+        row = self._query(msg_db, "SELECT data FROM messages WHERE id=?", (msg_id,))
+        parsed = json.loads(row[0])
+        assert parsed["key"] == "val"
+
 
     def _insert(self, db_path, task_id, from_llm, to_llm, content, ts="2026-01-01T00:00:00"):
         conn = sqlite3.connect(str(db_path))
@@ -374,6 +438,19 @@ class TestModel:
         result = _detect_model_error("Error: model not found", "test-model")
         assert result is not None
         assert "not available" in result
+
+    def test_check_model_cached(self, capsys):
+        import time
+
+        from scripts.ai_agent_bridge._config import _MODEL_CACHE
+        from scripts.ai_agent_bridge._model import check_model
+        _MODEL_CACHE["cached-model"] = (True, time.time())
+        try:
+            result = check_model("cached-model")
+            assert result is True
+            assert "cached" in capsys.readouterr().out
+        finally:
+            _MODEL_CACHE.pop("cached-model", None)
 
     def test_check_model_timeout(self, capsys, tmp_path, monkeypatch):
         home = tmp_path / "home"
@@ -458,6 +535,19 @@ class TestGitHub:
         transport.assert_not_called()
         assert "private matcher or rules unavailable/incompatible; write refused" in capsys.readouterr().out
 
+    def test_split_content_no_newline(self):
+        from scripts.ai_agent_bridge._github import _split_content
+        content = "a" * 20
+        result = _split_content(content, limit=10)
+        assert len(result) == 2
+
+    def test_gh_comment_success(self):
+        from scripts.ai_agent_bridge._github import _gh_comment
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        with patch("subprocess.run", return_value=mock_result):
+            assert _gh_comment(123, "body") is True
+
     def test_gh_comment_failure(self, capsys):
         from scripts.ai_agent_bridge._github import _gh_comment
         mock_result = MagicMock()
@@ -513,6 +603,22 @@ class TestContentQualityPipeline:
         chars = _get_charset_upper(1)
         assert "А" in chars
         assert "Я" in chars  # Full alphabet
+
+    def test_word_has_translation_after_parens(self):
+        from scripts.audit.checks.content_quality_pipeline import _word_has_translation_after
+        line = "Привіт (hello) to you"
+        assert _word_has_translation_after(line, 6) is True  # after Привіт
+
+    def test_word_is_in_translation_context(self):
+        from scripts.audit.checks.content_quality_pipeline import _word_is_in_translation_context
+        line = "(Привіт means hello)"
+        assert _word_is_in_translation_context(line, 1) is True
+
+    def test_check_untranslated_non_decodable_not_a1(self):
+        from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
+        plan = {"decodable_letters": "А О У І М Н Т К С Л"}
+        issues = check_untranslated_non_decodable("Привіт", module_num=1, level_code="B1", plan=plan)
+        assert issues == []
 
     def test_check_untranslated_non_decodable_flags_word(self):
         from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
@@ -589,6 +695,11 @@ class TestSampling:
         data = {"naturalness": {"score": 6}}
         assert determine_tier(data) == "llm-verified"
 
+    def test_determine_tier_high_naturalness(self):
+        from scripts.scoring.sampling import determine_tier
+        data = {"naturalness": {"score": 9}, "tags": []}
+        assert determine_tier(data) == "automated"
+
     def test_determine_tier_sensitive_tags(self):
         from scripts.scoring.sampling import determine_tier
         data = {"naturalness": {"score": 9}, "tags": ["politics", "economy"]}
@@ -600,6 +711,10 @@ class TestSampling:
         r1 = should_sample("test-slug")
         r2 = should_sample("test-slug")
         assert r1 == r2
+
+    def test_should_sample_rate_1(self):
+        from scripts.scoring.sampling import should_sample
+        assert should_sample("anything", sample_rate=1.0) is True
 
     def test_get_sampling_candidates(self):
         from scripts.scoring.sampling import get_sampling_candidates
@@ -643,6 +758,16 @@ class TestFinalizeActivityQuality:
         scores = {"naturalness_avg": 2.0}
         result = evaluate_quality_gates(scores, "A1")
         assert result["result"] == "PASS"  # A1 has no strict gates
+
+    def test_evaluate_quality_gates_b1_pass(self):
+        from scripts.audit.finalize_activity_quality import evaluate_quality_gates
+        scores = {
+            "naturalness_avg": 4.0, "engagement_avg": 4.0,
+            "distractor_quality_avg": 4.5, "variety_avg": 70,
+            "difficulty_inappropriate_pct": 0.1
+        }
+        result = evaluate_quality_gates(scores, "B1")
+        assert result["result"] == "PASS"
 
     def test_evaluate_quality_gates_b1_fail_naturalness(self):
         from scripts.audit.finalize_activity_quality import evaluate_quality_gates

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
 from datetime import UTC, datetime, timedelta
 
 from scripts.api.hramatka_cache import HramatkaGenerationCache
@@ -22,6 +23,14 @@ def test_cache_hit_miss_and_invalidation(tmp_path) -> None:
     cache.invalidate("lesson-key")
 
     assert cache.get("lesson-key") is None
+
+
+def test_cache_uses_wal_mode(tmp_path) -> None:
+    database_path = tmp_path / "generation-cache.sqlite3"
+    HramatkaGenerationCache(database_path)
+
+    with sqlite3.connect(database_path) as connection:
+        assert connection.execute("PRAGMA journal_mode").fetchone()[0].lower() == "wal"
 
 
 def test_cache_key_is_sha256_of_all_generation_inputs() -> None:

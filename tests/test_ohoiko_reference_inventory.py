@@ -301,6 +301,20 @@ def test_attested_inflection_does_not_borrow_its_lemma_pos():
     assert record.pos == "unlabelled" and record.vesum == "found" and record.vesum_pos == ()
 
 
+@pytest.mark.parametrize("mutation", ["phrase_sentence", "word_space", "title", "notes"])
+def test_ip_scan_rejects_prose_and_metadata_drift(mutation):
+    payload = yaml.safe_load(INVENTORY.read_text())
+    source = payload["sources"][0]
+    if mutation == "phrase_sentence":
+        source["headwords"].append({"lemma": "Це коротке речення.", "kind": "phrase"})
+    elif mutation == "word_space":
+        next(r for r in source["headwords"] if r["kind"] == "word")["lemma"] = "два слова"
+    else:
+        source[mutation] += " copied prose"
+    with pytest.raises(AssertionError):
+        assert_ip_fields(payload)
+
+
 def test_committed_phrase_segmentation_and_spelling_variants():
     from scripts.curriculum.validate.a1_reference import reference_spellings
 

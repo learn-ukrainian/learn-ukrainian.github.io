@@ -502,6 +502,19 @@ def test_a_changed_pack_or_state_gives_a_different_manifest(tmp_path, monkeypatc
     assert yaml.safe_load((tmp_path / doc["inputs"]["learner_state"]["path"]).read_bytes())["learner_state"] == {"a": 2}
 
 
+def test_changed_lesson_provenance_stales_the_manifest_and_closure(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
+    doc, digest = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    provenance_path = tmp_path / doc["inputs"]["provenance"]["path"]
+    provenance_path.write_bytes(provenance_path.read_bytes() + b"\n")
+    assert [change["input"] for change in manifest.changed_inputs(doc, tmp_path)] == ["inputs.provenance"]
+    closure = compute_closure(
+        level, slug, [{"n": 1, "kind": "lesson"}], repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir
+    )
+    assert any(row["manifest_sha256"] == digest and row["input"] == "inputs.provenance" for row in closure["stale"])
+
+
 def test_an_earlier_plans_letter_order_change_stales_an_existing_lesson_manifest(tmp_path):
     """A lesson manifest records the planned learner state; reordering an earlier plan's letters stales it (#9182).
 

@@ -224,6 +224,16 @@ def test_once_final_recheck_refusal_exits_two_without_resume(wake, capsys):
     assert "codex_wake_busy:start_event" in capsys.readouterr().err
 
 
+def test_completed_overlap_is_still_reported(wake):
+    def race():
+        for kind, turn_id in [("task_started", "live"), ("task_started", "resume"), ("task_complete", "live"), ("task_complete", "resume")]:
+            append(wake.rollout, kind, turn_id)
+    wake.action = race
+    assert watch.main(ARGS) == 2
+    report = receipt(wake)
+    assert report["status"] == "OVERLAP" and report["open_count"] == 0
+
+
 def test_historical_overlap_does_not_contaminate_new_clean_wake(wake, capsys):
     append(wake.rollout, "task_started", "old-a")
     append(wake.rollout, "task_started", "old-b")
@@ -583,3 +593,12 @@ def test_rollout_key_is_identity_bound_and_does_not_use_cursor(wake):
     path.write_text(json.dumps(state))
     assert watch.main(ARGS) == 2 and wake.sends == 0
     assert watch.read_codex_wakes("codex", {7})[7]["reason"] == "retained_receipt_invalid"
+
+
+def test_notification_cursor_preserves_receipt_until_ack(wake, monkeypatch):
+    report = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "open_turns"}
+    watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], report)
+    with watch.open_readonly_db(wake.db) as conn:
+        assert watch.poll_once(conn, "codex", last_seen=7) == []
+    assert receipt(wake) == report
+    assert watch.main(ARGS) == 2 and wake.sends == 0

@@ -257,3 +257,8 @@ class TestBareUrlConversion:
         assert "<YouTubeVideo" in result
         assert "[youtube.com]" not in result
         assert "[www.youtube.com]" not in result
+
+    def test_html_comment_url_not_converted(self):
+        text = "<!-- See https://example.com/internal for reference -->"
+        result, _count = convert_dsl_to_mdx(text)
+        assert "[example.com]" not in result

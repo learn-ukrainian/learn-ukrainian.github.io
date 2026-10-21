@@ -194,6 +194,22 @@ def test_build_pool_excludes_derived_forms_and_avoid_classified_lemmas() -> None
     assert [item["lemma"] for item in build_pool(entries, size=1)] == ["автобус"]
 
 
+def test_main_writes_deterministic_json_bytes(tmp_path) -> None:
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        json.dumps({"entries": fixture_entries()}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    out_one = tmp_path / "one.json"
+    out_two = tmp_path / "two.json"
+
+    assert main(["--manifest", str(manifest), "--out", str(out_one), "--size", "10"]) == 0
+    assert main(["--manifest", str(manifest), "--out", str(out_two), "--size", "10"]) == 0
+
+    assert out_one.read_bytes() == out_two.read_bytes()
+    assert out_one.read_text(encoding="utf-8").endswith("\n")
+
+
 def _daily_atlas_db(tmp_path: Path) -> Path:
     """Materialize a fixture atlas.db from a small manifest via the real migrator.
 

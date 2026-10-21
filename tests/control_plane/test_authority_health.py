@@ -181,6 +181,36 @@ def test_connect_time_privilege_denial_reads_the_wrapped_sqlstate(monkeypatch, t
         _assert_opaque(status, marker)
 
 
+def test_connect_time_unreachable_dsn_stays_a_probe_failure(monkeypatch, tmp_path):
+    """SQLSTATE 08001 on the wrapped connect error is not a privilege denial."""
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+
+    def unreachable(*_args, **_kwargs):
+        raise psycopg.errors.SqlclientUnableToEstablishSqlconnection(marker)
+
+    status = _status_when_connect_fails(monkeypatch, tmp_path, unreachable)
+    assert status["schema"]["db_error"] == "pg_probe_failed"
+    _assert_opaque(status, marker)
+
+
+def test_connect_time_chained_non_psycopg_errors_stay_probe_failures(monkeypatch, tmp_path):
+    """A cause chain with no SQLSTATE stays a probe failure and leaks no text."""
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+
+    def chained(*_args, **_kwargs):
+        try:
+            raise OSError(marker)
+        except OSError as inner:
+            try:
+                raise RuntimeError(marker) from inner
+            except RuntimeError as mid:
+                raise ValueError(marker) from mid
+
+    status = _status_when_connect_fails(monkeypatch, tmp_path, chained)
+    assert status["schema"]["db_error"] == "pg_probe_failed"
+    _assert_opaque(status, marker)
+
+
 def test_connect_time_cause_cycle_does_not_hang(monkeypatch, tmp_path):
     """A cause/context cycle returns, and a denial on that cycle is still classified."""
     marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
@@ -207,6 +237,36 @@ def test_connect_time_cause_cycle_does_not_hang(monkeypatch, tmp_path):
     status = _status_when_connect_fails(monkeypatch, tmp_path, denial_cycle)
     assert status["schema"]["db_error"] == "pg_privilege_denied"
     _assert_opaque(status, marker)
+
+
+def test_sqlstate_walk_stops_at_the_chain_limit():
+    """Privilege past the walk cap stays a probe failure; one inside the cap does not."""
+    from scripts.control_plane.health import _SQLSTATE_CHAIN_LIMIT, read_failure_code
+    from scripts.control_plane.storage import Authority
+
+    def chain(depth: int) -> Exception:
+        head: Exception = RuntimeError("synthetic")
+        current = head
+        for _ in range(1, depth):
+            nxt: Exception = RuntimeError("synthetic")
+            current.__cause__ = nxt
+            current = nxt
+        current.sqlstate = "42501"
+        return head
+
+    assert read_failure_code(chain(_SQLSTATE_CHAIN_LIMIT), Authority.PG) == "pg_privilege_denied"
+    assert read_failure_code(chain(_SQLSTATE_CHAIN_LIMIT + 1), Authority.PG) == "pg_probe_failed"
+
+
+def test_missing_pg_dsn_is_not_component_refusal_or_missing_sqlite(monkeypatch, tmp_path):
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    status = message_plane.read_plane_status(root=tmp_path / "absent")
+    assert status["schema"]["db_error"] == "pg_dsn_missing"
+    assert status["schema"]["db_exists"] is None
+    assert _short_plane_health(status)["db_exists"] is None
+    assert status["store"]["reachable"] is False
+    assert _short_plane_health(status)["healthy"] is False
+    assert not (tmp_path / "absent").exists()
 
 
 @pytest.mark.parametrize("phase", ["connect", "query"])
@@ -267,6 +327,20 @@ def test_pg_never_stats_or_opens_local_sqlite(monkeypatch, tmp_path):
     assert message_plane.read_plane_status(root=tmp_path)["store"]["reachable"] is True
 
 
+def test_unsupported_probe_is_not_database_absence(monkeypatch, tmp_path):
+    from scripts.control_plane.storage import COMPONENT_AUTHORITIES, Authority
+
+    conn = PgRead()
+    install_pg(monkeypatch, conn)
+    monkeypatch.setitem(COMPONENT_AUTHORITIES, "plane_status", frozenset({Authority.SQLITE}))
+    status = message_plane.read_plane_status(root=tmp_path)
+    assert status["schema"]["db_error"] == "authority_unsupported_component"
+    assert status["schema"]["db_exists"] is None
+    assert status["store"]["reachable"] is None
+    assert _short_plane_health(status)["db_exists"] is None
+    assert not conn.statements
+
+
 @pytest.mark.parametrize("command", ["metrics", "backlog", "dead-letters"])
 @pytest.mark.parametrize("outcome", ["success", "connect_failure", "query_failure", "missing_dsn"])
 def test_pg_sibling_cli_and_facade_collectors_agree(monkeypatch, tmp_path, capsys, command, outcome):
@@ -319,3 +393,54 @@ def test_pg_sibling_cli_and_facade_collectors_agree(monkeypatch, tmp_path, capsy
                 }[outcome]
             )
     assert not (tmp_path / "absent").exists()
+
+
+@pytest.mark.parametrize("phase", ["missing_dsn", "connect", "query"])
+def test_api_and_cli_status_fail_closed_without_driver_details(monkeypatch, tmp_path, capsys, caplog, phase):
+    from dataclasses import replace
+
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+
+    from scripts.api import fleet_router
+    from scripts.api.monitor_context import fixture_context
+    from scripts.fleet_comms import cli, fleet_overview
+
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+    install_pg(monkeypatch, PgRead(error=psycopg.errors.SyntaxError(marker)))
+    expected = "pg_probe_failed"
+    if phase == "missing_dsn":
+        monkeypatch.delenv("LEARN_UKRAINIAN_CP_PG_DSN")
+        expected = "pg_dsn_missing"
+    elif phase == "connect":
+
+        def fail(*args, **kwargs):
+            raise psycopg.OperationalError(marker)
+
+        monkeypatch.setattr(psycopg, "connect", fail)
+
+    ctx = fixture_context(tmp_path)
+    ctx = replace(ctx, stores=replace(ctx.stores, epics_store=None))
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(fleet_router.router, prefix="/api/fleet")
+    monkeypatch.setattr(fleet_router, "recent_runtime_records", lambda **kwargs: {"records": []})
+    with TestClient(app) as client:
+        health = client.get("/api/fleet/health").json()
+        overview = client.get("/api/fleet/overview").json()
+        facade = client.get("/api/fleet/facade/status").json()
+    assert health["ok"] is False
+    assert facade["health"]["healthy"] is False
+    monkeypatch.setattr(fleet_overview, "build_fleet_overview", lambda **kwargs: {"available": False})
+    assert cli.main(["fleet", "status", "--root", str(tmp_path / "absent")]) == cli.EXIT_OK
+    captured = capsys.readouterr()
+    cli_result = json.loads(captured.out)
+    assert cli_result["health"]["healthy"] is False
+    for status in (health, overview["health"], facade["plane_status"], cli_result["plane_status"]):
+        assert status["schema"]["db_error"] == expected
+        assert status["store"]["reachable"] is False
+        assert status["schema"]["store"]["reachable"] is False
+        assert "authority_unsupported_component" not in json.dumps(status)
+    public_output = json.dumps([health, overview, facade, cli_result]) + captured.err + caplog.text
+    assert marker not in public_output
+    assert "Traceback" not in public_output

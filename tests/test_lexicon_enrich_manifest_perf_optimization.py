@@ -109,6 +109,38 @@ def test_frazeolohichnyi_fts_limit_crowding_parity(tmp_path, monkeypatch):
     conn.close()
 
 
+def test_frazeolohichnyi_short_variant_fallback_and_missing_table(tmp_path):
+    db_path = tmp_path / "test_sources_short.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("""
+        CREATE TABLE frazeolohichnyi (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        )
+    """)
+    conn.execute("INSERT INTO frazeolohichnyi (id, word, definition, text, source) VALUES (?, ?, ?, ?, ?)",
+                 (1, "як", "Опис слова як.", "як", "Словник"))
+    conn.commit()
+
+    enrich_manifest_module._FRAZEOLOHICHNYI_FTS_AVAILABLE.clear()
+    _idioms_frazeolohichnyi(conn, "як")
+
+    cursor = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='frazeolohichnyi_fts'")
+    assert cursor.fetchone() is None
+    conn.close()
+
+
+def test_missing_table_returns_none():
+    conn = sqlite3.connect(":memory:")
+    enrich_manifest_module._FRAZEOLOHICHNYI_FTS_AVAILABLE.clear()
+
+    assert _idioms_frazeolohichnyi(conn, "яблуко") is None
+    conn.close()
+
+
 def test_frazeolohichnyi_readonly_degrades(tmp_path, monkeypatch):
     db_path = tmp_path / "test_sources_ro.db"
     conn = sqlite3.connect(db_path)

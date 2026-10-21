@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+import yaml
 
 from scripts.build.fresh.candidates import item_candidates, record_candidates
 from scripts.build.fresh.runner import check_4_activities
 from tests.build.test_fresh_assemble import make_word_record, make_words_store
 
 pytestmark = pytest.mark.reads_content
+ROOT = Path(__file__).resolve().parents[2]
+
+
 def _form(text: str, tags: str) -> dict:
     # Forms and tags below were checked with sources.inspect_words (VESUM).
     return {"form": text, "tags": tags, "stress_source": "pending", "markers": [], "learner": True}
@@ -217,3 +223,12 @@ def test_composite_and_writer_option_outside_generated_candidates_fail(words: di
         if outsider == "бути":
             assert row["code"] == "form_candidate_not_generated"
     item["options"] = ["буду", "буде"]
+
+
+def test_determinism_and_real_a1_store_candidate() -> None:
+    store = yaml.safe_load((ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml").read_text(encoding="utf-8"))
+    record = next(record for record in store["words"] if record["id"] == "W-001")
+    first = record_candidates(record)
+    assert first == record_candidates(record)
+    assert all(candidate["record"] == "W-001" for candidate in first)
+    _assert_no_stress_leak(_surfaces(first), [record])

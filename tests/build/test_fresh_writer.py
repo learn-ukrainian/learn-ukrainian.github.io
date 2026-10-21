@@ -281,6 +281,26 @@ def test_bilingual_arrays_unequal_length_fails(a1_valid_fixture):
     assert "bilingual_equal_length" in checks
 
 
+def test_writer_seat_validation(tmp_path, passing_preflight):
+    """The writer seat must be explicitly one of {claude, codex, agy}."""
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("prompt", encoding="utf-8")
+
+    for bad_seat in ("unknown_seat", "grok"):
+        with pytest.raises(ValueError, match=f"Invalid writer '{bad_seat}'"):
+            dispatch_writer(
+                writer=bad_seat,
+                level="a1",
+                slug="mod-1",
+                lesson_n=1,
+                prompt_file=prompt_file,
+                prompt_sha256="0" * 64,
+                inputs=_inputs("0" * 64),
+                output_dir=tmp_path / "out",
+                preflight_result=passing_preflight,
+            )
+
+
 def test_dispatch_refuses_without_passing_preflight(tmp_path):
     """Finding 4: dispatch_writer structurally refuses unless preflight passed."""
     prompt_file = tmp_path / "prompt.md"
@@ -542,6 +562,21 @@ def test_new_inputs_after_done_attempt_get_fresh_task_id(tmp_path, a1_valid_fixt
         dispatch(new)
 
 
+def test_writer_inputs_must_match_prompt_hash(tmp_path, passing_preflight):
+    with pytest.raises(ValueError, match="does not match prompt_sha256"):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="test",
+            lesson_n=1,
+            prompt_file=tmp_path / "prompt.md",
+            prompt_sha256="a" * 64,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            inputs=INPUTS,
+        )
+
+
 @pytest.mark.parametrize("key", INPUT_KEYS[:-1])
 def test_writer_inputs_must_be_complete(tmp_path, passing_preflight, key):
     """No entry point may key a dispatch on a partial snapshot: that gave identical work a second ID (#8425)."""
@@ -759,6 +794,16 @@ sys.exit(1)
         )
 
 
+@pytest.mark.parametrize("text", ["", " \n\t", "value: [", "```yaml\nvalue: [\n```"])
+def test_writer_yaml_empty_and_malformed(text):
+    cleaned = strip_markdown_fence(text)
+    if "[" in text:
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(cleaned)
+    else:
+        assert yaml.safe_load(cleaned) is None
+
+
 @pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"], ids=["LF", "CRLF", "CR"])
 @pytest.mark.parametrize("exterior_blanks", [0, 1, 3])
 @pytest.mark.parametrize("payload_blanks", [0, 1, 3])
@@ -789,6 +834,15 @@ def test_writer_uniform_indentation_and_literal_backticks_preserved(fenced):
     cleaned = strip_markdown_fence(text)
     assert cleaned == body
     assert yaml.safe_load(cleaned) == {"first": "one", "value": "```\ntail\n\n"}
+
+
+def test_writer_first_line_only_indentation_remains_malformed():
+    # Accepted low residual: do not repair malformed padding by corrupting valid indentation.
+    body = "  first: one\nsecond: two\n"
+    for text in (body, f"```yaml\n{body}```\n\n"):
+        assert strip_markdown_fence(text) == body
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(strip_markdown_fence(text))
 
 
 @pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])

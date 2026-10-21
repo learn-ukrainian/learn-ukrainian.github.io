@@ -204,6 +204,31 @@ def test_classify_withholds_noun_pos_when_displayed_sense_has_adjective_morpholo
     assert lemma not in classify
 
 
+@pytest.mark.parametrize("lemma", ["святий", "вчений", "психічний"])
+def test_classify_names_pos_mismatch_residual_for_adjectival_morphology(lemma: str) -> None:
+    entry = _entry(lemma, "noun", "adjectival sense", "B1", morphology={"pos": "прикметник"})
+    evidence = _vesum_lemma_evidence([lemma], JsonVesumVerifier(VESUM_ROWS))[lemma]
+    residuals: list[dict[str, str]] = []
+
+    assert (
+        _build_classify_items(
+            entry,
+            {"lemmaId": lemma, "lemma": lemma, "cefr": "B1"},
+            vesum_evidence=evidence,
+            pos_residuals=residuals,
+        )
+        == []
+    )
+    assert residuals == [{"lemmaId": lemma, "lemma": lemma, "cefr": "B1", "reason": "morphology_pos_mismatch"}]
+
+
+def test_classify_keeps_attested_noun_pos_when_morphology_is_noun() -> None:
+    lemma = "святий"
+    classify = _classify_by_lemma([_entry(lemma, "noun", "saint", "B1", morphology={"pos": "іменник"})])
+
+    assert _set_answers(classify[lemma]) == {"pos": ["noun"]}
+
+
 def test_classify_does_not_reuse_displayed_pos_as_missing_morphology_pos() -> None:
     entry = _entry("святий", "noun", "holy", "B1", morphology={"forms": [{"label": "чол., називний"}]})
     evidence = _vesum_lemma_evidence(["святий"], JsonVesumVerifier(VESUM_ROWS))["святий"]

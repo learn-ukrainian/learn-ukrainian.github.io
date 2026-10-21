@@ -45,6 +45,12 @@ def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, comma
     assert list(tmp_path.rglob("*")) == [repo]
 
 
+@pytest.mark.parametrize("epic", ["x", "0", "infra", "7919", "open-model-data", "a--b"])
+def test_epic_dir_preserves_valid_epic(tmp_path: Path, epic: str) -> None:
+    assert glm_lane._epic_dir(tmp_path, epic) == tmp_path / ".claude" / f"{epic}-epic"
+    assert not list(tmp_path.iterdir())
+
+
 @pytest.fixture
 def clear_ci_env(monkeypatch: pytest.MonkeyPatch) -> None:
     for var in _CI_ENV_VARS:
@@ -58,6 +64,12 @@ def test_assert_glm_egress_allowed_passes_when_no_ci_env(clear_ci_env: None) -> 
 @pytest.mark.parametrize("var", _CI_ENV_VARS)
 def test_assert_glm_egress_allowed_raises_under_ci(monkeypatch: pytest.MonkeyPatch, var: str) -> None:
     monkeypatch.setenv(var, "true")
+    with pytest.raises(GlmEgressForbiddenError, match="China-hosted"):
+        glm_lane.assert_glm_egress_allowed("test")
+
+
+def test_assert_glm_egress_allowed_raises_on_empty_ci_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CI", "")
     with pytest.raises(GlmEgressForbiddenError, match="China-hosted"):
         glm_lane.assert_glm_egress_allowed("test")
 

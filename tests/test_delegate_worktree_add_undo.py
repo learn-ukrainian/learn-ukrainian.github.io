@@ -28,6 +28,7 @@ import stat
 import subprocess
 import sys
 import textwrap
+import time
 from pathlib import Path
 from typing import Any
 
@@ -241,6 +242,31 @@ def test_successful_add_retires_the_reservation_record(repo: Path) -> None:
     assert proc.returncode == 0
     assert worktree.resolve() in _registered(repo)
     assert _record("ok") is None
+
+
+def test_registration_left_without_its_directory_is_reported(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def add_then_lose_directory(add_command: list[str], *, cwd: Path, worktree_path: Path, **kwargs: Any):
+        _report_git_spawned_then_exited(kwargs["on_spawn"])
+        proc = _REAL_RUN(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=_git_env())
+        assert proc.returncode == 0, proc.stderr
+        leave_half_built(worktree_path)
+        shutil.rmtree(worktree_path)
+        raise delegate.WorktreeAddTimeout(add_command, 120.0, git_exited=True)
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", add_then_lose_directory)
+    worktree = _dispatch_path(repo, "lost-dir")
+
+    with pytest.raises(delegate.WorktreeAddFailed) as caught:
+        delegate._add_reserved_worktree(
+            ["git", "worktree", "add", "-b", "claude/lost-dir", str(worktree), "main"],
+            repo_root=repo,
+            worktree_path=worktree,
+            task_id="lost-dir",
+        )
+
+    _assert_leftover_reported(caught.value.cleanup, repo, worktree)
+    # Not pruned either: the registration stays for a human to inspect.
+    assert worktree.resolve() in _registered(repo)
 
 
 def test_pre_existing_path_is_never_passed_to_git_or_removed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -728,7 +754,33 @@ def test_worktree_prep_and_leftover_report_never_remove_a_registered_worktree(fu
                 assert not words, f"{function.__name__} passes {sorted(words)} to {callee}"
 
 
+def test_the_removal_command_is_only_ever_displayed() -> None:
+    source = inspect.getsource(worktree_prep.verify_first_command)
+    assert "subprocess" not in source and "_git(" not in source
+    assert worktree_prep.verify_first_command(Path("/r"), Path("/r/w x")).startswith(
+        "verify first: git -C /r worktree unlock '/r/w x' && "
+    )
+
+
 # --- the bounded add itself ------------------------------------------------------------------
+
+
+def test_stalled_add_is_stopped_with_its_process_group(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_TIMEOUT_S", 0.2)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_STALL_S", 0.2)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_MAX_S", 5.0)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_POLL_S", 0.05)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_STOP_GRACE_S", 5.0)
+    # The child ``sleep`` keeps the output pipes open: the stop returns
+    # promptly only when the whole process group is signalled.
+    command = ["sh", "-c", "sleep 30 & wait"]
+
+    started = time.monotonic()
+    with pytest.raises(delegate.WorktreeAddTimeout) as caught:
+        delegate._run_worktree_add(command, cwd=tmp_path, worktree_path=tmp_path / "never-written")
+
+    assert time.monotonic() - started < 4.0
+    assert caught.value.git_exited is True
 
 
 def test_stop_reports_a_process_that_outlives_sigkill(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -744,3 +796,20 @@ def test_stop_reports_a_process_that_outlives_sigkill(monkeypatch: pytest.Monkey
 
     assert delegate._stop_worktree_add(Unkillable()) is False  # type: ignore[arg-type]
     assert signals == [delegate.signal.SIGTERM, delegate.signal.SIGKILL]
+
+
+def test_add_that_keeps_writing_outlives_the_base_window(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_TIMEOUT_S", 0.2)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_STALL_S", 0.5)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_MAX_S", 10.0)
+    monkeypatch.setattr(delegate, "_WORKTREE_ADD_POLL_S", 0.05)
+    target = tmp_path / "checkout"
+    target.mkdir()
+    # Writes one file every 0.1 s for ~1.2 s: six times the base window, but
+    # never idle for the stall window.
+    command = ["sh", "-c", f'for i in 1 2 3 4 5 6 7 8 9 10 11 12; do : > "{target}/f$i"; sleep 0.1; done']
+
+    proc = delegate._run_worktree_add(command, cwd=tmp_path, worktree_path=target)
+
+    assert proc.returncode == 0
+    assert len(list(target.iterdir())) == 12

@@ -115,6 +115,21 @@ def test_validate_findings_refuses_two_dot_artifact_paths() -> None:
         )
 
 
+def test_validate_findings_allows_in_surface_paths() -> None:
+    inventory = inventory_from_path_status(
+        repository=_REPO,
+        pr_number=5799,
+        head_sha=_SHA,
+        base_ref_oid=_BASE,
+        entries=(("scripts/fleet_comms/review_publication.py", "MODIFIED"),),
+    )
+    validate_findings_against_inventory(
+        _evidence("scripts/fleet_comms/review_publication.py"),
+        inventory,
+        expected_head_sha=_SHA,
+    )
+
+
 def test_validate_rejects_mismatched_head_sha() -> None:
     inventory = inventory_from_path_status(
         repository=_REPO,

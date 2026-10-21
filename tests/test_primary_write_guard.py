@@ -237,3 +237,27 @@ def test_unusual_filenames_handled(temp_git_repo, monkeypatch):
 
     assert utf8_file.read_text(encoding="utf-8") == "Ukrainian Book modified\n"
     assert space_file.read_text(encoding="utf-8") == "Space File modified\n"
+
+
+def test_install_hooks(temp_git_repo, monkeypatch):
+    main_dir = temp_git_repo["main"]
+    monkeypatch.chdir(main_dir)
+    installer = main_dir / "scripts" / "install_git_hooks.sh"
+    installer.parent.mkdir(parents=True)
+    installer.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        'touch "$PWD/.tracked-hook-installer-ran"\n',
+        encoding="utf-8",
+    )
+    installer.chmod(0o755)
+
+    pwg.install_hooks()
+
+    assert (main_dir / ".tracked-hook-installer-ran").exists()
+    for hook_name in ("post-merge", "post-checkout", "post-commit"):
+        hook_path = main_dir / ".git" / "hooks" / hook_name
+        if hook_path.exists():
+            content = hook_path.read_text(encoding="utf-8")
+            assert "AGY_PRIMARY_WRITE_GUARD_START" not in content
+            assert "AGY_PRIMARY_STAY_ON_MAIN_START" not in content

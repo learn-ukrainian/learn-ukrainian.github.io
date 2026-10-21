@@ -1380,6 +1380,39 @@ def test_page_one_reseed_after_transient_failure_uses_direct_search(tmp_path: Pa
     assert "resume_mismatch" not in err
 
 
+def test_mid_page_prefix_resumes_from_completed_page_without_fast_forward(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.conn.execute("DELETE FROM register_rows WHERE page_num = 2 AND row_index >= 22")
+        ledger.conn.execute("UPDATE register_pages SET end_headword = '', row_count = 0 WHERE page_num = 2")
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    server = ShiftedWindowServer(3)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=server,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    assert "direct search page 2, k=3" in capsys.readouterr().err
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for _, data in server.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == ["w024"]
+
+
 @pytest.mark.parametrize("damage", ["gap", "start", "end", "count"])
 def test_verify_ledger_flag_is_read_only_and_names_bad_page(tmp_path: Path, capsys, damage: str):
     state_dir = tmp_path / "state"
@@ -2357,6 +2390,23 @@ def test_resume_offset_aligns_homonym_across_page_boundary(tmp_path: Path, offse
                 )
                 == offset
             )
+    finally:
+        ledger.close()
+
+
+def test_resume_offset_stays_none_when_two_homonym_alignments_agree(tmp_path: Path):
+    # Without page 6932 rows, the window starting at the first homonym is
+    # consistent both at k=0 and k=1, so neither may be chosen.
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite", target_rows=False)
+    try:
+        rows = _boundary_window(1)
+        assert [row["stressed"] for row in rows[:2]] == ["порива́ння", "порива́ння"]
+        assert (
+            _resume_window_offset(
+                ledger, rows, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
+            )
+            is None
+        )
     finally:
         ledger.close()
 

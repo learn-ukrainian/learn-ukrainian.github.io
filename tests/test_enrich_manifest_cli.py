@@ -10,6 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 ENRICH_SCRIPT = ROOT / "scripts" / "lexicon" / "enrich_manifest.py"
@@ -70,6 +72,18 @@ def test_enrich_no_flags_exits_nonzero_and_leaves_manifest_untouched() -> None:
 # --- build_data_manifest.py (sibling #5393) ------------------------------------
 
 
+def test_build_help_exits_zero_and_leaves_manifest_untouched() -> None:
+    before = _path_snapshot(MANIFEST_PATH)
+    proc = _run_script(BUILD_SCRIPT, "--help")
+    after = _path_snapshot(MANIFEST_PATH)
+
+    assert proc.returncode == 0, proc.stderr
+    help_text = (proc.stdout + proc.stderr).lower()
+    assert "usage:" in help_text
+    assert "--write" in help_text
+    assert after == before
+
+
 def test_build_no_flags_exits_nonzero_and_leaves_manifest_untouched() -> None:
     before = _path_snapshot(MANIFEST_PATH)
     proc = _run_script(BUILD_SCRIPT)
@@ -80,6 +94,21 @@ def test_build_no_flags_exits_nonzero_and_leaves_manifest_untouched() -> None:
 
 
 # --- export_open_dataset.py (sibling #5393) -----------------------------------
+
+
+def test_export_help_exits_zero_and_leaves_dataset_untouched(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Subprocess path: assert default dataset root is not created/touched by --help.
+    before_root_exists = DATASET_ROOT.exists()
+    before_marker = _path_snapshot(DATASET_ROOT / "README.md") if before_root_exists else (False, None, None, None)
+    proc = _run_script(EXPORT_SCRIPT, "--help")
+    after_marker = _path_snapshot(DATASET_ROOT / "README.md") if DATASET_ROOT.exists() else (False, None, None, None)
+
+    assert proc.returncode == 0, proc.stderr
+    assert "usage:" in (proc.stdout + proc.stderr).lower()
+    assert "--write" in (proc.stdout + proc.stderr)
+    assert after_marker == before_marker
+    if not before_root_exists:
+        assert not DATASET_ROOT.exists()
 
 
 def test_export_no_flags_exits_nonzero() -> None:

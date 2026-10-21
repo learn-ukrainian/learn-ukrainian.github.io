@@ -345,6 +345,13 @@ def test_dirty_tracked_file_refuses(repo: Path, free_fuser: Path) -> None:
     assert _refusal(repo, worktree) == "dirty or untracked files"
 
 
+def test_untracked_file_refuses(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    (worktree / "notes" / "deep").mkdir(parents=True)
+    (worktree / "notes" / "deep" / "scratch.txt").write_text("x\n", encoding="utf-8")
+    assert _refusal(repo, worktree) == "dirty or untracked files"
+
+
 def test_one_unpushed_commit_refuses(repo: Path, free_fuser: Path) -> None:
     worktree = dispatch_tree(repo)
     (worktree / "README.md").write_text("local only\n", encoding="utf-8")
@@ -404,6 +411,13 @@ def test_unlistable_process_table_refuses(repo: Path, free_fuser: Path, monkeypa
 def test_live_task_refuses(repo: Path, free_fuser: Path, status: str) -> None:
     worktree = dispatch_tree(repo, status=status)
     assert _refusal(repo, worktree) == f"task task-a is {status}"
+
+
+def test_task_of_another_id_claiming_the_tree_refuses(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    record = write_task(repo, "reuser", worktree, status="running")
+    age([record])
+    assert _refusal(repo, worktree) == "task reuser is running"
 
 
 @pytest.mark.parametrize("status", ["queued", "", None])
@@ -503,6 +517,20 @@ def test_empty_or_unparseable_head_reflog_is_not_reaped(
     )
 
     assert _refusal(repo, worktree) == reason
+
+
+def _append_reflog_stamp(log: Path, stamp: int) -> None:
+    text = log.read_text(encoding="utf-8")
+    lines = [line for line in text.splitlines() if line.strip()]
+    header, separator, message = lines[-1].partition("\t")
+    match = _REFLOG_STAMP.fullmatch(header)
+    assert match is not None
+    entry = f"{match.group(1)}{stamp} {match.group(3)}"
+    if separator:
+        entry += f"{separator}{message}"
+    log.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
+    with log.open("a", encoding="utf-8") as handle:
+        handle.write(entry + "\n")
 
 
 def _keep_once(repo: Path, worktree: Path) -> None:
@@ -765,6 +793,25 @@ def test_reflog_watch_lock_held_by_another_process_keeps_a_backdated_reset(
     finally:
         holder.kill()
         holder.wait(timeout=5)
+
+
+def test_recent_entry_then_backdated_entry_stays_active(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    _append_reflog_stamp(log, int(time.time()))
+    _append_reflog_stamp(log, 978307200)
+    old = time.time() - TWO_HOURS
+    os.utime(log, (old, old))
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            worktree / "README.md",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+
+    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
 
 
 def test_identical_reflog_bytes_after_observation_are_still_reaped(repo: Path, free_fuser: Path) -> None:
@@ -2039,6 +2086,31 @@ def at_the_git_call(monkeypatch: pytest.MonkeyPatch, change: Any) -> list[Path]:
 
     monkeypatch.setattr(worktree_claims, "safe_git", spy)
     return seen
+
+
+@pytest.mark.parametrize("change", [late_hidden, late_ignored, late_process])
+def test_arrival_during_the_git_removal_call_is_lost_documented_residual(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, holders: list[Any], change: Any
+) -> None:
+    """Residual risk, not a guarantee (runbook): no privilege-free check excludes a same-user writer.
+
+    Bytes or a process that arrive after the final re-check, while the
+    non-forced ``git worktree remove`` runs, are not seen: Git trusts
+    assume-unchanged, deletes ignored files and ignores processes.
+    """
+    worktree = dispatch_tree(repo, detached=True)
+    flag_for(change, worktree, repo)
+    seen = at_the_git_call(monkeypatch, change)
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    [staged] = seen
+    assert not worktree.exists() and not staged.exists()
+    if change is late_process:
+        [process] = holders
+        assert process.poll() is None  # still running, its working directory deleted
+        assert os.readlink(f"/proc/{process.pid}/cwd").endswith(" (deleted)")
 
 
 def test_tracked_edit_at_the_git_call_is_refused_by_git_and_restored(

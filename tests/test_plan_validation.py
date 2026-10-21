@@ -51,6 +51,18 @@ class TestValidatePlan:
         errors = validate_plan(path, 'b1')
         assert len(errors) == 0
 
+    def test_missing_word_target(self, tmp_path):
+        plan = {
+            'module': 'test-module',
+            'level': 'B1',
+            'title': 'Test Module',
+            'objectives': ['Learn something'],
+            'content_outline': [{'section': 'Intro', 'words': 500}],
+        }
+        path = self._write_plan(tmp_path, plan)
+        errors = validate_plan(path, 'b1')
+        assert any('Missing word_target' in e for e in errors)
+
     def test_target_mismatch(self, tmp_path):
         """Plan target significantly below config = error."""
         config_target = get_config_target('b1')
@@ -114,6 +126,19 @@ class TestValidatePlan:
         assert 'size_policy.basis must be a nonempty string.' in errors
         assert any('word_target under config' in error for error in errors)
 
+    def test_missing_outline(self, tmp_path):
+        target = get_config_target('b1')
+        plan = {
+            'module': 'test-module',
+            'level': 'B1',
+            'title': 'Test Module',
+            'objectives': ['Learn something'],
+            'word_target': target,
+        }
+        path = self._write_plan(tmp_path, plan)
+        errors = validate_plan(path, 'b1')
+        assert any('Missing content_outline' in e for e in errors)
+
     def test_outline_sum_mismatch(self, tmp_path):
         target = get_config_target('b1')
         plan = {
@@ -135,6 +160,23 @@ class TestValidatePlan:
         assert any("content_outline sum" in e and ("under" in e or "over" in e) for e in errors), (
             f"expected an outline-sum-mismatch error, got: {errors}"
         )
+
+    def test_empty_plan(self, tmp_path):
+        plan_path = tmp_path / "empty.yaml"
+        plan_path.write_text("", encoding='utf-8')
+        errors = validate_plan(plan_path, 'b1')
+        assert any('Empty' in e for e in errors)
+
+    def test_missing_required_fields(self, tmp_path):
+        plan = {
+            'word_target': 2000,
+            'content_outline': [{'section': 'Intro', 'words': 2000}],
+        }
+        path = self._write_plan(tmp_path, plan)
+        errors = validate_plan(path, 'b1')
+        # Should flag missing module, level, title, objectives
+        assert any('module' in e for e in errors)
+        assert any('title' in e for e in errors)
 
 
 if __name__ == '__main__':

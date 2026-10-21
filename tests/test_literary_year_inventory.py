@@ -510,6 +510,20 @@ def test_synthetic_fixture_preserves_slots_classes_and_digest(main_inputs: tuple
         assert set(row) <= allowed  # type: ignore[arg-type]
 
 
+def test_uppercase_pin_is_accepted_and_recorded_lowercase(tmp_path: Path) -> None:
+    manifest = tmp_path / "manifest.json"
+    scraper = tmp_path / "scraper.py"
+    manifest_sha = _write_json(manifest, {})
+    scraper_sha = _write(scraper, b'P1_AUTHORS = {"one": {"name": "Author One", "years": "1900-1980"}}\n')
+    code, stdout, stderr = run_cli(_pins(manifest, manifest_sha.upper(), scraper, scraper_sha.upper()))
+
+    assert (code, stderr) == (0, b"")
+    document = _load_success(stdout)
+    assert document["inputs"] == {"manifest_sha256": manifest_sha, "scraper_sha256": scraper_sha}
+    assert document["denominator"] == {"literary_fts_dictionary_attestations": 0}
+    assert document["probe_compatible_counts"]["ukrlib_authors_parsed"] == 1  # type: ignore[index]
+
+
 def test_open_ended_years_and_scalar_witnesses(tmp_path: Path) -> None:
     manifest = tmp_path / "manifest.json"
     scraper = tmp_path / "scraper.py"
@@ -683,6 +697,21 @@ def test_excessive_nesting_is_typed(tmp_path: Path, depth: int) -> None:
     assert scraper.read_bytes() == scraper_raw
 
 
+def test_canonical_json_refuses_nonfinite_and_deep_output() -> None:
+    from scripts.audit.literary_year_inventory import InventoryError, canonical_json
+
+    with pytest.raises(InventoryError) as nonfinite:
+        canonical_json({"chunk_id": float("inf")})
+    assert nonfinite.value.code == "witness_nonfinite_number"
+
+    nested: object = 0
+    for _ in range(10000):
+        nested = [nested]
+    with pytest.raises(InventoryError) as deep:
+        canonical_json(nested)
+    assert deep.value.code == "json_nesting_limit"
+
+
 def test_compound_witness_on_excluded_source_stays_outside_the_denominator(tmp_path: Path) -> None:
     manifest = tmp_path / "manifest.json"
     scraper = tmp_path / "scraper.py"
@@ -831,6 +860,22 @@ def test_scraper_parser_limits_are_typed(tmp_path: Path, scraper_raw: bytes) -> 
     )
     assert manifest.read_bytes() == manifest_raw
     assert scraper.read_bytes() == scraper_raw
+
+
+@pytest.mark.parametrize("limit_error", [MemoryError, RecursionError])
+def test_literal_eval_parser_limits_are_typed(
+    monkeypatch: pytest.MonkeyPatch,
+    limit_error: type[BaseException],
+) -> None:
+    import scripts.audit.literary_year_inventory as inventory
+
+    def raise_limit(_value: object) -> object:
+        raise limit_error
+
+    monkeypatch.setattr(inventory.ast, "literal_eval", raise_limit)
+    with pytest.raises(inventory.InventoryError) as caught:
+        inventory._parse_scraper_authors(b'WRAP = {"a": {"name": "Author One", "years": "1900-1980"}}\n')
+    assert caught.value.code == "scraper_parse_failed"
 
 
 def test_scraper_source_is_not_executed(tmp_path: Path) -> None:

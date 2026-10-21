@@ -20,6 +20,18 @@ def test_lookup_key_strips_stress_and_lowercases() -> None:
     assert lookup_key("А́втобус") == "автобус"
 
 
+def test_clean_gloss_keeps_real_translations() -> None:
+    # plain translations pass through untouched
+    assert _clean_gloss("water") == "water"
+    assert _clean_gloss("railway, railroad") == "railway, railroad"
+    assert _clean_gloss("to calculate, to compute, to figure out") == (
+        "to calculate, to compute, to figure out"
+    )
+    # single grammatical-looking word that is a real translation survives
+    assert _clean_gloss("present") == "present"
+    assert _clean_gloss("plural") == "plural"
+
+
 def test_clean_gloss_drops_pure_grammatical_form_glosses() -> None:
     # bare inflected-form descriptors (no "of <lemma>" tail) are NOT translations
     assert _clean_gloss("accusative singular") == ""

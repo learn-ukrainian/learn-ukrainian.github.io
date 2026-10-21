@@ -133,6 +133,31 @@ def test_verified_when_epic_clean_pointer_present_no_zombies(hermetic_repo) -> N
     assert receipt["reasons"] == []
 
 
+def test_cli_exit_zero_on_verified(hermetic_repo, capsys) -> None:
+    repo_root, tasks_dir = hermetic_repo
+    reader = _reader(
+        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
+    )
+
+    exit_code = hygiene.main(
+        [
+            "--repo-root",
+            str(repo_root),
+            "--dispatch-worktrees-root",
+            str(repo_root / ".worktrees" / "dispatch"),
+            "--tasks-dir",
+            str(tasks_dir),
+            "--disk-path",
+            str(repo_root),
+        ],
+        reader=reader,
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "verified"
+
+
 # --- stale: epic charter --------------------------------------------------
 
 
@@ -171,6 +196,16 @@ def test_stale_when_349_pointer_missing(hermetic_repo) -> None:
     assert receipt["status"] == "stale"
     assert receipt["queue_pointer_ok"] is False
     assert any("pointer" in reason for reason in receipt["reasons"])
+
+
+def test_pointer_short_form_is_also_accepted(hermetic_repo) -> None:
+    repo_root, tasks_dir = hermetic_repo
+    body = f"Queue: {PRIVATE}#{BOARD} is the priority board."
+    reader = _reader({(PUBLIC, EPIC): {"number": EPIC, "body": body}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}})
+
+    receipt = hygiene.hygiene_check(reader=reader, **_base_kwargs(repo_root, tasks_dir))
+
+    assert receipt["queue_pointer_ok"] is True
 
 
 # --- unknown: GitHub unreachable --------------------------------------------
@@ -409,6 +444,11 @@ def test_probe_fails_closed_on_timeout(monkeypatch) -> None:
 
 def test_probe_fails_closed_on_subprocess_error(monkeypatch) -> None:
     assert _probe_with(monkeypatch, OSError("gh missing")) is False
+
+
+def test_probe_returns_false_for_detached_worktree() -> None:
+    """A detached worktree has no branch identity to probe."""
+    assert hygiene._branch_has_open_pr(Path("/nonexistent"), None) is False
 
 
 def test_probe_queries_an_explicit_repository(monkeypatch) -> None:

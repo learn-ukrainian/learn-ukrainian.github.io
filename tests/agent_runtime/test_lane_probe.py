@@ -220,3 +220,16 @@ def test_launcher_only_and_unknown_slots_fail_closed(monkeypatch, tmp_path, caps
     assert probe["agent"] == identity
     assert probe["status"] == "unhealthy"
     assert probe["reason"] == reason
+
+
+@pytest.mark.parametrize("identity", ["claude-", "claude-typo-lane", "CLAUDE-infra", "claudex-infra", "kimi-folk"])
+def test_handoff_cli_rejects_unmintable_identity(monkeypatch, tmp_path, capsys, identity):
+    def unexpected_adapter(_agent):
+        pytest.fail("an unmintable identity must not probe a provider")
+
+    monkeypatch.setattr(lane_probe, "_load_adapter", unexpected_adapter)
+    assert lane_probe.main(["--handoff-agent", identity, "--cwd", str(tmp_path)]) == 1
+    probe = json.loads(capsys.readouterr().out)["probes"][0]
+    assert probe["agent"] == identity
+    assert probe["status"] == "unhealthy"
+    assert probe["reason"] == "agent is not registered"

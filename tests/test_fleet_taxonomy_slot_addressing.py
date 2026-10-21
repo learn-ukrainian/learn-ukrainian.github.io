@@ -74,6 +74,20 @@ def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: st
         _channels._validate_recipient_agent(slot, assignments_path=_AREA_ASSIGNMENTS_YAML)
 
 
+def test_unknown_slot_rejected_naming_valids() -> None:
+    """Verify unknown slot 'claude-nosucharea' is rejected with an error message listing valid agents."""
+    with pytest.raises(ValueError) as exc_info:
+        _channels._validate_agent("claude-nosucharea", assignments_path=_AREA_ASSIGNMENTS_YAML)
+
+    err_msg = str(exc_info.value)
+    assert "Unknown agent 'claude-nosucharea'" in err_msg
+    assert "claude-infra" in err_msg
+    assert "grok-infra" in err_msg
+
+    with pytest.raises(ValueError):
+        _inbox._validate_agent("claude-nosucharea")
+
+
 def test_registry_absent_or_unreadable_fallback_to_static_tuple(tmp_path: Path) -> None:
     """Verify fallback to STATIC_VALID_AGENTS when area_assignments.yaml is missing or corrupt.
 
@@ -183,6 +197,16 @@ def test_resolve_slot_holder_live_holder(session_db_fixture: Path) -> None:
     assert res.generation == 1
     assert res.expires_at == future_time
     assert res.queue_location == "channels DB delivery queue for 'claude-atlas'"
+
+
+def test_resolve_slot_holder_no_holder(session_db_fixture: Path) -> None:
+    """Verify resolve_slot_holder returns has_holder=False when no active lease exists."""
+    res = resolve_slot_holder("grok-infra", session_db_path=session_db_fixture)
+    assert res.has_holder is False
+    assert res.slot == "grok-infra"
+    assert res.area_id == "infra"
+    assert res.queue_location == "channels DB delivery queue for 'grok-infra'"
+    assert res.reason == "no-live-holder"
 
 
 def test_resolve_slot_holder_expired_lease_treated_as_no_live_holder(session_db_fixture: Path) -> None:
@@ -348,4 +372,50 @@ def test_post_resolver_failure_surfaces_warning_not_silent(
     captured = capsys.readouterr()
     assert "slot resolver failed for the grok slot" in captured.err
     # Delivery still queued at the slot identity (fail-open on delivery).
+    assert len(result["delivery_ids"]) == 1
+
+
+def test_post_no_warnings_key_is_empty_list_when_all_held(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """post() return dict always carries a warnings key (empty when nothing bounces).
+
+    MUTATION-CHECK (revert→fail): if the ``warnings`` key is dropped from the
+    return dict, ``result['warnings']`` raises KeyError / ``in`` is False.
+    """
+    from scripts.orchestration import slot_routing
+    from scripts.orchestration.slot_routing import SlotHolderResult
+
+    def _held(slot: str, **kwargs: object) -> SlotHolderResult:
+        return SlotHolderResult(
+            has_holder=True,
+            slot=slot,
+            area_id="infra",
+            stream_id="epic:4707",
+            session_id="sess-1",
+            holder_agent="grok-infra",
+            holder_harness="grok",
+            generation=1,
+            expires_at=(datetime.now(UTC) + timedelta(hours=1)).isoformat(),
+            queue_location=f"channels DB delivery queue for '{slot}'",
+        )
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", _held)
+
+    with contextlib.suppress(Exception):
+        _channels.init_db()
+    with contextlib.suppress(ValueError):
+        _channels.create_channel("test-held", description="test channel")
+
+    # Recipient resolves to a live holder; from_agent 'user' never resolves.
+    result = _channels.post(
+        "test-held",
+        "user",
+        "Hello held",
+        to_agents=["grok-infra"],
+        auto_snapshot=False,
+    )
+
+    assert "warnings" in result
+    assert result["warnings"] == []
     assert len(result["delivery_ids"]) == 1

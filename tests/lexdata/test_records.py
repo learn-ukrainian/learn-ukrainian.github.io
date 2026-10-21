@@ -67,3 +67,29 @@ def test_line_dispositions_are_closed() -> None:
     with pytest.raises(r.RecordError):
         r.LineRecord(3, "x", "prose")
     assert "raw_line" not in repr(r.LineRecord(1, "private prose", "prose_excluded"))
+
+
+class _Adapter:
+    source_id = "fixture"
+    parser_id = "fixture_parser"
+    stores = ()
+
+    def snapshot(self, l0):
+        return r.SelectionSnapshot("SELECT 1", 2, r.selection_digest([FP, FP]))
+
+    def iter_units(self, l0):
+        yield unit("u1")
+        yield unit("u2")
+
+    def parse(self, item):
+        return r.ParsedUnit(item, "imported", (r.LexItemRecord("h", "шуба", "headword"),))
+
+
+def test_stub_sink_collects_and_refuses_duplicates() -> None:
+    adapter = _Adapter()
+    assert isinstance(adapter, r.SourceAdapter)
+    sink = r.CollectingSink()
+    assert r.drain(adapter, {}, sink) == 2
+    assert sink.counts() == {"units": 2, "items": 2, "lines": 0}
+    with pytest.raises(r.RecordError, match="duplicate unit"):
+        sink.emit(sink.units[0])

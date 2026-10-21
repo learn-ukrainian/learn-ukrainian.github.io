@@ -42,6 +42,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     RU_GLOSS_RE,
     TRAJECTORY_SCHEMA_FILE,
     V02_BASELINE_SUITE_PATH,
+    ZONE_MINIMUM_QUOTAS,
     MinedSentence,
     canonical_source_work,
     clean_headword,
@@ -756,6 +757,58 @@ def test_multizone_evaluation_rejects_punctuation_corruption(eval_cases: list[di
         assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate on corrupted punctuation!"
 
 
+def test_multizone_evaluation_enforces_zone_denominators() -> None:
+    """Verify that evaluation gates fail closed when zone quotas (600/400/250/250) are not met."""
+    # Provide 1 perfect case per zone
+    sample_cases = [
+        {
+            "eval_id": "eval_sw_1",
+            "macro_zone": "southwestern",
+            "sub_zone": "southwestern_boyko",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+        {
+            "eval_id": "eval_north_1",
+            "macro_zone": "northern",
+            "sub_zone": "northern",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+        {
+            "eval_id": "eval_slob_1",
+            "macro_zone": "southeastern",
+            "sub_zone": "southeastern_slobozhan",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+        {
+            "eval_id": "eval_steppe_1",
+            "macro_zone": "southeastern",
+            "sub_zone": "southeastern_steppe",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+    ]
+    preds = {c["eval_id"]: c["expected_output"] for c in sample_cases}
+    results = evaluate_multizone_benchmark(sample_cases, predictions=preds)
+
+    # All zones have 100% accuracy on their 1 case, but NONE may clear the gate due to quota enforcement
+    for zone, metrics in results.items():
+        assert metrics["accuracy"] == 1.0
+        assert metrics["total_cases"] == 1
+        min_q = ZONE_MINIMUM_QUOTAS[zone]
+        assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate with 1 case (min quota {min_q})!"
+
+
 def test_multizone_evaluation_rejects_duplicate_rows_in_denominator() -> None:
     """Verify that duplicating cases (same eval_id or repeated input_text) does not inflate denominator to clear quotas."""
     base_sw_case = {
@@ -1189,6 +1242,27 @@ def test_standard_headwords_with_nested_idioms_excluded(
         assert banned_substring not in c["input_text"].casefold()
     for t in sft_trajectories:
         assert banned_substring not in t["query"].casefold()
+
+
+@pytest.mark.needs_artifact(
+    "open_model_release_payload",
+    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+)
+def test_sft_synonyms_strictly_bound_to_quotation_sense(
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Verify that synonyms in SFT trajectories are bound strictly to the quoted sense."""
+    for t in sft_trajectories:
+        q = t.get("query", "")
+        lemmas = [att["lemma"].casefold() for att in t.get("vesum_attestation", [])]
+
+        if "служащий хліб добрий, та тільки вимовний" in q.casefold():
+            assert "докірливий" in lemmas, f"Expected sense synonym 'докірливий' for вимовний quote, got {lemmas}"
+            assert "красномовний" not in lemmas, f"Incorrect cross-sense synonym 'красномовний' in {lemmas}"
+
+        if "минув уже рік з окладом" in q.casefold():
+            assert "лишок" in lemmas, f"Expected sense synonym 'лишок' for оклад quote, got {lemmas}"
+            assert "компрес" not in lemmas, f"Incorrect cross-sense synonym 'компрес' in {lemmas}"
 
 
 @pytest.mark.needs_artifact(

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sqlite3
+import subprocess
 import sys
 from pathlib import Path
 
@@ -167,6 +168,38 @@ def test_archive_generation_remains_prohibited() -> None:
         production.assemble_production_shards(output_dir=production.HISTORICAL_ARCHIVE_DIR)
 
 
+@pytest.mark.parametrize("script", [production, kyivan, middle])
+def test_actual_cli_refusal_keeps_managed_bases_unchanged(managed_bases: tuple[Path, Path], script: object) -> None:
+    data, registry = managed_bases
+    output = data / "new_release"
+    source = data.parent.parent.parent / "sources.db"
+    vesum = source.with_name("vesum.db")
+    with sqlite3.connect(source), sqlite3.connect(vesum):
+        pass
+    before = (_tree_state(data), _tree_state(registry))
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(Path(script.__file__)),
+            "--output-dir",
+            str(output),
+            "--sources-db",
+            str(source),
+            "--vesum-db",
+            str(vesum),
+        ],
+        cwd=Path(__file__).resolve().parents[3],
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    assert "P3b deferred historical regeneration" in result.stderr
+    assert (_tree_state(data), _tree_state(registry)) == before
+    assert not output.exists()
+
+
 def test_verify_reader_uses_committed_snapshot_instead_of_reopening_name(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -186,6 +219,28 @@ def test_verify_reader_uses_committed_snapshot_instead_of_reopening_name(
     assert production._verified_artifact_bytes(path, "open_model_archive_payload", snapshots) == b'{"verified":true}\n'
     assert calls == ["open_model_archive_payload"]
     assert not path.exists()
+
+
+def test_verify_reader_missing_group_has_hydrate_guidance(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(production, "REPO_ROOT", tmp_path)
+    path = tmp_path / "data" / "projects" / "open_model_data" / "archive" / "missing.jsonl"
+
+    def missing(group: str, *, repo: Path) -> ArtifactSet:
+        raise FileNotFoundError(group)
+
+    monkeypatch.setattr(production, "artifact_set", missing)
+    with pytest.raises(RuntimeError, match="artifacts hydrate --group open_model_archive_payload"):
+        production._verified_artifact_bytes(path, "open_model_archive_payload", {})
+
+
+def test_verify_reader_explicit_missing_member_has_hydrate_guidance(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(production, "REPO_ROOT", tmp_path)
+    path = tmp_path / "data" / "projects" / "open_model_data" / "archive" / "missing.jsonl"
+    snapshots = {"open_model_archive_payload": ArtifactSet({}, {}, {})}
+    with pytest.raises(RuntimeError, match="artifacts hydrate --group open_model_archive_payload"):
+        production._verified_artifact_bytes(path, "open_model_archive_payload", snapshots)
 
 
 def test_middle_replay_requires_verified_member(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

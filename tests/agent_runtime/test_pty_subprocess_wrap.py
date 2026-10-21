@@ -26,6 +26,8 @@ from __future__ import annotations
 
 import contextlib
 import os
+import select
+import subprocess
 import sys
 import threading
 import time
@@ -41,7 +43,9 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 _TEST_PYTHON = project_python()
 
 from agent_runtime.runner import (
+    _pty_disabled_via_env,
     _spawn_pty_subprocess,
+    _spawn_subprocess,
 )
 from agent_runtime.watchdog import (
     WatchdogState,
@@ -70,6 +74,43 @@ def clean_env(monkeypatch):
 # ----------------------------------------------------------------------
 # Test 3: EOF on child exit — either b"" or EIO, both treated as shutdown.
 # ----------------------------------------------------------------------
+
+def test_pty_master_read_returns_eof_or_eio_on_child_exit(clean_env, tmp_path):
+    import errno as _errno
+
+    proc, stdout_fd, stderr_fd = _spawn_pty_subprocess(
+        [_TEST_PYTHON, "-c", "import sys; sys.stdout.write('done\\n'); sys.stdout.flush()"],
+        cwd=tmp_path,
+        env=os.environ.copy(),
+    )
+    try:
+        # Drain the pty as the child runs — on macOS, kernel may discard
+        # pending bytes when the slave side closes, so we MUST read while
+        # the child is still alive or right at the boundary.
+        data = b""
+        deadline = time.monotonic() + 60.0
+        saw_eof = False
+        while time.monotonic() < deadline:
+            if not select.select([stdout_fd], [], [], max(0, deadline - time.monotonic()))[0]:
+                break
+            try:
+                chunk = os.read(stdout_fd, 4096)
+            except OSError as exc:
+                # Linux raises EIO on slave close — that IS the EOF signal.
+                assert exc.errno == _errno.EIO, f"unexpected errno: {exc.errno}"
+                saw_eof = True
+                break
+            if not chunk:
+                # macOS path: empty bytes signal EOF.
+                saw_eof = True
+                break
+            data += chunk
+        proc.wait(timeout=5.0)
+        assert b"done" in data, f"missed 'done' marker: {data!r}"
+        assert saw_eof, "expected EOF / EIO after child exit"
+    finally:
+        _safe_close(stdout_fd)
+        _safe_close(stderr_fd)
 
 
 # ----------------------------------------------------------------------
@@ -231,6 +272,30 @@ def test_pty_streamer_strips_ansi_sgr_codes():
 # ----------------------------------------------------------------------
 # Test 7: DELEGATE_DISABLE_PTY env var falls back to pipe spawn.
 # ----------------------------------------------------------------------
+
+@pytest.mark.parametrize("value", ["1", "true", "TRUE", "yes", "on"])
+def test_delegate_disable_pty_env_var_routes_to_pipe_spawn(monkeypatch, tmp_path, value):
+    monkeypatch.setenv("DELEGATE_DISABLE_PTY", value)
+    assert _pty_disabled_via_env()
+    proc, stdout_fd, stderr_fd = _spawn_subprocess(
+        [_TEST_PYTHON, "-c", "print('hi')"],
+        cwd=tmp_path,
+        env=os.environ.copy(),
+        stdin=subprocess.DEVNULL,
+    )
+    try:
+        # Pipe path returns None fds and exposes proc.stdout/proc.stderr.
+        assert stdout_fd is None
+        assert stderr_fd is None
+        assert proc.stdout is not None
+        assert proc.stderr is not None
+        proc.wait(timeout=5.0)
+        out = proc.stdout.read()
+        assert "hi" in out
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.wait(timeout=5.0)
 
 
 # ----------------------------------------------------------------------

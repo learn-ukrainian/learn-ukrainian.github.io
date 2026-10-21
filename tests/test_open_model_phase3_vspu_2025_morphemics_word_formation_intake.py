@@ -478,6 +478,38 @@ def test_public_receipt_is_immutable(tmp_path: Path, monkeypatch: pytest.MonkeyP
         intake.write_public_receipt(out, other)
 
 
+def test_public_receipt_accepts_existing_tracked_checkout_mode(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    paths = _fixture(tmp_path, monkeypatch)
+    receipt = _build(paths)
+    out = tmp_path / "git" / "receipt.json"
+    out.parent.mkdir(parents=True)
+    (out.parent / ".git").mkdir()
+    payload = intake.canonical_bytes(receipt)
+    out.write_bytes(payload)
+    os.chmod(out, intake.PRIVATE_FILE_MODE)
+
+    real_lstat = Path.lstat
+
+    def lstat_with_tracked_checkout_mode(path: Path) -> os.stat_result:
+        result = real_lstat(path)
+        if path == out:
+            mode = (result.st_mode & ~0o777) | intake.TRACKED_PUBLIC_FILE_MODE
+            return os.stat_result((mode, *result[1:]))
+        return result
+
+    monkeypatch.setattr(Path, "lstat", lstat_with_tracked_checkout_mode)
+    assert stat.S_IMODE(os.lstat(out).st_mode) == intake.PRIVATE_FILE_MODE
+    assert stat.S_IMODE(out.lstat().st_mode) == intake.TRACKED_PUBLIC_FILE_MODE
+    intake.write_public_receipt(out, receipt)
+    assert out.read_bytes() == payload
+    assert stat.S_IMODE(os.lstat(out).st_mode) == intake.PRIVATE_FILE_MODE
+    other = dict(receipt)
+    other["status"] = "TAMPERED"
+    other["receipt_sha256"] = intake.receipt_sha256(other)
+    with pytest.raises(intake.Vspu2025MorphemicsWordFormationIntakeError, match="immutable public receipt"):
+        intake.write_public_receipt(out, other)
+
+
 def test_concurrent_receipt_creation_cannot_clobber_winner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     receipt = _build(paths)
@@ -494,6 +526,23 @@ def test_concurrent_receipt_creation_cannot_clobber_winner(tmp_path: Path, monke
     with pytest.raises(intake.Vspu2025MorphemicsWordFormationIntakeError, match="immutable public receipt"):
         intake.write_public_receipt(out, receipt)
     assert out.read_bytes() == b'{"winner":true}\n'
+
+
+def test_topic_conditioned_depth_ignores_off_topic_marker_pages() -> None:
+    morphemics_page = "морфеміка визначення класифікація наприклад завдання"
+    word_formation_page = "словотвір визначення класифікація наприклад завдання"
+    off_topic_depth_page = "визначення класифікація наприклад завдання самоконтроль відповіді " * 20
+    pages = [morphemics_page, word_formation_page, off_topic_depth_page]
+    conditioned = {cell: intake._topic_conditioned_depth(pages, cell) for cell in ("morphemics", "word_formation")}
+    document_wide = intake._depth_evidence_from_pages(pages)
+    assert conditioned["morphemics"]["definition_marker_hits"] == 1
+    assert conditioned["word_formation"]["definition_marker_hits"] == 1
+    assert document_wide["definition_marker_hits"] == 22
+    assert conditioned["morphemics"]["definition_marker_hits"] < document_wide["definition_marker_hits"]
+    assert conditioned["word_formation"]["definition_marker_hits"] < document_wide["definition_marker_hits"]
+    assert conditioned["morphemics"]["exercise_pages"] == 1
+    assert conditioned["word_formation"]["exercise_pages"] == 1
+    assert document_wide["exercise_pages"] == 3
 
 
 def test_validate_receipt_rebinds_university_freeze_and_policy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

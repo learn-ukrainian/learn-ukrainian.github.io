@@ -2,6 +2,17 @@
 from scripts.build import linear_pipeline
 
 
+def test_prompt_by_writer_routes_grok_and_defaults_to_linear_write() -> None:
+    assert linear_pipeline.PROMPT_BY_WRITER["grok-tools"] == "linear-write-grok.md"
+    assert linear_pipeline.writer_prompt_path("grok-tools").name == "linear-write-grok.md"
+    assert linear_pipeline.writer_prompt_path("claude-tools").name == "linear-write.md"
+    assert linear_pipeline.writer_prompt_path("unknown-tools").name == "linear-write.md"
+    assert (
+        linear_pipeline.writer_correction_prompt_path("grok-tools").name
+        == "linear-writer-correction-grok.md"
+    )
+
+
 def test_plan_thinking_sections_count_as_writer_cot_coverage() -> None:
     output = """<plan_thinking>
 <sections>

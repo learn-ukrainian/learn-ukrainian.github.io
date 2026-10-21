@@ -513,6 +513,20 @@ def test_render_router_markdown_contains_parseable_markers():
     assert len(rendered.encode("utf-8")) < 1200
 
 
+def test_default_agent_paths_are_agent_specific():
+    lineage_id = th.lineage_id_for("claude", "old-thread")
+    rollover_id = "rollover-example"
+    expected_runtime = Path(".agent/thread-rollovers/claude") / lineage_id / "generation-0001" / rollover_id
+    assert th.default_state_path("claude", lineage_id) == (
+        Path(".agent/thread-rollovers/claude") / lineage_id / "lease.json"
+    )
+    assert th.default_bootstrap_path("claude", lineage_id, 1, rollover_id) == expected_runtime / "bootstrap.md"
+    assert th.default_thread_handoff_path("claude", lineage_id, 1, rollover_id) == expected_runtime / "handoff.md"
+    assert th.default_handoff_path("orchestrator") == Path("docs/session-state/codex-orchestrator-handoff.md")
+    assert th.default_handoff_path("codex") == Path("docs/session-state/current.orchestrator.md")
+    assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
+
+
 def _v2_lease(
     *,
     owner_thread_id: str = "old-owner",
@@ -781,6 +795,21 @@ def test_zombie_owner_is_reclaimed_not_treated_as_live(tmp_path: Path, monkeypat
     assert result["status"] == "acquired"
     assert result["generation"] == 2
     assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "new-owner"
+
+
+def test_malformed_v2_liveness_fields_are_uncheckable_not_raised(tmp_path: Path):
+    """Matrix 10: a malformed individual field degrades to uncheckable, never raises."""
+    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
+    lease = _v2_lease(heartbeat_at="2026-07-23T09:55:00Z")
+    lease["owner_pid"] = "not-an-int"
+    _write_lease(tmp_path, "claude-infra", lease)
+
+    result = th.claim_thread_lease(
+        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
+    )
+
+    assert result["status"] == "conflict"
+    assert result["liveness"] == "liveness_unknown"
 
 
 def test_unknown_future_schema_version_is_uncheckable_not_raised(tmp_path: Path):
@@ -1580,6 +1609,102 @@ def test_refresh_thread_lease_heartbeat_without_generation_and_proven_identity_s
 # --- claim conflict diagnosis (item 5) ---
 
 
+def test_claim_conflict_diagnosis_reports_pid_heartbeat_age_and_cas_resolution_command(tmp_path: Path, capsys):
+    """Diagnosis golden test: the conflict JSON must give an operator everything needed to
+    decide without opening the lease file by hand, including the exact CAS-scoped (never
+    bare) force-release command."""
+    lease = {
+        "schema_version": 2,
+        "agent": "claude-infra",
+        "generation": 3,
+        "owner_thread_id": "stuck-owner",
+        "acquired_at": "2020-01-01T00:00:00Z",
+        "heartbeat_at": "2020-01-01T00:00:00Z",  # far enough in the past to be unambiguous forever
+        "owner_pid": 55555,
+        "owner_pid_started_at": 1000.0,
+        "owner_machine_id": "some-other-machine",  # cross-machine: liveness is never checkable
+    }
+    _write_lease(tmp_path, "claude-infra", lease)
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "new-session",
+            ]
+        )
+        == 2
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert payload["error_code"] == "THREAD_LEASE_LIVENESS_UNKNOWN"
+    assert payload["owner_thread_id"] == "stuck-owner"
+    assert payload["owner_pid"] == 55555
+    assert payload["owner_pid_started_at"] == 1000.0
+    assert payload["owner_alive"] is None  # never checkable, never guessed
+    assert payload["heartbeat_age_seconds"] > 45 * 60
+    assert payload["heartbeat_age_humanized"]
+    assert payload["idle_suspected"] is True
+    resolution = payload["resolution"]
+    assert "--force" in resolution
+    assert "--expect-owner-thread-id stuck-owner" in resolution
+    assert "--expect-generation 3" in resolution
+    assert "--acknowledge-live-owner" not in resolution  # liveness is unknown, not confirmed alive
+
+
+def test_claim_conflict_diagnosis_flags_a_confirmed_live_owner_and_requires_acknowledgement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+):
+    """Item 5/6: a genuinely live owner reports owner_alive=True and its resolution command
+    includes --acknowledge-live-owner up front — an operator should never have to discover
+    that flag by trial and error against a live process."""
+    lease = {
+        "schema_version": 2,
+        "agent": "claude-infra",
+        "generation": 2,
+        "owner_thread_id": "live-owner",
+        "acquired_at": "2020-01-01T00:00:00Z",
+        "heartbeat_at": "2020-01-01T00:00:00Z",
+        "owner_pid": 4242,
+        "owner_pid_started_at": 1000.0,
+        "owner_machine_id": "machine-a",
+    }
+    _write_lease(tmp_path, "claude-infra", lease)
+    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
+    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
+    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "claim-thread-lease",
+                "--agent",
+                "claude-infra",
+                "--starting-pid",
+                "1",
+                "--current-thread-id",
+                "new-session",
+            ]
+        )
+        == 2
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert payload["error_code"] == "THREAD_LEASE_CONFLICT"
+    assert payload["owner_alive"] is True
+    assert payload["idle_suspected"] is True
+    assert "--acknowledge-live-owner" in payload["resolution"]
+
+
 # --- cooperative release at prepare/rollover seal (item 4) ---
 
 
@@ -2022,6 +2147,38 @@ def test_supervised_claudex_prepare_emits_one_typed_request(
     assert len(list(supervisor.run_dir.glob("request.json"))) == 1
 
 
+def test_supervised_claudex_request_failure_preserves_prepared_lease(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+) -> None:
+    supervisor = seed_supervised_claudex(tmp_path, monkeypatch)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    monkeypatch.setenv("LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION", "1")
+
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                "claude-infra",
+            ]
+        )
+        == 2
+    )
+    payload = json.loads(capsys.readouterr().out)
+    lease_path = tmp_path / payload["state_file"]
+    lease = json.loads(lease_path.read_text(encoding="utf-8"))
+
+    assert "request launch generation is stale" in payload["error"]
+    assert payload["old_automation_ready_to_delete"] is False
+    assert lease["replacement"]["status"] == "pending_start"
+    assert lease["replacement"]["rollover_id"] == payload["rollover_id"]
+    assert not cs._request_path(tmp_path, supervisor.run_id).exists()
+
+
 def test_prepare_seal_release_skipped_when_claudex_rollover_request_fails(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -2203,6 +2360,30 @@ def test_prepare_dry_run_never_prints_canary_bearing_prompt(
     assert payload["bootstrap_prompt_bytes"] > 0
     assert len(payload["bootstrap_prompt_sha256"]) == 64
     assert not (tmp_path / payload["bootstrap_file"]).exists()
+
+
+def test_register_created_context_failure_reports_cleanly(tmp_path: Path, capsys):
+    rc = th.main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "register-created",
+            "--lineage-id",
+            "lineage-1234567890abcdef12345678",
+            "--rollover-id",
+            "rollover-missing",
+            "--replacement-thread-id",
+            "00000000-0000-0000-0000-000000000002",
+            "--evidence",
+            "native create result",
+        ]
+    )
+
+    assert rc == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["action"] == "register-created"
+    assert "isolated rollover" in payload["error"]
+    assert "NameError" not in payload["error"]
 
 
 def test_native_create_action_is_retry_gate_without_db(tmp_path: Path, capsys, monkeypatch):
@@ -2744,6 +2925,28 @@ def test_confirm_started_is_scoped_to_selected_agent(tmp_path: Path, capsys):
     assert untouched_orchestrator["cleanup"]["old_automation_ready_to_delete"] is False
 
 
+def test_check_state_flags_pending_and_stale_replacement():
+    prepared_at = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
+    state = {
+        "active": {"generation": "orchestrator-1", "last_seen_at": th.isoformat_z(prepared_at)},
+        "replacement": {"status": "pending_start", "prepared_at": th.isoformat_z(prepared_at)},
+        "cleanup": {"old_automation_ready_to_delete": False},
+    }
+
+    facts, warnings = th.check_state(
+        state,
+        now=prepared_at + timedelta(hours=13),
+        stale_after=timedelta(hours=12),
+        context_percent=83.0,
+        context_threshold=82.0,
+    )
+
+    assert "active_generation=orchestrator-1" in facts
+    assert any("pending_start" in warning for warning in warnings)
+    assert any("context estimate 83.0%" in warning for warning in warnings)
+    assert any("replacement has been pending" in warning for warning in warnings)
+
+
 def test_check_state_flags_corrupted_state_file():
     facts, warnings = th.check_state(
         {"schema_version": th.SCHEMA_VERSION, "state_error": "unreadable state file: bad json"},
@@ -2806,6 +3009,20 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
     assert audit["thread_count"] == 1
     assert audit["recent_threads"][0]["id"] == "thread-1"
     assert audit["automation_toml_files"] == []
+
+
+def test_v2_state_has_unique_rollover_and_lineage_runtime_paths():
+    state = prepared()
+    replacement = state["replacement"]
+
+    assert state["schema_version"] == 2
+    assert replacement["rollover_id"].startswith("rollover-")
+    assert replacement["lineage_id"] == th.lineage_id_for("orchestrator", "old-thread")
+    assert replacement["runtime_path"] == (
+        f".agent/thread-rollovers/orchestrator/{replacement['lineage_id']}/generation-0001/{replacement['rollover_id']}"
+    )
+    assert replacement["bootstrap_prompt_path"].startswith(replacement["runtime_path"])
+    assert replacement["handoff_path"].startswith(replacement["runtime_path"])
 
 
 def test_pending_prepare_refuses_unless_explicitly_forced():
@@ -4005,6 +4222,29 @@ def test_same_stream_family_hint_preserves_candidates(tmp_path: Path, capsys, mo
         else:
             assert "PENDING THREAD ROLLOVER DETECTED" in context
             assert "bootstrap-replacement" in context
+
+
+@pytest.mark.parametrize("packet_agent", ["claude-open-model-data", "claude"])
+def test_detect_missing_stream_is_candidate_only_in_own_directory(tmp_path: Path, capsys, monkeypatch, packet_agent):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            ["--repo-root", str(tmp_path), "prepare", "--agent", packet_agent, "--active-thread-id", "legacy-thread"]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    assert (
+        th.main(["--repo-root", str(tmp_path), "detect", "--agent", "claude-open-model-data", "--stream", "epic:1001"])
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    if packet_agent == "claude":
+        assert result["status"] == "none"
+        assert result["skipped_foreign"][0]["stream"] == ""
+    else:
+        assert result["status"] == "pending_start"
+        assert "skipped_foreign" not in result
 
 
 def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:

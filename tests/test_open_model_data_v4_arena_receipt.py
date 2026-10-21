@@ -215,6 +215,21 @@ def test_leave_one_out_ballots_never_mix_in_a_candidates_own_self_report() -> No
     assert loo["candidate-1"]["consensus_label"] == "accept"
 
 
+def test_leave_one_out_ballots_report_no_consensus_on_an_exact_split() -> None:
+    fixture = _fixture()
+    ballots = fixture["ballots"]
+    assert isinstance(ballots, list)
+    for ballot in ballots:
+        if ballot["candidate_id"] == "candidate-1" and ballot["case_id"] == "synthetic-01" and ballot["voter_candidate_id"] in {"candidate-2", "candidate-3"}:
+            ballot["label"] = "reject" if ballot["voter_candidate_id"] == "candidate-2" else "accept"
+        elif ballot["candidate_id"] == "candidate-1" and ballot["case_id"] == "synthetic-01":
+            ballot["label"] = "reject"
+    receipts = arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    loo = {item["candidate_id"]: item for item in receipts["public"]["cases"][0]["leave_one_out_ballots"]}
+    assert loo["candidate-1"]["label_counts"] == {"accept": 1, "reject": 2}
+    assert loo["candidate-1"]["consensus_label"] == "reject"
+
+
 def test_receipt_schema_drift_fails_closed_even_when_rehashed() -> None:
     receipt = arena.build_receipts(**_fixture())["public"]  # type: ignore[arg-type]
     receipt["unexpected"] = True

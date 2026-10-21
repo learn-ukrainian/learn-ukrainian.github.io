@@ -10,6 +10,7 @@ Hermetic, offline test suite verifying:
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 from datetime import UTC, datetime
@@ -22,6 +23,7 @@ import pytest
 from scripts.ci.ci_timings import (
     DEFAULT_REPO,
     analyze_timings,
+    extract_pr_number,
     fetch_run_jobs_from_api,
     fetch_workflow_runs_from_api,
     gh_api_get,
@@ -33,6 +35,17 @@ _FIXTURE_PATH = Path(__file__).parent / "fixtures" / "ci_timings" / "sample_ci_r
 
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
+
+def test_extract_pr_number() -> None:
+    """Test extracting PR numbers from branch names."""
+    assert extract_pr_number("gh-readonly-queue/main/pr-7170-0224500326cbe490cd890784f67741ca1d8ef65b") == 7170
+    assert extract_pr_number("issue/7139-monitor-dual-host-slice") == 7139
+    assert extract_pr_number("pull/6863") == 6863
+    assert extract_pr_number("pr-4811") == 4811
+    assert extract_pr_number("main") is None
+    assert extract_pr_number("") is None
+    assert extract_pr_number(None) is None
 
 
 def test_analyze_timings_on_recorded_fixture() -> None:
@@ -92,6 +105,16 @@ def test_analyze_timings_on_recorded_fixture() -> None:
     # PR 7169: failed / kicked
     assert pr_map[7169]["status"] == "failed"
     assert pr_map[7169]["kicks"] == 1
+
+
+def test_run_jobs_fetch_error_is_not_dropped() -> None:
+    runs, _ = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
+
+    def fail_jobs(_run_id: int) -> list[dict[str, Any]]:
+        raise RuntimeError("job fetch failed")
+
+    with pytest.raises(RuntimeError, match="job fetch failed"):
+        analyze_timings(runs, fail_jobs, event_filter="all", max_workers=8)
 
 
 def test_fetch_workflow_runs_passes_query_params(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -275,6 +298,21 @@ def test_fetch_run_jobs_pagination_max_pages_warning(
     assert len(jobs) == 200
     _, err = capsys.readouterr()
     assert "Warning: Reached maximum pagination limit (2 pages) for run 99999 jobs; retrieved 200 jobs." in err
+
+
+def test_load_runs_and_jobs_from_fixture_non_list_non_dict(tmp_path: Path) -> None:
+    """Verify load_runs_and_jobs_from_fixture raises ValueError on non-list/non-dict JSON payloads."""
+    str_file = tmp_path / "string_fixture.json"
+    str_file.write_text(json.dumps("plain string value"), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid fixture format: expected JSON object or array"):
+        load_runs_and_jobs_from_fixture(str_file)
+
+    int_file = tmp_path / "int_fixture.json"
+    int_file.write_text(json.dumps(12345), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid fixture format: expected JSON object or array"):
+        load_runs_and_jobs_from_fixture(int_file)
 
 
 def test_gh_api_get_json_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:

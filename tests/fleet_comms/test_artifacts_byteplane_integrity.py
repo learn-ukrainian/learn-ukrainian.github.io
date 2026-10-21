@@ -86,6 +86,12 @@ def test_orphan_sweep_never_touches_referenced_blobs(store: ArtifactStore) -> No
     assert rec.blob_path.is_file()
 
 
+def test_sqlite_records_keep_blob_path_contract(store: ArtifactStore) -> None:
+    rec = store.store_bytes(_payload(), producer="t")
+    assert rec.blob_path is not None and rec.blob_path.is_file()
+    assert rec.to_dict()["blob_path"] == str(rec.blob_path)
+
+
 @pytest.mark.postgres
 def test_pg_records_carry_no_fabricated_blob_path(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path

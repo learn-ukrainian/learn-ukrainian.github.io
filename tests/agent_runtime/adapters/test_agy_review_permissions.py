@@ -162,6 +162,20 @@ def test_deny_inventory_uses_launched_server_declarations(tmp_path, monkeypatch)
     assert "mcp(sources/future_reader)" not in rules["allow"]
 
 
+@pytest.mark.parametrize("marker", ["review_id", "attempt_id", "review_attempt_boundary"])
+def test_receipt_marker_prevents_permission_only_widening(tmp_path, scoped, marker):
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permission_outside_allow_set"):
+        build(
+            tmp_path,
+            {
+                "review_profile": "ukrainian",
+                "agy_home_override": str(scoped),
+                marker: "receipt",
+                "agy_required_permissions": ["mcp(sources/search_resources)"],
+            },
+        )
+
+
 @pytest.mark.parametrize("route", ["full", "isolated"])
 def test_review_missing_scoped_home_refused_before_probe(tmp_path, monkeypatch, route):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
@@ -450,6 +464,15 @@ def test_review_profile_rejects_write_mode_before_probe(tmp_path, scoped, monkey
             tool_config={"review_profile": profile, "agy_home_override": str(scoped)},
         )
     assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
+
+
+@pytest.mark.parametrize("config", [None, {"task_family": "recon"}])
+def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatch, config):
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    plan = build(tmp_path, config)
+    assert "--dangerously-skip-permissions" in plan.cmd
+    assert plan.metadata["agy_permission_profile_id"] is None
 
 
 def test_scoped_attempt_log_is_unique_in_same_process(tmp_path, scoped):

@@ -9,6 +9,13 @@ from scripts.rag.chunk_quality import (
 )
 
 
+def test_clean_prose_passes_symbol_noise_gate() -> None:
+    text = "Алгоритм працює так: input, output, 2024. Хімія? Так!"
+
+    assert symbol_noise_density(text) == 0.0
+    assert not should_drop_for_symbol_noise(text)
+
+
 def test_formula_garbage_chunk_drops() -> None:
     text = "∑∫√≈≠≤≥÷×▯" * 8 + "xy12"
 

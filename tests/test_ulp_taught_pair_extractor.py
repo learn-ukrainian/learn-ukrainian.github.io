@@ -2,9 +2,23 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+import pytest
+import yaml
+
+from scripts.lexicon import ulp_taught_pair_extractor as extractor
 from scripts.lexicon.ulp_taught_pair_extractor import (
     extract_taught_pairs_from_text,
+    measure_corpus_intake_ulp,
+    measure_curated_ulp_lists,
 )
+from tests._host_path_guard import assert_no_host_paths
+
+
+def test_source_has_no_baked_home_defaults() -> None:
+    assert_no_host_paths(Path(extractor.__file__).read_text(encoding="utf-8"))
 
 
 def test_extract_basic_margin_pair() -> None:
@@ -73,3 +87,99 @@ def test_uncurated_note_token_soup_yields_zero_taught_pairs() -> None:
     )
     pairs = extract_taught_pairs_from_text(soup, source_file="ulp-1-00-lesson-notes", season=1)
     assert pairs == []
+
+
+def test_measure_curated_ulp_lists_with_dummy_files(tmp_path: Path) -> None:
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {"lemma": "морозиво"},
+                    {"lemma": "привіт"},
+                    {"lemma": "чудово"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    dummy_inv = tmp_path / "inventory.yaml"
+    dummy_inv.write_text(
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
+                        "headwords": [
+                            {"lemma": "морозиво", "locator": "ulp-1-00-lesson-notes lesson 1"},
+                            {"lemma": "привіт", "locator": "ulp-1-00-lesson-notes lesson 1"},
+                            {"lemma": "переключити", "locator": "ulp-4-00-lesson-notes lesson 121"},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    res = measure_curated_ulp_lists(inventory_path=dummy_inv, manifest_path=dummy_manifest)
+    assert res["total_curated_rows"] == 3
+    assert res["total_in_atlas"] == 2
+    assert res["total_missing"] == 1
+    assert res["per_season"][1]["missing_count"] == 0
+    assert res["per_season"][4]["missing_count"] == 1
+    assert res["per_season"][4]["missing_lemmas"] == ["переключити"]
+
+
+def test_measure_corpus_intake_ulp_with_dummy_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {"lemma": "привіт"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    dec_dir = tmp_path / "decisions"
+    dec_dir.mkdir(parents=True, exist_ok=True)
+    batch_file = dec_dir / "2026-07-14-ohoiko-corpus-intake-batch-01.yaml"
+    batch_file.write_text(
+        yaml.safe_dump(
+            {
+                "decisions": [
+                    {
+                        "lemma": "привіт",
+                        "decision": "reject",
+                        "source_inventory": {
+                            "source_id": "ulp-1-00-lesson-notes",
+                        },
+                    },
+                    {
+                        "lemma": "невідомеслово",
+                        "decision": "needs_more_evidence",
+                        "source_inventory": {
+                            "source_id": "ulp-1-00-lesson-notes",
+                        },
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    # Mock verify_word so test does not depend on external DB
+    monkeypatch.setattr(extractor, "verify_word", lambda word: [] if word == "невідомеслово" else [{"pos": "noun"}])
+
+    res = measure_corpus_intake_ulp(decisions_dir=dec_dir, manifest_path=dummy_manifest)
+    s1 = res["per_season"][1]
+    assert s1["total_rows"] == 2
+    assert s1["unique_lemmas"] == 2
+    assert s1["already_in_atlas"] == 1
+    assert s1["missing_total"] == 1
+    assert s1["vesum_unrecognized"] == 1
+    assert s1["no_en_count"] == 2

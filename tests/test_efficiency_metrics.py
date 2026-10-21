@@ -77,6 +77,15 @@ def _mini_db(path: Path, *, legacy_messages: bool = False) -> None:
     conn.close()
 
 
+def test_backlog_excludes_retired_gemini(tmp_path: Path) -> None:
+    db = tmp_path / "m.db"
+    _mini_db(db)
+    payload = collect_delivery_backlog(db, exclude_retired=True)
+    assert payload["total"] == 1
+    assert payload["by_agent"] == {"claude": 1}
+    assert "content" not in str(payload).lower() or "content_included" not in payload
+
+
 def test_dead_letters_and_metrics(tmp_path: Path) -> None:
     db = tmp_path / "m.db"
     _mini_db(db)

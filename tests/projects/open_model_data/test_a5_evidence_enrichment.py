@@ -31,6 +31,7 @@ ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a5_evidence_enrichment_receipt_v1.schema.json"
+A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
 
 
@@ -63,6 +64,36 @@ FORBIDDEN_KEYS = {
     "salt_hex",
     "private_salt",
 }
+
+ENRICHMENT_ALGORITHM_DESCRIPTOR = {
+    "algorithm_id": "v4-a5-structural-evidence-enrichment-v1",
+    "algorithm_version": "v1",
+    "unit_of_enrichment": "source_unit_commitment",
+    "content_blind": True,
+    "expression_blind": True,
+    "ordering": "source_unit_commitment_sha256_ascending",
+    "aggregated_fields": ["span_count", "total_span_bytes", "min_span_byte_length", "max_span_byte_length"],
+    "aggregation_formula": (
+        "for each row in A4's private extraction ledger (only source_unit_commitment_sha256 and "
+        "span_byte_length are read -- input_sha256/output_sha256/span text are never inspected): "
+        "span_count[commitment] += 1; total_span_bytes[commitment] += span_byte_length; "
+        "min_span_byte_length[commitment] = min(existing, span_byte_length); "
+        "max_span_byte_length[commitment] = max(existing, span_byte_length); a commitment with no rows "
+        "keeps span_count 0, total_span_bytes 0, min/max null"
+    ),
+    "evidence_commitment_formula": (
+        "sha256(canonical_json(per_unit_evidence sorted by source_unit_commitment_sha256))"
+    ),
+    "text_emitted": False,
+    "expression_emitted": False,
+    "reproducibility": (
+        "byte_stable_given_the_identical_private_a4_extraction_ledger_and_the_frozen_aggregation_formula"
+    ),
+}
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -145,6 +176,14 @@ def _row(commitment: str, span_index: int, span_byte_length: int) -> dict[str, A
 # --- frozen algorithm descriptor ---------------------------------------------
 
 
+def test_enrichment_algorithm_descriptor_is_frozen_and_hashed() -> None:
+    assert enrichment.ENRICHMENT_ALGORITHM_DESCRIPTOR == ENRICHMENT_ALGORITHM_DESCRIPTOR
+    assert (
+        hashlib.sha256(_canonical_json(ENRICHMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")).hexdigest()
+        == enrichment.ENRICHMENT_ALGORITHM_DESCRIPTOR_SHA256
+    )
+
+
 # --- pure, content-blind aggregation -----------------------------------------
 
 
@@ -210,6 +249,14 @@ def test_aggregate_ledger_rows_bounds_growth_not_the_hosts_inherited_high_water(
 
     assert total_rows == 50
     assert accumulators[commitment]["span_count"] == 50
+
+
+def test_evidence_commitment_sha256_is_pure_and_order_sensitive() -> None:
+    first = [{"source_unit_commitment_sha256": "a" * 64, "span_count": 1}]
+    second = [{"source_unit_commitment_sha256": "a" * 64, "span_count": 2}]
+    assert enrichment.evidence_commitment_sha256(first) == enrichment.evidence_commitment_sha256(first)
+    assert enrichment.evidence_commitment_sha256(first) != enrichment.evidence_commitment_sha256(second)
+    assert enrichment.evidence_commitment_sha256([]) == enrichment.EMPTY_EVIDENCE_COMMITMENT_SHA256
 
 
 # --- enrichment gate (public-only) ------------------------------------------
@@ -396,6 +443,14 @@ def test_derive_a5_unit_evidence_residuals_is_pure_reproducible_and_id_free() ->
         assert residual["subject_kind"] == "source_unit_commitment"
 
 
+def test_derive_a5_unit_evidence_residuals_treats_a_missing_evidence_entry_as_zero() -> None:
+    commitment = "a" * 64
+    a4_receipt = _synthetic_a4_receipt([commitment], row_count=0, root_sha256=extraction.EMPTY_LEDGER_ROOT_SHA256)
+    residuals = enrichment.derive_a5_unit_evidence_residuals(a4_receipt, [])
+    assert len(residuals) == 1
+    assert residuals[0]["reason_code"] == "structural_evidence_pending_source_ingestion"
+
+
 # --- checked-in receipt: schema, bindings, forbidden content ----------------
 
 
@@ -442,6 +497,38 @@ def test_a5_receipt_never_names_a_held_out_family_or_source_unit_or_source_text(
     assert not _all_keys(receipt) & FORBIDDEN_KEYS
     for needle in ("fam-", "db.", "historical."):
         assert needle not in serialized
+
+
+def test_a5_receipt_carries_forward_every_a2_and_a4_residual_unchanged() -> None:
+    receipt = _receipt()
+    a2_receipt = _load(A2_RECEIPT_PATH)
+    a4_receipt = _load(A4_RECEIPT_PATH)
+
+    a2_ids = {entry["residual_id"] for entry in a2_receipt["residuals"]}
+    carried_a2_ids = {entry["residual_id"] for entry in receipt["a2_residuals_carried_forward"]}
+    assert carried_a2_ids == a2_ids
+    for entry in receipt["a2_residuals_carried_forward"]:
+        assert entry["origin_stage"] == "A2"
+        assert entry["status"] == "unresolved_carried_to_a5"
+
+    a4_ids = {entry["residual_id"] for entry in a4_receipt["a4_residuals"]}
+    carried_a4_ids = {entry["residual_id"] for entry in receipt["a4_residuals_carried_forward"]}
+    assert carried_a4_ids == a4_ids
+    for entry in receipt["a4_residuals_carried_forward"]:
+        assert entry["origin_stage"] == "A4"
+        assert entry["status"] == "unresolved_carried_to_a5"
+
+
+def test_a5_residuals_are_derivable_and_cover_every_known_a4_commitment() -> None:
+    receipt = _receipt()
+    a4_receipt = _load(A4_RECEIPT_PATH)
+    known_commitments = set(a4_receipt["builder_packet_consumption"]["unit_commitments"])
+
+    assert len(receipt["a5_residuals"]) == len(known_commitments)
+    assert {r["subject_id"] for r in receipt["a5_residuals"]} == known_commitments
+    assert receipt["a5_residuals"] == enrichment.derive_a5_unit_evidence_residuals(
+        a4_receipt, receipt["evidence_enrichment"]["per_unit_evidence"]
+    )
 
 
 def test_a5_evidence_enrichment_is_bound_to_a4_commitments_and_spans_covered() -> None:

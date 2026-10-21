@@ -7,10 +7,17 @@ a line must start with the label, so a glued ``behavior.VERDICT:`` does not matc
 from __future__ import annotations
 
 import json
+import re
+from pathlib import Path
 
 from scripts.agent_runtime.adapters.acpx import AcpxAdapter
 from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
 from scripts.review.verdict_parser import recognized_verdicts
+
+# Grok 1.0.46 streaming-messages-json, 2026-10-07. A read_file turn then a
+# second assistant message. Session id, event ids, the thinking signature,
+# and the working-directory path are placeholders.
+_RECORDED_STREAM = Path(__file__).resolve().parents[1] / "fixtures" / "grok" / "streaming-messages-multi.jsonl"
 
 _REVIEW = (
     "I'll review the pinned head only: confirm the SHA, read the findings schema, "
@@ -247,6 +254,23 @@ def test_log_noise_around_a_stream_is_ignored():
     assert result.response == "final report"
 
 
+def test_recorded_multi_message_stream_keeps_both_assistant_lines():
+    stdout = _RECORDED_STREAM.read_text(encoding="utf-8")
+    assert "session-placeholder" in stdout
+    assert "/home/" not in stdout and "/var/" not in stdout
+    assert re.search(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", stdout) is None
+    opened = "I'll read `note.txt` first."
+    answer = "The word is pinecone."
+    result = _parse_grok(stdout)
+    assert result.ok
+    assert result.response == f"{opened}\n{answer}"
+    assert "The fixture word is pinecone." not in result.response
+    assert result.session_id == "session-placeholder"
+    assert result.substitution["actual_model"] == "grok-4.7-build"
+    assert result.substitution["substituted"] is False
+    assert recognized_verdicts(result.response) == []
+
+
 def test_pretty_printed_json_object_stays_on_the_legacy_parser():
     stdout = json.dumps({"text": "final report", "stopReason": "end_turn", "sessionId": "s"}, indent=2)
     result = _parse_grok(stdout)
@@ -306,6 +330,11 @@ def _acp_chunk(
 
 def _parse_acp(stdout: str):
     return AcpxAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+
+
+def test_acp_chunks_without_a_message_id_stay_one_message():
+    stdout = _acp_stdout([_acp_chunk("Hello "), _acp_chunk("world.")])
+    assert _parse_acp(stdout).response == "Hello world."
 
 
 def test_acp_same_message_id_joins_even_when_stream_start_changes():

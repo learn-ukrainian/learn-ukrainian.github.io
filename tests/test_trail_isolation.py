@@ -14,6 +14,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import trail_isolation
+from agent_runtime.adapters.glm import GlmAdapter
 from agent_runtime.adapters.grok_build import GrokBuildAdapter
 from agent_runtime.adapters.kimi import KimiAdapter
 from agent_runtime.adapters.kimicc import KimiccHarness
@@ -156,6 +157,29 @@ def test_unproven_adapters_refuse_before_runner_loads_them(adapter: str) -> None
     with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
         with pytest.raises(TrailIsolationError, match="trail isolation refused"):
             invoke(adapter, "Run the trail.", tool_config={"trail_isolation": True})
+
+
+def test_glm_and_native_kimi_refuse_the_profile_at_adapter_boundary(tmp_path: Path) -> None:
+    with pytest.raises(TrailIsolationError, match="GLM"):
+        GlmAdapter().build_invocation(
+            prompt="Run the trail.",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"trail_isolation": True},
+        )
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        KimiAdapter().build_invocation(
+            prompt="Run the trail.",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"trail_isolation": True},
+        )
 
 
 def test_trail_isolation_rejects_write_modes_and_caller_tool_injection() -> None:

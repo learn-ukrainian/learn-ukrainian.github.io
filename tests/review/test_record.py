@@ -398,6 +398,12 @@ def test_an_unknown_model_or_family_fails_closed(world: World, agent: str, model
     assert world.db_rows("attempts") == [] and not world.verdict_file(1).exists()
 
 
+def test_a_missing_dispatch_record_fails_closed(world: World) -> None:
+    with pytest.raises(record.RecordError, match="unreadable"):
+        world.record(world.make_return(1), task_id="never-dispatched")
+    assert world.db_rows("attempts") == []
+
+
 def test_a_cursor_seat_counts_when_its_concrete_model_is_attested(world: World) -> None:
     world.task("review-cursor", "cursor", "auto", resolved_model="claude-opus-5-5", resolved_model_known=True)
     world.record(world.make_return(1), task_id="review-cursor")
@@ -431,6 +437,12 @@ def test_a_manifest_input_that_changed_since_the_manifest_rejects_the_attempt_as
     assert attempt["verdict"] == "REJECTED" and record.MANIFEST_INPUTS_STALE in json.loads(
         attempt["rejection_codes_json"]
     )
+
+
+def test_a_deleted_manifest_input_is_stale_too(world: World) -> None:
+    made = world.make_return(2)
+    (world.state_dir / "lesson-2.gates.yaml").unlink()
+    assert record.MANIFEST_INPUTS_STALE in world.record(made).rejection_codes
 
 
 # --- findings: lossless, none dropped -----------------------------------------------------------------
@@ -780,6 +792,17 @@ def test_a_budget_decision_needs_a_decision_a_decider_and_a_known_budget(world: 
         conn.close()
 
 
+def test_the_fixloop_cli_records_a_budget_decision(world: World, capsys: pytest.CaptureFixture[str]) -> None:
+    for _ in range(3):
+        _revise(world)
+    argv = ["--repo-root", str(world.root), "--db", str(world.db)]
+    assert (
+        fixloop.main([*argv, "budget-decision", LEVEL, SLUG, "2", "--decision", "one more", "--decided-by", "op"]) == 0
+    )
+    assert json.loads(capsys.readouterr().out) == {"budget": "revise_rounds", "counted": 3, "decision": "one more"}
+    assert _revise(world).accepted
+
+
 def test_an_approve_is_not_a_round(world: World) -> None:
     world.record(world.make_return(2))
     assert world.db_rows("budgets") == []
@@ -866,6 +889,28 @@ def test_two_concurrent_failure_records_of_one_attempt_count_it_once(
     assert sorted(outcome.replay for outcome in outcomes) == [False, True]
     [budget] = world.db_rows("budgets")
     assert budget["review_failures"] == 1
+
+
+def test_a_rejected_return_is_counted_as_a_failed_review_by_a_later_failure_record(world: World) -> None:
+    made = world.make_return(2, [finding(evidence={"receipt": "r-fabricated"})])
+    world.record(made)
+    assert world.db_rows("budgets") == []
+    args = dict(
+        manifest_path=world.manifest(2),
+        task_id="review-claude",
+        repo_root=world.root,
+        db_path=world.db,
+        tasks_dir=world.tasks_dir,
+        review_id=made["review_id"],
+        attempt_id=made["attempt_id"],
+        failure="rejected_return",
+    )
+    record.record_return(None, **args)
+    record.record_return(None, **args)
+    [budget] = world.db_rows("budgets")
+    assert budget["review_failures"] == 1
+    [attempt] = world.db_rows("attempts")
+    assert attempt["verdict"] == "REJECTED" and attempt["failure_reason"] == "rejected_return"
 
 
 # --- replay ---------------------------------------------------------------------------------------------------
@@ -1013,6 +1058,17 @@ def test_a_second_seat_of_the_first_reviewers_family_is_refused(world: World, sa
     with pytest.raises(record.RecordError, match="third family"):
         world.record(world.make_return(2), task_id="review-claude-2", second=True)
     assert world.db_rows("agreement") == [] and len(world.db_rows("attempts")) == 1
+
+
+def test_a_second_seat_of_the_writers_family_is_a_rejected_attempt(world: World, sampled: None) -> None:
+    world.record(world.make_return(2))
+    world.task("review-gpt", "codex", "gpt-6.1-sol")  # the writer's family
+    outcome = world.record(world.make_return(2), task_id="review-gpt", second=True)
+    assert not outcome.accepted and outcome.verdict == "REJECTED"
+    assert record.SAME_FAMILY_REVIEW in outcome.rejection_codes
+    [second] = world.db_rows("attempts", "role = 'second'")
+    assert second["verdict"] == "REJECTED" and record.SAME_FAMILY_REVIEW in json.loads(second["rejection_codes_json"])
+    assert world.db_rows("agreement") == []
 
 
 def test_a_second_seat_needs_the_lesson_to_be_sampled_and_a_first_review_on_that_manifest(
@@ -1666,6 +1722,54 @@ def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_r
     assert saved["reviewer"]["prompt_sha256"] == sent
     [attempt] = world.db_rows("attempts")
     assert attempt["prompt_sha256"] == sent
+
+
+def test_a_dispatch_hash_that_is_not_this_attempts_render_is_never_attested(world: World) -> None:
+    """A wrong or stale task record (its prompt is not this manifest rendered with these ids) supplies nothing."""
+    made = world.make_return(2)
+    world.task("review-stale", "claude", "claude-sonnet-5", prompt_sha256="ab" * 32, review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    _assert_unattestable_records_nothing(world, made, task_id="review-stale", cause="is not the hash of this attempt")
+
+
+def test_attest_prompt_sha256_touches_only_the_reviewer_field() -> None:
+    sent = "cd" * 32
+    one = b'reviewer:\n  model: m\n  prompt_sha256: "<prompt_sha256>"\nchecks: {}\n'
+    assert record.attest_prompt_sha256(one, sent) == one.replace(b"<prompt_sha256>", sent.encode())
+    assert record.attest_prompt_sha256(one, None) == one
+    real = b'reviewer:\n  prompt_sha256: "' + b"ef" * 32 + b'"\n'
+    assert record.attest_prompt_sha256(real, sent) == real
+    # a finding's block-scalar text that happens to contain the placeholder line is never rewritten
+    claim = (
+        b'reviewer:\n  prompt_sha256: "' + b"ef" * 32 + b'"\n'
+        b'findings:\n  - claim: |\n      prompt_sha256: "<prompt_sha256>"\n'
+    )
+    assert record.attest_prompt_sha256(claim, sent) == claim
+    mixed = b"reviewer:\n  prompt_sha256: \"<prompt_sha256>'\n"  # mismatched quotes: not the template line
+    assert record.attest_prompt_sha256(mixed, sent) == mixed
+
+
+def test_a_render_failure_refuses_an_unattestable_return_before_saving(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    monkeypatch.setattr(
+        record, "_render_prompt_sha256", lambda *a, **kw: (None, "the manifest pins a file that is not there")
+    )
+    _assert_unattestable_records_nothing(world, made, task_id="review-attested", cause="cannot be rendered")
+
+
+def test_a_placeholder_line_the_recorder_cannot_replace_refuses_before_saving(world: World) -> None:
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    text = made["review"].read_text(encoding="utf-8")
+    made["review"].write_text(text.replace('"<prompt_sha256>"', "'<prompt_sha256>'  # seat comment"), encoding="utf-8")
+    _assert_unattestable_records_nothing(world, made, task_id="review-attested", cause="not in the form")
 
 
 def _attestable_placeholder_return(world: World) -> dict[str, Any]:

@@ -57,6 +57,20 @@ def _resolve_core(repo_root: Path = REPO_ROOT) -> contracts.ResolvedPrompt:
     return contracts.resolve_profile("core", context=CORE_CONTEXT, repo_root=repo_root)
 
 
+def test_contract_audit_consumes_complete_p0_responsibility_inventory() -> None:
+    report = contracts.audit_contracts(repo_root=REPO_ROOT)
+
+    assert report["canonical_source_root"] == "agents_extensions/shared/prompt-contracts"
+    assert report["docs_prompts_executable_authority"] is False
+    assert report["legacy_inventory_count"] == 39
+    assert report["classified_inventory_count"] == 39
+    assert report["unclassified_inventory"] == []
+    assert report["legacy_entry_points_removed"] == 0
+    assert report["legacy_entry_points_deprecated"] == 39
+    assert report["legacy_operator_entry_points"] == 0
+    assert report["canonical_invocation"] == "Use $curriculum-lifecycle for <track>."
+
+
 def test_legacy_migration_hashes_fail_on_silent_prompt_drift(tmp_path: Path) -> None:
     migration = contracts.load_legacy_migration(repo_root=REPO_ROOT)
     legacy_root = tmp_path / "orchestrators"
@@ -81,6 +95,20 @@ def test_resolution_is_identical_across_clean_repository_roots(tmp_path: Path) -
     second = _copy_contract_repo(tmp_path / "second")
 
     assert _resolve_core(first).to_record() == _resolve_core(second).to_record()
+
+
+def test_output_schema_accepts_typed_payload_and_rejects_unknown_fields() -> None:
+    resolved = _resolve_core()
+    valid = {
+        "status": "ready",
+        "findings": [],
+        "next_action": "certify",
+        "evidence_identity": CORE_CONTEXT["evidence_identity"],
+    }
+    contracts.validate_output(resolved, valid, repo_root=REPO_ROOT)
+
+    with pytest.raises(contracts.PromptContractError, match="prompt output failed schema"):
+        contracts.validate_output(resolved, {**valid, "commentary": "not declared"}, repo_root=REPO_ROOT)
 
 
 def test_resolved_record_detects_rendered_prompt_tampering() -> None:

@@ -86,6 +86,13 @@ def test_both_grok_transports_refuse_subject_seats_and_families(risk, subject):
         assert candidate.status == "excluded" and "subject exclusion" in candidate.reason
 
 
+def test_grok_never_reviews_its_own_adapter():
+    result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="critical", owned_paths=("scripts/agent_runtime/adapters/grok_build.py",), claude_account=HOST_ACCOUNT))
+    assert result.selected.name == "claude-opus-5-5"
+    for name in GROK_SEATS:
+        assert next(item for item in result.trace if item.name == name).status == "excluded"
+
+
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("risk", RISKS)
 @pytest.mark.parametrize("name", GROK_SEATS)
@@ -111,6 +118,19 @@ def test_closeout_cli_selects_grok_transport_with_a_durable_receipt(tmp_path, ca
 
 def _catalog():
     return copy.deepcopy(load_model_catalog())
+
+
+@pytest.mark.parametrize("risk", RISKS)
+def test_catalog_admits_both_transports_directly_after_opus(risk):
+    catalog = load_model_catalog()
+    ladder = [name for rung in catalog["review_ladders"][risk] for name in rung]
+    opus = ladder.index("claude-opus-5-5")
+    assert ladder[opus + 1:opus + 3] == list(GROK_SEATS)
+    for name in GROK_SEATS:
+        candidate = catalog["review_candidates"][name]
+        assert candidate.get("last_resort", False) is False
+        assert "critical_review" in catalog["models"][candidate["model_id"]]["roles"]
+    validate_catalog(_catalog())
 
 
 @pytest.mark.parametrize("model", ["composer-2.5", "kimi-code/k3", "gemini-3.8-flash-high"])

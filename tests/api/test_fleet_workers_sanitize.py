@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from scripts.api.fleet_workers_sanitize import validate_worker_row_dict, validate_workers_list
-from scripts.api.project_state_sanitize import ProjectStateValidationError
+from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
 
 
 def _row(**overrides: object) -> dict[str, object]:
@@ -80,3 +80,37 @@ def test_identifier_fields_still_reject_pid_and_nonce_values(field: str, value: 
         validate_worker_row_dict(_row(**{field: value}))
     with pytest.raises(ProjectStateValidationError):
         validate_workers_list([_row(), _row(**{field: value})])
+
+
+@pytest.mark.parametrize("task_id", ["run-nonce-1234abcd1234abcd", "pid-1234", "impl-8874-pid-1234"])
+def test_report_document_rejects_pid_and_nonce_identifiers(task_id: str) -> None:
+    document = _report_document(workers=[_row(), _row(id=task_id)])
+    with pytest.raises(ProjectStateValidationError):
+        validate_report_document(document)
+
+
+def _report_document(*, workers: list[dict[str, object]]) -> dict[str, object]:
+    return {
+        "host_id": "host-worker",
+        "primary": {
+            "head_sha": "a" * 40,
+            "origin_main_sha": "b" * 40,
+            "origin_main_age_s": 1,
+            "ahead": 0,
+            "behind": 0,
+            "dirty_count": 0,
+        },
+        "worktrees": {"count": 0},
+        "services": [
+            {
+                "name": "api",
+                "state": "running",
+                "repo": "learn-ukrainian",
+                "serving_mode": "release",
+                "serving_sha": "b" * 40,
+                "checkout_sha": None,
+            }
+        ],
+        "collected_at": "2026-08-24T12:00:00Z",
+        "workers": workers,
+    }

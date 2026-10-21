@@ -16,6 +16,41 @@ io_utils = importlib.import_module("build.io_utils")
 plan_patch = importlib.import_module("build.phases.plan_patch")
 
 
+def test_extract_plateau_complaints_prefers_recurrent_findings() -> None:
+    complaints = plan_patch.extract_plateau_complaints(
+        [
+            {
+                "round": 1,
+                "findings": [
+                    {
+                        "dimension": "Dialogue & conversation quality",
+                        "location": "Dialogue section",
+                        "issue": "Dialogue situation is not grounded in the plan.",
+                        "fix": "Name a concrete place and task.",
+                    }
+                ],
+                "scores": [],
+            },
+            {
+                "round": 2,
+                "findings": [
+                    {
+                        "dimension": "Dialogue & conversation quality",
+                        "location": "Dialogue section",
+                        "issue": "Dialogue situation is not grounded in the plan.",
+                        "fix": "Name a concrete place and task.",
+                    }
+                ],
+                "scores": [],
+            },
+        ]
+    )
+
+    assert complaints
+    assert complaints[0]["summary"] == "Dialogue situation is not grounded in the plan."
+    assert complaints[0]["rounds"] == [1, 2]
+
+
 def test_build_plan_patch_prompt_strips_embedded_plan_patch_sentinels() -> None:
     plan_text = yaml.safe_dump(
         {
@@ -403,3 +438,18 @@ def test_apply_plan_patch_rejects_protected_fields_but_applies_legal_changes(
             "reason": "protected_field_violation",
         }
     ]
+
+
+def test_dispatch_gemini_plan_patch_explicit_pro_passes_model_to_cmd(monkeypatch) -> None:
+    """Explicit Pro model passed to _dispatch_gemini_plan_patch must win."""
+    captured_cmd = []
+
+    def fake_run(cmd, *args, **kwargs):
+        captured_cmd.extend(cmd)
+        return type("Completed", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(plan_patch.subprocess, "run", fake_run)
+    plan_patch._dispatch_gemini_plan_patch("prompt", task_id="task-pro", model="gemini-3.1-pro-high")
+    assert "--model" in captured_cmd
+    model_idx = captured_cmd.index("--model")
+    assert captured_cmd[model_idx + 1] == "gemini-3.1-pro-high"

@@ -47,6 +47,18 @@ def test_delegate_dispatch_accepts_grok_agent_and_alias():
         assert task in result.stdout
 
 
+def test_ab_channels_cli_marks_grok_cli_available():
+    """``ab discuss`` requires the agent to be CLI-spawnable."""
+    scripts_dir = str(_REPO_ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    from scripts.ai_agent_bridge import _channels_cli
+
+    assert _channels_cli._cli_available_agent("grok") is True
+    assert _channels_cli._cli_available_agent("grok-build") is True
+    assert _channels_cli._cli_available_agent("grok-hermes") is False
+
+
 def test_lint_agent_trailer_accepts_grok_and_alias():
     """Native seat, permanent alias, and hermes trailers must all validate."""
     scripts_dir = str(_REPO_ROOT / "scripts")

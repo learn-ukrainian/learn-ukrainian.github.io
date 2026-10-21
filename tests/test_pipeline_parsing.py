@@ -22,11 +22,23 @@ from pipeline.parsing import (
     _extract_fix_plan,
     _parse_d1_review,
     _parse_factual_review,
+    _scan_llm_filler,
 )
 
 # =============================================================================
 # _scan_llm_filler
 # =============================================================================
+
+class TestScanLlmFiller:
+
+    def test_repeated_filler_detected(self):
+        content = (
+            "It's worth noting that Ukrainian has cases.\n"
+            "More text here.\n"
+            "It's worth noting that verbs conjugate too."
+        )
+        issues = _scan_llm_filler(content)
+        assert len(issues) >= 2
 
 
 # =============================================================================
@@ -182,6 +194,11 @@ More text.
         result = _extract_fix_plan(review)
         assert "Fix grammar" in result
         assert "Add examples" in result
+
+    def test_falls_back_to_full_text(self):
+        review = "Just a plain review with no structured sections."
+        result = _extract_fix_plan(review)
+        assert result == review
 
 
 # =============================================================================

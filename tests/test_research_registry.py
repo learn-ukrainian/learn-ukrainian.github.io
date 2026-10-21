@@ -365,6 +365,36 @@ def test_anchor_fence_errors() -> None:
 
 
 # --------------------------------------------------------------------------- #
+# 11. Digest copyright policy
+# --------------------------------------------------------------------------- #
+def test_digest_policy_oversized_overlong_and_unattributed(tmp_path: Path) -> None:
+    big = "filler line number x\n" * 700  # > MAX_DIGEST_BYTES, no quotes
+    overlong = 'Source: https://e.org\n\n"' + "q" * (crr.MAX_QUOTE_CHARS + 5) + '"\n'
+    unattributed = '"a short quote with no provenance"\n'
+    recs = [
+        make_record("d-big"),
+        make_record("d-quote"),
+        make_record(
+            "d-noprov",
+            provenance={
+                "digest": "docs/references/research-digests/d-noprov.md",
+                "digest_anchor": None,
+                "source_url": None,
+            },
+        ),
+    ]
+    root, data = build_project(
+        tmp_path,
+        recs,
+        bodies={"d-big": big, "d-quote": overlong, "d-noprov": unattributed},
+    )
+    errs = run(data, root).errors
+    assert any("d-big" in e and "bytes" in e for e in errs)
+    assert any("d-quote" in e and "quoted span" in e for e in errs)
+    assert any("d-noprov" in e and "provenance" in e for e in errs)
+
+
+# --------------------------------------------------------------------------- #
 # 12. Ownership: unknown epic + duplicate epic declaration
 # --------------------------------------------------------------------------- #
 def test_ownership_unknown_and_duplicate_epic(tmp_path: Path) -> None:

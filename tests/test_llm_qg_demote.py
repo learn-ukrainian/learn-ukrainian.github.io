@@ -55,6 +55,24 @@ def test_seminar_decolonization_revise_stays_terminal() -> None:
     assert "decolonization" not in verdict.warning_dims
 
 
+def test_aggregate_llm_review_json_shape_includes_terminal_warning_fields() -> None:
+    """linear_pipeline.asdict output includes the additive gate fields."""
+    report = {
+        dim: {
+            "score": 4.0 if dim == "pedagogical" else 9.0,
+            "evidence": '"The module gives a concrete morning sequence."',
+            "verdict": "REJECT" if dim == "pedagogical" else "PASS",
+        }
+        for dim in QG_DIMS
+    }
+
+    aggregate = linear_pipeline.aggregate_llm_review(report, "A1")["aggregate"]
+
+    assert aggregate["verdict"] == "REJECT"
+    assert aggregate["terminal_verdict"] == "PASS"
+    assert aggregate["warning_dims"] == ("pedagogical",)
+
+
 def test_aggregate_llm_review_threads_core_profile_for_decolonization() -> None:
     report = {
         dim: {

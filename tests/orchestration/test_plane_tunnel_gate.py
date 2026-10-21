@@ -21,6 +21,11 @@ class _Resp:
         return None
 
 
+def test_skip_env(monkeypatch) -> None:
+    monkeypatch.setenv(gate.ENV_SKIP, "1")
+    assert gate.check_driver_plane()[0] == "skipped"
+
+
 def test_unreachable_is_degraded_not_refused(monkeypatch) -> None:
     monkeypatch.delenv(gate.ENV_SKIP, raising=False)
 
@@ -74,6 +79,21 @@ def test_healthy_production_monitor_is_ok_even_when_fleet_schema_is_typed_unavai
     assert "tunnel" not in reason
     assert "job-host" not in reason
     assert requested_paths == ["/api/health"]
+
+
+def test_unhealthy_production_monitor_is_degraded(monkeypatch) -> None:
+    monkeypatch.delenv(gate.ENV_SKIP, raising=False)
+
+    def fake_open(url, timeout=0):
+        if "/api/health" in str(url):
+            return _Resp({"status": "degraded"})
+        raise AssertionError(url)
+
+    monkeypatch.setattr(gate.urllib.request, "urlopen", fake_open)
+    status, reason = gate.check_driver_plane()
+    assert status == "degraded"
+    assert "Mac" in reason
+    assert "retired" in reason
 
 
 def test_help_contract() -> None:

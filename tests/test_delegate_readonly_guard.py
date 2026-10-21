@@ -181,6 +181,24 @@ def test_read_only_delegate_snapshot_sidecar_path_is_runtime_state():
     assert not delegate._is_read_only_runtime_telemetry_path(sidecar)
 
 
+def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypatch):
+    """#7124: the snapshot records no ``.worktrees/`` entries at all."""
+    repo = (tmp_path / "repo").resolve()
+    repo.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(repo, monkeypatch)
+    noise = repo / ".worktrees" / "dispatch" / "gemini" / "other-task"
+    noise.mkdir(parents=True)
+    (noise / "draft.md").write_text("other lane\n", encoding="utf-8")
+    (repo / "untracked.txt").write_text("visible\n", encoding="utf-8")
+
+    snapshot, error = delegate._read_only_checkout_snapshot(repo)
+
+    assert error is None
+    assert snapshot is not None
+    assert "untracked.txt" in snapshot
+    assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot)
+
+
 def test_read_only_worktree_ignores_concurrent_primary_writes(tmp_tasks_dir, tmp_path, monkeypatch):
     """#9094: the task snapshot covers only its detached worktree."""
     primary = (tmp_path / "primary").resolve()
@@ -267,6 +285,56 @@ def test_read_only_explicit_primary_still_fails_checkout_writes(path, tmp_tasks_
     # #9878: last_error names the typed cause and its count; the paths stay in their field and the .diag.
     assert state["last_error"] == "read_only_checkout_mutation, count 1"
     assert f"read-only checkout mutation detected: {path}" in _kept_diagnostics(state["task_id"])
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "tracked.txt",
+        ".claude/x.md",
+        "scratch/review.py",
+        ".cache/review.json",
+        ".mcp/servers/message-broker/scratch.log",
+    ],
+)
+def test_read_only_worktree_still_fails_own_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8516/#10025: tracked, untracked and ignored leaks still fail."""
+    primary = (tmp_path / "primary").resolve()
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = (tmp_path / "worktree").resolve()
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    task_id = "worktree-own-state"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    def worker_writes(*_args, **_kwargs):
+        target = checkout / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("task write\n", encoding="utf-8")
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=worker_writes):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [path]
 
 
 @pytest.mark.parametrize("existing", [False, True])
@@ -449,6 +517,38 @@ def test_read_only_review_ignores_sibling_task_lifecycle(tmp_tasks_dir, tmp_path
     assert delegate._read_state(own_path)["read_only_mutation_paths"] == []
 
 
+def test_overlapping_read_only_reviews_ignore_each_other(tmp_tasks_dir, tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    for task_id in ("review-a", "review-b"):
+        delegate._write_state_atomic(
+            delegate._state_path(task_id),
+            {"task_id": task_id, "cwd": str(checkout), "status": "spawning"},
+        )
+
+    def run_second_review(*_args, **_kwargs):
+        with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
+            second_rc = delegate._run_worker(
+                task_id="review-b", agent="grok", prompt="Review B.", mode="read-only",
+                cwd_str=str(checkout), model=None, hard_timeout=60,
+            )
+        assert second_rc == 0
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=run_second_review):
+        first_rc = delegate._run_worker(
+            task_id="review-a", agent="grok", prompt="Review A.", mode="read-only",
+            cwd_str=str(checkout), model=None, hard_timeout=60,
+        )
+
+    assert first_rc == 0
+    for task_id in ("review-a", "review-b"):
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+
+
 @pytest.mark.parametrize("replacement", [False, True])
 def test_read_only_review_ignores_archived_terminal_result(replacement, tmp_tasks_dir, tmp_path, monkeypatch):
     checkout = tmp_path / "checkout"
@@ -531,6 +631,84 @@ def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(tmp_path
     assert snapshot is not None
     assert snapshot["tracked.txt"] == "R :source"
     assert ".worktrees/lane/tracked.txt" not in snapshot
+
+
+def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#7124: a concurrent dispatch sandbox appearing under ``.worktrees/`` is excluded from snapshot."""
+    checkout = (tmp_path / "repo-root").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    gitignore = checkout / ".gitignore"
+    gitignore.write_text(gitignore.read_text(encoding="utf-8") + ".worktrees/\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".gitignore"], cwd=checkout, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "ignore worktrees"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    # Detach HEAD so ``git worktree add -b`` can create a sibling branch without
+    # fighting the fixture branch checked out in this repo.
+    subprocess.run(
+        ["git", "checkout", "--detach", "HEAD"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    task_id = "read-only-concurrent-sibling-worktree"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(checkout)},
+    )
+
+    sibling = checkout / ".worktrees" / "dispatch" / "cursor" / "codeql-path-injection-fix"
+
+    def concurrent_sibling_worktree(*_args, **_kwargs):
+        sibling.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            [
+                "git",
+                "worktree",
+                "add",
+                "-b",
+                "cursor/codeql-path-injection-fix",
+                str(sibling),
+                "HEAD",
+            ],
+            cwd=checkout,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=concurrent_sibling_worktree):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Inventory thin-mode sources without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
+    assert sibling.exists()
 
 
 def test_read_only_dispatch_ignores_other_lane_worktree_activity(
@@ -867,6 +1045,29 @@ def test_review_9204_result_opening_smoke_ignores_package_build_outputs(
     assert reviewed_head in state_path.with_suffix(".result").read_text(encoding="utf-8")
 
 
+@pytest.mark.parametrize(
+    ("task_id", "expected_ignored_count"),
+    [
+        ("review-9204-r2", 497),
+        ("review-9204-r3", 80),
+    ],
+)
+def test_review_9204_exact_snapshot_replay_ignores_package_build_outputs(
+    task_id, expected_ignored_count
+):
+    """Replay every ignored status from the real r2/r3 pre/post sidecars."""
+    fixture_path = Path(__file__).parent / "fixtures/review_9204_read_only_snapshots.json"
+    item = json.loads(fixture_path.read_text(encoding="utf-8"))[task_id]
+    before = {path: "!!" for path in item["pre_ignored"]}
+    after = {path: "!!" for path in item["post_ignored"]}
+    assert len(before) == 1 and len(after) - len(before) == expected_ignored_count
+    assert set(before).issubset(after)
+    assert delegate.parse_review_verdict(item["verdict_line"]) == "APPROVE"
+    assert len(item["reviewed_head"]) == 40
+    assert delegate._read_only_mutation_paths(before, after) == []
+    assert delegate._read_only_ignored_mutation_paths(before, after) == sorted(set(after) - set(before))
+
+
 def test_review_package_build_exemption_does_not_hide_tracked_edit(tmp_tasks_dir, tmp_path, monkeypatch):
     checkout = (tmp_path / "tracked-package-build").resolve()
     checkout.mkdir()
@@ -907,6 +1108,41 @@ def test_review_package_build_exemption_requires_git_ignored_status():
     path = "packages/v4-runtime/build/notes.txt"
     assert delegate._read_only_mutation_paths({}, {path: "!!"}) == []
     assert delegate._read_only_mutation_paths({}, {path: "??"}) == [path]
+
+
+def test_read_only_snapshot_clean_run_passes(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#8516 AC-02: a clean read-only run settles done with empty mutations."""
+    checkout = (tmp_path / "repo-clean").resolve()
+    checkout.mkdir(parents=True, exist_ok=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+
+    task_id = "read-only-clean-run"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout), **_AGY_UKRAINIAN_REVIEW})
+
+    with patch("agent_runtime.runner.invoke", side_effect=lambda *_args, **_kwargs: _finalize_mock_result()):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Review without editing the tree.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ignored_mutation_paths"] == []
+    assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
 
 
 # --- #8516 AC-01: runner cwd pin (agy re-anchors its cwd after spawn) -------
@@ -963,3 +1199,26 @@ def test_read_only_agy_cwd_pin_fails_when_child_anchors_outside(tmp_path, monkey
         time.sleep(0.4)
         assert pin.check() == "cwd_unpinned"
         assert pin.last_observed is not None
+
+
+@_needs_procfs
+def test_read_only_agy_cwd_pin_allows_late_settle(tmp_path, monkeypatch):
+    """A child that starts in scratch and then settles into the pin passes.
+
+    Mirrors the 2026-09-24 agy evidence on #8516: the CLI starts in its own
+    scratch directory and only later finds the cwd it was given.
+    """
+    monkeypatch.setenv(runner._CWD_PIN_GRACE_ENV, "120")
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    pinned = tmp_path / "pinned"
+    pinned.mkdir()
+    argv = ["bash", "-c", 'sleep 0.5; cd "$1" && exec sleep 30', "_", str(pinned)]
+    with _sleeping_child(elsewhere, *argv) as proc:
+        pin = runner._ChildCwdPin.start(proc=proc, cwd=pinned, mode="read-only", agent_name="agy", task_id="t")
+        assert pin is not None
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline and not pin.verified:
+            assert pin.check() is None
+            time.sleep(0.2)
+        assert pin.verified is True

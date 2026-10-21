@@ -527,6 +527,18 @@ def test_credential_does_not_enter_digests_or_mutate_profile(monkeypatch, native
     assert profile == original
 
 
+def test_invalid_parent_payload_closes_file(tmp_path, monkeypatch, plan_profile):
+    selected = tmp_path / "selected"
+    selected.write_bytes(b'{"credential":"synthetic-secret","credential":"duplicate"}')
+    selected.chmod(0o400)
+    monkeypatch.setattr(child, "load_profile", lambda: plan_profile)
+    monkeypatch.setattr(service, "provider_credential_path", lambda _: selected)
+    before = set(os.listdir("/proc/self/fd"))
+    with pytest.raises(OperationRefused):
+        service._provider_credential("codex")
+    assert set(os.listdir("/proc/self/fd")) == before
+
+
 @pytest.mark.parametrize("header", ["not-json", "e30", "eyJhbGciOiJub25lIn0"])
 def test_malformed_or_unsigned_jwt_header_is_refused(header):
     value = payload("codex", "subscription")

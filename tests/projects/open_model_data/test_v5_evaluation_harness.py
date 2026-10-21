@@ -77,6 +77,16 @@ def test_citation_whitelist_approved() -> None:
     assert len(approved) >= 3
 
 
+def test_citation_whitelist_hallucination_detection() -> None:
+    """Verify foreign dictionaries and synthetic citations are caught."""
+    text = (
+        "У словнику COBUILD та базі LexicalLab зазначено 45 форм даного слова."
+    )
+    is_clean, _approved, prohibited = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert "COBUILD" in [p.upper() for p in prohibited] or "LEXICALLAB" in [p.upper() for p in prohibited]
+
+
 def test_full_evaluation_suite_run() -> None:
     """Integration test verifying Gate 1 through Gate 5 metrics across a test batch."""
     test_cases = [
@@ -137,6 +147,13 @@ def test_span_integrity_collateral_token_mutation() -> None:
     is_intact, note = check_span_integrity(orig, edited, target)
     assert is_intact is False
     assert "prefix_mutation" in note
+
+
+def test_span_integrity_overlapping_spans_rejected() -> None:
+    """Verify prefix and suffix matches cannot overlap (e.g. 'a TARGET a' -> 'a')."""
+    is_intact, note = check_span_integrity("a TARGET a", "a", "TARGET")
+    assert is_intact is False
+    assert "span_truncation" in note
 
 
 def test_citation_whitelist_unknown_authority_rejected() -> None:
@@ -201,6 +218,38 @@ def test_gate5_zero_coverage_fails() -> None:
     assert summary.high_freq_total == 0
     assert summary.gate5_pass is False
     assert summary.all_gates_pass is False
+
+
+def test_gate5_partial_coverage_fails() -> None:
+    """Verify Gate 5 fails when coverage is below the required 50-calque floor."""
+    cases = [
+        {
+            "eval_id": "c_hf_01",
+            "case_type": "CORRECT",
+            "target_term": "приймати участь",
+            "input_text": "Студенти будуть приймати участь у заходах.",
+            "expected_replacement": "брати участь",
+        }
+    ]
+    preds = {"c_hf_01": "Студенти будуть брати участь у заходах."}
+    summary = run_evaluation_suite(cases, preds, min_high_freq_floor=50)
+    assert summary.high_freq_total == 1
+    assert summary.gate5_pass is False
+    assert summary.all_gates_pass is False
+
+
+def test_evaluate_prediction_prefix_suffix_substring_rejected() -> None:
+    """Verify Gate 1 rejects non-contiguous or embedded prefix/suffix token additions (e.g. 'XYZбрати участьXYZ')."""
+    case = {
+        "eval_id": "c_subseq",
+        "case_type": "CORRECT",
+        "target_term": "приймати участь",
+        "input_text": "Студенти будуть приймати участь у заходах.",
+        "expected_replacement": "брати участь",
+    }
+    pred = "Студенти будуть XYZбрати участьXYZ у заходах."
+    res = evaluate_prediction(case, pred)
+    assert res.calque_eliminated is False
 
 
 def test_evaluate_prediction_comma_clause_and_nenormatyvnym() -> None:
@@ -587,6 +636,30 @@ def test_citation_whitelist_r8_f3_introductory_attribution_parenthetical_subject
     assert any("ВЕСУМ" in a for a in app)
 
 
+def test_evaluate_academic_non_inferiority_pass() -> None:
+    """Verify academic non-inferiority passes when degradation is <= threshold (R8-F4)."""
+    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    assert set(STANDARD_ACADEMIC_BENCHMARKS) == set(base_scores.keys())
+    aligned_scores = {"mmlu_ua": 0.6450, "arc_ua": 0.5850, "hellaswag_ua": 0.6150, "gsm8k_ua": 0.4480}
+    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    assert report.overall_passed is True
+    assert report.benchmark_count == 4
+    assert report.worst_degradation_pct <= 2.0
+    assert all(t.passed for t in report.tasks)
+
+
+def test_evaluate_academic_non_inferiority_fail() -> None:
+    """Verify academic non-inferiority fails when any benchmark degrades > threshold (R8-F4)."""
+    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    aligned_scores = {"mmlu_ua": 0.6200, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    # mmlu_ua drops from 0.65 to 0.62: degradation is ~4.6% (> 2.0%)
+    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    assert report.overall_passed is False
+    mmlu_task = next(t for t in report.tasks if t.benchmark == "mmlu_ua")
+    assert mmlu_task.passed is False
+    assert mmlu_task.degradation_pct > 2.0
+
+
 def test_evaluate_academic_non_inferiority_lm_eval_dict_format() -> None:
     """Verify academic non-inferiority parses lm-evaluation-harness output dicts (R8-F4)."""
     base_data = {
@@ -783,6 +856,15 @@ def test_citation_whitelist_r10_f3_fabricated_suffix_rejected() -> None:
     is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
     assert is_clean2 is False
     assert any("Правопис 2099" in v for v in viol2)
+
+
+def test_citation_whitelist_r10_f4_two_authority_cyrillic_list_catches_unapproved() -> None:
+    """Verify two-authority Cyrillic list catches second unapproved authority (R10-F4)."""
+    text = "Згідно з ВЕСУМ, Зорблаксом, це правильно."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("Зорблаксом" in v for v in viol)
+    assert any("ВЕСУМ" in a for a in app)
 
 
 def test_evaluate_academic_non_inferiority_r11_f1_metadata_samples_rejected() -> None:

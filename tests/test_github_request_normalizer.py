@@ -883,6 +883,25 @@ def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkey
     assert spool.closed
 
 
+def test_landing_flow_never_reads_a_body(context):
+    """Inside a vetted landing flow the class is landing: a non-replayable body is sent unread."""
+    from scripts.orchestration import merge_queue_keeper as keeper
+
+    seed(context, budget_rows("graphql", "0"))
+    stream = Unseekable(envelope(R))
+
+    class Done(Exception):
+        pass
+
+    class Keeper:
+        def branch_names(self):
+            raise Done(outcome(opened("POST", "graphql", stream), context))
+
+    with pytest.raises(Done) as done:
+        keeper.run(Keeper(), Path("unused-state.json"), apply=False)
+    assert done.value.args[0][0] == "ok" and context.wire.sent[0][3] == envelope(R)
+
+
 # --- hold kinds -------------------------------------------------------------------------------
 
 POOL_TRIGGERS = {
@@ -1003,6 +1022,21 @@ def test_pr_view_404_falls_through_inside_the_guard(context, remaining, native_s
 
 
 # --- normalization: one reading, typed provenance ------------------------------------------------
+
+
+def test_one_gh_api_reading_feeds_admission_and_translation(context):
+    seed(context, budget_rows("graphql", "0"))
+    typed = ["api", "graphql", "-f", "query=" + CONDITIONAL, "-F", "skip=true"]
+    call = gh._gh_api_call(typed[1:], stdin=None, cwd=context.tmp)
+    url, body = call.build()
+    assert (call.method, url) == ("POST", "graphql")
+    assert json.loads(body) == {"query": CONDITIONAL, "variables": {"skip": True}}
+    assert outcome(native(*typed, *TEMPLATE), context)[0] == "ok"
+    # Translated: admitted from the same reading, and the wire carries exactly its body.
+    raw = ["api", "graphql", "-f", "query=" + LAND, "-f", "operationName=Land", "-f", "x=1"]
+    assert gh._translation_options(["gh", *raw]) is not None
+    assert outcome(translated(*raw), context)[0] == "ok"
+    assert context.wire.sent[-1][3] == gh._gh_api_call(raw[1:], stdin=None, cwd=None).build()[1]
 
 
 @pytest.mark.parametrize(

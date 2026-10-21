@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 import pytest
 
 from scripts.audit import cursor_judge_calibration as calibration
@@ -24,6 +26,13 @@ def test_call_cursor_refuses_before_spawn(monkeypatch, model, code):
     code_pattern = rf"\({code}\)" if code.startswith("cursor_") else rf"{code}: model"
     with pytest.raises(SystemExit, match=rf"^cursor_judge_calibration: refused: .*{code_pattern}"):
         calibration.call_cursor("judge this", model)
+
+
+def test_main_refuses_auto_before_loading_cases(monkeypatch):
+    monkeypatch.setattr(calibration, "pull_calibration_cases", lambda: pytest.fail("loaded cases before refusing"))
+    monkeypatch.setattr(sys, "argv", ["cursor_judge_calibration.py", "--model", "auto", "--dry-run"])
+    with pytest.raises(SystemExit, match=r"\(cursor_auto_outside_coding_task\)"):
+        calibration.main()
 
 
 def test_call_cursor_runs_a_concrete_pin(monkeypatch):

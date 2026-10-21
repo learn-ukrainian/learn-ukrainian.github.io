@@ -294,6 +294,41 @@ def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monk
             assert (primary / receipt["location"] / ".gitignore").read_bytes() == (repo / ".gitignore").read_bytes()
 
 
+@pytest.mark.parametrize("status", ["done", "no_deliverable", "failed"])
+def test_all_ignored_output_preserved_without_response_names(checkout, status):
+    repo, _, tasks = checkout
+    (repo / ".gitignore").write_text(".cache/\nignored/\n")
+    artifact(checkout, ".cache/transcriptions/page.txt", b"transcription")
+    artifact(checkout, "ignored/empty.txt", b"")
+    ok, reason, receipt = preserve(checkout, {"status": status, "started_at": "2000-01-01T00:00:00Z"})
+    assert ok and not reason
+    assert receipt["count"] == 2 and receipt["bytes"] == 13
+    assert ((checkout[1] / receipt["location"]) / ".cache/transcriptions/page.txt").read_bytes() == b"transcription"
+    assert ((checkout[1] / receipt["location"]) / "ignored/empty.txt").is_file()
+    assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
+
+
+@pytest.mark.parametrize(
+    "start",
+    ["2000-01-01T00:00:00Z", None, "bad", "2000-01-01T00:00:00", "2999-01-01T00:00:00Z"],
+    ids=["old", "missing", "malformed", "naive", "future"],
+)
+def test_start_values_are_irrelevant_to_selection(checkout, start):
+    old = artifact(checkout, "ignored/old.txt")
+    modified = artifact(checkout, "ignored/modified.txt", b"new version")
+    os.utime(old, (946684799, 946684799))
+    record = {} if start is None else {"started_at": start}
+    ok, _, receipt = preserve(checkout, record)
+    assert ok and receipt["count"] == 2
+    location = checkout[1] / receipt["location"]
+    assert (location / "ignored/old.txt").read_bytes() == old.read_bytes()
+    assert (location / "ignored/modified.txt").read_bytes() == modified.read_bytes()
+    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+    assert receipt["retention_disposition"] == "retrieved"
+    assert all(entry["class"] == "unknown_baseline" for entry in receipt["paths"])
+    assert str(checkout[0]) not in json.dumps(receipt)
+
+
 @pytest.mark.parametrize("failure", ["cap", "copy", "record", "inventory", "changed", "added"])
 def test_failure_retains_sources(checkout, monkeypatch, failure):
     source = artifact(checkout, "ignored/report.txt", b"task output")
@@ -925,6 +960,25 @@ def test_regular_file_beginning_with_symlink_prefix_has_no_target(tmp_path):
         "size": len(payload),
         "sha256": hashlib.sha256(payload).hexdigest(),
     }
+
+
+def test_symlink_target_longer_than_the_path_limit_is_refused(tmp_path, monkeypatch):
+    target = "too-long-target"
+    (tmp_path / "link").symlink_to(target)
+    _stub_path_limit(monkeypatch, 4)
+    with pytest.raises(output.artifacts.SymlinkTargetRefusal) as caught:
+        output._path_inventory(tmp_path, ["link"])
+    assert caught.value.kind == "target-too-long"
+    assert target not in str(caught.value)
+
+
+@pytest.mark.parametrize("reported", [-1, 0, "unavailable"])
+def test_unusable_path_limit_keeps_a_normal_symlink(tmp_path, monkeypatch, reported):
+    (tmp_path / "link").symlink_to("inside-target")
+    _stub_path_limit(monkeypatch, reported)
+    entry = output._path_inventory(tmp_path, ["link"])[0]
+    assert entry["type"] == "symlink"
+    assert entry["target"] == "inside-target"
 
 
 def test_longest_legal_symlink_target_is_kept(tmp_path):

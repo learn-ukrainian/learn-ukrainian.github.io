@@ -965,6 +965,17 @@ def test_resolutions_missing_tokens_fails(tmp_path: Path) -> None:
     assert str(paths["res_1"]) in exc_info.value.message
 
 
+def test_optional_places_defaults_to_empty_list(tmp_path: Path) -> None:
+    """A dialogue omitting optional 'places' defaults to [] in digest."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    del plan_doc["lessons"][0]["dialogue"]["places"]
+    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
+
+    doc = build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert doc["lessons"][0]["dialogue"]["places"] == []
+
+
 def test_symlinked_lock_sidecar_refused_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A .lock sidecar that is a symlink is refused before any read of that sidecar."""
     paths = _setup_two_lesson_fixture(tmp_path)
@@ -1304,6 +1315,37 @@ def test_cached_validator_reloads_on_schema_byte_change(tmp_path: Path) -> None:
     # Providing the new property succeeds under the new schema
     doc["review_round_5_marker"] = "r5_verified"
     validate_digest(doc, repo_root=tmp_path)
+
+
+def test_build_digest_fails_when_plan_schema_deleted_after_cache(tmp_path: Path) -> None:
+    """build_digest caches plan validator, but deleting plan schema causes subsequent call to fail."""
+    _setup_two_lesson_fixture(tmp_path)
+
+    # First call succeeds
+    doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert doc["level"] == "a1"
+
+    # Delete the plan schema
+    plan_schema_path = tmp_path / "schemas/module-plan-v2.schema.json"
+    plan_schema_path.unlink()
+
+    # Second call in same process must fail
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info.value.code == codes.DIGEST_SCHEMA_INVALID
+    assert "schema file not found" in exc_info.value.message
+
+    # Recreate plan schema with changed bytes requiring an extra property
+    real_schema = json.loads((REPO_ROOT / "schemas/module-plan-v2.schema.json").read_text(encoding="utf-8"))
+    real_schema["required"].append("custom_module_field")
+    real_schema["properties"]["custom_module_field"] = {"type": "string"}
+    plan_schema_path.write_text(json.dumps(real_schema), encoding="utf-8")
+
+    # Subsequent call in same process must reload schema and fail with plan_invalid
+    with pytest.raises(DigestError) as exc_info2:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info2.value.code == codes.PLAN_INVALID
+    assert "custom_module_field" in exc_info2.value.message
 
 
 def _multi_span_prompt_fixture(tmp_path: Path) -> dict[str, Path]:

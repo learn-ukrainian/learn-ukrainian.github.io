@@ -269,6 +269,21 @@ def test_cursor_adapter_refuses_admitted_auto_in_plan_or_ask_mode(adapter, tmp_p
         )
 
 
+def test_cursor_adapter_danger_auto_ignores_plan_mode_request(adapter, tmp_path):
+    """Danger never passes --mode, so an admitted Auto dispatch runs the agent regardless of cursor_mode."""
+    plan = adapter.build_invocation(
+        prompt="implement",
+        mode="danger",
+        cwd=tmp_path,
+        model="auto",
+        task_id="auto-danger",
+        session_id=None,
+        tool_config={"cursor_mode": "plan", CURSOR_AUTO_ADMITTED_KEY: True},
+    )
+    assert "--mode" not in plan.cmd
+    assert "--force" in plan.cmd
+
+
 def test_cursor_adapter_build_invocation_danger(adapter, tmp_path):
     plan = adapter.build_invocation(
         prompt="Delete all",
@@ -585,6 +600,25 @@ def test_cursor_adapter_parse_response_parses_v2026_05_27_single_assistant_messa
     assert result.ok is True
     assert result.session_id == "cursor-session-123"
     assert result.response == "Hello world"
+    assert "tool_use" not in result.response
+
+
+def test_cursor_adapter_parse_response_parses_v2026_05_27_assistant_messages(adapter):
+    """cursor-agent v2026.05.27 emits {role, message: {content: [...]}}."""
+    fixture = Path(__file__).parent / "fixtures" / "cursor_v2026_05_27_session_transcript.jsonl"
+    stdout = fixture.read_text(encoding="utf-8")
+    result = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok, f"Expected ok=True, stderr_excerpt={result.stderr_excerpt!r}"
+    assert result.response, "Response should not be empty"
+    assert "Reading the three module artifacts" in result.response
+    assert "Round 2" in result.response, "r2 content should be present"
+    assert "[VOTE: D]" in result.response, "Final vote should be captured"
     assert "tool_use" not in result.response
 
 

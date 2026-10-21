@@ -1,23 +1,30 @@
 """#9996: mechanical catalog roles admit Haiku only to explicitly typed safe work."""
 from __future__ import annotations
 
+import json
+import os
+import shutil
 import subprocess
 import sys
 from copy import deepcopy
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.agent_runtime import mechanical_admission as admission
 from scripts.agent_runtime.adapters import claude
 from scripts.agent_runtime.target_admission import resolve_and_admit
 from scripts.review.model_catalog import (
     ModelCatalogError,
+    activity_role_refusal,
     load_model_catalog,
     resolve_role,
     validate_catalog,
 )
-from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+from scripts.review.reviewer_resolver import SONNET_5_5, ResolverInputs, resolve_reviewer
+from scripts.telemetry.pricing import compute_cost
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 HAIKU = "claude-haiku-5-5"
@@ -44,6 +51,31 @@ def test_catalog_role_admits_typed_work(family):
     admission.refuse_mechanical_task((result.candidates[0].model_id,), **scope(task_family=family))
     (target,) = resolve_and_admit(("claude",), model=HAIKU, **scope(task_family=family), claude_account=HOST_ACCOUNT)
     assert target.model == HAIKU
+
+
+def test_routine_fallback_and_recon_peer_preserve_envelope_routes():
+    assert [row.model_id for row in resolve_role("routine_mechanical", purpose="inspect").candidates] == [HAIKU, "claude-sonnet-5-5"]
+    assert [row.model_id for row in resolve_role("readonly_recon", purpose="inspect").candidates] == [HAIKU, "gpt-6-luna"]
+    policy = load_model_catalog()["execution_routing"]["sol_advised_bounded"]
+    assert HAIKU not in {policy["preferred_worker"]["model_id"], policy["bounded_fallback_worker"]["model_id"]}
+
+
+@pytest.mark.parametrize("entrypoint", ["file", "module"])
+def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, entrypoint):
+    review = tmp_path / "scripts/review"
+    review.mkdir(parents=True)
+    for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "__init__.py"):
+        shutil.copyfile(ROOT / "scripts/review" / name, review / name)
+    config = tmp_path / "scripts/config"
+    config.mkdir()
+    shutil.copyfile(ROOT / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
+    command = [str(review / "model_catalog.py")] if entrypoint == "file" else ["-m", "scripts.review.model_catalog"]
+    result = subprocess.run(
+        [sys.executable, *command, "--resolve-role", "mechanical_classification"],
+        cwd=tmp_path, env={"PATH": os.defpath}, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["candidates"][0]["model_id"] == HAIKU
 
 
 @pytest.mark.parametrize("overrides,reason", [
@@ -95,6 +127,17 @@ def test_resolved_substitution_cannot_bypass_gate():
                           route=lambda request: ("claude", HAIKU, "test"))
 
 
+def test_prompt_and_content_read_errors_fail_closed(tmp_path):
+    prompt = tmp_path / "task.md"
+    prompt.write_text("Україна")
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="task input"):
+        admission.refuse_mechanical_task((HAIKU,), **scope(prompt_file=str(prompt)))
+    def unavailable():
+        raise OSError("private diagnostic must not escape")
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=r"unavailable at tree resolution \(OSError\)"):
+        admission.refuse_mechanical_task((HAIKU,), **scope(trees=unavailable))
+
+
 @pytest.mark.parametrize("stage", ["prompt file", "tree resolution", "owned content"])
 @pytest.mark.parametrize("error", [OSError, RuntimeError, ValueError, subprocess.SubprocessError])
 def test_input_failure_names_stage_and_class_without_exception_text(monkeypatch, stage, error):
@@ -118,6 +161,27 @@ def test_input_failure_names_stage_and_class_without_exception_text(monkeypatch,
     )
 
 
+def test_missing_prompt_file_names_stage_without_path(tmp_path):
+    with pytest.raises(admission.MechanicalAdmissionRefused) as refused:
+        admission.refuse_mechanical_task((HAIKU,), **scope(prompt_file=str(tmp_path / "missing.md")))
+    assert str(refused.value) == (
+        "MECHANICAL_TASK_REFUSED: task input unavailable at prompt file (FileNotFoundError) (#9996)"
+    )
+
+
+def test_unencodable_task_prompt_names_stage_without_content():
+    with pytest.raises(admission.MechanicalAdmissionRefused) as refused:
+        admission.refuse_mechanical_task((HAIKU,), **scope(task_prompt="private/path/\ud800"))
+    assert str(refused.value) == (
+        "MECHANICAL_TASK_REFUSED: task input unavailable at task prompt (UnicodeEncodeError) (#9996)"
+    )
+
+
+@pytest.mark.parametrize("activity", ["review", "consult"])
+def test_formal_review_and_advice_roles_refused(activity):
+    assert activity_role_refusal(HAIKU, activity)
+
+
 @pytest.mark.parametrize("profile", ["code", "infra", "ukrainian"])
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_reviewer_resolver_never_selects_haiku(profile, risk):
@@ -125,6 +189,21 @@ def test_reviewer_resolver_never_selects_haiku(profile, risk):
                                             review_profile=profile, pinned_candidate=HAIKU, claude_account=HOST_ACCOUNT))
     assert result.selected is None
     assert all(row.model_id != HAIKU for row in result.trace)
+
+
+@pytest.mark.parametrize("formal", [True, False])
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_custom_review_metadata_cannot_grant_haiku_authority(formal, risk):
+    candidate = replace(SONNET_5_5, concrete_model=HAIKU,
+                        invocation=f"dispatch --agent claude --model {HAIKU}",
+                        model_roles=frozenset({"routine_review", "critical_review"}))
+    result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk,
+                                            formal_review=formal, claude_account=HOST_ACCOUNT), ladder=((candidate,),))
+    assert result.selected is None
+    assert result.trace and all(
+        "mechanical-only" in row.reason or "formal review at high risk" in row.reason
+        for row in result.trace
+    )
 
 
 @pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review"])
@@ -165,6 +244,19 @@ def test_adapter_accepts_typed_haiku_and_refuses_untyped_without_provider(monkey
             "mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
 
 
+def test_price_keeps_directional_api_rates_and_subscription_accounting():
+    rates = yaml.safe_load((ROOT / "scripts/config/model_pricing.yaml").read_text())["models"][HAIKU]
+    assert rates["input_usd_per_1m_tokens"] == 0.10
+    assert rates["output_usd_per_1m_tokens"] == 0.50
+    assert rates["cache_read_usd_per_1m_tokens"] == 0.01
+    assert rates["base_price_max_input_tokens"] == 100000
+    assert rates["long_context_input_usd_per_1m_tokens"] == 0.50
+    assert rates["long_context_output_usd_per_1m_tokens"] == 2.50
+    assert rates["long_context_cache_read_usd_per_1m_tokens"] == 0.05
+    result = compute_cost(HAIKU, 1_000_000, agent="claude")
+    assert result.cost_usd is None and result.provenance == "subscription"
+
+
 def test_dispatch_parser_no_spawn_admission_and_persisted_scope():
     sys.path.insert(0, str(ROOT / "scripts"))
     import delegate
@@ -189,10 +281,25 @@ def test_dispatch_parser_no_spawn_admission_and_persisted_scope():
     assert target is None and "task prompt" in refusal
 
 
+def test_unrelated_dispatch_does_not_persist_research_dimensions():
+    from types import SimpleNamespace
+
+    import delegate
+    assert delegate._mechanical_task_scope(SimpleNamespace(research_task_family="unrelated", research_role="private")) == {}
+
+
 def test_unconstrained_models_and_routine_writes_preserve_admission():
     admission.refuse_mechanical_task((None,), mode="danger")
     admission.refuse_mechanical_task(("claude-sonnet-5-5",), mode="workspace-write")
     admission.refuse_mechanical_task((HAIKU,), **scope(mode="workspace-write", task_role="implementation"))
+
+
+@pytest.mark.parametrize("field,value", [("roles", None), ("roles", [{"invalid": True}])])
+def test_malformed_catalog_fields_keep_typed_validation(field, value):
+    catalog = deepcopy(load_model_catalog())
+    catalog["models"][HAIKU][field] = value
+    with pytest.raises(ModelCatalogError, match=field):
+        validate_catalog(catalog)
 
 
 def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypatch, tmp_path):
@@ -208,6 +315,54 @@ def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypat
         admission.refuse_mechanical_execution(
             HAIKU, mode="read-only", cwd=tmp_path, prompt=core_block("core") + "Напиши текст",
             tool_config={"mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+def test_bounded_implementation_role_preserves_target_gates(model):
+    admission.refuse_mechanical_task((model,), **scope(
+        task_family="bounded_implementation", task_role="implementation", mode="workspace-write"))
+    for role in ("driver", "design", "approval", "advisory", "orchestration", "review"):
+        with pytest.raises(admission.MechanicalAdmissionRefused):
+            resolve_and_admit(("claude" if model == HAIKU else "codex",), model=model,
+                              **scope(task_family="bounded_implementation", task_role=role), claude_account=HOST_ACCOUNT)
+
+
+@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation"])
+def test_luna_free_form_envelope_roles_remain_available(role):
+    admission.refuse_mechanical_task(("gpt-6-luna",), mode="read-only", task_role=role)
+
+
+@pytest.mark.parametrize("role", ["driver", "security_code", "ukrainian_authoring", "formal-review", "design_approval",
+                                  "consult", "consultation", "advice", "adviser"])
+def test_luna_free_form_roles_do_not_authorize_excluded_activity_classes(role):
+    with pytest.raises(admission.MechanicalAdmissionRefused):
+        admission.refuse_mechanical_task(("gpt-6-luna",), mode="read-only", task_role=role)
+
+
+@pytest.mark.parametrize("family,role", [("readonly_recon", "recon"), ("mechanical_classification", "classification")])
+def test_luna_direct_readonly_scope_rechecks_content(family, role):
+    admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+        task_family=family, task_role=role, driver_brief=True))
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+        admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+            task_family=family, task_role=role, driver_brief=True,
+            trees=(Tree({"safe.txt": "Україна".encode()}),)))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+@pytest.mark.parametrize("direct", [False, True])
+def test_bounded_routes_keep_distinct_content_rules_and_shared_security_floor(model, direct):
+    inputs = scope(task_family="bounded_implementation", task_role="implementation",
+                   mode="workspace-write", driver_brief=direct,
+                   paths=("tests/code.py",), trees=(Tree({"tests/code.py": "TEXT = 'Україна'".encode()}),))
+    if model == "gpt-6-luna" and not direct:
+        admission.refuse_mechanical_task((model,), **inputs)
+    else:
+        with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+            admission.refuse_mechanical_task((model,), **inputs)
+    inputs["trees"] = (Tree({"scripts/agent_runtime/new_gate.py": b"# security"}),)
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="security-sensitive"):
+        admission.refuse_mechanical_task((model,), **inputs)
 
 
 @pytest.mark.parametrize("family", ["bounded_implementation", "routine_mechanical", "readonly_recon", "mechanical_classification"])

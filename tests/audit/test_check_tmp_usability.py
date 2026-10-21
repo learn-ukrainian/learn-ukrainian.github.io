@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import errno
 import os
+import shutil
 from pathlib import Path
 from unittest.mock import patch
 
@@ -34,3 +35,14 @@ def test_probe_tmp_usability_simulated_edquot_on_write(tmp_path: Path) -> None:
         assert res["writable"] is False
         assert res["error"] == "edquot"
         assert not list(tmp_path.glob(".lu-tmp-probe-*"))
+
+
+def test_probe_tmp_usability_simulated_disk_usage_error(tmp_path: Path) -> None:
+    def fake_disk_usage(path):
+        raise OSError(errno.EACCES, "Permission denied")
+
+    with patch.object(shutil, "disk_usage", side_effect=fake_disk_usage):
+        res = ctu.probe_tmp_usability(tmp_path)
+        assert res["ok"] is False
+        assert res["writable"] is False
+        assert res["error"] == f"oserror-{errno.EACCES}"

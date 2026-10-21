@@ -114,6 +114,20 @@ def test_ellipsis_split_across_events():
     assert res.reason == "below_tau"
 
 
+def test_present_but_irrelevant_excerpt():
+    # 7. present-but-irrelevant excerpt (real string, unrelated claim) -> anchored=True
+    # Layer A is provenance only; entailment rejection is Layer B, out of scope here.
+    events = [_make_event()]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода Григорій Савич народився у 1722 році."
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events, tau=0.7)
+    assert res.anchored is True
+    assert res.reason == "anchored"
+
+
 def test_tool_query_mismatch_soft_signal():
     # 8. tool/query mismatch but strong excerpt anchor -> anchored=True (soft signal only)
     events = [_make_event()]
@@ -194,6 +208,111 @@ def test_v2_flag_wiring():
     # Verify default call matches explicit gate_version="v1" exactly
     res_v1_explicit = enforce_grounding_against_tool_events(payload, dispatch_meta, policy_family="seminar", gate_version="v1")
     assert res_v1_default.payload == res_v1_explicit.payload
+
+
+def test_shadow_compare_harness(tmp_path):
+    # 10. Prove the shadow compare harness loads cells, dual-runs, and emits correct summary shape
+    cell_payload = {
+        "schema_version": "qg_bakeoff_run.v1",
+        "seat": "test-seat",
+        "arm": "tooled",
+        "fixture": {"slug": "vesnianky"},
+        "payload": {
+            "fact_checks": [
+                {
+                    "claim": "Веснянки — це особливий жанр обрядових пісень, що відзначають пробудження природи та прихід весни.",
+                    "grounding": {
+                        "tool": "query_wikipedia",
+                        "query": "Веснянки",
+                        "evidence_excerpt": "Веснянки — це особливий жанр обрядових пісень, що відзначають пробудження природи та прихід весни."
+                    }
+                }
+            ]
+        },
+        "dispatch": {
+            "tool_events": [
+                {
+                    "tool": "query_wikipedia",
+                    "input": {"query": "Веснянки"},
+                    "output": "Веснянки — це особливий жанр обрядових пісень, що відзначають пробудження природи та прихід весни.",
+                    "tool_call_id": "call-1",
+                    "status": "completed"
+                }
+            ]
+        }
+    }
+
+    cell_path = tmp_path / "cell_1.json"
+    cell_path.write_text(json.dumps(cell_payload, ensure_ascii=False), encoding="utf-8")
+
+    out_prefix = tmp_path / "shadow_report"
+
+    # Mock fixtures dir to load an empty/missing or dummy fixtures directory
+    fixtures_dir = tmp_path / "fixtures"
+    fixtures_dir.mkdir()
+    # Write a dummy fixture matching vesnianky
+    dummy_fixture = {
+        "slug": "vesnianky",
+        "title": "Веснянки",
+        "passage_md": "Веснянки — це особливий жанр обрядових пісень, що відзначають пробудження природи та прихід весни.",
+        "claims": [
+            {
+                "claim": "Веснянки — це особливий жанр обрядових пісень, що відзначають пробудження природи та прихід весни.",
+                "claim_id": "vesnianky-01",
+                "is_true": True
+            }
+        ]
+    }
+    (fixtures_dir / "vesnianky.json").write_text(json.dumps(dummy_fixture, ensure_ascii=False), encoding="utf-8")
+
+    # Run main with argparse mocks
+    with patch("argparse.ArgumentParser.parse_args") as mock_args:
+        mock_args.return_value = argparse.Namespace(
+            artifacts_dir=tmp_path,
+            tau=0.75,
+            out=out_prefix,
+            fixtures_dir=fixtures_dir,
+        )
+        rc = grounding_shadow_compare.main()
+        assert rc == 0
+
+    # Verify JSON output
+    json_out = Path(str(out_prefix) + ".json")
+    assert json_out.exists()
+    report = json.loads(json_out.read_text(encoding="utf-8"))
+    assert report["metadata"]["total_groundings_checked"] == 1
+    assert report["summary"]["recovered_legit"] == 0
+    assert report["summary"]["regressions"] == 0
+
+    # Verify Markdown output
+    md_out = Path(str(out_prefix) + ".md")
+    assert md_out.exists()
+    md_text = md_out.read_text(encoding="utf-8")
+    assert "# Grounding Gate Shadow Compare Report" in md_text
+
+
+def test_near_copy_number_swap_rejected_at_default_tau():
+    events = [_make_event(output="Сковорода народився у 1722 році")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода народився у 1900 році"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is False
+    assert res.reason == "digit_not_aligned"
+
+
+def test_name_swap_rejected_at_default_tau():
+    events = [_make_event(output="Шевченко народився у 1722 році")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода народився у 1722 році"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is False
+    assert res.reason == "salient_not_aligned"
 
 
 def test_inflection_tolerance_at_default_tau():
@@ -340,6 +459,20 @@ def test_shadow_compare_gold_false_verbatim_excerpt_is_not_an_fp(tmp_path):
     assert summary["recovered_gold_false"] == 0
 
 
+def test_find_best_window_performance():
+    # Make sure _find_best_window runs in well under a second for large input
+    large_output = "Сковорода народився у 1722 році. " * 500
+    large_excerpt = "Сковорода народився у 1722 році."
+    import time
+    t0 = time.perf_counter()
+    score, span, _ = grounding_gate_v2._find_best_window(large_excerpt, large_output)
+    t1 = time.perf_counter()
+    duration = t1 - t0
+    assert duration < 0.2
+    assert score == 0.0
+    assert span is None
+
+
 
 def test_verified_probes_layer_a():
     # Probe 1: digit-elsewhere / digit not aligned
@@ -405,6 +538,80 @@ def test_verified_probes_layer_a():
     }
     res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
     assert res.anchored is True
+
+
+def test_large_pathological_output_performance():
+    # Make sure we return quickly for extremely large/repetitive outputs
+    large_output = "Сковорода народився у 1722 році. " * 10000  # ~330,000 chars
+    large_excerpt = "Сковорода народився у 1722 році."
+    events = [_make_event(output=large_output)]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": large_excerpt
+    }
+    import time
+    t0 = time.perf_counter()
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    t1 = time.perf_counter()
+    duration = t1 - t0
+    assert duration < 0.5
+    assert res.anchored is False
+    assert res.reason == "candidate_truncated"
+
+
+def test_grounding_gate_v2_repetitive_performance():
+    import time
+
+    # Case 1: _find_best_window on repetitive excerpt and output
+    excerpt1 = "Сковорода1722" * 100
+    output1 = ("Сковорода1722" * 100 + " ") * 400
+    t0 = time.perf_counter()
+    score, span, _ = grounding_gate_v2._find_best_window(excerpt1, output1)
+    t1 = time.perf_counter()
+    duration1 = t1 - t0
+    assert duration1 < 0.5, f"Case 1 took {duration1:.3f}s"
+    assert score == 0.0
+    assert span is None
+
+    # Case 2: Full gate on excerpt "Марко 1722" vs output "Марко 1722 "*5000
+    events2 = [_make_event(output="Марко 1722 " * 5000)]
+    grounding2 = {
+        "tool": "query_wikipedia",
+        "query": "Марко 1722",
+        "evidence_excerpt": "Марко 1722"
+    }
+    t0 = time.perf_counter()
+    res2 = grounding_gate_v2.anchor_evidence_to_events(grounding2, events2)
+    t1 = time.perf_counter()
+    duration2 = t1 - t0
+    assert duration2 < 0.5, f"Case 2 took {duration2:.3f}s"
+    assert res2.anchored is False
+    assert res2.reason == "candidate_truncated"
+
+
+    # Case 3: Excerpt "а"*5000 vs "а"*50000
+    excerpt3 = "а" * 5000
+    output3 = "а" * 50000
+    t0 = time.perf_counter()
+    _, _, _ = grounding_gate_v2._find_best_window(excerpt3, output3)
+    t1 = time.perf_counter()
+    duration3_window = t1 - t0
+    assert duration3_window < 0.5, f"Case 3 _find_best_window took {duration3_window:.3f}s"
+
+    events3 = [_make_event(output=output3)]
+    grounding3 = {
+        "tool": "query_wikipedia",
+        "query": "а",
+        "evidence_excerpt": excerpt3
+    }
+    t0 = time.perf_counter()
+    res3 = grounding_gate_v2.anchor_evidence_to_events(grounding3, events3)
+    t1 = time.perf_counter()
+    duration3_gate = t1 - t0
+    assert duration3_gate < 0.5, f"Case 3 full gate took {duration3_gate:.3f}s"
+    assert res3.anchored is False
+    assert res3.reason == "no_salient_anchor"
 
 
 def test_truncated_candidate_search_fails_closed():

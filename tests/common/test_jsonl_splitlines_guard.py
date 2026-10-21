@@ -384,6 +384,14 @@ def test_allowlist_reasons_and_exact_call_shapes_are_current():
         assert set(expressions) <= {ast.unparse(node) for node in ast.walk(scope) if isinstance(node, ast.Call)}
 
 
+def test_byte_exception_does_not_allow_decode_before_splitting():
+    path = "scripts/projects/open_model_data/phase3_fixed_release.py"
+    assert violations(
+        path,
+        "import json\ndef _read_jsonl(path):\n    return [json.loads(row) for row in path.read_bytes().decode('utf-8').splitlines()]",
+    )
+
+
 @pytest.mark.parametrize(
     "path, function",
     [key for key, (reason, _) in ALLOWLIST.items() if reason.startswith("hash-pinned frozen source;")],

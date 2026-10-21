@@ -37,6 +37,14 @@ def test_unknowns_are_reported_once_per_build():
         tags.to_oracle("synthetic-new")
 
 
+def test_every_declared_atom_is_handled():
+    mapper = tags.TagMapper()
+    for atom in tags.KNOWN_ATOMS:
+        mapper(atom)
+    assert mapper.unknown_atoms == set()
+    assert not tags.IGNORED_ATOMS & tags.ATOM_MAP.keys()
+
+
 def test_every_live_vesum_atom_is_declared():
     if not sources.VESUM_DB_PATH.is_file():
         pytest.skip("live VESUM is not provisioned; synthetic tests still run")

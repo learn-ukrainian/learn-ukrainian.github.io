@@ -4,9 +4,11 @@ Tests for YAML activity parsing, validation, and conversion.
 
 
 # Add scripts to path
+import json
 import sys
 from pathlib import Path
 
+import jsonschema
 import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
@@ -32,6 +34,12 @@ def parser():
 @pytest.fixture
 def sample_yaml_path():
     return Path(__file__).parent / 'fixtures' / 'sample.activities.yaml'
+
+
+@pytest.fixture
+def a2_activity_validator():
+    schema_path = Path(__file__).parent.parent / "schemas" / "activities-a2.schema.json"
+    return jsonschema.Draft7Validator(json.loads(schema_path.read_text(encoding="utf-8")))
 
 
 @pytest.fixture
@@ -347,12 +355,76 @@ class TestParsing:
         assert "\n- е\n" not in mdx
 
 
+class TestA2ActivitySchema:
+    """Contract checks for A2 schema forms consumed by ActivityParser."""
+
+    def test_quiz_string_options_require_correct_answer_signal(self, a2_activity_validator):
+        activity = {
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "items": [{
+                "prompt": "Питання?",
+                "options": ["а", "б", "в"],
+            }],
+        }
+
+        assert not a2_activity_validator.is_valid([activity])
+
+    def test_quiz_answer_and_object_options_are_valid(self, a2_activity_validator):
+        string_answer_activity = {
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "items": [{
+                "prompt": "Питання?",
+                "options": ["а", "б", "в"],
+                "answer": "б",
+                "explanation": "Пояснення.",
+            }],
+        }
+        object_options_activity = {
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "items": [{
+                "prompt": "Питання?",
+                "options": [
+                    {"text": "а", "correct": False},
+                    {"text": "б", "correct": True},
+                ],
+                "explanation": "Пояснення.",
+            }],
+        }
+
+        assert a2_activity_validator.is_valid([string_answer_activity])
+        assert a2_activity_validator.is_valid([object_options_activity])
+
+    def test_essay_response_object_rubric_is_valid(self, a2_activity_validator):
+        activity = {
+            "type": "essay-response",
+            "prompt": "Напишіть короткий текст.",
+            "peer_review_guidelines": ["Позначте процес."],
+            "rubric": {
+                "grammar": "Форми правильні.",
+                "aspect": "Процес і результат розрізнено.",
+            },
+        }
+
+        assert a2_activity_validator.is_valid([activity])
+
+
 # =============================================================================
 # MDX GENERATION TESTS
 # =============================================================================
 
 class TestMDXGeneration:
     """Test MDX output generation."""
+
+    def test_mdx_contains_component_tags(self, parser, sample_yaml_path):
+        """MDX contains React component tags."""
+        activities = parser.parse(sample_yaml_path)
+        mdx = parser.to_mdx(activities)
+        assert '<Quiz' in mdx
+        assert '<MatchUp' in mdx
+        assert '<FillIn' in mdx
 
     def test_quiz_mdx_format(self, parser, valid_quiz):
         """Quiz generates correct MDX format."""
@@ -473,6 +545,38 @@ class TestParserEdgeCases:
         )
         with pytest.raises(ValueError, match=r"ghost-act.*unknown activity type 'nonexistent-type'"):
             parser.parse(yaml_file)
+
+    def test_parse_true_false(self, parser, tmp_path):
+        yaml_file = tmp_path / "tf.yaml"
+        yaml_file.write_text(
+            "- type: true-false\n"
+            "  title: TF Test\n"
+            "  items:\n"
+            "    - statement: The sky is blue\n"
+            "      correct: true\n"
+            "    - statement: Cats are fish\n"
+            "      correct: false\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "true-false"
+        assert len(activities[0].items) == 2
+        assert activities[0].items[0].correct is True
+        assert activities[0].items[1].correct is False
+
+    def test_parse_fill_in(self, parser, tmp_path):
+        yaml_file = tmp_path / "fi.yaml"
+        yaml_file.write_text(
+            "- type: fill-in\n"
+            "  title: Fill Test\n"
+            "  items:\n"
+            "    - sentence: Я ___ вдома\n"
+            "      answer: був\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert len(activities) == 1
+        assert activities[0].type == "fill-in"
+        assert activities[0].items[0].answer == "був"
 
     def test_parse_fill_in_answer_from_braces(self, parser, tmp_path):
         yaml_file = tmp_path / "fi-brace.yaml"
@@ -612,6 +716,21 @@ class TestUnjumbleParsing:
         assert activities[0].items[0].hint == "сон — dream"
         mdx = parser.to_mdx(activities)
         assert "сон — dream" in mdx
+
+    def test_parse_unjumble_without_hint_omits_hint_key(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble_no_hint.yaml"
+        yaml_file.write_text(
+            "- id: act-406\n"
+            "  type: unjumble\n"
+            "  title: Складіть речення\n"
+            "  items:\n"
+            "    - jumbled: [я, читаю]\n"
+            "      answer: я читаю\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].hint is None
+        mdx = parser.to_mdx(activities)
+        assert '"hint"' not in mdx
 
     def test_parse_unjumble_bad_shape_raises_with_context(self, parser, tmp_path):
         yaml_file = tmp_path / "unjumble_bad.yaml"

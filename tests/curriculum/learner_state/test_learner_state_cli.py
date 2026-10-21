@@ -20,7 +20,9 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.curriculum.arc.loader import load_arc
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.learner_state import codes
 
 pytestmark = pytest.mark.reads_content
 
@@ -175,6 +177,116 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
     }
     _write_yaml(plans_dir / "mod-01.yaml", plan)
     return plans_dir, evidence_dir
+
+
+def test_cli_planned_json_output(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "planned",
+            "a1",
+            "1",
+            "2",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert payload["level"] == "a1"
+    assert payload["position"] == 1
+    assert payload["lesson_n"] == 2
+    assert payload["cumulative_core_count"] == 1
+    assert "W-10" in payload["core_ids"]
+    assert "W-1" in payload["base_ids"]
+
+
+def test_cli_band_json_output(tmp_path: Path) -> None:
+    orientation = load_arc("a1")[0]
+    assert (orientation.position, orientation.slug, orientation.band_key) == (
+        1, "introduction-to-ukrainian", "a1-orientation")
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "band",
+            "a1",
+            "1",
+            "2",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert payload["band_key"] == "a1-orientation"
+    assert payload["source"] == "arc_table"
+    assert payload["advisory_uk_share"] is None
+    assert payload["module_structural"] == {}
+    assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in payload["not_checked"]
+
+
+def test_cli_position_one_without_declaration_is_ordinary(tmp_path):
+    # A private fixture removes the marker, preserving the public source lock.
+    arc = yaml.safe_load(Path("curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml").read_text())
+    del arc["positions"][0]["band_key"]
+    arc_path = tmp_path / "_arc.yaml"
+    _write_yaml(arc_path, arc)
+    before = arc_path.read_bytes()
+    res = subprocess.run(
+        [PYTHON, "-m", "scripts.curriculum.learner_state", "band", "a1", "1", "1",
+         "--arc-path", str(arc_path), "--cumulative-count", "0", "--json"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert res.returncode == 0, res.stderr
+    payload = json.loads(res.stdout)
+    assert (payload["band_key"], payload["source"], payload["advisory_uk_share"]) == (
+        "a1-m01-03", "ulp_vocab", [0, 15])
+    assert arc_path.read_bytes() == before
+
+
+def test_cli_failing_planned_exits_nonzero(tmp_path: Path) -> None:
+    # Empty directory -> no plan found
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "planned",
+            "a1",
+            "1",
+            "1",
+            "--plans-dir",
+            str(tmp_path),
+            "--evidence-dir",
+            str(tmp_path),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 1
+    assert "Error [base_layer_missing]" in res.stderr
 
 
 def test_cli_band_a1_fails_closed_when_prior_plan_missing(tmp_path: Path) -> None:

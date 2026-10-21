@@ -150,6 +150,12 @@ def test_lexdata_override_never_reads_another_store(checkouts):
             'store_missing')
 
 
+def test_unknown_and_network_locality_probes(monkeypatch, tmp_path):
+    monkeypatch.setattr(storage, '_fs_type_for_path', lambda path: '')
+    assert storage._store_locality(tmp_path) == 'unknown'
+    assert storage._store_locality(Path('//server/UkrainianData/store.db')) == 'network'
+
+
 def test_injected_missing_store_never_falls_back(checkouts):
     primary, worker = checkouts
     make_db(primary / 'data' / 'sources.db')

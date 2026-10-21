@@ -183,3 +183,38 @@ def test_uninstall_preserves_receipts(tmp_path: Path, monkeypatch) -> None:
     assert result["loaded"] is False
     assert not destination.exists()
     assert receipt.exists()
+
+
+def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch) -> None:
+    """Mutation-check: putting .venv/bin/python back in Program must fail status."""
+    public = tmp_path / "public"
+    private = tmp_path / "private"
+    home = tmp_path / "home"
+    destination = launchd.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    payload = launchd.build_plist(
+        public_repo=public,
+        private_repo=private,
+        home=home,
+        interval_minutes=15,
+    )
+    payload["ProgramArguments"][0] = str(public / ".venv" / "bin" / "python")
+    destination.write_bytes(plistlib.dumps(payload))
+
+    class Result:
+        returncode = 0
+        stdout = "loaded"
+        stderr = ""
+
+    monkeypatch.setattr(launchd, "_loaded_readback", lambda: Result())
+
+    result, return_code = launchd.status(
+        public_repo=public,
+        private_repo=private,
+        home=home,
+        interval_minutes=15,
+    )
+
+    assert return_code == 1
+    assert result["valid_plist"] is False
+    assert result["loaded"] is True

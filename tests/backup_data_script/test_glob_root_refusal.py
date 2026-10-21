@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.backup_data_script._restic_exclude_prune import path_is_excluded
 from tests.backup_data_script._support import (
     REPO_ROOT,
     _make_database,
@@ -199,6 +200,60 @@ def test_staging_root_backslash_refuses_before_upload(
 
     _assert_refused_before_restic(backed_up, environment, "staging root")
     assert "disallowed character" in backed_up.stderr
+
+
+def test_staging_root_space_refuses_before_upload(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    staging_root = tmp_path / "stage dir"
+    staging_root.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(staging_root)
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    _assert_refused_before_restic(backed_up, environment, "staging root")
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda root: f"{root}\n/etc",
+        lambda root: f"{root}\n",
+        lambda root: f"{root}/../{Path(root).name}",
+        lambda _root: "relative/backup-root",
+    ],
+)
+def test_newline_dotdot_and_relative_project_roots_refuse(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    mutate,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    environment["LU_BACKUP_PROJECT_ROOT"] = mutate(str(source.parent))
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    _assert_refused_before_restic(backed_up, environment, "project root")
+
+
+def test_newline_and_dotdot_staging_roots_refuse(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    environment["LU_BACKUP_TMPDIR"] = f"{staging}\n"
+
+    trailed = _run(environment, "backup", "--execute")
+    _assert_refused_before_restic(trailed, environment, "staging root")
+
+    environment["LU_BACKUP_TMPDIR"] = f"{staging}/../{staging.name}"
+    dotted = _run(environment, "backup", "--execute")
+    _assert_refused_before_restic(dotted, environment, "staging root")
 
 
 @pytest.mark.parametrize("backup_environment", ["proj\\ect"], indirect=True)
@@ -382,3 +437,23 @@ def test_fake_and_real_restic_follow_explicit_sources(
         "batch_state/tasks/kept.md",
         "data/note.txt",
     }
+
+
+def test_exclude_patterns_match_restic_home_boundaries() -> None:
+    """Anchored patterns keep a nested home and drop only this project's batch_state home."""
+    root = "/work/project"
+    patterns = [
+        f"{root}/batch_state/**/*-home",
+        f"{root}/batch_state/**/*-home/**",
+        f"{root}/batch_state/review-receipts/**/home",
+        f"{root}/batch_state/review-receipts/**/home/**",
+    ]
+    assert not path_is_excluded(patterns, f"{root}/.agent/worker-home/state.db")
+    assert not path_is_excluded(patterns, f"{root}/.agent/batch_state/nested-home/state.db")
+    assert path_is_excluded(patterns, f"{root}/batch_state/fleet-comms/scratch-home/secret.txt")
+    assert path_is_excluded(patterns, f"{root}/batch_state/real-home/secret.txt")
+    escaped = root + "[1]"
+    literal = escaped.replace("[", "\\[").replace("]", "\\]")
+    bracket_patterns = [f"{literal}/batch_state/**/*-home"]
+    assert path_is_excluded(bracket_patterns, f"{escaped}/batch_state/tasks/run-home/held.md")
+    assert not path_is_excluded(bracket_patterns, f"{escaped}/.agent/batch_state/deeper/nested-home/state.db")

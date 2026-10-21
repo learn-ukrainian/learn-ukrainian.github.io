@@ -188,3 +188,21 @@ def test_lesson_lifecycle_is_durable_idempotent_and_rejects_invalid_transitions(
         hramatka_router.transition_lesson_job(lesson_id, hramatka_router.LessonJobState.BAKING)
     with pytest.raises(hramatka_router.LessonOwnershipError):
         hramatka_router.create_lesson_job(lesson_id, "teacher-2")
+
+
+def test_readyz_requires_every_dependency_and_reports_each_check(hramatka, monkeypatch, tmp_path):
+    client, _, baker_state, _ = hramatka
+
+    healthy = client.get("/api/hramatka/readyz")
+    baker_state.write_text('{"state": "paused"}', encoding="utf-8")
+    unhealthy = client.get("/api/hramatka/readyz")
+    monkeypatch.setattr(hramatka_router, "SCHEMA_PATHS", (tmp_path / "missing.schema.json",))
+    schema_failure = client.get("/api/hramatka/readyz")
+
+    assert healthy.status_code == 200
+    assert healthy.json()["ready"] is True
+    assert all(check["ok"] for check in healthy.json()["checks"].values())
+    assert unhealthy.status_code == 503
+    assert unhealthy.json()["checks"]["baker"]["ok"] is False
+    assert schema_failure.status_code == 503
+    assert schema_failure.json()["checks"]["schemas"]["ok"] is False

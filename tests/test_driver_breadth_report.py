@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.fleet.driver_breadth_report import (
+    _parse_ts,
     _tier_for,
     build_report,
     load_tasks,
@@ -38,6 +39,12 @@ def _task(
         "duration_s": 10,
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_parse_ts_naive_becomes_utc() -> None:
+    dt = _parse_ts("2026-08-06T12:00:00")
+    assert dt is not None
+    assert dt.tzinfo is not None
 
 
 def test_note_file_requires_fleet_breadth_marker(tmp_path: Path) -> None:

@@ -199,6 +199,35 @@ def test_everything_off_the_allowlist_is_refused(path):
     assert message and "owned path" in message
 
 
+def test_every_allowlisted_root_and_exclusion_carries_a_reason():
+    for table in (kimi_admission.KIMI_OWNED_ROOTS, kimi_admission.KIMI_EXCLUDED_PATHS):
+        for key, reason in table.items():
+            assert reason.strip(), key
+
+
+@pytest.mark.repo_wide
+def test_every_allowlisted_root_exists_in_the_repository():
+    tracked = subprocess.run(
+        ["git", "ls-files", "site/src", "scripts", "tests", ".github", ".dagger"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout.splitlines()
+    for root in kimi_admission.KIMI_OWNED_ROOTS:
+        if root.endswith("/"):
+            assert any(path.startswith(root) for path in tracked), root
+        else:
+            assert root in tracked, root
+
+
+def test_every_backend_package_admits_its_tests():
+    for root in kimi_admission.KIMI_OWNED_ROOTS:
+        if root.startswith("scripts/"):
+            assert f"tests/{root.removeprefix('scripts/')}" in kimi_admission.KIMI_OWNED_ROOTS
+
+
 @pytest.mark.parametrize(
     ("path", "canonical"),
     [
@@ -244,6 +273,12 @@ def test_an_allowlisted_file_with_cyrillic_text_is_refused(path):
     assert message and "Ukrainian content" in message and path in message
 
 
+def test_a_cyrillic_free_component_is_admitted():
+    path = "site/src/components/LiveStatus.tsx"
+    assert not kimi_admission.CYRILLIC.search((_REPO_ROOT / path).read_text(encoding="utf-8"))
+    assert _refusal(paths=(path,)) is None
+
+
 @pytest.mark.parametrize(
     ("scope", "excluded"),
     [
@@ -259,6 +294,11 @@ def test_a_broad_scope_that_contains_an_excluded_file_is_refused(scope, excluded
     message = _refusal(paths=(scope,))
     assert message and f"owned scope {kimi_admission.normalize_owned_path(scope)!r} contains" in message
     assert excluded in message and "narrow it to specific files or clean subdirectories" in message
+
+
+def test_a_glob_scope_reaching_off_allowlist_files_is_refused():
+    message = _refusal(paths=("site/src/*/index.astro",))
+    assert message and "owned path" in message
 
 
 def _scratch_repo(tmp_path: Path) -> Path:
@@ -338,6 +378,13 @@ def test_the_tree_is_resolved_only_after_every_policy_check_admits():
     assert message and "--mode read-only" in message
 
 
+def test_an_owned_binary_asset_in_the_repository_is_refused():
+    path = "site/src/assets/houston.webp"
+    assert kimi_admission.owned_path_reason(path) is None  # on the allowlist by path
+    message = _refusal(paths=(path,))
+    assert message and _NOT_PLAIN_TEXT in message and "binary files are refused" in message
+
+
 _CYRILLIC_LINE = "const label = 'Привіт';"
 _UKRAINIAN = "the changed files hold Ukrainian content"
 _NOT_TEXT = "the changed files hold content that is not plain text"
@@ -382,6 +429,11 @@ def test_changed_files_must_be_plain_utf8_text_without_cyrillic(after, expected)
 def test_a_cyrillic_file_name_is_refused():
     change = kimi_admission.FileChange("site/src/Урок.tsx", b"export {};\n")
     assert kimi_admission.change_reasons([change]) == [f"{_UKRAINIAN} (Cyrillic text: site/src/Урок.tsx: (file name))"]
+
+
+def test_a_deletion_adds_nothing():
+    change = kimi_admission.FileChange("site/src/Урок.tsx", None, deleted=True)
+    assert kimi_admission.change_reasons([change]) == []
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -435,11 +487,22 @@ def test_finalize_refuses_content_that_is_not_plain_text(kimi_worktree, committe
     assert message and _TOKEN in message and f"{_NOT_TEXT} ('Label.tsx')" in message
 
 
+def test_finalize_refuses_an_undecodable_addition(kimi_worktree):
+    (kimi_worktree / "blob.bin").write_bytes(b"\x89PNG\r\n\x1a\n\xff\xfe\xfd")
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert message and _NOT_TEXT in message and "blob.bin" in message and "binary files are refused" in message
+
+
 def test_finalize_admits_a_cyrillic_free_kimi_diff(kimi_worktree):
     (kimi_worktree / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
     (kimi_worktree / "legacy.py").write_text("GREETING = 'hello'\n", encoding="utf-8")  # a removal
     assert delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi") is None
     assert _git(kimi_worktree, "status", "--porcelain").splitlines() == [" M legacy.py", "?? Button.tsx"]
+
+
+def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
+    message = delegate._kimi_diff_refusal(kimi_worktree, "origin/missing", "kimi")
+    assert message and "could not be read" in message
 
 
 # #9878: every finalize read failure is a refusal that names only its typed cause; git's own
@@ -520,6 +583,20 @@ def test_a_commit_sha_holding_the_link_local_letters_is_no_host_detail():
     assert_no_host_details(f"head {sha}, base {sha.upper()}")
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        HOSTILE_GIT_ERRORS["ipv6_interface"],
+        "via fe80::1",
+        "via [FE80::1ff:fe23:4567:890a]",
+        "via fe80:0:0:0:1ff:fe23:4567:890a",
+    ],
+)
+def test_an_ipv6_link_local_literal_is_still_host_detail(text):
+    with pytest.raises(AssertionError):
+        assert_no_host_details(text.replace("eth7", "").replace("%", ""))
+
+
 # Characters whose escape ends in a hex digit (``\b \f \0``, ``\x01 \x1f \xa0``, ``\uXXXX``, ``\UXXXXXXXX``), as ``json.dumps``
 # and ``repr()`` write them.
 JSON_ESCAPED_CHARS = (
@@ -568,6 +645,46 @@ def shas_after_json_escapes() -> list[str]:
     return texts
 
 
+@pytest.mark.parametrize("text", link_local_after_json_escapes())
+def test_a_link_local_literal_behind_an_escape_is_still_host_detail(text):
+    assert "\\" in text and text.isascii()  # the escape, not the raw character, precedes the literal
+    assert contains_link_local_ipv6(text), text
+    with pytest.raises(AssertionError, match="link-local"):
+        assert_no_host_details(text)
+
+
+def test_a_commit_sha_behind_an_escape_is_no_host_detail():
+    texts = shas_after_json_escapes()
+    assert len(texts) == 37 * 2 * (len(JSON_ESCAPED_CHARS) * 5 + len(ESCAPE_SEQUENCES) * 3)
+    for text in texts:
+        assert not contains_link_local_ipv6(text), text
+        assert_no_host_details(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "\\\\" + _LINK_LOCAL_LETTERS + "::1",  # an escaped backslash pair, no escape sequence, before the literal
+        "C:\\" + _LINK_LOCAL_LETTERS + "::1",  # a backslash in plain text
+        json.dumps("\\" + _LINK_LOCAL_LETTERS + "::1"),
+        json.dumps({"last_error": repr("\x01" + _LINK_LOCAL_LETTERS + "::1")}),
+        json.dumps(json.dumps({"last_error": repr("\x1f" + _LINK_LOCAL_LETTERS + ":0:0:1")})),
+    ],
+)
+def test_a_link_local_literal_behind_a_backslash_or_in_a_record_is_still_host_detail(text):
+    assert contains_link_local_ipv6(text), text
+
+
+def test_the_old_lookbehind_guard_misses_the_repr_escapes_this_one_catches():
+    """Mutation check: the per-escape lookbehind form this guard replaced lets ``repr()`` escapes through."""
+    old = re.compile(
+        r"(?:(?<![0-9a-f])|(?<=\\[bfnrt])|(?<=\\u[0-9a-f]{4}))" + _LINK_LOCAL_LETTERS + r"(?::[0-9a-f]{0,4}){2,}",
+        re.IGNORECASE,
+    )
+    missed = [text for text in link_local_after_json_escapes() if not old.search(text)]
+    assert any(r"\\x01" in text for text in missed) and all(contains_link_local_ipv6(text) for text in missed)
+
+
 def _fail_git(monkeypatch, step: str, stderr: str) -> None:
     """Every ``git <step>`` run through ``delegate.subprocess.run`` exits 128 with ``stderr``."""
     real_run = delegate.subprocess.run
@@ -602,6 +719,19 @@ def test_a_failing_git_step_refusal_carries_only_its_typed_cause(kimi_worktree, 
     assert stderr.strip() in cause.diagnostic  # git's own error stays, for the local record only
 
 
+def test_an_unresolved_merge_base_keeps_each_attempts_git_error_in_the_diagnostic(kimi_worktree):
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "origin/missing", "kimi", base_sha="0" * 40)
+    assert "[merge_base_unresolved, git merge-base, exit 128]" in message
+    assert "origin/missing" not in message
+    assert "no merge base with 'origin/missing'" in cause.diagnostic
+    assert (
+        "git merge-base origin/missing HEAD failed (exit 128): fatal: Not a valid object name origin/missing"
+        in cause.diagnostic
+    )
+    assert f"the recorded base commit {'0' * 40} is not an ancestor of HEAD" in cause.diagnostic
+    assert "git merge-base origin/main HEAD failed (exit 128)" in cause.diagnostic
+
+
 def test_a_merge_base_without_common_ancestor_says_so(kimi_worktree):
     _git(kimi_worktree, "checkout", "--orphan", "unrelated")
     _git(kimi_worktree, "commit", "-m", "unrelated root")
@@ -628,6 +758,15 @@ def test_a_one_shot_merge_base_failure_keeps_its_own_stderr(kimi_worktree, monke
     assert "git merge-base base HEAD failed (exit 128): fatal: one-shot pack read error" in cause.diagnostic
     assert "transient" not in message + cause.diagnostic
     assert len(merge_bases) == 1
+
+
+def test_a_temporary_index_failure_refusal_names_the_exception_class(kimi_worktree, tmp_path, monkeypatch):
+    """The #9878 symptom: the process's cached temp root is gone when the scratch index is created."""
+    monkeypatch.setattr(delegate.tempfile, "tempdir", str(tmp_path / "reaped-root"))
+    message, cause = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")
+    assert "[temp_index_failed, FileNotFoundError ENOENT]" in message
+    assert "No such file or directory" in cause.diagnostic
+    assert_no_host_details(message, tmp_path)
 
 
 def test_a_git_timeout_refusal_names_the_step(kimi_worktree, monkeypatch):
@@ -716,6 +855,43 @@ def test_a_typed_cause_renders_only_its_allowlisted_parts():
 
 
 @pytest.mark.parametrize(
+    "field",
+    [
+        {"command": "git.build-host.example.internal"},
+        {"command": "--git-dir=/srv/synthetic-operator/learn.git"},
+        {"error": "Could not resolve host: git.build-host.example.internal"},
+        {"error": "fe80::1ff:fe23:4567:890a%eth7"},
+    ],
+)
+def test_a_typed_cause_drops_a_command_or_error_that_is_not_a_bare_name(field):
+    cause = delegate._TypedCause("rescue_push_failed", **field)
+    assert cause.public() == "rescue_push_failed"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/srv/synthetic-operator/learn.git",
+        "~/mnt/private-share/learn.git",
+        "../../private-share/learn.git",
+        "C:/Users/synthetic-operator/learn.git",
+        "https://deploy@git.build-host.example.internal/learn.git",
+        "site/\nfe80::1%eth7",
+    ],
+)
+def test_a_typed_cause_never_publishes_its_path(path):
+    cause = delegate._TypedCause("file_unreadable", path=path)
+    assert cause.public() == "file_unreadable"
+
+
+def test_the_git_subcommand_skips_global_options_and_their_values():
+    argv = ["git", "-c", "core.hooksPath=/dev/null", "--git-dir=/srv/x.git", "-C", "/srv", "diff-tree", "-r"]
+    assert delegate._git_subcommand(argv) == "diff-tree"
+    assert delegate._git_subcommand(["git", "--work-tree=/srv/x"]) is None
+    assert delegate._git_subcommand("git push") is None
+
+
+@pytest.mark.parametrize(
     ("kind", "code"),
     [
         ("dns_hostname", "remote_unreachable"),
@@ -730,6 +906,15 @@ def test_a_remote_git_failure_is_typed_unreachable_only_when_the_remote_was_neve
     cause = delegate._remote_git_cause("rescue_push_failed", proc)
     assert cause.public() == f"{code}, git push, exit 128"
     assert HOSTILE_GIT_ERRORS[kind].strip() in cause.diagnostic
+
+
+def test_every_cause_code_the_module_raises_is_allowlisted():
+    """A code missing from the allowlist would render as ``unclassified_failure``; keep the list complete."""
+    import re
+
+    source = Path(delegate.__file__).read_text(encoding="utf-8")
+    raised = set(re.findall(r'_(?:TypedCause|git_cause|remote_git_cause|exception_cause)\(\s*"([a-z_]+)"', source))
+    assert raised and raised <= delegate.TYPED_CAUSE_CODES, raised - delegate.TYPED_CAUSE_CODES
 
 
 # --- the gate ------------------------------------------------------------------------
@@ -769,6 +954,11 @@ def test_every_kimi_seat_and_model_id_is_recognised(agent, model):
     assert kimi_admission.is_kimi_seat(agent, model=model)
 
 
+def test_non_kimi_models_are_not_kimi_seats():
+    assert not kimi_admission.is_kimi_seat("codex", model="gpt-6-sol")
+    assert not kimi_admission.is_kimi_seat("cursor", model="composer-2.5")
+
+
 def test_an_effective_kimi_model_on_any_seat_is_gated():
     message = _refusal(participants=("claude", "codex"), models=(None, "kimi-code/k3"), mode=kimi_admission.ACP_MODE)
     assert message and "ACP asks, consults, discussions, and reviews" in message
@@ -778,6 +968,11 @@ def test_an_effective_kimi_model_on_any_seat_is_gated():
 def test_non_workspace_write_modes_are_refused(mode):
     message = _refusal(mode=mode)
     assert message and f"--mode {mode}" in message
+
+
+@pytest.mark.parametrize("mode", [kimi_admission.ACP_MODE, kimi_admission.REVIEW_MODE])
+def test_acp_and_review_activities_are_refused(mode):
+    assert _refusal(mode=mode, paths=())
 
 
 @pytest.mark.parametrize("marker", ["review_verdict_required", "review_isolation", "review_id"])
@@ -818,6 +1013,23 @@ def test_private_repositories_are_refused(role):
     assert message and f"--repo role {role!r} is a private repository" in message
 
 
+def test_refusal_states_the_policy_and_names_the_alternative_seats():
+    message = _refusal(mode="read-only", review=True, paths=("docs/x.md",))
+    assert message.startswith(f"ROUTING REFUSED: {_TOKEN}")
+    assert kimi_admission.POLICY_LINE in message
+    # The Cursor seat's concrete xAI pin makes it a consult alternative (#9274).
+    assert "consults and discussions → claude, codex, cursor, or grok" in message
+    assert "--mode read-only" in message and "review dispatches" in message and "docs/x.md" in message
+
+
+def test_kimi_refusal_distinguishes_reviewers_from_consult_and_discussion_seats():
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    reviews, consultations = message.split("reviews → ", 1)[1].split("; consults and discussions → ", 1)
+    assert "claude" in reviews and "codex" in reviews and "reviewer resolver" in reviews
+    assert "grok" not in reviews and "kimi" not in reviews and "agy" not in reviews
+    assert "grok" in consultations
+
+
 def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch):
     import builtins
 
@@ -845,6 +1057,27 @@ def test_9312_kimi_refusal_surfaces_malformed_catalog(monkeypatch):
     monkeypatch.setattr(model_catalog, "load_model_catalog", malformed)
     with pytest.raises(kimi_admission.KimiAdmissionRefused, match="MODEL_CATALOG_INVALID"):
         kimi_admission.refuse_kimi_if_disallowed(("kimi",), mode="read-only", review=True)
+
+
+@pytest.mark.parametrize("catalog", [{}, {"models": [], "review_candidates": {"bad": None}}])
+def test_kimi_refusal_surfaces_invalid_alternative_seat_data(monkeypatch, catalog):
+    from scripts.review import model_catalog
+
+    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: catalog)
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    assert "MODEL_CATALOG_INVALID" in message and "review dispatches" in message
+
+
+def test_kimi_refusal_formats_unexpected_catalog_errors_without_raising(monkeypatch):
+    from scripts.review import model_catalog
+
+    def unexpected():
+        raise RuntimeError("unexpected catalog bug")
+
+    monkeypatch.setattr(model_catalog, "load_model_catalog", unexpected)
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    assert "MODEL_CATALOG_INVALID" in message and "RuntimeError" in message
+    assert "unexpected catalog bug" not in message
 
 
 def test_9386_kimi_refusal_handles_empty_alternative_catalog(monkeypatch):
@@ -963,6 +1196,23 @@ def _isolate_host_state(monkeypatch) -> None:
         lambda: {"leases_reaped": 0, "bytes_freed": 0, "errors": 0, "error_details": []},
     )
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("local", "test", None))
+
+
+def _is_language_lane_path(flag: str, path: str) -> bool:
+    """Only a --research-owned-path under curriculum/ marks a dispatch as Ukrainian-language work."""
+    return flag == "--research-owned-path" and path.startswith(("curriculum/", "scripts/curriculum/"))
+
+
+@pytest.mark.parametrize("flag", ["--owned-path", "--research-owned-path"])
+@pytest.mark.parametrize("path", REFUSED_PATHS)
+def test_dispatch_refuses_every_off_allowlist_path_through_either_ownership_flag(no_spawn, capsys, flag, path):
+    argv = _dispatch(*_WRITE, flag, "scripts/ci/x.py", flag, path)
+    if _is_language_lane_path(flag, path):
+        _assert_refused(no_spawn, capsys, argv, _LANGUAGE_LANES_REASON, policy=_LANGUAGE_LANES_RULE)
+    else:
+        expected = kimi_admission.owned_path_reason(path)
+        assert expected
+        _assert_refused(no_spawn, capsys, argv, expected)
 
 
 @pytest.mark.parametrize(
@@ -1205,6 +1455,22 @@ def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, mo
     )
 
 
+def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
+    argv = ["dispatch", "--agent", "codex", "--model", "kimi-code/k3", "--task-id", "t", "--prompt", "Review it."]
+    _assert_refused(no_spawn, capsys, argv, "--mode read-only")
+
+
+def test_dispatch_refuses_a_private_state_prompt_file(no_spawn, capsys, tmp_path):
+    prompt = tmp_path / ".claude" / "brief.md"
+    prompt.parent.mkdir()
+    prompt.write_text("Implement the fix.\n", encoding="utf-8")
+    argv = ["dispatch", "--agent", "kimi", "--task-id", "kimi-admission-fixture", "--prompt-file", str(prompt)]
+    rc = delegate.main([*argv, *_WRITE])
+    err = capsys.readouterr().err
+    assert rc == 2
+    assert "agent-private state" in err
+
+
 class _AdmittedSentinel(Exception):
     pass
 
@@ -1349,6 +1615,14 @@ def test_inter_agent_route_refuses_a_kimi_model_override():
     for participant, model in (("kimi", None), ("kimicc", None), ("claude", "kimi-code/k3")):
         with pytest.raises(runner.InterAgentTransportError, match=_TOKEN):
             runner.resolve_inter_agent_route(participant, model=model)
+
+
+def test_no_non_kimi_acp_participant_pins_a_kimi_model():
+    from scripts.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    for name, route in ACPX_SUPPORTED_PARTICIPANTS.items():
+        if kimi_admission.is_kimi_model(route.get("model")):
+            assert kimi_admission.is_kimi_seat(name), name
 
 
 @pytest.mark.parametrize("harness", [None, "kimicc"])
@@ -1670,6 +1944,26 @@ def test_remove_takes_the_boundary_down(bounded_repo):
 # --- ACP, bridge and fleet-comms entry points ------------------------------------------
 
 
+def test_compat_ask_refuses_before_telemetry(monkeypatch):
+    from scripts.ai_agent_bridge import _acp_compat
+    from scripts.telemetry import legacy_bridge
+
+    monkeypatch.setattr(legacy_bridge, "start_bridge_invocation_safely", _fail)
+    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", _fail)
+    with pytest.raises(ValueError, match=_TOKEN):
+        _acp_compat.run_compat_ask("kimi", "Consult on this design.", task_id="kimi-consult")
+    with pytest.raises(ValueError, match=_TOKEN):
+        _acp_compat.run_compat_ask("claude", "Consult.", task_id="kimi-model", model="kimi-code/k3")
+
+
+def test_compat_ask_impl_refuses_before_the_job_host_forward(monkeypatch):
+    from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
+
+    monkeypatch.setattr(_job_host_forward, "maybe_forward_compat_ask", _fail)
+    with pytest.raises(ValueError, match=_TOKEN):
+        _acp_compat._run_compat_ask_impl("kimi", "Consult.", task_id="kimi-forward")
+
+
 def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypatch, tmp_path):
     from scripts.ai_agent_bridge import _acp_compat
     from scripts.fleet_comms import authority
@@ -1688,6 +1982,19 @@ def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypat
         )
 
 
+@pytest.mark.parametrize("extra", [[], ["--pr", "9158"], ["--review"]])
+def test_ask_kimi_cli_refuses_before_pr_resolution_or_dispatch(monkeypatch, extra):
+    from scripts.ai_agent_bridge import _acp_compat, _cli, _dispatch_wrappers
+
+    monkeypatch.setattr(_cli, "_resolve_same_repo_pr_head", _fail)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", _fail)
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", _fail)
+    monkeypatch.setattr("sys.stdin", types.SimpleNamespace(read=_fail))
+    args = _cli._build_parser().parse_args(["ask-kimi", "-", "--task-id", "kimi-cli", *extra])
+    with pytest.raises(SystemExit, match=_TOKEN):
+        _cli._handle_ask_kimi(args)
+
+
 def test_ask_review_dispatch_refuses_before_the_temporary_prompt(monkeypatch):
     from scripts.ai_agent_bridge import _dispatch_wrappers
 
@@ -1697,6 +2004,16 @@ def test_ask_review_dispatch_refuses_before_the_temporary_prompt(monkeypatch):
         _dispatch_wrappers.run_ask_review_dispatch("kimi", "Review PR #1.", task_id="kimi-review")
     with pytest.raises(ValueError, match=_TOKEN):
         _dispatch_wrappers.run_ask_review_dispatch("claude", "Review PR #1.", task_id="r", model="kimi-code/k3")
+
+
+def test_ask_review_dispatch_command_never_selects_a_kimi_harness(tmp_path):
+    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.ai_agent_bridge import _dispatch_wrappers
+
+    (target,) = resolve_and_admit(("claude",), mode=REVIEW_MODE, review=True)
+    cmd = _dispatch_wrappers.build_ask_review_dispatch_command(target, "t", tmp_path / "p.md", effort=None)
+    assert "--harness" not in cmd
 
 
 def test_authority_enqueue_request_refuses_before_any_write():
@@ -1761,6 +2078,29 @@ def test_acp_discussion_refuses_on_effective_seats_and_models_before_the_plane(
         )
 
 
+@pytest.mark.parametrize(("with_agents", "models"), [("claude,kimicc", None), ("claude,codex", "claude:kimi-code/k3")])
+def test_ab_discuss_refuses_on_effective_models_before_any_channel_write(monkeypatch, capsys, with_agents, models):
+    from scripts.ai_agent_bridge import _channels_cli
+    from scripts.fleet_comms import authority
+
+    monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
+    monkeypatch.setattr(authority, "AuthorityService", _fail)
+    args = types.SimpleNamespace(
+        channel="architecture", body="Compare.", with_agents=with_agents, max_rounds=1, review=False, models=models
+    )
+    assert _channels_cli._handle_discuss(args) == 2
+    assert _TOKEN in capsys.readouterr().err
+
+
+def test_ab_inbox_run_for_kimi_is_refused_before_housekeeping(monkeypatch, capsys):
+    from scripts.ai_agent_bridge import _channels, _channels_cli
+
+    monkeypatch.setattr(_channels, "expire_stale_deliveries", _fail)
+    args = types.SimpleNamespace(agent="kimi", once=True, until_idle=False, max_messages=None)
+    assert _channels_cli._handle_inbox_run(args) == 2
+    assert _TOKEN in capsys.readouterr().err
+
+
 def test_inbox_worker_refuses_kimi_before_any_claim(monkeypatch):
     from scripts.ai_agent_bridge import _channels, _inbox
 
@@ -1823,6 +2163,24 @@ def broker_db(tmp_path, monkeypatch):
 _SKIPPED = "skipped: Kimi is not a bridge recipient"
 
 
+@pytest.mark.parametrize("message_id", [7, 8])
+def test_a_kimi_addressed_message_is_never_processed(broker_db, capsys, message_id):
+    from scripts.ai_agent_bridge import _process
+
+    assert _process.process_message_for_recipient(message_id) is None
+    assert capsys.readouterr().out.count(_SKIPPED) == 1
+    assert broker_db.unchanged()
+    assert not _process.recipient_has_acp_route("kimi")
+
+
+def test_process_refuses_a_kimi_model_before_the_broker_is_opened(broker_db):
+    from scripts.ai_agent_bridge import _process
+
+    with pytest.raises(ValueError, match=_TOKEN):
+        _process.process_message_for_recipient(9, model="kimi-code/k3")
+    assert broker_db.connects == []
+
+
 @pytest.mark.parametrize("argv", [["process", "9", "--model", "kimi-code/k3"], ["process-kimi", "7"]])
 def test_process_cli_refuses_a_kimi_request_unopened(broker_db, argv):
     """A Kimi seat or model named on the command line is a Kimi request: refused before the broker is opened."""
@@ -1834,6 +2192,16 @@ def test_process_cli_refuses_a_kimi_request_unopened(broker_db, argv):
     assert broker_db.unchanged()
 
 
+@pytest.mark.parametrize("argv", [["process", "7"], ["process", "8"], ["process-claude", "7"], ["process-claude", "8"]])
+def test_process_cli_skips_a_stored_kimi_row_and_records_nothing(broker_db, capsys, argv):
+    """A generic drain reads the broker, then skips a stored Kimi-addressed row, reporting it once."""
+    from scripts.ai_agent_bridge import _cli
+
+    _cli._dispatch_command(_cli._build_parser().parse_args(argv))
+    assert capsys.readouterr().out.count(_SKIPPED) == 1
+    assert broker_db.unchanged()
+
+
 def test_detached_ask_worker_refuses_a_kimi_target_unopened(broker_db, monkeypatch):
     from scripts.ai_agent_bridge import _ask_lifecycle
 
@@ -1841,6 +2209,16 @@ def test_detached_ask_worker_refuses_a_kimi_target_unopened(broker_db, monkeypat
     with pytest.raises(SystemExit, match=_TOKEN):
         _ask_lifecycle.process_background_ask(7, "kimi")
     assert broker_db.connects == []
+    assert broker_db.unchanged()
+
+
+@pytest.mark.parametrize("message_id", [7, 8])
+def test_detached_ask_worker_skips_a_stored_kimi_row(broker_db, monkeypatch, capsys, message_id):
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
+    assert _ask_lifecycle.process_background_ask(message_id, "claude") is None
+    assert capsys.readouterr().out.count(_SKIPPED) == 1
     assert broker_db.unchanged()
 
 
@@ -1877,6 +2255,15 @@ def test_capacity_hint_never_suggests_kimi_for_non_coding_work(tmp_path, monkeyp
     err = capsys.readouterr().err
     assert "idle capacity is available in:" in err
     assert "kimi" not in err.split("available in:", 1)[1]
+
+
+def test_capacity_hint_never_suggests_kimi_for_owned_content(tmp_path, monkeypatch, capsys):
+    _busy_codex(tmp_path, monkeypatch)
+    content = types.SimpleNamespace(
+        json=False, quiet=False, mode="workspace-write", owned_path=["site/src/content/docs/x.mdx"]
+    )
+    delegate._check_capacity_hint("codex", args=content)
+    assert "kimi" not in capsys.readouterr().err.split("available in:", 1)[1]
 
 
 def test_capacity_hint_suggests_kimi_for_web_ui_and_backend_coding(tmp_path, monkeypatch, capsys):
@@ -2397,6 +2784,15 @@ def test_kimi_named_in_request_data_refuses_with_zero_effects(write_trap, capsys
             writer.close()
 
 
+def test_send_message_stores_no_kimi_row_for_data_supplied_model(write_trap):
+    """The probe that found the gap: neutral recipient, Kimi model only in ``data``."""
+    from scripts.ai_agent_bridge import _db, _messaging
+
+    with pytest.raises(ValueError, match=_TOKEN):
+        _messaging.send_message("q", to_llm="claude", data='{"to_model":"kimi-code/k3"}', quiet=True)
+    assert not _db.DB_PATH.exists()
+
+
 def test_explicit_model_replaces_the_data_model_as_before(write_trap, monkeypatch):
     """An explicit non-Kimi model overrides a data ``to_model``: admitted, and the explicit model is stored."""
     from scripts.ai_agent_bridge import _db, _messaging
@@ -2848,6 +3244,29 @@ def test_the_inbox_drain_skips_a_stored_kimi_delivery_before_claim_writes_or_tel
     assert (summary.deliveries_claimed, summary.deliveries_failed) == (2, 0)
 
 
+def test_fleet_comms_delivery_reclaim_leaves_a_stored_kimi_delivery_unwritten(tmp_path):
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService(root=tmp_path / "plane") as service:
+        message = service.publish_message(sender="user", body="q", recipients=["claude"], deadline_at=_OLD)
+        conn = service._conn
+        conn.execute(
+            "INSERT INTO authority_deliveries (delivery_id, message_id, recipient, state, deadline_at,"
+            " created_at, updated_at) VALUES ('kimi-legacy', ?, 'kimi', 'queued', ?, ?, ?)",
+            (message.message_id, _OLD, _OLD, _OLD),
+        )
+        conn.commit()
+        dump = lambda: {row["delivery_id"]: tuple(row) for row in conn.execute("SELECT * FROM authority_deliveries")}  # noqa: E731
+        dead_letters = lambda: conn.execute("SELECT COUNT(*) FROM authority_dead_letters").fetchone()[0]  # noqa: E731
+        before, letters = dump(), dead_letters()
+
+        assert service.reclaim_expired_deliveries() == 1
+        after = dump()
+        assert after["kimi-legacy"] == before["kimi-legacy"]
+        assert [row[3] for key, row in after.items() if key != "kimi-legacy"] == ["expired"]
+        assert dead_letters() == letters + 1
+
+
 def test_the_stale_request_requeue_leaves_a_stored_kimi_request_running(tmp_path):
     """A stored request to a Kimi seat, or whose message metadata pins a Kimi model, is never requeued."""
     from scripts.fleet_comms.request_executor import RequestExecutor
@@ -2868,6 +3287,18 @@ def test_the_stale_request_requeue_leaves_a_stored_kimi_request_running(tmp_path
         assert executor.requeue_stale_running(stale_after_seconds=60) == [kept.request_id]
         assert executor.get_request(legacy.request_id).state == "running"
         assert executor.get_request(pinned.request_id).state == "running"
+
+
+def test_create_request_refuses_a_kimi_model_in_its_metadata_before_any_insert(tmp_path):
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    with RequestExecutor(root=tmp_path) as executor:
+        conn = executor.store.connection
+        with pytest.raises(KimiAdmissionRefused):
+            executor.create_request(recipient="claude", body="ping", metadata={"model": "k3"})
+        assert conn.execute("SELECT COUNT(*) FROM requests").fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM comms_messages").fetchone()[0] == 0
 
 
 def test_the_ancient_message_sweep_leaves_a_stored_kimi_message_unacknowledged(broker_db, capsys):

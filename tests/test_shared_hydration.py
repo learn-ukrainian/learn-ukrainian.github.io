@@ -13,6 +13,7 @@ from copy import deepcopy
 from types import SimpleNamespace
 
 import pytest
+from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.session_canary import shared_hydration as hydration
 
@@ -30,6 +31,21 @@ def _evidence() -> dict[str, object]:
 def _half_second_budget(monkeypatch: pytest.MonkeyPatch) -> None:
     """Existing timing cases pin the 0.5 s floor through the supported override."""
     monkeypatch.setenv(hydration.HYDRATION_DEADLINE_ENV, "0.5")
+
+
+def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
+
+    validator = Draft202012Validator(hydration.HYDRATION_CAPSULE_V1_SCHEMA, format_checker=FormatChecker())
+    assert list(validator.iter_errors(capsule)) == []
+    assert capsule["schema_version"] == "1.3"
+    assert capsule["deadline_ms"] == 500.0
+    assert hydration.HYDRATION_DEADLINE_SECONDS == 2.0
+    assert hydration.HYDRATION_CAPSULE_V1_SCHEMA["$id"].endswith("HydrationCapsuleV1-1.3.json")
+    assert capsule["state"] == "ready"
+    assert capsule["execution_allowed"] is True
+    assert capsule["blocked"] is False
 
 
 def test_deadline_is_monotonic_and_degrades_without_blocking(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -247,6 +263,18 @@ def test_malformed_remote_digest_blocks_without_traceback(
     assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
 
 
+def test_remote_expiry_overflow_blocks_without_traceback(monkeypatch: pytest.MonkeyPatch, stream_fetch) -> None:
+    response = _remote_stream(monkeypatch)
+    response["lease"]["expires_at"] = "0001-01-01T00:00:00+05:00"
+    stream_fetch(response)
+
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
+
+    assert capsule["state"] == "blocked"
+    assert capsule["execution_allowed"] is False
+    assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
+
+
 @pytest.mark.parametrize(
     ("field", "value"),
     [
@@ -289,6 +317,21 @@ def test_remote_launcher_lease_mismatch_blocks(
 
     assert capsule["execution_allowed"] is False
     assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
+
+
+def test_missing_launcher_lease_or_remote_timeout_blocks(monkeypatch: pytest.MonkeyPatch, stream_fetch) -> None:
+    response = _remote_stream(monkeypatch)
+    monkeypatch.delenv("SESSION_STREAM_LEASE_ID")
+    stream_fetch(response)
+    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is False
+
+    monkeypatch.setenv("SESSION_STREAM_LEASE_ID", "lease-fixture")
+
+    def timed_out(stream_id: str, *, deadline: float) -> dict[str, object]:
+        raise TimeoutError("timeout")
+
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", timed_out)
+    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is False
 
 
 def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch: pytest.MonkeyPatch) -> None:

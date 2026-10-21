@@ -286,6 +286,22 @@ def test_provider_line_locator_hydrates_exact_unicode_excerpt(malyshko_packet: d
     assert "пам'яті опору" not in evidence["excerpt"]
 
 
+def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) -> None:
+    deterministic = bilash_packet["deterministic"]
+    argv = deterministic["track_audit"]["provenance"]["argv"]
+    assert argv[0] == ".venv/bin/python"
+    assert deterministic["track_audit"]["provenance"]["executed_argv"] == argv
+    assert "--run-mdx-generation-validate" not in argv
+    assert "--output" not in argv
+    assert deterministic["track_audit"]["provenance"]["config_version"] == "1"
+    skips = {item["category"]: item["disposition"] for item in deterministic["skip_assessments"]}
+    assert skips == {
+        "llm_qg": "capabilities_absorbed_by_semantic_v6",
+        "mdx_generation_validate": "accepted_read_only_omission",
+        "external_resource_liveness": "advisory_external",
+    }
+
+
 def test_semantic_pass_cannot_override_mechanical_high(bilash_packet: dict, monkeypatch: pytest.MonkeyPatch) -> None:
     policy_findings = _mechanical_high_deterministic()["policy_findings"]
     monkeypatch.setattr(

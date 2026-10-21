@@ -156,6 +156,16 @@ def test_scan_protects_unknown_schema_and_global_pin(tmp_path: Path) -> None:
     assert report["counts"]["present"] == 1
 
 
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_scan_rejects_non_finite_inputs(tmp_path: Path, value: float) -> None:
+    home = tmp_path / "codex"
+    _db(home)
+    with pytest.raises(reconcile.ReconcileError, match="finite"):
+        reconcile.scan(codex_home=home, min_age_seconds=value, now=NOW)
+    with pytest.raises(reconcile.ReconcileError, match="finite"):
+        reconcile.scan(codex_home=home, min_age_seconds=0, now=value)
+
+
 def test_apply_requires_digest_and_refuses_same_count_substitution(tmp_path: Path) -> None:
     home = tmp_path / "codex"
     database = _db(home)

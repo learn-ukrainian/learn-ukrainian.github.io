@@ -15,8 +15,11 @@ from agents_extensions.shared.session_streams.inventory import (
     _handoff_candidates_for,
 )
 from scripts.orchestration.fleet_taxonomy import (
+    EpicInfo,
+    ResolvedArea,
     UnknownAreaError,
     resolve_area,
+    resolve_area_by_epic,
 )
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL
 
@@ -40,6 +43,29 @@ INFRA_STREAM_ID = _infra_harness_stream_id()
 # ---------------------------------------------------------------------------
 
 
+def test_resolve_area_canonical_ids() -> None:
+    infra = resolve_area("infra")
+    assert isinstance(infra, ResolvedArea)
+    assert infra.id == "infra"
+    assert "infra-harness" in infra.aliases
+    assert EpicInfo(number=6943, name="Infra & fleet reliability (hooks, dispatch, routing)") in infra.epics
+
+    harness = resolve_area("harness")
+    assert harness.id == "harness"
+    assert "corpus-channels" in harness.aliases
+
+    devops = resolve_area("devops")
+    assert devops.id == "devops"
+
+    monitor = resolve_area("monitor")
+    assert monitor.id == "monitor"
+    assert monitor.epics == (EpicInfo(7919, "Ops API + UI — operator API & dashboards"),)
+
+    open_model_data = resolve_area("open-model-data")
+    assert open_model_data.id == "open-model-data"
+    assert open_model_data.epics == (EpicInfo(6321, "Ukrainian open-model data infrastructure"),)
+
+
 def test_resolve_area_aliases() -> None:
     # infra-harness -> infra
     area1 = resolve_area("infra-harness")
@@ -60,6 +86,26 @@ def test_resolve_area_aliases() -> None:
     # hramatka -> hramatka
     area5 = resolve_area("hramatka")
     assert area5.id == "hramatka"
+
+
+def test_resolve_area_by_epic_number() -> None:
+    # int epic lookup
+    infra = resolve_area(6943)
+    assert infra.id == "infra"
+
+    devops = resolve_area(5703)
+    assert devops.id == "devops"
+
+    harness = resolve_area(4706)
+    assert harness.id == "harness"
+
+    # string epic lookup
+    assert resolve_area("6943").id == "infra"
+    assert resolve_area("epic:6943").id == "infra"  # allow-hardcoded-epic: taxonomy alias reverse lookup
+    assert resolve_area_by_epic(6943).id == "infra"
+    assert resolve_area_by_epic("epic:5703").id == "devops"  # allow-hardcoded-epic: taxonomy alias reverse lookup
+    assert resolve_area(7919).id == "monitor"
+    assert resolve_area(6321).id == "open-model-data"
 
 
 def test_curriculum_upgrade_stream_has_isolated_handoffs() -> None:

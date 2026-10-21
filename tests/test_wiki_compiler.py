@@ -352,6 +352,33 @@ class TestCompileArticleSkipLogic:
         assert written.count("generated_by_model:") == 1
         assert "generated_by_model: unknown" in written
 
+    def test_compile_leaves_clean_gemini_output_unchanged(self, tmp_path, capsys):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+        clean_response = "# Title\n\nSentence [S1].\n"
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch("wiki.compiler._call_writer", return_value=clean_response):
+            result = compile_article(
+                topic="Test",
+                slug="clean",
+                domain="folk",
+                sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+            )
+
+        assert result.read_text(encoding="utf-8") == clean_response
+        captured = capsys.readouterr()
+        assert "stripped MCP-warning line" not in captured.err
+
     def test_compile_builds_rich_sources_registry_without_unknown_types(self, tmp_path, attribution_db):
         from wiki.compiler import compile_article
         from wiki.sources_schema import load_sources_registry
@@ -594,6 +621,14 @@ class TestBuildLog:
             a2_entries = read_log(track="a2")
             assert len(a2_entries) == 2
             assert all(e["track"] == "a2" for e in a2_entries)
+
+    def test_read_log_empty(self, tmp_path):
+        from unittest.mock import patch
+
+        from wiki.state import read_log
+
+        with patch("wiki.state.WIKI_STATE_DIR", tmp_path):
+            assert read_log() == []
 
 
 class TestReviewExisting:

@@ -63,6 +63,11 @@ def test_ordered_responses_rejects_invalid_id_sequences(tmp_path: Path) -> None:
             analysis.ordered_responses(path, ids)
 
 
+def test_report_metrics_rejects_missing_sections_cleanly() -> None:
+    with pytest.raises(analysis.EvidenceError, match="missing aggregate section: edit_correction"):
+        analysis.report_metrics({})
+
+
 @pytest.mark.parametrize("reader", [analysis.read_json, analysis.read_jsonl])
 def test_json_readers_normalize_unicode_decode_errors(
     tmp_path: Path,

@@ -37,3 +37,13 @@ class TestRunIpaScan:
         text = "Привіт [pry-vit] is a greeting"
         issues = _run_ipa_scan(text)
         assert any(i["type"] == "IPA_BANNED" for i in issues)
+
+    def test_detects_ipa_transcription(self):
+        text = "Sound [ɑɛɪ] is complex"
+        issues = _run_ipa_scan(text)
+        assert any(i["type"] == "IPA_BANNED" for i in issues)
+
+    def test_whitelist_excluded(self):
+        text = "The [Ø] marker means zero ending."
+        issues = _run_ipa_scan(text)
+        assert len(issues) == 0

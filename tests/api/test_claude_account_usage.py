@@ -765,6 +765,15 @@ def test_probe_sandbox_never_falls_back_to_the_system_temp(tmp_path, monkeypatch
     assert list(system_temp.iterdir()) == []
 
 
+@pytest.mark.exercises_default_scratch_root
+def test_probe_sandbox_uses_the_default_root_when_no_override(tmp_path, monkeypatch):
+    from scripts.common import scratch
+
+    with cau._probe_sandbox() as sandbox:
+        assert sandbox.parent == scratch.DEFAULT_SCRATCH_ROOT / cau._SANDBOX_PARENT
+    assert not sandbox.exists()
+
+
 @pytest.mark.parametrize("failing", ["root", "parent", "sandbox"])
 def test_every_sandbox_creation_failure_is_typed(tmp_path, monkeypatch, failing):
     """The root, the private parent and the sandbox are created in that order; any
@@ -799,6 +808,25 @@ def test_probe_sandbox_refuses_a_path_that_does_not_name_what_it_created(tmp_pat
     monkeypatch.setattr(cau, "_same_file", same_file)
     _assert_sandbox_refused([])
     assert list((root / cau._SANDBOX_PARENT).iterdir()) == []
+
+
+def test_sandbox_failure_is_the_rows_registered_reason(fake_probe, tmp_path, monkeypatch):
+    (tmp_path / "a-file").write_text("not a directory")
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "a-file"))
+    cau.refresh_claude_account_usage()
+    _, calls = fake_probe
+    assert calls == []
+    row = _row(cau.claude_accounts_snapshot(), "a")
+    assert (row["status"], row["reason"]) == ("unknown", "sandbox_unavailable")
+    assert "sandbox_unavailable" in cau.ROW_REASON_CODES
+
+
+def test_missing_codexbar_is_unknown(monkeypatch, account_dirs):
+    monkeypatch.setattr(cau, "_codexbar_bin", lambda: None)
+    cau.refresh_claude_account_usage()
+    row = _row(cau.claude_accounts_snapshot(), "a")
+    assert row["status"] == "unknown"
+    assert row["reason"] == "missing_binary"
 
 
 @pytest.mark.parametrize(
@@ -1388,6 +1416,16 @@ def test_restored_binding_is_rearmed_by_revalidation(bound, monkeypatch):
     assert _row(cau.claude_accounts_snapshot(), "b")["status"] == "ok"
 
 
+def test_binding_generation_and_fingerprints_are_never_published(bound, caplog):
+    cau.refresh_claude_account_usage()
+    accounts = cau._last_good["b"].accounts
+    serialized = json.dumps(cau.routing_budget_fields()) + repr(cau._last_good) + repr(accounts) + caplog.text
+    for secret in (accounts.generation, *accounts.fingerprints):
+        assert secret.hex() not in serialized
+        assert repr(secret) not in serialized
+    assert "generation" not in serialized and "fingerprints" not in serialized
+
+
 @pytest.mark.parametrize(
     ("make", "code"),
     [
@@ -1415,6 +1453,33 @@ def test_unreadable_default_directory_is_unavailable(monkeypatch, tmp_path):
     assert exc.value.code == "claude_account_config_dir_unavailable"
 
 
+def test_default_answer_naming_the_other_account_is_refused(bound):
+    for label, account in (("a", _ACCOUNT_A), ("b", _ACCOUNT_B)):
+        payload = bound.payload(label)
+        payload[0]["usage"]["identity"] = {"accountID": account}
+        bound.answer(label, payload)
+    cau.refresh_claude_account_usage()
+    assert {row["status"] for row in cau.claude_accounts_snapshot().values()} == {"ok"}
+
+    # Named as b's account, the default answer contradicts its proven account.
+    payload = bound.payload("a")
+    payload[0]["usage"]["identity"] = {"accountID": _ACCOUNT_B}
+    bound.answer("a", payload)
+    cau.refresh_claude_account_usage()
+    fields = cau.routing_budget_fields()
+    _assert_not_published(fields, "a", reason="claude_account_unverified")
+    assert _row(fields["claude_accounts"], "b")["status"] == "ok"
+
+
+def test_unidentified_default_beside_a_bound_account_is_withheld(bound):
+    """Neither answer names an account and the default records none: it cannot be proven."""
+    _write_login_record(bound.home / ".claude.json", None)
+    cau.refresh_claude_account_usage()
+    fields = cau.routing_budget_fields()
+    _assert_not_published(fields, "a", reason="claude_account_unverified")
+    assert _row(fields["claude_accounts"], "b")["status"] == "ok"
+
+
 def test_binding_check_defect_never_publishes_ok(bound, monkeypatch):
     """Serving never runs the binding check; a refresh that hits a defect in it marks rows stale."""
     cau.refresh_claude_account_usage()
@@ -1431,6 +1496,12 @@ def test_binding_check_defect_never_publishes_ok(bound, monkeypatch):
         assert (row["status"], row["reason"]) == ("stale", "probe_error")
     assert fields["preferred_claude_account"] is None
     assert _MARKER not in json.dumps(fields)
+
+
+def test_sample_without_attribution_is_refused():
+    with pytest.raises(TypeError):
+        cau._record("a", {"session5h": {}, "weekly": {}, "updated": None}, None)
+    assert "a" not in cau._last_good
 
 
 # ---- review regressions (#10630 fix round 3) -----------------------------------
@@ -1613,6 +1684,19 @@ def test_serving_never_reads_or_parses_account_files(bound, monkeypatch):
     assert scheduled == ["revalidate"]
 
 
+def test_unchanged_files_serve_without_scheduling(bound, monkeypatch):
+    cau.refresh_claude_account_usage()
+    scheduled: list[str] = []
+    monkeypatch.setattr(cau, "_schedule_revalidation", lambda: scheduled.append("revalidate"))
+    with monkeypatch.context() as serving:
+        guard = _forbid_reads(serving)
+        fields = cau.routing_budget_fields()
+    assert guard.calls == []
+    assert {row["status"] for row in fields["claude_accounts"].values()} == {"ok"}
+    assert fields["preferred_claude_account"] == "b"
+    assert scheduled == []
+
+
 def test_revalidation_rearms_a_same_account_rewrite_without_asking_the_provider(bound, provider):
     cau.refresh_claude_account_usage()
     asked = provider.calls
@@ -1643,6 +1727,29 @@ def test_revalidation_verifies_rotated_credentials(bound, provider):
     assert "b" not in cau._last_good
 
 
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        ("reassigned", "not_probed"),
+        ("removed", "claude_account_binding_missing"),
+        ("relogged", "claude_account_unverified"),
+    ],
+)
+def test_revalidation_forgets_a_sample_whose_binding_changed(bound, change, reason):
+    cau.refresh_claude_account_usage()
+    if change == "reassigned":
+        bound.bind("c")
+    elif change == "removed":
+        bound.unbind()
+    else:  # the default directory's login record names another account
+        _write_login_record(bound.home / ".claude.json", _ACCOUNT_C)
+    label = "a" if change == "relogged" else "b"
+    _assert_not_published(cau.routing_budget_fields(), label, reason="not_probed")
+    _settle()
+    _assert_not_published(cau.routing_budget_fields(), label, reason=reason)
+    assert label not in cau._last_good
+
+
 def test_revalidation_is_single_flight(bound, monkeypatch):
     cau.refresh_claude_account_usage()
     release = threading.Event()
@@ -1671,6 +1778,21 @@ def test_revalidation_does_not_replace_a_newer_sample(bound, monkeypatch):
     newer = cau._last_good["b"]
     cau._revalidate_one("b", stale)  # a revalidation of the old sample finishing late
     assert cau._last_good["b"] is newer
+
+
+def test_revalidation_defect_withholds_the_row(bound, monkeypatch):
+    cau.refresh_claude_account_usage()
+
+    def broken(label, **_kwargs):
+        raise RuntimeError(_MARKER)
+
+    monkeypatch.setattr(cau, "account_binding", broken)
+    _write_login_record(bound.home / ".claude.json", _ACCOUNT_A)
+    cau.claude_accounts_snapshot()
+    _settle()
+    fields = cau.routing_budget_fields()
+    _assert_withheld(_row(fields["claude_accounts"], "a"), "probe_error")
+    assert _MARKER not in json.dumps(fields)
 
 
 def test_serving_withholds_when_the_starting_paths_move(bound, monkeypatch):
@@ -1808,6 +1930,24 @@ def test_run_codexbar_kills_helpers_on_timeout(tmp_path):
     finally:
         with contextlib.suppress(ProcessLookupError):
             os.kill(helper, signal.SIGKILL)
+
+
+def test_run_codexbar_times_out_when_the_leader_outlives_its_output(tmp_path):
+    """The leader closes its output but keeps running: the deadline still holds."""
+    body = "print('[]', flush=True); os.close(1); time.sleep(30)"
+    started = time.monotonic()
+    with pytest.raises(cau._ProbeFailed) as exc:
+        cau._run_codexbar(_fake_codexbar(tmp_path, body), {}, timeout_s=0.5, max_bytes=65536)
+    assert exc.value.code == "timeout"
+    assert time.monotonic() - started < 10
+
+
+def test_run_codexbar_times_out_and_kills_the_child(tmp_path):
+    started = time.monotonic()
+    with pytest.raises(cau._ProbeFailed) as exc:
+        cau._run_codexbar(_fake_codexbar(tmp_path, "time.sleep(30)"), {}, timeout_s=0.5, max_bytes=65536)
+    assert exc.value.code == "timeout"
+    assert time.monotonic() - started < 10
 
 
 def test_run_codexbar_caps_output(tmp_path):

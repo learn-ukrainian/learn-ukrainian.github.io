@@ -121,6 +121,12 @@ def test_caller_v4_evidence_args_are_discarded_and_record_nothing(server_module,
     assert "totally-made-up" not in content[0].text
 
 
+def test_an_ordinary_call_records_nothing(server_module, isolated_plane, monkeypatch):
+    _stub_handler(server_module, monkeypatch)
+    _call(server_module, {"word": "книга"})
+    assert _recorded(isolated_plane) == []
+
+
 def test_authenticated_attempt_records_a_server_derived_identifier(server_module, isolated_plane, monkeypatch, prepared):
     claim = _running_attempt(isolated_plane, prepared)
     _stub_handler(server_module, monkeypatch)

@@ -5,7 +5,49 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from fastapi import FastAPI
+
+from scripts.api.fleet_router import router as fleet_router
+from scripts.api.monitor_context import production_context
+from scripts.api.route_contracts import contract_for_page, contract_for_route
+
 ROOT = Path(__file__).resolve().parents[1]
+def test_fleet_routes_are_registered_get_only_and_contracted() -> None:
+    observer_app = FastAPI()
+    observer_app.state.ctx = production_context()
+    observer_app.include_router(fleet_router, prefix="/api/fleet")
+    openapi = observer_app.openapi()["paths"]
+    paths = {path for path in openapi if path.startswith("/api/fleet")}
+
+    expected = {
+        "/api/fleet/health",
+        "/api/fleet/overview",
+        "/api/fleet/operations",
+        "/api/fleet/agents",
+        "/api/fleet/endpoints",
+        "/api/fleet/requests",
+        "/api/fleet/authority/jobs",
+        "/api/fleet/messages",
+        "/api/fleet/messages/{message_id}",
+        "/api/fleet/discussions",
+        "/api/fleet/discussions/{conversation_id}",
+        "/api/fleet/reviews",
+        "/api/fleet/reviews/{review_id}",
+        "/api/fleet/dead-letters",
+        "/api/fleet/migrations",
+        "/api/fleet/acp/conversations",
+        "/api/fleet/acp/conversations/{conversation_id}",
+        "/api/fleet/activity",
+    }
+    assert expected <= paths
+    assert all(set(openapi[path]) == {"get"} for path in paths)
+    assert contract_for_route("/api/fleet/messages", "http") is not None
+    operations_contract = contract_for_route("/api/fleet/operations", "http")
+    assert operations_contract is not None
+    assert operations_contract.pattern == "/api/fleet/operations"
+    assert contract_for_page("fleet.html") is not None
+
+
 _PROJECTS_RENDER_JS = r"""
 const fs = require('node:fs');
 const vm = require('node:vm');

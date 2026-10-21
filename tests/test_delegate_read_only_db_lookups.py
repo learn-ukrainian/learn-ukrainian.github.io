@@ -473,6 +473,25 @@ def test_read_only_sparse_dispatch_with_sources_mcp_lookup_ends_done(primary: Pa
     assert {name: _digest(primary / "data" / name) for name in _DATABASES} == before
 
 
+def test_sources_mcp_lookup_without_databases_fails_typed_and_creates_nothing(primary: Path, tmp_tasks_dir) -> None:
+    """With no database anywhere, the lookups fail typed and no file appears in either checkout."""
+    for name in _DATABASES:
+        (primary / "data" / name).unlink()
+    task_id = "review-9122-sources-absent"
+    worktree = _sparse_dispatch_worktree(primary, task_id)
+
+    rc, state, output = _run_read_only_worker(worktree, task_id, _SOURCES_MCP_LOOKUP, str(REPO_ROOT))
+
+    results = json.loads(output)
+    assert results["verify_words"] == {"is_error": True, "text": "Tool call failed: verify_words."}
+    assert results["get_chunk_context"]["text"] == "Sources database not found."
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert sorted(path.name for path in (worktree / "data").iterdir()) == ["reference"]
+    assert sorted((primary / "data").glob("*.db")) == []
+
+
 @pytest.mark.parametrize("name", _DATABASES)
 def test_read_only_database_openers_never_create_a_missing_file(tmp_path: Path, name: str) -> None:
     """With no database present, the repository openers fail typed and create nothing."""

@@ -168,6 +168,29 @@ def world(request):
     return root, home
 
 
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
+@pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
+def test_full_review_kind_and_family_matrix(world, tmp_path, agent, kind):
+    root, _ = world
+    manifest = manifest_world(root, kind)
+    tc = attempt_config(root, tmp_path, manifest, agent)
+    tc.update(review_access="full", review_cwd=str(root))
+    tc.pop("allowed_tools", None)
+    if agent == "claude":
+        tc["reviewer_tools"] = True
+    boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
+    try:
+        assert boundary.full and boundary.workspace == root
+        assert boundary.egress and boundary.egress.thread.is_alive()
+    finally:
+        boundary.cleanup()
+    assert (root / manifest["inputs"]["plan"]["path"]).is_file()
+    assert (
+        json.loads(Path(tc["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]["env"]["LU_REVIEW_ATTEMPT_ID"]
+        == "current"
+    )
+
+
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_full_review_checks_actual_cwd_not_render_copy(world, tmp_path, kind):
     root, _ = world

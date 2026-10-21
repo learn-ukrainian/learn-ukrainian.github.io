@@ -223,6 +223,17 @@ def test_store_scan_covers_every_tracked_text_file_under_scripts(tmp_path, capsy
         assert f'ERROR store literal {name!r}' in out
 
 
+def test_paths_outside_scripts_and_lookalike_names_are_not_required(tmp_path, capsys):
+    repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
+                     {'tests/test_fixture.py': "DB = 'data/fixture9412.db'\n",
+                      'tests/fixtures/run.sh': 'sqlite3 data/fixture9412.db\n',
+                      'docs/knowledge/note.md': 'data/doc9412.db\n',
+                      'scripts/lookalike.py': "M = 'metadata/m9412.db'; T = 'test_data/t9412.db'\n"
+                                              "J = 'data/j9412.json'; F = f'data/{name}.db'\n"})
+    assert cat.store_literals(repo).stores == {}
+    assert main(['check', '--repo', str(repo)]) == 0, capsys.readouterr().out
+
+
 def test_store_scan_reads_the_index_blob_not_the_worktree(tmp_path):
     repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
                      {'scripts/tool.sh': 'sqlite3 data/staged9412.db\n'})
@@ -258,6 +269,34 @@ def marker_repo(tmp_path, files, *overrides):
     return make_repo(tmp_path / 'r', data, {'docs/guide/private/p.md': '# Private\n', **files})
 
 
+SUPERSEDED = {'path': 'docs/guide/old.md', 'lifecycle': 'superseded', 'superseded_by': 'docs/guide/new.md',
+              'evidence': 'Replaced by the new guide.'}
+
+
+def test_markers_are_required_for_superseded_markdown_overrides_and_mark_writes_them(tmp_path, capsys):
+    repo = marker_repo(tmp_path, {'docs/guide/old.md': '# Old\n', 'docs/guide/new.md': '# New\n'}, SUPERSEDED)
+    report, _ = repository_check(repo)
+    errors = [e for e in report.errors if e.startswith('docs/guide/old.md')]
+    assert len(errors) == 2 and 'lifecycle: superseded' in errors[0] and 'banner' in errors[1]
+    assert main(['mark', '--repo', str(repo)]) == 1  # lists, writes nothing
+    assert (repo / 'docs/guide/old.md').read_text() == '# Old\n'
+    assert main(['mark', '--repo', str(repo), '--apply']) == 0
+    capsys.readouterr()
+    git(repo, 'add', '.')
+    assert repository_check(repo)[0].errors == []
+    assert main(['mark', '--repo', str(repo)]) == 0
+
+
+@pytest.mark.parametrize('front, message', [
+    ('lifecycle: archive', "front-matter lifecycle 'archive' disagrees with the catalogue ('active'"),
+    ('superseded_by: docs/guide/new.md', 'front-matter superseded_by'),
+    ('lifecycle: obsolete', 'front matter lifecycle unrecognized'),
+])
+def test_front_matter_that_disagrees_with_the_catalogue_fails(tmp_path, front, message):
+    repo = marker_repo(tmp_path, {'docs/guide/a.md': f'---\n{front}\n---\n# A\n', 'docs/guide/new.md': '# N\n'})
+    assert any(message in e for e in repository_check(repo)[0].errors), repository_check(repo)[0].errors
+
+
 def test_front_matter_that_agrees_passes_and_private_files_are_never_read(tmp_path):
     repo = marker_repo(tmp_path, {'docs/guide/a.md': '---\nlifecycle: active\n---\n# A\n',
                                   'docs/guide/private/p.md': '---\nlifecycle: archive\n---\n'})
@@ -285,6 +324,17 @@ def schema_patterns(node=SCHEMA, where='#'):
     elif isinstance(node, list):
         for index, value in enumerate(node):
             yield from schema_patterns(value, f'{where}/{index}')
+
+
+def test_patterns_use_no_engine_dependent_constructs():
+    found = list(schema_patterns())
+    assert len(found) >= 10
+    for where, pattern in found:
+        # Remove escaped characters and bracket classes, then nothing engine-dependent may remain.
+        bare = re.sub(r'\[(?:\\.|[^\]\\])*\]', '', re.sub(r'\\u[0-9a-f]{4}', '', pattern))
+        assert not re.search(r'\\[sSwWdDbBAZz]', pattern), where
+        assert '$' not in pattern, where
+        assert '.' not in re.sub(r'\\.', '', bare), where  # an unescaped dot outside a class
 
 
 def corpus():

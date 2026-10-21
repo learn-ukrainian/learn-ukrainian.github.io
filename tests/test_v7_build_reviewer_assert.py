@@ -212,6 +212,32 @@ def test_writer_preemit_audit_context_extracts_all_three_tags(tmp_path: Path):
     assert context.count("<activity_split_audit>") == 1
 
 
+def test_writer_preemit_audit_context_missing_tags_returns_empty(tmp_path: Path):
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "writer_output.raw.md").write_text("plain writer output\n", encoding="utf-8")
+
+    assert v7_build._writer_preemit_audit_context(module_dir) == ""
+    assert v7_build._writer_preemit_audit_context(tmp_path / "missing") == ""
+
+
+def test_writer_preemit_audit_context_malformed_tags_do_not_match(tmp_path: Path):
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "writer_output.raw.md").write_text(
+        "\n".join(
+            [
+                "<implementation_map_audit>manifest_obligations=3",
+                "<bad_form_audit>remaining=0</activity_split_audit>",
+                "<activity_split_audit level=B1 split_valid=true>",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    assert v7_build._writer_preemit_audit_context(module_dir) == ""
+
+
 def test_reviewer_assert_v7_build(tmp_path: Path):
     """v7_build must assert if writer and reviewer use the same model."""
     plan = {"slug": "test-slug", "level": "a1"}
@@ -469,6 +495,32 @@ def test_llm_qg_parse_uses_review_json_after_agy_status_wrapper(tmp_path: Path) 
     )
 
     assert entry["score"] == 8.5
+    assert entry["verdict"] == "PASS"
+
+
+def test_llm_qg_parse_uses_later_review_json_after_malformed_object(tmp_path: Path) -> None:
+    response = "\n".join(
+        [
+            "Here is an intermediate object:",
+            '{"status": "waiting", @}',
+            "Final review:",
+            json.dumps(
+                {
+                    "score": 8.7,
+                    "evidence": '"tone evidence quote"',
+                    "verdict": "PASS",
+                }
+            ),
+        ]
+    )
+
+    entry = v7_build._parse_llm_qg_dim_response(
+        response,
+        dim="tone",
+        response_path=tmp_path / "response.raw.md",
+    )
+
+    assert entry["score"] == 8.7
     assert entry["verdict"] == "PASS"
 
 

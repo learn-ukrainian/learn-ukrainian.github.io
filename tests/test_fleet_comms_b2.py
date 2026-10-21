@@ -20,6 +20,9 @@ from scripts.fleet_comms.adapter_conformance import (
 from scripts.fleet_comms.contracts import CompletionState
 
 B2_ADAPTERS = ("grok", "kimi", "cursor", "hermes", "opencode")
+HERMES_ALIASES = ("hermes", "hermes-grok", "hermes-qwen", "hermes-deepseek", "grok-hermes")
+
+
 def _lines(*events: dict[str, Any]) -> str:
     return "\n".join(json.dumps(event) for event in events)
 
@@ -32,6 +35,13 @@ def test_exit0_plain_text_without_terminal_is_unknown_not_complete(name: str) ->
     env = conform(CaptureInput(adapter=name, stdout="looks fine", returncode=0))
     assert env.completion_state is CompletionState.UNKNOWN
     assert env.terminal_event_observed is False
+    assert env.is_formal_review_eligible is False
+
+
+@pytest.mark.parametrize("name", HERMES_ALIASES)
+def test_hermes_aliases_plain_stdout_unknown(name: str) -> None:
+    env = conform(CaptureInput(adapter=name, stdout="assistant final message", returncode=0))
+    assert env.completion_state is CompletionState.UNKNOWN
     assert env.is_formal_review_eligible is False
 
 
@@ -50,6 +60,15 @@ def test_grok_complete_requires_stop_reason() -> None:
     assert env.response_text == "part-one part-two"
     assert env.is_formal_review_eligible is True
     assert raw_capture_matches(env, raw)
+
+
+def test_grok_json_without_stop_reason_is_unknown() -> None:
+    stdout = json.dumps({"text": "partial answer", "sessionId": "g-2"})
+    env = conform(CaptureInput(adapter="grok", stdout=stdout, returncode=0))
+    assert env.completion_state is CompletionState.UNKNOWN
+    assert env.terminal_event_observed is False
+    assert "partial" in env.response_text
+    assert env.is_formal_review_eligible is False
 
 
 def test_grok_length_limited() -> None:
@@ -98,6 +117,14 @@ def test_kimi_complete_requires_session_resume_hint() -> None:
     assert raw_capture_matches(env, raw)
 
 
+def test_kimi_assistant_only_without_terminal_is_unknown() -> None:
+    stdout = json.dumps({"role": "assistant", "content": "looks done"})
+    env = conform(CaptureInput(adapter="kimi", stdout=stdout, returncode=0))
+    assert env.completion_state is CompletionState.UNKNOWN
+    assert env.terminal_event_observed is False
+    assert env.is_formal_review_eligible is False
+
+
 def test_kimi_length_limited_via_finish_reason() -> None:
     stdout = _lines(
         {"role": "assistant", "content": "truncated…", "finish_reason": "length"},
@@ -106,6 +133,13 @@ def test_kimi_length_limited_via_finish_reason() -> None:
     env = conform(CaptureInput(adapter="kimi", stdout=stdout, returncode=0))
     assert env.completion_state is CompletionState.LENGTH_LIMITED
     assert "truncated" in env.response_text
+
+
+def test_kimi_nonzero_exit_with_output_is_transport_incomplete() -> None:
+    stdout = json.dumps({"role": "assistant", "content": "partial"})
+    env = conform(CaptureInput(adapter="kimi", stdout=stdout, returncode=2))
+    assert env.completion_state is CompletionState.TRANSPORT_INCOMPLETE
+    assert env.response_text == "partial"
 
 
 def test_kimi_status_done_is_terminal() -> None:
@@ -143,6 +177,15 @@ def test_cursor_complete_requires_turn_ended() -> None:
     assert raw_capture_matches(env, raw)
 
 
+def test_cursor_message_stream_without_turn_ended_is_unknown() -> None:
+    stdout = json.dumps(
+        {"type": "message", "role": "assistant", "content": [{"type": "text", "text": "hi"}]}
+    )
+    env = conform(CaptureInput(adapter="cursor", stdout=stdout, returncode=0))
+    assert env.completion_state is CompletionState.UNKNOWN
+    assert env.is_formal_review_eligible is False
+
+
 def test_cursor_length_limited() -> None:
     stdout = _lines(
         {"type": "text", "content": "truncated…"},
@@ -150,6 +193,13 @@ def test_cursor_length_limited() -> None:
     )
     env = conform(CaptureInput(adapter="cursor", stdout=stdout, returncode=0))
     assert env.completion_state is CompletionState.LENGTH_LIMITED
+
+
+def test_cursor_nonzero_exit_with_output_is_transport_incomplete() -> None:
+    stdout = json.dumps({"type": "text", "content": "partial"})
+    env = conform(CaptureInput(adapter="cursor", stdout=stdout, returncode=1))
+    assert env.completion_state is CompletionState.TRANSPORT_INCOMPLETE
+    assert env.response_text == "partial"
 
 
 def test_cursor_turn_ended_error_is_failed() -> None:
@@ -200,6 +250,17 @@ def test_opencode_complete_requires_final_step_finish_stop() -> None:
     assert raw_capture_matches(env, raw)
 
 
+def test_opencode_tool_calls_step_finish_alone_is_unknown() -> None:
+    stdout = _lines(
+        {"type": "text", "part": {"text": "thinking…"}},
+        {"type": "step_finish", "part": {"reason": "tool-calls"}},
+    )
+    env = conform(CaptureInput(adapter="opencode", stdout=stdout, returncode=0))
+    assert env.completion_state is CompletionState.UNKNOWN
+    assert env.terminal_event_observed is False
+    assert env.is_formal_review_eligible is False
+
+
 def test_opencode_length_limited() -> None:
     stdout = _lines(
         {"type": "text", "part": {"text": "truncated…"}},
@@ -208,6 +269,19 @@ def test_opencode_length_limited() -> None:
     env = conform(CaptureInput(adapter="opencode", stdout=stdout, returncode=0))
     assert env.completion_state is CompletionState.LENGTH_LIMITED
     assert "truncated" in env.response_text
+
+
+def test_opencode_nonzero_exit_with_output_is_transport_incomplete() -> None:
+    stdout = _lines({"type": "text", "part": {"text": "partial"}})
+    env = conform(CaptureInput(adapter="opencode", stdout=stdout, returncode=3))
+    assert env.completion_state is CompletionState.TRANSPORT_INCOMPLETE
+    assert env.response_text == "partial"
+
+
+def test_opencode_text_without_step_finish_is_unknown() -> None:
+    stdout = json.dumps({"type": "text", "part": {"text": "no finish"}})
+    env = conform(CaptureInput(adapter="opencode", stdout=stdout, returncode=0))
+    assert env.completion_state is CompletionState.UNKNOWN
 
 
 # ── hermes ───────────────────────────────────────────────────────────────────
@@ -240,6 +314,14 @@ def test_hermes_length_limited_structured() -> None:
     stdout = json.dumps({"type": "result", "result": "cut", "reason": "max_tokens"})
     env = conform(CaptureInput(adapter="hermes-qwen", stdout=stdout, returncode=0))
     assert env.completion_state is CompletionState.LENGTH_LIMITED
+
+
+def test_hermes_nonzero_exit_with_output_is_transport_incomplete() -> None:
+    env = conform(
+        CaptureInput(adapter="hermes-grok", stdout="partial hermes", returncode=1)
+    )
+    assert env.completion_state is CompletionState.TRANSPORT_INCOMPLETE
+    assert env.response_text == "partial hermes"
 
 
 def test_hermes_empty_nonzero_is_failed() -> None:

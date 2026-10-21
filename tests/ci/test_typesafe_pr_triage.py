@@ -10,6 +10,7 @@ from __future__ import annotations
 import pytest
 
 from scripts.ci.typesafe_pr_triage import (
+    main,
     triage,
 )
 
@@ -19,6 +20,12 @@ def _answers(choice: str, confidence: float, high_risk: float) -> dict:
         "readiness": {"choice": choice, "confidence": confidence},
         "high_risk": {"noul": high_risk},
     }
+
+
+def test_main_skips_without_api_key(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+    monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
+    assert main() == 0
+    assert "skipping" in capsys.readouterr().out
 
 
 def test_triage_broken_high_confidence_fails() -> None:
@@ -101,6 +108,17 @@ def test_triage_never_prints_api_key_from_value_error() -> None:
     assert code == 0
     assert _KEY not in msg
     assert "ValueError" in msg
+
+
+def test_triage_skips_on_incomplete_read() -> None:
+    import http.client
+
+    def boom(state, questions, api_key):
+        raise http.client.IncompleteRead(b"par", 10)
+
+    code, msg = triage(["a.py"], "diff", "pull_request", _KEY, system_one=boom)
+    assert code == 0
+    assert "IncompleteRead" in msg
 
 
 @pytest.mark.parametrize(

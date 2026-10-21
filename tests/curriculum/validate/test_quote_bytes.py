@@ -43,6 +43,14 @@ def test_word_tokens_skip_letters_syllables_and_brackets_and_join_divided_words(
     ]
 
 
+def test_word_tokens_skip_every_alphabet_table_cell() -> None:
+    alphabet = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+    assert len(alphabet) == 33
+    table = " ".join(letter + letter.lower() for letter in alphabet)
+    assert quote_bytes.word_tokens(f"{table} Дждж Дздз") == []
+    assert quote_bytes.word_tokens("Єє, Ии, Іі, Оо, Яя") == []
+
+
 def test_word_tokens_look_up_letter_runs_that_are_not_a_capital_and_its_own_small_letter() -> None:
     tokens = quote_bytes.word_tokens("ЄИ єє ЯЯ Оа Єєє Єє-Яя ЄєЯя Аб")
     assert [token.surface for token in tokens] == ["ЄИ", "єє", "ЯЯ", "Оа", "Єєє", "Єє-Яя", "ЄєЯя"]

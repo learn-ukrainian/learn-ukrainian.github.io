@@ -12,7 +12,15 @@ from scripts.lexicon.reconcile_calque_clusters import (
     CURRENT_ENRICHMENT_VERSION,
     CalqueReconciliationEngine,
     CandidateAlternative,
+    strip_accents,
 )
+
+
+def test_strip_accents() -> None:
+    assert strip_accents("пилосо́с") == "пилосос"
+    assert strip_accents("безкошто́вний") == "безкоштовний"
+    assert strip_accents("чи́стий") == "чистий"
+    assert strip_accents("plain") == "plain"
 
 
 def test_candidate_alternative_validation() -> None:

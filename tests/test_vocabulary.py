@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.checks.vocabulary import (
     check_vocab_matches_plan,
+    extract_vocab_items,
 )
 
 # =============================================================================
@@ -25,6 +26,24 @@ from scripts.audit.checks.vocabulary import (
 # =============================================================================
 # TEST: Vocabulary Extraction
 # =============================================================================
+
+class TestVocabExtraction:
+    """Test vocabulary item extraction from content."""
+
+    def test_extract_from_3_column_table(self):
+        """Should extract items from B1 3-column table."""
+        content = """
+# Словник
+
+| Слово | Переклад | Примітки |
+|-------|----------|----------|
+| граматика | grammar | noun |
+| відмінок | case | noun |
+"""
+        items = extract_vocab_items(content)
+        assert len(items) == 2
+        assert items[0]['uk'] == 'граматика'
+        assert items[0]['en'] == 'grammar'
 
 
 # =============================================================================

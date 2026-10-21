@@ -491,13 +491,15 @@ entries:
   - id: test-prune-selections
     kind: doc_family
     paths: [docs/test-prune/**]
-    purpose: Low-signal test prune (#11226) rubric, swarm selection of tests to delete with per-test reasons and votes, and the phase report with counts, restores and CI duration.
+    purpose: Low-signal test prune (#11226) rubric, swarm selection of tests to delete with per-test reasons and votes, the final selection, R1/R2/R3 restore manifest, and phase reports with counts and verification.
     keywords: [test prune, low-signal tests, t3code rubric, test selection, haiku swarm, restore pass]
     lifecycle: active
     owner: infra-harness
     entrypoints:
       - {topic: phase report and restores, path: docs/test-prune/README.md}
       - {topic: classification rubric, path: docs/test-prune/rubric.md}
+      - {topic: final deletion selection, path: docs/test-prune/2026-10-21-public-selection-final.jsonl}
+      - {topic: R1 R2 R3 restore manifest, path: docs/test-prune/2026-10-21-restore-r2.jsonl}
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<test name>' -- docs/test-prune"}
     content_searchable: true

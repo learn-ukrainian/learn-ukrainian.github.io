@@ -52,6 +52,11 @@ def test_inline_backtick_prose_keeps_whole_mapping(name, info, position, prose):
     assert extract_review_yaml(raw) == data
 
 
+def test_bare_mapping_with_a_fence_in_a_scalar_is_unchanged():
+    data = b"kind: plan\nnotes: |\n  ```yaml\n  example: true\n  ```\n"
+    assert extract_review_yaml(data) == data
+
+
 @pytest.mark.parametrize("indent", [1, 2, 3])
 def test_block_scalar_closing_fence_refuses_truncated_mapping(indent):
     padding = b" " * indent
@@ -94,6 +99,14 @@ def test_unrelated_closed_fence_refuses_ambiguous_mapping(position, marker):
         extract_review_yaml(raw)
     assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
     assert "outside the selected yaml/yml block" in str(raised.value)
+
+
+@pytest.mark.parametrize("opening", [b"```python", b"~~~text"])
+def test_trailing_unrelated_open_fence_names_actual_opening(opening):
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(fenced(b"kind: plan\n") + opening + b"\n")
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert str(raised.value) == f"the {opening.decode()!r} fence is not closed"
 
 
 @pytest.mark.parametrize("outer,inner", [(b"````", b"```"), (b"```", b"~~~"), (b"~~~~", b"~~~"), (b"~~~", b"```")])

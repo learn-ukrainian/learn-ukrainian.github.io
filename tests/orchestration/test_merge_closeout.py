@@ -162,6 +162,21 @@ def patch_gh(
     return calls
 
 
+def test_fetch_pr_info_parses_gh_payload(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    patch_gh(
+        monkeypatch,
+        pr_number=42,
+        state="MERGED",
+        head_ref_name="codex/feature",
+        head_sha="deadbeef",
+    )
+
+    pr = mc.fetch_pr_info(repo, 42)
+
+    assert pr == mc.PullRequestInfo(number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef")
+
+
 @pytest.mark.parametrize(
     ("raw_state", "merged_at", "expected_state"),
     [("closed", "2026-01-02T03:04:05Z", "MERGED"), ("open", None, "OPEN"), ("closed", None, "CLOSED")],
@@ -509,6 +524,39 @@ def test_apply_deletes_local_branch_when_tip_is_ancestor_of_live_pr_head(
     assert local.returncode != 0
 
 
+def test_apply_exact_head_delete_does_not_fetch_live_pr_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    pr_head = commit_on_branch(repo, "codex/exact-head-no-fetch", "note.txt")
+    publish_pr_head(repo, 8565, "codex/exact-head-no-fetch", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8565,
+        state="MERGED",
+        head_ref_name="codex/exact-head-no-fetch",
+        head_sha=pr_head,
+    )
+    original_run = rw._run
+    fetch_calls: list[dict[str, Any]] = []
+
+    def record_fetch(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:3] == ["git", "fetch", "--no-tags"]:
+            fetch_calls.append(kwargs)
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", record_fetch)
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8565, "MERGED", "codex/exact-head-no-fetch", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is True
+    assert status.local_error is None
+    assert fetch_calls == []
+
+
 def test_apply_refuses_local_branch_with_commit_outside_live_pr_head(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -536,6 +584,31 @@ def test_apply_refuses_local_branch_with_commit_outside_live_pr_head(
     assert status.local_gone is False
     assert status.local_error == "local head does not match merged PR head; refusing to delete"
     assert git(repo, "rev-parse", "refs/heads/codex/extra-local") == extra
+
+
+def test_apply_deletes_local_branch_when_head_equals_live_pr_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    pr_head = commit_on_branch(repo, "codex/equal-head", "note.txt")
+    publish_pr_head(repo, 8562, "codex/equal-head", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8562,
+        state="MERGED",
+        head_ref_name="codex/equal-head",
+        head_sha=pr_head,
+    )
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8562, "MERGED", "codex/equal-head", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is True
+    assert status.local_error is None
 
 
 def test_apply_refuses_ancestor_delete_when_fetching_live_pr_head_fails(
@@ -765,6 +838,76 @@ def test_apply_refuses_fallback_branch_delete_when_open_pr_exists(
     assert result.ok is False
     assert git(repo, "ls-remote", "--heads", "origin", "codex/reused-branch") != ""
     assert git(repo, "rev-parse", "--verify", "codex/reused-branch")
+
+
+def test_apply_expected_head_missing_still_refuses_branch_with_open_pr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    local_head = commit_on_branch(repo, "codex/open-pr-no-expected-head", "note.txt")
+    publish_pr_head(repo, 8567, "codex/open-pr-no-expected-head", local_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8567,
+        state="MERGED",
+        head_ref_name="codex/open-pr-no-expected-head",
+        head_sha=None,
+        branch_prs={"codex/open-pr-no-expected-head": [{"number": 8568, "state": "OPEN", "headRefOid": local_head}]},
+    )
+
+    result = mc.run_merge_closeout(repo, 8567, apply=True, live_cwds=set())
+
+    assert result.branch_status is not None
+    assert result.branch_status.local_gone is False
+    assert result.branch_status.local_error == ("branch has an open PR (#8568); refusing to delete")
+    assert result.ok is False
+    assert git(repo, "rev-parse", "refs/heads/codex/open-pr-no-expected-head") == local_head
+
+
+def test_main_exits_nonzero_and_prints_json_when_pr_not_merged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = init_repo(tmp_path)
+    patch_gh(
+        monkeypatch,
+        pr_number=9,
+        state="CLOSED",
+        head_ref_name="codex/closed",
+        head_sha="deadbeef",
+    )
+
+    exit_code = mc.main(["9", "--repo-root", str(repo), "--json"])
+
+    assert exit_code == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["ok"] is False
+    assert "not MERGED" in payload["error"]
+
+
+def test_main_dry_run_default_reports_ok_without_deleting(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/main-cli")
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", "codex/main-cli")
+    patch_gh(
+        monkeypatch,
+        pr_number=606,
+        state="MERGED",
+        head_ref_name="codex/main-cli",
+        head_sha=head_sha,
+        branch_prs={"codex/main-cli": [{"number": 606, "state": "MERGED", "headRefOid": head_sha}]},
+    )
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    exit_code = mc.main(["606", "--repo-root", str(repo)])
+
+    assert exit_code == 0
+    assert worktree.exists()
+    out = capsys.readouterr().out
+    assert "mode: dry-run" in out
+    assert "OK" in out
 
 
 def test_detached_earlier_pr_commit_matches_and_main_checkout_does_not(tmp_path: Path) -> None:

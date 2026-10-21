@@ -506,6 +506,14 @@ def test_process_snapshot_cwd_fd_zombie_and_unknown(tmp_path):
     assert sweep.process_snapshot(tmp_path / "absent") == ([], False)
 
 
+def test_real_process_fd_and_cwd_are_seen(tmp_path):
+    # Held by this test process: the sweep must include its own caller too.
+    with (tmp_path / "held").open("w"):
+        refs, _ = sweep.process_snapshot()
+        assert (os.getpid(), tmp_path / "held") in refs
+        assert (os.getpid(), Path.cwd()) in refs
+
+
 def test_registration_probe_preserves_on_failure(monkeypatch, tmp_path):
     monkeypatch.setattr(
         subprocess,
@@ -531,12 +539,32 @@ def test_invalid_age_refused(inventory, age):
         inventory.run(min_age_s=age)
 
 
+def test_cli_dry_run_json_table_and_errors(inventory, capsys):
+    inventory.make()
+    argv = ["--temp-root", str(inventory.root), "--task-root", str(inventory.tasks)]
+    assert sweep.main([*argv, "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["bytes_reclaimed"] == 0
+    assert sweep.main(argv) == 0
+    assert "| Entry |" in capsys.readouterr().out
+    with pytest.raises(SystemExit) as exc:
+        sweep.main([*argv, "--min-age-hours", "0"])
+    assert exc.value.code == 2
+
+
 def test_hardlinks_are_preserved_without_overstating_reclaim(inventory):
     path = inventory.make()
     os.link(path / "payload", path / "second-link")
     report = inventory.run(apply=True)
     assert path.exists() and report["rows"][0]["reason"] == "hardlinked_content"
     assert report["bytes_reclaimed"] == 0
+
+
+def test_foreign_ownership_is_preserved(inventory, monkeypatch):
+    path = inventory.make()
+    real_uid = os.geteuid()
+    monkeypatch.setattr(sweep.os, "geteuid", lambda: real_uid + 1)
+    report = inventory.run(apply=True)
+    assert path.exists() and report["rows"][0]["reason"] == "foreign_owner"
 
 
 def test_tree_read_error_is_unknown(inventory, monkeypatch):

@@ -76,6 +76,12 @@ def test_hook_injects_ephemeral_state(state, tmp_path):
     assert "fix X" in message
 
 
+def test_hook_is_noop_for_other_workspace(state, tmp_path):
+    other = tmp_path / "worker-checkout"
+    other.mkdir()
+    assert driver_state.cmd_agy_hook(json.dumps({"workspacePaths": [str(other)]})) == {}
+
+
 def test_hook_tolerates_bad_payload(state):
     assert driver_state.cmd_agy_hook("not json") == {}
 
@@ -610,6 +616,15 @@ def test_stop_cap_reset_write_failure_remains_visible_until_reset_succeeds(drive
     assert _stop(driver, transcript)["decision"] == "continue"
 
 
+def test_stop_corrupt_counter_fails_closed(driver, state):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text("invalid", encoding="utf-8")
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert "counter unavailable" in out["reason"]
+
+
 def test_pretool_denies_ask_question_only_for_drivers(driver, monkeypatch):
     call = {"toolCall": {"name": "ask_question"}, "workspacePaths": [str(driver)]}
     assert driver_state.cmd_agy_pretool_hook(json.dumps(call))["decision"] == "deny"
@@ -644,6 +659,14 @@ def test_stop_unknown_worker_target_does_not_force_continuation(driver, monkeypa
     assert driver_state.minimum_workers() is None
     assert _stop(driver, _transcript(driver, "Work verified.")) == {"decision": "allow"}
     assert _stop(driver, _transcript(driver, "I will run the remaining actions next."))["decision"] == "continue"
+
+
+def test_worker_target_is_read_at_call_time(driver, monkeypatch):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    transcript = _transcript(driver, "Work verified.")
+    assert _stop(driver, transcript) == {"decision": "allow"}
+    monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, str(SYNTHETIC_WORKER_TARGET + 1))
+    assert _stop(driver, transcript)["decision"] == "continue"
 
 
 def test_running_workers_uses_shared_store_from_linked_worktree(tmp_path, monkeypatch):
@@ -682,6 +705,31 @@ def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     message = out["injectSteps"][0]["ephemeralMessage"]
     assert text in message
     assert "truncated" not in message
+
+
+@pytest.mark.parametrize(
+    "prefix",
+    [
+        "",
+        "The CTO blocker delta policy is mentioned in prose.\n",
+        "## CTO blocker delta policy extra\n",
+        "### CTO blocker delta policy\n",
+        "```markdown\n## CTO blocker delta policy\n```\n",
+        "> ## CTO blocker delta policy\n",
+        "  ## CTO blocker delta policy\n",
+        "<!--\n## CTO blocker delta policy\n-->\n",
+        "CTO blocker delta policy\n-----------------------\n",
+    ],
+)
+def test_blocker_policy_requires_exact_real_heading(state, prefix):
+    message = driver_state.render_injection(prefix + "Current goals remain intact.", state)
+    assert message.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
+    assert "Current goals remain intact." in message
+    assert "scripts.driver_blockers delta" in message
+    assert "scripts.driver_blockers record" in message
+    assert "post ordinary reports to epics" in message
+    assert "--reporting-target cto only for explicit operator escalation" in message
+    assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
 
 
 @pytest.mark.parametrize(
@@ -843,6 +891,32 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     assert "live worker count is unknown" in out["reason"]
 
 
+@pytest.mark.parametrize("error", [ImportError, RuntimeError])
+def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, error):
+    import builtins
+
+    _workers(driver, "gemini-infra", 0)
+    original = builtins.__import__
+
+    def fail_delegate(name, *args, **kwargs):
+        if name == "scripts.delegate":
+            raise error("synthetic delegate import failure")
+        return original(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fail_delegate)
+    assert driver_state.running_workers("gemini-infra") is None
+    transcript = _transcript(driver, "Work verified.")
+    out = _stop(driver, transcript)
+    assert out["decision"] == "continue"
+    assert "live worker count is unknown" in out["reason"]
+    assert "DRIVER-GATE-FAILED" not in out["reason"]
+    for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES):
+        out = _stop(driver, transcript)
+    assert out == {"decision": "allow", "reason": "DRIVER-GATE-FAILED: corrective retry budget exhausted."}
+    failure = driver_state._counter_path(state, "c1").with_suffix(".failure.json")
+    assert json.loads(failure.read_text())["code"] == "corrective_retry_budget_exhausted"
+
+
 @pytest.mark.parametrize("all_dead", [False, True])
 def test_dead_running_workers_are_skipped(driver, monkeypatch, all_dead):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
@@ -878,6 +952,20 @@ def test_cli_hook_error_resets_counter_and_fails_visibly(driver, state, monkeypa
     assert driver_state.main(["agy-stop-hook"]) == 0
     assert json.loads(capsys.readouterr().out)["decision"] == "allow"
     assert driver_state._counter_path(state, "error").read_text() == "0"
+
+
+def test_gate_failure_storage_fault_preserves_typed_error(driver, state, monkeypatch, capsys):
+    original = driver_state.write_unit
+
+    def denied(fd, name, *args, **kwargs):
+        if name.endswith(".failure.json"):
+            raise PermissionError("synthetic failure storage fault")
+        return original(fd, name, *args, **kwargs)
+
+    monkeypatch.setattr(driver_state, "write_unit", denied)
+    out = driver_state._gate_failure(state, "c1", "test_failure", "DRIVER-GATE-FAILED: synthetic failure.")
+    assert out["decision"] == "allow"
+    assert json.loads(capsys.readouterr().err)["code"] == "test_failure"
 
 
 def test_cli_help_documents_usage_and_outputs(capsys):
@@ -1000,6 +1088,17 @@ def test_counter_refuses_parent_swap_before_write(state, tmp_path, monkeypatch, 
     assert (moved / counter.name).read_text() == "0"
     assert counter.read_text() == "0"
     assert (decoy / counter.name).read_text() == "0"
+
+
+@pytest.mark.parametrize("entry", ["counter", "lock"])
+def test_counter_refuses_nonregular_storage(driver, state, entry):
+    counter = driver_state._counter_path(state, "c1")
+    path = counter if entry == "counter" else counter.with_name(counter.name + ".lock")
+    path.mkdir()
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert path.is_dir()
 
 
 @pytest.mark.parametrize("replacement", ["removed", "replaced"])

@@ -90,6 +90,23 @@ def test_review_input_claim_lifetime_and_real_paths(tmp_path, registered_trees, 
     )
 
 
+@pytest.mark.parametrize("review_inputs_only", [False, True])
+def test_primary_review_input_does_not_claim_unrelated_linked_tree(tmp_path, registered_trees, review_inputs_only):
+    tree = tmp_path / ".worktrees/dispatch/codex/unrelated"
+    registered_trees.append(tree)
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "review.json").write_text(
+        json.dumps({"task_id": "review", "status": "running", "review_contract": {"input_root": str(tmp_path)}})
+    )
+    assert (
+        worktree_claims.active_worktree_claim_refusal(
+            tree, tasks_dir=tasks, repo_root=tmp_path, review_inputs_only=review_inputs_only
+        )
+        is None
+    )
+
+
 @pytest.mark.parametrize("inner_first", [False, True])
 @pytest.mark.parametrize("review_inputs_only", [False, True])
 def test_nested_review_input_claims_only_deepest_registered_tree(

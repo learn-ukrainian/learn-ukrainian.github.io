@@ -95,6 +95,19 @@ def test_render_runs_when_python_qg_raises(tmp_path, monkeypatch):
     assert steps["python_qg"] is False and steps["mdx_render"] is True
 
 
+def test_render_failure_blocks_ship(tmp_path, monkeypatch):
+    md, plan = _mk(tmp_path)
+    monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
+    monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
+    monkeypatch.setattr(
+        lp,
+        "run_mdx_render_gate",
+        lambda t: {"passed": False, "message": "boom", "failures": [{"snippet": "x", "error": "SyntaxError"}]},
+    )
+    rep = vs.verify("folk", "x", module_dir=md, plan_path=plan)
+    assert rep["shippable"] is False
+
+
 def test_assemble_crash_blocks_ship(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
     monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
@@ -247,6 +260,28 @@ def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
     assert (log_dir / "a1-greetings.astro-build.log").read_text() == "fixture build green\n"
 
 
+def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
+    """Test verify with fresh=True reports not shippable when render gate fails."""
+    site_mod, plan_file = _mk_fresh(tmp_path)
+
+    monkeypatch.setattr(
+        lp,
+        "run_mdx_render_gate",
+        lambda t: {"passed": False, "message": "fail", "failures": [{"snippet": "x", "error": "SyntaxError"}]},
+    )
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+    )
+    assert rep["shippable"] is False
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["mdx_render"] is False
+
+
 @pytest.mark.parametrize("missing", [(2,), (2, 3)])
 def test_verify_fresh_missing_planned_lessons(tmp_path, monkeypatch, missing):
     site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 2, 3))
@@ -336,6 +371,16 @@ def test_verify_fresh_invalid_plan_fails_closed(tmp_path, monkeypatch, plan, thr
     )
     assert rep["shippable"] is False
     assert rep["steps"][0]["reason"] == "invalid_lesson_plan"
+
+
+def test_verify_fresh_skipped_lesson_render_blocks_even_green_astro(tmp_path, monkeypatch):
+    site_mod, plan_file = _mk_fresh(tmp_path)
+    monkeypatch.setattr(vs, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(vs, "_astro_build", lambda p: True)
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": None})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, astro_build=True)
+    assert rep["render_fully_validated"] is True
+    assert rep["shippable"] is False
 
 
 @pytest.mark.parametrize("ids,through_lesson", [((1, 2), 1), ((1, 3, 5), 3)])

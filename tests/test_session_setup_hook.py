@@ -113,6 +113,172 @@ _hook_deadline() { shift; "$@"; }
         assert "SELF-TEST FAILED" not in result.stdout
 
 
+@pytest.mark.parametrize(
+    ("codex_normal_task", "probe_agent", "expected"),
+    [
+        pytest.param(
+            "1",
+            "codex",
+            "DISPATCH LANE SELF-TEST FAILED for codex: version command exited 23",
+            id="ordinary-codex-same-identity-is-compact",
+        ),
+        pytest.param(
+            "1",
+            "codex-sol",
+            "DISPATCH LANE SELF-TEST FAILED for codex-sol (handoff identity codex): version command exited 23",
+            id="ordinary-codex-other-identity-keeps-it",
+        ),
+        pytest.param(
+            "0",
+            "codex",
+            "DISPATCH LANE SELF-TEST FAILED for codex (handoff identity codex): version command exited 23",
+            id="non-ordinary-session-keeps-identity",
+        ),
+    ],
+)
+def test_lane_self_test_failure_names_identity_unless_ordinary_codex_repeats_it(
+    tmp_path: Path, codex_normal_task: str, probe_agent: str, expected: str
+) -> None:
+    """Ordinary Codex context is contracted under 500 bytes (#10952).
+
+    There, and only when the probed lane equals the handoff identity, the
+    repeated identity is omitted; every other session keeps the full line.
+    """
+    hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
+    block = hook[hook.index("LANE_PROBE_SCRIPT=") : hook.index("unset LANE_PROBE_SCRIPT")]
+    (tmp_path / "scripts/agent_runtime").mkdir(parents=True)
+    (tmp_path / "scripts/agent_runtime/lane_probe.py").touch()
+    probe = {"probes": [{"agent": probe_agent, "reason": "version command exited 23"}]}
+    script = (
+        r"""
+ISSUES=()
+run_bounded() { printf '%s' "$PROBE_JSON"; return 1; }
+_hook_deadline() { shift; "$@"; }
+"""
+        + block
+        + '\nprintf "%s\\n" "${ISSUES[@]}"\n'
+    )
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env={
+            **_fixture_environment(),
+            "PROJECT_DIR": str(tmp_path),
+            "BOUNDED_PYTHON": _canonical_python(),
+            "HANDOFF_AGENT": "codex",
+            "CODEX_NORMAL_TASK": codex_normal_task,
+            "PROBE_JSON": json.dumps(probe),
+        },
+    )
+    assert result.stdout == expected + "\n"
+
+
+_ROOT_DETAIL = "Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
+
+
+@pytest.mark.parametrize(
+    ("names", "names_filter_works", "codex_normal_task", "expected"),
+    [
+        pytest.param(
+            ["stray"],
+            True,
+            "0",
+            f"ROOT HYGIENE: 1 unexpected primary-checkout root entries (stray). "
+            f"Remove manually; never auto-deleted (#6863). {_ROOT_DETAIL}",
+            id="full-inline",
+        ),
+        pytest.param(
+            ["n" * 12],
+            True,
+            "0",
+            f"ROOT HYGIENE: 1 unexpected primary-checkout root entries (names on stderr). "
+            f"Remove manually; never auto-deleted (#6863). {_ROOT_DETAIL}",
+            id="full-withheld",
+        ),
+        pytest.param(
+            ["stray"],
+            False,
+            "0",
+            f"ROOT HYGIENE: 1 unexpected primary-checkout root entries (names unavailable). "
+            f"Remove manually; never auto-deleted (#6863). {_ROOT_DETAIL}",
+            id="full-filter-failed",
+        ),
+        pytest.param(
+            ["stray"],
+            True,
+            "1",
+            f"ROOT HYGIENE: 1 unexpected primary-checkout root entries (stray); manual removal only (#6863). {_ROOT_DETAIL}",
+            id="ordinary-codex-inline",
+        ),
+        pytest.param(
+            ["n" * 12],
+            True,
+            "1",
+            f"ROOT HYGIENE: 1 unexpected primary-checkout root entries; manual removal only (#6863). {_ROOT_DETAIL}",
+            id="ordinary-codex-withheld",
+        ),
+        pytest.param(
+            ["stray"],
+            False,
+            "1",
+            f"ROOT HYGIENE: 1 unexpected primary-checkout root entries; manual removal only (#6863). {_ROOT_DETAIL}",
+            id="ordinary-codex-filter-failed",
+        ),
+    ],
+)
+def test_root_hygiene_notice_keeps_count_and_detail_in_every_layout(
+    tmp_path: Path,
+    names: list[str],
+    names_filter_works: bool,
+    codex_normal_task: str,
+    expected: str,
+) -> None:
+    """Only ordinary Codex, contracted under 500 bytes, is compacted (#10952).
+
+    Every layout keeps the count, the manual-only rule and the Detail command;
+    the full layout is byte-for-byte the pre-#10952 notice.
+    """
+    hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
+    block = hook[hook.index("ROOT_GUARD_RC=0") : hook.index("unset ROOT_GUARD_RC ROOT_GUARD_JSON")]
+    names_python = _canonical_python()
+    if not names_filter_works:
+        failing = tmp_path / "failing-python"
+        failing.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+        failing.chmod(0o755)
+        names_python = str(failing)
+    report = {"unexpected_count": len(names), "unexpected": [{"name": name} for name in names]}
+    script = (
+        r"""
+ISSUES=()
+run_bounded() { printf '%s' "$REPORT_JSON"; }
+_hook_deadline() { shift; "$@"; }
+"""
+        + block
+        + '\nprintf "%s\\n" "${ISSUES[@]}"\n'
+    )
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env={
+            **_fixture_environment(),
+            "PROJECT_DIR": str(tmp_path),
+            "CANONICAL_ROOT": str(tmp_path),
+            "BOUNDED_PYTHON": names_python,
+            "CODEX_NORMAL_TASK": codex_normal_task,
+            "REPORT_JSON": json.dumps(report),
+        },
+    )
+    assert result.stdout == expected + "\n"
+    withheld = names_filter_works and len(", ".join(names)) > 11
+    assert ("ROOT HYGIENE unexpected entries (escaped): " in result.stderr) is withheld
+
+
 def test_hook_passes_stream_and_task_family_to_gate_and_fallback(tmp_path: Path) -> None:
     hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
     block = hook[hook.index("ROLLOVER_BUNDLE_STREAM=") : hook.index("GATE_RC=0")]
@@ -131,6 +297,13 @@ def test_hook_passes_stream_and_task_family_to_gate_and_fallback(tmp_path: Path)
     assert '"${ROLLOVER_STREAM_ARGS[@]}"' in fallback
     assert 'TASK_FAMILY_ARGS=(--task-family "$SESSION_EPIC")' in hook
     assert "SESSION_TASK_FAMILY" not in hook
+
+
+def test_legacy_table_parser_avoids_gnu_sed_anchor_escape() -> None:
+    hook = _REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh"
+    parser_line = next(line for line in hook.read_text(encoding="utf-8").splitlines() if "TABLE_BRIEF=$(sed -n" in line)
+
+    assert "\\`" not in parser_line
 
 
 def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) -> None:
@@ -434,3 +607,36 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     assert "DEPLOY DRIFT" not in context, f"False positive drift detected! Context:\n{context}"
     assert "VENV MISSING" not in context
     assert "VENV WRONG PYTHON" not in context
+
+
+def test_driver_state_banner_carries_complete_blocker_rule(tmp_path: Path) -> None:
+    hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
+    block = hook[hook.index('  DRIVER_STATE_PATH="') : hook.index("  unset EPIC_HANDOFF_PATH DRIVER_STATE_PATH")]
+    state = tmp_path / ".claude/infra-epic/DRIVER-STATE.md"
+    state.parent.mkdir(parents=True)
+    state.write_text("fixture")
+    result = subprocess.run(
+        ["bash"],
+        input=block + '\nprintf "%s" "$EPIC_BANNER"\n',
+        env={
+            "PATH": os.environ["PATH"],
+            "PROJECT_DIR": str(tmp_path),
+            "SESSION_EPIC": "infra",
+            "EPIC_BANNER": "fixture",
+        },
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    for fragment in (
+        "complete: true",
+        "scripts.driver_blockers delta --epic infra --current blockers.json",
+        "scripts.driver_blockers record --epic infra --current blockers.json",
+        "--receipt receipt.json --body-file posted.md --expect-generation N",
+        "post each item that is not UNCHANGED",
+        "exact case-sensitive standalone token RESOLVED <id>",
+        "on its own non-active line (no other fields or prose)",
+        "if delta fails or the baseline is unknown, post everything currently blocking",
+    ):
+        assert fragment in result.stdout

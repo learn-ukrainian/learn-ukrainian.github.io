@@ -21,6 +21,7 @@ import yaml
 
 from scripts.review.model_catalog import (
     ModelCatalogError,
+    _require_routable_model,
     load_model_catalog,
     require_execution_model,
 )
@@ -458,6 +459,44 @@ def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configura
         approved_agy_mode_baseline(after)
 
 
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
+    """#11084 adds ``word_card`` to the two Codex read-only Sources grants and nothing else."""
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
+
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_word_card_tool_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == WORD_CARD_TOOL_ROWS
+    read_only = list(sources_tool_sets()[0])
+    assert "word_card" in read_only
+    for index in changed:
+        assert INPUTS["adapters"][index] == {
+            "agent": ("codex", "codex-desktop")[changed.index(index)],
+            "isolation": False,
+            "mode": "read-only",
+        }
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert {k: v for k, v in old.items() if k != "value"} == {k: v for k, v in new.items() if k != "value"}
+        assert {k: v for k, v in old["value"].items() if k != "cmd"} == {
+            k: v for k, v in new["value"].items() if k != "cmd"
+        }
+        old_cmd, new_cmd = old["value"]["cmd"], new["value"]["cmd"]
+        tokens = [k for k, (a, b) in enumerate(zip(old_cmd, new_cmd, strict=True)) if a != b]
+        assert [old_cmd[k].split("=", 1)[0] for k in tokens] == [
+            "mcp_servers.sources.enabled_tools",
+            "mcp_servers.sources.tools",
+        ]
+        enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
+        assert json.loads(enabled) == read_only
+        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card"])
+        assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
+
+
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
     """The catalog role is descriptive: no Grok review route lists the ukrainian profile (#10835)."""
     source = Path(__file__).resolve().parents[2]
@@ -669,3 +708,15 @@ def test_deepseek_flash_execution_requires_opencode():
     assert require_execution_model("deepseek-v4.1-flash", transport="opencode", catalog=catalog) == "deepseek-v4.1-flash"
     with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
         require_execution_model("deepseek-v4.1-flash", transport="hermes", catalog=catalog)
+
+
+@pytest.mark.parametrize("model_id", ["deepseek-v4-pro", "deepseek-v4-flash", "deepseek-other"])
+def test_other_deepseek_execution_models_stay_refused(model_id):
+    catalog = deepcopy(load_model_catalog())
+    # Even an active new catalog entry cannot widen the operator's Flash-only order.
+    if model_id == "deepseek-other":
+        catalog["models"][model_id] = deepcopy(catalog["models"]["deepseek-v4.1-flash"])
+    with pytest.raises(ModelCatalogError, match=r"retired|only deepseek-v4\.1-flash"):
+        require_execution_model(model_id, transport="opencode", catalog=catalog)
+    with pytest.raises(ModelCatalogError, match=r"retired|only deepseek-v4\.1-flash"):
+        _require_routable_model(catalog["models"], model_id, "test execution reference")

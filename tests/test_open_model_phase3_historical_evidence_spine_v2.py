@@ -20,6 +20,33 @@ def _tracked() -> dict:
     return json.loads(spine.SPINE_PATH.read_text(encoding="utf-8"))
 
 
+def test_tracked_spine_validates_and_preserves_open_gates() -> None:
+    value = spine.load_spine()
+    assert value["status"] == "HISTORICAL_EVIDENCE_SPINE_UPDATED_SOURCE_GAPS_OPEN"
+    assert len(value["collections"]) == 5
+    assert len(value["gap_dispositions"]) == 11
+    assert value["framework_policy"]["canonical_framework_id"] is None
+    assert value["gates"] == {
+        "historical_content_gap_matrix_current": True,
+        "incremental_private_receipt_and_output_hashes_verified": True,
+        "qualified_historical_semantic_review_complete": False,
+        "historical_source_coverage_ready": False,
+        "historical_source_freeze_ready": False,
+        "phase3_complete": False,
+        "phase4_authorized": False,
+        "phase4_blocked": True,
+    }
+
+
+def test_every_collection_is_fail_closed_for_semantic_training() -> None:
+    value = spine.load_spine()
+    for collection in value["collections"]:
+        assert collection["phase3_historical_training_eligible"] is False
+        assert collection["semantic_gold"] is False
+        assert collection["modern_correction_eligible"] is False
+        assert collection["residual_gap_ids"]
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

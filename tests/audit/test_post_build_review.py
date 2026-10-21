@@ -49,6 +49,7 @@ FIXTURES = ROOT / "tests" / "fixtures" / "post_build_review"
 BILASH_V1_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v1.json"
 BILASH_V2_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v2.json"
 CORE_EXEMPLAR = FIXTURES / "core-semantic-exemplar.v1.json"
+SCORE_CALIBRATION = FIXTURES / "score-calibration.v1.yaml"
 SYNTHETIC_PATH = "tests/fixtures/post_build_review.md"
 SYNTHETIC_TEXT = (
     "Synthetic quality-dimension evidence for the review contract.\n"
@@ -600,6 +601,16 @@ def malyshko_exact_only_packet(tmp_path_factory: pytest.TempPathFactory) -> dict
     assert any(row["candidates"] for row in rows)
     assert any(not row["candidates"] for row in rows)
     return packet
+def test_track_resolution_covers_every_versioned_track() -> None:
+    policy = pbr.load_track_policy()
+    for track, config in policy["tracks"].items():
+        resolved = pbr.resolve_track_policy(track.upper(), policy)
+        assert resolved["family"] == config["family"]
+        assert resolved["semantic_prompt"].endswith("-semantic-review-prompt.md")
+    with pytest.raises(pbr.ReviewProtocolError, match="Unknown track"):
+        pbr.resolve_track_policy("unknown", policy)
+
+
 def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> None:
     """The command path must stay inside .venv so Python loads pyvenv.cfg."""
     runtime_python = tmp_path / "runtime-python"
@@ -614,6 +625,16 @@ def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> 
     assert resolved.is_symlink()
 
 
+def test_track_policy_rejects_stale_track_overrides(tmp_path: Path) -> None:
+    raw_policy = yaml.safe_load((SKILL / "config/track-policy.v1.yaml").read_text(encoding="utf-8"))
+    raw_policy["track_overrides"]["lit-doc"] = {}
+    path = tmp_path / "track-policy.yaml"
+    path.write_text(yaml.safe_dump(raw_policy, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(pbr.ReviewProtocolError, match="inactive tracks: lit-doc"):
+        pbr.load_track_policy(path, repo_root=ROOT)
+
+
 def test_target_resolution_routes_core_and_bio_families() -> None:
     archive_slug = pick_archive_only_slug()
     core = pbr.resolve_target(f"a1/{archive_slug}")
@@ -622,6 +643,19 @@ def test_target_resolution_routes_core_and_bio_families() -> None:
     assert seminar["semantic_family"] == "seminar"
     assert core["files"]["content"].endswith(f"a1-v1/{archive_slug}/module.md")
     assert seminar["files"]["content"].endswith("bio/oleksandr-bilash/module.md")
+
+
+def test_core_semantic_exemplar_uses_core_family() -> None:
+    exemplar = json.loads(CORE_EXEMPLAR.read_text(encoding="utf-8"))
+    target = pbr.resolve_target(f"a1/{pick_archive_only_slug()}")
+    semantic_input = copy.deepcopy(exemplar["semantic_result"])
+    contract = _passing_semantic({"deterministic": {"evidence_requirements": []}})
+    semantic_input["alignment_audit"] = contract["alignment_audit"]
+    semantic_input["vocabulary_coverage"] = []
+    semantic_input["quality_dimensions"] = contract["quality_dimensions"]
+    semantic = _normalize_fixture(semantic_input, target["semantic_family"])
+    assert target["semantic_family"] == exemplar["expected_family"] == "core"
+    assert semantic["claim_coverage"]["status"] == "not_applicable"
 
 
 def test_semantic_contract_requires_exactly_five_quality_dimensions() -> None:
@@ -658,6 +692,59 @@ def test_quality_dimension_material_finding_preserves_stable_issue_id() -> None:
 
     assert normalized["quality_dimensions"]["naturalness"]["status"] == "REVISE"
     assert normalized["findings"][0]["issue_id"] == "AWKWARD_PASSIVE_RESULT_STATE"
+
+
+def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
+    bilash_packet: dict,
+) -> None:
+    calibration = yaml.safe_load(SCORE_CALIBRATION.read_text(encoding="utf-8"))
+
+    assert calibration["fixture_version"] == "score-calibration.v1"
+    assert calibration["score_bands"] == {
+        **{
+            status: f"[{lower:.1f}, {upper:.1f}{']' if includes_upper else ')'}"
+            for status, (lower, upper, includes_upper) in pbr.QUALITY_DIMENSION_SCORE_BANDS.items()
+        },
+        "INCOMPLETE": None,
+    }
+    assert calibration["score_anchors"] == {
+        "10.0": "exceptional positive quality with two independent evidence anchors and no findings",
+        "[9.0, 10.0)": "publication target with bounded low-severity improvement backlog",
+        "[8.0, 9.0)": "strong base with a material revision before publication",
+        "[7.0, 8.0)": "focused material revision while most of the dimension remains strong",
+        "[6.0, 7.0)": "substantial material defect requiring broader revision",
+        "[4.0, 6.0)": "blocking defect with some usable evidence",
+        "[0.0, 4.0)": "fundamentally unusable, unsafe, or unsupported",
+    }
+    for case in calibration["cases"]:
+        semantic = _passing_semantic({"deterministic": {"evidence_requirements": []}})
+        dimension = case["dimension"]
+        semantic["verdict"] = case["verdict"]
+        semantic["quality_dimensions"][dimension].update(case["assessment"])
+        finding = case["finding"]
+        if finding is not None:
+            finding["location"] = semantic["quality_dimensions"][dimension]["evidence"][0]["location"]
+            semantic["findings"] = [finding]
+            semantic["quality_dimensions"][dimension]["finding_ids"] = [finding["id"]]
+        normalized = _normalize_fixture(semantic)
+
+        assert case["expected"]["valid"] is True
+        if "minimum_dimension_score" in case["expected"]:
+            assert (
+                pbr.minimum_dimension_score(normalized["quality_dimensions"])
+                == case["expected"]["minimum_dimension_score"]
+            )
+        if "documented_semantic_cap" in case["expected"]:
+            assert normalized["quality_dimensions"][dimension]["score"] == case["expected"]["documented_semantic_cap"]
+
+    current_result = pbr.finalize_review(bilash_packet, _raw(_passing_semantic(bilash_packet)))
+    current_identity = [
+        current_result["semantic_prompt_version"],
+        *(current_result["reviewer"][key] for key in ("family", "model", "effort")),
+    ]
+    assert calibration["comparability"][0]["left"] == current_identity
+    for comparison in calibration["comparability"]:
+        assert (comparison["left"] == comparison["right"]) is comparison["expected"]
 
 
 @pytest.mark.parametrize(
@@ -1435,6 +1522,27 @@ def test_provider_schema_requires_every_statement_and_risk_claim(bilash_packet: 
     assert packet == immutable_packet
 
 
+def test_provider_rejects_model_authored_aggregate_counts(bilash_packet: dict) -> None:
+    packet = bilash_packet
+    schema = pbr.semantic_response_schema(packet)
+    semantic = _provider_semantic(packet, _passing_semantic(packet))
+    semantic["claim_coverage"] = {
+        "status": "complete",
+        "claims_total": len(semantic["claim_ledger"]) + 1,
+        "claims_checked": len(semantic["claim_ledger"]) + 1,
+        "claims_supported": len(semantic["claim_ledger"]) + 1,
+    }
+
+    with pytest.raises(ValidationError):
+        Draft202012Validator(schema).validate(semantic)
+    result = pbr.finalize_review(
+        packet,
+        (json.dumps(semantic, ensure_ascii=False) + "\n").encode(),
+    )
+    assert result["semantic_response"]["contract_status"] == "invalid"
+    assert "Additional properties are not allowed" in result["semantic_response"]["error"]
+
+
 @pytest.mark.parametrize(
     ("text", "expected"),
     [
@@ -2182,6 +2290,128 @@ def test_seminar_level_meta_variants_are_mechanical_revise_findings() -> None:
     assert {finding["category"] for finding in level_meta} == {"learner_level_meta_leakage"}
     assert {finding["severity"] for finding in level_meta} == {"medium"}
     assert len({finding["location"] for finding in level_meta}) == 11
+
+
+def test_level_meta_policy_fails_closed_over_semantic_pass() -> None:
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+    findings = pbr.scan_learner_workflow_leakage(
+        {"module.md": "На рівні C1 хронологію варто передавати логічними зв’язками."},
+        policy["mechanical_checks"]["learner_workflow_leakage"],
+        family=policy["family"],
+    )
+    semantic = _passing_semantic({"deterministic": {"evidence_requirements": []}})
+    deterministic = {
+        "aggregate": {"status": "pass", "reasons": []},
+        "track_audit": {"status": "complete", "result": {}},
+        "size_policy": {"status": "complete", "result": {}},
+    }
+
+    disposition = pbr.combine_disposition(deterministic, semantic, findings)
+
+    assert disposition["status"] == "REVISE"
+
+
+def test_level_meta_rule_is_seminar_scoped() -> None:
+    policy = pbr.load_track_policy()
+    text = {"module.md": "Для учня C1 це корисна вправа."}
+
+    bio = pbr.resolve_track_policy("bio", policy)
+    bio_findings = pbr.scan_learner_workflow_leakage(
+        text,
+        bio["mechanical_checks"]["learner_workflow_leakage"],
+        family=bio["family"],
+    )
+    c1 = pbr.resolve_track_policy("c1", policy)
+    c1_findings = pbr.scan_learner_workflow_leakage(
+        text,
+        c1["mechanical_checks"]["learner_workflow_leakage"],
+        family=c1["family"],
+    )
+
+    assert any(finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE" for finding in bio_findings)
+    assert not any(finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE" for finding in c1_findings)
+
+
+def test_level_meta_rule_ignores_nonlearner_and_non_cefr_context() -> None:
+    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
+    texts = {
+        "module.md": (
+            "<!-- На рівні C1 це службова примітка. -->\nlevel: C1\nПроаналізуйте переказ на рівні композиції.\n"
+        ),
+        "resources.yaml": (
+            "title: На рівні C1: опис шкали CEFR\n"
+            "url: https://example.test/C1-level\n"
+            "notes: На рівні C1 сформулюйте відповідь одним абзацом.\n"
+        ),
+    }
+
+    findings = pbr.scan_learner_workflow_leakage(
+        texts,
+        policy["mechanical_checks"]["learner_workflow_leakage"],
+        family=policy["family"],
+    )
+
+    level_findings = [finding for finding in findings if finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE"]
+    assert len(level_findings) == 1
+    assert level_findings[0]["location"] == "resources.yaml:3"
+
+
+def test_regression_exposes_unintegrated_vocabulary_surfaces_hermetically() -> None:
+    def material(path: str, text: str) -> dict:
+        return {
+            "path": path,
+            "sha256": pbr.sha256_text(text),
+            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
+            "trailing_newline": text.endswith("\n"),
+        }
+
+    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
+        del db_path
+        lemmas = {"рецепції": "рецепція", "оцінку": "оцінка"}
+        return {word: ([{"lemma": lemmas[word]}] if word in lemmas else []) for word in words}
+
+    content = (
+        "Поняття рецепції описує подальше культурне життя твору.\nУ висновку дайте оцінку наведеній інтерпретації.\n"
+    )
+    vocabulary = (
+        "\n".join(
+            f"- lemma: {lemma}"
+            for lemma in (
+                "фронтовий кореспондент",
+                "співавторство",
+                "інституційна роль",
+                "громадянське звернення",
+                "художня деталь",
+                "рецепція",
+                "оцінка",
+            )
+        )
+        + "\n"
+    )
+    candidates = pbr.build_vocabulary_surface_candidates(
+        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
+        {
+            "content": material("module.md", content),
+            "vocabulary": material("vocabulary.yaml", vocabulary),
+        },
+        verify_words_fn=fake_verify,
+    )
+    missing = {item["lemma"] for item in candidates["lemmas"] if not item["candidates"]}
+
+    assert missing == {
+        "фронтовий кореспондент",
+        "співавторство",
+        "інституційна роль",
+        "громадянське звернення",
+        "художня деталь",
+    }
+    by_lemma = {item["lemma"]: item["candidates"] for item in candidates["lemmas"]}
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["рецепція"]} == {
+        ("рецепції", "VESUM: рецепція=рецепції")
+    }
+    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["оцінка"]} == {
+        ("оцінку", "VESUM: оцінка=оцінку")
+    }
 
 
 def test_vocabulary_candidates_match_across_combining_stress_marks() -> None:

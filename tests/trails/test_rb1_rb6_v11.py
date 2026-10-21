@@ -14,6 +14,7 @@ from scripts.orchestration.validate_trailspec import (
     TrailSpecValidationError,
     validate_estate_registry,
     validate_estate_registry_data,
+    validate_trailspec,
     validate_trailspec_data,
 )
 
@@ -24,6 +25,18 @@ ESTATE_PATH = DEFAULT_ESTATE_REGISTRY_PATH
 
 def _load_yaml(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def test_rb1_trail_validates_v11() -> None:
+    """RB-1 v1.1 passes validator, has non-empty hash, and is execution eligible."""
+    res = validate_trailspec(spec_path=RB1_TRAIL_PATH)
+    assert res["ok"] is True
+    spec = res["spec"]
+    assert spec["trail_id"] == "rb1-cold-start"
+    assert spec["version"] == "1.0.0"
+    assert spec["steps_count"] == 10
+    assert spec["execution_eligible"] is True
+    assert len(spec["trail_hash"]) == 64
 
 
 def test_estate_registry_seed_validates() -> None:

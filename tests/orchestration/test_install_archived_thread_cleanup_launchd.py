@@ -92,6 +92,36 @@ def test_uninstall_preserves_cleanup_receipts(
     assert receipt.exists()
 
 
+def test_status_rejects_loaded_plist_that_does_not_run_cleanup_code(
+    tmp_path: Path, monkeypatch
+) -> None:
+    home = tmp_path / "home"
+    destination = launchd.plist_path(home)
+    destination.parent.mkdir(parents=True)
+    payload = launchd.build_plist(
+        repo_root=tmp_path / "repo",
+        home=home,
+        codex_binary=tmp_path / "bin" / "codex",
+        weekday="sunday",
+        hour=3,
+    )
+    payload["ProgramArguments"] = ["/bin/sh", "-c", "echo prompt"]
+    destination.write_bytes(plistlib.dumps(payload))
+
+    class Result:
+        returncode = 0
+        stdout = "loaded"
+        stderr = ""
+
+    monkeypatch.setattr(launchd, "_loaded_readback", lambda: Result())
+
+    status, return_code = launchd.status(home=home)
+
+    assert return_code == 1
+    assert status["loaded"] is True
+    assert status["valid_plist"] is False
+
+
 def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch) -> None:
     """Mutation-check: putting .venv/bin/python back in Program must fail status."""
     home = tmp_path / "home"

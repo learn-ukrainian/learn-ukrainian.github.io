@@ -54,6 +54,25 @@ def test_fresh_identity_validates_without_rollover_ancestry() -> None:
     assert set(identity["carriers"].values()) == {identity["visible_title"]}
 
 
+@pytest.mark.parametrize("task_id", ["", " ", " native-thread", "native thread", "native\nthread", "native\x00thread", "native\x7fthread", 7])
+def test_fresh_builder_rejects_malformed_native_task_ids(task_id) -> None:
+    with pytest.raises(ValueError):
+        _fresh_identity(fresh_task_id=task_id)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("lineage_id", "lineage-real"), ("lineage_id", ""),
+    ("predecessor_task_id", "thread-old"), ("replacement_task_id", "thread-new"),
+    ("generation", 1), ("generation", 0),
+    ("lifecycle_state", "confirmed"), ("lifecycle_state", ""), ("lifecycle_state", None),
+    ("lifecycle_state", "prepared"),
+    ("legacy_fallback", True), ("terminal_goal", "unknown"),
+])
+def test_fresh_builder_rejects_rollover_and_legacy_fields(field, value) -> None:
+    with pytest.raises(ValueError):
+        _fresh_identity(**{field: value})
+
+
 @pytest.mark.parametrize("field,value", [
     ("origin", None), ("origin", "rollover"), ("task_id", None), ("task_id", ""),
     ("task_id", "native thread"), ("task_id", "native\x00thread"), ("task_id", "native-thread\n"),
@@ -65,6 +84,19 @@ def test_fresh_schema_rejects_malformed_and_mixed_envelopes(field, value) -> Non
     identity = _fresh_identity()
     identity[field] = value
     assert list(task_identity._IDENTITY_VALIDATOR.iter_errors(identity))
+    with pytest.raises(ValueError, match="schema violation"):
+        task_identity.validate_identity(identity)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("lineage_id", None), ("lineage_id", ""), ("lineage_id", "Bad-Lineage"),
+    ("predecessor_task_id", None), ("predecessor_task_id", ""),
+    ("generation", None), ("generation", 0), ("generation", True),
+    ("origin", "fresh"), ("task_id", "native-thread"), ("lifecycle_state", "active"),
+])
+def test_rollover_schema_still_rejects_invalid_identity(field, value) -> None:
+    identity = _identity()
+    identity[field] = value
     with pytest.raises(ValueError, match="schema violation"):
         task_identity.validate_identity(identity)
 
@@ -228,6 +260,25 @@ def test_incorrect_replacement_id_fails_closed_at_every_title_gate() -> None:
             error="",
             now="2026-07-16T08:02:00Z",
         )
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "",
+        "   ",
+        "Replacement task",
+        "Resume rollover",
+        "Codex continuation",
+        "Generation 2",
+        "lineage-abc123",
+        "rollover-abc123",
+        "019f6a34-df56-4951-9384-c160b627789b",
+    ],
+)
+def test_blank_generic_and_runtime_identifier_titles_are_rejected(title: str) -> None:
+    with pytest.raises(ValueError):
+        task_identity.validate_semantic_title(title)
 
 
 def test_unsupported_adapter_records_honest_carrier_fallback() -> None:

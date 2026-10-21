@@ -7,11 +7,32 @@ from pathlib import Path
 import yaml
 
 from agents_extensions.shared.session_streams.dual_write import (
+    list_handoff_candidates,
     resolve_handoff_path,
 )
 from agents_extensions.shared.session_streams.inventory import (
     epic_handoff_map,
 )
+
+
+def test_list_handoff_candidates_marks_missing(tmp_path: Path):
+    # Minimal issue_streams fixture
+    streams = {
+        "schema_version": 1,
+        "streams": {
+            "demo": {"title": "Demo", "epics": [9999]},
+        },
+    }
+    yml = tmp_path / "issue_streams.yaml"
+    yml.write_text(yaml.safe_dump(streams), encoding="utf-8")
+    # Point inventory at fixture via writing under scripts/config path structure
+    cfg = tmp_path / "scripts" / "config"
+    cfg.mkdir(parents=True)
+    (cfg / "issue_streams.yaml").write_text(yaml.safe_dump(streams), encoding="utf-8")
+    rows = list_handoff_candidates(tmp_path)
+    assert rows
+    assert all(r.exists is False for r in rows)
+    assert any(r.stream_id == "epic:9999" for r in rows)
 
 
 def test_resolve_handoff_path_first_existing(tmp_path: Path):

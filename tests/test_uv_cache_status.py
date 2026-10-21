@@ -329,6 +329,20 @@ def test_cli_prints_line_records_history_and_deletes_nothing(
     assert keep.read_bytes() == b"w" * 5000
 
 
+def test_cli_json_omits_the_cache_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(tmp_path / "state"))
+
+    assert uv.main(["--json", "--no-record"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["present"] is True and "cache" not in payload
+
+
 @pytest.mark.parametrize("record", [False, True])
 @pytest.mark.parametrize("layout", ["inside-missing-cache", "parent-alias", "cache-alias", "lexical-inside"])
 def test_directory_misconfiguration_refuses_before_any_creation(
@@ -559,3 +573,20 @@ def test_state_option_overrides_environment_and_tempdir_is_ignored(
     assert list(cache.iterdir()) == []
     assert (state / uv.HISTORY_FILENAME).stat().st_mode & 0o777 == 0o600
     assert state.stat().st_mode & 0o777 == 0o700
+
+
+def test_history_unreadable_is_explicit_without_writing(
+    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    history = tmp_path / uv.HISTORY_FILENAME
+    _write_history(history, (NOW - 24 * HOUR, GIB))
+    original_open = os.open
+
+    def open_file(path: object, flags: int, *args: object, **kwargs: object) -> int:
+        if path == uv.HISTORY_FILENAME:
+            raise PermissionError("injected read denial")
+        return original_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", open_file)
+    assert uv.format_line(_status(cache, history, 2 * GIB)) == "UV CACHE: 2.00 GiB, growth n/a (history unavailable)"
+    assert [p.name for p in tmp_path.iterdir() if p.is_file()] == [uv.HISTORY_FILENAME]

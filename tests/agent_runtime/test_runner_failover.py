@@ -480,6 +480,34 @@ def test_runner_failover_rejects_forbidden_glm_target(tmp_path, monkeypatch):
         runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
 
 
+def test_shipped_config_declares_no_deepseek_chain():
+    """Pin the shipped config: deepseek runs FIRST-PARTY ONLY (user order
+    2026-07-07) — NO failover chain exists for it. `openrouter/deepseek/*`
+    is guard-REFUSED for direct routing, and the old OR fallback routes in
+    this chain BYPASSED the guard and leeched a fresh OpenRouter top-up
+    (2026-07-07 burn). A deepseek fault is rerouted BY SEAT by the
+    orchestrator (grok-build/codex), never by burning API credit. Any future
+    chain must be explicitly user-approved and must not contain openrouter.
+    """
+    from agent_runtime.failover import (
+        default_failover_config_path,
+        load_failover_chain,
+    )
+
+    chain = load_failover_chain(
+        "deepseek",
+        effective_model="deepseek-v4.1-flash",
+        path=default_failover_config_path(),
+    )
+
+    assert chain is None, (
+        "deepseek must have NO failover chain (first-party only, user order "
+        f"2026-07-07); got routes: {[r.provider for r in chain.routes]}"
+        if chain is not None
+        else ""
+    )
+
+
 def test_classifier_routes_hermes_credential_startup_failure_to_auth():
     """Live-captured 2026-07-06: a dead/missing credential fails hermes at
     startup with prose that previously matched NO trigger class, so the chain
@@ -566,6 +594,34 @@ def test_classifier_refuses_to_rotate_on_inband_400():
     assert trigger is None
 
 
+def test_classifier_routes_initial_response_timeout_to_transport():
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=None),
+        returncode=-9,
+        kill_reason="initial_response_timeout",
+        stdout_text="",
+        stderr_text="",
+    )
+
+    assert trigger == "transport"
+
+
+def test_classifier_refuses_to_rotate_on_streaming_silence_timeout():
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=None),
+        returncode=-9,
+        kill_reason="stdout_silence_timeout",
+        stdout_text="partial output\n",
+        stderr_text="",
+    )
+
+    assert trigger is None
+
+
 def test_chain_route_missing_model_after_index_zero_warns_and_drops(tmp_path, caplog):
     """Review D4 (PR #4580): fail-safe stays (no raise), but loudly."""
     import logging
@@ -586,6 +642,30 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(tmp_path, ca
 
     assert chain is None  # single usable route -> feature disabled
     assert any("deepseek[1] dropped" in rec.getMessage() for rec in caplog.records)
+
+
+def test_shipped_config_declares_no_grok_chain():
+    """Pin the shipped config: native ``grok`` has NO failover chain (user
+    order 2026-07-07 — work belongs on the native-app seat; grok-4.* via
+    OpenRouter has no measured niche and 402-drained the OR balance). The
+    demoted hermes path ``grok-hermes`` stays a plain single route too."""
+    from agent_runtime.failover import (
+        default_failover_config_path,
+        load_failover_chain,
+    )
+
+    for lane in ("grok", "grok-build", "grok-hermes"):
+        chain = load_failover_chain(
+            lane,
+            effective_model="grok-4.7",
+            path=default_failover_config_path(),
+        )
+        assert chain is None, (
+            f"{lane} must have NO failover chain (user order 2026-07-07); "
+            f"got routes: {[r.provider for r in chain.routes]}"
+            if chain is not None
+            else ""
+        )
 
 
 _TOOL_OUTPUT_RATE_LIMIT_TEXT = (
@@ -946,6 +1026,39 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
     assert (outcome.status == "done" and outcome.identity_problem(seat, digest) is None) is (
         form in {"pin", "display", "backend"}
     )
+
+
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case,known", [("terminal-session", False), ("duplicate-after", False),
+                                       ("repeated-session", False), ("other-pin", True), ("repeated", True)])
+def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypatch, pin, case, known):
+    from agent_runtime.failover import FailoverChain, FailoverRoute
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner_mod, stdout=consistency_stream(pin, case))
+    chain = FailoverChain(agent_name="agy", routes=(FailoverRoute(provider="agy", model=pin),), cooldown_ttl_s=600)
+    monkeypatch.setattr(runner_mod, "load_failover_chain", lambda *args, **kwargs: chain)
+    monkeypatch.setenv(FAILOVER_COOLDOWN_DB_ENV, str(tmp_path / "cooldowns.sqlite3"))
+    records, events = [], []
+    monkeypatch.setattr(runner_mod, "write_record", records.append)
+    result = runner_mod.invoke("agy", "Implement.", model=pin, mode="workspace-write", cwd=tmp_path,
+                               task_id="failover-context", tool_config={"run_nonce": "failover-run"},
+                               event_sink=lambda *args, **kwargs: events.append((args, kwargs)))
+    assert len(launches) == 1
+    assert result.ok is False
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.stderr_excerpt == "agy_model_event_mismatch"
+    assert bool(result.model_identity and result.model_identity["actual_model_known"]) is known
+    assert bool(records[-1].get("model_identity") and records[-1]["model_identity"]["actual_model_known"]) is known
+    if known:
+        observed = ("claude-opus-5-5-high" if "sonnet" in pin else "claude-sonnet-5-5-high") if case == "other-pin" else pin
+        assert result.model_identity["actual_model"] == observed
+        assert result.substitution["actual_model"] == observed
+        assert records[-1]["substitution"]["actual_model"] == observed
+    else:
+        assert result.substitution is None
+        assert "substitution" not in records[-1]
+    assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None
 
 
 @pytest.mark.parametrize("kill_reason", ["stdout_silence_timeout", "initial_response_timeout", "hard_timeout"])

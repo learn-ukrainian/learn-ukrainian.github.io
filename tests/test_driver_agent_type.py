@@ -104,6 +104,18 @@ areas:
     )
 
 
+def test_unknown_alias_fails_closed(assignments: Path, taxonomy: Path) -> None:
+    assert resolve_driver_agent_type("nope", assignments_path=assignments, taxonomy_path=taxonomy) is None
+    assert (
+        resolve_driver_agent_type(
+            "infra-harness",
+            assignments_path=assignments,
+            taxonomy_path=taxonomy.parent / "absent.yaml",
+        )
+        is None
+    )
+
+
 def test_unknown_lane_and_missing_type_return_none(assignments: Path) -> None:
     assert resolve_driver_agent_type("nope", assignments_path=assignments) is None
     assert resolve_driver_agent_type("broken", assignments_path=assignments) is None

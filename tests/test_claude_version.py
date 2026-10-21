@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from utils.claude_version import (
     _parse_claude_semver,
     _reset_cache_for_tests,
+    remember_support,
     supports_exclude_dynamic_system_prompt_sections,
 )
 
@@ -139,6 +140,16 @@ def test_timeout_failure_not_cached():
         assert success_mock.call_count == 1
 
 
+def test_file_not_found_is_cached():
+    """FileNotFoundError (binary genuinely missing) IS a definitive outcome
+    and should be cached to avoid re-probing repeatedly."""
+    missing_mock = MagicMock(side_effect=FileNotFoundError("claude not found"))
+    with patch("utils.claude_version.subprocess.run", missing_mock):
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+    assert missing_mock.call_count == 1, "FileNotFoundError should be cached"
+
+
 # ---------------------------------------------------------------------------
 # supports_exclude_dynamic_system_prompt_sections — subprocess-backed
 # ---------------------------------------------------------------------------
@@ -170,6 +181,42 @@ def test_supports_false_exception():
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
 
 
+def test_supports_false_unparsable_output():
+    """Version output that can't be parsed falls back to False."""
+    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="garbage output")):
+        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
+
+
 # ---------------------------------------------------------------------------
 # Cache behavior
 # ---------------------------------------------------------------------------
+
+def test_cache_hits_on_repeat():
+    """Second call with same prefix does NOT re-invoke subprocess.run."""
+    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
+    with patch("utils.claude_version.subprocess.run", mock):
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+    assert mock.call_count == 1, "cache should have prevented duplicate probes"
+
+
+def test_cache_scoped_by_prefix():
+    """Different prefixes get independent cache entries — each probed once."""
+    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
+    with patch("utils.claude_version.subprocess.run", mock):
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+        supports_exclude_dynamic_system_prompt_sections(["npx", "@anthropic-ai/claude-code@latest"])
+        supports_exclude_dynamic_system_prompt_sections(["/usr/local/bin/claude"])
+    assert mock.call_count == 3, "each unique prefix should be probed exactly once"
+
+
+def test_remember_support_overwrites_cached_verdict():
+    """remember_support overwrites a cached entry (tests simulate old CLIs)."""
+    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
+    with patch("utils.claude_version.subprocess.run", mock):
+        supports_exclude_dynamic_system_prompt_sections(["claude"])
+        assert mock.call_count == 1
+        remember_support(["claude"], False)
+        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
+        assert mock.call_count == 1, "overwritten verdict must be served from cache"

@@ -59,6 +59,17 @@ STORED_ROW_TABLES = frozenset(
 )
 
 SKIP, ADMITTED, KEYED, NO_TARGET, HELPER = "skip", "admitted", "keyed", "no-target", "helper"
+
+_SKIP_MARKERS = (
+    "kimi_row(",
+    "kimi_message(",
+    "stored_kimi_row(",
+    "stored_kimi_request(",
+    "_stored_kimi_job(",
+    "_stored_kimi_delivery(",
+    "skip_stored_kimi_row(",
+)
+_ADMIT_MARKERS = ("resolve_and_admit(", "_admit_recipients(", "require_admitted(", "_admitted_subscribers(")
 _WRITE = re.compile(r"\b(UPDATE|INSERT(?:\s+OR\s+\w+)?\s+INTO|DELETE\s+FROM)\s+([A-Za-z_]\w*)", re.IGNORECASE)
 _KEY_PREDICATE = re.compile(
     r"\bWHERE\s+(?:\w+\.)?(?:id|job_id|delivery_id|request_id|wake_id)\s*(?:=|IN\s*\()", re.IGNORECASE
@@ -294,6 +305,17 @@ def test_every_stored_row_write_has_a_recorded_kimi_disposition():
     assert stale == []
 
 
+def test_generic_writers_skip_stored_kimi_rows_and_fresh_writers_are_admitted():
+    missing = []
+    for site, writer in WRITERS.items():
+        source = _SCANNED.sources.get(site, "")
+        if writer.disposition == SKIP and not any(marker in source for marker in _SKIP_MARKERS):
+            missing.append(f"{site}: SKIP without a Kimi skip")
+        if writer.disposition == ADMITTED and not any(marker in source for marker in _ADMIT_MARKERS):
+            missing.append(f"{site}: ADMITTED without admission")
+    assert missing == []
+
+
 def test_keyed_writers_name_one_row_by_its_key():
     """A KEYED writer never selects rows generically: every stored-row write names its key."""
     unkeyed = [
@@ -304,3 +326,23 @@ def test_keyed_writers_name_one_row_by_its_key():
         if not _KEY_PREDICATE.search(statement)
     ]
     assert unkeyed == []
+
+
+def test_helpers_are_called_only_from_declared_callers():
+    """Every call of a side-row writer is declared; SKIP and ADMITTED callers carry their marker."""
+    problems = []
+    for site, writer in WRITERS.items():
+        if writer.disposition != HELPER:
+            continue
+        name = site.rsplit("::", 1)[1].rsplit(".", 1)[-1]
+        actual = _SCANNED.calls.get(name, set())
+        if actual != set(writer.callers):
+            problems.append(f"{site}: callers {sorted(actual)} != declared {sorted(writer.callers)}")
+        for caller, disposition in writer.callers.items():
+            source = _SCANNED.sources.get(caller, "")
+            markers = {SKIP: _SKIP_MARKERS, ADMITTED: _ADMIT_MARKERS}.get(disposition)
+            if markers and not any(marker in source for marker in markers):
+                problems.append(f"{caller}: declared {disposition} without its marker")
+            if disposition == HELPER and caller not in WRITERS and not _SCANNED.calls.get(caller.rsplit(".", 1)[-1].rsplit("::", 1)[-1]):
+                problems.append(f"{caller}: declared HELPER but is neither registered nor called")
+    assert problems == []

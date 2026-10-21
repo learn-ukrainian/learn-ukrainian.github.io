@@ -371,6 +371,17 @@ def test_adjacent_russian_morphology_without_anchor_or_r2u_is_uncertain(
     "open_model_other_indexes",
     "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
 )
+def test_vesum_present_ochen_is_not_accepted_without_russian_context(config: dict, runtime) -> None:
+    tokens = detector.tokenize_with_offsets("очєнь")
+    vesum = runtime.vesum.lookup(token.normalized for token in tokens)
+    assert vesum["очєнь"]
+    assert _detect("У покажчику подано очєнь як форму.", config=config, runtime=runtime) == []
+
+
+@pytest.mark.needs_artifact(
+    "open_model_other_indexes",
+    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
+)
 def test_proper_name_other_language_and_ocr_require_positive_suspicion(config: dict, runtime) -> None:
     assert _detect("Тарас Шевченко відвідав Київ.", config=config, runtime=runtime) == []
     proper = _detect("У документі згадано Ростовъ як назву.", config=config, runtime=runtime)

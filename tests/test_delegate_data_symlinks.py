@@ -12,6 +12,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import delegate
 
 
+def test_main_checkout_root_resolves_primary_checkout_from_worktree(tmp_path):
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "codex-task"
+    git_dir = main_repo / ".git" / "worktrees" / "codex-task"
+    git_dir.mkdir(parents=True)
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {git_dir}\n")
+
+    assert delegate._main_checkout_root(worktree) == main_repo
+
+
 def test_provision_data_symlinks_links_data_and_node_modules_but_not_venv(tmp_path):
     main_repo = tmp_path / "main"
     worktree = tmp_path / "worktree"
@@ -57,6 +68,22 @@ def test_provision_data_symlinks_links_data_and_node_modules_but_not_venv(tmp_pa
     assert sources_link.readlink() == sources_db.resolve()
     assert node_modules_link.readlink() == node_modules_dir.resolve()
     assert site_node_modules_link.readlink() == site_node_modules_dir.resolve()
+
+
+def test_provision_data_symlinks_skips_missing_main_files(tmp_path, capsys):
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    main_repo.mkdir()
+
+    delegate._provision_data_symlinks(worktree, main_repo)
+
+    captured = capsys.readouterr()
+    assert "skipping worktree link for missing" in captured.err
+    assert not (worktree / "data" / "vesum.db").exists()
+    assert not (worktree / "data" / "sources.db").exists()
+    assert not (worktree / ".venv").exists()
+    assert not (worktree / "node_modules").exists()
+    assert not (worktree / "site" / "node_modules").exists()
 
 
 def test_provision_data_symlinks_read_only_withdraws_only_primary_database_links(tmp_path):
@@ -108,6 +135,25 @@ def test_withdraw_refuses_aliased_data_parent_and_primary_link_survives(tmp_path
     assert primary_link.resolve() == real_sources.resolve()
 
 
+def test_withdraw_refuses_aliased_data_parent_outside_worktree(tmp_path):
+    """Regression: the same alias is refused when the worktree itself sits outside the primary checkout."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    real_vesum = main_repo / "data" / "vesum-real.db"
+    real_vesum.touch()
+    primary_link = main_repo / "data" / "vesum.db"
+    primary_link.symlink_to(real_vesum)
+    worktree.mkdir()
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._withdraw_primary_database_links(worktree, main_repo, ("data/vesum.db",))
+
+    assert primary_link.is_symlink()
+    assert real_vesum.exists()
+
+
 def test_read_only_refuses_aliased_data_parent_over_ordinary_primary_files(tmp_path):
     """Regression: an aliased worktree data dir must be refused even when the primary DBs are ordinary files.
 
@@ -128,6 +174,22 @@ def test_read_only_refuses_aliased_data_parent_over_ordinary_primary_files(tmp_p
         delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
 
     assert primary_vesum.is_file() and not primary_vesum.is_symlink()
+    assert primary_sources.is_file() and not primary_sources.is_symlink()
+
+
+def test_read_only_refuses_aliased_data_parent_outside_worktree_over_ordinary_files(tmp_path):
+    """Regression: the same refusal holds when the worktree sits outside the primary checkout."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    primary_sources = main_repo / "data" / "sources.db"
+    primary_sources.touch()
+    worktree.mkdir()
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
     assert primary_sources.is_file() and not primary_sources.is_symlink()
 
 
@@ -173,3 +235,19 @@ def test_resolve_repo_root_hops_to_primary_from_worktree_script_copy(tmp_path):
     (worktree / ".git").write_text(f"gitdir: {git_dir}\n")
 
     assert delegate.resolve_repo_root(worktree / "scripts" / "delegate.py", 1) == main_repo
+
+
+def test_resolve_repo_root_is_identity_in_primary_checkout(tmp_path):
+    main_repo = tmp_path / "main"
+    (main_repo / ".git").mkdir(parents=True)
+    (main_repo / "scripts").mkdir()
+    assert delegate.resolve_repo_root(main_repo / "scripts" / "delegate.py", 1) == main_repo
+
+
+def test_repo_root_constant_is_wired_through_the_resolver():
+    # Revert guard for #5171: in the primary checkout raw parents[1] and the
+    # resolver agree, so behavior alone can't detect a revert — pin the wiring.
+    from pathlib import Path as _P
+
+    source = _P(delegate.__file__).read_text(encoding="utf-8")
+    assert "_REPO_ROOT = resolve_repo_root(Path(__file__), 1)" in source

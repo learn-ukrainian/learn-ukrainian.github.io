@@ -117,6 +117,21 @@ def test_update_manifest_entries_scoped(tmp_path: Path):
     assert res_del_after["total_files"] == 9
 
 
+def test_write_and_verify_manifest_success(tmp_path: Path):
+    repo, manifest_path = _setup_mock_repo(tmp_path)
+    payload = write_manifest(manifest_path, repo)
+    assert manifest_path.exists()
+    assert len(payload["files"]) == 10
+
+    res = verify_manifest(manifest_path, repo)
+    assert res["valid"] is True
+    assert res["total_files"] == 10
+    assert res["expected_files"] == 10
+    assert len(res["modified"]) == 0
+    assert len(res["added"]) == 0
+    assert len(res["deleted"]) == 0
+
+
 def test_verify_manifest_detects_modification(tmp_path: Path):
     repo, manifest_path = _setup_mock_repo(tmp_path)
     write_manifest(manifest_path, repo)

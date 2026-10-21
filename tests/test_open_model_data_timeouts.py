@@ -229,6 +229,32 @@ def test_phase3_donnu_drive_item_id_timeout(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
+# 8. phase3_linguistic_canary.py
+# ---------------------------------------------------------------------------
+def test_phase3_linguistic_canary_verify_pinned_corpus_timeout(tmp_path: Path) -> None:
+    from scripts.projects.open_model_data import phase3_linguistic_canary as plc
+    from scripts.projects.open_model_data import phase3_linguistic_representation as rep
+
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        return _completed(cmd, returncode=0, stdout=f"{plc.UA_GEC_COMMIT}\n")
+
+    with patch("subprocess.run", side_effect=fake_run):
+        # Empty packets battery
+        res = plc.verify_pinned_corpus({"packets": []}, tmp_path)
+        assert res["commit"] == plc.UA_GEC_COMMIT
+
+    assert len(calls) == 1
+    assert calls[0]["timeout"] == plc.DEFAULT_GIT_TIMEOUT_SECONDS
+
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], plc.DEFAULT_GIT_TIMEOUT_SECONDS)):
+        with pytest.raises(rep.LinguisticRepresentationError, match="cannot verify UA-GEC checkout commit"):
+            plc.verify_pinned_corpus({"packets": []}, tmp_path)
+
+
+# ---------------------------------------------------------------------------
 # 13. phase3_rule_author_packets.py
 # ---------------------------------------------------------------------------
 def test_phase3_rule_author_packets_output_is_private_timeout(tmp_path: Path) -> None:
@@ -324,6 +350,45 @@ def test_phase3_rule_author_runner_run_timeout(tmp_path: Path) -> None:
     assert recorded_errors == ["bridge_timeout:TimeoutExpired"]
 
 
+# ---------------------------------------------------------------------------
+# 16. phase3_source_universe.py
+# ---------------------------------------------------------------------------
+def test_phase3_source_universe_verify_merged_main_binding_timeout(tmp_path: Path) -> None:
+    from scripts.projects.open_model_data import phase3_source_universe as su
+
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        if "rev-parse" in cmd:
+            return _completed(cmd, returncode=0, stdout=b"abcdef1234567890abcdef1234567890abcdef12\n")
+        if "show" in cmd:
+            return _completed(cmd, returncode=0, stdout=b"script bytes")
+        return _completed(cmd, returncode=0)
+
+    script_file = tmp_path / su.FREEZER_SCRIPT_PATH
+    script_file.parent.mkdir(parents=True, exist_ok=True)
+    script_file.write_bytes(b"script bytes")
+
+    with (
+        patch("scripts.projects.open_model_data.phase3_source_universe.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
+        res = su._verify_merged_main_binding("abcdef1234567890abcdef1234567890abcdef12")
+        assert res["implementation_version"] == su.FREEZER_IMPLEMENTATION_VERSION
+
+    assert len(calls) == 2
+    assert calls[0]["timeout"] == su.DEFAULT_GIT_TIMEOUT_SECONDS
+    assert calls[1]["timeout"] == su.DEFAULT_GIT_TIMEOUT_SECONDS
+
+    with (
+        patch("scripts.projects.open_model_data.phase3_source_universe.ROOT", tmp_path),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git"], su.DEFAULT_GIT_TIMEOUT_SECONDS)),
+    ):
+        with pytest.raises(su.FreezeError, match="unable to verify merged-main binding"):
+            su._verify_merged_main_binding("abcdef1234567890abcdef1234567890abcdef12")
+
+
 def test_phase3_source_universe_extract_pdf_pages_timeout(tmp_path: Path) -> None:
     from scripts.projects.open_model_data import phase3_source_universe as su
 
@@ -351,6 +416,89 @@ def test_phase3_source_universe_extract_pdf_pages_timeout(tmp_path: Path) -> Non
     ):
         with pytest.raises(su.FreezeError, match=r"pdftotext failed for sample\.pdf"):
             su.extract_pdf_pages(pdf_file, pdftotext)
+
+
+# ---------------------------------------------------------------------------
+# 18. phase3_ua_gec_complete_context.py
+# ---------------------------------------------------------------------------
+def test_phase3_ua_gec_complete_context_checkout_commit_timeout(tmp_path: Path) -> None:
+    from scripts.projects.open_model_data import phase3_ua_gec_complete_context as ugc
+
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        if "rev-parse" in cmd:
+            return _completed(cmd, returncode=0, stdout=f"{ugc.UA_GEC_COMMIT}\n")
+        if "status" in cmd:
+            return _completed(cmd, returncode=0, stdout="")
+        return _completed(cmd, returncode=0)
+
+    with patch("subprocess.run", side_effect=fake_run):
+        commit = ugc._checkout_commit(tmp_path)
+        assert commit == ugc.UA_GEC_COMMIT
+
+    assert len(calls) == 2
+    assert calls[0]["timeout"] == ugc.DEFAULT_GIT_TIMEOUT_SECONDS
+    assert calls[1]["timeout"] == ugc.DEFAULT_GIT_TIMEOUT_SECONDS
+
+    with patch(
+        "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], ugc.DEFAULT_GIT_TIMEOUT_SECONDS)
+    ):
+        with pytest.raises(ugc.UaGecCompleteContextError, match="cannot verify UA-GEC checkout commit"):
+            ugc._checkout_commit(tmp_path)
+
+    def fake_run_rev_parse_only(cmd, **kwargs):
+        if "rev-parse" in cmd:
+            return _completed(cmd, returncode=0, stdout=f"{ugc.UA_GEC_COMMIT}\n")
+        raise subprocess.TimeoutExpired(["git", "status"], ugc.DEFAULT_GIT_TIMEOUT_SECONDS)
+
+    with patch("subprocess.run", side_effect=fake_run_rev_parse_only):
+        with pytest.raises(ugc.UaGecCompleteContextError, match="cannot verify UA-GEC checkout cleanliness"):
+            ugc._checkout_commit(tmp_path)
+
+
+# ---------------------------------------------------------------------------
+# 17. phase3_university_content_audit_freeze.py
+# ---------------------------------------------------------------------------
+def test_phase3_university_content_audit_freeze_validate_drive_backup_timeout(tmp_path: Path) -> None:
+    import contextlib
+
+    from scripts.projects.open_model_data import phase3_university_content_audit_freeze as ucaf
+
+    backup_file = tmp_path / "backup.gz"
+    backup_file.write_bytes(b"dummy")
+
+    post_backup = {
+        "backup": {
+            "google_drive_upload_verified": True,
+            "google_drive_uploading": False,
+            "google_drive_item_id": "drive_id_123",
+            "path": str(backup_file),
+            "compressed_sha256": ucaf.sha256_file(backup_file),
+            "decompressed_sha256": "abc",
+        }
+    }
+
+    calls: list[dict] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append({"cmd": cmd, **kwargs})
+        return _completed(cmd, returncode=0, stdout="drive_id_123\n")
+
+    with patch("subprocess.run", side_effect=fake_run), patch("gzip.open"):
+        # We test that timeout is passed to xattr
+        with contextlib.suppress(Exception):
+            ucaf._validate_drive_backup(post_backup)
+
+    assert len(calls) == 1
+    assert calls[0]["timeout"] == ucaf.DEFAULT_XATTR_TIMEOUT_SECONDS
+
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["xattr"], ucaf.DEFAULT_XATTR_TIMEOUT_SECONDS)):
+        with pytest.raises(
+            ucaf.UniversityContentAuditFreezeError, match="post-live database backup lacks Drive provider metadata"
+        ):
+            ucaf._validate_drive_backup(post_backup)
 
 
 # ---------------------------------------------------------------------------

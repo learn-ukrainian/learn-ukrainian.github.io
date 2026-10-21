@@ -18,6 +18,7 @@ from contextlib import ExitStack
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as wa
@@ -331,6 +332,20 @@ def strip_build(result):
     return {k: {f: v for f, v in c.items() if f != "build"} for k, c in result["cards"].items()}
 
 
+def test_every_card_is_schema_valid_and_one_per_unit(result, inputs):
+    validator = Draft202012Validator(SCHEMA)
+    assert len(result["cards"]) == len(inputs.units) == 9
+    for card in result["cards"].values():
+        assert list(validator.iter_errors(card)) == []
+
+
+def test_assembly_is_deterministic(inputs, result):
+    again = wa.build(inputs)
+    assert {k: foundation.digest(v) for k, v in again["cards"].items()} == {
+        k: foundation.digest(v) for k, v in result["cards"].items()}
+    assert again["build_id"] == result["build_id"]
+
+
 def test_homographs_are_separated_by_paradigm_and_stress_and_linked(result):
     first, second = card_of(result, "альфа", nth=0), card_of(result, "альфа", nth=1)
     assert first["identity"]["method"] == "stress_and_paradigm" and first["identity"]["confidence"] == "high"
@@ -463,6 +478,26 @@ def test_missing_holding_sense_is_refused_never_minted(world, tmp_path, monkeypa
         wa.build(make_inputs(world, tmp_path / "pinned", registry))
 
 
+def test_needs_holding_sense_rule():
+    class Unit:
+        def __init__(self, outcome="accepted"):
+            self.candidate = type("C", (), {"outcome": outcome})()
+    active, unsplit = {"sense_id": "a", "state": "active"}, {"sense_id": "u", "state": "unsplit"}
+    assert wa.needs_holding_sense([active], {"synonyms": [Unit(), Unit()]})
+    assert not wa.needs_holding_sense([active], {"synonyms": [Unit()]})
+    assert wa.needs_holding_sense([active, dict(active, sense_id="b")], {"synonyms": [Unit()]})
+    assert not wa.needs_holding_sense([unsplit], {"synonyms": [Unit(), Unit()]})
+    assert wa.needs_holding_sense([active], {"synonyms": [Unit(), Unit("withheld")]})  # two units of the kind
+    assert wa.aligned_sense([unsplit], [Unit()]) is None  # an unsplit sense is never aligned to
+
+
+def test_sense_ids_and_seeds_come_from_the_registry(result, inputs):
+    first = card_of(result, "альфа", nth=0)
+    labels = [s["fields"]["sense_label"]["values"][0]["value_norm"] for s in first["senses"][:2]]
+    assert labels == ["перше", "друге"]
+    assert first["senses"][0]["seeded_from"].startswith("ulif_sense_gloss:")
+
+
 def test_aggregator_forms_with_and_without_fna(result):
     forms = {a["value"] for c in result["cards"].values() for a in assertions(c, "mwe_form", source_id="frazeolohichnyi")}
     assert forms == {"перша фраза", "друга фраза"}
@@ -512,6 +547,13 @@ def test_unallocated_card_is_refused(inputs):
     broken = copy.copy(inputs)
     broken.registry = {**inputs.registry, "entries": inputs.registry["entries"][1:]}
     with pytest.raises(foundation.Refusal):
+        wa.build(broken)
+
+
+def test_assertion_without_registry_sense_evidence_is_refused(inputs):
+    broken = copy.copy(inputs)
+    broken.sense_events = {}
+    with pytest.raises(wa.AssemblyError):
         wa.build(broken)
 
 
@@ -690,6 +732,13 @@ def test_assertion_id_selector_falls_back_to_pinned_content_after_an_id_change(i
         wa.build(inputs, suppression(pinned))
 
 
+def test_every_exact_value_norm_selects_its_own_assertion(result):
+    for card in result["cards"].values():
+        for a in card["assertions"]:
+            selector = content(a["field"], card["key_at_creation"]["spelling"], a["value_norm"], a["source_id"])
+            assert wa.selector_matches(selector, a, card["key_at_creation"]["spelling"]), a["assertion_id"]
+
+
 def alpha_ulif_spelling(result):
     return next(a for a in card_of(result, "альфа", nth=0)["assertions"]
                 if a["source_id"] == "ulif" and a["field"] == "spelling")
@@ -722,6 +771,13 @@ def test_present_assertion_id_withdraws_only_itself_whatever_its_fallback_reache
     assert {t["suppression_id"]: t["assertions"] for t in forward["takedown"]}["sup-b-id"] == [target["assertion_id"]]
     both = {"schema_version": "1", "entries": [by_id, whole]}
     assert verify.verify(inputs, forward, None, both)["withdrawal"]["passed"]
+
+
+def test_present_assertion_id_whose_fallback_does_not_describe_it_is_refused(inputs, result):
+    target = alpha_ulif_spelling(result)
+    selector = {"kind": "assertion_id", "assertion_id": target["assertion_id"], "fallback": content("spelling", "бета")}
+    with pytest.raises(wa.AssemblyError, match="fallback does not describe"):
+        wa.build(inputs, suppression(selector))
 
 
 def test_source_record_selector_must_agree_with_its_registry_record(inputs, result):
@@ -940,6 +996,14 @@ def test_withdrawn_evidence_leaking_into_the_public_projection_fails(inputs, mon
     report = verify.verify(inputs, withdrawn, None, suppressions)
     assert report["public_projection"]["passed"] is False
     assert {"tombstone_shape", "withdrawn_locator_in_public"} <= set(report["public_projection"]["errors"])
+
+
+def test_rollback_with_current_selectors_never_revives_withdrawn_evidence(inputs):
+    withdrawn, suppressions = withdrawn_alpha(inputs)
+    reimport = wa.build(inputs, suppressions)  # previous inputs, current selectors (schema.md §12.1)
+    assert foundation.digest(reimport["cards"]) == foundation.digest(withdrawn["cards"])
+    assert all(a["status"] == "suppressed" for c in reimport["cards"].values() for a in c["assertions"]
+               if a["assertion_id"] in withdrawn["takedown"][0]["assertions"])
 
 
 def test_label_rules():
@@ -1549,8 +1613,65 @@ def test_r3f1_verify_checks_live_and_registry_sense_maps(inputs, result, forgery
     assert report["passed"] is False and report[check]["passed"] is False and error in report[check]["errors"]
 
 
+def test_r3f1_withdrawn_relation_keeps_registry_provenance_and_verifies(inputs):
+    withdrawn, suppressions = withdrawn_alpha(inputs)
+    card = card_of(withdrawn, "альфа", nth=0)
+    holder = card["senses"][2]
+    assert [u["mapped_by"] for u in holder["sense_map"]] == ["registry:rules-v1-draft"]  # live map gone only
+    report = verify.verify(inputs, withdrawn, None, suppressions)
+    assert report["passed"], {k: v for k, v in report.items() if isinstance(v, dict) and not v["passed"]}
+    assert report["identity_binding"] == {"passed": True, "errors": {}}
+
+
 def frozen_record(inputs, locator):
     return inputs.record_ids[("ulif", locator)]
+
+
+def forge_other_record(inputs):
+    a, b = ulif_entry_records(inputs.registry)[:2]
+    locator = a["correspondence"][0]["locator"]
+
+    def edit(cards):
+        touched = []
+        for card in cards.values():
+            for x in card["assertions"]:
+                if x["locator"].split(" ")[0] == locator:
+                    x["source_record_id"], x["source_record_key"] = b["source_record_id"], b["aliases"][0]["key"]
+                    touched.append(card)
+        return touched
+    return edit
+
+
+def forge_key_outside_snapshot(inputs):
+    locator = ulif_entry_records(inputs.registry)[0]["correspondence"][0]["locator"]
+
+    def edit(cards):
+        card = next(c for c in cards.values() for x in c["assertions"] if x["locator"].split(" ")[0] == locator)
+        next(x for x in card["assertions"] if x["locator"].split(" ")[0] == locator)["source_record_key"] = \
+            "ulif:uid:later"
+        return [card]
+    return edit
+
+
+def forge_foreign_source(inputs):
+    puls = next(sr for sr in inputs.registry["source_records"] if sr["source_id"] == "puls")
+    locator = ulif_entry_records(inputs.registry)[0]["correspondence"][0]["locator"]
+
+    def edit(cards):
+        card = next(c for c in cards.values() for x in c["assertions"] if x["locator"].split(" ")[0] == locator)
+        victim = next(x for x in card["assertions"] if x["locator"].split(" ")[0] == locator)
+        victim["source_record_id"], victim["source_record_key"] = puls["source_record_id"], puls["aliases"][0]["key"]
+        return [card]
+    return edit
+
+
+@pytest.mark.parametrize(("forgery", "error"), [
+    (forge_other_record, "snapshot_binding"), (forge_key_outside_snapshot, "key_outside_snapshot"),
+    (forge_foreign_source, "source")])
+def test_r3f1_verify_rejects_independent_source_record_rebinding(inputs, result, forgery, error):
+    report = forged_report(inputs, result, forgery(inputs))
+    assert report["passed"] is False
+    assert report["source_records"]["passed"] is False and error in report["source_records"]["errors"]
 
 
 def test_r3f1_output_rejects_coherent_foreign_homograph_row(inputs, result):

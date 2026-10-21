@@ -14,6 +14,9 @@ from scripts.lib.readonly_sqlite import open_readonly
 REPO = Path(__file__).resolve().parents[2]
 CARDS = REPO / "docs" / "style-cards"
 BANDS = {"a1": ["a1"], "a2": ["a2"], "b1plus": ["b1", "b2"]}
+COMBINING = ("̀", "́")
+
+
 def read_card(band: str) -> tuple[dict, str, bytes]:
     raw = (CARDS / f"{band}.md").read_bytes()
     text = raw.decode("utf-8")
@@ -59,6 +62,19 @@ def test_card_ukrainian_is_only_exemplars_or_contract_terms(band: str) -> None:
             line = line.replace(fragment, "")
         for run in re.findall(r"[Ѐ-ӿ][Ѐ-ӿ'’\-]*", line):
             assert run in contract_terms or any(run in a for a in allowed), f"{band}: unsourced Ukrainian {run!r} in: {line[:80]}"
+
+
+@pytest.mark.parametrize("band", sorted(BANDS))
+def test_card_exemplars_are_declared_with_record_ids_and_quoted_in_body(band: str) -> None:
+    front, body, _ = read_card(band)
+    assert front["exemplars"], "a card without exemplars would still be valid, but these cards carry sourced ones"
+    for exemplar in front["exemplars"]:
+        assert exemplar["table"] in ("textbooks", "literary_texts")
+        assert exemplar["chunk_id"] and exemplar["source"] and exemplar["domain"]
+        assert f"`{exemplar['chunk_id']}`" in body
+        for text in exemplar["text"]:
+            assert not any(c in text for c in COMBINING), "exemplars are plain corpus text; stress is the engine's"
+            assert f"> {text}" in body, f"exemplar text of {exemplar['id']} must be quoted verbatim in the body"
 
 
 @pytest.mark.parametrize("band", sorted(BANDS))

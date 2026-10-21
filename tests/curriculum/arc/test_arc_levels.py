@@ -20,6 +20,8 @@ from scripts.curriculum.arc import generate_arc, loader
 pytestmark = [pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+MANIFEST = REPO_ROOT / "curriculum/l2-uk-en/curriculum.yaml"
+
 # count, first slug, last slug — quoted from the accepted arc documents
 LEVELS = {
     "a2": (69, "a2-bridge", "a2-finale"),
@@ -64,6 +66,13 @@ def test_position_count_and_first_last_slug(level: str) -> None:
     assert records[0]["slug"] == first
     assert records[-1]["slug"] == last
     assert [r["position"] for r in records] == list(range(1, count + 1))
+
+
+@pytest.mark.parametrize("level", sorted(LEVELS))
+def test_no_letters_and_null_inventory(level: str) -> None:
+    for record in _records(level):
+        assert "letters" not in record
+        assert record["inventory_text"] is None
 
 
 @pytest.mark.parametrize("level", sorted(LEVELS))
@@ -123,6 +132,13 @@ def test_a1_arc_preserves_orientation_and_amended_positions() -> None:
     assert hashlib.sha256(block.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
 
 
+
+def test_a1_check_green_with_empty_manifest_list() -> None:
+    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    assert manifest["levels"]["a1"]["modules"] == []
+    assert generate_arc.main(["--level", "a1", "--check"]) == 0
+
+
 def test_all_skills_expansion_follows_each_documents_legend() -> None:
     a2 = {r["position"]: r for r in _records("a2")}
     assert a2[69]["skills_text"] == "all"
@@ -171,6 +187,18 @@ def test_mutation_letters_at_a2_fail(tmp_path: Path) -> None:
         "Notice that Ukrainian verbs come in pairs **3 letters**",
     )
     with pytest.raises(generate_arc.ArcGenerationError, match="no literacy inventory"):
+        generate_arc.generate_yaml(mutated, "a2")
+
+
+def test_literacy_table_at_a2_fails(tmp_path: Path) -> None:
+    header = "| Pos | Slug | Phase | One-sentence job | Skills duty | L |"
+    literacy_table = (
+        "| Pos | Slug | Phase | Job | Inventory (letters / signs) | Skills duty | Est. lessons |\n"
+        "| --- | --- | --- | --- | --- |\n"
+        "| 1 | `letters` | A1.1 | Letters | **1 letters** А | Li | 1 |\n\n"
+    )
+    mutated = _mutated_doc("a2", tmp_path, header, literacy_table + header)
+    with pytest.raises(generate_arc.ArcGenerationError, match="no literacy phase"):
         generate_arc.generate_yaml(mutated, "a2")
 
 

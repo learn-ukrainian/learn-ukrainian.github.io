@@ -160,6 +160,44 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
     assert blocked["codex"]["avoid"] is True
 
 
+@pytest.mark.parametrize(("asserted", "live", "expected"), [(5, 2, 2), (2, 5, 2)])
+def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected):
+    now = datetime.now(UTC)
+    budget = _fixture_budget()
+    budget["agents"]["codex"].update(
+        eligible=True,
+        health={"healthy": True},
+        freshness="fresh",
+        age_s=0,
+        status_source="weekly_pace",
+        reset_credits={
+            "available_count": live,
+            "expires_at": [None] * live,
+            "fetched_at": now.isoformat(),
+        },
+        codexbar={
+            **budget["agents"]["codex"]["codexbar"],
+            "weekly_used_pct": 72.0,
+            "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
+            "windows": {"primary": {"remaining_pct": 12.0}},
+        },
+        runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+    )
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": asserted,
+        "confirmed_at": (now - timedelta(minutes=1)).isoformat(),
+        "expires_at": (now + timedelta(days=1)).isoformat(),
+    }
+
+    row = next(row for row in capacity_pick.build_lane_rows(budget, reset_reserve=reserve) if row["lane"] == "codex")
+
+    assert row["reset_reserve_eligible"] is True
+    assert f"reset reserve eligible ({expected} remaining)" in row["notes"]
+    assert reserve["remaining_resets"] == asserted
+
+
 def test_reset_reserve_never_lifts_the_owner_avoid():
     """#9740 P1: a hot label the owner keeps (not weekly pace) stays AVOID whatever the reserve."""
     now = datetime.now(UTC)
@@ -485,6 +523,24 @@ def test_kimi_at_one_in_four_cannot_take_first_place_on_headroom_alone():
     assert ranked == ["agy", "codex", "kimi"]
 
 
+def test_build_report_attaches_write_success_and_notes_the_demotion():
+    budget = _fixture_budget()
+    budget["agents"]["kimi"] = {"status": "cool", "burn_pct_7d": 6.0, "remaining_pct": 94.0}
+    stats = {
+        "kimi": {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True},
+        "agy": {"attempts": 2, "done": 0, "rate": 0.0, "demoted": False},
+    }
+    report = capacity_pick.build_report(budget, active_in_flight={}, write_success=stats)
+    rows = {row["lane"]: row for row in report["rows"]}
+    assert rows["kimi"]["write_success"]["demoted"] is True
+    assert "write success 1/4 in 7d (<60%): one headroom band down" in rows["kimi"]["notes"]
+    assert rows["agy"]["write_success"]["demoted"] is False
+    assert rows["grok"]["write_success"] == {"attempts": 0, "done": 0, "rate": None, "demoted": False}
+    assert report["write_success"]["kimi"]["attempts"] == 4
+    without = capacity_pick.build_report(budget, active_in_flight={})
+    assert all("write_success" not in row for row in without["rows"])
+
+
 def test_load_write_success_stats_reads_hot_and_archived_records(tmp_path):
     (tmp_path / "archive").mkdir()
     (tmp_path / "a.json").write_text(json.dumps(_write_record("kimi", "done")))
@@ -557,6 +613,19 @@ def test_agy_own_entry_wins_over_mirror():
     assert row["status"] == "warm"
     assert row["remaining_pct"] == 55.0
     assert "quota:gemini" not in row["notes"]
+
+
+def test_agy_mirror_propagates_probe_failure():
+    budget = _gemini_only_budget()
+    budget["agents"]["gemini"] = {
+        "status": "unknown",
+        "freshness": "unavailable",
+        "codexbar": {"freshness": "unavailable", "auth_error": "agy /usage failed"},
+    }
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "agy")
+    assert row["status"] == "unknown"
+    assert row["remaining_pct"] is None
+    assert "quota:gemini" in row["notes"]
 
 
 def test_agy_mirror_need_login_is_avoid():

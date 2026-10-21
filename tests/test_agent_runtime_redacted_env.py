@@ -111,6 +111,20 @@ def run_failing_comparison(tmp_path, plan_type, verbosity, comparison, left_env,
 
 @pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
 @pytest.mark.parametrize("verbosity", ("-q", "-vv"))
+def test_real_pytest_plan_assertion_does_not_expose_values(tmp_path, plan_type, verbosity):
+    output = run_failing_comparison(
+        tmp_path,
+        plan_type,
+        verbosity,
+        "left == right",
+        "{'A': os.environ['PLAN_TEST_VALUE'], 'B': 'same'}",
+        "{'A': 'different', 'B': 'same'}",
+    )
+    assert SENTINEL not in output, output
+
+
+@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
+@pytest.mark.parametrize("verbosity", ("-q", "-vv"))
 @pytest.mark.parametrize(
     ("comparison", "right_env", "exposes_value"),
     (

@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 from jsonschema import Draft7Validator
 
 from scripts.build.fresh import runner
@@ -85,6 +86,9 @@ FAMILIES = {
     "unjumble": {"items": [{"words": ["first", "second"], "answer": "second first", "explanation": EXPLANATION}]},
     "watch-and-repeat": {"items": [{"video": "https://example.org/model", "explanation": EXPLANATION}]},
 }
+CHOICE_FAMILIES = ("error-correction", "fill-in", "image-to-letter", "odd-one-out", "quiz", "translate", "true-false")
+
+
 def _activity(typ: str) -> dict:
     return copy.deepcopy({"id": "a1", "type": typ, "instruction": "Follow the model.", **FAMILIES[typ]})
 
@@ -114,9 +118,80 @@ def _check(tmp_path: Path, activity: dict, *, planned: bool = False, host: bool 
     )
 
 
+@pytest.mark.parametrize("typ", FAMILIES)
+@pytest.mark.parametrize("planned", [False, True], ids=["inline-type", "planned-type"])
+def test_schema_family_witness_passes_check_7(tmp_path: Path, typ: str, planned: bool) -> None:
+    assert _check(tmp_path, _activity(typ), planned=planned)["status"] == "passed"
+
+
+@pytest.mark.parametrize("typ", CHOICE_FAMILIES)
+@pytest.mark.parametrize("planned", [False, True], ids=["inline-type", "planned-type"])
+def test_choice_family_is_checked_instead_of_skipped(tmp_path: Path, typ: str, planned: bool) -> None:
+    activity = _activity(typ)
+    # Put an unmarked item first: it must not hide the later marked choice.
+    unmarked = copy.deepcopy(activity["items"][0])
+    unmarked.pop("kind")
+    activity["items"].insert(0, unmarked)
+    row = _check(tmp_path, activity, planned=planned, host=False)
+    assert (row["status"], row["code"], row["token"]) == ("failed", "comprehension_host_ineligible", "1")
+
+
+@pytest.mark.parametrize("typ", ["fill-in", "error-correction", "translate"])
+def test_production_item_without_options_has_no_choice_semantics(tmp_path: Path, typ: str) -> None:
+    activity = _activity(typ)
+    item = activity["items"][0]
+    item.pop("options")
+    item.pop("kind")
+    assert _check(tmp_path, activity)["status"] == "passed"
+
+
 def test_group_sort_string_items_with_form_feature_fail_without_record(tmp_path: Path) -> None:
     activity = _activity("group-sort")
     activity["grouping_feature"] = "Case"
     for group, value in zip(activity["groups"], ["Nom", "Gen"], strict=True):
         group["value"] = value
     assert _check(tmp_path, activity)["code"] == "group_entry_record_missing"
+
+
+@pytest.mark.parametrize("key", ["words", "jumbled", "prompt", "scrambled"])
+@pytest.mark.parametrize("value", ["first second", ["first", "second"]])
+def test_unjumble_string_and_array_aliases_pass_check_7(tmp_path: Path, key: str, value) -> None:
+    activity = _activity("unjumble")
+    item = activity["items"][0]
+    item.pop("words")
+    item[key] = value
+    assert _check(tmp_path, activity)["status"] == "passed"
+
+
+def test_schema_allowed_classify_remains_forbidden_by_fresh_check_4(tmp_path: Path) -> None:
+    activity = _activity("classify")
+    assert _check(tmp_path, activity)["status"] == "passed"
+    row, _ = runner.check_4_activities(
+        {"activities": [activity]}, {"activities": [{"id": "a1", "type": "classify"}]}, {}, {}, level="a1"
+    )
+    assert row["code"] == "classify_forbidden"
+
+
+def test_unknown_family_fails_closed(tmp_path: Path) -> None:
+    row = runner.check_7_a1_choices(
+        {"activities": [{"id": "a1", "items": []}]},
+        {"activities": [{"id": "a1", "type": "unknown"}]},
+        {},
+        SimpleNamespace(tokens=[]),
+        state_dir=tmp_path,
+        lesson_n=1,
+    )
+    assert row["code"] == "choice_activity_type_invalid"
+
+
+def test_multiple_choice_alias_keeps_existing_quiz_checks(tmp_path: Path) -> None:
+    activity = _activity("quiz")
+    row = runner.check_7_a1_choices(
+        {"activities": [{key: value for key, value in activity.items() if key != "type"}]},
+        {"activities": [{"id": "a1", "type": "multiple-choice"}]},
+        {},
+        SimpleNamespace(tokens=[]),
+        state_dir=tmp_path,
+        lesson_n=1,
+    )
+    assert row["code"] == "comprehension_host_ineligible"

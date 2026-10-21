@@ -416,6 +416,30 @@ def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp
     assert saved["drops"][f"42:{HEAD_A}"] == 1
 
 
+def test_queued_missing_cf_dry_run_reports_only(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = []
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=False)
+    assert not failed
+    assert mutations(fake) == []
+    assert not path.exists()
+    assert len(lines) == 1
+    assert "reason=needs-CF" in lines[0]
+    assert "queued=True" in lines[0]
+    assert "revoked" not in lines[0]
+
+
+def test_queued_legacy_approval_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
+    assert "reason=needs-CF" in lines[0]
+
+
 def test_queued_recorded_rejection_revokes(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [
@@ -446,6 +470,14 @@ def test_later_posted_rejection_with_earlier_start_dequeues(tmp_path: Path, entr
     assert "enqueue" not in mutations(fake)
 
 
+def test_queued_recorded_approval_then_hold_revokes(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    fake.fresh["labels"] = [{"name": "hold"}]
+    keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
+
+
 @pytest.mark.parametrize("label", ["do-not-merge", "blocked"])
 def test_approved_green_hold_label_is_not_enqueued(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str) -> None:
     labels = [{"name": label.upper()}]
@@ -455,6 +487,24 @@ def test_approved_green_hold_label_is_not_enqueued(tmp_path: Path, monkeypatch: 
     assert not failed
     assert "enqueue" not in mutations(fake)
     assert "reason=hold" in lines[0]
+
+
+@pytest.mark.parametrize("label", ["do-not-merge", "blocked"])
+def test_queued_hold_label_is_revoked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.fresh["labels"] = [{"name": label.upper()}]
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: hold" in lines
+
+
+def test_queued_legacy_red_ci_revokes(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
+    fake.check_rows = checks(conclusion="failure")
+    keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
 
 
 def test_queued_verdict_lookup_error_reports_without_revocation(
@@ -544,6 +594,20 @@ def test_issue_11127_older_head_malformed_markers_never_revoke_queued_approval(t
     assert "cf-unknown=" not in lines[0]
 
 
+def test_cf_unknown_revocation_names_reason_and_comment(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    approval = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")
+    malformed = hand_written(approval["body"].replace("verdict=APPROVED", "verdict=REQUEST_CHANGES"), 4242)
+    fake.comments_rows = [approval, malformed]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    detail = " cf-unknown=marker-malformed-current-head comment=4242"
+    assert f"#42 revoked: CF-unknown-after-approval{detail}" in lines
+    assert lines[0].endswith(detail)
+    assert all("REQUEST_CHANGES" not in line and "Cross-family review" not in line for line in lines)
+
+
 def test_cf_unknown_hold_names_reason_and_comment(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     unattributed = "VERDICT: BLOCKED\n\n<!-- cf-verdict v1 task=hand verdict=BLOCKED model=m family=openai -->"
@@ -552,6 +616,28 @@ def test_cf_unknown_hold_names_reason_and_comment(tmp_path: Path) -> None:
     assert not failed
     assert "dequeue" not in mutations(fake)
     assert "#42 held: CF-unknown cf-unknown=marker-unattributable comment=77" in lines
+
+
+def test_cf_unknown_lookup_failure_names_reason(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+
+    def broken(number: int) -> list[dict[str, Any]]:
+        raise keeper.KeeperError("comments unavailable")
+
+    fake.comments = broken  # type: ignore[method-assign]
+    lines, _failed = keeper.run(fake, tmp_path / "state.json", apply=False)
+    assert lines[0].endswith(" cf-unknown=comments-unavailable comment=none")
+
+
+def test_queued_stale_recorded_approval_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True, headRefOid=HEAD_B))
+    fake.check_rows = checks(HEAD_B)
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
+    assert "reason=needs-CF" in lines[0]
 
 
 def test_enqueue_happy_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -659,6 +745,12 @@ def test_enqueue_without_membership_but_armed_auto_merge_reports_armed(
     assert not any("FAILED" in line for line in lines)
 
 
+def test_help_epilog_documents_hold_mechanisms() -> None:
+    epilog = keeper.build_parser().epilog or ""
+    assert "labels" in epilog
+    assert "[hold]" in epilog
+
+
 def test_third_drop_stops_and_comments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub()
     path = tmp_path / "state.json"
@@ -746,6 +838,14 @@ def test_lock_overlap_exits_without_network(tmp_path: Path, monkeypatch: pytest.
         assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 0
 
 
+def test_missing_membership_field_never_enqueues(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    row = pr()
+    del row["isInMergeQueue"]
+    fake = FakeGitHub(row)
+    run(fake, tmp_path / "state.json", monkeypatch)
+    assert "enqueue" not in mutations(fake)
+
+
 def test_unknown_fresh_read_leaves_queued_untouched(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.current = lambda number: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
@@ -768,6 +868,37 @@ def test_drop_at_old_head_does_not_block_new_head(tmp_path: Path, monkeypatch: p
     state = json.loads(path.read_text())
     assert state["drops"][f"42:{HEAD_A}"] == 3
     assert f"42:{HEAD_B}" not in state["drops"]
+
+
+def test_recent_rejection_overrides_approval_in_keeper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.review.record_cf_verdict import build_comment
+
+    fake = FakeGitHub()
+
+    def comment(verdict: str, started: str) -> dict[str, Any]:
+        return {
+            "body": build_comment(
+                sha=HEAD_A,
+                task_id="review",
+                started=started,
+                verdict=verdict,
+                model="gpt-6.1-sol",
+                family="openai",
+                reply="VERDICT: " + verdict,
+            ),
+            "user": {"login": "driver"},
+            "author_association": "MEMBER",
+            "created_at": "2026-09-23T13:00:00Z",
+            "updated_at": "2026-09-23T13:00:00Z",
+        }
+
+    fake.comments_rows = [
+        comment("APPROVED", "2026-09-23T12:00:00.000001+00:00"),
+        comment("CHANGES_REQUESTED", "2026-09-23T12:00:01.000001+00:00"),
+    ]
+    lines, _ = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert "enqueue" not in mutations(fake)
+    assert "CF-changes_requested" in lines[0]
 
 
 @pytest.mark.parametrize("granted", [False, True])
@@ -1042,6 +1173,15 @@ def test_queued_squash_text_is_rescanned(
     assert line is None or any(line in item for item in lines), lines
 
 
+def test_squash_text_is_not_read_for_unqueued_or_stale_rows(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.fresh["headRefOid"] = HEAD_B
+    run(fake, tmp_path / "state.json", monkeypatch)
+    ready = FakeGitHub()
+    run(ready, tmp_path / "ready.json", monkeypatch)
+    assert not any(kind == "squash-read" for kind, _ in fake.actions + ready.actions)
+
+
 def _squash_reply(subject="clean (#42)", body="* clean", entry=None, head=HEAD_A):
     pull = {
         "headRefOid": head,
@@ -1124,6 +1264,26 @@ def test_dependabot_lockfile_pr_with_neutral_codeql_and_no_analyze_is_queueable(
 @pytest.mark.parametrize(
     "files",
     [
+        [{"filename": "package-lock.json"}],
+        [{"filename": "site/package.json"}, {"filename": "site/package-lock.json"}],
+        [{"filename": "requirements-dev.txt"}, {"filename": ".dagger/uv.lock"}],
+    ],
+)
+def test_lockfile_only_pr_with_passing_codeql_is_queueable(tmp_path: Path, monkeypatch, files) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion="success")
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
         [{"filename": ".github/workflows/ci.yml"}],  # a dependabot github-actions bump
         [{"filename": "package-lock.json"}, {"filename": "scripts/example.py"}],  # code pushed onto a bot branch
         [{"filename": "scripts/example.py"}],
@@ -1191,6 +1351,15 @@ def test_codeql_check_from_any_other_app_is_not_evidence(tmp_path: Path, monkeyp
     assert "reason=CodeQL-pending" in lines[0]
     assert fake.lookups == []
     assert "enqueue" not in mutations(fake)
+
+
+def test_pr_with_analyze_runs_never_reads_files(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=ready" in lines[0]
+    assert fake.lookups == []
 
 
 def test_file_lookup_failure_never_enqueues(tmp_path: Path, monkeypatch) -> None:
@@ -1345,6 +1514,22 @@ def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.M
     assert "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
 
 
+@pytest.mark.parametrize("drops", [0, 1, 2])
+@pytest.mark.parametrize("configured", [False, True])
+def test_used_grant_holds_even_without_another_recorded_drop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drops: int, configured: bool
+) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path, drops={f"42:{HEAD_A}": drops}, requeued={f"42:{HEAD_A}": "used"})
+    fake = FakeGitHub()
+    if configured:
+        lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    else:
+        lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
 @pytest.mark.parametrize("diagnosis", ["KeeperError", "empty-timeline"])
 @pytest.mark.parametrize("granted", [False, True])
 @pytest.mark.parametrize("apply", [False, True])
@@ -1385,6 +1570,15 @@ def test_undiagnosed_removal_holds_unchanged_head(
     if granted:
         assert mutations(diagnosed) == ["enqueue"]
     assert f"42:{HEAD_A}" not in json.loads(path.read_text())["undiagnosed"]
+
+
+def test_undiagnosed_old_head_does_not_hold_new_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+    fake = FakeGitHub(pr(headRefOid=HEAD_B))
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
 
 
 def test_gate_denial_holds_and_comments_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1455,6 +1649,63 @@ def test_keeper_manual_dequeue_then_fix_reenqueues_without_ci_failure_proof(tmp_
     assert ("enqueue", (42, HEAD_A)) in fixed.actions
     assert not recovery.ledger_path(fixed.root).exists()
     assert not json.loads(path.read_text()).get("requeued")
+
+
+def test_gate_state_is_pruned_to_open_prs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "requeued": {f"7:{HEAD_A}": "x", f"42:{HEAD_A}": "y"}}))
+    gated(FakeGitHub(), path, monkeypatch, _gate(tmp_path, {}))
+    assert json.loads(path.read_text())["requeued"] == {f"42:{HEAD_A}": "y"}
+
+
+@pytest.mark.parametrize(
+    "environ,flag,expected",
+    [
+        ({}, False, 0),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "120"}, False, 120),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "soon"}, False, 300),
+        ({}, True, 300),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "600"}, True, 600),
+    ],
+)
+def test_min_interval(tmp_path: Path, environ: dict[str, str], flag: bool, expected: int) -> None:
+    marker = tmp_path / "slow"
+    if flag:
+        marker.write_text("")
+    env = {**environ, "MQ_KEEPER_SLOW_FLAG": str(marker)}
+    assert keeper._min_interval(env) == expected
+
+
+def test_throttled_uses_the_last_observed_run(tmp_path: Path) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    now = datetime(2026, 9, 23, 12, 0, tzinfo=UTC)
+    path = tmp_path / "state.json"
+    assert keeper._throttled(path, 300, now) is False
+    for age, expected in ((60, True), (290, False), (400, False)):
+        path.write_text(json.dumps({"observed": (now - timedelta(seconds=age)).isoformat()}))
+        assert keeper._throttled(path, 300, now) is expected
+        assert keeper._throttled(path, 0, now) is False
+
+
+def test_slow_mode_skips_apply_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from datetime import UTC, datetime
+
+    state = tmp_path / "batch_state/merge_queue_keeper.json"
+    state.parent.mkdir(parents=True)
+    state.write_text(json.dumps({"queued": {}, "drops": {}, "observed": datetime.now(UTC).isoformat()}))
+    flag = tmp_path / "slow"
+    flag.write_text("")
+    monkeypatch.setenv("MQ_KEEPER_SLOW_FLAG", str(flag))
+    monkeypatch.setattr(keeper, "GitHub", lambda *args: pytest.fail("network used in slow mode"))
+    assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 0
+
+
+def test_keeper_timer_runs_every_minute() -> None:
+    timer = Path(__file__).resolve().parents[2] / "packaging/systemd/learn-ukrainian-merge-queue-keeper.timer"
+    text = timer.read_text()
+    assert "OnCalendar=*:*:00" in text
+    assert "AccuracySec=5s" in text
 
 
 def _ejected(fake: FakeGitHub, path: Path, jobs: list[str], **state: Any) -> None:
@@ -1770,6 +2021,35 @@ def test_real_job_failing_on_two_distinct_prs_opens_one_issue_naming_it(
     assert [item["title"] for item in fake.issue_rows] == ["Merge queue flaky test: pytest (3)"]
 
 
+def test_aggregate_plus_real_job_names_the_real_job_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    prior = [_recent("CI Gate", 10596), _recent("Frontend", 10596)]
+    fake, _ = _flaky_run(tmp_path, monkeypatch, prior, ["Frontend", "CI Gate"])
+    assert _issue_titles(fake) == ["Merge queue flaky test: Frontend"]
+
+
+def test_legacy_aggregate_records_already_in_state_open_no_issue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake, _ = _flaky_run(tmp_path, monkeypatch, [_recent("CI Gate", 7), _recent("CI Gate", 8)], ["pytest (9)"])
+    assert _issue_titles(fake) == []
+
+
+def test_issue_body_names_the_failed_test_when_known(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    test = "tests/test_codexbar_usage.py::test_agy_fixture_publishes_separate_quota_groups"
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[{**_recent("pytest (3)", 10596), "test": test}])
+    fake.job_rows = [{"id": 5, "name": "pytest (3)", "conclusion": "failure"}]
+    monkeypatch.setattr(fake, "failed_tests", lambda job_id: [test], raising=False)
+    bodies: list[str] = []
+    monkeypatch.setattr(fake, "create_issue", lambda title, body: (bodies.append(body), 1000)[1])
+    run(fake, path, monkeypatch)
+    assert len(bodies) == 1
+    assert f"`{test}` failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
+    assert f"Failed test: `{test}`." in bodies[0]
+    assert {item["test"] for item in json.loads(path.read_text())["failures"] if item["pr"] == 42} == {test}
+
+
 def test_flaky_jobs_counts_distinct_prs_and_skips_aggregate_jobs() -> None:
     failures = [
         {"job": "pytest (1)", "pr": 5, "test": "tests/a.py::test_a"},
@@ -1782,6 +2062,29 @@ def test_flaky_jobs_counts_distinct_prs_and_skips_aggregate_jobs() -> None:
         {"job": "pytest (2)", "pr": True},
     ]
     assert keeper._flaky_jobs(failures) == {}
+
+
+def test_flaky_jobs_counts_one_pr_failing_the_same_job_twice_once() -> None:
+    failures = [{"job": "pytest (1)", "pr": 5}, {"job": "pytest (1)", "pr": 5}]
+    assert keeper._flaky_jobs(failures) == {}
+
+
+@pytest.mark.parametrize("failures", [[], None, "x", {}])
+def test_flaky_jobs_with_no_usable_failures_is_empty(failures: Any) -> None:
+    assert keeper._flaky_jobs(failures) == {}
+
+
+def test_same_pr_failing_the_same_job_twice_opens_no_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake, _ = _flaky_run(tmp_path, monkeypatch, [_recent("pytest (3)", 42)], ["pytest (3)"])
+    assert _issue_titles(fake) == []
+
+
+def test_ejection_with_no_failed_jobs_records_nothing_and_opens_no_issue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake, path = _flaky_run(tmp_path, monkeypatch, [], [])
+    assert _issue_titles(fake) == []
+    assert json.loads(path.read_text()).get("failures", []) == []
 
 
 # --- untrusted job names and test text in public issue and comment text (#10600) ---
@@ -1810,6 +2113,24 @@ def _public_flaky_issue(
     monkeypatch.setattr(fake, "create_issue", create_issue)
     run(fake, path, monkeypatch)
     return fake, filed
+
+
+def test_reviewer_reproducer_publishes_no_mention_or_link(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, HOSTILE_JOB)
+    assert len(filed) == 1
+    for field in filed[0]:
+        assert "@" not in field
+        assert "](" not in field and "[review-probe]" not in field
+        assert "https://" not in field
+        assert "review-probe" in field  # still identifies the job
+
+
+def test_sanitised_job_text_is_identical_in_title_and_body(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, HOSTILE_JOB)
+    title, body = filed[0]
+    shown = keeper.display_text(HOSTILE_JOB)
+    assert title == f"Merge queue flaky test: {shown}"
+    assert body.startswith(f"`{shown}` failed merge_group runs on distinct PRs #42, #10596")
 
 
 HOSTILE_CLASSES = {
@@ -1858,6 +2179,45 @@ def test_each_hostile_class_is_neutralised_in_title_body_and_pr_comment(
     assert forbidden not in body.replace("`" + shown + "`", "")
 
 
+def test_unicode_lookalike_at_never_survives_in_any_published_field(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    job = "pytest ＠maintainers ﹫team"
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, job)
+    for field in filed[0]:
+        assert not {"@", "＠", "﹫"} & set(field)
+
+
+def test_very_long_job_name_is_bounded_and_distinct_names_keep_distinct_titles(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first, second = "pytest " + "a" * 5000 + "1", "pytest " + "a" * 5000 + "2"
+    shown = keeper.display_text(first)
+    assert len(shown) <= keeper.DISPLAY_JOB_LIMIT + len(" (id:)") + keeper.DISPLAY_ID_LENGTH
+    assert shown.count("…") == 1
+    assert keeper.display_text(first) != keeper.display_text(second)
+    assert keeper.display_text(first) == keeper.display_text(first)  # deterministic
+
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[_recent(first, 1), _recent(first, 2), _recent(second, 3), _recent(second, 4)])
+    run(fake, path, monkeypatch)
+    titles = _issue_titles(fake)
+    assert len(titles) == 2 and len(set(titles)) == 2
+    assert all(len(title) < 256 for title in titles)
+
+
+def test_empty_after_sanitising_still_has_a_name() -> None:
+    shown = keeper.display_text("​\x00\n")
+    assert shown.startswith("(unnamed) (id:")
+
+
+@pytest.mark.parametrize("job", ["pytest (3)", "Frontend", "Test / pytest (shard 12, py3.12)", "Build, drift check"])
+def test_benign_names_pass_through_unchanged(job: str) -> None:
+    assert keeper.display_text(job) == job
+    assert keeper.code_span(job) == f"`{job}`"
+
+
 def test_grouping_and_counting_use_the_raw_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     raw = {"job": HOSTILE_JOB, "pr": 5}
     assert keeper._flaky_jobs([raw, {**raw, "pr": 6}]) == {HOSTILE_JOB: ([5, 6], [])}
@@ -1881,6 +2241,15 @@ def test_second_run_finds_the_sanitised_title_and_files_nothing(tmp_path: Path, 
     run(fake, path, monkeypatch)
     assert len(filed) == 1
     assert [row["title"] for row in fake.issue_rows] == [filed[0][0]]
+
+
+def test_hostile_failed_test_text_is_sanitised_in_issue_body(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    test = "tests/a.py::test_x @octocat [l](https://evil.example)\n# 12 `x`"
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, "pytest (3)", test=test)
+    body = filed[0][1]
+    assert f"Failed test: `{keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}`." in body
+    for token in ("@", "](", "https://", "\n", "#12", "`x`"):
+        assert token not in body
 
 
 def test_different_tests_in_one_shard_do_not_share_a_record(tmp_path, monkeypatch) -> None:
@@ -1976,6 +2345,20 @@ def test_failed_test_parser_collects_all_nodes_and_deduplicates(tmp_path, monkey
     assert client.failed_tests(456) == ["tests/a.py::test_one", "tests/a.py::test_two"]
 
 
+def test_report_shows_node_records_without_writes(tmp_path, monkeypatch):
+    path = tmp_path / "state.json"
+    failures = [{"test": "tests/a.py::test_one", "job": "pytest (1)", "pr": pr, "run_id": run_id,
+                 "at": keeper.datetime.now(keeper.UTC).isoformat()} for pr, run_id in ((41, 101), (42, 102))]
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "failures": failures}))
+    before = path.read_bytes()
+    fake = FakeGitHub()
+    fake.issue_rows = [{"number": 77, "body": "tests/a.py::test_one"}]
+    lines, failed = run(fake, path, monkeypatch, apply=False)
+    assert not failed
+    assert "flaky record: tests/a.py::test_one; PRs=41,42; runs=101,102; issue=77" in lines
+    assert mutations(fake) == [] and path.read_bytes() == before
+
+
 @pytest.mark.parametrize("job", ["pytest (7)", "Frontend", "Checks", "Secret scan"])
 def test_job_fallback_ignores_unrelated_issue_body(tmp_path, monkeypatch, job):
     path = tmp_path / "state.json"
@@ -2007,6 +2390,25 @@ def test_node_id_match_rejects_prefix_collision(tmp_path, monkeypatch, suffix):
     run(fake, path, monkeypatch)
     assert len(_issue_titles(fake)) == 1
     assert not any(kind == "issue-comment" for kind, _ in fake.actions)
+
+
+def test_new_issue_records_update_and_next_run_does_not_comment(tmp_path, monkeypatch):
+    fake, path = _flaky_run(tmp_path, monkeypatch, [_recent("Frontend", 41)], ["Frontend"])
+    assert json.loads(path.read_text())["flake_issue_updates"]["1000"]
+    fake.actions.clear()
+    run(fake, path, monkeypatch)
+    assert not any(kind in {"issue", "issue-comment"} for kind, _ in fake.actions)
+
+
+def test_issue_listing_is_once_for_multiple_flaky_keys(tmp_path, monkeypatch):
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    _ejected(fake, path, [], failures=[_recent(job, pr) for job in ("Frontend", "Checks") for pr in (41, 42)])
+    calls = []
+    monkeypatch.setattr(fake, "issues", lambda query: calls.append(query) or list(fake.issue_rows))
+    run(fake, path, monkeypatch)
+    assert calls == [""]
+    assert len(_issue_titles(fake)) == 2
 
 
 def test_create_issue_returns_new_issue_number(tmp_path, monkeypatch):

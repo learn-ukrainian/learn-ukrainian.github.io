@@ -21,6 +21,7 @@ from pathlib import Path
 
 import _v4_synthetic_chain_fixture as fixture
 import pytest
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_per_slot_private_factory as factory
@@ -29,6 +30,7 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A6_RECEIPT_PATH = ADMISSION / "dataset_v4_a6_blind_arena_receipt_v1.json"
@@ -36,6 +38,9 @@ A7_RECEIPT_PATH = ADMISSION / "dataset_v4_a7_original_row_factory_receipt_v1.jso
 A8_RECEIPT_PATH = ADMISSION / "dataset_v4_a8_admission_assembly_receipt_v1.json"
 A9_RECEIPT_PATH = ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json"
 FACTORY_RECEIPT_PATH = ADMISSION / "dataset_v4_per_slot_private_factory_receipt_v1.json"
+FACTORY_SCHEMA_PATH = CONTRACTS / "dataset_v4_per_slot_private_factory_receipt_v1.schema.json"
+
+
 @functools.cache
 def _cached_json(path: Path) -> dict:
     """Read a JSON artifact on first use so collection survives a sparse worktree."""
@@ -63,6 +68,26 @@ def _all_keys(value: object) -> set[str]:
 
 
 # --- prerequisite eligibility is a real, per-stratum, live-validated fact ---
+
+
+def test_stratum_eligibility_covers_every_manifest_stratum_exactly_once() -> None:
+    eligibility = ev.stratum_eligibility(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH))
+    assert len(eligibility) == 8
+    assert {record["stratum"] for record in eligibility} == {
+        s["stratum"] for s in _cached_json(MANIFEST_PATH)["slot_series"]
+    }
+
+
+def test_stratum_eligibility_resolving_one_stratum_never_needs_every_other_stratum_resolved() -> None:
+    """The per-stratum-independence property: resolving one stratum's A2
+    residual and manifest assignment must never depend on any other
+    stratum's state."""
+    resolved_a2 = fixture.resolved_a2_receipt("standard_correct")
+    assigned_manifest = fixture.assigned_manifest("standard_correct")
+    eligibility = ev.stratum_eligibility(assigned_manifest, resolved_a2)
+    eligible = {record["stratum"] for record in eligibility if record["prerequisite_eligible"]}
+    assert eligible == {"standard_correct"}
+    assert len(ev.eligible_slot_ids(eligibility)) == 15
 
 
 def test_stratum_eligibility_refuses_a_coverage_entry_referencing_an_absent_residual() -> None:
@@ -157,6 +182,13 @@ def test_subset_refuses_a_completion_for_a_prerequisite_ineligible_slot() -> Non
 # --- the private factory module: public receipt ------------------------------
 
 
+def test_factory_receipt_matches_schema() -> None:
+    schema = json.loads(FACTORY_SCHEMA_PATH.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    errors = list(Draft202012Validator(schema).iter_errors(_cached_json(FACTORY_RECEIPT_PATH)))
+    assert not errors, errors[0].message if errors else None
+
+
 def test_factory_receipt_validates_independently_against_real_public_artifacts() -> None:
     assert factory.validate_receipt_independently(_cached_json(FACTORY_RECEIPT_PATH)) is None
 
@@ -235,6 +267,13 @@ def test_factory_refuses_a_forged_slots_ready_claim() -> None:
         "slots_residual": 0,
         "blocked_reason_code": None,
     }
+    with pytest.raises(factory.PrivateFactoryError):
+        factory.validate_receipt_independently(receipt)
+
+
+def test_factory_refuses_a_nonzero_private_rows_constructed_claim() -> None:
+    receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
+    receipt["execution_counters"]["private_rows_constructed"] = 1
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)
 

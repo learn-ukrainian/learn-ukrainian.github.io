@@ -718,6 +718,63 @@ def test_append_accepts_repository_filenames(tmp_path: Path, filename: str) -> N
 
 
 @pytest.mark.parametrize(
+    "extension",
+    [
+        "py",
+        "md",
+        "db",
+        "yaml",
+        "yml",
+        "json",
+        "sh",
+        "txt",
+        "toml",
+        "js",
+        "ts",
+        "tsx",
+        "css",
+        "html",
+        "csv",
+        "jsonl",
+        "lock",
+        "cfg",
+        "ini",
+        "rs",
+        "go",
+        "mjs",
+        "cjs",
+        "svg",
+        "png",
+        "jpg",
+        "gif",
+        "pdf",
+        "log",
+    ],
+)
+def test_filename_exemption_rejects_embedded_hosts(tmp_path: Path, extension: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    # A file extension cannot exempt a host-named file from handoff hygiene.
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body=f"Changed `example.com.{extension.upper()}`.",
+            idempotency_key="filename",
+            now=NOW + timedelta(seconds=1),
+        )
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body=f"example.{extension}.example.com",
+            idempotency_key="host",
+            now=NOW + timedelta(seconds=2),
+        )
+    assert store.dump_stream(lease.stream_id)["entries"] == []
+
+
+@pytest.mark.parametrize(
     "body,rule",
     [
         # Synthetic domains and documentation addresses; no runtime configuration.
@@ -876,6 +933,38 @@ def test_namespace_network_roots_cannot_exempt_hosts(namespace: str, network_roo
             validate_entry_body(body)
 
 
+@pytest.mark.parametrize(
+    "root",
+    [
+        r"\Device\Mup",
+        r"\Device\LanmanRedirector",
+        r"\Device\OtherRedirector",
+        r"\\?\GLOBALROOT\??\UNC",
+        r"\\?\GLOBALROOT\GLOBAL??\UNC",
+        r"\\?\GLOBALROOT\Device\Mup",
+        r"\\?\GLOBALROOT\Device\LanmanRedirector",
+        r"\\?\GLOBALROOT\Device\OtherRedirector",
+        r"\\.\GLOBALROOT\Device\OtherRedirector",
+        r"\??\GLOBALROOT\Device\OtherRedirector",
+    ],
+)
+def test_following_separator_rejects_hosts_under_any_device_root(root: str) -> None:
+    # Arbitrary device roots and session segments must not need prefix entries.
+    for separator, upper, host, session, ending in product(
+        ["\\", "/", "\\/", "/\\", "\\\\", "//"],
+        [False, True],
+        ["server.sh", "fileserver.md", "box.py", "docs.rs"],
+        ["", ";Z:", ";Z:00000000000003e7\\"],
+        ["\\", "\\share"],
+    ):
+        path = root + "\\" + session + host + ending
+        path = path.swapcase() if upper else path
+        path = path.replace("\\", separator)
+        body = f"Changed `{path}`"
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+
+
 @pytest.mark.parametrize("separator", ["/", "\\"])
 @pytest.mark.parametrize("name", ["server.sh", "core.md", "store.py", "docs.rs"])
 def test_host_shaped_directory_segments_are_conservatively_rejected(separator: str, name: str) -> None:
@@ -905,6 +994,55 @@ def test_every_public_suffix_label_is_a_host_before_every_extension() -> None:
             continue
         passed.append(label)
     assert passed == []
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "example.info.json",
+        "host.biz.yaml",
+        "example.xyz.md",
+        "model.ai.py",
+        "about.me.txt",
+        "host_vars/web01.example.co.jp.yml",
+        r"`host_vars\WEB01.EXAMPLE.ONLINE.YML`",
+        "example.xn--p1ai.json",
+        "host.org.uk.md",
+        "school.sch.uk.md",
+        "nhs.uk.md",
+        "docs/PHASE1.uk.md",
+        "host.review.yaml",
+        "host.review.md",
+        "host.report.md",
+        "x.review.json",
+        "Changed `host_vars/web01.example.review.json`.",
+        "Changed `host_vars/web01.example.report.json`.",
+        "reviews/decol_lex_061.review.json",
+        "evidence/decol_lex_001.review.json.review.json",
+        "other.py.txt",
+        "run_codex_baseline.py.json",
+        "RUN_CODEX_BASELINE.PY.TXT",
+    ],
+)
+def test_hosts_under_public_suffix_labels_are_rejected(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        validate_entry_body(body)
+
+
+def test_entire_canary_script_receipts_remain_files_but_siblings_stay_hosts() -> None:
+    # .sh (Saint Helena) and .py (Paraguay) are suffix labels before .txt; only
+    # the exact tracked receipt names are files, never the label or the shape.
+    for body in (
+        "tool-cenv.sh.txt",
+        "canary-driver.py.txt",
+        "docs/architecture/adr/evidence/entire-0115-canary/round-2/tool-canary-hooks.sh.txt",
+    ):
+        assert not _filename_contains_hostname(body), body
+        validate_entry_body(body)
+    for body in ("tool-other.sh.txt", "canary-driver.sh.txt", "TOOL-CENV.SH.TXT", "tool-cenv.sh.json"):
+        assert _filename_contains_hostname(body), body
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
 
 
 @pytest.mark.parametrize(
@@ -1045,6 +1183,22 @@ def test_vendored_public_suffix_snapshot_is_pinned_and_rules_only() -> None:
 def test_ssh_rejection_preserved_with_linear_token_boundary(body: str) -> None:
     with pytest.raises(ContentRejectedError, match="ssh-alias rule"):
         validate_entry_body(body)
+
+
+def test_mirror_handoff_accepts_issue_filenames(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    handoff = repo_root / "handoff.md"
+    body = "Updated `sources.db`, `vesum.db`, `core.md`, `a1.yaml`, `lexicon-manifest.json`, `mcp-sources-requests.jsonl`.\n"
+    handoff.write_text(body, encoding="utf-8")
+    store = _store(tmp_path / "runtime")
+    lease = _open(store)
+    result = mirror_atlas_handoff(
+        store, lease, repo_root=repo_root, stream_id=lease.stream_id, source_path=Path("handoff.md"), now=NOW
+    )
+    assert result.entry.body == body
+    assert handoff.read_text(encoding="utf-8") == body
+    assert store.dump_stream(lease.stream_id)["entries"][0]["body"] == body
 
 
 def test_ttl_heartbeat_and_expired_write_fencing(tmp_path: Path) -> None:

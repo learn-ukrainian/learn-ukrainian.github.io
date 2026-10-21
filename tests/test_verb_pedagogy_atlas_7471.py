@@ -122,6 +122,11 @@ def test_extract_government_accusative() -> None:
     assert _extract_500_verbs_government(lines) == ["+ accusative"]
 
 
+def test_extract_government_accusative_plus_infinitive() -> None:
+    lines = [line for line in V0383_TEXT.splitlines() if line.strip()]
+    assert _extract_500_verbs_government(lines) == ["+ accusative + infinitive"]
+
+
 def test_extract_government_reflexive_genitive() -> None:
     lines = [line for line in V0365_TEXT.splitlines() if line.strip()]
     assert _extract_500_verbs_government(lines) == ["-ся + до + genitive"]

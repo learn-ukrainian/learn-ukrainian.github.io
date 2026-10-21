@@ -96,6 +96,19 @@ def test_build_candidate_from_committed_inventory(lemma: str, monkeypatch, commi
     assert provenance and all(item.get("inventory_path") for item in provenance)
 
 
+def test_build_candidate_for_zabojatysja_has_no_explicit_entry_type() -> None:
+    from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
+        SPACE_COLLAPSE_INVENTORY,
+    )
+
+    candidate = _build_candidate(ZABOJATYSJA_LEMMA, SPACE_COLLAPSE_INVENTORY, entry_type=None)
+    assert candidate["lemma"] == ZABOJATYSJA_LEMMA
+    assert "entry_type" not in candidate
+    assert candidate["pos"] == "verb"
+    assert candidate["heritage_status"]["classification"] == "standard"
+    assert candidate["surface_admission"] == {"practice": True}
+
+
 def test_scratch_decision_subset_raises_on_missing_lemma(tmp_path: Path, cached_decision_loader) -> None:
     from scripts.audit.source_inventory_intake import SourceInventoryError
     from scripts.lexicon.promote_atlas_6370_named_multiword_residual import BIG_DECISIONS

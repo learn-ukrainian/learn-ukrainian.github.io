@@ -192,6 +192,12 @@ def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]
     assert "would exec claude --model claude-sonnet-5-5 --effort xhigh" in result.stdout
 
 
+def test_claude_rejects_unknown_effort() -> None:
+    result = run_launcher("start-claude.sh", "--effort", "ludicrous")
+    assert result.returncode == 2
+    assert "effort" in result.stderr.lower()
+
+
 def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Path) -> None:
     bin_dir = _stub_claude(tmp_path)
     result = run_launcher(

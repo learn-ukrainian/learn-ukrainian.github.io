@@ -42,3 +42,10 @@ def test_removed_subscription_lane_does_not_suppress_later_api_key_lane(monkeypa
         frozenset({"claude", "codex", "agy", "metered"}),
     )
     assert _filter_handoff(["grok", "metered"], language=True) == ["metered"]
+
+
+def test_language_handoff_stays_on_sol_or_gemini() -> None:
+    choice = resolve_job("orchestrate", language=True)
+    assert choice["handoff"] == ["codex", "agy"]
+    assert "grok" not in choice["handoff"]
+    assert "kimi" not in choice["lanes"]

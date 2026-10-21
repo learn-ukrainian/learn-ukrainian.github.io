@@ -401,6 +401,31 @@ def test_fails_closed_on_wrong_frozen_total(tmp_path: Path, tiny_totals: dict[st
         _compile(tmp_path, freeze, document, role)
 
 
+def test_rights_limit_cannot_replace_a_v2_disposition(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
+    freeze, units = _freeze(tmp_path, tiny_totals)
+    role = tmp_path / "roles.json"
+    _role_contract(role)
+    document = _input(freeze, units, tiny_totals, role)
+    row = next(item for item in document["families"] if item["family_id"] == "ua_gec")["dispositions"][0]
+    for key in (
+        "canonical_identity",
+        "source_role",
+        "claim_type",
+        "evidence_locator_sha256s",
+        "consumer_view",
+        "predicate_sha256",
+        "artifact_sha256",
+    ):
+        row.pop(key)
+    row["disposition_code"] = "rights_limited_locator_only"
+    row["nonconversion"] = {
+        "reason_code": "rights_limit_is_only_a_capability_tag",
+        "unit_specific_locator_sha256": _sha(row["unit_id"]),
+    }
+    with pytest.raises(dispositions.DispositionError, match="schema violation"):
+        _compile(tmp_path, freeze, document, role)
+
+
 def test_repeated_nonconversion_reason_requires_predicate_or_rationale(
     tmp_path: Path, tiny_totals: dict[str, int], monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -67,6 +67,15 @@ def test_neutral_scratch_is_outside_repo(fake_repo: Path) -> None:
         assert (scratch / ".lu-review-scratch").is_file()
 
 
+def test_content_and_attachment_caps(tmp_path: Path) -> None:
+    with pytest.raises(safety.ReviewSafetyError, match="ask_content_exceeds_cap"):
+        safety.assert_content_size("x" * (safety.MAX_REVIEW_REQUEST_BYTES + 1), limit=safety.MAX_REVIEW_REQUEST_BYTES, label="ask_content")
+    big = tmp_path / "big.yaml"
+    big.write_bytes(b"a" * (safety.MAX_ASK_ATTACHMENT_BYTES + 10))
+    with pytest.raises(safety.ReviewSafetyError, match="attachment_exceeds_cap"):
+        safety.assert_attachment_size(big)
+
+
 def test_hermes_review_cwd_isolation_without_absolute_hostile_path(
     fake_repo: Path,
     tmp_path: Path,
@@ -166,3 +175,14 @@ echo 'VERDICT: APPROVED'
     assert status_after == status_before
     assert branch_after == branch_before
     assert Path(cwd_file.read_text(encoding="utf-8").strip()).resolve() != fake_repo.resolve()
+
+
+def test_review_content_cap_blocks_fat_prompt() -> None:
+    fat = "x" * (safety.MAX_REVIEW_REQUEST_BYTES + 50)
+    with pytest.raises(SystemExit, match=r"exceeds_cap"):
+        hermes.ask_hermes(
+            fat,
+            task_id="review-fat",
+            msg_type="review",
+            model="deepseek-v4.1-flash",
+        )

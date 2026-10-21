@@ -127,6 +127,11 @@ def test_backup_failure_includes_last_run_receipt_status(tmp_path: Path) -> None
     )
 
 
+def test_rejects_units_that_are_not_backup_units(tmp_path: Path) -> None:
+    with pytest.raises(alert.AlertError, match="not a backup unit"):
+        _handle(tmp_path, "failed", "learn-ukrainian-api.service", Recorder(), "2026-10-03T03:45:00Z")
+
+
 def test_cli_publishes_through_fleet_comms_to_the_cto_channel(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     seen: dict[str, object] = {}
 

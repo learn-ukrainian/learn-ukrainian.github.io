@@ -20,7 +20,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime.runner import InterAgentTransportError
+from agent_runtime.runner import InterAgentTransportError, resolve_inter_agent_route
 from scripts.ai_agent_bridge import _process
 from scripts.ai_agent_bridge._acp_compat import (
     registered_participant_model,
@@ -274,6 +274,19 @@ def test_process_already_acknowledged_message_skips(bridge_db, monkeypatch):
 
 
 # ── #6894: model defaults derive from the live registry pin ─────────────
+
+
+def test_ask_gemini_default_model_is_none_so_registry_pin_applies() -> None:
+    """A bare ask-gemini carries no model slug; the route applies the pin."""
+    from scripts.ai_agent_bridge import _cli
+
+    parser = _cli._build_parser()
+    args = parser.parse_args(["ask-gemini", "hello", "--task-id", "t-1"])
+    assert args.model is None
+    assert resolve_compat_model("gemini", args.model) is None
+    # The route resolver then applies the live pin — and accepts it.
+    route = resolve_inter_agent_route("agy")
+    assert route.model == registered_participant_model("agy")
 
 
 def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
@@ -572,6 +585,53 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert acp.call_args.args[0] == target
     assert acp.call_args.kwargs["source"] == "agy"
     assert _row(message_id)[0] == 1
+
+
+def _legacy_kimi_row() -> int:
+    """A Kimi-addressed row written before Kimi stopped being a bridge recipient (``send`` now refuses it)."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp)"
+            " VALUES ('task-6915', 'agy', 'kimi', 'advisory', 'Advisor note.', '2026-09-30T00:00:00+00:00')"
+        )
+        conn.commit()
+        return int(cursor.lastrowid)
+    finally:
+        conn.close()
+
+
+def test_send_refuses_a_kimi_recipient(bridge_db):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        _send("kimi", sender="agy")
+
+
+def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch, capsys, forbid_legacy_processors):
+    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed. A Kimi target is a
+    Kimi request and is refused; a generic drain skips the stored row, reports it once and leaves the broker
+    exactly as it was: no reply, no failure record, no acknowledgement."""
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _ask_lifecycle, _cli
+
+    acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    cli_message = _legacy_kimi_row()
+    detached_message = _legacy_kimi_row()
+    before = {message_id: (_row(message_id), _replies(message_id)) for message_id in (cli_message, detached_message)}
+
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _ask_lifecycle.process_background_ask(detached_message, "kimi")
+    capsys.readouterr()
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
+    _ask_lifecycle.process_background_ask(detached_message, "codex")
+    assert capsys.readouterr().out.count("skipped: Kimi is not a bridge recipient") == 3
+
+    acp.assert_not_called()
+    assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
 
 
 @pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])

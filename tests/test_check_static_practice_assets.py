@@ -872,6 +872,31 @@ def test_corrupt_or_absent_inputs_are_read_only_errors(tmp_path: Path, damage: s
     assert _input_snapshot(tmp_path) == before
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
+def test_mixed_unavailable_and_empty_custom_modes_keep_distinct_reports(tmp_path: Path, capsys) -> None:
+    _, practice, _ = _fixture_paths(tmp_path)
+    _write_level(practice, level="A2")
+    _add_empty_mode(practice, "homonym", level="A2")
+    _add_empty_mode(practice, "imperative", level="A2")
+    before = _input_snapshot(tmp_path)
+    summary = _check_fixture(tmp_path, levels=("A1", "A2"))
+    assert summary["ok"] is True, summary["errors"]
+    assert "homonym" not in summary["practice"]["A1"]["mode_coverage"]
+    assert summary["practice"]["A2"]["homonym"] == 0
+    assert summary["coverage"]["levels"]["A2"]["homonym"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
+    assert summary["coverage"]["levels"]["A2"]["imperative"] == {"ratio": 0.0, "pct": 0.0, "thin": False}
+    assert any("A2 imperative: custom origin unknown" in warning for warning in summary["warnings"])
+    assert not any("A1 homonym coverage" in warning for warning in summary["warnings"])
+    check_static_practice_assets._print_summary(summary)
+    output = capsys.readouterr().out
+    assert "homonym=N/A imperative=N/A" in output
+    assert "homonym=0 imperative=0" in output
+    assert "N/A*" not in output
+    assert output.count("N/A") == 4
+    assert "0.0%*" in output
+    assert _input_snapshot(tmp_path) == before
+
+
 def _pin_package(practice: Path, pointer_path: Path) -> bytes:
     import gzip
     import hashlib
@@ -971,6 +996,59 @@ def test_consistent_opaque_custom_versions_and_cross_level_mismatch(tmp_path: Pa
     assert summary["ok"] is False
     assert any("cross-level deckVersion mismatch" in error for error in summary["errors"])
     assert _input_snapshot(tmp_path) == before
+
+
+@pytest.mark.parametrize("failure", [False, True])
+@pytest.mark.needs_sparse_tree("site/src/data")
+def test_repeated_default_relative_absolute_library_and_default_qa_cli_are_pure(tmp_path: Path, monkeypatch, failure: bool) -> None:
+    import shutil
+    import sqlite3
+
+    supplied = tmp_path / "supplied"
+    daily, practice, reviewed = _fixture_paths(supplied)
+    sandbox = tmp_path / "sandbox"
+    (sandbox / "site/src/data").mkdir(parents=True)
+    (sandbox / "site/public").mkdir(parents=True)
+    shutil.copytree(practice, sandbox / "site/public/lexicon")
+    shutil.copyfile(daily, sandbox / check_static_practice_assets.DEFAULT_DAILY_POOL)
+    shutil.copyfile(reviewed, sandbox / check_static_practice_assets.DEFAULT_REVIEWED_SOURCES)
+    teacher, corrections, inventory = (sandbox / name for name in ("teacher.json", "corrections.json", "inventory.json"))
+    _write_json(teacher, {"cloze": []})
+    _write_json(corrections, {"drills": []})
+    _write_json(inventory, {"schema": "atlas-sentence-inventory", "schemaVersion": 1, "rows": [], "sentences": []})
+    db = sandbox / "vesum.db"
+    with sqlite3.connect(db) as connection:
+        connection.execute("CREATE TABLE fixture (value TEXT)")
+    if failure:
+        (sandbox / "site/public/lexicon/practice-stress.A1.json").unlink()
+    script = Path(check_static_practice_assets.__file__).resolve()
+    monkeypatch.chdir(sandbox)
+    before = _input_snapshot(sandbox)
+    common = dict(levels=("A1",), min_daily_pool_size=2, min_practice_lexemes_per_level=1,
+                  run_qa_gate=True, teacher_cloze=teacher, error_corrections=corrections,
+                  sentence_inventory=inventory, vesum_db=db)
+    for _ in range(2):
+        relative = check_assets(**common)
+        absolute = check_assets(**common, practice_dir=(sandbox / "site/public/lexicon").resolve())
+        assert relative["ok"] is (not failure), relative["errors"]
+        assert absolute["ok"] is (not failure), absolute["errors"]
+        for output_format in ("json", "summary"):
+            result = subprocess.run([
+                sys.executable, str(script), "--levels", "A1", "--min-daily-pool-size", "2",
+                "--min-practice-lexemes-per-level", "1", "--teacher-cloze", str(teacher),
+                "--error-corrections", str(corrections), "--sentence-inventory", str(inventory),
+                "--vesum-db", str(db), "--format", output_format,
+            ], cwd=sandbox, capture_output=True, text=True, timeout=60, check=False)
+            assert result.returncode == int(failure), result.stdout + result.stderr
+            if output_format == "json":
+                summary = json.loads(result.stdout)
+                assert summary["ok"] is (not failure)
+                assert "imperative" not in summary["coverage"]["levels"]["A1"]
+            else:
+                assert "imperative=N/A" in result.stdout
+                assert "N/A*" not in result.stdout
+                assert "A1 imperative unavailable" in result.stderr
+        assert _input_snapshot(sandbox) == before
 
 
 def _make_sandbox(tmp_path: Path) -> tuple[Path, Path]:

@@ -31,6 +31,11 @@ from scripts.lexdata import records as rec
 from scripts.lexicon import import_ohoiko_vocab as imp
 from scripts.lexicon import oho_workbook_glossary_parse as oho
 from scripts.lexicon import ulp_glossary_parse as gp
+from scripts.lexicon.ohoiko_quality_enrichment import (
+    extract_1000_words_example,
+    iter_1000_words_examples,
+    normalize_chunk_lines,
+)
 from scripts.storage import topology
 
 WORDS = "anna-ohoiko-1000-words-2nd-ed"
@@ -663,6 +668,13 @@ def test_split_senses_and_stress_diagnostic() -> None:
     assert gp.split_senses("1) more; 3) anymore") is None
     assert gp.stress_errors("коли-не́будь") == [] and gp.stress_errors("ключ") == []
     assert gp.stress_errors("коли-небудь") == ["unstressed_polysyllable:коли-небудь"]
+
+
+def test_iter_examples_first_matches_legacy_single_example() -> None:
+    lines = normalize_chunk_lines(WORD_CHUNKS[3])
+    examples = [example for _, example in iter_1000_words_examples(lines, start_i=2)]
+    assert len(examples) == 2
+    assert extract_1000_words_example(lines, start_i=2) == examples[0]
 
 
 # ---------------------------------------------------------------------------

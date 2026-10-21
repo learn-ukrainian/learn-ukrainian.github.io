@@ -10,6 +10,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from wiki.discipline import (
+    flag_anchor_violations,
     run_discipline_checks,
     strip_invented_citations,
     validate_canonical_anchors,
@@ -22,6 +23,10 @@ from wiki.discipline import (
 
 
 class TestValidateCitationBound:
+    def test_all_within_bound_clean(self):
+        text = "Claim [S1]. Another [S2]. End [S5]."
+        assert validate_citation_bound(text, source_count=5) == []
+
     def test_invented_citation_flagged(self):
         text = "Fine [S1]. Invented [S6]."
         violations = validate_citation_bound(text, source_count=5)
@@ -29,6 +34,12 @@ class TestValidateCitationBound:
         assert violations[0].cited_id == "S6"
         assert violations[0].cited_number == 6
         assert violations[0].max_legal == 5
+
+    def test_ignores_malformed_citations(self):
+        # [Sabc], [S], [S1a] are NOT matches (regex requires pure digits)
+        text = "Malformed [Sabc] [S] [S1a] fine [S1]"
+        violations = validate_citation_bound(text, source_count=5)
+        assert violations == []
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -77,6 +88,10 @@ def fake_anchors_path(tmp_path: Path) -> Path:
 
 
 class TestValidateCanonicalAnchors:
+    def test_clean_article_no_violations(self, fake_anchors_path: Path):
+        text = "Прапор України — синьо-жовтий. Мене звати Іван."
+        assert validate_canonical_anchors(text, fake_anchors_path) == []
+
     def test_flag_violation_caught(self, fake_anchors_path: Path):
         text = "Прапор — блакитно-жовтий стяг."
         violations = validate_canonical_anchors(text, fake_anchors_path)
@@ -172,6 +187,17 @@ class TestRegistryMembershipCitations:
         # source_count=99 would PASS [S5] under the numeric bound; membership
         # correctly flags it because S5 is not in the registry.
         assert [v.cited_id for v in report.citations] == ["S5"]
+
+
+class TestFlagAnchorViolations:
+    def test_inserts_verify_marker(self, fake_anchors_path: Path):
+        text = "Прапор блакитно-жовтий стяг."
+        violations = validate_canonical_anchors(text, fake_anchors_path)
+        out = flag_anchor_violations(text, violations)
+        assert "<!-- VERIFY" in out
+        assert "test_flag" in out
+        # Original text intact
+        assert "блакитно-жовтий" in out
 
 
 # ═══════════════════════════════════════════════════════════════════

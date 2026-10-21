@@ -78,6 +78,33 @@ class TestReviewGateInStatusJSON:
         assert data["gates"]["review"]["violations"] == 1
         assert "fake" in data["gates"]["review"]["message"].lower()
 
+    def test_review_gate_skipped(self):
+        """Review gate should be 'skipped' when content gates fail."""
+        path = save_status_cache(
+            str(self.md_file), "test-level", "test-module",
+            results={}, has_critical_failure=True,
+            critical_failure_reasons=["Word count too low"],
+            review_violations=[],
+            review_gate_status="skipped",
+        )
+        with open(path) as f:
+            data = json.load(f)
+
+        assert data["gates"]["review"]["status"] == "skipped"
+        assert data["gates"]["review"]["violations"] == 0
+
+    def test_review_gate_defaults(self):
+        """Review gate should default to skipped when params omitted."""
+        path = save_status_cache(
+            str(self.md_file), "test-level", "test-module",
+            results={}, has_critical_failure=False,
+            critical_failure_reasons=[],
+        )
+        with open(path) as f:
+            data = json.load(f)
+
+        assert data["gates"]["review"]["status"] == "skipped"
+
 
 # =============================================================================
 # Layer 2: Diagnosis logic + auto-mode routing
@@ -281,6 +308,16 @@ class TestFixApplyOutput:
         assert isinstance(data, list)
         assert data[0]["type"] == "quiz"
 
+    def test_changes_report_saved(self):
+        output = (
+            "===CONTENT_START===\n" + "x " * 100 + "\n===CONTENT_END===\n"
+            "===CHANGES_START===\n## Applied Fixes\n1. Fixed line 42\n===CHANGES_END===\n"
+        )
+        self.runner._apply_output("fix", output, self.paths)
+        changes_file = self.paths["orchestration"] / "fix-changes.md"
+        assert changes_file.exists()
+        assert "Fixed line 42" in changes_file.read_text()
+
     def test_no_content_block_leaves_file_unchanged(self):
         """If fix output has no CONTENT block, md should not be touched."""
         original = self.md_path.read_text()
@@ -299,6 +336,77 @@ class TestFixApplyOutput:
 # =============================================================================
 # Layer 4: Helper functions (schema filtering, activity examples, stall detection)
 # =============================================================================
+
+class TestFilterSchemaForTrack:
+    """Test _filter_schema_for_track behavior."""
+
+    def test_empty_allowed_types_returns_full_schema(self):
+        """When allowed_types is empty (core tracks), return full schema unchanged."""
+        from scripts.batch_gemini_runner import _filter_schema_for_track
+        schema = "### quiz (8+ items)\nQuiz content\n### reading\nReading content\n"
+        result = _filter_schema_for_track(schema, set())
+        assert result == schema
+
+    def test_filters_disallowed_types(self):
+        """Should remove sections for types not in allowed_types."""
+        from scripts.batch_gemini_runner import _filter_schema_for_track
+        schema = (
+            "# Activity Reference\n"
+            "General intro text\n"
+            "### quiz (8+ items)\n"
+            "Quiz description and examples\n"
+            "More quiz details\n"
+            "### reading\n"
+            "Reading description\n"
+            "### fill-in\n"
+            "Fill-in description\n"
+        )
+        result = _filter_schema_for_track(schema, {"reading"})
+        assert "reading" in result.lower()
+        assert "Reading description" in result
+        assert "Quiz description" not in result
+        assert "Fill-in description" not in result
+
+    def test_preserves_non_type_headers(self):
+        """Headers that don't match any type should be preserved."""
+        from scripts.batch_gemini_runner import _filter_schema_for_track
+        schema = (
+            "## Activity Type Reference\n"
+            "Overview text\n"
+            "### reading\n"
+            "Reading content\n"
+            "### quiz\n"
+            "Quiz content\n"
+            "## General Notes\n"
+            "Notes text\n"
+        )
+        result = _filter_schema_for_track(schema, {"reading"})
+        assert "Activity Type Reference" in result
+        assert "Overview text" in result
+        assert "Reading content" in result
+        assert "General Notes" in result
+        assert "Notes text" in result
+        assert "Quiz content" not in result
+
+
+class TestActivityExamples:
+    """Test _get_seminar_activity_examples and _get_core_activity_examples."""
+
+    def test_seminar_examples_have_delimiters(self):
+        """Activity examples must include the standard delimiters."""
+        from scripts.batch_gemini_runner import _get_seminar_activity_examples
+        result = _get_seminar_activity_examples("hist")
+        assert "===ACTIVITIES_START===" in result
+        assert "===ACTIVITIES_END===" in result
+        assert "===VOCABULARY_START===" in result
+        assert "===VOCABULARY_END===" in result
+
+    def test_core_examples_have_delimiters(self):
+        """Core activity examples must include the standard delimiters."""
+        from scripts.batch_gemini_runner import _get_core_activity_examples
+        result = _get_core_activity_examples()
+        assert "===ACTIVITIES_START===" in result
+        assert "===ACTIVITIES_END===" in result
 
 
 class TestDiagnoseModuleActivitiesRouting:

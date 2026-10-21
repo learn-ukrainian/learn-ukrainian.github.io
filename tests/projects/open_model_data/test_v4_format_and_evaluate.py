@@ -816,6 +816,26 @@ def test_explanation_concerning_named_unrelated_word_rejected() -> None:
     assert eval2["composite_score"] <= 0.40
 
 
+def test_explanation_concerning_grammatical_label_named_word_rejected() -> None:
+    """M1: An explanation concerning an unrelated word preceded by a grammatical label must fail grounding."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit M1: grammatical label «іменника «будинок»»
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника «будинок»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    # Probe unquoted variant
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника будинок."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
 def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
     """M1 Review P2: Grammatical qualifiers (e.g. «чоловічого роду») describe the subject and must not fail grounding."""
     target = "badtoken"
@@ -826,6 +846,32 @@ def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
     assert eval_res["is_pass"]
     assert eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] == 1.0
+
+
+def test_explanation_concerning_words_odnyny_mnozhyny_rejected() -> None:
+    """M1 Review P2: Explicit subjects 'однини', 'множини', or quoted modifier phrases must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    for word in ("однини", "множини"):
+        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
+        eval_q = evaluate_single_response(target, alts, r_quoted)
+        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
+        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
+        assert eval_q["composite_score"] <= 0.40
+
+        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
+        eval_u = evaluate_single_response(target, alts, r_unquoted)
+        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
+        assert eval_u["composite_score"] <= 0.40
+
+    # Quoted modifier phrase must also be treated as a named entity
+    r_phrase = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «чоловічого роду»."
+    eval_phrase = evaluate_single_response(target, alts, r_phrase)
+    assert not eval_phrase["is_pass"]
+    assert not eval_phrase["reasoning_grounded"]
+    assert eval_phrase["composite_score"] <= 0.40
 
 
 def test_word_internal_apostrophes_not_treated_as_quotes() -> None:
@@ -841,6 +887,18 @@ def test_word_internal_apostrophes_not_treated_as_quotes() -> None:
     assert eval_res["is_pass"]
     assert eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] == 1.0
+
+
+def test_unquoted_modifier_phrases_as_named_subjects_rejected() -> None:
+    """M1 Review P2: Unquoted modifier phrases introduced by 'слова' (e.g. 'слова чоловічого роду') must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова чоловічого роду."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
 
 
 def test_modifier_sequence_ordering_independent() -> None:

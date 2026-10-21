@@ -6,6 +6,7 @@ import sqlite3
 import pytest
 
 from scripts.build.fresh.requires_confirm import record_answers
+from scripts.build.fresh.runner import check_7_a1_choices
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.sources import Sources, batch_digest
 from scripts.curriculum.resolver import codes, receipts
@@ -200,6 +201,18 @@ def test_vesum_change_is_a_named_refusal(request):
         assert caught.value.code == codes.SOURCE_UNAVAILABLE
 
 
+def test_choice_gate_resolves_even_a_locked_fabrication(tmp_path):
+    from types import SimpleNamespace
+
+    forged = document("vesum:anything")
+    lock.write(receipts.requirement_receipt_path(tmp_path, 1), lock.yaml_bytes(forged))
+    with Sources() as api, pytest.raises(ResolverError) as caught:
+        check_7_a1_choices(
+            {"activities": []}, {}, {"words": []}, SimpleNamespace(), state_dir=tmp_path, lesson_n=1, sources=api,
+        )
+    assert caught.value.code == codes.EVIDENCE_ID_UNRESOLVED
+
+
 def test_schema_errors_remain_receipt_invalid():
     malformed = copy.deepcopy(document(IDS["vesum"]))
     malformed["items"][0]["options"][0]["evidence"] = ["vesum:no:colon"]
@@ -263,6 +276,14 @@ def test_lemma_binding_comes_from_vesum_lookup(kind, request):
         result = api.bind_evidence_forms(SourceResult({eid: [{field: "lemma", "status": "ok"}]}, "a" * 64), [(eid, "inflected")])
         assert result.raw[eid, "inflected"] is True
         assert "analyses_sha256" in result.metadata
+
+
+def test_pravopys_identity_names_live_origin():
+    with Sources() as api:
+        result = receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api)
+    assert result.metadata["pravopys"] == {
+        "scheme": "pravopys-live-section-v1", "origin": "https://2019.pravopys.net",
+    }
 
 
 @pytest.mark.parametrize("source_text", ["stone", "one's", "one-two", "two-one", "two’one", "_one"])

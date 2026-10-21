@@ -104,6 +104,35 @@ def test_model_lane_is_attributed_and_failed_lane_cannot_strengthen_gate() -> No
     assert gates["contextual_calque_government_valency"]["correction_release_allowed"] is True
 
 
+def test_calque_gate_counts_declared_non_model_channels_and_lanes() -> None:
+    known_answers = _json(KNOWN_ANSWERS)
+    thresholds = _json(THRESHOLDS)
+    known_answers["categories"]["contextual_calque_government_valency"]["evidence"] = known_answers["categories"][
+        "contextual_calque_government_valency"
+    ]["evidence"][:1]
+    gates = factory.gate_results(
+        known_answers,
+        thresholds,
+        model_proposal_lanes=1,
+        model_dissent_lanes=1,
+    )
+    calque = gates["contextual_calque_government_valency"]
+    assert calque["state"] == "research_only"
+    assert calque["correction_release_allowed"] is False
+    assert any("non-model evidence channels=1" in reason for reason in calque["reasons"])
+
+    known_answers = _json(KNOWN_ANSWERS)
+    gates = factory.gate_results(
+        known_answers,
+        thresholds,
+        model_proposal_lanes=1,
+        model_dissent_lanes=0,
+    )
+    assert any(
+        "attributed dissent lanes=0" in reason for reason in gates["contextual_calque_government_valency"]["reasons"]
+    )
+
+
 def test_frozen_canaries_and_false_correction_caps_fail_closed() -> None:
     known_answers = _json(KNOWN_ANSWERS)
     thresholds = _json(THRESHOLDS)

@@ -35,6 +35,43 @@ def test_phase_mdx_timeout_marks_phase_failed(monkeypatch, tmp_path: Path) -> No
     assert ctx.status_data["phases"]["mdx"]["error"] == "timeout"
 
 
+def test_generate_lesson_schema_main_maps_timeout_to_error_exit(monkeypatch, tmp_path: Path, capsys) -> None:
+    import scripts.build.generate_lesson_schema as gls
+
+    def fake_run(command, **kwargs):
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(gls.subprocess, "run", fake_run)
+
+    rc = gls.main(
+        ["--components-dir", str(tmp_path), "--output", str(tmp_path / "out.yaml")]
+    )
+    assert rc == 1
+    assert "timed out" in capsys.readouterr().err.lower()
+
+
+def test_pipeline_run_command_is_bounded_and_maps_timeout(monkeypatch) -> None:
+    import scripts.build.pipeline as pipeline
+
+    calls: list[dict[str, object]] = []
+
+    def fake_run(_command, **kwargs):
+        calls.append(kwargs)
+        return _result()
+
+    monkeypatch.setattr(pipeline.subprocess, "run", fake_run)
+    code, out, err = pipeline.run_command(["true"])
+    assert (code, out, err) == (0, "", "")
+    assert calls[-1]["timeout"] == 300
+
+    def timeout_run(command, **kwargs):
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(pipeline.subprocess, "run", timeout_run)
+    code, out, err = pipeline.run_command(["true"])
+    assert (code, out, err) == (1, "", str(subprocess.TimeoutExpired(["true"], 300)))
+
+
 def _make_archive(ra, tmp_path: Path, worktree: Path):
     archive_dir = tmp_path / "archive"
     archive_dir.mkdir()

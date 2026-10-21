@@ -193,6 +193,21 @@ def test_materializer_output_permissions_are_0700_and_0600(tmp_path: Path):
             assert mode == materializer.PRIVATE_FILE_MODE
 
 
+def test_materializer_fsyncs_directories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source, output, _rows = _fixture(tmp_path)
+    calls = {"count": 0}
+    real_fsync = os.fsync
+
+    def _counting_fsync(fd: int) -> None:
+        calls["count"] += 1
+        real_fsync(fd)
+
+    monkeypatch.setattr(materializer.os, "fsync", _counting_fsync)
+    materializer.materialize(source, output, fixture=True)
+    # Every packet file, both manifests, and every directory fsync at least once.
+    assert calls["count"] >= 3 + 2 + 3
+
+
 def test_materializer_rolls_back_on_mid_build_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     source, output, _rows = _fixture(tmp_path)
 

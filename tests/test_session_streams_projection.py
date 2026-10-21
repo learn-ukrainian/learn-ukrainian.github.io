@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import yaml
 
+from agents_extensions.shared.session_streams.cli import main
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.dual_write import mirror_handoff_file
 from agents_extensions.shared.session_streams.model import LeaseHolder
@@ -71,6 +73,21 @@ def test_classify_db_mirror_divergence() -> None:
     assert source == "db_mirror"
     assert "DB-first" in error
     assert mutation is True
+
+
+def test_classify_missing_target_with_db_mirror() -> None:
+    status, error, mutation, source = classify_file_projection(
+        file_exists=False,
+        file_sha256="",
+        inventoried_sha256="a" * 64,
+        invent_status="inventoried",
+        db_body="projected",
+        file_body="",
+    )
+    assert status == "failed"
+    assert mutation is False
+    assert source == "db_mirror"
+    assert "missing" in error
 
 
 def test_project_inventory_streams_writes_ok_receipts(tmp_path: Path) -> None:
@@ -173,3 +190,63 @@ def test_project_db_mirror_path_ok_and_failed(tmp_path: Path) -> None:
     assert failed.streams[0].status == "failed"
     assert failed.streams[0].source == "db_mirror"
     assert failed.failed == 1
+
+
+def test_cli_project_and_check_drift(tmp_path: Path, capsys) -> None:
+    repo = _fixture_repo(tmp_path)
+    db_path = tmp_path / "streams.sqlite3"
+    code = main(
+        [
+            "--db",
+            str(db_path),
+            "project",
+            "--repo-root",
+            str(repo),
+            "--format",
+            "json",
+        ]
+    )
+    assert code == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["epic_count"] == 3
+    assert out["receipts_written"] == 3
+    assert "blocked" in out["cutover"]
+    assert out["db_summary"]["projection_receipts"] == 3
+
+    # Mutate, then check-drift
+    handoff = repo / ".claude" / "alpha-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    handoff.write_text("drifted by operator edit\n", encoding="utf-8")
+    code = main(
+        [
+            "--db",
+            str(db_path),
+            "check-drift",
+            "--repo-root",
+            str(repo),
+            "--stream",
+            "epic:1001",
+            "--format",
+            "json",
+        ]
+    )
+    assert code == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["epic_count"] == 1
+    assert out["streams"][0]["status"] == "drift"
+    assert out["streams"][0]["unrecorded_mutation"] is True
+
+    code = main(
+        [
+            "--db",
+            str(db_path),
+            "project",
+            "--repo-root",
+            str(repo),
+            "--format",
+            "table",
+        ]
+    )
+    assert code == 0
+    table = capsys.readouterr().out
+    assert "stream_id" in table
+    assert "epic:1001" in table

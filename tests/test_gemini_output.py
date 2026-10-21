@@ -16,6 +16,7 @@ from scripts.gemini_output import (
     extract_yaml,
     find_complete_pairs,
     has_any_end_marker,
+    has_complete_pair,
     validate_output,
 )
 
@@ -31,9 +32,32 @@ class TestExtractDelimited:
         text = "noise ===CONTENT_START===\nHello world\n===CONTENT_END=== more noise"
         assert extract_delimited(text, "CONTENT") == "Hello world"
 
+    def test_missing_start(self):
+        text = "some text ===CONTENT_END==="
+        assert extract_delimited(text, "CONTENT") is None
+
     def test_missing_end(self):
         text = "===CONTENT_START=== some text"
         assert extract_delimited(text, "CONTENT") is None
+
+    def test_thinking_tokens_stripped(self):
+        """Thinking tokens before/after delimiters are discarded."""
+        text = (
+            "Let me think about this...\n"
+            "Okay, I'll structure the content as follows:\n"
+            "- First section on grammar\n"
+            "- Second section on vocabulary\n"
+            "\n"
+            "===CONTENT_START===\n"
+            "# Actual lesson content\n"
+            "===CONTENT_END===\n"
+            "\n"
+            "I hope that's helpful! Let me know if you need changes."
+        )
+        result = extract_delimited(text, "CONTENT")
+        assert result == "# Actual lesson content"
+        assert "think about" not in result
+        assert "helpful" not in result
 
     def test_last_match_wins(self):
         """If same tag appears twice, last complete pair wins.
@@ -74,6 +98,14 @@ class TestExtractYaml:
 
 class TestPairDetection:
     """Delimiter pair detection for truncation handling."""
+
+    def test_has_complete_pair_true(self):
+        text = "===CONTENT_START===\nstuff\n===CONTENT_END==="
+        assert has_complete_pair(text, "CONTENT") is True
+
+    def test_has_complete_pair_false_no_end(self):
+        text = "===CONTENT_START===\nstuff"
+        assert has_complete_pair(text, "CONTENT") is False
 
     def test_find_complete_pairs(self):
         text = (

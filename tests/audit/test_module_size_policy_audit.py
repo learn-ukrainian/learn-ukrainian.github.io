@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 import yaml
 
 from scripts.audit import module_size_policy_audit as audit
+from scripts.audit import post_build_review as pbr
 
 pytestmark = pytest.mark.reads_content
 
@@ -55,6 +57,71 @@ def _write_module_text(root: Path, track: str, slug: str, text: str) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return path
+
+
+def test_primary_source_words_are_visible_but_excluded_from_authored_repetition() -> None:
+    refrain = " ".join(f"приспів{index}" for index in range(45))
+    text = f"""# Навчальна тема
+
+Пояснення учням.
+
+:::primary-reading
+# Джерельний заголовок
+{refrain}
+:::
+
+:::primary-reading
+{refrain}
+:::
+"""
+
+    metrics, repetition, _ = audit.markdown_module_evidence(text)
+
+    assert metrics.authored_instructional_words == 4
+    assert metrics.quoted_primary_source_words == 92
+    assert metrics.learner_visible_words == 96
+    assert repetition.eligible_paragraphs == 0
+    assert repetition.matches == ()
+
+
+def test_near_duplicate_authored_paragraphs_emit_stable_line_evidence() -> None:
+    first = [f"термін{index}" for index in range(50)]
+    second = [*first[:45], *(f"заміна{index}" for index in range(5))]
+    text = (
+        "# Перша частина\n\n"
+        + " ".join(first)
+        + "\n\n<!-- PRIMARY-READING -->\n"
+        + " ".join(f"приспів{index}" for index in range(45))
+        + "\n<!-- /PRIMARY-READING -->\n\n# Друга частина\n\n"
+        + " ".join(second)
+        + "\n"
+    )
+
+    _, repetition, _ = audit.markdown_module_evidence(text)
+
+    assert repetition.eligible_paragraphs == 2
+    assert len(repetition.matches) == 1
+    match = repetition.matches[0]
+    assert match.match_type == "near_duplicate"
+    assert (match.first_start_line, match.second_start_line) == (3, 11)
+    assert (match.first_heading, match.second_heading) == (
+        "Перша частина",
+        "Друга частина",
+    )
+    assert match.jaccard_similarity >= audit.REPETITION_JACCARD_THRESHOLD
+    assert match.shared_shingle_count >= audit.REPETITION_MIN_SHARED_SHINGLES
+    assert match.shared_text.startswith("термін0 термін1")
+
+
+def test_short_intentional_recap_is_not_actionable_repetition() -> None:
+    recap = "Коротко повторімо головну думку модуля для самоперевірки учня."
+
+    _, repetition, _ = audit.markdown_module_evidence(
+        f"# Підсумок\n\n{recap}\n\n## Ще раз\n\n{recap}\n"
+    )
+
+    assert repetition.eligible_paragraphs == 0
+    assert repetition.matches == ()
 
 
 def test_sparse_bio_dossier_reports_plan_review_without_lowering_floor(
@@ -365,3 +432,52 @@ def test_mismatch_marker_and_exact_floor_violation_are_both_preserved(
     assert row["size_policy_mismatch"] is True
     assert row["status"] == "plan_review_needed"
     assert row["decision_signals"] == ("plan_review_needed", "below_plan_floor")
+
+
+def test_all_core_and_seminar_tracks_have_one_size_policy_route() -> None:
+    policy = pbr.load_track_policy(repo_root=audit.PROJECT_ROOT)
+    core = {
+        track
+        for track, config in policy["tracks"].items()
+        if config["family"] == "core"
+    }
+    seminar = {
+        track
+        for track, config in policy["tracks"].items()
+        if config["family"] == "seminar"
+    }
+
+    assert core == audit.CORE_TRACKS
+    assert seminar == audit.SEMINAR_TRACKS
+    assert set(policy["tracks"]) == audit.CORE_TRACKS | audit.SEMINAR_TRACKS
+
+
+def test_cli_json_output_is_stable_and_read_only(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    _patch_roots(monkeypatch, tmp_path)
+    _write_plan(
+        tmp_path,
+        "bio",
+        "built-person",
+        {
+            "word_target": 5000,
+            "content_outline": [{"section": "Огляд", "words": 5000}],
+        },
+    )
+    _write_dossier(tmp_path, "bio", "built-person", 1400)
+    _write_module(tmp_path, "bio", "built-person", 5050)
+
+    assert audit.main(["--tracks", "bio", "--built-only", "--format", "json"]) == 0
+
+    output = json.loads(capsys.readouterr().out)
+    assert output[0]["slug"] == "built-person"
+    assert output[0]["module_path"] == "curriculum/l2-uk-en/bio/built-person/module.md"
+    assert not (tmp_path / "curriculum" / "l2-uk-en" / "bio" / "built-person" / "status").exists()
+    assert not (tmp_path / "data" / "telemetry").exists()
+
+    first = json.dumps(audit.build_report(tracks=["bio"], built_only=True), sort_keys=True)
+    second = json.dumps(audit.build_report(tracks=["bio"], built_only=True), sort_keys=True)
+    assert first == second

@@ -83,6 +83,36 @@ def test_tasks_lists_state_files(tmp_path, monkeypatch):
     assert data["tasks"][0]["substitution"] is None
 
 
+def test_tasks_status_filter(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    _write_task(tasks_dir / "done.json", _task_payload("done", status="done"))
+    _write_task(tasks_dir / "running.json", _task_payload("running", status="running"))
+
+    response = client.get("/api/delegate/tasks?status=done")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 1
+    assert data["tasks"][0]["task_id"] == "done"
+    assert data["tasks"][0]["status"] == "done"
+
+
+def test_tasks_timeout_status_is_distinct_from_failed(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    _write_task(tasks_dir / "timeout.json", _task_payload("timeout", status="timeout"))
+    _write_task(tasks_dir / "failed.json", _task_payload("failed", status="failed"))
+
+    timeout_response = client.get("/api/delegate/tasks?status=timeout")
+    failed_response = client.get("/api/delegate/tasks?status=failed")
+
+    assert timeout_response.status_code == 200
+    assert failed_response.status_code == 200
+    assert [task["task_id"] for task in timeout_response.json()["tasks"]] == ["timeout"]
+    assert [task["task_id"] for task in failed_response.json()["tasks"]] == ["failed"]
+
+
 def test_tasks_attention_status_filters_are_queryable(tmp_path, monkeypatch):
     """``needs_finalize``/``no_deliverable`` are real settle states — the API
     must not 422 when an orchestrator filters by them (#5800 review)."""
@@ -131,6 +161,27 @@ def test_task_state_path_stays_under_tasks_dir(tmp_path, monkeypatch):
         resolved = path.resolve()
         assert resolved == tasks_dir.resolve() / resolved.name
         assert resolved.is_relative_to(tasks_dir.resolve())
+
+
+def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    # Production writes ``.result`` siblings under TASKS_DIR; reads are
+    # containment-checked there (CodeQL py/path-injection).
+    result_file = tasks_dir / "large.result"
+    result_file.write_text("x" * (70 * 1024), encoding="utf-8")
+    _write_task(
+        tasks_dir / "large.json",
+        _task_payload("large", result_file=str(result_file), status="done"),
+    )
+
+    response = client.get("/api/delegate/tasks/large")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["result_truncated"] is True
+    assert len(data["result"].encode("utf-8")) <= delegate_router.RESULT_BYTES_LIMIT
 
 
 def test_task_detail_falls_back_to_archived_record_and_result(tmp_path, monkeypatch):
@@ -417,6 +468,58 @@ def test_list_delegate_tasks_repository_filter_before_limit(tmp_path, monkeypatc
     # Unknown query keys are ignored by FastAPI; response stays unscoped.
     assert response_q.json()["total"] == unscoped["total"]
     _assert_legacy_summary_shape(response_q.json()["tasks"])
+
+
+def test_delegate_http_redacts_repository_even_when_task_state_has_private(
+    tmp_path, monkeypatch
+):
+    """Unscoped /tasks and /active must never serialize repository/repository_id."""
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    private_repo = "secret-org/secret-private-infra"
+    public_repo = "learn-ukrainian/learn-ukrainian.github.io"
+    now = datetime.now(UTC)
+    _write_task(
+        tasks_dir / "private-running.json",
+        _task_payload(
+            "private-running",
+            status="running",
+            pid=222,
+            started_at=_iso(now),
+            repository=private_repo,
+            repository_id=private_repo,
+            cwd=f"/Users/private/{private_repo}",
+        ),
+    )
+    _write_task(
+        tasks_dir / "public-done.json",
+        _task_payload(
+            "public-done",
+            status="done",
+            started_at=_iso(now - timedelta(minutes=1)),
+            repository=public_repo,
+        ),
+    )
+    monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
+
+    tasks_resp = client.get("/api/delegate/tasks?status=all&limit=50")
+    active_resp = client.get("/api/delegate/active")
+    assert tasks_resp.status_code == 200
+    assert active_resp.status_code == 200
+    tasks_body = tasks_resp.json()
+    active_body = active_resp.json()
+    assert tasks_body["total"] == 2
+    assert active_body["total"] == 1
+    _assert_legacy_summary_shape(tasks_body["tasks"])
+    _assert_legacy_summary_shape(active_body["tasks"])
+    for body in (tasks_body, active_body):
+        blob = json.dumps(body)
+        assert "repository" not in blob
+        assert "repository_id" not in blob
+        assert private_repo not in blob
+        assert public_repo not in blob
+        assert "secret-org" not in blob
+        assert "/Users/private/" not in blob
 
 
 def test_task_detail_detects_stale_run_nonce_split_brain(tmp_path, monkeypatch):

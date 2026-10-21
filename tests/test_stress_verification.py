@@ -10,6 +10,18 @@ from scripts.audit.checks.stress_verification import (
 )
 
 
+class TestStripStress:
+    def test_removes_combining_accent(self):
+        assert _strip_stress(f"яйце{STRESS_MARK}") == "яйце"
+
+    def test_no_stress_unchanged(self):
+        assert _strip_stress("молоко") == "молоко"
+
+    def test_multiple_marks(self):
+        # Shouldn't happen, but handle gracefully
+        assert _strip_stress(f"мо{STRESS_MARK}локо{STRESS_MARK}") == "молоко"
+
+
 class TestExtractStressedWords:
     def test_finds_stressed_words(self):
         text = f"Це моє се{STRESS_MARK}ло і мо{STRESS_MARK}ва."
@@ -41,6 +53,12 @@ class TestExtractStressedWords:
         words = _extract_stressed_words(text)
         assert len(words) == 0
 
+    def test_line_numbers(self):
+        text = f"line one\nline two моло{STRESS_MARK}ко\nline three"
+        words = _extract_stressed_words(text)
+        assert len(words) == 1
+        assert words[0][1] == 2  # line 2
+
 
 @pytest.mark.slow
 class TestVerifyStressMarks:
@@ -69,9 +87,22 @@ class TestVerifyStressMarks:
         assert len(stress_mismatches) == 1
         assert "молоко" in stress_mismatches[0]["text"].lower()
 
+    def test_reversed_stress_yajce(self):
+        # я́йце is wrong (should be яйце́)
+        text = f"Це я{STRESS_MARK}йце."
+        issues = verify_stress_marks(text)
+        stress_mismatches = [i for i in issues if i["type"] == "STRESS_MISMATCH"]
+        assert len(stress_mismatches) == 1
+
     def test_monosyllabic_no_issue(self):
         # кіт has one syllable — stress mark optional, no mismatch
         text = f"Мій кі{STRESS_MARK}т."
         issues = verify_stress_marks(text)
         stress_mismatches = [i for i in issues if i["type"] == "STRESS_MISMATCH"]
         assert len(stress_mismatches) == 0
+
+    def test_empty_text(self):
+        assert verify_stress_marks("") == []
+
+    def test_no_stressed_words(self):
+        assert verify_stress_marks("This is English text only.") == []

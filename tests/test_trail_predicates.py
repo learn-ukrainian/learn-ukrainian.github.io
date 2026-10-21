@@ -39,6 +39,23 @@ def test_typed_input_enforcement_parks_invalid_boolean_and_extra_input() -> None
     assert evaluate_named_table(tables, "queue-pick", extra_input) == STOP_UNKNOWN
 
 
+def test_unknown_enum_input_parks() -> None:
+    tables = load_decision_tables()
+    inputs = {
+        "blocker_class": "unrecognized-blocker",
+    }
+
+    assert evaluate_named_table(tables, "summon-vs-park", inputs) == STOP_UNKNOWN
+    assert (
+        evaluate_named_table(
+            tables,
+            "settle-status",
+            {"task_status": "unrecognized-status", "has_retry_suffix": False},
+        )
+        == STOP_UNKNOWN
+    )
+
+
 def test_zero_matching_rows_park() -> None:
     tables = load_decision_tables()
 

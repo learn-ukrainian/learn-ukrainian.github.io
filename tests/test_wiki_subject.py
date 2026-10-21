@@ -73,3 +73,7 @@ def test_wiki_subject_verify_marker_gate_flags_survivor():
     assert len(findings) == 2
     assert findings[0].line == 1
     assert findings[1].line == 2
+
+
+def test_wiki_subject_verify_marker_gate_accepts_clean_text():
+    assert find_verify_markers_text("Текст без маркерів.") == []

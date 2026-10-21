@@ -12,6 +12,8 @@ from pathlib import Path
 import pytest
 
 from scripts.control_plane.storage import (
+    Authority,
+    ControlPlaneError,
     ControlPlaneUnsupportedComponentError,
     StoreId,
     assert_component_supported,
@@ -39,6 +41,24 @@ def test_assert_component_supported_refuses_pg_for_sqlite_shaped() -> None:
     msg = str(exc.value)
     assert "authority_service" in msg and "'pg'" in msg
     # OPSEC: store id only — never a DSN fragment or hostname.
+    assert "127.0.0.1" not in msg and "postgresql" not in msg
+
+
+def test_assert_component_supported_unknown_component_fails_closed() -> None:
+    with pytest.raises(ControlPlaneError):
+        assert_component_supported(StoreId.FLEET_COMMS, "no_such_component")
+
+
+def test_request_executor_pg_unreachable_fails_closed(tmp_path: Path) -> None:
+    """#605: pg construction is allowed; an unreachable DSN fails closed with
+    a typed, OPSEC-safe error instead of an interlock refusal."""
+    from scripts.control_plane.storage import ControlPlanePgConnectError
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    with pytest.raises(ControlPlanePgConnectError) as exc:
+        RequestExecutor(root=tmp_path)
+    msg = str(exc.value)
+    assert "fleet_comms" in msg
     assert "127.0.0.1" not in msg and "postgresql" not in msg
 
 
@@ -95,6 +115,14 @@ def test_apply_migrations_refuses_non_sqlite_connection() -> None:
         apply_migrations(FakePgConnection())  # type: ignore[arg-type]
 
 
+def test_sqlite_authority_still_constructs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setenv(_ENV, "sqlite")
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    with RequestExecutor(root=tmp_path) as executor:
+        assert executor.store.authority is Authority.SQLITE
+
+
 def test_injected_sqlite_store_does_not_bypass_executor_interlock(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -111,3 +139,19 @@ def test_injected_sqlite_store_does_not_bypass_executor_interlock(
             RequestExecutor(store=store)
     finally:
         store.close()
+
+
+def test_injected_executor_does_not_bypass_message_plane_interlock(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from scripts.fleet_comms.message_plane import MessagePlane
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    monkeypatch.setenv(_ENV, "sqlite")
+    executor = RequestExecutor(root=tmp_path)
+    try:
+        monkeypatch.setenv(_ENV, "pg")
+        with pytest.raises(ControlPlaneUnsupportedComponentError):
+            MessagePlane(mode="shadow", executor=executor)
+    finally:
+        executor.close()

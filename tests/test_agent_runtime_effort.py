@@ -17,12 +17,13 @@ from __future__ import annotations
 import logging
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+import delegate as delegate_mod
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
@@ -68,14 +69,174 @@ def _stub_primary_integrity_sweep(monkeypatch):
 # ---------------------------------------------------------------------------
 
 
+def test_delegate_dispatch_rejects_invalid_effort_level():
+    """Only the documented choices are accepted."""
+    parser = delegate_mod.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args([
+            "dispatch",
+            "--agent", "claude",
+            "--task-id", "t1",
+            "--prompt", "hi",
+            "--effort", "ultra",
+        ])
+
+
+@pytest.mark.parametrize("level", ["low", "medium", "high", "xhigh", "max"])
+def test_delegate_dispatch_accepts_all_documented_effort_levels(level):
+    parser = delegate_mod.build_parser()
+    args = parser.parse_args([
+        "dispatch",
+        "--agent", "claude",
+        "--task-id", f"t-{level}",
+        "--prompt", "hi",
+        "--effort", level,
+    ])
+    assert args.effort == level
+
+
+def test_delegate_worker_parser_accepts_effort():
+    """The internal `_worker` subcommand also accepts --effort so the parent
+    can propagate the value into the detached child's argv."""
+    parser = delegate_mod.build_parser()
+    args = parser.parse_args([
+        "_worker",
+        "--task-id", "t1",
+        "--agent", "claude",
+        "--mode", "read-only",
+        "--cwd", "/tmp",
+        "--effort", "xhigh",
+    ])
+    assert args.effort == "xhigh"
+
+
 # ---------------------------------------------------------------------------
 # AC5.2 — _run_worker forwards effort to runtime.invoke
 # ---------------------------------------------------------------------------
+
+def test_run_worker_forwards_effort_to_runtime_invoke(tmp_path):
+    """_run_worker must pass effort= straight through to runner.invoke."""
+    mock_result = MagicMock(
+        ok=True,
+        response="ok",
+        stderr_excerpt=None,
+        returncode=0,
+        rate_limited=False,
+    )
+    # The state file must exist so _run_worker's read returns a dict.
+    state_path = delegate_mod._state_path("t-effort")
+    delegate_mod._write_state_atomic(state_path, {"task_id": "t-effort"})
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate_mod._run_worker(
+            task_id="t-effort",
+            agent="claude",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model="claude-opus-4-7",
+            hard_timeout=60,
+            effort="xhigh",
+        )
+
+    assert rc == 0
+    assert mock_invoke.called, "runner.invoke should have been called"
+    kwargs = mock_invoke.call_args.kwargs
+    assert kwargs["effort"] == "xhigh", (
+        f"_run_worker must forward effort='xhigh'; kwargs={kwargs}"
+    )
+    assert kwargs["model"] == "claude-opus-4-7"
+    assert kwargs["entrypoint"] == "delegate"
 
 
 # ---------------------------------------------------------------------------
 # AC5.3 — runner.invoke forwards effort to adapter.build_invocation
 # ---------------------------------------------------------------------------
+
+def test_runner_invoke_forwards_effort_to_adapter_build_invocation(tmp_path):
+    """runner.invoke(..., effort="xhigh") must pass effort="xhigh" into the
+    adapter's build_invocation call. Stub has_headroom + Popen so no real
+    process runs; assert the adapter spy captured effort."""
+    from agent_runtime import runner as runner_mod
+
+    spy_adapter = MagicMock()
+    spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
+    spy_adapter.default_model = "claude-opus-4-7"
+    # Make build_invocation return an InvocationPlan-ish mock.
+    fake_plan = MagicMock()
+    fake_plan.cmd = ["/bin/true"]
+    fake_plan.cwd = tmp_path
+    fake_plan.stdin_payload = ""
+    fake_plan.env_overrides = {}
+    fake_plan.env_unsets = ()
+    fake_plan.output_file = None
+    fake_plan.liveness_paths = ()
+    spy_adapter.build_invocation.return_value = fake_plan
+    spy_adapter.liveness_signal_paths.return_value = ()
+    # parse_response returns an ok ParseResult-like object.
+    spy_parse = MagicMock(
+        ok=True,
+        response="ok",
+        stderr_excerpt=None,
+        rate_limited=False,
+        session_id=None,
+        tokens=None,
+    )
+    spy_adapter.parse_response.return_value = spy_parse
+
+    fake_proc = MagicMock()
+    fake_proc.poll.return_value = 0
+    fake_proc.returncode = 0
+    fake_proc.stdin = None
+    # Patching runner.subprocess.Popen also hits env_sanitize._isolated_git_env
+    # via subprocess.run → Popen.communicate(); MagicMock's default unpacks to
+    # zero values (#7020 merge-group). Agent spawns pass env=; isolation does not.
+    fake_proc.communicate.return_value = (b"", b"")
+    fake_proc.__enter__.return_value = fake_proc
+    fake_proc.__exit__.return_value = False
+
+    def _agent_only_popen(*args, **kwargs):
+        if "env" not in kwargs:
+            isolation_proc = MagicMock()
+            isolation_proc.communicate.return_value = (b"", b"")
+            isolation_proc.__enter__.return_value = isolation_proc
+            isolation_proc.__exit__.return_value = False
+            isolation_proc.poll.return_value = 0
+            isolation_proc.returncode = 0
+            isolation_proc.args = args[0] if args else kwargs.get("args", ())
+            return isolation_proc
+        return fake_proc
+
+    with patch(
+        "agent_runtime.runner._load_adapter", return_value=spy_adapter,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", side_effect=_agent_only_popen,
+    ), patch(
+        "agent_runtime.runner.start_watchdog",
+        return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
+    ), patch(
+        "agent_runtime.runner.stop_watchdog",
+    ):
+        runner_mod.invoke(
+            "claude",
+            "hi",
+            mode="read-only",
+            cwd=tmp_path,
+            model="claude-opus-4-7",
+            effort="xhigh",
+            entrypoint="delegate",
+        )
+
+    assert spy_adapter.build_invocation.called
+    build_kwargs = spy_adapter.build_invocation.call_args.kwargs
+    assert build_kwargs["effort"] == "xhigh", (
+        f"runner.invoke must forward effort='xhigh' to adapter; "
+        f"kwargs={build_kwargs}"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -254,3 +415,104 @@ def test_gemini_adapter_accepts_effort_without_crashing(tmp_path, caplog):
 # Gemini fallback ladder path propagates effort on every rung
 # (Codex adversarial review 2026-04-22 finding #2.)
 # ---------------------------------------------------------------------------
+
+def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
+    """When invoke() routes to _invoke_gemini_with_fallback, each rung's
+    attempt must call adapter.build_invocation with effort= propagated.
+    Drive two rungs by returning rate_limited on the first, success on
+    the second, and assert both build_invocation calls saw the kwarg."""
+    from agent_runtime import runner as runner_mod
+
+    spy_adapter = MagicMock()
+    spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
+    spy_adapter.default_model = "gemini-3.1-pro-preview"
+
+    fake_plan = MagicMock()
+    fake_plan.cmd = ["/bin/true"]
+    fake_plan.cwd = tmp_path
+    fake_plan.stdin_payload = ""
+    fake_plan.env_overrides = {}
+    fake_plan.env_unsets = ()
+    fake_plan.output_file = None
+    fake_plan.liveness_paths = ()
+    spy_adapter.build_invocation.return_value = fake_plan
+    spy_adapter.liveness_signal_paths.return_value = ()
+
+    # Drive the ladder: rung 1 → rate_limited, rung 2 → success.
+    from ai_llm.fallback import CallResult
+    fake_call_result = CallResult(
+        response_text="pong",
+        model_used="gemini-3.1-pro-preview",
+        auth_mode_used="oauth",
+        elapsed_s=0.1,
+    )
+
+    with patch(
+        "agent_runtime.runner._load_adapter", return_value=spy_adapter,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.run_gemini_fallback_ladder",
+    ) as mock_ladder:
+        def _run_ladder(*, attempt_runner, **_kwargs):
+            # Invoke the runner's attempt callback twice with different rungs
+            # to prove effort gets forwarded on each call.
+            from ai_llm.fallback import GeminiRung
+            rung_a = GeminiRung(
+                index=0, total=2,
+                model="gemini-3.1-pro-preview", auth_mode="oauth",
+            )
+            rung_b = GeminiRung(
+                index=1, total=2,
+                model="gemini-3.1-flash-preview", auth_mode="api",
+            )
+            # The runner's _attempt_runner internally calls adapter.build_invocation.
+            # We patch _execute_invocation_plan to a no-op success so the runner
+            # returns an AttemptOutcome without running a real subprocess.
+            with patch(
+                "agent_runtime.runner._execute_invocation_plan",
+                return_value=MagicMock(
+                    parse=MagicMock(
+                        ok=True,
+                        response="pong",
+                        stderr_excerpt=None,
+                        rate_limited=False,
+                        session_id=None,
+                        tokens=None,
+                    ),
+                    duration_s=0.1,
+                    returncode=0,
+                    kill_reason=None,
+                    stdout_text="pong",
+                    stderr_text="",
+                    liveness_paths=(),
+                ),
+            ):
+                attempt_runner(rung_a, 0, 60)
+                attempt_runner(rung_b, 1, 60)
+            return fake_call_result
+
+        mock_ladder.side_effect = _run_ladder
+
+        runner_mod.invoke(
+            "gemini",
+            "hi",
+            mode="read-only",
+            cwd=tmp_path,
+            model="gemini-3.1-pro-preview",
+            effort="xhigh",
+            entrypoint="delegate",
+        )
+
+    # Both rung invocations must have forwarded effort="xhigh".
+    assert spy_adapter.build_invocation.call_count == 2, (
+        f"expected 2 build_invocation calls (one per rung); "
+        f"got {spy_adapter.build_invocation.call_count}"
+    )
+    for call in spy_adapter.build_invocation.call_args_list:
+        assert call.kwargs.get("effort") == "xhigh", (
+            f"every rung must propagate effort='xhigh'; "
+            f"kwargs={call.kwargs}"
+        )

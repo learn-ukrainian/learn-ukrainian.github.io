@@ -368,6 +368,25 @@ def test_a1_schema_accepts_unjumble_parser_aliases():
     assert errors == []
 
 
+def test_a1_schema_rejects_quiz_string_options_without_answer():
+    data = [
+        {
+            "type": "quiz",
+            "instruction": "Choose one.",
+            "items": [
+                {
+                    "question": "Which one?",
+                    "options": ["Так", "Ні"],
+                }
+            ],
+        }
+    ]
+
+    errors = list(_a1_schema_validator().iter_errors(data))
+
+    assert errors
+
+
 def test_order_still_rejects_non_permutation_strings(tmp_path):
     """A string correct_order that is NOT an exact permutation of items must
     still fail (no silent coercion of bogus answers)."""

@@ -450,3 +450,15 @@ def test_adversarial_nlp_negated_option_rejected() -> None:
     passed, score = score_nlp_prediction("test_task", pred, "А")
     assert passed is False
     assert score == 0.0
+
+
+def test_adversarial_nlp_selected_with_negated_alternative_accepted() -> None:
+    """Verify that an affirmative selection is retained when an alternative is negated.
+
+    Regression test for Codex R8 Finding 4.
+    """
+    pred = "Відповідь: А. Не обирайте `Б`."
+    assert parse_selected_option(pred) == "А"
+    passed, score = score_nlp_prediction("test_task", pred, "А")
+    assert passed is True
+    assert score == 1.0

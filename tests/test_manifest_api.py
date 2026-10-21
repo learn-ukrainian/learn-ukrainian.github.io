@@ -29,6 +29,47 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 # ---------------------------------------------------------------------
 
 
+def test_rule_sources_includes_all_unscoped_files():
+    """The explicit full-reference archive retains all its original sources."""
+    expected = {
+        "agents_extensions/shared/rules/operator-expectations.md",
+        "agents_extensions/shared/rules/critical-rules.md",
+        "agents_extensions/shared/rules/non-negotiable-rules.md",
+        "agents_extensions/shared/rules/workflow.md",
+        "agents_extensions/shared/rules/fleet-comms-coordination.md",
+        "agents_extensions/shared/rules/delegate-must-use-worktree.md",
+        "agents_extensions/shared/rules/cli-help-standard.md",
+        "agents_extensions/shared/rules/model-assignment.md",
+        "agents_extensions/shared/rules/fleet-driver-routing.md",
+        "docs/best-practices/fleet-shared-doctrine.md",
+        "docs/best-practices/fleet-role-scorecard.md",
+    }
+    assert set(rules_router.RULE_SOURCES) == expected
+    # Order: machine routing before living scorecard (#5529).
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/model-assignment.md"
+    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-role-scorecard.md")
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/model-assignment.md"
+    ) < rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-driver-routing.md"
+    )
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-driver-routing.md"
+    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-shared-doctrine.md")
+    # Fleet-comms mid-cutover rule sits with operational workflow, before model table.
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/workflow.md"
+    ) < rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-comms-coordination.md"
+    )
+    assert rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/fleet-comms-coordination.md"
+    ) < rules_router.RULE_SOURCES.index(
+        "agents_extensions/shared/rules/model-assignment.md"
+    )
+
+
 def test_rules_markdown_default(monkeypatch, tmp_path):
     """GET /api/rules returns text/markdown with an X-Rules-Hash header."""
     # Redirect the router at synthetic rule files so the test is hermetic.
@@ -76,6 +117,13 @@ def test_rules_missing_core_refuses_instead_of_serving_archive(monkeypatch, tmp_
     assert rules_core.CORE_REL in resp.json()["detail"]
     assert rules_router.rules_hash(project_root=tmp_path) == ""
     assert client.get("/api/rules?scope=full").status_code == 200
+
+
+def test_rules_archive_500_when_no_sources_readable(monkeypatch, tmp_path):
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    monkeypatch.setattr(rules_router, "RULE_SOURCES", ("missing.md",))
+    resp = client.get("/api/rules?scope=full")
+    assert resp.status_code == 500
 
 
 def test_binding_rules_are_core_with_task_scoped_references():
@@ -129,6 +177,19 @@ def session_fixture(tmp_path, monkeypatch):
     return project_root
 
 
+def test_session_current_markdown(session_fixture):
+    resp = client.get("/api/session/current")
+    assert resp.status_code == 200
+    assert "Working on #1309." in resp.text
+    # Recent handoffs block appended after the current.md body.
+    assert "Recent session-state files" in resp.text
+    assert "2026-04-17-newest.md" in resp.text
+    # Older handoffs listed too but not current router or agent handoff files.
+    recent_block = resp.text.split("Recent session-state")[1]
+    assert "current.md" not in recent_block
+    assert "codex-orchestrator-handoff.md" not in recent_block
+
+
 def test_session_current_json(session_fixture):
     resp = client.get("/api/session/current?format=json")
     assert resp.status_code == 200
@@ -171,6 +232,21 @@ def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_pa
     assert resp.status_code == 200
     body = resp.json()
     assert "Durable orchestrator state." in body["markdown"]
+    assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
+
+
+def test_session_current_codex_without_router_uses_durable_handoff(tmp_path, monkeypatch):
+    project_root = tmp_path
+    session_dir = project_root / "docs" / "session-state"
+    session_dir.mkdir(parents=True)
+    (session_dir / "codex-orchestrator-handoff.md").write_text("# Durable task\n\nCodex UI state.\n", encoding="utf-8")
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
+
+    resp = client.get("/api/session/current?agent=codex&format=json")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "Codex UI state." in body["markdown"]
     assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
 
 

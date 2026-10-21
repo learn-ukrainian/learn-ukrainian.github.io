@@ -176,6 +176,22 @@ def test_containment_counts_live_remote_ref(tmp_path: Path) -> None:
     assert delegate._commit_is_durably_contained(repo, tip) is True
 
 
+def test_containment_counts_live_remote_ref_that_moved_forward(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    tip = _topic_tip(repo)
+    # The remote branch advances past the cached tracking ref; the tip is
+    # still contained in the live remote head.
+    _git(repo, "checkout", "codex/review-topic-r2")
+    (repo / "more.txt").write_text("later round\n", encoding="utf-8")
+    _git(repo, "add", "more.txt")
+    _git(repo, "commit", "-m", "remote moved forward")
+    _git(repo, "push", "origin", "codex/review-topic-r2")
+    _git(repo, "checkout", "main")
+    _git(repo, "update-ref", "refs/remotes/origin/codex/review-topic-r2", tip)
+
+    assert delegate._commit_is_durably_contained(repo, tip) is True
+
+
 def test_containment_rejects_stale_tracking_ref(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
     tip = _topic_tip(repo)
@@ -193,6 +209,13 @@ def test_containment_ls_remote_error_is_not_contained(tmp_path: Path) -> None:
     _git(repo, "remote", "set-url", "origin", str(tmp_path / "missing.git"))
 
     assert delegate._commit_is_durably_contained(repo, tip) is False
+
+
+def test_review_series_round_numbers() -> None:
+    assert delegate._review_series("review-gpt6-routing") == ("review-gpt6-routing", 0)
+    assert delegate._review_series("review-gpt6-routing-r7") == ("review-gpt6-routing", 7)
+    assert delegate._review_series("review-8340-cf-r10") == ("review-8340-cf", 10)
+    assert delegate._review_series("impl-8414") is None
 
 
 @pytest.mark.parametrize("dry_run", [False, True])
@@ -221,6 +244,14 @@ def test_superseded_review_dependency_is_kept_without_refusing_dispatch(
     err = capsys.readouterr().err
     assert f"earlier review {earlier} kept: review dependency (manifest)" in err
     assert "would remove" not in err
+
+
+def test_detached_review_dependency_refusal_remedy_requires_a_separate_retained_checkout(tmp_path):
+    holder = tmp_path / "detached-review"
+    with pytest.raises(ValueError) as exc:
+        delegate._refuse_review_attempt_branch_holders(None, [holder], (("input_root", holder),))
+    assert "render from a separate retained worktree at the exact commit" in str(exc.value)
+    assert "render from a detached worktree" not in str(exc.value)
 
 
 def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Path) -> None:

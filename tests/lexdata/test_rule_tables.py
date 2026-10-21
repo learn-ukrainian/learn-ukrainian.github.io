@@ -19,6 +19,16 @@ def test_labels_map_through_the_closed_table_only() -> None:
     assert both["fields"] == {"pos": "noun"} and both["conflicts"] == ["gender"]
 
 
+def test_dispositions_are_closed() -> None:
+    assert rule_tables.is_unit_disposition("imported")
+    assert rule_tables.is_unit_disposition("refused:truncated_source")
+    assert rule_tables.is_unit_disposition("out_of_scope:prose")
+    assert not rule_tables.is_unit_disposition("out_of_scope:")
+    assert not rule_tables.is_unit_disposition("refused:made_up")
+    assert rule_tables.is_line_disposition("refused:stress_invalid")
+    assert not rule_tables.is_line_disposition("entry ")
+
+
 def test_derive_leaf_maps_labels_and_prefers_the_parser_refusal() -> None:
     locator = "sources:t:id=1"
     unit = records.UnitInput("fixture", locator, "page", (records.L0Row(locator, "a" * 64),))

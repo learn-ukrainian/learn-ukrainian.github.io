@@ -30,6 +30,12 @@ class TestParseFrontmatter:
         assert 'module: 1' in fm
         assert '# Body content' in body
 
+    def test_no_frontmatter(self):
+        content = "# Just a heading\n\nSome content."
+        fm, body = parse_frontmatter(content)
+        assert fm == ""
+        assert body == content
+
 
 # =============================================================================
 # TEST: detect_level

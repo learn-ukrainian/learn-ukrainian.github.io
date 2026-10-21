@@ -140,6 +140,30 @@ def test_update_plan_skips_already_compliant_plans(tmp_path):
     assert before == after  # file untouched
 
 
+def test_update_plan_dry_run_does_not_write(tmp_path):
+    """Dry-run mode returns True when a change would occur but
+    leaves the file unchanged."""
+    profile = {
+        "inline": [
+            {"type": "quiz", "after_section": "X", "focus": "q"},
+        ],
+        "workbook": [
+            {"type": "essay-response", "focus": "e"},
+        ],
+    }
+    plan = {
+        "title": "T",
+        "activity_hints": [{"type": "fill-in", "focus": "old"}],
+    }
+    plan_path = tmp_path / "t.yaml"
+    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
+    before = plan_path.read_text(encoding="utf-8")
+
+    would_change = updater.update_plan(plan_path, profile, dry_run=True)
+    assert would_change is True
+    assert plan_path.read_text(encoding="utf-8") == before
+
+
 # ---------------------------------------------------------------------------
 # Profile loading from the YAML template
 # ---------------------------------------------------------------------------

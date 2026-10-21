@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.guardrails.worktree_containment import NotAGitRepositoryError, _resolve_main_root_or_none
+from scripts.hygiene import root_entry_guard
 from scripts.hygiene.root_entry_guard import main, scan_unexpected_root_entries
 
 
@@ -36,6 +38,11 @@ def _make_repo(root: Path) -> Path:
     (root / "node_modules").mkdir()
     (root / "node_modules" / "dep.js").write_text("// ignored\n", encoding="utf-8")
     return root
+
+
+def test_clean_root_reports_nothing(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path / "repo")
+    assert scan_unexpected_root_entries(root) == []
 
 
 def test_empty_garbage_dir_flagged_as_git_invisible(tmp_path: Path) -> None:
@@ -63,6 +70,59 @@ def test_literal_dash_rf_dir_flagged_without_arg_injection(tmp_path: Path) -> No
     # The flag-shaped name must not have been consumed as a git option:
     # the ignored node_modules dir is still correctly NOT flagged.
     assert all(e.name != "node_modules" for e in unexpected)
+
+
+def test_nonempty_garbage_dir_flagged_as_git_visible(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path / "repo")
+    garbage = root / 'prompt"}}'
+    garbage.mkdir()
+    (garbage / "nested.txt").write_text("x\n", encoding="utf-8")
+
+    unexpected = scan_unexpected_root_entries(root)
+
+    assert [e.name for e in unexpected] == ['prompt"}}']
+    assert unexpected[0].kind == "dir"
+    assert unexpected[0].git_invisible is False
+
+
+def test_untracked_file_flagged_as_git_visible(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path / "repo")
+    (root / "stray.txt").write_text("x\n", encoding="utf-8")
+
+    unexpected = scan_unexpected_root_entries(root)
+
+    assert [e.name for e in unexpected] == ["stray.txt"]
+    assert unexpected[0].kind == "file"
+    assert unexpected[0].git_invisible is False
+
+
+def test_tracked_and_ignored_entries_never_flagged(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path / "repo")
+    unexpected = scan_unexpected_root_entries(root)
+    assert all(e.name not in {"tracked.py", ".gitignore", "node_modules", ".git"} for e in unexpected)
+
+
+def test_scan_anchored_from_nested_subdir_scans_primary_root(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path / "repo")
+    nested = root / "scripts" / "deeper"
+    nested.mkdir(parents=True)
+    (root / "scripts" / "kept.py").write_text("# tracked\n", encoding="utf-8")
+    _git(root, "add", "scripts/kept.py")
+    (root / "-rf").mkdir()
+
+    unexpected = scan_unexpected_root_entries(nested)
+
+    assert [e.name for e in unexpected] == ["-rf"]
+
+
+def test_outside_git_repo_raises(tmp_path: Path) -> None:
+    nowhere = tmp_path / "nowhere"
+    nowhere.mkdir()
+    # The guard's own resolver: Git, then its on-disk `.git` fallback walk.
+    if _resolve_main_root_or_none(nowhere) is not None:
+        pytest.skip("the runner's temp area has an enclosing Git root; no directory outside one is available")
+    with pytest.raises(NotAGitRepositoryError):
+        scan_unexpected_root_entries(nowhere)
 
 
 def test_guard_never_deletes(tmp_path: Path) -> None:
@@ -97,3 +157,25 @@ def test_cli_strict_exit_codes(tmp_path: Path) -> None:
 
     assert main(["--repo-root", str(dirty), "--strict"]) == 1
     assert main(["--repo-root", str(clean), "--strict"]) == 0
+
+
+def test_module_docstring_and_exports() -> None:
+    assert root_entry_guard.__doc__ is not None
+    assert "#6863" in root_entry_guard.__doc__
+
+
+def test_session_start_hook_wires_the_guard() -> None:
+    """The SessionStart canary must invoke this guard and alert, never delete."""
+    hook = (
+        Path(root_entry_guard.__file__).resolve().parents[2]
+        / "agents_extensions"
+        / "shared"
+        / "hooks"
+        / "session-setup.sh"
+    )
+    text = hook.read_text(encoding="utf-8")
+    assert '-m scripts.hygiene.root_entry_guard --repo-root "$CANONICAL_ROOT" --json' in text
+    assert "ROOT HYGIENE" in text
+    # Evidence preservation: the hook must not turn the guard into a deleter.
+    guard_block = text[text.index("Root-hygiene canary"):]
+    assert "rm " not in guard_block.split("# 6. Check MEMORY.md")[0]

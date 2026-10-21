@@ -595,6 +595,17 @@ def test_negative_decision_tables_missing_precedence() -> None:
         validate_decision_tables_data(data)
 
 
+def test_v1_decision_tables_file_validates_and_keeps_all_v0_table_names() -> None:
+    """P2's typed document is a parallel migration; v0 remains its own contract."""
+    res = validate_decision_tables(DEFAULT_DECISION_TABLES_V1_PATH)
+
+    assert res["ok"] is True
+    assert res["schema_version"] == "decision-tables.v1"
+    assert res["precedence"] == "first-match-unique"
+    for expected in ("queue-pick", "review-gate-arm", "settle-status", "width"):
+        assert expected in res["tables"], f"table '{expected}' missing from v1"
+
+
 def test_negative_v1_decision_tables_rejects_overlapping_first_match_rows() -> None:
     """Mutation proof: row order cannot silently resolve two typed outcomes."""
     data = _get_happy_v1_tables_data()
@@ -638,6 +649,17 @@ def _get_v1_table_lookup_data() -> dict[str, Any]:
     }
 
 
+def test_v1_table_reference_integrity_uses_the_typed_document() -> None:
+    """A trail binding must resolve in either validated parallel table version."""
+    spec = _get_v1_table_lookup_data()
+    tables = _get_happy_v1_tables_data()
+
+    res = validate_trail_table_refs(spec, tables)
+
+    assert res["ok"] is True
+    assert res["bound_steps"]["pick_next"] == "queue-pick"
+
+
 _RB4_PATH = _TRAILS_DIR / "rb4-red-ci-triage.trail.yaml"
 
 
@@ -665,6 +687,37 @@ def test_declared_table_refs_resolve(trail_path) -> None:
     tables = _get_happy_tables_data()
     res = validate_trail_table_refs(spec, tables)
     assert res["ok"] is True
+
+
+def test_negative_table_lookup_without_table_fails_cross_check() -> None:
+    """The table cross-check fails closed even when its caller bypasses schema validation."""
+    spec = _get_v1_table_lookup_data()
+    tables = _get_happy_tables_data()
+    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
+    lookup_step["table"] = None
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trail_table_refs(spec, tables)
+
+    assert "Missing table binding" in str(exc_info.value)
+    assert lookup_step["step_id"] in str(exc_info.value)
+
+
+@pytest.mark.parametrize("table_ref", [[], {}], ids=["list", "mapping"])
+def test_negative_table_lookup_non_string_table_fails_cross_check(
+    table_ref: object,
+) -> None:
+    """The cross-check must reject non-string table bindings before membership tests."""
+    spec = _get_v1_table_lookup_data()
+    tables = _get_happy_tables_data()
+    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
+    lookup_step["table"] = table_ref
+
+    with pytest.raises(TrailSpecValidationError) as exc_info:
+        validate_trail_table_refs(spec, tables)
+
+    assert "Missing table binding" in str(exc_info.value)
+    assert lookup_step["step_id"] in str(exc_info.value)
 
 
 def test_negative_unbound_table_ref() -> None:

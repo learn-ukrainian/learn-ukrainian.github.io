@@ -229,6 +229,29 @@ def test_ingestion_projection_preserves_all_cited_units_and_dispositions(sources
         ]
 
 
+def test_full_numbered_meanings_need_no_training_prompt_discriminator(sources):
+    long_definition = "SYNTHETIC full definition. " * 1000 + "SYNTHETIC final sentence."
+    with sqlite3.connect(sources) as conn:
+        conn.execute("DELETE FROM sum20_citations")
+        for order in range(3, 15):
+            insert(
+                conn,
+                SENSE,
+                id=100 + order,
+                article_id=1,
+                sense_order=order,
+                definition=long_definition,
+                register_labels='["SYNTHETIC label"]',
+            )
+        render(conn)
+    stream = units(sources, c3_sum20_meaning)
+    article = [u for u in stream if u.parent_key == "sum20_articles:id=1"]
+    assert [u.source_order for u in article] == list(range(1, 15))
+    assert all(u.candidate.outcome == "accepted" for u in article)
+    assert article[-1].candidate.response[0].text == long_definition
+    assert all(u.candidate.response[0].span is None for u in article)
+
+
 def test_quarantine_excluded_and_forged_admission_refused(sources):
     stream = units(sources, c3_sum20_meaning)
     assert {u.source_key for u in stream} == {"id=10", "id=11", "id=12"}

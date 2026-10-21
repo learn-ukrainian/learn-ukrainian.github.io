@@ -120,6 +120,20 @@ def test_folk_same_archaism_in_prose_still_fails_vesum(
     assert "пір'єчку" in looked_up
 
 
+def test_folk_prose_russianism_still_fails_vesum(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    gate, _seen = _gate(
+        "Це протиріччя лишається прозовою помилкою.",
+        level="folk",
+        missing_words={"протиріччя"},
+        monkeypatch=monkeypatch,
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["протиріччя"]
+
+
 def test_core_blockquote_non_vesum_word_still_fails_vesum(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

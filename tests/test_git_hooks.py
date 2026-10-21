@@ -8,6 +8,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -169,6 +171,16 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     return repo, remote, env
 
 
+def test_tracked_hook_chain_is_complete_and_executable():
+    for hook_name in REQUIRED_HOOKS:
+        hook = HOOK_DIR / hook_name
+        assert hook.is_file(), hook_name
+        assert os.access(hook, os.X_OK), hook_name
+    assert (HOOK_DIR / "_lib.sh").is_file()
+    assert (HOOK_DIR / "check-pytest-stamp.py").is_file()
+    assert not os.access(HOOK_DIR / "check-pytest-stamp.py", os.X_OK)
+
+
 def test_installer_and_all_hook_functions_run(tmp_path):
     repo, _, env = _fixture_repository(tmp_path)
     hook_log = Path(env["HOOK_LOG"])
@@ -202,6 +214,36 @@ def test_installer_and_all_hook_functions_run(tmp_path):
     assert len(updates) == 1
     assert updates[0].split()[0] == "refs/heads/feature"
     assert updates[0].split()[2] == "refs/heads/main"
+
+
+def test_installer_refuses_missing_hook_directory(tmp_path):
+    repo, _, env = _fixture_repository(tmp_path)
+    shutil.rmtree(repo / ".githooks")
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "Tracked hooks directory not found" in result.stderr
+
+
+def test_installer_refuses_an_incomplete_hook_directory(tmp_path):
+    repo, _, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/commit-msg").unlink()
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "Expected executable hook" in result.stderr
 
 
 def test_post_checkout_heals_even_when_lfs_fails(tmp_path):
@@ -298,3 +340,9 @@ def test_installer_materializes_hooks_in_a_sparse_linked_worktree(tmp_path):
     _run(["bash", ".githooks/pre-commit"], cwd=sparse, env=env)
     after = hook_log.read_text(encoding="utf-8").splitlines()
     assert after.count("pre-commit") == before.count("pre-commit") + 1
+
+
+@pytest.mark.parametrize("hook_name", REQUIRED_HOOKS)
+def test_hook_scripts_have_valid_bash_syntax(hook_name):
+    result = _run(["bash", "-n", str(HOOK_DIR / hook_name)], cwd=REPO_ROOT)
+    assert result.returncode == 0

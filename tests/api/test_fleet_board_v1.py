@@ -57,6 +57,31 @@ def test_index_lists_every_registered_v1_route() -> None:
     assert body["schema"] == "fleet.v1.index"
 
 
+def test_missing_env_var_is_not_configured_and_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_locations(monkeypatch)
+
+    response = client.get("/api/fleet/v1")
+
+    assert response.status_code == 200
+    by_name = {item["name"]: item for item in response.json()["sources"]}
+    assert set(by_name) == {source.name for source in sources_mod.EXTERNAL_SOURCES}
+    for item in by_name.values():
+        assert item["status"] == "not_configured"
+        assert item["age_s"] is None
+        assert item["error"] is None
+
+
+def test_blank_env_var_is_not_configured(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_locations(monkeypatch)
+    monkeypatch.setenv("FLEET_ROSTER_SNAPSHOT", "   ")
+
+    response = client.get("/api/fleet/v1")
+
+    assert response.status_code == 200
+    roster = next(item for item in response.json()["sources"] if item["name"] == "roster_snapshot")
+    assert roster["status"] == "not_configured"
+
+
 def test_present_location_is_ok_and_the_value_is_not_echoed(monkeypatch: pytest.MonkeyPatch) -> None:
     _clear_locations(monkeypatch)
     monkeypatch.setenv("FLEET_BACKUP_STATE_DIR", "present-token")
@@ -67,6 +92,45 @@ def test_present_location_is_ok_and_the_value_is_not_echoed(monkeypatch: pytest.
     backups = next(item for item in response.json()["sources"] if item["name"] == "backups")
     assert backups == {"name": "backups", "status": "ok", "age_s": None, "error": None}
     assert "present-token" not in response.text
+
+
+def test_location_probe_failure_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    def explode(*_args, **_kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(sources_mod, "read_location", explode)
+
+    response = client.get("/api/fleet/v1/schema")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["schema"] == "fleet.v1.schema"
+    assert body["sources"]
+    assert all(item["status"] == "unavailable" for item in body["sources"])
+    assert all(item["error"] == "unavailable" for item in body["sources"])
+    assert "boom" not in response.text
+
+
+def test_source_collector_failure_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    def explode():
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(board_routes, "collect_source_reports", explode)
+
+    response = client.get("/api/fleet/v1")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["data"]["endpoints"]
+    assert body["sources"] == [{"name": "sources", "status": "unavailable", "age_s": None, "error": "unavailable"}]
+    assert "boom" not in response.text
+
+
+def test_invalid_source_input_does_not_raise() -> None:
+    row = sources_mod.report("", "ok", age_s=float("nan"), error="detail")
+    assert row.status == "unavailable"
+    assert row.error == "unavailable"
+    assert row.as_dict()["error"] == "unavailable"
 
 
 @pytest.mark.parametrize(

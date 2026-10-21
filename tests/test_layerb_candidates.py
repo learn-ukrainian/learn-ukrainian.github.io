@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+import yaml
 
 from scripts.audit.layerb_candidates import (
     AnchorSetResult,
@@ -56,6 +57,19 @@ def test_ci_differential_replays_all_unit_fixtures_at_pinned_base_values() -> No
 
     assert len(list(QG_FIXTURES.glob("*.json"))) == 21
     assert len(actual) == 21
+    assert _comparison_failures(expected["records"], actual) == []
+
+
+def test_ci_differential_replays_phase_zero_skeleton_multispan_cases_at_pinned_base_values() -> None:
+    """PR-A.4: skeleton IDs and real-loss ellipsis cases use BASE-SHA records."""
+    skeletons = yaml.safe_load(
+        (ROOT / "tests" / "fixtures" / "curriculum_qg" / "layer_b_golden_skeletons.yaml").read_text(encoding="utf-8")
+    )
+    expected = json.loads((LAYERB_FIXTURES / "multispan_gate_base_results.json").read_text(encoding="utf-8"))
+    actual = replay_gate_results(cases_path=LAYERB_FIXTURES / "multispan_gate_cases.json", tau=0.75)
+
+    assert {case["case_id"] for case in skeletons["cases"]} == {case["key"] for case in _load_cases()}
+    assert len(actual) == 5
     assert _comparison_failures(expected["records"], actual) == []
 
 

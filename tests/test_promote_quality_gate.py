@@ -130,6 +130,18 @@ def test_verify_fails_closed_on_same_family_reviewer(tmp_path: Path) -> None:
     assert any("must differ" in failure for failure in report["failures"])
 
 
+def test_verify_fails_closed_on_deepseek_reviewer_for_folk(tmp_path: Path) -> None:
+    repo_root, module_dir = _write_stub_repo(tmp_path)
+    sidecar = _record_passing(repo_root, module_dir)
+    sidecar["reviewer"]["family"] = "deepseek"
+    _write_sidecar(module_dir, sidecar)
+
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+
+    assert report["passed"] is False
+    assert any("deepseek" in failure for failure in report["failures"])
+
+
 def test_verify_fails_closed_on_score_below_floor(tmp_path: Path) -> None:
     repo_root, module_dir = _write_stub_repo(tmp_path)
     scores = _passing_scores()
@@ -140,6 +152,42 @@ def test_verify_fails_closed_on_score_below_floor(tmp_path: Path) -> None:
 
     assert report["passed"] is False
     assert any("beauty" in failure and "below floor" in failure for failure in report["failures"])
+
+
+def test_verify_fails_closed_on_weaker_recorded_floors(tmp_path: Path) -> None:
+    repo_root, module_dir = _write_stub_repo(tmp_path)
+    sidecar = _record_passing(repo_root, module_dir)
+    sidecar["floors"]["beauty"] = 8.0
+    _write_sidecar(module_dir, sidecar)
+
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+
+    assert report["passed"] is False
+    assert any("recorded floor stale: beauty" in failure for failure in report["failures"])
+
+
+def test_verify_fails_closed_on_missing_score_dim(tmp_path: Path) -> None:
+    repo_root, module_dir = _write_stub_repo(tmp_path)
+    sidecar = _record_passing(repo_root, module_dir)
+    del sidecar["scores"]["beauty"]
+    _write_sidecar(module_dir, sidecar)
+
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+
+    assert report["passed"] is False
+    assert any("missing or invalid score: beauty" in failure for failure in report["failures"])
+
+
+def test_verify_fails_closed_on_unknown_reviewer_family(tmp_path: Path) -> None:
+    repo_root, module_dir = _write_stub_repo(tmp_path)
+    sidecar = _record_passing(repo_root, module_dir)
+    sidecar["reviewer"]["family"] = "unknown-family"
+    _write_sidecar(module_dir, sidecar)
+
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+
+    assert report["passed"] is False
+    assert any("unknown reviewer family" in failure for failure in report["failures"])
 
 
 @pytest.mark.parametrize("level", ["a1", "bio"])
@@ -210,3 +258,15 @@ def test_plan_bookkeeping_changes_do_not_stale_quality_hash(tmp_path: Path) -> N
     report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
     assert report["passed"] is False
     assert any("stale" in failure and f"{SLUG}.yaml" in failure for failure in report["failures"])
+
+
+def test_gate_reads_floors_from_thresholds_ssot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo_root, module_dir = _write_stub_repo(tmp_path)
+    _record_passing(repo_root, module_dir)
+
+    monkeypatch.setattr(gate, "seminar_promote_floors_for", lambda _level: {"pedagogical": 9.9})
+
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+
+    assert report["passed"] is False
+    assert any("pedagogical" in failure for failure in report["failures"])

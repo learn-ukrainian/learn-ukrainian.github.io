@@ -707,6 +707,20 @@ def test_provider_consumer_labels_yield_identical_bytes(
 # ── idempotent retry ─────────────────────────────────────────────────────────
 
 
+def test_bootstrap_retry_is_idempotent(
+    tmp_path: Path, git_repo: dict[str, object], capsys: pytest.CaptureFixture
+) -> None:
+    db = tmp_path / "db.sqlite3"
+    repo = str(git_repo["repo"])
+    sha = str(git_repo["sha1"])
+    code, out = run_cli(capsys, "bootstrap-git", sha, "--repo", repo, "--db", str(db))
+    assert code == 0 and json.loads(out)["outcome"] == "promoted"
+    code, out = run_cli(capsys, "bootstrap-git", sha, "--repo", repo, "--db", str(db))
+    assert code == 0 and json.loads(out)["outcome"] == "already_promoted"
+    status = ContextLinkStore(db).status()
+    assert status["counts"] == {"promoted": 1}
+
+
 # ── failure closure ──────────────────────────────────────────────────────────
 
 

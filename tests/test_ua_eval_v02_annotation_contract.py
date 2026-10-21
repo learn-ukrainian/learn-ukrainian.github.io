@@ -77,6 +77,15 @@ def test_validator_rejects_unsafe_decision_imports(mutation: str) -> None:
         validator.validate(rows, decisions, allow_test_fixtures=True)
 
 
+@pytest.mark.parametrize("field, value", [("extra", "forbidden"), ("kind", "invented")])
+def test_validator_rejects_structural_schema_violation(field: str, value: str) -> None:
+    rows = packet.build_rows()
+    decisions = _decisions(rows)
+    decisions[0]["source_citations"][0][field] = value
+    with pytest.raises(validator.AnnotationError, match="schema violation"):
+        validator.validate(rows, decisions, allow_test_fixtures=True)
+
+
 def test_validator_rejects_missing_second_reviewer() -> None:
     rows = packet.build_rows()
     decisions = _decisions(rows)
@@ -104,6 +113,14 @@ def test_validator_rejects_conflict_without_valid_resolution() -> None:
 def test_validator_accepts_unresolved_conflict_from_two_test_reviewers() -> None:
     rows = packet.build_rows()
     validator.validate(rows, _decisions(rows), allow_test_fixtures=True)
+
+
+def test_validator_rejects_identity_only_third_human_resolution() -> None:
+    rows = packet.build_rows()
+    decisions = _decisions(rows)
+    decisions[0]["final_resolution"] = {"kind": "third_human_adjudication", "third_reviewer": _reviewer(3)}
+    with pytest.raises(validator.AnnotationError, match="schema violation"):
+        validator.validate(rows, decisions, allow_test_fixtures=True)
 
 
 def test_validator_rejects_arbitrary_final_after_third_review() -> None:
@@ -135,3 +152,10 @@ def test_packet_file_is_jsonl() -> None:
     assert [packet.canonical(row) for row in rows] == [
         packet.canonical(row) for row in packet.build_rows()
     ]
+
+
+def test_packet_schema_rejects_nonpending_row() -> None:
+    rows = packet.build_rows()
+    rows[0]["decision"] = "model_error"
+    with pytest.raises(packet.PacketError, match="packet schema violation"):
+        packet.validate_packet_rows(rows)

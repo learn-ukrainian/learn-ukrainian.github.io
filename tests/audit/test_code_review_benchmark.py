@@ -52,6 +52,19 @@ def test_corpus_loader_reads_valid_case(tmp_path: Path) -> None:
     assert "diff --git" in cases[0]["diff"]
 
 
+def test_corpus_loader_preserves_gold_aliases(tmp_path: Path) -> None:
+    _write_case(
+        tmp_path,
+        extra="""    aliases:
+      - prompt-on-command-line-leak-and-arg-max-dos
+""",
+    )
+
+    cases = bench.load_corpus(tmp_path / "corpus")
+
+    assert cases[0]["gold_findings"][0]["aliases"] == ["prompt-on-command-line-leak-and-arg-max-dos"]
+
+
 def test_run_cell_uses_injected_runner_and_writes_reportable_json(tmp_path: Path) -> None:
     case_path = _write_case(tmp_path)
     case = bench.load_case(case_path)

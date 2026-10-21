@@ -600,6 +600,13 @@ def test_prepare_refuses_missing_span_and_foreign_document(world: World) -> None
         )
 
 
+def test_repeated_quote_exposes_each_context_to_the_seat() -> None:
+    finding = {"locations": [{"tab": "urok", "quote": "construction"}]}
+    spans = settle._context("first construction here. Second construction there.", finding)
+    assert [span["occurrence"] for span in spans] == [1, 2]
+    assert all(span["quote"] == "construction" for span in spans)
+
+
 def test_settle_manifest_requires_its_pinned_document(world: World) -> None:
     manifest = yaml.safe_load(world.manifest.read_text())
     assert not pin_refusals(manifest, world.root)
@@ -830,6 +837,42 @@ def test_an_absence_without_a_resolvable_scope_fails_closed() -> None:
 def test_a_scope_that_names_a_missing_unit_fails_closed(document: str, scope: dict[str, Any]) -> None:
     with pytest.raises(settle.SettleError, match="scope names a unit absent from the document"):
         settle._context(document, {"locations": [], "scope": scope})
+
+
+def test_two_tabs_with_one_key_fail_closed() -> None:
+    document = '<TabItem label="urok">\nONE\n</TabItem>\n<TabItem label="Lesson">\nTWO\n</TabItem>\n'
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(document, {"locations": [], "scope": {"tab": "urok"}})
+
+
+def test_rendered_settle_prompt_for_an_absence_item_shows_the_scoped_unit(tmp_path: Path) -> None:
+    document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
+    document.parent.mkdir(parents=True)
+    document.write_text(_LESSON, encoding="utf-8")
+    module_list = tmp_path / "curriculum/l2-uk-en/curriculum.yaml"
+    module_list.parent.mkdir(parents=True)
+    module_list.write_text(
+        yaml.safe_dump({"levels": {"a1": {"type": "core", "modules": ["fixture-module"]}}}), encoding="utf-8"
+    )
+    manifest_hash = _pin_provenance(tmp_path, _provenance([_span(text="ONLY ACTIVITY A1")]), direct=True)
+    world = _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
+    assert _prepared_spans(world) == [
+        {"absence": True, "locator": {"tab": "vpravy", "activity": "a1"}, "context": _ACTIVITY_A1}
+    ]
+    prompt = world.prompt.read_text(encoding="utf-8")
+    instructions = prompt.split("## Original Finding (Data)", 1)[0]
+    assert all(line in instructions for line in _ABSENCE_PROCEDURE)
+    assert all(line not in instructions for line in _QUOTED_PROCEDURE)
+    assert _ABSENCE_LINE in prompt
+    assert "## Scoped Unit (Data)" in prompt
+    assert "ONLY ACTIVITY A1" in prompt
+    assert "ONLY ACTIVITY A2" not in prompt
+    assert "ONLY THE LESSON TAB" not in prompt
+    assert "ONLY THE VOCABULARY TAB" not in prompt
+    assert "## Disputed Span In Context (Data)" not in prompt
+    sidecar = world.prompt.with_name(world.prompt.name + ".sha256")
+    checked = check_prompt(prompt, world.manifest, repo_root=tmp_path, recorded_sha256=sidecar.read_text().strip())
+    assert checked.passed, checked.errors
 
 
 def test_the_quoted_span_and_its_prompt_stay_unchanged(world: World) -> None:
@@ -1099,6 +1142,31 @@ def test_a_provenance_pin_that_does_not_match_is_refused(tmp_path: Path) -> None
         _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
 
 
+@pytest.mark.parametrize(
+    "document,scope",
+    [
+        (
+            _PLAN
+            + "  - n: 1\n    title: Also lesson one\n    steps:\n      - id: s9\n        teach: duplicate lesson\n",
+            {"lesson": 1},
+        ),
+        (
+            "lessons:\n  - n: 1\n    title: Lesson one\n    steps:\n      - id: s1\n        teach: first copy\n"
+            "      - id: s1\n        teach: second copy\n",
+            {"lesson": 1, "step": "s1"},
+        ),
+        (
+            "lessons:\n  - n: 1\n    title: Lesson one\n    activities:\n      - id: a1\n        focus: first copy\n"
+            "      - id: a1\n        focus: second copy\n",
+            {"lesson": 1, "activity": "a1"},
+        ),
+    ],
+)
+def test_duplicate_plan_ids_are_refused(document: str, scope: dict[str, Any]) -> None:
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(document, {"locations": [], "scope": scope})
+
+
 def test_prepare_refuses_a_duplicate_plan_lesson_before_writing(tmp_path: Path) -> None:
     document = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/fixture-module.yaml"
     document.parent.mkdir(parents=True)
@@ -1121,6 +1189,34 @@ def test_prepare_refuses_a_duplicate_plan_lesson_before_writing(tmp_path: Path) 
         )
     assert not world.manifest.exists()
     assert not world.prompt.exists()
+
+
+def test_a_duplicate_activity_id_in_the_lesson_is_refused() -> None:
+    document = (
+        '<TabItem label="vpravy">\n<span id="a1"></span>\n### First\nONE\n'
+        '<span id="a1"></span>\n### Second\nTWO\n</TabItem>\n'
+    )
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(document, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}})
+
+    page = _engine_activities_page(_ENGINE_ACTIVITIES[:1] + _ENGINE_ACTIVITIES[:1])
+    provenance = _provenance(
+        [
+            _span(text="Pick the first", role="instruction", block="instruction"),
+            _span(text="ONLY ACTIVITY A1", role="item_prompt", block="prompt", item=0),
+        ]
+    )
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(page, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}}, provenance)
+
+    two_steps = _provenance(
+        [
+            _span(text="ONLY ACTIVITY A1", role="item_prompt", block="prompt", item=0, step="s1"),
+            _span(text="OTHER STEP", role="item_prompt", block="prompt", item=0, step="s2"),
+        ]
+    )
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(page, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}}, two_steps)
 
 
 @pytest.mark.parametrize(

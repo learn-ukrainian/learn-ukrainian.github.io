@@ -178,6 +178,17 @@ def run_upload(
     return run
 
 
+def test_upload_requires_explicit_repository(tmp_path: Path) -> None:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--dataset-dir", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 2
+    assert "the following arguments are required: --repo-id" in result.stderr
+
+
 def test_help_uses_portable_example() -> None:
     result = subprocess.run([sys.executable, str(SCRIPT), "--help"], capture_output=True, text=True, timeout=15)
     assert result.returncode == 0

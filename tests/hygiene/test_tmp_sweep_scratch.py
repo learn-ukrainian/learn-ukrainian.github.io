@@ -98,6 +98,14 @@ def test_recent_deep_write_preserves_entry(scratch):
     assert scratch.row(report, directory.name)["reason"] == "recent_deep_write" and deep.exists()
 
 
+def test_top_level_age_threshold_is_configurable(scratch):
+    directory = scratch.tree()
+    os.utime(directory, (scratch.now - 10 * 3600, scratch.now - 10 * 3600))
+    assert scratch.row(scratch.run(apply=True), directory.name)["reason"] == "too_young"
+    policy = sweep.ScratchPolicy(min_age_s=6 * 3600, quiet_s=6 * 3600)
+    assert scratch.row(scratch.run(scratch=policy), directory.name)["reason"] == "unattributed_scratch"
+
+
 def test_change_time_keeps_freshly_extracted_archives(scratch, monkeypatch):
     # Old preserved mtimes, but every inode change time is the real present.
     directory = scratch.tree()
@@ -390,6 +398,38 @@ def test_unreadable_top_level_contents_preserve(scratch, monkeypatch):
     assert not _quarantines(scratch.root)
 
 
+def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
+    """The round-2 reproduction: a path write during the last process scan before removal.
+
+    With the rename boundary the old path no longer exists at that scan, so
+    the write either fails with ENOENT (nothing was written and removal is
+    correct) or lands and the entry survives. Removing a landed write fails.
+    The writer is this test process, which the scan therefore leaves out, as
+    the reviewer's out-of-process writer would be absent from it.
+    """
+    entry, payload = _target(scratch, "directory")
+    outcomes = []
+    scans = [0]
+
+    def scan(*args, **kwargs):
+        scans[0] += 1
+        if scans[0] == 3:
+            try:
+                payload.write_bytes(b"fresh write")
+                outcomes.append("written")
+            except FileNotFoundError:
+                outcomes.append("enoent")
+        return [(pid, ref) for pid, ref in real_references_complete()[0] if pid != os.getpid()], True
+
+    monkeypatch.setattr(sweep, "process_snapshot", scan)
+    report = scratch.run(apply=True)
+    assert outcomes, "the final scan never ran"
+    if outcomes == ["written"]:
+        assert payload.read_bytes() == b"fresh write"
+    else:
+        assert scratch.row(report, entry.name)["decision"] == "quarantined" and not entry.exists()
+
+
 def test_real_process_scan_reaps_unheld_entries(scratch, monkeypatch):
     """Under the real scan, the sweep's own descriptors never count as a holder of the entry."""
     directory, regular = scratch.tree(), scratch.file()
@@ -676,3 +716,16 @@ def test_scratch_class_refuses_roots_outside_system_temp(scratch, monkeypatch, t
     monkeypatch.setattr(sweep, "protected_roots", lambda: {managed})
     with pytest.raises(ValueError, match="system temp"):
         sweep.sweep(temp_root=managed, task_root=scratch.tasks, repo_root=tmp_path, scratch=sweep.ScratchPolicy())
+
+
+def test_cli_summary_has_counts_without_names(scratch, capsys):
+    scratch.tree()
+    argv = ["--temp-root", str(scratch.root), "--task-root", str(scratch.tasks), "--unattributed-scratch"]
+    assert sweep.main([*argv, "--summary"]) == 0
+    out = capsys.readouterr().out
+    summary = json.loads(out)
+    assert "rows" not in summary and "hand-made-scratch" not in out
+    assert summary["by_reason"] == {"unattributed_scratch": 1} and summary["bytes_reclaimed"] == 0
+    with pytest.raises(SystemExit) as exc:
+        sweep.main([*argv, "--scratch-quiet-hours", "0"])
+    assert exc.value.code == 2

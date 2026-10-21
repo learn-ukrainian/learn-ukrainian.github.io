@@ -405,6 +405,22 @@ def test_item6_failed_child_and_eof_are_typed(monkeypatch):
     assert state["status"] == "failed"
 
 
+def test_flag_model_is_loaded_at_pinned_revision_without_downloads(frozen, monkeypatch):
+    import sys
+    calls = []
+    def download(repo, **kwargs):
+        calls.append((repo, kwargs))
+        return "stub-snapshot"
+    def flag(snapshot, **kwargs):
+        assert snapshot == "stub-snapshot" and kwargs["use_fp16"] is False
+        return SimpleNamespace(tokenizer=SimpleNamespace(truncation_side="left"))
+    monkeypatch.setitem(sys.modules, "huggingface_hub", SimpleNamespace(snapshot_download=download))
+    monkeypatch.setitem(sys.modules, "FlagEmbedding", SimpleNamespace(BGEM3FlagModel=flag))
+    model, meta = b._new_encoder("BAAI/bge-m3", frozen.work)
+    assert meta["max_tokens"] == 8192 and model.tokenizer.truncation_side == "right"
+    assert calls[0][1]["revision"] == "a" * 40
+
+
 def test_item1_item2_item5_full_frozen_search_pool_and_score(frozen, monkeypatch):
     # Use the real frozen query allocation, with gold IDs mapped to this
     # independent synthetic corpus. No retrieval or model output informs it.

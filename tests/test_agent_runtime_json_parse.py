@@ -20,6 +20,12 @@ def test_extracts_json_object_from_json_fence():
     assert payload == {"score": 8, "verdict": "REVISE"}
 
 
+def test_extracts_json_object_with_preamble_and_trailing_text():
+    response = 'Reviewer output follows:\n{"score": 7, "verdict": "REVISE"}\nDone.'
+    payload = extract_json_object(response)
+    assert payload == {"score": 7, "verdict": "REVISE"}
+
+
 def test_extracts_nested_braces_json_object():
     response = """
 Preamble

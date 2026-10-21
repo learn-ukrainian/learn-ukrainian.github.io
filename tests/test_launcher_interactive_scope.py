@@ -575,6 +575,16 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
     assert not Path(env["FAKE_MANAGER_CALLS"]).exists()
 
 
+def test_entry_point_must_run_its_listed_provider_and_mode(tmp_path: Path) -> None:
+    root, env = _checkout(tmp_path)
+    wrapper = root / "start-glmcc.sh"
+    wrapper.write_text(wrapper.read_text().replace("launcher_main glm interactive", "launcher_main kimi interactive"))
+    result = _launch(root, env, "start-glmcc.sh")
+    assert result.returncode == 6, result.stdout + result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=entrypoint-mismatch;" in result.stderr
+    assert not Path(env["FAKE_MANAGER_CALLS"]).exists()
+
+
 # --- Re-entry identity -----------------------------------------------------
 
 
@@ -883,6 +893,23 @@ def _signal_session(tmp_path: Path, wrapper: str, *args: str) -> tuple[_Terminal
         terminal.close()
         raise
     return terminal, env
+
+
+def test_signal_session_failure_closes_the_terminal_and_job_group(tmp_path: Path, monkeypatch) -> None:
+    """Fail readiness after the provider and a second group member are running."""
+    original = _Terminal.wait_for
+
+    def fail_readiness(terminal, predicate, what):
+        original(terminal, predicate, what)
+        # Cleanup must still find the job if status publication was lost.
+        terminal.status.unlink()
+        pytest.fail("injected readiness failure")
+
+    monkeypatch.setattr(_Terminal, "wait_for", fail_readiness)
+    with pytest.raises(pytest.fail.Exception, match="injected readiness failure"):
+        _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
+    wait_until(lambda: not _test_processes(tmp_path), timeout=5, message="failed session cleanup")
+    _assert_no_test_processes(tmp_path)
 
 
 def _signal_log(env: dict[str, str]) -> list[str]:

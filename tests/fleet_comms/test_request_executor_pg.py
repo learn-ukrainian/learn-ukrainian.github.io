@@ -220,3 +220,18 @@ def test_injected_pg_store_refused_when_authority_flips_back_to_sqlite(
             RequestExecutor(store=store)
     finally:
         store.close()
+
+
+@pytest.mark.postgres
+def test_injected_pg_executor_refused_by_message_plane_under_sqlite(
+    pg_authority: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Mismatch guard on MessagePlane (#605): injected pg executor vs
+    sqlite-resolved authority refuses at construction."""
+    executor = RequestExecutor(root=tmp_path / "plane")
+    try:
+        monkeypatch.setenv(_AUTHORITY_ENV, "sqlite")
+        with pytest.raises(ControlPlaneUnsupportedComponentError, match="does not match"):
+            MessagePlane(mode="shadow", executor=executor)
+    finally:
+        executor.close()

@@ -224,6 +224,41 @@ def test_litvinova_cyrillic_variant_resolves_same_as_primary(
     assert hits[0]["chunk_id"] == "5-klas-ukrmova-litvinova-2022_s0104"
 
 
+def test_textbook_excerpt_context_uses_reference_title_for_direct_lookup(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "10-klas-ukrmova-karaman-2018_s0187",
+                "title": "Сторінка 105",
+                "text": "§ 38 Розмовна, просторічна, емоційно забарвлена лексика.",
+                "source_file": "10-klas-ukrmova-karaman-2018",
+                "grade": "10",
+                "author": "karaman",
+                "author_uk": "Караман",
+            }
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+    plan = {
+        "references": [{"title": "Караман Grade 10, p.187"}],
+        "title": "ranok",
+        "subtitle": "routine morning",
+        "content_outline": [
+            {"section": "ranok routine", "points": ["morning", "breakfast"]}
+        ],
+    }
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+
+    assert "10-klas-ukrmova-karaman-2018" in context
+    assert "corpus_missing: true" not in context
+
+
 def test_seminar_textbook_miss_uses_literary_primary(monkeypatch) -> None:
     from wiki import sources_db
 
@@ -308,6 +343,16 @@ _REPEATED_CHUNK = {
     "grade": "5",
     "author": "Авраменко",
 }
+_SIX_TITLES = [
+    "Звуки і букви",
+    "Абетка",
+    "Привітання",
+    "Літери",
+    "Голосні",
+    "Приголосні",
+]
+
+
 def _excerpt_plan(titles: list[str], *, reference_type: str | None = None) -> dict[str, Any]:
     references: list[dict[str, Any]] = []
     for title in titles:
@@ -348,6 +393,28 @@ def _install_textbook_search(
 
     monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
     return calls
+
+
+def test_repeated_textbook_chunk_is_quoted_once(monkeypatch) -> None:
+    """Six references that resolve to one chunk quote it once."""
+    calls = _install_textbook_search(
+        monkeypatch,
+        {title: [_REPEATED_CHUNK] for title in _SIX_TITLES},
+    )
+    plan = _excerpt_plan(_SIX_TITLES)
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+
+    topic = linear_pipeline._plan_topic_query(plan)
+    assert calls == [(f"{title} {topic}".strip(), "a1", 4) for title in _SIX_TITLES]
+    sections = _reference_sections(context)
+    assert [title for title, _body in sections] == _SIX_TITLES
+    assert sections[0][1] == _reference_sections(
+        linear_pipeline._build_textbook_excerpt_context(_excerpt_plan([_SIX_TITLES[0]]), "a1")
+    )[0][1]
+    assert context.count(f"> {_REPEATED_QUOTE}") == 1
+    assert context.count("5-klas-ukrmova-avramenko-2022") == 1
+    assert [body for _title, body in sections[1:]] == [f"see {_SIX_TITLES[0]}"] * 5
 
 
 def test_distinct_textbook_chunks_are_both_quoted(tmp_path: Path, monkeypatch) -> None:
@@ -420,6 +487,45 @@ def test_corpus_missing_is_unchanged_when_another_reference_repeats(monkeypatch)
     assert sections[2][1] == "see Звуки і букви"
 
 
+def test_literary_fallback_repeat_keeps_the_primary_block_once(monkeypatch) -> None:
+    from wiki import sources_db
+
+    literary_calls: list[set[str]] = []
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        return []
+
+    def fake_search_literary(keywords: set[str], max_total: int = 20) -> list[dict]:
+        literary_calls.append(keywords)
+        return [
+            {
+                "chunk_id": "chubynsky-koliadka_c0001",
+                "corpus": "literary_texts",
+                "source_type": "literary",
+                "title": "Колядка",
+                "text": "Коли не було з нащада світа, тоді не було неба ні землі.",
+                "source_file": "chubynsky-koliadky",
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    monkeypatch.setattr(sources_db, "search_literary", fake_search_literary)
+    titles = ["Чубинський колядки", "Чубинський щедрівки"]
+    plan = _excerpt_plan(titles, reference_type="primary")
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "folk")
+
+    assert len(literary_calls) == 2
+    sections = _reference_sections(context)
+    assert [title for title, _body in sections] == titles
+    assert "Primary text (literary corpus)" in sections[0][1]
+    assert "chunk_id: chubynsky-koliadka_c0001" in sections[0][1]
+    assert context.count("> Коли не було з нащада світа, тоді не було неба ні землі.") == 1
+    assert sections[1][1] == f"see {titles[0]}"
+    assert "corpus_missing" not in plan["references"][0]
+    assert "corpus_missing" not in plan["references"][1]
+
+
 def test_identical_text_without_identity_is_not_collapsed(monkeypatch) -> None:
     """Same truncated text from two unidentified hits is not one chunk."""
     anonymous = {"source_type": "textbook", "text": _REPEATED_QUOTE, "title": "Уривок"}
@@ -435,3 +541,24 @@ def test_identical_text_without_identity_is_not_collapsed(monkeypatch) -> None:
 
     assert context.count(f"> {_REPEATED_QUOTE}") == 2
     assert "see " not in context
+
+
+def test_source_file_and_page_identity_is_quoted_once(monkeypatch) -> None:
+    """Hits with no chunk id still collapse on source file plus page."""
+    hit = {
+        "source_type": "textbook",
+        "source_file": "5-klas-ukrmova-avramenko-2022",
+        "page": 73,
+        "title": "Сторінка 73",
+        "text": _REPEATED_QUOTE,
+    }
+    _install_textbook_search(monkeypatch, {"Звуки і букви": [hit], "Абетка": [dict(hit, page="73")]})
+
+    context = linear_pipeline._build_textbook_excerpt_context(
+        _excerpt_plan(["Звуки і букви", "Абетка"]),
+        "a1",
+    )
+
+    sections = _reference_sections(context)
+    assert context.count(f"> {_REPEATED_QUOTE}") == 1
+    assert sections[1][1] == "see Звуки і букви"

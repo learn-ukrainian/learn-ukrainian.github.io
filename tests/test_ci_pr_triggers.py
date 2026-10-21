@@ -39,6 +39,22 @@ def _load(name: str) -> dict:
     return workflow
 
 
+def _triggers(workflow: dict) -> dict:
+    # PyYAML (YAML 1.1) parses the bare ``on:`` key as the boolean True.
+    raw = workflow.get("on", workflow.get(True))
+    assert isinstance(raw, dict), "workflow has no `on:` mapping"
+    return raw
+
+
+def _pr_types(workflow: dict) -> set[str]:
+    pull_request = _triggers(workflow).get("pull_request")
+    if pull_request is None:
+        return set()
+    if isinstance(pull_request, dict):
+        return set(pull_request.get("types") or [])
+    return {"opened", "synchronize", "reopened"}  # default type set
+
+
 # --- GitHub Actions expression subset -------------------------------------
 
 _TOKEN = re.compile(
@@ -255,6 +271,11 @@ def _simulate(
 
 def _concurrency_group(github: dict[str, Any]) -> str:
     return _interpolate(_load("ci.yml")["concurrency"]["group"], {"github": github})
+
+
+def test_ci_triggers_on_code_events_only() -> None:
+    # Neither `edited` nor `labeled` may start CI on an unchanged SHA.
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
 
 
 @pytest.mark.parametrize("event", sorted(_EVENTS))

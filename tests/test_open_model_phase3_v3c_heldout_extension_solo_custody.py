@@ -95,6 +95,20 @@ def test_every_visible_stratum_is_present_once_with_nonzero_or_explicit_blocker(
     assert ledger["no_silent_zero"] is True
 
 
+def test_thresholds_and_residuals_cover_the_same_denominator() -> None:
+    artifact = _artifact()
+    strata_ids = [row["stratum_id"] for row in artifact["strata"]]
+    thresholds = artifact["evaluation_policy"]["per_stratum_thresholds"]
+    residuals = artifact["residual_query"]["rows"]
+    assert [row["stratum_id"] for row in thresholds] == strata_ids
+    assert [row["stratum_id"] for row in residuals] == strata_ids
+    assert artifact["evaluation_policy"]["threshold_row_count"] == 19
+    assert artifact["residual_query"]["row_count"] == 19
+    assert all(row["minimum_direct_human_review_fraction"] == 1.0 for row in thresholds)
+    assert all(row["abstention_is_not_gold"] for row in thresholds)
+    assert all(row["blocking"] is True for row in residuals)
+
+
 def test_custody_receipt_chain_requires_seal_exposure_invalidation_and_new_cycle() -> None:
     artifact = _artifact()
     freeze = "1" * 64

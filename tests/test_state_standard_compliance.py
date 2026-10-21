@@ -18,6 +18,8 @@ from pathlib import Path
 import pytest
 
 from scripts.audit.checks.state_standard_compliance import (
+    check_immersion_compliance,
+    check_imperative_complete_a2,
     check_plan_compliance,
     check_reflexive_verbs_a1,
     load_compliance_mapping,
@@ -77,6 +79,31 @@ class TestStateStandardFloorPolicy:
         assert 'A1' in violations[0].message
 
 
+class TestMappingVerificationA1:
+    """Verify that A1 mapping matches UKRAINIAN-STATE-STANDARD-2024.txt."""
+
+    def test_a1_accusative_prepositions_no_za_cherez(self, mapping):
+        """A1 accusative prepositions are в/у, на, про; no 'за', 'через' (issue #8404: :84)."""
+        acc = mapping['a1']['cases']['accusative']
+        desc = acc['description']
+        assert 'за' not in desc
+        assert 'через' not in desc
+        assert 'про' in desc
+        assert acc['lines'] == [678, 688]
+
+    def test_a1_complex_sentences_no_shcho_koly_de(self, mapping):
+        """A1 complex sentences has only і (й), але, тому що, бо (issue #8404: :126)."""
+        complex_sent = mapping['a1']['syntax']['complex_sentence']
+        desc = complex_sent['description']
+        assert 'і (й)' in desc
+        assert 'але' in desc
+        assert 'тому що' in desc
+        assert 'бо' in desc
+        # Ensure що, коли, де are not in A1 complex sentence description
+        assert 'коли' not in desc
+        assert complex_sent['lines'] == [741, 747]
+
+
 class TestPresenceChecks:
     """Test re-keyed reflexive and imperative presence checks."""
 
@@ -103,6 +130,35 @@ class TestPresenceChecks:
         v_skip = check_reflexive_verbs_a1(1, bad_content, mapping)
         assert len(v_skip) == 0
 
+    def test_imperative_check_matches_module_or_arc_or_req_id(self, mapping):
+        """check_imperative_complete_a2 checks module_num, arc_position, or requirement_id."""
+        bad_content = 'This lesson has no 3rd person imperative.'
+        good_content = 'Наказовий спосіб 3-ї особи: хай читає, нехай приходить.'
+
+        # Matches by module 23
+        v_bad = check_imperative_complete_a2(23, bad_content, mapping)
+        assert len(v_bad) > 0
+        v_good = check_imperative_complete_a2(23, good_content, mapping)
+        assert len(v_good) == 0
+
+        # Matches by arc_position 23
+        v_arc = check_imperative_complete_a2(99, bad_content, mapping, arc_position=23)
+        assert len(v_arc) > 0
+
+        # Matches by requirement_id
+        v_req = check_imperative_complete_a2(99, bad_content, mapping, requirement_id='REQ-A2-IMPERATIVE-3RD')
+        assert len(v_req) > 0
+
+
+class TestCheckStateStandardComplianceIntegration:
+    """Test integrated check_state_standard_compliance function."""
+
+    def test_immersion_compliance(self, mapping):
+        """Immersion compliance flags low immersion for B1+."""
+        violations = check_immersion_compliance('b1', 10, 85.0, mapping)
+        assert len(violations) == 1
+        assert violations[0].code == 'STATE_STANDARD_LOW_IMMERSION'
+
 
 class TestAstraReviewFindings:
     """Regression tests for Astra's review findings on PR #8404."""
@@ -114,6 +170,18 @@ class TestAstraReviewFindings:
         assert len(violations) > 0
         assert any(v.code == 'STATE_STANDARD_OMITTED_ITEM' for v in violations)
 
+    def test_finding_1_removing_item_and_declaration_fails(self, mapping):
+        """Finding 1: Removing an item and its declaration must fail (Standard mapping is authority)."""
+        # Module 9 at A1 requires reflexive_verbs per the Standard mapping
+        plan = {
+            'level': 'a1',
+            'module': 9,
+            'slug': 'verbs-lesson',
+            'grammar': ['nominative'],  # reflexive_verbs removed from grammar and not in required_items
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_OMITTED_ITEM' and 'reflexive_verbs' in v.message for v in violations)
+
     def test_finding_2_notes_mentioning_no_ulp_does_not_authorize_early_teaching(self, mapping):
         """Finding 2: Prose notes saying 'No ULP evidence exists' must not authorize early teaching."""
         plan = {
@@ -121,6 +189,17 @@ class TestAstraReviewFindings:
             'slug': 'premature-dative',
             'grammar': ['dative'],
             'notes': 'No ULP evidence exists for this move.',
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_finding_2_bare_boolean_ulp_evidence_does_not_authorize_early_teaching(self, mapping):
+        """Finding 2: Bare boolean ulp_evidence: true must not authorize early teaching without actual evidence."""
+        plan = {
+            'level': 'a1',
+            'slug': 'premature-dative',
+            'grammar': ['dative'],
+            'ulp_evidence': True,
         }
         violations = check_plan_compliance(plan, mapping=mapping)
         assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
@@ -213,6 +292,36 @@ class TestAstraReviewFindings:
         assert len(violations) > 0
         assert any(v.code == 'STATE_STANDARD_OMITTED_ITEM' for v in violations)
 
+    def test_blocker_2_item_and_arc_negative_ulp_evidence_fails(self, mapping):
+        """Blocker 2: Item or arc evidence saying 'No ULP evidence exists for this move.' must fail."""
+        # Item-level negative note
+        plan_item = {
+            'level': 'a1',
+            'grammar': [
+                {
+                    'name': 'dative',
+                    'ulp_evidence': 'No ULP evidence exists for this move.',
+                }
+            ],
+        }
+        violations_item = check_plan_compliance(plan_item, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_item)
+
+        # Arc-level negative note
+        plan_arc = {
+            'level': 'a1',
+            'grammar': ['dative'],
+            'arc': {
+                'moves': {
+                    'dative': {
+                        'ulp_evidence': 'No ULP evidence exists for this move.',
+                    }
+                }
+            },
+        }
+        violations_arc = check_plan_compliance(plan_arc, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_arc)
+
     def test_blocker_3_item_ulp_evidence_not_naming_move_fails(self, mapping):
         """Evidence attached directly to item not naming the move must fail."""
         plan = {
@@ -276,3 +385,78 @@ class TestAstraReviewFindings:
         }
         violations_arc = check_plan_compliance(plan_arc, mapping=mapping)
         assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_arc)
+
+    def test_sibling_field_evidence_unrelated_fails_and_move_specific_passes(self, mapping):
+        """Sibling field 'evidence' directly on item must name move, not bypass check."""
+        plan_unrelated = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': ['ULP episode 1: alphabet'],
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_unrelated = check_plan_compliance(plan_unrelated, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_unrelated)
+
+        plan_specific = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': ['ULP episode 25: G-a2-005'],
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_specific = check_plan_compliance(plan_specific, mapping=mapping)
+        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_specific)
+
+        # String evidence variant (not list)
+        plan_str_unrelated = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': 'ULP episode 1: alphabet',
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_str = check_plan_compliance(plan_str_unrelated, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_str)
+
+        plan_str_specific = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': 'ULP episode 25: G-a2-005',
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_str_spec = check_plan_compliance(plan_str_specific, mapping=mapping)
+        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_str_spec)

@@ -27,7 +27,7 @@ from scripts.fleet import claude_account_lane
 from scripts.fleet.claude_account_lane import HEALTHY, HOT, UNKNOWN, ClaudeAccount
 from scripts.review import closeout_cli
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
-from tests.claude_route_accounts import account, unresolved
+from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 from tests.test_delegate import _bind_claude_account_b, _default_account_file
 from tests.test_delegate_check_budget import (
     _UNVERIFIED_ROW,
@@ -46,6 +46,18 @@ HEADROOM_CAP = 90
 
 def _budget() -> dict:
     return _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(89.0)})
+
+
+def test_the_claude_lane_is_only_read_for_a_named_account():
+    budget = _budget()
+    assert claude_account_lane.lane_record(budget, "claude", account=HOST_ACCOUNT)["remaining_pct"] == 0.5
+    assert claude_account_lane.lane_record(budget, "claude", account=account("b"))["remaining_pct"] == 89.0
+    assert claude_account_lane.other_lane_record(budget, "codex") is budget["agents"]["codex"]
+    for lane in ("claude", " Claude "):
+        with pytest.raises(claude_account_lane.AccountRequired, match="named account"):
+            claude_account_lane.other_lane_record(budget, lane)
+    with pytest.raises(TypeError):
+        claude_account_lane.select_account(budget, account("b"))  # keyword only
 
 
 def test_an_unresolved_account_reads_route_facts_with_an_unknown_meter():
@@ -106,6 +118,24 @@ def test_an_unresolved_default_account_file_removes_every_claude_seat_from_the_r
     claude = [entry for entry in resolution.trace if entry.route == "claude"]
     assert claude and all(entry.status == "excluded" for entry in claude)
     assert {entry.reason for entry in claude} == {"claude account unresolved: claude_account_default_file_invalid"}
+
+
+@pytest.mark.parametrize("route_account", [HOST_ACCOUNT, account("b"), unresolved("claude_account_unknown")])
+def test_the_account_view_is_a_fixed_point(route_account):
+    """The resolver reads its snapshot through select_account; a caller's view must read the same."""
+    for b_row in (_account_row(0.5), _account_row(89.0, status="stale"), _UNVERIFIED_ROW):
+        raw = _accounts_budget(_default_claude_lane("near_cap"), {"b": b_row})
+        raw["agents"]["claude"]["runtime"] = {"ok": 1, "headroom_blocked": True, "rate_limited": 2}
+        view, _ = claude_account_lane.select_account(raw, account=route_account)
+        again, _ = claude_account_lane.select_account(view, account=route_account)
+        # The same reading; only the clock-derived pace fields of a recomputed account view may move.
+        decided = ("status", "remaining_pct", "burn_pct_7d", "freshness", "health", "runtime", "scheduler")
+        claude, claude_again = view["agents"]["claude"], again["agents"]["claude"]
+        assert {key: claude_again.get(key) for key in decided} == {key: claude.get(key) for key in decided}
+        assert {**again, "agents": {}} == {**view, "agents": {}}
+        assert claude_account_lane.capacity_verdict(again, account=route_account) == (
+            claude_account_lane.capacity_verdict(view, account=route_account)
+        )
 
 
 # --- row 5: every final claude route resolves and binds its account before admission ----------

@@ -659,6 +659,86 @@ result_path.write_text('''```yaml
     assert (state_dir / "lesson-2.draft.yaml").is_file()
 
 
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
+def test_cli_build_writer_effort(tmp_path, effort):
+    _admission_plan(tmp_path)
+    from scripts.build.fresh import cli
+
+    def build(level, slug, **kwargs):
+        if effort is None:
+            assert "writer_dispatch" not in kwargs
+        else:
+            kwargs["writer_dispatch"](writer="codex")
+        return {"lessons": [], "complete": False}
+
+    with (
+        patch("scripts.build.fresh.module.build_module", side_effect=build),
+        patch.object(cli, "dispatch_writer") as writer,
+    ):
+        assert (
+            main(
+                [
+                    "build",
+                    "a1",
+                    "fixture-module",
+                    "--lesson",
+                    "1",
+                    "--writer-seat",
+                    "codex:gpt-6.1-sol",
+                    "--repo-root",
+                    str(tmp_path),
+                    *(["--writer-effort", effort] if effort else []),
+                ]
+            )
+            == 1
+        )
+        if effort is None:
+            writer.assert_not_called()
+        else:
+            writer.assert_called_once_with(writer="codex", effort=effort)
+
+
+def test_cli_recap_flag_disagreement_fails(tmp_path, capsys):
+    """MAJOR B: --recap flag that disagrees with plan lesson kind fails."""
+    _build_synthetic_tree(tmp_path)
+
+    # Lesson 1 is teach, but --recap is asserted
+    code = main(
+        [
+            "render-prompt",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "1",
+            "--recap",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 1
+    captured = capsys.readouterr()
+    assert "disagrees with plan lesson kind" in captured.err
+
+    # Lesson 2 is recap, but --no-recap is asserted
+    code2 = main(
+        [
+            "write",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "2",
+            "--no-recap",
+            "--writer",
+            "agy",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code2 == 1
+    captured2 = capsys.readouterr()
+    assert "disagrees with plan lesson kind" in captured2.err
+
+
 @pytest.mark.parametrize("slug", ["../../plans/x", "nested/module", "/tmp/absolute"])
 @pytest.mark.parametrize(
     "command,extra",

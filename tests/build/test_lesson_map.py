@@ -70,6 +70,33 @@ def test_invalid_map_fails_closed(baseline, mutation):
         validate_lesson_map(mapping)
 
 
+def test_mismatched_outline_packs_source_headings():
+    filler = "word " * 200
+    plan = {"content_outline": [
+        {"section": "План А", "words": 300},
+        {"section": "План Б", "words": 300},
+        {"section": "Підсумок", "words": 150},
+    ]}
+    prose = (
+        "Intro\n"
+        f"## Sound First\n{filler}\n"
+        f"## Vowels\n{filler}\n"
+        f"## Consonants\n{filler}\n"
+        f"## Conversation\n{filler}\n"
+        "## Close\nend\n"
+        "<!-- INJECT_ACTIVITY: act-1 -->\n"
+    )
+    activities = {"inline": [{"id": "act-1", "type": "quiz", "items": [{}] * 6}],
+                  "workbook": [{"type": "quiz"} for _ in range(6)]}
+    result = derive_lesson_map(plan, prose, activities)
+    assert len(result["lessons"]) == 3
+    assert result["lessons"][0]["sections"] == ["Sound First", "Vowels", "Consonants"]
+    assert result["lessons"][1]["sections"] == ["Conversation"]
+    assert result["lessons"][2]["sections"] == ["Close"]
+    assert result["closes_module"] == 3
+    assert all(L["activities"]["total"] >= 10 for L in result["lessons"])
+
+
 def test_source_heading_pack_can_exceed_three_lessons():
     filler = "word " * 300
     plan = {"content_outline": [
@@ -109,6 +136,14 @@ def test_list_activities_split_by_inject_markers():
     assert [row["new_id"] for row in workbook] == ["act-2", "act-3"]
 
 
+def test_missing_outline_heading_no_longer_hard_fails(baseline):
+    plan, prose, activities = baseline
+    plan["content_outline"][0]["section"] = "Absent"
+    result = derive_lesson_map(plan, prose, activities)
+    assert result["lessons"]
+    assert result["closes_module"] == len(result["lessons"])
+
+
 def test_orphan_and_duplicate_inline_markers_fail(baseline):
     plan, prose, activities = baseline
     with pytest.raises(ValueError, match="Duplicate inline"):
@@ -121,6 +156,14 @@ def test_missing_inline_marker_fails(baseline):
     plan, prose, activities = baseline
     with pytest.raises(ValueError, match="source marker"):
         derive_lesson_map(plan, prose.replace("<!-- INJECT_ACTIVITY: act-1 -->", ""), activities)
+
+
+@pytest.mark.parametrize("words", [0, -1, True, "300"])
+def test_invalid_final_outline_budget_fails(baseline, words):
+    plan, prose, activities = baseline
+    plan["content_outline"][-1]["words"] = words
+    with pytest.raises(ValueError, match="positive integer"):
+        derive_lesson_map(plan, prose, activities)
 
 
 def test_all_held_out_fixture_hashes_and_denominator():

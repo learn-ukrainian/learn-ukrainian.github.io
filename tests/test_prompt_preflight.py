@@ -7,6 +7,7 @@ import textwrap
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
 from pipeline.prompt_preflight import (
+    PreflightResult,
     parse_preflight_response,
     run_prompt_preflight,
 )
@@ -110,6 +111,24 @@ class TestParsePreflightResponse:
 
 
 class TestRunPromptPreflight:
+    def test_pass_result(self, tmp_path):
+        prompt_path = tmp_path / "prompt.md"
+        prompt_path.write_text("test prompt content")
+        orch_dir = tmp_path / "orch"
+        orch_dir.mkdir()
+
+        pass_yaml = "prompt_preflight:\n  status: PASS\n  issues: []\n"
+
+        def mock_dispatch(prompt_text):
+            return True, pass_yaml
+
+        result = run_prompt_preflight(
+            prompt_path, "a1", 3, orch_dir,
+            dispatch_fn=mock_dispatch,
+        )
+
+        assert isinstance(result, PreflightResult)
+        assert result.status == "PASS"
 
     def test_result_yaml_saved(self, tmp_path):
         prompt_path = tmp_path / "prompt.md"

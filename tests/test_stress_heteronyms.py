@@ -133,3 +133,49 @@ class TestHeteronymSentenceContext:
             f"  Got:      {actual}\n"
             f"  Full result: {result}"
         )
+
+
+class TestAnnotatorUsesContext:
+    """Test that sentence context improves heteronym disambiguation.
+
+    Demonstrates that feeding full sentences to Stressifier resolves
+    more heteronyms than feeding isolated words.
+    """
+
+    def test_word_level_loses_context(self, stressifier):
+        """Calling stressifier on isolated words skips most heteronyms."""
+        ambiguous_words = ["замок", "обід", "мука", "атлас", "плачу", "насипати"]
+        skipped = 0
+        for word in ambiguous_words:
+            result = stressifier(word)
+            if STRESS not in result:
+                skipped += 1
+
+        # Most ambiguous words should be skipped when given in isolation
+        assert skipped >= 4, (
+            f"Expected most ambiguous words to be skipped in isolation, "
+            f"but only {skipped}/{len(ambiguous_words)} were skipped"
+        )
+
+    def test_sentence_level_resolves_more(self, stressifier):
+        """Calling stressifier on full sentences resolves more heteronyms."""
+        test_sentences = [
+            ("Великі вікна виходять на сад.", "вікна"),
+            ("Я стою біля вікна.", "вікна"),
+            ("Ця дорога веде до міста.", "дорога"),
+            ("Ця книга дуже дорога.", "дорога"),
+            ("Мої брати живуть у Києві.", "брати"),
+            ("Потрібно брати парасольку.", "брати"),
+        ]
+        resolved = 0
+        for sentence, target in test_sentences:
+            result = stressifier(sentence)
+            form = _get_stressed_form(result, target)
+            if form and STRESS in form:
+                resolved += 1
+
+        # Sentence-level should resolve significantly more
+        assert resolved >= 4, (
+            f"Expected sentence context to resolve ≥4/6 heteronyms, "
+            f"but only resolved {resolved}/6"
+        )

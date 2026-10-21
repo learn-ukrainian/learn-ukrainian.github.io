@@ -142,6 +142,17 @@ def test_require_durable_fails_closed_when_stale(tmp_path: Path) -> None:
         require_durable(mirror, max_age_hours=24.0)
 
 
+def test_require_durable_fails_closed_on_corruption(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    (mirror / "ledger.sqlite").write_bytes(b"tampered")
+
+    with pytest.raises(DurableMirrorError, match="failed verification"):
+        require_durable(mirror)
+
+
 def test_require_durable_succeeds_for_fresh_verified_mirror(tmp_path: Path) -> None:
     source = tmp_path / "work"
     mirror = tmp_path / "mirror"
@@ -174,6 +185,22 @@ def test_require_durable_fails_when_manifest_changes_after_receipt(tmp_path: Pat
 
     with pytest.raises(DurableMirrorError, match=r"predates|does not cover the current mirror manifest"):
         require_durable(mirror)
+
+
+def test_cli_snapshot_then_verify_then_require(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror"
+    _populate(source)
+
+    assert main(["snapshot", "--source", str(source), "--mirror-dir", str(mirror), "--allow-live"]) == 0
+    assert main(["verify", "--mirror-dir", str(mirror)]) == 0
+    _write_current_restic_receipt(mirror)
+    assert main(["require", "--mirror-dir", str(mirror)]) == 0
+
+
+def test_cli_require_exits_nonzero_when_not_durable(tmp_path: Path) -> None:
+    mirror = tmp_path / "missing-mirror"
+    assert main(["require", "--mirror-dir", str(mirror)]) == 2
 
 
 def test_cli_dry_run_snapshot_does_not_write_manifest(tmp_path: Path) -> None:

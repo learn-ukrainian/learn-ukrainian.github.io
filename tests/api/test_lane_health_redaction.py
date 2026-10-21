@@ -97,6 +97,29 @@ def test_sanitize_error_excerpt_redacts_before_truncating():
     assert served == "x" * 190
 
 
+@pytest.mark.parametrize(
+    "marker",
+    [
+        "/home/fixture/private/key.pem",
+        "getaddrinfo ENOTFOUND node.example.invalid",
+        "203.0.113.7",
+        _GH_TOKEN,
+    ],
+)
+def test_sanitize_error_excerpt_never_splits_any_placeholder(marker):
+    redacted = redact_lane_health_text(marker)
+    placeholder_start = redacted.index("[")
+    placeholder_end = redacted.index("]", placeholder_start) + 1
+    for inside_offset in range(1, placeholder_end - placeholder_start):
+        prefix = "x" * (MAX_ERROR_EXCERPT_CHARS - placeholder_start - inside_offset - 1) + " "
+        expected = (prefix + redacted)[: len(prefix) + placeholder_start].rstrip()
+        assert sanitize_error_excerpt(prefix + marker) == expected
+        assert sanitize_error_excerpt(expected) == expected
+
+    prefix = "x" * (MAX_ERROR_EXCERPT_CHARS - placeholder_end - 1) + " "
+    assert sanitize_error_excerpt(prefix + marker + " tail") == prefix + redacted
+
+
 @pytest.mark.repo_invariant
 @pytest.mark.parametrize(
     ("text", "token", "placeholder"),
@@ -235,6 +258,14 @@ def _multi_url_shapes():
 
 
 _MULTI_URL_SHAPES = _multi_url_shapes()
+
+
+@pytest.mark.parametrize(("raw", "password", "expected"), _MULTI_URL_SHAPES)
+def test_diagnostic_and_served_rules_redact_every_url_in_one_token(raw, password, expected):
+    for redactor in (redact_lane_health_diagnostics, redact_lane_health_text):
+        assert redactor(raw) == expected
+        assert password not in redactor(raw)
+        assert redactor(expected) == expected
 
 
 _REVIEW_SHAPES = [

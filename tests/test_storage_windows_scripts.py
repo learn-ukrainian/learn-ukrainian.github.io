@@ -43,6 +43,56 @@ def test_copy_uses_rclone_copy_not_sync(copy_text: str) -> None:
     assert "never" in copy_text.lower() and "sync" in copy_text.lower()
 
 
+def test_verify_receipt_only_after_success(verify_text: str) -> None:
+    assert "Get-SmbShare" in verify_text
+    assert "NTFS" in verify_text
+    assert "BULK_SOURCES_VERIFIED" in verify_text
+    assert "BULK_SOURCES_VERIFY_FAILED" in verify_text
+    # Receipt write is gated on $passed / success path.
+    assert re.search(r"if\s*\(\s*-not\s*\$passed\s*\)", verify_text)
+    assert "Set-Content" in verify_text
+    # Ensure failure path exits before success receipt language.
+    fail_idx = verify_text.index("BULK_SOURCES_VERIFY_FAILED")
+    success_write_idx = verify_text.index("Set-Content")
+    # There may be only one Set-Content (success receipt). Failure must exit 1.
+    assert "exit 1" in verify_text
+    assert fail_idx < success_write_idx
+    # No deletion of payload.
+    assert re.search(r"\bRemove-Item\b", verify_text) is None
+    assert re.search(r"\brclone\s+sync\b", verify_text, flags=re.IGNORECASE) is None
+
+
+def test_verify_rejects_unc_and_requires_markers(verify_text: str) -> None:
+    assert "literary_texts" in verify_text
+    assert "textbook_chunks" in verify_text
+    assert "not UNC" in verify_text or "refuse network" in verify_text.lower()
+    assert "reparse" in verify_text.lower()
+    assert "phase3-storage-migration" not in verify_text.lower()
+    assert "3187bdff0d41ed213e9d653e2f53b49bd46086f6f5f7daa49a47217ad71b24ec" not in verify_text
+
+
+def test_verify_destination_is_local_ntfs_derived_from_drive_format(
+    verify_text: str,
+) -> None:
+    """Receipt field must come from DriveFormat, not a hardcoded $true."""
+    assert "DriveFormat" in verify_text
+    assert re.search(
+        r"\$destinationIsLocalNtfs\s*=\s*\(\s*\$payloadDrive\.DriveFormat\s+-ceq\s*'NTFS'\s*\)",
+        verify_text,
+    )
+    assert re.search(
+        r"destination_is_local_ntfs\s*=\s*\$destinationIsLocalNtfs",
+        verify_text,
+    )
+    # Must not hardcode the receipt boolean independently of the format check.
+    assert not re.search(
+        r"destination_is_local_ntfs\s*=\s*\$true\b",
+        verify_text,
+    )
+    # Fail closed when the payload root is not NTFS.
+    assert "not backed by local NTFS" in verify_text
+
+
 def test_no_operator_secrets_or_hosts(copy_text: str, verify_text: str) -> None:
     blob = copy_text + "\n" + verify_text
     assert "kriszpc" not in blob.lower()

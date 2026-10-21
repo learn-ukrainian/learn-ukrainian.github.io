@@ -73,6 +73,16 @@ def test_allow_rules_name_the_interpreter_relative_to_the_checkout() -> None:
             assert head in INTERPRETERS, pattern
 
 
+def test_allow_list_has_no_push_or_switch_rule() -> None:
+    # #9030 round-2 (Grok): a trailing "*" in a push/delete allow rule also
+    # swallows extra refspecs and clustered short flags (-uf force-pushes),
+    # and prefix globs cannot make `git push`/`git switch` safe. These now go
+    # back to the auto-mode classifier, which force-blocks by default.
+    allow = _bash_patterns(_permissions()["allow"])
+    assert not any(p.startswith("git push") for p in allow)
+    assert not any(p.startswith("git switch") for p in allow)
+
+
 @pytest.mark.parametrize("command", [
     "git ls-remote",
     "git ls-remote --heads origin",

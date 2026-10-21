@@ -297,6 +297,16 @@ def test_parse_entry_html_accepts_corrected_dictionary_article_id():
     assert "пиття" in row["text"]
 
 
+def test_primary_synonym_sense_text_cuts_later_groups():
+    from wiki.slovnyk_me import primary_synonym_sense_text
+
+    text = "місто д. город, ур. град, (головне) столиця, центр; (портове) порт; П. посада."
+
+    assert primary_synonym_sense_text(text, "karavansky") == (
+        "місто д. город, ур. град, (головне) столиця, центр"
+    )
+
+
 def _record_miss(db_path, word, slug):
     with sqlite3.connect(str(db_path)) as conn:
         conn.execute(

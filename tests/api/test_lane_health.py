@@ -528,6 +528,16 @@ def test_producer_never_fills_in_healthy_for_a_scan_error(monkeypatch, tmp_path)
     assert all(item["health"]["healthy"] is not True for item in budget["ranked_by_headroom"])
 
 
+def test_ranked_view_orders_healthy_then_unknown_then_unhealthy():
+    items = [
+        {"lane": "a", "health": {"healthy": False}},
+        {"lane": "b", "health": {"healthy": None}},
+        {"lane": "c", "health": {"healthy": True}},
+        {"lane": "d"},
+    ]
+    assert [item["lane"] for item in sorted(items, key=state_router._health_rank)] == ["c", "b", "d", "a"]
+
+
 def test_recommendation_prefers_established_health_over_unknown():
     agents = {
         "claude": {"status": "cool", "burn_pct_7d": 5.0, "interactive": {"status": "cool", "burn_pct_7d": 5.0}},

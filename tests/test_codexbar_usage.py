@@ -624,6 +624,18 @@ def test_healthy_record_carries_error_shape_defaults():
     assert res["error_code"] is None
 
 
+def test_missing_credentials_returns_need_login(monkeypatch):
+    """Missing native credentials must surface NEED_LOGIN, not missing_binary."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
+    codexbar_usage_mod._last_good_data.pop("codex", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "need_login"
+    assert res["probe_state"] == "NEED_LOGIN"
+    assert "credential" in res["auth_error"].lower()
+
+
 def test_native_probe_unavailable_missing_credentials(monkeypatch):
     """Regression: missing credentials must not masquerade as a healthy 0% lane."""
     monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
@@ -1154,6 +1166,19 @@ def test_load_codex_oauth_token_reads_nested_tokens_shape(tmp_path, monkeypatch)
     assert subscription_usage_mod._load_codex_oauth_token() == "fixture-nested-token"
 
 
+def test_load_codex_oauth_token_still_reads_top_level_shape(tmp_path, monkeypatch):
+    """Backward compat: a flat top-level access_token must still resolve."""
+    codex_home = tmp_path / ".codex"
+    codex_home.mkdir()
+    (codex_home / "auth.json").write_text(
+        json.dumps({"access_token": "fixture-flat-token"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+
+    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-flat-token"
+
+
 def test_load_kimi_bearer_reads_credentials_file(tmp_path, monkeypatch):
     """Kimi credential loader must succeed from kimi-code.json's access_token."""
     monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
@@ -1400,6 +1425,15 @@ def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
     assert res["windows"]["primary"]["window_minutes"] == 300
 
 
+def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
+    assert subscription_usage_mod._coerce_float(" 42.5 ") == 42.5
+    assert subscription_usage_mod._coerce_float(7) == 7.0
+    assert subscription_usage_mod._coerce_float(True) is None
+    assert subscription_usage_mod._coerce_float("") is None
+    assert subscription_usage_mod._coerce_float("nope") is None
+    assert subscription_usage_mod._coerce_float(None) is None
+
+
 def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
     """HTTP 200 with used=NaN must not become healthy with nan percents."""
     monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
@@ -1606,6 +1640,22 @@ def test_management_balance_failure_is_not_a_good_prepaid_sample(monkeypatch):
     assert result["probe_state"] == "NEED_PROBE"
     assert result["balance_probe_state"] == "NEED_PROBE"
     assert not mod._api_account_is_cacheable(result)
+
+
+def test_management_key_missing_uses_short_cache_ttl(monkeypatch):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(mod, "_api_account_last_failure", {})
+    monkeypatch.setattr(mod, "_api_account_last_good", {})
+    monkeypatch.setattr(mod, "_scheduler_is_running", lambda: True)
+    monkeypatch.setattr(mod, "_on_demand_refresh_enabled", lambda: True)
+    called = []
+    monkeypatch.setattr(mod, "trigger_api_account_background_refresh", lambda: called.append(True))
+    account = {"probe_state": "ok", "balance_probe_state": "NEED_KEY", "fetched_at": "2026-09-14T12:00:00Z"}
+    monkeypatch.setattr(mod, "cache_get_with_age", lambda *a, **kw: (account, 31))
+    mod._api_account_last_good["openrouter"] = (time.monotonic() - 31, account)
+    result = mod.get_api_account_data("openrouter")
+    assert result["freshness"] == "stale_last_good"
+    assert called == [True]
 
 
 # --- CodexBar UsagePace port (usage-pace-secrets-v2) -----------------------
@@ -2303,6 +2353,35 @@ def test_agy_fixture_publishes_separate_quota_groups(monkeypatch):
     assert _agy_window(projected, "claude_gpt", "5h")["resets_at"] == "2026-09-30T12:33:22Z"
 
 
+def test_agy_groups_do_not_copy_a_window_into_its_sibling(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"},
+            ],
+        },
+        {
+            "name": "Claude and GPT models",
+            "buckets": [
+                {"window": "weekly", "remaining_fraction": 0.25, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert projected["remaining_pct"] is None
+    gemini = next(group for group in projected["quota_groups"] if group["key"] == "gemini_models")
+    claude = next(group for group in projected["quota_groups"] if group["key"] == "claude_gpt")
+    assert [item["window"] for item in gemini["windows"]] == ["5h"]
+    assert [item["window"] for item in claude["windows"]] == ["weekly"]
+    assert gemini["windows"][0]["remaining_pct"] == 50.0
+    assert gemini["windows"][0]["resets_at"] == "2026-10-13T18:00:00Z"
+    assert claude["windows"][0]["remaining_pct"] == 25.0
+    assert claude["windows"][0]["resets_at"] == "2026-10-20T00:00:00Z"
+
+
 def test_agy_missing_fraction_keeps_reset_and_is_unknown(monkeypatch):
     payload = _agy_usage_payload(
         {
@@ -2433,6 +2512,30 @@ def test_agy_malformed_and_rate_limit_drop_numeric_headroom(monkeypatch):
     assert _agy_window(hidden, "gemini_models", "weekly")["remaining_pct"] is None
     assert _agy_window(hidden, "gemini_models", "weekly")["resets_at"] is None
     _assert_no_sentinel_value(hidden, 50.0)
+
+
+def test_agy_stale_observation_hides_quota(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [{"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"}],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    with subscription_usage_mod._AGY_QUOTA_LOCK:
+        snapshot = subscription_usage_mod._agy_quota_parsed[1]
+        subscription_usage_mod._agy_quota_parsed = (time.monotonic() - 10_000, snapshot)
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["freshness"] == "stale_last_good"
+    assert projected["status"] == "unknown"
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] is None
+    assert _agy_window(projected, "gemini_models", "5h")["resets_at"] is None
+    _assert_no_sentinel_value(projected, 50.0)
+
+
+@pytest.mark.parametrize("value", [-1, 101, 10**400, float("nan"), float("inf"), True, None, "PRIVATE_PERCENT"])
+def test_public_percent_rejects_unmeasured_values(value):
+    assert subscription_usage_mod._public_percent(value) is None
 
 
 @pytest.mark.parametrize(
@@ -2570,6 +2673,19 @@ def test_muse_provider_age_expires_before_a_recent_cache_entry(monkeypatch):
     projected = subscription_usage_mod.project_muse_for_status(record)
     assert (projected["freshness"], projected["age_s"], projected["remaining_pct"]) == ("stale_last_good", 720.0, None)
     assert projected["error_code"] == "STALE_DATA"
+
+
+@pytest.mark.parametrize("used", [-1, 101, float("nan"), float("inf"), True])
+def test_muse_out_of_range_window_is_unknown(used):
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            "provider": "muse",
+            "usage": {"primary": {"usedPercent": used, "windowMinutes": 300}},
+        }
+    )
+    assert record["status"] == "unknown"
+    assert record["headroom_pct"] is None
+    assert record["windows"]["primary"]["remaining_pct"] is None
 
 
 def test_agy_public_labels_windows_and_resets_drop_private_metadata(monkeypatch):

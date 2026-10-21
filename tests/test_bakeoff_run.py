@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import yaml
 
 from scripts.audit import bakeoff_run
 
@@ -41,6 +42,26 @@ def _fake_runner(calls: list[list[str]], slug: str = "my-morning"):
         return _completed(command)
 
     return run
+
+
+def _plan_payload() -> dict[str, object]:
+    return {
+        "module": "a1-020",
+        "level": "A1",
+        "sequence": 20,
+        "slug": "my-morning",
+        "title": "Мій ранок",
+        "subtitle": "Зворотні дієслова",
+        "word_target": 1200,
+        "content_outline": [
+            {
+                "section": "Діалоги",
+                "words": 1200,
+                "points": ["Introduce a morning dialogue."],
+            }
+        ],
+        "references": [{"title": "Fixture source"}],
+    }
 
 
 def test_bakeoff_run_invokes_write_and_review_steps_in_order(
@@ -386,3 +407,23 @@ def test_bakeoff_run_aggregate_gets_normalized_writer_list(
 
     assert exit_code == 0
     assert aggregate_call[aggregate_call.index("--writers") + 1] == "gemini,gpt55,claude"
+
+
+def test_bakeoff_run_preflight_accepts_fixture_plan(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    plan_path = tmp_path / "my-morning.yaml"
+    plan_path.write_text(yaml.safe_dump(_plan_payload()), encoding="utf-8")
+    monkeypatch.setattr(
+        bakeoff_run.linear_pipeline,
+        "plan_path_for",
+        lambda _level, _slug: plan_path,
+    )
+    monkeypatch.setattr(
+        bakeoff_run.linear_pipeline,
+        "_wiki_article_paths",
+        lambda *_args: [tmp_path / "my-morning.md"],
+    )
+
+    assert bakeoff_run._preflight("a1", "my-morning", ["gemini-tools"]) == []

@@ -8,10 +8,19 @@ import pytest
 
 from scripts.practice_deck.markup_integrity import stem_requires_markup
 from scripts.practice_deck.zno import (
+    LEXICAL_NORM_LIVE_CANDIDATE_COUNT,
     LEXICAL_NORM_SQL,
     MORPHOLOGICAL_NORM_SQL,
+    MORPHOLOGY_LIVE_CANDIDATE_COUNT,
+    MORPHOLOGY_SQL,
+    ORTHOGRAPHY_LIVE_CANDIDATE_COUNT,
+    ORTHOGRAPHY_SQL,
+    PARONYM_LIVE_CANDIDATE_COUNT,
+    PHONETICS_SQL,
     SYNTACTIC_NORM_SQL,
+    SYNTAX_SQL,
     build_zno_shards,
+    learner_attribution,
     write_zno_fill_residual,
     write_zno_shards,
 )
@@ -107,6 +116,20 @@ def test_lexical_predicate_is_explicit_and_output_is_deterministic(tmp_path: Pat
     assert json.loads((output / "zno-fill-residual.json").read_text(encoding="utf-8"))["inventory"]["stress"]["emitted"] == 1
 
 
+def test_orthography_membership_is_pinned_and_malformed_candidates_drop(tmp_path: Path) -> None:
+    shards, residual, _fill = build_zno_shards(_database(tmp_path / "sources.db"))
+
+    assert "instr(t.topic_tag, 'Орфограф') > 0" in ORTHOGRAPHY_SQL
+    # This frozen live denominator makes an intentional source-corpus or predicate
+    # change visible in review before the generated shard is refreshed.
+    assert ORTHOGRAPHY_LIVE_CANDIDATE_COUNT == 168
+    assert residual["decks"]["orthography"]["candidates"] == 2
+    assert residual["decks"]["orthography"]["emitted"] == 1
+    assert residual["decks"]["orthography"]["dropped"] == {"invalid_options": 1}
+    assert shards["orthography"]["deckId"] == "zno-orthography"
+    assert shards["orthography"]["items"][0]["stem"] == "Орфографія?"
+
+
 def test_morphological_and_syntactic_norm_decks_use_exact_topic_norm_predicates(tmp_path: Path) -> None:
     shards, residual, _fill = build_zno_shards(_database(tmp_path / "sources.db"))
 
@@ -118,6 +141,41 @@ def test_morphological_and_syntactic_norm_decks_use_exact_topic_norm_predicates(
     assert shards["syntactic-norm"]["items"][0]["stem"] == "Синтаксис?"
     assert residual["decks"]["morphological-norm"]["candidates"] == 1
     assert residual["decks"]["syntactic-norm"]["candidates"] == 1
+
+
+def test_wave_3_decks_emit_from_broad_topic_tag_families(tmp_path: Path) -> None:
+    """#6620: morphology/syntax/phonetics were untapped topic_tag families sitting
+    behind the four thin/repetitive original decks; this pins their predicates and
+    proves each emits real, letter-valid items when candidates exist."""
+    shards, residual, _fill = build_zno_shards(_database(tmp_path / "sources.db"))
+
+    assert "instr(t.topic_tag, 'Морфолог') > 0" in MORPHOLOGY_SQL
+    assert "instr(t.topic_tag, 'Словотвір') > 0" in MORPHOLOGY_SQL
+    assert "instr(t.topic_tag, 'Синтаксис') > 0" in SYNTAX_SQL
+    assert "instr(t.topic_tag, 'Фонетик') > 0" in PHONETICS_SQL
+    assert MORPHOLOGY_LIVE_CANDIDATE_COUNT == 195
+    assert LEXICAL_NORM_LIVE_CANDIDATE_COUNT == 40
+    assert PARONYM_LIVE_CANDIDATE_COUNT == 7
+
+    assert shards["morphology"]["deckId"] == "zno-morphology"
+    assert residual["decks"]["morphology"]["candidates"] == 2
+    assert residual["decks"]["morphology"]["emitted"] == 2
+
+    assert shards["syntax"]["deckId"] == "zno-syntax"
+    assert residual["decks"]["syntax"]["candidates"] == 2
+    assert residual["decks"]["syntax"]["emitted"] == 2
+
+    assert shards["phonetics"]["deckId"] == "zno-phonetics"
+    assert residual["decks"]["phonetics"]["candidates"] == 2
+    assert residual["decks"]["phonetics"]["emitted"] == 1
+    assert residual["decks"]["phonetics"]["dropped"] == {"broken_missing_markup": 1}
+    assert shards["phonetics"]["items"][0]["stem"] == "Фонетика?"
+
+
+def test_attribution_uses_ucyoo_and_never_a_mirror() -> None:
+    assert learner_attribution(year=2024, exam="nmt", session="sesiya-2", task_no=7) == (
+        "Джерело: УЦОЯО · НМТ 2024, сесія 2 · завдання №7"
+    )
 
 
 def test_builder_quarantines_markup_dependent_items_without_overlay(tmp_path: Path) -> None:
@@ -269,4 +327,25 @@ def test_cli_option_distinctions_and_quarantine(tmp_path: Path, options, marks, 
             assert items[0].get("optionMarks") == marks
             assert fill["deckDrops"][deck] == []
         assert fill["inventory"][deck]["dropped"] == receipt["dropped"]
+    assert fill["predicateMissByTopicNorm"] == {}
+
+
+def test_cli_overlap_keeps_unique_tasks_separate_from_deck_occurrences(tmp_path: Path) -> None:
+    payloads, residual, fill = _option_cases_cli(tmp_path, [
+        (_SPACE_OPTIONS, _DIFFERENT_LETTER, True, "А"),
+        (["alpha", "alpha", "beta"], None, False, "А"),
+        (_SPACE_OPTIONS, None, True, "А"),
+    ])
+    for deck in ("morphological-norm", "morphology"):
+        assert residual["decks"][deck]["candidates"] == 3
+        assert residual["decks"][deck]["emitted"] == 1
+        assert residual["decks"][deck]["dropped"] == {"invalid_options": 1, "broken_missing_markup": 1}
+        assert [item["znoTaskId"] for item in payloads[f"practice-zno.{deck}"]["items"]] == ["zno:1"]
+        assert fill["deckDrops"][deck] == [
+            {"znoTaskId": "zno:2", "reason": "invalid_options"},
+            {"znoTaskId": "zno:3", "reason": "broken_missing_markup"},
+        ]
+    assert {entry["znoTaskId"] for entry in fill["blocked"]} == {"zno:2", "zno:3"}
+    assert len(fill["blocked"]) == 4
+    assert fill["unparsed"] == [{"znoTaskId": "zno:2", "reason": "invalid_options"}]
     assert fill["predicateMissByTopicNorm"] == {}

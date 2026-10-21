@@ -41,6 +41,16 @@ def test_resolve_retired_agent_alias_maps_gemini_to_agy():
     assert resolve_retired_agent_alias("  gemini  ") == "agy"
 
 
+def test_resolve_retired_agent_alias_passthrough_for_live_agents():
+    from agent_runtime.agent_identity import resolve_retired_agent_alias
+
+    assert resolve_retired_agent_alias("agy") is None
+    assert resolve_retired_agent_alias("codex") is None
+    assert resolve_retired_agent_alias("claude") is None
+    assert resolve_retired_agent_alias(None) is None
+    assert resolve_retired_agent_alias("") is None
+
+
 def test_capacity_pick_never_recommends_gemini_as_pick():
     from scripts.fleet import capacity_pick
 

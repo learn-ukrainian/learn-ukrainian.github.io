@@ -164,6 +164,14 @@ def test_main_human_output_and_exit_codes(
     assert capsys.readouterr().out == expected_output
 
 
+def test_main_json_output(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    payload = {"source": "rest.resources.graphql", "remaining": 8, "exhausted": False, "error": None}
+    monkeypatch.setattr(probe, "probe_graphql_budget", lambda: payload)
+
+    assert probe.main(["--json"]) == 0
+    assert capsys.readouterr().out == json.dumps(payload, separators=(",", ":")) + "\n"
+
+
 def test_ttl_cache_and_single_flight(monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.api import state_helpers
 

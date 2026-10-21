@@ -85,6 +85,16 @@ class TestParseConsultation:
         """)
         assert parse_consultation(text) is None
 
+    def test_proposed_changes_not_list_returns_none(self):
+        text = textwrap.dedent("""\
+            root_cause: Something
+            proposed_changes: "just a string"
+            scope: this_module
+            action: rebuild
+            confidence: high
+        """)
+        assert parse_consultation(text) is None
+
     def test_change_missing_find_returns_none(self):
         text = textwrap.dedent("""\
             root_cause: Something
@@ -114,6 +124,22 @@ class TestParseConsultation:
         result = parse_consultation(text)
         assert result is not None
         assert result.root_cause == "Template issue"
+
+    def test_empty_replace_is_allowed(self):
+        """A change can replace text with nothing (deletion)."""
+        text = textwrap.dedent("""\
+            root_cause: Remove bad instruction
+            proposed_changes:
+              - find: "Delete this line"
+                replace: ""
+                file: "content.md"
+            scope: this_module
+            action: rebuild
+            confidence: high
+        """)
+        result = parse_consultation(text)
+        assert result is not None
+        assert result.proposed_changes[0].replace == ""
 
 
 # ── apply_template_patch ───────────────────────────────────────────────
@@ -282,6 +308,15 @@ def test_consultation_fence_exterior_lines_preserve_payload(ending, exterior_bla
     exterior = (padding + ending) * exterior_blanks
     framed = f"{exterior}  ```yaml{ending}{body}```{exterior}"
     cleaned = _clean_yaml_text(framed)
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+@pytest.mark.parametrize("scalar", ['"alpha{separator}beta"', "|+\n  alpha{separator}  beta\n\n"])
+def test_consultation_unicode_scalar_bytes_preserved(separator, scalar):
+    body = "value: " + scalar.format(separator=separator) + "\n"
+    cleaned = _clean_yaml_text(f"```yaml\r\n{body}```\r\n \t\r\n\r\n")
     assert cleaned == body
     assert yaml.safe_load(cleaned) == yaml.safe_load(body)
 

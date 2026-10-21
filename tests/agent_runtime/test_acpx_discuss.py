@@ -261,6 +261,50 @@ def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
     assert terminal == "PARTIAL_COMPLETE"
 
 
+def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(
+    tmp_path, monkeypatch
+):
+    calls: list[tuple[str, str]] = []
+
+    def participant(agent: str, _prompt: str, **kwargs):
+        calls.append((agent, kwargs["tool_config"]["target_agent"]))
+        return _result(agent, f"{agent} evidence")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
+    try:
+        result = controller.run(
+            prompt="Compare the two bounded options.",
+            cwd=Path.cwd(),
+            task_id="task-6130",
+            correlation_id="corr-6130",
+            idempotency_key="idem-6130-generic",
+            rounds=1,
+            participants=("claude", "agy"),
+        )
+        stored = controller.conn.execute(
+            "SELECT participants_json FROM acp_conversations WHERE conversation_id = ?",
+            (result["conversation_id"],),
+        ).fetchone()[0]
+    finally:
+        controller.close()
+
+    assert sorted(calls) == [
+        ("acpx-agy-shadow", "agy"),
+        ("acpx-claude-shadow", "claude"),
+    ]
+    assert stored == '["claude", "agy"]'
+    receipt = acpx_discuss.verify_discussion_receipt(
+        root=tmp_path / "plane", conversation_id=result["conversation_id"]
+    )
+    assert receipt["participants"] == ["claude", "agy"]
+    assert receipt["checks"]["fixed_participants"] is True
+
+
 @pytest.mark.parametrize("kimi_seat", ["kimi", "kimicc"])
 def test_panel_with_a_kimi_seat_is_refused_before_any_call(tmp_path, monkeypatch, kimi_seat):
     """Kimi seats admit web, UI and backend coding only: a discussion panel naming one never starts."""

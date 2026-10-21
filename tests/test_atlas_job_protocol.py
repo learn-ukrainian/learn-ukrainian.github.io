@@ -69,6 +69,17 @@ def test_rejects_pointer_write() -> None:
     assert any("pointer_write" in e for e in errors)
 
 
+def test_submit_dry_run_sets_host_and_workdir(capsys: pytest.CaptureFixture[str]) -> None:
+    rc = atlas_job.submit(_plan(), dry_run=True)
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "atlas-runner" in out
+    assert "launch_reenrich_class_b_remote.sh" in out
+    assert "--no-poll" in out
+    assert "atlas-job-missing-tr-example.service" in out
+    assert "run-atlas-job-missing-tr-example" in out
+
+
 def test_submit_fails_closed_without_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
     assert atlas_job.submit(_plan(), dry_run=True) == 2
@@ -313,6 +324,29 @@ def test_status_reconciles_inactive_unit_to_needs_finalize(
     assert row["state"] == "needs_finalize"
 
 
+def test_status_fails_closed_without_runner_host(
+    monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
+) -> None:
+    monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
+    rc = atlas_job.status(host_adapter=_isolate_host)
+    assert rc == 2
+
+
+def test_pull_forwards_required_run_root_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """pull must forward ATLAS_RUN_ROOT (mirrors submit)."""
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/custom-run-root")
+    captured_env: dict[str, str] = {}
+
+    def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
+        captured_env.update(kwargs.get("env") or {})
+        return 0
+
+    monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
+    rc = atlas_job.pull(host="test-runner-host")
+    assert rc == 0
+    assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
+
+
 def test_git_receipt_rejects_absolute_paths() -> None:
     bad = {
         "schema": "atlas-job-result.v1",
@@ -439,6 +473,21 @@ def test_workdir_honored_only_when_safe(tmp_path: Path, monkeypatch: pytest.Monk
     monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
     with pytest.raises(ValueError, match="ATLAS_RUN_ROOT is required"):
         atlas_job.require_safe_workdir("/tmp/atlas-run-root/run-atlas-job-test")
+
+
+def test_work_dir_for_requires_run_root_and_ignores_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
+    assert atlas_job.work_dir_for("ar-job", _plan(id="ar-job")) == (
+        "/tmp/atlas-run-root/run-atlas-job-ar-job"
+    )
+    assert atlas_job.work_dir_for("alt-job", _plan(id="alt-job", host="atlas-runner")) == (
+        "/tmp/atlas-run-root/run-atlas-job-alt-job"
+    )
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    with pytest.raises(ValueError, match="ATLAS_RUN_ROOT is required"):
+        atlas_job.work_dir_for("ar-job", _plan(id="ar-job"))
 
 
 def test_submit_refuses_when_host_free_disk_below_floor(

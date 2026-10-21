@@ -33,6 +33,21 @@ def quality_gate_module(monkeypatch):
     return quality_gate
 
 
+def test_check_article_flags_forbidden_sources_section(tmp_path: Path, quality_gate_module) -> None:
+    article_path = _write_article(
+        tmp_path,
+        "# Заголовок\n\nТекст [S1].\n\n## Джерела\n* [S1] Example.\n",
+    )
+    _write_registry(
+        article_path,
+        "sources:\n  - id: S1\n    file: ext-example-1\n    type: external\n",
+    )
+
+    issues = quality_gate_module.check_article(article_path, "oes")
+
+    assert "SOURCES_SECTION_PRESENT" in issues
+
+
 def test_check_article_flags_orphan_inline_ref(tmp_path: Path, quality_gate_module) -> None:
     article_path = _write_article(tmp_path, "# Заголовок\n\nТекст [S1][S99].\n")
     _write_registry(
@@ -73,6 +88,17 @@ def test_check_article_flags_missing_sources_yaml_when_refs_exist(
     issues = quality_gate_module.check_article(article_path, "oes")
 
     assert "MISSING_SOURCES_YAML (walls-speak-intro.sources.yaml)" in issues
+
+
+def test_check_article_preserves_legacy_behavior_without_refs(
+    tmp_path: Path, quality_gate_module
+) -> None:
+    article_path = _write_article(tmp_path, "# Заголовок\n\nПросто текст без цитат.\n")
+
+    issues = quality_gate_module.check_article(article_path, "oes")
+
+    assert "MISSING_SOURCES_YAML (walls-speak-intro.sources.yaml)" not in issues
+    assert issues == []
 
 
 def test_check_article_flags_malformed_sources_yaml(tmp_path: Path, quality_gate_module) -> None:

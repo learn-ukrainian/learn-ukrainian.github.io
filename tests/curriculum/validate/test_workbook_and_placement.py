@@ -16,6 +16,7 @@ from scripts.curriculum.validate import codes
 from scripts.curriculum.validate.report import Report
 from scripts.curriculum.validate.validate import (
     _check_activity_placement,
+    _check_workbook_presence,
     validate_plan,
 )
 from tests.curriculum.test_plan_validate import LEVEL, SLUG, build_base, write_world
@@ -68,7 +69,88 @@ def produced_workbook_and_placement_codes(tmp_path: Path) -> set[str]:
     # already exercised by every VALID_CASES run in test_plan_validate.py
 
 
+def test_non_recap_lesson_without_workbook_fails(tmp_path: Path) -> None:
+    plan, pack, words = build_base()
+    plan["lessons"][0]["activities"][1]["placement"] = "inline"  # a2 was the only workbook activity
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    outcome = next(o for o in report.failures if o.code == codes.WORKBOOK_ACTIVITY_MISSING)
+    assert outcome.lesson == 1
+
+
+def test_recap_lesson_without_workbook_passes(tmp_path: Path) -> None:
+    plan, pack, words = build_base()
+    plan["lessons"][1]["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."}]
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    assert codes.WORKBOOK_ACTIVITY_MISSING not in report.codes()
+
+
+def test_checkpoint_lesson_needs_a_workbook_activity_too() -> None:
+    """checkpoint is not the recap; §A1 exempts only the recap lesson."""
+    report = Report(level="a1", slug="x")
+    plan = {
+        "lessons": [{"n": 1, "kind": "checkpoint", "activities": [{"id": "a1", "type": "quiz", "placement": "inline"}]}]
+    }
+    _check_workbook_presence(report, plan)
+    assert report.failures[0].code == codes.WORKBOOK_ACTIVITY_MISSING
+
+
 # --- end-to-end: forbidden / mismatched placement ---------------------------
+
+
+def test_translate_inline_at_a1_fails_placement_not_allowed(tmp_path: Path) -> None:
+    """translate is workbook-only at a1 (issue #8889 r5 §B2)."""
+    plan, pack, words = build_base()
+    plan["lessons"][0]["activities"].append(
+        {"id": "a4", "type": "translate", "placement": "inline", "focus": "Translate a sentence."}
+    )
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    outcome = next(o for o in report.failures if o.code == codes.ACTIVITY_PLACEMENT_NOT_ALLOWED)
+    assert "translate" in outcome.message
+    assert outcome.lesson == 1
+
+
+def test_translate_workbook_at_a1_passes(tmp_path: Path) -> None:
+    plan, pack, words = build_base()
+    plan["lessons"][0]["activities"].append(
+        {"id": "a4", "type": "translate", "placement": "workbook", "focus": "Translate a sentence."}
+    )
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    assert codes.ACTIVITY_PLACEMENT_NOT_ALLOWED not in report.codes()
+    assert codes.ACTIVITY_PLACEMENT_FORBIDDEN not in report.codes()
+
+
+def test_classify_at_a1_fails_placement_forbidden() -> None:
+    """classify is deprecated in favour of group-sort and forbidden in new plans (§B2)."""
+    report = Report(level="a1", slug="x")
+    plan = {
+        "lessons": [
+            {
+                "n": 1,
+                "kind": "teach",
+                "activities": [{"id": "a1", "type": "classify", "placement": "inline"}],
+            }
+        ]
+    }
+    _check_activity_placement(report, plan, "a1", allowlist={"classify"}, placement_table_path=None)
+    outcome = report.failures[0]
+    assert outcome.code == codes.ACTIVITY_PLACEMENT_FORBIDDEN
+    assert outcome.lesson == 1
+
+
+def test_type_outside_the_allowlist_is_skipped_not_double_reported() -> None:
+    """UNKNOWN_ACTIVITY_TYPE (schema check) already covers this; no second failure."""
+    report = Report(level="a1", slug="x")
+    plan = {
+        "lessons": [
+            {"n": 1, "kind": "teach", "activities": [{"id": "a1", "type": "not-a-type", "placement": "inline"}]}
+        ]
+    }
+    _check_activity_placement(report, plan, "a1", allowlist={"quiz"}, placement_table_path=None)
+    assert report.failures == []
 
 
 # --- unit tests: table-loading edge cases -----------------------------------
@@ -88,6 +170,15 @@ def test_malformed_placement_table_file_fails_closed(tmp_path: Path) -> None:
     plan = {"lessons": []}
     _check_activity_placement(report, plan, "a1", allowlist=None, placement_table_path=bad)
     assert report.failures[0].code == codes.PLACEMENT_TABLE_UNAVAILABLE
+
+
+def test_level_not_covered_by_table_is_not_checked_not_failed() -> None:
+    report = Report(level="zz", slug="x")
+    plan = {"lessons": [{"n": 1, "kind": "teach", "activities": [{"id": "a1", "type": "quiz", "placement": "inline"}]}]}
+    _check_activity_placement(report, plan, "zz", allowlist=None, placement_table_path=None)
+    assert report.failures == []
+    outcome = next(o for o in report.not_checked if o.code == codes.PLACEMENT_LEVEL_NOT_COVERED)
+    assert "zz" in outcome.message
 
 
 # --- the plan_report is printed by plan-validate ----------------------------

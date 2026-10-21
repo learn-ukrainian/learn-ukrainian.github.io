@@ -2,11 +2,48 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
+from tests._host_path_guard import assert_no_host_paths
+
 ROOT = Path(__file__).resolve().parents[1]
+PYTHON = sys.executable
+DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "fetch_ulif_20k.py"
+
+
+def test_source_has_no_baked_home_defaults() -> None:
+    assert_no_host_paths(DRIVER.read_text(encoding="utf-8"))
+
+
+def test_work_dir_flag_is_required() -> None:
+    from scripts.lexicon.runner.fetch_ulif_20k import main as fetch_main
+
+    with pytest.raises(SystemExit) as exc:
+        fetch_main([])
+    assert exc.value.code == 2
+
+
+def test_help_exits_zero_without_side_effects(tmp_path: Path) -> None:
+    work = tmp_path / "work"
+    proc = subprocess.run(
+        [PYTHON, str(DRIVER), "--help"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    help_text = (proc.stdout + proc.stderr).lower()
+    assert "usage:" in help_text
+    assert "--cohort" in help_text
+    assert not work.exists()
+
+
 def test_in_process_fetch_never_applies_worker_memory_limit_to_coordinator(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
