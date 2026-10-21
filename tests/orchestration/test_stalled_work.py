@@ -224,6 +224,31 @@ def test_rejection_of_current_head_without_live_task_is_detected(host):
 
 
 @pytest.mark.parametrize(
+    "review_fields",
+    [{"mode": "read-only"}, {"review_branch": "codex/fix"}, {"mode": "read-only", "review_branch": "codex/fix"}],
+)
+def test_rejection_owner_prefers_author_over_newer_review_task(host, review_fields):
+    host.record(status="done", finished_at=(NOW - timedelta(hours=5)).isoformat())
+    host.record(
+        "review",
+        status="done",
+        initiator="claude-infra",
+        worktree_branch="review/other",
+        pr=42,
+        finished_at=(NOW - timedelta(hours=4)).isoformat(),
+        **review_fields,
+    )
+    pr(host)
+    rejection(host)
+    report = host.scan()
+    assert report["errors"] == []
+    assert len(report["rows"]) == 1
+    row = report["rows"][0]
+    assert (row["kind"], row["task_id"], row["lane"]) == ("changes_requested", "one", "codex-devops")
+    assert row["age_hours"] == 3
+
+
+@pytest.mark.parametrize(
     "case",
     [
         "new_head",
@@ -336,9 +361,7 @@ def test_unknown_pr_verdict_routes_to_cto_without_blocking_other_work(host):
 def test_keeper_post_step_failure_does_not_fail_the_keeper_unit():
     unit = Path(__file__).resolve().parents[2] / "packaging/systemd/learn-ukrainian-merge-queue-keeper.service"
     post = [line for line in unit.read_text().splitlines() if line.startswith("ExecStartPost=")]
-    assert post == [
-        "ExecStartPost=-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.stalled_work stalled --tick"
-    ]
+    assert post == ["ExecStartPost=-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.stalled_work stalled --tick"]
 
 
 def test_malformed_record_is_visible(host):

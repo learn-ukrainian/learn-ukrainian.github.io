@@ -36,9 +36,7 @@ def owner_lanes() -> dict[str, str]:
     areas = _load_yaml(TAXONOMY_PATH)["areas"]
     lanes = {slot: slot for area in assignments.values() for slot in area["slots"]}
     stream_slots = {
-        f"epic:{epic['number']}": assignments[area]["slots"]
-        for area, spec in areas.items()
-        for epic in spec["epics"]
+        f"epic:{epic['number']}": assignments[area]["slots"] for area, spec in areas.items() for epic in spec["epics"]
     }
     succession, _ = succession_streams()
     for initiator, stream in succession.items():
@@ -233,7 +231,13 @@ def scan(tasks: Path, checkouts: dict[str, Path], *, now: datetime, adapter_fact
                     and selected.task == verdict.task
                     and selected.started == verdict.started
                 ]
-                matches = sorted((c for c in terminal if related(c, pr)), key=lambda c: c.age_days)
+                matches = sorted(
+                    (c for c in terminal if related(c, pr)),
+                    key=lambda c: (
+                        c.record.get("mode") == "read-only" or bool(c.record.get("review_branch")),
+                        c.age_days,
+                    ),
+                )
                 times = [t for t in [verdict.started, *posted] if t is not None]
                 if matches:
                     times.append(finished(matches[0]))
