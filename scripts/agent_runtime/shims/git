@@ -336,35 +336,170 @@ fi
 # or times out refuses. GIT_CONFIG is unset because it narrows `git config` to
 # one file while Git's alias lookup ignores it. The time limit is bash's own
 # read timeout (some timeout(1) builds poll and add 0.1 s to every call).
+# A refusal names the cause — the read timed out, git config's exit status,
+# the probe key was missing, or the output contained a NUL — and appends git
+# config's stderr, cut at 400 characters. The exit status stays 2.
+#
+# Production limit is 10s. Test hook, off unless a test sets both:
+#   LU_OPSEC_ALIAS_PROBE_TEST_HOOK=1
+#   LU_OPSEC_ALIAS_PROBE_TIMEOUT=<seconds>
+# The timeout must be an integer from 1 to 60. Any other value, or the flag
+# unset, keeps 10s. The hook cannot disable the limit.
 _opsec_probe="lu-opsec.alias-probe"
-_opsec_aliased() {
-  local fd pid names="" name rest word="${_opsec_command,,}" read_status=0 git_status=0
-  exec {fd}< <(exec env -u GIT_CONFIG "$real_git" "${_opsec_globals[@]}" -c "$_opsec_probe=1" \
-    config --name-only --get-regexp "^(alias\\..*|${_opsec_probe//./\\.})\$")
-  pid=$!
-  IFS= read -r -d '' -t 10 -u "$fd" names || read_status=$?
-  exec {fd}<&-
-  if [[ "$read_status" != 1 ]]; then
-    # Over time (above 128), or a NUL where Git writes none (0).
-    kill "$pid" 2>/dev/null || true
-    return 2
+_opsec_alias_probe_timeout=10
+if [[ "${LU_OPSEC_ALIAS_PROBE_TEST_HOOK:-}" == "1" && "${LU_OPSEC_ALIAS_PROBE_TIMEOUT:-}" =~ ^[1-9][0-9]?$ && "${LU_OPSEC_ALIAS_PROBE_TIMEOUT}" -le 60 ]]; then
+  _opsec_alias_probe_timeout="${LU_OPSEC_ALIAS_PROBE_TIMEOUT}"
+fi
+_opsec_alias_detail=""
+
+# Wall-clock milliseconds. EPOCHREALTIME is bash 5+; SECONDS is the fallback.
+_opsec_now_ms() {
+  local now sec frac
+  if [[ "${EPOCHREALTIME:-}" == *.* ]]; then
+    now="${EPOCHREALTIME}"
+    sec="${now%%.*}"
+    frac="${now#*.}000"
+    frac="${frac:0:3}"
+    printf '%s\n' $((sec * 1000 + 10#$frac))
+  else
+    printf '%s\n' $((SECONDS * 1000))
   fi
-  wait "$pid" || git_status=$?
-  [[ "$git_status" == 0 && $'\n'"$names" == *$'\n'"$_opsec_probe"$'\n'* ]] || return 2
-  while IFS= read -r name; do
-    [[ "$name" == alias.* ]] || continue
-    rest="${name#alias.}"
-    rest="${rest,,}"
-    [[ "$rest" == "$word" || "$rest" == "$word".* ]] && return 0
-  done <<< "$names"
-  return 1
+}
+
+# One line, at most 400 characters, controls removed. Empty input is "(empty)".
+_opsec_alias_bound() {
+  local raw="" out="" i char
+  if [[ -f "$1" ]]; then
+    IFS= read -r -d '' -n 400 raw <"$1" || true
+  fi
+  for ((i = 0; i < ${#raw}; i++)); do
+    char="${raw:i:1}"
+    case "$char" in
+      [[:cntrl:]]) continue ;;
+      *) out+="$char" ;;
+    esac
+  done
+  if [[ -z "$out" ]]; then
+    printf '%s' "(empty)"
+  else
+    printf '%s' "$out"
+  fi
+}
+
+_opsec_aliased() {
+  local fd="" pid="" names="" chunk="" name rest word="${_opsec_command,,}"
+  local read_status=0 git_status=0 result=2 kill_child=0 opened=0
+  local dir="" now_ms=0 deadline_ms=0 remaining_ms=0 remaining_s="" stderr_text=""
+  local started_ms=0 spin_ms=0
+  _opsec_alias_detail=""
+  dir="$(mktemp -d "${TMPDIR:-/tmp}/lu-opsec-alias.XXXXXX")" || {
+    _opsec_alias_detail="cause: probe temporary directory unavailable; git config stderr: (empty)"
+    return 2
+  }
+  # Git's exit status is recorded by the child. Waiting on the process
+  # substitution is not git's status: bash does not promise that wait.
+  exec {fd}< <(
+    set +e
+    git_pid=""
+    trap '[[ -n "${git_pid}" ]] && kill "${git_pid}" 2>/dev/null || true; exit 143' TERM
+    env -u GIT_CONFIG "$real_git" "${_opsec_globals[@]}" -c "${_opsec_probe}=1" \
+      config --name-only --get-regexp "^(alias\\..*|${_opsec_probe//./\\.})\$" 2>"${dir}/err" &
+    git_pid=$!
+    wait "${git_pid}"
+    rc=$?
+    git_pid=""
+    printf '%s\n' "$rc" >"${dir}/rc"
+    exit 0
+  )
+  pid=$!
+  opened=1
+  started_ms="$(_opsec_now_ms)"
+  deadline_ms=$((started_ms + _opsec_alias_probe_timeout * 1000))
+  while true; do
+    now_ms="$(_opsec_now_ms)"
+    remaining_ms=$((deadline_ms - now_ms))
+    if [[ "$remaining_ms" -le 0 ]]; then
+      read_status=142
+      break
+    fi
+    printf -v remaining_s '%d.%03d' $((remaining_ms / 1000)) $((remaining_ms % 1000))
+    chunk=""
+    read_status=0
+    spin_ms="$now_ms"
+    IFS= read -r -d '' -t "$remaining_s" -u "$fd" chunk || read_status=$?
+    names+="$chunk"
+    if [[ "$read_status" -eq 0 || "$read_status" -eq 1 ]]; then
+      break
+    fi
+    now_ms="$(_opsec_now_ms)"
+    if [[ "$now_ms" -ge "$deadline_ms" ]]; then
+      read_status=142
+      break
+    fi
+    # A signal can make read -t return before the deadline. Keep reading.
+    # Sleep only when the clock did not move, so a stuck read cannot spin.
+    if [[ $((now_ms - spin_ms)) -lt 50 ]]; then
+      sleep 0.05
+    fi
+  done
+  stderr_text="$(_opsec_alias_bound "${dir}/err")"
+  if [[ "$read_status" -gt 128 ]]; then
+    kill_child=1
+    _opsec_alias_detail="cause: timeout after ${_opsec_alias_probe_timeout}s; git config stderr: ${stderr_text}"
+  elif [[ "$read_status" -eq 0 ]]; then
+    kill_child=1
+    _opsec_alias_detail="cause: git config output contained a NUL; git config stderr: ${stderr_text}"
+  elif [[ "$read_status" -ne 1 ]]; then
+    kill_child=1
+    _opsec_alias_detail="cause: git exit status unavailable; git config stderr: ${stderr_text}"
+  else
+    git_status=""
+    if [[ -f "${dir}/rc" ]]; then
+      git_status="$(<"${dir}/rc")" || git_status=""
+      git_status="${git_status//[[:space:]]/}"
+    fi
+    if [[ ! "$git_status" =~ ^[0-9]+$ ]]; then
+      _opsec_alias_detail="cause: git exit status unavailable; git config stderr: ${stderr_text}"
+    elif [[ "$git_status" -ne 0 ]]; then
+      _opsec_alias_detail="cause: git config exit ${git_status}; git config stderr: ${stderr_text}"
+    elif [[ $'\n'"$names" != *$'\n'"${_opsec_probe}"$'\n'* ]]; then
+      _opsec_alias_detail="cause: probe key missing; git config stderr: ${stderr_text}"
+    else
+      result=1
+      while IFS= read -r name; do
+        [[ "$name" == alias.* ]] || continue
+        rest="${name#alias.}"
+        rest="${rest,,}"
+        if [[ "$rest" == "$word" || "$rest" == "$word".* ]]; then
+          result=0
+          break
+        fi
+      done <<< "$names"
+    fi
+  fi
+  # Failure leaves the child running when the read did not see it exit
+  # (a false end-of-file, or the timeout path). Kill after the status file and
+  # stderr have been read. A child that already exited is unreaped; kill fails.
+  if [[ "$kill_child" -eq 1 || "$result" -eq 2 ]]; then
+    kill "$pid" 2>/dev/null || true
+  fi
+  if [[ "$opened" -eq 1 ]]; then
+    exec {fd}<&-
+    wait "$pid" 2>/dev/null || true
+  fi
+  rm -rf -- "$dir" || true
+  return "$result"
 }
 
 if [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
   _opsec_alias_status=0
   _opsec_aliased || _opsec_alias_status=$?
   if [[ "$_opsec_alias_status" == 2 ]]; then
-    echo "OPSEC: could not check Git's aliases for '$_opsec_command', so it was not run." >&2
+    printf "OPSEC: could not check Git's aliases for '%s', so it was not run.\n" "$_opsec_command" >&2
+    if [[ -z "${_opsec_alias_detail}" ]]; then
+      _opsec_alias_detail="cause: git exit status unavailable; git config stderr: (empty)"
+    fi
+    printf '       %s\n' "$_opsec_alias_detail" >&2
     exit 2
   elif [[ "$_opsec_alias_status" == 0 ]]; then
     cat >&2 <<EOF

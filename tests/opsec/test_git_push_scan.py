@@ -1662,13 +1662,38 @@ ALIAS_SOURCES = [
 ]
 
 
+# Production probe limit stays 10s. Both variables are required; the shim
+# ignores the number when the hook flag is unset, and rejects 0 and values
+# above 60. See scripts/agent_runtime/shims/git.
+_ALIAS_PROBE_TEST_HOOK = {
+    "LU_OPSEC_ALIAS_PROBE_TEST_HOOK": "1",
+    "LU_OPSEC_ALIAS_PROBE_TIMEOUT": "30",
+}
+
+
+def _push_when_alias_probe_has_run(sandbox, *args, **environment):
+    """Retry only while the alias probe reports that it did not finish.
+
+    A defined-alias refusal, or a command the probe allowed through, is
+    returned immediately. Those are finished probes; repeating them would hide
+    a real miss.
+    """
+    last = None
+    for _attempt in range(3):
+        last = sandbox.push(*args, **{**environment, **_ALIAS_PROBE_TEST_HOOK})
+        if "could not check" not in last.stderr:
+            return last
+    return last
+
+
 @pytest.mark.parametrize("source", ALIAS_SOURCES)
 def test_alias_is_found_in_every_configuration_source(push_sandbox, source):
     options, environment = _alias_source(push_sandbox, source, "push --no-verify")
     pushing = [*options, "whatchanged", "origin", "HEAD:refs/heads/feature"]
     sha = push_sandbox.commit("subject " + TOKEN)
     before = push_sandbox.remote_refs()
-    assert_alias_refused(push_sandbox.push(*pushing, **environment), push_sandbox, before, sha, "whatchanged")
+    result = _push_when_alias_probe_has_run(push_sandbox, *pushing, **environment)
+    assert_alias_refused(result, push_sandbox, before, sha, "whatchanged")
     if source == "worktree":
         return  # Git 2.53 looks aliases up without the worktree file; the shim refuses them all the same.
     control = _plain(push_sandbox, *pushing, **environment)
@@ -1691,6 +1716,28 @@ def test_alias_over_any_listed_name_is_refused(push_sandbox, options, name):
     assert_alias_refused(result, push_sandbox, before, sha, name)
 
 
+def _git_stub(sandbox, body):
+    """A stand-in for AGENT_REAL_GIT. Push skips Git's command list and probes config only."""
+    path = sandbox.tmp / "git-stub"
+    path.write_text("#!/bin/sh\n" + body)
+    path.chmod(0o755)
+    return str(path)
+
+
+def _assert_alias_probe_unchecked(result, sandbox, before, sha, cause):
+    assert result.returncode == 2, result.stderr
+    assert "OPSEC: could not check Git's aliases for 'push', so it was not run." in result.stderr, result.stderr
+    assert cause in result.stderr, result.stderr
+    assert "an alias named" not in result.stderr, result.stderr
+    assert sandbox.remote_refs() == before and not _remote_has(sandbox, sha)
+
+
+def _probe_stderr_field(stderr):
+    marker = "git config stderr: "
+    assert marker in stderr, stderr
+    return stderr.split(marker, 1)[1].splitlines()[0]
+
+
 def test_failed_alias_lookup_refuses(push_sandbox):
     """A configuration Git cannot read leaves the aliases unknown (push skips the command list)."""
     (push_sandbox.tmp / "broken.gitconfig").write_text("[alias\n")
@@ -1698,13 +1745,232 @@ def test_failed_alias_lookup_refuses(push_sandbox):
     before = push_sandbox.remote_refs()
     pushing = ["push", "origin", "HEAD:refs/heads/feature"]
     result = push_sandbox.push(*pushing, GIT_CONFIG_GLOBAL=str(push_sandbox.tmp / "broken.gitconfig"))
-    assert result.returncode == 2, result.stderr
-    assert "OPSEC: could not check Git's aliases for 'push', so it was not run." in result.stderr, result.stderr
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: git config exit 128;")
+    assert "fatal: bad config line 1" in result.stderr, result.stderr
+
+
+def test_alias_probe_names_git_exit_status_and_bounds_stderr(push_sandbox):
+    """git config's own exit status and stderr are in the refusal, and stderr stops at 400 characters."""
+    stub = _git_stub(
+        push_sandbox,
+        r"""
+for arg in "$@"; do
+  if [ "$arg" = config ]; then
+    i=0
+    while [ "$i" -lt 500 ]; do
+      printf A
+      i=$((i + 1))
+    done >&2
+    printf TAIL >&2
+    exit 7
+  fi
+done
+exit 0
+""",
+    )
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", AGENT_REAL_GIT=stub)
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: git config exit 7;")
+    field = _probe_stderr_field(result.stderr)
+    assert len(field) == 400 and set(field) == {"A"}, field
+    assert "TAIL" not in result.stderr
+
+
+def test_alias_probe_names_a_missing_probe_key(push_sandbox):
+    """Exit 0 without the probe key is not an alias hit: the lookup did not prove it read config."""
+    stub = _git_stub(
+        push_sandbox,
+        r"""
+for arg in "$@"; do
+  if [ "$arg" = config ]; then
+    printf '%s\n' alias.whatchanged
+    exit 0
+  fi
+done
+exit 0
+""",
+    )
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", AGENT_REAL_GIT=stub)
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: probe key missing;")
+    assert _probe_stderr_field(result.stderr) == "(empty)"
+
+
+def test_alias_probe_names_a_nul_in_git_output(push_sandbox):
+    """A NUL is not a timeout and not a found alias. Git's --name-only listing never contains one."""
+    stub = _git_stub(
+        push_sandbox,
+        r"""
+for arg in "$@"; do
+  if [ "$arg" = config ]; then
+    printf 'alias.push\nlu-opsec.alias-probe\0'
+    exit 0
+  fi
+done
+exit 0
+""",
+    )
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", AGENT_REAL_GIT=stub)
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: git config output contained a NUL;")
+
+
+def test_stalled_alias_probe_refuses_at_the_test_hook_limit(push_sandbox):
+    """A git config that never exits is still refused. The hook supplies the 1s limit; production stays 10s."""
+    stub = _git_stub(
+        push_sandbox,
+        r"""
+for arg in "$@"; do
+  if [ "$arg" = config ]; then
+    echo stall-marker >&2
+    sleep 30
+    exit 0
+  fi
+done
+exit 0
+""",
+    )
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    started = time.perf_counter()
+    result = push_sandbox.push(
+        "push",
+        "origin",
+        "HEAD:refs/heads/feature",
+        AGENT_REAL_GIT=stub,
+        LU_OPSEC_ALIAS_PROBE_TEST_HOOK="1",
+        LU_OPSEC_ALIAS_PROBE_TIMEOUT="1",
+    )
+    elapsed = time.perf_counter() - started
+    assert 0.5 < elapsed < 8, elapsed
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: timeout after 1s;")
+    assert "timeout after 10s" not in result.stderr
+    assert "stall-marker" in result.stderr
+
+
+def test_alias_probe_timeout_hook_is_off_without_its_flag(push_sandbox):
+    """LU_OPSEC_ALIAS_PROBE_TIMEOUT does nothing unless the test hook flag is also set."""
+    stub = _git_stub(
+        push_sandbox,
+        r"""
+for arg in "$@"; do
+  if [ "$arg" = config ]; then
+    sleep 2
+    printf '%s\n' lu-opsec.alias-probe
+    exit 0
+  fi
+done
+exit 0
+""",
+    )
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    started = time.perf_counter()
+    result = push_sandbox.push(
+        "push",
+        "origin",
+        "HEAD:refs/heads/feature",
+        AGENT_REAL_GIT=stub,
+        LU_OPSEC_ALIAS_PROBE_TIMEOUT="1",
+    )
+    elapsed = time.perf_counter() - started
+    assert result.returncode == 0, result.stderr
+    assert elapsed > 1.5, elapsed
+    assert "could not check" not in result.stderr and "timeout after" not in result.stderr
     assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
 
 
+def _counting_stub(sandbox, config_body):
+    """Count every stub invocation in $PROBE_CALLS, then run config_body for a config argument."""
+    return _git_stub(
+        sandbox,
+        r"""
+n=0
+if [ -f "$PROBE_CALLS" ]; then
+  n=$(cat "$PROBE_CALLS")
+fi
+n=$((n + 1))
+printf '%s' "$n" > "$PROBE_CALLS"
+for arg in "$@"; do
+  if [ "$arg" = config ]; then
+"""
+        + config_body
+        + r"""
+    exit 0
+  fi
+done
+exit 0
+""",
+    )
+
+
+def test_defined_alias_is_not_retried_when_the_probe_finished(push_sandbox):
+    calls = push_sandbox.tmp / "probe-calls"
+    stub = _counting_stub(
+        push_sandbox,
+        r"""
+    printf '%s\n' alias.push lu-opsec.alias-probe
+""",
+    )
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    result = _push_when_alias_probe_has_run(
+        push_sandbox, "push", "origin", "HEAD:refs/heads/feature", AGENT_REAL_GIT=stub, PROBE_CALLS=str(calls)
+    )
+    assert_alias_refused(result, push_sandbox, before, sha, "push")
+    assert calls.read_text() == "1"
+
+
+def test_unfinished_alias_probe_is_retried_then_kept(push_sandbox):
+    """The first unfinished probe is retried; the defined-alias refusal that follows is kept."""
+    calls = push_sandbox.tmp / "probe-calls"
+    stub = _counting_stub(
+        push_sandbox,
+        r"""
+    if [ "$n" -lt 2 ]; then
+      echo first-probe-failed >&2
+      exit 7
+    fi
+    printf '%s\n' alias.push lu-opsec.alias-probe
+""",
+    )
+    sha = push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    result = _push_when_alias_probe_has_run(
+        push_sandbox, "push", "origin", "HEAD:refs/heads/feature", AGENT_REAL_GIT=stub, PROBE_CALLS=str(calls)
+    )
+    assert_alias_refused(result, push_sandbox, before, sha, "push")
+    assert calls.read_text() == "2"
+    assert "first-probe-failed" not in result.stderr
+
+
+def test_unfinished_alias_probe_stops_after_three_attempts(push_sandbox):
+    calls = push_sandbox.tmp / "probe-calls"
+    stub = _counting_stub(
+        push_sandbox,
+        r"""
+    echo still-unfinished >&2
+    exit 7
+""",
+    )
+    sha = push_sandbox.commit("clean subject")
+    before = push_sandbox.remote_refs()
+    result = _push_when_alias_probe_has_run(
+        push_sandbox, "push", "origin", "HEAD:refs/heads/feature", AGENT_REAL_GIT=stub, PROBE_CALLS=str(calls)
+    )
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: git config exit 7;")
+    assert calls.read_text() == "3"
+    assert "still-unfinished" in result.stderr
+
+
 def test_alias_lookup_that_hangs_refuses_after_its_time_limit(push_sandbox):
-    """An include file that never delivers (a FIFO with no writer) holds Git's read open."""
+    """An include file that never delivers (a FIFO with no writer) holds Git's read open.
+
+    No test hook: this is the production 10s limit, and the stalled git is killed.
+    """
     fifo = push_sandbox.tmp / "never-written"
     os.mkfifo(fifo)
     sha = push_sandbox.commit("clean subject")
@@ -1712,9 +1978,7 @@ def test_alias_lookup_that_hangs_refuses_after_its_time_limit(push_sandbox):
     started = time.perf_counter()
     result = push_sandbox.push("-c", f"include.path={fifo}", "push", "origin", "HEAD:refs/heads/feature")
     assert 9 < time.perf_counter() - started < 60
-    assert result.returncode == 2, result.stderr
-    assert "OPSEC: could not check Git's aliases for 'push', so it was not run." in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
+    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: timeout after 10s;")
 
 
 def test_alias_lookup_latency_is_reported(push_sandbox):
