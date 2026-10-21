@@ -4053,7 +4053,12 @@ def _terminal_abandon_matches(repo_root: Path, worktree: Path) -> list[tuple[Pat
 
 
 def _merged_reuse_claim_proven_settled(
-    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+    repo_root: Path,
+    worktree: Path,
+    record: dict[str, Any],
+    *,
+    tasks_dir: Path,
+    merged_pr: PullRequestState | None = None,
 ) -> list[tuple[Path, dict[str, Any]]] | None:
     """Settle a keep-false creator via a successor contained in a merged PR.
 
@@ -4082,7 +4087,7 @@ def _merged_reuse_claim_proven_settled(
             return None
         try:
             _, creator, alternate = _resolve_merged_reuse_creator(
-                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=merged_pr
             )
         except ValueError:
             branch = worktree_claims.checked_out_branch(worktree)
@@ -4116,6 +4121,14 @@ def _merged_reuse_claim_proven_settled(
         branch = worktree_claims.checked_out_branch(worktree)
         info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
         if branch is not None:
+            # The numbered PR record survives deletion of the branch. Keep
+            # the full cohort's containment and worker-absence requirements.
+            if (
+                merged_pr is not None
+                and merged_pr.head_sha == info.head
+                and _same_branch_merged_cohort(info, merged_pr, cohort)
+            ):
+                return matches
             states, error = _query_pr_states(repo_root, branch)
             if error is None and (
                 _same_branch_merged_cohort(info, _best_pr(states), cohort)
@@ -4230,6 +4243,7 @@ def _record_merged_reuse_proof(
         "head_relation": _merged_head_relation(info, pr),
         "pr_number": pr.number,
         "pr_state": pr.state,
+        "pr_head_source": "merged_pr_record",
         "clean": True,
         "members": [
             {
@@ -4278,6 +4292,7 @@ def _enter_dispatch_worktree_guard(
     *,
     repo_root: Path,
     info: WorktreeInfo,
+    merged_pr: PullRequestState | None = None,
 ) -> str | None:
     """Take delegate's per-worktree lock and refuse another task's live claim (#8610).
 
@@ -4349,7 +4364,9 @@ def _enter_dispatch_worktree_guard(
                 return True
         except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
             return False
-        merged_reuse = _merged_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        merged_reuse = _merged_reuse_claim_proven_settled(
+            primary, info.path, record, tasks_dir=tasks_dir, merged_pr=merged_pr
+        )
         if merged_reuse is not None:
             identity = _needs_finalize_claim_identity(record)
             if identity is not None:
@@ -4474,6 +4491,38 @@ def _reap_qualified_worktree(
             dirty=True,
             pr=_pr_dict(pr_state),
         )
+    # Search only establishes commit membership, not the actual PR head.
+    # Refresh before planning too, and before acquiring any dispatch/worktree lock.
+    if pr_state is not None and pr_state.head_from_commit_search:
+        from scripts.fleet import ignored_task_output
+
+        tasks_dir = task_store_paths.tasks_dir()
+        matches = ignored_task_output.matching_worktree_records(
+            info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
+        )
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+    else:
+        cohort = []
+    if len(cohort) >= 2:
+        states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
+        fresh = next((state for state in states if state.number == pr_state.number), None)
+        if (
+            error is not None
+            or fresh is None
+            or fresh.head_from_commit_search
+            or fresh.state != "MERGED"
+            or not info.head
+            or fresh.head_sha != info.head
+        ):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="commit-search PR head unavailable",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+        pr_state = fresh
     if not apply:
         from scripts.fleet import ignored_task_output
 
@@ -4562,31 +4611,6 @@ def _reap_qualified_worktree(
     recovery_ref: str | None = None
     dispatch_guard = contextlib.ExitStack()
     try:
-        # Search only establishes commit membership, not the actual PR head.
-        # Refresh by number before acquiring the dispatch/worktree lock.
-        if pr_state is not None and pr_state.head_from_commit_search:
-            from scripts.fleet import ignored_task_output
-
-            tasks_dir = task_store_paths.tasks_dir()
-            matches = ignored_task_output.matching_worktree_records(
-                info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
-            )
-            cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
-        else:
-            cohort = []
-        if len(cohort) >= 2:
-            states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
-            fresh = next((state for state in states if state.number == pr_state.number), None)
-            if error is not None or fresh is None or fresh.head_from_commit_search:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="commit-search PR head unavailable",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            pr_state = fresh
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
         if not reaper_lifecycle.mark_reap_pending(
@@ -4622,7 +4646,9 @@ def _reap_qualified_worktree(
         ):
             pr_snapshot = _query_pr_states(repo_root, info.branch)
 
-        guard_refusal = _enter_dispatch_worktree_guard(dispatch_guard, repo_root=repo_root, info=info)
+        guard_refusal = _enter_dispatch_worktree_guard(
+            dispatch_guard, repo_root=repo_root, info=info, merged_pr=pr_state
+        )
         if guard_refusal is not None:
             return ReapResult(
                 path=str(info.path),
