@@ -115,8 +115,10 @@ describe('Atlas DB SSG read parity', () => {
   let cache: AtlasPayloadCache;
 
   beforeAll(() => {
+    const started = performance.now();
     resetAtlasPayloadCacheForTests();
     cache = getAtlasPayloadCache();
+    console.log(`[10183-phase] path=parity phase=cache-build ms=${(performance.now() - started).toFixed(3)}`);
   }, CACHE_BUILD_TIMEOUT_MS);
 
   test('preloaded DB payloads preserve the current manifest route surface', async () => {
@@ -136,6 +138,7 @@ describe('Atlas DB SSG read parity', () => {
   });
 
   test('renders DB payload HTML byte-identical to manifest payload HTML for parity fixtures', async () => {
+    const started = performance.now();
     const manifestEntries = manifestRouteEntries();
     const manifestBySlug = new Map(manifestEntries.map((entry) => [entry.url_slug, entry]));
     const fixtureSlugs = Array.from(
@@ -180,6 +183,7 @@ describe('Atlas DB SSG read parity', () => {
 
     process.stdout.write(`atlas render parity golden diff: fixtures=${fixtureSlugs.length} differing=${differing}\n`);
     expect(differing).toBe(0);
+    console.log(`[10183-phase] path=parity phase=render-compare ms=${(performance.now() - started).toFixed(3)}`);
   });
 });
 

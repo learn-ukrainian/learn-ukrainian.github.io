@@ -19,8 +19,10 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import requests
+if TYPE_CHECKING:
+    import requests
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
@@ -582,6 +584,18 @@ def live_article_predicate_for(conn: SQLiteConnection | sqlite3.Cursor, alias: s
     return live_article_predicate((str(row[1]) for row in rows), alias)
 
 
+def sum20_live_article_where(columns: Iterable[str], *, prefix: bool) -> str:
+    """SQL filter shared by official exact lookup and lexicon prefix lookup.
+
+    ``prefix`` also matches a normalized key followed by a space (homonym
+    labels such as ``вода 2``). The key stays a bound parameter. Quarantine
+    and unverified-codification rows stay excluded. This fragment does not
+    create schema, write, or choose a database.
+    """
+    match = "(normalized_lookup_key = ? OR normalized_lookup_key LIKE ?)" if prefix else "normalized_lookup_key = ?"
+    return f"{match} AND {live_article_predicate(columns)}"
+
+
 def utc_now() -> str:
     """Return a stable, timezone-aware timestamp for crawl provenance."""
     return datetime.now(UTC).replace(microsecond=0).isoformat()
@@ -754,6 +768,8 @@ def fetch_sum20_wordid(
     responses stop on the first response, stored lossily as ``transient_error``
     with numeric HTTP evidence and ``terminal=True``. Only 404 proves a miss.
     """
+    import requests
+
     client = session or requests.Session()
     # A requests.Session already carries "python-requests/<version>" and
     # "Accept: */*", so setdefault() never applied the project's identifying

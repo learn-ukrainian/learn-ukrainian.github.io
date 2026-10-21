@@ -199,7 +199,11 @@ function observerTaskView(task) {
   const view = {
     task_id: task.task_id ?? null,
     agent: task.agent ?? null,
-    model: task.model ?? null,
+    accounting_model: task.model ?? null,
+    requested_selector: task.requested_selector ?? null,
+    observed_model: task.observed_model ?? null,
+    identity_state: task.identity_state ?? 'unknown',
+    observed_model_source: task.observed_model_source ?? null,
     status: task.status ?? null,
   };
   if (Object.keys(timings).length) view.timings = timings;

@@ -979,10 +979,10 @@ models:
     transports: [hermes, opencode]
     strengths: [frontend_code_quality_per_dollar, very_low_cost, speed, one_million_context]
     weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content, moving_provider_alias]
-    # The first-party OpenCode id is a moving alias, not a version pin. The
-    # 2026-09-24 models.dev cache named it "DeepSeek V4.1 Flash". Before
-    # consequential dispatch, check the cached deepseek/deepseek-flash name;
-    # if it changes, stop and re-identify the served model before recording it.
+    # The first-party OpenCode id is a moving alias, not a version pin.
+    # provider_alias_expected_name names the model line, allowing an optional
+    # numeric release tag such as 1017. Policy (#11143): V4.1 Flash only,
+    # always the latest release; a different line, version or tier is drift.
     provider_alias: deepseek/deepseek-flash
     provider_alias_expected_name: DeepSeek V4.1 Flash
     provider_alias_drift_check: "jq -r '.deepseek.models[\"deepseek-flash\"].name' ~/.cache/opencode/models.json"
