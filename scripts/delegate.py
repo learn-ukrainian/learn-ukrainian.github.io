@@ -10774,10 +10774,10 @@ def _hold_review_test_slots(
 
     Codex's read-only sandbox maps only this user, so the pool's root-owned ancestors show an unmapped owner,
     and it mounts the pool read-only: the governor cannot prepare the pool there and refuses every run. The
-    worker queues in the host pool like any run and holds ``review`` slots until the CLI's process group is
-    gone; the reviewer's governed runs check the holder marker read-only and take turns on the hold, so
-    accounting stays host-wide. Other routes, and sealed attempts whose inputs carry no pool, take their own
-    slots or none. A refusal is recorded and the review runs on; its governed runs are then refused, typed.
+    worker queues in the host pool like any run and holds ``review`` slots until the runtime returns; the
+    reviewer's governed runs check the holder marker read-only, take turns on the hold and keep its slots taken
+    while any of them still runs, even past this worker, so accounting stays host-wide. Other routes, and sealed
+    attempts whose inputs carry no pool, take their own slots or none. A refusal is recorded and the review runs on; its governed runs are then refused, typed.
     Returns the hold (or ``None``) and the record for the task's ``review_test_slots`` field.
     """
     if agent != "codex" or mode != "read-only" or not review_typed or sealed_attempt:
@@ -11580,7 +11580,7 @@ def _run_worker(
             returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
             if review_slots is not None:
-                # The runtime has stopped the CLI's process group, so no reviewer test runs inside these slots.
+                # A reviewer test run that outlives the CLI keeps its slots taken until it ends (#11230).
                 os.environ.pop(test_slots.HOLDER_ENV, None)
                 review_slots.release()
                 review_slots = None

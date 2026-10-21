@@ -119,9 +119,18 @@ def _git_checkout(path: Path) -> Path:
     return path
 
 
-def _sandbox() -> list[str]:
-    """Codex's view where available (unmapped root, read-only), else none: the marker must work either way."""
+# Where a sandboxed run finds the launcher's pool: it may not choose another (#11230).
+INSIDE_POOL = test_slots.DEFAULT_SCRATCH_ROOT / f"test-slots-{os.geteuid()}"
+
+
+def _sandbox(pool: Path) -> list[str]:
+    """Codex's view where available (unmapped root, read-only, the pool at its default place), else none."""
     prefix = ["bwrap", "--ro-bind", "/", "/", "--dev", "/dev", "--proc", "/proc", "--unshare-user", "--unshare-pid"]
+    # The checkout and the interpreter stay visible over the empty scratch parent, wherever they live.
+    kept = [option for path in (REPO_ROOT, Path(sys.prefix)) for option in ("--ro-bind", str(path), str(path))]
+    scratch_parent = str(INSIDE_POOL.parent.parent)
+    mounts = ["--tmpfs", scratch_parent, *kept, "--dir", str(INSIDE_POOL.parent), "--ro-bind", os.path.realpath(pool)]
+    prefix = [*prefix, *mounts, str(INSIDE_POOL)]
     try:
         probe = subprocess.run([*prefix, "true"], capture_output=True, timeout=30, check=False)
     except (OSError, subprocess.TimeoutExpired):
@@ -129,9 +138,22 @@ def _sandbox() -> list[str]:
     return [*prefix, "--die-with-parent"] if probe.returncode == 0 else []
 
 
+def _reviewer_env(sandboxed: bool) -> dict[str, str]:
+    """The CLI's environment for a reviewer command: in the sandbox, no pool choice and the marker as seen there."""
+    env = {**os.environ, "PYTHONPATH": str(REPO_ROOT)}
+    if not sandboxed:
+        return env
+    for name in (test_slots.DIR_ENV, test_slots.SCRATCH_ROOT_ENV):
+        env.pop(name, None)
+    marker = env[test_slots.HOLDER_ENV]
+    ticket = Path(marker.rsplit(":", 1)[1])
+    env[test_slots.HOLDER_ENV] = f"{marker[: -len(str(ticket))]}{INSIDE_POOL / 'holders' / ticket.name}"
+    return env
+
+
 @pytest.mark.parametrize("outcome", ["returns", "raises"])
 def test_the_worker_holds_review_slots_for_the_cli_and_returns_them_after(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, outcome: str
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pool: Path, outcome: str
 ) -> None:
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     (tmp_path / "tasks").mkdir()
@@ -144,7 +166,6 @@ def test_the_worker_holds_review_slots_for_the_cli_and_returns_them_after(
     )
     seen: dict[str, object] = {}
     governed = [
-        *_sandbox(),
         sys.executable,
         "-m",
         "scripts.common.test_slots",
@@ -160,8 +181,15 @@ def test_the_worker_holds_review_slots_for_the_cli_and_returns_them_after(
     def runtime(*_args: object, **_kwargs: object) -> object:
         seen["marker"] = os.environ.get(test_slots.HOLDER_ENV)
         seen["holders"] = [(h["task_id"], h["kind"], h["slots"]) for h in test_slots.status()["holders"]]
-        env = {**os.environ, "PYTHONPATH": str(REPO_ROOT)}
-        seen["run"] = subprocess.run(governed, cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=60)
+        sandbox = _sandbox(pool)
+        seen["run"] = subprocess.run(
+            [*sandbox, *governed],
+            cwd=REPO_ROOT,
+            env=_reviewer_env(bool(sandbox)),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
         if outcome == "raises":
             raise RuntimeError("the CLI crashed")
         return type(

@@ -25,9 +25,14 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   - it names a ticket in the `holders` directory of the pool that environment selects;
   - the current user owns that ticket and a live process holds its lock;
   - the ticket's record holds exactly the marked count;
+  - every slot the record claims is locked, and that slot's file names this ticket and the marker's nonce
+    (`<count>:<nonce>:<ticket>`), which the pool minted when it issued the slots, never the ambient
+    `LU_RUNTIME_RUN_NONCE`;
   - the run names no dispatch task other than the hold's.
 
-  A marker that is dead, copied, inflated or carried into another task is ignored. A run that names no
+  A marker that is dead, copied, inflated or carried into another task is ignored, and so is a
+  hand-written ticket, whether it claims free slots, another run's slots or sits in a pool the caller
+  made without holding its slots. A run that names no
   task stays inside its ancestor's slots, as tests do when the suite strips the agent's identity.
   `delegate.py` removes any marker from a dispatched worker's environment, so a worker never runs inside
   its dispatcher's slots.
@@ -68,24 +73,32 @@ outside the sandbox, with the full ownership walk:
    the wait), `refused` (with the reason) or `disabled`. A refused review still runs, and its governed
    test runs are refused with a typed reason.
 2. The CLI receives the holder marker. Inside the sandbox, `test_slots run` and the dispatch pytest plugin
-   only read the marked ticket and check its lock, so they need no write access to the pool.
+   only read the marked ticket and the slot files and check their locks, so they need no write access to
+   the pool. A sandboxed process, one whose user namespace maps only part of the id range, cannot choose
+   the pool: `LU_TEST_SLOTS_DIR` or `LU_SCRATCH_ROOT` there is refused with
+   `test_slots_pool_override_refused`, and it may join only a `review` hold.
 3. The review's governed test runs take turns on the hold's session lock, a `.session` file beside its
    ticket. Concurrent runs of one review therefore never add up past its 2 slots. The run that holds the
-   turn passes `LU_TEST_SLOTS_SESSION` to its own descendants, such as xdist workers or the pytest it
-   execs, so they run within that turn.
-4. The worker gives the slots back after the runtime has stopped the CLI's process group, on success, on
-   failure, on a timeout and on cancellation.
+   turn passes `LU_TEST_SLOTS_SESSION` to its own descendants, such as a pytest a test starts or the
+   command it execs. The value names the turn's process, its start time and the descriptor holding the
+   session lock. A descendant joins without waiting only when the kernel shows that process is itself or
+   an ancestor and holds the lock through that descriptor. A sibling that guesses the value or copies it
+   is refused with `test_slots_session_unverified`.
+4. Every run of a turn holds the hold's slot files and its `.turn` file shared until it ends. Slots
+   therefore stay taken while any reviewer test run is alive, even after the worker that issued the
+   hold has ended or was killed, and the next turn starts only when every run of the previous one has
+   ended. `status` reports such slots as `slots_draining`.
+5. The worker gives its own hold back when the runtime returns: on success, on failure, on a timeout and
+   on cancellation. New runs are refused from then on, because the marker's holder is gone.
 
 The slots stay reserved while the reviewer reads. The dispatch hard timeout bounds that time. Other
 routes are unchanged: a Claude read-only seat has no OS sandbox and takes its own slots, and a write
 worker takes slots for each test run.
 
-If a worker is killed abruptly, its slots come back at once. A test run that was already inside the hold
-can then keep running outside the accounting until the run ends or `post_task_reap` stops the task's
-leftover processes. Only one such run can exist, because a review has one turn at a time, and it uses at
-most 2 workers. New runs are refused, because the marker's holder is dead. Sandboxed commands outlive
-the Codex process (its `bwrap` wrapper does not take them down), so no holder outside the dispatch scope
-could cover this case.
+Processes a reviewer test run starts without the governor (xdist workers, which take no slots, or other
+commands a test starts) are not counted on their own. They run inside their governed run's slots and end
+with it in the normal case. If their governed run is killed first, they can outlive it until they end or
+`post_task_reap` stops the task's leftover processes.
 
 ## Settings
 

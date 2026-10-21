@@ -9,10 +9,12 @@ trusted beyond the hold it names.
 
 from __future__ import annotations
 
+import contextlib
 import errno
 import fcntl
 import json
 import os
+import re
 import signal
 import stat
 import subprocess
@@ -156,21 +158,17 @@ def _bwrap() -> list[str] | None:
     return [*prefix, "--die-with-parent"] if result.stdout.strip() == str(OVERFLOW_UID) else None
 
 
-def test_a_real_read_only_user_namespace_sandbox_runs_only_inside_the_launchers_hold(review: test_slots.Hold) -> None:
-    """The reproduction under a real sandbox: unmapped root owners and a read-only pool, as Codex shows them."""
-    sandbox = _bwrap()
+def test_a_real_read_only_user_namespace_sandbox_runs_only_inside_the_launchers_hold(
+    pool: Path, review: test_slots.Hold
+) -> None:
+    """The reproduction under a real sandbox: unmapped root owners and the launcher's pool read-only at its place."""
+    sandbox = _bwrap_at_default(pool)
     if sandbox is None:
         pytest.skip("no unprivileged user-namespace sandbox (bwrap) on this host")
-    command = [*sandbox, sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "1", "--"]
     probe = [sys.executable, "-c", "print('ran inside the review hold')"]
 
-    def run(**extra: str) -> subprocess.CompletedProcess[str]:
-        env = _child_env(**{test_slots.WAIT_ENV: "1", **extra})
-        return subprocess.run(
-            [*command, *probe], cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=60, check=False
-        )
-
-    marked, unmarked = run(**review.environment()), run()
+    marked = _sandboxed(sandbox, *probe, **{test_slots.HOLDER_ENV: _inside_marker(review)})
+    unmarked = _sandboxed(sandbox, *probe)
 
     assert marked.returncode == 0, marked.stderr
     assert marked.stdout.strip() == "ran inside the review hold"
@@ -231,30 +229,32 @@ def _counterfeit(directory: Path, record: dict[str, object]) -> tuple[Path, int]
         "another-users-ticket",
         "linked-ticket",
         "dead-holder",
+        "round-1-format",
+        "wrong-nonce",
     ],
 )
 def test_a_forged_or_stale_marker_runs_nothing_inside_slots_it_does_not_hold(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
 ) -> None:
     hold = test_slots.acquire(2, kind="review", task_id=TASK)
-    record = hold.marker().partition(":")[2]
+    _count, nonce, record = hold.marker().split(":", 2)
     env = {key: value for key, value in os.environ.items() if key != test_slots.HOLDER_ENV}
     descriptor = None
     try:
         if case == "malformed":
-            env[test_slots.HOLDER_ENV] = f"two:{record}"
+            env[test_slots.HOLDER_ENV] = f"two:{nonce}:{record}"
         elif case == "missing-ticket":
-            env[test_slots.HOLDER_ENV] = f"2:{Path(record).parent / 'missing.ticket'}"
+            env[test_slots.HOLDER_ENV] = f"2:{nonce}:{Path(record).parent / 'missing.ticket'}"
         elif case == "inflated-count":
-            env[test_slots.HOLDER_ENV] = f"8:{record}"
+            env[test_slots.HOLDER_ENV] = f"8:{nonce}:{record}"
         elif case == "deflated-count":
-            env[test_slots.HOLDER_ENV] = f"1:{record}"
+            env[test_slots.HOLDER_ENV] = f"1:{nonce}:{record}"
         elif case == "another-task":
             env.update({test_slots.HOLDER_ENV: hold.marker(), test_slots.TASK_ENV: "impl-other-task"})
         elif case == "counterfeit-outside-the-pool":
-            forged = {"kind": "review", "held": 2, "task_id": TASK, "pid": os.getpid()}
+            forged = {"kind": "review", "held": 2, "task_id": TASK, "pid": os.getpid(), "nonce": nonce, "slots": [0, 1]}
             path, descriptor = _counterfeit(tmp_path / "elsewhere" / "holders", forged)
-            env[test_slots.HOLDER_ENV] = f"2:{path}"
+            env[test_slots.HOLDER_ENV] = f"2:{nonce}:{path}"
         elif case == "another-users-ticket":
             env[test_slots.HOLDER_ENV] = hold.marker()
             real_fstat = os.fstat
@@ -272,10 +272,14 @@ def test_a_forged_or_stale_marker_runs_nothing_inside_slots_it_does_not_hold(
         elif case == "linked-ticket":
             link = Path(record).with_name("00000000000000000002-link.ticket")
             link.symlink_to(record)
-            env[test_slots.HOLDER_ENV] = f"2:{link}"
+            env[test_slots.HOLDER_ENV] = f"2:{nonce}:{link}"
         elif case == "dead-holder":
             env[test_slots.HOLDER_ENV] = hold.marker()
             hold.release()
+        elif case == "round-1-format":  # ``<count>:<ticket>`` carries no issued nonce
+            env[test_slots.HOLDER_ENV] = f"2:{record}"
+        elif case == "wrong-nonce":
+            env[test_slots.HOLDER_ENV] = f"2:{nonce[::-1]}:{record}"
 
         assert test_slots.inherited_hold(env) is None
         assert test_slots.join_inherited(env) is None
@@ -308,19 +312,24 @@ def test_runs_of_one_review_take_turns_on_its_hold(review: test_slots.Hold) -> N
     env = _marked(review)
     first = test_slots.join_inherited(env)
     assert first is not None
+    nested = None
     try:
         with pytest.raises(test_slots.SlotError) as waited:
             test_slots.join_inherited(env, wait_s=0.3, progress=lambda _line: None)
         assert waited.value.reason == "wait_timeout" and "another test run of this review" in waited.value.detail
         nested = test_slots.join_inherited({**env, **first.environment()}, wait_s=0.3)
         assert nested is not None and nested.count == 2  # the turn's own descendants never wait for it
+        first.release()
+        # The turn's own run ended, but a run of that turn still runs: the next turn waits for it as well.
+        with pytest.raises(test_slots.SlotError) as straggler:
+            test_slots.join_inherited(env, wait_s=0.3, progress=lambda _line: None)
+        assert straggler.value.reason == "wait_timeout" and "previous test run" in straggler.value.detail
     finally:
         first.release()
+        if nested is not None:
+            nested.release()
     second = test_slots.join_inherited(env, wait_s=0.3)
-    assert (
-        second is not None
-        and second.environment()[test_slots.SESSION_ENV] == first.environment()[test_slots.SESSION_ENV]
-    )
+    assert second is not None and second.environment()[test_slots.SESSION_ENV].startswith(f"{os.getpid()}:")
     second.release()
 
 
@@ -451,3 +460,406 @@ def test_a_session_wait_reports_progress_and_never_waits_past_its_limit(review: 
         first.release()
     assert 0.4 <= time.monotonic() - started < 5
     assert lines and lines[0].startswith("TEST SLOTS: waiting for another test run of this review")
+
+
+# ---- round 2 (#11230): forged turns, counterfeit holders, early release, issued nonces -------------------------
+
+# A governed run's command: it records the session value it was given, then, once it has run, when it ran.
+RECORDER = textwrap.dedent(
+    """\
+    import os, sys, time
+    start = time.monotonic()
+    with open(sys.argv[1], "w") as out:
+        out.write(os.environ.get("LU_TEST_SLOTS_SESSION", "-") + "\\n")
+    time.sleep(float(sys.argv[2]))
+    with open(sys.argv[1], "a") as out:
+        out.write(f"{start} {time.monotonic()}\\n")
+    """
+)
+
+
+def _record_path(hold: test_slots.Hold) -> Path:
+    """The holder ticket a marker names: its last field, whatever fields come before it."""
+    return Path(hold.marker().rsplit(":", 1)[1])
+
+
+def _governed(out: Path, seconds: float, *slots: str, **env: str) -> subprocess.Popen[str]:
+    """A real governed test run (``test_slots run``) whose command records when it ran."""
+    command = [sys.executable, "-m", "scripts.common.test_slots", "run", *slots, "--"]
+    return subprocess.Popen(
+        [*command, sys.executable, "-c", RECORDER, str(out), str(seconds)],
+        cwd=REPO_ROOT,
+        env=_child_env(**env),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+
+def _interval(out: Path) -> tuple[float, float] | None:
+    """When a recorded run ran, or ``None`` when its command never finished."""
+    lines = out.read_text(encoding="utf-8").splitlines() if out.exists() else []
+    if len(lines) < 2:
+        return None
+    start, end = map(float, lines[1].split())
+    return start, end
+
+
+def _most_at_once(intervals: list[tuple[float, float]]) -> int:
+    """The largest number of the runs that ran at the same moment."""
+    events = sorted([(start, 1) for start, _ in intervals] + [(end, -1) for _, end in intervals])
+    running = most = 0
+    for _, step in events:  # an end sorts before a start at the same instant: touching runs never overlap
+        running += step
+        most = max(most, running)
+    return most
+
+
+@pytest.mark.parametrize("value", ["session-path", "copied-token"])
+def test_siblings_presenting_a_predictable_session_value_never_share_the_turn(
+    tmp_path: Path, read_only_pool: Path, review: test_slots.Hold, value: str
+) -> None:
+    """Two real sibling runs that present one guessable session value are refused while a run holds the turn."""
+    turn_out = tmp_path / "turn"
+    turn = _governed(turn_out, 3.0, **review.environment())
+    siblings: list[subprocess.Popen[str]] = []
+    try:
+        token = wait_for_line(turn_out, stop_if=lambda: turn.poll() is not None)
+        predictable = (
+            str(_record_path(review).with_suffix(test_slots.SESSION_SUFFIX)) if value == "session-path" else token
+        )
+        siblings = [
+            _governed(tmp_path / f"sibling-{index}", 0.3, **review.environment(), LU_TEST_SLOTS_SESSION=predictable)
+            for index in range(2)
+        ]
+        results = [sibling.communicate(timeout=60) for sibling in siblings]
+        turn_result = turn.communicate(timeout=60)
+    finally:
+        for process in (turn, *siblings):
+            if process.poll() is None:
+                process.kill()
+                process.wait(timeout=30)
+    ran = [_interval(path) for path in (turn_out, tmp_path / "sibling-0", tmp_path / "sibling-1")]
+    assert turn.returncode == 0, turn_result
+    assert _most_at_once([interval for interval in ran if interval is not None]) == 1
+    for sibling, (_, stderr) in zip(siblings, results, strict=True):
+        assert sibling.returncode == test_slots.EXIT_REFUSED, stderr
+        assert "test_slots_session_unverified" in stderr
+
+
+SURVIVING_HOLDER = textwrap.dedent(
+    """\
+    import os, subprocess, sys, time
+    from scripts.common import test_slots
+
+    out, task, ending, recorder = sys.argv[1:5]
+    hold = test_slots.acquire(2, kind="review", task_id=task)
+    # The CLI stand-in: a shell whose child is the reviewer's governed test run, so that run is a grandchild.
+    script = '"$1" -m scripts.common.test_slots run -- "$1" -c "$2" "$3" 4; true'
+    subprocess.Popen(["sh", "-c", script, "sh", sys.executable, recorder, out], env={**os.environ, **hold.environment()})
+    while not (os.path.exists(out) and open(out).read().endswith("\\n")):
+        time.sleep(0.02)
+    if ending == "released":
+        hold.release()
+        open(out + ".released", "w").write("released\\n")
+    time.sleep(120)
+    """
+)
+
+
+@pytest.mark.parametrize("ending", ["killed", "released"])
+def test_slots_stay_taken_while_a_review_test_run_outlives_its_holder(tmp_path: Path, pool: Path, ending: str) -> None:
+    """The pool cap holds: a replacement run never starts while the review's surviving grandchild still runs."""
+    survivor_out = tmp_path / "survivor"
+    holder = subprocess.Popen(
+        [sys.executable, "-c", SURVIVING_HOLDER, str(survivor_out), TASK, ending, RECORDER],
+        cwd=REPO_ROOT,
+        env=_child_env(),
+        start_new_session=True,  # its own process group, so cleanup reaches the shell and the survivor
+    )
+    try:
+        wait_for_line(survivor_out, stop_if=lambda: holder.poll() is not None)
+        if ending == "killed":
+            holder.send_signal(signal.SIGKILL)
+            holder.wait(timeout=30)
+        else:
+            wait_for_line(Path(f"{survivor_out}.released"), stop_if=lambda: holder.poll() is not None)
+        report = test_slots.status()  # the holder's record is gone, but its surviving run still takes both slots
+        assert (report["slots_in_use"], report["slots_draining"], report["slots_free"]) == (0, 2, 0)
+        replacement_out = tmp_path / "replacement"
+        replacement = _governed(replacement_out, 0.2, "--slots", "2", **{test_slots.WAIT_ENV: "60"})
+        _, stderr = replacement.communicate(timeout=90)
+        assert replacement.returncode == 0, stderr
+        deadline = time.monotonic() + 30
+        while _interval(survivor_out) is None and time.monotonic() < deadline:
+            time.sleep(0.05)
+        survivor, replaced = _interval(survivor_out), _interval(replacement_out)
+        assert survivor is not None and replaced is not None
+        # Each run holds both of the pool's two slots, so two at once would be four slots in use.
+        assert 2 * _most_at_once([survivor, replaced]) <= 2
+        assert replaced[0] >= survivor[1]
+    finally:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(holder.pid, signal.SIGKILL)
+        if holder.poll() is None:
+            holder.wait(timeout=30)
+
+
+def _forged_ticket(directory: Path, record: dict[str, object]) -> tuple[Path, int]:
+    """A locked, hand-written holder ticket in ``directory``; the caller closes the descriptor."""
+    directory.mkdir(parents=True, mode=0o700, exist_ok=True)
+    path = directory / "00000000000000000009-forged.ticket"
+    fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
+    os.write(fd, json.dumps(record).encode())
+    fcntl.flock(fd, fcntl.LOCK_EX)
+    return path, fd
+
+
+@pytest.mark.parametrize(
+    "claim", ["free-slots", "free-slots-with-forged-slot-files", "another-runs-slots", "the-holds-own-slots"]
+)
+def test_a_hand_forged_ticket_in_the_launchers_pool_is_refused(
+    monkeypatch: pytest.MonkeyPatch, pool: Path, claim: str
+) -> None:
+    """A locked copy of a real record claiming slots it does not hold never verifies; the real hold still does."""
+    monkeypatch.setenv(test_slots.COUNT_ENV, "4")
+    genuine = test_slots.acquire(2, kind="review", task_id=TASK)
+    other = test_slots.acquire(2, kind="pytest", task_id="impl-other-task") if claim == "another-runs-slots" else None
+    descriptor = None
+    try:
+        record = json.loads(_record_path(genuine).read_text(encoding="utf-8"))
+        claimed = {"another-runs-slots": [2, 3], "the-holds-own-slots": record["slots"]}.get(claim, [2, 3])
+        forged, descriptor = _forged_ticket(pool / "holders", {**record, "slots": claimed})
+        if claim == "free-slots-with-forged-slot-files":  # the forger also writes the pool's slot records
+            for index in claimed:
+                claim_record = {"ticket": forged.name, "nonce": record["nonce"]}
+                (pool / f"slot-{index:03d}.lock").write_text(json.dumps(claim_record), encoding="utf-8")
+        env = {**os.environ, test_slots.HOLDER_ENV: genuine.marker().replace(str(_record_path(genuine)), str(forged))}
+
+        assert test_slots.inherited_hold(env) is None
+        assert test_slots.join_inherited(env) is None
+        assert test_slots.inherited_hold({**os.environ, test_slots.HOLDER_ENV: genuine.marker()}) == 2
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        genuine.release()
+        if other is not None:
+            other.release()
+
+
+def test_a_session_token_naming_a_descriptor_without_the_turns_lock_is_refused(review: test_slots.Hold) -> None:
+    """The named process must hold the turn's lock through the named descriptor, not merely have the file open."""
+    env = _marked(review)
+    turn = test_slots.join_inherited(env)
+    assert turn is not None
+    session = _record_path(review).with_suffix(test_slots.SESSION_SUFFIX)
+    unlocked = os.open(session, os.O_RDONLY)  # this process is its own ancestor and has the session file open
+    try:
+        token = f"{os.getpid()}:{test_slots._start_ticks(os.getpid())}:{unlocked}"
+        with pytest.raises(test_slots.SlotError) as refused:
+            test_slots.join_inherited({**env, test_slots.SESSION_ENV: token}, wait_s=0.3)
+        assert refused.value.reason == "session_unverified" and "does not hold" in refused.value.detail
+        nested = test_slots.join_inherited({**env, **turn.environment()}, wait_s=0.3)  # the locking descriptor
+        assert nested is not None
+        nested.release()
+    finally:
+        os.close(unlocked)
+        turn.release()
+
+
+def test_a_hand_written_ticket_in_a_pool_the_caller_created_is_refused(tmp_path: Path, review: test_slots.Hold) -> None:
+    caller_pool = tmp_path / "caller-pool"
+    record = json.loads(_record_path(review).read_text(encoding="utf-8"))
+    forged, descriptor = _forged_ticket(caller_pool / "holders", record)
+    try:
+        env = {
+            **os.environ,
+            test_slots.DIR_ENV: str(caller_pool),
+            test_slots.HOLDER_ENV: review.marker().replace(str(_record_path(review)), str(forged)),
+        }
+        assert test_slots.inherited_hold(env) is None
+        assert test_slots.join_inherited(env) is None
+    finally:
+        os.close(descriptor)
+
+
+def test_each_hold_issues_its_own_nonce_and_a_marker_must_carry_it(monkeypatch: pytest.MonkeyPatch, pool: Path) -> None:
+    """The nonce is minted at issue, never the ambient run nonce, and a marker with any other value is refused."""
+    ambient = "ambient0run0nonce"
+    monkeypatch.setenv(test_slots.COUNT_ENV, "4")
+    monkeypatch.setenv("LU_RUNTIME_RUN_NONCE", ambient)
+    first = test_slots.acquire(2, kind="review", task_id=TASK)
+    second = test_slots.acquire(2, kind="review", task_id=TASK)
+    try:
+        nonces = [json.loads(_record_path(hold).read_text(encoding="utf-8"))["nonce"] for hold in (first, second)]
+        assert all(re.fullmatch(r"[0-9a-f]{32}", nonce) for nonce in nonces) and nonces[0] != nonces[1]
+        count, nonce, record = first.marker().split(":", 2)
+        assert nonce == nonces[0] and ambient not in first.marker()
+        for wrong in (nonces[1], ambient, "0" * 32, ""):
+            assert test_slots.inherited_hold({**os.environ, test_slots.HOLDER_ENV: f"{count}:{wrong}:{record}"}) is None
+        assert test_slots.inherited_hold({**os.environ, test_slots.HOLDER_ENV: first.marker()}) == 2
+    finally:
+        first.release()
+        second.release()
+
+
+# ---- the real sandbox: the launcher's pool at its fixed location ---------------------------------------------
+
+
+def _kept_visible() -> list[str]:
+    """Bind the checkout and the interpreter back over the sandbox's empty scratch parent, wherever they live."""
+    return [option for path in (REPO_ROOT, Path(sys.prefix)) for option in ("--ro-bind", str(path), str(path))]
+
+
+def _bwrap_at_default(pool: Path) -> list[str] | None:
+    """Codex's view with ``pool`` mounted read-only where a sandboxed run must find it: the default location."""
+    sandbox = _bwrap()
+    if sandbox is None:
+        return None
+    inside = test_slots.DEFAULT_SCRATCH_ROOT / f"test-slots-{os.geteuid()}"
+    mounts = ["--tmpfs", str(inside.parent.parent), *_kept_visible(), "--dir", str(inside.parent)]
+    mounts += ["--ro-bind", os.path.realpath(pool), str(inside)]
+    return [*sandbox[:-1], *mounts, sandbox[-1]]
+
+
+def _inside_marker(hold: test_slots.Hold) -> str:
+    """``hold``'s marker as the sandbox sees it: its ticket in the pool mounted at the default location."""
+    ticket = _record_path(hold)
+    inside = test_slots.DEFAULT_SCRATCH_ROOT / f"test-slots-{os.geteuid()}" / "holders" / ticket.name
+    return f"{hold.marker()[: -len(str(ticket))]}{inside}"
+
+
+# Variables that select a pool or name a hold; a sandboxed run gets only those a test sets on purpose.
+_POOL_SELECTORS = (test_slots.DIR_ENV, test_slots.SCRATCH_ROOT_ENV, test_slots.HOLDER_ENV)
+
+
+def _sandboxed(prefix: list[str], *command: str, **env: str) -> subprocess.CompletedProcess[str]:
+    """Run ``test_slots run -- <command>`` in ``prefix`` with no pool override unless ``env`` sets one."""
+    base = {key: value for key, value in _child_env().items() if key not in _POOL_SELECTORS}
+    return subprocess.run(
+        [*prefix, sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "1", "--", *command],
+        cwd=REPO_ROOT,
+        env={**base, test_slots.WAIT_ENV: "1", **env},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+
+@pytest.mark.parametrize("override", [test_slots.DIR_ENV, test_slots.SCRATCH_ROOT_ENV])
+def test_a_sandboxed_run_refuses_a_pool_override_even_for_a_complete_pool_it_points_at(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, override: str
+) -> None:
+    """A sandboxed process cannot select the pool: a real pool at a caller-chosen place is refused, typed."""
+    sandbox = _bwrap()
+    if sandbox is None:
+        pytest.skip("no unprivileged user-namespace sandbox (bwrap) on this host")
+    scratch = tmp_path / "caller-scratch"
+    caller_pool = scratch / f"test-slots-{os.geteuid()}" if override == test_slots.SCRATCH_ROOT_ENV else scratch
+    monkeypatch.setenv(test_slots.DIR_ENV, str(caller_pool))
+    with test_slots.acquire(2, kind="review", task_id=TASK) as caller_hold:
+        result = _sandboxed(
+            sandbox,
+            sys.executable,
+            "-c",
+            "print('ran inside a pool the caller chose')",
+            **{override: str(scratch), test_slots.HOLDER_ENV: caller_hold.marker()},
+        )
+    assert result.returncode == test_slots.EXIT_REFUSED, result.stdout
+    assert "ran inside" not in result.stdout
+    assert "test_slots_pool_override_refused" in result.stderr
+
+
+def test_a_sandboxed_run_may_join_only_a_review_hold(pool: Path) -> None:
+    sandbox = _bwrap_at_default(pool)
+    if sandbox is None:
+        pytest.skip("no unprivileged user-namespace sandbox (bwrap) on this host")
+    with test_slots.acquire(2, kind="launcher", task_id=TASK) as launcher_hold:
+        result = _sandboxed(
+            sandbox, sys.executable, "-c", "print('ran')", **{test_slots.HOLDER_ENV: _inside_marker(launcher_hold)}
+        )
+    assert result.returncode == test_slots.EXIT_REFUSED and "ran" not in result.stdout
+
+
+def test_a_sandboxed_turn_serves_its_own_descendants_but_not_a_sibling_holding_its_token(
+    tmp_path: Path, pool: Path, review: test_slots.Hold
+) -> None:
+    """Inside Codex's pid namespace a nested run of the turn joins it; a sibling with the copied token cannot."""
+    sandbox = _bwrap_at_default(pool)
+    if sandbox is None:
+        pytest.skip("no unprivileged user-namespace sandbox (bwrap) on this host")
+    marker = {test_slots.HOLDER_ENV: _inside_marker(review)}
+    # A real child of the turn (subprocess closes the turn's descriptors), not the turn's own exec'd command.
+    nested = "import subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'scripts.common.test_slots', 'run', '--', sys.executable, '-c', 'print(\"nested\")']))"
+    joined = _sandboxed(sandbox, sys.executable, "-c", nested, **marker)
+    assert joined.returncode == 0, joined.stderr
+    assert joined.stdout.strip() == "nested"
+
+    token_out = tmp_path / "token"
+    turn = subprocess.Popen(
+        [
+            *sandbox,
+            "--bind",
+            str(tmp_path),
+            str(tmp_path),
+            sys.executable,
+            "-m",
+            "scripts.common.test_slots",
+            "run",
+            "--",
+            sys.executable,
+            "-c",
+            RECORDER,
+            str(token_out),
+            "3",
+        ],
+        cwd=REPO_ROOT,
+        env={**{key: value for key, value in _child_env().items() if key not in _POOL_SELECTORS}, **marker},
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        token = wait_for_line(token_out, stop_if=lambda: turn.poll() is not None)
+        sibling = _sandboxed(sandbox, sys.executable, "-c", "print('ran')", **marker, LU_TEST_SLOTS_SESSION=token)
+        assert sibling.returncode == test_slots.EXIT_REFUSED and "ran" not in sibling.stdout
+        assert "test_slots_session_unverified" in sibling.stderr
+        assert turn.wait(timeout=60) == 0
+    finally:
+        if turn.poll() is None:
+            turn.kill()
+            turn.wait(timeout=30)
+
+
+# A governed run whose command starts a governed child run, the shape of a test that starts pytest.
+NESTED_RUN = (
+    "import subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'scripts.common.test_slots', 'run', "
+    "'--', sys.executable, '-c', 'print(\"nested ran\")']))"
+)
+
+
+def test_a_child_of_the_turn_joins_it_without_waiting(read_only_pool: Path, review: test_slots.Hold) -> None:
+    """A real child (its descriptors closed by ``subprocess``) proves its ancestry and runs inside the turn."""
+    started = time.monotonic()
+    result = _launch("run", "--", sys.executable, "-c", NESTED_RUN, **review.environment(), LU_TEST_SLOTS_WAIT_S="2")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "nested ran"
+    assert "waiting" not in result.stderr and time.monotonic() - started < 30
+
+
+def test_a_turn_whose_slots_changed_hands_while_it_joined_gets_nothing_and_keeps_nothing(
+    monkeypatch: pytest.MonkeyPatch, review: test_slots.Hold
+) -> None:
+    env = _marked(review)
+    real_share = test_slots._share
+
+    def slots_taken(path: Path) -> int | None:
+        return None if path.name.startswith("slot-") else real_share(path)
+
+    monkeypatch.setattr(test_slots, "_share", slots_taken)
+    assert test_slots.join_inherited(env, wait_s=0.3) is None
+    monkeypatch.setattr(test_slots, "_share", real_share)
+    joined = test_slots.join_inherited(env, wait_s=0.3)  # nothing of the refused join is still held
+    assert joined is not None
+    joined.release()
