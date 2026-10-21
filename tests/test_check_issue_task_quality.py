@@ -86,6 +86,85 @@ def test_complete_card_passes() -> None:
     assert result["missing"] == []
 
 
+@pytest.mark.parametrize("phrase", ["after merge", "post-merge", "once merged", "after landing", "After MERGE"])
+def test_postmerge_assignment_required(phrase):
+    result = score_body(COMPLETE + f"\n- [ ] AC-03: {phrase}, review the evidence.\n")
+    assert result["verdict"] == "WARN"
+    assert result["dod"]["errors"] == [{
+        "section": "dod", "field": "AC-03", "code": "post_merge_unowned",
+        "message": "post-merge evidence requires owner: <recognized lane> and due: YYYY-MM-DD "
+        "on the same item line; due is the evidence collection and review deadline",
+    }]
+
+
+@pytest.mark.parametrize("criterion", [
+    "checker tests: unowned post-merge item -> WARN; owned+dated -> pass.",
+    "closeout tests: owned post-merge items listed; unowned item reported to claude-cto.",
+    "The service restarts after merge.",
+    "Post-merge closeout lists outstanding items.",
+])
+def test_postmerge_behavior_does_not_require_assignment(criterion):
+    assert score_body(COMPLETE + f"\n- [ ] AC-03: {criterion}\n")["verdict"] == "PASS"
+
+
+@pytest.mark.parametrize("criterion", [
+    "Collect 30/30 runs after merge",
+    "Publish the 5-run before/after table once merged",
+    "After landing, collect a two-week measurement",
+    "Post-merge evidence must be reviewed",
+])
+def test_postmerge_evidence_requirement_warns(criterion):
+    result = score_body(COMPLETE + f"\n- [ ] AC-03: {criterion}\n")
+    assert result["verdict"] == "WARN"
+    assert result["missing"] == ["post_merge_unowned"]
+
+
+@pytest.mark.parametrize("phrase", ["five runs", "measurement window", "14 days", "review receipt"])
+def test_generic_measurement_does_not_require_assignment(phrase):
+    assert score_body(COMPLETE + f"\n- [ ] AC-03: {phrase}\n")["verdict"] == "PASS"
+
+
+@pytest.mark.parametrize("fields", [
+    "owner: codex-devops; due: 2028-02-29", "owner: claude-infra; due: 2026-11-20",
+    "owner: codex-atlas; due: 2026-11-20", "owner: grok-monitor; due: 2026-11-20",
+    "owner: gemini-open-model-data; due: 2026-11-20", "owner: claude-cto; due: 2026-11-20",
+    "owner: `codex-devops`; due: 2026-11-20", "**owner:** codex-devops; due: 2026-11-20",
+    "owner: codex-devops. due: 2026-11-20",
+])
+def test_postmerge_valid_assignment(fields):
+    assert score_body(COMPLETE + f"\n- [ ] AC-03: After merge, review evidence; {fields}\n")["verdict"] == "PASS"
+
+
+@pytest.mark.parametrize("fields", [
+    "owner: someone; due: 2026-11-20", "owner: codex-devops", "due: 2026-11-20",
+    "owner: codex-devops; due: 2026-02-29", "owner: codex-devops; due: 2026-13-01",
+    "owner: codex-devops; due: 2026-1-01", "owner: codex-devops; due: tomorrow",
+    "owner: codex-devops; due: 2026-11-20junk", "owner: codex-devops\ndue: 2026-11-20",
+    "owner: codex-devops; owner: claude-cto; due: 2026-11-20",
+    "co-owner: codex-devops; due: 2026-11-20",
+])
+def test_postmerge_invalid_assignment(fields):
+    assert "post_merge_unowned" in score_body(
+        COMPLETE + f"\n- [ ] AC-03: After merge, review evidence; {fields}\n"
+    )["missing"]
+
+
+@pytest.mark.parametrize("example", [
+    "```markdown\n- [ ] AC-03: after merge\n```",
+    "~~~markdown\n- [ ] AC-03: after merge\n~~~",
+    "> - [ ] AC-03: after merge", "<!--\n- [ ] AC-03: after merge\n-->",
+    "````markdown\n```\n- [ ] AC-03: after merge\n````",
+])
+def test_postmerge_examples_ignored(example):
+    assert score_body(COMPLETE + "\n" + example)["verdict"] == "PASS"
+
+
+def test_postmerge_trivial_card_still_needs_assignment():
+    result = score_body("trivial: yes\n- [ ] AC-01: After merge, review receipts")
+    assert result["verdict"] == "WARN"
+    assert result["missing"] == ["post_merge_unowned"]
+
+
 def test_missing_fields_warn() -> None:
     result = score_body("## Overview\nDo a thing somehow.\n")
     assert result["verdict"] == "WARN"

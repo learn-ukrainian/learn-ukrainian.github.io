@@ -62,6 +62,9 @@ Operator everyday “ready” = DoD delivered, not this checklist.
 - [ ] AC-01: …
 - [ ] AC-02: …
 <!-- Stable IDs required; map each to Verify evidence + denominator -->
+<!-- Evidence explicitly required after merge needs owner: <recognized lane> and due: YYYY-MM-DD on the same AC line. The date is the deadline to collect and review evidence. Example:
+- [ ] AC-03: After merge, review five CI receipts; owner: codex-devops; due: 2026-11-20
+-->
 - [ ] Outcome verified on exact merged SHA / shipped artifact
 - [ ] Verify commands green (or N/A with reason)
 - [ ] Docs/templates updated if touched
