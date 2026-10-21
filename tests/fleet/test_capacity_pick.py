@@ -4,6 +4,8 @@ import copy
 import io
 import json
 import subprocess
+from itertools import count
+from types import SimpleNamespace
 
 import pytest
 
@@ -15,6 +17,11 @@ from scripts.fleet import capacity_pick, usage
 @pytest.mark.parametrize("agy_signal", [False, True], ids=["inherit-gemini", "own-hot-row"])
 @pytest.mark.parametrize("diagnostic", ["hot", "zero", "full", "stale", "error", "cold"])
 def test_hot_agy_remains_avoid_through_budget_and_capacity_cli(monkeypatch, capsys, fresh, agy_signal, diagnostic):
+    # Keep legitimate observation ages independent of the private credit digits.
+    # Advance time so ttl=0 still exercises the stale observation path. Scope
+    # the clock to this module rather than changing the shared time module.
+    clock = count(step=0.125)
+    monkeypatch.setattr(subscription_usage, "time", SimpleNamespace(monotonic=lambda: next(clock)))
     quota = {
         "status": "hot",
         "remaining_pct": 3.0,

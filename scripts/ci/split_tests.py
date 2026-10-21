@@ -21,7 +21,11 @@ the split, so the list cannot go stale silently.
 merge-group timing artifacts, retaining committed weights where observations
 are absent. ci.yml publishes those artifacts only after its full partition
 audit, and distributes one snapshot to the whole matrix. Unavailable telemetry
-falls back to committed weights with a diagnostic; it never changes selection.
+keeps the committed weights inside that one snapshot and exits 0. Shards do
+not choose a fallback themselves: every shard reads the same refresh-job
+result. Success requires the uploaded snapshot (a shard that still cannot
+read it fails). Any other result uses the committed weights. Weights never
+change which files run.
 
 Stdlib only, so it runs before the project environment is installed.
 """
@@ -50,11 +54,54 @@ if __package__ in (None, ""):
 from scripts.common import github_client
 
 DEFAULT_DURATIONS = Path(__file__).with_name("pytest-file-durations.json")
+# Repo-relative path the workflow passes to ``split``. It names DEFAULT_DURATIONS
+# without putting a runner path in the job log.
+COMMITTED_DURATION_PATH = Path("scripts/ci/pytest-file-durations.json")
 DEFAULT_HISTORY = Path(__file__).with_name("history-tests.txt")
 HISTORY_SHARD = 1  # ci.yml: the one pytest shard with a full-history checkout
 TIMING_ARTIFACT = "pytest-file-durations"
 MAX_ARCHIVE_BYTES = 2 * 1024 * 1024
 MAX_MEMBER_BYTES = 1024 * 1024
+# needs.refresh-pytest-durations.result. Only these four exist; anything else
+# is rejected so a shard cannot invent an input the others did not choose.
+REFRESH_RESULTS = frozenset({"success", "failure", "cancelled", "skipped"})
+SOURCE_SNAPSHOT = "snapshot"
+SOURCE_COMMITTED = "committed"
+
+
+class DurationSnapshotRequired(RuntimeError):
+    """The refresh job succeeded, so this shard cannot run on other weights."""
+
+
+def duration_source_decision(refresh_result: str) -> str:
+    """``snapshot`` or ``committed``, from the shared refresh-job result.
+
+    Every shard passes the same ``needs.refresh-pytest-durations.result``.
+    The result does not depend on this shard's download. Only ``success``
+    selects the snapshot that job uploaded. ``failure``, ``cancelled`` and
+    ``skipped`` select the committed weights.
+    """
+    if refresh_result not in REFRESH_RESULTS:
+        raise ValueError("refresh result must be success, failure, cancelled, or skipped")
+    return SOURCE_SNAPSHOT if refresh_result == "success" else SOURCE_COMMITTED
+
+
+def resolve_duration_path(refresh_result: str, snapshot: Path) -> Path:
+    """Weights path every shard must pass to ``split``.
+
+    When the decision is ``snapshot``, a missing or invalid file raises
+    ``DurationSnapshotRequired`` instead of falling back. When it is
+    ``committed``, ``snapshot`` is ignored even if it holds different weights.
+    """
+    if duration_source_decision(refresh_result) == SOURCE_COMMITTED:
+        return COMMITTED_DURATION_PATH
+    try:
+        validate_durations(json.loads(snapshot.read_text(encoding="utf-8")))
+    except (OSError, ValueError):
+        raise DurationSnapshotRequired(
+            "refresh succeeded but the shared duration snapshot is unavailable"
+        ) from None
+    return snapshot
 
 
 def validate_durations(value: object) -> dict[str, float]:
@@ -181,6 +228,16 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
     return len(samples)
 
 
+def tracked_test_files(root: Path | None = None) -> list[str]:
+    """Tracked ``tests/**/test_*.py`` paths, the same denominator ci.yml shards split.
+
+    ``git ls-files`` is the selection. A duration snapshot never adds or drops a file.
+    """
+    repo = root or Path(__file__).resolve().parents[2]
+    listed = subprocess.check_output(["git", "ls-files", "--", "tests"], cwd=repo, text=True, timeout=30)
+    return [line for line in listed.splitlines() if re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", line)]
+
+
 def read_list(path: Path) -> list[str]:
     """Paths in a list file, one per line; ``#`` starts a comment."""
     lines = (line.split("#", 1)[0].strip() for line in path.read_text(encoding="utf-8").splitlines())
@@ -241,9 +298,11 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python -m scripts.ci.split_tests durations junit/*.xml > durations.json
   .venv/bin/python -m scripts.ci.split_tests refresh --repo owner/repo --output snapshot.json
   .venv/bin/python -m scripts.ci.split_tests validate snapshot.json
+  .venv/bin/python -m scripts.ci.split_tests duration-source --refresh-result success --snapshot ci-artifacts/pytest-file-durations.json
 Outputs: file paths or timing JSON on stdout; refresh writes one immutable timing snapshot.
-Exit codes: 0 = success (including refresh fallback); 1 = invalid data; 2 = CLI usage error.
-Related: .github/workflows/ci.yml; issue #9065.
+duration-source prints the weights path every shard must use, or ``snapshot`` / ``committed`` with ``--decide``.
+Exit codes: 0 = success (including refresh fallback and a committed duration source); 1 = invalid data, or the refresh job succeeded and the shared snapshot is missing or invalid; 2 = CLI usage error.
+Related: .github/workflows/ci.yml; issues #9065 and #11040.
 """,
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -258,6 +317,25 @@ Related: .github/workflows/ci.yml; issue #9065.
     durations.add_argument("junit", nargs="+", type=Path, help="all shard JUnit XML files from one full run")
     validate = commands.add_parser("validate", help="check a snapshot against the shared timing schema")
     validate.add_argument("snapshot", type=Path, help="timing JSON to validate, e.g. snapshot.json")
+    source = commands.add_parser(
+        "duration-source",
+        help="print the weights path every shard must use for one refresh-job result",
+    )
+    source.add_argument(
+        "--refresh-result",
+        required=True,
+        help="needs.refresh-pytest-durations.result: success, failure, cancelled, or skipped",
+    )
+    source.add_argument(
+        "--snapshot",
+        type=Path,
+        help="downloaded snapshot path, e.g. ci-artifacts/pytest-file-durations.json",
+    )
+    source.add_argument(
+        "--decide",
+        action="store_true",
+        help="print snapshot or committed from the refresh result alone; do not read --snapshot",
+    )
     refresh = commands.add_parser("refresh", help="freeze median weights from recent successful merge-group artifacts")
     refresh.add_argument("--repo", required=True, help="GitHub owner/repo; uses GH_TOKEN with actions:read")
     refresh.add_argument("--output", required=True, type=Path, help="immutable snapshot JSON shared by all shards")
@@ -280,6 +358,23 @@ Related: .github/workflows/ci.yml; issue #9065.
         return 0
     if args.command == "refresh":
         refresh_durations(args.repo, args.fallback, args.output, args.limit)
+        return 0
+    if args.command == "duration-source":
+        try:
+            if args.decide:
+                if args.snapshot is not None:
+                    parser.error("--decide does not read --snapshot")
+                print(duration_source_decision(args.refresh_result))
+                return 0
+            if args.snapshot is None:
+                parser.error("duration-source requires --snapshot or --decide")
+            print(resolve_duration_path(args.refresh_result, args.snapshot))
+        except DurationSnapshotRequired as exc:
+            print(exc, file=sys.stderr)
+            return 1
+        except ValueError as exc:
+            print(exc, file=sys.stderr)
+            return 1
         return 0
     if not 1 <= args.shard <= args.shard_count:
         parser.error(f"--shard {args.shard} is outside 1..{args.shard_count}")

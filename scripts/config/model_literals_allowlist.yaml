@@ -6364,3 +6364,66 @@ entries:
   count: 1
   kind: non_model_label
   reason: Stable operational CTO inbox identity; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: claude-infra
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: grok-monitor
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: gemini-open-model-data
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: run_postmerge_criteria
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Stable supervisory request recipient; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: main
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Help text names the supervisory request recipient; does not select a runtime model.
+- path: scripts/orchestration/stalled_work.py
+  scope: owner
+  context: expression
+  id: claude-cto
+  count: 2
+  kind: non_model_label
+  reason: Fleet supervisory fallback recipient identity, not a model selection.
+- path: scripts/orchestration/stalled_work.py
+  scope: scan.add
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Fleet supervisory fallback recipient identity, not a model selection.
+- path: scripts/orchestration/stalled_work.py
+  scope: route
+  context: expression
+  id: claude-cto
+  count: 2
+  kind: non_model_label
+  reason: Fleet supervisory sender and summary recipient identities, not model selections.

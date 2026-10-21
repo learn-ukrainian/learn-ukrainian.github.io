@@ -24,6 +24,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.ingest.private_teacher_lessons_ingest import ingest_lessons, parse_docx
 from scripts.lexicon import teacher_deck_shard as shard
 from scripts.lexicon.sync_teacher_table_deck import (

@@ -25,6 +25,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.audit.daily_cefr import CEFR_LEVEL_ORDER, CEFR_LEVELS
 from scripts.audit.generate_search_index import _site_build_entry_model_gates
 from scripts.audit.lexeme_filter import (

@@ -1536,60 +1536,74 @@ def observe_pressure(
     *,
     phase: str,
     decision: AdmissionDecision | None = None,
+    record: bool = True,
 ) -> dict[str, Any]:
     """Shadow the CPU gate using only already collected attribution (#10802).
 
     No task/pool/slot scan is added to the cheap path. These snapshots identify
     participants, not measured CPU owners; unattributed load is always unknown.
     """
-    load = probe.load_per_cpu
-    slots = decision.slots if decision else None
-    pool = decision.pool if decision else None
-    memory = pool.memory if pool else None
-    live = decision.live_task_ids if decision and phase == "evaluate" else None
-    context = {
-        "phase": phase,
-        "current_admission_decision": "unknown" if decision is None else "admit" if decision.admitted else "refuse",
-        "override_outcome": "unknown: shadow observes checks before force overrides",
-        "load_per_cpu": load,
-        "load_limit": limits.max_load_per_cpu,
-        "load_decision": "unknown" if load is None else "refuse" if load > limits.max_load_per_cpu else "admit",
-        "attribution": {
-            "live_task_ids": (
-                [admission_shadow.label(t) for t in live[:admission_shadow.MAX_ATTRIBUTED]]
-                if live is not None else None
-            ),
-            "live_task_count": len(live) if live is not None else None,
-            "pool_nonreclaimable_bytes": memory.nonreclaimable if memory else None,
-            "pool_limit_bytes": memory.limit if memory else None,
-            "test_slot_queue_depth": slots.depth if slots else None,
-            "test_slot_pool_size": slots.pool_size if slots else None,
-            "test_slot_holders": [
-                {"task_id": admission_shadow.label(h.get("task_id")), "slots": h.get("slots")}
-                for h in slots.holders[:admission_shadow.MAX_ATTRIBUTED]
-            ] if slots and slots.depth is not None else None,
-            "test_slot_waiters": [
-                {"task_id": admission_shadow.label(h.get("task_id"))}
-                for h in slots.queued[:admission_shadow.MAX_ATTRIBUTED]
-            ] if slots and slots.depth is not None else None,
-            "cpu_ownership": "unknown: existing snapshots do not measure CPU shares",
-            "unattributed_load": "unknown: no per-actor CPU measurement",
-            "missing_attribution": "unknown: not collected on cheap path or unavailable",
-            "limit": admission_shadow.MAX_ATTRIBUTED,
-        },
-    }
-    pressure = admission_shadow.read_pressure(PROC_ROOT)
-    directory = os.environ.get(admission_shadow.DIRECTORY_ENV)
-    # Match the existing host-probe seam: tests opt into a private store.
-    if "PYTEST_CURRENT_TEST" in os.environ and directory is None:
-        return {
-            **context,
-            "pressure": pressure,
-            "psi": admission_shadow.transition(pressure, {}, time.time()),
-            "persistence": "unknown: test journal not configured",
+    try:
+        load = probe.load_per_cpu
+        slots = decision.slots if decision else None
+        pool = decision.pool if decision else None
+        memory = pool.memory if pool else None
+        live = decision.live_task_ids if decision and phase == "evaluate" else None
+        context = {
+            "phase": phase,
+            "current_admission_decision": "unknown" if decision is None else "admit" if decision.admitted else "refuse",
+            "override_outcome": "unknown: shadow observes checks before force overrides",
+            "load_per_cpu": load,
+            "load_limit": limits.max_load_per_cpu,
+            "load_decision": "unknown" if load is None else "refuse" if load > limits.max_load_per_cpu else "admit",
+            "attribution": {
+                "live_task_ids": (
+                    [admission_shadow.label(t) for t in live[:admission_shadow.MAX_ATTRIBUTED]]
+                    if live is not None else None
+                ),
+                "live_task_count": len(live) if live is not None else None,
+                "pool_nonreclaimable_bytes": memory.nonreclaimable if memory else None,
+                "pool_limit_bytes": memory.limit if memory else None,
+                "test_slot_queue_depth": slots.depth if slots else None,
+                "test_slot_pool_size": slots.pool_size if slots else None,
+                "test_slot_holders": [
+                    {"task_id": admission_shadow.label(h.get("task_id")), "slots": h.get("slots")}
+                    for h in slots.holders[:admission_shadow.MAX_ATTRIBUTED]
+                ] if slots and slots.depth is not None else None,
+                "test_slot_waiters": [
+                    {"task_id": admission_shadow.label(h.get("task_id"))}
+                    for h in slots.queued[:admission_shadow.MAX_ATTRIBUTED]
+                ] if slots and slots.depth is not None else None,
+                "cpu_ownership": "unknown: existing snapshots do not measure CPU shares",
+                "unattributed_load": "unknown: no per-actor CPU measurement",
+                "missing_attribution": "unknown: not collected on cheap path or unavailable",
+                "limit": admission_shadow.MAX_ATTRIBUTED,
+            },
         }
-    root = Path(directory) if directory else primary_checkout() / "batch_state" / "admission-shadow"
-    return admission_shadow.observe(root, pressure, context)
+        pressure = admission_shadow.read_pressure(PROC_ROOT)
+        directory = os.environ.get(admission_shadow.DIRECTORY_ENV)
+        # Match the existing host-probe seam: tests opt into a private store.
+        persistence = (
+            "unknown: test journal not configured"
+            if "PYTEST_CURRENT_TEST" in os.environ and directory is None
+            else "unknown: report-only evaluation" if not record else None
+        )
+        if persistence is not None:
+            return {
+                **context,
+                "pressure": pressure,
+                "psi": admission_shadow.transition(pressure, {}, time.time()),
+                "persistence": persistence,
+            }
+        root = Path(directory) if directory else primary_checkout() / "batch_state" / "admission-shadow"
+        return admission_shadow.observe(root, pressure, context)
+    except Exception as exc:  # optional diagnostics must never abort admission
+        return {
+            "phase": phase,
+            "psi": {"decision": "unknown", "low_since": None, "reason": "observer_error"},
+            "persistence": "unknown: observer_error",
+            "observer_error": type(exc).__name__,
+        }
 
 
 def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDecision | None:
@@ -1633,6 +1647,7 @@ def evaluate(
     thresholds: Thresholds | None = None,
     reaper: DiskReaper | None = None,
     disk_guard: bool = True,
+    record_shadow: bool = True,
 ) -> AdmissionDecision:
     """Decide whether a ``mode`` dispatch may start a worker on this host now.
 
@@ -1642,7 +1657,9 @@ def evaluate(
     :func:`run_disk_reaper`) is attempted at most once, through
     :func:`attempt_disk_reaper`, when the disk is at or above the reap
     watermark; without it the disk is only measured and only the refuse
-    watermark refuses. ``disk_guard=False``
+    watermark refuses. Report-only callers pass ``record_shadow=False`` to keep PSI diagnostics
+    without reading or writing journal state or changing the admission decision.
+    ``disk_guard=False``
     (a dispatch that reuses an existing worktree) skips the disk check, the
     reaper and the alert. Invalid threshold environment variables raise
     ``ValueError``.
@@ -1702,7 +1719,10 @@ def evaluate(
         slots=slots,
         disk=disk,
     )
-    return replace(decision, psi_shadow=observe_pressure(probe, limits, phase="evaluate", decision=decision))
+    return replace(
+        decision,
+        psi_shadow=observe_pressure(probe, limits, phase="evaluate", decision=decision, record=record_shadow),
+    )
 
 
 @contextlib.contextmanager

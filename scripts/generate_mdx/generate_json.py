@@ -25,6 +25,10 @@ import yaml
 SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from yaml_activities import Activity, ActivityParser
 
 # =============================================================================

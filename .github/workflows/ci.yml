@@ -248,12 +248,78 @@ jobs:
           node --experimental-strip-types tests/helpers/ci-build-artifact.ts verify --record "$FRONTEND_BUILD_RECORD"
           npm run test:built-output
 
+  # One snapshot per run, then every shard downloads that same artifact (#11040).
+  # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
+  # Queue reuse skips the steps: pytest does not run, so there is nothing to balance.
+  refresh-pytest-durations:
+    name: Refresh pytest durations
+    needs: [reuse]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: needs.reuse.outputs.reuse != 'true'
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/ci/
+            scripts/__init__.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/common/scratch.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: needs.reuse.outputs.reuse != 'true'
+        with:
+          python-version-file: '.python-version'
+      - name: Refresh pytest duration snapshot
+        if: needs.reuse.outputs.reuse != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-artifacts
+          out=ci-artifacts/pytest-file-durations.json
+          set +e
+          log=$(python3 -m scripts.ci.split_tests refresh --repo "$REPO" --output "$out" 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$log"
+          if [ "$status" -ne 0 ] || ! python3 -m scripts.ci.split_tests validate "$out"; then
+            echo "::notice::duration refresh failed; retaining committed weights"
+            cp scripts/ci/pytest-file-durations.json "$out"
+          elif printf '%s\n' "$log" | grep -q "retaining committed fallback"; then
+            echo "::notice::duration lookup unavailable; retaining committed weights"
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: needs.reuse.outputs.reuse != 'true'
+        with:
+          name: pytest-duration-input
+          path: ci-artifacts/pytest-file-durations.json
+          if-no-files-found: error
+          retention-days: 1
+
   pytest:
     name: pytest (${{ matrix.shard }})
-    needs: [reuse]
+    needs: [reuse, refresh-pytest-durations]
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # actions:read is only so this job can download the same-run snapshot.
+    # The token is passed to the download step, not to pytest.
+    permissions:
+      contents: read
+      actions: read
     strategy:
       fail-fast: false
       matrix:
@@ -284,10 +350,55 @@ jobs:
         uses: ./.github/actions/python-ci-env
       - run: bash scripts/ci/test_env.sh wait
         timeout-minutes: 5
+      # The refresh-job result is the same on every shard. Success always uploaded
+      # one validated snapshot: download it with bounded retries and fail if it
+      # is still unusable. Any other result means every shard uses the committed
+      # weights. A shard never switches inputs on its own (#11040).
+      # continue-on-error is forbidden here.
+      - name: Download pytest duration snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REFRESH_RESULT: ${{ needs.refresh-pytest-durations.result }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-artifacts
+          snapshot=ci-artifacts/pytest-file-durations.json
+          rm -f "$snapshot"
+          decision=$(python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
+          if [ "$decision" = "committed" ]; then
+            echo "::notice::duration refresh did not succeed; using committed weights"
+            exit 0
+          fi
+          if [ "$decision" != "snapshot" ]; then
+            echo "::error::unexpected duration source decision"
+            exit 1
+          fi
+          attempt=1
+          while true; do
+            rm -f "$snapshot"
+            rm -rf ci-artifacts/pytest-duration-input
+            if gh run download "$GITHUB_RUN_ID" --name pytest-duration-input --dir ci-artifacts; then
+              nested=$(find ci-artifacts -name pytest-file-durations.json -type f ! -path "$snapshot" -print -quit || true)
+              if [ -n "$nested" ]; then
+                mv "$nested" "$snapshot"
+              fi
+            fi
+            if python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
+              exit 0
+            fi
+            if [ "$attempt" -ge 3 ]; then
+              echo "::error::shared duration snapshot unavailable after 3 attempts"
+              exit 1
+            fi
+            attempt=$((attempt + 1))
+            # Tests set LU_DURATION_RETRY_SLEEP=0. The pause is not the retry bound.
+            sleep "${LU_DURATION_RETRY_SLEEP:-1}"
+          done
       - name: Run pytest
         env:
           SHARD: ${{ matrix.shard }}
           SHARDS: ${{ strategy.job-total }}
+          REFRESH_RESULT: ${{ needs.refresh-pytest-durations.result }}
         run: |
           set -euo pipefail
           mkdir -p ci-artifacts
@@ -297,13 +408,9 @@ jobs:
           # Shallow shards: a test that fetches from GitHub fails instead of
           # quietly downloading history (scripts/ci/history-tests.txt).
           [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
-          durations=scripts/ci/pytest-file-durations.json
           snapshot=ci-artifacts/pytest-file-durations.json
-          if python3 -m scripts.ci.split_tests validate "$snapshot"; then
-            durations="$snapshot"
-          else
-            echo "::notice::duration snapshot unavailable or invalid; using committed weights"
-          fi
+          durations=$(python3 -m scripts.ci.split_tests duration-source \
+            --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
               --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
@@ -410,7 +517,8 @@ jobs:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pytest, pytest-report]
+    # The refresh job is waited on and is not a gate result: lookup failure stays green.
+    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

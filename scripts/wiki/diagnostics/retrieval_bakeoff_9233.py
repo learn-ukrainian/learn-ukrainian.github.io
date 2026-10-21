@@ -520,7 +520,7 @@ def _admission_probe() -> bool:
     from scripts.common.task_store_paths import tasks_dir
     from scripts.orchestration.dispatch_admission import evaluate
 
-    decision = evaluate("danger", tasks_dir())
+    decision = evaluate("danger", tasks_dir(), record_shadow=False)
     probe = decision.probe
     return bool(decision.admitted and probe and probe.proc_available and probe.mem_available_bytes is not None and probe.load_per_cpu is not None)
 
