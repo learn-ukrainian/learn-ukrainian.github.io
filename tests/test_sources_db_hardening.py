@@ -81,7 +81,9 @@ def _is_unsafe_connect(call: ast.Call) -> bool:
 
 
 def _is_connect_ref(node: ast.expr | None, names: set[str]) -> bool:
-    """``sqlite3.connect`` / ``x.connect`` or a name already known to alias it."""
+    """``sqlite3.connect`` / ``x.connect``, a name known to alias it, or a walrus wrapping either."""
+    if isinstance(node, ast.NamedExpr):
+        return _is_connect_ref(node.value, names)
     if isinstance(node, ast.Attribute):
         return node.attr == "connect"
     return isinstance(node, ast.Name) and node.id in names
@@ -117,11 +119,8 @@ def _shared_connects(source: str) -> list[tuple[int, str]]:
     def visit(node: ast.AST, scope: tuple[str, ...]) -> None:
         if isinstance(node, ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef):
             scope += (node.name,)
-        if isinstance(node, ast.Call):
-            func = node.func
-            name = func.attr if isinstance(func, ast.Attribute) else getattr(func, "id", "")
-            if name in names and _is_unsafe_connect(node):
-                found.append((node.lineno, ".".join(scope)))
+        if isinstance(node, ast.Call) and _is_connect_ref(node.func, names) and _is_unsafe_connect(node):
+            found.append((node.lineno, ".".join(scope)))
         for child in ast.iter_child_nodes(node):
             visit(child, scope)
 
@@ -157,11 +156,20 @@ def test_shared_connect_scanner_flags_plain_connect() -> None:
         "from sqlite3 import connect as c\nd = c\nd('x', check_same_thread=False)\n",
         "d = c\nc = sqlite3.connect\nd('x', check_same_thread=False)\n",
         "c = sqlite3.connect\nd: object = c\ne = d\ne('x', 5.0, 0, 'DEFERRED', False)\n",
-        "(c := sqlite3.connect)('x', check_same_thread=False)\nc('x', check_same_thread=False)\n",
+        "(c := sqlite3.connect)('x', check_same_thread=False)\n",
+        "(c := sqlite3.connect)('x')\nc('x', check_same_thread=False)\n",
+        "d = (c := sqlite3.connect)\nd('x', check_same_thread=False)\n",
+        "(c := sqlite3.connect)\n(d := c)('x', 5.0, 0, 'DEFERRED', False)\n",
+        "(d := (c := sqlite3.connect))('x', **opts)\n",
     ],
 )
 def test_shared_connect_scanner_flags_unsafe_call_forms(call: str) -> None:
     assert len(_shared_connects(call)) == 1
+
+
+def test_shared_connect_scanner_counts_walrus_call_and_alias_call_separately() -> None:
+    src = "(c := sqlite3.connect)('x', check_same_thread=False)\nc('x', check_same_thread=False)\n"
+    assert [line for line, _ in _shared_connects(src)] == [1, 2]
 
 
 def test_shared_connect_scanner_ignores_safe_positional_forms() -> None:
@@ -170,6 +178,7 @@ def test_shared_connect_scanner_ignores_safe_positional_forms() -> None:
     assert _shared_connects("sqlite3.connect(*(':memory:', 5.0, 0, 'DEFERRED', True))\n") == []
     assert _shared_connects("sqlite3.connect(*args, check_same_thread=True)\n") == []
     assert _shared_connects("c: object = sqlite3.connect\nd = c\nd('x')\n") == []
+    assert _shared_connects("(c := sqlite3.connect)('x')\nc('x', check_same_thread=True)\n") == []
 
 
 @pytest.mark.repo_wide
