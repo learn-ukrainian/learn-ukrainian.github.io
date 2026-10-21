@@ -15,7 +15,7 @@
       },
       {
         "path": "scripts/lexicon/admit_teacher_table.py",
-        "sha256": "8661b12249b8e9fb6132bcea7afbd0acc99a080c5e1ec62e9059c103640cbc6a"
+        "sha256": "ca64dad99635f6628f5ca99522c48b4922e4a4100facbc61f47c19ab7a67788a"
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
@@ -39,7 +39,7 @@
       },
       {
         "path": "scripts/lexicon/audit_sum11_relations.py",
-        "sha256": "adb3604074f7d85764bd9d9ad97a94d7b5fa8af97ab84e9bd2b8c98e7751f895"
+        "sha256": "8e35fe9db667e8891e6273dd146866e737c0429441e0be73e51f8f7db8076895"
       },
       {
         "path": "scripts/lexicon/backfill_course_usage.py",
@@ -51,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/build_fmu_booster_inventory.py",
-        "sha256": "14acb8d991a44531642a146ecccb83c436e6061780aeb4e62088e576dfaad32f"
+        "sha256": "9ad42ac5cda6cc5dd093f29de12327bb90642e0bc63af200d8ee63bf26e78d48"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -59,7 +59,7 @@
       },
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
-        "sha256": "9fa60a1b5f8c694f638638f5f71448a1f659f317203d619adcdb7506a2d6c57f"
+        "sha256": "392b083021f7d0589465691e2022f4dd9d2377af92988db21ce180beb820e428"
       },
       {
         "path": "scripts/lexicon/build_synonym_verdicts_yaml.py",
@@ -163,7 +163,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "23b243ce327b32296ce82b2063efbde0792c845d636f0ad37c2d776d4a3fd9d0"
+        "sha256": "0f6a64171e73d0c149ca8c4ddd1f6ead47c7df100d16d439e03f5f2c2b10ea1c"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
-        "sha256": "d3190e6d47c4ce18ea01d1e96cc45c803ec562be1e381a70af53f77cde96b874"
+        "sha256": "15651793f082cd75b2bef45332f0c2d0dfe598322ee3efd4ad5d72de3cc3c2ab"
       },
       {
         "path": "scripts/lexicon/heritage_calque_wave.py",
@@ -299,7 +299,7 @@
       },
       {
         "path": "scripts/lexicon/obvious_noise_classifier.py",
-        "sha256": "5d11e5d12c3629eebf343e66bcbea8ac0dbde0be98f0e70157f293259404bebb"
+        "sha256": "0946c3f307f121a474216d3c06156bd4f6ed5844b5225e5b968b09a4c23f695b"
       },
       {
         "path": "scripts/lexicon/oho_workbook_glossary_parse.py",
@@ -307,7 +307,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
-        "sha256": "90a477565bb14f2b18c307d1cae5b0f0e1055c76e55620fe6b026f0e0191222b"
+        "sha256": "9c113b40d71a607823e406e377c5b0aa163c11dd8fa53b939f741effc9408b1d"
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
@@ -395,7 +395,7 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck.py",
-        "sha256": "fe97699ea23784d6fd05625d42bacd009449be5131d79e2dfdf3ea25316fa7c6"
+        "sha256": "7ed1a359b632eacffbeb433e4edef36217dad6251fbb4a6248ce2eb559702b91"
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",

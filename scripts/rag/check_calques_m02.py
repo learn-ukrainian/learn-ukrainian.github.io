@@ -24,4 +24,7 @@ def check_calques():
                 print(f"Translation: {entry['translation']}")
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python scripts/rag/check_calques_m02.py")
+        raise SystemExit(0)
     check_calques()

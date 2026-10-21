@@ -55,6 +55,9 @@ class ModuleCase:
 
 
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: .venv/bin/python scripts/audit/immersion_gate_calibration.py")
+        return
     sequence_by_slug = _load_a1_sequences()
     cases = _module_cases(sequence_by_slug)
     records: list[dict[str, Any]] = []

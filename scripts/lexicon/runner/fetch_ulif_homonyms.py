@@ -37,6 +37,9 @@ from typing import Any
 
 from bs4 import BeautifulSoup
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner.fetch_ulif_20k import ULIF_URL, DictUAClient
 from scripts.lexicon.runner.ulif_dictua_parse import (

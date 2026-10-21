@@ -17,6 +17,9 @@ from typing import Any
 
 from filelock import FileLock, Timeout
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
