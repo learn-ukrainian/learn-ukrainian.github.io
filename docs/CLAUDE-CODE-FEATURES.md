@@ -141,14 +141,11 @@ Start all services: `./services.sh start`
 
 ---
 
-## Agent Bridge (`--bare` optimization)
+## `--bare` (minimal mode)
 
-The `scripts/ai_agent_bridge/_claude.py` uses `--bare` flag for scripted Claude CLI calls when `ANTHROPIC_API_KEY` is set. This skips hooks, LSP, plugin sync, and skill walks — significantly faster for non-interactive calls.
+`claude -p --bare` skips hooks, LSP, plugin sync, auto-memory, keychain reads, and `CLAUDE.md` auto-discovery. Anthropic auth is strictly `ANTHROPIC_API_KEY` or `apiKeyHelper` via `--settings` (OAuth and keychain are never read; `claude --help`).
 
-| Condition | Mode |
-|-----------|------|
-| `ANTHROPIC_API_KEY` set, no session resume | `--bare` (fast) |
-| No API key, or resuming session | Normal (full context) |
+The project's agent runtime does not use it for guarded Claude workers: `--bare` skips the PreToolUse hooks that block primary-checkout writes (`scripts/agent_runtime/adapters/claude.py`, `docs/agent-runtime-guide.md`). `scripts/ai_agent_bridge/_claude.py` no longer builds the command; `ClaudeAdapter` owns the flags. The stateless KimiCC route is the one runtime path that passes `--bare`, with its own credentials.
 
 ---
 

@@ -6406,3 +6406,24 @@ entries:
   count: 1
   kind: non_model_label
   reason: Help text names the supervisory request recipient; does not select a runtime model.
+- path: scripts/orchestration/stalled_work.py
+  scope: owner
+  context: expression
+  id: claude-cto
+  count: 2
+  kind: non_model_label
+  reason: Fleet supervisory fallback recipient identity, not a model selection.
+- path: scripts/orchestration/stalled_work.py
+  scope: scan.add
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Fleet supervisory fallback recipient identity, not a model selection.
+- path: scripts/orchestration/stalled_work.py
+  scope: route
+  context: expression
+  id: claude-cto
+  count: 2
+  kind: non_model_label
+  reason: Fleet supervisory sender and summary recipient identities, not model selections.

@@ -428,6 +428,11 @@ def rollover_bundle_handoff_candidates(lane_candidates: Iterable[str], agent: st
     return tuple(dict.fromkeys(candidates))
 
 
+def rollover_bundle_identity_is_safe(value: str) -> bool:
+    """The check an uploaded bundle's agent, lineage_id and rollover_id must pass to be stored."""
+    return bool(value) and len(value) <= 256 and all(char.isalnum() or char in "._:/-" for char in value)
+
+
 def _rollover_bundle_member_name(value: object) -> str:
     if not isinstance(value, str) or not value or "\\" in value or "\x00" in value:
         raise ValueError("rollover bundle member path is malformed")
@@ -2228,7 +2233,7 @@ class SessionStreamStore:
 
     @staticmethod
     def _identity_is_safe(value: str) -> bool:
-        return bool(value) and len(value) <= 256 and all(char.isalnum() or char in "._:/-" for char in value)
+        return rollover_bundle_identity_is_safe(value)
 
     @staticmethod
     def _rollover_bundle_payload(row: sqlite3.Row, *, include_blob: bool) -> dict[str, Any]:

@@ -1543,6 +1543,17 @@ function hasArticleText(value: string | null | undefined): boolean {
   return Boolean(value?.trim());
 }
 
+/** Historical Soviet context is shown only when note, markers, risk, or definition carry information. */
+export function hasSovietColonizationContextContent(
+  context: LexiconEntryView["soviet_colonization_context"],
+): boolean {
+  if (!context) return false;
+  if (hasArticleText(context.definition)) return true;
+  if (hasArticleText(context.historical_note)) return true;
+  if (context.keywords?.some((keyword) => hasArticleText(keyword))) return true;
+  return (context.sovietization_risk ?? 0) > 0;
+}
+
 function hasMorphologyContent(morphology: Enrichment["morphology"]): boolean {
   if (!morphology) return false;
   if (hasArticleText(morphology.pos) || morphology.forms?.some((item) => hasArticleText(item.form)) ||
@@ -1574,7 +1585,7 @@ function renderedArticleLayers(args: {
     meaning: definitionCards.length > 0 || enrichedMeaning || hasArticleText(entry.gloss),
     // Historical context remains visible, but cannot establish meaning readiness.
     meaningSection: definitionCards.length > 0 || enrichedMeaning || hasArticleText(entry.gloss) ||
-      hasArticleText(entry.soviet_colonization_context?.definition),
+      hasSovietColonizationContextContent(entry.soviet_colonization_context),
     enrichedMeaning,
     etymology: hasArticleText(enrichment?.etymology?.text) ||
       Boolean(enrichment?.etymology?.stages?.some((stage) => hasArticleText(stage.word))),
