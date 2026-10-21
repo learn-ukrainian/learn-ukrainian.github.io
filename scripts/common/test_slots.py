@@ -114,8 +114,9 @@ _AUTO_VALUES = frozenset({"auto", "logical"})
 
 class SlotError(Exception):
     """A typed refusal. ``reason`` is ``invalid_configuration``, ``pool_unavailable``, ``wait_timeout``,
-    ``pool_override_refused`` (a sandboxed run chose the pool) or ``session_unverified`` (a review turn's
-    session value that does not prove this run descends from the run holding the turn).
+    ``pool_override_refused`` (a sandboxed run chose the pool), ``session_unverified`` (a review turn's
+    session value that does not prove this run descends from the run holding the turn) or ``hold_ended`` (an
+    xdist worker whose run's live hold ended before the worker could join it).
 
     ``detail`` never names a path, so it is safe in API responses and public logs.
     """
@@ -940,22 +941,30 @@ def join_as_worker(environ: Mapping[str, str] | None = None) -> Hold | None:
     first, and no other run takes them or starts the review's next turn until the last worker exits. A worker
     queues for nothing and takes no turn: it joins the hold :data:`HOLDER_ENV` names, checked as
     :func:`_live_holder` checks it, and for a ``review`` hold the turn its controller holds, proved through
-    :data:`SESSION_ENV` as :func:`join_inherited` proves a nested run. ``None`` when no live hold or turn names
-    this worker. Raises :class:`SlotError` when the hold's files are unusable; nothing stays held then.
+    :data:`SESSION_ENV` as :func:`join_inherited` proves a nested run.
+
+    ``None`` only for a worker no live hold names (no valid marker, or a ``review`` marker without a turn token),
+    which runs as any ungoverned run does. A worker a live hold names must keep that hold's slots before it runs a
+    test: when it cannot, it raises :class:`SlotError` (``hold_ended`` when the hold or its turn ended while it
+    joined, ``pool_unavailable`` when a file of the hold cannot be opened, ``session_unverified``) and nothing stays
+    held, so its run is refused rather than run on slots a killed controller would free beneath it.
     """
     env = os.environ if environ is None else environ
     found = _live_holder(env)
     if found is None:
         return None
     if found.kind == "review":
-        # A worker presents its controller's turn token: it joins that turn or nothing, and never waits for one.
-        return join_inherited(env, wait_s=0.0) if env.get(SESSION_ENV) else None
+        if not env.get(SESSION_ENV):
+            return None  # its controller took no turn of this review, so the hold does not cover this worker
+        # A worker presents its controller's turn token: it joins that turn or is refused, and never waits for one.
+        hold = join_inherited(env, wait_s=0.0)
+        if hold is None:
+            raise SlotError("hold_ended", "the review turn this xdist worker's run holds ended before it joined")
+        return hold
     descriptors: list[int] = []
     try:
         if not _share_slots(found, descriptors) or _live_holder(env) is None:
-            for fd in descriptors:
-                os.close(fd)
-            return None
+            raise SlotError("hold_ended", "the hold this xdist worker's run holds ended before it joined")
     except BaseException:
         for fd in descriptors:
             os.close(fd)

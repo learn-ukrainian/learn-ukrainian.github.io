@@ -425,17 +425,19 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
 def _join_as_worker(config: pytest.Config) -> None:
     """Keep the controller's slots taken while this xdist worker runs, even when the controller is killed first.
 
-    xdist closes inherited descriptors when it starts a worker, so the worker joins the hold itself. A worker that
-    cannot join (its controller's hold has already ended, or a pool file cannot be opened) runs as before rather
-    than being refused: the controller's own hold still covers it while the controller lives.
+    xdist closes inherited descriptors when it starts a worker, so the worker joins the hold itself. A worker its
+    run's live hold names (the checked marker, and for a review its turn token) that cannot keep the hold's slots
+    is refused before its session, typed: run on no slot, it would keep running tests after a killed controller
+    freed them. xdist reports the refusal as the worker going down, and the controller's run fails. A worker no
+    live hold names runs as before.
     """
     slots = _test_slots()
-    if not os.environ.get(slots.HOLDER_ENV, "").strip():
+    if not os.environ.get(slots.HOLDER_ENV, "").strip() or not slots.enabled():
         return
     try:
-        hold = slots.join_as_worker() if slots.enabled() else None
-    except slots.SlotError:
-        return
+        hold = slots.join_as_worker()
+    except slots.SlotError as error:
+        raise pytest.UsageError(str(error)) from None
     if hold is not None:
         config.add_cleanup(hold.release)
 

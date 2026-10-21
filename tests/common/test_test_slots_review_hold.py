@@ -901,10 +901,13 @@ def test_an_xdist_worker_keeps_the_slots_after_the_run_that_issued_them_ends(poo
     assert [index for index in range(2) if not _slot_free(pool, index)] == []
 
 
-def test_a_worker_whose_hold_changed_hands_while_it_joined_gets_nothing_and_keeps_nothing(
+def test_a_worker_whose_hold_changed_hands_while_it_joined_is_refused_and_keeps_nothing(
     monkeypatch: pytest.MonkeyPatch, pool: Path
 ) -> None:
-    """A successor holds its slots shared too, so only the re-check after sharing tells the worker its hold ended."""
+    """A successor holds its slots shared too, so only the re-check after sharing tells the worker its hold ended.
+
+    The worker was named by a live hold, so it is refused, typed, rather than left to run tests on no slot.
+    """
     hold = test_slots.acquire(2, kind="launcher", task_id=TASK)
     env = _marked(hold)
     real_share_slots = test_slots._share_slots
@@ -917,12 +920,38 @@ def test_a_worker_whose_hold_changed_hands_while_it_joined_gets_nothing_and_keep
 
     monkeypatch.setattr(test_slots, "_share_slots", changing_hands)
     try:
-        assert test_slots.join_as_worker(env) is None
+        with pytest.raises(test_slots.SlotError) as refused:
+            test_slots.join_as_worker(env)
+        assert refused.value.reason == "hold_ended"
     finally:
         hold.release()
         for successor in successors:
             successor.release()
     assert len(successors) == 1
+    assert [index for index in range(2) if not _slot_free(pool, index)] == []
+
+
+@pytest.mark.parametrize("kind", ["launcher", "review"])
+def test_a_worker_its_hold_names_but_cannot_share_a_slot_is_refused(
+    monkeypatch: pytest.MonkeyPatch, pool: Path, kind: str
+) -> None:
+    """A slot another run holds alone means the hold ended; a worker the hold named is refused, not left unreserved."""
+    hold = test_slots.acquire(2, kind=kind, task_id=TASK)
+    turn = None
+    try:
+        env = _marked(hold)
+        if kind == "review":
+            turn = test_slots.join_inherited(env)
+            assert turn is not None
+            env = {**env, **turn.environment()}
+        monkeypatch.setattr(test_slots, "_share_slots", lambda found, descriptors: False)
+        with pytest.raises(test_slots.SlotError) as refused:
+            test_slots.join_as_worker(env)
+        assert refused.value.reason == "hold_ended"
+    finally:
+        if turn is not None:
+            turn.release()
+        hold.release()
     assert [index for index in range(2) if not _slot_free(pool, index)] == []
 
 

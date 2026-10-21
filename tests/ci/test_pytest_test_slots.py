@@ -429,6 +429,130 @@ def test_slots_stay_taken_until_the_last_xdist_worker_of_a_killed_controller_exi
             controller.wait(timeout=30)
 
 
+# The fixture project's conftest: in an xdist worker only, opening a slot file to join the hold fails.
+_WORKER_JOIN_FAULT = """\
+import errno
+import os
+import sys
+from pathlib import Path
+
+from scripts.common import test_slots
+
+_real_open = os.open
+
+
+def _opening(path, flags, *args, **kwargs):
+    # Only the worker's own join of a slot fails; the marker's checks and every other open stay real.
+    if Path(os.fspath(path)).name.startswith("slot-") and sys._getframe(1).f_code.co_name == "_share":
+        raise OSError(errno.EIO, "injected slot open failure")
+    return _real_open(path, flags, *args, **kwargs)
+
+
+if os.environ.get("PYTEST_XDIST_WORKER"):
+    test_slots.os.open = _opening
+"""
+
+
+def _stamps(probe: Path, suffix: str) -> dict[str, float]:
+    """Each worker's ``start`` time, or its ``end`` time, keyed by worker id (a replaced worker gets a new id)."""
+    found: dict[str, float] = {}
+    for path in probe.parent.glob(f"{probe.name}.*.{suffix}"):
+        text = path.read_text(encoding="utf-8")
+        if text.endswith("\n"):
+            found[path.name.split(".")[-2]] = float(text.split()[-1])
+    return found
+
+
+@pytest.mark.parametrize("hold", ["review-turn", "dispatch-hold"])
+def test_a_worker_that_cannot_join_its_controllers_hold_runs_no_test(
+    project: Path, monkeypatch: pytest.MonkeyPatch, hold: str
+) -> None:
+    """A marked xdist worker whose own join fails runs no test, so a killed controller frees no slot it still uses.
+
+    The controller's hold is real; every worker's open of a slot file fails. A worker that ran its tests anyway would
+    hold no slot, and killing its controller would admit a replacement run beside it. It refuses before its session
+    instead, typed, and the controller's run fails visibly.
+    """
+    monkeypatch.setenv(test_slots.COUNT_ENV, "2")
+    (project / "tests" / "test_sample.py").write_text(_LONG_TESTS, encoding="utf-8")
+    (project / "tests" / "conftest.py").write_text(_WORKER_JOIN_FAULT, encoding="utf-8")
+    probe = project / "probe.jsonl"  # SLOT_PROBE_OUT, which each worker suffixes with its id
+    extra: dict[str, str | None] = {"SLOT_TEST_SECONDS": "4", test_slots.SESSION_ENV: None}
+    issued = test_slots.acquire(2, kind="review", environ=_env(project)) if hold == "review-turn" else None
+    if issued is not None:
+        extra[test_slots.HOLDER_ENV] = issued.marker()
+    log = project / "controller.log"  # a file, not a pipe: orphaned workers keep a pipe open until they exit
+    with log.open("w", encoding="utf-8") as stream:
+        controller = subprocess.Popen(
+            _pytest(project, "-p", "xdist", "-n", "2"),
+            cwd=project,
+            env=_env(project, **extra),
+            stdout=stream,
+            stderr=subprocess.STDOUT,
+            text=True,
+            start_new_session=True,  # its own process group, so cleanup reaches the orphaned workers
+        )
+    try:
+        deadline = time.monotonic() + 60
+        while controller.poll() is None and len(_stamps(probe, "start")) < 2:
+            assert time.monotonic() < deadline, "the controller neither ran its tests nor ended"
+            time.sleep(0.05)
+        if issued is not None:
+            issued.release()  # the issuing worker ends first; only the turn's runs keep the slots now
+        with contextlib.suppress(ProcessLookupError):
+            os.kill(controller.pid, signal.SIGKILL)  # the controller dies while any worker it started still runs
+        controller.wait(timeout=30)
+        stamp = project / "replacement"
+        governor = [sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "2", "--"]
+        replacement = subprocess.run(
+            [*governor, sys.executable, "-c", _STAMP, str(stamp)],
+            cwd=_REPO_ROOT,
+            env=_env(project, **{test_slots.WAIT_ENV: "60", DISPATCH_TASK_ENV: None, test_slots.SESSION_ENV: None}),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert replacement.returncode == 0, replacement.stdout + replacement.stderr
+        admitted = float(stamp.read_text(encoding="utf-8"))
+        started = _stamps(probe, "start")
+        deadline = time.monotonic() + 30
+        while set(_stamps(probe, "end")) != set(started):
+            assert time.monotonic() < deadline, "a worker never finished its test"
+            time.sleep(0.05)
+        ended = _stamps(probe, "end")
+        output = log.read_text(encoding="utf-8")
+        overlapped_by_replacement = sorted(worker for worker, end in ended.items() if admitted < end)
+        assert overlapped_by_replacement == [], output
+        assert started == {}, output
+        assert controller.returncode not in (0, -signal.SIGKILL), output
+        assert "test_slots_pool_unavailable" in output
+    finally:
+        if issued is not None:
+            issued.release()
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(controller.pid, signal.SIGKILL)
+        if controller.poll() is None:
+            controller.wait(timeout=30)
+
+
+@pytest.mark.parametrize("marker", ["stale", "forged"])
+def test_a_worker_no_live_hold_names_runs_as_before(project: Path, marker: str) -> None:
+    """An xdist worker under a marker that names no live hold is not its run's to keep: it runs, never refused.
+
+    The run is not a dispatch run, so it takes no slots of its own and passes the stale or forged marker to its
+    workers unchanged. Their slot opens would fail as above, yet they never try one.
+    """
+    (project / "tests" / "conftest.py").write_text(_WORKER_JOIN_FAULT, encoding="utf-8")
+    with test_slots.acquire(1, kind="pytest") as gone:
+        stale = gone.marker()
+    value = stale if marker == "stale" else f"9:{Path(stale).parent / 'forged.ticket'}"
+    result = _xdist_run(project, "-n", "2", **{test_slots.HOLDER_ENV: value, DISPATCH_TASK_ENV: None})
+    assert result.returncode == 0, result.stdout + result.stderr
+    rows = _probe(project)
+    assert len(rows) == 3 and {row["holder"] for row in rows} == {value}
+    assert "test_slots" not in result.stdout + result.stderr
+
+
 _REFUSED_AFTER_THE_PLUGIN = """\
 import json
 import os

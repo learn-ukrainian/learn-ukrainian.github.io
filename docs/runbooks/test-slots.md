@@ -98,8 +98,15 @@ worker takes slots for each test run.
 Every hold keeps its slot files locked shared once issued. xdist starts a governed run's workers with
 their inherited descriptors closed, so each worker joins the hold itself and keeps its slots locked until
 it exits. Killing the governed run while its workers still run tests therefore frees nothing early: the
-slots stay taken, and a review's next turn waits, until the last worker exits. A worker that cannot join
-(its run's hold has already ended) runs as before and is not refused.
+slots stay taken, and a review's next turn waits, until the last worker exits.
+
+A worker that its run's live hold names (the checked marker, and for a review its turn token) must keep
+those slots before it runs a test. When it cannot (a slot file cannot be opened, or the hold or turn ended
+while it joined), it is refused before its session with a typed error such as `test_slots_pool_unavailable`
+or `test_slots_hold_ended`. xdist reports this as the worker going down, with that error, and the run fails
+without running tests. Otherwise the worker would hold no slot, and killing its run would admit other work
+beside it. A worker that no live hold names (no marker, a stale or forged one, or a review marker without
+a turn token) runs as before and is never refused.
 
 Other commands a test starts without the governor are not counted on their own. They run inside their
 governed run's slots and end with it in the normal case. If their governed run is killed first, they can
