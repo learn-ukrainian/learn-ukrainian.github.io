@@ -7,13 +7,25 @@ import ast
 import inspect
 import json
 import subprocess
+import sys
 import textwrap
+from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
 from scripts.ci import check_issue_task_quality as checker
 from tests.test_check_issue_task_quality import COMPLETE
-from tests.test_delegate import delegate
+from tests.test_delegate import (
+    _fixture_runtime_tmp_root,  # noqa: F401 -- isolate full-dispatch scratch
+    _fixture_worktree_lock_dir,  # noqa: F401 -- isolate full-dispatch locks
+    _make_run_stub,
+    _review_target_from_fixture_refs,  # noqa: F401 -- fixture remote, no live PRs
+    _synthetic_routing_budget,  # noqa: F401 -- no live provider telemetry
+    _tmp_dispatch_repo_root,
+    _worktree_add_via_run,  # noqa: F401 -- retain the git command stub at provisioning
+    delegate,
+)
 
 PRIVATE = "learn-ukrainian/learn-ukrainian-infra-private"
 
@@ -408,3 +420,65 @@ def test_explicit_non_pass_dor_is_not_cursor_auto_evidence(record):
 def test_pass_dor_records_remain_cursor_auto_evidence(record):
     """Defect class: a new refusal for formerly valid PASS records (OO-53)."""
     assert delegate._cursor_auto_refusal(_cursor_auto_args(), agent="cursor", model="auto", dor_record=record) is None
+
+
+@pytest.mark.usefixtures(
+    "_fixture_runtime_tmp_root",
+    "_fixture_worktree_lock_dir",
+    "_review_target_from_fixture_refs",
+    "_synthetic_routing_budget",
+    "_worktree_add_via_run",
+)
+@pytest.mark.parametrize("final_status", ["UNKNOWN (timeout)", "PASS"])
+def test_full_dispatch_cursor_auto_uses_final_dor(monkeypatch, tmp_path, capsys, final_status):
+    """F2: an early PASS must not admit Auto after the changed prompt's DoR times out."""
+    _tmp_dispatch_repo_root(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setenv("LU_ALLOW_NOTEBOOK_DISPATCH", "1")
+    monkeypatch.setattr(delegate, "project_interpreter", lambda: Path(sys.executable))
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("Implement #123", encoding="utf-8")
+    calls, git_run = _make_run_stub(rev_parse_head_sha="a" * 40)
+    checked_issues = []
+
+    def run(command, **kwargs):
+        if command[:2] == ["gh", "api"]:
+            number = int(command[-1].rsplit("/", 1)[-1])
+            return subprocess.CompletedProcess(command, 0, json.dumps({"number": number}), "")
+        if "--issue" in command:
+            issue = int(command[command.index("--issue") + 1])
+            checked_issues.append(issue)
+            membership = TIMEOUT if issue == 124 and final_status != "PASS" else checker.section("PASS")
+            payload = checker.evaluate_issue({"body": COMPLETE}, membership)
+            # Deterministic prompt drift between the early read and launch read.
+            prompt_file.write_text("Implement #124", encoding="utf-8")
+            return subprocess.CompletedProcess(command, int(payload["verdict"] != "PASS"), json.dumps(payload), "")
+        return git_run(command, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    spawn = MagicMock(return_value=MagicMock(pid=24681))
+    monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch", "--agent", "cursor", "--model", "auto", "--mode", "danger",
+            "--task-id", "final-dor", "--prompt-file", str(prompt_file),
+            "--research-role", "implementation", "--owned-path", "scripts/example.py",
+            "--worktree", str(tmp_path / ".worktrees/dispatch/cursor/final-dor"),
+        ]
+    )
+    result = delegate.cmd_dispatch(args)
+    state = delegate._read_state(delegate._state_path("final-dor"))
+    assert checked_issues == [123, 124]
+    if final_status == "PASS":
+        assert result == 0
+        assert spawn.call_count == 1
+        assert state["dor_preflight"]["dor"] == "PASS"
+        assert state["cursor_auto_admission"] == {"admitted": True, "model": "auto", "issues": [124]}
+    else:
+        assert result == 2
+        spawn.assert_not_called()
+        assert state is None
+        assert not any(command[:3] == ["git", "worktree", "add"] for command in calls)
+        err = capsys.readouterr().err
+        assert "UNKNOWN (timeout)" in err
+        assert "cursor_auto_outside_coding_task" in err

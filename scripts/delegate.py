@@ -13593,12 +13593,6 @@ def _dispatch(
     if cursor_auto_error:
         print(cursor_auto_error, file=sys.stderr)
         return 2
-    cursor_auto_admission = (
-        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
-        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
-        else None
-    )
-
     task_id = args.task_id
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
@@ -14042,6 +14036,17 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+
+    # Bind Auto admission to the final DoR check, including a changed prompt (#11283).
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
