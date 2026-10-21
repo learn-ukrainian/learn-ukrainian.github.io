@@ -7,6 +7,7 @@ import gzip
 import hashlib
 import io
 import json
+import os
 import shutil
 import subprocess
 import tarfile
@@ -712,6 +713,41 @@ def test_from_api_agent_mismatch_still_exits_invalid_rollover_bundle(
     assert _tree(target) == {}
 
 
+def _age_lane_handoff(root: Path) -> None:
+    """Date the seeded lane handoff before the packet, so detect still offers it."""
+    stamp = datetime(2026, 8, 24, 15, 0, tzinfo=UTC).timestamp()
+    os.utime(root / HANDOFF_PATH, (stamp, stamp))
+
+
+def test_from_api_without_a_row_reports_the_local_pending_packet(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#11259: the API list has no row, but this seat's local packet is pending."""
+    state = _seed_state(tmp_path, thread_id="local-thread")
+    _age_lane_handoff(tmp_path)
+    server = _BundleServer({})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    before = _tree(tmp_path)
+
+    assert th.cmd_import_bundle(_import_args(tmp_path, None, from_api=STREAM)) == 0
+    result = json.loads(capsys.readouterr().out)
+
+    assert result["status"] == "local_packet"
+    assert result["agent"] == AGENT
+    assert result["packets"] == [
+        {
+            "packet_agent": AGENT,
+            "lineage_id": state["lineage_id"],
+            "rollover_id": state["replacement"]["rollover_id"],
+        }
+    ]
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+    assert _tree(tmp_path) == before
+
+
 FOREIGN_ROW = {"manifest": {"agent": "claude-devops", "stream_id": STREAM, "upload_seq": 7}, "upload_seq": 7}
 # The same slot identity carried at both levels, consistently.
 FOREIGN_ROW_WITH_COPIES = {
@@ -1167,6 +1203,34 @@ def test_launcher_import_is_silent_for_the_typed_none_only(tmp_path: Path, paylo
 
     assert result.returncode == 0, result.stderr
     assert ("WARNING:" in result.stderr) is warns
+
+
+@pytest.mark.parametrize("local", ["confirmed", "stale"])
+def test_from_api_without_a_row_and_no_deliverable_local_packet_is_a_typed_none(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    local: str,
+) -> None:
+    """A packet detect would not offer is not a local packet; the empty slot stays a typed none (#11257)."""
+    state = _seed_state(tmp_path, thread_id="local-thread")
+    if local == "confirmed":
+        _age_lane_handoff(tmp_path)
+        _mark_confirmed(tmp_path, state)
+    else:
+        # The seeded lane handoff is newer than the packet.
+        assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", AGENT, "--stream", STREAM]) == 0
+        detected = json.loads(capsys.readouterr().out)
+        assert [item["lineage_id"] for item in detected["skipped_stale"]] == [state["lineage_id"]]
+    server = _BundleServer({})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    before = _tree(tmp_path)
+
+    assert th.cmd_import_bundle(_import_args(tmp_path, None, from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+    assert _tree(tmp_path) == before
 
 
 def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(
