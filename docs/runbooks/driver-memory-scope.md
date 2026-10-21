@@ -72,8 +72,12 @@ tracked name running another provider or mode), `mode-mismatch` and
 
 ## Signals and the terminal
 
-Drivers: when a trap observes the child still running, it forwards INT, TERM
-or HUP and selects the conventional status (130, 143 or 129). The driver waiter ignores
+Drivers: INT, TERM and HUP traps only record the signal. The wait loop forwards
+recorded signals in order, outside the timed read, checking whether the child
+is still running at forwarding time, up to about 0.1 s later. A forwarded
+signal selects the conventional status (130, 143 or 129). If the child exits
+zero by itself before forwarding, its status stays zero rather than becoming
+130 for a recorded INT. The driver waiter ignores
 SIGQUIT and neither relays it nor synthesizes status 131. An inner command may
 restore or trap SIGQUIT; the waiter preserves that command's own status.
 
@@ -94,9 +98,10 @@ The driver waiter never blocks in `wait` while its child runs: a trapped signal
 that interrupts `wait` as the child exits makes Bash drop the child's status
 (a later `wait` reports 127). It polls the child's process state with a timed
 read and collects the status only after the child has exited. The INT, TERM
-and HUP relay traps remain installed until the waiter exits. If a trap observes
-that the child has exited, it leaves the collected status and recorded signal
-unchanged, including during exit logging. Interactive sessions have no
+and HUP relay traps remain installed until the waiter exits. A late trap still
+records the signal, but forwarding skips an exited child. Recording alone
+does not change the collected status or the last forwarded signal, including
+during exit logging. Interactive sessions have no
 collector whose completed status can be overwritten.
 
 Driver residuals remain owned by DevOps. A terminal Ctrl-C reaches a driver's
