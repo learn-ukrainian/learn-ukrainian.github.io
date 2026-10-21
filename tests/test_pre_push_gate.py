@@ -183,6 +183,17 @@ def test_gate_thread_policy_parity(value: str | None, setting: str) -> None:
     assert env == original
 
 
+@pytest.fixture(autouse=True)
+def _no_inherited_gate_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An in-process gate under test never takes the invoking push's opt-in concurrency (#11207).
+
+    With two runs allowed, a qualified host and a reachable user bus, ``validate`` runs its stages in a
+    ``systemd-run`` scope child: a fresh process that the test's monkeypatches never reach. A test that
+    needs two runs sets the value itself, after this fixture.
+    """
+    monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
+
+
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
@@ -1331,9 +1342,9 @@ def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
 
         def finish_once_hung(shadow: gate.Shadow) -> dict[str, object]:
             assert shadow.process is not None
-            wait_until(
+            wait_until(  # well inside the per-test timeout, so a stub that never starts fails typed
                 lambda: hung.exists() or shadow.process.poll() is not None,
-                timeout=120.0,
+                timeout=60.0,
                 message="the selector reaching its hang",
             )
             return real_finish(shadow)
@@ -1350,6 +1361,8 @@ def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
             update, repo, str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml"), event
         )
 
+    # The patched budget and finish reach only the serial path: a scope child is a fresh process (#11207).
+    assert event["scope"] == {"status": "serial", "reason": "default_or_worker_bound"}
     assert raised.value.reason == "tests_failed"  # never green on an unknown selection
     assert "tests/test_invariant.py::test_no_marker" in raised.value.failing
     assert event["selection"]["status"] == "fallback" and event["selection"]["reason"] == reason
@@ -2274,7 +2287,7 @@ def _wait_once_child_hangs(monkeypatch: pytest.MonkeyPatch, hung: Path) -> None:
 
     class HangAwarePopen(subprocess.Popen):
         def wait(self, timeout: float | None = None) -> int:
-            wait_until(lambda: hung.exists() or self.poll() is not None, timeout=120.0, message=f"{hung.name}")
+            wait_until(lambda: hung.exists() or self.poll() is not None, timeout=60.0, message=f"{hung.name}")
             return super().wait(timeout)
 
     monkeypatch.setattr(gate.subprocess, "Popen", HangAwarePopen)
@@ -5388,6 +5401,36 @@ def test_dead_scope_executor_still_requires_own_unit_descendant_cleanup(tmp_path
     assert scope.process is None
 
 
+@pytest.mark.parametrize("step", ["unit kill", "executor reap", "descendant drain"])
+def test_unverified_scope_cleanup_names_the_step_that_failed(tmp_path, qualified_cgroups, monkeypatch, step):
+    monkeypatch.setattr(gate, "CLEANUP_BUDGET_S", 0.2)
+    scope = gate.ResourceScope(tmp_path, "unused", gate.Admission(tmp_path / "head", 0))
+    _fake_cgroup(qualified_cgroups, scope.unit)  # stays populated: only the drain step reads it
+    scope.group = "/" + scope.unit
+    scope.completed = step != "unit kill"  # a settled executor is reaped without a kill
+    body = _BLOCK_UNTIL_KILLED if step == "executor reap" else "pass"
+    scope.process = process = subprocess.Popen([sys.executable, "-c", body], env=_env())
+    if step != "executor reap":
+        process.wait(timeout=10)
+
+    def kill(command, **kwargs):
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(gate.subprocess, "run", kill)
+    try:
+        with pytest.raises(gate.GateOutcome) as raised:
+            scope.close()
+    finally:
+        process.kill()
+        process.wait(timeout=10)
+
+    error = {"unit kill": "TimeoutExpired", "executor reap": "TimeoutExpired", "descendant drain": "OSError"}[step]
+    settled = "not proven settled" if step == "unit kill" else "settled"
+    assert raised.value.incomplete and raised.value.reason == "validation_incomplete"
+    assert raised.value.detail == f"own scope cleanup is unverified at the {step} ({error}; executor {settled}); stop"
+    assert scope.process is None
+
+
 @pytest.mark.parametrize("failure_phase", ["BEGIN", "TERMINAL"])
 def test_measurement_storage_failure_cannot_claim_green_or_start_without_begin(repo, monkeypatch, failure_phase):
     monkeypatch.chdir(repo)
@@ -5881,10 +5924,11 @@ def test_the_real_gate_waits_for_a_host_slot_and_records_the_wait(repo: Path, tm
     try:
         process.stdin.write(f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n")
         process.stdin.close()
-        assert "queue position 1/1" in wait_for_line(log, timeout=120, stop_if=lambda: process.poll() is not None)
+        # Both waits together stay inside the per-test timeout, so a stuck gate fails typed with its log.
+        assert "queue position 1/1" in wait_for_line(log, timeout=50, stop_if=lambda: process.poll() is not None)
     finally:
         held.release()
-    assert process.wait(timeout=180) == 0, log.read_text()
+    assert process.wait(timeout=50) == 0, log.read_text()
     row = _measurements(repo)[-1]
     assert row["outcome"] == "green"
     assert row["test_slots"]["status"] == "held" and row["test_slots"]["held"] == 1

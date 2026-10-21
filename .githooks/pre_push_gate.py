@@ -992,6 +992,7 @@ class ResourceScope:
         if self.process is None:
             return
         deadline = time.monotonic() + CLEANUP_BUDGET_S
+        step = "unit kill"  # the refusal names the step that could not be verified
         try:
             if not self.completed and (self.process.poll() is None or self.group is not None):
                 subprocess.run(
@@ -1001,8 +1002,10 @@ class ResourceScope:
                     check=False,
                     env=clean_environment(),
                 )
+            step = "executor reap"
             self.process.wait(timeout=max(0.01, deadline - time.monotonic()))
             if self.group is not None:
+                step = "descendant drain"
                 group = scope_cgroup(self.group)
                 while True:
                     try:
@@ -1015,8 +1018,11 @@ class ResourceScope:
                         raise OSError("scope still contains descendants")
                     time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
         except (OSError, subprocess.SubprocessError, ValueError) as error:
+            settled = "settled" if self.completed else "not proven settled"
             raise GateOutcome(
-                "validation_incomplete", "own scope cleanup is unverified; stop", incomplete=True
+                "validation_incomplete",
+                f"own scope cleanup is unverified at the {step} ({type(error).__name__}; executor {settled}); stop",
+                incomplete=True,
             ) from error
         finally:
             self.process = None

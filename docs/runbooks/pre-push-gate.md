@@ -280,6 +280,9 @@ Failure after checks start is incomplete, with no repeated stage or automatic re
 Cleanup addresses only the run's generated unit and descendants. Scoped receipt publication follows
 verified cleanup. If descendants cannot be verified as settled, the executor retains its inherited
 reservations for own-unit cleanup and driver disposition; it never promotes an orphaned owner.
+When the launching gate cannot verify that cleanup, the incomplete refusal names the step that failed
+(`unit kill`, `executor reap` or `descendant drain`), the error class, and whether the executor had
+reported itself settled.
 
 The serial pytest stage restores the stale `pytest-*` sweep only while its run holds the exclusive
 Git-common admission lock. That lock excludes live shared holders and any surviving scoped executor.
@@ -298,8 +301,10 @@ when the invoking push uses two slots. Startup I/O fault injection and the non-g
 test also pin serial admission, where interrupting the leader ends its validation stages before
 the follower checks for a reusable receipt. The existing shared-mode stale-sweep test still verifies
 that shared execution preserves other runs' temporary directories. Gates the tests start as
-subprocesses never inherit the invoking push's `LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS` (#10820). A test
-that needs two slots passes the value explicitly. Tests that expect the scope to be
+subprocesses never inherit the invoking push's `LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS` (#10820), and
+neither do in-process gates: every gate test starts with the variable unset (#11207). On a quiet host
+with a user bus, an inherited `2` sent an in-process `validate` into a real scope child, a fresh
+process that the test's monkeypatches never reach. A test that needs two slots sets the value explicitly. Tests that expect the scope to be
 attempted also clear `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES`, so a pushing caller's larger process
 override cannot make the run ineligible for the scope.
 
