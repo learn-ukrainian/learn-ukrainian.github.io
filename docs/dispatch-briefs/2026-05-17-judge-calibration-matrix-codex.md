@@ -176,7 +176,7 @@ NEVER skip a cell silently. Every combo gets a file, even unsupported.
 
 #### native_cli routes
 
-- **Claude**: `claude -p --bare --model <model> --effort <effort> "<prompt>"` (+ MCP via project `.mcp.json`)
+- **Claude**: `claude -p --bare --model <model> --effort <effort> "<prompt>"` (+ MCP via project `.mcp.json`). `--bare` needs `ANTHROPIC_API_KEY` or `apiKeyHelper` via `--settings` (OAuth and keychain are never read) and skips hooks, so project guards do not run; the Claude runtime adapter never uses it (`docs/agent-runtime-guide.md`)
 - **Codex**: `codex exec --model <model> -c model_reasoning_effort=<effort> "<prompt>"` (+ MCP via project `.mcp.json`)
 - **Gemini**: `gemini -m <model> -p "<prompt>"` (effort NOT routed — no flag)
 
