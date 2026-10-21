@@ -6365,31 +6365,10 @@ entries:
   kind: non_model_label
   reason: Stable operational CTO inbox identity; does not select a runtime model.
 - path: scripts/orchestration/stalled_work.py
-  scope: <module>
-  context: expression
-  id: claude-infra
-  count: 1
-  kind: non_model_label
-  reason: Fleet supervisory recipient identity for the owning lane, not a model selection.
-- path: scripts/orchestration/stalled_work.py
-  scope: <module>
-  context: expression
-  id: grok-monitor
-  count: 1
-  kind: non_model_label
-  reason: Fleet supervisory recipient identity for the owning lane, not a model selection.
-- path: scripts/orchestration/stalled_work.py
-  scope: <module>
-  context: expression
-  id: gemini-open-model-data
-  count: 1
-  kind: non_model_label
-  reason: Fleet supervisory recipient identity for the owning lane, not a model selection.
-- path: scripts/orchestration/stalled_work.py
   scope: owner
   context: expression
   id: claude-cto
-  count: 1
+  count: 2
   kind: non_model_label
   reason: Fleet supervisory fallback recipient identity, not a model selection.
 - path: scripts/orchestration/stalled_work.py
