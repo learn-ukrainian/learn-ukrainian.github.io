@@ -60,6 +60,7 @@ import word_card
 
 import scripts.wiki.sources_db as sources_db_full_name
 import wiki.sources_db as sources_db_short_name
+from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
@@ -1981,17 +1982,17 @@ def _observe(method: Any) -> Any:
     return observed
 
 
-class _ObservedCursor(sqlite3.Cursor):
-    execute = _observe(sqlite3.Cursor.execute)
-    executemany = _observe(sqlite3.Cursor.executemany)
-    executescript = _observe(sqlite3.Cursor.executescript)
-    fetchone = _observe(sqlite3.Cursor.fetchone)
-    fetchmany = _observe(sqlite3.Cursor.fetchmany)
-    fetchall = _observe(sqlite3.Cursor.fetchall)
-    __next__ = _observe(sqlite3.Cursor.__next__)
+class _ObservedCursor(SerializedCursor):
+    execute = _observe(SerializedCursor.execute)
+    executemany = _observe(SerializedCursor.executemany)
+    executescript = _observe(SerializedCursor.executescript)
+    fetchone = _observe(SerializedCursor.fetchone)
+    fetchmany = _observe(SerializedCursor.fetchmany)
+    fetchall = _observe(SerializedCursor.fetchall)
+    __next__ = _observe(SerializedCursor.__next__)
 
 
-class _ObservedConnection(sqlite3.Connection):
+class _ObservedConnection(SerializedConnection):
     """A read connection whose cursors report damage-class errors (see ``_observe``)."""
 
     def cursor(self, factory: Any = _ObservedCursor) -> Any:

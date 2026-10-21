@@ -471,3 +471,26 @@ def test_shared_connection_survives_concurrent_threads(tmp_path):
     assert result.returncode == 0, f"shared reader deadlocked:\n{result.stderr[-3000:]}"
     completed = int(result.stdout.split()[-1])
     assert completed > 100
+
+
+def test_shared_reader_cursor_and_transaction_methods_preserve_results(database):
+    """#11330: serialization must cover iteration/cleanup without changing read-only results."""
+    with closing(open_readonly(database, check_same_thread=False)) as conn:
+        with conn:
+            assert list(conn.execute("SELECT id FROM synthetic")) == [(7,)]
+        cursor = conn.cursor()
+        for method, arguments in (
+            (cursor.executemany, ("INSERT INTO synthetic VALUES (?)", [(8,)])),
+            (conn.executemany, ("INSERT INTO synthetic VALUES (?)", [(8,)])),
+            (cursor.executescript, ("INSERT INTO synthetic VALUES (8);",)),
+            (conn.executescript, ("INSERT INTO synthetic VALUES (8);",)),
+        ):
+            with pytest.raises(sqlite3.OperationalError, match="readonly"):
+                method(*arguments)
+        conn.execute("BEGIN")
+        conn.rollback()
+        conn.commit()
+        cursor.close()
+        with pytest.raises(sqlite3.ProgrammingError, match="closed cursor"):
+            cursor.fetchone()
+        assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]

@@ -670,13 +670,14 @@ def test_exception_that_is_not_preceded_by_swallowed_damage_is_left_alone(server
         asyncio.run(server._run_attempt(breaks, server._FIRST_ATTEMPT_MARKERS))
 
 
-def test_other_consumers_of_sources_db_get_a_plain_connection_when_the_factory_is_unset(sdb, db, monkeypatch):
+def test_other_consumers_of_sources_db_get_an_unobserved_reader_when_the_factory_is_unset(server, sdb, db, monkeypatch):
     monkeypatch.setattr(sdb, "_connection_factory", None)
 
     readonly = sdb._open_conn(db, read_only=True)
     writable = sdb._open_conn(db)
     try:
-        assert type(readonly) is sqlite3.Connection and type(writable) is sqlite3.Connection
+        assert isinstance(readonly, sqlite3.Connection) and type(writable) is sqlite3.Connection
+        assert not isinstance(readonly, server._ObservedConnection)
         assert readonly.row_factory is sqlite3.Row
         assert readonly.execute("PRAGMA busy_timeout").fetchone()[0] == sdb._SQLITE_BUSY_TIMEOUT_MS
     finally:
@@ -909,3 +910,143 @@ def test_wal_side_files_are_preexisting_readonly_open_behavior(server, sdb, tmp_
         ]
         with pytest.raises(sqlite3.OperationalError, match="readonly"):
             reader.execute("INSERT INTO article VALUES ('forbidden')")
+
+
+@pytest.mark.parametrize("observed", [False, True])
+@pytest.mark.parametrize("operation", ["execute", "fetchone", "fetchmany", "fetchall", "close"])
+def test_shared_reader_serializes_native_cursor_calls(server, sdb, db, monkeypatch, observed, operation):
+    """#11330: a second cursor must not enter SQLite while another call is in flight.
+
+    Pause immediately before the first native call. The contender either waits
+    for the connection lock or enters SQLite unsafely. Both paths release the
+    first caller through an event, so failure needs neither sleeps nor a race.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    monkeypatch.setattr(sdb, "_connection_factory", server._ObservedConnection if observed else None)
+    conn = sdb._get_conn()
+    first_inside, contender_reached = threading.Event(), threading.Event()
+    overlaps = []
+    native_name = operation
+    cursors = [conn.execute("SELECT id FROM textbooks ORDER BY id LIMIT 2") for _ in range(2)]
+
+    class SignallingLock:
+        def __init__(self):
+            self.lock = threading.RLock()
+
+        def __enter__(self):
+            if first_inside.is_set():
+                contender_reached.set()
+            self.lock.acquire()
+            return self
+
+        def __exit__(self, *args):
+            self.lock.release()
+
+    # This probe delegates mutual exclusion to a real RLock. Without production
+    # locking it is simply unused, and the native-call probe observes overlap.
+    if hasattr(conn, "__dict__"):
+        conn._operation_lock = SignallingLock()
+
+    def call(index):
+        def profile(frame, event, arg):
+            if getattr(arg, "__name__", "") != native_name:
+                return
+            if getattr(arg, "__self__", frame.f_locals.get("self")) is not cursors[index]:
+                return
+            if index == 0 and event in {"c_return", "c_exception"}:
+                first_inside.clear()
+                return
+            if event != "c_call":
+                return
+            if index == 0:
+                first_inside.set()
+                assert contender_reached.wait(timeout=30)
+            else:
+                if first_inside.is_set():
+                    overlaps.append("second native call entered before first returned")
+                contender_reached.set()
+
+        sys.setprofile(profile)
+        try:
+            cursor = cursors[index]
+            if operation == "execute":
+                return cursor.execute("SELECT id FROM textbooks ORDER BY id LIMIT 2").fetchall()
+            return getattr(cursor, operation)()
+        finally:
+            sys.setprofile(None)
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(call, 0)
+        assert first_inside.wait(timeout=30)
+        second = pool.submit(call, 1)
+        first_result = first.result(timeout=30)
+        second_result = second.result(timeout=30)
+    assert overlaps == []
+    if operation in {"execute", "fetchall"}:
+        assert [row[0] for row in first_result] == [1, 2]
+        assert [row[0] for row in second_result] == [1, 2]
+    elif operation == "fetchone":
+        assert first_result[0] == second_result[0] == 1
+    elif operation == "fetchmany":
+        assert [row[0] for row in first_result] == [row[0] for row in second_result] == [1]
+    else:
+        assert first_result is second_result is None
+
+
+def test_corpus_workers_keep_held_readers_usable_across_one_shared_heal(server, sdb, db, monkeypatch):
+    """#11330: healing while both real Wikipedia FTS workers hold the cache reopens once."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    with contextlib.closing(sqlite3.connect(db)) as seed:
+        seed.execute("CREATE TABLE wikipedia (id INTEGER PRIMARY KEY, title TEXT, url TEXT, text TEXT)")
+        seed.execute("INSERT INTO wikipedia VALUES (1, 'fixture', 'https://example.org/article', 'article body')")
+        seed.execute("CREATE VIRTUAL TABLE wikipedia_fts USING fts5(title, text, content='wikipedia')")
+        seed.execute("INSERT INTO wikipedia_fts(wikipedia_fts) VALUES ('rebuild')")
+        seed.commit()
+    held = sdb._get_conn()
+    seen = server._connection_generations()
+    acquired = threading.Barrier(3)
+    resume = threading.Event()
+    real_get = sdb._get_conn
+    real_open = sdb._open_conn
+    opens = []
+    held_by_workers = []
+
+    def counting_open(*args, **kwargs):
+        opens.append(1)
+        return real_open(*args, **kwargs)
+
+    def hold_reader():
+        conn = real_get()
+        held_by_workers.append(conn)
+        acquired.wait(timeout=30)
+        assert resume.wait(timeout=30)
+        return conn
+
+    monkeypatch.setattr(sdb, "_open_conn", counting_open)
+    monkeypatch.setattr(sdb, "_get_conn", hold_reader)
+    monkeypatch.setattr(sdb, "_candidate_tokenizer", lambda corpus: None)
+    monkeypatch.setattr(sdb, "rerank_candidates", lambda query, candidates, **kwargs: candidates)
+
+    def lookup():
+        return sdb._dispatch_corpus_search(
+            "wikipedia", bucket_a_phrases=[], bucket_b_keywords={"article"},
+            dense_query="article", track="", candidate_k_per_corpus=2,
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(lookup) for _ in range(2)]
+        try:
+            acquired.wait(timeout=30)
+            assert server._discard_cached_connections("sources.db", seen) is True
+            assert server._discard_cached_connections("sources.db", seen) is True
+        finally:
+            resume.set()
+        results = [future.result(timeout=30) for future in futures]
+    assert held_by_workers == [held, held]
+    assert [[row["title"] for row in result] for result in results] == [["fixture"], ["fixture"]]
+    assert [[row["text"] for row in result] for result in results] == [["article body"], ["article body"]]
+    assert opens == [1]
+    assert sdb._conn is not held
+    held.close()
