@@ -40,6 +40,7 @@ To prevent dirty checkout drift while preserving Entire CLI functionality:
 | Hook / class | Keep for Claude | Keep for Grok | Notes |
 | --- | --- | --- | --- |
 | `guard-primary-checkout-write` | yes | yes (if any Grok hooks) | Safety |
+| `audit-primary-checkout-dirt` Pre/PostToolUse(Failure) (Bash only) | yes | skip for Grok | fail-open attribution of primary dirt (#11253) |
 | `guard-secret-print` | yes | yes | Safety |
 | `guard-pr-merge` / `guard-admin-merge` | yes (Bash) | optional | gh merge path |
 | `guard-branch-switch-in-main` | yes | optional | |

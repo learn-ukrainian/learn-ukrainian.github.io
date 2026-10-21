@@ -13,6 +13,8 @@ import pytest
 from scripts.orchestration import pr_freeze
 
 REPO = "example/repo"
+# The freeze is off by default (#11272); the behavior tests opt in explicitly.
+OPT_IN = {pr_freeze.THRESHOLD_ENV: "15"}
 
 
 def _fetch(count):
@@ -27,7 +29,7 @@ def _fetch(count):
 
 def test_refuses_at_threshold(tmp_path: Path) -> None:
     fetch, _ = _fetch(15)
-    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=tmp_path / "c.json")
     assert decision.refused
     line = decision.refusal_line(REPO)
     assert "15 open PRs" in line
@@ -36,7 +38,7 @@ def test_refuses_at_threshold(tmp_path: Path) -> None:
 
 def test_admits_below_threshold(tmp_path: Path) -> None:
     fetch, _ = _fetch(14)
-    assert not pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=tmp_path / "c.json").refused
+    assert not pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=tmp_path / "c.json").refused
 
 
 def test_env_override(tmp_path: Path) -> None:
@@ -54,15 +56,43 @@ def test_env_override(tmp_path: Path) -> None:
     assert disabled.threshold == 0
     assert disabled.open_prs is None
     assert calls == [REPO]
-    assert pr_freeze.threshold_from_env({}) == 15
-    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "junk"}) == 15
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "15"}) == 15
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "0"}) == 0
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "-3"}) == 0
+
+
+def test_default_is_off() -> None:
+    """No override, a blank value or junk leaves the freeze disabled (#11272)."""
+    assert pr_freeze.DEFAULT_THRESHOLD == 0
+    assert pr_freeze.threshold_from_env({}) == 0
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: ""}) == 0
+    assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "junk"}) == 0
+
+
+def test_default_admits_many_open_prs_without_counting(tmp_path: Path) -> None:
+    fetch, calls = _fetch(500)
+    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert not decision.refused
+    assert decision.threshold == 0
+    assert decision.open_prs is None
+    assert decision.warning is None
+    assert calls == []
+
+
+@pytest.mark.parametrize("threshold, count, refused", [(3, 2, False), (3, 3, True), (3, 4, True)])
+def test_explicit_opt_in_refuses_at_n(tmp_path: Path, threshold: int, count: int, refused: bool) -> None:
+    fetch, _ = _fetch(count)
+    env = {pr_freeze.THRESHOLD_ENV: str(threshold)}
+    decision = pr_freeze.evaluate(REPO, environ=env, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert decision.refused is refused
+    assert decision.threshold == threshold
 
 
 def test_fails_open_with_warning(tmp_path: Path) -> None:
     def broken(repo):
         raise RuntimeError("network down")
 
-    decision = pr_freeze.evaluate(REPO, environ={}, fetch=broken, cache_file=tmp_path / "c.json")
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=broken, cache_file=tmp_path / "c.json")
     assert not decision.refused
     assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
 
@@ -71,18 +101,20 @@ def test_branch_exempt_only_with_open_pr(tmp_path: Path) -> None:
     fetch, _ = _fetch(30)
     cache = tmp_path / "c.json"
     with_pr = pr_freeze.evaluate(
-        REPO, branch="codex/fix-1", environ={}, fetch=fetch, has_open_pr=lambda r, b: True, cache_file=cache
+        REPO, branch="codex/fix-1", environ=OPT_IN, fetch=fetch, has_open_pr=lambda r, b: True, cache_file=cache
     )
     assert not with_pr.refused
     no_pr = pr_freeze.evaluate(
-        REPO, branch="codex/new", environ={}, fetch=fetch, has_open_pr=lambda r, b: False, cache_file=cache
+        REPO, branch="codex/new", environ=OPT_IN, fetch=fetch, has_open_pr=lambda r, b: False, cache_file=cache
     )
     assert no_pr.refused
 
     def broken(repo, branch):
         raise RuntimeError("lookup failed")
 
-    unknown = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, has_open_pr=broken, cache_file=cache)
+    unknown = pr_freeze.evaluate(
+        REPO, branch="codex/x", environ=OPT_IN, fetch=fetch, has_open_pr=broken, cache_file=cache
+    )
     assert not unknown.refused
     assert unknown.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
 
@@ -106,7 +138,7 @@ def test_fresh_cache_count_below_total_is_not_used(tmp_path: Path) -> None:
         calls.append(repo)
         return pr_freeze.OpenPrCounts(total=21, counted=21)
 
-    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=cache)
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=cache)
     assert calls == [REPO]
     assert decision.open_prs == 21
     assert decision.total_open == 21
@@ -129,7 +161,7 @@ def test_unequal_fetched_counts_are_not_used(tmp_path: Path) -> None:
     normalized = pr_freeze._as_counts(pr_freeze.OpenPrCounts(total=21, counted=14))
     assert normalized.counted == 21
     assert normalized.total == 21
-    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=tmp_path / "c.json")
     assert calls == [REPO]
     assert decision.open_prs == 21
     assert decision.total_open == 21
@@ -384,7 +416,7 @@ def test_decision_path_issues_one_non_dependabot_search(monkeypatch, tmp_path: P
         return payload
 
     monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
-    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, cache_file=tmp_path / "c.json")
     assert seen == [pr_freeze._open_pr_search_endpoint(REPO)]
     assert len(seen) == 1
     assert _issued_search_query(seen[0]) == f"repo:{REPO} is:pr is:open -author:app/dependabot"
@@ -408,7 +440,7 @@ def test_search_fetch_error_fails_open(monkeypatch, tmp_path: Path) -> None:
         raise RuntimeError("network down")
 
     monkeypatch.setattr(pr_freeze, "_gh_get", broken)
-    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, cache_file=tmp_path / "c.json")
     assert not decision.refused
     assert decision.open_prs is None
     assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"

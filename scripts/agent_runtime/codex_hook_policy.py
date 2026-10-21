@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import contextlib
 import json
 import os
 import subprocess
@@ -19,6 +20,9 @@ LOCAL_BASH_GUARDS = (
 )
 ENFORCE_VENV_TIMEOUT = 3
 PRIMARY_WRITE_GUARD = ("guard-primary-checkout-write.py", 5)
+# Pre-call snapshot for the primary-checkout dirt audit (#11253). It refuses
+# nothing, so it runs only after every guard allowed the call and never blocks.
+DIRT_AUDIT_SNAPSHOT = ("audit-primary-checkout-dirt.py", 3)
 MERGE_GUARDS = (
     ("guard-admin-merge.py", 20),
     ("guard-pr-merge.py", 20),
@@ -153,6 +157,20 @@ def _run_enforce_venv(
     )
 
 
+def _snapshot_primary_dirt(python_bin: Path, hooks_dir: Path, payload: str) -> None:
+    """Take the fail-open pre-call snapshot; its output never reaches the JSON channel."""
+    name, timeout = DIRT_AUDIT_SNAPSHOT
+    with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+        subprocess.run(
+            [str(python_bin), str(hooks_dir / name)],
+            input=payload,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=timeout,
+        )
+
+
 def _result_code(results: list[GuardResult]) -> int:
     normalized: list[GuardResult] = []
     for result in results:
@@ -207,6 +225,7 @@ def main() -> int:
         merge_code = _result_code(_run_merge_guards(args.python_bin, args.hooks_dir, payload))
         if merge_code:
             return merge_code
+        _snapshot_primary_dirt(args.python_bin, args.hooks_dir, payload)
     return 0
 
 

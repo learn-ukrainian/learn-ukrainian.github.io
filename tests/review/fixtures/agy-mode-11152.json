@@ -1,0 +1,23 @@
+{
+  "issue": 11152,
+  "adapter_cmd_replacements": [
+    {
+      "rows": [
+        108,
+        110
+      ],
+      "before": "--input-format",
+      "after": "--mode auto --input-format"
+    }
+  ],
+  "adapter_metadata_replacements": [
+    {
+      "rows": [
+        108,
+        110
+      ],
+      "before": "\"agy_app_data_root\": \"<CAPTURE_ROOT>/home/.gemini/antigravity-cli\"",
+      "after": "\"agy_app_data_root\": \"<CAPTURE_ROOT>/home/.gemini/antigravity-cli\", \"agy_mcp_config_path\": \"<CAPTURE_ROOT>/home/.gemini/config/mcp_config.json\""
+    }
+  ]
+}

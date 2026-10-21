@@ -73,7 +73,10 @@ its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
 sequentially with their former 3–5 second individual deadlines. The two
 independent, network-backed merge guards run concurrently with separate
 20-second aggregate deadlines, and their results are emitted in a fixed order.
-`PostToolUse` telemetry and pytest stamping run sequentially. This removes the
+`PostToolUse` telemetry, pytest stamping and, for `Bash`, the primary-checkout
+dirt audit run sequentially (the audit's pre-call snapshot runs in the
+`PreToolUse` policy only after every guard allowed the call; see
+[`primary-checkout-dirt.md`](primary-checkout-dirt.md), #11253). This removes the
 prior seven-process Bash fan-out and the unsupported failure-event duplicate
 without letting one slow merge guard starve the other.
 

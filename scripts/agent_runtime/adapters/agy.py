@@ -22,6 +22,8 @@ Known behavioral facts (verify against the installed CLI when changing transport
   is the only binding (no fallback; see ``_transcript_path_from_plan``).
   Tool results are ``type: GENERIC`` events (agy 2026-09) or legacy
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
+- Print-mode invocations explicitly select ``--mode auto`` so a persisted
+  plan-mode selection cannot suppress native MCP tool execution.
 - Per-invocation model is an allowlisted ``--model <slug>``. Slugs and
   display strings normalize to the same key. Missing models use the default;
   unknown explicit names are refused. Claude 5.5 high pins use the existing
@@ -1078,7 +1080,10 @@ class AgyAdapter:
 
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
-        cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
+        cmd: list[str] = [agy_bin]
+        if not review_route:
+            cmd.extend(["--mode", "auto"])
+        cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
 
         final_prompt = prompt
 
@@ -1137,6 +1142,11 @@ class AgyAdapter:
             # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
             env_overrides["HOME"] = str(agy_home)
             env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+        # Native MCP registration follows the effective HOME, independently
+        # of transcript storage. Record the file AGY actually loads, including
+        # scoped review homes; the app-data mcp_config.json is not loadable.
+        mcp_home = Path(agy_home) if agy_home else Path.home()
+        mcp_config_path = mcp_home / ".gemini" / "config" / "mcp_config.json"
         app_data = _agy_app_data(env_overrides)
         app_data_root = app_data.resolve()
         transcript_read_root = Path(str(tc["review_write_root"])) if tc.get("review_write_root") else app_data_root
@@ -1160,6 +1170,7 @@ class AgyAdapter:
                 "parent_read_root": str(transcript_read_root),
                 "agy_app_data_path": str(app_data),
                 "agy_app_data_root": str(app_data_root),
+                "agy_mcp_config_path": str(mcp_config_path),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
                 "agy_permission_profile_id": (

@@ -54,6 +54,7 @@ EXPECTED_JOBS = (
     "Secret scan",
     "Checks",
     "Frontend",
+    "Refresh pytest durations",
     "Dependency audit",
     "pytest report",
     "CI Gate",
