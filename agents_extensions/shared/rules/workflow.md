@@ -189,24 +189,22 @@ warning `review_brief_no_dispositions` on stderr and in the task record's
 
 ## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 
-The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09-03;
-**CF review-fix before CI** clarified operator 2026-09-18):
+The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09-03).
+OO-53 (#11226) supersedes the 2026-09-18 "CF review-fix before CI" order: a PR may
+be opened before approval so CI exists; merge still needs both gates below.
 
-0. **CF review-fix before CI (binding).** Push the implementation branch.
+0. **CF review on the branch (binding).** Push the implementation branch.
    Run independent exact-head cross-family CF on that branch (`ask-<lane>
    --review --branch <name>` / detached dispatch; drive-epic §6). Delegate
    admission pins the remote-tracking target; fetch refuses movement. Compare
    task `pinned_head`/`worktree_base_sha` with the pushed tip, not ask reply stdout.
    Continue client expiry on the same task/nonce (§6), never repeat the launch.
-   On `REQUEST_CHANGES`: fix on the branch → re-CF the new SHA. **Do not open any PR** (draft or ready)
-   while CF is still open or while iterating CF findings. In this repo,
-   `.github/workflows/ci.yml` runs on `opened` / `synchronize` with **no**
-   draft guard — a draft PR still starts CI and slows the review-fix loop.
-   Open the PR **only after** CF APPROVE on the tip you intend to land, so CI
-   runs once on that tip. Accidental parallel CI is waste, not permission to
-   skip this order.
-1. Independent cross-family exact-head review **APPROVE** on the tip.
-2. Open the PR, then run `scripts/review/record_cf_verdict.py` to bind the completed
+   On `REQUEST_CHANGES`: fix on the branch → re-CF the new SHA. The PR may be open
+   (draft or ready) during this loop; `.github/workflows/ci.yml` runs on `opened` /
+   `synchronize` with no draft guard, so every pushed fix starts CI on the new head.
+   An open PR or its green CI is not approval.
+1. Independent cross-family exact-head review **APPROVE** on the tip you intend to land.
+2. Open the PR if it is not already open, then run `scripts/review/record_cf_verdict.py` to bind the completed
    review, reviewed head, and author qualification in a **PR comment bound to the head SHA**,
    with reviewer model/family/harness provenance. GitHub rejects API approval reviews
    from the shared bot identity when it also authored the PR; do not use
