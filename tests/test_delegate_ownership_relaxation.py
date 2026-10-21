@@ -259,8 +259,8 @@ def test_directory_prefix_overlap_queues_and_is_never_admitted_while_held(env, h
     assert _claims(ledger, "waiter") == []
 
 
-def test_newcomer_does_not_jump_a_queued_waiter(env):
-    """FIFO: a later writer for the same file waits behind the earlier waiter, not beside it."""
+def test_newcomer_is_not_blocked_by_a_waiter_after_holder_exit(env):
+    """AC-01: stale waiter order cannot extend a real holder's lifetime."""
     ledger, state_dir = env
     _hold(ledger, state_dir, "holder", ["shared.py"])
     fake = FakeTime()
@@ -271,14 +271,14 @@ def test_newcomer_does_not_jump_a_queued_waiter(env):
         seen["late"] = ledger.admit(
             task_id="late", mode="workspace-write", owned_paths=["shared.py"], pid=PID, clock=fake.clock
         )
+        ledger.release("late", pid=PID)
 
     fake.hooks.append(holder_finishes_and_newcomer_arrives)
 
     first = _queued_admit(ledger, fake, "first", ["shared.py"])
 
     late = seen["late"]
-    assert not late.admitted and late.conflicts[0]["other_task_id"] == "first"
-    assert late.conflicts[0].get("queued") is True
+    assert late.admitted and not late.conflicts
     assert first.admitted
     assert _claims(ledger, "first") == ["shared.py"]
 
@@ -525,3 +525,150 @@ def test_globs_the_ledger_cannot_compare_still_refuse(env, raw):
     assert result.outcome is AdmissionOutcome.REFUSED
     assert "declared no comparable --owned-path" in result.reason
     assert [c.kind for c in expand_claim(raw)] == [ClaimKind.UNKNOWN]
+
+
+@pytest.fixture
+def chained_queue(env):
+    """Evidence shape: H holds tests; A bridges tests to audit; B/C extend A."""
+    ledger, state_dir = env
+    _hold(ledger, state_dir, "holder", ["scripts/agent_runtime/env_sanitize.py", "tests/"])
+    with ledger._connect() as conn:
+        for task, paths in (
+            ("A", ["tests/test_review.py", "scripts/audit/index.py"]),
+            ("B", ["scripts/audit/index.py", "scripts/review/record.py"]),
+            ("C", ["scripts/review/record.py"]),
+        ):
+            conn.execute(
+                "INSERT INTO write_waiters (task_id, claims_json, pid, enqueued_at, deadline) VALUES (?,?,?,?,?)",
+                (task, json.dumps([normalize_claim(p).as_dict() for p in paths]), PID, time.time(), time.time() + 1800),
+            )
+    return ledger, state_dir
+
+
+@pytest.mark.parametrize("task,paths", [("B", ["scripts/audit/index.py"]), ("C", ["scripts/review/record.py"])])
+def test_disjoint_newcomer_escapes_chained_waiters(chained_queue, task, paths):
+    """AC-01: waiting peers cannot turn a disjoint writer into a fleet stall."""
+    ledger, _ = chained_queue
+    result = ledger.admit(task_id=task, mode="workspace-write", owned_paths=paths, pid=PID)
+    assert result.admitted, result.reason
+    assert not result.conflicts
+
+
+def test_waiter_chain_does_not_outlive_real_holder(chained_queue):
+    """AC-01: remaining waiter rows cannot block once H exits."""
+    ledger, state_dir = chained_queue
+    fake = FakeTime()
+    fake.hooks.append(lambda: _state(state_dir, "holder", status="done"))
+    result = _queued_admit(ledger, fake, "new", ["tests/test_review.py", "scripts/audit/index.py"])
+    assert result.admitted, result.reason
+    assert fake.sleeps == [5.0]
+
+
+@pytest.mark.parametrize("hard_timeout", [45, 10800, 14400])
+def test_queue_uses_actual_holder_timeout_instead_of_fixed_default(env, hard_timeout):
+    """AC-02: short and long holders determine the wait, beyond the old cap."""
+    ledger, state_dir = env
+    _hold(ledger, state_dir, "holder", ["a.py"])
+    _state(state_dir, "holder", hard_timeout=hard_timeout)
+    fake = FakeTime(limit=hard_timeout)
+    result = _queued_admit(ledger, fake, "waiter", ["a.py"], wait_s=1800, poll_s=hard_timeout / 3)
+    assert result.outcome is AdmissionOutcome.QUEUE_TIMEOUT
+    assert result.waited_s == pytest.approx(hard_timeout)
+    assert _claims(ledger, "holder") == ["a.py"]
+    assert _claims(ledger, "waiter") == []
+
+
+@pytest.mark.parametrize("hard_timeout", [None, "broken", -1, "inf", "nan", True])
+def test_unknown_holder_timeout_keeps_existing_fallback(env, hard_timeout):
+    """Malformed task metadata cannot make the queue unbounded or remove ownership."""
+    ledger, state_dir = env
+    _hold(ledger, state_dir, "holder", ["a.py"])
+    _state(state_dir, "holder", hard_timeout=hard_timeout)
+    fake = FakeTime(limit=12)
+    result = _queued_admit(ledger, fake, "waiter", ["a.py"], wait_s=12)
+    assert result.outcome is AdmissionOutcome.QUEUE_TIMEOUT
+    assert result.waited_s == pytest.approx(12)
+
+
+def test_requeue_multiple_expirations_issues_one_notice_and_retains_enqueue_time(env):
+    """AC-02: retry survives two windows with new tickets and one initiator notice."""
+    ledger, state_dir = env
+    _hold(ledger, state_dir, "holder", ["a.py"])
+    fake = FakeTime(limit=40)
+    tickets = []
+    enqueued = []
+    notices = []
+
+    def observe():
+        row = _rows(ledger, "SELECT ticket, enqueued_at FROM write_waiters")[0]
+        tickets.append(row[0])
+        enqueued.append(row[1])
+        if len(tickets) == 6:
+            _state(state_dir, "holder", status="done")
+
+    fake.hooks = [observe] * 6
+    result = ledger.admit(
+        task_id="waiter", mode="workspace-write", owned_paths=["a.py"], pid=PID,
+        wait_s=10, poll_s=5, clock=fake.clock, monotonic=fake.clock, sleep=fake.sleep,
+        requeue_on_timeout=True, on_requeued=notices.append,
+    )
+    assert result.admitted
+    assert result.waited_s == pytest.approx(30)
+    assert tickets[0] < tickets[2] < tickets[4]
+    assert len(set(enqueued)) == 1
+    assert len(notices) == 1
+    assert "re-queued" in notices[0]
+    assert _events(ledger, "waiter").count("requeued") == 2
+    assert _waiters(ledger) == []
+
+
+@pytest.mark.parametrize("claim,narrow", [
+    ("tests/", "tests/<file>"),
+    ("scripts/guardrails", "scripts/guardrails/<file>"),
+    ("scripts/pkg/**", "scripts/pkg/<file>"),
+    ("scripts/**/worker.py", "specific files"),
+])
+def test_broad_subtree_claim_warns_without_refusing(env, capsys, claim, narrow):
+    """AC-04: advice names a narrower claim but never adds an admission gate."""
+    ledger, _ = env
+    result = ledger.admit(task_id="broad", mode="workspace-write", owned_paths=[claim], pid=PID)
+    assert result.admitted
+    lines = capsys.readouterr().err.splitlines()
+    assert len(lines) == 1
+    assert "warning" in lines[0] and narrow in lines[0]
+
+
+@pytest.mark.parametrize("claim", ["tests/test_delegate_ownership.py", "scripts/guardrails/delegate_ownership.py"])
+def test_specific_file_claim_has_no_subtree_warning(env, capsys, claim):
+    ledger, _ = env
+    assert ledger.admit(task_id="specific", mode="workspace-write", owned_paths=[claim], pid=PID).admitted
+    assert capsys.readouterr().err == ""
+
+
+def test_queue_budget_ignores_disjoint_holder_and_waits_for_all_blockers(env):
+    """AC-02: unrelated long-lived claims must not inflate a blocked writer's budget."""
+    ledger, state_dir = env
+    for task, path, timeout in (("short", "a.py", 15), ("long", "b.py", 30), ("unrelated", "c.py", 10800)):
+        _hold(ledger, state_dir, task, [path])
+        _state(state_dir, task, hard_timeout=timeout)
+    fake = FakeTime(limit=30)
+    result = _queued_admit(ledger, fake, "waiter", ["a.py", "b.py"], wait_s=1800)
+    assert result.outcome is AdmissionOutcome.QUEUE_TIMEOUT
+    assert result.waited_s == pytest.approx(30)
+
+
+def test_requeue_notice_uses_durable_initiator_delivery_once(tmp_path, monkeypatch):
+    """AC-02: duplicate publication cannot create two Fleet messages or deliveries."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    root = tmp_path / "fleet"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+    for _ in range(2):
+        ownership.publish_requeue_notice(
+            "write-path waiter re-queued", task_id="waiting-task", initiator="claude-infra", run_nonce="run-1",
+        )
+    with AuthorityService(root=root) as service:
+        rows = service._conn.execute("SELECT message_id FROM comms_messages").fetchall()
+        deliveries = service._conn.execute("SELECT recipient FROM authority_deliveries").fetchall()
+        assert len(rows) == 1
+        assert [row[0] for row in deliveries] == ["claude-infra"]
