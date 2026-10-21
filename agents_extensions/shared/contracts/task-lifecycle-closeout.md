@@ -180,6 +180,24 @@ re-verifies these inputs before accepting the historical local facts. Missing
 or changed inputs and mismatched ancestry remain typed refusals, not evidence.
 A second recovery for the task returns its existing verified receipt.
 
+For a later child lifecycle delivered by the same preserved attempt,
+`recover-local --associate-child` reads the child's exact merged PR from
+GitHub. It appends a `local-recovery-association.v1` inside
+`local.recovered_from_preserved.association`, binding both lifecycle IDs and
+full identities, the task ID and run nonce, and the child PR number, URL,
+head and branch. The earlier carrier must have a valid lifecycle ID in the
+same repository and stream, for a different issue. Neither carrier nor
+earlier ledger is edited, and no historical attempt is invented.
+
+The digest-verified task's merged reaper proof must name that exact child PR
+and head, with the original branch/head member. Ancestry alone cannot prove
+delivery. Missing or foreign carriers, absent exact child linkage, changed
+inputs and all ordinary bundle, worktree, branch, push and ancestry failures
+remain typed refusals. Readers rebuild the association from the preserved
+inputs and reject a different authoritative child head. Replays verify the
+original input locators and digests and return the same receipt. Ordinary
+same-carrier recovery remains offline and unchanged.
+
 Recovered dispatch facts describe the historical worktree. Primary cleanliness
 is observed at recovery time. The receipt timestamp is the recovery time, and
 its local-only observation requires a fresh authoritative reconciliation for
