@@ -116,9 +116,13 @@ describe('Atlas DB SSG read parity', () => {
 
   beforeAll(() => {
     const started = performance.now();
-    resetAtlasPayloadCacheForTests();
-    cache = getAtlasPayloadCache();
-    console.log(`[10183-phase] path=parity phase=cache-build ms=${(performance.now() - started).toFixed(3)}`);
+    console.log('[10183-phase] path=parity phase=cache-build state=started');
+    try {
+      resetAtlasPayloadCacheForTests();
+      cache = getAtlasPayloadCache();
+    } finally {
+      console.log(`[10183-phase] path=parity phase=cache-build state=settled ms=${(performance.now() - started).toFixed(3)}`);
+    }
   }, CACHE_BUILD_TIMEOUT_MS);
 
   test('preloaded DB payloads preserve the current manifest route surface', async () => {
@@ -139,51 +143,55 @@ describe('Atlas DB SSG read parity', () => {
 
   test('renders DB payload HTML byte-identical to manifest payload HTML for parity fixtures', async () => {
     const started = performance.now();
-    const manifestEntries = manifestRouteEntries();
-    const manifestBySlug = new Map(manifestEntries.map((entry) => [entry.url_slug, entry]));
-    const fixtureSlugs = Array.from(
-      new Set([...requiredFixtureSlugs, ...readEntryTypeFixtures().map((row) => row.slug)]),
-    );
-    const manifestLemmaSlugs = new Set(
-      manifestEntries.filter((item) => item.entry_type === 'lemma').map((item) => item.url_slug),
-    );
-    const cacheLemmaSlugs = new Set(
-      cache.entries.filter((item) => item.entry_type === 'lemma').map((item) => item.url_slug),
-    );
-    let differing = 0;
+    console.log('[10183-phase] path=parity phase=render-compare state=started');
+    try {
+      const manifestEntries = manifestRouteEntries();
+      const manifestBySlug = new Map(manifestEntries.map((entry) => [entry.url_slug, entry]));
+      const fixtureSlugs = Array.from(
+        new Set([...requiredFixtureSlugs, ...readEntryTypeFixtures().map((row) => row.slug)]),
+      );
+      const manifestLemmaSlugs = new Set(
+        manifestEntries.filter((item) => item.entry_type === 'lemma').map((item) => item.url_slug),
+      );
+      const cacheLemmaSlugs = new Set(
+        cache.entries.filter((item) => item.entry_type === 'lemma').map((item) => item.url_slug),
+      );
+      let differing = 0;
 
-    for (const slug of fixtureSlugs) {
-      const manifestEntry = manifestBySlug.get(slug);
-      const dbEntry = cache.bySlug.get(slug);
-      expect(manifestEntry, `manifest fixture missing: ${slug}`).toBeDefined();
-      expect(dbEntry, `DB fixture missing: ${slug}`).toBeDefined();
-      // entry_type is a DB-only field (the manifest predates the entry model).
-      // Align the manifest fixture with the DB's entry_type so this parity check
-      // isolates payload-projection fidelity from entry_type branching, which is
-      // covered by atlas-entry-type-templates.test.ts.
-      const alignedManifestEntry = { ...manifestEntry!, entry_type: dbEntry!.entry_type };
-      expect(dbEntry).toEqual(alignedManifestEntry);
+      for (const slug of fixtureSlugs) {
+        const manifestEntry = manifestBySlug.get(slug);
+        const dbEntry = cache.bySlug.get(slug);
+        expect(manifestEntry, `manifest fixture missing: ${slug}`).toBeDefined();
+        expect(dbEntry, `DB fixture missing: ${slug}`).toBeDefined();
+        // entry_type is a DB-only field (the manifest predates the entry model).
+        // Align the manifest fixture with the DB's entry_type so this parity check
+        // isolates payload-projection fidelity from entry_type branching, which is
+        // covered by atlas-entry-type-templates.test.ts.
+        const alignedManifestEntry = { ...manifestEntry!, entry_type: dbEntry!.entry_type };
+        expect(dbEntry).toEqual(alignedManifestEntry);
 
-      const manifestHtml = renderWordAtlasArticle(articleProps(alignedManifestEntry, {
-        lemmaSlugs: manifestLemmaSlugs,
-        generatedAt: data.generated_at,
-        manifestVersion: data.version,
-      }));
-      const dbHtml = renderWordAtlasArticle(articleProps(dbEntry!, {
-        lemmaSlugs: cacheLemmaSlugs,
-        generatedAt: cache.generatedAt,
-        manifestVersion: cache.manifestVersion,
-      }));
+        const manifestHtml = renderWordAtlasArticle(articleProps(alignedManifestEntry, {
+          lemmaSlugs: manifestLemmaSlugs,
+          generatedAt: data.generated_at,
+          manifestVersion: data.version,
+        }));
+        const dbHtml = renderWordAtlasArticle(articleProps(dbEntry!, {
+          lemmaSlugs: cacheLemmaSlugs,
+          generatedAt: cache.generatedAt,
+          manifestVersion: cache.manifestVersion,
+        }));
 
-      if (manifestHtml !== dbHtml) {
-        differing += 1;
-        throw new Error(`golden diff not empty for ${slug}: ${firstDifference(manifestHtml, dbHtml)}`);
+        if (manifestHtml !== dbHtml) {
+          differing += 1;
+          throw new Error(`golden diff not empty for ${slug}: ${firstDifference(manifestHtml, dbHtml)}`);
+        }
       }
-    }
 
-    process.stdout.write(`atlas render parity golden diff: fixtures=${fixtureSlugs.length} differing=${differing}\n`);
-    expect(differing).toBe(0);
-    console.log(`[10183-phase] path=parity phase=render-compare ms=${(performance.now() - started).toFixed(3)}`);
+      process.stdout.write(`atlas render parity golden diff: fixtures=${fixtureSlugs.length} differing=${differing}\n`);
+      expect(differing).toBe(0);
+    } finally {
+      console.log(`[10183-phase] path=parity phase=render-compare state=settled ms=${(performance.now() - started).toFixed(3)}`);
+    }
   });
 });
 
