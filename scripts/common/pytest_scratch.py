@@ -8,6 +8,12 @@ directory under the sandbox's writable temp: ``TMPDIR``, else shared memory.
 (each owned by this user or root, and writable by others only when sticky);
 shared memory only if others may not rename entries in it. The run must land
 in the very directory created there.
+
+``TMPDIR`` is carried byte for byte from the environment to the allocation:
+nothing strips, expands, normalizes or resolves it, because each of those can
+name a directory other than the one supplied. A value that cannot be carried
+that way (empty, relative, holding a NUL or an unencodable character, or too
+long for the kernel to resolve whole) is skipped for the next candidate.
 """
 
 from __future__ import annotations
@@ -103,7 +109,8 @@ def _open_unreplaceable(path: str) -> int | None:
     Owner-only mode on ``path`` does not protect its name in its parent, so every
     directory from ``/`` down must be unreplaceable. ``O_NOFOLLOW`` refuses a symlink.
     The components are walked as supplied: normalizing first would drop a symlink
-    that a following ``..`` steps out of, so ``..`` is refused instead.
+    that a following ``..`` steps out of, so ``..`` is refused instead. The whole
+    value must then resolve, as the kernel reads it, to the directory walked.
     """
     parts = [part for part in path.split("/") if part]
     if ".." in parts:
@@ -117,7 +124,10 @@ def _open_unreplaceable(path: str) -> int | None:
             child = os.open(part, _DIR_FLAGS, dir_fd=fd)
             os.close(fd)
             fd = child
-        if _replaceable_by_others(os.fstat(fd)):
+        walked = os.fstat(fd)
+        # Allocation names the directory by this very string; a value too long to resolve whole raises here.
+        named = os.stat(path, follow_symlinks=False)
+        if _replaceable_by_others(walked) or (named.st_dev, named.st_ino) != (walked.st_dev, walked.st_ino):
             os.close(fd)
             return None
     except BaseException:
@@ -126,7 +136,7 @@ def _open_unreplaceable(path: str) -> int | None:
     return fd
 
 
-def _open_shared_memory(path: Path) -> int | None:
+def _open_shared_memory(path: str) -> int | None:
     """Open the provisioned shared-memory temp; None if others may rename entries in it."""
     fd = os.open(path, _DIR_FLAGS)
     if _others_can_rename_in(os.fstat(fd).st_mode):
@@ -135,14 +145,25 @@ def _open_shared_memory(path: Path) -> int | None:
     return fd
 
 
-def _fallback_bases() -> list[tuple[Path, Callable[[], int | None]]]:
+def _verbatim_absolute(value: str) -> str | None:
+    """``value`` unchanged if the OS can take it as one absolute path exactly as written, else None."""
+    if not value.startswith("/") or "\0" in value:
+        return None
+    try:
+        os.fsencode(value)
+    except UnicodeEncodeError:
+        return None
+    return value
+
+
+def _fallback_bases() -> list[tuple[str, Callable[[], int | None]]]:
     """Each candidate temp with how to open it: TMPDIR only if its whole path, as supplied, is unreplaceable."""
-    bases: list[tuple[Path, Callable[[], int | None]]] = []
-    tmpdir = os.environ.get("TMPDIR", "").strip()
-    if os.path.isabs(tmpdir):
-        # Path() drops only "." and repeated slashes, which name the same directory once no component is a symlink.
-        bases.append((Path(tmpdir), partial(_open_unreplaceable, tmpdir)))
-    bases.append((SHARED_MEMORY_TEMP, partial(_open_shared_memory, SHARED_MEMORY_TEMP)))
+    bases: list[tuple[str, Callable[[], int | None]]] = []
+    tmpdir = _verbatim_absolute(os.environ.get("TMPDIR", ""))
+    if tmpdir is not None:
+        bases.append((tmpdir, partial(_open_unreplaceable, tmpdir)))
+    shared_memory = os.fspath(SHARED_MEMORY_TEMP)
+    bases.append((shared_memory, partial(_open_shared_memory, shared_memory)))
     return bases
 
 
@@ -158,9 +179,10 @@ def _make_private_dir(base_fd: int) -> str:
     raise FileExistsError(errno.EEXIST, "no unused private temp name")
 
 
-def _allocate_in_created(base: Path, base_fd: int, name: str) -> TaskScratch:
+def _allocate_in_created(base: str, base_fd: int, name: str) -> TaskScratch:
     """Allocate below ``base/name`` only if the run lands in the directory this process just created."""
-    private = base / name
+    # Appended to the supplied value as it is; the one Path made here is what is checked and what allocate() gets.
+    private = Path(os.path.join(base, name))
     try:
         fd = os.open(name, _DIR_FLAGS, dir_fd=base_fd)
     except OSError as exc:

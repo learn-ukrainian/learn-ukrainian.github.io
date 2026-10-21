@@ -588,6 +588,248 @@ def test_tmpdir_as_supplied_is_walked_so_a_symlink_before_dot_dot_is_skipped(wor
     _assert_private_fallback(world, config, world.shm)
 
 
+# ---- TMPDIR carried byte for byte ----------------------------------------------------------------------------
+
+
+def _supply_tmpdir(world: World, value: str) -> None:
+    world.monkeypatch.setenv("TMPDIR", value)
+    world.make_runs_root(0o700)
+    world.readonly()
+
+
+def _fallbacks_in(directory: Path) -> list[Path]:
+    """Private fallback directories made directly in ``directory``."""
+    return [entry for entry in directory.iterdir() if entry.name.startswith(pytest_scratch.FALLBACK_PREFIX)]
+
+
+def _siblings(tmp_path: Path, provisioned: str, *decoys: str) -> tuple[Path, list[Path]]:
+    """Make the provisioned TMPDIR and decoy directories a transformed value would name, all owner-only."""
+    parent = tmp_path / "named"
+    parent.mkdir(mode=0o700)
+    made = []
+    for name in (provisioned, *decoys):
+        directory = parent / name if name else parent
+        directory.mkdir(mode=0o700, exist_ok=True)
+        made.append(directory)
+    return made[0], [decoy for decoy in made[1:] if decoy != made[0]]
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        pytest.param("temp ", id="trailing-space"),
+        pytest.param(" temp", id="leading-space"),
+        pytest.param("   ", id="spaces-only"),
+        pytest.param("temp\n", id="trailing-newline"),
+        pytest.param("temp\t", id="trailing-tab"),
+        pytest.param("temp ", id="trailing-no-break-space"),
+        pytest.param("temp\x1f", id="trailing-unit-separator"),
+    ],
+)
+def test_tmpdir_whitespace_belongs_to_the_directory_name(world, tmp_path, name):
+    """Held-out regression from the round-4 review (#11317).
+
+    Defect class: whitespace is stripped from TMPDIR before verification, so a
+    directory whose name starts or ends with whitespace is swapped for its
+    stripped namesake and the run lands outside the provisioned temp.
+    """
+    provisioned, decoys = _siblings(tmp_path, name, name.strip())
+    _supply_tmpdir(world, f"{provisioned.parent}/{name}")
+    config = world.configure()
+    for decoy in decoys:
+        assert _fallbacks_in(decoy) == [], "whitespace stripping wrote outside the provisioned TMPDIR"
+    _assert_private_fallback(world, config, provisioned)
+
+
+@pytest.mark.parametrize(
+    ("prefix", "suffix"),
+    [(" ", ""), ("\t", ""), ("", " "), ("", "\n")],
+    ids=["leading-space", "leading-tab", "trailing-space", "trailing-newline"],
+)
+def test_tmpdir_padded_with_whitespace_is_not_trimmed_to_another_directory(world, prefix, suffix):
+    """Defect class: a padded TMPDIR (relative, or naming no directory) is trimmed to one it does not name."""
+    _supply_tmpdir(world, f"{prefix}{world.temp}{suffix}")
+    config = world.configure()
+    assert list(world.temp.iterdir()) == [], "a trimmed TMPDIR was used"
+    _assert_private_fallback(world, config, world.shm)
+
+
+@pytest.mark.parametrize("spelling", ["{p}/temp/", "{p}/temp//", "{p}//temp", "{p}/./temp", "{p}/temp/.", "/{p}/temp"])
+def test_tmpdir_spelled_with_redundant_separators_lands_in_that_directory(world, tmp_path, spelling):
+    """Defect class: an equivalent spelling (trailing slash, doubled slash, ".") is refused or allocated
+    elsewhere, because the walk and the allocation each re-derive the path differently.
+    """
+    provisioned, _ = _siblings(tmp_path, "temp")
+    value = spelling.replace("{p}", str(provisioned.parent))
+    _supply_tmpdir(world, value)
+    config = world.configure()
+    # Lexically the run sits below the value as supplied (a leading "//" stays), which is the provisioned temp.
+    assert Path(value).samefile(provisioned)
+    _assert_private_fallback(world, config, Path(value))
+    assert list(world.shm.iterdir()) == []
+
+
+def test_tmpdir_dollar_name_is_not_expanded(world, tmp_path):
+    """Defect class: TMPDIR goes through expandvars, so a directory named "$VAR" is swapped for $VAR's value."""
+    provisioned, decoys = _siblings(tmp_path, "$LU_SCRATCH_PROBE", "decoy")
+    world.monkeypatch.setenv("LU_SCRATCH_PROBE", "decoy")
+    _supply_tmpdir(world, f"{provisioned.parent}/$LU_SCRATCH_PROBE")
+    config = world.configure()
+    assert _fallbacks_in(decoys[0]) == [], "TMPDIR was expanded"
+    _assert_private_fallback(world, config, provisioned)
+
+
+@pytest.mark.parametrize("value", ["~", "~/temp"])
+def test_tmpdir_tilde_is_not_expanded_to_home(world, tmp_path, value):
+    """Defect class: TMPDIR goes through expanduser, so a relative "~" value is taken for the home directory."""
+    home = tmp_path / "home"
+    (home / "temp").mkdir(parents=True, mode=0o700)
+    home.chmod(0o700)
+    world.monkeypatch.setenv("HOME", str(home))
+    _supply_tmpdir(world, value)
+    config = world.configure()
+    assert _fallbacks_in(home) == [] and _fallbacks_in(home / "temp") == [], "TMPDIR was expanded to HOME"
+    _assert_private_fallback(world, config, world.shm)
+
+
+@pytest.mark.parametrize("value", ["temp", "./temp", "temp/"])
+def test_relative_tmpdir_is_not_anchored_at_the_working_directory(world, tmp_path, value):
+    """Defect class: a relative TMPDIR goes through abspath, so the current directory picks the run's home."""
+    provisioned, _ = _siblings(tmp_path, "temp")
+    world.monkeypatch.chdir(provisioned.parent)
+    _supply_tmpdir(world, value)
+    config = world.configure()
+    assert _fallbacks_in(provisioned) == [], "a relative TMPDIR was made absolute"
+    _assert_private_fallback(world, config, world.shm)
+
+
+def test_tmpdir_that_is_a_symlink_is_skipped_not_resolved(world, tmp_path):
+    """Defect class: TMPDIR goes through realpath or Path.resolve(), so a symlink is replaced by its target."""
+    target, _ = _siblings(tmp_path, "target")
+    link = target.parent / "link"
+    link.symlink_to(target, target_is_directory=True)
+    _supply_tmpdir(world, str(link))
+    config = world.configure()
+    assert list(target.iterdir()) == [], "a symlinked TMPDIR was resolved"
+    _assert_private_fallback(world, config, world.shm)
+
+
+def test_tmpdir_case_is_preserved(world, tmp_path):
+    """Defect class: TMPDIR is case-folded, so "Temp" is swapped for a sibling "temp"."""
+    provisioned, decoys = _siblings(tmp_path, "Temp", "temp")
+    _supply_tmpdir(world, str(provisioned))
+    config = world.configure()
+    assert _fallbacks_in(decoys[0]) == [], "TMPDIR was case-folded"
+    _assert_private_fallback(world, config, provisioned)
+
+
+@pytest.mark.parametrize("name", ["a\nb", "\x1b[1mtemp", "temp\x7f", "tab\tin"], ids=["newline", "esc", "del", "tab"])
+def test_tmpdir_with_control_characters_lands_in_that_directory(world, tmp_path, name):
+    """Defect class: control characters are dropped or refused, so a legitimate name loses its temp or another
+    directory is used.
+    """
+    provisioned, decoys = _siblings(tmp_path, name, "".join(char for char in name if char.isprintable()))
+    _supply_tmpdir(world, str(provisioned))
+    config = world.configure()
+    for decoy in decoys:
+        assert _fallbacks_in(decoy) == [], "control characters were dropped from TMPDIR"
+    _assert_private_fallback(world, config, provisioned)
+
+
+def test_tmpdir_with_non_utf8_bytes_lands_in_that_directory(world, tmp_path):
+    """Defect class: an encoding round trip (replace or ignore) changes TMPDIR's bytes, so a sibling is used."""
+    _, decoys = _siblings(tmp_path, "temp-", "temp-�")
+    raw = os.fsencode(tmp_path / "named") + b"/temp-\xff"
+    os.mkdir(raw, 0o700)
+    provisioned = Path(os.fsdecode(raw))
+    _supply_tmpdir(world, os.fsdecode(raw))
+    assert os.environb[b"TMPDIR"] == raw
+    config = world.configure()
+    for decoy in decoys:
+        assert _fallbacks_in(decoy) == [], "TMPDIR bytes were re-encoded"
+    _assert_private_fallback(world, config, provisioned)
+
+
+@pytest.mark.parametrize(
+    "value",
+    ["", "   ", "\n", "named/temp", "/named\0/temp", "/named/temp-\ud800"],
+    ids=["empty", "spaces-only", "newline-only", "relative", "nul", "unencodable"],
+)
+def test_unrepresentable_tmpdir_is_skipped_for_shared_memory(world, tmp_path, value):
+    """Defect class: a TMPDIR the OS cannot take verbatim crashes the walk (ValueError) or is coerced into
+    another path. A NUL or an unencodable character cannot be put in a real environment, so the lookup
+    itself returns them here.
+    """
+    provisioned, _ = _siblings(tmp_path, "temp")
+    world.monkeypatch.chdir(tmp_path)
+    world.make_runs_root(0o700)
+    world.readonly()
+    environ_type = type(os.environ)
+    real_get = environ_type.get
+
+    def get(mapping, key, default=None):
+        return value if mapping is os.environ and key == "TMPDIR" else real_get(mapping, key, default)
+
+    world.monkeypatch.setattr(environ_type, "get", get)
+    bases = [os.fspath(base) for base, _ in pytest_scratch._fallback_bases()]
+    assert bases == [os.fspath(world.shm)], "an unrepresentable TMPDIR was kept as a candidate"
+    scratch = pytest_scratch._allocate_run()
+    try:
+        assert scratch.payload_dir.is_relative_to(world.shm)
+    finally:
+        scratch.preserve()
+    assert _fallbacks_in(provisioned) == [] and _fallbacks_in(provisioned.parent) == []
+
+
+def test_tmpdir_too_long_to_resolve_whole_is_skipped(world, tmp_path):
+    """Defect class: a TMPDIR longer than the kernel resolves passes the per-component walk, then the
+    allocation by path fails, so configure crashes instead of using the next candidate.
+    """
+    component = "d" * 250
+    chain = tmp_path / "deep"
+    chain.mkdir(mode=0o700)
+    fd = os.open(chain, os.O_RDONLY | os.O_DIRECTORY)
+    value = str(chain)
+    try:
+        while len(os.fsencode(value)) <= os.pathconf("/", "PC_PATH_MAX"):
+            os.mkdir(component, 0o700, dir_fd=fd)
+            child = os.open(component, os.O_RDONLY | os.O_DIRECTORY, dir_fd=fd)
+            os.close(fd)
+            fd = child
+            value += "/" + component
+        world.monkeypatch.setenv("TMPDIR", value)
+        # The read-only shim resolves descriptors through /proc, which cannot name a path this long; stand in
+        # for a safe read-only shared root directly so every call below is the real one.
+        world.monkeypatch.setattr(pytest_scratch, "_private_shared_root", lambda: None)
+        config = world.configure()
+        assert os.listdir(fd) == [], "the over-long TMPDIR was written"
+    finally:
+        os.close(fd)
+        shutil.rmtree(chain)
+    _assert_private_fallback(world, config, world.shm)
+
+
+def test_tmpdir_whose_dot_dot_detours_through_a_replaceable_directory_is_skipped(world, tmp_path):
+    """Defect class: the walk verifies a normalized TMPDIR, so a symlink detour through a directory another
+    user can rename in is trusted because ".." brings it back to the verified directory, and that user can
+    re-point the detour between the check and the allocation.
+    """
+    lexical = tmp_path / "lexical"
+    for directory in (lexical, lexical / "x", lexical / "leaf"):
+        directory.mkdir(mode=0o700)
+    public = tmp_path / "public"
+    public.mkdir()
+    public.chmod(0o777)
+    (public / "x").symlink_to(lexical / "x", target_is_directory=True)
+    (lexical / "link").symlink_to(public / "x", target_is_directory=True)
+    value = f"{lexical}/link/../leaf"
+    assert os.path.samefile(value, lexical / "leaf")
+    _supply_tmpdir(world, value)
+    config = world.configure()
+    assert list((lexical / "leaf").iterdir()) == [], "a TMPDIR through a replaceable directory was used"
+    _assert_private_fallback(world, config, world.shm)
+
+
 def test_tmpdir_replaced_after_the_walk_fails_closed_without_writing_outside(world, tmp_path):
     """Defect class: the run directory is made by path after the walk, so a replaced TMPDIR still redirects it."""
     outside = tmp_path / "outside"
