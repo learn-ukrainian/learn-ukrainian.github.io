@@ -115,11 +115,13 @@ class _DeadlineReader:
         self.deadline = deadline
         self.expired = False
         os.set_blocking(fd, False)
+        self.poller = select.poll()
+        self.poller.register(fd, select.POLLIN)
 
     def read(self, size: int) -> bytes:
         while True:
             remaining = self.deadline - time.monotonic()
-            if remaining <= 0 or not select.select([self.fd], [], [], remaining)[0]:
+            if remaining <= 0 or not self.poller.poll(remaining * 1000):
                 self.expired = True
                 # EOF lets tarfile report an incomplete member, while a timeout
                 # during the final drain remains a lifecycle failure only.

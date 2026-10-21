@@ -627,6 +627,51 @@ def test_deadline_reader_retries_transient_unavailable_read(monkeypatch) -> None
 
 
 @pytest.mark.timeout(30)
+def test_extract_archive_accepts_real_pipe_above_select_fd_limit(monkeypatch, tmp_path: Path) -> None:
+    """A valid producer pipe above FD_SETSIZE must still drain and be reaped."""
+    if sys.platform != "linux":
+        pytest.skip("deterministic pipe capacity and high descriptor control require Linux fcntl")
+    import fcntl
+
+    archive = _archive_file(tmp_path)
+    archive.write_bytes(archive.read_bytes() + b"\0" * (64 * 1024))
+    descriptors: list[int] = []
+
+    class HighDescriptorPipe(subprocess.Popen):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            assert self.stdout is not None
+            fd = fcntl.fcntl(self.stdout.fileno(), fcntl.F_DUPFD_CLOEXEC, 1025)
+            self.stdout.close()
+            self.stdout = os.fdopen(fd, "rb")
+            descriptors.append(fd)
+
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys, signal, fcntl; "
+        "signal.signal(signal.SIGPIPE, signal.SIG_DFL); "
+        "assert fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETPIPE_SZ, 4096) == 4096; "
+        + _write_stdout(archive),
+        popen_cls=HighDescriptorPipe,
+    )
+    staging = tmp_path / "staging"
+    staging.mkdir()
+
+    release_snapshot._extract_archive(tmp_path, "0" * 40, staging)
+
+    assert len(descriptors) == 1 and descriptors[0] > 1024
+    assert (staging / "scripts/a.py").read_bytes() == b"VALUE = 1\n"
+    assert sorted(path.relative_to(staging).as_posix() for path in staging.rglob("*")) == [
+        "scripts",
+        "scripts/a.py",
+    ]
+    assert [process.returncode for process in spawned] == [0]
+    assert spawned[0].stdout.closed
+    with pytest.raises(ChildProcessError):
+        os.waitpid(spawned[0].pid, os.WNOHANG)
+
+
+@pytest.mark.timeout(30)
 def test_extract_archive_drains_padding_beyond_small_pipe_capacity(monkeypatch, tmp_path: Path) -> None:
     """Closing at tar EOF must not SIGPIPE a producer still writing padding."""
     if sys.platform != "linux":
