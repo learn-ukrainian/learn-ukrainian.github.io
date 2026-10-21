@@ -362,9 +362,22 @@ def _cap_threads(config: pytest.Config) -> None:
     os.environ.update(apply_thread_caps(os.environ))
 
 
-def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, count: int) -> None:
-    """Start at most ``count`` workers, the slots a live ancestor holds, here and in this run's descendants."""
+def _keep_hold(config: pytest.Config, hold: object) -> None:
+    """Keep ``hold`` for this session; its variables reach workers and nested runs and are restored after it."""
+    environment = hold.environment()  # type: ignore[attr-defined]
+    setattr(config, _SLOTS_ATTR, hold)
+    setattr(config, _SLOTS_PRIOR_MARKER_ATTR, {name: os.environ.get(name) for name in environment})
+    os.environ.update(environment)
+
+
+def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, hold: object) -> None:
+    """Start at most the slots a live ancestor holds, here and in this run's descendants.
+
+    A review hold's turn (its session lock) is this session's until it ends, so the review's runs never overlap.
+    """
     config.add_cleanup(lambda: _release_test_slots(config))
+    _keep_hold(config, hold)
+    count = hold.count  # type: ignore[attr-defined]
     _limit_workers(config, count)
     name = slots.XDIST_AUTO_ENV
     auto_cap = slots.auto_worker_cap()  # a lower existing cap, such as a driver scope's, is kept
@@ -388,7 +401,7 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
     try:
         if not slots.enabled():
             return
-        inherited = slots.inherited_hold()
+        inherited = slots.join_inherited()
         if inherited is not None:
             _run_inside_inherited_hold(config, slots, inherited)
             return
@@ -399,10 +412,8 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
         raise pytest.UsageError(str(error)) from None
     # pytest closes the cleanup stack even when a later hook refuses the run before the session configures.
     config.add_cleanup(lambda: _release_test_slots(config))
-    setattr(config, _SLOTS_ATTR, hold)
-    setattr(config, _SLOTS_PRIOR_MARKER_ATTR, os.environ.get(slots.HOLDER_ENV))
     # Workers and nested runs inherit the marker and run inside these slots instead of queueing.
-    os.environ.update(hold.environment())
+    _keep_hold(config, hold)
     _cap_threads(config)
     _limit_workers(config, hold.count)
     if hold.waited >= 1.0:
@@ -434,12 +445,11 @@ def _release_test_slots(config: pytest.Config) -> None:
     if hold is None:
         return
     setattr(config, _SLOTS_ATTR, None)
-    holder_env = _test_slots().HOLDER_ENV
-    prior = getattr(config, _SLOTS_PRIOR_MARKER_ATTR, None)
-    if prior is None:
-        os.environ.pop(holder_env, None)
-    else:
-        os.environ[holder_env] = prior
+    for name, prior in (getattr(config, _SLOTS_PRIOR_MARKER_ATTR, None) or {}).items():
+        if prior is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = prior
     hold.release()
 
 

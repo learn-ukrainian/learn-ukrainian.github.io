@@ -74,6 +74,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_language_lane": bool,  # dispatch's Ukrainian content classification
         "review_brief_warnings": [str] | absent,  # advisory brief checks, e.g. review_brief_no_dispositions (#10665)
         "sources_mcp_call_count": int | null,  # runtime evidence; null means unknown
+        "review_test_slots": {outcome: "held" | "refused" | "disabled", slots?, waited_s?, reason?} | absent,  # Codex read-only reviews (#11230)
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
@@ -202,6 +203,7 @@ from scripts.agent_runtime import bounded_advisory
 from scripts.agent_runtime.accounting import model_accounting_fields
 from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
+from scripts.common import test_slots
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -7953,6 +7955,9 @@ def _build_worker_env(
     """Construct the execution environment for a dispatched worker process."""
     source = dict(os.environ if base_env is None else base_env)
     worker_env = _pinned_worker_venv_env(source)
+    # A worker never runs inside the dispatcher's test slots: it takes its own (#11230).
+    for name in (test_slots.HOLDER_ENV, test_slots.SESSION_ENV):
+        worker_env.pop(name, None)
     if attribution is not None:
         worker_env["LU_RUNTIME_INITIATOR"] = getattr(attribution, "initiator", str(attribution))
         worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = getattr(attribution, "source", "")
@@ -10758,6 +10763,34 @@ def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
 # reading EOF) get this long before they count as background jobs.
 _BACKGROUND_JOBS_SETTLE_S = 5.0
 
+# Slots a Codex read-only review holds for its reviewer: the review bound of two test workers (cto-10744).
+REVIEW_TEST_SLOTS = 2
+
+
+def _hold_review_test_slots(
+    *, agent: str, mode: str, review_typed: bool, sealed_attempt: bool, task_id: str
+) -> tuple[test_slots.Hold | None, dict[str, Any] | None]:
+    """Take a Codex read-only review's test slots in this worker, before its sandbox starts (#11230, #10744).
+
+    Codex's read-only sandbox maps only this user, so the pool's root-owned ancestors show an unmapped owner,
+    and it mounts the pool read-only: the governor cannot prepare the pool there and refuses every run. The
+    worker queues in the host pool like any run and holds ``review`` slots until the CLI's process group is
+    gone; the reviewer's governed runs check the holder marker read-only and take turns on the hold, so
+    accounting stays host-wide. Other routes, and sealed attempts whose inputs carry no pool, take their own
+    slots or none. A refusal is recorded and the review runs on; its governed runs are then refused, typed.
+    Returns the hold (or ``None``) and the record for the task's ``review_test_slots`` field.
+    """
+    if agent != "codex" or mode != "read-only" or not review_typed or sealed_attempt:
+        return None, None
+    try:
+        if not test_slots.enabled():
+            return None, {"outcome": "disabled"}
+        hold = test_slots.acquire(REVIEW_TEST_SLOTS, kind="review", task_id=task_id)
+    except test_slots.SlotError as error:
+        print(f"[delegate] WARNING: review test slots refused: {error}", file=sys.stderr)
+        return None, {"outcome": "refused", "reason": error.reason}
+    return hold, {"outcome": "held", "slots": hold.count, "waited_s": round(hold.waited, 1)}
+
 
 def _worker_process_reader() -> worker_leftovers.ProcessReader:
     """Seam for tests: the live ``/proc`` and cgroup reader."""
@@ -11255,6 +11288,7 @@ def _run_worker(
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
+    review_slots: test_slots.Hold | None = None
     from scripts.agent_runtime.result import AgyTelemetry
 
     agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
@@ -11421,6 +11455,21 @@ def _run_worker(
             advisory_prompt_sha256 = _verify_bounded_worker(
                 task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=advisory_execution, prompt=prompt
             )
+            review_slots, review_slots_record = _hold_review_test_slots(
+                agent=agent,
+                mode=mode,
+                review_typed=_dispatch_is_review_typed(argparse.Namespace(**state))
+                or require_review_verdict
+                or review_id is not None,
+                sealed_attempt=review_manifest is not None or attempt_id is not None,
+                task_id=task_id,
+            )
+            if review_slots_record is not None:
+                state["review_test_slots"] = review_slots_record
+                _write_state_atomic(state_path, state)
+            if review_slots is not None:
+                # The CLI's environment is built from this process's, so its tool commands receive the marker.
+                os.environ.update(review_slots.environment())
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -11530,6 +11579,11 @@ def _run_worker(
             stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
+            if review_slots is not None:
+                # The runtime has stopped the CLI's process group, so no reviewer test runs inside these slots.
+                os.environ.pop(test_slots.HOLDER_ENV, None)
+                review_slots.release()
+                review_slots = None
             if cursor_mcp_path is not None:
                 try:
                     if cursor_mcp_existed and cursor_mcp_backup is not None:

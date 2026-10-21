@@ -21,7 +21,16 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   `test_slots_pool_unavailable` while more than 1024 ticket files exist.
 - Descendants of a holder run inside its slots and never queue themselves. Examples are xdist workers,
   pytest runs started by tests and the gate's pytest children. The holder marks them with
-  `LU_TEST_SLOTS_HOLDER`. A marker whose holder is dead is ignored.
+  `LU_TEST_SLOTS_HOLDER`. The marker is checked, never trusted. It counts only when all of these hold:
+  - it names a ticket in the `holders` directory of the pool that environment selects;
+  - the current user owns that ticket and a live process holds its lock;
+  - the ticket's record holds exactly the marked count;
+  - the run names no dispatch task other than the hold's.
+
+  A marker that is dead, copied, inflated or carried into another task is ignored. A run that names no
+  task stays inside its ancestor's slots, as tests do when the suite strips the agent's identity.
+  `delegate.py` removes any marker from a dispatched worker's environment, so a worker never runs inside
+  its dispatcher's slots.
 - A pytest run below a live holder, dispatch run or not, starts at most the held count of xdist
   workers. Before the session starts, the `ci.pytest_dispatch_cap` plugin caps `-n` (`auto` included),
   cuts an explicit `--tx` list and lowers `PYTEST_XDIST_AUTO_NUM_WORKERS` for the run and its own
@@ -36,11 +45,47 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
 | Dispatch-worker pytest runs | The `ci.pytest_dispatch_cap` plugin holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only` and `--help`. A nested run queues for nothing and starts at most the inherited count of workers. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
 | Pre-push gate | The pytest stage holds slots and passes `-n` equal to the slots held. The wait is bounded by `TEST_SLOT_WAIT_S` (600 s) and recorded as `slot_wait_s`. It spends neither the stage allowance nor the run budget. See `docs/runbooks/pre-push-gate.md`. |
 | Any other test command | `.venv/bin/python -m scripts.common.test_slots run -- <command>` waits for slots, rewrites a visible `-n`/`--numprocesses` (including `auto`) to the slots held, caps a hidden `-n auto` through `PYTEST_XDIST_AUTO_NUM_WORKERS`, and execs the command, so the command itself holds the slots until it exits. A repo pytest the command starts with a hidden explicit `-n` is capped by the plugin above. |
+| Codex read-only reviews | The dispatch worker holds 2 `review` slots before the CLI starts. See "Sandboxed reviews" below. |
 | Dispatch admission | `delegate.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
 
 Operator shells and CI are unchanged: the plugin takes slots only for dispatch workers, it caps
 workers only for runs below a live holder, and a true `CI` variable turns the pool off unless
 `LU_TEST_SLOTS=on` is set explicitly.
+
+## Sandboxed reviews
+
+Codex runs a read-only review's commands in a user-namespace sandbox that maps only the current user.
+There, root-owned ancestors of the pool, `/` included, show the kernel's overflow owner, and every path
+is mounted read-only. The governor therefore refuses to prepare the pool there with
+`test_slots_pool_unavailable` ("owned by another user"). That refusal is correct, because the sandbox
+cannot prove who owns those ancestors, and it stays in place (#11230, #10744).
+
+For a review-typed Codex dispatch in `read-only` mode, the dispatch worker takes the slots instead,
+outside the sandbox, with the full ownership walk:
+
+1. It queues in the host pool like any run and holds 2 `review` slots, the review bound of two test
+   workers. The task record shows the result as `review_test_slots`: `held` (with the slot count and
+   the wait), `refused` (with the reason) or `disabled`. A refused review still runs, and its governed
+   test runs are refused with a typed reason.
+2. The CLI receives the holder marker. Inside the sandbox, `test_slots run` and the dispatch pytest plugin
+   only read the marked ticket and check its lock, so they need no write access to the pool.
+3. The review's governed test runs take turns on the hold's session lock, a `.session` file beside its
+   ticket. Concurrent runs of one review therefore never add up past its 2 slots. The run that holds the
+   turn passes `LU_TEST_SLOTS_SESSION` to its own descendants, such as xdist workers or the pytest it
+   execs, so they run within that turn.
+4. The worker gives the slots back after the runtime has stopped the CLI's process group, on success, on
+   failure, on a timeout and on cancellation.
+
+The slots stay reserved while the reviewer reads. The dispatch hard timeout bounds that time. Other
+routes are unchanged: a Claude read-only seat has no OS sandbox and takes its own slots, and a write
+worker takes slots for each test run.
+
+If a worker is killed abruptly, its slots come back at once. A test run that was already inside the hold
+can then keep running outside the accounting until the run ends or `post_task_reap` stops the task's
+leftover processes. Only one such run can exist, because a review has one turn at a time, and it uses at
+most 2 workers. New runs are refused, because the marker's holder is dead. Sandboxed commands outlive
+the Codex process (its `bwrap` wrapper does not take them down), so no holder outside the dispatch scope
+could cover this case.
 
 ## Settings
 

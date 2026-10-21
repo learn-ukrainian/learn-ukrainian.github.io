@@ -17,12 +17,20 @@ it, and missing components are created mode 0700 whatever the umask. The pool is
 It never falls back to a per-process temp directory, which would split the pool, and it never lies inside a Git
 checkout or Git directory.
 
+A holder's descendants run inside its slots through :data:`HOLDER_ENV`. The marker is checked, not trusted: it
+counts only while it names a ticket in this pool's ``holders`` directory that this user owns and a live process
+locks, whose record holds exactly the marked count for the same dispatch task. A sandbox that shows the pool's
+root-owned ancestors under an unmapped owner and mounts it read-only cannot prepare the pool, so a Codex read-only
+review takes ``review`` slots in its trusted dispatch worker before the sandbox starts (#11230, #10744). The
+review's governed test runs then take turns on that hold's session lock, so concurrent runs never add up past it.
+
 Environment:
   LU_TEST_SLOTS         on or off. Default on, except where ``CI`` is true, so CI runs are unchanged.
   LU_TEST_SLOTS_COUNT   pool size. Default: half the CPU count, rounded down, and at least 2.
   LU_TEST_SLOTS_WAIT_S  longest wait for slots in seconds (default 3600), then a typed refusal.
   LU_TEST_SLOTS_DIR     absolute pool directory, for tests and experiments.
   LU_TEST_SLOTS_HOLDER  set by a holder for its descendants, which then run inside its slots.
+  LU_TEST_SLOTS_SESSION set by the test run that holds a review hold's session lock, for its own descendants.
   LU_TEST_THREAD_CAP    off preserves native thread settings; otherwise governed runs apply native thread caps.
 
 Users: the dispatch pytest plugin (``scripts/ci/pytest_dispatch_cap.py``), the pre-push gate's pytest stage,
@@ -59,6 +67,7 @@ COUNT_ENV = "LU_TEST_SLOTS_COUNT"
 WAIT_ENV = "LU_TEST_SLOTS_WAIT_S"
 DIR_ENV = "LU_TEST_SLOTS_DIR"
 HOLDER_ENV = "LU_TEST_SLOTS_HOLDER"
+SESSION_ENV = "LU_TEST_SLOTS_SESSION"
 TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 XDIST_AUTO_ENV = "PYTEST_XDIST_AUTO_NUM_WORKERS"
 MIN_DEFAULT_SLOTS = 2
@@ -71,7 +80,8 @@ PENDING_GRACE_S = 60.0
 LINK_LIMIT = 40  # links followed while verifying the pool directory, as Linux's MAXSYMLINKS
 STATUS_SCHEMA = "test-slots.status.v1"
 EXIT_REFUSED = 75  # EX_TEMPFAIL: the command did not run; retry once slots free up
-KINDS = frozenset({"gate", "pytest", "launcher"})
+KINDS = frozenset({"gate", "pytest", "launcher", "review"})
+SESSION_SUFFIX = ".session"  # a review hold's session lock, beside its holder ticket
 _TRUE = frozenset({"on", "1", "true", "yes"})
 _FALSE = frozenset({"off", "0", "false", "no"})
 _TASK_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}")
@@ -408,6 +418,14 @@ def _reap_pending(directory: Path) -> None:
             os.close(fd)
 
 
+def _reap_sessions(directory: Path) -> None:
+    """Remove review session locks whose holder ticket is gone: no live marker can name them any more."""
+    for path in directory.glob(f"*{SESSION_SUFFIX}"):
+        if not os.path.lexists(path.with_suffix(".ticket")):
+            with contextlib.suppress(OSError):
+                path.unlink()
+
+
 def _take_slots(pool: Path, count: int, size: int) -> list[tuple[int, int]] | None:
     """Lock ``count`` free slot files, or none at all."""
     taken: list[tuple[int, int]] = []
@@ -447,6 +465,8 @@ class Hold:
         queue_position: int,
         record: Path | None = None,
         descriptors: tuple[int, ...] = (),
+        session: Path | None = None,
+        session_environment: Mapping[str, str] | None = None,
     ) -> None:
         self.count = count
         self.requested = requested
@@ -455,6 +475,8 @@ class Hold:
         self.queue_position = queue_position
         self._record = record
         self._descriptors = descriptors
+        self._session = session  # a review hold's session lock file, removed with its record
+        self._session_environment = dict(session_environment or {})
         self._released = False
 
     @classmethod
@@ -468,7 +490,8 @@ class Hold:
 
     def environment(self) -> dict[str, str]:
         """Variables a child needs to run inside these slots rather than queue for its own."""
-        return {HOLDER_ENV: self.marker()} if self._record is not None else {}
+        marker = {HOLDER_ENV: self.marker()} if self._record is not None else {}
+        return {**marker, **self._session_environment}
 
     def inheritable(self) -> None:
         """Keep the locks across ``exec``, so the command itself holds the slots until it exits."""
@@ -479,9 +502,10 @@ class Hold:
         if self._released:
             return
         self._released = True
-        if self._record is not None:
-            with contextlib.suppress(OSError):
-                self._record.unlink()
+        for path in (self._record, self._session):
+            if path is not None:
+                with contextlib.suppress(OSError):
+                    path.unlink()
         for fd in self._descriptors:
             with contextlib.suppress(OSError):
                 os.close(fd)
@@ -551,6 +575,7 @@ def acquire(
                     first_position = first_position or position
                     if position == 1:
                         _scan(pool / "holders", reap=True)
+                        _reap_sessions(pool / "holders")
                         _reap_pending(pool / "queue")
                         _reap_pending(pool / "holders")
                         slots = _take_slots(pool, count, size)
@@ -598,12 +623,22 @@ def _hold(
         "acquired_at": time.time(),
         "waited_s": round(waited, 3),
     }
+    descriptors = tuple(fd for _, fd in slots)
     try:
         holder, holder_fd = _publish(pool / "holders", record)
     except BaseException:
-        for _, fd in slots:
+        for fd in descriptors:
             os.close(fd)
         raise
+    session = holder.with_suffix(SESSION_SUFFIX) if identity["kind"] == "review" else None
+    if session is not None:
+        try:  # created before any marker names the hold, so every run joining it finds its session lock
+            os.close(os.open(session, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW, 0o600))
+        except BaseException:
+            _discard(holder, holder_fd)
+            for fd in descriptors:
+                os.close(fd)
+            raise
     _discard(ticket, ticket_fd)
     return Hold(
         count=count,
@@ -612,16 +647,23 @@ def _hold(
         waited=waited,
         queue_position=position,
         record=holder,
-        descriptors=(*(fd for _, fd in slots), holder_fd),
+        descriptors=(*descriptors, holder_fd),
+        session=session,
     )
 
 
-def inherited_hold(environ: Mapping[str, str] | None = None) -> int | None:
-    """Slots of a live ancestor holder named by :data:`HOLDER_ENV`, else ``None``.
+def _live_holder(env: Mapping[str, str]) -> tuple[int, str, Path] | None:
+    """``(count, kind, record)`` of the live holder :data:`HOLDER_ENV` names, else ``None``.
 
-    The marker is checked, not trusted: a dead holder's record is unlocked, so a stale variable is ignored.
+    The marker is checked, not trusted. It counts only when it names a ticket in the ``holders`` directory of
+    the pool this environment selects, the ticket is a regular file this user owns, a live process holds its
+    lock (a dead holder's record is unlocked, so a stale variable is ignored), and its record holds exactly
+    the marked count, and the run names no dispatch task other than the hold's. (A run that names none, such
+    as a test the suite runs without the agent's identity, stays inside its ancestor's slots, as before.) An
+    inflated marker, or one carried into another dispatch task, therefore runs nothing inside slots it does
+    not hold. Only reads: a sandbox that mounts the pool read-only can check a marker its trusted launcher
+    issued.
     """
-    env = os.environ if environ is None else environ
     count, _, record = env.get(HOLDER_ENV, "").partition(":")
     path = Path(record)
     if _COUNT_RE.fullmatch(count) is None or int(count) < 1 or not path.is_absolute():
@@ -629,19 +671,112 @@ def inherited_hold(environ: Mapping[str, str] | None = None) -> int | None:
     if path.parent.name != "holders" or path.suffix != ".ticket":
         return None
     try:
+        if os.path.realpath(path.parent.parent) != os.path.realpath(pool_dir(env)):
+            return None
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-    except OSError:
+    except (OSError, SlotError):
         return None
     try:
-        if not stat.S_ISREG(os.fstat(fd).st_mode):
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid():
             return None
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            return int(count)
-        return None
+            held = _read_record(fd)
+        else:
+            return None
     finally:
         os.close(fd)
+    kind = held.get("kind")
+    if _whole(held.get("held")) != int(count) or not isinstance(kind, str) or kind not in KINDS:
+        return None
+    tasks = {_task_label(held.get("task_id")), _task_label(env.get(TASK_ENV))} - {"unknown"}
+    if len(tasks) > 1:
+        return None
+    return int(count), kind, path
+
+
+def inherited_hold(environ: Mapping[str, str] | None = None) -> int | None:
+    """Slots of the live ancestor holder :data:`HOLDER_ENV` names (checked as :func:`_live_holder`), else ``None``."""
+    found = _live_holder(os.environ if environ is None else environ)
+    return found[0] if found is not None else None
+
+
+def join_inherited(
+    environ: Mapping[str, str] | None = None,
+    *,
+    wait_s: float | None = None,
+    progress: Callable[[str], None] | None = None,
+) -> Hold | None:
+    """Run inside a live ancestor's slots, or ``None`` when no valid marker names one.
+
+    A ``review`` hold serves every test run of one sandboxed review, so its runs take turns: each waits in turn
+    for the hold's session lock, up to ``wait_s`` (default :data:`WAIT_ENV`), and holds it until it ends. The
+    returned hold carries :data:`SESSION_ENV` for that run's own descendants (xdist workers, a pytest the
+    launcher execs), which run in the same turn. Raises :class:`SlotError` when the wait times out or the
+    session lock is unusable. Other holds keep the per-run inheritance of :func:`inherited_hold`.
+    """
+    env = os.environ if environ is None else environ
+    found = _live_holder(env)
+    if found is None:
+        return None
+    count, kind, record = found
+    session = record.with_suffix(SESSION_SUFFIX)
+    if kind != "review" or env.get(SESSION_ENV) == str(session):
+        return Hold.inherited(count)
+    limit = wait_timeout(env) if wait_s is None else wait_s
+    fd, waited = _join_session(session, limit, progress or _print_progress)
+    if _live_holder(env) is None:  # the holder ended while this run waited for its turn
+        os.close(fd)
+        return None
+    return Hold(
+        count=count,
+        requested=count,
+        pool_size=count,
+        waited=waited,
+        queue_position=0,
+        descriptors=(fd,),
+        session_environment={SESSION_ENV: str(session)},
+    )
+
+
+def _join_session(session: Path, limit: float, report: Callable[[str], None]) -> tuple[int, float]:
+    """Lock a review hold's session file, waiting while another of its runs holds it; ``(descriptor, waited)``."""
+    try:
+        fd = os.open(session, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except OSError as error:
+        raise SlotError(
+            "pool_unavailable", f"the hold's session lock cannot be opened ({type(error).__name__})"
+        ) from None
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid():
+            raise SlotError("pool_unavailable", "the hold's session lock is not a regular file of this user")
+        started = time.monotonic()
+        reported_at: float | None = None
+        while True:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                return fd, time.monotonic() - started
+            except BlockingIOError:
+                pass
+            waited = time.monotonic() - started
+            if reported_at is None or time.monotonic() - reported_at >= REPORT_EVERY_S:
+                report(
+                    f"TEST SLOTS: waiting for another test run of this review to finish; "
+                    f"waited {waited:.1f}s (limit {limit:g}s)"
+                )
+                reported_at = time.monotonic()
+            if waited >= limit:
+                raise SlotError(
+                    "wait_timeout",
+                    f"waited {waited:.1f}s for another test run of this review (limit {limit:g}s, {WAIT_ENV})",
+                )
+            time.sleep(min(POLL_S, max(0.0, limit - waited)))
+    except BaseException:
+        os.close(fd)
+        raise
 
 
 # ---- visibility -----------------------------------------------------------------------------------------------
@@ -831,10 +966,8 @@ def _run(arguments: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
         if not enabled(env):
             return _exec(command, env)
         size = pool_size(env)
-        inherited = inherited_hold(env)
-        if inherited is not None:
-            hold = Hold.inherited(inherited)
-        else:
+        hold = join_inherited(env)
+        if hold is None:
             requested = arguments.slots if arguments.slots is not None else requested_processes(command, size, auto_cap)
             hold = acquire(requested, kind="launcher", environ=env)
     except SlotError as error:
