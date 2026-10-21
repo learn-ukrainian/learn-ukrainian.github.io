@@ -23,7 +23,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.common import pytest_scratch
+from scripts.common import pytest_scratch, task_scratch
 from scripts.common.task_scratch import TaskScratchError
 
 REPO = Path(__file__).resolve().parents[2]
@@ -373,15 +373,35 @@ def test_other_write_errors_on_the_shared_root_stay_loud(world, mode):
 # ---- fallback containment ------------------------------------------------------------------------------------
 
 
-def _swap_fallback_root(world: World, outside: Path, *, under: Path, when: str) -> list[Path]:
-    """Rename the fresh fallback directory away and plant a symlink to ``outside`` in its place."""
-    swapped: list[Path] = []
+def _replace_held(directory: Path, outside: Path) -> None:
+    """Move ``directory`` away and plant a symlink to ``outside`` under its name."""
+    directory.rename(directory.with_name(directory.name + ".moved"))
+    directory.symlink_to(outside, target_is_directory=True)
 
-    def swap(private: Path) -> None:
-        if private.parent == under and not swapped:
-            private.rename(private.with_name(private.name + ".moved"))
-            private.symlink_to(outside, target_is_directory=True)
-            swapped.append(private)
+
+# What each allocation step creates, recognised by its name; the swap hits the directory it is created in.
+_STEP_CREATES: dict[str, Callable[[str], bool]] = {
+    "runs": lambda leaf: leaf == pytest_scratch.RUNS_DIRNAME,
+    "run-dir": lambda leaf: leaf.startswith("pytest."),
+    "lease": lambda leaf: leaf.startswith(("lease.", ".lease.")),
+    "scratch": lambda leaf: leaf == "scratch",
+}
+
+
+def _swap_fallback_root(world: World, outside: Path, *, under: Path, when: str) -> list[Path]:
+    """Replace the directory a fallback step is about to write in with a symlink to ``outside``.
+
+    ``after-create`` swaps the fresh fallback directory as soon as it exists; every
+    other step swaps the directory that step creates its entry in, just before the
+    creating call, whether that call names the entry by path or by descriptor.
+    """
+    swapped: list[Path] = []
+    scope = Path(os.path.realpath(under))
+
+    def swap(directory: Path) -> None:
+        if not swapped and directory.is_relative_to(scope) and directory != scope:
+            _replace_held(directory, outside)
+            swapped.append(directory)
 
     if when == "after-create":
         real_make = pytest_scratch._make_private_dir
@@ -392,30 +412,58 @@ def _swap_fallback_root(world: World, outside: Path, *, under: Path, when: str) 
             return name
 
         world.monkeypatch.setattr(pytest_scratch, "_make_private_dir", make_private_dir)
-    else:
-        real_allocate = pytest_scratch.allocate
+        return swapped
+    creates = _STEP_CREATES[when]
+    real_mkdir, real_open = os.mkdir, os.open
 
-        def allocate(task_id, *, root, namespace_dirname):
-            swap(root)
-            return real_allocate(task_id, root=root, namespace_dirname=namespace_dirname)
+    def before_create(path, dir_fd) -> None:
+        text = os.fsdecode(path)
+        if creates(os.path.basename(text)):
+            relative = dir_fd is not None and not os.path.isabs(text)
+            swap(_fd_path(dir_fd) if relative else Path(os.path.realpath(os.path.dirname(text))))
 
-        world.monkeypatch.setattr(pytest_scratch, "allocate", allocate)
+    def mkdir(path, mode=0o777, *, dir_fd=None):
+        before_create(path, dir_fd)
+        return real_mkdir(path, mode, dir_fd=dir_fd)
+
+    def open_(path, flags, mode=0o777, *, dir_fd=None):
+        if flags & os.O_CREAT:
+            before_create(path, dir_fd)
+        return real_open(path, flags, mode, dir_fd=dir_fd)
+
+    world.monkeypatch.setattr(os, "mkdir", mkdir)
+    world.monkeypatch.setattr(os, "open", open_)
     return swapped
 
 
-@pytest.mark.parametrize("when", ["after-create", "before-allocate"])
-def test_fallback_directory_swapped_for_a_symlink_fails_closed(world, tmp_path, when):
-    """Defect class: a fallback path replaced after its check redirects the run outside the temp."""
+def _files_below(directory: Path) -> list[Path]:
+    """Regular files below ``directory``, symlinks not followed."""
+    return [entry for entry in directory.rglob("*") if entry.is_file() and not entry.is_symlink()]
+
+
+@pytest.mark.parametrize("when", ["after-create", "runs", "run-dir", "lease", "scratch"])
+def test_fallback_directory_replaced_before_any_allocation_step_writes_nothing_outside(world, tmp_path, when):
+    """Held-out regression from the round-5 review (#11317).
+
+    Defect class: the fallback verifies a directory by descriptor and then
+    allocates by path, so replacing it between the two creates ``runs``, the run
+    directory, its lease files or ``scratch`` outside the provisioned temp. Every
+    step must stay in the held directory; the candidate is then refused, its
+    entries removed, and the run moves on to the next candidate.
+    """
     outside = tmp_path / "outside"
     outside.mkdir(mode=0o700)
     world.make_runs_root(0o700)
     world.readonly()
     swapped = _swap_fallback_root(world, outside, under=world.temp, when=when)
-    with pytest.raises(TaskScratchError, match=r"changed|symlink"):
-        world.configure()
-    assert swapped
-    assert world.cleanups == []
-    assert os.environ["TMPDIR"] == str(world.temp)
+    try:
+        config = world.configure()
+    finally:
+        # Checked even when configure raises: a refusal after an outside write is still an outside write.
+        assert _listing(outside) == [], "an allocation step wrote outside the held directory"
+    assert swapped, "the step under test never ran"
+    assert _files_below(world.temp) == [], "the refused candidate kept its lease files"
+    _assert_private_fallback(world, config, world.shm)
 
 
 @pytest.mark.parametrize("mode", [0o777, 0o770], ids=oct)
@@ -426,7 +474,7 @@ def test_fallback_skips_a_temp_others_can_rename_entries_in(world, tmp_path, mod
     world.make_runs_root(0o700)
     world.temp.chmod(mode)
     world.readonly()
-    swapped = _swap_fallback_root(world, outside, under=world.temp, when="before-allocate")
+    swapped = _swap_fallback_root(world, outside, under=world.temp, when="runs")
     config = world.configure()
     _assert_private_fallback(world, config, world.shm)
     assert swapped == [] and list(world.temp.iterdir()) == [] and list(outside.iterdir()) == []
@@ -669,6 +717,24 @@ def test_tmpdir_spelled_with_redundant_separators_lands_in_that_directory(world,
     assert list(world.shm.iterdir()) == []
 
 
+@pytest.mark.parametrize("filler", ["/", "/."], ids=["slashes", "dot-components"])
+def test_tmpdir_with_redundant_components_past_the_path_limit_is_skipped(world, filler):
+    """Held-out regression from the round-5 review (#11317).
+
+    Defect class: redundant separators or "." components are collapsed at
+    ingestion, which turns a TMPDIR the kernel cannot resolve as supplied into a
+    usable directory the value as supplied does not name.
+    """
+    value = str(world.temp) + filler * os.pathconf("/", "PC_PATH_MAX")
+    with pytest.raises(OSError) as raised:
+        os.stat(value)
+    assert raised.value.errno == errno.ENAMETOOLONG
+    _supply_tmpdir(world, value)
+    config = world.configure()
+    assert list(world.temp.iterdir()) == [], "a collapsed TMPDIR was used"
+    _assert_private_fallback(world, config, world.shm)
+
+
 def test_tmpdir_dollar_name_is_not_expanded(world, tmp_path):
     """Defect class: TMPDIR goes through expandvars, so a directory named "$VAR" is swapped for $VAR's value."""
     provisioned, decoys = _siblings(tmp_path, "$LU_SCRATCH_PROBE", "decoy")
@@ -830,7 +896,7 @@ def test_tmpdir_whose_dot_dot_detours_through_a_replaceable_directory_is_skipped
     _assert_private_fallback(world, config, world.shm)
 
 
-def test_tmpdir_replaced_after_the_walk_fails_closed_without_writing_outside(world, tmp_path):
+def test_tmpdir_replaced_after_the_walk_is_refused_without_writing_outside(world, tmp_path):
     """Defect class: the run directory is made by path after the walk, so a replaced TMPDIR still redirects it."""
     outside = tmp_path / "outside"
     outside.mkdir(mode=0o700)
@@ -840,16 +906,44 @@ def test_tmpdir_replaced_after_the_walk_fails_closed_without_writing_outside(wor
 
     def make_private_dir(base_fd):
         # The same user (the only one left who can) swaps TMPDIR after it was verified and opened.
-        world.temp.rename(world.temp.with_name("sandbox-temp.moved"))
-        world.temp.symlink_to(outside, target_is_directory=True)
+        if not world.temp.is_symlink():
+            _replace_held(world.temp, outside)
         return real_make(base_fd)
 
     world.monkeypatch.setattr(pytest_scratch, "_make_private_dir", make_private_dir)
-    with pytest.raises(TaskScratchError, match="changed after creation"):
-        world.configure()
-    assert list(outside.iterdir()) == [] and world.cleanups == []
-    (made,) = world.temp.with_name("sandbox-temp.moved").iterdir()
-    assert made.name.startswith(pytest_scratch.FALLBACK_PREFIX)
+    try:
+        config = world.configure()
+    finally:
+        assert _listing(outside) == [], "an allocation step wrote outside the held TMPDIR"
+    # Everything made in the held TMPDIR was removed through its descriptor.
+    assert list(world.temp.with_name("sandbox-temp.moved").iterdir()) == []
+    _assert_private_fallback(world, config, world.shm)
+
+
+def test_fallback_lease_is_one_the_shared_allocator_would_write(world, tmp_path):
+    """Defect class: the descriptor-anchored fallback writes its own lease, which drifts from the shared
+    schema, so the run is not recognised as a pytest invocation by lease readers.
+    """
+    world.make_runs_root(0o700)
+    world.readonly()
+    config = world.configure()
+    run = Path(config.option.basetemp).parent.parent
+    lease = task_scratch.parse_lease((run / task_scratch.LEASE_FILENAME).read_bytes())
+    assert lease is not None
+    reference_root = tmp_path / "reference"
+    reference_root.mkdir(mode=0o700)
+    reference = task_scratch.allocate("pytest", root=reference_root, namespace_dirname=pytest_scratch.RUNS_DIRNAME)
+    try:
+        assert lease.keys() == reference.lease.keys()
+        assert {key: lease[key] for key in ("kind", "task_id", "uid", "state", "child")} == {
+            key: reference.lease[key] for key in ("kind", "task_id", "uid", "state", "child")
+        }
+        assert lease["owner"]["pid"] == os.getpid() and lease["invocation_id"] == run.name
+        assert (lease["dir"]["dev"], lease["dir"]["ino"]) == (run.stat().st_dev, run.stat().st_ino)
+        assert run.name.startswith("pytest.") and stat.S_IMODE(run.stat().st_mode) == 0o700
+        assert stat.S_IMODE((run / task_scratch.LOCK_FILENAME).stat().st_mode) == 0o600
+    finally:
+        reference.preserve()
 
 
 # ---- callers that own their base temp ------------------------------------------------------------------------

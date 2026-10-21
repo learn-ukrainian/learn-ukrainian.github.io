@@ -6,8 +6,14 @@ group or others, but the run itself is allocated in a fresh owner-only
 directory under the sandbox's writable temp: ``TMPDIR``, else shared memory.
 ``TMPDIR`` is used only if no other user can replace any directory on its path
 (each owned by this user or root, and writable by others only when sticky);
-shared memory only if others may not rename entries in it. The run must land
-in the very directory created there.
+shared memory only if others may not rename entries in it.
+
+Once that directory is verified and held open, every entry of the run (its
+directory, ``runs``, the run, the lease files and ``scratch``) is created
+relative to a held descriptor, never by path, so a replaced directory cannot
+redirect a write. The run is named by path only when complete; if that path
+does not reach the held run, the candidate is removed through the descriptors
+and the next one is tried.
 
 ``TMPDIR`` is carried byte for byte from the environment to the allocation:
 nothing strips, expands, normalizes or resolves it, because each of those can
@@ -18,19 +24,37 @@ long for the kernel to resolve whole) is skipped for the next candidate.
 
 from __future__ import annotations
 
+import contextlib
 import errno
+import fcntl
 import os
 import secrets
 import stat
 import tempfile
+import time
 from collections.abc import Callable
 from functools import partial
 from pathlib import Path
+from typing import Any
 
 import pytest
 
+from scripts.common.acp_runtime_lock import process_start_time
 from scripts.common.scratch import ensure_scratch_root
-from scripts.common.task_scratch import TaskScratch, TaskScratchError, _verify_private_dir, allocate
+from scripts.common.task_scratch import (
+    LEASE_FILENAME,
+    LEASE_SCHEMA_VERSION,
+    LOCK_FILENAME,
+    PAYLOAD_DIRNAME,
+    TaskScratch,
+    TaskScratchError,
+    _rmdir_held,
+    _verify_private_dir,
+    _write_lease_at,
+    allocate,
+    current_boot_id,
+)
+from scripts.common.task_scratch import NAMESPACE_DIRNAME as LEASE_KIND
 
 NAMESPACE = "pytest-runs"
 RUNS_DIRNAME = "runs"
@@ -167,55 +191,130 @@ def _fallback_bases() -> list[tuple[str, Callable[[], int | None]]]:
     return bases
 
 
-def _make_private_dir(base_fd: int) -> str:
-    """Create a fresh 0700 directory with a random name below ``base_fd``; return its name."""
+class _Unusable(Exception):
+    """This candidate cannot hold the run; the reason is reported if no candidate can."""
+
+
+def _reason(exc: OSError) -> str:
+    return errno.errorcode.get(exc.errno or 0, "error")
+
+
+def _make_unique_dir(parent_fd: int, prefix: str) -> str:
+    """Create a fresh 0700 directory with a random name below ``parent_fd``; return its name."""
     for _ in range(100):
-        name = FALLBACK_PREFIX + secrets.token_hex(4)
+        name = prefix + secrets.token_hex(4)
         try:
-            os.mkdir(name, PRIVATE_MODE, dir_fd=base_fd)
+            os.mkdir(name, PRIVATE_MODE, dir_fd=parent_fd)
         except FileExistsError:
             continue
         return name
     raise FileExistsError(errno.EEXIST, "no unused private temp name")
 
 
-def _allocate_in_created(base: str, base_fd: int, name: str) -> TaskScratch:
-    """Allocate below ``base/name`` only if the run lands in the directory this process just created."""
-    # Appended to the supplied value as it is; the one Path made here is what is checked and what allocate() gets.
-    private = Path(os.path.join(base, name))
+def _make_private_dir(base_fd: int) -> str:
+    return _make_unique_dir(base_fd, FALLBACK_PREFIX)
+
+
+def _open_made(parent_fd: int, name: str, made: list[tuple[int, str, int]]) -> int:
+    """Hold the directory just made as ``name`` below ``parent_fd``; refuse it unless it is ours and owner-only."""
     try:
-        fd = os.open(name, _DIR_FLAGS, dir_fd=base_fd)
+        fd = os.open(name, _DIR_FLAGS, dir_fd=parent_fd)
     except OSError as exc:
-        raise TaskScratchError(f"pytest private temp changed after creation: {private}") from exc
-    try:
-        st = os.fstat(fd)
-        if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) != PRIVATE_MODE:
-            raise TaskScratchError(f"pytest private temp is not owner-only: {private}")
-        # allocate() takes a path: it must still name this directory, or it would write elsewhere.
-        try:
-            named = os.stat(private, follow_symlinks=False)
-        except OSError as exc:
-            raise TaskScratchError(f"pytest private temp changed after creation: {private}") from exc
-        if (named.st_dev, named.st_ino) != (st.st_dev, st.st_ino):
-            raise TaskScratchError(f"pytest private temp changed after creation: {private}")
-        scratch = allocate("pytest", root=private, namespace_dirname=RUNS_DIRNAME)
-        # allocate() walks the path again; reach the run from the descriptor and compare.
-        expected = (scratch.lease["dir"]["dev"], scratch.lease["dir"]["ino"])
-        try:
-            runs_fd = os.open(RUNS_DIRNAME, _DIR_FLAGS, dir_fd=fd)
-            try:
-                run = os.stat(scratch.invocation_id, dir_fd=runs_fd, follow_symlinks=False)
-            finally:
-                os.close(runs_fd)
-            contained = (run.st_dev, run.st_ino) == expected
-        except OSError:
-            contained = False
-        if not contained:
-            scratch.preserve()
-            raise TaskScratchError(f"pytest private temp changed during allocation: {private}")
-        return scratch
-    finally:
+        raise _Unusable("changed") from exc
+    st = os.fstat(fd)
+    if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) != PRIVATE_MODE:
         os.close(fd)
+        raise _Unusable("changed")
+    made.append((parent_fd, name, fd))
+    return fd
+
+
+def _names_held(path: str, fd: int) -> bool:
+    """``path`` reaches, as the kernel resolves it now, the very directory ``fd`` holds."""
+    try:
+        named = os.stat(path, follow_symlinks=False)
+    except OSError:
+        return False
+    held = os.fstat(fd)
+    return (named.st_dev, named.st_ino) == (held.st_dev, held.st_ino)
+
+
+def _discard(made: list[tuple[int, str, int]], run_fd: int | None, lock_fd: int | None) -> None:
+    """Remove what this candidate made, through the held descriptors only, and release its lease."""
+    if run_fd is not None:
+        for entry in (LEASE_FILENAME, f".{LEASE_FILENAME}.tmp", LOCK_FILENAME):
+            with contextlib.suppress(OSError):
+                os.unlink(entry, dir_fd=run_fd)
+    if lock_fd is not None:
+        os.close(lock_fd)
+    for parent_fd, name, fd in reversed(made):
+        # Removed only while ``name`` still is the held directory; a replacement is left alone.
+        with contextlib.suppress(OSError, TaskScratchError):
+            _rmdir_held(parent_fd, name, held_fd=fd, held_st=os.fstat(fd))
+        os.close(fd)
+
+
+def _allocate_in_created(base: str, base_fd: int, name: str) -> TaskScratch:
+    """Allocate the run inside ``base/name``, creating every entry relative to a held descriptor.
+
+    Nothing is created by path, so replacing any directory on the way cannot move
+    a write out of the directories held. Only once the run is complete is it
+    named by path, for pytest; that path must reach the held run and payload, or
+    the candidate is removed through the descriptors and refused.
+    """
+    made: list[tuple[int, str, int]] = []
+    run_fd: int | None = None
+    lock_fd: int | None = None
+    try:
+        private_fd = _open_made(base_fd, name, made)
+        os.mkdir(RUNS_DIRNAME, PRIVATE_MODE, dir_fd=private_fd)
+        runs_fd = _open_made(private_fd, RUNS_DIRNAME, made)
+        run_name = _make_unique_dir(runs_fd, "pytest.")
+        run_fd = _open_made(runs_fd, run_name, made)
+        lock_fd = os.open(
+            LOCK_FILENAME, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=run_fd
+        )
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        held = os.fstat(run_fd)
+        # The lease allocate() writes, so lease readers treat this run like any other.
+        lease: dict[str, Any] = {
+            "schema_version": LEASE_SCHEMA_VERSION,
+            "kind": LEASE_KIND,
+            "task_id": "pytest",
+            "invocation_id": run_name,
+            "uid": os.geteuid(),
+            "dir": {"dev": held.st_dev, "ino": held.st_ino},
+            "owner": {"pid": os.getpid(), "start_time": process_start_time(os.getpid()), "boot_id": current_boot_id()},
+            "child": None,
+            "state": "registered",
+            "created_at": time.time(),
+        }
+        _write_lease_at(run_fd, lease)
+        os.mkdir(PAYLOAD_DIRNAME, PRIVATE_MODE, dir_fd=run_fd)
+        payload_fd = _open_made(run_fd, PAYLOAD_DIRNAME, made)
+        # Appended to the supplied value as it is: the one path pytest and every tempfile user get.
+        run = os.path.join(base, name, RUNS_DIRNAME, run_name)
+        payload = os.path.join(run, PAYLOAD_DIRNAME)
+        if not (_names_held(run, run_fd) and _names_held(payload, payload_fd)):
+            raise _Unusable("changed")
+    except BaseException as exc:
+        _discard(made, run_fd, lock_fd)
+        if isinstance(exc, OSError):
+            raise _Unusable(_reason(exc)) from exc
+        raise
+    for _parent_fd, _name, fd in made:
+        if fd != run_fd:
+            os.close(fd)
+    return TaskScratch(
+        task_id="pytest",
+        invocation_id=run_name,
+        namespace=Path(os.path.dirname(run)),
+        path=Path(run),
+        payload_dir=Path(payload),
+        lease=lease,
+        _dir_fd=run_fd,
+        _lock_fd=lock_fd,
+    )
 
 
 def _allocate_private_fallback() -> TaskScratch:
@@ -224,20 +323,20 @@ def _allocate_private_fallback() -> TaskScratch:
     for base, open_base in _fallback_bases():
         try:
             base_fd = open_base()
-            if base_fd is None:
-                failures.append("replaceable")
-                continue
-            try:
-                # A new 0700 directory with a random name: exclusive even in a shared sticky parent.
-                name = _make_private_dir(base_fd)
-            except OSError:
-                os.close(base_fd)
-                raise
         except OSError as exc:
-            failures.append(errno.errorcode.get(exc.errno or 0, "error"))
+            failures.append(_reason(exc))
+            continue
+        if base_fd is None:
+            failures.append("replaceable")
             continue
         try:
+            # A new 0700 directory with a random name: exclusive even in a shared sticky parent.
+            name = _make_private_dir(base_fd)
             return _allocate_in_created(base, base_fd, name)
+        except OSError as exc:
+            failures.append(_reason(exc))
+        except _Unusable as exc:
+            failures.append(str(exc))
         finally:
             os.close(base_fd)
     raise TaskScratchError(
