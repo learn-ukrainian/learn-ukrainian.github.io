@@ -33,21 +33,25 @@ _SENSITIVE_NAME_RE = re.compile(
 # context (#11326).
 _MIN_KEY_BODY = 8
 
-# A credential starts at a word boundary; the tail of "task-" is not a key
-# prefix. Separators, including a hyphen, still expose short keys. ``sk-`` has
-# no length floor: a launch-gate test relies on a short task-id tail
-# (``task-sk-att``) still looking sensitive, and this alternative already had
-# its word boundary before #11326.
+# A credential is matched even when it is glued to a preceding word character:
+# URLs (``%3D``/``%3A``), escaped JSON (a literal ``\n``), and text with a
+# digit, underscore, Cyrillic or accented letter before the key all carry real
+# keys that way. The body floor alone rules out the #11326 run-directory
+# collision, because mkdtemp's ``[a-z0-9_]`` alphabet leaves at most five body
+# characters after the only prefixes it can embed. ``sk-`` is the exception: it
+# keeps the word boundary it had before #11326 (a launch-gate test relies on a
+# short task-id tail, ``task-sk-att``, still looking sensitive) and it has no
+# length floor.
 _SENSITIVE_VALUE_RE = re.compile(
     r"(?:"
-    rf"\bgithub_pat_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
-    rf"\bgh[pousr]_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"github_pat_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"gh[pousr]_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     r"\bsk-[A-Za-z0-9_-]+|"
-    rf"\bxox[baprs]-[A-Za-z0-9-]{{{_MIN_KEY_BODY},}}|"
-    rf"\bhf_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
-    rf"\bnpm_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
-    r"\bAKIA[A-Z0-9]{12,}|"
-    rf"\bAIza[A-Za-z0-9_-]{{{_MIN_KEY_BODY},}}"
+    rf"xox[baprs]-[A-Za-z0-9-]{{{_MIN_KEY_BODY},}}|"
+    rf"hf_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"npm_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    r"AKIA[A-Z0-9]{12,}|"
+    rf"AIza[A-Za-z0-9_-]{{{_MIN_KEY_BODY},}}"
     r")"
 )
 

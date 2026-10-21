@@ -88,38 +88,47 @@ def test_hyphen_preceded_key_path_remains_rejected_with_spoofed_dispatch():
     assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "task-7828-sk-something"
 
 
-# Each fragment is a random pytest run-directory name holding one provider
-# key-prefix alternative. The surrounding word and the short body make it a
-# directory name, not a credential (#11326). ``sk-`` is only exercised inside a
-# word: its word boundary predates this fix and its short task-id tails must
-# stay sensitive.
+# A pytest run directory is ``pytest.`` plus eight random characters from
+# mkdtemp's ``[a-z0-9_]`` alphabet. Only the all-lowercase ``gh?_``, ``hf_`` and
+# ``npm_`` prefixes can occur there, and the longest fragment they leave is
+# five characters, below the floor. ``sk-`` needs a hyphen and ``AKIA``/``AIza``
+# need uppercase letters, so none of those can appear in a run-directory name
+# (#11326). A re-added word boundary is caught by the glued-key test below, not
+# by these rows.
 _RUN_DIRECTORY_KEY_FRAGMENTS = (
-    "xgithub_pat_ab",
-    "bghp_56ac",
-    "bsk-56ac",
-    "bxoxb-56ac",
-    "bhf_56ac",
-    "bnpm_56ac",
-    "bAKIAFAKEFAKEFAKE",
-    "bAIzaFakeValue",
-    "github_pat_ab",
     "ghp_56ac",
-    "xoxb-56ac",
-    "hf_56ac",
+    "gho_56ac",
+    "ghu_56ac",
+    "ghs_56ac",
+    "ghr_56ac",
+    "bghp_56a",
+    "bbghp_56",
+    "hf_56acd",
+    "bhf_56ac",
+    "bbbhf_56",
     "npm_56ac",
-    "AIzaFAKE",
+    "bnpm_56a",
+    "bbnpm_56",
 )
 
-_REAL_KEY_SHAPED_VALUES = (
-    "github_pat_" + "FAKE" * 6,
-    "ghp_" + "FAKE" * 9,
-    "sk-" + "FAKE" * 5,
-    "xoxb-" + "FAKE" * 6,
-    "hf_" + "FAKE" * 8,
-    "npm_" + "FAKE" * 9,
-    "AKIA" + "FAKE" * 4,
-    "AIza" + "FAKE" * 8,
+_KEY_PREFIX_BODIES = (
+    ("github_pat_", "FAKE" * 6),
+    ("ghp_", "FAKE" * 9),
+    ("sk-", "FAKE" * 5),
+    ("xoxb-", "FAKE" * 6),
+    ("hf_", "FAKE" * 8),
+    ("npm_", "FAKE" * 9),
+    ("AKIA", "FAKE" * 4),
+    ("AIza", "FAKE" * 8),
 )
+
+_REAL_KEY_SHAPED_VALUES = tuple(prefix + body for prefix, body in _KEY_PREFIX_BODIES)
+
+# A real key can be glued to a preceding word character, which is exactly what
+# a word boundary would hide. ``sk-`` is absent: it keeps its pre-#11326
+# boundary and therefore is not detected when glued.
+_GLUED_SEPARATORS = ("MY_", "x_", "abc", "9", "%3D", "%3A", "\\n", "і", "é")
+_GLUED_PREFIX_BODIES = tuple((prefix, body) for prefix, body in _KEY_PREFIX_BODIES if prefix != "sk-")
 
 
 @pytest.mark.parametrize("provider", ["claude", "acpx-claude-shadow"])
@@ -137,12 +146,35 @@ def test_run_directory_name_containing_a_key_prefix_keeps_path(provider, fragmen
 
 @pytest.mark.parametrize("key", _REAL_KEY_SHAPED_VALUES)
 def test_real_key_shaped_values_are_still_dropped(key):
-    """#11326: the word boundary and body floor must not weaken real detection."""
+    """#11326: the body floor must not weaken real detection."""
     path = f"/usr/bin:{key}:/bin"
     with patch.dict(os.environ, {"PATH": path, "HOME": "/fixture/home", "AB_TRACE": key}, clear=True):
         env = build_agent_env(provider="claude")
     assert "AB_TRACE" not in env
     assert "PATH" not in env
+    assert all(key not in value for value in env.values())
+
+
+@pytest.mark.parametrize("separator", _GLUED_SEPARATORS)
+@pytest.mark.parametrize("prefix,body", _GLUED_PREFIX_BODIES)
+def test_glued_full_length_keys_are_still_dropped(separator, prefix, body):
+    """#11326: a full-length key glued to a word character is still a credential.
+
+    Reads like ``MY_ghp_...``, ``9AKIA...``, ``%3Dgithub_pat_...``, escaped
+    JSON ``\\ngithub_pat_...`` and a Cyrillic or accented letter before the key
+    are all dropped. Adding a word boundary in front of a prefix makes every
+    row here fail.
+    """
+    key = f"{separator}{prefix}{body}"
+    context = {
+        "PATH": f"/usr/bin:{key}:/bin",
+        "HOME": f"/fixture/{key}/home",
+        "AB_TRACE": f'{{"value":"{key}"}}',
+    }
+    with patch.dict(os.environ, context, clear=True):
+        env = build_agent_env(provider="claude")
+    for name in context:
+        assert name not in env, name
     assert all(key not in value for value in env.values())
 
 
