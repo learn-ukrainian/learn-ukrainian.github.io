@@ -6,6 +6,8 @@
   data_store entry (or a reasoned exemption).
 * Front matter, banners and catalogue overrides agree; the README's generated family
   table is current.
+* The SQLite store registry agrees with code and the backup allowlist, and the checkout's
+  data/, .agent/, .mcp/ and batch_state/ hold no SQLite file it does not claim (#11092).
 * The development lookups (tests/fixtures/docs_find_dev_lookups.yaml and the natural-wording
   set docs_find_dev_lookups_natural.yaml) are verified authorities, and the one entry point
   answers them as short queries and as full questions (the top-n sweep is split over
@@ -26,6 +28,7 @@ from fastapi.testclient import TestClient
 import scripts.api.main as api_main
 from scripts.docs import catalogue as cat
 from scripts.docs import find as find_module
+from scripts.docs import store_census
 from scripts.docs.find import find
 from tests.helpers.docs_find_lookups import (
     DEV_KINDS,
@@ -100,6 +103,31 @@ def test_the_readme_block_is_generated_from_the_catalogue(checked):
     assert cat.render_readme(text, catalogue) == text, (
         f'{cat.README_PATH} is stale: run python -m scripts.docs.catalogue readme')
     assert 'python -m scripts.docs.find' in text  # the one entry point is named
+
+
+# ------------------------------------------------------------------ the SQLite store registry (#11092)
+
+def test_the_store_registry_is_checked_against_code_and_the_allowlist(checked):
+    report, catalogue = checked
+    registry = store_census.registry(catalogue)
+    assert len(registry['stores']) == 49, 'expected 40 present stores and 9 declared-absent defaults'
+    assert [e for e in report.errors if e.startswith(store_census.REGISTRY_KEY)] == []
+
+
+def test_this_checkout_has_no_unregistered_sqlite_file(checked):
+    # In CI this is the real tree: data/, .agent/, .mcp/ and batch_state/ hold no SQLite file
+    # that the registry does not claim. A copy left in a worktree fails here too.
+    _, catalogue = checked
+    result = store_census.census(REPO, catalogue)
+    assert result.ok, '\n'.join(store_census.census_lines(result, store_census.registry(catalogue)))
+
+
+def test_the_check_command_fails_on_an_unregistered_store_under_the_store_root(tmp_path, capsys):
+    (tmp_path / 'data').mkdir()
+    (tmp_path / 'data/foo.sqlite3').write_bytes(b'SQLite format 3\x00' + bytes(84))
+    assert cat.main(['check', '--repo', str(REPO), '--store-root', str(tmp_path)]) == 1
+    out = capsys.readouterr().out
+    assert 'errors 0' in out and 'UNREGISTERED SQLITE data/foo.sqlite3' in out
 
 
 # ------------------------------------------------------------------ the entry point answers real lookups

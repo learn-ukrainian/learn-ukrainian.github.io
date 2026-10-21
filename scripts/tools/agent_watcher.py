@@ -103,16 +103,19 @@ MAX_TURNS_PER_TASK = 10  # Max agent responses per task before requiring human i
 MAX_CONSECUTIVE_ERRORS = 3  # Stop processing after consecutive errors
 MAX_DELIVERY_ATTEMPTS = 3   # Ack with error status after this many failed attempts
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    handlers=[
-        logging.FileHandler(LOG_FILE),
-        logging.StreamHandler()
-    ]
-)
 logger = logging.getLogger(__name__)
+
+
+def _configure_logging() -> None:
+    """Attach the watcher log file. Import and `--help` must not open it."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        handlers=[
+            logging.FileHandler(LOG_FILE),
+            logging.StreamHandler(),
+        ],
+    )
 
 # Agent config (lazy-loaded singleton)
 _AGENTS_CONFIG = None
@@ -390,8 +393,6 @@ def run_watcher():
 
     # Track blocked tasks (hit turn limit)
     blocked_tasks = set()
-    # Track delivery attempts per message: {message_id: attempt_count}
-    delivery_attempts: dict[int, int] = {}
 
     while True:
         try:
@@ -443,40 +444,6 @@ def run_watcher():
                 logger.debug(f"Auto-acking msg #{msg['id']} ({msg['from']}→{msg['to']} task={msg.get('task_id', 'N/A')})")
                 acknowledge_message(msg['id'], status="auto-acked-monitor-only")
                 continue
-
-                # Check if max delivery attempts exceeded
-                attempts = delivery_attempts.get(msg['id'], 0)
-                if attempts >= MAX_DELIVERY_ATTEMPTS:
-                    logger.error(
-                        f"Message #{msg['id']} failed {attempts} delivery attempts — "
-                        f"marking as delivery_failed (from={msg['from']} to={msg['to']} task={msg['task_id']})"
-                    )
-                    acknowledge_message(msg['id'], status="delivery_failed")
-                    delivery_attempts.pop(msg['id'], None)
-                    continue
-
-                # Trigger appropriate agent
-                success = trigger_agent(msg['to'], msg['id'], msg['task_id'], from_agent=msg['from'])
-
-                if success:
-                    consecutive_errors = 0
-                    datetime.now(UTC)
-                    processed = True
-                    delivery_attempts.pop(msg['id'], None)
-                    # Cooldown after successful trigger
-                    time.sleep(COOLDOWN_AFTER_TRIGGER_SECONDS)
-                else:
-                    consecutive_errors += 1
-                    delivery_attempts[msg['id']] = attempts + 1
-                    logger.warning(
-                        f"Message #{msg['id']} delivery attempt {attempts + 1}/{MAX_DELIVERY_ATTEMPTS} failed"
-                    )
-                    if consecutive_errors >= MAX_CONSECUTIVE_ERRORS:
-                        logger.error(f"Too many consecutive errors ({consecutive_errors}) - pausing for 60s")
-                        time.sleep(60)
-                        consecutive_errors = 0
-
-                break  # Only process one message per loop iteration
 
             if not processed:
                 # All messages were skipped (blocked or errors)
@@ -586,6 +553,7 @@ def main():
     parser.add_argument("--once", action="store_true", help="Process one message and exit")
 
     args = parser.parse_args()
+    _configure_logging()
 
     if args.status:
         show_status()

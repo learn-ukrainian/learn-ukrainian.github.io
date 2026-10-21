@@ -8187,6 +8187,53 @@ def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) ->
     path.write_bytes(_json_bytes(payload))
 
 
+def _cloze_mechanism(item: dict[str, Any]) -> str:
+    return "lexical" if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID else "case-labelled"
+
+
+def snapshot_cloze_occurrences(
+    shards: dict[str, dict[str, dict[str, Any]]],
+) -> list[tuple[dict[str, Any], dict[str, str]]]:
+    """Pair each emitted cloze item with its withheld-row identity before compaction drops ``lemma``."""
+    return [
+        (
+            item,
+            {
+                "clozeId": item["clozeId"],
+                "lemma": item["lemma"],
+                "level": level,
+                "mechanism": _cloze_mechanism(item),
+                "sentence": item["sentence"],
+            },
+        )
+        for level, level_shards in shards.items()
+        for item in level_shards["cloze"]["cloze"]
+    ]
+
+
+def reconcile_cloze_budget_trims(
+    shards: dict[str, dict[str, dict[str, Any]]],
+    snapshot: list[tuple[dict[str, Any], dict[str, str]]],
+    withheld: list[dict[str, str]],
+) -> None:
+    """Record each snapshotted cloze occurrence that size budgets removed (#10672).
+
+    Source ``clozeId`` values are not unique, so occurrences are matched by
+    their complete compacted payload with multiplicity, never by ID sets.
+    """
+    final = Counter(
+        (level, _json_bytes(item)) for level, level_shards in shards.items() for item in level_shards["cloze"]["cloze"]
+    )
+    for item, row in snapshot:
+        key = (row["level"], _json_bytes(item))
+        if final[key]:
+            final[key] -= 1
+        else:
+            withheld.append({**row, "rule": "size_budget_trim", "reason": "size_budget_trim"})
+    if +final:
+        raise RuntimeError(f"unaccounted cloze occurrences in final shards: {sum((+final).values())}")
+
+
 def write_cloze_withheld_report(
     path: Path,
     withheld: list[dict[str, str]],
@@ -8197,7 +8244,7 @@ def write_cloze_withheld_report(
     excluded = {(row["level"], row["mechanism"], row["clozeId"]) for row in withheld}
     withheld_counts = Counter((level, mechanism) for level, mechanism, _ in excluded)
     admitted_counts = Counter(
-        (level, "lexical" if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID else "case-labelled")
+        (level, _cloze_mechanism(item))
         for level, level_shards in shards.items()
         for item in level_shards["cloze"]["cloze"]
     )
@@ -8581,6 +8628,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
                 ensure_ascii=False,
             )
         )
+    cloze_snapshot = snapshot_cloze_occurrences(shards) if args.cloze_withheld_report else None
     compact_cloze_emit_fields(shards)
     apply_size_budgets(
         shards,
@@ -8591,6 +8639,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     )
     reconcile_synonym_accounting(shards, synonym_accounting)
     if args.cloze_withheld_report:
+        reconcile_cloze_budget_trims(shards, cloze_snapshot or [], cloze_withheld)
         write_cloze_withheld_report(args.cloze_withheld_report, cloze_withheld, shards)
         print(f"cloze withheld {len(cloze_withheld)} findings -> {args.cloze_withheld_report}")
     if args.aspect_residual_report or args.pos_residual_report:

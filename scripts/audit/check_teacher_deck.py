@@ -464,10 +464,12 @@ def article_senses(article: dict[str, Any]) -> list[str]:
     return [" ".join(item.split()) for item in english if isinstance(item, str) and item.strip()]
 
 
-def load_ledger(path: Path, report: Report) -> tuple[dict[str, str], set[str]]:
+def load_ledger(path: Path, report: Report) -> tuple[dict[str, str], set[str]] | None:
     """Withheld sentence digests -> code, and kept digests; the ledger must carry hashes, never text."""
 
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = _load(path, report)
+    if payload is None:
+        return None
     if (payload.get("schema"), payload.get("schemaVersion")) != LEDGER_SCHEMA:
         report.fail("review ledger schema/version mismatch")
     withheld: dict[str, str] = {}
@@ -546,7 +548,7 @@ def _load(path: Path, report: Report) -> dict[str, Any] | None:
         return None
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         report.fail(f"unreadable artifact {path.name}: {exc}")
         return None
     if not isinstance(payload, dict):
@@ -555,13 +557,33 @@ def _load(path: Path, report: Report) -> dict[str, Any] | None:
     return payload
 
 
+def _manifest_records(manifest: dict[str, Any], report: Report) -> list[dict[str, Any]] | None:
+    """The manifest's file rows; a malformed container or row is reported, never iterated."""
+
+    files = manifest.get("files", [])
+    if not isinstance(files, list):
+        report.fail(f"invalid manifest {MANIFEST_FILE}: files must be a list")
+        return None
+    for index, row in enumerate(files):
+        if not isinstance(row, dict):
+            report.fail(f"invalid manifest {MANIFEST_FILE}: files[{index}] must be an object")
+    return [row for row in files if isinstance(row, dict)]
+
+
 def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> None:
-    for record in manifest.get("files", []):
+    records = _manifest_records(manifest, report)
+    if records is None:
+        return
+    for record in records:
         path = deck_dir / str(record.get("path"))
         if not path.exists():
             report.fail(f"manifest file missing: {record.get('path')}")
             continue
-        data = path.read_bytes()
+        try:
+            data = path.read_bytes()
+        except OSError as exc:
+            report.fail(f"unreadable artifact {path.name}: {exc}")
+            continue
         if hashlib.sha256(data).hexdigest() != record.get("sha256") or len(data) != record.get("bytes"):
             report.fail(f"manifest hash/size mismatch: {record.get('path')}")
         payload = _load(path, report)
@@ -573,7 +595,7 @@ def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> 
         compressed = len(gzip.compress(data, compresslevel=9, mtime=0))
         if isinstance(budget, int) and compressed > budget:
             report.fail(f"{record.get('path')}: gzip {compressed} B exceeds budget {budget} B")
-    names = {record.get("path") for record in manifest.get("files", [])}
+    names = {record.get("path") for record in records}
     for required in (DECK_FILE, CLOZE_FILE, FROZEN_FILE):
         if required not in names:
             report.fail(f"manifest does not reference {required}")
@@ -1137,7 +1159,13 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
         report.fail(f"frozen key list has {len(frozen.get('keys', []))} keys, expected {args.expect_keys}")
     if args.docx:
         summary["table"] = check_source_table(deck, frozen, extract_table(args.docx, args.heading), report)
-    withheld, kept = load_ledger(args.withheld, report) if getattr(args, "withheld", None) else (None, set())
+    withheld: dict[str, str] | None = None
+    kept: set[str] = set()
+    if getattr(args, "withheld", None):
+        ledger = load_ledger(args.withheld, report)
+        if ledger is None:
+            return report, {}
+        withheld, kept = ledger
     required_kept = kept if getattr(args, "publication", False) else None
     vesum = _read_only(args.vesum_db)
     sources = _read_only(args.sources_db)

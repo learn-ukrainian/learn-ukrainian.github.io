@@ -1,196 +1,33 @@
 """Decolonized dictionary evidence lookup: official СУМ-20 + Soviet colonization context (СУМ-11).
 
 Provides:
-- lookup_sum20_articles: Fetches and caches authentic modern СУМ-20 entries from sum20ua.com.
-- lookup_sum11_colonization_context: Fetches Soviet-era СУМ-11 definitions, flagged with
+- lookup_sum20_articles: reads locally stored modern СУМ-20 articles. A miss is empty.
+- lookup_sum11_colonization_context: reads Soviet-era СУМ-11 rows, flagged with
   sovietization_risk and keywords for historical transparency.
-- lookup_decolonized_heteronym_evidence: Combines modern baseline with colonization context.
+- lookup_decolonized_heteronym_evidence: combines the local modern baseline with
+  colonization context.
+
+Public SUM-20 lookups are strictly offline (#10655). They share the live-article
+filter in ``scripts.wiki.sum20_official`` and never fetch or scrape. ``data/lexdata.db``
+is canonical only when its published generation passes validation and holds
+``sum20_articles``; an absent default uses the read-only official sources
+collection. On a local key miss the binding reads mirror staging as mirror_candidate evidence.
+Official ingest owns official store population; readers never populate stores.
 """
 
 from __future__ import annotations
 
-import contextlib
-import json
-import os
-import re
-import sqlite3
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
-import requests
-from bs4 import BeautifulSoup
-
-from scripts.wiki.sum20_official import (
-    ensure_sum20_official_schema,
-    live_article_predicate,
-    normalize_sum20_lookup,
-    parse_sum20_article,
-    upsert_sum20_article,
-)
+from scripts.lexicon.sum20_store import lookup_sum20_cached as lookup_sum20_cached
+from scripts.lexicon.sum20_store import open_sources, resolve_sum20_articles
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-)
-
-
-@lru_cache(maxsize=1)
-def _resolve_primary_checkout() -> Path | None:
-    parts = REPO_ROOT.parts
-    if ".worktrees" in parts:
-        return Path(*parts[: parts.index(".worktrees")])
-    return REPO_ROOT
-
-
-def _resolve_sources_db() -> Path:
-    env_path = os.environ.get("SOURCES_DB_PATH")
-    if env_path and Path(env_path).is_file():
-        return Path(env_path)
-    local = REPO_ROOT / "data" / "sources.db"
-    if local.is_file() and local.stat().st_size > 1_000_000:
-        return local
-    primary = _resolve_primary_checkout()
-    if primary:
-        prim_db = primary / "data" / "sources.db"
-        if prim_db.is_file():
-            return prim_db
-    return local
-
-
-def _read_only_uri(uri: str) -> str:
-    """``uri`` with ``mode=ro`` enforced; a fragment or any other ``mode`` is refused."""
-    parts = urlsplit(uri)
-    if "#" in uri:  # SQLite ends the path/query at "#", so even an empty fragment changes the parse
-        raise ValueError(f"read-only СУМ-20 lookup refuses a URI with a fragment: {uri}")
-    params = parse_qsl(parts.query, keep_blank_values=True)
-    for key, value in params:
-        if key == "mode" and value != "ro":
-            raise ValueError(f"read-only СУМ-20 lookup refuses a URI with mode={value}: {uri}")
-    kept = [(key, value) for key, value in params if key != "mode"]
-    return urlunsplit(parts._replace(query=urlencode([*kept, ("mode", "ro")])))
-
-
-def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
-    if isinstance(db_path, str) and db_path.startswith("file:"):
-        conn = sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)
-    else:
-        target = Path(db_path) if db_path else _resolve_sources_db()
-        read_only_uri = f"{target.resolve().as_uri()}?mode=ro"
-        conn = sqlite3.connect(target) if write else sqlite3.connect(read_only_uri, uri=True)
-    conn.row_factory = sqlite3.Row
-    if not write:
-        with contextlib.suppress(sqlite3.OperationalError):
-            conn.execute("PRAGMA query_only = ON")
-    else:
-        ensure_sum20_official_schema(conn)
-    return conn
-
-
-def lookup_sum20_cached(lemma: str, conn: sqlite3.Connection) -> list[dict[str, Any]]:
-    """Retrieve locally cached СУМ-20 records for lemma (read-only safe)."""
-    norm = normalize_sum20_lookup(lemma)
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum20_articles'")
-        if not cur.fetchone():
-            return []
-        columns = [str(row[1]) for row in cur.execute("PRAGMA table_info(sum20_articles)").fetchall()]
-        cur.execute(
-            f"""
-            SELECT a.id, a.wordid, a.headword, a.stressed_headword, a.pos, a.grammar, a.definition_text, a.official_url
-            FROM sum20_articles a
-            WHERE (a.normalized_lookup_key = ? OR a.normalized_lookup_key LIKE ?)
-              AND {live_article_predicate(columns, "a")}
-            ORDER BY a.wordid
-            """,
-            (norm, f"{norm} %"),
-        )
-        rows = cur.fetchall()
-    except sqlite3.OperationalError:
-        return []
-
-    results = []
-    for r in rows:
-        art_id = r["id"]
-        senses = []
-        try:
-            cur.execute(
-                """
-                SELECT sense_order, definition, register_labels
-                FROM sum20_senses
-                WHERE article_id = ?
-                ORDER BY sense_order
-                """,
-                (art_id,),
-            )
-            senses = [
-                {
-                    "sense_order": s["sense_order"],
-                    "definition": s["definition"],
-                    "register_labels": json.loads(s["register_labels"] or "[]"),
-                }
-                for s in cur.fetchall()
-            ]
-        except (sqlite3.OperationalError, json.JSONDecodeError):
-            pass
-
-        results.append(
-            {
-                "id": art_id,
-                "wordid": r["wordid"],
-                "headword": r["headword"],
-                "stressed_headword": r["stressed_headword"],
-                "pos": r["pos"],
-                "grammar": r["grammar"],
-                "definition": r["definition_text"],
-                "senses": senses,
-                "url": r["official_url"],
-            }
-        )
-    return results
-
-
-def fetch_and_cache_sum20(
-    lemma: str,
-    conn: sqlite3.Connection,
-    timeout_s: float = 15.0,
-) -> list[dict[str, Any]]:
-    """Fetch official СУМ-20 articles for lemma from sum20ua.com and cache into sources.db."""
-    norm_lemma = normalize_sum20_lookup(lemma)
-    url = f"https://sum20ua.com/List/Search?searchWord={quote(lemma)}"
-    headers = {"User-Agent": DEFAULT_USER_AGENT}
-    try:
-        resp = requests.get(url, headers=headers, timeout=timeout_s)
-        if resp.status_code != 200:
-            return []
-        soup = BeautifulSoup(resp.text, "html.parser")
-        matching_wordids: list[int] = []
-        for a in soup.find_all("a", href=re.compile(r"wordid=\d+")):
-            text = a.get_text(strip=True)
-            norm_text = normalize_sum20_lookup(text)
-            if norm_text == norm_lemma or norm_text.rstrip("1234567890") == norm_lemma:
-                m = re.search(r"wordid=(\d+)", a["href"])
-                if m:
-                    wid = int(m.group(1))
-                    if wid not in matching_wordids:
-                        matching_wordids.append(wid)
-
-        for wid in matching_wordids:
-            art_url = f"https://sum20ua.com/?wordid={wid}&page=0"
-            art_resp = requests.get(art_url, headers=headers, timeout=timeout_s)
-            if art_resp.status_code == 200:
-                try:
-                    parsed = parse_sum20_article(art_resp.text, wordid=wid)
-                    upsert_sum20_article(conn, parsed)
-                except Exception:
-                    continue
-        conn.commit()
-    except Exception:
-        pass
-
-    return lookup_sum20_cached(lemma, conn)
+def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> SQLiteConnection:
+    """Legacy connection helper; even write=True cannot grant write access."""
+    return open_sources(db_path, repository_root=REPO_ROOT)
 
 
 def lookup_sum20_articles(
@@ -198,33 +35,18 @@ def lookup_sum20_articles(
     db_path: Path | str | None = None,
     *,
     write: bool = False,
+    mirror_db_path: Path | str | None = None,
 ) -> list[dict[str, Any]]:
-    """Retrieve modern authoritative СУМ-20 articles for lemma.
+    """Return modern СУМ-20 articles already stored for ``lemma``.
 
-    By default (write=False), only read-only lookup against cached records is performed,
-    enforcing PRAGMA query_only = ON and never attempting schema creation or cache writes.
-    To allow network fetching and caching on miss, pass write=True.
+    Strictly offline (#10655). The connection is read-only (``PRAGMA query_only``).
+    A missing table or row returns ``[]``. Refused stores raise Sum20StoreError.
+    ``write`` is retained for existing callers. ``True`` does not open a writable
+    database, populate a cache, or contact the network. Official ingest owns that.
     """
-    try:
-        conn = _get_db(db_path, write=False)
-    except sqlite3.OperationalError:  # no database file yet: nothing cached
-        cached: list[dict[str, Any]] = []
-    else:
-        try:
-            cached = lookup_sum20_cached(lemma, conn)
-        finally:
-            conn.close()
-    if cached or not write:
-        return cached
-
-    try:
-        write_conn = _get_db(db_path, write=True)
-        try:
-            return fetch_and_cache_sum20(lemma, write_conn)
-        finally:
-            write_conn.close()
-    except sqlite3.OperationalError:
-        return []
+    # ``write`` cannot select a live fallback. Both values take the local read.
+    _ = write
+    return resolve_sum20_articles(lemma, db_path, mirror_db_path=mirror_db_path, repository_root=REPO_ROOT)
 
 
 def lookup_sum11_colonization_context(lemma: str, db_path: Path | str | None = None) -> dict[str, Any] | None:
@@ -276,7 +98,13 @@ def lookup_decolonized_heteronym_evidence(
     *,
     write: bool = False,
 ) -> dict[str, Any]:
-    """Return complete decolonized evidence bundle for a heteronym lemma."""
+    """Return the local decolonized evidence bundle for a heteronym lemma.
+
+    Both layers are read from local databases. A modern miss is an empty list;
+    a missing colonization row is ``None``. ``write`` is forwarded and still
+    cannot authorize a network request (#10655). An omitted ``db_path`` reads
+    SUM-20 from the canonical file and SUM-11 from the sources collection.
+    """
     sum20 = lookup_sum20_articles(lemma, db_path, write=write)
     col_context = lookup_sum11_colonization_context(lemma, db_path)
     return {

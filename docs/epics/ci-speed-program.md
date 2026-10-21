@@ -77,8 +77,10 @@ landed the same day, so the two effects are not separable. **What now dominates*
   every PR touching `tests/`; the label stays for the rare change the classifier cannot see. `full-ci` stops forcing
   the Frontend job unless site paths changed.
 - **D2 — Flake control (#9067).** A quarantine registry (node id, fix issue, owner, expiry ≤ 30 days, one renewal).
-  *Admission:* an open fix issue plus at least two observed flaky failures (run ids) — the registry lint rejects
-  anything else. *Behaviour:* `pytest-rerunfailures` reruns **only** listed tests and **never** on the nightly
+  *Admission:* an open fix issue, two distinct reproduced failures on unmodified main, equivalent behavior coverage
+  and designated admission approval. The [admission checker](../runbooks/flake-quarantine.md) verifies changed
+  registry entries against GitHub metadata and exact-node JUnit evidence; pytest lint stays offline.
+  *Behaviour:* `pytest-rerunfailures` reruns **only** listed tests and **never** on the nightly
   `schedule` run, so a still-flaky test shows up red on the nightly; every rerun (first-attempt failure, rerun green)
   is written to the job summary and the nightly flake ledger. *Expiry:* on the expiry date the nightly opens or updates
   the fix issue; after a 7-day grace the entry's rerun is removed on every event, so an unfixed flake fails PR and queue
@@ -131,7 +133,7 @@ Out of this program: #8921 (Claude workers backgrounding pytest — harness), #8
   them — **zero misses**; merged-PR replays and importer checks alone are not proof. #8506's replay set includes
   #8872's. A selector change that misses, or that lowers a tier's collected-test count, stops. Queue-only escapes
   above 1 / 100 queue runs reopen D1.
-- **Quarantine as a parking lot** (#9067): an entry without an open fix issue fails the registry lint; entries expire
+- **Quarantine as a parking lot** (#9067): an entry without an open fix issue fails the admission check; entries expire
   and the nightly shows it.
 - **Nightly reliability:** the 2026-09-27 nightly started ~6 h late and the 2026-09-28 one had not started by 09:40Z.
   GitHub does not guarantee `schedule` timing. #8877 (moving tests to the nightly tier) waits until the nightly has run

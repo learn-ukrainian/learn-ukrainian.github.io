@@ -9,6 +9,7 @@ import io
 import posixpath
 import re
 import shlex
+import subprocess
 import sys
 from bisect import bisect_right
 from collections import Counter
@@ -743,8 +744,10 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "scripts/orchestration/issue_stream_audit.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "190bf8f61e9cdcfae7b5495b37b89ef5dcee3c2ba1e12ed4aa6faf8f4f250465:1",
+        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702. "
+        "publish_cache stages its atomic os.replace in the cache's own directory and unlinks it (#10793).",
+        "190bf8f61e9cdcfae7b5495b37b89ef5dcee3c2ba1e12ed4aa6faf8f4f250465:1 "
+        "8640cf7f0d0116eec5bc28feaf76e1e70769ffd900775c0ba583c1b91735f6d3:1",
     ),
     (
         "scripts/orchestration/job_host_exec.py",
@@ -2421,24 +2424,97 @@ def scan_shell(source: str, path: str) -> list[Finding]:
     return sorted(set(findings))
 
 
-def scan_lines(repo_root: Path) -> list[tuple[str, int, str]]:
-    """Collect raw/decoded literals and producer calls under the same exact baseline."""
+SCAN_DIRECTORIES = ("scripts", "tests")
+SCAN_SUFFIXES = {".py", ".sh", ".bash"}
+
+
+def scannable(path: Path, repo_root: Path) -> bool:
+    """Whether a file is in the lint's scope; one predicate for repo-wide and per-file scans."""
+    if path.is_symlink() or not path.is_file() or path.suffix not in SCAN_SUFFIXES:
+        return False
+    try:
+        relative = path.relative_to(repo_root)
+    except ValueError:
+        return False
+    return relative.parts[0] in SCAN_DIRECTORIES and not any(
+        (repo_root / parent).is_symlink() for parent in relative.parents if parent != Path(".")
+    )
+
+
+def repo_scan_paths(repo_root: Path) -> list[Path]:
+    return [
+        path
+        for directory in SCAN_DIRECTORIES
+        for path in sorted((repo_root / directory).rglob("*"))
+        if scannable(path, repo_root)
+    ]
+
+
+def explicit_scan_paths(repo_root: Path, names: list[str]) -> list[Path]:
+    """Resolve given files (cwd-relative or absolute); missing or out-of-scope ones are skipped."""
+    selected = set()
+    for name in names:
+        candidate = Path(posixpath.normpath((Path.cwd() / name).as_posix()))
+        try:
+            candidate.relative_to(repo_root)
+        except ValueError:
+            continue
+        if scannable(candidate, repo_root):
+            selected.add(candidate)
+    return sorted(selected)
+
+
+def changed_files(repo_root: Path, ref: str) -> list[str]:
+    """Absolute paths of files added/modified against ``ref`` (includes the working tree)."""
+    listing = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo_root),
+            "diff",
+            "--name-only",
+            "--no-renames",
+            "--diff-filter=ACMR",
+            "-z",
+            "--end-of-options",
+            ref,
+            "--",
+        ],
+        capture_output=True,
+        check=True,
+        timeout=60,
+    ).stdout.decode()
+    top = subprocess.run(
+        ["git", "-C", str(repo_root), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=60,
+    ).stdout.strip()
+    return [str(Path(top) / name) for name in listing.split("\0") if name]
+
+
+def scan_lines(repo_root: Path, paths: list[Path] | None = None) -> list[tuple[str, int, str]]:
+    """Collect raw/decoded literals and producer calls under the same exact baseline.
+
+    ``paths`` limits the scan to those files; their rows equal the repo-wide rows.
+    """
     rows = []
-    for directory in ("scripts", "tests"):
-        for path in sorted((repo_root / directory).rglob("*")):
-            if path.is_symlink() or not path.is_file() or path.suffix not in {".py", ".sh", ".bash"}:
-                continue
-            relative = path.relative_to(repo_root).as_posix()
-            source = path.read_text(encoding="utf-8")
-            lines = re.split(r"\r\n|\r|\n", source)
-            literal_numbers = {n for n, line in enumerate(lines, 1) if has_literal_temp_path(line)}
-            findings = scan_python(source, relative) if path.suffix == ".py" else scan_shell(source, relative)
-            for finding in findings:
-                if finding.message == "literal system temp path":
-                    literal_numbers.add(finding.line)
-                else:
-                    rows.append((relative, finding.line, finding.message))
-            rows.extend((relative, n, lines[n - 1].strip()) for n in sorted(literal_numbers))
+    candidates = repo_scan_paths(repo_root) if paths is None else sorted(set(paths))
+    for path in candidates:
+        if not scannable(path, repo_root):
+            continue
+        relative = path.relative_to(repo_root).as_posix()
+        source = path.read_text(encoding="utf-8")
+        lines = re.split(r"\r\n|\r|\n", source)
+        literal_numbers = {n for n, line in enumerate(lines, 1) if has_literal_temp_path(line)}
+        findings = scan_python(source, relative) if path.suffix == ".py" else scan_shell(source, relative)
+        for finding in findings:
+            if finding.message == "literal system temp path":
+                literal_numbers.add(finding.line)
+            else:
+                rows.append((relative, finding.line, finding.message))
+        rows.extend((relative, n, lines[n - 1].strip()) for n in sorted(literal_numbers))
     return sorted(rows)
 
 
@@ -2475,14 +2551,33 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Flag literal system-temp paths and unmanaged tempfile/mktemp calls outside the counted allowlist.\nUse before review; worker scratch belongs under the managed TMPDIR lease.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --repo .\nOutputs: source locations, counted fingerprints and remediation; no writes or literal path contents.\nExit codes: 0 clean; 1 findings; 2 invalid arguments or source read/parse error.\nRelated: #8755; workflow.md; scripts.hygiene.lint_raw_rm_rf.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --repo .\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths scripts/a.py tests/b.py\n  .venv/bin/python -m scripts.hygiene.lint_tmp_paths --changed-from origin/main\nOutputs: source locations, counted fingerprints and remediation; no writes or literal path contents.\nExit codes: 0 clean; 1 findings; 2 invalid arguments or source read/parse error.\nRelated: #8755; workflow.md; scripts.hygiene.lint_raw_rm_rf.",
     )
     parser.add_argument(
         "--repo", type=Path, default=REPO_ROOT, help="Repository to scan (default this checkout; example .)."
     )
+    parser.add_argument(
+        "paths", nargs="*", help="Changed-file mode: scan only these files (same allowlist and results as repo-wide)."
+    )
+    parser.add_argument(
+        "--changed-from",
+        metavar="REF",
+        help="Changed-file mode: also scan files added/modified against REF (git diff, includes the working tree).",
+    )
     args = parser.parse_args(argv)
     try:
-        rows = scan_lines(args.repo)
+        selected = None
+        if args.paths or args.changed_from:
+            repo = args.repo.resolve()
+            names = list(args.paths)
+            if args.changed_from:
+                names += changed_files(repo, args.changed_from)
+            selected = explicit_scan_paths(repo, names)
+            args.repo = repo
+        rows = scan_lines(args.repo, selected)
+    except subprocess.SubprocessError:
+        print("git: cannot list changed files", file=sys.stderr)
+        return 2
     except (OSError, SyntaxError, UnicodeError) as exc:
         location = Path(exc.filename).name if getattr(exc, "filename", None) else "source"
         print(f"{location}: cannot read or parse source", file=sys.stderr)

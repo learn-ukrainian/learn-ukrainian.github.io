@@ -27,6 +27,7 @@ import json
 import re
 import sqlite3
 import sys
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -273,6 +274,20 @@ def extract_1000_words_example(
     locator: str = "",
 ) -> dict[str, str] | None:
     """Extract at most one bilingual UK/EN example pair from a 1000-words chunk."""
+    return next((example for _, example in iter_1000_words_examples(lines, start_i=start_i, locator=locator)), None)
+
+
+def iter_1000_words_examples(
+    lines: list[str],
+    *,
+    start_i: int = 1,
+    locator: str = "",
+) -> Iterator[tuple[int, dict[str, str]]]:
+    """Yield ``(first_line_index, example)`` for every plausible UK/EN pair in a 1000-words chunk.
+
+    The first yielded pair is exactly what ``extract_1000_words_example``
+    returns; scanning resumes after the lines a pair consumed.
+    """
     i = start_i
     while i < len(lines):
         line = lines[i].strip()
@@ -354,14 +369,18 @@ def extract_1000_words_example(
             uk = re.sub(r"\s+", " ", uk).strip()
             en = re.sub(r"\s+", " ", en).strip()
             if is_plausible_example(uk, en):
-                return {
-                    "uk": uk,
-                    "en": en,
-                    "source": SOURCE_LABEL_AUTHOR,
-                    "locator": locator,
-                }
+                yield (
+                    i,
+                    {
+                        "uk": uk,
+                        "en": en,
+                        "source": SOURCE_LABEL_AUTHOR,
+                        "locator": locator,
+                    },
+                )
+                i = j
+                continue
         i += 1
-    return None
 
 
 def parse_1000_words_head_and_gloss(lines: list[str]) -> tuple[str, str, int]:
@@ -492,6 +511,20 @@ def extract_500_verbs_example(lines: list[str], *, start_i: int = 2, locator: st
     continuation may be a matching two-column row (both sides wrap) or a
     lone Cyrillic-only / Latin-only row (only one side wraps).
     """
+    return next((example for _, example in iter_500_verbs_examples(lines, start_i=start_i, locator=locator)), None)
+
+
+def iter_500_verbs_examples(
+    lines: list[str],
+    *,
+    start_i: int = 2,
+    locator: str = "",
+) -> Iterator[tuple[int, dict[str, str]]]:
+    """Yield ``(first_line_index, example)`` for every plausible example on a 500-verbs page.
+
+    The first yielded pair is exactly what ``extract_500_verbs_example``
+    returns; scanning resumes after the lines a pair consumed.
+    """
     i = start_i
     while i < len(lines):
         pair = split_uk_en_line(lines[i].strip())
@@ -526,17 +559,14 @@ def extract_500_verbs_example(lines: list[str], *, start_i: int = 2, locator: st
         uk = re.sub(r"\s+", " ", uk).strip()
         en = re.sub(r"\s+", " ", en).strip()
         if is_plausible_example(uk, en):
-            return {"uk": uk, "en": en, "source": SOURCE_LABEL_AUTHOR, "locator": locator}
+            yield i, {"uk": uk, "en": en, "source": SOURCE_LABEL_AUTHOR, "locator": locator}
+            i = j
+            continue
         i += 1
-    return None
 
 
-def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoEntry:
-    """Parse a single 500-verbs textbook row into structured entry data."""
-    num_m = re.search(r"_e(\d+)", chunk_id)
-    entry_num = int(num_m.group(1)) if num_m else 0
-    locator = f"ohoiko-500-verbs entry {entry_num}"
-
+def normalize_500_verbs_lines(text: str) -> list[str]:
+    """Drop blank lines and re-attach combining acutes the OCR wrapped onto the next line."""
     raw_lines = [line.rstrip() for line in text.splitlines() if line.strip()]
     lines: list[str] = []
     for line in raw_lines:
@@ -550,7 +580,15 @@ def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoE
             lines[-1] = lines[-1] + content
         else:
             lines.append(line)
+    return lines
 
+
+def parse_500_verbs_head_and_gloss(lines: list[str]) -> tuple[str, str]:
+    """Return the raw stressed headword pair and the gloss line from a 500-verbs page.
+
+    The gloss is everything right of the first ``to ``; on most pages it still
+    carries the right-hand ``Conjugation: ...`` column after a wide gap.
+    """
     head_raw = ""
     gloss = ""
 
@@ -585,7 +623,17 @@ def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoE
                 gloss_cand = ls
             if not gloss:
                 gloss = gloss_cand
+    return head_raw, gloss
 
+
+def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoEntry:
+    """Parse a single 500-verbs textbook row into structured entry data."""
+    num_m = re.search(r"_e(\d+)", chunk_id)
+    entry_num = int(num_m.group(1)) if num_m else 0
+    locator = f"ohoiko-500-verbs entry {entry_num}"
+
+    lines = normalize_500_verbs_lines(text)
+    head_raw, gloss = parse_500_verbs_head_and_gloss(lines)
     lemmas = split_headword_into_lemmas(head_raw)
 
     # The example sentence(s) live after the conjugation tables, past a

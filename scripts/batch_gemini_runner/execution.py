@@ -88,7 +88,7 @@ def run_phase(runner, phase, slug, paths, error_msg=None):
             stderr = result["stderr"]
             category = classify_error(
                 result["returncode"], stderr,
-                result.get("elapsed_ms", 0), TIMEOUT_SECONDS * 1000,
+                result.get("elapsed_ms", 0),
             )
 
             if category == ErrorCategory.QUOTA:

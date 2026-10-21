@@ -400,12 +400,193 @@ def test_atlas_census_drift_refuses_publication_and_input_overlap(fixture, monke
         manifest.publish(atlas, outputs, receipt)
 
 
+PULS_ROWS = [
+    {"id": "puls-1", "word": "fixture-key", "level": "A1", "pos": "іменник", "guideword": ""},
+    {"id": "puls-2", "word": "fixture-key", "level": "B2", "pos": "дієслово"},
+    {"id": "puls-3", "word": "fixture key", "level": "C1"},
+    {"id": "puls-4", "word": "FIXTURE-KEY", "level": "A2"},
+]
+
+
+def puls_input(fixture, rows=None, name="puls.jsonl"):
+    path = fixture.root / name
+    lines = [json.dumps(row, ensure_ascii=False) for row in (PULS_ROWS if rows is None else rows)]
+    path.write_bytes(("\n".join(lines) + "\n").encode("utf-8") if lines else b"")
+    return path
+
+
+def test_puls_census_cli_ordered_exact_matches_levels_and_hashes(fixture):
+    puls = puls_input(fixture)
+    original_inputs = {p: p.read_bytes() for p in [puls, *fixture.paths.values()]}
+    result = fixture.cli(extra=["--puls-entries", str(puls)])
+    assert (result.returncode, result.stderr) == (0, "")
+    raw = (fixture.root / "output/puls-census.json").read_bytes()
+    census = json.loads(raw)
+    receipt = fixture.receipt()
+    assert "atlas-census.json" not in {p.name for p in (fixture.root / "output").iterdir()}
+    assert census["schema_version"] == "puls-census.v1"
+    assert census["evidence_role"] == "exact_key_observation_only"
+    assert census["programme_completeness"] == "UNRESOLVED"
+    assert census["required_requirement_count"] == receipt["required_requirement_count"] == 20
+    assert (census["entry_count"], census["distinct_word_count"]) == (4, 3)
+    assert census["level_entry_counts"] == {"A1": 1, "A2": 1, "B1": 0, "B2": 1, "C1": 1}
+    assert list(census["level_entry_counts"]) == ["A1", "A2", "B1", "B2", "C1"]
+    assert census["contract_sha256"] == digest(manifest.CONTRACT.read_bytes())
+    assert census["matrix_sha256"] == receipt["matrix_sha256"] == digest(manifest.MATRIX.read_bytes())
+    assert census["inputs"] == receipt["inputs"]
+    assert census["inputs"]["puls_entries"] == {
+        "sha256": digest(puls.read_bytes()),
+        "bytes": len(puls.read_bytes()),
+        "schema_version": "puls-entries:jsonl.v1",
+    }
+    assert receipt["outputs"][-1] == {"path": "puls-census.json", "sha256": digest(raw), "bytes": len(raw)}
+    assert [r["requirement_id"] for r in census["requirements"]] == list(IDS)
+    assert census["requirements"][0] == {
+        "requirement_id": "SRC-ULIF",
+        "gap": "G-ULIF",
+        "owner": "open-model-data",
+        "partition_status": "PARTITIONED",
+        "entry_count": 4,
+        "exact_key_matched_entry_count": 2,
+        "no_exact_key_match_entry_count": 2,
+        "supplied_known_matched_entry_count": 2,
+        "supplied_known_matched_unit_count": 3,
+    }
+    assert [(e["ordinal"], e["id"], e["word"], e["level"]) for e in census["entries"]] == [
+        (0, "puls-1", "fixture-key", "A1"),
+        (1, "puls-2", "fixture-key", "B2"),
+        (2, "puls-3", "fixture key", "C1"),
+        (3, "puls-4", "FIXTURE-KEY", "A2"),
+    ]
+    assert len(census["entries"][0]["source_key_matches"]) == 144
+    assert census["entries"][1]["source_key_matches"] == census["entries"][0]["source_key_matches"]
+    assert [e["source_key_matches"] for e in census["entries"][2:]] == [[], []]
+    before = {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in (fixture.root / "output").iterdir()}
+    assert fixture.cli(extra=["--puls-entries", str(puls)]).returncode == 0
+    assert before == {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in (fixture.root / "output").iterdir()}
+    assert original_inputs == {p: p.read_bytes() for p in original_inputs}
+
+
+def test_both_candidate_a_censuses_share_one_bound_input_set(fixture):
+    atlas, puls = atlas_input(fixture), puls_input(fixture)
+    result = fixture.cli(extra=["--atlas-manifest", str(atlas), "--puls-entries", str(puls)])
+    assert (result.returncode, result.stderr) == (0, "")
+    receipt = fixture.receipt()
+    censuses = {n: json.loads((fixture.root / f"output/{n}-census.json").read_bytes()) for n in ("atlas", "puls")}
+    assert [o["path"] for o in receipt["outputs"][-2:]] == ["atlas-census.json", "puls-census.json"]
+    assert {"atlas_manifest", "puls_entries"} <= set(receipt["inputs"])
+    assert all(c["inputs"] == receipt["inputs"] for c in censuses.values())
+    # No union, overlap or deduplication is computed across the two populations.
+    assert all("union" not in json.dumps(c) for c in censuses.values())
+    assert (censuses["atlas"]["entry_count"], censuses["puls"]["entry_count"]) == (5, 4)
+
+
+@pytest.mark.parametrize("inventory", ["unknown", "missing", "known_empty"])
+def test_puls_census_unknown_is_not_zero_coverage(fixture, inventory):
+    puls = puls_input(fixture)
+    row = fixture.docs["source_manifest"]["ranges"][1]
+    fixture.docs["stage_evidence"]["records"] = [
+        r for r in fixture.docs["stage_evidence"]["records"] if r["range_id"] != row["range_id"]
+    ]
+    if inventory == "missing":
+        fixture.docs["source_manifest"]["ranges"].remove(row)
+    elif inventory == "known_empty":
+        row["units"] = []
+        fixture.source_index(1)
+    else:
+        row.update(membership="UNKNOWN", index=None, units=[])
+    fixture.save()
+    outputs, receipt = manifest.account(fixture.paths, puls_entries=puls)
+    coverage = json.loads(outputs["puls-census.json"])["requirements"][1]
+    assert coverage["partition_status"] == ("PARTITIONED" if inventory == "known_empty" else "UNPARTITIONED")
+    assert coverage["exact_key_matched_entry_count"] == (0 if inventory == "known_empty" else None)
+    assert coverage["no_exact_key_match_entry_count"] == (4 if inventory == "known_empty" else None)
+    assert (coverage["supplied_known_matched_entry_count"], coverage["supplied_known_matched_unit_count"]) == (0, 0)
+    assert receipt["legacy_expected_obligation"] == 123
+
+
+def test_puls_census_empty_optional_and_forged_row_boundaries(fixture):
+    baseline, original = manifest.account(fixture.paths)
+    outputs, receipt = manifest.account(fixture.paths, puls_entries=puls_input(fixture, []))
+    assert "puls-census.json" not in baseline and "puls_entries" not in original["inputs"]
+    assert all(outputs[name] == raw for name, raw in baseline.items())
+    census = json.loads(outputs["puls-census.json"])
+    assert census["entries"] == [] and census["level_entry_counts"] == dict.fromkeys(manifest.PULS_LEVELS, 0)
+    assert [r["exact_key_matched_entry_count"] for r in census["requirements"]] == [0] * 20
+    assert receipt["programme_completeness"] == "UNRESOLVED"
+    # A bare U+2028 inside a string must not split the row; a missing final LF is tolerated.
+    path = fixture.root / "separator.jsonl"
+    path.write_bytes(json.dumps({"id": "a", "word": "x\u2028y", "level": "A1"}, ensure_ascii=False).encode())
+    separated = json.loads(manifest.account(fixture.paths, puls_entries=path)[0]["puls-census.json"])
+    assert [e["word"] for e in separated["entries"]] == ["x\u2028y"]
+
+
+def test_puls_census_repeated_source_ids_stay_separate_rows(fixture):
+    # The real PULS file shares one id between a phrase row and its lexeme sense row.
+    rows = [
+        {"id": "puls-1", "word": "fixture key", "level": "A1", "type": "фраза"},
+        {"id": "puls-1", "word": "fixture-key", "level": "A2", "type": "значення"},
+    ]
+    census = json.loads(manifest.account(fixture.paths, puls_entries=puls_input(fixture, rows))[0]["puls-census.json"])
+    assert [(e["ordinal"], e["id"], e["word"]) for e in census["entries"]] == [
+        (0, "puls-1", "fixture key"),
+        (1, "puls-1", "fixture-key"),
+    ]
+    assert [bool(e["source_key_matches"]) for e in census["entries"]] == [False, True]
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        b"not json\n",
+        b'{"id":"a","word":"x","level":"A1"}\n\n',
+        b'{"id":"a","word":"x","level":"A1"}\n{"id":"b","word":"y"\n',
+        b'{"id":"a","word":"x","level":"A1","id":"b"}\n',
+        b'{"id":"a","word":"x","level":NaN}\n',
+        b'{"id":"a","word":"\xff","level":"A1"}\n',
+        b'["a","x","A1"]\n',
+        b'{"id":"a","word":"x"}\n',
+        b'{"id":"a","level":"A1"}\n',
+        b'{"word":"x","level":"A1"}\n',
+        b'{"id":"a","word":"x","level":"C2"}\n',
+        b'{"id":"a","word":"x","level":"a1"}\n',
+        b'{"id":"a","word":"x","level":null}\n',
+        b'{"id":" ","word":"x","level":"A1"}\n',
+        b'{"id":"a","word":" ","level":"A1"}\n',
+        b'{"id":"a","word":3,"level":"A1"}\n',
+    ],
+)
+def test_puls_census_invalid_input_publishes_nothing(fixture, content):
+    puls = fixture.root / "bad.jsonl"
+    puls.write_bytes(content)
+    result = fixture.cli(extra=["--puls-entries", str(puls)])
+    assert result.returncode == 3
+    assert result.stderr.startswith("INVALID_EVIDENCE:")
+    assert not (fixture.root / "output").exists()
+
+
+def test_puls_census_drift_refuses_publication_and_input_overlap(fixture, monkeypatch):
+    puls = puls_input(fixture)
+    assert fixture.cli(extra=["--puls-entries", str(puls)]).returncode == 0
+    previous = (fixture.root / "output/manifest-receipt.json").read_bytes()
+    puls_input(fixture, [{"id": "changed", "word": "changed", "level": "A1"}])
+    result = fixture.cli(extra=["--puls-entries", str(puls)])
+    assert result.returncode == 4
+    assert result.stderr.startswith("PUBLICATION_FAILURE:")
+    assert (fixture.root / "output/manifest-receipt.json").read_bytes() == previous
+    outputs, receipt = manifest.account(fixture.paths, puls_entries=puls)
+    monkeypatch.setenv("TMPDIR", str(fixture.root))
+    with pytest.raises(OSError, match="overlaps input evidence"):
+        manifest.publish(puls, outputs, receipt)
+
+
 def test_complete_finite_inventory_cli_callable_and_rerun(fixture):
     result = fixture.cli()
     assert (result.returncode, result.stderr) == (0, "")
     assert json.loads(result.stdout) == {"status": "STRUCTURALLY_ACCOUNTED", "gap_count": 0}
     receipt = fixture.receipt()
     assert receipt["required_requirement_count"] == 20
+    assert receipt["contract_sha256"] == digest(manifest.CONTRACT.read_bytes())
     assert receipt["supplied_unit_count"] == 144
     assert receipt["lexical_member_count"] == 3
     assert receipt["legacy_member_count"] == receipt["legacy_expected_obligation"] == 123
@@ -1187,3 +1368,70 @@ def test_cli_rejects_trailing_newline_in_unacquired_unit_digest(fixture):
     assert result.returncode == 3, result.stdout + result.stderr
     assert result.stderr.startswith("INVALID_EVIDENCE:")
     assert not (fixture.root / "output").exists()
+
+
+def test_validation_stops_at_first_invalid_row():
+    class InvalidTail(list):
+        def __getitem__(self, index):
+            if index != 0:
+                raise AssertionError("validation traversed beyond the first error")
+            return None
+
+    with pytest.raises(manifest.InvalidEvidence, match=r"^bounded\.0: type failed$"):
+        manifest._validate(InvalidTail([None, None]), {"type": "array", "items": {"type": "integer"}}, "bounded")
+
+
+@pytest.mark.parametrize("censuses", [False, True])
+def test_receipt_and_censuses_bind_one_contract_snapshot(fixture, monkeypatch, censuses):
+    contract = fixture.root / "accounting-contract.md"
+    contract.write_bytes(b"literal accounting contract snapshot\n")
+    monkeypatch.setattr(manifest, "CONTRACT", contract)
+    monkeypatch.setenv("TMPDIR", str(fixture.root))
+    optional = {"atlas_manifest": atlas_input(fixture), "puls_entries": puls_input(fixture)} if censuses else {}
+    original_read = manifest.Path.read_bytes
+    reads = []
+
+    def changing_contract(path):
+        raw = original_read(path)
+        if path == contract:
+            reads.append(raw)
+            contract.write_bytes(b"subsequent contract revision\n")
+        return raw
+
+    monkeypatch.setattr(manifest.Path, "read_bytes", changing_contract)
+    outputs, receipt = manifest.account(fixture.paths, **optional)
+    manifest.publish(fixture.root / "output", outputs, receipt)
+    published = fixture.receipt()
+    expected = digest(b"literal accounting contract snapshot\n")
+    assert published["contract_sha256"] == expected
+    assert reads == [b"literal accounting contract snapshot\n"]
+    assert contract.resolve() in receipt["_input_paths"]
+    if censuses:
+        for name in ("atlas-census.json", "puls-census.json"):
+            assert json.loads(outputs[name])["contract_sha256"] == expected
+    for output in published["outputs"]:
+        raw = (fixture.root / "output" / output["path"]).read_bytes()
+        assert (digest(raw), len(raw)) == (output["sha256"], output["bytes"])
+
+
+def test_diagnostic_bundle_is_deterministic_across_hash_seeds(fixture, monkeypatch):
+    records = fixture.docs["stage_evidence"]["records"]
+    records[0].update(state="corrupt", reason="retained corrupt capture")
+    records[1].update(state="quarantined", reason="retained quarantined capture")
+    del records[2]  # Unexplained parsing loss stays missing.
+    fixture.save()
+    for seed in ("1", "719"):
+        monkeypatch.setenv("PYTHONHASHSEED", seed)
+        result = fixture.cli(out=f"seed-{seed}")
+        assert (result.returncode, result.stderr) == (2, "")
+        assert json.loads(result.stdout) == {"status": "INCOMPLETE_DIAGNOSTIC", "gap_count": 3}
+    first = {p.name: p.read_bytes() for p in (fixture.root / "seed-1").iterdir()}
+    second = {p.name: p.read_bytes() for p in (fixture.root / "seed-719").iterdir()}
+    assert first == second
+    receipt = fixture.receipt(out="seed-1")
+    assert receipt["supplied_unit_count"] == 144
+    assert [(g["stage"], g["owner"]) for g in receipt["gaps"]] == [
+        ("acquisition", "open-model-data"),
+        ("raw_custody", "open-model-data"),
+        ("parsing", "open-model-data"),
+    ]

@@ -23,6 +23,10 @@ import re
 import sys
 from pathlib import Path
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.scoring"
+
 from .calculate_richness_config import (
     DEFAULT_WEIGHTS,
     MODULE_TYPE_TARGETS,
@@ -407,6 +411,9 @@ def _print_score_breakdown(result: dict, weights: dict) -> None:
 
 def main():
     """CLI entry point for richness scoring."""
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: .venv/bin/python scripts/calculate_richness.py <file> [--json]")
+        sys.exit(0)
     if len(sys.argv) < 2:
         print("Usage: .venv/bin/python scripts/calculate_richness.py <file> [--json]")
         sys.exit(1)

@@ -378,7 +378,8 @@ sources:
     slovnyk.me (atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release
     asset; counted 2026-09-28).'
   stored_in:
-  - data/sources.db slovnyk_me_entries (snippets capped at 200–500 chars)
+  - data/sources.db slovnyk_me_entries (snippets capped at 200–500 chars; every row carries use_role, content_sha256, cache_path and importer_version —
+    newsum rows are candidate-discovery, sum rows contrast) and slovnyk_me_lookup_misses (the cache's observed 404s)
   - data/lexicon/slovnyk_cache/ (per-lemma cache pre-filled for every manifest lemma by scripts/lexicon/build_slovnyk_mirror.py,
     per its module docstring)
   provenance:
@@ -1763,18 +1764,32 @@ sources:
   - The held edition is unverified (holdings_manifest.yaml); edition-dependent records remain unresolved until authenticated.
   - Who represents the author’s heirs?
 - id: ulp_private
-  permission_status: none
+  permission_status: granted
+  permission_note: Operator decision 2026-10-20 admits the dictionary parts (Oho! A1 Словничок; 1000 words; 500
+    verbs; ULP lesson-note vocabulary zones) as a database and word-card source. Prose, transcripts, flashcards
+    and audio stay private references. Anna Ohoiko directly confirmed consent to citation display on 2026-10-20
+    after reviewing example citations from her books. The confirmed display rule permits attributed quotations
+    of example sentences and glosses on public learner pages.
   name: Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references)
   organisation: Anna Ohoiko (Ukrainian Lessons)
-  role: Private reference for pedagogy only; never quoted and never a card field source.
+  role: Dictionary-part source for lexdata L1 and for word-card lexical facts; private pedagogy reference otherwise.
   fields_used:
-  - reference_text
+  - headword
+  - grammatical_label
+  - en_gloss
+  - example_sentence
+  - course_usage
   appears_in:
   - internal
-  appears_note: Private pedagogy reference; its text is not on the site or in the dataset.
+  - site
+  appears_note: >-
+    Public learner pages (lexicon and word cards) may quote her example sentences and glosses with visible
+    credit to Anna Ohoiko and the book title, linked to her work where possible. Her teaching content is never
+    republished as our own. We learn from her teaching methods as from any other teacher and author
+    our own curriculum, following docs/best-practices/ulp-presentation-pattern.md.
   stored_in:
-  - data/sources.db textbooks rows ulp-*-lesson-notes, anna-ohoiko-* (from the operator's private files under docs/references/private/,
-    gitignored)
+  - data/sources.db textbooks/textbook_sections (L0, unchanged)
+  - data/lexdata.db L1 (derived)
   provenance:
     urls:
     - The operator's own purchased copies under docs/references/private/ (gitignored)
@@ -1803,11 +1818,16 @@ sources:
       read_on: '2026-09-27'
     searched: []
   citation:
-    form: Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko).
-    shown_label: null
+    form: >-
+      Mark quoted example sentences and glosses as quotations and display "Anna Ohoiko, <book title>" beside
+      them, linked to her work where possible. Keep the source locator for each quotation. Visible attribution
+      credits and promotes her work without presenting it as our own teaching content. Anna Ohoiko directly
+      consented to citation display on 2026-10-20 after reviewing example citations from her books.
+    shown_label: Anna Ohoiko, <book title>
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
-    scope: the stored copies listed in stored_in (deleted only with the operator's authorisation).
+    scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the
+      stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions: []
 - id: zno_nmt
   permission_status: none
@@ -2024,7 +2044,7 @@ sources:
     urls:
     - https://slovnyk.me/dict/vts/
     retrieved: '2026-10-15'
-    retrieved_evidence: data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds 13,181 rows.
+    retrieved_evidence: data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds all 31,687 cached vts rows (145,191 rows across the 13 cached dictionaries; scripts/ingest/slovnyk_me_ingest.py, 2026-10-20).
   terms:
     found: true
     licence:

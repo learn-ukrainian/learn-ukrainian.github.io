@@ -47,6 +47,8 @@
 #   '> **Superseded by:** [target](link)'; `... catalogue mark --apply` writes
 #   both. Front-matter lifecycle or superseded_by anywhere must agree with what
 #   the catalogue resolves for that file.
+# - store_registry (below the entries) names every SQLite store, one row per
+#   file, with its writer, journal, busy, protection and backup facts (#11092).
 # - docs/README.md's family table is generated from this file:
 #   `.venv/bin/python -m scripts.docs.catalogue readme`.
 # Search it (and tracked names and text) with `.venv/bin/python -m scripts.docs.find "<query>"`.
@@ -685,7 +687,7 @@ entries:
   - id: ci-program
     kind: doc_family
     paths: [docs/plans/2026-09-02-ci-sweet-spot.md, docs/epics/ci-speed-program.md]
-    purpose: CI plan of record and the CI speed program (epic #8875 holds the live task list).
+    purpose: 'CI plan of record and the CI speed program (epic #8875 holds the live task list).'
     keywords: [CI, CI speed, sweet spot, test shards, CI plan]
     lifecycle: active
     owner: devops
@@ -751,6 +753,20 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/epics"}
     content_searchable: true
 
+  # ================================================================ datasets
+  - id: datasets
+    kind: doc_family
+    paths: [docs/datasets/**]
+    purpose: Dataset release documentation covering source permissions, certification, cited export formats and withdrawal procedures.
+    keywords: [dataset, word cards, release, citations, permissions, withdrawal]
+    lifecycle: active
+    owner: open-model-data
+    entrypoints:
+      - {topic: word-card dataset releases, path: docs/datasets/word-cards.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/datasets"}
+    content_searchable: true
+
   # ================================================================ research and references
   - id: research-bio-dossiers
     kind: doc_family
@@ -805,7 +821,7 @@ entries:
   - id: research-retrieval-bakeoff
     kind: evidence
     paths: [docs/research/retrieval-bakeoff-9233/**]
-    purpose: Query sets, judging rubric and phase-1 results of the #9233 retrieval bake-off (exact FTS versus lemma-aware FTS versus embedder and reranker).
+    purpose: 'Query sets, judging rubric and phase-1 results of the #9233 retrieval bake-off (exact FTS versus lemma-aware FTS versus embedder and reranker).'
     keywords: [retrieval bake-off, FTS, lemma-aware search, reranker, hit@20]
     lifecycle: active
     owner: infra-harness
@@ -1070,7 +1086,7 @@ entries:
   - id: l2en-archive
     kind: doc_family
     paths: [docs/l2-uk-en/_archive/**]
-    purpose: Retired per-level curriculum plans (RFC #409 era); live plans are under curriculum/l2-uk-en/plans.
+    purpose: 'Retired per-level curriculum plans (RFC #409 era); live plans are under curriculum/l2-uk-en/plans.'
     keywords: [archived curriculum plan, RFC 409]
     lifecycle: archive
     owner: curriculum-upgrade
@@ -1301,7 +1317,7 @@ entries:
   - id: bio-epic-queues
     kind: doc_family
     paths: [docs/bio-epic/**]
-    purpose: BIO phase-2 sequence allocation and the phase-4 wiki rewrite queue with its rubric (epic #2309).
+    purpose: 'BIO phase-2 sequence allocation and the phase-4 wiki rewrite queue with its rubric (epic #2309).'
     keywords: [bio wiki queue, phase-4 rubric, bio allocation]
     lifecycle: active
     owner: seminars-bio
@@ -1371,7 +1387,7 @@ entries:
   - id: resources-mapping-reports
     kind: evidence
     paths: [docs/resources/podcasts/*.md, docs/resources/ukrainianlessons/*.md]
-    purpose: January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic #334).
+    purpose: 'January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic #334).'
     keywords: [podcast mapping, ULP mapping report, blog mapping methodology]
     lifecycle: archive
     owner: curriculum-upgrade
@@ -1481,7 +1497,7 @@ entries:
   - id: projects-open-model-data
     kind: doc_family
     paths: [docs/projects/open-model-data/**]
-    purpose: ULDR decolonization and reasoning dataset specs, phase plans, runbooks and the paper outline (epics #6321, #7423); the HF pilot is withdrawn.
+    purpose: 'ULDR decolonization and reasoning dataset specs, phase plans, runbooks and the paper outline (epics #6321, #7423); the HF pilot is withdrawn.'
     keywords: [ULDR, decolonization dataset, grammar dataset spec, dataset acceptance check, source record contract]
     lifecycle: active
     owner: open-model-data
@@ -1716,7 +1732,7 @@ entries:
   - id: registry-translations
     kind: registry
     paths: [registry/translations/**]
-    purpose: Legacy vocabulary translation batches and outputs (issue #462 era); the README lists files that are not present.
+    purpose: 'Legacy vocabulary translation batches and outputs (issue #462 era); the README lists files that are not present.'
     keywords: [vocabulary translations, translation batch]
     lifecycle: archive
     owner: curriculum-upgrade
@@ -1820,6 +1836,21 @@ entries:
     owner: atlas-practice
     query:
       - {surface: sqlite, how: "Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db"}
+    content_searchable: false
+
+  - id: data-lexdata-db
+    kind: data_store
+    store: [data/lexdata.db]
+    producer: [scripts/lexdata/build_store.py]
+    producer_note: "The single writer: `.venv/bin/python -m scripts.lexdata build` from the primary checkout builds data/lexdata/lexdata.<gen>.db.tmp, verifies it and swaps it in atomically; backups and receipts stay under data/lexdata/."
+    local_only: true
+    purpose: Derived lexical store for word cards (L1 per-source staging, L2 crosswalk to one lexeme, L3 card inputs), rebuilt as whole generations from sources.db and vesum.db and never their only copy.
+    keywords: [lexdata, lexical data layer, L1 staging, crosswalk, word cards, generation]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.lexdata status / verify / digests (--help)"}
+      - {surface: sqlite, how: "read-only through scripts.lexdata.generation.open_generation, which refuses an unpublished or digest-mismatched generation"}
     content_searchable: false
 
   - id: data-atlas-synthetic
@@ -2191,6 +2222,877 @@ entries:
     query:
       - {surface: sqlite, how: "read-only SQL on data/movne_pytannya.db"}
     content_searchable: false
+
+# ================================================================ SQLite store registry (#11092)
+# One row per SQLite store the project owns (DB plan step 1). Checked by
+# `.venv/bin/python -m scripts.docs.catalogue check` (static) and
+# `... catalogue census --root <checkout> --expect-present` (filesystem, read-only).
+# - stores: one row per named physical file, present or declared in code but
+#   absent. writers are file:function (Class.method) entry points that must be
+#   defined in tracked code. busy_ms is the effective SQLite busy timeout of the
+#   writer connection (sqlite3.connect defaults to 5 s). journal is the persistent
+#   mode in the file header (wal or delete).
+# - protection: keep (must survive host loss), rebuild (regenerable from tracked
+#   code and sources), disposable (loss costs only a re-run). It is never a deletion
+#   authorization; deletion and eviction are operator-authorized (plan step 12).
+# - backup is the fact scripts/config/backup-allowlist.json gives today (keep,
+#   drop or none), checked against that file; the nightly owns it (plan step 6).
+#   protection keep without backup keep carries protection_gap.
+# - families: stores at caller-chosen or per-key paths; glob is what the census
+#   can match, path_rule the code's rule. --db and other overrides elsewhere are a
+#   known gap (residual G1).
+# - evidence_dirs are not walked; non_stores are SQLite-shaped files that are not
+#   stores. A new SQLite file anywhere else under data/, .agent/, .mcp/ or
+#   batch_state/ fails the census until a row claims it.
+# Inputs: DB census study r2 section 2 and the Sol validation amendments 1 and 5.
+store_registry:
+  census_roots: [data, .agent, .mcp, batch_state]
+  stores:
+    # ---------------------------------------------------------------- operational
+    - path: batch_state/fleet-comms/v1/comms.sqlite3
+      owner: infra-harness
+      kind: operational
+      activity: active
+      presence: present
+      writers: [scripts/fleet_comms/artifacts.py:ArtifactStore.__init__]
+      journal: wal
+      busy_ms: 5000
+      busy_source: explicit
+      protection: keep
+      backup: keep
+      retention: Durable Fleet Comms message and job authority; kept indefinitely.
+    - path: .agent/session-streams/v1/session-streams.sqlite3
+      owner: infra-harness
+      kind: operational
+      activity: active
+      presence: present
+      writers: [agents_extensions/shared/session_streams/db.py:SessionStreamDatabase._connect_once]
+      journal: wal
+      busy_ms: 5000
+      busy_source: explicit
+      protection: keep
+      backup: keep
+      retention: Session stream leases and events; kept indefinitely (#11021 owns its evolution).
+    - path: batch_state/tasks/write-ownership.sqlite3
+      owner: infra-harness
+      kind: operational
+      activity: active
+      presence: present
+      writers: [scripts/guardrails/delegate_ownership.py:OwnershipLedger._connect]
+      journal: wal
+      busy_ms: 30000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: The task_records filter stages only json, result, diag, md and prompt files and archive/, so the admission audit trail is not backed up; DB plan step 6 (devops) proposes a keep file row.
+      retention: Admission claims and audit events; kept indefinitely.
+    - path: batch_state/tasks/.task_cache.sqlite3
+      owner: monitor
+      kind: operational
+      activity: active
+      presence: present
+      writers: [scripts/api/delegate_router.py:_init_task_cache_db]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: disposable
+      backup: none
+      retention: Derived from task files on every scan; safe to lose.
+    - path: .mcp/servers/message-broker/messages.db
+      owner: infra-harness
+      kind: operational
+      activity: active
+      presence: present
+      writers: [scripts/ai_agent_bridge/_db.py:init_db, .mcp/servers/message-broker/server.py:handle_send_message]
+      journal: wal
+      busy_ms: 5000
+      busy_source: explicit
+      busy_setters: [scripts/ai_agent_bridge/_db.py:_tune_connection, .mcp/servers/message-broker/server.py:get_db]
+      protection: keep
+      backup: none
+      protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'
+      retention: 'Legacy broker history; frozen read-only and kept after #6106 retirement, never row-deleted without operator authorization.'
+    - path: batch_state/entire-context/v1/context-links.sqlite3
+      owner: infra-harness
+      kind: operational
+      activity: active
+      presence: present
+      writers: [scripts/entire_context/store.py:ContextLinkStore._connect]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: none
+      protection_gap: Not in the allowlist; DB plan step 6 proposes keep.
+      retention: Body-free context links and use receipts; kept indefinitely.
+    - path: <git-common-dir>/ci-recovery.sqlite3
+      owner: devops
+      kind: operational
+      activity: active
+      presence: present
+      writers: [scripts/publish/recovery.py:consume]
+      journal: delete
+      busy_ms: 30000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: Lives in the Git common directory, outside every allowlist root; it records the one-recovery-per-head allowance, and DB plan step 6 proposes keep.
+      retention: One row per PR head recovery attempt; kept indefinitely.
+      note: ledger_path resolves it with git rev-parse --git-common-dir, so every worktree shares one file.
+    - path: batch_state/review-findings/a1.sqlite
+      owner: core-quality
+      kind: operational
+      activity: active
+      presence: present
+      family: review-findings
+      writers: [scripts/review/findings_db.py:connect]
+      journal: delete
+      busy_ms: 30000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: Review findings are a review record like the required review-receipts tree but sit outside every allowlist row; DB plan step 6 proposes the review-findings glob as keep.
+      retention: Review findings, attempts and budgets; kept indefinitely.
+      note: Missed by the r1 census because its classifier hard-coded live directories.
+    - path: batch_state/agent_monitor.sqlite3
+      owner: monitor
+      kind: operational
+      activity: dormant
+      presence: present
+      writers: [scripts/api/agent_monitor_router.py:_get_db]
+      journal: wal
+      busy_ms: 10000
+      busy_source: explicit
+      protection: disposable
+      backup: none
+      retention: Host RAM reservations from agent leases (0 rows); dormant is a traffic state, not a retirement verdict (DB plan step 8).
+    # ---------------------------------------------------------------- caches
+    - path: batch_state/github-client/cache.sqlite3
+      owner: devops
+      kind: cache
+      activity: active
+      presence: present
+      writers: [scripts/common/github_client.py:GitHubClient._db]
+      journal: delete
+      busy_ms: 5000
+      busy_source: explicit
+      protection: rebuild
+      backup: drop
+      retention: Unbounded today (no row eviction); a logical bound is DB plan step 5, and destructive eviction needs operator authorization.
+    - path: data/wiki_cache.db
+      owner: corpus-channels
+      kind: cache
+      activity: active
+      presence: present
+      catalogue_entry: data-wiki-cache
+      writers: [scripts/rag/wiki_cache.py:WikiCache.__init__]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Small wiki retrieval cache; kept by the data/wiki_*.db nightly glob.
+    - path: data/mphdict/.mphdict-lookup.sqlite3
+      owner: corpus-channels
+      kind: cache
+      activity: active
+      presence: present
+      writers: [scripts/mphdict/query.py:_ensure_index]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Lookup index sidecar over the mphdict databases; kept with the data/mphdict tree, rebuildable from it.
+    - path: data/lexicon/cache/ulif_raw.sqlite
+      owner: atlas-practice
+      kind: cache
+      activity: active
+      presence: present
+      catalogue_entry: data-lexicon-ulif-cache
+      writers: [scripts/lexicon/ulif_raw_cache.py:open_cache]
+      journal: wal
+      busy_ms: 30000
+      busy_source: explicit
+      protection: keep
+      backup: keep
+      retention: Digest-keyed raw ULIF response bodies; kept, since a refetch costs the full crawl.
+    # ---------------------------------------------------------------- reference and derived
+    - path: data/sources.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      catalogue_entry: data-sources-db
+      writers: [scripts/wiki/build_sources_db.py:build, scripts/wiki/sources_db.py:store_ulif_dictua_entry]
+      journal: wal
+      busy_ms: 30000
+      busy_source: explicit
+      busy_setters: [scripts/wiki/sources_db.py:_open_conn]
+      protection: keep
+      backup: keep
+      retention: The corpus of record; kept indefinitely.
+      note: The sources MCP miss path writes ulif_dictua_entries rows through store_ulif_dictua_entry (DB plan step 9), which opens the store through _open_conn; build writes a temporary file and replaces the store, so its default timeout never applies to the store.
+    - path: data/vesum.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      catalogue_entry: data-vesum-db
+      writers: [scripts/rag/activate_vesum_db.py:activate_database]
+      journal: delete
+      busy_ms: null
+      busy_source: not_applicable
+      protection: rebuild
+      backup: drop
+      retention: Replaced by an atomic swap from a verified shadow; rebuilt from the VESUM source, not restored from the nightly.
+    - path: data/vesum_shadow_v680.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      catalogue_entry: data-vesum-db
+      writers: [scripts/rag/vesum_reingest.py:build_shadow_database]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: drop
+      retention: Shadow build of the v6.8.0 VESUM; rebuilt, not restored.
+    - path: data/atlas.db
+      owner: atlas-practice
+      kind: derived
+      activity: active
+      presence: present
+      catalogue_entry: data-atlas-db
+      writers: [scripts/atlas/atlas_db.py:migrate_manifest]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Word Atlas articles and enrichment; kept, costly to rebuild.
+    - path: data/lexdata.db
+      owner: open-model-data
+      kind: derived
+      activity: active
+      presence: present
+      catalogue_entry: data-lexdata-db
+      writers: [scripts/lexdata/build_store.py:_open_build_connection]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Derived lexical generations; kept, because each published file is costly to rebuild.
+    - path: data/mphdict/etym.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      writers: []
+      writer_note: Imported upstream mphdict database; no tracked script writes it, scripts/mphdict/query.py reads it.
+      journal: delete
+      busy_ms: null
+      busy_source: no_writer
+      protection: keep
+      backup: keep
+      retention: Upstream reference input; kept with the data/mphdict tree.
+    - path: data/mphdict/mph_ua.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      writers: []
+      writer_note: Imported upstream mphdict database; no tracked script writes it, scripts/mphdict/query.py reads it.
+      journal: delete
+      busy_ms: null
+      busy_source: no_writer
+      protection: keep
+      backup: keep
+      retention: Upstream reference input; kept with the data/mphdict tree.
+    - path: data/mphdict/synsets_ua.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      writers: []
+      writer_note: Imported upstream mphdict database; no tracked script writes it, scripts/mphdict/query.py reads it.
+      journal: delete
+      busy_ms: null
+      busy_source: no_writer
+      protection: keep
+      backup: keep
+      retention: Upstream reference input; kept with the data/mphdict tree.
+    - path: data/movaua.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      catalogue_entry: data-movaua-db
+      writers: [scripts/ingest/usage_advice_ingest.py:main]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Usage-advice corpus; kept, costly to rebuild.
+    - path: data/movne_pytannya.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      catalogue_entry: data-movne-pytannya-db
+      writers: [scripts/ingest/usage_advice_ingest.py:main]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Usage-advice corpus; kept, costly to rebuild.
+    - path: data/grac_frequency.db
+      owner: corpus-channels
+      kind: reference
+      activity: active
+      presence: present
+      catalogue_entry: data-grac-frequency-db
+      writers: [scripts/ingest/grac_frequency_ingest.py:ingest]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Resumable GRAC frequency snapshot; kept, costly to rebuild.
+    - path: curriculum/l2-uk-en/vocabulary.db
+      owner: curriculum-upgrade
+      kind: derived
+      activity: active
+      presence: present
+      writers: [scripts/vocab/vocab_init.py:main]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Tracked in Git and rebuilt from the curriculum by vocab_init; Git history is its record.
+    # ---------------------------------------------------------------- job state
+    - path: batch_state/ulif-walk/state/ledger.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      family: ulif-ledgers
+      writers: [scripts/lexicon/runner/fetch_ulif_homonyms.py:SpellingLedger.__init__]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Resumable ULIF walk ledger; a loss means re-walking at crawl cost.
+    - path: batch_state/ulif-homonyms/state/ledger.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      family: ulif-ledgers
+      writers: [scripts/lexicon/runner/fetch_ulif_homonyms.py:SpellingLedger.__init__]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Resumable ULIF homonym ledger; a loss means re-fetching.
+    - path: data/lexicon/runner_work/staged_manifest.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      family: lexicon-runner-work
+      catalogue_entry: data-lexicon-working
+      writers: [scripts/lexicon/runner/stream_manifest.py:stage_manifest_to_sqlite]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Runner staging, rewritten on each offline enrichment run.
+    - path: data/lexicon/runner_work/seals/cefr.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      family: lexicon-runner-work
+      catalogue_entry: data-lexicon-working
+      writers: [scripts/lexicon/runner/phase_cefr.py:sealed_cefr_precompute]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Sealed CEFR precompute, rewritten on each run.
+    - path: data/lexicon/runner_work/seals/relations.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      family: lexicon-runner-work
+      catalogue_entry: data-lexicon-working
+      writers: [scripts/lexicon/runner/phase_relations.py:extract_and_close_relations]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Sealed relations precompute, rewritten on each run.
+    - path: data/lexicon/side/balla_reverse.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      catalogue_entry: data-lexicon-working
+      writers: [scripts/lexicon/runner/side_db.py:build_balla_reverse_side_db]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Side lexicon input; kept with the data/lexicon/side tree.
+    - path: data/lexicon/side/dmklinger.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      catalogue_entry: data-lexicon-working
+      writers: [scripts/lexicon/runner/side_db.py:build_dmklinger_side_db]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Side lexicon input; kept with the data/lexicon/side tree.
+    - path: data/lexicon/side/kaikki.sqlite
+      owner: atlas-practice
+      kind: job_state
+      activity: active
+      presence: present
+      catalogue_entry: data-lexicon-working
+      writers: [scripts/lexicon/runner/side_db.py:build_kaikki_side_db]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Side lexicon input; kept with the data/lexicon/side tree.
+    - path: wiki/.state/progress.db
+      owner: seminars-cross
+      kind: job_state
+      activity: dormant
+      presence: present
+      writers: [scripts/wiki/state.py:_ensure_progress_db, scripts/wiki/quality_gate.py:clear_for_recompile]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Wiki compile progress (0 rows); dormant because no compile ran since August, not replaced (DB plan step 8).
+    - path: data/ulif_dump.db
+      owner: atlas-practice
+      kind: reference
+      activity: dormant
+      presence: present
+      catalogue_entry: data-ulif-dumps
+      writers: [scripts/lexicon/tools/dump_ulif.py:DumpDB.__init__]
+      journal: wal
+      busy_ms: 5000
+      busy_source: explicit
+      protection: rebuild
+      backup: none
+      retention: Crawler dump (1 row); canonical entries reside in sources.db.
+    # ---------------------------------------------------------------- telemetry
+    - path: data/telemetry/tool_timings.db
+      owner: infra-harness
+      kind: telemetry
+      activity: active
+      presence: present
+      catalogue_entry: data-telemetry
+      writers: [scripts/api/telemetry_router.py:_open_telemetry_db]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: disposable
+      backup: none
+      retention: Tool timing samples; regenerated by use.
+    - path: data/telemetry/legacy_comms_routes.db
+      owner: infra-harness
+      kind: telemetry
+      activity: active
+      presence: present
+      catalogue_entry: data-telemetry
+      writers: [scripts/api/telemetry/legacy_comms.py:_initialize_db]
+      journal: wal
+      busy_ms: 5000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: 'The #6106 broker-retirement evidence is not in the allowlist; DB plan step 6 proposes keep until #6106 closes.'
+      retention: 'Legacy route usage counts; kept until #6106 closes.'
+    # ---------------------------------------------------------------- staged and orphan
+    - path: data/sum20_staging.db
+      owner: corpus-channels
+      kind: staged
+      activity: staged
+      presence: present
+      catalogue_entry: data-sum20-staging
+      writers: []
+      writer_note: No tracked producer writes this path; operator Decision D (2026-10-17) promotes its staged articles into sources.db.
+      journal: delete
+      busy_ms: null
+      busy_source: no_writer
+      protection: keep
+      backup: keep
+      retention: Active staging input; kept until its promotion is recorded.
+    - path: data/sum20_slovnyk_staging.db
+      owner: corpus-channels
+      kind: staged
+      activity: staged
+      presence: present
+      catalogue_entry: data-sum20-staging
+      writers: []
+      writer_note: No tracked producer writes this path.
+      journal: wal
+      busy_ms: null
+      busy_source: no_writer
+      protection: keep
+      backup: keep
+      retention: Staging input, costly to rebuild; kept.
+    - path: batch_state/fleet-comms/v1/artifacts/comms.sqlite3
+      owner: infra-harness
+      kind: orphan
+      activity: orphan
+      presence: present
+      writers: []
+      writer_note: No code binds this path; it holds the Fleet Comms schema with 10 migration rows and no data rows. Its origin is a Fleet Comms lane residual.
+      journal: wal
+      busy_ms: null
+      busy_source: no_writer
+      protection: keep
+      backup: keep
+      retention: Kept incidentally inside the fleet-comms tree; removal is an operator-authorized cleanup item (plan step 12).
+    # ---------------------------------------------------------------- declared in code, absent on disk
+    - path: batch_state/hramatka/lessons.sqlite3
+      owner: hramatka
+      kind: operational
+      activity: not_created
+      presence: declared_absent
+      absent_reason: Default of HRAMATKA_DB_PATH in scripts/api/hramatka_router.py; created on the first lesson job.
+      writers: [scripts/api/hramatka_router.py:_connect]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: Lesson job state would have no backup row when created; DB plan step 6 decides.
+      retention: Lesson job state; retention set when the service is qualified.
+    - path: batch_state/trails/runs.sqlite3
+      owner: infra-harness
+      kind: job_state
+      activity: not_created
+      presence: declared_absent
+      absent_reason: RUNS_DATABASE_PATH in scripts/orchestration/trail_runner.py; created on the first trail run.
+      writers: [scripts/orchestration/trails/store.py:TrailStore._connect]
+      journal: unknown
+      busy_ms: 30000
+      busy_source: explicit
+      protection: rebuild
+      backup: none
+      retention: Trail run records with receipts beside them.
+    - path: batch_state/agent_runtime_failover_cooldowns.sqlite3
+      owner: infra-harness
+      kind: operational
+      activity: not_created
+      presence: declared_absent
+      absent_reason: Default path in scripts/agent_runtime/failover.py; created on the first provider cooldown.
+      writers: [scripts/agent_runtime/failover.py:FailoverCooldownStore._connect]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: explicit
+      protection: disposable
+      backup: none
+      retention: Short-lived provider cooldowns.
+    - path: data/telemetry/module_builds.db
+      owner: infra-harness
+      kind: telemetry
+      activity: not_created
+      presence: declared_absent
+      catalogue_entry: data-telemetry
+      absent_reason: Default in scripts/api/telemetry_router.py; created on the first module build event.
+      writers: [scripts/api/telemetry_router.py:_open_telemetry_db]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: default
+      protection: disposable
+      backup: none
+      retention: Build telemetry; regenerated by use.
+    - path: data/telemetry/llm_qg.db
+      owner: core-quality
+      kind: operational
+      activity: not_created
+      presence: declared_absent
+      catalogue_entry: data-telemetry
+      absent_reason: Default in scripts/audit/llm_qg_store.py (LEARN_UKRAINIAN_LLM_QG_DB overrides it); created on the first stored gate result.
+      writers: [scripts/audit/llm_qg_store.py:_connect_sqlite_db]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: Durable LLM quality-gate state would have no backup row when created; DB plan step 6 decides.
+      retention: Gate results of record; retention set by core-quality.
+    - path: data/telemetry/llm_qg_shadow.db
+      owner: core-quality
+      kind: telemetry
+      activity: not_created
+      presence: declared_absent
+      catalogue_entry: data-telemetry
+      absent_reason: DEFAULT_DB_PATH in scripts/audit/llm_qg_shadow_store.py; created on the first shadow run.
+      writers: [scripts/audit/llm_qg_shadow_store.py:init_db]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: default
+      protection: disposable
+      backup: none
+      retention: Shadow-run comparisons; regenerated by re-running.
+    - path: data/embeddings/manifest.db
+      owner: corpus-channels
+      kind: derived
+      activity: not_created
+      presence: declared_absent
+      catalogue_entry: data-embeddings
+      absent_reason: Default in scripts/wiki/embedding_manifest.py; created by the first embedding build.
+      writers: [scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__]
+      journal: unknown
+      busy_ms: 30000
+      busy_source: explicit
+      protection: rebuild
+      backup: none
+      retention: Embedding shard manifest; rebuilt with the shards.
+    - path: data/ubertext-freq/frequency.db
+      owner: corpus-channels
+      kind: reference
+      activity: not_created
+      presence: declared_absent
+      catalogue_entry: data-ubertext-freq
+      absent_reason: Output of scripts/rag/convert_phase2.py convert_ubertext_freq; the frequency database lives on the bulk root per docs/corpus-inventory.md.
+      writers: [scripts/rag/convert_phase2.py:convert_ubertext_freq]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: UberText frequencies; kept by the data/ubertext-freq tree when present.
+    - path: data/atlas-synthetic.db
+      owner: atlas-practice
+      kind: derived
+      activity: not_created
+      presence: declared_absent
+      catalogue_entry: data-atlas-synthetic
+      absent_reason: DEFAULT_OUT in scripts/benchmarks/generate_synthetic_atlas.py; created only by a benchmark run (not in the study's nine; found by the registry literal check).
+      writers: [scripts/benchmarks/generate_synthetic_atlas.py:_build_synthetic_db_unchecked]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: default
+      protection: disposable
+      backup: none
+      retention: Benchmark fixture generated on demand.
+  families:
+    - id: review-findings
+      path_rule: batch_state/review-findings/<level>.sqlite (scripts/review/findings_db.py db_path)
+      glob: batch_state/review-findings/*.sqlite
+      example: batch_state/review-findings/a1.sqlite
+      owner: core-quality
+      kind: operational
+      writers: [scripts/review/findings_db.py:connect]
+      journal: delete
+      busy_ms: 30000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: The per-level ledgers sit outside every allowlist row; DB plan step 6 proposes this glob as keep.
+      retention: One ledger per level; kept indefinitely.
+    - id: ulif-ledgers
+      path_rule: <state_dir>/ledger.sqlite, with --state-dir chosen by the caller (documented examples use batch_state/ulif-*/state)
+      glob: batch_state/ulif-*/state/ledger.sqlite
+      example: batch_state/ulif-homonyms/state/ledger.sqlite
+      owner: atlas-practice
+      kind: job_state
+      writers: [scripts/lexicon/runner/fetch_ulif_homonyms.py:SpellingLedger.__init__]
+      journal: wal
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Resumable crawl ledgers.
+    - id: lexicon-runner-work
+      path_rule: <work_dir>/{ledger,reduce-ledger,network-cache,staged_manifest}.sqlite and <work_dir>/seals/*.sqlite, with --work-dir chosen by the caller (default data/lexicon/runner_work)
+      glob: data/lexicon/runner_work/**/*.sqlite
+      example: data/lexicon/runner_work/ledger.sqlite
+      owner: atlas-practice
+      kind: job_state
+      writers: [scripts/lexicon/runner/offline_engine.py:enrich_offline_slice, scripts/lexicon/runner/offline_reduce.py:reduce_offline_slice, scripts/lexicon/enrich_manifest.py:enrich]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Rewritten by each offline run.
+    - id: dictionary-acquisition-staging
+      path_rule: <root>/<dictionary>/staging.sqlite3, with --root chosen by the caller (documented example batch_state/acquisition)
+      glob: batch_state/acquisition/*/staging.sqlite3
+      example: batch_state/acquisition/vts/staging.sqlite3
+      owner: corpus-channels
+      kind: staged
+      writers: [scripts/ingest/dictionary_acquisition.py:connect]
+      journal: unknown
+      busy_ms: 1000
+      busy_source: explicit
+      protection: keep
+      backup: none
+      protection_gap: Acquisition staging outside batch_state/open-model-data* has no backup row; DB plan step 6 decides.
+      retention: Per-dictionary acquisition staging until promoted; earlier run copies sit in open-model-data evidence directories.
+    - id: verbatim-shingle-index
+      path_rule: <dir of the given sources.db>/verbatim_shingle_k<k>[_<slug>].db (scripts/audit/verbatim_overlap_gate.py)
+      glob: data/verbatim_shingle_k*.db
+      example: data/verbatim_shingle_k5.db
+      owner: core-quality
+      kind: derived
+      writers: [scripts/audit/verbatim_overlap_gate.py:ShingleIndex.__init__]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: default
+      protection: rebuild
+      backup: none
+      retention: Shingle index rebuilt from sources.db; none on disk today.
+    - id: trail-certification
+      path_rule: <case_root>/state.sqlite3 under a caller-chosen runner root (scripts/orchestration/trails/trail_certification.py run)
+      glob: null
+      owner: infra-harness
+      kind: job_state
+      writers: [scripts/orchestration/trails/store.py:TrailStore._connect]
+      journal: unknown
+      busy_ms: 30000
+      busy_source: explicit
+      protection: disposable
+      backup: none
+      retention: Per-case certification state; none found in the walked roots.
+    - id: temporary-scratch
+      path_rule: extract.sqlite, pilot-wp3-extract.sqlite and profile.sqlite inside temporary directories
+      glob: null
+      owner: atlas-practice
+      kind: job_state
+      writers: [scripts/atlas/allocate_pilot_identities.py:holding_obligations, scripts/atlas/word_card_assembly.py:load_inputs, scripts/projects/open_model_data/profile_corpus.py:profile_corpus]
+      journal: unknown
+      busy_ms: 5000
+      busy_source: default
+      protection: disposable
+      backup: none
+      retention: Removed with the temporary directory.
+    - id: db-overrides
+      path_rule: any path passed as --db or a similar option (for example grac_frequency_ingest --db, fixloop --db); unknowable statically
+      glob: null
+      literals: [data/grac-10.db]
+      owner: infra-harness
+      kind: operational
+      writers: [scripts/ingest/grac_frequency_ingest.py:ingest]
+      writer_note: Every tool with a --db option; grac_frequency_ingest is the one whose help names a data/ example.
+      journal: unknown
+      busy_ms: null
+      busy_source: not_applicable
+      protection: disposable
+      backup: none
+      retention: Owned by whoever chose the path; residual G1.
+  evidence_dirs:
+    - {path: batch_state/preserved, owner: devops, example: batch_state/preserved/x.sqlite3, backup: drop, retention: "Preserved SQLite evidence, outside the nightly; still written (latest mtime 2026-10-19), so excluded from cleanup until idle."}
+    - {path: batch_state/devops-*, owner: devops, example: batch_state/devops-20261010/x.sqlite3, backup: drop, retention: "DevOps scratch and evidence; regenerable."}
+    - {path: batch_state/codex-atlas, owner: atlas-practice, example: batch_state/codex-atlas/x.sqlite3, backup: drop, retention: "Atlas worker checkouts with corpus copies; regenerable."}
+    - {path: batch_state/briefs, owner: infra-harness, example: batch_state/briefs/x.sqlite3, backup: drop, retention: "Brief bundles; regenerable."}
+    - {path: batch_state/open-model-data-20261007, owner: open-model-data, example: batch_state/open-model-data-20261007/x.sqlite3, backup: keep, retention: "Open-model snapshot with dictionary acquisition staging copies; kept until the data lane says it is regenerable."}
+    - {path: batch_state/open-model-data-*, owner: open-model-data, example: batch_state/open-model-data-20261016/x.sqlite3, backup: none, retention: "Dated open-model-data runs; the 2026-10-16 run is live staging evidence."}
+    - {path: batch_state/review-receipts, owner: infra-harness, example: batch_state/review-receipts/x.sqlite3, backup: keep, retention: "The record of independent review; required in the nightly."}
+  non_stores:
+    - id: zero-byte-placeholders-in-kept-trees
+      class: zero_byte_placeholder
+      paths: [.agent/session-streams/v1/comms.sqlite3, batch_state/fleet-comms/v1/authority.db, batch_state/fleet-comms/v1/plane.db, data/wiki_sources.db]
+      owner: infra-harness
+      backup: keep
+      retention: Zero-byte probe files copied incidentally by a kept tree or glob; a cleanup item (plan step 12). The census flags one that stops being empty.
+    - id: zero-byte-placeholders
+      class: zero_byte_placeholder
+      paths: [batch_state/agent_comms.db, batch_state/bridge.db, batch_state/fleet_comms.db, data/authority.db, data/bridge.db, data/comms.db, data/comms_plane.db, data/fleet_comms.db, data/fleet_communications.db, data/messages.db, data/slovnyk_download.db, data/slovnyk_mirror.db]
+      owner: infra-harness
+      backup: none
+      retention: Zero-byte probe files named after stores; a cleanup item (plan step 12). The census flags one that stops being empty.
+    - id: coverage-data
+      class: coverage_data
+      glob: batch_state/**/*coverage*
+      example: batch_state/impl-9525/coverage.sqlite
+      owner: infra-harness
+      backup: none
+      retention: coverage.py data files left by test evidence runs (confirmed by their coverage_schema table); a cleanup item.
+    - id: coverage-data-agent
+      class: coverage_data
+      glob: .agent/review-closeout/**/*coverage*
+      example: .agent/review-closeout/10419-evidence/author-checkpoint-b35/batch_state/reports/10419-v2.coverage
+      owner: infra-harness
+      backup: keep
+      retention: coverage.py data inside review-closeout evidence, copied incidentally by the .agent tree.
+    - id: data-backup-copies
+      class: backup_copy
+      glob: data/backups/*.db
+      example: data/backups/sources.pre-9581.20261003T140929Z.db
+      owner: infra-harness
+      backup: drop
+      retention: Hand-made pre-migration copies; removal needs operator authorization naming each item (plan step 12).
+    - id: nightly-backup-staging
+      class: backup_copy
+      glob: data/.backup-staging/**
+      example: data/.backup-staging/run.stage/db-incoming/data/sources.db
+      owner: devops
+      backup: none
+      retention: Online-backup copies scripts/backup-data.sh stages during a nightly run; empty between runs.
+    - id: vesum-backup-copies
+      class: backup_copy
+      glob: data/vesum.db.bak.*
+      example: data/vesum.db.bak.20260930_235346
+      owner: corpus-channels
+      backup: drop
+      retention: VESUM activation backups; removal needs operator authorization (plan step 12).
+    - id: retrieval-bakeoff-corpora
+      class: experiment_copy
+      glob: batch_state/bakeoff-9233*/corpus.sqlite3
+      example: batch_state/bakeoff-9233-v3/corpus.sqlite3
+      owner: infra-harness
+      backup: drop
+      retention: 'Corpus copies of the #9233 retrieval bake-off; regenerable.'
+    - id: retrieval-bakeoff-embeddings
+      class: experiment_copy
+      glob: batch_state/bakeoff-9233-v3/embeddings/*.sqlite3
+      example: batch_state/bakeoff-9233-v3/embeddings/intfloat--multilingual-e5-small.sqlite3
+      owner: infra-harness
+      backup: drop
+      retention: 'Embedding stores of the #9233 retrieval bake-off; regenerable.'
+    - id: write-ownership-test-copies
+      class: test_copy
+      glob: batch_state/runtime/review-10104-r3-claude/**/write-ownership.sqlite3
+      example: batch_state/runtime/review-10104-r3-claude/pt/write-ownership-stores0/0/write-ownership.sqlite3
+      owner: infra-harness
+      backup: none
+      retention: Pytest-basetemp copies of the write-ownership ledger from one review run; a new pile-up elsewhere is flagged.
+    - id: grok-session-probe
+      class: probe_evidence
+      paths: [batch_state/probe-evidence/9008/sessions/session_search.sqlite]
+      owner: infra-harness
+      backup: none
+      retention: 'Session-search probe evidence for #9008.'
 
 # Store names that scripts/ code mentions but that are not stores of this
 # repository. Every other data/<name>.db|.sqlite literal in scripts/ must be

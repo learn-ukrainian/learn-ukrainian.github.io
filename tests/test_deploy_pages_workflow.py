@@ -209,6 +209,94 @@ def test_auto_deploy_step_summary_and_cli(tmp_path: Path, capsys: pytest.Capture
     assert "### ⚠️ Pages Auto-Deploy: Skipped" in cli_summary_file.read_text(encoding="utf-8")
 
 
+def test_pages_build_publishes_the_pinned_word_card_preview() -> None:
+    """#11194: the standard build verifies the pinned release, then builds the preview from it."""
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["deploy"]["steps"]
+    by_name = {step.get("name"): step for step in steps}
+
+    prepare = by_name["Prepare pinned word-card preview release"]
+    build_site = by_name["Build Site"]
+    verify = by_name["Verify word-card preview routes"]
+    assert prepare["id"] == "word-card-preview"
+    assert prepare["working-directory"] == "."
+    assert prepare["env"] == {"RELEASE_DIR": "${{ runner.temp }}/word-card-preview-release"}
+    assert prepare["run"] == (
+        ".venv/bin/python scripts/deploy/prepare_word_card_preview.py prepare "
+        '--dest "$RELEASE_DIR" --github-output "$GITHUB_OUTPUT"'
+    )
+
+    assert build_site["env"] == {
+        "ATLAS_WORD_CARD_PREVIEW": "1",
+        "ATLAS_WORD_CARD_RELEASE_PATH": "${{ steps.word-card-preview.outputs.release-path }}",
+        "ATLAS_WORD_CARD_RELEASE_PIN": "${{ steps.word-card-preview.outputs.pin }}",
+    }
+    assert 'if [[ -n "${PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS+set}" ]]; then' in build_site["run"]
+    assert build_site["run"].rstrip().endswith("npm run build")
+
+    assert verify["working-directory"] == "."
+    assert verify["env"] == {"RELEASE_DIR": "${{ steps.word-card-preview.outputs.release-path }}"}
+    # The route set comes from Atlas's committed inventory, never a count frozen in this workflow.
+    assert verify["run"] == (
+        '.venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist --release-dir "$RELEASE_DIR" '
+        "--inventory site/src/lib/lexicon/word-card-preview-route-inventory.json"
+    )
+
+    order = [
+        steps.index(by_name[name])
+        for name in (
+            "Create Python venv",
+            "Prepare pinned word-card preview release",
+            "Build Site",
+            "Verify word-card preview routes",
+            "Emit immutable deployment marker",
+            "Vendor Atlas runtime tree",
+            "Check published-site size (fail-closed)",
+            "Upload artifact",
+            "Deploy to GitHub Pages",
+        )
+    ]
+    assert order == sorted(order)
+
+
+def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() -> None:
+    """#11194: the test-only controls flag never reaches publication; no token or input drives the preview."""
+    workflow_text = WORKFLOW.read_text(encoding="utf-8")
+    workflow = yaml.safe_load(workflow_text)
+    deploy = workflow["jobs"]["deploy"]
+    steps = deploy["steps"]
+    by_name = {step.get("name"): step for step in steps}
+
+    for scope in (workflow, deploy, *steps):
+        assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS" not in (scope.get("env") or {})
+    assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS:" not in workflow_text
+    # PyYAML reads the bare ``on`` key as boolean True.
+    assert workflow[True]["workflow_dispatch"] is None
+    assert deploy["permissions"] == {"contents": "read", "pages": "write", "id-token": "write"}
+
+    for name in ("Prepare pinned word-card preview release", "Build Site", "Verify word-card preview routes"):
+        step = by_name[name]
+        assert "${{" not in step["run"], f"{name}: expressions must reach run scripts via env only"
+        env_blob = yaml.safe_dump(step.get("env") or {})
+        for forbidden in ("secrets.", "github.token", "GITHUB_TOKEN", "GH_TOKEN", "inputs.", "github.event"):
+            assert forbidden not in env_blob, f"{name}: {forbidden}"
+
+    # Vite also reads these dotenv files for a production build.
+    for name in (".env", ".env.local", ".env.production", ".env.production.local", ".env.example"):
+        env_file = REPO_ROOT / "site" / name
+        if env_file.is_file():
+            assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS" not in env_file.read_text(encoding="utf-8")
+
+
+def test_preview_pin_changes_keep_manual_deployment_semantics() -> None:
+    """#11194 leaves eligibility unchanged: a release-pin change is content drift, not auto-deployable."""
+    pin = "site/src/data/word-card-preview-release.pointer.json"
+    assert (REPO_ROOT / pin).is_file()
+    assert decide_auto_deploy([pin]).reason == "content_drift"
+    assert decide_auto_deploy(["scripts/deploy/prepare_word_card_preview.py"]).reason == "unknown_path"
+    assert decide_auto_deploy([".github/workflows/deploy-pages.yml"]).reason == "unknown_path"
+
+
 def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
     """The manual certification route remains available beside the push preflight."""
     workflow_text = WORKFLOW.read_text(encoding="utf-8")

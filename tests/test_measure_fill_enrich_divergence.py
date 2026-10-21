@@ -10,14 +10,17 @@ import pytest
 
 from scripts.atlas import measure_fill_enrich_divergence as measure
 from scripts.lexicon import enrich_manifest as em
+from tests.helpers.sum20_store import canonical_sum20_store as canonical_sum20_store
+from tests.helpers.sum20_store import seed_sum20_rows
 
 
 @pytest.fixture
-def cohort(tmp_path: Path) -> dict[str, object]:
+def cohort(tmp_path: Path, canonical_sum20_store: Path) -> dict[str, object]:
     entries = measure.build_synthetic_entries(50)
     sources = tmp_path / "sources.sqlite"
     measure.build_synthetic_sources(sources, entries)
     grac = measure.build_synthetic_grac(entries, puls_count=10)
+    seed_sum20_rows(canonical_sum20_store, measure.build_synthetic_dictionary_rows(entries))
     return {
         "entries": entries,
         "sources": sources,

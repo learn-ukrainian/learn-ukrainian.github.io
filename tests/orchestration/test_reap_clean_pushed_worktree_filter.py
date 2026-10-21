@@ -83,8 +83,13 @@ def age_tree(tree: Path) -> None:
         ),
         encoding="utf-8",
     )
-    for path in (admin / "HEAD", admin / "index", log):
+    tracked = (tree / name for name in git(tree, "ls-files", "-z").split("\0") if name)
+    for path in (admin / "HEAD", admin / "index", log, *tracked):
         os.utime(path, (stamp, stamp))
+    # Keep cached stats consistent with the aged tracked files, as the sibling
+    # clean-pushed fixtures do, then age the index the refresh rewrote.
+    git(tree, "status", "--porcelain")
+    os.utime(admin / "index", (stamp, stamp))
 
 
 def dispatch_tree(repo: Path, name: str, *, agent: str = "codex") -> Path:

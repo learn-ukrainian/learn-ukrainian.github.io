@@ -15,6 +15,10 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    __package__ = "scripts.orchestration.task_family"
+
 from . import codex_state, executor, git_safety
 from .graph import FamilyGraph, discover_task_family
 from .model import (

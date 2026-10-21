@@ -150,6 +150,7 @@ gha-creds-*.json
 .pytest_cache/
 .pytest_breadcrumbs/
 .ruff_cache/
+.mypy_cache/
 # CI scratch output (junit XML, shard plans, logs) written by .github/workflows/ci.yml
 ci-artifacts/
 
@@ -981,3 +982,10 @@ data/projects/open_model_data/export/
 # Narrow live-registration artifact shapes.
 /data/projects/open_model_data/components/grammar/grammar_train_shard_*_of_*.jsonl
 /data/projects/open_model_data/components/grammar/grammar_eval_shard_*_of_*.jsonl
+
+# Immutable dataset releases; backed up by scripts/config/backup-allowlist.json path data/datasets, line ~181; not versioned in git.
+# pairing-atlas0.json is the derived identity index for that release, not the release bytes.
+data/datasets/word-cards/releases/*
+!data/datasets/word-cards/releases/v0.1.0-pilot/
+data/datasets/word-cards/releases/v0.1.0-pilot/*
+!data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json
