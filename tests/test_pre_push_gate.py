@@ -1215,6 +1215,11 @@ def _install_shadow(repo: Path, body: str) -> None:
     _git(repo, "commit", "-m", "shadow")
 
 
+# A stub's hang blocks until it is killed. A ``time.sleep`` hang can end while the gate is still busy
+# on a loaded host, and the gate then rightly reads its empty answer as unparseable, not as a timeout.
+_BLOCK_UNTIL_KILLED = "import threading\nthreading.Event().wait()\n"
+
+
 def _install_selector(repo: Path, selected: list[str], *, scope: str = "importer_closure") -> None:
     """A committed selector that answers ``selected`` in the gate's schema, whatever the paths."""
     answer = {"schema": gate.SELECTION_SCHEMA, "scope": scope, "all_tests_reasons": [], "selected_tests": selected}
@@ -1296,7 +1301,13 @@ def test_no_affected_tests_is_green_and_recorded_as_such(repo: Path) -> None:
     [
         ("raise SystemExit(3)\n", "selector_failed"),
         ("print('not json')\n", "selector_unparseable"),
-        ("import time\ntime.sleep(60)\n", "selector_timeout"),
+        # Part of an answer, then a hang: the cut output must never be parsed.
+        (
+            "import sys\nfrom pathlib import Path\n"
+            'sys.stdout.write(\'{"selected_tests": ["tests/test_n\'); sys.stdout.flush()\n'
+            "Path(HUNG_MARKER).touch()\n" + _BLOCK_UNTIL_KILLED,
+            "selector_timeout",
+        ),
         ("import json\nprint(json.dumps({'selected_tests': ['tests/test_new.py']}))\n", "selector_schema_mismatch"),
         ("import json\nprint(json.dumps({'selected_tests': ['scripts/x.py']}))\n", "selector_invalid_output"),
     ],
@@ -1305,13 +1316,29 @@ def test_no_affected_tests_is_green_and_recorded_as_such(repo: Path) -> None:
 def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
     repo: Path, body: str, reason: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    hung = tmp_path / "selector-hung"
     _red_unchanged(repo, "tests/test_invariant.py")
-    _install_shadow(repo, body)
+    _install_shadow(repo, body.replace("HUNG_MARKER", repr(str(hung))))
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _write(repo, "RED_MARKER", "x\n")
     _commit(repo, "change", "tests/test_new.py", "RED_MARKER")
-    # The selector budget is a module constant, so drive validate() in-process with it shortened.
-    monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 2.0)
+    if reason == "selector_timeout":
+        # The gate looks only once the selector has blocked after part of an answer. It never exits, so
+        # the budget always ends it as a timeout, however fast the host. Every other stub exits by itself
+        # within the default budget, which only bounds the wait.
+        monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 0.5)
+        real_finish = gate.Shadow.finish
+
+        def finish_once_hung(shadow: gate.Shadow) -> dict[str, object]:
+            assert shadow.process is not None
+            wait_until(
+                lambda: hung.exists() or shadow.process.poll() is not None,
+                timeout=120.0,
+                message="the selector reaching its hang",
+            )
+            return real_finish(shadow)
+
+        monkeypatch.setattr(gate.Shadow, "finish", finish_once_hung)
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
     monkeypatch.chdir(repo)
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
@@ -1327,6 +1354,7 @@ def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
     assert "tests/test_invariant.py::test_no_marker" in raised.value.failing
     assert event["selection"]["status"] == "fallback" and event["selection"]["reason"] == reason
     assert event["nodes"] == 3  # the registry's two entries plus the changed test file
+    assert hung.exists() is (reason == "selector_timeout")  # the hang case was killed in its hang
 
 
 def test_every_test_affected_falls_back_to_the_registry(tmp_path: Path) -> None:
@@ -2237,6 +2265,21 @@ def _gone(pid: int) -> bool:
     return True
 
 
+def _wait_once_child_hangs(monkeypatch: pytest.MonkeyPatch, hung: Path) -> None:
+    """Hold each wait on a child until the child creates ``hung`` (or exits), then let the wait's budget run.
+
+    A short ``run_bounded`` budget then always kills a child that has reached its hang, after the output it
+    wrote first, however slowly a loaded host started it.
+    """
+
+    class HangAwarePopen(subprocess.Popen):
+        def wait(self, timeout: float | None = None) -> int:
+            wait_until(lambda: hung.exists() or self.poll() is not None, timeout=120.0, message=f"{hung.name}")
+            return super().wait(timeout)
+
+    monkeypatch.setattr(gate.subprocess, "Popen", HangAwarePopen)
+
+
 _DETACHED_CHILD = (
     "import os, subprocess, sys, time\n"
     "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(300)'], start_new_session=True)\n"
@@ -2245,12 +2288,16 @@ _DETACHED_CHILD = (
 
 
 @pytest.mark.parametrize("hang", [False, True], ids=["command-exits", "command-times-out"])
-def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(tmp_path: Path, hang: bool) -> None:
+def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, hang: bool
+) -> None:
     pid_file = tmp_path / "child.pid"
-    script = _DETACHED_CHILD + ("time.sleep(300)\n" if hang else "")
+    hung = tmp_path / "hung"
+    script = _DETACHED_CHILD + (f"open({str(hung)!r}, 'w').close()\n{_BLOCK_UNTIL_KILLED}" if hang else "")
     started = time.monotonic()
 
     if hang:
+        _wait_once_child_hangs(monkeypatch, hung)  # the kill finds the descendant already spawned
         with pytest.raises(gate.GateOutcome) as raised:
             gate.run_bounded(
                 [sys.executable, "-c", script, str(pid_file)],
@@ -2282,19 +2329,24 @@ def test_command_output_and_exit_code_are_returned(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("ending", ["nonzero", "signal", "timeout", "spawn-error", "no-budget"])
-def test_failed_command_measurement_keeps_output_and_observed_exit(tmp_path: Path, ending: str) -> None:
+def test_failed_command_measurement_keeps_output_and_observed_exit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    hung = tmp_path / "hung"
     script = (
-        "import os, signal, time; print('synthetic output', flush=True); "
+        "import os, signal, threading; print('synthetic output', flush=True); "
         + {
             "nonzero": "raise SystemExit(3)",
             "signal": "os.kill(os.getpid(), signal.SIGTERM)",
-            "timeout": "time.sleep(60)",
+            "timeout": f"open({str(hung)!r}, 'w').close(); threading.Event().wait()",
             "spawn-error": "raise SystemExit(0)",
             "no-budget": "raise SystemExit(0)",
         }[ending]
     )
     command = [sys.executable, "-c", script] if ending != "spawn-error" else [str(tmp_path / "absent")]
     allowance = 0.0 if ending == "no-budget" else 1.0 if ending == "timeout" else 30.0
+    if ending == "timeout":
+        _wait_once_child_hangs(monkeypatch, hung)  # the kill comes after the output, never before it
     event = {}
     with pytest.raises(gate.GateOutcome) as raised:
         with gate.stage_measurement(event, "pre_commit") as diagnostics:
@@ -2554,7 +2606,7 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
     repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
 ) -> None:
     pid_file = tmp_path / "shadow-child.pid"
-    tail = _SHADOW_ANSWER if ending == "success" else "import time\ntime.sleep(300)\n"
+    tail = _SHADOW_ANSWER if ending == "success" else _BLOCK_UNTIL_KILLED
     _install_shadow(repo, _SHADOW_DETACHED.format(pid_file=str(pid_file), tail=tail))
     monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 3.0 if ending == "timeout" else 60.0)
     plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
@@ -2606,7 +2658,7 @@ def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
     repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
-    _install_shadow(repo, "import time\ntime.sleep(60)\n")
+    _install_shadow(repo, _BLOCK_UNTIL_KILLED)
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
@@ -2658,7 +2710,7 @@ def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(
     repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
-    _install_shadow(repo, "import time\ntime.sleep(60)\n")
+    _install_shadow(repo, _BLOCK_UNTIL_KILLED)
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
@@ -6403,12 +6455,14 @@ def test_a_killed_stage_is_typed_by_the_load_observed_at_its_timeout(
 ) -> None:
     observed, load, reason = TIMEOUT_LOADS[case]
     monkeypatch.setattr(gate, "admission_resources", lambda: dict(observed))
+    hung = tmp_path / "hung"
     script = (
-        "import sys, time\n"
+        "import sys\n"
         "print('FAILED tests/test_a.py::test_whole - printed', flush=True)\n"
         "sys.stdout.write('FAILED tests/test_a.py::test_cu'); sys.stdout.flush()\n"
-        "time.sleep(60)\n"
+        f"open({str(hung)!r}, 'w').close()\n" + _BLOCK_UNTIL_KILLED
     )
+    _wait_once_child_hangs(monkeypatch, hung)  # the kill always cuts the second line, never the first
     diagnostics: dict[str, object] = {}
 
     with pytest.raises(gate.StageTimeout) as raised:
