@@ -1205,7 +1205,10 @@ launcher_close_failed_driver_lease() {
 launcher_forward_driver_signal() {
   local signal="$1"
   local exit_code="$2"
-  trap - "$signal"
+  # The scope waiter can relay the terminal signal again during close. Keep
+  # that signal non-fatal until the client returns and EXIT cleanup is cleared;
+  # otherwise EXIT can close again before the successful-close flag is set.
+  trap '' "$signal"
   if [ -n "${LC_DRIVER_CHILD_PID:-}" ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
     kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true

@@ -23,6 +23,104 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 REPO = Path(__file__).resolve().parents[1]
 
 
+@pytest.mark.parametrize(("name", "expected"), [("INT", 130), ("TERM", 143), ("HUP", 129)])
+@pytest.mark.parametrize("delivery", ["pid", "group"])
+def test_forwarder_finishes_close_and_reaps_children_after_repeated_signal(
+    tmp_path: Path, name: str, expected: int, delivery: str
+) -> None:
+    """Check the core's own status without the outer scope's status translation."""
+    from tests.test_launcher_interactive_scope import DEADLINE_S, _assert_no_test_processes, _test_processes, _write
+
+    gate = tmp_path / "gate"
+    os.mkfifo(gate)
+    gate_fd = os.open(gate, os.O_RDWR | os.O_NONBLOCK)
+    ready = tmp_path / "ready"
+    received = tmp_path / "received"
+    attempts = tmp_path / "attempts"
+    closed = tmp_path / "closed"
+    client_pid = tmp_path / "client-pid"
+    core = _write(tmp_path / "launcher_core.sh", (REPO / "scripts/lib/launcher_core.sh").read_text())
+    provider = _write(tmp_path / "provider.py", """import signal, sys
+from pathlib import Path
+def stop(sig, frame):
+    Path(sys.argv[2]).write_text(str(sig))
+    raise SystemExit(0)
+for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+    signal.signal(sig, stop)
+Path(sys.argv[1]).write_text('ready')
+signal.pause()
+""")
+    # Only this disposable helper can receive the real close function's call.
+    _write(tmp_path / ".venv/bin/python", """#!/usr/bin/env bash
+[ "$*" = '-m scripts.session_supervisor close --role driver' ] || exit 97
+printf '%s\\n' "$$" > "$TEST_CLIENT_PID"
+printf 'close\\n' >> "$TEST_ATTEMPTS"
+IFS= read -r -t 60 _ < "$TEST_GATE" || exit 98
+printf 'closed\\n' > "$TEST_CLOSED"
+""", 0o755)
+    launcher = _write(tmp_path / "forwarder.sh", f"""#!/usr/bin/env bash
+source {shlex.quote(str(core))}
+source {shlex.quote(str(REPO / 'scripts/lib/session_supervisor.sh'))}
+LC_DURABLE_HELPER_ROOT="$PWD"
+LC_PROVIDER=claude
+{shlex.quote(sys.executable)} -I {shlex.quote(str(provider))} {shlex.quote(str(ready))} {shlex.quote(str(received))} &
+LC_DRIVER_CHILD_PID=$!
+sleep 300 & LC_SUPERVISORY_WATCH_PID=$!
+sleep 300 & LC_DRIVER_RENEW_PID=$!
+sleep 300 & LC_OBSERVER_HEARTBEAT_PID=$!
+trap 'launcher_forward_driver_signal {name} {expected}' {name}
+printf 'armed\\n' > armed
+IFS= read -r _ < "$TEST_GATE"
+""")
+    env = {**os.environ, "TEST_GATE": str(gate), "TEST_ATTEMPTS": str(attempts),
+           "TEST_CLOSED": str(closed), "TEST_CLIENT_PID": str(client_pid)}
+    process = subprocess.Popen(["bash", str(launcher)], cwd=tmp_path, env=env, start_new_session=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    try:
+        wait_until(lambda: ready.exists() and (tmp_path / "armed").exists(), timeout=DEADLINE_S,
+                   message="provider and direct forwarder traps")
+        sig = getattr(signal, f"SIG{name}")
+        process.send_signal(sig)
+        wait_until(attempts.exists, timeout=DEADLINE_S, message="in-flight close client")
+        assert not closed.exists()
+        if delivery == "group":
+            # The new session belongs only to this fixture. Refuse delivery if
+            # either its identity or any current member cannot be established.
+            assert process.poll() is None
+            assert os.getpgid(process.pid) == os.getsid(process.pid) == process.pid
+            assert process.pid != os.getpgrp()
+            members = set()
+            for entry in Path("/proc").iterdir():
+                if not entry.name.isdigit():
+                    continue
+                try:
+                    fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+                except FileNotFoundError:
+                    continue
+                if int(fields[2]) == process.pid:
+                    assert int(fields[3]) == process.pid
+                    members.add(int(entry.name))
+            assert {process.pid, int(client_pid.read_text())} <= members
+            assert members <= set(_test_processes(tmp_path))
+            os.killpg(process.pid, sig)
+        else:
+            process.send_signal(sig)
+        os.write(gate_fd, b"release\nrelease\n")
+        stdout, stderr = process.communicate(timeout=DEADLINE_S)
+        assert process.returncode == expected, stdout + stderr
+        assert received.read_text() == str(sig)
+        assert attempts.read_text().splitlines() == ["close"]
+        assert closed.read_text() == "closed\n"
+        wait_until(lambda: not _test_processes(tmp_path),
+                   timeout=5, message="provider and watcher cleanup")
+        _assert_no_test_processes(tmp_path)
+    finally:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.communicate(timeout=10)
+        os.close(gate_fd)
+
+
 def manager_guard(directory: Path) -> Path:
     """Stand-ins that refuse and record any user-manager call no fake intercepted.
 
