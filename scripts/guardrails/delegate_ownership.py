@@ -106,7 +106,10 @@ DEFAULT_QUEUE_POLL_S = 5.0
 MAX_LITERAL_EXPANSIONS = 64
 
 # Seams for the queue's waiting; resolved at call time so tests can replace them.
+# ``_monotonic`` bounds the wait, so a wall-clock step cannot stretch it;
+# ``_clock`` (wall time) stamps the ledger rows other processes read.
 _sleep = time.sleep
+_monotonic = time.monotonic
 _clock = time.time
 
 WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
@@ -957,6 +960,7 @@ class OwnershipLedger:
         poll_s: float = DEFAULT_QUEUE_POLL_S,
         sleep: Callable[[float], None] | None = None,
         clock: Callable[[], float] | None = None,
+        monotonic: Callable[[], float] | None = None,
         on_queued: Callable[[str], None] | None = None,
     ) -> AdmissionResult:
         """Attempt admission. WARN always admits; REFUSE may refuse or queue.
@@ -968,6 +972,11 @@ class OwnershipLedger:
         hears once that it waits. At the bound the result is a typed
         ``QUEUE_TIMEOUT``. ``wait_s=0`` refuses the overlap at once.
         Unprovable disjointness never queues: it refuses as before.
+
+        The bound is elapsed ``monotonic`` time; ``clock`` (wall time) only
+        stamps ledger rows. A waiter row's wall ``deadline`` is the remaining
+        monotonic budget added to the wall time the row is written, so other
+        processes can expire an abandoned row without this process's clock.
         """
         if mode not in WRITE_CAPABLE_MODES:
             return AdmissionResult(
@@ -980,12 +989,12 @@ class OwnershipLedger:
 
         sleep = sleep if sleep is not None else _sleep
         clock = clock if clock is not None else _clock
+        monotonic = monotonic if monotonic is not None else _monotonic
         override = (allow_path_overlap or "").strip() or None
         bound = _bounded_wait(wait_s)
         poll_s = poll_s if poll_s > 0 else DEFAULT_QUEUE_POLL_S
         queue = bound > 0 and self.mode == GuardMode.REFUSE and not override
-        started = clock()
-        deadline = started + bound
+        started = monotonic()
         ticket: int | None = None
         notified = False
         try:
@@ -993,6 +1002,7 @@ class OwnershipLedger:
                 with self._connect() as conn:
                     conn.execute("BEGIN IMMEDIATE")
                     now = clock()
+                    waited = monotonic() - started
                     result, blockers, concrete = self._admit_once(
                         conn,
                         task_id=task_id,
@@ -1003,7 +1013,7 @@ class OwnershipLedger:
                         ticket=ticket,
                         queue=queue,
                         now=now,
-                        waited_s=now - started,
+                        waited_s=waited,
                     )
                     if result is not None:
                         if ticket is not None:
@@ -1012,18 +1022,18 @@ class OwnershipLedger:
                         conn.execute("COMMIT")
                         return result
                     summary = overlap_summary(blockers)
-                    if now >= deadline:
+                    if waited >= bound:
                         if ticket is not None:
                             conn.execute("DELETE FROM write_waiters WHERE ticket = ?", (ticket,))
                             ticket = None
                         reason = (
-                            f"write-path ownership queue timed out after {now - started:.0f}s "
+                            f"write-path ownership queue timed out after {waited:.0f}s "
                             f"(QUEUE_TIMEOUT): still behind {summary}"
                         )
                         _record_event(
                             conn, task_id, "queue_timeout",
                             {"task_id": task_id, "conflicts": blockers, "caller": caller,
-                             "waited_s": now - started, "reason": reason},
+                             "waited_s": waited, "reason": reason},
                         )
                         conn.execute("COMMIT")
                         return AdmissionResult(
@@ -1034,7 +1044,7 @@ class OwnershipLedger:
                             conflicts=blockers,
                             claims=concrete,
                             queue_timeout=True,
-                            waited_s=now - started,
+                            waited_s=waited,
                         )
                     present = ticket is not None and conn.execute(
                         "SELECT 1 FROM write_waiters WHERE ticket = ?", (ticket,)
@@ -1044,7 +1054,7 @@ class OwnershipLedger:
                             "INSERT INTO write_waiters (task_id, claims_json, pid, enqueued_at, deadline) "
                             "VALUES (?,?,?,?,?)",
                             (task_id, json.dumps([c.as_dict() for c in concrete], sort_keys=True),
-                             os.getpid(), now, deadline),
+                             os.getpid(), now, now + bound - waited),
                         )
                         ticket = int(cursor.lastrowid)
                         _record_event(
@@ -1059,7 +1069,7 @@ class OwnershipLedger:
                         f"write-path ownership: queued behind {summary}; "
                         f"waiting up to {bound:.0f}s (ticket {ticket})"
                     )
-                sleep(max(0.0, min(poll_s, deadline - clock())))
+                sleep(max(0.0, min(poll_s, bound - (monotonic() - started))))
         finally:
             # Interrupted while waiting (signal, ledger error): leave no queue row.
             # Best effort; an abandoned row is dropped by pid and deadline anyway.

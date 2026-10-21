@@ -69,6 +69,7 @@ def test_dispatch_queues_same_file_writer_and_times_out_typed(tasks_dir, monkeyp
 
     monkeypatch.setattr(ownership, "_sleep", fake_sleep, raising=False)
     monkeypatch.setattr(ownership, "_clock", lambda: now[0], raising=False)
+    monkeypatch.setattr(ownership, "_monotonic", lambda: now[0], raising=False)
     monkeypatch.setattr(
         delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("queued writer must not spawn")
     )

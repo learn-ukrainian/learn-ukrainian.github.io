@@ -106,6 +106,7 @@ def _queued_admit(ledger, fake, task_id, paths, *, wait_s=60.0, poll_s=5.0, noti
         poll_s=poll_s,
         sleep=fake.sleep,
         clock=fake.clock,
+        monotonic=fake.clock,
         on_queued=(notices.append if notices is not None else None),
     )
 
@@ -161,6 +162,36 @@ def test_same_file_queue_is_bounded_and_times_out_typed(env):
     assert result.conflicts and result.conflicts[0]["other_task_id"] == "holder"
     assert _events(ledger, "waiter") == ["queued", "queue_timeout"]
     assert _claims(ledger, "waiter") == []
+    assert _waiters(ledger) == []
+
+
+def test_queue_bound_survives_a_backward_wall_clock_step(env, monkeypatch):
+    """The bound is elapsed monotonic time: stepping the wall clock back cannot extend the wait."""
+    ledger, state_dir = env
+    _hold(ledger, state_dir, "holder", ["scripts/pkg/a.py"])
+    fake = FakeTime(limit=30.0)
+    wall = [time.time()]
+
+    def stepping_wall_clock() -> float:
+        wall[0] -= 3600.0  # an hour back on every read, as a clock correction might
+        return wall[0]
+
+    monkeypatch.setattr(ownership, "_sleep", fake.sleep)
+    monkeypatch.setattr(ownership, "_monotonic", fake.clock, raising=False)
+    monkeypatch.setattr(ownership, "_clock", stepping_wall_clock)
+    rows: list[tuple] = []
+    fake.hooks.append(lambda: rows.extend(_rows(ledger, "SELECT enqueued_at, deadline FROM write_waiters")))
+
+    result = ledger.admit(
+        task_id="waiter", mode="workspace-write", owned_paths=["scripts/pkg/a.py"], pid=PID, wait_s=30.0, poll_s=5.0
+    )
+
+    assert result.outcome is AdmissionOutcome.QUEUE_TIMEOUT, result.reason
+    assert result.waited_s == pytest.approx(30.0)
+    assert sum(fake.sleeps) == pytest.approx(30.0)
+    # Peers expire the row on wall time: its deadline is the monotonic budget left at the write.
+    assert len(rows) == 1 and rows[0][1] - rows[0][0] == pytest.approx(30.0)
+    assert _events(ledger, "waiter") == ["queued", "queue_timeout"]
     assert _waiters(ledger) == []
 
 
