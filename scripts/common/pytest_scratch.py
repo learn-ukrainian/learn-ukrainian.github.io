@@ -18,6 +18,7 @@ import secrets
 import stat
 import tempfile
 from collections.abc import Callable
+from functools import partial
 from pathlib import Path
 
 import pytest
@@ -96,15 +97,20 @@ def _replaceable_by_others(st: os.stat_result) -> bool:
     return st.st_uid not in (0, os.geteuid()) or _others_can_rename_in(st.st_mode)
 
 
-def _open_unreplaceable(path: Path) -> int | None:
+def _open_unreplaceable(path: str) -> int | None:
     """Open ``path`` from ``/`` one component at a time; None if another user could replace any of it.
 
     Owner-only mode on ``path`` does not protect its name in its parent, so every
     directory from ``/`` down must be unreplaceable. ``O_NOFOLLOW`` refuses a symlink.
+    The components are walked as supplied: normalizing first would drop a symlink
+    that a following ``..`` steps out of, so ``..`` is refused instead.
     """
+    parts = [part for part in path.split("/") if part]
+    if ".." in parts:
+        return None
     fd = os.open("/", _DIR_FLAGS)
     try:
-        for part in path.parts[1:]:
+        for part in parts:
             if _replaceable_by_others(os.fstat(fd)):
                 os.close(fd)
                 return None
@@ -129,13 +135,14 @@ def _open_shared_memory(path: Path) -> int | None:
     return fd
 
 
-def _fallback_bases() -> list[tuple[Path, Callable[[Path], int | None]]]:
-    """Each candidate temp with how to open it: TMPDIR only if its whole path is unreplaceable."""
-    bases: list[tuple[Path, Callable[[Path], int | None]]] = []
+def _fallback_bases() -> list[tuple[Path, Callable[[], int | None]]]:
+    """Each candidate temp with how to open it: TMPDIR only if its whole path, as supplied, is unreplaceable."""
+    bases: list[tuple[Path, Callable[[], int | None]]] = []
     tmpdir = os.environ.get("TMPDIR", "").strip()
     if os.path.isabs(tmpdir):
-        bases.append((Path(os.path.normpath(tmpdir)), _open_unreplaceable))
-    bases.append((SHARED_MEMORY_TEMP, _open_shared_memory))
+        # Path() drops only "." and repeated slashes, which name the same directory once no component is a symlink.
+        bases.append((Path(tmpdir), partial(_open_unreplaceable, tmpdir)))
+    bases.append((SHARED_MEMORY_TEMP, partial(_open_shared_memory, SHARED_MEMORY_TEMP)))
     return bases
 
 
@@ -194,7 +201,7 @@ def _allocate_private_fallback() -> TaskScratch:
     failures = []
     for base, open_base in _fallback_bases():
         try:
-            base_fd = open_base(base)
+            base_fd = open_base()
             if base_fd is None:
                 failures.append("replaceable")
                 continue

@@ -565,6 +565,29 @@ def test_tmpdir_below_a_symlinked_ancestor_is_skipped(world, tmp_path):
     assert list(target.iterdir()) == []
 
 
+@pytest.mark.parametrize(
+    "suffix",
+    ["link/../leaf", "link/../leaf/", "link/./../leaf/.", "link/", "link/."],
+)
+def test_tmpdir_as_supplied_is_walked_so_a_symlink_before_dot_dot_is_skipped(world, tmp_path, suffix):
+    """Defect class: normalizing TMPDIR before the walk erases a symlink component, so the walk verifies
+    a different directory than TMPDIR names and the run lands outside the provisioned temp (round-3 F3).
+    """
+    lexical = tmp_path / "lexical"
+    semantic = tmp_path / "semantic"
+    target = semantic / "target"
+    for directory in (lexical, semantic, target, lexical / "leaf", semantic / "leaf"):
+        directory.mkdir(mode=0o700)
+    (lexical / "link").symlink_to(target, target_is_directory=True)
+    world.monkeypatch.setenv("TMPDIR", f"{lexical}/{suffix}")
+    world.make_runs_root(0o700)
+    world.readonly()
+    config = world.configure()
+    for directory in (lexical / "leaf", semantic / "leaf", target):
+        assert list(directory.iterdir()) == [], f"the run landed in {directory}, not the provisioned TMPDIR"
+    _assert_private_fallback(world, config, world.shm)
+
+
 def test_tmpdir_replaced_after_the_walk_fails_closed_without_writing_outside(world, tmp_path):
     """Defect class: the run directory is made by path after the walk, so a replaced TMPDIR still redirects it."""
     outside = tmp_path / "outside"
