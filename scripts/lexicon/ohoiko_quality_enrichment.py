@@ -7,6 +7,7 @@ and ``anna-ohoiko-500-verbs``), and merges them onto Atlas entries:
 - Sets ``enrichment.translation`` to ``{en: [gloss, ...], source: "learner_english_gloss"}``
   with Anna's learner gloss first, preserving existing dictionary EN terms only when they
   represent a distinct sense.
+- Preserves term-specific source_file/locator in ``translation.attributions``.
 - Sets ``enrichment.examples`` to ``[{uk, en, source: "Anna Ohoiko", locator}]`` (<=2).
 - Re-enriches empty #7397 heads of Ohoiko provenance (e.g. ``так само``, ``забоятися``, etc.).
 - (#7471) For 500-verbs entries, additionally sets ``enrichment.verb_pedagogy``:
@@ -682,6 +683,9 @@ def is_duplicate_sense(prior_term: str, anna_gloss: str) -> bool:
 def merge_translation(
     prior_translation: dict[str, Any] | None,
     anna_gloss: str,
+    *,
+    source_file: str = "",
+    locator: str = "",
 ) -> dict[str, Any]:
     """Merge Anna's learner gloss as primary, keeping only distinct prior EN senses."""
     new_en = [anna_gloss]
@@ -695,9 +699,32 @@ def merge_translation(
             if term_str not in new_en:
                 new_en.append(term_str)
 
+    credit = {"text": anna_gloss, "source": SOURCE_LABEL_AUTHOR}
+    if source_file:
+        credit["source_file"] = source_file
+    if locator:
+        credit["locator"] = locator
+    attributions = [credit]
+    prior = prior_translation or {}
+    prior_credits = prior.get("attributions") or []
+    for term in new_en:
+        credits = [dict(c) for c in prior_credits if isinstance(c, dict) and c.get("text") == term]
+        # A legacy learner_english_gloss row merges multiple origins; its marker
+        # cannot establish authorship of any retained term (#11340).
+        if not credits and term != anna_gloss:
+            source = prior.get("source") or ""
+            if source == SOURCE_LABEL_GLOSS:
+                source = ""
+            credits = [{"text": term, "source": source}]
+            if source:
+                credits[0].update({key: prior[key] for key in ("source_file", "source_title", "source_url", "locator") if prior.get(key)})
+        for item in credits:
+            if item not in attributions:
+                attributions.append(item)
     result: dict[str, Any] = {
         "en": new_en,
         "source": SOURCE_LABEL_GLOSS,
+        "attributions": attributions,
     }
     if prior_translation and prior_translation.get("pos"):
         result["pos"] = prior_translation["pos"]
@@ -724,9 +751,10 @@ def merge_examples(
             seen.add(key)
             merged.append(
                 {
+                    **ex,
                     "uk": uk,
                     "en": en,
-                    "source": ex.get("source") or SOURCE_LABEL_AUTHOR,
+                    "source": ex.get("source") or "",
                     "locator": ex.get("locator") or "",
                 }
             )
@@ -740,6 +768,8 @@ def enrich_entry_with_ohoiko(
     *,
     anna_gloss: str | None = None,
     anna_example: dict[str, str] | None = None,
+    source_file: str = "",
+    locator: str = "",
 ) -> bool:
     """Enrich a single Atlas entry dictionary in-place with Ohoiko gloss/example."""
     changed = False
@@ -751,13 +781,20 @@ def enrich_entry_with_ohoiko(
     sources = set(enrichment.get("sources") or [])
 
     if anna_gloss:
-        enrichment["translation"] = merge_translation(enrichment.get("translation"), anna_gloss)
+        enrichment["translation"] = merge_translation(
+            enrichment.get("translation"), anna_gloss, source_file=source_file, locator=locator
+        )
         sources.add(SOURCE_LABEL_GLOSS)
         changed = True
 
     if anna_example:
         prior_ex = enrichment.get("examples") or []
-        enrichment["examples"] = merge_examples(prior_ex, [anna_example])
+        example = dict(anna_example)
+        if source_file:
+            example["source_file"] = source_file
+        if locator:
+            example["locator"] = locator
+        enrichment["examples"] = merge_examples(prior_ex, [example])
         sources.add(SOURCE_LABEL_AUTHOR)
         changed = True
 
@@ -905,10 +942,14 @@ def apply_ohoiko_quality_enrichment(
                 chunk_matched = True
                 lemmas_updated_1000.add(lem)
                 if item.gloss:
-                    enrich_entry_with_ohoiko(entry, anna_gloss=item.gloss)
+                    enrich_entry_with_ohoiko(
+                        entry, anna_gloss=item.gloss, source_file=item.source_file, locator=item.locator
+                    )
                     gloss_updated_1000 += 1
                 if item.example:
-                    enrich_entry_with_ohoiko(entry, anna_example=item.example)
+                    enrich_entry_with_ohoiko(
+                        entry, anna_example=item.example, source_file=item.source_file, locator=item.locator
+                    )
                     ex_updated_1000 += 1
         if chunk_matched:
             matched_chunks_1000 += 1
@@ -929,10 +970,14 @@ def apply_ohoiko_quality_enrichment(
                 chunk_matched = True
                 lemmas_updated_500.add(lem)
                 if item.gloss:
-                    enrich_entry_with_ohoiko(entry, anna_gloss=item.gloss)
+                    enrich_entry_with_ohoiko(
+                        entry, anna_gloss=item.gloss, source_file=item.source_file, locator=item.locator
+                    )
                     gloss_updated_500 += 1
                 if item.example:
-                    enrich_entry_with_ohoiko(entry, anna_example=item.example)
+                    enrich_entry_with_ohoiko(
+                        entry, anna_example=item.example, source_file=item.source_file, locator=item.locator
+                    )
                     ex_updated_500 += 1
                 if (item.stems or item.government) and enrich_entry_with_verb_pedagogy(
                     entry, stems=item.stems, government=item.government, locator=item.locator

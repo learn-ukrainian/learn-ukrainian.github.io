@@ -2,6 +2,8 @@ import { describe, expect, test } from "vitest";
 import { CHROME_STRINGS } from "@site/src/lib/i18n/chrome";
 import { formatOrigin } from "@site/src/lib/lexicon/format-origin";
 import {
+  articleAttribution,
+  translationAttributions,
   atlasWikipediaOkAsIntro,
   buildAtlasLinkCatalogFromSearchRows,
   buildFutureTenseNumbers,
@@ -411,7 +413,7 @@ describe("translation source humanization (#7459)", () => {
     expect(emptyView.translationSource).toBeNull();
   });
 
-  test("renders Anna Ohoiko label on Переклад block for learner_english_gloss", () => {
+  test("renders Anna Ohoiko and the supported book for a proven translation term", () => {
     const html = renderWordAtlasArticle(
       articleProps({
         lemma: "автобус",
@@ -423,12 +425,16 @@ describe("translation source humanization (#7459)", () => {
         primary_source: "course",
         course_usage: [],
         enrichment: {
-          translation: { en: ["bus"], source: "learner_english_gloss" },
+          translation: { en: ["bus"], source: "learner_english_gloss", attributions: [
+            { text: "bus", source: "Anna Ohoiko", source_file: "anna-ohoiko-1000-words-2nd-ed" },
+          ] },
         },
       }),
     );
     expect(html).toContain("<h2>Переклад</h2>");
     expect(html).toContain("Джерело: Anna Ohoiko");
+    expect(html).toContain("1000 Most Useful Ukrainian Words");
+    expect(html).toContain("<q>bus</q>");
     expect(html).not.toContain("Джерело: learner_english_gloss");
   });
 
@@ -1724,14 +1730,18 @@ describe("usage-label scope on entry pages (#9603)", () => {
     const html = renderWordAtlasArticle(props);
     expect(html).toContain(`<div class="word-pos">іменник · ${PEREKLIUCHYTY_SHOWN}</div>`);
     expect(html).toContain(`<p>${PEREKLIUCHYTY_SHOWN}</p>`);
-    expect(html).toContain(`<span class="en-term">${PEREKLIUCHYTY_SHOWN}</span><span class="en-term">to switch</span>`);
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    expect(Array.from(doc.querySelectorAll(".en-term q")).map((q) => q.textContent)).toEqual([PEREKLIUCHYTY_GLOSS, "to switch"]);
+    expect(doc.querySelector(".en-term .atlas-muted")?.textContent).toContain(PEREKLIUCHYTY_SHOWN);
     // #9603 F3: unresolved alternatives without source proof are Atlas suggestions, never a reference source's.
     expect(styleNotesHtml(html)).toContain(
       "<p>Атлас пропонує відповідники, не звірені з джерелом: перемкнути, перемикнути. Перевіреного витягу з джерела запис не містить, тому слово не позначено як русизм або кальку.</p>",
     );
     expect(html).not.toContain("Довідкові джерела");
     expect(html).not.toContain("Джерело не визначає");
-    expect(html).not.toContain("(Russian calque");
+    // Source quotations stay exact; unquoted Atlas prose must qualify the clause.
+    for (const quote of doc.querySelectorAll("q")) quote.remove();
+    expect(doc.body.textContent).not.toContain("(Russian calque");
     const form = renderWordAtlasArticle(
       heritageEntry("переключив", {}, { gloss: PEREKLIUCHYTY_GLOSS, form_of: { url_slug: "переключити", lemma: "переключити" } }),
     );
@@ -2608,5 +2618,42 @@ describe("thin rendered-state presentation (#8327)", () => {
       .toEqual({ tier: "thin", richBuckets: 1 });
     expect(classifyRenderedArticleTier({ ...model.renderable, meaning: true }))
       .toEqual({ tier: "thin", richBuckets: 1 });
+  });
+});
+
+
+describe("article attribution metadata (#11340)", () => {
+  test("each supported book resolves from term provenance, independently of examples", () => {
+    expect(articleAttribution({ source: "Anna Ohoiko", source_file: "anna-ohoiko-500-verbs", locator: "entry 9" })).toEqual({
+      kind: "quotation", source: "Anna Ohoiko", title: "500+ Ukrainian Verbs: Conjugation and Examples of Use",
+      href: "https://www.ukrainianlessons.com/verbs/", locator: "entry 9",
+    });
+    const translation = { en: ["first", "retained"], source: "learner_english_gloss", attributions: [
+      { text: "first", source: "Anna Ohoiko", source_file: "anna-ohoiko-500-verbs" },
+      { text: "retained", source: "dictionary", locator: "sense 2" },
+    ] };
+    expect(translationAttributions(translation, "first")[0]).toMatchObject({ kind: "quotation", title: "500+ Ukrainian Verbs: Conjugation and Examples of Use" });
+    expect(translationAttributions(translation, "retained")).toEqual([{ kind: "ordinary", source: "dictionary", locator: "sense 2" }]);
+  });
+
+  test.each(["", "unknown", "__proto__", "constructor"])("unknown book %s never borrows a title", (source_file) => {
+    const credit = articleAttribution({ source: "Anna Ohoiko", source_file, source_title: "Invented", source_url: "javascript:alert(1)" });
+    expect(credit).toEqual({ kind: "quotation", source: "Anna Ohoiko", title: null, href: null, locator: "" });
+  });
+
+  test("strict example locators resolve only their own book and do not override unknown source IDs", () => {
+    expect(articleAttribution({ source: "Anna Ohoiko", locator: "ohoiko-500-verbs entry 1" }, true)).toMatchObject({ title: "500+ Ukrainian Verbs: Conjugation and Examples of Use" });
+    for (const locator of ["ohoiko-500-verbs entry 0", "ohoiko-500-verbs entry 1 extra", "entry 1", ""]) {
+      expect(articleAttribution({ source: "Anna Ohoiko", locator }, true)).toMatchObject({ title: null });
+    }
+    expect(articleAttribution({ source: "Anna Ohoiko", source_file: "unknown", locator: "ohoiko-1000-words entry 3" }, true)).toMatchObject({ title: null });
+    expect(articleAttribution({ source: "dictionary", locator: "ohoiko-1000-words entry 3" }, true)).toEqual({ kind: "ordinary", source: "dictionary", locator: "ohoiko-1000-words entry 3" });
+  });
+
+  test("absent per-term metadata is explicit and never inherits a neighboring term", () => {
+    expect(translationAttributions({ en: ["first", "other"], source: "learner_english_gloss", attributions: [
+      { text: "first", source: "Anna Ohoiko", source_file: "anna-ohoiko-500-verbs" },
+    ] }, "other")).toEqual([{ kind: "quotation", source: "Source unknown", title: null, href: null, locator: "" }]);
+    expect(articleAttribution({ source: "" }, true)).toMatchObject({ source: "Source unknown", title: null });
   });
 });

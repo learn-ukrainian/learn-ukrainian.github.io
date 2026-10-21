@@ -315,7 +315,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-        "sha256": "888eb4b6a12dcb1faae38dea9981f9fe02ddba6923d43bbb8541a0a2ce84fe62"
+        "sha256": "75872d5506e325a39df80009c1985c0e3e56d986745f7cbe3e6ee17b75650ff9"
       },
       {
         "path": "scripts/lexicon/paradigm_stress.py",
