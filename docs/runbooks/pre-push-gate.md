@@ -54,13 +54,19 @@ subprocesses. A test file is affected when it reaches a changed path that way. A
 test file affects every test file: the pytest configuration (`pyproject.toml`, `pytest.ini`,
 `setup.cfg`, `tox.ini`), the root or `tests/conftest.py`, and the `-p` plugins in `addopts`.
 
-A deleted path is no longer in the tree, but the tests that still import it are the ones it breaks.
-The gate lists the range without rename detection, so a rename is its new path (changed) plus its old
-path (deleted), and passes the deleted paths with the range's base (`--base <sha> --deleted …`). The
-selector reads the base commit's import graph from Git objects (no checkout needed) and joins its
-edges to the head's, so the importers of a deleted file are selected; the configuration and conftest
-rules apply to deleted paths too. Without the base graph a deleted path is a selector error, never an
-empty selection.
+**A range that deletes anything but documentation runs the registry, not the selector** (#11207,
+`selection.reason: deleted_paths`). The gate lists the range without rename detection, so renaming a
+path away deletes its old path too. Documentation is Markdown under `docs/` (`documentation_only`);
+Markdown elsewhere is data that tests and scripts read (lessons, rules, fixtures, a script's README),
+so deleting it counts like any other deletion. Why: a deleted path is gone from the tree the selector
+scans, and the tests it breaks are the ones that still reach it. An earlier design found them through
+the base commit's import graph, behind a text prefilter of the base files; the scanner also resolves
+constant concatenation (`__import__('scripts.' + 'mod')`, `Path('scripts') / ('tab' + 'le.json')`), so
+the prefilter dropped real dependencies and an unrelated changed test kept the too-small answer
+non-empty. No static graph proves every way a test reaches a path, so the gate does not try: the
+registry set is sound for a deletion by construction, and CI's full suite still runs the importers.
+The row's `selection.deleted_paths` names the first `DELETED_PATHS_RECORDED` (20) such paths; the
+receipt binds the whole deletion set. A range that deletes only documentation keeps the selection.
 
 Two kinds of reach are deliberately not followed; CI covers them:
 
@@ -81,25 +87,25 @@ The gate then:
 
 Both deferrals are recorded. A selection with no affected test files and no changed test file is
 green with `pytest: "no tests selected"`, recorded as `selection.no_tests_affected`. That is the
-expected result for a docs-only or data-only change, and only for one: when such a range adds, changes
-or deletes a Python file, the gate falls back (`python_change_selects_nothing`, below) instead of
+expected result for a docs-only or data-only change, and only for one: when such a range adds or
+changes a Python file, the gate falls back (`python_change_selects_nothing`, below) instead of
 passing with zero tests.
 
 ### Fallback: the conservative set
 
 When the selector fails or exits non-zero, times out, answers malformed or in another schema, or names
-a path that is not a test file, when every test file is affected (a configuration change), when its
-answer does not report following every deleted path, or when it selects nothing for a range that
-adds, changes or deletes Python files and changes no test file, the gate blocks on the conservative
+a path that is not a test file, when every test file is affected (a configuration change), or when it
+selects nothing for a range that adds or changes Python files and changes no test file, the gate
+blocks on the conservative
 set instead: the changed test files plus the invariant registry,
 `KNOWN_REPO_WIDE_MODULES` and `KNOWN_REPO_WIDE_FUNCTIONS` in `tests/test_repo_wide_marker_invariant.py`.
 The registry is read by AST and deduplicated (a function id is dropped when its whole file is
 selected), with the deferrals described in Bounds. Its version is a digest of the gate version and
 the ids. The event records `selection.status: fallback` with a typed `selection.reason`:
 `selector_unavailable`, `selector_failed`, `selector_timeout`, `selector_unparseable`,
-`selector_invalid_output`, `selector_schema_mismatch`, `all_tests_affected`,
-`selector_ignored_deleted_paths` or `python_change_selects_nothing`, or one of the
-`merge_base_*` reasons from check 1, which skip the selector (#11207). The set is never
+`selector_invalid_output`, `selector_schema_mismatch`, `all_tests_affected` or
+`python_change_selects_nothing`; or, skipping the selector, one of the `merge_base_*` reasons from
+check 1 or `deleted_paths` (above) (#11207). The set is never
 silently narrower and never green on an unknown selection. The registry is loaded, and its
 materialization checked, on every push, because the fallback needs it.
 
@@ -350,8 +356,9 @@ a well-formed recorded selection (`selected` with a digest, sorted test files an
 `fallback` with one of the fallback reasons above and no test files); and a key equal, field for field with no extra ones, to
 the one the gate would write for the current plan with that recorded selection. `blocking_node_ids` is
 therefore derived from the recorded selection, never taken from the file. A plan with a base fallback
-reuses only a receipt that ran that fallback, and a plan without one never reuses a `merge_base_*`
-receipt. Receipts are checked before the selector runs, so the
+or a `deleted_paths` fallback reuses only a receipt that ran that fallback, and a plan the selector
+runs for never reuses a `merge_base_*` or `deleted_paths` receipt; the key binds the exact deletion
+set, documentation deletions included. Receipts are checked before the selector runs, so the
 bound inputs stand for the selection: the tree carries the selector, the import graph and the durations
 table, `tools` the code and versions that run them, and the gate version the cap. A plan whose selection
 is known reuses only a receipt that recorded the same selection. A missing, extra, altered or
@@ -410,6 +417,9 @@ Once a plan exists, the row also records `base`, `selected_test_files`, `changed
 receipt also binds.
 Gate version 10 (#11207 review) adds `deleted_paths` to the row and the receipt, the `tools` and
 `seal` receipt fields, and `selected_test_files` counted after the selector answered.
+Gate version 11 (#11207 review) runs the registry for a range that deletes anything but documentation
+(`selection.reason: deleted_paths`, with `selection.deleted_paths`) and drops the selector's base-graph
+scan and the `selector_ignored_deleted_paths` reason.
 From gate version 9 a stage timeout records `reason` `timeout` or `timeout_under_load` and its stage's
 `load_at_timeout` (#11140); version 8 and older rows record `validation_incomplete` with `(timeout)` in
 `detail`. Version 9 also applies the main-refresh base rule above to every row's `base`.

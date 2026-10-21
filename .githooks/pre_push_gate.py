@@ -16,11 +16,13 @@ gate defers to CI the modules over ``HEAVY_MODULE_S`` and, once the estimated
 cost of the changed files and the rest passes ``SELECTION_COST_CAP_S``, the
 farther remainder, and records both.  The range starts at the merge-base with
 ``origin/main`` after a merge of newer main, so the selector sees only the
-branch's own changes (#10820).  Deleted paths reach the tests that import them
-through the base commit's import graph.  When no single merge-base can be proven, or when
+branch's own changes (#10820).  When no single merge-base can be proven, or the
+range deletes a path that is not documentation (``documentation_only``: Markdown
+under ``docs/``), the selector does not run: a deleted path is gone from the tree
+it scans, and no import graph proves every way a test can still reach it.  When
 the selector fails, times out, answers malformed, finds every test file
-affected, ignores a deleted path, or selects nothing for a range that changes
-Python files and no test file, the gate falls back to the
+affected, or selects nothing for a range that changes Python files and no test
+file, the gate falls back to the
 conservative set: the changed test files plus the registry of repository-wide
 invariant tests (``KNOWN_REPO_WIDE_*`` in
 ``tests/test_repo_wide_marker_invariant.py``).  The event records which set ran
@@ -74,7 +76,7 @@ import uuid
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
-GATE_VERSION = 10  # 10: deleted paths, sealed receipts binding the selection and tools (#11207 review)
+GATE_VERSION = 11  # 11: a non-documentation deletion runs the registry, never the selector (#11207 review)
 # Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
 # tests/test_pre_push_gate.py checks table and behavior parity.
 THREAD_CAPS = {
@@ -147,6 +149,9 @@ SELECTION_SCHEMA = "pre-push-selection.v1"  # the only selector answer the gate 
 # Every reason the conservative set runs for: the merge-base could not set the base (the selector never
 # runs), or the selector's answer could not be blocked on. A receipt recording any other reason is invalid.
 BASE_FALLBACK_REASONS = ("merge_base_unavailable", "merge_base_ambiguous", "merge_base_is_head", "merge_base_unproven")
+# The range deletes a path that is not documentation: the selector never runs (``Plan.forced_fallback``).
+DELETION_FALLBACK_REASON = "deleted_paths"
+DELETED_PATHS_RECORDED = 20  # the deleted paths a deletion fallback names in its measurement row
 SELECTOR_FALLBACK_REASONS = (
     "selector_unavailable",
     "selector_timeout",
@@ -155,7 +160,6 @@ SELECTOR_FALLBACK_REASONS = (
     "selector_invalid_output",
     "selector_schema_mismatch",
     "all_tests_affected",
-    "selector_ignored_deleted_paths",
     "python_change_selects_nothing",
 )
 # Keep existing CI deferrals until the tracked durations table supplies a row.
@@ -245,8 +249,23 @@ class Plan:
     deferred_to_ci: tuple[str, ...] = ()
     selection: Selection | None = None  # set once the selector has answered, before pytest
     base_fallback: str | None = None  # why the merge-base could not set ``base``; forces the conservative set
-    deleted_paths: tuple[str, ...] = ()  # removed by the range; the selector finds their importers at ``base``
+    deleted_paths: tuple[str, ...] = ()  # removed by the range; any but documentation forces the registry
     tools: dict[str, str | None] = field(default_factory=dict)  # ``tool_versions``
+
+    @property
+    def forced_fallback(self) -> str | None:
+        """Why the conservative set runs without asking the selector, or ``None`` when the selector runs.
+
+        The merge-base could not set the base (``base_fallback``), or the range deletes a path that is not
+        documentation (``deleted_paths``, #11207): the selector scans the head tree, where the path no
+        longer is, and no static graph proves every way a test reaches it (a constant concatenation, a
+        computed path), so its answer could be too small. The registry is sound for it by construction.
+        """
+        if self.base_fallback is not None:
+            return self.base_fallback
+        if any(not documentation_only(path) for path in self.deleted_paths):
+            return DELETION_FALLBACK_REASON
+        return None
 
     @property
     def uses_registry(self) -> bool:
@@ -259,6 +278,16 @@ class Plan:
             return dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
         assert self.selection is not None
         return dedupe_node_ids((*self.changed_tests, *self.selection.tests))
+
+
+def documentation_only(path: str) -> bool:
+    """A Markdown file under ``docs/``: the one deletion the selection keeps (#11207).
+
+    Markdown elsewhere is data a test or script reads (lessons, rules, fixtures, a script's README), so
+    its deletion is treated like any other.
+    """
+    parts = path.split("/")
+    return len(parts) >= 2 and parts[0] == "docs" and parts[-1].endswith(".md") and parts[-1] != ".md"
 
 
 def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
@@ -528,8 +557,8 @@ def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan |
     base, base_fallback = outgoing_base(update, root)
     if base == head and base_fallback is None:  # only a remote tip equal to the head is nothing outgoing
         return None
-    # Without rename detection a rename is its new path (changed) and its old path (deleted): tests that
-    # import the old path must still be found (#11207).
+    # Without rename detection a rename is its new path (changed) and its old path (deleted), so renaming
+    # a path away forces the registry like any other deletion (#11207).
     names = git_ok("diff", "--name-only", "--no-renames", "--diff-filter=ACM", f"{base}..{head}", cwd=root)
     removed = git_ok("diff", "--name-only", "--no-renames", "--diff-filter=D", f"{base}..{head}", cwd=root)
     if names is None or removed is None:
@@ -668,7 +697,8 @@ def recorded_selection(value: object) -> Selection | None:
         return None
     if status == "selected" and reason is None and digest is not None:
         return Selection(status, tuple(tests), digest=digest)
-    if status == "fallback" and reason in (*BASE_FALLBACK_REASONS, *SELECTOR_FALLBACK_REASONS) and not tests:
+    known = (*BASE_FALLBACK_REASONS, DELETION_FALLBACK_REASON, *SELECTOR_FALLBACK_REASONS)
+    if status == "fallback" and reason in known and not tests:
         return Selection(status, reason=reason, digest=digest)
     return None
 
@@ -680,8 +710,9 @@ def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
     exactly what ``receipt_key`` writes for ``plan`` with the recorded selection, which must be well formed.
     The node ids it blocked on are therefore derived from that selection, never taken from the file. Before
     the selector runs, the inputs stand for the selection: the tree carries the selector, the import graph
-    and the durations table, and ``tools`` binds the interpreter, test tools, gate and launcher. A base
-    fallback must have run as that fallback. Once ``plan.selection`` is known it must equal the recorded one.
+    and the durations table, and ``tools`` binds the interpreter, test tools, gate and launcher. A forced
+    fallback (a base fallback, or a deletion) must have run as that fallback, and a plan the selector runs
+    for never reuses one. Once ``plan.selection`` is known it must equal the recorded one.
     """
     try:
         receipt = json.loads(receipt_path(state, plan).read_text(encoding="utf-8"))
@@ -696,9 +727,10 @@ def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
         return False
     if plan.selection is not None and plan.selection != ran:
         return False
-    if plan.base_fallback is not None and (ran.status, ran.reason) != ("fallback", plan.base_fallback):
+    forced = plan.forced_fallback
+    if forced is not None and (ran.status, ran.reason) != ("fallback", forced):
         return False
-    if plan.base_fallback is None and ran.reason in BASE_FALLBACK_REASONS:  # the selector ran for this plan
+    if forced is None and ran.reason in (*BASE_FALLBACK_REASONS, DELETION_FALLBACK_REASON):  # the selector runs
         return False
     return (
         key == receipt_key(replace(plan, selection=ran))
@@ -2095,10 +2127,6 @@ class Shadow:
                     launcher,
                     "-m",
                     SELECTOR_MODULE,
-                    "--base",
-                    plan.base,
-                    "--deleted",
-                    *plan.deleted_paths,
                     "--paths",
                     *plan.changed_paths,
                 ],
@@ -2149,7 +2177,6 @@ class Shadow:
                 "schema": selection.get("schema"),
                 "scope": selection.get("scope"),
                 "all_tests_reasons": selection.get("all_tests_reasons", []),
-                "deleted_paths": selection.get("deleted_paths"),  # how many deleted paths it followed
                 "selected_count": len(selected),
                 "selected_digest": digest,
                 "selected_tests": list(dict.fromkeys(selected)),  # the selector's order: nearest first
@@ -2168,19 +2195,21 @@ def canonical_test_file(path: str) -> bool:
     return TEST_FILE_RE.match(path) is not None and all(part not in ("", ".", "..") for part in path.split("/"))
 
 
-def base_fallback_selection(plan: Plan) -> Selection:
-    """The conservative set when the merge-base could not set the base (#11207): never an empty selection."""
-    assert plan.base_fallback is not None
-    return Selection(
-        "fallback",
-        reason=plan.base_fallback,
-        record={
-            "status": "fallback",
-            "reason": plan.base_fallback,
-            "detail": f"previous range {plan.base}..{plan.head} plus the registry",
-            "selected_count": None,
-        },
-    )
+def plan_fallback_selection(plan: Plan) -> Selection:
+    """The conservative set for ``plan.forced_fallback`` (#11207): never an empty selection.
+
+    A deletion fallback names the first ``DELETED_PATHS_RECORDED`` deleted paths that are not documentation.
+    """
+    reason = plan.forced_fallback
+    assert reason is not None
+    record: dict[str, object] = {"status": "fallback", "reason": reason, "selected_count": None}
+    if plan.base_fallback is not None:
+        record["detail"] = f"previous range {plan.base}..{plan.head} plus the registry"
+    else:
+        deleted = [path for path in plan.deleted_paths if not documentation_only(path)]
+        record["detail"] = f"{len(deleted)} deleted paths; the registry runs instead of the selector"
+        record["deleted_paths"] = deleted[:DELETED_PATHS_RECORDED]
+    return Selection("fallback", reason=reason, record=record)
 
 
 def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Selection:
@@ -2190,10 +2219,9 @@ def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Sel
     and once the estimated cost of the changed files plus the rest would pass ``SELECTION_COST_CAP_S``
     so is every farther file. Changed test files always run; their cost counts against the cap.
 
-    Two answers fail closed to the fallback (#11207): one that does not report following every deleted
-    path (``selector_ignored_deleted_paths``), and an empty one while the range adds, changes or deletes
-    Python files and changes no test file (``python_change_selects_nothing``), which would otherwise
-    pass with zero tests.
+    An empty answer while the range adds or changes Python files and changes no test file fails closed
+    to the fallback (``python_change_selects_nothing``, #11207), which would otherwise pass with zero
+    tests. A range that deletes anything but documentation never reaches here (``Plan.forced_fallback``).
     """
     if answer.get("status") != "recorded" or not isinstance(answer.get("selected_tests"), list):
         reason = answer.get("reason") if answer.get("status") == "unavailable" else None
@@ -2221,13 +2249,9 @@ def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Sel
         reasons = answer.get("all_tests_reasons")
         detail = ", ".join(str(item) for item in reasons) if isinstance(reasons, list) else ""
         return fallback("all_tests_affected", detail, keep_digest=True)
-    followed = answer.get("deleted_paths")
-    if plan.deleted_paths and (type(followed) is not int or followed != len(plan.deleted_paths)):
-        detail = f"{len(plan.deleted_paths)} deleted paths, followed {followed}"
-        return fallback("selector_ignored_deleted_paths", detail)
-    python = [path for path in (*plan.changed_paths, *plan.deleted_paths) if path.endswith(".py")]
+    python = [path for path in plan.changed_paths if path.endswith(".py")]
     if not selected and not plan.changed_tests and python:
-        return fallback("python_change_selects_nothing", f"{len(python)} Python paths changed or deleted")
+        return fallback("python_change_selects_nothing", f"{len(python)} Python paths changed")
     durations = load_durations(root)
     known = sorted(cost for cost in durations.values() if isinstance(cost, int | float) and cost >= 0)
     typical = known[len(known) // 2] if known else 1.0  # an untracked file costs the median, as split_tests does
@@ -2381,8 +2405,9 @@ def execute_stages(
     shadow: Shadow | None = None
     settled = False
     try:
-        # Without a merge-base the range may carry main's own changes: no selector, the conservative set.
-        shadow = Shadow(plan, root, launcher) if plan.base_fallback is None else None
+        # Without a merge-base the range may carry main's own changes, and a deleted path is not in the tree
+        # the selector scans: no selector, the conservative set.
+        shadow = Shadow(plan, root, launcher) if plan.forced_fallback is None else None
         with stage_measurement(event, "pre_commit") as diagnostics:
             run_pre_commit_stage(
                 plan,
@@ -2393,7 +2418,7 @@ def execute_stages(
                 diagnostics=diagnostics,
             )
         plan.selection = (
-            blocking_selection(plan, root, shadow.finish()) if shadow is not None else base_fallback_selection(plan)
+            blocking_selection(plan, root, shadow.finish()) if shadow is not None else plan_fallback_selection(plan)
         )
         event.update(
             selection=plan.selection.record,

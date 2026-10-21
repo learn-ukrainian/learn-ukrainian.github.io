@@ -1496,7 +1496,6 @@ def test_the_selector_answer_is_returned_in_its_order_with_a_digest(repo: Path) 
         "schema": gate.SELECTION_SCHEMA,
         "scope": "importer_closure",
         "all_tests_reasons": [],
-        "deleted_paths": None,
         "selected_count": 3,
         "selected_digest": digest,
         "selected_tests": ["tests/test_b.py", "tests/test_a.py"],
@@ -6665,34 +6664,18 @@ def _main_with_real_selector(repo: Path, files: dict[str, str]) -> None:
     _git(repo, "merge", "--ff-only", "main")
 
 
-def test_deleting_an_imported_module_selects_its_importers_from_the_base_graph(repo: Path) -> None:
-    """The deleted file is gone from the head tree; the tests that still import it must run, and fail."""
-    _main_with_real_selector(repo, {"scripts/lib.py": "VALUE = 1\n", "tests/test_lib.py": IMPORTING_TEST})
+@pytest.mark.parametrize("imported", [True, False])
+def test_deleting_a_module_runs_the_registry_whether_or_not_it_is_imported(repo: Path, imported: bool) -> None:
+    """Never a selection, so never an empty or a too-small one: the registry runs (#11207, round 6)."""
+    _main_with_real_selector(
+        repo, {"scripts/lib.py": "VALUE = 1\n", **({"tests/test_lib.py": IMPORTING_TEST} if imported else {})}
+    )
     _git(repo, "rm", "-q", "scripts/lib.py")
-    _git(repo, "commit", "-q", "-m", "delete an imported module")
+    _git(repo, "commit", "-q", "-m", "delete a module")
 
     result = _run_gate(repo)
 
-    row = _measurements(repo)[-1]
-    assert row["selection"]["status"] == "selected", row["selection"]
-    assert row["selection"]["selected_count"] == 1 and row["nodes"] == 1  # never an empty selection
-    assert result.returncode == gate.EXIT_REFUSED, result.stderr
-    assert _verdict(result)["failing"] == ["tests/test_lib.py"]  # its import now fails at collection
-    assert _receipts(repo) == []
-
-
-def test_deleting_a_module_nothing_imports_falls_back_to_the_registry(repo: Path) -> None:
-    """An empty selection for a range that deletes Python code is refused as a selection, never zero tests."""
-    _main_with_real_selector(repo, {"scripts/dead.py": "VALUE = 1\n"})
-    _git(repo, "rm", "-q", "scripts/dead.py")
-    _git(repo, "commit", "-q", "-m", "delete dead code")
-
-    result = _run_gate(repo)
-
-    assert result.returncode == 0, result.stderr
-    row = _measurements(repo)[-1]
-    assert row["selection"]["status"] == "fallback"
-    assert row["selection"]["reason"] == "python_change_selects_nothing"
+    row = _deletion_row(repo, result, ["scripts/lib.py"])
     assert row["nodes"] == 2  # the registry's two entries ran
 
 
@@ -6900,21 +6883,195 @@ def test_a_scoped_refusal_adopts_the_scoped_selection_before_raising(tmp_path: P
     assert plan.selection == chosen and plan.node_ids == ("tests/test_b.py", "tests/test_x.py")
 
 
-@pytest.mark.parametrize("followed", [None, 0, 2, True, "1"])
-def test_an_answer_that_ignores_a_deleted_path_falls_back(tmp_path: Path, followed: object) -> None:
-    _write(tmp_path, "tests/test_x.py", GREEN_TEST)
-    answer = {**_answer(["tests/test_x.py"]), "deleted_paths": followed}
-    plan = _plan(changed_tests=(), deleted_paths=("scripts/gone.py",))
-
-    selection = gate.blocking_selection(plan, tmp_path, answer)
-
-    assert (selection.status, selection.reason) == ("fallback", "selector_ignored_deleted_paths")
-    assert gate.blocking_selection(plan, tmp_path, {**answer, "deleted_paths": 1}).status == "selected"
-
-
 def test_an_empty_answer_for_a_python_change_falls_back_but_not_for_docs(tmp_path: Path) -> None:
     python = gate.blocking_selection(_plan(changed_tests=(), changed_paths=("scripts/x.py",)), tmp_path, _answer([]))
     docs = gate.blocking_selection(_plan(changed_tests=(), changed_paths=("docs/x.md",)), tmp_path, _answer([]))
 
     assert (python.status, python.reason) == ("fallback", "python_change_selects_nothing")
     assert docs.status == "selected" and docs.record["no_tests_affected"] is True
+
+
+# ---- #11207 review round 6: a range that deletes a non-documentation path runs the registry ------------
+
+# The reviewer's two shapes: the scanner resolves the constant concatenation, so the importer closure of the
+# base commit reaches the deleted path, while no text of the deleted path's name appears in the importer.
+DYNAMIC_IMPORTER = "def test_loaded():\n    assert __import__('scripts.' + 'tar' + 'get')\n"
+CONCATENATED_READER = (
+    "from pathlib import Path\n\n\ndef test_rows():\n    assert (Path('scripts') / ('tab' + 'le.json')).read_text()\n"
+)
+REVIEWED_SHAPES = {
+    "dunder_import_concatenation": ("scripts/target.py", {"scripts/target.py": "VALUE = 1\n"}, DYNAMIC_IMPORTER),
+    "path_read_concatenation": ("scripts/table.json", {"scripts/table.json": "{}\n"}, CONCATENATED_READER),
+}
+
+
+def _deletion_row(repo: Path, result: subprocess.CompletedProcess[str], deleted: list[str]) -> dict:
+    """The measurement row of a run that took the deletion fallback, checked for its typed reason."""
+    row = _measurements(repo)[-1]
+    assert row["selection"] == {
+        "status": "fallback",
+        "reason": "deleted_paths",
+        "detail": f"{len(deleted)} deleted paths; the registry runs instead of the selector",
+        "selected_count": None,
+        "deleted_paths": deleted,
+    }, row["selection"]
+    assert result.returncode == 0, result.stderr
+    return row
+
+
+@pytest.mark.parametrize("shape", sorted(REVIEWED_SHAPES))
+def test_a_deletion_reached_through_concatenation_runs_the_registry(repo: Path, shape: str) -> None:
+    deleted, files, importer = REVIEWED_SHAPES[shape]
+    _main_with_real_selector(repo, {**files, "tests/test_importer.py": importer, "tests/test_unrelated.py": GREEN_TEST})
+    _git(repo, "rm", "-q", deleted)
+    _write(repo, "tests/test_unrelated.py", GREEN_TEST + "\n\ndef test_more():\n    assert True\n")
+    _commit(repo, "delete a path and change an unrelated test", "tests/test_unrelated.py")
+
+    result = _run_gate(repo)
+
+    row = _deletion_row(repo, result, [deleted])
+    # The registry's two entries and the changed test, never a selection narrowed to the unrelated test.
+    assert row["nodes"] == 3
+    (receipt,) = _receipts(repo)
+    key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
+    assert key["deleted_paths"] == [deleted] and key["selection"]["reason"] == "deleted_paths"
+    assert set(key["blocking_node_ids"]) == {
+        "tests/test_invariant.py",
+        "tests/test_scanner.py::test_scan",
+        "tests/test_unrelated.py",
+    }
+
+
+DELETION_KINDS = {
+    # kind: (files on main, how the branch removes them) -> the deleted paths the fallback records
+    "package": (
+        {"scripts/pkg/__init__.py": "VALUE = 1\n", "scripts/pkg/mod.py": "from . import VALUE\n"},
+        ("rm", "-q", "-r", "scripts/pkg"),
+        ["scripts/pkg/__init__.py", "scripts/pkg/mod.py"],
+    ),
+    "data_file": ({"scripts/data/rows.csv": "a,b\n"}, ("rm", "-q", "scripts/data/rows.csv"), ["scripts/data/rows.csv"]),
+    "module_renamed_away": (
+        {"scripts/old_name.py": "VALUE = 1\n"},
+        ("mv", "scripts/old_name.py", "scripts/new_name.py"),
+        ["scripts/old_name.py"],
+    ),
+}
+
+
+@pytest.mark.parametrize("kind", sorted(DELETION_KINDS))
+def test_every_deletion_kind_runs_the_registry_without_the_selector(repo: Path, tmp_path: Path, kind: str) -> None:
+    files, removal, deleted = DELETION_KINDS[kind]
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    for name, text in files.items():
+        _write(repo, name, text)
+    _commit(repo, "files the branch removes", ".")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    _git(repo, *removal)
+    _git(repo, "commit", "-q", "-m", f"remove: {kind}")
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, extra_env={"SELECTOR_LOG": str(log)})
+
+    row = _deletion_row(repo, result, deleted)
+    assert not log.exists(), "a deletion never reaches the selector: its answer could be too small"
+    assert row["nodes"] == 2 and row["deleted_paths"] == len(deleted)
+
+
+def test_deleting_documentation_only_keeps_the_selection(repo: Path, tmp_path: Path) -> None:
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    _write(repo, "docs/guide.md", "# Guide\n")
+    _commit(repo, "a guide", "docs/guide.md")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    _git(repo, "rm", "-q", "docs/guide.md")
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "drop the guide, add a test", "tests/test_new.py")
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, extra_env={"SELECTOR_LOG": str(log)})
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected" and row["deleted_paths"] == 1
+    assert json.loads(log.read_text()) == ["tests/test_new.py"]  # the selector ran for the changed paths
+    assert row["nodes"] == 1  # the changed test only: the registry did not run
+
+
+@pytest.mark.parametrize(
+    ("path", "documentation"),
+    [
+        ("docs/guide.md", True),
+        ("docs/runbooks/pre-push-gate.md", True),
+        # Markdown tests read as data, or that a script ships: never documentation-only.
+        ("README.md", False),
+        ("scripts/README.md", False),
+        ("scripts/docs/notes.md", False),
+        ("tests/fixtures/lesson.md", False),
+        ("curriculum/l2-uk-en/a1/lesson.md", False),
+        ("agents_extensions/shared/rules/core.md", False),
+        ("docs/guide.md.py", False),
+        ("docs/data.json", False),
+        ("docs/schema.yaml", False),
+        ("docsx/guide.md", False),
+        ("docs/", False),
+        ("docs/.md", False),
+    ],
+)
+def test_only_markdown_under_docs_is_a_documentation_only_deletion(path: str, documentation: bool) -> None:
+    plan = _plan(changed_tests=(), deleted_paths=(path,))
+
+    assert gate.documentation_only(path) is documentation
+    assert plan.forced_fallback == (None if documentation else "deleted_paths")
+    # One non-documentation deletion among documentation deletions still runs the registry.
+    mixed = _plan(changed_tests=(), deleted_paths=("docs/guide.md", path))
+    assert mixed.forced_fallback == (None if documentation else "deleted_paths")
+    # A base fallback names the stronger cause: the range itself is unproven.
+    assert _plan(base_fallback="merge_base_ambiguous", deleted_paths=(path,)).forced_fallback == "merge_base_ambiguous"
+
+
+def test_the_deletion_fallback_records_a_bounded_list_of_deleted_paths() -> None:
+    deleted = tuple(f"scripts/gone_{index:03}.py" for index in range(gate.DELETED_PATHS_RECORDED + 5))
+    plan = _plan(deleted_paths=("docs/guide.md", *deleted))
+
+    selection = gate.plan_fallback_selection(plan)
+
+    assert (selection.status, selection.reason, selection.tests, selection.digest) == (
+        "fallback",
+        "deleted_paths",
+        (),
+        None,
+    )
+    assert selection.record["deleted_paths"] == list(deleted[: gate.DELETED_PATHS_RECORDED])
+    assert selection.record["detail"] == f"{len(deleted)} deleted paths; the registry runs instead of the selector"
+
+
+def test_a_deleted_paths_receipt_is_reused_only_for_the_identical_deletion_set(tmp_path: Path) -> None:
+    fallback = gate.Selection("fallback", reason="deleted_paths")
+    gone = ("scripts/gone.py",)
+    gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=gone, selection=fallback), 1000.0)
+    receipt = json.loads(gate.receipt_path(tmp_path, _receipt_plan()).read_text(encoding="utf-8"))
+
+    assert receipt["seal"] == gate.receipt_seal({name: receipt[name] for name in ("key", "outcome", "at")})
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=gone), 1001.0)
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=gone, selection=fallback), 1001.0)
+    for other in (
+        ("scripts/other.py",),
+        ("scripts/gone.py", "scripts/more.py"),
+        ("scripts/gone.py", "docs/guide.md"),  # documentation deletions are bound too, though exempt
+        ("docs/guide.md",),
+        (),
+    ):
+        assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=other), 1001.0), other
+
+    # A sealed receipt whose selection contradicts the deletion is refused, however consistent otherwise.
+    gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=gone, selection=_ran_selected()), 1000.0)
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=gone), 1001.0)
+    # And a plan without a non-documentation deletion never reuses a deletion fallback's verdict.
+    for deleted in ((), ("docs/guide.md",)):
+        gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=deleted, selection=fallback), 1000.0)
+        assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=deleted), 1001.0), deleted
