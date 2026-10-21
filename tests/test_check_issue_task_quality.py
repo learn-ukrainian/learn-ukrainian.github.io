@@ -97,6 +97,28 @@ def test_postmerge_assignment_required(phrase):
     }]
 
 
+@pytest.mark.parametrize("criterion", [
+    "checker tests: unowned post-merge item -> WARN; owned+dated -> pass.",
+    "closeout tests: owned post-merge items listed; unowned item reported to claude-cto.",
+    "The service restarts after merge.",
+    "Post-merge closeout lists outstanding items.",
+])
+def test_postmerge_behavior_does_not_require_assignment(criterion):
+    assert score_body(COMPLETE + f"\n- [ ] AC-03: {criterion}\n")["verdict"] == "PASS"
+
+
+@pytest.mark.parametrize("criterion", [
+    "Collect 30/30 runs after merge",
+    "Publish the 5-run before/after table once merged",
+    "After landing, collect a two-week measurement",
+    "Post-merge evidence must be reviewed",
+])
+def test_postmerge_evidence_requirement_warns(criterion):
+    result = score_body(COMPLETE + f"\n- [ ] AC-03: {criterion}\n")
+    assert result["verdict"] == "WARN"
+    assert result["missing"] == ["post_merge_unowned"]
+
+
 @pytest.mark.parametrize("phrase", ["five runs", "measurement window", "14 days", "review receipt"])
 def test_generic_measurement_does_not_require_assignment(phrase):
     assert score_body(COMPLETE + f"\n- [ ] AC-03: {phrase}\n")["verdict"] == "PASS"
@@ -119,7 +141,9 @@ def test_postmerge_valid_assignment(fields):
     "owner: codex-devops; owner: claude-cto; due: 2026-11-20",
 ])
 def test_postmerge_invalid_assignment(fields):
-    assert "post_merge_unowned" in score_body(COMPLETE + f"\n- [ ] AC-03: After merge; {fields}\n")["missing"]
+    assert "post_merge_unowned" in score_body(
+        COMPLETE + f"\n- [ ] AC-03: After merge, review evidence; {fields}\n"
+    )["missing"]
 
 
 @pytest.mark.parametrize("example", [

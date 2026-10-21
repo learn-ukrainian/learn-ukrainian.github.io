@@ -18,7 +18,15 @@ LANES = frozenset({
     "claude-infra", "codex-devops", "codex-atlas", "grok-monitor",
     "gemini-open-model-data", "claude-cto",
 })
-POST_MERGE_RE = re.compile(r"\b(?:after\s+merge|post[- ]merge|once\s+merged|after\s+landing)\b", re.I)
+_MERGE_TIME = r"\b(?:after\s+merge|post[- ]merge|once\s+merged|after\s+landing)\b"
+_EVIDENCE_ACTION = r"\b(?:collect|review|record|capture|publish|provide|measure|observe|monitor|verify)\b"
+_EVIDENCE = r"\b(?:evidence|receipts?|measurements?|observations?|table|\d+(?:/\d+)?[- ]runs?)\b"
+POST_MERGE_RE = re.compile(
+    # A time marker alone can describe code or test behaviour rather than a receipt.
+    rf"{_MERGE_TIME}\s*[,;:]?\s*(?:{_EVIDENCE_ACTION}|{_EVIDENCE})"
+    rf"|{_EVIDENCE_ACTION}[^.;\n]*{_EVIDENCE}[^.;\n]*{_MERGE_TIME}",
+    re.I,
+)
 
 
 def visible_markdown(body: str) -> str:
