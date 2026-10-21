@@ -1,11 +1,14 @@
 """Author controls for exact execution binding; independent review is separate."""
 from __future__ import annotations
 
+import json
 import subprocess
 from copy import deepcopy
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
+from scripts.opsec import prepublish as gate
 from scripts.orchestration import lifecycle_observation as lo
 from scripts.orchestration import merge_closeout as mc
 from scripts.orchestration import task_closeout
@@ -67,6 +70,165 @@ def bound_case():
 def derive(case):
     ledger, observation, pull, run, jobs = case
     return lo.merged_run_evidence(ledger, observation, pull=pull, run=run, jobs=jobs, now=NOW)
+
+
+@pytest.fixture
+def run_transport(bound_case, monkeypatch):
+    """Model the counted GitHub search cap at the actual typed GET boundary."""
+    _, _, pull, run, jobs = bound_case
+    state = {"history": [deepcopy(run)], "detail": deepcopy(run), "jobs": deepcopy(jobs),
+             "pages": None, "requests": []}
+    monkeypatch.setattr(gate, "catalog", lambda: {
+        "public": {"github": "org/repo", "default": True, "local_name": "fixture", "role": "public-monorepo"},
+    })
+
+    def send(argv, **kwargs):
+        assert argv[:4] == ["gh", "api", "--method", "GET"]
+        assert kwargs["fresh"] is True
+        endpoint = urlsplit(argv[4])
+        query = parse_qs(endpoint.query)
+        state["requests"].append((endpoint.path, query))
+        if endpoint.path == "repos/org/repo/pulls/77":
+            payload = pull
+        elif endpoint.path == "repos/org/repo/actions/runs":
+            assert argv[-2:] == ["--paginate", "--slurp"]
+            assert query["event"] == ["merge_group"]
+            assert query["created"] == [pull["created_at"] + ".." + pull["merged_at"]]
+            assert query["per_page"] == ["100"]
+            rows = [row for row in state["history"]
+                    if row.get("event") in query["event"]
+                    and ("head_sha" not in query or row.get("head_sha") in query["head_sha"])]
+            payload = state["pages"]
+            if payload is None:
+                capped = rows[:1000]
+                payload = [{"total_count": len(rows), "workflow_runs": capped[i:i + 100]}
+                           for i in range(0, max(1, len(capped)), 100)]
+        elif endpoint.path == "repos/org/repo/actions/runs/123":
+            payload = state["detail"]
+        elif endpoint.path == "repos/org/repo/actions/runs/123/jobs":
+            assert argv[-2:] == ["--paginate", "--slurp"]
+            payload = [{"total_count": len(state["jobs"]), "jobs": state["jobs"]}]
+        else:
+            pytest.fail(f"unexpected execution identity: {endpoint.path}")
+        return subprocess.CompletedProcess(argv, 0, json.dumps(payload), "")
+
+    monkeypatch.setattr(mc.github_client, "run", send)
+    return state
+
+
+def collect_at_boundary(bound_case, tmp_path):
+    return mc.collect_merged_run_evidence(tmp_path, *bound_case[:2], now=NOW)
+
+
+def test_exact_merge_survives_more_unrelated_newer_runs_than_search_cap(bound_case, run_transport, tmp_path):
+    """F3: a 1,002-row global history hides the eligible run behind the 1,000 cap."""
+    run = bound_case[3]
+    run_transport["history"] = [
+        {**run, "id": run_id, "head_sha": "c" * 40} for run_id in range(1124, 123, -1)
+    ] + [deepcopy(run)]
+    updated, report = collect_at_boundary(bound_case, tmp_path)
+    assert report["closure_ready"] is True
+    assert updated["evidence"][-1]["details"]["run_id"] == 123
+    assert run_transport["requests"][1][1]["head_sha"] == [MERGE]
+    assert [path for path, _ in run_transport["requests"]] == [
+        "repos/org/repo/pulls/77", "repos/org/repo/actions/runs",
+        "repos/org/repo/actions/runs/123", "repos/org/repo/actions/runs/123/jobs",
+    ]
+
+
+def test_exact_target_paginates_all_matching_runs_before_choosing_newest(bound_case, run_transport, tmp_path):
+    """A matching run on page two cannot be hidden by a short first-page read."""
+    run_transport["history"] = [{**bound_case[3], "id": run_id} for run_id in range(21, 124)]
+    _, report = collect_at_boundary(bound_case, tmp_path)
+    assert report["closure_ready"] is True
+    assert run_transport["requests"][1][1]["head_sha"] == [MERGE]
+
+
+@pytest.mark.parametrize("history_change", ["missing", "wrong_sha", "wrong_event", "wrong_workflow"])
+def test_exact_query_cannot_supply_an_unrelated_execution(bound_case, run_transport, tmp_path, history_change):
+    """Empty or unrelated search results cannot create merged-run proof."""
+    if history_change == "missing":
+        run_transport["history"] = []
+    else:
+        key, value = {"wrong_sha": ("head_sha", "c" * 40), "wrong_event": ("event", "push"),
+                      "wrong_workflow": ("path", ".github/workflows/other.yml")}[history_change]
+        run_transport["history"][0][key] = value
+    with pytest.raises(mc.MergeCloseoutError, match=r"^CLOSEOUT_MERGE_RUN_MISSING$"):
+        collect_at_boundary(bound_case, tmp_path)
+    assert len(run_transport["requests"]) == 2
+
+
+@pytest.mark.parametrize("key,value", [
+    ("event", "pull_request"), ("head_sha", "c" * 40), ("path", ".github/workflows/other.yml"),
+    ("conclusion", "failure"), ("conclusion", "cancelled"), ("status", "in_progress"),
+    ("repository", {"full_name": "other/repo"}),
+])
+def test_fresh_detail_cannot_turn_wrong_or_red_execution_into_proof(
+    bound_case, run_transport, tmp_path, key, value,
+):
+    """The server-side filter never substitutes for fresh detail validation."""
+    run_transport["detail"][key] = value
+    with pytest.raises(lo.ObservationRefusal, match=r"^CLOSEOUT_MERGE_RUN_MISMATCH$"):
+        collect_at_boundary(bound_case, tmp_path)
+
+
+@pytest.mark.parametrize("conclusion", ["failure", "cancelled"])
+def test_newest_red_run_never_falls_back_to_older_green(bound_case, run_transport, tmp_path, conclusion):
+    """A successful older match must not mask the newest failed execution."""
+    newest = {**bound_case[3], "conclusion": conclusion}
+    run_transport["history"] = [{**bound_case[3], "id": 122}, newest]
+    run_transport["detail"] = newest
+    with pytest.raises(lo.ObservationRefusal, match=r"^CLOSEOUT_MERGE_RUN_MISMATCH$"):
+        collect_at_boundary(bound_case, tmp_path)
+    assert run_transport["requests"][2][0] == "repos/org/repo/actions/runs/123"
+
+
+@pytest.mark.parametrize("key,value", [("run_attempt", 3), ("run_attempt", None), ("id", 124)])
+def test_fresh_attempt_or_identity_moving_is_refused(bound_case, run_transport, tmp_path, key, value):
+    """A rerun between listing and detail fetch invalidates that snapshot."""
+    run_transport["detail"][key] = value
+    with pytest.raises(mc.MergeCloseoutError, match=r"^CLOSEOUT_RUN_ATTEMPT_MOVED$"):
+        collect_at_boundary(bound_case, tmp_path)
+    assert len(run_transport["requests"]) == 3
+
+
+@pytest.mark.parametrize("attempt", [None, 0, True, "2"])
+def test_list_without_a_proven_latest_attempt_is_refused(bound_case, run_transport, tmp_path, attempt):
+    """Malformed attempt metadata cannot authorize fetching arbitrary run jobs."""
+    run_transport["history"][0]["run_attempt"] = attempt
+    with pytest.raises(mc.MergeCloseoutError, match=r"^CLOSEOUT_RUN_ID_INVALID$"):
+        collect_at_boundary(bound_case, tmp_path)
+
+
+def test_jobs_from_an_older_attempt_cannot_prove_the_new_rerun(bound_case, run_transport, tmp_path):
+    """Successful jobs for attempt one do not prove listed and fetched attempt two."""
+    run_transport["jobs"][0]["run_attempt"] = 1
+    with pytest.raises(lo.ObservationRefusal, match=r"^CLOSEOUT_JOB_RUN_MISMATCH$"):
+        collect_at_boundary(bound_case, tmp_path)
+
+
+@pytest.mark.parametrize("malformation", [
+    "empty", "partial", "duplicate", "malformed_row", "missing_count", "count_drift", "not_pages", "target_cap",
+])
+def test_target_query_keeps_counted_completeness_fail_closed(bound_case, run_transport, tmp_path, malformation):
+    """SHA filtering cannot excuse truncation, duplicate pages or malformed collections."""
+    run = bound_case[3]
+    run_transport["pages"] = {
+        "empty": [],
+        "partial": [{"total_count": 2, "workflow_runs": [run]}],
+        "duplicate": [{"total_count": 2, "workflow_runs": [run]}, {"total_count": 2, "workflow_runs": [run]}],
+        "malformed_row": [{"total_count": 1, "workflow_runs": [None]}],
+        "missing_count": [{"workflow_runs": [run]}],
+        "count_drift": [{"total_count": 1, "workflow_runs": [run]}, {"total_count": 2, "workflow_runs": []}],
+        "not_pages": {},
+        "target_cap": None,
+    }[malformation]
+    if malformation == "target_cap":
+        run_transport["history"] = [{**run, "id": run_id} for run_id in range(1124, 123, -1)]
+    reason = "UNREADABLE" if malformation == "not_pages" else "INCOMPLETE"
+    with pytest.raises(mc.MergeCloseoutError, match=f"^CLOSEOUT_EXECUTION_{reason}$"):
+        collect_at_boundary(bound_case, tmp_path)
+    assert len(run_transport["requests"]) == 2
 
 
 def test_bound_execution_derives_only_ci_and_replays_without_duplicate(bound_case):

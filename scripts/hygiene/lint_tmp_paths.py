@@ -405,6 +405,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:2",
     ),
     (
+        "scripts/common/pytest_scratch.py",
+        "Read-only sandbox fallback: a fresh 0700 directory under TMPDIR, else shared memory, when the shared "
+        "scratch root cannot be written (#11317).",
+        "7cae75542a9198566a8b0ab24d2d419fc1076e026764e18f632d7aa8fd8c4456:1",
+    ),
+    (
         "scripts/common/scratch.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "734d70dd80103658a3af0240c447c005c3a42aaba07220515eebba41e0b00cee:1 b839113a6d989306201fbcf9450dc67ebf118a950c7b8f5e6976dfe548f3f229:1",
