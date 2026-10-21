@@ -1357,6 +1357,45 @@ def test_driver_relay_during_close_preserves_client_result(
             os.close(fd)
 
 
+def test_driver_group_hup_duplicate_lease_close_is_idempotent(tmp_path: Path) -> None:
+    """Group HUP and the waiter relay can both close the same fenced lease."""
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder, SessionState
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.session_supervisor import SessionSupervisor
+
+    terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
+    try:
+        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
+        os.killpg(job, signal.SIGHUP)
+        assert terminal.finish() == 129
+    finally:
+        terminal.close()
+    names = [name for name, _ in _events(env)]
+    assert names.count("lease-open") == 1, names
+    # Group HUP reaches both the child and waiter. Before #11142, the relayed
+    # HUP could interrupt cleanup and make EXIT retry the close. Signal ordering
+    # may coalesce delivery; verify repeated closes independently below.
+    assert names.count("lease-close") in (1, 2), names
+
+    # Recording calls does not prove their safety. Exercise two closes through
+    # the real supervisor/store even when this group delivery produced only one.
+    # The second close must neither append another release nor close a successor.
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"))
+    supervisor = SessionSupervisor(store, repo_root=REPO)
+    holder = LeaseHolder(agent="codex", harness="native-codex", instance_id="hup-test", process_id=os.getpid())
+    lease = store.open_session(stream_id="epic:11106", holder=holder, lineage_id="hup-test", ttl_seconds=300)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    closed = store.dump_stream(lease.stream_id)
+    assert sum(row["event_type"] == "released" for row in closed["lease_events"]) == 1
+    successor = store.open_session(stream_id=lease.stream_id, holder=holder, lineage_id="hup-test", ttl_seconds=300)
+    before_duplicate = store.dump_stream(lease.stream_id)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    assert store.dump_stream(lease.stream_id) == before_duplicate
+    assert store.session_state(lease.stream_id, lease.session_id) is SessionState.CLOSED
+    assert store.session_state(successor.stream_id, successor.session_id) is SessionState.OPEN
+
+
 def test_driver_quit_is_not_relayed_or_used_to_replace_provider_status(tmp_path: Path) -> None:
     terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
     try:

@@ -188,4 +188,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python scripts/generate_mdx/generate_playground_data.py")
+        raise SystemExit(0)
     main()

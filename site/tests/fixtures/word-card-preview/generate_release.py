@@ -30,7 +30,7 @@ def load_frozen_projection():
 projection = load_frozen_projection()
 
 
-def generate(authority, output: Path, format: str):
+def generate(authority, output: Path, format: str, *, producer=projection):
     """Project two same-spelling identities using the existing synthetic authority."""
     certified = copy.deepcopy(authority.card)
     certified["assertions"] = certified["assertions"][:2]
@@ -50,7 +50,7 @@ def generate(authority, output: Path, format: str):
     candidate["assertions"][1]["value"] = "<img src=x onerror=globalThis.releaseInjected=1> RAW  A"
     candidate["assertions"][1]["value_norm"] = candidate["assertions"][1]["value"]
     cards = [certified, candidate]
-    release = projection.create_release(
+    release = producer.create_release(
         cards, release_version="v0.1.0-synthetic" if format == "jsonl" else "v0.1.1-synthetic",
         format=format, allow_candidates=True,
     )

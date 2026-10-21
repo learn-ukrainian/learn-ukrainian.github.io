@@ -25,6 +25,7 @@ import znoOrthographyDeck from '@site/src/data/practice-zno.orthography.json';
 import {
   SRS_STORAGE_KEY,
   PRACTICE_SESSION_STORAGE_KEY,
+  readPracticeSessionSnapshot,
   writePracticeSessionSnapshot,
   DAILY_PRACTICE_DECK_SIZE,
   DEFAULT_NEW_PER_SESSION,
@@ -6922,18 +6923,19 @@ describe('LexiconPractice', () => {
     //    hoist it into beforeAll (#10640/#10645) and stay under 1.6 s per test contended.
     describe('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', () => {
       const drawCases = [
-        { case: 1, precondition: 'fresh', seed: 1, expected: { lemmaId: 'robota', mode: 'flashcards' } },
-        { case: 2, precondition: 'fresh', seed: 2, expected: { lemmaId: 'robota', mode: 'flashcards' } },
-        { case: 3, precondition: 'fresh', seed: 3, expected: { lemmaId: 'knyha', mode: 'flashcards' } },
-        { case: 4, precondition: 'fresh', seed: 4, expected: { lemmaId: 'knyha', mode: 'flashcards' } },
-        { case: 5, precondition: 'fresh', seed: 5, expected: { lemmaId: 'robota', mode: 'flashcards' } },
-        { case: 6, precondition: 'knyha-recognition-mastered', seed: 6, expected: { lemmaId: 'robota', mode: 'flashcards' } },
-        { case: 7, precondition: 'knyha-recognition-mastered', seed: 7, expected: { lemmaId: 'knyha', mode: 'cloze' } },
-        { case: 8, precondition: 'knyha-recognition-mastered', seed: 8, expected: { lemmaId: 'robota', mode: 'flashcards' } },
-        { case: 9, precondition: 'knyha-recognition-mastered', seed: 9, expected: { lemmaId: 'robota', mode: 'flashcards' } },
-        { case: 10, precondition: 'knyha-recognition-mastered', seed: 10, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 1, sessionSeed: 4013139457, precondition: 'fresh', seed: 1, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 2, sessionSeed: 4013139458, precondition: 'fresh', seed: 2, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 3, sessionSeed: 4013139459, precondition: 'fresh', seed: 3, expected: { lemmaId: 'knyha', mode: 'flashcards' } },
+        { case: 4, sessionSeed: 4013139460, precondition: 'fresh', seed: 4, expected: { lemmaId: 'knyha', mode: 'flashcards' } },
+        { case: 5, sessionSeed: 4013139461, precondition: 'fresh', seed: 5, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 6, sessionSeed: 4013139462, precondition: 'knyha-recognition-mastered', seed: 6, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 7, sessionSeed: 4013139463, precondition: 'knyha-recognition-mastered', seed: 7, expected: { lemmaId: 'knyha', mode: 'cloze' } },
+        { case: 8, sessionSeed: 4013139464, precondition: 'knyha-recognition-mastered', seed: 8, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 9, sessionSeed: 4013139465, precondition: 'knyha-recognition-mastered', seed: 9, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 10, sessionSeed: 4013139466, precondition: 'knyha-recognition-mastered', seed: 10, expected: { lemmaId: 'robota', mode: 'flashcards' } },
       ] satisfies ReadonlyArray<{
         case: number;
+        sessionSeed: number;
         precondition: 'fresh' | 'knyha-recognition-mastered';
         seed: number;
         expected: { lemmaId: 'knyha' | 'robota'; mode: 'flashcards' | 'cloze' };
@@ -6976,48 +6978,60 @@ describe('LexiconPractice', () => {
 
         const user = userEvent.setup();
         const renderStarted = performance.now();
+        console.log(`[10183-phase] path=mixed case=${row.case} phase=render state=started`);
         const { container, unmount } = render(
           <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
         );
 
-        console.log(`[10183-phase] path=mixed phase=render ms=${(performance.now() - renderStarted).toFixed(3)}`);
+        try {
+          console.log(`[10183-phase] path=mixed phase=render ms=${(performance.now() - renderStarted).toFixed(3)}`);
 
-        const activationStarted = performance.now();
-        expect(screen.getByTestId('practice-active-deck-chip')).not.toHaveTextContent('Дві слова');
-        await user.click(screen.getByTestId('practice-settings-toggle'));
-        await user.click(screen.getByRole('button', { name: /Дві слова/i }));
-        await user.click(screen.getByTestId('settings-drawer-close'));
-        expect(screen.getByTestId('practice-active-deck-chip')).toHaveTextContent('Дві слова');
-        expect(screen.getByTestId('practice-mode-count-flashcards').querySelector('[aria-hidden="true"]')).toHaveTextContent(/^2$/);
-        expect(screen.getByTestId('practice-mode-count-cloze').querySelector('[aria-hidden="true"]')).toHaveTextContent(/^1$/);
-        console.log(`[10183-phase] path=mixed phase=activation ms=${(performance.now() - activationStarted).toFixed(3)}`);
+          const activationStarted = performance.now();
+          console.log(`[10183-phase] path=mixed case=${row.case} phase=activation state=started`);
+          expect(screen.getByTestId('practice-active-deck-chip')).not.toHaveTextContent('Дві слова');
+          await user.click(screen.getByTestId('practice-settings-toggle'));
+          await user.click(screen.getByRole('button', { name: /Дві слова/i }));
+          await user.click(screen.getByTestId('settings-drawer-close'));
+          expect(screen.getByTestId('practice-active-deck-chip')).toHaveTextContent('Дві слова');
+          expect(screen.getByTestId('practice-mode-count-flashcards').querySelector('[aria-hidden="true"]')).toHaveTextContent(/^2$/);
+          expect(screen.getByTestId('practice-mode-count-cloze').querySelector('[aria-hidden="true"]')).toHaveTextContent(/^1$/);
+          console.log(`[10183-phase] path=mixed phase=activation ms=${(performance.now() - activationStarted).toFixed(3)}`);
 
-        const startStarted = performance.now();
-        await user.click(container.querySelector<HTMLButtonElement>('[data-mode="mixed"]')!);
-        console.log(`[10183-phase] path=mixed phase=start ms=${(performance.now() - startStarted).toFixed(3)}`);
+          const startStarted = performance.now();
+          console.log(`[10183-phase] path=mixed case=${row.case} phase=start state=started`);
+          await user.click(container.querySelector<HTMLButtonElement>('[data-mode="mixed"]')!);
+          console.log(`[10183-phase] path=mixed phase=start ms=${(performance.now() - startStarted).toFixed(3)}`);
 
-        const assertStarted = performance.now();
+          const assertStarted = performance.now();
+          console.log(`[10183-phase] path=mixed case=${row.case} phase=assert state=started`);
 
-        const clozeStage = screen.queryByTestId('practice-cloze');
-        if (clozeStage) {
-          expect(clozeStage.textContent).not.toMatch(/місто|школа/);
-        } else {
-          const flashcardWord = container.querySelector('.flashcard-word')?.textContent ?? '';
-          expect(['книга', 'робота']).toContain(flashcardWord);
+          const clozeStage = screen.queryByTestId('practice-cloze');
+          if (clozeStage) {
+            expect(clozeStage.textContent).not.toMatch(/місто|школа/);
+          } else {
+            const flashcardWord = container.querySelector('.flashcard-word')?.textContent ?? '';
+            expect(['книга', 'робота']).toContain(flashcardWord);
+          }
+
+          const snapshot = readPracticeSessionSnapshot('mixed');
+          expect(snapshot?.sessionSeed).toBe(row.sessionSeed);
+          expect(snapshot?.deckId).toBe(customSet.id);
+
+          const observed = {
+            lemmaId: clozeStage ? 'knyha' : new Map([
+              ['книга', 'knyha'],
+              ['робота', 'robota'],
+            ]).get(container.querySelector('.flashcard-word')?.textContent ?? ''),
+            mode: clozeStage ? 'cloze' : 'flashcards',
+          };
+          expect(observed).toEqual(row.expected);
+          console.log(`[10183-phase] path=mixed phase=assert ms=${(performance.now() - assertStarted).toFixed(3)}`);
+          console.log(`[10183-ledger] case=${row.case} precondition=${row.precondition} inputSeed=${row.seed} seed=${snapshot?.sessionSeed} mode=${observed.mode} lemma=${observed.lemmaId} activation=ok`);
+        } finally {
+          unmount();
+          localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+          console.log(`[10183-phase] path=mixed case=${row.case} phase=cleanup state=settled ms=${(performance.now() - renderStarted).toFixed(3)}`);
         }
-
-        const observed = {
-          lemmaId: clozeStage ? 'knyha' : new Map([
-            ['книга', 'knyha'],
-            ['робота', 'robota'],
-          ]).get(container.querySelector('.flashcard-word')?.textContent ?? ''),
-          mode: clozeStage ? 'cloze' : 'flashcards',
-        };
-        expect(observed).toEqual(row.expected);
-        console.log(`[10183-phase] path=mixed phase=assert ms=${(performance.now() - assertStarted).toFixed(3)}`);
-        console.log(`[10183-ledger] case=${row.case} precondition=${row.precondition} seed=${row.seed} mode=${observed.mode} lemma=${observed.lemmaId} activation=ok`);
-
-        unmount();
       });
     });
 

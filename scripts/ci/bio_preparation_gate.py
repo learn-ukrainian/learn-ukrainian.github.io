@@ -12,9 +12,13 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import yaml
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.orchestration import curriculum_readiness as readiness
 from scripts.orchestration.preparation_evidence import UniqueKeyLoader, load_manual_evidence
@@ -53,6 +57,9 @@ def _show(ref: str, fallback: str) -> str:
 
 
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print(__doc__.strip())
+        return
     root = Path.cwd()
     base_sha = os.environ.get("BASE_SHA", "")
     head_sha = os.environ.get("HEAD_SHA", "HEAD") or "HEAD"

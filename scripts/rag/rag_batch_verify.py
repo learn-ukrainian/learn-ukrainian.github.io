@@ -24,17 +24,16 @@ from pathlib import Path
 
 import yaml
 
-from common.text_utils import strip_ukrainian_stress
-
-# ---------------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------------
+# Bare `common` lives under scripts/. Module import skips the file guard below.
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = SCRIPT_DIR.parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
-# Add scripts/ to sys.path for imports
-sys.path.insert(0, str(SCRIPT_DIR))
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from common.text_utils import strip_ukrainian_stress
 
 _APOSTROPHE_TRANSLATION = str.maketrans({
     "\u2019": "'",
