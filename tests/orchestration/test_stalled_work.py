@@ -7,6 +7,7 @@ import copy
 import json
 import subprocess
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -301,6 +302,43 @@ def test_failed_fetch_is_unknown_and_cannot_route(host):
     assert report["errors"] == [f"{SLUG}: git repository evidence unavailable"]
     with pytest.raises(ValueError, match="incomplete"):
         mod.route(report, cycle=1, service=None)
+
+
+def test_unknown_pr_verdict_routes_to_cto_without_blocking_other_work(host):
+    host.record()
+    host.facts.local_branches["codex/fix"] = LOCAL
+    pr(host)
+    rejection(host)
+    host.comments[42][0]["updated_at"] = NOW.isoformat()
+    report = host.scan()
+    assert report["errors"] == []
+    assert report["rows"][0] == {
+        "task_id": "unknown",
+        "lane": "claude-cto",
+        "repository": SLUG,
+        "kind": "verdict_unknown",
+        "commit": REMOTE,
+        "pr": 42,
+        "since": None,
+        "age_hours": None,
+        "reason": "marker-edited",
+    }
+    assert report["rows"][1]["kind"] == "unpushed"
+    with AuthorityService(root=host.tmp_path / "fleet") as service:
+        first = mod.route(report, cycle=1, service=service)
+        assert mod.route(host.scan(), cycle=1, service=service) == first
+        messages = [service.get_message(mid) for mid in first]
+        assert [m.recipient for m in messages] == ["claude-cto", "codex-devops", "claude-cto"]
+        assert '"kind":"verdict_unknown"' in service.read_message_body(first[0])
+        assert '"kind":"unpushed"' in service.read_message_body(first[1])
+
+
+def test_keeper_post_step_failure_does_not_fail_the_keeper_unit():
+    unit = Path(__file__).resolve().parents[2] / "packaging/systemd/learn-ukrainian-merge-queue-keeper.service"
+    post = [line for line in unit.read_text().splitlines() if line.startswith("ExecStartPost=")]
+    assert post == [
+        "ExecStartPost=-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.stalled_work stalled --tick"
+    ]
 
 
 def test_malformed_record_is_visible(host):

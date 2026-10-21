@@ -123,8 +123,8 @@ def scan(tasks: Path, checkouts: dict[str, Path], *, now: datetime, adapter_fact
                 "kind": kind,
                 "commit": commit,
                 "pr": pr,
-                "since": since.isoformat(),
-                "age_hours": round((now - since).total_seconds() / 3600, 2),
+                "since": since.isoformat() if since else None,
+                "age_hours": round((now - since).total_seconds() / 3600, 2) if since else None,
             }
         )
 
@@ -219,7 +219,9 @@ def scan(tasks: Path, checkouts: dict[str, Path], *, now: datetime, adapter_fact
                 comments = adapter.comments(slug, pr["number"])
                 verdict = lookup_verdict(comments, pr["headRefOid"], login)
                 if verdict.state == "unknown":
-                    errors.append(f"{slug} PR #{pr['number']}: verdict unknown ({verdict.reason})")
+                    add(None, "verdict_unknown", pr["headRefOid"], None, pr["number"])
+                    rows[-1]["reason"] = verdict.reason
+                    continue
                 if verdict.state != "CHANGES_REQUESTED" or verdict.review_mode != "cross_family":
                     continue
                 # lookup_verdict selects the standing trusted marker. Use its posting
