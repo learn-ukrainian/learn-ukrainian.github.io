@@ -147,6 +147,7 @@ def test_diagnostic_workflow_cannot_save_uv_or_npm_caches_even_for_old_commits()
             assert not str(item.get("uses", "")).startswith("actions/cache@")
             if str(item.get("uses", "")).startswith("actions/setup-node@"):
                 assert "cache" not in item.get("with", {})
+                assert item["with"]["package-manager-cache"] is False
 
 
 def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():

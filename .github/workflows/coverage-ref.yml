@@ -165,6 +165,7 @@ jobs:
     - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
       with:
         node-version: '22'
+        package-manager-cache: false
     - run: bash scripts/ci/test_env.sh start npm
     - name: Python CI environment
       # Use the workflow's action, including when measuring an older commit.
