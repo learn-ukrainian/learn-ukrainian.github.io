@@ -1510,3 +1510,91 @@ def test_event_api_cost_and_exit_status(monkeypatch, tmp_path, action, body, par
     assert ("membership_missing_parent" if parent is None else "Membership: PASS") in comments[0]
     assert "membership_unknown" not in comments[0]
     assert "synchronized" in capsys.readouterr().out
+
+
+# #11283 (R6): the dispatch reading of a strict --json result. A membership
+# timeout on a fully read, complete card is UNKNOWN; it never reads as PASS,
+# and it never stands in for the card evidence it did not cover.
+@pytest.mark.parametrize(
+    "code",
+    [
+        "membership_timeout",
+        "membership_timeout_cached_audit_validation",
+        "membership_timeout_live_audit_open_issues",
+        "membership_timeout_live_audit_root_2_of_9_issue_123",
+    ],
+)
+def test_membership_timeout_on_complete_card_is_unknown(code):
+    payload = checker.evaluate_issue({"body": COMPLETE}, checker.membership_error(code))
+    assert payload["verdict"] == "WARN"
+    assert checker.admission_state(payload) is checker.AdmissionState.UNKNOWN
+
+
+def test_admission_state_unknown_cannot_be_read_as_pass():
+    state = checker.AdmissionState.UNKNOWN
+    assert state is not checker.AdmissionState.PASS
+    assert state != checker.AdmissionState.PASS
+    assert state != "PASS" and state.value != "PASS"
+    assert not isinstance(state, str)
+    assert state.value == "UNKNOWN (timeout)"
+    for member in checker.AdmissionState:
+        with pytest.raises(TypeError):
+            bool(member)
+
+
+def test_admission_state_pass_needs_clean_pass_payload():
+    assert checker.admission_state(checker.evaluate_issue({"body": COMPLETE}, checker.section("PASS"))) is (
+        checker.AdmissionState.PASS
+    )
+    assert checker.admission_state({"verdict": "PASS", "missing": ["membership_timeout"]}) is not (
+        checker.AdmissionState.PASS
+    )
+    assert checker.admission_state({"verdict": "WARN", "missing": []}) is checker.AdmissionState.WARN
+    assert checker.admission_state({}) is checker.AdmissionState.WARN
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        # The card itself is incomplete: a timeout elsewhere does not hide it.
+        pytest.param(
+            checker.evaluate_issue(
+                {"body": COMPLETE.replace("## User-visible outcome\nShip the advisory checker.\n", "")},
+                checker.membership_error("membership_timeout_live_audit"),
+            ),
+            id="missing-outcome",
+        ),
+        pytest.param(
+            checker.evaluate_issue(
+                {"body": COMPLETE.split("## Acceptance Criteria")[0]},
+                checker.membership_error("membership_timeout"),
+            ),
+            id="missing-acceptance-criteria",
+        ),
+        # The target fetch timed out: the card was never read.
+        pytest.param(
+            {
+                "verdict": "WARN",
+                "missing": ["input", "checker_error", "membership_timeout_target_fetch"],
+                "dor": checker.section("unchecked"),
+            },
+            id="target-fetch-timeout",
+        ),
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout_target_fetch"], "dor": checker.section("PASS")},
+            id="target-fetch-code-alone",
+        ),
+        # No positive card evidence (legacy or partial payload shape).
+        pytest.param({"verdict": "WARN", "missing": ["membership_timeout"]}, id="no-dor-section"),
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout"], "dor": checker.section("unchecked")},
+            id="dor-unchecked",
+        ),
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout", 7], "dor": checker.section("PASS")},
+            id="non-string-code",
+        ),
+    ],
+)
+def test_timeout_never_manufactures_hard_tier_success(payload):
+    assert checker.admission_state(payload) is checker.AdmissionState.WARN

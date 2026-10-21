@@ -15,6 +15,7 @@ import subprocess
 import sys
 from contextlib import contextmanager
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -32,6 +33,49 @@ MAX_AGE_S = 3600
 # delegate.py gives --issue --strict 135 seconds: 60 for the issue, 60 for
 # membership (cache validation and any live audit included), 15 for overhead.
 NON_OVERRIDABLE = frozenset({"dod_structure_malformed", "membership_conflicting_ancestry"})
+TARGET_FETCH_TIMEOUT = "membership_timeout_target_fetch"
+
+
+class AdmissionState(Enum):
+    """Dispatch reading of one strict ``--json`` result (#11283).
+
+    ``UNKNOWN`` is a membership timeout on a card whose own fields were read and
+    complete. It is advisory, not a warning to override, and never PASS: members
+    are not strings and have no truth value, so only an identity or equality
+    test against ``PASS`` can admit one as PASS.
+    """
+
+    PASS = "PASS"
+    WARN = "WARN"
+    UNKNOWN = "UNKNOWN (timeout)"
+
+    def __bool__(self) -> bool:
+        raise TypeError("AdmissionState has no truth value; compare with AdmissionState.PASS")
+
+
+def is_membership_timeout(code: object) -> bool:
+    """A membership observation deadline; a target-fetch timeout left the card unread."""
+    return (
+        isinstance(code, str)
+        and code != TARGET_FETCH_TIMEOUT
+        and (code == "membership_timeout" or code.startswith("membership_timeout_"))
+    )
+
+
+def admission_state(payload: dict) -> AdmissionState:
+    """PASS only for a clean PASS; UNKNOWN only when the card read PASS and every finding is a timeout."""
+    missing = payload.get("missing") or []
+    if payload.get("verdict") == "PASS" and not missing:
+        return AdmissionState.PASS
+    dor = payload.get("dor")
+    if (
+        missing
+        and all(is_membership_timeout(code) for code in missing)
+        and isinstance(dor, dict)
+        and dor.get("status") == "PASS"
+    ):
+        return AdmissionState.UNKNOWN
+    return AdmissionState.WARN
 
 
 class _DeadlineExpired(BaseException):
@@ -710,7 +754,7 @@ def main(argv: list[str] | None = None) -> int:
         RuntimeError,
     ) as exc:
         timeout = isinstance(exc, (TimeoutError, subprocess.TimeoutExpired))
-        timeout_code = "membership_timeout_target_fetch"
+        timeout_code = TARGET_FETCH_TIMEOUT
         result = {
             "verdict": "WARN",
             "trivial": False,

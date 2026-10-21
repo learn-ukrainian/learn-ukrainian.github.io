@@ -1290,7 +1290,7 @@ def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
         "Implement issue #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO
     )
     assert "#8886: verify" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "verify"}, "dor": "WARN"}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
     assert calls[1][-6:] == [
         "--issue",
@@ -1328,7 +1328,7 @@ def test_dor_preflight_skips_pr_numbers_and_query_values(monkeypatch):
     prompt = "PR #8750, feat: gate dor (#8750), ?q=#8750, x=#8750; Fixes #8886 and #8886"
     error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert error is None
-    assert record == {"issues": [8886], "warnings": {}}
+    assert record == {"issues": [8886], "warnings": {}, "dor": "PASS"}
     assert [call for call in calls if call[:2] == ["gh", "api"]] == [
         ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8750"],
         ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"],
@@ -1347,7 +1347,7 @@ def test_dor_preflight_lookup_failure_fails_closed_with_override(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "run", failed_gh)
     error, record = delegate._run_dor_preflight("Fixes #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert "#8886: checker_error" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}, "dor": "WARN"}
     error, record = delegate._run_dor_preflight(
         "Fixes #8886", "urgent repair", dispatch_repo=delegate._CANONICAL_GITHUB_REPO
     )
@@ -1365,7 +1365,7 @@ def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "run", wrong_issue)
     error, record = delegate._run_dor_preflight("Fixes #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert "#8886: checker_error" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}, "dor": "WARN"}
 
 
 @pytest.mark.parametrize(
@@ -1410,6 +1410,7 @@ def test_dor_preflight_cross_repo_references_deduplicate_by_repo_and_number(monk
     assert record == {
         "issues": [690, 690],
         "warnings": {},
+        "dor": "PASS",
         "issue_repositories": [{"issue": 690, "repo": "acme/other"}],
     }
     assert [call for call in calls if call[:2] == ["gh", "api"]] == [
@@ -1473,7 +1474,7 @@ def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
     calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
     error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
     assert error is None
-    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
     assert not [call for call in calls if call[-1].endswith("/issues/6943")]
 
@@ -1546,7 +1547,7 @@ def test_dor_preflight_local_epic_full_url_and_qualified_forms_are_exempt(monkey
         dispatch_repo=_LOCAL,
     )
     assert error is None
-    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
 
 
@@ -1965,7 +1966,7 @@ def test_parser_spans_container_exit_preserves_dor_warn(monkeypatch, container):
     error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert error is not None
     assert "#9672: verify" in error
-    assert record == {"issues": [9672], "warnings": {"9672": "verify"}}
+    assert record == {"issues": [9672], "warnings": {"9672": "verify"}, "dor": "WARN"}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/9672"]
     assert len(calls) == 2
     assert calls[1][-6:] == ["--issue", "9672", "--repo", delegate._CANONICAL_GITHUB_REPO, "--strict", "--json"]

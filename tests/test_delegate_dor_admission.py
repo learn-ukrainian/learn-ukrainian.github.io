@@ -60,7 +60,7 @@ def test_overrides_recorded_only_for_overrideable_codes(monkeypatch, code):
 def test_old_shape_meaning_preserved_without_membership_proof(monkeypatch):
     refusal, record = admission(monkeypatch, {"verdict": "PASS", "missing": []})
     assert refusal is None
-    assert record == {"issues": [123], "warnings": {}}
+    assert record == {"issues": [123], "warnings": {}, "dor": "PASS"}
     assert record.get("membership", {}).get("123", {}).get("status") != "PASS"
 
 
@@ -185,3 +185,134 @@ def test_delegate_allows_both_checker_read_budgets(monkeypatch):
     refusal, _ = delegate._run_dor_preflight("Implement #123", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert refusal is None
     assert timeouts == [135]
+
+
+# #11283 (R6): one row per DoR check outcome with its dispatch decision. A
+# membership timeout on a complete card is an UNKNOWN advisory and needs no
+# --allow-dor-warn; the hard tier and tool errors keep their existing refusals.
+NO_OUTCOME = COMPLETE.replace("## User-visible outcome\nShip the advisory checker.\n", "")
+NO_CRITERIA = COMPLETE.split("## Acceptance Criteria")[0]
+TIMEOUT = checker.membership_error("membership_timeout_live_audit_root_1_of_3_issue_123")
+
+
+@pytest.mark.parametrize(
+    "body,membership,refused,dor",
+    [
+        pytest.param(COMPLETE, checker.section("PASS"), False, "PASS", id="pass"),
+        pytest.param(NO_OUTCOME, checker.section("PASS"), True, "WARN", id="hard-tier-fail"),
+        pytest.param(NO_OUTCOME, TIMEOUT, True, "WARN", id="hard-tier-fail-with-timeout"),
+        pytest.param(NO_CRITERIA, TIMEOUT, True, "WARN", id="no-criteria-with-timeout"),
+        pytest.param(COMPLETE, checker.membership_error("membership_missing_parent"), True, "WARN", id="content-warn"),
+        pytest.param(COMPLETE, TIMEOUT, False, "UNKNOWN (timeout)", id="timeout"),
+    ],
+)
+def test_dor_outcome_dispatch_decision(monkeypatch, capsys, body, membership, refused, dor):
+    refusal, record = admission(monkeypatch, checker.evaluate_issue({"body": body}, membership))
+    assert bool(refusal) is refused
+    if refused:
+        assert "--allow-dor-warn" in refusal
+    assert record["dor"] == dor
+    assert "allow_warn_reason" not in record
+    if dor == "UNKNOWN (timeout)":
+        assert record["warnings"] == {}
+        assert record["unknown"] == {"123": TIMEOUT["errors"][0]["code"]}
+        assert "UNKNOWN (timeout)" in capsys.readouterr().err
+
+
+def _tool_error_admission(monkeypatch, failure):
+    def run(command, **kwargs):
+        if command[:2] == ["gh", "api"]:
+            if failure == "no-issue":
+                return subprocess.CompletedProcess(command, 1, "", "Not Found")
+            return subprocess.CompletedProcess(command, 0, '{"number":123}', "")
+        if failure == "checker-subprocess-timeout":
+            raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+        if failure == "target-fetch-timeout":
+            payload = {
+                "verdict": "WARN",
+                "missing": ["input", "checker_error", "membership_timeout_target_fetch"],
+                "dor": checker.section("unchecked"),
+                "dod": checker.section("unchecked"),
+                "membership": checker.section("unchecked"),
+            }
+            return subprocess.CompletedProcess(command, 1, json.dumps(payload), "")
+        if failure == "checker-abnormal-exit":
+            # A timeout-only payload is UNKNOWN only under the strict WARN exit (1).
+            payload = checker.evaluate_issue({"body": COMPLETE}, TIMEOUT)
+            return subprocess.CompletedProcess(command, -9, json.dumps(payload), "")
+        return subprocess.CompletedProcess(command, 1, "Traceback (most recent call last):", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    return delegate._run_dor_preflight("Implement #123", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+
+
+@pytest.mark.parametrize(
+    "failure",
+    ["no-issue", "checker-crash", "checker-subprocess-timeout", "target-fetch-timeout", "checker-abnormal-exit"],
+)
+def test_tool_error_still_requires_override(monkeypatch, failure):
+    refusal, record = _tool_error_admission(monkeypatch, failure)
+    assert "--allow-dor-warn" in refusal
+    assert record["dor"] == "WARN"
+    if failure != "checker-abnormal-exit":
+        assert "checker_error" in record["warnings"]["123"]
+    assert "unknown" not in record
+
+
+def test_real_checker_membership_timeout_admits_without_override(monkeypatch, capsys):
+    """The real checker main, timing out in membership, read through the real delegate mapping."""
+    import signal
+
+    monkeypatch.setattr(checker, "fetch_issue", lambda *a: {"body": COMPLETE, "title": "target", "labels": []})
+    budget = checker.time_budget
+    monkeypatch.setattr(checker, "time_budget", lambda: budget(0.01))
+    monkeypatch.setattr(checker, "observe_membership", lambda *a: signal.pause())
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["verdict"] == "WARN" and payload["missing"] == ["membership_timeout"]
+    refusal, record = admission(monkeypatch, payload)
+    assert refusal is None
+    assert record == {
+        "issues": [123],
+        "warnings": {},
+        "unknown": {"123": "membership_timeout"},
+        "dor": "UNKNOWN (timeout)",
+        "membership": {"123": payload["membership"]},
+    }
+
+
+def test_unknown_dor_is_not_pass_for_cursor_auto(monkeypatch):
+    _refusal, record = admission(monkeypatch, checker.evaluate_issue({"body": COMPLETE}, TIMEOUT))
+    args = argparse.Namespace(
+        mode="danger",
+        research_role="implementation",
+        research_task_family=None,
+        owned_path=["scripts/example.py"],
+        review=False,
+        review_attempt=None,
+        require_review_verdict=False,
+        review_profile=None,
+    )
+    assert "not PASS" in delegate._cursor_auto_refusal(args, agent="cursor", model="auto", dor_record=record)
+
+
+def test_unknown_with_overridden_warning_records_warn(monkeypatch):
+    def run(command, **kwargs):
+        if command[:2] == ["gh", "api"]:
+            number = int(command[2].rsplit("/", 1)[1])
+            return subprocess.CompletedProcess(command, 0, json.dumps({"number": number}), "")
+        number = int(command[command.index("--issue") + 1])
+        membership = TIMEOUT if number == 1 else checker.membership_error("membership_missing_parent")
+        return subprocess.CompletedProcess(
+            command, 1, json.dumps(checker.evaluate_issue({"body": COMPLETE}, membership)), ""
+        )
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    canonical = delegate._CANONICAL_GITHUB_REPO
+    refusal, record = delegate._run_dor_preflight("Implement #1 and #2", None, dispatch_repo=canonical)
+    assert "#2: membership_missing_parent" in refusal and "#1" not in refusal
+    refusal, record = delegate._run_dor_preflight("Implement #1 and #2", "accepted", dispatch_repo=canonical)
+    assert refusal is None
+    assert record["dor"] == "WARN"
+    assert record["unknown"] == {"1": TIMEOUT["errors"][0]["code"]}
+    assert record["warnings"] == {"2": "membership_missing_parent"}
