@@ -36,6 +36,18 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from scripts.atlas.atlas_db import classify_entry_type, unstressed
+from scripts.atlas.export_runtime_shards import (
+    DEFAULT_SEARCH_MAX,
+    SearchFamilyIndex,
+    _alias_index_keys,
+    _alias_sort_key,
+    _article_index_keys,
+    _article_search_row,
+    _article_sort_key,
+    build_search_family_shards,
+)
+from scripts.atlas.normalization import normalize_atlas_text
 from scripts.deploy.vendor_atlas_tree import (
     DEFAULT_FAIL_EXTRACTED_BYTES,
     DEFAULT_WARN_EXTRACTED_BYTES,
@@ -101,8 +113,7 @@ def _safe_rss_bytes() -> int | None:
 MAX_OPEN_SHARD_FDS = 8
 
 # Entry-shard packing: keep shards small enough to stream; not the full 1 MiB
-# runtime band — finalizer emits a runner-assembly tree, not a full atlas.db
-# export. Vendor script only checks packaging/retention/scale, not entry schema.
+# runtime band. Search uses the exporter's existing adaptive prefix shards.
 DEFAULT_ENTRIES_PER_SHARD = 64
 
 BOOTSTRAP_PRIOR_VERSION = "atlas-bootstrap-empty"
@@ -111,6 +122,7 @@ GENERATED_AT_PIN = "1970-01-01T00:00:00+00:00"
 MANIFEST_SCHEMA = "atlas-runtime-manifest"
 CURRENT_SCHEMA = "atlas-current"
 ENTRY_SHARD_SCHEMA = "atlas-entry-shard"
+SEALED_SEARCH_PROJECTION = "sealed-search-v1"
 
 
 class FinalizeError(RuntimeError):
@@ -310,6 +322,7 @@ def compute_data_version_from_digests(
     identity = {
         "engine_version": ENGINE_VERSION,
         "serialization_version": SERIALIZATION_VERSION,
+        "search_projection": SEALED_SEARCH_PROJECTION,
         "run_fingerprint": fingerprint,
         "lemmas": [{"id": lid, "sha256": digest} for lid, digest in lemma_digests],
     }
@@ -526,6 +539,108 @@ class BoundedShardWriter:
         self._buffers.clear()
 
 
+def _build_sealed_search(
+    *,
+    ledger: Ledger,
+    run_id: str,
+    artifacts_dir: Path,
+    phase: str,
+    version_root: Path,
+    data_version: str,
+    scratch: Path,
+) -> tuple[dict[str, Any], dict[str, int]]:
+    """Project sealed articles and explicit aliases with the runtime shard builder.
+
+    Spool compact rows outside the published tree. The shared index retains only
+    locators and search keys, and replays row bodies one at a time for compression.
+    Form routes stay routes and contribute only their source-declared alias.
+    """
+    heads: dict[str, str] = {}
+    form_count = 0
+    search: dict[str, Any] = {}
+    counts: dict[str, int] = {}
+    for family in ("articles", "aliases"):
+        spool = scratch / family
+        spool.mkdir(parents=True)
+
+        def rows(family: str = family, spool: Path = spool) -> Iterator[tuple[int, dict[str, Any]]]:
+            nonlocal form_count
+            seen_aliases: set[tuple[str, str]] = set()
+            rank = 0
+            for slug, entry, _digest in stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase):
+                form = entry.get("form_of")
+                if family == "articles":
+                    if form:
+                        form_count += 1
+                        continue
+                    head = str(entry.get("display_head") or entry.get("lemma") or "").strip()
+                    if not head or slug in heads:
+                        raise FinalizeError("missing article head or duplicate sealed article slug")
+                    heads[slug] = head
+                    enrichment = entry.get("enrichment") or {}
+                    cefr = (enrichment.get("cefr") or {}).get("level")
+                    candidates = [
+                        _article_search_row(slug, head, entry.get("gloss"), classify_entry_type(entry), cefr, entry)
+                    ]
+                else:
+                    aliases = list(entry.get("search_aliases") or [])
+                    if form:
+                        target = (form.get("url_slug") or form.get("lemma")) if isinstance(form, dict) else form
+                        aliases.append(
+                            {
+                                "alias": unstressed(str(entry.get("lemma") or "")),
+                                "kind": "inflected_form",
+                                "target_slug": target,
+                            }
+                        )
+                    candidates = []
+                    for alias in aliases:
+                        target = alias["target_slug"]
+                        text = alias["alias"]
+                        kind = alias["kind"]
+                        if target not in heads or not isinstance(text, str) or not normalize_atlas_text(text):
+                            raise FinalizeError("sealed search alias must name an article and a nonempty alias")
+                        if not isinstance(kind, str) or not kind:
+                            raise FinalizeError("sealed search alias must declare its kind")
+                        key = (normalize_atlas_text(text), target)
+                        if key in seen_aliases:
+                            continue
+                        seen_aliases.add(key)
+                        candidates.append({"a": text, "k": kind, "s": target, "h": heads[target]})
+                for row in candidates:
+                    (spool / f"{rank}.json").write_bytes(_canonical_json_bytes(row))
+                    yield rank, row
+                    rank += 1
+
+        def replay(rank: int, spool: Path = spool) -> dict[str, Any]:
+            return json.loads((spool / f"{rank}.json").read_bytes())
+
+        index = SearchFamilyIndex.build(
+            rows(),
+            sort_key=_article_sort_key if family == "articles" else _alias_sort_key,
+            key_fn=_article_index_keys if family == "articles" else _alias_index_keys,
+            replay=replay,
+        )
+
+        def open_object(relative: str) -> Any:
+            path = version_root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            return path.open("wb")
+
+        search[family], _ = build_search_family_shards(
+            index,
+            family=family,
+            data_version=data_version,
+            max_gzip_bytes=DEFAULT_SEARCH_MAX,
+            compression_level=9,
+            schema=f"atlas-search-{'article' if family == 'articles' else 'alias'}-shard",
+            open_object=open_object,
+        )
+        counts["searchArticles" if family == "articles" else "searchAliases"] = len(index)
+    counts.update(articles=len(heads), formRoutes=form_count, publicRoutes=len(heads) + form_count)
+    return search, counts
+
+
 def assemble_version_tree(
     *,
     ledger: Ledger,
@@ -620,7 +735,7 @@ def assemble_version_tree(
                 raise RuntimeError("injected crash: mid_stream_assembly")
             record = {
                 "slug": lemma_id,
-                "kind": "article",
+                "kind": "form_route" if entry.get("form_of") else "article",
                 "entry": entry,
                 "contentSha256": digest,
             }
@@ -634,6 +749,15 @@ def assemble_version_tree(
             _note_rss(n=record_count)
 
         writer.flush_all(data_version=data_version)
+        search, counts = _build_sealed_search(
+            ledger=ledger,
+            run_id=run_id,
+            artifacts_dir=artifacts_dir,
+            phase=phase,
+            version_root=version_root,
+            data_version=data_version,
+            scratch=staging / "search-spool",
+        )
         _note_rss(force=True)
 
         # Prefix-free trivial tree: first shard as root pointer.
@@ -648,22 +772,16 @@ def assemble_version_tree(
             "runFingerprint": fingerprint,
             "engineVersion": ENGINE_VERSION,
             "serializationVersion": SERIALIZATION_VERSION,
+            "searchProjection": SEALED_SEARCH_PROJECTION,
             "counts": {
-                "articles": record_count,
-                "publicRoutes": record_count,
-                "formRoutes": 0,
+                **counts,
                 "entryShards": len(shard_ids),
-                "searchArticles": 0,
-                "searchAliases": 0,
             },
             "entries": {
                 "tree": tree_ptr,
                 "shards": {sid: writer.descriptors[sid] for sid in shard_ids},
             },
-            "search": {
-                "articles": {"tree": {}, "shards": {}},
-                "aliases": {"tree": {}, "shards": {}},
-            },
+            "search": search,
             "decks": {"levels": {}},
             "zipWriter": ZIP_WRITER_PIN,
         }

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import re
@@ -30,35 +31,73 @@ def _write(path: Path, data: bytes | str) -> None:
         path.write_bytes(data)
 
 
+def _replace_runtime_shard(version_root: Path, family: str, shard_id: str, rows: list[dict]) -> None:
+    manifest_path = version_root / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    schemas = {
+        "entries": "atlas-entry-shard",
+        "articles": "atlas-search-article-shard",
+        "aliases": "atlas-search-alias-shard",
+    }
+    rel = f"{family if family == 'entries' else 'search/' + family}/{shard_id}.json.gz"
+    raw = json.dumps(
+        {"schema": schemas[family], "schemaVersion": 1, "dataVersion": manifest["dataVersion"], "records": rows}
+    ).encode()
+    blob = gzip.compress(raw, mtime=0)
+    _write(version_root / rel, blob)
+    index = manifest["entries"] if family == "entries" else manifest["search"][family]
+    index["shards"][shard_id] = {
+        "id": shard_id,
+        "url": rel,
+        "count": len(rows),
+        "bytes": len(blob),
+        "uncompressedBytes": len(raw),
+        "sha256": sha256_hex(blob),
+        "jsonSha256": sha256_hex(raw),
+        "encoding": "gzip",
+    }
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+
 def _mini_generation(root: Path, data_version: str, *, payload: bytes) -> None:
     """Write a minimal versions/<dataVersion>/ tree (manifest + one shard)."""
     version_root = root / "atlas" / "versions" / data_version
-    shard_rel = "entries/p00-0.json.gz"
-    _write(version_root / shard_rel, payload)
+    logical_version = data_version.split("-transport-")[0]
     manifest = {
         "schema": "atlas-runtime-manifest",
         "schemaVersion": 1,
-        "dataVersion": data_version,
+        "dataVersion": logical_version,
         "generatedAt": "2026-07-17T00:00:00+00:00",
-        "entries": {
-            "tree": {"shardId": "p00-0"},
-            "shards": {
-                "p00-0": {
-                    "id": "p00-0",
-                    "url": shard_rel,
-                    "count": 1,
-                    "bytes": len(payload),
-                    "uncompressedBytes": len(payload),
-                    "sha256": sha256_hex(payload),
-                    "jsonSha256": sha256_hex(payload),
-                    "encoding": "gzip",
-                }
-            },
-        },
+        "entries": {"tree": {"shardId": "p00-0"}, "shards": {}},
         "search": {"articles": {"tree": {}, "shards": {}}, "aliases": {"tree": {}, "shards": {}}},
         "decks": {"levels": {}},
-        "counts": {"entryShards": 1},
+        "counts": {
+            "articles": 1,
+            "formRoutes": 0,
+            "publicRoutes": 1,
+            "searchArticles": 1,
+            "searchAliases": 0,
+            "entryShards": 1,
+        },
     }
+    _write(version_root / "manifest.json", json.dumps(manifest))
+    _replace_runtime_shard(
+        version_root,
+        "entries",
+        "p00-0",
+        [
+            {"slug": "unit-article", "kind": "article", "fixturePayload": payload.hex()},
+        ],
+    )
+    _replace_runtime_shard(
+        version_root,
+        "articles",
+        "unit",
+        [
+            {"s": "unit-article", "l": "Unit article", "g": "Unmodified gloss", "r": "Unit", "t": "lemma"},
+        ],
+    )
+    manifest = json.loads((version_root / "manifest.json").read_bytes())
     _write(
         version_root / "manifest.json",
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
@@ -642,3 +681,242 @@ def test_partial_pin_without_source_skips(
     metrics = vendor_atlas_tree(tmp_path / "dist", sha256="ab" * 32, archive_path=None, asset_id=None)
     assert metrics.skipped is True
     assert SKIP_MESSAGE in capsys.readouterr().out
+
+
+def test_vendoring_replaces_equal_count_different_search_set_from_exact_pin(tmp_path: Path) -> None:
+    """#11341: independent DB search survives a later runtime install on the old producer.
+
+    Faithful minimal reproducer: stale search advertises an absent slug and omits
+    a runtime article, while totals match. Actual captured input fingerprints:
+    search 007b8c01bd91f32efcd72432dd91538d77af48b858e82d6df3e08ef4b29421d7;
+    runtime manifest 626906d480dd33beeab29d64d2a76796d82a6a05f3ffee241182895d2b3ca1e0.
+    That full replay has 340 advertised-only and 1 runtime-only articles. These
+    synthetic English rows reproduce the producing sequence without lexical edits.
+    """
+    tree = _with_transport_current(tmp_path)
+    version = tree / "atlas/versions" / f"v-current-transport-{TRANSPORT_HEX}"
+    article = {"s": "runtime-only", "l": "Runtime only", "g": "Keep exactly.", "r": "Runtime", "t": "lemma"}
+    _replace_runtime_shard(
+        version,
+        "entries",
+        "p00-0",
+        [
+            {"slug": "runtime-only", "kind": "article"},
+            {"slug": "separate-form", "kind": "form_route"},
+        ],
+    )
+    _replace_runtime_shard(version, "articles", "unit", [article])
+    # Article search legitimately replicates an identical row across prefix leaves.
+    _replace_runtime_shard(version, "articles", "other-prefix", [article])
+    alias = {"a": "Separate alias", "s": "runtime-only", "h": "Runtime only", "k": "variant"}
+    frozen_input = {
+        "advertised": [{"s": "advertised-only"}],
+        "runtime_articles": [article],
+        "form_routes": ["separate-form"],
+        "aliases": [alias],
+    }
+    input_bytes = json.dumps(frozen_input, sort_keys=True, separators=(",", ":")).encode()
+    assert sha256_hex(input_bytes) == "b576c4027df953807917460837eae79a423b554af5a75a78fa9f7c74f7919793"
+    _replace_runtime_shard(version, "aliases", "alias", [alias])
+    manifest_path = version / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["counts"].update(formRoutes=1, publicRoutes=2, searchAliases=1)
+    manifest_path.write_text(json.dumps(manifest))
+    pinned_files = {p.relative_to(tree): p.read_bytes() for p in tree.rglob("*") if p.is_file()}
+    archive, digest = _archive_for(tree, tmp_path)
+    dist = tmp_path / "dist"
+    _write(dist / "lexicon/search-index.json", '[{"s":"advertised-only"}]')
+    _write(dist / "api/lexicon/search-index.json", '[{"s":"advertised-only"}]')
+    _write(dist / "lexicon/search-aliases.json", '[{"a":"Old alias","s":"advertised-only"}]')
+
+    _write(dist / "lexicon/search/obsolete.json", '[{"s":"advertised-only"}]')
+    metrics = vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+
+    assert not (dist / "lexicon/search/obsolete.json").exists()
+    rows = json.loads((dist / "lexicon/search-index.json").read_bytes())
+    assert rows == [article]
+    assert (dist / "api/lexicon/search-index.json").read_bytes() == (dist / "lexicon/search-index.json").read_bytes()
+    assert json.loads((dist / "lexicon/search-aliases.json").read_bytes()) == [alias]
+    shard_manifest = json.loads((dist / "lexicon/search-shards.json").read_bytes())
+    assert shard_manifest["total"] == 1
+    assert shard_manifest["fullIndex"]["sha256"] == sha256_hex((dist / "lexicon/search-index.json").read_bytes())
+    for desc in shard_manifest["shards"].values():
+        blob = (dist / desc["path"].lstrip("/")).read_bytes()
+        assert sha256_hex(blob) == desc["sha256"]
+        assert json.loads(blob) == [article]
+    assert metrics.search_parity["advertisedOnly"] == []
+    assert metrics.search_parity["runtimeOnly"] == []
+    assert metrics.search_parity["articleDuplicates"] == 0
+    assert metrics.search_parity["runtimeDuplicates"] == 0
+    assert metrics.search_parity["formRoutes"] == 1
+    assert metrics.search_parity["aliases"] == 1
+    assert metrics.search_parity["replicatedArticleRows"] == 1
+    assert metrics.search_parity["runtimeManifestSha256"] == sha256_hex(manifest_path.read_bytes())
+    for rel, blob in pinned_files.items():
+        assert (dist / rel).read_bytes() == blob
+
+
+def test_release_asset_entrypoint_projects_search_and_emits_pin_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The release-download entrypoint must obey the same pinned search gate as local archives."""
+    from scripts.deploy import vendor_atlas_tree as vendor
+
+    archive, digest = _archive_for(_build_two_gen_tree(tmp_path), tmp_path)
+
+    def download(asset_id: str, *, repo: str, token: str | None) -> bytes:
+        assert asset_id == "42"
+        assert repo == "fixture/runtime"
+        assert token is None
+        return archive.read_bytes()
+
+    monkeypatch.setattr(vendor, "download_release_asset", download)
+    dist = tmp_path / "dist"
+    metrics = vendor.vendor_atlas_tree(dist, sha256=digest, asset_id="42", repo="fixture/runtime")
+    rows = json.loads((dist / "lexicon/search-index.json").read_bytes())
+    assert [row["s"] for row in rows] == ["unit-article"]
+    assert metrics.archive_sha256 == digest
+    assert metrics.search_parity["articles"] == 1
+    receipt = capsys.readouterr().out
+    assert f"archive_sha256={digest}" in receipt
+    assert "asset_id=42" in receipt
+    assert "search_parity=" + json.dumps(metrics.search_parity, sort_keys=True) in receipt
+
+
+@pytest.mark.parametrize(
+    "defect",
+    [
+        "equal-count-different-set",
+        "missing-search",
+        "extra-search",
+        "duplicate-entry",
+        "duplicate-search",
+        "conflicting-replica",
+        "alias-targets-form",
+        "duplicate-alias",
+        "unknown-kind",
+    ],
+)
+def test_incoherent_pin_is_rejected_before_dist_mutation(tmp_path: Path, defect: str) -> None:
+    """Bad membership, duplicates and aliases cannot be hidden by matching totals."""
+    tree = _build_two_gen_tree(tmp_path)
+    version = tree / "atlas/versions/v-current"
+    row = {"s": "unit-article", "l": "Unit", "g": None, "r": "Unit", "t": "lemma"}
+    if defect == "equal-count-different-set":
+        _replace_runtime_shard(version, "articles", "unit", [{**row, "s": "absent"}])
+    elif defect == "missing-search":
+        _replace_runtime_shard(version, "articles", "unit", [])
+    elif defect == "extra-search":
+        _replace_runtime_shard(version, "articles", "unit", [row, {**row, "s": "absent"}])
+    elif defect == "duplicate-entry":
+        _replace_runtime_shard(version, "entries", "extra", [{"slug": "unit-article", "kind": "article"}])
+    elif defect == "duplicate-search":
+        _replace_runtime_shard(version, "articles", "unit", [row, row])
+    elif defect == "conflicting-replica":
+        _replace_runtime_shard(version, "articles", "extra", [{**row, "g": "conflict"}])
+    elif defect == "alias-targets-form":
+        _replace_runtime_shard(version, "entries", "extra", [{"slug": "form", "kind": "form_route"}])
+        _replace_runtime_shard(version, "aliases", "alias", [{"a": "Alias", "s": "form", "h": "Form", "k": "variant"}])
+    elif defect == "duplicate-alias":
+        alias = {"a": "Alias", "s": "unit-article", "h": "Unit", "k": "variant"}
+        _replace_runtime_shard(version, "aliases", "alias", [alias, alias])
+    else:
+        _replace_runtime_shard(version, "entries", "p00-0", [{"slug": "unit-article", "kind": "unknown"}])
+    archive, digest = _archive_for(tree, tmp_path)
+    dist = tmp_path / "dist"
+    _write(dist / "atlas/sentinel", "old runtime")
+    _write(dist / "lexicon/search-index.json", "old search")
+    with pytest.raises(VendorError):
+        vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    assert (dist / "atlas/sentinel").read_text() == "old runtime"
+    assert (dist / "lexicon/search-index.json").read_text() == "old search"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("url", "../../../../outside.json.gz"),
+        ("url", "/outside.json.gz"),
+        ("sha256", "0" * 64),
+        ("jsonSha256", "0" * 64),
+        ("bytes", 1),
+        ("uncompressedBytes", 1),
+        ("count", 99),
+        ("encoding", "plain"),
+    ],
+)
+def test_runtime_descriptor_fault_fails_before_install(tmp_path: Path, field: str, value: object) -> None:
+    """Runtime-derived search cannot follow escaping paths or unchecked descriptors."""
+    tree = _build_two_gen_tree(tmp_path)
+    path = tree / "atlas/versions/v-current/manifest.json"
+    manifest = json.loads(path.read_bytes())
+    manifest["search"]["articles"]["shards"]["unit"][field] = value
+    path.write_text(json.dumps(manifest))
+    archive, digest = _archive_for(tree, tmp_path)
+    dist = tmp_path / "dist"
+    with pytest.raises(VendorError):
+        vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    assert not dist.exists()
+
+
+@pytest.mark.parametrize(
+    "defect",
+    [
+        "foreign-version",
+        "foreign-schema",
+        "unsupported-schema-version",
+        "non-array-records",
+        "non-object-row",
+        "invalid-search-row",
+        "invalid-slug",
+        "truncated-gzip",
+        "invalid-json",
+        "manifest-schema",
+        "manifest-count",
+        "negative-inflated-size",
+    ],
+)
+def test_pinned_runtime_protocol_fault_is_not_published(tmp_path: Path, defect: str) -> None:
+    """A valid outer pin does not excuse a malformed runtime protocol or row."""
+    tree = _build_two_gen_tree(tmp_path)
+    version = tree / "atlas/versions/v-current"
+    manifest_path = version / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    desc = manifest["search"]["articles"]["shards"]["unit"]
+    shard_path = version / desc["url"]
+    raw = gzip.decompress(shard_path.read_bytes())
+    payload = json.loads(raw)
+    if defect == "foreign-version":
+        payload["dataVersion"] = "another-runtime"
+    elif defect == "foreign-schema":
+        payload["schema"] = "atlas-search-alias-shard"
+    elif defect == "unsupported-schema-version":
+        payload["schemaVersion"] = 2
+    elif defect == "non-array-records":
+        payload["records"] = {}
+    elif defect == "non-object-row":
+        payload["records"] = [None]
+    elif defect == "invalid-search-row":
+        payload["records"][0]["l"] = None
+    elif defect == "invalid-slug":
+        payload["records"][0]["s"] = ""
+    elif defect == "manifest-schema":
+        manifest["schema"] = "other"
+    elif defect == "manifest-count":
+        manifest["counts"]["searchArticles"] = 99
+    elif defect == "negative-inflated-size":
+        desc["uncompressedBytes"] = -1
+    raw = b"not-json" if defect == "invalid-json" else json.dumps(payload).encode()
+    blob = gzip.compress(raw, mtime=0)
+    if defect == "truncated-gzip":
+        blob = blob[:-5]
+    shard_path.write_bytes(blob)
+    desc.update(bytes=len(blob), sha256=sha256_hex(blob), jsonSha256=sha256_hex(raw))
+    if defect != "negative-inflated-size":
+        desc["uncompressedBytes"] = len(raw)
+    manifest_path.write_text(json.dumps(manifest))
+    archive, digest = _archive_for(tree, tmp_path)
+    dist = tmp_path / "dist"
+    with pytest.raises(VendorError):
+        vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    assert not dist.exists()
