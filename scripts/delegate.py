@@ -12743,8 +12743,12 @@ def _run_dor_preflight(
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
     (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
     says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+
+    A membership timeout on a card that otherwise read PASS is an UNKNOWN advisory (#11283): it is recorded
+    under ``unknown`` with ``dor: UNKNOWN (timeout)`` and needs no ``--allow-dor-warn``. Card findings, issue
+    lookup and checker failures keep their refusals; ``dor`` is PASS only when every issue read PASS.
     """
-    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE
+    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE, AdmissionState, admission_state
 
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
@@ -12760,6 +12764,7 @@ def _run_dor_preflight(
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
+    unknown: dict[str, str] = {}
     non_overridable: set[str] = set()
     membership_records: dict[str, Any] = {}
     issue_numbers: list[int] = []
@@ -12805,7 +12810,10 @@ def _run_dor_preflight(
                 # section is explicitly unchecked, never evidence of membership.
                 if "membership" in payload:
                     membership_records[label] = payload["membership"] or {"status": "unchecked"}
-                if result.returncode or payload.get("verdict") != "PASS":
+                state = admission_state(payload)
+                if state is AdmissionState.UNKNOWN and result.returncode == 1:
+                    unknown[label] = ",".join(payload["missing"])
+                elif result.returncode or state is not AdmissionState.PASS:
                     warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
             except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
                 if not recorded:
@@ -12829,7 +12837,10 @@ def _run_dor_preflight(
         stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
         return None, None
-    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    verdict = AdmissionState.WARN if warnings else AdmissionState.UNKNOWN if unknown else AdmissionState.PASS
+    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings, "dor": verdict.value}
+    if unknown:
+        record["unknown"] = unknown
     if membership_records:
         record["membership"] = membership_records
     if stream_epics:
@@ -12845,6 +12856,9 @@ def _run_dor_preflight(
             f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()
         )
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
+    if unknown:
+        details = "; ".join(f"{('#' + label) if label.isdigit() else label}: {codes}" for label, codes in unknown.items())
+        print(f"⚠️ DoR UNKNOWN (timeout) ({details}); membership unverified", file=sys.stderr)
     return None, record
 
 
@@ -13579,12 +13593,6 @@ def _dispatch(
     if cursor_auto_error:
         print(cursor_auto_error, file=sys.stderr)
         return 2
-    cursor_auto_admission = (
-        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
-        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
-        else None
-    )
-
     task_id = args.task_id
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
@@ -14028,6 +14036,17 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+
+    # Bind Auto admission to the final DoR check, including a changed prompt (#11283).
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": dor_record.get("dor", "PASS") == "PASS", "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
@@ -16187,9 +16206,12 @@ def _cursor_auto_refusal(
     Auto needs positive evidence of that task: ``--research-role implementation``
     (the declared functional role; a missing or any other role is unclassified for
     Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
-    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
-    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    checked an issue card and found it PASS (``--allow-dor-warn`` and UNKNOWN are not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default. An explicit
+    ``dor`` state other than PASS refuses on its own; a legacy record without ``dor`` keeps its
+    warning-map reading.
     """
+    from scripts.ci.check_issue_task_quality import AdmissionState
     from scripts.review.model_catalog import (
         CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
         cursor_pinned_models,
@@ -16212,7 +16234,12 @@ def _cursor_auto_refusal(
         reasons.append("no --owned-path")
     if not dor_record or not dor_record.get("issues"):
         reasons.append("no DoR issue card was checked")
-    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+    elif (
+        ("dor" in dor_record and dor_record["dor"] != AdmissionState.PASS.value)
+        or dor_record.get("warnings")
+        or dor_record.get("unknown")
+        or dor_record.get("allow_warn_reason") is not None
+    ):
         reasons.append("the DoR issue card is not PASS")
     if not reasons:
         return None
@@ -19588,7 +19615,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--allow-dor-warn",
         metavar="REASON",
-        help="Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON.",
+        help=(
+            "Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON. "
+            "A membership timeout on an otherwise PASS card is an UNKNOWN advisory and needs no override (#11283)."
+        ),
     )
     d.add_argument(
         "--lifecycle-file",
