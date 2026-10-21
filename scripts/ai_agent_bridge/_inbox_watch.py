@@ -25,6 +25,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, TextIO
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    # Bare `agent_runtime` lives under scripts/, which a file launch does not add.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    __package__ = "scripts.ai_agent_bridge"
+
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:

@@ -15,6 +15,9 @@ import wave
 from pathlib import Path
 from urllib.request import urlopen
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.verification.stress import spoken_stressed_form
 
 REVISION = "1162a9173d0ce503555aed757976b7a9912eae4c"

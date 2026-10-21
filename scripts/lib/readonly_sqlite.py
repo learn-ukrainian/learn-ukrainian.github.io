@@ -46,6 +46,7 @@ def open_readonly(
     check_same_thread: bool = True,
     isolation_level: str | None = "",
     immutable: bool = False,
+    factory: type[sqlite3.Connection] | None = None,
 ) -> sqlite3.Connection:
     """Open exactly path, read-only; refuse extensions and other databases.
 
@@ -59,6 +60,9 @@ def open_readonly(
     No additional database can be attached, so none can be detached. VACUUM INTO
     is also refused by the attachment limit. Callers must preserve the limit
     and avoid installing Python SQL callbacks on shared connections.
+    Shared connections disable the statement cache; CPython 3.12+ corrupts it
+    when threads share one connection. ``factory`` is a ``sqlite3.Connection``
+    subclass for readers that observe errors (the Sources MCP server, #11115).
     """
     uri = Path(path).resolve().as_uri() + "?mode=ro"
     if immutable:
@@ -68,8 +72,18 @@ def open_readonly(
         settings["timeout"] = timeout
     if not check_same_thread:
         settings["check_same_thread"] = False
+        # CPython 3.12+ keeps one statement cache per connection, and that cache
+        # is not safe when threads share the connection: fetches come back wrong
+        # and sqlite3 raises InterfaceError or IndexError (CPython #118172,
+        # #11208). SQLite itself is serialized, so the calls stay concurrent.
+        # Disabling the statement cache is the documented upstream mitigation.
+        # A lock around execute() would hide the #10674 callback deadlock this
+        # reader avoids.
+        settings["cached_statements"] = 0
     if isolation_level != "":
         settings["isolation_level"] = isolation_level
+    if factory is not None:
+        settings["factory"] = factory
     conn = sqlite3.connect(uri, uri=True, **settings)
     try:
         if hasattr(conn, "enable_load_extension"):

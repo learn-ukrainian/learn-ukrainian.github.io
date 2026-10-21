@@ -240,7 +240,7 @@ def test_cheap_path_samples_without_scans_or_admission_changes(host, monkeypatch
 
 def test_evaluation_reuses_bounded_attribution_and_exposes_diagnostics(host, tmp_path, monkeypatch):
     journal, _ = host
-    live = (*(f"task-{n}" for n in range(20)), "/private/location")
+    live = ("/private/location", "task-0", "bad\nlabel", "x" * 97, *(f"task-{n}" for n in range(1, 18)))
     monkeypatch.setattr(adm, "scan_task_records", lambda *_a, **_kw: adm.WorkerScan(live, ()))
     monkeypatch.setattr(
         adm,
@@ -258,7 +258,7 @@ def test_evaluation_reuses_bounded_attribution_and_exposes_diagnostics(host, tmp
     observation = decision.to_record()["psi_shadow"]
     attributed = observation["attribution"]
     assert attributed["live_task_count"] == 21
-    assert attributed["live_task_ids"] == list(live[:10])
+    assert attributed["live_task_ids"] == ["unknown", "task-0", "unknown", "unknown", *(f"task-{n}" for n in range(1, 7))]
     assert attributed["test_slot_holders"] == [{"task_id": "writer", "slots": 2}]
     assert attributed["test_slot_waiters"] == [{"task_id": "unknown"}] * 10
     assert attributed["pool_nonreclaimable_bytes"] == 100
@@ -288,10 +288,12 @@ def test_slot_attribution_reuses_the_single_existing_status_probe(tmp_path, monk
     assert sample.depth == 20
 
 
-@pytest.mark.parametrize("gate", ["none", "load", "memory", "pool", "slots", "disk"])
+@pytest.mark.parametrize("gate", ["none", "workers", "load", "memory", "pool", "slots", "disk"])
 def test_psi_never_changes_existing_protections(host, tmp_path, monkeypatch, gate):
-    _, probe = host
-    if gate == "load":
+    journal, probe = host
+    if gate == "workers":
+        monkeypatch.setattr(adm, "scan_task_records", lambda *_a, **_kw: adm.WorkerScan(("one", "two"), ()))
+    elif gate == "load":
         monkeypatch.setattr(adm, "probe_host", lambda: adm.replace(probe, load1=100))
     elif gate == "memory":
         monkeypatch.setattr(adm, "probe_host", lambda: adm.replace(probe, mem_available_bytes=1))
@@ -310,13 +312,54 @@ def test_psi_never_changes_existing_protections(host, tmp_path, monkeypatch, gat
         )
         monkeypatch.setattr(adm, "maybe_alert_disk", lambda *_a, **_k: None)
     missing = {key: {"avg10": None, "avg60": None, "avg300": None, "unknown": "missing"} for key in pressure()}
+    baseline = adm.evaluate("danger", tmp_path / "tasks", thresholds=LIMITS, record_shadow=False)
+    assert not journal.exists()
     for psi in (pressure(99, 99), pressure(), missing):
         monkeypatch.setattr(shadow, "read_pressure", lambda _, p=psi: p)
         decision = adm.evaluate("danger", tmp_path / "tasks", thresholds=LIMITS)
         assert decision.admitted is (gate == "none")
         assert decision.disk_refused is (gate == "disk")
+        assert adm.replace(decision, psi_shadow=None) == adm.replace(baseline, psi_shadow=None)
+    day = next(journal.glob("*.jsonl")).stem
+    assert shadow.compare_day(journal, day)["samples"] == 3
 
 
 @pytest.mark.parametrize("value", ["/private/location", "a\nb", "x" * 97, 4])
 def test_task_labels_cannot_emit_paths_or_unbounded_text(value):
     assert shadow.label(value) == "unknown"
+
+
+@pytest.mark.parametrize("stage", ["read_pressure", "observe", "label", "transition"])
+@pytest.mark.parametrize("error", [RuntimeError, TypeError, KeyError, AttributeError, OverflowError, OSError, ValueError])
+@pytest.mark.parametrize("refused", [False, True])
+def test_observer_exceptions_are_unknown_and_preserve_admission(host, tmp_path, monkeypatch, stage, error, refused):
+    journal, probe = host
+    if refused:
+        monkeypatch.setattr(adm, "probe_host", lambda: adm.replace(probe, load1=100))
+    monkeypatch.setattr(adm, "scan_task_records", lambda *_a, **_kw: adm.WorkerScan(("writer",), ()))
+    baseline = adm.evaluate("danger", tmp_path / "tasks", thresholds=LIMITS)
+
+    def broken(*_args, **_kwargs):
+        raise error("/private/observer-detail")
+
+    monkeypatch.setattr(shadow, stage, broken)
+    if stage == "transition":
+        # Exercise the no-journal test seam as well as the real journal path.
+        monkeypatch.delenv(shadow.DIRECTORY_ENV)
+    decision = adm.evaluate("danger", tmp_path / "tasks", thresholds=LIMITS)
+    assert adm.replace(decision, psi_shadow=None) == adm.replace(baseline, psi_shadow=None)
+    diagnostic = decision.psi_shadow
+    assert diagnostic["psi"] == {"decision": "unknown", "low_since": None, "reason": "observer_error"}
+    assert diagnostic["observer_error"] == error.__name__
+    assert diagnostic["persistence"] == "unknown: observer_error"
+    assert "private" not in json.dumps(diagnostic)
+    assert "PSI shadow unknown" in decision.summary()
+    # An observer failure must not add a successful journal observation.
+    assert sum(len(p.read_text().splitlines()) for p in journal.glob("*.jsonl")) == 1
+    if refused:
+        early = adm.precheck("danger", thresholds=LIMITS)
+        assert early.admitted is False
+        if stage != "label":  # the cheap path has no task labels to filter
+            assert early.psi_shadow["psi"]["decision"] == "unknown"
+    else:
+        assert adm.precheck("danger", thresholds=LIMITS) is None

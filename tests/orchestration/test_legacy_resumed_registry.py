@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import selectors
 import subprocess
 import sys
@@ -21,6 +22,8 @@ from tests.orchestration.task_family.test_rollover_registry import _lease, _sync
 
 ACTION = registry.MaintenanceAction.DISPOSE_LEGACY_RESUMED
 THREAD = "01a130e0-b3f1-7021-891b-96d9abc65cf8"
+_SUCCESSOR_READY_TIMEOUT = 10
+_SUCCESSOR_CLEANUP_TIMEOUT = 2
 
 
 @pytest.fixture
@@ -84,22 +87,137 @@ def _registry_bytes(case):
 
 @contextmanager
 def _successor_process(*, name="codex", thread=THREAD):
-    deadline = time.monotonic() + 10
-    with subprocess.Popen(
+    deadline = time.monotonic() + _SUCCESSOR_READY_TIMEOUT
+    child = subprocess.Popen(
         [name, "-c", "import sys; print('ready', flush=True); sys.stdin.read()", thread],
         executable=sys.executable,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
-    ) as child:
+    )
+    primary_error = None
+    try:
+        # Popen can return while exec still exposes an empty /proc cmdline.
+        with selectors.DefaultSelector() as selector:
+            selector.register(child.stdout, selectors.EVENT_READ)
+            assert selector.select(max(0, deadline - time.monotonic())), "successor readiness deadline"
+            assert child.stdout.readline() == b"ready\n"
+        yield child
+    except BaseException as error:
+        primary_error = error
+        raise
+    finally:
+        cleanup_deadline = time.monotonic() + _SUCCESSOR_CLEANUP_TIMEOUT
         try:
-            # Popen can return while exec still exposes an empty /proc cmdline.
-            with selectors.DefaultSelector() as selector:
-                selector.register(child.stdout, selectors.EVENT_READ)
-                assert selector.select(max(0, deadline - time.monotonic())), "successor readiness deadline"
-                assert child.stdout.readline() == b"ready\n"
-            yield child
+            if primary_error is not None:
+                child.kill()
+            try:
+                # Reserve half the cleanup budget for kill and reap on failure.
+                child.communicate(timeout=max(0, cleanup_deadline - time.monotonic()) / 2)
+            except BaseException:
+                child.kill()
+                child.wait(timeout=max(0, cleanup_deadline - time.monotonic()))
+                raise
+        except BaseException as cleanup_error:
+            if primary_error is None:
+                raise
+            primary_error.add_note(f"successor cleanup failed: {cleanup_error!r}")
         finally:
-            child.communicate(timeout=max(0, deadline - time.monotonic()))
+            child.stdin.close()
+            child.stdout.close()
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "readiness_timeout",
+        "early_exit",
+        "body_exception",
+        "communication_failure",
+        "unresponsive",
+        "body_and_communication_failure",
+        "success",
+    ],
+)
+def test_successor_process_bounds_cleanup_and_preserves_failure(monkeypatch, failure):
+    module = sys.modules[__name__]
+    monkeypatch.setattr(module, "_SUCCESSOR_READY_TIMEOUT", 0.5)
+    monkeypatch.setattr(module, "_SUCCESSOR_CLEANUP_TIMEOUT", 0.8)
+    primary = RuntimeError("original yielded-body failure")
+    communication_error = OSError("synthetic communication failure")
+    popen = subprocess.Popen
+    children = []
+    cleanup_started = []
+    code = "import sys; print('ready', flush=True); sys.stdin.read()"
+    if failure == "early_exit":
+        code = "raise SystemExit(7)"
+    elif failure == "readiness_timeout":
+        code = "import time; time.sleep(30)"
+    elif failure == "unresponsive":
+        code = "import time; print('ready', flush=True); time.sleep(30)"
+
+    def spawn(args, **kwargs):
+        args = list(args)
+        args[2] = code
+        child = popen(args, **kwargs)
+        children.append((child, child.kill))
+        communicate = child.communicate
+
+        def communicate_or_fail(*args, **kwargs):
+            cleanup_started.append(time.monotonic())
+            if failure in {"communication_failure", "body_and_communication_failure"}:
+                raise communication_error
+            return communicate(*args, **kwargs)
+
+        monkeypatch.setattr(child, "communicate", communicate_or_fail)
+        return child
+
+    monkeypatch.setattr(subprocess, "Popen", spawn)
+    started = time.monotonic()
+    observed = None
+    try:
+        try:
+            with _successor_process() as child:
+                assert child.poll() is None
+                if failure in {"body_exception", "body_and_communication_failure"}:
+                    raise primary
+        except BaseException as error:
+            observed = error
+        finished = time.monotonic()
+        assert len(children) == 1
+        child = children[0][0]
+        # Inspect before any rescue cleanup or poll() could reap the child.
+        assert child.returncode is not None
+        with pytest.raises(ChildProcessError):
+            os.waitpid(child.pid, os.WNOHANG)
+        assert child.stdin.closed
+        assert child.stdout.closed
+        assert cleanup_started
+        assert finished - cleanup_started[0] < module._SUCCESSOR_CLEANUP_TIMEOUT
+        assert finished - started < module._SUCCESSOR_READY_TIMEOUT + module._SUCCESSOR_CLEANUP_TIMEOUT
+        if failure in {"body_exception", "body_and_communication_failure"}:
+            assert observed is primary
+            if failure == "body_and_communication_failure":
+                assert primary.__notes__ == [f"successor cleanup failed: {communication_error!r}"]
+        elif failure == "communication_failure":
+            assert observed is communication_error
+        elif failure == "readiness_timeout":
+            assert isinstance(observed, AssertionError)
+            assert "successor readiness deadline" in str(observed)
+        elif failure == "early_exit":
+            assert isinstance(observed, AssertionError)
+            assert child.returncode == 7
+        elif failure == "unresponsive":
+            assert isinstance(observed, subprocess.TimeoutExpired)
+        else:
+            assert observed is None
+            assert child.returncode == 0
+    finally:
+        for child, kill in children:
+            if child.poll() is None:
+                kill()
+            child.wait(timeout=1)
+            child.stdin.close()
+            child.stdout.close()
 
 
 @pytest.mark.parametrize("authority", ["operator", "cto"])

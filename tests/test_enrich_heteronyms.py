@@ -8,6 +8,7 @@ from pathlib import Path
 
 from scripts.lexicon import enrich_heteronyms
 from scripts.lexicon.sum20_lookup import lookup_sum11_colonization_context
+from tests.helpers.sum20_store import canonical_sum20_store as canonical_sum20_store
 
 
 def test_colonization_context_builder_sets_explicit_citation_marker(tmp_path: Path) -> None:

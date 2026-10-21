@@ -278,14 +278,16 @@ def _verify_private_dir(path: Path, *, what: str) -> os.stat_result:
     return st
 
 
-def ensure_namespace(root: Path | None = None) -> Path:
+def ensure_namespace(root: Path | None = None, *, dirname: str = NAMESPACE_DIRNAME) -> Path:
     """Create (or validate) the owner-only managed namespace and return it."""
+    if re.fullmatch(r"[a-z][a-z0-9_-]*", dirname) is None:
+        raise TaskScratchError("invalid scratch namespace component")
     if root is None:
         base = ensure_scratch_root()
     else:
         base = root
         base.mkdir(parents=True, exist_ok=True)
-    namespace = base / NAMESPACE_DIRNAME
+    namespace = base / dirname
     with contextlib.suppress(FileExistsError):
         namespace.mkdir(mode=0o700)
     st = _verify_private_dir(namespace, what="task-scratch namespace")
@@ -865,10 +867,10 @@ class TaskScratch:
                 os.close(fd)
 
 
-def allocate(task_id: str, *, root: Path | None = None) -> TaskScratch:
-    """Allocate one unique, locked, owner-only invocation directory."""
+def allocate(task_id: str, *, root: Path | None = None, namespace_dirname: str = NAMESPACE_DIRNAME) -> TaskScratch:
+    """Allocate a locked invocation; an optional component leaves the default layout and lease kind intact."""
     safe_id = _sanitize_task_id(task_id)
-    namespace = ensure_namespace(root)
+    namespace = ensure_namespace(root, dirname=namespace_dirname)
     path = Path(tempfile.mkdtemp(prefix=f"{safe_id}.", dir=namespace))
     os.chmod(path, 0o700)
     dir_fd = os.open(path, _DIR_OPEN_FLAGS | getattr(os, "O_CLOEXEC", 0))

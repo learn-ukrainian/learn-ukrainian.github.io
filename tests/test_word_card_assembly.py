@@ -1136,7 +1136,8 @@ def test_learner_release_excludes_unscoped_names_and_accounts_for_every_identity
     assert report["field_dispositions_by_field"]["grammatical_label"] == {"asserted": 6}
 
 
-def test_proper_name_needs_active_unambiguous_source_scope_to_enter_learner_set(result):
+def test_proper_name_needs_active_unambiguous_source_scope_to_enter_learner_set(result, monkeypatch):
+    monkeypatch.setattr(wa, "LEARNER_PROPER_NAME_ALLOWLIST", {"ЮНЕСКО", "Ета"})
     name = copy.deepcopy(card_of(result, "Ета"))
     card_id = name["card_id"]
     scope = {"source_id": "puls", "field": "cefr", "status": "active", "mapping": {"confidence": "medium"}}
@@ -1150,6 +1151,14 @@ def test_proper_name_needs_active_unambiguous_source_scope_to_enter_learner_set(
     scope["status"] = "active"
     scope["review"] = {"status": "rejected"}
     assert wa.learner_cards({card_id: name}) == {}
+
+
+def test_proper_name_with_active_source_scope_still_needs_allowlisting(result, monkeypatch):
+    monkeypatch.setattr(wa, "LEARNER_PROPER_NAME_ALLOWLIST", {"ЮНЕСКО"})
+    name = copy.deepcopy(card_of(result, "Ета"))
+    name["assertions"].append({"source_id": "puls", "field": "cefr", "status": "active",
+                               "mapping": {"confidence": "medium"}})
+    assert wa.learner_cards({name["card_id"]: name}) == {}
 
 
 # --- host-only output containment (AC-P06) -------------------------------------------------------------------

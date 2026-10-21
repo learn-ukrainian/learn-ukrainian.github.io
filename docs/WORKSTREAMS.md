@@ -62,7 +62,7 @@ is the single source of truth for membership (auditor:
 | epics | #10453 | Epic coordination |
 | atlas-practice | #4387 | Word Atlas + Practice Hub product & UX (intake epics #4220, #4378, #5224 and UX epic #4700 folded into umbrella #4387) |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
-| infra-harness | #6943 (successor to closed #4707), #9737 (nested program; #6943 is at GitHub's 100 sub-issue limit) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
+| infra-harness | #6943 (successor to closed #4707), #9737 (nested program; #6943 is at GitHub's 100 sub-issue limit), #11254 (overflow epic for the existing stream; #6943, #9737 and #10535 are at GitHub's 100 native sub-issue limit) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
 | docs-knowledge | #5535 | Repository knowledge system — curated docs authority, plain-Astro truth, optional OpenWiki layer |
 | devops | #5703, #10844 (overflow epic for the existing stream; #5703 is at GitHub's 100 native sub-issue limit) | DevOps automation, CI, release & launcher reliability |
 | monitor (`ops-api` alias) | #7919 (successor to closed #7177) | **Ops API + UI** — operator API (`scripts/api`) + dashboards; Monitor routes are a subset |

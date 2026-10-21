@@ -10,6 +10,8 @@ from typing import Any
 from scripts.atlas import atlas_db, fill_local
 from scripts.atlas import measure_fill_enrich_divergence as measure
 from scripts.lexicon import enrich_manifest
+from tests.helpers.sum20_store import canonical_sum20_store as canonical_sum20_store
+from tests.helpers.sum20_store import seed_sum20_rows
 
 
 def _build_atlas_db(tmp_path: Path, entries: list[dict[str, Any]] | None = None) -> Path:
@@ -250,7 +252,7 @@ def test_phase1_offline_guard_blocks_slovnyk_wikipedia_and_grac_network(tmp_path
     assert os.environ["LEXICON_SLOVNYK_OFFLINE"] == "0"
 
 
-def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monkeypatch):
+def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monkeypatch, canonical_sum20_store):
     """#5331: fill_local must prepare CEFR quantiles and pass reciprocal pointer maps."""
     entries = measure.build_synthetic_entries(20)
     db_path = _build_atlas_db(tmp_path, entries)
@@ -309,6 +311,7 @@ def test_fill_local_prepares_cefr_and_passes_closed_pointer_maps(tmp_path, monke
                 }}
             }
     monkeypatch.setattr(enrich_manifest, "_read_cached_slovnyk_rows", lambda lemma: modern_pointer_rows.get(lemma, {}))
+    seed_sum20_rows(canonical_sum20_store, modern_pointer_rows)
 
     try:
         fill_local.fill_local(db_path, sources_db_path, _empty_kaikki_lookup(tmp_path))

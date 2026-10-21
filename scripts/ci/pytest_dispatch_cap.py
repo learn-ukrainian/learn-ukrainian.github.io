@@ -24,7 +24,9 @@ still applies.
 A dispatch run also holds host test slots for its whole session (#10662): it
 asks ``scripts/common/test_slots.py`` for its process count (its xdist workers
 after the cap, or one), waits in the host's FIFO queue with progress lines, and
-starts no more workers than the slots it holds. ``LU_TEST_SLOTS=off`` and a
+starts no more workers than the slots it holds. Each xdist worker joins those
+slots and keeps them until it exits, so they stay taken when the controller is
+killed while its workers still run tests (#11230). ``LU_TEST_SLOTS=off`` and a
 true ``CI`` variable disable this. ``--collect-only``, ``--help`` and other runs
 that execute no test take no slots. A run nested inside a live holder
 (``LU_TEST_SLOTS_HOLDER``) queues for nothing, dispatch run or not, and starts
@@ -362,9 +364,22 @@ def _cap_threads(config: pytest.Config) -> None:
     os.environ.update(apply_thread_caps(os.environ))
 
 
-def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, count: int) -> None:
-    """Start at most ``count`` workers, the slots a live ancestor holds, here and in this run's descendants."""
+def _keep_hold(config: pytest.Config, hold: object) -> None:
+    """Keep ``hold`` for this session; its variables reach workers and nested runs and are restored after it."""
+    environment = hold.environment()  # type: ignore[attr-defined]
+    setattr(config, _SLOTS_ATTR, hold)
+    setattr(config, _SLOTS_PRIOR_MARKER_ATTR, {name: os.environ.get(name) for name in environment})
+    os.environ.update(environment)
+
+
+def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, hold: object) -> None:
+    """Start at most the slots a live ancestor holds, here and in this run's descendants.
+
+    A review hold's turn (its session lock) is this session's until it ends, so the review's runs never overlap.
+    """
     config.add_cleanup(lambda: _release_test_slots(config))
+    _keep_hold(config, hold)
+    count = hold.count  # type: ignore[attr-defined]
     _limit_workers(config, count)
     name = slots.XDIST_AUTO_ENV
     auto_cap = slots.auto_worker_cap()  # a lower existing cap, such as a driver scope's, is kept
@@ -388,7 +403,7 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
     try:
         if not slots.enabled():
             return
-        inherited = slots.inherited_hold()
+        inherited = slots.join_inherited()
         if inherited is not None:
             _run_inside_inherited_hold(config, slots, inherited)
             return
@@ -399,14 +414,32 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
         raise pytest.UsageError(str(error)) from None
     # pytest closes the cleanup stack even when a later hook refuses the run before the session configures.
     config.add_cleanup(lambda: _release_test_slots(config))
-    setattr(config, _SLOTS_ATTR, hold)
-    setattr(config, _SLOTS_PRIOR_MARKER_ATTR, os.environ.get(slots.HOLDER_ENV))
     # Workers and nested runs inherit the marker and run inside these slots instead of queueing.
-    os.environ.update(hold.environment())
+    _keep_hold(config, hold)
     _cap_threads(config)
     _limit_workers(config, hold.count)
     if hold.waited >= 1.0:
         print(f"TEST SLOTS: holding {hold.count} of {hold.pool_size} slot(s) after {hold.waited:.1f}s", flush=True)
+
+
+def _join_as_worker(config: pytest.Config) -> None:
+    """Keep the controller's slots taken while this xdist worker runs, even when the controller is killed first.
+
+    xdist closes inherited descriptors when it starts a worker, so the worker joins the hold itself. A worker its
+    run's live hold names (the checked marker, and for a review its turn token) that cannot keep the hold's slots
+    is refused before its session, typed: run on no slot, it would keep running tests after a killed controller
+    freed them. xdist reports the refusal as the worker going down, and the controller's run fails. A worker no
+    live hold names runs as before.
+    """
+    slots = _test_slots()
+    if not os.environ.get(slots.HOLDER_ENV, "").strip() or not slots.enabled():
+        return
+    try:
+        hold = slots.join_as_worker()
+    except slots.SlotError as error:
+        raise pytest.UsageError(str(error)) from None
+    if hold is not None:
+        config.add_cleanup(hold.release)
 
 
 def _release_test_slots(config: pytest.Config) -> None:
@@ -434,12 +467,11 @@ def _release_test_slots(config: pytest.Config) -> None:
     if hold is None:
         return
     setattr(config, _SLOTS_ATTR, None)
-    holder_env = _test_slots().HOLDER_ENV
-    prior = getattr(config, _SLOTS_PRIOR_MARKER_ATTR, None)
-    if prior is None:
-        os.environ.pop(holder_env, None)
-    else:
-        os.environ[holder_env] = prior
+    for name, prior in (getattr(config, _SLOTS_PRIOR_MARKER_ATTR, None) or {}).items():
+        if prior is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = prior
     hold.release()
 
 
@@ -456,9 +488,10 @@ def pytest_cmdline_main(config: pytest.Config) -> Generator[None, object, object
     it returns, so a lock taken after ``yield`` does not cover execution.
     xdist workers already have ``workerinput`` and ``PYTEST_XDIST_WORKER`` set
     and must not take the host lock; neither does a ``--collect-only`` run.
-    Test slots skip only real workers (``workerinput``): a pytest that a test
-    starts inside a worker inherits ``PYTEST_XDIST_WORKER`` but is a new run,
-    and it must start no more workers than the hold it runs inside.
+    A real worker (``workerinput``) joins the slots its controller holds and
+    keeps them until it exits, so killing the controller frees nothing early.
+    A pytest that a test starts inside a worker inherits ``PYTEST_XDIST_WORKER``
+    but is a new run, and it must start no more workers than the hold it runs inside.
 
     A new-style wrapper, so an exception raised inside the session (for
     example pytest's own ``tmp_path`` teardown ``KeyError`` after a SIGINT
@@ -473,7 +506,9 @@ def pytest_cmdline_main(config: pytest.Config) -> Generator[None, object, object
         _arm_maxprocesses(config)
     if armed and is_full_suite(config) and not collection_only(config):
         _acquire_for_config(config)
-    if not hasattr(config, "workerinput"):
+    if hasattr(config, "workerinput"):
+        _join_as_worker(config)
+    else:
         _acquire_test_slots(config, acquire=armed)
     result = yield
     if cap_armed:

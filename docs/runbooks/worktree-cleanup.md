@@ -97,10 +97,35 @@ Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
 `.hypothesis`, `.tox`, `.nox`, `.entire/logs`, and Git metadata) are excluded. `.cache`
 itself is deliberately not a tool-cache exemption. Shared state and verified
 provisioned database links survive outside the worktree and are never copied.
-Task output placed in an excluded cache remains disposable. Real `.venv` and
-`node_modules` directories are never disposable, including below caches; only
-verified provisioned links are disposable. `worktree_artifacts.is_disposable_path`
-is the shared taxonomy for creation, preservation and scheduled reaping.
+Task output placed in an excluded cache remains disposable. Real `.venv`
+directories retain the normal output rules. A real ignored `node_modules`
+directory is regenerable only with a local regular, tracked sibling
+`package-lock.json`. Verified provisioned links are disposable without following
+their targets. `worktree_artifacts.is_disposable_path` and
+`regenerable_output.is_regenerable_ignored_path` supply the shared taxonomy.
+
+The reviewed site build patterns live in `regenerable_output.SITE_BUILD_OUTPUT_PATTERNS`.
+They exclude tracked files, symlink components, database files and unknown output.
+`RELEASE_OUTPUT_PATTERNS` adds two conditional classes (#9828, #10061):
+
+- `site/src/data/lexicon-manifest.json`, reproduced by
+  `node site/scripts/hydrate-manifest.mjs` from `lexicon-manifest.pointer.json`.
+- `site/public/lexicon/practice-{kind}.{level}.json`, for the hydrator's enumerated
+  kinds and levels, reproduced by `node site/scripts/hydrate-practice-deck.mjs`
+  from `lexicon-practice-deck.pointer.json`.
+
+Each conditional file must be ignored, untracked, a local regular file without
+symlink components, and match its committed pointer's byte count and SHA-256.
+The pointer and hydrator must be tracked, committed and clean in both index and
+worktree. Hashing streams through directory descriptors without following links.
+Missing proof, richer unpublished content, `.tmp`, staged manifests and gzip
+copies retain the normal preservation and cap rules. No filename-only exemption
+applies to these release files. `data/atlas.db` and its sidecars remain task output;
+their names and an `atlas:build-db` command do not prove their local provenance.
+
+Task-record inventory retries one complete scan after a read failure, logging
+the retry. A vanished task filename must have a visible archive counterpart;
+persistent unreadable records or unaccounted disappearance still refuse removal.
 
 The issue-stream audit's refresh sidecars, `batch_state/issue_stream_audit_refresh.json`
 and `batch_state/issue_stream_audit_refresh.lock`, are regenerable tool state, not
@@ -1058,12 +1083,32 @@ still returns the older absolute `primary_checkout` and `worktree` fields to
 other callers. Removing those pre-existing fields is a separate infra-owned
 residual; the new capture and recovery writers convert their own copies.
 
-Recovery never recreates a worktree, backdates an observation, edits previous
-receipts or calls GitHub. Repeating recovery returns the existing verified
-receipt. Missing inputs, changed digests, wrong task/branch and unavailable or
+Recovery never recreates a worktree, backdates an observation or edits previous
+receipts. Ordinary same-carrier recovery makes no GitHub calls. Repeating recovery
+returns the existing verified receipt. Missing inputs, changed digests, wrong task/branch and unavailable or
 unrelated commits produce typed `RECOVERY_*` refusals. Reconcile with current
 GitHub authority afterward; recovery alone does not close the issue or prove
 review, CI or delivery.
+
+For a later child PR delivered by an attempt carrying an earlier lifecycle,
+add `--associate-child` to the recovery command above, pointing `--state-file`
+at the child's ledger. This explicit mode reads that ledger's PR from GitHub
+and requires `MERGED`, its exact repository-qualified URL, head and branch.
+The preserved task's `worktree_reap_proof` must independently name that child
+in `pr_number` and `pr_head_sha`, retain `pr_state: MERGED`, and contain the
+task's branch/head member. Missing proof refuses with
+`RECOVERY_MERGED_PR_UNPROVEN`; a different child PR/head/branch refuses with
+`RECOVERY_CHILD_PR_MISMATCH`; an unavailable GitHub read refuses with
+`RECOVERY_CHILD_PR_UNAVAILABLE`. Do not fill missing proof from ancestry or
+edit the author carrier to match the child.
+
+Rehearse with the copied child ledger and original evidence tree. Verify that
+one receipt contains `recovered_from_preserved.association`, naming both
+lifecycle identities, the exact task/run nonce and child PR/head. Repeat the
+command and check that the receipt ID is unchanged. Confirm that the earlier
+ledger and carrier bytes are unchanged. Alter a copied input and confirm a
+typed refusal with no append. The association supplies local observation only;
+review, CI and behavior evidence require their own verification.
 
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
 `scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one

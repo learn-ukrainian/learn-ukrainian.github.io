@@ -10,12 +10,16 @@ import json
 import os
 import stat
 import subprocess
+import sys
 import tempfile
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.projects.open_model_data import phase3_vspu_db_cutover as cutover
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion

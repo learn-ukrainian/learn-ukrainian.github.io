@@ -643,6 +643,7 @@ def _stub_worker_clis(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     refuses under CI markers before any process runs; scrub them as the GLM
     adapter tests do (the guard has its own tests).
     """
+    monkeypatch.setattr("scripts.agent_runtime.adapters.deepseek._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
     bin_dir = tmp_path / "stub-bin"
     bin_dir.mkdir()
     for name in _WORKER_CLIS:

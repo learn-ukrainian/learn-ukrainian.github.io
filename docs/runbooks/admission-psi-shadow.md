@@ -32,6 +32,15 @@ candidate PSI decision, PSI windows, phase, and current admission-check decision
 An early pass has no admission decision, because the remaining protections have not run.
 Force overrides occur later and their outcome is explicitly unknown to this observer.
 Read-only dispatches remain exempt.
+Report-only callers `capacity_pick.admission_status` and
+`retrieval_bakeoff_9233._admission_probe` pass `record_shadow=False` to `evaluate`.
+They run the same admission checks and retain PSI diagnostics without reading
+or writing journal state. Their candidate uses only the current sample and
+starts with unknown continuity; persistence is explicitly unknown for a report-only evaluation.
+An unexpected observer exception returns an unknown PSI decision with
+`observer_error` containing only the exception type and unknown persistence.
+Exception messages are excluded because they can contain private locations.
+Observer failures never change the admission result.
 
 Full evaluations reuse their existing live task IDs, pool counters, and test-slot snapshots.
 Task, holder, and waiter lists each contain at most ten entries.
@@ -52,10 +61,18 @@ After collecting a UTC calendar day, run the comparison from the project environ
 
 The JSON report counts load-versus-PSI decisions, unknown signals, phases,
 current admission-check decisions, peak `avg60` pressure, and invalid rows.
-Its denominator is sampled evaluations, not unique dispatch attempts or admitted workers.
+Its denominator is recorded samples from actual dispatch admission checks,
+not unique dispatch attempts or admitted workers. Report-only calls add no rows.
+A passing early check records an unknown admission decision; it has not admitted a worker.
+Observer failures that cannot write a row are absent from the day's denominator;
+the caller's shadow diagnostic reports unknown instead.
 A dispatch can produce an early sample, a full evaluation, and a locked recheck.
 The observed span and unknown counts expose incomplete measurements.
 Unobserved intervals cannot establish continuous host health.
+Journals collected before the report-only exclusion may include status-query rows
+labelled `evaluate`. Those rows have no source marker, so the comparison cannot
+separate them retrospectively. Use a complete UTC day collected after the fix
+for a dispatch-only comparison, and retain that limitation when reading older days.
 
 The Infra driver owns the live one-day comparison and subsequent calibration judgment.
 Injected calendar-day tests verify the reporter but do not replace that measured trace.

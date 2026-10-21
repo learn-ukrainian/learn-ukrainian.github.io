@@ -38,11 +38,14 @@ import subprocess
 import sys
 import time
 from collections import Counter
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
 from scripts.common.task_scratch import TaskScratchError, mount_points
@@ -838,6 +841,7 @@ def quarantine_entry(
     ledger: Ledger,
     run_id: str,
     digest_limit: int,
+    recheck: Callable[[Path], str | None] | None = None,
 ) -> dict[str, Any]:
     """Ledger, rename, re-verify, then retain or return one proven candidate; return its final row.
 
@@ -879,6 +883,8 @@ def quarantine_entry(
     # Durable before anything is recorded about it; a failed sync stops the run with the entry pending.
     _sync_rename(root_fd, quarantine.fd)
     reason = quarantined_problem(quarantined, path, row, before, task_root)
+    if reason is None and recheck is not None:
+        reason = recheck(quarantined)
     if reason is None:
         ledger.append(_event(entry_id, run_id, "quarantined"))
         return row | marks | {"decision": "quarantined"}
@@ -1049,6 +1055,7 @@ def sweep(
     state_dir: Path | None = None,
     quarantine_s: float = DEFAULT_QUARANTINE_S,
     digest_limit: int = DEFAULT_DIGEST_LIMIT,
+    pytest_keep: int = 3,
 ) -> dict[str, Any]:
     """Inventory top-level unmanaged entries; on ``apply``, purge expired quarantine, then quarantine proven ones.
 
@@ -1059,6 +1066,8 @@ def sweep(
     """
     if not math.isfinite(min_age_s) or min_age_s <= 0:
         raise ValueError("minimum age must be finite and positive")
+    if isinstance(pytest_keep, bool) or not isinstance(pytest_keep, int) or pytest_keep < 1:
+        raise ValueError("pytest retention count must be a positive integer")
     if not math.isfinite(quarantine_s) or quarantine_s <= 0 or digest_limit < 0:
         raise ValueError("quarantine window must be finite and positive, digest limit non-negative")
     if (
@@ -1079,7 +1088,7 @@ def sweep(
     tasks = task_root if task_root is not None else tasks_dir()
     run_id = new_run_id(time.time())
     with ledger.exclusive(wait=True) if apply else contextlib.nullcontext():
-        return _sweep_locked(
+        report = _sweep_locked(
             root,
             tasks=tasks,
             repo_root=repo_root,
@@ -1091,6 +1100,15 @@ def sweep(
             quarantine_s=quarantine_s,
             digest_limit=digest_limit,
         )
+        from scripts.hygiene.pytest_retention import sweep_pytest_runs
+
+        report["pytest_retention"] = sweep_pytest_runs(
+            keep=pytest_keep, apply=apply, ledger=ledger, run_id=run_id,
+            task_root=tasks, digest_limit=digest_limit, quarantine_s=quarantine_s, repo_root=repo_root,
+        )
+        report["errors"] += report["pytest_retention"]["errors"]
+        report["digest"] = plan_digest(report)
+        return report
 
 
 def _sweep_locked(
@@ -1240,6 +1258,10 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
     The ledger path is shown relative to the home directory (``~/...``).
     """
     summary = {key: value for key, value in report.items() if key != "rows"}
+    if "pytest_retention" in summary:
+        summary["pytest_retention"] = {
+            key: value for key, value in summary["pytest_retention"].items() if key != "rows"
+        }
     home = str(Path.home())
     if summary["ledger_path"].startswith(home + "/"):
         summary["ledger_path"] = "~" + summary["ledger_path"][len(home) :]
@@ -1535,7 +1557,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Attribute unmanaged top-level temp entries; quarantine proven ones recoverably and purge expired ones.\n"
             "Use for legacy task residue and, with --unattributed-scratch, quiet hand-made scratch; "
-            "never for managed scratch or harness state. Subcommands ledger, quarantine and restore "
+            "also retains completed owned pytest runs, preserving live and unknown runs. Other managed "
+            "scratch and harness state are excluded. Subcommands ledger, quarantine and restore "
             "inspect and undo removals (see `tmp_sweep ledger --help`)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1603,6 +1626,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _state_dir_argument(parser)
     parser.add_argument(
+        "--pytest-keep", type=int, default=3,
+        help="Keep this many newest completed eligible pytest runs per managed root (positive integer; default 3).",
+    )
+    parser.add_argument(
         "--apply",
         action="store_true",
         help="Purge expired quarantine, then recheck proofs and quarantine proven entries (default dry-run).",
@@ -1642,6 +1669,7 @@ def main(argv: list[str] | None = None) -> int:
             state_dir=args.state_dir,
             quarantine_s=args.quarantine_days * 86400,
             digest_limit=int(args.digest_limit_mib * (1 << 20)),
+            pytest_keep=args.pytest_keep,
         )
     except LedgerError as error:
         # The step in progress stays unconfirmed in the ledger, and the next run reconciles it.
@@ -1656,7 +1684,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print("| Entry | Allocated bytes | Task / live PID attribution | Decision | Reason |")
         print("|---|---:|---|---|---|")
-        for row in report["rows"]:
+        for row in report["rows"] + report["pytest_retention"]["rows"]:
             name = json.dumps(row["name"], ensure_ascii=True).replace("|", "\\|")
             owner = row["task"] or ("live process" if row["live_pids"] else "unknown")
             print(f"| {name} | {row['bytes']} | {owner} | {row['decision']} | {row['reason']} |")
@@ -1670,6 +1698,9 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"bytes_reclaimable={report['bytes_reclaimable']} bytes_reclaimed={report['bytes_reclaimed']} free_bytes={report['free_bytes']} projected_free_bytes={report['projected_free_bytes']}"
         )
+        print("pytest_retention=" + json.dumps({
+            key: value for key, value in report["pytest_retention"].items() if key != "rows"
+        }, sort_keys=True))
     return 1 if report["errors"] else 0
 
 

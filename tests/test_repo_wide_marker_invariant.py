@@ -100,6 +100,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
+        "tests/test_issue_template_acceptance_criteria.py",
         "tests/test_lesson_atlas_link_census.py",
         "tests/test_lint_fleet_roster.py",
         "tests/test_lint_prompts.py",
@@ -200,6 +201,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_session_streams.py::test_embedded_host_exemptions_are_required_by_tracked_basenames",
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
+    "tests/test_sources_db_hardening.py::test_shared_sqlite_connections_route_through_open_readonly",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
     "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
 )
@@ -243,6 +245,11 @@ NOT_REPO_WIDE = {
     "tests/packaging/test_systemd_templates.py::test_systemd_templates_have_no_host_facts": (
         "Reads packaging/systemd; packaging/ is not a test or script candidate, so any "
         "change to a systemd template already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_atlas_pairing.py::test_pairing_does_not_modify_sources_db": (
+        "Lists data/ only to stat sources.db without joining that filename onto a checkout "
+        "path. data/ is not a test or script candidate, so a data change already forces the "
+        "full tier. Generator changes select this test through its import."
     ),
     "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v05_grammar_valency_findings": (
         "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "

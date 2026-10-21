@@ -169,9 +169,8 @@ def _bad_constant(value: str) -> None:
 
 
 def _validate(value: Any, schema: dict, label: str) -> None:
-    errors = list(EvidenceValidator(schema).iter_errors(value))
-    if errors:
-        error = errors[0]
+    error = next(EvidenceValidator(schema).iter_errors(value), None)
+    if error is not None:
         location = ".".join(map(str, error.absolute_path)) or "root"
         raise InvalidEvidence(f"{label}.{location}: {error.validator} failed")
 
@@ -213,7 +212,8 @@ class Inputs:
     def __init__(self, paths: dict[str, Path]):
         self.documents: dict[str, Any] = {}
         self.bindings: dict[str, dict] = {}
-        self.paths: set[Path] = set()
+        self.paths: set[Path] = {_resolve(CONTRACT), _resolve(MATRIX)}
+        self.contract_sha256 = _sha(CONTRACT.read_bytes())
         for name, path in paths.items():
             raw, value = _read(path)
             _validate(value, SCHEMAS[name], name)
@@ -520,13 +520,11 @@ def _key_coverage(counts: Counter, ordered: list[dict], ranges: dict[str, dict])
 
 def _census_header(schema_version: str, inputs: Inputs, counts: Counter) -> dict:
     """Fields shared by every census; binds input, matrix and accounting-contract bytes."""
-    inputs.paths.add(_resolve(CONTRACT))
-    inputs.paths.add(_resolve(MATRIX))
     return {
         "schema_version": schema_version,
         "evidence_role": "exact_key_observation_only",
         "programme_completeness": "UNRESOLVED",
-        "contract_sha256": _sha(CONTRACT.read_bytes()),
+        "contract_sha256": inputs.contract_sha256,
         "matrix_sha256": inputs.documents["requirements"]["matrix_sha256"],
         "inputs": dict(inputs.bindings),
         "required_requirement_count": 20,
@@ -769,6 +767,7 @@ def account(
         "status": status,
         "inputs": inputs.bindings,
         "artifacts": inputs.artifacts,
+        "contract_sha256": inputs.contract_sha256,
         "matrix_sha256": inputs.documents["requirements"]["matrix_sha256"],
         "requirements": dispositions,
         "stage_counts": {stage: {s: c[s] for s in STATES} for stage, c in totals.items()},

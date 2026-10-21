@@ -2,27 +2,28 @@
 
 Git calls ``.githooks/pre-push`` for a worker's own ``git push`` and for the
 auto-finalize push alike, so this gate sits on the one path both share.  For
-each pushed branch it checks, in order:
+each pushed branch it refuses a dirty tree and untracked or ignored files that
+could change the run, then runs the pre-commit ``pre-push`` stage over the
+explicit committed range, with the per-commit OPSEC scan and the learner-surface
+internal-ID scan.  The pre-commit stage runs the hooks ``.pre-commit-config.yaml``
+places at the ``pre-push`` stage, unchanged.
 
-1. the pre-commit ``pre-push`` stage over the explicit committed range;
-2. the deduplicated registry of repository-wide invariant tests
-   (``KNOWN_REPO_WIDE_*`` in ``tests/test_repo_wide_marker_invariant.py``);
-3. the test files the outgoing range adds or changes.
+The gate runs no tests of its own (#11276): no pytest stage, no host test slots
+and no affected-test selector.  CI Gate runs the full suite on every pull request
+and again in the merge queue, and remains the merge gate.
 
-A red result refuses the push with a typed reason and the failing node ids.
-A run that cannot finish (admission wait, time budget, tooling error) is
+The range starts at the merge-base with ``origin/main`` after a merge of newer
+main, so the scans see only the branch's own commits (#10820).
+
+A finding refuses the push with a typed reason and the failing hooks.  A run
+that cannot finish (admission wait, time budget, tooling error) is
 ``validation_incomplete``: the push is refused, the branch is preserved, the
-driver decides, and nothing is retried or reported green.  Importer-closure
-selection runs afterwards in shadow only; it is recorded and never blocks.
+driver decides, and nothing is retried or reported green.
 
-Before pytest starts, the gate takes host test slots from the pool worker pytest runs share
-(``scripts/common/test_slots.py``, #10662) and runs no more test processes than it holds. The wait
-for slots is bounded, recorded apart as ``slot_wait_s``, and spends neither the stage allowance nor
-the run budget.
-
-Receipts are bound to the commit, its tree, the range, the registry digest and
-the gate version, and are ignored once the tree is dirty or any of those
-change.  ``git push --no-verify`` remains the explicit operator bypass.
+Receipts are bound to the commit, its tree, the range base, the gate version
+and the tools that run it, and are sealed.  A missing, extra or altered field
+refuses reuse, as does a dirty tree.  ``git push --no-verify`` remains the
+explicit operator bypass.
 
 Stdlib only: the hook must run before any project import is trustworthy.
 """
@@ -30,12 +31,11 @@ Stdlib only: the hook must run before any project import is trustworthy.
 from __future__ import annotations
 
 import argparse
-import ast
 import contextlib
 import errno
 import fcntl
 import hashlib
-import importlib.util
+import importlib.metadata
 import json
 import os
 import re
@@ -51,37 +51,25 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 8  # 8: unconditional process cap and invariant timing (#10734)
-# Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
-# tests/test_pre_push_gate.py checks table and behavior parity.
-THREAD_CAPS = {
-    "OMP_NUM_THREADS": "1",
-    "MKL_NUM_THREADS": "1",
-    "OPENBLAS_NUM_THREADS": "1",
-    "NUMEXPR_NUM_THREADS": "1",
-    "ORT_NUM_THREADS": "1",
-    "TOKENIZERS_PARALLELISM": "false",
-    "RAYON_NUM_THREADS": "1",
-}
-REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
-REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
-MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
+GATE_VERSION = 12  # 12: no test stage; a receipt binds only what the remaining stages read (#11276)
 MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
-MEASUREMENT_SCHEMA = "pre-push-measurement.v1"
+MEASUREMENT_SCHEMA = "pre-push-measurement.v3"  # v3: no test-stage fields (#11276)
 SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
-# Each blocking stage (pre-commit, pytest) gets its own allowance from its own start, so time one
-# stage spends never shortens the next (#10642). The run budget caps their sum for the whole push.
+# The blocking stage gets its own allowance from its own start (#10642); the run budget caps what every ref
+# update of one push spends together. A timeout is typed by the load observed at it (``stage_timeout``) and
+# is never green.
 STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
-SHADOW_BUDGET_S = 120.0
+# What a run depends on beyond the bound tree; a receipt binds each. ``pytest`` is the version the
+# configuration's pytest-based ``pre-push`` hooks run under.
+TOOL_NAMES = ("gate_source", "launcher", "pre_commit_config", "python", "pytest", "pre_commit")
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
-# The host test-slot governor (#10662), loaded by path from this gate's own checkout: it is stdlib-only.
-TEST_SLOTS_MODULE = "scripts/common/test_slots.py"
-# The longest wait for host test slots before pytest. It spends neither the stage allowance nor the run
-# budget; LU_TEST_SLOTS_WAIT_S can only shorten it.
-TEST_SLOT_WAIT_S = STAGE_BUDGET_S
-ADMISSION_WAIT_S = RUN_BUDGET_S + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
+# One predecessor's admission allowance. Gate version 11 held admission through its run budget, a host
+# test-slot wait of one stage allowance, its selector's bound and two cleanups. Checkouts that still run it
+# share this queue (one Git common directory), so the allowance keeps that length until none does (#11276).
+SELECTOR_BOUND_V11_S = 120.0
+ADMISSION_WAIT_S = RUN_BUDGET_S + STAGE_BUDGET_S + SELECTOR_BOUND_V11_S + 2 * CLEANUP_BUDGET_S
 # Each predecessor gets one complete gate allowance. The ceiling of ten allowances covers a burst of
 # ten predecessors, while bounding overload or a stuck holder. Environment overrides only shorten it.
 ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
@@ -89,31 +77,12 @@ MAX_QUEUE_ENTRIES = 256  # cap live tickets after reaping abandoned entries
 RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
 OUTPUT_TAIL_BYTES = 8192
-# Registered modules exceeding the cost threshold are explicitly deferred to CI
-# and recorded on every run. Function entries always run.
-HEAVY_MODULE_S = 60.0
-DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
-# Keep existing CI deferrals until the tracked durations table supplies a row.
-CI_DEFERRED_MODULES = frozenset({"tests/test_source_ingest_entrypoints.py"})
-# Registry entries that read a tree a sparse dispatch worktree omits.  They fail there for want of the
-# tree, not for a defect. Deferred to CI only while the worktree is sparse and the tree is absent.
-SPARSE_TREE_NODES = {
-    "curriculum": (
-        "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
-        "tests/curriculum/evidence/test_lessons_lock.py::test_committed_lesson_lock_is_fresh",
-        "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
-    ),
-}
 ZERO_SHA = "0" * 40
 EXIT_REFUSED = 1
 EXIT_INCOMPLETE = 75  # EX_TEMPFAIL: the push was not validated, not judged bad
-NO_TESTS_COLLECTED = 5  # pytest.ExitCode.NO_TESTS_COLLECTED
-FAILURE_RE = re.compile(r"^(?:FAILED|ERROR) (\S+?)(?: - .*)?$", re.MULTILINE)
-SUMMARY_RE = re.compile(r"^=+ .*\bin \d+(?:\.\d+)?s.*=+$|^\d+ \w+.* in \d+(?:\.\d+)?s", re.MULTILINE)
 PRE_COMMIT_FAILED_RE = re.compile(r"^(.+?)\.{3,}.*Failed$", re.MULTILINE)
-TEST_FILE_RE = re.compile(r"^tests/(?:.+/)?test_[^/]+\.py$")
-# Files outside the commit that can change what pytest imports or how it is configured.  The receipt
-# binds only committed inputs, so any such file, untracked or ignored, makes the run unrepeatable.
+# Files outside the commit that can change what the stage's Python hooks import or how they are configured.
+# The receipt binds only committed inputs, so any such file, untracked or ignored, makes the run unrepeatable.
 OVERLAY_PATHSPECS = (
     "*.py",
     "*.pth",
@@ -122,16 +91,10 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
 )
-# Pytest base temps live outside every Git checkout and Git directory (#10654), under the fleet scratch
-# root of scripts/common/scratch.py. The hook imports no project code, so it restates that convention.
-SCRATCH_ROOT_ENV = "LU_SCRATCH_ROOT"
-DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
-FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
-SCRATCH_LINK_LIMIT = 40  # links followed while verifying a scratch root, as Linux's MAXSYMLINKS
 
 
 class GateOutcome(Exception):
-    """A typed refusal: ``reason`` names the cause, ``failing`` the node ids."""
+    """A typed refusal: ``reason`` names the cause, ``failing`` the hooks that found it."""
 
     def __init__(self, reason: str, detail: str, *, failing: tuple[str, ...] = (), incomplete: bool = False):
         super().__init__(detail)
@@ -154,31 +117,8 @@ class Plan:
     head: str
     tree: str
     base: str
-    registry_version: str
-    registry_nodes: tuple[str, ...]
-    changed_tests: tuple[str, ...]
-    changed_paths: tuple[str, ...]
-    deferred_to_ci: tuple[str, ...] = ()
-    node_ids: tuple[str, ...] = field(init=False)
-
-    def __post_init__(self) -> None:
-        self.node_ids = dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
-
-
-def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
-    """Copy the shared test-thread policy without importing project code (#10716)."""
-    result = dict(env)
-    if env.get("LU_TEST_THREAD_CAP", "").strip().lower() == "off":
-        return result
-    for name, cap in THREAD_CAPS.items():
-        if cap != "false" and name in env:
-            try:
-                if env[name].isascii() and env[name].isdecimal() and 0 < int(env[name]) <= int(cap):
-                    continue
-            except ValueError:
-                pass
-        result[name] = cap
-    return result
+    base_fallback: str | None = None  # why the merge-base could not set ``base``; the previous range runs
+    tools: dict[str, str | None] = field(default_factory=dict)  # ``tool_versions``
 
 
 def clean_environment() -> dict[str, str]:
@@ -202,6 +142,26 @@ def git_ok(*args: str, cwd: Path) -> str | None:
     return result.stdout if result.returncode == 0 else None
 
 
+def git_records(*args: str, cwd: Path) -> list[str] | None:
+    """The NUL-terminated records of a ``-z`` listing, each name byte for byte; ``None`` when Git fails (#11207).
+
+    The caller passes ``-z``, so neither user, repository nor environment configuration decides how the
+    paths are spelled. Splitting on NUL alone keeps a
+    name whole: ``str.splitlines`` also splits on, and drops, CR, VT, FF, the separators U+001C to U+001E,
+    U+0085, U+2028 and U+2029, all of which a path may hold.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "--no-pager", *args], capture_output=True, check=False, cwd=cwd, env=clean_environment(), timeout=30
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    output = result.stdout.decode("utf-8", errors="surrogateescape")
+    if result.returncode != 0 or (output and not output.endswith("\0")):
+        return None
+    return output.split("\0")[:-1]
+
+
 def parse_updates(text: str) -> list[Update]:
     updates = []
     for line in text.splitlines():
@@ -212,102 +172,63 @@ def parse_updates(text: str) -> list[Update]:
     return updates
 
 
-def dedupe_node_ids(node_ids: tuple[str, ...] | list[str]) -> tuple[str, ...]:
-    """Sorted unique ids; a function or class id is dropped when its whole file is selected."""
-    unique = set(node_ids)
-    files = {node for node in unique if "::" not in node}
-    return tuple(sorted(node for node in unique if "::" not in node or node.split("::", 1)[0] not in files))
+def main_merge_base(update: Update, root: Path) -> tuple[str | None, str | None]:
+    """``(merge-base, None)`` with ``origin/main``, or ``(None, reason)`` when Git gives no usable one.
 
-
-def pytest_node_id(registered: str) -> str:
-    """The registry writes a class method as ``file::Class.method``; pytest wants ``file::Class::method``."""
-    path, separator, rest = registered.partition("::")
-    return f"{path}{separator}{rest.replace('.', '::')}"
-
-
-def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
-    """Read the registry literals by AST (no import) and return ``(node_ids, version)``.
-
-    The version is the digest of the gate version and the sorted, deduplicated
-    ids, so any registry edit changes it and voids earlier receipts.
+    Usable means exactly one merge-base, other than the head. ``merge_base_unavailable``: no
+    ``origin/main``, a Git error, a shallow clone or no common history; ``merge_base_ambiguous``: several
+    merge-bases (criss-cross merges); ``merge_base_is_head``: ``origin/main`` already contains the head.
     """
-    path = root / REGISTRY_FILE
-    try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-    except (OSError, SyntaxError, UnicodeError) as exc:
-        raise GateOutcome("registry_unavailable", f"cannot read {REGISTRY_FILE}: {exc}", incomplete=True) from exc
-    found: dict[str, tuple[str, ...]] = {}
-    for statement in tree.body:
-        if not isinstance(statement, ast.Assign | ast.AnnAssign):
-            continue
-        targets = statement.targets if isinstance(statement, ast.Assign) else [statement.target]
-        for target in targets:
-            if isinstance(target, ast.Name) and target.id in REGISTRY_NAMES and statement.value is not None:
-                value = statement.value
-                if isinstance(value, ast.Call) and len(value.args) <= 1:  # frozenset() / frozenset({...})
-                    value = value.args[0] if value.args else ast.Tuple(elts=[], ctx=ast.Load())
-                try:
-                    found[target.id] = tuple(str(item) for item in ast.literal_eval(value))
-                except (ValueError, TypeError) as exc:
-                    raise GateOutcome(
-                        "registry_unavailable", f"{target.id} in {REGISTRY_FILE} is not a literal", incomplete=True
-                    ) from exc
-    missing = [name for name in REGISTRY_NAMES if name not in found]
-    if missing:
-        raise GateOutcome("registry_unavailable", f"{REGISTRY_FILE} lacks {', '.join(missing)}", incomplete=True)
-    nodes = dedupe_node_ids([pytest_node_id(node) for name in REGISTRY_NAMES for node in found[name]])
-    digest = hashlib.sha256(json.dumps([GATE_VERSION, nodes]).encode()).hexdigest()[:16]
-    return nodes, f"v{GATE_VERSION}-{digest}"
+    bases = (git_ok("merge-base", "--all", "origin/main", update.local_sha, cwd=root) or "").split()
+    if not bases:
+        return None, "merge_base_unavailable"
+    if len(bases) > 1:
+        return None, "merge_base_ambiguous"
+    if bases[0] == update.local_sha:
+        return None, "merge_base_is_head"
+    return bases[0], None
 
 
-def tree_is_partial(root: Path, tree: str) -> bool:
-    """True when sparse-checkout left some tracked file under ``tree`` unmaterialized (skip-worktree)."""
-    listing = git_ok("ls-files", "-v", "--", tree, cwd=root)
-    return listing is not None and any(line.startswith("S ") for line in listing.splitlines())
+def outgoing_base(update: Update, root: Path) -> tuple[str, str | None]:
+    """``(base, fallback)``: the commit below the range the gate validates, never inferred from HEAD.
 
+    The range is the change the pull request carries, so the scans see only the branch's own
+    commits (#10820, #11207). A fast-forward keeps the remote tip, whose range lies inside
+    ``merge-base..head``, unless the head merged newer ``origin/main`` into it: the merge-base then
+    replaces the tip, on Git's positive answer that it is not an ancestor of the tip (``is-ancestor``
+    exits 1). A new branch or a divergent tip starts at the merge-base.
 
-def defer_to_ci(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """Split ``nodes`` into ``(run_here, deferred_to_ci)``; every deferral is recorded by the caller.
-
-    Two reasons defer an entry.  A whole module whose tracked CI duration exceeds ``HEAVY_MODULE_S``
-    cannot fit the budget (function entries and unknown durations run).  An entry that reads a tree
-    a sparse worktree omits cannot pass here; it defers only while sparse-checkout has left part of
-    the tree unmaterialized, so a full checkout runs it.
+    ``fallback`` names why the merge-base could not set the base (``main_merge_base`` reasons, or
+    ``merge_base_unproven`` for an ``is-ancestor`` error). The base is then the previous one, the remote
+    tip or Git's single merge-base answer, and the scans cover that range. A tip equal to
+    the head is nothing outgoing; with no merge-base at all a new or divergent tip is ``range_unresolved``.
     """
-    try:
-        durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        durations = {}
-    durations = durations if isinstance(durations, dict) else {}
-    absent = {
-        node for tree, tree_nodes in SPARSE_TREE_NODES.items() if tree_is_partial(root, tree) for node in tree_nodes
-    }
-
-    def deferred(node: str) -> bool:
-        cost = durations.get(node)
-        heavy = "::" not in node and (
-            (isinstance(cost, int | float) and cost > HEAVY_MODULE_S)
-            or (node not in durations and node in CI_DEFERRED_MODULES)
-        )
-        return heavy or node in absent
-
-    return tuple(n for n in nodes if not deferred(n)), tuple(n for n in nodes if deferred(n))
-
-
-def outgoing_base(update: Update, root: Path) -> str:
-    """The commit below the outgoing range; never inferred from HEAD or shell arguments."""
-    if (
+    if update.remote_sha == update.local_sha:
+        return update.remote_sha, None
+    base, fallback = main_merge_base(update, root)
+    fast_forward = (
         update.remote_sha != ZERO_SHA
         and git_ok("merge-base", "--is-ancestor", update.remote_sha, update.local_sha, cwd=root) is not None
-    ):
-        return update.remote_sha
-    base = (git_ok("merge-base", "origin/main", update.local_sha, cwd=root) or "").strip()
-    if not base:
+    )
+    if fast_forward:
+        if base is None:
+            return update.remote_sha, fallback
+        try:
+            answer = git("merge-base", "--is-ancestor", base, update.remote_sha, cwd=root).returncode
+        except (OSError, subprocess.SubprocessError):
+            answer = None
+        if answer in (0, 1):  # 1 is Git's "not an ancestor"; other non-zero codes are errors
+            return (base if answer == 1 else update.remote_sha), None
+        return update.remote_sha, "merge_base_unproven"
+    if base is not None:
+        return base, None
+    previous = (git_ok("merge-base", "origin/main", update.local_sha, cwd=root) or "").strip()
+    if not previous:
         raise GateOutcome(
             "range_unresolved",
             f"cannot resolve the outgoing range for {update.local_ref}: no merge-base with origin/main",
         )
-    return base
+    return previous, fallback
 
 
 def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str]) -> bool:
@@ -360,12 +281,12 @@ def reject_untracked_inputs(root: Path) -> None:
         shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
         raise GateOutcome(
             "untracked_inputs",
-            f"untracked or ignored files outside the outgoing commit could change the test run: {shown}; "
+            f"untracked or ignored files outside the outgoing commit could change the validation run: {shown}; "
             "commit them or remove them first",
         )
 
 
-def build_plan(update: Update, root: Path) -> Plan | None:
+def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan | None:
     head = (git_ok("rev-parse", "HEAD", cwd=root) or "").strip()
     if head != update.local_sha:
         raise GateOutcome(
@@ -373,40 +294,41 @@ def build_plan(update: Update, root: Path) -> Plan | None:
             f"{update.local_ref} ({update.local_sha[:12]}) is not the checked-out HEAD ({head[:12] or 'unknown'}); "
             "push from the worktree that has the commit checked out so the exact commit is the one validated",
         )
-    dirty = git_ok("status", "--porcelain", "--untracked-files=no", cwd=root)
-    if dirty is None or dirty.strip():
+    dirty = git_records("status", "--porcelain", "-z", "--untracked-files=no", "--ignore-submodules=none", cwd=root)
+    if dirty is None or dirty:
         raise GateOutcome("dirty_tree", "tracked files differ from the outgoing commit; commit or restore them first")
     reject_untracked_inputs(root)
-    base = outgoing_base(update, root)
-    if base == head:
+    base, base_fallback = outgoing_base(update, root)
+    if base == head and base_fallback is None:  # only a remote tip equal to the head is nothing outgoing
         return None
-    names = git_ok("diff", "--name-only", "--diff-filter=ACMR", f"{base}..{head}", cwd=root)
-    if names is None:
-        raise GateOutcome("range_unresolved", f"cannot list changed paths for {base[:12]}..{head[:12]}")
-    changed = tuple(sorted(path for path in names.splitlines() if path))
-    changed_tests = tuple(path for path in changed if TEST_FILE_RE.match(path))
-    unmaterialized = tuple(path for path in changed_tests if not (root / path).is_file())
-    if unmaterialized:
-        raise GateOutcome(
-            "changed_tests_unmaterialized",
-            "the outgoing range changes test files this worktree has not materialized (sparse-checkout): "
-            f"{', '.join(unmaterialized)}; run `git sparse-checkout add tests` and push again",
-            incomplete=True,
-        )
-    registry, version = load_registry(root)
-    runnable, deferred = defer_to_ci(registry, root)
-    absent = tuple(
-        dict.fromkeys(node.split("::", 1)[0] for node in runnable if not (root / node.split("::", 1)[0]).is_file())
-    )
-    if absent:  # only the recorded deferrals above may skip a registered invariant; an absent file may not
-        raise GateOutcome(
-            "registry_entries_unmaterialized",
-            "registered invariant files are missing from this worktree (sparse-checkout or a stale registry): "
-            f"{', '.join(absent)}; run `git sparse-checkout add tests` and push again",
-            incomplete=True,
-        )
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
-    return Plan(head, tree, base, version, runnable, changed_tests, changed, deferred)
+    return Plan(head, tree, base, base_fallback=base_fallback, tools=tool_versions(launcher, config))
+
+
+def tool_versions(launcher: str, config: str) -> dict[str, str | None]:
+    """``TOOL_NAMES``: the gate, launcher, pre-commit configuration, interpreter and installed hook tools;
+    unknown is ``None``."""
+
+    def digest(path: Path) -> str | None:
+        try:
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+        except OSError:
+            return None
+
+    def installed(distribution: str) -> str | None:
+        try:
+            return importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError:
+            return None
+
+    return {
+        "gate_source": digest(Path(__file__)),
+        "launcher": digest(Path(launcher)),
+        "pre_commit_config": digest(Path(config)),
+        "python": sys.version,
+        "pytest": installed("pytest"),
+        "pre_commit": installed("pre-commit"),
+    }
 
 
 # ---- receipts -------------------------------------------------------------
@@ -421,15 +343,14 @@ def state_dir(root: Path) -> Path:
 
 
 def receipt_key(plan: Plan) -> dict[str, object]:
+    """What a green run validated: the gate version, the committed range and the tools that ran it."""
     return {
         "gate_version": GATE_VERSION,
         "head": plan.head,
         "tree": plan.tree,
         "base": plan.base,
-        "registry_version": plan.registry_version,
-        "deferred_to_ci": list(plan.deferred_to_ci),
-        "node_ids": list(plan.node_ids),
-        "changed_paths": list(plan.changed_paths),
+        "base_fallback": plan.base_fallback,
+        "tools": dict(plan.tools),
     }
 
 
@@ -437,16 +358,30 @@ def receipt_path(state: Path, plan: Plan) -> Path:
     return state / "receipts" / f"{plan.head}-{plan.base}.json"
 
 
+def receipt_seal(body: dict[str, object]) -> str:
+    """The digest of a receipt's key, outcome and time, so any later edit of one field shows."""
+    return hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
+
+
 def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
+    """A live, sealed green receipt for the same inputs.
+
+    Every field binds (#11207): the receipt is exactly its key, outcome, time and seal, and its key is
+    exactly what ``receipt_key`` writes for ``plan``. A receipt of an earlier gate version carries another
+    ``gate_version`` and other fields (a test selection, before #11276), so it never stands for this run.
+    """
     try:
         receipt = json.loads(receipt_path(state, plan).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return False
+    if not isinstance(receipt, dict) or set(receipt) != {"key", "outcome", "at", "seal"}:
+        return False
+    body = {name: receipt[name] for name in ("key", "outcome", "at")}
     return (
-        isinstance(receipt, dict)
-        and receipt.get("key") == receipt_key(plan)
-        and receipt.get("outcome") == "green"
-        and isinstance(receipt.get("at"), int | float)
+        receipt["seal"] == receipt_seal(body)
+        and receipt["key"] == receipt_key(plan)
+        and receipt["outcome"] == "green"
+        and type(receipt["at"]) in (int, float)
         and 0 <= now - receipt["at"] <= RECEIPT_TTL_S
     )
 
@@ -455,7 +390,8 @@ def write_receipt(state: Path, plan: Plan, now: float) -> None:
     path = receipt_path(state, plan)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps({"key": receipt_key(plan), "outcome": "green", "at": now}), encoding="utf-8")
+    body: dict[str, object] = {"key": receipt_key(plan), "outcome": "green", "at": now}
+    temporary.write_text(json.dumps({**body, "seal": receipt_seal(body)}), encoding="utf-8")
     temporary.replace(path)
 
 
@@ -564,8 +500,6 @@ def ticket_identity(update: Update, root: Path | None = None) -> dict[str, str]:
 def coalescing_state(state: Path, plan: Plan) -> Path:
     """The head groups serialization only; the existing full key still decides reuse."""
     if any(re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (plan.head, plan.tree, plan.base)):
-        raise GateOutcome("validation_incomplete", "immutable validation identity is unavailable", incomplete=True)
-    if not plan.registry_version or any(not node for node in plan.node_ids):
         raise GateOutcome("validation_incomplete", "immutable validation identity is unavailable", incomplete=True)
     heads = state / "heads"
     path = heads / plan.head
@@ -793,7 +727,8 @@ class ResourceScope:
                 "max_concurrent_runs": 2,
                 "unit": self.unit,
                 "cgroup": self.group,
-                "effective_workers": int(parallel_options()[1]) if parallel_options() else 1,
+                # The gate runs no test workers (#11276); one keeps the proof that older gates read valid.
+                "effective_workers": 1,
                 "ticket_inode": os.fstat(admission._ticket_fd).st_ino,
             }
             path = admission._ticket.with_suffix(".scope.json")
@@ -812,12 +747,16 @@ class ResourceScope:
     def execute(
         self, plan: Plan, config: str, deadline: float, event: dict[str, object], *, stage_budget_s: float
     ) -> None:
-        assert self.stream is not None and self.channel is not None
-        self.channel.settimeout(
-            max(0.01, deadline - time.monotonic()) + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
-        )
+        if self.stream is None or self.channel is None or self.process is None:
+            # Never started, or already closed: no check may run and nothing may be inferred (#10820).
+            raise GateOutcome(
+                "scope_setup_unavailable",
+                "the scoped executor was not set up or is already closed; no check ran",
+                incomplete=True,
+            )
+        self.channel.settimeout(max(0.01, deadline - time.monotonic()) + 2 * CLEANUP_BUDGET_S)
         packet = {
-            "plan": {name: value for name, value in vars(plan).items() if name != "node_ids"},
+            "plan": vars(plan),
             "root": str(self.root),
             "launcher": self.launcher,
             "config": config,
@@ -851,6 +790,7 @@ class ResourceScope:
         if self.process is None:
             return
         deadline = time.monotonic() + CLEANUP_BUDGET_S
+        step = "unit kill"  # the refusal names the step that could not be verified
         try:
             if not self.completed and (self.process.poll() is None or self.group is not None):
                 subprocess.run(
@@ -860,8 +800,10 @@ class ResourceScope:
                     check=False,
                     env=clean_environment(),
                 )
+            step = "executor reap"
             self.process.wait(timeout=max(0.01, deadline - time.monotonic()))
             if self.group is not None:
+                step = "descendant drain"
                 group = scope_cgroup(self.group)
                 while True:
                     try:
@@ -874,8 +816,11 @@ class ResourceScope:
                         raise OSError("scope still contains descendants")
                     time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
         except (OSError, subprocess.SubprocessError, ValueError) as error:
+            settled = "settled" if self.completed else "not proven settled"
             raise GateOutcome(
-                "validation_incomplete", "own scope cleanup is unverified; stop", incomplete=True
+                "validation_incomplete",
+                f"own scope cleanup is unverified at the {step} ({type(error).__name__}; executor {settled}); stop",
+                incomplete=True,
             ) from error
         finally:
             self.process = None
@@ -1059,6 +1004,11 @@ class Admission:
                         position, depth = 2, depth + 1
                     else:
                         self._exclusive = True
+                        if self.scope is not None:
+                            # The scope did not start (e.g. sharing.lock was busy): exclusive admission runs
+                            # the serial path, so the holder must not keep an idle executor (#10820).
+                            self.scope.reason = "exclusive_admission_serial"
+                            self.scope = None
                         self.queue_depth = max(self.queue_depth, depth)
                         self.queue_position = self.queue_position or 1
                         return self
@@ -1160,6 +1110,33 @@ def terminate_run(process: subprocess.Popen[str], token: str) -> bool:
     return True
 
 
+def stage_timeout(
+    detail: str,
+    diagnostics: dict[str, object] | None,
+    observed: dict[str, object] | None = None,
+) -> GateOutcome:
+    """Type a timeout by the host load observed at it (#11140); unknown load stays unknown.
+
+    ``timeout_under_load`` needs a positive observation above an admission cap (``CPU_SOME_AVG10_MAX``,
+    ``CPU_SOME_AVG60_MAX`` or the available-memory floor, as ``admission_resources`` qualifies a host). A host
+    observed below every cap, or not observed at all, gives ``timeout``. Either way the push is not validated
+    and never green.
+    """
+    observed = observed if observed is not None else admission_resources()
+    values = {name: observed.get(name) for name in ("cpu_some_avg10", "cpu_some_avg60", "mem_available_bytes")}
+    if any(value is None for value in values.values()):
+        load = "unknown"
+        described = "unobserved"
+    else:
+        load = "below_caps" if observed.get("qualified") else "above_caps"
+        observation = ", ".join(f"{name}={value}" for name, value in values.items())
+        described = f"{'below' if load == 'below_caps' else 'above'} the admission caps ({observation})"
+    if diagnostics is not None:
+        diagnostics["load_at_timeout"] = {**values, "load": load}
+    reason = "timeout_under_load" if load == "above_caps" else "timeout"
+    return GateOutcome(reason, f"{detail}; host load at the timeout: {described}", incomplete=True)
+
+
 def run_bounded(
     command: list[str],
     *,
@@ -1167,23 +1144,19 @@ def run_bounded(
     deadline: float,
     label: str,
     diagnostics: dict[str, object] | None = None,
-    extra_env: dict[str, str] | None = None,
 ) -> tuple[int, str]:
     """Run in its own process group; on budget exhaustion kill the group and report incomplete.
 
     Output goes to a file, never a pipe, so a descendant that outlives the command cannot block the
     gate on a pipe it still holds.  Every exit path then kills the run's leftover descendants.
-    ``extra_env`` adds variables to the cleaned environment, such as the test-slot holder marker.
     """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
         if diagnostics is not None:
             diagnostics["child_unavailable_reason"] = "budget_exhausted_before_start"
-        raise GateOutcome(
-            "validation_incomplete", f"{label}: time budget exhausted before start (timeout)", incomplete=True
-        )
+        raise stage_timeout(f"{label}: time budget exhausted before start (timeout)", diagnostics)
     token = uuid.uuid4().hex
-    environment = {**clean_environment(), **(extra_env or {}), RUN_TOKEN_ENV: token}
+    environment = {**clean_environment(), RUN_TOKEN_ENV: token}
     if diagnostics is not None:
         diagnostics["child_unavailable_reason"] = "output_file_unavailable"
     with tempfile.TemporaryFile() as sink:
@@ -1204,10 +1177,12 @@ def run_bounded(
             except OSError as exc:
                 raise GateOutcome("validation_incomplete", f"{label}: cannot start ({exc})", incomplete=True) from exc
             timed_out = False
+            observed: dict[str, object] | None = None
             try:
                 process.wait(timeout=remaining)
             except subprocess.TimeoutExpired:
                 timed_out = True
+                observed = admission_resources()  # the host while the stage still ran, before the kill
                 with contextlib.suppress(ProcessLookupError):
                     os.killpg(process.pid, signal.SIGKILL)
             except BaseException:
@@ -1222,9 +1197,7 @@ def run_bounded(
                     raise GateOutcome(
                         "validation_incomplete", f"{label}: could not reap the timed-out process", incomplete=True
                     ) from None
-                raise GateOutcome(
-                    "validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True
-                )
+                raise stage_timeout(f"{label}: exceeded the time budget (timeout)", diagnostics, observed)
             sink.seek(0)
             return process.returncode, sink.read().decode("utf-8", errors="replace")
         finally:
@@ -1242,10 +1215,6 @@ def run_bounded(
                     diagnostics["output_tail"] = tail(sink.read(OUTPUT_TAIL_BYTES).decode("utf-8", errors="replace"))
                 except OSError:
                     diagnostics["output_unavailable_reason"] = "output_read_error"
-
-
-def failing_node_ids(output: str) -> tuple[str, ...]:
-    return tuple(dict.fromkeys(FAILURE_RE.findall(output)))
 
 
 def run_pre_commit_stage(
@@ -1302,510 +1271,6 @@ def run_pre_commit_stage(
         raise GateOutcome("pre_commit_failed", tail(output), failing=("check-no-internal-ids",))
 
 
-def test_process_limit() -> int:
-    """Read the configured process ceiling; invalid configuration refuses validation."""
-    value = os.environ.get(MAX_TEST_PROCESSES_ENV, "4")
-    try:
-        if len(value) > 4 or re.fullmatch(r"[0-9]+", value) is None or int(value) < 1:
-            raise ValueError
-        return int(value)
-    except ValueError:
-        raise GateOutcome(
-            "invalid_configuration", f"{MAX_TEST_PROCESSES_ENV} must be a positive integer", incomplete=True
-        ) from None
-
-
-def parallel_options(dist: str = "loadfile", cap: int | None = None) -> list[str]:
-    """Bound configured parallelism by the gate ceiling and any held host slots."""
-    limit = min(test_process_limit(), 2)
-    if cap is not None:
-        limit = min(limit, cap)
-    if limit == 1 or importlib.util.find_spec("xdist") is None:
-        return []
-    return ["-n", str(limit), "--dist", dist]
-
-
-def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
-    """Split the plan's node ids into ``(node_ids, xdist mode)`` runs that together cover every id once.
-
-    Changed test files are distributed per test (``worksteal``, as CI runs them) so one slow
-    changed file cannot pin a single worker for the whole stage (#10610); they run first, as the
-    likeliest to fail. Registered invariant nodes keep whole files on one worker (``loadfile``).
-    """
-    changed = set(plan.changed_tests)
-    distributed = tuple(node for node in plan.node_ids if node.split("::", 1)[0] in changed)
-    grouped = tuple(node for node in plan.node_ids if node.split("::", 1)[0] not in changed)
-    return tuple((nodes, dist) for nodes, dist in ((distributed, "worksteal"), (grouped, "loadfile")) if nodes)
-
-
-def inside_git_tree(path: Path) -> bool:
-    """Whether ``path`` or an ancestor is a Git checkout or a Git directory, as Git discovery finds them.
-
-    A checkout has a ``.git`` entry (directory or gitfile). A Git directory, bare or not, holds
-    ``HEAD``, ``objects`` and ``refs``. An ancestor that cannot be inspected counts as inside.
-    """
-
-    def present(entry: Path) -> bool:
-        try:
-            entry.lstat()
-        except (FileNotFoundError, NotADirectoryError):
-            return False
-        return True
-
-    try:
-        return any(
-            present(directory / ".git") or all(present(directory / name) for name in ("HEAD", "objects", "refs"))
-            for directory in (path, *path.parents)
-        )
-    except OSError:
-        return True
-
-
-def private_directory(path: Path) -> int:
-    """Create ``path`` with mode 0700 if missing and open it without following a link.
-
-    Requires a real directory owned by this user, closed to others, and returns its descriptor for the
-    caller to close.
-    """
-    try:
-        path.mkdir(mode=0o700, exist_ok=True)
-        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-    except OSError as error:
-        raise GateOutcome(
-            "pytest_temp_unavailable",
-            f"cannot create a private pytest base temp directory ({errno.errorcode.get(error.errno, 'error')}); "
-            f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
-            incomplete=True,
-        ) from None
-    info = os.fstat(fd)
-    if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
-        os.close(fd)
-        raise GateOutcome(
-            "pytest_temp_unavailable",
-            "the pytest base temp directory is not private to this user (owner or mode); remove it and push again",
-            incomplete=True,
-        )
-    return fd
-
-
-def scratch_root_refusal(problem: str) -> GateOutcome:
-    """Refuse the push as incomplete over the scratch root, naming the problem's class but never a path."""
-    return GateOutcome(
-        "pytest_temp_unavailable",
-        f"the pytest base temp root {problem}; set {SCRATCH_ROOT_ENV} to a private directory (yours, mode 0700) "
-        "outside every Git checkout",
-        incomplete=True,
-    )
-
-
-def unsafe_scratch_component(info: os.stat_result) -> str | None:
-    """Name the class of a directory or link another user could replace or redirect, or ``None`` if safe.
-
-    Only this user and root are trusted. A directory writable by group or others is safe only when it is
-    sticky, as the system temp directories are: there only an entry's owner can rename or replace it.
-    """
-    kind = "link" if stat.S_ISLNK(info.st_mode) else "directory"
-    if info.st_uid not in (0, os.geteuid()):
-        return f"a {kind} owned by another user"
-    if kind == "directory" and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH) and not info.st_mode & stat.S_ISVTX:
-        return "a directory writable by group or others without the sticky bit"
-    return None
-
-
-def verified_scratch_root(candidate: Path) -> Path:
-    """Resolve ``candidate`` one component at a time from ``/``, verify each, and create what is missing.
-
-    Every directory passed must be safe (``unsafe_scratch_component``), and every link must be owned by
-    this user or root and is followed only into a target that passes the same checks. So no other user
-    can redirect the returned link-free path; same-user changes are outside the gate's trust model
-    (#10654). Missing components are created with mode 0700 below the verified part, after the Git
-    check, and verified again. Raises ``GateOutcome`` for an unsafe or in-Git root, else ``OSError``
-    when the root cannot be inspected or created.
-    """
-
-    def verify(info: os.stat_result) -> None:
-        if not (stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode)):
-            raise NotADirectoryError(errno.ENOTDIR, "a scratch root component is not a directory")
-        problem = unsafe_scratch_component(info)
-        if problem is not None:
-            raise scratch_root_refusal(f"or one of its ancestors is {problem}, so another user could redirect it")
-
-    current = Path("/")
-    verify(os.lstat(current))
-    pending, missing, links = list(reversed((Path.cwd() / candidate).parts[1:])), [], 0
-    while pending:
-        part = pending.pop()
-        if part == "..":
-            if missing:
-                missing.pop()
-            else:
-                current = current.parent  # an ancestor of a verified directory, so verified itself
-            continue
-        if missing:
-            missing.append(part)
-            continue
-        try:
-            info = os.lstat(current / part)
-        except FileNotFoundError:
-            missing.append(part)
-            continue
-        verify(info)
-        if not stat.S_ISLNK(info.st_mode):
-            current = current / part
-            continue
-        links += 1
-        if links > SCRATCH_LINK_LIMIT:
-            raise scratch_root_refusal("passes through a link loop")
-        target = Path(os.readlink(current / part))
-        if target.is_absolute():
-            current = Path("/")
-        pending.extend(reversed(target.parts[1:] if target.is_absolute() else target.parts))
-    if inside_git_tree(current.joinpath(*missing)):
-        raise scratch_root_refusal("is inside a Git checkout or Git directory")
-    for part in missing:
-        current = current / part
-        with contextlib.suppress(FileExistsError):  # a concurrent run created it; verify it like any other
-            os.mkdir(current, 0o700)
-        info = os.lstat(current)
-        verify(info)
-        if stat.S_ISLNK(info.st_mode):
-            raise NotADirectoryError(errno.ENOTDIR, "a created scratch root component is not a directory")
-    return current
-
-
-def pytest_temp_parent(state: Path) -> Path:
-    """Return this repository's private parent for pytest base temps, outside every Git tree (#10654).
-
-    The root follows the fleet scratch convention: ``LU_SCRATCH_ROOT`` when set (strictly), else
-    ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Its whole
-    ancestry is verified before anything is created (``verified_scratch_root``). Below it a per-user
-    0700 directory holds one 0700 directory per Git common dir. Nothing sweeps them: each run removes
-    only its own base (``own_base_temp``) and the host's scratch aging owns what a killed run leaves. An
-    unsafe or uncreatable location refuses the push as incomplete; an unsafe default never falls back,
-    and nothing falls back into Git.
-    """
-    override = os.environ.get(SCRATCH_ROOT_ENV, "").strip()
-    candidates = (
-        [Path(override)] if override else [DEFAULT_SCRATCH_ROOT, Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME]
-    )
-    scratch, failure = None, "error"
-    for candidate in candidates:
-        try:
-            scratch = verified_scratch_root(candidate)
-        except OSError as error:
-            failure = errno.errorcode.get(error.errno, "error")
-            continue
-        break
-    if scratch is None:
-        raise scratch_root_refusal(f"cannot be created ({failure})")
-    user = scratch / f"pre-push-gate-{os.geteuid()}"
-    parent = user / hashlib.sha256(os.fsencode(state.resolve())).hexdigest()[:32]
-    for directory in (user, parent):
-        os.close(private_directory(directory))
-    if inside_git_tree(parent):
-        raise scratch_root_refusal("is inside a Git checkout or Git directory")
-    return parent
-
-
-def remove_own_base_temp(parent_fd: int, name: str) -> None:
-    """Remove ``name`` below ``parent_fd`` and everything in it, never following a link.
-
-    Every directory is opened relative to its parent's descriptor with ``O_NOFOLLOW``, so a rename or
-    link above or inside the base cannot redirect the removal. A directory a test left without owner
-    access is first given 0700, as ``tempfile.TemporaryDirectory`` does, without following a link.
-    """
-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    try:
-        if not stat.S_ISDIR(os.stat(name, dir_fd=parent_fd, follow_symlinks=False).st_mode):
-            os.unlink(name, dir_fd=parent_fd)
-            return
-        try:
-            fd = os.open(name, flags, dir_fd=parent_fd)
-        except PermissionError:
-            os.chmod(name, 0o700, dir_fd=parent_fd, follow_symlinks=False)
-            fd = os.open(name, flags, dir_fd=parent_fd)
-        try:
-            os.fchmod(fd, 0o700)
-            for entry in os.listdir(fd):
-                remove_own_base_temp(fd, entry)
-        finally:
-            os.close(fd)
-        os.rmdir(name, dir_fd=parent_fd)
-    except FileNotFoundError:
-        return
-
-
-@contextlib.contextmanager
-def own_base_temp(parent: Path):
-    """Create this run's own pytest base temp below ``parent`` and remove only it afterwards (#10654).
-
-    The private parent is opened once without following a link, and the base is created and removed
-    relative to that descriptor, so replacing any ancestor after validation cannot redirect either step
-    into another run's base. Pytest deletes and recreates a given ``--basetemp``, so the base is held by
-    name inside the anchored parent, not by its own descriptor. No other run's base is ever removed.
-    """
-    parent_fd = private_directory(parent)
-    try:
-        name = f"pytest-{uuid.uuid4().hex}"
-        try:
-            os.mkdir(name, 0o700, dir_fd=parent_fd)
-        except OSError as error:
-            raise GateOutcome(
-                "pytest_temp_unavailable",
-                f"cannot create the pytest base temp ({errno.errorcode.get(error.errno, 'error')})",
-                incomplete=True,
-            ) from None
-        try:
-            yield str(parent / name)
-        except BaseException:
-            with contextlib.suppress(OSError):  # the run's own outcome outranks a cleanup failure
-                remove_own_base_temp(parent_fd, name)
-            raise
-        try:
-            remove_own_base_temp(parent_fd, name)
-        except OSError as error:
-            raise GateOutcome(
-                "validation_incomplete",
-                f"pytest base temp cleanup failed ({errno.errorcode.get(error.errno, 'error')})",
-                incomplete=True,
-            ) from None
-    finally:
-        os.close(parent_fd)
-
-
-def load_test_slots(path: Path | None = None):
-    """Import the self-contained host test-slot governor from this gate's checkout; refuse when it cannot.
-
-    The governor's directory is appended to ``sys.path`` only for the import, so the standard library and
-    installed packages keep every name, and the imported file must be the expected one.
-    """
-    path = (path or Path(__file__).resolve().parents[1] / TEST_SLOTS_MODULE).resolve()
-    directory = str(path.parent)
-    sys.path.append(directory)
-    try:
-        import test_slots as governor
-    except Exception as error:  # any load failure is a typed refusal, never a crash or an ungoverned run
-        raise GateOutcome(
-            "test_slots_unavailable",
-            f"the host test-slot governor cannot be loaded ({type(error).__name__})",
-            incomplete=True,
-        ) from error
-    finally:
-        sys.path.pop()  # the governor adds no path entries, so the last one is the entry appended above
-    if Path(governor.__file__).resolve() != path:
-        raise GateOutcome(
-            "test_slots_unavailable", "another test_slots module shadows the host test-slot governor", incomplete=True
-        )
-    return governor
-
-
-def acquire_pytest_slots(plan: Plan, event: dict[str, object]) -> tuple[object | None, float]:
-    """Hold host test slots for the pytest stage; return the hold and the wait on this gate's clock.
-
-    The wait is recorded apart (``slot_wait_s``) so neither budget pays for it. A disabled pool changes
-    nothing; a gate nested in a holder runs inside its holder's slots; a refusal is typed and incomplete.
-    """
-    record: dict[str, object] = {
-        "status": "not_needed",
-        "requested": None,
-        "held": None,
-        "pool_size": None,
-        "wait_s": 0.0,
-        "queue_position": None,
-    }
-    event.update(test_slots=record, slot_wait_s=0.0)
-    if not plan.node_ids:
-        return None, 0.0
-    governor = load_test_slots()
-    options = parallel_options()
-    record["requested"] = requested = int(options[1]) if options else 1
-    try:
-        if not governor.enabled():
-            record["status"] = "disabled"
-            return None, 0.0
-        inherited = governor.inherited_hold()
-        if inherited is not None:
-            record.update(status="inherited", held=inherited)
-            return governor.Hold.inherited(inherited), 0.0
-        limit = min(governor.wait_timeout(), TEST_SLOT_WAIT_S)
-        started = time.monotonic()
-        try:
-            hold = governor.acquire(requested, kind="gate", wait_s=limit)
-        finally:
-            record["wait_s"] = event["slot_wait_s"] = time.monotonic() - started
-    except governor.SlotError as error:
-        raise GateOutcome(f"test_slots_{error.reason}", str(error), incomplete=True) from None
-    record.update(status="held", held=hold.count, pool_size=hold.pool_size, queue_position=hold.queue_position)
-    return hold, record["wait_s"]
-
-
-def run_pytest_stage(
-    plan: Plan,
-    root: Path,
-    launcher: str,
-    deadline: float,
-    *,
-    diagnostics: dict[str, object] | None = None,
-    admission: Admission | None = None,
-    slots: object | None = None,
-) -> str:
-    if diagnostics is not None:
-        diagnostics["invariant_serial_total_s"] = None
-    state = state_dir(root)
-    state.mkdir(parents=True, exist_ok=True)
-    temp_parent = pytest_temp_parent(state)
-    # Only the actual exclusive global holder can prove that no other gate owns these bases.
-    exclusive = (
-        admission is not None
-        and admission._exclusive
-        and admission._fd is not None
-        and admission.scope is None
-        and admission.state == state
-    )
-    if diagnostics is not None:
-        diagnostics["stale_pytest_cleanup"] = "exclusive_sweep" if exclusive else "skipped_shared_or_unknown"
-    if exclusive:
-        for stale in state.glob("pytest-*"):
-            reap_stale_node(stale)
-    if not plan.node_ids:
-        return "no tests selected"
-    invocations = pytest_invocations(plan)
-    # Never more test processes than the host test slots held (#10662).
-    cap = slots.count if slots is not None else None
-    slot_environment = slots.environment() if slots is not None else None
-    if slot_environment is not None:
-        capped = apply_thread_caps(clean_environment())
-        slot_environment.update({name: capped[name] for name in THREAD_CAPS if name in capped})
-    options = parallel_options(cap=cap)
-    if diagnostics is not None:
-        requested = test_process_limit()
-        diagnostics.update(
-            requested_test_processes=requested,
-            effective_test_processes=int(options[1]) if options else 1,
-            test_processes_clamp_reason="gate_process_limit" if requested > 2 else None,
-            pytest_invocations=[{"dist": dist, "nodes": len(nodes)} for nodes, dist in invocations],
-        )
-    # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
-    summaries = []
-    # A changed whole file can subsume registered tests; count that invocation's wall time too.
-    invariant_files = {node.split("::", 1)[0] for node in plan.registry_nodes}
-    for nodes, dist in invocations:
-        with own_base_temp(temp_parent) as base_temp:
-            started = time.monotonic()
-            try:
-                code, output = run_bounded(
-                    [
-                        "bash",
-                        launcher,
-                        "-m",
-                        "pytest",
-                        *nodes,
-                        "-rfE",
-                        "-q",
-                        "--tb=short",
-                        "-p",
-                        "no:cacheprovider",
-                        "--basetemp",
-                        base_temp,
-                        *parallel_options(dist, cap=cap),
-                    ],
-                    cwd=root,
-                    deadline=deadline,
-                    label="pytest stage",
-                    diagnostics=diagnostics,
-                    extra_env=slot_environment,
-                )
-            finally:
-                if (
-                    any(node.split("::", 1)[0] in invariant_files for node in nodes)
-                    and diagnostics is not None
-                    and diagnostics.get("child_unavailable_reason") in (None, "exit_unobserved")
-                ):
-                    diagnostics["invariant_serial_total_s"] = (
-                        diagnostics["invariant_serial_total_s"] or 0.0
-                    ) + time.monotonic() - started
-        failing = failing_node_ids(output)
-        if code == 0:
-            match = SUMMARY_RE.findall(output)
-            summaries.append(match[-1].strip("= ") if match else "pytest passed")
-        elif code == 1 or failing:
-            raise GateOutcome("tests_failed", tail(output), failing=failing)
-        elif code != NO_TESTS_COLLECTED:
-            break
-    # One run collecting nothing is fine while the selection as a whole ran tests.
-    if summaries and code in (0, NO_TESTS_COLLECTED):
-        return "; ".join(summaries)
-    raise GateOutcome("pytest_error", f"pytest exited {code} without a verdict\n{tail(output)}", incomplete=True)
-
-
-class Shadow:
-    """Importer-closure selection started beside the blocking stages and only recorded.
-
-    It never gates: every failure, including a timeout, becomes data in the
-    measurement row.  Output goes to a file so a large selection cannot fill a pipe.
-    """
-
-    def __init__(self, plan: Plan, root: Path, launcher: str):
-        self.output = tempfile.TemporaryFile(mode="w+")  # noqa: SIM115 - closed in finish()
-        self.deadline = time.monotonic() + SHADOW_BUDGET_S
-        self.token = uuid.uuid4().hex
-        try:
-            self.process: subprocess.Popen[str] | None = subprocess.Popen(
-                ["bash", launcher, "-m", "scripts.ci.pre_push_shadow", "--paths", *plan.changed_paths],
-                cwd=root,
-                env={**clean_environment(), RUN_TOKEN_ENV: self.token},
-                stdin=subprocess.DEVNULL,
-                stdout=self.output,
-                stderr=subprocess.DEVNULL,
-                text=True,
-                start_new_session=True,
-            )
-        except OSError:
-            self.process = None
-
-    def finish(self) -> dict[str, object]:
-        try:
-            if self.process is None:
-                return {"status": "unavailable", "detail": "could not start"}
-            try:
-                self.process.wait(timeout=max(0.0, self.deadline - time.monotonic()))
-            except subprocess.TimeoutExpired:
-                terminate_run(self.process, self.token)
-                return {"status": "unavailable", "detail": "shadow time budget exhausted"}
-            terminate_run(self.process, self.token)  # the selector exited; its detached descendants must not outlive it
-            if self.process.returncode != 0:
-                return {"status": "unavailable", "detail": f"exit {self.process.returncode}"}
-            try:
-                self.output.seek(0)
-                selection = json.loads(self.output.read().strip().splitlines()[-1])
-            except (OSError, ValueError, IndexError):
-                return {"status": "unavailable", "detail": "unparseable output"}
-            if not isinstance(selection, dict):
-                return {"status": "unavailable", "detail": "unexpected result shape"}
-            selected = selection.get("selected_tests")
-            if not isinstance(selected, list) or not all(isinstance(test, str) for test in selected):
-                return {"status": "unavailable", "detail": "unexpected selected_tests shape"}
-            selected = sorted(selected)
-            try:
-                digest = hashlib.sha256("\n".join(selected).encode()).hexdigest()[:16]
-            except UnicodeEncodeError:  # e.g. a lone surrogate from a JSON "\ud800" escape
-                return {"status": "unavailable", "detail": "cannot encode selected_tests"}
-            return {
-                "status": "recorded",
-                "selected_count": len(selected),
-                "components": selection.get("components", []),
-                "fallback_reasons": selection.get("fallback_reasons", []),
-                "selected_digest": digest,
-            }
-        finally:
-            self.output.close()
-
-    def abandon(self) -> None:
-        if self.process is not None:
-            terminate_run(self.process, self.token)
-        self.output.close()
-
-
 def bounded(name: str, ceiling: float) -> float:
     """An environment override may only shorten a bound, never lengthen it."""
     try:
@@ -1824,8 +1289,8 @@ def tail(output: str, lines: int = 40) -> str:
 class Budget:
     """Push execution budget: a total shared by every ref update, plus each stage's own allowance.
 
-    The total starts at admission and excludes later admission waits and host test-slot waits. Each
-    blocking stage's allowance starts when that stage starts and stays inside the total (#10642).
+    The total starts at admission and excludes later admission waits. The blocking stage's allowance
+    starts when that stage starts and stays inside the total (#10642).
     """
 
     def __init__(self, seconds: float, stage_seconds: float = STAGE_BUDGET_S):
@@ -1851,7 +1316,7 @@ class Budget:
         return self.deadline
 
     def exclude_wait(self, waited: float) -> None:
-        """Time spent waiting (admission, host test slots) never spends the run budget."""
+        """Time spent waiting for admission never spends the run budget."""
         if self._deadline is not None:
             self._deadline += waited
 
@@ -1906,50 +1371,20 @@ def execute_stages(
     *,
     stage_budget_s: float,
     persist_receipt: bool = True,
-    admission: Admission | None = None,
 ) -> None:
-    state = state_dir(root)
-    shadow: Shadow | None = None
-    settled = False
-    try:
-        shadow = Shadow(plan, root, launcher)
-        with stage_measurement(event, "pre_commit") as diagnostics:
-            run_pre_commit_stage(
-                plan,
-                root,
-                launcher,
-                config,
-                stage_deadline(deadline, stage_budget_s, diagnostics),
-                diagnostics=diagnostics,
-            )
-        slots, slot_wait = acquire_pytest_slots(plan, event)
+    """The pre-commit stage, then the green receipt; the gate runs no tests (#11276)."""
+    with stage_measurement(event, "pre_commit") as diagnostics:
+        run_pre_commit_stage(
+            plan, root, launcher, config, stage_deadline(deadline, stage_budget_s, diagnostics), diagnostics=diagnostics
+        )
+    if persist_receipt:
         try:
-            with stage_measurement(event, "pytest") as diagnostics:
-                event["pytest"] = run_pytest_stage(
-                    plan,
-                    root,
-                    launcher,
-                    stage_deadline(deadline + slot_wait, stage_budget_s, diagnostics),
-                    diagnostics=diagnostics,
-                    admission=admission,
-                    slots=slots,
-                )
-        finally:
-            if slots is not None:
-                slots.release()
-        if persist_receipt:
-            try:
-                write_receipt(state, plan, time.time())
-            except OSError as error:
-                raise GateOutcome(
-                    "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
-                ) from error
-        event["shadow"] = shadow.finish()
-        settled = True
-        event["outcome"] = "green"
-    finally:
-        if not settled and shadow is not None:  # whatever escapes, the shadow must not outlive the hook
-            shadow.abandon()
+            write_receipt(state_dir(root), plan, time.time())
+        except OSError as error:
+            raise GateOutcome(
+                "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
+            ) from error
+    event["outcome"] = "green"
 
 
 def validate(
@@ -1957,7 +1392,7 @@ def validate(
 ) -> None:
     event["local_ref"] = update.local_ref
     event.update(admission_wait_s=0.0, queue_depth=0, queue_position=0)
-    plan = build_plan(update, root)
+    plan = build_plan(update, root, launcher, config)
     if plan is None:
         event["outcome"] = "green"
         event["detail"] = "no outgoing commits"
@@ -1965,9 +1400,7 @@ def validate(
     event.update(
         head=plan.head,
         base=plan.base,
-        nodes=len(plan.node_ids),
-        registry_version=plan.registry_version,
-        deferred_to_ci=list(plan.deferred_to_ci),
+        base_fallback=plan.base_fallback,
     )
     state = state_dir(root)
     head_state = coalescing_state(state, plan)
@@ -1986,7 +1419,7 @@ def validate(
             locks.enter_context(head_admission)
             # Followers have no global ticket. A head is only a serialization group,
             # so rebuild inputs and compare the entire frozen key before receipt reuse.
-            refreshed = build_plan(update, root)
+            refreshed = build_plan(update, root, launcher, config)
             if refreshed is None or receipt_key(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for coalescing")
             if receipt_is_fresh(state, plan, time.time()):
@@ -1994,9 +1427,7 @@ def validate(
                 if budget is not None and budget._deadline is not None:
                     budget.after_admission(head_admission.waited)
                 return
-            options = parallel_options()
-            effective = int(options[1]) if options else 1
-            if concurrent_run_limit() == 2 and effective <= 4:
+            if concurrent_run_limit() == 2:
                 scope = ResourceScope(root, launcher, head_admission)
             scope_kwargs = {"scope": scope} if scope is not None else {}
             admission = Admission(state, wait_s, update=update, prior=head_admission, **scope_kwargs)
@@ -2011,7 +1442,7 @@ def validate(
             }
             # A matching gate may have finished while this caller was queued. Rebuild the plan
             # first to preserve the dirty-tree/untracked-input checks after the wait.
-            refreshed = build_plan(update, root)
+            refreshed = build_plan(update, root, launcher, config)
             if refreshed is None or receipt_key(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for admission")
             if receipt_is_fresh(state, plan, time.time()):
@@ -2031,21 +1462,15 @@ def validate(
                         "receipt_unwritable", "cannot persist the green receipt", incomplete=True
                     ) from error
             else:
-                execute_stages(
-                    plan,
-                    root,
-                    launcher,
-                    config,
-                    deadline,
-                    event,
-                    stage_budget_s=budget.stage_seconds,
-                    admission=admitted,
-                )
-            budget.exclude_wait(float(event.get("slot_wait_s") or 0.0))  # later ref updates keep it too
-    except GateOutcome:
+                execute_stages(plan, root, launcher, config, deadline, event, stage_budget_s=budget.stage_seconds)
+    except GateOutcome as error:
+        if error.incomplete:
+            error.detail = f"{error.detail}\n{range_summary(plan)}"
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
-        raise GateOutcome("validation_error", f"validation I/O failed: {error}", incomplete=True) from error
+        raise GateOutcome(
+            "validation_error", f"validation I/O failed: {error}\n{range_summary(plan)}", incomplete=True
+        ) from error
     finally:
         event.update(
             admission_wait_s=round(admission.waited, 2),
@@ -2056,6 +1481,12 @@ def validate(
             scope_setup_s=scope.setup_s if scope is not None else 0.0,
             queue_wait_s=max(0.0, admission.waited - (scope.setup_s if scope is not None else 0.0)),
         )
+
+
+def range_summary(plan: Plan) -> str:
+    """An incomplete run names the range it scanned, so a timeout from an oversized range is recognisable (#10820)."""
+    base = f"{plan.base} ({plan.base_fallback})" if plan.base_fallback else plan.base
+    return f"range: {base}..{plan.head}"
 
 
 def refuse(error: GateOutcome) -> int:
@@ -2115,9 +1546,10 @@ def scope_child(arguments: list[str]) -> int:
         packet = json.loads(text)
         event: dict[str, object] = {}
         error = None
+        plan = Plan(**packet["plan"])
         try:
             execute_stages(
-                Plan(**packet["plan"]),
+                plan,
                 Path(packet["root"]),
                 packet["launcher"],
                 packet["config"],
@@ -2165,7 +1597,8 @@ def scope_child(arguments: list[str]) -> int:
         except (OSError, ValueError):
             event.update(peak_memory_bytes=None, peak_memory_unknown_reason="cgroup_peak_unavailable")
         with contextlib.suppress(BrokenPipeError):
-            channel.sendall((json.dumps({"event": event, "error": error, "settled": settled}) + "\n").encode())
+            result = {"event": event, "error": error, "settled": settled}
+            channel.sendall((json.dumps(result) + "\n").encode())
         if not settled:
             while True:
                 signal.pause()  # Retain the existing reservation, never promote an orphaned owner.
@@ -2175,8 +1608,6 @@ def scope_child(arguments: list[str]) -> int:
 def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> dict[str, str | None]:
     inputs = {
         "source": Path(__file__),
-        "registry": root / REGISTRY_FILE,
-        "selector": root / "scripts/ci/pre_push_shadow.py",
         "launcher": Path(launcher),
         "config": Path(config),
     }
@@ -2224,17 +1655,10 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             "at": time.time(),
             "attempt_id": uuid.uuid4().hex,
             "fingerprints": fingerprints,
-            "requested_test_processes": None,
-            "requested_test_processes_raw": os.environ.get(MAX_TEST_PROCESSES_ENV),
-            "effective_test_processes": None,
-            "test_processes_clamp_reason": None,
-            "invariant_serial_total_s": None,
             "peak_memory_bytes": None,
             "peak_memory_unknown_reason": "no_supported_scope",
             "admission_wait_s": 0.0,
             "queue_wait_s": 0.0,
-            "slot_wait_s": 0.0,
-            "test_slots": None,
             "scope_setup_s": 0.0,
             "resources_at_admission": None,
             "begin_durable": False,
@@ -2262,18 +1686,13 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         event["duration_s"] = round(time.monotonic() - started, 2)
         times = event_times[event["attempt_id"]]
         elapsed = (times[1] if len(times) > 1 else time.monotonic()) - times[0]
-        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0) - event.get("slot_wait_s", 0.0))
+        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0))
         event["phase"] = "TERMINAL"
-        pytest_stage = event.get("stages", {}).get("pytest", {})
-        event["effective_test_processes"] = pytest_stage.get("effective_test_processes")
-        event["test_processes_clamp_reason"] = pytest_stage.get("test_processes_clamp_reason")
-        event["invariant_serial_total_s"] = pytest_stage.get("invariant_serial_total_s")
         return record(state, event)
 
     with catch_interruptions():
         try:
             event = new_event()
-            event["requested_test_processes"] = test_process_limit()
             concurrent_run_limit()
             updates = [
                 u for u in parse_updates(text) if u.local_sha != ZERO_SHA and not u.remote_ref.startswith("refs/tags/")
@@ -2288,7 +1707,6 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             ):  # equal commits can still have different outgoing ranges: validate each
                 if index:
                     event = new_event()
-                    event["requested_test_processes"] = test_process_limit()
                 try:
                     with catch_interruptions():
                         validate(update, root, arguments.launcher, arguments.config, event, budget)

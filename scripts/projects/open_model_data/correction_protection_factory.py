@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Iterator, Mapping
@@ -21,6 +22,10 @@ from pathlib import Path
 from typing import Any, TextIO
 
 from jsonschema import Draft202012Validator, FormatChecker
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from referencing import Registry, Resource
 
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches

@@ -37,6 +37,10 @@ from typing import Any
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.wiki"
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.esum_garbled import (
     garbled_esum_entry,
@@ -48,6 +52,7 @@ from scripts.lexicon.runner.ulif_dictua_store import (
     ULIF_DICTUA_ENTRIES_DDL,
     ulif_dictua_entries_table_sql,
 )
+from scripts.lib.readonly_sqlite import open_readonly
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
 # The top-level ``audit/`` tree is a namespace package, so ``import audit``
@@ -70,8 +75,8 @@ from .sum20_official import (
 from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
-    live_article_predicate,
     normalize_sum20_lookup,
+    sum20_live_article_where,
 )
 from .textbook_subjects import normalize_subject_slug
 
@@ -1680,14 +1685,22 @@ def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
     _connection_factory = factory
 
 
+def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connection:
+    """Writable connection (schema create / migrate): never a shared reader.
+
+    Allowlisted in tests/test_sources_db_hardening.py; ``_open_conn`` is not.
+    """
+    return sqlite3.connect(str(db_path), check_same_thread=False, **options)
+
+
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
-    options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
     if read_only:
-        conn = sqlite3.connect(
-            f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, **options
-        )
+        # Shared across threads: open_readonly disables the statement cache
+        # that CPython 3.12 corrupts under concurrent use (#11217).
+        conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
     else:
-        conn = sqlite3.connect(str(db_path), check_same_thread=False, **options)
+        options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
+        conn = _open_writer_conn(db_path, options)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -4297,23 +4310,25 @@ def _json_string_list(value: object) -> list[str]:
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     """Return every exact-matching article from the offline official СУМ-20 collection.
 
-    The collection is populated only by ``sum20_official_ingest.py``.  This
-    reader deliberately has no live fallback, so its returned provenance is
-    always the official stored ``wordid`` record.
+    The collection is populated only by an explicit ingest. This reader has no
+    live fallback, so its provenance is the stored official ``wordid`` record.
+    An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
+    ``sum20_articles``; otherwise it uses the read-only sources collection.
+    ``LEXDATA_DB_PATH`` is exclusive and never falls back.
     """
     normalized_lookup_key = normalize_sum20_lookup(query)
-    columns = _table_columns("sum20_articles", db_path)
-    if not normalized_lookup_key or not columns:
+    if not normalized_lookup_key:
         return []
-    conn = _get_conn_for(db_path)
+    from scripts.lexicon.sum20_store import open_sum20
+
+    conn = open_sum20(db_path, repository_root=PROJECT_ROOT)
     try:
+        columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
+        if not columns:
+            return []
+        where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
-            f"""
-            SELECT *
-            FROM sum20_articles
-            WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)}
-            ORDER BY wordid
-            """,
+            f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
             (normalized_lookup_key,),
         ).fetchall()
         records: list[dict] = []
@@ -4373,7 +4388,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             )
         return records
     finally:
-        _close_if_temporary(conn, db_path)
+        conn.close()
 
 
 def _heritage_text(hit: dict) -> str:

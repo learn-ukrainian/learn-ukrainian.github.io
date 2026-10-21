@@ -1,7 +1,8 @@
 # Host test slots
 
 The host defaults to a test pool of half its CPUs, rounded down, with at least 2 slots (#10715).
-Worker pytest runs and the pre-push gate take slots from one pool before they start their processes. A run that cannot get slots
+Worker pytest runs, the launcher and `scripts.common.test_slots run` take slots from one pool before they start their processes.
+The pre-push gate takes none: it runs no tests (#11276). A run that cannot get slots
 waits in a first-come-first-served queue and prints its position. It never starts and piles up.
 
 Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.common.test_slots status` or
@@ -20,8 +21,22 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   live tickets count toward the limit of 1024. Until a waiter has reaped them, `status` reports
   `test_slots_pool_unavailable` while more than 1024 ticket files exist.
 - Descendants of a holder run inside its slots and never queue themselves. Examples are xdist workers,
-  pytest runs started by tests and the gate's pytest children. The holder marks them with
-  `LU_TEST_SLOTS_HOLDER`. A marker whose holder is dead is ignored.
+  pytest runs started by tests. The holder marks them with
+  `LU_TEST_SLOTS_HOLDER`. The marker is checked, never trusted. It counts only when all of these hold:
+  - it names a ticket in the `holders` directory of the pool that environment selects;
+  - the current user owns that ticket and a live process holds its lock;
+  - the ticket's record holds exactly the marked count;
+  - every slot the record claims is locked, and that slot's file names this ticket and the marker's nonce
+    (`<count>:<nonce>:<ticket>`), which the pool minted when it issued the slots, never the ambient
+    `LU_RUNTIME_RUN_NONCE`;
+  - the run names no dispatch task other than the hold's.
+
+  A marker that is dead, copied, inflated or carried into another task is ignored, and so is a
+  hand-written ticket, whether it claims free slots, another run's slots or sits in a pool the caller
+  made without holding its slots. A run that names no
+  task stays inside its ancestor's slots, as tests do when the suite strips the agent's identity.
+  `delegate.py` removes any marker from a dispatched worker's environment, so a worker never runs inside
+  its dispatcher's slots.
 - A pytest run below a live holder, dispatch run or not, starts at most the held count of xdist
   workers. Before the session starts, the `ci.pytest_dispatch_cap` plugin caps `-n` (`auto` included),
   cuts an explicit `--tx` list and lowers `PYTEST_XDIST_AUTO_NUM_WORKERS` for the run and its own
@@ -34,13 +49,68 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
 | Caller | How |
 | --- | --- |
 | Dispatch-worker pytest runs | The `ci.pytest_dispatch_cap` plugin holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only` and `--help`. A nested run queues for nothing and starts at most the inherited count of workers. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
-| Pre-push gate | The pytest stage holds slots and passes `-n` equal to the slots held. The wait is bounded by `TEST_SLOT_WAIT_S` (600 s) and recorded as `slot_wait_s`. It spends neither the stage allowance nor the run budget. See `docs/runbooks/pre-push-gate.md`. |
 | Any other test command | `.venv/bin/python -m scripts.common.test_slots run -- <command>` waits for slots, rewrites a visible `-n`/`--numprocesses` (including `auto`) to the slots held, caps a hidden `-n auto` through `PYTEST_XDIST_AUTO_NUM_WORKERS`, and execs the command, so the command itself holds the slots until it exits. A repo pytest the command starts with a hidden explicit `-n` is capped by the plugin above. |
+| Codex read-only reviews | The dispatch worker holds 2 `review` slots before the CLI starts. See "Sandboxed reviews" below. |
 | Dispatch admission | `delegate.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
 
 Operator shells and CI are unchanged: the plugin takes slots only for dispatch workers, it caps
 workers only for runs below a live holder, and a true `CI` variable turns the pool off unless
 `LU_TEST_SLOTS=on` is set explicitly.
+
+## Sandboxed reviews
+
+Codex runs a read-only review's commands in a user-namespace sandbox that maps only the current user.
+There, root-owned ancestors of the pool, `/` included, show the kernel's overflow owner, and every path
+is mounted read-only. The governor therefore refuses to prepare the pool there with
+`test_slots_pool_unavailable` ("owned by another user"). That refusal is correct, because the sandbox
+cannot prove who owns those ancestors, and it stays in place (#11230, #10744).
+
+For a review-typed Codex dispatch in `read-only` mode, the dispatch worker takes the slots instead,
+outside the sandbox, with the full ownership walk:
+
+1. It queues in the host pool like any run and holds 2 `review` slots, the review bound of two test
+   workers. The task record shows the result as `review_test_slots`: `held` (with the slot count and
+   the wait), `refused` (with the reason) or `disabled`. A refused review still runs, and its governed
+   test runs are refused with a typed reason.
+2. The CLI receives the holder marker. Inside the sandbox, `test_slots run` and the dispatch pytest plugin
+   only read the marked ticket and the slot files and check their locks, so they need no write access to
+   the pool. A sandboxed process, one whose user namespace maps only part of the id range, cannot choose
+   the pool: `LU_TEST_SLOTS_DIR` or `LU_SCRATCH_ROOT` there is refused with
+   `test_slots_pool_override_refused`, and it may join only a `review` hold.
+3. The review's governed test runs take turns on the hold's session lock, a `.session` file beside its
+   ticket. Concurrent runs of one review therefore never add up past its 2 slots. The run that holds the
+   turn passes `LU_TEST_SLOTS_SESSION` to its own descendants, such as a pytest a test starts or the
+   command it execs. The value names the turn's process, its start time and the descriptor holding the
+   session lock. A descendant joins without waiting only when the kernel shows that process is itself or
+   an ancestor and holds the lock through that descriptor. A sibling that guesses the value or copies it
+   is refused with `test_slots_session_unverified`.
+4. Every run of a turn holds the hold's slot files and its `.turn` file shared until it ends. Slots
+   therefore stay taken while any reviewer test run is alive, even after the worker that issued the
+   hold has ended or was killed, and the next turn starts only when every run of the previous one has
+   ended. `status` reports such slots as `slots_draining`.
+5. The worker gives its own hold back when the runtime returns: on success, on failure, on a timeout and
+   on cancellation. New runs are refused from then on, because the marker's holder is gone.
+
+The slots stay reserved while the reviewer reads. The dispatch hard timeout bounds that time. Other
+routes are unchanged: a Claude read-only seat has no OS sandbox and takes its own slots, and a write
+worker takes slots for each test run.
+
+Every hold keeps its slot files locked shared once issued. xdist starts a governed run's workers with
+their inherited descriptors closed, so each worker joins the hold itself and keeps its slots locked until
+it exits. Killing the governed run while its workers still run tests therefore frees nothing early: the
+slots stay taken, and a review's next turn waits, until the last worker exits.
+
+A worker that its run's live hold names (the checked marker, and for a review its turn token) must keep
+those slots before it runs a test. When it cannot (a slot file cannot be opened, or the hold or turn ended
+while it joined), it is refused before its session with a typed error such as `test_slots_pool_unavailable`
+or `test_slots_hold_ended`. xdist reports this as the worker going down, with that error, and the run fails
+without running tests. Otherwise the worker would hold no slot, and killing its run would admit other work
+beside it. A worker that no live hold names (no marker, a stale or forged one, or a review marker without
+a turn token) runs as before and is never refused.
+
+Other commands a test starts without the governor are not counted on their own. They run inside their
+governed run's slots and end with it in the normal case. If their governed run is killed first, they can
+outlive it until they end or `post_task_reap` stops the task's leftover processes.
 
 ## Settings
 
@@ -48,8 +118,8 @@ workers only for runs below a live holder, and a true `CI` variable turns the po
 | --- | --- | --- |
 | `LU_TEST_SLOTS` | on (off when `CI` is true) | `off` restores the previous behaviour everywhere: no waits, no `-n` changes and no admission check. |
 | `LU_TEST_SLOTS_COUNT` | Half the CPU count, rounded down, at least 2 | Pool size. Every participant on the host must use the same value. |
-| `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. The gate never waits longer than 600 s. |
-| `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits beside the pre-push gate's `pre-push-gate-<uid>`. |
+| `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. |
+| `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits in that root as `test-slots-<uid>`. |
 | `LU_TEST_THREAD_CAP` | on | `off` preserves the caller's thread environment for a run that needs threads. Slot accounting stays enabled. |
 
 ## Threads inside each worker
@@ -57,7 +127,7 @@ workers only for runs below a live holder, and a true `CI` variable turns the po
 Governed runs also limit native library threads (#10716). Before xdist starts workers, the plugin sets
 `OMP_NUM_THREADS`, `MKL_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `NUMEXPR_NUM_THREADS`,
 `ORT_NUM_THREADS` and `RAYON_NUM_THREADS` to `1`, and `TOKENIZERS_PARALLELISM` to `false`.
-The launcher and the pre-push gate's pytest stage apply the same policy. Children inherit the limits.
+The launcher applies the same policy. Children inherit the limits.
 The policy preserves only positive integers at or below `1` for numeric settings, written as ASCII
 decimal digits. It replaces every other value with `1`, including zero, negatives, fractions, padded
 or signed values, empty strings, `nan`, infinities, oversized integers and nonnumeric tokens such as
@@ -75,14 +145,13 @@ describes its BLAS backend controls.
 ## Pool directory permissions
 
 The pool directory is mode 0700 and owned by the current user. Its path follows the trust model of
-the pre-push gate's base temp (#10654; see "Bounds" in `docs/runbooks/pre-push-gate.md`): only the
+the fleet scratch root: only the
 current user and root are trusted, and no other user may be able to redirect the path. Before anything
 is created, the path is resolved from `/` one component at a time. Every directory on the way must be
 owned by the user or root and must not be writable by group or others unless it is sticky, as the
 system temp directories are. A link is followed only if the user or root owns it, and its target passes
 the same checks. Missing components, the scratch root included, are created with mode 0700 whatever
-the umask. A root created under umask 002 would be group-writable, and the gate would then refuse its
-own base temp below the same root. `status` runs the same checks and creates nothing.
+the umask. A root created under umask 002 would be group-writable, which this check refuses on the next run. `status` runs the same checks and creates nothing.
 
 Each of these is refused with `test_slots_pool_unavailable`:
 
