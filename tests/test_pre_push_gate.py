@@ -1292,7 +1292,16 @@ def test_dependency_input_predicate_matches_reaper(
         link.symlink_to(target, target_is_directory=True)
     tracked = set(_git(repo, "ls-files", "-z", "--cached").stdout.split("\0"))
 
-    assert is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked) is expected
+    # The input scanner also sees unignored dependency overlays. Reaping needs
+    # Git-ignore proof in addition to the shared lockfile/containment predicate.
+    assert not is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked)
+    exclude = repo / ".git" / "info" / "exclude"
+    previous_exclude = exclude.read_text() if exclude.exists() else ""
+    try:
+        exclude.write_text(previous_exclude + "\nnode_modules/\n")
+        assert is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked) is expected
+    finally:
+        exclude.write_text(previous_exclude)
     assert gate.is_regenerable_dependency_input(relative, root=repo, tracked=tracked) is expected
     # Git does not descend directory symlinks. Supply that enumerated path to
     # also prove the scan applies its predicate if such an input is returned.
