@@ -16,6 +16,9 @@ def compute_hash(file_path):
         return hashlib.md5(content.encode('utf-8'), usedforsecurity=False).hexdigest()
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python debug_hash.py <file>")
+        sys.exit(0)
     if len(sys.argv) < 2:
         print("Usage: python debug_hash.py <file>")
         sys.exit(1)

@@ -7,6 +7,7 @@ data/datasets/hramatka_literary_poltava_v1/evidence/record_dispositions.jsonl
 data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl
 data/datasets/hramatka_uk_pedagogy_v1/README.md
 data/datasets/hramatka_uk_pedagogy_v1/hramatka_uk_pedagogy_v1.jsonl
+data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json
 data/processed/esum_vol1.jsonl
 data/processed/esum_vol2.jsonl
 data/processed/esum_vol3.jsonl

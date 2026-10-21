@@ -16,6 +16,7 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
@@ -25,6 +26,9 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR

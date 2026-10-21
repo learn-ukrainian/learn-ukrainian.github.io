@@ -645,18 +645,18 @@ The held edition remains unverified in the holdings record; a 1991 ingest filena
 
 ### Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references) — `ulp_private`
 
-- **Permission status:** `granted` — Operator decision 2026-10-20 admits the dictionary parts (Oho! A1 Словничок; 1000 words; 500 verbs; ULP lesson-note vocabulary zones) as a database and word-card source. Prose, transcripts, flashcards and audio stay private references.
+- **Permission status:** `granted` — Operator decision 2026-10-20 admits the dictionary parts (Oho! A1 Словничок; 1000 words; 500 verbs; ULP lesson-note vocabulary zones) as a database and word-card source. Prose, transcripts, flashcards and audio stay private references. Anna Ohoiko directly confirmed consent to citation display on 2026-10-20 after reviewing example citations from her books. The confirmed display rule permits attributed quotations of example sentences and glosses on public learner pages.
 - **Organisation:** Anna Ohoiko (Ukrainian Lessons)
 - **Role:** Dictionary-part source for lexdata L1 and for word-card lexical facts; private pedagogy reference otherwise.
 - **Fields:** headword, grammatical_label, en_gloss, example_sentence, course_usage
-- **Appears in:** internal — Internal only until the operator confirms the display rule and per-field gating exists. PROPOSED public scope (awaiting operator confirmation): site and dataset, lexical facts only (membership and lesson position, printed stress and grammatical labels, only where they agree with VESUM/ULIF), credit "Ukrainian Lessons (Anna Ohoiko)". English glosses, example sentences and sense wording would stay internal evidence and never be shown verbatim. A public English gloss comes from another admitted source or is authored and reviewed in-project.
+- **Appears in:** internal, site. Public learner pages (lexicon and word cards) may quote her example sentences and glosses with visible credit to Anna Ohoiko and the book title, linked to her work where possible. Her teaching content is never republished as our own. We learn from her teaching methods as from any other teacher and author our own curriculum, following the [ULP presentation pattern](../best-practices/ulp-presentation-pattern.md).
 - **Stored in:** data/sources.db textbooks/textbook_sections (L0, unchanged); data/lexdata.db L1 (derived)
 - **Where from:** The operator's own purchased copies under docs/references/private/ (gitignored) · Supplied by the operator; not fetched from the website.
 - **Licence as found:** All rights reserved (Anna Ohoiko). Share-alike: not stated. Non-commercial: not stated.
 - **Terms as found:**
   - «This Agreement does not transfer to you any intellectual property owned by Ogoiko, Anna or third parties, and all rights, titles, and interests in and to such property will remain (as between the parties) solely with Ogoiko, Anna.» (https://www.ukrainianlessons.com/terms-and-conditions/, read 2026-09-27)
   - «(h) to spam, phish, pharm, pretext, spider, crawl, or scrape» — Listed among prohibited uses of the website (https://www.ukrainianlessons.com/terms-and-conditions/, read 2026-09-27)
-- **Citation:** Proposed credit "Ukrainian Lessons (Anna Ohoiko)" beside lexical facts only; no printed quotation (display rule awaits operator confirmation). Label shown: Ukrainian Lessons (Anna Ohoiko).
+- **Citation:** Mark quoted example sentences and glosses as quotations and display "Anna Ohoiko, <book title>" beside them, linked to her work where possible. Keep the source locator for each quotation. Visible attribution credits and promotes her work without presenting it as our own teaching content. Anna Ohoiko directly consented to citation display on 2026-10-20 after reviewing example citations from her books.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
 
 ### ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys — `zno_nmt`

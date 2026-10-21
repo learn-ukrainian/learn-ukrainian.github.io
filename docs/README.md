@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-122 document families and 32 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+122 document families and 33 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -251,6 +251,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `data-vesum-db` | `data/vesum.db`, `data/vesum.db.bak`, `data/vesum.db.bak.*`, `data/vesum_shadow_v680.db` | current | mcp: sources MCP verify_word / verify_words / verify_lemma / inspect_word |
 | `data-grac-frequency-db` | `data/grac_frequency.db`, `data/grac-10.db` | current | mcp: sources MCP query_grac with mode frequency or lemma_forms; cache_only=true for offline snapshot lookups |
 | `data-atlas-db` | `data/atlas.db` | current | sqlite: Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db |
+| `data-lexdata-db` | `data/lexdata.db` | current | cli: .venv/bin/python -m scripts.lexdata status / verify / digests (--help); sqlite: read-only through scripts.lexdata.generation.open_generation, which refuses an unpublished or digest-mismatched generation |
 | `data-atlas-synthetic` | `data/atlas-synthetic.db` | current | cli: .venv/bin/python scripts/benchmarks/generate_synthetic_atlas.py --help |
 | `data-ulif-dumps` | `data/ulif_dump.db`, `data/ulif_scrape.log` | current | mcp: sources MCP query_ulif / query_ulif_records (reads the sources.db copy); sqlite: read-only SQL on data/sources.db (ulif_dictua_* tables) |
 | `data-wiki-cache` | `data/wiki_cache.db`, `data/wiki_sources.db` | current | sqlite: read-only SQL on data/wiki_cache.db |

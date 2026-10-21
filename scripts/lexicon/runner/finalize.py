@@ -25,12 +25,16 @@ import hashlib
 import json
 import os
 import shutil
+import sys
 import tempfile
 import time
 from collections.abc import Callable, Iterator, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.deploy.vendor_atlas_tree import (
     DEFAULT_FAIL_EXTRACTED_BYTES,
