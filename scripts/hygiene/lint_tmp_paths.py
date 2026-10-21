@@ -777,8 +777,8 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "scripts/orchestration/safe_git_context.py",
-        "Caller supplies managed temp_root; the source repository is nested under that context's "
-        "TemporaryDirectory and removed by its exit cleanup (#10931).",
+        "TemporaryDirectory uses caller-supplied temp_root; mkdtemp is nested under that directory. "
+        "Both producers are cleaned in __exit__ (#10931).",
         "c7f063a156b2bbdaf8c2b495fbcd710fa830943229aefac0374f0c5ae1ddf081:1 "
         "f818768d90cbaa8d857ef53c4b59c06fbc238580cf5f5f581073fa2b8ace0a21:1",
     ),

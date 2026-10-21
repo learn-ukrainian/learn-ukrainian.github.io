@@ -358,16 +358,24 @@ def _push(repo: Path, path: str) -> tuple[bool, str]:
 
 
 def test_finalization_context_resolves_the_interpreter_without_a_local_venv(repo: Path, monkeypatch):
-    """A checkout without .venv must use the shared project-interpreter resolver."""
+    """Reject sys.executable bypasses and worktree roots in the shared interpreter resolver."""
     from scripts import delegate
 
     linked = repo.parent / "linked"
     _git(repo, "worktree", "add", "-b", "linked", str(linked))
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    monkeypatch.setattr(delegate, "project_interpreter", lambda root: Path(PYTHON))
+    sentinel = repo.parent / "sentinel-python"
+    sentinel.touch()
+    assert sentinel != Path(PYTHON)
+
+    def resolve_interpreter(root: Path) -> Path:
+        assert root is delegate._REPO_ROOT
+        return sentinel
+
+    monkeypatch.setattr(delegate, "project_interpreter", resolve_interpreter)
 
     with delegate._finalize_execution_context(linked) as context:
-        assert context.interpreter == Path(PYTHON)
+        assert context.interpreter == sentinel
         assert context.interpreter.is_file()
     assert not (repo / ".venv").exists()
     assert not (linked / ".venv").exists()
