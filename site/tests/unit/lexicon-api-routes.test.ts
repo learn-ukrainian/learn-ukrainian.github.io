@@ -56,12 +56,19 @@ describe("lexicon static API routes", () => {
   beforeAll(async () => {
     // Status first: it primes the committed runtime-status cache that the status
     // and contract routes (and the tests below) then read in milliseconds.
+    const statusStarted = performance.now();
     await routeJson(getStatus);
+    console.log(`[10183-phase] path=status phase=status ms=${(performance.now() - statusStarted).toFixed(3)}`);
+    const searchStarted = performance.now();
     sharedSearch = await routeJson<unknown[]>(getSearchIndex);
+    console.log(`[10183-phase] path=status phase=search ms=${(performance.now() - searchStarted).toFixed(3)}`);
+    const dailyStarted = performance.now();
     sharedDaily = await routeJson<unknown[]>(getDailyPool);
+    console.log(`[10183-phase] path=status phase=daily ms=${(performance.now() - dailyStarted).toFixed(3)}`);
   }, FIXTURE_BUILD_TIMEOUT_MS);
 
   test("emits runtime status for public Atlas, Daily Word, and Practice", async () => {
+    const started = performance.now();
     const search = sharedSearch;
     const daily = sharedDaily;
     const status = await routeJson<{
@@ -119,6 +126,7 @@ describe("lexicon static API routes", () => {
     expect(status.endpoints.practiceClozeTemplate).toBe(
       "/lexicon/practice-cloze.{level}.json",
     );
+    console.log(`[10183-phase] path=status phase=assert ms=${(performance.now() - started).toFixed(3)}`);
   });
 
   test("publishes one static API contract for Atlas, Daily Word, and practice", async () => {
