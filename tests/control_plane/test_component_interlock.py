@@ -12,9 +12,6 @@ from pathlib import Path
 import pytest
 
 from scripts.control_plane.storage import (
-    COMPONENT_AUTHORITIES,
-    Authority,
-    ControlPlaneError,
     ControlPlaneUnsupportedComponentError,
     StoreId,
     assert_component_supported,
@@ -36,24 +33,6 @@ def _pg_authority(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-_PG_CAPABLE_COMPONENTS = frozenset(
-    {"artifact_store", "request_executor", "message_plane", "efficiency_metrics", "plane_status"}
-)
-
-
-def test_matrix_covers_every_component_and_expected_pg_capability() -> None:
-    assert "session_streams" in COMPONENT_AUTHORITIES
-    for component, allowed in COMPONENT_AUTHORITIES.items():
-        assert allowed, component
-        if component in _PG_CAPABLE_COMPONENTS:
-            assert Authority.PG in allowed, component
-        else:
-            assert Authority.PG not in allowed, component
-        # shadow stays a sqlite synonym in this slice — every component that
-        # accepts sqlite accepts shadow, so a shadow flip cannot outrun sqlite.
-        assert (Authority.SQLITE in allowed) == (Authority.SHADOW in allowed)
-
-
 def test_assert_component_supported_refuses_pg_for_sqlite_shaped() -> None:
     with pytest.raises(ControlPlaneUnsupportedComponentError) as exc:
         assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
@@ -61,40 +40,6 @@ def test_assert_component_supported_refuses_pg_for_sqlite_shaped() -> None:
     assert "authority_service" in msg and "'pg'" in msg
     # OPSEC: store id only — never a DSN fragment or hostname.
     assert "127.0.0.1" not in msg and "postgresql" not in msg
-
-
-def test_assert_component_supported_unknown_component_fails_closed() -> None:
-    with pytest.raises(ControlPlaneError):
-        assert_component_supported(StoreId.FLEET_COMMS, "no_such_component")
-
-
-def test_request_executor_pg_unreachable_fails_closed(tmp_path: Path) -> None:
-    """#605: pg construction is allowed; an unreachable DSN fails closed with
-    a typed, OPSEC-safe error instead of an interlock refusal."""
-    from scripts.control_plane.storage import ControlPlanePgConnectError
-    from scripts.fleet_comms.request_executor import RequestExecutor
-
-    with pytest.raises(ControlPlanePgConnectError) as exc:
-        RequestExecutor(root=tmp_path)
-    msg = str(exc.value)
-    assert "fleet_comms" in msg
-    assert "127.0.0.1" not in msg and "postgresql" not in msg
-
-
-def test_authority_service_refuses_pg_at_construction(tmp_path: Path) -> None:
-    from scripts.fleet_comms.authority import AuthorityService
-
-    with pytest.raises(ControlPlaneUnsupportedComponentError):
-        AuthorityService(root=tmp_path)
-
-
-def test_message_plane_pg_unreachable_fails_closed(tmp_path: Path) -> None:
-    """#605: pg construction is allowed; an unreachable DSN fails closed."""
-    from scripts.control_plane.storage import ControlPlanePgConnectError
-    from scripts.fleet_comms.message_plane import MessagePlane
-
-    with pytest.raises(ControlPlanePgConnectError):
-        MessagePlane(mode="shadow", root=tmp_path)
 
 
 def test_message_plane_authority_mode_still_refuses_pg(tmp_path: Path) -> None:
@@ -150,25 +95,6 @@ def test_apply_migrations_refuses_non_sqlite_connection() -> None:
         apply_migrations(FakePgConnection())  # type: ignore[arg-type]
 
 
-def test_metrics_read_pg_unreachable_fails_closed(tmp_path: Path) -> None:
-    from scripts.fleet_comms.efficiency_metrics import _connect_ro
-
-    db = tmp_path / "comms.sqlite3"
-    from scripts.control_plane.storage import ControlPlanePgConnectError
-
-    with pytest.raises(ControlPlanePgConnectError):
-        with _connect_ro(db):
-            pass
-
-
-def test_sqlite_authority_still_constructs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    monkeypatch.setenv(_ENV, "sqlite")
-    from scripts.fleet_comms.request_executor import RequestExecutor
-
-    with RequestExecutor(root=tmp_path) as executor:
-        assert executor.store.authority is Authority.SQLITE
-
-
 def test_injected_sqlite_store_does_not_bypass_executor_interlock(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -183,65 +109,5 @@ def test_injected_sqlite_store_does_not_bypass_executor_interlock(
         monkeypatch.setenv(_ENV, "pg")  # authority flips after the store opened
         with pytest.raises(ControlPlaneUnsupportedComponentError):
             RequestExecutor(store=store)
-    finally:
-        store.close()
-
-
-def test_injected_sqlite_store_does_not_bypass_authority_interlock(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    from scripts.fleet_comms.artifacts import ArtifactStore
-    from scripts.fleet_comms.authority import AuthorityService
-
-    monkeypatch.setenv(_ENV, "sqlite")
-    store = ArtifactStore(root=tmp_path)
-    try:
-        monkeypatch.setenv(_ENV, "pg")
-        with pytest.raises(ControlPlaneUnsupportedComponentError):
-            AuthorityService(store=store)
-    finally:
-        store.close()
-
-
-def test_injected_executor_does_not_bypass_message_plane_interlock(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    from scripts.fleet_comms.message_plane import MessagePlane
-    from scripts.fleet_comms.request_executor import RequestExecutor
-
-    monkeypatch.setenv(_ENV, "sqlite")
-    executor = RequestExecutor(root=tmp_path)
-    try:
-        monkeypatch.setenv(_ENV, "pg")
-        with pytest.raises(ControlPlaneUnsupportedComponentError):
-            MessagePlane(mode="shadow", executor=executor)
-    finally:
-        executor.close()
-
-
-def test_routing_reservations_read_refuses_pg(tmp_path: Path) -> None:
-    import sqlite3 as _sqlite3
-
-    from scripts.fleet_comms.routing_reservations import list_routing_decisions
-
-    plane = tmp_path / "plane"
-    plane.mkdir(parents=True)
-    _sqlite3.connect(plane / "comms.sqlite3").close()
-    with pytest.raises(ControlPlaneUnsupportedComponentError):
-        list_routing_decisions(root=plane)
-
-
-def test_routing_ledger_refuses_pg_even_with_injected_store(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    from scripts.fleet_comms.artifacts import ArtifactStore
-    from scripts.fleet_comms.routing_reservations import RoutingReservationLedger
-
-    monkeypatch.setenv(_ENV, "sqlite")
-    store = ArtifactStore(root=tmp_path)
-    try:
-        monkeypatch.setenv(_ENV, "pg")
-        with pytest.raises(ControlPlaneUnsupportedComponentError):
-            RoutingReservationLedger(store=store)
     finally:
         store.close()

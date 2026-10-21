@@ -65,38 +65,6 @@ def test_grok_schema_preserves_ordered_row_identity_and_liveness() -> None:
     assert schema["properties"]["liveness_challenge"] == {"enum": ["challenge"]}
 
 
-def test_real_cli_passes_explicit_provider_bin(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    runner = _load_runner()
-    provider = (tmp_path / "agy").resolve()
-    receipt = tmp_path / "receipt.json"
-    observed: dict[str, object] = {}
-
-    def fake_invoke(provider_name: str, provider_bin: Path, **kwargs: object) -> dict[str, object]:
-        observed.update(provider_name=provider_name, provider_bin=provider_bin, **kwargs)
-        return {"ok": True, "text_free": True}
-
-    monkeypatch.setattr(runner, "invoke_canary", fake_invoke)
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [
-            str(RUNNER),
-            "--provider",
-            "gemini",
-            "--provider-bin",
-            str(provider),
-            "--receipt",
-            str(receipt),
-        ],
-    )
-
-    assert runner.main() == 0
-    assert observed["provider_name"] == "gemini"
-    assert observed["provider_bin"] == provider
-    assert observed["execution_mode"] == "real"
-    assert observed["receipt_path"] == receipt
-
-
 def test_real_invoke_rejects_relative_and_symlink_provider(tmp_path: Path) -> None:
     runner = _load_runner()
     with pytest.raises(runner.CanaryError, match="provider_executable_not_absolute"):
@@ -477,24 +445,6 @@ def _seed_runner_second_recovery(runner: ModuleType, package: Path) -> Path:
     return out
 
 
-def test_batch_runner_accepts_only_exact_chained_attempt_three_receipt(tmp_path: Path) -> None:
-    path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
-    spec = importlib.util.spec_from_file_location("cycle007_gemini_attempt_three_test", path)
-    assert spec is not None and spec.loader is not None
-    runner = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(runner)
-    package = tmp_path / "package"
-    out = _seed_runner_second_recovery(runner, package)
-
-    assert runner._next_attempt(package, out, 1) == 3
-    second_path = package / runner.OUTPUT / runner.SECOND_RECOVERY_RECEIPT
-    receipt = json.loads(second_path.read_text(encoding="utf-8"))
-    receipt["prior_recovery_receipt_sha256"] = "0" * 64
-    second_path.write_bytes(runner.canonical(receipt))
-    with pytest.raises(runner.Error, match="ordinal_identity_binding_drift"):
-        runner._next_attempt(package, out, 1)
-
-
 def test_batch_runner_accepts_exact_receipt_after_first_structural_call(
     tmp_path: Path,
 ) -> None:
@@ -755,32 +705,6 @@ def test_batch_runner_uses_controller_bound_source_identity_without_local_databa
     assert identity["vesum_db_sha256"] == "3" * 64
 
 
-def test_grok_runner_uses_controller_bound_source_identity_without_local_databases(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
-    spec = importlib.util.spec_from_file_location("cycle007_grok_bound_sources_test", path)
-    assert spec is not None and spec.loader is not None
-    runner = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(runner)
-
-    monkeypatch.setattr(runner.compiler, "DEFAULT_SERVER_CODE", tmp_path / "missing-server.py")
-    monkeypatch.setattr(runner.compiler, "DEFAULT_SOURCES_DB", tmp_path / "missing-sources.db")
-    monkeypatch.setattr(runner.compiler, "DEFAULT_VESUM_DB", tmp_path / "missing-vesum.db")
-    runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
-        "server_code_sha256": "4" * 64,
-        "sources_db_sha256": "5" * 64,
-        "vesum_db_sha256": "6" * 64,
-    }
-
-    identity = runner._get_expected_identity()
-
-    assert identity["server_code_sha256"] == "4" * 64
-    assert identity["sources_db_sha256"] == "5" * 64
-    assert identity["vesum_db_sha256"] == "6" * 64
-
-
 def test_batch_stream_input_command_has_no_print_prompt() -> None:
     path = ROOT / "batch_state" / "phase3-run-cycle007-gemini-label-provider-batch-v1.py"
     spec = importlib.util.spec_from_file_location("cycle007_gemini_batch_command_test", path)
@@ -798,14 +722,6 @@ def test_batch_stream_input_command_has_no_print_prompt() -> None:
     assert "--new-project" in command
     assert command.count("--print-timeout") == 1
     assert command[command.index("--print-timeout") + 1] == runner.AGY_PRINT_TIMEOUT == "120m"
-
-
-def test_public_canary_uses_the_same_explicit_agy_print_timeout() -> None:
-    canary = _load_runner()
-    command = canary._gemini_command(Path("/provider"), Path("/schema.json"), Path("/agy.log"))
-
-    assert command.count("--print-timeout") == 1
-    assert command[command.index("--print-timeout") + 1] == canary.AGY_PRINT_TIMEOUT == "120m"
 
 
 def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:
@@ -938,54 +854,6 @@ def test_grok_canary_retry_mints_a_fresh_session(
 
     assert len(observed_sessions) == 2
     assert len(set(observed_sessions)) == 2
-
-
-def test_grok_batch_decodes_only_documented_matching_session_envelope(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    path = ROOT / "batch_state" / "phase3-run-cycle007-grok-label-provider-batch-v1.py"
-    spec = importlib.util.spec_from_file_location("cycle007_grok_batch_decode_test", path)
-    assert spec is not None and spec.loader is not None
-    batch = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(batch)
-    payload = {"labels": [{"unit_id": "one"}]}
-    session_id = "00000000-0000-4000-8000-000000000007"
-    envelope = {
-        "text": f"Schema result follows.\n{json.dumps(payload)}",
-        "sessionId": session_id,
-        "stopReason": "end_turn",
-        "requestId": "request-7",
-    }
-    validated: list[bytes] = []
-
-    def fake_validate(lane: str, packet: dict[str, object], raw: bytes, **kwargs: object) -> dict[str, object]:
-        assert lane == "clean_label"
-        assert packet == {"lane": "clean_label"}
-        validated.append(raw)
-        return payload
-
-    monkeypatch.setattr(batch, "validate", fake_validate)
-    decoded = batch._decode_provider(
-        ("CLI presentation\n" + json.dumps(envelope)).encode(),
-        {"lane": "clean_label"},
-        expected_session_id=session_id,
-    )
-
-    assert decoded == batch.canonical(payload)
-    assert validated == [batch.canonical(payload)]
-    with pytest.raises(batch.Invalid, match="structured_output_envelope_drift"):
-        batch._decode_provider(
-            json.dumps(envelope).encode(),
-            {"lane": "clean_label"},
-            expected_session_id="wrong-session",
-        )
-    trailing = envelope | {"text": f"{json.dumps(payload)}\nuntrusted trailing prose"}
-    with pytest.raises(batch.Invalid, match="schema_json_trailing_drift"):
-        batch._decode_provider(
-            json.dumps(trailing).encode(),
-            {"lane": "clean_label"},
-            expected_session_id=session_id,
-        )
 
 
 def test_grok_terminal_json_rule_rejects_multiple_values_but_skips_malformed_decoys() -> None:

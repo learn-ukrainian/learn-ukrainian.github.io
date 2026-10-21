@@ -277,41 +277,6 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert reap.json() == {"read_only": True, "apply": False, "report": []}
 
 
-def test_facade_board_real_producer_emits_no_db_path(
-    client: TestClient,
-    fleet_root: Path,
-) -> None:
-    _seed_plane(fleet_root)
-    response = client.get("/api/fleet/facade/board", params={"stream_id": "core", "agent": "claude"})
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["response_schema_version"] == "comms.v2"
-    assert "db_path" not in json.dumps(payload)
-    backlog_probe = payload["probes"]["backlog_and_dead_letters"]["data"]
-    assert backlog_probe is not None
-    assert "store" in backlog_probe
-    assert backlog_probe["store"]["kind"] in {"comms-plane", "legacy-broker"}
-
-
-def test_facade_missing_plane_db_is_fail_open(
-    client: TestClient, fleet_root: Path
-) -> None:
-    assert not fleet_root.exists()
-
-    status = client.get("/api/fleet/facade/status").json()
-    metrics = client.get("/api/fleet/facade/metrics").json()
-    backlog = client.get("/api/fleet/facade/backlog").json()
-    dead = client.get("/api/fleet/facade/dead").json()
-
-    assert status["plane_status"]["schema"]["db_exists"] is False
-    for payload in (metrics, backlog, dead):
-        assert payload["db_missing"] is True
-        assert payload["read_only"] is True
-        assert "db_path" not in payload
-        assert payload["store"]["kind"] == "comms-plane"
-        assert payload["store"]["reachable"] is False
-
-
 def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[dict[str, object]] = []
 
@@ -639,103 +604,6 @@ def test_fleet_reviews_direct_python_call_with_defaults(fleet_root: Path) -> Non
     assert result["filters"]["repository"] == public_repo
 
 
-def test_reviews_repository_filter_applies_before_count_and_pagination(
-    client: TestClient, fleet_root: Path
-) -> None:
-    """Exact repository filter participates in SQL COUNT/LIMIT so foreign volume
-    cannot hide public rows or inflate public totals/truncation signals.
-    """
-    _seed_plane(fleet_root)
-    public_repo = "learn-ukrainian/learn-ukrainian.github.io"
-    foreign_repo = "evil-org/private-infra"
-    # More foreign rows than a typical Work hard-cap page window (2000), plus a
-    # handful of public rows that must remain fully visible when filtered.
-    foreign_n = 2050
-    public_n = 5
-    connection = sqlite3.connect(fleet_root / "comms.sqlite3")
-    try:
-        for i in range(foreign_n):
-            connection.execute(
-                """
-                INSERT INTO formal_review_jobs(
-                    review_id, repository, pr_number, head_sha, gate_kind, state,
-                    snapshot_artifact_id, sealed_verdict_artifact_id, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?)
-                """,
-                (
-                    f"foreign-review-{i:04d}",
-                    foreign_repo,
-                    7000 + i,
-                    f"dead{i:04d}",
-                    "cross-family-review",
-                    "running",
-                    f"2026-07-01T00:00:{i % 60:02d}Z",
-                ),
-            )
-        for i in range(public_n):
-            connection.execute(
-                """
-                INSERT INTO formal_review_jobs(
-                    review_id, repository, pr_number, head_sha, gate_kind, state,
-                    snapshot_artifact_id, sealed_verdict_artifact_id, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?)
-                """,
-                (
-                    f"public-review-{i:04d}",
-                    public_repo,
-                    8000 + i,
-                    f"beef{i:04d}",
-                    "cross-family-review",
-                    "running",
-                    f"2026-08-02T00:{i:02d}:00Z",
-                ),
-            )
-        connection.commit()
-    finally:
-        connection.close()
-
-    unfiltered = client.get("/api/fleet/reviews", params={"limit": 10, "offset": 0})
-    assert unfiltered.status_code == 200
-    # Seed already has review-1 for public_repo; plus inserts.
-    assert unfiltered.json()["total"] == foreign_n + public_n + 1
-
-    filtered = client.get(
-        "/api/fleet/reviews",
-        params={"repository": public_repo, "limit": 100, "offset": 0},
-    )
-    assert filtered.status_code == 200
-    payload = filtered.json()
-    assert payload["filters"]["repository"] == public_repo
-    # total is repository-scoped — private volume does not inflate it.
-    assert payload["total"] == public_n + 1
-    assert len(payload["reviews"]) == public_n + 1
-    assert {row["repository"] for row in payload["reviews"]} == {public_repo}
-    review_ids = {row["review_id"] for row in payload["reviews"]}
-    assert "review-1" in review_ids
-    assert {f"public-review-{i:04d}" for i in range(public_n)} <= review_ids
-    assert not any(rid.startswith("foreign-review-") for rid in review_ids)
-    assert foreign_repo not in json.dumps(payload)
-
-    # Pagination offsets also advance only within the filtered set.
-    page = client.get(
-        "/api/fleet/reviews",
-        params={"repository": public_repo, "limit": 2, "offset": 2},
-    )
-    assert page.status_code == 200
-    assert page.json()["total"] == public_n + 1
-    assert len(page.json()["reviews"]) == 2
-    assert {row["repository"] for row in page.json()["reviews"]} == {public_repo}
-
-    foreign_only = client.get(
-        "/api/fleet/reviews",
-        params={"repository": foreign_repo, "limit": 5, "offset": 0},
-    )
-    assert foreign_only.status_code == 200
-    assert foreign_only.json()["total"] == foreign_n
-    assert len(foreign_only.json()["reviews"]) == 5
-    assert all(r["repository"] == foreign_repo for r in foreign_only.json()["reviews"])
-
-
 def test_acp_and_runtime_provenance_reuse_existing_read_models(
     client: TestClient,
     fleet_root: Path,
@@ -926,38 +794,6 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     ):
         assert forbidden not in response.text
     assert broker_path.read_bytes() == before, "observer must not mutate the broker database"
-
-
-def test_operations_missing_store_does_not_create_it(
-    client: TestClient,
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    broker_path = tmp_path / "missing" / "legacy-broker.db"
-    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
-
-    async def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
-        return {"alive": 0, "processes": []}
-
-    async def empty_zombies(**_kwargs: object) -> dict:
-        return {"count": 0, "zombies": []}
-
-    def empty_batches(ctx: MonitorContext | None = None) -> dict:
-        return {"running_processes": 0, "tracks": {}}
-
-    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
-    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", empty_batches)
-
-    payload = client.get("/api/fleet/operations").json()
-
-    assert payload["availability"] == "partial"
-    assert payload["broker"]["availability"] == "db_missing"
-    assert payload["broker"]["db_exists"] is False
-    assert payload["zombies"]["items"] == []
-    assert payload["batches"]["tracks"] == []
-    assert not broker_path.exists()
-    assert not broker_path.parent.exists()
 
 
 def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(

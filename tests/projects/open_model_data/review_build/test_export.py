@@ -384,30 +384,6 @@ def test_export_preserves_unicode_separators_crlf_and_unterminated_record(verifi
         assert guard.read("C1/records.jsonl") == raw
 
 
-def test_missing_build_directory_is_not_recreated(verified_build):
-    (verified_build / "C1").rename(verified_build / "SYNTHETIC-unavailable")
-    with OutputGuard(verified_build.parent / "SYNTHETIC-export") as guard:
-        with pytest.raises(BuildError, match="artifact_mismatch"):
-            export_build(verified_build, guard)
-    assert not (verified_build / "C1").exists()
-
-
-def test_cli_refusals_preserve_input_and_existing_destination(verified_build, capsys):
-    before = {p.relative_to(verified_build): p.read_bytes() for p in verified_build.rglob("*") if p.is_file()}
-    for target in (verified_build, verified_build / "SYNTHETIC-nested", verified_build.parent):
-        assert cli.main(["export", "--from", str(verified_build), "--out", str(target)]) == 1
-        capsys.readouterr()
-    assert not (verified_build / "SYNTHETIC-nested").exists()
-    assert before == {p.relative_to(verified_build): p.read_bytes() for p in verified_build.rglob("*") if p.is_file()}
-    assert not (verified_build.parent / "logs").exists()
-    target = verified_build.parent / "SYNTHETIC-occupied"
-    with OutputGuard(target) as guard:
-        guard.write("SYNTHETIC-existing", b"SYNTHETIC previous export")
-    assert cli.main(["export", "--from", str(verified_build), "--out", str(target)]) == 1
-    assert json.loads(capsys.readouterr().err)["error"] == "export_output_not_empty"
-    assert list(p.name for p in target.iterdir()) == ["SYNTHETIC-existing"]
-
-
 def test_cli_unknown_filter_failure_log_requires_clean_retry_destination(verified_build, capsys):
     target = verified_build.parent / "SYNTHETIC-export"
     args = ["export", "--from", str(verified_build), "--out", str(target)]

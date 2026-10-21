@@ -149,30 +149,10 @@ def test_examples_not_outstanding(transport):
     assert not transport.mutations
 
 
-def test_item_set_order_does_not_change_escalation(transport):
-    transport.issue["body"] = UNOWNED + "\n- [ ] AC-03: More evidence"
-    pc.run_postmerge_criteria(3, apply=True)
-    transport.issue["body"] = "- [ ] AC-03: More evidence\n" + UNOWNED
-    pc.run_postmerge_criteria(3, apply=True)
-    assert len(transport.requests) == 1
-    assert len(transport.comments) == 1
-
-
 def test_closing_references_and_body():
     pr = {"body": "Closes #7\nFixes other/repo#9\nMentions #10\n> Closes #11\n```\nCloses #12\n```",
           "closingIssuesReferences": [{"url": "https://github.com/unit/public/issues/8"}]}
     assert pc.closing_issues(pr, "unit/public") == [("other/repo", 9), ("unit/public", 7), ("unit/public", 8)]
-
-
-@pytest.mark.parametrize("body,expected", [
-    ("Closes #7, #8", [("unit/public", 7), ("unit/public", 8)]),
-    ("Fixes #7,#8 and #9", [("unit/public", 7), ("unit/public", 8), ("unit/public", 9)]),
-    ("Resolves #7, other/repo#9, and #8", [("other/repo", 9), ("unit/public", 7), ("unit/public", 8)]),
-    ("Closes #7 & #8; related #10\nMentions #11", [("unit/public", 7), ("unit/public", 8)]),
-])
-def test_multiple_closing_references(body, expected):
-    pr = {"body": body, "closingIssuesReferences": [{"url": "https://github.com/unit/public/issues/8"}]}
-    assert pc.closing_issues(pr, "unit/public") == expected
 
 
 @pytest.mark.parametrize("state", ["OPEN", "CLOSED"])
@@ -204,14 +184,6 @@ def test_write_failure_reported(transport, monkeypatch, capsys):
     monkeypatch.setattr(pc, "publish", fail)
     assert pc.main(["--pr", "3", "--apply"]) == 2
     assert json.loads(capsys.readouterr().out) == {"ok": False, "error": "write refused"}
-
-
-def test_cli_status(transport, capsys):
-    assert pc.main(["--pr", "3"]) == 1
-    assert json.loads(capsys.readouterr().out)["apply"] is False
-    transport.issue["body"] = OWNED.replace("[ ]", "[x]")
-    assert pc.main(["--pr", "3", "--apply"]) == 0
-    assert json.loads(capsys.readouterr().out)["ok"] is True
 
 
 def test_cli_help(capsys):

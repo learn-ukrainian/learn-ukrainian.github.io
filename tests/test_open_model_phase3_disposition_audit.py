@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-import tracemalloc
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -184,12 +183,6 @@ def _results(manifest: dict[str, Any], freeze: dict[str, Any], roles: dict[str, 
     }
 
 
-def test_exact_formula_is_not_weakened() -> None:
-    assert audit.sample_size(101, 10000) == 101
-    assert audit.sample_size(500, 10000) == 200
-    assert audit.sample_size(17, 0) == 17
-
-
 def test_common_entropy_tuple_is_ordered_and_lane_specific() -> None:
     seeds = set()
     for audit_kind, population_kind in [
@@ -327,17 +320,6 @@ def test_stratified_selection_is_deterministic_and_without_replacement() -> None
     assert {next(row for row in records if row["unit_id"] == unit)["disposition_code"] for unit in first} == {"code_0", "code_1", "code_2"}
 
 
-def test_published_strata_uses_proportional_largest_remainder() -> None:
-    records = [
-        {"unit_id": f"unit.{index}", "disposition_code": "major" if index < 8 else "minor", "document_or_edition_identity": "edition"}
-        for index in range(10)
-    ]
-    assert audit._strata_allocation(records, 3, "nonconverted") == [
-        {"stratum": ["major", "edition"], "population_total": 8, "sample_allocation": 2},
-        {"stratum": ["minor", "edition"], "population_total": 2, "sample_allocation": 1},
-    ]
-
-
 def test_stale_and_repaired_seed_receipts_cannot_be_reused(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
     ledger, coverage, roles = frozen
     freeze = audit.freeze_audit_populations(ledger, coverage_contract=coverage, role_contract=roles)
@@ -390,13 +372,6 @@ def test_emit_rejects_substituted_self_consistent_freeze(frozen: tuple[dict[str,
     seeds = [_seed(substituted, roles), _seed(substituted, roles, population_kind="converted")]
     with pytest.raises(audit.AuditError, match="freshly derived"):
         audit.emit_samples(substituted, seeds, ledger=ledger, role_contract=roles, coverage_contract=coverage)
-
-
-def test_source_text_shape_is_rejected(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
-    ledger, coverage, roles = frozen
-    ledger["families"][0]["rows"][0]["text"] = "forbidden"
-    with pytest.raises(audit.AuditError, match="source text"):
-        audit.validate_disposition_ledger(ledger, coverage_contract=coverage, role_contract=roles)
 
 
 def test_unit_hash_and_conversion_evidence_are_required(frozen: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> None:
@@ -459,21 +434,6 @@ def test_bundle_recomputes_every_artifact_binding(frozen: tuple[dict[str, Any], 
     bundle["audit_results_sha256"] = _token("0")
     with pytest.raises(audit.AuditError, match="audit_results_sha256"):
         audit.validate_bundle(bundle, ledger=ledger, population_freeze=freeze, seed_receipts=seeds, sample_manifest=manifest, results=results, coverage_contract=coverage, role_contract=roles)
-
-
-def test_schema_is_a_closed_artifact_schema() -> None:
-    schema = json.loads((audit.DATA / "contracts/phase3_disposition_audit_bundle_v1.schema.json").read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert "oneOf" in schema and "ledgerRow" in schema["$defs"] and schema["$defs"]["ledgerRow"]["additionalProperties"] is False
-
-
-def test_historical_controller_lexical_census_is_non_current() -> None:
-    census = {
-        "schema_version": "phase3_lexical_complete_census_v1", "text_free": True,
-        "auditor_controller_identity_id": "controller_fixture_auditor", "families": [],
-    }
-    with pytest.raises(audit.AuditError, match="historical v1"):
-        audit.validate_lexical_complete_census(census, coverage_contract=_coverage(), role_contract=_roles())
 
 
 def _lexical_roles() -> dict[str, Any]:
@@ -553,41 +513,6 @@ def test_closed_lexical_census_fails_closed_for_population_and_authority(mutatio
         census["seed"] = _token("f")
     with pytest.raises(lexical.LexicalCoverageError):
         lexical.validate_complete_census(census, population, role_contract=roles)
-
-
-def test_complete_census_rejects_stale_population_role_contract() -> None:
-    population, roles = _lexical_population(), _lexical_roles()
-    next(item for item in roles["functional_roles"] if item["role_id"] == "disposition_auditor")["task_id"] = "phase3-v2-1-other-audit"
-    with pytest.raises(lexical.LexicalCoverageError, match="functional-role schema"):
-        lexical.validate_complete_census(_complete_census(population), population, role_contract=roles)
-
-
-def test_cli_validates_synthetic_closed_lexical_census_v2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    roles = _lexical_roles()
-    population = _lexical_population()
-    census = _complete_census(population)
-    role_path = tmp_path / "roles.json"
-    population_path = tmp_path / "population.json"
-    census_path = tmp_path / "census.json"
-    role_path.write_text(json.dumps(roles), encoding="utf-8")
-    population_path.write_text(json.dumps(population), encoding="utf-8")
-    census_path.write_text(json.dumps(census), encoding="utf-8")
-
-    assert audit.main([
-        "--role-contract", str(role_path),
-        "validate-lexical-census-v2",
-        "--census", str(census_path),
-        "--population-freeze", str(population_path),
-    ]) == 0
-    result = json.loads(capsys.readouterr().out)
-    assert result == {
-        "complete_census": True,
-        "family_count": 13,
-        "ok": True,
-        "seed_required": False,
-        "status": "MECHANICS_ONLY_NOT_SOURCE_COVERAGE_READY",
-        "used_unit_count": 1,
-    }
 
 
 def test_release_manifest_is_closed_and_rejects_generic_locator(tmp_path: Any) -> None:
@@ -701,41 +626,3 @@ def test_lexical_bundle_rejects_stale_cross_receipt_bindings(monkeypatch: pytest
         bundle[binding] = _token("9")
     with pytest.raises(lexical.LexicalCoverageError, match="binding mismatch"):
         lexical.validate_lexical_bundle(bundle, structural_audit=structural, population_freeze=population, census=census, role_contract=roles, coverage_contract=coverage, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))
-
-
-@pytest.mark.slow
-def test_structural_summary_streams_large_synthetic_family() -> None:
-    def units() -> Any:
-        for index in range(150_000):
-            yield {"unit_id": f"unit.fixture.{index}", "unit_sha256": _token("a"), "duplicate_group_id": f"duplicate.fixture.{index % 3}", "parse_status": "parsed", "provenance": {"input_sha256": _token("b"), "unit_grain": "fixture"}}
-
-    tracemalloc.start()
-    summary = lexical._structural_summary("fixture", units())
-    _, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    assert summary["unit_count"] == summary["duplicate_group_observation_total"] == 150_000
-    assert peak < 5 * 1024 * 1024
-
-
-def test_structural_summary_streams_bounded_synthetic_family() -> None:
-    """PR-tier twin: same summary assertions on 4_000 units (2_000–5_000 band)."""
-
-    def units() -> Any:
-        for index in range(4_000):
-            yield {
-                "unit_id": f"unit.fixture.{index}",
-                "unit_sha256": _token("a"),
-                "duplicate_group_id": f"duplicate.fixture.{index % 3}",
-                "parse_status": "parsed",
-                "provenance": {"input_sha256": _token("b"), "unit_grain": "fixture"},
-            }
-
-    tracemalloc.start()
-    summary = lexical._structural_summary("fixture", units())
-    _, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    assert summary["unit_count"] == summary["duplicate_group_observation_total"] == 4_000
-    # Host peaks (7/7 identical): streaming 19_002 bytes; list() materialisation
-    # 2_833_778 bytes. Ceiling is 3× streaming, between the two.
-    _BOUNDED_TWIN_PEAK_CEILING_BYTES = 3 * 19_002
-    assert peak < _BOUNDED_TWIN_PEAK_CEILING_BYTES

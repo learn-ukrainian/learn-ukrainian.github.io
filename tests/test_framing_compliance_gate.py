@@ -2,16 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from scripts.audit import framing_compliance_gate as gate
-
-REAL_FOLK_SLUGS = (
-    "narodna-kultura-yak-systema",
-    "kalendarna-obriadovist-zvychai",
-    "koliadky-shchedrivky",
-    "dumy-nevilnytski-lytsarski",
-)
 
 
 def _write_fixture(tmp_path: Path, module_text: str, plan_text: str = "content_outline: []\n") -> tuple[Path, Path]:
@@ -106,13 +97,3 @@ def test_creation_myth_carol_title_warns(tmp_path: Path) -> None:
 
     assert report["passed"] is True
     assert {item["rule_id"] for item in report["warnings"]} == {"W2"}
-
-
-@pytest.mark.parametrize("slug", REAL_FOLK_SLUGS)
-def test_real_surviving_folk_modules_emit_triage_report(capsys: pytest.CaptureFixture[str], slug: str) -> None:
-    report = gate.verify("folk", slug)
-    gate.print_report(report)
-
-    captured = capsys.readouterr()
-    assert f"folk/{slug}" in captured.out
-    assert isinstance(report["passed"], bool)

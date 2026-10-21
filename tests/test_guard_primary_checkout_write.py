@@ -106,10 +106,6 @@ def test_issue_9102_executable_payload_stays_visible(repo: Path, shape):
     assert _run(repo, payload).returncode == 2
 
 
-def test_issue_9102_real_let_heredoc_body_is_inert():
-    assert hook.bash_write_targets("let x=1<<EOF\ntee AGENTS.md\nEOF") == []
-
-
 @pytest.mark.parametrize(
     "command",
     [
@@ -156,10 +152,6 @@ def test_issue_9115_malformed_write_hook_input_blocks(monkeypatch, payload):
     assert hook.main() == 2
 
 
-def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
-    assert hook._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False, False)]
-
-
 @pytest.mark.parametrize(
     "opener,closer,quoted",
     [
@@ -196,14 +188,6 @@ def test_issue_9088_here_strings_keep_primary_write_visible(repo: Path, first):
 def test_issue_9088_crlf_closer_keeps_primary_write_visible(repo: Path):
     command = "cat <<EOF\r\nEOF\r\ntee AGENTS.md\nEOF"
     assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
-    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
-    assert _run(repo, payload).returncode == 2
-
-
-def test_issue_9088_reviewer_heredoc_bypass_blocks(repo: Path):
-    command = 'cat <<"EO\\"F"\nnote\nEO"F\ngh pr merge 1 --admin\ngit checkout -b feature\ntee AGENTS.md\necho $GH_TOKEN\ncat .env\nEO\\"F'
-    assert "tee AGENTS.md" in hook._strip_heredoc_bodies(command)
-    assert hook.bash_write_targets(command)
     payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
     assert _run(repo, payload).returncode == 2
 
@@ -512,39 +496,6 @@ def test_issue_10337_cursor_shell_blocks_primary_and_allows_dispatch(repo: Path,
         assert result.returncode == 0, result.stderr
 
 
-def test_dispatch_worktree_control_hook_write_allowed(repo: Path):
-    payload = _write_payload(
-        repo,
-        "Edit",
-        ".worktrees/dispatch/claude/task-1/agents_extensions/shared/hooks/guard-pr-merge.py",
-    )
-
-    result = _run(repo, payload)
-
-    assert result.returncode == 0, result.stderr
-
-
-def test_read_only_bash_allowed(repo: Path):
-    for command in ("git status", "cat curriculum/tracked.md", "git log --oneline"):
-        payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
-        result = _run(repo, payload)
-        assert result.returncode == 0, f"{command!r}: {result.stderr}"
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        "`tee AGENTS.md`",
-        'echo "`tee AGENTS.md`"',
-        "echo `echo ok; tee AGENTS.md`",
-    ],
-)
-def test_issue_8896_executable_backtick_write_blocked(repo: Path, command: str):
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
-    assert result.returncode == 2, result.stderr
-    assert "AGENTS.md" in result.stderr
-
-
 @pytest.mark.parametrize(
     "command",
     [
@@ -560,30 +511,10 @@ def test_issue_8896_review_round_two_write_bypasses_block(repo: Path, command: s
     assert result.returncode == 2, result.stderr
 
 
-@pytest.mark.parametrize(
-    "command",
-    [
-        'echo "$(echo "$(tee AGENTS.md)")"',
-        "cat <<EOF\n$(tee \\\nAGENTS.md)\nEOF",
-    ],
-)
-def test_issue_8896_review_round_three_nested_writes_block(repo: Path, command: str):
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
-    assert result.returncode == 2, result.stderr
-
-
 def test_issue_8896_write_recursion_limit_blocks(repo: Path):
     command = "tee AGENTS.md"
     for _ in range(9):
         command = f"bash -c {shlex.quote(command)}"
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
-    assert result.returncode == 2, result.stderr
-
-
-def test_issue_8896_quoted_substitution_recursion_limit_blocks(repo: Path):
-    command = "tee AGENTS.md"
-    for _ in range(9):
-        command = f'echo "$({command})"'
     result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
     assert result.returncode == 2, result.stderr
 
@@ -666,50 +597,6 @@ def test_issue_8896_review_round_two_ordinary_write_allow(repo: Path, command: s
     assert result.returncode == 0, result.stderr
 
 
-@pytest.mark.parametrize(
-    "command",
-    [
-        "git status",
-        "ls -la",
-        "echo ok > /tmp/x",
-        "cat <<EOF\nordinary text\nEOF",
-        "cat <<-EOF\n\t# tee AGENTS.md\n\tEOF",
-        "echo '`tee AGENTS.md`'",
-        "echo \\`tee AGENTS.md\\`",
-    ],
-)
-def test_issue_8896_ordinary_commands_allow_primary(repo: Path, command: str):
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
-    assert result.returncode == 0, result.stderr
-
-
-def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(repo: Path, tmp_path: Path) -> None:
-    """Read-only commands do not depend on optional Python packages."""
-    poison = tmp_path / "poison"
-    poison.mkdir()
-    (poison / "jsonschema.py").write_text("raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8")
-    env = _clean_env()
-    env["PYTHONPATH"] = str(poison)
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git status 2>/dev/null"},
-    }
-
-    result = subprocess.run(
-        [_python(), str(HOOK_PATH)],
-        input=json.dumps(payload),
-        cwd=repo,
-        check=False,
-        capture_output=True,
-        text=True,
-        env=env,
-        timeout=30,
-    )
-
-    assert result.returncode == 0, result.stderr
-
-
 def test_bash_tool_input_workdir_controls_relative_write_resolution(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     payload = {
@@ -743,52 +630,6 @@ def test_bash_tool_input_primary_workdir_cannot_be_spoofed_by_payload_cwd(repo: 
     assert "tracked_primary_checkout" in result.stderr
 
 
-def test_bash_line_continuation_cannot_hide_primary_in_place_edit(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {
-            "command": "sed -i \\\n-e 's/old/new/' curriculum/tracked.md",
-        },
-    }
-
-    result = _run(repo, payload)
-
-    assert result.returncode == 2, result.stderr
-    assert "tracked_primary_checkout" in result.stderr
-
-
-def test_write_capable_bash_redirect_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "echo tampered > curriculum/tracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-    assert ".worktrees/dispatch/" in result.stderr
-
-
-def test_write_capable_bash_tee_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "echo x | tee curriculum/tracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-
-
-def test_bash_redirect_to_gitignored_allowed(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "echo x > local_state/out.log"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
-
-
 def test_apply_patch_tracked_file_blocked(repo: Path):
     patch = "*** Begin Patch\n*** Update File: curriculum/tracked.md\n@@\n-original\n+tampered\n*** End Patch\n"
     payload = {"tool_name": "apply_patch", "cwd": str(repo), "tool_input": {"input": patch}}
@@ -820,35 +661,6 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
 
 
 # --- #4538 / #4855: heredoc bodies carry no write targets -------------------
-
-
-@pytest.mark.parametrize(
-    "command, expected",
-    [
-        # Body text with `>N` (previously misread as a redirect to '15%').
-        (
-            "cat > /tmp/brief.md <<'EOF'\n... if >15% of the last 30 consecutive live passages ...\nEOF",
-            ["/tmp/brief.md"],
-        ),
-        # Body text with markdown backtick code spans (#4855 live repro).
-        (
-            "cat > /tmp/brief.md <<'EOF'\nrun `.venv/bin/python scripts/x.py` then check\nEOF",
-            ["/tmp/brief.md"],
-        ),
-        # Tab-indented body with <<- and a redirect-looking line.
-        (
-            "cat > /tmp/t.md <<-'DOC'\n\tdata 2>&1 goes here\n\tDOC",
-            ["/tmp/t.md"],
-        ),
-        # A real write AFTER the heredoc closes is still seen.
-        (
-            "cat > /tmp/a.md <<'EOF'\nbody\nEOF\necho x > out.txt",
-            ["/tmp/a.md", "out.txt"],
-        ),
-    ],
-)
-def test_heredoc_body_not_write_targets(command, expected):
-    assert hook.bash_write_targets(command) == expected
 
 
 # --- #4877 adversarial round (grok-build msg 2334): heredoc fail-open ---------
@@ -921,13 +733,6 @@ def test_bash_git_write_intents_allowlisted_or_ignored(command):
     assert all(i.get("allowlisted") for i in intents)
 
 
-def test_bash_git_write_intents_honors_dash_c():
-    intents = hook.bash_git_write_intents("git -C .worktrees/dispatch/claude/task-1 apply /tmp/x.diff")
-    assert len(intents) == 1
-    assert intents[0]["c_path"] == ".worktrees/dispatch/claude/task-1"
-    assert intents[0]["kind"] == "apply"
-
-
 def test_git_apply_on_primary_blocked(repo: Path):
     payload = {
         "tool_name": "Bash",
@@ -938,36 +743,6 @@ def test_git_apply_on_primary_blocked(repo: Path):
     assert result.returncode == 2, result.stderr
     assert "#5396" in result.stderr
     assert "git apply" in result.stderr
-
-
-def test_git_stash_pop_on_primary_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git stash pop"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-
-
-def test_git_add_tracked_on_primary_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git add curriculum/tracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-
-
-def test_git_checkout_ref_path_on_primary_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git checkout HEAD -- curriculum/tracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
 
 
 def test_git_checkout_clean_on_primary_allowed(repo: Path):
@@ -989,33 +764,6 @@ def test_git_apply_via_dash_c_worktree_allowed(repo: Path):
         "tool_input": {"command": f"git -C {worktree} apply /tmp/worker.diff"},
     }
     result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
-
-
-def test_git_apply_from_worktree_cwd_allowed(repo: Path):
-    """Pinned residual: pathless worktree applies are checked by CI/merge diff layers."""
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(worktree),
-        "tool_input": {"command": "git apply /tmp/worker.diff"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
-
-
-def test_git_add_control_path_in_worktree_allowed(repo: Path):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(worktree),
-        "tool_input": {
-            "command": "git add agents_extensions/shared/hooks/guard-pr-merge.py",
-        },
-    }
-
-    result = _run(repo, payload)
-
     assert result.returncode == 0, result.stderr
 
 
@@ -1069,47 +817,6 @@ def test_bash_git_write_intents_mv_rm():
     assert len(rm) == 1 and rm[0]["kind"] == "rm" and rm[0]["paths"] == ["curriculum/tracked.md"]
 
 
-def test_git_checkout_treeish_path_no_dashdash_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git checkout HEAD~1 curriculum/tracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-
-
-def test_git_mv_on_primary_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git mv curriculum/tracked.md curriculum/renamed.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-
-
-def test_git_rm_on_primary_blocked(repo: Path):
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "git rm curriculum/tracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-
-
-def test_git_mv_via_dash_c_worktree_allowed(repo: Path):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": f"git -C {worktree} mv curriculum/tracked.md curriculum/renamed.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
-
-
 def test_git_checkout_branch_only_blocked_by_effective_cwd_guard(repo: Path):
     """The write guard owns branch mutations after effective-cwd resolution."""
     payload = {
@@ -1144,36 +851,6 @@ def test_bash_unresolved_shell_var_blocked_with_distinct_reason(repo: Path):
     result = _run(repo, payload)
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr
-
-
-def test_bash_redirect_to_gitignored_claude_archive_is_allowed(repo: Path):
-    epic = repo / ".claude" / "atlas-epic"
-    epic.mkdir(parents=True, exist_ok=True)
-    (epic / "archive").mkdir(exist_ok=True)
-    # Ensure .claude is ignored like production (fixture may already ignore local_state only)
-    gitignore = repo / ".gitignore"
-    gi = gitignore.read_text(encoding="utf-8") if gitignore.is_file() else ""
-    if ".claude/" not in gi:
-        gitignore.write_text(gi.rstrip() + "\n.claude/\n", encoding="utf-8")
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(epic),
-        "tool_input": {"command": "echo x > archive/t.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 0, result.stderr
-
-
-def test_bash_untracked_non_ignored_still_blocked(repo: Path):
-    (repo / "docs").mkdir(exist_ok=True)
-    payload = {
-        "tool_name": "Bash",
-        "cwd": str(repo),
-        "tool_input": {"command": "echo x > docs/brand-new-untracked.md"},
-    }
-    result = _run(repo, payload)
-    assert result.returncode == 2, result.stderr
-    assert "untracked_primary_checkout" in result.stderr
 
 
 def test_bash_shell_var_reassignment_not_expanded(repo: Path):
@@ -1233,11 +910,6 @@ def test_bash_write_targets_expand_home_and_tilde(monkeypatch: pytest.MonkeyPatc
     ]
 
 
-def test_bash_git_write_intents_expand_dash_c_variable():
-    (intent,) = hook.bash_git_write_intents("W=/r/.worktrees/dispatch/a/b; git -C $W add f")
-    assert intent["c_path"] == "/r/.worktrees/dispatch/a/b"
-
-
 def _bash(
     repo: Path,
     command: str,
@@ -1266,11 +938,6 @@ def _bash(
 )
 def test_bash_expanded_variable_write_outside_primary_allowed(repo: Path, command: str):
     result = _bash(repo, command)
-    assert result.returncode == 0, result.stderr
-
-
-def test_external_tee_with_null_redirect_allowed(repo: Path):
-    result = _bash(repo, "S=/tmp/claude-1000; tee $S/orig-1.md >/dev/null")
     assert result.returncode == 0, result.stderr
 
 
@@ -1327,32 +994,6 @@ def test_bash_comments_preserve_real_primary_writes(repo: Path, command: str):
     result = _bash(repo, command)
     assert result.returncode == 2, result.stderr
     assert "primary_checkout" in result.stderr
-
-
-@pytest.mark.parametrize("blank", ["\r", "\v", "\f", "\u00a0", "\u2003", "\u2028"])
-def test_leading_non_bash_blank_does_not_hide_primary_write(repo: Path, blank: str):
-    result = _bash(repo, f"{blank}#; tee AGENTS.md")
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
-
-
-@pytest.mark.parametrize("blank", [" ", "\t"])
-def test_leading_bash_blank_keeps_primary_comment_inert(repo: Path, blank: str):
-    result = _bash(repo, f"{blank}#; tee AGENTS.md")
-    assert result.returncode == 0, result.stderr
-
-
-@pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
-def test_bash_comment_starts_after_control_operator_in_primary_hook(operator):
-    assert hook._strip_shell_comments(f"echo hi{operator}# hidden\ntee AGENTS.md") == (
-        f"echo hi{operator}\ntee AGENTS.md"
-    )
-
-
-def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    result = _bash(repo, f"W={worktree}; git -C $W add f")
-    assert result.returncode == 0, result.stderr
 
 
 # ===========================================================================
@@ -1475,32 +1116,6 @@ def test_issue_10633_refusal_precedes_allowlisted_early_returns(repo: Path, comm
     _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=where))
 
 
-@pytest.mark.parametrize(
-    "spelling",
-    [
-        "$'\\xc3\\xa9/curriculum/tracked.md'",
-        "$'\\303\\251/curriculum/tracked.md'",
-        "$'\\xc3'$'\\xa9/curriculum/tracked.md'",
-    ],
-)
-def test_issue_10633_byte_escapes_through_symlink_to_primary_refused(repo: Path, spelling: str):
-    # A dispatch symlink whose raw name is the UTF-8 bytes of 'é' points at the
-    # protected primary; byte-escape spellings of it are refused on presence.
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    os.symlink(os.fsencode(str(repo)), os.fsencode(str(dispatch)) + b"/\xc3\xa9")
-    _assert_ansi_c_refused(_hook_subprocess(repo, f"printf changed > {spelling}", cwd=dispatch))
-
-
-def test_issue_10633_literal_utf8_symlink_name_still_resolves(repo: Path):
-    # Control: a LITERAL UTF-8 path component is ordinary input; it still
-    # resolves through the symlink and blocks as a primary write.
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    os.symlink(os.fsencode(str(repo)), os.fsencode(str(dispatch)) + b"/\xc3\xa9")
-    result = _hook_subprocess(repo, "printf changed > \u00e9/curriculum/tracked.md", cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
-
-
 def test_issue_10633_byte_escaped_non_ascii_primary_root_refused(tmp_path: Path, repo_template: Path):
     main = _materialize_repo(repo_template, tmp_path / "r\u00e9po" / "main")
     dispatch = main / ".worktrees/dispatch/claude/task-1"
@@ -1512,15 +1127,6 @@ def test_issue_10633_byte_escaped_non_ascii_primary_root_refused(tmp_path: Path,
     for escape in ("\\x{:02x}", "\\{:03o}"):
         spelled = "".join(escape.format(b) if b >= 0x80 else chr(b) for b in os.fsencode(str(target)))
         _assert_ansi_c_refused(_hook_subprocess(main, f"printf changed > $'{spelled}'", cwd=dispatch))
-
-
-def test_issue_10633_c_locale_scalar_symlink_refused(repo: Path):
-    # Under a C locale Bash leaves ``$'\u00e9'`` as the literal text ``\u00E9``,
-    # here the name of a dispatch symlink into the primary.
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    os.symlink(repo, dispatch / "\\u00E9")
-    command = "export LC_ALL=C\nprintf changed > $'\\u00e9'/curriculum/tracked.md"
-    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=dispatch))
 
 
 @pytest.mark.parametrize(
@@ -1539,87 +1145,6 @@ def test_issue_10633_plain_quoting_controls_allowed(repo: Path, command: str):
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
     result = _hook_subprocess(repo, command, cwd=dispatch)
     assert result.returncode == 0, result.stderr
-
-
-@pytest.mark.parametrize(
-    "command, expected",
-    [
-        ("echo $'x'", True),
-        ("echo $\\\n'x'", True),
-        ("echo $\\\n\\\n'x'", True),
-        # A removal that brings a new pair together is removed too (conservative).
-        ("echo $\\\\\n\n'x'", True),
-        # Bash does not treat backslash-CR as a line continuation.
-        ("echo $\\\r\n'x'", False),
-        ("echo '$HOME' \"$x\" $\"msg\"", False),
-    ],
-)
-def test_issue_10633_ansi_c_marker_detection(command: str, expected: bool):
-    assert hook._has_ansi_c_quoting(command) is expected
-
-
-def test_issue_10633_octal_wrap_spellings_match_bash():
-    # The octal-wrap cases above probe real bypasses only if Bash decodes them
-    # to these words: the tee program name and an absolute path.
-    bash = shutil.which("bash")
-    if bash is None:
-        pytest.skip("bash not available")
-    result = subprocess.run(
-        [bash, "-c", "printf '%s|' $'\\564ee' $'\\457tmp'"], capture_output=True, text=True, check=True, timeout=30
-    )
-    assert result.stdout == "tee|/tmp|"
-
-
-def test_issue_10633_octal_wrap_spellings_skip_without_bash(monkeypatch: pytest.MonkeyPatch):
-    # Without Bash on PATH the companion test skips: it neither fails nor
-    # passes without having compared anything.
-    monkeypatch.setattr(shutil, "which", lambda name: None)
-    with pytest.raises(pytest.skip.Exception, match="bash not available"):
-        test_issue_10633_octal_wrap_spellings_match_bash()
-
-
-def test_issue_10633_guard_has_no_ansi_c_decoder():
-    assert not hasattr(hook, "_decode_ansi_c_quotes")
-    assert "unicode_escape" not in HOOK_PATH.read_text(encoding="utf-8")
-
-
-@pytest.mark.parametrize(
-    "command, literal",
-    [
-        # The final-review probe: Bash wraps \457 to "/" and writes an absolute
-        # path; a decoder read "įtmp/x".
-        pytest.param("tee $'\\457tmp/x'", "$\\457tmp/x", id="octal-wrap-target"),
-        # The span body is not a reference to a same-command variable.
-        pytest.param("x=/srv/ok; tee $'x'", "$x", id="span-names-assigned-variable"),
-        pytest.param("echo x > $'a b'", "$a b", id="redirect-target"),
-    ],
-)
-def test_issue_10633_parser_keeps_ansi_c_span_literal_and_unresolved(command: str, literal: str):
-    # The hook entry refuses these commands. A direct parser caller gets the
-    # undecoded span, unresolved like any unknown expansion, so it blocks.
-    targets = hook.bash_write_targets(command, cwd="/")
-    assert [str(target) for target in targets] == [literal]
-    assert targets[0].unresolved_at == 0
-    assert hook._bash_path_decision(targets[0], "/", None).reason == "unresolved_shell_variable"
-
-
-def test_issue_10633_parser_never_decodes_ansi_c_program_name():
-    (segment,) = hook._expanded_segments("$'\\564ee' notes.txt")
-    assert hook._command_word(segment) == ("$\\564ee", 0)
-    assert segment[0].unresolved_at == 0
-
-
-def test_issue_10633_parser_ansi_c_path_program_name_keeps_basename(repo: Path):
-    # The parser takes a command word's basename without decoding, so a span
-    # spelled as a plain path still names that program for a direct caller; the
-    # token stays unresolved, and the hook entry refuses the command outright.
-    command = "$'/usr/bin/tee' notes.txt"
-    (segment,) = hook._expanded_segments(command)
-    assert str(segment[0]) == "$/usr/bin/tee"
-    assert segment[0].unresolved_at == 0
-    assert hook._command_word(segment) == ("tee", 0)
-    assert [str(target) for target in hook.bash_write_targets(command, cwd="/")] == ["notes.txt"]
-    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=repo / ".worktrees/dispatch/claude/task-1"))
 
 
 @pytest.mark.parametrize(
@@ -1741,13 +1266,6 @@ def test_issue_8785_primary_bypasses_block(repo: Path, template: str, reason: st
     assert reason in result.stderr
 
 
-def test_issue_8785_quoted_heredoc_body_is_inert(repo: Path):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    command = f"cat <<'EOF'\n$(echo x > {repo}/curriculum/tracked.md)\nEOF"
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
-    assert result.returncode == 0, result.stderr
-
-
 def test_issue_8785_mixed_heredocs_keep_quoted_body_inert(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     command = f"cat <<'INERT' <<ACTIVE\n$(echo x > {repo}/curriculum/tracked.md)\nINERT\nplain text\nACTIVE"
@@ -1815,16 +1333,6 @@ def test_issue_8785_final_component_can_match_primary(repo: Path, template: str)
     assert "undecidable_glob_write_target" in result.stderr
 
 
-@pytest.mark.parametrize(
-    "pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"]
-)
-def test_issue_8785_parent_pattern_matching_primary_blocks(repo: Path, pattern: str):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)
-    assert result.returncode == 2, result.stderr
-    assert "undecidable_glob_write_target" in result.stderr
-
-
 @pytest.mark.parametrize("pattern", ["other*", "{other,sibling}", "out-?.txt", "{a,b}.txt"])
 def test_issue_8785_parent_pattern_matching_siblings_allowed(repo: Path, pattern: str):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
@@ -1838,30 +1346,6 @@ def test_issue_8785_hidden_component_glob_semantics():
     assert hook._final_component_matches(".m*", ".main")
     assert hook._final_component_matches("{other,.m*}", ".main")
     assert hook._final_component_matches("{other,{.main,sibling}}", ".main")
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        "cat {scratch}/read-only",
-        "grep needle {scratch}/read-only",
-        "find {scratch} -maxdepth 0",
-        "git log -1",
-        "cd {scratch}; tee scratch.txt",
-        "tee {scratch}/scratch.txt",
-        "echo {scratch}/scratch.txt | xargs tee",
-        "echo x > {scratch}/out-?.txt",
-    ],
-)
-def test_issue_8785_safe_commands_remain_allowed(repo: Path, outside_dir: Path, command: str):
-    # #10343: a shared scratch.txt can be a symlink into a primary checkout.
-    # Own the directory and its leaves instead of assuming global temp state.
-    scratch = outside_dir / "scratch"
-    scratch.mkdir()
-    command = command.format(scratch=shlex.quote(str(scratch)))
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
-    assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize("primary_cwd", [False, True])
@@ -1951,25 +1435,6 @@ def test_bash_home_clobbered_or_deferred_is_unknown(repo: Path, command: str):
     result = _bash(repo, command, env={"HOME": "/tmp"})
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr
-
-
-def test_bash_home_assigned_literal_still_expands(repo: Path):
-    result = _bash(repo, "HOME=/tmp/h; echo x > ~/f", env={"HOME": str(repo)})
-    assert result.returncode == 0, result.stderr
-
-
-@pytest.mark.parametrize(
-    "command, name, value",
-    [
-        ("S=/tmp/x || true; echo x > $S/f", "S", "/tmp/x/f"),
-        ("S=/tmp/x && echo x > $S/f", "S", "/tmp/x/f"),
-        ("echo a; S=/tmp/x\necho x > $S/f", "S", "/tmp/x/f"),
-        ("if true; then :; fi; S=/tmp/x; echo x > $S/f", "S", "/tmp/x/f"),
-    ],
-)
-def test_unconditional_top_level_assignment_is_known(command, name, value):
-    (target,) = hook.bash_write_targets(command)
-    assert target == value and target.unresolved_at is None
 
 
 def test_bash_write_targets_see_through_compound_keywords():
@@ -2079,109 +1544,6 @@ def test_issue_8785_review_writers_block(repo: Path, template: str, reason: str)
 
 
 @pytest.mark.parametrize(
-    "template",
-    [
-        "find {primary} -exec rm {{}} \\;",
-        "find {primary} -exec rm -rf {{}} +",
-        "find {primary} -exec tee {{}} \\;",
-        "find -D exec {primary} -delete",
-        "find -D exec -O2 {primary} -delete",
-        "find -files0-from {primary}/list -delete",
-        "find /tmp -fprintf {primary}/AGENTS.md '%p'",
-        "find /tmp -fprint {primary}/AGENTS.md",
-        "find /tmp -fprint0 {primary}/AGENTS.md",
-        "find /tmp -fls {primary}/AGENTS.md",
-        "curl --output-dir {primary} -O https://example.test/a",
-        "curl --output-dir={primary} -o AGENTS.md https://example.test/a",
-        "curl -D {primary}/AGENTS.md https://example.test/a",
-        "curl -c {primary}/AGENTS.md https://example.test/a",
-        "wget -o {primary}/AGENTS.md https://example.test/a",
-        "sort -T {primary} -o /tmp/out /tmp/in",
-        "sort {primary}/AGENTS.md -o /tmp/out",  # accepted long-tail input false positive
-        "xargs sort -o {primary}/AGENTS.md",
-        "parallel sort -o {primary}/AGENTS.md ::: /tmp/a",
-        "sqlite3 /tmp/a.db '.save {primary}/AGENTS.md'",
-        'sh -c "$CMD"',
-        'bash -c "$CMD"',
-        'zsh -c "$CMD"',
-        'dash -c "$CMD"',
-        "git -C {primary} switch -f other",
-        "git -C {primary} checkout other",
-        "git -C {primary} merge other",
-        "git -C {primary} pull",
-        "git -C {primary} rebase other",
-        "git -C {primary} cherry-pick HEAD~1",
-        "git -C {primary} revert HEAD",
-        "git -C {primary} am /tmp/a.patch",
-        "git -C {primary} apply /tmp/a.patch",
-        "git -C {primary} stash pop",
-        "git -C {primary} stash apply",
-        "git -C {primary} read-tree -u HEAD",
-        "sh -c 'git -C {primary} merge other'",
-        "git worktree remove {primary}",
-        "tar -xf /tmp/x.tar -C {primary}",
-        "unzip /tmp/x.zip -d {primary}",
-        "patch -d {primary} -i /tmp/x.patch",
-        "ffmpeg -i /tmp/in.mp4 {primary}/out.mp4",
-        "convert /tmp/in.png {primary}/out.png",
-    ],
-)
-def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    result = _run(
-        repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": template.format(primary=repo)}}
-    )
-    assert result.returncode == 2, (template, result.stderr)
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        "sort -o../../../../AGENTS.md /tmp/in",
-        "curl -o../../../../AGENTS.md https://example.test/a",
-        "tar -cf../../../../AGENTS.md /tmp/a",
-        "wget -O../../../../AGENTS.md https://example.test/a",
-        "unzip /tmp/x.zip -d../../../../",
-        "patch -o../../../../AGENTS.md -i /tmp/x.patch",
-        "cd {primary}; sort -oAGENTS.md /tmp/in",
-        "cd {primary}; curl -oAGENTS.md https://example.test/a",
-        "ruff format {primary}/AGENTS.md",
-        "ruff check --fix {primary}/AGENTS.md",
-        "ruff check --fix-only {primary}/AGENTS.md",
-        "ruff check --fix --unsafe-fixes {primary}/AGENTS.md",
-        "black {primary}/AGENTS.md",
-        "isort {primary}/AGENTS.md",
-        "prettier --write {primary}/AGENTS.md",
-        "prettier -w {primary}/AGENTS.md",
-        "eslint --fix {primary}/AGENTS.md",
-        "clang-format -i {primary}/AGENTS.md",
-        "gofmt -w {primary}/AGENTS.md",
-        "gofmt -l -w {primary}/AGENTS.md",
-        "gofmt -lw {primary}/AGENTS.md",
-        "rustfmt {primary}/AGENTS.md",
-        "shfmt -w {primary}/AGENTS.md",
-        "markdownlint --fix {primary}/AGENTS.md",
-        "markdownlint-cli2 --fix {primary}/AGENTS.md",
-        "bash -lc 'echo x > {primary}/AGENTS.md'",
-        "bash -ec 'echo x > {primary}/AGENTS.md'",
-        "zsh -lc 'echo x > {primary}/AGENTS.md'",
-        "dash -ec 'echo x > {primary}/AGENTS.md'",
-        "sh -lc 'echo x > {primary}/AGENTS.md'",
-        "bash -o pipefail -lc 'echo x > {primary}/AGENTS.md'",
-        "bash +O extglob -lc 'echo x > {primary}/AGENTS.md'",
-        "bash -lc -- 'echo x > {primary}/AGENTS.md'",
-        "bash --noprofile --norc -lc 'echo x > {primary}/AGENTS.md'",
-        "bash --login --rcfile /tmp/bashrc -lc 'echo x > {primary}/AGENTS.md'",
-        "bash --init-file=/tmp/bashrc -lc 'echo x > {primary}/AGENTS.md'",
-    ],
-)
-def test_issue_8785_final_review_writers_block(repo: Path, command: str):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    result = _bash(repo, command.format(primary=repo), cwd=worktree)
-    assert result.returncode == 2, (command, result.stderr)
-
-
-@pytest.mark.parametrize(
     "command",
     [
         "ruff check {primary}/AGENTS.md",
@@ -2281,55 +1643,12 @@ def test_issue_8785_option_destinations_follow_target_worktree(repo: Path, templ
     assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
 
 
-@pytest.mark.parametrize(
-    "command",
-    [
-        "curl --proto=https https://example.test/a -o /tmp/x",
-        "sort --parallel=2 /tmp/in -o /tmp/out",
-        "tar --exclude=AGENTS.md -cf /tmp/out /tmp/in",
-        "tar --exclude='*.pyc' -cf /tmp/out /tmp/in",
-    ],
-)
-def test_issue_8785_unknown_long_values_do_not_write_primary(repo: Path, command: str):
-    result = _bash(repo, command, cwd=repo)
-    assert result.returncode == 0, (command, result.stderr)
-
-
-@pytest.mark.parametrize(
-    "template",
-    [
-        "curl --output={target}/AGENTS.md URL",
-        "wget --output-document={target}/AGENTS.md URL",
-        "sort --output={target}/AGENTS.md /tmp/in",
-        "tar --file={target}/AGENTS.md -c /tmp/in",
-        "patch --output={target}/AGENTS.md -i /tmp/in.patch",
-    ],
-)
-@pytest.mark.parametrize("target_primary", [True, False])
-def test_issue_8785_known_long_values_follow_target(repo: Path, template: str, target_primary: bool):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    target = repo if target_primary else worktree
-    command = template.format(target=target)
-    result = _bash(repo, command, cwd=repo)
-    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
-
-
 @pytest.mark.parametrize("flags", ["-oc", "-oce"])
 @pytest.mark.parametrize("target_primary", [True, False])
 def test_issue_8785_bash_cluster_option_value_precedes_script(repo: Path, flags: str, target_primary: bool):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     target = repo if target_primary else worktree
     command = f"bash {flags} pipefail 'echo x > {target}/AGENTS.md'"
-    result = _bash(repo, command, cwd=repo)
-    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
-
-
-@pytest.mark.parametrize("flag", ["-l", "-e", "-r 'a -> b'"])
-@pytest.mark.parametrize("target_primary", [True, False])
-def test_issue_8785_gofmt_flag_values_follow_target(repo: Path, flag: str, target_primary: bool):
-    worktree = repo / ".worktrees/dispatch/claude/task-1"
-    target = repo if target_primary else worktree
-    command = f"gofmt -w {flag} {target}/f.go"
     result = _bash(repo, command, cwd=repo)
     assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
 

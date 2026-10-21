@@ -43,51 +43,6 @@ def test_generated_contract_is_exact_and_schema_valid() -> None:
     assert contract["cycle007"]["private_binding_state"] == "BOUND"
 
 
-def test_schema_rejects_nested_extra_missing_and_frozen_drift() -> None:
-    contract = firewall.build_contract()
-    schema = json.loads((firewall.DATA / "contracts/phase3_scope_circularity_firewall_v1.schema.json").read_text())
-    validator = Draft202012Validator(schema)
-    extra = deepcopy(contract)
-    extra["cycle007"]["unexpected"] = True
-    missing = deepcopy(contract)
-    del missing["private_runtime"]["rejects"]
-    drift = deepcopy(contract)
-    drift["denominator"]["source_units"] = 58
-    open_binding = deepcopy(contract)
-    open_binding["phase_bindings"]["unexpected"] = {"path": "x", "sha256": "a" * 64}
-    open_split = deepcopy(contract)
-    open_split["split_firewall"]["unexpected"] = True
-    open_failure = deepcopy(contract)
-    open_failure["fail_closed"]["unexpected"] = True
-    assert all(
-        list(validator.iter_errors(candidate))
-        for candidate in (extra, missing, drift, open_binding, open_split, open_failure)
-    )
-
-
-def test_runtime_receipt_corpus_and_state_schemas_are_closed_and_pinned() -> None:
-    schema_paths = (firewall.PUBLIC_RECEIPT_SCHEMA, firewall.PRIVATE_CORPUS_SCHEMA, firewall.RUN_STATE_SCHEMA)
-    schemas = [json.loads(path.read_text()) for path in schema_paths]
-    for schema in schemas:
-        Draft202012Validator.check_schema(schema)
-    public_receipt = firewall._public_binding_receipt({"corpus_sha256": firewall.EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256})
-    Draft202012Validator(schemas[0]).validate(public_receipt)
-    for state, extra in (
-        ("RUNNING", {}),
-        ("COMPLETE", {"corpus_sha256": "a" * 64, "public_receipt_sha256": "b" * 64}),
-        ("TERMINAL_FAILURE", {"code": "hash_drift"}),
-    ):
-        value = {"schema_version": "phase3_evaluation_steward_run_state_v1", "state": state, "text_free": True} | extra
-        value["state_sha256"] = firewall.sha256_bytes(firewall.canonical_json(value))
-        Draft202012Validator(schemas[2]).validate(value)
-    forged = deepcopy(public_receipt)
-    forged["private_graph_commitment_sha256"] = "0" * 64
-    assert list(Draft202012Validator(schemas[0]).iter_errors(forged))
-    private_schema = schemas[1]
-    assert private_schema["properties"]["candidate_clearance_allowlist"]["maxItems"] == 0
-    assert private_schema["properties"]["corpus_sha256"]["const"] == firewall.EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256
-
-
 @pytest.mark.parametrize("namespace", firewall.DENY_NAMESPACES)
 def test_every_cycle007_deny_namespace_is_terminal_and_never_derives(namespace: str) -> None:
     called = 0

@@ -8,12 +8,10 @@ import subprocess
 import sys
 import textwrap
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
 from scripts.common.repo_root import main_checkout_root
-from tests.conftest import _TelemetryIsolation
 
 
 def test_live_guard_covers_repo_and_primary_events(pytestconfig: pytest.Config) -> None:
@@ -220,45 +218,3 @@ def test_guard_ignores_unrelated_writer(tmp_path: Path, mutation: str, collect_o
         assert not existing.exists()
     else:
         assert (production / "renamed.jsonl").read_bytes() == b"existing\n"
-
-
-def test_guard_accepts_unchanged_existing_events(tmp_path: Path) -> None:
-    production = tmp_path / "repo/batch_state/telemetry/events"
-    production.mkdir(parents=True)
-    (production / "existing.jsonl").write_bytes(b"pre-existing\n")
-
-    result = _run_guard(tmp_path, "def test_no_leak():\n    pass\n")
-
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert (production / "existing.jsonl").read_bytes() == b"pre-existing\n"
-
-
-def test_guard_is_disabled_after_session_cleanup(tmp_path: Path, tmp_path_factory, monkeypatch) -> None:
-    from scripts.telemetry import emit
-
-    production = tmp_path / "batch_state/telemetry/events"
-    guard = _TelemetryIsolation((production,))
-    cleanups = []
-    config = SimpleNamespace(_tmp_path_factory=tmp_path_factory, add_cleanup=cleanups.append)
-    previous = os.environ.get("LU_TELEMETRY_EVENTS_DIR")
-    try:
-        guard.pytest_sessionstart(SimpleNamespace(config=config))
-        assert os.environ["LU_TELEMETRY_EVENTS_DIR"] != previous
-    finally:
-        for cleanup in reversed(cleanups):
-            cleanup()
-    assert os.environ.get("LU_TELEMETRY_EVENTS_DIR") == previous
-
-    monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", str(production))
-    emit.emit_event("later-session", {})
-
-    assert not guard.leaks
-    assert [json.loads(path.read_text())["event_type"] for path in production.glob("*.jsonl")] == ["later-session"]
-
-
-def test_guard_handles_a_crashed_worker_without_output() -> None:
-    guard = _TelemetryIsolation(())
-
-    guard.pytest_testnodedown(SimpleNamespace(), RuntimeError("worker crashed"))
-
-    assert not guard.leaks

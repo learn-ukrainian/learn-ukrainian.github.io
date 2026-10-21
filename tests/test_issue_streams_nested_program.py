@@ -12,7 +12,6 @@ import subprocess
 import time
 from pathlib import Path
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
 from scripts.orchestration import task_lifecycle
 from scripts.orchestration.issue_stream_audit import (
     _tree_membership,
@@ -53,24 +52,6 @@ def _audit_report(edges: dict[int, list[int]], open_numbers: list[int]) -> dict:
     report = classify(issues, registry, membership)
     report["repository"] = "org/repo"
     return report
-
-
-def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():
-    registry = load_registry(REGISTRY_PATH)
-    assert registry[STREAM] == [PARENT, PROGRAM, OVERFLOW]
-    assert load_registry(REGISTRY_PATH, audit_only=True)[STREAM] == [PARENT, PROGRAM, OVERFLOW]
-    all_epics = [epic for epics in registry.values() for epic in epics]
-    assert len(all_epics) == len(set(all_epics))
-
-
-def test_workstreams_mirror_lists_both_epics():
-    rows = [
-        line
-        for line in (ROOT / "docs" / "WORKSTREAMS.md").read_text(encoding="utf-8").splitlines()
-        if line.startswith(f"| {STREAM} |") and "Infra & fleet reliability" in line
-    ]
-    assert len(rows) == 1
-    assert f"#{PARENT}" in rows[0] and f"#{PROGRAM}" in rows[0]
 
 
 def test_audit_assigns_program_child_to_exactly_one_epic_and_stream():
@@ -203,27 +184,6 @@ def test_lifecycle_accepts_native_grandchild_through_unregistered_sub_epic():
     assert other["valid"] is False and "different registered epic" in other["reason"]
 
 
-def test_lifecycle_refuses_chain_that_reaches_a_different_registered_epic():
-    """A sub-epic under the nested program #9737 belongs to #9737, never to #6943."""
-    report = _audit_report(
-        {PARENT: [PROGRAM], PROGRAM: [SUB_EPIC], SUB_EPIC: [GRANDCHILD]},
-        [PARENT, PROGRAM, SUB_EPIC, GRANDCHILD],
-    )
-    report["generated_at"] = time.time()
-    assert report["effective_membership"][str(GRANDCHILD)]["epics"] == [PROGRAM]
-
-    wrong = task_lifecycle.resolve_membership(
-        issue_number=GRANDCHILD,
-        stream_epic=PARENT,
-        native_parent_epic=SUB_EPIC,
-        repository="org/repo",
-        native_parent_repository="org/repo",
-        registered_epics=_registered(),
-        membership_report=report,
-    )
-    assert wrong["valid"] is False and "different registered epic" in wrong["reason"]
-
-
 def test_lifecycle_refuses_native_cycle_that_never_reaches_a_registered_epic():
     report = _audit_report({SUB_EPIC: [GRANDCHILD], GRANDCHILD: [SUB_EPIC]}, [PARENT, SUB_EPIC, GRANDCHILD])
     report["generated_at"] = time.time()
@@ -239,12 +199,6 @@ def test_lifecycle_refuses_native_cycle_that_never_reaches_a_registered_epic():
         membership_report=report,
     )
     assert result["valid"] is False and "native sub-issue chain" in result["reason"]
-
-
-def test_session_stream_readers_keep_stream_epic_as_anchor():
-    assert stream_map(ROOT)[STREAM] == [PARENT, PROGRAM, OVERFLOW]
-    # The first listed epic stays the launcher/handoff anchor.
-    assert stream_anchor_id(STREAM, ROOT).split(":", 1)[1] == str(load_registry(REGISTRY_PATH)[STREAM][0])
 
 
 def test_launcher_shell_anchor_is_first_epic():

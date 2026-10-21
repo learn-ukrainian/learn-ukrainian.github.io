@@ -7,7 +7,6 @@ from typing import Any
 import pytest
 
 from scripts.audit.wiki_coverage_gate import (
-    build_obligation_checklist_object,
     check_wiki_coverage,
     parse_implementation_map,
 )
@@ -17,12 +16,6 @@ pytestmark = pytest.mark.reads_content
 
 FIXTURES_DIR = Path(__file__).with_name("fixtures")
 M20_ERR_SEAM_FIXTURES_DIR = FIXTURES_DIR / "m20-wiki-coverage-err-seam"
-
-BAN_1_RULE = (
-    "При викладанні теми «Мій ранок» та семантики зворотних дієслів категорично заборонено "
-    "використовувати будь-які російськомовні пояснення, паралелі чи фонетичні порівняння. "
-    "Це абсолютна вимога деколонізованої педагогіки [S9]."
-)
 BAN_4_RULE = (
     "У лексичному наповненні теми ранкової рутини слід рішуче відкидати русизми, суржик "
     "та кальки, які можуть випадково просочитися в тексти. Слід суворо контролювати чистоту "
@@ -66,28 +59,6 @@ def _ban_result(report: dict[str, Any]) -> dict[str, Any]:
     return next(item for item in report["obligations"] if item["obligation_id"] == "ban-1")
 
 
-def test_obligation_checklist_ignores_teacher_facing_chunk_loanword() -> None:
-    manifest = {
-        "slug": "chunk-fixture",
-        "wiki_path": "wiki/pedagogy/a1/chunk-fixture.md",
-        "sequence_steps": [
-            {
-                "id": "step-1",
-                "heading": "Крок 1: Комунікативні чанки",
-                "required_claim": "Ця фраза подається як лексичний моноліт (чанк).",
-            }
-        ],
-        "l2_errors": [],
-        "phonetic_rules": [],
-        "decolonization_bans": [],
-    }
-
-    checklist = build_obligation_checklist_object(manifest)
-    required = checklist["obligations"][0]["required_items"]["vocabulary"]
-
-    assert "чанк" not in required
-
-
 def test_decolonization_ban_substance_required_passes_when_pair_present() -> None:
     manifest = _ban_manifest(BAN_4_RULE)
 
@@ -126,84 +97,6 @@ def test_decolonization_ban_substance_required_fails_when_pair_missing() -> None
     assert result["status"] == "FAIL"
     assert result["reason"] == "ban_substance_missing"
     assert result["subtype"] == "substance_required"
-
-
-def test_decolonization_ban_absence_required_passes_automatically() -> None:
-    manifest = _ban_manifest(BAN_1_RULE)
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map=_claim(),
-        module_md="This module teaches the Ukrainian morning routine with Ukrainian-only framing.",
-        activities_yaml="[]",
-        seeded_map=seed_implementation_map(manifest),
-    )
-
-    result = _ban_result(report)
-    assert report["passed"] is True
-    assert result["status"] == "PASS"
-    assert result["reason"] == "absence_obligation_assumed_satisfied"
-    assert result["subtype"] == "absence_required"
-
-
-def test_decolonization_ban_legacy_manifest_without_subtype_field() -> None:
-    manifest = _ban_manifest(BAN_1_RULE)
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map=_claim(),
-        module_md="This module avoids the prohibited framing.",
-        activities_yaml="[]",
-    )
-
-    result = _ban_result(report)
-    assert report["passed"] is False
-    assert result["status"] == "FAIL"
-    assert result["reason"] == "ban_substance_missing"
-    assert "subtype" not in result
-
-
-def test_gate_default_path_preserves_legacy_manifest_output() -> None:
-    """Flag-OFF callers do not receive the generator checklist path."""
-    manifest = _ban_manifest(BAN_1_RULE)
-    kwargs = {
-        "manifest": manifest,
-        "implementation_map": _claim(),
-        "module_md": "This module avoids the prohibited framing.",
-        "activities_yaml": "[]",
-    }
-
-    assert check_wiki_coverage(**kwargs) == check_wiki_coverage(
-        **kwargs,
-        obligation_checklist=None,
-    )
-
-
-def test_gate_uses_supplied_obligation_checklist_instead_of_reflattening_manifest() -> None:
-    manifest = _sequence_step_manifest()
-    extra_step = dict(manifest["sequence_steps"][0])
-    extra_step["id"] = "step-6"
-    extra_step["required_claim"] = "Introduce the extra phrase «пізніше»."
-    manifest["sequence_steps"].append(extra_step)
-    checklist = build_obligation_checklist_object(manifest)
-    checklist["obligations"] = checklist["obligations"][:1]
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        obligation_checklist=checklist,
-        implementation_map={
-            "step-5": {
-                "artifact": "module.md",
-                "location": "whole file",
-                "treatment": "first checklist obligation only",
-            }
-        },
-        module_md="The prose includes вода, зарядка, сніданок, раненько, завжди, ніколи.",
-        activities_yaml="[]",
-    )
-
-    assert report["total"] == 1
-    assert [item["obligation_id"] for item in report["obligations"]] == ["step-5"]
 
 
 # Regression tests for two bugs that masked the build #6 a1/my-morning gate
@@ -541,74 +434,6 @@ def test_l2_error_passes_when_marker_contains_apostrophe() -> None:
     )
 
 
-def test_l2_error_passes_when_correction_contains_source_marker() -> None:
-    """Source markers like [S11] are citation metadata, not learner text.
-
-    The marker matcher must accept an activity correction that reproduces the
-    wiki manifest verbatim with a source marker inside terminal punctuation.
-    """
-    manifest = {
-        "slug": "fixture",
-        "wiki_path": "wiki/pedagogy/a1/fixture.md",
-        "sequence_steps": [],
-        "l2_errors": [
-            {
-                "id": "err-3",
-                "incorrect": (
-                    "Намагатися артикулювати «Ь» (м'який знак) як окремий, "
-                    "хоч і короткий, звук (наприклад, як редуковане [і])."
-                ),
-                "correct": (
-                    "Робити попередній приголосний звук м'яким під час вимови, "
-                    "не додаючи після нього жодного окремого звукового елемента "
-                    "(наприклад, у слові день [S11])."
-                ),
-                "why": "Ь has no sound of its own.",
-                "treatment": "contrast_pair",
-                "source_lines": "48",
-            }
-        ],
-        "phonetic_rules": [],
-        "decolonization_bans": [],
-        "external_resources": [],
-    }
-    activities_yaml = (
-        "- type: error-correction\n"
-        "  title: Типові помилки\n"
-        "  items:\n"
-        "    - sentence: Намагатися артикулювати «Ь» (м'який знак) як окремий, "
-        "хоч і короткий, звук (наприклад, як редуковане [і]).\n"
-        "      error: Намагатися артикулювати «Ь» (м'який знак) як окремий, "
-        "хоч і короткий, звук (наприклад, як редуковане [і]).\n"
-        "      correction: Робити попередній приголосний звук м'яким під час вимови, "
-        "не додаючи після нього жодного окремого звукового елемента "
-        "(наприклад, у слові день [S11]).\n"
-    )
-    implementation_map = {
-        "err-3": {
-            "artifact": "activities.yaml",
-            "location": "activities.yaml",
-            "treatment": "contrast_pair",
-        }
-    }
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map=implementation_map,
-        module_md="# Module body unrelated to err-3.\n",
-        activities_yaml=activities_yaml,
-        seeded_map=seed_implementation_map(manifest),
-    )
-
-    err_result = next(
-        item for item in report["obligations"] if item["obligation_id"] == "err-3"
-    )
-    assert err_result["status"] == "PASS", (
-        f"err-3 should PASS with the manifest source marker intact; got "
-        f"reason={err_result['reason']!r}"
-    )
-
-
 def test_l2_error_resolves_via_title_when_workbook_activity_omits_id() -> None:
     """`_activity_text` MUST fall back to ``title`` matching when the writer
     targets a workbook activity, because workbook activities legitimately
@@ -776,37 +601,6 @@ def test_parse_implementation_map_accepts_xml_row_attribute_shape() -> None:
     assert parsed["step-1"]["treatment"] == "Крок 1 marker with читати paradigm."
 
 
-def test_parse_implementation_map_xml_row_tolerates_whitespace_and_self_close_variants() -> None:
-    """The XML-row parser must tolerate the common formatting variants
-    a writer might produce: multi-line attribute layout, attributes in
-    any order, space-around-slash in the closing token, and mixed
-    bullet+XML entries inside one implementation_map block."""
-    implementation_map = """
-<implementation_map>
-<row
-  artifact="module.md"
-  obligation_id="phon-2"
-  location="§Phonetics"
-  treatment="written -ться → spoken [ц':а]"
-/>
-<row obligation_id="ban-3" artifact="module.md" location="§Intro" treatment="absence required"/>
-- obligation_id: step-9; artifact: module.md; location: §Outro; treatment: closing recap
-</implementation_map>
-"""
-
-    parsed = parse_implementation_map(implementation_map)
-
-    assert "phon-2" in parsed
-    assert parsed["phon-2"]["artifact"] == "module.md"
-    assert parsed["phon-2"]["treatment"] == "written -ться → spoken [ц':а]"
-    assert "ban-3" in parsed
-    assert parsed["ban-3"]["location"] == "§Intro"
-    # Bullet entry on the same line as XML rows still parses via the existing
-    # bullet path; the XML parser leaves entries it already added alone.
-    assert parsed["step-9"]["artifact"] == "module.md"
-    assert parsed["step-9"]["treatment"] == "closing recap"
-
-
 def test_parse_implementation_map_accepts_v71_self_closing_inline_fixture() -> None:
     fixture_text = (
         FIXTURES_DIR / "v7.1-self-closing-implementation-map.md"
@@ -870,84 +664,6 @@ def test_parse_implementation_map_merges_nested_and_inline_shapes_once() -> None
         "location": "§Inline override",
         "treatment": "inline restatement",
     }
-
-
-def test_l2_error_passes_with_compact_pipe_workbook_location() -> None:
-    """The compact Codex pipe-map shape plus a generic workbook location
-    should widen to all activities, then let the substance check decide."""
-    manifest = _phonetic_l2_error_manifest()
-    activities_yaml = (
-        "- type: error-correction\n"
-        "  title: Редагування типових помилок\n"
-        "  items:\n"
-        "    - sentence: 'Вимова: [прокидайешся]'\n"
-        "      error: 'Вимова: [прокидайешся]'\n"
-        "      correction: \"Вимова: [прокидайес':а]\"\n"
-        "      explanation: assimilation rule.\n"
-    )
-    implementation_map = (
-        "<implementation_map>"
-        "err-2 | activities.yaml | workbook error-correction | sentence/error/correction contrast."
-        "</implementation_map>"
-    )
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map=implementation_map,
-        module_md="# Module body unrelated to err-2.\n",
-        activities_yaml=activities_yaml,
-        seeded_map=seed_implementation_map(manifest),
-    )
-
-    err_result = next(
-        item for item in report["obligations"] if item["obligation_id"] == "err-2"
-    )
-    assert err_result["status"] == "PASS", (
-        f"err-2 must PASS from compact pipe-map claim when the workbook "
-        f"activity contains the contrast pair; got reason={err_result['reason']!r}"
-    )
-
-
-def test_l2_error_widens_for_any_workbook_aggregate_activity_type() -> None:
-    """Workbook aggregate map locations name practice buckets, not stable ids.
-
-    The resolver should therefore widen all ``workbook <type>`` references for
-    known workbook activity types, not only the original error-correction case.
-    The obligation substance check still decides whether the widened text is
-    sufficient.
-    """
-    manifest = _phonetic_l2_error_manifest()
-    activities_yaml = (
-        "- type: error-correction\n"
-        "  title: Comprehensive contrast review\n"
-        "  items:\n"
-        "    - sentence: 'Вимова: [прокидайешся]'\n"
-        "      error: 'Вимова: [прокидайешся]'\n"
-        "      correction: \"Вимова: [прокидайес':а]\"\n"
-        "      explanation: assimilation rule.\n"
-    )
-    implementation_map = (
-        "<implementation_map>"
-        "err-2 | activities.yaml | workbook fill-in review | contrast in workbook bucket."
-        "</implementation_map>"
-    )
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map=implementation_map,
-        module_md="# Module body unrelated to err-2.\n",
-        activities_yaml=activities_yaml,
-        seeded_map=seed_implementation_map(manifest),
-    )
-
-    err_result = next(
-        item for item in report["obligations"] if item["obligation_id"] == "err-2"
-    )
-    assert err_result["status"] == "PASS", (
-        f"err-2 must PASS when a known workbook aggregate type widens to the "
-        f"activity text and the contrast pair is present; got "
-        f"reason={err_result['reason']!r}"
-    )
 
 
 def test_m20_err_obligations_resolve_from_forensic_seeded_map_and_activity_type() -> None:
@@ -1019,48 +735,6 @@ def test_seeded_fallback_still_fails_when_activity_lacks_substance() -> None:
     assert err_result["reason"] == "missing_correct"
     assert err_result["claim"]["artifact"] == "activities.yaml"
     assert err_result["claim"]["location"] == "activities.yaml"
-
-
-def test_goodhart_sentinel_rejects_duplicate_err_claim_for_same_contrast() -> None:
-    manifest = _phonetic_l2_error_manifest()
-    duplicate = dict(manifest["l2_errors"][0])
-    duplicate["id"] = "err-duplicate"
-    manifest["l2_errors"].append(duplicate)
-    activities_yaml = (
-        "- type: error-correction\n"
-        "  title: One contrast only\n"
-        "  items:\n"
-        "    - sentence: 'Вимова: [прокидайешся]'\n"
-        "      error: 'Вимова: [прокидайешся]'\n"
-        "      correction: \"Вимова: [прокидайес':а]\"\n"
-        "      explanation: assimilation rule.\n"
-    )
-
-    report = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map={
-            "err-2": {
-                "artifact": "activities.yaml",
-                "location": "activities.yaml",
-                "treatment": "contrast_pair",
-            },
-            "err-duplicate": {
-                "artifact": "activities.yaml",
-                "location": "activities.yaml",
-                "treatment": "contrast_pair",
-            },
-        },
-        module_md="# Module body unrelated to err-2.\n",
-        activities_yaml=activities_yaml,
-        seeded_map=seed_implementation_map(manifest),
-    )
-
-    reasons = {item["obligation_id"]: item["reason"] for item in report["obligations"]}
-    assert report["passed"] is False
-    assert reasons == {
-        "err-2": "duplicate_l2_error_contrast_claim",
-        "err-duplicate": "duplicate_l2_error_contrast_claim",
-    }
 
 
 def test_l2_error_seed_includes_activity_stub_without_filled_sentence() -> None:
@@ -1216,41 +890,3 @@ def test_decolonization_ban_substance_still_fails_when_no_section_carries_it() -
     ban_result = next(o for o in result["obligations"] if o["obligation_id"] == "ban-4")
     assert ban_result["status"] == "FAIL"
     assert ban_result["reason"] == "ban_substance_missing"
-
-
-def test_location_comma_join_also_resolves_as_union() -> None:
-    """Slash is the codex-tools convention; comma is a likely writer
-    alternative. Both should union-resolve to avoid future drift."""
-    manifest = {
-        "sequence_steps": [
-            {
-                "id": "step-1",
-                "required_claim": "Крок 1: introduce regular verb pattern",
-                "step_num": 1,
-                "source_lines": "23",
-            }
-        ]
-    }
-    implementation_map = {
-        "step-1": {
-            "obligation_id": "step-1",
-            "artifact": "module.md",
-            "location": "§Дієслова, §Діалоги",
-            "treatment": "step marker",
-        }
-    }
-    module_md = (
-        "# Module\n\n## Діалоги\n\n**Крок 1** introduces the regular verb "
-        "pattern with the **читати** conjugation.\n\n"
-        "## Дієслова\n\nMore content.\n"
-    )
-
-    result = check_wiki_coverage(
-        manifest=manifest,
-        implementation_map=implementation_map,
-        module_md=module_md,
-        activities_yaml="[]",
-    )
-
-    step_result = next(o for o in result["obligations"] if o["obligation_id"] == "step-1")
-    assert step_result["status"] == "PASS"

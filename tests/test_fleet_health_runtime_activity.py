@@ -20,8 +20,6 @@ import scripts.api.fleet_router as fleet_router
 from scripts.api.monitor_context import production_context
 from scripts.fleet_comms.migrations import apply_migrations
 
-ROOT = Path(__file__).resolve().parents[1]
-
 
 @pytest.fixture()
 def client() -> TestClient:
@@ -86,30 +84,3 @@ def test_health_names_both_ledgers_when_authority_window_is_empty(
     assert runtime["ledger"] == "runtime_delegate_usage"
     assert runtime["availability"] == "available"
     assert runtime["records_in_window"] == 2
-
-
-def test_health_runtime_activity_survives_ledger_read_failure(
-    client: TestClient, fleet_root: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """A broken runtime ledger degrades the chip hint, never the health verdict."""
-
-    def _boom(*, limit: int, ctx=None) -> dict[str, list[dict[str, str]]]:
-        raise OSError("usage files unreadable")
-
-    monkeypatch.setattr(fleet_router, "recent_runtime_records", _boom)
-
-    response = client.get("/api/fleet/health")
-
-    assert response.status_code == 200
-    runtime = response.json()["runtime_activity"]
-    assert runtime["records_in_window"] is None
-    assert runtime["availability"] == "unavailable"
-    assert response.json()["authority_health"]["state"] == "idle"
-
-
-def test_fleet_page_chip_names_fleet_comms_ledger_and_runtime_delegate() -> None:
-    html = (ROOT / "dashboards" / "fleet.html").read_text(encoding="utf-8")
-
-    assert "fleet-comms authority jobs in the last" in html
-    assert "runtime/delegate records in window" in html
-    assert "health.runtime_activity?.records_in_window" in html

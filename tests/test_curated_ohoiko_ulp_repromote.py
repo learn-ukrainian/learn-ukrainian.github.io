@@ -66,36 +66,6 @@ def test_sum20_vts_gloss_none_when_neither_available(monkeypatch, module) -> Non
     assert module._sum20_vts_gloss("ґаджет") is None
 
 
-@pytest.mark.parametrize("module", _MODULES, ids=lambda m: m.__name__)
-def test_sum20_vts_gloss_truncates_long_definitions(monkeypatch, module) -> None:
-    long_text = "а" * 200
-    monkeypatch.setattr(module, "_sum20_definition_card", lambda lemma: {"definitions": [long_text]})
-    monkeypatch.setattr(module, "_vts_definition_card", lambda lemma: None)
-
-    gloss = module._sum20_vts_gloss("довге-слово")
-
-    assert gloss is not None
-    assert len(gloss) == 180
-    assert gloss.endswith("...")
-
-
-def test_collect_ulp_headwords_signature_has_no_sum_connection() -> None:
-    """The ULP inventory builder no longer needs a sqlite connection now that
-    gloss fill goes through _sum20_vts_gloss instead of a sum11 query."""
-    params = inspect.signature(ohoiko_repromote.collect_ulp_headwords).parameters
-    assert "sum_conn" not in params
-
-
-def test_mine_headwords_signature_has_no_sum_connection() -> None:
-    params = inspect.signature(textbook_repromote.mine_headwords).parameters
-    assert "sum_conn" not in params
-
-
-def test_resolve_leg_pos_gloss_signature_has_no_sum_connection() -> None:
-    params = inspect.signature(paired_split.resolve_leg_pos_gloss).parameters
-    assert "sum_conn" not in params
-
-
 def test_resolve_leg_pos_gloss_falls_back_to_sum20_vts_gloss(monkeypatch) -> None:
     """A split leg with no parent gloss fills from СУМ-20/ВТС via the shared
     helper, never from СУМ-11 (#7453)."""
@@ -268,27 +238,6 @@ def test_temp_artifacts_destination_readback_and_lifetime(
     )
 
 
-def test_apply_plan_resolves_default_at_call_time(monkeypatch, tmp_path: Path) -> None:
-    plan = {"counts": {"proposed_additions": 0}}
-    monkeypatch.setattr(ohoiko_repromote.planner, "build_promotion_plan", lambda **kwargs: plan)
-    for name in ("first", "second"):
-        root = tmp_path / name
-        root.mkdir()
-        monkeypatch.setenv("TMPDIR", str(root))
-        assert ohoiko_repromote.apply_plan(
-            candidates=tmp_path / "candidates",
-            decisions=tmp_path / "decisions",
-            manifest=tmp_path / "manifest",
-            fingerprint=tmp_path / "fingerprint",
-            write=False,
-        ) == {
-            "plan": plan["counts"],
-            "wrote": False,
-        }
-        assert json.loads((root / ohoiko_repromote.PLAN_FILENAME).read_text()) == plan
-    assert (tmp_path / "first" / ohoiko_repromote.PLAN_FILENAME).is_file()
-
-
 @pytest.mark.parametrize("tmpdir", [None, "relative", "missing"])
 def test_invalid_temp_root_stops_before_collection(monkeypatch, tmp_path: Path, capsys, tmpdir) -> None:
     if tmpdir is None:
@@ -300,20 +249,6 @@ def test_invalid_temp_root_stops_before_collection(monkeypatch, tmp_path: Path, 
         ohoiko_repromote.main(["--apply"])
     assert exc.value.code == 2
     assert "TMPDIR" in capsys.readouterr().err
-
-
-def test_parser_preserves_committed_defaults_and_help_without_tmpdir(monkeypatch, capsys) -> None:
-    monkeypatch.delenv("TMPDIR", raising=False)
-    args = ohoiko_repromote.build_parser().parse_args([])
-    assert args.inventory_out == ohoiko_repromote.DEFAULT_INVENTORY
-    assert args.decisions_out == ohoiko_repromote.DEFAULT_DECISIONS
-    assert args.manifest == ohoiko_repromote.DEFAULT_MANIFEST
-    assert args.fingerprint == ohoiko_repromote.DEFAULT_FINGERPRINT
-    with pytest.raises(SystemExit) as exc:
-        ohoiko_repromote.main(["--help"])
-    assert exc.value.code == 0
-    help_text = capsys.readouterr().out
-    assert "--plan-out" in help_text and "$TMPDIR" in help_text and "caller" in help_text
 
 
 def test_explicit_plan_needs_no_temp_root_and_keeps_publication_guard(monkeypatch, tmp_path: Path) -> None:

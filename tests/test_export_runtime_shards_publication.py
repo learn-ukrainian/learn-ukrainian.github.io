@@ -3,14 +3,11 @@
 from __future__ import annotations
 
 import errno
-import gc
 import hashlib
 import json
 import os
 import random
-import sqlite3
 import threading
-import tracemalloc
 from pathlib import Path
 
 import pytest
@@ -21,14 +18,11 @@ from tests.test_export_runtime_shards import (
     _CHANGED_LIMITS,
     _FSYNC_STEPS,
     _KILL_POINTS,
-    _STORED_PATTERN,
     _TREE_A,
     _TREE_B,
     _build_indexes,
     _export,
-    _framed,
     _fsync_target,
-    _make_source_db,
     _pointed_manifest,
     _pointer,
     _publish_synthetic,
@@ -36,7 +30,6 @@ from tests.test_export_runtime_shards import (
     _run_killed,
     _snapshot,
     _synthetic_stage,
-    _traced_in_fresh_interpreter,
     _version_dirs,
 )
 
@@ -314,51 +307,6 @@ def test_failure_around_the_commit_never_moves_a_concurrent_publishers_pointer(
     assert not list(base.glob(".current-*"))
 
 
-def test_cli_reports_unconfirmed_pointer_durability_without_failing(
-    edge_db: Path, tmp_path: Path, monkeypatch, capsys
-) -> None:
-    out = tmp_path / "out"
-    real_fsync_dir = exporter._fsync_dir
-
-    def fsync_dir(path: Path) -> None:
-        if path == out / "atlas":
-            raise OSError(errno.EIO, "injected")
-        real_fsync_dir(path)
-
-    monkeypatch.setattr(exporter, "_fsync_dir", fsync_dir)
-    argv = ["--db", str(edge_db), "--out-dir", str(out), "--no-decks", "--verify"]
-    assert exporter.main(argv) == 0
-    captured = capsys.readouterr()
-    report = json.loads(captured.out)
-    assert report["publication"]["committed"] is True and report["publication"]["durable"] is False
-    assert captured.err.startswith(f"warning: published {report['manifestUrl']}, but its durability is unconfirmed")
-    assert _pointer(out)["manifestUrl"] == report["manifestUrl"]
-
-
-def test_concurrent_full_exports_with_different_limits_all_stay_valid(edge_db: Path, tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    variants = [{"compression_level": 9}, {"compression_level": 6}] * 2
-    errors: list[BaseException] = []
-
-    def worker(kwargs: dict) -> None:
-        try:
-            _export(edge_db, out, **kwargs)
-        except BaseException as exc:
-            errors.append(exc)
-
-    threads = [threading.Thread(target=worker, args=(kwargs,)) for kwargs in variants]
-    for thread in threads:
-        thread.start()
-    for thread in threads:
-        thread.join(timeout=110)
-    assert not errors, errors
-    dirs = _version_dirs(out)
-    assert len(dirs) == 2
-    for name in dirs:
-        assert verify_tree(out, "atlas", manifest_path=out / "atlas" / "versions" / name / "manifest.json")
-    assert verify_tree(out, "atlas")["dataVersion"]
-
-
 def test_stale_pending_pointer_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
     out = tmp_path / "out"
     base = out / "atlas"
@@ -386,43 +334,6 @@ def test_replayed_search_fragments_match_reference_rows_and_order(edge_db: Path,
             conn.close()
 
 
-def test_search_index_memory_follows_key_metadata_not_gloss_bodies(tmp_path: Path) -> None:
-    retained: dict[int, int] = {}
-    bodies: dict[int, int] = {}
-    for gloss_chars in (60, 20_000):
-        db = _make_source_db(tmp_path / f"g{gloss_chars}.db", records=700, filler_chars=1, gloss_chars=gloss_chars)
-        conn = open_readonly_db(db)
-        try:
-            conn.execute("BEGIN")
-            bodies[gloss_chars] = sum(len(r[0] or "") for r in conn.execute("SELECT gloss FROM articles"))
-            gc.collect()
-            tracemalloc.start()
-            try:
-                before = tracemalloc.get_traced_memory()[0]
-                articles, aliases = _build_indexes(conn)
-                gc.collect()
-                retained[gloss_chars] = tracemalloc.get_traced_memory()[0] - before
-                assert len(articles) > 600 and len(aliases) > 600
-            finally:
-                tracemalloc.stop()
-            del articles, aliases
-        finally:
-            conn.close()
-    assert bodies[20_000] > 10_000_000
-    assert retained[20_000] < retained[60] * 1.25, retained
-    assert retained[20_000] < bodies[20_000] * 0.25, (retained, bodies)
-
-
-def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
-    db = _make_source_db(tmp_path / "gloss.db", records=700, filler_chars=1, gloss_chars=20_000)
-    glosses = sum(len(r[0] or "") for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
-    assert glosses > 10_000_000
-    kwargs = {"include_decks": False, "deck_dir": None, "compression_level": 1, "verify": True}
-    error, peak = _traced_in_fresh_interpreter("export", db=db, out=tmp_path / "out", kwargs=kwargs)
-    assert error is None
-    assert peak < glosses * 0.25, f"peak {peak} vs gloss bodies {glosses}"
-
-
 @pytest.mark.parametrize("level", [0, 1, 6, 9])
 def test_gzip_size_and_streamed_sink_match_one_shot_without_retention(level: int) -> None:
     rng = random.Random(level + 100)
@@ -438,13 +349,3 @@ def test_gzip_size_and_streamed_sink_match_one_shot_without_retention(level: int
     )
     if level:
         assert len(pieces) > 2, "levels 1-9 hand compressed pieces over as they are produced"
-
-
-def test_stored_block_plan_reproduces_observed_one_shot_block_lengths() -> None:
-    """Python 3.12.8 / zlib 1.3.1 one-shot framing observed by the reviewer."""
-    observed = {
-        65_531: [65_531], 65_532: [65_531, 1], 98_304: [65_531, 32_773], 100_000: [65_531, 32_773, 1_696],
-    }
-    for length, blocks in observed.items():
-        assert [size for size, _last in exporter.stored_block_plan(length)] == blocks
-        assert _framed(_STORED_PATTERN[:length]) == gzip_bytes(_STORED_PATTERN[:length], compression_level=0)

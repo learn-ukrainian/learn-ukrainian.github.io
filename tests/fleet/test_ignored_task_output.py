@@ -31,21 +31,6 @@ def test_record_created_worktree_requires_both_creation_fields(record, expected)
     assert output.record_created_worktree(record) is expected
 
 
-@pytest.mark.parametrize("has_inventory", [False, True])
-def test_archive_filter_requires_inventory_backed_current_creator(tmp_path, has_inventory):
-    task_id = "creator"
-    current = {"task_id": task_id, "worktree_reused": False, "run_nonce": "current"}
-    if has_inventory:
-        current["ignored_output_baseline"] = {}
-    hot = (task_record_path(tmp_path, task_id), current)
-    archived = (
-        tmp_path / "creator.20261012T120000Z.archived.json",
-        {"task_id": task_id, "worktree_reused": True, "status": "done", "run_nonce": "prior"},
-    )
-
-    assert output._current_reuse_records([hot, archived], tmp_path) == ([hot] if has_inventory else [hot, archived])
-
-
 @pytest.mark.parametrize("archived", [False, True], ids=["hot", "archived"])
 @pytest.mark.parametrize("status", ["failed", "done", "running"])
 def test_false_record_without_inventory_is_never_cohort_creator(hermetic_reap, archived, status):

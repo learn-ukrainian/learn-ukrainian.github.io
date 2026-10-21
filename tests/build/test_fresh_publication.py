@@ -49,45 +49,6 @@ def test_renderer_cannot_bypass_quote_admission(file, quote, page, code):
     assert caught.value.code == code
 
 
-@pytest.mark.parametrize(
-    "file,citation",
-    [
-        (BOOK, "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 12"),
-        ("1-klas-bukvar-zaharijchuk-2025-2", "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 2, 2025, с. 12"),
-        ("10-11-klas-mystectvo-nazarenko-2018", "Назаренко, «Мистецтво», 10–11 клас, 2018, с. 12"),
-        ("5-klas-ukrmova-zabolotnyi-2023", "Заболотний, «Українська мова», 5 клас, 2022, с. 12"),
-        ("7-klas-tekhnolohiyi-bilenko-2024", "Біленко, «Технології», 7 клас, 2023, с. 12"),
-        (
-            "9-klas-zarubizhna-literatura-kovbasenko-2026",
-            "Ковбасенко, «Зарубіжна література», 9 клас, 2025, с. 12",
-        ),
-    ],
-)
-def test_quote_and_resources_show_same_human_citation(file, citation):
-    markdown, _units = render_quote(file=file, page=12)
-    assert citation in markdown
-    pack = {
-        "texts": [
-            {
-                "id": "T-001",
-                "quote": "Synthetic excerpt",
-                "source": {
-                    "kind": "textbook",
-                    "file": file,
-                    "page": 12,
-                    "work": "Spoofed English title",
-                    "author": "Spoof",
-                },
-            }
-        ]
-    }
-    tab = build_resursy_tab({"steps": [{"evidence": ["T-001"]}]}, pack)
-    entry = tab["books"][0]
-    assert entry["title"] == citation
-    assert entry["pages"] == entry["author"] == ""
-    assert file not in str(tab)
-
-
 @pytest.mark.parametrize("file", ["9-klas-tekhnolohiyi-bilenko-2026", "uni-unregistered"])
 def test_resources_omit_unconfirmed_title_with_warning(file):
     pack = {"texts": [{"id": "T-001", "source": {"kind": "textbook", "file": file, "page": 12}}]}

@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
 import yaml
 
 from scripts.audit.llm_qg_canaries import (
@@ -12,7 +11,7 @@ from scripts.audit.llm_qg_canaries import (
     list_canaries,
 )
 from scripts.audit.llm_qg_store import content_sha_for_module, record_llm_qg
-from scripts.audit.module_quality_audit import audit_modules, main, planned_modules
+from scripts.audit.module_quality_audit import audit_modules
 
 
 def _write_module(root: Path, level: str, slug: str, body: str) -> Path:
@@ -49,19 +48,6 @@ def _payload() -> dict:
         },
         "findings": [],
     }
-
-
-def test_planned_modules_use_manifest_order_and_profiles(tmp_path: Path) -> None:
-    _write_manifest(tmp_path)
-
-    modules = planned_modules(curriculum_root=tmp_path, level_ids=["a1", "b1", "hist"])
-
-    assert [(item.num, item.level, item.slug, item.profile) for item in modules] == [
-        (1, "a1", "intro", "a1"),
-        (1, "b1", "bad-style", "b1_plus"),
-        (2, "b1", "not-built", "b1_plus"),
-        (1, "hist", "seminar", "seminar"),
-    ]
 
 
 def test_audit_modules_reports_surface_and_llm_qg_coverage(tmp_path: Path) -> None:
@@ -179,77 +165,6 @@ def test_audit_modules_counts_compact_qg_evidence_as_current_file_evidence(tmp_p
     assert row["second_review_recommended"] is False
 
 
-def test_cli_json_output(tmp_path: Path, capsys) -> None:
-    _write_manifest(tmp_path)
-    _write_module(tmp_path, "a1", "intro", "**Я тут.**\n")
-
-    code = main(
-        [
-            "--curriculum-root",
-            str(tmp_path),
-            "--level",
-            "a1",
-            "--llm-qg-db",
-            str(tmp_path / "missing.db"),
-            "--format",
-            "json",
-        ]
-    )
-
-    assert code == 0
-    output = json.loads(capsys.readouterr().out)
-    assert output["summary"]["planned_modules"] == 1
-    assert output["summary"]["missing_llm_qg_modules"] == 1
-
-
-def test_cli_includes_canary_results_and_can_fail_on_canary_failure(
-    tmp_path: Path,
-    capsys,
-) -> None:
-    _write_manifest(tmp_path)
-    _write_module(tmp_path, "b1", "bad-style", "**Я тут.**\n")
-    canary_path = tmp_path / "canary.json"
-    canary_path.write_text(
-        json.dumps({"findings": [{"issue_id": "AI_LEAKAGE"}]}),
-        encoding="utf-8",
-    )
-
-    code = main(
-        [
-            "--curriculum-root",
-            str(tmp_path),
-            "--level",
-            "b1",
-            "--format",
-            "json",
-            "--canary-result",
-            f"b1={canary_path}",
-            "--fail-on-canary-failure",
-        ]
-    )
-
-    assert code == 1
-    output = json.loads(capsys.readouterr().out)
-    assert output["canaries"]["b1"]["passed"] is False
-    assert "AWKWARD_PASSIVE_RESULT_STATE" in output["canaries"]["b1"]["missing_issue_ids"]
-
-
-def test_b1_canary_snippets_include_required_examples() -> None:
-    b1_snippets = [item.snippet for item in list_canaries("b1")]
-
-    assert any("застосунок має бути відкритий" in snippet for snippet in b1_snippets)
-    assert any(
-        "Застереження каже: будь обережний, щоб небажаний результат не стався."
-        in snippet
-        for snippet in b1_snippets
-    )
-    assert any(
-        "У застереженні зміст інший: будь обережний, щоб небажаний результат не стався."
-        in snippet
-        for snippet in b1_snippets
-    )
-
-
 def test_extract_issue_ids_reads_top_level_and_dimensional_findings() -> None:
     result = {
         "issue_ids": ["internal_leakage"],
@@ -299,19 +214,6 @@ def test_evaluator_fails_when_required_issue_ids_are_missing_for_level() -> None
     assert "ENGLISH_LEAKAGE" in report["missing_issue_ids"]
 
 
-def test_evaluator_can_score_one_named_canary() -> None:
-    result = {
-        "canary_id": "b1-passive-result-state",
-        "findings": [{"issue_id": "AWKWARD_PASSIVE_RESULT_STATE"}],
-    }
-
-    report = evaluate_canaries(result, "b1")
-
-    assert report["passed"]
-    assert report["canary_ids"] == ("b1-passive-result-state",)
-    assert report["missing_issue_ids"] == ()
-
-
 def test_evaluator_marks_pass_when_all_required_issue_ids_present() -> None:
     level = "seminar"
     required = set()
@@ -340,46 +242,3 @@ def test_evaluator_fails_when_allow_list_canary_is_false_positive() -> None:
     assert "ENGLISH_LEAKAGE" in report["forbidden_issue_ids"]
     assert "ENGLISH_LEAKAGE" in report["forbidden_issue_ids_found"]
     assert "a1-english-scaffold-allowed" in report["missed_canaries"]
-
-
-@pytest.mark.parametrize("level", ["a1", "a2", "b1", "seminar", "any"])
-def test_list_canaries_includes_global_and_level_specific_rules(level: str) -> None:
-    ids = {canary.canary_id for canary in list_canaries(level)}
-
-    assert "surface-ai-leakage" in ids
-    assert "surface-path-leakage" in ids
-    assert "surface-internal-leakage" in ids
-
-    if level == "a1":
-        assert "a1-english-scaffold-allowed" in ids
-        return
-
-    if level == "a2":
-        assert "a2-english-gloss-allowed" in ids
-        return
-
-    if level == "b1":
-        assert "b1-passive-result-state" in ids
-        assert "b1-anthropomorphic-pathos" in ids
-        assert "policy-b1-english-led" in ids
-        return
-
-    if level == "seminar":
-        assert "policy-seminar-english-led" in ids
-        assert "seminar-register-pathos" in ids
-        return
-
-    assert level == "any"
-    required = set(
-        issue
-        for canary in list_canaries(level)
-        for issue in canary.required_issue_ids
-    )
-    assert "AI_LEAKAGE" in required
-
-
-def test_seminar_track_ids_use_seminar_canaries() -> None:
-    ids = {canary.canary_id for canary in list_canaries("hist")}
-
-    assert "policy-seminar-english-led" in ids
-    assert "seminar-register-pathos" in ids

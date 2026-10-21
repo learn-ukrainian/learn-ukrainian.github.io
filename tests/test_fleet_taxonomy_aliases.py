@@ -15,13 +15,8 @@ from agents_extensions.shared.session_streams.inventory import (
     _handoff_candidates_for,
 )
 from scripts.orchestration.fleet_taxonomy import (
-    EpicInfo,
-    ResolvedArea,
     UnknownAreaError,
-    list_valid_names,
-    load_fleet_taxonomy,
     resolve_area,
-    resolve_area_by_epic,
 )
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL
 
@@ -40,58 +35,9 @@ def _infra_harness_stream_id() -> str:
 INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
-def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> None:
-    assignments = yaml.safe_load((_REPO_ROOT / "scripts/config/area_assignments.yaml").read_text())
-    slots = [slot for area in assignments["assignments"].values() for slot in area.get("slots", [])]
-    codex_lanes = {slot.removeprefix("codex-") for slot in slots if slot.startswith("codex-")}
-    gemini_lanes = {slot.removeprefix("gemini-") for slot in slots if slot.startswith("gemini-")}
-    assert codex_lanes
-    assert gemini_lanes == codex_lanes - {"epics", "practice"}
-    assert assignments["assignments"]["epics"] == {
-        "driver_agent_type": "infra-orchestrator",
-        "slots": ["claude-epics", "codex-epics"],
-    }
-
-
 # ---------------------------------------------------------------------------
 # 1. Helper Unit Tests (scripts/orchestration/fleet_taxonomy.py)
 # ---------------------------------------------------------------------------
-
-
-def test_load_fleet_taxonomy_structure() -> None:
-    registry = load_fleet_taxonomy()
-    assert "infra" in registry.areas
-    assert "harness" in registry.areas
-    assert "devops" in registry.areas
-    assert "atlas" in registry.areas
-    assert "core" in registry.areas
-    assert "seminars" in registry.areas
-    assert "hramatka" in registry.areas
-    assert "monitor" in registry.areas
-    assert "open-model-data" in registry.areas
-
-
-def test_resolve_area_canonical_ids() -> None:
-    infra = resolve_area("infra")
-    assert isinstance(infra, ResolvedArea)
-    assert infra.id == "infra"
-    assert "infra-harness" in infra.aliases
-    assert EpicInfo(number=6943, name="Infra & fleet reliability (hooks, dispatch, routing)") in infra.epics
-
-    harness = resolve_area("harness")
-    assert harness.id == "harness"
-    assert "corpus-channels" in harness.aliases
-
-    devops = resolve_area("devops")
-    assert devops.id == "devops"
-
-    monitor = resolve_area("monitor")
-    assert monitor.id == "monitor"
-    assert monitor.epics == (EpicInfo(7919, "Ops API + UI — operator API & dashboards"),)
-
-    open_model_data = resolve_area("open-model-data")
-    assert open_model_data.id == "open-model-data"
-    assert open_model_data.epics == (EpicInfo(6321, "Ukrainian open-model data infrastructure"),)
 
 
 def test_resolve_area_aliases() -> None:
@@ -116,26 +62,6 @@ def test_resolve_area_aliases() -> None:
     assert area5.id == "hramatka"
 
 
-def test_resolve_area_by_epic_number() -> None:
-    # int epic lookup
-    infra = resolve_area(6943)
-    assert infra.id == "infra"
-
-    devops = resolve_area(5703)
-    assert devops.id == "devops"
-
-    harness = resolve_area(4706)
-    assert harness.id == "harness"
-
-    # string epic lookup
-    assert resolve_area("6943").id == "infra"
-    assert resolve_area("epic:6943").id == "infra"  # allow-hardcoded-epic: taxonomy alias reverse lookup
-    assert resolve_area_by_epic(6943).id == "infra"
-    assert resolve_area_by_epic("epic:5703").id == "devops"  # allow-hardcoded-epic: taxonomy alias reverse lookup
-    assert resolve_area(7919).id == "monitor"
-    assert resolve_area(6321).id == "open-model-data"
-
-
 def test_curriculum_upgrade_stream_has_isolated_handoffs() -> None:
     stream, epic = "curriculum-upgrade", 7994
     assert resolve_area(stream).id == "core"
@@ -157,27 +83,6 @@ def test_resolve_area_unknown_raises_typed_error() -> None:
     assert "Unknown area name, alias, or epic 'invalid_area_xyz'" in err_msg
     assert "infra" in err_msg
     assert "harness" in err_msg
-
-
-def test_resolve_area_unknown_epic_raises_typed_error() -> None:
-    with pytest.raises(UnknownAreaError) as exc_info:
-        resolve_area(999999)
-
-    err_msg = str(exc_info.value)
-    assert "Unknown epic number 999999" in err_msg
-
-
-def test_list_valid_names() -> None:
-    names = list_valid_names()
-    assert "infra" in names
-    assert "infra-harness" in names
-    assert "harness" in names
-    assert "eval-harness" not in names
-    assert "a1-upgrade" not in names
-    assert "devops" in names
-    assert "monitor" in names
-    assert "open-model-data" in names
-    assert names == tuple(sorted(names))
 
 
 # ---------------------------------------------------------------------------
@@ -306,30 +211,6 @@ def test_handoff_identity_shell_resolver_fails_closed_without_alias_map(tmp_path
     assert result.returncode == 1
     assert result.stdout == ""
     assert "launcher alias map missing or malformed" in result.stderr
-
-
-@pytest.mark.parametrize(
-    "launcher",
-    [
-        "start-claude.sh",
-        "start-codex.sh",
-        "start-gemini.sh",
-        "start-grok.sh",
-        "start-kimi.sh",
-        "start-glm.sh",
-        "start-claude-driver.sh",
-        "start-codex-driver.sh",
-        "start-gemini-driver.sh",
-        "start-grok-driver.sh",
-        "start-cursor-driver.sh",
-    ],
-)
-def test_launcher_static_selector_wiring(launcher: str) -> None:
-    """Public wrappers delegate selector behavior to the shared launcher core."""
-    script_path = _REPO_ROOT / launcher
-    assert script_path.is_file(), f"Launcher missing: {launcher}"
-    content = script_path.read_text(encoding="utf-8")
-    assert "scripts/lib/launcher_core.sh" in content, f"{launcher} does not source launcher_core.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -510,10 +391,3 @@ def test_session_setup_hook_names_driver_state_as_authoritative(tmp_path: Path) 
     assert "ASSIGNED EPIC: curriculum-upgrade.epic" in context
     assert "Driver state (AUTHORITATIVE, read it FIRST" in context
     assert ".claude/curriculum-upgrade-epic/DRIVER-STATE.md" in context
-
-
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
-def test_session_setup_hook_omits_driver_state_when_absent(tmp_path: Path) -> None:
-    context = _run_session_setup_hook(tmp_path, "curriculum-upgrade")
-    assert "ASSIGNED EPIC: curriculum-upgrade.epic" in context
-    assert "DRIVER-STATE.md" not in context

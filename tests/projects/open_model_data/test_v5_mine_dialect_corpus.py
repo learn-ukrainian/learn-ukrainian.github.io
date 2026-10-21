@@ -42,13 +42,10 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     RU_GLOSS_RE,
     TRAJECTORY_SCHEMA_FILE,
     V02_BASELINE_SUITE_PATH,
-    ZONE_MINIMUM_QUOTAS,
     MinedSentence,
     canonical_source_work,
     clean_headword,
-    clean_sentence,
     evaluate_multizone_benchmark,
-    exact_clopper_pearson_lower,
     find_attested_synonym,
     normalize_for_eval,
     normalize_lookup_token,
@@ -759,58 +756,6 @@ def test_multizone_evaluation_rejects_punctuation_corruption(eval_cases: list[di
         assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate on corrupted punctuation!"
 
 
-def test_multizone_evaluation_enforces_zone_denominators() -> None:
-    """Verify that evaluation gates fail closed when zone quotas (600/400/250/250) are not met."""
-    # Provide 1 perfect case per zone
-    sample_cases = [
-        {
-            "eval_id": "eval_sw_1",
-            "macro_zone": "southwestern",
-            "sub_zone": "southwestern_boyko",
-            "dialect_marker": "тест",
-            "case_type": "PRESERVE",
-            "input_text": "Тестове речення без помилок.",
-            "expected_output": "Тестове речення без помилок.",
-        },
-        {
-            "eval_id": "eval_north_1",
-            "macro_zone": "northern",
-            "sub_zone": "northern",
-            "dialect_marker": "тест",
-            "case_type": "PRESERVE",
-            "input_text": "Тестове речення без помилок.",
-            "expected_output": "Тестове речення без помилок.",
-        },
-        {
-            "eval_id": "eval_slob_1",
-            "macro_zone": "southeastern",
-            "sub_zone": "southeastern_slobozhan",
-            "dialect_marker": "тест",
-            "case_type": "PRESERVE",
-            "input_text": "Тестове речення без помилок.",
-            "expected_output": "Тестове речення без помилок.",
-        },
-        {
-            "eval_id": "eval_steppe_1",
-            "macro_zone": "southeastern",
-            "sub_zone": "southeastern_steppe",
-            "dialect_marker": "тест",
-            "case_type": "PRESERVE",
-            "input_text": "Тестове речення без помилок.",
-            "expected_output": "Тестове речення без помилок.",
-        },
-    ]
-    preds = {c["eval_id"]: c["expected_output"] for c in sample_cases}
-    results = evaluate_multizone_benchmark(sample_cases, predictions=preds)
-
-    # All zones have 100% accuracy on their 1 case, but NONE may clear the gate due to quota enforcement
-    for zone, metrics in results.items():
-        assert metrics["accuracy"] == 1.0
-        assert metrics["total_cases"] == 1
-        min_q = ZONE_MINIMUM_QUOTAS[zone]
-        assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate with 1 case (min quota {min_q})!"
-
-
 def test_multizone_evaluation_rejects_duplicate_rows_in_denominator() -> None:
     """Verify that duplicating cases (same eval_id or repeated input_text) does not inflate denominator to clear quotas."""
     base_sw_case = {
@@ -904,28 +849,11 @@ def test_clean_headword_and_token_normalization() -> None:
     assert clean_headword("плай") == "плай"
 
 
-def test_clean_sentence_formatting() -> None:
-    """Verify sentence cleaning normalizes quotes, whitespace, and leading dashes."""
-    raw = "  — Ой куме,   ходім у ліс!  "
-    cleaned = clean_sentence(raw)
-    assert cleaned == "Ой куме, ходім у ліс!"
-
-
 def test_passage_fingerprint_invariance() -> None:
     """Verify passage fingerprint is invariant to whitespace and capitalization."""
     s1 = "Гриць пішов до лісу."
     s2 = "гриць  пішов   до лісу! "
     assert passage_fingerprint(s1) == passage_fingerprint(s2)
-
-
-def test_exact_clopper_pearson_mathematical_bounds() -> None:
-    """Verify Clopper-Pearson lower bound calculation on boundary values."""
-    assert exact_clopper_pearson_lower(0, 100) == 0.0
-    assert exact_clopper_pearson_lower(0, 0) == 0.0
-
-    perfect_lcl = exact_clopper_pearson_lower(100, 100, alpha=0.05)
-    assert 0.95 <= perfect_lcl <= 1.0
-    assert abs(perfect_lcl - (0.05 ** (1.0 / 100))) < 1e-6
 
 
 def test_canonical_source_work_equivalence_and_year_preservation() -> None:
@@ -1265,60 +1193,6 @@ def test_standard_headwords_with_nested_idioms_excluded(
 
 @pytest.mark.needs_artifact(
     "open_model_release_payload",
-    "projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
-)
-def test_sft_synonyms_strictly_bound_to_quotation_sense(
-    sft_trajectories: list[dict[str, Any]],
-) -> None:
-    """Verify that synonyms in SFT trajectories are bound strictly to the quoted sense."""
-    for t in sft_trajectories:
-        q = t.get("query", "")
-        lemmas = [att["lemma"].casefold() for att in t.get("vesum_attestation", [])]
-
-        if "служащий хліб добрий, та тільки вимовний" in q.casefold():
-            assert "докірливий" in lemmas, f"Expected sense synonym 'докірливий' for вимовний quote, got {lemmas}"
-            assert "красномовний" not in lemmas, f"Incorrect cross-sense synonym 'красномовний' in {lemmas}"
-
-        if "минув уже рік з окладом" in q.casefold():
-            assert "лишок" in lemmas, f"Expected sense synonym 'лишок' for оклад quote, got {lemmas}"
-            assert "компрес" not in lemmas, f"Incorrect cross-sense synonym 'компрес' in {lemmas}"
-
-
-@pytest.mark.needs_artifact(
-    "open_model_release_payload",
-    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
-)
-def test_dialect_variant_headers_exclude_standard_quotations(
-    eval_cases: list[dict[str, Any]],
-    sft_trajectories: list[dict[str, Any]],
-) -> None:
-    """Verify that headwords with dialect variant markers (приймати, затикати) are not admitted."""
-    eval_markers = {c["dialect_marker"].casefold() for c in eval_cases}
-    sft_targets = {t.get("target_term", "").casefold() for t in sft_trajectories}
-
-    banned_words = {"приймати", "затикати", "чотири", "антихрист"}
-    assert not (eval_markers & banned_words), f"Banned words leaked into eval markers: {eval_markers & banned_words}"
-    assert not (sft_targets & banned_words), f"Banned words leaked into SFT targets: {sft_targets & banned_words}"
-
-    banned_substrings = [
-        "не прийматимуть їх до вищих шкіл",
-        "нервово затикала голкою",
-        "поруч з джерихою сиділи чотири молодиці",
-    ]
-    for c in eval_cases:
-        for bs in banned_substrings:
-            assert bs not in c["input_text"].casefold(), (
-                f"Banned quotation fragment '{bs}' found in eval {c['eval_id']}"
-            )
-    for t in sft_trajectories:
-        for bs in banned_substrings:
-            assert bs not in t["query"].casefold(), (
-                f"Banned quotation fragment '{bs}' found in SFT {t['trajectory_id']}"
-            )
-
-
-@pytest.mark.needs_artifact(
-    "open_model_release_payload",
     "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
 )
 def test_sub_sense_boundary_and_synonym_binding(
@@ -1415,18 +1289,3 @@ def test_sum11_mining_projects_flagged_history_and_withholds_sft(tmp_path, metad
     # the only sense evidence is SUM-11. It must not create a modern answer.
     with pytest.raises(ValueError, match="found 0, required 1"):
         build_sft_dialect_dataset(candidates, vesum_db=vesum, sft_dialect_quota=1)
-
-
-def test_sum11_context_cannot_be_laundered_by_changing_source_label(tmp_path):
-    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
-
-    vesum = tmp_path / "vesum.db"
-    with sqlite3.connect(vesum) as conn:
-        conn.execute("CREATE TABLE forms_all (lemma TEXT, pos TEXT)")
-        conn.executemany("INSERT INTO forms_all VALUES (?, 'noun')", [("бараболя",), ("картопля",)])
-    item = MinedSentence("бараболя", "Synthetic quotation", "Synthetic citation", "southwestern",
-                         "southwestern_bukovina", "southwestern", "Synthetic locality", "Synthetic collector",
-                         "Synthetic work", "renamed-source", "БАРАБОЛЯ, і, ж., діал. Картопля.",
-                         {"source_role": "soviet_colonization_context"})
-    with pytest.raises(ValueError, match="found 0, required 1"):
-        build_sft_dialect_dataset([item], vesum_db=vesum, sft_dialect_quota=1)

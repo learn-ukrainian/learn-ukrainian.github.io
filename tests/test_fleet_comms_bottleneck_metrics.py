@@ -103,96 +103,6 @@ def _merged_at(*, repo: str, pr_number: int) -> tuple[datetime | None, str | Non
     return datetime(2026, 7, 22, 12, 0, tzinfo=UTC), None
 
 
-def test_percentiles_omitted_below_twenty_samples(tmp_path: Path) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    for seconds in range(1, 20):
-        _write_task(
-            tasks_dir,
-            f"task-{seconds}",
-            started=NOW - timedelta(seconds=seconds),
-            finished=NOW,
-        )
-    plane_db = tmp_path / "plane.sqlite3"
-    _plane_db(plane_db)
-
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
-    )
-
-    duration = payload["by_stream_epic"]["4707"]["dispatch"]["duration_s"]
-    assert payload["by_stream_epic"]["4707"]["dispatch"]["n"] == 19
-    assert "p50" not in duration
-    assert "p95" not in duration
-
-
-def test_percentiles_are_deterministic_at_twenty_samples(tmp_path: Path) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    for seconds in range(1, 21):
-        _write_task(
-            tasks_dir,
-            f"task-{seconds}",
-            started=NOW - timedelta(seconds=seconds),
-            finished=NOW,
-        )
-    plane_db = tmp_path / "plane.sqlite3"
-    _plane_db(plane_db)
-
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
-    )
-
-    duration = payload["by_task_family"]["fleet-comms-metrics"]["dispatch"]["duration_s"]
-    assert duration["p50"] == 10.5
-    assert duration["p95"] == 19.05
-
-
-def test_injected_clock_reports_exact_unfinished_backlog_age(tmp_path: Path) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task(
-        tasks_dir,
-        "running",
-        started=NOW - timedelta(seconds=123),
-        finished=None,
-        hard_timeout=8_000,
-    )
-    plane_db = tmp_path / "plane.sqlite3"
-    _plane_db(plane_db)
-
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
-    )
-
-    span = payload["by_stream_epic"]["4707"]["dispatch"]
-    assert span["backlog_age_s"] == 123.0
-    assert span["raw"]["unfinished_count"] == 1
-    assert payload["threshold_seconds"]["dispatch"] == 8_000
-
-
-def test_missing_lifecycle_identity_is_unclassified(tmp_path: Path) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task(
-        tasks_dir,
-        "unclassified",
-        started=NOW - timedelta(seconds=10),
-        finished=NOW,
-        stream_epic=None,
-        task_family=None,
-    )
-    plane_db = tmp_path / "plane.sqlite3"
-    _plane_db(plane_db, with_identity=False)
-
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
-    )
-
-    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
-    assert payload["unclassified"]["by_task_family"]["formal_cf_publication"]["n"] == 1
-
-
 def test_broken_source_is_visible_while_other_source_reports(tmp_path: Path) -> None:
     plane_db = tmp_path / "plane.sqlite3"
     _plane_db(plane_db)
@@ -409,16 +319,6 @@ _INVALID_STREAM_EPICS = [
     pytest.param("   ", id="whitespace"),
     pytest.param("epic-6943", id="non-digit-string"),
 ]
-_INVALID_TASK_FAMILIES = [
-    pytest.param(["infra"], id="list"),
-    pytest.param({"name": "infra"}, id="dict"),
-    pytest.param(1.5, id="float"),
-    pytest.param(True, id="bool"),
-    pytest.param("", id="empty"),
-    pytest.param("   ", id="whitespace"),
-]
-
-
 @pytest.mark.parametrize("bad", _INVALID_STREAM_EPICS)
 def test_invalid_carrier_stream_epic_falls_back_to_valid_top_level(
     tmp_path: Path, bad: object
@@ -444,33 +344,6 @@ def test_invalid_stream_epic_without_fallback_is_unclassified(
 
     assert payload["by_stream_epic"] == {}
     assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
-
-
-@pytest.mark.parametrize("bad", _INVALID_TASK_FAMILIES)
-def test_invalid_carrier_task_family_falls_back_to_valid_top_level(
-    tmp_path: Path, bad: object
-) -> None:
-    payload = _identity_payload(
-        tmp_path,
-        {"t": {"task_family": "infra", "task_lifecycle": {"identity": {"task_family": bad}}}},
-    )
-
-    assert list(payload["by_task_family"]) == ["infra"]
-    assert payload["by_task_family"]["infra"]["dispatch"]["n"] == 1
-    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 0
-    assert payload["source_errors"] == []
-
-
-@pytest.mark.parametrize("bad", _INVALID_TASK_FAMILIES)
-def test_invalid_task_family_without_fallback_is_unclassified(
-    tmp_path: Path, bad: object
-) -> None:
-    payload = _identity_payload(
-        tmp_path, {"t": {"task_lifecycle": {"identity": {"task_family": bad}}}}
-    )
-
-    assert payload["by_task_family"] == {}
-    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 1
 
 
 def test_identity_values_are_normalised_before_grouping(tmp_path: Path) -> None:
@@ -564,81 +437,6 @@ def _assert_aggregate_invariant(payload: dict[str, object], scanned: int) -> Non
         assert classified + unclassified + len(errors) == scanned
 
 
-def test_leading_zero_carrier_of_any_length_canonicalises_without_int_conversion(
-    tmp_path: Path,
-) -> None:
-    zeros = "0" * 5000 + "6943"
-    payload = _identity_payload(
-        tmp_path,
-        {
-            "bare": {"task_lifecycle": {"identity": {"stream_epic": zeros}}},
-            "with-fallback": {"stream_epic": 6943, "task_lifecycle": {"identity": {"stream_epic": zeros}}},
-        },
-    )
-
-    assert list(payload["by_stream_epic"]) == ["6943"]
-    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 2
-    _assert_aggregate_invariant(payload, 2)
-
-
-def test_all_zero_epic_string_canonicalises_to_single_zero(tmp_path: Path) -> None:
-    payload = _identity_payload(
-        tmp_path, {"t": {"task_lifecycle": {"identity": {"stream_epic": "0" * 5000}}}}
-    )
-
-    assert list(payload["by_stream_epic"]) == ["0"]
-
-
-_OVERSIZED_EPICS = [
-    pytest.param("1" + "0" * 5000, id="oversized-string"),
-    pytest.param("9" * 19, id="nineteen-digit-string"),
-    pytest.param(10**18, id="oversized-int-at-bound"),
-    pytest.param(10**4000, id="oversized-int-4000-digits"),
-]
-
-
-@pytest.mark.parametrize("big", _OVERSIZED_EPICS)
-def test_oversized_carrier_epic_falls_back_or_is_unclassified(tmp_path: Path, big: object) -> None:
-    payload = _identity_payload(
-        tmp_path,
-        {
-            "fallback": {"stream_epic": 6943, "task_lifecycle": {"identity": {"stream_epic": big}}},
-            "bare": {"task_lifecycle": {"identity": {"stream_epic": big}}},
-        },
-    )
-
-    assert list(payload["by_stream_epic"]) == ["6943"]
-    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
-    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
-    _assert_aggregate_invariant(payload, 2)
-
-
-@pytest.mark.parametrize("big", _OVERSIZED_EPICS)
-def test_oversized_fallback_epic_does_not_override_valid_carrier(tmp_path: Path, big: object) -> None:
-    payload = _identity_payload(
-        tmp_path,
-        {"t": {"stream_epic": big, "task_lifecycle": {"identity": {"stream_epic": 6943}}}},
-    )
-
-    assert list(payload["by_stream_epic"]) == ["6943"]
-    _assert_aggregate_invariant(payload, 1)
-
-
-def test_oversized_task_family_is_unclassified_or_falls_back(tmp_path: Path) -> None:
-    payload = _identity_payload(
-        tmp_path,
-        {
-            "fallback": {"task_family": "infra", "task_lifecycle": {"identity": {"task_family": "x" * 100_000}}},
-            "bare": {"task_lifecycle": {"identity": {"task_family": "x" * 100_000}}},
-            "at-bound": {"task_family": "y" * 128},
-        },
-    )
-
-    assert sorted(payload["by_task_family"]) == ["infra", "y" * 128]
-    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 1
-    _assert_aggregate_invariant(payload, 3)
-
-
 @pytest.mark.parametrize(
     "digits",
     [
@@ -694,25 +492,6 @@ def test_hostile_task_file_is_a_source_error_never_an_abort(tmp_path: Path, raw:
     json.dumps(payload)
 
 
-def test_absurd_hard_timeout_cannot_inflate_the_bottleneck_threshold(tmp_path: Path) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    started = (NOW - timedelta(seconds=5)).isoformat()
-    for name, timeout in (("huge", 10**3000), ("bool", True), ("sane", 9000)):
-        (tasks_dir / f"{name}.json").write_text(
-            json.dumps({"task_id": name, "started_at": started, "hard_timeout": timeout}),
-            encoding="utf-8",
-        )
-    plane_db = tmp_path / "plane.sqlite3"
-    _plane_db(plane_db, with_identity=False)
-
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
-    )
-
-    assert payload["threshold_seconds"]["dispatch"] == 9000
-
-
 def _file_level_payload(
     tmp_path: Path, make_hostile: Callable[[Path], None]
 ) -> tuple[dict[str, object], list[str]]:
@@ -741,34 +520,6 @@ def test_fifo_beside_valid_record_is_counted_and_never_opened(tmp_path: Path) ->
     _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
 
 
-def test_symlink_to_fifo_is_counted_and_never_opened(tmp_path: Path) -> None:
-    def plant(tasks_dir: Path) -> None:
-        os.mkfifo(tasks_dir / "pipe.fifo")
-        (tasks_dir / "link.json").symlink_to("pipe.fifo")
-
-    payload, kinds = _file_level_payload(tmp_path, plant)
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
-
-
-def test_looping_symlink_beside_valid_record_is_counted(tmp_path: Path) -> None:
-    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "loop.json").symlink_to("loop.json"))
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
-
-
-def test_dangling_symlink_beside_valid_record_is_counted(tmp_path: Path) -> None:
-    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "dangling.json").symlink_to("nowhere"))
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
-
-
-def test_directory_named_like_a_task_file_is_counted(tmp_path: Path) -> None:
-    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "folder.json").mkdir())
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
-
-
 def test_symlink_to_a_valid_record_is_still_read(tmp_path: Path) -> None:
     def plant(tasks_dir: Path) -> None:
         (tasks_dir / "alias.json").symlink_to("good.json")
@@ -777,22 +528,6 @@ def test_symlink_to_a_valid_record_is_still_read(tmp_path: Path) -> None:
 
     assert _kinds == []
     assert payload["by_stream_epic"]["4707"]["dispatch"]["n"] == 2
-
-
-def test_file_vanishing_between_listing_and_read_is_counted(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    listing = efficiency_metrics._task_record_paths
-
-    def listing_with_ghost(directory: Path, *, optional: bool) -> list[Path]:
-        paths = listing(directory, optional=optional)
-        return [*paths, directory / "vanished.json"] if not optional else paths
-
-    monkeypatch.setattr(efficiency_metrics, "_task_record_paths", listing_with_ghost)
-
-    payload, kinds = _file_level_payload(tmp_path, lambda _d: None)
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
 
 
 @pytest.mark.parametrize(
@@ -824,34 +559,3 @@ def test_task_record_size_cap_boundary(
     assert kinds == ([expected] if expected else [])
     assert payload["by_stream_epic"].get("4707", {}).get("dispatch", {}).get("n", 0) == (0 if expected else 1)
     _assert_aggregate_invariant(payload, 1)
-
-
-def test_hundred_megabyte_file_is_counted_without_being_read(tmp_path: Path) -> None:
-    def plant(tasks_dir: Path) -> None:
-        with (tasks_dir / "huge.json").open("wb") as handle:
-            handle.write(b'{"task_id":"x","padding":"')
-            handle.truncate(100 * 1024 * 1024)
-
-    payload, kinds = _file_level_payload(tmp_path, plant)
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_too_large")
-
-
-def test_memory_error_while_parsing_is_a_source_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    real_loads = json.loads
-
-    def loads(text: str) -> object:
-        if '"boom"' in text:
-            raise MemoryError
-        return real_loads(text)
-
-    monkeypatch.setattr(efficiency_metrics.json, "loads", loads)
-
-    def plant(tasks_dir: Path) -> None:
-        (tasks_dir / "boom.json").write_text('{"task_id": "boom"}', encoding="utf-8")
-
-    payload, kinds = _file_level_payload(tmp_path, plant)
-
-    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")

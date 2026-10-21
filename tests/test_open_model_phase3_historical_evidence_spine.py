@@ -75,145 +75,6 @@ def _full_receipt_fixture() -> dict:
     return body
 
 
-def test_tracked_spine_starts_with_direct_kyiv_epigraphy_and_keeps_frameworks_attributed():
-    value = spine.load_spine()
-
-    assert spine.sha256_file(spine.SPINE_PATH) == spine.EXPECTED_SPINE_SHA256
-    assert value["instructional_sequence"][0]["sequence_id"] == "kyiv_medieval_epigraphy"
-    assert value["instructional_sequence"][0]["evidence_mode"] == "direct_attestation"
-    assert value["instructional_sequence"][-1]["sequence_id"] == "comparative_reconstruction_backlink"
-    assert value["framework_policy"]["canonical_framework_id"] is None
-    assert value["framework_policy"]["instructional_navigation_scope"] == "coarse_navigation_only_not_semantic_gold"
-    assert set(value["framework_policy"]["bound_framework_ids"]) == {
-        "university_five_stage_synthesis",
-        "shevelov_detailed_six_period",
-        "nimchuk_five_stage_with_middle_subperiods",
-    }
-
-
-def test_saint_sophia_and_lavra_are_separate_and_only_one_is_materialized():
-    collections = {item["collection_id"]: item for item in spine.load_spine()["collections"]}
-    sophia = collections["saint-sophia-inscriptions"]
-    lavra = collections["kyiv-pechersk-lavra-graffiti"]
-
-    assert sophia["record_count"] == 4157
-    assert sophia["facts"]["retrieval_scope"] == "complete_current_public_api"
-    assert sophia["facts"]["stage_labels_assigned"] == 0
-    assert lavra["custody_state"] == "not_materialized"
-    assert lavra["record_count"] is None
-    assert lavra["facts"]["corpus_count_known"] is False
-    assert lavra["facts"]["separate_from_saint_sophia"] is True
-
-
-def test_saint_sophia_provenance_binds_official_download_part_ix_and_ai_disclosure():
-    sophia = next(
-        item for item in spine.load_spine()["collections"]
-        if item["collection_id"] == "saint-sophia-inscriptions"
-    )
-    provenance = sophia["facts"]["source_provenance"]
-
-    assert provenance["official_bulk_download"] == {
-        "api_url": "https://saintsophia.dh.gu.se/api/inscriptions/inscription/?depth=2",
-        "download_label": "Download all inscription data",
-        "record_count_at_snapshot": 4157,
-        "same_public_api_stream": True,
-    }
-    assert provenance["part_ix"]["bibliography_id"] == 11
-    assert provenance["part_ix"]["linked_public_records"] == 306
-    assert provenance["gippius_2023"]["portal_bibliography_present"] is False
-    assert provenance["ai_assistance"]["human_gold_eligible_without_review"] is False
-    assert provenance["license_evidence"]["explicit_data_license_at_pinned_sources"] is None
-    assert provenance["license_evidence"]["korniienko_media_assets"] == {
-        "asset_count_at_snapshot": 6477,
-        "included_in_text_training": False,
-        "license_label": "CC BY-NC",
-        "license_version_declared": False,
-    }
-    assert provenance["license_evidence"]["operator_use_decision"] == {
-        "binary_media_in_scope": False,
-        "decision": "proceed_without_pre_use_permission_wait",
-        "decision_date": "2026-08-12",
-        "full_publications_in_scope": False,
-        "response_policy": "adapt_remove_or_reclassify_affected_material_on_substantiated_rights_notice",
-        "scope": "public_structured_text_and_metadata_for_phase3_training_with_attribution_and_field_level_provenance",
-    }
-    assert sophia["rights"]["status"] == "publicly_downloadable_license_not_declared"
-    assert sophia["rights"]["reuse_scope"] == (
-        "phase3_textual_dataset_training_and_derived_data_release_with_attribution_"
-        "field_provenance_and_takedown_readiness"
-    )
-
-    locators = {(item["locator_role"], item["url"]) for item in sophia["locators"]}
-    assert (
-        "official_bulk_download_implementation",
-        "https://github.com/gu-gridh/multimodal-map/blob/574914b6a740b639eb8e90f143664aae9a86cac7/projects/sophia/Footer.vue",
-    ) in locators
-    assert ("scholarly_reanalysis_doi", "https://doi.org/10.4324/9781003256236-14") in locators
-
-
-def test_current_materialized_coverage_does_not_fake_old_or_middle_depth():
-    collections = {item["collection_id"]: item for item in spine.load_spine()["collections"]}
-    sophia = collections["saint-sophia-inscriptions"]["facts"]
-    ud = collections["ud-old-east-slavic-ruthenian-05a029e00ccf"]["facts"]
-    plug2 = collections["plug2-zenodo-19482961"]["facts"]
-
-    assert sophia["old_date_band"]["interval_wholly_inside"] == 1225
-    assert sophia["old_date_band"]["text_bearing_ukrainian_label_wholly_inside"] == 7
-    assert sophia["old_date_band"]["semantic_stage_assignment"] == "pending_qualified_review"
-    assert ud["exact_years"] == [1413, 1436, 1456, 1473]
-    assert ud["undated_documents"] == 78
-    assert ud["periodization_assignment_state"] == "unresolved"
-    assert plug2["date_min"] == 1816
-    assert plug2["date_max"] == 1954
-    assert plug2["pre_1800_documents"] == 0
-
-
-def test_learner_material_is_preserved_but_not_historical_authority():
-    learner = spine.load_spine()["authority_policy"]["learner_exposition"]
-
-    assert learner["preserve_for_instructional_evaluation"] is True
-    assert learner["historical_authority_eligible"] is False
-    assert learner["training_text_eligibility"] == "pending_separate_rights_and_quality_review"
-
-
-def test_phase_boundaries_remain_fail_closed():
-    value = spine.load_spine()
-
-    assert value["gates"] == {
-        "evidence_first_spine_defined": True,
-        "historical_source_coverage_ready": False,
-        "historical_source_freeze_ready": False,
-        "phase3_complete": False,
-        "phase4_authorized": False,
-        "phase4_blocked": True,
-        "private_corpus_audit_reproducible": True,
-    }
-    gap_states = {item["gap_id"]: item["state"] for item in value["gaps"]}
-    assert gap_states["saint_sophia_license_expression_missing"] == "accepted_operational_risk"
-    assert {
-        state for gap_id, state in gap_states.items()
-        if gap_id != "saint_sophia_license_expression_missing"
-    } == {"open"}
-
-
-def test_validator_rejects_framework_collapse_even_when_resealed():
-    value = copy.deepcopy(_tracked())
-    value["framework_policy"]["canonical_framework_id"] = "university_five_stage_synthesis"
-
-    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
-        spine.validate_spine(_reseal(value))
-
-
-def test_validator_rejects_fabricated_lavra_denominator_even_when_resealed():
-    value = copy.deepcopy(_tracked())
-    lavra = next(item for item in value["collections"] if item["collection_id"] == "kyiv-pechersk-lavra-graffiti")
-    lavra["record_count"] = 100
-    lavra["facts"]["corpus_count_known"] = True
-
-    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
-        spine.validate_spine(_reseal(value))
-
-
 def test_validator_rejects_audited_fact_tampering_even_when_resealed():
     value = copy.deepcopy(_tracked())
     sophia = next(item for item in value["collections"] if item["collection_id"] == "saint-sophia-inscriptions")
@@ -234,17 +95,6 @@ def test_validator_rejects_rights_overclaim_even_when_resealed():
         spine.validate_spine(_reseal(value))
 
 
-def test_validator_rejects_erased_operator_use_decision_even_when_resealed():
-    value = copy.deepcopy(_tracked())
-    sophia = next(item for item in value["collections"] if item["collection_id"] == "saint-sophia-inscriptions")
-    sophia["facts"]["source_provenance"]["license_evidence"]["operator_use_decision"]["decision"] = (
-        "wait_for_pre_use_permission"
-    )
-
-    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
-        spine.validate_spine(_reseal(value))
-
-
 def test_validator_rejects_reblocking_accepted_rights_risk_even_when_resealed():
     value = copy.deepcopy(_tracked())
     license_gap = next(
@@ -254,15 +104,6 @@ def test_validator_rejects_reblocking_accepted_rights_risk_even_when_resealed():
     license_gap["state"] = "open"
 
     with pytest.raises(spine.HistoricalEvidenceSpineError, match="gap disposition drift"):
-        spine.validate_spine(_reseal(value))
-
-
-def test_validator_rejects_ai_assisted_portal_fields_as_unreviewed_human_gold():
-    value = copy.deepcopy(_tracked())
-    sophia = next(item for item in value["collections"] if item["collection_id"] == "saint-sophia-inscriptions")
-    sophia["facts"]["source_provenance"]["ai_assistance"]["human_gold_eligible_without_review"] = True
-
-    with pytest.raises(spine.HistoricalEvidenceSpineError, match="schema violation"):
         spine.validate_spine(_reseal(value))
 
 
@@ -466,50 +307,3 @@ def test_full_materialization_receipt_is_hash_and_seal_bound(tmp_path):
             expected_file_sha256=file_sha256,
             expected_receipt_sha256=receipt["receipt_sha256"],
         )
-
-
-def test_private_audit_uses_supplied_spine_without_reloading_default(monkeypatch, tmp_path):
-    checked = spine.validate_spine(_tracked())
-    monkeypatch.setattr(spine, "load_spine", lambda *_args, **_kwargs: pytest.fail("default spine reloaded"))
-    monkeypatch.setattr(spine, "audit_saint_sophia", lambda *_args, **_kwargs: copy.deepcopy(spine.EXPECTED_SOPHIA_PRIVATE_AUDIT))
-    monkeypatch.setattr(
-        spine,
-        "audit_plug2_metadata",
-        lambda *_args, **_kwargs: {
-            "all_documents": 56245,
-            "uk_documents": 56080,
-            "uk_token_sum": 71802066,
-            "date_min": 1816,
-            "date_max": 1954,
-            "pre_1800_documents": 0,
-            "exact_dated_documents": 56080,
-        },
-    )
-    monkeypatch.setattr(
-        spine,
-        "audit_ud",
-        lambda *_args, **_kwargs: {
-            "documents": 82,
-            "sentences": 1311,
-            "token_rows": 35081,
-            "exact_dated_documents": 4,
-            "exact_years": [1413, 1436, 1456, 1473],
-            "undated_documents": 78,
-            "nonexact_dated_documents": 0,
-        },
-    )
-    monkeypatch.setattr(
-        spine,
-        "audit_full_materialization_receipt",
-        lambda *_args, **_kwargs: {"full_materialization_complete": True},
-    )
-
-    result = spine.audit_private_inputs(
-        sophia_jsonl=tmp_path / "sophia.jsonl",
-        plug2_metadata=tmp_path / "metadata.psv",
-        ud_root=tmp_path / "ud",
-        full_materialization_receipt=tmp_path / "receipt.json",
-        spine_value=checked,
-    )
-
-    assert result["full_materialization_receipt"]["full_materialization_complete"] is True

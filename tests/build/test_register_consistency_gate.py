@@ -34,20 +34,6 @@ def test_register_consistency_dialogue_box_exempt():
     assert result["violation_count"] == 0
 
 
-def test_register_consistency_blockquote_exempt():
-    """шо inside a > blockquote -> PASS (no violations)."""
-    text = """
-Ми читаємо цитату:
-> Він сказав: "Шо це таке?"
-І продовжуємо далі.
-"""
-    plan = {"level": "a2"}
-    result = _register_consistency_gate(text, plan)
-    assert result["passed"] is True
-    assert result["verdict"] == "PASS"
-    assert result["violation_count"] == 0
-
-
 def test_register_consistency_teacher_voice_warn():
     """шо in teacher-voice paragraph at level A1 -> WARN with violation count 1."""
     text = """

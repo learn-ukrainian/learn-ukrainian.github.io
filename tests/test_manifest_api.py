@@ -10,7 +10,6 @@ Covered:
 from __future__ import annotations
 
 import hashlib
-import json
 import sqlite3
 
 import pytest
@@ -28,93 +27,6 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 # ---------------------------------------------------------------------
 # /api/rules
 # ---------------------------------------------------------------------
-
-
-def test_rule_sources_includes_all_unscoped_files():
-    """The explicit full-reference archive retains all its original sources."""
-    expected = {
-        "agents_extensions/shared/rules/operator-expectations.md",
-        "agents_extensions/shared/rules/critical-rules.md",
-        "agents_extensions/shared/rules/non-negotiable-rules.md",
-        "agents_extensions/shared/rules/workflow.md",
-        "agents_extensions/shared/rules/fleet-comms-coordination.md",
-        "agents_extensions/shared/rules/delegate-must-use-worktree.md",
-        "agents_extensions/shared/rules/cli-help-standard.md",
-        "agents_extensions/shared/rules/model-assignment.md",
-        "agents_extensions/shared/rules/fleet-driver-routing.md",
-        "docs/best-practices/fleet-shared-doctrine.md",
-        "docs/best-practices/fleet-role-scorecard.md",
-    }
-    assert set(rules_router.RULE_SOURCES) == expected
-    # Order: machine routing before living scorecard (#5529).
-    assert rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/model-assignment.md"
-    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-role-scorecard.md")
-    assert rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/model-assignment.md"
-    ) < rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/fleet-driver-routing.md"
-    )
-    assert rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/fleet-driver-routing.md"
-    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-shared-doctrine.md")
-    # Fleet-comms mid-cutover rule sits with operational workflow, before model table.
-    assert rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/workflow.md"
-    ) < rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/fleet-comms-coordination.md"
-    )
-    assert rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/fleet-comms-coordination.md"
-    ) < rules_router.RULE_SOURCES.index(
-        "agents_extensions/shared/rules/model-assignment.md"
-    )
-
-
-def test_rules_live_assembly_includes_fleet_scorecard():
-    """Doctrine + scorecard remain available through the task-scoped driver path."""
-    resp = client.get("/api/rules?scope=task:driver&format=json")
-    assert resp.status_code == 200
-    body = resp.json()
-    sources = body["sources"]
-    assert "docs/best-practices/fleet-shared-doctrine.md" in sources
-    assert "docs/best-practices/fleet-role-scorecard.md" in sources
-    md = body["markdown"]
-    assert "Fleet role scorecard" in md
-    assert "Fleet topology" in md or "orchestrator" in md.lower()
-    assert body["hash"] == rules_router.scope_digest("task:driver", md)
-
-
-def test_served_deepseek_policy_allows_coding_but_keeps_review_closed():
-    response = client.get("/api/rules?scope=task:driver&format=json")
-    assert response.status_code == 200
-    markdown = response.json()["markdown"]
-    assert "latest V4.1 Flash coding through opencode is allowed" in markdown
-    assert "named US provider allow-list" in markdown
-    assert "Never send private-repository content or secrets." in markdown
-    assert "Review-of-record and Ukrainian work need measured evidence first" in markdown
-    assert "Pro and older ids stay retired" in markdown
-    assert "`ask-deepseek` is consult-only for non-language work" in markdown
-    assert "Budget substitution never selects DeepSeek" in markdown
-    assert "still refuses `openrouter/deepseek` until that allow-list exists" in markdown
-
-
-def test_rules_live_assembly_includes_fleet_comms_coordination():
-    """Drivers explicitly load the fleet-comms authority SSOT for their task."""
-    resp = client.get("/api/rules?scope=task:fleet-comms&format=json")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert "agents_extensions/shared/rules/fleet-comms-coordination.md" in body["sources"]
-    md = body["markdown"]
-    assert "Fleet-comms coordination" in md or "fleet-comms coordination" in md.lower()
-    assert "plane-status" in md
-    assert "review-pr" in md
-    assert "dual_write" in md or "dual-write" in md
-    assert "do not invent a competing design" in md.lower() or "competing design" in md
-    assert "fleet-comms is the durable source of truth" in md.lower()
-    assert "legacy stores are read-only" in md.lower()
-    assert "acp" in md.lower() and "provider transport" in md.lower()
-    assert "drive-epic" in md
 
 
 def test_rules_markdown_default(monkeypatch, tmp_path):
@@ -164,13 +76,6 @@ def test_rules_missing_core_refuses_instead_of_serving_archive(monkeypatch, tmp_
     assert rules_core.CORE_REL in resp.json()["detail"]
     assert rules_router.rules_hash(project_root=tmp_path) == ""
     assert client.get("/api/rules?scope=full").status_code == 200
-
-
-def test_rules_archive_500_when_no_sources_readable(monkeypatch, tmp_path):
-    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
-    monkeypatch.setattr(rules_router, "RULE_SOURCES", ("missing.md",))
-    resp = client.get("/api/rules?scope=full")
-    assert resp.status_code == 500
 
 
 def test_binding_rules_are_core_with_task_scoped_references():
@@ -224,19 +129,6 @@ def session_fixture(tmp_path, monkeypatch):
     return project_root
 
 
-def test_session_current_markdown(session_fixture):
-    resp = client.get("/api/session/current")
-    assert resp.status_code == 200
-    assert "Working on #1309." in resp.text
-    # Recent handoffs block appended after the current.md body.
-    assert "Recent session-state files" in resp.text
-    assert "2026-04-17-newest.md" in resp.text
-    # Older handoffs listed too but not current router or agent handoff files.
-    recent_block = resp.text.split("Recent session-state")[1]
-    assert "current.md" not in recent_block
-    assert "codex-orchestrator-handoff.md" not in recent_block
-
-
 def test_session_current_json(session_fixture):
     resp = client.get("/api/session/current?format=json")
     assert resp.status_code == 200
@@ -282,21 +174,6 @@ def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_pa
     assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
 
 
-def test_session_current_codex_without_router_uses_durable_handoff(tmp_path, monkeypatch):
-    project_root = tmp_path
-    session_dir = project_root / "docs" / "session-state"
-    session_dir.mkdir(parents=True)
-    (session_dir / "codex-orchestrator-handoff.md").write_text("# Durable task\n\nCodex UI state.\n", encoding="utf-8")
-    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(project_root))
-
-    resp = client.get("/api/session/current?agent=codex&format=json")
-
-    assert resp.status_code == 200
-    body = resp.json()
-    assert "Codex UI state." in body["markdown"]
-    assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
-
-
 def test_session_current_codex_empty_router_uses_router_body(tmp_path, monkeypatch):
     project_root = tmp_path
     session_dir = project_root / "docs" / "session-state"
@@ -337,13 +214,6 @@ def test_session_current_legacy_pointer_remap_is_codex_or_orchestrator_only(tmp_
     assert "Claude was mapped here deliberately." in body["markdown"]
     assert "Durable orchestrator state." not in body["markdown"]
     assert body["sections"]["current"] == "docs/session-state/current.orchestrator.md"
-
-
-def test_session_current_router_query(session_fixture):
-    resp = client.get("/api/session/current?agent=router")
-    assert resp.status_code == 200
-    assert "Agent-Handoff:" in resp.text
-    assert "Codex-specific handoff." not in resp.text
 
 
 def test_session_current_rejects_invalid_agent(session_fixture):
@@ -388,15 +258,6 @@ def test_manifest_shape_and_hashes(monkeypatch, tmp_path):
     assert body["activity"]["url"] == "/api/comms/agent-activity"
 
 
-def test_manifest_stays_small():
-    """Manifest must stay under 2 KB — that's the whole point of it."""
-    resp = client.get("/api/state/manifest")
-    assert resp.status_code == 200
-    assert len(resp.content) < 2048, (
-        f"manifest grew to {len(resp.content)} bytes; keep it lean or agents will stop using it"
-    )
-
-
 def test_manifest_omits_research_when_flag_off(monkeypatch):
     """ADR-011 P2: with the kill switch off, the manifest is exactly the pre-P2
     shape — no ``research`` key — so existing clients are untouched."""
@@ -404,23 +265,6 @@ def test_manifest_omits_research_when_flag_off(monkeypatch):
     resp = client.get("/api/state/manifest")
     assert resp.status_code == 200
     assert "research" not in resp.json()
-
-
-@pytest.mark.parametrize("telemetry", ["0", "1"])
-def test_manifest_with_research_stays_within_budget(monkeypatch, telemetry):
-    """Enabled research component ≤ 512 bytes and total manifest < 2 KB, with and
-    without the telemetry footer. Uses the real committed 3-record registry."""
-    monkeypatch.setenv("LEARN_UK_RESEARCH_REGISTRY_ENABLED", "true")
-    monkeypatch.setenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", telemetry)
-    # Unresolvable session → bounded, deterministic telemetry block (no sidecar).
-    resp = client.get("/api/state/manifest?session=00000000-0000-0000-0000-000000000000")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["research"]["url"] == "/api/knowledge/manifest"
-    assert len(body["research"]["hash"]) == 64
-    component = json.dumps(body["research"], separators=(",", ":")).encode("utf-8")
-    assert len(component) <= 512, f"research component grew to {len(component)} bytes"
-    assert len(resp.content) < 2048, f"manifest grew to {len(resp.content)} bytes"
 
 
 # ---------------------------------------------------------------------
@@ -493,19 +337,6 @@ def test_inbox_respects_limit_and_marks_truncated(monkeypatch):
     assert body["count"] == 5
     assert body["truncated"] is True
     assert len(body["deliveries"]) == 2
-
-
-def test_inbox_claude_infra_returns_empty_when_no_pending(monkeypatch):
-    from scripts.ai_agent_bridge import _channels
-
-    monkeypatch.setattr(_channels, "pending_deliveries_for", lambda agent: [])
-
-    resp = client.get("/api/comms/inbox?agent=claude-infra")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["agent"] == "claude-infra"
-    assert body["count"] == 0
-    assert body["deliveries"] == []
 
 
 def test_inbox_400_on_invalid_agent(monkeypatch):

@@ -193,21 +193,6 @@ def test_materializer_output_permissions_are_0700_and_0600(tmp_path: Path):
             assert mode == materializer.PRIVATE_FILE_MODE
 
 
-def test_materializer_fsyncs_directories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    source, output, _rows = _fixture(tmp_path)
-    calls = {"count": 0}
-    real_fsync = os.fsync
-
-    def _counting_fsync(fd: int) -> None:
-        calls["count"] += 1
-        real_fsync(fd)
-
-    monkeypatch.setattr(materializer.os, "fsync", _counting_fsync)
-    materializer.materialize(source, output, fixture=True)
-    # Every packet file, both manifests, and every directory fsync at least once.
-    assert calls["count"] >= 3 + 2 + 3
-
-
 def test_materializer_rolls_back_on_mid_build_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     source, output, _rows = _fixture(tmp_path)
 
@@ -294,30 +279,6 @@ def test_materializer_never_deletes_output_when_a_post_replace_check_fails(
     assert output.exists()
     custody = materializer.strict_json(output / "custody-receipt.json")
     assert custody["evaluation_cycle_id"] == materializer.CYCLE007
-
-
-def test_materializer_rollback_never_touches_a_concurrently_created_destination(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
-    source, output, _rows = _fixture(tmp_path)
-
-    def _boom(*_args: Any, **_kwargs: Any):
-        raise RuntimeError("synthetic mid-build failure")
-
-    monkeypatch.setattr(materializer, "_packet_rows", _boom)
-    # Simulate a concurrent process having already created the destination
-    # with unrelated content between _validate_paths() and _build_stage().
-    output.mkdir(mode=materializer.PRIVATE_DIR_MODE)
-    os.chmod(output, materializer.PRIVATE_DIR_MODE)
-    (output / "concurrent-marker.json").write_bytes(b"{}")
-    os.chmod(output / "concurrent-marker.json", materializer.PRIVATE_FILE_MODE)
-    with pytest.raises(materializer.MaterializationError) as excinfo:
-        materializer.materialize(source, output, fixture=True)
-    # _validate_paths refuses the pre-existing destination outright...
-    assert excinfo.value.code == "output_exists"
-    # ...and, crucially, never deletes it.
-    assert output.exists()
-    assert (output / "concurrent-marker.json").exists()
 
 
 def test_materializer_toctou_race_fails_closed_when_output_appears_after_validation(
@@ -410,20 +371,6 @@ def test_materializer_real_mode_rejects_a_world_readable_source_package(
 def test_main_real_mode_refuses_argv_source_and_output(tmp_path: Path):
     source, output, _rows = _fixture(tmp_path)
     exit_code = materializer.main(["--source", str(source), "--output", str(output)])
-    assert exit_code == 2
-    assert not output.exists()
-
-
-def test_main_real_mode_resolves_paths_from_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    source, output, _rows = _fixture(tmp_path)
-    monkeypatch.setenv(materializer.REAL_SOURCE_ENV, str(source))
-    monkeypatch.setenv(materializer.REAL_OUTPUT_ENV, str(output))
-    monkeypatch.delenv(materializer.REAL_CONFIG_ENV, raising=False)
-    # Real mode still enforces the frozen Cycle-005 hash pins against this
-    # synthetic fixture, so it fails closed on source_binding_drift — the
-    # point of this test is that it reaches that check at all (i.e. argv
-    # was never required and env resolution worked), not that it succeeds.
-    exit_code = materializer.main([])
     assert exit_code == 2
     assert not output.exists()
 

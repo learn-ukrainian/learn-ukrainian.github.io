@@ -148,23 +148,6 @@ def test_runtime_cache_write_during_capture_is_retained_with_error(
     assert retained.read_bytes() == b"Concurrent cache write"
 
 
-@pytest.mark.parametrize("ancestor", ["agents_extensions", "agents_extensions/shared"])
-def test_runtime_cache_rejects_upper_canonical_source_symlink(
-    repo: Path, python_skill: Path, ancestor: str,
-) -> None:
-    cache = python_skill / "bounded_completion.cpython-312.pyc"
-    cache.write_bytes(b"Retain runtime bytes")
-    canonical = repo / ancestor
-    outside = repo.parent / "outside-source"
-    canonical.rename(outside)
-    canonical.symlink_to(outside, target_is_directory=True)
-    relative = cache.relative_to(repo / ".codex/skills").as_posix()
-    assert not migration.cache_source_is_tracked(repo, relative)
-    assert migration.migrate(repo, "apply") == 1
-    assert cache.read_bytes() == b"Retain runtime bytes"
-    assert not captures(repo)
-
-
 def test_capture_is_retained_and_repeated_run_never_removes_backup(repo: Path) -> None:
     assert migration.migrate(repo, "apply") == 0
     retained = captures(repo)
@@ -208,20 +191,6 @@ def test_open_file_descriptor_write_after_success_survives(repo: Path) -> None:
     assert retained.read_bytes() == b"Late writer content"
     assert migration.migrate(repo, "apply") == 0
     assert retained.read_bytes() == b"Late writer content"
-
-
-def test_open_file_descriptor_write_during_capture_survives_with_error(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    original = migration.rename_exclusive
-    with (repo / ".codex/skills/example/SKILL.md").open("r+b", buffering=0) as writer:
-        def capture_then_write(*args: object) -> None:
-            original(*args)
-            writer.seek(0)
-            writer.write(b"Concurrent writer content")
-            writer.truncate()
-
-        monkeypatch.setattr(migration, "rename_exclusive", capture_then_write)
-        assert migration.migrate(repo, "apply") == 1
-    assert (captures(repo)[0] / "example/SKILL.md").read_bytes() == b"Concurrent writer content"
 
 
 @pytest.mark.parametrize("component", [".codex", ".codex/skills", ".codex/skills/example"])

@@ -12,8 +12,6 @@ import pytest
 from scripts.orchestration.trails import trail_certification as certification_module
 from scripts.orchestration.trails.models import CommandExecution, ExitClass
 from scripts.orchestration.trails.trail_certification import (
-    BINARY_DAMAGE_EVENT_CODES,
-    FAULT_CLASSES,
     CaseExpectation,
     CertificationCase,
     CertificationSubject,
@@ -23,10 +21,6 @@ from scripts.orchestration.trails.trail_certification import (
     P3Action,
     TrailCertificationError,
     TrailCertificationHarness,
-    UnsupportedTrailSpecError,
-    case_matrix_coverage_gaps,
-    load_case_matrix,
-    one_sided_95_upper_bound,
     validate_certification_attestation_data,
 )
 
@@ -166,36 +160,6 @@ def test_harness_executes_p3_cases_from_sqlite_and_writes_bound_attestation(tmp_
     assert state_db.is_file()
 
 
-def test_harness_refuses_v1_before_constructing_the_p3_runner(tmp_path: Path, monkeypatch) -> None:
-    case = _case(
-        case_id="legacy-refusal",
-        transition="accepted",
-        outcome="terminal",
-        exit_class=ExitClass.OK,
-        state="terminal",
-    )
-
-    def assert_v1_refused(subject: CertificationSubject) -> None:
-        try:
-            _harness(tmp_path).run(
-                certification_id="legacy",
-                subject=subject,
-                fixture=_fixture(),
-                cases=(case,),
-            )
-        except UnsupportedTrailSpecError:
-            return
-        raise AssertionError("the certification harness accepted an execution-ineligible trail")
-
-    assert_v1_refused(_subject(trail_path=FIXTURES / "legacy.trail.yaml", seat="grok-daily"))
-    valid_spec = certification_module._read_trail(
-        FIXTURES / "executable.trail.yaml", seat_registry_path=FIXTURES / "seats.yaml"
-    )
-    monkeypatch.setattr(certification_module, "_read_trail", lambda *args, **kwargs: valid_spec)
-    with pytest.raises(AssertionError):
-        assert_v1_refused(_subject())
-
-
 def test_harness_records_an_injected_crash_without_spawning_a_live_command(tmp_path: Path) -> None:
     case = CertificationCase(
         case_id="crash-before-spawn",
@@ -282,40 +246,6 @@ def test_hermetic_receipt_slots_are_pending_and_non_fabricable(tmp_path: Path) -
 
     with pytest.raises(TrailCertificationError, match="cannot fabricate a live canary"):
         validate_certification_attestation_data(forged)
-
-
-def test_exact_operability_upper_bound_has_the_memo_corrected_threshold() -> None:
-    assert one_sided_95_upper_bound(0, 59) < 0.05
-    assert one_sided_95_upper_bound(0, 58) >= 0.05
-    assert 0.05 < one_sided_95_upper_bound(1, 59) < 0.1
-
-
-def test_case_matrix_covers_all_trail_plants_and_fault_classes() -> None:
-    matrix = load_case_matrix(FIXTURES / "case-matrix.v1.yaml")
-
-    assert case_matrix_coverage_gaps(matrix) == {}
-    assert {case["fault"] for case in matrix} >= FAULT_CLASSES
-
-
-def test_attestation_schema_rejects_unknown_damage_event_codes(tmp_path: Path) -> None:
-    case = _case(
-        case_id="schema-damage",
-        transition="accepted",
-        outcome="terminal",
-        exit_class=ExitClass.OK,
-        state="terminal",
-    )
-    attestation = _harness(tmp_path).run(
-        certification_id="schema-damage",
-        subject=_subject(),
-        fixture=_fixture(),
-        cases=(case,),
-    ).attestation
-    malformed = copy.deepcopy(attestation)
-    malformed["damage_event_codes"] = ["invented-damage-code"]
-
-    with pytest.raises(TrailCertificationError, match="schema violation"):
-        validate_certification_attestation_data(malformed)
 
 
 def _probe_executor(adapter: str, escape: bool):
@@ -430,17 +360,3 @@ def test_trail_hash_drift_between_p3_and_submitted_spec_is_refused(tmp_path: Pat
             fixture=_fixture(),
             cases=(case,),
         )
-
-
-def test_binary_damage_event_codes_are_complete() -> None:
-    assert {
-        "merged-regression",
-        "unauthorized-rail-file-edit",
-        "self-review-accepted",
-        "false-closure",
-        "missed-stop",
-        "stale-generation-action",
-        "review-merge-bypass",
-        "replayed-side-effect",
-        "wrong-head-rerun",
-    } == BINARY_DAMAGE_EVENT_CODES

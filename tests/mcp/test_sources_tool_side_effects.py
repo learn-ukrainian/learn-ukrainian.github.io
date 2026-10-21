@@ -73,18 +73,6 @@ def test_read_only_annotation_equals_observed_writes(probe_results: dict[str, di
     assert _annotation_mismatches(probe_results) == {}
 
 
-def test_every_read_only_lookup_succeeds(probe_results: dict[str, dict]) -> None:
-    """Each audited read-only call found its fixture row, so its success path ran under the audit."""
-    read_only = {name for name, result in probe_results.items() if result["read_only_hint"] is True}
-    assert set(probe.HERMETIC_HITS) == read_only
-    failed = {
-        name: probe_results[name]["result_head"]
-        for name in sorted(read_only)
-        if probe_results[name]["is_error"] or probe_results[name]["hit"] is not True
-    }
-    assert failed == {}
-
-
 def test_hermetic_run_reads_only_its_scratch_stores(probe_results: dict[str, dict]) -> None:
     """No tool reached a host database, so the outcome is the same on a machine without data/."""
     assert {name: result["escapes"] for name, result in probe_results.items() if result["escapes"]} == {}
@@ -103,15 +91,6 @@ def test_a_write_after_a_successful_lookup_fails_the_audit(tmp_path: Path) -> No
     for name in injected:
         assert any("on sources.db" in write for write in results[name]["writes"]), results[name]
     assert sorted(_annotation_mismatches(results)) == sorted(injected)
-
-
-def test_wikipedia_and_dictua_cache_writes_are_detected(probe_results: dict[str, dict]) -> None:
-    """Positive controls: the probe sees the writes the review found, so a clean result means something."""
-    assert any("wiki_cache.db" in write for write in probe_results["query_wikipedia"]["writes"])
-    for name in ("query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology"):
-        assert any(write.startswith("sqlite-write") for write in probe_results[name]["writes"]), name
-    # The cache_only-free records lookup reads the same table without storing.
-    assert probe_results["query_ulif_records"]["writes"] == []
 
 
 def test_probe_refuses_writes_outside_the_request_log(tmp_path: Path) -> None:

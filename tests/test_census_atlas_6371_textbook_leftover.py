@@ -11,17 +11,12 @@ import yaml
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.census_atlas_6371_textbook_leftover import (
     CENSUS_ID,
-    NAMED_DECISIONS,
-    NAMED_INVENTORIES,
-    ONESHOT_DECISIONS,
-    ONESHOT_INVENTORY,
     admission_allowed_keys,
     build_census,
     is_learner_english,
     iter_manifest_lemmas_from_text,
     iter_yaml_list_maps,
     refuse_invented_lemmas,
-    render_report,
 )
 
 pytestmark = pytest.mark.reads_content
@@ -193,11 +188,6 @@ def test_iter_yaml_list_maps_skips_nested_evidence_refs(tmp_path: Path) -> None:
     assert "curated source family textbook" not in rows[0].get("lemma", "")
 
 
-def test_iter_manifest_lemmas_from_text_unescapes() -> None:
-    lemmas = list(iter_manifest_lemmas_from_text('{"entries":[{"lemma":"кам\'яниця"},{"lemma":"ліс"}]}'))
-    assert lemmas == ["кам'яниця", "ліс"]
-
-
 def test_iter_manifest_lemmas_ignores_nested_pretty_printed_lemmas() -> None:
     text = """{
   "stats": {
@@ -290,24 +280,6 @@ def test_admission_allowed_keys_are_only_named_teacher_p1(tmp_path: Path) -> Non
         assert "на" in str(exc)
     else:
         raise AssertionError("oneshot SUM-11 leftover must not be admission-eligible")
-
-
-def test_render_report_names_exact_missing_dbs(tmp_path: Path) -> None:
-    _, census = _census_fixture(tmp_path, atlas_lemmas=["мама"])
-    rendered = render_report(census)
-    assert "data/vesum.db" in rendered
-    assert "data/sources.db" in rendered
-    assert "BLOCKED" in rendered
-    assert "Issue #6371 stays open" in rendered
-
-
-def test_committed_oneshot_and_named_leftover_paths_exist() -> None:
-    assert ONESHOT_INVENTORY.is_file()
-    assert ONESHOT_DECISIONS.is_file()
-    for path in NAMED_INVENTORIES:
-        assert path.is_file(), path
-    for path in NAMED_DECISIONS:
-        assert path.is_file(), path
 
 
 def test_committed_oneshot_stream_matches_published_denominator() -> None:

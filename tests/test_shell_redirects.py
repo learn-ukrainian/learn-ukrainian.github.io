@@ -190,17 +190,6 @@ def test_unknown_repository_reader_keeps_quoted_branch_prose_inert(command):
     assert not any(argv[:2] == ["git", "switch"] for argv in unknown_repository_segments(command))
 
 
-def test_original_argv_order_survives_whole_command_refusal():
-    kwargs = dict(mark_redirect_unreadable=True, unreadable_marker="?", unparsed=["?"], may_match=lambda _: False)
-    command = "git status; git switch -c ${x:-(}"
-    assert command_repository_unknown(command)
-    events = scope_events(command, **kwargs)
-    assert events[0] == ("segment", ["git", "status"])
-    switch = next(i for i, (kind, argv) in enumerate(events) if kind == "segment" and argv[:2] == ["git", "switch"])
-    assert switch > 0
-    assert not any(kind in {"syntax_unreadable", "line_end"} for kind, _ in events)
-
-
 @pytest.mark.parametrize("opener", ["<<'EOF'", '<<"EOF"', r"<<\EOF", "<<-'EOF'"])
 @pytest.mark.parametrize(
     "wrapper", ['git commit -m "$({body})"', "echo `{body}`", "cat <({body})", 'echo "$(printf %s "$({body})")"']

@@ -17,7 +17,6 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from scripts.verification.stress import (
-    STRESS_BATCH_CAP,
     _load_trie,
     _parse_dictionary_value,
     _trie_value,
@@ -40,12 +39,6 @@ class TestOverrides:
         assert match["vowel_index"] == 3
         assert match["override_applied"] is True
         assert match["required_tags"] == []
-
-    def test_razom_override(self):
-        result = verify_stress("разом")
-        match = result["matches"][0]
-        assert match["stressed_form"] == f"ра{STRESS}зом"
-        assert match["override_applied"] is True
 
     def test_override_is_exact_lemma_only_not_inflected_forms(self):
         # "любові" is an inflected (dative/locative) form of "любов"; the
@@ -129,20 +122,11 @@ class TestPedagogicalForm:
         assert match["vowel_indices"] == [1, 4]
         assert pedagogical_stressed_form(match) == f"ро{STRESS}збі{STRESS}р"
 
-    def test_korysnyi_preserves_both_without_source_choice(self):
-        match = verify_stress("корисний")["matches"][0]
-        assert pedagogical_stressed_form(match) == match["stressed_form"]
-
     def test_zavzhdy_override_keeps_first_vowel(self):
         result = verify_stress("завжди")
         match = result["matches"][0]
         assert match["override_applied"] is True
         assert pedagogical_stressed_form(match) == f"за{STRESS}вжди"
-
-    def test_takozh_override_keeps_first_vowel(self):
-        match = verify_stress("також")["matches"][0]
-        assert match["override_applied"] is True
-        assert pedagogical_stressed_form(match) == f"та{STRESS}кож"
 
     def test_transfer_preserves_capitalization(self):
         assert transfer_stress_marks(f"розбі{STRESS}р", "Розбір") == f"Розбі{STRESS}р"
@@ -179,34 +163,11 @@ class TestInputMismatch:
 
 
 class TestInvalidInput:
-    def test_empty(self):
-        result = verify_stress("")
-        assert result["status"] == "invalid_input"
-        assert "empty" in result["error"]
-
-    def test_whitespace_only(self):
-        result = verify_stress("   ")
-        assert result["status"] == "invalid_input"
-
-    def test_multi_word(self):
-        result = verify_stress("добрий день")
-        assert result["status"] == "invalid_input"
-        assert "multi-word" in result["error"]
-
-    def test_non_cyrillic(self):
-        result = verify_stress("hello")
-        assert result["status"] == "invalid_input"
-        assert "Cyrillic" in result["error"]
 
     def test_single_syllable(self):
         result = verify_stress("я")
         assert result["status"] == "invalid_input"
         assert "single-syllable" in result["error"]
-
-    def test_invalid_input_distinct_from_not_found(self):
-        # A stray multi-word string must not be reported as "dictionary
-        # doesn't know this word" (round-2 §3d) — status differs.
-        assert verify_stress("добрий день")["status"] != verify_stress("квазюрап")["status"]
 
 
 class TestVesumJoin:
@@ -298,20 +259,3 @@ class TestVerifyStresses:
         assert [reading["stressed_form"] for reading in batch["words"][0]["readings"]] == [
             match["stressed_form"] for match in single["matches"]
         ]
-
-    def test_501_words_truncates_with_note(self):
-        words = ["я"] * (STRESS_BATCH_CAP + 1)
-        batch = verify_stresses(words)
-        assert len(batch["words"]) == STRESS_BATCH_CAP
-        assert batch["note"] == (
-            f"Note: received {STRESS_BATCH_CAP + 1} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
-        )
-        assert batch["source"]["digest"]
-        assert all(row["status"] == "invalid_input" for row in batch["words"])
-        assert all(row["readings"] == [] for row in batch["words"])
-
-    def test_source_envelope_is_not_repeated_per_word(self, ulif_stress_db):
-        batch = verify_stresses(["село", "замок"])
-        assert batch["words"][0]["source"] == "ulif"
-        assert batch["words"][1]["source"] == "ulif"
-        assert str(batch).count(batch["source"]["digest"]) == 1

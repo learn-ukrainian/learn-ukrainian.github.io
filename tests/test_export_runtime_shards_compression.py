@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import random
-import tracemalloc
 import zlib
 from pathlib import Path
 
@@ -79,31 +78,6 @@ def test_stored_model_no_flush_path_matches_real_zlib_streams() -> None:
             lambda total=total: (_STORED_PATTERN[:total],), _model_compressobj_blocks(lengths), pieces.append
         )
         assert b"".join(pieces) == real, lengths
-
-
-def test_stored_block_plan_beyond_uint_max_without_allocating() -> None:
-    """``zlib_compress_impl`` hands zlib ``UINT_MAX`` slices: ``Z_NO_FLUSH`` then ``Z_FINISH``.
-
-    Source-derived: the ``Z_NO_FLUSH`` slice never writes a block shorter than
-    ``min_block`` (32 KiB), so its tail stays in the window and the ``Z_FINISH``
-    slice emits it together with the rest — the >4 GiB plan is the UINT_MAX plan
-    with its final block extended (and split at 65535) by the extra bytes.
-    """
-    uint_max = exporter._UINT_MAX
-    tracemalloc.start()
-    try:
-        base = exporter.stored_block_plan(uint_max)
-        for extra in (1, 12_345, 70_000):
-            plan = exporter.stored_block_plan(uint_max + extra)
-            tail = base[-1][0] + extra
-            expected_tail = [(65_535, 0)] * ((tail - 1) // 65_535) + [((tail - 1) % 65_535 + 1, 1)]
-            assert plan == base[:-1] + expected_tail, extra
-            assert sum(length for length, _last in plan) == uint_max + extra
-        peak = tracemalloc.get_traced_memory()[1]
-    finally:
-        tracemalloc.stop()
-    assert base[:2] == [(65_531, 0), (32_773, 0)] and base[-1][1] == 1
-    assert peak < 64 * 1024 * 1024, "a length-only plan, never the bytes"
 
 
 @pytest.mark.slow

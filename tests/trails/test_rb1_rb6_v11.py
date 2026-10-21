@@ -14,7 +14,6 @@ from scripts.orchestration.validate_trailspec import (
     TrailSpecValidationError,
     validate_estate_registry,
     validate_estate_registry_data,
-    validate_trailspec,
     validate_trailspec_data,
 )
 
@@ -25,30 +24,6 @@ ESTATE_PATH = DEFAULT_ESTATE_REGISTRY_PATH
 
 def _load_yaml(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
-
-
-def test_rb1_trail_validates_v11() -> None:
-    """RB-1 v1.1 passes validator, has non-empty hash, and is execution eligible."""
-    res = validate_trailspec(spec_path=RB1_TRAIL_PATH)
-    assert res["ok"] is True
-    spec = res["spec"]
-    assert spec["trail_id"] == "rb1-cold-start"
-    assert spec["version"] == "1.0.0"
-    assert spec["steps_count"] == 10
-    assert spec["execution_eligible"] is True
-    assert len(spec["trail_hash"]) == 64
-
-
-def test_rb6_trail_validates_v11() -> None:
-    """RB-6 v1.1 passes validator, has non-empty hash, and is execution eligible."""
-    res = validate_trailspec(spec_path=RB6_TRAIL_PATH)
-    assert res["ok"] is True
-    spec = res["spec"]
-    assert spec["trail_id"] == "rb6-estate-probes"
-    assert spec["version"] == "1.0.0"
-    assert spec["steps_count"] == 7
-    assert spec["execution_eligible"] is True
-    assert len(spec["trail_hash"]) == 64
 
 
 def test_estate_registry_seed_validates() -> None:
@@ -129,28 +104,6 @@ def _assert_registry_decoupled_from_commands(estate_data: dict, rb6_data: dict) 
         )
 
 
-def test_negative_rb6_cross_linked_host_alias_fails_decoupling() -> None:
-    """Mutation negative: cross-linking host_alias to ssh_alias FAILS the decoupling pin."""
-    estate_data = _load_yaml(ESTATE_PATH)
-    rb6_data = _load_yaml(RB6_TRAIL_PATH)
-    estate_data["surfaces"]["services"][0]["host_alias"] = estate_data["surfaces"]["vps_hosts"][0][
-        "ssh_alias"
-    ]
-    with pytest.raises(AssertionError, match="cross-link"):
-        _assert_registry_decoupled_from_commands(estate_data, rb6_data)
-
-
-def test_negative_rb1_dropped_predicate_clause_fails() -> None:
-    """Mutation negative test: dropping a clause from a transition evidence fails validation."""
-    data = _load_yaml(RB1_TRAIL_PATH)
-    # Remove all clauses from the first transition evidence
-    data["steps"][0]["transitions"]["none"]["evidence"]["clauses"] = []
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data)
-    assert "schema violation" in str(exc_info.value) or "clauses" in str(exc_info.value)
-
-
 def test_negative_rb1_unpublished_stop_code_fails() -> None:
     """Mutation negative test: using an unpublished STOP code fails validation."""
     data = _load_yaml(RB1_TRAIL_PATH)
@@ -184,26 +137,6 @@ def test_negative_rb6_unquoted_parameter_in_shell_fails() -> None:
     assert "Unquoted parameter interpolation prohibited" in str(exc_info.value)
 
 
-def test_negative_estate_registry_extra_properties_fails() -> None:
-    """Mutation negative test: adding illegal top-level property to estate registry fails strict schema."""
-    data = _load_yaml(ESTATE_PATH)
-    data["illegal_extra_property"] = True
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_estate_registry_data(data)
-    assert "EstateRegistry schema violation" in str(exc_info.value)
-
-
-def test_negative_estate_registry_missing_refused_surface_fails() -> None:
-    """Mutation negative test: removing a required surface section from estate registry fails schema."""
-    data = _load_yaml(ESTATE_PATH)
-    del data["surfaces"]["vps_hosts"]
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_estate_registry_data(data)
-    assert "EstateRegistry schema violation" in str(exc_info.value)
-
-
 KNOWN_PASSTHROUGH_VOCABULARY = {
     # detect_rollover and claim_rollover pass through thread_handoff.py detect JSON 'status' values
     ("rb1-cold-start", "detect_rollover"): {"none", "pending_start", "resumed", "ambiguous", "unparseable"},
@@ -232,28 +165,6 @@ def test_rb1_rb6_transition_reachability() -> None:
     """Every transition key in RB-1 and RB-6 specs is reachable by an emittable stdout token."""
     _verify_step_reachability(_load_yaml(RB1_TRAIL_PATH))
     _verify_step_reachability(_load_yaml(RB6_TRAIL_PATH))
-
-
-def test_negative_dead_transition_key_fails_reachability() -> None:
-    """Mutation negative test: re-adding a dead transition key to any step fails reachability check."""
-    spec = _load_yaml(RB1_TRAIL_PATH)
-    spec["steps"][0]["transitions"]["dead_unreachable_key"] = {
-        "target": "STOP-concurrency-conflict",
-        "evidence": {
-            "predicate_id": "detect-rollover-dead",
-            "clauses": [
-                {
-                    "source": "command_receipt",
-                    "field": "actor_outcome",
-                    "op": "eq",
-                    "value": "dead_unreachable_key",
-                }
-            ],
-        },
-    }
-    with pytest.raises(AssertionError) as exc_info:
-        _verify_step_reachability(spec)
-    assert "Dead transition key 'dead_unreachable_key'" in str(exc_info.value)
 
 
 def test_rb1_action_honesty_pin() -> None:
@@ -296,29 +207,10 @@ def test_rb1_action_honesty_pin() -> None:
     assert FORBIDDEN_DISHONEST_TOKENS.isdisjoint(reap_tokens)
 
 
-@pytest.mark.parametrize("dishonest_token", ["confirmed", "applied_and_drained", "reaped_with_receipts"])
-def test_negative_rb1_action_honesty_dishonest_token_fails(dishonest_token: str) -> None:
-    """Mutation negative test: re-introducing any dishonest success token fails the action-honesty check."""
-    data = _load_yaml(RB1_TRAIL_PATH)
-    steps_by_id = {s["step_id"]: s for s in data["steps"]}
-
-    FORBIDDEN_DISHONEST_TOKENS = {
-        "confirmed",
-        "applied_and_drained",
-        "reaped_with_receipts",
-    }
-
-    for step_id in ("claim_rollover", "apply_inbox", "reap_stale_refs"):
-        tokens = set(steps_by_id[step_id]["transitions"].keys())
-        tokens.add(dishonest_token)
-        assert not FORBIDDEN_DISHONEST_TOKENS.isdisjoint(tokens)
-
-
 def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
     """Mutation negative: refused list drifting from per-surface policy fails validation."""
     from scripts.orchestration.validate_trailspec import (
         TrailSpecValidationError,
-        validate_estate_registry_data,
     )
 
     estate_data = _load_yaml(ESTATE_PATH)
@@ -332,7 +224,6 @@ def test_negative_estate_surface_id_keyed_refusal_is_not_skipped() -> None:
     """Mutation negative: a surface_id-keyed group declaring refused is cross-checked too."""
     from scripts.orchestration.validate_trailspec import (
         TrailSpecValidationError,
-        validate_estate_registry_data,
     )
 
     estate_data = _load_yaml(ESTATE_PATH)

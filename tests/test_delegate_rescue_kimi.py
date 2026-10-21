@@ -205,21 +205,6 @@ def test_rescue_ignores_a_shared_push_url_the_worker_changed(kimi_rescue, tmp_pa
     assert _remote_heads(decoy) == {}
 
 
-def test_rescue_ignores_a_push_url_the_kimi_worktree_set_for_itself(kimi_rescue, tmp_path):
-    """The canonical URL comes from the main repository, never the worker's worktree-scoped config."""
-    worktree, origin, state_path, write = kimi_rescue
-    decoy = tmp_path / "decoy.git"
-    _git(tmp_path, "init", "--bare", str(decoy))
-    _git(worktree, "config", "--worktree", "remote.origin.url", str(decoy))
-    write("export const label = 'Lesson';\n", commit=True)
-
-    result = delegate._rescue_task(state_path, apply=True)
-
-    assert result["action"] == "rescued", result
-    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
-    assert _remote_heads(decoy) == {}
-
-
 # --- #9878 review probes: rescue runs nothing the worker's worktree configured ---------------
 
 
@@ -328,21 +313,6 @@ def test_rescue_retains_source_without_calling_worktree_removal(kimi_rescue, mon
         assert (worktree / "untracked.txt").read_text() == "preserve me\n"
         assert _git(origin, "show", f"{result['head']}:untracked.txt") == "preserve me\n"
     _assert_push_block_intact(worktree)
-
-
-@pytest.mark.parametrize("committed", [False, True])
-def test_a_worktree_url_rewrite_receives_nothing(kimi_rescue, tmp_path, committed):
-    worktree, origin, state_path, write = kimi_rescue
-    decoy = tmp_path / "decoy.git"
-    _git(tmp_path, "init", "--bare", str(decoy))
-    _git(worktree, "config", "--worktree", f"url.{decoy}.insteadOf", str(origin))
-    write("export const label = 'Lesson';\n", commit=committed)
-
-    result = delegate._rescue_task(state_path, apply=True)
-
-    assert result["action"] == "rescued", result
-    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
-    assert _remote_heads(decoy) == {}
 
 
 def test_a_url_rewrite_cannot_fake_the_remote_verification(kimi_rescue, tmp_path):

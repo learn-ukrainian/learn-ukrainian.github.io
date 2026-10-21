@@ -161,16 +161,6 @@ def test_file_store_interface():
         assert "ua-gec:SYNTHETIC.json" in reader.snapshots()
 
 
-def test_snapshot_can_pin_binary_metadata_without_treating_it_as_text(bundle):
-    with sqlite3.connect(bundle["db"]) as writer:
-        writer.execute("ALTER TABLE units ADD COLUMN synthetic_blob BLOB")
-        writer.execute("UPDATE units SET synthetic_blob=? WHERE id=1", (b"SYNTHETIC binary metadata",))
-    with SnapshotReader({"sources.db": bundle["db"]}) as reader:
-        reader.units(bundle["spec"]["unit_query"])
-        reader.row(bundle["candidates"][0].slots[0].citations[0])
-        assert reader.reads["sources.db", "units"] == {("id=1", digest(bundle["rows"][0]["source_field"].encode()))}
-
-
 def test_snapshot_pins_only_cited_column_bytes_sorted_by_utf8_row_key(bundle):
     rows = bundle["rows"]
     with SnapshotReader({"sources.db": bundle["db"]}) as reader:

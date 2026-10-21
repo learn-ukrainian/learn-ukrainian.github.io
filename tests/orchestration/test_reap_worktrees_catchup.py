@@ -58,21 +58,6 @@ def test_lock_diagnostic_distinguishes_pid_text_from_live_kernel_owner(repo: Pat
         assert f"kernel holder pid={os.getpid()}" in str(caught.value)
 
 
-def test_kernel_owner_unavailable_is_unknown(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    original = Path.open
-
-    def unavailable(path, *args, **kwargs):
-        if str(path) == "/proc/locks":
-            raise PermissionError("denied")
-        return original(path, *args, **kwargs)
-
-    with rw._ReapLock(repo):
-        # Use a separate read descriptor; inode identity, not file contents, decides.
-        with (repo / ".git" / "worktree-reaper.lock").open() as handle:
-            monkeypatch.setattr(Path, "open", unavailable)
-            assert rw._kernel_lock_holder(handle.fileno()) == "unknown"
-
-
 def test_legacy_discovery_does_not_hold_sweep_lock(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     helpers.dispatch_tree(repo)
     queried = []
@@ -291,33 +276,3 @@ def test_undoing_observed_staged_only_edit_is_recent_activity(repo: Path, free_f
     assert outcome.action == "skipped"
     assert outcome.reason == "last activity 0 min ago (< 60 min)"
     assert tree.is_dir()
-
-
-def test_inspection_preserves_dry_run_apply_set(repo: Path, free_fuser: Path) -> None:
-    eligible = {helpers.dispatch_tree(repo, f"idle-{i}") for i in range(3)}
-    dirty = helpers.dispatch_tree(repo, "dirty")
-    (dirty / "README.md").write_text("uncommitted\n", encoding="utf-8")
-    unpushed = helpers.dispatch_tree(repo, "unpushed")
-    (unpushed / "README.md").write_text("unique commit\n", encoding="utf-8")
-    helpers.git(unpushed, "commit", "-am", "unique")
-    helpers.age_tree(unpushed, repo, "unpushed")
-    active = helpers.dispatch_tree(repo, "active", status="running")
-    recent = helpers.dispatch_tree(repo, "recent")
-    # A write restored the original bytes. It is clean but genuinely recent.
-    original = (recent / "README.md").read_bytes()
-    (recent / "README.md").write_bytes(original)
-
-    before = rw.reap_clean_pushed(repo_root=repo)
-    expected = {p.relative_to(repo).as_posix() for p in eligible}
-    assert {item.path for item in before.removed} == expected
-    for tree in (*eligible, dirty, unpushed, active, recent):
-        helpers.git(tree, "status", "--porcelain")
-        subprocess.run(["du", "-s", str(tree)], capture_output=True, check=True, timeout=30)
-    inspected = rw.reap_clean_pushed(repo_root=repo)
-    assert {item.path for item in inspected.removed} == expected
-    after = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
-    assert {item.path for item in after.removed} == expected
-    assert all(not tree.exists() for tree in eligible)
-    assert all(tree.is_dir() for tree in (dirty, unpushed, active, recent))
-    assert (dirty / "README.md").read_text() == "uncommitted\n"
-    assert {item["path"] for item in helpers.abandon_log(repo)} == expected

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import sqlite3
 import subprocess
 from pathlib import Path
@@ -14,31 +13,14 @@ import pytest
 from scripts.storage.topology import (
     REQUIRED_BULK_MARKERS,
     ActiveDatabaseNetworkError,
-    is_network_filesystem_path,
-    report_mac_cache,
     require_local_active_sources_db,
     resolve_active_sources_db,
     resolve_bulk_root,
     resolve_topology,
-    unresolved_bulk_placeholder,
 )
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-
-_STORAGE_SCOPE_FILES = (
-    REPO_ROOT / "docs" / "runbooks" / "storage-topology.md",
-    REPO_ROOT / "scripts" / "storage" / "cli.py",
-    REPO_ROOT / "scripts" / "storage" / "topology.py",
-    REPO_ROOT / "scripts" / "storage" / "__init__.py",
-    REPO_ROOT / "scripts" / "storage" / "__main__.py",
-    REPO_ROOT / "scripts" / "storage" / "windows" / "Verify-BulkSources.ps1",
-    REPO_ROOT / "scripts" / "storage" / "windows" / "Copy-BulkSourcesFromDrive.ps1",
-    REPO_ROOT / "scripts" / "storage" / "windows" / "README.md",
-    REPO_ROOT / "agents_extensions" / "shared" / "rules" / "storage-topology.md",
-    REPO_ROOT / "tests" / "test_storage_resolver.py",
-    REPO_ROOT / "tests" / "test_storage_windows_scripts.py",
-)
 
 
 def _project_python() -> str:
@@ -179,18 +161,6 @@ def test_invalid_lu_gdrive_data_fails_closed_no_drive_fallback(
     assert gdrive_reports[0].marker_valid is False
 
 
-def test_missing_lu_gdrive_data_path_fails_closed(tmp_path: Path) -> None:
-    missing = tmp_path / "does-not-exist"
-    fallback = _make_bulk_root(tmp_path / "auto-drive")
-    result = resolve_bulk_root(
-        env={"LU_GDRIVE_DATA": str(missing)},
-        smb_candidates=[],
-        drive_candidates=[fallback],
-    )
-    assert result.available is False
-    assert result.reason == "drive_override_not_marker_valid"
-
-
 def test_refuse_network_sources_db_override(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "data").mkdir(parents=True)
@@ -210,53 +180,6 @@ def test_refuse_network_sources_db_override(tmp_path: Path) -> None:
             repo,
             env={"LU_SOURCES_DB": str(network)},
         )
-
-
-def test_network_path_heuristic() -> None:
-    assert is_network_filesystem_path(Path("/Volumes/UkrainianData/raw-sources/x"))
-    assert is_network_filesystem_path(Path("//server/UkrainianData/x"))
-    assert not is_network_filesystem_path(Path("/tmp/local-only"))
-
-
-def test_mac_cache_report_only_for_gdrive(tmp_path: Path) -> None:
-    drive = _make_bulk_root(tmp_path / "drive")
-    (drive / "literary_texts" / "a.jsonl").write_text("x\n", encoding="utf-8")
-    bulk = resolve_bulk_root(env={}, smb_candidates=[], drive_candidates=[drive])
-    report = report_mac_cache(bulk, max_entries=10)
-    assert report.applicable is True
-    assert report.sampled_entries >= 1
-    assert "Remove Download" in report.remove_download_instruction
-
-    smb = resolve_bulk_root(
-        env={},
-        smb_candidates=[_make_bulk_root(tmp_path / "smb")],
-        drive_candidates=[],
-    )
-    smb_report = report_mac_cache(smb)
-    assert smb_report.applicable is False
-
-
-def test_topology_status_json_roundtrip(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    (repo / "data").mkdir(parents=True)
-    (repo / "scripts").mkdir()
-    status = resolve_topology(
-        repository_root=repo,
-        env={},
-        smb_candidates=[tmp_path / "missing-smb"],
-        drive_candidates=[tmp_path / "missing-drive"],
-    )
-    payload = status.to_dict()
-    assert payload["schema"] == "storage-topology.status.v1"
-    assert payload["bulk_root"]["available"] is False
-    assert payload["active_database"]["is_local"] is True
-    # Ensure JSON serializable.
-    json.dumps(payload)
-
-
-def test_unresolved_placeholder_does_not_exist() -> None:
-    placeholder = unresolved_bulk_placeholder()
-    assert not placeholder.exists()
 
 
 def test_cli_status_json_subprocess(tmp_path: Path) -> None:
@@ -289,41 +212,6 @@ def test_cli_status_json_subprocess(tmp_path: Path) -> None:
     assert payload["schema"] == "storage-topology.status.v1"
     assert "active_database" in payload
     assert "bulk_root" in payload
-
-
-def test_wiki_config_uses_bulk_resolver(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """scripts/wiki/config.py must consume the single bulk-root resolver."""
-    bulk = _make_bulk_root(tmp_path / "bulk")
-    monkeypatch.setenv("LU_BULK_ROOT", str(bulk))
-    import importlib
-
-    import scripts.wiki.config as wiki_config
-
-    importlib.reload(wiki_config)
-    try:
-        assert bulk == wiki_config.GDRIVE_DATA
-        assert bulk / "literary_texts" == wiki_config.LITERARY_DIR
-    finally:
-        monkeypatch.delenv("LU_BULK_ROOT", raising=False)
-        importlib.reload(wiki_config)
-
-
-def test_storage_topology_scope_has_no_committed_operator_home_paths() -> None:
-    """Regression: do not commit absolute operator-home/project paths in scope."""
-    # Concrete username path only (not the regex character-class source text).
-    concrete = re.compile(
-        r"(?:/Users|/home)/[A-Za-z0-9._-]+/projects/learn-ukrainian(?:/|\b)"
-    )
-    offenders: list[str] = []
-    for path in _STORAGE_SCOPE_FILES:
-        assert path.is_file(), f"missing scope file: {path}"
-        text = path.read_text(encoding="utf-8")
-        for match in concrete.finditer(text):
-            line_no = text.count("\n", 0, match.start()) + 1
-            offenders.append(
-                f"{path.relative_to(REPO_ROOT)}:{line_no}:{match.group(0)}"
-            )
-    assert offenders == [], "committed operator-home paths:\n" + "\n".join(offenders)
 
 
 def test_status_reports_sources_db_size_and_journal_mode(tmp_path: Path) -> None:

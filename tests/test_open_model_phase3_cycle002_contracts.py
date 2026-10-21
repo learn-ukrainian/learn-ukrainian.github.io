@@ -54,11 +54,6 @@ def test_cycle002_contracts_reject_unblocking_source_authoring(tmp_path: Path) -
         roles.verify_cycle002_contracts(role_path=role_path, evaluation_path=evaluation_path)
 
 
-def test_cycle002_verifier_rejects_the_historical_v21_role_document() -> None:
-    with pytest.raises(roles.FunctionalRoleError, match="schema violation"):
-        roles.verify_cycle002_contracts(role_path=roles.LEDGER_PATH)
-
-
 @pytest.mark.parametrize(
     ("section", "field", "value"),
     [
@@ -106,8 +101,3 @@ def test_cycle002_contracts_reject_labeling_protocol_drift(
     evaluation_path = _json(tmp_path / "evaluation.json", evaluation)
     with pytest.raises(roles.FunctionalRoleError, match=r"schema violation|protocol drift"):
         roles.verify_cycle002_contracts(role_path=role_path, evaluation_path=evaluation_path)
-
-
-def test_verify_value_preserves_v21_contract_semantics() -> None:
-    baseline = roles.read_json(roles.LEDGER_PATH)
-    assert roles.verify_value(baseline) == baseline

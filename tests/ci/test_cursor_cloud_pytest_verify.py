@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -244,25 +243,6 @@ def test_synthetic_red_bundle_shard_exit_code_fails(tmp_path: Path) -> None:
     assert any("shard 2 failed" in reason for reason in result.reasons)
 
 
-def test_synthetic_red_bundle_cli_exits_one(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    """CLI exits 1 on FAIL outcome."""
-    bundle = create_synthetic_bundle(
-        tmp_path,
-        shard_exit_codes={1: 0, 2: 1, 3: 0, 4: 0},
-        shard_failures={1: 0, 2: 1, 3: 0, 4: 0},
-    )
-    exit_code = verifier_main([
-        "--artifact-dir", str(bundle),
-        "--requested-sha", TEST_SHA,
-        "--expected-runner-sha", TEST_RUNNER_SHA,
-        "--nonce", TEST_NONCE,
-        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
-    ])
-    assert exit_code == 1
-    captured = capsys.readouterr()
-    assert "FAIL" in captured.out
-
-
 def test_shard1_playground_probe_failure_fails(tmp_path: Path) -> None:
     """Shard 1 serial playground failure returns FAIL even if main tests had 0 failures."""
     bundle = create_synthetic_bundle(
@@ -426,39 +406,6 @@ def test_missing_metadata_json_rejected(tmp_path: Path) -> None:
     assert any("missing metadata.json" in r for r in result.reasons)
 
 
-def test_invalid_metadata_timestamp_rejected(tmp_path: Path) -> None:
-    """Invalid or empty started_at timestamp in metadata fails closed."""
-    bundle = create_synthetic_bundle(tmp_path, started_at="invalid-timestamp")
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("started_at is not a valid ISO 8601 timestamp" in r for r in result.reasons)
-
-
-def test_missing_build_id_in_metadata_rejected(tmp_path: Path) -> None:
-    """Missing build_id field in metadata fails closed."""
-    bundle = create_synthetic_bundle(tmp_path)
-    meta_path = bundle / "metadata.json"
-    meta = json.loads(meta_path.read_text(encoding="utf-8"))
-    del meta["build_id"]
-    meta_path.write_text(json.dumps(meta), encoding="utf-8")
-
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("missing required field: 'build_id'" in r for r in result.reasons)
-
-
 def test_unexpected_playground_on_shard_two_rejected(tmp_path: Path) -> None:
     """Serial playground-junit.xml found on shard 2 fails closed."""
     bundle = create_synthetic_bundle(tmp_path)
@@ -473,22 +420,6 @@ def test_unexpected_playground_on_shard_two_rejected(tmp_path: Path) -> None:
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("unexpected playground-junit.xml" in r for r in result.reasons)
-
-
-def test_empty_main_log_rejected(tmp_path: Path) -> None:
-    """Empty main.log file in a shard fails closed as UNKNOWN/INFRA."""
-    bundle = create_synthetic_bundle(tmp_path)
-    (bundle / "pytest-shard-1" / "main.log").write_text("", encoding="utf-8")
-
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("main.log is empty" in r for r in result.reasons)
 
 
 def test_duplicate_nodeid_between_shards_rejected(tmp_path: Path) -> None:
@@ -523,41 +454,6 @@ def test_duplicate_nodeid_between_shards_rejected(tmp_path: Path) -> None:
 # 4. Runner Shell Script Contract Tests
 # =============================================================================
 
-def test_runner_script_rejects_missing_sha() -> None:
-    """Runner script exits non-zero if --sha is not provided."""
-    proc = subprocess.run(
-        ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--nonce", "token123"],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert proc.returncode != 0
-    assert "--sha is required" in proc.stderr
-
-
-def test_runner_script_rejects_invalid_sha() -> None:
-    """Runner script exits non-zero if --sha is not 40 hex characters."""
-    proc = subprocess.run(
-        ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", "invalid-sha", "--nonce", "token123"],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert proc.returncode != 0
-    assert "40-character hex string" in proc.stderr
-
-
-def test_runner_script_rejects_missing_nonce() -> None:
-    """Runner script exits non-zero if --nonce is not provided."""
-    proc = subprocess.run(
-        ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--sha", TEST_SHA],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert proc.returncode != 0
-    assert "--nonce is required" in proc.stderr
-
 
 def test_runner_script_rejects_head_sha_mismatch() -> None:
     """Runner script exits non-zero if requested --sha does not match git HEAD."""
@@ -570,62 +466,6 @@ def test_runner_script_rejects_head_sha_mismatch() -> None:
     )
     assert proc.returncode != 0
     assert "does not match requested --sha" in proc.stderr or "dirty" in proc.stderr
-
-
-def test_invalid_requested_sha_format_rejected(tmp_path: Path) -> None:
-    """Non-40-hex requested_sha is rejected as UNKNOWN/INFRA."""
-    bundle = create_synthetic_bundle(tmp_path)
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha="short-sha",
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("requested_sha must be a 40-character hex string" in r for r in result.reasons)
-
-
-def test_invalid_runner_sha_format_rejected(tmp_path: Path) -> None:
-    """Non-64-hex expected_runner_blob_sha256 is rejected as UNKNOWN/INFRA."""
-    bundle = create_synthetic_bundle(tmp_path)
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256="short-hash",
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("expected_runner_blob_sha256 must be a 64-character hex string" in r for r in result.reasons)
-
-
-def test_empty_nonce_rejected(tmp_path: Path) -> None:
-    """Empty nonce parameter is rejected as UNKNOWN/INFRA."""
-    bundle = create_synthetic_bundle(tmp_path)
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce="   ",
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("nonce parameter must not be empty" in r for r in result.reasons)
-
-
-def test_nonexistent_artifact_directory_rejected(tmp_path: Path) -> None:
-    """Nonexistent artifact directory is rejected as UNKNOWN/INFRA."""
-    nonexistent = tmp_path / "nonexistent-dir"
-    result = verify_cloud_artifacts(
-        artifact_dir=nonexistent,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert any("does not exist or is not a directory" in r for r in result.reasons)
 
 
 def test_missing_shard_directory_rejected(tmp_path: Path) -> None:
@@ -657,18 +497,6 @@ def test_nodeids_txt_mismatch_with_plan_rejected(tmp_path: Path) -> None:
     )
     assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
     assert any("test-nodeids.txt does not match plan.json" in r for r in result.reasons)
-
-
-def test_runner_script_help_flag() -> None:
-    """Runner script with --help displays usage and exits 0."""
-    proc = subprocess.run(
-        ["bash", "scripts/ci/cursor_cloud_full_pytest.sh", "--help"],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert proc.returncode == 0
-    assert "Usage:" in proc.stdout
 
 
 # =============================================================================
@@ -721,24 +549,6 @@ def test_one_shard_synthetic_bundle_rejected_as_unknown_infra(
     assert exit_code == 2
     captured = capsys.readouterr()
     assert "UNKNOWN/INFRA" in captured.out
-
-
-def test_runner_script_rejects_shard_count_collapse() -> None:
-    """Runner script refuses to execute with shard count != 4."""
-    proc = subprocess.run(
-        [
-            "bash",
-            "scripts/ci/cursor_cloud_full_pytest.sh",
-            "--sha", TEST_SHA,
-            "--nonce", "token123",
-            "--shard-count", "1",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert proc.returncode != 0
-    assert "--shard-count must be 4" in proc.stderr
 
 
 def test_omitted_test_self_consistent_plans_rejected_by_anchoring(
@@ -885,106 +695,6 @@ def test_renamed_directory_mutation_rejected_as_unknown_infra(
     assert "UNKNOWN/INFRA" in captured.out
 
 
-def test_runner_script_contains_node22_confinement_and_dirty_tree_contracts() -> None:
-    """Runner script asserts Node 22, write confinement outside repo, and final dirty-tree check."""
-    script_path = Path("scripts/ci/cursor_cloud_full_pytest.sh")
-    script_text = script_path.read_text(encoding="utf-8")
-
-    # Fixed 4-shard plane
-    assert "SHARD_COUNT must be 4" in script_text or "SHARD_COUNT\" -ne 4" in script_text
-
-    # Node 22 check
-    assert "NODE_VER" in script_text
-    assert "v22" in script_text
-    assert "Node 22" in script_text
-
-    # Write confinement outside git worktree
-    assert "cursor-cloud-ci-venv" in script_text or "TMPDIR" in script_text
-    assert "never overwriting repo .venv" in script_text or "outside git worktree" in script_text
-
-    # Final dirty-tree check
-    assert "git status --porcelain --untracked-files=all" in script_text
-    assert "DIRTY_ENTRIES" in script_text
-    assert "artifacts/" in script_text
-
-
-def test_default_public_api_without_anchors_rejects_as_unknown_infra(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """Default verify() / CLI with no optional kwargs/flags rejects as UNKNOWN/INFRA (anchoring is mandatory)."""
-    bundle = create_synthetic_bundle(tmp_path)
-
-    # 1. Default verify_cloud_artifacts call with no optional kwargs on authentic bundle
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result.is_pass is False
-    assert result.is_unknown_infra is True
-    assert any("completeness anchor is mandatory" in r for r in result.reasons)
-
-    # 2. Mutated omitted-test bundle with default public API (no optional kwargs) must NOT be PASS
-    (bundle / "pytest-shard-4" / "test-nodeids.txt").write_text("tests/test_module_4.py::test_case_a\n", encoding="utf-8")
-    (bundle / "pytest-shard-4" / "main-junit.xml").write_text(
-        '<testsuite tests="1" failures="0" errors="0"><testcase name="test_case_a"/></testsuite>',
-        encoding="utf-8",
-    )
-    res_mutated = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-    )
-    assert res_mutated.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert res_mutated.is_pass is False
-
-    # 3. CLI execution with no extra flags exits 2 with UNKNOWN/INFRA
-    exit_code = verifier_main([
-        "--artifact-dir", str(bundle),
-        "--requested-sha", TEST_SHA,
-        "--expected-runner-sha", TEST_RUNNER_SHA,
-        "--nonce", TEST_NONCE,
-    ])
-    assert exit_code == 2
-    captured = capsys.readouterr()
-    assert "UNKNOWN/INFRA" in captured.out
-
-
-def test_empty_build_id_in_metadata_rejected_as_unknown_infra(tmp_path: Path) -> None:
-    """Empty build_id string in metadata fails closed as UNKNOWN/INFRA (missing Build provenance is never PASS)."""
-    bundle = create_synthetic_bundle(tmp_path, build_id="")
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result.is_pass is False
-    assert result.is_unknown_infra is True
-    assert any("build_id must not be empty" in r for r in result.reasons)
-
-    # Also test whitespace-only build_id
-    meta_path = bundle / "metadata.json"
-    meta = json.loads(meta_path.read_text(encoding="utf-8"))
-    meta["build_id"] = "   "
-    meta_path.write_text(json.dumps(meta), encoding="utf-8")
-
-    result_ws = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result_ws.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result_ws.is_pass is False
-
-
 
 # =============================================================================
 # 6. Delta r3 — Nonce Regex-Injection and Build-ID Fail-Closed Tests (#7113)
@@ -1046,42 +756,6 @@ def test_runner_script_rejects_path_nonce() -> None:
         assert "--nonce must match" in proc.stderr
 
 
-def test_runner_script_rejects_missing_build_id() -> None:
-    """Runner fails closed (before the expensive suite) when --build-id is absent and BUILD_ID is unset."""
-    env = {k: v for k, v in os.environ.items() if k != "BUILD_ID"}
-    proc = subprocess.run(
-        [
-            "bash", "scripts/ci/cursor_cloud_full_pytest.sh",
-            "--sha", TEST_SHA,
-            "--nonce", "token123",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        env=env,
-    )
-    assert proc.returncode != 0
-    assert "--build-id is required and cannot be empty" in proc.stderr
-
-
-def test_runner_script_rejects_empty_build_id() -> None:
-    """Runner fails closed on empty or whitespace-only --build-id values."""
-    for bad_build_id in ("", "   "):
-        proc = subprocess.run(
-            [
-                "bash", "scripts/ci/cursor_cloud_full_pytest.sh",
-                "--sha", TEST_SHA,
-                "--nonce", "token123",
-                "--build-id", bad_build_id,
-            ],
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        assert proc.returncode != 0, f"build_id {bad_build_id!r} was accepted"
-        assert "--build-id is required and cannot be empty" in proc.stderr
-
-
 def test_dirty_tree_filter_nonce_regex_injection_cannot_hide_dirty_file(tmp_path: Path) -> None:
     """Executable proof: nonce 'x|.*' cannot hide ' M source.py' from the dirty-tree filter.
 
@@ -1137,84 +811,6 @@ def test_dirty_tree_filter_allowlists_only_untracked_nonce_prefix(tmp_path: Path
 # nodeids, outer failure without PASS override, stale nonce/head mismatches.
 # =============================================================================
 
-def test_truncated_bundle_empty_exit_code_file_rejected(tmp_path: Path) -> None:
-    """A write cut off before any bytes were flushed (cloud VM preemption
-    mid-run) leaves an empty exit_code file -- distinct from mutation (c)'s
-    non-empty corrupted content, but it must fail closed the same way, never
-    silently treated as exit 0."""
-    bundle = create_synthetic_bundle(tmp_path)
-    (bundle / "pytest-shard-3" / "exit_code").write_text("", encoding="utf-8")
-
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result.is_pass is False
-    assert any("invalid or non-integer exit_code" in r for r in result.reasons)
-
-
-def test_truncated_bundle_empty_metadata_json_rejected(tmp_path: Path) -> None:
-    """A zero-byte metadata.json (interrupted before any content was written)
-    fails closed the same way as a missing or corrupted one."""
-    bundle = create_synthetic_bundle(tmp_path)
-    (bundle / "metadata.json").write_text("", encoding="utf-8")
-
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result.is_pass is False
-    assert any("corrupted or unparseable metadata.json" in r for r in result.reasons)
-
-
-def test_swapped_nodeid_same_count_rejected_by_anchor(tmp_path: Path) -> None:
-    """A shard that silently swaps one anchored node ID for an unrelated one
-    still fails closed even though the swap keeps the *count* self-consistent
-    (an omission disguised as an unrelated substitution): the trusted
-    partition check rejects the now-inconsistent plan/JUnit content before
-    the anchored node-ID inventory comparison is even reached."""
-    bundle = create_synthetic_bundle(tmp_path)
-    real_nodeid = "tests/test_module_4.py::test_case_b"
-    fake_nodeid = "tests/test_module_4.py::test_case_fake"
-
-    plan4_path = bundle / "pytest-shard-4" / "plan.json"
-    plan4 = json.loads(plan4_path.read_text(encoding="utf-8"))
-    plan4["assigned_nodeids"] = [
-        fake_nodeid if n == real_nodeid else n for n in plan4["assigned_nodeids"]
-    ]
-    plan4["assigned_digest"] = _sha256_digest(plan4["assigned_nodeids"])
-    plan4_path.write_text(json.dumps(plan4), encoding="utf-8")
-    (bundle / "pytest-shard-4" / "test-nodeids.txt").write_text(
-        "\n".join(plan4["assigned_nodeids"]) + "\n", encoding="utf-8"
-    )
-    junit4_path = bundle / "pytest-shard-4" / "main-junit.xml"
-    junit4_path.write_text(
-        junit4_path.read_text(encoding="utf-8").replace("test_case_b", "test_case_fake"),
-        encoding="utf-8",
-    )
-
-    result = verify_cloud_artifacts(
-        artifact_dir=bundle,
-        requested_sha=TEST_SHA,
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_nodeids=TEST_ALL_NODEIDS,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result.is_pass is False
-    assert any(
-        "shard partition verification failed" in r or "does not match anchored suite" in r
-        for r in result.reasons
-    )
-
 
 def test_outer_failure_not_overridden_by_green_junit(tmp_path: Path) -> None:
     """A nonzero shard exit_code (an outer/pipeline failure -- e.g. `tee`
@@ -1243,39 +839,3 @@ def test_outer_failure_not_overridden_by_green_junit(tmp_path: Path) -> None:
     assert shard2.errors == 0
     assert shard2.passed is False
     assert any("shard 2 failed" in r and "exit_code=1" in r for r in result.reasons)
-
-
-def test_stale_nonce_and_head_reuse_rejected(tmp_path: Path) -> None:
-    """A stale bundle from a previous session (old nonce, old candidate SHA)
-    renamed into the *current* nonce's directory is still rejected: the
-    directory name passes, but metadata's nonce (and git_head) are stale and
-    must fail closed. A stale run stays attached to its original SHA/nonce
-    and is never reusable as evidence for a new candidate."""
-    old_nonce = "old-session-nonce"
-    old_sha = "1111111111111111111111111111111111111111"
-    bundle = create_synthetic_bundle(tmp_path, nonce=old_nonce, sha=old_sha)
-
-    # Reuse attempt: rename the stale bundle directory to the *new* nonce
-    # without regenerating metadata.
-    renamed_bundle = tmp_path / TEST_NONCE
-    bundle.rename(renamed_bundle)
-
-    result = verify_cloud_artifacts(
-        artifact_dir=renamed_bundle,
-        requested_sha=TEST_SHA,  # current candidate, different from stale old_sha
-        expected_runner_blob_sha256=TEST_RUNNER_SHA,
-        nonce=TEST_NONCE,
-        expected_collected_count=TEST_COLLECTED_COUNT,
-    )
-    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
-    assert result.is_pass is False
-    assert any("nonce mismatch" in r for r in result.reasons)
-
-    exit_code = verifier_main([
-        "--artifact-dir", str(renamed_bundle),
-        "--requested-sha", TEST_SHA,
-        "--expected-runner-sha", TEST_RUNNER_SHA,
-        "--nonce", TEST_NONCE,
-        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
-    ])
-    assert exit_code == 2

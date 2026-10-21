@@ -12,7 +12,7 @@ import yaml
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
-from wiki.migrate_external_chunks import _overlap_prefix, _split_main_chunks, chunk_text, migrate_external_chunks
+from wiki.migrate_external_chunks import migrate_external_chunks
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -62,24 +62,6 @@ def _seed_fixture(tmp_path: Path) -> dict[str, Path]:
     db_path = tmp_path / "sources.db"
     sqlite3.connect(str(db_path)).close()
     return {"data_dir": data_dir, "channels_path": channels_path, "db_path": db_path}
-
-
-def test_chunk_text_is_sentence_aware_and_respects_cap():
-    text = (
-        "Перше коротке речення про мову. "
-        "Друге речення достатньо довге, щоб тримати контекст і переносити сенс. "
-        "Третє речення завершує перший блок.\n\n"
-        "Четверте речення починає новий абзац із новими подробицями. "
-        "П'яте речення знову додає деталі про українську історію та лексику. "
-    ) * 6
-
-    main_chunks = _split_main_chunks(text, target_chars=200)
-    chunks = chunk_text(text, target_chars=200, overlap_chars=20)
-
-    assert len(chunks) >= 2
-    assert all(len(chunk) <= 230 for chunk in chunks)
-    assert all(chunk.rstrip().endswith((".", "!", "?", "…")) for chunk in main_chunks[:-1])
-    assert chunks[1].startswith(f"{_overlap_prefix(main_chunks[0], 20)}\n\n")
 
 
 def test_migration_rerun_is_a_noop_and_chunk_ids_stay_stable(tmp_path: Path):

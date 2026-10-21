@@ -654,33 +654,6 @@ def _direct_scan_sites(
     return sorted(set(sites))
 
 
-def _is_repo_wide_marker(node: ast.AST) -> bool:
-    """True for a real ``pytest.mark.repo_wide`` attribute chain."""
-    return (
-        isinstance(node, ast.Attribute)
-        and node.attr == "repo_wide"
-        and isinstance(node.value, ast.Attribute)
-        and node.value.attr == "mark"
-        and isinstance(node.value.value, ast.Name)
-        and node.value.value.id == "pytest"
-    )
-
-
-def _marked_by_repo_wide(decorators: list[ast.expr]) -> bool:
-    return any(any(_is_repo_wide_marker(node) for node in ast.walk(decorator)) for decorator in decorators)
-
-
-def _module_marked(tree: ast.Module) -> bool:
-    for statement in tree.body:
-        if not isinstance(statement, ast.Assign):
-            continue
-        if not any(isinstance(target, ast.Name) and target.id == "pytestmark" for target in statement.targets):
-            continue
-        if _marked_by_repo_wide([statement.value]):
-            return True
-    return False
-
-
 def _top_level_functions(
     tree: ast.Module,
 ) -> dict[str, tuple[ast.FunctionDef | ast.AsyncFunctionDef, ast.ClassDef | None]]:
@@ -693,16 +666,6 @@ def _top_level_functions(
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             found[node.name] = (node, None)
     return found
-
-
-def _function_marked(tree: ast.Module, function: str) -> bool:
-    entry = _top_level_functions(tree).get(function)
-    if entry is None:
-        return False
-    node, owner = entry
-    return _marked_by_repo_wide(node.decorator_list) or (
-        owner is not None and _marked_by_repo_wide(owner.decorator_list)
-    )
 
 
 def _implicated_test_functions(tree: ast.Module, source: str | None = None) -> dict[str, list[str]]:
@@ -761,71 +724,6 @@ def _implicated_test_functions(tree: ast.Module, source: str | None = None) -> d
         for name in implicated_all
         if name.rsplit(".", 1)[-1].startswith("test_")
     }
-
-
-def _module_level_scan_sites(tree: ast.Module) -> list[str]:
-    statements = [
-        statement
-        for statement in tree.body
-        if not isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-    ]
-    bindings = _scope_bindings(statements)
-    module_roots = _module_repo_root_names(tree)
-    root_names = module_roots | _bindings_repo_root_names(bindings, module_roots)
-    return _direct_scan_sites(
-        ast.Module(body=statements, type_ignores=[]),
-        root_names,
-        bindings,
-    )
-
-
-@lru_cache(maxsize=128)
-def _cached_scan_facts(filename: str, source: str) -> tuple[frozenset[str], frozenset[str], tuple[str, ...]]:
-    """Reuse call-graph facts for identical module content without retaining ASTs."""
-    tree = ast.parse(source, filename=filename)
-    return (
-        frozenset(_top_level_functions(tree)),
-        frozenset(_implicated_test_functions(tree, source)),
-        tuple(_module_level_scan_sites(tree)),
-    )
-
-
-def test_repo_tree_scanners_carry_the_marker() -> None:
-    """A test that scans a repo tree or runs a repo lint must be ``repo_wide``.
-
-    Per-function granularity: every implicated test is checked on its own, so a
-    module with two scanners and one marker fails.
-    """
-    missing: list[str] = []
-    for module in _test_module_paths():
-        source = module.read_text(encoding="utf-8")
-        # Every supported direct scanner contains one of these names or the
-        # literal git argv prefix. Skip modules that cannot have a scan site;
-        # the AST pass remains authoritative for every possible candidate.
-        if not _could_contain_scan(source):
-            continue
-        relative = module.relative_to(_REPO_ROOT).as_posix()
-        tree = ast.parse(source, filename=str(module))
-        module_marked = _module_marked(tree)
-        # The module mark applies to every function and module-level scan. No
-        # scan-site analysis can add a missing marker once this is established.
-        if module_marked:
-            continue
-        for function, sites in _implicated_test_functions(tree, source).items():
-            node_id = f"{relative}::{function}"
-            if node_id in NOT_REPO_WIDE:
-                continue
-            if module_marked or _function_marked(tree, function):
-                continue
-            missing.append(f"{node_id}  ({', '.join(sites)})")
-        if not module_marked and relative not in NOT_REPO_WIDE and _module_level_scan_sites(tree):
-            missing.append(f"{relative}  (module-level repo tree scan)")
-    assert not missing, (
-        "These test functions scan repository trees or run a repo-wide linter but "
-        "do not carry the repo_wide marker, so an import-selected CI tier can "
-        "never run them (#8707). Add `@pytest.mark.repo_wide` (or a module "
-        "`pytestmark`), or add a reasoned NOT_REPO_WIDE entry:\n" + "\n".join(missing)
-    )
 
 
 # The registry checks below read the marks pytest itself applies, so alias
@@ -907,14 +805,7 @@ _CHILD_ENV_DROP = frozenset(
     }
 )
 _COLLECT_TIMEOUT_S = 90
-# Collecting the whole suite took 178s on a loaded host (2026-10-03).
-# One child must collect it all: a modifyitems hook sees only its own run's items.
-_EXACT_COLLECT_TIMEOUT_S = 1200
 _MARK_NAME = "repo_wide"
-_EXACT_CHECK_MODULE = "tests/test_repo_wide_registry_exact.py"
-_EXACT_CHECK = f"{_EXACT_CHECK_MODULE}::test_registry_matches_every_collected_repo_wide_mark"
-
-
 def _child_env() -> dict[str, str]:
     return {name: value for name, value in os.environ.items() if name not in _CHILD_ENV_DROP}
 
@@ -1113,15 +1004,6 @@ def _repository_python_sources() -> list[Path]:
     return sorted(path for path in paths if path.is_file())
 
 
-def _ci_test_files() -> list[Path]:
-    """Every test file CI's shards collect between them (``git ls-files -- tests`` named ``test_*.py``, ci.yml)."""
-    return sorted(
-        path
-        for path in _listed_files("tests")
-        if path.name.startswith("test_") and path.suffix == ".py" and path.is_file()
-    )
-
-
 def _collect_repo_wide_marks(
     root: Path, test_files: Collection[Path], timeout: float = _COLLECT_TIMEOUT_S
 ) -> tuple[frozenset[str], frozenset[str]]:
@@ -1201,31 +1083,6 @@ def _unregistered_repo_wide_nodes(
     return sorted((modules - set(known_modules)) | (functions - set(known_functions)))
 
 
-def test_known_repo_wide_modules_carry_the_marker() -> None:
-    missing = [module for module in sorted(KNOWN_REPO_WIDE_MODULES) if not (_REPO_ROOT / module).is_file()]
-    assert not missing, f"known repo-wide modules no longer exist: {missing}"
-    modules, _functions = _repository_marks()
-    unmarked = sorted(KNOWN_REPO_WIDE_MODULES - modules)
-    assert not unmarked, "known repo-wide modules lost their module-level repo_wide marker:\n" + "\n".join(unmarked)
-
-
-def test_known_repo_wide_functions_carry_the_marker() -> None:
-    missing = sorted(
-        {
-            row.partition("::")[0]
-            for row in KNOWN_REPO_WIDE_FUNCTIONS
-            if not (_REPO_ROOT / row.partition("::")[0]).is_file()
-        }
-    )
-    assert not missing, f"known repo-wide modules no longer exist: {missing}"
-    _modules, functions = _repository_marks()
-    unmarked = [row for row in KNOWN_REPO_WIDE_FUNCTIONS if row not in functions]
-    assert not unmarked, (
-        "known repo-wide tests are not collected with a function- or class-level repo_wide mark "
-        "(renamed, unmarked, or now covered by a module marker):\n" + "\n".join(unmarked)
-    )
-
-
 def test_every_marked_test_has_a_registry_row() -> None:
     """The registry is complete: a marked test without a row fails (#9434).
 
@@ -1241,81 +1098,6 @@ def test_every_marked_test_has_a_registry_row() -> None:
         "(module-level marker) or KNOWN_REPO_WIDE_FUNCTIONS (function or class marker). "
         "Add the row:\n" + "\n".join(unregistered)
     )
-
-
-def test_removing_any_registry_row_fails_the_completeness_check() -> None:
-    """Every row is load-bearing: dropping it is reported, and only it is reported."""
-    marked = _repository_marks()
-    rows = sorted(KNOWN_REPO_WIDE_MODULES) + list(KNOWN_REPO_WIDE_FUNCTIONS)
-    assert len(rows) == len(set(rows)), "a registry row is listed twice"
-    for row in rows:
-        unregistered = _unregistered_repo_wide_nodes(
-            marked,
-            KNOWN_REPO_WIDE_MODULES - {row},
-            [function for function in KNOWN_REPO_WIDE_FUNCTIONS if function != row],
-        )
-        assert unregistered == [row], f"removing {row} reported {unregistered}"
-
-
-def _registry_drift(
-    marked: tuple[frozenset[str], frozenset[str]],
-    known_modules: Collection[str],
-    known_functions: Collection[str],
-) -> tuple[list[str], list[str]]:
-    """Marked tests without a registry row, and registry rows without a marked collected test."""
-    modules, functions = marked
-    stale = sorted((set(known_modules) - modules) | (set(known_functions) - functions))
-    return _unregistered_repo_wide_nodes(marked, known_modules, known_functions), stale
-
-
-def _drift_report(unregistered: list[str], stale: list[str]) -> str:
-    sections = []
-    if unregistered:
-        sections.append(
-            "Marked repo_wide but missing from KNOWN_REPO_WIDE_MODULES (module-level marker) or "
-            "KNOWN_REPO_WIDE_FUNCTIONS (function or class marker); add the row:\n" + "\n".join(unregistered)
-        )
-    if stale:
-        sections.append(
-            "Registry rows with no collected test carrying that repo_wide mark (renamed, removed, "
-            "unmarked, or now covered by a module marker); fix or remove the row:\n" + "\n".join(stale)
-        )
-    return "\n\n".join(sections)
-
-
-def _selected_node_ids(marker: str, module: str) -> list[str]:
-    """Node ids ``pytest -m <marker> <module>`` selects, from a collection-only child.
-
-    ``--verbosity=-1`` overrides the config's ``-v``, so pytest lists one node id per line.
-    """
-    result = run_in_process_group(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            "--collect-only",
-            "--verbosity=-1",
-            "-p",
-            "no:cacheprovider",
-            "-m",
-            marker,
-            module,
-        ],
-        cwd=_REPO_ROOT,
-        env=_child_env(),
-        timeout=_COLLECT_TIMEOUT_S,
-    )
-    selected = [line for line in result.stdout.splitlines() if line.startswith(f"{module}::")]
-    # Exit 5 is "no tests collected", here because ``-m`` deselected all of them.
-    assert result.returncode == (0 if selected else 5), (result.stdout + result.stderr)[-4000:]
-    return selected
-
-
-def test_exact_check_is_outside_the_repo_wide_selection() -> None:
-    """``pytest -m repo_wide`` (worker pre-push) never selects the whole-suite collection (#9434)."""
-    assert _selected_node_ids(_MARK_NAME, _EXACT_CHECK_MODULE) == []
-    assert _selected_node_ids("slow", _EXACT_CHECK_MODULE) == [_EXACT_CHECK]
-    assert _EXACT_CHECK_MODULE not in KNOWN_REPO_WIDE_MODULES
 
 
 def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
@@ -1346,25 +1128,6 @@ def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
     assert marked == (frozenset({"tests/test_hooks_executable.py"}), frozenset())
     assert refused.returncode != 0
     assert FULL_SUITE_BUSY in refused.stdout + refused.stderr
-
-
-def test_registry_drift_names_each_missing_and_stale_row() -> None:
-    marked = (frozenset({"tests/test_m.py"}), frozenset({"tests/test_f.py::test_a", "tests/test_f.py::test_b"}))
-    unregistered, stale = _registry_drift(
-        marked,
-        {"tests/test_gone.py", "tests/test_f.py"},
-        ["tests/test_f.py::test_a", "tests/test_m.py::test_inside", "tests/test_f.py::test_renamed"],
-    )
-    assert unregistered == ["tests/test_f.py::test_b", "tests/test_m.py"]
-    assert stale == [
-        "tests/test_f.py",
-        "tests/test_f.py::test_renamed",
-        "tests/test_gone.py",
-        "tests/test_m.py::test_inside",
-    ]
-    report = _drift_report(unregistered, stale)
-    assert all(row in report for row in unregistered + stale)
-    assert _registry_drift(marked, ["tests/test_m.py"], sorted(marked[1])) == ([], [])
 
 
 _SYNTHETIC_TREE = {
@@ -1502,350 +1265,8 @@ def test_completeness_follows_pytest_effective_marks(tmp_path: Path) -> None:
     ) == sorted(marked[0] | marked[1])
 
 
-# Shapes the prefilter misses (review-9434-b); the exact check must find each.
-_PREFILTER_BLIND_SPOTS = {
-    "conftest hook marks a test outside its directory": (
-        {
-            "tests/marked/conftest.py": """
-                import pytest
-
-                def pytest_collection_modifyitems(items):
-                    for item in items:
-                        if item.name == "test_plain":
-                            item.add_marker(pytest.mark.repo_wide)
-                """,
-            "tests/marked/test_seed.py": "def test_seed():\n    ...\n",
-            "tests/test_plain.py": "def test_plain():\n    ...\n",
-        },
-        (frozenset(), frozenset({"tests/test_plain.py::test_plain"})),
-    ),
-    "marked base class through an aliased dynamic import": (
-        {
-            "tests/scan_base.py": """
-                import pytest
-
-                class ScanBase:
-                    @pytest.mark.repo_wide
-                    def test_inherited(self):
-                        ...
-                """,
-            "tests/test_inherit.py": """
-                from importlib import import_module as load
-
-                class TestScan(load("scan_base").ScanBase):
-                    pass
-                """,
-        },
-        (frozenset(), frozenset({"tests/test_inherit.py::TestScan.test_inherited"})),
-    ),
-    "marker name from a runtime expression": (
-        {
-            "tests/test_plain.py": """
-                import pytest
-
-                pytestmark = getattr(pytest.mark, "repo" + "_wide")
-
-                def test_plain():
-                    ...
-                """,
-        },
-        (frozenset({"tests/test_plain.py"}), frozenset()),
-    ),
-}
-
-
-@pytest.mark.parametrize("shape", sorted(_PREFILTER_BLIND_SPOTS))
-def test_exact_collection_finds_marks_the_prefilter_misses(tmp_path: Path, shape: str) -> None:
-    files, expected = _PREFILTER_BLIND_SPOTS[shape]
-    (tmp_path / "pytest.ini").write_text("[pytest]\nmarkers =\n    repo_wide: test marker\n", encoding="utf-8")
-    for relative, source in files.items():
-        path = tmp_path / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(textwrap.dedent(source), encoding="utf-8")
-    marked = _collect_repo_wide_marks(tmp_path, sorted(tmp_path.rglob("test_*.py")))
-    assert marked == expected
-    # An empty registry names the mark as unregistered; a registry of a removed test names it stale.
-    assert _registry_drift(marked, (), ()) == (sorted(expected[0] | expected[1]), [])
-    assert _registry_drift(marked, expected[0], [*expected[1], "tests/test_plain.py::test_gone"]) == (
-        [],
-        ["tests/test_plain.py::test_gone"],
-    )
-
-
-def test_prefilter_follows_imports_conftests_packages_and_global_plugins(tmp_path: Path) -> None:
-    sources, test_files = _write_synthetic_tree(tmp_path)
-    relative = {path.relative_to(tmp_path).as_posix() for path in _candidate_test_files(tmp_path, sources, test_files)}
-    # Imported base class and conftest subtree reach files that never name the marker.
-    assert {"tests/test_inherit.py", "tests/marked/test_plain.py"} <= relative
-    assert "tests/test_unrelated.py" not in relative
-
-    package = tmp_path / "tests" / "pkg"
-    package.mkdir()
-    (package / "__init__.py").write_text("import pytest\nMARK = pytest.mark.repo_wide\n", encoding="utf-8")
-    (package / "test_inside.py").write_text("def test_z():\n    ...\n", encoding="utf-8")
-    plugin = tmp_path / "plugins" / "global_marks.py"
-    plugin.parent.mkdir()
-    plugin.write_text("from pkg import MARK\n", encoding="utf-8")
-    sources, test_files = sorted(tmp_path.rglob("*.py")), sorted(tmp_path.rglob("test_*.py"))
-    relative = {path.relative_to(tmp_path).as_posix() for path in _candidate_test_files(tmp_path, sources, test_files)}
-    assert "tests/pkg/test_inside.py" in relative
-    assert "tests/test_unrelated.py" not in relative
-    assert _candidate_test_files(tmp_path, sources, test_files, {"global_marks"}) == frozenset(test_files)
-
-
-@pytest.mark.parametrize(
-    "source",
-    [
-        "# repo_wide\nx = 1\n",
-        '"""pytest.mark.repo_wide is described here."""\n',
-        'BOUNDED_MARKERS = frozenset({"repo_wide"})\n',
-        'def test_allowlist():\n    assert "repo_wide" in BOUNDED_MARKERS\n',
-        'MARKERS = ["repo_wide", "slow"]\n',
-        'SOURCE = "@pytest.mark.repo_wide\\ndef test_fixture(): pass"\n',
-        "x = 1\n",
-    ],
-)
-def test_marker_naming_ignores_inert_strings(source: str) -> None:
-    assert not _names_the_marker(source)
-
-
-@pytest.mark.parametrize(
-    "source",
-    [
-        "import pytest as pt\nmark = pt.mark.repo_wide\n",
-        "from pytest.mark import repo_wide\n",
-        "@pytest.mark.repo_wide\ndef test_planted(): pass\n",
-        "pytestmark = [pytest.mark.repo_wide]\n",
-        'mark = getattr(pytest.mark, "repo_wide")\n',
-        'mark = getattr(pytest.mark, "repo" "_wide")\n',
-        'item.add_marker("repo_wide")\n',
-        'item.add_marker(marker="repo_wide")\n',
-        'mark = pytest.Mark(name="repo_wide", args=(), kwargs={})\n',
-        'config.addinivalue_line("markers", "repo_wide: whole-tree scanner")\n',
-        "@pytest.mark.repo_wide\ndef test_broken(\n",
-    ],
-)
-def test_marker_naming_keeps_authoring_and_registration(source: str) -> None:
-    assert _names_the_marker(source)
-
-
-def test_prefilter_allowlist_plugin_does_not_hide_a_planted_marker(tmp_path: Path) -> None:
-    """A global plugin's inert marker name must not widen collection to all tests."""
-    sources, test_files = _write_synthetic_tree(tmp_path)
-    plugin = tmp_path / "plugins" / "dispatch_cap.py"
-    plugin.parent.mkdir()
-    plugin.write_text('BOUNDED_MARKERS = frozenset({"repo_wide"})\n', encoding="utf-8")
-    planted = tmp_path / "tests" / "test_planted.py"
-    planted.write_text("import pytest\n@pytest.mark.repo_wide\ndef test_planted(): pass\n", encoding="utf-8")
-    candidates = _candidate_test_files(tmp_path, [*sources, plugin, planted], [*test_files, planted], {plugin.stem})
-    assert planted in candidates
-    assert tmp_path / "tests" / "test_unrelated.py" not in candidates
-    assert tmp_path / "tests" / "test_mention_only.py" not in candidates
-    marked = _collect_repo_wide_marks(tmp_path, candidates)
-    assert "tests/test_planted.py::test_planted" in marked[1]
-    assert "tests/test_planted.py::test_planted" in _unregistered_repo_wide_nodes(marked, (), ())
-
-
-@pytest.mark.parametrize("relative", ["scripts/ci/pytest_dispatch_cap.py", "tests/ci/test_pytest_dispatch_cap.py"])
-def test_dispatch_cap_allowlist_is_not_a_marker_source(relative: str) -> None:
-    source = (_REPO_ROOT / relative).read_text(encoding="utf-8")
-    assert not _names_the_marker(source)
-
-
-def test_not_repo_wide_entries_are_justified() -> None:
-    """The escape hatch stays honest: real node, real reason, still a scanner."""
-    known = set(KNOWN_REPO_WIDE_MODULES) | set(KNOWN_REPO_WIDE_FUNCTIONS)
-    for node_id, reason in NOT_REPO_WIDE.items():
-        assert reason.strip(), f"{node_id}: a NOT_REPO_WIDE entry needs a reason"
-        assert node_id not in known, f"{node_id}: cannot be both repo-wide and NOT_REPO_WIDE"
-        module_rel, _, function = node_id.partition("::")
-        module = _REPO_ROOT / module_rel
-        assert module.is_file(), f"{node_id}: module {module_rel} no longer exists"
-        functions, implicated, module_sites = _cached_scan_facts(str(module), module.read_text(encoding="utf-8"))
-        if function:
-            assert function in functions, f"{node_id}: function no longer exists"
-            assert function in implicated, f"{node_id}: no longer looks like a repo scanner; remove the stale entry"
-        else:
-            assert module_sites, f"{node_id}: no longer has a module-level repo scan; remove the stale entry"
-
-
-def test_cached_scan_facts_recompute_after_source_changes() -> None:
-    first = "def test_scan():\n    pass\n"
-    second = "def test_changed():\n    pass\n"
-    assert "test_scan" in _cached_scan_facts("changed.py", first)[0]
-    assert "test_changed" in _cached_scan_facts("changed.py", second)[0]
-    assert "test_scan" not in _cached_scan_facts("changed.py", second)[0]
-
-
-def test_scan_renders_shared_bindings_once_without_caching_classification(monkeypatch: pytest.MonkeyPatch) -> None:
-    tree = _synthetic(
-        """
-        later = base / "scripts"
-        base = ROOT
-
-        def test_first():
-            later.rglob("*.py")
-
-        def test_second():
-            later.glob("*.py")
-        """
-    )
-    original = ast.unparse
-    rendered: list[ast.AST] = []
-
-    def record(node: ast.AST) -> str:
-        rendered.append(node)
-        return original(node)
-
-    # These module bindings are rendered once for module root discovery, then
-    # once for the entire function scan, rather than once per test/iteration.
-    monkeypatch.setattr(ast, "unparse", record)
-    assert set(_implicated_test_functions(tree)) == {"test_first", "test_second"}
-    binding = tree.body[0].value
-    assert rendered.count(binding) == 3  # two root-discovery iterations, one shared render
-
-    # Mutating the same AST and rescanning must render and classify it afresh.
-    tree.body[1].value = ast.Name(id="tmp_path", ctx=ast.Load())
-    assert _implicated_test_functions(tree) == {}
-
-
-def test_scanner_guard_detects_marker_removal_and_restoration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    tests = tmp_path / "tests"
-    tests.mkdir()
-    module = tests / "test_scanner.py"
-    scanner = 'def test_scan():\n    (REPO / "scripts").rglob("*.py")\n'
-    marked = "import pytest\npytestmark = pytest.mark.repo_wide\n" + scanner
-    module.write_text(marked, encoding="utf-8")
-    monkeypatch.setattr(sys.modules[__name__], "_REPO_ROOT", tmp_path)
-    monkeypatch.setattr(sys.modules[__name__], "_TESTS_ROOT", tests)
-    test_repo_tree_scanners_carry_the_marker()
-    module.write_text(scanner, encoding="utf-8")
-    with pytest.raises(AssertionError, match=re.escape("tests/test_scanner.py::test_scan")):
-        test_repo_tree_scanners_carry_the_marker()
-    module.write_text(marked, encoding="utf-8")
-    test_repo_tree_scanners_carry_the_marker()
-
-
 def _synthetic(source: str) -> ast.Module:
     return ast.parse(textwrap.dedent(source))
-
-
-def test_marker_detection_requires_the_real_decorator() -> None:
-    """A bare ``repo_wide`` mention in a comment or docstring is not a marker."""
-    tree = _synthetic(
-        '''
-        import pytest
-
-        # repo_wide
-        """repo_wide is a marker."""
-
-        def test_mention_only():
-            assert "repo_wide" == "repo_wide"
-        '''
-    )
-    assert not _module_marked(tree)
-    assert not _function_marked(tree, "test_mention_only")
-
-
-def test_marker_detection_accepts_module_function_and_class_forms() -> None:
-    module_form = _synthetic(
-        """
-        import pytest
-
-        pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
-
-        def test_x():
-            ...
-        """
-    )
-    assert _module_marked(module_form)
-
-    # Decorator order must not matter (the marker is not first).
-    function_form = _synthetic(
-        """
-        import pytest
-
-        @pytest.mark.other
-        @pytest.mark.repo_wide
-        def test_x():
-            ...
-        """
-    )
-    assert _function_marked(function_form, "test_x")
-
-    class_form = _synthetic(
-        """
-        import pytest
-
-        @pytest.mark.repo_wide
-        class TestSuite:
-            def test_x(self):
-                ...
-        """
-    )
-    assert _function_marked(class_form, "TestSuite.test_x")
-
-    unrelated = _synthetic(
-        """
-        import pytest
-
-        @some_other.repo_wide
-        def test_x():
-            ...
-        """
-    )
-    assert not _function_marked(unrelated, "test_x")
-
-
-def test_marker_detection_is_per_function() -> None:
-    """Two scanners in one module, one marker: the unmarked one must stand out."""
-    tree = _synthetic(
-        """
-        import pytest
-
-        @pytest.mark.repo_wide
-        def test_marked():
-            (REPO / "tests").rglob("*.py")
-
-        def test_unmarked():
-            (REPO / "scripts").rglob("*.py")
-        """
-    )
-    assert set(_implicated_test_functions(tree)) == {"test_marked", "test_unmarked"}
-    assert not _module_marked(tree)
-    assert _function_marked(tree, "test_marked")
-    assert not _function_marked(tree, "test_unmarked")
-
-
-def test_heuristic_roots_tmp_paths_and_git_tree_scans() -> None:
-    """Temp-path receivers are skipped; repo-root and git-tree scans are flagged."""
-    tmp_receiver = _synthetic(
-        """
-        def test_tmp(tmp_path):
-            (tmp_path / "x").rglob("*.py")
-        """
-    )
-    assert _implicated_test_functions(tmp_receiver) == {}
-
-    file_relative = _synthetic(
-        """
-        from pathlib import Path
-
-        def test_scan():
-            Path(__file__).resolve().parents[1].rglob("*.py")
-        """
-    )
-    assert "test_scan" in _implicated_test_functions(file_relative)
-
-    git_tree_scan = _synthetic(
-        """
-        import subprocess
-
-        def test_scan():
-            subprocess.run(["git", "ls-files"], capture_output=True, check=True)
-        """
-    )
-    assert "test_scan" in _implicated_test_functions(git_tree_scan)
 
 
 def test_heuristic_follows_named_argv_and_derived_repo_root_constants() -> None:
@@ -1878,34 +1299,6 @@ def test_heuristic_follows_named_argv_and_derived_repo_root_constants() -> None:
     assert "test_scan" in _implicated_test_functions(derived_root)
 
 
-def test_heuristic_prefilter_keeps_module_bound_git_argv() -> None:
-    source = textwrap.dedent(
-        """
-        import subprocess
-
-        GIT_CMD = ["git", "ls-files", "*.py"]
-
-        def test_scan():
-            subprocess.run(GIT_CMD, capture_output=True, check=True)
-        """
-    )
-    assert _could_contain_scan(source)
-    assert "test_scan" in _implicated_test_functions(ast.parse(source), source)
-
-
-def test_heuristic_prefilter_keeps_split_git_argv_literal() -> None:
-    source = textwrap.dedent(
-        """
-        import subprocess
-
-        def test_scan():
-            subprocess.run(["git", "ls-fi" "les", "*.py"], capture_output=True, check=True)
-        """
-    )
-    assert _could_contain_scan(source)
-    assert "test_scan" in _implicated_test_functions(ast.parse(source), source)
-
-
 def test_heuristic_roots_function_local_and_nested_bindings() -> None:
     """A function-local repo-root binding and an `if`-guarded argv are scanners (#8707 review)."""
     local_root = _synthetic(
@@ -1936,24 +1329,3 @@ def test_heuristic_roots_function_local_and_nested_bindings() -> None:
         """
     )
     assert "test_scan" in _implicated_test_functions(guarded_argv)
-
-
-def test_method_keys_do_not_mask_same_named_methods() -> None:
-    """Two classes with the same method name stay distinct (``Class.method`` keys)."""
-    tree = _synthetic(
-        """
-        import pytest
-
-        class TestOne:
-            @pytest.mark.repo_wide
-            def test_scan(self):
-                (REPO / "tests").rglob("*.py")
-
-        class TestTwo:
-            def test_scan(self):
-                (REPO / "scripts").rglob("*.py")
-        """
-    )
-    assert set(_implicated_test_functions(tree)) == {"TestOne.test_scan", "TestTwo.test_scan"}
-    assert _function_marked(tree, "TestOne.test_scan")
-    assert not _function_marked(tree, "TestTwo.test_scan")

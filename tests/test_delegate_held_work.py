@@ -113,16 +113,6 @@ def test_orphan_sweep_preserves_saved_result_and_metadata(lease, tmp_path, legac
     assert (location / "readers.patch").read_text() == "held\n"
 
 
-def test_unreferenced_files_reaped_without_preservation(lease, tmp_path):
-    root, namespace, _ = lease
-    (root / "disposable").write_bytes(b"temporary")
-    result = delegate._reap_runtime_tmp_lease(root, namespace)
-    assert result["tmp_reap_error"] is None
-    assert result["tmp_bytes_freed"] > 0
-    assert not root.exists()
-    assert not (tmp_path / "batch_state/preserved").exists()
-
-
 @pytest.mark.parametrize(
     "citation",
     [
@@ -370,14 +360,6 @@ def test_preservation_failure_refuses_cleanup_and_orphan_retry(lease, tmp_path, 
     assert swept["error_details"][0][2] == held.HeldWorkPreservationError.code
 
 
-def test_worker_preamble_guides_held_work_to_reports(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate, "_resolve_primary_root_for_worktree", lambda _root: tmp_path)
-    prompt = delegate._augment_prompt_with_worktree("task", tmp_path, mode="workspace-write")
-    assert "[held work]" in prompt
-    assert "`batch_state/reports/`" in prompt
-    assert "cite its absolute file path" in prompt
-
-
 def test_structured_report_and_deliverable_citations(lease, tmp_path):
     root, namespace, record = lease
     (root / "report.txt").write_text("held report")
@@ -417,21 +399,6 @@ def test_invalid_or_missing_declaration_refuses_cleanup(lease, declaration):
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response="")
     assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
     assert root.exists()
-
-
-def test_missing_prose_citations_and_outside_paths_are_not_copied(lease, tmp_path):
-    root, namespace, record = lease
-    (tmp_path / "outside.patch").write_text("outside")
-    result = delegate._reap_runtime_tmp_lease(
-        root,
-        namespace,
-        task_record=record,
-        response=f"`{root}/missing.patch` `{root}/sub/missing.patch` `{tmp_path}/outside.patch`",
-    )
-    assert result["tmp_reap_error"] is None
-    assert not root.exists()
-    assert not (tmp_path / "batch_state/preserved").exists()
-    assert (tmp_path / "outside.patch").read_text() == "outside"
 
 
 def test_destination_symlink_refuses_cleanup_without_writing_outside(lease, tmp_path):

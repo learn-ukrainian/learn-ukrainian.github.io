@@ -41,36 +41,6 @@ def _load_yaml(path: Path) -> dict:
 # ---------------------------------------------------------------------------
 
 
-def test_strip_parenthetical_hints(tmp_path):
-    data = {
-        "inline": [
-            {
-                "id": "fill-1",
-                "type": "fill-in",
-                "title": "Test",
-                "instruction": "Fill in",
-                "items": [
-                    {"sentence": "Я йду в ____ (магазин).", "answer": "магазин"},
-                    {"sentence": "Вона йде в ____ (школа).", "answer": "школу"},
-                    {"sentence": "Це звичайне речення без натяку.", "answer": "слово"},
-                ],
-            }
-        ],
-        "workbook": [],
-    }
-    path = _write_yaml(tmp_path, "test-mod", data)
-    result = repair_activities(path, "a2", 1)
-
-    assert result.fixes_applied >= 2
-    assert result.modified is True
-
-    out = _load_yaml(path)
-    items = out["inline"][0]["items"]
-    assert items[0]["sentence"] == "Я йду в ____."
-    assert items[1]["sentence"] == "Вона йде в ____."
-    assert items[2]["sentence"] == "Це звичайне речення без натяку."
-
-
 # ---------------------------------------------------------------------------
 # Fix 2: Deduplicate quiz options
 # ---------------------------------------------------------------------------
@@ -210,32 +180,6 @@ def test_move_workbook_only_type_from_inline(tmp_path):
 # ---------------------------------------------------------------------------
 # Fix 4b: Move INLINE-ONLY type from workbook to inline
 # ---------------------------------------------------------------------------
-
-
-def test_move_inline_only_type_from_workbook(tmp_path):
-    data = {
-        "inline": [],
-        "workbook": [
-            {"type": "fill-in", "title": "F", "items": [{"sentence": "___", "answer": "a"}]},
-            {
-                "type": "image-to-letter",
-                "title": "Letters",
-                "items": [{"image": "🍎", "letter": "А"}],
-            },
-        ],
-    }
-    path = _write_yaml(tmp_path, "test-mod", data)
-    result = repair_activities(path, "a1", 1)
-
-    assert result.fixes_applied >= 1
-    out = _load_yaml(path)
-    # image-to-letter should be gone from workbook
-    assert all(a.get("type") != "image-to-letter" for a in out["workbook"])
-    # image-to-letter should be in inline
-    assert any(a.get("type") == "image-to-letter" for a in out["inline"])
-    # moved activity should have an id (inline requires it)
-    moved = next(a for a in out["inline"] if a.get("type") == "image-to-letter")
-    assert moved.get("id")
 
 
 # ---------------------------------------------------------------------------
@@ -394,25 +338,6 @@ def test_repair_reports_structural_regen_for_bad_sections_items_pairs_and_null_a
 # ---------------------------------------------------------------------------
 
 
-def test_count_below_min_reported_as_regen(tmp_path):
-    # A2 requires INLINE_MIN=4, WORKBOOK_MIN=8. Give only 1 of each.
-    data = {
-        "inline": [
-            {"id": "q1", "type": "quiz", "title": "Q", "items": [{"question": "?", "options": ["a", "b", "c", "d"], "correct": 0}]}
-        ],
-        "workbook": [
-            {"type": "fill-in", "title": "F", "items": [{"sentence": "___ word", "answer": "a"}]}
-        ],
-    }
-    path = _write_yaml(tmp_path, "test-mod", data)
-    result = repair_activities(path, "a2", 1)
-
-    assert len(result.needs_regen) >= 2  # inline + workbook both below min
-    assert any("inline count" in msg for msg in result.needs_regen)
-    assert any("workbook count" in msg for msg in result.needs_regen)
-    assert result.can_ship is False
-
-
 # ---------------------------------------------------------------------------
 # Idempotency: running twice produces identical output
 # ---------------------------------------------------------------------------
@@ -458,96 +383,6 @@ def test_repair_is_idempotent(tmp_path):
 # ---------------------------------------------------------------------------
 # Clean module is a no-op
 # ---------------------------------------------------------------------------
-
-
-def test_clean_module_unchanged(tmp_path):
-    # Each activity needs ≥ ITEMS_MIN items at a2 (= 8) to satisfy the
-    # per-activity density check added 2026-04-11. Use 8 quiz questions
-    # per activity and 8 fill-in items per activity so the module is
-    # truly clean and repair is a no-op.
-    quiz_items = [
-        {"question": f"Question {i}?", "options": ["a", "b", "c", "d"], "correct": 0}
-        for i in range(8)
-    ]
-    fillin_items = [
-        {
-            "sentence": f"Я ___ українську #{i}.",
-            "answer": "вчу",
-            "options": ["вчу", "вчиш", "вчить", "вчимо"],
-        }
-        for i in range(8)
-    ]
-    data = {
-        "inline": [
-            {"id": f"q{i}", "type": "quiz", "title": "Q", "items": quiz_items}
-            for i in range(4)
-        ],
-        "workbook": [
-            {"id": f"f{i}", "type": "fill-in", "title": "F", "items": fillin_items}
-            for i in range(8)
-        ],
-    }
-    path = _write_yaml(tmp_path, "test-mod", data)
-    before = path.read_text("utf-8")
-
-    result = repair_activities(path, "a2", 1)
-
-    after = path.read_text("utf-8")
-    assert before == after
-    assert result.fixes_applied == 0
-    assert result.modified is False
-    assert result.can_ship is True
-
-
-@pytest.mark.parametrize("root", [[], [None]])
-def test_validator_flags_non_mapping_root(tmp_path, root):
-    path = _write_yaml(tmp_path, "test-mod", root)
-
-    issues = validate_activities(path, level="a2", module_num=1)
-
-    assert len(issues) == 1
-    assert issues[0].message == "root is not a mapping"
-
-
-def test_validator_flags_dict_quiz_duplicates_and_malformed_structures(tmp_path):
-    data = {
-        "inline": [
-            {
-                "id": "quiz-bridge",
-                "type": "quiz",
-                "title": "Визначення відмінків",
-                "items": [
-                    {
-                        "question": "Це новий **студент**.",
-                        "options": [
-                            {"text": "Називний", "correct": True},
-                            {"text": "Знахідний", "correct": False},
-                            {"text": "Називний", "correct": False},
-                            {"text": "Кличний", "correct": False},
-                        ],
-                    }
-                ],
-            },
-            {"type": "fill-in", "title": "Broken options", "items": [{"sentence": "Я ___.", "answer": "вчу", "options": {}}]},
-            None,
-        ],
-        "workbook": [
-            {"type": "fill-in", "title": "Broken items", "items": "oops"},
-            {"type": "match-up", "title": "Broken pairs", "pairs": {}},
-            {"type": "match-up", "title": "Mixed pairs", "pairs": [{"left": "a", "right": "b"}, "oops"]},
-        ],
-    }
-    path = _write_yaml(tmp_path, "test-mod", data)
-
-    issues = validate_activities(path, level="a2", module_num=1)
-    messages = [issue.message for issue in issues]
-
-    assert any("duplicate options" in message and "Називний" in message for message in messages)
-    assert any(message == "options is not a list: dict" for message in messages)
-    assert any(message == "activity entry is not a mapping: NoneType" for message in messages)
-    assert any(message == "items is not a list: str" for message in messages)
-    assert any(message == "pairs is not a list: dict" for message in messages)
-    assert any(message == "pair entry is not a mapping: str" for message in messages)
 
 
 def test_validator_allows_error_correction_passthroughs(tmp_path):

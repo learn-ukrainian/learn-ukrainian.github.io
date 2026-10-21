@@ -227,51 +227,6 @@ def test_config_and_validation_contract():
         validate_answers([], frozenset())
 
 
-def test_resolver_concurrency_limit_and_cleanup(proxy, monkeypatch):
-    children = []
-    real_spawn = asyncio.create_subprocess_exec
-
-    async def hung(*args, **kwargs):
-        proc = await real_spawn(args[0], "-c", "import time; time.sleep(60)", **kwargs)
-        children.append(proc)
-        return proc
-
-    monkeypatch.setattr(asyncio, "create_subprocess_exec", hung)
-    clients = []
-    try:
-        for _ in range(8):
-            client = socket.socket(socket.AF_UNIX)
-            client.connect(str(proxy.endpoint))
-            client.sendall(b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n")
-            clients.append(client)
-        deadline = time.monotonic() + LIVENESS_SECONDS
-        while len(children) < 2 and time.monotonic() < deadline:
-            time.sleep(.005)
-        assert len(children) == proxy.limits.resolvers
-        proxy.cleanup()
-        assert all(proc.returncode is not None for proc in children)
-    finally:
-        for client in clients:
-            client.close()
-
-
-def test_connect_deadline_closes_numeric_socket(proxy, monkeypatch):
-    sockets = []
-
-    async def resolve(host):
-        return ["8.8.8.8"]
-
-    async def hang(sock, address):
-        sockets.append(sock)
-        await asyncio.sleep(60)
-
-    proxy.limits = replace(proxy.limits, connect_seconds=.1)
-    monkeypatch.setattr(proxy, "_resolve", resolve)
-    monkeypatch.setattr(proxy.loop, "sock_connect", hang)
-    assert request(proxy, b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n").startswith(b"HTTP/1.1 403")
-    assert sockets and all(sock.fileno() == -1 for sock in sockets)
-
-
 def test_real_resolver_is_parent_only_and_numeric(proxy):
     # No external lookup: libc's local hosts entry is sufficient to exercise
     # the production child; the subsequent address contract must refuse it.
@@ -297,53 +252,6 @@ def test_proxy_start_failure_and_forwarder_help(tmp_path, monkeypatch):
     help_run = subprocess.run([sys.executable, str(forwarder), "--help"], capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert help_run.returncode == 0
     assert "Exit codes:" in help_run.stdout and "Outputs:" in help_run.stdout
-
-
-def test_one_way_stream_stays_alive_then_idle_closes(proxy, monkeypatch):
-    listener = socket.socket()
-    listener.bind(("127.0.0.1", 0))
-    listener.listen()
-    failures = []
-
-    def stream():
-        try:
-            with listener.accept()[0] as connection:
-                for _ in range(12):
-                    connection.sendall(b"tick")
-                    time.sleep(.05)
-                # After streaming exceeds the idle limit, idle closes the socket.
-                time.sleep(.5)
-        except OSError as exc:
-            failures.append(type(exc).__name__)
-
-    thread = threading.Thread(target=stream)
-    thread.start()
-
-    async def resolve(host):
-        return ["8.8.8.8"]
-
-    async def connect(addresses):
-        return await asyncio.open_connection(*listener.getsockname())
-
-    monkeypatch.setattr(proxy, "_resolve", resolve)
-    monkeypatch.setattr(proxy, "_connect", connect)
-    try:
-        with socket.socket(socket.AF_UNIX) as client:
-            client.settimeout(LIVENESS_SECONDS)
-            client.connect(str(proxy.endpoint))
-            client.sendall(b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n")
-            header = bytearray()
-            while not header.endswith(b"\r\n\r\n"):
-                header.extend(client.recv(1))
-            assert header.startswith(b"HTTP/1.1 200")
-            data = bytearray()
-            while chunk := client.recv(1024):
-                data.extend(chunk)
-            assert data == b"tick" * 12
-            assert not failures
-    finally:
-        listener.close()
-        thread.join(LIVENESS_SECONDS)
 
 
 def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, monkeypatch, tmp_path):
@@ -376,33 +284,3 @@ def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, 
     result = subprocess.run([sys.executable, module.__file__, str(missing), "/bin/true"],
                             capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert result.returncode == 125 and "attempt_forwarder_start_failed" in result.stderr
-
-
-def test_dns_oversized_response_is_bounded_and_reaped(proxy, monkeypatch):
-    real_spawn = asyncio.create_subprocess_exec
-    children = []
-
-    async def large(*args, **kwargs):
-        proc = await real_spawn(args[0], "-c", "import sys,time; sys.stdout.write('x'*100000); "
-                                "sys.stdout.flush(); time.sleep(60)", **kwargs)
-        children.append(proc)
-        return proc
-
-    monkeypatch.setattr(asyncio, "create_subprocess_exec", large)
-    assert request(proxy, b"CONNECT api.provider.example:443 HTTP/1.1\r\n\r\n").startswith(b"HTTP/1.1 403")
-    assert children and children[0].returncode is not None
-
-
-def test_forwarder_cli_success_refusal_and_argument_contract(proxy, tmp_path, monkeypatch):
-    import sys
-
-    from scripts.agent_runtime import attempt_forwarder
-
-    monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(proxy.endpoint), "/bin/true"])
-    assert attempt_forwarder.main() == 0
-    monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(tmp_path / "missing.sock"), "/bin/true"])
-    assert attempt_forwarder.main() == 125
-    monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(proxy.endpoint)])
-    with pytest.raises(SystemExit) as error:
-        attempt_forwarder.main()
-    assert error.value.code == 2

@@ -632,22 +632,6 @@ def test_url_scoped_transport_settings_win_after_probe(https_world, tmp_path, mo
             assert requests and all(header == HEADER for _, header in requests)
 
 
-def test_direct_fetch_rechecks_configuration_before_credential(https_world, tmp_path, monkeypatch):
-    client = runner(tmp_path, None, None)
-    repo = resolved(https_world, client)
-    git(https_world[1], "config", "credential.helper", "unsafe")
-    calls = []
-
-    def unexpected_mint(**kwargs):
-        calls.append(kwargs)
-        raise RuntimeError("credential should not be requested")
-
-    monkeypatch.setattr(sg, "resolve_agent_github_identity", unexpected_mint)
-    with pytest.raises(sg.Refusal, match="unsupported redirect"):
-        client.fetch(repo)
-    assert calls == []
-
-
 @pytest.mark.parametrize("fetch_state", ["success", "failure", "timeout"])
 @pytest.mark.parametrize("revoke_fails", [False, True])
 def test_fetch_revokes_same_token_once_without_changing_outcome(

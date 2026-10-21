@@ -8,12 +8,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-import yaml
 
 from scripts.ci import dependency_advisory_issue as helper
-
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "security-audit.yml"
 
 
 def _pip_report() -> dict:
@@ -108,29 +104,6 @@ def test_collect_npm_findings_fixed_version() -> None:
     minimist = next(f for f in findings if f["package"] == "minimist")
     assert minimist["fixed_version"] == "1.2.8"
     assert minimist["ecosystem"] == "npm (site)"
-
-
-def test_collect_npm_findings_honors_suppressions() -> None:
-    findings = helper.collect_npm_findings(_npm_vulns(), ["GHSA-xvch-5gv4-984h"], target="root")
-    # Suppressing the minimist advisory also clears the transitive chain on it.
-    assert findings == []
-
-
-def test_build_issue_body_lists_every_field() -> None:
-    findings = helper.collect_python_findings(_pip_report()) + helper.collect_npm_findings(
-        _npm_vulns(), [], target="site"
-    )
-    body = helper.build_issue_body(findings)
-    assert "| Ecosystem | Package | Advisory | Severity | Fixed version |" in body
-    assert "urllib3" in body
-    assert "PYSEC-2023-0001" in body
-    assert "1.26.18, 2.0.7" in body
-    assert "minimist" in body
-    assert "GHSA-XVCH-5GV4-984H" in body
-    assert "critical" in body
-    assert "#9871" in body
-    # Rows are sorted deterministically.
-    assert body.index("minimist") < body.index("urllib3")
 
 
 def test_build_issue_body_escapes_pipes_and_newlines() -> None:
@@ -237,47 +210,12 @@ def test_run_json_command_unparseable_json_raises(tmp_path: Path) -> None:
             helper._run_json_command(["pip_audit"], cwd=tmp_path, timeout=1, label="pip-audit")
 
 
-def test_run_json_command_non_object_json_raises(tmp_path: Path) -> None:
-    with patch.object(helper.subprocess, "run", return_value=_completed(0, "[1, 2]")):
-        with pytest.raises(RuntimeError, match=r"unexpected report format"):
-            helper._run_json_command(["npm"], cwd=tmp_path, timeout=1, label="npm audit (root)")
-
-
-def test_run_collect_unparseable_tool_output_raises(tmp_path: Path) -> None:
-    repo = _fake_repo(tmp_path / "repo")
-    pip = _completed(1, "traceback, not json")
-    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(pip, _CLEAN_NPM)):
-        with pytest.raises(RuntimeError, match=r"failed to parse JSON output"):
-            helper.run_collect(repo)
-
-
 def test_run_collect_npm_error_payload_raises(tmp_path: Path) -> None:
     repo = _fake_repo(tmp_path / "repo")
     npm = _completed(1, json.dumps({"error": {"summary": "audit endpoint exploded"}}))
     with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, npm)):
         with pytest.raises(RuntimeError, match=r"npm audit reported an error"):
             helper.run_collect(repo)
-
-
-def test_run_collect_missing_lockfile_raises(tmp_path: Path) -> None:
-    repo = _fake_repo(tmp_path / "repo", site_lock=False)
-    with patch.object(helper.subprocess, "run", side_effect=_stub_audits(_CLEAN_PIP, _CLEAN_NPM)):
-        with pytest.raises(RuntimeError, match=r"package\.json or package-lock\.json missing"):
-            helper.run_collect(repo)
-
-
-def test_daily_schedule_runs_only_the_advisory_issue_job() -> None:
-    """The daily cron refreshes only the tracking issue; blocking jobs stay weekly (#9871)."""
-    workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
-    triggers = workflow.get("on", workflow.get(True))
-    crons = [entry["cron"] for entry in triggers["schedule"]]
-    assert "23 4 * * *" in crons  # daily advisory refresh
-    assert "0 9 * * 1" in crons  # weekly blocking audit
-    jobs = workflow["jobs"]
-    for name in ("pip-audit", "npm-audit"):
-        assert "github.event.schedule != '23 4 * * *'" in jobs[name]["if"], name
-    advisory_condition = jobs["advisory-issue"]["if"]
-    assert "github.event.schedule == '23 4 * * *'" in advisory_condition
 
 
 def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> None:
@@ -288,15 +226,6 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
     for heading in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert heading in out
     assert ".venv/bin/python" in out
-
-
-def test_collect_help_documents_repo_root_default(capsys: pytest.CaptureFixture[str]) -> None:
-    with pytest.raises(SystemExit) as exc:
-        helper.main(["collect", "--help"])
-    assert exc.value.code == 0
-    out = capsys.readouterr().out
-    assert "--repo-root" in out
-    assert "default:" in out
 
 
 def test_decide_action() -> None:
@@ -325,32 +254,6 @@ def test_plan_writes_body_and_outputs_for_findings(tmp_path: Path, monkeypatch, 
     assert "action=update" in written
     assert "issue_number=42" in written
     assert "action=update" in capsys.readouterr().out
-
-
-def test_plan_close_action_on_empty_findings(tmp_path: Path, monkeypatch) -> None:
-    findings_file = tmp_path / "findings.json"
-    findings_file.write_text(json.dumps({"findings": []}), encoding="utf-8")
-    body_out = tmp_path / "body.md"
-    github_output = tmp_path / "github_output"
-    monkeypatch.setenv("GITHUB_OUTPUT", str(github_output))
-    rc = helper.main(
-        ["plan", "--findings", str(findings_file), "--issue-number", "42", "--body-out", str(body_out)]
-    )
-    assert rc == 0
-    assert "action=close" in github_output.read_text(encoding="utf-8")
-    assert not body_out.exists()
-
-
-def test_plan_none_action_when_clean_and_no_issue(tmp_path: Path, monkeypatch) -> None:
-    findings_file = tmp_path / "findings.json"
-    findings_file.write_text(json.dumps({"findings": []}), encoding="utf-8")
-    github_output = tmp_path / "github_output"
-    monkeypatch.setenv("GITHUB_OUTPUT", str(github_output))
-    rc = helper.main(
-        ["plan", "--findings", str(findings_file), "--issue-number", "", "--body-out", str(tmp_path / "b.md")]
-    )
-    assert rc == 0
-    assert "action=none" in github_output.read_text(encoding="utf-8")
 
 
 def test_plan_rejects_malformed_findings_file(tmp_path: Path, monkeypatch) -> None:

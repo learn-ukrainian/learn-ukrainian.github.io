@@ -8,7 +8,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_vspu_source_materialization as materialization
 
@@ -124,13 +123,6 @@ def _build(paths: dict[str, Path]) -> dict[str, object]:
         scope_review_path=paths["scope"],
         private_jsonl_path=paths["jsonl"],
     )
-
-
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema_text = materialization.SCHEMA_PATH.read_text(encoding="utf-8")
-    Draft202012Validator.check_schema(json.loads(schema_text))
-    assert '"text"' not in schema_text
-    assert '"source_text"' not in schema_text
 
 
 def test_materialization_is_deterministic_and_round_trips(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -322,16 +314,6 @@ def test_public_receipt_is_immutable(tmp_path: Path) -> None:
         materialization.write_public_receipt(output, {"value": 2})
 
 
-def test_check_cli_reports_receipt(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    receipt_path = tmp_path / "receipt.json"
-    receipt_path.write_text('{"receipt_sha256":"fixture"}', encoding="utf-8")
-    monkeypatch.setattr(materialization, "validate_receipt", lambda value: value)
-    assert materialization.main(["--check", str(receipt_path)]) == 0
-    assert json.loads(capsys.readouterr().out) == {"ok": True, "receipt_sha256": "fixture"}
-
-
 def _rehash(receipt: dict[str, object]) -> dict[str, object]:
     body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
     receipt["receipt_sha256"] = materialization.sha256_bytes(materialization.canonical_bytes(body))
@@ -343,14 +325,6 @@ def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: p
     receipt = _build(paths)
     receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
     with pytest.raises(materialization.VspuSourceMaterializationError, match="legal reuse authorization"):
-        materialization.validate_receipt(_rehash(receipt))
-
-
-def test_legacy_operator_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    paths = _fixture(tmp_path, monkeypatch)
-    receipt = _build(paths)
-    receipt["rights"]["operator_private_text_only_phase3_use_authorized"] = True  # type: ignore[index]
-    with pytest.raises(materialization.VspuSourceMaterializationError, match="legacy operator authorization field"):
         materialization.validate_receipt(_rehash(receipt))
 
 

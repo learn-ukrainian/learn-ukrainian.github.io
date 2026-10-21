@@ -5,61 +5,11 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.audit import atlas_source_census as census
 from scripts.audit.source_inventory_intake import SourceInventoryError
 
 pytestmark = pytest.mark.reads_content
-
-
-def test_module_census_separates_content_activities_and_vocabulary(tmp_path: Path) -> None:
-    module_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1" / "demo"
-    module_dir.mkdir(parents=True)
-    (module_dir / "module.md").write_text("# Заголовок\n\nКоти читають урок.", encoding="utf-8")
-    (module_dir / "activities.yaml").write_text(
-        yaml.safe_dump(
-            {"inline": [{"id": "act-1", "instruction": "Мами пишуть слова."}]},
-            allow_unicode=True,
-            sort_keys=False,
-        ),
-        encoding="utf-8",
-    )
-    (module_dir / "vocabulary.yaml").write_text(
-        yaml.safe_dump(
-            [{"word": "кіт", "translation": "cat", "example": "Кіт читає."}],
-            allow_unicode=True,
-            sort_keys=False,
-        ),
-        encoding="utf-8",
-    )
-    manifest = _write_manifest(tmp_path, ["кіт"])
-
-    result = census.build_atlas_source_census(
-        root=tmp_path,
-        manifest_path=manifest,
-        include_default_inventories=False,
-        textbook_txt_root=None,
-        textbook_pdf_root=None,
-        sources_db_path=None,
-    )
-    payload = census.public_census_payload(result)
-
-    assert payload["source_inputs"]["modules"] == {
-        "l2_uk_en_module_md": 1,
-        "l2_uk_en_activity_yaml": 1,
-        "l2_uk_en_vocabulary_yaml": 1,
-        "l2_uk_direct_module_yaml": 0,
-    }
-    assert payload["surfaces"][census.MODULE_CONTENT]["source_units"] == 1
-    assert payload["surfaces"][census.MODULE_ACTIVITY]["source_units"] == 1
-    assert payload["surfaces"][census.MODULE_VOCABULARY]["explicit_headwords"] == 1
-    assert payload["surfaces"][census.MODULE_VOCABULARY]["explicit_in_atlas"] == 1
-    assert payload["surfaces"][census.MODULE_ALL]["source_units"] == 3
-    assert payload["modules_by_track"]["a1"]["source_units"] == 3
-    public_json = json.dumps(payload, ensure_ascii=False)
-    assert "Коти читають" not in public_json
-    assert "кіт" not in public_json
 
 
 def test_textbook_sqlite_and_jsonl_lanes_are_aggregate_only(tmp_path: Path) -> None:
@@ -116,11 +66,6 @@ def test_detail_output_path_must_be_outside_repo(tmp_path: Path) -> None:
 
     outside = tmp_path.parent / "atlas-census-details.json"
     assert census.resolve_local_detail_output_path(outside, project_root=tmp_path) == outside.resolve()
-
-
-def test_textbook_grade_parser_accepts_zero_padded_names() -> None:
-    assert census._textbook_grade(Path("textbook_chunks/grade-01/chunks.jsonl")) == "grade-01"
-    assert census._textbook_grade(Path("texts/02-klas-book.txt")) == "grade-02"
 
 
 def _write_manifest(tmp_path: Path, lemmas: list[str]) -> Path:

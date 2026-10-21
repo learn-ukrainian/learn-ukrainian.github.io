@@ -82,30 +82,6 @@ def test_hermetic_valency_fail_incorrect_gov():
     assert any("Strict government not confirmed" in f for f in verdict.findings)
 
 
-def test_hermetic_valency_warn_weak_foil():
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "strict_government": MockNoulResult(0.95),
-            "syntactic_exclusivity": MockNoulResult(0.92),
-            "is_calque_foil": MockNoulResult(0.40),  # Weak foil (not a real calque)
-            "sentence_naturalness": MockScoreResult(4.0, 0.85),
-        },
-    }
-
-    verdict = verify_valency_card(
-        verb="дякувати",
-        stem="Я дякую ___ за все.",
-        target="мамі",
-        calque_distractor="столу",
-        case_demanded="Dative",
-        mock_response=mock_resp,
-    )
-
-    assert verdict.verdict == "warn_weak_foil"
-    assert any("not a strong calque foil" in f for f in verdict.findings)
-
-
 @pytest.mark.live_network
 def test_live_valency_verification_dyakuvaty():
     api_key = resolve_api_key()

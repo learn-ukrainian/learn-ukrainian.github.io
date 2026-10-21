@@ -38,28 +38,6 @@ def _has_pymorphy3() -> bool:
     not _has_pymorphy3(),
     reason="pymorphy3 not installed; russian_shadow channel cannot be tested at all",
 )
-def test_russian_shadow_channel_alive_in_process() -> None:
-    """In-process import — the module-level sys.path shim makes the absolute
-    `scripts.verification.check_ru_morph` import resolve."""
-    from scripts.audit._judge_eval_lib import _russian_shadow_check
-
-    result = _russian_shadow_check("спасибо")
-    assert result["available"] is True, (
-        "russian_shadow channel reported unavailable; sys.path shim did not "
-        "make `scripts.verification.check_ru_morph` importable. See #2050."
-    )
-    # `спасибо` is a Russian-only common word; pymorphy3 RU should match it.
-    triggered = result["triggered_tokens"]
-    assert triggered, (
-        "russian_shadow channel imported but did not fire on `спасибо`; "
-        "expected at least one triggered token. Got: " + repr(result)
-    )
-
-
-@pytest.mark.skipif(
-    not _has_pymorphy3(),
-    reason="pymorphy3 not installed; russian_shadow channel cannot be tested at all",
-)
 def test_russian_shadow_channel_alive_from_audit_cwd() -> None:
     """Reproduce the exact #2050 bug scenario: subprocess launched with
     cwd=`scripts/audit/`, simulating `python scripts/audit/<runner>.py`

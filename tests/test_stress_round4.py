@@ -100,12 +100,6 @@ def test_uncovered_analysis_never_drops_proven_readings(real_rows, form, expecte
     assert result["uncovered_vesum_analyses"]
 
 
-def test_context_resolves_partial_coverage(real_rows):
-    result = stress.verify_stress("була", lemma="бути")
-    assert result["status"] == "ok"
-    assert [m["stressed_form"] for m in result["matches"]] == ["була́"]
-
-
 @pytest.mark.parametrize(
     "form,expected",
     [

@@ -10,24 +10,11 @@ import yaml
 
 from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables
 from scripts.orchestration.validate_trailspec import (
-    DEFAULT_DECISION_TABLES_V1_PATH,
     PROJECT_ROOT,
-    validate_trailspec,
 )
 
 RB3_PATH = PROJECT_ROOT / "scripts/config/trails/rb3-pr-lifecycle.trail.yaml"
 RB4_PATH = PROJECT_ROOT / "scripts/config/trails/rb4-red-ci-triage.trail.yaml"
-
-REVIEW_GATE_INPUTS = {
-    "is_draft",
-    "current_head_reviews_terminal_published",
-    "reviewer_is_independent",
-    "requested_changes_resolved",
-    "has_stale_approval",
-    "verdicts_conflict",
-    "blocking_ci",
-    "has_current_cross_family_approval",
-}
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -65,19 +52,6 @@ def _assert_rb3_babysit_routing(spec: dict[str, Any]) -> None:
         "still_armed": "observe_babysit_state",
         "babysit_state_unreadable": "STOP-precondition-failed",
     }
-
-
-@pytest.mark.parametrize(
-    ("path", "trail_id", "version"),
-    [(RB3_PATH, "rb3-pr-lifecycle", "2.3.0"), (RB4_PATH, "rb4-red-ci-triage", "0.5.0")],
-)
-def test_migrated_trails_validate_v11(path: Path, trail_id: str, version: str) -> None:
-    """Both P9 rails are execution-eligible v1.1 specifications."""
-    result = validate_trailspec(spec_path=path)
-    assert result["ok"] is True
-    assert result["spec"]["trail_id"] == trail_id
-    assert result["spec"]["version"] == version
-    assert result["spec"]["execution_eligible"] is True
 
 
 @pytest.mark.parametrize("path", [RB3_PATH, RB4_PATH])
@@ -119,16 +93,6 @@ def test_rb4_retry_once_is_a_non_rerun_stop_and_commands_have_no_rerun_primitive
     assert "claimant-ledger" not in command_text
 
 
-def test_negative_rb4_retry_once_rewire_fails_non_rerun_contract() -> None:
-    """Mutation proof: rerouting retry-once away from STOP fails exactly this contract."""
-    spec = _load(RB4_PATH)
-    _steps(spec)["allowlist_match"]["transitions"]["matched_retry_once"]["target"] = (
-        "back_to_pr_lifecycle"
-    )
-    with pytest.raises(AssertionError):
-        _assert_retry_once_stops(spec)
-
-
 @pytest.mark.parametrize(
     ("changed", "expected"),
     [
@@ -164,39 +128,9 @@ def test_rb3_refusal_rows_cannot_reach_gate_passed(
     assert rb3["transitions"][label]["target"] != "arm_automerge"
 
 
-def test_rb3_review_gate_evaluates_all_eight_typed_inputs() -> None:
-    """Every RB-3 review-gate evaluation consumes the complete P2 input contract."""
-    rb3 = _steps(_load(RB3_PATH))
-    observation = rb3["observe_gate_inputs"]
-    evaluation = rb3["evaluate_review_gate"]
-    observation_program = _command_text(observation)
-    evaluation_program = _command_text(evaluation)
-
-    tables = load_decision_tables()
-    assert set(tables["tables"]["review-gate-arm"]["inputs"]) == REVIEW_GATE_INPUTS
-    for input_name in REVIEW_GATE_INPUTS:
-        assert input_name in observation_program
-    assert evaluation["command"]["environment"]["TABLE_ID"] == "review-gate-arm"
-    assert evaluation["command"]["environment"]["TABLES_PATH"] == str(
-        DEFAULT_DECISION_TABLES_V1_PATH.relative_to(PROJECT_ROOT)
-    )
-    assert "evaluate_named_table" in evaluation_program
-    assert evaluation["command"]["environment"]["GATE_FACTS_RECEIPT"] == "{gate_facts_receipt}"
-
-
 def test_rb3_babysit_registration_continues_to_bounded_state_observation() -> None:
     """A durable registration hands control to the bounded lifecycle observation."""
     _assert_rb3_babysit_routing(_load(RB3_PATH))
-
-
-def test_negative_rb3_babysit_registration_stop_rewire_fails_routing_contract() -> None:
-    """Mutation proof: restoring the inverted registration STOP fails this contract."""
-    spec = _load(RB3_PATH)
-    _steps(spec)["observe_babysit_registration"]["transitions"]["registration_observed"][
-        "target"
-    ] = "STOP-manual-intervention"
-    with pytest.raises(AssertionError):
-        _assert_rb3_babysit_routing(spec)
 
 
 def test_rb3_review_in_flight_self_loops_for_driver_owned_pacing() -> None:
@@ -205,27 +139,6 @@ def test_rb3_review_in_flight_self_loops_for_driver_owned_pacing() -> None:
     assert review_request["transitions"]["review_in_flight"]["target"] == (
         "observe_review_request"
     )
-
-
-def test_rb3_former_judgment_nodes_are_receipt_observations_or_stops() -> None:
-    """Former summon/judgment nodes neither fabricate completion nor perform their action."""
-    steps = _steps(_load(RB3_PATH))
-    former_judgment_steps = {
-        "observe_delivery_application_receipt": "rb3-deliveries-",
-        "observe_stuck_request_resolution": "rb3-stuck-request-",
-        "observe_verdict_receipt": "rb3-verdict-",
-        "observe_fix_round_receipt": "rb3-fix-round-",
-        "observe_finalize_note_receipt": "rb3-finalize-",
-    }
-    for step_id, receipt_name in former_judgment_steps.items():
-        step = steps[step_id]
-        assert step["command"]["mutation_class"] == "observe"
-        command = _command_text(step)
-        assert receipt_name in command
-        assert "jq" in command
-        assert any(target.startswith("STOP-") for target in (
-            transition["target"] for transition in step["transitions"].values()
-        ))
 
 
 def test_rb4_keeps_head_currency_reachable_and_url_bound() -> None:

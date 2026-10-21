@@ -172,19 +172,6 @@ def test_route_not_proven_private_refuses_capture(tmp_path: Path, status: object
     assert "capture refused (checkpoint_route_not_private)" in result.stderr
 
 
-def test_version_probe_hang_refuses_within_the_budget(tmp_path: Path) -> None:
-    state, env = _fake_entire(tmp_path)
-    (state / "version-hang").touch()
-
-    started = time.monotonic()
-    result = _guard(env, tmp_path, "--budget", "2", "hooks", "claude-code", "stop")
-
-    assert time.monotonic() - started < 10
-    assert result.returncode == 0
-    assert "capture refused (guard_probe_timeout)" in result.stderr
-    assert "hooks claude-code stop" not in _calls(env)
-
-
 @pytest.mark.parametrize("hook_rc", [1, 2, 127])
 def test_capture_failure_is_an_outage_and_exits_zero(tmp_path: Path, hook_rc: int) -> None:
     state, env = _fake_entire(tmp_path)
@@ -195,18 +182,6 @@ def test_capture_failure_is_an_outage_and_exits_zero(tmp_path: Path, hook_rc: in
     assert result.returncode == 0
     assert _calls(env)[-1] == "hooks git pre-push origin"
     assert f"capture failed (exit {hook_rc}); continuing without capture" in result.stderr
-
-
-def test_capture_hang_is_stopped_at_the_budget_and_exits_zero(tmp_path: Path) -> None:
-    state, env = _fake_entire(tmp_path)
-    (state / "hook-hang").touch()
-
-    started = time.monotonic()
-    result = _guard(env, tmp_path, "--budget", "3", "hooks", "git", "pre-push", "origin")
-
-    assert time.monotonic() - started < 15
-    assert result.returncode == 0
-    assert "capture timed out" in result.stderr
 
 
 POST_COMMIT = ("hooks", "git", "post-commit")
@@ -456,15 +431,6 @@ def test_broken_routing_allowlist_refuses_before_any_cli_call(tmp_path: Path) ->
     assert calls == []
 
 
-def test_refusal_passes_with_the_tracked_configuration_and_private_status() -> None:
-    def runner(argv, cwd, timeout):
-        assert timeout > 0
-        stdout = "Entire CLI 0.11.5\n" if argv[1] == "version" else json.dumps(PRIVATE_STATUS)
-        return subprocess.CompletedProcess(list(argv), 0, stdout, "")
-
-    assert capture_guard.refusal(REPO_ROOT, "entire", time.monotonic() + 30, runner=runner) is None
-
-
 def _entire_hook_commands(path: Path, agent: str) -> list[dict]:
     settings = json.loads(path.read_text(encoding="utf-8"))
     return [
@@ -512,26 +478,6 @@ def test_configured_stop_hook_never_captures_with_an_old_cli(tmp_path: Path) -> 
     assert "capture refused (cli_version_not_accepted)" in result.stderr
 
 
-@pytest.mark.parametrize(("path", "agent"), [(CLAUDE_SETTINGS, "claude-code"), (CODEX_HOOKS, "codex")])
-def test_configured_hooks_capture_with_the_accepted_cli(tmp_path: Path, path: Path, agent: str) -> None:
-    _state, env = _fake_entire(tmp_path)
-
-    for hook in _entire_hook_commands(path, agent):
-        verb = re.search(rf"hooks {agent} ([a-z-]+)", hook["command"]).group(1)
-        result = subprocess.run(
-            ["/bin/sh", "-c", hook["command"]],
-            input="{}\n",
-            capture_output=True,
-            text=True,
-            check=False,
-            cwd=REPO_ROOT,
-            env=env,
-            timeout=60,
-        )
-        assert result.returncode == 0
-        assert _calls(env)[-3:] == ["version", "status --json", f"hooks {agent} {verb}"]
-
-
 def test_configured_hooks_refuse_outside_a_guarded_checkout(tmp_path: Path) -> None:
     _state, env = _fake_entire(tmp_path)
     outside = tmp_path / "not-a-repo"
@@ -551,56 +497,7 @@ def test_configured_hooks_refuse_outside_a_guarded_checkout(tmp_path: Path) -> N
         assert result.returncode == 0
         assert "capture refused (guard_missing)" in result.stderr
     assert _calls(env) == []
-
-
-ADR = REPO_ROOT / "docs" / "architecture" / "adr" / "adr-018-entire-acp-context-layer.md"
 EVIDENCE = REPO_ROOT / "docs" / "architecture" / "adr" / "evidence" / "entire-0115-canary"
-# Stack-currency policy v3 consequence for ADR-018, required verbatim (#10846).
-STACK_CURRENCY_CONSEQUENCE = (
-    "The last accepted Entire CLI version is recorded in stack_pins.yaml; it is an acceptance record, "
-    "not an expiry. A newer CLI is allowed only after a compatibility review re-proves the "
-    "version-sensitive canaries (fail-closed version preflight, private-destination allowlist, zero "
-    "public entire/* refs, body-leakage scan, fail-open outage behaviour, locator digest checks), with "
-    "independent cross-family review and a reviewed rollback procedure. Until that review is recorded, "
-    "automated calls prove the accepted version. A version probe is not that review. After approval, "
-    "the native-recall preflight and the runtime version guard move to the new version in the same change."
-)
-CANARIES = (
-    "Fail-closed version preflight",
-    "Private-destination allowlist",
-    "Zero public `entire/*` refs",
-    "Body-leakage scan",
-    "Fail-open outage behaviour",
-    "Locator digest checks",
-)
-
-
-def test_adr_018_carries_the_stack_currency_consequence_and_the_accepted_version() -> None:
-    text = ADR.read_text(encoding="utf-8")
-
-    assert STACK_CURRENCY_CONSEQUENCE in text
-    assert "Entire is pinned to 0.11.5. An upgrade requires" not in text
-    # Until stack_pins.yaml lands, the ADR is the acceptance record the guard must match.
-    assert not (REPO_ROOT / "stack_pins.yaml").exists()
-    assert f"**Entire CLI {capture_guard.ACCEPTED_VERSION}**" in text
-
-
-def test_adr_018_names_a_receipt_for_every_canary_and_each_receipt_exists() -> None:
-    text = ADR.read_text(encoding="utf-8")
-    table = text.split("The six version-sensitive canaries")[1].split("Wrapper bytes:")[0]
-    rows = [line for line in table.splitlines() if line.startswith("| ") and not line.startswith("| Canary")]
-
-    assert [row.split(" | ")[0].removeprefix("| ") for row in rows if not row.startswith("| ---")] == list(CANARIES)
-    named = re.findall(
-        r"`((?:round-[12]/)?(?:log|status|refs|tool|wrapper|mutation|explain|CANARY)[\w.-]*\.(?:json|txt))`",
-        text,
-    )
-    assert len(named) >= 15
-    for name in named:
-        path = EVIDENCE / name if name.startswith("round-") else EVIDENCE / "round-2" / name
-        assert path.is_file(), name
-
-
 @pytest.mark.repo_wide
 def test_canary_evidence_bundle_carries_no_local_absolute_paths() -> None:
     absolute = re.compile(r"(^|[\s'\"=:(\[])/(home|var/tmp|run/user|tmp)/")

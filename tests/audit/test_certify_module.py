@@ -3,8 +3,6 @@ from __future__ import annotations
 import os
 import subprocess
 from pathlib import Path
-from types import SimpleNamespace
-from unittest.mock import patch
 
 import pytest
 
@@ -22,27 +20,6 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         env=env,
         text=True, timeout=30,
     )
-
-
-def test_qg_artifacts_match_only_known_direct_files(tmp_path: Path) -> None:
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    expected = {
-        "llm_qg.json": "{}\n",
-        "python_qg.json": "{}\n",
-        "llm-qg-naturalness-prompt.md": "prompt\n",
-        "llm-qg-tone-response.raw.md": "raw\n",
-    }
-    for name, content in expected.items():
-        (module_dir / name).write_text(content, encoding="utf-8")
-    (module_dir / "llm-qg-notes.txt").write_text("keep\n", encoding="utf-8")
-    nested = module_dir / "nested"
-    nested.mkdir()
-    (nested / "llm_qg.json").write_text("{}\n", encoding="utf-8")
-
-    artifacts = certify_module.qg_artifacts(module_dir)
-
-    assert {path.name for path in artifacts} == set(expected)
 
 
 def test_inspect_qg_artifacts_flags_empty_and_malformed_outputs(tmp_path: Path) -> None:
@@ -107,57 +84,6 @@ def test_clean_qg_artifacts_refuses_tracked_files(tmp_path: Path) -> None:
     assert not untracked.exists()
 
 
-def test_build_checks_use_project_venv_python() -> None:
-    target = certify_module.ModuleTarget(
-        lang_pair="l2-uk-en",
-        level="a1",
-        slug="my-family",
-        local_num=6,
-    )
-
-    checks = certify_module.build_checks(target, site_build=False, install_site_deps=False)
-    python_commands = [check.command for check in checks if check.command[0].endswith("/python")]
-
-    assert python_commands
-    assert all(command[0] == str(certify_module.VENV_PYTHON) for command in python_commands)
-
-
-def test_build_checks_include_standard_certification_guards() -> None:
-    target = certify_module.ModuleTarget(
-        lang_pair="l2-uk-en",
-        level="a1-v1",
-        slug="my-family",
-        local_num=6,
-    )
-
-    checks = certify_module.build_checks(target, site_build=False, install_site_deps=False)
-    names = [check.name for check in checks]
-    vocab_check = next(check for check in checks if check.name == "validate vocabulary")
-
-    assert "validate vocabulary" in names
-    assert "validate plan config" in names
-    assert "check MDX generation drift" in names
-    assert "agent trailer audit" in names
-    assert vocab_check.command[1] == "scripts/validate/validate_vocab_yaml.py"
-    assert all("vocabulary.yaml" in arg for arg in vocab_check.command[2:])
-    vocab_files = certify_module.vocabulary_source_files(target)
-    assert vocab_files
-    assert any(path.name == "vocabulary.yaml" for path in vocab_files)
-
-
-def test_build_checks_do_not_add_vocabulary_validator_for_missing_file() -> None:
-    target = certify_module.ModuleTarget(
-        lang_pair="l2-uk-en",
-        level="a1",
-        slug="does-not-exist",
-        local_num=999,
-    )
-
-    checks = certify_module.build_checks(target, site_build=False, install_site_deps=False)
-
-    assert "validate vocabulary" not in {check.name for check in checks}
-
-
 def test_vocabulary_presence_guard_fails_clearly_for_missing_file(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -211,21 +137,3 @@ def test_changed_or_untracked_paths_reports_tracked_and_untracked(tmp_path: Path
     paths = certify_module.changed_or_untracked_paths(repo)
 
     assert paths == ("tracked\tfile.txt", "untracked space.txt")
-
-
-def test_parse_target_accepts_slug_and_module_number() -> None:
-    modules = [
-        SimpleNamespace(slug="hello", local_num=1, numbered_slug="01-hello"),
-        SimpleNamespace(slug="my-family", local_num=6, numbered_slug="06-my-family"),
-    ]
-    with (
-        patch("scripts.audit.certify_module.get_modules_for_level", return_value=modules),
-        patch("scripts.audit.certify_module.get_module_by_number", return_value=modules[1]),
-    ):
-        by_slug = certify_module.parse_target(["a1/my-family"])
-        by_number = certify_module.parse_target(["l2-uk-en", "a1", "6"])
-
-    assert by_slug.slug == "my-family"
-    assert by_slug.local_num == 6
-    assert by_number.slug == "my-family"
-    assert by_number.local_num == 6

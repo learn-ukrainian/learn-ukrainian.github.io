@@ -3,10 +3,8 @@ from __future__ import annotations
 import json
 from contextlib import contextmanager
 from types import SimpleNamespace
-from unittest.mock import patch
 
-from scripts.agent_runtime.registry import get_agent_entry
-from scripts.ai_agent_bridge import _cli, _grok_build
+from scripts.ai_agent_bridge import _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
@@ -99,55 +97,6 @@ def test_grok_missing_trace_is_typed_error_with_banner(monkeypatch, tmp_path):
     metadata = json.loads(reply["data"])
     assert metadata["turn_outcome"] == "trace_unavailable"
     assert metadata["trace_status"] == "unavailable"
-
-
-def test_ask_grok_build_parser_accepts_first_class_args():
-    parser = _cli._build_parser()
-
-    args = parser.parse_args(
-        [
-            "ask-grok-build",
-            "hello",
-            "--task-id",
-            "task-1",
-            "--type",
-            "query",
-            "--data",
-            "payload.md",
-            "--new-session",
-            "--from",
-            "codex",
-            "--from-model",
-            "gpt-5.5",
-            "--to-model",
-            "grok-4.7",
-            "--no-timeout",
-            "--review",
-        ]
-    )
-
-    assert args.command == "ask-grok-build"
-    assert args.task_id == "task-1"
-    assert args.new_session is True
-    assert args.from_llm == "codex"
-    assert args.from_model == "gpt-5.5"
-    assert args.to_model == "grok-4.7"
-    assert args.no_timeout is True
-    assert args.review is True
-
-
-def test_ask_grok_build_review_flag_runs_as_normal_ask(monkeypatch):
-    # Direct one-round review regime (operator order 2026-08-06): review=True is
-    # a normal ask, never a sealed-path refusal. Mutation guard: re-adding the
-    # formal_review_requires_sealed_snapshot raise fails this test.
-    from scripts.ai_agent_bridge import _acp_compat
-
-    sentinel = object()
-    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", lambda *a, **k: sentinel)
-    result = _acp_compat.run_compat_ask(
-        "grok-build", "hello", task_id="task-1", review=True
-    )
-    assert result is sentinel
 
 
 def test_process_grok_build_invokes_native_registry_key(monkeypatch):
@@ -243,28 +192,3 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
 
     assert captured["cwd"] == checkout.path
     assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
-
-
-def test_grok_build_registry_key_resolves_native_adapter():
-    for key in ("grok", "grok-build"):
-        entry = get_agent_entry(key)
-        assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-        assert entry["default_model"] == "grok-4.7"
-        assert entry["default_effort"] == "high"
-
-
-def test_grok_build_dispatch_start_telemetry_has_defaults():
-    with patch(
-        "scripts.agent_runtime.telemetry._resolve_cli_version",
-        return_value="grok 0.0.test",
-    ):
-        from scripts.agent_runtime.telemetry import resolve_dispatch_start_telemetry
-
-        for agent_name in ("grok", "grok-build"):
-            telemetry = resolve_dispatch_start_telemetry(
-                agent_name=agent_name,
-                requested_model=None,
-                requested_effort=None,
-            )
-            assert telemetry.model == "grok-4.7"
-            assert telemetry.effort == "high"

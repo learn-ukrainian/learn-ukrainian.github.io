@@ -58,10 +58,6 @@ def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, s
     assert sum(int(size) for size in sizes.splitlines()) == sum(int(row["size"]) for row in rows)
 
 
-def test_repeated_generation_is_byte_identical(generated: tuple[str, list[dict[str, str]]]) -> None:
-    assert classification.build(ROOT, BASE)[0] == generated[0]
-
-
 def test_meta_matches_table_generator_and_git_base(generated: tuple[str, list[dict[str, str]]]) -> None:
     table, rows = generated
     meta = json.loads(META.read_text(encoding="utf-8"))

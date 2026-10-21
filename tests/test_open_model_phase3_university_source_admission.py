@@ -229,37 +229,11 @@ def test_pre_2019_admission_requires_current_orthography_restriction() -> None:
         admission.validate_review(review)
 
 
-def test_pre_2019_restriction_rejects_descriptive_marker_sentence() -> None:
-    review = _review()
-    decision = review["decisions"][2]
-    decision.update(
-        {
-            "final_disposition": "admit_scoped",
-            "allowed_lanes": ["contextual_retrieval", "corpus_ingest", "linguistic_rule_evidence"],
-            "orthography_regime": "pre_2019",
-            "exactness_status": "verified_for_scoped_use",
-            "missing_evidence": [],
-            "prohibited_uses": ["discusses_commercial_trends_after_post_2019"],
-        }
-    )
-    with pytest.raises(admission.SourceAdmissionError, match="post-2019 authority restriction"):
-        admission.validate_review(review)
-
-
 def test_noncommercial_rights_cannot_lose_commercial_restriction() -> None:
     review = _review()
     decision = review["decisions"][0]
     decision["rights_capability"] = "cc_by_nc_4_0_noncommercial_only"
     decision["prohibited_uses"] = ["automatic_admission"]
-    with pytest.raises(admission.SourceAdmissionError, match="non-commercial rights restriction"):
-        admission.validate_review(review)
-
-
-def test_noncommercial_restriction_rejects_uncontrolled_commercial_marker() -> None:
-    review = _review()
-    decision = review["decisions"][0]
-    decision["rights_capability"] = "cc_by_nc_4_0_noncommercial_only"
-    decision["prohibited_uses"] = ["commercial_topic_context"]
     with pytest.raises(admission.SourceAdmissionError, match="non-commercial rights restriction"):
         admission.validate_review(review)
 

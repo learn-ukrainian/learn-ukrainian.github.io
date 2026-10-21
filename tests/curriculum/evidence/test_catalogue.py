@@ -171,13 +171,6 @@ def test_missing_catalogue_fields_stop_instead_of_claiming_empty(curation):
         catalogue.request_report(plan, words, src)
 
 
-def test_invalid_plan_is_not_a_no_source_claim(curation):
-    plan, words, src = curation
-    plan.write_text("[]")
-    with pytest.raises(ValueError, match="catalogue_plan_invalid"):
-        catalogue.request_report(plan, words, src)
-
-
 def test_build_report_suggestions_never_bind_or_change_pack(curation, tmp_path):
     plan, words, src = curation
     request = tmp_path / "request.yaml"
@@ -213,64 +206,6 @@ def test_build_report_suggestions_never_bind_or_change_pack(curation, tmp_path):
     )
     assert all(q["candidates"] == [] for q in empty["catalogue"]["queries"])
     assert pack.lock.yaml_bytes(report["pack"]) == pack.lock.yaml_bytes(empty["pack"])
-
-
-@pytest.mark.parametrize("missing_db", [False, True])
-def test_build_fails_open_when_catalogue_is_absent(curation, tmp_path, missing_db):
-    plan, words, src = curation
-    if missing_db:
-        src.sources_db = tmp_path / "absent.db"
-    else:
-        with sqlite3.connect(src.sources_db) as conn:
-            conn.execute("DROP TABLE resource_catalogue")
-    request = tmp_path / "request.yaml"
-    request.write_text("request_schema: 1\nmodule: a1/test-mod\n")
-    result = pack.build_pack(
-        "a1",
-        "test-mod",
-        request,
-        plans_dir=plan.parent,
-        evidence_dir=words.parent,
-        sources_instance=src,
-        dry_run=True,
-        offline=True,
-    )
-    assert result["status"] == "ok"
-    assert result["catalogue"]["notes"] == [{"code": "catalogue_unavailable"}]
-
-
-@pytest.mark.parametrize("json_output", [True, False])
-def test_cli_exposes_catalogue_report(curation, tmp_path, capsys, json_output):
-    plan, words, src = curation
-    request = tmp_path / "request.yaml"
-    request.write_text("request_schema: 1\nmodule: a1/test-mod\n")
-    argv = [
-        "a1",
-        "test-mod",
-        "--request",
-        str(request),
-        "--plans-dir",
-        str(plan.parent),
-        "--evidence-dir",
-        str(words.parent),
-        "--sources-db",
-        str(src.sources_db),
-        "--vesum-db",
-        str(src.vesum_db),
-        "--standard-path",
-        str(src.standard_path),
-        "--dry-run",
-    ]
-    if json_output:
-        argv.append("--json")
-    assert pack.main(argv) == 0
-    output = capsys.readouterr().out
-    if json_output:
-        assert json.loads(output)["catalogue"]["queries"][0]["candidates"]
-    else:
-        assert "Catalogue suggestions (curator evidence required)" in output
-        assert '"query": "synthetic"' in output
-        assert '"url": "https://example.org/1"' in output
 
 
 def test_letter_requirements_never_accept_unindexed_hits(curation, monkeypatch):

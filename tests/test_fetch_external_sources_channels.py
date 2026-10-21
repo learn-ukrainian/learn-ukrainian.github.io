@@ -54,23 +54,10 @@ def fake_video_fixture():
     }
 
 
-def test_registry_lookup_by_channel_name(fetcher_module) -> None:
-    channel = fetcher_module.resolve_named_channel("realna-istoria")
-
-    assert channel.key == "realna-istoria"
-    assert channel.output_filename == "realna_istoria.jsonl"
-    assert channel.speaker == "Akím Galímov"
-
-
 def test_playlist_urls_are_not_normalized_to_videos_tab(fetcher_module) -> None:
     playlist_url = "https://www.youtube.com/playlist?list=PLKTBLqy7kMugWc9_dOpw18zaIlhuBVtgz"
 
     assert fetcher_module.normalize_channel_url(playlist_url, videos_tab=True) == playlist_url
-
-
-def test_unknown_channel_name_raises_clear_error(fetcher_module) -> None:
-    with pytest.raises(ValueError, match="Unknown channel-name 'missing-channel'"):
-        fetcher_module.resolve_named_channel("missing-channel")
 
 
 def test_fake_subtitles_record_matches_expected_schema(fetcher_module, fake_video_fixture) -> None:
@@ -246,12 +233,3 @@ def test_title_pattern_discovery_matches_and_dedupes_by_video_id(
     lines = [json.loads(line) for line in output_file.read_text(encoding="utf-8").splitlines() if line.strip()]
     assert [entry["video_id"] for entry in lines] == ["alreadydone1", "newvideo2222"]
     assert lines[-1]["no_captions"] is True
-
-
-def test_status_output_includes_all_registered_channels(fetcher_module) -> None:
-    status = fetcher_module.render_status(fetcher_module.CACHE_DIR)
-
-    for key, channel in fetcher_module.YOUTUBE_CHANNELS.items():
-        assert key in status
-        assert channel.output_filename in status
-        assert f"{channel.output_filename} | present=no" in status

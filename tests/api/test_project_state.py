@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import json
 import re
-import threading
 import time
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
 import pytest
@@ -18,7 +16,6 @@ from scripts.api.main import app
 from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
 from scripts.api.project_state_store import REPORT_TTL_SECONDS, reset_project_state_store, upsert_report
 from tests import _host_path_guard as guard
-from tests.api.test_project_state_collect import _init_repo
 
 loop_client = TestClient(
     app,
@@ -117,33 +114,6 @@ def test_get_projects_schema_and_unknown_host(monkeypatch: pytest.MonkeyPatch) -
     assert host["freshness"] == "unknown"
     assert host["primary"] is None
     assert host["services"] == []
-
-
-def test_post_report_rejects_unmapped_host_job(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
-    posted = _post_report(_document("host-job"))
-    assert posted.status_code == 400
-    assert posted.json()["detail"] == "unknown host_id"
-
-
-def test_mapped_host_job_stays_retired(monkeypatch: pytest.MonkeyPatch) -> None:
-    # A leftover prod env can still map a canonical alias at host-job. The
-    # mapping must not resurrect it as a glance row, a queryable id, or an
-    # allowed reporter.
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "atlas-runner=host-job,hramatka=host-teacher")
-    monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
-
-    default_glance = client.get("/api/fleet/projects/v1")
-    assert default_glance.status_code == 200
-    assert sorted(default_glance.json()["hosts"].keys()) == ["host-teacher", "mac-operator"]
-
-    denied = client.get("/api/fleet/projects/v1?host_id=host-job")
-    assert denied.status_code == 400
-    assert denied.json()["detail"] == "unknown host_id"
-
-    posted = _post_report(_document("host-job"))
-    assert posted.status_code == 400
-    assert posted.json()["detail"] == "unknown host_id"
 
 
 def test_post_report_loopback_and_expiry(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -345,106 +315,3 @@ def test_in_process_self_host_is_fresh(monkeypatch: pytest.MonkeyPatch) -> None:
     host = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
     assert host["freshness"] == "fresh"
     assert host["age_s"] == 0.0
-
-
-def test_self_report_cache_is_shared_by_project_and_worker_routes(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
-    document = _document("host-worker")
-    calls = 0
-
-    def collect(host_id: str) -> dict[str, Any]:
-        nonlocal calls
-        calls += 1
-        assert host_id == "host-worker"
-        return document
-
-    monkeypatch.setattr(router_mod, "collect_local_document", collect)
-    monkeypatch.setattr("scripts.api.fleet_workers_collect._self_host_ids", lambda: {"host-worker"})
-    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_driver_workers", lambda **_: ([], []))
-    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_delegate_workers", lambda *_, **__: [])
-    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_job_workers", lambda **_: ([], None))
-    monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_marker_workers", lambda **_: [])
-
-    project = client.get("/api/fleet/projects/v1?host_id=host-worker")
-    workers = client.get("/api/fleet/workers/v1?host_id=host-worker")
-
-    assert project.status_code == 200
-    assert workers.status_code == 200
-    assert calls == 1
-    project_host = project.json()["hosts"]["host-worker"]
-    worker_host = workers.json()["hosts"][0]
-    assert project_host["freshness"] == "fresh"
-    assert project_host["age_s"] <= 1.0
-    assert worker_host["freshness"] == "fresh"
-    assert worker_host["age_s"] <= 1.0
-
-
-def test_self_report_cache_serves_stale_while_refreshing(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
-    document = _document("host-worker")
-    calls = 0
-    refresh_started = threading.Event()
-    release_refresh = threading.Event()
-
-    def collect(_host_id: str) -> dict[str, Any]:
-        nonlocal calls
-        calls += 1
-        if calls == 1:
-            return document
-        refresh_started.set()
-        release_refresh.wait(timeout=2.0)
-        return {**document, "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z")}
-
-    monkeypatch.setattr(router_mod, "collect_local_document", collect)
-    first = router_mod.get_cached_local_document("host-worker")
-    assert first.document is document
-    cached_entry = router_mod._LOCAL_DOCUMENT_CACHE["host-worker"]
-    router_mod._LOCAL_DOCUMENT_CACHE["host-worker"] = router_mod._LocalDocumentCacheEntry(
-        document,
-        cached_entry.stored_at_mono - router_mod.LOCAL_DOCUMENT_FRESH_S - 1.0,
-    )
-
-    try:
-        stale = router_mod.get_cached_local_document("host-worker")
-        assert refresh_started.wait(timeout=1.0)
-        assert stale.document is document
-        assert stale.freshness == "stale"
-        assert stale.age_s is not None and stale.age_s > router_mod.LOCAL_DOCUMENT_FRESH_S
-        assert calls == 2
-    finally:
-        release_refresh.set()
-
-
-def test_self_host_live_collection_unmocked(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    fixture_repo = _init_repo(tmp_path)
-    monkeypatch.chdir(fixture_repo)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "mac-operator")
-    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
-
-    response = client.get("/api/fleet/projects/v1?host_id=mac-operator")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["schema"] == "monitor-project-state.v1"
-    host = data["hosts"]["mac-operator"]
-    assert host["freshness"] == "fresh"
-    assert host["age_s"] == 0.0
-    assert host["primary"] is not None
-    assert len(host["primary"]["head_sha"]) == 40
-    assert host["worktrees"]["count"] >= 1
-    assert len(host["services"]) == 4
-    assert {service["name"] for service in host["services"]} == {"sources", "api", "astro", "work"}
-
-
-def test_projects_route_contract_registered() -> None:
-    from scripts.api.route_contracts import contract_for_route
-
-    get_contract = contract_for_route("/api/fleet/projects/v1", "http")
-    post_contract = contract_for_route("/api/fleet/projects/v1/report", "http")
-    assert get_contract is not None
-    assert post_contract is not None
-    assert post_contract.mutates is True

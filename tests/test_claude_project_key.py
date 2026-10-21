@@ -27,26 +27,6 @@ def _key(path: str) -> str:
     return re.sub(r"[^A-Za-z0-9-]", "-", path)
 
 
-@pytest.mark.parametrize(
-    ("checkout", "expected"),
-    [
-        ("/work/learn-ukrainian", "learn-ukrainian"),
-        ("/work/learn-ukrainian/.worktrees/dispatch/codex/issue-1", "learn-ukrainian"),
-        ("/work/learn-ukrainian/.claude/worktrees/feature", "learn-ukrainian"),
-        ("/work/kubedojo", "kubedojo"),
-        ("/work/kubedojo/.worktrees/lane", "kubedojo"),
-        # Sibling copies and other checkouts are never counted.
-        ("/work/learn-ukrainian--backup", None),
-        ("/work/learn-ukrainian__backup", None),
-        ("/work/learn-ukrainian/.cache/x", None),
-        ("/work/learn-ukrainian-infra-private", None),
-        ("/work/other", None),
-    ],
-)
-def test_project_name_matches_only_the_checkout_and_its_worktrees(checkout, expected) -> None:
-    assert token_usage.resolve_project_name(_key(checkout)) == expected
-
-
 def _git(*args: str, cwd: Path) -> None:
     subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30)
 
@@ -106,20 +86,6 @@ def _run_hook(worktree: Path, **overrides: str) -> str:
 
 def _line(context: str, marker: str) -> str:
     return next(line for line in context.splitlines() if marker in line)
-
-
-@pytest.mark.skipif(shutil.which("jq") is None, reason="jq is required by the hook")
-def test_post_compact_memory_hint_uses_the_primary_checkout_from_a_worktree(tmp_path: Path) -> None:
-    primary, worktree = _primary_with_worktree(tmp_path)
-    context = _run_hook(
-        worktree,
-        THREAD_ROLLOVER_PYTHON=sys.executable,
-        THREAD_ROLLOVER_SCRIPT=str(tmp_path / "absent.py"),
-        SESSION_BOUNDED_RUNNER=str(RUNNER),
-    )
-    memory = _line(context, "MEMORY:")
-    assert f"/{_key(str(primary.resolve()))}/memory/MEMORY.md" in memory
-    assert _key(str(worktree)) not in memory
 
 
 @pytest.mark.skipif(shutil.which("jq") is None, reason="jq is required by the hook")

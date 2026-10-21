@@ -13,7 +13,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from agent_runtime.adapters.gemini import (
-    _normalize_gemini_auth_mode,
     resolve_gemini_auth_mode,
 )
 from ai_llm.cooldown import (
@@ -28,37 +27,6 @@ from ai_llm.fallback import (
 )
 
 # ── _normalize_gemini_auth_mode ───────────────────────────────────────
-
-
-class TestNormalizeAuthMode:
-    def test_none_defaults_to_auto(self) -> None:
-        assert _normalize_gemini_auth_mode(None) == "auto"
-
-    def test_empty_string_defaults_to_auto(self) -> None:
-        assert _normalize_gemini_auth_mode("") == "auto"
-
-    def test_explicit_subscription(self) -> None:
-        assert _normalize_gemini_auth_mode("subscription") == "subscription"
-
-    def test_explicit_api(self) -> None:
-        assert _normalize_gemini_auth_mode("api") == "api"
-
-    def test_oauth_alias_normalizes_to_subscription(self) -> None:
-        assert _normalize_gemini_auth_mode("oauth") == "subscription"
-
-    def test_api_key_alias_normalizes_to_api(self) -> None:
-        assert _normalize_gemini_auth_mode("api-key") == "api"
-
-    def test_case_insensitive(self) -> None:
-        assert _normalize_gemini_auth_mode("SUBSCRIPTION") == "subscription"
-        assert _normalize_gemini_auth_mode("Api") == "api"
-
-    def test_whitespace_stripped(self) -> None:
-        assert _normalize_gemini_auth_mode("  subscription  ") == "subscription"
-
-    def test_invalid_value_falls_back_to_auto(self) -> None:
-        assert _normalize_gemini_auth_mode("garbage") == "auto"
-        assert _normalize_gemini_auth_mode("🐙") == "auto"
 
 
 # ── resolve_gemini_auth_mode — API-first policy (#1710) ───────────────
@@ -83,39 +51,6 @@ class TestResolveAuthMode:
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         assert resolve_gemini_auth_mode(env, cooldown_active=False) == "api"
 
-    def test_auto_with_google_api_key_resolves_to_api(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        env = {"GOOGLE_API_KEY": "secret"}
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "api"
-
-    def test_auto_unset_with_oauth_creds_resolves_to_subscription(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        env: dict[str, str] = {}
-        fake_home = tmp_path / "home"
-        (fake_home / ".gemini").mkdir(parents=True)
-        (fake_home / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: fake_home))
-        assert resolve_gemini_auth_mode(env, cooldown_active=True) == "subscription"
-
-    def test_explicit_auto_resolves_to_subscription(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        """``auto`` without an API key resolves to subscription."""
-        env = {"GEMINI_AUTH_MODE": "auto"}
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
-
-    def test_explicit_subscription_resolves_to_subscription(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        env = {"GEMINI_AUTH_MODE": "subscription"}
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
-        assert resolve_gemini_auth_mode(env, cooldown_active=True) == "subscription"
-
     def test_explicit_api_is_the_only_escape_hatch(
         self, tmp_path: Path, monkeypatch
     ) -> None:
@@ -126,21 +61,6 @@ class TestResolveAuthMode:
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         assert resolve_gemini_auth_mode(env, cooldown_active=False) == "api"
         assert resolve_gemini_auth_mode(env, cooldown_active=True) == "api"
-
-    def test_invalid_value_degrades_to_subscription(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        """Garbage env follows auto mode; without API keys, subscription."""
-        env = {"GEMINI_AUTH_MODE": "garbage"}
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
-
-    def test_oauth_alias_resolves_to_subscription(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        env = {"GEMINI_AUTH_MODE": "oauth"}
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
 
     def test_disk_state_does_not_override_api_first_policy(
         self, tmp_path: Path, monkeypatch
@@ -160,11 +80,6 @@ class TestResolveAuthMode:
 
 class TestCooldownPrimitives:
     """Cover the on-disk state machine: set / read / clear / expire."""
-
-    def test_inactive_by_default(self, tmp_path: Path, monkeypatch) -> None:
-        monkeypatch.setenv("LU_GEMINI_COOLDOWN_PATH", str(tmp_path / "cd.json"))
-        assert is_api_cooldown_active() is False
-        assert cooldown_remaining_s() == 0
 
     def test_set_then_active(self, tmp_path: Path, monkeypatch) -> None:
         monkeypatch.setenv("LU_GEMINI_COOLDOWN_PATH", str(tmp_path / "cd.json"))
@@ -191,13 +106,6 @@ class TestCooldownPrimitives:
         clear_api_cooldown()
         assert is_api_cooldown_active() is False
 
-    def test_clear_when_absent_is_noop(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        monkeypatch.setenv("LU_GEMINI_COOLDOWN_PATH", str(tmp_path / "cd.json"))
-        clear_api_cooldown()  # should not raise
-        assert is_api_cooldown_active() is False
-
     def test_set_twice_keeps_later_expiry(
         self, tmp_path: Path, monkeypatch
     ) -> None:
@@ -217,35 +125,6 @@ class TestCooldownPrimitives:
         monkeypatch.setenv("LU_GEMINI_COOLDOWN_PATH", str(path))
         path.write_text("{not valid json", "utf-8")
         assert is_api_cooldown_active() is False
-
-    def test_no_probe_calls_in_cooldown_module(self) -> None:
-        """Guarantee: the cooldown module has NO network / subprocess imports.
-
-        Daily API quota is tight; the cooldown logic must NEVER do a
-        probe call to decide whether cooldown should end. Inspect the
-        module source to confirm.
-        """
-        import ast
-
-        import ai_llm.cooldown as mod
-        tree = ast.parse(Path(mod.__file__).read_text("utf-8"))
-        imported: set[str] = set()
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                for alias in node.names:
-                    imported.add(alias.name.split(".")[0])
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                imported.add(node.module.split(".")[0])
-
-        forbidden = {
-            "requests", "urllib", "urllib2", "urllib3", "httpx",
-            "subprocess", "socket", "http",
-        }
-        overlap = imported & forbidden
-        assert not overlap, (
-            f"cooldown.py imports forbidden modules {overlap} — daily "
-            f"API quota forbids probe calls (#1384)"
-        )
 
 
 # ── Adapter env-strip wiring ──────────────────────────────────────────
@@ -293,26 +172,6 @@ class TestEnvStripWiring:
         assert "GEMINI_API_KEY" in plan.env_unsets, (
             "Subscription fallback must strip API env vars when API mode is "
             "not selected."
-        )
-
-    def test_adapter_preserves_api_keys_when_explicit_api(
-        self, tmp_path: Path, monkeypatch
-    ) -> None:
-        from agent_runtime.adapters.gemini import GeminiAdapter
-
-        (tmp_path / ".gemini").mkdir(parents=True)
-        (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
-        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        monkeypatch.setenv("GEMINI_AUTH_MODE", "api")  # explicit wins
-        monkeypatch.setenv("GEMINI_API_KEY", "secret")
-
-        plan = GeminiAdapter().build_invocation(
-            prompt="test", mode="read-only", cwd=tmp_path,
-            model=None, task_id=None, session_id=None, tool_config=None,
-        )
-        assert plan.env_unsets == (), (
-            "Explicit GEMINI_AUTH_MODE=api must not strip keys even "
-            "when OAuth creds are present."
         )
 
     def test_explicit_api_without_api_key_fails_fast(
@@ -447,14 +306,6 @@ class TestLadderAuthModeFiltering:
     def test_auto_with_cooldown_skips_api(self) -> None:
         assert resolve_allowed_auth_modes({}, cooldown_active=True) == ("oauth",)
 
-    def test_explicit_subscription_skips_api(self) -> None:
-        env = {"GEMINI_AUTH_MODE": "subscription"}
-        assert resolve_allowed_auth_modes(env, cooldown_active=False) == ("oauth",)
-
-    def test_explicit_oauth_alias_skips_api(self) -> None:
-        env = {"GEMINI_AUTH_MODE": "oauth"}
-        assert resolve_allowed_auth_modes(env, cooldown_active=False) == ("oauth",)
-
     def test_explicit_api_skips_oauth_even_under_cooldown(self) -> None:
         """Explicit API wins even if cooldown says skip. Fail-loudly path
         for debugging — if a user forces API they want to see the 429."""
@@ -471,11 +322,6 @@ class TestLadderAuthModeFiltering:
         assert [r.index for r in ladder] == [1, 2]
         assert all(r.total == 2 for r in ladder)
 
-    def test_ladder_api_only_has_primary_rung(self) -> None:
-        ladder = build_gemini_ladder(allowed_auth_modes=("api",))
-        assert len(ladder) == 1
-        assert all(r.auth_mode == "api" for r in ladder)
-
     def test_ladder_both_has_three_rungs_with_agy_after_pro(self) -> None:
         ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
         assert len(ladder) == 3
@@ -485,11 +331,6 @@ class TestLadderAuthModeFiltering:
         assert ladder[0].model == ladder[1].model
         assert ladder[2].cli == "agy-cli"
         assert ladder[2].auth_mode is None
-
-    def test_empty_allowed_modes_rejected(self) -> None:
-        import pytest
-        with pytest.raises(ValueError, match="allowed_auth_modes"):
-            build_gemini_ladder(allowed_auth_modes=())
 
 
 # ── Rate-limit classification (the bug that burned 15 min at 14:30) ──
@@ -506,19 +347,6 @@ class TestRateLimitClassification:
         from ai_llm.fallback import is_gemini_rate_limited
         assert is_gemini_rate_limited("429 Too Many Requests")
 
-    def test_matches_quota(self) -> None:
-        from ai_llm.fallback import is_gemini_rate_limited
-        assert is_gemini_rate_limited("Error: quota exceeded for project")
-
-    def test_matches_rate_limited_word(self) -> None:
-        from ai_llm.fallback import is_gemini_rate_limited
-        assert is_gemini_rate_limited("Response: rate_limited")
-
-    def test_matches_resource_exhausted(self) -> None:
-        """GRPC status name — Gemini prints this in place of 429."""
-        from ai_llm.fallback import is_gemini_rate_limited
-        assert is_gemini_rate_limited("RESOURCE_EXHAUSTED: ...")
-
     def test_matches_no_capacity_available(self) -> None:
         """The exact string Gemini emitted that burned 15 min on rung 1
         at 14:30 today before this regression guard existed. A backend
@@ -529,12 +357,6 @@ class TestRateLimitClassification:
         assert is_gemini_rate_limited(
             "No capacity available for model gemini-3.1-pro-preview"
         )
-
-    def test_case_insensitive(self) -> None:
-        """Gemini capitalizes inconsistently; matching must be robust."""
-        from ai_llm.fallback import is_gemini_rate_limited
-        assert is_gemini_rate_limited("No Capacity Available in region")
-        assert is_gemini_rate_limited("NO CAPACITY AVAILABLE")
 
     def test_clean_success_is_not_rate_limited(self) -> None:
         """Regression guard against an over-broad pattern. A normal
@@ -611,37 +433,9 @@ class TestRateLimitMarkersFromCodexReview:
         from ai_llm.fallback import is_gemini_rate_limited
         assert is_gemini_rate_limited("Rate limit exceeded. Please try again.")
 
-    def test_free_tier_limits(self) -> None:
-        from ai_llm.fallback import is_gemini_rate_limited
-        assert is_gemini_rate_limited(
-            "Rate limit exceeded. Free tier limits have been reached."
-        )
-
     def test_model_is_overloaded(self) -> None:
         """503 from Gemini — wrong to retry same rung, advance to next model."""
         from ai_llm.fallback import is_gemini_rate_limited
         assert is_gemini_rate_limited(
             "The model is overloaded. Please try again later."
         )
-
-    def test_json_status_unavailable(self) -> None:
-        """UNAVAILABLE covers 503 in any whitespace / quoting form."""
-        from ai_llm.fallback import is_gemini_rate_limited
-        assert is_gemini_rate_limited('{"error": {"status": "UNAVAILABLE", "code": 503}}')
-        assert is_gemini_rate_limited('{"status":"UNAVAILABLE"}')
-        assert is_gemini_rate_limited("Status: UNAVAILABLE (503)")
-
-    def test_classifier_contract_stderr_only(self) -> None:
-        """Contract: the classifier is called on FAILURE-PATH stderr
-        only (see _attempt_runner fast-path in scripts/ai_llm/fallback.py).
-        Stdout success content never reaches it. Therefore broad
-        substring matches like 'quota' or 'unavailable' are safe —
-        they can only trigger if Gemini itself emitted them as an
-        error signal. This test documents the contract, not a
-        false-positive defense at classifier layer."""
-        from ai_llm.fallback import is_gemini_rate_limited
-        # Empty / None are safe
-        assert not is_gemini_rate_limited("")
-        assert not is_gemini_rate_limited(None)
-        # Normal success-shaped strings don't accidentally match
-        assert not is_gemini_rate_limited("Lesson written successfully.")

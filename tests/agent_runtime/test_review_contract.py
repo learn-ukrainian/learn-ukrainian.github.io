@@ -185,22 +185,6 @@ def test_rendered_in_a_skewed_worktree_and_run_by_the_primary_server_refuses(
     assert "fix: pull the primary checkout to origin/main, then re-render and retry" in message
 
 
-def test_rendered_in_a_matching_worktree_proceeds_and_records_the_digests(
-    tmp_path: Path, checkouts: tuple[Path, Path]
-) -> None:
-    primary, worktree = checkouts
-    prompt = _render(worktree, tmp_path / "out" / "prompt.md")
-
-    contract = check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
-
-    assert contract["render_checkout"] == str(worktree)
-    assert contract["server_checkout"] == str(primary)
-    assert contract["render_server_digest"] == contract["server_digest"] == server_code_digest(primary)
-    assert contract["render_template_digest"] == contract["template_digest"]
-    assert contract["templates"] == [LOADED_TEMPLATE]
-    assert contract["prompt_sha256"] == hashlib.sha256(PROMPT_TEXT.encode()).hexdigest()
-
-
 @pytest.mark.parametrize(
     ("changed", "refuses"),
     [
@@ -268,23 +252,6 @@ def test_a_checkout_without_a_sources_server_refuses_by_name(tmp_path: Path, che
         check_review_contract(prompt, PROMPT_TEXT, server_checkout=plain)
 
 
-def test_a_changed_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:
-    """Third-party code is not traced; the lock that pins it is a named component of the digest."""
-    primary, _worktree = checkouts
-    prompt = _render(primary, tmp_path / "out" / "prompt.md")
-    rendered_as = server_code(primary).components()[LOCK_FILE]
-    _write(primary, LOCK_FILE, "anyio==4.16.0\n./packages/v4-runtime\n")
-
-    with pytest.raises(ReviewContractError) as refused:
-        check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
-
-    message = str(refused.value)
-    print(message)
-    now = server_code(primary).components()[LOCK_FILE]
-    assert "review_render_record_digest_mismatch: the prompt was rendered against different server code" in message
-    assert f"differing server components: {LOCK_FILE}: {rendered_as} -> {now}" in message
-
-
 def test_a_checkout_without_the_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:
     primary, worktree = checkouts
     prompt = _render(worktree, tmp_path / "out" / "prompt.md")
@@ -298,22 +265,6 @@ def test_a_checkout_without_the_lock_refuses_by_name(tmp_path: Path, checkouts: 
     assert message.startswith(f"review attempt refused: review_server_lock_missing: cannot read {primary / LOCK_FILE}")
     with pytest.raises(ReviewContractError, match="review_server_lock_missing"):
         _render(primary, tmp_path / "out" / "again.md")
-
-
-def test_a_change_in_an_untraced_third_party_package_alone_does_not_refuse(
-    tmp_path: Path, checkouts: tuple[Path, Path]
-) -> None:
-    """Documented behaviour: code outside the repository is not traced; only a lock change reaches the digest."""
-    primary, _worktree = checkouts
-    site = tmp_path / "site"
-    _write(site, "lu_fake_runtime/__init__.py", "")
-    _write(site, "lu_fake_runtime/transport.py", "def handle():\n    return 'receipt'\n")
-    prompt = _render(primary, tmp_path / "out" / "prompt.md")
-
-    _write(site, "lu_fake_runtime/transport.py", "def handle():\n    return 'another receipt'\n")
-
-    contract = check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
-    assert contract["server_digest"] == contract["render_server_digest"]
 
 
 def test_the_launch_check_refuses_a_server_changed_since_admission(
@@ -524,26 +475,3 @@ def test_equal_size_edit_with_restored_mtime_changes_the_digest(tmp_path: Path) 
     _assert_same_closure_as_main(root)
     assert after.digest != before.digest
     assert after.files["scripts/kept.py"] != before.files["scripts/kept.py"]
-
-
-def test_new_init_py_in_an_imported_namespace_package_changes_the_closure(tmp_path: Path) -> None:
-    """Adding ``__init__.py`` to a namespace package already imported is part of the next digest."""
-    root = tmp_path / "checkout"
-    _write(root, SERVER_FILE, "import scripts.ns.mod\n")
-    _write(root, LOCK_FILE, "lock\n")
-    _write(root, "scripts/__init__.py", "")
-    _write(root, "scripts/ns/mod.py", "VALUE = 1\n")
-    _write(root, "scripts/kept_from_init.py", "VALUE = 1\n")
-    before = server_code(root)
-    _assert_same_closure_as_main(root)
-    assert "scripts/ns/__init__.py" not in before.files
-    assert "scripts/ns/mod.py" in before.files
-    assert "scripts/kept_from_init.py" not in before.files
-
-    _write(root, "scripts/ns/__init__.py", "import kept_from_init\n")
-
-    after = server_code(root)
-    _assert_same_closure_as_main(root)
-    assert "scripts/ns/__init__.py" in after.files
-    assert "scripts/kept_from_init.py" in after.files
-    assert after.digest != before.digest

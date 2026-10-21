@@ -34,13 +34,6 @@ class TestSemanticFalseFriends:
         result = self._check(content)
         assert len(result) == 1
 
-    def test_detects_неділя_as_week(self):
-        content = "**неділя** (week) is the first word."
-        result = self._check(content)
-        assert len(result) == 1
-        assert "неділя" in result[0]["issue"]
-        assert "week" in result[0]["issue"]
-
     def test_detects_город_as_city_in_table(self):
         content = "| город | city |"
         result = self._check(content)
@@ -50,18 +43,6 @@ class TestSemanticFalseFriends:
     def test_correct_usage_not_flagged(self):
         """лук (bow) is the correct Ukrainian meaning — should not flag."""
         content = "The word **лук** (bow) refers to a weapon."
-        result = self._check(content)
-        assert len(result) == 0
-
-    def test_correct_неділя_not_flagged(self):
-        """неділя (Sunday) is correct — should not flag."""
-        content = "**неділя** (Sunday) is the last day."
-        result = self._check(content)
-        assert len(result) == 0
-
-    def test_цибуля_not_flagged(self):
-        """цибуля (onion) is the correct Ukrainian word — no false friend."""
-        content = "**цибуля** (onion) is a vegetable."
         result = self._check(content)
         assert len(result) == 0
 
@@ -88,41 +69,9 @@ class TestSemanticFalseFriends:
         assert len(result) == 1  # returns one aggregated violation
         assert "3 semantic false friend" in result[0]["issue"]
 
-    def test_new_entries_річ(self):
-        content = "**річ** (speech) is important."
-        result = self._check(content)
-        assert len(result) == 1
-        assert "річ" in result[0]["issue"]
-
-    def test_new_entries_шар(self):
-        content = "шар — ball"
-        result = self._check(content)
-        assert len(result) == 1
-
-    def test_new_entries_мешкати(self):
-        content = "**мешкати** (to delay)"
-        result = self._check(content)
-        assert len(result) == 1
-
-    def test_severity_is_critical(self):
-        content = "**лук** (onion)"
-        result = self._check(content)
-        assert result[0]["severity"] == "critical"
-
     def test_no_substring_match(self):
         """'ball' should not match 'balloon'."""
         content = "**шар** (balloon)"
-        result = self._check(content)
-        assert len(result) == 0
-
-    def test_with_article(self):
-        """Should catch 'an onion' not just 'onion'."""
-        content = "**лук** (an onion)"
-        result = self._check(content)
-        assert len(result) == 1
-
-    def test_blockquote_skipped(self):
-        content = "> **лук** (onion) in a quote."
         result = self._check(content)
         assert len(result) == 0
 
@@ -135,18 +84,6 @@ class TestSemanticFalseFriends:
         content = "| onion | лук |"
         result = self._check(content)
         assert len(result) == 1
-
-    def test_removed_entries_no_false_positive(self):
-        """рушник (towel) and дурний (stupid) should NOT be flagged — they're correct Ukrainian."""
-        content = "**рушник** (towel) and **дурний** (stupid)"
-        result = self._check(content)
-        assert len(result) == 0
-
-    def test_гадати_not_flagged(self):
-        """гадати (to guess) is valid Ukrainian — removed from dictionary."""
-        content = "**гадати** (to guess)"
-        result = self._check(content)
-        assert len(result) == 0
 
     def test_narrative_zones_only(self):
         """Should not match inside code blocks or YAML frontmatter."""

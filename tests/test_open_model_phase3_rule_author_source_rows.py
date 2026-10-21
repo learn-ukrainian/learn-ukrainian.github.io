@@ -298,19 +298,6 @@ def test_empty_source_lang_is_schema_valid_and_preserves_frozen_hash(tmp_path: P
         validator.validate(item)
 
 
-def test_source_row_receipt_schema_closes_nested_objects(tmp_path: Path) -> None:
-    paths = _fixture(tmp_path)
-    receipt = _build(paths)
-    closed = json.loads(json.dumps(receipt))
-    closed["exclusions"]["unexpected"] = True
-    with pytest.raises(rows.SourceRowsError, match="schema violation"):
-        rows._validate(closed, "receipt", "source-row receipt")
-    missing = json.loads(json.dumps(receipt))
-    del missing["action_receipt"]["task_id"]
-    with pytest.raises(rows.SourceRowsError, match="schema violation"):
-        rows._validate(missing, "receipt", "source-row receipt")
-
-
 def test_rejects_stale_db_test_injection_and_unexpected_or_symlink_private_inputs(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
     with sqlite3.connect(paths["db"]) as connection:

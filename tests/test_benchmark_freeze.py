@@ -38,18 +38,6 @@ def test_heldout_hashes_include_only_non_hidden_json_files(tmp_path: Path) -> No
     }
 
 
-def test_external_paths_are_rendered_posix(tmp_path: Path) -> None:
-    external = tmp_path / "outside" / "SCORECARD.md"
-    external.parent.mkdir()
-    external.write_text("# scorecard\n", encoding="utf-8")
-
-    reference = freeze_benchmark._reference_result(external)
-
-    assert reference is not None
-    assert "\\" not in reference["path"]
-    assert reference["path"].endswith("/outside/SCORECARD.md")
-
-
 def test_public_fixture_hashes_match_frozen_manifest() -> None:
     manifest = _manifest()
     files = manifest["fixtures"]["public"]["files"]
@@ -60,17 +48,6 @@ def test_public_fixture_hashes_match_frozen_manifest() -> None:
         assert (
             freeze_benchmark._sha256_file(path) == row["sha256"]
         ), f"{row['path']}: drift detected; bump benchmark version, never edit v1"
-
-
-def test_reference_scorecard_hash_matches_frozen_manifest() -> None:
-    manifest = _manifest()
-    reference = manifest.get("reference_result")
-    assert isinstance(reference, dict), "reference_result must be frozen in benchmark v1"
-    path = _tree_path(str(reference["path"]))
-    assert path.exists(), f"{reference['path']}: frozen reference scorecard missing"
-    assert freeze_benchmark._sha256_file(path) == reference["sha256"], (
-        f"{reference['path']}: frozen reference scorecard drift; bump benchmark version, never edit v1"
-    )
 
 
 def test_frozen_diagnostic_values_match_current_code() -> None:

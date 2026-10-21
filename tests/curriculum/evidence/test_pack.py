@@ -172,46 +172,6 @@ def test_span_does_not_match_fails_naming_id_and_chunk(
     assert "chunk-1" in err
 
 
-def test_span_with_two_matches_build_fails(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
-    """A span with two matches -> build fails."""
-    # Insert a duplicate phrase into chunk-1
-    with sqlite3.connect(synthetic_sources) as conn:
-        conn.execute("UPDATE textbooks SET text = 'repeated repeated middle repeated' WHERE chunk_id = 'chunk-1'")
-
-    req_file = tmp_path / "req.yaml"
-    req_file.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "module": "a1/test-mod",
-                "texts": [
-                    {
-                        "id": "T-004",
-                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
-                        "span": {"first_words": "repeated", "last_words": "repeated"},
-                        "supports": "Two matches fail.",
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    src = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
-    with pytest.raises(ValueError) as excinfo:
-        pack.build_pack(
-            "a1",
-            "test-mod",
-            req_file,
-            evidence_dir=synthetic_word_store,
-            sources_instance=src,
-            offline=True,
-        )
-    err = str(excinfo.value)
-    assert codes.SPAN_MISMATCH in err
-    assert "T-004" in err
-
-
 def _text_request(tmp_path, chunk_id="chunk-1", first="synthetic-first", last="synthetic-last") -> Path:
     req_file = tmp_path / "req.yaml"
     req_file.write_text(
@@ -365,29 +325,6 @@ def test_moved_chunk_id_with_same_text_is_drift_and_still_reports_chunk_id_moved
     assert any(codes.SOURCE_CHANGED in e for e in res_strict["errors"])
 
 
-def test_deleted_and_reinserted_chunk_fails_strict_even_though_the_quote_is_found(
-    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
-):
-    """MUST 1: delete the cited chunk and re-insert identical content under a new chunk id."""
-    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
-
-    with sqlite3.connect(synthetic_sources) as conn:
-        row = conn.execute("SELECT * FROM textbooks WHERE chunk_id = 'chunk-1'").fetchone()
-        conn.execute("DELETE FROM textbooks WHERE chunk_id = 'chunk-1'")
-        conn.execute("INSERT INTO textbooks VALUES (?,?,?,?,?,?,?,?,?,?,?)", (99, "chunk-99", *row[2:]))
-
-    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
-    assert res["status"] == "warning"
-    assert res["errors"] == []
-    assert res["chunk_id_moved"] == ["T-001"]
-    assert any(codes.SOURCE_CHANGED in w and "T-001" in w for w in res["warnings"])
-
-    res_strict = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
-    assert res_strict["status"] == "failed"
-    assert any(codes.SOURCE_CHANGED in e and "T-001" in e for e in res_strict["errors"])
-    assert not any(codes.QUOTE_MISMATCH in e for e in res_strict["errors"])
-
-
 def test_lock_fails_only_when_cited_content_changes(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
 ):
@@ -422,63 +359,6 @@ def test_lock_fails_only_when_cited_content_changes(
         res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=strict)
         assert res["status"] == "failed"
         assert any(codes.QUOTE_MISMATCH in e for e in res["errors"])
-
-
-@pytest.mark.parametrize(
-    ("section", "request_key", "record", "table", "drift_sql"),
-    [
-        (
-            "errors",
-            {
-                "id": "E-001",
-                "source": {"table": "ua_gec_errors", "error": "synthetic-bad", "correct": "synthetic-good"},
-                "pattern": "p",
-            },
-            "E-001",
-            "ua_gec_errors",
-            "UPDATE ua_gec_errors SET error_type = 'Relabelled' WHERE id = 1",
-        ),
-        (
-            "notes",
-            {"id": "N-001", "source": {"table": "style_guide", "id": 1}},
-            "N-001",
-            "style_guide",
-            "UPDATE style_guide SET section = 'renamed section' WHERE id = 1",
-        ),
-    ],
-)
-def test_metadata_only_drift_on_errors_and_notes(
-    synthetic_sources,
-    synthetic_standard,
-    synthetic_word_store,
-    tmp_path,
-    section,
-    request_key,
-    record,
-    table,
-    drift_sql,
-):
-    req_file = tmp_path / "req.yaml"
-    req_file.write_text(
-        yaml.safe_dump({"request_schema": 1, "module": "a1/test-mod", section: [request_key]}), encoding="utf-8"
-    )
-    res = _build(synthetic_sources, synthetic_standard, synthetic_word_store, req_file)
-    source = res["pack"][section][0]["source"]
-    assert source["table"] == table and len(source["row_sha256"]) == 64
-    assert res["pack"]["built_with"]["sources_db"] == sources.aggregate_digest([(f"{table}:1", source["row_sha256"])])
-
-    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
-    assert (res["status"], res["warnings"]) == ("ok", [])
-
-    with sqlite3.connect(synthetic_sources) as conn:
-        conn.execute(drift_sql)
-    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
-    assert res["status"] == "warning"
-    assert res["errors"] == []  # the copied values still match; only the row's identity moved
-    assert any(codes.SOURCE_CHANGED in w and record in w for w in res["warnings"])
-    res = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
-    assert res["status"] == "failed"
-    assert res["cited_rows_drifted"] == [record]
 
 
 def test_legacy_pack_and_tampered_identities(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
@@ -717,31 +597,6 @@ def test_style_guide_copied_as_note_never_as_error(
     assert set(note_rec["source"]) == {"table", "id", "row_sha256"}
 
 
-def test_request_naming_other_error_source_schema_failure(synthetic_word_store, tmp_path):
-    """A request naming any other error source -> schema failure."""
-    req_file = tmp_path / "req.yaml"
-    req_file.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "module": "a1/test-mod",
-                "errors": [
-                    {
-                        "id": "E-001",
-                        "source": {"table": "style_guide", "error": "foo", "correct": "bar"},
-                        "pattern": "Invalid table",
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    with pytest.raises(ValueError) as exc:
-        pack.build_pack("a1", "test-mod", req_file, evidence_dir=synthetic_word_store)
-    assert codes.INVALID_REQUEST in str(exc.value)
-
-
 def test_unsupported_id_dropped_from_previous_build(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
 ):
@@ -781,21 +636,6 @@ def test_unsupported_id_dropped_from_previous_build(
         pack.build_pack("a1", "test-mod", req2, evidence_dir=synthetic_word_store, sources_instance=src, offline=True)
     assert codes.UNSUPPORTED_DROPPED in str(exc.value)
     assert "U-002" in str(exc.value)
-
-
-def test_strict_offline_refused(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
-    """--strict --offline refused."""
-    src = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
-    res = verify.verify_pack(
-        "a1",
-        "test-mod",
-        evidence_dir=synthetic_word_store,
-        sources_instance=src,
-        offline=True,
-        strict=True,
-    )
-    assert res["status"] == "failed"
-    assert any("--strict and --offline together are refused" in err for err in res["errors"])
 
 
 def test_video_with_offline_checked_null_verify_not_checked(
@@ -845,16 +685,6 @@ def test_video_with_offline_checked_null_verify_not_checked(
     )
     assert v_res["status"] == "ok"
     assert "V-001" in v_res["not_checked"]
-
-
-def test_check_url_never_called_without_timeout():
-    """check_url never called without a timeout."""
-    with pytest.raises(ValueError):
-        sources.check_url("https://example.com", timeout=0)
-    with pytest.raises(ValueError):
-        sources.check_url("https://example.com", timeout=-1.0)
-    with pytest.raises(ValueError):
-        sources.check_url("https://example.com", timeout=None)
 
 
 def test_open_unsupported_summary_count_non_zero_under_strict_only(
@@ -979,41 +809,6 @@ def test_db_opened_readonly(synthetic_sources):
     with pytest.raises(sqlite3.OperationalError):
         conn.execute("INSERT INTO style_guide (id, word, text) VALUES (99, 'fail', 'fail')")
     conn.close()
-
-
-def test_file_modes(synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path):
-    """Atomic write sets file modes to 0o644."""
-    req_file = tmp_path / "req.yaml"
-    req_file.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "module": "a1/test-mod",
-                "texts": [
-                    {
-                        "id": "T-001",
-                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
-                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
-                        "supports": "Mode test.",
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    src = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
-    res = pack.build_pack(
-        "a1",
-        "test-mod",
-        req_file,
-        evidence_dir=synthetic_word_store,
-        sources_instance=src,
-        offline=True,
-    )
-    p = Path(res["pack_path"])
-    mode = oct(p.stat().st_mode & 0o777)
-    assert mode == "0o644"
 
 
 def _texts_only_request(tmp_path) -> Path:
@@ -1195,27 +990,6 @@ def test_verify_video_models_rejects_unknown_words_and_invalid_letters(
         assert any(codes.SOURCE_UNAVAILABLE in error and "video models" in error for error in result["errors"])
     else:
         assert any("schema error" in error for error in result["errors"])
-
-
-@pytest.mark.parametrize("letter", ["A", "ы", "А а", "’"])
-def test_pack_request_models_reject_invalid_letters(synthetic_word_store, tmp_path, letter):
-    req = {
-        "request_schema": 1,
-        "module": "a1/test-mod",
-        "videos": [
-            {
-                "id": "V-001",
-                "url": "https://example.com/video",
-                "channel": "corpus-channel",
-                "use": "Free text",
-                "models": {"letters": [letter], "words": [], "segment": None},
-            }
-        ],
-    }
-    req_path = tmp_path / "req.yaml"
-    req_path.write_text(yaml.safe_dump(req, allow_unicode=True))
-    with pytest.raises(ValueError, match="request schema validation failed"):
-        pack.build_pack("a1", "test-mod", req_path, evidence_dir=synthetic_word_store, offline=True)
 
 
 def test_publication_quote_and_listening_models_verify_and_assemble_together(

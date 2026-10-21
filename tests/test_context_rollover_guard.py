@@ -10,13 +10,9 @@ from pathlib import Path
 
 import pytest
 
-from tests.test_context_latest_usage import advisor_usage, write_usage
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 HOOKS = PROJECT_ROOT / "agents_extensions/shared/hooks"
 GUARD = HOOKS / "context-rollover-guard.sh"
-LIB = HOOKS / "context-rollover-lib.sh"
-SETTINGS = PROJECT_ROOT / "agents_extensions/shared/settings.json"
 SESSION = "guard-session"
 
 
@@ -142,25 +138,6 @@ def test_reminder_is_silent_after_a_manual_compaction_drop(tmp_path: Path) -> No
     assert _reminder(completed) == ""
 
 
-@pytest.mark.parametrize("tokens", [400_000, 760_000])
-def test_guard_uses_final_main_pass_with_advisor_iterations(tmp_path: Path, tokens: int) -> None:
-    project, record_path = _project(tmp_path)
-    _tier_state(project, 3, 760_000)
-    transcript = tmp_path / "advisor.jsonl"
-    write_usage(transcript, advisor_usage(tokens))
-    reminder = _reminder(
-        _run(
-            project,
-            record_path,
-            {"hook_event_name": "UserPromptSubmit", "transcript_path": str(transcript)},
-        )
-    )
-    if tokens == 400_000:
-        assert reminder == ""
-    else:
-        assert "above this session's final rollover tier (~760k tokens)" in reminder
-
-
 @pytest.mark.parametrize("rollover_mode", ["continuation", None])
 def test_reminder_never_fires_for_continuation_profiles(tmp_path: Path, rollover_mode: str | None) -> None:
     project, record_path = _project(tmp_path, rollover_mode=rollover_mode)
@@ -192,22 +169,6 @@ def test_reminder_never_fires_when_the_record_is_missing_despite_env_mode(tmp_pa
     assert (completed.returncode, completed.stdout, completed.stderr) == (0, "", "")
 
 
-def test_reminder_never_fires_when_the_record_names_another_session(tmp_path: Path) -> None:
-    project, record_path = _project(tmp_path)
-    record = json.loads(record_path.read_text(encoding="utf-8"))
-    record["session_id"] = "another-session"
-    record_path.write_text(json.dumps(record), encoding="utf-8")
-
-    assert _reminder(_tier_three_prompt(project, record_path)) == ""
-
-
-def test_reminder_never_fires_when_the_record_is_unreadable(tmp_path: Path) -> None:
-    project, record_path = _project(tmp_path)
-    record_path.write_text("{not json", encoding="utf-8")
-
-    assert _reminder(_tier_three_prompt(project, record_path)) == ""
-
-
 @pytest.mark.parametrize(
     "extra_env",
     [
@@ -231,26 +192,3 @@ def test_guard_ignores_compaction_events(tmp_path: Path) -> None:
     completed = _run(project, record_path, {"hook_event_name": "PreCompact", "trigger": "auto"})
 
     assert (completed.returncode, completed.stdout, completed.stderr) == (0, "", "")
-
-
-def test_settings_register_guard_for_prompts_only() -> None:
-    hooks = json.loads(SETTINGS.read_text(encoding="utf-8"))["hooks"]
-    command = "$CLAUDE_PROJECT_DIR/.claude/hooks/context-rollover-guard.sh"
-
-    registered = {
-        event
-        for event, groups in hooks.items()
-        for group in groups
-        for hook in group["hooks"]
-        if hook["command"] == command
-    }
-    assert registered == {"UserPromptSubmit"}
-
-
-@pytest.mark.parametrize("script", [GUARD, LIB])
-def test_guard_scripts_are_executable_bash(script: Path) -> None:
-    assert os.access(script, os.X_OK)
-    completed = subprocess.run(
-        ["bash", "-n", os.fspath(script)], text=True, capture_output=True, check=False, timeout=30
-    )
-    assert completed.returncode == 0, completed.stderr

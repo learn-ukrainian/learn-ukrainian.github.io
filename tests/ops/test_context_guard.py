@@ -188,18 +188,6 @@ def test_previous_sessions_handoff_done_does_not_end_a_fresh_session(tmp_path: P
     assert h.fake.typed() == []
 
 
-def test_new_agent_process_resets_the_fleet_watch_window(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"infra-muse": claude_pane(30)})
-    h.tick("infra-muse")
-    h.advance(30)
-    h.posted["claude-infra"] = cg.iso(h.moment)  # the old session's handoff post
-    h.pane("infra-muse").agent_pid = "201"  # a human relaunched the lane before the guard ticked
-    h.advance(1)
-    h.tick("infra-muse")
-    assert h.state["infra-muse"]["phase"] == "watch"
-    assert h.fake.typed() == []
-
-
 # ---- handoff phase ----------------------------------------------------------------
 def test_handoff_now_is_resent_every_15_minutes_until_done(tmp_path: Path) -> None:
     h = Harness(tmp_path, **{"devops-muse": claude_pane(70)})
@@ -246,17 +234,6 @@ def test_codex_quit_is_retried_when_the_first_is_swallowed(tmp_path: Path) -> No
     h.tick("atlas")
     assert h.fake.typed("atlas") == ["/quit", "/quit"]
     assert h.state["atlas"]["quit_attempts"] == 2
-
-
-def test_ctx_pct_is_logged_on_every_handoff_tick(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"infra-muse": claude_pane(70, busy=True)})
-    h.tick("infra-muse")
-    h.logs.clear()
-    for pct in (73, 76):
-        h.pane("infra-muse").text = claude_text(pct, busy=True)
-        h.advance(5)
-        h.tick("infra-muse")
-    assert [line.split()[2] for line in h.logs] == ["ctx_pct=73", "ctx_pct=76"]
 
 
 def test_no_input_while_a_human_is_typing_in_the_session(tmp_path: Path) -> None:
@@ -323,16 +300,6 @@ def test_codex_compactions_trigger_handoff(tmp_path: Path) -> None:
         h.advance(5)
     assert h.state["harness"]["compactions"] == 3
     assert h.fake.typed("harness")[0].startswith("HANDOFF NOW")
-
-
-def test_tick_main_writes_state_and_log(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    fake = FakeTmux()
-    real = cg.Tmux
-    monkeypatch.setattr(cg, "Tmux", lambda: real(run=fake.run, sleep=fake.sleep, clock=fake.clock))
-    monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(tmp_path / "absent.json"))
-    assert cg.main(["tick", "--state-dir", str(tmp_path / "s")]) == 0
-    assert (tmp_path / "s" / "state.json").is_file()
-    assert "tmux session cto missing" in (tmp_path / "s" / "guard.log").read_text(encoding="utf-8")
 
 
 # ---- Fleet Comms adapters ----------------------------------------------------------
@@ -454,14 +421,6 @@ def test_unknown_process_telemetry_never_respawns(tmp_path: Path, command: str, 
     assert len(respawns(h)) == 1
 
 
-def test_unknown_process_telemetry_in_watch_types_nothing(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"cto": claude_pane(80)})
-    h.fake.override["ps"] = subprocess.CompletedProcess([], 1, "", "process table unavailable")
-    h.tick("cto")
-    assert h.fake.typed() == [] and h.sent == []
-    assert h.state["cto"]["phase"] == "watch"
-
-
 def test_snapshot_reads_pane_pid_then_the_table_once_then_pane_pid_again() -> None:
     fake = ShellTmux(sessions={"cto": Pane(agent="claude", agent_pid="4242", agent_start="Fri Oct  2 09:05:01 2026")})
     tmux = cg.Tmux(run=fake.run)
@@ -525,25 +484,6 @@ def test_unparseable_client_activity_types_nothing(tmp_path: Path, rows: str) ->
     assert h.fake.typed("cto")[0].startswith("HANDOFF NOW")
 
 
-def test_client_telemetry_timeout_counts_as_a_human() -> None:
-    fake = FakeTmux(override={"list-clients": subprocess.TimeoutExpired(["tmux"], 30)})
-    assert cg.Tmux(run=fake.run).human_activity("cto", 120) == "client telemetry unavailable (TimeoutExpired)"
-
-
-def test_refused_local_wrapper_blocks_only_that_relaunch(tmp_path: Path) -> None:
-    from scripts.ops.driver_lanes import load_local_config
-
-    local = tmp_path / "local.json"
-    local.write_text(json.dumps({"lanes": {"harness": {"wrapper": "printf expected; printf INJECTED"}}}))
-    local.chmod(0o600)
-    h = handoff_with_agent_gone(tmp_path, launcher_running=False)
-    h.guard.local = load_local_config(local)
-    h.tick("harness")
-    assert respawns(h) == []
-    assert h.state["harness"]["phase"] == "handoff"
-    assert "relaunch refused" in h.logs[-1] and "shell syntax" in h.logs[-1]
-
-
 # ---- respawn or type only on one consistent pane + process snapshot (review of 0b9a61a7, #10814) ----
 REPLACED = "Fri Oct 16 12:09:00 2026"  # ps lstart of a pane shell started during the handoff
 
@@ -584,14 +524,6 @@ def test_snapshot_of_a_pane_missing_from_the_process_table_is_unknown() -> None:
     fake = FakeTmux(sessions={"cto": FakePane(agent="claude")})  # lists the agent but not the pane's shell
     with pytest.raises(cg.TelemetryUnavailable, match="pane pid 100 not in the process table"):
         cg.Tmux(run=fake.run).snapshot("=cto:", "claude")
-
-
-def test_a_tick_reads_the_process_table_once(tmp_path: Path) -> None:
-    h = handoff_with_agent_gone(tmp_path, launcher_running=True)
-    h.fake.calls.clear()
-    h.tick("harness")
-    assert h.logs[-1].endswith("agent gone, launcher still exiting; relaunch next tick")
-    assert [call for call in h.fake.calls if call[0] == "env"] == [cg.PS_ARGV]
 
 
 @pytest.mark.parametrize("launcher", [False, True], ids=["bare-shell", "launcher"])

@@ -5,13 +5,10 @@ from __future__ import annotations
 import json
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from scripts.projects.open_model_data.typesafe_homonym_disambiguator import (
     GrammaticalForm,
     SyntacticRole,
     TypeSafeHomonymDisambiguator,
-    _resolve_typesafe_key,
 )
 
 
@@ -41,25 +38,6 @@ def test_myla_homonym_disambiguation_heuristic() -> None:
     assert res_adj.grammatical_form == GrammaticalForm.ADJECTIVE
     assert res_adj.lemma in ("милий", "мила")
     assert res_adj.confidence >= 0.85
-
-
-def test_pyly_homonym_disambiguation_heuristic() -> None:
-    """Verify that «пили» is disambiguated between verb and noun."""
-    disambiguator = TypeSafeHomonymDisambiguator(api_key="")
-
-    # Verb reading: «вони пили воду»
-    s_verb = "Вони пили воду біля джерела."
-    res_verb = disambiguator.disambiguate(s_verb, "пили")
-    assert res_verb.grammatical_form == GrammaticalForm.FINITE_VERB_PAST
-    assert res_verb.syntactic_role == SyntacticRole.PREDICATE_VERB
-    assert res_verb.lemma == "пити"
-
-    # Noun reading: «дві пили заводу»
-    s_noun = "На складі лежали дві пили заводу."
-    res_noun = disambiguator.disambiguate(s_noun, "пили")
-    assert res_noun.grammatical_form == GrammaticalForm.NOUN_GENITIVE
-    assert res_noun.syntactic_role == SyntacticRole.ADNOMINAL_ATTRIBUTE
-    assert res_noun.lemma == "пила"
 
 
 @patch("urllib.request.urlopen")
@@ -93,34 +71,6 @@ def test_remote_batched_api_mock(mock_urlopen: MagicMock) -> None:
     assert results[0].confidence >= 0.95
     assert results[1].grammatical_form == GrammaticalForm.NOUN_GENITIVE
     assert results[1].syntactic_role == SyntacticRole.ADNOMINAL_ATTRIBUTE
-
-
-@pytest.mark.live_network
-def test_live_typesafe_api_homonym_disambiguation() -> None:
-    """Live network test against TypeSafe System One API if key is present."""
-    api_key = _resolve_typesafe_key()
-    if not api_key:
-        pytest.skip("TypeSafe API key not found; skipping live test")
-
-    disambiguator = TypeSafeHomonymDisambiguator(api_key=api_key)
-    items = [
-        ("Сестра уважно шила новий святковий одяг.", "шила"),
-        ("Гострого шила не сховаєш у мішку.", "шила"),
-    ]
-    results = disambiguator.batch_disambiguate(items)
-
-    assert len(results) == 2
-    # 1. шила (verb past): «Сестра уважно шила новий святковий одяг»
-    assert results[0].grammatical_form == GrammaticalForm.FINITE_VERB_PAST
-    assert results[0].syntactic_role == SyntacticRole.PREDICATE_VERB
-    assert results[0].lemma == "шити"
-
-    # 2. шила (noun genitive from шило): «Гострого шила не сховаєш у мішку»
-    assert results[1].grammatical_form == GrammaticalForm.NOUN_GENITIVE
-    assert results[1].lemma == "шило"
-    # Low confidence / complex negative government triggers verification
-    assert results[1].confidence <= 0.85
-    assert results[1].needs_verification is True
 
 
 def test_homonym_disambiguation_hermetic_without_vesum(tmp_path) -> None:

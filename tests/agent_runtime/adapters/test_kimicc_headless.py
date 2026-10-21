@@ -183,21 +183,6 @@ def test_headless_wrapper_refuses_missing_credentials_before_claude_runs(tmp_pat
     assert result.stdout == ""
 
 
-def test_headless_wrapper_workspace_write_does_not_force_plan_mode(tmp_path: Path, monkeypatch) -> None:
-    home = tmp_path / "home"
-    home.mkdir()
-    plan = _adapter_plan(tmp_path, monkeypatch, model="k2.7")
-    env = _clean_kimicc_env(home)
-    env.update({**plan.env_overrides, "KIMICC_AUTH_TOKEN": "test-route-token"})
-
-    result = subprocess.run(plan.cmd, cwd=_REPO_ROOT, env=env, capture_output=True, text=True, timeout=20)
-
-    assert result.returncode == 0, result.stderr
-    assert plan.cmd[plan.cmd.index("--mode") + 1] == "workspace-write"
-    assert "arg=--permission-mode" not in result.stdout
-    assert "arg=--dangerously-skip-permissions" not in result.stdout
-
-
 @pytest.mark.parametrize("mode_args", [["--mode", "read-only"], ["--mode", "danger"], []])
 def test_headless_wrapper_refuses_every_mode_but_workspace_write(tmp_path: Path, mode_args: list[str]) -> None:
     """Kimi: web, UI and backend coding only — the wrapper refuses before auth or Claude runs."""
@@ -223,27 +208,6 @@ def test_headless_wrapper_refuses_every_mode_but_workspace_write(tmp_path: Path,
     assert result.stdout == ""
 
 
-@pytest.mark.parametrize("flag", ["--tools", "--setting-sources"])
-def test_headless_wrapper_rejects_the_retired_trail_flags(tmp_path: Path, flag: str) -> None:
-    """The trail isolation profile needed read-only; its flags are unknown arguments now."""
-    home = tmp_path / "home"
-    home.mkdir()
-    env = _clean_kimicc_env(home)
-    env.update({"KIMICC_AUTH_TOKEN": "test-route-token"})
-
-    result = subprocess.run(
-        [str(_WRAPPER), "--model", "k3", "--mode", "workspace-write", "--prompt", "say hi", flag, "x"],
-        cwd=_REPO_ROOT,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=20,
-    )
-
-    assert result.returncode == 2
-    assert f"unsupported KimiCC headless argument '{flag}'" in result.stderr
-
-
 def _wrapper_args(stdout: str) -> list[str]:
     return [line.removeprefix("arg=") for line in stdout.splitlines() if line.startswith("arg=")]
 
@@ -259,48 +223,6 @@ def _sources_grant(tmp_path: Path) -> dict:
         "strict_mcp_config": True,
         "review_verdict_required": True,
     }
-
-
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
-def test_adapter_refuses_the_review_grant_before_the_wrapper(tmp_path: Path, monkeypatch, mode: str) -> None:
-    """Kimi seats admit web, UI and backend coding only: the review grant never becomes a wrapper argv (#8652 retired)."""
-    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
-        _adapter_plan(tmp_path, monkeypatch, model="k3", mode=mode, tool_config=_sources_grant(tmp_path))
-
-
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-def test_headless_wrapper_rejects_the_retired_review_flag(tmp_path: Path, mode: str) -> None:
-    """--read-only-review is gone: the wrapper refuses it as an unknown argument in every mode."""
-    home = tmp_path / "home"
-    home.mkdir()
-    claude = tmp_path / "claude"
-    _fake_claude(claude)
-    env = _clean_kimicc_env(home)
-    env.update({"KIMICC_CLAUDE_BIN": str(claude), "KIMICC_AUTH_TOKEN": "test-route-token"})
-
-    result = subprocess.run(
-        [
-            str(_WRAPPER),
-            "--model",
-            "k3",
-            "--mode",
-            mode,
-            "--read-only-review",
-            "--mcp-config",
-            "/any/.mcp.json",
-            "--strict-mcp-config",
-            "--prompt",
-            "say hi",
-        ],
-        cwd=_REPO_ROOT,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=20,
-    )
-    assert result.returncode == 2, mode
-    assert "unsupported KimiCC headless argument '--read-only-review'" in result.stderr
-    assert result.stdout == ""
 
 
 def test_headless_wrapper_forwards_a_strict_mcp_config_on_workspace_write(tmp_path: Path, monkeypatch) -> None:

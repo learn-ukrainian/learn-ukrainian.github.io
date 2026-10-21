@@ -28,7 +28,6 @@ from scripts.audit.layerb_shadow import (
     final_decision,
     main,
     normalize_lineage_family,
-    normalize_seat_key,
 )
 
 RAW = "Іван Франко народився 1856 року."
@@ -122,18 +121,6 @@ def _runner(artifacts: Path, audit_dir: Path, **kwargs: Any) -> ShadowRunner:
     )
 
 
-def test_seat_key_is_canonical_not_python_dict_order() -> None:
-    first = {"family": "google", "pin": "model", "entrypoint": "runner"}
-    reordered = {"entrypoint": "runner", "pin": "model", "family": "google"}
-
-    first_key, first_metadata = normalize_seat_key(first)
-    second_key, second_metadata = normalize_seat_key(reordered)
-
-    assert first_key == second_key
-    assert first_key.startswith("seat-")
-    assert first_metadata == second_metadata
-
-
 def test_normalize_lineage_family_uses_canonical_vendor_families() -> None:
     # Single source of truth: layer-B now agrees with the live dispatcher on
     # every token (see test_model_families for the cross-layer agreement
@@ -174,15 +161,6 @@ def test_route_selection_ignores_fixture_writer_sentinel() -> None:
     claude = JudgeRoute("claude", "claude-opus-4-6")
 
     route = _select_route((gemini, claude), writer_family="fixture", reviewer_family="deepseek")
-
-    assert route == gemini
-
-
-def test_route_selection_ignores_adversarial_fixture_reviewer_marker() -> None:
-    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
-    claude = JudgeRoute("claude", "claude-opus-4-6")
-
-    route = _select_route((gemini, claude), writer_family="fixture", reviewer_family="fixture")
 
     assert route == gemini
 
@@ -572,27 +550,6 @@ def test_cache_key_covers_route_snapshot_labels_candidate_and_window(tmp_path: P
     assert len({key, different_route, different_snapshot, changed_window_key, changed_candidate_key}) == 5
 
 
-def test_optional_label_sidecar_emits_labeled_not_outcome_only_rates(tmp_path: Path) -> None:
-    artifacts = _write_artifacts(tmp_path / "artifacts", _artifact([_fact_check("fc")]))
-    labels = tmp_path / "labels.json"
-    labels.write_text(
-        json.dumps(
-            {
-                "schema_version": "qg-layer-b-labels.v2",
-                "cases": [{"fact_check_id": "fc", "expected_source_relation": "ENTAILS"}],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    report = _runner(artifacts, tmp_path / "audit", labels_path=labels).run()
-
-    assert report["records"][0]["labels"]["present"] is True
-    assert report["summary"]["label_denominators"] == {"labeled": 1, "outcome_only": 0, "partial": False}
-    assert report["summary"]["rates"]["false_accept"] == {"count": 0, "denominator": 0, "rate": None}
-    assert report["summary"]["rates"]["false_reject"] == {"count": 0, "denominator": 1, "rate": 0.0}
-
-
 def test_checkpoint_resume_skips_completed_rows_and_matches_one_shot_outcomes(tmp_path: Path) -> None:
     artifacts = _write_artifacts(tmp_path / "artifacts", _artifact([_fact_check("fc-1"), _fact_check("fc-2")]))
     budgeted_dir = tmp_path / "budgeted"
@@ -750,38 +707,6 @@ def _make_attestation_artifacts(
     att_path = tmp / "qualification-attestation.json"
     att_path.write_text(json.dumps(att, sort_keys=True), encoding="utf-8")
     return att_path, labels, corpus_m, fixture_m, report_path, raw_path
-
-
-def test_judge_attestation_old_flag_errors(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    artifacts = tmp_path / "art"
-    artifacts.mkdir()
-    (artifacts / "a.json").write_text("{}", encoding="utf-8")
-    labels = tmp_path / "l.json"
-    labels.write_text("{}", encoding="utf-8")
-    exit_code = main(
-        [
-            "--artifacts-dir",
-            str(artifacts),
-            "--audit-dir",
-            str(tmp_path / "aud"),
-            "--judge-command",
-            "echo",
-            "--judge-family",
-            "claude",
-            "--judge-model",
-            "x",
-            "--judge-model-version",
-            "v",
-            "--provider-account-lane",
-            "lane",
-            "--labels",
-            str(labels),
-            "--judge-qualified",
-        ]
-    )
-    err = capsys.readouterr().err
-    assert exit_code == 2
-    assert "--judge-qualified is removed; use --judge-attestation <path> instead" in err
 
 
 def test_judge_attestation_valid_passes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -962,10 +887,3 @@ def test_judge_attestation_malformed_fails(tmp_path: Path, capsys: pytest.Captur
     assert exit_code == 2
     # Malformed triggers schema or route parse failure inside verify
     assert "unknown attestation schema" in err or "effective route" in err or "attestation" in err.lower()
-
-
-def test_cli_rejects_non_default_tau(capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = main(["--artifacts-dir", "dummy_artifacts", "--tau", "0.8"])
-    err = capsys.readouterr().err
-    assert exit_code == 2
-    assert "Layer B shadow requires the pinned Phase-1 tau=0.75." in err

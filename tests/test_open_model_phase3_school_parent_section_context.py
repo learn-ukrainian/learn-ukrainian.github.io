@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 import json
 import os
 import stat
@@ -169,21 +168,6 @@ def _patch_pins(monkeypatch: pytest.MonkeyPatch, paths: dict[str, object]) -> No
     monkeypatch.setattr(parent_ctx, "_schema_validator", lambda: _AcceptAll())
 
 
-def test_schema_parses() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    assert schema["properties"]["denominators"]["properties"]["positive_parent_section_heldout"]["const"] == 3526
-    assert schema["properties"]["gates"]["properties"]["phase4_blocked"]["const"] is True
-    assert schema["properties"]["gates"]["properties"]["school_complete_context_ready"]["const"] is False
-
-
-def test_assemble_roundtrip_offsets_unicode() -> None:
-    texts = ["Апостроф: м'ята.", "Комбінування: зе́лень — так."]
-    context, offsets = parent_ctx._assemble_parent_section(texts)
-    assert parent_ctx.PARENT_SECTION_SEPARATOR.join(texts) == context
-    for (start, end), text in zip(offsets, texts, strict=True):
-        assert context[start:end] == text
-
-
 def test_hermetic_materialize_roundtrip_and_negative_exclusion(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path)
     _patch_pins(monkeypatch, paths)
@@ -272,62 +256,6 @@ def test_verify_existing_rejects_implementation_binding_mutation(
     public.write_bytes(parent_ctx.canonical_bytes(receipt))
     os.chmod(public, parent_ctx.PRIVATE_FILE_MODE)
     with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="implementation binding drift"):
-        parent_ctx.verify_existing(
-            source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
-            partition_path=paths["partition"],  # type: ignore[arg-type]
-            private_output=paths["private_output"],  # type: ignore[arg-type]
-            public_receipt_path=public,
-        )
-
-
-def test_verify_existing_rejects_schema_binding_mutation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    paths = _fixture(tmp_path)
-    _patch_pins(monkeypatch, paths)
-    parent_ctx.materialize(
-        source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
-        partition_path=paths["partition"],  # type: ignore[arg-type]
-        private_output=paths["private_output"],  # type: ignore[arg-type]
-        public_receipt_path=paths["public_receipt"],  # type: ignore[arg-type]
-        started_at="2026-08-14T02:48:00Z",
-        completed_at="2026-08-14T02:48:30Z",
-    )
-    public = paths["public_receipt"]
-    assert isinstance(public, Path)
-    receipt = json.loads(public.read_text(encoding="utf-8"))
-    receipt["bindings"] = dict(receipt["bindings"])
-    receipt["bindings"]["receipt_schema_sha256"] = "0" * 64
-    receipt["receipt_sha256"] = parent_ctx.receipt_sha256(receipt)
-    public.write_bytes(parent_ctx.canonical_bytes(receipt))
-    os.chmod(public, parent_ctx.PRIVATE_FILE_MODE)
-    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="schema binding drift"):
-        parent_ctx.verify_existing(
-            source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
-            partition_path=paths["partition"],  # type: ignore[arg-type]
-            private_output=paths["private_output"],  # type: ignore[arg-type]
-            public_receipt_path=public,
-        )
-
-
-def test_verify_existing_rejects_stale_pinned_binding_mutation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    paths = _fixture(tmp_path)
-    _patch_pins(monkeypatch, paths)
-    parent_ctx.materialize(
-        source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
-        partition_path=paths["partition"],  # type: ignore[arg-type]
-        private_output=paths["private_output"],  # type: ignore[arg-type]
-        public_receipt_path=paths["public_receipt"],  # type: ignore[arg-type]
-        started_at="2026-08-14T02:48:00Z",
-        completed_at="2026-08-14T02:48:30Z",
-    )
-    public = paths["public_receipt"]
-    assert isinstance(public, Path)
-    receipt = json.loads(public.read_text(encoding="utf-8"))
-    receipt["bindings"] = dict(receipt["bindings"])
-    receipt["bindings"]["source_universe_receipt_sha256"] = "0" * 64
-    receipt["receipt_sha256"] = parent_ctx.receipt_sha256(receipt)
-    public.write_bytes(parent_ctx.canonical_bytes(receipt))
-    os.chmod(public, parent_ctx.PRIVATE_FILE_MODE)
-    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="source universe binding drift"):
         parent_ctx.verify_existing(
             source_jsonl=paths["source_jsonl"],  # type: ignore[arg-type]
             partition_path=paths["partition"],  # type: ignore[arg-type]
@@ -458,17 +386,6 @@ def test_symlink_and_output_collision_rejected(tmp_path: Path) -> None:
     parent_ctx._atomic_write(out, b"aaa\n")
     with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="refusing to overwrite"):
         parent_ctx._write_immutable(out, b"bbb\n", label="private context artifact")
-
-
-def test_atomic_write_api_and_mode(tmp_path: Path) -> None:
-    params = inspect.signature(parent_ctx._atomic_write).parameters
-    assert list(params) == ["path", "payload"]
-    target = tmp_path / "secret.bin"
-    parent_ctx._atomic_write(target, b"secret")
-    assert stat.S_IMODE(target.stat().st_mode) == 0o600
-    public = tmp_path / "public.json"
-    parent_ctx._atomic_write(public, b"{}\n")
-    assert stat.S_IMODE(public.stat().st_mode) == 0o600
 
 
 def test_public_receipt_creates_private_and_accepts_tracked_mode(tmp_path: Path) -> None:

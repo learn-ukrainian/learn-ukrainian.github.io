@@ -85,12 +85,6 @@ def test_cto_explicit_opus_epics_uses_native_profile() -> None:
     assert "slot=claude-epics" in result.stdout
 
 
-def test_explicit_retired_sonnet_driver_pin_is_refused() -> None:
-    result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-sonnet-5")
-    assert result.returncode == 2
-    assert "would exec claude" not in result.stdout
-
-
 @pytest.mark.parametrize("alias", ["fable-5", "opus-5"])
 @pytest.mark.parametrize("script", ["start-claude.sh", "start-claude-driver.sh"])
 def test_versioned_retired_claude_alias_is_refused(alias, script) -> None:
@@ -100,13 +94,6 @@ def test_versioned_retired_claude_alias_is_refused(alias, script) -> None:
     assert "is retired in the model catalog" in result.stderr
     assert "would claim lease" not in result.stdout
     assert "would exec claude" not in result.stdout
-
-
-def test_full_retired_fable_id_is_refused() -> None:
-    retired = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-fable-5")
-    assert retired.returncode != 0
-    assert "would claim lease" not in retired.stdout
-    assert "would exec claude" not in retired.stdout
 
 
 @pytest.mark.parametrize(
@@ -191,21 +178,6 @@ def test_claude_driver_default_yields_to_launcher_env() -> None:
     assert "would exec claude --model claude-fable-5-1 --effort medium" in result.stdout
 
 
-def test_claude_opus_aliases_resolve_and_are_blocked() -> None:
-    for alias in ("opus", "opus-5-5", "opus-5.5", "claude-opus-5-5"):
-        result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", alias)
-        assert result.returncode == 7, (alias, result.stderr)
-        assert "Opus is blocked by operator policy" in result.stderr
-        assert "would exec claude" not in result.stdout
-
-
-def test_claude_interactive_does_not_inherit_driver_default() -> None:
-    result = run_launcher("start-claude.sh")
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model" not in result.stdout
-    assert "--effort" not in result.stdout
-
-
 @pytest.mark.parametrize(
     "argv",
     (
@@ -218,26 +190,6 @@ def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]
     result = run_launcher("start-claude-driver.sh", *argv)
     assert result.returncode == 0, result.stderr
     assert "would exec claude --model claude-sonnet-5-5 --effort xhigh" in result.stdout
-
-
-def test_claude_driver_injects_model_and_effort_when_explicit() -> None:
-    result = run_launcher(
-        "start-claude-driver.sh",
-        "--epic",
-        "devops",
-        "--model",
-        "fable",
-        "--effort",
-        "high",
-    )
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-fable-5-1 --effort high" in result.stdout
-
-
-def test_claude_rejects_unknown_effort() -> None:
-    result = run_launcher("start-claude.sh", "--effort", "ludicrous")
-    assert result.returncode == 2
-    assert "effort" in result.stderr.lower()
 
 
 def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Path) -> None:

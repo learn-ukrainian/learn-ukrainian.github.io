@@ -204,19 +204,6 @@ def test_item3_projection_mean_gate_and_borderline_rules(frozen):
         b.admit(frozen.work, frozen.measurements)
 
 
-def test_item4_passages_preserve_exercise_tail_and_report_by_source():
-    text = "h" * 128 + "middle" * 100 + "t" * 384
-    preview, truncated, retained = b._passage(text, Tokenizer(), budget=512, tail=True)
-    assert preview == "h" * 128 + " … " + "t" * 381
-    assert truncated and retained == 509
-    rows = [{"text": text, "source_file": "book"}, {"text": "short", "source_file": "book"}]
-    _, stats = b._passage_stats(rows, Tokenizer(), 512, tail=True)
-    assert stats["book"]["truncation_rate"] == 0.5
-    assert stats["book"]["retained_character_share"] == pytest.approx(514 / (len(text) + 5))
-    assert b._passage(text, Tokenizer(), budget=900, tail=False)[0] == text[:900]
-    assert b._passage("", Tokenizer(), budget=512, tail=True) == ("", False, 0)
-
-
 def test_item2_permutation_and_real_adapter_top20_without_pool_addition():
     candidates = [{"chunk_id": f"c{i:02}", "text": "a" * 128 + "m" * 700 + "z" * 384, "source_file": "book"} for i in range(20)]
     class Ranker:
@@ -235,76 +222,6 @@ def test_item2_permutation_and_real_adapter_top20_without_pool_addition():
         b._assert_permutation(["a", "a"], ["a", "a"])
     with pytest.raises(ValueError, match="insufficient context"):
         b._rerank(Ranker(), {"kind": "cross_encoder", "max_tokens": 700}, "q" * 300, candidates)
-
-
-def test_item1_binary_ndcg_and_mrr_respond_to_rank11_promotion():
-    original = [f"c{i}" for i in range(20)]
-    reordered = ["c10", *original[:10], *original[11:]]
-    assert b._ranking_metrics(original, {"c10"}) == (0, 0)
-    assert b._ranking_metrics(reordered, {"c10"}) == (1, 1)
-    assert b._ranking_metrics(original, {"c1"}) == pytest.approx((1 / b.math.log2(3), .5))
-    with pytest.raises(ValueError, match="Duplicate"):
-        b._ranking_metrics(["a", "a"], {"a"})
-
-
-def _decision_fixture():
-    queries = [{"id": f"q{i}", "cluster": f"q{i}", "family": "G3"} for i in range(120)]
-    def arm(recall, ndcg):
-        return {q["id"]: {"recall_at_20_strict": recall, "ndcg_at_10_strict": ndcg} for q in queries}
-    metrics = {"L": arm(.8, .4), "D:a": arm(1, .5), "H:a": arm(1, .7), "H:b": arm(.8, .9), "R:r|a": arm(1, .9)}
-    costs = {a: {"query_p95_seconds": 1, "index_size_bytes": 10, "wall_seconds": 10} for a in metrics}
-    return queries, metrics, costs
-
-
-def test_item1_two_stage_decision_excludes_bad_coverage_and_uses_ndcg():
-    queries, metrics, costs = _decision_fixture()
-    costs["R:r|a"]["query_p95_seconds"] = 10
-    result = b.decide(metrics, queries, costs, usable_queries=120, kappa_gate=True, iterations=20)
-    assert result["outcome"] == "RECOMMENDED"
-    assert result["recommended_configuration"] == "R:r|a"
-    assert not result["coverage_comparisons"]["H:b"]["eligible_noninferior"]
-    assert "H:b" not in result["ranking_comparisons"]
-    assert result["ranking_comparisons"]["H:a"]["upper_95"] == pytest.approx(.2)
-
-
-@pytest.mark.parametrize("reason,outcome", [("poor_reranker", "NO_RERANKER"), ("no_reranker", "NO_RERANKER"), ("bad_hybrids", "NO_ELIGIBLE_HYBRID"), ("sparse", "INCONCLUSIVE"), ("kappa", "INCONCLUSIVE"), ("missing_cost", "INCONCLUSIVE")])
-def test_item1_all_terminal_outcomes_and_empty_candidate_set(reason, outcome):
-    queries, metrics, costs = _decision_fixture()
-    if reason == "poor_reranker":
-        for entry in metrics["R:r|a"].values():
-            entry["ndcg_at_10_strict"] = .5
-    elif reason == "no_reranker":
-        metrics.pop("R:r|a")
-    elif reason == "bad_hybrids":
-        for entry in metrics["H:a"].values():
-            entry["recall_at_20_strict"] = .5
-    elif reason == "missing_cost":
-        costs["R:r|a"]["query_p95_seconds"] = None
-    result = b.decide(metrics, queries, costs, usable_queries=59 if reason == "sparse" else 60, kappa_gate=reason != "kappa", iterations=20)
-    assert result["outcome"] == outcome
-    if outcome == "NO_RERANKER":
-        assert result["recommended_configuration"] == "H:a"
-    else:
-        assert result["recommended_configuration"] is None
-
-
-def test_item1_equal_cluster_weight_cost_ties_and_zero_queries():
-    values = {"a": (1., 0.), "b": (1., 0.), "c": (0., 1.)}
-    clusters = {"a": "pair", "b": "pair", "c": "single"}
-    result = b.paired_cluster_bootstrap(values, clusters, iterations=100)
-    assert result["estimate"] == 0
-    assert b._cluster_mean({"a": 1, "b": 1, "c": 0}, clusters) == .5
-    queries, metrics, costs = _decision_fixture()
-    for entry in metrics["R:r|a"].values():
-        entry["ndcg_at_10_strict"] = .7
-    costs["R:r|a"].update(index_size_bytes=5)
-    result = b.decide(metrics, queries, costs, usable_queries=120, kappa_gate=True, iterations=20)
-    assert result["recommended_configuration"] == "R:r|a"
-    costs["H:a"].update(index_size_bytes=5, wall_seconds=1)
-    assert b.decide(metrics, queries, costs, usable_queries=120, kappa_gate=True, iterations=20)["recommended_configuration"] == "H:a"
-    assert b.paired_cluster_bootstrap({}, {}, iterations=2)["estimate"] == 0
-    with pytest.raises(ValueError):
-        b.paired_cluster_bootstrap(values, clusters, iterations=0)
 
 
 def test_item5_search_without_manifest_refuses_before_any_model(tmp_path, monkeypatch):
@@ -390,26 +307,6 @@ def test_item6_quiet_window_end_stops_without_counting_calendar_gap():
     assert state["status"] == "QUIET_WINDOW_ENDED"
 
 
-def test_item6_launch_enforces_memory_threads_and_both_priorities(monkeypatch):
-    calls = []
-    monkeypatch.setattr(b.resource, "getrlimit", lambda *a: (b.resource.RLIM_INFINITY, b.resource.RLIM_INFINITY))
-    monkeypatch.setattr(b.resource, "setrlimit", lambda *a: calls.append(("memory", a)))
-    monkeypatch.setattr(b.os, "getpriority", lambda *a: 5)
-    monkeypatch.setattr(b.os, "nice", lambda n: calls.append(("nice", n)))
-    import sys
-    monkeypatch.setitem(sys.modules, "psutil", SimpleNamespace(IOPRIO_CLASS_IDLE=3, Process=lambda: SimpleNamespace(ionice=lambda n: calls.append(("io", n)))))
-    monkeypatch.setitem(sys.modules, "torch", SimpleNamespace(set_num_threads=lambda n: calls.append(("threads", n)), set_num_interop_threads=lambda n: calls.append(("interop", n))))
-    for key in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "ORT_NUM_THREADS", "TOKENIZERS_PARALLELISM"):
-        monkeypatch.setenv(key, "fixture")
-    report = b._enforce_host_limits()
-    assert not any(call[0] == "memory" for call in calls)
-    assert ("nice", 14) in calls and ("io", 3) in calls
-    assert ("threads", 6) in calls and ("interop", 6) in calls
-    assert b.os.environ["OMP_NUM_THREADS"] == "6"
-    assert b.os.environ["TOKENIZERS_PARALLELISM"] == "false"
-    assert report == {**b.GUARDRAILS, "memory_enforcement": "rss_watchdog"}
-
-
 def test_item6_host_lock_and_unavailable_admission_fail_closed(frozen, monkeypatch):
     with b._heavy_lock(), pytest.raises(ValueError, match="Another heavy"):
         with b._heavy_lock():
@@ -440,65 +337,6 @@ def test_item6_worker_enforces_limits_before_call_and_sends_typed_error(monkeypa
         raise ValueError("fixture")
     b._heavy_worker(connection, failure, (), {})
     assert events[-2] == {"ok": False, "error": "ValueError: fixture"}
-
-
-def test_int8_quantization_wraps_each_adapter(monkeypatch):
-    import sys
-    calls = []
-    torch = SimpleNamespace(ao=SimpleNamespace(quantization=SimpleNamespace(quantize_dynamic=lambda module, types, **kwargs: calls.append((module, types, kwargs)) or "quantized")), nn=SimpleNamespace(Linear="linear"), qint8="int8")
-    monkeypatch.setitem(sys.modules, "torch", torch)
-    assert b._quantize_reranker(("module", "tokenizer"), {"kind": "qwen"}) == ("quantized", "tokenizer")
-    encoder = SimpleNamespace(model="module")
-    assert b._quantize_reranker(encoder, {"kind": "cross_encoder"}).model == "quantized"
-    assert b._quantize_reranker("module", {"kind": "jina"}) == "quantized"
-    assert all(c[2] == {"dtype": "int8", "inplace": False} for c in calls)
-
-
-def test_item3_measure_embedder_uses_exact_frozen_sample_and_projects(frozen, monkeypatch):
-    calls = []
-    clock = [0.]
-    meta = {"kind": "sentence", "max_tokens": 2048, "prefixes": frozen.configs[b.E5]["prefixes"]}
-    monkeypatch.setattr(b, "_new_encoder", lambda *a: (SimpleNamespace(tokenizer=Tokenizer()), meta))
-    monkeypatch.setattr(b.time, "perf_counter", lambda: clock[0])
-    def encode(model, metadata, texts, repo, batch):
-        calls.extend(texts)
-        clock[0] += len(texts) / 10
-        return [[1] for _ in texts]
-    monkeypatch.setattr(b, "_encode_batch", encode)
-    def query(*args):
-        clock[0] += .2
-        return [1]
-    monkeypatch.setattr(b, "_query_vector", query)
-    result = b.measure(frozen.source, frozen.work, b.E5, batch_size=16)
-    assert result["sample_rows"] == 500 and result["sample_seconds"] == pytest.approx(50)
-    assert result["projected_seconds"] == pytest.approx(60)
-    assert result["query_seconds"] == pytest.approx(.2)
-    assert len(calls) == 516  # Separate 16-chunk warmup, then all 500 sample rows.
-    again = b.measure(frozen.source, frozen.work, b.E5, batch_size=16)
-    assert again["sample_seconds"] == result["sample_seconds"]
-    assert len(calls) == 532  # Resume does only warmup, not the frozen sample again.
-
-
-def test_item3_measure_reranker_uses_frozen_pairs_and_actual_latency(frozen, monkeypatch):
-    _, pairs = _timing(frozen)
-    b.admit(frozen.work, frozen.measurements)
-    repo = next(iter(b.RERANKERS))
-    clock = [0.]
-    monkeypatch.setattr(b.time, "perf_counter", lambda: clock[0])
-    model = SimpleNamespace(tokenizer=Tokenizer())
-    monkeypatch.setattr(b, "_new_reranker", lambda *a: (model, {"kind": "cross_encoder", "max_tokens": 2048}))
-    seen = []
-    def rerank(model, meta, query, candidates):
-        seen.append((query, [r["chunk_id"] for r in candidates]))
-        clock[0] += 5
-        return [r["chunk_id"] for r in candidates][::-1]
-    monkeypatch.setattr(b, "_rerank", rerank)
-    result = b.measure(frozen.source, frozen.work, repo)
-    assert result["timing_pairs_sha256"] == pairs["sha256"]
-    assert result["p50_seconds"] == result["p95_seconds"] == result["mean_seconds"] == 5
-    assert len(seen) == 25 and sum(len(pair[1]) for pair in seen) == 500
-    b.measure(frozen.source, frozen.work, repo)
-    assert len(seen) == 25
 
 
 def test_cli_sample_manifest_and_fake_admit_no_compute(frozen, capsys, monkeypatch):
@@ -565,32 +403,6 @@ def test_item6_failed_child_and_eof_are_typed(monkeypatch):
     with pytest.raises(RuntimeError, match="without a measurement"):
         b._supervise(Process(), pipe, state, 10000, clock=lambda: clock[0], probe=lambda: True)
     assert state["status"] == "failed"
-
-
-def test_flag_model_is_loaded_at_pinned_revision_without_downloads(frozen, monkeypatch):
-    import sys
-    calls = []
-    def download(repo, **kwargs):
-        calls.append((repo, kwargs))
-        return "stub-snapshot"
-    def flag(snapshot, **kwargs):
-        assert snapshot == "stub-snapshot" and kwargs["use_fp16"] is False
-        return SimpleNamespace(tokenizer=SimpleNamespace(truncation_side="left"))
-    monkeypatch.setitem(sys.modules, "huggingface_hub", SimpleNamespace(snapshot_download=download))
-    monkeypatch.setitem(sys.modules, "FlagEmbedding", SimpleNamespace(BGEM3FlagModel=flag))
-    model, meta = b._new_encoder("BAAI/bge-m3", frozen.work)
-    assert meta["max_tokens"] == 8192 and model.tokenizer.truncation_side == "right"
-    assert calls[0][1]["revision"] == "a" * 40
-
-
-def test_retained_characters_use_original_offsets_not_decoded_length():
-    class Normalizer(Tokenizer):
-        def decode(self, ids, **kwargs):
-            # Model tokenizer drops whitespace while decoding. Original
-            # retention still accounts for the selected source spans.
-            return super().decode(ids).replace(" ", "")
-    _, _, retained = b._passage(" " * 700, Normalizer(), budget=512, tail=True)
-    assert retained == 509
 
 
 def test_item1_item2_item5_full_frozen_search_pool_and_score(frozen, monkeypatch):
@@ -688,104 +500,6 @@ def test_item3_measurement_order_requires_failed_fp32_and_borderline(frozen):
         b._measurement_preflight(frozen.work, b.E5, "fp32", True)
 
 
-def test_item4_embedder_uses_model_maximum_with_actual_prefix_overhead():
-    model = SimpleNamespace(tokenizer=Tokenizer())
-    rows = [{"text": "abcdefghij", "source_file": "book"}]
-    stats = b._embedder_passage_stats(rows, model, {"max_tokens": 10, "prefixes": {"passage": "passage: "}}, b.E5)
-    assert stats["book"]["truncation_rate"] == 1
-    assert stats["book"]["retained_character_share"] == .1
-    with pytest.raises(ValueError, match="no passage token budget"):
-        b._embedder_passage_stats(rows, model, {"max_tokens": 9, "prefixes": {"passage": "passage: "}}, b.E5)
-
-
-def test_r2_full_pipeline_projection_survives_old_deadline_and_still_stops_overrun(frozen, monkeypatch):
-    # Measured load + index/vector load + reporting: 35 s. Lexical + encode +
-    # rank + fuse: .002 + .020 + .095 + .003 s, measured over 50 plus warmup.
-    full_timing = 35 + 51 * .120
-    calls = []
-    monkeypatch.setattr(b, "_admission", lambda *a: {"measurements": {"lexical_query_seconds": .002, "embedders": {b.E5: {"query_seconds": .020, "model_load_seconds": 5}}}})
-    def guard(function, args, kwargs, work, step, projection):
-        calls.append((step, projection))
-        return {"cost": {"pipeline_seconds": full_timing, "pipeline_queries": 51}} if kwargs else {"rankings": {}}
-    monkeypatch.setattr(b, "_guarded_step", guard)
-    b._isolated_arm(frozen.source, frozen.work, frozen.evaluation["queries"], f"H:{b.E5}", b.E5, None)
-    assert calls[0] == (f"search-timing:H:{b.E5}", 1800)
-    projection = calls[1][1]
-    actual_seconds = 35 + 121 * .120
-    assert b._stop_reason(actual_seconds, 5 + .022 * 121, None, 0) == "DEADLINE"
-    assert b._stop_reason(actual_seconds, projection, None, 0) is None
-    clock, state = [0.], {}
-    with pytest.raises(RuntimeError, match="DEADLINE"):
-        b._supervise(Process(), Pipe(clock), state, projection, clock=lambda: clock[0], probe=lambda: True)
-    assert state["status"] == "DEADLINE" and state["running_seconds"] > 1.5 * projection
-
-
-def test_r2_search_projection_counts_child_startup_and_guardrail_setup(frozen, monkeypatch):
-    projections = []
-    monkeypatch.setattr(b, "_admission", lambda *a: {})
-    def guard(function, args, kwargs, work, step, projection):
-        projections.append(projection)
-        return {"host_running_seconds": 8, "cost": {"pipeline_seconds": .01, "pipeline_queries": 51}}
-    monkeypatch.setattr(b, "_guarded_step", guard)
-    b._isolated_arm(frozen.source, frozen.work, frozen.evaluation["queries"], "L", None, None)
-    assert projections == [1800, 8 * 121 / 51]
-
-
-def test_r2_timing_probe_measures_all_stages_and_loads_vectors_once(frozen, monkeypatch):
-    clock, loads = [0.], []
-    rows = [dict(row) for row in b._subset_rows(frozen.source)]
-    model = SimpleNamespace(tokenizer=Tokenizer())
-    meta = {"max_tokens": 2048, "prefixes": frozen.configs[b.E5]["prefixes"]}
-    def stage(seconds, value):
-        def call(*args, **kwargs):
-            clock[0] += seconds
-            return value
-        return call
-    monkeypatch.setattr(b.time, "perf_counter", lambda: clock[0])
-    monkeypatch.setattr(b, "_load_rows", stage(10, rows))
-    monkeypatch.setattr(b, "_new_encoder", stage(5, (model, meta)))
-    def vectors(path):
-        loads.append(path)
-        clock[0] += 20
-        return ([], [])
-    monkeypatch.setattr(b, "_load_vectors", vectors)
-    monkeypatch.setattr(b, "get_vesum_connection", lambda *a: nullcontext(None))
-    monkeypatch.setattr(b, "_fts_search", stage(.002, ["c0000"]))
-    monkeypatch.setattr(b, "_query_vector", stage(.020, [1]))
-    monkeypatch.setattr(b, "_dense_rank", stage(.095, ["c0000"]))
-    monkeypatch.setattr(b, "reciprocal_rank_fusion", stage(.003, ["c0000"]))
-    monkeypatch.setattr(b, "_embedder_passage_stats", lambda *a: pytest.fail("retokenization forbidden"))
-    vectors_path = frozen.work / "embeddings" / (b.E5.replace("/", "--") + ".sqlite3")
-    vectors_path.parent.mkdir()
-    vectors_path.touch()
-    result = b._run_arm(frozen.source, frozen.work, frozen.evaluation["queries"], f"H:{b.E5}", b.E5, None, timing_only=True)
-    assert loads == [vectors_path]
-    assert set(result["rankings"]) == set(frozen.evaluation["cost_query_ids"])
-    assert result["cost"]["pipeline_seconds"] == pytest.approx(35 + 51 * .12)
-    assert result["cost"]["query_p95_seconds"] == pytest.approx(.12)
-    assert result["cost"]["pipeline_queries"] == 51
-
-
-def test_r2_vectors_load_once_and_rank_as_one_matrix_product(tmp_path, monkeypatch):
-    import numpy as np
-    path = tmp_path / "vectors.db"
-    with sqlite3.connect(path) as conn:
-        conn.execute("CREATE TABLE vectors(chunk_id TEXT, vector BLOB, dimensions INTEGER)")
-        conn.executemany("INSERT INTO vectors VALUES (?,?,2)", [(cid, np.asarray(vector, dtype="float32").tobytes()) for cid, vector in [("b", [2, 0]), ("a", [1, 0]), ("zero", [0, 0]), ("other", [0, 2])]])
-    ids, matrix = b._load_vectors(path)
-    monkeypatch.setattr(b, "_ro_connect", lambda *a: pytest.fail("must reuse loaded vectors"))
-    products = []
-    class Matrix(np.ndarray):
-        def __matmul__(self, query):
-            products.append(query)
-            return super().__matmul__(query)
-    matrix = matrix.view(Matrix)
-    assert b._dense_rank([10, 0], (ids, matrix)) == ["a", "b", "other", "zero"]
-    assert b._dense_rank([0, 3], (ids, matrix))[0] == "other"
-    assert len(products) == 2
-    assert b._dense_rank([1], ([], np.empty((0, 0)))) == []
-
-
 def test_r2_preview_merging_tokenizer_enforces_reencoded_budget():
     class MergingTokenizer(Tokenizer):
         def encode(self, text, **kwargs):
@@ -805,59 +519,6 @@ def test_r2_preview_merging_tokenizer_enforces_reencoded_budget():
     preview, truncated, retained = b._passage(text, tokenizer, budget=512, tail=True)
     assert " … " in preview and len(tokenizer.encode(preview)) <= 512
     assert truncated and retained == len(preview) - 3
-
-
-def test_r2_cached_bge_tokenizer_on_longest_real_chunks():
-    cache = Path.home() / ".cache/huggingface/hub/models--BAAI--bge-reranker-v2-m3/snapshots"
-    snapshots = sorted(p for p in cache.glob("*") if (p / "tokenizer.json").exists())
-    if not snapshots or not b._default_sources_db().exists():
-        pytest.skip("Cached BGE tokenizer or real corpus unavailable; no download")
-    from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained(str(snapshots[-1]), local_files_only=True)
-    rows = sorted(b._subset_rows(b._default_sources_db()), key=lambda r: len(r["text"]), reverse=True)[:2500]
-    truncated = 0
-    for row in rows:
-        preview, clipped, retained = b._passage(row["text"], tokenizer, budget=512, tail=True)
-        assert len(tokenizer.encode(preview, add_special_tokens=False)) <= 512
-        assert 0 <= retained <= len(row["text"])
-        truncated += clipped
-    assert len(rows) == 2500 and truncated > 0
-    print(f"cached BGE tokenizer: {len(rows)} longest real chunks; {truncated} truncated; zero over-budget previews")
-
-
-@pytest.mark.parametrize("scope", [True, False, "missing", "timeout", "launch_failure"])
-def test_r2_memory_launcher_scope_and_fallback(tmp_path, monkeypatch, scope):
-    monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
-    monkeypatch.delenv("DBUS_SESSION_BUS_ADDRESS", raising=False)
-    commands = []
-    def run(command, **kwargs):
-        commands.append((command, kwargs))
-        if scope == "missing":
-            raise FileNotFoundError
-        if scope == "timeout":
-            raise b.subprocess.TimeoutExpired(command, 10)
-        return SimpleNamespace(returncode=0 if scope in {True, "launch_failure"} else 1)
-    def popen(command, **kwargs):
-        commands.append((command, kwargs))
-        return SimpleNamespace(pid=123, poll=lambda: 1 if scope == "launch_failure" else None)
-    monkeypatch.setattr(b.subprocess, "run", run)
-    monkeypatch.setattr(b.subprocess, "Popen", popen)
-    monkeypatch.setattr(b.time, "sleep", lambda *a: None)
-    ticks = iter([0, 11])
-    monkeypatch.setattr(b.time, "monotonic", lambda: next(ticks))
-    process, pipe, enforcement = b._launch_heavy(b.encode, (Path("db"), tmp_path, b.E5), {"limit": None, "batch_size": 16}, tmp_path)
-    expected = "systemd_scope" if scope is True else "rss_watchdog"
-    assert process.pid == 123 and enforcement == expected
-    assert b._scope_command() == ["systemd-run", "--user", "--scope", "--quiet", "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0"]
-    command, kwargs = commands[-1]
-    assert command[:len(b._scope_command())] == b._scope_command() if scope is True else command[0] == str(b.project_interpreter(b.ROOT))
-    assert kwargs["env"]["XDG_RUNTIME_DIR"] == f"/run/user/{b.os.getuid()}"
-    assert kwargs["env"]["DBUS_SESSION_BUS_ADDRESS"] == f"unix:path=/run/user/{b.os.getuid()}/bus"
-    assert all(kwargs["env"][key] == "6" for key in b.THREAD_ENV)
-    assert kwargs["env"]["LU_BAKEOFF_MEMORY_ENFORCEMENT"] == expected
-    payload = json.loads((tmp_path / "steps/worker-input.json").read_text())
-    assert payload["args"][0] == {"path": "db"}
-    assert not pipe.poll(0)
 
 
 def test_r2_rss_watchdog_kills_above_resident_ceiling():

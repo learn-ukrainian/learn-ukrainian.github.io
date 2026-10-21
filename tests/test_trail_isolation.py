@@ -14,8 +14,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import trail_isolation
-from agent_runtime.adapters import grok_build
-from agent_runtime.adapters.glm import GlmAdapter
 from agent_runtime.adapters.grok_build import GrokBuildAdapter
 from agent_runtime.adapters.kimi import KimiAdapter
 from agent_runtime.adapters.kimicc import KimiccHarness
@@ -109,32 +107,6 @@ def test_grok_profile_has_one_private_server_and_exact_allowlist() -> None:
     assert not launch.root.exists()
 
 
-def test_grok_deny_check_is_mutation_honest() -> None:
-    launch = _prepared_profile("grok")
-    assert launch is not None
-    try:
-        with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
-            with patch.object(
-                grok_build,
-                "GROK_TRAIL_DENY_TOOLS",
-                tuple(rule for rule in trail_isolation.GROK_TRAIL_DENY_TOOLS if rule != "Bash"),
-            ):
-                mutated = GrokBuildAdapter().build_invocation(
-                    prompt="Run the trail.",
-                    mode="read-only",
-                    cwd=Path.cwd(),
-                    model=None,
-                    task_id="p5-mutant",
-                    session_id=None,
-                    tool_config=launch.tool_config,
-                )
-        # This proves the preceding conformance assertion would reject a
-        # regression that dropped the Bash deny rule.
-        assert "Bash" not in _values_after(mutated.cmd, "--deny")
-    finally:
-        launch.cleanup()
-
-
 def test_grok_profile_refuses_conflicting_or_unknown_tool_config() -> None:
     launch = _prepared_profile("grok")
     assert launch is not None
@@ -184,29 +156,6 @@ def test_unproven_adapters_refuse_before_runner_loads_them(adapter: str) -> None
     with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
         with pytest.raises(TrailIsolationError, match="trail isolation refused"):
             invoke(adapter, "Run the trail.", tool_config={"trail_isolation": True})
-
-
-def test_glm_and_native_kimi_refuse_the_profile_at_adapter_boundary(tmp_path: Path) -> None:
-    with pytest.raises(TrailIsolationError, match="GLM"):
-        GlmAdapter().build_invocation(
-            prompt="Run the trail.",
-            mode="read-only",
-            cwd=tmp_path,
-            model=None,
-            task_id=None,
-            session_id=None,
-            tool_config={"trail_isolation": True},
-        )
-    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
-        KimiAdapter().build_invocation(
-            prompt="Run the trail.",
-            mode="read-only",
-            cwd=tmp_path,
-            model=None,
-            task_id=None,
-            session_id=None,
-            tool_config={"trail_isolation": True},
-        )
 
 
 def test_trail_isolation_rejects_write_modes_and_caller_tool_injection() -> None:

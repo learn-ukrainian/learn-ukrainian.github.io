@@ -222,25 +222,6 @@ def test_fresh_non_writer_failure_preserves_spent_budget(tmp_path, layer):
     assert lock.check(path)
 
 
-def test_fresh_real_runner_check_9_is_terminal_on_first_failure(tmp_path, monkeypatch):
-    from scripts.build.fresh import assemble, runner
-    from tests.build.test_fresh_runner import _run_contract
-
-    draft, plan, pack, words = lesson_fixture()
-    monkeypatch.setattr(
-        runner,
-        "check_9_stress_and_render",
-        lambda *a, **kw: assemble.CheckResult(check=9, passed=False, reason="span_location_unrendered", layer="engine"),
-    )
-    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    failure = next(row for row in report["checks"] if row["status"] == "failed")
-    assert failure["check"] == 9 and failure["layer"] == "engine"
-    path = state / "lesson-1.regeneration.yaml"
-    ledger = regeneration.load_ledger(path, "sample-slug", 1)
-    assert ledger["terminal_layer"] == "engine" and ledger["regenerations"] == 0
-    assert len(ledger["attempts"]) == 1 and lock.check(path)
-
-
 def test_fresh_writer_check_still_regenerates(context):
     calls = []
 

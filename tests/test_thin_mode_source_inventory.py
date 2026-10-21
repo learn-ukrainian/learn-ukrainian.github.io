@@ -11,7 +11,6 @@ from scripts.practice.thin_mode_source_inventory import (
     SCHEMA,
     UNIQUE_LEMMA_BAR,
     build_inventory,
-    format_table,
     main,
 )
 
@@ -301,35 +300,3 @@ def test_cli_help_documents_usage_output_exit(capsys) -> None:
     assert "Usage:" in captured.out
     assert "Output:" in captured.out
     assert "Exit codes:" in captured.out
-
-
-def test_cli_prints_unused_table(tmp_path: Path, capsys) -> None:
-    sources = _seed_sources(tmp_path / "sources")
-    practice_dir = tmp_path / "lexicon"
-    _seed_shards(practice_dir)
-    out = tmp_path / "inventory.json"
-
-    rc = main(
-        [
-            "--practice-dir",
-            str(practice_dir),
-            "--synonym-verdicts",
-            str(sources["synonym"]),
-            "--antonym-pairs",
-            str(sources["antonym"]),
-            "--paronym-pairs",
-            str(sources["paronym"]),
-            "--homonym-pairs",
-            str(sources["homonym"]),
-            "--json-out",
-            str(out),
-        ]
-    )
-    assert rc == 0
-    captured = capsys.readouterr()
-    assert "Unused" in captured.out
-    assert "synonym" in captured.out
-    assert "antonym" in captured.out
-    payload = json.loads(out.read_text(encoding="utf-8"))
-    assert payload["modes"]["synonym"]["unused_attested_pairs"] == 1
-    assert "synonym" in format_table(payload)

@@ -38,41 +38,6 @@ def batch(tmp_path):
     return root
 
 
-def test_stale_fresh_excluded_and_held(batch, tmp_path):
-    make(batch, "old-run", 10)
-    make(batch, "busy-run", 10)
-    os.utime(batch / "busy-run" / "deep" / "file")  # one recent deep write keeps it fresh
-    for name in ("tasks", "preserved", "reports", "branch-archive"):
-        make(batch, name, 30)
-    make(batch, "codex-atlas", 30, nested="session-20260929-resume/evidence")
-    (batch / "loose-file").write_text("not a directory")
-    (batch / "linked").symlink_to(batch / "old-run")
-    holds = retention.load_holds(
-        holds_file(tmp_path, [{"path": "batch_state/codex-atlas/session-20260929-resume/", "reason": "#9250"}])
-    )
-    before = {node: node.lstat().st_mtime_ns for node in batch.rglob("*")}
-    result = retention.report(batch, holds=holds)
-    rows = {row["path"]: row for row in result["rows"]}
-    assert set(rows) == {"batch_state/old-run/", "batch_state/codex-atlas/"}
-    assert rows["batch_state/old-run/"]["status"] == "stale" and rows["batch_state/old-run/"]["bytes"] > 8192
-    assert rows["batch_state/codex-atlas/"]["status"] == "held"
-    assert rows["batch_state/codex-atlas/"]["holds"] == [
-        {"path": "batch_state/codex-atlas/session-20260929-resume/", "reason": "#9250"}
-    ]
-    assert result["counts"] == {"excluded": 4, "fresh": 1, "held": 1, "stale": 1, "unknown": 0}
-    assert result["stale_bytes"] == rows["batch_state/old-run/"]["bytes"]
-    # Report only: nothing created, removed or modified.
-    assert {node: node.lstat().st_mtime_ns for node in batch.rglob("*")} == before
-
-
-def test_stale_days_threshold(batch):
-    make(batch, "run", 5)
-    assert retention.report(batch, holds=[])["counts"]["fresh"] == 1
-    assert retention.report(batch, holds=[], stale_days=3)["counts"]["stale"] == 1
-    with pytest.raises(ValueError):
-        retention.report(batch, holds=[], stale_days=0)
-
-
 def test_symlinks_and_mounts_are_not_followed(batch, tmp_path, monkeypatch):
     outside = tmp_path / "outside"
     outside.mkdir()

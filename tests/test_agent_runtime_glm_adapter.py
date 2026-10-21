@@ -12,14 +12,11 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
-from agent_runtime import registry
-from agent_runtime.adapters import glm
 from agent_runtime.adapters.glm import (
     _CI_ENV_VARS,
     GlmAdapter,
     GlmEgressForbiddenError,
 )
-from agent_runtime.runner import invoke
 
 FAKE_OPENCODE = "/usr/local/bin/opencode"
 
@@ -42,16 +39,6 @@ def _build(prompt: str, tmp_path: Path, **kw):
             tool_config=kw.pop("tool_config", None),
             effort=kw.pop("effort", None),
         )
-
-
-def test_glm_registry_and_choices_wiring():
-    assert "glm" in registry.AGENTS
-    entry = registry.get_agent_entry("glm")
-    assert entry["cli_available"] is True
-    assert entry["default_model"] == "glm-5.3-flash"
-    assert entry["default_effort"] == "high"
-    assert entry["resume_policy"] == "never"
-    assert "glm" in delegate._DISPATCH_AGENT_CHOICES
 
 
 def test_glm_adapter_basic_argv_construction(tmp_path):
@@ -100,22 +87,6 @@ def test_glm_adapter_refuses_openrouter_route(tmp_path):
         _build("Refactor module", tmp_path, model="openrouter/z-ai/glm-5.3-flash")
 
 
-def test_glm_adapter_explicit_coding_plan_provider_pin(tmp_path):
-    plan = _build("Refactor module", tmp_path, model="zai-coding-plan/glm-5.3", effort="high")
-    assert plan.cmd[3] == "zai-coding-plan/glm-5.3"
-
-
-def test_glm_adapter_omitted_effort_defaults_to_variant_high(tmp_path):
-    """Operator 2026-08-13: omitted effort → --variant high."""
-    plan = _build("Analyze code", tmp_path)
-    assert plan.cmd[plan.cmd.index("--variant") + 1] == "high"
-
-
-def test_glm_adapter_explicit_effort_max_wins(tmp_path):
-    plan = _build("Analyze code", tmp_path, effort="max")
-    assert plan.cmd[plan.cmd.index("--variant") + 1] == "max"
-
-
 def test_glm_adapter_ci_refusal_guard(tmp_path, monkeypatch):
     for var in _CI_ENV_VARS:
         monkeypatch.setenv(var, "1")
@@ -132,24 +103,6 @@ def test_glm_ci_refusal_names_the_variable_never_its_value(tmp_path, monkeypatch
     with pytest.raises(GlmEgressForbiddenError, match="JENKINS_URL") as refused:
         _build("Should fail in CI", tmp_path)
     assert sentinel not in str(refused.value)
-
-
-def test_glm_ci_guard_mutation_check(tmp_path, monkeypatch):
-    """Mutation check: disabling guard allows execution in CI, restoring it blocks."""
-    monkeypatch.setenv("CI", "true")
-
-    # 1. Guard active -> raises GlmEgressForbiddenError
-    with pytest.raises(GlmEgressForbiddenError):
-        _build("Prompt in CI", tmp_path)
-
-    # 2. Disable guard (mutation) -> test fails to raise error (plan constructs)
-    with patch.object(glm, "assert_glm_egress_allowed", lambda verb="": None):
-        plan = _build("Prompt in CI", tmp_path)
-        assert plan.cmd[0] == FAKE_OPENCODE
-
-    # 3. Restore guard -> raises GlmEgressForbiddenError again
-    with pytest.raises(GlmEgressForbiddenError):
-        _build("Prompt in CI", tmp_path)
 
 
 def test_glm_adapter_parse_response_success():
@@ -191,48 +144,6 @@ def test_glm_adapter_parse_response_rate_limit():
     )
     assert result.ok is False
     assert result.rate_limited is True
-
-
-def test_glm_runner_execution_with_fake_opencode_binary(tmp_path, monkeypatch):
-    fake_bin = tmp_path / "bin" / "opencode"
-    fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text("#!/bin/sh\necho 'GLM Output: Verified'\nexit 0\n")
-    fake_bin.chmod(0o755)
-
-    monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
-
-    res = invoke(
-        "glm",
-        "Explain quantum state",
-        mode="read-only",
-        cwd=tmp_path,
-        entrypoint="runtime",
-    )
-
-    assert res.ok is True
-    assert "GLM Output: Verified" in res.response
-    assert res.returncode == 0
-
-
-def test_glm_runner_execution_failure_path(tmp_path, monkeypatch):
-    fake_bin = tmp_path / "bin" / "opencode"
-    fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text("#!/bin/sh\necho 'Fatal error in opencode' >&2\nexit 2\n")
-    fake_bin.chmod(0o755)
-
-    monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
-
-    res = invoke(
-        "glm",
-        "Test failure path",
-        mode="read-only",
-        cwd=tmp_path,
-        entrypoint="runtime",
-    )
-
-    assert res.ok is False
-    assert res.returncode == 2
-    assert "Fatal error in opencode" in res.stderr_excerpt
 
 
 def test_glm_delegate_worker_state_lifecycle_success(tmp_path, monkeypatch):

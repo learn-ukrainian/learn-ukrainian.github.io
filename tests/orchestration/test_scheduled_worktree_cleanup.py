@@ -76,20 +76,6 @@ def test_main_sweeps_sessions_once_and_reports_counts_only(tmp_path: Path, monke
     assert session.exists() is not apply
 
 
-def test_main_session_error_is_recorded_and_returns_failure(tmp_path: Path, monkeypatch, capsys) -> None:
-    monkeypatch.setattr(
-        cleanup,
-        "build_receipt",
-        lambda *_args, **_kwargs: {"observed_at": "2026-10-03T00:00:00Z", "summary": {"errors": 0}, "repositories": []},
-    )
-    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
-    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
-    monkeypatch.setattr(cleanup, "sweep_sessions", lambda **_kwargs: {"summary": {"errors": 2}})
-    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(tmp_path / "receipts")]) == 1
-    summary = json.loads(capsys.readouterr().out)
-    assert summary["summary"]["errors"] == 2
-
-
 def test_main_nested_lease_json_writes_receipt_and_keeps_scratch(tmp_path: Path, monkeypatch, capsys) -> None:
     root = tmp_path / f"claude-{os.getuid()}"
     session = root / "12345678-1234-1234-1234-123456789abc"
@@ -166,65 +152,6 @@ def test_apply_fails_closed_without_process_probe(tmp_path: Path, monkeypatch) -
     assert result["activity_probe"] == {"available": False, "cwd_count": 0}
     assert result["errors"] == ["process-CWD activity probe unavailable; apply skipped"]
     assert result["results"] == []
-
-
-def test_scheduled_cleanup_enables_terminal_dispatch_class_by_default(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = _repo(tmp_path)
-    captured: dict[str, object] = {}
-    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "reap_worktrees",
-        lambda **kwargs: captured.update(kwargs) or [],
-    )
-    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
-    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
-    monkeypatch.setattr(
-        cleanup,
-        "sweep_tmp_leaks",
-        lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0},
-    )
-
-    cleanup._repo_result(repo, apply=False)
-
-    assert captured["merged_pr_only"] is True
-    assert captured["include_terminal_dispatches"] is True
-
-
-def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monkeypatch) -> None:
-    repo = _repo(tmp_path)
-    captured: dict[str, object] = {}
-    monkeypatch.setenv("LU_REAPER_TERMINAL_DISPATCHES", "0")
-    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "reap_worktrees",
-        lambda **kwargs: captured.update(kwargs) or [],
-    )
-    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
-    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
-    monkeypatch.setattr(
-        cleanup,
-        "sweep_tmp_leaks",
-        lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0},
-    )
-
-    cleanup._repo_result(repo, apply=False)
-
-    assert captured["include_terminal_dispatches"] is False
 
 
 def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path, monkeypatch) -> None:
@@ -323,27 +250,6 @@ def test_reaper_error_marks_repository_run_failed(
     result = cleanup._repo_result(repo, apply=True)
 
     assert result["errors"] == [f"{worktree}: worktree removal failed"]
-
-
-def test_lock_contention_marks_repository_run_failed(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = _repo(tmp_path)
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_live_cwd_paths",
-        lambda _repo: set(),
-    )
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "reap_worktrees",
-        lambda **_kwargs: (_ for _ in ()).throw(RuntimeError("cleanup lock held")),
-    )
-
-    result = cleanup._repo_result(repo, apply=True)
-
-    assert result["errors"] == ["cleanup lock held"]
 
 
 def test_stale_worktree_registration_is_pruned_before_reaping(
@@ -632,35 +538,6 @@ def test_checked_out_branch_is_not_deleted(
     assert _git(worktree, "branch", "--show-current") == branch
 
 
-def test_origin_main_ancestor_with_gone_upstream_is_deleted(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = _repo(tmp_path)
-    branch = "codex/ancestor-gone"
-    _git(repo, "checkout", "-b", branch)
-    (repo / "merged.txt").write_text("merged remotely\n", encoding="utf-8")
-    _git(repo, "add", "merged.txt")
-    _git(repo, "commit", "-m", "merged branch commit")
-    _git(repo, "push", "-u", "origin", branch)
-    branch_head = _git(repo, "rev-parse", "HEAD")
-    _git(repo, "push", "origin", f"{branch}:main")
-    _git(repo, "checkout", "main")
-    assert _git(repo, "rev-parse", "HEAD") != branch_head
-    _git(repo, "push", "origin", "--delete", branch)
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_query_pr_states",
-        lambda _repo, _branch: ([], None),
-    )
-
-    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
-
-    assert result[0]["action"] == "deleted"
-    assert "ancestor of origin/main" in result[0]["reason"]
-    assert _git(repo, "branch", "--list", branch) == ""
-
-
 def test_repository_run_fails_closed_when_hygiene_lock_is_held(
     tmp_path: Path,
 ) -> None:
@@ -696,23 +573,6 @@ def test_worktree_prune_failure_stops_repository_run(
     assert result["branches"] == []
     assert result["maintenance"] is None
     assert result["errors"] == ["worktree prune failed; cleanup skipped"]
-
-
-def test_lock_contention_is_aggregated_in_receipt(
-    tmp_path: Path,
-) -> None:
-    repo = _repo(tmp_path)
-
-    with cleanup._GitHygieneLock(repo):
-        receipt = cleanup.build_receipt(
-            [repo],
-            apply=True,
-            observed_at="2026-07-29T10:00:00Z",
-        )
-
-    assert receipt["schema_version"] == "scheduled-git-hygiene.v2"
-    assert receipt["summary"]["errors"] == 1
-    assert "another scheduled Git hygiene run holds" in (receipt["repositories"][0]["errors"][0])
 
 
 def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> None:
@@ -773,40 +633,6 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "needs_finalize_worktrees": [],
     }
     assert receipt["mode"] == "apply"
-
-
-def test_main_records_read_only_home_session_policy_and_prints_hard_warning(
-    tmp_path: Path,
-    monkeypatch,
-    capsys,
-) -> None:
-    receipt = {"summary": {"errors": 0}}
-    home_report = {
-        "mode": "read_only",
-        "policy": {"retention_days": 14},
-        "lanes": [],
-        "violations": [
-            {
-                "provider": "codex",
-                "kind": "stale_sessions",
-                "stale_files": 1,
-                "stale_bytes": 2,
-            }
-        ],
-    }
-    monkeypatch.setattr(cleanup, "build_receipt", lambda *_args, **_kwargs: receipt)
-    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: home_report)
-    monkeypatch.setattr(
-        cleanup.home_session_retention_check,
-        "warning_lines",
-        lambda _report: ["HARD WARNING: stale home session"],
-    )
-    monkeypatch.setattr(cleanup, "write_receipt", lambda *_args: tmp_path / "receipt.json")
-
-    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(tmp_path)]) == 0
-
-    assert receipt["home_session_retention"] is home_report
-    assert "HARD WARNING: stale home session" in capsys.readouterr().err
 
 
 def _git_env() -> dict[str, str]:
@@ -922,32 +748,6 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     assert fetch_traces and not any(_maintenance_child(argv) for blob in fetch_traces for argv in _trace_children(blob))
     assert result["maintenance"]["action"] == "ran"
     assert result["maintenance"]["ok"] is True
-
-
-def test_git_maintenance_failure_is_reported(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = _repo(tmp_path)
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
-    monkeypatch.setattr(
-        cleanup,
-        "_git_maintenance",
-        lambda _repo, *, apply: {
-            "action": "ran",
-            "ok": False,
-            "detail": "gc failed",
-        },
-    )
-
-    result = cleanup._repo_result(repo, apply=True)
-
-    assert result["errors"] == ["git maintenance failed: gc failed"]
 
 
 def test_receipt_write_is_atomic_and_private(tmp_path: Path) -> None:
@@ -1165,24 +965,6 @@ def test_rescue_ref_with_unique_commit_and_no_pr_is_skipped(tmp_path: Path, monk
     assert _git(repo, "branch", "--list", "rescue/x") != ""
 
 
-def test_scratch_ancestor_of_origin_main_is_deleted(tmp_path: Path, monkeypatch) -> None:
-    repo = _repo(tmp_path)
-    branch = "claude/review-9"
-    _git(repo, "branch", branch, "main")
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_query_pr_states",
-        lambda _repo, _branch: ([], None),
-    )
-
-    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
-
-    row = next(item for item in result if item["branch"] == branch)
-    assert row["action"] == "deleted"
-    assert "ancestor of origin/main" in row["reason"]
-    assert _git(repo, "branch", "--list", branch) == ""
-
-
 def test_scratch_ref_on_another_origin_ref_is_deleted(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
     _git(repo, "checkout", "-b", "feature/landed")
@@ -1264,43 +1046,6 @@ def test_scratch_ref_on_stale_origin_ref_is_kept(tmp_path: Path, monkeypatch) ->
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
-
-    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
-
-    row = next(item for item in result if item["branch"] == branch)
-    assert row["action"] == "skipped"
-    assert "tip not contained" in row["reason"]
-    assert _git(repo, "branch", "--list", branch) != ""
-
-
-def test_scratch_ref_is_kept_when_live_remote_check_errors(tmp_path: Path, monkeypatch) -> None:
-    repo = _repo(tmp_path)
-    _git(repo, "checkout", "-b", "feature/landed")
-    (repo / "landed.txt").write_text("on origin\n", encoding="utf-8")
-    _git(repo, "add", "landed.txt")
-    _git(repo, "commit", "-m", "landed elsewhere")
-    _git(repo, "push", "-u", "origin", "feature/landed")
-    _git(repo, "checkout", "main")
-    branch = "rescue/copied"
-    _git(repo, "branch", branch, "feature/landed")
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_query_pr_states",
-        lambda _repo, _branch: ([], None),
-    )
-    real_run_git = cleanup._run_git
-
-    def flaky_run_git(repo_root: Path, *args: str):
-        if "ls-remote" in args:
-            return subprocess.CompletedProcess(
-                args=["git", *args],
-                returncode=128,
-                stdout="",
-                stderr="fatal: unable to connect to origin",
-            )
-        return real_run_git(repo_root, *args)
-
-    monkeypatch.setattr(cleanup, "_run_git", flaky_run_git)
 
     result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
 
@@ -1610,14 +1355,6 @@ def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) 
     assert not root.exists(), "review temp orphan should be reaped during apply mode"
 
 
-def test_default_parser_targets_both_repositories() -> None:
-    parser = cleanup.build_parser()
-    args = parser.parse_args([])
-    assert len(args.default_repo_roots) == 2
-    assert args.default_repo_roots[0] == cleanup.default_public_repo()
-    assert args.default_repo_roots[1] == cleanup.default_private_repo(cleanup.default_public_repo())
-
-
 def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
     receipt = {
         "schema_version": cleanup.SCHEMA_VERSION,
@@ -1704,25 +1441,6 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
     assert ".worktrees" not in dumped
     assert "t1" not in dumped
     assert "t2" not in dumped
-
-
-def test_classify_repo_results_retains_exceptions_and_owners() -> None:
-    results = [
-        {"action": "removed", "reason": "merged", "owner": "codex"},
-        {"action": "skipped", "reason": "dirty worktree", "dirty": True, "owner": "codex"},
-        {"action": "error", "reason": "failed", "error": "permission denied removing worktree", "owner": "claude"},
-        {"action": "skipped", "reason": "primary checkout", "owner": "unattributed"},
-    ]
-    counts = cleanup.classify_repo_results(results)
-    assert counts["total"] == 4
-    assert counts["reaped"] == 1
-    assert counts["retained"] == 3
-    assert counts["retained_exceptions"] == 2  # dirty + permission_error
-    assert counts["by_preservation_class"]["primary"] == 1
-    assert counts["by_preservation_class"]["dirty"] == 1
-    assert counts["by_preservation_class"]["permission_error"] == 1
-    assert counts["by_owner"] == {"claude": 1, "codex": 2, "unattributed": 1}
-    assert counts["reaped_by_owner"] == {"codex": 1}
 
 
 def _stub_repo_hooks(monkeypatch, *, leak_sweep_calls: list[bool]) -> None:

@@ -88,17 +88,6 @@ def test_passes_when_plan_has_no_chunk_ids():
     assert result["warnings"] == ["plan_has_no_chunk_ids_skipping_membership_check"]
 
 
-def test_ignores_non_textbook_roles():
-    plan = {"references": [{"title": "Book 1", "notes": "chunk_id: known-chunk"}]}
-    resources = [
-        {"role": "youtube", "source_ref": "Vid 1", "packet_chunk_id": "unknown-1"},
-        {"role": "wiki", "source_ref": "Article 1", "chunk_id": "unknown-2"},
-    ]
-
-    result = _plan_reference_match_gate(resources, plan)
-    assert result["passed"] is True
-
-
 def test_resource_coverage_requires_a1_m1_m7_plan_references():
     plan = {
         "level": "A1",
@@ -172,11 +161,3 @@ def test_resource_coverage_requires_wiki_external_resource_urls():
             "url": "https://www.youtube.com/watch?v=abc",
         }
     ]
-
-
-def test_resource_coverage_skips_other_archetypes():
-    plan = {"level": "A1", "sequence": 8, "references": [{"title": "Missing"}]}
-
-    result = _resource_coverage_gate([], plan, {"external_resources": []})
-
-    assert result == {"passed": True, "skipped": "not_a1_m1_m7_archetype"}

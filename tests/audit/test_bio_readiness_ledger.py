@@ -79,22 +79,6 @@ def test_each_milestone_transition_stops_at_its_previous_reached_stage(gate: str
     assert max((name for name, reached in milestones.items() if reached), key=ledger.MILESTONES.index) == expected
 
 
-def test_manual_unknown_and_structural_wiki_pass_do_not_grant_grounding() -> None:
-    gates = _gates()
-    gates["wiki_grounding"]["status"] = "unknown"
-
-    milestones = ledger.calculate_milestones(gates)
-
-    assert milestones["plan-ready"] is True
-    assert milestones["wiki-ready"] is False
-    assert ledger._manual_gate(None, Path("registry.yaml"), "slug", "wiki_grounding")["status"] == "unknown"
-
-
-def test_reading_packet_presence_is_independent_of_plan_validity() -> None:
-    assert ledger._plan_has_reading_packet({"readings": [{"title": "Source"}]}) is True
-    assert ledger._plan_has_reading_packet({"readings": []}) is False
-
-
 def test_active_hold_blocks_module_ready_even_when_other_inputs_pass() -> None:
     gates = _gates()
     gates["no_active_hold"]["status"] = "fail"

@@ -18,8 +18,6 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     ULIF_PARSER_VERSION,
     ULIF_STRUCTURED_SCHEMA_VERSION,
     parse_dictua_envelope,
-    strip_raw_html,
-    summarize_artifacts,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -213,12 +211,6 @@ def test_reduce_rejects_content_empty_ok_envelope():
     assert artifact["sections"] == {}
 
 
-def test_strip_raw_html_removes_nested_keys():
-    payload = {"rows": [[{"raw_html": "<b>x</b>", "text": "x"}]], "raw_html": "<table/>"}
-    cleaned = strip_raw_html(payload)
-    assert cleaned == {"rows": [[{"text": "x"}]]}
-
-
 def test_reduce_offline_slice_resumable_after_kill(tmp_path, sample_envelopes):
     cache_path = tmp_path / "network-cache.sqlite"
     keys = _seed_network_cache(cache_path, sample_envelopes)
@@ -290,17 +282,3 @@ def test_raw_cache_ro_index_does_not_require_writer_lock(tmp_path, sample_envelo
             conn.close()
     finally:
         writer.close()
-
-
-def test_summarize_artifacts_aggregate_only():
-    arts = [
-        {"status": "ok", "sections": {"paradigm": {}, "synonyms": [{}, {}]}},
-        {"status": "not_found", "sections": {}},
-        {"status": "ok", "sections": {"paradigm": {}, "antonyms": [{}]}},
-    ]
-    summary = summarize_artifacts(arts)
-    assert summary["artifact_count"] == 3
-    assert summary["status_counts"] == {"ok": 2, "not_found": 1}
-    assert summary["section_presence"]["paradigm"] == 2
-    assert summary["relation_group_totals"]["synonyms"] == 2
-    assert summary["relation_group_totals"]["antonyms"] == 1

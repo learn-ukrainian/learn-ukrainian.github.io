@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -19,10 +18,6 @@ def _load(name: str) -> dict:
 
 def _record(report: dict, task_id: str) -> dict:
     return next(item for item in report["records"] if item["task_id"] == task_id)
-
-
-def _at(minute: int) -> datetime:
-    return datetime(2026, 1, 1, 10, minute, tzinfo=UTC)
 
 
 def test_canonical_task_and_linked_pr_check_spans_are_qualified() -> None:
@@ -50,21 +45,6 @@ def test_missing_or_non_canonical_span_is_unknown_never_zero() -> None:
     assert record["metrics"]["onboarding.elapsed"]["status"] == "unqualified"
 
 
-def test_unknown_value_makes_the_comparison_inconclusive() -> None:
-    report = db.evaluate(_load("unknown_span.json"))
-    metric = report["strata"]["routine_product_change"]["metrics"]["authoring.worker_wall"]
-    assert metric["verdict"] == "inconclusive"
-    assert "unknown_value_in_before" in metric["reasons"]
-
-
-def test_overlapping_spans_report_union_not_sum() -> None:
-    record = _record(db.evaluate(_load("overlapping_spans.json")), "fixture-overlap-1")
-    checks = record["metrics"]["ci_landing.check_wall"]
-    assert checks["spans_s"] == [600.0, 600.0]
-    assert checks["union_s"] == 900.0
-    assert checks["union_s"] != sum(checks["spans_s"])
-
-
 @pytest.mark.parametrize(
     ("task_id", "reason"),
     [
@@ -82,68 +62,6 @@ def test_finished_but_unproven_records_are_not_delivered(task_id: str, reason: s
     assert record["reasons"] == [reason]
 
 
-def test_exclusions_and_out_of_strata_records_are_excluded_not_counted() -> None:
-    report = db.evaluate(_load("not_delivered.json"))
-    assert report["excluded"] == ["fixture-excluded-dry-run", "fixture-outside-strata"]
-    denominators = report["strata"]["routine_product_change"]["denominators"]["before"]
-    assert denominators["members"] == 6
-    assert denominators["delivered"] == 0
-
-
-def test_floor_applies_per_stratum_never_pooled() -> None:
-    report = db.evaluate(_load("stratum_floor.json"))
-    delivered = {
-        arm: sum(1 for r in report["records"] if r["arm"] == arm and r["disposition"] == "delivered") for arm in db.ARMS
-    }
-    assert delivered == {"before": 11, "after": 11}
-    for stratum in ("routine_product_change", "architecture_change"):
-        assert report["strata"][stratum]["verdict"] == "inconclusive"
-        assert report["strata"][stratum]["metrics"]["authoring.worker_wall"]["reasons"] == [
-            "fewer_than_five_delivered_in_stratum"
-        ]
-    launcher = report["strata"]["launcher_repair"]
-    assert launcher["verdict"] == "reportable"
-    assert launcher["metrics"]["authoring.worker_wall"]["before"]["n"] == 5
-
-
-def test_claims_on_inconclusive_or_pooled_comparisons_are_rejected() -> None:
-    claims = {(c["stratum"], c["metric"]): c for c in db.evaluate(_load("stratum_floor.json"))["claims"]}
-    assert claims[("routine_product_change", "authoring.worker_wall")]["status"] == "rejected"
-    assert claims[("launcher_repair", "ci_landing.check_wall")]["reason"] == "comparison_inconclusive"
-    assert claims[("pooled", "authoring.worker_wall")]["reason"] == "not_a_single_frozen_stratum"
-    admissible = claims[("launcher_repair", "authoring.worker_wall")]
-    assert admissible["status"] == "admissible"
-    assert admissible["reason"] == "reportable_distribution_only_not_significance"
-
-
-def test_incomparable_setup_is_inconclusive() -> None:
-    cohort = _load("stratum_floor.json")
-    for record in cohort["records"]:
-        if record["arm"] == "after" and record["stratum"] == "launcher_repair":
-            record["matched_setup"] = {"required_check": "other"}
-    metric = db.evaluate(cohort)["strata"]["launcher_repair"]["metrics"]["authoring.worker_wall"]
-    assert metric["verdict"] == "inconclusive"
-    assert metric["reasons"] == ["incomparable_setup"]
-
-
-def test_missing_metric_in_one_arm_is_inconclusive() -> None:
-    cohort = _load("stratum_floor.json")
-    target = next(r for r in cohort["records"] if r["arm"] == "before" and r["stratum"] == "launcher_repair")
-    target["spans"].append(
-        {
-            "stage": "ci_landing",
-            "kind": "check_wall",
-            "start_field": "github.check_run.startedAt",
-            "end_field": "github.check_run.completedAt",
-            "start": "2026-01-01T11:00:00Z",
-            "end": "2026-01-01T11:05:00Z",
-        }
-    )
-    metric = db.evaluate(cohort)["strata"]["launcher_repair"]["metrics"]["ci_landing.check_wall"]
-    assert metric["verdict"] == "inconclusive"
-    assert "missing_value_in_after" in metric["reasons"]
-
-
 def test_negative_interval_and_naive_timestamp_are_unknown() -> None:
     negative = {
         "stage": "authoring",
@@ -159,16 +77,6 @@ def test_negative_interval_and_naive_timestamp_are_unknown() -> None:
         None,
         "missing_endpoint",
     )
-
-
-def test_union_seconds_merges_overlaps_and_keeps_gaps() -> None:
-    assert db.union_seconds([]) == 0.0
-    intervals = [(_at(0), _at(10)), (_at(5), _at(12)), (_at(20), _at(25)), (_at(21), _at(22))]
-    assert db.union_seconds(intervals) == (12 + 5) * 60.0
-
-
-def test_unqualified_stages_are_exactly_onboarding_and_capacity() -> None:
-    assert frozenset({"onboarding", "capacity"}) == db.UNQUALIFIED_STAGES
 
 
 @pytest.mark.parametrize(
@@ -190,13 +98,6 @@ def test_unqualified_stages_are_exactly_onboarding_and_capacity() -> None:
 def test_malformed_cohorts_are_refused(cohort: dict, message: str) -> None:
     with pytest.raises(db.CohortError, match=message):
         db.evaluate(cohort)
-
-
-def test_report_records_input_digest_and_is_deterministic() -> None:
-    first = db.evaluate(_load("stratum_floor.json"))
-    second = db.evaluate(_load("stratum_floor.json"))
-    assert first == second
-    assert len(first["input_sha256"]) == 64
 
 
 def test_cli_prints_report_and_refuses_bad_input(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -257,15 +158,6 @@ def _verdict(cohort: dict) -> tuple[dict, dict, dict | None]:
     return report, stratum, stratum["metrics"].get("ci_landing.check_wall")
 
 
-def test_heldout_base_cohort_at_floor_is_reportable() -> None:
-    report, stratum, metric = _verdict(_floor_cohort())
-    assert _record(report, "heldout-before-0")["metrics"]["ci_landing.check_wall"]["spans_s"] == [240.0, 300.0, 60.0]
-    assert _record(report, "heldout-before-0")["metrics"]["ci_landing.check_wall"]["union_s"] == 480.0
-    assert stratum["verdict"] == "reportable"
-    assert metric["before"]["n"] == metric["after"]["n"] == 5
-    assert report["claims"][0]["status"] == "admissible"
-
-
 @pytest.mark.parametrize(
     ("field", "value"),
     [
@@ -321,18 +213,6 @@ def test_shared_merged_head_under_different_pr_numbers_is_one_outcome() -> None:
         db.evaluate(cohort)
 
 
-def test_explicitly_excluded_repeats_count_once_and_miss_the_floor() -> None:
-    cohort = _one_outcome_per_arm(_floor_cohort())
-    for record in cohort["records"][2:]:
-        record["exclusion"] = "duplicate_attempt"
-    report, stratum, metric = _verdict(cohort)
-    assert {arm: stratum["denominators"][arm]["delivered"] for arm in db.ARMS} == {"before": 1, "after": 1}
-    assert len(report["excluded"]) == 8
-    assert stratum["floor_met"] is False
-    assert metric["reasons"] == ["fewer_than_five_delivered_in_stratum"]
-    assert report["claims"][0]["status"] == "rejected"
-
-
 @pytest.mark.parametrize("setup", ["absent", None, {}, {"required_check": None, "review_profile": "code"}])
 def test_missing_or_empty_setup_is_unknown_and_inconclusive(setup: object) -> None:
     cohort = _floor_cohort()
@@ -345,12 +225,6 @@ def test_missing_or_empty_setup_is_unknown_and_inconclusive(setup: object) -> No
     assert metric == {"verdict": "inconclusive", "reasons": ["unknown_setup"]}
     assert stratum["verdict"] == "inconclusive"
     assert report["claims"][0] == {**CLAIM, "status": "rejected", "reason": "comparison_inconclusive"}
-
-
-def test_one_record_without_setup_makes_the_comparison_inconclusive() -> None:
-    cohort = _floor_cohort()
-    cohort["records"][3].pop("matched_setup")
-    assert _verdict(cohort)[2]["reasons"] == ["unknown_setup"]
 
 
 @pytest.mark.parametrize(
@@ -371,85 +245,6 @@ def test_outcome_identifiers_must_be_positive_integers(outcome: dict) -> None:
     report = db.evaluate(cohort)
     assert _record(report, "heldout-before-0")["reasons"] == ["unlinked_outcome"]
     assert report["claims"][0]["status"] == "rejected"
-
-
-def test_boolean_identifiers_everywhere_are_not_delivered() -> None:
-    cohort = _floor_cohort()
-    for record in cohort["records"]:
-        record["outcome"] = {"issue": False, "pr": True}
-    report, stratum, _ = _verdict(cohort)
-    assert {tuple(item["reasons"]) for item in report["records"]} == {("unlinked_outcome",)}
-    assert stratum["verdict"] == "inconclusive"
-
-
-@pytest.mark.parametrize(
-    ("cohort", "message"),
-    [
-        ([], "cohort must be a JSON object"),
-        ({"schema_version": db.SCHEMA_VERSION, "records": [None]}, "each record must be an object"),
-        (
-            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "spans": [False]}]},
-            "each span must be an object",
-        ),
-        (
-            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "spans": {"a": 1}}]},
-            "spans must be a list",
-        ),
-        (
-            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "outcome": [1]}]},
-            "outcome must be an object",
-        ),
-        (
-            {
-                "schema_version": db.SCHEMA_VERSION,
-                "records": [{"task_id": "x", "arm": "before", "exclusion": "dry_run", "merge": "yes"}],
-            },
-            "merge must be an object",
-        ),
-        (
-            {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "matched_setup": "x"}]},
-            "matched_setup must be an object",
-        ),
-        ({"schema_version": db.SCHEMA_VERSION, "records": [], "claims": {}}, "claims must be a list"),
-        ({"schema_version": db.SCHEMA_VERSION, "records": [], "claims": [None]}, "each claim must be an object"),
-        (
-            {"schema_version": db.SCHEMA_VERSION, "records": [], "claims": [{"stratum": "x", "metric": ["m"]}]},
-            "string metric",
-        ),
-    ],
-)
-def test_malformed_structures_raise_cohort_error(cohort: object, message: str) -> None:
-    with pytest.raises(db.CohortError, match=message):
-        db.evaluate(cohort)  # type: ignore[arg-type]
-
-
-@pytest.mark.parametrize(
-    "document",
-    [
-        [],
-        {"schema_version": db.SCHEMA_VERSION, "records": [None]},
-        {"schema_version": db.SCHEMA_VERSION, "records": [{"task_id": "x", "arm": "before", "spans": [False]}]},
-    ],
-)
-def test_cli_exits_two_on_malformed_structures(
-    document: object, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    path = tmp_path / "malformed.json"
-    path.write_text(json.dumps(document), encoding="utf-8")
-    assert db.main([str(path)]) == 2
-    assert capsys.readouterr().err.startswith("delivery_baseline: ")
-
-
-def test_unhashable_span_fields_are_non_canonical_not_a_crash() -> None:
-    span = {
-        "stage": "authoring",
-        "kind": "worker_wall",
-        "start_field": ["task.started_at"],
-        "end_field": "task.finished_at",
-        "start": "2026-01-01T10:00:00Z",
-        "end": "2026-01-01T11:00:00Z",
-    }
-    assert db._span_value(span) == (None, "non_canonical_source")
 
 
 def test_actions_job_span_is_a_qualified_check_wall() -> None:

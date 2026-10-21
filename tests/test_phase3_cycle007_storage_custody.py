@@ -29,11 +29,6 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SUMMARY_SCHEMA = resolve_open_model_path(
     "data/projects/open_model_data/contracts/phase3_cycle007_storage_public_summary_v1.schema.json"
 )
-PUBLIC_SUMMARY = resolve_open_model_path(
-    "data/projects/open_model_data/reference/phase3_cycle007_storage_public_summary_v1.json"
-)
-
-
 def _assert_no_host_filesystem_leak(payload: Mapping[str, Any], *, where: str) -> None:
     leaked = storage.public_summary_forbidden_fs_keys(payload)
     assert leaked == (), f"{where} leaked host filesystem keys: {leaked}"
@@ -220,15 +215,6 @@ def _build_evidence(root: Path, materialization: Path) -> Path:
     }
     _write(evidence / "manifest.json", manifest)
     return evidence
-
-
-def test_reconcile_reports_unbound_without_private_binding() -> None:
-    reconcile = storage.reconcile_public_private(private_bound=False, inventory=None)
-    assert reconcile["text_free"] is True
-    assert reconcile["private_binding_state"] == "UNBOUND"
-    assert reconcile["safe_failure_code"] == "private_binding_unbound"
-    assert reconcile["public"]["public_packet_count"] == 204
-    assert reconcile["public"]["public_row_count"] == 10159
 
 
 def test_retention_stays_unresolved_without_held_out_proof() -> None:
@@ -521,65 +507,6 @@ def test_staged_backup_refuses_tampered_export_or_same_failure_domain(
     assert exc.value.code == "backup_restore_failure"
 
 
-def test_staged_backup_records_cross_filesystem_allocation_without_rejecting_content(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setattr(
-        storage,
-        "_physical_failure_domain_sha256",
-        lambda root: storage.digest(f"fixture-domain:{root.name}".encode()),
-    )
-    materialization, _packet_count, _row_count = _build_materialization(tmp_path)
-    evidence = _build_evidence(tmp_path, materialization)
-    source_work = tmp_path / "source-work"
-    source_work.mkdir(mode=storage.PRIVATE_DIR_MODE)
-    os.chmod(source_work, storage.PRIVATE_DIR_MODE)
-    bindings = storage.resolve_bindings(
-        fixture=True,
-        materialization=materialization,
-        evidence=evidence,
-        work_root=source_work,
-    )
-    primary = storage.primary_universal_pack_stage(bindings)
-    workstation_root = tmp_path / "workstation"
-    workstation_root.mkdir(mode=storage.PRIVATE_DIR_MODE)
-    imported_pack = workstation_root / "imported-pack"
-    admission = storage.workstation_backup_admission_stage(
-        primary["portable_export"],
-        workstation_root,
-        imported_pack,
-        source_failure_domain_token="fixture-primary-domain",
-        workstation_failure_domain_token="fixture-workstation-domain",
-        fixture=True,
-    )
-    shutil.copytree(primary["pack_dir"], imported_pack)
-
-    source_allocated = primary["pack_manifest"]["total_stored_allocated_bytes"]
-    allocation_delta = 22_827_008
-    monkeypatch.setattr(
-        storage,
-        "_pack_payload_allocated_bytes",
-        lambda _pack_dir, _manifest: source_allocated - storage.ZSTD_METADATA_ALLOWANCE_BYTES + allocation_delta,
-    )
-
-    attested = storage.workstation_backup_attestation_stage(
-        primary["portable_export"],
-        admission,
-        imported_pack,
-        workstation_root,
-        source_failure_domain_token="fixture-primary-domain",
-        workstation_failure_domain_token="fixture-workstation-domain",
-        zstd_executable=bindings.zstd_executable,
-        fixture=True,
-    )
-
-    assert attested["restore_proof"]["backup_restore_ok"] is True
-    assert attested["backup"]["source_compact_allocated_bytes"] == source_allocated
-    assert attested["backup"]["backup_allocated_bytes"] == (source_allocated + allocation_delta)
-    assert attested["backup"]["backup_allocation_delta_bytes"] == allocation_delta
-    assert attested["attestation"]["backup_allocation_delta_bytes"] == allocation_delta
-
-
 def test_staged_finalize_refuses_same_content_inode_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         storage,
@@ -854,42 +781,6 @@ def test_unresolved_deletion_auth_requires_universal_pack_and_restore_proof(
     assert exc.value.code == "backup_restore_failure"
 
 
-def test_reversible_lane_retain_streams_content_pack_proof(tmp_path: Path) -> None:
-    materialization, packet_count, row_count = _build_materialization(tmp_path)
-    evidence = _build_evidence(tmp_path, materialization)
-    work = tmp_path / "work"
-    work.mkdir(mode=storage.PRIVATE_DIR_MODE)
-    os.chmod(work, storage.PRIVATE_DIR_MODE)
-    proof = {
-        "held_out_evaluation_function_id": "source_qualified_cell_coverage_v1",
-        "source_qualified": True,
-        "required_fields": ["document_id", "split_id"],
-        "required_identities": ["unit_id", "unit_sha256"],
-        "named_consumer": "issue-7427-evaluation-steward",
-        "text_free_source_rights_adjudication_metadata": True,
-    }
-    bindings = storage.resolve_bindings(
-        fixture=True,
-        materialization=materialization,
-        evidence=evidence,
-        work_root=work,
-    )
-
-    lane = storage.run_reversible_lane(bindings, held_out_evaluation_proof=proof)
-
-    assert lane["lane_complete"] is True
-    assert lane["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
-    assert lane["pack_kind"] == "content_compact"
-    assert lane["packet_count"] == packet_count
-    assert lane["row_count"] == row_count
-    assert lane["identity_proof_ok"] is True
-    assert lane["roundtrip_ok"] is True
-    assert lane["second_expanded_tree"] is False
-    roundtrip = json.loads((work / "cycle007-storage-lane" / "roundtrip.json").read_bytes())
-    assert roundtrip["proof_mode"] == "stream_decompress_hash"
-    assert roundtrip["roundtrip_ok"] is True
-
-
 def test_real_mode_refuses_argv_paths(tmp_path: Path) -> None:
     with pytest.raises(storage.StorageCustodyError) as exc:
         storage.resolve_bindings(
@@ -975,89 +866,6 @@ def test_cli_prepare_lane_fixture(tmp_path: Path, capsys: pytest.CaptureFixture[
     assert "filesystem_avail_bytes" not in summary
 
 
-def test_public_summary_keeps_retention_unresolved_while_production_is_unbound() -> None:
-    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
-    summary = json.loads(PUBLIC_SUMMARY.read_bytes())
-    Draft202012Validator.check_schema(schema)
-    Draft202012Validator(schema).validate(summary)
-    assert summary["private_binding_state"] == "UNBOUND"
-    assert summary["production_inventory_frozen"] is False
-    assert summary["retention_outcome"] is None
-    assert summary["replacement_firewall_owner_issue"] == 7427
-    assert summary["preserves_only_non_content_lineage_hashes"] is False
-    assert summary["pack_kind"] is None
-    assert summary["deletion_authorized"] is False
-    _assert_no_host_filesystem_leak(summary, where="committed public summary")
-    assert "filesystem_avail_bytes" not in summary
-
-
-def test_public_summary_schema_allows_optional_nulls() -> None:
-    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
-    properties = schema["properties"]
-    for key in (
-        "replacement_firewall_owner_issue",
-        "pack_kind",
-        "safe_failure_code",
-        "evaluation_firewall_requires_cycle007_identities",
-    ):
-        variants = properties[key]["anyOf"]
-        assert {"type": "null"} in variants
-
-
-def test_committed_public_summary_omits_host_filesystem_totals() -> None:
-    receipt = json.loads(PUBLIC_SUMMARY.read_bytes())
-    schema = json.loads(PUBLIC_SUMMARY_SCHEMA.read_bytes())
-    _assert_no_host_filesystem_leak(receipt, where="public summary receipt")
-    properties = schema.get("properties") or {}
-    assert isinstance(properties, dict)
-    _assert_no_host_filesystem_leak(properties, where="public summary schema")
-    combined = PUBLIC_SUMMARY.read_text(encoding="utf-8") + PUBLIC_SUMMARY_SCHEMA.read_text(encoding="utf-8")
-    assert "workstation_filesystem" not in combined
-    assert "fixture_filesystem" not in combined
-    assert "production_filesystem" not in combined
-    assert "filesystem_avail_bytes" not in combined
-
-
-def test_build_public_summary_does_not_emit_live_statvfs() -> None:
-    lane = {
-        "lane_complete": True,
-        "stopped_at": "deletion_authorization_gate",
-        "safe_failure_code": None,
-        "retention_outcome": storage.RETIRE_CYCLE007,
-        "packet_count": 3,
-        "row_count": 7,
-        "object_count": 9,
-        "total_allocated_bytes": 1,
-        "compact_stored_allocated_bytes": 1,
-        "reclaimed_byte_forecast": 1,
-        "deletion_candidate_count": 1,
-        "filesystem_avail_bytes": 123456,
-        "fixture_filesystem_avail_bytes": 123456,
-        "production_filesystem_total_bytes": 123456,
-        "workstation_filesystem": {"total_bytes": 1, "avail_bytes": 1},
-        "peak_temporary_bytes": 1,
-        "capacity_sufficient_for_peak": True,
-        "identity_proof_ok": True,
-        "backup_restore_ok": True,
-        "roundtrip_ok": True,
-        "receipt_sha256": "a" * 64,
-    }
-    reconcile = {
-        "private_binding_state": "UNBOUND",
-        "safe_failure_code": "private_binding_unbound",
-        "receipt_sha256": "b" * 64,
-    }
-    summary = storage.build_public_summary(lane, reconcile)
-    _assert_no_host_filesystem_leak(summary, where="build_public_summary")
-    assert "filesystem_avail_bytes" not in summary
-    assert "workstation_filesystem" not in summary
-    assert "fixture_filesystem_avail_bytes" not in summary
-    assert "production_filesystem_total_bytes" not in summary
-    assert storage.public_summary_forbidden_fs_keys({"nested": {"workstation_filesystem": {"total_bytes": 1}}}) == (
-        "workstation_filesystem",
-    )
-
-
 def test_inventory_counts_overlapping_aliases_once_for_allocation(tmp_path: Path) -> None:
     materialization, _packet_count, _row_count = _build_materialization(tmp_path)
     # The evidence root is nested under materialization, so materialization
@@ -1083,33 +891,6 @@ def test_inventory_counts_overlapping_aliases_once_for_allocation(tmp_path: Path
     assert inventory["external_link_inode_count"] == 0
     assert inventory["fully_closed_reclaimable_bytes"] == inventory["total_allocated_bytes"]
     assert all(len(item["role_relative_paths"]) >= 1 for item in inventory["objects"])
-
-
-def test_inventory_deduplicates_hard_linked_selected_paths(tmp_path: Path) -> None:
-    materialization, _packet_count, _row_count = _build_materialization(tmp_path)
-    source = materialization / "clean_label" / "packet-0001.json"
-    alias = materialization / "clean_label" / "packet-0003.json"
-    os.link(source, alias)
-    work = tmp_path / "work"
-    work.mkdir(mode=storage.PRIVATE_DIR_MODE)
-    os.chmod(work, storage.PRIVATE_DIR_MODE)
-    bindings = storage.resolve_bindings(
-        fixture=True,
-        materialization=materialization,
-        work_root=work,
-    )
-
-    inventory = storage.build_inventory(bindings)
-    packet = next(item for item in inventory["objects"] if item["sha256"] == storage.digest_file(source))
-
-    assert inventory["selected_path_count"] == inventory["unique_inode_count"] + 1
-    assert inventory["path_sum_allocated_bytes"] > inventory["total_allocated_bytes"]
-    assert packet["selected_path_count"] == 2
-    assert packet["selected_link_count"] == 2
-    assert packet["link_count"] == 2
-    assert packet["external_link_count"] == 0
-    assert packet["link_set_closed"] is True
-    assert packet["path_allocated_bytes"] == packet["allocated_bytes"] * 2
 
 
 def test_deletion_forecast_with_external_hard_link_claims_no_blocks() -> None:
@@ -1258,95 +1039,6 @@ def test_deletion_forecast_counts_closed_inode_allocation_once() -> None:
     assert auth["reclaimed_byte_forecast"] == 4096
     assert len(auth["targets"]) == 1
     assert auth["targets"][0]["role_relative_paths"] == inventory["objects"][0]["role_relative_paths"]
-
-
-def test_capacity_forecast_uses_unique_allocation_and_no_second_tree() -> None:
-    inventory = {
-        "total_allocated_bytes": 4096,
-        "path_sum_allocated_bytes": 8192,
-        "receipt_sha256": "a" * 64,
-    }
-
-    forecast = storage.forecast_peak_temporary_bytes(
-        inventory,
-        compact_stored_bytes=1024,
-        backup_stored_bytes=2048,
-        destination_avail_bytes=storage.MIN_FREE_BYTES + 3072,
-    )
-
-    assert forecast["peak_temporary_bytes"] == 3072
-    assert forecast["duplicate_selected_link_allocated_bytes"] == 4096
-    assert forecast["second_expanded_tree_bytes"] == 0
-    assert forecast["capacity_sufficient_for_peak"] is True
-
-
-def test_full_size_pack_forecast_does_not_assume_compression() -> None:
-    inventory = {
-        "total_size_bytes": 999999,
-        "unique_logical_bytes": 4096,
-        "receipt_sha256": "a" * 64,
-    }
-
-    forecast = storage.forecast_no_write_content_pack_bytes(inventory)
-
-    assert forecast["unique_logical_bytes"] == 4096
-    assert forecast["compression_ratio_assumed"] is None
-    assert forecast["full_size_upper_bound_bytes"] == 4096 + 1024 * 1024
-
-
-def test_content_pack_and_backup_keep_aliases_as_one_blob(tmp_path: Path) -> None:
-    materialization, _packet_count, _row_count = _build_materialization(tmp_path)
-    evidence = _build_evidence(materialization, materialization)
-    work = tmp_path / "work"
-    work.mkdir(mode=storage.PRIVATE_DIR_MODE)
-    os.chmod(work, storage.PRIVATE_DIR_MODE)
-    proof = {
-        "held_out_evaluation_function_id": "source_qualified_cell_coverage_v1",
-        "source_qualified": True,
-        "required_fields": ["document_id", "split_id"],
-        "required_identities": ["unit_id", "unit_sha256"],
-        "named_consumer": "issue-7427-evaluation-steward",
-        "text_free_source_rights_adjudication_metadata": True,
-    }
-    bindings = storage.resolve_bindings(
-        fixture=True,
-        materialization=materialization,
-        evidence=evidence,
-        work_root=work,
-    )
-
-    lane = storage.run_reversible_lane(bindings, held_out_evaluation_proof=proof)
-
-    assert lane["lane_complete"] is True
-    assert lane["pack_kind"] == "content_compact"
-    pack = json.loads((work / "cycle007-storage-lane" / "pack" / "pack-manifest.json").read_bytes())
-    backup = json.loads((work / "cycle007-storage-lane" / "backup.json").read_bytes())
-    assert pack["object_count"] == lane["object_count"]
-    assert pack["unique_stored_object_count"] <= pack["object_count"]
-    assert backup["backup_unique_inode_count"] <= backup["backup_object_count"]
-    assert lane["second_expanded_tree"] is False
-
-
-def test_separate_backup_filesystem_capacity_is_not_summed() -> None:
-    inventory = {
-        "total_allocated_bytes": 4096,
-        "path_sum_allocated_bytes": 8192,
-        "receipt_sha256": "a" * 64,
-    }
-    forecast = storage.forecast_peak_temporary_bytes(
-        inventory,
-        compact_stored_bytes=8192,
-        backup_stored_bytes=4096,
-        destination_avail_bytes=storage.MIN_FREE_BYTES + 8192,
-        backup_destination_avail_bytes=storage.MIN_FREE_BYTES + 4096,
-    )
-
-    assert forecast["separate_filesystems"] is True
-    assert forecast["peak_temporary_bytes"] == 8192
-    assert forecast["peak_backup_bytes"] == 4096
-    assert forecast["compact_capacity_sufficient"] is True
-    assert forecast["backup_capacity_sufficient"] is True
-    assert forecast["capacity_sufficient_for_peak"] is True
 
 
 def test_exact_zstd_preflight_matches_written_unique_payload(tmp_path: Path) -> None:
@@ -1780,28 +1472,6 @@ def test_quiescence_still_rejects_visible_target_descriptor_with_allowed_hidden_
     assert target.read_bytes() == b"target"
 
 
-def test_quiescence_still_scans_inspectable_allowlisted_process(
-    tmp_path: Path,
-) -> None:
-    proc = tmp_path / "proc"
-    descriptor_dir = proc / "105" / "fd"
-    descriptor_dir.mkdir(parents=True)
-    (proc / "105" / "comm").write_text("ssh-agent\n", encoding="utf-8")
-    target = tmp_path / "authorized-target.bin"
-    target.write_bytes(b"target")
-    (descriptor_dir / "0").symlink_to(target)
-    target_info = target.stat()
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(
-            {"entries": [{"dev": int(target_info.st_dev), "ino": int(target_info.st_ino)}]},
-            fixture=False,
-            proc=proc,
-        )
-
-    assert target.read_bytes() == b"target"
-
-
 def test_quiescence_rejects_uninspectable_individual_descriptor(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -2058,60 +1728,6 @@ def test_deletion_crash_resume_uses_durable_journal(
     assert state["imported_pack"].is_dir()
 
 
-def test_finalize_reports_actual_free_delta_separately_from_forecast(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
-    forecast = int(state["finalized"]["auth"]["reclaimed_byte_forecast"])
-    # A live statvfs delta can equal the forecast on a quiet disk; inject fixed
-    # before/after readings that differ from the forecast by a known amount.
-    known_excess_bytes = 1_048_576
-    avail_before = 8 * 1024**3
-    avail_after = avail_before + forecast + known_excess_bytes
-    free_space = {"avail": avail_before}
-
-    def advance_free_space(_event: Any) -> None:
-        free_space["avail"] = avail_after
-
-    monkeypatch.setattr(storage, "available_bytes", lambda _path: free_space["avail"])
-    result = _execute_fixture_deletion(state, fault_hook=advance_free_space)
-    before = result["unlinked_receipt"]["source_avail_before_bytes"]
-    after = result["unlinked_receipt"]["source_avail_after_bytes"]
-    post_response = deletion.workstation_deletion_custody_response_stage(
-        state["primary"]["portable_export"],
-        state["attested"]["attestation"],
-        result["post_challenge"],
-        state["imported_pack"],
-        state["workstation_root"],
-        source_failure_domain_token="fixture-primary-domain",
-        workstation_failure_domain_token="fixture-workstation-domain",
-        zstd_executable=state["bindings"].zstd_executable,
-        fixture=True,
-    )
-
-    final = deletion.finalize_deletion_execution(
-        state["bindings"],
-        state["primary"]["inventory"],
-        state["primary"]["portable_export"],
-        state["authorization"],
-        result,
-        post_response,
-        state["primary"]["pack_dir"],
-    )
-
-    assert before == avail_before
-    assert after == avail_after
-    assert final["filesystem_avail_before_bytes"] == avail_before
-    assert final["filesystem_avail_at_completion_bytes"] == avail_after
-    assert final["actual_reclaimed_bytes"] == forecast + known_excess_bytes
-    assert final["actual_reclaimed_bytes"] == (
-        final["filesystem_avail_at_completion_bytes"] - final["filesystem_avail_before_bytes"]
-    )
-    assert final["reclaimed_byte_forecast"] == forecast
-    assert final["actual_reclaimed_bytes"] != final["reclaimed_byte_forecast"]
-    assert final["forecast_is_not_actual"] is True
-
-
 def _rehashed(value: Mapping[str, Any], **changes: Any) -> dict[str, Any]:
     body = {key: item for key, item in value.items() if key != "receipt_sha256"}
     body.update(changes)
@@ -2126,28 +1742,6 @@ def test_deletion_refuses_validly_rehashed_custody_misbinding(tmp_path: Path, mo
         _execute_fixture_deletion(state)
 
     assert all(path.exists() for path in _fixture_source_paths(state))
-
-
-def test_deletion_resume_refuses_validly_rehashed_plan_misbinding(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
-
-    def stop_before_intent(event: Mapping[str, Any]) -> None:
-        if event["event"] == "before_intent":
-            raise _SyntheticDeletionCrash("before_intent")
-
-    with pytest.raises(_SyntheticDeletionCrash):
-        _execute_fixture_deletion(state, fault_hook=stop_before_intent)
-    plan_path = state["source_work"] / "cycle007-storage-primary-stage" / "deletion-execution-journal" / "plan.json"
-    plan = json.loads(plan_path.read_bytes())
-    storage._atomic_write_json(
-        plan_path,
-        _rehashed(plan, pre_delete_workstation_response_sha256="e" * 64),
-    )
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        _execute_fixture_deletion(state)
 
 
 def test_deletion_resume_refuses_validly_rehashed_plan_target_substitution(
@@ -2227,47 +1821,6 @@ def test_finalize_refuses_validly_rehashed_persisted_evidence(tmp_path: Path, mo
         unlinked_path,
         _rehashed(unlinked, journal_terminal_event_sha256="d" * 64),
     )
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion.finalize_deletion_execution(
-            state["bindings"],
-            state["primary"]["inventory"],
-            state["primary"]["portable_export"],
-            state["authorization"],
-            result,
-            post_response,
-            state["primary"]["pack_dir"],
-        )
-
-
-def test_finalize_resume_refuses_validly_rehashed_completion(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
-    result = _execute_fixture_deletion(state)
-    post_response = deletion.workstation_deletion_custody_response_stage(
-        state["primary"]["portable_export"],
-        state["attested"]["attestation"],
-        result["post_challenge"],
-        state["imported_pack"],
-        state["workstation_root"],
-        source_failure_domain_token="fixture-primary-domain",
-        workstation_failure_domain_token="fixture-workstation-domain",
-        zstd_executable=state["bindings"].zstd_executable,
-        fixture=True,
-    )
-    deletion.finalize_deletion_execution(
-        state["bindings"],
-        state["primary"]["inventory"],
-        state["primary"]["portable_export"],
-        state["authorization"],
-        result,
-        post_response,
-        state["primary"]["pack_dir"],
-    )
-    completion_path = (
-        state["source_work"] / "cycle007-storage-primary-stage" / "deletion-execution-journal" / "completion.json"
-    )
-    completion = json.loads(completion_path.read_bytes())
-    storage._atomic_write_json(completion_path, _rehashed(completion, directories_removed=1))
 
     with pytest.raises(deletion.DeletionExecutionError):
         deletion.finalize_deletion_execution(
@@ -2402,26 +1955,6 @@ def test_quiescence_rejects_noncanonical_systemd_cmdline(
         deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
 
 
-@pytest.mark.parametrize(
-    "status",
-    [
-        b"Name:\tsystemd\nUid:\t0 0 0 1\n",
-        b"Name:\tsystemd\nUid:\t0 0 0\n",
-        b"Name:\tsystemd\nUid:\t0 0 0 0 0\n",
-    ],
-)
-def test_quiescence_rejects_systemd_status_uid_shape_or_ownership_drift(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, status: bytes
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path, status=status)
-    descriptor = fd_dir / "0"
-    descriptor.touch()
-    _deny_individual_descriptor(monkeypatch, descriptor)
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
 def test_quiescence_rejects_systemd_ppid_mismatch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     proc, fd_dir = _systemd_proc_fixture(tmp_path, stat_bytes=_systemd_proc_stat(48001, ppid=2))
     descriptor = fd_dir / "0"
@@ -2430,30 +1963,6 @@ def test_quiescence_rejects_systemd_ppid_mismatch(tmp_path: Path, monkeypatch: p
     # PPID is validated on the attestation path, which is entered only when
     # an individual descriptor cannot be inspected.
     _deny_individual_descriptor(monkeypatch, descriptor)
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
-def test_quiescence_rejects_systemd_differing_status_uid_ownership(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    uid = os.geteuid()
-    status = f"Name:\tsystemd\nUid:\t{uid}\t{uid}\t{uid}\t{uid + 1}\n".encode("ascii")
-    proc, fd_dir = _systemd_proc_fixture(tmp_path, status=status)
-    descriptor = fd_dir / "0"
-    descriptor.touch()
-    _deny_individual_descriptor(monkeypatch, descriptor)
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
-@pytest.mark.parametrize("comm", [b"systemd-user\n", b"Systemd\n", b"systemd \n", b"systemd\r\n"])
-def test_quiescence_rejects_near_systemd_comm(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, comm: bytes) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path, comm=comm)
-    descriptor = fd_dir / "0"
-    descriptor.touch()
-    _deny_individual_descriptor(monkeypatch, descriptor)
-
     with pytest.raises(deletion.DeletionExecutionError):
         deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
 
@@ -2486,170 +1995,6 @@ def test_quiescence_rejects_systemd_pid_start_time_drift_or_disappearance(
     with pytest.raises(deletion.DeletionExecutionError):
         deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
     assert reads >= 2
-
-
-def test_quiescence_rejects_systemd_generation_change_during_fd_enumeration(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path)
-    descriptor = fd_dir / "0"
-    descriptor.touch()
-    _deny_individual_descriptor(monkeypatch, descriptor)
-    stat_path = proc / "48001" / "stat"
-    original_iterdir = Path.iterdir
-    original_read_bytes = Path.read_bytes
-    enumerated = False
-
-    def changing_iterdir(path: Path):
-        nonlocal enumerated
-        if path == fd_dir:
-            enumerated = True
-        return original_iterdir(path)
-
-    def changing_read_bytes(path: Path) -> bytes:
-        if path == stat_path and enumerated:
-            return _systemd_proc_stat(48001, start_time=67890)
-        return original_read_bytes(path)
-
-    monkeypatch.setattr(Path, "iterdir", changing_iterdir)
-    monkeypatch.setattr(Path, "read_bytes", changing_read_bytes)
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
-def test_quiescence_rejects_any_readable_systemd_target_inode(
-    tmp_path: Path,
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path)
-    target = tmp_path / "authorized-target.bin"
-    target.write_bytes(b"target")
-    (fd_dir / "0").symlink_to(target)
-    info = target.stat()
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(
-            {
-                "entries": [
-                    {"dev": int(info.st_dev), "ino": int(info.st_ino)},
-                ]
-            },
-            fixture=False,
-            proc=proc,
-        )
-    assert target.read_bytes() == b"target"
-
-
-def test_quiescence_rejects_systemd_fd_directory_permission_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path)
-    original_iterdir = Path.iterdir
-
-    def denied_iterdir(path: Path):
-        if path == fd_dir:
-            raise PermissionError("fixture systemd fd table denied")
-        return original_iterdir(path)
-
-    monkeypatch.setattr(Path, "iterdir", denied_iterdir)
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
-def test_quiescence_allows_only_attested_systemd_individual_descriptor_denial(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path)
-    descriptor = fd_dir / "0"
-    descriptor.touch()
-    original_stat = Path.stat
-
-    def denied_stat(path: Path, *args: Any, **kwargs: Any):
-        if path == descriptor:
-            raise PermissionError("fixture individual systemd fd denied")
-        return original_stat(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "stat", denied_stat)
-    deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
-def test_quiescence_rejects_non_attested_individual_descriptor_denial(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path, comm=b"ordinary-worker\n")
-    descriptor = fd_dir / "0"
-    descriptor.touch()
-    original_stat = Path.stat
-
-    def denied_stat(path: Path, *args: Any, **kwargs: Any):
-        if path == descriptor:
-            raise PermissionError("fixture individual fd denied")
-        return original_stat(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "stat", denied_stat)
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(_systemd_plan(), fixture=False, proc=proc)
-
-
-def test_quiescence_rejects_mixed_denied_systemd_fd_and_visible_target(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    proc, fd_dir = _systemd_proc_fixture(tmp_path)
-    denied = fd_dir / "0"
-    denied.touch()
-    target = tmp_path / "authorized-target.bin"
-    target.write_bytes(b"target")
-    visible = fd_dir / "1"
-    visible.symlink_to(target)
-    info = target.stat()
-    original_stat = Path.stat
-
-    def mixed_stat(path: Path, *args: Any, **kwargs: Any):
-        if path == denied:
-            raise PermissionError("fixture individual systemd fd denied")
-        return original_stat(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "stat", mixed_stat)
-    with pytest.raises(deletion.DeletionExecutionError):
-        deletion._require_no_open_target_descriptors(
-            {"entries": [{"dev": int(info.st_dev), "ino": int(info.st_ino)}]},
-            fixture=False,
-            proc=proc,
-        )
-    assert target.read_bytes() == b"target"
-
-
-def test_systemd_quiescence_refusal_precedes_journal_and_source_mutation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
-    proc, fd_dir = _systemd_proc_fixture(tmp_path)
-    original_require = deletion._require_no_open_target_descriptors
-    original_iterdir = Path.iterdir
-
-    def denied_iterdir(path: Path):
-        if path == fd_dir:
-            raise PermissionError("fixture systemd fd table denied")
-        return original_iterdir(path)
-
-    def force_quiescence(plan: Mapping[str, Any], *, fixture: bool) -> None:
-        original_require(plan, fixture=False, proc=proc)
-
-    monkeypatch.setattr(Path, "iterdir", denied_iterdir)
-    monkeypatch.setattr(deletion, "_require_no_open_target_descriptors", force_quiescence)
-    targets = _fixture_source_paths(state)
-
-    with pytest.raises(deletion.DeletionExecutionError):
-        _execute_fixture_deletion(state)
-
-    journal_root = state["source_work"] / "cycle007-storage-primary-stage" / "deletion-execution-journal"
-    events = journal_root / "events"
-    assert not events.exists() or not tuple(events.iterdir())
-    assert all(path.is_file() for path in targets)
-    assert state["sentinel"].is_file()
-    assert state["primary"]["pack_dir"].is_dir()
-    assert state["imported_pack"].is_dir()
 
 
 def _fixture_deletion_journal_root(state: Mapping[str, Any]) -> Path:

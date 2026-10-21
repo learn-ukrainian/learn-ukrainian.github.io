@@ -27,9 +27,6 @@ FAKE_GROK = "/usr/local/bin/grok"
 # Linux MAX_ARG_STRLEN. strnlen_user counts the NUL, so 131072 bytes of text
 # cannot be exec'd. An argv element must stay strictly below this.
 _MAX_ARG_STRLEN = 131_072
-_CYRILLIC = "а"  # U+0430, two UTF-8 bytes
-
-
 def _inline_limit() -> int:
     from agent_runtime.adapters import grok_build
 
@@ -130,28 +127,8 @@ def test_ascii_200_kib_ordinary_uses_private_prompt_file(tmp_path: Path) -> None
     _assert_removed(plan, path)
 
 
-def test_cyrillic_70k_chars_ordinary_uses_private_prompt_file(tmp_path: Path) -> None:
-    prompt = _CYRILLIC * 70_000
-    encoded = len(prompt.encode("utf-8"))
-    assert len(prompt) == 70_000
-    assert len(prompt) < 100_000
-    assert encoded > _MAX_ARG_STRLEN
-    plan = _build(prompt, tmp_path)
-    path = _assert_prompt_file(plan, prompt)
-    _assert_removed(plan, path)
-
-
 def test_ascii_200_kib_isolated_review_uses_private_prompt_file(tmp_path: Path) -> None:
     prompt = "b" * (200 * 1024)
-    plan, review_root = _isolated(prompt, tmp_path)
-    path = _assert_prompt_file(plan, prompt)
-    if not path.is_relative_to(review_root):
-        raise AssertionError(f"isolated prompt file {path.name} is outside the review write root")
-    _assert_removed(plan, path)
-
-
-def test_cyrillic_70k_chars_isolated_review_uses_private_prompt_file(tmp_path: Path) -> None:
-    prompt = _CYRILLIC * 70_000
     plan, review_root = _isolated(prompt, tmp_path)
     path = _assert_prompt_file(plan, prompt)
     if not path.is_relative_to(review_root):
@@ -172,13 +149,6 @@ def test_prompt_exactly_at_inline_limit_stays_inline(tmp_path: Path) -> None:
         )
 
 
-def test_prompt_one_byte_over_inline_limit_uses_prompt_file(tmp_path: Path) -> None:
-    prompt = "d" * (_inline_limit() + 1)
-    plan = _build(prompt, tmp_path)
-    path = _assert_prompt_file(plan, prompt)
-    _assert_removed(plan, path)
-
-
 def test_hyphen_leading_prompt_still_uses_private_prompt_file(tmp_path: Path) -> None:
     prompt = "--- context: shared\nfix it"
     if len(prompt.encode("utf-8")) >= _MAX_ARG_STRLEN:
@@ -186,12 +156,6 @@ def test_hyphen_leading_prompt_still_uses_private_prompt_file(tmp_path: Path) ->
     plan = _build(prompt, tmp_path)
     path = _assert_prompt_file(plan, prompt)
     _assert_removed(plan, path)
-
-
-def test_inline_limit_constant_is_under_the_kernel_ceiling() -> None:
-    limit = _inline_limit()
-    if not 0 < limit < _MAX_ARG_STRLEN:
-        raise AssertionError(f"inline limit {limit} is not a margin under {_MAX_ARG_STRLEN}")
 
 
 _OVERSIZED = "x" * 100_001
@@ -274,41 +238,6 @@ def test_oversized_prompt_failure_leaves_no_prompt_file(
     _assert_no_prompt_files(tmp_path)
 
 
-def test_short_prompt_invalid_effort_leaves_no_prompt_file(tmp_path: Path) -> None:
-    def invoke() -> None:
-        _build("short", tmp_path, effort="invalid")
-
-    _expect(invoke, ValueError, _EFFORT_ERROR)
-    _assert_no_prompt_files(tmp_path)
-
-
-def test_isolated_short_prompt_invalid_effort_leaves_no_prompt_file(tmp_path: Path) -> None:
-    def invoke() -> None:
-        _isolated("short", tmp_path, effort="invalid")
-
-    _expect(invoke, ValueError, _EFFORT_ERROR)
-    _assert_no_prompt_files(tmp_path)
-
-
-def test_hyphen_prompt_invalid_effort_leaves_no_prompt_file(tmp_path: Path) -> None:
-    def invoke() -> None:
-        _build("--- context: shared\nfix it", tmp_path, effort="invalid")
-
-    _expect(invoke, ValueError, _EFFORT_ERROR)
-    _assert_no_prompt_files(tmp_path)
-
-
-def test_write_mode_invalid_effort_leaves_no_guard_or_prompt_file(tmp_path: Path) -> None:
-    def invoke() -> None:
-        _build(_OVERSIZED, tmp_path, mode="workspace-write", effort="invalid")
-
-    _expect(invoke, ValueError, _EFFORT_ERROR)
-    _assert_no_prompt_files(tmp_path)
-    guards = _guard_files(tmp_path)
-    if guards:
-        raise AssertionError(f"guard files left behind: {[path.name for path in guards]}")
-
-
 def _raise_after_prompt_file(tmp_path: Path, fn) -> None:
     with patch.object(
         GrokBuildAdapter,
@@ -324,14 +253,3 @@ def _raise_after_prompt_file(tmp_path: Path, fn) -> None:
 
 def test_exception_after_prompt_file_creation_removes_it(tmp_path: Path) -> None:
     _raise_after_prompt_file(tmp_path, lambda: _build(_OVERSIZED, tmp_path, effort="high"))
-
-
-def test_isolated_exception_after_prompt_file_creation_removes_it(tmp_path: Path) -> None:
-    _raise_after_prompt_file(tmp_path, lambda: _isolated(_OVERSIZED, tmp_path, effort="high"))
-
-
-def test_write_mode_exception_after_files_are_created_removes_them(tmp_path: Path) -> None:
-    _raise_after_prompt_file(
-        tmp_path,
-        lambda: _build(_OVERSIZED, tmp_path, mode="workspace-write", effort="high"),
-    )

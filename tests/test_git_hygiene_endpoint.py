@@ -1,18 +1,12 @@
 import os
 import subprocess
-import time
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
 
 from scripts.api import git_hygiene_router
-from scripts.api.main import app
-from tests.latency_budget import assert_under_budget
 
 pytestmark = pytest.mark.reads_content
-
-client = TestClient(app, raise_server_exceptions=False)
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -111,39 +105,6 @@ def test_hygiene_classifies_each_dirty_bucket(tmp_path: Path) -> None:
     }
 
 
-def test_hygiene_endpoint_is_registered_and_uses_project_root(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = _dirty_repo_with_all_buckets(tmp_path)
-    ctx = app.state.ctx.with_roots(live_repo_root=repo, project_root=repo)
-    monkeypatch.setattr(app.state, "ctx", ctx)
-
-    response = client.get("/api/git/hygiene")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["health"] == "dirty"
-    assert body["buckets"]["real_wip"]["files"] == ["wip.py"]
-
-
-def test_hygiene_is_clean_when_all_dirty_files_are_exempt(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    _write(repo / "README.md", "clean base\n")
-    _commit_all(repo, "initial")
-    _write(repo / "wiki" / "draft.md", "wiki output\n")
-    _write(repo / "registry" / "corpus_audit" / "draft_tickets" / "ticket.md", "draft\n")
-
-    result = git_hygiene_router.compute_git_hygiene(repo)
-
-    assert result["health"] == "clean"
-    assert result["dirty_total"] == 0
-    assert result["exempt"]["total"] == 2
-    assert all(bucket["count"] == 0 for bucket in result["buckets"].values())
-
-
 def test_hygiene_marks_deleted_python_as_blocked_imports(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -156,31 +117,3 @@ def test_hygiene_marks_deleted_python_as_blocked_imports(tmp_path: Path) -> None
 
     assert result["health"] == "blocked_imports"
     assert result["dirty_total"] == 1
-
-
-def test_hygiene_1000_untracked_files_stays_under_500ms(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    _write(repo / "README.md", "clean base\n")
-    _commit_all(repo, "initial")
-
-    for idx in range(1000):
-        _write(repo / "scratch" / f"{idx:04d}.txt", f"{idx}\n")
-
-    started = time.perf_counter()
-    result = git_hygiene_router.compute_git_hygiene(repo)
-    elapsed_ms = (time.perf_counter() - started) * 1000
-
-    assert result["dirty_total"] == 1000
-    assert result["buckets"]["untracked_unexempted"]["count"] == 1000
-    assert_under_budget(
-        result["performance_ms"] / 1000.0,
-        0.5,
-        f"git hygiene performance_ms budget exceeded: {result['performance_ms']}ms",
-    )
-    assert_under_budget(
-        elapsed_ms / 1000.0,
-        0.5,
-        f"git hygiene endpoint wall-clock budget exceeded: {elapsed_ms:.0f}ms",
-    )

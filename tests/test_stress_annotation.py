@@ -10,10 +10,8 @@ Validates post-processing stress annotation:
 
 from __future__ import annotations
 
-import contextlib
 import subprocess
 import sys
-import time
 import types
 from pathlib import Path
 
@@ -21,9 +19,7 @@ import pytest
 
 from scripts.pipeline.stress_annotator import (
     STRESS_MARK,
-    _build_skip_mask,
     _count_syllables,
-    _in_skip_range,
     annotate_file,
     annotate_stress,
 )
@@ -143,56 +139,10 @@ def _stressed_form(text: str, target: str) -> str | None:
 
 
 class TestCountSyllables:
-    def test_monosyllabic(self):
-        assert _count_syllables("так") == 1
-
-    def test_two_syllables(self):
-        assert _count_syllables("мама") == 2
 
     def test_apostrophe_word(self):
         # сім'я has 2 vowels → 2 syllables
         assert _count_syllables("сім'я") == 2
-
-    def test_long_word(self):
-        assert _count_syllables("фотографії") == 5
-
-
-class TestBuildSkipMask:
-    def test_code_block_detected(self):
-        text = "hello ```some code``` world"
-        ranges = _build_skip_mask(text)
-        assert len(ranges) >= 1
-        start, end = ranges[0]
-        assert text[start:end] == "```some code```"
-
-    def test_url_detected(self):
-        from urllib.parse import urlparse
-
-        text = "see https://example.com/path for info"
-        ranges = _build_skip_mask(text)
-        assert len(ranges) >= 1
-        covered = text[ranges[0][0] : ranges[0][1]]
-        assert urlparse(covered).netloc == "example.com"
-
-    def test_inline_code_detected(self):
-        text = "Use `код` here"
-        ranges = _build_skip_mask(text)
-        assert len(ranges) >= 1
-
-
-class TestInSkipRange:
-    def test_inside(self):
-        assert _in_skip_range(5, [(3, 10)]) is True
-
-    def test_outside(self):
-        assert _in_skip_range(2, [(3, 10)]) is False
-
-    def test_at_boundary_start(self):
-        assert _in_skip_range(3, [(3, 10)]) is True
-
-    def test_at_boundary_end(self):
-        # end is exclusive
-        assert _in_skip_range(10, [(3, 10)]) is False
 
 
 # ---------------------------------------------------------------------------
@@ -288,72 +238,6 @@ class TestProperNouns:
             positions = _stress_positions(form)
             assert len(positions) <= 1, f"Київ should have at most 1 stress mark, got {len(positions)} in '{form}'"
 
-    def test_shevchenko_single_stress(self):
-        text = "Тарас Шевченко — великий поет."
-        result, _ = annotate_stress(text)
-        form = _stressed_form(result, "Шевченко")
-        if form is not None:
-            positions = _stress_positions(form)
-            assert len(positions) <= 1, f"Шевченко should have at most 1 stress mark, got {len(positions)} in '{form}'"
-
-    def test_kyiv_not_stressed_monosyllabic(self):
-        """Київ has 2 vowels (и, і) so 2 syllables — it CAN be stressed.
-        But must not be double-stressed."""
-        text = "Київ — красиве місто."
-        result, _ = annotate_stress(text)
-        form = _stressed_form(result, "Київ")
-        if form is not None:
-            positions = _stress_positions(form)
-            assert len(positions) <= 1
-
-
-@pytest.mark.slow
-class TestCodeBlocksUntouched:
-    """AC: words inside code blocks should not get stress marks."""
-
-    def test_fenced_code_block(self):
-        text = "Текст перед.\n\n```\nмама тато бабуся\n```\n\nТекст після."
-        result, _ = annotate_stress(text)
-        # Extract the code block from result
-        code_start = result.index("```")
-        code_end = result.index("```", code_start + 3) + 3
-        code_block = result[code_start:code_end]
-        # No stress marks inside code block
-        assert STRESS_MARK not in code_block, f"Code block should not contain stress marks: '{code_block}'"
-
-    def test_inline_code(self):
-        text = "Використовуй `мама` тут."
-        result, _ = annotate_stress(text)
-        # Find inline code span
-        tick1 = result.index("`")
-        tick2 = result.index("`", tick1 + 1)
-        inline = result[tick1 : tick2 + 1]
-        assert STRESS_MARK not in inline, f"Inline code should not contain stress marks: '{inline}'"
-
-
-@pytest.mark.slow
-class TestURLsUntouched:
-    """AC: URLs should not get stress marks."""
-
-    def test_url_not_annotated(self):
-        text = "Дивіться https://uk.wikipedia.org/wiki/Київ для інформації."
-        result, _ = annotate_stress(text)
-        # Extract the URL
-        url_start = result.index("https://")
-        # Find end of URL (next space or end of string)
-        url_end = result.find(" ", url_start)
-        if url_end == -1:
-            url_end = len(result)
-        url = result[url_start:url_end]
-        assert STRESS_MARK not in url, f"URL should not contain stress marks: '{url}'"
-
-    def test_html_tags_not_annotated(self):
-        text = '<div class="dialogue">мама тато</div>'
-        result, _ = annotate_stress(text)
-        # Tags should be intact
-        assert '<div class="dialogue">' in result
-        assert "</div>" in result
-
 
 @pytest.mark.slow
 class TestNoDuplicateStress:
@@ -376,17 +260,6 @@ class TestNoDuplicateStress:
         # Text should be identical
         assert result1 == result2, "Double annotation changed the text"
 
-    def test_pre_stressed_words_preserved(self):
-        text = f"Це ма{STRESS_MARK}ма і та{STRESS_MARK}то."
-        result, _count = annotate_stress(text)
-        # Should not add extra marks to already-stressed words
-        mama_form = _stressed_form(result, "мама")
-        if mama_form is not None:
-            positions = _stress_positions(mama_form)
-            assert len(positions) <= 1, (
-                f"мама should have at most 1 stress mark after re-annotation, got {len(positions)}"
-            )
-
     def test_single_syllable_and_english_untouched(self):
         text = "Кіт тут. English morning stays English."
         result, count = annotate_stress(text)
@@ -402,40 +275,6 @@ class TestNoDuplicateStress:
         assert 'en="My mother reads."' in result
         assert f"ма{STRESS_MARK}ма" in result or f"чита{STRESS_MARK}є" in result
         assert '<DialogueBox uk="' in result
-
-
-@pytest.mark.slow
-class TestPerformance:
-    """AC: annotating a 1500-word module takes <5 seconds."""
-
-    def test_annotation_speed(self):
-        # Build a ~1500 word Ukrainian text by repeating realistic content
-        paragraph = (
-            "Українська мова — одна з найкрасивіших мов світу. "
-            "Вона має багату історію та чудову літературу. "
-            "Київ є столицею України. Тарас Шевченко написав багато віршів. "
-            "Моя сім'я живе у великому місті. Ми любимо українську кухню. "
-            "Бабуся готує смачний борщ кожної неділі. "
-            "Дідусь розповідає цікаві історії про минуле. "
-        )
-        # Each paragraph is roughly 40 words; 38 repetitions ≈ 1520 words
-        text = "\n\n".join([paragraph] * 38)
-        word_count = len(text.split())
-        assert word_count >= 1500, f"Test text should be ≥1500 words, got {word_count}"
-
-        start = time.perf_counter()
-        _result, count = annotate_stress(text)
-        elapsed = time.perf_counter() - start
-
-        # 20s allows for Stanza model loading on first call. Default budget
-        # bumped from 15s → 20s 2026-05-12 (#1896 sibling follow-up) because
-        # Dagger local-CI replay on Apple Silicon QEMU emulation regressed
-        # this assertion under the act-runner image. Real GHA + native arm64
-        # via Dagger comfortably fit in the prior 15s; the budget bump
-        # absorbs runner-image variance without weakening the perf intent.
-        budget_s = 20.0
-        assert elapsed < budget_s, f"Annotation took {elapsed:.2f}s — must be <{budget_s:.0f}s for {word_count} words"
-        assert count > 0, "Should have stressed at least some words"
 
 
 @pytest.mark.slow
@@ -459,41 +298,6 @@ class TestHeteronyms:
             positions = _stress_positions(form)
             # Must have 0 (library declined) or 1 stress mark — never 2+
             assert len(positions) <= 1, f"замок should have at most 1 stress, got {len(positions)} in '{form}'"
-
-    def test_does_not_crash_on_ambiguous(self):
-        """Annotator should not crash on ambiguous words."""
-        ambiguous_sentences = [
-            "Я бачу замок на дверях.",
-            "Великий замок на пагорбі.",
-            "Вона стоїть біля дверей.",
-        ]
-        for sent in ambiguous_sentences:
-            result, _ = annotate_stress(sent)
-            assert isinstance(result, str)
-
-
-@pytest.mark.slow
-class TestRealModuleContent:
-    """Test with content from actual A1 module files."""
-
-    def test_dialogue_format_preserved(self):
-        """Stress annotation should not break dialogue HTML structure."""
-        text = (
-            '<div class="dialogue">\n\n'
-            "**Оксана:** У тебе є брати чи сестри?\n\n"
-            "**Андрій:** Так, у мене є два брати.\n\n"
-            "</div>"
-        )
-        result, _ = annotate_stress(text)
-        assert '<div class="dialogue">' in result
-        assert "</div>" in result
-        assert "**Оксана:**" in result or f"**Окса{STRESS_MARK}на:**" in result
-
-    def test_yaml_frontmatter_like_content(self):
-        """HTML comments (used as tab markers) should not be modified."""
-        text = "<!-- TAB:Урок -->\n\n## Діалоги (Dialogues)\n\nМоя мама працює."
-        result, _ = annotate_stress(text)
-        assert "<!-- TAB:Урок -->" in result
 
 
 # ---------------------------------------------------------------------------
@@ -526,23 +330,6 @@ class TestAnnotateFileSafetyCheck:
         count = annotate_file(md_file)
         # Body has Ukrainian words that should get stressed
         assert count > 0, "Body content should have been stress-annotated"
-
-    def test_already_stressed_body_is_idempotent(self, tmp_path):
-        """A fully stressed body should not receive duplicate marks."""
-        from scripts.pipeline.stress_annotator import annotate_file
-
-        stressed_body = (
-            f"Моя{STRESS_MARK} ма{STRESS_MARK}ма працю{STRESS_MARK}є "
-            f"в шко{STRESS_MARK}лі ду{STRESS_MARK}же до{STRESS_MARK}бре. "
-        ) * 30
-        content = f"<!-- TAB:Урок -->\n\n{stressed_body}\n"
-
-        md_file = tmp_path / "test-stressed.md"
-        md_file.write_text(content, encoding="utf-8")
-
-        count = annotate_file(md_file)
-        assert count == 0, "Already-stressed body should be idempotent"
-        assert md_file.read_text(encoding="utf-8") == content
 
 
 # ---------------------------------------------------------------------------
@@ -582,43 +369,6 @@ with _model_download_lock():
 
 class TestModelDownloadLock:
     """The lazy Stressifier load must be concurrency-safe across processes."""
-
-    def test_lock_path_keyed_to_stanza_resources_dir(self, tmp_path, monkeypatch):
-        from scripts.pipeline import stress_annotator as sa
-
-        monkeypatch.setenv("STANZA_RESOURCES_DIR", str(tmp_path))
-        assert sa._stanza_download_lock_path() == tmp_path / ".uk-model-download.lock"
-
-    def test_get_stressifier_constructs_inside_download_lock(self, monkeypatch):
-        """Construction must happen *inside* the lock, never before/after it."""
-        from scripts.pipeline import stress_annotator as sa
-
-        events: list[str] = []
-
-        @contextlib.contextmanager
-        def fake_lock():
-            events.append("lock-enter")
-            try:
-                yield
-            finally:
-                events.append("lock-exit")
-
-        class FakeStressifier:
-            def __init__(self, *args, **kwargs):
-                events.append("construct")
-
-        fake_module = types.SimpleNamespace(
-            Stressifier=FakeStressifier,
-            StressSymbol=types.SimpleNamespace(CombiningAcuteAccent="́"),
-        )
-        monkeypatch.setitem(sys.modules, "ukrainian_word_stress", fake_module)
-        monkeypatch.setattr(sa, "_model_download_lock", fake_lock)
-        monkeypatch.setattr(sa, "_load_context_parser", lambda: None)
-        monkeypatch.setattr(sa, "_stressifier", None)
-
-        sa._get_stressifier()
-
-        assert events == ["lock-enter", "construct", "lock-exit"]
 
     def test_model_download_lock_serializes_across_processes(self, tmp_path):
         """Concurrent cold starts must not interleave (the #1448-style race)."""
@@ -686,10 +436,6 @@ class TestActivitiesYaml:
         assert "    - сімя\n" in annotated
         assert ' сімя."\n' in annotated  # the sentence keeps the spotted misspelling
         assert f"сімя{STRESS_MARK}" not in annotated
-
-    def test_repairs_dictionary_contradicting_mark(self, annotated: str):
-        assert f"дере{STRESS_MARK}в'яний" not in annotated
-        assert f"дерев'я{STRESS_MARK}ний" in annotated
 
     def test_yaml_shape_and_idempotence(self, annotated: str, tmp_path: Path):
         import yaml

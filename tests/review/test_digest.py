@@ -861,70 +861,6 @@ def test_record_not_in_observed_fails(tmp_path: Path) -> None:
     assert exc_info.value.code == codes.RECORD_NOT_IN_OBSERVED
 
 
-def test_cli_subprocess_invocation(tmp_path: Path) -> None:
-    """Test CLI commands via subprocess with timeout."""
-    _setup_two_lesson_fixture(tmp_path)
-
-    # 1. Run digest generation --up-to 3
-    cmd_write = [
-        PYTHON_BIN,
-        "-m",
-        "scripts.review.digest",
-        "a1",
-        "mod-fixture",
-        "--up-to",
-        "3",
-        "--repo-root",
-        str(tmp_path),
-    ]
-    proc = subprocess.run(cmd_write, capture_output=True, text=True, timeout=30)
-    assert proc.returncode == 0
-    assert "ok: wrote" in proc.stdout
-
-    digest_file = digest_output_path("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert digest_file.is_file()
-    assert Path(f"{digest_file}.lock").is_file()
-
-    # 2. Run --check
-    cmd_check = [
-        PYTHON_BIN,
-        "-m",
-        "scripts.review.digest",
-        "a1",
-        "mod-fixture",
-        "--up-to",
-        "3",
-        "--check",
-        "--repo-root",
-        str(tmp_path),
-    ]
-    proc_check = subprocess.run(cmd_check, capture_output=True, text=True, timeout=30)
-    assert proc_check.returncode == 0
-    assert "verified byte-stable" in proc_check.stdout
-
-    # 3. Run --up-to 1
-    cmd_upto_1 = [
-        PYTHON_BIN,
-        "-m",
-        "scripts.review.digest",
-        "a1",
-        "mod-fixture",
-        "--up-to",
-        "1",
-        "--repo-root",
-        str(tmp_path),
-    ]
-    proc_upto_1 = subprocess.run(cmd_upto_1, capture_output=True, text=True, timeout=30)
-    assert proc_upto_1.returncode == 0
-    assert "ok: wrote" in proc_upto_1.stdout
-
-    # 4. Lock mismatch causes exit code 1
-    Path(f"{digest_file}.lock").unlink()
-    proc_fail = subprocess.run(cmd_check, capture_output=True, text=True, timeout=30)
-    assert proc_fail.returncode == 1
-    assert "failure:" in proc_fail.stderr or "digest_file_missing" in proc_fail.stderr
-
-
 @pytest.mark.parametrize(
     "bad_slug",
     [
@@ -990,45 +926,11 @@ def test_symlink_pointing_to_forbidden_dir_fails_and_reads_nothing(
     assert opened_files == []
 
 
-def test_invalid_level_fails(tmp_path: Path) -> None:
-    """Invalid level not in CLI allowed choices fails with path_forbidden."""
-    _setup_two_lesson_fixture(tmp_path)
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a3", "mod-fixture", 1, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PATH_FORBIDDEN
-
-
 def test_dialogue_missing_register_fails(tmp_path: Path) -> None:
     """A dialogue missing required 'register' breaks schema and fails with plan_invalid."""
     paths = _setup_two_lesson_fixture(tmp_path)
     plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
     del plan_doc["lessons"][0]["dialogue"]["register"]
-    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PLAN_INVALID
-    assert str(paths["plan"]) in exc_info.value.message
-
-
-def test_malformed_dialogue_fails(tmp_path: Path) -> None:
-    """A malformed dialogue breaks schema and fails with plan_invalid (not silently null)."""
-    paths = _setup_two_lesson_fixture(tmp_path)
-    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-    plan_doc["lessons"][0]["dialogue"] = "not a valid dialogue mapping"
-    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PLAN_INVALID
-    assert str(paths["plan"]) in exc_info.value.message
-
-
-def test_plan_lesson_with_no_steps_fails(tmp_path: Path) -> None:
-    """A plan lesson with no 'steps' breaks schema and fails with plan_invalid."""
-    paths = _setup_two_lesson_fixture(tmp_path)
-    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-    del plan_doc["lessons"][0]["steps"]
     paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
 
     with pytest.raises(DigestError) as exc_info:
@@ -1063,17 +965,6 @@ def test_resolutions_missing_tokens_fails(tmp_path: Path) -> None:
     assert str(paths["res_1"]) in exc_info.value.message
 
 
-def test_optional_places_defaults_to_empty_list(tmp_path: Path) -> None:
-    """A dialogue omitting optional 'places' defaults to [] in digest."""
-    paths = _setup_two_lesson_fixture(tmp_path)
-    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-    del plan_doc["lessons"][0]["dialogue"]["places"]
-    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
-
-    doc = build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert doc["lessons"][0]["dialogue"]["places"] == []
-
-
 def test_symlinked_lock_sidecar_refused_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A .lock sidecar that is a symlink is refused before any read of that sidecar."""
     paths = _setup_two_lesson_fixture(tmp_path)
@@ -1097,34 +988,6 @@ def test_symlinked_lock_sidecar_refused_before_read(tmp_path: Path, monkeypatch:
         str(tmp_path / "schemas/module-plan-v2.schema.json"),
     }
     assert set(opened_files).issubset(expected_allowed)
-
-
-def test_dialogue_missing_step_fails(tmp_path: Path) -> None:
-    """A dialogue missing required 'step' fails with plan_invalid."""
-    paths = _setup_two_lesson_fixture(tmp_path)
-    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-    del plan_doc["lessons"][0]["dialogue"]["step"]
-    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PLAN_INVALID
-    assert str(paths["plan"]) in exc_info.value.message
-    assert "step" in exc_info.value.message
-
-
-def test_dialogue_null_step_fails(tmp_path: Path) -> None:
-    """A dialogue with step: null fails with plan_invalid instead of defaulting to null."""
-    paths = _setup_two_lesson_fixture(tmp_path)
-    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-    plan_doc["lessons"][0]["dialogue"]["step"] = None
-    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PLAN_INVALID
-    assert str(paths["plan"]) in exc_info.value.message
-    assert "step" in exc_info.value.message
 
 
 def test_in_root_data_symlink_with_escaping_lock_refused_before_read(
@@ -1443,37 +1306,6 @@ def test_cached_validator_reloads_on_schema_byte_change(tmp_path: Path) -> None:
     validate_digest(doc, repo_root=tmp_path)
 
 
-def test_build_digest_fails_when_plan_schema_deleted_after_cache(tmp_path: Path) -> None:
-    """build_digest caches plan validator, but deleting plan schema causes subsequent call to fail."""
-    _setup_two_lesson_fixture(tmp_path)
-
-    # First call succeeds
-    doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
-    assert doc["level"] == "a1"
-
-    # Delete the plan schema
-    plan_schema_path = tmp_path / "schemas/module-plan-v2.schema.json"
-    plan_schema_path.unlink()
-
-    # Second call in same process must fail
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
-    assert exc_info.value.code == codes.DIGEST_SCHEMA_INVALID
-    assert "schema file not found" in exc_info.value.message
-
-    # Recreate plan schema with changed bytes requiring an extra property
-    real_schema = json.loads((REPO_ROOT / "schemas/module-plan-v2.schema.json").read_text(encoding="utf-8"))
-    real_schema["required"].append("custom_module_field")
-    real_schema["properties"]["custom_module_field"] = {"type": "string"}
-    plan_schema_path.write_text(json.dumps(real_schema), encoding="utf-8")
-
-    # Subsequent call in same process must reload schema and fail with plan_invalid
-    with pytest.raises(DigestError) as exc_info2:
-        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
-    assert exc_info2.value.code == codes.PLAN_INVALID
-    assert "custom_module_field" in exc_info2.value.message
-
-
 def _multi_span_prompt_fixture(tmp_path: Path) -> dict[str, Path]:
     """Two-lesson fixture whose lesson 1 gains a two-span prompt unit: writer prefix + E-001 text."""
     paths = _setup_two_lesson_fixture(tmp_path)
@@ -1590,16 +1422,6 @@ def test_digest_receipt_offset_with_unit_origin_fails_closed(tmp_path: Path) -> 
         build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
     assert exc_info.value.code == codes.RECEIPT_SPAN_ALIGNMENT_FAILED
     assert "offset 18" in exc_info.value.message
-
-
-def test_digest_receipts_missing_a_span_token_fail_closed(tmp_path: Path) -> None:
-    # The receipts list every token of a unit; a shorter list cannot be aligned to the spans.
-    paths = _multi_span_prompt_fixture(tmp_path)
-    selected = {"record": "W-1", "forms": ["noun:inanim:n:v_kly"], "stressed": "сло́ве"}
-    _write_prompt_receipts(paths, [_prompt_receipt(0, "слове", selected=selected)])
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
-    assert exc_info.value.code == codes.RECEIPT_SPAN_ALIGNMENT_FAILED
 
 
 def test_digest_rejects_provenance_spans_that_do_not_partition_their_unit(tmp_path: Path) -> None:

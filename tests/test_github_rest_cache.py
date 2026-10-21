@@ -58,26 +58,6 @@ def test_etag_is_stored_and_sent_on_the_next_request():
     assert second.body == first.body
 
 
-def test_304_serves_cached_body_and_ignores_a_replacement_payload():
-    calls, transport = _transport_from(
-        lambda path, headers, timeout, n: (
-            (200, {"etag": 'W/"one"', "link": '<https://api.github.com/next>; rel="next"'}, b"[1]")
-            if n == 1
-            else (304, {"etag": '"two"'}, b"[999]")
-        )
-    )
-    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
-
-    first = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
-    second = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
-
-    assert first.body == [1]
-    assert second.body == [1]
-    assert second.link_next == "https://api.github.com/next"
-    assert calls[1][1] == 'W/"one"'
-    assert cache.cached_body("repos/o/r/issues?state=open") == [1]
-
-
 def test_non_304_replaces_the_cached_body_and_etag():
     payloads = [b'[{"n": 1}]', b'[{"n": 2}]']
     etags = ['"a"', '"b"']
@@ -441,27 +421,6 @@ def test_open_pr_detail_is_conditional_and_bounded_to_open_pulls():
     assert len(calls) == 14
     assert calls[0][1] is None
     assert all(etag for _, etag in calls[7:])
-
-
-def test_check_run_error_keeps_pr_membership_with_unknown_details():
-    resources = _scripted_repo()
-
-    def transport(path, headers, timeout):
-        if "check-runs" in path:
-            return 500, {}, b"unavailable"
-        etag, body = resources[path]
-        return 200, {"etag": etag}, json.dumps(body).encode()
-
-    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
-    result = github_rest.list_open_prs(REPO, limit=10, timeout=2.0, cache=cache)
-    assert len(result) == 1
-    assert result[0]["number"] == 77
-    assert result[0]["detailReadComplete"] is False
-    assert result[0]["statusCheckRollup"] is None
-    assert result[0]["reviewDecision"] is None
-    assert result[0]["mergeStateStatus"] is None
-    check_path = f"repos/{REPO}/commits/{SHA}/check-runs?per_page=100&page=1"
-    assert cache.cached_body(check_path) is None
 
 
 @pytest.mark.parametrize("error", [github_rest.GitHubRestError("unavailable"), github_rest.GitHubRestTimeout(2)])

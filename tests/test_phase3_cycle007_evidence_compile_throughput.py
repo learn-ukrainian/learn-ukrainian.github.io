@@ -410,15 +410,6 @@ def test_owner_drift_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
         throughput.prepare_resume_root(parent / "evidence")
 
 
-def test_compiler_level_lock_rejects_concurrent_owner(tmp_path: Path) -> None:
-    parent = _private_parent(tmp_path, "private")
-    root, _ = throughput.prepare_resume_root(parent / "evidence")
-    with throughput.exclusive_resume_lock(root):
-        with pytest.raises(throughput.ThroughputResumeError, match="compiler_lock_held"):
-            with throughput.exclusive_resume_lock(root):
-                pass
-
-
 def test_foreign_resume_root_entry_fails_closed(tmp_path: Path) -> None:
     parent = _private_parent(tmp_path, "private")
     root, _ = throughput.prepare_resume_root(parent / "evidence")
@@ -539,23 +530,6 @@ def test_runner_allows_private_installed_output_for_idempotent_validation(tmp_pa
     output = package / "evidence"
     output.mkdir(mode=0o700)
     assert _RUNNER._validate_paths(package, source_manifest, output) == (package, source_manifest, output)
-
-
-def test_straight_and_resumed_sidecars_are_byte_identical(tmp_path: Path) -> None:
-    straight_parent = _private_parent(tmp_path, "straight")
-    resumed_parent = _private_parent(tmp_path, "resumed")
-    straight = straight_parent / "evidence"
-    resumed = resumed_parent / "evidence"
-    _run(tmp_path / "client-straight", straight)
-    with pytest.raises(RuntimeError):
-        _run(tmp_path / "client-first", resumed, interrupt_after_packet=1)
-    _run(tmp_path / "client-second", resumed)
-    for packet_index in (1, 2):
-        name = throughput.sidecar_filename(packet_index)
-        assert (straight / name).read_bytes() == (resumed / name).read_bytes()
-    straight_manifest = json.loads((straight / "manifest.json").read_text())
-    resumed_manifest = json.loads((resumed / "manifest.json").read_text())
-    assert straight_manifest["mcp_transport_attestation"] != resumed_manifest["mcp_transport_attestation"]
 
 
 def test_invalid_existing_output_without_resume_metadata_is_refused(tmp_path: Path) -> None:

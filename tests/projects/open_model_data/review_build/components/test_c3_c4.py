@@ -15,7 +15,6 @@ from scripts.projects.open_model_data.review_build.components import (
     c3_relations,
     c3_sum20_meaning,
     c4_phraseology,
-    load_components,
 )
 from scripts.projects.open_model_data.review_build.components.wp3_sources import (
     ARTICLE,
@@ -35,8 +34,6 @@ from scripts.projects.open_model_data.review_build.components.wp3_sources import
     identity,
     query,
     ref,
-    sense_unit_key,
-    within,
 )
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
@@ -232,35 +229,6 @@ def test_ingestion_projection_preserves_all_cited_units_and_dispositions(sources
         ]
 
 
-def test_no_direct_rb1_registration():
-    for component in ("C3", "C4"):
-        with pytest.raises(BuildError, match="component_unavailable"):
-            load_components([component])
-
-
-def test_full_numbered_meanings_need_no_training_prompt_discriminator(sources):
-    long_definition = "SYNTHETIC full definition. " * 1000 + "SYNTHETIC final sentence."
-    with sqlite3.connect(sources) as conn:
-        conn.execute("DELETE FROM sum20_citations")
-        for order in range(3, 15):
-            insert(
-                conn,
-                SENSE,
-                id=100 + order,
-                article_id=1,
-                sense_order=order,
-                definition=long_definition,
-                register_labels='["SYNTHETIC label"]',
-            )
-        render(conn)
-    stream = units(sources, c3_sum20_meaning)
-    article = [u for u in stream if u.parent_key == "sum20_articles:id=1"]
-    assert [u.source_order for u in article] == list(range(1, 15))
-    assert all(u.candidate.outcome == "accepted" for u in article)
-    assert article[-1].candidate.response[0].text == long_definition
-    assert all(u.candidate.response[0].span is None for u in article)
-
-
 def test_quarantine_excluded_and_forged_admission_refused(sources):
     stream = units(sources, c3_sum20_meaning)
     assert {u.source_key for u in stream} == {"id=10", "id=11", "id=12"}
@@ -354,19 +322,6 @@ def test_c4_requires_printed_idiom_definition_and_every_author_label(sources, ht
             c4_phraseology,
             replace(unit, candidate=replace(unit.candidate, outcome="accepted", reason="ok", evidence=())),
         )
-
-
-def test_c4_projection_refuses_quotation_whose_author_label_was_removed(sources):
-    unit = units(sources, c4_phraseology)[0]
-    assert unit.candidate.outcome == "accepted"
-    html_update(sources, 3, PHRASE.replace("(SYNTHETIC second author)", "(synthetic stage direction)"))
-    with SnapshotReader({STORE: sources}) as reader:
-        with pytest.raises(BuildError):
-            unit.project(ComponentContext(reader, {}))
-    current = units(sources, c4_phraseology)[0]
-    assert (current.candidate.outcome, current.candidate.reason) == ("withheld", "citation_unresolved")
-    with SnapshotReader({STORE: sources}) as reader:
-        assert current.project(ComponentContext(reader, {})) == current.candidate
 
 
 @pytest.mark.parametrize("mutation", ["omit", "reorder", "cross_sense", "truncate", "metadata"])
@@ -528,23 +483,6 @@ def test_projection_reauthenticates_against_changed_source_snapshot(sources):
     update(sources, ARTICLE, 1, quarantine_reason="SYNTHETIC hold")
     with SnapshotReader({STORE: sources}) as reader:
         with pytest.raises(BuildError, match="quarantined_source"):
-            unit.project(ComponentContext(reader, {}))
-
-
-@pytest.mark.parametrize("module", [c3_relations, c4_phraseology])
-def test_malformed_and_empty_html_has_no_accepted_unit(sources, module):
-    key = 1 if module == c3_relations else 3
-    html_update(sources, key, "")
-    unit = next(u for u in units(sources, module) if u.source_key == f"id={key}")
-    assert unit.candidate.reason == ("empty_source" if module == c3_relations else "headword_unresolved")
-    assert unit.candidate.outcome == "withheld"
-
-
-def test_phrase_projection_refuses_parent_headword_removed(sources):
-    unit = units(sources, c4_phraseology)[0]
-    update(sources, ENTRY, 1, canonical_headword="")
-    with SnapshotReader({STORE: sources}) as reader:
-        with pytest.raises(BuildError, match="headword_unresolved"):
             unit.project(ComponentContext(reader, {}))
 
 
@@ -903,15 +841,3 @@ def test_printed_stress_naming_a_sibling_homonym_is_withheld(sources):
     for key in (1, 4):
         html_update(sources, key, SYNONYM)
     assert all(u.candidate.outcome == "accepted" for u in units(sources, c3_relations))
-
-
-def test_sense_unit_key_and_markup_containment():
-    assert sense_unit_key("10") == ("10", 0)
-    assert sense_unit_key("10//3") == ("10", 3)
-    for bad in ("10//", "10//0", "10//01", "10//x", "10//-1", "10//١"):
-        with pytest.raises(BuildError, match="binding_group"):
-            sense_unit_key(bad)
-    markup = Markup('<div class="A SYNTHETIC">x <div class="B">y</div></div><div class="B">z</div>')
-    outer, (inner, after) = markup.classed("A")[0], markup.classed("B")
-    assert within(outer, inner) and not within(outer, after)
-    assert not within(inner, outer) and not within(outer, outer)

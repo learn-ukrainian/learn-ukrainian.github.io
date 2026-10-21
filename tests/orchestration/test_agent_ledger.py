@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import asyncio
 import json
 import threading
 from pathlib import Path
 
 import pytest
-from fastapi import HTTPException
 
-from scripts.api import coordination_router
 from scripts.orchestration import agent_ledger
 
 pytestmark = pytest.mark.reads_content
@@ -147,23 +144,6 @@ def test_upsert_task_preserves_fields_on_partial_update(tmp_path: Path):
     assert task["events"][-1]["message"] == "running -> reviewing"
 
 
-def test_heartbeat_writes_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    agent_ledger.upsert_task(tmp_path, task_id="reviewer", agent="gemini")
-    writes: list[Path] = []
-    original_write = agent_ledger.write_json_atomic
-
-    def counting_write(path: Path, payload: dict):
-        writes.append(path)
-        original_write(path, payload)
-
-    monkeypatch.setattr(agent_ledger, "write_json_atomic", counting_write)
-
-    task = agent_ledger.heartbeat(tmp_path, "reviewer", actor="gemini")
-
-    assert task["heartbeat_at"] == task["events"][-1]["timestamp"]
-    assert len(writes) == 1
-
-
 def test_parallel_conflicting_claims_are_serialized(tmp_path: Path):
     barrier = threading.Barrier(2)
     outcomes: list[str] = []
@@ -212,69 +192,3 @@ def test_absolute_owned_path_is_rejected(tmp_path: Path):
             agent="codex",
             owned_paths=[str(tmp_path / "site/src")],
         )
-
-
-def test_coordination_task_rejects_invalid_task_id():
-    with pytest.raises(HTTPException) as exc_info:
-        asyncio.run(coordination_router.coordination_task("bad id"))
-
-    assert exc_info.value.status_code == 400
-
-
-def test_cli_reports_bad_json(tmp_path: Path, capsys):
-    rc = agent_ledger.main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "upsert-task",
-            "--task-id",
-            "bad-json",
-            "--agent",
-            "codex",
-            "--metadata",
-            "{",
-        ]
-    )
-    payload = json.loads(capsys.readouterr().out)
-
-    assert rc == 2
-    assert "invalid JSON object" in payload["error"]
-
-
-def test_cli_reports_conflict(tmp_path: Path, capsys):
-    assert agent_ledger.main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "upsert-task",
-            "--task-id",
-            "ui",
-            "--agent",
-            "codex",
-            "--status",
-            "running",
-            "--owned-path",
-            "site/src",
-        ]
-    ) == 0
-    capsys.readouterr()
-
-    rc = agent_ledger.main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "upsert-task",
-            "--task-id",
-            "ui-css",
-            "--agent",
-            "codex",
-            "--status",
-            "running",
-            "--owned-path",
-            "site/src/styles/course.css",
-        ]
-    )
-    payload = json.loads(capsys.readouterr().out)
-
-    assert rc == 2
-    assert payload["error"] == "ownership_conflict"

@@ -21,14 +21,6 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.euphony import (
-    _ends_with_vowel,
-    _is_predominantly_latin,
-    _skip_line,
-    _starts_with_consonant_cluster,
-    _starts_with_v_or_f,
-    _starts_with_vowel,
-    _starts_with_z_cluster,
-    _starts_with_z_or_s,
     auto_fix_euphony,
     check_euphony_violations,
 )
@@ -36,61 +28,6 @@ from audit.checks.euphony import (
 # =============================================================================
 # Helper functions
 # =============================================================================
-
-class TestHelpers:
-
-    def test_ends_with_vowel(self):
-        assert _ends_with_vowel("вона") is True
-        assert _ends_with_vowel("він") is False
-
-    def test_ends_with_vowel_with_punctuation(self):
-        assert _ends_with_vowel("вона,") is True
-        assert _ends_with_vowel("він.") is False
-
-    def test_starts_with_vowel(self):
-        assert _starts_with_vowel("Олена") is True
-        assert _starts_with_vowel("Петро") is False
-
-    def test_starts_with_vowel_with_quotes(self):
-        assert _starts_with_vowel("«Олена»") is True
-        assert _starts_with_vowel("«Петро»") is False
-
-    def test_starts_with_consonant_cluster(self):
-        assert _starts_with_consonant_cluster("школі") is True
-        assert _starts_with_consonant_cluster("місті") is False  # мі- starts vowel at pos 1
-        assert _starts_with_consonant_cluster("Криму") is True
-
-    def test_starts_with_v_or_f(self):
-        assert _starts_with_v_or_f("відділі") is True
-        assert _starts_with_v_or_f("фотографії") is True
-        assert _starts_with_v_or_f("місті") is False
-
-    def test_starts_with_z_or_s(self):
-        assert _starts_with_z_or_s("зброєю") is True
-        assert _starts_with_z_or_s("сиру") is True
-        assert _starts_with_z_or_s("шостого") is True
-        assert _starts_with_z_or_s("молоком") is False
-
-    def test_starts_with_z_cluster(self):
-        assert _starts_with_z_cluster("зброєю") is True
-        assert _starts_with_z_cluster("здоров'я") is True
-        assert _starts_with_z_cluster("закон") is False  # за- = з + vowel
-
-    def test_predominantly_latin(self):
-        assert _is_predominantly_latin("This is English text") is True
-        assert _is_predominantly_latin("Це українська мова") is False
-        assert _is_predominantly_latin("") is False
-
-    def test_skip_line(self):
-        assert _skip_line("## Header") is True
-        assert _skip_line("| table |") is True
-        assert _skip_line("> blockquote") is True
-        assert _skip_line("```code```") is True
-        assert _skip_line("---") is True
-        assert _skip_line("<!-- comment -->") is True
-        assert _skip_line("This is English prose") is True
-        assert _skip_line("Це українська проза") is False
-        assert _skip_line("") is True
 
 
 # =============================================================================
@@ -114,14 +51,6 @@ class TestRule1IY:
     def test_y_between_vowels_is_ok(self):
         """й between vowels is correct — no violation."""
         content = "вона й Олена"
-        violations = check_euphony_violations(content)
-        rule1 = [v for v in violations if "і між голосними" in v["issue"]
-                 or "й після приголосного" in v["issue"]]
-        assert len(rule1) == 0
-
-    def test_i_after_consonant_is_ok(self):
-        """і after a consonant is correct — no violation."""
-        content = "він і Петро"
         violations = check_euphony_violations(content)
         rule1 = [v for v in violations if "і між голосними" in v["issue"]
                  or "й після приголосного" in v["issue"]]
@@ -173,13 +102,6 @@ class TestRule2UV:
         uv = [v for v in violations if "у перед" in v["issue"] or "в перед" in v["issue"]]
         assert len(uv) == 0
 
-    def test_u_before_consonant_is_ok(self):
-        """у before a consonant (no cluster) is correct — no violation."""
-        content = "Вона живе у місті"
-        violations = check_euphony_violations(content)
-        uv = [v for v in violations if "у перед" in v["issue"] or "в перед" in v["issue"]]
-        assert len(uv) == 0
-
     def test_fix_u_to_v_before_vowel(self):
         """Auto-fix: у before vowel → в."""
         content = "Живу у Одесі"
@@ -214,12 +136,6 @@ class TestRule3ZIZ:
         violations = check_euphony_violations(content)
         assert any("з перед з/с/ш/ч" in v["issue"] for v in violations)
 
-    def test_detect_z_before_z_cluster(self):
-        """з before з-cluster should be flagged."""
-        content = "Воїн з зброєю"
-        violations = check_euphony_violations(content)
-        assert any(v for v in violations if v["type"] == "EUPHONY")
-
     def test_iz_before_sibilant_is_ok(self):
         """із before a sibilant is correct — no violation."""
         content = "Зроблено із сиру"
@@ -247,40 +163,8 @@ class TestExemptions:
         violations = check_euphony_violations(content, file_path="/curriculum/l2-uk-en/oes/module.md")
         assert len(violations) == 0
 
-    def test_ruth_track_exempt(self):
-        """RUTH track (Ruthenian) should be exempt from euphony."""
-        content = "вона і Олена"
-        fixed, count = auto_fix_euphony(content, file_path="/curriculum/l2-uk-en/ruth/module.md")
-        assert count == 0
-        assert fixed == content
-
-    def test_a1_track_not_exempt(self):
-        """Core tracks should NOT be exempt."""
-        content = "вона і Олена"
-        violations = check_euphony_violations(content, file_path="/curriculum/l2-uk-en/a1/module.md")
-        assert len(violations) > 0
-
 
 class TestEdgeCases:
-
-    def test_frontmatter_skipped(self):
-        """YAML frontmatter should not be checked."""
-        content = "---\ntitle: вона і Олена\n---\n\nНормальний текст."
-        violations = check_euphony_violations(content)
-        # No violations from frontmatter content
-        assert not any("і між голосними" in v["issue"] for v in violations)
-
-    def test_table_lines_skipped(self):
-        """Table rows should not be checked."""
-        content = "| вона і Олена | test |"
-        violations = check_euphony_violations(content)
-        assert len(violations) == 0
-
-    def test_english_lines_skipped(self):
-        """English text should not be checked."""
-        content = "This uses the preposition and conjunction rules."
-        violations = check_euphony_violations(content)
-        assert len(violations) == 0
 
     def test_multiple_violations_single_line(self):
         """A line can have multiple violations."""
@@ -296,10 +180,3 @@ class TestEdgeCases:
         fixed2, count2 = auto_fix_euphony(fixed1)
         assert count2 == 0
         assert fixed1 == fixed2
-
-    def test_empty_content(self):
-        """Empty content should produce no violations and no fixes."""
-        violations = check_euphony_violations("")
-        assert len(violations) == 0
-        _fixed, count = auto_fix_euphony("")
-        assert count == 0

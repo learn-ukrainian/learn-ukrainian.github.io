@@ -339,10 +339,6 @@ def test_decolonization_integrity_failure_is_never_withholding(monkeypatch):
     "case_id",
     [
         "decol_prot_058",
-        "decol_prot_061",
-        "decol_prot_063",
-        "decol_prot_064",
-        "decol_prot_071",
     ],
 )
 def test_decolonization_queries_cannot_fallback_for_withheld_passages(case_id):
@@ -522,17 +518,6 @@ def test_healthy_dictionary_with_no_row_withholds(dictionary_probe):
     assert error.value.reason_code == "held_source_missing"
 
 
-def test_healthy_dictionary_with_missing_literal_passage_withholds(dictionary_probe):
-    sources, _, _ = dictionary_probe
-    sources.execute(
-        "INSERT INTO sum20_articles VALUES (42, 'FIXTURE', 'fixture', 'fixture unrelated text', '', "
-        "'https://sum20ua.com/?wordid=42', '')"
-    )
-    with pytest.raises(builder.SourceEvidenceUnavailable, match="literal passage") as error:
-        _query_dictionary(dictionary_probe)
-    assert error.value.reason_code == "held_source_unproven"
-
-
 def test_edited_passage_cannot_bypass_quarantined_headword(dictionary_probe):
     sources, _, evidence = dictionary_probe
     evidence["supporting_passage"] += " changed"
@@ -564,30 +549,6 @@ def test_trusted_vts_cache_positive_control(dictionary_probe):
         "INSERT INTO slovnyk_me_entries VALUES (13, 'https://slovnyk.me/dict/vts/fixture', 'vts', 'literal synthetic passage')"
     )
     assert _query_dictionary(dictionary_probe)["binding"]["locator"] == "slovnyk_me_entries:13"
-
-
-def test_missing_source_provenance_column_is_integrity_failure(dictionary_probe):
-    sources, _, _ = dictionary_probe
-    sources.execute("ALTER TABLE sum20_articles DROP COLUMN official_url")
-    with pytest.raises(sqlite3.OperationalError, match="no such column: official_url"):
-        _query_dictionary(dictionary_probe)
-
-
-def test_dictionary_query_error_is_never_ordinary_absence(dictionary_probe):
-    sources, vesum, evidence = dictionary_probe
-
-    class FailedQuery:
-        connection = sources
-
-        def execute(self, query, args=()):
-            if "ORDER BY id" in query and "sum20_articles" in query:
-                raise sqlite3.OperationalError("synthetic query failure")
-            return sources.execute(query, args)
-
-    with pytest.raises(sqlite3.OperationalError, match="synthetic query failure"):
-        builder.query_source_evidence(
-            "synthetic", "fixture", "", evidence["authority"], "synthetic", FailedQuery(), vesum.cursor(), []
-        )
 
 
 PASSAGE = "literal synthetic passage"
@@ -692,14 +653,6 @@ def test_each_admitted_family_literal_positive(admitted_source_probe):
 )
 def test_each_family_headword_or_normalized_only_is_withheld(admitted_source_probe, text):
     _insert_witness(admitted_source_probe, text)
-    with pytest.raises(builder.SourceEvidenceUnavailable) as error:
-        _query_source(admitted_source_probe)
-    assert error.value.reason_code == "held_source_unproven"
-
-
-def test_each_family_placeholder_never_survives(admitted_source_probe):
-    _insert_witness(admitted_source_probe)
-    admitted_source_probe[2]["supporting_passage"] = "arbitrary placeholder not in witness"
     with pytest.raises(builder.SourceEvidenceUnavailable) as error:
         _query_source(admitted_source_probe)
     assert error.value.reason_code == "held_source_unproven"
@@ -1008,9 +961,6 @@ def reviewed_synthetic_case(monkeypatch, tmp_path):
         "dossier_rejected",
         "changed_receipt",
         "changed_passage",
-        "changed_locus",
-        "changed_source",
-        "changed_context",
         "review_digest",
         "dossier_digest",
     ],

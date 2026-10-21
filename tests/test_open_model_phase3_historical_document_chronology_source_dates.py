@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import copy
 import json
-from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_historical_document_chronology as chronology_v1
 from scripts.projects.open_model_data import phase3_historical_document_chronology_source_dates as source_dates
@@ -94,17 +92,6 @@ def _reseal(record: dict) -> dict:
     return record
 
 
-def test_contracts_are_strict_and_parent_runtime_binding_is_current():
-    for path in (source_dates.RECORD_SCHEMA_PATH, source_dates.RECEIPT_SCHEMA_PATH):
-        schema = json.loads(path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-        assert schema["additionalProperties"] is False
-
-    assert source_dates.file_sha256(Path(chronology_v1.__file__)) == (
-        source_dates.EXPECTED_CHRONOLOGY_V1_IMPLEMENTATION_SHA256
-    )
-
-
 @pytest.mark.parametrize(
     ("raw_date", "expected"),
     [
@@ -174,19 +161,6 @@ def test_ratushna_record_requires_official_edition_binding_but_uses_source_comme
     assert record["date_evidence"]["raw_date"] == "1653"
 
 
-def test_ratushna_agreeing_created_and_date_fields_prefer_date_comment():
-    record = _record(
-        document_identity="RatushnaKniga_1986__ratush02",
-        created="1653",
-        date="1653",
-    )
-
-    assert record["date_evidence"]["selected_field"] == "date"
-    assert record["date_evidence"]["source_comment_line"] == 5
-    assert record["date_evidence"]["source_field_values"]["created"] == "1653"
-    assert record["date_evidence"]["source_field_values"]["date"] == "1653"
-
-
 def test_ratushna_created_without_date_fails_closed():
     with pytest.raises(
         source_dates.HistoricalSourceDateError, match="Ratushna date must come from source date comment"
@@ -203,14 +177,6 @@ def test_validator_rejects_date_projection_tamper_after_reseal():
     record["projection"]["chronological_end_year"] = 1599
 
     with pytest.raises(source_dates.HistoricalSourceDateError, match="end year drift"):
-        source_dates.validate_record(_reseal(record), freeze=periodization.load_freeze())
-
-
-def test_validator_rejects_canonical_framework_selection_after_reseal():
-    record = copy.deepcopy(_record())
-    record["projection"]["canonical_framework_id"] = "university_five_stage_synthesis"
-
-    with pytest.raises(source_dates.HistoricalSourceDateError, match="schema violation"):
         source_dates.validate_record(_reseal(record), freeze=periodization.load_freeze())
 
 

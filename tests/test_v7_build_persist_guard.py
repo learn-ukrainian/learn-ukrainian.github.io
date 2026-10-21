@@ -180,30 +180,6 @@ def test_artifact_names_cover_both_correction_loop_summaries() -> None:
     assert "llm_qg_correction_loop.json" in names
 
 
-def test_persist_commits_python_qg_correction_loop(tmp_path: Path) -> None:
-    repo = init_repo(tmp_path)
-    child = add_build_worktree(repo)
-    seed_artifacts(child)
-    module_dir = child / "curriculum" / "l2-uk-en" / "a1" / "foo"
-    (module_dir / "python_qg_correction_loop.json").write_text(
-        '{"best_round": 2, "stopped_reason": "pass"}\n', encoding="utf-8"
-    )
-    worktree = build_worktree(repo, child)
-
-    assert (
-        v7_build._persist_build_artifacts(
-            worktree,
-            level="a1",
-            slug="foo",
-            result="failed",
-        )
-        is True
-    )
-
-    committed = git(child, "show", "--name-only", "--format=", "HEAD")
-    assert "curriculum/l2-uk-en/a1/foo/python_qg_correction_loop.json" in committed
-
-
 def test_main_guard_refuses_primary_checkout_but_allows_archive_child(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

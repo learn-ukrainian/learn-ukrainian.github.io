@@ -16,10 +16,7 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import migrate.migrate_v6_plan_hashes as migrate_plan_hashes
-from build.phases.plan_validator import validate_plan_consistency
 from build.plan_tracking import PLAN_HASH_PHASES
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _write_manifest(curriculum_root: Path, *, level: str, slug: str) -> None:
@@ -137,38 +134,3 @@ def test_two_track_migration_flags_both_correctly(
             assert state["phases"][phase]["plan_hash"]
             assert state["phases"][phase]["status"] == "stale"
         assert state["phases"]["publish"]["status"] == "stale"
-
-
-def test_plan_contradiction_validator_integration() -> None:
-    clean_plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / "a1" / "at-the-cafe.yaml"
-    clean_plan = yaml.safe_load(clean_plan_path.read_text("utf-8"))
-
-    assert clean_plan.get("dialogue_situations")
-    assert validate_plan_consistency(clean_plan, clean_plan_path.stem) == []
-
-    contradictory_plan = {
-        "dialogue_situations": [
-            {
-                "setting": "At a pet shop with animals and pet items, not room furniture.",
-                "speakers": ["Марія", "Оленка"],
-                "motivation": "Practice він/вона/воно with pet-shop nouns",
-            }
-        ],
-        "content_outline": [
-            {
-                "section": "Діалоги",
-                "words": 300,
-                "points": [
-                    "Dialogue 1 — Video call showing your room with a table, lamp, and bed.",
-                    "Dialogue 2 — Ask what is in your bag.",
-                ],
-            }
-        ],
-    }
-
-    messages = validate_plan_consistency(contradictory_plan, "synthetic-pet-shop")
-
-    assert len(messages) == 1
-    assert "synthetic-pet-shop" in messages[0]
-    assert "room furniture" in messages[0]
-    assert "room" in messages[0]

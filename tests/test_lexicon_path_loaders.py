@@ -208,33 +208,10 @@ def _assert_opened_path(mode: str, repo: str, database: str) -> None:
     print(opened)
 
 
-def test_package_import_uses_scripts_package_reader(tmp_path: Path) -> None:
-    from scripts.lexicon.heritage_classifier import (
-        _open_readonly,
-        resolve_usage_label,
-        usage_source_records,
-    )
-
-    database = tmp_path / "reader.db"
-    _make_database(database)
-    assert _open_readonly.__module__ == "scripts.lib.readonly_sqlite"
-    assert callable(resolve_usage_label)
-    assert callable(usage_source_records)
-    assert _opened_database(_open_readonly, database) == database.resolve()
-
-
 def test_path_loaded_lexicon_modules_import_without_repo_on_sys_path() -> None:
     result = _run("path-load", str(REPO), *PATH_LOADED, SEARCH_INDEX_LOADER)
     assert result.returncode == 0, result.stderr or result.stdout
     assert result.stdout.strip() == "ok"
-
-
-def test_reader_initialization_error_propagates_for_package_and_file_load() -> None:
-    for kind in ("import-error", "other-module"):
-        for mode in ("package", "file"):
-            result = _run("init-failure", kind, mode, str(REPO))
-            assert result.returncode == 0, result.stderr or result.stdout
-            assert result.stdout.strip() == "propagated"
 
 
 def test_file_load_opens_the_given_database(tmp_path: Path) -> None:

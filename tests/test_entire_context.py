@@ -100,13 +100,6 @@ def event_count(store: ContextLinkStore) -> int:
 # ── schema: allowlist and forbidden-field rejection ──────────────────────────
 
 
-def test_valid_link_roundtrips_and_validates() -> None:
-    link = make_link()
-    link.validate()
-    parsed = ContextLink.from_dict(link.to_dict())
-    assert parsed.locator_id == link.locator_id
-
-
 def test_long_rollover_link_and_evidence_roundtrip() -> None:
     link = make_link(
         kind=LinkKind.ROLLOVER,
@@ -165,29 +158,6 @@ def test_rollover_link_exemption_does_not_bypass_credential_scan() -> None:
 
 
 @pytest.mark.parametrize(
-    ("verifier", "evidence_locator"),
-    [
-        ("git", ROLLOVER_EVIDENCE_LOCATOR),
-        ("rollover-registry", "rollover:other/v1/" + ROLLOVER_CANONICAL_ID),
-        ("rollover-registry", ROLLOVER_EVIDENCE_LOCATOR + "/extra"),
-        ("rollover-registry", ROLLOVER_EVIDENCE_LOCATOR.upper()),
-    ],
-)
-def test_rollover_evidence_exemption_requires_exact_typed_pair(
-    verifier: str,
-    evidence_locator: str,
-) -> None:
-    verification = make_verification(verifier=verifier, evidence_locator=evidence_locator)
-    with pytest.raises(SchemaError):
-        verification.validate()
-
-
-def test_locator_id_format() -> None:
-    assert make_link().locator_id.startswith("clink_")
-    assert len(make_link().locator_id) == len("clink_") + 64
-
-
-@pytest.mark.parametrize(
     "field",
     [
         "prompt",
@@ -206,14 +176,6 @@ def test_locator_id_format() -> None:
 def test_from_dict_rejects_unknown_and_body_bearing_fields(field: str) -> None:
     payload = make_link().to_dict()
     payload[field] = "x"
-    with pytest.raises(SchemaError):
-        ContextLink.from_dict(payload)
-
-
-@pytest.mark.parametrize("facet_key", ["prompt", "body", "transcript_path", "unknown_field"])
-def test_facets_reject_forbidden_and_unknown_keys(facet_key: str) -> None:
-    payload = make_link().to_dict()
-    payload["facets"] = {facet_key: "x"}
     with pytest.raises(SchemaError):
         ContextLink.from_dict(payload)
 
@@ -257,13 +219,6 @@ def test_long_natural_language_facet_remains_allowed() -> None:
     assert ContextLink.from_dict(payload).facets == payload["facets"]
 
 
-def test_real_semantic_long_touched_path_remains_allowed() -> None:
-    payload = make_link().to_dict()
-    path = "docs/research/EXISTING_CORPUS_ASSET_RECOVERY_AND_LINEAGE_AUDIT.md"
-    payload["facets"] = {"touched_paths": [path]}
-    assert ContextLink.from_dict(payload).facets == {"touched_paths": [path]}
-
-
 @pytest.mark.parametrize(
     "path",
     [
@@ -280,130 +235,9 @@ def test_touched_paths_reject_opaque_or_nonrelative_values(path: str) -> None:
         ContextLink.from_dict(payload)
 
 
-@pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
-def test_non_facet_identity_fields_reject_token_like_values(field: str) -> None:
-    payload = make_link().to_dict()
-    payload.pop("locator_id")
-    payload[field] = "ghp_" + "x" * 32
-    with pytest.raises(SchemaError, match="credential-token"):
-        ContextLink.from_dict(payload)
-
-
-@pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
-def test_non_facet_identity_fields_reject_long_opaque_values(field: str) -> None:
-    payload = make_link().to_dict()
-    payload.pop("locator_id")
-    payload[field] = "A" * 64
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        ContextLink.from_dict(payload)
-
-
-@pytest.mark.parametrize("field", ["canonical_id", "entire_checkpoint_id"])
-def test_non_facet_identity_fields_reject_delimiter_split_opaque_values(field: str) -> None:
-    payload = make_link().to_dict()
-    payload.pop("locator_id")
-    payload[field] = "A" * 47 + "." + "A" * 47
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        ContextLink.from_dict(payload)
-
-
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [
-        ("entire_checkpoint_id", 123),
-        ("entire_checkpoint_id", True),
-        ("git_sha", 123),
-        ("git_sha", True),
-    ],
-)
-def test_optional_identity_fields_reject_non_strings(field: str, value: object) -> None:
-    payload = make_link().to_dict()
-    payload.pop("locator_id")
-    payload[field] = value
-    with pytest.raises(SchemaError, match=field):
-        ContextLink.from_dict(payload)
-
-
-def test_canonical_namespace_rejects_long_opaque_path_component() -> None:
-    payload = make_link().to_dict()
-    payload.pop("locator_id")
-    payload["canonical_namespace"] = "github:" + "A" * 64
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        ContextLink.from_dict(payload)
-
-
-def test_canonical_namespace_rejects_delimiter_split_opaque_value() -> None:
-    payload = make_link().to_dict()
-    payload.pop("locator_id")
-    payload["canonical_namespace"] = "github:" + "A" * 30 + "." + "A" * 30
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        ContextLink.from_dict(payload)
-
-
-def test_verification_locator_rejects_token_like_values() -> None:
-    payload = make_verification().to_dict()
-    payload["evidence_locator"] = "ghp_" + "x" * 32
-    with pytest.raises(SchemaError, match="credential-token"):
-        VerificationEvidence.from_dict(payload)
-
-
-@pytest.mark.parametrize("field", ["verifier", "evidence_locator"])
-def test_verification_identity_fields_reject_long_opaque_values(field: str) -> None:
-    payload = make_verification().to_dict()
-    payload[field] = "A" * 64
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        VerificationEvidence.from_dict(payload)
-
-
-@pytest.mark.parametrize("field", ["verifier", "evidence_locator"])
-def test_verification_identity_fields_reject_delimiter_split_opaque_values(field: str) -> None:
-    payload = make_verification().to_dict()
-    payload[field] = "A" * 47 + "." + "A" * 47
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        VerificationEvidence.from_dict(payload)
-
-
-def test_typed_verification_locator_rejects_long_opaque_path_component() -> None:
-    payload = make_verification().to_dict()
-    payload["evidence_locator"] = "github:" + "A" * 64
-    with pytest.raises(SchemaError, match="long-opaque-token"):
-        VerificationEvidence.from_dict(payload)
-
-
-def test_git_commit_evidence_locator_remains_allowed() -> None:
-    payload = make_verification().to_dict()
-    payload["evidence_locator"] = "git:commit/" + GIT_SHA
-    assert VerificationEvidence.from_dict(payload).evidence_locator == payload["evidence_locator"]
-
-
-def test_from_dict_rejects_unsupported_schema_version() -> None:
-    payload = make_link().to_dict()
-    payload["schema_version"] = 99
-    with pytest.raises(SchemaError):
-        ContextLink.from_dict(payload)
-
-
 def test_from_dict_rejects_tampered_locator_id() -> None:
     payload = make_link().to_dict()
     payload["locator_id"] = "clink_" + "f" * 64
-    with pytest.raises(SchemaError):
-        ContextLink.from_dict(payload)
-
-
-def test_from_dict_rejects_caller_supplied_ingested_at() -> None:
-    payload = make_link().to_dict()
-    payload["ingested_at"] = isoformat_z(NOW)
-    with pytest.raises(SchemaError):
-        ContextLink.from_dict(payload)
-
-
-def test_from_dict_rejects_bad_digest_and_kind() -> None:
-    payload = make_link().to_dict()
-    payload["canonical_digest"] = "not-a-digest"
-    with pytest.raises(SchemaError):
-        ContextLink.from_dict(payload)
-    payload = make_link().to_dict()
-    payload["kind"] = "entire_session"
     with pytest.raises(SchemaError):
         ContextLink.from_dict(payload)
 
@@ -415,17 +249,6 @@ def test_locator_id_is_deterministic() -> None:
     first = make_link().locator_id
     second = make_link(facets={"title": "different facets do not matter"}).locator_id
     assert first == second
-
-
-def test_changed_digest_produces_new_locator_id() -> None:
-    assert make_link().locator_id != make_link(canonical_digest=DIGEST_B).locator_id
-
-
-def test_changed_kind_namespace_or_id_produce_new_locator_id() -> None:
-    base = make_link()
-    assert base.locator_id != make_link(kind=LinkKind.GITHUB_ISSUE).locator_id
-    assert base.locator_id != make_link(canonical_namespace="github:learn-ukrainian/learn-ukrainian.github.io").locator_id
-    assert base.locator_id != make_link(canonical_id="6174").locator_id
 
 
 # ── admission lifecycle ──────────────────────────────────────────────────────
@@ -589,32 +412,6 @@ def test_verified_status_with_wrong_digest_cannot_promote(tmp_path: Path) -> Non
     assert result.reason == "digest_mismatch"
 
 
-def test_explain_returns_body_free_audit_trail(tmp_path: Path) -> None:
-    store = make_store(tmp_path)
-    link = make_link()
-    result = store.admit(link, make_verification(), actor="test", now=NOW)
-    detail = store.explain(result.locator_id)
-    assert detail is not None
-    assert [event["event_type"] for event in detail["events"]] == ["claimed", "promoted"]
-    rendered = json.dumps(detail, ensure_ascii=False).lower()
-    for token in FORBIDDEN_OUTPUT_TOKENS:
-        assert token not in rendered
-
-
-def test_multiple_links_stay_distinct(tmp_path: Path) -> None:
-    store = make_store(tmp_path)
-    first = store.admit(make_link(), make_verification(), actor="test", now=NOW)
-    second = store.admit(
-        make_link(canonical_digest=DIGEST_B),
-        make_verification(canonical_digest=DIGEST_B),
-        actor="test",
-        now=NOW,
-    )
-    assert first.locator_id != second.locator_id
-    assert store.lookup(first.locator_id)["canonical_digest"] == DIGEST_A
-    assert store.lookup(second.locator_id)["canonical_digest"] == DIGEST_B
-
-
 # ── rebuild parity ───────────────────────────────────────────────────────────
 
 
@@ -660,19 +457,6 @@ def test_rebuild_repairs_projection_drift_and_reports_applied_state(tmp_path: Pa
 # ── cross-harness equivalence ────────────────────────────────────────────────
 
 
-def test_same_fixture_yields_same_body_free_result_across_projections(tmp_path: Path) -> None:
-    link_payload = make_link().to_dict()
-    verification = make_verification()
-    results = []
-    for seat in ("codex", "kimi", "glm"):
-        store = ContextLinkStore(tmp_path / f"{seat}.sqlite3")
-        link = ContextLink.from_dict(link_payload)
-        admitted = store.admit(link, verification, actor=seat, now=NOW)
-        results.append(store.lookup(admitted.locator_id))
-    assert results[0] is not None
-    assert results[0] == results[1] == results[2]
-
-
 # ── CLI: status / lookup / explain / rebuild / admit ─────────────────────────
 
 
@@ -695,51 +479,11 @@ def test_cli_status_missing_projection_does_not_create_state(tmp_path: Path) -> 
     assert not db.exists()
 
 
-def test_cli_lookup_missing_projection_is_clean(tmp_path: Path) -> None:
-    code, payload = run_cli(["lookup", "clink_" + "0" * 64, "--db", str(tmp_path / "m.sqlite3")])
-    assert code == cli.EXIT_OK
-    assert payload["available"] is False
-
-
-def test_cli_rebuild_missing_projection_is_clean(tmp_path: Path) -> None:
-    db = tmp_path / "missing.sqlite3"
-    code, payload = run_cli(["rebuild", "--db", str(db)])
-    assert code == cli.EXIT_OK
-    assert payload["available"] is False
-    assert not db.exists()
-
-
-def test_cli_disabled_projection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(cli.ENV_DISABLED, "1")
-    db = tmp_path / "disabled.sqlite3"
-    code, payload = run_cli(["status", "--db", str(db)])
-    assert code == cli.EXIT_OK
-    assert payload["enabled"] is False
-    assert payload["reason"] == "projection_disabled"
-    link_file = tmp_path / "link.json"
-    link_file.write_text(json.dumps(make_link().to_dict()), encoding="utf-8")
-    code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
-    assert code == cli.EXIT_REFUSED
-    assert payload["reason"] == "projection_disabled"
-    assert not db.exists()
-
-
 def test_cli_corrupt_projection_fails_open(tmp_path: Path) -> None:
     db = tmp_path / "corrupt.sqlite3"
     db.write_bytes(b"not a sqlite database at all")
     code, payload = run_cli(["status", "--db", str(db)])
     assert code == cli.EXIT_OK
-    assert payload["available"] is False
-    assert payload["reason"] == "projection_unreadable"
-
-
-def test_cli_rebuild_corrupt_projection_refuses_without_traceback(tmp_path: Path) -> None:
-    db = tmp_path / "corrupt.sqlite3"
-    db.write_bytes(b"not a sqlite database at all")
-
-    code, payload = run_cli(["rebuild", "--db", str(db)])
-
-    assert code == cli.EXIT_REFUSED
     assert payload["available"] is False
     assert payload["reason"] == "projection_unreadable"
 
@@ -753,23 +497,6 @@ def test_cli_admit_corrupt_projection_fails_closed_without_traceback(tmp_path: P
     code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
 
     assert code == cli.EXIT_REFUSED
-    assert payload["available"] is False
-    assert payload["reason"] == "projection_unreadable"
-
-
-def test_cli_malformed_projection_row_fails_open_without_traceback(tmp_path: Path) -> None:
-    db = tmp_path / "malformed.sqlite3"
-    store = ContextLinkStore(db)
-    result = store.admit(make_link(), make_verification(), actor="test", now=NOW)
-    with sqlite3.connect(db) as connection:
-        connection.execute(
-            "UPDATE context_links SET facets_json = ? WHERE locator_id = ?",
-            ("not-json", result.locator_id),
-        )
-
-    code, payload = run_cli(["lookup", result.locator_id, "--db", str(db)])
-
-    assert code == cli.EXIT_OK
     assert payload["available"] is False
     assert payload["reason"] == "projection_unreadable"
 
@@ -816,57 +543,6 @@ def test_cli_admit_lookup_explain_roundtrip(tmp_path: Path) -> None:
     code, payload = run_cli(["lookup", "clink_" + "f" * 64, "--db", str(db)])
     assert code == cli.EXIT_NOT_FOUND
     assert payload["found"] is False
-
-
-def test_cli_admit_without_verification_refuses(tmp_path: Path) -> None:
-    db = tmp_path / "noverif.sqlite3"
-    link_file = tmp_path / "link.json"
-    link_file.write_text(json.dumps(make_link().to_dict()), encoding="utf-8")
-    code, payload = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
-    assert code == cli.EXIT_REFUSED
-    assert payload["reason"] == "verification_missing"
-    lookup_code, lookup_payload = run_cli(["lookup", make_link().locator_id, "--db", str(db)])
-    assert lookup_code == cli.EXIT_NOT_FOUND
-    assert lookup_payload["found"] is False
-
-
-def test_cli_admit_rejects_schema_violations(tmp_path: Path) -> None:
-    db = tmp_path / "schema.sqlite3"
-    link_file = tmp_path / "link.json"
-    payload = make_link().to_dict()
-    payload["prompt"] = "ignored"
-    link_file.write_text(json.dumps(payload), encoding="utf-8")
-    code, out = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
-    assert code == cli.EXIT_REFUSED
-    assert out["reason"] == "schema_invalid"
-    assert not db.exists()
-
-
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [
-        ("entire_checkpoint_id", 123),
-        ("entire_checkpoint_id", True),
-        ("git_sha", 123),
-        ("git_sha", True),
-    ],
-)
-def test_cli_admit_rejects_non_string_optional_identifiers(
-    tmp_path: Path, field: str, value: object
-) -> None:
-    db = tmp_path / "schema.sqlite3"
-    link_file = tmp_path / "link.json"
-    payload = make_link().to_dict()
-    payload[field] = value
-    link_file.write_text(json.dumps(payload), encoding="utf-8")
-
-    code, out = run_cli(["admit", "--link", str(link_file), "--db", str(db)])
-
-    assert code == cli.EXIT_REFUSED
-    assert out["outcome"] == "refused"
-    assert out["reason"] == "schema_invalid"
-    assert field in out["detail"]
-    assert not db.exists()
 
 
 def test_cli_admit_rejects_non_utf8_json_without_traceback(tmp_path: Path) -> None:

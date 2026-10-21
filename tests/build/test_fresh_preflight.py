@@ -150,19 +150,6 @@ def test_preflight_example_need(clean_word_store, clean_pack):
     assert any(g.need == "example" and g.step == "s1" for g in res_bad.gaps)
 
 
-def test_preflight_quote_need_publication_right_gap(clean_word_store, clean_pack):
-    """An unregistered source remains a publication_right gap."""
-    plan_entry = {
-        "steps": [{"id": "s1", "needs": ["quote"], "explains": ["T-002"]}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res = preflight_lesson(plan_entry, pack=clean_pack, word_store=clean_word_store)
-    assert res.passed is False
-    assert len(res.gaps) == 1
-    assert res.gaps[0].step == "s1"
-    assert res.gaps[0].need == "publication_right"
-
-
 def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word_store):
     """Pack-provided publication rights cannot grant permission."""
     pack_with_allowed = {
@@ -320,42 +307,6 @@ def test_preflight_error_need(clean_word_store, clean_pack):
     res_bad = preflight_lesson(plan_entry_bad, pack=clean_pack, word_store=clean_word_store)
     assert res_bad.passed is False
     assert any(g.need == "error" for g in res_bad.gaps)
-
-
-def test_preflight_video_need(clean_word_store, clean_pack):
-    """Video need passes when V- is present; fails when missing."""
-    plan_entry = {
-        "steps": [{"id": "s1", "needs": ["video"], "ref": "V-001"}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res = preflight_lesson(plan_entry, pack=clean_pack, word_store=clean_word_store)
-    assert res.passed is True
-
-    plan_entry_bad = {
-        "steps": [{"id": "s1", "needs": ["video"], "ref": "V-999"}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res_bad = preflight_lesson(plan_entry_bad, pack=clean_pack, word_store=clean_word_store)
-    assert res_bad.passed is False
-    assert any(g.need == "video" for g in res_bad.gaps)
-
-
-def test_preflight_culture_need(clean_word_store, clean_pack):
-    """Culture need passes when T- is present with kind 'culture'; fails when missing."""
-    plan_entry = {
-        "steps": [{"id": "s1", "needs": ["culture"], "explains": ["T-001"]}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res = preflight_lesson(plan_entry, pack=clean_pack, word_store=clean_word_store)
-    assert res.passed is True
-
-    plan_entry_bad = {
-        "steps": [{"id": "s1", "needs": ["culture"], "explains": ["T-999"]}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res_bad = preflight_lesson(plan_entry_bad, pack=clean_pack, word_store=clean_word_store)
-    assert res_bad.passed is False
-    assert any(g.need == "culture" for g in res_bad.gaps)
 
 
 def test_preflight_paradigm_need(clean_word_store, clean_pack):

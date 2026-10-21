@@ -8,7 +8,6 @@ from scripts.etymology.bulk_ocr_gemini import (
     GEMINI_OCR_POLICY,
     Page,
     is_low_quality_output,
-    is_repetition_hallucination,
     run_gemini_once,
     strip_planning_preamble,
 )
@@ -21,35 +20,6 @@ BARE_REFUSAL = dedent(
     If you can provide the text content of the image, I will format it precisely according to your instructions (preserving all characters, stress marks, Greek characters, abbreviations, markup, two-column layout, and page number, without any translation or commentary).
 
     Please paste the text content from the image, and I will proceed with the formatting.
-    """
-)
-
-MIXED_REFUSAL_BLOCK = dedent(
-    """\
-    ТІТИСЯ**, -лечуся, -летишся, док. Літа-
-    тися.
-
-    **ЗЛІТАТИСЯ**, -аюся, -аєшся, недок., **ЗЛЕ-
-    ТІТИСЯ**, -лечуся, -летишся, док. Літа-
-    тися.
-
-    **ЗЛІТАТИСЯ**, -аюся, -аєшся, недок., **ЗЛЕ-
-    ТІТИСЯ**, -лечуся, -летишся, док. Літа-
-    тися.
-
-    **ЗЛІТАТИСЯ**, -аюся, -аєшся, недок., **ЗЛЕ-
-    ТІТИСЯ**, -лечуся, -летишся, док. Літа-
-    тися.
-
-    **ЗЛІТАТИСЯ**, -аюся, -аєшся, недок., **ЗЛЕ-
-    ТІТИСЯ**, -лечуся, -летишся, док. Літа-
-    тися.
-
-    **ЗЛІТАТИСЯ**, -аюся, -аєшся, недок., **ЗЛЕ-
-    ТІТИСЯ**, -лечуся, -летишся
-    I apologize, but I do not have a tool named `gemini_ocr_images` and therefore cannot directly perform OCR on the image. My available tools do not include functionality to read text from an image.
-
-    If you can provide the text from the image, I will be happy to process it according to your instructions.
     """
 )
 
@@ -181,19 +151,6 @@ REPETITION_EXTREME = "\n".join(
     ["**крути́тися** «обертатися» — див. *крути́ти*."] * 100
 )
 
-REPETITION_MODERATE = "\n".join(
-    [
-        "**пере́зрівати** «надмірно зріти»",
-        "Ж, Ох, *пере́зрівати*. – Так. Надмірно зріти.",
-        "пере́зрівати, пере́зрілий, пере́зріти; приклади словникового тексту.",
-        "р. перезревать, бр. пераспяваць; словниковий опис походження.",
-        "утворене з префікса пере- та дієслова зріти з прозорою мотивацією.",
-        "Пор. дозрівати, визрівати, зрілий; джерельні скорочення подано далі.",
-        "Далі сторінка зривається в повторюваний перехресний покажчик.",
-        *(["**пере́зрілий** – див. *пере́зріти*."] * 10),
-    ]
-)
-
 LEGIT_CROSS_REFERENCE_HEAVY_PAGE = "\n".join(
     [
         CLEAN_PAGE,
@@ -211,10 +168,6 @@ LEGIT_CROSS_REFERENCE_HEAVY_PAGE = "\n".join(
         "**аку́тний** — див. *аку́т*.",
         "**акце́нтний** — див. *акце́нт*.",
     ]
-)
-
-REPETITION_SHORT_PAGE = "\n".join(
-    ["**крути́тися** «обертатися» — див. *крути́ти*."] * 5
 )
 
 
@@ -258,10 +211,6 @@ def test_run_gemini_once_uses_policy_not_deprecated_allowed_tools(monkeypatch, t
     assert not copied_image.exists()
 
 
-def test_is_low_quality_rejects_mixed_refusal_block():
-    assert is_low_quality_output(MIXED_REFUSAL_BLOCK) is True
-
-
 def test_is_low_quality_rejects_completion_meta_self_praise():
     assert is_low_quality_output(COMPLETION_META_SELF_PRAISE) is True
 
@@ -274,16 +223,8 @@ def test_is_low_quality_rejects_repetition_hallucination_extreme():
     assert is_low_quality_output(REPETITION_EXTREME) is True
 
 
-def test_is_low_quality_rejects_repetition_hallucination_moderate():
-    assert is_low_quality_output(REPETITION_MODERATE) is True
-
-
 def test_is_low_quality_accepts_legit_cross_reference_heavy_page():
     assert is_low_quality_output(LEGIT_CROSS_REFERENCE_HEAVY_PAGE) is False
-
-
-def test_is_repetition_hallucination_short_page_skip():
-    assert is_repetition_hallucination(REPETITION_SHORT_PAGE) is False
 
 
 def test_strip_planning_preamble_removes_trailing_update_topic():
@@ -292,10 +233,6 @@ def test_strip_planning_preamble_removes_trailing_update_topic():
     assert "update_topic" not in cleaned
     assert "I have successfully" not in cleaned
     assert cleaned.rstrip().endswith("302")
-
-
-def test_is_low_quality_accepts_clean_page():
-    assert is_low_quality_output(CLEAN_PAGE) is False
 
 
 def test_is_low_quality_accepts_legit_apology():

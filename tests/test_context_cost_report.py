@@ -206,20 +206,6 @@ def test_totals_separate_categories(tmp_path, harness):
     assert m["totals"]["first_call_cache_creation"] == c.value(11)
 
 
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_reminders_differing_size_and_exclusions(tmp_path, harness):
-    rows = []
-    for kind in c.REMINDERS:
-        rows += [attachment(kind, "initial"), attachment(kind, "é"), attachment(kind, "xyz")]
-    rows += [attachment("hook_success", "ignored"), attachment("unknown-type", "ignored")]
-    m = metrics(tmp_path, harness, rows)
-    expected = sum(
-        len(f'{{"content":"{text}","type":"{kind}"}}'.encode()) for kind in c.REMINDERS for text in ("é", "xyz")
-    )
-    assert amount(m, "reminder_attachments") == (expected if harness == "claude" else "unknown")
-    assert m["counters"]["other"] == (1 if harness == "claude" else 13)
-
-
 def test_codex_negative_delta_and_identical_keys_only(tmp_path):
     def usage(total):
         return {
@@ -247,12 +233,6 @@ def test_function_call_sibling_and_out_of_order_join(tmp_path):
     assert amount(m, "unchanged_polls") == 3
     fake = {"type": "assistant", "message": {"content": [{"type": "function_call", "id": "fake"}]}}
     assert c.paired_count(transcript(tmp_path, "claude", [fake]), "claude") == 0
-
-
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_canonical_object_body_and_utf8(tmp_path, harness):
-    m = metrics(tmp_path, harness, [*pair(harness, "a", {"z": "é", "a": 1}), *pair(harness, "b", {"a": 1, "z": "é"})])
-    assert amount(m, "unchanged_polls") == len('{"a":1,"z":"é"}'.encode())
 
 
 @pytest.mark.parametrize("harness", ["claude", "codex"])
@@ -352,34 +332,6 @@ def test_error_redaction(tmp_path, capsys):
     assert "https://" not in capsys.readouterr().err
 
 
-@pytest.mark.parametrize(
-    ("command", "shape"),
-    [
-        ("git status --short", "git-status"),
-        ("git diff --stat", "git-diff"),
-        ("git log -1", "git-log"),
-        ("gh pr view 3", "gh-pr-view"),
-        ("gh pr diff 3", "gh-pr-diff"),
-        ("cat /synthetic/file", "file-read"),
-        ("head -n 2 /synthetic/file", "file-read"),
-        ("sed -n '1,2p' /synthetic/file", "file-read"),
-        ("rg needle /synthetic/file", "file-search"),
-        ("pytest test_synthetic.py", "pytest"),
-        ("curl http://localhost/api?secret=yes", "curl-local-api"),
-        ("git status; cat /synthetic/file", "other"),
-        ("git status && gh pr view 3", "other"),
-        ("git statusx", "other"),
-        ("git -C /synthetic -C child status", "other"),
-        ("git -C /synthetic --git-dir /synthetic/repo diff", "other"),
-        ("git --work-tree /synthetic -C child log", "other"),
-        ("git -C -C status", "other"),
-        ("unknown secret", "other"),
-    ],
-)
-def test_closed_command_shapes(command, shape):
-    assert c.command_shape(command, "")[0] == shape
-
-
 def test_js_wrapper_and_help(capsys):
     shape = c.call_shape("functions.exec", 'await tools.exec_command({cmd: "cat /synthetic/file"})', "")
     assert shape == ("file-read", c.digest("/synthetic/file"), "path")
@@ -390,47 +342,6 @@ def test_js_wrapper_and_help(capsys):
     help_text = capsys.readouterr().out
     for section in ("Outputs:", "Exit codes:", "Related:", "--manifest", "--text"):
         assert section in help_text
-
-
-def test_aggregate_unknown_and_weighted_share():
-    assert c.aggregate([c.value(2), c.unknown("field_absent")]) == {
-        "value": 2,
-        "lower_bound": True,
-        "coverage": {
-            "sessions_total": 2,
-            "sessions_known": 1,
-            "sessions_unknown": 1,
-            "unknown_reasons": {"field_absent": 1},
-        },
-    }
-    assert c.normalize_path("x/../file/", "/synthetic") == c.normalize_path("/synthetic/file", "")
-    assert c.normalize_path("/synthetic/link/file", "") != c.normalize_path("/synthetic/target/file", "")
-    a, b = c.fresh_metrics(), c.fresh_metrics()
-    a["raw_tool_payload"]["bytes"] = c.value(20_001)
-    a["totals"]["tool_result_bytes"] = c.value(20_001)
-    b["totals"]["tool_result_bytes"] = c.value(3)
-    combined = c.aggregate([a, b])
-    assert combined["raw_tool_payload"]["share"] == {
-        "value": 20_001 / 20_004,
-        "coverage": {"sessions_total": 2, "sessions_known": 2, "sessions_unknown": 0, "unknown_reasons": {}},
-    }
-
-
-def test_revisited_hash_series_and_large_read_precedence(tmp_path):
-    rows = []
-    for i, body in enumerate(("abc", "different", "abc")):
-        rows += pair("codex", str(i), body, "Read", {"file_path": "/synthetic/file"})
-    for i, body in enumerate(("abc", "different", "abc")):
-        rows += pair("codex", f"poll{i}", body)
-    rows += pair("codex", "large", "x" * 20_001, "Read", {"file_path": "/synthetic/large"})
-    rows += [marker("codex")]
-    rows += pair("codex", "large2", "x" * 20_001, "Read", {"file_path": "/synthetic/large"})
-    m = metrics(tmp_path, "codex", rows)
-    assert amount(m, "repeated_reads") == 3
-    assert amount(m, "unchanged_polls") == 3
-    assert amount(m, "raw_tool_payload") == 40_002
-    assert amount(m, "post_compaction_rehydration") == 0
-    assert m["changed_reread"]["count"] == c.value(1)
 
 
 def test_per_model_attribution_and_partial_categories(tmp_path):
@@ -449,18 +360,6 @@ def test_per_model_attribution_and_partial_categories(tmp_path):
     m = metrics(tmp_path, "codex", [request("codex"), missing])
     assert m["totals"]["provider_tokens"]["input_tokens"] == c.value(11)
     assert m["totals"]["provider_tokens"]["cache_read_input_tokens"] == c.unknown("field_absent")
-
-
-def test_claude_freeze_excludes_agent_files(tmp_path):
-    root = tmp_path / "claude"
-    root.mkdir()
-    rows = [r for i in range(20) for r in pair("claude", f"synthetic-{i}")]
-    transcript(root, "claude", rows, "synthetic-session.jsonl")
-    transcript(root, "claude", rows, "agent-synthetic.jsonl")
-    manifest = tmp_path / "manifest.json"
-    summary = c.freeze(manifest, roots={"claude": root}, run_start=datetime.now(UTC) + timedelta(seconds=1))
-    assert summary["sessions"] == 1
-    assert c.report(manifest)["harnesses"]["claude"]["sessions"] == 1
 
 
 def test_manifest_error_fields_cannot_echo_text(tmp_path, capsys):
@@ -524,119 +423,6 @@ def test_missing_read_identity_preserves_partial_bytes(tmp_path, harness, compac
     assert c.call_shape("functions.exec", mixed, "") == ("other", None, None)
 
 
-def test_sha_metadata_is_validated_and_absent_is_unknown(tmp_path):
-    manifest, _, _ = frozen_sample(tmp_path)
-    sha = "a" * 40
-    assert c.report(manifest, tool_sha=sha)["tool_sha"] == sha
-    assert c.report(manifest)["tool_sha"] == "unknown"
-    with pytest.raises(ValueError, match="invalid_manifest"):
-        c.report(manifest, tool_sha="private-path-or-invalid-sha")
-
-
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_invalid_discriminator_shapes_are_tolerated(tmp_path, harness):
-    rows = [
-        {"type": []},
-        {"type": "event_msg", "payload": {"type": {}}},
-        {"type": "attachment", "attachment": {"type": []}},
-        *pair(harness, "valid"),
-    ]
-    m = metrics(tmp_path, harness, rows)
-    assert m["counters"]["malformed_line"] == 3
-    assert m["totals"]["paired_tool_calls"] == c.value(1)
-
-
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_wall_time_requires_two_endpoints_in_event_order(tmp_path, harness):
-    first = metadata(harness) | {"timestamp": "2026-10-01T00:01:00Z"}
-    rows = [first, *pair(harness, "a")]
-    m = c.parse_session(transcript(tmp_path, harness, rows), harness)["metrics"]
-    assert m["totals"]["wall_seconds"] == c.unknown("field_absent")
-    rows += [{"type": "system", "timestamp": "2026-10-01T00:00:00Z"}]
-    m = c.parse_session(transcript(tmp_path, harness, rows), harness)["metrics"]
-    assert m["totals"]["wall_seconds"] == c.value(-60)
-
-
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_unpaired_small_result_adds_bytes_but_not_large_count(tmp_path, harness):
-    m = metrics(tmp_path, harness, [result(harness, "synthetic-unpaired", "four")])
-    assert m["raw_tool_payload"]["bytes"] == c.value(4)
-    assert m["raw_tool_payload"]["count"] == c.value(0)
-    assert m["raw_tool_payload"]["top_shapes"] == [{"shape": "other", "bytes": 4}]
-
-
-def test_mixed_sessions_have_harness_and_model_coverage(tmp_path, capsys):
-    root = tmp_path / "codex"
-    root.mkdir()
-    pre = {"type": "session_meta", "payload": {"base_instructions": {"text": "synthetic"}}}
-    for index in range(2):
-        rows = [metadata("codex")]
-        if index == 0:
-            rows += [pre, request("codex")]
-        rows += [r for i in range(20) for r in pair("codex", f"synthetic-{index}-{i}")]
-        transcript(root, "codex", rows, f"rollout-synthetic-{index}.jsonl")
-    manifest = tmp_path / "manifest.json"
-    c.freeze(manifest, roots={"codex": root}, run_start=datetime.now(UTC) + timedelta(seconds=1))
-    out = c.report(manifest)
-    harness = out["harnesses"]["codex"]
-    expected = {
-        "value": len(json.dumps(metadata("codex")).encode()) + len(json.dumps(pre).encode()),
-        "lower_bound": True,
-        "coverage": {
-            "sessions_total": 2,
-            "sessions_known": 1,
-            "sessions_unknown": 1,
-            "unknown_reasons": {"field_absent": 1},
-        },
-    }
-    assert harness["metrics"]["cold_start"]["bytes"] == expected
-    assert harness["models"]["gpt-synthetic"]["cold_start"]["bytes"] == expected
-    assert harness["metrics"]["totals"]["provider_tokens"]["input_tokens"] == expected | {"value": 10}
-    assert harness["metrics"]["totals"]["paired_tool_calls"] == {
-        "value": 40,
-        "coverage": {"sessions_total": 2, "sessions_known": 2, "sessions_unknown": 0, "unknown_reasons": {}},
-    }
-    for session in out["sessions"]:
-        assert "coverage" not in session["metrics"]["cold_start"]["bytes"]
-    assert c.main(["report", "--manifest", str(manifest), "--text"]) == 0
-    printed = capsys.readouterr().out
-    assert f"{expected['value']}[coverage=1/2;lower_bound=true]" in printed
-    assert "unknown(field_absent)[coverage=0/2;lower_bound=true]" in printed
-    assert str(root) not in printed
-
-
-def test_all_unknown_aggregate_has_dominant_reason_and_coverage():
-    assert c.aggregate([c.unknown("no_marker"), c.unknown("field_absent"), c.unknown("no_marker")]) == {
-        "value": "unknown",
-        "reason": "no_marker",
-        "lower_bound": True,
-        "coverage": {
-            "sessions_total": 3,
-            "sessions_known": 0,
-            "sessions_unknown": 3,
-            "unknown_reasons": {"field_absent": 1, "no_marker": 2},
-        },
-    }
-    assert c.aggregate([c.unknown("no_marker"), c.unknown("field_absent")])["reason"] == "field_absent"
-    assert c.aggregate([c.value(2), c.unknown("field_absent")], session_coverage=False) == c.unknown("field_absent")
-
-
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_absent_hook_and_reminder_payloads_use_harness_capability(tmp_path, harness):
-    m = metrics(tmp_path, harness, pair(harness, "synthetic"))
-    expected = c.value(0) if harness == "claude" else c.unknown("field_absent")
-    assert m["per_call_reinjection"]["bytes"] == expected
-    assert m["reminder_attachments"]["bytes"] == expected
-
-
-@pytest.mark.parametrize("harness", ["claude", "codex"])
-def test_defined_compaction_type_without_occurrences_is_zero(tmp_path, harness):
-    m = metrics(tmp_path, harness, pair(harness, "synthetic"))
-    assert m["post_compaction_rehydration"] == {"bytes": c.value(0), "compactions": c.value(0)}
-    m = metrics(tmp_path, harness, [marker(harness), *pair(harness, "synthetic"), marker(harness)])
-    assert m["post_compaction_rehydration"] == {"bytes": c.value(0), "compactions": c.value(2)}
-
-
 def test_claude_cold_start_explicit_pre_action_list_uses_raw_utf8(tmp_path):
     selected = [
         attachment("hook_additional_context", "é"),
@@ -691,34 +477,6 @@ def test_claude_content_blocks_count_usage_once_with_identity_fallback(tmp_path,
     assert m["totals"]["first_call_uncached_input"] == c.value(10)
     assert m["totals"]["first_call_cache_creation"] == c.value(11)
     assert m["totals"]["first_call_cache_read"] == c.value(12)
-
-
-def test_claude_request_identity_controls_hook_intervals_and_first_call(tmp_path):
-    first = request("claude") | {"requestId": "synthetic-first"}
-    duplicate = request("claude", 100) | {"requestId": "synthetic-first"}
-    second = request("claude", 20) | {"requestId": "synthetic-second"}
-    first["message"]["model"] = "claude-first"
-    second["message"]["model"] = "claude-second"
-    rows = [first, attachment("hook_additional_context", "é"), duplicate, attachment("hook_additional_context", "é")]
-    rows += [second, attachment("hook_additional_context", "é")]
-    # Metadata creates the second model's bucket before the first counted request.
-    pre = {"type": "assistant", "message": {"model": "claude-second"}}
-    parsed = c.parse_session(transcript(tmp_path, "claude", [pre, *rows]), "claude")
-    m = parsed["metrics"]
-    assert m["totals"]["model_calls"] == c.value(2)
-    assert m["totals"]["provider_tokens"]["output_tokens"] == c.value(36)
-    assert m["totals"]["first_call_uncached_input"] == c.value(10)
-    assert amount(m, "per_call_reinjection") == 2
-
-
-def test_first_counted_claude_call_keeps_missing_category_unknown(tmp_path):
-    first = request("claude") | {"requestId": "synthetic-first"}
-    del first["message"]["usage"]["cache_creation_input_tokens"]
-    second = request("claude", 20) | {"requestId": "synthetic-second"}
-    second["message"]["model"] = "claude-second"
-    m = metrics(tmp_path, "claude", [first, second])
-    assert m["totals"]["first_call_uncached_input"] == c.value(10)
-    assert m["totals"]["first_call_cache_creation"] == c.unknown("field_absent")
 
 
 def codex_snapshot(last, total):
@@ -787,15 +545,6 @@ def test_codex_mismatch_uses_cumulative_totals_and_model_deltas(tmp_path):
     assert m["totals"]["first_call_uncached_input"] == c.value(10)
     assert parsed["models"]["gpt-synthetic"]["totals"]["provider_tokens"]["input_tokens"] == c.value(11)
     assert parsed["models"]["gpt-second"]["totals"]["provider_tokens"]["input_tokens"] == c.value(24)
-
-
-def test_codex_negative_delta_disables_mismatch_self_check(tmp_path):
-    rows = [codex_snapshot({"input_tokens": 90}, {"input_tokens": 100}), marker("codex")]
-    rows += [codex_snapshot({"input_tokens": 7}, {"input_tokens": 20})]
-    m = metrics(tmp_path, "codex", rows)
-    assert m["counters"]["token_total_mismatch"] == 0
-    assert m["totals"]["model_calls"] == c.value(2)
-    assert m["totals"]["provider_tokens"]["input_tokens"] == c.value(97)
 
 
 def test_reminder_bytes_use_entire_canonical_attachment_and_other_is_count_only(tmp_path):

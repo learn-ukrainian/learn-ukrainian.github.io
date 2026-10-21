@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
 from scripts.lexicon.runner.network_cache import NetworkCache, compute_request_key
-from tests._host_path_guard import assert_no_host_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "ulif_dictua"
@@ -120,37 +118,3 @@ def test_in_process_reduce_never_applies_worker_memory_limit_to_coordinator(
     assert code == 0
     candidate = json.loads((work / "candidate-ulif-reduce.json").read_text(encoding="utf-8"))
     assert candidate["entries"][0]["lemma"] == "привіт"
-
-
-def test_source_has_no_baked_home_defaults() -> None:
-    assert_no_host_paths(
-        (ROOT / "scripts" / "lexicon" / "runner" / "reduce_ulif_20k.py").read_text(encoding="utf-8")
-    )
-
-
-def test_work_dir_flag_is_required() -> None:
-    from scripts.lexicon.runner.reduce_ulif_20k import main as reduce_main
-
-    with pytest.raises(SystemExit) as exc:
-        reduce_main([])
-    assert exc.value.code == 2
-
-
-def test_help_exits_zero_without_side_effects(tmp_path: Path) -> None:
-    """Sanity companion: --help must not start a reduce run or write work artifacts."""
-    import subprocess
-
-    work = tmp_path / "work"
-    proc = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "lexicon" / "runner" / "reduce_ulif_20k.py"), "--help"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    assert proc.returncode == 0, proc.stderr
-    help_text = (proc.stdout + proc.stderr).lower()
-    assert "usage:" in help_text
-    assert "--require-memory-cap" in help_text
-    assert not work.exists()

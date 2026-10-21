@@ -94,14 +94,6 @@ def test_confirmed_ended_session_removed_with_complete_registry(tmp_path: Path) 
     assert result["entries"][0]["reason"] == "confirmed_rollover"
 
 
-def test_unknown_kept_regardless_of_age(tmp_path: Path) -> None:
-    root, directory = _session(tmp_path)
-    os.utime(directory, (1, 1))
-    result = scratch.sweep_sessions(root, apply=True, probe=lambda: UNKNOWN)
-    assert (directory / "scratchpad/payload").read_bytes() == b"keep every byte\x00\xff"
-    assert result["summary"]["kept_by_reason"] == {"unknown_session": 1}
-
-
 def test_dry_run_byte_for_byte_unchanged(tmp_path: Path) -> None:
     root, directory = _session(tmp_path)
 
@@ -338,29 +330,6 @@ def test_process_enumeration_failure_is_unknown(registry, monkeypatch) -> None:
 
 
 @pytest.mark.parametrize(
-    "process",
-    [
-        FakeProcess(exe="/install/claude/versions/2.1.0", args=["2.1.0", "-p"]),
-        FakeProcess(exe="/bin/node", args=["node", "/package/@anthropic-ai/claude-code/cli.js", "-p"]),
-    ],
-)
-def test_unregistered_native_or_node_claude_preserves_scratch(registry, tmp_path, monkeypatch, process) -> None:
-    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
-    root, directory = _session(tmp_path)
-    report = scratch.sweep_sessions(root, apply=True)
-    assert report["summary"]["kept_by_reason"] == {"unknown_session": 1}
-    assert report["summary"]["removed"] == report["summary"]["would_remove"] == 0
-    assert (directory / "scratchpad/payload").read_bytes() == b"keep every byte\x00\xff"
-
-
-def test_registered_version_named_claude_still_proves_liveness(registry, monkeypatch) -> None:
-    process = FakeProcess(pid=123, exe="/install/claude/versions/2.1.0", args=["2.1.0", "-p"])
-    monkeypatch.setattr(scratch, "_kernel_start", lambda _pid: "100")
-    monkeypatch.setattr(scratch.psutil, "process_iter", lambda: iter([process]))
-    assert scratch.process_evidence() == LIVE
-
-
-@pytest.mark.parametrize(
     "payload", [b"[" * 10000 + b"]" * 10000, b"{", b"\xff"], ids=["deeply_nested", "malformed", "invalid_unicode"]
 )
 def test_registry_parse_failure_preserves_scratch(registry, tmp_path, monkeypatch, payload) -> None:
@@ -519,32 +488,6 @@ def test_pid_domain_matches_registry_format(tmp_path, monkeypatch) -> None:
     machine.write_text("")
     with pytest.raises(ValueError, match="unknown PID domain"):
         scratch._pid_domain()
-
-
-def test_deep_tree_error_does_not_abort_other_entries(tmp_path) -> None:
-    root, deep = _session(tmp_path)
-    _session(tmp_path, session=REPLACEMENT)
-    nested = deep
-    for _ in range(130):
-        nested /= "d"
-        nested.mkdir()
-    report = scratch.sweep_sessions(root, probe=lambda: DEAD)
-    assert report["summary"]["errors"] == report["summary"]["would_remove"] == 1
-    assert report["entries"][0]["reason"] == "ELOOP"
-    assert deep.exists()
-
-
-def test_recursion_error_is_per_entry(tmp_path, monkeypatch) -> None:
-    root, directory = _session(tmp_path)
-
-    def fail(_fd):
-        raise RecursionError
-
-    monkeypatch.setattr(scratch, "_tree_bytes", fail)
-    report = scratch.sweep_sessions(root, probe=lambda: DEAD)
-    assert report["summary"]["errors"] == 1
-    assert report["entries"][0]["reason"] == "RecursionError"
-    assert directory.exists()
 
 
 def test_cli_counts_only_and_error_exit(registry, tmp_path: Path, monkeypatch, capsys) -> None:

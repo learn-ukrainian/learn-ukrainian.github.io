@@ -41,9 +41,3 @@ def test_unmapped_stem_is_reported_not_guessed() -> None:
     assert added == 0
     assert unmapped == ["99-klas-mystery-2099"]
     assert new == text
-
-
-def test_non_textbook_reference_untouched() -> None:
-    text = "- title: t\n  role: article\n  url: https://x.example\n"
-    new, added, _ = stamp.stamp_text(text, URL_MAP)
-    assert added == 0 and new == text

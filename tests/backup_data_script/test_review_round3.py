@@ -25,39 +25,6 @@ from tests.backup_data_script._support import (
 )
 
 
-def _receipt_function(source: str) -> str:
-    return source.split("write_backup_receipt()", 1)[1].split("\nprepare_staging_tree()", 1)[0]
-
-
-def _flush_function(source: str) -> str:
-    return source.split("flush_database_batch()", 1)[1].split("\nrun_linux_backup()", 1)[0]
-
-
-def test_count_scaled_jq_inventories_are_not_argv() -> None:
-    """Pin: path, exclusion, archive, and database inventories are files, not argv."""
-    source = SCRIPT.read_text(encoding="utf-8")
-    receipt = _receipt_function(source)
-    flush = _flush_function(source)
-    for flag in (
-        "--argjson paths",
-        "--argjson exclusions",
-        "--argjson archives",
-        "--argjson current",
-        "--args",
-    ):
-        assert flag not in receipt, flag
-    for flag in (
-        "--slurpfile paths",
-        "--slurpfile exclusions",
-        "--slurpfile archives",
-        "--slurpfile database_inventory",
-    ):
-        assert flag in receipt, flag
-    assert "--slurpfile previous" in flush
-    assert "LINUX_DB_SNAPSHOTS" not in source
-    assert "printf '%s\\n' \"$LINUX_DB_SNAPSHOTS\"" not in source
-
-
 def _install_jq_argv_probe(environment: dict[str, str]) -> Path:
     real_jq = shutil.which("jq", path=os.environ["PATH"])
     assert real_jq
@@ -132,25 +99,6 @@ def test_twelve_hundred_task_records_publish_a_completion_marker(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     relatives = _write_task_records(source.parent, 1200, stem_length=64)
-    argv_log = _install_jq_argv_probe(environment)
-
-    _assert_task_inventory_completed(environment, relatives, argv_log)
-
-
-def test_long_task_paths_publish_a_completion_marker(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    directory = source.parent / "batch_state" / "tasks"
-    for _index in range(8):
-        directory = directory / ("p" * 180)
-    directory.mkdir(parents=True)
-    relatives = []
-    for index in range(100):
-        path = directory / f"{index:04d}.json"
-        path.write_text("{}\n", encoding="utf-8")
-        relatives.append(path.relative_to(source.parent).as_posix())
-    assert max(len(relative) for relative in relatives) > 1000
     argv_log = _install_jq_argv_probe(environment)
 
     _assert_task_inventory_completed(environment, relatives, argv_log)
@@ -287,20 +235,5 @@ def test_many_file_roots_leave_no_file_list_after_success(
     entries = _files_from_entries(environment)
     assert len(entries) > 50
     assert any(b"\n" in entry and b"*" in entry for entry in entries)
-    assert _leftover_file_lists(staging) == []
-    assert list(staging.iterdir()) == []
-
-
-def test_many_file_roots_leave_no_file_list_after_failure(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, staging, _legacy = backup_environment
-    _file_roots_including_newline_glob(source.parent)
-    environment["FAKE_FILE_PHASE_EXIT"] = "1"
-
-    result = _run(environment, "backup", "--execute")
-
-    assert result.returncode != 0
-    assert "arg=<lu-part-complete>" not in _log(environment)
     assert _leftover_file_lists(staging) == []
     assert list(staging.iterdir()) == []

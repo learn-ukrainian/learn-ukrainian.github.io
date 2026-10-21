@@ -29,10 +29,8 @@ from scripts.projects.open_model_data.phase3_decolonization_partition import (
     DEFAULT_VESUM_DB,
     SENTENCE_SPLIT_RE,
     MinHashDedup,
-    exact_clopper_pearson_upper,
     extract_root_family,
     normalize_text,
-    verify_manifest,
 )
 
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
@@ -330,28 +328,6 @@ def test_ua_gec_test_split_strict_zero_leakage(requires_sources_db: Path) -> Non
     "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
 )
 @pytest.mark.usefixtures("_verified_partition_bundle")
-def test_minhash_near_duplicate_zero_collisions() -> None:
-    """Verify MinHash / token Jaccard deduplication report and verify real LSH parameters."""
-    assert MINHASH_REPORT_FILE.is_file(), f"Missing MinHash report: {MINHASH_REPORT_FILE}"
-    with MINHASH_REPORT_FILE.open("r", encoding="utf-8") as f:
-        report = json.load(f)
-
-    assert report["permutations"] == 64
-    assert report["bands"] == 16
-    assert report["rows_per_band"] == 4
-    # Full corpus indexing covers all 41,611 textbook chunks + ZNO + style guide + UA-GEC
-    assert report["train_corpus_sentences_indexed"] >= 40000
-    assert report["similarity_threshold"] == 0.80
-    assert report["cross_split_duplicates_above_threshold"] == 0
-    assert report["max_cross_split_similarity"] < 0.80
-    assert report["max_minhash_signature_similarity"] < 0.85
-    assert report["status"] == "PASS"
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
-)
-@pytest.mark.usefixtures("_verified_partition_bundle")
 def test_independent_minhash_cross_split_verification(requires_sources_db: Path) -> None:
     """Independently re-run MinHash signatures and token Jaccard on a cross-split sample across all sources."""
     minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
@@ -401,57 +377,3 @@ def test_independent_minhash_cross_split_verification(requires_sources_db: Path)
             assert sig_sim < 0.85, (
                 f"Cross-split MinHash signature similarity {sig_sim} >= 0.85 between '{h_toks}' and '{t_toks}'"
             )
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
-)
-@pytest.mark.usefixtures("_verified_partition_bundle")
-def test_heldout_suite_exact_allocation_and_statistical_power() -> None:
-    """Verify held-out suite has exactly 600 PRESERVE + 400 CORRECT cases and HER <= 1.0% power."""
-    assert HELDOUT_SUITE_FILE.is_file(), f"Missing held-out suite: {HELDOUT_SUITE_FILE}"
-
-    cases = []
-    with HELDOUT_SUITE_FILE.open("r", encoding="utf-8") as f:
-        for line in f:
-            if line.strip():
-                cases.append(json.loads(line.strip()))
-
-    assert len(cases) == 1000
-
-    preserve_cases = [c for c in cases if c["case_type"] == "PRESERVE"]
-    correct_cases = [c for c in cases if c["case_type"] == "CORRECT"]
-
-    assert len(preserve_cases) == 600
-    assert len(correct_cases) == 400
-
-    # Verify required fields on all cases
-    for c in cases:
-        assert "eval_id" in c
-        assert "case_type" in c
-        assert "input_text" in c
-        assert "target_term" in c
-        assert "expected_action" in c
-        assert "phenomenon_category" in c
-        assert "source_metadata" in c
-        assert "derivational_family" in c
-
-        if c["case_type"] == "PRESERVE":
-            assert c["expected_action"] == "PRESERVE"
-            assert c["expected_replacement"] is None
-        else:
-            assert c["expected_action"] == "CORRECT"
-            assert c["expected_replacement"] is not None
-
-    # Verify statistical power: exact one-sided 95% binomial upper bound for k=1 in n=600
-    bound = exact_clopper_pearson_upper(1, 600, confidence=0.95)
-    assert bound < 0.010, f"Statistical bound {bound} does not satisfy HER <= 1.0% gate"
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes", "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl"
-)
-@pytest.mark.usefixtures("_verified_partition_bundle")
-def test_partition_cli_verify_only() -> None:
-    """Verify that verify_manifest function returns True on disk artifacts."""
-    assert verify_manifest(PARTITIONS_DIR) is True

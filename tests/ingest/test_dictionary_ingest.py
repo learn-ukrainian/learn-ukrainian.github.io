@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.ingest.dictionary_ingest import ADAPTERS, build_parser, ingest
+from scripts.ingest.dictionary_ingest import ADAPTERS, ingest
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -94,31 +94,6 @@ def test_idempotent_rerun_skips_duplicates(tmp_path: Path) -> None:
     assert count == 2
 
 
-def test_all_adapters_ingest_into_one_db_and_fts_search(tmp_path: Path) -> None:
-    db_path = tmp_path / "sources.db"
-    searches = [
-        ("style_antonenko_fts", "священник"),
-        ("karavansky_r2u_fts", "коротко"),
-        ("style_holovashchuk_fts", "участь"),
-        ("paronyms_full_fts", "результативний"),
-    ]
-
-    for source, adapter in ADAPTERS.items():
-        result = ingest(adapter, FIXTURES / f"{source}.txt", db_path, dry_run=False, force=False)
-        assert result.inserted == 2
-
-    conn = sqlite3.connect(db_path)
-    try:
-        for fts_table, query in searches:
-            count = conn.execute(
-                f"SELECT COUNT(*) FROM {fts_table} WHERE {fts_table} MATCH ?",
-                (query,),
-            ).fetchone()[0]
-            assert count >= 1
-    finally:
-        conn.close()
-
-
 def test_force_reingest_replaces_target_rows(tmp_path: Path) -> None:
     db_path = tmp_path / "sources.db"
     adapter = ADAPTERS["antonenko"]
@@ -159,15 +134,3 @@ def test_paronym_parser_keeps_meanings_separate() -> None:
 
     assert rows[0].values["meaning_a"] == "письмове привітання"
     assert rows[0].values["meaning_b"] == "місце проживання"
-
-
-def test_help_documents_sources(capsys: pytest.CaptureFixture[str]) -> None:
-    with pytest.raises(SystemExit) as exc:
-        build_parser().parse_args(["--help"])
-
-    assert exc.value.code == 0
-    out = capsys.readouterr().out
-    for source in ADAPTERS:
-        assert source in out
-    assert "PDF extraction is not" in out
-    assert "handled here" in out

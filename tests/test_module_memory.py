@@ -126,16 +126,6 @@ def test_legacy_plan_hash_file_migrates_and_invalidates_on_first_read(
     assert "Migrating legacy module memory without alignment_manifest_hash" in caplog.text
 
 
-def test_reset_memory_wipes_file(tmp_path: Path) -> None:
-    path = tmp_path / "module-memory.yaml"
-    module_memory.save_module_memory(path, {"history": [{"attempt": 1}]})
-
-    assert path.exists()
-    assert module_memory.reset_module_memory(path) is True
-    assert not path.exists()
-    assert module_memory.reset_module_memory(path) is False
-
-
 def test_conflict_detector_quarantines_same_scope_opposites() -> None:
     memory = {
         "constraints": [

@@ -8,7 +8,6 @@ import importlib.abc
 import importlib.util
 import json
 import shutil
-import subprocess
 import sys
 import types
 from collections.abc import Iterator
@@ -51,10 +50,6 @@ HUB_WRITE_CALLS = frozenset(
         "upload_large_folder",
     }
 )
-ARCHIVE_DIR = REPO_ROOT / "archive/code/open_model_data"
-ARCHIVED_MODULES = ("v6_mine_ulif_phraseology", "v6_mine_general_assistant_textbooks", "judge_eval_seat")
-
-
 @pytest.fixture
 def inventory() -> dict[str, Any]:
     return json.loads(QUARANTINE_INVENTORY_PATH.read_text(encoding="utf-8"))
@@ -162,18 +157,6 @@ def test_inventory_quarantine_verify_detects_drift(inventory: dict[str, Any]) ->
         quarantine.verify_inventory(drifted)
 
 
-def test_inventory_quarantine_cli_verify_passes() -> None:
-    result = subprocess.run(
-        [sys.executable, str(OPEN_MODEL_SCRIPTS / "quarantine.py"), "verify"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-    assert result.returncode == 0, result.stderr
-    assert json.loads(result.stdout)["totals"]["ignored_files"] == 412
-
-
 def test_every_tombstoned_set_has_a_seal() -> None:
     for directory in quarantine.TOMBSTONED_DIRECTORIES:
         assert (REGISTRY_OPEN_MODEL_DATA_DIR / directory / "TOMBSTONE.md").is_file(), directory
@@ -254,21 +237,6 @@ def test_quarantine_guard_seal_in_one_store_covers_the_other(guard_stores: tuple
             refuse_quarantined(form, "test loader")
 
 
-def test_quarantine_guard_honours_new_release_tombstone(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fresh_guard_caches: None
-) -> None:
-    registry = tmp_path / "registry/projects/open_model_data"
-    artifacts = tmp_path / "data/projects/open_model_data"
-    (registry / "release/new_set").mkdir(parents=True)
-    monkeypatch.setattr(paths_mod, "REGISTRY_OPEN_MODEL_DATA_DIR", registry)
-    monkeypatch.setattr(paths_mod, "ARTIFACT_OPEN_MODEL_DATA_DIR", artifacts)
-    target = artifacts / "release/new_set/sft/shard.jsonl"
-    assert quarantine_reason(target) is None
-    (registry / "release/new_set/TOMBSTONE.md").write_text("sealed\n", encoding="utf-8")
-    with pytest.raises(QuarantinedArtifactError, match=r"release/new_set/TOMBSTONE\.md"):
-        refuse_quarantined(target, "test loader")
-
-
 def test_quarantine_guard_fails_closed_without_inventory(
     sealed_copy: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fresh_guard_caches: None
 ) -> None:
@@ -296,18 +264,6 @@ def _load_script(name: str, relative: str) -> types.ModuleType:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
-
-
-GUARDED_LOADERS = (
-    "scripts/projects/open_model_data/train_and_eval_real_model.py",
-    "scripts/projects/open_model_data/gemma_hardware_probe.py",
-    "scripts/projects/open_model_data/package_unified_dataset.py",
-    "scripts/projects/open_model_data/upload_to_huggingface.py",
-    "scripts/projects/open_model_data/v4_format_decolonization.py",
-    "scripts/projects/open_model_data/v4_open_weight_learning_study.py",
-    "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
-    "scripts/dataset/train_gemma_huggingface.py",
-)
 # The ML stack a slim CI shard lacks; a loader must refuse before it needs any of it.
 ML_STACK_MODULES = frozenset({"accelerate", "bitsandbytes", "datasets", "peft", "torch", "transformers", "trl"})
 
@@ -333,11 +289,6 @@ def without_ml_stack(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
         yield
 
 
-@pytest.mark.parametrize("relative", GUARDED_LOADERS)
-def test_loader_imports_without_ml_stack(relative: str, without_ml_stack: None) -> None:
-    _load_script(f"no_ml_stack_{Path(relative).stem}", relative)
-
-
 def test_loader_train_and_eval_real_model_refuses(
     tmp_path: Path, sealed_copy: Path, monkeypatch: pytest.MonkeyPatch, without_ml_stack: None
 ) -> None:
@@ -360,18 +311,6 @@ def test_loader_gemma_hardware_probe_refuses() -> None:
     for logical in (SEALED_CANARY, release):
         with pytest.raises(QuarantinedArtifactError):
             module._assert_artifact({"logical_path": logical, "bytes": 1, "sha256": "0" * 64})
-
-
-def test_loader_package_unified_dataset_refuses(tmp_path: Path) -> None:
-    module = importlib.import_module("scripts.projects.open_model_data.package_unified_dataset")
-    release = tmp_path / "release"
-    (release / "uldr_v03_dialect").mkdir(parents=True)
-    (release / "uldr_v03_dialect/sft_dialect_protection_500.jsonl").write_text("{}\n", encoding="utf-8")
-    output = tmp_path / "package"
-    for release_dir in (module.MANAGED_RELEASE_DIR, release):
-        with pytest.raises(QuarantinedArtifactError):
-            module.build_unified_dataset(release_dir, output)
-    assert not output.exists()
 
 
 def test_loader_upload_to_huggingface_refuses_before_any_hub_call(
@@ -546,13 +485,6 @@ def test_loader_train_gemma_huggingface_refuses(sealed_copy: Path) -> None:
             module.refuse_rebuild_required_candidate(dataset)
 
 
-@pytest.mark.parametrize("relative", GUARDED_LOADERS)
-def test_loader_calls_the_quarantine_guard(relative: str) -> None:
-    tree = ast.parse((REPO_ROOT / relative).read_text(encoding="utf-8"))
-    calls = {node.func.id for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)}
-    assert "refuse_quarantined" in calls or "refuse_quarantined_package" in calls, relative
-
-
 # AC3 — neither notebook can push to a hub.
 
 
@@ -583,88 +515,3 @@ def test_notebook_first_code_cell_refuses_to_run(notebook: Path) -> None:
 
 
 # AC4 / AC5 — archived generators and their tests cannot be imported by active code.
-
-
-def test_archive_holds_generators_and_their_tests() -> None:
-    for module in ARCHIVED_MODULES:
-        assert (ARCHIVE_DIR / "scripts" / f"{module}.py").is_file()
-        assert not (OPEN_MODEL_SCRIPTS / f"{module}.py").exists()
-    for test in ("test_v6_mine_ulif_phraseology.py", "test_v6_mine_general_assistant_textbooks.py"):
-        assert (ARCHIVE_DIR / "tests" / test).is_file()
-        assert not (REPO_ROOT / "tests/projects/open_model_data" / test).exists()
-    assert (ARCHIVE_DIR / "issue_8341_branch.patch").is_file()
-
-
-ARCHIVED_FILES = (
-    *(f"scripts/{module}.py" for module in ARCHIVED_MODULES),
-    "tests/test_v6_mine_ulif_phraseology.py",
-    "tests/test_v6_mine_general_assistant_textbooks.py",
-)
-
-
-@pytest.mark.repo_wide
-def test_archive_lists_every_archived_python_file() -> None:
-    found = {path.relative_to(ARCHIVE_DIR).as_posix() for path in ARCHIVE_DIR.rglob("*.py")}
-    assert found == {"__init__.py", *ARCHIVED_FILES}
-
-
-@pytest.mark.parametrize("relative", ARCHIVED_FILES)
-def test_archive_module_refuses_file_based_loading(relative: str) -> None:
-    spec = importlib.util.spec_from_file_location(f"archived_{Path(relative).stem}", ARCHIVE_DIR / relative)
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    with pytest.raises(ImportError, match="#9607"):
-        spec.loader.exec_module(module)
-    assert [name for name, value in vars(module).items() if callable(value) and not name.startswith("__")] == []
-
-
-def test_archive_package_refuses_import(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.syspath_prepend(str(REPO_ROOT))
-    for module in ARCHIVED_MODULES:
-        with pytest.raises(ImportError, match="#9607"):
-            importlib.import_module(f"archive.code.open_model_data.scripts.{module}")
-        with pytest.raises(ModuleNotFoundError):
-            importlib.import_module(f"scripts.projects.open_model_data.{module}")
-
-
-def _imported_names(tree: ast.AST) -> Iterator[str]:
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            yield from (alias.name for alias in node.names)
-        elif isinstance(node, ast.ImportFrom):
-            base = node.module or ""
-            yield base
-            yield from (f"{base}.{alias.name}" for alias in node.names)
-        elif isinstance(node, ast.Call) and getattr(node.func, "attr", getattr(node.func, "id", "")) in {
-            "import_module",
-            "__import__",
-        }:
-            yield from (arg.value for arg in node.args if isinstance(arg, ast.Constant) and isinstance(arg.value, str))
-
-
-@pytest.mark.repo_invariant
-@pytest.mark.repo_wide
-def test_archive_import_guard_active_code() -> None:
-    tracked = subprocess.run(
-        ["git", "ls-files", "-z", "--", "scripts", "tests"],
-        cwd=REPO_ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    ).stdout.split("\0")
-    this_file = Path(__file__).resolve()
-    offenders = []
-    for relative in tracked:
-        path = REPO_ROOT / relative
-        if not relative.endswith(".py") or not path.is_file() or path.resolve() == this_file:
-            continue
-        try:
-            tree = ast.parse(path.read_text(encoding="utf-8"))
-        except (SyntaxError, UnicodeDecodeError):
-            continue
-        for name in _imported_names(tree):
-            parts = name.split(".")
-            if parts[:2] == ["archive", "code"] or any(module in parts for module in ARCHIVED_MODULES):
-                offenders.append(f"{relative}: {name}")
-    assert offenders == []

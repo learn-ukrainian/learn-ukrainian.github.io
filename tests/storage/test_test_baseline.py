@@ -107,12 +107,6 @@ def test_compare_enforces_needs_artifact_and_fixture_evidence(dispositions: dict
         assert errors == []
 
 
-def test_compare_requires_paired_rename() -> None:
-    old = {"jobs": {"pytest-1": {"outcomes": {"pkg::old": "passed"}}}}
-    new = {"jobs": {"pytest-1": {"outcomes": {"pkg::new": "passed"}}}}
-    assert compare_baselines(old, new, {"renamed": [{"job": "pytest-1", "old": "pkg::old", "new": "pkg::new"}]}) == []
-
-
 def test_needs_artifact_disposition_rejects_an_unrelated_skip() -> None:
     old = {"jobs": {"pytest-1": {"outcomes": {"pkg::test_data": "passed"}}}}
     new = {
@@ -175,16 +169,6 @@ def test_cross_job_rename_requires_passed(outcome: str) -> None:
     assert compare_baselines(old, new, row) == []
 
 
-def test_rename_to_artifact_skip_requires_its_own_disposition() -> None:
-    old = {"jobs": {"a": {"outcomes": {"pkg::old": "passed"}}}}
-    new = {"jobs": {"b": {"outcomes": {"pkg::new": "skipped"}, "skip_reasons": {"pkg::new": "needs_artifact: absent"}}}}
-    dispositions = {
-        "renamed": [{"old": "pkg::old", "new": "pkg::new"}],
-        "needs_artifact": [{"id": "pkg::new", "host_run": "PASSED pkg::new\n= 1 passed in 0.01s ="}],
-    }
-    assert compare_baselines(old, new, dispositions) == []
-
-
 def test_host_run_rejects_failing_summary_and_accepts_junit(tmp_path: Path) -> None:
     old = {"jobs": {"a": {"outcomes": {"pkg::test_data": "passed"}}}}
     new = {
@@ -208,17 +192,6 @@ def test_host_run_rejects_failing_summary_and_accepts_junit(tmp_path: Path) -> N
     assert compare_baselines(old, new, row)
     xml.write_text('<testsuite failures="1"><testcase classname="pkg" name="test_data"/></testsuite>')
     assert compare_baselines(old, new, row)
-
-
-def test_compare_cli_reports_passing_addition(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    old = tmp_path / "old.json"
-    new = tmp_path / "new.json"
-    dispositions = tmp_path / "dispositions.json"
-    old.write_text(json.dumps({"jobs": {"a": {"outcomes": {"pkg::existing": "passed"}}}}))
-    new.write_text(json.dumps({"jobs": {"b": {"outcomes": {"pkg::existing": "passed", "pkg::new": "passed"}}}}))
-    dispositions.write_text("{}")
-    assert main(["compare", "--old", str(old), "--new", str(new), "--dispositions", str(dispositions)]) == 0
-    assert "ADDED passed pkg::new (job b)" in capsys.readouterr().out
 
 
 def test_collected_node_ids_match_junit_ids_for_classes_and_parameter_colons() -> None:

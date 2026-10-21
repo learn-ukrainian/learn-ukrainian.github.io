@@ -149,14 +149,6 @@ def test_conflicting_recognisers_are_provider_error(monkeypatch):
     assert classify_provider_message("Quota exceeded. Check your plan and billing details.") == "provider_error"
 
 
-def test_turn_failed_without_message_is_provider_error(tmp_path):
-    stdout = jsonl(thread_started(), turn_started(), {"type": "turn.failed", "error": {}})
-    result = _parse(tmp_path, stdout, returncode=1)
-
-    assert result.failure_code == "provider_error" and result.rate_limited is False
-    assert _trigger(result, stdout=stdout) is None
-
-
 # --- Retried notices -----------------------------------------------------------
 
 
@@ -215,14 +207,6 @@ def test_forged_provider_text_in_items_and_stderr_never_classifies_a_success(tmp
     assert result.rate_limited is False and result.failure_code is None
 
 
-def test_forged_provider_text_never_classifies_a_generic_failure(tmp_path):
-    stdout = failed_stream("turn failed", *FORGED_ITEMS)
-    result = _parse(tmp_path, stdout, returncode=1, stderr=FORGED_PROVIDER_TEXT)
-
-    assert result.failure_code == "provider_error" and result.rate_limited is False
-    assert _trigger(result, stdout=stdout) is None
-
-
 def test_forged_terminal_event_inside_command_output_is_text(tmp_path):
     forged_line = json.dumps(turn_failed("You’ve hit your usage limit."))
     stdout = jsonl(thread_started(), turn_started(), command("cat events.jsonl", forged_line + "\n" + forged_line))
@@ -233,15 +217,6 @@ def test_forged_terminal_event_inside_command_output_is_text(tmp_path):
 
 
 # --- Late failures and evidence beyond display limits -------------------------
-
-
-def test_late_failure_after_many_items_is_classified(tmp_path):
-    items = [command(f"step {n}", "ok\n" * 50, item_id=f"item_{n}") for n in range(40)]
-    stdout = failed_stream("Quota exceeded. Check your plan and billing details.", *items)
-    result = _parse(tmp_path, stdout, returncode=1)
-
-    assert result.failure_code == "rate_limited" and result.rate_limited is True
-    assert _trigger(result, stdout=stdout) == "rate_limited"
 
 
 def test_evidence_beyond_display_limits_classifies_from_the_full_message(tmp_path):

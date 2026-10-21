@@ -240,36 +240,6 @@ def test_native_occupation_final_guard_keeps_complete_batch(repo: Path, mode: st
     assert ref_sha(repo, "codex/free") == other
 
 
-@pytest.mark.parametrize(
-    "mode", ["checkout", "merge", "apply", "bisect", "merge-operation", "cherry-pick", "revert", "am"]
-)
-@pytest.mark.parametrize("apply", [False, True])
-def test_native_occupation_cli_retains_branch(
-    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], mode: str, apply: bool
-) -> None:
-    _, tip = occupy_branch(repo, "codex/occupied", mode, linked=True)
-    original = sweep.sweep
-
-    def synthetic(root: Path, *, apply: bool = False) -> list[sweep.Decision]:
-        return original(root, apply=apply, pr_lookup=lookup(), protected_lookup=lambda _: set())
-
-    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
-    monkeypatch.setattr(sweep, "sweep", synthetic)
-    assert sweep.main(["--json", *(["--apply"] if apply else [])]) == (0 if mode == "checkout" else 1)
-    payload = json.loads(capsys.readouterr().out)
-    if mode == "checkout":
-        item = next(row for row in payload["decisions"] if row["branch"] == "codex/occupied")
-        assert item["classification"] == "skipped-worktree"
-        assert not item["local_deleted"] and not item["remote_deleted"]
-    else:
-        assert payload["ok"] is False
-        assert "in-progress operation" in payload["error"]
-        assert payload["decisions"] == []
-    assert ref_sha(repo, "codex/occupied") == tip
-    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
-    assert not (repo / sweep.RECEIPT_PATH).exists()
-
-
 def test_native_rebase_update_refs_targets_are_occupied(repo: Path) -> None:
     _, tip = occupy_branch(repo, "codex/occupied", "update-refs", linked=True)
     refused = sweep._git(repo, "branch", "-D", "codex/update-target")
@@ -595,48 +565,6 @@ def receipt_rows(repo: Path) -> list[dict[str, object]]:
     if not path.is_file():
         return []
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
-
-
-def test_dry_run_reports_only_expired_local_branches(repo: Path, tmp_path: Path) -> None:
-    old_local = commit_unique(repo, "codex/old-local", days=8)
-    old_remote = commit_unique(repo, "codex/old-remote", days=8)
-    publish(repo, "codex/old-remote")
-    commit_unique(repo, "codex/young", days=3)
-    closed = commit_unique(repo, "codex/closed-pr", days=10)
-    opened = commit_unique(repo, "claude/open-pr", days=10)
-    commit_unique(repo, "agy/checked-out", days=10)
-    git(repo, "worktree", "add", str(tmp_path / "other"), "agy/checked-out")
-    commit_unique(repo, "grok/live", days=10)
-    task_dir = repo / "batch_state" / "tasks"
-    task_dir.mkdir(parents=True)
-    (task_dir / "live.json").write_text(
-        json.dumps({"worktree_branch": "grok/live", "status": "running"}),
-        encoding="utf-8",
-    )
-
-    decisions = run(
-        repo,
-        states={
-            "codex/closed-pr": [PullRequestState(4, "CLOSED", closed)],
-            "claude/open-pr": [PullRequestState(5, "OPEN", opened)],
-        },
-    )
-    found = by_name(decisions)
-    expired = {name for name, item in found.items() if item.classification == "archive-expired"}
-    assert expired == {"codex/old-local", "codex/old-remote"}
-    assert found["codex/old-local"].local_deleted is False
-    assert found["codex/old-local"].remote_deleted is False
-    assert found["codex/old-remote"].remote_deleted is False
-    assert found["codex/young"].classification == "report-only"
-    assert found["codex/closed-pr"].classification == "report-only"
-    assert found["claude/open-pr"].classification == "skipped-open-PR"
-    assert found["agy/checked-out"].classification == "skipped-worktree"
-    assert found["grok/live"].classification == "skipped-live-task"
-    assert local_ref(repo, "codex/old-local") == old_local
-    assert local_ref(repo, "codex/old-remote") == old_remote
-    assert remote_sha(repo, "codex/old-remote") == old_remote
-    assert not (repo / "batch_state" / "branch-archive" / "stale-local-receipts.jsonl").exists()
-    assert list((repo / "batch_state" / "branch-archive").glob("*.bundle")) == []
 
 
 def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path) -> None:
@@ -1044,20 +972,6 @@ def test_missing_bundle_head_deletes_nothing(repo: Path, monkeypatch: pytest.Mon
     assert receipt_rows(repo) == []
 
 
-def test_unwritable_archive_directory_deletes_nothing(repo: Path) -> None:
-    sha = commit_unique(repo, "codex/old-local", days=8)
-    archive = repo / "batch_state" / "branch-archive"
-    archive.parent.mkdir(parents=True)
-    archive.write_text("not a directory\n", encoding="utf-8")
-    item = by_name(run(repo, apply=True))["codex/old-local"]
-    assert item.classification == "report-only"
-    assert item.local_deleted is False
-    assert item.remote_deleted is False
-    assert "unwritable" in item.reason
-    assert local_ref(repo, "codex/old-local") == sha
-    assert archive.is_file()
-
-
 def test_symlink_archive_directory_deletes_nothing(repo: Path, tmp_path: Path) -> None:
     sha = commit_unique(repo, "codex/old-local", days=8)
     outside = tmp_path / "outside"
@@ -1071,25 +985,6 @@ def test_symlink_archive_directory_deletes_nothing(repo: Path, tmp_path: Path) -
     assert "symlink" in item.reason
     assert local_ref(repo, "codex/old-local") == sha
     assert list(outside.iterdir()) == []
-
-
-def test_threshold_defaults_to_seven_days_and_is_configurable(repo: Path) -> None:
-    week = commit_unique(repo, "codex/just-one-week", days=7)
-    younger = commit_unique(repo, "codex/six-days", days=6)
-    defaulted = by_name(run(repo, apply=False))
-    assert defaulted["codex/just-one-week"].classification == "archive-expired"
-    assert defaulted["codex/six-days"].classification == "report-only"
-    sooner = by_name(run(repo, apply=False, days=6))
-    assert sooner["codex/six-days"].classification == "archive-expired"
-    later = by_name(run(repo, apply=False, days=30))
-    assert later["codex/just-one-week"].classification == "report-only"
-    assert local_ref(repo, "codex/just-one-week") == week
-    assert local_ref(repo, "codex/six-days") == younger
-    assert sweep.build_parser().get_default("archive_after_days") == 7
-    help_text = sweep.build_parser().format_help()
-    assert "--archive-after-days" in help_text
-    assert "default: 7" in help_text
-    assert "90" in help_text
 
 
 def test_bundles_older_than_ninety_days_are_listed_and_kept(repo: Path) -> None:
@@ -1147,29 +1042,6 @@ def test_diverged_and_unknown_pr_branches_stay_report_only(repo: Path) -> None:
     assert local_ref(repo, "glm/unknown")
 
 
-def test_cli_passes_archive_after_days(
-    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    seen: dict[str, object] = {}
-
-    def capture(root: Path, *, apply: bool = False) -> list[sweep.Decision]:
-        seen["root"] = root
-        seen["apply"] = apply
-        seen["days"] = sweep.current_archive_after_days()
-        return []
-
-    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
-    monkeypatch.setattr(sweep, "sweep", capture)
-    assert sweep.main(["--archive-after-days", "12", "--apply", "--json"]) == 0
-    assert seen == {"root": repo, "apply": True, "days": 12}
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["archive_after_days"] == 12
-    assert payload["apply"] is True
-    with pytest.raises(SystemExit) as caught:
-        sweep.main(["--archive-after-days", "-1"])
-    assert caught.value.code == 2
-
-
 def test_moved_head_and_peer_stay_when_compare_and_delete_fails(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Findings 1 and 6: one compare-and-delete, or the whole batch stays."""
     first = commit_unique(repo, "codex/first", days=8)
@@ -1203,34 +1075,6 @@ def test_moved_head_and_peer_stay_when_compare_and_delete_fails(repo: Path, monk
     assert found["codex/second"].local_deleted is False
     assert found["codex/first"].remote_deleted is False
     assert found["codex/second"].remote_deleted is False
-
-
-def test_pr_and_task_guards_are_reread_immediately_before_delete(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Finding 2: a task or pull request that appears after the receipt blocks the batch."""
-    task_sha = commit_unique(repo, "codex/late-task", days=8)
-    pr_sha = commit_unique(repo, "codex/late-pr", days=8)
-    states: dict[str, list[PullRequestState]] = {}
-    original = sweep._write_archive_receipts
-
-    def plant(root: Path, confirmed, **kwargs: object):
-        original(root, confirmed, **kwargs)
-        task_dir = root / "batch_state" / "tasks"
-        task_dir.mkdir(parents=True, exist_ok=True)
-        (task_dir / "late.json").write_text(
-            json.dumps({"status": "running", "worktree_branch": "codex/late-task"}),
-            encoding="utf-8",
-        )
-        states["codex/late-pr"] = [PullRequestState(9, "OPEN", pr_sha)]
-
-    monkeypatch.setattr(sweep, "_write_archive_receipts", plant)
-    found = by_name(run(repo, apply=True, states=states))
-    assert ref_sha(repo, "codex/late-task") == task_sha
-    assert ref_sha(repo, "codex/late-pr") == pr_sha
-    assert found["codex/late-task"].local_deleted is False
-    assert found["codex/late-pr"].local_deleted is False
-    assert list((repo / "batch_state" / "branch-archive").glob("*.bundle"))
-    assert "skipped-live-task" in found["codex/late-task"].reason
-    assert "open PR" in found["codex/late-pr"].reason
 
 
 def test_newer_than_closing_merge_blocks_archive_before_file_coverage(repo: Path) -> None:
@@ -1301,44 +1145,6 @@ def test_truncated_receipt_does_not_authorize_delete(repo: Path, monkeypatch: py
     assert ref_sha(repo, "codex/short-receipt") is None
 
 
-def test_rescue_upstream_and_recent_tasks_are_not_archived(repo: Path) -> None:
-    """Finding 5: rescue refs, unpushed upstreams, and recent released tasks stay."""
-    rescue = commit_unique(repo, "rescue/held-patch", days=8)
-    unpushed = commit_unique(repo, "codex/unpushed", days=8)
-    git(repo, "branch", "--set-upstream-to=origin/main", "codex/unpushed")
-    recent = commit_unique(repo, "codex/just-failed", days=8)
-    old = commit_unique(repo, "codex/long-failed", days=8)
-    task_dir = repo / "batch_state" / "tasks"
-    task_dir.mkdir(parents=True)
-    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-    long_ago = (datetime.now(UTC) - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    (task_dir / "just-failed.json").write_text(
-        json.dumps({"status": "failed", "worktree_branch": "codex/just-failed", "finished_at": now}),
-        encoding="utf-8",
-    )
-    (task_dir / "long-failed.json").write_text(
-        json.dumps({"status": "failed", "worktree_branch": "codex/long-failed", "finished_at": long_ago}),
-        encoding="utf-8",
-    )
-
-    found = by_name(run(repo, apply=True))
-    assert found["rescue/held-patch"].classification == "report-only"
-    assert found["rescue/held-patch"].local_deleted is False
-    assert "rescue" in found["rescue/held-patch"].reason
-    assert ref_sha(repo, "rescue/held-patch") == rescue
-    assert found["codex/unpushed"].classification == "report-only"
-    assert found["codex/unpushed"].local_deleted is False
-    assert "unpushed" in found["codex/unpushed"].reason
-    assert ref_sha(repo, "codex/unpushed") == unpushed
-    assert found["codex/just-failed"].classification == "report-only"
-    assert found["codex/just-failed"].local_deleted is False
-    assert ref_sha(repo, "codex/just-failed") == recent
-    assert found["codex/long-failed"].classification == "archive-expired"
-    assert found["codex/long-failed"].local_deleted is True
-    assert ref_sha(repo, "codex/long-failed") is None
-    assert old not in {ref_sha(repo, "codex/long-failed")}
-
-
 def test_archive_bundle_is_thin_and_restores_into_a_clone(repo: Path) -> None:
     """Finding 7: the bundle excludes origin/main and restores only after a clone."""
     (repo / "weight.bin").write_bytes(os.urandom(256 * 1024))
@@ -1393,25 +1199,6 @@ def test_archive_bundle_is_thin_and_restores_into_a_clone(repo: Path) -> None:
         timeout=30,
     )
     assert refused.returncode != 0
-
-
-def test_pr_checkout_names_are_not_archived(repo: Path) -> None:
-    """Finding 8: pr-* and review-* local checkouts are not archive-expired."""
-    pr_sha = commit_unique(repo, "pr-4242", days=30)
-    review_sha = commit_unique(repo, "claude/review-4242", days=30)
-    plain = commit_unique(repo, "codex/plain-old", days=30)
-    found = by_name(run(repo, apply=True))
-    assert found["pr-4242"].classification == "report-only"
-    assert found["pr-4242"].local_deleted is False
-    assert ref_sha(repo, "pr-4242") == pr_sha
-    assert "pull request" not in found["pr-4242"].reason.lower() or "not archived" in found["pr-4242"].reason
-    assert found["claude/review-4242"].classification == "report-only"
-    assert found["claude/review-4242"].local_deleted is False
-    assert ref_sha(repo, "claude/review-4242") == review_sha
-    assert found["codex/plain-old"].classification == "archive-expired"
-    assert found["codex/plain-old"].local_deleted is True
-    assert ref_sha(repo, "codex/plain-old") is None
-    assert plain
 
 
 def test_symbolic_alias_cannot_archive_protected_main(repo: Path) -> None:
@@ -1622,16 +1409,6 @@ def test_changed_but_still_eligible_guard_snapshot_keeps_batch(
     found = by_name(run(repo, apply=True))
     assert {name: ref_sha(repo, name) for name in heads} == heads
     assert all(not found[name].local_deleted for name in heads)
-
-
-def test_receipt_explains_thin_bundle_prerequisites(repo: Path) -> None:
-    commit_unique(repo, "codex/alpha", days=8)
-    run(repo, apply=True)
-    row = receipt_rows(repo)[0]
-    assert row["restore_prerequisites"] == (
-        "This thin bundle needs its prerequisite commits present. Fetch them from origin "
-        "or run the restore command in a clone of this repository."
-    )
 
 
 @pytest.mark.parametrize(

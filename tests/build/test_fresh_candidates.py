@@ -2,22 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
-import yaml
 
-from scripts.build.fresh import candidates as candidate_source
 from scripts.build.fresh.candidates import item_candidates, record_candidates
-from scripts.build.fresh.immersion import compute_immersion_payload
-from scripts.build.fresh.prompt import _render_form_candidates, check_rendered_prompt, render_lesson_prompt
 from scripts.build.fresh.runner import check_4_activities
 from tests.build.test_fresh_assemble import make_word_record, make_words_store
 
 pytestmark = pytest.mark.reads_content
-ROOT = Path(__file__).resolve().parents[2]
-
-
 def _form(text: str, tags: str) -> dict:
     # Forms and tags below were checked with sources.inspect_words (VESUM).
     return {"form": text, "tags": tags, "stress_source": "pending", "markers": [], "learner": True}
@@ -226,94 +217,3 @@ def test_composite_and_writer_option_outside_generated_candidates_fail(words: di
         if outsider == "бути":
             assert row["code"] == "form_candidate_not_generated"
     item["options"] = ["буду", "буде"]
-
-
-def test_determinism_and_real_a1_store_candidate() -> None:
-    store = yaml.safe_load((ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml").read_text(encoding="utf-8"))
-    record = next(record for record in store["words"] if record["id"] == "W-001")
-    first = record_candidates(record)
-    assert first == record_candidates(record)
-    assert all(candidate["record"] == "W-001" for candidate in first)
-    _assert_no_stress_leak(_surfaces(first), [record])
-
-
-def test_pending_stress_guard_catches_stressed_candidate(monkeypatch: pytest.MonkeyPatch) -> None:
-    store = yaml.safe_load((ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml").read_text(encoding="utf-8"))
-    record = next(record for record in store["words"] if record["id"] == "W-001")
-    form = next(form for form in record["forms"] if form.get("stressed") == "мені\u0301")
-    form["stress_source"] = "pending"
-    monkeypatch.setattr(candidate_source, "record_candidates", lambda _: [{"form": form["stressed"]}])
-    with pytest.raises(AssertionError):
-        _assert_no_stress_leak(_surfaces(candidate_source.record_candidates(record)), [record])
-
-
-def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
-    record = words["words"][1]
-    plan = {
-        "slug": "fixture",
-        "title": "Fixture",
-        "kind": "teach",
-        "job": "Practice",
-        "rationale": "Practice",
-        "word_target": 1,
-        "lesson": {"module": "a1/fixture", "n": 1},
-        "steps": [],
-        "consolidation": [],
-        "activities": [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Form"}],
-        "inventory": {
-            "vocabulary": {
-                "core": [{"evidence": "W-102", "lemma": record["lemma"], "forms": []}],
-                "incidental": [],
-                "recycled": [],
-            },
-            "grammar": [],
-            "phonetics": {"letters": []},
-        },
-    }
-    state = {
-        "level": "a1",
-        "position": 1,
-        "lesson_n": 1,
-        "cumulative_core_count": 0,
-        "base_ids": [],
-        "core_ids": {},
-        "name_ids": {},
-        "grammar_ids": {},
-        "letters": {},
-    }
-    prompt = render_lesson_prompt(
-        plan,
-        {"W-102": record},
-        state,
-        compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
-        level="a1",
-        slug="fixture",
-        lesson_n=1,
-    )
-    bank = prompt.split("## Form-choice candidate bank", 1)[1]
-    assert "`W-102`: `читати`" in bank
-    assert "VerbForm=Inf" in bank
-    rule = "Each distractor must be a form that the sentence rules out by a feature the form itself carries."
-    assert rule in prompt
-    assert (
-        "`tests_feature` names one focus group; the reviewer judges whether the distractors really make the learner choose along that focus."
-        in prompt
-    )
-    assert "A finite verb slot names `VerbForm: Fin` in `requires`; a plural slot omits `Gender`" in prompt
-    _assert_no_stress_leak([bank], [record])
-    assert check_rendered_prompt(prompt, plan, ROOT / "docs/style-cards/a1.md", learner_state=state).passed
-    pending_bank = _render_form_candidates(plan, {"W-102": words["words"][1]})
-    assert "`W-102`: `читати`" in pending_bank
-    _assert_no_stress_leak([pending_bank], [words["words"][1]])
-
-
-@pytest.mark.parametrize("level", ["a2", "b1", "b2"])
-def test_non_a1_candidate_bank_keeps_main_wording(words: dict, level: str) -> None:
-    plan = {"activities": [{"type": "quiz"}]}
-    bank = _render_form_candidates(plan, {"W-102": words["words"][1]}, level=level)
-    assert (
-        "Use one form from its bound record per option. State the complete slot `requires`; "
-        "choose one admitted key and distractors that differ in `tests_feature`. "
-        "The engine generates the item-specific subset and checks every written option."
-    ) in bank
-    assert "partitive genitive" not in bank

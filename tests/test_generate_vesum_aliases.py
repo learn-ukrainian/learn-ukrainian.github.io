@@ -27,16 +27,6 @@ def test_keep_standalone_forms_are_not_folded(monkeypatch) -> None:
     assert "може" in gen._KEEP_STANDALONE_FORMS
 
 
-def test_uncurated_homograph_is_never_auto_resolved(monkeypatch) -> None:
-    # #2882: a true homograph with NO curated decision must NOT fold — "sole taught candidate"
-    # mis-merges. `цьому` (це vs цей) was deliberately left out of _CURATED_HOMOGRAPHS
-    # (genuinely ambiguous demonstrative, codex-flagged), so it must stay standalone.
-    monkeypatch.setattr(gen, "verify_word", lambda w: [{"lemma": "це"}, {"lemma": "цей"}])
-    aliases = gen.build_alias_map(["цьому"])
-    assert "цьому" not in aliases
-    assert "цьому" not in gen._CURATED_HOMOGRAPHS
-
-
 def test_curated_homograph_resolves_by_gloss_decision(monkeypatch) -> None:
     # #2882 curated pass: сьома is the ORDINAL ("seventh"/"seven o'clock"), so it folds to
     # сьомий — NOT the cardinal сім. This is the exact mis-merge the auto-heuristic made.

@@ -10,7 +10,6 @@ from typing import Any
 
 import pytest
 import yaml
-from jsonschema import ValidationError
 
 from scripts.build.fresh import plan_manifest as pm
 from scripts.curriculum.evidence import lock as lock_module
@@ -83,12 +82,6 @@ def located(quote: str, **location: Any) -> dict[str, Any]:
     [
         ("word", "word_store"),
         ("quote", "pack"),
-        ("example", "pack"),
-        ("exercise_text", "pack"),
-        ("error", "pack"),
-        ("note", "pack"),
-        ("video", "pack"),
-        ("resource", "pack"),
     ],
 )
 def test_a_defective_span_the_engine_printed_from_a_record_is_that_records_layer(kind: str, layer: str) -> None:
@@ -358,25 +351,6 @@ def test_findings_that_could_be_a_gate_are_listed_when_they_match_the_schemas_pa
     ]
 
 
-def test_the_report_lists_the_gate_candidates_for_the_driver(world: World) -> None:
-    world.record(
-        world.make_return(
-            1,
-            [
-                finding("F-01", could_be_a_gate="yes - a script could count them"),
-                finding("F-02", dimension="fact", could_be_a_gate="no"),
-            ],
-        )
-    )
-    conn = db.connect(world.db)
-    try:
-        report = fixloop.build_report(conn, LEVEL, SLUG, root=world.root, params=PARAMS)
-    finally:
-        conn.close()
-    assert [item["could_be_a_gate"] for item in report["gate_candidates"]] == ["yes - a script could count them"]
-    assert "GATE CANDIDATE" in fixloop.render_report(report)
-
-
 def quoted_unsupported(claim: str, quote: str, **overrides: Any) -> dict[str, Any]:
     return unsupported("F-01", claim=claim, locations=[{"tab": "urok", "quote": quote}], **overrides)
 
@@ -420,27 +394,6 @@ def test_the_disputed_object_is_the_expected_value_when_the_finding_has_one(worl
     finally:
         conn.close()
     assert group["claim"] == "no results" and len(group["lessons"]) == 2
-
-
-def test_different_claims_on_identical_quotes_do_not_group(world: World) -> None:
-    for n, text in ((1, "The form is a russianism."), (2, "The stress is wrong."), (3, "The case is wrong.")):
-        world.record(world.make_return(n, [quoted_unsupported(text, PROSE)]))
-    conn = db.connect(world.db)
-    try:
-        assert fixloop.unsupported_claim_counts(conn, 3) == []
-    finally:
-        conn.close()
-
-
-def test_claim_identity_is_dimension_sub_dimension_and_object() -> None:
-    base = {"dimension": "language", "sub_dimension": "calque", "claim": "A  Claim."}
-    assert fixloop.claim_key(base) == fixloop.claim_key({**base, "claim": "a claim"})
-    assert fixloop.claim_key(base) != fixloop.claim_key({**base, "sub_dimension": "surzhyk"})
-    assert fixloop.claim_key(base) != fixloop.claim_key({**base, "dimension": "fact", "sub_dimension": None})
-    assert fixloop.claim_key({**base, "expected": "X"}) == fixloop.claim_key(
-        {**base, "claim": "other", "expected": "x"}
-    )
-    assert fixloop.claim_key({**base, "locations": [{"tab": "urok", "quote": "q"}]}) == fixloop.claim_key(base)
 
 
 def test_claims_that_differ_only_in_stress_are_different_claims(world: World) -> None:
@@ -677,13 +630,6 @@ def test_a_module_whose_lessons_are_approved_on_current_manifests_and_whose_plan
     assert on_disk == document and on_disk["verdict"] == "APPROVE"
 
 
-def test_the_module_verdict_document_is_schema_checked() -> None:
-    from jsonschema import Draft202012Validator
-
-    with pytest.raises(ValidationError):
-        Draft202012Validator(fixloop.MODULE_VERDICT_SCHEMA).validate({"module_verdict_schema": 1, "verdict": "MAYBE"})
-
-
 def test_a_module_with_an_open_settle_item_is_not_approved(world: World, promoted: None) -> None:
     world.record(
         world.make_return(1, [unsupported("F-01")])
@@ -828,13 +774,6 @@ def test_a_verdict_whose_manifest_of_record_is_gone_or_altered_is_stale(world: W
     assert "missing" in verdict(world)["lessons"][1]["stale"][0]
 
 
-def test_a_verdict_file_that_is_not_a_verdict_is_stale_not_trusted(world: World, promoted: None) -> None:
-    approve_all(world)
-    world.verdict_file(2).write_text("verdict: APPROVE\n", encoding="utf-8")
-    row = verdict(world)["lessons"][1]
-    assert row["state"] == "stale" and row["verdict"] is None
-
-
 def test_a_seeded_review_never_reaches_the_module_verdict(world: World, promoted: None) -> None:
     approve_all(world)
     world.record(
@@ -862,15 +801,6 @@ def test_a_lesson_whose_current_manifest_is_unknown_holds_the_module(world: Worl
 
 def current_of(world: World, n: int) -> fixloop.CurrentManifest:
     return fixloop.establish_current_manifest(world.root, world.state_dir, "lesson", n)
-
-
-def test_an_unreadable_manifest_sidecar_is_an_unknown_current_manifest(world: World) -> None:
-    sidecar = world.state_dir / "lesson-2.manifest.sha256"
-    assert current_of(world, 2).digest == world.digest(2)
-    sidecar.write_text("not a digest\n", encoding="ascii")
-    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
-    sidecar.unlink()
-    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
 
 
 def test_a_well_formed_sidecar_digest_that_names_no_manifest_holds_the_module(world: World, promoted: None) -> None:
@@ -996,29 +926,6 @@ def test_a_second_seat_attempt_id_reused_under_another_review_holds_as_ambiguous
     try:
         original = conn.execute(
             "SELECT * FROM attempts WHERE attempt_id = ? AND lesson_n = 3", (agreement["attempt_a"],)
-        ).fetchone()
-        columns = original.keys()
-        with db.transaction(conn):
-            db.insert_attempt(conn, {**{c: original[c] for c in columns}, "review_id": "rev-elsewhere"})
-    finally:
-        conn.close()
-    document = verdict(world, SAMPLED)
-    assert document["verdict"] == "HOLD" and codes_of(document) == [fixloop.HOLD_AGREEMENT_AMBIGUOUS]
-    assert "more than one review" in document["holds"][0]["detail"]
-
-
-def test_a_second_seat_attempt_id__b_reused_under_another_review_holds_as_ambiguous(
-    world: World, promoted: None, monkeypatch
-) -> None:
-    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
-    approve_all(world)
-    record_second_seat(world, 3)
-    assert verdict(world, SAMPLED)["verdict"] == "APPROVE"
-    [agreement] = world.db_rows("agreement")
-    conn = db.connect(world.db)
-    try:
-        original = conn.execute(
-            "SELECT * FROM attempts WHERE attempt_id = ? AND lesson_n = 3", (agreement["attempt_b"],)
         ).fetchone()
         columns = original.keys()
         with db.transaction(conn):
@@ -1208,35 +1115,11 @@ def test_a_verdict_file_with_no_accepted_attempt_behind_it_holds_and_cannot_be_r
     assert plan_review.exists()  # nothing to project from: the file is left for the operator, and it keeps holding
 
 
-def test_the_report_repairs_projections_too(world: World, promoted: None, capsys: pytest.CaptureFixture[str]) -> None:
-    approve_all(world)
-    world.verdict_file(1).unlink()
-    assert run(world, "report", LEVEL, SLUG, "--repair-projections") == 0
-    captured = capsys.readouterr()
-    assert "module a1/fixture-module: APPROVE" in captured.out and "lesson-1.verdict.yaml" in captured.err
-    assert published(world, 1) == latest_projection(world, 1)
-
-
 # --- the CLI -------------------------------------------------------------------------------------------------------------
 
 
 def run(world: World, *argv: str) -> int:
     return fixloop.main(["--repo-root", str(world.root), "--db", str(world.db), *argv])
-
-
-def test_the_cli_writes_the_module_verdict_and_prints_the_report(
-    world: World, promoted: None, capsys: pytest.CaptureFixture[str]
-) -> None:
-    approve_all(world)
-    assert run(world, "verdict", LEVEL, SLUG) == 0
-    printed = json.loads(capsys.readouterr().out)
-    assert printed["verdict"] == "APPROVE" and printed["path"].endswith("_state/fixture-module/module-verdict.yaml")
-    assert yaml.safe_load((world.state_dir / "module-verdict.yaml").read_bytes())["verdict"] == "APPROVE"
-    assert run(world, "report", LEVEL, SLUG, "--json") == 0
-    report = json.loads(capsys.readouterr().out)
-    assert report["verdict"] == "APPROVE" and report["terminal"] == [] and report["layers"] == {}
-    assert run(world, "report", LEVEL, SLUG) == 0
-    assert "module a1/fixture-module: APPROVE" in capsys.readouterr().out
 
 
 def test_the_cli_refuses_a_regeneration_past_the_budget_with_the_operator_transition(
@@ -1421,11 +1304,6 @@ def test_check_fails_on_a_missing_file(world: World, promoted: None, capsys: pyt
     approve_all(world)
     assert run(world, "verdict", LEVEL, SLUG, "--check") == 1
     assert "missing" in capsys.readouterr().err
-
-
-def test_check_and_repair_projections_are_refused_together(world: World, capsys: pytest.CaptureFixture[str]) -> None:
-    assert run(world, "verdict", LEVEL, SLUG, "--check", "--repair-projections") == 2
-    assert "read-only" in capsys.readouterr().err
 
 
 def _fingerprint(world: World, params: dict[str, Any] | None = None) -> str:

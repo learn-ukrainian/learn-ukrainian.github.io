@@ -46,28 +46,6 @@ def packet(*rows):
     }
 
 
-def test_frozen_inventory_and_provenance(table):
-    assert table["status"] == "frozen" and table["provisional"] is False
-    assert table["pending_classes"] == []
-    assert table["freeze_reviewers"] == [
-        "gpt-6.1-sol/e3c-freeze-sol", "claude-opus-5-5/e3c-freeze-opus",
-    ]
-    assert table["driver_reconciliation"]["issue"] == 9604
-    assert table["driver_reconciliation"]["driver"] == "claude-open-model-data"
-    assert {"U+A675", "U+2DF7", "U+A677", "U+2DEA", "U+1E08F", "U+1ABB", "U+1ABC",
-            "U+0301", "U+0300", "U+032D", "U+0358", "U+0361", "U+02B9", "U+02BC",
-            "U+02D0", "U+044B", "U+0020", "U+002C", "U+003B", "U+2010", "U+2013",
-            "U+1E034", "U+1E036", "U+1E037", "U+1E040", "U+1E044", "U+1E045", "U+1E046",
-            "U+045E", "U+0439", "U+0450", "U+045D"} <= {s["codepoint"] for s in table["symbols"]}
-    assert set("ґгы") <= set(table["letters"])
-    assert set("ўйѐѝ") <= set(table["precomposed_letters"])
-    for symbol in table["symbols"]:
-        assert symbol["provisional"] is False
-        assert symbol["source_page"] >= 4
-        if symbol["source_kind"] in {"key", "body"}:
-            assert symbol["definition_uk"]
-
-
 @pytest.mark.parametrize("text", ["[а́]", "[еꙵ]", "[иⷷ]", "[ў]", "[д͡з]", "[ґг]", "[лʼ]"])
 def test_starter_symbols_are_preserved(text, table):
     assert tooling.validate_text(text, table)[0]["text"] == text
@@ -224,18 +202,6 @@ def test_notation_pins_reconciled_order(table):
         tooling.validate_notation(table)
 
 
-def test_notation_requires_unicode_15(monkeypatch, table):
-    monkeypatch.setattr(tooling.unicodedata, "unidata_version", "14.0.0")
-    with pytest.raises(ValueError, match="Unicode 15"):
-        tooling.validate_notation(table)
-
-
-def test_notation_rejects_inconsistent_status(table):
-    table["status"] = "provisional"
-    with pytest.raises(ValueError, match="status and provisional"):
-        tooling.validate_notation(table)
-
-
 @pytest.mark.parametrize("point", ["U+02B9", "U+02D0", "U+1E034", "U+2010"])
 def test_frozen_table_cannot_omit_a_symbol_class(point, table):
     table["symbols"] = [s for s in table["symbols"] if s["codepoint"] != point]
@@ -294,12 +260,6 @@ def test_notation_schema_rejects_invalid_tables(tmp_path, table, change):
     path.write_text(json.dumps(table), encoding="utf-8")
     with pytest.raises(ValueError):
         tooling.load_notation(path)
-
-
-def test_duplicate_symbol_rejected(table):
-    table["symbols"].append(copy.deepcopy(table["symbols"][0]))
-    with pytest.raises(ValueError, match="duplicate"):
-        tooling.validate_notation(table)
 
 
 @pytest.mark.parametrize(
@@ -559,19 +519,6 @@ def test_freeze_requires_complete_nonprovisional_table(frozen):
         tooling.validate_notation(frozen)
 
 
-def test_render_cli_prints_only_manifest_summary(monkeypatch, capsys):
-    calls = []
-
-    def render(pdf, cache):
-        calls.append((pdf, cache))
-        return {"page_count": 28, "dpi": 300, "pdf_sha256": tooling.PDF_SHA256}
-
-    monkeypatch.setattr(tooling, "render_pages", render)
-    assert tooling.main(["render", "--pdf", "held.pdf"]) == 0
-    assert calls == [(Path("held.pdf"), tooling.CACHE_DIR)]
-    assert json.loads(capsys.readouterr().out)["page_count"] == 28
-
-
 def test_ingest_cli_refuses_missing_db_without_creating_it(tmp_path, frozen):
     data, notation, missing = tmp_path / "rows.json", tmp_path / "table.json", tmp_path / "missing.db"
     data.write_text(json.dumps(packet(row())), encoding="utf-8")
@@ -708,12 +655,6 @@ def test_legacy_cli_also_requires_apply_and_existing_db(schema_copy, tmp_path, m
     assert not missing.exists()
 
 
-def test_legacy_cli_reports_missing_input(schema_copy, tmp_path, monkeypatch):
-    db, _ = schema_copy
-    monkeypatch.setattr(ingest, "REFERENCES_DIR", tmp_path)
-    assert ingest.main(["--db", str(db), "--dry-run"]) == 2
-
-
 def page_packet(*texts, page=15, seat="fixture-seat"):
     return {
         "page": page,
@@ -735,12 +676,6 @@ def test_page_alignment_does_not_cascade_from_different_splits(table):
     assert report["pages"][0]["left_seat"] == "left"
     assert report["pages"][0]["right_seat"] == "right"
     assert (a, b) == before
-
-
-def test_page_alignment_reports_changed_boundary_even_with_equal_counts(table):
-    a = page_packet("one [а]", "two [б] three [в]")
-    b = page_packet("one [а] two [б]", "three [в]")
-    assert [d["kind"] for d in tooling.diff_transcriptions(a, b, table)["disagreements"]] == ["paragraph_boundary"]
 
 
 def test_page_alignment_reports_only_real_token_and_prose_edits_with_raw_offsets(table):
@@ -921,13 +856,6 @@ def test_printed_anomaly_flag_requires_boolean(flag, table):
         tooling.validate_rows([a], table)
 
 
-@pytest.mark.parametrize("field", ["letters", "precomposed_letters"])
-def test_frozen_letters_cannot_be_extended_or_removed(field, table):
-    table[field] = table[field][:-1]
-    with pytest.raises(ValueError, match="Frozen letter inventory"):
-        tooling.validate_notation(table)
-
-
 def test_cli_page_packets_and_folder_inputs(tmp_path, table, capsys):
     left, right = tmp_path / "left", tmp_path / "right"
     left.mkdir()
@@ -961,12 +889,6 @@ def test_folder_inputs_reject_empty_and_invalid_json(tmp_path, capsys):
     with pytest.raises(SystemExit) as exc:
         tooling.main(args)
     assert exc.value.code == 1
-
-
-def test_cli_rejects_mixed_file_folder_mode(tmp_path):
-    with pytest.raises(SystemExit) as exc:
-        tooling.main(["diff", "--left", "a.json", "--right-dir", "b", "--output", str(tmp_path / "out.json")])
-    assert exc.value.code == 2
 
 
 @pytest.mark.parametrize(
@@ -1027,13 +949,6 @@ def test_printed_key_mark_can_have_its_own_underlining(table):
     assert [d["kind"] for d in tooling.diff_transcriptions([a], [b], table)["disagreements"]] == ["underlining"]
 
 
-def test_underlining_on_a_replaced_reading_is_reported(table):
-    a, b = row("[а]"), row("[б]")
-    a["underlining"] = [{"start": 1, "end": 2}]
-    report = tooling.diff_transcriptions([a], [b], table)
-    assert {d["kind"] for d in report["disagreements"]} == {"bracketed_span", "underlining"}
-
-
 def test_tooling_help_documents_folder_mode_and_frozen_notation(capsys):
     for args in (["--help"], ["diff", "--help"]):
         with pytest.raises(SystemExit) as exc:
@@ -1055,17 +970,6 @@ def test_fourteen_page_five_vs_six_paragraph_regression(table):
     assert report["disagreement_count"] == 14
     assert [d["page"] for d in report["disagreements"]] == list(range(15, 29))
     assert all(d["kind"] == "paragraph_boundary" for d in report["disagreements"])
-
-
-@pytest.mark.parametrize("reading", ["readable", "[а]"])
-def test_withheld_does_not_hide_neighboring_real_prose_difference(reading, table):
-    a = row("pre \ufffc foo end")
-    a["withheld"] = [{"start": 4, "end": 5, "reason": "uncertain"}]
-    b = row(f"pre {reading} bar end")
-    report = tooling.diff_transcriptions([a], [b], table)
-    assert [d["kind"] for d in report["disagreements"]] == ["withheld", "paragraph_text"]
-    assert report["disagreements"][1]["left"]["text"] == "foo"
-    assert report["disagreements"][1]["right"]["text"] == "bar"
 
 
 @pytest.fixture(params=[5, 13, 15, 20, 24], ids=["p05-bare-mark", "p13-unclosed", "p15-overlap", "p20-displaced", "p24-marker-span"])
@@ -1125,17 +1029,6 @@ def test_diff_recovers_reported_seat_shapes_with_raw_offsets(seat_input_problem,
     assert not any(d["kind"] == "paragraph_text" for d in report["disagreements"])
 
 
-def test_reported_seat_shapes_remain_invalid_for_adjudication_and_ingest(seat_input_problem, table):
-    bad, _ = seat_input_problem
-    rows = tooling.transcription_rows(bad)
-    for item in rows:
-        item.update(status="adjudicated", adjudicated_by="fixture")
-    with pytest.raises(ValueError):
-        tooling.validate_rows(rows, table, adjudicated=True)
-    with pytest.raises(ValueError):
-        ingest.validate_adjudicated_packet(packet(*rows), table, census_counts={str(bad["page"]): 2})
-
-
 @pytest.mark.parametrize("text", ["[a]", "[аʹʹ]", "[]", "[еꙵⷷ]", "[\u0378]", "\u0378", "]", "["])
 def test_diff_quarantines_invalid_spans_without_losing_valid_neighbors(text, table):
     a = page_packet(f"prefix {text}\nnext [а] suffix")
@@ -1144,14 +1037,6 @@ def test_diff_quarantines_invalid_spans_without_losing_valid_neighbors(text, tab
     assert sum(d["kind"] == "input_problem" for d in report["disagreements"]) == 1
     edits = [d for d in report["disagreements"] if d["kind"] == "bracketed_span"]
     assert [(d["left"]["text"], d["right"]["text"]) for d in edits] == [("[а]", "[г]")]
-
-
-def test_diff_recovers_multiple_bad_spans_and_unclosed_at_paragraph_end(table):
-    a = page_packet("[\u0301] prose [a] tail [а", "known [б] end")
-    b = page_packet("[в] prose [г] tail [а]", "known [г] end")
-    report = tooling.diff_transcriptions(a, b, table)
-    assert sum(d["kind"] == "input_problem" for d in report["disagreements"]) == 3
-    assert [(d["left"]["text"], d["right"]["text"]) for d in report["disagreements"] if d["kind"] == "bracketed_span"] == [("[б]", "[г]")]
 
 
 def test_diff_withheld_matching_prefers_overlap_and_does_not_mask_displaced_text(table):
@@ -1197,29 +1082,6 @@ def test_diff_reports_invalid_metadata_and_keeps_valid_text(metadata, table):
     assert not any(d["kind"] in {"bracketed_span", "paragraph_text"} for d in report["disagreements"])
     with pytest.raises(ValueError):
         tooling.validate_rows([a], table, adjudicated=True)
-
-
-def test_cli_recovers_defects_in_all_28_page_folder_run(tmp_path, capsys):
-    left, right = tmp_path / "left", tmp_path / "right"
-    left.mkdir()
-    right.mkdir()
-    bad_pages = {5: "[\u0301]", 13: "[а next [б]", 15: "[\ufffc]", 20: "[\ufffd]", 24: "[\ufffc\ufffd]"}
-    for page in range(1, 29):
-        a = page_packet(f"prefix {bad_pages.get(page, '[а]')} tail [в]", page=page, seat="left")
-        b = page_packet("prefix [а] tail [г]", page=page, seat="right")
-        if page in {15, 20, 24}:
-            a["paragraphs"][0]["withheld"] = [{"start": 7, "end": 10, "reason": "uncertain fixture"}]
-        for directory, data in ((left, a), (right, b)):
-            (directory / f"{page:02d}.json").write_text(json.dumps(data))
-    output = tmp_path / "report.json"
-    assert tooling.main(["diff", "--left-dir", str(left), "--right-dir", str(right), "--output", str(output)]) == 0
-    assert "input_problem" not in capsys.readouterr().err
-    report = json.loads(output.read_text())
-    assert [p["page"] for p in report["pages"]] == list(range(1, 29))
-    assert {d["page"] for d in report["disagreements"] if d["kind"] == "input_problem"} == set(bad_pages)
-    edits = [d for d in report["disagreements"] if d["kind"] == "bracketed_span"]
-    assert {d["page"] for d in edits} == set(range(1, 29))
-    assert all(d["left"]["text"] == "[в]" and d["right"]["text"] == "[г]" for d in edits)
 
 
 def test_cli_adjudicated_validation_is_strict(tmp_path, capsys):

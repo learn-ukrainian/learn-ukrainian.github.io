@@ -1382,38 +1382,6 @@ def test_authority_write_transaction_retains_atomicity_with_subservice_stores(
             assert service._conn.in_transaction
 
 
-def test_concurrent_substitution_requests_converge_under_high_contention(
-    tmp_path: Path,
-) -> None:
-    root = _root(tmp_path)
-    with AuthorityService(root=root) as service:
-        job, review, request, evidence = _failed_formal_substitution_fixture(service)
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        outcomes = list(
-            pool.map(
-                lambda _index: _concurrent_substitution(
-                    root,
-                    job.job_id,
-                    review.review_id,
-                    str(review.snapshot_artifact_id),
-                    request,
-                    evidence,
-                ),
-                range(4),
-            )
-        )
-    reservation_ids = [value for value in outcomes if value.startswith("routing-reservation_")]
-    assert reservation_ids and len(set(reservation_ids)) == 1
-    assert all(
-        value.startswith("routing-reservation_") or value == "substitution_authority_job_not_failed"
-        for value in outcomes
-    )
-    with AuthorityService(root=root) as service, RoutingReservationLedger(store=service.store) as ledger:
-        reservation = ledger.latest_for_authority_key(request.authority_key)
-        assert reservation is not None and reservation.attempt == 2
-        assert service.get_job(job.job_id).state == "queued"
-
-
 def _supervisory_message(service: AuthorityService):
     return service.enqueue_supervisory_request(
         sender="operator", recipient="driver", body="restart after handoff",

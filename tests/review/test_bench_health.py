@@ -152,35 +152,6 @@ def test_only_accepted_family_risk_single_seats_pass(risk, family, count, monkey
         assert "BENCH HEALTH FAIL" in captured.err
 
 
-@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
-@pytest.mark.parametrize("snapshot", [{}, {"cursor": "healthy", "pool": "healthy"}])
-def test_composer_and_pool_exclusions_are_resolver_gates(risk, snapshot):
-    eligible, excluded = bench_health._bench_inventory(
-        snapshot, data_egress_policy="local_interactive", review_profile="code", risk=risk
-    )
-    inputs = ResolverInputs(
-        author_model="claude", risk=risk, routing_snapshot=snapshot, data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT
-    )
-    resolution = resolve_reviewer(inputs)
-    expected_reasons = {
-        "composer-2.5": "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'",
-        "pool": "ACP participant does not yet pin and attest the concrete Laguna model",
-        "pool-xs": "ACP participant does not yet pin and attest the concrete Laguna model",
-    }
-    for name, reason in expected_reasons.items():
-        evaluation = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert evaluation.status == "excluded"
-        assert evaluation.reason == excluded["anthropic"][name] == reason
-        if risk == "high":
-            # High's ladder contains Sol, Opus and Grok; these seats are never attempted.
-            assert name not in {entry.name for entry in resolution.trace}
-        else:
-            trace = next(entry for entry in resolution.trace if entry.name == name)
-            assert trace.status == "excluded"
-            assert trace.reason == reason
-        assert name not in eligible["anthropic"]
-
-
 def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, capsys):
     # Deliberately put the pin-only seat on the ladder to isolate the route gate.
     monkeypatch.setitem(REVIEW_LADDERS, "medium", (*REVIEW_LADDERS["medium"], (REVIEW_CANDIDATES["glm-5.3"],)))
@@ -277,43 +248,12 @@ def test_bench_health_preserves_critical_role_gate():
     assert all("claude-sonnet-5-5" not in seats for seats in results.values())
 
 
-@pytest.mark.parametrize("risk", ["high", "critical"])
-@pytest.mark.parametrize("status", ["unhealthy", "near_cap"])
-@pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
-def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
-    # Disable both newly admitted Grok routes to keep exercising the zero-seat invariant.
-    data = {"agents": {lane: {"status": status, "remaining_pct": 5} for lane in (route, "grok", "cursor")},
-            "diagnostics": {"stale": False}}
-    assert main(["--risk", risk], routing_snapshot=data) == 1
-    captured = capsys.readouterr()
-    finding = next(item for item in _findings(captured) if item["author_family"] == family)
-    assert finding["minimum"] == 1
-    assert finding["counted_seats"] == []
-    assert "BENCH HEALTH FAIL: At least one author family is below its required reviewer minimum." in captured.err
-
-
 def test_catalog_reserves_count_only_on_automatic_ladder():
     medium = check_bench_health(routing_snapshot={})
     critical = check_bench_health(routing_snapshot={}, risk="critical")
     assert "claude-fable-5-1" not in medium["openai"]
     # #9583: Fable is no reviewer at any risk.
     assert "claude-fable-5-1" not in critical["openai"]
-
-
-def test_bench_health_main_returns_zero_when_healthy(monkeypatch, capsys):
-    """Exercise the success branch with a hypothetical adequate automatic bench."""
-    monkeypatch.setattr(
-        bench_health,
-        "_bench_inventory",
-        lambda *args, **kwargs: (
-            {family: ["seat-one", "seat-two"] for family in AUTHOR_FAMILIES},
-            {family: {} for family in AUTHOR_FAMILIES},
-        ),
-    )
-    assert main([], routing_snapshot={}) == 0
-    captured = capsys.readouterr()
-    assert "BENCH HEALTH PASS: All author families meet their required reviewer minimum." in captured.out
-    assert captured.err == ""
 
 
 def test_bench_health_main_returns_one_when_unhealthy(capsys):

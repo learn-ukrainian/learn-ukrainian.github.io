@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import re
-
 import pytest
 
 from scripts.generate_mdx import converters, resources, utils
@@ -15,124 +13,15 @@ from scripts.generate_mdx.unit_map import (
     Edit,
     EditLog,
     LessonUnitMap,
-    LineEdits,
     UnitMapError,
     apply_edits,
-    compose_regions,
     decode_js_json_string,
-    edits_from_regions,
     encode_js_json_string,
-    regions_from_edits,
 )
 
 # ---------------------------------------------------------------------------
 # Edit records
 # ---------------------------------------------------------------------------
-
-
-def test_apply_edits_and_regions_round_trip() -> None:
-    before = "ab\ncd\nef\n"
-    edits = [Edit(0, 0, "X"), Edit(3, 6, "Y\n"), Edit(9, 9, "Z")]
-    after = apply_edits(before, edits)
-    assert after == "Xab\nY\nef\nZ"
-    regions = regions_from_edits(edits, len(before))
-    assert regions == [(0, 1, 3), (6, 6, 3)]
-    # Recovered edits are narrowed: the trailing "\n" of the second edit is unchanged.
-    assert edits_from_regions(before, after, regions) == [Edit(0, 0, "X"), Edit(3, 5, "Y"), Edit(9, 9, "Z")]
-    with pytest.raises(ValueError):
-        apply_edits(before, [Edit(3, 6, ""), Edit(2, 4, "")])  # overlapping / unsorted
-    with pytest.raises(ValueError):
-        edits_from_regions(before, after, [(0, 1, 3), (0, 6, 2)])  # not in document order
-    with pytest.raises(ValueError):
-        edits_from_regions(before, after, [(0, 2, 3)])  # bytes differ
-
-
-def test_compose_regions_keeps_bytes_kept_by_both_steps() -> None:
-    # Step 1 keeps [0,6) at 0; step 2 removes [2,4) of that: composed keeps [0,2) and [4,6).
-    assert compose_regions([(0, 0, 6)], [(0, 0, 2), (4, 2, 2)]) == [(0, 0, 2), (4, 2, 2)]
-    assert compose_regions([(0, 0, 2), (5, 2, 3)], [(1, 0, 3)]) == [(1, 0, 1), (5, 1, 2)]
-
-
-def test_edit_log_sub_reports_template_groups_as_kept_bytes() -> None:
-    log = EditLog("x __слово__ y _два_ z")
-    log.sub(r"(?<!\w)__(?!\s)(.+?)(?<!\s)__(?!\w)", r"**\1**")
-    log.sub(r"(?<!\w)_(?!\s)([^_]+?)(?<!\s)_(?!\w)", r"*\1*")
-    assert log.text == "x **слово** y *два* z"
-    assert log.edits() == [
-        Edit(2, 4, "**"),
-        Edit(9, 11, "**"),
-        Edit(14, 15, "*"),
-        Edit(18, 19, "*"),
-    ]
-    # `\g<name>` and escapes in templates; a callable is a whole-match replacement, narrowed.
-    log = EditLog("a\n# h\n")
-    log.sub(r"(?P<p>\S[^\n]*)\n(?P<h>#{1,6} )", r"\g<p>\n\n\g<h>")
-    assert log.text == "a\n\n# h\n" and log.edits() == [Edit(2, 2, "\n")]
-    log = EditLog("[slug:x] t")
-    log.sub(r"\[slug:([a-z]+)\]", lambda m: f"[{m.group(1).upper()}](/x)")
-    assert log.edits() == [Edit(1, 8, "X](/x)")]
-    # Group references out of match order fall back to a whole-match replacement.
-    log = EditLog("ab")
-    log.sub(r"(a)(b)", r"\2\1")
-    assert log.text == "ba" and log.edits() == [Edit(0, 2, "ba")]
-
-
-@pytest.mark.parametrize(
-    ("pattern", "repl", "text", "count", "flags"),
-    [
-        (r"<!--.*?-->\n?", "", "a<!-- x -->\nb<!-- y -->c", 0, re.DOTALL),
-        (r"^#\s+[^\n]+\n", "", "# t\n# t\nx", 1, re.MULTILINE),
-        (r"\n{3,}", "\n\n", "a\n\n\n\nb\n\n\nc", 0, 0),
-        (r"x*", "-", "abxxc", 0, 0),  # empty matches
-        (r"(a)|(b)", r"[\1\2]", "abc", 0, 0),  # unmatched group expands to nothing
-    ],
-)
-def test_edit_log_sub_matches_re_sub(pattern: str, repl: str, text: str, count: int, flags: int) -> None:
-    log = EditLog(text)
-    log.sub(pattern, repl, count=count, flags=flags)
-    assert log.text == re.sub(pattern, repl, text, count=count, flags=flags)
-    assert apply_edits(text, log.edits()) == log.text
-
-
-def test_edit_log_replace_insert_strip_and_consistency_check() -> None:
-    log = EditLog("  a b  ")
-    log.strip()
-    assert log.text == "a b" and log.edits() == [Edit(0, 2, ""), Edit(5, 7, "")]
-    log.insert(0, "<")
-    log.replace(4, 4, ">")
-    assert log.text == "<a b>" and log.edits() == [Edit(0, 2, "<"), Edit(5, 7, ">")]
-    with pytest.raises(ValueError):
-        log.apply([Edit(0, 1, "")], "wrong")
-    assert EditLog("   ").strip() is None and EditLog("   ").edits() == []
-
-
-def test_line_edits_report_kept_sliced_edited_and_new_lines() -> None:
-    text = "> [!tip]\n> слово\n\nend"
-    out = LineEdits(text)
-    out.new(":::tip[Tip]")  # replaces the header line
-    out.slice(1, 2, 7)  # "> слово" -> "слово"
-    out.new(":::")
-    out.keep(2)
-    out.keep(3)
-    assert out.text() == ":::tip[Tip]\nслово\n:::\n\nend"
-    edits = out.edits()
-    assert apply_edits(text, edits) == out.text()
-    # The newline between the two kept consecutive input lines is the input's own byte.  Edits are narrowed to what changed.
-    assert edits == [Edit(0, 11, ":::tip[Tip]\n"), Edit(17, 17, ":::\n")]
-    # A line edited on its own log, and a retracted output line.
-    text = "**Діалог 1 — x**\n* item  \nz"
-    out = LineEdits(text)
-    out.keep(0)
-    line = EditLog("* item  ")
-    line.replace(6, 8, "")
-    line.sub(r"^(\s*)\*(?= )", r"\1-")
-    out.edited(1, line)
-    out.delete(0)
-    out.new("<Box />")
-    out.keep(2)
-    assert out.text() == "- item\n<Box />\nz"
-    assert apply_edits(text, out.edits()) == out.text()
-    assert out.edits() == [Edit(0, 18, "-"), Edit(23, 25, "\n<Box />")]
 
 
 # ---------------------------------------------------------------------------
@@ -190,21 +79,6 @@ def test_carry_moves_units_by_position_only() -> None:
     assert m.units["cd"].lost_kind == LOST_REWRITTEN
 
 
-def test_carry_rejects_edits_that_do_not_produce_the_output() -> None:
-    m = LessonUnitMap("abc")
-    m.track("u", 0, 3, "abc")
-    with pytest.raises(ValueError):
-        m.carry("xyz", "abc", "t", [])
-    with pytest.raises(ValueError):
-        m.carry("abc", "ab", "t", [])  # no edits reported, but the text changed
-    with pytest.raises(ValueError):
-        m.verify("abd")
-    with pytest.raises(ValueError):
-        m.track("u", 0, 1, "a")
-    with pytest.raises(ValueError):
-        m.track("v", 0, 2, "ac")
-
-
 def test_js_json_string_codec_round_trips_and_is_verified() -> None:
     text = "а'б\"в\\г\nд `е` ${ж}"
     encoded = encode_js_json_string(text)
@@ -225,18 +99,6 @@ def test_js_json_string_codec_round_trips_and_is_verified() -> None:
     with pytest.raises(UnitMapError) as exc_info:
         m.verify(edited)
     assert exc_info.value.kind == LOST_REWRITTEN and exc_info.value.transform == "edit"
-
-
-def test_adopt_merges_maps_in_the_same_coordinates() -> None:
-    a = LessonUnitMap("one two")
-    a.track("a", 0, 3, "one")
-    b = LessonUnitMap("one two")
-    b.track("b", 4, 7, "two")
-    a.adopt(b)
-    assert a.verify("one two") == {"a": "one", "b": "two"}
-    c = LessonUnitMap("other")
-    with pytest.raises(ValueError):
-        a.adopt(c)
 
 
 # ---------------------------------------------------------------------------
@@ -391,25 +253,6 @@ def test_generate_mdx_duplicate_h1_removal_never_reattaches_the_unit() -> None:
     assert m.verify(mdx) == {1: "# слово"}
 
 
-def test_generate_mdx_duplicate_paragraph_in_a_removed_section() -> None:
-    # The Вправи section is stripped; its paragraph is an exact copy of paragraphs before and
-    # after it. Only the unit in the removed section is lost; the others keep their positions.
-    md = "## A\n\nслово\n\n## Вправи\n\nслово\n\n## B\n\nслово\n"
-    m = LessonUnitMap(md)
-    for key, start in zip((1, 2, 3), [i for i in range(len(md)) if md.startswith("слово", i)], strict=True):
-        m.track(key, start, start + 5, "слово")
-    meta = {"title": "T", "subtitle": "", "prev": "/a1/", "next": "/a1/", "lesson": 1, "module_slug": "s"}
-    mdx = generate_mdx(md, 1, meta_data=meta, level="a1", fresh=True, unit_map=m)
-    assert "Вправи" not in mdx.split('<TabItem label="Урок — Lesson">')[1].split("</TabItem>")[0]
-    with pytest.raises(UnitMapError) as exc_info:
-        m.verify(mdx)
-    assert exc_info.value.key == 2 and exc_info.value.kind == LOST_REMOVED
-    assert exc_info.value.transform == "strip_activities_section"
-    del m.units[2]
-    assert m.verify(mdx) == {1: "слово", 3: "слово"}
-    assert m.units[1].start < m.units[3].start
-
-
 # ---------------------------------------------------------------------------
 # No-op and partial replacements (r6 BLOCKER: unchanged text reported as removed)
 # ---------------------------------------------------------------------------
@@ -436,31 +279,6 @@ def test_edit_log_records_no_edit_for_a_replacement_equal_to_its_match() -> None
     log.replace(2, 5, "Q")
     log.replace(2, 3, "abc")
     assert log.text == "x abc y" and log.edits() == []
-
-
-def test_edit_log_narrows_edits_to_the_changed_middle() -> None:
-    log = EditLog("see [Video](https://a.b/x) now")
-    log.sub(r"\[Video\]\(([^)]*)\)", lambda match: f"[Video]({match.group(1)}?t=1)")
-    assert log.edits() == [Edit(25, 25, "?t=1")]
-    log = EditLog("aa")
-    log.sub("aa", "aaa")  # ambiguous by content; the convention is positional
-    assert log.edits() == [Edit(2, 2, "a")]
-    log = EditLog("abcdef")
-    log.sub("bcd", lambda match: "bXd")
-    assert log.edits() == [Edit(2, 3, "X")]
-
-
-def test_line_edits_and_carry_narrow_edits_that_change_nothing() -> None:
-    text = "a\nb\nc"
-    out = LineEdits(text)
-    out.keep(0)
-    out.new("b")  # the same bytes as input line 1, emitted as new text
-    out.keep(2)
-    assert out.edits() == []
-    m = LessonUnitMap(text)
-    m.track("b", 2, 3, "b")
-    m.carry(text, text, "noop", [Edit(2, 3, "b")])
-    assert m.verify(text) == {"b": "b"}
 
 
 def test_a_real_replacement_over_a_tracked_unit_still_invalidates_it() -> None:

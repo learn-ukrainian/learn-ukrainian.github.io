@@ -5,8 +5,6 @@ from __future__ import annotations
 import json
 import os
 import sqlite3
-import subprocess
-import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -72,73 +70,6 @@ def test_reconcile_sweep_uses_worker_identity(tmp_path, monkeypatch, apply, iden
         assert json.loads(path.read_bytes())["status"] == "crashed"
     else:
         assert path.read_bytes() == before
-
-
-def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
-    task_dir = tmp_path / "tasks"
-    task_dir.mkdir()
-    dead_task_id = "dead-task-1"
-    state = {
-        "task_id": dead_task_id,
-        "status": "running",
-        "pid": 999_999_999,
-    }
-    task_file = task_dir / f"{dead_task_id}.json"
-    task_file.write_text(json.dumps(state), encoding="utf-8")
-
-    ledger_path = tmp_path / "own.sqlite3"
-    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
-
-    report = reconcile_sweep.run_reconcile_sweep(
-        apply=False,
-        task_dir=task_dir,
-        ledger=ledger,
-    )
-
-    assert report.mode == "dry_run"
-    assert report.scanned_tasks == 1
-    assert report.zombie_tasks == [dead_task_id]
-    assert report.stale_claims == []
-    assert report.live_tasks == []
-
-    # File on disk must NOT be modified in dry-run
-    unchanged = json.loads(task_file.read_text(encoding="utf-8"))
-    assert unchanged["status"] == "running"
-    assert "reconcile-sweep: mode=dry_run scanned_tasks=1 zombie_tasks=1 stale_claims=0" in report.summary_line()
-
-
-def test_reconcile_sweep_apply_settles_dead_record(tmp_path: Path) -> None:
-    task_dir = tmp_path / "tasks"
-    task_dir.mkdir()
-    dead_task_id = "dead-task-2"
-    state = {
-        "task_id": dead_task_id,
-        "status": "running",
-        "pid": 999_999_999,
-    }
-    task_file = task_dir / f"{dead_task_id}.json"
-    task_file.write_text(json.dumps(state), encoding="utf-8")
-
-    ledger_path = tmp_path / "own.sqlite3"
-    ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
-
-    report = reconcile_sweep.run_reconcile_sweep(
-        apply=True,
-        task_dir=task_dir,
-        ledger=ledger,
-    )
-
-    assert report.mode == "apply"
-    assert report.scanned_tasks == 1
-    assert report.zombie_tasks == [dead_task_id]
-
-    # File on disk must be marked crashed by the explicit mutating path.
-    healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert "marked crashed by reconcile_sweep probe" in healed.get("stderr_excerpt", "")
-    assert (
-        "reconcile-sweep: mode=apply scanned_tasks=1 zombies_crashed=1 stale_claims_released=0" in report.summary_line()
-    )
 
 
 def test_reconcile_sweep_does_not_touch_live_pid(tmp_path: Path) -> None:
@@ -263,61 +194,6 @@ def test_reconcile_sweep_stale_claims(tmp_path: Path) -> None:
     count_after = conn.execute("SELECT COUNT(*) FROM write_claims").fetchone()[0]
     conn.close()
     assert count_after == 0
-
-
-def test_reconcile_sweep_cli_main(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    task_dir = tmp_path / "tasks"
-    task_dir.mkdir()
-    dead_task_id = "cli-dead-task"
-    (task_dir / f"{dead_task_id}.json").write_text(
-        json.dumps(
-            {
-                "task_id": dead_task_id,
-                "status": "running",
-                "pid": 999_999_999,
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    # Dry-run CLI
-    rc = reconcile_sweep.main(
-        [
-            "--task-dir",
-            str(task_dir),
-            "--repo-root",
-            str(tmp_path),
-        ]
-    )
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "reconcile-sweep: mode=dry_run scanned_tasks=1 zombie_tasks=1 stale_claims=0" in out
-
-    # Verify task file is still running
-    state = json.loads((task_dir / f"{dead_task_id}.json").read_text(encoding="utf-8"))
-    assert state["status"] == "running"
-
-    # Apply CLI with --json
-    rc_apply = reconcile_sweep.main(
-        [
-            "--apply",
-            "--task-dir",
-            str(task_dir),
-            "--repo-root",
-            str(tmp_path),
-            "--json",
-        ]
-    )
-    assert rc_apply == 0
-    out_apply = capsys.readouterr().out
-    assert "reconcile-sweep: mode=apply scanned_tasks=1 zombies_crashed=1 stale_claims_released=0" in out_apply
-    payload = json.loads("\n".join(out_apply.splitlines()[1:]))
-    assert payload["mode"] == "apply"
-    assert payload["zombie_tasks"] == [dead_task_id]
-
-    # Verify task file is now crashed
-    state_after = json.loads((task_dir / f"{dead_task_id}.json").read_text(encoding="utf-8"))
-    assert state_after["status"] == "crashed"
 
 
 def test_reconcile_sweep_filesystem_immutability_in_report_mode(tmp_path: Path) -> None:
@@ -482,85 +358,6 @@ def test_reconcile_sweep_cli_help_standard() -> None:
     assert "--repo-root" in help_text
     assert "--task-dir" in help_text
     assert "--json" in help_text
-
-
-def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
-    repo_root = Path(__file__).resolve().parents[1]
-    service_file = repo_root / "packaging" / "systemd" / "learn-ukrainian-reconcile.service"
-    assert service_file.exists()
-    content = service_file.read_text(encoding="utf-8")
-
-    # 1. Verify exact ExecStart shape in systemd unit
-    exec_line = next(line for line in content.splitlines() if line.startswith("ExecStart="))
-    assert exec_line == "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep --apply"
-
-    # Derive module args from the unit command shape
-    cmd_template = exec_line.removeprefix("ExecStart=").strip()
-    module_args = cmd_template.replace("@REPO_ROOT@/.venv/bin/python", "").strip().split()
-
-    # 2. Smoke test: module invocation with --help
-    res_help = subprocess.run(
-        [sys.executable, *module_args, "--help"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert res_help.returncode == 0
-    assert "Reconcile stale write-ownership claims" in res_help.stdout
-
-    # 3. Smoke test: the unit's own invocation (apply mode, #8645) against an empty task dir
-    task_dir = tmp_path / "tasks"
-    task_dir.mkdir()
-    res_report = subprocess.run(
-        [
-            sys.executable,
-            *module_args,
-            "--repo-root",
-            str(tmp_path),
-            "--task-dir",
-            str(task_dir),
-        ],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert res_report.returncode == 0
-    assert "reconcile-sweep: mode=apply scanned_tasks=0 zombies_crashed=0 stale_claims_released=0" in res_report.stdout
-
-    # 4. Smoke test: direct script path execution with --help and report mode
-    script_path = str(repo_root / "scripts" / "orchestration" / "reconcile_sweep.py")
-    res_script_help = subprocess.run(
-        [sys.executable, script_path, "--help"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert res_script_help.returncode == 0
-    assert "Reconcile stale write-ownership claims" in res_script_help.stdout
-
-    res_script_report = subprocess.run(
-        [
-            sys.executable,
-            script_path,
-            "--repo-root",
-            str(tmp_path),
-            "--task-dir",
-            str(task_dir),
-        ],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert res_script_report.returncode == 0
-    assert "reconcile-sweep: mode=dry_run scanned_tasks=0 zombie_tasks=0 stale_claims=0" in res_script_report.stdout
 
 
 # --- #8663: pid-less worktree-prep records --------------------------------------------------

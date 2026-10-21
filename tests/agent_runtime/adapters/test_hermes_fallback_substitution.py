@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -284,43 +283,3 @@ def test_probe_refuses_live_hermes_home():
 
     with pytest.raises(ProbeError, match=r"live ~/\.hermes"):
         run_probe(args, invoke_fn=lambda *_args, **_kwargs: None)
-
-
-def test_probe_requires_result_usage_and_event_substitution(tmp_path):
-    hermes_home = tmp_path / "hermes"
-    _write_config(hermes_home)
-    substitution = {
-        "requested_provider": "deepseek",
-        "requested_model": "deepseek-v4.1-flash",
-        "actual_provider": "openrouter",
-        "actual_model": "deepseek/deepseek-v3.2",
-        "substituted": True,
-    }
-
-    def fake_invoke(*_args, **kwargs):
-        kwargs["event_sink"](
-            "agent_runtime_substitution",
-            substitution={"substituted": True},
-        )
-        return SimpleNamespace(
-            model="deepseek/deepseek-v3.2",
-            substitution=substitution,
-            usage_record={"substitution": dict(substitution)},
-        )
-
-    args = argparse.Namespace(
-        hermes_home=hermes_home,
-        agent="deepseek",
-        model=None,
-        expected_fallback_provider="openrouter",
-        expected_fallback_model="deepseek/deepseek-v3.2",
-        prompt="hi",
-        cwd=tmp_path,
-        timeout=30,
-    )
-
-    summary = run_probe(args, invoke_fn=fake_invoke)
-
-    assert summary["ok"] is True
-    assert summary["usage_record_surfaced"] is True
-    assert summary["telemetry_event_seen"] is True

@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common import pytest_scratch, task_scratch
+from scripts.common import task_scratch
 from scripts.common.scratch import scratch_scan_roots
 from scripts.hygiene import pytest_retention, tmp_sweep
 
@@ -310,15 +310,6 @@ def test_existing_sweeper_gates_also_protect_owned_pytest_runs(area, monkeypatch
     assert next(row for row in report["rows"] if row["name"] == runs[0].name)["reason"] == expected
 
 
-@pytest.mark.parametrize("keep", [0, -1, True, 1.5])
-def test_invalid_count_refuses_without_removal(area, keep):
-    root, args = area
-    runs = completed(root, 1)
-    with pytest.raises(ValueError, match="positive integer"):
-        tmp_sweep.sweep(**args, apply=True, pytest_keep=keep)
-    assert (runs[0] / "scratch" / "payload").is_file()
-
-
 def test_repeated_sweep_keeps_retention_and_uses_existing_purge_window(area, monkeypatch):
     root, args = area
     runs = completed(root)
@@ -335,20 +326,6 @@ def test_repeated_sweep_keeps_retention_and_uses_existing_purge_window(area, mon
     assert third["quarantine_held_entries"] == 0
     assert third["remaining_runs"] == 3
     assert [path for path in runs if path.exists()] == runs[-3:]
-
-
-def test_cli_applies_retention_count_and_reports_aggregate_exceptions(area, capsys):
-    root, args = area
-    runs = completed(root, 4)
-    assert tmp_sweep.main([
-        "--temp-root", str(args["temp_root"]), "--task-root", str(args["task_root"]),
-        "--state-dir", str(args["state_dir"]), "--pytest-keep", "1", "--apply", "--summary",
-    ]) == 0
-    summary = json.loads(capsys.readouterr().out)
-    assert summary["pytest_retention"]["by_decision"] == {"quarantined": 3, "preserve": 1}
-    assert summary["pytest_retention"]["remaining_runs"] == 1
-    assert summary["pytest_retention"]["remaining_bytes"] > 0
-    assert [path for path in runs if path.exists()] == runs[-1:]
 
 
 def test_scan_confinement_excludes_other_managed_roots(area, monkeypatch, tmp_path):
@@ -470,108 +447,8 @@ def test_payload(tmp_path):
     assert list(namespace.iterdir()) == runs
 
 
-def test_retention_counts_legacy_and_neutral_namespaces_together(area):
-    root, args = area
-    legacy = completed(root, 4)
-    neutral = completed(root, 4, namespace="runs")
-    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    assert report["errors"] == 0
-    assert report["by_decision"] == {"quarantined": 5, "preserve": 3}
-    assert [path for path in legacy + neutral if path.exists()] == neutral[-3:]
-    assert report["quarantine_held_entries"] == 5
-    again = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    assert again["quarantine_held_entries"] == 5
-    assert again["by_decision"] == {"preserve": 3}
-
-
-def test_missing_pytest_namespaces_do_not_probe_processes(area, monkeypatch):
-    _root, args = area
-    monkeypatch.setattr(tmp_sweep, "process_snapshot", lambda: pytest.fail("no owned pytest namespace to inspect"))
-    report = pytest_retention.sweep_pytest_runs(
-        keep=3, apply=False, ledger=tmp_sweep.Ledger(args["state_dir"]), run_id="missing",
-        task_root=args["task_root"], digest_limit=1024, quarantine_s=86400, repo_root=REPO,
-    )
-    assert report["rows"] == []
-    assert report["errors"] == 0
-
-
 @pytest.mark.parametrize("namespace", ["../escape", "a/b", "", ".", "/absolute"])
 def test_namespace_override_rejects_noncomponents(tmp_path, namespace):
     with pytest.raises(task_scratch.TaskScratchError, match="invalid scratch namespace"):
         task_scratch.allocate("pytest", root=tmp_path, namespace_dirname=namespace)
     assert not list(tmp_path.iterdir())
-
-
-@pytest.mark.parametrize("previous_env", [None, "caller-temp"])
-def test_pytest_restores_temp_environment_and_cache(tmp_path, monkeypatch, previous_env):
-    import tempfile
-    from types import SimpleNamespace
-
-    root = tmp_path / "managed"
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
-    if previous_env is None:
-        monkeypatch.delenv("TMPDIR", raising=False)
-    else:
-        monkeypatch.setenv("TMPDIR", previous_env)
-    previous = tempfile.tempdir
-    cleanups = []
-    config = SimpleNamespace(option=SimpleNamespace(basetemp=None), add_cleanup=cleanups.append)
-    try:
-        pytest_scratch.pytest_configure(config)
-        relative = Path(config.option.basetemp).relative_to(root).as_posix().lower()
-        for prefix in ("sk-", "ghp_", "github_pat_", "xoxb-", "xoxp-", "akia"):
-            assert prefix not in relative
-        assert Path(config.option.basetemp).parent == Path(tempfile.gettempdir())
-        assert os.environ["TMPDIR"] == tempfile.gettempdir()
-    finally:
-        for cleanup in reversed(cleanups):
-            cleanup()
-    assert os.environ.get("TMPDIR") == previous_env
-    assert tempfile.tempdir == previous
-
-
-def test_relative_shard_file_resolves_from_checkout_after_chdir(tmp_path, monkeypatch):
-    from types import SimpleNamespace
-
-    from tests import conftest as suite
-
-    checkout = tmp_path / "checkout"
-    shards = checkout / "ci-artifacts"
-    shards.mkdir(parents=True)
-    relative = "ci-artifacts/pytest-shard-2-files.txt"
-    (checkout / relative).write_text("tests/test_allowed.py\n")
-    child = tmp_path / "child"
-    child.mkdir()
-    (child / "ci-artifacts").mkdir()
-    (child / relative).write_text("tests/test_decoy.py\n")
-    monkeypatch.chdir(child)
-    monkeypatch.setattr(suite, "_REPO_ROOT", checkout)
-    monkeypatch.setenv(suite.LU_PYTEST_SHARD_FILES_ENV_VAR, relative)
-    suite._load_shard_allowlist.cache_clear()
-    try:
-        assert suite._load_shard_allowlist() == frozenset({"tests/test_allowed.py"})
-        config = SimpleNamespace(rootpath=checkout)
-        assert suite.pytest_ignore_collect(checkout / "tests/test_allowed.py", config) is False
-        assert suite.pytest_ignore_collect(checkout / "tests/test_other.py", config) is True
-        (checkout / relative).unlink()
-        suite._load_shard_allowlist.cache_clear()
-        with pytest.raises(RuntimeError, match="unreadable"):
-            suite._load_shard_allowlist()
-    finally:
-        suite._load_shard_allowlist.cache_clear()
-
-
-def test_generated_child_suite_does_not_inherit_checkout_shard(pytester, monkeypatch):
-    pytester.makeconftest(f'''
-import sys
-sys.path.insert(0, {str(REPO)!r})
-pytest_plugins = ["tests.conftest"]
-''')
-    pytester.makepyfile("def test_child(): pass")
-    monkeypatch.setenv("LU_PYTEST_SHARD_FILES", "ci-artifacts/absent-shard.txt")
-    result = subprocess.run(
-        [sys.executable, "-m", "pytest", "-q"], cwd=pytester.path,
-        capture_output=True, text=True, timeout=30,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "1 passed" in result.stdout

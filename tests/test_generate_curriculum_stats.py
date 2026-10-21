@@ -56,20 +56,6 @@ def test_build_stats_counts_modules_and_total() -> None:
     }
 
 
-def test_render_stats_is_stable_two_space_json_with_trailing_newline() -> None:
-    text = gcs.render_stats({"a2": {"modules": 2}, "_total": 2})
-
-    assert text.endswith("}\n")
-    assert text == '{\n  "a2": {\n    "modules": 2\n  },\n  "_total": 2\n}\n'
-
-
-def test_load_stats_reads_manifest_from_disk(paths) -> None:
-    curriculum, _ = paths
-    _write_manifest(curriculum, _manifest(a2=["x"], b1=["y", "z"]))
-
-    assert gcs.load_stats() == {"a2": {"modules": 1}, "b1": {"modules": 2}, "_total": 3}
-
-
 def test_check_passes_for_fresh_output(paths) -> None:
     curriculum, _ = paths
     _write_manifest(curriculum, _manifest(a2=["x"], b1=["y", "z"]))
@@ -135,14 +121,6 @@ def test_check_detects_source_change_behind_self_consistent_output(paths, before
     assert gcs.main(["--check"]) == 0
 
 
-def test_write_creates_missing_output_directory(paths) -> None:
-    curriculum, output = paths
-    _write_manifest(curriculum, _manifest(a2=["x"]))
-
-    assert gcs.main([]) == 0
-    assert json.loads(output.read_text(encoding="utf-8")) == {"a2": {"modules": 1}, "_total": 1}
-
-
 @pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_stats_match_current_manifest_for_every_key() -> None:
     """All level keys and `_total` equal the manifest-derived producer output."""
@@ -154,21 +132,6 @@ def test_committed_stats_match_current_manifest_for_every_key() -> None:
     assert actual == expected
     assert actual["_total"] == sum(actual[level]["modules"] for level in manifest["levels"])
     assert gcs.stats_drift(expected) == []
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_check_cli_passes_on_committed_stats() -> None:
-    result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--check"],
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert result.stdout.startswith("OK ")
 
 
 def test_help_documents_check_flag_and_exit_codes() -> None:

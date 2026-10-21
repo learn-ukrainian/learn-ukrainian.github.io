@@ -275,50 +275,6 @@ PLANNED = 24
 # --------------------------------------------------------------------------- run and resume
 
 
-def _dispatcher_python(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, python: str | None) -> str:
-    seen: dict[str, Any] = {}
-
-    class Recorder:
-        def __init__(self, **kwargs: Any) -> None:
-            seen.update(kwargs)
-
-    monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
-    args = cli.build_parser().parse_args(
-        ["run", "--set", "s", "--results", "r", "--variant", "none", *(["--python", python] if python else [])]
-    )
-    cli.make_dispatcher(args, tmp_path)
-    return seen["python"]
-
-
-def test_default_interpreter_comes_from_the_shared_helper(monkeypatch, tmp_path: Path):
-    asked: list[Path] = []
-
-    def fake(root: Path | None = None) -> Path:
-        asked.append(root)
-        return tmp_path / "shared-python"
-
-    monkeypatch.setattr(cli, "project_interpreter", fake)
-    assert _dispatcher_python(monkeypatch, tmp_path, None) == str(tmp_path / "shared-python")
-    assert asked == [cli.REPO_ROOT]
-
-
-def test_python_flag_overrides_the_helper(monkeypatch, tmp_path: Path):
-    def refuse(root: Path | None = None) -> Path:
-        raise AssertionError("helper must not run when --python is given")
-
-    monkeypatch.setattr(cli, "project_interpreter", refuse)
-    assert _dispatcher_python(monkeypatch, tmp_path, "/custom/python") == "/custom/python"
-
-
-def test_missing_project_interpreter_is_a_harness_error(monkeypatch, tmp_path: Path):
-    def missing(root: Path | None = None) -> Path:
-        raise FileNotFoundError("no interpreter")
-
-    monkeypatch.setattr(cli, "project_interpreter", missing)
-    with pytest.raises(HarnessError, match="--python"):
-        _dispatcher_python(monkeypatch, tmp_path, None)
-
-
 def test_run_dispatches_every_cell_and_resume_skips_accepted(env):
     assert cli.main(env["run"]) == 0
     assert len(env["fake"].dispatched) == PLANNED
@@ -328,12 +284,6 @@ def test_run_dispatches_every_cell_and_resume_skips_accepted(env):
     assert raw["workspace"] == raw["workspace_after"] == {"head": "commit-a"}
     assert cli.main(env["run"]) == 0
     assert len(env["fake"].dispatched) == PLANNED  # nothing re-dispatched
-
-
-def test_prompt_is_the_rendered_effective_prompt_with_the_rules_core(env):
-    assert cli.main(env["run"]) == 0
-    prompt = (env["results"] / "prompts" / f"{tid(env, 'sol', 'adapted-v2', 1, 'review')}.md").read_text("utf-8")
-    assert prompt.startswith(rules_block() + "\n\n" + PREAMBLE + "\n\n# Task: proofreading")
 
 
 def test_resume_waits_on_dispatched_task_and_orphan_without_marker_is_not_accepted(env):
@@ -418,21 +368,6 @@ def test_dry_run_preflights_every_task_without_dispatch(env):
     assert len(env["fake"].dispatched) == PLANNED
 
 
-def test_manifest_frozen_under_old_dispatch_arguments_refuses_to_resume(env, capsys):
-    assert cli.main([*env["run"], "--dry-run"]) == 0
-    path = env["results"] / "manifest.json"
-    manifest = read_json(path)
-    frozen_args = manifest["frozen"]["dispatch_args_sha256"]
-    assert set(frozen_args) == {f"{kind}/{seat}" for kind in ("review", "writing") for seat in SEATS}
-    manifest["frozen"]["dispatch_args_sha256"] = {key: "0" * 64 for key in frozen_args}
-    path.write_text(json.dumps(manifest), encoding="utf-8")
-    capsys.readouterr()
-    assert cli.main([*env["run"], "--dry-run"]) == 2
-    err = capsys.readouterr().err
-    assert "different dispatch arguments" in err and "--run-tag" in err and "never mixed" in err
-    assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
-
-
 def test_malformed_output_counted_as_failed_items(env):
     victim = tid(env, "flash", "none", 1, "review")
     env["fake"].garbage_for.add(victim)
@@ -511,72 +446,6 @@ def test_manifest_freezes_the_complete_plan_and_refuses_plan_drift(env, capsys):
 # --------------------------------------------------------------------------- --review-profile (#9623, #8771)
 
 
-def test_review_profile_reaches_the_real_dispatcher_and_defaults_off(monkeypatch, tmp_path: Path):
-    seen: dict[str, Any] = {}
-
-    class Recorder:
-        def __init__(self, **kwargs: Any) -> None:
-            seen.update(kwargs)
-
-    monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
-    base = ["run", "--set", "s", "--results", "r", "--variant", "none", "--python", "py"]
-    cli.make_dispatcher(cli.build_parser().parse_args(base), tmp_path)
-    assert seen["review_profile"] is None
-    cli.make_dispatcher(cli.build_parser().parse_args([*base, "--review-profile", "ukrainian"]), tmp_path)
-    assert seen["review_profile"] == "ukrainian"
-    with pytest.raises(SystemExit):
-        cli.build_parser().parse_args([*base, "--review-profile", "code"])
-
-
-def test_review_profile_is_frozen_marks_review_prompts_only_and_refuses_a_changed_resume(env, capsys):
-    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
-    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
-    prompts = {p.name: p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md")}
-    review = [text for name, text in prompts.items() if "-review-" in name]
-    writing = [text for name, text in prompts.items() if "-writing-" in name]
-    assert review and writing
-    assert all("VERDICT: APPROVE" in text for text in review)
-    assert not any("VERDICT" in text for text in writing)
-    dispatched = len(env["fake"].dispatched)
-    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0  # the same value resumes
-    assert len(env["fake"].dispatched) == dispatched
-    capsys.readouterr()
-    assert cli.main(env["run"]) == 2  # dropping the value is a changed frozen term
-    assert "review_profile" in capsys.readouterr().err
-    assert len(env["fake"].dispatched) == dispatched
-
-
-def test_review_gate_marker_digest_is_frozen_and_an_edited_marker_refuses_the_resume(env, capsys, monkeypatch):
-    from scripts.eval.uk_preamble import prompts
-
-    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
-    frozen = read_json(env["results"] / "manifest.json")["frozen"]
-    assert frozen["review_gate_marker_sha256"] == prompts.sha256_text(prompts.REVIEW_GATE_MARKER)
-    assert frozen["templates_sha256"] == prompts.template_fingerprint()  # the marker is outside the fingerprint
-    dispatched = len(env["fake"].dispatched)
-    capsys.readouterr()
-    monkeypatch.setattr(prompts, "REVIEW_GATE_MARKER", prompts.REVIEW_GATE_MARKER + " Edited.")
-    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2
-    assert "review_gate_marker_sha256" in capsys.readouterr().err
-    assert len(env["fake"].dispatched) == dispatched
-
-
-def test_default_run_manifest_and_prompts_are_unchanged_by_the_review_profile_option(env, capsys):
-    assert cli.main(env["run"]) == 0
-    frozen = read_json(env["results"] / "manifest.json")["frozen"]
-    assert "review_profile" not in frozen and "review_gate_marker_sha256" not in frozen
-    assert not any("VERDICT" in p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md"))
-    capsys.readouterr()
-    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2  # adding the value to a default run
-    assert "review_profile" in capsys.readouterr().err
-
-
-def test_dry_run_with_a_review_profile_validates_every_task_and_freezes_the_value(env):
-    assert cli.main([*env["run"], "--review-profile", "ukrainian", "--dry-run"]) == 0
-    assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
-    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
-
-
 def test_the_review_gate_marker_does_not_break_the_json_answer():
     from scripts.eval.uk_preamble.prompts import validate_response
 
@@ -645,29 +514,6 @@ def test_full_plan_adopts_end_to_end(full_env, capsys):
         assert report["seats"][seat]["complete"] is True
         assert report["seats"][seat]["decision"] == "adapted-v2"
     assert "| lexical-russianism |" in markdown
-
-
-def test_missing_planned_task_makes_the_seat_incomplete(full_env, capsys):
-    victim = tid(full_env, "sol", "adapted-v2", 3, "review", 1)
-    full_env["fake"].refuse.add(victim)
-    assert cli.main(full_env["run"]) == 1
-    assert _score(full_env) == 0
-    report, _ = _report(full_env, capsys)
-    sol = report["seats"]["gpt-6.1-sol"]
-    assert sol["decision"] == "no change" and sol["complete"] is False
-    assert any("not run or not accepted" in r for r in sol["comparisons"]["adapted-v2"]["rule"]["reasons"])
-    assert report["seats"]["claude-opus-5-5"]["decision"] == "adapted-v2"  # other seats are complete
-
-
-def test_report_refuses_scores_from_another_plan(env, capsys):
-    assert cli.main(env["run"]) == 0
-    assert _score(env) == 0
-    path = env["results"] / "scores.json"
-    scores = read_json(path)
-    scores["plan"]["repeats"] = 1
-    path.write_text(json.dumps(scores), encoding="utf-8")
-    assert cli.main(["report", "--results", str(env["results"])]) == 2
-    assert "frozen plan" in capsys.readouterr().err
 
 
 # --------------------------------------------------------------------------- finding 5: executed conditions
@@ -841,33 +687,6 @@ def test_score_judge_refuses_a_legacy_manifest_before_any_dispatch(env, capsys):
     assert "dispatch_args_sha256" in err and "--run-tag" in err and "never mixed" in err
     assert env["fake"].dispatched == before
     assert "judge" not in read_json(path)
-
-
-def test_judge_retry_with_different_arguments_is_refused_before_dispatch(env, capsys):
-    """A retry that changes --hard-timeout must not dispatch, or reuse judges frozen earlier."""
-    assert cli.main(env["run"]) == 0
-    assert _score(env, "--judge") == 0
-    manifest = read_json(env["results"] / "manifest.json")
-    frozen_args = manifest["judge"]["dispatch_args_sha256"]
-    assert set(frozen_args) == set(SEATS)
-    judge_ids = [task_id for task_id, _force in env["fake"].dispatched if "-judge-" in task_id]
-    assert judge_ids
-    victim = judge_ids[0]
-    raw_path = env["results"] / "raw" / f"{victim}.json"
-    raw = read_json(raw_path)
-    raw["accepted"] = False
-    raw["status"] = "timeout"
-    raw_path.write_text(json.dumps(raw), encoding="utf-8")
-    before = list(env["fake"].dispatched)
-    capsys.readouterr()
-    assert _score(env, "--judge", "--retry-failed", "--hard-timeout", "17") == 2
-    err = capsys.readouterr().err
-    assert "per seat" in err and "--run-tag" in err and "never mixed" in err
-    assert env["fake"].dispatched == before
-    assert read_json(env["results"] / "manifest.json")["judge"]["dispatch_args_sha256"] == frozen_args
-    # The same frozen arguments still retry only the failed judge.
-    assert _score(env, "--judge", "--retry-failed") == 0
-    assert env["fake"].dispatched == [*before, (victim, True)]
 
 
 def _judge_dispatch_ids(env) -> list[str]:

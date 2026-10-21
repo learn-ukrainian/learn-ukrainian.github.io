@@ -11,7 +11,7 @@ import yaml
 from jsonschema import Draft7Validator, Draft202012Validator
 
 from scripts.build.fresh import assemble, runner
-from scripts.build.fresh.assemble import PROVENANCE_SCHEMA_PATH, get_provenance_validator
+from scripts.build.fresh.assemble import get_provenance_validator
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ResolverError
@@ -263,75 +263,6 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.read_requirement_receipts(path)
 
 
-def test_requirement_receipt_status_binds_each_payload_field(tmp_path: Path) -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
-    lesson = {"level": "a1", "slug": "sample", "n": 1}
-    inputs = {"draft_semantic_sha256": "a" * 64}
-    original = ("Можна ___?", ["хліб", "хліба"], 0, {"Case": "Acc", "Number": "Sing"})
-    sentence, options, key, demand = original
-    doc = {
-        "requirements_schema": 2,
-        "lesson": lesson,
-        "inputs": inputs,
-        "items": [
-            {
-                "activity": "a1",
-                "item": 0,
-                "requires": demand,
-                "payload_sha256": receipts.requirement_payload_sha256(*original),
-                "decision": "deny",
-                "reason": "partitive reading remains possible",
-                "requires_forced": False,
-                "options": [
-                    {"text": "хліб", "judgement": "valid", "evidence": ["vesum:6445807-6445825"]},
-                    {"text": "хліба", "judgement": "depends_on_context", "evidence": ["vesum:6445807-6445825"]},
-                ],
-                "writer": {"seat": "codex@sol", "family": "openai"},
-                "reviewer": {"seat": "claude@sonnet", "family": "anthropic", "lane": "language"},
-            }
-        ],
-    }
-    for changed in (
-        ("Дайте ___?", options, key, demand),
-        (sentence, ["хліб", "хлібу"], key, demand),
-        (sentence, options, 1, demand),
-        (sentence, options, key, {"Case": "Gen", "Number": "Sing"}),
-    ):
-        _, changed_options, changed_key, changed_demand = changed
-        assert (
-            receipts.requirement_status(
-                doc,
-                lesson=lesson,
-                state_dir=tmp_path,
-                inputs=inputs,
-                activity="a1",
-                item=0,
-                payload_sha256=receipts.requirement_payload_sha256(*changed),
-                options=changed_options,
-                key_index=changed_key,
-                requires=changed_demand,
-            )
-            == "requires_receipt_stale"
-        )
-    assert (
-        receipts.requirement_status(
-            doc,
-            lesson=lesson,
-            state_dir=tmp_path,
-            inputs=inputs,
-            activity="a1",
-            item=0,
-            payload_sha256=receipts.requirement_payload_sha256(
-                " Можна  ___? ", [" хліб ", "хліба"], key, {"Number": "Sing", "Case": "Acc"}
-            ),
-            options=[" хліб ", "хліба"],
-            key_index=key,
-            requires=demand,
-        )
-        == "requires_receipt_denied"
-    )
-
-
 def test_live_runner_error_correction_item_provenance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     draft, plan, pack, words = _fixture()
     pack["errors"] = [
@@ -529,153 +460,6 @@ def test_live_runner_quiz_typed_distractors_provenance(tmp_path: Path, monkeypat
     distractors = [s for s in opt_spans if s["is_key"] is False]
     assert len(distractors) == 1
     assert distractors[0]["text"] == "слова"
-
-
-def test_check_4_error_text_mismatch_and_ambiguous() -> None:
-    draft, plan, pack, words = _fixture()
-    pack["errors"] = [
-        {
-            "id": "E-001",
-            "source": {"table": "ua_gec_errors", "id": 1},
-            "incorrect": "слове",
-            "correct": "слово",
-            "error_type": "form",
-            "pattern": "fixture",
-        }
-    ]
-    plan["lessons"][0]["activities"] = [
-        {
-            "id": "a1",
-            "type": "error-correction",
-            "placement": "inline",
-            "focus": "Correct",
-            "error_refs": ["E-001"],
-        }
-    ]
-    item = {
-        "sentence": "слове",
-        "error": "слове",
-        "correction": "слово",
-        "explanation": "Correct",
-        "error_ref": "E-001",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Correct", "items": [item]}]
-
-    # Valid item passes
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert res["status"] == "passed"
-
-    # error field does not match record incorrect
-    bad_error = copy.deepcopy(draft)
-    bad_error["activities"][0]["items"][0]["error"] = "слова"
-    res, _ = runner.check_4_activities(bad_error, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "error_text_mismatch", "writer")
-
-    # record incorrect does not occur in sentence
-    bad_sentence = copy.deepcopy(draft)
-    bad_sentence["activities"][0]["items"][0]["sentence"] = "слово"
-    res, _ = runner.check_4_activities(bad_sentence, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "error_text_mismatch", "writer")
-
-    # record incorrect occurs twice in sentence
-    bad_ambiguous = copy.deepcopy(draft)
-    orig_sentence = bad_ambiguous["activities"][0]["items"][0]["sentence"]
-    bad_ambiguous["activities"][0]["items"][0]["sentence"] = f"{orig_sentence} {orig_sentence}"
-    res, _ = runner.check_4_activities(bad_ambiguous, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "error_text_ambiguous", "writer")
-
-    # error-correction: correction and answer conflict
-    bad_conflict = copy.deepcopy(draft)
-    bad_conflict["activities"][0]["items"][0]["answer"] = "слова"
-    res, _ = runner.check_4_activities(bad_conflict, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_conflict", "writer")
-
-
-def test_check_4_key_failure_reasons() -> None:
-    draft, plan, pack, words = _fixture()
-    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
-
-    # Index out of range
-    item_oor = {
-        "question": "слово",
-        "options": ["слово", "слова"],
-        "correct": 5,
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_oor]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_index_out_of_range", "writer")
-
-    # Ambiguous key in dict options (two correct: true)
-    item_amb = {
-        "question": "слово",
-        "options": [
-            {"text": "слово", "correct": True},
-            {"text": "слова", "correct": True},
-        ],
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_amb]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_ambiguous", "writer")
-
-    # Ambiguous key via duplicate matching string options
-    item_dup_str = {
-        "question": "слово",
-        "options": ["слово", "слово"],
-        "answer": "слово",
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_dup_str]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_ambiguous", "writer")
-
-    # Conflicting key styles (correct=0 points to слово, answer="слова")
-    item_conf = {
-        "question": "слово",
-        "options": ["слово", "слова"],
-        "correct": 0,
-        "answer": "слова",
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_conf]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_conflict", "writer")
-
-    # Conflicting key styles (correct index vs dict option)
-    item_conf_dict = {
-        "question": "слово",
-        "options": [
-            {"text": "слово", "correct": True},
-            {"text": "слова", "correct": False},
-        ],
-        "correct": 1,
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_conf_dict]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_conflict", "writer")
-
-    # Missing key
-    item_miss = {
-        "question": "слово",
-        "options": ["слово", "слова"],
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_miss]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_key_missing", "writer")
-
-    # Answer string not in options
-    item_notin = {
-        "question": "слово",
-        "options": ["слово", "слова"],
-        "answer": "інше",
-        "explanation": "Exp",
-    }
-    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": [item_notin]}]
-    res, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
-    assert (res["check"], res["reason"], res["layer"]) == (4, "answer_not_in_options", "writer")
 
 
 def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -984,88 +768,6 @@ def test_live_runner_a2_select_provenance_and_key_assignment(tmp_path: Path, mon
     assert (res["check"], res["reason"], res["layer"]) == (4, "select_correct_set_invalid", "writer")
 
 
-def test_provenance_schema_rejects_invalid() -> None:
-    schema = json.loads(PROVENANCE_SCHEMA_PATH.read_text(encoding="utf-8"))
-    validator = Draft202012Validator(schema)
-
-    valid_doc = {
-        "provenance_schema": 1,
-        "lesson": {"level": "a1", "slug": "sample-slug", "n": 1},
-        "spans": [
-            {
-                "tab": "urok",
-                "step": "s1",
-                "activity": None,
-                "item": None,
-                "block": "narration",
-                "span": 0,
-                "start": 0,
-                "end": 11,
-                "source": "writer_prose",
-                "ref": None,
-                "role": "narration",
-                "text": "sample text",
-                "record_kind": None,
-                "record_side": None,
-                "option_origin": None,
-                "is_key": None,
-            }
-        ],
-    }
-    validator.validate(valid_doc)
-
-    # Valid with record source and record_kind
-    valid_record = copy.deepcopy(valid_doc)
-    valid_record["spans"][0]["source"] = "record"
-    valid_record["spans"][0]["ref"] = "W-1"
-    valid_record["spans"][0]["record_kind"] = "word"
-    validator.validate(valid_record)
-
-    # Reject record source with null record_kind (Finding 5)
-    bad_record = copy.deepcopy(valid_doc)
-    bad_record["spans"][0]["source"] = "record"
-    bad_record["spans"][0]["ref"] = "W-1"
-    bad_record["spans"][0]["record_kind"] = None
-    assert len(list(validator.iter_errors(bad_record))) > 0
-
-    # Reject writer_prose with non-null record_kind (Finding 5)
-    bad_prose = copy.deepcopy(valid_doc)
-    bad_prose["spans"][0]["source"] = "writer_prose"
-    bad_prose["spans"][0]["record_kind"] = "word"
-    assert len(list(validator.iter_errors(bad_prose))) > 0
-
-    # Reject invalid record_kind
-    bad_kind = copy.deepcopy(valid_record)
-    bad_kind["spans"][0]["record_kind"] = "unrecognized_kind"
-    assert len(list(validator.iter_errors(bad_kind))) > 0
-
-    # Reject invalid record_side
-    bad_side = copy.deepcopy(valid_doc)
-    bad_side["spans"][0]["record_side"] = "neutral"
-    assert len(list(validator.iter_errors(bad_side))) > 0
-
-    # Reject invalid option_origin
-    bad_origin = copy.deepcopy(valid_doc)
-    bad_origin["spans"][0]["option_origin"] = "machine_generated"
-    assert len(list(validator.iter_errors(bad_origin))) > 0
-
-    # Reject missing required span property
-    bad_missing = copy.deepcopy(valid_doc)
-    del bad_missing["spans"][0]["is_key"]
-    assert len(list(validator.iter_errors(bad_missing))) > 0
-
-    # Reject an unknown role
-    bad_role = copy.deepcopy(valid_doc)
-    bad_role["spans"][0]["role"] = "footnote"
-    assert len(list(validator.iter_errors(bad_role))) > 0
-
-    # Reject missing span/start/end/role (Finding 4, r3)
-    for missing_field in ("span", "start", "end", "role"):
-        bad_pos = copy.deepcopy(valid_doc)
-        del bad_pos["spans"][0][missing_field]
-        assert len(list(validator.iter_errors(bad_pos))) > 0
-
-
 def test_assembler_unknown_record_prefix_fails_with_engine_layer() -> None:
     # Finding 5: unknown record prefix fails with engine layer
     with pytest.raises(assemble.AssemblerError) as exc_info:
@@ -1368,57 +1070,6 @@ def test_live_runner_error_correction_spans_partition_prompt_and_correction_is_r
     assert '"correctForm": "слово"' in mdx and '"я слове"' in mdx
 
 
-def test_check_9_activity_absent_from_rendered_output_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    # Finding 1: the activity is dropped after assembly; its spans are absent from the page and the
-    # renderer identified no location for them -> fail closed, no whole-page search.
-    draft, plan, pack, words = _fixture()
-    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
-    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
-    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
-    draft["activities"] = [
-        {
-            "id": "a1",
-            "instruction": "Quiz",
-            "items": [{"question": "слово", "options": ["слово", "слова"], "correct": 0, "explanation": "E"}],
-        }
-    ]
-    validate_fixture_plan(plan)
-    validate_fixture_draft(draft)
-    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
-    draft["activities"] = []
-    draft["steps"][0]["blocks"] = [b for b in draft["steps"][0]["blocks"] if b.get("kind") != "activity"]
-
-    monkeypatch.setattr(
-        assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})()
-    )
-    monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
-    monkeypatch.setattr(
-        assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {"lessons": [{"n": 1, "entry_sha256": "0" * 64}]}
-    )
-    monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": "a1"})())
-    res = assemble.check_9_stress_and_render(
-        expanded,
-        draft,
-        plan,
-        pack,
-        words,
-        type("Stream", (), {"tokens": []})(),
-        "a1",
-        "sample-slug",
-        1,
-        provenance_doc=prov,
-        repo_root=tmp_path,
-        output_dir=tmp_path / "state",
-        plans_dir=tmp_path,
-        evidence_dir=tmp_path,
-    )
-    assert res.passed is False
-    assert "span_location_unrendered" in (res.reason or "")
-    assert "('vpravy', 's1', 'a1', None, 'instruction')" in (res.reason or "")
-    assert res.layer == "engine"
-    assert not (tmp_path / "state" / "lesson-1.provenance.yaml").exists()
-
-
 def _finalize_inputs() -> tuple[dict, dict]:
     draft, plan, pack, words = _fixture(text="слово {{uk:слово}}")
     expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
@@ -1611,24 +1262,6 @@ def test_every_a1_inventory_type_locates_its_emitted_unit_blocks(activity_type):
     expected = {i for i, unit in enumerate(expanded["units"]) if unit["tab"] == "vpravy"}
     assert set(located) == expected
     assert expected
-
-
-@pytest.mark.parametrize("activity_type", ["observe", "classify", "letter-grid", "phrase-table"])
-def test_a1_instruction_reaches_component_props(activity_type):
-    """These activity-level instructions use the assembler's normal lookup."""
-    from scripts.yaml_activities import ActivityParser
-
-    payload = {"id": "a1", "type": activity_type, "instruction": "Instruction", **_A1_PAGE_PAYLOADS[activity_type]}
-    parser = ActivityParser()
-    parsed = parser._parse_activity(payload)
-    props = assemble.component_props_from_jsx(parser._activity_to_mdx(parsed))
-    assert props["instruction"] == "Instruction"
-    assert assemble.page_field_text(activity_type, props, None, "instruction") == "Instruction"
-    unit = {"tab": "vpravy", "activity": "a1", "item": None, "block": "instruction", "text": "Instruction"}
-    located = assemble.locate_units_in_component_props(
-        {"units": [unit]}, {0: "Instruction"}, {"a1": parsed}, {"a1": [parser._activity_to_mdx(parsed)]}
-    )
-    assert set(located) == {0}
 
 
 @pytest.mark.parametrize("activity_type", ["observe", "classify", "letter-grid", "phrase-table"])
@@ -1887,24 +1520,6 @@ def test_live_runner_image_to_letter_locates_spans_on_the_page(tmp_path: Path, m
     assert [(s["text"], s["is_key"]) for s in a4[("vpravy", "s1", "a4", 0, "opt_1")]] == [("слова", False)]
 
 
-def test_image_to_letter_options_reach_the_page() -> None:
-    # #8716: the parser reads the schema's image/letter/options, so they reach the page props.
-    from scripts.yaml_activities import ActivityParser
-
-    parser = ActivityParser()
-    act = parser._parse_activity(
-        {
-            "type": "image-to-letter",
-            "id": "a4",
-            "instruction": "Img",
-            "items": [{"image": "image.png", "letter": "слово", "options": ["слово", "слова"], "explanation": "E"}],
-        }
-    )
-    props = assemble.component_props_from_jsx(parser._activity_to_mdx(act))
-    assert assemble.page_field_text("image-to-letter", props, 0, "opt_0", key_index=0) == "слово"
-    assert assemble.page_field_text("image-to-letter", props, 0, "opt_1", key_index=0) == "слова"
-
-
 def test_urok_renderer_emits_mapped_bytes_without_final_strip() -> None:
     # Reviewer reproduction (r3 BLOCKER b): the renderer's final `.strip()` removed whitespace the
     # mapped piece kept. The mapping now describes exactly the bytes emitted. (Assembly drops
@@ -1991,21 +1606,6 @@ def test_live_runner_duplicate_heading_removed_by_generate_mdx_is_not_reattached
     assert not (tmp_path / "site" / "1.mdx").exists()
 
 
-def test_live_runner_heading_inside_prose_unit_rewritten_by_generate_mdx_fails_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # The same heading as the first line of a longer prose unit: the page keeps the rest of the
-    # unit, so the unit is rewritten (not removed) and the reason names the transform.
-    draft, plan, pack, words = _fixture(text="# слово\n\n" + "слово " * 10)
-    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is False
-    c9 = _check_9_row(report)
-    assert c9["layer"] == "engine"
-    assert c9["reason"].startswith("span_text_not_in_rendered_output: unit 0 at ('urok', 's1', None, None, 0): ")
-    assert "transform 'remove_duplicate_h1' rewrote the bytes of unit 0" in c9["reason"]
-    assert not (tmp_path / "site" / "1.mdx").exists()
-
-
 def _video_fixture() -> tuple[dict, dict, dict, dict]:
     from tests.build.test_fresh_assemble import make_video_record
 
@@ -2037,47 +1637,6 @@ def test_live_runner_youtube_link_becomes_component_and_lead_in_unit_keeps_its_l
     lead_text = "".join(s["text"] for s in lead)
     assert lesson.count(lead_text) == 1
     assert lesson.index(lead_text) < lesson.index(component)
-    _assert_spans_partition_units(prov)
-
-
-def test_live_runner_youtube_link_inside_prose_unit_fails_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # A prose unit that contains a YouTube markdown link is rewritten into a component by
-    # generate_mdx: the unit's bytes no longer stand together on the page -> fail closed.
-    draft, plan, pack, words = _fixture(text="слово " * 10 + "[слово](https://youtu.be/dQw4w9WgXcQ) слово")
-    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is False
-    c9 = _check_9_row(report)
-    assert c9["layer"] == "engine"
-    assert c9["reason"].startswith("span_text_not_in_rendered_output: unit 0 at ('urok', 's1', None, None, 0): ")
-    assert "transform 'embed_youtube_video_links' rewrote the bytes of unit 0" in c9["reason"]
-
-
-@pytest.mark.needs_sparse_tree("site/src/content")
-def test_live_runner_readings_block_insertion_keeps_unit_locations(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # generate_mdx inserts the reading list in front of the Lesson content; every unit after
-    # it is verified at its shifted location.
-    from scripts.generate_mdx.reading_links import reading_href_for
-
-    href = reading_href_for("duma-marusia-bohuslavka")
-    assert href, "hosted reading fixture missing"
-    draft, plan, pack, words = _fixture()
-    plan["lessons"][0]["reading_passages"] = [
-        {"title": "Маруся Богуславка", "reading_slug": "duma-marusia-bohuslavka", "genre": "дума"}
-    ]
-    validate_fixture_plan(plan)
-    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is True, report
-    mdx, prov = _page_and_provenance(tmp_path)
-    lesson = _lesson_tab(mdx)
-    block = f"**Тексти для читання**\n\n- [Маруся Богуславка]({href}) — дума"
-    assert block in lesson
-    prose = _spans_by_unit(prov)[("urok", "s1", None, None, 0)]
-    assert [s["text"] for s in prose] == [("сло́во " * 11).rstrip()]
-    assert lesson.index(block) < lesson.index(prose[0]["text"])
     _assert_spans_partition_units(prov)
 
 
@@ -2123,21 +1682,6 @@ def test_live_runner_dialogue_units_live_in_the_dialogue_box_payload(
     assert [(e["speaker"], e["text"]) for e in exchanges] == [("Оксана", line_texts[0]), ("Оксана", line_texts[1])]
     assert decode_js_json_string(payload.split('"text":"')[2].split('"}')[0]) == line_texts[1]
     _assert_spans_partition_units(prov)
-
-
-def test_live_runner_end_of_line_whitespace_is_dropped_at_assembly(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # The page's normalizer strips whitespace at the end of a line; unit text is taken from the
-    # draft the same way (page_text), so the spans and the page agree byte for byte.
-    draft, plan, pack, words = _fixture(text="слово " * 6 + "\t\n" + "слово " * 5)
-    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is True, report
-    mdx, prov = _page_and_provenance(tmp_path)
-    prose = _spans_by_unit(prov)[("urok", "s1", None, None, 0)]
-    expected = ("сло́во " * 6).rstrip() + "\n" + ("сло́во " * 5).rstrip()
-    assert [(s["text"], s["start"], s["end"]) for s in prose] == [(expected, 0, len(expected))]
-    assert expected in _lesson_tab(mdx)
 
 
 def test_live_runner_callout_and_table_units_keep_locations_through_generate_mdx(

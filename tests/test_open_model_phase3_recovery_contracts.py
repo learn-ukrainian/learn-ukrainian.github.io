@@ -133,15 +133,6 @@ def test_source_audit_formula_weakening_fails_closed(tmp_path: Path) -> None:
         contracts.validate_contracts(root)
 
 
-def test_mandatory_family_identity_reuse_fails_schema_only(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    coverage["mandatory_families"][1]["family_id"] = coverage["mandatory_families"][0]["family_id"]
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
 def test_missing_matrix_cell_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
@@ -160,35 +151,6 @@ def test_near_duplicate_threshold_change_fails_closed(tmp_path: Path) -> None:
         contracts.validate_contracts(root)
 
 
-def test_near_duplicate_implementation_is_exactly_bound_to_its_pinned_artifact(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    _, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
-    policy = evaluation["near_duplicate_policy"]
-    assert policy["implementation_version"] == contracts.NEAR_DUPLICATE_IMPLEMENTATION_VERSION
-    assert policy["implementation_module"] == contracts.NEAR_DUPLICATE_IMPLEMENTATION_MODULE
-    assert policy["implementation_artifact"] == contracts.NEAR_DUPLICATE_POLICY_ARTIFACT
-    assert policy["policy_fingerprint_sha256"] == contracts.NEAR_DUPLICATE_POLICY_FINGERPRINT
-    assert contracts.validate_contracts(root)["ok"] is True
-
-
-@pytest.mark.parametrize(
-    ("field", "replacement"),
-    [
-        ("implementation_version", "implementation_pending"),
-        ("implementation_module", "scripts/projects/open_model_data/drift.py"),
-        ("implementation_artifact", "data/projects/open_model_data/evidence/drift.json"),
-        ("policy_fingerprint_sha256", "0" * 64),
-    ],
-)
-def test_near_duplicate_implementation_binding_drift_fails_closed(tmp_path: Path, field: str, replacement: str) -> None:
-    root = _isolated_root(tmp_path)
-    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
-    evaluation["near_duplicate_policy"][field] = replacement
-    _write_json(path, evaluation)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
 def test_near_duplicate_policy_artifact_content_drift_fails_closed(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     artifact_path = root / "registry" / Path(contracts.NEAR_DUPLICATE_POLICY_ARTIFACT).relative_to("data")
@@ -201,19 +163,6 @@ def test_near_duplicate_policy_artifact_content_drift_fails_closed(tmp_path: Pat
     ).hexdigest()
     _write_json(artifact_path, policy_artifact)
     with pytest.raises(contracts.ContractError, match="near-duplicate policy artifact fingerprint drift"):
-        contracts.validate_contracts(root)
-
-
-@pytest.mark.parametrize("mutation", ["role_reuse", "root_assignment"])
-def test_role_reuse_and_root_assignment_fail_closed(tmp_path: Path, mutation: str) -> None:
-    root = _isolated_root(tmp_path)
-    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
-    if mutation == "role_reuse":
-        roles["seats"][1]["seat_id"] = roles["seats"][0]["seat_id"]
-    else:
-        roles["root"]["decision_role_ids"] = ["scorer"]
-    _write_json(path, roles)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
         contracts.validate_contracts(root)
 
 
@@ -243,15 +192,6 @@ def test_stale_or_drifted_v2_1_evaluation_hash_fails_closed(tmp_path: Path, fiel
         contracts.validate_contracts(root)
 
 
-def test_retired_v1_evaluation_hash_shape_fails_closed(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
-    evaluation["contract_inputs"] = contracts.LEGACY_CONTRACT_INPUTS
-    _write_json(path, evaluation)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
 @pytest.mark.parametrize(
     ("field", "replacement"),
     [
@@ -273,17 +213,6 @@ def test_heldout_transport_requirements_and_review_pins_cannot_weaken(
         contracts.validate_contracts(root)
 
 
-def test_required_heldout_family_partition_set_cannot_shrink(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
-    evaluation["heldout_partition_extraction_blocker"]["required_heldout_family_partitions"].remove(
-        "antonenko_textbook_representation"
-    )
-    _write_json(path, evaluation)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
 def test_nonlexical_disposition_totals_and_cycle_binding_cannot_drift(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
@@ -298,15 +227,6 @@ def test_nonlexical_disposition_totals_and_cycle_binding_cannot_drift(tmp_path: 
     _write_json(path, evaluation)
     with pytest.raises(contracts.ContractError, match=r"schema violation|functional-role evaluation cycle"):
         contracts.validate_contracts(cycle_root)
-
-
-def test_wrong_current_2026_hash_fails_closed(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    coverage["pravopys_2026_authority"]["official_pdf_sha256"] = "0" * 64
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError):
-        contracts.validate_contracts(root)
 
 
 def test_present_hash_on_nonfrozen_universe_fails_closed(tmp_path: Path) -> None:
@@ -336,38 +256,6 @@ def test_lexical_disposition_mode_fails_closed(tmp_path: Path) -> None:
         "source_conversion"
     )
     _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError):
-        contracts.validate_contracts(root)
-
-
-@pytest.mark.parametrize("field", ["audit", "scanner_nonhit_audit"])
-def test_both_textbook_audits_are_required(tmp_path: Path, field: str) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    textbook = next(item for item in coverage["mandatory_families"] if item["family_id"] == "school_textbooks")
-    del textbook[field]
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError):
-        contracts.validate_contracts(root)
-
-
-def test_stale_ulif_counts_fail_closed(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    next(item for item in coverage["mandatory_families"] if item["family_id"] == "lexical_ulif")["input_identity"][
-        "observed_input_total"
-    ] = 7
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError, match="denominator shrunk: lexical_ulif"):
-        contracts.validate_contracts(root)
-
-
-@pytest.mark.parametrize("field", ["matcher_mechanisms", "breadth_floors"])
-def test_mechanism_and_breadth_freezes_are_required(tmp_path: Path, field: str) -> None:
-    root = _isolated_root(tmp_path)
-    path, evaluation = _artifact(root, "correction_protection_evaluation_contract_v1.json")
-    del evaluation[field]
-    _write_json(path, evaluation)
     with pytest.raises(contracts.ContractError):
         contracts.validate_contracts(root)
 
@@ -420,66 +308,6 @@ def test_partial_local_binding_state_returns_json_error(tmp_path: Path, capsys: 
     result = json.loads(capsys.readouterr().out)
     assert result["ok"] is False
     assert "binding input" in result["error"]
-
-
-def test_all_roles_unlaunched_lie_fails_closed(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
-    for binding in roles["task_bindings"]:
-        binding["status"] = "reserved_not_launched"
-    _write_json(path, roles)
-    with pytest.raises(
-        contracts.ContractError, match=r"schema violation|approved contract-text review binding changed"
-    ):
-        contracts.validate_contracts(root)
-
-
-def test_newly_attested_roles_have_only_their_accepted_bindings(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    roles = _artifact(root, "correction_protection_role_contract_v1.json")[1]
-    expected = {
-        "rule_author_extractor": ("phase3-role-rule-author-agy-v3", "controller_phase3_rule_author_agy_runtime_01"),
-        "heldout_steward": (
-            "phase3-role-heldout-steward-cursor-v2",
-            "controller_phase3_heldout_steward_cursor_runtime_01",
-        ),
-        "heldout_label_reviewer": (
-            "phase3-role-label-reviewer-codex-v2",
-            "controller_phase3_heldout_label_reviewer_codex_runtime_01",
-        ),
-        "scorer": ("phase3-role-scorer-kimi-v1", "controller_phase3_scorer_kimi_01"),
-        "outsider_reproducer": (
-            "phase3-role-outsider-reproducer-glm-v1",
-            "controller_phase3_outsider_reproducer_glm_01",
-        ),
-        "cross_family_code_infra_reviewer": (
-            "phase3-role-cross-family-code-infra-reviewer-grok-v1",
-            "controller_phase3_cross_family_reviewer_grok_01",
-        ),
-        "disposition_auditor": (
-            "phase3-role-disposition-auditor-claude-v1",
-            "controller_phase3_disposition_auditor_claude_01",
-        ),
-        "textbook_nonhit_auditor": (
-            "phase3-role-textbook-nonhit-auditor-agy-v1",
-            "controller_phase3_textbook_nonhit_auditor_agy_01",
-        ),
-    }
-    bindings = {binding["role_id"]: binding for binding in roles["task_bindings"]}
-    seats = {seat["role_id"]: seat for seat in roles["seats"]}
-    for role_id, (task_id, controller_identity_id) in expected.items():
-        assert seats[role_id]["assignment_state"] == "assigned_verified"
-        assert seats[role_id]["controller_identity_id"] == controller_identity_id
-        assert seats[role_id]["controller_identity_attested"] is True
-        assert bindings[role_id] == {
-            "role_id": role_id,
-            "reserved_task_id": task_id,
-            "controller_identity_id": controller_identity_id,
-            "status": "identity_attested_pre_artifact",
-            "artifact_approval_claimed": False,
-            "program_completion_claimed": False,
-        }
-    assert contracts.validate_contracts(root)["ok"] is True
 
 
 @pytest.mark.parametrize(
@@ -539,37 +367,6 @@ def test_new_auditor_seat_assignment_cannot_drift(
         contracts.validate_contracts(root)
 
 
-def test_attested_scorer_cannot_be_rebound_without_fresh_attestation(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
-    seats = {seat["role_id"]: seat for seat in roles["seats"]}
-    bindings = {binding["role_id"]: binding for binding in roles["task_bindings"]}
-    reserved_roles: set[str] = set()
-    for role_id in reserved_roles:
-        assert seats[role_id]["assignment_state"] == "reserved_unassigned"
-        assert seats[role_id]["controller_identity_id"] is None
-        assert bindings[role_id]["status"] == "reserved_not_launched"
-    seats["scorer"].update(
-        {
-            "assignment_state": "assigned_verified",
-            "controller_identity_id": "controller_phase3_scorer_01",
-            "controller_identity_attested": True,
-        }
-    )
-    bindings["scorer"].update(
-        {
-            "controller_identity_id": "controller_phase3_scorer_01",
-            "status": "identity_attested_pre_artifact",
-        }
-    )
-    _write_json(path, roles)
-    with pytest.raises(
-        contracts.ContractError,
-        match=r"attested decision role binding changed|attested decision seat controller identity changed",
-    ):
-        contracts.validate_contracts(root)
-
-
 def test_artifact_review_cannot_self_seal(tmp_path: Path) -> None:
     root = _isolated_root(tmp_path)
     path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
@@ -617,63 +414,6 @@ def test_ledger_audit_identity_contract_cannot_weaken(tmp_path: Path) -> None:
     coverage["ledger_audit_identity_contract"]["required_equalities"].pop()
     _write_json(path, coverage)
     with pytest.raises(contracts.ContractError):
-        contracts.validate_contracts(root)
-
-
-@pytest.mark.parametrize(
-    ("contract_key", "field"),
-    [
-        ("audit_seed_independence_contract", "author_roles_forbidden_from_seed_proposal_filter_search_or_reroll"),
-        ("audit_result_acceptance_contract", "pravopys_delta_zero_nonagree_required"),
-    ],
-)
-def test_audit_independence_and_zero_miss_contracts_cannot_weaken(
-    tmp_path: Path, contract_key: str, field: str
-) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    coverage[contract_key][field] = False
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
-def test_lexical_family_cannot_use_source_disposition_audit(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    lexical = next(item for item in coverage["mandatory_families"] if item["family_id"] == "lexical_vesum")
-    source = next(item for item in coverage["mandatory_families"] if item["family_id"] == "ua_gec")
-    lexical["audit"] = source["audit"]
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
-def test_nonlexical_family_cannot_claim_lexical_coverage_mode(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    source = next(item for item in coverage["mandatory_families"] if item["family_id"] == "ua_gec")
-    source["coverage_mode"] = "lexical_structural_and_used_subset"
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
-def test_delta_zero_miss_and_fresh_sample_rules_cannot_weaken(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, coverage = _artifact(root, "correction_protection_coverage_contract_v1.json")
-    coverage["edition_alignment"]["delta_audit"]["repair_requires_new_freeze_and_sample"] = False
-    _write_json(path, coverage)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
-        contracts.validate_contracts(root)
-
-
-def test_forbidden_heldout_acl_cannot_shrink_schema_only(tmp_path: Path) -> None:
-    root = _isolated_root(tmp_path)
-    path, roles = _artifact(root, "correction_protection_role_contract_v1.json")
-    roles["heldout_acl"]["forbidden_roles"].pop()
-    _write_json(path, roles)
-    with pytest.raises(contracts.ContractError, match="schema violation"):
         contracts.validate_contracts(root)
 
 

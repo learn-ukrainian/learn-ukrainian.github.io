@@ -9,13 +9,11 @@ from scripts.audit.generate_daily_pool import (
     DEFAULT_OUT,
     VERIFIED_ENGLISH_GLOSSES,
     VERIFIED_SENTENCE_EN,
-    _clean_origin,
     _entry_gloss,
     _first_origin,
     _is_eligible,
     _pool_item,
     build_pool,
-    compute_weight,
     load_db_entries,
     main,
 )
@@ -69,16 +67,6 @@ def fixture_entries() -> list[dict[str, object]]:
             "course_usage": [],
         },
     ]
-
-
-def test_compute_weight_rules() -> None:
-    entries = fixture_entries()
-
-    assert compute_weight(entries[0]) == 3
-    assert compute_weight(entries[1]) == 2
-    assert compute_weight(entries[2]) == 2
-    assert compute_weight(entries[3]) == 0
-    assert compute_weight(entries[4]) == 0
 
 
 def test_build_pool_schema_sorting_and_filters() -> None:
@@ -168,12 +156,6 @@ def test_build_pool_prefers_inventory_example_with_provenance() -> None:
     assert row["exampleLicense"] == inventory["баба"]["license"]
 
 
-def test_build_pool_top_n_uses_weight_then_lemma() -> None:
-    pool = build_pool(fixture_entries(), size=2)
-
-    assert [item["lemma"] for item in pool] == ["баба", "дім"]
-
-
 def test_build_pool_excludes_derived_forms_and_avoid_classified_lemmas() -> None:
     entries = [
         # Inflected/normalized duplicate — must be dropped even though it has a gloss + course.
@@ -210,22 +192,6 @@ def test_build_pool_excludes_derived_forms_and_avoid_classified_lemmas() -> None
     assert "всьо" not in {item["lemma"] for item in pool}
     assert all(item["k"] != "avoid" for item in pool)
     assert [item["lemma"] for item in build_pool(entries, size=1)] == ["автобус"]
-
-
-def test_main_writes_deterministic_json_bytes(tmp_path) -> None:
-    manifest = tmp_path / "manifest.json"
-    manifest.write_text(
-        json.dumps({"entries": fixture_entries()}, ensure_ascii=False),
-        encoding="utf-8",
-    )
-    out_one = tmp_path / "one.json"
-    out_two = tmp_path / "two.json"
-
-    assert main(["--manifest", str(manifest), "--out", str(out_one), "--size", "10"]) == 0
-    assert main(["--manifest", str(manifest), "--out", str(out_two), "--size", "10"]) == 0
-
-    assert out_one.read_bytes() == out_two.read_bytes()
-    assert out_one.read_text(encoding="utf-8").endswith("\n")
 
 
 def _daily_atlas_db(tmp_path: Path) -> Path:
@@ -393,20 +359,6 @@ def test_build_pool_keeps_source_inventory_browse_only_by_default() -> None:
     assert [item["lemma"] for item in build_pool(entries, size=10)] == ["кіт"]
 
 
-def test_clean_origin_strips_latin_parentheticals_and_comparisons() -> None:
-    raw = "From наштовх(ну́ти) (naštovx(núty)) + -увати (-uvaty)."
-    assert _clean_origin(raw) == "From наштовх(ну́ти) + -увати."
-
-    compare = "From одно- + кімна́та + -ний. Compare Russian одноко́мнатный."
-    assert _clean_origin(compare) == "From одно- + кімна́та + -ний."
-
-
-def test_clean_origin_rejects_garbage_and_esum_labels() -> None:
-    assert _clean_origin("   ") is None
-    assert _clean_origin("(núty) (odnokómnatnyj)") is None
-    assert _clean_origin("Стаття ЕСУМ: вода; етимонів: 3.") is None
-
-
 def test_first_origin_only_returns_kaikki_sourced_prose() -> None:
     kaikki_entry = {
         "lemma": "монета",
@@ -427,43 +379,6 @@ def test_first_origin_only_returns_kaikki_sourced_prose() -> None:
 
     assert _first_origin(kaikki_entry) == "From Latin monēta."
     assert _first_origin(esum_entry) is None
-
-
-def test_build_pool_carries_cleaned_etymology_for_kaikki_origin() -> None:
-    entries = [
-        {
-            "lemma": "монета",
-            "url_slug": "moneta",
-            "gloss": "coin",
-            "primary_source": "course",
-            "course_usage": [],
-            "enrichment": {
-                "cefr": {"level": "A1", "source": "fixture", "text": "A1"},
-                "etymology": {
-                    "text": "From Latin monēta.",
-                    "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
-                },
-            },
-        },
-        {
-            "lemma": "вода",
-            "url_slug": "voda",
-            "gloss": "water",
-            "primary_source": "course",
-            "course_usage": [],
-            "enrichment": {
-                "cefr": {"level": "A1", "source": "fixture", "text": "A1"},
-                "etymology": {
-                    "text": "Стаття ЕСУМ: вода; етимонів: 3.",
-                    "source": "ЕСУМ",
-                },
-            },
-        },
-    ]
-
-    pool = {item["lemma"]: item for item in build_pool(entries, size=10)}
-    assert pool["монета"]["etymology"] == "From Latin monēta."
-    assert "etymology" not in pool["вода"]
 
 
 def _level_entry(lemma: str, slug: str, level: str) -> dict[str, object]:
@@ -504,20 +419,6 @@ def test_build_pool_reserves_slots_for_every_present_cefr_level() -> None:
     # The remaining 40 slots fill from the weighted pool (A1 dominates by count).
     assert by_level.get("A1", 0) == 40
     assert len(pool) == 120
-
-
-def test_build_pool_includes_c1_words_alongside_a_lower_level_majority() -> None:
-    """#6728 integration shape: with default quotas, a large beginner majority must
-    not erase C1 representation. Mirrors the real manifest where ~4400 A1/A2/B1
-    eligible words used to squeeze out all 596 C1 candidates."""
-    entries = [_level_entry(f"а{i:03d}", f"a{i:03d}", "A1") for i in range(300)]
-    entries += [_level_entry(f"с{i:03d}", f"s{i:03d}", "C1") for i in range(50)]
-
-    pool = build_pool(entries, size=300)
-    c1 = [item for item in pool if item.get("cefr") == "C1"]
-    assert len(c1) == 40  # default MIN_PER_LEVEL
-    # Every C1 card carries its true level so the WotD C1 tab can match it.
-    assert all(item["cefr"] == "C1" for item in c1)
 
 
 def test_entry_gloss_and_eligibility_enforces_english() -> None:

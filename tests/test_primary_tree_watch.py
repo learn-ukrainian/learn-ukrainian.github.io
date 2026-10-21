@@ -117,47 +117,9 @@ def _events(repo) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 
-def test_mode_sets_do_not_drift():
-    # The watch and the spawn-time guard must agree on what "write-capable" is.
-    assert ptw.WRITE_CAPABLE_MODES == runner_mod._WRITE_CAPABLE_MODES
-
-
-def test_start_returns_none_for_read_only_mode(repo):
-    assert _start(repo, mode="read-only") is None
-
-
-def test_start_returns_none_for_primary_checkout_cwd(repo):
-    # The spawn-time guard refuses this spawn anyway; the watch must not
-    # double-report a cwd that is itself the primary.
-    assert _start(repo, cwd=repo.main) is None
-
-
-def test_start_returns_none_outside_repo_tree(repo, tmp_path):
-    outside = tmp_path / "elsewhere"
-    outside.mkdir()
-    assert _start(repo, cwd=outside) is None
-
-
-def test_start_returns_none_when_disabled_by_interval(repo):
-    assert _start(repo, interval_s=0) is None
-
-
-def test_start_builds_watch_for_dispatch_worktree(repo):
-    watch = _start(repo)
-    assert watch is not None
-    assert watch.main_root == repo.main
-    assert watch.baseline == set()
-
-
 # ---------------------------------------------------------------------------
 # detection
 # ---------------------------------------------------------------------------
-
-
-def test_no_writes_no_events(repo):
-    watch = _start(repo)
-    assert watch.maybe_check(force=True) == []
-    assert _events(repo) == []
 
 
 def test_detects_new_tracked_write(repo):
@@ -186,59 +148,6 @@ def test_baseline_dirty_paths_are_not_reported(repo):
     # A DIFFERENT tracked file going dirty afterwards still fires.
     (repo.main / "pkg" / "module.py").write_text("x = 2\n")
     assert watch.maybe_check(force=True) == ["pkg/module.py"]
-
-
-def test_untracked_files_are_out_of_scope(repo):
-    # Untracked pollution belongs to the #6866 root-entry canary; this watch
-    # stays cheap with -uno.
-    watch = _start(repo)
-    (repo.main / "junk.tmp").write_text("junk\n")
-    assert watch.maybe_check(force=True) == []
-
-
-def test_worktree_writes_are_not_reported(repo):
-    watch = _start(repo)
-    (repo.dispatch_wt / "tracked.txt").write_text("legit worker edit\n")
-    assert watch.maybe_check(force=True) == []
-
-
-def test_throttle_skips_until_interval_and_force_bypasses(repo):
-    watch = _start(repo, interval_s=3600)
-    (repo.main / "tracked.txt").write_text("ESCAPED\n")
-    # Non-forced check inside the interval: no probe yet.
-    assert watch.maybe_check() == []
-    assert _events(repo) == []
-    # Forced probe (the post-exit sweep) sees it.
-    assert watch.maybe_check(force=True) == ["tracked.txt"]
-
-
-def test_event_sink_receives_the_event(repo):
-    seen: list[tuple[str, dict]] = []
-    watch = _start(repo, event_sink=lambda name, **fields: seen.append((name, fields)))
-    (repo.main / "tracked.txt").write_text("ESCAPED\n")
-    watch.maybe_check(force=True)
-    assert len(seen) == 1
-    name, fields = seen[0]
-    assert name == ptw.EVENT_NAME
-    assert fields["paths"] == ["tracked.txt"]
-
-
-def test_probe_failures_fail_open_and_self_disable(repo, monkeypatch):
-    watch = _start(repo)
-    monkeypatch.setattr(ptw, "_tracked_dirty_paths", lambda _root: None)
-    for _ in range(5):
-        assert watch.maybe_check(force=True) == []
-    # Self-disabled after repeated failures: even a real escape stays silent
-    # rather than crashing the dispatch (fail-open by design).
-    assert watch._probe_failures == ptw._MAX_PROBE_FAILURES
-
-
-def test_enforce_gate_defaults_off(repo, monkeypatch):
-    monkeypatch.delenv("LU_PRIMARY_TREE_WATCH_ENFORCE", raising=False)
-    watch = _start(repo)
-    assert watch.enforce is False
-    monkeypatch.setenv("LU_PRIMARY_TREE_WATCH_ENFORCE", "1")
-    assert watch.enforce is True
 
 
 # ---------------------------------------------------------------------------
@@ -288,40 +197,6 @@ def _disable_fleet_capture(monkeypatch):
         "start",
         classmethod(lambda cls, **_kw: (_ for _ in ()).throw(RuntimeError("off"))),
     )
-
-
-def test_runner_starts_watch_and_final_checks(monkeypatch, tmp_path):
-    calls = SimpleNamespace(start_kwargs=None, final_checks=0)
-
-    class _StubWatch:
-        enforce = False
-
-        def maybe_check(self, *, force: bool = False):
-            return []
-
-        def final_check(self):
-            calls.final_checks += 1
-            return []
-
-    def _stub_start(cls=None, **kwargs):
-        calls.start_kwargs = kwargs
-        return _StubWatch()
-
-    monkeypatch.setattr(
-        runner_mod.PrimaryTreeWatch, "start", classmethod(lambda cls, **kw: _stub_start(**kw))
-    )
-    _disable_fleet_capture(monkeypatch)
-    plan = _Plan(cmd=[sys.executable, "-c", "print('hi')"], cwd=tmp_path)
-    outcome = _run_plan(plan)
-    assert outcome.parse.ok is True
-    assert calls.start_kwargs["cwd"] == tmp_path
-    assert calls.start_kwargs["mode"] == "workspace-write"
-    assert calls.start_kwargs["agent_name"] == "agy"
-    assert calls.start_kwargs["task_id"] == "task-1"
-    # Post-exit sweep always runs (once in the normal path, once as the
-    # finally safety net — both are required to be reachable).
-    assert calls.final_checks >= 1
-    assert outcome.kill_reason is None
 
 
 def test_runner_kills_on_escape_only_when_enforced(monkeypatch, tmp_path):

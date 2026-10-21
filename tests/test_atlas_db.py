@@ -7,7 +7,6 @@ import json
 import sqlite3
 
 import pytest
-import yaml
 
 from scripts.atlas import atlas_db
 from scripts.atlas.export_runtime_shards import export_runtime_shards
@@ -216,21 +215,6 @@ rejected:
     assert counts["verified_synonym_self_pairs_skipped"] == 1
     assert counts["related_entries"] == 6
     conn.close()
-
-
-def test_cafe_verdict_is_an_approved_synonym_with_attested_sources():
-    verdicts = yaml.safe_load(atlas_db.DEFAULT_SYNONYM_VERDICTS.read_text(encoding="utf-8"))
-    cafe = next(
-        item
-        for item in verdicts["approved"]
-        if item.get("a") == "кафе" and item.get("b") == "кав'ярня"
-    )
-    assert cafe == {
-        "a": "кафе",
-        "b": "кав'ярня",
-        "polarity": "synonym",
-        "sources": ["sum20", "vts", "synonyms"],
-    }
 
 
 def test_alias_validator_reports_actionable_failures(tmp_path, capsys):

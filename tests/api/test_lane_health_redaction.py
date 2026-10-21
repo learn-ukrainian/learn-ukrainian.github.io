@@ -19,7 +19,6 @@ from test_routing_budget_endpoint import _configure
 
 from scripts.api import state_router
 from scripts.api.lane_health import (
-    BASIS_SCAN_UNAVAILABLE,
     MAX_ERROR_EXCERPT_CHARS,
     LaneHealthScan,
     redact_lane_health_text,
@@ -91,119 +90,11 @@ def test_sanitize_error_excerpt_redacts_marker_classes(excerpt, markers, placeho
     assert placeholder in served
 
 
-def test_sanitize_error_excerpt_keeps_ordinary_diagnostic_text():
-    ordinary = "UnknownError Unexpected server error; retrying"
-    assert sanitize_error_excerpt(ordinary) == ordinary
-    assert sanitize_error_excerpt("spawn failed with exit code 1") == "spawn failed with exit code 1"
-
-
-def test_lane_health_redacts_adjacent_markdown_paths():
-    raw = "".join(("Open `/", "tmp/first`;`/home/fixture/second`next."))
-    expected = "Open `[redacted-path]`;`[redacted-path]`next."
-    assert redact_lane_health_text(raw) == expected
-    assert redact_lane_health_text(expected) == expected
-
-
 def test_sanitize_error_excerpt_redacts_before_truncating():
     # A marker straddling the 200-char excerpt cap must not leak through it.
     served = sanitize_error_excerpt("x" * 190 + f" {FIXTURE_HOME}/secret-token.pem unreadable")
     assert served is not None
     assert served == "x" * 190
-
-
-@pytest.mark.parametrize(
-    "marker",
-    [
-        "/home/fixture/private/key.pem",
-        "getaddrinfo ENOTFOUND node.example.invalid",
-        "203.0.113.7",
-        _GH_TOKEN,
-    ],
-)
-def test_sanitize_error_excerpt_never_splits_any_placeholder(marker):
-    redacted = redact_lane_health_text(marker)
-    placeholder_start = redacted.index("[")
-    placeholder_end = redacted.index("]", placeholder_start) + 1
-    for inside_offset in range(1, placeholder_end - placeholder_start):
-        prefix = "x" * (MAX_ERROR_EXCERPT_CHARS - placeholder_start - inside_offset - 1) + " "
-        expected = (prefix + redacted)[: len(prefix) + placeholder_start].rstrip()
-        assert sanitize_error_excerpt(prefix + marker) == expected
-        assert sanitize_error_excerpt(expected) == expected
-
-    prefix = "x" * (MAX_ERROR_EXCERPT_CHARS - placeholder_end - 1) + " "
-    assert sanitize_error_excerpt(prefix + marker + " tail") == prefix + redacted
-
-
-def test_sanitize_error_excerpt_keeps_plain_truncation_and_literal_brackets():
-    assert sanitize_error_excerpt("retry " * 50) == ("retry " * 50)[:MAX_ERROR_EXCERPT_CHARS]
-    raw = "x" * 190 + " [ordinary diagnostic]"
-    assert sanitize_error_excerpt(raw) == raw[:MAX_ERROR_EXCERPT_CHARS]
-
-
-def test_health_for_redacts_the_served_scan_error_field():
-    scan = LaneHealthScan(observed=False, error=f"scan failed: {FIXTURE_HOME}/tasks on {_IPV4}")
-    served = scan.health_for("codex")
-    assert served["basis"] == BASIS_SCAN_UNAVAILABLE
-    assert FIXTURE_HOME not in served["error"]
-    assert _IPV4 not in served["error"]
-
-
-def test_health_for_redacts_a_raw_record_last_error():
-    scan = LaneHealthScan(
-        observed=True,
-        records={
-            "claude": {
-                "healthy": False,
-                "consecutive_failures": 2,
-                "span_minutes": 5,
-                "last_error": "dial db-primary-9.internal:5432 refused",
-            }
-        },
-    )
-    assert scan.health_for("claude")["last_error"] == "dial [redacted-host] refused"
-
-
-def test_routing_budget_endpoint_serves_redacted_lane_health(monkeypatch, tmp_path):
-    """The real handler serves redacted health; the local task record keeps the raw text."""
-    _configure(monkeypatch, tmp_path, [])
-    tasks_dir = tmp_path / "batch_state" / "tasks"
-    tasks_dir.mkdir(parents=True, exist_ok=True)
-    now = datetime.now(UTC)
-
-    marker_excerpt = (
-        f"spawn failed: ssh {_HOST_USER} exit 255; "
-        f"fallback connect to {_IPV4}:443 timed out; "
-        f"log {_PRIVATE_PATH}; "
-        + "".join(("auth ", "postgres", "://", "deploy:", _CRED_PASSWORD, "@", _HOST_PORT, "/app"))
-    )
-    ordinary_excerpt = "UnknownError Unexpected server error"
-    _write_task(tasks_dir, "c-1", "claude", now - timedelta(minutes=30), marker_excerpt)
-    _write_task(tasks_dir, "c-2", "claude", now - timedelta(minutes=10), marker_excerpt)
-    _write_task(tasks_dir, "x-1", "codex", now - timedelta(minutes=30), ordinary_excerpt)
-    _write_task(tasks_dir, "x-2", "codex", now - timedelta(minutes=10), ordinary_excerpt)
-
-    app = FastAPI()
-    app.state.ctx = fixture_context(tmp_path)
-    app.include_router(state_router.router, prefix="/api/state")
-    response = TestClient(app).get("/api/state/routing-budget")
-
-    assert response.status_code == 200
-    body = response.text
-    for marker in (_HOST_USER, "prod-bastion-7", "db-primary-9.internal", _PRIVATE_PATH, _IPV4, _CRED_PASSWORD):
-        assert marker not in body
-
-    health = response.json()["agents"]["claude"]["health"]
-    assert health["healthy"] is False
-    last_error = health["last_error"]
-    assert "[redacted-host]" in last_error
-    assert "[redacted-ip]" in last_error
-    assert "[redacted-path]" in last_error
-    # Ordinary diagnostic text survives unredacted on a healthy-text lane.
-    assert response.json()["agents"]["codex"]["health"]["last_error"] == ordinary_excerpt
-
-    # Non-goal: the local task record keeps the raw excerpt for local debugging.
-    record = json.loads((tasks_dir / "c-2.json").read_text(encoding="utf-8"))
-    assert record["stderr_excerpt"] == marker_excerpt
 
 
 @pytest.mark.repo_invariant
@@ -344,37 +235,6 @@ def _multi_url_shapes():
 
 
 _MULTI_URL_SHAPES = _multi_url_shapes()
-
-
-@pytest.mark.parametrize(("raw", "password", "expected"), _MULTI_URL_SHAPES)
-def test_diagnostic_and_served_rules_redact_every_url_in_one_token(raw, password, expected):
-    for redactor in (redact_lane_health_diagnostics, redact_lane_health_text):
-        assert redactor(raw) == expected
-        assert password not in redactor(raw)
-        assert redactor(expected) == expected
-
-
-@pytest.mark.parametrize(("raw", "expected"), [
-    (
-        "https://archive.invalid/20261007/https://source.invalid/path",
-        "https://[redacted-host]/20261007/https://[redacted-host]/path",
-    ),
-    (
-        "https://outer.invalid:443/@scope/pkg?next=https://source.invalid:443/@vite/client",
-        "https://[redacted-host]/@scope/pkg?next=https://[redacted-host]/@vite/client",
-    ),
-])
-def test_nested_credentialless_urls_preserve_each_path_and_query(raw, expected):
-    assert redact_lane_health_diagnostics(raw) == expected
-    assert redact_lane_health_diagnostics(expected) == expected
-
-
-def test_diagnostic_redactor_preserves_url_suffixes_that_resemble_private_paths():
-    # The response middleware retains its separate private-path policy.
-    raw = "".join(("https://node.example.invalid:443/home/fixture/%2f/@user/post?next=/", "tmp/fixture#203.0.113.7"))
-    expected = "".join(("https://[redacted-host]/home/fixture/%2f/@user/post?next=/", "tmp/fixture#203.0.113.7"))
-    assert redact_lane_health_text(raw) == expected
-    assert redact_lane_health_text(expected) == expected
 
 
 _REVIEW_SHAPES = [

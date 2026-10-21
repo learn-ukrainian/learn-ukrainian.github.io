@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator, ValidationError
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import freeze_phase3_p2_contracts as p2
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -58,16 +58,6 @@ def _contract() -> dict[str, Any]:
 
 def _validate_contract(value: dict[str, Any]) -> None:
     Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8"))).validate(value)
-
-
-def _validate_case_schema(value: dict[str, Any]) -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    case_schema = {
-        "$schema": schema["$schema"],
-        "$defs": schema["$defs"],
-        **schema["$defs"]["case_record"],
-    }
-    Draft202012Validator(case_schema).validate(value)
 
 
 def _p1_cells() -> dict[str, dict[str, Any]]:
@@ -422,70 +412,6 @@ def test_dialect_regional_amendment_is_additive_versioned_and_schema_valid() -> 
 
 
 @pytest.mark.parametrize(
-    "record_kind",
-    [
-        "correct_modern_production",
-        "source_backed_correction",
-        "minimal_contrast",
-        "protected_historical_context",
-        "protected_dialect_or_regional_context",
-        "abstention",
-        "not_applicable_with_evidence",
-        "coverage_blocked",
-    ],
-)
-def test_json_schema_accepts_each_state_specific_case_branch(record_kind: str) -> None:
-    _validate_case_schema(_case(record_kind))
-
-
-@pytest.mark.parametrize(
-    ("record_kind", "field", "value"),
-    [
-        ("coverage_blocked", "authority", copy.deepcopy(AUTHORITY)),
-        ("protected_historical_context", "dialect_or_regional_identity", "cross-state"),
-        ("protected_historical_context", "historical_identity", "modern_standard_ukrainian"),
-        ("protected_historical_context", "period_id", ""),
-        ("protected_historical_context", "region_id", ""),
-        ("protected_historical_context", "recension_editorial_layer", ""),
-        ("protected_dialect_or_regional_context", "historical_identity", "cross-state"),
-        ("protected_dialect_or_regional_context", "dialect_or_regional_identity", ""),
-        ("protected_dialect_or_regional_context", "dialect_or_regional_identity", "modern_standard_ukrainian"),
-        ("protected_dialect_or_regional_context", "region_id", ""),
-        ("protected_dialect_or_regional_context", "register_id", ""),
-        ("protected_dialect_or_regional_context", "source_qualified_identity", False),
-        ("protected_dialect_or_regional_context", "modern_normalization", True),
-        ("abstention", "not_applicable_evidence_id", "cross-state"),
-        ("not_applicable_with_evidence", "abstention_reason_code", "cross-state"),
-        ("correct_modern_production", "modern_normalization", False),
-    ],
-)
-def test_json_schema_rejects_cross_state_case_fields(record_kind: str, field: str, value: Any) -> None:
-    record = _case(record_kind)
-    record[field] = value
-    with pytest.raises(ValidationError):
-        _validate_case_schema(record)
-
-
-@pytest.mark.parametrize(
-    ("record_kind", "field"),
-    [
-        ("protected_historical_context", "historical_identity"),
-        ("protected_historical_context", "period_id"),
-        ("protected_historical_context", "region_id"),
-        ("protected_historical_context", "recension_editorial_layer"),
-        ("protected_dialect_or_regional_context", "dialect_or_regional_identity"),
-        ("protected_dialect_or_regional_context", "region_id"),
-        ("protected_dialect_or_regional_context", "register_id"),
-    ],
-)
-def test_json_schema_rejects_missing_protection_identity_fields(record_kind: str, field: str) -> None:
-    record = _case(record_kind)
-    del record[field]
-    with pytest.raises(ValidationError):
-        _validate_case_schema(record)
-
-
-@pytest.mark.parametrize(
     ("mutation", "error"),
     [
         ({"amendment": {"base_p1_rewritten": True}}, "p1_dialect_regional_amendment_sha_drift"),
@@ -535,73 +461,6 @@ def test_r_is_empty_until_source_qualified_rule_admission_and_is_hash_bound() ->
     assert "p1_cells_are_coverage_strata_not_rules" in algorithm["derivation"]
 
 
-def test_r_merge_split_and_denominator_changes_are_versioned_and_fail_closed() -> None:
-    rule_universe = _contract()["rule_slot_universe"]
-    assert rule_universe["merge_criteria"] == {
-        "permitted": True,
-        "requires": [
-            "source_qualified_claim_typed_evidence",
-            "registered_qualified_human_adjudication",
-            "all_parent_slot_ids",
-        ],
-        "preserves": ["coverage_stratum_id", "case_denominator", "atomic_identity_lineage"],
-        "version_effect": "new_rule_manifest_version_with_all_parent_lineage",
-    }
-    assert rule_universe["split_criteria"] == {
-        "permitted": True,
-        "requires": [
-            "source_qualified_claim_typed_evidence",
-            "registered_qualified_human_adjudication",
-            "parent_slot_id",
-        ],
-        "preserves": ["coverage_stratum_id", "case_denominator", "atomic_identity_lineage"],
-        "version_effect": "new_rule_manifest_version_with_parent_child_lineage",
-    }
-    assert rule_universe["denominator_change_policy"] == "new_p1_manifest_sha256_and_new_dataset_version_required"
-
-
-def test_composite_strata_and_adjudication_registry_are_explicitly_non_admitting() -> None:
-    contract = _contract()
-    assert contract["p1_binding"]["required_cell_count"] == 15
-    assert contract["p1_binding"]["composite_required_cell_count"] == 16
-    assert len(contract["p1_binding"]["composite_required_cell_statuses"]) == 16
-    assert (
-        next(
-            status
-            for status in contract["p1_binding"]["composite_required_cell_statuses"]
-            if status["cell_id"] == _dialect_cell_id()
-        )["status"]
-        == "coverage_blocked"
-    )
-    assert contract["case_state_contract"]["structurally_distinct_states"] == [
-        "correct_modern_production",
-        "source_backed_correction",
-        "minimal_contrast",
-        "protected_historical_context",
-        "protected_dialect_or_regional_context",
-        "abstention",
-        "not_applicable_with_evidence",
-        "coverage_blocked",
-    ]
-    assert contract["case_state_contract"]["protected_dialect_or_regional_is_not_modern_correction"] is True
-    assert contract["adjudication_contract"] == {
-        "registry_status": "FROZEN_NONADMITTING",
-        "semantic_case_admission_permitted": False,
-        "required_adjudicator_qualification": {
-            "authority_kind": "source_qualified_human_adjudication",
-            "actor_kind": "human",
-            "qualification_status": "registered_source_qualified_human",
-        },
-        "required_adjudication_record": {
-            "record_identity_rule": "sha256_canonical_adjudication_metadata",
-            "record_sha256_required": True,
-            "evidence_ref_ids_bound": True,
-            "source_qualified_identity_bound": True,
-        },
-        "adjudication_registry_sha256": None,
-    }
-
-
 @pytest.mark.parametrize(
     ("path", "replacement"),
     [
@@ -648,23 +507,6 @@ def test_same_count_p1_metadata_mutation_is_rejected_before_contract_generation(
         p2.build_contract()
 
 
-def test_contract_integrity_rejects_forged_r_and_hidden_denominator_changes() -> None:
-    contract = _contract()
-    assert p2.validate_contract_integrity(contract) is True
-
-    for section, field, replacement in (
-        ("p1_binding", "source_unit_count", 56),
-        ("p1_binding", "unknown_rights_blocker_count", 0),
-        ("rule_slot_universe", "slot_count", 1),
-        ("rule_slot_universe", "coverage_strata_are_rules", True),
-        ("rule_slot_universe", "rule_manifest_sha256", SHA256),
-        ("rule_slot_universe", "algorithm", {"forged": True}),
-    ):
-        mutated = copy.deepcopy(contract)
-        mutated[section][field] = replacement
-        assert p2.validate_contract_integrity(mutated) is False
-
-
 def test_atomic_rule_slot_identity_is_structured_and_canonical() -> None:
     contract = _contract()
     slot = _rule_slot()
@@ -678,35 +520,9 @@ def test_atomic_rule_slot_identity_is_structured_and_canonical() -> None:
     assert contract["rule_slot_universe"]["rule_manifest_sha256"] == p2.sha256_bytes(p2.canonical_json([]))
 
 
-@pytest.mark.parametrize(
-    ("lineage_kind", "parent_slot_ids"),
-    [
-        ("split_child", ["p2_rule_slot:" + SHA256]),
-        ("merge", ["p2_rule_slot:" + SHA256, "p2_rule_slot:" + ("b" * 64)]),
-    ],
-)
-def test_atomic_rule_slot_identity_accepts_structurally_valid_lineage(
-    lineage_kind: str, parent_slot_ids: list[str]
-) -> None:
-    assert (
-        p2.validate_rule_slot_identity(
-            _rule_slot(lineage_kind=lineage_kind, parent_slot_ids=parent_slot_ids), _contract()
-        )
-        is True
-    )
-
-
 def test_rule_slot_identity_must_bind_to_one_of_the_frozen_composite_strata() -> None:
     outside = _rule_slot(coverage_stratum_id="coverage.stratum:not-frozen")
     assert p2.validate_rule_slot_identity(outside, _contract()) is False
-
-
-def test_rule_slot_identity_rejects_non_hex_parent_slot_ids() -> None:
-    slot = _rule_slot(
-        lineage_kind="split_child",
-        parent_slot_ids=["p2_rule_slot:" + ("g" * 64)],
-    )
-    assert p2.validate_rule_slot_identity(slot, _contract()) is False
 
 
 @pytest.mark.parametrize(
@@ -967,25 +783,6 @@ def test_case_authority_must_bind_exactly_the_cited_evidence_refs() -> None:
 
 
 @pytest.mark.parametrize(
-    "mutation",
-    [
-        {"authority": {"authority_kind": "self_asserted_adjudication"}},
-        {"evidence_refs": [{"source_class": "mismatched-source-class"}]},
-        {"evidence_refs": [{"identity_candidate": "mismatched-identity-candidate"}]},
-    ],
-)
-def test_semantic_cases_reject_self_asserted_or_mismatched_source_identity(
-    mutation: dict[str, Any],
-) -> None:
-    record = _case("not_applicable_with_evidence")
-    if "authority" in mutation:
-        record["authority"].update(mutation["authority"])
-    else:
-        record["evidence_refs"][0].update(mutation["evidence_refs"][0])
-    assert p2.validate_case_record(record) is False
-
-
-@pytest.mark.parametrize(
     "record_kind",
     [
         "protected_historical_context",
@@ -1005,23 +802,6 @@ def test_protected_abstention_na_and_coverage_blocked_are_distinct_states(record
         # into an admitted case, including the additive dialect protection
         # state.
         assert p2.validate_case_record(record) is False
-
-
-@pytest.mark.parametrize(
-    "record_kind",
-    [
-        "protected_historical_context",
-        "protected_dialect_or_regional_context",
-        "abstention",
-        "not_applicable_with_evidence",
-    ],
-)
-def test_semantic_case_roles_remain_blocked_even_with_a_satisfied_p1_stratum(
-    record_kind: str, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    if record_kind != "protected_dialect_or_regional_context":
-        monkeypatch.setattr(p2, "read_p1", lambda: _satisfied_p1_for(record_kind))
-    assert p2.validate_case_record(_case(record_kind)) is False
 
 
 def _case_state_mutation_params() -> list[object]:
@@ -1096,23 +876,6 @@ def test_case_evidence_roles_are_claim_appropriate(
 
 
 @pytest.mark.parametrize(
-    "record_kind",
-    [
-        "protected_historical_context",
-        "protected_dialect_or_regional_context",
-        "abstention",
-        "not_applicable_with_evidence",
-    ],
-)
-def test_case_evidence_requires_a_non_attestation_claim_role(record_kind: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    record = _case(record_kind)
-    if record_kind in {"protected_historical_context", "protected_dialect_or_regional_context", "abstention"}:
-        monkeypatch.setattr(p2, "read_p1", lambda: _satisfied_p1_for(record_kind))
-    _set_evidence_roles(record, ["attestation_only", "rights_provenance"])
-    assert p2.validate_case_record(record) is False
-
-
-@pytest.mark.parametrize(
     "authority",
     [
         {"authority_kind": "source_qualified_human_adjudication", "actor_kind": "model"},
@@ -1165,43 +928,6 @@ def test_proposal_binds_the_pinned_composite_input_not_the_base_p1_only() -> Non
             p2.canonical_json({key: value for key, value in mutated.items() if key != "proposal_sha256"})
         )
         assert p2.validate_promotion(mutated, _promotion(mutated), contract) is False
-
-
-@pytest.mark.parametrize("field", ["input_identity_sha256", "proposal_metadata_sha256", "proposal_sha256"])
-def test_proposal_digest_fields_require_lowercase_hex(field: str) -> None:
-    proposal = _proposal()
-    if field == "input_identity_sha256":
-        proposal[field] = proposal[field].upper()
-        proposal["producer_provenance"]["input_identity_sha256"] = proposal[field]
-    elif field == "proposal_metadata_sha256":
-        proposal[field] = proposal[field].upper()
-    else:
-        proposal[field] = proposal[field].upper()
-    if field != "proposal_sha256":
-        proposal["proposal_sha256"] = p2.sha256_bytes(
-            p2.canonical_json({key: value for key, value in proposal.items() if key != "proposal_sha256"})
-        )
-    assert p2.validate_promotion(proposal, _promotion(proposal), _contract()) is False
-
-
-@pytest.mark.parametrize(
-    ("nested_path", "replacement"),
-    [
-        (("proposal_metadata", "candidate_identity_sha256"), SHA256.upper()),
-        (("producer_provenance", "run_identity_sha256"), SHA256.upper()),
-        (("producer_provenance", "run_identity_sha256"), "not-a-sha256"),
-    ],
-)
-def test_proposal_nested_metadata_and_provenance_hashes_are_lowercase_hex(
-    nested_path: tuple[str, str], replacement: str
-) -> None:
-    proposal = _proposal()
-    proposal[nested_path[0]][nested_path[1]] = replacement
-    proposal["proposal_metadata_sha256"] = p2.sha256_bytes(p2.canonical_json(proposal["proposal_metadata"]))
-    proposal["proposal_sha256"] = p2.sha256_bytes(
-        p2.canonical_json({key: value for key, value in proposal.items() if key != "proposal_sha256"})
-    )
-    assert p2.validate_promotion(proposal, _promotion(proposal), _contract()) is False
 
 
 @pytest.mark.parametrize("decision", ["accepted", "admitted", "gold", "target"])

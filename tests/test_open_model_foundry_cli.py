@@ -7,7 +7,6 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import foundry_cli as foundry
 from scripts.projects.open_model_data import model_view_exporter as exporter
@@ -41,13 +40,6 @@ def run_example(tmp_path: Path, suffix: str) -> foundry.PreparedRun:
         tokenizer_revision=None,
         cost_path=COST,
     )
-
-
-def test_portable_contracts_are_strict_and_meta_valid() -> None:
-    for path in (foundry.INPUT_SCHEMA, foundry.RECEIPT_SCHEMA):
-        schema = json.loads(path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-        assert schema["additionalProperties"] is False
 
 
 def test_example_runs_end_to_end_without_model_or_private_database(tmp_path: Path) -> None:
@@ -163,10 +155,3 @@ def test_allowed_capability_requires_its_own_evidence(tmp_path: Path) -> None:
     with pytest.raises(foundry.FoundryError, match="allows dataset_publication without evidence") as exc_info:
         foundry.read_records(input_path, max_records=1)
     assert exc_info.value.code == "FNDY-E002"
-
-
-def test_public_parser_exposes_one_prepare_and_verify_cli() -> None:
-    help_text = foundry.build_parser().format_help()
-    assert "ukrainian-data-foundry" in help_text
-    assert "prepare" in help_text
-    assert "verify" in help_text

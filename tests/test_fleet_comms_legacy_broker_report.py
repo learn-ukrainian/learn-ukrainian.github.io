@@ -8,8 +8,8 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_OK, _short_plane_health, main
-from scripts.fleet_comms.legacy_broker_report import _usage_summary, build_legacy_broker_report
+from scripts.fleet_comms.cli import EXIT_OK, main
+from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 
 
 def _seed_telemetry(path: Path, *, coverage_started_at: datetime) -> None:
@@ -171,24 +171,6 @@ def test_report_refuses_to_treat_missing_or_incomplete_telemetry_as_zero_use(tmp
     ]
 
 
-def test_fleet_broker_report_cli_is_json_and_exit_zero(tmp_path: Path, capsys) -> None:
-    database = tmp_path / "missing.db"
-
-    rc = main(["fleet", "broker-report", "--days", "7", "--routes-db", str(database)])
-
-    assert rc == EXIT_OK
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["schema"] == "fleet-broker-report.v1"
-    assert payload["zero_use_candidate"]["eligible"] is False
-
-
-def test_fleet_broker_report_rejects_unsupported_windows(capsys) -> None:
-    rc = main(["fleet", "broker-report", "--days", "0"])
-
-    assert rc == EXIT_ERROR
-    assert "days must be between 1 and 90" in capsys.readouterr().err
-
-
 def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys) -> None:
     rc = main(["fleet", "status", "--root", str(tmp_path / "uninitialized")])
     assert rc == EXIT_OK
@@ -211,24 +193,6 @@ def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys
     assert "broker_report" in help_payload["truth"]
     assert "reap_report" in help_payload["hand"]
     assert {"board", "backlog", "dead"} <= set(help_payload["eyes"])
-
-
-def test_health_and_usage_helpers_tolerate_optional_values() -> None:
-    assert _short_plane_health({"schema": None}) == {
-        "authority": None,
-        "db_error": None,
-        "db_exists": None,
-        "enabled": False,
-        "healthy": False,
-        "mode": None,
-        "read_only": False,
-        "schema_version": None,
-    }
-    assert _usage_summary([{"caller": "browser", "count": None}], bridge=False) == {
-        "seat": {"count": 0, "by_caller": {"browser": 0}},
-        "background": {"count": 0, "by_caller": {}},
-        "other": {"count": 0, "by_caller": {}},
-    }
 
 
 def test_fleet_reap_report_forwards_only_the_established_guards(monkeypatch, capsys) -> None:

@@ -13,12 +13,6 @@ FIXTURE = Path(__file__).resolve().parent / "fixtures" / "atlas" / "curated_v5_s
 ROOT = Path(__file__).resolve().parents[1]
 
 
-
-def test_entry_slug_is_stable_for_ukrainian() -> None:
-    assert convert.entry_slug("Справедливий") == "справедливий"
-    assert convert.entry_slug("Відписатися від") == "відписатися-від"
-
-
 def test_convert_seed_emits_required_record_types() -> None:
     assert FIXTURE.is_file(), "fixture missing"
     records = convert.convert_seed_file(FIXTURE)

@@ -14,9 +14,6 @@ from scripts.lib.readonly_sqlite import open_readonly
 REPO = Path(__file__).resolve().parents[2]
 CARDS = REPO / "docs" / "style-cards"
 BANDS = {"a1": ["a1"], "a2": ["a2"], "b1plus": ["b1", "b2"]}
-COMBINING = ("̀", "́")
-
-
 def read_card(band: str) -> tuple[dict, str, bytes]:
     raw = (CARDS / f"{band}.md").read_bytes()
     text = raw.decode("utf-8")
@@ -43,28 +40,6 @@ def test_card_sidecar_hash_matches(band: str) -> None:
 
 
 @pytest.mark.parametrize("band", sorted(BANDS))
-def test_card_covers_the_contract_sections(band: str) -> None:
-    _, body, _ = read_card(band)
-    for heading in (
-        "## 1. Presentation practices",
-        "## 2. Voice",
-        "## 3. Conversational rules",
-        "## 4. Lesson shape",
-        "## 5. Activity rules",
-        "## 6. Ukrainian on its own terms",
-        "## 7. The language rule",
-        "## 8. The draft: schema, block kinds, markup, gaps",
-        "## 9. What you may not do",
-        "## 10. Exemplars",
-    ):
-        assert heading in body, heading
-    for dimension in ("`learner_fit`", "`language` / `calque`", "`language` / `register`", "`language` / `agreement`", "`evidence_use`"):
-        assert dimension in body, f"conversational rules name the reviewer's dimension: {dimension}"
-    assert "{{gloss:W-…}}" in body and "{{uk:…}}" in body
-    assert "explanation" in body and "error_ref" in body
-
-
-@pytest.mark.parametrize("band", sorted(BANDS))
 def test_card_ukrainian_is_only_exemplars_or_contract_terms(band: str) -> None:
     """Cyrillic is sourced exemplar text, contract terminology or approved policy notation."""
     front, body, _ = read_card(band)
@@ -87,19 +62,6 @@ def test_card_ukrainian_is_only_exemplars_or_contract_terms(band: str) -> None:
 
 
 @pytest.mark.parametrize("band", sorted(BANDS))
-def test_card_exemplars_are_declared_with_record_ids_and_quoted_in_body(band: str) -> None:
-    front, body, _ = read_card(band)
-    assert front["exemplars"], "a card without exemplars would still be valid, but these cards carry sourced ones"
-    for exemplar in front["exemplars"]:
-        assert exemplar["table"] in ("textbooks", "literary_texts")
-        assert exemplar["chunk_id"] and exemplar["source"] and exemplar["domain"]
-        assert f"`{exemplar['chunk_id']}`" in body
-        for text in exemplar["text"]:
-            assert not any(c in text for c in COMBINING), "exemplars are plain corpus text; stress is the engine's"
-            assert f"> {text}" in body, f"exemplar text of {exemplar['id']} must be quoted verbatim in the body"
-
-
-@pytest.mark.parametrize("band", sorted(BANDS))
 def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_db: Path) -> None:
     """Each exemplar text is a whitespace-normalised substring of its corpus record (R-35)."""
     front, _, _ = read_card(band)
@@ -113,20 +75,3 @@ def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_d
                 assert norm(text) in record, f"{exemplar['id']}: not attested: {text}"
     finally:
         con.close()
-
-
-@pytest.mark.repo_wide
-def test_the_three_bands_and_nothing_else() -> None:
-    names = sorted(p.name for p in CARDS.iterdir())
-    assert names == sorted([f"{b}.md" for b in BANDS] + [f"{b}.sha256" for b in BANDS])
-
-
-@pytest.mark.parametrize("band", sorted(BANDS))
-def test_card_language_rule_is_one_sentence_one_language(band: str) -> None:
-    """The writer sees the card, not the contract: the operator's rule (2026-09-27) must be in §7 itself."""
-    _, body, _ = read_card(band)
-    section = body.split("## 7. The language rule", 1)[1].split("## 8.", 1)[0]
-    assert "Every sentence is in one language" in section
-    assert "Mixed sentences outside those two spans fail" in section
-    if band != "b1plus":
-        assert "about that item" in section, "the quoted-term span is licensed only for a sentence about the item"

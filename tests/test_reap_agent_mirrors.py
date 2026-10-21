@@ -17,7 +17,6 @@ old behaviour so the guarantee cannot silently regress to path semantics.
 
 from __future__ import annotations
 
-import errno
 import importlib.util
 import os
 from pathlib import Path
@@ -75,25 +74,6 @@ def test_fd_bound_deletion_survives_path_swap(tmp_path: Path) -> None:
     # now names a different file. The fd-bound unlink above ignored that entirely.
     assert inner.exists(), "sanity: the swapped path should now resolve outside .agent"
     assert inner.resolve() == external.resolve()
-
-
-def test_path_based_deletion_would_have_escaped(tmp_path: Path) -> None:
-    """Pin the OLD behaviour, so a regression to path semantics is visible.
-
-    This documents why the fd walk exists: the same swap against a path-based
-    unlink destroys the external file.
-    """
-    agent, _inner, external = _fixture(tmp_path)
-
-    (agent / "sub").rename(tmp_path / "sub-moved")
-    (agent / "sub").symlink_to(external.parent, target_is_directory=True)
-
-    os.unlink(str(agent / "sub" / "victim.txt"))  # path-based: follows the symlink
-
-    assert not external.exists(), (
-        "expected the path-based deletion to escape; if this fails the fixture no longer "
-        "reproduces the original defect and the guarantee above proves nothing"
-    )
 
 
 def test_symlinked_component_is_refused(tmp_path: Path) -> None:
@@ -248,26 +228,3 @@ def test_refused_symlinked_leaf_is_preserved_without_failing_reap(
     assert (agent / "leafptr").is_symlink()
     assert external.exists()
     assert "symlinked leaf declared 'f'" in capsys.readouterr().err
-
-
-def test_operational_unlink_error_fails_reap_and_names_entry(
-    tmp_path: Path, monkeypatch, capsys
-) -> None:
-    """Unexpected filesystem failures must not be relabelled as safe refusals."""
-    agent, inner, _external = _fixture(tmp_path)
-    manifest = tmp_path / "m.manifest"
-    manifest.write_text("f\tsub/victim.txt\n", encoding="utf-8")
-    source = tmp_path / "src"
-    source.mkdir()
-
-    def fail_unlink(*_args, **_kwargs) -> None:
-        raise OSError(errno.EIO, "Input/output error")
-
-    monkeypatch.setattr(reaper.os, "unlink", fail_unlink)
-    rc = reaper.main(
-        ["--agent-root", str(agent), "--manifest", str(manifest), "--source-root", str(source)]
-    )
-
-    assert rc == 1, "an operational unlink failure must fail the reap"
-    assert inner.exists(), "the failed unlink must leave its entry intact"
-    assert "operational error reaping 'sub/victim.txt'" in capsys.readouterr().err

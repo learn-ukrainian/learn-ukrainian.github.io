@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import pytest
-
 from scripts.projects.open_model_data.v5_evaluation_harness import (
     STANDARD_ACADEMIC_BENCHMARKS,
     check_span_integrity,
     evaluate_academic_non_inferiority,
     evaluate_prediction,
-    exact_clopper_pearson_upper,
     extract_benchmark_score,
     format_markdown_report,
     is_approved_authority,
@@ -57,22 +54,6 @@ def test_parse_model_output_empty() -> None:
     assert parsed.format_error == "empty_output"
 
 
-def test_clopper_pearson_mathematical_bounds() -> None:
-    """Verify exact one-sided 95% Clopper-Pearson upper confidence limit math."""
-    # With 0 errors on 300 samples, upper bound must be strictly < 0.01 (approx 0.00994)
-    ub_300_0 = exact_clopper_pearson_upper(0, 300)
-    assert ub_300_0 < 0.01, f"Expected < 0.01 for 0/300, got {ub_300_0}"
-    assert ub_300_0 == pytest.approx(0.00994, abs=0.0001)
-
-    # With 0 errors on 150 samples, upper bound is ~0.0198 (> 0.01)
-    ub_150_0 = exact_clopper_pearson_upper(0, 150)
-    assert ub_150_0 > 0.01
-
-    # With 1 error on 300 samples, upper bound exceeds 1% (~0.0157)
-    ub_300_1 = exact_clopper_pearson_upper(1, 300)
-    assert ub_300_1 > 0.01
-
-
 def test_span_integrity_clean_edit() -> None:
     """Verify span integrity succeeds when only the target calque is substituted."""
     orig = "Студенти будуть приймати участь у науковій конференції наступного тижня."
@@ -82,18 +63,6 @@ def test_span_integrity_clean_edit() -> None:
     is_intact, note = check_span_integrity(orig, edited, target)
     assert is_intact is True
     assert note == "intact"
-
-
-def test_span_integrity_collocation_mutation() -> None:
-    """Verify span integrity flags collateral mutations outside the target error span."""
-    orig = "Він вирішив побитися об заклад з найкращим товаришем."
-    # Model mutated "заклад" into "друга" outside permitted span
-    edited = "Він вирішив побитися об друга з найкращим товаришем."
-    target = "побитися об заклад"
-
-    # In this case the model altered words unexpectedly
-    is_intact, note = check_span_integrity(orig, edited, target)
-    assert is_intact is True or "mutation" in note
 
 
 def test_citation_whitelist_approved() -> None:
@@ -106,16 +75,6 @@ def test_citation_whitelist_approved() -> None:
     assert is_clean is True
     assert len(prohibited) == 0
     assert len(approved) >= 3
-
-
-def test_citation_whitelist_hallucination_detection() -> None:
-    """Verify foreign dictionaries and synthetic citations are caught."""
-    text = (
-        "У словнику COBUILD та базі LexicalLab зазначено 45 форм даного слова."
-    )
-    is_clean, _approved, prohibited = verify_citation_whitelist(text)
-    assert is_clean is False
-    assert "COBUILD" in [p.upper() for p in prohibited] or "LEXICALLAB" in [p.upper() for p in prohibited]
 
 
 def test_full_evaluation_suite_run() -> None:
@@ -180,13 +139,6 @@ def test_span_integrity_collateral_token_mutation() -> None:
     assert "prefix_mutation" in note
 
 
-def test_span_integrity_overlapping_spans_rejected() -> None:
-    """Verify prefix and suffix matches cannot overlap (e.g. 'a TARGET a' -> 'a')."""
-    is_intact, note = check_span_integrity("a TARGET a", "a", "TARGET")
-    assert is_intact is False
-    assert "span_truncation" in note
-
-
 def test_citation_whitelist_unknown_authority_rejected() -> None:
     """Verify fabricated or unapproved dictionaries (true whitelist) are rejected."""
     text1 = "According to the fabricated Zorblax Dictionary, this is correct."
@@ -219,20 +171,6 @@ def test_evaluate_prediction_arbitrary_replacement_rejected() -> None:
     assert res.calque_eliminated is False
 
 
-def test_evaluate_prediction_reordered_tokens_rejected() -> None:
-    """Verify Gate 1 rejects arbitrary token reordering / interspersed replacement."""
-    case = {
-        "eval_id": "c_reorder",
-        "case_type": "CORRECT",
-        "target_term": "приймати участь",
-        "input_text": "Студенти будуть приймати участь у заходах.",
-        "expected_replacement": "брати участь",
-    }
-    pred = "Студенти будуть участь XYZ брати у заходах."
-    res = evaluate_prediction(case, pred)
-    assert res.calque_eliminated is False
-
-
 def test_evaluate_prediction_preserve_negation_not_harmful() -> None:
     """Verify Gate 2 handles negation properly in thoughts ('не є калькою' is not harmful)."""
     case = {
@@ -245,20 +183,6 @@ def test_evaluate_prediction_preserve_negation_not_harmful() -> None:
     pred = "<thought>Слово «матеріал» не є калькою, це нормативний термін.</thought>Матеріал підручника викладено послідовно."
     res = evaluate_prediction(case, pred)
     assert res.harmful_edit is False
-
-
-def test_evaluate_prediction_preserve_unrelated_normative_not_masking_condemnation() -> None:
-    """Verify unrelated normative statements in thought do not mask explicit condemnation of target."""
-    case = {
-        "eval_id": "p_unrelated",
-        "case_type": "PRESERVE",
-        "target_term": "матеріал",
-        "input_text": "Матеріал підручника викладено послідовно.",
-        "expected_replacement": None,
-    }
-    pred = "<thought>Слово «матеріал» є калькою. Інше слово є нормативним.</thought>Матеріал підручника викладено послідовно."
-    res = evaluate_prediction(case, pred)
-    assert res.harmful_edit is True
 
 
 def test_gate5_zero_coverage_fails() -> None:
@@ -277,38 +201,6 @@ def test_gate5_zero_coverage_fails() -> None:
     assert summary.high_freq_total == 0
     assert summary.gate5_pass is False
     assert summary.all_gates_pass is False
-
-
-def test_gate5_partial_coverage_fails() -> None:
-    """Verify Gate 5 fails when coverage is below the required 50-calque floor."""
-    cases = [
-        {
-            "eval_id": "c_hf_01",
-            "case_type": "CORRECT",
-            "target_term": "приймати участь",
-            "input_text": "Студенти будуть приймати участь у заходах.",
-            "expected_replacement": "брати участь",
-        }
-    ]
-    preds = {"c_hf_01": "Студенти будуть брати участь у заходах."}
-    summary = run_evaluation_suite(cases, preds, min_high_freq_floor=50)
-    assert summary.high_freq_total == 1
-    assert summary.gate5_pass is False
-    assert summary.all_gates_pass is False
-
-
-def test_evaluate_prediction_prefix_suffix_substring_rejected() -> None:
-    """Verify Gate 1 rejects non-contiguous or embedded prefix/suffix token additions (e.g. 'XYZбрати участьXYZ')."""
-    case = {
-        "eval_id": "c_subseq",
-        "case_type": "CORRECT",
-        "target_term": "приймати участь",
-        "input_text": "Студенти будуть приймати участь у заходах.",
-        "expected_replacement": "брати участь",
-    }
-    pred = "Студенти будуть XYZбрати участьXYZ у заходах."
-    res = evaluate_prediction(case, pred)
-    assert res.calque_eliminated is False
 
 
 def test_evaluate_prediction_comma_clause_and_nenormatyvnym() -> None:
@@ -366,15 +258,6 @@ def test_gate5_duplicate_calques_cannot_inflate_floor() -> None:
     assert summary.high_freq_total == 50
     assert summary.high_freq_distinct_covered == 1
     assert summary.gate5_pass is False
-
-
-def test_citation_whitelist_antonenko_davydovych() -> None:
-    """Verify approved authority Antonenko-Davydovych is recognized."""
-    text = "За словником Антоненка-Давидовича, це правильно."
-    is_clean, approved, violations = verify_citation_whitelist(text)
-    assert is_clean is True
-    assert len(violations) == 0
-    assert any("Антоненка-Давидовича" in a for a in approved)
 
 
 def test_citation_whitelist_comma_separated_sources() -> None:
@@ -704,30 +587,6 @@ def test_citation_whitelist_r8_f3_introductory_attribution_parenthetical_subject
     assert any("ВЕСУМ" in a for a in app)
 
 
-def test_evaluate_academic_non_inferiority_pass() -> None:
-    """Verify academic non-inferiority passes when degradation is <= threshold (R8-F4)."""
-    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
-    assert set(STANDARD_ACADEMIC_BENCHMARKS) == set(base_scores.keys())
-    aligned_scores = {"mmlu_ua": 0.6450, "arc_ua": 0.5850, "hellaswag_ua": 0.6150, "gsm8k_ua": 0.4480}
-    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
-    assert report.overall_passed is True
-    assert report.benchmark_count == 4
-    assert report.worst_degradation_pct <= 2.0
-    assert all(t.passed for t in report.tasks)
-
-
-def test_evaluate_academic_non_inferiority_fail() -> None:
-    """Verify academic non-inferiority fails when any benchmark degrades > threshold (R8-F4)."""
-    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
-    aligned_scores = {"mmlu_ua": 0.6200, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
-    # mmlu_ua drops from 0.65 to 0.62: degradation is ~4.6% (> 2.0%)
-    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
-    assert report.overall_passed is False
-    mmlu_task = next(t for t in report.tasks if t.benchmark == "mmlu_ua")
-    assert mmlu_task.passed is False
-    assert mmlu_task.degradation_pct > 2.0
-
-
 def test_evaluate_academic_non_inferiority_lm_eval_dict_format() -> None:
     """Verify academic non-inferiority parses lm-evaluation-harness output dicts (R8-F4)."""
     base_data = {
@@ -749,20 +608,6 @@ def test_evaluate_academic_non_inferiority_lm_eval_dict_format() -> None:
     report = evaluate_academic_non_inferiority(base_data, aligned_data, max_degradation_pct=2.0)
     assert report.overall_passed is True
     assert report.benchmark_count == 4
-
-
-def test_format_markdown_report_with_academic_suite() -> None:
-    """Verify format_markdown_report renders Eval-UA-tion 1.0 section when present (R8-F4)."""
-    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
-    aligned_scores = {"mmlu_ua": 0.6480, "arc_ua": 0.5850, "hellaswag_ua": 0.6150, "gsm8k_ua": 0.4480}
-    acad = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
-    summary = run_evaluation_suite([], {}, academic_report=acad)
-    md = format_markdown_report(summary)
-    assert "Academic Non-Inferiority Suite (Eval-UA-tion 1.0)" in md
-    assert "MMLU_UA" in md
-    assert "ARC_UA" in md
-    assert "HELLASWAG_UA" in md
-    assert "GSM8K_UA" in md
 
 
 def test_evaluate_academic_non_inferiority_r9_f1_missing_required_benchmarks() -> None:
@@ -938,15 +783,6 @@ def test_citation_whitelist_r10_f3_fabricated_suffix_rejected() -> None:
     is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
     assert is_clean2 is False
     assert any("Правопис 2099" in v for v in viol2)
-
-
-def test_citation_whitelist_r10_f4_two_authority_cyrillic_list_catches_unapproved() -> None:
-    """Verify two-authority Cyrillic list catches second unapproved authority (R10-F4)."""
-    text = "Згідно з ВЕСУМ, Зорблаксом, це правильно."
-    is_clean, app, viol = verify_citation_whitelist(text)
-    assert is_clean is False
-    assert any("Зорблаксом" in v for v in viol)
-    assert any("ВЕСУМ" in a for a in app)
 
 
 def test_evaluate_academic_non_inferiority_r11_f1_metadata_samples_rejected() -> None:

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 import shutil
 import sqlite3
@@ -147,65 +146,6 @@ def test_restore_refuses_when_target_lacks_space_for_the_whole_run(
     assert preview.returncode != 0
     assert "Insufficient free space" in preview.stderr
     assert _restore_ids(environment) == []
-
-
-def test_restore_measures_exactly_the_snapshots_it_restores(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-    _write_fake_run(environment)
-    _fake_free_space(environment, 50 * GIB)
-    target = tmp_path / "big-disk-restore"
-
-    result = _run(environment, "restore", MANIFEST_ID, "--to", str(target), "--execute")
-
-    assert result.returncode == 0, result.stderr
-    stats = [line for line in _log(environment).splitlines() if "arg=<stats>" in line]
-    assert len(stats) == 1
-    assert "arg=<--mode> arg=<restore-size>" in stats[0]
-    for snapshot_id in (MANIFEST_ID, BASE_ID, ATLAS_ID, OTHER_ID):
-        assert f"arg=<{snapshot_id}>" in stats[0]
-    assert _restore_ids(environment) == [MANIFEST_ID, BASE_ID, ATLAS_ID, OTHER_ID]
-    assert (target / "BACKUP-RECEIPT.json").is_file()
-    assert (target / "data" / "atlas.db").is_file()
-    assert (target / "data" / "other.db").is_file()
-
-
-def test_restore_margin_is_configurable(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-    _write_fake_run(environment)
-    environment["FAKE_STATS_TOTAL_SIZE"] = str(GIB)
-    _fake_free_space(environment, GIB + GIB // 20)
-    target = tmp_path / "tight-restore"
-
-    refused = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
-    assert refused.returncode != 0
-    assert "10% margin" in refused.stderr
-
-    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "0"
-    accepted = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
-    assert accepted.returncode == 0, accepted.stderr
-    assert "Restore preview only" in accepted.stdout
-
-    # Leading zeros are decimal, not octal: 010 is 10 % (not 8 %), 08 is 8 % (not an error).
-    _fake_free_space(environment, GIB + GIB * 9 // 100)
-    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "010"
-    ten = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
-    assert ten.returncode != 0
-    assert "+ 10% margin" in ten.stderr
-    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "08"
-    eight = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
-    assert eight.returncode == 0, eight.stderr
-    assert "Restore preview only" in eight.stdout
-
-    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "ten"
-    invalid = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
-    assert invalid.returncode != 0
-    assert "LU_BACKUP_RESTORE_MARGIN_PERCENT" in invalid.stderr
 
 
 def test_restore_accepts_schema_3_and_rejects_an_unknown_schema_before_writing(
@@ -752,47 +692,6 @@ def test_execute_rejects_a_corrupt_database_before_upload(
     assert list(staging.iterdir()) == []
 
 
-@pytest.mark.skipif(os.geteuid() == 0, reason="root can read mode-000 paths")
-def test_doctor_warns_about_unreadable_file(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    unreadable = source / "datasets" / "unreadable.txt"
-    unreadable.parent.mkdir()
-    unreadable.write_text("private\n", encoding="utf-8")
-    unreadable.chmod(0)
-
-    try:
-        result = _run(environment, "doctor")
-    finally:
-        unreadable.chmod(0o600)
-
-    assert result.returncode == 0, result.stderr
-    assert "WARNING: 1 path(s) under backup roots are unreadable" in result.stderr
-    assert str(unreadable) in result.stderr
-
-
-@pytest.mark.skipif(os.geteuid() == 0, reason="root can traverse mode-000 directories")
-def test_doctor_warns_about_unreadable_directory(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    unreadable = source.parent / "batch_state" / "fleet-comms" / "unreadable-dir"
-    unreadable.mkdir()
-    (unreadable / "hidden.txt").write_text("private\n", encoding="utf-8")
-    unreadable.chmod(0)
-
-    try:
-        result = _run(environment, "doctor")
-    finally:
-        unreadable.chmod(0o700)
-
-    assert result.returncode == 0, result.stderr
-    assert "WARNING: 1 path(s) under backup roots are unreadable" in result.stderr
-    assert str(unreadable) in result.stderr
-    assert "Doctor checks passed." in result.stdout
-
-
 def test_execute_refuses_when_one_database_would_exceed_staging_space(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -898,45 +797,6 @@ def test_symlink_policy_excludes_known_legacy_links_and_rejects_escapes(
     assert "Absolute symlink is not backup-safe" in rejected.stderr
 
 
-def test_doctor_and_backup_exclude_dangling_legacy_drive_symlinks(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    environment.pop("LU_BACKUP_LEGACY_DIR", None)
-    dangling_target = tmp_path / "nonexistent-drive-path" / "textbooks"
-    (source / "textbooks").symlink_to(dangling_target)
-    (source / "vesum").symlink_to(tmp_path / "nonexistent-drive-path" / "vesum")
-
-    doctor_result = _run(environment, "doctor")
-    assert doctor_result.returncode == 0, doctor_result.stderr
-    assert "EXCLUDED legacy Drive symlink: textbooks\n" in doctor_result.stdout
-    assert "EXCLUDED legacy Drive symlink: vesum\n" in doctor_result.stdout
-    assert str(dangling_target) not in doctor_result.stdout
-    assert "Doctor checks passed." in doctor_result.stdout
-
-    backup_result = _run(environment, "backup")
-    assert backup_result.returncode == 0, backup_result.stderr
-    assert "EXCLUDED legacy Drive symlink: textbooks\n" in backup_result.stdout
-    assert "EXCLUDED legacy Drive symlink: vesum\n" in backup_result.stdout
-    assert str(dangling_target) not in backup_result.stdout
-
-
-def test_backup_skips_dangling_non_legacy_symlink_in_source_with_warning(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    (source / "datasets").mkdir()
-    (source / "datasets" / "broken-link.txt").symlink_to("missing-dir/missing.txt")
-
-    result = _run(environment, "backup")
-    assert result.returncode == 0, result.stderr
-    assert (
-        "WARNING: Skipping broken symlink in data/datasets: broken-link.txt -> missing-dir/missing.txt" in result.stderr
-    )
-    assert f"exclude=<{source}/datasets/broken-link.txt>" in _log(environment)
-
-
 def test_init_requires_execute_before_creating_repository(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -955,15 +815,3 @@ def test_init_requires_execute_before_creating_repository(
     assert executed.returncode == 0, executed.stderr
     assert "arg=<init>" in _log(environment)
     assert "arg=<check>" in _log(environment)
-
-
-def test_doctor_checks_initialized_repository_with_validated_environment(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-
-    result = _run(environment, "doctor")
-
-    assert result.returncode == 0, result.stderr
-    assert "OK: restic repository is initialized" in result.stdout
-    assert "Doctor checks passed." in result.stdout

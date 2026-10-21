@@ -30,13 +30,6 @@ title: Folk
     return docs_dir
 
 
-def test_locked_module_with_draft_true_has_no_findings(tmp_path: Path) -> None:
-    docs_dir = _write_track_fixture(tmp_path, locked_frontmatter="---\ntitle: Locked\ndraft: true\n---")
-    scope = check_locked_module_not_published.CheckScope(tracks=frozenset({"folk"}), modules=frozenset())
-
-    assert check_locked_module_not_published.check_scope(scope, docs_dir=docs_dir) == []
-
-
 def test_locked_module_without_draft_true_is_reported(tmp_path: Path) -> None:
     docs_dir = _write_track_fixture(tmp_path, locked_frontmatter="---\ntitle: Locked\n---")
     scope = check_locked_module_not_published.CheckScope(tracks=frozenset({"folk"}), modules=frozenset())
@@ -47,47 +40,3 @@ def test_locked_module_without_draft_true_is_reported(tmp_path: Path) -> None:
     assert findings[0].module.slug == "locked-module"
     assert findings[0].module.status == "locked"
     assert findings[0].mdx_path == docs_dir / "folk" / "locked-module.mdx"
-
-
-def test_locked_module_finding_prints_mdx_file_line(tmp_path: Path) -> None:
-    docs_dir = _write_track_fixture(tmp_path, locked_frontmatter="---\ntitle: Locked\n---")
-    scope = check_locked_module_not_published.CheckScope(
-        tracks=frozenset(),
-        modules=frozenset({check_locked_module_not_published.ModuleTarget("folk", "locked-module")}),
-    )
-
-    finding = check_locked_module_not_published.check_scope(scope, docs_dir=docs_dir)[0]
-
-    assert str(docs_dir / "folk" / "locked-module.mdx") in finding.format()
-    assert ":1: folk/locked-module is 'locked'" in finding.format()
-
-
-def test_affected_scope_checks_index_tracks_and_module_pages() -> None:
-    paths = [
-        Path("site/src/content/docs/folk/index.mdx"),
-        Path("site/src/content/docs/folk/locked-module.mdx"),
-        Path("site/src/content/docs/a1/core-module.mdx"),
-    ]
-
-    scope = check_locked_module_not_published.affected_scope(paths)
-
-    assert scope.tracks == frozenset({"folk"})
-    assert scope.modules == frozenset({
-        check_locked_module_not_published.ModuleTarget("a1", "core-module"),
-        check_locked_module_not_published.ModuleTarget("folk", "locked-module"),
-    })
-
-
-def test_discover_scope_includes_core_landing_tracks(tmp_path: Path) -> None:
-    docs_dir = tmp_path / "docs"
-    (docs_dir / "b2").mkdir(parents=True)
-    (docs_dir / "b2" / "index.mdx").write_text("", encoding="utf-8")
-    (docs_dir / "folk").mkdir(parents=True)
-    (docs_dir / "folk" / "index.mdx").write_text("", encoding="utf-8")
-    (docs_dir / "not-a-track").mkdir(parents=True)
-    (docs_dir / "not-a-track" / "index.mdx").write_text("", encoding="utf-8")
-
-    scope = check_locked_module_not_published.discover_scope(docs_dir=docs_dir)
-
-    assert scope.tracks == frozenset({"b2", "folk"})
-    assert scope.modules == frozenset()

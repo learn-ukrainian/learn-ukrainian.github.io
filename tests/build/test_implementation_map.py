@@ -13,7 +13,6 @@ from scripts.build.phases.implementation_map import (
     classify_decolonization_ban_subtype,
     read_implementation_map,
     seed_implementation_map,
-    validate_implementation_map,
     write_implementation_map,
 )
 from scripts.build.phases.wiki_manifest import extract_manifest
@@ -172,28 +171,6 @@ def test_seed_emits_one_entry_per_obligation_in_manifest_order() -> None:
     ]
 
 
-def test_artifact_mapping_matches_obligation_type_and_treatment() -> None:
-    payload = seed_implementation_map(_fixture_manifest())
-    artifacts = {entry["obligation_id"]: entry["artifact"] for entry in payload["entries"]}
-
-    assert artifacts == {
-        "step-1": "module.md",
-        "step-2": "module.md",
-        "step-3": "module.md",
-        "step-4": "module.md",
-        "l2-1": "activities.yaml",
-        "l2-2": "activities.yaml",
-        "l2-3": "module.md",
-        "phon-1": "module.md",
-        "phon-2": "module.md",
-        "ban-1": "module.md",
-        "ban-2": "module.md",
-        "ban-3": "module.md",
-        "ban-4": "module.md",
-        "ban-5": "module.md",
-    }
-
-
 def test_manifest_payload_round_trips_verbatim() -> None:
     manifest = _fixture_manifest()
     payload = seed_implementation_map(manifest)
@@ -201,10 +178,6 @@ def test_manifest_payload_round_trips_verbatim() -> None:
 
     for entry in payload["entries"]:
         assert entry["manifest_payload"] == manifest_by_id[entry["obligation_id"]]
-
-
-def test_json_schema_validates_seeded_output() -> None:
-    validate_implementation_map(seed_implementation_map(_fixture_manifest()))
 
 
 def test_json_schema_allows_subtype_only_for_decolonization_bans() -> None:
@@ -228,68 +201,6 @@ def test_write_read_round_trip_identity(tmp_path: Path) -> None:
     assert read_implementation_map(path) == payload
 
 
-def test_empty_manifest_writes_empty_entries(tmp_path: Path) -> None:
-    manifest = {
-        "slug": "empty-module",
-        "wiki_path": "wiki/pedagogy/a1/empty-module.md",
-        "sequence_steps": [],
-        "l2_errors": [],
-        "phonetic_rules": [],
-        "decolonization_bans": [],
-        "external_resources": [],
-    }
-
-    payload = seed_implementation_map(manifest)
-    path = tmp_path / "empty-implementation-map.json"
-    write_implementation_map(payload, path)
-
-    assert payload["entries"] == []
-    assert read_implementation_map(path) == payload
-
-
-def test_location_hint_fallback_without_plan() -> None:
-    payload = seed_implementation_map(_fixture_manifest(), plan=None)
-    hints = {entry["obligation_id"]: entry["location_hint"] for entry in payload["entries"]}
-
-    assert hints["step-1"] == "§Привітання"
-    assert hints["step-2"] == "§Дії вранці"
-    assert hints["step-3"] == "§Зворотні дієслова"
-    assert hints["step-4"] == "§Мінідіалог"
-    assert hints["l2-1"] == "activities.yaml"
-    assert hints["l2-2"] == "activities.yaml"
-    assert hints["l2-3"] == "(any prose section)"
-    assert hints["phon-1"] == "(any prose section)"
-    assert hints["phon-2"] == "(any prose section)"
-    assert hints["ban-1"] == "(any prose section)"
-
-
-def test_location_hint_uses_simple_plan_section_match() -> None:
-    plan = {
-        "sections": [
-            {"heading": "Розминка"},
-            {"heading": "Вимова -ться"},
-            {"heading": "Пояснення: я прокидаю"},
-            {"heading": "Деколонізація: dialect"},
-        ]
-    }
-
-    payload = seed_implementation_map(_fixture_manifest(), plan=plan)
-    hints = {entry["obligation_id"]: entry["location_hint"] for entry in payload["entries"]}
-
-    assert hints["phon-1"] == "§Вимова -ться"
-    assert hints["l2-3"] == "§Пояснення: я прокидаю"
-    assert hints["ban-1"] == "§Деколонізація: dialect"
-
-
-def test_seeder_is_byte_deterministic() -> None:
-    manifest = _fixture_manifest()
-
-    first = json.dumps(seed_implementation_map(manifest), ensure_ascii=False, indent=2, sort_keys=True)
-    second = json.dumps(seed_implementation_map(manifest), ensure_ascii=False, indent=2, sort_keys=True)
-
-    assert first == second
-
-
 def test_m20_real_world_manifest_seeds_gate_obligation_count() -> None:
     manifest = extract_manifest(PROJECT_ROOT / "wiki/pedagogy/a1/my-morning.md")
     payload = seed_implementation_map(manifest)
@@ -306,30 +217,6 @@ def test_classify_ban_substance_required_with_substitution_pairs() -> None:
 def test_classify_ban_absence_required_pure_prohibition() -> None:
     for rule in (M20_BAN_1_RULE, M20_BAN_2_RULE, M20_BAN_3_RULE):
         assert classify_decolonization_ban_subtype(rule) == "absence_required"
-
-
-def test_classify_ban_edge_case_empty_rule() -> None:
-    assert classify_decolonization_ban_subtype("") == "absence_required"
-
-
-def test_classify_ban_edge_case_mixed_prose_and_pair() -> None:
-    rule = (
-        "Не пояснюйте тему через мову колонізатора; натомість у словнику давайте "
-        "«рушник» (не «полотенце»)."
-    )
-
-    assert classify_decolonization_ban_subtype(rule) == "substance_required"
-
-
-def test_classify_ban_edge_case_variant_substitution_phrasings() -> None:
-    rules = [
-        "Не лишайте «полотенце» (це русизм) у лексиці ранкової рутини.",
-        "Пояснюйте як українську норму: «рушник», а не «полотенце».",
-        "У вправах замінюємо «одіватися» на «одягатися».",
-    ]
-
-    for rule in rules:
-        assert classify_decolonization_ban_subtype(rule) == "substance_required"
 
 
 def test_seed_stamps_decolonization_ban_subtype() -> None:

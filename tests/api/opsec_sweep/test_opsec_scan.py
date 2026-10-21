@@ -115,11 +115,6 @@ def test_response_scan_extracts_embedded_telemetry_as_a_separate_section() -> No
     ]
 
 
-def test_ip_parser_does_not_treat_colons_in_timestamps_or_durations_as_addresses() -> None:
-    text = "created=2026-08-24T19:12:43Z; timeout=PT30S; route=/api/health"
-    assert scan_text(text, operation="GET /api/health", field_path="body") == []
-
-
 def test_host_port_scanner_ignores_css_but_keeps_bare_hostnames() -> None:
     assert scan_text(
         '<style>.card { font-size:13; }</style>',

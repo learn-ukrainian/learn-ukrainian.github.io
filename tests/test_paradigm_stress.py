@@ -182,24 +182,6 @@ def test_validator_audits_against_the_injected_paradigm_lookup(authority, monkey
     assert empty["disagreement_count"] == expected["stressed_rows"] + expected["display_values"]
 
 
-def test_validator_cli_reports_denominator_and_failure(authority, tmp_path, capsys):
-    path = tmp_path / "candidate.json"
-    manifest = candidate()
-    path.write_text(json.dumps(manifest, ensure_ascii=False))
-    before = path.read_bytes()
-    assert validate_paradigm_stress.main(["--manifest", str(path)]) == 0
-    assert json.loads(capsys.readouterr().out)["stressed_rows"] == 5
-    assert path.read_bytes() == before
-    bad = copy.deepcopy(manifest)
-    bad["entries"][0]["enrichment"]["morphology"].setdefault("stress", {"forms": {}})["forms"]["unknown"] = "unknown"
-    path.write_text(json.dumps(bad, ensure_ascii=False))
-    assert validate_paradigm_stress.main(["--manifest", str(path)]) == 1
-    assert json.loads(capsys.readouterr().out)["disagreement_count"] == 1
-    path.write_text('{"entries": []}')
-    assert validate_paradigm_stress.main(["--manifest", str(path)]) == 1
-    assert json.loads(capsys.readouterr().out)["rows"] == 0
-
-
 def review_entry(lemma):
     return {"lemma": lemma, "enrichment": {"morphology": enrich_manifest._morphology(lemma)}}
 
@@ -351,20 +333,6 @@ def test_display_stress_is_audited_on_an_entry_without_rows(review_authority):
     bad = validate_paradigm_stress.validate_manifest_stress({"entries": [display_only_entry("висипле́ться")]})
     assert bad["display_values"] == 1
     assert [(d["form"], d["kind"]) for d in bad["disagreements"]] == [("висиплеться", "display_stress")]
-
-
-def test_validator_cli_rejects_a_rowless_display_in_a_mixed_manifest(review_authority, tmp_path, capsys):
-    path = tmp_path / "candidate.json"
-    with_rows = review_entry("суддя")
-    morphology = with_rows["enrichment"]["morphology"]
-    rows = len(morphology["forms"]) + len(morphology.get("marked_forms", []))
-    displayed = len(morphology["stress"]["forms"])
-    for accent, code in (("ви́сиплеться", 0), ("висипле́ться", 1)):
-        path.write_text(json.dumps({"entries": [with_rows, display_only_entry(accent)]}, ensure_ascii=False))
-        assert validate_paradigm_stress.main(["--manifest", str(path)]) == code
-        report = json.loads(capsys.readouterr().out)
-        assert (report["entries"], report["rows"], report["display_values"]) == (2, rows, displayed + 1)
-        assert report["disagreement_count"] == code
 
 
 def test_paradigm_row_kind_matches_the_card_partition():

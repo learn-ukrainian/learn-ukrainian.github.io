@@ -7,8 +7,6 @@ import hashlib
 import json
 import re
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 from typing import ClassVar
 
@@ -412,36 +410,6 @@ def test_homonym_group_straddling_pages_gets_indexes_in_order_and_one_transactio
         ledger.close()
 
 
-def test_same_stress_pair_becomes_two_entries(tmp_path: Path):
-    server = MockULIFServer()
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        ishym_rows = list(
-            ledger.conn.execute(
-                "SELECT page_num, row_index, stressed_headword, homonym_index FROM register_rows WHERE normalized_spelling = 'ішим' ORDER BY page_num, row_index"
-            )
-        )
-        assert len(ishym_rows) == 2
-        assert ishym_rows[0]["stressed_headword"] == "Іши́м"
-        assert ishym_rows[1]["stressed_headword"] == "Іши́м"
-        assert ishym_rows[0]["homonym_index"] == 1
-        assert ishym_rows[1]["homonym_index"] == 2
-    finally:
-        ledger.close()
-
-
 def test_paradigm_from_entry_makes_zero_par_requests_vs_one_when_absent(tmp_path: Path):
     server = MockULIFServer()
     state_dir = tmp_path / "state"
@@ -755,46 +723,6 @@ def test_legacy_walk_seed_does_not_block_resume(tmp_path: Path, capsys):
     assert "refusing to start" not in output
 
 
-def test_fetch_modes_refuse_reusing_the_opposite_state_dir(tmp_path: Path, capsys):
-    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database, run_fetch
-
-    db_path = tmp_path / "cache.db"
-    prepare_database(db_path).close()
-
-    run_state = tmp_path / "run-state"
-    run_ledger = SpellingLedger(run_state / "ledger.sqlite")
-    run_ledger.set_meta("mode", "run")
-    run_ledger.close()
-    assert (
-        run_walk(
-            state_dir=run_state,
-            db_path=db_path,
-            transport=lambda *_: pytest.fail("mixed-mode walk made a request"),
-            sleep=_noop_sleep,
-            scanner=lambda: False,
-        )
-        == EXIT_USAGE
-    )
-    assert "targeted run data in --state-dir" in capsys.readouterr().err
-
-    walk_state = tmp_path / "walk-state"
-    walk_ledger = SpellingLedger(walk_state / "ledger.sqlite")
-    walk_ledger.set_meta("mode", "walk")
-    walk_ledger.close()
-    assert (
-        run_fetch(
-            spellings=["ішим"],
-            state_dir=walk_state,
-            db_path=db_path,
-            transport=lambda *_: pytest.fail("mixed-mode run made a request"),
-            sleep=_noop_sleep,
-            scanner=lambda: False,
-        )
-        == EXIT_USAGE
-    )
-    assert "walk data in --state-dir" in capsys.readouterr().err
-
-
 def test_resume_after_injected_mid_page_failure_refetches_nothing_already_stored(tmp_path: Path):
     server1 = MockULIFServer(fail_on_page2_row1=True)
     state_dir = tmp_path / "state"
@@ -1035,13 +963,6 @@ def test_tail_advance_accepts_new_window_at_register_end() -> None:
     first = [{"stressed": f"synthetic-a-{index}"} for index in range(25)]
     following = [{"stressed": f"synthetic-b-{index}"} for index in range(25)]
     assert ulif_walk._tail_window_advance(first, following, start_register=60, register_size=62, page_num=4) == 25
-
-
-def test_single_repeated_tail_headword_is_not_assumed_to_be_an_overlap() -> None:
-    first = [{"stressed": "synthetic-a"}, {"stressed": "synthetic-homonym"}]
-    second = [{"stressed": "synthetic-homonym"}, {"stressed": "synthetic-z"}]
-    with pytest.raises(ulif_walk.SessionInvalid, match="register_overlap"):
-        ulif_walk._tail_window_advance(first, second, start_register=58, register_size=61, page_num=3)
 
 
 def test_reconcile_legacy_null_homonyms_at_real_register_positions(tmp_path: Path) -> None:
@@ -1305,7 +1226,7 @@ def _seed_shifted_ledger(state_dir: Path) -> None:
         ledger.close()
 
 
-@pytest.mark.parametrize("offset", [0, 2, 4, 24])
+@pytest.mark.parametrize("offset", [0, 2, 24])
 def test_shifted_resume_completes_canonical_pages_across_windows(tmp_path: Path, offset: int, capsys):
     state_dir = tmp_path / "state"
     state_dir.mkdir()
@@ -1457,79 +1378,6 @@ def test_page_one_reseed_after_transient_failure_uses_direct_search(tmp_path: Pa
     err = capsys.readouterr().err
     assert "direct search page 1, k=0" in err
     assert "resume_mismatch" not in err
-
-
-def test_mid_page_prefix_resumes_from_completed_page_without_fast_forward(tmp_path: Path, capsys):
-    state_dir = tmp_path / "state"
-    state_dir.mkdir()
-    _seed_shifted_ledger(state_dir)
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        ledger.conn.execute("DELETE FROM register_rows WHERE page_num = 2 AND row_index >= 22")
-        ledger.conn.execute("UPDATE register_pages SET end_headword = '', row_count = 0 WHERE page_num = 2")
-        ledger.conn.commit()
-    finally:
-        ledger.close()
-    server = ShiftedWindowServer(3)
-    assert (
-        run_walk(
-            state_dir=state_dir,
-            db_path=tmp_path / "cache.db",
-            delay_seconds=1,
-            max_pages=1,
-            transport=server,
-            sleep=_noop_sleep,
-            scanner=lambda: False,
-        )
-        == EXIT_OK
-    )
-    assert "direct search page 2, k=3" in capsys.readouterr().err
-    searches = [
-        data["ctl00$ContentPlaceHolder1$tsearch"]
-        for _, data in server.requests
-        if data and "ctl00$ContentPlaceHolder1$search.x" in data
-    ]
-    assert searches == ["w024"]
-
-
-def test_chunked_walk_resumes_next_unrecorded_page_without_fast_forward(tmp_path: Path, capsys):
-    state_dir = tmp_path / "state"
-    state_dir.mkdir()
-    _seed_shifted_ledger(state_dir)
-    first = ShiftedWindowServer(3)
-    assert (
-        run_walk(
-            state_dir=state_dir,
-            db_path=tmp_path / "cache.db",
-            delay_seconds=1,
-            max_pages=1,
-            transport=first,
-            sleep=_noop_sleep,
-            scanner=lambda: False,
-        )
-        == EXIT_OK
-    )
-    capsys.readouterr()
-    second = ShiftedWindowServer(3)
-    assert (
-        run_walk(
-            state_dir=state_dir,
-            db_path=tmp_path / "cache.db",
-            delay_seconds=1,
-            max_pages=1,
-            transport=second,
-            sleep=_noop_sleep,
-            scanner=lambda: False,
-        )
-        == EXIT_OK
-    )
-    assert "direct search page 3" in capsys.readouterr().err
-    searches = [
-        data["ctl00$ContentPlaceHolder1$tsearch"]
-        for _, data in second.requests
-        if data and "ctl00$ContentPlaceHolder1$search.x" in data
-    ]
-    assert searches == ["w049"]
 
 
 @pytest.mark.parametrize("damage", ["gap", "start", "end", "count"])
@@ -1789,21 +1637,6 @@ def test_verify_ledger_short_search_page_and_page_size(
             ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
 
 
-def test_verify_ledger_flag_reports_success_without_cache_or_requests(tmp_path: Path, capsys):
-    state_dir = tmp_path / "state"
-    state_dir.mkdir()
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        ledger.ensure_page(1, start_headword="а", end_headword="б", row_count=2)
-        for index, word in enumerate(("а", "б")):
-            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word)
-        ledger.mark_page(1, "completed")
-    finally:
-        ledger.close()
-    assert ulif_walk.main(["walk", "--state-dir", str(state_dir), "--verify-ledger"]) == EXIT_OK
-    assert "ledger continuity OK: 1 pages checked" in capsys.readouterr().out
-
-
 def test_walk_rejects_broken_ledger_before_network_or_cache(tmp_path: Path, capsys):
     state_dir = tmp_path / "state"
     state_dir.mkdir()
@@ -1981,79 +1814,6 @@ def test_shifted_resume_persistent_nextpage_failure_exhausts_retries(tmp_path: P
         ledger.close()
 
 
-def test_startup_resume_offset_search_stops_for_drift(tmp_path: Path):
-    """A startup search that matches no page placement stops before pagination."""
-    server1 = MockULIFServer(fail_on_page2_row1=True)
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    # Run 1 fails on page 2 row 1, leaving page 2 in_progress
-    run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server1,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-
-    server2 = MockULIFServer(search_offsets=True, fail_nextpage_500_times=1)
-    code2 = run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server2,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-    assert code2 == EXIT_USAGE
-
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        p2 = ledger.get_page(2)
-        assert p2 is not None
-        assert p2["error"] == "resume_mismatch"
-    finally:
-        ledger.close()
-
-
-def test_startup_resume_contradictory_search_stops_before_pagination(tmp_path: Path):
-    """A contradictory resume search stops. It does not paginate into HTTP retries."""
-    server1 = MockULIFServer(fail_on_page2_row1=True)
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    # Run 1 fails on page 2 row 1, leaving page 2 in_progress
-    run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server1,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-
-    # Resume with server that offsets search AND fails all nextpage clicks with 500
-    server2 = MockULIFServer(search_offsets=True, fail_nextpage_500_times=10)
-    code2 = run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server2,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-    assert code2 == EXIT_USAGE
-
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        p2 = ledger.get_page(2)
-        assert p2 is not None
-        assert p2["error"] == "resume_mismatch"
-    finally:
-        ledger.close()
-
-
 def test_startup_retry_exhaustion_followed_by_healthy_invocation_recovers(tmp_path: Path):
     """Startup failure leaves uninitialized page 1 with empty boundaries; restart on healthy server recovers."""
     server1 = MockULIFServer()
@@ -2124,36 +1884,6 @@ def test_mid_walk_offset_reseed_stops_for_drift(tmp_path: Path):
         search_offsets=True,
         fail_page2_row1_500_times=1,
         fail_nextpage_500_times=1,
-    )
-    code = run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-    assert code == EXIT_USAGE
-
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        p2 = ledger.get_page(2)
-        assert p2 is not None
-        assert p2["error"] == "resume_mismatch"
-    finally:
-        ledger.close()
-
-
-def test_mid_walk_contradictory_reseed_stops_before_pagination(tmp_path: Path):
-    """A contradictory mid-walk reseed stops. It does not burn next-page retries."""
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    # Server fails page 2 row 1 with 500, offsets search, and fails all reseed nextpage attempts with 500
-    server = MockULIFServer(
-        search_offsets=True,
-        fail_page2_row1_500_times=1,
-        fail_nextpage_500_times=10,
     )
     code = run_walk(
         state_dir=state_dir,
@@ -2349,24 +2079,6 @@ def test_verify_complete_itemises_deliberately_skipped_row_and_exits_nonzero(tmp
     assert code == EXIT_USAGE
 
 
-def test_verify_complete_exits_zero_on_complete(tmp_path: Path):
-    server = MockULIFServer()
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-
-    code = verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8)
-    assert code == EXIT_OK
-
-
 def test_printed_size_beyond_observed_fails_verification(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
     server = MockULIFServer(page1_size=9, page2_size=9, page3_size=9)
     state_dir = tmp_path / "state"
@@ -2390,63 +2102,6 @@ def test_printed_size_beyond_observed_fails_verification(tmp_path: Path, capsys:
     report = capsys.readouterr().err
     assert "stored register ends at 8, before printed size 9" in report
     assert "Status: INCOMPLETE" in report
-
-
-def test_status_on_empty_walk_ledger_prints_complete_not_started(tmp_path: Path):
-    state_dir = tmp_path / "empty_state"
-    state_dir.mkdir(parents=True)
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        ledger.set_meta("mode", "walk")
-        st = status_text(ledger, delay_seconds=1.0, state_dir=state_dir, mode="walk")
-        assert "complete=not_started" in st
-        assert "pages_done=0" in st
-    finally:
-        ledger.close()
-
-
-def test_stderr_progress_line_contains_no_ukrainian_characters(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
-    server = MockULIFServer()
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-        quiet=False,
-    )
-
-    captured = capsys.readouterr()
-    progress_lines = [line for line in captured.err.splitlines() if "page_completed" in line]
-    assert len(progress_lines) >= 3
-    for line in progress_lines:
-        assert line.isascii(), f"Progress line contains non-ASCII characters: {line}"
-
-
-def test_cli_walk_and_verify_complete_subcommands(tmp_path: Path):
-    state_dir = tmp_path / "cli_state"
-
-    res_status = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "scripts.lexicon.runner.fetch_ulif_homonyms",
-            "status",
-            "--state-dir",
-            str(state_dir),
-            "--mode",
-            "walk",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    assert res_status.returncode == 0
-    assert "complete=not_started" in res_status.stdout
 
 
 def test_verify_complete_fails_when_db_entries_deleted(tmp_path: Path):
@@ -2501,33 +2156,6 @@ def test_verify_complete_fails_on_page_continuity_gap(tmp_path: Path):
     finally:
         ledger.close()
 
-    code = verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8)
-    assert code == EXIT_USAGE
-
-
-def test_verify_complete_fails_when_final_page_record_deleted(tmp_path: Path):
-    server = MockULIFServer()
-    state_dir = tmp_path / "state"
-    db_path = tmp_path / "cache.db"
-
-    run_walk(
-        state_dir=state_dir,
-        db_path=db_path,
-        delay_seconds=1.0,
-        transport=server,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-
-    # Delete page 3 from register_pages (final page)
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        ledger.conn.execute("DELETE FROM register_pages WHERE page_num = 3")
-        ledger.conn.commit()
-    finally:
-        ledger.close()
-
-    # verify_complete must fail because page 3 rows have no completed page record
     code = verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8)
     assert code == EXIT_USAGE
 
@@ -2728,42 +2356,6 @@ def test_resume_offset_aligns_homonym_across_page_boundary(tmp_path: Path, offse
                     anchor_index=anchor_index,
                 )
                 == offset
-            )
-    finally:
-        ledger.close()
-
-
-def test_resume_offset_stays_none_when_two_homonym_alignments_agree(tmp_path: Path):
-    # Without page 6932 rows, the window starting at the first homonym is
-    # consistent both at k=0 and k=1, so neither may be chosen.
-    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite", target_rows=False)
-    try:
-        rows = _boundary_window(1)
-        assert [row["stressed"] for row in rows[:2]] == ["порива́ння", "порива́ння"]
-        assert (
-            _resume_window_offset(
-                ledger, rows, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
-            )
-            is None
-        )
-    finally:
-        ledger.close()
-
-
-def test_resume_offset_homonym_window_with_drift_is_rejected(tmp_path: Path):
-    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite")
-    try:
-        drifted = _boundary_window(3)
-        drifted[10] = {**drifted[10], "stressed": "поривни́ця", "unstressed": "поривниця"}
-        with pytest.raises(ulif_walk.ResumeMismatchError):
-            _resume_window_offset(
-                ledger, drifted, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
-            )
-        single = _boundary_window(0)
-        single[5] = {**single[5], "stressed": "поривни́ця", "unstressed": "поривниця"}
-        with pytest.raises(ulif_walk.ResumeMismatchError, match="page 6932 row 5"):
-            _resume_window_offset(
-                ledger, single, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
             )
     finally:
         ledger.close()

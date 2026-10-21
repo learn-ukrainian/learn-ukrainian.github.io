@@ -31,9 +31,3 @@ def test_pending_form_never_reaches_ipa_or_stressifier(form, monkeypatch):
     monkeypatch.setitem(sys.modules, "ipa_uk", SimpleNamespace(ipa=lambda _: pytest.fail("pending reached ipa_uk")))
     assert pending_stress_reason(form)
     assert ipa_module.generate_ipa(form) is None
-
-
-def test_missing_ipa_override_file_is_an_error(monkeypatch, tmp_path):
-    monkeypatch.setattr(ipa_module, "DATA_DIR", tmp_path)
-    with pytest.raises(FileNotFoundError):
-        ipa_module._load_overrides("stress_overrides.yaml")

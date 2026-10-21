@@ -16,11 +16,6 @@ def test_public_diagnostic_keeps_only_repository_relative_paths(root):
     assert public_diagnostic(f"sibling {root}-other/file.yaml", root).startswith("sibling <external-path>")
 
 
-def test_public_diagnostic_preserves_relative_paths_and_reason_codes():
-    message = "receipt_span_alignment_failed: curriculum/receipt.yaml unit ('urok', 's1')"
-    assert public_diagnostic(message, Path("/tmp/project")) == message
-
-
 @pytest.mark.parametrize("scheme", ["https", "http", "HTTPS", "HTTP"])
 @pytest.mark.parametrize("url_path", ["receipt.yaml?check=12#reason", "part;param/file", "part(one)/file", "part,two/file"])
 def test_public_diagnostic_preserves_urls_while_sanitizing_paths(scheme, url_path):

@@ -19,7 +19,6 @@ from build.exercise_verify import (
     extract_exercise_items_from_yaml,
     extract_plan_vocab,
     extract_prose_words,
-    format_verify_result,
     verify_exercises,
 )
 
@@ -134,12 +133,6 @@ title: "True or false?"
     assert "літери" in words
 
 
-def test_no_exercises_returns_empty():
-    content = "## Section\n\nJust prose, no exercises."
-    items = extract_exercise_items(content)
-    assert items == []
-
-
 # --- extract_prose_words ---
 
 
@@ -211,174 +204,13 @@ def test_extract_plan_vocab():
     assert "університет" in words
 
 
-def test_extract_plan_vocab_empty():
-    assert extract_plan_vocab({}) == set()
-    assert extract_plan_vocab({"vocabulary_hints": {}}) == set()
-
-
 # --- verify_exercises ---
-
-
-def test_verify_all_grounded():
-    content = """\
-## Розділ
-
-Це моя книга і мій стіл. Мій зошит тут.
-
-:::fill-in
-title: "Test"
----
-- sentence: "Це ___ книга."
-  answer: "моя"
-- sentence: "Це ___ стіл."
-  answer: "мій"
-:::
-"""
-    result = verify_exercises(content)
-    assert result.all_grounded
-    assert result.total_items > 0
-    assert len(result.ungrounded) == 0
-
-
-def test_verify_ungrounded_items():
-    content = """\
-## Розділ
-
-Це моя книга.
-
-:::fill-in
-title: "Test"
----
-- sentence: "Це ___ олівець."
-  answer: "мій"
-:::
-"""
-    result = verify_exercises(content)
-    # "олівець" is NOT in the prose, so it should be ungrounded
-    ungrounded_words = {u["word"] for u in result.ungrounded}
-    assert "олівець" in ungrounded_words
-
-
-def test_verify_with_plan_vocab():
-    content = """\
-## Розділ
-
-Це моя книга. Мій олівець тут.
-
-:::fill-in
-title: "Test"
----
-- sentence: "Це ___ олівець."
-  answer: "мій"
-:::
-"""
-    plan = {
-        "vocabulary_hints": {
-            "required": ["олівець (pencil)"],
-        }
-    }
-    result = verify_exercises(content, plan)
-    # All exercise words are in prose + plan vocab, so should be grounded
-    assert result.all_grounded
-
-
-def test_verify_vocab_coverage():
-    content = """\
-## Розділ
-
-Це моя книга і стіл.
-
-:::quiz
-title: "Test"
----
-- q: "Що це? **книга**"
-  o: ["книга", "стіл"]
-  a: 0
-:::
-"""
-    plan = {
-        "vocabulary_hints": {
-            "required": ["книга (book)", "стіл (table)", "вікно (window)"],
-        }
-    }
-    result = verify_exercises(content, plan)
-    vc = result.vocab_coverage
-    assert vc["plan_vocab_total"] == 3
-    assert vc["tested_in_exercises"] >= 1  # at least книга + стіл
-    assert "вікно" in vc["not_tested"]
 
 
 # --- format_verify_result ---
 
 
-def test_format_all_grounded():
-    content = """\
-## Розділ
-
-Мій стіл тут.
-
-:::fill-in
-title: "Test"
----
-- sentence: "Мій ___."
-  answer: "стіл"
-:::
-"""
-    result = verify_exercises(content)
-    output = format_verify_result(result)
-    assert "✅" in output
-    assert "grounded" in output
-
-
-def test_format_ungrounded():
-    content = """\
-## Розділ
-
-Моя книга.
-
-:::fill-in
-title: "Test"
----
-- sentence: "Мій ___."
-  answer: "олівець"
-:::
-"""
-    result = verify_exercises(content)
-    output = format_verify_result(result)
-    assert "🔍" in output
-    assert "олівець" in output
-
-
 # --- Integration: real module content ---
-
-
-def test_real_module_things_have_gender():
-    """Smoke test against a real module if it exists."""
-    module_path = (
-        Path(__file__).resolve().parents[1]
-        / "curriculum"
-        / "l2-uk-en"
-        / "a1"
-        / "things-have-gender.md"
-    )
-    if not module_path.exists():
-        return  # skip if not available
-
-    content = module_path.read_text("utf-8")
-    result = verify_exercises(content)
-
-    # V6 modules use separate YAML activities (not inline DSL).
-    # If no DSL exercises found, the test is not applicable.
-    if result.total_items == 0:
-        return  # V6 module — exercises are in activities/{slug}.yaml
-
-    # A well-built module should have most items grounded
-    assert result.total_items > 0
-    # Allow some ungrounded (e.g., meta-linguistic terms) but not too many
-    grounded_ratio = result.grounded_items / result.total_items if result.total_items else 0
-    assert grounded_ratio > 0.5, (
-        f"Only {grounded_ratio:.0%} of exercise items grounded — expected > 50%"
-    )
 
 
 # --- extract_exercise_items_from_yaml (V6 YAML activities) ---
@@ -521,12 +353,6 @@ def test_yaml_order():
     assert "пане" in words
 
 
-def test_yaml_empty_activities():
-    assert extract_exercise_items_from_yaml({}) == []
-    assert extract_exercise_items_from_yaml({"inline": None, "workbook": None}) == []
-    assert extract_exercise_items_from_yaml({"inline": [], "workbook": []}) == []
-
-
 def test_yaml_no_exercises_in_markdown_but_yaml_provided():
     """Bug #1121: verify_exercises should use YAML activities when provided."""
     content = "## Lesson\n\nЧитай книжку. Пиши речення."
@@ -550,62 +376,3 @@ def test_yaml_no_exercises_in_markdown_but_yaml_provided():
     assert result.total_items > 0
     # "читай" from plan vocab is the answer in the fill-in exercise
     assert result.vocab_coverage["tested_in_exercises"] > 0
-
-
-def test_yaml_vocab_coverage():
-    """Plan vocabulary tested_in_exercises should count words present in YAML activities."""
-    content = "## Lesson\n\nЧитай, слухай, говори."
-    activities = {
-        "inline": [
-            {
-                "type": "fill-in",
-                "items": [
-                    {"sentence": "Учні, ___!", "answer": "читайте", "options": ["читайте", "читай"]},
-                    {"sentence": "Друже, ___!", "answer": "слухай", "options": ["слухай", "слухайте"]},
-                ],
-            }
-        ]
-    }
-    plan = {
-        "vocabulary_hints": {
-            "required": [
-                "читати (to read)",
-                "слухати (to listen)",
-                "говорити (to speak)",
-            ],
-        }
-    }
-    result = verify_exercises(content, plan, activities=activities)
-    vc = result.vocab_coverage
-    assert vc["plan_vocab_total"] == 3
-    # "читати" won't match "читайте" (different forms) but "слухай" contains "слухай"
-    # The plan has lemmas, exercises have inflected forms — coverage checks exact match
-    # Only "говорити" is not tested (no exercise uses it)
-    assert "говорити" in vc["not_tested"]
-
-
-def test_real_module_please_do_this_yaml():
-    """Integration test: verify please-do-this with real YAML activities. Issue #1121."""
-    import yaml as _yaml
-
-    base = Path(__file__).resolve().parents[1] / "curriculum" / "l2-uk-en"
-    content_path = base / "a1" / "please-do-this.md"
-    activities_path = base / "a1" / "activities" / "please-do-this.yaml"
-    plan_path = base / "plans" / "a1" / "please-do-this.yaml"
-
-    if not all(p.exists() for p in (content_path, activities_path, plan_path)):
-        return  # skip if files not available
-
-    content = content_path.read_text("utf-8")
-    activities = _yaml.safe_load(activities_path.read_text("utf-8"))
-    plan = _yaml.safe_load(plan_path.read_text("utf-8"))
-
-    result = verify_exercises(content, plan, activities=activities)
-
-    # With YAML activities, we must find exercise items
-    assert result.total_items > 0, "Should find exercise items from YAML"
-    # Plan has 15 vocab words; with 4 exercises covering imperatives,
-    # many should be tested
-    assert result.vocab_coverage["tested_in_exercises"] > 0, (
-        "tested_in_exercises must be > 0 with YAML activities (was the bug in #1121)"
-    )

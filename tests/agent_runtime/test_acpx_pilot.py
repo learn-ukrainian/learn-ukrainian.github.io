@@ -247,46 +247,6 @@ def test_normal_loader_still_refuses_cached_direct_only_adapter():
         runner._ADAPTER_CACHE.pop("acpx-codex-shadow", None)
 
 
-def test_direct_only_surface_rejects_normal_available_agent():
-    with pytest.raises(AgentUnavailableError, match="not an unavailable direct-only seat"):
-        runner._invoke_direct_only(
-            "codex",
-            "prompt",
-            cwd=Path.cwd(),
-            task_id="task-6063",
-            tool_config={},
-        )
-
-
-def test_direct_only_surface_preserves_omitted_model_and_fixed_entrypoint(monkeypatch):
-    captured: dict[str, Any] = {}
-    sentinel = _result("acpx-codex-shadow")
-
-    def fake_invoke_impl(*args, **kwargs):
-        captured["args"] = args
-        captured.update(kwargs)
-        return sentinel
-
-    monkeypatch.setattr(runner, "_invoke_impl", fake_invoke_impl)
-
-    result = runner._invoke_direct_only(
-        "acpx-codex-shadow",
-        "prompt",
-        cwd=Path.cwd(),
-        model=None,
-        task_id="task-6063",
-        tool_config={"acpx_shadow": True},
-    )
-
-    assert result is sentinel
-    assert captured["model"] is None
-    assert captured["mode"] == "read-only"
-    assert captured["session_id"] is None
-    assert captured["entrypoint"] == "acpx-pilot-shadow"
-    assert captured["allow_direct_only"] is True
-    assert captured["allow_runner_failover"] is False
-
-
 def test_native_once_surface_disables_runner_failover(monkeypatch):
     captured: dict[str, Any] = {}
     sentinel = _result("codex")

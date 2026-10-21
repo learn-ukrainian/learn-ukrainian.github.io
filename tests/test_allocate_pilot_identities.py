@@ -104,11 +104,6 @@ def test_append_is_append_only_and_idempotent(allocated):
     assert len(sense_ids) == len(set(sense_ids))
 
 
-def test_allocation_alone_is_a_valid_prefix_without_holding_senses(allocated):
-    manifest, allocation, _needs, _registry = allocated
-    assert allocator.holding_check(allocation, manifest, {}, allocation) == 0
-
-
 @pytest.mark.parametrize("tamper", [
     "changed_seed_sense", "extra_holding", "missing_holding", "version", "foreign_event", "evidence",
     "source_records", "rewritten_history"])

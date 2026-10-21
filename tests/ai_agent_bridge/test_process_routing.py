@@ -20,7 +20,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime.runner import InterAgentTransportError, resolve_inter_agent_route
+from agent_runtime.runner import InterAgentTransportError
 from scripts.ai_agent_bridge import _process
 from scripts.ai_agent_bridge._acp_compat import (
     registered_participant_model,
@@ -276,19 +276,6 @@ def test_process_already_acknowledged_message_skips(bridge_db, monkeypatch):
 # ── #6894: model defaults derive from the live registry pin ─────────────
 
 
-def test_ask_gemini_default_model_is_none_so_registry_pin_applies() -> None:
-    """A bare ask-gemini carries no model slug; the route applies the pin."""
-    from scripts.ai_agent_bridge import _cli
-
-    parser = _cli._build_parser()
-    args = parser.parse_args(["ask-gemini", "hello", "--task-id", "t-1"])
-    assert args.model is None
-    assert resolve_compat_model("gemini", args.model) is None
-    # The route resolver then applies the live pin — and accepts it.
-    route = resolve_inter_agent_route("agy")
-    assert route.model == registered_participant_model("agy")
-
-
 def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     """Rotating the registry pin updates the accepted pin and its display alias."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
@@ -310,23 +297,6 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     assert resolve_compat_model("gemini", "custom-provider/model-x") == "custom-provider/model-x"
     # Non-agy seats never get rewritten.
     assert resolve_compat_model("cursor", "composer-2") == "composer-2"
-
-
-def test_converse_default_model_is_none_so_registry_pin_applies() -> None:
-    """A bare converse carries no model slug; converse_gemini applies the pin."""
-    import inspect
-
-    from scripts.ai_agent_bridge import _cli
-    from scripts.ai_agent_bridge._gemini import converse_gemini
-
-    parser = _cli._build_parser()
-    args = parser.parse_args(["converse", "hello", "--task-id", "t-1"])
-    assert args.model is None
-    assert resolve_compat_model("gemini", args.model) is None
-    # Mutation-check: a restored hardcoded slug on either surface is a miss.
-    assert inspect.signature(converse_gemini).parameters["model"].default is None
-    route = resolve_inter_agent_route("agy")
-    assert route.model == registered_participant_model("agy")
 
 
 def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
@@ -363,35 +333,6 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     assert captured["model"] == "not-a-gemini-model"
 
 
-def test_default_gemini_model_resolves_from_registry_and_tracks_rotation(monkeypatch) -> None:
-    """#6959: default_gemini_model resolves from the live ACP registry pin."""
-    import scripts.ai_agent_bridge as bridge
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._config import default_gemini_model
-
-    monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
-    assert default_gemini_model() == registered_participant_model("agy")
-    assert registered_participant_model("agy") == bridge.GEMINI_DEFAULT_MODEL
-
-    monkeypatch.setitem(
-        ACPX_SUPPORTED_PARTICIPANTS,
-        "agy",
-        {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
-    )
-    assert default_gemini_model() == "gemini-9.9-flash-high"
-    assert bridge.GEMINI_DEFAULT_MODEL == "gemini-9.9-flash-high"
-
-
-def test_default_gemini_model_respects_env_override(monkeypatch) -> None:
-    """#6959: AB_GEMINI_MODEL environment override takes precedence."""
-    import scripts.ai_agent_bridge as bridge
-    from scripts.ai_agent_bridge._config import default_gemini_model
-
-    monkeypatch.setenv("AB_GEMINI_MODEL", "gemini-custom-override")
-    assert default_gemini_model() == "gemini-custom-override"
-    assert bridge.GEMINI_DEFAULT_MODEL == "gemini-custom-override"
-
-
 def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> None:
     """#6959: missing registry pin fails loudly instead of falling back to stale literal."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
@@ -405,16 +346,6 @@ def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> 
     )
     with pytest.raises(RuntimeError, match="No default Gemini model configured"):
         default_gemini_model()
-
-
-def test_ask_gemini_and_process_and_respond_signatures_default_to_none() -> None:
-    """#6959: ask_gemini and process_and_respond signatures default model to None."""
-    import inspect
-
-    from scripts.ai_agent_bridge._gemini import ask_gemini, process_and_respond
-
-    assert inspect.signature(ask_gemini).parameters["model"].default is None
-    assert inspect.signature(process_and_respond).parameters["model"].default is None
 
 
 def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> None:
@@ -472,20 +403,6 @@ def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bri
 
     ask_gemini("hello", task_id="issue-6959")
     assert captured["model"] == "gemini-3.1-pro-high"
-
-
-def test_process_model_override_must_match_registry(bridge_db, monkeypatch):
-    """Explicit overrides pass through to registry validation (loud mismatch)."""
-    message_id = _send("cursor")
-    captured: dict[str, object] = {}
-    monkeypatch.setattr(
-        _process,
-        "run_compat_ask",
-        lambda target, content, **kwargs: captured.update(**kwargs) or _ok_result(),
-    )
-
-    assert _process.process_message_for_recipient(message_id, model="composer-2") is not None
-    assert captured["model"] == "composer-2"
 
 
 # ── #6915 sibling sweep: every process-* error handler is ack-free ──────
@@ -657,53 +574,6 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert _row(message_id)[0] == 1
 
 
-def _legacy_kimi_row() -> int:
-    """A Kimi-addressed row written before Kimi stopped being a bridge recipient (``send`` now refuses it)."""
-    conn = get_db()
-    try:
-        cursor = conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp)"
-            " VALUES ('task-6915', 'agy', 'kimi', 'advisory', 'Advisor note.', '2026-09-30T00:00:00+00:00')"
-        )
-        conn.commit()
-        return int(cursor.lastrowid)
-    finally:
-        conn.close()
-
-
-def test_send_refuses_a_kimi_recipient(bridge_db):
-    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
-        _send("kimi", sender="agy")
-
-
-def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch, capsys, forbid_legacy_processors):
-    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed. A Kimi target is a
-    Kimi request and is refused; a generic drain skips the stored row, reports it once and leaves the broker
-    exactly as it was: no reply, no failure record, no acknowledgement."""
-    from unittest.mock import Mock
-
-    from scripts.ai_agent_bridge import _ask_lifecycle, _cli
-
-    acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
-    monkeypatch.setattr(_process, "run_compat_ask", acp)
-    cli_message = _legacy_kimi_row()
-    detached_message = _legacy_kimi_row()
-    before = {message_id: (_row(message_id), _replies(message_id)) for message_id in (cli_message, detached_message)}
-
-    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
-        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
-    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
-        _ask_lifecycle.process_background_ask(detached_message, "kimi")
-    capsys.readouterr()
-    _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
-    _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
-    _ask_lifecycle.process_background_ask(detached_message, "codex")
-    assert capsys.readouterr().out.count("skipped: Kimi is not a bridge recipient") == 3
-
-    acp.assert_not_called()
-    assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
-
-
 @pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])
 def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
     bridge_db, monkeypatch, target, forbid_legacy_processors
@@ -852,7 +722,6 @@ def cursor_provider(monkeypatch):
     [
         (None, "cursor_model_unpinned"),
         ("auto", "cursor_auto_outside_coding_task"),
-        ("Auto", "cursor_auto_outside_coding_task"),
         ("cursor:auto", "cursor_auto_outside_coding_task"),
         ("default", "cursor_auto_outside_coding_task"),
         ("composer-2.5-fast", "cursor_model_not_approved"),

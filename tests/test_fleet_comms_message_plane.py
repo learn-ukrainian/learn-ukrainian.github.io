@@ -12,18 +12,8 @@ from scripts.fleet_comms.message_plane import (
     MAX_CONTINUATIONS,
     MessagePlane,
     default_plane_root,
-    invocation_digest,
     resolve_plane_mode,
 )
-
-
-def test_resolve_plane_mode() -> None:
-    assert resolve_plane_mode("off") == "off"
-    assert resolve_plane_mode("shadow") == "shadow"
-    assert resolve_plane_mode("dual_write") == "dual_write"
-    assert resolve_plane_mode("dual-write") == "dual_write"
-    with pytest.raises(ValueError):
-        resolve_plane_mode("production")
 
 
 def test_resolve_plane_mode_env_unset_uses_configured_default(
@@ -113,14 +103,6 @@ def test_default_plane_root_makes_relative_override_stable(
     assert resolved.is_absolute()
 
 
-def test_message_plane_preserves_public_root_constants() -> None:
-    import scripts.fleet_comms.message_plane as message_plane
-    from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, ENV_ROOT
-
-    assert message_plane.DEFAULT_ROOT_REL is DEFAULT_ROOT_REL
-    assert message_plane.ENV_ROOT is ENV_ROOT
-
-
 def test_configured_default_fail_open_on_malformed_yaml(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -140,22 +122,6 @@ def test_configured_default_fail_open_on_malformed_yaml(
     monkeypatch.setattr(mp, "__file__", str(fake_file))
     assert mp._configured_default_plane_mode() == "off"
     assert mp.resolve_plane_mode(None) == "off"
-
-
-def test_invocation_digest_stable_for_fg_bg_parity() -> None:
-    a = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")
-    b = invocation_digest(recipient="codex", body="hello", model="m", mode="read-only", cwd="/tmp/x")
-    c = invocation_digest(recipient="codex", body="hello!", model="m", mode="read-only", cwd="/tmp/x")
-    assert a == b
-    assert a != c
-
-
-def test_off_mode_is_noop(tmp_path: Path) -> None:
-    with MessagePlane(mode="off", root=tmp_path / "v1") as plane:
-        assert plane.open_ask(recipient="codex", body="x") is None
-        result = plane.complete_ask("request_missing")
-        assert result.request is None
-        assert result.projected_legacy_replied is False
 
 
 def test_shadow_records_incomplete_without_legacy_replied(tmp_path: Path) -> None:
@@ -283,11 +249,3 @@ def test_length_limited_increments_continuation_budget(tmp_path: Path) -> None:
         assert out.request.completion_state == CompletionState.LENGTH_LIMITED.value
         assert out.continuation_used == 1
         assert out.continuation_used <= MAX_CONTINUATIONS
-
-
-def test_gemini_opens_as_agy_on_plane(tmp_path: Path) -> None:
-    with MessagePlane(mode="shadow", root=tmp_path / "v1") as plane:
-        req = plane.open_ask(recipient="gemini", body="hi")
-        assert req is not None
-        assert req.requested_recipient == "gemini"
-        assert req.resolved_recipient == "agy"

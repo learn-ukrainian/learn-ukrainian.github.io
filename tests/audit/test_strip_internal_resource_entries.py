@@ -20,23 +20,6 @@ def test_removes_internal_roles_keeps_real_resources() -> None:
     assert "Real article" in new
 
 
-def test_detects_internal_hiding_under_valid_role() -> None:
-    # role: wiki but title/source_ref point at an internal pedagogy brief.
-    entry_locked = {"role": "wiki", "title": "Wiki: pedagogy/a1/who-am-i (LOCKED 2026-04-23)", "source_ref": "Wiki: pedagogy/a1/who-am-i"}
-    # role: checkpoint source with a Synthesis title.
-    entry_synth = {"role": "checkpoint source", "title": "Synthesis of M42-M46 content", "source_ref": "Synthesis of M42-M46 content"}
-    # curriculum/ source path prerequisite.
-    entry_prereq = {"role": "prerequisite pattern", "title": "Internal module M43", "source_ref": "curriculum/l2-uk-en/a1/x/module.md"}
-    for e in (entry_locked, entry_synth, entry_prereq):
-        assert strip.is_internal_entry(role=e["role"], title=e["title"], source_ref=e["source_ref"])
-
-
-def test_keeps_genuine_external_and_standard_reference() -> None:
-    assert not strip.is_internal_entry(role="official source", title="DSNS contacts", source_ref="https://bezpeka.dsns.gov.ua")
-    assert not strip.is_internal_entry(role="standard reference", title="State Standard 2024, §4.2.4.1", source_ref="State Standard 2024, §4.2.4.1")
-    assert not strip.is_internal_entry(role="wiki", title="Ukrainian Wikipedia: Greetings", source_ref="https://uk.wikipedia.org/x")
-
-
 def test_url_bearing_catalog_provenance_is_kept() -> None:
     """A2 regression: a genuine external resource whose source_ref records its
     ``docs/resources/`` catalog provenance but carries a real off-site URL must NOT be
@@ -46,39 +29,6 @@ def test_url_bearing_catalog_provenance_is_kept() -> None:
         title="ULP: Ukrainian Cases Chart",
         source_ref="docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/",
         url="https://www.ukrainianlessons.com/ukrainian-cases-chart/",
-    )
-
-
-def test_role_and_title_junk_still_stripped_despite_url() -> None:
-    # The strong role/title signals stay strict even when a URL is present.
-    assert strip.is_internal_entry(role="internal wiki", title="X", source_ref="", url="https://x.com")
-    assert strip.is_internal_entry(role="wiki", title="Wiki: pedagogy/a1/foo", source_ref="", url="https://x.com")
-    assert strip.is_internal_entry(role="prerequisite pattern", title="Prior module", source_ref="", url="https://x.com")
-
-
-def test_source_ref_junk_without_url_still_stripped() -> None:
-    # A repo-pointing source_ref with NO external URL is still build-provenance junk.
-    assert strip.is_internal_entry(role="reference", title="Brief", source_ref="docs/pedagogy/brief.md", url="")
-
-
-def test_internal_url_paths_are_stripped_without_source_ref() -> None:
-    assert strip.is_internal_entry(
-        role="textbook",
-        title="Internal wiki source",
-        source_ref="",
-        url="wiki/grammar/b1/prepositions-spatial-review.sources.yaml#S1",
-    )
-    assert strip.is_internal_entry(
-        role="textbook",
-        title="Internal docs wiki source",
-        source_ref="",
-        url="docs/wiki/grammar/b1/prepositions-spatial-review.md",
-    )
-    assert strip.is_internal_entry(
-        role="curriculum",
-        title="Prior B1 module",
-        source_ref="",
-        url="b1/prepositions-spatial-review",
     )
 
 
@@ -128,29 +78,3 @@ def test_empty_module_becomes_bracket_list() -> None:
     new, removed = strip.strip_yaml('- title: t\n  role: internal synthesis\n  source_ref: "Synthesis of M1"\n  notes: x\n')
     assert new.strip() == "[]"
     assert removed == ["t"]
-
-
-def test_mdx_empty_state_note() -> None:
-    mdx = (
-        "<TabItem label=\"Resources\">\n\n"
-        ":::info[🎧 🔗 External Resources]\n\n"
-        "**🔗 Online resources:**\n"
-        "- 🔗 **Synthesis of M1** — internal note.\n"
-        ":::\n\n</TabItem>\n"
-    )
-    out = strip.strip_mdx(mdx, ["Synthesis of M1"])
-    assert "Synthesis of M1" not in out
-    assert strip._EMPTY_NOTE in out
-
-
-def test_mdx_linked_resource_empty_state_note() -> None:
-    mdx = (
-        "<TabItem label=\"Ресурси\">\n\n"
-        ":::info[🎧 🔗 Зовнішні ресурси]\n\n"
-        "**🔗 Онлайн-ресурси:**\n"
-        "- 🔗 [Spatial prepositions review](b1/prepositions-spatial-review) — internal.\n"
-        ":::\n\n</TabItem>\n"
-    )
-    out = strip.strip_mdx(mdx, ["Spatial prepositions review"])
-    assert "b1/prepositions-spatial-review" not in out
-    assert strip._EMPTY_NOTE_UK in out

@@ -261,23 +261,6 @@ def test_sealed_matches_job_fail_closed() -> None:
         )
 
 
-def test_sealed_payload_file_round_trip(tmp_path: Path) -> None:
-    path = tmp_path / "sealed.json"
-    path.write_text(json.dumps(_sealed(verdict="BLOCKED")), encoding="utf-8")
-    gh = FakeGh(head=_SHA_A)
-    with ArtifactStore(root=tmp_path / "plane") as store:
-        result = publish_sealed_verdict(
-            path,
-            current_head_sha=_SHA_A,
-            mutate=True,
-            runner=gh,
-            store=store,
-        )
-    assert result.plan.verdict == "BLOCKED"
-    assert result.plan.status_state == STATUS_ERROR
-    assert result.status_posted is True
-
-
 def test_publish_refuses_evidence_free_approved_without_github_mutation(
     tmp_path: Path,
 ) -> None:

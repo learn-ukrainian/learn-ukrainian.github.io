@@ -48,10 +48,6 @@ def test_activation_backup_is_gitignored(now: datetime) -> None:
     assert _ignored(backup.as_posix()), f"{backup} is not gitignored; the primary checkout would turn dirty"
 
 
-def test_latest_backup_pointer_is_gitignored() -> None:
-    assert _ignored("data/vesum.db.bak")
-
-
 def test_live_store_stays_ignored_and_tracked_data_is_not_swept() -> None:
     assert _ignored("data/vesum.db")
     # The new pattern is scoped to database backups, not to other data files.

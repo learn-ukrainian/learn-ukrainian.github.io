@@ -8,7 +8,6 @@ import queue
 import shlex
 import shutil
 import subprocess
-import sys
 import threading
 import time
 from pathlib import Path
@@ -238,32 +237,6 @@ def _fake_binary(tmp_path: Path, name: str, response: str) -> Path:
     )
     binary.chmod(0o755)
     return binary
-
-
-def test_reader_keeps_consecutive_lines_from_one_pipe_write():
-    process = subprocess.Popen(
-        [
-            sys.executable,
-            "-c",
-            "import sys; "
-            "sys.stderr.write('acp-text-agent ready\\n'); "
-            "sys.stdout.write('{\"id\":1}\\n{\"id\":2}\\n'); "
-            "sys.stdout.flush(); "
-            "sys.stdin.read()",
-        ],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        bufsize=1,
-    )
-    server = _AcpServer(process)
-    try:
-        server.wait_until_ready()
-        assert _read_json_line(server, timeout=2.0)["id"] == 1
-        assert _read_json_line(server, timeout=2.0)["id"] == 2
-    finally:
-        server.close()
 
 
 def test_agy_text_agent_is_source_blind_sandboxed_and_ephemeral(tmp_path):

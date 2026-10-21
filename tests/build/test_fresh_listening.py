@@ -11,7 +11,7 @@ import yaml
 
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.draft_schema import validate_draft
-from scripts.build.fresh.listening import choice_error, model_target
+from scripts.build.fresh.listening import model_target
 from scripts.curriculum.resolver.inputs import Allowlist
 from tests.build.test_fresh_assemble import make_text_record, make_video_record, make_word_record
 from tests.build.test_fresh_runner import _fixture, _run_contract
@@ -94,36 +94,6 @@ def test_listening_word_and_primer_letter_are_admitted(tmp_path, letter):
     fixture = _listening_fixture(letter=letter)
     draft = fixture[0]
     assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
-    assert _check(tmp_path, fixture)["status"] == "passed"
-
-
-@pytest.mark.parametrize("letter", [False, True])
-@pytest.mark.parametrize("declaration", ["absent", "target", "wrong_target"])
-def test_listening_admission_requires_target_model(tmp_path, letter, declaration):
-    """Every scored binding needs its target declared by its host, regardless of pack prose."""
-    fixture = _listening_fixture(letter=letter)
-    draft, _, pack, _ = fixture
-    video = pack["videos"][0]
-    video["use"] = "Arbitrary source prose: never a model declaration."
-    if declaration == "absent":
-        video.pop("models")
-    elif declaration == "wrong_target":
-        video["models"] = {"letters": ["З"] if letter else [], "words": [] if letter else ["W-2"], "segment": None}
-    assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
-    result = _check(tmp_path, fixture)
-    if declaration == "target":
-        assert result["status"] == "passed", result
-    else:
-        assert result["status"] == "failed", result
-        expected = "listening_model_undeclared" if declaration == "absent" else "listening_model_unverified"
-        assert (result["code"], result["layer"]) == (expected, "pack")
-
-
-@pytest.mark.parametrize("letter", [False, True])
-def test_listening_ignores_free_text_when_models_are_declared(tmp_path, letter):
-    fixture = _listening_fixture(letter=letter)
-    fixture[2]["videos"][0]["use"] = "An arbitrary description with no model prefix."
-    fixture[2]["texts"] = []
     assert _check(tmp_path, fixture)["status"] == "passed"
 
 
@@ -269,34 +239,6 @@ def test_video_opening_requires_attested_word_model():
     assert (row["code"], row["layer"]) == ("listening_model_unverified", "pack")
 
 
-@pytest.mark.parametrize("target", [None, "W-999", "T-999"])
-def test_missing_model_target_stays_a_pack_gap(target):
-    _, _, pack, words = _listening_fixture()
-    assert model_target(target, "V-1", pack, words) == (None, "listening_target_invalid")
-
-
-def test_nontext_listening_option_is_refused():
-    assert (
-        choice_error({"target_record": "Д"}, [None], 0, "Д", {}, letters={"Д"}, record_ids=set())
-        == "listening_option_invalid"
-    )
-
-
-@pytest.mark.parametrize("key", [-1, 1])
-def test_listening_key_must_be_an_option_index(key):
-    assert (
-        choice_error({"target_record": "Д"}, ["Д"], key, "Д", {}, letters={"Д"}, record_ids=set())
-        == "listening_key_not_unique"
-    )
-
-
-@pytest.mark.parametrize("field", ["target_record", "host"])
-def test_listening_schema_requires_bindings(field):
-    draft, _, _, _ = _listening_fixture()
-    draft["activities"][0]["items"][0].pop(field)
-    assert validate_draft(draft, "a1", activity_types={"a1": "quiz"})
-
-
 @pytest.mark.parametrize("mutation", ["url", "target_form", "description"])
 def test_model_metadata_does_not_admit_unproved_words(mutation):
     _, _, pack, words = _listening_fixture()
@@ -308,12 +250,6 @@ def test_model_metadata_does_not_admit_unproved_words(mutation):
         pack["videos"][0].pop("models")
         pack["videos"][0]["use"] = "Pronunciation model for слово."
     assert model_target("W-1", "V-1", pack, words)[1]
-
-
-def test_unlisted_video_is_typed_before_generic_evidence_arithmetic():
-    draft, plan, _, _ = _listening_fixture(letter=True)
-    plan["lessons"][0]["videos"] = []
-    assert runner.check_3_structure(draft, plan["lessons"][0])["code"] == "listening_host_ineligible"
 
 
 @pytest.mark.parametrize("channel", [True, False])

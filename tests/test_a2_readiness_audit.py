@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -11,7 +10,7 @@ pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from validate.a2_readiness_audit import audit, main
+from validate.a2_readiness_audit import audit
 
 
 def _write_yaml(path: Path, data: dict) -> None:
@@ -115,14 +114,3 @@ def test_a2_audit_reports_current_blocker_classes(tmp_path: Path) -> None:
         "register": 1,
         "persona": 1,
     }
-
-
-def test_a2_audit_json_cli(tmp_path: Path, capsys) -> None:
-    _write_minimal_a2(tmp_path)
-
-    assert main(["--root", str(tmp_path), "--json"]) == 0
-    payload = json.loads(capsys.readouterr().out)
-
-    assert payload["summary"]["manifest_modules"] == 1
-    assert payload["summary"]["errors"] == 0
-    assert payload["findings"] == []

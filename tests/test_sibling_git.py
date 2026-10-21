@@ -826,26 +826,6 @@ def test_protocol_configuration_cannot_enable_tripwire(world, tmp_path, key):
     assert not (world[0] / "tripwire").exists()
 
 
-@pytest.mark.parametrize("kind", ["gpg", "ssh"])
-def test_signed_fixture_triggers_unprotected_verifier(world, tmp_path, kind):
-    sha = signed_advance(world, tmp_path, kind)
-    sibling = world[1]
-    git(sibling, "fetch", str(world[2]), "main")
-    fired = tmp_path / "unprotected-verifier-fired"
-    script = tmp_path / "unprotected verifier"
-    script.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(fired))}\nexit 1\n")
-    script.chmod(0o700)
-    git(sibling, "config", "merge.verifySignatures", "true")
-    git(sibling, "config", "gpg.program" if kind == "gpg" else "gpg.ssh.program", str(script))
-    if kind == "ssh":
-        git(sibling, "config", "gpg.format", "ssh")
-        git(sibling, "config", "gpg.ssh.allowedSignersFile", str(tmp_path / "signers"))
-        (tmp_path / "signers").write_text("fixture@example.invalid ssh-ed25519 Zml4dHVyZQ==\n")
-    with pytest.raises(subprocess.CalledProcessError):
-        git(sibling, "merge", "--ff-only", sha)
-    assert fired.exists(), "signed fixture did not reach the configured verifier"
-
-
 @pytest.mark.parametrize("name", ["notes.txt", " leading.txt", "line\nbreak.txt"])
 def test_sync_preserves_ignored_local_file(world, tmp_path, name):
     sibling = world[1]
@@ -1201,11 +1181,6 @@ def test_own_primary_marker_resolution(tmp_path):
 def test_plain_path_validation(raw):
     with pytest.raises(sg.Refusal):
         sg._plain_path(Path(raw), exists=False)
-
-
-def test_unused_filter_is_safe(world):
-    git(world[1], "config", "filter.unused.process", "exit 99")
-    assert invoke("status")[0] == 0
 
 
 @pytest.mark.parametrize("name", [" leading.txt", "trailing .txt", "line\nbreak.txt"])

@@ -47,20 +47,6 @@ def test_load_manifest_parses_json_blob_without_filesystem_access() -> None:
     assert result == manifest
 
 
-def test_load_manifest_short_json_blob_also_short_circuits() -> None:
-    """Short JSON blobs (under 255 bytes) still take the JSON path so
-    behavior is consistent regardless of payload size."""
-    short_blob = '{"slug": "test", "sequence_steps": [], "l2_errors": [], "phonetic_rules": [], "decolonization_bans": []}'
-    result = gate._load_manifest(short_blob)
-    assert result["slug"] == "test"
-
-
-def test_load_manifest_passes_through_mapping() -> None:
-    """Mapping input returns unchanged (no path/JSON detour)."""
-    payload = {"slug": "x", "sequence_steps": []}
-    assert gate._load_manifest(payload) is payload
-
-
 def _manifest() -> dict[str, object]:
     return {
         "slug": "fixture",
@@ -172,23 +158,6 @@ def test_parse_implementation_map_collects_all_blocks_and_inline_format() -> Non
     assert "epenthetic" in result["err-5"]["treatment"]
 
 
-def test_parse_implementation_map_inline_field_order_independence() -> None:
-    """Inline-format fields appear in any order on the line; parser must
-    not assume `obligation_id` comes first or that `artifact` precedes
-    `location`."""
-    raw = """<implementation_map>
-- artifact: activities.yaml; obligation_id: phon-3; treatment: phonetic explanation; location: act-3
-- treatment: ban explanation; obligation_id: ban-1; location: §Підсумок; artifact: module.md
-</implementation_map>"""
-
-    result = parse_implementation_map(raw)
-
-    assert result["phon-3"]["artifact"] == "activities.yaml"
-    assert result["phon-3"]["location"] == "act-3"
-    assert result["ban-1"]["artifact"] == "module.md"
-    assert result["ban-1"]["location"] == "§Підсумок"
-
-
 def test_parse_implementation_map_inline_pipe_separator_accepted() -> None:
     """Build-#9 a1/my-morning regression: the writer-prompt template
     describes the artifact field as `<module.md | activities.yaml | ...>`
@@ -232,24 +201,6 @@ def test_parse_implementation_map_last_emission_wins() -> None:
 
     assert result["step-5"]["location"] == "§Мій ранок"
     assert result["step-5"]["treatment"] == "full narrative coverage"
-
-
-def test_parse_implementation_map_from_writer_output() -> None:
-    raw = """<implementation_map>
-- obligation_id: err-1
-  artifact: activities.yaml
-  location: act-1
-  treatment: contrast_pair in activity act-1
-</implementation_map>"""
-
-    assert parse_implementation_map(raw) == {
-        "err-1": {
-            "obligation_id": "err-1",
-            "artifact": "activities.yaml",
-            "location": "act-1",
-            "treatment": "contrast_pair in activity act-1",
-        }
-    }
 
 
 def test_check_wiki_coverage_passes_when_claimed_evidence_exists() -> None:

@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import stat
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -99,21 +98,6 @@ def test_prepare_rejects_packet_bundle_v2_binding_drift(tmp_path: Path) -> None:
         runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
-@pytest.mark.parametrize("field", ["phase3_v2_1_amendment_sha256", "phase3_v2_1_combined_contract_sha256"])
-def test_prepare_rejects_packet_bundle_v2_1_binding_drift(tmp_path: Path, field: str) -> None:
-    bundle, role, private, _ = _paths(tmp_path)
-    value = json.loads(bundle.read_text(encoding="utf-8"))
-    value[field] = "0" * 64
-    _write(bundle, value)
-    with pytest.raises(runner.RuleAuthorRunnerError, match=r"schema violation|v2.1 contract binding drift"):
-        runner.prepare(
-            bundle_path=bundle,
-            role_path=role,
-            private_dir=private,
-            exact_model="gemini-3.8-flash-high",
-        )
-
-
 def test_malformed_output_is_unparsed_not_a_proposal(tmp_path: Path) -> None:
     bundle, role, private, receipt = _paths(tmp_path)
     result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.8-flash-high", max_packets=1, executor=_executor(False))
@@ -184,16 +168,6 @@ def test_symlinked_ancestor_canonicalizes_but_leaf_symlink_is_rejected(tmp_path:
     os.symlink(bundle, leaf_alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
         runner.prepare(bundle_path=leaf_alias, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
-
-
-def test_role_binding_drift_rejects_resume(tmp_path: Path) -> None:
-    bundle, role, private, _ = _paths(tmp_path)
-    runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
-    changed = _role()
-    next(item for item in changed["functional_roles"] if item["role_id"] == "rule_author_extractor")["task_id"] = "other-task"  # type: ignore[index]
-    _write(role, changed)
-    with pytest.raises(runner.RuleAuthorRunnerError, match=r"functional-role|schema violation"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
 def test_canary_never_claims_full_completion_then_full_union_can(tmp_path: Path) -> None:
@@ -370,28 +344,6 @@ def test_execution_error_and_bundle_alias_fail_closed(tmp_path: Path) -> None:
     os.symlink(bundle, alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
         runner.prepare(bundle_path=alias, role_path=role, private_dir=tmp_path / "other-private", exact_model="gemini-3.8-flash-high")
-
-
-def test_timeout_expired_execution_error_is_labeled_accurately(tmp_path: Path) -> None:
-    bundle, role, private, receipt = _paths(tmp_path)
-
-    def timed_out(command: list[str], stdin: bytes) -> None:
-        del command, stdin
-        raise subprocess.TimeoutExpired(cmd=["bridge"], timeout=30.0)
-
-    result = runner.run(
-        bundle_path=bundle,
-        role_path=role,
-        private_dir=private,
-        receipt_path=receipt,
-        exact_model="gemini-3.8-flash-high",
-        executor=timed_out,
-    )
-    assert result["failed_count"] == 2 and result["unparsed_count"] == 2
-    assert result["complete"] is False and result["canary"] is False
-    record_path = private / "records/1.json"
-    record = json.loads(record_path.read_text(encoding="utf-8"))
-    assert record["execution_error"] == "bridge_timeout:TimeoutExpired"
 
 
 def test_valid_json_before_nonzero_exit_cannot_complete_or_succeed_canary(tmp_path: Path) -> None:

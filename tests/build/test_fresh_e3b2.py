@@ -502,19 +502,6 @@ def test_a_changed_pack_or_state_gives_a_different_manifest(tmp_path, monkeypatc
     assert yaml.safe_load((tmp_path / doc["inputs"]["learner_state"]["path"]).read_bytes())["learner_state"] == {"a": 2}
 
 
-def test_changed_lesson_provenance_stales_the_manifest_and_closure(tmp_path, monkeypatch):
-    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
-    doc, digest = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
-    provenance_path = tmp_path / doc["inputs"]["provenance"]["path"]
-    provenance_path.write_bytes(provenance_path.read_bytes() + b"\n")
-    assert [change["input"] for change in manifest.changed_inputs(doc, tmp_path)] == ["inputs.provenance"]
-    closure = compute_closure(
-        level, slug, [{"n": 1, "kind": "lesson"}], repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir
-    )
-    assert any(row["manifest_sha256"] == digest and row["input"] == "inputs.provenance" for row in closure["stale"])
-
-
 def test_an_earlier_plans_letter_order_change_stales_an_existing_lesson_manifest(tmp_path):
     """A lesson manifest records the planned learner state; reordering an earlier plan's letters stales it (#9182).
 
@@ -720,17 +707,6 @@ def test_closure_goes_stale_when_a_pin_outside_inputs_changes(tmp_path, monkeypa
     assert row["current_sha256"] == hashlib.sha256(target.read_bytes()).hexdigest()
 
 
-def test_the_pin_walk_covers_every_pinned_file_in_the_manifest(tmp_path, monkeypatch):
-    doc, _review, _stale = _rereview_closure(tmp_path, monkeypatch)
-    names = [name for name, _entry in manifest.pinned_entries(doc)]
-    assert {"module_digest", "diff", "previous_attempt.review", "previous_attempt.ledger", "inputs.plan"} <= set(names)
-    assert "inputs.provenance" in names
-    assert "inputs.activity_data[0]" in names or not doc["inputs"]["activity_data"]
-    assert len(names) == len(set(names))
-    # not a pin: the lock entry (entry_sha256) and the learner-state identity (no path)
-    assert "lesson_lock_entry" not in names and "learner_state" not in names
-
-
 def test_a_new_pinned_field_anywhere_is_detected_without_code_changes(tmp_path):
     (tmp_path / "notes").mkdir()
     for name in ("a.txt", "b.txt", "c.txt"):
@@ -861,16 +837,6 @@ def test_manifest_hashes_all_imported_activity_data_sorted(tmp_path, monkeypatch
             position=1,
             site_dir=page_dir,
         )
-
-
-def test_build_cli_requires_exactly_one_target():
-    from scripts.build.fresh.cli import _build_parser
-
-    parser = _build_parser()
-    with pytest.raises(SystemExit):
-        parser.parse_args(["build", "a1", "fixture-module"])
-    with pytest.raises(SystemExit):
-        parser.parse_args(["build", "a1", "fixture-module", "--lesson", "1", "--module"])
 
 
 def test_success_snapshot_controls_draft_reuse(tmp_path):

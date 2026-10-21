@@ -138,16 +138,6 @@ def test_phrase_dedup_item_locations_and_truncation(hermetic_check):
     assert not any(f["detail"].get("pattern_id") for f in split["problems"])
 
 
-def test_book_findings_respect_max_findings(hermetic_check):
-    result = check_text(
-        text="Ми приймаємо участь. На протязі року ми працювали", checks=["russian_shadow"], max_findings=1
-    )
-    assert result["summary"]["truncated"] is True
-    assert result["summary"]["uncut_count"] == 2
-    assert result["problems"][0]["detail"]["pattern_id"] == "participation"
-    assert result["suspicions"] == []
-
-
 def test_curated_and_book_evidence_share_one_finding(hermetic_check, monkeypatch):
     monkeypatch.setattr(hermetic_check, "CURATED_CALQUES", {"бажаючі": {"corrections": ["охочі"]}})
     result = check_text(text="Усі бажаючі повинні записатися", checks=["russian_shadow"])

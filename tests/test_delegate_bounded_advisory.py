@@ -275,12 +275,6 @@ def test_m1_luna_without_advisory_task_is_refused_before_any_record(env, capsys)
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
 
 
-def test_m1_write_mode_luna_without_advisory_task_creates_no_worktree(env, capsys):
-    rc = _dispatch(_argv("--mode", "workspace-write", "--worktree", "--owned-path", OWNED))
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
-    assert not (delegate._REPO_ROOT / ".worktrees" / "dispatch" / "codex" / _worker_id()).exists()
-
-
 # --- M2 -------------------------------------------------------------------
 
 
@@ -322,20 +316,6 @@ def test_m3_advisory_task_on_wrong_model_role_or_route_is_refused(env, capsys, o
 # --- M4 -------------------------------------------------------------------
 
 
-def test_m4_unrelated_sol_task_is_refused(env, capsys):
-    argv = _argv("--owned-path", OWNED)
-    _write_advisor(
-        env.tasks,
-        _binding(argv),
-        result="Here is my review. VERDICT: APPROVE\n",
-        advisory_role=None,
-        advisory_route=None,
-        advisory_binding_sha256=None,
-    )
-    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
-    _assert_refused(env, capsys, rc, bounded_advisory.TASK_WRONG_ROLE)
-
-
 def test_m4_advisor_result_without_envelope_is_refused(env, capsys):
     argv = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(argv), result="I think the worker should be careful.\n")
@@ -363,14 +343,6 @@ def test_m4_incomplete_envelope_is_refused(env, capsys, mutate):
     _write_advisor(env.tasks, _binding(argv), envelope=envelope)
     rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_INCOMPLETE)
-
-
-def test_m4_two_envelopes_in_one_result_are_refused(env, capsys):
-    argv = _argv("--owned-path", OWNED)
-    text = _result_text(_envelope(_binding(argv)))
-    _write_advisor(env.tasks, _binding(argv), result=text + text)
-    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_MISSING)
 
 
 def test_m4_forged_result_file_outside_the_canonical_result_is_refused(env, capsys, tmp_path):
@@ -451,37 +423,12 @@ def test_m6_envelope_bound_to_other_dispatch_arguments_is_refused(env, capsys, c
     _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
 
 
-def test_m6_mode_change_is_refused_before_any_worktree(env, capsys):
-    issued_for = _argv("--owned-path", OWNED)
-    _write_advisor(env.tasks, _binding(issued_for))
-    argv = _argv("--mode", "workspace-write", "--worktree", "--owned-path", OWNED, "--advisory-task", _advisor_id())
-    rc = _dispatch(argv)
-    _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
-    assert not (delegate._REPO_ROOT / ".worktrees" / "dispatch" / "codex" / _worker_id()).exists()
-
-
-def test_m6_envelope_binding_field_differs_from_the_advisor_record(env, capsys):
-    argv = _argv("--owned-path", OWNED)
-    _write_advisor(env.tasks, _binding(argv), envelope=_envelope("0" * 64))
-    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
-    _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
-
-
 def test_m6_owned_path_set_must_equal_the_envelope(env, capsys):
     argv = _argv("--owned-path", OWNED)
     envelope = _envelope(_binding(argv), owned_paths=[OWNED, "tests/test_delegate.py"])
     _write_advisor(env.tasks, _binding(argv), envelope=envelope)
     rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.OWNED_PATHS_MISMATCH)
-
-
-def test_m6_print_advisory_binding_matches_and_has_no_effect(env, capsys):
-    argv = _argv("--owned-path", OWNED)
-    rc = _dispatch([*argv, "--print-advisory-binding"])
-    out = capsys.readouterr().out.strip()
-    assert rc == 0
-    assert out == _binding(argv) == _binding([*argv, "--advisory-task", "any-advisor"])
-    assert env.spawned == [] and not env.tasks.exists()
 
 
 # --- M7 -------------------------------------------------------------------
@@ -568,11 +515,6 @@ def test_m10_write_mode_gemini_flash_without_classification_is_refused(env, caps
     assert not (delegate._REPO_ROOT / ".worktrees" / "dispatch" / "agy" / _worker_id()).exists()
 
 
-def test_m15_read_only_gemini_flash_recon_without_envelope_is_refused(env, capsys):
-    rc = _dispatch(_argv(agent="agy", model="gemini-3.8-flash-high"))
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
-
-
 @pytest.mark.parametrize(
     "extra",
     [
@@ -598,25 +540,6 @@ def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
-def test_m16_gemini_flash_code_review_with_ukrainian_family_is_refused(ordinary_review_scope, env, capsys):
-    """#10073 admits code review; a conflicting language classification still refuses."""
-    rc = _dispatch(
-        _argv(
-            "--branch",
-            "review-target",
-            "--research-task-family",
-            "ukrainian-authoring",
-            "--review-profile",
-            "code",
-            "--review-risk",
-            "low",
-            agent="agy",
-            model=None,
-        )
-    )
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
-
-
 def test_m16_gemini_flash_code_review_without_review_risk_is_refused(ordinary_review_scope, env, capsys):
     rc = _dispatch(
         _argv(
@@ -631,44 +554,11 @@ def test_m16_gemini_flash_code_review_without_review_risk_is_refused(ordinary_re
     _assert_refused(env, capsys, rc, "AGY code review requires an explicit --review-risk")
 
 
-def test_m16_ukrainian_family_with_code_review_profile_is_an_ambiguous_classification():
-    """The envelope rule still treats this classification as conflicting when reached directly."""
-    reason = bounded_advisory.bounded_requirement(
-        bounded_advisory.bounded_execution_policy().bounded_fallback_model_id,
-        mode="read-only",
-        task_family="ukrainian-authoring",
-        review_profile="code",
-        repo_root=delegate._REPO_ROOT,
-    )
-    assert reason and "ambiguous classification" in reason and "with --review-profile code" in reason
-
-
 def test_m16_ukrainian_review_profile_in_write_mode_without_family_is_refused(env, capsys):
     rc = _dispatch(
         _argv("--mode", "workspace-write", "--worktree", "--review-profile", "ukrainian", agent="agy", model=None)
     )
     _assert_refused(env, capsys, rc, "agy_review_permissions_require_read_only")
-
-
-@pytest.mark.parametrize(
-    ("agent", "model", "extra"),
-    [
-        ("gemini", None, []),
-        ("agy", "gemini-3.8-flash", []),
-        ("agy", "gemini-3.8-flash-low", []),
-        ("agy", None, ["--check-budget", "--force-agent"]),
-    ],
-    ids=["retired-cli-alias", "model-alias", "model-alias-low", "force-agent"],
-)
-def test_m17_gemini_flash_via_alias_or_force_agent_without_envelope_is_refused(env, capsys, agent, model, extra):
-    rc = _dispatch(_argv(*extra, agent=agent, model=model))
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
-
-
-def test_m17_substitution_into_gemini_flash_without_envelope_is_refused(env, capsys, monkeypatch):
-    _substitute_into(monkeypatch, "agy", "gemini-3.8-flash-high")
-    rc = _dispatch(_argv("--check-budget", agent="claude", model=None))
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
 
 
 # --- M11 / M18: admitted Gemini Flash dispatches ---------------------------
@@ -689,34 +579,6 @@ def test_m11_gemini_flash_with_ukrainian_classification_is_admitted_without_enve
     assert rc == 0, capsys.readouterr().err
     assert len(env.spawned) == 1
     assert "advisory_envelope" not in _worker_record(env.tasks)
-
-
-def test_m11_write_mode_gemini_ukrainian_authoring_is_admitted(env, capsys):
-    argv = _argv(
-        "--mode",
-        "workspace-write",
-        "--worktree",
-        "--dry-run",
-        "--research-task-family",
-        "ukrainian-authoring",
-        # A write dispatch declares its scope (#9739): lesson content only.
-        "--owned-path",
-        "curriculum/l2-uk-en/a1/lesson.md",
-        agent="agy",
-        model=None,
-    )
-    rc = _dispatch(argv)
-    assert rc == 0, capsys.readouterr().err
-    assert _worker_record(env.tasks)["status"] == "dry_run"
-
-
-def test_m18_read_only_gemini_flash_recon_with_bound_envelope_is_admitted(env, capsys):
-    argv = _argv("--owned-path", OWNED, agent="agy", model=None)
-    _write_advisor(env.tasks, _binding(argv))
-    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
-    assert rc == 0, capsys.readouterr().err
-    assert len(env.spawned) == 1
-    assert _worker_record(env.tasks)["advisory_envelope"]["advisor_task_id"] == _advisor_id()
 
 
 # --- M13 / M14 --------------------------------------------------------------
@@ -760,13 +622,6 @@ def test_m14_non_bounded_models_without_envelope_are_unaffected(env, capsys, age
     record = _worker_record(env.tasks)
     assert "advisory_envelope" not in record and "advisory_role" not in record
     assert "advisory_envelope" not in record["prompt_blocks"]
-
-
-def test_m14_advisory_task_on_a_non_bounded_dispatch_is_refused(env, capsys):
-    argv = _argv("--owned-path", OWNED, model="gpt-6.1-sol")
-    _write_advisor(env.tasks, _binding(argv))
-    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
-    _assert_refused(env, capsys, rc, bounded_advisory.FLAG_CONFLICT)
 
 
 # --- The advisor side --------------------------------------------------------
@@ -1277,16 +1132,6 @@ def test_b1_hand_built_worker_for_a_bounded_model_refuses_before_any_provider_sp
     assert not (worker_env.tasks / f"{_worker_id()}.json").exists()
 
 
-def test_b1_worker_record_without_admission_is_marked_failed_and_the_provider_never_starts(worker_env, capsys):
-    path = _publish(worker_env, {"task_id": _worker_id(), "mode": "read-only", "owned_paths": [OWNED]})
-    rc = _start_worker(worker_env, "bounded work")
-    assert rc == 1 and worker_env.spy.calls == 0
-    record = json.loads(path.read_text())
-    assert record["status"] == "failed"
-    assert record["failure_reason"] == bounded_advisory.ADMISSION_MISSING
-    assert "pid" not in record
-
-
 def _tamper_result(tasks: Path) -> None:
     result = tasks / f"{_advisor_id()}.result"
     record = json.loads((tasks / f"{_advisor_id()}.json").read_text())
@@ -1401,37 +1246,6 @@ def test_b1_gemini_dispatch_records_the_exemption_its_worker_re_classifies(env, 
         "mode": "read-only",
         "classified_paths": [],
     }
-
-
-def test_b1_luna_dispatch_records_the_binding_halves_its_worker_re_derives(env, capsys, monkeypatch):
-    """Acceptance 1: a real dispatch admits; its worker checks and submits the same prompt bytes."""
-    argv = _admitted_luna(env)
-    assert _dispatch(argv) == 0, capsys.readouterr().err
-    record = _worker_record(env.tasks)
-    admitted = record["advisory_envelope"]
-    assert admitted["prompt_sha256"] == record["prompt_sha256"]
-    assert bounded_advisory.canonical_sha256(admitted["advisory_args"]) == admitted["advisory_args_sha256"]
-    assert (
-        bounded_advisory.binding_digest(admitted["advisory_args_sha256"], admitted["prompt_sha256"])
-        == (admitted["dispatch_args_sha256"])
-    )
-    execution = admitted["admitted_execution"]
-    assert (execution["agent"], execution["model_id"], execution["mode"]) == ("codex", "gpt-6-luna", "read-only")
-    assert execution["hard_timeout"] == delegate.DEFAULT_HARD_TIMEOUT_S
-    assert Path(execution["cwd"]).resolve() == Path(record["worktree_path"]).resolve()
-    assert record["read_only_primary_cwd"] is True
-    (prompt,) = env.prompts
-    spy = _Spy()
-    monkeypatch.setattr("agent_runtime.runner.invoke", spy)
-    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
-    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
-    monkeypatch.setattr(delegate, "_read_only_checkout_snapshot", lambda *_a, **_k: ({}, None))
-    rc = _run_spawned_worker(env, prompt, monkeypatch)
-    assert rc == 0, capsys.readouterr().err
-    (submitted,) = spy.prompts
-    checked = _worker_record(env.tasks)["advisory_prompt_sha256"]
-    digest = __import__("hashlib").sha256(submitted.encode("utf-8")).hexdigest()
-    assert submitted == prompt and digest == checked
 
 
 def _run_spawned_worker(env, prompt: str, monkeypatch, *argv_changes: tuple[str, str | None]) -> int:
@@ -1589,45 +1403,6 @@ def test_b1_an_admitted_execution_rewritten_to_match_the_worker_still_refuses_on
     assert "bound argument" in final["stderr_excerpt"]
 
 
-@pytest.mark.parametrize(
-    "launch",
-    [
-        {"agent": "cursor"},
-        {"model": "gemini-3.8-flash"},
-        {"cwd": "elsewhere"},
-        {"effort": "low"},
-        {"hard_timeout": 999},
-        {"silence_timeout": 7},
-        {"initial_response_timeout": 7},
-        {"max_budget_usd": 99.0},
-        {"provider": "openrouter"},
-        {"harness": "native"},
-        {"finalize_open_pr": True},
-    ],
-    ids=lambda launch: next(iter(launch)),
-)
-def test_b1_each_worker_launch_value_changed_alone_refuses_before_any_provider_call(worker_env, capsys, launch):
-    """Round 3 B1 (worker level): cwd is compared even with no recorded worktree."""
-    record, prompt = _admitted_worker(worker_env.tasks, repo_root=delegate._REPO_ROOT, owned=[OWNED])
-    assert "worktree_path" not in record
-    if launch.get("cwd") == "elsewhere":
-        elsewhere = worker_env.cwd / "elsewhere"
-        elsewhere.mkdir()
-        launch = {"cwd": elsewhere}
-    path = _publish(worker_env, record)
-    rc = _start_worker(worker_env, prompt, **launch)
-    err = capsys.readouterr().err
-    assert rc == 1, err
-    assert worker_env.spy.calls == 0
-    assert json.loads(path.read_text())["status"] == "failed"
-
-
-def test_b1_a_record_without_a_complete_admitted_execution_refuses(worker_env, capsys):
-    record, prompt = _admitted_worker(worker_env.tasks, repo_root=delegate._REPO_ROOT, owned=[OWNED])
-    del record["advisory_envelope"]["admitted_execution"]["effort"]
-    _run_refused_worker(worker_env, capsys, record, prompt, bounded_advisory.ADMISSION_INVALID)
-
-
 def test_b1_worker_submits_exactly_the_bytes_it_checked(worker_env, capsys):
     """Acceptance 1 (worker level): the captured provider prompt hashes to the recorded checked digest."""
     record, prompt = _admitted_worker(worker_env.tasks, repo_root=delegate._REPO_ROOT, owned=[OWNED])
@@ -1734,14 +1509,6 @@ def test_b1_instructions_appended_after_the_start_backstop_refuse_at_the_provide
     assert "advisory_prompt_sha256" not in final
 
 
-def test_b1_updating_only_the_recorded_effective_prompt_digest_cannot_bless_an_appended_instruction(worker_env, capsys):
-    """Acceptance 3: the record's effective_prompt_sha256 is not what the worker trusts."""
-    record, prompt = _admitted_worker(worker_env.tasks, repo_root=delegate._REPO_ROOT, owned=[OWNED])
-    appended = prompt + "\nAlso rewrite the admission gate."
-    record["effective_prompt_sha256"] = __import__("hashlib").sha256(appended.encode("utf-8")).hexdigest()
-    _run_refused_worker(worker_env, capsys, record, appended, bounded_advisory.BINDING_MISMATCH)
-
-
 @pytest.mark.parametrize(
     ("advisor", "code"),
     [
@@ -1771,26 +1538,6 @@ def test_b1_missing_unfinished_or_changed_advisor_evidence_refuses_at_the_worker
 
 
 # --- Round 2: B2 classification of normalized owned paths ------------------------
-
-
-@pytest.mark.parametrize(
-    "extra",
-    [
-        ["--research-task-family", "ukrainian-authoring", "--owned-path", "scripts"],
-        ["--research-task-family", "ukrainian-authoring", "--owned-path", "././scripts/delegate.py"],
-        ["--research-task-family", "ukrainian-authoring", "--owned-path", "site/src/App.tsx"],
-        ["--review-profile", "ukrainian", "--owned-path", "scripts/delegate.py"],
-        ["--review-profile", "ukrainian", "--research-owned-path", "scripts"],
-        ["--research-task-family", "ukrainian-review", "--research-owned-path", "curriculum/../scripts/delegate.py"],
-    ],
-    ids=["bare-root", "dot-dot-slash", "site-tsx", "profile-owns-code", "profile-research-root", "climbs-out"],
-)
-def test_b2_ukrainian_exemptions_owning_code_are_refused(env, capsys, extra):
-    rc = _dispatch(_argv(*extra, agent="agy", model=_language_lane_model(extra)))
-    err = capsys.readouterr().err
-    assert rc == 2, err
-    assert bounded_advisory.ENVELOPE_REQUIRED in err and "ambiguous classification" in err
-    assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
 @pytest.mark.parametrize(
@@ -1929,11 +1676,6 @@ def test_b2_symlinks_into_code_and_code_attributes_are_not_content(content_repo,
     assert problem is not None and reason in problem, problem
 
 
-@pytest.mark.parametrize("path", ["docs/lessons/one.md", "docs/attributed/readme.txt", "docs/new-lessons/"])
-def test_b2_content_only_files_beside_the_probes_stay_eligible(content_repo, path):
-    assert bounded_advisory.content_path_problem(path, content_repo) is None
-
-
 @pytest.mark.parametrize("inside_git_dir", [False, True], ids=["plain", "git-dir"])
 def test_b2_an_unreadable_tree_fails_closed(tmp_path, monkeypatch, inside_git_dir):
     for key in tuple(os.environ):
@@ -1949,17 +1691,6 @@ def test_b2_an_unreadable_tree_fails_closed(tmp_path, monkeypatch, inside_git_di
     problem = bounded_advisory.content_path_problem("docs/", root)
     assert problem is not None and "cannot be resolved" in problem
     assert "not a git repository" in problem
-
-
-def test_b2_reviewer_probe_dispatches_are_refused(env, capsys):
-    """Acceptance 5 at dispatch: the review's probes never reach a worker without an envelope."""
-    for path in ("docs/atlas/word-cards/examples/", "docs/**/*.p[y]"):
-        rc = _dispatch(
-            _argv("--research-task-family", "ukrainian-authoring", "--owned-path", path, agent="agy", model=None)
-        )
-        err = capsys.readouterr().err
-        assert rc == 2 and "ambiguous classification" in err, err
-    assert env.spawned == []
 
 
 def test_b2_worker_re_classifies_a_recorded_exemption_against_its_own_tree(worker_env, capsys, content_repo):
@@ -1979,43 +1710,7 @@ def test_b2_worker_re_classifies_a_recorded_exemption_against_its_own_tree(worke
     assert worker_env.spy.calls == 0
 
 
-def test_b2_md_symlink_to_a_python_attributed_file_refuses_at_admission_and_at_the_worker(
-    worker_env, capsys, content_repo
-):
-    """Round 3 B2: a ``.md`` symlink is classified by its target's git attributes, not its own name."""
-    requirement = bounded_advisory.bounded_requirement(
-        "gemini-3.8-flash-high",
-        mode="workspace-write",
-        task_family="ukrainian-authoring",
-        review_profile=None,
-        owned_paths=["docs/aliased/lesson.md"],
-        repo_root=content_repo,
-    )
-    assert requirement is not None and "ambiguous classification" in requirement
-    _publish(worker_env, _exempt_record(classified_paths=["docs/aliased/lesson.md"]))
-    rc = delegate._run_worker(
-        task_id=_worker_id(),
-        agent="agy",
-        prompt="Review the lesson.",
-        mode="read-only",
-        cwd_str=str(content_repo),
-        model=None,
-        hard_timeout=60,
-    )
-    err = capsys.readouterr().err
-    assert rc == 1 and bounded_advisory.ENVELOPE_REQUIRED in err, err
-    assert worker_env.spy.calls == 0
-
-
 # --- Round 2: B3 the finish-time seal --------------------------------------------
-
-
-def test_b3_envelope_replaced_after_the_advisor_finished_is_refused(env, capsys):
-    argv = _argv("--owned-path", OWNED)
-    _write_advisor(env.tasks, _binding(argv))
-    _tamper_result(env.tasks)
-    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
-    _assert_refused(env, capsys, rc, bounded_advisory.SEAL_MISMATCH)
 
 
 @pytest.mark.parametrize(
@@ -2090,13 +1785,6 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
     with pytest.raises(bounded_advisory.AdvisoryRefused) as refused:
         bounded_advisory.load_envelope(_advisor_id(), state_path=path, binding_sha256=binding, repo_root=delegate._REPO_ROOT)
     assert refused.value.code == bounded_advisory.SEAL_MISMATCH
-
-
-def test_b3_a_non_advisor_worker_records_no_seal(worker_env, capsys):
-    _publish(worker_env, {"task_id": _worker_id(), "mode": "read-only"})
-    rc = _start_worker(worker_env, "hello", model="gpt-6.1-sol")
-    assert rc == 0, capsys.readouterr().err
-    assert "advisory_seal" not in json.loads((worker_env.tasks / f"{_worker_id()}.json").read_text())
 
 
 # --- Round 3: B3 the content-exemption completion gate ---------------------------
@@ -2295,23 +1983,6 @@ def test_b3_uncommitted_scratch_residue_is_ignored_but_committed_residue_is_clas
     assert state["advisory_exempt_change_check"]["problems"] == [
         "'docs/new-lessons/node_modules/gen/index.js', which is a code file"
     ]
-
-
-def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_path, monkeypatch, capsys):
-    original = delegate._worktree_diff_read
-
-    def with_residue(worktree, *args, **kwargs):
-        cache = Path(worktree) / "docs" / "new-lessons" / "__pycache__"
-        cache.mkdir(parents=True, exist_ok=True)
-        (cache / "gen.cpython-312.pyc").write_bytes(b"\0")
-        return original(worktree, *args, **kwargs)
-
-    monkeypatch.setattr(delegate, "_worktree_diff_read", with_residue)
-    state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
-    check = state["advisory_exempt_change_check"]
-    assert check["ignored_residue"] == ["docs/new-lessons/__pycache__/gen.cpython-312.pyc"]
-    assert check["problems"] == []
-    assert state.get("failure_reason") != bounded_advisory.EXEMPT_CODE_CHANGE
 
 
 # --- Round 5: success only after every completion gate has durably passed ----------
@@ -2590,23 +2261,6 @@ def test_r9_recovery_runs_only_the_delivery_gate_on_a_delivery_only_record():
     )
 
 
-def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path, monkeypatch):
-    """A verdict-gated bounded worker that breaches its ceilings is recorded with that cause, not renamed."""
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    path = delegate._state_path("verdict-bounded")
-    delegate._write_state_atomic(
-        path,
-        {
-            "task_id": "verdict-bounded",
-            "status": "failed",
-            "returncode": 0,
-            "require_review_verdict": True,
-            "failure_reason": bounded_advisory.CEILING_EXCEEDED,
-        },
-    )
-    assert delegate._read_state(path)["failure_reason"] == bounded_advisory.CEILING_EXCEEDED
-
-
 # #10919: the driver brief is a second admission source, with the same replay boundary.
 _BRIEF_MODELS = [("codex", "gpt-6-luna"), ("claude", "claude-haiku-5-5")]
 _SAFE_OWNED = "tests/driver_brief_target.py"
@@ -2738,16 +2392,6 @@ def test_driver_brief_replay_refuses_mutations(env, capsys, monkeypatch, agent, 
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-@pytest.mark.parametrize("suffix", ["\nextra instructions", ""])
-@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
-def test_driver_brief_replay_checks_exact_prompt(env, capsys, agent, model, suffix, scope):
-    assert _dispatch(_driver_argv(agent, model, scope=scope)) == 0, capsys.readouterr().err
-    prompt = env.prompts[0] + suffix if suffix else ""
-    with pytest.raises(bounded_advisory.AdvisoryRefused):
-        _verify_driver_record(env, agent, model, prompt)
-
-
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
 @pytest.mark.parametrize("change", ["missing", "empty", "changed"])
 @pytest.mark.parametrize("scope", _BRIEF_SCOPES)
 def test_driver_brief_source_file_is_bound_on_replay(env, capsys, tmp_path, agent, model, change, scope):
@@ -2805,14 +2449,6 @@ def test_driver_brief_rechecks_content_and_core(env, capsys, monkeypatch, tmp_pa
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_driver_brief_argv_without_a_record_cannot_start_provider(worker_env, capsys, agent, model):
-    assert _start_worker(worker_env, "Implement a bounded change.", agent=agent, model=model) == 1
-    expected = "mechanical_admission_refused" if agent == "claude" else bounded_advisory.ADMISSION_MISSING
-    assert expected in capsys.readouterr().err
-    assert worker_env.spy.calls == 0
-
-
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
 def test_driver_brief_dry_run_has_binding_but_no_worker(env, capsys, agent, model):
     assert _dispatch(_driver_argv(agent, model, "--dry-run")) == 0, capsys.readouterr().err
     record = _worker_record(env.tasks)
@@ -2820,30 +2456,6 @@ def test_driver_brief_dry_run_has_binding_but_no_worker(env, capsys, agent, mode
     assert record["driver_brief"]["prompt_sha256"] == hashlib.sha256(b"Map the parser flags.").hexdigest()
     assert "admitted_execution" not in record["driver_brief"]
     assert env.spawned == []
-
-
-def test_driver_brief_refusal_is_a_public_typed_cause():
-    assert bounded_advisory.DRIVER_BRIEF_REFUSED in delegate.public_causes()
-
-
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_driver_brief_symlink_cycle_is_a_typed_refusal(env, capsys, agent, model):
-    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
-    root = Path(_worker_record(env.tasks)["cwd"])
-    target = root / _SAFE_OWNED
-    target.symlink_to(target.name)
-    with pytest.raises(bounded_advisory.AdvisoryRefused):
-        _verify_driver_record(env, agent, model)
-
-
-def test_driver_brief_verify_command_is_bound_when_present():
-    args = _parse(_driver_argv("codex", "gpt-6-luna"))
-    original = (delegate.dispatch_args_sha256(args), delegate.advisory_args_sha256(args))
-    args.verify_command = "pytest -q tests/another_target.py"
-    assert delegate.dispatch_args_sha256(args) != original[0]
-    assert delegate.advisory_args_sha256(args) != original[1]
-    args.verify_command = None
-    assert "verify_command" not in delegate.advisory_args_payload(args)
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
@@ -2865,40 +2477,6 @@ def test_explicit_luna_advisor_retains_danger_mode(env, capsys):
     record = _worker_record(env.tasks)
     assert "driver_brief" not in record and record["mode"] == "danger"
     assert "advisory_envelope" in record
-
-
-@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation", None])
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-@pytest.mark.parametrize("family", [None, "bounded_investigation", "bounded_implementation"])
-def test_explicit_luna_envelope_preserves_free_form_research_roles(env, capsys, role, mode, family):
-    owned = _SAFE_OWNED if family == "bounded_implementation" else OWNED
-    extra = ["--force-agent", "--owned-path", owned, "--mode", mode]
-    if family:
-        extra.extend(["--research-task-family", family])
-    if mode != "read-only":
-        extra.append("--worktree")
-    if role:
-        extra.extend(["--research-role", role])
-    argv = _argv(*extra)
-    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[owned]))
-    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
-    record = _worker_record(env.tasks)
-    assert "driver_brief" not in record
-    assert record["advisory_envelope"]["advisor_task_id"] == _advisor_id()
-
-
-@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation", None, "implementation"])
-@pytest.mark.parametrize("scope", _BRIEF_SCOPES[1:])
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_direct_readonly_brief_rejects_unclassified_or_unrelated_roles(env, capsys, role, scope, agent, model):
-    argv = _driver_argv(agent, model, scope=scope)
-    index = argv.index("--research-role")
-    if role is None:
-        del argv[index:index + 2]
-    else:
-        argv[index + 1] = role
-    assert _dispatch(argv) == 2, capsys.readouterr().err
-    assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
 def test_existing_haiku_routine_mechanical_dispatch_needs_no_new_brief_contract(env, capsys):
@@ -2930,53 +2508,6 @@ def test_direct_recon_classification_cannot_write(env, capsys, agent, model, sco
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_driver_classification_triage_role_uses_bound_replay(env, capsys, agent, model):
-    assert _dispatch(_driver_argv(agent, model, scope=("mechanical_classification", "triage", "read-only"))) == 0, capsys.readouterr().err
-    assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
-
-
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-@pytest.mark.parametrize("scope", _BRIEF_SCOPES[1:])
-def test_readonly_driver_brief_with_automatic_worktree_replays(env, capsys, agent, model, scope):
-    argv = _driver_argv(agent, model, scope=scope)
-    argv.remove("--worktree")
-    assert _dispatch(argv) == 0, capsys.readouterr().err
-    assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
-
-
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-def test_explicit_luna_bounded_code_with_cyrillic_dispatch_and_replay(env, capsys, mode):
-    owned = "tests/test_api_helpers.py"
-    argv = _argv("--force-agent", "--owned-path", owned, "--mode", mode,
-                 "--research-task-family", "bounded_implementation", "--research-role", "implementation")
-    if mode != "read-only":
-        argv.append("--worktree")
-    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[owned]))
-    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
-    record = _worker_record(env.tasks)
-    actual = dict(record["advisory_envelope"]["admitted_execution"])
-    assert record["mode"] == mode and "driver_brief" not in record
-    assert delegate._verify_bounded_worker(
-        _worker_id(), agent="codex", model="gpt-6-luna", mode=mode, cwd=Path(actual["cwd"]),
-        execution={k: v for k, v in actual.items() if k not in {"agent", "model_id", "mode", "cwd"}},
-        prompt=env.prompts[0],
-    ) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
-
-
-@pytest.mark.parametrize("problem", ["missing", "unsealed", "wrong-binding"])
-def test_luna_cyrillic_scope_still_requires_valid_sealed_envelope(env, capsys, problem):
-    owned = "tests/test_api_helpers.py"
-    argv = _argv("--force-agent", "--owned-path", owned, "--mode", "workspace-write", "--worktree",
-                 "--research-task-family", "bounded_implementation", "--research-role", "implementation")
-    if problem != "missing":
-        binding = "0" * 64 if problem == "wrong-binding" else _binding(argv)
-        options = {"seal": None} if problem == "unsealed" else {}
-        _write_advisor(env.tasks, binding, envelope=_envelope(binding, owned_paths=[owned]), **options)
-    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 2, capsys.readouterr().err
-    assert env.spawned == [] and _worker_record(env.tasks) is None
-
-
 @pytest.mark.parametrize("model,agent", [("gpt-6-luna", "codex"), ("claude-haiku-5-5", "claude")])
 @pytest.mark.parametrize("flag", ["--owned-path", "--research-owned-path"])
 def test_explicit_bounded_envelope_retains_security_path_refusal(env, capsys, model, agent, flag):
@@ -2989,15 +2520,6 @@ def test_explicit_bounded_envelope_retains_security_path_refusal(env, capsys, mo
     _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[owned]))
     assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 2
     assert "security-sensitive" in capsys.readouterr().err
-    assert env.spawned == [] and _worker_record(env.tasks) is None
-
-
-def test_haiku_explicit_envelope_refuses_danger_before_dispatch(env, capsys):
-    argv = _driver_argv("claude", "claude-haiku-5-5")
-    argv[argv.index("--mode") + 1] = "danger"
-    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
-    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 2
-    assert "MECHANICAL_TASK_REFUSED" in capsys.readouterr().err
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 

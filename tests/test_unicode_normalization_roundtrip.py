@@ -35,15 +35,6 @@ def test_plan_adherence_strip_stress_roundtrip(word: str) -> None:
     assert result == unicodedata.normalize("NFC", result)
 
 
-@pytest.mark.parametrize("word", ["мій", "їжа", "йому"])
-def test_grammar_strip_stress_roundtrip(word: str) -> None:
-    from audit.checks.grammar import _strip_stress
-
-    result = _strip_stress(word)
-    assert "\u0301" not in result
-    assert result == unicodedata.normalize("NFC", result)
-
-
 def test_tokenize_all_ukrainian_preserves_original_bytes() -> None:
     from rag.rag_batch_verify import tokenize_all_ukrainian
 

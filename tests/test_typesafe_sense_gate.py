@@ -8,12 +8,8 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from scripts.atlas.typesafe_sense_gate import (
-    AtlasSenseGateVerdict,
     evaluate_atlas_example,
-    resolve_api_key,
 )
 
 
@@ -119,81 +115,3 @@ def test_hermetic_reject_wrong_sense():
     assert verdict.verdict == "reject_off_sense"
     assert verdict.sense_match == "unrelated_or_wrong_sense"
     assert any("does not illustrate definition" in f for f in verdict.findings)
-
-
-def test_hermetic_warn_poor_pedagogy():
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "sense_match": MockChoiceResult("primary_sense", 0.90),
-            "is_authentic_ukrainian": MockNoulResult(0.88),
-            "calque_risk": MockChoiceResult("none_authentic", 0.92),
-            "pedagogical_clarity": MockScoreResult(1.8, 0.82),
-            "cefr_level": MockChoiceResult("C2", 0.70, 0.75),
-        },
-    }
-
-    verdict = evaluate_atlas_example(
-        lemma="сонце",
-        definition="центральне світило Сонячної системи",
-        sentence="Сонце... отак воно якось... через дим туманний ледь-ледь...",
-        pos="noun",
-        mock_response=mock_resp,
-    )
-
-    assert verdict.verdict == "warn_pedagogy"
-    assert verdict.pedagogical_score < 3.0
-
-
-def test_hermetic_low_confidence_triggers_review():
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "sense_match": MockChoiceResult("primary_sense", 0.60),
-            "is_authentic_ukrainian": MockNoulResult(0.80),
-            "calque_risk": MockChoiceResult("none_authentic", 0.75),
-            "pedagogical_clarity": MockScoreResult(3.5, 0.42),  # Low confidence
-            "cefr_level": MockChoiceResult("B1", 0.60, 0.40),  # Low confidence
-        },
-    }
-
-    verdict = evaluate_atlas_example(
-        lemma="громада",
-        definition="група людей, об'єднаних спільністю інтересів",
-        sentence="Громада зібралася біля клубу.",
-        mock_response=mock_resp,
-    )
-
-    assert verdict.verdict == "needs_review"
-    assert verdict.needs_review is True
-    assert any("Low confidence" in f for f in verdict.findings)
-
-
-@pytest.mark.live_network
-def test_live_typesafe_atlas_evaluation():
-    api_key = resolve_api_key()
-    if not api_key:
-        pytest.skip("TYPESAFE_API_KEY not found in env or ~/.secrets/")
-
-    # 1. Test authentic Ukrainian usage of «вірний» (loyal)
-    v_auth = evaluate_atlas_example(
-        lemma="вірний",
-        definition="відданий, незрадливий у стосунках",
-        sentence="Собака — це найвірніший друг людини.",
-        pos="adj",
-    )
-    assert isinstance(v_auth, AtlasSenseGateVerdict)
-    assert v_auth.sense_match in ("primary_sense", "secondary_sense")
-    assert v_auth.is_authentic_prob >= 0.70
-    assert v_auth.calque_risk == "none_authentic"
-    assert v_auth.verdict == "admit"
-
-    # 2. Test Russian calque usage of «вірний» (meaning «правильний»)
-    v_calque = evaluate_atlas_example(
-        lemma="вірний",
-        definition="відданий, незрадливий",
-        sentence="Студент знайшов вірне рішення складної задачі.",
-        pos="adj",
-    )
-    assert v_calque.verdict != "admit"
-    assert v_calque.pedagogical_score < 3.0

@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import importlib.util
 import sys
-import time
 from pathlib import Path
 from unittest.mock import patch
 
@@ -62,20 +61,6 @@ class TestIsPedagogicalHeader:
     def test_headers_are_filtered(self, topic):
         assert fw._is_pedagogical_header(topic) is True
 
-    @pytest.mark.parametrize("topic", [
-        "Тарас Шевченко",
-        "Іван Франко",
-        "Київська Русь",
-        "Президентство Дуайта Ейзенхауера",
-        "Голодомор 1932-1933 років",
-        "Пересопницьке Євангеліє",
-        "Ізборник Святослава",
-        # Long-prefixed colon-containing title that is genuinely an article
-        "Pacta et Constitutiones legum libertatumque Exercitus Zaporoviensis: Philippus Orlyk",
-    ])
-    def test_real_topics_are_kept(self, topic):
-        assert fw._is_pedagogical_header(topic) is False
-
 
 # ──────────────────────────────────────────────────────────────────────
 # _extract_topics_from_plans — end-to-end topic list filtering
@@ -116,76 +101,10 @@ content_outline:
         assert "Аналіз: Причини розпаду" not in topics
         assert "Висновки" not in topics
 
-    def test_deduplicates_same_topic_across_plans(self, tmp_path):
-        plans_dir = tmp_path / "plans" / "lit"
-        plans_dir.mkdir(parents=True)
-        (plans_dir / "a.yaml").write_text('title: "Тарас Шевченко"\n', encoding="utf-8")
-        (plans_dir / "b.yaml").write_text('title: "Тарас Шевченко"\n', encoding="utf-8")
-        (plans_dir / "c.yaml").write_text('title: "тарас шевченко"\n', encoding="utf-8")
-
-        with patch.object(fw, "CURRICULUM_DIR", tmp_path):
-            topics = fw._extract_topics_from_plans("lit")
-
-        # Case-insensitive dedup: exactly one
-        lowered = [t.lower() for t in topics]
-        assert lowered.count("тарас шевченко") == 1
-
-    def test_missing_track_returns_empty(self, tmp_path):
-        with patch.object(fw, "CURRICULUM_DIR", tmp_path):
-            assert fw._extract_topics_from_plans("nonexistent") == []
-
-    def test_strips_english_parenthetical(self, tmp_path):
-        plans_dir = tmp_path / "plans" / "hist"
-        plans_dir.mkdir(parents=True)
-        (plans_dir / "x.yaml").write_text(
-            'title: "Test"\n'
-            'content_outline:\n'
-            '  - section: "Народний календар (Folk Calendar)"\n',
-            encoding="utf-8",
-        )
-        with patch.object(fw, "CURRICULUM_DIR", tmp_path):
-            topics = fw._extract_topics_from_plans("hist")
-        assert "Народний календар" in topics
-        # English parenthetical stripped
-        assert not any("(Folk Calendar)" in t for t in topics)
-
 
 # ──────────────────────────────────────────────────────────────────────
 # _pace_api_call — ensures minimum gap between consecutive calls
 # ──────────────────────────────────────────────────────────────────────
-
-
-class TestPaceApiCall:
-    def setup_method(self):
-        # Reset the module-level tracker before each test
-        fw._last_call_ts = 0.0
-
-    def test_first_call_has_no_delay(self):
-        start = time.monotonic()
-        fw._pace_api_call()
-        elapsed = time.monotonic() - start
-        assert elapsed < 0.1  # should return ~immediately
-
-    def test_second_call_within_interval_sleeps(self):
-        # Use a tighter interval for speed
-        with patch.object(fw, "_MIN_INTERVAL_S", 0.3):
-            fw._pace_api_call()
-            start = time.monotonic()
-            fw._pace_api_call()  # immediately after → should sleep ~0.3s
-            elapsed = time.monotonic() - start
-        # Should have slept at least the interval
-        assert elapsed >= 0.25
-        assert elapsed < 0.5  # but not much more
-
-    def test_gap_longer_than_interval_no_sleep(self):
-        with patch.object(fw, "_MIN_INTERVAL_S", 0.1):
-            fw._pace_api_call()
-            time.sleep(0.2)  # wait longer than the interval
-            start = time.monotonic()
-            fw._pace_api_call()
-            elapsed = time.monotonic() - start
-        # Second call should not have slept
-        assert elapsed < 0.05
 
 
 # ──────────────────────────────────────────────────────────────────────

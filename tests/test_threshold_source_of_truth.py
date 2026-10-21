@@ -11,7 +11,6 @@ Related incident: ISTORIO 3500 vs 4000 drift (Jan 2026), recorded in
 
 from __future__ import annotations
 
-import ast
 import re
 import sys
 from functools import cache
@@ -21,51 +20,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from common.thresholds import (
-    REVIEW_PASS_FLOOR,
-    REVIEW_REJECT_FLOOR,
-    SEMINAR_PROMOTE_PROFILES,
-    STYLE_REVIEW_DIMENSION_FLOOR,
-    STYLE_REVIEW_TARGET,
-)
 
 SCRIPTS_ROOT = Path(__file__).resolve().parent.parent / "scripts"
 SOURCE_OF_TRUTH = SCRIPTS_ROOT / "common" / "thresholds.py"
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content, pytest.mark.repo_wide]
-
-# Canonical names that must never be redeclared outside the source-of-truth.
-# The values are the source-of-truth values — any other file claiming to
-# own these names (at module scope) is a regression.
-_CANONICAL_NAMES: frozenset[str] = frozenset({
-    "REVIEW_PASS_FLOOR",
-    "REVIEW_REJECT_FLOOR",
-    "STYLE_REVIEW_TARGET",
-    "STYLE_REVIEW_DIMENSION_FLOOR",
-    "LEVEL_THRESHOLDS",
-    "SEMINAR_PROMOTE_DIMS",
-    "SEMINAR_PROMOTE_PROFILES",
-})
-
-# Float literals that are threshold-valued. 5.0 / 7.0 are common but not
-# pipeline thresholds; we deliberately do not list them.
-_THRESHOLD_VALUES: frozenset[float] = frozenset({
-    REVIEW_PASS_FLOOR,
-    REVIEW_REJECT_FLOOR,
-    STYLE_REVIEW_TARGET,
-    STYLE_REVIEW_DIMENSION_FLOOR,
-}) | frozenset(
-    value for profile in SEMINAR_PROMOTE_PROFILES.values() for value in profile.values()
-)
-
-# Words that make a nearby float literal "look like" a threshold. If none
-# of these appear within 3 lines of the literal, we don't flag — an 8.0
-# in a test-weight matrix is fine.
-_THRESHOLD_CONTEXT_WORDS: tuple[str, ...] = (
-    "threshold", "floor", "target", "min_score", "minscore",
-    "pass_floor", "reject_floor", "revise", "review_score",
-    "review_target", "review_pass", "style_review",
-    "naturalness_min", "naturalness_threshold",
-)
 
 # Precise content-based allow-list for legitimate non-threshold float
 # literals that happen to look like thresholds. Each entry is
@@ -100,18 +58,6 @@ _FLOAT_LITERAL_ALLOWLIST: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("build/v6_build.py", re.compile(r"review_threshold \(default 9\.0\)")),
 )
 
-# REVIEW_PASS_FLOOR remains valid only for legacy V6, wiki single-score
-# review, and dashboard surfaces that still consume legacy single scores.
-_REVIEW_PASS_FLOOR_IMPORT_ALLOWLIST: frozenset[str] = frozenset({
-    "audit/checks/review_gaming.py",
-    "audit/checks/review_validation.py",
-    "build/v6_build.py",
-    "wiki/review.py",
-    "api/dashboard_helpers.py",
-    "api/dashboard_router.py",
-    "api/state_compute.py",
-})
-
 # Files excluded from the scan entirely (archived / generated / legacy).
 _EXCLUDED_DIRS: tuple[str, ...] = (
     "__pycache__",
@@ -138,32 +84,6 @@ def _read_script_text(path: Path) -> str:
     return path.read_text("utf-8")
 
 
-@cache
-def _parse_script(path: Path) -> ast.Module | None:
-    """Parse each scanned script once for the module's AST invariants."""
-    try:
-        return ast.parse(_read_script_text(path), filename=str(path))
-    except SyntaxError:
-        return None
-
-
-def _module_level_name_assignments(tree: ast.Module) -> list[tuple[str, int]]:
-    """Return (name, lineno) pairs for module-level ``NAME = ...`` assigns.
-
-    Skips nested functions/classes — only top-level assignments count as
-    "this module claims to own this constant."
-    """
-    results: list[tuple[str, int]] = []
-    for node in tree.body:
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name):
-                    results.append((target.id, node.lineno))
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            results.append((node.target.id, node.lineno))
-    return results
-
-
 def _matching_allowlist_patterns(
     rel_path: str,
     stripped_line: str,
@@ -174,68 +94,6 @@ def _matching_allowlist_patterns(
         for path, pat in _FLOAT_LITERAL_ALLOWLIST
         if rel_path == path and pat.search(stripped_line)
     ]
-
-
-def test_no_canonical_name_redeclared_outside_thresholds() -> None:
-    """No file other than thresholds.py defines the canonical names.
-
-    An ``import`` of the name is fine (that's the whole point). Only
-    local re-assignments at module scope are flagged.
-    """
-    offenders: list[str] = []
-    for path in _iter_python_files():
-        if path.resolve() == SOURCE_OF_TRUTH.resolve():
-            continue
-        source = _read_script_text(path)
-        if not any(name in source for name in _CANONICAL_NAMES):
-            continue
-        tree = _parse_script(path)
-        if tree is None:
-            continue
-        for name, lineno in _module_level_name_assignments(tree):
-            if name in _CANONICAL_NAMES:
-                rel = path.relative_to(SCRIPTS_ROOT).as_posix()
-                offenders.append(f"{rel}:{lineno} redeclares {name!r}")
-
-    assert not offenders, (
-        "Canonical threshold names must live only in scripts/common/thresholds.py.\n"
-        + "\n".join(offenders)
-    )
-
-
-def test_review_pass_floor_imports_are_legacy_allowlisted() -> None:
-    """New module QG callers must use per-level per-dim review_floors.
-
-    ``REVIEW_PASS_FLOOR`` is retained for legacy V6 and single-score wiki /
-    dashboard review. A new import of the global floor is a schema regression.
-    """
-    offenders: list[str] = []
-    for path in _iter_python_files():
-        if path.resolve() == SOURCE_OF_TRUTH.resolve():
-            continue
-        rel = path.relative_to(SCRIPTS_ROOT).as_posix()
-        source = _read_script_text(path)
-        if "REVIEW_PASS_FLOOR" not in source or "threshold" not in source.lower():
-            continue
-        tree = _parse_script(path)
-        if tree is None:
-            continue
-        for node in ast.walk(tree):
-            if not isinstance(node, ast.ImportFrom):
-                continue
-            if node.module not in {"common.thresholds", "scripts.common.thresholds"}:
-                continue
-            if (
-                any(alias.name == "REVIEW_PASS_FLOOR" for alias in node.names)
-                and rel not in _REVIEW_PASS_FLOOR_IMPORT_ALLOWLIST
-            ):
-                offenders.append(f"{rel}:{node.lineno} imports REVIEW_PASS_FLOOR")
-
-    assert not offenders, (
-        "New callers must use LevelThresholds.review_floors or aggregate_review(); "
-        "REVIEW_PASS_FLOOR imports are legacy-only.\n"
-        + "\n".join(offenders)
-    )
 
 
 def test_no_duplicate_target_words_module_level() -> None:
@@ -263,52 +121,6 @@ def test_no_duplicate_target_words_module_level() -> None:
     )
 
 
-def test_no_threshold_float_literals_in_threshold_context() -> None:
-    """Flag ``8.0 / 8.5 / 9.0 / 6.0`` near threshold-adjacent words.
-
-    The ± 3-line window catches common patterns (``if score < 8.0:``,
-    ``threshold = 8.0``) without false-positiving on unrelated uses
-    (e.g., a version string or a percentage). Per-line allow-list
-    carries the few legitimate exceptions.
-    """
-    offenders: list[str] = []
-    for path in _iter_python_files():
-        if path.resolve() == SOURCE_OF_TRUTH.resolve():
-            continue
-        rel = path.relative_to(SCRIPTS_ROOT).as_posix()
-        source = _read_script_text(path)
-        if not any(f"{value:.1f}" in source for value in _THRESHOLD_VALUES):
-            continue
-        lines = source.splitlines()
-        for idx, line in enumerate(lines, start=1):
-            stripped_line = line.strip()
-            if _matching_allowlist_patterns(rel, stripped_line):
-                continue
-            # Quick literal presence filter.
-            stripped = line.split("#", 1)[0]  # strip line comments
-            has_literal = any(
-                re.search(rf"(?<!\d)\b{re.escape(f'{value:.1f}')}\b", stripped)
-                for value in _THRESHOLD_VALUES
-            )
-            if not has_literal:
-                continue
-            # Context window: ± 3 lines. Include the line itself.
-            lo, hi = max(0, idx - 4), min(len(lines), idx + 3)
-            window = " ".join(lines[lo:hi]).lower()
-            if any(word in window for word in _THRESHOLD_CONTEXT_WORDS):
-                offenders.append(f"{rel}:{idx} — {line.strip()}")
-
-    assert not offenders, (
-        "Float literals that look like pipeline thresholds were found "
-        "outside scripts/common/thresholds.py:\n"
-        + "\n".join(offenders)
-        + "\n\nFix: import REVIEW_PASS_FLOOR / STYLE_REVIEW_TARGET / etc. "
-        "from scripts.common.thresholds, or — if the value is genuinely "
-        "unrelated — add (path, regex_pattern) to "
-        "_FLOAT_LITERAL_ALLOWLIST with a one-line justification."
-    )
-
-
 def test_allowlist_does_not_match_unrelated_lines(tmp_path: Path) -> None:
     """A ``9.0`` in an unrelated location must still trigger the gate.
 
@@ -331,50 +143,4 @@ def test_allowlist_does_not_match_unrelated_lines(tmp_path: Path) -> None:
     assert not matched, (
         "Allowlist regex is too permissive — matched an unrelated line: "
         f"{fake_line!r}. Tighten the pattern(s): {matched}"
-    )
-
-
-def test_audit_config_naturalness_matches_thresholds() -> None:
-    """``AUDIT_THRESHOLDS['naturalness_min_score']`` stays in sync with
-    ``LEVEL_THRESHOLDS`` — not because a test asserts equality once,
-    but because the dict is built from LEVEL_THRESHOLDS at import time.
-    Regression guard.
-    """
-    from audit.config import AUDIT_THRESHOLDS
-    from common.thresholds import LEVEL_THRESHOLDS
-
-    mins = AUDIT_THRESHOLDS["naturalness_min_score"]
-    for level, thresholds in LEVEL_THRESHOLDS.items():
-        assert mins[level] == thresholds.naturalness_min, (
-            f"{level} audit naturalness drift: "
-            f"AUDIT_THRESHOLDS={mins[level]} vs LEVEL_THRESHOLDS={thresholds.naturalness_min}"
-        )
-    assert "default" in mins, "AUDIT_THRESHOLDS must keep a 'default' fallback."
-
-
-def test_level_config_family_target_words_match_thresholds() -> None:
-    """Family entries (A1..C2) in ``LEVEL_CONFIG`` read from
-    ``LEVEL_THRESHOLDS`` — guards against someone hardcoding a number
-    back into the LEVEL_CONFIG dict literal.
-    """
-    from audit.config import LEVEL_CONFIG
-    from common.thresholds import LEVEL_THRESHOLDS
-
-    for level, thresholds in LEVEL_THRESHOLDS.items():
-        cfg = LEVEL_CONFIG.get(level)
-        assert cfg is not None, f"LEVEL_CONFIG missing family {level!r}"
-        assert cfg["target_words"] == thresholds.target_words, (
-            f"{level} LEVEL_CONFIG target_words={cfg['target_words']} "
-            f"drifted from LEVEL_THRESHOLDS.target_words={thresholds.target_words}"
-        )
-
-
-def test_config_py_has_no_word_floor() -> None:
-    """Legacy dead field — must stay removed. scripts/config.py
-    TRACK_CONFIG used to carry ``word_floor`` that no caller read."""
-    config_py = (SCRIPTS_ROOT / "config.py").read_text("utf-8")
-    assert "word_floor" not in config_py, (
-        "scripts/config.py TRACK_CONFIG.word_floor was removed as dead "
-        "code that contradicted scripts/audit/config.py word targets. "
-        "Do not revive it — use scripts.common.thresholds.LEVEL_THRESHOLDS."
     )

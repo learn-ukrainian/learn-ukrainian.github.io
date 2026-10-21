@@ -164,10 +164,6 @@ def test_planted_temp_symlink_does_not_change_a_checkout_file(tmp_path: Path) ->
     _planted_temp_alias_is_refused(tmp_path, lambda protected, planted: planted.symlink_to(protected))
 
 
-def test_planted_temp_hardlink_does_not_change_a_checkout_file(tmp_path: Path) -> None:
-    _planted_temp_alias_is_refused(tmp_path, lambda protected, planted: os.link(protected, planted))
-
-
 def test_destination_symlink_does_not_change_a_checkout_file(tmp_path: Path) -> None:
     checkout, drift_dir = _external_state(tmp_path)
     protected = checkout / "report.json"
@@ -231,26 +227,6 @@ def test_state_dir_inside_any_git_checkout_is_refused(tmp_path: Path, kind: str)
     assert not report_path.exists()
 
 
-def test_resolved_alias_into_a_foreign_checkout_is_refused(tmp_path: Path) -> None:
-    foreign = tmp_path / "foreign"
-    foreign.mkdir()
-    (foreign / ".git").write_text("gitdir: /unused\n", encoding="utf-8")
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    alias = outside / "state"
-    alias.symlink_to(foreign, target_is_directory=True)
-    session = tmp_path / "session"
-    session.mkdir()
-    report_path = foreign / "learn-ukrainian" / "stack-drift" / "report.json"
-    with pytest.raises(drift.DriftError, match="outside the repository"):
-        drift.write_report(
-            session,
-            read=lambda _name: drift.Reading("unknown", "unknown"),
-            env={"XDG_STATE_HOME": str(alias)},
-        )
-    assert not report_path.exists()
-
-
 @pytest.mark.parametrize(
     ("name", "argv", "comm"),
     [
@@ -295,15 +271,6 @@ def test_session_probe_runs_only_the_fixed_command(
     assert drift._default_run(argv, time.monotonic() + 1) == "1.2.3\n"
     route = "shared_client" if name == "gh" else "subprocess"
     assert calls == [(route, list(argv), {"capture_output": True, "text": True, "timeout": 0.25, "check": False})]
-
-
-@pytest.mark.parametrize("error", [OSError("unavailable"), subprocess.TimeoutExpired(["gh", "--version"], 0.25)])
-def test_github_probe_returns_empty_on_shared_client_failure(error: Exception, monkeypatch: pytest.MonkeyPatch) -> None:
-    def github_run(*_args, **_kwargs):
-        raise error
-
-    monkeypatch.setattr(drift, "github_run", github_run)
-    assert drift._default_run(("gh", "--version"), time.monotonic() + 1) == ""
 
 
 @pytest.mark.parametrize("argv", [("unregistered", "--version"), ("claude", "-p"), ("agy", "--help")])

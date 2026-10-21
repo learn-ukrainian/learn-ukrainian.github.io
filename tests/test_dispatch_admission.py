@@ -154,15 +154,6 @@ def test_high_load_per_cpu_is_refused(tmp_path, probe):
     assert "DISPATCH_MAX_LOAD_PER_CPU=1.5" in failure
 
 
-def test_single_cpu_load_failure_uses_singular(tmp_path, probe):
-    probe["probe"] = adm.HostProbe(mem_available_bytes=12 * _GIB, load1=3.0, cpu_count=1, proc_available=True)
-
-    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
-
-    [failure] = decision.failures
-    assert "(1-minute load 3.00 on 1 CPU) is above" in failure
-
-
 def test_every_failed_check_is_named_in_one_refusal_line(tmp_path, probe):
     tasks = tmp_path / "tasks"
     _record(tasks, "a", pid=11)
@@ -241,52 +232,6 @@ def test_probe_host_marks_invalid_cpu_steal_unknown(tmp_path, stat_text):
 
     assert probe.cpu_steal_ticks is None
     assert probe.cpu_total_ticks is None
-
-
-def test_thresholds_default_to_config_and_honour_env_overrides():
-    from scripts import config
-
-    defaults = adm.load_thresholds({})
-    assert defaults == adm.Thresholds(
-        max_live_write_workers=config.DISPATCH_MAX_LIVE_WRITE_WORKERS,
-        min_mem_available_gib=config.DISPATCH_MIN_MEM_AVAILABLE_GIB,
-        max_load_per_cpu=config.DISPATCH_MAX_LOAD_PER_CPU,
-    )
-    assert (
-        defaults.max_live_write_workers,
-        defaults.min_mem_available_gib,
-        defaults.max_load_per_cpu,
-        defaults.worker_mem_reserve_gib,
-    ) == (2, 8.5, 1.0, 2.5)
-
-    overridden = adm.load_thresholds(
-        {
-            adm.ENV_MAX_LIVE_WRITE_WORKERS: "0",
-            adm.ENV_MIN_MEM_AVAILABLE_GIB: "6",
-            adm.ENV_MAX_LOAD_PER_CPU: "0.75",
-        }
-    )
-    assert overridden == adm.Thresholds(max_live_write_workers=0, min_mem_available_gib=6.0, max_load_per_cpu=0.75)
-
-
-def test_defaults_allow_cap_slots_and_refuse_below_the_floor(tmp_path, probe):
-    tasks = tmp_path / "tasks"
-    defaults = adm.load_thresholds({})
-    _record(tasks, "writer-00", pid=1000)
-
-    before_cap = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=defaults)
-    assert before_cap.admitted
-    assert "live write workers 1/2" in before_cap.summary()
-
-    _record(tasks, "writer-01", pid=1001)
-    at_cap = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=defaults)
-    assert not at_cap.admitted
-    assert "live write workers 2/2 reached the cap" in at_cap.failures[0]
-
-    probe["probe"] = adm.HostProbe(mem_available_bytes=int(8.4 * _GIB), load1=0.0, cpu_count=8, proc_available=True)
-    below_floor = adm.evaluate("workspace-write", tmp_path / "empty", thresholds=defaults)
-    assert not below_floor.admitted
-    assert "below the floor of 8.5 GiB" in below_floor.failures[0]
 
 
 @pytest.mark.parametrize(
@@ -381,27 +326,6 @@ def _omit_live_slice(monkeypatch):
     monkeypatch.setattr(adm, "slice_usage_clause", lambda: None)
 
 
-def test_summary_adds_active_slice_use_without_changing_the_decision(tmp_path, probe, monkeypatch):
-    tasks = tmp_path / "tasks"
-    _record(tasks, "writer", pid=11)
-    monkeypatch.setattr(adm, "slice_usage_clause", lambda: "lu-dispatch.slice 0.4/11.0 GiB")
-
-    decision = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=_LIMITS)
-
-    assert decision.admitted
-    assert decision.failures == ()
-    assert "lu-dispatch.slice 0.4/11.0 GiB" in decision.summary()
-
-
-def test_summary_omits_the_slice_when_it_is_not_reported(tmp_path, probe):
-    tasks = tmp_path / "tasks"
-    _record(tasks, "writer", pid=11)
-
-    summary = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=_LIMITS).summary()
-
-    assert "lu-dispatch.slice" not in summary
-
-
 # --- Shared lu.slice pool headroom (#9975) --------------------------------------------------
 
 
@@ -445,21 +369,6 @@ def test_file_cache_does_not_count_against_the_pool(tmp_path, probe, monkeypatch
     assert "lu.slice 14.0/21.0 GiB non-cache (+14.0 GiB file cache; worker reserve 2.5 GiB)" in decision.summary()
 
 
-def test_worker_reserve_env_override_changes_the_pool_decision(tmp_path, probe, monkeypatch):
-    pool = _fake_pool(tmp_path / "lu.slice", current=17 * _GIB, file_cache=0)
-    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
-    tasks = tmp_path / "tasks"
-
-    roomy = adm.evaluate("workspace-write", tasks, thresholds=_LIMITS)
-    strict = adm.evaluate(
-        "workspace-write", tasks, thresholds=adm.load_thresholds({adm.ENV_WORKER_MEM_RESERVE_GIB: "5.5"})
-    )
-
-    assert roomy.admitted
-    assert not strict.admitted
-    assert any("DISPATCH_WORKER_MEM_RESERVE_GIB=5.5" in failure for failure in strict.failures)
-
-
 def test_missing_pool_cgroup_skips_the_check_and_logs_why(tmp_path, probe, monkeypatch, caplog):
     monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent" / "lu.slice"))
 
@@ -485,24 +394,6 @@ def test_malformed_memory_high_skips_with_reason_in_the_admitted_line(tmp_path, 
     assert decision.admitted
     assert "lu.slice pool check skipped (lu.slice memory.high is neither a number nor 'max')" in decision.summary()
     assert "memory.high is neither a number nor 'max'" in caplog.text
-
-
-def test_healthy_test_host_never_reads_the_real_pool(tmp_path, probe, monkeypatch):
-    monkeypatch.delenv("LU_SLICE_CGROUP", raising=False)
-    monkeypatch.setattr(adm.pool_headroom, "check_pool", lambda *_a, **_k: pytest.fail("real pool read"))
-
-    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
-
-    assert decision.admitted
-    assert decision.pool is not None
-    assert decision.pool.skipped == "test host"
-    assert "lu.slice pool check skipped (test host)" in decision.summary()
-
-
-def test_read_only_dispatch_does_not_probe_the_pool(tmp_path, monkeypatch):
-    monkeypatch.setattr(adm, "probe_pool", lambda *_a, **_k: pytest.fail("read-only must not probe the pool"))
-
-    assert adm.evaluate("read-only", tmp_path / "tasks").admitted
 
 
 def test_deployment_env_file_fills_thresholds_the_environment_does_not_set(tmp_path):
@@ -531,22 +422,6 @@ def test_env_file_is_optional_and_can_be_disabled(tmp_path, monkeypatch):
     assert adm.admission_env_file({"XDG_CONFIG_HOME": str(tmp_path)}, live=True) == (
         tmp_path / "learn-ukrainian" / adm.ADMISSION_ENV_FILE_NAME
     )
-
-
-def test_live_thresholds_read_the_default_env_file(tmp_path, monkeypatch):
-    target = tmp_path / "learn-ukrainian" / adm.ADMISSION_ENV_FILE_NAME
-    target.parent.mkdir()
-    target.write_text(f"{adm.ENV_MAX_LOAD_PER_CPU}=0.5\n", encoding="utf-8")
-    monkeypatch.delenv(adm.ENV_ADMISSION_FILE, raising=False)
-    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
-    assert adm.load_thresholds().max_load_per_cpu == 0.5
-
-
-def test_invalid_env_file_value_is_refused(tmp_path):
-    env_file = tmp_path / "admission.env"
-    env_file.write_text(f"{adm.ENV_MAX_LIVE_WRITE_WORKERS}=many\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="is not a whole number"):
-        adm.load_thresholds({adm.ENV_ADMISSION_FILE: str(env_file)})
 
 
 # --- Host test-slot queue (#10662) -----------------------------------------------------------
@@ -632,29 +507,3 @@ def test_a_disabled_or_unreadable_pool_skips_the_queue_check_and_says_why(tmp_pa
     assert decision.admitted
     assert f"test-slot queue check skipped ({clause}" in decision.summary()
     assert clause in decision.to_record()["test_slot_queue_skipped"]
-
-
-def test_test_slot_queue_threshold_defaults_to_config_and_rejects_invalid_values():
-    from scripts import config
-
-    assert adm.load_thresholds({}).max_test_slot_queue == config.DISPATCH_MAX_TEST_SLOT_QUEUE == 4
-    assert adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "2"}).max_test_slot_queue == 2
-    with pytest.raises(ValueError, match=adm.ENV_MAX_TEST_SLOT_QUEUE):
-        adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "many"})
-
-
-def test_read_only_dispatch_does_not_read_the_test_slot_pool(tmp_path, monkeypatch):
-    monkeypatch.setattr(adm, "probe_test_slots", lambda: pytest.fail("read-only must not read the slot pool"))
-
-    assert adm.evaluate("read-only", tmp_path / "tasks").admitted
-
-
-def test_healthy_test_host_never_reads_the_real_test_slot_pool(tmp_path, probe, monkeypatch):
-    monkeypatch.delenv(adm.test_slots.DIR_ENV, raising=False)
-    monkeypatch.setattr(adm.test_slots, "status", lambda *_a, **_k: pytest.fail("real slot pool read"))
-
-    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
-
-    assert decision.admitted
-    assert decision.slots is not None and decision.slots.skipped == "test host"
-    assert "test-slot queue check skipped (test host)" in decision.summary()

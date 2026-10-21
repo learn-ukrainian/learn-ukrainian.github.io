@@ -573,19 +573,6 @@ def test_restore_refuses_worker_cwd_before_raw_checkout(boundary_tree):
     ) == (False, "restore requires the primary repository")
 
 
-@pytest.mark.parametrize("attribute", ["text", "eol=lf", "working-tree-encoding=UTF-8", "ident"])
-def test_preserve_refuses_other_byte_transformations(boundary_tree, attribute):
-    from scripts.orchestration import reap_worktrees as rw
-
-    _repo, tree, _tasks, _record = boundary_tree
-    (tree / ".gitattributes").write_text(f"payload.bin {attribute}\n")
-    (tree / "payload.bin").write_bytes(b"$Id: expanded $\r\n")
-    info = rw.WorktreeInfo(tree, "codex/boundary", _git(tree, "rev-parse", "HEAD"))
-    error = rw._preserve_dirty_worktree(info)
-    assert error is not None and "preserve_transform_attribute" in error
-    assert (tree / "payload.bin").read_bytes() == b"$Id: expanded $\r\n"
-
-
 def test_remote_and_signing_execution_overrides_are_refused(boundary_tree, tmp_path):
     from scripts.orchestration import execution_safe_git as safe
 

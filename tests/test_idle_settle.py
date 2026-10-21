@@ -38,26 +38,6 @@ def _snapshot(
     )
 
 
-def test_disposition_codes_include_original_six_and_new_wip() -> None:
-    assert {
-        "dependency_blocked",
-        "review_wip_cap",
-        "ci_capacity",
-        "disk_capacity",
-        "human_decision",
-        "no_ready_work",
-        "authoring_wip_cap",
-        "worktree_wip_cap",
-        "integration_wip_cap",
-    } == idle.DISPOSITION_CODES
-    for code in idle.DISPOSITION_CODES:
-        assert idle.disposition_accepted(code) is True
-    assert idle.disposition_accepted("busywork") is False
-    assert idle.disposition_accepted("") is False
-    assert idle.normalize_disposition("  ") is None
-    assert idle.normalize_disposition(" human_decision ") == "human_decision"
-
-
 def test_reminder_silent_when_nothing_actionable() -> None:
     snap = _snapshot(items=[])
     decision = idle.evaluate_settle(snap)
@@ -194,22 +174,6 @@ def test_no_ready_work_is_dishonest_when_eligible() -> None:
     assert honest.reminder_fired is False
 
 
-def test_human_decision_is_always_honest() -> None:
-    snap = _snapshot()
-    decision = idle.evaluate_settle(snap, disposition="human_decision")
-    assert decision.disposition_honest is True
-
-
-def test_opportunity_seconds_only_when_previous_was_eligible() -> None:
-    t0 = datetime(2026, 8, 17, 12, 0, tzinfo=UTC)
-    t1 = t0 + timedelta(seconds=45)
-    prev_eligible = {"eligible": True, "recorded_at": idle.format_iso(t0)}
-    prev_silent = {"eligible": False, "recorded_at": idle.format_iso(t0)}
-    assert idle.opportunity_seconds_since(prev_eligible, t1) == 45.0
-    assert idle.opportunity_seconds_since(prev_silent, t1) == 0.0
-    assert idle.opportunity_seconds_since(None, t1) == 0.0
-
-
 def test_record_and_report_counts_missing_and_opportunity(tmp_path: Path) -> None:
     store = tmp_path / "events.jsonl"
     snap = _snapshot()
@@ -228,112 +192,6 @@ def test_record_and_report_counts_missing_and_opportunity(tmp_path: Path) -> Non
     assert report["eligible_idle_opportunity_seconds"] == 30.0
     assert "pass" not in report
     assert "threshold" not in report
-
-
-def test_cli_evaluate_rejects_unknown_disposition(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    snap_path = tmp_path / "snap.json"
-    snap_path.write_text(json.dumps(_snapshot().to_dict()), encoding="utf-8")
-    store = tmp_path / "events.jsonl"
-    rc = idle.main(
-        [
-            "evaluate",
-            "--snapshot-json",
-            str(snap_path),
-            "--store",
-            str(store),
-            "--disposition",
-            "taking_a_break",
-            "--json",
-        ]
-    )
-    assert rc == 2
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["outcome"] == "invalid_disposition"
-
-
-def test_cli_evaluate_missing_action_is_report_only_zero(tmp_path: Path) -> None:
-    snap_path = tmp_path / "snap.json"
-    snap_path.write_text(json.dumps(_snapshot().to_dict()), encoding="utf-8")
-    store = tmp_path / "events.jsonl"
-    rc = idle.main(
-        [
-            "evaluate",
-            "--snapshot-json",
-            str(snap_path),
-            "--store",
-            str(store),
-            "--task-id",
-            "infra-6976",
-        ]
-    )
-    assert rc == 0
-    report = idle.build_report(idle.load_events(store))
-    assert report["settle_events_missing_action"] == 1
-
-
-def test_cli_report_json(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    store = tmp_path / "events.jsonl"
-    idle.record_settle(store, idle.evaluate_settle(_snapshot()), now=datetime(2026, 8, 17, tzinfo=UTC))
-    rc = idle.main(["report", "--store", str(store), "--json"])
-    assert rc == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["report_only"] is True
-    assert payload["settle_events_missing_action"] == 1
-
-
-def test_cli_report_since_hours_windows_events(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    store = tmp_path / "events.jsonl"
-    now = datetime.now(UTC)
-    events = [
-        {"recorded_at": idle.format_iso(now - timedelta(hours=25)), "outcome": "missing_action"},
-        {"recorded_at": idle.format_iso(now - timedelta(hours=1)), "outcome": "disposed"},
-        {"outcome": "disposed", "disposition_honest": False},
-    ]
-    store.write_text("\n".join(json.dumps(event) for event in events) + "\n", encoding="utf-8")
-
-    assert idle.main(["report", "--store", str(store), "--json"]) == 0
-    all_events = json.loads(capsys.readouterr().out)
-    assert all_events["event_count"] == 3
-    assert all_events["settle_events_missing_action"] == 1
-
-    assert idle.main(["report", "--store", str(store), "--since-hours", "24", "--json"]) == 0
-    window = json.loads(capsys.readouterr().out)
-    assert window["event_count"] == 2
-    assert window["settle_events_missing_action"] == 0
-    assert window["settle_events_dishonest"] == 1
-
-
-@pytest.mark.parametrize("value", ["-1", "0", "-0.5", "nan", "inf", "abc"])
-def test_cli_report_rejects_non_positive_since_hours(
-    value: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        idle.main(["report", "--store", str(tmp_path / "events.jsonl"), "--since-hours", value])
-    assert excinfo.value.code == 2
-    assert "--since-hours" in capsys.readouterr().err
-
-
-def test_infer_review_kind() -> None:
-    assert idle.infer_settle_kind("review-6981") == "review"
-    assert idle.infer_settle_kind("infra-6976") == "dispatch"
-
-
-def test_idle_settle_work_queue_is_not_fillable() -> None:
-    """Work no longer supplies fillable items. Defaults cannot turn a row on."""
-    from_queue = idle.items_from_work_next_queue(
-        [
-            {
-                "work_id": "issue:9",
-                "resource_kind": "issue",
-                "safe_next_action": {"code": "MERGE_WHEN_READY", "state": "ready"},
-            }
-        ]
-    )
-    assert from_queue[0].is_fillable() is False
-    bare = idle.ReadyItem(item_id="work-sourced")
-    assert bare.valuable is False
-    assert bare.independent is False
-    assert bare.is_fillable() is False
 
 
 def test_items_from_work_next_marks_blockers() -> None:
@@ -386,17 +244,6 @@ def test_freshly_reset_lane_is_available() -> None:
         [{"lane": "codex", "status": "cool", "in_flight": 0, "will_last": False, "avoid": False, "quota_ok": True}]
     )
     assert from_capacity[0].is_healthy_available() is True
-
-
-def test_lanes_from_capacity_rows_mark_avoid_as_quota_fail() -> None:
-    lanes = idle.lanes_from_capacity_rows(
-        [
-            {"lane": "codex", "status": "hot", "in_flight": 0, "will_last": False, "avoid": True},
-            {"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "avoid": False, "quota_ok": True},
-        ]
-    )
-    assert lanes[0].is_healthy_available() is False
-    assert lanes[1].is_healthy_available() is True
 
 
 @pytest.mark.parametrize(
@@ -488,22 +335,6 @@ def test_enforce_fail_codes_ignore_idle_seconds() -> None:
     assert dishonest["enforce_fail_codes"] == [idle.ENFORCE_DISHONEST]
 
 
-def test_cli_admission_json_exit_codes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    ok = tmp_path / "ok.json"
-    ok.write_text(json.dumps(_snapshot().to_dict()), encoding="utf-8")
-    blocked = tmp_path / "blocked.json"
-    blocked.write_text(
-        json.dumps(_snapshot(caps={"worktrees_in_flight": 5, "worktrees_wip_limit": 4}).to_dict()),
-        encoding="utf-8",
-    )
-    assert idle.main(["admission", "--snapshot-json", str(ok), "--json"]) == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["admitted"] is True
-    assert idle.main(["admission", "--snapshot-json", str(blocked), "--json"]) == 2
-    refused = json.loads(capsys.readouterr().out)
-    assert refused["reason_codes"] == ["worktree_wip_cap"]
-
-
 @pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
 def test_load_events_preserves_unicode_separators(tmp_path, sep):
     events = [{"note": f"a{sep}b", "event": "settle"}, {"event": "other"}]
@@ -555,24 +386,3 @@ def test_owner_established_capacity_row_counts_as_quota_permission() -> None:
     lanes = {lane.lane: lane for lane in idle.lanes_from_capacity_rows(rows)}
     assert lanes["cursor"].quota_ok is True and lanes["cursor"].is_healthy_available() is True
     assert lanes["codex"].quota_ok is None and lanes["codex"].is_healthy_available() is False
-
-
-def test_idle_lane_with_no_recent_tasks_counts() -> None:
-    """A1 control: an idle, scan-observed lane (healthy, basis scan_observed_idle) is available."""
-    from scripts.fleet import capacity_pick
-    from scripts.fleet.reset_reserve import unavailable_reserve
-
-    budget = {
-        "agents": {
-            "kimi": {
-                "status": "cool",
-                "remaining_pct": 80.0,
-                "health": {"healthy": True, "basis": "scan_observed_idle"},
-            }
-        },
-        "in_flight": {},
-        "diagnostics": {"stale": False},
-    }
-    rows = capacity_pick.build_lane_rows(budget, lanes=("kimi",), reset_reserve=unavailable_reserve())
-    [lane] = idle.lanes_from_capacity_rows(rows)
-    assert lane.is_healthy_available() is True

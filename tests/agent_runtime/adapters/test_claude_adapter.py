@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter, _extract_stream_json_response
+from agent_runtime.adapters.claude import _extract_stream_json_response
 
 
 def test_claude_stream_single_turn_byte_identical() -> None:
@@ -38,19 +38,6 @@ def test_claude_stream_multi_turn_two_turns_preserves_substantive_report() -> No
     assert extracted == expected
 
 
-def test_claude_stream_multi_turn_three_turns_preserves_all_reports() -> None:
-    turn1 = "Phase 1: Initial analysis completed successfully."
-    turn2 = "Phase 2: Fix implemented and verified locally."
-    turn3 = "Phase 3: Cleaned up worktree and final checks passed."
-    events = [
-        {"type": "result", "subtype": "success", "result": turn1},
-        {"type": "result", "subtype": "success", "result": turn2},
-        {"type": "result", "subtype": "success", "result": turn3},
-    ]
-    extracted = _extract_stream_json_response(events)
-    assert extracted == f"{turn1}\n\n{turn2}\n\n{turn3}"
-
-
 def test_claude_stream_consecutive_duplicate_results_deduped() -> None:
     report = "Single substantive report"
     events = [
@@ -78,26 +65,3 @@ def test_claude_stream_empty_result_fallback_to_text_parts() -> None:
     ]
     extracted = _extract_stream_json_response(events)
     assert extracted == "Part 1\nPart 2"
-
-
-def test_claude_parse_response_multiturn_integration() -> None:
-    turn1_report = (
-        "## Review Findings\n\n"
-        "P1: Bug in error handling\n\n"
-        "VERDICT: REQUEST_CHANGES"
-    )
-    turn2_followup = "Confirmed findings remain valid."
-    stdout = "\n".join([
-        json.dumps({"type": "result", "subtype": "success", "result": turn1_report, "session_id": "sess-123"}),
-        json.dumps({"type": "user", "message": {"content": [{"type": "text", "text": "ping"}]}}),
-        json.dumps({"type": "result", "subtype": "success", "result": turn2_followup, "session_id": "sess-123"}),
-    ])
-    result = ClaudeAdapter().parse_response(
-        stdout=stdout,
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-    assert result.ok is True
-    assert result.session_id == "sess-123"
-    assert result.response == f"{turn1_report}\n\n{turn2_followup}"

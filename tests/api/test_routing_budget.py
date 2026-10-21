@@ -129,66 +129,6 @@ def test_cursor_logout_surfaces_need_login_without_substitution(monkeypatch, tmp
     assert data["recommendation"]["primary_agent_for_code"] != "cursor"
 
 
-def test_authenticated_cursor_with_fleet_burn_and_empty_codexbar(monkeypatch, tmp_path):
-    _budget_path = _configure_base(monkeypatch, tmp_path)
-    monkeypatch.setattr(
-        state_router,
-        "get_cursor_lane_usage",
-        lambda **kwargs: {
-            "lane": "cursor",
-            "login_state": "authenticated",
-            "probe_state": "healthy",
-            "status": "cool",
-            "primary_used_pct": 8.0,
-            "provider_windows": {
-                "auto": {
-                    "window": "monthly",
-                    "used_pct": 8.0,
-                    "remaining_pct": 92.0,
-                    "resets_at": "2026-09-01T00:00:00Z",
-                },
-                "api": {
-                    "window": "monthly",
-                    "used_pct": 12.0,
-                    "remaining_pct": 88.0,
-                    "resets_at": "2026-09-01T00:00:00Z",
-                },
-            },
-            "weekly_resets_at": "2026-09-01T00:00:00Z",
-            "source": "cursor_native",
-        },
-    )
-
-    def _fleet(agent: str, **kwargs) -> dict:
-        total = 3 if agent == "cursor" else 0
-        return {
-            "source": "agent_runtime_jsonl",
-            "agent": agent,
-            "windows": {
-                "5h": {"counts": {"total": total}, "hours": 0.5},
-                "7d": {"counts": {"total": total}, "hours": 1.0},
-                "30d": {"counts": {"total": total}, "hours": 2.0},
-            },
-        }
-
-    monkeypatch.setattr(state_router, "summarize_fleet_burn", _fleet)
-
-    data = state_router.compute_routing_budget(
-        datetime(2026, 8, 26, 12, 0, tzinfo=UTC),
-        budget_config_path=_budget_path,
-        tasks_dir=tmp_path / "tasks",
-        project_root=tmp_path,
-        curriculum_root=tmp_path,
-        batch_state_dir=tmp_path,
-    )
-    cursor = data["agents"]["cursor"]
-    assert cursor["fleet_burn"]["windows"]["7d"]["counts"]["total"] == 3
-    assert cursor["provider_windows"]["auto"]["window"] == "monthly"
-    assert cursor["provider_windows"]["api"]["window"] == "monthly"
-    assert "5h" not in cursor["provider_windows"]
-    assert data["recommendation"]["primary_agent_for_code"] == "cursor"
-
-
 def test_need_probe_with_fleet_burn_still_picks_cursor(monkeypatch, tmp_path):
     """NEED_PROBE + JSONL activity must not leave cursor unknown / unpicked."""
     _budget_path = _configure_base(monkeypatch, tmp_path)

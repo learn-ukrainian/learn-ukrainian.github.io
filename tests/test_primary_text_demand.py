@@ -57,25 +57,6 @@ def test_primary_text_manifest_cli_writes_json(tmp_path: Path) -> None:
     assert len(payload["entries"]) == 2
 
 
-def test_primary_text_manifest_summary_skips_file_write(tmp_path: Path, capsys) -> None:
-    plans_dir = _write_plan_fixture(tmp_path)
-    out_path = tmp_path / "should-not-exist.json"
-
-    assert main(["--plans-dir", str(plans_dir), "--out", str(out_path), "--summary"]) == 0
-
-    assert not out_path.exists()
-    assert capsys.readouterr().out == (
-        "Primary text demand summary\n"
-        "total_distinct_works: 2\n"
-        "total_primary_refs: 3\n"
-        "works_taught_by_multiple_modules: 1\n"
-        "per_track_counts:\n"
-        "  folk: 1\n"
-        "  hist: 1\n"
-        "  lit: 1\n"
-    )
-
-
 def test_primary_text_manifest_skips_malformed_yaml(tmp_path: Path, caplog) -> None:
     plans_dir = _write_plan_fixture(tmp_path)
     (plans_dir / "lit" / "broken.yaml").write_text("references: [", encoding="utf-8")

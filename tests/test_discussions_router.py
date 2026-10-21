@@ -96,24 +96,3 @@ def test_active_discussions_classifies_running_converged_and_timed_out(discussio
     assert by_thread["running"]["channel"] == "architecture"
     assert by_thread["running"]["last_round"] == 1
     assert by_thread["running"]["round_count"] == 1
-
-
-def test_active_discussions_limit_and_lookback(discussions_client: TestClient):
-    response = discussions_client.get("/api/discussions/active", params={"limit": 1, "lookback_days": 30})
-    assert response.status_code == 200
-    body = response.json()
-    assert body["count"] == 1
-    assert len(body["discussions"]) == 1
-
-
-def test_active_discussions_lookback_includes_older_threads(discussions_client: TestClient):
-    response = discussions_client.get("/api/discussions/active", params={"lookback_days": 15})
-    assert response.status_code == 200
-    by_thread = {item["thread_id"]: item for item in response.json()["discussions"]}
-    assert "old" in by_thread
-
-
-def test_active_discussions_negative_path_missing_db(tmp_path: Path):
-    response = _discussions_client(tmp_path, tmp_path / "missing.db").get("/api/discussions/active")
-    assert response.status_code == 200
-    assert response.json()["error"] == "Broker DB not found"

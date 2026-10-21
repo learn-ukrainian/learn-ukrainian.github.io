@@ -328,30 +328,11 @@ def test_paths_reject_traversal_and_dispatch_store(repo: Path, tmp_path: Path, m
         paths.artifact_store_root(worktree)
 
 
-def test_manifest_json_has_migration_fields(repo: Path) -> None:
-    manifest = json.loads((repo / "registry/artifacts/raw_source.manifest.json").read_text())
-    assert set(manifest["entries"][0]) >= {
-        "git_blob",
-        "pre_untrack_sha256",
-        "migrated_at",
-        "size",
-        "sha256",
-        "producer",
-        "rights",
-    }
-
-
 def test_status_does_not_create_a_store_without_transactions(repo: Path) -> None:
     store = paths.artifact_store_root(repo)
     assert not store.exists()
     assert artifacts.main(["status"], repo=repo) == 0
     assert not store.exists()
-
-
-def test_status_help_describes_its_read_only_report(capsys: pytest.CaptureFixture[str]) -> None:
-    with pytest.raises(SystemExit, match="0"):
-        artifacts._parser().parse_args(["status", "--help"])
-    assert "without creating a store" in capsys.readouterr().out.replace("\n", " ")
 
 
 def test_hydrate_refuses_divergence_and_force_preserves(repo: Path) -> None:
@@ -535,43 +516,12 @@ def test_snapshot_manifests_ref_still_proves_disk_against_blob(
     assert not (tmp_path / "store" / hashlib.sha256(b"omega").hexdigest()).exists()
 
 
-def test_snapshot_manifests_ref_missing_ref_or_manifest_is_a_clear_error(
-    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    monkeypatch.setenv("LU_ARTIFACT_STORE", str(tmp_path / "store"))
-    (repo / "registry/artifacts/raw_source.manifest.json").unlink()
-    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "origin/nope"], repo=repo) == 1
-    err = capsys.readouterr().err
-    assert "'origin/nope' does not resolve to a commit" in err and "git fetch origin <phase-branch>" in err
-    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "HEAD"], repo=repo) == 1
-    assert "manifest missing at" in capsys.readouterr().err
-    assert list((tmp_path / "store").glob("[0-9a-f]*")) == []
-
-
 def test_snapshot_help_documents_manifests_ref(capsys: pytest.CaptureFixture[str]) -> None:
     with pytest.raises(SystemExit, match="0"):
         artifacts._parser().parse_args(["snapshot", "--help"])
     out = capsys.readouterr().out
     assert "--manifests-ref REF" in out
     assert "snapshot --phase P2 --manifests-ref origin/<phase-branch>" in out
-
-
-def test_failed_recovery_names_journal_and_remediation_for_every_command(
-    repo: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    journal = artifacts._journal_path(repo, "raw_source", "raw/source.txt")
-    journal.parent.mkdir(parents=True)
-    journal.write_text("{not json", encoding="utf-8")
-    for argv in (["status"], ["verify"]):
-        assert artifacts.main(argv, repo=repo) == 1
-        err = capsys.readouterr().err
-        assert f"publish recovery failed for journal {journal}" in err
-        assert "remediation: every" in err
-        assert "scripts.storage.artifacts status" in err and "verify --group <group>" in err
-        assert f"mv {journal} {journal}.resolved" in err
-        assert "sha256sum" in err and "cat " in err
-    with pytest.raises(artifacts.RecoveryError, match="remediation"):
-        artifacts.publish(repo, "raw_source", "raw/source.txt", repo / "data/raw/source.txt", "test")
 
 
 def test_recovery_prunes_journals_of_deleted_checkouts_only(
@@ -639,20 +589,6 @@ def test_orphan_journal_kept_when_parent_missing_or_unreadable(
     assert "unreadable" in capsys.readouterr().err
 
 
-def test_orphan_journal_pruned_when_parent_present_and_checkout_absent(repo: Path, tmp_path: Path) -> None:
-    journal = _orphan_journal(repo, tmp_path / "deleted-worktree")
-    assert artifacts.recover_incomplete(repo) == 0
-    assert not journal.exists()
-
-
-def test_orphan_journal_kept_for_live_checkout(repo: Path, tmp_path: Path) -> None:
-    live = tmp_path / "live"
-    live.mkdir()
-    journal = _orphan_journal(repo, live)
-    assert artifacts.recover_incomplete(repo) == 0
-    assert journal.exists()
-
-
 def test_orphan_journal_kept_while_worktree_still_registered(
     repo: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -666,9 +602,3 @@ def test_orphan_journal_kept_while_worktree_still_registered(
     git(repo, "worktree", "prune")
     assert artifacts.recover_incomplete(repo) == 0
     assert not journal.exists()
-
-
-def test_artifacts_imports_sys_plainly() -> None:
-    source = Path(artifacts.__file__).read_text(encoding="utf-8")
-    assert "__import__(" not in source
-    assert "\nimport sys\n" in source

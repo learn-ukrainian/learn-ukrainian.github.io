@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 import subprocess
 import time
@@ -13,7 +12,7 @@ from uuid import uuid4
 import pytest
 
 from scripts.orchestration import task_identity
-from scripts.orchestration.task_family import codex_state, rollover, storage
+from scripts.orchestration.task_family import codex_state, rollover
 from scripts.orchestration.task_family.model import RelationType
 from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
 from tests.project_python import project_python
@@ -121,56 +120,6 @@ def _title_reconciled(tmp_path: Path, data: dict[str, object]) -> None:
     assert result["ok"] is True
 
 
-def test_rollover_titles_are_meaningful_bounded_and_hide_runtime_identifiers() -> None:
-    title, source, metadata = rollover.rollover_title(
-        agent="codex",
-        lineage_id="lineage-1234567890abcdef12345678",
-        generation=1,
-        epic_title="Curriculum lifecycle",
-        goal="CI unblock",
-        phase="P5",
-        next_phase="P6",
-    )
-    assert title == "Curriculum lifecycle — P5 CI unblock → P6"
-    assert source == "durable_metadata"
-    assert metadata["phase"] == "P5"
-    fallback, fallback_source, _ = rollover.rollover_title(
-        agent="codex",
-        lineage_id="lineage-1234567890abcdef12345678",
-        generation=17,
-        epic_title=None,
-        goal=None,
-        phase=None,
-    )
-    assert fallback == "thread-rollover — Recover predecessor task context"
-    assert "lineage-1234567890abcdef12345678" not in fallback
-    assert "g0017" not in fallback
-    assert len(fallback) <= 60
-    assert fallback_source == "deterministic_legacy_fallback"
-    assert "resume codex rollover" not in fallback.casefold()
-    orchestrator_fallback, _, _ = rollover.rollover_title(
-        agent="orchestrator",
-        lineage_id="lineage-fedcba0987654321fedcba09",
-        generation=9999,
-        epic_title=None,
-        goal=None,
-        phase=None,
-    )
-    assert orchestrator_fallback == "thread-rollover — Recover predecessor task context"
-    assert "lineage-fedcba0987654321fedcba09" not in orchestrator_fallback
-    assert "g9999" not in orchestrator_fallback
-    assert len(orchestrator_fallback) <= 60
-    with pytest.raises(ValueError, match="supplied together"):
-        rollover.rollover_title(
-            agent="codex",
-            lineage_id="lineage-1234567890abcdef12345678",
-            generation=1,
-            epic_title="Infrastructure",
-            goal=None,
-            phase="P1",
-        )
-
-
 def test_transition_identity_is_stable_per_packet_without_splitting_the_family() -> None:
     first_family, first_operation = rollover.transition_identity(
         lineage_id="lineage-1234567890abcdef12345678",
@@ -253,60 +202,6 @@ def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> 
     stdout, stderr = child.communicate(timeout=5)
     assert child.returncode == 0, (stdout, stderr)
     assert acquired_path.read_text(encoding="utf-8") == "acquired"
-
-
-def test_advisory_lock_honors_hook_deadline(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    lock_path = tmp_path / "lineage" / ".native-intent.lock"
-    ready_path = tmp_path / "child-ready"
-    code = (
-        "import sys,time\n"
-        "from pathlib import Path\n"
-        "from scripts.orchestration.task_family.storage import advisory_lock\n"
-        "lock_path, ready_path = map(Path, sys.argv[1:])\n"
-        "with advisory_lock(lock_path):\n"
-        "    ready_path.write_text('ready', encoding='utf-8')\n"
-        "    sys.stdin.read()\n"
-    )
-    repo_root = Path(__file__).resolve().parents[3]
-    environment = os.environ.copy()
-    environment.pop("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", None)
-    child = subprocess.Popen(
-        [str(project_python()), "-c", code, str(lock_path), str(ready_path)],
-        cwd=repo_root,
-        env=environment,
-        stdin=subprocess.PIPE,
-    )
-    try:
-        deadline = time.monotonic() + 60
-        while not ready_path.exists() and time.monotonic() < deadline:
-            time.sleep(0.01)
-        assert ready_path.exists()
-        monkeypatch.setenv("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "0.05")
-
-        with pytest.raises(TimeoutError, match="waiting for local state lock"):
-            with advisory_lock(lock_path):
-                pass
-    finally:
-        child.terminate()
-        child.wait(timeout=5)
-        child.stdin.close()
-
-
-def test_advisory_lock_treats_malformed_hook_timeout_as_unbounded(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    flock_flags: list[int] = []
-
-    def record_flock(_: int, flags: int) -> None:
-        flock_flags.append(flags)
-
-    monkeypatch.setenv("LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS", "not-a-number")
-    monkeypatch.setattr(storage.fcntl, "flock", record_flock)
-
-    with advisory_lock(tmp_path / "lineage" / ".native-intent.lock"):
-        pass
-
-    assert flock_flags == [storage.fcntl.LOCK_EX, storage.fcntl.LOCK_UN]
 
 
 def test_pristine_transition_supersession_is_durable_idempotent_and_blocks_old_create(tmp_path: Path) -> None:

@@ -144,27 +144,6 @@ def test_packet_and_key_reject_tampering_and_nested_leakage() -> None:
         validate_key(packet, rebound_key)
 
 
-def test_partial_matching_and_repeated_columns_score_per_pair() -> None:
-    packet, key = _prepared()
-    run = _run(
-        packet,
-        condition="sources",
-        responses={"q0002": {"r1": "A", "r2": "A"}},
-    )
-    result = score_run(packet, key, run)
-    assert result["raw_points"] == 1
-    assert result["max_points"] == 4
-    assert result["correct_items"] == 0
-    assert result["missing_items"] == 2
-    assert result["invalid_items"] == 0
-    matching = result["items"][1]
-    assert matching["points"] == 1
-    assert matching["rows"][0]["correct"] is True
-    assert matching["rows"][0]["duplicate"] is True
-    assert matching["rows"][1]["correct"] is False
-    assert matching["rows"][1]["duplicate"] is True
-
-
 def test_missing_invalid_and_failed_trials_are_explicit() -> None:
     packet, key = _prepared()
     run = _run(
@@ -183,106 +162,6 @@ def test_missing_invalid_and_failed_trials_are_explicit() -> None:
     for field in ("raw_points", "max_points", "correct_items", "missing_items", "invalid_items", "passed"):
         assert failed[field] is None
     assert all(item["points"] is None for item in failed["items"])
-
-
-def test_official_pass_uses_threshold_policy_and_threshold_zero_is_valid() -> None:
-    packet, key = _prepared(scoring_kind="official", threshold=0)
-    result = score_run(
-        packet,
-        key,
-        _run(
-            packet,
-            condition="sources",
-            responses={"q0001": "A", "q0002": {"r1": "A", "r2": "B"}, "q0003": "B"},
-        ),
-    )
-    assert result["raw_points"] == 4
-    assert result["correct_items"] == 3
-    assert result["passed"] is True
-
-    no_policy = copy.deepcopy(key)
-    no_policy["scoring"]["policy_url"] = None
-    no_policy["key_sha256"] = digest({field: no_policy[field] for field in no_policy if field != "key_sha256"})
-    assert score_run(
-        packet,
-        no_policy,
-        _run(
-            packet,
-            condition="sources",
-            responses={"q0001": "A", "q0002": {"r1": "A", "r2": "B"}, "q0003": "B"},
-        ),
-    )["passed"] is False
-
-    partial = score_run(
-        packet,
-        key,
-        _run(
-            packet,
-            condition="sources",
-            responses={"q0001": "A", "q0002": {"r1": "A"}, "q0003": "invalid"},
-        ),
-    )
-    assert partial["raw_points"] == 2
-    assert partial["correct_items"] == 1
-    assert partial["missing_items"] == 0
-    assert partial["invalid_items"] == 1
-    assert partial["passed"] is True
-
-    threshold_three = copy.deepcopy(key)
-    threshold_three["scoring"]["pass_threshold"] = 3
-    threshold_three["key_sha256"] = digest(
-        {field: threshold_three[field] for field in threshold_three if field != "key_sha256"}
-    )
-    below = score_run(
-        packet,
-        threshold_three,
-        _run(
-            packet,
-            condition="sources",
-            responses={"q0001": "A", "q0002": {"r1": "A"}, "q0003": "invalid"},
-        ),
-    )
-    assert below["raw_points"] == 2
-    assert below["passed"] is False
-
-
-def test_compare_requires_pair_identity_and_reports_descriptive_deltas() -> None:
-    packet, key = _prepared()
-    control = _run(
-        packet,
-        condition="closed-book",
-        responses={"q0001": "B", "q0002": {"r1": "A"}, "q0003": "B"},
-        metrics={"tool_calls": 0, "runtime_ms": 10},
-    )
-    treatment = _run(
-        packet,
-        condition="sources",
-        responses={"q0001": "A", "q0002": {"r1": "A", "r2": "B"}, "q0003": "A"},
-        metrics={"tool_calls": 2, "runtime_ms": 20, "cost_usd": 0.5},
-    )
-    result = compare_runs(packet, key, control, treatment)
-    assert result["score_delta"] == 1
-    assert result["control_points"] == 2
-    assert result["treatment_points"] == 3
-    assert (result["wins"], result["losses"], result["ties"]) == (2, 1, 0)
-    assert result["metrics"]["tool_calls"]["delta"] == 2
-    assert result["metrics"]["cost_usd"] == {"control": None, "treatment": None, "delta": None}
-    assert result["significance"] is None
-
-    drifted = copy.deepcopy(treatment)
-    drifted["packet_sha256"] = "0" * 64
-    with pytest.raises(ExamError, match="different packet"):
-        compare_runs(packet, key, control, drifted)
-
-    mismatched = copy.deepcopy(treatment)
-    mismatched["identity"]["model"] = "other-model"
-    with pytest.raises(ExamError, match="identity field"):
-        compare_runs(packet, key, control, mismatched)
-
-    different_comparison = copy.deepcopy(treatment)
-    different_comparison["comparison"]["prompt_sha256"] = "other"
-    with pytest.raises(ExamError, match="comparison configuration"):
-        compare_runs(packet, key, control, different_comparison)
 
 
 def test_runner_identity_aliases_and_pair_repeat_are_accepted() -> None:

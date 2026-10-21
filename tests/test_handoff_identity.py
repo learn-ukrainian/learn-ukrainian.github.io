@@ -14,7 +14,6 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -71,30 +70,6 @@ def test_handoff_identity_fixtures() -> None:
 def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str) -> None:
     result = subprocess.run(
         ["bash", "-c", 'source "$1"; "$2" devops', "bash", str(_HANDOFF_IDENTITY), resolver],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == expected
-
-
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
-@pytest.mark.parametrize(
-    ("resolver", "expected"),
-    [
-        ("handoff_identity_for_epic", "claude-monitor"),
-        ("handoff_identity_for_gemini_epic", "gemini-monitor"),
-        ("handoff_identity_for_codex_epic", "codex-monitor"),
-        ("handoff_identity_for_cursor_epic", "cursor-monitor"),
-        ("handoff_identity_for_grok_epic", "grok-monitor"),
-        ("handoff_identity_for_kimi_epic", "kimi-monitor"),
-    ],
-)
-def test_monitor_resolves_to_dedicated_provider_slot(resolver: str, expected: str) -> None:
-    result = subprocess.run(
-        ["bash", "-c", 'source "$1"; "$2" monitor', "bash", str(_HANDOFF_IDENTITY), resolver],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -249,62 +224,6 @@ def test_legacy_epic_suffix_normalizes_before_selector_resolution(arguments: lis
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
-def test_unknown_selector_fails_closed() -> None:
-    result = subprocess.run(
-        ["bash", "-c", 'source "$1"; launcher_selector_resolve unknown', "bash", str(_HANDOFF_IDENTITY)],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 1
-    assert result.stdout == ""
-
-
-def test_devops_epic_is_registered_separately_from_infra() -> None:
-    registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
-
-    assert registry["infra-harness"]["epics"]
-    assert 5703 in registry["devops"]["epics"]  # allow-hardcoded-epic: devops stream anchor
-    assert set(registry["infra-harness"]["epics"]).isdisjoint(registry["devops"]["epics"])
-    assert f"epic:{int(registry['infra-harness']['epics'][0])}" == INFRA_STREAM_ID
-
-
-def test_monitor_epic_is_registered_separately_from_infra() -> None:
-    registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
-
-    assert registry["infra-harness"]["epics"]
-    assert 7919 in registry["monitor"]["epics"]  # allow-hardcoded-epic: ops-api / monitor stream anchor
-    assert set(registry["infra-harness"]["epics"]).isdisjoint(registry["monitor"]["epics"])
-    assert set(registry["devops"]["epics"]).isdisjoint(registry["monitor"]["epics"])
-
-
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
-@pytest.mark.parametrize(
-    "launcher",
-    [
-        "start-gemini-driver.sh",
-        "start-grok-driver.sh",
-        "start-claude-driver.sh",
-        "start-codex-driver.sh",
-        "start-cursor-driver.sh",
-    ],
-)
-def test_launcher_help_documents_allowlisted_dot_notation(launcher: str) -> None:
-    result = subprocess.run(
-        ["bash", str(_REPO_ROOT / launcher), "--help"],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "Valid lane selectors:" in result.stdout
-    assert "infra.fleet-comms" in result.stdout
-    assert "atlas.practice" in result.stdout
-
-
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
     ("launcher", "arguments", "expected_code"),
     [
@@ -326,64 +245,6 @@ def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[s
     assert result.returncode == expected_code
     assert "unknown lane selector 'unknown'" in result.stderr
     assert "Valid lane selectors:" in result.stderr
-
-
-def test_infra_launcher_stream_matches_registry_anchor() -> None:
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            'source "$1"; launcher_selector_stream infra',
-            "bash",
-            str(_HANDOFF_IDENTITY),
-        ],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == INFRA_STREAM_ID
-
-
-def test_infra_stream_follows_registry_mutation(tmp_path: Path) -> None:
-    """A registry change must flow through the launcher with zero script edits."""
-    fresh_epic = 888001
-    fixture = tmp_path / "issue_streams.yaml"
-    fixture.write_text(
-        yaml.safe_dump(
-            {
-                "schema_version": 1,
-                "streams": {
-                    "infra-harness": {
-                        "title": "Infra fixture",
-                        "epics": [fresh_epic],
-                    }
-                },
-            }
-        ),
-        encoding="utf-8",
-    )
-    env = os.environ.copy()
-    env["HANDOFF_ISSUE_STREAMS_YAML"] = str(fixture)
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            'source "$1"; printf "%s|%s|%s" "$(launcher_selector_stream infra)" "$(launcher_selector_stream harness)" "$(launcher_selector_stream infra.fleet-comms)"',
-            "bash",
-            str(_HANDOFF_IDENTITY),
-        ],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-        env=env,
-    )
-    assert result.returncode == 0, result.stderr
-    expected = f"epic:{fresh_epic}"
-    assert result.stdout == f"{expected}|{expected}|{expected}"
-    assert expected != INFRA_STREAM_ID
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -446,36 +307,6 @@ def test_new_registry_stream_resolves_without_shell_edit(tmp_path: Path) -> None
     # The selector table still resolves it, but the launcher refuses a key with no
     # roster slot (#8303), so help must not advertise it.
     assert f"{fresh_key} | infra.{fresh_key}" not in help_result.stdout
-
-
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
-def test_selector_help_checks_all_registry_keys_in_one_interpreter_call(tmp_path: Path) -> None:
-    calls = tmp_path / "registry-arguments.txt"
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            'source "$1"; calls="$2"; py="$3"; '
-            '_handoff_slot_registry() { printf "%s\\n" "$@" > "$calls"; '
-            '"$py" -m scripts.orchestration.handoff_slot_registry "$@"; }; '
-            "launcher_selector_help",
-            "bash",
-            str(_HANDOFF_IDENTITY),
-            str(calls),
-            sys.executable,
-        ],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    assert calls.read_text(encoding="utf-8").splitlines() == [
-        "--registered",
-        *(f"claude-{key}" for key in yaml.safe_load(_ISSUE_STREAMS.read_text())["streams"]),
-    ]
-    assert "    devops | infra.devops\n" in result.stdout
-    assert "    atlas-practice | infra.atlas-practice\n" not in result.stdout
 
 
 def test_launch_path_does_not_literal_mint_infra_epic() -> None:

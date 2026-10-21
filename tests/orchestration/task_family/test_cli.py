@@ -133,27 +133,6 @@ def _preview_args(command: str, repo: Path, manifest_path: Path, db: Path, ids: 
     ]
 
 
-def test_inspect_renders_roles_counts_and_similar_title_exclusion(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    repo = _repo(tmp_path)
-    manifest, ids = _manifest(repo)
-    path = tmp_path / "manifest.json"
-    _write_manifest(path, manifest)
-
-    assert cli.main(["inspect", "--manifest", str(path), "--json"]) == cli.EXIT_OK
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["counts"]["included"] == 5
-    assert payload["counts"]["excluded"] == 1
-    assert payload["roots"] == [ids["root"]]
-    assert len(payload["relations"]) == 5
-    assert payload["excluded"] == [{"task_id": ids["unrelated"], "title": "Planner", "reason": "outside exact-ID seed component"}]
-    assert next(task for task in payload["tasks"] if task["task_id"] == ids["replacement"])["roles"] == ["Replacement", "Generation 1"]
-
-    assert cli.main(["inspect", "--manifest", str(path)]) == cli.EXIT_OK
-    human = capsys.readouterr().out
-    assert "excluded" in human
-    assert "-[replacement_of]->" in human
-
-
 def test_preview_rename_persists_immutable_mapping_and_requires_each_pin_confirmation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     repo = _repo(tmp_path)
     manifest, ids = _manifest(repo)

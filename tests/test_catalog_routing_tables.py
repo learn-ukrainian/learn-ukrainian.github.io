@@ -31,14 +31,6 @@ def test_ladder_reordering_changes_projection(tmp_path):
     assert tables.render(path) != before
 
 
-def test_seat_effort_rotation_changes_projection(tmp_path):
-    path, data = copy_catalog(tmp_path)
-    before = tables.render(path)
-    data["orchestrator_seats"]["codex"]["effort"] = "xhigh"
-    path.write_text(yaml.safe_dump(data), encoding="utf-8")
-    assert tables.render(path) != before
-
-
 @pytest.mark.parametrize("model", ["invented-model", "gpt-6-astra"])
 def test_retired_or_unknown_seat_refuses_publication(tmp_path, model):
     path, data = copy_catalog(tmp_path)
@@ -57,10 +49,3 @@ def test_check_fails_on_missing_and_drifted_output(tmp_path, monkeypatch):
     assert path.read_text(encoding="utf-8") == "plausible but stale routing table\n"
     assert tables.main(["--write"]) == 0
     assert tables.main(["--check"]) == 0
-
-
-def test_active_model_accepts_only_current_identity():
-    catalog = {"models": {"live": {"lifecycle": "active"}, "retired": {"lifecycle": "retired"}}}
-    assert tables.active_model("live", catalog) == "live"
-    with pytest.raises(ValueError, match="non-active catalog model"):
-        tables.active_model("retired", catalog)

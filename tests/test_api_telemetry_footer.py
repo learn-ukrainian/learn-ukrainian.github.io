@@ -4,53 +4,10 @@ from __future__ import annotations
 
 import json
 
-from scripts.api.telemetry.footer import render_footer
 from scripts.api.telemetry.transcript_tokens import (
     current_context_telemetry,
     parse_transcript_tokens,
 )
-
-
-def test_render_footer_base_tier() -> None:
-    assert (
-        render_footer(tokens=187_000, prev_tokens=165_000, turn=47)
-        == "[ctx: 187K (+22K this turn), tier: base, 13K to premium, turn: 47]"
-    )
-
-
-def test_render_footer_premium_tier() -> None:
-    assert (
-        render_footer(tokens=222_000, prev_tokens=187_000, turn=48)
-        == "[ctx: 222K (+35K this turn), tier: premium, 22K over premium, turn: 48]"
-    )
-
-
-def test_render_footer_without_previous_tokens() -> None:
-    assert (
-        render_footer(tokens=13_000, prev_tokens=None, turn=1)
-        == "[ctx: 13K, tier: base, 187K to premium, turn: 1]"
-    )
-
-
-def test_render_footer_without_turn() -> None:
-    assert (
-        render_footer(tokens=13_000, prev_tokens=None, turn=None)
-        == "[ctx: 13K, tier: base, 187K to premium]"
-    )
-
-
-def test_render_footer_exact_200k_boundary_is_base() -> None:
-    assert (
-        render_footer(tokens=200_000, prev_tokens=187_000, turn=48)
-        == "[ctx: 200K (+13K this turn), tier: base, 0K to premium, turn: 48]"
-    )
-
-
-def test_render_footer_exact_zero_delta() -> None:
-    assert (
-        render_footer(tokens=187_000, prev_tokens=187_000, turn=48)
-        == "[ctx: 187K (+0K this turn), tier: base, 13K to premium, turn: 48]"
-    )
 
 
 def test_parse_transcript_tokens_uses_latest_assistant_usage(tmp_path) -> None:

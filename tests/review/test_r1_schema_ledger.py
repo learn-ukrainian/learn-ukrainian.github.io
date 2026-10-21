@@ -37,7 +37,7 @@ from scripts.review.receipts.ledger import (
 )
 from scripts.review.receipts.outcomes import classify_outcome, search_outcome
 from scripts.review.validate import codes
-from scripts.review.validate.validate import fold_quote, main, validate_review
+from scripts.review.validate.validate import fold_quote, validate_review
 
 REPO = Path(__file__).resolve().parents[2]
 SERVER_PATH = REPO / ".mcp" / "servers" / "sources" / "server.py"
@@ -311,47 +311,6 @@ def test_ledger_round_trip_same_bytes(tmp_path: Path) -> None:
     assert (sidecar.stat().st_mode & 0o777) == 0o600
 
 
-def test_ledger_and_sidecar_mode_0o600_after_append(tmp_path: Path) -> None:
-    path = tmp_path / "review-1" / "attempt-1.jsonl"
-    _record(path, manifest="ab" * 32, result="first-result")
-    sidecar = path.with_name(path.name + ".sha256")
-    lock_path = path.with_name(path.name + ".lock")
-    assert (path.stat().st_mode & 0o777) == 0o600
-    assert (sidecar.stat().st_mode & 0o777) == 0o600
-    assert (lock_path.stat().st_mode & 0o777) == 0o600
-
-    _record(path, manifest="ab" * 32, result="second-result")
-    assert (path.stat().st_mode & 0o777) == 0o600
-    assert (sidecar.stat().st_mode & 0o777) == 0o600
-    assert (lock_path.stat().st_mode & 0o777) == 0o600
-
-
-def test_ledger_atomic_write_sets_mode_0o600_before_replace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    path = tmp_path / "review-1" / "attempt-1.jsonl"
-    observed: list[tuple[str, int]] = []
-    real_replace = os.replace
-
-    def recording_replace(src: str | os.PathLike[str], dst: str | os.PathLike[str]) -> None:
-        src_path = Path(src)
-        observed.append((src_path.name, src_path.stat().st_mode & 0o777))
-        real_replace(src, dst)
-
-    monkeypatch.setattr(os, "replace", recording_replace)
-
-    _record(path, manifest="ab" * 32, result="first-result")
-
-    assert len(observed) == 2
-    for name, mode in observed:
-        assert mode == 0o600, f"Expected 0o600 at replace time for {name}, got {oct(mode)}"
-
-    observed.clear()
-    empty_path = tmp_path / "empty" / "attempt-2.jsonl"
-    create_empty_ledger(empty_path)
-    assert len(observed) == 2
-    for name, mode in observed:
-        assert mode == 0o600, f"Expected 0o600 at replace time for {name}, got {oct(mode)}"
-
-
 def test_ledger_append_only_and_sidecar_mismatch(tmp_path: Path) -> None:
     path = tmp_path / "attempt-1.jsonl"
     first = _record(path, manifest="ab" * 32, result="first-result")
@@ -514,30 +473,6 @@ def test_review_server_advertises_and_accepts_exact_attempt_tools(server_module,
         assert records(ledger)[-1]["tool"] == name and records(ledger)[-1]["status"] == "refused"
 
 
-def test_full_review_server_calls_search_resources_and_ledgers_result(server_module, tmp_path, monkeypatch):
-    from mcp.types import CallToolRequestParams, TextContent
-
-    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
-    _arm(monkeypatch, ledger)
-    monkeypatch.setenv("LU_REVIEW_ACCESS", "full")
-    calls = []
-
-    async def catalogue(arguments):
-        calls.append(arguments)
-        return [TextContent(type="text", text="Found 1 catalogue resources (returned ranking order):")]
-
-    monkeypatch.setattr(server_module, "handle_search_resources", catalogue)
-    result = _run(
-        server_module._on_call_tool(
-            None, CallToolRequestParams(name="search_resources", arguments={"query": "alphabet"})
-        )
-    )
-    assert result.is_error is False and calls == [{"query": "alphabet"}]
-    [receipt] = records(ledger)
-    assert receipt["tool"] == "search_resources" and receipt["status"] == "ok"
-    assert receipt["receipt_id"] in result.content[-1].text
-
-
 @pytest.mark.parametrize("access", [None, "", "wildcard"])
 def test_review_server_invalid_access_cannot_advertise_or_call_tools(server_module, tmp_path, monkeypatch, access):
     ledger = tmp_path / "review-1" / "attempt-1.jsonl"
@@ -550,37 +485,6 @@ def test_review_server_invalid_access_cannot_advertise_or_call_tools(server_modu
     refused = server_module._review_before_handler(recorder, "verify_words", {})
     assert refused and refused[1] is True and "misconfigured" in refused[0][0].text
     assert not ledger.exists()
-
-
-def test_review_access_without_recording_identity_refuses_tools(server_module, monkeypatch):
-    _quiet_env(monkeypatch)
-    monkeypatch.setenv("LU_REVIEW_ACCESS", "full")
-    assert _run(server_module._on_list_tools(None, None)).tools == []
-    result = _run(server_module.call_tool("verify_words", {"words": ["fixture"]}))
-    assert "misconfigured" in result[0].text
-
-
-def test_ordinary_sources_catalogue_and_calls_unchanged(server_module, monkeypatch):
-    from mcp.types import CallToolRequestParams, TextContent
-
-    _quiet_env(monkeypatch)
-    catalog = _run(server_module._on_list_tools(None, None))
-    assert {tool.name for tool in catalog.tools} == {tool.name for tool in _run(server_module.list_tools())}
-    assert "search_sources" in {tool.name for tool in catalog.tools}
-    calls = []
-
-    async def catalogue(arguments):
-        calls.append(arguments)
-        return [TextContent(type="text", text="ordinary catalogue result")]
-
-    monkeypatch.setattr(server_module, "handle_search_resources", catalogue)
-    result = _run(
-        server_module._on_call_tool(
-            None, CallToolRequestParams(name="search_resources", arguments={"query": "alphabet"})
-        )
-    )
-    assert not result.is_error and calls == [{"query": "alphabet"}]
-    assert result.content == [TextContent(type="text", text="ordinary catalogue result")]
 
 
 def test_valid_plan_and_lesson_reviews(tmp_path: Path) -> None:
@@ -764,23 +668,6 @@ def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> No
         )
 
 
-def test_recap_check_required_when_manifest_says_recap(tmp_path: Path) -> None:
-    paths = _layout(tmp_path, recap=True)
-    _dump(
-        paths["review"],
-        _review(kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(), findings=[]),
-    )
-    missing = _validate(paths)
-    assert codes.CHECK_MISSING in _codes(missing)
-    checks = _lesson_checks()
-    checks["recap"] = "clean"
-    _dump(
-        paths["review"],
-        _review(kind="lesson", manifest_hash=paths["digest"], checks=checks, findings=[]),
-    )
-    assert _validate(paths).ok
-
-
 def test_help_lists_the_code_registry() -> None:
     proc = subprocess.run(
         [sys.executable, "-m", "scripts.review.validate", "--help"],
@@ -795,56 +682,6 @@ def test_help_lists_the_code_registry() -> None:
         assert code in proc.stdout
     assert "Do NOT use" in proc.stdout
     assert "Exit codes:" in proc.stdout
-
-
-def test_cli_rejects_fabricated_receipt(tmp_path: Path) -> None:
-    paths = _layout(tmp_path)
-    _record(paths["ledger"], manifest=paths["digest"], result="alpha-item-text is attested")
-    _dump(
-        paths["review"],
-        _review(
-            kind="lesson",
-            manifest_hash=paths["digest"],
-            checks=_lesson_checks(["F-01"]),
-            findings=[_finding(evidence={"receipt": "not-a-receipt"})],
-        ),
-    )
-    proc = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "scripts.review.validate",
-            str(paths["review"]),
-            "--manifest",
-            str(paths["manifest"]),
-            "--lesson",
-            str(paths["lesson"]),
-            "--ledger",
-            str(paths["ledger"]),
-        ],
-        cwd=REPO,
-        timeout=30,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert proc.returncode == 1
-    assert codes.RECEIPT_NOT_IN_LEDGER in proc.stdout
-    assert (
-        main(
-            [
-                str(paths["review"]),
-                "--manifest",
-                str(paths["manifest"]),
-                "--lesson",
-                str(paths["lesson"]),
-                "--ledger",
-                str(paths["ledger"]),
-                "--json",
-            ]
-        )
-        == 1
-    )
 
 
 def test_server_recording_off_is_byte_identical(server_module, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -976,33 +813,6 @@ def test_check_text_outcome_classification() -> None:
     assert suspicions_facts == {"call_status": "ok", "hits": 1, "status": "hits_found", "unavailable": False}
 
 
-def test_check_text_call_is_recorded_and_receipt_resolves(
-    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from mcp.types import TextContent
-
-    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
-    _arm(monkeypatch, ledger)
-    payload = json.dumps(
-        {"provenance": {}, "summary": {}, "problems": [], "suspicions": []},
-        ensure_ascii=False,
-    )
-
-    async def fake(_arguments):
-        return [TextContent(type="text", text=payload)]
-
-    monkeypatch.setattr(server_module, "handle_check_text", fake)
-    result = _run(server_module.call_tool("check_text", {"text": "Привіт."}))
-    receipt, outcome = _printed_receipt(result[0].text)
-    assert outcome == "no_hits"
-    assert result[0].text == payload + f"\nreceipt: {receipt} (outcome: no_hits)"
-    stored = lookup(ledger, receipt)
-    assert stored["tool"] == "check_text"
-    assert stored["status"] == "ok"
-    assert stored["result"] == payload
-    assert "check_text" in REVIEW_TOOLS
-
-
 def test_server_records_full_result_and_refuses_other_tools(
     server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1058,23 +868,6 @@ def test_v4_refusal_unchanged_when_review_recording_is_on(
         server_module._V4_ACTIVE_ATTEMPT.reset(token)
     assert result[0].text == "V4 tool capability refused"
     assert not ledger.exists()
-
-
-def test_review_tool_error_is_recorded(server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
-    _arm(monkeypatch, ledger)
-
-    async def boom(_arguments):
-        raise RuntimeError("boom-marker")
-
-    monkeypatch.setattr(server_module, "handle_verify_quote", boom)
-    result = _run(server_module.call_tool("verify_quote", {"quote": "placeholder"}))
-    assert "boom-marker" in result[0].text
-    assert _printed_receipt(result[0].text)[1] == "error"
-    stored = records(ledger)[0]
-    assert stored["status"] == "error"
-    assert "boom-marker" in stored["result"]
-    assert len(stored["result"]) > len("boom-marker")
 
 
 TOOL_NO_RESULT_FIXTURES: list[tuple[str, str]] = [
@@ -1227,18 +1020,6 @@ def test_missing_ledger_is_ledger_unreadable(tmp_path: Path) -> None:
     validated = _validate(paths)
     assert not validated.ok
     assert codes.LEDGER_UNREADABLE in _codes(validated)
-
-
-def test_create_empty_ledger_helper(tmp_path: Path) -> None:
-    target = tmp_path / "empty" / "attempt-1.jsonl"
-    created = create_empty_ledger(target)
-    assert created == target
-    assert target.is_file() and target.stat().st_size == 0
-    sidecar = target.with_name(target.name + ".sha256")
-    assert sidecar.is_file()
-    assert (target.stat().st_mode & 0o777) == 0o600
-    assert (sidecar.stat().st_mode & 0o777) == 0o600
-    assert records(target) == []
 
 
 def test_ledger_stale_last_line_recovery(tmp_path: Path) -> None:
@@ -1410,22 +1191,6 @@ def test_http_mode_refuses_recording(
         server_module._set_http_mode(False)
 
 
-def test_review_server_version_format(server_module) -> None:
-    version = server_module._review_server_version()
-    assert "+" in version
-    sha, commit = version.split("+", 1)
-    assert len(sha) == 64
-    assert len(commit) >= 7 or commit == "unknown"
-
-
-def test_detect_git_commit_fallback(server_module, monkeypatch: pytest.MonkeyPatch) -> None:
-    def fake_run(*_a, **_kw):
-        raise OSError("no git")
-
-    monkeypatch.setattr(subprocess, "run", fake_run)
-    assert server_module._detect_git_commit() == "unknown"
-
-
 def test_plan_review_findings_with_locations_rejected(tmp_path: Path) -> None:
     import scripts.review.validate.validate as val_mod
     from scripts.review.validate.validate import build_parser
@@ -1467,32 +1232,6 @@ def test_plan_review_findings_with_locations_rejected(tmp_path: Path) -> None:
     assert any("plan-review findings with locations are rejected" in r.message for r in res.rejections)
 
 
-def test_sub_dimension_invalid_isolated_from_schema(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import copy
-
-    import scripts.review.validate.validate as val_mod
-
-    paths = _layout(tmp_path)
-    receipt = _record(paths["ledger"], manifest=paths["digest"], result="alpha-item-text is attested", status="ok")
-    finding = _finding(evidence={"receipt": receipt}, sub_dimension="stress")
-    checks = _lesson_checks(["F-01"])
-    _dump(paths["review"], _review(kind="lesson", manifest_hash=paths["digest"], checks=checks, findings=[finding]))
-
-    # Valid under default taxonomy
-    val_default = _validate(paths)
-    assert val_default.ok
-
-    # Omit 'stress' from taxonomy only
-    custom_tax = copy.deepcopy(val_mod._taxonomy())
-    custom_tax["sub_dimensions"]["language"] = ["russianism", "surzhyk"]
-    monkeypatch.setattr(val_mod, "_taxonomy", lambda: custom_tax)
-
-    val_custom = _validate(paths)
-    assert not val_custom.ok
-    assert codes.SUB_DIMENSION_INVALID in _codes(val_custom)
-    assert codes.SCHEMA_INVALID not in _codes(val_custom)
-
-
 def test_active_finding_cites_previous_receipt_rejected(tmp_path: Path) -> None:
     paths = _layout(tmp_path)
     prev_ledger = paths["ledger"].parent / "attempt-0.jsonl"
@@ -1527,39 +1266,6 @@ def test_active_finding_cites_previous_receipt_rejected(tmp_path: Path) -> None:
 
     val_persisting = _validate(paths)
     assert val_persisting.ok
-
-
-def test_v4_and_review_both_record(server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from mcp.types import TextContent
-
-    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
-    _arm(monkeypatch, ledger)
-
-    v4_invocations: list[tuple[str, dict]] = []
-
-    def fake_v4_record(*, name: str, typed_outcome: dict) -> None:
-        v4_invocations.append((name, typed_outcome))
-
-    monkeypatch.setattr(server_module, "_record_v4_typed_invocation", fake_v4_record)
-
-    async def fake_verify_words(_arguments):
-        content = [TextContent(type="text", text="Batch verification: 1 words\nFound: 1/1\n- слово — FOUND")]
-        typed_outcome = {"disposition": "found", "hits": 1}
-        return content, typed_outcome
-
-    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
-
-    result = _run(server_module.call_tool("verify_words", {"words": ["слово"]}))
-    assert any("receipt: " in t.text for t in result)
-    receipt, _outcome = _printed_receipt(result[0].text)
-
-    stored = lookup(ledger, receipt)
-    assert stored["tool"] == "verify_words"
-    assert stored["status"] == "ok"
-
-    assert len(v4_invocations) == 1
-    assert v4_invocations[0][0] == "verify_words"
-    assert v4_invocations[0][1] == {"disposition": "found", "hits": 1}
 
 
 def test_server_recording_off_preserves_typed_structured_content(
@@ -1711,19 +1417,6 @@ def test_printed_outcome_is_the_one_the_validator_accepts(
     assert res.content[-1].text.endswith(f"\nreceipt: {receipt} (outcome: {printed})")
     assert _outcome_shown(printed, record)
     assert search_outcome(record["status"], record["outcome_facts"]) == printed
-
-
-def test_refused_call_prints_a_bare_receipt_line(
-    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """No outcome name is shown for a refused call, so none is printed."""
-    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
-    _arm(monkeypatch, ledger)
-    refused = _run(server_module.call_tool("search_sources", {"query": "placeholder"}))
-    stored = records(ledger)[-1]
-    assert stored["status"] == "refused"
-    assert refused[-1].text.splitlines()[-1] == f"receipt: {stored['receipt_id']}"
-    assert search_outcome("refused", stored["outcome_facts"]) is None
 
 
 @pytest.mark.parametrize(

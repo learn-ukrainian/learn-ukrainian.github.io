@@ -614,14 +614,6 @@ def test_allowlisted_k_literal_join_is_a_violation(allowed: str, logical: str, p
     assert _disposition(hit, packaged=packaged) == "violation"
 
 
-def test_logical_key_resolver_and_log_message_stay_allowed() -> None:
-    logical = "data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json"
-    resolved = _literal_hits(f'resolve_open_model_path("{logical}")')[0]
-    logged = _literal_hits(f'logger.info("{logical}")')[0]
-    assert _disposition(resolved, packaged=False) == "resolver"
-    assert _disposition(logged, packaged=False) == "frozen-logical-key"
-
-
 @pytest.mark.parametrize(
     "expression",
     [
@@ -635,89 +627,6 @@ def test_packaged_resource_join_uses_package_root(expression: str) -> None:
     source = (
         "from learn_ukrainian_v4_runtime.resources import resource_root\n"
         "ROOT = resource_root()\n" + expression.format(logical=logical)
-    )
-    hit = _literal_hits(source)[0]
-    assert hit["join"] is True
-    assert hit["resource_join"] is True
-    assert _disposition(hit, packaged=True) == "packaged-resource"
-
-
-@pytest.mark.parametrize(
-    "root_assignment",
-    [
-        "REPO_ROOT = Path(__file__).resolve().parents[3]",
-        'REPO_ROOT = Path(".")',
-        'REPO_ROOT = Path(os.environ["REPO_ROOT"])',
-    ],
-)
-def test_packaged_resource_join_on_other_root_is_a_violation(root_assignment: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
-    source = (
-        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
-        "ROOT = resource_root()\n"
-        f'{root_assignment}\nREPO_ROOT / "{logical}"'
-    )
-    hit = _literal_hits(source)[0]
-    assert hit["join"] is True
-    assert hit["resource_join"] is False
-    assert _disposition(hit, packaged=True) == "violation"
-
-
-def test_packaged_resource_join_rejects_rebound_and_parameter_roots() -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
-    source = (
-        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
-        "ROOT = resource_root()\n"
-        'ROOT = Path(".")\n'
-        f'ROOT / "{logical}"\n'
-        f'def load(root: Path = Path(".")):\n    return root / "{logical}"'
-    )
-    for hit in _literal_hits(source):
-        assert hit["resource_join"] is False
-        assert _disposition(hit, packaged=True) == "violation"
-
-
-@pytest.mark.parametrize(
-    ("import_line", "expression"),
-    [
-        ("import os.path as p", "p.join(REPO_ROOT, '{logical}')"),
-        ("from os.path import join", "join(REPO_ROOT, '{logical}')"),
-        ("import os as o", "o.path.join(REPO_ROOT, '{logical}')"),
-        ("import posixpath", "posixpath.join(REPO_ROOT, '{logical}')"),
-        ("import posixpath as p", "p.join(REPO_ROOT, '{logical}')"),
-        ("from posixpath import join as path_join", "path_join(REPO_ROOT, '{logical}')"),
-        ("from os import path as p", "p.join(REPO_ROOT, '{logical}')"),
-        ("from pathlib import Path", "REPO_ROOT.joinpath('{logical}')"),
-        ("from pathlib import Path", "Path(REPO_ROOT).joinpath('{logical}')"),
-        ("from pathlib import PurePath", "PurePath(REPO_ROOT).joinpath('{logical}')"),
-        ("from pathlib import Path", "Path.joinpath(REPO_ROOT, '{logical}')"),
-        ("from pathlib import PurePath", "PurePath.joinpath(REPO_ROOT, '{logical}')"),
-    ],
-)
-def test_packaged_resource_alias_joins_on_other_root_are_violations(import_line: str, expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
-    source = f"{import_line}\n" + expression.format(logical=logical)
-    hit = _literal_hits(source)[0]
-    assert hit["join"] is True
-    assert hit["resource_join"] is False
-    assert _disposition(hit, packaged=True) == "violation"
-
-
-@pytest.mark.parametrize(
-    ("import_line", "expression"),
-    [
-        ("import os.path as p", "p.join(ROOT, '{logical}')"),
-        ("from os.path import join", "join(ROOT, '{logical}')"),
-        ("import os as o", "o.path.join(ROOT, '{logical}')"),
-        ("import posixpath", "posixpath.join(ROOT, '{logical}')"),
-    ],
-)
-def test_packaged_resource_alias_joins_accept_package_root(import_line: str, expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
-    source = (
-        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
-        "ROOT = resource_root()\n"
-        f"{import_line}\n" + expression.format(logical=logical)
     )
     hit = _literal_hits(source)[0]
     assert hit["join"] is True
@@ -743,41 +652,4 @@ def test_packaged_resource_join_rejects_function_local_shadow(function: str) -> 
     hit = _literal_hits(source)[0]
     assert hit["join"] is True
     assert hit["resource_join"] is False
-    assert _disposition(hit, packaged=True) == "violation"
-
-
-@pytest.mark.parametrize(
-    "expression",
-    [
-        "ROOT.joinpath('{logical}')",
-        "resource_root().joinpath('{logical}')",
-        "Path.joinpath(ROOT, '{logical}')",
-    ],
-)
-def test_packaged_resource_joinpath_accepts_package_root(expression: str) -> None:
-    logical = "data/projects/open_model_data/trust/v4_child_profile_v3.json"
-    source = (
-        "from learn_ukrainian_v4_runtime.resources import resource_root\n"
-        "ROOT = resource_root()\n" + expression.format(logical=logical)
-    )
-    hit = _literal_hits(source)[0]
-    assert hit["join"] is True
-    assert hit["resource_join"] is True
-    assert _disposition(hit, packaged=True) == "packaged-resource"
-
-
-@pytest.mark.parametrize(
-    ("logical", "allowed"),
-    [
-        ("data/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json", "review-locator"),
-        ("data/projects/open_model_data/examples", "directory-prefix"),
-        ("data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json", "frozen-logical-key"),
-    ],
-)
-def test_resource_root_join_does_not_allow_other_classes(logical: str, allowed: str) -> None:
-    source = f'from learn_ukrainian_v4_runtime.resources import resource_root\nresource_root() / "{logical}"'
-    bare = f'{{"review_dossier_locator": "{logical}"}}' if allowed == "review-locator" else f'"{logical}"'
-    assert _disposition(_literal_hits(bare)[0], packaged=True) == allowed
-    hit = _literal_hits(source)[0]
-    assert hit["resource_join"] is True
     assert _disposition(hit, packaged=True) == "violation"

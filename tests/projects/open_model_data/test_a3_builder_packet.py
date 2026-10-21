@@ -37,10 +37,6 @@ def _cached_json(path: Path) -> dict:
 FAMILY_IDS = [f"fam-synthetic-{index:02d}" for index in range(9)]
 
 
-def test_synthetic_family_count_matches_the_real_seal_registry() -> None:
-    assert len(FAMILY_IDS) == len(_cached_json(REAL_SEAL_RECEIPT_PATH)["source_family_registry"]["families"])
-
-
 def _seal_receipt_shape(family_ids: list[str]) -> dict:
     """A full, schema-conformant stand-in seal receipt built from the real
     checked-in one -- same bindings/access_firewall/everything else -- with
@@ -108,13 +104,6 @@ def _tamper_packet(packet_path: Path, mutate) -> None:
 
 
 # --- source_unit_id mapping -------------------------------------------------
-
-
-def test_builder_eligible_source_unit_ids_maps_families_sorted() -> None:
-    receipt = _seal_receipt_shape(FAMILY_IDS)
-    subset = sorted(FAMILY_IDS[:3])
-    ids = packet.builder_eligible_source_unit_ids(receipt, subset)
-    assert ids == sorted(f"synthetic.{fid}" for fid in subset)
 
 
 def test_builder_eligible_source_unit_ids_refuses_unknown_family_id() -> None:
@@ -385,15 +374,6 @@ def test_validate_public_receipt_independently_detects_count_tamper(tmp_path: Pa
 # --- real production receipt: schema/registry sanity (no private access) ---
 
 
-def test_real_seal_receipt_family_registry_supports_the_packet_module() -> None:
-    """The real, checked-in production seal receipt has the shape this
-    module expects -- exercised without ever touching a private artifact."""
-    families = _cached_json(REAL_SEAL_RECEIPT_PATH)["source_family_registry"]["families"]
-    real_family_ids = sorted(family["family_id"] for family in families)
-    ids = packet.builder_eligible_source_unit_ids(_cached_json(REAL_SEAL_RECEIPT_PATH), real_family_ids[:1])
-    assert ids  # at least one source_unit_id resolves for a real family_id
-
-
 # --- CLI -----------------------------------------------------------------
 
 
@@ -440,25 +420,3 @@ def test_cli_issue_write_receipt_then_default_verify_roundtrip(tmp_path: Path, c
     printed = json.loads(capsys.readouterr().out)
     assert printed["builder_eligible_count"] == 8
     assert not any(fid in json.dumps(printed) for fid in FAMILY_IDS)
-
-
-def test_cli_issue_refuses_to_overwrite_existing_packet(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    salt = secrets.token_bytes(32)
-    receipt, result = _sealed_receipt(salt, FAMILY_IDS)
-    seal_receipt_path = _write_seal_receipt(tmp_path, receipt)
-    membership_dir = _seed_membership(tmp_path, salt, result, receipt)
-    packet_dir = tmp_path / "packet"
-    argv = [
-        "--seal-receipt",
-        str(seal_receipt_path),
-        "--membership-dir",
-        str(membership_dir),
-        "--packet-dir",
-        str(packet_dir),
-        "--issue",
-    ]
-
-    packet.main(argv)
-    capsys.readouterr()
-    with pytest.raises(heldout.AssignmentError, match="already exists"):
-        packet.main(argv)

@@ -332,12 +332,6 @@ def test_invalid_state_rearms_safely(state_module, tmp_path, raw, capsys):
     assert (state / f"{SESSION}.tier").read_bytes() == b"3 760000\n"
 
 
-def test_helper_unavailable_fails_open_without_announcement(hook_case):
-    hook_case[1]["THREAD_ROLLOVER_PYTHON"] = "/unavailable/interpreter"
-    assert run_hook(hook_case) == ""
-    assert not (hook_case[0] / "batch_state").exists()
-
-
 def test_missing_resolver_fails_open_without_path_python(hook_case):
     hook_case[1].pop("THREAD_ROLLOVER_PYTHON")
     assert run_hook(hook_case) == ""

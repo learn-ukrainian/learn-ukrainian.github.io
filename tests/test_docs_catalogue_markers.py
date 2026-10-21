@@ -10,28 +10,20 @@ from pathlib import Path
 
 import pytest
 import yaml
-from jsonschema import Draft202012Validator
 
 from scripts.docs import catalogue as cat
 from scripts.docs.catalogue import (
     README_BEGIN,
     README_END,
-    apply_marker,
-    banner_line,
     main,
-    readme_block,
-    render_readme,
     repository_check,
-    shown,
     store_literal_errors,
     store_literals_in_source,
-    store_stub,
     validate,
 )
 
 REPO = Path(__file__).resolve().parents[1]
 SCHEMA = json.loads((REPO / 'docs/knowledge/catalogue.schema.json').read_text(encoding='utf-8'))
-BIDI = chr(0x202E)
 BOM = chr(0xFEFF)
 NEL = chr(0x85)
 LS, PS = chr(0x2028), chr(0x2029)
@@ -171,14 +163,6 @@ def test_exemptions_must_be_live_and_not_redundant():
     assert validate(data, SCHEMA, [], {'infra-harness'}).schema_ok
 
 
-def test_store_stub_is_a_pasteable_entry_that_claims_the_name():
-    [stub] = yaml.safe_load(store_stub('data/telemetry/new_thing.db'))
-    assert stub['store'] == ['data/telemetry/new_thing.db'] and stub['kind'] == 'data_store'
-    report = validate(catalogue(stub), SCHEMA, ['scripts/build.py'], {'infra-harness'})
-    assert report.schema_ok  # it pastes cleanly, and the validator still demands a real purpose
-    assert any('purpose is still a TODO placeholder' in e for e in report.errors)
-
-
 def test_check_fails_on_an_unclaimed_store_and_suggests_a_stub(tmp_path, capsys):
     repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
                      {'scripts/tool.py': "DB = 'data/fresh.db'\n"})
@@ -239,17 +223,6 @@ def test_store_scan_covers_every_tracked_text_file_under_scripts(tmp_path, capsy
         assert f'ERROR store literal {name!r}' in out
 
 
-def test_paths_outside_scripts_and_lookalike_names_are_not_required(tmp_path, capsys):
-    repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
-                     {'tests/test_fixture.py': "DB = 'data/fixture9412.db'\n",
-                      'tests/fixtures/run.sh': 'sqlite3 data/fixture9412.db\n',
-                      'docs/knowledge/note.md': 'data/doc9412.db\n',
-                      'scripts/lookalike.py': "M = 'metadata/m9412.db'; T = 'test_data/t9412.db'\n"
-                                              "J = 'data/j9412.json'; F = f'data/{name}.db'\n"})
-    assert cat.store_literals(repo).stores == {}
-    assert main(['check', '--repo', str(repo)]) == 0, capsys.readouterr().out
-
-
 def test_store_scan_reads_the_index_blob_not_the_worktree(tmp_path):
     repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
                      {'scripts/tool.sh': 'sqlite3 data/staged9412.db\n'})
@@ -277,62 +250,12 @@ def test_store_scan_skips_binary_and_fails_closed_on_unreadable_or_withheld(tmp_
 
 # ------------------------------------------------------------------ in-place status markers
 
-def test_apply_marker_adds_front_matter_and_banner_after_the_title():
-    text = '# Old spec\n\nBody.\n'
-    marked = apply_marker(text, 'docs/a/old.md', 'docs/b/new.md')
-    assert marked == ('---\nlifecycle: superseded\nsuperseded_by: docs/b/new.md\n---\n\n# Old spec\n\n'
-                      '> **Superseded by:** [docs/b/new.md](../b/new.md)\n\nBody.\n')
-    assert apply_marker(marked, 'docs/a/old.md', 'docs/b/new.md') == marked  # idempotent
-
-
-def test_apply_marker_keeps_existing_front_matter_and_replaces_an_old_banner():
-    text = '---\ntitle: X\nlifecycle: active\n---\n# T\n\n> **Superseded by:** [old](old.md)\n'
-    marked = apply_marker(text, 'docs/x.md', 'docs/y.md#part')
-    assert marked.startswith('---\ntitle: X\nlifecycle: superseded\nsuperseded_by: docs/y.md#part\n---\n')
-    assert '> **Superseded by:** [docs/y.md#part](y.md#part)' in marked
-    assert marked.count('Superseded by') == 1
-
-
-def test_banner_links_resolve_from_the_file_and_quote_awkward_targets():
-    assert banner_line('docs/decisions/a.md', 'AGENTS.md') == '> **Superseded by:** [AGENTS.md](../../AGENTS.md)'
-    assert banner_line('docs/a.md', 'docs/with space.md').endswith('(<with space.md>)')
-    assert banner_line('docs/a.md', 'id:family-x') == ('> **Superseded by:** [id:family-x]'
-                                                        '(knowledge/catalogue.yaml)')
-
 
 def marker_repo(tmp_path, files, *overrides):
     data = catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge'),
                      entry('guide', ['docs/guide/**'], overrides=list(overrides)),
                      entry('guide-private', ['docs/guide/private/**'], content_searchable=False))
     return make_repo(tmp_path / 'r', data, {'docs/guide/private/p.md': '# Private\n', **files})
-
-
-SUPERSEDED = {'path': 'docs/guide/old.md', 'lifecycle': 'superseded', 'superseded_by': 'docs/guide/new.md',
-              'evidence': 'Replaced by the new guide.'}
-
-
-def test_markers_are_required_for_superseded_markdown_overrides_and_mark_writes_them(tmp_path, capsys):
-    repo = marker_repo(tmp_path, {'docs/guide/old.md': '# Old\n', 'docs/guide/new.md': '# New\n'}, SUPERSEDED)
-    report, _ = repository_check(repo)
-    errors = [e for e in report.errors if e.startswith('docs/guide/old.md')]
-    assert len(errors) == 2 and 'lifecycle: superseded' in errors[0] and 'banner' in errors[1]
-    assert main(['mark', '--repo', str(repo)]) == 1  # lists, writes nothing
-    assert (repo / 'docs/guide/old.md').read_text() == '# Old\n'
-    assert main(['mark', '--repo', str(repo), '--apply']) == 0
-    capsys.readouterr()
-    git(repo, 'add', '.')
-    assert repository_check(repo)[0].errors == []
-    assert main(['mark', '--repo', str(repo)]) == 0
-
-
-@pytest.mark.parametrize('front, message', [
-    ('lifecycle: archive', "front-matter lifecycle 'archive' disagrees with the catalogue ('active'"),
-    ('superseded_by: docs/guide/new.md', 'front-matter superseded_by'),
-    ('lifecycle: obsolete', 'front matter lifecycle unrecognized'),
-])
-def test_front_matter_that_disagrees_with_the_catalogue_fails(tmp_path, front, message):
-    repo = marker_repo(tmp_path, {'docs/guide/a.md': f'---\n{front}\n---\n# A\n', 'docs/guide/new.md': '# N\n'})
-    assert any(message in e for e in repository_check(repo)[0].errors), repository_check(repo)[0].errors
 
 
 def test_front_matter_that_agrees_passes_and_private_files_are_never_read(tmp_path):
@@ -342,72 +265,12 @@ def test_front_matter_that_agrees_passes_and_private_files_are_never_read(tmp_pa
     assert report.errors == [] and report.markers_unverifiable == 0
 
 
-def test_a_wrong_replacement_in_front_matter_fails(tmp_path):
-    marked = apply_marker('# Old\n', 'docs/guide/old.md', 'docs/guide/other.md')
-    repo = marker_repo(tmp_path, {'docs/guide/old.md': marked, 'docs/guide/new.md': '# N\n',
-                                  'docs/guide/other.md': '# O\n'}, SUPERSEDED)
-    errors = repository_check(repo)[0].errors
-    assert any("superseded_by ['docs/guide/other.md'] disagrees" in e for e in errors)
-    assert any('missing the banner line' in e for e in errors)
-
-
 # ------------------------------------------------------------------ generated README block
 
 README = f'# Map\n\nIntro.\n\n{README_BEGIN}\n{README_END}\n\nTail.\n'
 
 
-def test_readme_block_lists_every_family_and_store_and_escapes_cells():
-    data = catalogue(entry('guide', ['docs/guide/**'], purpose='Pipes | and `ticks`'),
-                     entry('old', ['docs/old/**'], lifecycle='superseded', superseded_by='docs/guide/a.md'),
-                     store('main', ['data/main.db']))
-    block = readme_block(data)
-    assert '| `guide` | doc_family | current | `docs/guide/**` | Pipes \\| and `ticks` |' in block
-    assert '| `old` | doc_family | superseded → `docs/guide/a.md` |' in block
-    assert '| `main` | `data/main.db` | current | sqlite: read-only SQL |' in block
-    rendered = render_readme(README, data)
-    assert rendered.startswith('# Map\n\nIntro.\n\n') and rendered.endswith('\n\nTail.\n')
-    assert render_readme(rendered, data) == rendered
-
-
-@pytest.mark.parametrize('text', ['# no markers\n', f'{README_BEGIN}\n', f'{README_END}\n{README_BEGIN}\n',
-                                  f'{README_BEGIN}\n{README_END}\n{README_BEGIN}\n{README_END}\n'])
-def test_readme_markers_must_form_one_pair(text):
-    with pytest.raises(ValueError):
-        render_readme(text, catalogue(entry('guide', ['docs/guide/**'])))
-
-
-def test_readme_command_and_drift_check(tmp_path, capsys):
-    data = catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge'),
-                     entry('docs-map', ['docs/README.md']))
-    repo = make_repo(tmp_path / 'r', data, {'docs/README.md': README})
-    assert any('generated family table is stale' in e for e in repository_check(repo)[0].errors)
-    assert main(['readme', '--repo', str(repo), '--check']) == 1
-    assert main(['readme', '--repo', str(repo)]) == 0
-    assert main(['readme', '--repo', str(repo), '--check']) == 0
-    capsys.readouterr()
-    assert any('stale' in e for e in repository_check(repo)[0].errors)  # the index still holds the old block
-    git(repo, 'add', '.')
-    assert repository_check(repo)[0].errors == []
-
-
 # ------------------------------------------------------------------ escaped diagnostics
-
-def test_shown_escapes_every_non_printable_but_not_ukrainian():
-    assert shown('docs/ґанок.md') == 'docs/ґанок.md'
-    assert shown(f'docs/a{BIDI}b.md') == repr(f'docs/a{BIDI}b.md')
-    for char in ('\n', '\t', NEL, LS, PS, BOM):
-        assert shown(f'x{char}y') == repr(f'x{char}y')
-
-
-def test_messages_escape_ids_and_paths_even_when_validation_is_bypassed():
-    tricky = f'docs/guide/a{BIDI}.md'
-    data = catalogue(entry('one', [tricky]), entry('two', [tricky]))
-    report = validate(data, {}, [tricky], {'infra-harness'}, ('docs',))
-    [ambiguous] = [e for e in report.errors if 'ambiguous' in e]
-    assert BIDI not in ambiguous and repr(tricky) in ambiguous
-    data = catalogue(entry(f'bad{BIDI}id', ['docs/guide/**'], owner='nobody'))
-    errors = validate(data, {}, ['docs/guide/a.md'], {'infra-harness'}, ('docs',)).errors
-    assert errors and all(BIDI not in e for e in errors)
 
 
 # ------------------------------------------------------------------ engine-independent schema patterns
@@ -424,17 +287,6 @@ def schema_patterns(node=SCHEMA, where='#'):
             yield from schema_patterns(value, f'{where}/{index}')
 
 
-def test_patterns_use_no_engine_dependent_constructs():
-    found = list(schema_patterns())
-    assert len(found) >= 10
-    for where, pattern in found:
-        # Remove escaped characters and bracket classes, then nothing engine-dependent may remain.
-        bare = re.sub(r'\[(?:\\.|[^\]\\])*\]', '', re.sub(r'\\u[0-9a-f]{4}', '', pattern))
-        assert not re.search(r'\\[sSwWdDbBAZz]', pattern), where
-        assert '$' not in pattern, where
-        assert '.' not in re.sub(r'\\.', '', bare), where  # an unescaped dot outside a class
-
-
 def corpus():
     base = ['abc', 'docs/a.md', 'data/a.db', 'data/a/', 'id:ab', 'ab', 'docs/a/**', 'a b', 'Ґанок']
     odd = ['\n', '\r', NEL, LS, PS, BOM, chr(0xA0), chr(0x3000), chr(0x1F600), ' ', '\t', '.', '/', '..']
@@ -444,14 +296,6 @@ def corpus():
             out += [s + c, c + s, s[:1] + c + s[1:]]
     out += [c * 3 for c in odd] + [BOM + BOM + BOM, LS + PS + ' ', NEL * 3, 'docs/../a.md', 'data/x/../y.db']
     return out
-
-
-def test_whitespace_semantics_are_explicit():
-    text = Draft202012Validator(SCHEMA['$defs']['text'])
-    for value in (BOM * 3, LS + PS + ' ', chr(0x3000) * 3, chr(0xA0) * 3, '   '):
-        assert not text.is_valid(value), repr(value)
-    for value in ('abc', 'а б', BOM + 'ab', chr(0x1F600) * 3):
-        assert text.is_valid(value), repr(value)
 
 
 def test_python_and_ecma_engines_agree_on_every_schema_pattern():

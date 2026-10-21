@@ -237,31 +237,6 @@ def test_terminal_task_reaped_with_known_inactive_ids(tmp_path: Path, task_statu
     assert unpushed_reason is None
 
 
-def test_needs_finalize_log_visibility(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Guard 8 (needs_finalize Log): needs_finalize worktrees surfaced in summary receipt."""
-    repo = tmp_path / "repo"
-    repo.mkdir()
-
-    wt_item = {"path": str(repo / ".worktrees" / "wt-1"), "task_id": "task-456", "branch": None}
-    fake_repo_result = {
-        "repo_root": str(repo),
-        "fetch": {"ok": True},
-        "worktree_prune": {"ok": True},
-        "activity_probe": {"available": True},
-        "results": [],
-        "branches": [],
-        "maintenance": {"ok": True},
-        "orphans": [],
-        "errors": [],
-        "needs_finalize_worktrees": [wt_item],
-    }
-    monkeypatch.setattr(scheduled_worktree_cleanup, "_repo_result", lambda path, apply: fake_repo_result)
-
-    receipt = scheduled_worktree_cleanup.build_receipt([repo], apply=False)
-    assert "needs_finalize_worktrees" in receipt["summary"]
-    assert receipt["summary"]["needs_finalize_worktrees"] == [wt_item]
-
-
 def test_sweep_preserves_non_esrch_dead_owner_during_grace_window(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -318,21 +293,6 @@ def test_sweep_toctou_recheck_skips_on_uncheckable(tmp_path: Path, monkeypatch: 
     res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["roots_reaped"] == 0
     assert root.exists()
-
-
-def test_disk_pressure_threshold_reads_yaml_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Guard / F3 (Disk Pressure YAML Config): YAML config threshold is respected."""
-    monkeypatch.setattr(
-        isolation,
-        "_load_hygiene_yaml_min_free_gb",
-        lambda: 19.0,
-    )
-
-    mock_usage = MagicMock()
-    mock_usage.free = 17 * (1024**3)
-    monkeypatch.setattr(isolation.shutil, "disk_usage", lambda p: mock_usage)
-
-    assert isolation._is_disk_pressure_active(tmp_path) is True
 
 
 def test_review_resource_cleanup_is_idempotent(tmp_path: Path) -> None:

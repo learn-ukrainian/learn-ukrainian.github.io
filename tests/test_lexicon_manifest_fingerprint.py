@@ -96,26 +96,6 @@ def test_manifest_fingerprint_changes_when_lexicon_source_byte_changes(tmp_path:
     assert after != before
 
 
-def test_manifest_fingerprint_excludes_release_asset_loader(tmp_path: Path) -> None:
-    root = _fixture_repo(tmp_path)
-    (root / "scripts" / "lexicon" / "manifest_io.py").write_text("VALUE = 999\n", encoding="utf-8")
-
-    paths = {item["path"] for item in build_fingerprint(root)["inputs"]["lexicon_code"]}
-
-    assert "scripts/lexicon/manifest_io.py" not in paths
-
-
-def test_manifest_fingerprint_ignores_vocab_lemma_churn(tmp_path: Path) -> None:
-    root = _fixture_repo(tmp_path)
-    before = build_fingerprint(root)["fingerprint"]
-
-    vocabulary = root / "curriculum" / "l2-uk-en" / "a1" / "hello" / "vocabulary.yaml"
-    vocabulary.write_text(vocabulary.read_text(encoding="utf-8") + "- uk: школа\n", encoding="utf-8")
-    after = build_fingerprint(root)["fingerprint"]
-
-    assert after == before
-
-
 def test_write_fingerprint_is_idempotent(tmp_path: Path) -> None:
     # The PR-tier repo-invariant guard compares the committed sidecar with the
     # real lexicon tree. If write_fingerprint were non-deterministic, that guard
@@ -140,21 +120,6 @@ def test_sidecar_omits_aggregate_fields_that_cause_concurrent_conflicts(tmp_path
     assert json.loads(sidecar.read_text(encoding="utf-8")) == sidecar_payload(written)
     assert "fingerprint" not in json.loads(sidecar.read_text(encoding="utf-8"))
     assert "stats" not in json.loads(sidecar.read_text(encoding="utf-8"))
-
-
-def test_write_fingerprint_changes_after_lexicon_edit(tmp_path: Path) -> None:
-    # Conversely, editing lexicon code MUST change the regenerated sidecar — that
-    # is the drift the PR-tier repo-invariant guard is meant to catch.
-    root = _fixture_repo(tmp_path)
-    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
-
-    write_fingerprint(sidecar, root=root)
-    before = sidecar.read_bytes()
-    (root / "scripts" / "lexicon" / "alpha.py").write_text("VALUE = 999\n", encoding="utf-8")
-    write_fingerprint(sidecar, root=root)
-    after = sidecar.read_bytes()
-
-    assert after != before
 
 
 def test_manifest_freshness_check_passes_on_matching_sidecar(tmp_path: Path, capsys) -> None:

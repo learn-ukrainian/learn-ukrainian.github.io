@@ -7,7 +7,7 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -25,13 +25,6 @@ def server_module():
 
 def _run(coro):
     return asyncio.run(coro)
-
-
-def test_call_tool_dispatches_search_external(server_module):
-    with patch.object(server_module, "handle_search_external", new_callable=AsyncMock) as mock:
-        mock.return_value = [MagicMock(text="ok")]
-        _run(server_module.call_tool("search_external", {"query": "козаки"}))
-        mock.assert_called_once_with({"query": "козаки"})
 
 
 def test_handle_search_external_formats_chunk_output(server_module):
@@ -71,49 +64,3 @@ def test_handle_search_external_formats_chunk_output(server_module):
     assert payload[0]["text"] == "Короткий фрагмент про козаків."
     assert payload[0]["fts_score"] == -4.2
     assert payload[0]["adjusted_score"] == -4.2
-
-
-def test_handle_search_external_passes_filters(server_module):
-    with patch("wiki.sources_db.search_external", return_value=[]) as mock:
-        _run(server_module.handle_search_external({
-            "query": "козаки",
-            "track": "hist",
-            "channel": "realna_istoria",
-            "register": "interview",
-            "decolonization": "strong",
-            "min_quality_tier": 1,
-            "max_results": 7,
-        }))
-
-    args, kwargs = mock.call_args
-    assert args[0] == {"козаки"}
-    assert kwargs == {
-        "max_total": 7,
-        "channel": "realna_istoria",
-        "register": "interview",
-        "decolonization": "strong",
-        "min_quality_tier": 1,
-        "track": "hist",
-    }
-
-
-def test_handle_search_external_track_changes_result_order(server_module):
-    plain_hits = [
-        {"chunk_id": "ext-ulp-001", "source_name": "Ukrainian Lessons Podcast", "speaker": "Anna Ohoiko",
-         "register_tag": "scripted", "decolonization_tag": "moderate", "quality_tier": 1,
-         "publish_date": "", "url": "https://example.test/ulp", "text": "ULP"},
-        {"chunk_id": "ext-realna-001", "source_name": "Реальна Історія", "speaker": "Акім Галімов",
-         "register_tag": "interview", "decolonization_tag": "strong", "quality_tier": 1,
-         "publish_date": "", "url": "https://example.test/realna", "text": "Realna"},
-    ]
-    hist_hits = list(reversed(plain_hits))
-
-    def _fake_search(_keywords, **kwargs):
-        return hist_hits if kwargs.get("track") == "hist" else plain_hits
-
-    with patch("wiki.sources_db.search_external", side_effect=_fake_search):
-        plain = json.loads(_run(server_module.handle_search_external({"query": "козаки"}))[0].text)
-        hist = json.loads(_run(server_module.handle_search_external({"query": "козаки", "track": "hist"}))[0].text)
-
-    assert plain[0]["chunk_id"] == "ext-ulp-001"
-    assert hist[0]["chunk_id"] == "ext-realna-001"

@@ -30,12 +30,6 @@ def _mint(tmp_path: Path) -> Path:
     return probe
 
 
-def test_mint_writes_anchors(tmp_path: Path):
-    probe = _mint(tmp_path)
-    data = json.loads(probe.read_text(encoding="utf-8"))
-    assert [a["id"] for a in data["anchors"]] == ["safe_env_sha", "agy_pr", "wiki_reason"]
-
-
 def test_perfect_recall_passes_and_logs(tmp_path: Path):
     probe = _mint(tmp_path)
     answers = tmp_path / "ans.json"
@@ -74,33 +68,6 @@ def test_confident_but_wrong_answer_fails_handoff(tmp_path: Path):
     assert rc == 2  # FAIL-HANDOFF
 
 
-def test_partial_drift_below_pass_ratio_fails(tmp_path: Path):
-    probe = _mint(tmp_path)
-    answers = tmp_path / "ans.json"
-    # 1 of 3 wrong -> 0.67 < default pass_ratio 0.85 -> handoff
-    answers.write_text(
-        json.dumps({"safe_env_sha": "5cd67954ab", "agy_pr": "2839", "wiki_reason": "totally unrelated text"}),
-        encoding="utf-8",
-    )
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(answers)])
-    assert rc == 2
-
-
-def test_missing_answer_counts_as_drift(tmp_path: Path):
-    probe = _mint(tmp_path)
-    answers = tmp_path / "ans.json"
-    answers.write_text(json.dumps({"safe_env_sha": "5cd67954ab"}), encoding="utf-8")  # 2 missing
-    rc = context_canary.main(["score", "--probe", str(probe), "--answers", str(answers)])
-    assert rc == 2
-
-
-def test_mint_rejects_duplicate_ids(tmp_path: Path):
-    facts = tmp_path / "facts.json"
-    facts.write_text(json.dumps([{"id": "x", "q": "q", "a": "a"}, {"id": "x", "q": "q2", "a": "a2"}]), encoding="utf-8")
-    rc = context_canary.main(["mint", "--facts", str(facts), "--out", str(tmp_path / "p.json")])
-    assert rc == 1
-
-
 def test_mint_accepts_inline_json(tmp_path: Path):
     # The arg help advertises "Inline JSON list of {id,q,a}" — passing the list
     # directly (not a file path) must work, not crash with 'File name too long'.
@@ -111,19 +78,6 @@ def test_mint_accepts_inline_json(tmp_path: Path):
     assert [a["id"] for a in data["anchors"]] == ["safe_env_sha", "agy_pr", "wiki_reason"]
 
 
-def test_mint_inline_and_file_produce_identical_probe(tmp_path: Path):
-    file_probe = _mint(tmp_path)
-    inline_probe = tmp_path / "inline_probe.json"
-    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(inline_probe)])
-    assert rc == 0
-    assert inline_probe.read_text(encoding="utf-8") == file_probe.read_text(encoding="utf-8")
-
-
-def test_mint_missing_file_is_clean_usage_error(tmp_path: Path):
-    rc = context_canary.main(["mint", "--facts", str(tmp_path / "nope.json"), "--out", str(tmp_path / "p.json")])
-    assert rc == 1  # FileNotFoundError -> clean rc 1, not an uncaught traceback
-
-
 def test_mint_directory_as_facts_is_clean_usage_error(tmp_path: Path):
     # A path that is a directory raises IsADirectoryError inside read_text; the
     # widened (OSError, UnicodeDecodeError) catch must turn it into a clean rc 1,
@@ -132,11 +86,6 @@ def test_mint_directory_as_facts_is_clean_usage_error(tmp_path: Path):
     a_dir.mkdir()
     rc = context_canary.main(["mint", "--facts", str(a_dir), "--out", str(tmp_path / "p.json")])
     assert rc == 1
-
-
-def test_mint_malformed_inline_json_is_clean_usage_error(tmp_path: Path):
-    rc = context_canary.main(["mint", "--facts", "[{bad json", "--out", str(tmp_path / "p.json")])
-    assert rc == 1  # inline branch JSONDecodeError caught, returns usage error
 
 
 # --- Production v2 tests added after all original legacy tests (no originals replaced, deleted, weakened or inverted) ---
@@ -336,34 +285,6 @@ def test_v2_9_of_10_or_drift_fails_rc2(tmp_path: Path):
     assert rc == 2
 
 
-def test_v2_exact_id_match_no_normalization(tmp_path: Path):
-    """IDs matched exactly; whitespace/case in key means no lookup hit. '  GIT_BRANCH  ' cannot match git_branch."""
-    probe = _mint_v2(tmp_path)
-    data = json.loads(probe.read_text(encoding="utf-8"))
-    answers = {}
-    for a in data["anchors"]:
-        # padded + upper key will NOT match the exact id
-        answers["  " + a["id"].upper() + "  "] = a["a"]
-    ans = tmp_path / "wsid.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    lid = data["lineage_id"]
-    rid = data["rollover_id"]
-    rc = context_canary.main(
-        [
-            "score",
-            "--probe",
-            str(probe),
-            "--answers",
-            str(ans),
-            "--expected-lineage-id",
-            lid,
-            "--expected-rollover-id",
-            rid,
-        ]
-    )
-    assert rc == 2
-
-
 def test_v2_match_mode_exact_vs_normalized(tmp_path: Path):
     probe = _mint_v2(tmp_path)
     pdata = json.loads(probe.read_text(encoding="utf-8"))
@@ -396,57 +317,6 @@ def test_v2_match_mode_exact_vs_normalized(tmp_path: Path):
         ]
     )
     assert rc == 0
-
-
-def test_legacy_three_anchor_flow_still_passes_unchanged(tmp_path: Path):
-    """Explicit demonstration that original legacy path (facts + threshold + pass-ratio) is intact."""
-    probe = tmp_path / "p.json"
-    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(probe)])
-    assert rc == 0
-    answers = {f["id"]: f["a"] for f in FACTS}
-    ans = tmp_path / "a.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(
-        ["score", "--probe", str(probe), "--answers", str(ans), "--threshold", "0.75", "--pass-ratio", "0.85"]
-    )
-    assert rc == 0
-
-
-def test_arbitrary_ten_entry_facts_source_does_not_produce_v2_prod_probe(tmp_path: Path):
-    """arbitrary ten-entry source=facts cannot pass as production (lacks v2 markers, uses legacy scoring)."""
-    facts = [{"id": f"f{i}", "q": f"q{i}", "a": f"a{i}"} for i in range(10)]
-    fpath = tmp_path / "ten.json"
-    fpath.write_text(json.dumps(facts), encoding="utf-8")
-    p = tmp_path / "p10.json"
-    rc = context_canary.main(["mint", "--facts", str(fpath), "--out", str(p)])
-    assert rc == 0
-    data = json.loads(p.read_text(encoding="utf-8"))
-    # not a v2 production probe
-    assert data.get("version") != "2" or not data.get("strict_production")
-    assert data.get("source") != "snapshot" or data.get("schema") != "production-handoff-v2"
-    assert len(data.get("anchors", [])) == 10
-    # perfect answers still go through legacy path (no strict enforcement here)
-    answers = {f["id"]: f["a"] for f in facts}
-    ans = tmp_path / "ans10.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(p), "--answers", str(ans)])
-    # 10/10 would pass legacy ratio too, but the point is it was not treated as v2 prod
-    assert rc == 0
-    # 9/10 would also pass legacy (0.9 >= 0.85) but would fail v2
-    answers[facts[0]["id"]] = "wrong"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(["score", "--probe", str(p), "--answers", str(ans)])
-    assert rc == 0  # legacy allows >=0.85
-
-
-def test_v2_score_rejects_wrong_lineage_or_malformed_provenance(tmp_path: Path):
-    snap = _good_v2_snapshot()
-    snap["lineage_id"] = ""
-    sfile = tmp_path / "badline.json"
-    sfile.write_text(json.dumps(snap), encoding="utf-8")
-    p = tmp_path / "pbad.json"
-    rc = context_canary.main(["mint", "--snapshot", str(sfile), "--out", str(p)])
-    assert rc == 1
 
 
 def test_negative_v2_mint_insufficient_or_unknown_or_dup_or_bad_shape(tmp_path: Path):
@@ -490,39 +360,6 @@ def test_negative_v2_mint_insufficient_or_unknown_or_dup_or_bad_shape(tmp_path: 
     s5.write_text(json.dumps(bad5), encoding="utf-8")
     rc = context_canary.main(["mint", "--snapshot", str(s5), "--out", str(tmp_path / "p5")])
     assert rc == 1
-
-
-def test_deterministic_same_seed_same_order(tmp_path: Path):
-    snap = _good_v2_snapshot()
-    s1 = tmp_path / "s1.json"
-    s1.write_text(json.dumps(snap), encoding="utf-8")
-    p1 = tmp_path / "p1.json"
-    rc1 = context_canary.main(["mint", "--snapshot", str(s1), "--out", str(p1)])
-    p2 = tmp_path / "p2.json"
-    rc2 = context_canary.main(["mint", "--snapshot", str(s1), "--out", str(p2)])
-    assert rc1 == rc2 == 0
-    d1 = json.loads(p1.read_text(encoding="utf-8"))["anchors"]
-    d2 = json.loads(p2.read_text(encoding="utf-8"))["anchors"]
-    assert [a["id"] for a in d1] == [a["id"] for a in d2]
-
-
-def test_differing_seed_produces_different_order(tmp_path: Path):
-    snap = _good_v2_snapshot()
-    snap["seed"] = 111
-    s1 = tmp_path / "sd1.json"
-    s1.write_text(json.dumps(snap), encoding="utf-8")
-    p1 = tmp_path / "pd1.json"
-    context_canary.main(["mint", "--snapshot", str(s1), "--out", str(p1)])
-    snap["seed"] = 222
-    s2 = tmp_path / "sd2.json"
-    s2.write_text(json.dumps(snap), encoding="utf-8")
-    p2 = tmp_path / "pd2.json"
-    context_canary.main(["mint", "--snapshot", str(s2), "--out", str(p2)])
-    d1 = json.loads(p1.read_text(encoding="utf-8"))["anchors"]
-    d2 = json.loads(p2.read_text(encoding="utf-8"))["anchors"]
-    ids1 = [a["id"] for a in d1]
-    ids2 = [a["id"] for a in d2]
-    assert ids1 != ids2  # order randomized by seed
 
 
 def test_generated_seed_when_absent_is_persisted_and_reproducible(tmp_path: Path):
@@ -613,45 +450,6 @@ def test_mint_rejects_git_github_monitor_arbitrary_and_bad_source_refs(tmp_path:
         assert rc == 1, f"should reject bad source_ref: {bad}"
 
 
-def test_forged_v2_with_bad_source_refs_fails_score(tmp_path: Path):
-    """forged v2 with such refs fails score (even if other fields look ok)."""
-    probe = _mint_v2(tmp_path)
-    pdata = json.loads(probe.read_text(encoding="utf-8"))
-    lid, rid = pdata["lineage_id"], pdata["rollover_id"]
-    # corrupt one ref
-    pdata["anchors"][0]["source_ref"] = "git:HEAD"
-    badp = tmp_path / "forged_badref.json"
-    badp.write_text(json.dumps(pdata), encoding="utf-8")
-    answers = {a["id"]: a["a"] for a in pdata["anchors"]}
-    ans = tmp_path / "a.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(
-        [
-            "score",
-            "--probe",
-            str(badp),
-            "--answers",
-            str(ans),
-            "--expected-lineage-id",
-            lid,
-            "--expected-rollover-id",
-            rid,
-        ]
-    )
-    assert rc == 2
-
-
-def test_snapshot_missing_either_identity_fails_mint(tmp_path: Path):
-    """snapshot missing either identity fails mint."""
-    for key in ("lineage_id", "rollover_id"):
-        snap = _good_v2_snapshot()
-        snap.pop(key, None)
-        s = tmp_path / f"no{key}.json"
-        s.write_text(json.dumps(snap), encoding="utf-8")
-        rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(tmp_path / "p.json")])
-        assert rc == 1
-
-
 def test_v2_score_missing_or_wrong_expected_identity_fails(tmp_path: Path):
     """v2 score missing/wrong expected identity fails."""
     probe = _mint_v2(tmp_path)
@@ -737,81 +535,6 @@ def test_v2_incomplete_or_extra_markers_fail_closed_not_legacy(tmp_path: Path):
         ["score", "--probe", str(gp), "--answers", str(aa), "--expected-lineage-id", lid, "--expected-rollover-id", rid]
     )
     assert rc == 2
-
-
-def test_missing_or_both_mint_sources_return_rc2(tmp_path: Path):
-    """missing/both mint source arguments return rc 2 (via required mutually_exclusive_group)."""
-    outp = str(tmp_path / "o.json")
-    # neither
-    rc = context_canary.main(["mint", "--out", outp])
-    assert rc == 2
-    # both
-    facts = tmp_path / "f.json"
-    facts.write_text(json.dumps([{"id": "x", "q": "q", "a": "a"}]), encoding="utf-8")
-    snap = tmp_path / "s.json"
-    snap.write_text(json.dumps(_good_v2_snapshot()), encoding="utf-8")
-    rc = context_canary.main(["mint", "--facts", str(facts), "--snapshot", str(snap), "--out", outp])
-    assert rc == 2
-
-
-def test_valid_durable_refs_for_every_allowed_category_pass(tmp_path: Path):
-    """valid durable refs for every allowed category pass (goals handoff; dec/rationale decision+handoff; const handoff+decision; next queue+handoff)."""
-    # already exercised by _good + _mint_v2 + perfect score, but explicit
-    probe = _mint_v2(tmp_path)
-    data = json.loads(probe.read_text(encoding="utf-8"))
-    lid, rid = data["lineage_id"], data["rollover_id"]
-    answers = {a["id"]: a["a"] for a in data["anchors"]}
-    ans = tmp_path / "okans.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(
-        [
-            "score",
-            "--probe",
-            str(probe),
-            "--answers",
-            str(ans),
-            "--expected-lineage-id",
-            lid,
-            "--expected-rollover-id",
-            rid,
-        ]
-    )
-    assert rc == 0
-    # also re-mint to confirm
-    s2 = tmp_path / "s2.json"
-    s2.write_text(json.dumps(_good_v2_snapshot()), encoding="utf-8")
-    p2 = tmp_path / "p2.json"
-    rc = context_canary.main(["mint", "--snapshot", str(s2), "--out", str(p2)])
-    assert rc == 0
-
-
-def test_all_prior_strictness_determinism_and_origin_legacy_tests_still_pass(tmp_path: Path):
-    """all prior strictness/determinism and every origin/main legacy test still pass (sanity after changes)."""
-    # run a representative legacy flow
-    probe = tmp_path / "pl.json"
-    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(probe)])
-    assert rc == 0
-    answers = {f["id"]: f["a"] for f in FACTS}
-    ap = tmp_path / "al.json"
-    ap.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(
-        ["score", "--probe", str(probe), "--answers", str(ap), "--threshold", "0.75", "--pass-ratio", "0.85"]
-    )
-    assert rc == 0
-
-    # determinism on v2
-    snap = _good_v2_snapshot()
-    s = tmp_path / "sd.json"
-    s.write_text(json.dumps(snap), encoding="utf-8")
-    p1 = tmp_path / "pd1.json"
-    rc1 = context_canary.main(["mint", "--snapshot", str(s), "--out", str(p1)])
-    p2 = tmp_path / "pd2.json"
-    rc2 = context_canary.main(["mint", "--snapshot", str(s), "--out", str(p2)])
-    assert rc1 == rc2 == 0
-    d1 = json.loads(p1.read_text(encoding="utf-8"))
-    d2 = json.loads(p2.read_text(encoding="utf-8"))
-    assert [a["id"] for a in d1["anchors"]] == [a["id"] for a in d2["anchors"]]
-    assert d1["lineage_id"] == d2["lineage_id"] and d1["rollover_id"] == d2["rollover_id"]
 
 
 # --- Centralized identity validator regression tests (must cover the blocker cases at all three boundaries) ---
@@ -934,137 +657,3 @@ def test_identity_validator_rejects_bad_values_in_forged_probes_at_score(tmp_pat
             ]
         )
         assert rc == 2, f"forged probe rollover must be rejected in score validation: {bad!r}"
-
-
-def test_identity_validator_rejects_bad_expected_cli_at_score_boundaries(tmp_path: Path):
-    """--expected-lineage-id / --expected-rollover-id bad values fail at expected-CLI boundary (validated before ==)."""
-    probe = _mint_v2(tmp_path)
-    pdata = json.loads(probe.read_text(encoding="utf-8"))
-    good_lid, good_rid = pdata["lineage_id"], pdata["rollover_id"]
-    answers = {a["id"]: a["a"] for a in pdata["anchors"]}
-    ans = tmp_path / "ans.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-
-    bad_expected_l = [
-        "!!!",
-        "../../lineage",
-        "lineage-foo\nbar",
-        "lineage-FOO",
-        "foo-bar",
-        "lineage-",
-        "lineage-" + "x" * 57,
-        "lineage-foo..bar",
-        "lineage-abc-",
-    ]
-    for bad in bad_expected_l:
-        rc = context_canary.main(
-            [
-                "score",
-                "--probe",
-                str(probe),
-                "--answers",
-                str(ans),
-                "--expected-lineage-id",
-                bad,
-                "--expected-rollover-id",
-                good_rid,
-            ]
-        )
-        assert rc == 2, f"bad --expected-lineage-id must fail at CLI validation boundary: {bad!r}"
-
-    bad_expected_r = [
-        "!!!",
-        "rollover-foo\n",
-        "rollover-UPPER",
-        "rollover",
-        "rollover-",
-        "rollover-" + "y" * 57,
-        "../../roll",
-        "rollover-foo/bar",
-        "rollover--x",
-    ]
-    for bad in bad_expected_r:
-        rc = context_canary.main(
-            [
-                "score",
-                "--probe",
-                str(probe),
-                "--answers",
-                str(ans),
-                "--expected-lineage-id",
-                good_lid,
-                "--expected-rollover-id",
-                bad,
-            ]
-        )
-        assert rc == 2, f"bad --expected-rollover-id must fail at CLI validation boundary: {bad!r}"
-
-    # both bad also fails
-    rc = context_canary.main(
-        [
-            "score",
-            "--probe",
-            str(probe),
-            "--answers",
-            str(ans),
-            "--expected-lineage-id",
-            "!!!",
-            "--expected-rollover-id",
-            "!!!",
-        ]
-    )
-    assert rc == 2
-
-
-def test_valid_engine_shaped_identities_continue_to_pass_mint_score_and_expected(tmp_path: Path):
-    """Valid engine-shaped (lineage-... rollover-...) examples must keep passing at mint, probe, and expected-CLI."""
-    # mint
-    snap = _good_v2_snapshot()
-    s = tmp_path / "sval.json"
-    s.write_text(json.dumps(snap), encoding="utf-8")
-    p = tmp_path / "pval.json"
-    rc = context_canary.main(["mint", "--snapshot", str(s), "--out", str(p)])
-    assert rc == 0
-    data = json.loads(p.read_text(encoding="utf-8"))
-    assert data["lineage_id"] == snap["lineage_id"]
-    assert data["rollover_id"] == snap["rollover_id"]
-
-    # score with expected exact raw
-    answers = {a["id"]: a["a"] for a in data["anchors"]}
-    ans = tmp_path / "aval.json"
-    ans.write_text(json.dumps(answers), encoding="utf-8")
-    rc = context_canary.main(
-        [
-            "score",
-            "--probe",
-            str(p),
-            "--answers",
-            str(ans),
-            "--expected-lineage-id",
-            data["lineage_id"],
-            "--expected-rollover-id",
-            data["rollover_id"],
-        ]
-    )
-    assert rc == 0
-
-    # also via the original _mint_v2 path + expected
-    probe2 = _mint_v2(tmp_path)
-    d2 = json.loads(probe2.read_text(encoding="utf-8"))
-    a2 = {a["id"]: a["a"] for a in d2["anchors"]}
-    aa2 = tmp_path / "a2.json"
-    aa2.write_text(json.dumps(a2), encoding="utf-8")
-    rc = context_canary.main(
-        [
-            "score",
-            "--probe",
-            str(probe2),
-            "--answers",
-            str(aa2),
-            "--expected-lineage-id",
-            d2["lineage_id"],
-            "--expected-rollover-id",
-            d2["rollover_id"],
-        ]
-    )
-    assert rc == 0

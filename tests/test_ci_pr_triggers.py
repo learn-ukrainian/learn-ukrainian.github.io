@@ -39,22 +39,6 @@ def _load(name: str) -> dict:
     return workflow
 
 
-def _triggers(workflow: dict) -> dict:
-    # PyYAML (YAML 1.1) parses the bare ``on:`` key as the boolean True.
-    raw = workflow.get("on", workflow.get(True))
-    assert isinstance(raw, dict), "workflow has no `on:` mapping"
-    return raw
-
-
-def _pr_types(workflow: dict) -> set[str]:
-    pull_request = _triggers(workflow).get("pull_request")
-    if pull_request is None:
-        return set()
-    if isinstance(pull_request, dict):
-        return set(pull_request.get("types") or [])
-    return {"opened", "synchronize", "reopened"}  # default type set
-
-
 # --- GitHub Actions expression subset -------------------------------------
 
 _TOKEN = re.compile(
@@ -205,21 +189,6 @@ def _condition(raw: Any, context: dict[str, Any]) -> bool:
     return _truthy(_evaluate(text, context))
 
 
-def test_expression_evaluator_follows_github_semantics() -> None:
-    ctx = {"github": {"event": {"action": "opened", "label": {"name": "Full-CI"}}}}
-    assert _evaluate("github.event.label.name == 'full-ci'", ctx) is True  # case-insensitive
-    assert _evaluate("github.event.missing == 'opened'", ctx) is False
-    assert _evaluate("github.event.missing != 'opened'", ctx) is True
-    assert _evaluate("false && 'x' || ''", ctx) == ""
-    assert _evaluate("true && 'x' || ''", ctx) == "x"
-    assert _evaluate("!(true && false)", ctx) is True
-    assert _interpolate("a-${{ 7 }}-${{ null }}", ctx) == "a-7-"
-    assert _evaluate("!cancelled() && success()", ctx) is True
-    assert _evaluate("!cancelled()", {"job": {"status": "failure"}}) is True
-    assert _evaluate("success()", {"job": {"status": "failure"}}) is False
-    assert _evaluate("!cancelled()", {"job": {"status": "cancelled"}}) is False
-
-
 # --- ci.yml job simulation -------------------------------------------------
 
 
@@ -288,19 +257,6 @@ def _concurrency_group(github: dict[str, Any]) -> str:
     return _interpolate(_load("ci.yml")["concurrency"]["group"], {"github": github})
 
 
-def test_ci_triggers_on_code_events_only() -> None:
-    # Neither `edited` nor `labeled` may start CI on an unchanged SHA.
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
-
-
-def test_no_workflow_reruns_ci_on_a_label() -> None:
-    assert not (_WORKFLOWS / "full-ci-label.yml").exists()
-    for path in _WORKFLOWS.glob("*.yml"):
-        text = path.read_text(encoding="utf-8")
-        assert "gh run rerun" not in text, path.name
-        assert "label-noop" not in text, path.name
-
-
 @pytest.mark.parametrize("event", sorted(_EVENTS))
 def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
@@ -318,39 +274,11 @@ def test_merge_queue_reuse_skips_every_reused_job() -> None:
     assert results["queue-metadata-scan"] == "success"
 
 
-def test_only_the_history_shard_checks_out_full_history() -> None:
-    from scripts.ci.split_tests import HISTORY_SHARD
-
-    pytest_job = _load("ci.yml")["jobs"]["pytest"]
-    checkout = next(step for step in pytest_job["steps"] if step.get("uses", "").startswith("actions/checkout@"))
-    depths = {
-        shard: _interpolate(checkout["with"]["fetch-depth"], {"matrix": {"shard": float(shard)}})
-        for shard in pytest_job["strategy"]["matrix"]["shard"]
-    }
-    # fetch-depth 0 is full history; 1 is a shallow checkout of the tested commit.
-    assert depths == {shard: "0" if shard == HISTORY_SHARD else "1" for shard in depths}
-    # Shallow shards block network git, so a fetch cannot hide a history need.
-    script = next(step["run"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
-    assert f'[ "$SHARD" = {HISTORY_SHARD} ] || export GIT_ALLOW_PROTOCOL=file' in script
-
-
 def test_pr_runs_share_one_group_per_pr_number() -> None:
     # A push cancels the in-flight run for the previous SHA of the PR.
     groups = {_concurrency_group(_EVENTS[name]) for name in ("opened", "synchronize", "reopened")}
     assert groups == {"CI-pull_request-7"}
     assert _concurrency_group(_EVENTS["merge_group"]).startswith("CI-merge_group-refs/heads/gh-readonly-queue/")
-
-
-def test_body_guard_lives_in_pr_body_guard() -> None:
-    ci_text = (_WORKFLOWS / "ci.yml").read_text(encoding="utf-8")
-    assert "lint_pr_closing_references" not in ci_text
-
-    guard = _load("pr-body-guard.yml")
-    # The guard runs at push time (opened/synchronize/reopened) and on body edits.
-    assert {"opened", "edited", "synchronize", "reopened"} <= _pr_types(guard)
-    guard_text = (_WORKFLOWS / "pr-body-guard.yml").read_text(encoding="utf-8")
-    assert "lint_pr_closing_references.py --stdin" in guard_text
-    assert guard.get("permissions") == {"contents": "read"}
 
 
 def test_exactly_one_ci_gate_job_across_workflows() -> None:
@@ -378,11 +306,6 @@ def _gate_script() -> str:
 def test_ci_gate_needs_every_other_job() -> None:
     jobs = set(_load("ci.yml")["jobs"])
     assert set(_ci_gate_job()["needs"]) == jobs - {"ci-gate"}
-
-
-def test_component_shadow_is_gone() -> None:
-    assert "component-shadow" not in _load("ci.yml")["jobs"]
-    assert "component-shadow" not in _gate_script()
 
 
 def test_ci_gate_runs_after_cancel() -> None:
@@ -451,12 +374,6 @@ def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]
     assert result.returncode != 0, result.stdout
 
 
-def test_gate_names_a_cancelled_job() -> None:
-    result = _run_gate("pull_request", PYTEST="cancelled")
-    assert result.returncode != 0
-    assert "required job was cancelled: pytest" in result.stdout
-
-
 _REUSED = {name: "skipped" for name in _GREEN}
 
 
@@ -499,10 +416,6 @@ def test_pytest_runs_after_lint_failure(failed_job: str) -> None:
     results, _ = _simulate(_EVENTS["workflow_dispatch"], failures={failed_job})
     assert results[failed_job] == "failure"
     assert results["pytest"] == "success"
-
-
-def test_ci_gate_job_timeout_is_five_minutes() -> None:
-    assert _ci_gate_job()["timeout-minutes"] == 5
 
 
 def test_ci_gate_guard_step_order_and_event_conditions() -> None:

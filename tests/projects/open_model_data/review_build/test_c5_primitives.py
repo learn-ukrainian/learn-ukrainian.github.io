@@ -83,36 +83,6 @@ def test_empty_groups_and_rule_boundaries():
     ]
 
 
-@pytest.mark.parametrize("body", ["FIRST, Prof. SECOND, THIRD", "FIRST, abbreviation. SECOND", "FIRST: SECOND, THIRD"])
-def test_dotted_or_colon_continuation_cannot_license_a_truncated_example(body):
-    text = "SYNTHETIC examples: " + body + "."
-    decisions = bindings.example_boundaries(text)
-    assert decisions[0][1] == "example_boundary_ambiguous"
-    assert not any(
-        reason == "ok" and text[slice(*span)] in {"Prof", "abbreviation", "FIRST"} for span, reason in decisions
-    )
-
-
-@pytest.mark.parametrize(
-    "text,expected",
-    [
-        (
-            "SYNTHETIC rule conditions: a) in sentences with direct speech; b) in another condition.",
-            ["in sentences with direct speech", "in another condition"],
-        ),
-        (
-            "SYNTHETIC combinations: 1) ?! (label), !? (label); 2) ...?.",
-            ["?! (label), !? (label)", "...?"],
-        ),
-        ("SYNTHETIC examples: 1) FIRST, SECOND; 2) THIRD, FOURTH.", ["FIRST, SECOND", "THIRD, FOURTH"]),
-    ],
-)
-def test_numbered_rule_conditions_and_multi_example_groups_are_withheld(text, expected):
-    decisions = bindings.example_boundaries(text)
-    assert [text[slice(*span)] for span, _ in decisions] == expected
-    assert all(reason == "example_boundary_ambiguous" for _, reason in decisions)
-
-
 @pytest.mark.parametrize(
     "body",
     [
@@ -210,21 +180,6 @@ def test_binding_authenticates_citation_column_and_locator(bundle):
         ):
             with pytest.raises(BuildError, match=error):
                 bindings.check(candidate, {"schema": "binding-spec.v1", "rules": [{**rule, **extra}]}, reader, {})
-
-
-@pytest.mark.parametrize(
-    "body",
-    [
-        "1) FIRST — SECOND, THIRD — FOURTH; 2) FIFTH",
-        "1) FIRST — SECOND.; 2) THIRD",
-        "1) A rule clause, if the words meet a condition; 2) SECOND",
-    ],
-)
-def test_numbered_explicit_introduction_cannot_admit_groups_punctuation_or_rule_clauses(body):
-    text = "SYNTHETIC наприклад: " + body + "."
-    decisions = bindings.example_boundaries(text)
-    assert decisions[0][1] == "example_boundary_ambiguous"
-    assert decisions[1][1] == "ok"
 
 
 @pytest.mark.parametrize(

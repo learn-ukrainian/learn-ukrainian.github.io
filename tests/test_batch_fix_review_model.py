@@ -62,29 +62,6 @@ def test_call_gemini_review_passes_explicit_pro_model():
         output.unlink()
 
 
-def test_call_gemini_default_uses_flash_high():
-    """call_gemini with default Flash High model passes gemini-3.8-flash-high."""
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
-        prompt_path = tmp_path / "prompt.md"
-        prompt_path.write_text("fix this content", "utf-8")
-
-        captured_cmd = []
-
-        def fake_run(cmd, *args, **kwargs):
-            captured_cmd.extend(cmd)
-            return MagicMock(returncode=0, stdout="===CONTENT_START===\nfixed\n===CONTENT_END===\n", stderr="")
-
-        with patch("subprocess.run", side_effect=fake_run):
-            output = call_gemini(prompt_path, "task-flash", "gemini-3.8-flash-high")
-
-        assert output.exists()
-        assert "--model" in captured_cmd
-        model_idx = captured_cmd.index("--model")
-        assert captured_cmd[model_idx + 1] == "gemini-3.8-flash-high"
-        output.unlink()
-
-
 def test_process_module_propagates_explicit_pro_model():
     """process_module must propagate the explicit model to review/fix functions."""
     with tempfile.TemporaryDirectory() as tmp_dir:

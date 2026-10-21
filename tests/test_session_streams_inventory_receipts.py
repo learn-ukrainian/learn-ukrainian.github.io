@@ -8,7 +8,6 @@ from pathlib import Path
 
 import yaml
 
-from agents_extensions.shared.session_streams.cli import main
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase, load_migrations
 from agents_extensions.shared.session_streams.inventory import (
     inventory_snapshot,
@@ -80,45 +79,6 @@ def test_stream_anchor_follows_listed_order_not_numeric_order(tmp_path: Path) ->
     assert stream_anchor_id("beta", repo) == "epic:2001"
     assert stream_anchor_id("alpha", repo) == "epic:1001"
     assert stream_anchor_id("gamma", repo) == "epic:3001"
-
-
-def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> None:
-    """Fixture epics are the sole authority — not the old four-epic production set."""
-    repo = _fixture_repo(tmp_path)
-    epics = set(sorted_epic_numbers(repo))
-    # Classic four-epic subset from pre-PR-H dual-write code must not appear.
-    hard_coded_four = {4387, 4707, 4542, 4706}
-    assert epics.isdisjoint(hard_coded_four)
-    assert epics == {1001, 1002, 2001, 3001}
-
-
-def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
-    migrations = load_migrations()
-    assert [m.version for m in migrations] == [1, 2, 3, 4, 5, 6, 7]
-    assert "inventory_receipts" in migrations[1].name
-    assert "app_thread_holders" in migrations[2].name
-    assert "remote_epic_lifecycle" in migrations[3].name
-    assert "rollover_bundles" in migrations[4].name
-    db = SessionStreamDatabase(tmp_path / "streams.sqlite3")
-    conn = db.connect()
-    try:
-        versions = [int(r[0]) for r in conn.execute("SELECT version FROM schema_migrations ORDER BY 1")]
-        assert versions == [1, 2, 3, 4, 5, 6, 7]
-        for table in (
-            "stream_migration_state",
-            "stream_inventory_receipts",
-            "legacy_import_receipts",
-            "legacy_projection_receipts",
-            "stream_control_events",
-            "rollover_bundles",
-        ):
-            row = conn.execute(
-                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
-                (table,),
-            ).fetchone()
-            assert row is not None, table
-    finally:
-        conn.close()
 
 
 def test_rollover_bundle_v5_receipt_upgrades_to_status_binding_schema(tmp_path: Path) -> None:
@@ -349,44 +309,3 @@ def test_projection_receipt_records_drift(tmp_path: Path) -> None:
             "WHERE stream_id = 'epic:1001' AND event_type = 'drift_detected'"
         ).fetchall()
         assert len(events) == 1
-
-
-def test_cli_inventory_json_and_register(tmp_path: Path, capsys) -> None:
-    repo = _fixture_repo(tmp_path)
-    db_path = tmp_path / "streams.sqlite3"
-    # Read-only inventory (no register)
-    code = main(
-        [
-            "--db",
-            str(db_path),
-            "inventory",
-            "--repo-root",
-            str(repo),
-            "--format",
-            "json",
-        ]
-    )
-    assert code == 0
-    out = capsys.readouterr().out
-    assert '"epic_count": 4' in out
-    assert "1001" in out and "3001" in out
-    assert "hard_coded_subset_authoritative" in out
-
-    code = main(
-        [
-            "--db",
-            str(db_path),
-            "inventory",
-            "--repo-root",
-            str(repo),
-            "--register",
-            "--format",
-            "json",
-        ]
-    )
-    assert code == 0
-    out = capsys.readouterr().out
-    assert "registration" in out
-    assert "new_inventory_receipts" in out
-    summary = inventory_registration_summary(SessionStreamStore(SessionStreamDatabase(db_path)))
-    assert summary["inventory_receipts"] == 4

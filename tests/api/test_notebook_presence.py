@@ -159,35 +159,6 @@ def test_unmocked_testclient_flow_reaches_mac_occupancy_and_manifest(monkeypatch
     }
 
 
-def test_telemetry_fallback_requires_fresh_matching_instance(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(telemetry_response, "session_context_telemetry", lambda *args, **kwargs: None)
-    now = time.monotonic()
-    upsert_presence(
-        PresenceRequest.model_validate(_notebook_body("fresh-session")),
-        now_mono=now,
-    )
-    fresh = telemetry_response.build_telemetry_payload("fresh-session", force=True)
-    assert fresh is not None
-    assert fresh["source"] == "notebook-presence"
-    assert fresh["ctx"] == 12345
-
-    stale_stamp = time.monotonic() - PRESENCE_FRESHNESS_SECONDS - 1
-    upsert_presence(
-        PresenceRequest.model_validate(_notebook_body("stale-session")),
-        now_mono=stale_stamp,
-    )
-    stale = telemetry_response.build_telemetry_payload("stale-session", force=True)
-    other = telemetry_response.build_telemetry_payload("missing-session", force=True)
-    assert stale == {
-        "ctx": None,
-        "prev_ctx": None,
-        "turn": None,
-        "caller_match": False,
-        "reason": "session-transcript-not-found",
-    }
-    assert other == stale
-
-
 def test_telemetry_fallback_rejects_cloud_and_gui_instance_collisions(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

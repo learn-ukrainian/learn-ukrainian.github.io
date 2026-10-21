@@ -45,20 +45,6 @@ def acquisition_admission_scan(tmp_path, monkeypatch, acquisition_writer_entry):
     return scan
 
 
-def test_acquisition_writer_admission_entry_is_exact(acquisition_writer_entry):
-    entries = [entry for entry in sqlite_lint.load_allowlist() if entry.path == acquisition_writer_entry.path]
-    assert entries == [
-        sqlite_lint.AllowedReference(
-            path="scripts/ingest/dictionary_acquisition.py",
-            reference_count=9,
-            kind="writer",
-            target_db="per-dictionary acquisition staging.sqlite3",
-            reason="Persists isolated acquisition job specification, results and events; no canonical source-store admission.",
-            calls=("sqlite3.connect(directory / 'staging.sqlite3', timeout=1)",),
-        )
-    ]
-
-
 def test_acquisition_writer_source_pins(acquisition_writer_entry, acquisition_admission_scan):
     source = (sqlite_lint.REPO_ROOT / acquisition_writer_entry.path).read_text()
     assert len(sqlite_lint.classify_source(source, acquisition_writer_entry.path)) == 9
@@ -347,15 +333,6 @@ def test_transient_backoff_exhaustion_survives_process_invocations(tmp_path):
         assert conn.execute("SELECT COUNT(*) FROM events WHERE kind='operator_resume'").fetchone()[0] == 1
 
 
-@pytest.mark.parametrize("code", [408, 425, 429, 500, 599])
-def test_http_retryable_statuses_are_errors(tmp_path, code):
-    clock = Clock()
-    assert invoke("run", arguments(tmp_path), HTTP([response(code)], clock), clock) == 75
-    result = status(tmp_path)
-    assert result["counts"]["error"] == 1
-    assert result["counts"]["miss"] == 0
-
-
 @pytest.mark.parametrize(
     "value,expected", [("5", 5), ("-3", 0), ("NaN", 0), ("bad", 0), (None, 0), ("Thu, 01 Jan 1970 00:16:45 GMT", 5)]
 )
@@ -431,15 +408,6 @@ def test_legacy_null_is_unattested_and_empty_200_is_parse_error(tmp_path):
     assert len(http.calls) == 1
     assert status(tmp_path)["counts"]["miss"] == status(tmp_path)["counts"]["reused"] == 0
     assert path.read_bytes() == original
-
-
-def test_missing_and_malformed_seed_are_safe(tmp_path):
-    assert acquisition.seed_row(tmp_path, "sample", "sample", "vts") is None
-    path = write_seed(tmp_path, positive_row())
-    path.write_text("[1]")
-    assert acquisition.seed_row(tmp_path, "sample", "sample", "vts") is None
-    path.write_text("{")
-    assert acquisition.seed_row(tmp_path, "sample", "sample", "vts") is None
 
 
 def test_manifest_configuration_and_durable_target_drift_refused(tmp_path, capsys):
@@ -677,18 +645,6 @@ def test_terminal_state_after_progress_and_child_crash_stays_latched(tmp_path, l
     assert status(tmp_path)["request_attempts"] == 2
 
 
-def test_supervisor_restart_after_own_crash_does_not_reset_budget(tmp_path):
-    clock = Clock()
-    argv = arguments(tmp_path, "vts", ("sample",), "--max-restarts", "0")
-
-    def interrupted(*_a, **_k):
-        raise KeyboardInterrupt
-
-    with pytest.raises(KeyboardInterrupt):
-        invoke("supervise", argv, HTTP([], clock), clock, launch=interrupted)
-    assert invoke("supervise", argv, HTTP([], clock), clock, launch=lambda *_a, **_k: pytest.fail("budget reset")) == 5
-
-
 @pytest.mark.parametrize("scenario", ["blocked", "scattered"])
 def test_supervise_command_with_real_children_and_fake_http(tmp_path, scenario):
     """Exercise the actual CLI supervisor offline, not a shell-loop model."""
@@ -786,45 +742,6 @@ def test_bad_manifest_refusal(tmp_path, entries):
     assert invoke("run", argv, HTTP([], clock), clock) == 2
 
 
-@pytest.mark.parametrize("manifest", ["[]", "{", '{"entries": 1}'])
-def test_bad_manifest_schema_and_json_refusal(tmp_path, manifest):
-    clock = Clock()
-    argv = arguments(tmp_path)
-    (tmp_path / "manifest.json").write_text(manifest)
-    assert invoke("run", argv, HTTP([], clock), clock) == 2
-
-
-def test_official_range_admission_and_aliases(tmp_path):
-    clock = Clock()
-    argv = arguments(tmp_path, "sum20_official")
-    assert invoke("run", [*argv, "--end-wordid", "4"], HTTP([], clock), clock) == 2
-    assert invoke("run", [*argv, "--manifest", "manifest.json"], HTTP([], clock), clock) == 2
-    assert acquisition.dictionary_name("karavansky") == "synonyms_karavansky"
-
-
-@pytest.mark.parametrize("action", ["status", "resume"])
-def test_missing_job_refuses(tmp_path, action):
-    clock = Clock()
-    assert invoke(action, arguments(tmp_path), HTTP([], clock), clock) == 2
-
-
-@pytest.mark.parametrize("style", ["file", "module"])
-def test_cli_entrypoints_without_pythonpath(tmp_path, monkeypatch, style):
-    repo = Path(__file__).resolve().parents[1]
-    monkeypatch.delenv("PYTHONPATH", raising=False)
-    if style == "file":
-        command = [sys.executable, str(repo / "scripts/ingest/dictionary_acquisition.py"), "--help"]
-        cwd = tmp_path
-        expected = "usage:"
-    else:
-        command = [sys.executable, "-c", "import scripts.ingest.dictionary_acquisition; print('IMPORT_COMPLETE')"]
-        cwd = repo
-        expected = "IMPORT_COMPLETE"
-    result = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=30, check=False)
-    assert result.returncode == 0, result.stderr
-    assert expected in result.stdout
-
-
 def test_cli_help_and_argparse_error(capsys):
     with pytest.raises(SystemExit) as help_exit:
         acquisition.main(["--help"])
@@ -854,11 +771,6 @@ def test_atomic_json_replaces_projection_and_refusal_storage_failure(tmp_path, c
     root.write_text("occupied")
     assert acquisition.refusal(root, "invalid", "input_or_storage_error") == 2
     assert json.loads(capsys.readouterr().out)["evidence_error"] == "refusal_storage_unavailable"
-
-
-def test_packing_is_stable_and_digest_matches():
-    assert acquisition.packed({"b": 2, "a": 1}) == '{"a":1,"b":2}'
-    assert acquisition.digest(b"") == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 
 @pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])

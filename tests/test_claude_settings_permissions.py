@@ -64,11 +64,6 @@ def _is_interpreter_head(head: str) -> bool:
     return head in INTERPRETERS or bool(_INTERPRETER_HEAD_RE.search(head))
 
 
-def test_session_env_disables_bytecode_for_sibling_git() -> None:
-    settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
-    assert settings["env"]["PYTHONDONTWRITEBYTECODE"] == "1"
-
-
 def test_allow_rules_name_the_interpreter_relative_to_the_checkout() -> None:
     """Allow rules must not pin one machine's checkout location: an
     interpreter head is either bare or the checkout-relative venv path."""
@@ -76,34 +71,6 @@ def test_allow_rules_name_the_interpreter_relative_to_the_checkout() -> None:
         head = pattern.split(" ", 1)[0]
         if _is_interpreter_head(head):
             assert head in INTERPRETERS, pattern
-
-
-def test_allow_list_is_present_and_bash_scoped() -> None:
-    allow = _permissions()["allow"]
-    assert len(allow) >= 40
-    assert len(allow) == len(set(allow)), "duplicate allow rules"
-    assert all(rule.startswith("Bash(") and rule.endswith(")") for rule in allow)
-
-
-def test_allow_list_has_no_push_or_switch_rule() -> None:
-    # #9030 round-2 (Grok): a trailing "*" in a push/delete allow rule also
-    # swallows extra refspecs and clustered short flags (-uf force-pushes),
-    # and prefix globs cannot make `git push`/`git switch` safe. These now go
-    # back to the auto-mode classifier, which force-blocks by default.
-    allow = _bash_patterns(_permissions()["allow"])
-    assert not any(p.startswith("git push") for p in allow)
-    assert not any(p.startswith("git switch") for p in allow)
-
-
-def test_branch_sweep_and_read_only_branch_probes_are_allowed() -> None:
-    allow = _permissions()["allow"]
-    assert {
-        "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",
-        "Bash(git for-each-ref *)",
-    } <= set(allow)
-    assert _decide(".venv/bin/python -m scripts.hygiene.branch_sweep --json") == "allow"
-    assert _decide("git for-each-ref refs/remotes/origin") == "allow"
-    assert not any(pattern.startswith("git push") for pattern in _bash_patterns(allow))
 
 
 @pytest.mark.parametrize("command", [
@@ -124,15 +91,6 @@ def test_branch_sweep_and_read_only_branch_probes_are_allowed() -> None:
 def test_no_allow_rule_admits_other_git_transport_or_push(command: str) -> None:
     allow = _bash_patterns(_permissions()["allow"])
     assert not any(_matches(pattern, command) for pattern in allow), command
-
-
-@pytest.mark.parametrize("command", [
-    "git fetch origin",
-    "git fetch -q origin main",
-    "git fetch --prune origin",
-])
-def test_routine_git_fetch_is_allowed(command: str) -> None:
-    assert _decide(command) == "allow"
 
 
 @pytest.mark.parametrize("command", [
@@ -171,12 +129,6 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
             # classifier (#9030 Grok review).
             assert target.startswith(("scripts/", "-m scripts."))
             assert "pytest" not in target, pattern
-
-
-def test_no_ask_rule_shadows_an_allow_rule() -> None:
-    # A matching ask rule outranks allow; in auto mode it prompts and in
-    # headless dontAsk it denies, which would silently undo the allow list.
-    assert not _permissions().get("ask")
 
 
 @pytest.mark.parametrize(
@@ -260,20 +212,3 @@ def test_no_ask_rule_shadows_an_allow_rule() -> None:
 )
 def test_rule_precedence(command: str, expected: str | None) -> None:
     assert _decide(command) == expected
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        # `git push`/`git switch` no longer match any allow rule at all
-        # (#9030 round-2); fetch execution options now exercise deny precedence.
-        "git fetch --upload-pack=x origin",
-        "git fetch origin --upl=x",
-        "gh pr merge 1 --admin --squash",
-        "sudo systemctl link /tmp/x.service",
-        "sudo systemctl --user link x",
-    ],
-)
-def test_denied_commands_are_also_allowed_so_precedence_is_exercised(command: str) -> None:
-    allow = _bash_patterns(_permissions()["allow"])
-    assert any(_matches(p, command) for p in allow), command

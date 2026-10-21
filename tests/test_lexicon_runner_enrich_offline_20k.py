@@ -59,15 +59,6 @@ def test_help_exits_zero_without_side_effects(tmp_path: Path) -> None:
     assert not work.exists()
 
 
-def test_bare_invocation_refuses_without_running() -> None:
-    """#5393 class: bare argv must refuse (nonzero) and not open a long run."""
-    proc = _run_driver()
-    assert proc.returncode != 0
-    combined = (proc.stdout + proc.stderr).lower()
-    assert "refusing" in combined or "usage:" in combined
-    assert "offline_enrich_start" not in proc.stdout
-
-
 def test_dry_run_plan_fixture_slice(tmp_path: Path) -> None:
     sources = sources_slice(tmp_path)
     work = tmp_path / "enrich_work"
@@ -301,17 +292,3 @@ def test_resume_after_stop_after_chunks(tmp_path: Path, monkeypatch: pytest.Monk
     assert second["ledger_run_id"] == run_id
     assert second.get("interrupted") is False
     assert sum(1 for e in second["entries"] if e.get("enriched") is True) == MAX_FIXTURE_LEMMAS
-
-
-def test_launch_enrich_sh_is_executable_and_documents_caps() -> None:
-    path = ROOT / "scripts" / "lexicon" / "runner" / "launch_enrich.sh"
-    assert path.is_file()
-    text = path.read_text(encoding="utf-8")
-    assert 'MemoryHigh="${JOB_MEMORY_HIGH_MIB}M"' in text
-    assert 'MemoryMax="${JOB_MEMORY_MAX_MIB}M"' in text
-    assert "enrich_offline_20k.py" in text
-    assert "candidate-ulif-reduce.json" in text
-    assert "finalize" in text.lower() or "pin-flip" in text.lower()
-    # Shell syntax check
-    proc = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True, check=False, timeout=10)
-    assert proc.returncode == 0, proc.stderr

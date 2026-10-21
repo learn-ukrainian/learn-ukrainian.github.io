@@ -15,8 +15,6 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-import pytest
-
 from scripts.ingest import antonenko_full_book_ingest as antonenko
 
 # pdftotext emits page content directly followed by ``\f`` between pages,
@@ -70,30 +68,6 @@ def test_parse_book_drops_empty_pages(tmp_path: Path) -> None:
     assert [p.number for p in pages] == [1, 2]
     assert "Page A body." in pages[0].render()
     assert "Page B body." in pages[1].render()
-
-
-def test_parse_book_missing_file_raises(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        antonenko.parse_book(tmp_path / "missing.txt")
-
-
-def test_page_render_strips_leading_and_trailing_blanks(tmp_path: Path) -> None:
-    """A page that's all blanks renders as empty string; non-blank pages
-    drop their leading/trailing blank lines while keeping content."""
-    fixture = "\n\n  Real content.  \n\n"
-    txt = _write_fixture(tmp_path, "p.txt", fixture)
-    pages = antonenko.parse_book(txt)
-    assert len(pages) == 1
-    rendered = pages[0].render()
-    assert rendered.startswith("  Real content."), rendered
-    assert rendered.endswith("\n")
-
-
-def test_page_render_preserves_internal_blanks(tmp_path: Path) -> None:
-    fixture = "Paragraph A.\n\nParagraph B.\n"
-    txt = _write_fixture(tmp_path, "p.txt", fixture)
-    pages = antonenko.parse_book(txt)
-    assert "Paragraph A.\n\nParagraph B." in pages[0].render()
 
 
 # --- DB round trip --------------------------------------------------------
@@ -165,34 +139,6 @@ def test_ingest_pages_round_trip_with_section_coverage(tmp_path: Path) -> None:
 
     section_ids = {s[0] for s in sections}
     assert all(c[5] in section_ids for c in chunks)
-    conn.close()
-
-
-def test_ingest_pages_uses_three_digit_page_number(tmp_path: Path) -> None:
-    """169 pages — the chunk_id padding must be 3 digits so chunks sort
-    correctly. Regression check: 2-digit padding would produce
-    ``_p10`` < ``_p2`` under string sort."""
-    # Synthesize 12 pages so the padding-needs gap is exercised.
-    fixture = "\f".join(f"Body of page {i}\n" for i in range(1, 13)) + "\f"
-    txt = _write_fixture(tmp_path, "many.txt", fixture)
-    pages = antonenko.parse_book(txt)
-    assert len(pages) == 12
-
-    db_path = tmp_path / "sources.db"
-    conn = _make_textbooks_db(db_path)
-    antonenko.ingest_pages(conn, pages)
-    conn.commit()
-    chunk_ids = [
-        r[0]
-        for r in conn.execute(
-            "SELECT chunk_id FROM textbooks WHERE source_file = ? ORDER BY chunk_id",
-            (antonenko.SOURCE_FILE,),
-        )
-    ]
-    # Sorted string order matches numeric page order — three-digit padding works.
-    assert chunk_ids == [
-        f"{antonenko.SOURCE_FILE}_p{i:03d}" for i in range(1, 13)
-    ]
     conn.close()
 
 

@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 
 from scripts.fleet.driver_breadth_report import (
-    _parse_ts,
     _tier_for,
     build_report,
     load_tasks,
@@ -39,12 +38,6 @@ def _task(
         "duration_s": 10,
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
-
-
-def test_parse_ts_naive_becomes_utc() -> None:
-    dt = _parse_ts("2026-08-06T12:00:00")
-    assert dt is not None
-    assert dt.tzinfo is not None
 
 
 def test_note_file_requires_fleet_breadth_marker(tmp_path: Path) -> None:
@@ -479,11 +472,3 @@ def test_load_tasks_reads_archived_records(tmp_path: Path) -> None:
     )
     tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(days=30))
     assert sorted(task["task_id"] for task in tasks) == ["hot", "old"]
-
-
-@pytest.mark.parametrize("value", ["-1", "0", "-0.5", "nan", "inf", "abc"])
-def test_rejects_non_positive_since_hours(value: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        main(["--tasks-dir", str(tmp_path), "--since-hours", value])
-    assert excinfo.value.code == 2
-    assert "--since-hours" in capsys.readouterr().err

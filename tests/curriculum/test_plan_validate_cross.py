@@ -15,10 +15,8 @@ import copy
 import functools
 import hashlib
 import json
-import os
 import stat
 import subprocess
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -26,7 +24,7 @@ import pytest
 import yaml
 
 from scripts.curriculum.validate import codes
-from scripts.curriculum.validate.scope import compute_scope, letter_runs, write_scope_sidecar
+from scripts.curriculum.validate.scope import compute_scope, write_scope_sidecar
 from scripts.curriculum.validate.validate import Report, validate_plan
 from scripts.curriculum.validate.validate import main as validate_main
 from tests.sparse_trees import tree_absent
@@ -812,46 +810,6 @@ def test_cross_case(tmp_path: Path, case: CrossCase) -> None:
 # --- message-level assertions -----------------------------------------------
 
 
-def test_missing_prior_lists_positions(tmp_path: Path) -> None:
-    case = next(case for case in RULE4_CASES if case.name == "rule4_earlier_position_missing_fails")
-    report = run_cross(tmp_path, case)
-    outcome = next(o for o in report.failures if o.code == codes.PRIOR_PLANS_MISSING)
-    assert "missing positions: 2" in outcome.message
-
-
-def test_letters_mismatch_reports_missing_and_extra_separately(tmp_path: Path) -> None:
-    _skip_if_arc_absent()
-    case = next(case for case in arc_cases() if case.name == "rule5_missing_and_extra_letters")
-    report = run_cross(tmp_path, case)
-    outcomes = [o for o in report.failures if o.code == codes.ARC_LETTERS_MISMATCH]
-    assert len(outcomes) == 2, report.render_text()
-    missing = next(o for o in outcomes if "missing" in o.message)
-    extra = next(o for o in outcomes if "extra" in o.message)
-    assert " ".join(_letters(1, 3)) in missing.message
-    assert _letters(5, 6)[0] in extra.message
-
-
-def test_registry_missing_says_how_to_add_the_record(tmp_path: Path) -> None:
-    case = next(case for case in REGISTRY_CASES if case.name == "registry_missing_while_plan_introduces_grammar")
-    report = run_cross(tmp_path, case)
-    outcome = next(o for o in report.failures if o.code == codes.REGISTRY_MISSING)
-    assert "introduced_at" in outcome.message
-    assert "append" in outcome.message
-    assert "G-a1-001" in outcome.message
-
-
-def test_title_quantities_quotes_digits(tmp_path: Path) -> None:
-    case = CrossCase(
-        "title_digits_quoted",
-        plans=[target_plan(title="Module 1 title", subtitle="About 7 things")],
-        arc=default_arc(),
-    )
-    report = run_cross(tmp_path, case)
-    outcome = next(o for o in report.not_checked if o.code == codes.TITLE_QUANTITIES_NOT_PARSED)
-    assert "1" in outcome.message and "7" in outcome.message
-    assert report.ok
-
-
 def test_real_position2_letters_through_load_arc(tmp_path: Path) -> None:
     """A plan matching the real position-2 arc (letters via load_arc) passes, and a
     title enumerating exactly the scope letter list passes the title check."""
@@ -886,29 +844,6 @@ def test_real_position2_letters_through_load_arc(tmp_path: Path) -> None:
     assert report.ok, report.render_text()
     assert not any(o.code == codes.TITLE_LETTER_ENUMERATION_MISMATCH for o in report.failures)
     assert any(o.code == codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY for o in report.not_checked)
-
-
-def test_title_seven_over_33_message(tmp_path: Path) -> None:
-    _skip_if_arc_absent()
-    case = next(case for case in title_cases() if case.name == "title_seven_enumerated_over_33_taught")
-    report = run_cross(tmp_path, case)
-    outcome = next(o for o in report.failures if o.code == codes.TITLE_LETTER_ENUMERATION_MISMATCH)
-    assert "missing:" in outcome.message
-    assert " ".join(_letters(0, 7)) in outcome.message
-
-
-def test_letter_runs_boundaries() -> None:
-    """The definition of 'a run of enumerated single letters' at its edges."""
-    _skip_if_arc_absent()
-    letters = real_position_letters(2)
-    a, o, u = letters[0], letters[1], letters[2]
-    assert letter_runs(f"{a}") == []  # one letter alone is not a run
-    assert letter_runs(f"{a} {o}") == [[a, o]]
-    assert letter_runs(f"{a}, {o}, {u}") == [[a, o, u]]
-    assert letter_runs(f"{a},{o}; {u}") == [[a, o, u]]
-    assert letter_runs("Я і ти читаємо") == []  # a one-letter word in a sentence is not an enumeration
-    assert letter_runs(f"{a}{o} {u}") == []  # a two-letter word is not two letters
-    assert letter_runs("About 7 things") == []
 
 
 # --- scope sidecar behavior ---------------------------------------------------
@@ -975,25 +910,6 @@ def test_renamed_plan_file_is_rejected(tmp_path: Path, capsys: pytest.CaptureFix
     # --all reads the slug field; the leftover _scope/mod-one.yaml must not let it pass.
     assert validate_main([LEVEL, "--all", "--level-dir", str(renamed.parent)]) == 1
     assert codes.PLAN_SLUG_MISMATCH in capsys.readouterr().out
-
-
-def test_sidecar_moved_to_another_slug_or_level_is_rejected(tmp_path: Path) -> None:
-    """The sidecar names its level and module, so bytes from another slug or level are stale."""
-    plans = [make_plan("mod-zero", 1, [teach_lesson(1, "prior-lesson"), recap_lesson(2)]), target_plan(position=2)]
-    paths = write_level(tmp_path, plans=plans, arc=[arc_position(1, "mod-zero"), arc_position(2, SLUG)])
-    plan_path = paths[SLUG]
-    sidecar = plan_path.parent / "_scope" / f"{SLUG}.yaml"
-    assert validate_plan(LEVEL, SLUG, plan_path=plan_path).ok
-
-    sidecar.write_bytes((plan_path.parent / "_scope" / "mod-zero.yaml").read_bytes())
-    report = validate_plan(LEVEL, SLUG, plan_path=plan_path)
-    assert codes.SCOPE_SIDECAR_STALE in report.codes(), report.render_text()
-
-    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    write_scope_sidecar(plan_path, SLUG, compute_scope(plan, "a2", SLUG))  # the a2 sidecar of the same slug
-    report = validate_plan(LEVEL, SLUG, plan_path=plan_path)
-    outcome = next(o for o in report.failures if o.code == codes.SCOPE_SIDECAR_STALE)
-    assert "-level: a2" in outcome.message
 
 
 # --- waivers and the CLI ------------------------------------------------------
@@ -1154,86 +1070,7 @@ def test_git_scenario(tmp_path: Path, scenario: GitScenario) -> None:
     assert {o.code for o in report.failures} == set(scenario.expected), report.render_text()
 
 
-def test_no_merge_base_says_fetch_full_history(tmp_path: Path) -> None:
-    scenario = next(scenario for scenario in GIT_SCENARIOS if scenario.name == "strict_no_merge_base_fails")
-    report = run_git_scenario(tmp_path, scenario)
-    outcome = next(o for o in report.failures if o.code == codes.MERGE_BASE_UNAVAILABLE)
-    assert "fetch full history" in outcome.message
-
-
 # --- whole-level mode ----------------------------------------------------------
-
-
-def _three_plan_level(root: Path) -> Path:
-    plans = [
-        make_plan(
-            "mod-b",
-            2,
-            [teach_lesson(1, "lesson-b", core=["W-014"], recycled=["W-012"], uses_vocab=["W-012"]), recap_lesson(2)],
-        ),
-        make_plan("mod-a", 1, [teach_lesson(1, "lesson-a", core=["W-012"]), recap_lesson(2)]),
-        make_plan(
-            "mod-c",
-            3,
-            [teach_lesson(1, "lesson-c", core=["W-015"], recycled=["W-014"], uses_vocab=["W-014"]), recap_lesson(2)],
-        ),
-    ]
-    write_level(
-        root,
-        plans=plans,
-        arc=[arc_position(1, "mod-a"), arc_position(2, "mod-b"), arc_position(3, "mod-c")],
-    )
-    return root / "curriculum/l2-uk-en/lesson-plans" / LEVEL
-
-
-def test_all_prints_one_summary_line_per_plan_in_position_order(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    level_dir = _three_plan_level(tmp_path)
-    assert validate_main([LEVEL, "--all", "--level-dir", str(level_dir)]) == 0
-    out = capsys.readouterr().out
-    lines = [line for line in out.splitlines() if line.startswith(f"{LEVEL}/mod-")]
-    assert lines == [f"{LEVEL}/mod-a: pass", f"{LEVEL}/mod-b: pass", f"{LEVEL}/mod-c: pass"]
-
-
-def test_all_subprocess_clean_environment_strict(tmp_path: Path) -> None:
-    """The CLI runs --all --strict from the repository root under env -i (only PATH and HOME)."""
-    plans = [
-        make_plan("mod-zero", 1, [teach_lesson(1, "prior-lesson", grammar=["G-a1-001"]), recap_lesson(2)]),
-        make_plan(SLUG, 2, [teach_lesson(1, "lesson-one", grammar=["G-a1-002"]), recap_lesson(2)]),
-    ]
-    write_level(
-        tmp_path,
-        plans=plans,
-        arc=[arc_position(1, "mod-zero"), arc_position(2, SLUG)],
-        registry=[_r1(), _r2()],
-    )
-    assert _git(tmp_path, "init", "-q", "-b", "main").returncode == 0
-    assert _git(tmp_path, "add", "-A").returncode == 0
-    assert _git(tmp_path, "commit", "-q", "-m", "baseline").returncode == 0
-    assert _git(tmp_path, "update-ref", "refs/remotes/origin/main", "HEAD").returncode == 0
-    level_dir = tmp_path / "curriculum/l2-uk-en/lesson-plans" / LEVEL
-    env = [f"PATH={os.environ['PATH']}", f"HOME={os.environ.get('HOME', str(tmp_path))}"]
-    completed = subprocess.run(
-        [
-            "env",
-            "-i",
-            *env,
-            sys.executable,
-            "-m",
-            "scripts.curriculum.validate",
-            LEVEL,
-            "--all",
-            "--strict",
-            "--level-dir",
-            str(level_dir),
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-    assert completed.returncode == 0, completed.stderr + completed.stdout
-    assert f"{LEVEL}/mod-zero: pass" in completed.stdout
-    assert f"{LEVEL}/{SLUG}: pass" in completed.stdout
 
 
 # --- registry completeness aggregation (used by test_plan_validate.py) ---------

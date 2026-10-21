@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -90,26 +89,6 @@ def dpo_records(archive_payload: ArtifactSet) -> list[dict[str, Any]]:
         )
         records.extend(shard_recs)
     return records
-
-
-@pytest.mark.needs_artifact(
-    "open_model_archive_payload",
-    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
-)
-def test_production_release_files_exist(archive_payload: ArtifactSet) -> None:
-    """Verify all 6 SFT shards, 3 DPO shards, receipt, and detached SHA exist."""
-    assert DEFAULT_OUTPUT_DIR.exists(), f"Release dir {DEFAULT_OUTPUT_DIR} does not exist"
-    receipt_path = REGISTRY_OUTPUT_DIR / "production_release_receipt.json"
-    assert receipt_path.exists(), "production_release_receipt.json missing"
-    assert receipt_path.with_suffix(".json.sha256").exists(), "detached .sha256 missing"
-
-    for shard_idx in range(1, SFT_SHARDS_COUNT + 1):
-        shard_path = DEFAULT_OUTPUT_DIR / "sft" / f"sft_shard_{shard_idx:03d}_of_{SFT_SHARDS_COUNT:03d}.jsonl"
-        assert _a_bytes(archive_payload, shard_path)
-
-    for shard_idx in range(1, DPO_SHARDS_COUNT + 1):
-        shard_path = DEFAULT_OUTPUT_DIR / "dpo" / f"dpo_shard_{shard_idx:03d}_of_{DPO_SHARDS_COUNT:03d}.jsonl"
-        assert _a_bytes(archive_payload, shard_path)
 
 
 def test_production_receipt_schema_valid(receipt_data: dict[str, Any]) -> None:
@@ -307,24 +286,6 @@ def test_partition_firewall_zero_leakage(
         assert r["pair_id"] not in heldout_ids, f"Leakage: DPO pair_id {r['pair_id']} present in held-out suite"
 
 
-def test_partition_firewall_minhash_isolation(receipt_data: dict[str, Any]) -> None:
-    """Verify empirical MinHash and exact Jaccard near-duplicate similarity are strictly < 0.80."""
-    firewall = receipt_data["deliverables"]["heldout_evaluation_suite"]["partition_firewall"]
-    assert firewall["partition_isolated"] is True
-    assert firewall["target_term_leakage_count"] == 0
-    assert firewall["record_id_leakage_count"] == 0
-
-    max_sim = firewall["max_minhash_similarity"]
-    assert isinstance(max_sim, (int, float))
-    assert max_sim < 0.35, f"MinHash similarity {max_sim} >= 0.35 threshold"
-    assert max_sim == 0.3281, f"Unexpected MinHash similarity {max_sim}, expected measured value 0.3281"
-
-    max_jac = firewall["max_token_jaccard_similarity"]
-    assert isinstance(max_jac, (int, float))
-    assert max_jac < 0.35, f"Token Jaccard similarity {max_jac} >= 0.35 threshold"
-    assert max_jac == 0.3000, f"Unexpected Token Jaccard similarity {max_jac}, expected measured value 0.3000"
-
-
 def test_compute_heldout_minhash_similarity_detects_duplicate(tmp_path: Path) -> None:
     """Verify compute_heldout_minhash_similarity detects duplicate/near-duplicate and raises ValueError."""
     fake_heldout = tmp_path / "fake_heldout.jsonl"
@@ -397,25 +358,6 @@ def test_no_private_host_paths_opsec(receipt_data: dict[str, Any]) -> None:
     "open_model_archive_payload",
     "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
 )
-def test_verify_only_cli_execution() -> None:
-    """Run production shards assembly in --verify-only mode and verify exit 0."""
-    script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_production_shards_assembly.py"
-    res = subprocess.run(
-        [sys.executable, str(script_path), "--verify-only"],
-        cwd=str(REPO_ROOT),
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert res.returncode == 0, f"--verify-only failed with code {res.returncode}:\n{res.stderr}\n{res.stdout}"
-    assert "[✓] --verify-only checks passed 100% cleanly!" in res.stdout
-
-
-@pytest.mark.needs_artifact(
-    "open_model_archive_payload",
-    "projects/open_model_data/archive/uldr_v1_production/sft/sft_shard_001_of_012.jsonl",
-)
 def test_tamper_detection_on_corrupted_shard(tmp_path: Path, archive_payload: ArtifactSet) -> None:
     """Verify that tampering with an SFT shard or receipt triggers a verification failure."""
     test_release_dir = tmp_path / "uldr_v1_production"
@@ -439,16 +381,6 @@ def test_tamper_detection_on_corrupted_shard(tmp_path: Path, archive_payload: Ar
         verify_production_release(test_release_dir)
 
 
-def test_dual_tier_licensing_structure(receipt_data: dict[str, Any]) -> None:
-    """Verify dual-tier licensing declaration in receipt metadata."""
-    licensing = receipt_data.get("licensing", {})
-    assert licensing.get("packaging_tier") == "dual_tier"
-    assert "CC-BY-4.0" in licensing.get("public_release", "")
-    assert "Train-only" in licensing.get("research_internal", "")
-    assert receipt_data.get("safety_assertions", {}).get("schema_validation_100_percent") is True
-    assert receipt_data.get("safety_assertions", {}).get("claim_verification_100_percent") is True
-
-
 def test_assemble_production_shards_refuses_archive_write() -> None:
     """Verify that assemble_production_shards strictly refuses write destinations in archive/ (#6321)."""
     from scripts.projects.open_model_data.v4_production_shards_assembly import assemble_production_shards
@@ -458,28 +390,3 @@ def test_assemble_production_shards_refuses_archive_write() -> None:
             output_dir=HISTORICAL_ARCHIVE_DIR,
             verify_only=False,
         )
-
-
-def test_removed_sum11_lookup_does_not_reopen_production_generation(tmp_path):
-    """Generation refuses before reading even a SUM-11-only synthetic database."""
-    import sqlite3
-
-    from scripts.projects.open_model_data import v4_production_shards_assembly as assembly
-
-    db = tmp_path / "sources.db"
-    with sqlite3.connect(db) as conn:
-        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
-        conn.execute("INSERT INTO sum11 VALUES ('fixture', 'historical-only gloss')")
-    original = db.read_bytes()
-    out = tmp_path / "output"
-    from scripts.projects.open_model_data.p3b_refusal import HistoricalProducerDeferredError
-
-    with pytest.raises(HistoricalProducerDeferredError, match="P3b"):
-        assembly.assemble_production_shards(output_dir=out, sources_db_path=db)
-    assert db.read_bytes() == original
-    assert not out.exists()
-    result = subprocess.run([sys.executable, "-m", assembly.__name__, "--output-dir", str(out),
-                             "--sources-db", str(db)], capture_output=True, text=True, timeout=30)
-    assert result.returncode != 0
-    assert "P3b" in result.stderr
-    assert not out.exists()

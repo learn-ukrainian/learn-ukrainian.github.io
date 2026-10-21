@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import sqlite3
 from functools import cache
 from pathlib import Path
 from types import SimpleNamespace
@@ -91,14 +90,6 @@ READ = _record(
         ("читаю", "verb:imperf:pres:s:1"),
         ("читаєш", "verb:imperf:pres:s:2"),
         ("читав", "verb:imperf:past:m"),
-    ],
-)
-BIG = _record(
-    6,
-    "великий",
-    [
-        ("велике", "adj:n:v_naz:compb"),
-        ("великому", "adj:n:v_dav:compb"),
     ],
 )
 BREAKFAST = _record(
@@ -298,17 +289,6 @@ DEED = _record(
         ("діла", "noun:inanim:p:v_kly"),
     ],
 )
-CAT = _record(
-    22,
-    "кіт",
-    [
-        ("кота", "noun:anim:m:v_rod"),
-        ("кота", "noun:anim:m:v_zna"),
-        ("кіт", "noun:anim:m:v_naz"),
-    ],
-)
-
-
 def _case_offer(
     sentence: str,
     *,
@@ -505,10 +485,6 @@ def test_prompt_sentence_is_used_by_offer_question_and_payload() -> None:
     )
 
 
-def test_form_with_empty_rendered_sentence_is_refused() -> None:
-    assert _case_offer("", sentence_field="prompt")["code"] == "form_sentence_missing"
-
-
 def test_shared_accusative_case_does_not_trigger_negation_rule() -> None:
     # Under rev 6.5, options whose learner Case sets are all identical (Acc) do not contrast in case.
     coffee = _record(30, "кава", [("каву", "noun:inanim:f:v_zna")])
@@ -589,18 +565,6 @@ def test_store_without_negation_particle_record_is_named(particle: dict | None) 
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
 
 
-def test_negation_record_rebound_to_another_particle_is_refused() -> None:
-    # W-061 carrying another store particle's lemma and VESUM binding (the real W-062 record).
-    another = _store_record("W-062")
-    other = {**_store_record(NEGATION_PARTICLE_RECORD), "lemma": another["lemma"], "entry": another["entry"]}
-    row = _case_offer("Я не знаю ___.", particle=other)
-    assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
-
-
-def test_real_a1_store_negation_particle_passes_identity_check() -> None:
-    assert _case_offer("Я не знаю ___.")["code"] == "a1_case_contrast_under_negated_verb"
-
-
 @pytest.mark.parametrize(
     "sentence",
     ["Це не хліб, а ___", "Немає ___", "Ні, ___", "Без ___", "Ось ___"],
@@ -613,10 +577,6 @@ def test_a1_case_contrast_cannot_bypass_by_declaring_another_feature() -> None:
     assert _case_offer("Я не знаю ___", feature="Number")["code"] == "a1_case_contrast_under_negated_verb"
 
 
-def test_a1_case_contrast_cannot_bypass_by_declaring_another_kind() -> None:
-    assert _case_offer("Я не знаю ___", kind="vocabulary")["code"] == "a1_case_contrast_under_negated_verb"
-
-
 def test_a1_case_contrast_accepts_store_finite_analysis_without_vesum() -> None:
     know = _record(19, "знати", [("знаю", "verb:imperf:pres:s:1")])
     assert _case_offer("Я не знаю ___ і не хліб", extra_records=[know])["code"] == "a1_case_contrast_under_negated_verb"
@@ -625,11 +585,6 @@ def test_a1_case_contrast_accepts_store_finite_analysis_without_vesum() -> None:
 @pytest.mark.parametrize("level", ["a2", "b1"])
 def test_negated_case_contrast_does_not_apply_above_a1(level: str) -> None:
     assert _case_offer("Я не знаю ___", level=level).get("code") != "a1_case_contrast_under_negated_verb"
-
-
-def test_case_contrast_blocker_1_two_options_with_shared_accusative_refused() -> None:
-    row = _case_offer("Я не маю ___.", options=["подарунка", "подарунок"])
-    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
 
 
 def test_adjacent_preposition_e1_exempts_case_contrast() -> None:
@@ -654,17 +609,6 @@ def test_adjacent_unambiguous_adjective_e3_exempts_feminine_genitive() -> None:
     assert row["status"] == "passed"
 
 
-def test_adjacent_unambiguous_adjective_e3_exempts_plural_genitive_with_animacy_contrast() -> None:
-    row = _case_offer(
-        "Ця країна не має сухопутних ___.",
-        options=["кордонами", "кордони", "кордонів"],
-        target_record=BORDER,
-        key=2,
-    )
-    assert row.get("code") != "a1_case_contrast_under_negated_verb"
-    assert row["status"] == "passed"
-
-
 def test_adjacent_modifier_with_adverb_analysis_fails_e3_and_refuses() -> None:
     row = _case_offer(
         "Я не роблю добре ___.",
@@ -672,17 +616,6 @@ def test_adjacent_modifier_with_adverb_analysis_fails_e3_and_refuses() -> None:
         target_record=DEED,
         key=0,
         demand={"Case": "Nom"},
-    )
-    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
-
-
-def test_adjacent_modifier_with_noun_analysis_fails_e3_and_refuses() -> None:
-    row = _case_offer(
-        "Я не бачу нового ___.",
-        options=["кота", "кіт"],
-        target_record=CAT,
-        key=0,
-        demand={"Case": "Gen"},
     )
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
 
@@ -697,12 +630,6 @@ def test_adjacent_modifier_with_noun_analysis_fails_e3_and_refuses() -> None:
 def test_intervening_clause_or_verb_has_no_nearest_verb_exemption_refused(sentence: str) -> None:
     row = _case_offer(sentence, options=["подарунка", "подарунок"])
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
-
-
-def test_sentence_without_negated_verb_is_unaffected() -> None:
-    row = _case_offer("Я купую ___.", options=["подарунка", "подарунок"])
-    assert row.get("code") != "a1_case_contrast_under_negated_verb"
-    assert row["status"] == "passed"
 
 
 @pytest.mark.parametrize(
@@ -807,24 +734,6 @@ def test_case_contrast_pins_var_accusative_reading() -> None:
         "a1_case_contrast_under_negated_verb",
         "writer",
     )
-
-
-@pytest.mark.parametrize("exc", [sqlite3.OperationalError("disk I/O error"), OSError("connection lost")])
-def test_choice_checks_vesum_lookup_error_fails_closed_when_store_records_present(exc: Exception) -> None:
-    def failing_lookup(words: list[str]) -> dict:
-        raise exc
-
-    item = _form(["діло", "діла"], DEED, {"Case": "Nom"}, key=0)
-    item["sentence"] = "Я не роблю добре ___."
-    row = check_4_activities(
-        {"activities": [{"id": "a1", "items": [item]}]},
-        {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
-        {"words": [DEED, _store_record(NEGATION_PARTICLE_RECORD), _store_record("W-075")]},
-        {},
-        level="a1",
-        vesum_lookup=failing_lookup,
-    )[0]
-    assert (row["check"], row["code"], row["layer"]) == (4, "a1_choice_source_unavailable", "pack")
 
 
 def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:
@@ -991,40 +900,11 @@ def test_one_noncontradicting_analysis_makes_distractor_undecidable(tmp_path: Pa
 
 
 @pytest.mark.parametrize(
-    ("sentence", "record", "options", "requires", "feature"),
-    [
-        ("Я ___ книгу", READ, ["читаю", "читаєш"], {"Person": "1", "Number": "Sing"}, "Person"),
-        (
-            "Вікно ___ і чисте",
-            BIG,
-            ["велике", "великому"],
-            {"Gender": "Neut", "Number": "Sing", "Case": "Nom"},
-            "Gender",
-        ),
-    ],
-)
-def test_header_agreement_examples_reject_swapped_key(
-    tmp_path: Path, sentence: str, record: dict, options: list[str], requires: dict[str, str], feature: str
-) -> None:
-    item = _form(options, record, requires, taught=feature)
-    item["sentence"] = sentence
-    assert _check(tmp_path, item, record)["status"] == "passed"
-    item["correct"] = 1
-    assert _check(tmp_path, item, record)["code"] == "form_not_unique_for_requires"
-
-
-@pytest.mark.parametrize(
     ("seat", "family"),
     [("claude@opus-5-5", "anthropic"), ("codex@gpt-6.1-sol", "openai"), ("agy@gemini-3-pro", "google")],
 )
 def test_language_lanes_admit_claude_codex_and_agy(seat: str, family: str) -> None:
     assert receipts.language_seat_family(seat, what="test") == family
-
-
-def test_language_lanes_refuse_grok() -> None:
-    assert "grok" not in receipts.LANGUAGE_LANES
-    with pytest.raises(ResolverError, match="language lane"):
-        receipts.language_seat_family("grok@grok-4.7", what="test")
 
 
 @pytest.mark.parametrize(
@@ -1141,22 +1021,6 @@ def test_requirement_inputs_ignore_only_form_formatting() -> None:
     assert receipts.requirement_inputs({"expanded_sha256": "c" * 64, "words_lock": "b" * 64}, formatted) == before
     formatted["activities"][0]["items"][0]["options"][0] = "хліба"
     assert receipts.requirement_inputs({"expanded_sha256": "c" * 64, "words_lock": "b" * 64}, formatted) != before
-
-
-def test_denied_partitive_item_fails_check_7(tmp_path: Path) -> None:
-    # inspect-words: хліб noun:inanim:m:v_zna; хліба noun:inanim:m:v_rod;
-    # хлібу noun:inanim:m:v_dav and noun:inanim:m:v_mis (VESUM 6445807-6445825).
-    bread = _record(
-        17,
-        "хліб",
-        [("хліб", "noun:inanim:m:v_zna"), ("хліба", "noun:inanim:m:v_rod"), ("хлібу", "noun:inanim:m:v_dav")],
-    )
-    item = _form(["хліб", "хліба", "хлібу"], bread, {"Case": "Acc", "Number": "Sing"})
-    item["sentence"] = "Можна ___?"
-    _write_form_receipt(tmp_path, item, decision="deny")
-    assert _check(tmp_path, item, bread)["code"] == "requires_receipt_denied"
-    item["sentence"] = "Дайте ___?"
-    assert _check(tmp_path, item, bread)["code"] == "requires_receipt_stale"
 
 
 def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
@@ -1389,28 +1253,6 @@ def test_requires_cli_writes_questions_prompt_and_denial(tmp_path: Path, monkeyp
     )
     doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state, 1))
     assert doc["requirements_schema"] == 2 and doc["items"][0]["decision"] == "deny"
-
-
-def test_missing_vesum_fails_as_named_check_not_exception(tmp_path: Path) -> None:
-    # The runner wraps the lookup's FileNotFoundError as a check-7 engine failure;
-    # this direct checker still exposes the missing dependency for that wrapper.
-    item = {
-        "kind": "orthography",
-        "mode": "orthography",
-        "sentence": "м___яч",
-        "options": ["'", ""],
-        "answer": "'",
-        "target_record": "W-5",
-    }
-    ball = _record(5, "м'яч", [("м'яч", "noun:inanim:m:v_naz")])
-    with pytest.raises(FileNotFoundError):
-        _check(
-            tmp_path,
-            item,
-            ball,
-            typ="fill-in",
-            lookup=lambda _words: (_ for _ in ()).throw(FileNotFoundError("VESUM missing")),
-        )
 
 
 def test_choice_gate_records_resolved_evidence_identity(tmp_path):

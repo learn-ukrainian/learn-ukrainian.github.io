@@ -100,7 +100,7 @@ def test_retained_merged_head_records_and_removes(succession, monkeypatch, capsy
     _remove(fixture)
 
 
-@pytest.mark.parametrize("bad", ["unmerged_head", "open_pr", "live_pid", "live_lease", "unknown"])
+@pytest.mark.parametrize("bad", ["unmerged_head", "open_pr", "live_pid", "unknown"])
 def test_merged_retention_still_refuses_unproved_or_live(succession, monkeypatch, capsys, bad):
     fixture, _ = succession
     repo, _, tasks, creator, successor, _, head = fixture

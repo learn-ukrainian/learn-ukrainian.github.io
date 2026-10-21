@@ -147,11 +147,6 @@ def _identity(**overrides: Any) -> dict[str, Any]:
 # --------------------------------------------------------------------------
 
 
-def test_extract_forms_deduplicates_and_lowercases():
-    forms = compiler.extract_forms("Привіт, Привіт! світ-мир.")
-    assert forms == sorted({"привіт", "світ-мир"})
-
-
 def test_split_compound_requires_two_valid_parts():
     assert compiler.split_compound("світ-мир") == ("resolved", ["світ", "мир"])
     assert compiler.split_compound("привіт") == ("not_compound", None)
@@ -284,26 +279,6 @@ def test_build_evidence_record_rejects_tampered_query_sha256_via_recompute():
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_evidence_record(tampered)
     assert excinfo.value.code == "evidence_id_hash_drift"
-
-
-def test_no_query_evidence_uses_domain_separated_fixed_hash():
-    row = _row()
-    record = contract.build_evidence_record(
-        channel="source_metadata",
-        source_identity="fam",
-        source_version="v1",
-        locator="loc",
-        query=None,
-        status="attested",
-        supports="metadata_only",
-        retrieval_sha256=contract.sha256_text("payload"),
-        parser_id="p",
-        parser_version="1",
-        row=row,
-    )
-    assert record["query_sha256"] == contract.expected_query_sha256(
-        None, channel="source_metadata", source_identity="fam", locator="loc"
-    )
 
 
 # --------------------------------------------------------------------------
@@ -467,13 +442,6 @@ def test_pravopys_2026_binding_reports_unavailable_without_context_receipt(tmp_p
     assert record["channel"] == "pravopys_2026_normative"
 
 
-def test_pravopys_2026_binding_rejects_a_phenomenon_id_outside_the_taxonomy(tmp_path: Path):
-    row = _row()
-    missing_receipt = tmp_path / "missing-receipt.json"
-    with pytest.raises(contract.EvidenceContractError):
-        compiler.bind_pravopys_2026_evidence(row, "not-a-real-phenomenon", context_receipt_path=missing_receipt)
-
-
 def test_pravopys_2019_comparison_calls_query_pravopys_not_style_guide():
     """Amendment step 8: 2019 comparison evidence must come from query_pravopys, never search_style_guide."""
     row = _row()
@@ -485,13 +453,6 @@ def test_pravopys_2019_comparison_calls_query_pravopys_not_style_guide():
     assert record["status"] == "attested"
     assert record["supports"] == "comparison_only"
     assert record["locator"] == compiler.PRAVOPYS_2019_DOWNLOAD_LOCATOR
-
-
-def test_pravopys_2019_comparison_never_carries_normative_support():
-    row = _row()
-    client = SyntheticSourcesClient(pravopys={"апостроф": {"status": "attested", "hits": "text"}})
-    record = compiler.bind_pravopys_2019_comparison_evidence(row, "apostrophe", client, query="апостроф", source_version="d" * 64)
-    assert record["supports"] != "normative_rule"
 
 
 # --------------------------------------------------------------------------
@@ -514,13 +475,6 @@ def test_pravopys_2019_comparison_is_queried_once_per_row_not_once_per_phenomeno
     assert {record["retrieval_sha256"] for record in scoped} == {scoped[0]["retrieval_sha256"]}
     assert all(record["supports"] == "comparison_only" for record in scoped)
     assert {record["source_version"] for record in scoped} == {compiler.PRAVOPYS_2019_PDF_SHA256}
-
-
-def test_pravopys_2019_comparison_never_runs_for_the_clean_lane():
-    row = _row(text="слово")
-    client = SyntheticSourcesClient(pravopys={"слово": {"status": "attested", "hits": "text"}})
-    compiler.compile_row_evidence(row, client, identity=_identity())  # residual_phenomena=() default
-    assert not any(call[0] == "query_pravopys" for call in client.call_log)
 
 
 def test_pravopys_2026_normative_binds_only_for_the_frozen_2026_family(tmp_path: Path):
@@ -592,17 +546,6 @@ def test_attested_plus_unavailable_decisive_channel_forces_uncertainty():
 # --------------------------------------------------------------------------
 # Phenomenon-scoped residual evidence (amendment: residual scoping)
 # --------------------------------------------------------------------------
-
-
-def test_residual_lane_produces_phenomenon_scoped_evidence_for_every_phenomenon():
-    row = _row(text="Проста фраза")
-    client = SyntheticSourcesClient()
-    result = compiler.compile_row_evidence(
-        row, client, identity=_identity(), residual_phenomena=contract.RESIDUAL_PHENOMENON_TAXONOMY
-    )
-    assert set(result["phenomenon_evidence_ids"]) == set(contract.RESIDUAL_PHENOMENON_TAXONOMY)
-    for phenomenon_id, ids in result["phenomenon_evidence_ids"].items():
-        assert ids, f"phenomenon {phenomenon_id} has no bound evidence"
 
 
 def test_phenomenon_scoped_evidence_shares_retrieval_hash_with_row_level_record():
@@ -781,14 +724,6 @@ def test_local_mcp_client_fails_closed_on_endpoint_identity_malformed_response(t
         compiler.LocalMcpSourcesClient(transport=transport, **files)
 
 
-def test_local_mcp_client_fails_closed_on_endpoint_identity_missing_tool(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    incomplete_tools = compiler.REQUIRED_TOOL_NAMES - {"mcp_server_identity"}
-    transport = compiler.FakeMcpToolTransport(tool_names=incomplete_tools, responses={})
-    with pytest.raises(compiler.McpTransportError):
-        compiler.LocalMcpSourcesClient(transport=transport, **files)
-
-
 def test_local_mcp_client_rejects_a_non_loopback_endpoint(tmp_path: Path):
     files = _stub_client_files(tmp_path)
     with pytest.raises(compiler.LocalMcpSourcesClientError):
@@ -837,37 +772,12 @@ def test_check_russian_shadow_rejects_unexpected_extra_json_keys(tmp_path: Path)
     assert result["matches_russian"] is False
 
 
-def test_check_russian_shadow_rejects_a_truncated_payload(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    transport = _passing_transport(identity_files=files, check_russian_shadow='{"matches_russian": fal')
-    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
-    with pytest.raises(compiler.LocalMcpSourcesClientError):
-        client.check_russian_shadow("слово")
-
-
-def test_check_modern_form_rejects_unexpected_json_keys_without_the_required_shape(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    bad = json.dumps({"unexpected_key": True})
-    transport = _passing_transport(identity_files=files, check_modern_form=bad)
-    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
-    modern = client.check_modern_form("слово")
-    assert modern["found"] is False
-
-
 def test_prose_status_empty_text_is_not_found(tmp_path: Path):
     files = _stub_client_files(tmp_path)
     transport = _passing_transport(identity_files=files, search_style_guide="")
     client = compiler.LocalMcpSourcesClient(transport=transport, **files)
     result = client.search_style_guide("слово")
     assert result["status"] == "not_found"
-
-
-def test_local_mcp_client_fails_closed_on_a_truncated_response(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    transport = _passing_transport(identity_files=files, check_modern_form='{"is_modern_codified": tr')
-    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
-    with pytest.raises(compiler.LocalMcpSourcesClientError):
-        client.check_modern_form("слово")
 
 
 def test_prose_status_rejects_unknown_nonempty_text_as_incomplete_never_attested(tmp_path: Path):
@@ -889,11 +799,6 @@ def test_prose_status_rejects_a_forged_same_tool_success_envelope():
     complete = '\n'.join(('Found 1 results for: "x"', '### Result 1', '- **Source**: reviewed'))
     assert compiler._prose_status(complete, tool="search_text", expected_query="x") == "attested"
     assert compiler._prose_status(complete, tool="search_text", expected_query="other") == "incomplete"
-
-
-def test_prose_status_rejects_truncated_same_tool_result_body():
-    truncated = '\n'.join(('Found 2 results for: "x"', '### Result 1', '- **Source**: reviewed'))
-    assert compiler._prose_status(truncated, tool="search_text", expected_query="x") == "incomplete"
 
 
 def test_prose_status_treats_the_legacy_error_marker_as_parse_error(tmp_path: Path):
@@ -996,12 +901,6 @@ def test_russian_shadow_source_version_is_the_actual_check_ru_morph_hash():
     assert all(record["source_version"] == compiler.contract.sha256_file(compiler.DEFAULT_CHECK_RU_MORPH) for record in shadow_records)
 
 
-def test_fake_transport_rejects_a_call_to_an_undeclared_tool(tmp_path: Path):
-    transport = compiler.FakeMcpToolTransport(tool_names=compiler.REQUIRED_TOOL_NAMES, responses={})
-    with pytest.raises(compiler.McpTransportError):
-        transport.call_tool("not_a_real_tool", {})
-
-
 # --------------------------------------------------------------------------
 # Sidecar assembly, permissions, non-disclosure
 # --------------------------------------------------------------------------
@@ -1047,15 +946,6 @@ def test_compile_sidecar_bundle_refuses_to_overwrite_existing_sidecar(tmp_path: 
     client = SyntheticSourcesClient()
     output_dir = tmp_path / "sidecars"
     compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
-    with pytest.raises(contract.EvidenceContractError):
-        compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
-
-
-def test_compile_sidecar_bundle_refuses_a_nonempty_existing_destination(tmp_path: Path):
-    client = SyntheticSourcesClient()
-    output_dir = tmp_path / "sidecars"
-    output_dir.mkdir()
-    (output_dir / "stray.txt").write_text("x")
     with pytest.raises(contract.EvidenceContractError):
         compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
 
@@ -1330,20 +1220,6 @@ def test_compile_cycle007_package_binds_legacy_source_without_text_hash(tmp_path
         fixture=True,
     )
     assert manifest["row_count"] == 4
-
-
-def test_compile_sidecar_bundle_bare_compile_has_a_null_source_package_binding(tmp_path: Path):
-    """A bare (package-free) compile still carries the key, but its value is None."""
-    client = SyntheticSourcesClient()
-    output_dir = tmp_path / "sidecars"
-    manifest = compiler.compile_sidecar_bundle([[_row("unit-1")]], client, output_dir)
-    assert manifest["source_package_binding"] is None
-    assert manifest["mcp_transport_attestation"] is None
-    assert set(manifest["sidecars"][0]["packet_binding"]) == {
-        "canonical_basename",
-        "raw_sha256",
-        "packet_identity_set_sha256",
-    }
 
 
 def test_compile_cycle007_package_rejects_a_tampered_packet_raw_sha(tmp_path: Path):

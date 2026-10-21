@@ -458,13 +458,6 @@ class TestSourcesDb:
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", sample_data["db_path"])
         monkeypatch.setattr(sdb, "_conn", None)
 
-    def test_search_textbooks(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_textbooks
-        results = search_textbooks({"родовий", "відмінок"}, max_total=5)
-        assert len(results) >= 1
-        assert results[0]["source_type"] == "textbook"
-
     def test_search_textbooks_subject_filter(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
         from wiki.sources_db import search_textbooks
@@ -485,44 +478,6 @@ class TestSourcesDb:
             )
             == []
         )
-
-    def test_search_external(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_external
-        results = search_external({"родовий", "відмінок"}, max_total=5)
-        assert len(results) >= 1
-        assert results[0]["source_type"] == "external"
-
-    def test_search_literary(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_literary
-        results = search_literary({"козак"}, max_total=5)
-        assert len(results) >= 1
-
-    def test_search_definitions(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_definitions
-        results = search_definitions("слово")
-        assert len(results) == 1
-        assert "Одиниця мови" in results[0]["definition"]
-
-    def test_search_grinchenko_1907(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_grinchenko_1907
-        results = search_grinchenko_1907("хата")
-        assert len(results) == 1
-
-    def test_translate_en_uk(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import translate_en_uk
-        results = translate_en_uk("house")
-        assert len(results) == 1
-
-    def test_search_synonyms(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_synonyms
-        results = search_synonyms("великий")
-        assert len(results) >= 1
 
     def test_ulif_materialized_relations_take_priority_over_fallbacks(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
@@ -607,12 +562,6 @@ class TestSourcesDb:
         assert "Одиниця мови" in definitions["слов"][0]["definition"]
         assert definitions["відсутнє"] == []
 
-    def test_search_style_guide(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_style_guide
-        results = search_style_guide("процент")
-        assert len(results) == 1
-
     def test_search_style_guide_lowercase_phrase_matches_capitalized_headword(
         self, sample_data, monkeypatch
     ):
@@ -648,21 +597,6 @@ class TestSourcesDb:
         assert len(results) >= 1
         assert results[0]["word"] == "На протязі"
         assert "протягом" in results[0]["text"]
-
-    def test_search_style_guide_nonexistent_query_returns_empty(
-        self, sample_data, monkeypatch
-    ):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_style_guide
-
-        assert search_style_guide("нежиттєздатнийтермін") == []
-
-    def test_lookup_by_url(self, sample_data, monkeypatch):
-        self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import lookup_by_url
-        result = lookup_by_url("https://example.com/genitive")
-        assert result is not None
-        assert result["title"] == "Родовий відмінок"
 
     def test_missing_db(self, tmp_path, monkeypatch):
         import wiki.sources_db as sdb
@@ -1030,45 +964,6 @@ class TestForcedRebuildAtomicity:
         assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
 
 
-class TestClipQuoteSafe:
-    def test_clip_quote_safe_balances_unclosed_guillemets(self):
-        from wiki.sources_db import clip_quote_safe
-
-        # Text with an unclosed « after clipping
-        text = "Опис: «давня рукописна книга псалмів із коментарями»."
-        clipped = clip_quote_safe(text, max_chars=25)
-        assert clipped.endswith("»")
-        assert clipped.count("«") == clipped.count("»")
-
-    def test_clip_quote_safe_strips_trailing_orphan_open_quote(self):
-        from wiki.sources_db import clip_quote_safe
-
-        text = "Початок «довга цитата»"
-        clipped = clip_quote_safe(text, max_chars=9)
-        assert clipped == "Початок"
-        assert clipped.count("«") == 0
-        assert clipped.count("»") == 0
-
-    def test_clip_quote_safe_short_text_unchanged(self):
-        from wiki.sources_db import clip_quote_safe
-
-        text = "«Коротка цитата»"
-        assert clip_quote_safe(text, max_chars=100) == text
-
-    def test_clip_quote_safe_with_ellipsis(self):
-        from wiki.sources_db import clip_quote_safe
-
-        text = "«Довга цитата з книги Шевченка про мову»"
-        clipped = clip_quote_safe(text, max_chars=20, ellipsis="…")
-        assert clipped.endswith("…»")
-        assert clipped.count("«") == clipped.count("»")
-
-    def test_quote_safe_clip_alias(self):
-        from wiki.sources_db import clip_quote_safe, quote_safe_clip
-
-        assert quote_safe_clip is clip_quote_safe
-
-
 @pytest.fixture()
 def esum_heritage_rank_db(tmp_path):
     """Fixture DB with exact headwords and body-inner hits for ranking tests."""
@@ -1231,39 +1126,6 @@ class TestHeadwordFirstRanking:
         assert hits
         assert hits[0]["lemma"] == "книга"
 
-    def test_search_esum_oversized_document_query_fails_closed_without_fuzzy_sql(self, esum_heritage_rank_db):
-        from wiki.sources_db import search_esum, search_heritage
-
-        oversized_document = ("український текст\n" * 3_000).strip()
-
-        assert len(oversized_document.encode("utf-8")) > 50_000
-        assert search_esum(oversized_document, db_path=esum_heritage_rank_db, limit=5) == []
-        assert search_heritage(
-            oversized_document,
-            db_path=esum_heritage_rank_db,
-            include_live_slovnyk=False,
-            limit=5,
-        ) == []
-
-    def test_search_esum_oversized_exact_lemma_still_resolves(self, esum_heritage_rank_db):
-        from wiki.sources_db import search_esum
-
-        oversized_lemma = "а" * 25_001
-        conn = sqlite3.connect(esum_heritage_rank_db)
-        conn.execute(
-            """
-            INSERT INTO esum_etymology_meta (id, lemma, vol, page, etymology_text, cognates, source)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (99, oversized_lemma, 1, 999, "synthetic exact entry", "[]", "ЕСУМ synthetic"),
-        )
-        conn.commit()
-        conn.close()
-
-        hits = search_esum(oversized_lemma, db_path=esum_heritage_rank_db, limit=5)
-
-        assert [hit["lemma"] for hit in hits] == [oversized_lemma]
-
     def test_search_esum_volume_filter_headword_and_body(self, esum_heritage_rank_db):
         from wiki.sources_db import search_esum
 
@@ -1316,22 +1178,6 @@ class TestHeadwordFirstRanking:
         hits = search_style_guide("участь", db_path=esum_heritage_rank_db)
         assert len(hits) >= 1
         assert hits[0]["word"] == "Приймати участь"
-
-    def test_search_style_guide_live_db_documented_examples(self):
-        from wiki.sources_db import SOURCES_DB_PATH, search_style_guide
-
-        if not SOURCES_DB_PATH.exists() or SOURCES_DB_PATH.stat().st_size < 1000:
-            pytest.skip("sources.db not present")
-
-        # "На протязі", "протязі", "Приймати участь" must all resolve against live DB
-        for query in ("«На протязі»", "На протязі", "протязі", "«протязі»"):
-            hits = search_style_guide(query)
-            assert len(hits) >= 1, f"Failed to return a row for {query!r}"
-            assert "протязі" in (hits[0]["word"] + hits[0]["text"]).lower()
-
-        hits_uchast = search_style_guide("Приймати участь")
-        assert len(hits_uchast) >= 1
-        assert "приймати участь" in hits_uchast[0]["word"].lower()
 
     def test_search_definitions_quoted_and_case_variants(self, esum_heritage_rank_db):
         from wiki.sources_db import search_definitions

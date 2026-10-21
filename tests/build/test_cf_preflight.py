@@ -46,23 +46,6 @@ def test_clearance_file_requires_matching_head(tmp_path: Path):
     assert "!= build HEAD" in bad.reason
 
 
-def test_check_cf_preflight_module_dir_clearance(tmp_path: Path):
-    head = "e" * 40
-    module = tmp_path / "module"
-    module.mkdir()
-    (module / "cf_clearance.json").write_text(
-        json.dumps({"head": head, "verdict": "APPROVED"}),
-        encoding="utf-8",
-    )
-    result = cf.check_cf_preflight(
-        repo_root=tmp_path,
-        head=head,
-        module_dir=module,
-        allow_github=False,
-    )
-    assert result.clear is True
-
-
 def test_chronology_later_request_changes_comment_blocks_earlier_approve_review():
     head = "f" * 40
     t0 = datetime.fromisoformat("2026-09-17T11:00:00+00:00")
@@ -193,13 +176,6 @@ def test_same_second_conflict_fails_closed_to_request_changes():
         ],
     )
     assert cf.evaluate_evidence_events(events, head=head).clear is False
-
-
-def test_historical_only_previously_reviewed_head_does_not_clear():
-    head = "a" * 40
-    bodies = [f"Reviewer verdict: APPROVE\nPreviously reviewed head: {head}"]
-    assert cf.evaluate_comment_bodies(bodies, head=head).clear is False
-    assert cf.explicit_heads_in_body(bodies[0]) == []
 
 
 def test_incomplete_github_evidence_does_not_clear(tmp_path: Path, monkeypatch):

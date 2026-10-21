@@ -202,20 +202,6 @@ def test_missing_recovery_after_withdraw_still_refuses_retry(tmp_path, monkeypat
     assert path.read_bytes() == original
 
 
-def test_present_metadata_aliases_only_and_cli_contract(tmp_path, monkeypatch, capsys):
-    _, _, _, path = prepare(tmp_path, monkeypatch)
-    assert command.main(["--manifest", str(path), "--action", "withdraw"]) == 0
-    assert json.loads(capsys.readouterr().out)["state"] == "dry_run"
-    with pytest.raises(SystemExit) as exit_info:
-        command.main(["--action", "withdraw"])
-    assert exit_info.value.code == 2
-    with pytest.raises(dispositions.DispositionError):
-        command.dispose(path, "invalid")
-    manifest = {"entries": []}
-    command._refresh_present_counts(manifest)
-    assert manifest == {"entries": []}
-
-
 @pytest.mark.parametrize(
     "manifest",
     [

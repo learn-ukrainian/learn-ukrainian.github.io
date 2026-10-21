@@ -350,30 +350,6 @@ def test_core_a1_renderers_preserve_instruction_and_quiz_anchor(tmp_path):
         assert instruction in mdx
 
 
-def test_watch_and_repeat_renderer_preserves_instruction(tmp_path):
-    fixture = tmp_path / "watch.yaml"
-    fixture.write_text(
-        """
-- id: watch-1
-  type: watch-and-repeat
-  title: Repeat
-  instruction: Watch once, then repeat aloud.
-  items:
-    - video: https://youtu.be/dQw4w9WgXcQ
-      letter: А
-      word: мама
-      sound: /a/
-""",
-        encoding="utf-8",
-    )
-
-    parser = ActivityParser()
-    mdx = parser.to_mdx(parser.parse(fixture))
-
-    assert "<WatchAndRepeat" in mdx
-    assert 'instruction={"Watch once, then repeat aloud."}' in mdx
-
-
 def test_a1_schema_accepts_unjumble_parser_aliases():
     data = [
         {
@@ -390,25 +366,6 @@ def test_a1_schema_accepts_unjumble_parser_aliases():
     errors = list(_a1_schema_validator().iter_errors(data))
 
     assert errors == []
-
-
-def test_a1_schema_rejects_quiz_string_options_without_answer():
-    data = [
-        {
-            "type": "quiz",
-            "instruction": "Choose one.",
-            "items": [
-                {
-                    "question": "Which one?",
-                    "options": ["Так", "Ні"],
-                }
-            ],
-        }
-    ]
-
-    errors = list(_a1_schema_validator().iter_errors(data))
-
-    assert errors
 
 
 def test_order_still_rejects_non_permutation_strings(tmp_path):

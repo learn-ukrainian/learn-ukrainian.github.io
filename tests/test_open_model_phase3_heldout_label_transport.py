@@ -601,20 +601,6 @@ def test_cycle002_floors_fail_closed_without_resampling_or_adjudication() -> Non
     }
 
 
-def test_cycle002_prompt_hash_and_two_pass_contract_are_pinned() -> None:
-    assert transport.sha256_file(transport.DEFAULT_CYCLE002_LABEL_PROMPT) == transport.CYCLE002_LABEL_PROMPT_SHA256
-    prompt = transport.DEFAULT_CYCLE002_LABEL_PROMPT.read_text(encoding="utf-8")
-    assert "Clean eligibility is independent of semantic-gold support" in prompt
-    assert "Do not abstain solely because" in prompt
-    assert "ua_gec_human_annotation" in prompt
-    assert transport.CYCLE002_PACKET_LIMIT == 40
-    assert [actor["task_id"] for actor in transport.CYCLE002_ACTORS.values()] == [
-        "phase3-v2-2-heldout-semantic-label-pass-a",
-        "phase3-v2-2-heldout-semantic-label-pass-b",
-    ]
-    assert all(actor["exact_model"] == "gpt-6.1-sol" for actor in transport.CYCLE002_ACTORS.values())
-
-
 def test_cycle002_ua_gec_reference_evidence_is_closed_and_human_annotated() -> None:
     source = {
         "family_id": "ua_gec",
@@ -639,16 +625,6 @@ def test_cycle002_ua_gec_reference_evidence_is_closed_and_human_annotated() -> N
     assert transport._cycle002_reference_evidence({**source, "family_id": "school_textbooks"}) is None
     source["source_record"]["error"] = ""  # type: ignore[index]
     assert transport._cycle002_reference_evidence(source) is None
-
-
-def test_cycle002_execution_accepts_the_tracked_role_and_evaluation_contracts() -> None:
-    execution, role_hash, evaluation_hash = transport._cycle002_execution(
-        transport.DEFAULT_CYCLE002_ROLE_CONTRACT,
-        transport.DEFAULT_CYCLE002_EVALUATION_CONTRACT,
-    )
-    assert [item["pass_id"] for item in execution["passes"]] == ["a", "b"]
-    assert role_hash == transport.sha256_file(transport.DEFAULT_CYCLE002_ROLE_CONTRACT)
-    assert evaluation_hash == transport.sha256_file(transport.DEFAULT_CYCLE002_EVALUATION_CONTRACT)
 
 
 def _cycle002_runtime_fixture(

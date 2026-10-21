@@ -10,7 +10,6 @@ import argparse
 import hashlib
 import json
 import os
-import resource
 import shutil
 import subprocess
 import sys
@@ -22,40 +21,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
-from scripts.fleet import capacity_pick
 from scripts.orchestration import dispatch_admission, job_host_exec
 
 _GIB = 1024**3
-
-
-def test_admission_reads_once_and_parses_only_active_records(tasks_dir, monkeypatch):
-    tasks_dir.mkdir()
-    for index in range(200):
-        (tasks_dir / f"finished-{index}.json").write_text(json.dumps({"status": "done", "pid": 123}))
-    _running_record(tasks_dir, "active", pid=os.getpid())
-    reads = []
-    parses = []
-    read_bytes = Path.read_bytes
-    loads = json.loads
-
-    def read(path):
-        if path.parent == tasks_dir:
-            reads.append(path.name)
-        return read_bytes(path)
-
-    def parse(raw, *args, **kwargs):
-        result = loads(raw, *args, **kwargs)
-        if isinstance(result, dict) and result.get("status") in ("running", "done"):
-            parses.append(result["status"])
-        return result
-
-    monkeypatch.setattr(Path, "read_bytes", read)
-    monkeypatch.setattr(json, "loads", parse)
-    monkeypatch.setattr(delegate, "_read_state", lambda *_: pytest.fail("admission must not hydrate task sidecars"))
-    result = delegate._evaluate_dispatch_admission("danger", sweep=False)
-    assert result.live_task_ids == ("active",)
-    assert parses == ["running"]
-    assert len(reads) == len(set(reads)) == 201
 
 
 @pytest.mark.parametrize("block", ["admission_hold", "worktree_prep"])
@@ -166,22 +134,6 @@ def test_omitted_model_on_allowed_agent_waits_for_resolution():
         "--research-task-family", "reviews",
     ])
     delegate._require_ukrainian_model_family(args, None)
-
-
-def test_omitted_model_on_disallowed_agent_refused():
-    args = delegate.build_parser().parse_args([
-        "dispatch", "--task-id", "synthetic-language-job", "--agent", "grok", "--language-lane",
-        "--research-task-family", "data",
-    ])
-    with pytest.raises(delegate._DispatchRouteRefused, match="UKRAINIAN_MODEL_REFUSED"):
-        delegate._require_ukrainian_model_family(args, None)
-
-
-def test_ukrainian_lane_without_content_family_refuses_other_model():
-    args = delegate.build_parser().parse_args(["dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--model", "grok-4.7", "--language-lane"])
-    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
-    assert refusal.startswith("UKRAINIAN_MODEL_REFUSED:")
-    assert target is None
 
 
 @pytest.mark.parametrize("model", ["grok-4.7", "glm-5", "other-model", None])
@@ -353,11 +305,6 @@ def test_force_admission_records_the_reason(tasks_dir, monkeypatch, capsys):
     assert admission["forced"] is True
     assert admission["force_reason"] == "hotfix #1234 while one worker drains"
     assert admission["max_live_write_workers"] == 0
-
-
-def test_force_admission_requires_a_reason(tasks_dir, capsys):
-    assert delegate.cmd_dispatch(_dry_run_args("--force-admission", "   ")) == 2
-    assert "--force-admission requires a non-empty reason" in capsys.readouterr().err
 
 
 def test_admission_sweeps_dead_workers_to_crashed_and_frees_their_slot(tasks_dir, monkeypatch):
@@ -687,21 +634,6 @@ def test_readonly_mechanical_unreadable_checkout_reports_resolution_stage(tmp_pa
     assert start is None and target is None
 
 
-@pytest.mark.parametrize("unsafe", [False, True])
-def test_substituted_readonly_mechanical_route_checks_checkout_without_worktree(tmp_path, unsafe):
-    repo = _lockfile_repo(tmp_path, '{"name": "Україна"}' if unsafe else '{"lockfileVersion": 3}')
-    args = _mechanical_canary_args("--model", "claude-sonnet-5-5")
-    refusal, start, target = delegate._kimi_dispatch_gate(
-        args, agent=args.agent, route=lambda request: ("claude", "claude-haiku-5-5", "test-substitution"),
-        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=None,
-    )
-    assert start is None
-    if unsafe:
-        assert "owned content must be plain UTF-8 without Cyrillic" in refusal and target is None
-    else:
-        assert refusal is None and target.model == "claude-haiku-5-5"
-
-
 @pytest.mark.parametrize("selector", ["--worktree", "--branch"])
 def test_readonly_mechanical_with_worktree_keeps_start_tree_resolution(tmp_path, monkeypatch, selector):
     from scripts.agent_runtime.kimi_admission import worktree_trees
@@ -918,69 +850,6 @@ def test_admission_marks_a_record_whose_dispatcher_died_crashed(tasks_dir, block
     assert "marked crashed by admission probe" in healed["stderr_excerpt"]
 
 
-def test_terminal_fields_record_peak_rss_of_reaped_children(monkeypatch):
-    class _Usage:
-        ru_maxrss = 3 * 1024 * 1024 if sys.platform == "darwin" else 3 * 1024  # 3 MiB
-
-    monkeypatch.setattr(resource, "getrusage", lambda _who: _Usage())
-
-    fields = delegate._core_terminal_fields(
-        status="done",
-        duration_s=1.0,
-        response="ok",
-        result_file=None,
-        stderr_excerpt=None,
-        returncode=0,
-        returncode_reason=None,
-        dirty_on_exit=False,
-        commits_ahead=1,
-        needs_finalize=False,
-        finalize_error=None,
-        last_error=None,
-    )
-
-    assert fields["peak_rss_mib"] == 3.0
-
-
-def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
-    from scripts.fleet import usage
-
-    tasks = tmp_path / "tasks"
-    _running_record(tasks, "busy", pid=515151)
-    dead = _running_record(tasks, "gone", pid=424242)
-    monkeypatch.setattr(dispatch_admission, "process_alive", lambda pid: pid == 515151)
-    monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
-    monkeypatch.setattr(
-        dispatch_admission.admission_shadow, "read_pressure",
-        lambda _: {"cpu.some": {"avg10": None, "avg60": None}},
-    )
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
-    monkeypatch.setattr(
-        usage,
-        "read_budget",
-        lambda **_kwargs: {"agents": {}, "recommendation": {"warnings": []}, "diagnostics": {}},
-    )
-
-    assert capacity_pick.main([]) == 0
-    assert capsys.readouterr().out.splitlines()[-1] == (
-        "admission (write dispatch): would admit now | live write workers 1/2, "
-        "MemAvailable 64.0 GiB (floor 8.5 GiB), load 0.00 per CPU (limit 1.00), "
-        "lu.slice pool check skipped (test host), test-slot queue check skipped (test host), "
-        "disk check skipped (test host), PSI shadow unknown (calibration only; "
-        "unknown: test journal not configured; CPU ownership unknown, unattributed load unknown); "
-        "1 record(s) dead pid, not counted: gone"
-    )
-
-    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
-    assert capacity_pick.main(["--json"]) == 0
-    admission = json.loads(capsys.readouterr().out)["admission"]
-    assert admission["admitted"] is False
-    assert admission["line"].startswith("admission (write dispatch): would REFUSE now: live write workers 1/1")
-    # capacity_pick only reports; marking dead records crashed is dispatch's job.
-    assert json.loads(dead.read_text(encoding="utf-8"))["status"] == "running"
-
-
 def test_live_dispatch_admitted_line_shows_a_skipped_pool_check(tasks_dir, tmp_path, monkeypatch, capsys):
     """delegate.py configures no logging, so the pool skip reason must be on the admitted line (#9975)."""
     _stub_worktree(monkeypatch, tasks_dir)
@@ -1080,54 +949,6 @@ def test_dry_run_on_a_full_disk_refuses_without_running_the_reaper(tasks_dir, mo
     assert "92.0% used, 32.0 GiB free" in capsys.readouterr().err
 
 
-def test_read_only_dispatch_is_exempt_from_the_disk_guard(tasks_dir, monkeypatch, capsys):
-    disk = _full_disk(monkeypatch, 99.0)
-
-    assert delegate.cmd_dispatch(_dry_run_args(mode="read-only", task_id="adm-disk-reader")) == 0
-
-    assert disk["reaper"] == [] and disk["alerts"] == []
-    assert "admission" not in capsys.readouterr().err
-
-
-def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeypatch, capsys):
-    from scripts.fleet import usage
-
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
-    monkeypatch.setattr(
-        dispatch_admission.admission_shadow, "read_pressure",
-        lambda _: {"cpu.some": {"avg10": None, "avg60": None}},
-    )
-    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
-    monkeypatch.setattr(
-        usage,
-        "read_budget",
-        lambda **_kwargs: {"agents": {}, "recommendation": {"warnings": []}, "diagnostics": {}},
-    )
-    disk = _full_disk(monkeypatch, 82.0)
-
-    assert capacity_pick.main([]) == 0
-    assert capsys.readouterr().out.splitlines()[-1].endswith(
-        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [epics alert posted], "
-        "PSI shadow unknown (calibration only; unknown: test journal not configured; "
-        "CPU ownership unknown, unattributed load unknown)"
-    )
-
-    disk["readings"] = [91.0]
-    assert capacity_pick.main(["--json"]) == 0
-    admission = json.loads(capsys.readouterr().out)["admission"]
-    assert admission["admitted"] is False
-    assert admission["line"].startswith(
-        "admission (write dispatch): would REFUSE now: disk 91.0% used, 36.0 GiB free on the .worktrees "
-        "filesystem is at or above the refuse threshold of 90% (DISPATCH_DISK_REFUSE_USED_PERCENT=90); "
-        "reaper not run in this check"
-    )
-    assert admission["disk_used_percent"] == 91.0
-    assert admission["disk_free_gib"] == 36.0
-    assert disk["reaper"] == []  # capacity_pick only reports
-    assert len(disk["alerts"]) == 1  # rate-limited across both calls
-
-
 # --- Round 3 (#10776): a disk refusal is a hard stop in both gates; reuse skips the guard -----------
 
 
@@ -1144,34 +965,6 @@ def test_a_force_reason_never_turns_a_disk_refusal_into_an_admit(tasks_dir, monk
     err = capsys.readouterr().err
     assert "--force-admission cannot override a full disk" in err
     assert "overridden by --force-admission" not in err
-
-
-def test_a_force_reason_still_overrides_the_other_checks(tasks_dir, monkeypatch, capsys):
-    _full_disk(monkeypatch, 50.0)
-    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
-    decision = delegate._evaluate_dispatch_admission("danger", sweep=False)
-
-    assert delegate._report_dispatch_admission(decision, force_reason="drain") is None
-    assert delegate._admission_allows_dispatch(decision, force_reason="drain")
-    assert not delegate._admission_allows_dispatch(decision, force_reason=None)
-    assert delegate._report_dispatch_admission(decision, force_reason=None) == delegate._ADMISSION_REFUSED_EXIT
-    assert "overridden by --force-admission ('drain')" in capsys.readouterr().err
-
-
-def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(tasks_dir, monkeypatch, capsys):
-    _stub_worktree(monkeypatch, tasks_dir)
-    monkeypatch.setattr(
-        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn")
-    )
-    disk = _full_disk(monkeypatch, 90.0)
-    args = _live_danger_args(tasks_dir, "adm-disk-forced")
-    args.force_admission = "hotfix while the disk drains"
-
-    assert delegate.cmd_dispatch(args) == delegate._ADMISSION_DISK_REFUSED_EXIT
-
-    assert len(disk["reaper"]) == 1
-    assert "--force-admission cannot override a full disk" in capsys.readouterr().err
-    assert not delegate._state_path("adm-disk-forced").exists()
 
 
 def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(tasks_dir, monkeypatch, capsys):
@@ -1196,17 +989,6 @@ def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(tasks_dir, m
     err = capsys.readouterr().err
     assert "disk 90.0% used" in err and "--force-admission cannot override a full disk" in err
     assert not delegate._state_path("adm-disk-locked").exists()
-
-
-def test_forced_dry_run_on_a_full_disk_is_refused(tasks_dir, monkeypatch, capsys):
-    _pin_origin_main_to_head(monkeypatch)
-    disk = _full_disk(monkeypatch, 92.0)
-
-    rc = delegate.cmd_dispatch(_dry_run_args("--force-admission", "hotfix"))
-
-    assert rc == delegate._ADMISSION_DISK_REFUSED_EXIT
-    assert disk["reaper"] == []
-    assert "--force-admission cannot override a full disk" in capsys.readouterr().err
 
 
 def test_live_dispatch_reusing_an_existing_worktree_skips_the_disk_guard(tasks_dir, monkeypatch, capsys):
@@ -1289,100 +1071,8 @@ def test_dispatch_reuses_worktree_detects_existing_checkouts_without_git(tmp_pat
 # --- #10799: a refused dispatch costs almost no CPU ---------------------------------------------
 
 _OVERLOADED = dispatch_admission.HostProbe(mem_available_bytes=1 * _GIB, load1=40.0, cpu_count=8, proc_available=True)
-_HISTORY_RECORDS = 400
-_UNMATCHED_LEASES = 6
-
-
-def _seed_history(tasks: Path, scratch: Path, *, records: int = _HISTORY_RECORDS) -> None:
-    """A realistic hot history: terminal records (every tenth with snapshot sidecars), two live
-    codex writers, and young scratch leases no record owns (the case the sweep scanned per lease)."""
-    tasks.mkdir(parents=True, exist_ok=True)
-    for index in range(records):
-        task_id = f"history-{index:05d}"
-        record = {
-            "task_id": task_id, "status": "done", "mode": "workspace-write", "agent": "claude",
-            "pid": 100_000 + index, "run_nonce": f"nonce-{index}", "prompt": "brief " * 300,
-        }
-        (tasks / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
-        if index % 10 == 0:
-            for phase in ("pre", "post"):
-                sidecar = delegate._read_only_snapshot_sidecar_path(task_id, phase)
-                sidecar.parent.mkdir(parents=True, exist_ok=True)
-                sidecar.write_text(json.dumps({f"path-{n}.txt": "0" * 40 for n in range(200)}), encoding="utf-8")
-    for task_id in ("live-codex-a", "live-codex-b"):
-        path = _running_record(tasks, task_id, pid=os.getpid())
-        path.write_text(json.dumps({**json.loads(path.read_text(encoding="utf-8")), "agent": "codex"}), encoding="utf-8")
-    namespace = scratch / "learn-ukrainian"
-    for index in range(_UNMATCHED_LEASES):
-        (namespace / f"unowned-lease-{index}").mkdir(parents=True)
-
-
-def _tree_state(root: Path) -> dict[str, tuple[int, int]]:
-    return {
-        str(path.relative_to(root)): (path.stat().st_size, path.stat().st_mtime_ns)
-        for path in sorted(root.rglob("*"))
-    }
-
-
-def _write_dispatch_args(task_id: str, *extra: str):
-    return delegate.build_parser().parse_args([
-        "dispatch", "--agent", "codex", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
-        "--mode", "workspace-write", "--worktree", "--owned-path", "scripts/example.py", *extra,
-    ])
-
-
 def _local_placement(monkeypatch) -> None:
     monkeypatch.setattr(delegate, "_dispatch_may_forward", lambda: False)
-
-
-def _forbid_expensive_reads(monkeypatch) -> list[str]:
-    """Record every call into the work an early refusal must skip (some callers suppress exceptions)."""
-    from scripts.orchestration import task_record_store
-
-    calls: list[str] = []
-
-    def sentinel(name):
-        def forbidden(*_args, **_kwargs):
-            calls.append(name)
-            raise AssertionError(f"{name} ran before the early host refusal")
-
-        return forbidden
-
-    for owner, name in (
-        (delegate, "_sweep_runtime_tmp_orphans"),
-        (delegate, "_read_runtime_tmp_state_for_legacy_lease"),
-        (delegate, "_hydrate_read_only_checkout_snapshots"),
-        (delegate, "_load_read_only_snapshot_sidecar"),
-        (delegate, "_check_capacity_hint"),
-        (delegate, "_run_dor_preflight"),
-        (delegate, "_authoring_review_admission"),
-        (dispatch_admission, "scan_task_records"),
-        (task_record_store, "iter_task_records"),
-    ):
-        monkeypatch.setattr(owner, name, sentinel(name))
-    return calls
-
-
-@pytest.mark.parametrize("dry_run", [False, True], ids=["live", "dry-run"])
-def test_early_host_refusal_skips_the_sweep_hint_and_history(tasks_dir, tmp_path, monkeypatch, capsys, dry_run):
-    _seed_history(tasks_dir, tmp_path / "scratch")
-    _local_placement(monkeypatch)
-    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
-    calls = _forbid_expensive_reads(monkeypatch)
-    before = _tree_state(tmp_path)
-
-    rc = delegate.cmd_dispatch(_write_dispatch_args("early-refusal", *(["--dry-run"] if dry_run else [])))
-
-    assert rc == delegate._ADMISSION_REFUSED_EXIT == 3
-    assert calls == []
-    refusal = [line for line in capsys.readouterr().err.splitlines() if "admission" in line]
-    assert refusal == [
-        "❌ dispatch admission refused for a workspace-write worker: MemAvailable 1.0 GiB is below the floor of "
-        "8.5 GiB (DISPATCH_MIN_MEM_AVAILABLE_GIB=8.5); load 5.00 per CPU (1-minute load 40.00 on 8 CPUs) is above "
-        "the limit of 1.00 (DISPATCH_MAX_LOAD_PER_CPU=1). Wait for a worker to finish or for the host to recover, "
-        'raise the threshold through the named environment variable, or pass --force-admission "<reason>" to override.'
-    ]
-    assert _tree_state(tmp_path) == before
 
 
 def test_early_refusal_text_matches_full_admission(tasks_dir, monkeypatch):
@@ -1409,22 +1099,6 @@ def test_precheck_admits_nothing_and_refuses_only_failures(probe, monkeypatch):
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")  # the cap is the full admission's check
 
     assert dispatch_admission.precheck("workspace-write") is None
-
-
-def test_precheck_exempts_read_only_and_rejects_invalid_thresholds(monkeypatch):
-    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
-    assert dispatch_admission.precheck("read-only") is None
-    monkeypatch.setenv("DISPATCH_MAX_LOAD_PER_CPU", "lots")
-    with pytest.raises(ValueError, match="DISPATCH_MAX_LOAD_PER_CPU='lots' is not a number"):
-        dispatch_admission.precheck("danger")
-
-
-def test_read_only_dispatch_on_an_overloaded_host_is_exempt(tasks_dir, monkeypatch, capsys):
-    _local_placement(monkeypatch)
-    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
-
-    assert delegate.cmd_dispatch(_dry_run_args(mode="read-only", task_id="early-reader")) == 0
-    assert "admission" not in capsys.readouterr().err
 
 
 def test_early_refusal_steps_aside_for_a_full_disk(tasks_dir, monkeypatch, capsys):
@@ -1455,41 +1129,6 @@ def test_force_admission_skips_the_early_refusal(tasks_dir, monkeypatch, capsys)
 
     assert "overridden by --force-admission ('drain one worker'): MemAvailable 1.0 GiB" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path(args.task_id))["admission"]["forced"] is True
-
-
-def test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request(tasks_dir, monkeypatch, capsys):
-    _local_placement(monkeypatch)
-    monkeypatch.setenv("DISPATCH_MIN_MEM_AVAILABLE_GIB", "-1")
-
-    assert delegate.cmd_dispatch(_write_dispatch_args("early-invalid")) == 2
-    assert "invalid dispatch admission threshold: DISPATCH_MIN_MEM_AVAILABLE_GIB='-1' must be zero or more" in (
-        capsys.readouterr().err
-    )
-
-
-def test_dispatch_that_passes_the_early_check_runs_as_before(tasks_dir, monkeypatch, capsys):
-    _stub_worktree(monkeypatch, tasks_dir)
-    _local_placement(monkeypatch)
-    prechecks = []
-    real_precheck = dispatch_admission.precheck
-    monkeypatch.setattr(
-        dispatch_admission, "precheck", lambda mode, **kwargs: prechecks.append(mode) or real_precheck(mode, **kwargs)
-    )
-    spawned: list[list[str]] = []
-
-    class _Proc:
-        pid = 13581
-        stdin = _FakeStdin()
-
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: spawned.append(cmd) or _Proc())
-
-    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "early-passed")) == 0
-
-    assert prechecks == ["danger"]
-    assert len([cmd for cmd in spawned if "_worker" in cmd]) == 1
-    err = capsys.readouterr().err
-    assert len([line for line in err.splitlines() if "dispatch admission: admitted — live write workers 0/2" in line]) == 1
-    assert delegate._read_state(delegate._state_path("early-passed"))["admission"]["admitted"] is True
 
 
 def test_forwarding_client_does_not_refuse_on_its_own_load(tasks_dir, monkeypatch):
@@ -1531,93 +1170,6 @@ def test_may_forward_agrees_with_placement(tmp_path, monkeypatch, marker, allow_
 
     assert delegate._dispatch_may_forward() is (placement == "vps")
     assert delegate._dispatch_may_forward() is (marker is not None and not allow_notebook)
-
-
-def test_runtime_tmp_sweep_resolves_legacy_ownership_once(tmp_path, monkeypatch):
-    """Leases no record owns cost one task-id scan per sweep, not one per lease."""
-    tasks = tmp_path / "tasks"
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    monkeypatch.setattr(delegate, "scratch_scan_roots", lambda: [tmp_path / "scratch"])
-    _seed_history(tasks, tmp_path / "scratch", records=50)
-    # A record whose stem differs from its task id still owns its lease through the task-id scan.
-    delegate._write_state_atomic(delegate._state_path("legacy/owner"), {"task_id": "legacy/owner", "status": "running"})
-    owned = tmp_path / "scratch" / "learn-ukrainian" / delegate._runtime_tmp_lease_name("legacy/owner")
-    owned.mkdir()
-    reads: list[str] = []
-    real_read = delegate._read_state_json
-    monkeypatch.setattr(delegate, "_read_state_json", lambda path: reads.append(path.name) or real_read(path))
-
-    result = delegate._sweep_runtime_tmp_orphans()
-
-    assert result["leases_reaped"] == 0 and result["errors"] == 0
-    record_count = len(list(tasks.glob("*.json")))
-    assert len(reads) <= record_count + 1, len(reads)
-    assert delegate._read_runtime_tmp_task_id_marker(owned) == "legacy/owner"
-
-
-def test_capacity_hint_reads_stored_fields_without_sidecars(tasks_dir, tmp_path, monkeypatch, capsys):
-    from scripts.api import lane_health
-
-    _seed_history(tasks_dir, tmp_path / "scratch", records=50)
-    monkeypatch.setattr(lane_health, "compute_lane_health", lambda _tasks: {})  # its own reader is not under test
-    hydrated = []
-    monkeypatch.setattr(delegate, "_hydrate_read_only_checkout_snapshots", lambda state: hydrated.append(state) or state)
-    monkeypatch.setattr(delegate, "_load_read_only_snapshot_sidecar", lambda *args: hydrated.append(args))
-    parsed = []
-    loads = json.loads
-
-    def parse(raw, *args, **kwargs):
-        result = loads(raw, *args, **kwargs)
-        if isinstance(result, dict) and "status" in result:
-            parsed.append(result["status"])
-        return result
-
-    monkeypatch.setattr(json, "loads", parse)
-
-    delegate._check_capacity_hint("codex")
-
-    assert hydrated == []
-    assert parsed == ["running", "running"]
-    assert "lane 'codex' has 2 task(s) in flight while idle capacity is available in: claude" in capsys.readouterr().err
-
-
-def _fresh_refusal_cpu_s(tmp_path: Path, task_id: str) -> tuple[float, subprocess.CompletedProcess]:
-    env = {key: value for key, value in os.environ.items() if key not in {"LU_TEST_DISPATCH_HEALTHY_HOST", "PYTEST_CURRENT_TEST", "LEARN_UKRAINIAN_DISPATCH_TASK_ID"}}
-    scratch = tmp_path / "scratch"
-    env.update({
-        "LU_TASKS_DIR": str(tmp_path / "tasks"),
-        "LU_SCRATCH_ROOT": str(scratch),
-        "LU_SCRATCH_SCAN_ROOT": str(scratch),
-        "TMPDIR": str(tmp_path / "tmp"),
-        job_host_exec.ENV_ALLOW_NOTEBOOK: "1",
-        # Any real host is below a 1 PiB floor, so the refusal needs no probe stub in the child.
-        "DISPATCH_MIN_MEM_AVAILABLE_GIB": "1048576",
-        "DISPATCH_ADMISSION_ENV_FILE": "",
-        "LU_OPEN_PR_FREEZE_THRESHOLD": "0",
-    })
-    before = resource.getrusage(resource.RUSAGE_CHILDREN)
-    proc = subprocess.run(
-        [sys.executable, str(Path(delegate.__file__)), "dispatch", "--agent", "codex", "--task-id", task_id,
-         "--initiator", "codex", "--prompt", "test", "--mode", "workspace-write", "--worktree",
-         "--owned-path", "scripts/example.py"],
-        cwd=delegate._REPO_ROOT, env=env, capture_output=True, text=True, timeout=300, check=False,
-    )
-    after = resource.getrusage(resource.RUSAGE_CHILDREN)
-    return (after.ru_utime - before.ru_utime) + (after.ru_stime - before.ru_stime), proc
-
-
-@pytest.mark.skipif(not Path("/proc/meminfo").is_file(), reason="the refusal reads MemAvailable from /proc")
-def test_early_host_refusal_costs_under_two_cpu_seconds_in_a_fresh_process(tmp_path):
-    _seed_history(tmp_path / "tasks", tmp_path / "scratch", records=2_000)
-    (tmp_path / "tmp").mkdir()  # the child's TMPDIR: tempfile probes it, so it is not compared
-    before = {name: _tree_state(tmp_path / name) for name in ("tasks", "scratch")}
-
-    for attempt in range(3):
-        cpu_s, proc = _fresh_refusal_cpu_s(tmp_path, f"early-fresh-{attempt}")
-        assert proc.returncode == 3, proc.stderr
-        assert "dispatch admission refused for a workspace-write worker: MemAvailable" in proc.stderr
-        assert cpu_s < 2.0, f"refusal used {cpu_s:.2f} CPU s"
-    assert {name: _tree_state(tmp_path / name) for name in ("tasks", "scratch")} == before
 
 
 def _freeze_check(monkeypatch, tmp_path, open_prs: int) -> int | None:

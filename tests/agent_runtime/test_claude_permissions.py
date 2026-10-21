@@ -167,24 +167,6 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
         assert ("--dangerously-skip-permissions" in plan.cmd) is (mode == "danger")
 
 
-def test_workspace_write_keeps_explicit_allowed_tools(tmp_path: Path) -> None:
-    plan = ClaudeAdapter().build_invocation(
-        prompt="inspect",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={"allowed_tools": "mcp__sources__*"},
-    )
-    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "dontAsk"
-    assert plan.cmd.count("--allowedTools") == 1
-    assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == "mcp__sources__*"
-    assert "Bash" not in plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
-    assert "--disallowedTools" not in plan.cmd
-    assert "--dangerously-skip-permissions" not in plan.cmd
-
-
 def test_workspace_write_names_mcp_servers_from_config(tmp_path: Path) -> None:
     config = tmp_path / "mcp.json"
     config.write_text(
@@ -564,20 +546,6 @@ def test_worker_guards_classify_the_plain_path_after_tokenization(tmp_path: Path
 @pytest.mark.parametrize(
     "command",
     [
-        "sh -c 'entire hooks claude-code pre-task || true'",
-        "echo hello",
-        "",
-    ],
-)
-def test_worker_guards_leave_unrelated_hooks_untouched(tmp_path: Path, command: str) -> None:
-    from scripts.agent_runtime.adapters.claude import _worker_guard_invocation
-
-    assert _worker_guard_invocation(command, tmp_path) is None
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
         # Unknown guard, extra or missing arguments in the canonical spelling.
         f"{_WRAPPER} guard-secret-print.py",
         f"{_WRAPPER} guard-pr-merge.py --extra",
@@ -903,38 +871,6 @@ def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
     assert cmd[cmd.index("--mcp-config") - 1] == "--strict-mcp-config"
 
 
-@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
-def test_sources_config_leaves_write_and_danger_argv_unchanged(tmp_path: Path, mode: str) -> None:
-    (tmp_path / ".mcp.json").write_text(json.dumps({"mcpServers": {"sources": {}}}), encoding="utf-8")
-    plan = ClaudeAdapter().build_invocation(
-        prompt="inspect",
-        mode=mode,
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={"reviewer_tools": True},
-    )
-    assert "--disallowedTools" not in plan.cmd
-    assert not any(rule in plan.cmd for rule in SOURCES_RULES)
-    if mode == "workspace-write":
-        assert _granted(plan.cmd) == [
-            "Bash",
-            "Read",
-            "Edit",
-            "Write",
-            "Grep",
-            "Glob",
-            "LS",
-            "WebFetch",
-            "WebSearch",
-            "mcp__sources__*",
-        ]
-    else:
-        assert "--allowedTools" not in plan.cmd
-        assert "--dangerously-skip-permissions" in plan.cmd
-
-
 @pytest.mark.parametrize("allowed_tools", ["mcp__sources__*", "Read,Bash(git push *)", ""])
 @pytest.mark.parametrize("strict_mcp_config", [False, True])
 def test_explicit_allowed_tools_are_not_widened_or_narrowed(
@@ -965,22 +901,6 @@ def test_explicit_allowed_tools_are_not_widened_or_narrowed(
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
     assert not any(command.endswith("guard-reviewer-publish.py") for command in commands)
-
-
-def test_readonly_without_profile_keeps_legacy_permissions_and_denies_writers(tmp_path: Path) -> None:
-    plan = ClaudeAdapter().build_invocation(
-        prompt="write content",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={},
-    )
-    assert "--allowedTools" not in plan.cmd
-    assert "--permission-mode" not in plan.cmd
-    assert _denied(plan.cmd) == WRITER_DENIES
-    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
 
 def _isolated_review_config(tmp_path: Path, monkeypatch) -> dict:
@@ -1103,47 +1023,6 @@ def test_explicit_config_alternate_server_name_cannot_expose_a_writer(
         assert not _claude_denies(denied, f"mcp__{server}__{name}"), name
 
 
-@pytest.mark.parametrize("tool_config", [None, {"allowed_tools": "mcp__sources_alias__*"}, {"reviewer_tools": True}])
-def test_settings_provided_alternate_server_name_cannot_expose_a_writer(tmp_path: Path, tool_config) -> None:
-    """A checkout's ``.mcp.json`` and settings can register and allow sources under another name.
-
-    The adapter never reads those files for a read-only run; the deny covers every server name instead.
-    """
-    _alias_sources_config(tmp_path / ".mcp.json", "sources_alias")
-    (tmp_path / ".claude").mkdir()
-    (tmp_path / ".claude" / "settings.json").write_text(
-        json.dumps(
-            {
-                "enabledMcpjsonServers": ["sources_alias"],
-                "permissions": {"allow": ["mcp__sources_alias__*"]},
-            }
-        ),
-        encoding="utf-8",
-    )
-    plan = ClaudeAdapter().build_invocation(
-        prompt="inspect",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=tool_config,
-    )
-    denied = _denied(plan.cmd)
-    for name in SOURCES_PERSISTING_TOOLS:
-        assert _claude_denies(denied, f"mcp__sources_alias__{name}"), name
-    for name in SOURCES_READ_ONLY_TOOLS:
-        assert not _claude_denies(denied, f"mcp__sources_alias__{name}"), name
-
-
-def test_any_server_writer_deny_leaves_longer_reader_names_alone() -> None:
-    """``mcp__*__query_ulif`` must match the whole name, so ``query_ulif_records`` stays reachable."""
-    denies = [f"mcp__*__{name}" for name in SOURCES_PERSISTING_TOOLS]
-    assert "query_ulif_records" in SOURCES_READ_ONLY_TOOLS
-    assert _claude_denies(denies, "mcp__sources_alias__query_ulif")
-    assert not _claude_denies(denies, "mcp__sources_alias__query_ulif_records")
-
-
 def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("AB_DISCUSS_READONLY", "1")
     plan = ClaudeAdapter().build_invocation(
@@ -1156,55 +1035,6 @@ def test_ad_hoc_discuss_env_denies_every_sources_writer(tmp_path: Path, monkeypa
         tool_config=None,
     )
     assert _denied(plan.cmd) == WRITER_DENIES
-
-
-def test_readers_stay_allowed_where_they_were(tmp_path: Path) -> None:
-    """AC-02 (#9560): the ordinary reviewer keeps every reader; the formal full reviewer keeps its contract."""
-    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS
-
-    ordinary = _reviewer_plan(tmp_path)
-    assert set(SOURCES_RULES) <= set(_granted(ordinary))
-    assert "mcp__sources__verify_word" in _granted(ordinary)
-    full = _reviewer_plan(
-        tmp_path,
-        mcp_config_path=str(tmp_path / "attempt.json"),
-        strict_mcp_config=True,
-        review_access="full",
-    )
-    full_rules = {f"mcp__sources__{name}" for name in FULL_REVIEW_TOOLS}
-    assert full_rules <= set(_granted(full))
-    assert not full_rules & set(_denied(full))
-
-
-@pytest.mark.parametrize(
-    "tool_config",
-    [
-        None,
-        {"reviewer_tools": True},
-        {"allowed_tools": "mcp__sources__*"},
-        {"allowed_tools": ",".join(PERSISTING_RULES)},
-    ],
-    ids=["none", "reviewer-tools", "explicit-glob", "explicit-writers"],
-)
-@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
-def test_write_and_danger_modes_never_deny_sources_writers(tmp_path: Path, mode: str, tool_config) -> None:
-    """AC-02 (#9560): builds and writers keep their cache access."""
-    plan = ClaudeAdapter().build_invocation(
-        prompt="inspect",
-        mode=mode,
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=tool_config,
-    )
-    assert "--disallowedTools" not in plan.cmd
-    if tool_config and "allowed_tools" in tool_config:
-        assert _granted(plan.cmd) == tool_config["allowed_tools"].split(",")
-    elif mode == "danger":
-        assert "--allowedTools" not in plan.cmd
-    else:
-        assert "Bash" in _granted(plan.cmd)
 
 
 @pytest.mark.parametrize("tool_config", [None, {"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}])

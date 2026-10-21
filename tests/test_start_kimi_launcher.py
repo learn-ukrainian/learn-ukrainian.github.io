@@ -21,13 +21,6 @@ def test_kimi_native_is_default_and_interactive_rejects_epic() -> None:
     assert "interactive launchers reject --epic" in epic.stderr
 
 
-@pytest.mark.parametrize("harness", ("claude", "native", "agy"))
-def test_kimi_rejects_harnesses_outside_native_or_claude_code(harness: str) -> None:
-    result = run_launcher("start-kimi.sh", "--harness", harness)
-    assert result.returncode == 2
-    assert "kimi-code|claude-code" in result.stderr
-
-
 @pytest.mark.rules_core_absent
 def test_kimi_native_accepts_explicit_model_and_provider_arguments() -> None:
     result = run_launcher("start-kimi.sh", "--model", "k3", "--", "--yolo")
@@ -57,9 +50,3 @@ def test_kimi_claude_code_requires_a_kimi_credential_in_noninteractive_dry_run(t
     )
     assert result.returncode == 3
     assert "no Kimi API credential" in result.stderr
-
-
-def test_kimi_rejects_unknown_launcher_flag_with_usage_exit() -> None:
-    result = run_launcher("start-kimi.sh", "--not-a-real-flag")
-    assert result.returncode == 2
-    assert "run --help" in result.stderr

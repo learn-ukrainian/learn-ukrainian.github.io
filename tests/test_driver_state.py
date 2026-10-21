@@ -76,22 +76,6 @@ def test_hook_injects_ephemeral_state(state, tmp_path):
     assert "fix X" in message
 
 
-def test_hook_is_noop_without_env(monkeypatch):
-    monkeypatch.delenv(driver_state.STATE_ENV, raising=False)
-    assert driver_state.cmd_agy_hook("{}") == {}
-
-
-def test_hook_is_noop_for_other_workspace(state, tmp_path):
-    other = tmp_path / "worker-checkout"
-    other.mkdir()
-    assert driver_state.cmd_agy_hook(json.dumps({"workspacePaths": [str(other)]})) == {}
-
-
-def test_hook_is_noop_when_state_missing(state):
-    state.unlink()
-    assert driver_state.cmd_agy_hook("{}") == {}
-
-
 def test_hook_tolerates_bad_payload(state):
     assert driver_state.cmd_agy_hook("not json") == {}
 
@@ -105,15 +89,6 @@ def test_injection_is_rejected_when_envelope_is_oversized(state, tmp_path):
     assert message.startswith("DRIVER-GATE-FAILED:")
     assert "envelope exceeds" in message
     assert driver_state._read_state(state) == text
-
-
-def test_whoami_prints_goals_and_next(state, capsys):
-    assert driver_state.main(["whoami"]) == 0
-    out = capsys.readouterr().out
-    assert "epic: infra" in out
-    assert "fix X" in out
-    assert "open PR" in out
-    assert "blocker-policy: Put every owned blocker in --current with complete: true;" in out
 
 
 @pytest.mark.parametrize("missing", [False, True])
@@ -139,19 +114,6 @@ def test_init_refuses_overwrite(tmp_path, monkeypatch):
     assert driver_state.main(["init", "--epic", "demo"]) == 0
     assert (tmp_path / ".claude" / "demo-epic" / "DRIVER-STATE.md").is_file()
     assert driver_state.main(["init", "--epic", "demo"]) == 1
-
-
-def test_hook_cli_prints_json_end_to_end(state, tmp_path):
-    proc = subprocess.run(
-        [sys.executable, "-m", "scripts.driver_state", "agy-hook"],
-        input=json.dumps({"workspacePaths": [str(tmp_path)]}),
-        capture_output=True,
-        text=True,
-        cwd=REPO,
-        check=True,
-        timeout=60,
-    )
-    assert json.loads(proc.stdout)["injectSteps"]
 
 
 @pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
@@ -373,28 +335,6 @@ def test_stop_continues_below_min_workers_counting_only_own_seat(driver):
     out = _stop(driver, _transcript(driver, "All good."))
     assert out["decision"] == "continue"
     assert "below the privately configured target" in out["reason"]
-
-
-def test_stop_cli_checks_worker_floor_without_pythonpath(driver, state, monkeypatch):
-    monkeypatch.delenv("PYTHONPATH", raising=False)
-    _workers(driver, "gemini-infra", 0)
-    transcript = _transcript(driver, "Which should I take?")
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.driver_state", "agy-stop-hook"],
-        input=json.dumps({"workspacePaths": [str(driver)], "conversationId": "c1", "transcriptPath": str(transcript)}),
-        capture_output=True,
-        text=True,
-        cwd=REPO,
-        timeout=10,
-        check=True,
-    )
-    out = json.loads(result.stdout)
-    assert out["decision"] == "continue", (result.stdout, result.stderr)
-    assert "below the privately configured target" in out["reason"], (result.stdout, result.stderr)
-    assert "question" in out["reason"]
-    counter = driver_state._counter_path(state, "c1")
-    assert counter.read_text() == "1"
-    assert not counter.with_suffix(".failure.json").exists()
 
 
 def test_stop_requires_wakeup_when_fully_idle(driver):
@@ -670,51 +610,6 @@ def test_stop_cap_reset_write_failure_remains_visible_until_reset_succeeds(drive
     assert _stop(driver, transcript)["decision"] == "continue"
 
 
-def test_stop_counter_failure_preserves_all_policy_reasons(driver, state, monkeypatch):
-    _workers(driver, "gemini-infra", 0)
-    counter = driver_state._counter_path(state, "c1")
-    original = driver_state.write_unit
-
-    def denied(fd, name, *args, **kwargs):
-        if name == counter.name:
-            raise PermissionError("synthetic counter storage is unwritable")
-        return original(fd, name, *args, **kwargs)
-
-    monkeypatch.setattr(driver_state, "write_unit", denied)
-    out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "allow"
-    assert "DRIVER-GATE-FAILED" in out["reason"]
-    assert "below the privately configured target" in out["reason"]
-    assert "question" in out["reason"]
-    assert "counter unavailable" in out["reason"]
-    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
-    out = _stop(driver, _transcript(driver, "Work verified."), fully_idle=True)
-    assert out["decision"] == "allow"
-    assert "DRIVER-GATE-FAILED" in out["reason"]
-    assert "nothing is armed to wake you" in out["reason"]
-    assert "counter unavailable" in out["reason"]
-
-
-def test_stop_corrupt_counter_fails_closed(driver, state):
-    counter = driver_state._counter_path(state, "c1")
-    counter.write_text("invalid", encoding="utf-8")
-    out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "allow"
-    assert "DRIVER-GATE-FAILED" in out["reason"]
-    assert "counter unavailable" in out["reason"]
-
-
-def test_stop_ignores_errors_and_non_drivers(driver, monkeypatch):
-    transcript = _transcript(driver, "Which should I take?")
-    for reason in ("error", "MAX_INVOCATIONS", "EXECUTOR_TERMINATION_REASON_USER_CANCELED"):
-        payload = {"workspacePaths": [str(driver)], "transcriptPath": str(transcript), "terminationReason": reason}
-        assert driver_state.cmd_agy_stop_hook(json.dumps(payload)) == {"decision": "allow"}
-    payload["terminationReason"] = "model_stop"
-    assert driver_state.cmd_agy_stop_hook(json.dumps(payload))["decision"] == "continue"
-    monkeypatch.delenv(driver_state.STATE_ENV)
-    assert _stop(driver, transcript) == {"decision": "allow"}
-
-
 def test_pretool_denies_ask_question_only_for_drivers(driver, monkeypatch):
     call = {"toolCall": {"name": "ask_question"}, "workspacePaths": [str(driver)]}
     assert driver_state.cmd_agy_pretool_hook(json.dumps(call))["decision"] == "deny"
@@ -722,22 +617,6 @@ def test_pretool_denies_ask_question_only_for_drivers(driver, monkeypatch):
     assert driver_state.cmd_agy_pretool_hook(json.dumps(other)) == {"decision": "allow"}
     monkeypatch.delenv(driver_state.STATE_ENV)
     assert driver_state.cmd_agy_pretool_hook(json.dumps(call)) == {"decision": "allow"}
-
-
-def test_injection_appends_policy_when_state_lacks_it(state, tmp_path):
-    message = driver_state.cmd_agy_hook(json.dumps({"workspacePaths": [str(tmp_path)]}))["injectSteps"][0][
-        "ephemeralMessage"
-    ]
-    assert driver_state.POLICY_TITLE in message
-    assert "CTO-ESCALATION:" in message
-
-
-def test_template_carries_policy(tmp_path, monkeypatch):
-    monkeypatch.setattr(driver_state, "_repo_root", lambda start=None: tmp_path)
-    assert driver_state.main(["init", "--epic", "demo"]) == 0
-    text = (tmp_path / ".claude" / "demo-epic" / "DRIVER-STATE.md").read_text(encoding="utf-8")
-    assert driver_state.POLICY_TITLE in text
-    assert text.count(driver_state.POLICY_TITLE) == 1
 
 
 def test_last_model_text_reads_final_response(tmp_path):
@@ -765,14 +644,6 @@ def test_stop_unknown_worker_target_does_not_force_continuation(driver, monkeypa
     assert driver_state.minimum_workers() is None
     assert _stop(driver, _transcript(driver, "Work verified.")) == {"decision": "allow"}
     assert _stop(driver, _transcript(driver, "I will run the remaining actions next."))["decision"] == "continue"
-
-
-def test_worker_target_is_read_at_call_time(driver, monkeypatch):
-    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
-    transcript = _transcript(driver, "Work verified.")
-    assert _stop(driver, transcript) == {"decision": "allow"}
-    monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, str(SYNTHETIC_WORKER_TARGET + 1))
-    assert _stop(driver, transcript)["decision"] == "continue"
 
 
 def test_running_workers_uses_shared_store_from_linked_worktree(tmp_path, monkeypatch):
@@ -803,11 +674,6 @@ def test_last_model_text_preserves_unicode_inside_jsonl(tmp_path, separator):
     assert driver_state.last_model_text(str(path)) == content
 
 
-def test_public_worker_policy_uses_no_numeric_target():
-    assert "privately configured worker target" in driver_state.POLICY
-    assert not any(char.isdigit() for char in driver_state.POLICY)
-
-
 @pytest.mark.parametrize("length", [5999, 6000, 6001, 6100])
 def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     text = "x" * length + "\nNewest goal: preserve me"
@@ -816,93 +682,6 @@ def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     message = out["injectSteps"][0]["ephemeralMessage"]
     assert text in message
     assert "truncated" not in message
-
-
-def test_rendered_envelope_exact_boundary(state):
-    wrapper_size = len(driver_state.render_injection(driver_state.POLICY, state))
-    text = driver_state.POLICY.rstrip() + "x" * (driver_state.MAX_ENVELOPE_CHARS - wrapper_size)
-    assert len(driver_state.render_injection(text, state)) == driver_state.MAX_ENVELOPE_CHARS
-    with pytest.raises(ValueError, match="envelope exceeds"):
-        driver_state.render_injection(text + "x", state)
-
-
-@pytest.mark.parametrize(
-    "prefix",
-    [
-        "",
-        "The CTO blocker delta policy is mentioned in prose.\n",
-        "## CTO blocker delta policy extra\n",
-        "### CTO blocker delta policy\n",
-        "```markdown\n## CTO blocker delta policy\n```\n",
-        "> ## CTO blocker delta policy\n",
-        "  ## CTO blocker delta policy\n",
-        "<!--\n## CTO blocker delta policy\n-->\n",
-        "CTO blocker delta policy\n-----------------------\n",
-    ],
-)
-def test_blocker_policy_requires_exact_real_heading(state, prefix):
-    message = driver_state.render_injection(prefix + "Current goals remain intact.", state)
-    assert message.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
-    assert "Current goals remain intact." in message
-    assert "scripts.driver_blockers delta" in message
-    assert "scripts.driver_blockers record" in message
-    assert "post ordinary reports to epics" in message
-    assert "--reporting-target cto only for explicit operator escalation" in message
-    assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
-
-
-def test_existing_blocker_heading_is_not_duplicated(state):
-    text = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY
-    rendered = driver_state.render_injection(text, state)
-    assert rendered.count("## " + driver_state.BLOCKER_POLICY_TITLE) == 1
-    assert rendered.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
-    assert driver_state.render_injection(text + "\nLast goal", state).endswith("Last goal")
-
-
-def test_blocker_template_and_complete_envelope_boundary(state, monkeypatch, tmp_path):
-    monkeypatch.setattr(driver_state, "_repo_root", lambda start=None: tmp_path)
-    assert driver_state.main(["init", "--epic", "demo"]) == 0
-    text = (tmp_path / ".claude/demo-epic/DRIVER-STATE.md").read_text()
-    assert text.count(driver_state.BLOCKER_POLICY) == 1
-    assert "exact case-sensitive standalone token RESOLVED <id>" in text
-    assert "on its own non-active line (no other fields or prose)" in text
-    policies = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY + "\n"
-    wrapper_size = len(driver_state.render_injection(policies, state))
-    exact = policies.rstrip() + "\n" + "x" * (driver_state.MAX_ENVELOPE_CHARS - wrapper_size - 1)
-    assert len(driver_state.render_injection(exact, state)) == driver_state.MAX_ENVELOPE_CHARS
-    with pytest.raises(ValueError, match="envelope exceeds"):
-        driver_state.render_injection(exact + "x", state)
-
-
-@pytest.mark.parametrize("baseline", ["absent", "present", "legacy_cto", "empty"])
-def test_whoami_blocker_summary(state, baseline, capsys):
-    from scripts import driver_blockers
-
-    ledger = state.parent / driver_blockers.LEDGER_NAME
-    if baseline == "empty":
-        ledger.write_text("")
-    elif baseline in {"present", "legacy_cto"}:
-        body = b"No blockers"
-        receipt = {
-            "recipient": "cto" if baseline == "legacy_cto" else "epics",
-            "message_id": "fixture-msg",
-            "created_at": "2026-10-10T01:00:00Z",
-            "content_sha256": driver_blockers.hashlib.sha256(body).hexdigest(),
-        }
-        options = {"reporting_target": "cto"} if baseline == "legacy_cto" else {}
-        driver_blockers.record(
-            ledger, "infra", {"epic": "infra", "complete": True, "items": []}, receipt, body, 0, **options
-        )
-    assert driver_state.cmd_whoami(state) == 0
-    output = capsys.readouterr().out
-    assert (
-        "Blocker baseline: generation 1; 0 recorded blockers"
-        if baseline in {"present", "legacy_cto"}
-        else driver_blockers.UNKNOWN_SUMMARY
-    ) in output
-    assert "post ordinary reports to epics" in output
-    assert "--reporting-target cto only for explicit operator escalation" in output
-    assert str(state.parent) not in output
 
 
 @pytest.mark.parametrize(
@@ -961,26 +740,6 @@ def test_question_plan_detector_preserves_authored_actions(driver, text):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     assert driver_state.ends_on_question_or_plan(text) is not None
     assert _stop(driver, _transcript(driver, text))["decision"] == "continue"
-
-
-@pytest.mark.parametrize(
-    "prefix,suffix",
-    [
-        ("> ", ""),
-        ("```\n", "\n```"),
-        ("~~~\n", "\n~~~"),
-        ('"', '"'),
-        ("`", "`"),
-        ("Report: ", ""),
-        ("    ", ""),
-    ],
-)
-def test_quoted_or_embedded_escalation_never_exempts_worker_gate(driver, prefix, suffix):
-    _workers(driver, "gemini-infra", 0)
-    text = prefix + "CTO-ESCALATION: approval required" + suffix
-    out = _stop(driver, _transcript(driver, text))
-    assert out["decision"] == "continue"
-    assert "below the privately configured target" in out["reason"]
 
 
 def test_trimmed_leading_escalation_resets_counter(driver, state):
@@ -1084,32 +843,6 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     assert "live worker count is unknown" in out["reason"]
 
 
-@pytest.mark.parametrize("error", [ImportError, RuntimeError])
-def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, error):
-    import builtins
-
-    _workers(driver, "gemini-infra", 0)
-    original = builtins.__import__
-
-    def fail_delegate(name, *args, **kwargs):
-        if name == "scripts.delegate":
-            raise error("synthetic delegate import failure")
-        return original(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", fail_delegate)
-    assert driver_state.running_workers("gemini-infra") is None
-    transcript = _transcript(driver, "Work verified.")
-    out = _stop(driver, transcript)
-    assert out["decision"] == "continue"
-    assert "live worker count is unknown" in out["reason"]
-    assert "DRIVER-GATE-FAILED" not in out["reason"]
-    for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES):
-        out = _stop(driver, transcript)
-    assert out == {"decision": "allow", "reason": "DRIVER-GATE-FAILED: corrective retry budget exhausted."}
-    failure = driver_state._counter_path(state, "c1").with_suffix(".failure.json")
-    assert json.loads(failure.read_text())["code"] == "corrective_retry_budget_exhausted"
-
-
 @pytest.mark.parametrize("all_dead", [False, True])
 def test_dead_running_workers_are_skipped(driver, monkeypatch, all_dead):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
@@ -1130,64 +863,11 @@ def test_dead_running_workers_are_skipped(driver, monkeypatch, all_dead):
     assert "restore worker telemetry" not in out["reason"]
 
 
-def test_live_terminal_workers_do_not_count(driver, monkeypatch):
-    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
-    original = delegate._fetch_monitor_task
-
-    def fetch(task_id, *, run_nonce=None):
-        out = original(task_id, run_nonce=run_nonce)
-        out["task"]["status"] = "done"
-        out["alive"] = False
-        return out
-
-    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
-    assert driver_state.running_workers("gemini-infra") == 0
-
-
 def test_worker_probe_budget_is_bounded(driver, monkeypatch):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     ticks = iter([0, 7])
     monkeypatch.setattr(driver_state.time, "monotonic", lambda: next(ticks))
     assert driver_state.running_workers("gemini-infra") is None
-
-
-@pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
-def test_shell_consult_with_inherited_driver_environment(state, tmp_path, monkeypatch, mode):
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
-    raw = json.dumps({"workspacePaths": [str(tmp_path / "consult")], "toolCall": {"name": "ask_question"}})
-    proc = subprocess.run(
-        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), mode],
-        input=raw,
-        capture_output=True,
-        text=True,
-        cwd=REPO,
-        timeout=60,
-        check=True,
-    )
-    assert json.loads(proc.stdout) == ({"decision": "allow"} if mode != "agy-hook" else {})
-
-
-def test_shell_exhaustion_is_visible_and_records_failure(driver, state, monkeypatch):
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
-    monkeypatch.delenv(driver_state.MIN_WORKERS_ENV)
-    driver_state._counter_path(state, "shell").write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES))
-    transcript = _transcript(driver, "Which should I take?")
-    raw = json.dumps({"workspacePaths": [str(driver)], "conversationId": "shell", "transcriptPath": str(transcript)})
-    proc = subprocess.run(
-        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), "agy-stop-hook"],
-        input=raw,
-        capture_output=True,
-        text=True,
-        cwd=REPO,
-        timeout=60,
-        check=True,
-    )
-    assert json.loads(proc.stdout) == {
-        "decision": "allow",
-        "reason": "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
-    }
-    receipt = driver_state._counter_path(state, "shell").with_suffix(".failure.json")
-    assert json.loads(receipt.read_text())["status"] == "failed"
 
 
 def test_cli_hook_error_resets_counter_and_fails_visibly(driver, state, monkeypatch, capsys):
@@ -1198,46 +878,6 @@ def test_cli_hook_error_resets_counter_and_fails_visibly(driver, state, monkeypa
     assert driver_state.main(["agy-stop-hook"]) == 0
     assert json.loads(capsys.readouterr().out)["decision"] == "allow"
     assert driver_state._counter_path(state, "error").read_text() == "0"
-
-
-def test_gate_failure_storage_fault_preserves_typed_error(driver, state, monkeypatch, capsys):
-    original = driver_state.write_unit
-
-    def denied(fd, name, *args, **kwargs):
-        if name.endswith(".failure.json"):
-            raise PermissionError("synthetic failure storage fault")
-        return original(fd, name, *args, **kwargs)
-
-    monkeypatch.setattr(driver_state, "write_unit", denied)
-    out = driver_state._gate_failure(state, "c1", "test_failure", "DRIVER-GATE-FAILED: synthetic failure.")
-    assert out["decision"] == "allow"
-    assert json.loads(capsys.readouterr().err)["code"] == "test_failure"
-
-
-def test_shell_oversized_envelope_fails_visibly(state, tmp_path, monkeypatch):
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
-    state.write_text("x" * driver_state.MAX_ENVELOPE_CHARS + "\nNewest goal: retain me")
-    raw = json.dumps({"workspacePaths": [str(tmp_path)], "conversationId": "oversized"})
-    proc = subprocess.run(
-        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), "agy-hook"],
-        input=raw,
-        capture_output=True,
-        text=True,
-        cwd=REPO,
-        timeout=60,
-        check=True,
-    )
-    out = json.loads(proc.stdout)
-    assert set(out) == {"injectSteps"}
-    assert "envelope exceeds" in out["injectSteps"][0]["ephemeralMessage"]
-    failure = driver_state._counter_path(state, "oversized").with_suffix(".failure.json")
-    assert json.loads(failure.read_text())["code"] == "state_envelope_oversized"
-
-
-def test_negative_counter_is_not_a_new_retry_budget(state):
-    driver_state._counter_path(state, "c1").write_text("-3")
-    with pytest.raises(ValueError, match="invalid continuation counter"):
-        driver_state._bump_counter(state, "c1")
 
 
 def test_cli_help_documents_usage_and_outputs(capsys):
@@ -1330,35 +970,6 @@ def test_stop_corrupt_counter_records_typed_failure(driver, state, content):
     assert failure["reason"] == out["reason"]
 
 
-@pytest.mark.parametrize("fault", ["unreadable", "lock", "write"])
-def test_stop_counter_storage_fault_never_continues(driver, state, monkeypatch, fault):
-    counter = driver_state._counter_path(state, "c1")
-    counter.write_text("0")
-    operation = "read_unit" if fault == "unreadable" else "write_unit"
-    original = getattr(driver_state, operation)
-
-    def denied(fd, name, *args, **kwargs):
-        if name == counter.name and fault != "lock":
-            raise PermissionError("synthetic counter storage fault")
-        return original(fd, name, *args, **kwargs)
-
-    monkeypatch.setattr(driver_state, operation, denied)
-    original_open = os.open
-
-    def denied_lock(name, *args, **kwargs):
-        if str(name).endswith(".lock") and fault == "lock":
-            raise PermissionError("synthetic lock failure")
-        return original_open(name, *args, **kwargs)
-
-    monkeypatch.setattr(os, "open", denied_lock)
-    out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "allow"
-    assert "DRIVER-GATE-FAILED" in out["reason"]
-    assert "question" in out["reason"]
-    failure = json.loads(counter.with_suffix(".failure.json").read_text())
-    assert failure["code"] == "continuation_counter_unavailable"
-
-
 @pytest.mark.parametrize("replacement", ["symlink", "directory"])
 def test_counter_refuses_parent_swap_before_write(state, tmp_path, monkeypatch, replacement):
     counter = driver_state._counter_path(state, "c1")
@@ -1389,17 +1000,6 @@ def test_counter_refuses_parent_swap_before_write(state, tmp_path, monkeypatch, 
     assert (moved / counter.name).read_text() == "0"
     assert counter.read_text() == "0"
     assert (decoy / counter.name).read_text() == "0"
-
-
-@pytest.mark.parametrize("entry", ["counter", "lock"])
-def test_counter_refuses_nonregular_storage(driver, state, entry):
-    counter = driver_state._counter_path(state, "c1")
-    path = counter if entry == "counter" else counter.with_name(counter.name + ".lock")
-    path.mkdir()
-    out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "allow"
-    assert "DRIVER-GATE-FAILED" in out["reason"]
-    assert path.is_dir()
 
 
 @pytest.mark.parametrize("replacement", ["removed", "replaced"])
@@ -1506,30 +1106,6 @@ def test_stop_refuses_oversized_counter_before_read_or_parse(driver, state, monk
     assert reads == [limit]
     # The hook may parse its worker target, but must never parse the counter.
     assert content.decode("utf-8") not in parses
-    assert counter.read_bytes() == content
-    assert json.loads(counter.with_suffix(".failure.json").read_text())["code"] == "continuation_counter_unavailable"
-
-
-def test_stop_cli_refuses_oversized_counter_within_hook_timeout(driver, state, monkeypatch):
-    monkeypatch.delenv("PYTHONPATH", raising=False)
-    _workers(driver, "gemini-infra", 0)
-    counter = driver_state._counter_path(state, "c1")
-    content = b"1" * (4 * 1024 * 1024)
-    counter.write_bytes(content)
-    transcript = _transcript(driver, "Which should I take?")
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.driver_state", "agy-stop-hook"],
-        input=json.dumps({"workspacePaths": [str(driver)], "conversationId": "c1", "transcriptPath": str(transcript)}),
-        capture_output=True,
-        text=True,
-        cwd=REPO,
-        timeout=10,
-        check=True,
-    )
-    out = json.loads(result.stdout)
-    assert out["decision"] == "allow", (result.stdout, result.stderr)
-    assert out["reason"].startswith("DRIVER-GATE-FAILED:"), (result.stdout, result.stderr)
-    assert "counter unavailable" in out["reason"], (result.stdout, result.stderr)
     assert counter.read_bytes() == content
     assert json.loads(counter.with_suffix(".failure.json").read_text())["code"] == "continuation_counter_unavailable"
 

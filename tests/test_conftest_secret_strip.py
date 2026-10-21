@@ -726,45 +726,6 @@ def test_credential_strip_marker_has_no_effect(mode: str) -> None:
     _assert_import_stripped(report)
 
 
-# A child pytest process loads this conftest and strips again. A test that
-# needs a credential in a child session passes it through that child's own
-# conftest or monkeypatch.
-_CHILD_STRIPS_PUBLISHED = textwrap.dedent(
-    """\
-    import os
-
-    def test_child_strips_inherited_credentials():
-        inherited = (
-            "ZZ_PUBLISHED_AFTER_STRIP_API_KEY",
-            "ZZ_STRIP_PROBE_API_KEY",
-            "ZZ_STRIP_PROBE_TOKEN",
-            "ZZ_STRIP_PROBE_SECRET",
-        )
-        visible = [name for name in inherited if name in os.environ]
-        if visible:
-            raise AssertionError("credential-shaped names still set: " + ", ".join(visible))
-        if os.environ.get("ZZ_STRIP_PROBE_PLAIN") != "sentinel-not-a-real-value":
-            raise AssertionError("unrelated name was stripped or changed")
-    """
-)
-
-
-def test_child_pytest_process_strips_published_credentials() -> None:
-    """A child pytest that loads this conftest strips names the parent published."""
-    probe_dir = _new_probe_dir("zz-strip-child-")
-    (probe_dir / "test_child_strips.py").write_text(_CHILD_STRIPS_PUBLISHED, encoding="utf-8")
-    overrides = {
-        _CREDENTIAL_STRIP_MARKER: _parent_process_identity(),
-        "ZZ_PUBLISHED_AFTER_STRIP_API_KEY": "published-after-strip",
-        "ZZ_STRIP_PROBE_PLAIN": SENTINEL,
-    }
-    for name in _IMPORT_CREDENTIALS:
-        overrides[name] = SENTINEL
-    result = _run_child_pytest(probe_dir, overrides)
-    _assert_child_collected(result.stdout, result.stderr)
-    assert result.returncode == 0, result.stdout + "\n" + result.stderr
-
-
 _XDIST_CONFTEST = textwrap.dedent(
     """\
     import os

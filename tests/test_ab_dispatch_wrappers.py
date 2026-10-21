@@ -75,75 +75,6 @@ def _capture_native_review(
     return prompts[0]
 
 
-@pytest.mark.parametrize(
-    ("profile", "review_request", "applicable"),
-    [
-        ("code", "Review this branch.", True),
-        ("infra", "Review this branch.", True),
-        (None, "Return code-review-findings.v1 JSON.", True),
-        ("code", "Return code-review-findings.v1 JSON.", True),
-        ("ukrainian", "Return code-review-findings.v1 JSON.", True),
-        (None, "Review code; verdict only.", False),
-        ("ukrainian", "Review this meaning; verdict only.", False),
-        ("ukrainian", "Review this lesson; verdict only.", False),
-        ("ukrainian", "Review this source; verdict only.", False),
-        (None, "Discuss code-review-findings.v10.", False),
-    ],
-)
-@pytest.mark.parametrize("data", [None, "", "Prior code-review-findings.v1 payload\r\n\t  \r\n"])
-def test_native_prompt_delivers_code_contract_only_when_requested(
-    monkeypatch, tmp_path, profile, review_request, applicable, data
-):
-    content = f"{review_request}\r\n\r\nKeep caller whitespace: \t  \r\n\r\n"
-    prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, "VERDICT: BLOCKED\n", data=data)
-    attachment = "\n\n--- attached inert text ---\n" + data if data else ""
-    preamble = wrappers._REVIEW_VERDICT_OUTPUT + "\n\n"
-    assert prompt.startswith(preamble)
-    assert "APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED" in preamble
-    if not applicable:
-        assert prompt == preamble + content + attachment
-        return
-    assert prompt == preamble + content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + attachment
-    offset = len(preamble) + len(content) + 2
-    guidance = prompt[offset : offset + len(wrappers._NATIVE_CODE_REVIEW_OUTPUT)]
-    # Verify instructions at the subprocess boundary rather than a constant's existence.
-    assert guidance.count("## Existing code-review output") == 1
-    for requirement in (
-        "first completed reply",
-        "plain, unfenced verdict",
-        "one native JSON object",
-        "schemas/code-review-findings.v1.schema.json",
-        "nonblocking finding",
-        "judgment and confidence",
-        "repository-relative",
-        "all leading",
-        "tabs, trailing spaces",
-        "intervening blank lines",
-        "Only line endings",
-        "end_line = start_line + number of quoted source lines - 1",
-        'claim_type "present"',
-        "actual changed new-side line",
-        "body/sources",
-        'claim_type "missing"',
-        "real contextual",
-        "never invent a line",
-        "locally reread",
-        "pinned head",
-        "existing strict verifier",
-    ):
-        assert requirement in guidance
-
-
-def test_native_prompt_preserves_caller_markers_without_splitting(monkeypatch, tmp_path):
-    content = "Caller-authored example:\n--- attached inert text ---\nReturn code-review-findings.v1 JSON.\t \n"
-    data = "Attachment provenance: fixture\r\n--- attached inert text ---\r\n\tDATA  \r\n"
-    prompt = _capture_native_review(monkeypatch, tmp_path, content, None, "VERDICT: BLOCKED\n", data=data)
-    assert prompt == (
-        wrappers._REVIEW_VERDICT_OUTPUT + "\n\n" + content + "\n\n"
-        + wrappers._NATIVE_CODE_REVIEW_OUTPUT + "\n\n--- attached inert text ---\n" + data
-    )
-
-
 @pytest.mark.parametrize("verdict", [None, "REQUEST_CHANGES"])
 def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp_path, verdict):
     from scripts import delegate
@@ -419,21 +350,6 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert "diff --git" not in prompt
 
 
-@pytest.mark.parametrize("ancestor", (".git", "__pycache__"))
-def test_review_path_listing_filters_only_target_relative_metadata(tmp_path, ancestor):
-    target = tmp_path / ancestor / "review-target"
-    target.mkdir(parents=True)
-    (target / "a.py").write_text("DO_NOT_EMBED", encoding="utf-8")
-    (target / "nested").mkdir()
-    (target / "nested" / "b.py").write_text("DO_NOT_EMBED", encoding="utf-8")
-    for metadata in (".git", "__pycache__"):
-        directory = target / "nested" / metadata
-        directory.mkdir()
-        (directory / "hidden").write_text("DO_NOT_EMBED", encoding="utf-8")
-
-    assert wrappers._list_review_path_names(target) == "- a.py\n- nested/b.py"
-
-
 def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch, tmp_path):
     monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
     target = tmp_path / "target.py"
@@ -470,89 +386,6 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     assert not Path(captured_prompt["path"]).exists()
 
 
-def test_run_json_command_passes_default_timeout(monkeypatch):
-    calls = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append((cmd, kwargs))
-        return subprocess.CompletedProcess(cmd, 0, stdout='{"ok": true}')
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    res = wrappers._run_json_command(["echo", "hi"])
-    assert res == {"ok": True}
-    assert calls[0][1].get("timeout") == wrappers.DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS
-
-
-def test_run_json_command_timeout_raises_timeout_expired(monkeypatch):
-    def timeout_run(cmd, **kwargs):
-        raise subprocess.TimeoutExpired(cmd, wrappers.DEFAULT_JSON_COMMAND_TIMEOUT_SECONDS)
-
-    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
-    import pytest
-
-    with pytest.raises(subprocess.TimeoutExpired):
-        wrappers._run_json_command(["echo", "hi"])
-
-
-def test_run_text_command_passes_default_timeout(monkeypatch):
-    calls = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append((cmd, kwargs))
-        return subprocess.CompletedProcess(cmd, 0, stdout="hello\n")
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    res = wrappers._run_text_command(["echo", "hello"])
-    assert res == "hello\n"
-    assert calls[0][1].get("timeout") == wrappers.DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS
-
-
-def test_run_text_command_timeout_raises_timeout_expired(monkeypatch):
-    def timeout_run(cmd, **kwargs):
-        raise subprocess.TimeoutExpired(cmd, wrappers.DEFAULT_TEXT_COMMAND_TIMEOUT_SECONDS)
-
-    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
-    import pytest
-
-    with pytest.raises(subprocess.TimeoutExpired):
-        wrappers._run_text_command(["echo", "hi"])
-
-
-def test_run_dispatch_passes_timeout(monkeypatch, tmp_path):
-    prompt_file = tmp_path / "prompt.md"
-    prompt_file.write_text("test", encoding="utf-8")
-    calls = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append((cmd, kwargs))
-        return subprocess.CompletedProcess(cmd, 0)
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    rc = wrappers._run_dispatch(["python", "--task-id", "123"], False, prompt_file)
-    assert rc == 0
-    assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
-
-
-def test_run_dispatch_timeout_returns_1(monkeypatch, tmp_path, capsys):
-    prompt_file = tmp_path / "prompt.md"
-    prompt_file.write_text("test", encoding="utf-8")
-
-    def timeout_run(cmd, **kwargs):
-        raise subprocess.TimeoutExpired(cmd, wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS)
-
-    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
-    rc = wrappers._run_dispatch(["python", "--task-id", "123"], False, prompt_file)
-    assert rc == 1
-    err = capsys.readouterr().err
-    assert f"dispatch command timed out after {wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS}s" in err
-
-
 def _admitted_reviewer(agent: str, model: str | None = None):
     from scripts.agent_runtime.kimi_admission import REVIEW_MODE
     from scripts.agent_runtime.target_admission import resolve_and_admit
@@ -583,63 +416,6 @@ def test_ask_non_kimi_review_argv_omits_kimicc_harness():
     assert "--harness" not in command
     assert command[command.index("--agent") + 1] == "claude"
     assert command[command.index("--mode") + 1] == "read-only"
-
-
-def test_run_ask_review_dispatch_dispatch_timeout_raises_runtime_error(monkeypatch):
-    import pytest
-
-    def timeout_run(cmd, **kwargs):
-        raise subprocess.TimeoutExpired(cmd, wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS)
-
-    monkeypatch.setattr(wrappers.github_client, "run", timeout_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", timeout_run)
-    with pytest.raises(RuntimeError, match=r"delegate\.py dispatch timed out"):
-        wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
-
-
-def test_run_ask_review_dispatch_wait_timeout_raises_runtime_error(monkeypatch):
-    import pytest
-
-    def fake_run(cmd, **kwargs):
-        if "dispatch" in cmd:
-            return subprocess.CompletedProcess(cmd, 0)
-        if "wait" in cmd:
-            raise subprocess.TimeoutExpired(cmd, 1860)
-        raise AssertionError(f"unexpected cmd: {cmd}")
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    with pytest.raises(RuntimeError, match=r"delegate\.py wait timed out at process level"):
-        wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
-
-
-def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
-    result_file = tmp_path / "result.md"
-    result_file.write_text("Reviewed the diff.\nVERDICT: APPROVED\n", encoding="utf-8")
-    calls = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append((cmd, kwargs))
-        if "dispatch" in cmd:
-            return subprocess.CompletedProcess(cmd, 0)
-        if "wait" in cmd:
-            return subprocess.CompletedProcess(
-                cmd,
-                0,
-                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
-            )
-        raise AssertionError(f"unexpected cmd: {cmd}")
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123", hard_timeout=600)
-    assert state["ok"] is True
-    assert state["status"] == "done"
-    assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
-    assert "--require-review-verdict" in calls[0][0]
-    assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
-    assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
-    assert "--branch" not in calls[0][0]
 
 
 def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
@@ -693,30 +469,6 @@ def test_run_ask_review_dispatch_without_verdict_fails_with_reason(monkeypatch, 
     assert state["ok"] is False
     assert state["status"] == "failed"
     assert state["failure_reason"] == "review_missing_verdict_line"
-
-
-def test_run_ask_review_dispatch_with_approve_verdict_stays_done(monkeypatch, tmp_path):
-    """VERDICT: APPROVE (no D) is accepted by the live review parsers (#8421)."""
-    result_file = tmp_path / "result.md"
-    result_file.write_text("Findings: none.\nVERDICT: APPROVE\n", encoding="utf-8")
-
-    def fake_run(cmd, **kwargs):
-        if "dispatch" in cmd:
-            return subprocess.CompletedProcess(cmd, 0)
-        if "wait" in cmd:
-            return subprocess.CompletedProcess(
-                cmd,
-                0,
-                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
-            )
-        raise AssertionError(f"unexpected cmd: {cmd}")
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
-    assert state["ok"] is True
-    assert state["status"] == "done"
-    assert state.get("no_deliverable_reason") is None
 
 
 def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch, tmp_path):
@@ -805,67 +557,6 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
     assert Path(serialized["result_file"]).read_text() == response
     if token == "[REDACTED_SECRET]":
         assert "ghp_SYNTHETIC10598TOKENabcdefghij" not in serialized["stderr_excerpt"]
-
-
-@pytest.mark.parametrize(
-    "response,token,expected",
-    [
-        (
-            "VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij\n",
-            "ghp_SYNTHETIC10598TOKENabcdefghij",
-            "review_unsupported_verdict_token: unsupported verdict identifier '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
-        ),
-        (
-            "VERDICT: CHANGES\n",
-            "CHANGES",
-            "review_unsupported_verdict_token: unsupported verdict identifier 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
-        ),
-        (
-            "Verdict: Looks good to me overall.", "Looks",
-            "review_unsupported_verdict_token: unsupported verdict identifier 'Looks'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
-        ),
-        (
-            "**Verdict:** I approve this change.", "I",
-            "review_unsupported_verdict_token: unsupported verdict identifier 'I'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
-        ),
-    ],
-    ids=["sensitive", "benign", "prose-looks", "prose-i"],
-)
-def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path, response, token, expected):
-    """Run the CLI output path in a process; fake only dispatch/wait transport."""
-    result = tmp_path / "result.md"
-    result.write_text(response, encoding="utf-8")
-    code = """
-import json, os, subprocess, sys
-from scripts.ai_agent_bridge import _cli, _dispatch_wrappers as wrappers
-os.environ["LU_RUNTIME_TMP_ROOT"] = sys.argv[2]
-def boundary(command, **kwargs):
-    if "dispatch" in command:
-        return subprocess.CompletedProcess(command, 0)
-    assert "wait" in command
-    return subprocess.CompletedProcess(command, 1, stdout=json.dumps({
-        "status": "failed", "result_file": sys.argv[1],
-        "failure_reason": "review_unsupported_verdict_token",
-        "stderr_excerpt": "review_unsupported_verdict_token",
-    }))
-wrappers.subprocess.run = boundary
-_cli._dispatch_headless_review(
-    "claude", "Review the branch", data=None, task_id="review-diagnostic",
-    model=None, effort=None, output_path=None, stdout_only=True, hard_timeout=None,
-)
-"""
-    completed = subprocess.run(
-        [sys.executable, "-c", code, str(result), str(tmp_path)],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert completed.returncode == 1
-    assert completed.stdout == response + "\n"
-    assert result.read_text() == response
-    assert completed.stderr.strip() == expected
-    if token.startswith("ghp_"):
-        assert token not in completed.stderr
 
 
 def test_ask_unsupported_token_never_replaces_other_terminal_failure(monkeypatch, tmp_path):

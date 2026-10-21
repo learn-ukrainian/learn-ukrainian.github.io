@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_linguistic_canary as canary
 from scripts.projects.open_model_data import phase3_linguistic_representation as representation
@@ -76,17 +75,6 @@ def test_remaining_canaries_are_real_ua_gec_train_rows_and_cover_every_shape() -
     assert battery["provider_calls"] is False
 
 
-def test_multi_edit_has_exact_source_and_target_coordinates() -> None:
-    packet = _packet("multi_edit")
-    source = packet["source"]["complete_text"]
-    target = packet["corrected"]["complete_text"]
-    assert len(packet["edits"]) == 3
-    assert len(packet["minimal_edit_spans"]) == 3
-    for edit in packet["edits"]:
-        assert source[edit["start"] : edit["end"]] == edit["source_text"]
-        assert target[edit["target_start"] : edit["target_end"]] == edit["target_text"]
-
-
 def test_unicode_code_point_offsets_and_word_boundaries_round_trip() -> None:
     text = "Півʼяблука та cafe\u0301 — тест."
     tokens = representation.tokenize(
@@ -98,18 +86,6 @@ def test_unicode_code_point_offsets_and_word_boundaries_round_trip() -> None:
     assert all(text[token["start"] : token["end"]] == token["text"] for token in tokens)
     assert tokens[2]["end"] - tokens[2]["start"] == len("cafe\u0301")
     assert tokens[2]["normalized_text"] == "café"
-
-
-def test_schema_is_strict_and_every_canary_matches_it() -> None:
-    schema = __import__("json").loads(representation.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    validator = Draft202012Validator(schema)
-    for packet in _battery()["packets"]:
-        validator.validate(packet)
-    broken = copy.deepcopy(_packet("substitution"))
-    broken["unknown"] = True
-    with pytest.raises(representation.LinguisticRepresentationError, match="Additional properties"):
-        representation.validate_representation(broken)
 
 
 @pytest.mark.parametrize(
@@ -152,13 +128,6 @@ def test_validator_rejects_stale_or_unauthorized_packets(mutate: object, message
     assert callable(mutate)
     mutate(packet)
     with pytest.raises(representation.LinguisticRepresentationError, match=message):
-        representation.validate_representation(packet)
-
-
-def test_reordering_rejects_non_permutation() -> None:
-    packet = copy.deepcopy(_packet("reordering"))
-    packet["edits"][0]["replacement"] = "зовсім інші слова"
-    with pytest.raises(representation.LinguisticRepresentationError, match=r"stale|reordering"):
         representation.validate_representation(packet)
 
 

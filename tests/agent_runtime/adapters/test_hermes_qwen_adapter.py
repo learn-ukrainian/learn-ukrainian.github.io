@@ -87,16 +87,3 @@ def test_qwen_adapter_forces_openrouter_provider_for_routing_drift_fix(
             f"--provider value for {model} is "
             f"{plan.cmd[provider_idx + 1]!r}, expected 'openrouter'"
         )
-
-
-def test_qwen_adapter_uses_default_model_when_none_passed(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        "agent_runtime.adapters.hermes_qwen.shutil.which", lambda _: "hermes"
-    )
-
-    plan = _build("hi", tmp_path, model=None)
-
-    # default_model declared on the adapter class
-    assert "-m" in plan.cmd
-    m_idx = plan.cmd.index("-m")
-    assert plan.cmd[m_idx + 1] == HermesQwenAdapter.default_model

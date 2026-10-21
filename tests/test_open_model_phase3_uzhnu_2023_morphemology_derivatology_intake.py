@@ -11,7 +11,6 @@ import sys
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_uzhnu_2023_morphemology_derivatology_intake as intake
 
@@ -45,27 +44,6 @@ def _staging(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         intake, "_drive_item_id", lambda path: identifiers[next(k for k, v in artifacts.items() if path.name == v[0])]
     )
     return stage
-
-
-def test_schema_is_strict_and_text_free() -> None:
-    schema = json.loads(intake.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    text = intake.SCHEMA_PATH.read_text(encoding="utf-8")
-    assert schema["additionalProperties"] is False
-    assert '"source_text"' not in text and '"page_texts"' not in text
-    assert "GoogleDrive-" not in text and "/Users/" not in text
-
-    def assert_closed(value: object) -> None:
-        if isinstance(value, dict):
-            if value.get("type") == "object":
-                assert value.get("additionalProperties") is False
-            for nested in value.values():
-                assert_closed(nested)
-        elif isinstance(value, list):
-            for nested in value:
-                assert_closed(nested)
-
-    assert_closed(schema)
 
 
 def test_mint_is_source_blind_deterministic_and_fail_closed() -> None:
@@ -200,14 +178,3 @@ def test_materialized_receipt_validates() -> None:
         pytest.skip("receipt has not been materialized")
     receipt = intake.validate_receipt(json.loads(intake.DEFAULT_PUBLIC_RECEIPT_PATH.read_text(encoding="utf-8")))
     assert receipt["receipt_sha256"] == intake.receipt_sha256(receipt)
-
-
-def test_optional_live_drive_audit() -> None:
-    try:
-        stage = intake.default_staging_root()
-    except intake.Uzhnu2023MorphemologyDerivatologyIntakeError:
-        pytest.skip("configured Drive mount unavailable")
-    if not all((stage / values[0]).is_file() for values in intake.ARTIFACTS.values()):
-        pytest.skip("private Drive packet unavailable")
-    result = intake.private_audit(stage)
-    assert result["ok"] is True

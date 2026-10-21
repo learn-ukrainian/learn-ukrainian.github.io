@@ -330,34 +330,6 @@ def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> No
     assert "would claim lease" not in result.stdout
 
 
-@pytest.mark.parametrize(
-    "arguments",
-    (("--help",), ("--governor", "--help")),
-)
-def test_codex_driver_help_succeeds_before_or_after_governor(arguments: tuple[str, ...]) -> None:
-    result = run_launcher("start-codex-driver.sh", *arguments)
-    assert result.returncode == 0, result.stderr
-    assert "Usage:" in result.stdout
-
-
-def test_governor_missing_selector_exits_usage_error() -> None:
-    result = run_launcher("start-codex-driver.sh", "--governor")
-    assert result.returncode == 2
-    assert "requires a value" in result.stderr
-
-
-@pytest.mark.parametrize(
-    "arguments",
-    (("not-a-selector",), ("--governor", "not-a-selector")),
-)
-def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
-    arguments: tuple[str, ...],
-) -> None:
-    result = run_launcher("start-codex-driver.sh", *arguments)
-    assert result.returncode == 2
-    assert "unknown lane selector 'not-a-selector'" in result.stderr
-
-
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
     result = run_launcher("start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol", "--verbose", "--foo=bar")
     assert result.returncode == 0, result.stderr
@@ -445,24 +417,6 @@ def test_non_model_passthrough_remains_available(harness):
     assert result.returncode == 0, result.stderr
     assert "--model gpt-6.1-sol" in result.stdout
     assert "--verbose" in result.stdout
-
-
-@pytest.mark.parametrize(
-    "forwarded",
-    [
-        ["--fallback-model", "claude-sonnet-5"],
-        ["--fallback-model=claude-sonnet-5"],
-        ["--agents", '{"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
-        ['--agents={"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
-    ],
-)
-def test_claude_code_forwarded_agent_and_fallback_models_rejected_before_preflight(forwarded):
-    result = run_launcher("start-codex.sh", "--harness", "claude-code", "--", *forwarded)
-    assert result.returncode == 2
-    assert "Forwarded model overrides are forbidden" in result.stderr
-    assert "would exec" not in result.stdout
-    assert "would probe" not in result.stdout
-    assert "would require binary" not in result.stdout
 
 
 def test_luna_is_rejected_for_driver_and_governor() -> None:

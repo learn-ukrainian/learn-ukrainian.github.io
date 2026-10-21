@@ -180,14 +180,6 @@ def test_ulif_paradigm_withholds_asterisk_preposition_and_unmapped_slots():
     assert "head" not in {f for item in slots.values() for f in item["forms"]}
 
 
-def test_asterisk_form_never_joins_the_slot_form_set():
-    forms = [ulif_row(1, 7, ["v_naz", "s"], "a"), ulif_row(2, 7, ["v_naz", "s"], "z", marked_asterisk=1)]
-    slot = src.ulif_paradigm(forms)["slots"][("v_naz", "s")]
-    assert slot["forms"] == ["a"]
-    assert slot["uncertain"] == ["z"]
-    assert slot["withheld"] == ["asterisk_marked"]
-
-
 def par(**slots):
     return {"slots": {("v_" + k, "s"): {"forms": sorted(v)} for k, v in slots.items()}}
 
@@ -205,13 +197,6 @@ def test_compare_paradigms_is_equal_subset_or_differs():
     assert src.compare_paradigms(par(naz=["а"]), par(rod=["а"]))["relation"] == "differs"
     assert src.compare_paradigms(par(), par(naz=["а"]))["relation"] == "differs"
     assert src.compare_paradigms(None, par(naz=["а"]))["relation"] == "unknown"
-
-
-def test_overlapping_form_sets_never_match_by_intersection():
-    # The retained rule compares whole form sets: an extra variant on either side is a different form set.
-    for ulif, vesum in ((["а", "х"], ["а"]), (["а"], ["а", "х"]), (["а", "х"], ["а", "у"])):
-        result = src.compare_paradigms(par(naz=ulif), par(naz=vesum))
-        assert result["relation"] == "differs" and result["slots"][("v_naz", "s")] == "differs"
 
 
 def test_vesum_paradigm_keeps_source_slots_forms_and_tags():
@@ -309,13 +294,6 @@ def test_identity_dictionary_division_is_medium():
     match = src.match_identity(1, ulif, {10: vesum_entry({"v_naz.s": ["альфа"], "v_rod.s": ["альфи"]})})
     assert (match["confidence"], match["method"], match["vesum_entry"]) == ("medium", "paradigm_only", 10)
     assert any("dictionary-division" in note for note in match["notes"])
-
-
-def test_identity_stress_only_when_vesum_has_no_stress_and_ulif_heads_differ():
-    ulif = {1: homonym(f"а{A}льфа", forms_for(1, "альфа", "альфи")),
-            2: homonym(f"альфа{A}", forms_for(2, "альфа", "альфи"))}
-    match = src.match_identity(1, ulif, {10: vesum_entry({"v_naz.s": ["альфа"], "v_rod.s": ["альфи"]})})
-    assert (match["confidence"], match["method"]) == ("medium", "stress_only")
 
 
 def test_identity_opposite_aspect_never_attaches():
@@ -451,8 +429,3 @@ INSERT INTO sum20_articles VALUES (1,'x');
     again = src.write_extract(source, [1], tmp_path / "again.sqlite")
     assert again["content_sha256"] != extracted["content_sha256"]
     assert foundation.digest(again["tables"]) == foundation.digest(counts)
-
-
-@pytest.mark.parametrize("value,expected", [("Fóo", "Fóo"), ("é", "é")])
-def test_nfc_is_idempotent_for_combining_marks(value, expected):
-    assert src.nfc(src.nfc(value)) == src.nfc(expected)

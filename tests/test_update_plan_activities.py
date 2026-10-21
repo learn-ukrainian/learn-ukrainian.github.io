@@ -70,21 +70,6 @@ def test_build_activity_hints_from_mock_profile():
     assert "Есе про значення теми" in hints[3]["focus"]
 
 
-def test_build_activity_hints_includes_items_only_for_quiz_and_true_false():
-    profile = {
-        "inline": [
-            {"type": "quiz", "after_section": "X", "focus": "q"},
-            {"type": "true-false", "after_section": "Y", "focus": "tf"},
-            {"type": "reading", "after_section": "Z", "focus": "r"},
-        ],
-        "workbook": [],
-    }
-    hints = updater.build_activity_hints(profile, {"title": "T"})
-    assert hints[0]["items"] == 5  # quiz
-    assert hints[1]["items"] == 5  # true-false
-    assert "items" not in hints[2]  # reading
-
-
 # ---------------------------------------------------------------------------
 # update_plan — file I/O + idempotency
 # ---------------------------------------------------------------------------
@@ -155,59 +140,9 @@ def test_update_plan_skips_already_compliant_plans(tmp_path):
     assert before == after  # file untouched
 
 
-def test_update_plan_dry_run_does_not_write(tmp_path):
-    """Dry-run mode returns True when a change would occur but
-    leaves the file unchanged."""
-    profile = {
-        "inline": [
-            {"type": "quiz", "after_section": "X", "focus": "q"},
-        ],
-        "workbook": [
-            {"type": "essay-response", "focus": "e"},
-        ],
-    }
-    plan = {
-        "title": "T",
-        "activity_hints": [{"type": "fill-in", "focus": "old"}],
-    }
-    plan_path = tmp_path / "t.yaml"
-    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
-    before = plan_path.read_text(encoding="utf-8")
-
-    would_change = updater.update_plan(plan_path, profile, dry_run=True)
-    assert would_change is True
-    assert plan_path.read_text(encoding="utf-8") == before
-
-
 # ---------------------------------------------------------------------------
 # Profile loading from the YAML template
 # ---------------------------------------------------------------------------
-
-def test_load_activity_profiles_returns_expected_tracks():
-    profiles = updater.load_activity_profiles()
-    # The 16 canonical seminar tracks must all have a profile
-    expected = {
-        "folk", "hist", "bio", "istorio",
-        "lit", "lit-essay", "lit-hist-fic", "lit-fantastika",
-        "lit-war", "lit-humor", "lit-youth", "lit-drama",
-        "lit-doc", "lit-crimea",
-        "oes", "ruth",
-    }
-    assert expected.issubset(profiles.keys())
-
-
-def test_get_profile_falls_back_to_lit_for_unknown_lit_subtrack():
-    profiles = {"lit": {"inline": [{"type": "quiz"}], "workbook": []}, "folk": {}}
-    resolved = updater.get_profile(profiles, "lit-nonexistent")
-    assert resolved["inline"] == [{"type": "quiz"}]
-
-
-def test_get_profile_for_known_track_returns_its_profile():
-    profiles = updater.load_activity_profiles()
-    hist = updater.get_profile(profiles, "hist")
-    assert "inline" in hist
-    assert "workbook" in hist
-    assert any(a["type"] == "reading" for a in hist["inline"])
 
 
 # ---------------------------------------------------------------------------

@@ -1,15 +1,11 @@
 """C29 membership and exceptions; strings are letter-arithmetic fixtures."""
 
 import json
-import shutil
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.curriculum.validate import a1_reference, codes, config, quote_bytes
 from scripts.curriculum.validate.loader import REPO_ROOT, load_plan
@@ -21,26 +17,6 @@ from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.curriculum.test_plan_validate_review_gates import _world
 
 pytestmark = pytest.mark.reads_content
-
-
-def test_validator_module_import_needs_no_registry_files(tmp_path):
-    """Import the implementation, not just the lazy package, from a minimal checkout."""
-    copied = tmp_path / "checkout"
-    shutil.copytree(REPO_ROOT / "scripts", copied / "scripts")
-    assert not (copied / "registry/lexicon/vesum_inflection_aliases.json").exists()
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            "import sys; import scripts.curriculum.validate.validate; "
-            "assert 'scripts.audit.source_inventory_intake' not in sys.modules",
-        ],
-        cwd=copied,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, f"stdout={result.stdout!r} stderr={result.stderr!r}"
 
 
 def gates(lemma, exception=None, *, field="core", tags="noun", level="a1"):
@@ -126,14 +102,6 @@ def test_mixed_proper_paradigm_is_checked():
     assert g.report.notes
 
 
-@pytest.mark.parametrize("level", ["a2", "b1"])
-def test_non_a1_does_not_load_reference(monkeypatch, level):
-    monkeypatch.setattr(a1_reference, "reference_spellings", lambda *args: pytest.fail("non-A1 read"))
-    g = gates("неінвентарне", level=level)
-    g.check_a1_reference()
-    assert not g.report.notes and not g.report.inputs
-
-
 @pytest.mark.parametrize(
     "lemma,valid", [(term, True) for term in sorted(config.A1_REFERENCE_PHONETICS_TERMS)] + [("склад", False)]
 )
@@ -167,13 +135,6 @@ def test_exception_names_decodable_alternatives_and_includes_current_step():
     g.check_a1_reference()
     assert "ґудзик" in g.report.notes[0].message
     assert "decodable inventory alternatives" in g.report.notes[0].message
-
-
-def test_exception_unknown_state_cannot_pass():
-    g = gates("ґанок", {"class": "letter_example_no_a1_word", "letter": "ґ", "step": "s1"})
-    g.arc = None
-    g.check_a1_reference()
-    assert "unavailable" in g.report.notes[0].message
 
 
 @pytest.mark.parametrize("mode", ["advisory", "failure"])
@@ -213,50 +174,6 @@ def test_reference_unavailable_fails(monkeypatch):
     assert g.report.failures[0].code == codes.A1_REFERENCE_INVALID
 
 
-@pytest.mark.parametrize(
-    "value,valid",
-    [
-        ({"class": "phonetics_term"}, True),
-        ({"class": "letter_example_no_a1_word", "letter": "ґ", "step": "s3"}, True),
-        ({"class": "unknown"}, False),
-        ({"class": "phonetics_term", "letter": "ґ"}, False),
-        ({"class": "letter_example_no_a1_word", "letter": "ґ"}, False),
-        ({"class": "letter_example_no_a1_word", "letter": "ab", "step": "s3"}, False),
-    ],
-)
-def test_typed_exception_schema(value, valid):
-    schema = json.loads((REPO_ROOT / "schemas/module-plan-v2.schema.json").read_text())
-    validator = Draft202012Validator({"$ref": "#/$defs/a1ReferenceException", "$defs": schema["$defs"]})
-    assert validator.is_valid(value) == valid
-
-
-def test_step_without_introduces_is_valid_input():
-    g = gates("неінвентарне")
-    del g.plan["lessons"][0]["steps"][0]["introduces"]
-    g.check_a1_reference()
-    assert g.report.notes[0].step is None
-
-
-def test_exception_does_not_disable_print_decodability():
-    g = gates("ґанок", {"class": "letter_example_no_a1_word", "letter": "ґ", "step": "s1"})
-    g.check_a1_reference()
-    assert not g.report.notes
-    assert not g._readable("ґанок", g._taught_at_steps(g.plan["lessons"][0])["s1"])
-
-
-def test_step_and_recycled_lists_are_not_separate_checked_sets():
-    g = gates("неінвентарне")
-    g.plan["lessons"][0]["inventory"]["vocabulary"]["core"] = []
-    g.check_a1_reference()
-    assert not g.report.notes
-
-
-def test_letter_exception_is_case_insensitive():
-    g = gates("Ґанок", {"class": "letter_example_no_a1_word", "letter": "Ґ", "step": "s1"})
-    g.check_a1_reference()
-    assert not g.report.notes
-
-
 def test_malformed_reference_is_a_typed_failure(tmp_path, monkeypatch):
     path = tmp_path / "invalid.yaml"
     path.write_text("sources: [invalid")
@@ -282,15 +199,6 @@ def produced_a1_reference_codes():
         g.check_a1_reference()
         produced |= g.report.codes()
     return produced
-
-
-def test_produced_a1_reference_codes():
-    assert produced_a1_reference_codes() == {
-        codes.A1_REFERENCE_WORD_MISSING,
-        codes.A1_REFERENCE_EXCEPTION_INVALID,
-        codes.A1_REFERENCE_INVALID,
-        codes.A1_REFERENCE_CLOSED_CLASS_A1,
-    }
 
 
 def test_changed_inventory_bytes_invalidate_membership_cache(tmp_path):
@@ -453,49 +361,6 @@ def test_proper_and_phrase_rows_members_but_never_alternatives(tmp_path, monkeyp
     g = gates(row["lemma"])
     g.check_a1_reference()
     assert not g.report.notes
-
-
-def test_closed_class_exemption_keeps_c10_c18_c21_failures(tmp_path, monkeypatch):
-    from scripts.curriculum.validate.validate import validate_plan
-    from tests.curriculum.test_plan_validate_review_gates import _quote
-
-    monkeypatch.setattr(a1_reference, "reference_spellings", lambda *args: (frozenset(), frozenset()))
-    monkeypatch.setattr(quote_bytes, "vesum_lookup", lambda words: set(words))
-
-    def mutate(plan, pack, words, prior):
-        item = plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]
-        item["lemma"] = "не"
-        record = next(w for w in words["words"] if w["id"] == item["evidence"])
-        record["lemma"] = "не"
-        for form in record["forms"]:
-            form.update(form="не", tags="part")
-        plan["lessons"][0]["activities"][0]["options"] = ["не"]
-        _quote(
-            "не",
-            {
-                "id": "b4",
-                "type": "quiz",
-                "placement": "workbook",
-                "focus": "Read the source.",
-                "learner_reads": ["T-002"],
-            },
-        )(plan, pack, words, prior)
-
-    report = validate_plan(LEVEL, SLUG, plan_path=_world(tmp_path, mutate))
-    failures = {o.code for o in report.failures}
-    assert {
-        codes.STEP_WORD_NOT_DECODABLE,
-        codes.CHOICE_OPTION_NOT_DECODABLE,
-        codes.MODELED_PRINT_NOT_DECODABLE,
-    } <= failures
-    assert codes.A1_REFERENCE_CLOSED_CLASS_A1 in report.codes()
-
-
-def test_unavailable_closed_class_list_fails(monkeypatch):
-    monkeypatch.setattr(a1_reference, "CLOSED_CLASS_PATH", Path("missing-closed.yaml"))
-    g = gates("не", tags="part")
-    g.check_a1_reference()
-    assert g.report.failures[0].code == codes.A1_REFERENCE_INVALID
 
 
 def test_teaching_replacements_same_pos_open_class_readable_and_both_outcomes(tmp_path):

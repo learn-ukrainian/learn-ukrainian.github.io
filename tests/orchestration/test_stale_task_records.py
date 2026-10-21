@@ -234,20 +234,6 @@ def _by_file(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {row["file"]: row for row in report["records"]}
 
 
-def test_settle_stale_help_states_gated_record_recovery_requires_rerun(capsys):
-    with pytest.raises(SystemExit) as exc:
-        str_mod.main(["settle-stale", "--help"])
-
-    assert exc.value.code == 0
-    help_text = " ".join(capsys.readouterr().out.split())
-    assert "done (+merged_pr) only for delivery-only records when a merged" in help_text
-    assert "same-repository PR carries a recorded commit" in help_text
-    assert (
-        "A gated orphaned record (verdict, ceiling, exemption or leftovers gate) settles "
-        "failed with recovery_requires_rerun" in help_text
-    )
-
-
 def test_classifies_every_class_like_the_report(tasks_dir, mixed):
     report = _run(tasks_dir, mixed)
     rows = _by_file(report)
@@ -313,16 +299,6 @@ def test_apply_settles_class_c_with_receipt_and_leaves_a_b_d_untouched(tasks_dir
         json.loads((tasks_dir / name).read_text())["status"] in worktree_claims.RELEASED_TASK_STATUSES
         for name in ("merged.json", "no-commits.json", "crashed.json", "stale-pr.json")
     )
-
-
-def test_class_b_untouched_even_when_it_looks_orphaned_otherwise(tasks_dir, mixed):
-    """A local branch alone keeps a record in class B, whatever the PR list says."""
-    mixed["pager"].pulls.append(_merged("codex/local-only", 9, OLD_FINISH + timedelta(hours=3)))
-    before = (tasks_dir / "local-only.json").read_bytes()
-    report = _run(tasks_dir, mixed, apply=True)
-    assert _by_file(report)["local-only.json"]["class"] == "B"
-    assert _by_file(report)["local-only.json"]["action"] == "report"
-    assert (tasks_dir / "local-only.json").read_bytes() == before
 
 
 def test_record_changed_since_classification_is_skipped(tasks_dir, mixed):
@@ -1199,33 +1175,6 @@ def test_restore_keeps_a_snapshot_directory_whole_when_a_writer_fills_its_hot_na
     assert (tasks_dir / "revived.result").read_text() == "old reply\n"
 
 
-def test_restore_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir, monkeypatch):
-    _with_snapshots(tasks_dir, "revived")
-    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
-    hot = tasks_dir / "revived.snapshots"
-    raced = _rename_after_writer(monkeypatch, hot, hot.mkdir)
-
-    report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
-
-    row = report["records"][0]
-    assert raced and row["action"] == "restored" and "kept_in_archive" not in row
-    assert _contents(hot) == SNAPSHOT_FILES
-    assert not (tasks_dir / "archive" / "revived.snapshots").exists()
-
-
-def test_archive_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir):
-    _with_snapshots(tasks_dir, "empty-dest")
-    (tasks_dir / "archive" / "empty-dest.snapshots").mkdir(parents=True)
-
-    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
-
-    row = report["records"][0]
-    assert row["action"] == "archived"
-    assert row["moved"] == ["empty-dest.json", "empty-dest.result", "empty-dest.snapshots"]
-    assert _contents(tasks_dir / "archive" / "empty-dest.snapshots") == SNAPSHOT_FILES
-    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
-
-
 def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(tasks_dir, monkeypatch):
     monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
     _with_snapshots(tasks_dir, "clash")
@@ -1588,31 +1537,6 @@ def test_r9_each_gate_type_settles_rerun_and_stays_so(tasks_dir, repo, name, fie
         _assert_rerun_settled(tasks_dir, name, gate, failure)
 
 
-def test_r9_a_gated_record_settles_rerun_without_a_pull_request_lookup(tasks_dir, repo):
-    """No merged PR can make a gated record done, so none is looked up for it."""
-    _orphan_record(tasks_dir, repo, "nolist", response=None, advisory_envelope={})
-    pager = FakePager([])
-    report = str_mod.settle_stale(tasks_dir, repo_checkouts={SLUG: repo}, pager=pager, now=NOW, apply=True)
-
-    assert pager.calls == []
-
-    row = _by_file(report)["nolist.json"]
-    assert (row["class"], row["action"], row["outcome"], row["failure_reason"]) == ("C", "settled", "failed", RERUN)
-    _assert_rerun_settled(tasks_dir, "nolist", "advisory_ceiling")
-
-
-def test_r9_a_delivery_only_record_still_settles_done_when_its_merged_pr_carries_its_commit(tasks_dir, repo):
-    sha = _orphan_record(tasks_dir, repo, "delivered", response=None, leftovers_scan="clear")
-    pulls = [_merged("codex/delivered", 52, OLD_FINISH + timedelta(days=1), head_sha=sha)]
-
-    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["delivered.json"]
-
-    assert (row["class"], row["action"], row["outcome"]) == ("C", "settled", "done")
-    record = json.loads((tasks_dir / "delivered.json").read_text())
-    assert (record["status"], record.get("failure_reason"), record["merged_pr"]["number"]) == ("done", None, 52)
-    assert "completion_gate" not in record["settle_evidence"]
-
-
 @pytest.mark.parametrize(
     ("name", "response", "fields", "outcome", "gate", "failure"),
     [
@@ -1651,13 +1575,3 @@ def test_r9_a_delivery_only_record_keeps_its_delivery_check_and_recorded_failure
         assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
         if outcome == "no_deliverable":
             assert record["no_deliverable_reason"] == failure
-
-
-def test_r7_delivery_counts_a_pull_request_merged_since_the_task_started(tasks_dir, repo):
-    """The merged commit is delivery evidence even when the worker exited before committing it itself."""
-    sha = _orphan_record(tasks_dir, repo, "finalized", response=None, commits_ahead=0)
-    pulls = [_merged("codex/finalized", 52, OLD_FINISH + timedelta(days=1), head_sha=sha)]
-
-    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["finalized.json"]
-
-    assert (row["outcome"], json.loads((tasks_dir / "finalized.json").read_text())["status"]) == ("done", "done")

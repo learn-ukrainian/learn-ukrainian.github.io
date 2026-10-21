@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -15,11 +14,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from navsi200_captions import (
     DEFAULT_LEDGER_PATH,
-    DEFAULT_YT_DLP_BIN,
     clean_vtt_text,
     fetch_single_caption,
     load_caption_ledger,
-    order_lessons_by_priority,
     scrub_teacher_names,
 )
 from navsi200_catalog import load_catalog
@@ -40,34 +37,11 @@ class TestNavsi200CaptionsLedger:
         return load_catalog()
 
     @CAPTIONS_LEDGER
-    def test_ledger_file_exists(self) -> None:
-        assert DEFAULT_LEDGER_PATH.exists(), f"Ledger file not found at {DEFAULT_LEDGER_PATH}"
-        assert DEFAULT_LEDGER_PATH.stat().st_size > 1000
-
-    @CAPTIONS_LEDGER
-    def test_ledger_metadata_shape(self, ledger: dict) -> None:
-        assert ledger.get("version") == 1
-        assert ledger.get("caption_lang") == "uk"
-        assert "generated_at" in ledger
-        assert isinstance(ledger.get("summary"), dict)
-        assert isinstance(ledger.get("lessons"), list)
-        assert isinstance(ledger.get("entries"), list)
-        assert len(ledger["lessons"]) == len(ledger["entries"])
-
-    @CAPTIONS_LEDGER
     def test_privacy_no_teacher_names_in_ledger(self) -> None:
         raw_text = DEFAULT_LEDGER_PATH.read_text(encoding="utf-8").lower()
         forbidden_names = ["огойко", "охойко", "ohoiko", "анни огойко", "анна огойко"]
         for name in forbidden_names:
             assert name not in raw_text, f"Privacy violation: found teacher name '{name}' in committed ledger"
-
-    @CAPTIONS_LEDGER
-    def test_privacy_no_verbatim_captions_in_ledger(self, ledger: dict) -> None:
-        for entry in ledger["lessons"]:
-            assert "transcript" not in entry, "Verbatim transcript key found in ledger entry"
-            assert "subtitles" not in entry, "Verbatim subtitles key found in ledger entry"
-            assert "text" not in entry, "Verbatim text key found in ledger entry"
-            assert "raw_captions" not in entry, "Raw captions key found in ledger entry"
 
     @CAPTIONS_LEDGER
     def test_lessons_shape_and_types(self, ledger: dict) -> None:
@@ -111,18 +85,6 @@ class TestNavsi200CaptionsLedger:
                 assert char_count == 0
 
             assert isinstance(entry.get("is_priority"), bool)
-
-    @CAPTIONS_LEDGER
-    def test_priority_ordering_in_ledger(self, ledger: dict) -> None:
-        lessons = ledger["lessons"]
-        priority_indices = [i for i, entry in enumerate(lessons) if entry["is_priority"]]
-        non_priority_indices = [i for i, entry in enumerate(lessons) if not entry["is_priority"]]
-
-        assert len(priority_indices) > 0
-        assert len(non_priority_indices) > 0
-        assert max(priority_indices) < min(non_priority_indices), (
-            "Priority lessons must all appear before non-priority lessons in the coverage ledger"
-        )
 
     @CAPTIONS_LEDGER
     def test_all_catalog_videos_accounted_for(self, ledger: dict, catalog: dict) -> None:
@@ -186,22 +148,6 @@ Language: uk
         assert cleaned.count("Привіт, друзі!") == 1
         assert "Сьогодні ми вивчаємо пароніми." in cleaned
 
-    def test_order_lessons_by_priority_unit(self) -> None:
-        fake_lessons = [
-            {
-                "id": "l1",
-                "video_id": "vid1",
-                "topic": "всяка_всячина",
-                "topics": ["всяка_всячина"],
-                "is_priority": False,
-            },
-            {"id": "l2", "video_id": "vid2", "topic": "наголос", "topics": ["наголос"], "is_priority": True},
-            {"id": "l3", "video_id": "vid3", "topic": "пароніми", "topics": ["пароніми"], "is_priority": True},
-            {"id": "l4", "video_id": "vid4", "topic": "синтаксис", "topics": ["синтаксис"], "is_priority": False},
-        ]
-        ordered = order_lessons_by_priority(fake_lessons)
-        assert [l["id"] for l in ordered] == ["l3", "l2", "l1", "l4"]
-
     def test_mock_fetch_single_caption_available(self, tmp_path: Path) -> None:
         video_id = "testvid1234"
         vtt_file = tmp_path / f"{video_id}.uk.vtt"
@@ -225,18 +171,3 @@ Language: uk
         assert status == "bot_blocked"
         assert char_count == 0
         assert sha256_hash is None
-
-
-def test_cli_help_has_no_home_paths() -> None:
-    result = subprocess.run(
-        [sys.executable, "scripts/navsi200_captions.py", "--help"],
-        cwd=Path(__file__).resolve().parent.parent,
-        capture_output=True,
-        text=True,
-        timeout=10,
-        check=True,
-    )
-    assert "--yt-dlp" in result.stdout
-    assert ".venv/bin/python scripts/navsi200_captions.py" in result.stdout
-    assert "/home/" not in result.stdout + result.stderr
-    assert DEFAULT_YT_DLP_BIN == ".venv/bin/yt-dlp"

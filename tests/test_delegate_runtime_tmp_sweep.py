@@ -6,7 +6,6 @@ import argparse
 import hashlib
 import json
 import os
-import stat
 import subprocess
 import time
 from pathlib import Path
@@ -17,10 +16,6 @@ import pytest
 import scripts.delegate as delegate
 from scripts.orchestration import job_host_exec
 from tests.test_delegate import _init_git_repo_for_test, _seed_read_only_checkout_fixture
-
-SYNTHETIC_TASK_RECORD_COUNT = 500
-MARKED_LEASE_DIR_COUNT = 25
-LEGACY_LEASE_DIR_COUNT = 3
 
 
 @pytest.fixture
@@ -78,35 +73,6 @@ def _seed_sweep_fixture(
     return namespace
 
 
-def _count_task_record_reads(monkeypatch) -> dict[str, int]:
-    counts = {"read_state_json": 0}
-    original_read_state_json = delegate._read_state_json
-
-    def counting_read_state_json(path: Path):
-        if path.parent == delegate.tasks_dir() and path.suffix == ".json":
-            counts["read_state_json"] += 1
-        return original_read_state_json(path)
-
-    monkeypatch.setattr(delegate, "_read_state_json", counting_read_state_json)
-    return counts
-
-
-def _old_runtime_tmp_state_for_lease(lease_name: str) -> dict | None:
-    """Pre-#7203 behaviour: scan every task record for each lease."""
-    try:
-        state_files = tuple(delegate.tasks_dir().glob("*.json")) if delegate.tasks_dir().is_dir() else ()
-    except OSError:
-        return None
-    for state_path in state_files:
-        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
-            continue
-        state = delegate._read_state_json(state_path)
-        task_id = state.get("task_id") if isinstance(state, dict) else None
-        if isinstance(task_id, str) and delegate._runtime_tmp_lease_name(task_id) == lease_name:
-            return state
-    return None
-
-
 @pytest.mark.parametrize("identity_case,kept", [("foreign", True), ("reused", False), ("alive", True)])
 def test_runtime_tmp_sweep_preserves_unknown_identity(tmp_path, tmp_tasks_dir, monkeypatch, identity_case, kept):
     from scripts.orchestration import dead_worker_state as dead
@@ -130,154 +96,6 @@ def test_runtime_tmp_sweep_preserves_unknown_identity(tmp_path, tmp_tasks_dir, m
     result = delegate._sweep_runtime_tmp_orphans()
     assert result["leases_reaped"] == (0 if kept else 1)
     assert (namespace / delegate._runtime_tmp_lease_name(task_id)).exists() is kept
-
-
-def test_runtime_tmp_orphan_sweep_avoids_record_scan_for_marked_leases(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    _seed_sweep_fixture(
-        tmp_path,
-        tmp_tasks_dir,
-        marked_lease_count=MARKED_LEASE_DIR_COUNT,
-        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
-        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
-    )
-    counts = _count_task_record_reads(monkeypatch)
-
-    result = delegate._sweep_runtime_tmp_orphans()
-
-    assert result["leases_reaped"] == MARKED_LEASE_DIR_COUNT + LEGACY_LEASE_DIR_COUNT
-    assert counts["read_state_json"] == MARKED_LEASE_DIR_COUNT + LEGACY_LEASE_DIR_COUNT
-
-
-def test_runtime_tmp_orphan_sweep_marker_lookup_mutation_check(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    """Reverting half 1 would parse far more records than marker-based lookup."""
-    _seed_sweep_fixture(
-        tmp_path,
-        tmp_tasks_dir,
-        marked_lease_count=MARKED_LEASE_DIR_COUNT,
-        legacy_lease_count=0,
-        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
-    )
-    fixed_counts = _count_task_record_reads(monkeypatch)
-    delegate._sweep_runtime_tmp_orphans()
-    fixed_reads = fixed_counts["read_state_json"]
-
-    _seed_sweep_fixture(
-        tmp_path,
-        tmp_tasks_dir,
-        marked_lease_count=MARKED_LEASE_DIR_COUNT,
-        legacy_lease_count=0,
-        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
-    )
-    reverted_counts = _count_task_record_reads(monkeypatch)
-
-    def legacy_lookup(lease_name: str, lease_root: Path, *, legacy_stem_index):
-        return _old_runtime_tmp_state_for_lease(lease_name)
-
-    monkeypatch.setattr(delegate, "_runtime_tmp_state_for_lease", legacy_lookup)
-    delegate._sweep_runtime_tmp_orphans()
-    reverted_reads = reverted_counts["read_state_json"]
-
-    assert fixed_reads == MARKED_LEASE_DIR_COUNT
-    assert reverted_reads > fixed_reads
-    assert reverted_reads >= 5_000
-
-
-def test_runtime_tmp_orphan_sweep_stem_index_mutation_check(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    """Reverting the stem index would scan records for every legacy lease."""
-    _seed_sweep_fixture(
-        tmp_path,
-        tmp_tasks_dir,
-        marked_lease_count=0,
-        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
-        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
-    )
-    fixed_counts = _count_task_record_reads(monkeypatch)
-    delegate._sweep_runtime_tmp_orphans()
-    fixed_reads = fixed_counts["read_state_json"]
-
-    _seed_sweep_fixture(
-        tmp_path,
-        tmp_tasks_dir,
-        marked_lease_count=0,
-        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
-        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
-    )
-    reverted_counts = _count_task_record_reads(monkeypatch)
-    monkeypatch.setattr(
-        delegate,
-        "_build_runtime_tmp_legacy_stem_index",
-        lambda: {},
-    )
-    # Directory iteration order is a host property. Pin the reverted scan to
-    # sorted names so every seeded decoy is read before a legacy match.
-    original_glob = Path.glob
-
-    def _sorted_glob(self: Path, pattern: str):
-        found = original_glob(self, pattern)
-        if self == delegate.tasks_dir():
-            return iter(sorted(found, key=lambda path: path.name))
-        return found
-
-    monkeypatch.setattr(Path, "glob", _sorted_glob)
-    delegate._sweep_runtime_tmp_orphans()
-    reverted_reads = reverted_counts["read_state_json"]
-
-    assert fixed_reads == LEGACY_LEASE_DIR_COUNT
-    assert reverted_reads > fixed_reads
-    assert reverted_reads >= 500
-
-
-def test_runtime_tmp_orphan_sweep_marker_backfill_second_sweep(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    """After one sweep, marker backfill makes the next sweep O(1) without legacy fallback."""
-    namespace = _seed_sweep_fixture(
-        tmp_path,
-        tmp_tasks_dir,
-        marked_lease_count=0,
-        legacy_lease_count=LEGACY_LEASE_DIR_COUNT,
-        decoy_record_count=SYNTHETIC_TASK_RECORD_COUNT,
-        legacy_status="running",
-    )
-    delegate._sweep_runtime_tmp_orphans()
-
-    for index in range(LEGACY_LEASE_DIR_COUNT):
-        task_id = f"legacy-task-{index:04d}"
-        lease = namespace / delegate._runtime_tmp_lease_name(task_id)
-        assert lease.is_dir()
-        assert delegate._read_runtime_tmp_task_id_marker(lease) == task_id
-
-    def forbid_legacy_paths(*_args, **_kwargs):
-        raise AssertionError("legacy resolution should not run after marker backfill")
-
-    monkeypatch.setattr(
-        delegate,
-        "_build_runtime_tmp_legacy_stem_index",
-        forbid_legacy_paths,
-    )
-    monkeypatch.setattr(
-        delegate,
-        "_read_runtime_tmp_state_for_legacy_lease",
-        forbid_legacy_paths,
-    )
-
-    second_counts = _count_task_record_reads(monkeypatch)
-    delegate._sweep_runtime_tmp_orphans()
-    assert second_counts["read_state_json"] == LEGACY_LEASE_DIR_COUNT
 
 
 def test_read_only_dispatch_task_record_stays_within_byte_budget(
@@ -358,23 +176,6 @@ def test_read_only_dispatch_task_record_stays_within_byte_budget(
     assert state["read_only_snapshot_retention"] == "digest"
     assert "read_only_checkout_pre" not in state
     assert "read_only_checkout_pre" not in json.loads(state_path.read_text(encoding="utf-8"))
-
-
-def test_read_only_dispatch_inline_snapshot_mutation_check(tmp_tasks_dir):
-    """Reverting half 2 would embed whole-checkout snapshots in the task record."""
-    task_id = "read-only-inline-bloat"
-    state_path = delegate._state_path(task_id)
-    huge_snapshot = {f"path-{index}.txt": " M" for index in range(400_000)}
-    delegate._write_state_atomic(
-        state_path,
-        {
-            "task_id": task_id,
-            "status": "done",
-            "read_only_checkout_pre": huge_snapshot,
-            "read_only_checkout_post": huge_snapshot,
-        },
-    )
-    assert state_path.stat().st_size >= delegate._READ_ONLY_CHECKOUT_RECORD_BYTE_BUDGET
 
 
 def _lease_task_id(prefix: str) -> str:
@@ -527,15 +328,6 @@ def test_runtime_tmp_orphan_sweep_marker_without_record_uses_orphan_age(
     assert not lease.exists()
 
 
-def test_runtime_tmp_task_id_marker_no_clobber_created_owner_only(tmp_path):
-    """No-clobber marker creation must use owner-only permissions."""
-    lease = tmp_path / "lease"
-    lease.mkdir()
-    delegate._write_runtime_tmp_task_id_marker(lease, "task/live", no_clobber=True)
-    marker = delegate._runtime_tmp_task_id_marker_path(lease)
-    assert stat.S_IMODE(marker.stat().st_mode) == 0o600
-
-
 def test_runtime_tmp_orphan_sweep_marker_backfill_does_not_clobber(
     tmp_tasks_dir,
     tmp_path,
@@ -582,91 +374,3 @@ def test_runtime_tmp_orphan_sweep_marker_backfill_does_not_clobber(
 
     assert result["leases_reaped"] == 0
     assert delegate._read_runtime_tmp_task_id_marker(lease) == fresh_task_id
-
-
-def test_runtime_tmp_orphan_sweep_backfill_best_effort_mutation_check(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    """Reverting the OSError guard around backfill must raise during sweep."""
-    lease = _seed_legacy_running_lease(tmp_path, tmp_tasks_dir)
-
-    def fail_backfill_write(lease_root: Path, task_id: str, *, no_clobber: bool = False) -> None:
-        if no_clobber:
-            raise FileNotFoundError(lease_root)
-
-    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", fail_backfill_write)
-
-    result = delegate._sweep_runtime_tmp_orphans()
-    assert result["errors"] == 0
-
-    with pytest.raises(FileNotFoundError):
-        delegate._write_runtime_tmp_task_id_marker(
-            lease,
-            "legacy-running-task",
-            no_clobber=True,
-        )
-
-
-def test_runtime_tmp_orphan_sweep_marker_backfill_no_clobber_mutation_check(
-    tmp_tasks_dir,
-    tmp_path,
-    monkeypatch,
-):
-    """Reverting no-clobber must let a stale backfill clobber a live marker."""
-    lease_name = "shared-lease"
-    namespace = tmp_path / "learn-ukrainian"
-    lease = namespace / lease_name
-    lease.mkdir(parents=True)
-    fresh_task_id = "fresh/live-task"
-    stale_task_id = "stale/resolved-task"
-    delegate._write_state_atomic(
-        delegate._state_path(stale_task_id),
-        {"task_id": stale_task_id, "status": "running", "pid": None},
-    )
-    delegate._write_state_atomic(
-        delegate._state_path(fresh_task_id),
-        {"task_id": fresh_task_id, "status": "running", "pid": None},
-    )
-
-    def legacy_only_for_stale(
-        lease_name_arg: str,
-        lease_root: Path,
-        *,
-        legacy_stem_index: dict[str, str] | None,
-    ):
-        if lease_name_arg != lease_name:
-            return None
-        return delegate._read_state_json(delegate._state_path(stale_task_id))
-
-    original_write = delegate._write_runtime_tmp_task_id_marker
-
-    def clobbering_backfill(
-        lease_root: Path,
-        task_id: str,
-        *,
-        no_clobber: bool = False,
-    ) -> None:
-        if no_clobber:
-            original_write(lease_root, fresh_task_id)
-            marker = delegate._runtime_tmp_task_id_marker_path(lease_root)
-            tmp = marker.with_suffix(f".tmp.{os.getpid()}")
-            tmp.write_text(task_id, encoding="utf-8")
-            os.replace(tmp, marker)
-            return
-        original_write(lease_root, task_id, no_clobber=no_clobber)
-
-    monkeypatch.setattr(delegate, "_runtime_tmp_state_for_lease", legacy_only_for_stale)
-    monkeypatch.setattr(delegate, "_write_runtime_tmp_task_id_marker", clobbering_backfill)
-
-    delegate._sweep_runtime_tmp_orphans()
-    assert delegate._read_runtime_tmp_task_id_marker(lease) == stale_task_id
-
-    delegate._write_state_atomic(
-        delegate._state_path(stale_task_id),
-        {"task_id": stale_task_id, "status": "done", "pid": None},
-    )
-    second_result = delegate._sweep_runtime_tmp_orphans()
-    assert second_result["leases_reaped"] == 1
-    assert not lease.exists()

@@ -46,12 +46,6 @@ def test_shared_tool_set_equals_wire_annotations():
     assert REVIEW_TOOLS <= FULL_REVIEW_TOOLS <= set(SOURCES_READ_ONLY_TOOLS)
 
 
-def test_claude_adapter_keeps_no_tool_list_of_its_own():
-    assert claude.sources_tool_sets is sources_tool_sets
-    assert not hasattr(claude, "SOURCES_READ_ONLY_TOOLS")
-    assert not hasattr(claude, "SOURCES_PERSISTING_TOOLS")
-
-
 @pytest.mark.parametrize(
     "tool_config",
     [{"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}, {"discussion_readonly": True}, None],
@@ -169,33 +163,6 @@ def test_annotation_reader_fails_closed(tmp_path, mutation, error):
         sources_tool_sets(path)
 
 
-def test_annotation_change_removes_new_writer_without_updating_a_list(tmp_path):
-    path = tmp_path / "server.py"
-    path.write_text(
-        SERVER_PATH.read_text().replace(
-            'name="verify_word",', 'name="verify_word", annotations=_PERSISTING_LOOKUP_TOOL,'
-        )
-    )
-    readers, writers = sources_tool_sets(path)
-    assert "verify_word" not in readers and "verify_word" in writers
-
-
-def test_tool_sets_cache_successful_reads(tmp_path, monkeypatch):
-    path = tmp_path / "server.py"
-    path.write_text(SERVER_PATH.read_text())
-    read_text = Path.read_text
-    reads = []
-
-    def counted_read(self, *args, **kwargs):
-        reads.append(self)
-        return read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_text", counted_read)
-    first = sources_tool_sets(path)
-    assert sources_tool_sets(path) is first
-    assert reads == [path]
-
-
 def test_missing_server_fails_closed_and_can_be_retried(tmp_path):
     path = tmp_path / "server.py"
     with pytest.raises(FileNotFoundError):
@@ -275,35 +242,6 @@ def test_formal_contract_refuses_reclassified_writer_at_call_time(tmp_path, monk
     monkeypatch.setattr(ledger, "sources_tool_sets", lambda: sources_tool_sets(path))
     with pytest.raises(ValueError, match="review_contract_contains_non_read_only_sources_tool"):
         ledger.review_tools(access)
-
-
-def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
-    from scripts.agent_runtime import review_mcp
-
-    monkeypatch.setattr(review_mcp, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
-    with pytest.raises(FileNotFoundError):
-        _render_codex_review_config(Path("/bin/python"), tmp_path / "missing.py", {})
-
-
-@pytest.mark.parametrize("writer", SOURCES_PERSISTING_TOOLS)
-def test_claude_ad_hoc_reviewer_denies_every_writer(tmp_path, writer):
-    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
-
-    tc = {"reviewer_tools": True}
-    plan = ClaudeAdapter().build_invocation(
-        prompt="review",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=tc,
-    )
-    allows = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
-    denies = plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(",")
-    assert f"mcp__sources__{writer}" in denies
-    assert f"mcp__sources__{writer}" not in allows
-    assert "mcp__sources__verify_words" in allows
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])

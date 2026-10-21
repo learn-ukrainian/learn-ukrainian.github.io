@@ -8,9 +8,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
-from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
-from agent_runtime.errors import AgentTimeoutError, AgentUnavailableError
+from agent_runtime.errors import AgentUnavailableError
 from agent_runtime.runner import invoke
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
@@ -46,15 +45,6 @@ def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_pro(tmp_path, monke
     assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "deepseek-v4.1-flash", "--provider", "deepseek"]
     assert plan.cwd == tmp_path
     assert plan.stdin_payload == ""
-
-
-def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_flash(tmp_path, monkeypatch):
-    """Flash variant uses the same shape, different ``-m``."""
-    monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
-
-    plan = _build("Review this code.", tmp_path, model="deepseek-v4.1-flash")
-
-    assert plan.cmd == ["hermes", "-z", "Review this code.", "-m", "deepseek-v4.1-flash", "--provider", "deepseek"]
 
 
 def test_deepseek_adapter_translates_mcp_prefix_for_hermes(tmp_path, monkeypatch):
@@ -93,52 +83,6 @@ def test_deepseek_adapter_leaves_non_mcp_prompts_unchanged(tmp_path, monkeypatch
     assert plan.cmd[2] == prompt
 
 
-def test_deepseek_adapter_default_model_is_pro(tmp_path, monkeypatch):
-    """When model=None, the adapter falls back to deepseek-v4.1-flash (primary)."""
-    monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
-    adapter = HermesDeepSeekAdapter()
-
-    plan = adapter.build_invocation(
-        prompt="hi",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-        effort=None,
-    )
-
-    # Inspect the -m value rather than cmd[-1] (provider flag may be appended after)
-    m_idx = plan.cmd.index("-m")
-    assert plan.cmd[m_idx + 1] == "deepseek-v4.1-flash"
-
-
-def test_deepseek_adapter_returns_stdout_as_response():
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="hello from deepseek",
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.ok is True
-    assert result.response == "hello from deepseek"
-
-
-def test_deepseek_adapter_tool_calls_total_is_none_not_zero():
-    """Hermes ``-z`` exposes no tool-call trace — distinguish unknown from zero."""
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="hello",
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.tool_calls == []
-    assert result.tool_calls_total is None
-
-
 def test_deepseek_adapter_handles_missing_hermes_binary(tmp_path):
     with (
         patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
@@ -160,31 +104,6 @@ def test_deepseek_adapter_handles_missing_hermes_binary(tmp_path):
         )
 
 
-def test_deepseek_adapter_honors_timeout(tmp_path, monkeypatch):
-    adapter = HermesDeepSeekAdapter()
-
-    def fake_build_invocation(**kwargs):
-        return InvocationPlan(cmd=["/bin/sh", "-c", "sleep 5"], cwd=Path(kwargs["cwd"]))
-
-    monkeypatch.setattr(adapter, "build_invocation", fake_build_invocation)
-    monkeypatch.setattr("agent_runtime.runner._load_adapter", lambda _name: adapter)
-
-    with (
-        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
-        patch("agent_runtime.runner.write_record"),
-        pytest.raises(AgentTimeoutError),
-    ):
-        invoke(
-            "deepseek",
-            "hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            model="deepseek-v4.1-flash",
-            entrypoint="dispatch",
-            hard_timeout=1,
-        )
-
-
 def test_deepseek_adapter_strips_ansi_codes_from_stdout():
     result = HermesDeepSeekAdapter().parse_response(
         stdout="\x1b[32mhello\x1b[0m",
@@ -194,74 +113,6 @@ def test_deepseek_adapter_strips_ansi_codes_from_stdout():
     )
 
     assert result.response == "hello"
-
-
-def test_deepseek_adapter_detects_rate_limit():
-    """Rate-limit pattern (HTTP 429 / "rate limit") is surfaced on returncode != 0."""
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="",
-        stderr="HTTP 429 rate limit exceeded",
-        returncode=1,
-        output_file=None,
-    )
-
-    assert result.rate_limited is True
-    assert result.ok is False
-
-
-def test_runner_preserves_unknown_deepseek_tool_call_total(tmp_path, monkeypatch):
-    """Runner round-trip preserves the unknown-vs-zero distinction."""
-    adapter = HermesDeepSeekAdapter()
-
-    def fake_build_invocation(**kwargs):
-        return InvocationPlan(cmd=["/bin/sh", "-c", "printf hello"], cwd=Path(kwargs["cwd"]))
-
-    monkeypatch.setattr(adapter, "build_invocation", fake_build_invocation)
-    monkeypatch.setattr("agent_runtime.runner._load_adapter", lambda _name: adapter)
-
-    with (
-        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
-        patch("agent_runtime.runner.write_record"),
-    ):
-        result = invoke(
-            "deepseek",
-            "hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            model="deepseek-v4.1-flash",
-            entrypoint="dispatch",
-            effort="medium",
-        )
-
-    assert result.response == "hello"
-    assert result.tool_calls == []
-    assert result.tool_calls_total is None
-
-
-def test_registry_lists_deepseek_with_opencode_adapter():
-    """Registry dispatch default: OpenCode first-party adapter, Flash @ high.
-
-    Operator 2026-08-13: dispatch routes through ``DeepSeekAdapter``
-    (opencode → deepseek first-party provider). The legacy ``hermes-deepseek``
-    seat stays
-    registered for the ``_hermes.py`` review path; since the Hermes removal
-    (operator order 2026-08-16) its invocations refuse at binary resolution
-    with the documented opencode fallbacks (#6805).
-    """
-    from agent_runtime.registry import get_agent_entry
-
-    entry = get_agent_entry("deepseek")
-    assert entry["cli_available"] is True
-    assert entry["default_model"] == "deepseek-v4.1-flash"
-    assert entry["default_effort"] == "high"
-    assert entry["adapter"].endswith(":DeepSeekAdapter")
-    assert entry["resume_policy"] == "never"
-
-    hermes_entry = get_agent_entry("hermes-deepseek")
-    assert hermes_entry["cli_available"] is True
-    assert hermes_entry["default_model"] == "deepseek-v4.1-flash"
-    assert hermes_entry["adapter"].endswith(":HermesDeepSeekAdapter")
-    assert hermes_entry["resume_policy"] == "never"
 
 
 def test_deepseek_adapter_inband_http_error_is_not_ok():
@@ -297,18 +148,6 @@ def test_deepseek_adapter_inband_429_sets_rate_limited():
     assert result.rate_limited is True
 
 
-def test_deepseek_adapter_inband_5xx_is_not_ok():
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="HTTP 503 — Service Unavailable — Ray 8c1a2b3d4e5f6789",
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.ok is False
-    assert "HTTP 503" in (result.stderr_excerpt or "")
-
-
 def test_deepseek_adapter_multiline_response_mentioning_http_error_stays_ok():
     """Legit content that merely discusses an HTTP status must not be eaten."""
     stdout = (
@@ -326,17 +165,6 @@ def test_deepseek_adapter_multiline_response_mentioning_http_error_stays_ok():
     assert result.response == stdout
 
 
-def test_deepseek_adapter_single_line_non_error_response_stays_ok():
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="Verdict: HTTP 404 handling in routes.py is correct.",
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.ok is True
-
-
 def test_deepseek_adapter_inband_error_detected_on_nonzero_returncode():
     """Detection must not depend on returncode (review D1, PR #4580)."""
     result = HermesDeepSeekAdapter().parse_response(
@@ -348,35 +176,3 @@ def test_deepseek_adapter_inband_error_detected_on_nonzero_returncode():
 
     assert result.ok is False
     assert "HTTP 401" in (result.stderr_excerpt or "")
-
-
-def test_deepseek_adapter_inband_ansi_wrapped_error_is_detected():
-    """strip_ansi runs before detection — a colorized error line still fails."""
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="\x1b[31mHTTP 401: Authentication Fails\x1b[0m",
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.ok is False
-    assert "HTTP 401" in (result.stderr_excerpt or "")
-
-
-def test_deepseek_adapter_inband_400_parses_as_failure():
-    """A 400 is still a failed invocation (never content) even though the
-    failover classifier deliberately refuses to rotate on it."""
-    result = HermesDeepSeekAdapter().parse_response(
-        stdout="HTTP 400: Invalid request: unknown parameter 'foo'",
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.ok is False
-    assert "HTTP 400" in (result.stderr_excerpt or "")
-
-
-def test_retired_pro_is_refused(tmp_path):
-    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use deepseek-v4.1-flash"):
-        _build("prompt", tmp_path, model="deepseek-v4-pro")

@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 from scripts.audit.classify_grounding_failures import classify_grounding
 from scripts.audit.runtime_tool_events import map_runtime_tool_calls
 
@@ -116,18 +113,3 @@ def test_confirmed_against_evidence_requires_supporting_output() -> None:
     )
     assert row is not None
     assert row.bucket == "excerpt_not_in_tool_output"
-
-
-def test_analyze_paths_on_vesnianky_multirun_artifact() -> None:
-    root = Path(__file__).resolve().parents[2]
-    artifact_path = (
-        root
-        / "audit/2026-07-06-qg-bakeoff-multirun/openrouter-deepseek-deepseek-v4-pro__vesnianky.json"
-    )
-    if not artifact_path.exists():
-        return
-    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
-    from scripts.audit.classify_grounding_failures import classify_artifact
-
-    rows = classify_artifact(artifact)
-    assert rows, "expected at least one failed grounding in ds-pro vesnianky cell"

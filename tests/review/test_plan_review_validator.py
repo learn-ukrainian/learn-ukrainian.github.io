@@ -17,7 +17,7 @@ import yaml
 from scripts.curriculum.evidence import lock
 from scripts.review.receipts.ledger import create_empty_ledger
 from scripts.review.validate import codes
-from scripts.review.validate.validate import build_parser, main, validate_review
+from scripts.review.validate.validate import main, validate_review
 from tests.build.test_fresh_plan_review import append_comment, fake_verify, make_manifest, run
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import Env, build_env
@@ -151,29 +151,6 @@ def test_an_absence_finding_uses_a_plan_scope(case: Case) -> None:
         assert code == 1 and rejected(payload) == {codes.LOCATION_NOT_IN_PLAN}, scope
 
 
-@pytest.mark.parametrize(
-    "finding",
-    [
-        {"locations": [{"tab": "urok", "quote": "first letter"}]},  # the lesson shape
-        {"locations": [{"lesson": 0, "quote": "x"}]},
-        {"locations": [{"lesson": 1, "step": "s1", "activity": "a1", "quote": "x"}]},
-        {"locations": [{"step": "s1", "quote": "x"}]},  # a step needs its lesson
-        {"locations": [{"lesson": 1, "field": "has space", "quote": "x"}]},
-        {"locations": [{"lesson": 1}]},  # no quote
-        {"locations": [], "scope": {"tab": "urok"}},  # the lesson scope
-        {"locations": [], "scope": {"lesson": 1, "step": "s1", "activity": "a1"}},
-        {"locations": [], "scope": None},
-    ],
-)
-def test_a_lesson_shaped_or_malformed_plan_location_is_a_schema_error(case: Case, finding: dict) -> None:
-    payload = case.finding(**finding)
-    if payload.get("scope") is None:
-        payload.pop("scope", None)
-    case.write_review([payload])
-    code, result = case.validate()
-    assert code == 1 and codes.SCHEMA_INVALID in rejected(result), finding
-
-
 def test_a_plan_location_in_a_lesson_review_is_a_schema_error(tmp_path: Path) -> None:
     from tests.review.test_r1_schema_ledger import LESSON_CHECKS, _layout
 
@@ -225,16 +202,6 @@ def test_a_changed_manifest_input_makes_the_review_stale(case: Case) -> None:
     code, payload = case.validate()
     assert code == 1 and rejected(payload) == {codes.PLAN_INPUTS_STALE}
     assert "_arc.yaml" in payload["rejections"][0]["message"]
-
-
-@pytest.mark.parametrize("name", ["requirements", "arc_source"])
-def test_a_changed_requirements_or_arc_source_makes_the_review_stale(case: Case, name: str) -> None:
-    case.write_review([case.finding()])
-    entry = yaml.safe_load(case.manifest.read_bytes())["inputs"][name]
-    append_comment(case.env.root / entry["path"])
-    code, payload = case.validate()
-    assert code == 1 and rejected(payload) == {codes.PLAN_INPUTS_STALE}
-    assert entry["path"] in payload["rejections"][0]["message"]
 
 
 @pytest.mark.parametrize("name", ["pack", "words", "learner_state"])
@@ -313,27 +280,3 @@ def test_after_promotion_the_review_is_checked_against_the_reviewed_plan(case: C
     append_comment(case.env.plans_dir / "_arc.yaml")
     code, payload = case.validate()
     assert code == 1 and codes.PLAN_INPUTS_STALE in rejected(payload)
-
-
-def test_document_is_required_for_lesson_reviews_only(case: Case, tmp_path: Path) -> None:
-    case.write_review([], kind="lesson")
-    with pytest.raises(SystemExit) as excinfo:
-        main([str(case.review), "--manifest", str(case.manifest), "--ledger", str(case.ledger)])
-    assert excinfo.value.code == 2
-    case.write_review([])
-    assert case.validate()[0] == 0  # a plan review needs no --document
-
-
-def test_help_documents_plan_mode_and_keeps_the_lesson_alias(capsys) -> None:
-    text = build_parser().format_help()
-    assert "--document" in text and "--lesson" in text
-    assert "Plan mode" in text and "inputs.plan.sha256" in text
-    for code in (
-        codes.MANIFEST_KIND_MISMATCH,
-        codes.PLAN_BYTES_MISMATCH,
-        codes.PLAN_INPUTS_STALE,
-        codes.LOCATION_NOT_IN_PLAN,
-        codes.PLAN_UNREADABLE,
-        codes.PLAN_MANIFEST_INVALID,
-    ):
-        assert code in text

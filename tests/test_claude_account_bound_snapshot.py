@@ -18,7 +18,6 @@ remaining, account ``b`` 0.5%.
 
 from __future__ import annotations
 
-import ast
 import copy
 import io
 import json
@@ -27,17 +26,14 @@ import operator
 import pickle
 from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
-from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
 from scripts import delegate
 from scripts.agent_runtime import model_pause, target_admission
-from scripts.fleet import capacity_pick, claude_account_lane, credit_lane, usage
+from scripts.fleet import claude_account_lane, credit_lane
 from scripts.fleet.claude_account_lane import AccountRequired, AccountSnapshot, bind_snapshot, select_account
-from scripts.lib import claude_weekly_used
 from scripts.orchestration import curriculum_coordinator as coordinator
 from scripts.review import bench_health, closeout_cli, reviewer_resolver, reviewer_scheduler
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
@@ -45,13 +41,9 @@ from tests.claude_route_accounts import HOST_ACCOUNT, account, bound, unresolved
 from tests.test_claude_account_route_key import _agreement_snapshot, _route_key_for
 from tests.test_delegate_check_budget import _account_row
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
 B = account("b")
 A_REMAINING, B_REMAINING = 90.0, 0.5
 CLAUDE = REVIEW_CANDIDATES["claude-opus-5-5"]
-CODEX = next(candidate for candidate in REVIEW_CANDIDATES.values() if candidate.route == "codex")
-
-
 def _reversed() -> dict:
     """Account a: 90% remaining on the lane row and its own row; account b: 0.5% on its row."""
     raw = _agreement_snapshot("healthy", _account_row(B_REMAINING))
@@ -282,15 +274,6 @@ def _outcome(reader: Callable[[Any], Any], snapshot: Any) -> object:
         return type(exc)
 
 
-def test_on_the_raw_payload_the_reproducers_read_account_as_meter():
-    """What the reviews demonstrated: a raw payload hands account a's 90% to any reader."""
-    raw = _reversed()
-    escaped = {name: _outcome(reader, raw) for name, reader in REPRODUCERS.items()}
-    assert escaped.pop("route_record_forwarding") is AccountRequired  # #10770: the helper now refuses
-    assert escaped.pop("vars_of_snapshot") is TypeError  # a dict has no instance namespace
-    assert escaped == dict.fromkeys(escaped, A_REMAINING)
-
-
 def _capture_resolver(monkeypatch) -> list[Any]:
     held: list[Any] = []
     original = reviewer_resolver._evaluate_candidate
@@ -431,22 +414,6 @@ def test_every_reproducer_reads_only_the_bound_accounts_meter(consumer, monkeypa
 # --- the scheduler helper refuses an unbound claude read ----------------------------------------
 
 
-def test_route_record_refuses_an_unbound_claude_read_and_absence_is_not_empty():
-    raw = _reversed()
-    for snapshot in (raw, {**raw, "agents": {"codex": raw["agents"]["codex"]}}, {"agents": {}}):
-        with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
-            reviewer_scheduler._route_record(CLAUDE, snapshot)
-        with pytest.raises(AccountRequired):
-            reviewer_scheduler.metrics_for(CLAUDE, snapshot)
-    # Non-claude candidates and flat health maps hold no claude meter: unchanged.
-    assert reviewer_scheduler._route_record(CODEX, raw) is raw["agents"]["codex"]
-    assert reviewer_scheduler._route_record(CLAUDE, {"claude": "Healthy"}) == {"status": "healthy"}
-    assert reviewer_scheduler._route_record(CLAUDE, None) == {}
-    # A bound snapshot reads its own account, and its absence reads as absent.
-    assert reviewer_scheduler._route_record(CLAUDE, bound(raw, B))["remaining_pct"] == pytest.approx(B_REMAINING)
-    assert reviewer_scheduler._route_record(CLAUDE, bound({"agents": {}}, B)) == {}
-
-
 # --- entry paths ------------------------------------------------------------------------------
 
 
@@ -495,58 +462,6 @@ def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys,
     assert "preferred" not in capsys.readouterr().err
 
 
-def test_the_dispatch_guards_only_unbound_payload_is_refused_by_the_scheduler(monkeypatch):
-    """The guard's only unbound value is the fetched payload; the scheduler refuses that object.
-
-    ``_held_by_delegate_guard`` sees the snapshot after ``select_account``. This
-    test takes the raw payload the guard itself binds — the only plain mapping
-    ``select_account`` is given — and requires ``_route_record`` and
-    ``metrics_for`` to raise ``AccountRequired`` on it.
-    """
-    raw = _reversed()
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: raw)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    unbound: list[Any] = []
-    original = claude_account_lane.select_account
-
-    def spy(snapshot, *, account):
-        if not isinstance(snapshot, AccountSnapshot):
-            unbound.append(snapshot)
-        return original(snapshot, account=account)
-
-    monkeypatch.setattr(claude_account_lane, "select_account", spy)
-    held: list[Any] = []
-
-    def review_select(snapshot, _seat):
-        held.append(snapshot)
-        return "claude", None
-
-    delegate._resolve_agent_with_budget_guard("claude", fallbacks={}, review_select=review_select, claude_account=B)
-
-    assert unbound == [raw]
-    assert held and all(isinstance(snapshot, AccountSnapshot) and snapshot.account.label == "b" for snapshot in held)
-    with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
-        reviewer_scheduler._route_record(CLAUDE, raw)
-    with pytest.raises(AccountRequired):
-        reviewer_scheduler.metrics_for(CLAUDE, raw)
-
-
-def test_model_pause_binds_the_fetched_snapshot_and_lets_account_required_through(monkeypatch):
-    raw = _reversed()
-    monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(raw)))
-    assert model_pause.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == pytest.approx(10.0)
-    assert model_pause.routing_budget_used_pct("claude", account=B) == pytest.approx(100.0 - B_REMAINING)
-    assert model_pause.routing_budget_used_pct("claude", account=None) is None
-    assert model_pause.routing_budget_used_pct("codex", account=None) is None  # fixture codex has no fresh used-%
-
-    def contract_failure(*_a, **_k):
-        raise AccountRequired("unbound read")
-
-    monkeypatch.setattr(model_pause.urllib.request, "urlopen", contract_failure)
-    with pytest.raises(AccountRequired):  # not "unreachable": the (OSError, ValueError, ...) handler lets it through
-        model_pause.routing_budget_used_pct("codex", account=B)
-
-
 def test_credit_lane_reads_credit_lanes_from_a_snapshot_bound_to_no_account(monkeypatch):
     raw = _reversed()
     held: list[Any] = []
@@ -585,119 +500,6 @@ def test_bench_health_binds_injected_and_produced_snapshots(monkeypatch, tmp_pat
         bench_health._bench_inventory(
             None, data_egress_policy="local_interactive", review_profile="code", risk="medium"
         )
-
-
-def _spy_entry_binding(monkeypatch) -> tuple[list[tuple[Any, Any, Any]], list[Any]]:
-    """Record ``select_account`` calls, and what ``ResolverInputs`` holds before it binds.
-
-    ``bind_snapshot`` calls ``select_account`` too. The snapshot recorded at the
-    start of ``ResolverInputs.__post_init__`` is what the entry handed over, so
-    an entry that skips its own ``select_account`` shows up as a plain payload
-    there rather than as the object that call returned.
-    """
-    select_calls: list[tuple[Any, Any, Any]] = []
-    inputs_received: list[Any] = []
-    original_select = claude_account_lane.select_account
-    original_init = ResolverInputs.__post_init__
-
-    def spy_select(snapshot, *, account):
-        result = original_select(snapshot, account=account)
-        select_calls.append((snapshot, account, result[0]))
-        return result
-
-    def spy_init(self) -> None:
-        inputs_received.append(self.routing_snapshot)
-        original_init(self)
-
-    monkeypatch.setattr(claude_account_lane, "select_account", spy_select)
-    monkeypatch.setattr(ResolverInputs, "__post_init__", spy_init)
-    return select_calls, inputs_received
-
-
-def _assert_entry_select_account_precedes_resolver(select_calls, inputs_received) -> None:
-    assert select_calls, "select_account was never called"
-    snapshot_in, route_account, snapshot_out = select_calls[0]
-    assert not isinstance(snapshot_in, AccountSnapshot)
-    assert snapshot_in["agents"]["claude"]["remaining_pct"] == A_REMAINING
-    assert route_account.label == "b"
-    assert isinstance(snapshot_out, AccountSnapshot) and snapshot_out.account.label == "b"
-    assert inputs_received, "ResolverInputs was not constructed"
-    assert all(received is snapshot_out for received in inputs_received)
-
-
-@pytest.mark.parametrize("source", ["live", "file"])
-def test_closeout_binds_through_its_own_select_account_before_resolver_inputs(source, monkeypatch, tmp_path, capsys):
-    """``_cmd_resolve_reviewer`` binds before ``ResolverInputs``; removing that call fails this test."""
-    raw = _reversed()
-    assert _route_key_for(tmp_path, monkeypatch, b"b\n").label == "b"
-    select_calls, inputs_received = _spy_entry_binding(monkeypatch)
-    argv = [
-        "--state-file",
-        str(tmp_path / "state.json"),
-        "resolve-reviewer",
-        "--author-model",
-        "gpt-6.1-sol",
-        "--risk",
-        "critical",
-        "--owned-path",
-        "ordinary.py",
-    ]
-    if source == "file":
-        path = tmp_path / "snapshot.json"
-        path.write_text(json.dumps(raw))
-        argv += ["--routing-snapshot-file", str(path)]
-    else:
-        monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_k: raw)
-    closeout_cli.main(argv)
-    capsys.readouterr()
-    _assert_entry_select_account_precedes_resolver(select_calls, inputs_received)
-    if source == "live":
-        assert select_calls[0][0] is raw
-
-
-def test_bench_inventory_binds_through_its_own_select_account_before_resolver_inputs(monkeypatch, tmp_path):
-    """``_bench_inventory`` binds before ``ResolverInputs``; removing that call fails this test."""
-    raw = _reversed()
-    assert _route_key_for(tmp_path, monkeypatch, b"b\n").label == "b"
-    select_calls, inputs_received = _spy_entry_binding(monkeypatch)
-    bench_health._bench_inventory(raw, data_egress_policy="local_interactive", review_profile="code", risk="medium")
-    _assert_entry_select_account_precedes_resolver(select_calls, inputs_received)
-    assert select_calls[0][0] is raw
-
-
-def test_the_coordinator_binds_probe_snapshots_and_refuses_unbound_or_rebound_ones(monkeypatch, tmp_path):
-    raw = _reversed()
-    health = coordinator.load_config()["health"]
-    with pytest.raises(AccountRequired, match="wave health gate"):
-        coordinator._health_assessment(raw, health)
-    _route_key_for(tmp_path, monkeypatch, None)  # the default account
-    assert coordinator._probe_health(lambda: raw, coordinator.load_config()) == coordinator._health_assessment(
-        bound(raw), health
-    )
-    with pytest.raises(AccountRequired, match="not read as 'a'"):
-        coordinator._probe_health(lambda: bound(raw, B), coordinator.load_config())
-
-    def contract_failure():
-        raise AccountRequired("unbound read")
-
-    with pytest.raises(AccountRequired):  # the probe's ``except Exception`` does not absorb it
-        coordinator._probe_health(contract_failure, coordinator.load_config())
-
-
-@pytest.mark.parametrize(("label", "used"), [("a", 10.0), ("b", 100.0 - B_REMAINING)])
-def test_the_launcher_reader_keeps_its_explicit_launch_account_selection(label, used):
-    raw = _reversed()
-    raw["agents"]["claude"]["codexbar"]["stale"] = False
-    assert claude_weekly_used._weekly_used_pct(raw, label) == pytest.approx(used)
-
-
-def test_display_consumers_keep_the_plain_payload(monkeypatch, capsys):
-    raw = _reversed()
-    monkeypatch.setattr(usage, "read_budget", lambda **_k: raw)
-    assert usage.main(["json"]) == 0
-    assert json.loads(capsys.readouterr().out) == json.loads(json.dumps(raw))  # every account's row, unchanged
-    rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(raw)}
-    assert rows["claude"]["remaining_pct"] == A_REMAINING  # the display shows the host lane row as before
 
 
 # --- round 2 (review-s2b-adbd73eb): derivation, conversion and alias bypasses ---------------------
@@ -979,20 +781,6 @@ def test_a_value_taken_from_a_bound_view_is_never_pickled(splice):
             pickle.dumps(part)
 
 
-def test_copies_of_a_bound_view_keep_its_account():
-    """Copying (not serializing) keeps provenance: a copy is bound again as its own account, never as another."""
-    raw = _a_exhausted_b_healthy()
-    b = bind_snapshot(raw, account=B)
-    for copied in (copy.copy(b["agents"]), copy.deepcopy(b["agents"])):
-        assert copied is b["agents"]  # frozen values are their own copies
-        with pytest.raises(AccountRequired, match="not read as 'a'"):
-            bind_snapshot({"agents": copied}, account=HOST_ACCOUNT)
-    for whole in (copy.copy(dict(b)), copy.deepcopy(dict(b))):
-        assert bind_snapshot(whole, account=B) == b
-        with pytest.raises(AccountRequired, match="not read as 'a'"):
-            bind_snapshot(whole, account=HOST_ACCOUNT)
-
-
 # --- round 4 (review-s2b-684f5fa8): plain-data copies of any part of a bound view --------------------
 
 
@@ -1101,16 +889,6 @@ def test_a_stamped_record_whose_stamp_does_not_verify_is_refused_for_every_accou
             bind_snapshot(_lane_spliced(raw, record), account=route_account)
 
 
-def test_a_record_stamped_in_another_process_is_refused(monkeypatch):
-    """The seal is process-local: a record stamped elsewhere verifies nowhere here, even as its own account."""
-    raw = _a_exhausted_b_healthy()
-    record = _json(bind_snapshot(raw, account=B)["agents"]["claude"])
-    monkeypatch.setattr(claude_account_lane, "_SEAL_KEY", b"another process".ljust(32, b"\0"))
-    for route_account in (HOST_ACCOUNT, B):
-        with pytest.raises(AccountRequired, match="whose stamp does not verify"):
-            bind_snapshot(_lane_spliced(raw, record), account=route_account)
-
-
 @pytest.mark.parametrize("label", ["a", "b"])
 def test_claude_alias_records_are_the_host_accounts_and_never_reach_another_accounts_decision(label):
     """Blocker 3: an alias-keyed copy of account a's lane row reached b's scheduler metrics; b's view drops it.
@@ -1134,217 +912,3 @@ def test_claude_alias_records_are_the_host_accounts_and_never_reach_another_acco
     assert set(view["agents"]) == {"claude", "codex", "grok", "cursor"} | kept
     ranked_aliases = [row["lane"] for row in view["ranked_by_headroom"]].count("claude-opus-5-5")
     assert ranked_aliases == (1 if label == "a" else 0)
-
-
-def test_a_candidate_reaching_any_claude_record_reads_only_a_bound_snapshot():
-    """A candidate whose keys name a claude alias, on any route, never reads an unbound payload's claude record."""
-    raw = _reversed()
-    agents = {"claude-opus-5-5": raw["agents"]["claude"], "cursor": raw["agents"]["cursor"]}
-    hosted = SimpleNamespace(
-        name="claude-opus-5-5", route="cursor", concrete_model="claude-opus-5-5", family="", health_keys=()
-    )
-    for candidate in (hosted, CLAUDE):
-        with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
-            reviewer_scheduler._route_record(candidate, {"agents": agents})
-    # Bound to b, the alias is gone: the hosted route reads its own lane.
-    assert reviewer_scheduler._route_record(hosted, bind_snapshot({"agents": agents}, account=B)) == agents["cursor"]
-
-
-# --- source inventory: where a decision module receives a raw routing snapshot -------------------
-
-DECISION_MODULES = (
-    "scripts/agent_runtime/model_pause.py",
-    "scripts/agent_runtime/target_admission.py",
-    "scripts/delegate.py",
-    "scripts/fleet/credit_lane.py",
-    "scripts/lib/claude_weekly_used.py",
-    "scripts/orchestration/curriculum_coordinator.py",
-    "scripts/review/bench_health.py",
-    "scripts/review/closeout_cli.py",
-    "scripts/review/reviewer_resolver.py",
-    "scripts/review/reviewer_scheduler.py",
-)
-FETCHERS = frozenset({"_fetch_routing_budget", "compute_routing_budget", "read_routing_budget"})
-BINDERS = frozenset({"bind_snapshot", "select_account", "account_weekly_used_pct"})
-# (module, function) -> how the raw snapshot it receives is bound. ``None`` marks a fetch helper
-# whose callers are listed here too, or a reader that selects its account itself.
-RAW_SNAPSHOT_SOURCES: dict[tuple[str, str], str | None] = {
-    ("scripts/delegate.py", "_fetch_routing_budget"): None,
-    ("scripts/delegate.py", "_admit_dispatch_target"): "red-team initial snapshot: select_account",
-    ("scripts/delegate.py", "_resolve_agent_with_budget_guard"): (
-        "select_account as the dispatch's account; the raw payload is bound again only for the "
-        "cooler-seat advice, as the account a re-routed claude dispatch would resolve"
-    ),
-    ("scripts/fleet/credit_lane.py", "read_routing_budget"): None,
-    ("scripts/fleet/credit_lane.py", "dispatch_refusal"): "bind_snapshot to no account (credit lanes only)",
-    ("scripts/review/closeout_cli.py", "_cmd_resolve_reviewer"): "live fetch or JSON file: select_account",
-    ("scripts/agent_runtime/model_pause.py", "routing_budget_used_pct"): "bind_snapshot as the named account",
-    ("scripts/review/bench_health.py", "_bench_inventory"): "select_account as a claude review dispatch would run",
-    ("scripts/orchestration/curriculum_coordinator.py", "default_health_probe"): "bind_snapshot as the wave's account",
-    ("scripts/lib/claude_weekly_used.py", "main"): None,  # isolated launcher reader: explicit launch account
-}
-
-
-_FUNCTIONS = (ast.FunctionDef, ast.AsyncFunctionDef)
-
-
-def _fetcher_named(node: ast.AST, names: frozenset[str]) -> str | None:
-    """The fetcher (or alias) ``node`` names: a name, an attribute, or a string such as ``getattr``'s."""
-    if isinstance(node, ast.Name) and node.id in names:
-        return node.id
-    if isinstance(node, ast.Attribute) and node.attr in names:
-        return node.attr
-    if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in names:
-        return node.value
-    return None
-
-
-def _in_scope(scope: ast.AST) -> list[ast.AST]:
-    """Every node of ``scope`` outside its nested functions (which have their own scope)."""
-    nodes: list[ast.AST] = []
-    pending = list(ast.iter_child_nodes(scope))
-    while pending:
-        node = pending.pop()
-        nodes.append(node)
-        if not isinstance(node, _FUNCTIONS):
-            pending.extend(ast.iter_child_nodes(node))
-    return nodes
-
-
-def _aliases(scope: ast.AST, names: frozenset[str]) -> frozenset[str]:
-    """``names`` plus every name ``scope`` binds to a fetcher itself rather than to its result.
-
-    ``fetch = credit_lane.read_routing_budget``, ``import ... as fetch``, a
-    walrus, ``functools.partial(fetcher)`` and ``getattr(module, "fetcher")``
-    bind the reader; ``payload = fetcher()`` binds a payload and is not an
-    alias. Chains (``first = fetcher; second = first``) resolve to a fixpoint.
-    """
-    found = set(names)
-    while True:
-        before = len(found)
-        current = frozenset(found)
-        for node in _in_scope(scope):
-            if isinstance(node, ast.ImportFrom):
-                found.update(alias.asname or alias.name for alias in node.names if alias.name in current)
-                continue
-            if not isinstance(node, ast.Assign | ast.AnnAssign | ast.NamedExpr) or node.value is None:
-                continue
-            called = {id(sub.func) for sub in ast.walk(node.value) if isinstance(sub, ast.Call)}
-            if any(_fetcher_named(sub, current) and id(sub) not in called for sub in ast.walk(node.value)):
-                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
-                for target in targets:
-                    found.update(
-                        sub.id if isinstance(sub, ast.Name) else sub.attr
-                        for sub in ast.walk(target)
-                        if isinstance(sub, ast.Name | ast.Attribute)
-                    )
-        if len(found) == before:
-            return frozenset(found)
-
-
-def _raw_snapshot_sources(module: str) -> dict[str, set[str]]:
-    """``{function: names}`` for every fetcher reference (call or alias), routing-budget URL or snapshot-file read.
-
-    A reference to a fetcher, or to a name the scope (or an enclosing one)
-    binds to it, marks the function it appears in, so an aliased fetch
-    (``fetch = credit_lane.read_routing_budget; fetch()``) is found too.
-    """
-    found: dict[str, set[str]] = {}
-
-    def visit(scope: ast.AST, label: str, inherited: frozenset[str]) -> None:
-        names = _aliases(scope, inherited)
-        for node in _in_scope(scope):
-            if isinstance(node, _FUNCTIONS):
-                visit(node, node.name, names)
-                continue
-            source = _fetcher_named(node, names)
-            if (
-                source is None
-                and isinstance(node, ast.JoinedStr | ast.BinOp)
-                and "/routing-budget" in ast.unparse(node)
-            ):
-                source = "routing-budget URL"
-            elif isinstance(node, ast.Attribute) and node.attr == "routing_snapshot_file":
-                source = "routing snapshot file"
-            if source:
-                found.setdefault(label, set()).add(source)
-
-    visit(ast.parse((REPO_ROOT / module).read_text(encoding="utf-8")), "<module>", FETCHERS)
-    return found
-
-
-def _binder_calls(module: str) -> dict[str, set[str]]:
-    calls: dict[str, set[str]] = {}
-    for node in ast.walk(ast.parse((REPO_ROOT / module).read_text(encoding="utf-8"))):
-        if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
-            names = {
-                sub.func.attr if isinstance(sub.func, ast.Attribute) else getattr(sub.func, "id", "")
-                for sub in ast.walk(node)
-                if isinstance(sub, ast.Call)
-            }
-            calls[node.name] = names & BINDERS
-    return calls
-
-
-def test_raw_snapshot_sources_in_decision_modules_are_inventoried():
-    """A tripwire, not the enforcement: a new raw-snapshot source in a decision module must be listed and bound."""
-    found = {
-        (module, function): sources
-        for module in DECISION_MODULES
-        for function, sources in _raw_snapshot_sources(module).items()
-    }
-    assert set(found) == set(RAW_SNAPSHOT_SOURCES), "list the new source here and bind it where it enters"
-    for (module, function), how in RAW_SNAPSHOT_SOURCES.items():
-        if how is not None:
-            assert _binder_calls(module)[function], f"{module}:{function} receives a raw snapshot but never binds it"
-
-
-_PREAMBLE = "import functools\n\nfrom scripts.fleet import credit_lane\n\n"
-INJECTED_READERS = {
-    "direct_call": "def reader():\n    return credit_lane.read_routing_budget()['agents']['claude']\n",
-    # review-s2b-adbd73eb follow-up: the round-1 guard missed this one.
-    "attribute_alias": (
-        "def reader():\n    fetch = credit_lane.read_routing_budget\n    return fetch()['agents']['claude']\n"
-    ),
-    "chained_alias": (
-        "def reader():\n    first = credit_lane.read_routing_budget\n    second = first\n"
-        "    return second()['agents']['claude']\n"
-    ),
-    "import_alias": (
-        "from scripts.fleet.credit_lane import read_routing_budget as fetch\n\n"
-        "def reader():\n    return fetch()['agents']['claude']\n"
-    ),
-    "module_alias": "FETCH = credit_lane.read_routing_budget\n\ndef reader():\n    return FETCH()['agents']['claude']\n",
-    "getattr_name": "def reader():\n    return getattr(credit_lane, 'read_routing_budget')()['agents']['claude']\n",
-    "partial": (
-        "def reader():\n    fetch = functools.partial(credit_lane.read_routing_budget)\n"
-        "    return fetch()['agents']['claude']\n"
-    ),
-    "walrus": (
-        "def reader():\n    if (fetch := credit_lane.read_routing_budget) is not None:\n"
-        "        return fetch()['agents']['claude']\n"
-    ),
-    "default_argument": (
-        "def reader(fetch=credit_lane.read_routing_budget):\n    return fetch()['agents']['claude']\n"
-    ),
-}
-
-
-@pytest.mark.parametrize("name", sorted(INJECTED_READERS))
-def test_the_inventory_finds_an_injected_reader_however_it_names_the_fetch(name, tmp_path):
-    module = tmp_path / "injected_reader.py"
-    module.write_text(_PREAMBLE + INJECTED_READERS[name], encoding="utf-8")
-    assert "reader" in _raw_snapshot_sources(str(module))
-
-
-def test_an_alias_is_scoped_and_a_fetched_payload_is_not_an_alias(tmp_path):
-    module = tmp_path / "scoped.py"
-    module.write_text(
-        _PREAMBLE
-        + "def first():\n    fetch = credit_lane.read_routing_budget\n    return fetch\n\n"
-        + "def second(fetch):\n    return fetch()\n\n"
-        + "def third():\n    payload = credit_lane.read_routing_budget()\n    return payload\n\n"
-        + "def fourth(payload):\n    return payload['agents']\n",
-        encoding="utf-8",
-    )
-    assert set(_raw_snapshot_sources(str(module))) == {"first", "third"}

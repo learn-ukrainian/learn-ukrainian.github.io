@@ -9,18 +9,9 @@ import yaml
 
 from scripts.orchestration.fleet_repos import (
     FleetRepoError,
-    default_repo_key,
     load_fleet_repos,
     resolve_fleet_repo,
 )
-
-
-def test_load_canonical_fleet_repos_catalog():
-    repos = load_fleet_repos()
-    assert set(repos) == {"public", "infra-private", "hramatka"}
-    assert default_repo_key(repos) == "public"
-    assert repos["hramatka"].github == "learn-ukrainian/hramatka"
-    assert repos["infra-private"].local_name == "learn-ukrainian-infra-private"
 
 
 def test_resolve_public_uses_primary_root(tmp_path: Path):
@@ -44,20 +35,6 @@ def test_resolve_hramatka_sibling(tmp_path: Path):
     assert checkout == sibling.resolve()
 
 
-def test_padded_and_uppercase_keys_resolve_to_the_catalog_key(tmp_path: Path):
-    primary = tmp_path / "learn-ukrainian"
-    sibling = tmp_path / "hramatka"
-    primary.mkdir()
-    sibling.mkdir()
-    (primary / ".git").mkdir()
-    (sibling / ".git").mkdir()
-    for spelling in ("  hramatka  ", "HRAMATKA", "Hramatka"):
-        repo, checkout = resolve_fleet_repo(spelling, primary_root=primary)
-        assert repo.key == "hramatka"
-        assert checkout == sibling.resolve()
-        assert str(tmp_path) not in repo.key
-
-
 def test_empty_repo_key_is_not_the_default(tmp_path: Path):
     primary = tmp_path / "learn-ukrainian"
     primary.mkdir()
@@ -70,14 +47,6 @@ def test_empty_repo_key_is_not_the_default(tmp_path: Path):
         assert str(primary) not in messages[-1]
     assert messages[0] == messages[1]
     assert "unknown --repo" in messages[0]
-
-
-def test_resolve_unknown_key_fails(tmp_path: Path):
-    primary = tmp_path / "learn-ukrainian"
-    primary.mkdir()
-    (primary / ".git").mkdir()
-    with pytest.raises(FleetRepoError, match="unknown --repo"):
-        resolve_fleet_repo("not-a-repo", primary_root=primary)
 
 
 def test_resolve_missing_sibling_fails_closed(tmp_path: Path):

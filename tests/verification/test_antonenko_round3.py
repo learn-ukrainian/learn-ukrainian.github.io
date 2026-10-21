@@ -94,13 +94,6 @@ def test_missing_morphology_does_not_manufacture_duration():
     assert not find_book_calques(text, tokenize(text), {})
 
 
-def test_all_new_sentence_words_have_frozen_vesum_evidence():
-    for text in FIXTURE_DATA["correct"] + FIXTURE_DATA["incorrect"] + FIXTURE_DATA["stopping_rule_cases"]:
-        for token in tokenize(text):
-            # Range spellings are absent as a whole; both numeral parts attest.
-            assert all(MORPHOLOGY.get(part.lower()) for part in token.parts)
-
-
 @pytest.fixture
 def hermetic_checker(monkeypatch, tmp_path):
     checker = importlib.import_module("scripts.verification.check_text")

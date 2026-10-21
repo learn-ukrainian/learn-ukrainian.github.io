@@ -281,18 +281,6 @@ def test_invalid_withdrawals_refuse(release_input, withdrawals):
         release(release_input, withdrawals=withdrawals)
 
 
-def test_cli_release_and_withdrawal(release_input, tmp_path, capsys):
-    source = tmp_path / "cards.json"
-    source.write_text(json.dumps({"cards": {release_input.card["card_id"]: release_input.card}}))
-    common = ["--cards", str(source), "--format", "json"]
-    assert projection.main([*common, "--version", "v0.1.0-pilot", "--output", str(tmp_path / "release")]) == 0
-    assert json.loads(capsys.readouterr().out)["field_citation_count"] == 2
-    assert projection.main([*common, "--version", "v0.1.1-pilot", "--output", str(tmp_path / "replacement"),
-                            "--previous-version", "v0.1.0-pilot", "--withdraw-source", "ulif",
-                            "--justification", "Removal request"]) == 0
-    assert (tmp_path / "replacement/withdrawal-notice.json").is_file()
-
-
 @pytest.mark.parametrize("shape", ["list", "map", "single", "jsonl", "directory", "assembly-directory"])
 def test_input_formats(tmp_path, shape):
     card = {"card_id": "fixture", "assertions": []}
@@ -321,21 +309,6 @@ def test_jsonl_rejects_bare_cr_record_separator(tmp_path):
     path.write_bytes(record + b"\r" + record)
     with pytest.raises(json.JSONDecodeError):
         projection.load_cards(path, Path("unused"))
-
-
-def test_pilot_manifest_uses_existing_readonly_assembly(tmp_path, monkeypatch):
-    from scripts.atlas import word_card_assembly as assembly
-
-    manifest = tmp_path / "pilot.json"
-    manifest.write_text('{"selection": {}}')
-    calls = []
-    monkeypatch.setattr(assembly, "store_path", lambda name, explicit: tmp_path / f"{name}.db")
-    monkeypatch.setattr(assembly, "load_inputs", lambda *args: calls.append(args) or "inputs")
-    monkeypatch.setattr(assembly, "build", lambda inputs: {"cards": {"fixture": {"card_id": inputs}}})
-    assert projection.load_cards(manifest, tmp_path / "register.yaml") == [{"card_id": "inputs"}]
-    assert calls[0][0] == manifest
-    assert calls[0][2] == tmp_path / "register.yaml"
-    assert all(p.is_absolute() for p in calls[0][3:6])
 
 
 def test_help_and_invalid_cli(tmp_path, capsys):

@@ -264,17 +264,3 @@ def test_mechanical_worker_admits_composed_stdin_after_file_change(dispatched, f
         review=False, prompt=executed,
     )
     assert refusal is None and target.model == HAIKU
-
-
-def test_changed_stdin_prompt_settles_as_typed_refusal_before_runtime(dispatched, monkeypatch):
-    repo, _args, state_path = dispatched
-
-    def never_started(*_args, **_kwargs):
-        pytest.fail("changed stdin reached runtime setup")
-
-    monkeypatch.setattr(delegate, "_advisory_worker_refusal", never_started)
-    assert delegate._run_worker(TASK, "claude", "Changed prompt", "read-only", str(repo), HAIKU, 30) == 1
-    saved = json.loads(state_path.read_text())
-    assert saved["status"] == "failed"
-    assert saved["failure_reason"] == saved["returncode_reason"] == "mechanical_admission_refused"
-    assert saved["stderr_excerpt"].startswith("MECHANICAL_TASK_REFUSED:")

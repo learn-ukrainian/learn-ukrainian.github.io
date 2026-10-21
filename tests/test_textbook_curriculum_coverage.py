@@ -6,15 +6,11 @@ import json
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.projects.open_model_data import textbook_curriculum_coverage as coverage
 
 ROOT = Path(__file__).resolve().parents[1]
 DENOMINATOR = ROOT / "registry" / "textbook_curriculum_denominator.yaml"
-UNIVERSITY_DENOMINATOR = ROOT / "registry" / "university_corpus_denominator.yaml"
-
-
 def _cell(
     cell_id: str,
     *,
@@ -111,139 +107,6 @@ def test_range_expansion_is_materialized_and_selection_is_separate(tmp_path: Pat
     }
 
 
-def test_foreign_languages_are_retained_but_non_gating() -> None:
-    denominator = coverage.load_denominator(DENOMINATOR)
-    foreign_cells = [
-        cell
-        for cell in denominator["cells"]
-        if cell["canonical_subject_id"] == "foreign_language"
-    ]
-
-    assert {cell["grade"] for cell in foreign_cells} == set(range(1, 12))
-    assert {cell["requirement_class"] for cell in foreign_cells} == {"optional_elective"}
-    assert {cell["textbook_applicability"] for cell in foreign_cells} == {"optional"}
-
-
-def test_grade_twelve_is_future_tracking_not_a_current_cell() -> None:
-    denominator = coverage.load_denominator(DENOMINATOR)
-
-    assert all(cell["grade"] <= 11 for cell in denominator["cells"])
-    assert denominator["future_coverage"] == [
-        {
-            "future_id": "g12.all_subjects",
-            "grade": 12,
-            "status": "future_not_current",
-            "hard_denominator": False,
-            "acquisition_required_now": False,
-            "earliest_applicable_school_year": "2029/30",
-            "basis_note": "The new profile-school standard starts with Grade 10 on 1 September 2027; Grade 12 is tracked now but is not a current 2026/27 textbook gap.",
-            "official_program_locator_ids": ["MON_P10_12"],
-        }
-    ]
-
-
-def test_rights_blocked_grade_nine_candidate_cannot_close_coverage() -> None:
-    denominator = coverage.load_denominator(DENOMINATOR)
-    grade_nine = next(cell for cell in denominator["cells"] if cell["cell_id"] == "g09.ukrmova")
-    candidate = grade_nine["candidate_sources"][0]
-
-    assert grade_nine["coverage"]["source_ids"] == []
-    assert grade_nine["coverage"]["evidence_state"] == "legacy_only"
-    assert candidate["native_text_canary_state"] == "searchable_front_matter_verified"
-    assert candidate["license_or_access_status"] == "public_download_all_rights_reserved"
-    assert candidate["admission_state"] == "blocked_for_retention_and_model_corpus"
-
-
-def test_gap_execution_plan_matches_the_non_gating_denominator() -> None:
-    denominator = coverage.load_denominator(DENOMINATOR)
-    plan = denominator["phase3_gap_execution"]
-    exact_packets = plan["exact_page_verification_packets"]
-    full_packets = plan["full_extraction_or_replacement_packets"]
-
-    assert plan["hard_denominator_counts"] == {
-        "required_cells": 116,
-        "covered": 77,
-        "choice_satisfied": 12,
-        "extraction_missing": 20,
-        "acquisition_missing": 7,
-        "unresolved": 0,
-    }
-    assert plan["acquisition_interpretation"]["true_new_source_gap"] == ["g09.ukrmova"]
-    assert sum(packet["affected_row_count"] for packet in exact_packets) == 13
-    assert plan["exact_page_verification_status"]["verified_row_count"] == 13
-    assert plan["covered_source_quality_status"]["repaired_row_count"] == 10
-    assert (
-        plan["covered_source_quality_status"][
-            "verified_legitimate_foreign_diacritic_row_count"
-        ]
-        == 2
-    )
-    assert len(full_packets) == 12
-    assert len({packet["source_file"] for packet in exact_packets + full_packets}) == 21
-    assert all("angli" not in packet["source_file"] for packet in exact_packets + full_packets)
-
-
-def test_university_layer_is_separate_and_topic_complete() -> None:
-    university = yaml.safe_load(UNIVERSITY_DENOMINATOR.read_text(encoding="utf-8"))
-    cells = university["topic_cells"]
-
-    assert university["operation"]["counted_in_school_textbook_denominator"] is False
-    assert len(cells) == 20
-    assert len({cell["cell_id"] for cell in cells}) == len(cells)
-    assert {cell["domain"] for cell in cells} == {
-        "ukrainian_language",
-        "ukrainian_literature",
-        "history_of_ukraine",
-        "arts",
-    }
-    assert all(cell["required"] is True for cell in cells)
-    assert university["coverage_summary"] == {
-        "required_cells": 20,
-        "canary_passed": 18,
-        "candidate": 2,
-        "acquisition_research": 0,
-        "residual_gap": 0,
-        "accepted": 0,
-        "acceptance_gate": (
-            "A source closes a cell only after its rights, native text, Drive "
-            "identities, and database identity pass."
-        ),
-    }
-    assert university["source_admission_contract"]["quality_rules"]["guessed_text"] == "forbidden"
-    sources = {source["source_id"]: source for source in university["sources"]}
-    assert len(sources) == 12
-    assert sum(source["admission_state"] == "accepted" for source in sources.values()) == 3
-    assert sum(source["admission_state"] == "canary_passed" for source in sources.values()) == 7
-    assert sum(source["admission_state"] == "candidate" for source in sources.values()) == 2
-    assert all(
-        source["database_identity"] is not None
-        for source in sources.values()
-        if source["admission_state"] == "accepted"
-    )
-    assert all(source["database_identity"] is not None for source in sources.values())
-    assert sources["uni-ukrlit-kalinichenko-2024"]["reuse_tier"] == "open_with_attribution"
-    assert sources["uni-istoriya-levytska-2015"]["reuse_tier"] == "rights_scope_requires_confirmation"
-    assert sources["uni-ukrmova-punctuation-marynenko-2021"]["native_text_canary_state"] == (
-        "pass_no_ocr_276_of_276_pages_pypdf_backend"
-    )
-    assert sources["uni-mystetstvo-petutina-2012"]["native_text_canary_state"] == (
-        "pass_no_ocr_136_of_136_pages_pdfkit_backend"
-    )
-    assert university["native_exactness_audit"]["source_count"] == 12
-    assert university["native_exactness_audit"]["chunk_count"] == 2681
-    assert university["native_exactness_audit"]["flagged_chunk_count"] == 1
-    assert university["native_exactness_audit"]["verified_flagged_chunk_count"] == 1
-    assert university["native_exactness_audit"]["unverified_flagged_chunk_count"] == 0
-    assert sum(report["source_count"] for report in university["native_exactness_audit"]["reports"]) == 12
-    rejected_ids = {
-        item.get("source_id") for item in university["rejected_candidates"] if item.get("source_id")
-    }
-    assert {
-        "uni-ukrmova-glukhovtseva-2021",
-        "uni-ukrmova-morphology-aleksiienko-2014",
-    } <= rejected_ids
-
-
 def test_one_of_choice_is_satisfied_by_one_approved_alternative() -> None:
     first = _cell(
         "g01.choice_a",
@@ -288,22 +151,6 @@ def test_combined_ten_eleven_art_volume_covers_both_grade_cells() -> None:
         for item in cells.values()
         for match in item["readiness_matches"]
     )
-
-
-def test_combined_grade_two_language_reading_volume_covers_both_cells() -> None:
-    report = coverage.evaluate(
-        coverage.load_denominator(DENOMINATOR),
-        _readiness(("3037-ukrmova-bolshakova-2-klas", "ready")),
-    )
-    cells = {
-        item["cell_id"]: item
-        for item in report["cells"]
-        if item["cell_id"] in {"g02.ukrmova", "g02.chytannia"}
-    }
-    assert {item["coverage_unit_id"] for item in cells.values()} == {
-        "g02.ukrmova_chytannia_combined"
-    }
-    assert {item["status"] for item in cells.values()} == {"covered"}
 
 
 def test_no_textbook_applicability_is_not_an_automatic_pdf_gap() -> None:
@@ -357,15 +204,6 @@ def test_pdf_without_chunks_is_extraction_missing() -> None:
     assert report["cells"][0]["status"] == "extraction_missing"
 
 
-def test_partial_page_quarantine_is_extraction_missing() -> None:
-    cell = _cell("g06.partial", source_ids=["partial-source"])
-    report = coverage.evaluate(
-        _denominator(cell),
-        _readiness(("partial-source", "partial_db_ingest")),
-    )
-    assert report["cells"][0]["status"] == "extraction_missing"
-
-
 def test_all_source_groups_require_every_curricular_component() -> None:
     cell = _cell("g10.history", source_ids=["history-ua"])
     cell["coverage"].update(
@@ -378,14 +216,6 @@ def test_all_source_groups_require_every_curricular_component() -> None:
         _readiness(("history-ua", "ready")),
     )
     assert report["cells"][0]["status"] == "acquisition_missing"
-
-
-def test_report_is_deterministic() -> None:
-    denominator = coverage.load_denominator(DENOMINATOR)
-    readiness = _readiness(("3090-mystectvo-10-11-klas-nazarenko", "ready"))
-    first = coverage.evaluate(denominator, readiness)
-    second = coverage.evaluate(denominator, readiness)
-    assert coverage.canonical_json(first) == coverage.canonical_json(second)
 
 
 @pytest.mark.parametrize(

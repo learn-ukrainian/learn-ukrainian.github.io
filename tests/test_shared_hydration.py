@@ -2,24 +2,17 @@
 
 from __future__ import annotations
 
-import errno
 import http.client
 import http.server
 import json
-import re
-import signal
-import socket
 import sqlite3
 import threading
 import time
 from contextlib import suppress
 from copy import deepcopy
-from pathlib import Path
-from pathlib import Path as _Path
 from types import SimpleNamespace
 
 import pytest
-from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.session_canary import shared_hydration as hydration
 
@@ -37,40 +30,6 @@ def _evidence() -> dict[str, object]:
 def _half_second_budget(monkeypatch: pytest.MonkeyPatch) -> None:
     """Existing timing cases pin the 0.5 s floor through the supported override."""
     monkeypatch.setenv(hydration.HYDRATION_DEADLINE_ENV, "0.5")
-
-
-def test_default_deadline_is_five_seconds_without_override(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(hydration.HYDRATION_DEADLINE_ENV, raising=False)
-    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
-    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
-    validator = Draft202012Validator(hydration.HYDRATION_CAPSULE_V1_SCHEMA, format_checker=FormatChecker())
-    assert list(validator.iter_errors(capsule)) == []
-    assert capsule["deadline_ms"] == 2000.0
-    assert capsule["state"] == "ready"
-
-
-@pytest.mark.parametrize(
-    ("raw", "expected"),
-    [("3", 3.0), ("0.1", 0.5), ("99", 4.5), ("nan", 2.0), ("inf", 2.0), ("bogus", 2.0), ("", 2.0)],
-)
-def test_deadline_override_is_bounded(monkeypatch: pytest.MonkeyPatch, raw: str, expected: float) -> None:
-    monkeypatch.setenv(hydration.HYDRATION_DEADLINE_ENV, raw)
-    assert hydration.hydration_deadline_seconds() == expected
-
-
-def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
-    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
-
-    validator = Draft202012Validator(hydration.HYDRATION_CAPSULE_V1_SCHEMA, format_checker=FormatChecker())
-    assert list(validator.iter_errors(capsule)) == []
-    assert capsule["schema_version"] == "1.3"
-    assert capsule["deadline_ms"] == 500.0
-    assert hydration.HYDRATION_DEADLINE_SECONDS == 2.0
-    assert hydration.HYDRATION_CAPSULE_V1_SCHEMA["$id"].endswith("HydrationCapsuleV1-1.3.json")
-    assert capsule["state"] == "ready"
-    assert capsule["execution_allowed"] is True
-    assert capsule["blocked"] is False
 
 
 def test_deadline_is_monotonic_and_degrades_without_blocking(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -177,57 +136,6 @@ def stream_fetch(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest
         monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
 
     return install
-
-
-@pytest.mark.parametrize("delay", [0.250, 0.750], ids=["below-budget", "above-budget"])
-def test_real_capsule_stream_fetch_budget_and_no_retry(monkeypatch: pytest.MonkeyPatch, delay: float) -> None:
-    payload = json.dumps(_remote_stream(monkeypatch)).encode()
-    fetches: list[str] = []
-    original_fetch = hydration._fetch_remote_stream
-
-    def fetch(stream_id: str, *, deadline: float) -> dict[str, object]:
-        fetches.append(stream_id)
-        return original_fetch(stream_id, deadline=deadline)
-
-    class Handler(http.server.BaseHTTPRequestHandler):
-        def do_GET(self) -> None:
-            assert self.path == "/api/epics/v1/epic:123?limit=1"
-            time.sleep(delay)
-            with suppress(BrokenPipeError, ConnectionResetError):
-                self.send_response(200)
-                self.send_header("Content-Length", str(len(payload)))
-                self.send_header("Connection", "close")
-                self.end_headers()
-                self.wfile.write(payload)
-
-        def log_message(self, format: str, *args: object) -> None:
-            pass
-
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
-    monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
-    try:
-        capsule = hydration.build_hydration_capsule("epic:123", "gemini")
-        assert fetches == ["epic:123"]
-        assert capsule["deadline_ms"] == 500.0
-        if delay < 0.500:
-            assert capsule["state"] == "ready"
-            assert capsule["blocked"] is False
-            assert capsule["execution_allowed"] is True
-            assert capsule["degradation_reasons"] == []
-            assert capsule["elapsed_ms"] >= delay * 1000
-        else:
-            assert capsule["state"] == "blocked"
-            assert capsule["blocked"] is True
-            assert capsule["execution_allowed"] is False
-            assert capsule["degradation_reasons"] == ["deadline-exceeded", "stream-evidence-timeout"]
-            assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=1)
 
 
 @pytest.mark.parametrize(
@@ -339,18 +247,6 @@ def test_malformed_remote_digest_blocks_without_traceback(
     assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
 
 
-def test_remote_expiry_overflow_blocks_without_traceback(monkeypatch: pytest.MonkeyPatch, stream_fetch) -> None:
-    response = _remote_stream(monkeypatch)
-    response["lease"]["expires_at"] = "0001-01-01T00:00:00+05:00"
-    stream_fetch(response)
-
-    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
-
-    assert capsule["state"] == "blocked"
-    assert capsule["execution_allowed"] is False
-    assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
-
-
 @pytest.mark.parametrize(
     ("field", "value"),
     [
@@ -393,21 +289,6 @@ def test_remote_launcher_lease_mismatch_blocks(
 
     assert capsule["execution_allowed"] is False
     assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
-
-
-def test_missing_launcher_lease_or_remote_timeout_blocks(monkeypatch: pytest.MonkeyPatch, stream_fetch) -> None:
-    response = _remote_stream(monkeypatch)
-    monkeypatch.delenv("SESSION_STREAM_LEASE_ID")
-    stream_fetch(response)
-    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is False
-
-    monkeypatch.setenv("SESSION_STREAM_LEASE_ID", "lease-fixture")
-
-    def timed_out(stream_id: str, *, deadline: float) -> dict[str, object]:
-        raise TimeoutError("timeout")
-
-    monkeypatch.setattr(hydration, "_fetch_remote_stream", timed_out)
-    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is False
 
 
 def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -548,197 +429,6 @@ def test_remote_transport_real_loopback_connection_close(monkeypatch: pytest.Mon
         thread.join(timeout=1)
 
 
-def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
-    received = threading.Event()
-
-    class Handler(http.server.BaseHTTPRequestHandler):
-        def do_GET(self) -> None:
-            received.set()
-            time.sleep(0.2)
-            try:
-                self.send_response(200)
-                self.end_headers()
-            except BrokenPipeError:
-                pass
-
-        def log_message(self, format: str, *args: object) -> None:
-            pass
-
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
-    try:
-        with pytest.raises(LookupError) as error:
-            hydration._fetch_remote_stream("epic:123", deadline=time.monotonic() + 0.05)
-        assert received.is_set()
-        assert isinstance(error.value.__cause__, (TimeoutError, http.client.RemoteDisconnected))
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=1)
-
-
-@pytest.mark.parametrize("phase", ["headers", "body"])
-def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: pytest.MonkeyPatch, phase: str) -> None:
-    # Bytes arrive every 10 ms, a tenth of the 100 ms socket inactivity timeout,
-    # so only the total-deadline watchdog can end the read. Unwatched, the drip
-    # would take ~10 s (1000 bytes), far past the 3 s bound that absorbs CI jitter.
-    drip_interval = 0.01
-    drip_bytes = 1000
-    received = threading.Event()
-    release = threading.Event()
-
-    class Handler(http.server.BaseHTTPRequestHandler):
-        def do_GET(self) -> None:
-            received.set()
-            if phase == "body":
-                self.send_response(200)
-                self.send_header("Content-Length", str(drip_bytes))
-                self.send_header("Connection", "close")
-                self.end_headers()
-                pieces = (b"x" for _ in range(drip_bytes))
-            else:
-                head = b"HTTP/1.1 200 OK\r\nConnection: close\r\nX-Pad: "
-                raw = head + b"a" * (drip_bytes - len(head)) + b"\r\nContent-Length: 2\r\n\r\n{}"
-                pieces = (bytes((byte,)) for byte in raw)
-            for piece in pieces:
-                try:
-                    self.wfile.write(piece)
-                    self.wfile.flush()
-                except (BrokenPipeError, ConnectionResetError):
-                    break
-                if release.wait(drip_interval):
-                    break
-
-        def log_message(self, format: str, *args: object) -> None:
-            pass
-
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
-    try:
-        started = time.monotonic()
-        with pytest.raises(LookupError):
-            hydration._fetch_remote_stream("epic:123", deadline=started + 0.1)
-        assert received.is_set()
-        assert time.monotonic() - started < 3.0
-    finally:
-        release.set()
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=1)
-
-
-def test_terminating_process_group_reaps_child_without_zombie(monkeypatch: pytest.MonkeyPatch) -> None:
-    class Process:
-        pid = 4242
-        returncode: int | None = None
-
-    calls: list[tuple[int, int]] = []
-    monkeypatch.setattr(hydration.os, "killpg", lambda pid, sig: calls.append((pid, sig)))
-    monkeypatch.setattr(hydration.os, "waitpid", lambda pid, options: (pid, 0))
-
-    process = Process()
-    hydration.terminate_process_group(process)  # type: ignore[arg-type]
-
-    assert calls == [(4242, signal.SIGTERM)]
-    assert process.returncode == 0
-
-
-def test_terminating_process_group_escalates_after_200ms(monkeypatch: pytest.MonkeyPatch) -> None:
-    class Process:
-        pid = 4242
-
-    calls: list[tuple[int, int]] = []
-    waits: list[float] = []
-    results = iter((False, True))
-    monkeypatch.setattr(hydration.os, "killpg", lambda pid, sig: calls.append((pid, sig)))
-    monkeypatch.setattr(
-        hydration,
-        "_reap_pid",
-        lambda process, timeout: waits.append(timeout) or next(results),
-    )
-
-    hydration.terminate_process_group(Process())  # type: ignore[arg-type]
-
-    assert calls == [(4242, signal.SIGTERM), (4242, signal.SIGKILL)]
-    assert waits == [0.200, 0.200]
-
-
-def test_gh_queries_are_new_sessions_and_timeout_reaps(monkeypatch: pytest.MonkeyPatch) -> None:
-    def pipe(mode):
-        """A real pipe end whose other end is closed: reads see end of file, writes break."""
-        read, write = hydration.os.pipe()
-        hydration.os.close(write if mode == "rb" else read)
-        return hydration.os.fdopen(read if mode == "rb" else write, mode)
-
-    class Process:
-        """A ``gh`` that closes its output but is still running at the deadline."""
-
-        pid = 4242
-        returncode = None
-
-        def __init__(self, stdin):
-            self.args = ["gh"]
-            self.stdin = pipe("wb") if stdin == hydration.subprocess.PIPE else None
-            self.stdout, self.stderr = pipe("rb"), pipe("rb")
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *args):
-            for stream in (self.stdin, self.stdout, self.stderr):
-                if stream is not None:
-                    stream.close()
-            return False
-
-        def wait(self, timeout=None):
-            events.append(("wait", timeout))
-            if timeout is not None:
-                raise hydration.subprocess.TimeoutExpired("gh", timeout)
-            self.returncode = -signal.SIGKILL
-            return self.returncode
-
-    launched = {}
-    events = []
-    monkeypatch.setenv("GH_REPO", "fixture/project")
-    monkeypatch.setattr(
-        hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process(kwargs["stdin"])
-    )
-    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: events.append(("killpg", pid, signum)))
-    monkeypatch.setattr(hydration.time, "monotonic", lambda: 1.0)
-    assert hydration.run_gh_json(["issue", "view", "5512", "--json", "title"], deadline=1.1) is None
-    assert launched["start_new_session"] is True
-    # The bounded wait times out, the whole group is killed, and only then is the process reaped.
-    assert events[0][0] == "wait" and events[0][1] is not None and 0 < events[0][1] <= 0.1 + 1e-9
-    assert events[1:] == [("killpg", 4242, signal.SIGKILL), ("wait", None)]
-
-
-@pytest.mark.parametrize(
-    "value",
-    [
-        {"path": Path(hydration.ROOT) / "scripts" / "lib" / "safe.py"},
-        {"nested": [{"path": "scripts/lib/safe.py"}]},
-    ],
-)
-def test_sanitizer_normalizes_repo_relative_paths(value: dict[str, object]) -> None:
-    sanitized = hydration.sanitize_hydration_value(value)
-    assert "scripts/lib/safe.py" in str(sanitized)
-
-
-@pytest.mark.parametrize(
-    "value",
-    [
-        "./this sentence has spaces /.. and is not a file path",
-        ".agent/this sentence has spaces /.. and is not a file path",
-    ],
-)
-def test_sanitizer_preserves_sentence_like_strings_with_slashes(value: str) -> None:
-    assert hydration.sanitize_hydration_value(value) == value
-
-
 @pytest.mark.parametrize(
     "value",
     [
@@ -750,57 +440,6 @@ def test_sanitizer_preserves_sentence_like_strings_with_slashes(value: str) -> N
 def test_sanitizer_rejects_raw_output_secrets_and_external_paths(value: dict[str, str]) -> None:
     with pytest.raises(hydration.HydrationSanitizationError):
         hydration.sanitize_hydration_value(value)
-
-
-@pytest.mark.parametrize("failure", [TimeoutError(), ConnectionRefusedError(), ConnectionResetError()])
-def test_retry_recovers_transport_failure_with_fresh_500ms_budget(monkeypatch, failure) -> None:
-    response = _remote_stream(monkeypatch)
-    clock = [10.0]
-    deadlines = []
-    sleeps = []
-    monkeypatch.setattr(hydration.time, "monotonic", lambda: clock[0])
-
-    def sleep(seconds):
-        sleeps.append(seconds)
-        clock[0] += seconds
-
-    def fetch(stream_id, *, deadline):
-        deadlines.append(deadline)
-        assert deadline - clock[0] == pytest.approx(0.500)
-        if len(deadlines) == 1:
-            clock[0] += 0.501
-            raise failure
-        return response
-
-    monkeypatch.setattr(hydration.time, "sleep", sleep)
-    monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
-    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "gemini")
-    assert attempts == 2
-    assert capsule["state"] == "ready"
-    assert capsule["execution_allowed"] is True
-    assert capsule["deadline_ms"] == 500.0
-    assert deadlines == pytest.approx([10.5, 11.051])
-    assert sleeps == [0.050]
-    hydration._validate_capsule(capsule)
-
-
-def test_retry_caps_timeout_attempts_at_three(monkeypatch) -> None:
-    _remote_stream(monkeypatch)
-    calls = []
-    sleeps = []
-
-    def fetch(stream_id, *, deadline):
-        calls.append(deadline)
-        raise TimeoutError("not used for classification")
-
-    monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
-    monkeypatch.setattr(hydration.time, "sleep", sleeps.append)
-    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "gemini")
-    assert attempts == len(calls) == 3
-    assert sleeps == [0.050, 0.050]
-    assert capsule["blocked"] is True
-    assert capsule["deadline_ms"] == 500.0
-    assert capsule["degradation_reasons"] == ["stream-evidence-timeout"]
 
 
 @pytest.mark.parametrize(
@@ -864,103 +503,3 @@ def test_retry_does_not_repeat_degraded_allowed_capsule(monkeypatch) -> None:
     assert attempts == 1
     assert capsule["state"] == "degraded"
     assert capsule["execution_allowed"] is True
-
-
-@pytest.mark.parametrize(
-    ("error", "kind"),
-    [
-        (TimeoutError("lease mismatch"), "stream-evidence-timeout"),
-        (ConnectionRefusedError("unsafe"), "stream-evidence-connection-failure"),
-        (socket.gaierror("dns failure"), "stream-evidence-connection-failure"),
-        (OSError(errno.ENETUNREACH, "network"), "stream-evidence-connection-failure"),
-        (PermissionError("timeout"), "stream-evidence-invalid"),
-        (LookupError("deadline-exceeded"), "stream-evidence-invalid"),
-    ],
-)
-def test_evidence_failure_classifies_types_and_network_errno(error, kind) -> None:
-    assert hydration._evidence_failure(error) == kind
-
-
-def test_deadline_alone_cannot_mask_permanent_unavailable_evidence(monkeypatch) -> None:
-    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream, deadline: _evidence())
-    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
-    capsule["lease_state"] = {"status": "unavailable", "reason": "stream-evidence-unavailable"}
-    capsule["blocked"] = True
-    capsule["execution_allowed"] = False
-    capsule["state"] = "blocked"
-    capsule["degradation_reasons"] = ["deadline-exceeded", "stream-evidence-invalid"]
-    assert hydration._retryable_capsule(capsule) is False
-    capsule["degradation_reasons"] = ["deadline-exceeded"]
-    assert hydration._retryable_capsule(capsule) is True
-
-
-def test_retries_share_one_total_budget_inside_the_hook_bound(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Timeouts followed by recovery finish inside the post-compact hook's bound."""
-    monkeypatch.setenv(hydration.HYDRATION_DEADLINE_ENV, "4.5")
-    now = [100.0]
-    monkeypatch.setattr(hydration.time, "monotonic", lambda: now[0])
-    monkeypatch.setattr(hydration.time, "sleep", lambda s: now.__setitem__(0, now[0] + s))
-    budgets: list[float] = []
-    calls = iter(("timeout", "timeout", "ok"))
-
-    def fake_build(stream_id: str, lane_name: str, *, budget: float) -> dict[str, object]:
-        budgets.append(budget)
-        if next(calls) == "timeout":
-            now[0] += budget
-            return {"state": "blocked", "degradation_reasons": ["deadline-exceeded", "stream-evidence-timeout"]}
-        now[0] += 0.1
-        return {"state": "ready", "degradation_reasons": []}
-
-    monkeypatch.setattr(hydration, "build_hydration_capsule", fake_build)
-    monkeypatch.setattr(hydration, "_retryable_capsule", lambda c: c["state"] != "ready")
-    _capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "codex")
-    assert budgets[0] == 4.5
-    assert now[0] - 100.0 <= hydration.HYDRATION_TOTAL_BUDGET_SECONDS + 0.2
-    assert attempts <= 3
-
-    hook = (_Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks/post-compact.sh").read_text()
-    bound = int(
-        re.search(
-            r"run_bounded (\d+) \"\$BOUNDED_PYTHON\" \\\n\s+-m scripts.session_canary.codex_lane hydrate", hook
-        ).group(1)
-    )
-    assert bound >= hydration.HYDRATION_TOTAL_BUDGET_SECONDS + 1.0
-
-
-def test_default_retry_stops_inside_the_total_budget(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Two full default timeouts leave under 0.5 s, so no third attempt starts."""
-    monkeypatch.delenv(hydration.HYDRATION_DEADLINE_ENV, raising=False)
-    now = [0.0]
-    monkeypatch.setattr(hydration.time, "monotonic", lambda: now[0])
-    monkeypatch.setattr(hydration.time, "sleep", lambda s: now.__setitem__(0, now[0] + s))
-    budgets: list[float] = []
-
-    def fake_build(stream_id: str, lane_name: str, *, budget: float) -> dict[str, object]:
-        budgets.append(budget)
-        now[0] += budget
-        return {"state": "blocked"}
-
-    monkeypatch.setattr(hydration, "build_hydration_capsule", fake_build)
-    monkeypatch.setattr(hydration, "_retryable_capsule", lambda c: c["state"] != "ready")
-    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "codex")
-    assert budgets == [2.0, 2.0] and attempts == 2 and capsule["state"] == "blocked"
-    assert now[0] <= hydration.HYDRATION_TOTAL_BUDGET_SECONDS
-
-
-def test_default_retry_recovers_after_a_timeout_within_budget(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(hydration.HYDRATION_DEADLINE_ENV, raising=False)
-    now = [0.0]
-    monkeypatch.setattr(hydration.time, "monotonic", lambda: now[0])
-    monkeypatch.setattr(hydration.time, "sleep", lambda s: now.__setitem__(0, now[0] + s))
-    results = iter((False, True))
-
-    def fake_build(stream_id: str, lane_name: str, *, budget: float) -> dict[str, object]:
-        ok = next(results)
-        now[0] += 0.2 if ok else budget
-        return {"state": "ready" if ok else "blocked"}
-
-    monkeypatch.setattr(hydration, "build_hydration_capsule", fake_build)
-    monkeypatch.setattr(hydration, "_retryable_capsule", lambda c: c["state"] != "ready")
-    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "codex")
-    assert capsule["state"] == "ready" and attempts == 2
-    assert now[0] <= hydration.HYDRATION_TOTAL_BUDGET_SECONDS

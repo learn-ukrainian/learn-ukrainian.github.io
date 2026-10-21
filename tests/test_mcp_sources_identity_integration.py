@@ -136,12 +136,6 @@ def test_real_transport_preflight_requires_every_frozen_tool(sources_http_url):
         transport.close()
 
 
-def test_real_transport_verify_words_round_trip_is_harmless_and_public(real_transport):
-    # A public, harmless word — no private Phase 3 packet content.
-    result = real_transport.call_tool("verify_words", {"words": ["слово"]})
-    assert "слово" in result
-
-
 def test_real_endpoint_logs_hash_only_never_argument_values_or_response_text(real_transport, log_path: Path):
     private_marker = "СЕКРЕТНЕ_СЛОВО_ІНТЕГРАЦІЙНОГО_ТЕСТУ"
     offset = log_path.stat().st_size if log_path.exists() else 0

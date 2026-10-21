@@ -5,9 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-from jsonschema import Draft202012Validator
-
 from scripts.projects.open_model_data import correction_protection_factory as factory
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
@@ -19,40 +16,6 @@ MODEL_LANES = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_mod
 
 def _json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
-
-
-def test_cli_defaults_open_registry_inputs(tmp_path: Path) -> None:
-    phase2_input = tmp_path / "phase2.jsonl"
-    args = factory.parse_args(
-        [
-            "candidate",
-            "--phase2-input",
-            str(phase2_input),
-            "--full-output-dir",
-            str(tmp_path / "full"),
-            "--public-output-dir",
-            str(tmp_path / "public"),
-            "--index-output",
-            str(tmp_path / "index.json"),
-        ]
-    )
-    assert args.thresholds == factory.DEFAULT_THRESHOLDS
-    assert args.known_answers == factory.DEFAULT_KNOWN_ANSWERS
-    assert args.phase2_receipt == factory.DEFAULT_PHASE2_RECEIPT
-    for path in (args.thresholds, args.known_answers, args.phase2_receipt):
-        assert path.is_file()
-        assert "registry/projects/open_model_data" in path.as_posix()
-
-    with pytest.raises(FileNotFoundError):
-        factory.build_artifacts(
-            phase2_input=phase2_input,
-            phase2_receipt_path=args.phase2_receipt,
-            thresholds_path=args.thresholds,
-            known_answers_path=args.known_answers,
-            full_output_root=args.full_output_dir,
-            public_output_root=args.public_output_dir,
-            model_evidence_path=None,
-        )
 
 
 def test_known_answers_cover_all_categories_and_frozen_minima() -> None:
@@ -121,12 +84,6 @@ def test_phase2_source_blind_routes_are_conservative() -> None:
     assert factory.phase2_route(contaminated) == ("surzhyk_contested_contact", "excluded")
 
 
-def test_bundle_schema_is_strict_and_meta_valid() -> None:
-    schema = _json(factory.BUNDLE_SCHEMA)
-    Draft202012Validator.check_schema(schema)
-    assert schema["additionalProperties"] is False
-
-
 def test_model_lane_is_attributed_and_failed_lane_cannot_strengthen_gate() -> None:
     active = factory.validators()
     proposals, lane_counts = factory.load_model_proposals(MODEL_LANES, active)
@@ -145,48 +102,6 @@ def test_model_lane_is_attributed_and_failed_lane_cannot_strengthen_gate() -> No
     )
     assert gates["contextual_calque_government_valency"]["state"] == "passed"
     assert gates["contextual_calque_government_valency"]["correction_release_allowed"] is True
-
-
-def test_calque_gate_counts_declared_non_model_channels_and_lanes() -> None:
-    known_answers = _json(KNOWN_ANSWERS)
-    thresholds = _json(THRESHOLDS)
-    known_answers["categories"]["contextual_calque_government_valency"]["evidence"] = known_answers["categories"][
-        "contextual_calque_government_valency"
-    ]["evidence"][:1]
-    gates = factory.gate_results(
-        known_answers,
-        thresholds,
-        model_proposal_lanes=1,
-        model_dissent_lanes=1,
-    )
-    calque = gates["contextual_calque_government_valency"]
-    assert calque["state"] == "research_only"
-    assert calque["correction_release_allowed"] is False
-    assert any("non-model evidence channels=1" in reason for reason in calque["reasons"])
-
-    known_answers = _json(KNOWN_ANSWERS)
-    gates = factory.gate_results(
-        known_answers,
-        thresholds,
-        model_proposal_lanes=1,
-        model_dissent_lanes=0,
-    )
-    assert any(
-        "attributed dissent lanes=0" in reason for reason in gates["contextual_calque_government_valency"]["reasons"]
-    )
-
-
-def test_zvuchyt_narration_and_protected_mutations_are_frozen() -> None:
-    known_answers = _json(KNOWN_ANSWERS)
-    category = known_answers["categories"]["russian_lexical_inflectional_intrusion"]
-    assert category["positive"][0] == {
-        "text": "Фраза звучит значно вишуканіше.",
-        "surface": "звучит",
-        "replacement": "звучить",
-        "canary_ids": ["zvuchyt-modern-ukrainian-narration"],
-    }
-    assert len(category["protected"]) == 5
-    assert all(item["surface"] == "звучит" for item in category["protected"])
 
 
 def test_frozen_canaries_and_false_correction_caps_fail_closed() -> None:

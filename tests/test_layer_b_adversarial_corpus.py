@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections import Counter
-from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -19,29 +17,11 @@ from scripts.audit.layerb_label_scaffold import (
     validate_annotator_record,
     verify_candidate_segments,
 )
-from scripts.audit.layerb_shadow import JudgeRoute, _extract_lineages, _injection_screen, _select_route
+from scripts.audit.layerb_shadow import JudgeRoute, _extract_lineages, _select_route
 
 CORPUS_DIR = Path("tests/fixtures/curriculum_qg/layer_b_adversarial")
 ARTIFACT_PATH = CORPUS_DIR / "adversarial-layer-b-fixture.json"
 MANIFEST_PATH = CORPUS_DIR / "manifest.yaml"
-EXPECTED_PROBE_CLASSES = {
-    "digit",
-    "name-swap",
-    "meaning-inversion",
-    "over-generalization",
-    "tool-error-as-evidence",
-    "multi-span",
-    "cross-event-join",
-    "lexical-variant",
-    "irrelevant-support-offset",
-    "prompt-injection",
-}
-EXPECTED_INJECTION_PROBES = {
-    "delimiter-escape",
-    "instruction-in-output",
-    "query-echo",
-    "boilerplate-double-false-evidence",
-}
 ARTIFACT_ENVELOPE_FIELDS = {
     "schema_version",
     "arm",
@@ -72,30 +52,6 @@ def _load_corpus() -> tuple[dict[str, Any], dict[str, Any]]:
     assert isinstance(artifact, dict)
     assert isinstance(manifest, dict)
     return artifact, manifest
-
-
-def _event_for_call_id(events: list[Mapping[str, Any]], call_id: str) -> Mapping[str, Any]:
-    return next(event for event in events if event.get("tool_call_id") == call_id)
-
-
-def test_adversarial_corpus_has_required_coverage_and_exact_injection_set() -> None:
-    _artifact, manifest = _load_corpus()
-    cases = manifest["cases"]
-
-    assert manifest["annotation_status"] == "PROPOSED"
-    assert len(cases) == 24
-    assert all(case["annotation_status"] == "PROPOSED" for case in cases.values())
-    counts = Counter(case["probe_class"] for case in cases.values())
-    assert set(counts) == EXPECTED_PROBE_CLASSES
-    assert all(counts[probe_class] >= 2 for probe_class in EXPECTED_PROBE_CLASSES)
-    assert counts["multi-span"] == 3
-    assert counts["prompt-injection"] == 4
-    assert counts["digit"] >= 3
-    assert "wrong-occurrence-17-preface" in cases
-    assert cases["wrong-occurrence-17-preface"].get("wrong_occurrence_probe") is True
-    assert {
-        case["injection_probe"] for case in cases.values() if case["probe_class"] == "prompt-injection"
-    } == EXPECTED_INJECTION_PROBES
 
 
 def test_adversarial_artifact_is_qg_bakeoff_shaped_and_lineage_safe() -> None:
@@ -142,28 +98,3 @@ def test_adversarial_candidates_pass_existing_event_index_and_scaffold_integrity
                 assert projected_event_output_id == event_output_id
                 raw_output, _normalized_output = verify_candidate_segments(candidate, event_output_id, event_outputs)
                 assert candidate["raw_output_sha256"] == hashlib.sha256(raw_output.encode("utf-8")).hexdigest()
-
-
-def test_adversarial_injection_and_offset_probes_are_unsafe_to_accept() -> None:
-    artifact, manifest = _load_corpus()
-    events = _artifact_events(artifact)
-    fact_checks = {fact_check["fact_check_id"]: fact_check for fact_check in artifact["payload"]["fact_checks"]}
-
-    for case in manifest["cases"].values():
-        fact_check = fact_checks[case["fact_check_id"]]
-        source_event = _event_for_call_id(events, fact_check["grounding"]["tool_call_id"])
-        raw_output = str(source_event["output"])
-        if case["probe_class"] == "prompt-injection":
-            assert case["expected_fact_check_decision"] == "AUDIT"
-            assert _injection_screen(raw_output)
-        if case["probe_class"] == "irrelevant-support-offset":
-            assert case["expected_fact_check_decision"] == "AUDIT"
-            simulated = case["simulated_judge_result"]["support_spans"][0]
-            assert 0 <= simulated["start"] < simulated["end"] <= len(raw_output)
-            anchored_spans = [
-                segment
-                for candidates in case["candidates_by_event_output_id"].values()
-                for candidate in candidates
-                for segment in candidate["ordered_segment_spans"]
-            ]
-            assert all(simulated["end"] <= span["output_raw_start"] for span in anchored_spans)

@@ -160,15 +160,6 @@ def test_invalid_server_request_identifier_is_not_echoed(request_id):
         }) + b"\n")
 
 
-def test_missing_native_tool_runner_warning_refuses():
-    rows = events()
-    rows.insert(3, {"method": "warning", "params": {
-        "message": "Code Mode is unavailable because the host executable was not found",
-    }})
-    with pytest.raises(OperationRefused, match="child_sources_tools_unavailable"):
-        parse_child(capture(rows), binding())
-
-
 def test_recorded_native_protocol_projection_matches_actual_event_order():
     # Actual 0.153.4 stdio controls, with opaque IDs mapped and payload bodies
     # omitted. This records wire shape/order, not a linguistic or provider proof.

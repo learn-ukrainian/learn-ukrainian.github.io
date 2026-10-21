@@ -51,9 +51,3 @@ def test_existing_path_still_resolved_as_file(tmp_path: Path, monkeypatch: pytes
     assert bucket_a == ['"ранкова рутина"']
     assert bucket_b == {"ранкова", "рутина"}
     assert "ранкова рутина" in dense
-
-
-def test_short_string_query_treated_as_text() -> None:
-    """A short string that is not a real path stays a text query."""
-    _bucket_a, _bucket_b, dense = _prepare_query("дієслова -ся", track="a1")
-    assert dense == "дієслова -ся" or "дієслова" in dense

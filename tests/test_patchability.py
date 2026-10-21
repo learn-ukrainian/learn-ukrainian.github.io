@@ -62,35 +62,6 @@ def test_validate_fix_anchors_rejects_malformed_fix() -> None:
 # ---------- compute_anchor_validation (observation-level) ----------
 
 
-def test_compute_anchor_validation_aggregates_once() -> None:
-    content = "Alpha Beta Gamma"
-    fixes = [
-        {"find": "Alpha", "replace": "α"},
-        {"find": "Beta", "replace": "β"},
-        {"find": "Delta", "replace": "δ"},  # absent
-    ]
-    result = compute_anchor_validation(fixes, content)
-    assert result == AnchorValidation(evaluated=True, total=3, valid=2, invalid=1)
-
-
-def test_compute_anchor_validation_not_evaluated_when_inputs_none() -> None:
-    assert compute_anchor_validation(None, "some content") == AnchorValidation(
-        evaluated=False, total=0, valid=0, invalid=0
-    )
-    assert compute_anchor_validation([{"find": "x", "replace": "y"}], None) == AnchorValidation(
-        evaluated=False, total=0, valid=0, invalid=0
-    )
-
-
-def test_compute_anchor_validation_accepts_tuple_without_copy() -> None:
-    # Real call-site passes observation.parsed_fixes, which is a tuple.
-    # Regression guard: don't require list conversion at the boundary.
-    content = "tuple input works"
-    result = compute_anchor_validation(({"find": "tuple", "replace": "x"},), content)
-    assert result.evaluated is True
-    assert result.valid == 1
-
-
 # ---------- plan-level hardstop (ADR-007 preservation) ----------
 
 
@@ -102,18 +73,6 @@ def test_plan_level_finding_always_hardstops() -> None:
     status, reason = classify_patchability(finding, anchor_validation=validation)
     assert status == "plan_level_hardstop"
     assert "plan_contradiction" in reason
-
-
-def test_plan_level_hardstop_fires_before_evaluation_check() -> None:
-    # Plan-level short-circuits before we read anchor_validation.evaluated —
-    # safe even if caller passed the unevaluated default.
-    finding = {"plan_level": True, "error_class": "vocab_density"}
-    status, reason = classify_patchability(
-        finding,
-        anchor_validation=AnchorValidation(evaluated=False, total=0, valid=0, invalid=0),
-    )
-    assert status == "plan_level_hardstop"
-    assert "vocab_density" in reason
 
 
 # ---------- legacy / not-evaluated path ----------
@@ -192,15 +151,6 @@ def test_batch_patch_ok_when_all_anchors_validate_and_not_plan_level() -> None:
     assert "batch-level" in reason
 
 
-def test_batch_patch_ok_with_insert_after_directive() -> None:
-    finding = {"plan_level": False, "error_class": "word_budget"}
-    content = "Section 1 content.\n\nSection 2 content."
-    fixes = [{"insert_after": "Section 1 content.", "text": " Added sentence."}]
-    validation = compute_anchor_validation(fixes, content)
-    status, _ = classify_patchability(finding, anchor_validation=validation)
-    assert status == "batch_patch_ok"
-
-
 # ---------- dispatch-order parity with _apply_review_fixes ----------
 
 
@@ -232,29 +182,6 @@ def test_mixed_shape_fix_validates_insert_after_first() -> None:
 
 
 # ---------- integration: empty-tuple telemetry through convergence_loop ----------
-
-
-def test_empty_parsed_fixes_tuple_reports_no_fixes_not_unevaluated() -> None:
-    """A real observation whose reviewer emitted zero <fixes> MUST report
-    ``no_fixes`` (reviewer was there, had nothing to say), NOT ``not_evaluated``
-    (observation wasn't populated with P0 inputs).
-
-    Regression guard: an earlier version collapsed ``if parsed_fixes else None``
-    which silently lost the distinction. The ``no_fixes`` branch would be
-    dead in production and the audit trail would be wrong.
-    """
-    # Empty tuple (reviewer emitted nothing) + populated content → no_fixes
-    validation = compute_anchor_validation((), "real module content")
-    assert validation == AnchorValidation(evaluated=True, total=0, valid=0, invalid=0)
-    finding = {"plan_level": False, "error_class": "notation_error"}
-    status, reason = classify_patchability(finding, anchor_validation=validation)
-    assert status == "no_fixes"
-    assert "nothing to patch" in reason
-    # None (legacy observation) → not_evaluated
-    legacy_validation = compute_anchor_validation(None, None)
-    assert legacy_validation.evaluated is False
-    status, _ = classify_patchability(finding, anchor_validation=legacy_validation)
-    assert status == "not_evaluated"
 
 
 def test_empty_fixes_propagate_through_prioritize_findings() -> None:

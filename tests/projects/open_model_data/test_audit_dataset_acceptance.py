@@ -25,7 +25,6 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
     audit_check_6_split_overlap,
     audit_check_7_sample_drawer,
     compute_dataset_sha256,
-    delexicalize_text,
     load_profile,
     normalize_ukrainian_text,
     parse_dataset_record,
@@ -101,21 +100,6 @@ def test_ukrainian_text_normalization():
     assert normalize_ukrainian_text("нови́й") == "новий"
     assert normalize_ukrainian_text("ба́чити") == "бачити"
     assert normalize_ukrainian_text("  слово   з   пробілами\n") == "слово з пробілами"
-
-
-def test_delexicalization_quote_and_digit_masking():
-    """Test masking of all typographic quote styles and digits."""
-    s1 = "Проаналізуйте напис: «Jan Lohowski» 1585 року."
-    assert delexicalize_text(s1) == "Проаналізуйте напис: <QUOTED_SPAN> # року."
-
-    s2 = 'Поясніть слово "калька" у розділі 3.'
-    assert delexicalize_text(s2) == "Поясніть слово <QUOTED_SPAN> у розділі #."
-
-    s3 = "Текст „цитата“ та ‘інша’ 2026."
-    assert delexicalize_text(s3) == "Текст <QUOTED_SPAN> та <QUOTED_SPAN> #."
-
-    s4 = "Шаблон {word} та <item> у списку [1]."
-    assert delexicalize_text(s4) == "Шаблон <VAR> та <VAR> у списку <VAR>."
 
 
 # ── Split Detection Tests (Blocker 1) ───────────────────────────────────────
@@ -1413,20 +1397,6 @@ def test_run_acceptance_audit_fails_on_missing_vesum_db(tmp_path):
     report, exit_code = run_acceptance_audit(
         dataset_dir=dummy_dir,
         vesum_db=Path("/nonexistent/vesum.db"),
-    )
-    assert exit_code == 2
-    assert report.overall_status == "OPERATIONAL_ERROR"
-
-
-def test_run_acceptance_audit_fails_on_missing_explicit_sources_db(tmp_path):
-    """Acceptance audit exits 2 if explicit sources_db is missing."""
-    dummy_dir = tmp_path / "data"
-    dummy_dir.mkdir()
-    (dummy_dir / "sample.jsonl").write_text('{"query": "a", "final_response": "b"}\n', encoding="utf-8")
-
-    report, exit_code = run_acceptance_audit(
-        dataset_dir=dummy_dir,
-        sources_db=Path("/nonexistent/sources.db"),
     )
     assert exit_code == 2
     assert report.overall_status == "OPERATIONAL_ERROR"

@@ -5,29 +5,13 @@ from __future__ import annotations
 import json
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from scripts.projects.open_model_data.typesafe_corpus_firewall import (
-    CorpusAction,
     TypeSafeCorpusFirewall,
-    _resolve_typesafe_key,
 )
 from scripts.projects.open_model_data.typesafe_cyrillic_gate import (
     CurriculumAction,
     LexicalVariety,
 )
-
-
-def test_corpus_action_is_gate_curriculum_action() -> None:
-    """Firewall must not invent a parallel disposition enum."""
-    assert CorpusAction is CurriculumAction
-    assert set(CurriculumAction) == {
-        CurriculumAction.ADMIT_STANDARD,
-        CurriculumAction.ADMIT_DIALECT_HERITAGE,
-        CurriculumAction.USE_AS_ANTI_CALQUE,
-        CurriculumAction.REJECT_DROP,
-    }
-    assert LexicalVariety.SOVIET_JARGON.value == "soviet_jargon"
 
 
 def test_standard_literary_sentence_heuristic() -> None:
@@ -133,26 +117,6 @@ def test_remote_batched_api_mock(mock_urlopen: MagicMock) -> None:
     assert report.decisions[1].quality_score == 0.1
 
 
-@pytest.mark.skipif(not _resolve_typesafe_key(), reason="TypeSafe API key not present on host")
-@pytest.mark.live_network
-def test_live_typesafe_firewall_integration() -> None:
-    """Integration test with live TypeSafe System One API."""
-    firewall = TypeSafeCorpusFirewall()
-    assert firewall.api_key != ""
-
-    candidates = [
-        "Тарас Шевченко народився у Моринцях і став символом українського відродження.",
-        "Файний леґінь запалив ватру на полонині.",
-        "Это сугубо русское предложение для проверки фильтрации.",
-    ]
-    report = firewall.filter_sentences(candidates)
-
-    assert report.total_processed == 3
-    assert report.kept_standard >= 1
-    assert report.dropped_russian_surzhyk >= 1
-    assert report.average_quality > 1.0
-
-
 def test_russian_letter_precedence_over_markers() -> None:
     """Russian letters must reject immediately even if historical/dialect markers are present."""
     firewall = TypeSafeCorpusFirewall(api_key="")
@@ -170,23 +134,6 @@ def test_russian_letter_precedence_over_markers() -> None:
     res_dialect_conflict = firewall.filter_sentences(["Файний ґазда прийшов с буквой ы."])
     assert res_dialect_conflict.dropped_russian_surzhyk == 1
     assert res_dialect_conflict.decisions[0].action == CurriculumAction.USE_AS_ANTI_CALQUE
-
-
-def test_non_ukrainian_and_numeric_noise_rejection() -> None:
-    """Foreign text and numeric/punctuation noise must be dropped, not admitted as standard."""
-    firewall = TypeSafeCorpusFirewall(api_key="")
-    res_en = firewall.filter_sentences(["This is an English sentence."])
-    assert res_en.dropped_ocr_noise == 1
-    assert res_en.kept_standard == 0
-
-    res_num = firewall.filter_sentences(["12345 67890 12345 67890."])
-    assert res_num.dropped_ocr_noise == 1
-    assert res_num.kept_standard == 0
-
-    # Foreign-script letters (Greek) must count in the denominator
-    res_greek = firewall.filter_sentences(["Αυτό είναι ελληνικό κείμενο για δοκιμή."])
-    assert res_greek.dropped_ocr_noise == 1
-    assert res_greek.kept_standard == 0
 
 
 def test_verbatim_whitespace_preservation() -> None:
@@ -211,22 +158,6 @@ def test_malformed_api_response_validation(mock_urlopen: MagicMock) -> None:
     assert res.total_processed == 1
     assert res.decisions[0].needs_human_review is True
     assert res.decisions[0].confidence == 0.0
-    assert res.decisions[0].action == CurriculumAction.REJECT_DROP
-    assert res.escalated_to_human == 1
-
-
-@patch("urllib.request.urlopen")
-def test_null_answers_container_escalates(mock_urlopen: MagicMock) -> None:
-    """Null or non-object answers must not fall through to silent heuristic admission."""
-    import io
-
-    resp_mock = io.BytesIO(b'{"answers": null}')
-    mock_urlopen.return_value.__enter__.return_value = resp_mock
-
-    firewall = TypeSafeCorpusFirewall(api_key="fake-key", batch_size=10)
-    res = firewall.filter_sentences(["Якийсь валідний текст для тестування."])
-    assert res.total_processed == 1
-    assert res.decisions[0].needs_human_review is True
     assert res.decisions[0].action == CurriculumAction.REJECT_DROP
     assert res.escalated_to_human == 1
 

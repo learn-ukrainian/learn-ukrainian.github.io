@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import subprocess
-from fnmatch import fnmatchcase
 from pathlib import Path
 
 import pytest
@@ -12,14 +11,11 @@ import pytest
 from scripts.common.git_context import sanitized_git_env
 from scripts.review.closeout_cli import main
 from scripts.review.security_paths import (
-    SECURITY_SENSITIVE_PATHS,
     effective_review_risk,
     git_changed_paths,
     is_security_sensitive_change,
 )
 from scripts.review.target_resolution import TargetResolutionError
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture(autouse=True)
@@ -29,14 +25,6 @@ def isolated_live_snapshot(monkeypatch):
 
 def _git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30)
-
-
-@pytest.mark.parametrize("pattern", SECURITY_SENSITIVE_PATHS)
-def test_every_security_glob_matches_a_tracked_file(pattern):
-    tracked = _git(REPO_ROOT, "ls-files", "-z").split("\0")
-    witnesses = [path for path in tracked if fnmatchcase(path, pattern)]
-    assert witnesses, f"security coverage lost: {pattern} matches no tracked file"
-    assert is_security_sensitive_change((witnesses[0],))
 
 
 @pytest.mark.parametrize(

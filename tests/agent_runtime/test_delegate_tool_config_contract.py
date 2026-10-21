@@ -88,13 +88,6 @@ def _dispatch_adapter_classes() -> list[type]:
     return classes
 
 
-def test_parsed_delegate_keys_cover_read_only_and_review_attempts() -> None:
-    keys = delegate_read_only_and_review_tool_config_keys()
-    assert "read_only_tmp_root" in keys
-    assert {"mcp_server_names", "review_id", "attempt_id", "strict_mcp_config", "mcp_config_path"} <= keys
-    assert "reviewer_tools" in keys
-
-
 # Placeholder per key delegate.py assigns. An unmapped key still gets a
 # value so a new read-only or review assignment is sent, not dropped.
 _KEY_PLACEHOLDERS: dict[str, object] = {

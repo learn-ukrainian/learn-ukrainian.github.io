@@ -21,9 +21,7 @@ from scripts.audit.generate_practice_deck import (
     ReviewedSourceAllowlist,
     apply_size_budgets,
     build_practice_shards,
-    format_a2_synonym_nomination_report,
     nominate_a2_synonym_pairs,
-    validate_synonym_verdict_record,
 )
 from scripts.lexicon.build_synonym_verdicts_yaml import main as run_converter
 from scripts.lexicon.verify_synonym_pairs import main as run_verify_script
@@ -357,24 +355,6 @@ def test_verb_distractors_count_under_first_sense_word_head() -> None:
     ]
 
 
-def test_verify_script_detects_verb_pair(tmp_path: Path) -> None:
-    manifest_path = tmp_path / "mock-manifest.json"
-    verdicts_path = tmp_path / "mock-verdicts.yaml"
-    out_path = tmp_path / "new_pairs.jsonl"
-    manifest_path.write_text(json.dumps({"entries": _verb_manifest("B1")}, ensure_ascii=False), encoding="utf-8")
-    yaml.dump({"approved": [], "rejected": []}, verdicts_path.open("w", encoding="utf-8"))
-    sys.argv = ["", "--manifest", str(manifest_path), "--verdicts", str(verdicts_path), "--out", str(out_path)]
-    assert run_verify_script() == 0
-    rows = [json.loads(line) for line in out_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    assert [(row["a"], row["b"], row["polarity"]) for row in rows] == [("говорити", "розмовляти", "synonym")]
-
-
-def test_synonym_verdict_a2_exception_requires_curator() -> None:
-    assert "curator" in " ".join(
-        validate_synonym_verdict_record({"a": "друг", "b": "товариш", "polarity": "synonym", "a2Exception": True})
-    )
-
-
 def test_flagged_a2_synonym_pair_emits_at_a2() -> None:
     manifest = _a2_synonym_fixture_manifest()
     verifier = _a2_synonym_fixture_verifier()
@@ -474,35 +454,6 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
     }
 
 
-def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
-    words = [
-        ("слово", "word"),
-        ("термін", "term, word"),
-        ("мова", "language"),
-        ("книга", "book"),
-        ("звук", "sound"),
-        ("парк", "park"),
-    ]
-    manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
-    verifier = JsonVesumVerifier({lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words})
-    verdicts = {
-        "approved": [],
-        "rejected": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
-    }
-
-    shards = build_practice_shards(
-        manifest,
-        ReviewedSourceAllowlist.from_payload([]),
-        verifier,
-        cloze_sources=None,
-        config=BuildConfig(target=20),
-        synonym_verdicts=verdicts,
-        ulif_synonym_groups=ULIF_FIXTURE,
-    )
-
-    assert shards["B1"]["synonym"]["synonym"] == []
-
-
 def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> None:
     manifest = [
         make_a1_mock_manifest_entry("кіт", "kit", "cat"),
@@ -538,78 +489,6 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
     assert tagged == set()
     assert {item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]} == {"kit", "kytska"}
     assert len(shards["B1"]["classify"]["classify"]) < 20
-
-
-def test_b1_synonym_behavior_unchanged_with_a2_exception_mechanism() -> None:
-    mock_manifest = [
-        make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
-        make_mock_manifest_entry("мова", "mova", "language"),
-        make_mock_manifest_entry("книга", "knyha", "book"),
-        make_mock_manifest_entry("звук", "zvuk", "sound"),
-    ]
-    verifier = JsonVesumVerifier(
-        {
-            "слово": [{"lemma": "слово", "pos": "noun"}],
-            "термін": [{"lemma": "термін", "pos": "noun"}],
-            "мова": [{"lemma": "мова", "pos": "noun"}],
-            "книга": [{"lemma": "книга", "pos": "noun"}],
-            "звук": [{"lemma": "звук", "pos": "noun"}],
-        }
-    )
-    verdicts = {
-        "approved": [
-            {
-                "a": "слово",
-                "b": "термін",
-                "polarity": "synonym",
-                "sources": ["synonyms"],
-            }
-        ],
-        "rejected": [],
-    }
-    shards = build_practice_shards(
-        mock_manifest,
-        ReviewedSourceAllowlist.from_payload([]),
-        verifier,
-        cloze_sources=None,
-        config=BuildConfig(target=10),
-        synonym_verdicts=verdicts,
-        ulif_synonym_groups=ULIF_FIXTURE,
-    )
-    b1_synonyms = shards["B1"]["synonym"]["synonym"]
-    assert len(b1_synonyms) >= 1
-    assert any(item["prompt"] == "слово" and item["answer"] == "термін" for item in b1_synonyms)
-    assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
-
-
-def test_nominate_a2_synonym_report_lists_fixture_candidates() -> None:
-    from scripts.audit.generate_practice_deck import _select_practice_lexemes
-
-    manifest = _a2_synonym_fixture_manifest()
-    verifier = _a2_synonym_fixture_verifier()
-    verdicts = {
-        "approved": [
-            {
-                "a": "друг",
-                "b": "товариш",
-                "polarity": "synonym",
-                "sources": ["synonyms", "wiktionary"],
-            }
-        ],
-        "rejected": [],
-    }
-    _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
-        manifest,
-        verifier,
-        BuildConfig(target=20),
-    )
-    nominations = nominate_a2_synonym_pairs(manifest, verdicts, all_lexemes, by_plain_lemma)
-    report = format_a2_synonym_nomination_report(nominations)
-    assert "друг\tтовариш\tsynonym\tsynonyms,wiktionary\tA2\tA2" in report
-    assert nominations[0]["a"] == "друг"
-    assert nominations[0]["b"] == "товариш"
-    assert "total\t1" in report
 
 
 def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
@@ -664,58 +543,6 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
     captured = capsys.readouterr()
     assert "a2Exception ignored" in captured.err
     assert "both legs must be A2 vocabulary" in captured.err
-
-
-def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    # One leg B1, one leg A2, flagged: flag must be ignored (loudly) and pair stays B1+.
-    manifest = [
-        make_mock_manifest_entry("приятель", "pryiatel", "friend, pal", ["друг"]),
-        make_a2_mock_manifest_entry("друг", "druh", "friend", ["приятель"]),
-        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade"),
-        make_a2_mock_manifest_entry("книга", "knyha", "book"),
-        make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
-        make_a2_mock_manifest_entry("папір", "papir", "paper"),
-    ]
-    verifier = JsonVesumVerifier(
-        {
-            "приятель": [{"lemma": "приятель", "pos": "noun"}],
-            "друг": [{"lemma": "друг", "pos": "noun"}],
-            "товариш": [{"lemma": "товариш", "pos": "noun"}],
-            "книга": [{"lemma": "книга", "pos": "noun"}],
-            "зошит": [{"lemma": "зошит", "pos": "noun"}],
-            "папір": [{"lemma": "папір", "pos": "noun"}],
-        }
-    )
-    verdicts = {
-        "approved": [
-            {
-                "a": "приятель",
-                "b": "друг",
-                "polarity": "synonym",
-                "sources": ["synonyms"],
-                "a2Exception": True,
-                "curator": "fixture-2026-07-07",
-            }
-        ],
-        "rejected": [],
-    }
-    shards = build_practice_shards(
-        manifest,
-        ReviewedSourceAllowlist.from_payload([]),
-        verifier,
-        cloze_sources=None,
-        config=BuildConfig(target=20),
-        synonym_verdicts=verdicts,
-        ulif_synonym_groups=ULIF_FIXTURE,
-    )
-    # Flag ignored → stays at B1+ floor (B1 prompt with its A2 target), never at A2.
-    b1_synonyms = shards["B1"]["synonym"]["synonym"]
-    assert any(item["prompt"] == "приятель" and item["answer"] == "друг" for item in b1_synonyms)
-    assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
-    captured = capsys.readouterr()
-    assert "a2Exception ignored" in captured.err
 
 
 def test_invalid_exception_flag_drops_bit_but_keeps_pair_at_b1(

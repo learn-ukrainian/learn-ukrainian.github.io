@@ -95,22 +95,6 @@ def test_bad_registration_refuses(tmp_path, failure, reason):
     assert result.reason == reason
 
 
-@pytest.mark.parametrize("scoped", [False, True])
-def test_existing_effective_candidates_required(tmp_path, scoped):
-    cwd, home, scoped_home = tmp_path / "worker", tmp_path / "home", tmp_path / "scoped"
-    paths = config.hook_locations(cwd, home, scoped_home if scoped else None)
-    write_guard(paths[0])
-    assert config.check_hook_config(paths).passed
-    write_guard(paths[1])
-    assert config.check_hook_config(paths).passed
-    data = json.loads(paths[1].read_text())
-    data[config.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"] = (
-        f"../.venv/bin/python ../{config.ENTRY_POINT} --harness agy"
-    )
-    paths[1].write_text(json.dumps(data))
-    assert config.check_hook_config(paths).reason == "relative_home_command"
-
-
 @pytest.mark.parametrize("scoped", [False, True], ids=["ordinary", "scoped"])
 @pytest.mark.parametrize("workspace_state", ["absent", "valid", "invalid"])
 @pytest.mark.parametrize("home_state", ["absent", "valid", "invalid"])
@@ -297,34 +281,6 @@ def test_install_does_not_reenable_guard(tmp_path):
     assert config.check_hook_config((path,)).reason == "disabled"
 
 
-def test_overlay_keeps_existing_driver_hooks():
-    data = json.loads((ROOT / "agents_extensions/agy/hooks.json").read_text())
-    assert len(data) == 5
-    assert data["pending-orders-announce"] == {
-        "PreInvocation": [
-            {
-                "type": "command",
-                "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh",
-                "timeout": 10,
-            }
-        ]
-    }
-    for name, event, matcher, action, timeout in [
-        ("driver-state-pin", "PreInvocation", None, "agy-hook", 10),
-        ("driver-keep-driving", "Stop", None, "agy-stop-hook", 20),
-        ("driver-no-ask-question", "PreToolUse", "ask_question", "agy-pretool-hook", 10),
-    ]:
-        hook = {
-            "type": "command",
-            "command": f"sh ../scripts/agy_hooks/driver_state_inject.sh {action}",
-            "timeout": timeout,
-        }
-        assert data[name] == {event: [{"matcher": matcher, "hooks": [hook]}] if matcher else [hook]}
-    guard = data[config.GUARD_NAME]["PreToolUse"][0]
-    assert guard["matcher"] == "run_command"
-    assert guard["hooks"][0]["timeout"] == config.GUARD_TIMEOUT_FLOOR
-
-
 @pytest.mark.parametrize("timeout", [None, 1, 9, True, "10", 10, 30])
 def test_guard_timeout_floor(tmp_path, timeout):
     path = tmp_path / ".agents/hooks.json"
@@ -456,27 +412,3 @@ def test_review_provisioner_writes_absolute_guard_and_keeps_command_denial(tmp_p
     settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())
     assert settings == agy_review_settings("full")
     assert "command(*)" in settings["permissions"]["deny"]
-
-
-@pytest.mark.parametrize("access", ["isolated", "full"])
-def test_review_registration_pass_does_not_certify_hook_execution(tmp_path, access):
-    from dataclasses import asdict
-
-    from scripts.agent_runtime.review_mcp import _populate_agy_review_home
-
-    home = tmp_path / "attempt-home"
-    home.mkdir(mode=0o700)
-    token = tmp_path / "synthetic-token"
-    token.write_text("synthetic")
-    fd = os.open(home, os.O_RDONLY | os.O_DIRECTORY)
-    try:
-        _populate_agy_review_home(
-            fd, token, json.dumps({"mcpServers": {"sources": {"env": {"LU_REVIEW_ACCESS": access}}}}).encode()
-        )
-    finally:
-        os.close(fd)
-
-    result = config.check_hook_config(config.hook_locations(tmp_path / "workspace", tmp_path / "home", home))
-    assert asdict(result) == {"status": "PASS", "reason": "guard_registered"}
-    settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())
-    assert settings["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]

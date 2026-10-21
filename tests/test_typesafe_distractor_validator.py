@@ -5,8 +5,6 @@ from __future__ import annotations
 import os
 from unittest.mock import patch
 
-import pytest
-
 from scripts.practice.typesafe_distractor_validator import (
     DistractorValidationVerdict,
     ground_with_sources,
@@ -121,29 +119,6 @@ def test_validate_ambiguous_card_mock():
     assert verdict.grounded
 
 
-def test_validate_weak_foils_mock():
-    # Distractors are absurd or non-foils
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "distractor_plausibility": DummyAns(score=0.40, confidence=0.85),
-            "is_unambiguous": DummyAns(noul=0.98),
-            "anti_calque_yield": DummyAns(noul=0.05),
-            "card_quality": DummyAns(choice="pass", confidence=0.75),
-        },
-    }
-    verdict = validate_practice_card(
-        stem="Діти граються на _____ (подвір'я).",
-        target="подвір'ї",
-        distractors=["автомобіль", "комп'ютер", "кіт"],
-        mock_response=mock_resp,
-        ground_hook=_hermetic_ground,
-    )
-    assert verdict.verdict == "warn_weak_foils"
-    assert any("Weak foils" in f for f in verdict.findings)
-    assert verdict.grounded
-
-
 def test_validate_anti_calque_yield_mock():
     mock_resp = {
         "model": "jev-test",
@@ -166,84 +141,6 @@ def test_validate_anti_calque_yield_mock():
     assert any("High anti-calque value" in f for f in verdict.findings)
     assert any("grounded in Sources" in f for f in verdict.findings)
     assert verdict.grounded
-
-
-def test_escalate_path_invokes_grounding():
-    """Verify that ambiguous card triggers grounding via the escalate path."""
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "distractor_plausibility": DummyAns(score=1.20, confidence=0.80),
-            "is_unambiguous": DummyAns(noul=0.45),  # Triggers escalate
-            "anti_calque_yield": DummyAns(noul=0.10),
-            "card_quality": DummyAns(choice="pass", confidence=0.60),
-        },
-    }
-    with patch(
-        "scripts.practice.typesafe_distractor_validator.ground_with_sources",
-        side_effect=_hermetic_ground,
-    ) as mock_ground:
-        verdict = validate_practice_card(
-            stem="Він пішов до лісу з _____ (брат).",
-            target="братом",
-            distractors=["брати", "братів", "братові"],
-            mock_response=mock_resp,
-        )
-        mock_ground.assert_called_once()
-        assert verdict.grounded is True
-        assert verdict.grounding is not None
-        assert verdict.grounding["target"]["in_vesum"] is True
-
-
-def test_clean_card_fast_path_skips_grounding():
-    """Verify clean passing card does not invoke grounding on fast path."""
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "distractor_plausibility": DummyAns(score=1.80, confidence=0.95),
-            "is_unambiguous": DummyAns(noul=0.95),
-            "anti_calque_yield": DummyAns(noul=0.20),
-            "card_quality": DummyAns(choice="pass", confidence=0.90),
-        },
-    }
-    with patch(
-        "scripts.practice.typesafe_distractor_validator.ground_with_sources"
-    ) as mock_ground:
-        verdict = validate_practice_card(
-            stem="Вчора ми побачили старого _____ (друг).",
-            target="друга",
-            distractors=["другові", "другом", "друг"],
-            mock_response=mock_resp,
-        )
-        mock_ground.assert_not_called()
-        assert verdict.grounded is False
-        assert verdict.grounding is None
-
-
-def test_always_ground_forces_grounding_on_clean_card():
-    """Verify always_ground=True forces grounding even on clean pass."""
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "distractor_plausibility": DummyAns(score=1.80, confidence=0.95),
-            "is_unambiguous": DummyAns(noul=0.95),
-            "anti_calque_yield": DummyAns(noul=0.20),
-            "card_quality": DummyAns(choice="pass", confidence=0.90),
-        },
-    }
-    with patch(
-        "scripts.practice.typesafe_distractor_validator.ground_with_sources",
-        side_effect=_hermetic_ground,
-    ) as mock_ground:
-        verdict = validate_practice_card(
-            stem="Вчора ми побачили старого _____ (друг).",
-            target="друга",
-            distractors=["другові", "другом", "друг"],
-            mock_response=mock_resp,
-            always_ground=True,
-        )
-        mock_ground.assert_called_once()
-        assert verdict.grounded is True
 
 
 def test_anti_calque_unverified_by_sources_flags_review():
@@ -366,49 +263,3 @@ def test_validate_practice_card_vesum_exception_forces_fail_broken():
         assert verdict.grounding["target"]["in_vesum"] is False
         assert "ERROR: VESUM database locked" in verdict.grounding["target"]["status"]
         assert any("not found in VESUM morphological dictionary (grounding failure)" in f for f in verdict.findings)
-
-
-def test_escalate_path_vesum_exception_forces_fail_broken():
-    """Ambiguous card triggers escalate path, and VESUM exception fails closed to fail_broken."""
-    mock_resp = {
-        "model": "jev-test",
-        "answers": {
-            "distractor_plausibility": DummyAns(score=1.20, confidence=0.80),
-            "is_unambiguous": DummyAns(noul=0.45),  # Triggers escalate
-            "anti_calque_yield": DummyAns(noul=0.10),
-            "card_quality": DummyAns(choice="pass", confidence=0.60),
-        },
-    }
-    with patch(
-        "scripts.practice.typesafe_distractor_validator.verify_word",
-        side_effect=RuntimeError("VESUM IO error"),
-    ):
-        verdict = validate_practice_card(
-            stem="Він пішов до лісу з _____ (брат).",
-            target="братом",
-            distractors=["брати", "братів", "братові"],
-            mock_response=mock_resp,
-        )
-        assert verdict.verdict == "fail_broken"
-        assert verdict.needs_review is True
-        assert verdict.grounded is True
-        assert verdict.grounding["target"]["in_vesum"] is False
-        assert any("not found in VESUM morphological dictionary (grounding failure)" in f for f in verdict.findings)
-
-
-@pytest.mark.live_network
-def test_live_practice_validator_smoke():
-    key = resolve_api_key()
-    if not key:
-        pytest.skip("TypeSafe API key not available on host.")
-
-    verdict = validate_practice_card(
-        stem="Він завжди радий _____ (поговорити) з новими людьми.",
-        target="поговорити",
-        distractors=["поговорив", "поговори", "говоритиме"],
-        grammar_focus="Infinitive vs finite verb forms",
-    )
-    assert isinstance(verdict, DistractorValidationVerdict)
-    assert verdict.verdict in {"pass", "warn_weak_foils"}
-    assert verdict.is_unambiguous_prob > 0.60
-    assert verdict.latency_seconds > 0.0

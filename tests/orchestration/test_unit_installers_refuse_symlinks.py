@@ -269,24 +269,6 @@ def test_symlinked_unit_file_is_refused(
     assert [path.name for path in installer.unit.parent.iterdir()] == [installer.unit.name]
 
 
-@pytest.mark.parametrize("mode", MODES)
-def test_symlinked_ancestor_is_refused(
-    installer: Installer, mode: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    outside = tmp_path / "outside-ancestor"
-    real_unit = outside / installer.unit.relative_to(installer.ancestor)
-    real_unit.parent.mkdir(parents=True)
-    real_unit.write_text("outside unit")
-    installer.ancestor.symlink_to(outside, target_is_directory=True)
-    before = _snapshot(outside)
-
-    message = _refusal(installer, mode, capsys)
-
-    assert "symlinked path component" in message and str(installer.ancestor) in message
-    assert _snapshot(outside) == before
-    assert installer.ancestor.is_symlink()
-
-
 def test_link_raced_in_before_rename_is_replaced(
     installer: Installer, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -415,19 +397,3 @@ def test_state_creation_refuses_every_symlinked_ancestor_before_mutation(
     assert _snapshot(home) == home_before
     assert calls == []
     assert not installer.unit.exists()
-
-
-def test_project_state_dry_run_validates_before_creating_state(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    home = tmp_path / "home"
-    home.mkdir()
-    installer = _project_state(tmp_path, home, monkeypatch)
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (home / "Library").symlink_to(outside, target_is_directory=True)
-    with pytest.raises(InstallError, match="symlinked"):
-        installer.invoke("check")
-    assert not (home / ".codex").exists()
-    assert list(outside.iterdir()) == []

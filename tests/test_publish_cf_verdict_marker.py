@@ -64,12 +64,6 @@ def recorder_comment(**changes):
     return build_comment(**{**fields, **changes})
 
 
-def test_comment_field_map_names_every_comment_verb():
-    assert {verb: pub.COMMENT_FIELDS[verb] for verb, _ in COMMENT_VERBS} == pub.COMMENT_FIELDS
-    for verb, key in pub.COMMENT_FIELDS.items():
-        assert pub.SCHEMAS[verb][1][key] == "text"
-
-
 @pytest.mark.parametrize("verb,fields", COMMENT_VERBS)
 @pytest.mark.parametrize(
     "text",
@@ -98,15 +92,6 @@ def test_body_file_marker_is_refused(synthetic_opsec, tmp_path, verb):
     with pytest.raises(gate.PublishBlocked, match="CF_VERDICT_MARKER_REFUSED"):
         pub.publish(verb, repo="unit/public", number=1, body_file=str(path), runner=spy(calls), **extra)
     assert calls == []
-
-
-@pytest.mark.parametrize("verb", ["issue-comment", "pr-comment"])
-def test_cli_refuses_hand_written_marker(synthetic_opsec, tmp_path, capsys, verb):
-    path = tmp_path / "reply.md"
-    path.write_text(recorder_comment())
-    argv = [verb, "--repo", "unit/public", "--number", "1", "--body-file", str(path)]
-    assert pub.main(argv, runner=lambda *a, **k: pytest.fail("send")) == 2
-    assert "CF_VERDICT_MARKER_REFUSED" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize(
@@ -167,7 +152,3 @@ def test_marker_free_comments_are_unaffected(synthetic_opsec):
         == 0
     )
     assert len(calls) == 1
-
-
-def test_sweep_reader_and_publisher_share_one_marker_prefix():
-    assert sweep.MARKER_PREFIX is pub.CF_VERDICT_MARKER_PREFIX

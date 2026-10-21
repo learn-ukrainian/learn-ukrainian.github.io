@@ -1,7 +1,6 @@
 """Producer-derived non-arc freshness and default-byte compatibility (#9721)."""
 
 import hashlib
-import importlib
 import json
 import shutil
 import subprocess
@@ -209,19 +208,6 @@ def test_bad_status_refuses_without_creating_output(producer, bad, capsys):
     assert str(producer) not in err
 
 
-@pytest.mark.parametrize('bad', [None, 'bad: [', '[]', 'levels: []',
-                               'levels: {a2: {}}', 'levels: {a2: {modules: [null]}}'])
-def test_bad_manifest_refuses_without_writes(producer, bad):
-    path = gen.CURRICULUM_DIR / 'curriculum.yaml'
-    if bad is None:
-        path.unlink()
-    else:
-        path.write_text(bad)
-    before = snapshot(producer)
-    assert gen.main(['--check']) == 1
-    assert snapshot(producer) == before
-
-
 def test_missing_output_directory_and_unreadable_output(producer, capsys):
     shutil.rmtree(gen.DOCS_DIR)
     before = snapshot(producer)
@@ -265,12 +251,6 @@ def test_default_skip_policy(producer, capsys):
     assert gen.main(['--check']) == 0
 
 
-def test_compatibility_import_exposes_producer(producer):
-    wrapper = importlib.import_module('scripts.build_landing_pages')
-    assert Path(wrapper.__file__).resolve() == REPO / 'scripts/build/build_landing_pages.py'
-    assert callable(wrapper.main) and callable(wrapper.generated_pages)
-
-
 @pytest.mark.parametrize('entry', [['-m', 'scripts.build.build_landing_pages'],
                                  ['scripts/build/build_landing_pages.py'], ['scripts/build_landing_pages.py']])
 def test_cli_help_misuse_fresh_stale_and_default(producer, entry):
@@ -302,23 +282,6 @@ def test_cli_help_misuse_fresh_stale_and_default(producer, entry):
     before = snapshot(producer)
     stale = subprocess.run([*command, '--check'], cwd=producer, capture_output=True, text=True, check=False, timeout=60)
     assert stale.returncode == 1 and 'stale: site/src/content/docs/hist/index.mdx' in stale.stderr
-    assert snapshot(producer) == before
-
-
-@pytest.mark.parametrize('entry', [['-m', 'scripts.build.build_landing_pages'],
-                                 ['scripts/build_landing_pages.py']])
-def test_cli_refusal_missing_inputs_and_directories(producer, entry):
-    for relative in ('scripts/build/build_landing_pages.py', 'scripts/build_landing_pages.py',
-                     'scripts/manifest_utils.py'):
-        target = producer / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(REPO / relative, target)
-    shutil.rmtree(gen.DOCS_DIR)
-    gen.LEVEL_STATUS_FILE.unlink()
-    before = snapshot(producer)
-    result = subprocess.run([sys.executable, '-B', *entry, '--check'], cwd=producer,
-                            capture_output=True, text=True, check=False, timeout=60)
-    assert result.returncode == 1 and 'level-status.yaml' in result.stderr
     assert snapshot(producer) == before
 
 

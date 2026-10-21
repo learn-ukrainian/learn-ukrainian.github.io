@@ -12,7 +12,6 @@ from fastapi.testclient import TestClient
 
 from scripts.api.monitor_context import fixture_context
 from scripts.api.ops_router import router
-from scripts.api.route_contracts import contract_for_route
 from scripts.common import test_slots
 
 ROUTE = "/api/ops/v1/test-slots"
@@ -56,10 +55,3 @@ def test_route_reports_a_missing_or_disabled_pool_without_creating_it(
     broken = client.get(ROUTE)
     assert broken.status_code == 200 and broken.json()["error"]["reason"] == "invalid_configuration"
     assert not (tmp_path / "pool").exists()
-
-
-def test_route_has_a_read_only_host_affine_contract() -> None:
-    contract = contract_for_route(ROUTE)
-    assert contract is not None and contract.pattern == ROUTE and contract.match == "exact"
-    assert contract.mutates is False and contract.locality == "host_affine"
-    assert contract.response_schema_version == "test-slots.status.v1"

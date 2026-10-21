@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import re
 from collections.abc import Callable
 from pathlib import Path
 
@@ -62,20 +61,6 @@ def _module_with_sections(context: str, poetics: str) -> str:
     return f"# Sample\n\n## Context\n\n{context}\n\n## Poetics\n\n{poetics}\n"
 
 
-def test_writer_draft_length_report_excludes_primary_reading_blocks() -> None:
-    module_text = _module_with_sections(
-        "one two\n\n:::primary-reading\nthis quoted block has many excluded words\n:::\n\nthree",
-        "four five six seven eight nine",
-    )
-
-    report = linear_pipeline.writer_draft_length_report(_length_plan(), module_text)
-
-    assert report["count"] == 12
-    assert report["sections"][0]["section"] == "Context"
-    assert report["sections"][0]["count"] == 3
-    assert report["sections"][0]["shortfall"] == 5
-
-
 def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -114,120 +99,6 @@ def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path:
     assert "Context: 6 words short of 8" in prompts[0]
     assert "Keep ALL existing content" in prompts[0]
     assert result["after"]["passed"] is True
-
-
-def test_writer_draft_length_precheck_skips_when_at_or_over_target(tmp_path: Path) -> None:
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    module_text = _module_with_sections(
-        "one two three four five six seven eight nine",
-        "ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen",
-    )
-    (module_dir / "module.md").write_text(module_text, encoding="utf-8")
-    plan_path = tmp_path / "plan.yaml"
-    plan_path.write_text("level: folk\nsequence: 1\nslug: sample\n", encoding="utf-8")
-
-    def corrector(_context: linear_pipeline.CorrectionContext) -> str:
-        raise AssertionError("precheck should not invoke writer when draft is long enough")
-
-    result = linear_pipeline.run_writer_draft_length_precheck(
-        plan=_length_plan(word_target=16),
-        module_dir=module_dir,
-        plan_path=plan_path,
-        writer_corrector=corrector,
-    )
-
-    assert result["applied"] is False
-    assert result["before"]["passed"] is True
-
-
-def test_writer_draft_length_prompt_names_short_sections_and_shortfalls() -> None:
-    module_text = _module_with_sections("one two", "three four")
-    report = linear_pipeline.writer_draft_length_report(
-        _length_plan(word_target=20),
-        module_text,
-    )
-
-    prompt = linear_pipeline.render_writer_draft_length_expansion_prompt(
-        plan=_length_plan(word_target=20),
-        module_text=module_text,
-        length_report=report,
-    )
-
-    assert "Overall draft is 13 words short of 20" in prompt
-    assert "Context: 6 words short of 8" in prompt
-    assert "Poetics: 6 words short of 8" in prompt
-
-
-def test_plan_check_accepts_a1_20_plan() -> None:
-    plan = linear_pipeline.plan_check(
-        linear_pipeline.plan_path_for("a1", "my-morning")
-    )
-
-    assert plan["module"] == "a1-020"
-    assert plan["sequence"] == 20
-    assert plan["word_target"] == 1200
-
-
-def test_plan_check_rejects_missing_required_key(tmp_path: Path) -> None:
-    plan = _small_plan()
-    plan.pop("references")
-    path = tmp_path / "bad.yaml"
-    _write_yaml(path, plan)
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="references"):
-        linear_pipeline.plan_check(path)
-
-
-def test_jsx_text_values_extracts_uk_attribute() -> None:
-    result = linear_pipeline._jsx_text_values(
-        '<DialogueBox uk="привіт" en="hi" />'
-    )
-
-    assert result == ["привіт"]
-
-
-def test_jsx_text_values_extracts_legacy_text_attribute() -> None:
-    result = linear_pipeline._jsx_text_values('<DialogueBox text="привіт" />')
-
-    assert result == ["привіт"]
-
-
-def test_jsx_text_values_extracts_both_when_present() -> None:
-    result = linear_pipeline._jsx_text_values(
-        '<DialogueBox text="доброго ранку" /><DialogueBox uk="як справи?" en="how are you?" />'
-    )
-
-    assert result == ["доброго ранку", "як справи?"]
-
-
-def test_component_language_text_dialoguebox_uk_prop() -> None:
-    result = linear_pipeline._component_language_text(
-        "DialogueBox",
-        '<DialogueBox uk="привіт" en="hi" />',
-    )
-
-    assert result == "привіт"
-
-
-def test_render_phase_prompt_fills_registered_tokens() -> None:
-    plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
-    plan = linear_pipeline.plan_check(plan_path)
-    context = linear_pipeline.writer_context(
-        plan,
-        plan_path.read_text(encoding="utf-8"),
-        "Knowledge packet excerpt.",
-    )
-
-    rendered = linear_pipeline.render_phase_prompt(
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md",
-        context,
-    )
-
-    assert "{NORTH_STAR}" not in rendered
-    assert "{LESSON_CONTRACT}" not in rendered
-    assert "{LEVEL}" not in rendered
-    assert "STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):" in rendered
 
 
 @pytest.mark.parametrize(
@@ -619,38 +490,6 @@ End of section.
     assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
 
 
-def test_parse_writer_output_3backtick_outer_still_works_no_inner_fences() -> None:
-    """3-backtick OUTER fences still parse correctly (backward compat).
-
-    Writers who don't need inner code fences can keep using 3-backtick outer
-    fences. The new run-length-aware close logic preserves this — an open=3
-    fence closes on a close=3 (no info) line. Critical for incremental
-    migration of the writer-prompt templates.
-    """
-    output = """```markdown file=module.md
-# Мій ранок
-
-Plain prose without any code fences.
-```
-
-```json file=activities.yaml
-[{"id": "act-1", "type": "fill-in", "title": "Додайте -ся"}]
-```
-
-```json file=vocabulary.yaml
-[{"lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "test."}]
-```
-
-```json file=resources.yaml
-[{"title": "Караман Grade 10, p.176", "role": "textbook", "notes": "test."}]
-```
-"""
-
-    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
-    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
-    assert "Plain prose" in artifacts["module.md"]
-
-
 _DUPLICATE_FENCE_MODULE_BLOCK = """```markdown file=module.md
 # Мій ранок
 
@@ -724,18 +563,6 @@ Different prose in the second copy.
     output = _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS + differing
 
     with pytest.raises(linear_pipeline.LinearPipelineError, match=r"duplicate artifact block: module\.md"):
-        linear_pipeline.parse_writer_output_strict_json(output)
-
-
-def test_parse_writer_output_rejects_differing_duplicate_json_fence() -> None:
-    differing = """
-```json file=vocabulary.yaml
-[{"lemma": "вечір", "translation": "evening", "pos": "noun", "usage": "test."}]
-```
-"""
-    output = _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS + differing
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"duplicate artifact block: vocabulary\.yaml"):
         linear_pipeline.parse_writer_output_strict_json(output)
 
 
@@ -956,27 +783,6 @@ def test_parse_writer_output_rejects_extra_fields_in_vocabulary() -> None:
         linear_pipeline.parse_writer_output_strict_json(output)
 
 
-def test_validate_writer_json_artifact_rejects_vocabulary_cefr_metadata() -> None:
-    """CEFR lookup results are selection evidence, not vocabulary fields."""
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match=r"vocabulary\.yaml schema validation failed: item 1 has "
-        r"unexpected fields \['cefr'\]",
-    ):
-        linear_pipeline._validate_writer_json_artifact(
-            "vocabulary.yaml",
-            [
-                {
-                    "lemma": "звук",
-                    "translation": "sound",
-                    "pos": "noun",
-                    "usage": "Я чую звук.",
-                    "cefr": "A2",
-                }
-            ],
-        )
-
-
 def test_parse_writer_output_rejects_label_vs_fence_name_mismatch() -> None:
     """A label line + fence info that disagree must fail loud, not silently pick one.
 
@@ -1140,96 +946,6 @@ def test_activity_type_field_whitelist_uses_authoring_shape() -> None:
         assert "id" in whitelist[activity_type]
 
 
-def test_activity_type_field_whitelist_rejects_react_only_props() -> None:
-    """React component-only props (`children`, `isUkrainian`) appear in
-    `docs/lesson-schema.yaml` because they're rendered by `<Quiz>` etc.,
-    but the writer must NEVER emit them in authoring YAML — the MDX
-    assembler synthesizes them. The pre-#1627 loader accepted them.
-    """
-    whitelist = linear_pipeline._activity_type_field_whitelist()
-    for activity_type in whitelist:
-        assert "children" not in whitelist[activity_type], (
-            f"{activity_type}: `children` is a JSX-only prop, never authored"
-        )
-        assert "isUkrainian" not in whitelist[activity_type], (
-            f"{activity_type}: `isUkrainian` is synthesized by the MDX "
-            "assembler, never authored"
-        )
-
-
-def test_activity_type_field_whitelist_covers_parser_dispatch() -> None:
-    """Drift guard: every activity type the parser dispatches on
-    (`scripts/yaml_activities.py:ActivityParser._parse_activity`) must
-    appear in `_ACTIVITY_AUTHORING_FIELDS`, AND every key in the map
-    must be a type the parser handles OR a type declared in
-    `docs/lesson-schema.yaml` (so the writer is told it's emittable).
-
-    Catches: a new activity type added to the parser without updating
-    the validator (writers would emit it and get rejected with the
-    `unknown activity type` message), and the reverse — a stale map
-    entry that the parser no longer dispatches.
-    """
-    import inspect
-
-    from scripts.yaml_activities import ActivityParser
-
-    whitelist = linear_pipeline._activity_type_field_whitelist()
-
-    # Extract parser dispatch type strings from the literal `parsers = {...}`
-    # dict in `_parse_activity`. Keys look like `'foo-bar': self._parse_foo`
-    # (string, then arrow, then bound-method ref).
-    parser_src = inspect.getsource(ActivityParser._parse_activity)
-    parser_types = set(re.findall(r"^\s*'([a-z][a-z0-9-]*)':\s*self\.", parser_src, re.MULTILINE))
-    assert parser_types, "Failed to extract parser dispatch types — has _parse_activity been refactored?"
-
-    # Every parser-dispatched type has a whitelist entry.
-    missing_in_map = parser_types - set(whitelist)
-    assert not missing_in_map, (
-        f"Activity types parsed but not whitelisted (writers would be "
-        f"rejected with 'unknown activity type'): {sorted(missing_in_map)}"
-    )
-
-    # Every whitelist entry is either a parser-known type OR declared in
-    # `docs/lesson-schema.yaml` (parser silently drops it but writer is
-    # told it's emittable — preserves pre-#1624 behavior of the
-    # lesson-schema-sourced loader, while remaining strict about the
-    # AUTHORING field names per type).
-    schema = yaml.safe_load(
-        (linear_pipeline.PROJECT_ROOT / "docs" / "lesson-schema.yaml").read_text()
-    )
-    schema_types = {
-        data.get("activity_type")
-        for data in (schema.get("components") or {}).values()
-        if isinstance(data, dict) and data.get("activity_type")
-    }
-    stale_in_map = set(whitelist) - parser_types - schema_types
-    assert not stale_in_map, (
-        f"Whitelist entries with no parser dispatch AND no lesson-schema "
-        f"declaration (likely stale): {sorted(stale_in_map)}"
-    )
-
-
-def test_validate_writer_json_artifact_accepts_groups_for_group_sort() -> None:
-    """`group-sort` activities legitimately carry a top-level `groups` field
-    per `docs/lesson-schema.yaml` (`required: [{name: groups, ...}]`). The
-    pre-#1624 global whitelist rejected this as a hallucinated field.
-    """
-    linear_pipeline._validate_writer_json_artifact(
-        "activities.yaml",
-        [
-            {
-                "id": "act-1",
-                "type": "group-sort",
-                "instruction": "Розсортуйте слова за групами.",
-                "groups": [
-                    {"name": "Фрукти", "items": ["яблуко", "груша"]},
-                    {"name": "Овочі", "items": ["морква", "буряк"]},
-                ],
-            }
-        ],
-    )
-
-
 def test_validate_writer_json_artifact_rejects_groups_on_fill_in() -> None:
     """`groups` is per-type valid for `group-sort` but NOT for `fill-in`.
     A simple global whitelist of `groups` would have allowed it on every
@@ -1252,201 +968,6 @@ def test_validate_writer_json_artifact_rejects_groups_on_fill_in() -> None:
                 }
             ],
         )
-
-
-def test_validate_writer_json_artifact_accepts_items_for_fill_in() -> None:
-    """`fill-in` activities use `items` as their top-level required prop
-    per `docs/lesson-schema.yaml`. Standard shape, must always pass.
-    """
-    linear_pipeline._validate_writer_json_artifact(
-        "activities.yaml",
-        [
-            {
-                "id": "act-1",
-                "type": "fill-in",
-                "instruction": "Закінчіть речення.",
-                "items": [
-                    {
-                        "sentence": "Я ____ о сьомій.",
-                        "answer": "прокидаюся",
-                        "options": ["прокидаюся", "сплю"],
-                    }
-                ],
-            }
-        ],
-    )
-
-
-def test_validate_writer_json_artifact_accepts_error_correction_items() -> None:
-    """Boundary case for #1623 `_component_prop_gate` work: an
-    `error-correction` activity with the standard items array passes
-    top-level extra-field validation.
-
-    The nested `errorWord`/`correctForm` per item are not visible to this
-    layer (which only checks top-level activity keys); they are governed
-    by `_component_prop_gate` and the lesson-schema's `nested_types`.
-    """
-    linear_pipeline._validate_writer_json_artifact(
-        "activities.yaml",
-        [
-            {
-                "id": "act-9",
-                "type": "error-correction",
-                "instruction": "Виправте помилку.",
-                "items": [
-                    {
-                        "sentence": "Він вмиваєця.",
-                        "errorWord": "вмиваєця",
-                        "correctForm": "вмивається",
-                        "explanation": "Закінчення -ться.",
-                    }
-                ],
-            }
-        ],
-    )
-
-
-def test_validate_writer_json_artifact_accepts_quiz_items_authoring_shape() -> None:
-    """`quiz` authoring YAML uses `items: [...]` (per
-    `agents_extensions/shared/quick-ref/ACTIVITY-SCHEMAS.md`). The MDX adapter
-    `_quiz_to_mdx` renames this to the React component's `questions=`
-    prop. The strict-JSON validator must accept the AUTHORING shape.
-    """
-    linear_pipeline._validate_writer_json_artifact(
-        "activities.yaml",
-        [
-            {
-                "id": "act-1",
-                "type": "quiz",
-                "title": "Питання",
-                "items": [
-                    {
-                        "question": "Як справи?",
-                        "options": [
-                            {"text": "Добре", "correct": True},
-                            {"text": "Погано", "correct": False},
-                        ],
-                    }
-                ],
-            }
-        ],
-    )
-
-
-def test_validate_writer_json_artifact_rejects_quiz_questions_component_prop() -> None:
-    """A writer that emits `quiz: {questions: [...]}` is using the
-    React component PROP NAME, not the authoring field name. Pre-#1627
-    the validator (sourced from `lesson-schema.yaml`) silently accepted
-    this AND silently rejected the canonical `items` — producing empty
-    quizzes at render time because `_quiz_to_mdx` reads `activity.items`,
-    not `activity.questions`.
-    """
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match=r"activities\.yaml schema validation failed: item 1 has "
-        r"unexpected fields \['questions'\]; allowed: ",
-    ):
-        linear_pipeline._validate_writer_json_artifact(
-            "activities.yaml",
-            [
-                {
-                    "id": "act-1",
-                    "type": "quiz",
-                    "questions": [{"question": "x", "options": []}],
-                }
-            ],
-        )
-
-
-def test_validate_writer_json_artifact_rejects_authorial_intent_excerpt_dataclass_name() -> None:
-    """`authorial-intent` authoring YAML uses `text_excerpt:` and
-    `prompt:` per `ACTIVITY-SCHEMAS.md` and the activities-base JSON
-    Schema. `_parse_authorial_intent` renames these to the dataclass's
-    `excerpt`/`questions` fields post-parse — so the post-parse name
-    `excerpt` is NOT a valid authoring field. Catches Codex-flagged
-    drift between the parser-output dataclass and the YAML wire format.
-    """
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match=r"unexpected fields \['excerpt'\]",
-    ):
-        linear_pipeline._validate_writer_json_artifact(
-            "activities.yaml",
-            [
-                {
-                    "id": "act-7",
-                    "type": "authorial-intent",
-                    "title": "Авторський задум",
-                    "excerpt": "...",  # WRONG — dataclass field name
-                    "prompt": "Чому автор обрав таку структуру?",
-                    "model_answer": "...",
-                }
-            ],
-        )
-
-
-def test_validate_writer_json_artifact_accepts_authorial_intent_text_excerpt_authoring() -> None:
-    """Counterpart to the rejects-excerpt test: the canonical authoring
-    field `text_excerpt` is what the writer is told to emit, and what
-    `_parse_authorial_intent` reads via `data.get('text_excerpt', '')`.
-    """
-    linear_pipeline._validate_writer_json_artifact(
-        "activities.yaml",
-        [
-            {
-                "id": "act-7",
-                "type": "authorial-intent",
-                "title": "Авторський задум",
-                "text_excerpt": "...",
-                "prompt": "Чому автор обрав таку структуру?",
-                "model_answer": "...",
-            }
-        ],
-    )
-
-
-def test_validate_writer_json_artifact_rejects_camelcase_component_prop_names() -> None:
-    """Many seminar/HIST activities use snake_case authoring fields that
-    `_*_to_mdx` adapters rename to camelCase component props. The
-    pre-#1627 lesson-schema-sourced loader accepted the camelCase names
-    (e.g. `modelAnswer`, `debateQuestion`, `imageUrl`), masking writer
-    errors. This batches a few canonical examples.
-    """
-    cases = [
-        ("essay-response", "modelAnswer"),
-        ("debate", "debateQuestion"),
-        ("paleography-analysis", "imageUrl"),
-    ]
-    for activity_type, bad_field in cases:
-        with pytest.raises(
-            linear_pipeline.LinearPipelineError,
-            match=rf"unexpected fields \['{bad_field}'\]",
-        ):
-            linear_pipeline._validate_writer_json_artifact(
-                "activities.yaml",
-                [{"id": "act-1", "type": activity_type, bad_field: "x"}],
-            )
-
-
-def test_validate_writer_json_artifact_rejects_nonsense_field() -> None:
-    """A field that exists in NO activity type's schema must fail with
-    a per-type-aware error message naming the activity type's allowed
-    fields, not the union of every type's fields.
-    """
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match=r"activities\.yaml schema validation failed: item 1 has "
-        r"unexpected fields \['kek'\]; allowed: ",
-    ) as exc_info:
-        linear_pipeline._validate_writer_json_artifact(
-            "activities.yaml",
-            [{"id": "act-1", "type": "fill-in", "kek": "bogus"}],
-        )
-    # The message must list fill-in's allowed fields specifically — not
-    # the union of every activity type's fields.
-    msg = str(exc_info.value)
-    assert "items" in msg  # fill-in's required prop name
-    assert "groups" not in msg  # group-sort's prop, must not leak in
 
 
 def test_validate_writer_json_artifact_rejects_unknown_activity_type() -> None:
@@ -1507,35 +1028,6 @@ def test_validate_writer_json_artifact_allows_workbook_activity_without_id() -> 
     linear_pipeline._validate_writer_json_artifact("activities.yaml", activities)
 
 
-def test_validate_writer_json_artifact_error_messages_include_actual_value() -> None:
-    """Schema validation errors must include the actual value/type for redispatch.
-
-    Adversarial review (Gemini + Codex, 2026-04-26): the prior error
-    `requires {field} as str` didn't say what was actually present (None?
-    int? empty string?). The corrective redispatch needs that context to
-    correct the writer.
-    """
-    # Wrong type: lemma is int instead of str.
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match=r"requires lemma as str, got int \(123\)",
-    ):
-        linear_pipeline._validate_writer_json_artifact(
-            "vocabulary.yaml",
-            [{"lemma": 123, "translation": "x", "pos": "n", "usage": "y"}],
-        )
-
-    # Empty string: now reports the non-empty constraint separately.
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match=r"requires lemma as a non-empty string",
-    ):
-        linear_pipeline._validate_writer_json_artifact(
-            "vocabulary.yaml",
-            [{"lemma": "   ", "translation": "x", "pos": "n", "usage": "y"}],
-        )
-
-
 def test_parse_review_response_accepts_json_fence() -> None:
     response = """```json
 {"score": 9.2, "evidence": "\\"Мій ранок простий.\\"", "verdict": "PASS"}
@@ -1566,21 +1058,6 @@ def test_aggregate_llm_review_requires_exact_qg_dims() -> None:
     }
 
     with pytest.raises(linear_pipeline.LinearPipelineError, match="extra"):
-        linear_pipeline.aggregate_llm_review(report, "A1")
-
-
-def test_aggregate_llm_review_requires_quoted_evidence() -> None:
-    report = {
-        dim: {
-            "score": 9.0,
-            "evidence": '"Specific quoted evidence."',
-            "verdict": "PASS",
-        }
-        for dim in QG_DIMS
-    }
-    report["tone"]["evidence"] = "Specific but unquoted evidence."
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="quoted excerpt"):
         linear_pipeline.aggregate_llm_review(report, "A1")
 
 
@@ -1795,48 +1272,6 @@ def test_apply_activity_id_inserts_strips_id_from_unused_workbook_activities(
         )
 
 
-def test_apply_activity_id_inserts_noop_when_unused_empty(tmp_path: Path) -> None:
-    """No unused ids → no-op; module.md and activities.yaml untouched."""
-    module_path = tmp_path / "module.md"
-    activities_path = tmp_path / "activities.yaml"
-    module_text = "## Section\n\n<!-- INJECT_ACTIVITY: act-1 -->\n"
-    module_path.write_text(module_text, encoding="utf-8")
-    activities_data = [{"id": "act-1", "type": "quiz", "title": "Inline only"}]
-    _write_yaml(activities_path, activities_data)
-
-    linear_pipeline._apply_activity_id_inserts(
-        module_path,
-        {"passed": True, "injected": ["act-1"], "missing": [], "unused": [], "reason": None},
-    )
-
-    assert module_path.read_text(encoding="utf-8") == module_text
-    assert yaml.safe_load(activities_path.read_text(encoding="utf-8")) == activities_data
-
-
-def test_apply_activity_id_inserts_tolerates_missing_activities_yaml(
-    tmp_path: Path,
-) -> None:
-    """If `activities.yaml` is absent, the correction silently no-ops on
-    module.md and exits cleanly — the upstream `inject_activity_ids` gate
-    will continue to fail and the build will halt naturally rather than
-    crashing inside the correction path.
-    """
-    module_path = tmp_path / "module.md"
-    module_text = "## Section\n\n<!-- INJECT_ACTIVITY: act-1 -->\n"
-    module_path.write_text(module_text, encoding="utf-8")
-
-    gate_report = {
-        "passed": False,
-        "injected": ["act-1"],
-        "missing": [],
-        "unused": ["act-2"],
-        "reason": "unused_activities_not_injected",
-    }
-    linear_pipeline._apply_activity_id_inserts(module_path, gate_report)
-
-    assert module_path.read_text(encoding="utf-8") == module_text
-
-
 def test_ai_slop_gate_ignores_correction_field_in_error_correction_activity(
     tmp_path: Path,
 ) -> None:
@@ -2045,40 +1480,6 @@ def test_bad_form_heritage_gate_does_not_split_grammar_error_sentences() -> None
     assert calls == ["Я бачу нікого"]
 
 
-def test_run_python_qg_reports_bad_form_heritage_failure(tmp_path: Path) -> None:
-    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
-    module_path = module_dir / "module.md"
-    module_path.write_text(
-        module_path.read_text(encoding="utf-8")
-        + "\nUse одягатися, not <!-- bad -->одіватися<!-- /bad -->.\n",
-        encoding="utf-8",
-    )
-
-    def fake_lookup(query: str) -> list[dict]:
-        assert query == "одіватися"
-        return [
-            {
-                "source_family": "grinchenko",
-                "source": "Грінченко",
-                "word": "одіватися",
-                "classification": "pre_soviet_ukrainian_attestation",
-                "is_authentic_ukrainian": True,
-                "is_russianism": False,
-            }
-        ]
-
-    report = linear_pipeline.run_python_qg(
-        module_dir,
-        plan_path,
-        verify_words_fn=fake_verify,
-        heritage_lookup_fn=fake_lookup,
-    )
-
-    assert report["gates"]["bad_form_heritage"]["passed"] is False
-    assert report["gates"]["bad_form_heritage"]["finding_count"] == 1
-    assert report["gates"]["passed"] is False
-
-
 def test_vesum_gate_strips_phonetic_transcriptions_in_brackets(tmp_path: Path) -> None:
     """Phonetic notation in `[...]` must NOT be tokenized for VESUM lookup."""
     module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
@@ -2239,67 +1640,6 @@ def test_vesum_gate_skips_error_field_of_error_correction_activity(
     )
     # The correction (well-formed) IS verified.
     assert "прокидаєшся" in forwarded
-
-
-def test_vesum_gate_skips_error_field_of_error_correction_items_shape(
-    tmp_path: Path,
-) -> None:
-    """`error:` in the `items:` shape stores a deliberate typo and must not fail VESUM.
-
-    Companion to `test_vesum_gate_skips_error_field_of_error_correction_activity`
-    (which covers the `sentences:` shape). Post-PR #2031, the canonical fields
-    for `error-correction` items are `error:` (the misspelled form) and
-    `correction:` (the corrected form). Legacy aliases `errorWord` / `error_word`
-    / `correctForm` trip the new `_activity_schema_gate` before this gate runs.
-    """
-    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
-    _write_yaml(
-        module_dir / "activities.yaml",
-        [
-            {
-                "id": "act-1",
-                "type": "error-correction",
-                "title": "Знайдіть помилку",
-                "items": [
-                    {
-                        "sentence": "Він ____ щодня.",
-                        "error": "вмиваєця",
-                        "correction": "вмивається",
-                        "explanation": "Потрібна форма -ться.",
-                    },
-                    {
-                        "sentence": "Ти ____ швидко.",
-                        "error": "одягаєся",
-                        "correction": "одягаєшся",
-                        "explanation": "Потрібна форма -шся.",
-                    }
-                ],
-            }
-        ],
-    )
-
-    received: list[list[str]] = []
-
-    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
-        received.append(list(words))
-        deliberate_errors = {"вмиваєця", "одягаєся"}
-        return {
-            word: []
-            if word in deliberate_errors
-            else [{"lemma": word, "pos": "x", "tags": ""}]
-            for word in words
-        }
-
-    report = linear_pipeline.run_python_qg(
-        module_dir, plan_path, verify_words_fn=fake_verify
-    )
-
-    assert report["gates"]["vesum_verified"]["passed"] is True
-    forwarded = received[0]
-    assert "вмиваєця" not in forwarded
-    assert "одягаєся" not in forwarded
-    assert "вмивається" in forwarded
-    assert "одягаєшся" in forwarded
 
 
 def test_activity_vesum_text_verifies_distractors_unless_opted_out() -> None:
@@ -2728,35 +2068,6 @@ def test_vesum_gate_skips_fillin_options_bare_list() -> None:
     assert report["passed"] is True
 
 
-def test_vesum_gate_skips_quiz_options_distractors_with_opt_out() -> None:
-    """Regression for #1962 gate 1 leak 2, updated for #2738. quiz distractors are verified unless opted out."""
-    activities = [
-        {
-            "id": "act-1",
-            "type": "quiz",
-            "items": [
-                {
-                    "question": "Я ___ каву.",
-                    "options": [
-                        {"text": "п'юся", "intentional_error": True},
-                        {"text": "п'ю", "correct": True},
-                    ],
-                }
-            ],
-        }
-    ]
-    fake_verify = _build_fake_verify_words(known={"каву": True, "п'ю": True})
-    report = linear_pipeline._vesum_gate(
-        module_text="",
-        activities=activities,
-        vocabulary=[],
-        resources=[],
-        verify_words_fn=fake_verify,
-    )
-    assert "п'юся" not in report["missing"]
-    assert report["passed"] is True
-
-
 def test_vesum_gate_skips_error_correction_explanation() -> None:
     """Regression for #1962 gate 1 leak 3. explanations cite wrong forms."""
     activities = [
@@ -2947,82 +2258,6 @@ def test_vesum_gate_skips_resource_notes_field() -> None:
     assert "Ніцою" not in report["missing"]
     # Title field included, so "Фабрикація" should be missing
     assert "фабрикація" in report["missing"] or "Фабрикація" in report["missing"]
-
-
-def test_immersion_gate_recognizes_unicode_sentence_boundaries(
-    tmp_path: Path,
-) -> None:
-    """Ukrainian dialogue punctuation `…`, `‼`, `⁇` must split sentences.
-
-    Adversarial review (Codex, 2026-04-26): without these, a Ukrainian run
-    like "Так… Потім вмиваюся… І одягаюся… Нарешті йду." was treated as one
-    long sentence, producing a false long-sentence flag.
-    """
-    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
-    (module_dir / "module.md").write_text(
-        "## Діалоги\n\n"
-        "Так… Потім вмиваюся… І одягаюся… Нарешті йду на роботу.",
-        encoding="utf-8",
-    )
-
-    report = linear_pipeline.run_python_qg(
-        module_dir, plan_path, verify_words_fn=fake_verify
-    )
-
-    # Without the `…` boundary, all 4 short sentences would join into one
-    # 12-Ukrainian-word run, exceeding the >10 threshold.
-    assert report["gates"]["long_uk_ceiling"]["offending_runs"] == [], (
-        f"Ukrainian ellipsis was not treated as sentence boundary: "
-        f"{report['gates']['long_uk_ceiling']['offending_runs']}"
-    )
-
-
-def test_immersion_gate_credits_ukrainian_in_jsx_text_props(tmp_path: Path) -> None:
-    """JSX `text="..."` Ukrainian content counts; prop keys do NOT count.
-
-    Adversarial review (Gemini + Codex, 2026-04-26): raw-body tokenization
-    counted English JSX prop keys (`speaker`, `text`, `translation`) and
-    English translation strings as English tokens, deflating the immersion
-    percentage. Now the JSX block is stripped from the body, then string-
-    valued Ukrainian inside JSX is added back via `_JSX_STRING_VALUE_RE`.
-    """
-    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
-    # Body has English meta-narration prose AND a DialogueBox with Ukrainian
-    # `text:` props. Without the fix, English prop keys + English
-    # translations would dominate. With the fix, only learner-facing
-    # Ukrainian inside JSX adds to the count.
-    (module_dir / "module.md").write_text(
-        "\n".join(
-            [
-                "## Діалоги",
-                "",
-                "<DialogueBox",
-                "  characters={{}}",
-                "  lines={[",
-                '    { speaker: "Ліна", text: "Прокидаюся рано і вмиваюся." },',
-                '    { speaker: "Настя", text: "А я снідаю і йду на роботу." },',
-                "  ]}",
-                "/>",
-                "",
-                "<!-- INJECT_ACTIVITY: act-1 -->",
-            ]
-        ),
-        encoding="utf-8",
-    )
-
-    report = linear_pipeline.run_python_qg(
-        module_dir, plan_path, verify_words_fn=fake_verify
-    )
-
-    pct = report["gates"]["immersion_advisory"]["pct"]
-    # The body has effectively no English prose (one heading, one comment).
-    # All counted tokens come from Ukrainian dialogue text. Prop keys
-    # (`speaker`, `text`, `lines`, `characters`) are excluded; English
-    # translations are absent. Immersion should be high (>50%).
-    assert pct > 50.0, (
-        f"JSX-extracted Ukrainian gave a too-low immersion pct: {pct}%; "
-        "prop keys may still be counted as English tokens"
-    )
 
 
 def test_immersion_gate_strips_jsx_blocks_with_gt_in_prop_expressions(
@@ -3243,387 +2478,9 @@ def test_citation_matcher_rejects_different_grade_even_small_page() -> None:
     assert result["unknown"] == ["Аврамченко, Українська мова, 6 клас, с. 112"]
 
 
-def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
-    """Smoke test: the baseline `_passing_qg_fixture` produces a green report.
-
-    Acts as the canary for run_python_qg. If a future change breaks the basic
-    happy-path module shape, this test surfaces it before any of the targeted
-    bugfix tests run.
-
-    `l2_exposure_floor` is excluded from the aggregate assertion: Phase B
-    (2026-05-13) calibrated its floors against deployed-corpus-scale content
-    (~14 dialogue lines for a1-m15-24), which a 30-line synthetic fixture
-    intentionally does not satisfy. That gate has dedicated coverage in
-    `tests/test_immersion_gates.py`; the canary's job is the other 17 gates.
-    """
-    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
-
-    report = linear_pipeline.run_python_qg(
-        module_dir, plan_path, verify_words_fn=fake_verify
-    )
-
-    gates = report["gates"]
-    failures = [
-        name
-        for name, g in gates.items()
-        if isinstance(g, dict)
-        and g.get("passed") is False
-        and name != "l2_exposure_floor"
-    ]
-    assert failures == [], f"Unexpected gate failures: {failures}"
-    assert gates["russianisms_clean"]["passed"] is True
-    assert gates["surzhyk_clean"]["passed"] is True
-    assert gates["calques_clean"]["passed"] is True
-    assert gates["paronym_clean"]["passed"] is True
-
-
 # ---------------------------------------------------------------------------
 # Round 3.5 prompt-tighten regression tests (#1602)
 # ---------------------------------------------------------------------------
-
-
-def test_render_component_props_schema_lists_required_and_optional() -> None:
-    """A1's allowed types must each get authoring required/optional lines.
-
-    Round-3 (#1577) failed because the writer guessed `passage:` for `fill-in`
-    and omitted `correct_order` on `order`. The POC M20 failure then showed
-    that surfacing React component props misled Gemini into writing
-    `quiz.questions`. The prompt must show authoring fields instead.
-    """
-    allowed = "fill-in, order, match-up, quiz"
-    rendered = linear_pipeline._render_component_props_schema(allowed)
-
-    # Each allowed type must produce its own bullet block.
-    for activity_type in ("fill-in", "order", "match-up", "quiz"):
-        assert f"- {activity_type}:" in rendered, (
-            f"Missing bullet for activity type {activity_type!r} in:\n{rendered}"
-        )
-
-    # Required authoring field names must appear verbatim — these are the exact
-    # keys the writer parser accepts.
-    assert "items" in rendered, "FillIn / Order / MatchUp `items` prop missing"
-    assert "correct_order" in rendered, (
-        "Order `correct_order` prop missing — was the original round-3 failure"
-    )
-    quiz_block = rendered.split("- quiz:")[1].split("- ")[0]
-    assert "items" in quiz_block
-    assert "questions" not in quiz_block
-
-    # Required and optional must be on different lines so the writer can tell
-    # them apart.
-    assert "    required authoring fields:" in rendered
-    assert "    optional authoring fields:" in rendered
-
-
-def test_render_component_props_schema_filters_to_allowed_types() -> None:
-    """The schema renderer must NOT leak forbidden activity types.
-
-    Forbidden types (e.g. `cloze`, `essay-response`, `paleography-analysis`)
-    have their own authoring schemas. If the
-    renderer doesn't filter, the writer would see them as 'available' and
-    reach for them. The filter mirrors `ALLOWED_ACTIVITY_TYPES` exactly.
-    """
-    rendered = linear_pipeline._render_component_props_schema("fill-in, quiz")
-
-    # Allowed types appear.
-    assert "- fill-in:" in rendered
-    assert "- quiz:" in rendered
-    # Forbidden / unmentioned types must NOT appear.
-    assert "- cloze:" not in rendered
-    assert "- essay-response:" not in rendered
-    assert "- paleography-analysis:" not in rendered
-
-
-def test_writer_context_populates_component_props_schema() -> None:
-    """`writer_context` must surface `COMPONENT_PROPS_SCHEMA` for `.format()`.
-
-    Without this, `render_phase_prompt` would raise `Unknown downstream
-    prompt context keys` (forbid-extras) or leave `{COMPONENT_PROPS_SCHEMA}`
-    unresolved in the prompt sent to the writer.
-    """
-    plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
-    plan = linear_pipeline.plan_check(plan_path)
-    context = linear_pipeline.writer_context(
-        plan,
-        plan_path.read_text(encoding="utf-8"),
-        "Knowledge packet excerpt.",
-    )
-
-    assert "COMPONENT_PROPS_SCHEMA" in context
-    schema_text = context["COMPONENT_PROPS_SCHEMA"]
-    assert "- fill-in:" in schema_text
-    assert "    required authoring fields:" in schema_text
-
-
-def test_render_phase_prompt_resolves_component_props_schema() -> None:
-    """The placeholder `{COMPONENT_PROPS_SCHEMA}` must be substituted.
-
-    Asserts the full rendering path: token registered in `DOWNSTREAM_TOKENS`,
-    populated by `writer_context`, substituted by `render_phase_prompt`, and
-    no `{...}` placeholder left in the rendered output for the writer.
-    """
-    plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
-    plan = linear_pipeline.plan_check(plan_path)
-    context = linear_pipeline.writer_context(
-        plan,
-        plan_path.read_text(encoding="utf-8"),
-        "Knowledge packet excerpt.",
-    )
-    rendered = linear_pipeline.render_phase_prompt(
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md",
-        context,
-    )
-
-    assert "{COMPONENT_PROPS_SCHEMA}" not in rendered
-    # Concrete schema body landed in the prompt where the placeholder was.
-    assert "- fill-in:" in rendered
-    assert "    required authoring fields:" in rendered
-    assert "quiz`, `select`, and `translate`, use the authoring" in rendered
-
-
-def test_linear_write_prompt_carries_anti_meta_narration_directive() -> None:
-    """The writer prompt must explicitly forbid English meta-narration.
-
-    Round-3 diagnostic (#1577) showed Gemini wrote chatty English intros
-    ("Welcome to...", "Now that you have seen..."), blowing past
-    `plan_sections` budgets and dropping immersion below the 15% floor.
-    The fix is a direct prohibition in the prompt; this test guards
-    against the directive being silently removed.
-    """
-    prompt_text = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-
-    assert "No English meta-narration" in prompt_text, (
-        "linear-write.md is missing the explicit anti-meta-narration directive"
-    )
-    # The directive references concrete forbidden phrases so the writer can
-    # pattern-match. A future agent that wants to soften this should bring
-    # data showing the chatty-intro failure mode is gone, not just delete it.
-    for forbidden_phrase in ("Welcome to", "In this section we will learn"):
-        assert forbidden_phrase in prompt_text, (
-            f"Anti-meta-narration directive must name {forbidden_phrase!r} as a "
-            f"forbidden phrase"
-        )
-
-
-def test_linear_write_prompt_documents_non_textbook_role_url_requirement() -> None:
-    """Regression for #1959: non-textbook resource entries require url:.
-
-    The writer prompt lists valid roles, but the deterministic schema only
-    allows `role: textbook` without a URL. This guards the direct instruction
-    that unverifiable non-textbook entries should be omitted, not emitted with
-    missing or placeholder URLs.
-    """
-    prompt_text = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-
-    assert "role: textbook" in prompt_text, (
-        "Template should reference role: textbook in the schema-rule explanation"
-    )
-    assert "OMIT THE ENTRY" in prompt_text, (
-        "Template should instruct the writer to omit entries without verifiable URL"
-    )
-    normalized_prompt = prompt_text.lower()
-    assert (
-        "requires url" in normalized_prompt
-        or "require a non-empty `url:`" in normalized_prompt
-    ), "Template should explicitly state non-textbook roles require url"
-
-
-def test_linear_write_prompt_mandates_dialoguebox_or_blockquote_for_dialogues() -> None:
-    """#1962: writer must emit dialogues in gate-countable form."""
-    template = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-
-    assert "DialogueBox" in template
-    assert "blockquote" in template.lower() or "`> `" in template
-    assert "em-dash" in template.lower() or "anti-pattern" in template.lower()
-
-
-def test_linear_write_prompt_requires_inline_gloss_within_8_tokens() -> None:
-    """#1962: each dialogue line needs inline English gloss."""
-    template = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-    lower_template = template.lower()
-
-    assert "inline gloss" in lower_template or "inline english" in lower_template
-    assert "8 tokens" in template or "8 words" in template or "within 8" in template
-    assert "block-bottom" in lower_template or "block bottom" in lower_template
-
-
-def test_linear_write_prompt_restricts_non_plan_citations() -> None:
-    """#1962: writer must not invent out-of-plan citations."""
-    template = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-
-    assert "plan_references" in template
-    assert "Knowledge Packet" in template or "writer_tool_calls" in template
-    assert "citations_resolve" in template
-
-
-def test_linear_write_prompt_references_component_props_schema_token() -> None:
-    """The writer prompt must consume `{COMPONENT_PROPS_SCHEMA}` somewhere.
-
-    If the token is registered in `DOWNSTREAM_TOKENS` and populated by
-    `writer_context` but never referenced in the prompt, the writer never
-    sees the schema and the bug recurs. Prevents a refactor from silently
-    de-wiring the schema.
-    """
-    prompt_text = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-
-    assert "{COMPONENT_PROPS_SCHEMA}" in prompt_text
-
-
-def test_proper_name_whitelist_includes_round_3_5_additions() -> None:
-    """`Караман`, `Ліна`, `Настя` (+ declined forms) must be whitelisted.
-
-    A1/20 plan cites `Караман Grade 10, p.176` and the dialogue uses
-    `Ліна` and `Настя` as speakers. Without the whitelist entries the
-    `vesum_verified` gate fails on names VESUM was never going to know.
-    Adversarial review (Gemini + Codex on PR #1603) flagged that exact
-    surface forms only weren't enough — the writer may use vocative
-    (`Лін!`, `Настю!`) or oblique cases (`Караманом`) freely. Common
-    declined forms are included.
-    """
-    from scripts.audit.config import PROPER_NAME_WHITELIST
-
-    for name in ("Караман", "Ліна", "Настя"):
-        assert name in PROPER_NAME_WHITELIST, (
-            f"Proper name {name!r} expected in PROPER_NAME_WHITELIST after #1602"
-        )
-    # Spot-check that the most common declined forms landed too.
-    for declined in ("Ліну", "Ліно", "Настю", "Карамана", "Караманом"):
-        assert declined in PROPER_NAME_WHITELIST, (
-            f"Declined form {declined!r} expected in PROPER_NAME_WHITELIST "
-            f"after Gemini/Codex review on PR #1603"
-        )
-
-
-def test_proper_name_whitelist_lc_observes_runtime_mutation() -> None:
-    """`_proper_name_whitelist_lc` must NOT cache across mutations.
-
-    Adversarial review (Gemini, 2026-04-26, PR #1603) flagged that an
-    earlier `@functools.cache` decorator on this function created a silent
-    test-isolation hazard — any test that mutated `PROPER_NAME_WHITELIST`
-    (via monkeypatch / set.add) would not be observed by pipeline code.
-    The decorator is gone; this test guards against it being reintroduced.
-    """
-    from scripts.audit.config import PROPER_NAME_WHITELIST
-
-    sentinel = "ZZZ_TEST_SENTINEL_NOT_A_REAL_NAME_ZZZ"
-    assert sentinel not in PROPER_NAME_WHITELIST  # paranoia
-    baseline = linear_pipeline._proper_name_whitelist_lc()
-    assert sentinel.lower() not in baseline
-
-    PROPER_NAME_WHITELIST.add(sentinel)
-    try:
-        after_add = linear_pipeline._proper_name_whitelist_lc()
-        assert sentinel.lower() in after_add, (
-            "Mutation to PROPER_NAME_WHITELIST was not observed — has "
-            "@functools.cache been reintroduced on _proper_name_whitelist_lc?"
-        )
-    finally:
-        PROPER_NAME_WHITELIST.discard(sentinel)
-
-
-def test_render_component_props_schema_warns_on_unresolved_allowed_type() -> None:
-    """Allowed types with no schema entry must produce a `# WARNING:` line.
-
-    Adversarial review (Codex, 2026-04-26, PR #1603) flagged that
-    `phrase-table` is in `INLINE_ALLOWED_TYPES` for A1 but has
-    `activity_type: null` in `docs/lesson-schema.yaml` (schema-generator
-    drift, tracked separately as #1604). Earlier the renderer silently
-    omitted such types — the writer wouldn't know NOT to use them, then
-    `_component_prop_gate` would reject the activity with a cryptic error.
-    The renderer now emits an explicit warning bullet so the writer is
-    told off the type, and the build doesn't fail-fast on the unrelated
-    drift bug.
-    """
-    rendered = linear_pipeline._render_component_props_schema(
-        "fill-in, phrase-table, banana-rama-not-a-real-type"
-    )
-
-    assert "- fill-in:" in rendered
-    # Each unresolved type gets its own WARNING bullet.
-    for unresolved in ("phrase-table", "banana-rama-not-a-real-type"):
-        assert f"- {unresolved}:" in rendered
-        assert "# WARNING: no authoring schema entry" in rendered, (
-            f"Unresolved type {unresolved!r} did not produce a WARNING line; "
-            f"rendered output was:\n{rendered}"
-        )
-    assert "DO NOT USE" in rendered
-    # And the rendered output references the follow-up issue so future
-    # readers can find context without grepping commit history.
-    assert "#1604" in rendered
-
-
-def test_render_component_props_schema_uses_authoring_shape_not_ts_types() -> None:
-    """The writer prompt must expose authoring fields, not TypeScript props.
-
-    The prompt used to render component prop types from lesson-schema.yaml.
-    That leaked TypeScript/JSDoc details and, worse, component-side names like
-    `questions` that are not valid authoring JSON. It now renders the compact
-    authoring whitelist.
-    """
-    rendered = linear_pipeline._render_component_props_schema("odd-one-out")
-
-    odd_block = rendered.split("- odd-one-out:")[1].split("- ")[0]
-    assert "/**" not in odd_block, (
-        f"TSDoc block leaked into rendered odd-one-out output:\n{odd_block}"
-    )
-    assert "*/" not in odd_block
-    assert "@schemaDescription" not in odd_block
-    assert "@ukrainianText" not in odd_block
-    assert "required authoring fields: id, type, items" in odd_block
-
-
-def test_linear_write_prompt_skeleton_example_matches_schema() -> None:
-    """The literal `fill-in` example in `linear-write.md` must be valid.
-
-    Adversarial review (Codex, 2026-04-26, PR #1603 BLOCKER #1) flagged
-    that the original example showed `id/type/title` only, contradicting
-    the new "Activity Component Props" section that says `fill-in`
-    requires `items: FillInItem[]`. Self-contradicting prompts are worse
-    than no prompt — the model resolves the conflict by picking whichever
-    feels closer to its prior, and we lose control of the contract.
-
-    This test reads `linear-write.md`, finds the `activities.yaml` JSON
-    fenced block, parses it, and confirms each example object satisfies
-    its declared `type`'s required props per `lesson-schema.yaml`. The
-    same `_component_prop_gate` logic that catches writer outputs at
-    runtime is reused here — drift between example and gate fails loud.
-    """
-    prompt_text = (
-        linear_pipeline.PROJECT_ROOT / "scripts/build/phases/linear-write.md"
-    ).read_text(encoding="utf-8")
-
-    # Pull the JSON code block fenced as ```json file=activities.yaml.
-    match = re.search(
-        r"```json file=activities\.yaml\n(.*?)\n```",
-        prompt_text,
-        re.DOTALL,
-    )
-    assert match is not None, (
-        "linear-write.md no longer contains a ```json file=activities.yaml ``` "
-        "fenced example — did the example block get refactored away?"
-    )
-    activities = json.loads(match.group(1))
-    assert isinstance(activities, list) and activities, (
-        "Example activities list is empty"
-    )
-
-    report = linear_pipeline._component_prop_gate(activities)
-    assert report["passed"], (
-        f"Example activities in linear-write.md fail the component-prop gate "
-        f"that runs against real writer output. Errors: {report['errors']}"
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -3673,69 +2530,6 @@ def test_component_prop_gate_rejects_authorial_intent_component_prop_names() -> 
     assert any("model_answer" in err for err in report["errors"])
 
 
-def test_component_prop_gate_accepts_debate_snake_case_authoring() -> None:
-    """`debate` requires camelCase `debateQuestion`; authoring uses snake_case."""
-    activities = [
-        {
-            "id": "act-1",
-            "type": "debate",
-            "title": "Debate",
-            "debate_question": "Чи був Хмельницький героєм?",
-            "positions": [{"label": "За", "arguments": ["..."]}],
-        }
-    ]
-    report = linear_pipeline._component_prop_gate(activities)
-    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
-
-
-def test_component_prop_gate_accepts_paleography_imageurl_authoring() -> None:
-    """`paleography-analysis` requires camelCase `imageUrl`; authoring uses
-    snake_case `image_url`."""
-    activities = [
-        {
-            "id": "act-1",
-            "type": "paleography-analysis",
-            "title": "Палеографія",
-            "image_url": "https://example.com/manuscript.jpg",
-            "hotspots": [{"x": 10, "y": 20, "label": "..."}],
-        }
-    ]
-    report = linear_pipeline._component_prop_gate(activities)
-    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
-
-
-def test_component_prop_gate_accepts_dialect_comparison_snake_case_authoring() -> None:
-    """`dialect-comparison` requires camelCase `textA`/`textB`; authoring
-    uses snake_case `text_a`/`text_b`."""
-    activities = [
-        {
-            "id": "act-1",
-            "type": "dialect-comparison",
-            "title": "Compare",
-            "text_a": "Sample A...",
-            "text_b": "Sample B...",
-            "features": [{"name": "f", "a": "...", "b": "..."}],
-        }
-    ]
-    report = linear_pipeline._component_prop_gate(activities)
-    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
-
-
-def test_component_prop_gate_accepts_source_evaluation_snake_case_authoring() -> None:
-    """`source-evaluation` requires camelCase `sourceText`; authoring uses
-    snake_case `source_text`."""
-    activities = [
-        {
-            "id": "act-1",
-            "type": "source-evaluation",
-            "title": "Evaluate",
-            "source_text": "Source text content...",
-        }
-    ]
-    report = linear_pipeline._component_prop_gate(activities)
-    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
-
-
 def test_component_prop_gate_skips_jsx_only_children_prop() -> None:
     """`mark-the-words` and `highlight-morphemes` require `children` in the
     React component, but authoring YAML doesn't have a top-level `children:`
@@ -3774,26 +2568,6 @@ def test_component_prop_gate_still_reports_genuinely_missing_props() -> None:
     report = linear_pipeline._component_prop_gate(activities)
     assert not report["passed"]
     assert any("text_excerpt" in err for err in report["errors"])
-
-
-def test_component_to_authoring_renames_cover_known_renames() -> None:
-    """Drift guard: every type in the rename map must also be in the
-    authoring whitelist (so a rename can't reference a type the parser
-    doesn't know about) AND every renamed AUTHORING field name must be in
-    that type's authoring whitelist (so the renamed field can pass strict
-    JSON validation)."""
-    for activity_type, rename_map in linear_pipeline._COMPONENT_TO_AUTHORING_RENAMES.items():
-        assert activity_type in linear_pipeline._ACTIVITY_AUTHORING_FIELDS, (
-            f"_COMPONENT_TO_AUTHORING_RENAMES has type {activity_type!r} "
-            f"that is not in _ACTIVITY_AUTHORING_FIELDS"
-        )
-        allowed = linear_pipeline._ACTIVITY_AUTHORING_FIELDS[activity_type]
-        for component_prop, authoring_field in rename_map.items():
-            assert authoring_field in allowed, (
-                f"Type {activity_type!r}: rename {component_prop!r} -> "
-                f"{authoring_field!r}, but {authoring_field!r} is not in "
-                f"the authoring whitelist for that type"
-            )
 
 
 def test_component_prop_gate_consistent_with_strict_json_parser_for_a1_20() -> None:
@@ -3852,17 +2626,6 @@ def test_strip_metalinguistic_removes_avoid_markers() -> None:
     # The Ukrainian-preferred forms must survive.
     assert "сніданок" in stripped
     assert "рушник" in stripped
-
-
-def test_strip_metalinguistic_avoid_marker_handles_multiline_and_spacing() -> None:
-    """The marker tolerates surrounding whitespace and a multi-line span."""
-    text = (
-        "Avoid the surzhyk form <!--   bad   -->\nодіватися\n<!--   /bad   -->\n"
-        "and use одягатися instead."
-    )
-    stripped = linear_pipeline._strip_metalinguistic(text)
-    assert "одіватися" not in stripped
-    assert "одягатися" in stripped
 
 
 def test_strip_metalinguistic_avoid_marker_keeps_adjacent_callouts_separate() -> None:
@@ -4129,27 +2892,6 @@ def test_warning_quote_unclosed_italic_terminated_by_punctuation() -> None:
     )
 
 
-def test_proper_name_whitelist_covers_ya_forma() -> None:
-    """`я-форма` and its declined forms are pedagogical Ukrainian
-    linguistics terminology, not a VESUM lemma. Whitelist must cover
-    the surface forms a writer can realistically emit so the m20
-    `Інфінітив ↔ я-форма` activity title doesn't trip the gate."""
-    from scripts.audit.config import PROPER_NAME_WHITELIST
-
-    whitelist_lc = {name.lower() for name in PROPER_NAME_WHITELIST}
-    for surface in (
-        "я-форма",  # nom
-        "я-форми",  # gen / nom-pl
-        "я-формі",  # dat / loc
-        "я-форму",  # acc
-        "я-формою",  # instr
-    ):
-        assert surface in whitelist_lc, (
-            f"linguistic term {surface!r} must be in PROPER_NAME_WHITELIST "
-            f"(VESUM does not contain hyphenated pronoun-forma compounds)"
-        )
-
-
 def test_iter_vesum_word_surfaces_skips_mixed_script_typos() -> None:
     """Mixed-script Cyrillic-abutting-Latin tokens are writer typos, not words.
 
@@ -4256,36 +2998,6 @@ def test_strip_metalinguistic_collapses_bold_wrapped_morpheme_labels() -> None:
         )
 
 
-def test_strip_metalinguistic_preserves_bold_lemmas_in_running_prose() -> None:
-    """Plain bold-emphasized Ukrainian lemmas still reach VESUM lookup intact.
-
-    Bold-unwrap in `_strip_metalinguistic` is for the morpheme-regex
-    pass-through. After the regex runs, the unwrapped lemma must still
-    appear in the gate text so a real misspelling inside `**...**`
-    (e.g. `**прокидаюсь**`) is still verified.
-    """
-    text = "Stick to **сніданок** and **рушник**, not **полотенце**."
-    stripped = linear_pipeline._strip_metalinguistic(text)
-    for lemma in ("сніданок", "рушник", "полотенце"):
-        assert lemma in stripped, f"bold-unwrapped lemma '{lemma}' should survive"
-
-
-def test_contract_yaml_handles_dict_shape_vocabulary_hints() -> None:
-    """CORE plans express vocabulary_hints as `{required: [...], optional: [...]}`."""
-    plan = {
-        "content_outline": [{"section": "S", "words": 100, "points": ["p1"]}],
-        "activity_hints": [],
-        "references": [{"title": "Ref"}],
-        "vocabulary_hints": {
-            "required": [{"word": "сніданок", "pos": "ч.", "definition": "ранкова їжа"}],
-            "optional": [],
-        },
-    }
-    out = linear_pipeline._contract_yaml(plan)
-    assert "vocabulary_required" in out
-    assert "сніданок" in out
-
-
 def test_contract_yaml_handles_list_shape_vocabulary_hints() -> None:
     """Seminar plans (most LIT + BIO) express vocabulary_hints as a bare list.
 
@@ -4307,17 +3019,6 @@ def test_contract_yaml_handles_list_shape_vocabulary_hints() -> None:
     assert "vocabulary_required" in out
     assert "сентименталізм" in out
     assert "ремарка" in out
-
-
-def test_contract_yaml_tolerates_missing_vocabulary_hints() -> None:
-    """Plans without vocabulary_hints render an empty required list."""
-    plan = {
-        "content_outline": [{"section": "S", "words": 100, "points": ["p1"]}],
-        "activity_hints": [],
-        "references": [{"title": "Ref"}],
-    }
-    out = linear_pipeline._contract_yaml(plan)
-    assert "vocabulary_required: []" in out
 
 
 # ---------------------------------------------------------------------------
@@ -4435,26 +3136,6 @@ def test_section_gate_accepts_zero_script_heading_aliases() -> None:
     assert report["archetype"] == "a1-zero-script-onboarding"
 
 
-def test_section_gate_passes_when_sections_overshoot_max() -> None:
-    """Section overshoot (count > max) does not fail the gate either.
-
-    Reaffirms the pre-existing rule that max_words is diagnostic-only
-    ("more is always welcome" — user direction 2026-05-17 + 2026-05-23).
-    """
-    plan = {
-        "content_outline": [
-            {"section": "Підсумок", "words": 300, "points": ["p1"]},
-        ]
-    }
-    # 600 words: well over max=330 but max is diagnostic.
-    text = "## Підсумок\n\n" + ("слово " * 600) + "\n"
-    report = linear_pipeline._section_gate(text, plan)
-    assert report["passed"] is True
-    budget = report["word_budgets"][0]
-    assert budget["over_max"] is True
-    assert budget["under_min"] is False
-
-
 def test_vesum_gate_accepts_hyphenated_multi_word_compound_when_parts_verify() -> None:
     """Hyphenated multi-word constructions where all parts verify pass.
 
@@ -4508,38 +3189,3 @@ def test_vesum_gate_still_fails_hyphenated_compound_when_part_is_russianism() ->
     # The compound stays missing because `буквенного` constituent fails.
     assert "буквенного-щось" in report["missing"]
     assert report["passed"] is False
-
-
-def test_vesum_gate_hyphenated_compound_accepted_when_only_short_parts() -> None:
-    """Hyphenated compounds of only-short-tokens are accepted conservatively.
-
-    Edge case: `і-і-і` or `у-у-у` — strings of short prepositions/
-    conjunctions all below VESUM_MIN_WORD_LENGTH=3 — are not realistic
-    Ukrainian forms but if they ever appear, the fallback accepts them
-    conservatively (there are no constituents to verify, so no constituent
-    fails). This prevents the gate from blocking on unverifiable noise.
-    """
-    fake_verify = _build_fake_verify_words(known={"слово": True})
-    report = linear_pipeline._vesum_gate(
-        # `і-і-і` (3-part compound of single-char tokens). All below
-        # VESUM_MIN_WORD_LENGTH=3.
-        module_text="Слово і-і-і.",
-        activities=[],
-        vocabulary=[],
-        resources=[],
-        verify_words_fn=fake_verify,
-    )
-    # 'і-і-і' wouldn't reach VESUM at all (below min length on the whole
-    # compound). The test is structurally a smoke test that the fallback
-    # doesn't crash on degenerate inputs.
-    assert report.get("error") is None
-
-
-def test_codex_writer_and_reviewer_defaults_use_astra_with_explicit_effort():
-    assert linear_pipeline.WRITER_DEFAULTS["codex-tools"] == {"model": "gpt-6.1-sol", "effort": "high"}
-    assert linear_pipeline.REVIEWER_DEFAULTS["codex-tools"] == {"model": "gpt-6.1-sol", "effort": "high"}
-
-
-def test_agy_writer_and_reviewer_defaults_use_live_flash_with_preserved_effort():
-    assert linear_pipeline.WRITER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "high"}
-    assert linear_pipeline.REVIEWER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "medium"}

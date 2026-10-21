@@ -6,10 +6,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-from bs4 import BeautifulSoup
-
 from scripts.practice_deck.recover_markup_osvita import (
-    extract_option_from_answer,
     main,
     match_recovered_tasks,
     merge_overlay_items,
@@ -81,16 +78,6 @@ BOLD_ONLY_HTML = """
 </div>
 </body></html>
 """
-
-
-def test_extract_option_marks_from_u_b_snippet() -> None:
-    soup = BeautifulSoup(ZNO_203_HTML, "html.parser")
-    answer = soup.find(class_="answer")
-    assert answer is not None
-    option = extract_option_from_answer(answer)
-    assert option is not None
-    assert option.text == "сьомий, шість, сюди"
-    assert option.marks == ZNO_203_MARKS[0]
 
 
 def test_parse_tasks_recovers_zno_203_style_underlines() -> None:

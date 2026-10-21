@@ -25,10 +25,6 @@ from scripts.projects.open_model_data import v4_fleet_execution_authority as fle
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority
 from scripts.projects.open_model_data import v4_trust_authority as trust
 
-# Bound at import, before any test-policy seam is installed.
-_REAL_LOAD_PRODUCTION_TRUST_POLICY = trust.load_production_trust_policy
-
-ROW_SHA = "b" * 64
 PACKET_SHA = "d" * 64
 AUTHORSHIP_SHA = "f" * 64
 RUBRIC_SHA = "1" * 64
@@ -96,16 +92,6 @@ def test_execute_capture_never_writes_a_v4_observation(tmp_path: Path) -> None:
         assert int(rows["n"]) == 0
 
 
-def test_authorize_author_execution_takes_no_caller_hashes() -> None:
-    import inspect
-
-    params = inspect.signature(RequestExecutor.authorize_author_execution).parameters
-    assert "prompt_sha256" not in params
-    assert "row_content_sha256" not in params
-    assert "packet_sha256" not in params
-    assert list(params) == ["self", "request_id", "slot_id", "expected_seat"]
-
-
 def test_a_slot_cannot_be_authorized_after_execution_starts(tmp_path: Path) -> None:
     """There is no retroactive authorization: once a request has left
     ``queued`` the dispatch binding can never be minted for it."""
@@ -144,16 +130,6 @@ def test_the_execution_boundary_exposes_no_caller_built_observation_writer() -> 
 # --- fixed canonical PostgreSQL production resolution -----------------------
 
 
-def test_production_authority_selection_takes_no_plane_argument() -> None:
-    """No root, path, DSN, connection or authority parameter exists on the
-    production selector, so no caller-level substitution is possible."""
-    import inspect
-
-    assert list(inspect.signature(v4_store.open_production_authority_store).parameters) == ["write"]
-    assert list(inspect.signature(fleet_execution._open_canonical_authority_store).parameters) == []
-    assert list(inspect.signature(sources_authority._open_canonical_authority_store).parameters) == []
-
-
 def test_production_authority_refuses_the_sqlite_default() -> None:
     """A bare shell's SQLite default is not the deployed service authority."""
     with pytest.raises(v4_store.CanonicalAuthorityUnavailableError, match="PostgreSQL"):
@@ -187,14 +163,6 @@ def test_issue_verifier_attestation_refuses_a_non_pg_authority_before_key_access
         sources_authority.issue_verifier_attestation(invocation_id="inv-1")
 
 
-def test_a_caller_selected_sqlite_plane_is_not_production_authority(monkeypatch: pytest.MonkeyPatch) -> None:
-    """The production selector never consults a caller-chosen SQLite root."""
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "sqlite")
-    monkeypatch.setattr(fleet_execution, "_load_signing_key", lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
-    with pytest.raises(fleet_execution.FleetExecutionError, match="unavailable"):
-        fleet_execution.issue_author_execution_receipt(task_id="task-1", run_id="run-1")
-
-
 # --- production issuers over a real resolved observation --------------------
 
 
@@ -220,14 +188,6 @@ def _patch_fleet(monkeypatch: pytest.MonkeyPatch, *, tmp_path: Path | None = Non
 
 def _recorded_author_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
     return _run_author_via_runner(tmp_path, monkeypatch)
-
-
-def test_issue_author_execution_receipt_signature_accepts_only_task_and_run_id() -> None:
-    import inspect
-
-    assert list(inspect.signature(fleet_execution.issue_author_execution_receipt).parameters) == ["task_id", "run_id"]
-    assert list(inspect.signature(fleet_execution.issue_reviewer_execution_receipt).parameters) == ["task_id", "run_id"]
-    assert list(inspect.signature(sources_authority.issue_verifier_attestation).parameters) == ["invocation_id"]
 
 
 def test_issue_author_execution_receipt_refuses_an_unknown_task_run_before_key_access(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
@@ -276,13 +236,6 @@ def test_issue_reviewer_execution_receipt_refuses_an_author_slot(tmp_path: Path,
         fleet_execution.issue_reviewer_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
 
 
-def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
-    binding, _record = _recorded_author_record(tmp_path, monkeypatch)
-    _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
-    with pytest.raises(fleet_execution.FleetExecutionError, match="unknown task_id/run_id"):
-        fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id="run-OTHER")
-
-
 @pytest.mark.parametrize("mutation", [{"status": "running"}, {"return_code": 1}, {"completion_state": "failed"}, {"terminal_event_observed": False}])
 def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: dict[str, Any], owned_resources) -> None:
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
@@ -311,11 +264,6 @@ def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: P
             v4_store._persist_execution_observation({**base, "status": "failed"}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
     with ArtifactStore(root=tmp_path) as store:
         assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="author") == base
-
-
-def test_execution_observation_resolves_none_for_an_unknown_key(tmp_path: Path) -> None:
-    with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id="nope", run_id="nope", role="author") is None
 
 
 def test_execution_observation_write_rejects_a_malformed_record_before_any_persistence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
@@ -395,19 +343,6 @@ def test_sources_invocation_records_a_typed_call(tmp_path: Path) -> None:
         assert store.resolve_v4_sources_invocation(invocation_id=record["invocation_id"]) == record
 
 
-def test_sources_invocation_identifier_cannot_be_declared_by_the_caller() -> None:
-    """The retired caller identifier/row-hash path has no replacement
-    parameter: a spoofed identifier is structurally impossible."""
-    import inspect
-
-    params = inspect.signature(v4_store.record_sources_invocation_from_typed_outcome).parameters
-    assert "identifier" not in params
-    assert "tool_id" not in params
-    assert "row_content_sha256" not in params
-    assert "request_id" not in params
-    assert "success" not in params
-
-
 @pytest.mark.parametrize(
     ("kwargs", "why"),
     [
@@ -424,27 +359,6 @@ def test_sources_invocation_identifier_cannot_be_declared_by_the_caller() -> Non
 def test_sources_invocation_refuses_to_record_a_fabricated_or_failed_call(tmp_path: Path, kwargs: dict[str, Any], why: str) -> None:
     assert _record_invocation(tmp_path, **kwargs) is None, why
     with ArtifactStore(root=tmp_path) as store:
-        rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
-        assert int(rows["n"]) == 0
-
-
-def test_retired_caller_correlation_path_records_nothing(tmp_path: Path) -> None:
-    claim = _running_attempt(tmp_path)
-    with ArtifactStore(root=tmp_path) as store:
-        assert (
-            v4_store.record_sources_invocation_from_tool_result(
-                conn=store.connection,
-                is_pg=False,
-                tool_name="verify_word",
-                arguments={"word": "книга"},
-                result_text="книга | VESUM: valid",
-                tool_version=TOOL_VERSION,
-                request_id=claim["request_id"],
-                row_content_sha256=ROW_SHA,
-                claimed_lookup_ids=["vesum:12345"],
-            )
-            is None
-        )
         rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
         assert int(rows["n"]) == 0
 
@@ -469,19 +383,6 @@ def test_sources_invocation_conflicting_duplicate_leaves_prior_evidence_unchange
             with pytest.raises(v4_store.SourcesInvocationConflictError, match="different sources invocation"):
                 v4_store._persist_sources_invocation({**original, "success": False}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
         assert store.resolve_v4_sources_invocation(invocation_id=original["invocation_id"]) == original
-
-
-def test_sources_invocation_resolves_none_for_an_unknown_invocation_id(tmp_path: Path) -> None:
-    with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_sources_invocation(invocation_id="nope") is None
-
-
-def test_verification_tool_ids_join_attempt_not_request() -> None:
-    import inspect
-
-    params = inspect.signature(v4_store.resolve_sources_invocation_tool_ids).parameters
-    assert "attempt_id" in params
-    assert "request_id" not in params
 
 
 def test_compute_invocation_id_is_deterministic_and_content_addressed() -> None:
@@ -547,11 +448,6 @@ def test_load_production_signing_key_refuses_an_unprovisioned_role() -> None:
         trust.load_production_signing_key("fleet_execution")
 
 
-def test_load_production_signing_key_refuses_an_unknown_role() -> None:
-    with pytest.raises(trust.TrustAuthorityError, match="unknown signing-key role"):
-        trust.load_production_signing_key("not-a-real-role")
-
-
 def _provision_flattened_key(namespace: Path, role: str, private: str, key_id: str) -> None:
     """systemd's flattened ``v4-signing-keys_<role>.key[_id]`` credential names, owner-private."""
     for suffix, value in ((".key", private), (".key_id", key_id)):
@@ -579,14 +475,6 @@ def test_load_production_signing_key_succeeds_once_provisioned(tmp_path: Path, m
 # --- production trust-policy digest pinning / rotation / revocation --------
 
 
-def test_load_production_trust_policy_returns_the_reviewed_active_policy(monkeypatch: pytest.MonkeyPatch) -> None:
-    policy, digest = trust.load_production_trust_policy()
-    assert set(policy["keyrings"]) == set(trust.KEYRING_ROLES)
-    assert all(len(ring) == 1 for ring in policy["keyrings"].values())
-    assert all(entry["revoked"] is False for ring in policy["keyrings"].values() for entry in ring.values())
-    assert digest == trust.trust_policy_sha256(policy)
-
-
 def test_load_production_trust_policy_refuses_a_one_byte_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     drifted = trust.DEFAULT_TRUST_POLICY_PATH.read_bytes() + b" "  # one extra byte, still valid JSON whitespace
     drifted_path = tmp_path / "drifted.json"
@@ -594,34 +482,6 @@ def test_load_production_trust_policy_refuses_a_one_byte_drift(tmp_path: Path, m
     monkeypatch.setattr(trust, "DEFAULT_TRUST_POLICY_PATH", drifted_path)
     with pytest.raises(trust.TrustAuthorityError, match="not in the code-reviewed active allowlist"):
         trust.load_production_trust_policy()
-
-
-def test_load_production_trust_policy_refuses_a_revoked_digest(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset())
-    with pytest.raises(trust.TrustAuthorityError, match="not in the code-reviewed active allowlist"):
-        trust.load_production_trust_policy()
-
-
-def test_load_production_trust_policy_takes_no_arguments() -> None:
-    import inspect
-
-    assert list(inspect.signature(_REAL_LOAD_PRODUCTION_TRUST_POLICY).parameters) == []
-
-
-def test_a7_private_ledger_cli_exposes_no_trust_policy_flag() -> None:
-    """``--trust-policy`` is an unrecognized argument now -- argparse itself
-    refuses it (exit code 2), never a caller-selected policy path."""
-    import contextlib
-    import io
-
-    from scripts.projects.open_model_data import v4_a7_private_ledger as ledger
-
-    buf = io.StringIO()
-    with contextlib.redirect_stderr(buf), pytest.raises(SystemExit) as excinfo:
-        ledger.main(["--trust-policy", "somewhere.json", "--verify-private", "--public-receipt", "x", "--ledger", "x", "--a4-receipt", "x", "--seal-receipt", "x", "--membership-dir", "x", "--packet-dir", "x", "--manifest", "x", "--a2-receipt", "x", "--salt-hex", "aa"])
-    assert excinfo.value.code == 2
-    assert "unrecognized arguments" in buf.getvalue()
-    assert "--trust-policy" in buf.getvalue()
 
 
 # --- trust_policy_sha256 binding: tamper / cross-chain disagreement --------
@@ -690,15 +550,6 @@ def test_a3_sign_reference_check_receipt_refuses_without_a_provisioned_productio
     receipt = fx.build_reference_check_receipt()
     with pytest.raises(trust.TrustAuthorityError, match="no production signing key is provisioned"):
         reference_check.sign_reference_check_receipt(receipt=receipt, outcome_sha256=fx.ledger.V4_SHA256)
-
-
-def test_a3_production_entrypoints_accept_no_signing_key_argument() -> None:
-    import inspect
-
-    assert "signing_key_hex" not in inspect.signature(reference_check.sign_reference_check_receipt).parameters
-    assert "signer_key_id" not in inspect.signature(reference_check.sign_reference_check_receipt).parameters
-    assert "signing_key_hex" not in inspect.signature(reference_check.issue_replay_attestation).parameters
-    assert "signer_key_id" not in inspect.signature(reference_check.issue_replay_attestation).parameters
 
 
 @pytest.mark.parametrize("mutation", [

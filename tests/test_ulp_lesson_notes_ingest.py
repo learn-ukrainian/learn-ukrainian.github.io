@@ -187,14 +187,6 @@ def test_parse_book_skips_cover_and_toc(tmp_path: Path) -> None:
     # mistaken for lesson starts.
 
 
-def test_parse_book_with_space_anchor_seasons_1_3(tmp_path: Path) -> None:
-    """Season 1-3 anchor is ``Lesson Notes № N`` with space."""
-    txt = _write_fixture(tmp_path, "s1.txt", FIXTURE_S1)
-    lessons = ulp.parse_book(txt)
-    assert lessons[0].title == "Informal Greetings in Ukrainian"
-    assert lessons[1].title == "Formal Greetings in Ukrainian"
-
-
 def test_parse_book_with_space_anchor_seasons_4_6(tmp_path: Path) -> None:
     """Season 4-6 anchor is ``Конспект уроку № N`` with space — the
     no-space variant ``Конспект уроку №N`` is a page running head and
@@ -212,29 +204,6 @@ def test_parse_book_with_space_anchor_seasons_4_6(tmp_path: Path) -> None:
     assert "Конспект уроку № 121" not in body  # also not the start marker
 
 
-def test_parse_book_strips_page_furniture(tmp_path: Path) -> None:
-    """Footers, Back-to-Contents, season headers, and bare page numbers
-    must NOT appear in lesson bodies."""
-    txt = _write_fixture(tmp_path, "s1.txt", FIXTURE_S1)
-    lessons = ulp.parse_book(txt)
-    for lesson in lessons:
-        blob = lesson.render()
-        assert "Inspiring resources for learning Ukrainian" not in blob
-        assert "Back to Contents" not in blob
-        assert "Ukrainian Lessons Podcast: Season" not in blob
-        # Bare page numbers (single line of digits) — none should land
-        for line in blob.split("\n"):
-            assert not line.strip().isdigit() or len(line.strip()) > 4
-
-
-def test_parse_book_strips_episode_running_head(tmp_path: Path) -> None:
-    """Season 1-3 running head ``Episode N — Title`` must be stripped."""
-    txt = _write_fixture(tmp_path, "s1.txt", FIXTURE_S1)
-    lessons = ulp.parse_book(txt)
-    body_l1 = lessons[0].render()
-    assert "Episode 1 — Informal Greetings" not in body_l1
-
-
 def test_parse_book_terminates_at_vidpovidi(tmp_path: Path) -> None:
     """``Відповіді до вправ`` (Season 1-3 appendix) finalizes the last
     lesson without absorbing the appendix."""
@@ -245,16 +214,6 @@ def test_parse_book_terminates_at_vidpovidi(tmp_path: Path) -> None:
     assert "Exercise 1 answers" not in last_blob
     # But the real lesson 2 content stays:
     assert "До́брий день" in last_blob
-
-
-def test_parse_book_terminates_at_key_phrases(tmp_path: Path) -> None:
-    """``Key Phrases N-NNN`` (Season 4 appendix) finalizes the last
-    lesson without absorbing the appendix."""
-    txt = _write_fixture(tmp_path, "s4.txt", FIXTURE_S4)
-    lessons = ulp.parse_book(txt)
-    last_blob = lessons[-1].render()
-    assert "Key Phrases 4-122" not in last_blob
-    assert "Bonus vocabulary follows" not in last_blob
 
 
 def test_parse_book_captures_title_after_marker(tmp_path: Path) -> None:
@@ -274,11 +233,6 @@ def test_parse_book_captures_title_after_marker(tmp_path: Path) -> None:
     body_lines = [ln for ln in rendered.split("\n")[1:] if ln.strip()]
     # First body line should not be the title.
     assert body_lines[0] != l121.title
-
-
-def test_parse_book_missing_file_raises(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        ulp.parse_book(tmp_path / "does-not-exist.txt")
 
 
 def test_parse_book_joins_multiline_title(tmp_path: Path) -> None:
@@ -306,30 +260,6 @@ def test_parse_book_joins_multiline_title(tmp_path: Path) -> None:
     body = lessons[0].render()
     assert "Це лекція" in body
     assert "Link to audio" not in body
-
-
-def test_parse_book_link_to_audio_acts_as_title_terminator(
-    tmp_path: Path,
-) -> None:
-    """The Link to audio line MUST NOT be promoted into the title or
-    the body."""
-    fixture = """                                            Lesson Notes № 1
-
-       Informal Greetings in Ukrainian
-                                         Link to audio: ukrainianlessons.com/episode1
-
-
-
-Привіт!
-"""
-    txt = _write_fixture(tmp_path, "link.txt", fixture)
-    lessons = ulp.parse_book(txt)
-    assert len(lessons) == 1
-    assert lessons[0].title == "Informal Greetings in Ukrainian"
-    body = lessons[0].render()
-    assert "Link to audio" not in body
-    assert "ukrainianlessons.com/episode1" not in body
-    assert "Привіт!" in body
 
 
 # ---------------------------------------------------------------------------

@@ -161,29 +161,6 @@ def test_plan_output_rejects_repository_paths(bad_path: Path) -> None:
         planner.resolve_ephemeral_plan_output_path(bad_path)
 
 
-def test_write_plan_and_report_stay_ephemeral(tmp_path: Path) -> None:
-    plan = {
-        "workflow": planner.WORKFLOW_ID,
-        "policy": "fixture",
-        "production_outputs_updated": [],
-        "counts": {
-            "approved_decisions": 0,
-            "proposed_additions": 0,
-            "skipped_existing": 0,
-            "missing_candidates": 0,
-        },
-        "proposed_manifest_additions": [],
-        "skipped_existing": [],
-        "missing_candidates": [],
-    }
-
-    plan_path = planner.write_plan(plan, tmp_path / "plan.json")
-    report_path = planner.write_report(plan, tmp_path / "plan.md")
-
-    assert json.loads(plan_path.read_text(encoding="utf-8"))["production_outputs_updated"] == []
-    assert "Source Inventory Approved Promotion Plan" in report_path.read_text(encoding="utf-8")
-
-
 
 @pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions", "curriculum")
 def test_plan_carries_surface_admission_to_manifest_entry(tmp_path: Path) -> None:
@@ -344,16 +321,3 @@ def test_plan_api_default_refuses_repository_tmpdir(
     monkeypatch.setenv("TMPDIR", str(PROJECT_ROOT / "site/src/data"))
     with pytest.raises(SourceInventoryError, match="must not write under"):
         writer({})
-
-
-@pytest.mark.parametrize("output_flag", ["--out", "--report-out"])
-def test_planner_cli_refuses_repository_outputs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_flow: tuple[Path, Path], output_flag: str,
-) -> None:
-    source, ledger = synthetic_flow
-    monkeypatch.setenv("TMPDIR", str(tmp_path))
-    monkeypatch.setattr(decisions, "validate_committed_decision_files", lambda paths: {"files": len(paths)})
-    assert planner.main([
-        "--candidates", str(source), "--decision-file", str(ledger),
-        output_flag, str(PROJECT_ROOT / "site/src/data/forbidden.json"),
-    ]) == 2

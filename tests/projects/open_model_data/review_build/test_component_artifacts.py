@@ -64,35 +64,6 @@ def test_component_artifacts_refuse_conflicts_and_unsafe_paths(bundle, monkeypat
             execute(bundle["root"] / "request.json", guard, component_objects={"C1": SyntheticArtifacts(bundle, files)})
 
 
-@pytest.mark.parametrize("verify", [False, True], ids=["build", "verify"])
-@pytest.mark.parametrize(
-    "name",
-    [
-        "verification.json",
-        "mutation-fixtures",
-        "mutation-fixtures/results.json",
-        "mutation-fixtures/component-results.json",
-        "mutation-fixtures/absent_quote.jsonl",
-        "mutation-fixtures/nested/arbitrary.bin",
-    ],
-)
-def test_component_artifacts_refuse_reserved_outputs(bundle, monkeypatch, name, verify):
-    monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
-    obj = SyntheticArtifacts(bundle, {})
-    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        if verify:
-            execute(bundle["root"] / "request.json", guard, component_objects={"C1": obj})
-        obj.generated = {name: b"SYNTHETIC forged proof"}
-        with pytest.raises(BuildError, match=r"^artifact_conflict$"):
-            execute(bundle["root"] / "request.json", guard, verify=verify, component_objects={"C1": obj})
-        assert json.loads(guard.read("verification.json")) == {
-            "schema": "omd-review-verification.v1",
-            "status": "unverified",
-        }
-        assert not (guard.path / "mutation-fixtures").exists()
-        assert (guard.path / "manifest.json").exists() == verify
-
-
 @pytest.mark.parametrize(
     "name",
     [

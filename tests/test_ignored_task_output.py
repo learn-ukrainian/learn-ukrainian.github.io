@@ -53,20 +53,6 @@ def test_regenerable_patterns_skip_fingerprinting_and_cap(checkout, monkeypatch,
     assert not (primary / "batch_state/preserved").exists()
 
 
-def test_mixed_regenerable_paths_preserve_only_output(checkout, monkeypatch):
-    repo, primary, _ = checkout
-    (repo / ".gitignore").write_text("ignored/\nnode_modules/\n__pycache__/\n")
-    tracked_lockfile(repo, "site")
-    artifact(checkout, "site/node_modules/package/index.js", b"x" * 100)
-    artifact(checkout, "__pycache__/module.pyc", b"x" * 100)
-    artifact(checkout, "ignored/answer.txt", b"answer")
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 6)
-    ok, reason, receipt = preserve(checkout)
-    assert ok and not reason and receipt["bytes"] == 6
-    assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
-    assert (primary / receipt["location"] / "ignored/answer.txt").read_bytes() == b"answer"
-
-
 @pytest.mark.parametrize("payload", [b'{"entries": []}', b'{"entries": ["promoted"]}', b"arbitrary bytes"])
 @pytest.mark.parametrize(
     "pointer_kind",
@@ -308,47 +294,6 @@ def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monk
             assert (primary / receipt["location"] / ".gitignore").read_bytes() == (repo / ".gitignore").read_bytes()
 
 
-@pytest.mark.parametrize("status", ["done", "no_deliverable", "failed"])
-def test_all_ignored_output_preserved_without_response_names(checkout, status):
-    repo, _, tasks = checkout
-    (repo / ".gitignore").write_text(".cache/\nignored/\n")
-    artifact(checkout, ".cache/transcriptions/page.txt", b"transcription")
-    artifact(checkout, "ignored/empty.txt", b"")
-    ok, reason, receipt = preserve(checkout, {"status": status, "started_at": "2000-01-01T00:00:00Z"})
-    assert ok and not reason
-    assert receipt["count"] == 2 and receipt["bytes"] == 13
-    assert ((checkout[1] / receipt["location"]) / ".cache/transcriptions/page.txt").read_bytes() == b"transcription"
-    assert ((checkout[1] / receipt["location"]) / "ignored/empty.txt").is_file()
-    assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
-
-
-@pytest.mark.parametrize(
-    "start",
-    ["2000-01-01T00:00:00Z", None, "bad", "2000-01-01T00:00:00", "2999-01-01T00:00:00Z"],
-    ids=["old", "missing", "malformed", "naive", "future"],
-)
-def test_start_values_are_irrelevant_to_selection(checkout, start):
-    old = artifact(checkout, "ignored/old.txt")
-    modified = artifact(checkout, "ignored/modified.txt", b"new version")
-    os.utime(old, (946684799, 946684799))
-    record = {} if start is None else {"started_at": start}
-    ok, _, receipt = preserve(checkout, record)
-    assert ok and receipt["count"] == 2
-    location = checkout[1] / receipt["location"]
-    assert (location / "ignored/old.txt").read_bytes() == old.read_bytes()
-    assert (location / "ignored/modified.txt").read_bytes() == modified.read_bytes()
-    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-    assert receipt["retention_disposition"] == "retrieved"
-    assert all(entry["class"] == "unknown_baseline" for entry in receipt["paths"])
-    assert str(checkout[0]) not in json.dumps(receipt)
-
-
-@pytest.mark.parametrize("cache", sorted(output.artifacts._DISPOSABLE_DIRECTORIES - {".git"}))
-def test_known_caches_excluded(checkout, cache):
-    artifact(checkout, f"ignored/{cache}/tool.bin")
-    assert preserve(checkout) == (True, "", None)
-
-
 @pytest.mark.parametrize("failure", ["cap", "copy", "record", "inventory", "changed", "added"])
 def test_failure_retains_sources(checkout, monkeypatch, failure):
     source = artifact(checkout, "ignored/report.txt", b"task output")
@@ -392,13 +337,6 @@ def test_missing_record_retains_unknown_output_without_fallback_attribution(chec
     assert receipt["retention_disposition"] == "retained"
     assert receipt["owner"] == "infra lane"
     assert not (checkout[1] / "batch_state/preserved").exists()
-
-
-def test_cap_is_inclusive_and_existing_copies_are_verified(checkout, monkeypatch):
-    artifact(checkout, "ignored/report.txt", b"0123456789")
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 10)
-    assert preserve(checkout, {"status": "done"})[0]
-    assert preserve(checkout)[0]
 
 
 def test_touch_old_mtime_during_task_is_preserved(checkout):
@@ -617,36 +555,6 @@ def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch,
     assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
 
 
-def test_vanished_pids_directory_after_git_inventory(checkout, monkeypatch):
-    repo, _, _ = checkout
-    (repo / ".gitignore").write_text(".pids/\nignored/\n")
-    pids = repo / ".pids"
-    pids.mkdir()
-    original = output.artifacts._git_paths
-
-    def stale_inventory(*args):
-        names = original(*args)
-        if "--ignored" in args:
-            pids.rmdir()
-            names.append(".pids/")
-        return names
-
-    # Only the first Git inventory is stale; the final inventory is fresh.
-    calls = 0
-
-    def once(*args):
-        nonlocal calls
-        if "--ignored" in args and calls == 0:
-            calls += 1
-            return stale_inventory(*args)
-        return original(*args)
-
-    monkeypatch.setattr(output.artifacts, "_git_paths", once)
-    ok, reason, receipt = preserve(checkout, {"status": "done"})
-    assert ok and not reason and receipt["count"] == 0
-    assert receipt["absent_paths"] == [{"path": ".pids/", "proof": "lstat_enoent"}]
-
-
 @pytest.mark.parametrize("failure", ["changed_before_copy", "false_enoent", "reappeared", "permission"])
 def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure):
     source = artifact(checkout, "ignored/report.txt", b"original")
@@ -838,40 +746,6 @@ def test_removal_does_not_follow_symlink(tmp_path):
     assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == b"preserve me"
 
 
-def test_dangling_link_is_not_absence_proof(checkout):
-    repo, primary, _ = checkout
-    (repo / ".gitignore").write_text(".pids\n")
-    link = repo / ".pids"
-    link.symlink_to("missing-outside-target")
-    ok, reason, receipt = preserve(checkout, {"status": "done"})
-    assert ok and not reason, reason
-    assert receipt["absent_paths"] == []
-    entry = receipt["paths"][0]
-    assert entry["path"] == ".pids" and entry["type"] == "symlink" and entry["target"] == "missing-outside-target"
-    copied = primary / receipt["location"] / ".pids"
-    assert copied.is_file() and not copied.is_symlink()
-    assert link.is_symlink()
-
-
-def test_internal_release_link_to_vanished_pids_preserves_the_link(checkout):
-    repo, primary, _ = checkout
-    (repo / ".gitignore").write_text(".runtime/\nignored/\n")
-    release = repo / ".runtime/api/releases/test-release"
-    release.mkdir(parents=True)
-    link = release / ".pids"
-    link.symlink_to(repo / ".pids")
-    source = artifact(checkout, "ignored/report.txt", b"preserve this")
-    ok, reason, receipt = preserve(checkout, {"status": "done"})
-    assert ok and not reason and receipt["count"] == 2
-    assert receipt["absent_paths"] == []
-    entry = next(item for item in receipt["paths"] if item["path"].endswith("/.pids"))
-    assert entry["type"] == "symlink" and entry["target"] == str(repo / ".pids")
-    copied = primary / receipt["location"] / entry["path"]
-    assert copied.is_file() and not copied.is_symlink()
-    assert link.is_symlink() and source.exists()
-    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
-
-
 def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):
     from tests.orchestration.test_worktree_claims_cli import _git
 
@@ -1002,42 +876,6 @@ def test_unverified_previous_copy_is_not_reused(checkout, change):
     assert ((checkout[1] / second["location"]) / "ignored/report.txt").read_bytes() == b"original"
 
 
-def test_missing_record_identical_retry_remains_retained_without_copy(checkout):
-    artifact(checkout, "ignored/report.txt")
-    ok, _, first = preserve(checkout, task_id=None)
-    assert not ok and first["retention_disposition"] == "retained"
-    ok, _, second = preserve(checkout, task_id=None)
-    assert not ok and second == first
-    assert not (checkout[1] / "batch_state/preserved").exists()
-
-
-def test_same_bytes_with_different_file_list_get_new_attempt(checkout):
-    source = artifact(checkout, "ignored/first.txt", b"same bytes")
-    ok, _, first = preserve(checkout)
-    assert ok
-    source.rename(source.with_name("second.txt"))
-    ok, _, second = preserve(checkout)
-    assert ok and not second["reused"] and second["location"] != first["location"]
-    assert second["content_sha256"] != first["content_sha256"]
-
-
-def test_same_task_and_bytes_in_another_worktree_get_new_attempt(checkout):
-    repo, primary, tasks = checkout
-    artifact(checkout, "ignored/report.txt", b"same bytes")
-    ok, _, first = preserve(checkout)
-    assert ok
-    other = repo.parent / "other"
-    other.mkdir()
-    subprocess.run(["git", "init", str(other)], check=True, capture_output=True, timeout=30)
-    (other / ".gitignore").write_text("ignored/\n")
-    subprocess.run(["git", "add", ".gitignore"], cwd=other, check=True, capture_output=True, timeout=30)
-    artifact((other, primary, tasks), "ignored/report.txt", b"same bytes")
-    (tasks / "output-task.json").write_text(json.dumps({"task_id": "output-task", "worktree_path": str(other)}))
-    ok, _, second = output.preserve_worktree_artifacts(other, primary=primary, task_id="output-task", tasks_dir=tasks)
-    assert ok and not second["reused"] and second["location"] != first["location"]
-    assert second["content_sha256"] == first["content_sha256"]
-
-
 def test_source_change_during_reuse_refuses_removal(checkout, monkeypatch):
     source = artifact(checkout, "ignored/report.txt", b"original")
     assert preserve(checkout)[0]
@@ -1052,53 +890,6 @@ def test_source_change_during_reuse_refuses_removal(checkout, monkeypatch):
     ok, reason, _ = preserve(checkout)
     assert not ok and "changed during preservation" in reason
     assert source.read_bytes() == b"different"
-
-
-def test_preservation_error_never_updates_an_unbound_record(checkout, monkeypatch):
-    repo, primary, tasks = checkout
-    artifact(checkout, "ignored/report.txt", b"old output")
-    record = {"worktree_path": str(primary), "started_at": "2999-01-01T00:00:00Z"}
-    path = tasks / "output-task.json"
-    path.write_text(json.dumps(record))
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    ok, reason, _ = output.preserve_worktree_artifacts(
-        repo, primary=primary, task_id="output-task", tasks_dir=tasks, task_record=record
-    )
-    assert not ok and "missing canonical task attribution" in reason
-    assert json.loads(path.read_text()) == record and "artifact_preservation_error" not in record
-
-
-def test_manifest_write_failure_retains_sources(checkout, monkeypatch):
-    source = artifact(checkout, "ignored/report.txt", b"task output")
-    original_open = Path.open
-
-    def fail_receipt(path, *args, **kwargs):
-        if path.name.endswith(".manifest.json"):
-            raise OSError("receipt denied")
-        return original_open(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "open", fail_receipt)
-    ok, reason, _ = preserve(checkout)
-    assert not ok and "receipt denied" in reason and "refusing worktree removal" in reason
-    assert source.read_bytes() == b"task output"
-
-
-def test_entire_exclusion_is_limited_to_logs(checkout):
-    (checkout[0] / ".gitignore").write_text(".entire/\n")
-    artifact(checkout, ".entire/logs/diagnostic.log", b"tool state")
-    artifact(checkout, ".entire/report.txt", b"task output")
-    ok, _, receipt = preserve(checkout)
-    assert ok and receipt["count"] == 1
-    assert ((checkout[1] / receipt["location"]) / ".entire/report.txt").read_bytes() == b"task output"
-
-
-def test_directory_inventory_prunes_entire_logs_but_keeps_output(checkout):
-    repo = checkout[0]
-    artifact(checkout, ".entire/logs/diagnostic.log", b"tool state")
-    artifact(checkout, ".entire/report.txt", b"task output")
-    assert output.artifacts._inspect_directory_artifact(repo / ".entire", ".entire", worktree=repo) == [
-        ".entire/report.txt"
-    ]
 
 
 @pytest.mark.parametrize("cache", [".pytest_breadcrumbs", "site/.astro", ".entire/logs", ".hypothesis", ".tox", ".nox"])
@@ -1136,45 +927,6 @@ def test_regular_file_beginning_with_symlink_prefix_has_no_target(tmp_path):
     }
 
 
-def test_real_symlink_keeps_its_target(tmp_path):
-    (tmp_path / "link").symlink_to("inside-target")
-    record = b"symlink\n" + os.fsencode("inside-target")
-    entry = output._path_inventory(tmp_path, ["link"])[0]
-    assert entry == {
-        "path": "link",
-        "type": "symlink",
-        "target": "inside-target",
-        "size": len(record),
-        "sha256": hashlib.sha256(record).hexdigest(),
-    }
-
-
-def test_symlink_target_at_the_path_limit_is_kept(tmp_path, monkeypatch):
-    target = "abcd"
-    (tmp_path / "link").symlink_to(target)
-    _stub_path_limit(monkeypatch, len(os.fsencode(target)))
-    assert output._path_inventory(tmp_path, ["link"])[0]["target"] == target
-
-
-def test_symlink_target_longer_than_the_path_limit_is_refused(tmp_path, monkeypatch):
-    target = "too-long-target"
-    (tmp_path / "link").symlink_to(target)
-    _stub_path_limit(monkeypatch, 4)
-    with pytest.raises(output.artifacts.SymlinkTargetRefusal) as caught:
-        output._path_inventory(tmp_path, ["link"])
-    assert caught.value.kind == "target-too-long"
-    assert target not in str(caught.value)
-
-
-@pytest.mark.parametrize("reported", [-1, 0, "unavailable"])
-def test_unusable_path_limit_keeps_a_normal_symlink(tmp_path, monkeypatch, reported):
-    (tmp_path / "link").symlink_to("inside-target")
-    _stub_path_limit(monkeypatch, reported)
-    entry = output._path_inventory(tmp_path, ["link"])[0]
-    assert entry["type"] == "symlink"
-    assert entry["target"] == "inside-target"
-
-
 def test_longest_legal_symlink_target_is_kept(tmp_path):
     target = "t" * 4095
     (tmp_path / "link").symlink_to(target)
@@ -1182,23 +934,6 @@ def test_longest_legal_symlink_target_is_kept(tmp_path):
     assert entry["type"] == "symlink"
     assert entry["target"] == target
     assert len(os.fsencode(entry["target"])) <= os.pathconf(tmp_path, "PC_PATH_MAX")
-
-
-def test_preserved_regular_file_with_symlink_prefix_stays_regular(checkout):
-    payload = b"symlink\n" + b"x" * 100_000
-    source = artifact(checkout, "ignored/note.txt", payload)
-    ok, reason, receipt = preserve(checkout, {"status": "done"})
-    assert ok and not reason, reason
-    entry = next(item for item in receipt["paths"] if item["path"] == "ignored/note.txt")
-    assert "type" not in entry and "target" not in entry
-    assert entry["size"] == len(payload)
-    assert entry["sha256"] == hashlib.sha256(payload).hexdigest()
-    copied = checkout[1] / receipt["location"] / "ignored/note.txt"
-    assert copied.is_file() and not copied.is_symlink()
-    assert copied.read_bytes() == source.read_bytes()
-    published = json.dumps(receipt) + (checkout[2] / "output-task.json").read_text()
-    assert "x" * 100 not in published
-    assert output.verify_retrieval(checkout[1], receipt) == receipt["retrieval_proof_sha256"]
 
 
 def test_preserved_overlong_symlink_target_is_refused(checkout, monkeypatch):

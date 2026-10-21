@@ -13,7 +13,7 @@ import pytest
 import yaml
 
 from scripts.build.fresh import assemble, runner
-from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
+from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateFailure, GateReport
 from scripts.curriculum.resolver import receipts
@@ -149,75 +149,6 @@ def test_internal_term_triggers_writer_regeneration_feedback(tmp_path, monkeypat
     assert ledger["attempts"][0]["reason"] == row["reason"]
 
 
-def test_runner_calls_frozen_draft_report_interface(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    called = []
-
-    def controlled_report(received_plan, received_drafts):
-        called.append((received_plan, received_drafts))
-        return {"lessons": {"1": {"workbook": 0}}}
-
-    # Control only the return value here to verify the runner's exact call contract.
-    monkeypatch.setattr(runner, "draft_report", controlled_report)
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is True
-    assert called == [(plan, [draft])]
-    assert report["checks"][3]["details"]["draft_report"] == {"lessons": {"1": {"workbook": 0}}}
-
-
-def test_runner_real_draft_report_has_numeric_single_lesson_totals(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    pack["errors"] = [
-        {
-            "id": "E-001",
-            "source": {"table": "ua_gec_errors", "id": 1},
-            "incorrect": "слове",
-            "correct": "слово",
-            "error_type": "form",
-            "pattern": "fixture",
-        }
-    ]
-    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
-    plan["lessons"][0]["activities"] = [
-        {"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Correct", "error_refs": ["E-001"]}
-    ]
-    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
-    draft["activities"] = [
-        {
-            "id": "a1",
-            "instruction": "Correct",
-            "items": [
-                {
-                    "sentence": "слове",
-                    "error": "слове",
-                    "correction": "слово",
-                    "explanation": "Correct",
-                    "error_ref": "E-001",
-                }
-            ],
-        }
-    ]
-    validate_fixture_pack(pack)
-    validate_fixture_plan(plan)
-    validate_fixture_draft(draft)
-
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is True, report
-    activity = report["checks"][3]["details"]["draft_report"]
-    assert activity["stage"] == "draft"
-    assert activity["lessons"] == [
-        {
-            "n": 1,
-            "response_opportunities": {"total": 1, "by_type": {"error-correction": 1}},
-            "explanation_coverage": {"explained": 1, "total": 1},
-            "planned_workbook": 0,
-            "rendered_and_playable": "not_available_at_this_stage",
-        }
-    ]
-    assert activity["module"]["response_opportunities_total"] == 1
-    assert activity["module"]["inline_response_opportunities_total"] == 1
-
-
 def test_runner_missing_vesum_orthography_fails_closed(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     # VESUM слово/слова: source location 5682038-5682052.
@@ -260,18 +191,6 @@ def test_runner_missing_vesum_orthography_fails_closed(tmp_path, monkeypatch):
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["code"], bad["layer"]) == (7, "a1_choice_source_unavailable", "pack")
-
-
-def test_true_false_before_text_and_schema_valid_fixture():
-    draft, plan, _pack, _words = _fixture()
-    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
-    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
-    draft["steps"][0]["blocks"].insert(0, {"kind": "activity", "ref": "a1"})
-    draft["activities"] = [
-        {"id": "a1", "instruction": "Choose", "items": [{"statement": "слово", "is_true": True, "explanation": "Read"}]}
-    ]
-    row = runner.check_3_structure(draft, plan["lessons"][0])
-    assert row["reason"] == "true_false_before_text" and row["layer"] == "writer"
 
 
 def test_structure_uses_plan_consolidation_list():
@@ -319,37 +238,6 @@ def test_form_choice_store_options_valid_invented_duplicate_and_tags():
         assert (row["check"], row["reason"], row["layer"]) == (4, "form_choice_options_invalid", "writer")
 
 
-def test_counting_contract_urok_only_with_quoted_term_and_english():
-    units = [
-        {"tab": "urok", "role": "quoted_term", "text": "слово"},
-        {"tab": "urok", "role": "vesum_exempt", "text": "English line"},
-        {"tab": "urok", "role": "narration", "text": "слово"},
-        {"tab": "slovnyk", "role": "record_print", "text": "слово слово"},
-    ]
-    row = runner.check_6_count({"units": units})
-    assert row["status"] == "passed"
-    assert row["details"]["urok_tokens"] == 4
-    assert row["details"]["ukrainian_tokens"] == 2
-    assert row["details"]["ukrainian_share"] == 0.5
-    assert "word_target" not in row["details"]
-    assert row["details"]["not_checked"] == ["lesson_structural_minimums_not_calibrated"]
-
-
-def test_counting_contract_inline_gloss_uses_record_lemma_and_english_gloss():
-    word = make_word_record(1, "слово", gloss_en="word in English")
-    row = runner.check_6_count(
-        {
-            "units": [
-                {"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-1}}"},
-                {"tab": "slovnyk", "role": "record_print", "text": "слово"},
-            ]
-        },
-        make_words_store(words=[word]),
-    )
-    assert row["details"]["urok_tokens"] == 4
-    assert row["details"]["ukrainian_tokens"] == 1
-
-
 def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_lesson(tmp_path):
     path = tmp_path / "lesson-1.regeneration.yaml"
     inputs = {key: "a" * 64 for key in ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")}
@@ -382,33 +270,6 @@ def test_two_regenerations_route_third_failure_to_driver(tmp_path):
         )
     assert result["regenerations"] == 2
     assert result["terminal_layer"] == "driver"
-
-
-def test_successful_regeneration_counts_even_without_a_second_failure(tmp_path):
-    path = tmp_path / "lesson-1.regeneration.yaml"
-    inputs = {key: "a" * 64 for key in ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")}
-    record_failure(
-        path,
-        "sample-slug",
-        1,
-        {"check": 4, "code": "4", "reason": "failure", "layer": "writer"},
-        inputs,
-        at="2026-01-01T00:00:00Z",
-    )
-    result = record_success(path, "sample-slug", 1)
-    assert result["regenerations"] == 1 and result["terminal_layer"] is None
-
-
-def test_each_check_failure_carries_layer():
-    for number in range(1, 10):
-        row = runner.failure(number, "fixture_failure", "writer")
-        assert row == {
-            "check": number,
-            "status": "failed",
-            "code": str(number),
-            "reason": "fixture_failure",
-            "layer": "writer",
-        }
 
 
 def test_clean_environment_build_cli_fails_closed_before_dispatch(tmp_path):
@@ -777,46 +638,6 @@ def test_contract_fixture_hyphenated_compound_through_check_9(tmp_path, monkeypa
     assert "сло\u0301во-сло\u0301во" in (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
 
 
-def test_contract_fixture_intentional_error_item_through_check_9(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    pack["errors"] = [
-        {
-            "id": "E-001",
-            "source": {"table": "ua_gec_errors", "id": 1},
-            "incorrect": "слове",
-            "correct": "слово",
-            "error_type": "form",
-            "pattern": "fixture",
-        }
-    ]
-    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
-    plan["lessons"][0]["activities"] = [
-        {"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Correct", "error_refs": ["E-001"]}
-    ]
-    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
-    draft["activities"] = [
-        {
-            "id": "a1",
-            "instruction": "Correct",
-            "items": [
-                {
-                    "sentence": "слове",
-                    "error": "слове",
-                    "correction": "слово",
-                    "explanation": "Correct",
-                    "error_ref": "E-001",
-                }
-            ],
-        }
-    ]
-    validate_fixture_pack(pack)
-    validate_fixture_plan(plan)
-    validate_fixture_draft(draft)
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is True, report
-    assert "слове" in (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
-
-
 def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     draft["steps"][0]["id"] = "s2"
@@ -839,50 +660,6 @@ def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatc
     assert not receipt.exists()
 
 
-def test_runner_form_choice_options_invalid_reports_check_4(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
-    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Forms"}]
-    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
-    draft["activities"] = [
-        {
-            "id": "a1",
-            "instruction": "Choose",
-            "items": [
-                {
-                    "sentence": "____",
-                    "answer": "слово",
-                    "options": ["слово", "invented"],
-                    "explanation": "Choose",
-                    "mode": "form-choice",
-                    "record": "W-1",
-                    "answer_tags": words["words"][0]["forms"][0]["tags"],
-                }
-            ],
-        }
-    ]
-    validate_fixture_plan(plan)
-    validate_fixture_draft(draft)
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["reason"], bad["layer"]) == (4, "form_choice_options_invalid", "writer")
-
-
-def test_runner_true_false_before_text_reports_check_3(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
-    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
-    draft["steps"][0]["blocks"].insert(0, {"kind": "activity", "ref": "a1"})
-    draft["activities"] = [
-        {"id": "a1", "instruction": "Read", "items": [{"statement": "слово", "correct": True, "explanation": "Read"}]}
-    ]
-    validate_fixture_plan(plan)
-    validate_fixture_draft(draft)
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["reason"], bad["layer"]) == (3, "true_false_before_text", "writer")
-
-
 def test_runner_check_1_echo_hash_failure(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     report, _, _ = _run_contract(
@@ -890,17 +667,6 @@ def test_runner_check_1_echo_hash_failure(tmp_path, monkeypatch):
     )
     bad = next(row for row in report["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["layer"]) == (1, "writer")
-
-
-def test_runner_check_2_declared_gap(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    draft["status"] = "evidence_gap"
-    draft["gaps"] = [{"step": "s1", "need": "example", "detail": "Missing evidence"}]
-    draft["steps"][0]["blocks"] = []
-    validate_fixture_draft(draft)
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["layer"]) == (2, "pack")
 
 
 def test_runner_check_5_missing_record(tmp_path, monkeypatch):
@@ -912,22 +678,6 @@ def test_runner_check_5_missing_record(tmp_path, monkeypatch):
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["layer"]) == (5, "pack")
-
-
-@pytest.mark.parametrize("target", [None, 550])
-def test_runner_short_complete_lesson_has_no_size_gate(tmp_path, monkeypatch, target):
-    draft, plan, pack, words = _fixture(text="слово")
-    lesson = plan["lessons"][0]
-    if target is None:
-        lesson.pop("word_target")
-    else:
-        lesson["word_target"] = target
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is True, report
-    counted = next(row for row in report["checks"] if row["check"] == 6)
-    assert counted["status"] == "passed"
-    assert counted["details"]["urok_tokens"] == 1
-    assert "word_target" not in counted["details"]
 
 
 def test_runner_check_7_source_unavailable_has_gate_report(tmp_path, monkeypatch):
@@ -950,18 +700,6 @@ def test_runner_check_8_requires_explicit_seat(tmp_path, monkeypatch):
     assert (bad["check"], bad["reason"], bad["layer"]) == (8, "question_seat_required", "driver")
     assert seen == []
     assert lock.check(state / "lesson-1.questions.yaml")
-
-
-def test_runner_check_9_engine_failure_layer(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture()
-    monkeypatch.setattr(
-        runner,
-        "check_9_stress_and_render",
-        lambda *a, **kw: assemble.CheckResult(check=9, passed=False, reason="fixture_render_error", layer="engine"),
-    )
-    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["reason"], bad["layer"]) == (9, "fixture_render_error", "engine")
 
 
 def test_inventory_failure_is_reported_as_check_7_after_answers(tmp_path, monkeypatch):

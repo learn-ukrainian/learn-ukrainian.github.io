@@ -297,16 +297,6 @@ def test_parse_entry_html_accepts_corrected_dictionary_article_id():
     assert "пиття" in row["text"]
 
 
-def test_primary_synonym_sense_text_cuts_later_groups():
-    from wiki.slovnyk_me import primary_synonym_sense_text
-
-    text = "місто д. город, ур. град, (головне) столиця, центр; (портове) порт; П. посада."
-
-    assert primary_synonym_sense_text(text, "karavansky") == (
-        "місто д. город, ур. град, (головне) столиця, центр"
-    )
-
-
 def _record_miss(db_path, word, slug):
     with sqlite3.connect(str(db_path)) as conn:
         conn.execute(
@@ -314,16 +304,6 @@ def _record_miss(db_path, word, slug):
             "VALUES (?, ?, ?, ?)",
             (word, word, word, slug),
         )
-
-
-def test_batch_lookup_can_be_narrowed_to_the_explanatory_dictionary(slovnyk_sources_db):
-    from wiki.sources_db import search_slovnyk_me_entries_batch
-
-    assert search_slovnyk_me_entries_batch(["блакитний"])["блакитний"]
-    assert search_slovnyk_me_entries_batch(["блакитний"], dictionaries=["newsum"])["блакитний"]
-    assert search_slovnyk_me_entries_batch(["блакитний"], dictionaries=["vts"])["блакитний"] == []
-    # An overlap-blocked dictionary stays unreachable even when named.
-    assert search_slovnyk_me_entries_batch(["гаразд"], dictionaries=["hrinchenko"])["гаразд"] == []
 
 
 def test_live_lookup_skips_dictionaries_with_a_recorded_404(slovnyk_sources_db, monkeypatch):

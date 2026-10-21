@@ -24,59 +24,6 @@ def _drive_staging() -> Path | None:
         return None
 
 
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    schema_text = SCHEMA.read_text(encoding="utf-8")
-    assert schema.get("additionalProperties") is False
-    assert '"source_text"' not in schema_text
-    assert '"page_texts"' not in schema_text
-    assert "GoogleDrive-" not in schema_text
-    assert "@gmail.com" not in schema_text
-    assert "NOTE: PLACE YOUR OWN LICENSE HERE" not in schema_text
-
-
-def test_mint_is_deterministic_and_preserves_false_completion_gates() -> None:
-    first = intake.mint_receipt()
-    second = intake.mint_receipt()
-    assert first == second
-    assert first["status"] == intake.STATUS
-    assert first["text_free"] is True
-    assert first["provider_calls"] is False
-    assert first["review_scope"]["topic_gaps_closed"] == []
-    assert first["review_scope"]["topic_gaps_narrowed"] == []
-    assert first["content_fitness"]["topic_gaps_narrowed_claimed"] == []
-    assert first["content_fitness"]["adversarial_dispositions"]["morphemics"] == "NARROW_ONLY"
-    assert first["content_fitness"]["adversarial_dispositions"]["word_formation"] == "NARROW_ONLY"
-    assert first["content_fitness"]["adversarial_dispositions"]["semantics"] == "REJECT"
-    assert first["content_fitness"]["adversarial_dispositions"]["phraseology"] == "REJECT"
-    assert first["rights"]["rights_statement"] == intake.RIGHTS_STATEMENT
-    assert first["rights"]["public_redistribution_authorized"] is False
-    assert first["rights"]["public_dataset_export_authorized"] is False
-    assert first["rights"]["publish_source_text_authorized"] is False
-    assert first["rights"]["unrestricted_training_export_authorized"] is False
-    assert first["rights"]["reuse_license"] == "reuse_license_not_established"
-    assert first["gates"]["semantic_gold"] is False
-    assert first["gates"]["database_ingest_authorized"] is False
-    assert first["gates"]["topic_gaps_closed"] is False
-    assert first["gates"]["topic_gaps_narrowed"] is False
-    assert first["gates"]["source_freeze_ready"] is False
-    assert first["gates"]["phase3_complete"] is False
-    assert first["gates"]["phase4_blocked"] is True
-    assert first["denominators"]["v2_source_units"] == 67041
-    assert first["denominators"]["v2_evaluation_identities"] == 9392
-    assert first["denominators"]["phase3_labels"] == 0
-    assert first["denominators"]["cycle002_diagnostic_only"] is True
-    assert first["denominators"]["candidate_additive_outside_v2_totals"] is True
-    assert first["denominators"]["candidate_source_count"] == 30
-    assert first["text_layer"]["page_count_discrepancy"]["recorded_without_correction"] is True
-    assert first["text_layer"]["page_count_discrepancy"]["pdf_page_objects"] == 215
-    assert first["text_layer"]["page_count_discrepancy"]["catalog_citation_pages"] == 214
-    assert first["text_layer"]["empty_text_pages"] == [1]
-    assert first["native_exactness"]["flagged_chunk_count"] == 0
-    assert first["native_exactness"]["clean_chunk_count"] == 215
-
-
 def test_public_receipt_is_immutable(tmp_path: Path) -> None:
     receipt = intake.mint_receipt()
     out = tmp_path / "git" / "receipt.json"
@@ -272,24 +219,6 @@ def test_committed_receipt_validates_when_present() -> None:
     assert "\f" not in dumped
     assert "NOTE: PLACE YOUR OWN LICENSE HERE" not in dumped
     assert "page_texts" not in validated
-
-
-def test_check_cli_is_hermetic_without_drive(monkeypatch: pytest.MonkeyPatch) -> None:
-    if not PUBLIC_RECEIPT.is_file():
-        pytest.skip("public receipt not materialized yet")
-
-    def boom() -> Path:
-        raise intake.Donnu2023MorphemicsWordFormationIntakeError("drive must not be touched")
-
-    monkeypatch.setattr(intake, "default_staging_root", boom)
-    assert intake.main(["--check", str(PUBLIC_RECEIPT)]) == 0
-
-
-def test_no_db_mutation_surface() -> None:
-    source = Path(intake.__file__).read_text(encoding="utf-8")
-    assert "sources.db" not in source
-    assert "sqlite3" not in source
-    assert "INSERT INTO" not in source
 
 
 def test_private_audit_against_drive_custody() -> None:

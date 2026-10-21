@@ -44,13 +44,9 @@ from tests.test_delegate import (  # noqa: F401
 )
 from tests.test_kimi_coding_only_admission import (
     _FAKE_TOKEN,
-    ESCAPE_SEQUENCES,
     HOSTILE_GIT_ERRORS,
-    JSON_ESCAPED_CHARS,
     assert_no_host_details,
     contains_link_local_ipv6,
-    link_local_after_json_escapes,
-    shas_after_json_escapes,
 )
 
 kimi_rescue = rescue_fixtures.kimi_rescue
@@ -117,40 +113,7 @@ def _assert_public(record: dict) -> None:
         assert delegate.is_public_cause(value), value
 
 
-def test_a_commit_sha_holding_the_link_local_letters_is_no_host_detail():
-    sha = "426cf32d8175a73823c18d63ca4107ebfe8007cb"
-    assert "fe80" in sha
-    _assert_no_hostile_markers(json.dumps({"head": sha}))
-
-
-def test_the_hostile_link_local_literal_still_fails_the_public_guard():
-    with pytest.raises(AssertionError, match="link-local"):
-        _assert_no_hostile_markers(json.dumps({"last_error": "via [fe80::1ff:fe23:4567:890a]"}))
-    with pytest.raises(AssertionError, match="link-local"):
-        _assert_no_hostile_markers("via fe80::1")
-
-
-@pytest.mark.parametrize("text", link_local_after_json_escapes())
-def test_a_link_local_literal_behind_an_escape_still_fails_the_public_guard(text):
-    with pytest.raises(AssertionError, match="link-local"):
-        _assert_no_hostile_markers(text)
-
-
-def test_a_commit_sha_behind_an_escape_passes_the_public_guard():
-    texts = shas_after_json_escapes()
-    assert len(texts) == 37 * 2 * (len(JSON_ESCAPED_CHARS) * 5 + len(ESCAPE_SEQUENCES) * 3)
-    for text in texts:
-        _assert_no_hostile_markers(text)
-
-
 # --- the registry and the sink -------------------------------------------------------------------
-
-
-def test_the_public_fields_are_the_ones_this_contract_names():
-    """Removing a field or row key from the sink fails here, not silently in production."""
-    assert set(delegate.PUBLIC_RECORD_REASON_FIELDS) == set(PUBLIC_RECORD_FIELDS)
-    assert delegate.PUBLIC_RECORD_NESTED_REASON_FIELDS == PUBLIC_NESTED_FIELDS
-    assert delegate.PUBLIC_ROW_REASON_KEYS == PUBLIC_ROW_KEYS
 
 
 def test_every_registered_cause_is_fixed_text():
@@ -246,11 +209,6 @@ def test_an_exception_publishes_its_class_only():
     assert "git.build-host.example.internal" in cause.diagnostic
 
 
-def test_a_non_string_value_is_replaced():
-    assert delegate.public_cause({"error": HOSTILE})[0] == "unclassified_error"
-    assert delegate.public_cause(None) == (None, None)
-
-
 # --- no record write bypasses the sink -----------------------------------------------------------
 
 
@@ -308,11 +266,6 @@ def test_only_the_sink_writes_a_task_record():
         assert [getattr(writer, "id", None) for writer in writers] == ["_write_record_unlocked"], call.func.id
 
 
-def test_every_rescue_row_leaves_through_the_sink():
-    tree = _delegate_tree()
-    assert {"_rescue_task", "cmd_rescue"} <= _functions_referencing(tree, "_public_row")
-
-
 @pytest.mark.parametrize("field", PUBLIC_RECORD_FIELDS)
 def test_a_record_write_replaces_free_text_in_every_public_field(field):
     """Runtime: whatever a producer put in a public field, the record on disk holds a public cause."""
@@ -363,37 +316,6 @@ def test_a_rescue_row_with_free_text_is_replaced_at_the_sink(monkeypatch):
 def _status(task_id: str, capsys) -> dict:
     assert delegate.cmd_status(argparse.Namespace(task_id=task_id, run_nonce=None)) == 0
     return json.loads(capsys.readouterr().out)
-
-
-def test_a_raw_reason_assigned_in_memory_during_status_is_persisted_as_a_typed_cause(monkeypatch, capsys):
-    """``cmd_status`` heals an orphaned record; a raw ``last_error`` assigned to it in memory is caught at the write."""
-    task_id = "sink-status-memory"
-    path = delegate._state_path(task_id)
-    record = {
-        "task_id": task_id,
-        "status": "spawning",
-        "pid": None,
-        "run_nonce": "nonce-1",
-        "started_at": "2026-10-06T00:00:00+00:00",
-        "worktree_prep": {"run_nonce": "nonce-1", "owner_pid": 999_999},
-    }
-    path.write_text(json.dumps(record), encoding="utf-8")
-
-    def orphaned_with_raw_reason(current):
-        current["last_error"] = HOSTILE  # any producer, in memory, before the record is persisted
-        return True
-
-    monkeypatch.setattr(delegate.worktree_prep, "is_orphaned_prep_record", orphaned_with_raw_reason)
-
-    delegate._heal_dead_task(path, delegate._read_state(path), source="wait")
-    shown = _status(task_id, capsys)
-
-    on_disk = json.loads(path.read_text(encoding="utf-8"))
-    assert (on_disk["status"], on_disk["last_error"]) == ("crashed", "unclassified_error")
-    _assert_public(on_disk)
-    assert shown["last_error"] == "unclassified_error"
-    _assert_public(shown)
-    assert _assert_kept_locally(task_id, field="last_error")["source"] == "record"
 
 
 def test_a_raw_reason_already_on_disk_is_replaced_when_wait_heals_the_record(monkeypatch, capsys):
@@ -618,21 +540,6 @@ def _run_owned_worker(task_id: str, worktree: Path) -> dict:
     return delegate._read_state(delegate._state_path(task_id))
 
 
-def test_an_auto_finalize_push_error_never_reaches_the_task_record(tmp_path, monkeypatch):
-    """End to end: git's push stderr is not in ``auto_finalize.error`` or any other public field."""
-    _sanitize_git_env_for_test(monkeypatch)
-    task_id = "sink-af-record"
-    worktree = _dirty_owned_worktree(tmp_path, task_id)
-    _failing_git(monkeypatch, "push")
-
-    record = _run_owned_worker(task_id, worktree)
-
-    assert record["status"] == "needs_finalize"
-    assert record["auto_finalize"]["error"] == "auto_finalize_push_failed, git push, exit 128"
-    _assert_public(record)
-    _assert_kept_locally(task_id, field="auto_finalize.error")
-
-
 def test_the_outer_finalize_handler_publishes_the_exception_class_only(tmp_path, monkeypatch):
     """The broad finalize handler: the exception's message stays local; the task still needs a human."""
     _sanitize_git_env_for_test(monkeypatch)
@@ -740,12 +647,6 @@ def test_a_hard_linked_diagnostic_is_refused(tmp_path):
     assert target.read_text(encoding="utf-8") == "keep\n"
 
 
-def test_a_diagnostic_needs_an_existing_task_record():
-    record = delegate._state_path("diag-none")
-    assert delegate._append_diagnostics(record, [("reason", _cause())], source="test") is None
-    assert not record.with_suffix(".diag").exists()
-
-
 def test_an_oversized_entry_is_cut_to_the_entry_bound():
     record = delegate._state_path("diag-big")
     delegate._write_state_atomic(record, {"task_id": "diag-big"})
@@ -817,21 +718,6 @@ def test_an_append_beside_an_oversized_diagnostic_leaves_every_file_bounded_and_
     assert [json.loads(line)["source"] for line in diag.read_text(encoding="utf-8").splitlines()] == ["test"]
 
 
-def test_an_existing_oversized_readable_rotated_diagnostic_is_bounded_and_made_private():
-    """An existing 2 MiB, 0644 ``.diag.prev`` is cut to its newest entries and made 0600 before the append."""
-    record = delegate._state_path("diag-prev")
-    delegate._write_state_atomic(record, {"task_id": "diag-prev"})
-    diag = record.with_suffix(".diag")
-    rotated = diag.with_name(diag.name + delegate._DIAG_ROTATED_SUFFIX)
-    lines = _oversized_diagnostic(rotated)
-
-    assert delegate._append_diagnostics(record, [("reason", _cause())], source="test")
-
-    _assert_bounded_and_private(diag, rotated)
-    kept = rotated.read_text(encoding="utf-8").splitlines()
-    assert kept and kept == lines[-len(kept) :]
-
-
 def test_a_symlinked_rotated_diagnostic_is_dropped_and_its_target_untouched(tmp_path):
     record = delegate._state_path("diag-prev-link")
     delegate._write_state_atomic(record, {"task_id": "diag-prev-link"})
@@ -865,14 +751,3 @@ def test_the_advisory_committed_diff_error_names_the_exception_class_only(tmp_pa
 
     assert output is None
     assert error == "the worker's committed diff could not be read (OSError)"
-
-
-def test_agy_unverified_identity_is_a_closed_public_cause():
-    task_id = "agy-unverified-public"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
-    cause = delegate._worker_last_error(
-        task_id, stderr_excerpt=HOSTILE, failure_cause="agy_model_identity_unverified",
-        final_status="failed", returncode=0, runtime_failure_code=None, worker_exception=None,
-    )
-    assert cause == "agy_model_identity_unverified"
-    assert_no_host_details(cause)

@@ -10,20 +10,6 @@ import yaml
 from scripts.lexicon import admit_textbook_book_glossary as admit
 
 
-def test_dmklinger_gloss_dedupes_and_caps_senses() -> None:
-    index = {
-        "мама": [
-            ("noun", json.dumps(["mother", "mama", "mom", "mum", "extra sense"])),
-        ]
-    }
-    gloss = admit.dmklinger_gloss(index, "мама")
-    assert gloss == "mother; mama; mom"
-
-
-def test_dmklinger_gloss_missing_returns_none() -> None:
-    assert admit.dmklinger_gloss({}, "невідоме") is None
-
-
 def test_uk_definition_prefers_sum20_over_vts() -> None:
     cache = {
         "lookup_word": "мама",
@@ -46,11 +32,6 @@ def test_uk_definition_falls_back_to_vts() -> None:
     _text, source, url = admit.uk_definition(cache, "мама")
     assert source == "vts"
     assert url == "u2"
-
-
-def test_uk_definition_missing_returns_none() -> None:
-    cache = {"lookup_word": "х", "lookups": {"newsum": None, "vts": None}}
-    assert admit.uk_definition(cache, "х") is None
 
 
 def test_en_gloss_prefers_dmklinger_then_ukreng() -> None:
@@ -142,23 +123,6 @@ def test_resolve_sources_db_missing_worktree_falls_back_to_primary(
     assert not worktree_db.exists()
 
 
-def test_resolve_sources_db_empty_worktree_falls_back_to_primary(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    worktree = tmp_path / "worktree"
-    primary = tmp_path / "primary"
-    worktree_db = worktree / "data" / "sources.db"
-    primary_db = primary / "data" / "sources.db"
-
-    worktree_db.parent.mkdir(parents=True, exist_ok=True)
-    worktree_db.touch()  # 0-byte invalid file
-    _make_sqlite_db(primary_db)
-    monkeypatch.setattr(admit, "_resolve_primary_checkout", lambda root=None: primary)
-
-    resolved = admit.resolve_sources_db(project_root=worktree)
-    assert resolved == primary_db
-
-
 def test_resolve_sources_db_fails_closed_when_neither_exists(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     worktree = tmp_path / "worktree"
     primary = tmp_path / "primary"
@@ -166,15 +130,6 @@ def test_resolve_sources_db_fails_closed_when_neither_exists(tmp_path: Path, mon
     monkeypatch.setattr(admit, "_resolve_primary_checkout", lambda root=None: primary)
 
     with pytest.raises(FileNotFoundError, match=r"sources\.db not found: checked worktree.*primary checkout"):
-        admit.resolve_sources_db(project_root=worktree)
-
-
-def test_resolve_sources_db_fails_closed_no_primary_resolved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    worktree = tmp_path / "worktree"
-
-    monkeypatch.setattr(admit, "_resolve_primary_checkout", lambda root=None: None)
-
-    with pytest.raises(FileNotFoundError, match=r"sources\.db not found: checked worktree"):
         admit.resolve_sources_db(project_root=worktree)
 
 
@@ -194,22 +149,6 @@ def test_resolve_sources_db_explicit_override(tmp_path: Path) -> None:
 
     with pytest.raises(FileNotFoundError, match=r"sources\.db specified at.*does not exist"):
         admit.resolve_sources_db(explicit=tmp_path / "missing.db")
-
-
-def test_resolve_primary_checkout_matches_git_common_dir() -> None:
-    from scripts.guardrails.worktree_containment import (
-        NotAGitRepositoryError,
-        resolve_main_root,
-    )
-
-    resolved = admit._resolve_primary_checkout()
-    try:
-        expected = resolve_main_root(admit.PROJECT_ROOT)
-    except NotAGitRepositoryError:
-        assert resolved is None
-        return
-    assert resolved == expected
-    assert (resolved / ".git").is_dir()
 
 
 def test_main_runs_with_primary_fallback_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

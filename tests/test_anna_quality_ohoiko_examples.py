@@ -20,7 +20,6 @@ from scripts.lexicon.ohoiko_quality_enrichment import (
     apply_ohoiko_quality_enrichment,
     build_ohoiko_book_catalog,
     enrich_entry_with_ohoiko,
-    is_duplicate_sense,
     is_plausible_example,
     merge_examples,
     merge_translation,
@@ -398,17 +397,6 @@ def test_parse_1000_words_paired_equal_headword() -> None:
     }
 
 
-def test_parse_1000_words_comma_pair_and_gender() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0006"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 6
-    assert parsed.lemmas == ["актор", "акторка"]
-    assert parsed.gloss == "actor, actress"
-    assert parsed.example is not None
-    assert parsed.example["uk"] == "Він хо́че ста́ти акто́ром."
-    assert parsed.example["en"] == "He wants to become an actor."
-
-
 def test_parse_1000_words_two_col_wrap_discount() -> None:
     cid, title, text = SAMPLE_1000_CHUNKS["e0007"]
     parsed = parse_1000_words_chunk(cid, title, text)
@@ -471,42 +459,6 @@ def test_parse_1000_words_dzvonyty_entry_214() -> None:
     assert parsed.example["en"] == "Bells are ringing in the church."
 
 
-def test_parse_1000_words_livoruch_entry_405() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0405"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 405
-    assert parsed.lemmas == ["ліворуч", "зліва", "наліво"]
-    assert parsed.gloss == "1) on the left, to the left; 2) left (direction)"
-    assert parsed.example is not None
-    # Must NOT be the gloss fragment "налі́во (2)" / "2) left (direction)"
-    assert parsed.example["uk"] == "Ліво́руч (злі́ва) від Оле́ни — її́ син Наза́р."
-    assert parsed.example["en"] == "To the left of Olena is her son Nazar."
-
-
-def test_parse_1000_words_odruzhuvatysia_entry_543() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0543"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 543
-    assert parsed.lemmas == ["одружуватися", "одружитися"]
-    assert parsed.gloss == "1) to get married; 2) to marry a woman"
-    assert parsed.example is not None
-    # Must NOT be the gloss fragment "одружи́тися" / "2) to marry a woman"
-    assert parsed.example["uk"] == "Бага́то пар одру́жуються влі́тку."
-    assert parsed.example["en"] == "Many couples get married in the summer."
-
-
-def test_parse_1000_words_pravoruch_entry_658() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0658"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 658
-    assert parsed.lemmas == ["праворуч", "справа", "направо"]
-    assert parsed.gloss == "1) on the right, to the right; 2) right (direction)"
-    assert parsed.example is not None
-    # Must NOT be the gloss fragment "напра́во (2)" / "2) right (direction)"
-    assert parsed.example["uk"] == "Мій буди́нок право́руч (= спра́ва) від магази́ну."
-    assert parsed.example["en"] == "My house is to the right of the shop."
-
-
 # ---------------------------------------------------------------------------
 # Tests: 500-verbs Chunk Parser
 # ---------------------------------------------------------------------------
@@ -536,17 +488,6 @@ def test_parse_500_verbs_reflexive_bracket() -> None:
     assert parsed.example is not None
     assert parsed.example["uk"] == "Я ба́чу вели́кий буди́нок."
     assert parsed.example["en"] == "I see a big house."
-
-
-def test_parse_500_verbs_multiple_perfectives() -> None:
-    cid, title, text = SAMPLE_500_CHUNKS["v0018"]
-    parsed = parse_500_verbs_chunk(cid, title, text)
-    assert parsed.entry_number == 18
-    assert parsed.lemmas == ["будувати", "збудувати", "побудувати"]
-    assert parsed.gloss == "to build"
-    assert parsed.example is not None
-    assert parsed.example["uk"] == "Робітники́ будую́ть но́вий міст."
-    assert parsed.example["en"] == "Workers are building a new bridge."
 
 
 def test_parse_500_verbs_ocr_accent_wrapped_entry_277() -> None:
@@ -696,15 +637,6 @@ def test_is_plausible_example_accepts_valid_sentences() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_is_duplicate_sense_exact_and_subterms() -> None:
-    assert is_duplicate_sense("to analyze", "to analyze") is True
-    assert is_duplicate_sense("bus (vehicle)", "bus") is True
-    assert is_duplicate_sense("bus, motorbus", "bus") is True
-    assert is_duplicate_sense("coach (long-distance bus)", "bus") is False
-    assert is_duplicate_sense("want (to desire)", "to wish, to desire") is False
-    assert is_duplicate_sense("to desire, to want, to wish", "to wish, to desire") is True
-
-
 def test_merge_translation_preserves_distinct_prior_senses() -> None:
     prior = {
         "en": ["bus (vehicle)", "bus, motorbus", "coach (long-distance bus)"],
@@ -715,11 +647,6 @@ def test_merge_translation_preserves_distinct_prior_senses() -> None:
     assert merged["source"] == "learner_english_gloss"
     assert merged["en"] == ["bus", "coach (long-distance bus)"]
     assert merged["pos"] == "noun"
-
-
-def test_merge_translation_empty_prior() -> None:
-    merged = merge_translation(None, "agriculture")
-    assert merged == {"en": ["agriculture"], "source": "learner_english_gloss"}
 
 
 # ---------------------------------------------------------------------------

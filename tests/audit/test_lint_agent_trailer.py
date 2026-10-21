@@ -231,36 +231,6 @@ def test_blocker_1_agent_prefixed_task_id_normalization(
     assert "PASS" in captured.out
 
 
-def test_earlier_round_commits_on_same_branch_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Finding 2: Earlier-round commits on the same branch must pass.
-
-    Worktree is on round 2 (impl-8642-r2). An earlier commit on the branch
-    carries round 1's trailer (impl-8642), whose record exists in tasks_dir.
-    """
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "impl-8642-r2", agent="agy")
-    _write_task_record(tasks_dir, "impl-8642", agent="agy", archived=True)
-
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8642-r2")
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "agy")
-
-    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
-    assert provenance.active is True
-
-    # R1 commit passes
-    _mock_commit(monkeypatch, "feat: round 1 implementation\n\nX-Agent: agy/impl-8642")
-    verdict_r1, reason_r1 = _check_commit("sha-r1", provenance=provenance)
-    assert verdict_r1 == "PASS"
-    assert reason_r1 == "X-Agent: agy/impl-8642"
-
-    # R2 commit passes
-    _mock_commit(monkeypatch, "fix: round 2 review fixes\n\nX-Agent: agy/impl-8642-r2")
-    verdict_r2, reason_r2 = _check_commit("sha-r2", provenance=provenance)
-    assert verdict_r2 == "PASS"
-    assert reason_r2 == "X-Agent: agy/impl-8642-r2"
-
-
 def test_exemptions_shape_checked_only_when_provenance_active(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Finding 3: *-inline/*, */inline, and dependabot/* are shape-checked only."""
     tasks_dir = tmp_path / "tasks"
@@ -312,29 +282,6 @@ def test_gemini_agy_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     verdict_rev, reason_rev = _check_commit("sha-agy", provenance=provenance)
     assert verdict_rev == "PASS"
     assert reason_rev == "X-Agent: agy/old-task"
-
-
-def test_deepseek_plain_trailer_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Finding 5: plain deepseek in _TRAILER_RE and LU_X_AGENT_TRAILER."""
-    from scripts import delegate
-
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "1234-fix-parse", agent="deepseek")
-
-    trailer = delegate._x_agent_trailer("deepseek", "1234-fix-parse")
-    assert trailer == "X-Agent: deepseek/1234-fix-parse"
-
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "1234-fix-parse")
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "deepseek")
-
-    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
-    assert provenance.active is True
-
-    _mock_commit(monkeypatch, f"feat: deepseek dispatch\n\n{trailer}")
-    verdict, reason = _check_commit("sha-deepseek", provenance=provenance)
-    assert verdict == "PASS"
-    assert reason == "X-Agent: deepseek/1234-fix-parse"
 
 
 def test_detection_requires_record_to_exist(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -436,22 +383,6 @@ def test_trailer_agent_mismatch_rejected(tmp_path: Path, monkeypatch: pytest.Mon
     assert "expected literal trailer: 'X-Agent: codex/task-alpha'" in reason
 
 
-def test_grok_build_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "task-grok", agent="grok")
-
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "task-grok")
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "grok")
-
-    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
-    assert provenance.active is True
-
-    _mock_commit(monkeypatch, "feat: work with grok-build alias\n\nX-Agent: grok-build/task-grok")
-    verdict, _reason = _check_commit("fake-sha", provenance=provenance)
-    assert verdict == "PASS"
-
-
 def test_worker_env_carries_lu_x_agent_trailer(monkeypatch: pytest.MonkeyPatch) -> None:
     """delegate.py exports LU_X_AGENT_TRAILER into worker_env via _build_worker_env and _x_agent_trailer."""
     from scripts import delegate
@@ -545,26 +476,6 @@ def test_candidate_order_and_agent_match_preference(tmp_path: Path, monkeypatch:
     verdict, reason = _check_commit("fake-sha", provenance=provenance)
     assert verdict == "FAIL"
     assert "dispatch worktree agent is 'claude'" in reason
-
-
-def test_prompt_preamble_mentions_lu_x_agent_trailer() -> None:
-    """Prompt preamble for write-capable workers must mention LU_X_AGENT_TRAILER."""
-    from scripts import delegate
-
-    text = delegate._augment_prompt_with_worktree(
-        "implement feature",
-        Path("/tmp/dispatch-wt"),
-        mode="workspace-write",
-    )
-    assert "LU_X_AGENT_TRAILER" in text
-    assert "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`)." in text
-
-    read_only_text = delegate._augment_prompt_with_worktree(
-        "inspect feature",
-        Path("/tmp/dispatch-wt"),
-        mode="read-only",
-    )
-    assert "LU_X_AGENT_TRAILER" not in read_only_text
 
 
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

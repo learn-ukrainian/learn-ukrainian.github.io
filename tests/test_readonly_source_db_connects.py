@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import ast
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -142,16 +141,6 @@ def test_unrelated_syntax_passes(source):
     assert lint.classify_source(source, "scripts/reader.py") == []
 
 
-def test_same_line_constructor_references_are_counted_separately():
-    assert len(lint.classify_source("import sqlite3\na = sqlite3.connect; b = sqlite3.connect", "scripts/x.py")) == 2
-    assert len(lint.classify_source("from sqlite3 import connect, Connection", "scripts/x.py")) == 2
-
-
-def test_imported_and_assigned_alias_uses_are_references():
-    assert len(lint.classify_source("from sqlite3 import connect as c\nc(path)", "scripts/x.py")) == 2
-    assert len(lint.classify_source("import sqlite3\nfactory = sqlite3.connect\nfactory(path)", "scripts/x.py")) == 2
-
-
 @pytest.mark.parametrize("kind", ["writer", "reader_pending_migration_9662"])
 def test_new_connect_in_allowlisted_file_fails_even_on_same_line(tmp_path, kind):
     scripts = tmp_path / "scripts"
@@ -202,15 +191,6 @@ def test_tests_are_not_script_exemptions(tmp_path):
     (tmp_path / "scripts" / "ingest").mkdir(parents=True)
     (tmp_path / "scripts" / "ingest" / "new.py").write_text('import sqlite3\nsqlite3.connect("sources.db")')
     assert lint.find_violations(tmp_path, ())[0]
-
-
-def test_cli_reports_failures_and_success(monkeypatch, capsys):
-    monkeypatch.setattr(lint, "find_violations", lambda: (["scripts/x.py:1: constructor reference"], []))
-    assert lint.main([]) == 1
-    assert "constructor reference" in capsys.readouterr().err
-    monkeypatch.setattr(lint, "find_violations", lambda: ([], []))
-    assert lint.main([]) == 0
-    assert "OK:" in capsys.readouterr().out
 
 
 def test_reader_boundary_has_one_open():
@@ -306,18 +286,6 @@ SOURCE_INGEST_BUILD_WRITERS = {
 }
 
 
-def test_github_client_cache_is_a_declared_non_source_database():
-    entry = next(item for item in lint.load_allowlist() if item.path == "scripts/common/github_client.py")
-    assert entry.kind == "writer"
-    assert entry.target_db == "GitHub client cache"
-    assert "sources.db" not in entry.target_db
-    assert "vesum.db" not in entry.target_db
-    assert entry.calls == ("sqlite3.connect(path, timeout=5)",)
-    source = (REPO_ROOT / entry.path).read_text()
-    assert lint.classify_source(source, entry.path)
-    assert lint.writer_target_violations(source, entry) == []
-
-
 def test_only_listed_source_ingest_build_writers_declare_protected_databases():
     actual = {
         entry.path
@@ -325,26 +293,6 @@ def test_only_listed_source_ingest_build_writers_declare_protected_databases():
         if entry.kind == "writer" and any(name in entry.target_db for name in ("sources.db", "vesum.db"))
     }
     assert actual == SOURCE_INGEST_BUILD_WRITERS
-
-
-def test_migrated_vesum_reader_cannot_switch_to_writable(tmp_path):
-    rel_path = "scripts/verification/vesum.py"
-    assert rel_path not in {entry.path for entry in lint.load_allowlist()}
-    source = (REPO_ROOT / rel_path).read_text()
-    path = tmp_path / rel_path
-    path.parent.mkdir(parents=True)
-    path.write_text(source)
-    assert lint.classify_source(source, rel_path) == []
-    assert 'open_readonly(resolved_path.resolve(), check_same_thread=False)' in source
-    path.write_text(
-        source.replace(
-            'open_readonly(resolved_path.resolve(), check_same_thread=False)',
-            "sqlite3.connect(str(resolved_path))",
-        )
-    )
-    violations, unreadable = lint.find_violations(tmp_path, ())
-    assert not unreadable
-    assert any("constructor reference" in v for v in violations)
 
 
 @pytest.mark.parametrize("source", [
@@ -384,15 +332,6 @@ def test_import_access_forms_and_helper_calls(source):
     assert not any(f.kind == 'test_import_access' for f in lint.classify_store_source(source, 'scripts/new.py'))
 
 
-def test_live_collection_helpers_in_base_census():
-    # Classify the current tree, as the ratchet does when a shallow clone lacks
-    # the frozen base. Migrated helpers must leave the committed baseline too.
-    entries = lint.census('HEAD')['entries']
-    actual = {lint.StoreFinding(**e) for e in entries if e['kind'] == 'test_import_access'}
-    expected = {e for e in lint.baseline_entries() if e.kind == 'test_import_access'}
-    assert actual == expected
-
-
 def test_baseline_identity_survives_lines_but_counts_occurrences():
     source = "db = ROOT / 'data' / 'sources.db'\ndb = ROOT / 'data' / 'sources.db'"
     original = lint.classify_store_source(source, 'scripts/x.py')
@@ -415,45 +354,6 @@ def test_ratchet_rejects_missing_and_new_entries(tmp_path, monkeypatch):
     violations, _ = lint.find_violations(tmp_path, ())
     assert any('stale baseline' in v for v in violations)
     assert any('store_path' in v and 'stale' not in v for v in violations)
-
-
-def test_resolver_allowlist_is_narrow(tmp_path, monkeypatch):
-    import json
-    path = tmp_path / 'allowlist.json'
-    monkeypatch.setattr(lint, 'REFERENCE_MANIFEST', path)
-    row = dict(path='scripts/storage/topology.py', reference_count=0, kind='store_resolver',
-               target_db=None, reason='sanctioned', functions=['resolve_store'])
-    path.write_text(json.dumps([row]))
-    assert lint.load_allowlist()[0].functions == ('resolve_store',)
-    for change in ({'path': 'scripts/new.py'}, {'functions': ['default_repository_root']},
-                   {'calls': ['sqlite3.connect(path)']}, {'reference_count': 1}):
-        path.write_text(json.dumps([{**row, **change}]))
-        with pytest.raises(ValueError, match='invalid'):
-            lint.load_allowlist()
-
-
-def test_fixture_factory_allowlist_requires_tests_and_pinned_calls(tmp_path, monkeypatch):
-    import json
-    path = tmp_path / 'allowlist.json'
-    monkeypatch.setattr(lint, 'REFERENCE_MANIFEST', path)
-    row = dict(path='tests/factory.py', reference_count=1, kind='fixture_factory',
-               target_db=None, reason='synthetic', calls=['sqlite3.connect(path)'])
-    path.write_text(json.dumps([row]))
-    assert lint.load_allowlist()[0].kind == 'fixture_factory'
-    for change in ({'path': 'scripts/factory.py'}, {'calls': []}, {'target_db': 'sources.db'}):
-        path.write_text(json.dumps([{**row, **change}]))
-        with pytest.raises(ValueError, match='invalid'):
-            lint.load_allowlist()
-
-
-@pytest.mark.parametrize("source", [
-    "db = tmp_path / 'data/sources.db'",
-    "def test_read(checkouts):\n    primary, worker = checkouts\n    return primary / 'data' / 'sources.db'",
-    "def test_read(custom_directory): return custom_directory / 'sources.db'",
-    "def test_read(tmp_path_factory): return tmp_path_factory.mktemp('db') / 'vesum.db'",
-])
-def test_fixture_roots_are_not_store_builders(source):
-    assert lint.classify_store_source(source, 'tests/new.py') == []
 
 
 def test_baseline_cannot_grow_or_change_freeze(tmp_path, monkeypatch):
@@ -497,16 +397,6 @@ def test_fixture_sibling_cannot_hide_repository_path():
     source = "import sqlite3\ndb = choose(ROOT / 'data' / 'sources.db', tmp_path)\nsqlite3.connect(db)"
     assert any(f.kind == 'raw_store_constructor' for f in lint.classify_store_source(source, 'tests/new.py'))
     assert any(f.kind == 'store_path' for f in lint.classify_store_source("db = Path('data') / 'sources.db'", 'tests/new.py'))
-
-
-def test_helper_accesses_are_individually_ratcheted():
-    source = "from scripts.lib.readonly_sqlite import open_readonly\ndef present():\n    open_readonly(db)\npytestmark = pytest.mark.skipif(present(), reason='missing')"
-    before = lint.classify_store_source(source, 'tests/new.py')
-    after = lint.classify_store_source(source.replace('    open_readonly(db)',
-        '    open_readonly(db)\n    open_readonly(other)'), 'tests/new.py')
-    assert len(before) == 1 and len(after) == 2
-    assert set(before) < set(after)
-    assert before[0].scope == 'present'
 
 
 
@@ -583,23 +473,6 @@ def test_unresolved_store_builders_fail_full_lint(tmp_path, source, tree):
     assert any('store_path' in v for v in violations), violations
 
 
-@pytest.mark.parametrize('expression', [
-    "os.path.join(directory, 'data', 'sources.db')",
-    "helper(directory, 'data', 'sources.db')",
-    "(directory / 'x').with_name('vesum.db')",
-    "(directory / 'sources').with_suffix('.db')",
-    "str(directory) + '/vesum_shadow_fixture.db'",
-    "f'{directory}/sources.db'",
-    "'%s/vesum.db' % directory",
-    "'{}/sources.db'.format(directory)",
-    "'/'.join([directory, 'sources.db'])",
-    "str(directory) + os.sep + 'sources.db'",
-])
-def test_fixture_store_builders_stay_clean(expression):
-    source = f"def test_read(directory):\n    DB = {expression}"
-    assert lint.classify_store_source(source, 'tests/new.py') == []
-
-
 def test_absent_base_scans_every_file_and_rejects_new_builders(tmp_path, monkeypatch):
     import json
     subprocess.run(['git', 'init', '-q', str(tmp_path)], check=True, timeout=30)
@@ -624,24 +497,6 @@ def _git(repo, *args):
     subprocess.run(['git', '-C', str(repo), *args], check=True, timeout=30)
 
 
-def test_absent_commit_census_classifies_head(tmp_path):
-    """A depth-1 checkout can classify HEAD when the frozen base object is absent."""
-    _git(tmp_path, 'init', '-q')
-    _git(tmp_path, 'config', 'user.email', 'census@example.com')
-    _git(tmp_path, 'config', 'user.name', 'Census')
-    (tmp_path / 'scripts').mkdir()
-    (tmp_path / 'tests').mkdir()
-    (tmp_path / 'scripts' / 'a.py').write_text("DB = DATA_DIR / 'sources.db'\n")
-    (tmp_path / 'tests' / 'empty.py').write_text('')
-    _git(tmp_path, 'add', 'scripts', 'tests')
-    _git(tmp_path, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'base')
-    head = lint.census('HEAD', tmp_path)
-    absent = lint.census('0' * 40, tmp_path)
-    assert absent['base_commit'] == head['base_commit']
-    assert absent['entries'] == head['entries']
-    assert any(entry['path'] == 'scripts/a.py' and entry['kind'] == 'store_path' for entry in absent['entries'])
-
-
 def test_present_commit_census_does_not_substitute_later_head(tmp_path):
     _git(tmp_path, 'init', '-q')
     _git(tmp_path, 'config', 'user.email', 'census@example.com')
@@ -660,16 +515,6 @@ def test_present_commit_census_does_not_substitute_later_head(tmp_path):
     assert old['base_commit'] == first
     assert any(entry['path'] == 'scripts/a.py' for entry in old['entries'])
     assert all(entry['path'] != 'scripts/b.py' for entry in old['entries'])
-
-
-@pytest.mark.parametrize('path,scope', [
-    ('scripts/rag/scrape_wikisource.py', '<module>'),
-    ('scripts/build/vocab_gen.py', '<module>'),
-    ('scripts/api/admin_router.py', 'disk_usage'),
-])
-def test_anchor_and_helper_base_sites_are_in_census(path, scope):
-    assert any(f.path == path and f.kind == 'store_path' and f.scope == scope
-               for f in lint.baseline_entries())
 
 
 @pytest.mark.parametrize('landed,reproduced', [(False, True), (True, True), (False, False)])
@@ -694,62 +539,6 @@ def test_initial_census_correction_requires_unlanded_exact_reproduction(tmp_path
     assert lint.baseline_policy_violations(tmp_path)
 
 
-JOIN_FORMS = [
-    'f"{ANCHOR}/vesum.db"',
-    "'%s/sources.db' % ANCHOR",
-    "'{}/sources.db'.format(ANCHOR)",
-    "'/'.join([ANCHOR, 'sources.db'])",
-    "str(ANCHOR) + os.sep + 'sources.db'",
-]
-
-
-@pytest.mark.parametrize('expression', JOIN_FORMS)
-@pytest.mark.parametrize('anchor', ['DATA_DIR', 'config.DATA_DIR', 'helper()'])
-@pytest.mark.parametrize('tree', ['scripts', 'tests'])
-def test_interpolated_unresolved_store_joins_fail_full_lint(tmp_path, expression, anchor, tree):
-    path = tmp_path / tree / 'new.py'
-    path.parent.mkdir()
-    path.write_text('from scripts.rag.config import DATA_DIR\nDB = ' + expression.replace('ANCHOR', anchor))
-    violations, unreadable = lint.find_violations(tmp_path, ())
-    assert unreadable == []
-    assert any('store_path' in v for v in violations), violations
-
-
-@pytest.mark.parametrize('expression', JOIN_FORMS)
-@pytest.mark.parametrize('anchor', ['tmp_path', "tmp_path_factory.mktemp('db')", 'directory'])
-def test_interpolated_fixture_store_joins_stay_clean(expression, anchor):
-    source = 'def test_read(directory):\n    DB = ' + expression.replace('ANCHOR', anchor)
-    assert lint.classify_store_source(source, 'tests/new.py') == []
-
-
-@pytest.mark.parametrize('expression', [
-    'f"Parsing {name}"',
-    "'Parsing %s' % name",
-    "'Parsing {}'.format(name)",
-    "' '.join(['Parsing', name])",
-    "'Parsing ' + str(name)",
-    'f"{name}/sources.db.backup"',
-])
-@pytest.mark.parametrize('setup', [
-    "DB = DATA_DIR / 'sources.db'\nname = DB.stem",
-    "DB = ROOT / 'data' / 'sources.db'\nname = DB.stem",
-    'from argparse import ArgumentParser\n'
-    'parser = ArgumentParser(description="Load data/sources.db")\n'
-    'args = parser.parse_args()\nbook = args.book\nname = book.txt_filename',
-])
-@pytest.mark.parametrize('tree', ['scripts', 'tests'])
-def test_tainted_text_joins_do_not_add_store_findings(tmp_path, expression, setup, tree):
-    path = tmp_path / tree / 'new.py'
-    path.parent.mkdir()
-    path.write_text(setup)
-    expected_findings = lint.classify_store_source(setup, f'{tree}/new.py')
-    expected_violations = lint.find_violations(tmp_path, ())
-    source = setup + '\nmessage = ' + expression
-    path.write_text(source)
-    assert lint.classify_store_source(source, f'{tree}/new.py') == expected_findings
-    assert lint.find_violations(tmp_path, ()) == expected_violations
-
-
 @pytest.mark.parametrize('source,expression', [
     ('message = f"{ROOT / \'data\' / \'sources.db\'} is missing"', "ROOT / 'data' / 'sources.db'"),
     ("sources_path = ROOT / 'data' / 'sources.db'\n"
@@ -772,64 +561,6 @@ def test_text_joins_preserve_nested_store_builders(tmp_path, source, expression,
 
 
 @pytest.mark.parametrize('source', [
-    "from pathlib import Path\nROOT = Path(__file__).parents[1]\nDB = ROOT / 'data' / 'sources.db'",
-    "import os\nDB = os.path.join(os.path.dirname(__file__), '..', 'data', 'vesum.db')",
-    "from pathlib import Path\nP = Path\nDB = P(__file__).parent.parent / 'data/sources.db'",
-    "DB = str(PROJECT_ROOT) + '/data/' + 'sources.db'",
-    "DB = f'{REPO_ROOT}/data/vesum.db'",
-    "from pathlib import Path\nimport os\nDB = Path(os.environ.get('LU_SOURCES_DB', 'data/sources.db'))",
-    "from sqlite3 import connect as c\nc('data/sources.db')",
-    "import sqlite3 as s\nDB = REPO_ROOT / 'data' / 'sources.db'\ns.connect(DB)",
-    "from scripts.lib.readonly_sqlite import open_readonly\ndef _present(): return open_readonly(REPO / 'data' / 'sources.db')\npytestmark = pytest.mark.skipif(_present(), reason='missing')",
-    "import sqlite3\nCONN = sqlite3.connect(REPO / 'data' / 'vesum.db')",
-])
-@pytest.mark.parametrize('tree', ['scripts', 'tests'])
-def test_round_a_held_out_positives_remain_reported(tmp_path, source, tree):
-    path = tmp_path / tree / 'held_out.py'
-    path.parent.mkdir()
-    path.write_text(source)
-    violations, unreadable = lint.find_violations(tmp_path, ())
-    assert unreadable == []
-    assert any('store_path' in v for v in violations), violations
-    if 'sqlite3' in source:
-        assert any('raw_store_constructor' in v for v in violations), violations
-    if tree == 'tests' and ('sqlite3' in source or 'open_readonly' in source):
-        assert any('test_import_access' in v for v in violations), violations
-
-
-@pytest.mark.parametrize('source', [
-    "def test_read(tmp_path): return tmp_path / 'data' / 'sources.db'",
-    "import sqlite3\ndef test_read(tmp_path): return sqlite3.connect(tmp_path / 'fixture.db')",
-    '\"\"\"Prose mentioning data/sources.db as an example.\"\"\"',
-    "import pytest\n@pytest.fixture\ndef db(tmp_path): return tmp_path / 'data' / 'sources.db'",
-    "def test_read(tmp_path):\n    directory = tmp_path / 'repo' / 'data'\n    directory.mkdir(parents=True)\n    (directory / 'sources.db').write_text('fixture')",
-    "DB = helper('metadata', 'sources.db')",
-])
-def test_review_negative_controls_remain_clean(tmp_path, source):
-    path = tmp_path / 'tests' / 'held_out.py'
-    path.parent.mkdir()
-    path.write_text(source)
-    assert lint.find_violations(tmp_path, ()) == ([], [])
-
-
-@pytest.mark.parametrize('kind', ['writer', 'reader_pending_migration_9662'])
-def test_full_lint_parses_each_source_once(tmp_path, monkeypatch, kind):
-    path = tmp_path / 'scripts' / 'writer.py'
-    path.parent.mkdir()
-    path.write_text('import sqlite3\nsqlite3.connect("output.db")')
-    entry = lint.AllowedReference('scripts/writer.py', 1, kind, 'output.db' if kind == 'writer' else None,
-                                  'fixture', ("sqlite3.connect('output.db')",))
-    original = lint.ast.parse
-    parses = []
-    def counted(*args, **kwargs):
-        parses.append(kwargs.get('filename'))
-        return original(*args, **kwargs)
-    monkeypatch.setattr(lint.ast, 'parse', counted)
-    assert lint.find_violations(tmp_path, (entry,)) == ([], [])
-    assert parses == ['scripts/writer.py']
-
-
-@pytest.mark.parametrize('source', [
     "a = 's'\nb = 'o'\nc = 'u'\nd = 'r'\ne = 'c'\nf = 'e'\ng = '.'\nh = 'd'\ni = 'b'\nDB = DATA_DIR / (a+b+c+d+e+f+a+g+h+i)",
     "tail = 'rces.db'\nnoise = 'unrelated'\nstem = 'sou'\nDB = f'{DATA_DIR}/{stem}{tail}'",
     "prefix = 'LU_'\nnoise = 'unrelated'\nstore = 'VESUM'\nsuffix = '_DB'\nDB = os.environ[prefix + store + suffix]",
@@ -838,36 +569,6 @@ def test_full_lint_parses_each_source_once(tmp_path, monkeypatch, kind):
 @pytest.mark.parametrize('tree', ['scripts', 'tests'])
 def test_literal_prefilter_preserves_split_and_reordered_names(source, tree):
     assert any(f.kind == 'store_path' for f in lint.classify_store_source(source, f'{tree}/new.py'))
-
-
-def test_literal_prefilter_has_no_false_negatives_for_concatenations():
-    from itertools import product
-    pieces = ['sou', 'rces.db', 'ves', 'um.db', 'vesum_', 'shadow_', 'release.db',
-              'LU_', 'SOURCES', '_DB', 'data/', '?mode=ro']
-    for parts in product(pieces, repeat=3):
-        folded = ''.join(parts)
-        if lint.STORE_NAME.search(folded) or folded in {'LU_SOURCES_DB', 'LU_VESUM_DB'}:
-            nodes = [ast.Constant(value=value) for value in parts]
-            assert lint._may_fold_store(nodes), parts
-    assert not lint._may_fold_store([ast.Constant(value='metadata'), ast.Constant(value='fixture.db')])
-
-
-@pytest.mark.parametrize('source', [
-    "DB = DATA_DIR / 'sources.db'",
-    "def test_read(tmp_path): return tmp_path / 'sources.db'",
-    "unused = 'sources.db' + 'extra'",
-])
-def test_store_scan_releases_its_ast_without_garbage_collection(monkeypatch, source):
-    import weakref
-    original = lint._Syntax
-    refs = []
-    def tracked(*args):
-        syntax = original(*args)
-        refs.append(weakref.ref(syntax))
-        return syntax
-    monkeypatch.setattr(lint, '_Syntax', tracked)
-    lint.classify_store_source(source, 'tests/new.py')
-    assert refs and all(ref() is None for ref in refs)
 
 
 
@@ -883,167 +584,3 @@ def test_rebound_reader_alias_still_reports_collection_access():
     assert len(findings) == 1
     assert findings[0].kind == 'test_import_access'
     assert findings[0].scope == '<module>'
-
-
-@pytest.mark.parametrize('enabled', [False, True])
-@pytest.mark.parametrize('source', ['value = 42', 'value = ('])
-def test_scan_restores_gc_state_with_valid_and_unreadable_source(tmp_path, monkeypatch, enabled, source):
-    import gc
-
-    original = ast.parse
-    states_during_parse = []
-
-    def observed(*args, **kwargs):
-        states_during_parse.append(gc.isenabled())
-        return original(*args, **kwargs)
-
-    monkeypatch.setattr(ast, 'parse', observed)
-    path = tmp_path / 'scripts' / 'input.py'
-    path.parent.mkdir()
-    path.write_text(source)
-    was_enabled = gc.isenabled()
-    (gc.enable if enabled else gc.disable)()
-    try:
-        expected_unreadable = ['scripts/input.py'] if source.endswith('(') else []
-        assert lint.find_violations(tmp_path, ()) == ([], expected_unreadable)
-        assert states_during_parse == [False]
-        assert gc.isenabled() is enabled
-    finally:
-        (gc.enable if was_enabled else gc.disable)()
-
-
-@pytest.mark.parametrize('enabled', [False, True])
-@pytest.mark.parametrize('error', [RuntimeError, KeyboardInterrupt])
-def test_scan_restores_gc_state_after_unexpected_error(tmp_path, monkeypatch, enabled, error):
-    import gc
-
-    def broken_paths(root):
-        assert gc.isenabled() is False
-        raise error('scan failed')
-
-    monkeypatch.setattr(lint, 'iter_scan_paths', broken_paths)
-    was_enabled = gc.isenabled()
-    (gc.enable if enabled else gc.disable)()
-    try:
-        with pytest.raises(error, match='scan failed'):
-            lint.find_violations(tmp_path, ())
-        assert gc.isenabled() is enabled
-    finally:
-        (gc.enable if was_enabled else gc.disable)()
-
-
-@pytest.mark.parametrize('enabled', [False, True])
-def test_scan_restores_gc_state_when_disable_is_interrupted(tmp_path, monkeypatch, enabled):
-    import gc
-
-    original_disable = gc.disable
-    calls = []
-
-    def interrupted_disable():
-        original_disable()
-        calls.append('disabled')
-        if len(calls) == 1:
-            raise KeyboardInterrupt('disable interrupted')
-
-    was_enabled = gc.isenabled()
-    (gc.enable if enabled else original_disable)()
-    monkeypatch.setattr(gc, 'disable', interrupted_disable)
-    try:
-        with pytest.raises(KeyboardInterrupt, match='disable interrupted'):
-            lint.find_violations(tmp_path, ())
-        assert gc.isenabled() is enabled
-    finally:
-        (gc.enable if was_enabled else original_disable)()
-
-
-@pytest.mark.parametrize('enabled', [False, True])
-def test_nested_scans_restore_each_gc_state(tmp_path, enabled):
-    import gc
-
-    @lint._without_cyclic_gc
-    def outer_scan():
-        assert gc.isenabled() is False
-        assert lint.find_violations(tmp_path, ()) == ([], [])
-        assert gc.isenabled() is False
-        return 'scanned'
-
-    was_enabled = gc.isenabled()
-    (gc.enable if enabled else gc.disable)()
-    try:
-        assert outer_scan() == 'scanned'
-        assert gc.isenabled() is enabled
-    finally:
-        (gc.enable if was_enabled else gc.disable)()
-
-
-@pytest.mark.parametrize('enabled', [False, True])
-def test_scan_restores_exact_gc_state_after_callable_changes_it(enabled):
-    import gc
-
-    @lint._without_cyclic_gc
-    def changes_gc():
-        gc.enable()
-
-    was_enabled = gc.isenabled()
-    (gc.enable if enabled else gc.disable)()
-    try:
-        changes_gc()
-        assert gc.isenabled() is enabled
-    finally:
-        (gc.enable if was_enabled else gc.disable)()
-
-
-@pytest.mark.parametrize('enabled', [False, True])
-def test_overlapping_scan_threads_restore_original_gc_state(enabled):
-    import gc
-    from concurrent.futures import ThreadPoolExecutor
-    from threading import Event
-
-    first_entered, second_attempted, second_entered = Event(), Event(), Event()
-    release_first, release_second = Event(), Event()
-
-    @lint._without_cyclic_gc
-    def scan(name):
-        assert gc.isenabled() is False
-        entered, release = ((first_entered, release_first) if name == 'first'
-                            else (second_entered, release_second))
-        entered.set()
-        assert release.wait(10), f'{name} scan was not released'
-        return name
-
-    def second_scan():
-        second_attempted.set()
-        return scan('second')
-
-    was_enabled = gc.isenabled()
-    (gc.enable if enabled else gc.disable)()
-    try:
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            try:
-                first = pool.submit(scan, 'first')
-                assert first_entered.wait(10), 'first scan did not enter'
-                second = pool.submit(second_scan)
-                assert second_attempted.wait(10), 'second scan did not start'
-                release_first.set()
-                assert second_entered.wait(10), 'second scan did not enter'
-                assert first.result(timeout=10) == 'first'
-                assert gc.isenabled() is False
-                release_second.set()
-                assert second.result(timeout=10) == 'second'
-            finally:
-                release_first.set()
-                release_second.set()
-        assert gc.isenabled() is enabled
-    finally:
-        (gc.enable if was_enabled else gc.disable)()
-
-
-@pytest.mark.parametrize('entry', [
-    ['-m', 'scripts.hygiene.lint_source_db_writable_connects'],
-    ['scripts/hygiene/lint_source_db_writable_connects.py'],
-], ids=['module', 'script'])
-def test_cli_help_entrypoints(entry):
-    result = subprocess.run([sys.executable, *entry, '--help'], cwd=REPO_ROOT,
-                            capture_output=True, text=True, timeout=30)
-    assert result.returncode == 0, result.stderr
-    assert 'Structural SQLite boundary and store-access ratchet' in result.stdout

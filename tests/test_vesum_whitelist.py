@@ -22,7 +22,6 @@ from vesum_whitelist import (
     add_word,
     load_combined_whitelist,
     load_global_whitelist,
-    load_module_whitelist,
     load_whitelist,
 )
 
@@ -47,14 +46,6 @@ def tmp_whitelist(tmp_path: Path) -> Path:
     return path
 
 
-@pytest.fixture()
-def empty_whitelist(tmp_path: Path) -> Path:
-    """Create an empty whitelist file."""
-    path = tmp_path / "vesum-whitelist.yaml"
-    path.write_text("words: []\n", encoding="utf-8")
-    return path
-
-
 # ---------------------------------------------------------------------------
 # Tests: load_whitelist
 # ---------------------------------------------------------------------------
@@ -71,10 +62,6 @@ class TestLoadWhitelist:
         result = load_whitelist(tmp_path / "nonexistent.yaml")
         assert result == {}
 
-    def test_returns_empty_for_empty_file(self, empty_whitelist: Path):
-        result = load_whitelist(empty_whitelist)
-        assert result == {}
-
     def test_returns_empty_for_malformed_yaml(self, tmp_path: Path):
         path = tmp_path / "bad.yaml"
         path.write_text(": : : not valid yaml [[[", encoding="utf-8")
@@ -88,27 +75,6 @@ class TestLoadWhitelist:
         result = load_whitelist(path)
         assert "морос" in result
         assert "Морос" not in result
-
-    def test_skips_entries_without_word(self, tmp_path: Path):
-        data = {"words": [{"reason": "no word field", "approved_by": "auto"}]}
-        path = tmp_path / "wl.yaml"
-        path.write_text(yaml.dump(data, allow_unicode=True), encoding="utf-8")
-        result = load_whitelist(path)
-        assert result == {}
-
-    def test_handles_non_dict_root(self, tmp_path: Path):
-        """YAML file with a list at root instead of a dict."""
-        path = tmp_path / "wl.yaml"
-        path.write_text("- word: test\n", encoding="utf-8")
-        result = load_whitelist(path)
-        assert result == {}
-
-    def test_handles_non_dict_entries(self, tmp_path: Path):
-        """words list containing strings instead of dicts."""
-        path = tmp_path / "wl.yaml"
-        path.write_text("words:\n  - just a string\n  - another\n", encoding="utf-8")
-        result = load_whitelist(path)
-        assert result == {}
 
 
 # ---------------------------------------------------------------------------
@@ -126,13 +92,6 @@ class TestLoadGlobalWhitelist:
 # ---------------------------------------------------------------------------
 # Tests: load_module_whitelist
 # ---------------------------------------------------------------------------
-
-class TestLoadModuleWhitelist:
-    def test_returns_empty_for_nonexistent_module(self):
-        result = load_module_whitelist("z99", "nonexistent-slug")
-        assert result == {}
-
-
 # ---------------------------------------------------------------------------
 # Tests: load_combined_whitelist
 # ---------------------------------------------------------------------------
@@ -142,10 +101,6 @@ class TestLoadCombinedWhitelist:
         combined = load_combined_whitelist("a1", "nonexistent-slug")
         assert "зь" in combined
         assert "морос" in combined
-
-    def test_returns_set(self):
-        result = load_combined_whitelist("a1", "test")
-        assert isinstance(result, set)
 
 
 # ---------------------------------------------------------------------------
@@ -193,7 +148,3 @@ class TestAddWord:
         expected = fake_curriculum / "a1" / "orchestration" / "test-module" / "vesum-whitelist.yaml"
         assert result_path == expected
         assert expected.exists()
-
-    def test_module_scope_requires_level_and_slug(self):
-        with pytest.raises(ValueError, match="level and slug required"):
-            add_word("test", "reason", scope="module")

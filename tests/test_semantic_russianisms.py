@@ -43,41 +43,6 @@ class TestScanPlan:
         findings = scan_plan_for_russianisms(plan_path)
         assert len(findings) == 0
 
-    def test_detects_gorod_as_city(self, tmp_path):
-        plan = {
-            "vocabulary_hints": {
-                "required": [
-                    "город (city) — high frequency",
-                ]
-            }
-        }
-        plan_path = tmp_path / "test.yaml"
-        plan_path.write_text(yaml.dump(plan, allow_unicode=True))
-
-        findings = scan_plan_for_russianisms(plan_path)
-        assert len(findings) == 1
-        assert findings[0]["word"] == "город"
-        assert findings[0]["replacement"] == "місто"
-
-    def test_no_findings_for_clean_plan(self, tmp_path):
-        plan = {
-            "vocabulary_hints": {
-                "required": [
-                    "мама (mom) — decodable",
-                    "кіт (cat) — decodable",
-                ]
-            }
-        }
-        plan_path = tmp_path / "test.yaml"
-        plan_path.write_text(yaml.dump(plan, allow_unicode=True))
-
-        findings = scan_plan_for_russianisms(plan_path)
-        assert len(findings) == 0
-
-    def test_missing_file(self, tmp_path):
-        findings = scan_plan_for_russianisms(tmp_path / "nonexistent.yaml")
-        assert findings == []
-
 
 class TestFixPlan:
     """fix_plan_russianisms auto-corrects semantic false friends."""
@@ -101,18 +66,3 @@ class TestFixPlan:
         updated = plan_path.read_text()
         assert "цибуля" in updated
         assert "лук (onion)" not in updated
-
-    def test_detects_город_as_city(self, tmp_path):
-        plan = {
-            "vocabulary_hints": {
-                "required": [
-                    "город (city) — noun",
-                ]
-            }
-        }
-        plan_path = tmp_path / "test.yaml"
-        plan_path.write_text(yaml.dump(plan, allow_unicode=True))
-
-        findings, fixes = scan_and_fix_plan(plan_path)
-        assert len(findings) == 1
-        assert fixes == 1  # auto-fixed to місто

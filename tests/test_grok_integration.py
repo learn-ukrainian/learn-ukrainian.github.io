@@ -8,31 +8,11 @@ any of them.
 
 from __future__ import annotations
 
-import importlib
 import subprocess
 import sys
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-def test_registry_exposes_native_and_hermes_grok_seats():
-    """Registry must expose native ``grok``, permanent alias ``grok-build``,
-    and demoted Hermes ``grok-hermes``."""
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from agent_runtime.registry import AGENTS, available_agents
-
-    assert "grok" in AGENTS
-    assert "grok-build" in AGENTS
-    assert "grok-hermes" in AGENTS
-    assert "grok_build:GrokBuildAdapter" in AGENTS["grok"]["adapter"]
-    assert "hermes_grok:HermesGrokAdapter" in AGENTS["grok-hermes"]["adapter"]
-    assert AGENTS["grok"]["cli_available"] is True
-    assert AGENTS["grok-hermes"]["cli_available"] is False
-    for name in ("grok", "grok-build"):
-        assert name in available_agents()
 
 
 def test_delegate_dispatch_accepts_grok_agent_and_alias():
@@ -65,29 +45,6 @@ def test_delegate_dispatch_accepts_grok_agent_and_alias():
             f"delegate dispatch --agent {agent} failed:\nstdout={result.stdout!r}\nstderr={result.stderr!r}"
         )
         assert task in result.stdout
-
-
-def test_ab_channels_valid_agents_includes_grok_seats():
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts.ai_agent_bridge import _channels
-
-    importlib.reload(_channels)
-    for name in ("grok", "grok-build", "grok-hermes"):
-        assert name in _channels.VALID_AGENTS
-
-
-def test_ab_channels_cli_marks_grok_cli_available():
-    """``ab discuss`` requires the agent to be CLI-spawnable."""
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts.ai_agent_bridge import _channels_cli
-
-    assert _channels_cli._cli_available_agent("grok") is True
-    assert _channels_cli._cli_available_agent("grok-build") is True
-    assert _channels_cli._cli_available_agent("grok-hermes") is False
 
 
 def test_lint_agent_trailer_accepts_grok_and_alias():

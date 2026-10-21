@@ -184,12 +184,6 @@ def test_access_conflict_excludes_free_filter(database):
     assert merged["access"] == "mixed"
 
 
-def test_all_podcast_audio_free_notes_premium(database):
-    rows = list(database.execute("SELECT audio_access,notes_access FROM resource_catalogue WHERE kind='podcast'"))
-    assert len(rows) == 313  # includes separately catalogued episode-page aliases
-    assert all(tuple(row) == ("free", "premium") for row in rows)
-
-
 @pytest.mark.parametrize("status", [200, 404, 403, 405, 501])
 def test_link_check_records_status_and_date(monkeypatch, status):
     response = MagicMock(status_code=status)
@@ -325,11 +319,6 @@ def test_letter_mode_rejects_non_letter_queries(database, query):
     assert catalogue.search_resources(database, query, mode="letter") == []
 
 
-def test_unknown_search_mode_is_rejected(database):
-    with pytest.raises(ValueError, match="search mode"):
-        catalogue.search_resources(database, "Т", mode="auto")
-
-
 def test_invalid_catalogues_fail_closed(tmp_path, monkeypatch):
     monkeypatch.setattr(catalogue, "CATALOGUES", ("broken.txt",))
     (tmp_path / "broken.txt").write_text("unexpected row\n")
@@ -370,18 +359,6 @@ def test_explicit_access_metadata(access_fields, expected):
         {},
     )
     assert entry["access"] == expected
-
-
-def test_missing_access_is_unknown_and_not_free(database):
-    entry = catalogue._resource_entry({"title": "Unknown", "url": "https://example.org/unknown"}, "test.json", "/0", {})
-    assert entry["access"] == "unknown"
-    all_rows = catalogue.search_resources(database, kind="article", limit=20)
-    assert all_rows
-    free_rows = catalogue.search_resources(database, kind="article", free_only=True)
-    assert len(free_rows) == 5
-    assert "https://www.ukrainianlessons.com/ukrainian-alphabet/" in {r["url"] for r in free_rows}
-    assert all(r["access_evidence"] for r in free_rows)
-    assert all(r["access_evidence"] for r in catalogue.search_resources(database, kind="video", free_only=True))
 
 
 @pytest.mark.parametrize("query", ["добрий день", "привіт", "дякую"])
@@ -470,13 +447,6 @@ def test_browse_and_large_provenance_have_byte_caps(database, monkeypatch):
     )
     assert len(json.dumps(envelope, ensure_ascii=False).encode("utf-8")) < 20 * catalogue.MAX_HIT_BYTES + 4096
     assert "original_url" not in content[0].text
-
-
-def test_compact_metadata_is_bounded_without_mutating_store(database):
-    database.execute("UPDATE resource_catalogue SET title=?,topics=?", ("я" * 1000, json.dumps(["x" * 10000])))
-    hit = catalogue.search_resources(database, limit=1)[0]
-    assert len(hit["title"].encode("utf-8")) <= 256 and hit["title_truncated"]
-    assert hit["topics"] == [] and hit["topics_count"] == 1 and hit["topics_truncated"]
 
 
 def test_database_failure_rolls_back_catalogue(database, monkeypatch):

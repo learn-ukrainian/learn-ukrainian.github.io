@@ -133,30 +133,6 @@ def test_module_mapping_uses_the_latest_header_on_a_page() -> None:
     assert module_count == 2
 
 
-def test_same_lemma_with_multiple_vesum_pos_values_is_ambiguous() -> None:
-    result = extractor.extract_headword_inventory(
-        [extractor.PageText(1, "1 мати\n")], vesum_lookup=_fake_vesum
-    )
-    candidates = [
-        item for item in result.inventory["sources"][0]["headwords"] if item["lemma"] == "мати"
-    ]
-
-    assert [item["pos"] for item in candidates] == ["noun", "verb"]
-    assert all(item["ambiguous"] is True for item in candidates)
-    assert result.stats.ambiguous_forms == 1
-
-
-def test_running_lines_are_removed_before_tokenization() -> None:
-    cleaned = extractor.strip_running_lines(
-        "слово\n"
-        "Inspiring resources for learning Ukrainian — UkrainianLessons.com\n"
-        "Back to Contents\n"
-        "12\n"
-    )
-
-    assert cleaned == "слово"
-
-
 def test_output_order_is_deterministic() -> None:
     first = extractor.extract_headword_inventory(_synthetic_pages(), vesum_lookup=_fake_vesum)
     second = extractor.extract_headword_inventory(_synthetic_pages(), vesum_lookup=_fake_vesum)
@@ -230,27 +206,6 @@ def test_output_never_serializes_synthetic_canary_sentence() -> None:
         }
         for headword in source["headwords"]
     )
-
-
-def test_cli_dry_run_prints_report_without_writing(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    result = extractor.extract_headword_inventory(_synthetic_pages(), vesum_lookup=_fake_vesum)
-    monkeypatch.setattr(extractor, "extract_pdf_pages", lambda _: _synthetic_pages())
-    monkeypatch.setattr(extractor, "extract_headword_inventory", lambda _: result)
-    output = tmp_path / "inventory.yaml"
-
-    exit_code = extractor.main(
-        ["--pdf", str(tmp_path / "synthetic.pdf"), "--out", str(output), "--dry-run", "--report"]
-    )
-
-    assert exit_code == 0
-    assert not output.exists()
-    stdout = capsys.readouterr().out
-    assert "BEFORE pages_read=4 tokens_seen=10 unique_forms=8" in stdout
-    assert "AFTER lemmas_found=8" in stdout
-    assert "MODULE COVERAGE" in stdout
-    assert "DRY RUN: no output written" in stdout
 
 
 def test_cli_writes_inventory_and_optional_module_map(

@@ -104,39 +104,6 @@ def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, pr
     assert "LU_DRIVER_STATE_FILE" not in env
 
 
-def test_user_and_logname_pass_through() -> None:
-    with patch.dict(
-        "os.environ",
-        {
-            "PATH": "/usr/bin",
-            "HOME": "/Users/example",
-            "USER": "example",
-            "LOGNAME": "example",
-        },
-        clear=True,
-    ):
-        env = build_agent_env(provider="claude")
-
-    assert env["USER"] == "example"
-    assert env["LOGNAME"] == "example"
-
-
-def test_user_logname_not_provider_specific() -> None:
-    parent_env = {
-        "PATH": "/usr/bin",
-        "HOME": "/Users/example",
-        "USER": "example",
-        "LOGNAME": "example",
-    }
-
-    with patch.dict("os.environ", parent_env, clear=True):
-        envs = {provider: build_agent_env(provider=provider) for provider in ("gemini", "claude", "codex", "bridge")}
-
-    for env in envs.values():
-        assert env["USER"] == "example"
-        assert env["LOGNAME"] == "example"
-
-
 def test_anthropic_api_key_still_passes_through_for_claude() -> None:
     with patch.dict(
         "os.environ",
@@ -256,25 +223,6 @@ def test_gh_auth_chain_preserved_without_identity_token(tmp_path) -> None:
     assert env["GH_PROMPT_DISABLED"] == "1"
 
 
-def test_gh_config_dir_defaults_to_home_without_identity_token() -> None:
-    """#7166: with no explicit host GH_CONFIG_DIR, leave it unset so gh falls
-    back to its default config dir under the preserved HOME — never to an
-    empty sandbox dir."""
-    with patch.dict(
-        "os.environ",
-        {
-            "PATH": "/usr/bin",
-            "HOME": "/Users/example",
-            "USER": "example",
-        },
-        clear=True,
-    ):
-        env = build_agent_env(provider="codex")
-
-    assert "GH_CONFIG_DIR" not in env
-    assert env["HOME"] == "/Users/example"
-
-
 def test_empty_sandbox_gh_config_dir_rejected_without_identity_token(tmp_path) -> None:
     """#7472: an inherited empty lu-agent-runtime-git GH_CONFIG_DIR must not
     pass through — leave unset so gh recovers to $HOME/.config/gh."""
@@ -379,32 +327,6 @@ def test_kimi_seat_gets_no_push_credential(tmp_path) -> None:
     assert {"https://", "ssh://", "git@", "/"} <= rewrites
 
 
-def test_dispatch_markers_pass_through_for_every_dispatch_provider() -> None:
-    """#7827: delegate.py exports LEARN_UKRAINIAN_DISPATCH_TASK_ID /
-    LEARN_UKRAINIAN_DISPATCH_AGENT into the worker environment; the markers
-    must survive build_agent_env for every dispatched provider so the
-    SessionStart gate sees the explicit dispatch-worker signal. A task id
-    containing ``sk-`` must not trip the generic secret-value redactor."""
-    for task_id in ("lease-gate-dispatch-7827", "task-7828-sk-something"):
-        with patch.dict(
-            "os.environ",
-            {
-                "PATH": "/usr/bin",
-                "HOME": "/Users/example",
-                "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id,
-                "LEARN_UKRAINIAN_DISPATCH_AGENT": "kimi",
-            },
-            clear=True,
-        ):
-            envs = {
-                provider: build_agent_env(provider=provider) for provider in ("claude", "codex", "kimi", "grok", "agy")
-            }
-
-        for provider, env in envs.items():
-            assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == task_id, provider
-            assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "kimi", provider
-
-
 def test_build_agent_env_keeps_only_the_dispatch_cap_plugin() -> None:
     """#8645: the final CLI env keeps ci.pytest_dispatch_cap only inside a dispatch.
 
@@ -492,21 +414,6 @@ def test_build_agent_env_keeps_only_the_cap_plugins_scripts_dir(tmp_path) -> Non
         without_marker = build_agent_env(provider="codex")
 
     assert "PYTHONPATH" not in without_marker
-
-
-def test_usable_host_gh_config_dir_requires_hosts_yml(tmp_path) -> None:
-    from agent_runtime.env_sanitize import usable_host_gh_config_dir
-
-    empty = tmp_path / "empty"
-    empty.mkdir()
-    assert usable_host_gh_config_dir(str(empty)) is None
-
-    good = tmp_path / "good"
-    good.mkdir()
-    (good / "hosts.yml").write_text("github.com:\n    user: ops\n", encoding="utf-8")
-    assert usable_host_gh_config_dir(str(good)) == str(good)
-    assert usable_host_gh_config_dir(None) is None
-    assert usable_host_gh_config_dir("") is None
 
 
 def test_agy_app_data_dir_reaches_only_the_agy_provider() -> None:

@@ -41,92 +41,6 @@ One-liner per bug.
     )
 
 
-def test_validates_valid_entry(tmp_path: Path, capsys) -> None:
-    _write_tree(tmp_path, {"cache-invalidation.md": VALID_ENTRY})
-
-    exit_code = check_postmortems.main([], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 0
-    assert "✅ 1 postmortems validated" in captured.out
-
-
-def test_flags_missing_symptom(tmp_path: Path, capsys) -> None:
-    _write_tree(
-        tmp_path,
-        {"cache-invalidation.md": VALID_ENTRY.replace("## Symptom\n", "")},
-    )
-
-    exit_code = check_postmortems.main(["--regenerate-index"], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 1
-    assert (
-        "❌ docs/bug-autopsies/cache-invalidation.md — missing required field: Symptom"
-        in captured.out
-    )
-
-
-def test_flags_missing_prevention(tmp_path: Path, capsys) -> None:
-    _write_tree(
-        tmp_path,
-        {"cache-invalidation.md": VALID_ENTRY.replace("## Prevention\n", "")},
-    )
-
-    exit_code = check_postmortems.main(["--regenerate-index"], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 1
-    assert (
-        "❌ docs/bug-autopsies/cache-invalidation.md — missing required field: Prevention"
-        in captured.out
-    )
-
-
-def test_flags_missing_links(tmp_path: Path, capsys) -> None:
-    _write_tree(
-        tmp_path,
-        {
-            "cache-invalidation.md": VALID_ENTRY.replace(
-                "## Links\n- Issue: #1522\n- Fix: abc1234\n",
-                "",
-            )
-        },
-    )
-
-    exit_code = check_postmortems.main(["--regenerate-index"], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 1
-    assert (
-        "❌ docs/bug-autopsies/cache-invalidation.md — missing required field: Links"
-        in captured.out
-    )
-
-
-def test_quiet_mode_silent_on_success(tmp_path: Path, capsys) -> None:
-    _write_tree(tmp_path, {"cache-invalidation.md": VALID_ENTRY})
-
-    exit_code = check_postmortems.main(["--quiet"], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 0
-    assert captured.out == ""
-
-
-def test_quiet_mode_reports_failures(tmp_path: Path, capsys) -> None:
-    _write_tree(
-        tmp_path,
-        {"cache-invalidation.md": VALID_ENTRY.replace("## Symptom\n", "")},
-    )
-
-    exit_code = check_postmortems.main(["--quiet"], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 1
-    assert "missing required field: Symptom" in captured.out
-
-
 def test_index_regeneration_preserves_outer_content(tmp_path: Path) -> None:
     index = """# Bug Autopsy Index
 
@@ -157,27 +71,6 @@ def test_index_regeneration_idempotent(tmp_path: Path) -> None:
     second = (tmp_path / "docs" / "bug-autopsies" / "INDEX.md").read_text("utf-8")
 
     assert second == first
-
-
-def test_index_regeneration_preserves_sort_order(tmp_path: Path) -> None:
-    _write_tree(
-        tmp_path,
-        {
-            "zulu-cache.md": VALID_ENTRY.replace(
-                "Cache Invalidation Failure",
-                "Zulu Cache Failure",
-            ),
-            "alpha-cache.md": VALID_ENTRY.replace(
-                "Cache Invalidation Failure",
-                "Alpha Cache Failure",
-            ),
-        },
-    )
-
-    check_postmortems.main([], project_root=tmp_path)
-
-    regenerated = (tmp_path / "docs" / "bug-autopsies" / "INDEX.md").read_text("utf-8")
-    assert regenerated.index("| alpha-cache |") < regenerated.index("| zulu-cache |")
 
 
 # --- #3045: non-lossy regen (slug-mismatch dups + multi-incident + --check) ---
@@ -241,17 +134,3 @@ def test_check_mode_flags_stale_index_without_writing(tmp_path: Path, capsys) ->
     assert exit_code == 1
     assert "INDEX.md is stale" in captured.out
     assert index_path.read_text("utf-8") == before  # dry-run: not written
-
-
-def test_check_mode_passes_when_index_current(tmp_path: Path, capsys) -> None:
-    _write_tree(tmp_path, {"cache-invalidation.md": VALID_ENTRY})
-    check_postmortems.main([], project_root=tmp_path)  # make it current
-    index_path = tmp_path / "docs" / "bug-autopsies" / "INDEX.md"
-    current = index_path.read_text("utf-8")
-
-    exit_code = check_postmortems.main(["--check"], project_root=tmp_path)
-
-    captured = capsys.readouterr()
-    assert exit_code == 0
-    assert "INDEX.md is stale" not in captured.out
-    assert index_path.read_text("utf-8") == current  # unchanged

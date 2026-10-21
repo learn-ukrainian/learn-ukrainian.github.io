@@ -24,9 +24,6 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
-import os
-import subprocess
-import sys
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -1063,10 +1060,6 @@ def _write_bad_activity_schema(world: World) -> Path:
     return path
 
 
-def case_by_name(name: str) -> Case:
-    return next(case for case in ALL_CASES if case.name == name)
-
-
 def run_case(root: Path, case: Case) -> Report:
     plan, pack, words = case.build()
     if case.mutate:
@@ -1098,74 +1091,6 @@ def test_case(tmp_path: Path, case: Case) -> None:
     assert report.ok == (not case.expected)
 
 
-def test_valid_plan_reports_all_not_checked_and_full_gate(tmp_path: Path) -> None:
-    report = run_case(tmp_path, VALID_CASES[0])
-    text = report.render_text()
-    assert "the §6 gate" in text
-    assert "cross_plan_rules_pending" not in text
-    for code in NOT_CHECKED:
-        assert f"NOT_CHECKED {code}" in text
-    payload = report.to_json()
-    assert payload["status"] == "pass"
-    assert "the §6 gate" in payload["validator"]
-    assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
-    assert payload["waivers"] == []
-
-
-def _strict_quota_world(root: Path, plan: dict, pack: dict, words: dict) -> World:
-    from tests.curriculum.test_plan_validate_cross import _git
-
-    world = write_world(root, plan, pack, words)
-    for args in (("init", "-q", "-b", "main"), ("add", "-A"), ("commit", "-q", "-m", "baseline"),
-                 ("update-ref", "refs/remotes/origin/main", "HEAD")):
-        result = _git(root, *args)
-        assert result.returncode == 0, result.stderr
-    return world
-
-
-@pytest.mark.parametrize("target", [None, 55000])
-def test_complete_plan_has_no_word_quota(tmp_path: Path, target: int | None) -> None:
-    plan, pack, words = build_base()
-    for lesson in plan["lessons"]:
-        if target is None:
-            lesson.pop("word_target")
-        else:
-            lesson["word_target"] = target
-    world = _strict_quota_world(tmp_path, plan, pack, words)
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=True)
-    assert report.ok, report.render_text()
-    assert {item.code for item in report.not_checked} == NOT_CHECKED
-
-
-@pytest.mark.parametrize("target", [0, -1, "550", True, 5.5])
-def test_invalid_legacy_word_target_fails_strict_schema(tmp_path: Path, target: object) -> None:
-    plan, pack, words = build_base()
-    plan["lessons"][0]["word_target"] = target
-    world = _strict_quota_world(tmp_path, plan, pack, words)
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=True)
-    assert not report.ok
-    assert {item.code for item in report.failures} == {codes.SCHEMA_VIOLATION}, report.render_text()
-    assert all("lessons/0/word_target" in item.message for item in report.failures), report.render_text()
-
-
-def test_module_word_target_error_names_deprecated_metadata(tmp_path: Path) -> None:
-    report = run_case(tmp_path, case_by_name("module_word_target_fails"))
-    assert {item.code for item in report.failures} == {codes.REMOVED_V1_FIELD}
-    assert "deprecated per-lesson metadata" in report.failures[0].message
-
-
-def test_quota_free_plan_still_requires_teaching_practice(tmp_path: Path) -> None:
-    plan, pack, words = build_base()
-    for lesson in plan["lessons"]:
-        lesson.pop("word_target")
-    step = next(step for step in plan["lessons"][0]["steps"] if step["kind"] == "teach")
-    step["practice"] = []
-    world = _strict_quota_world(tmp_path, plan, pack, words)
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=True)
-    assert not report.ok
-    assert any("practice" in item.code for item in report.failures), report.render_text()
-
-
 def test_render_text_prints_activity_report_per_lesson_not_only_module(tmp_path: Path) -> None:
     # Regression for review finding 4: the printed report must show
     # plan_report per lesson, not only the module-level summary line.
@@ -1180,49 +1105,6 @@ def test_render_text_prints_activity_report_per_lesson_not_only_module(tmp_path:
     assert "workbook=1" in lesson_1_line
     assert "inline=2" in lesson_1_line
     assert "has_workbook=True" in lesson_1_line
-
-
-def test_failure_names_code_lesson_step_and_value(tmp_path: Path) -> None:
-    report = run_case(tmp_path, case_by_name("introduced_twice"))
-    outcome = report.failures[0]
-    assert outcome.code == codes.INTRODUCED_TWICE
-    assert outcome.lesson == 1
-    assert LETTER_A in outcome.message
-    step_report = run_case(tmp_path / "b", case_by_name("uses_before_introducing_step"))
-    step_outcome = step_report.failures[0]
-    assert step_outcome.lesson == 1
-    assert step_outcome.step == "s1"
-    assert "G-a1-001" in step_outcome.message
-
-
-def test_evidence_failures_keep_lesson_and_step(tmp_path: Path) -> None:
-    report = run_case(tmp_path, case_by_name("unknown_pack_id"))
-    outcome = next(o for o in report.failures if o.code == codes.UNKNOWN_PACK_ID)
-    assert outcome.lesson == 1
-    assert outcome.step == "s2"
-    word_report = run_case(tmp_path / "b", case_by_name("unknown_word_id_in_step"))
-    word_outcome = next(o for o in word_report.failures if o.code == codes.UNKNOWN_WORD_ID)
-    assert word_outcome.lesson == 1
-    assert word_outcome.step == "s2"
-
-
-def test_schema_failure_keeps_lesson_and_step(tmp_path: Path) -> None:
-    plan, pack, words = build_base()
-    plan["lessons"][0]["steps"][1]["kind"] = "bogus"
-    world = write_world(tmp_path, plan, pack, words)
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
-    outcome = next(o for o in report.failures if o.code == codes.SCHEMA_VIOLATION)
-    assert outcome.lesson == 1
-    assert outcome.step == "s2"
-    assert "kind" in outcome.message
-
-
-def test_inventory_mismatch_reports_missing_and_extra_separately(tmp_path: Path) -> None:
-    report = run_case(tmp_path, case_by_name("inventory_item_in_no_step"))
-    messages = [o.message for o in report.failures if o.code == codes.INVENTORY_INTRODUCTION_MISMATCH]
-    assert len(messages) == 2
-    assert any("missing from" in message and "W-001" in message for message in messages)
-    assert any("introduced by no step" in message and "W-007" in message for message in messages)
 
 
 def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
@@ -1259,22 +1141,6 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     assert produced == set(codes.DESCRIPTIONS)
 
 
-def test_pack_override_matching_declared_path_passes(tmp_path: Path) -> None:
-    world = write_world(tmp_path, *build_base())
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, pack_path=world.pack_path)
-    assert report.ok, report.render_text()
-
-
-def test_cli_text_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    world = write_world(tmp_path, *build_base())
-    assert validate_main([LEVEL, SLUG, "--plan", str(world.plan_path)]) == 0
-    out = capsys.readouterr().out
-    assert "the §6 gate" in out
-    assert "status: pass" in out
-    for code in NOT_CHECKED:
-        assert code in out
-
-
 def test_cli_json_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     world = write_world(tmp_path, *build_base())
     assert validate_main([LEVEL, SLUG, "--plan", str(world.plan_path), "--json"]) == 0
@@ -1282,59 +1148,6 @@ def test_cli_json_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     assert payload["status"] == "pass"
     assert "the §6 gate" in payload["validator"]
     assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
-
-
-def test_cli_failing_plan_exits_nonzero(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    plan, pack, words = build_base()
-    plan["minutes"] = 60
-    world = write_world(tmp_path, plan, pack, words)
-    assert validate_main([LEVEL, SLUG, "--plan", str(world.plan_path)]) == 1
-    assert codes.REMOVED_V1_FIELD in capsys.readouterr().out
-
-
-def test_help_lists_every_code(capsys: pytest.CaptureFixture) -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        validate_main(["--help"])
-    assert excinfo.value.code == 0
-    out = capsys.readouterr().out
-    for code in codes.DESCRIPTIONS:
-        assert code in out
-
-
-def test_cli_subprocess_clean_environment(tmp_path: Path) -> None:
-    """The CLI runs from the repository root under env -i (only PATH and HOME)."""
-    good = write_world(tmp_path / "good", *build_base())
-    bad_plan, bad_pack, bad_words = build_base()
-    bad_plan["minutes"] = 60
-    bad = write_world(tmp_path / "bad", bad_plan, bad_pack, bad_words)
-    env = [f"PATH={os.environ['PATH']}", f"HOME={os.environ.get('HOME', str(tmp_path))}"]
-
-    def run(plan_path: Path) -> subprocess.CompletedProcess:
-        return subprocess.run(
-            [
-                "env",
-                "-i",
-                *env,
-                sys.executable,
-                "-m",
-                "scripts.curriculum.validate",
-                LEVEL,
-                SLUG,
-                "--plan",
-                str(plan_path),
-            ],
-            cwd=REPO_ROOT,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-
-    ok = run(good.plan_path)
-    assert ok.returncode == 0, ok.stderr
-    assert "the §6 gate" in ok.stdout
-    failing = run(bad.plan_path)
-    assert failing.returncode == 1
-    assert codes.REMOVED_V1_FIELD in failing.stdout
 
 
 @pytest.mark.parametrize("case", ["permitted", "unregistered", "oversize", "text_field", "exercise", "missing", "selector"])

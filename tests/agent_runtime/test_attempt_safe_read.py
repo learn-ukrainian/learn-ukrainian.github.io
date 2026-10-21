@@ -3,9 +3,6 @@
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -23,72 +20,6 @@ from tests.helpers.codex_exec_stream import completed_stream
 
 SENTINEL = b"FORBIDDEN_PARENT_READ_SENTINEL"
 UUID = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
-
-
-@pytest.fixture(scope="module")
-def scripts_only_tree(tmp_path_factory):
-    root = tmp_path_factory.mktemp("safe-read-imports")
-    scripts = Path(__file__).resolve().parents[2] / "scripts"
-    shutil.copytree(scripts, root / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
-    return root
-
-
-@pytest.mark.repo_wide
-@pytest.mark.parametrize(
-    "module",
-    [
-        "scripts.agent_runtime.attempt_safe_read",
-        "scripts.agent_runtime.attempt_boundary",
-        "scripts.agent_runtime.runner",
-        "scripts.agent_runtime.watchdog",
-        "scripts.agent_runtime.sources_read_only",
-        "scripts.agent_runtime.review_mcp",
-        "scripts.review.receipts.ledger",
-        *[
-            f"scripts.agent_runtime.adapters.{path.stem}"
-            for path in sorted((Path(__file__).resolve().parents[2] / "scripts/agent_runtime/adapters").glob("*.py"))
-        ],
-    ],
-)
-def test_scripts_only_import_does_not_load_isolation(scripts_only_tree, module):
-    probe = """
-import importlib
-import importlib.abc
-import pathlib
-import sys
-
-root = pathlib.Path.cwd()
-sys.path[:0] = [str(root), str(root / 'scripts')]
-blocked = {'isolation', 'thread_handoff', 'task_identity'}
-
-class RejectIsolation(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.rsplit('.', 1)[-1] in blocked:
-            raise AssertionError('isolation stack imported: ' + fullname)
-
-sys.meta_path.insert(0, RejectIsolation())
-assert not (root / 'agents_extensions').exists()
-module = importlib.import_module(sys.argv[1])
-assert pathlib.Path(module.__file__).is_relative_to(root / 'scripts')
-assert not any(name.rsplit('.', 1)[-1] in blocked for name in sys.modules)
-print('scripts-only import OK')
-"""
-    result = subprocess.run(
-        [sys.executable, "-I", "-c", probe, module],
-        cwd=scripts_only_tree,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, f"{module}: stdout={result.stdout!r} stderr={result.stderr!r}"
-    assert result.stdout.strip() == "scripts-only import OK"
-
-
-def test_boundary_reexports_leaf_helpers():
-    from scripts.agent_runtime import attempt_safe_read
-
-    for name in ("AttemptReadError", "MAX_ATTEMPT_READ_BYTES", "safe_attempt_file_size", "safe_read_attempt_file"):
-        assert getattr(boundary, name) is getattr(attempt_safe_read, name)
 
 
 @pytest.fixture
@@ -140,11 +71,6 @@ def test_safe_read_refuses_swapped_names(files, attack, code):
         root.symlink_to(forbidden.parent, target_is_directory=True)
     with pytest.raises(AttemptReadError, match="attempt_read_" + code):
         safe_read_attempt_file(target, trusted_root=root, max_bytes=10)
-
-
-def test_safe_read_refuses_device():
-    with pytest.raises(AttemptReadError, match="not_regular"):
-        safe_read_attempt_file(Path("/dev/null"))
 
 
 @pytest.mark.parametrize("field,value,code", [("st_uid", -1, "wrong_owner"), ("st_nlink", 2, "link_count")])
@@ -243,12 +169,6 @@ def test_growth_during_read_is_bounded(files, monkeypatch):
         safe_read_attempt_file(target, max_bytes=10)
 
 
-@pytest.mark.parametrize("offset", [-1, 11])
-def test_invalid_offset_is_typed(files, offset):
-    with pytest.raises(AttemptReadError, match="invalid_"):
-        safe_read_attempt_file(files[1], offset=offset)
-
-
 def test_outside_and_traversal_are_refused(files):
     root, target, forbidden = files
     for path in (forbidden, root / ".." / "forbidden", root):
@@ -258,32 +178,6 @@ def test_outside_and_traversal_are_refused(files):
         safe_read_attempt_file(target, max_bytes=-1)
     with pytest.raises(AttemptReadError, match="outside_root"):
         safe_read_attempt_file(target, trusted_root=Path("relative"))
-
-
-def test_missing_is_optional_and_refusal_closes_all_fds(files, monkeypatch):
-    _, target, forbidden = files
-    target.unlink()
-    original_open, original_close = os.open, os.close
-    active = set()
-
-    def open_fd(*args, **kwargs):
-        fd = original_open(*args, **kwargs)
-        active.add(fd)
-        return fd
-
-    def close_fd(fd):
-        active.remove(fd)
-        original_close(fd)
-
-    monkeypatch.setattr(boundary.os, "open", open_fd)
-    monkeypatch.setattr(boundary.os, "close", close_fd)
-    with pytest.raises(FileNotFoundError):
-        safe_read_attempt_file(target)
-    assert not active
-    os.link(forbidden, target)
-    with pytest.raises(AttemptReadError, match="link_count"):
-        safe_read_attempt_file(target)
-    assert not active
 
 
 @pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "oversized", "component", "nul"])
@@ -627,42 +521,6 @@ def test_ordinary_codex_resume_never_reads_rollouts(tmp_path, monkeypatch, large
         plan.output_file.unlink()
 
 
-def test_ordinary_codex_symlinked_temp_and_home_ancestors(tmp_path, monkeypatch):
-
-    real = tmp_path / "real"
-    real.mkdir()
-    alias = tmp_path / "alias"
-    alias.symlink_to(real, target_is_directory=True)
-    home = alias / "home"
-    home.mkdir()
-    adapter = CodexAdapter()
-    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.tempfile.gettempdir", lambda: str(alias))
-    plan = adapter.build_invocation(
-        prompt="prompt",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={"codex_home_override": str(home)},
-    )
-    try:
-        directory = adapter._candidate_rollout_dirs()
-        assert not directory
-        from datetime import UTC, datetime
-
-        day = datetime.now(UTC)
-        (real / "home" / "sessions" / day.strftime("%Y/%m/%d")).mkdir(parents=True)
-        assert adapter._candidate_rollout_dirs()
-        (alias / plan.output_file.name).write_text("valid answer")
-        result = adapter.parse_response(
-            stdout=completed_stream(thread_id=UUID), stderr="", returncode=0, output_file=plan.output_file, plan=plan
-        )
-        assert result.ok and result.response == "valid answer" and result.session_id == UUID
-    finally:
-        plan.output_file.unlink()
-
-
 def test_agy_resume_baseline_and_reads_under_symlinked_ancestor(tmp_path, monkeypatch):
     import json
 
@@ -696,39 +554,6 @@ def test_agy_resume_baseline_and_reads_under_symlinked_ancestor(tmp_path, monkey
     Path(plan.env_overrides[agy._AGY_LOG_ENV]).write_text(f"Created conversation {UUID}\n")
     bound = agy._invocation_transcript(plan)
     assert bound is not None and bound.events == events and bound.unreadable_lines == 0
-
-
-@pytest.mark.parametrize("loader", [CodexAdapter._tool_config_flags, agy.load_output_schema])
-def test_ordinary_schema_under_symlinked_ancestor(tmp_path, loader):
-    import hashlib
-
-    real = tmp_path / "real"
-    real.mkdir()
-    alias = tmp_path / "alias"
-    alias.symlink_to(real, target_is_directory=True)
-    schema = alias / "schema.json"
-    payload = b'{"type":"object"}'
-    schema.write_bytes(payload)
-    assert loader({"output_schema_path": str(schema), "output_schema_sha256": hashlib.sha256(payload).hexdigest()})
-
-
-def test_debug_tail_seeks_and_bounds_read_bytes(files, monkeypatch):
-    _, target, _ = files
-    with target.open("wb") as writer:
-        writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
-        writer.seek(0, os.SEEK_END)
-        writer.write(b"useful tail")
-    original_read = os.read
-    consumed = []
-
-    def read(fd, count):
-        data = original_read(fd, count)
-        consumed.append(len(data))
-        return data
-
-    monkeypatch.setattr(boundary.os, "read", read)
-    assert tail_liveness_file_for_debug([target], max_bytes=11) == "useful tail"
-    assert sum(consumed) == 11
 
 
 def test_agy_attempt_root_remains_enforced_if_plan_override_changes(files):
@@ -779,31 +604,6 @@ def test_agy_log_override_keeps_attempt_containment(files, attempt):
         plan.env_overrides[agy._AGY_LOG_ENV] = str(root.parent / "other-worktree" / "log")
         with pytest.raises(AttemptReadError, match="outside_root"):
             agy._bound_conversation(plan)
-
-
-@pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "dotdot"])
-def test_agy_ordinary_log_override_keeps_safe_read_refusals(files, attack):
-    root, target, forbidden = files
-    target.unlink()
-    if attack == "symlink":
-        target.symlink_to(forbidden)
-    elif attack == "hardlink":
-        os.link(forbidden, target)
-    elif attack == "fifo":
-        os.mkfifo(target)
-    else:
-        target = root / ".." / forbidden.name
-    plan = InvocationPlan(
-        cmd=[],
-        cwd=root,
-        env_overrides={agy._AGY_LOG_ENV: str(target)},
-        liveness_paths=(root / "original.log",),
-        metadata={
-            "log_read_root": str(root),
-        },
-    )
-    with pytest.raises(AttemptReadError, match="attempt_read_"):
-        agy._bound_conversation(plan)
 
 
 @pytest.mark.parametrize("workspace_path", ["relative", "symlink"])

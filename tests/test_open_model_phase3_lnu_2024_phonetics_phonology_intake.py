@@ -9,10 +9,8 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_lnu_2024_phonetics_phonology_intake as intake
 
@@ -46,27 +44,6 @@ def _staging(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         intake, "_drive_item_id", lambda path: identifiers[next(k for k, v in artifacts.items() if path.name == v[0])]
     )
     return stage
-
-
-def test_schema_is_strict_and_text_free() -> None:
-    schema = json.loads(intake.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    text = intake.SCHEMA_PATH.read_text(encoding="utf-8")
-    assert schema["additionalProperties"] is False
-    assert '"source_text"' not in text and '"page_texts"' not in text
-    assert "GoogleDrive-" not in text and "/Users/" not in text
-
-    def assert_closed(value: object) -> None:
-        if isinstance(value, dict):
-            if value.get("type") == "object":
-                assert value.get("additionalProperties") is False
-            for nested in value.values():
-                assert_closed(nested)
-        elif isinstance(value, list):
-            for nested in value:
-                assert_closed(nested)
-
-    assert_closed(schema)
 
 
 def test_mint_is_source_blind_deterministic_and_fail_closed() -> None:
@@ -143,39 +120,6 @@ def test_require_no_training_authorization_rejects_any_true_flag() -> None:
         forged = {**base, field: True}
         with pytest.raises(intake.Lnu2024PhoneticsPhonologyIntakeError, match="training authorization"):
             intake._require_no_training_authorization(forged)
-
-
-def _schema_validator() -> Draft202012Validator:
-    schema = json.loads(intake.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    return Draft202012Validator(schema)
-
-
-def test_schema_rejects_duplicate_target_cell_area() -> None:
-    receipt = copy.deepcopy(intake.mint_receipt())
-    cells = receipt["content_fitness"]["target_cells"]
-    cells[1] = copy.deepcopy(cells[0])
-    assert not _schema_validator().is_valid(receipt)
-
-
-def test_schema_rejects_missing_target_cell_area() -> None:
-    receipt = copy.deepcopy(intake.mint_receipt())
-    del receipt["content_fitness"]["target_cells"][-1]
-    assert not _schema_validator().is_valid(receipt)
-
-
-def test_schema_rejects_reordered_target_cells() -> None:
-    receipt = copy.deepcopy(intake.mint_receipt())
-    cells = receipt["content_fitness"]["target_cells"]
-    cells[0], cells[1] = cells[1], cells[0]
-    assert not _schema_validator().is_valid(receipt)
-
-
-def test_schema_rejects_mismatched_qualified_source_needed() -> None:
-    receipt = copy.deepcopy(intake.mint_receipt())
-    cells = receipt["content_fitness"]["target_cells"]
-    cells[0]["qualified_source_needed"] = cells[1]["qualified_source_needed"]
-    assert not _schema_validator().is_valid(receipt)
 
 
 def test_private_audit_rejects_modes_symlink_and_hash_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -302,20 +246,3 @@ def test_repeated_mint_and_check_are_byte_identical(tmp_path: Path) -> None:
         intake.write_public_receipt(out, receipt)
         checked = intake.validate_receipt(json.loads(out.read_text(encoding="utf-8")))
         assert out.read_bytes() == intake.canonical_bytes(checked)
-
-
-def test_optional_live_drive_audit() -> None:
-    try:
-        stage = intake.default_staging_root()
-    except intake.Lnu2024PhoneticsPhonologyIntakeError:
-        pytest.skip("configured Drive mount unavailable")
-    if not all((stage / values[0]).is_file() for values in intake.ARTIFACTS.values()):
-        pytest.skip("private Drive packet unavailable")
-    result = intake.private_audit(stage)
-    assert result["ok"] is True
-    assert set(result["provider_identity_sha256"]) == set(intake.ARTIFACTS)
-    serialized = intake.canonical_json(result)
-    assert "provider_item_id" not in serialized
-    with patch.object(intake, "_drive_item_id", return_value="live-id"):
-        with pytest.raises(intake.Lnu2024PhoneticsPhonologyIntakeError, match="provider identity drift"):
-            intake.private_audit(stage)

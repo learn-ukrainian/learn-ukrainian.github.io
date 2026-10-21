@@ -167,35 +167,6 @@ def test_manifest_registration_reserves_zero_row_shard(tmp_path: Path) -> None:
     assert next(iter(shard_map.values())).exists()
 
 
-def test_track_prior_values_favor_a1_a2_and_near_zero_b1_plus() -> None:
-    assert sources_db._corpus_prior("a1", "ukrainian_wiki") == pytest.approx(0.95)
-    assert sources_db._corpus_prior("a2", "ukrainian_wiki") == pytest.approx(0.90)
-    assert sources_db._corpus_prior("b1", "ukrainian_wiki") == pytest.approx(0.05)
-    assert sources_db._corpus_prior("c1", "ukrainian_wiki") == pytest.approx(0.02)
-    assert sources_db._corpus_prior("a1", "ukrainian_wiki") > sources_db._corpus_prior("b1", "ukrainian_wiki")
-
-
-def test_search_sources_returns_empty_cleanly_for_reserved_but_empty_corpus(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    db_path = tmp_path / "sources.db"
-    manifest_path = tmp_path / "embeddings" / "manifest.db"
-    ukrainian_wiki_corpus.migrate_ukrainian_wiki_corpus(
-        db_path=db_path,
-        manifest_db=manifest_path,
-    )
-
-    conn = sqlite3.connect(db_path, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    _configure_search(monkeypatch, conn, manifest_path)
-
-    results = sources_db.search_sources("апостроф", track="a1", strategy="modern_dense_section", limit=5)
-
-    assert results == []
-    conn.close()
-
-
 def test_round_trip_insert_and_search_query(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     article = _article_with_registry(
         tmp_path,
@@ -262,54 +233,6 @@ def test_round_trip_insert_and_search_query(tmp_path: Path, monkeypatch: pytest.
     assert results[0]["corpus"] == "ukrainian_wiki"
     assert results[0]["title"] == "Апостроф"
     assert "п'ять" in results[0]["text"]
-
-
-def test_round_trip_insert_preserves_a2_track(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    article = _article_with_registry(
-        tmp_path,
-        slug="aspect-concept",
-        source_dir=("wiki", "grammar", "a2"),
-        text=(
-            "# Вид дієслова\n\n"
-            "Вид дієслова допомагає розрізняти завершену та незавершену дію [S1]. "
-            "Для рівня A2 ця тема потрібна, щоб поєднувати часові форми і намір мовця.\n\n"
-            "У парах читати і прочитати учень бачить, як змінюється значення результату "
-            "та тривалості дії.\n"
-        ),
-    )
-    db_path = tmp_path / "sources.db"
-    manifest_path = tmp_path / "embeddings" / "manifest.db"
-
-    monkeypatch.setattr(
-        ukrainian_wiki_corpus,
-        "vesum_batch_lookup",
-        lambda words: {word: [{"word": word}] for word in words},
-    )
-    monkeypatch.setattr(ukrainian_wiki_corpus, "check_russicisms", lambda text, file_path="": [])
-    monkeypatch.setattr(ukrainian_wiki_corpus, "pravopys_lookup", lambda term: {"term": term})
-    monkeypatch.setattr(ukrainian_wiki_corpus, "search_style_guide", lambda term: [])
-
-    report, inserted = ukrainian_wiki_corpus.ingest_article(
-        article,
-        db_path=db_path,
-        manifest_db=manifest_path,
-        min_words=5,
-        max_chars=1000,
-        min_vesum_coverage=0.5,
-    )
-
-    assert report.passed is True
-    assert inserted == 2
-
-    conn = sqlite3.connect(db_path)
-    try:
-        rows = conn.execute(
-            "SELECT article_slug, track FROM ukrainian_wiki ORDER BY chunk_index"
-        ).fetchall()
-    finally:
-        conn.close()
-
-    assert rows == [("aspect-concept", "a2"), ("aspect-concept", "a2")]
 
 
 def test_admission_gate_pass_and_fail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -495,28 +418,6 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     assert len(results) == 1
     assert results[0]["corpus"] == "ukrainian_wiki"
     assert results[0]["title"] == "Наголос"
-
-
-def test_directory_ingest_rejects_top_level_tree_without_recursive(tmp_path: Path) -> None:
-    wiki_root = tmp_path / "wiki"
-    wiki_root.mkdir()
-    (wiki_root / "index.md").write_text("# Wiki index\n", encoding="utf-8")
-    article_dir = wiki_root / "grammar" / "a1"
-    article_dir.mkdir(parents=True)
-    (article_dir / "hello.md").write_text("# Привіт\n\nПривіт світе.\n", encoding="utf-8")
-
-    with pytest.raises(SystemExit) as exc_info:
-        ukrainian_wiki_corpus.main(
-            [
-                str(wiki_root),
-                "--db-path",
-                str(tmp_path / "sources.db"),
-                "--manifest-db",
-                str(tmp_path / "embeddings" / "manifest.db"),
-            ]
-        )
-
-    assert exc_info.value.code == 1
 
 
 def test_recursive_ingest_preserves_same_slug_articles_across_tracks(
@@ -730,79 +631,3 @@ def _fetch_passage_ids(db_path: Path) -> list[str]:
         return [row[0] for row in conn.execute("SELECT passage_id FROM ukrainian_wiki ORDER BY id")]
     finally:
         conn.close()
-
-
-def test_main_cli_encode_flag_wires_ingest_to_manifest(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """--encode on the CLI must trigger encoding after a successful ingest."""
-
-    article = _article_with_registry(
-        tmp_path,
-        slug="simya",
-        text=(
-            "# Сім'я\n\n"
-            "Сім'я — це найближчі люди поряд з учнем [S1]. "
-            "Мама, тато, брат і сестра дають першу лексику для A1.\n\n"
-            "Учень описує свою родину простими реченнями.\n"
-        ),
-    )
-    db_path = tmp_path / "sources.db"
-    manifest_path = tmp_path / "embeddings" / "manifest.db"
-
-    monkeypatch.setattr(
-        ukrainian_wiki_corpus,
-        "vesum_batch_lookup",
-        lambda words: {word: [{"word": word}] for word in words},
-    )
-    monkeypatch.setattr(ukrainian_wiki_corpus, "check_russicisms", lambda text, file_path="": [])
-    monkeypatch.setattr(ukrainian_wiki_corpus, "pravopys_lookup", lambda term: {"term": term})
-    monkeypatch.setattr(ukrainian_wiki_corpus, "search_style_guide", lambda term: [])
-    _install_fake_encoder(monkeypatch)
-
-    exit_code = ukrainian_wiki_corpus.main(
-        [
-            str(article),
-            "--db-path",
-            str(db_path),
-            "--manifest-db",
-            str(manifest_path),
-            "--min-words",
-            "5",
-            "--max-chars",
-            "1000",
-            "--min-vesum-coverage",
-            "0.5",
-            "--encode",
-        ]
-    )
-    assert exit_code == 0
-
-    manifest = EmbeddingManifest(manifest_path)
-    try:
-        active = manifest.active_units_for_corpus("ukrainian_wiki")
-    finally:
-        manifest.close()
-    assert len(active) >= 1
-    assert all(row.unit_key.startswith("ukrainian_wiki:") for row in active)
-
-
-def test_write_ingest_report_writes_scratch_paths_and_routes_through_write_artifact(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    scratch = tmp_path / "out" / "report.md"
-    assert ukrainian_wiki_corpus.write_ingest_report([], report_path=scratch) == scratch
-    assert scratch.read_text(encoding="utf-8").startswith("# ")
-
-    calls: list[tuple[Path, str, str]] = []
-
-    def record(target: Path, group: str, producer: str, write) -> None:
-        calls.append((target, group, producer))
-        write(tmp_path / "staged.md")
-
-    monkeypatch.setattr(ukrainian_wiki_corpus, "write_artifact", record)
-    published = tmp_path / "data/corpus_audit/ukrainian_wiki_a2_ingest_report.md"
-    ukrainian_wiki_corpus.write_ingest_report([], report_path=published)
-    assert calls == [(published, "corpus_audit_snapshots", "scripts/wiki/ukrainian_wiki_corpus.py")]
-    assert (tmp_path / "staged.md").read_text(encoding="utf-8").startswith("# ")

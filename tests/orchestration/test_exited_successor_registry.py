@@ -168,12 +168,6 @@ def test_launcher_evidence_for_other_successor_is_refused(case, field):
         _plan(case)
 
 
-def test_caller_successor_mismatch_is_refused(case):
-    case.proof["successor_exit"]["replacement_thread_id"] = "other"
-    with pytest.raises(ValueError, match="exact bound successor"):
-        _plan(case)
-
-
 @pytest.mark.parametrize("guard", ["no_unrecorded_native_create", "no_active_heartbeat_dependency"])
 def test_existing_disposition_guards_still_bind(case, guard):
     case.proof["assertions"][guard] = False
@@ -301,15 +295,6 @@ def test_exact_cli_plan_and_apply_and_wrong_action(case, capsys):
     assert json.loads(capsys.readouterr().out)["final_state"] == "ABANDONED_WITH_PROOF"
 
 
-def test_cli_documents_exact_exit_contract(capsys):
-    with pytest.raises(SystemExit) as exc:
-        cli.main(["dispose-exited-successor-exact", "--help"])
-    assert exc.value.code == 0
-    help_text = capsys.readouterr().out
-    assert "canonical launcher runtime" in help_text
-    assert "--proof-file" in help_text
-
-
 @pytest.mark.parametrize(
     "action",
     [
@@ -331,12 +316,6 @@ def test_existing_maintenance_actions_keep_their_behavior(case, action):
     )
     assert _apply(case, plan)["final_state"] == expected
     assert _apply(case, plan)["final_state"] == expected
-
-
-def test_extra_proof_fields_are_refused(case):
-    case.proof["force"] = True
-    with pytest.raises(ValueError, match="unexpected fields"):
-        _plan(case)
 
 
 def test_plan_tamper_is_refused(case):

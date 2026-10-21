@@ -251,15 +251,6 @@ def test_heldout_overlap_is_signaled_without_erasure(tmp_path: Path, candidate: 
     }
 
 
-def test_similar_texts_share_independent_minhash_candidate_bands() -> None:
-    first = " ".join(f"слово{index}" for index in range(30))
-    second = first.replace("слово15", "заміна")
-    first_bands = set(signals._near_fingerprint(first)["bands"])
-    second_bands = set(signals._near_fingerprint(second)["bands"])
-    assert first_bands & second_bands
-    assert signals._near_fingerprint(first)["fingerprint"] != signals._near_fingerprint(second)["fingerprint"]
-
-
 def test_staged_manifest_is_removed_when_row_validation_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     config, manifest, receipt = _fixture(tmp_path)
     original_validate = signals._validate

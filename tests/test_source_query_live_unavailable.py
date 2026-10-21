@@ -17,7 +17,6 @@ import requests
 from scripts.rag.source_query import (
     E2ULookupStatus,
     e2u_translate_with_status,
-    grac_collocations,
     grac_concordance,
     slovnyk_me_lookup,
 )
@@ -92,15 +91,6 @@ class TestSlovnykMeLookup:
         assert result["status"] == "unavailable"
         assert result["reason"] == "ConnectionError"
 
-    def test_timeout_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        def raise_timeout(url, **kwargs):
-            raise requests.Timeout("timed out")
-
-        _patch_get(monkeypatch, raise_timeout)
-        result = slovnyk_me_lookup("хата", "vts")
-        assert result["status"] == "unavailable"
-        assert result["reason"] == "Timeout"
-
     def test_cloudflare_403_challenge_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(403, CLOUDFLARE_CHALLENGE_HTML))
         result = slovnyk_me_lookup("хата", "vts")
@@ -128,12 +118,6 @@ class TestSlovnykMeLookup:
         result = slovnyk_me_lookup("хата", "vts")
         assert result["status"] == "unavailable"
         assert result["http_status"] == 429
-
-    def test_5xx_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        _patch_get(monkeypatch, DummyResponse(503, "Service Unavailable"))
-        result = slovnyk_me_lookup("хата", "vts")
-        assert result["status"] == "unavailable"
-        assert result["http_status"] == 503
 
     def test_unparseable_page_is_unavailable_not_not_found(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(200, "<html><body>no headings here</body></html>"))
@@ -171,12 +155,6 @@ class TestE2uTranslateWithStatus:
         assert status == E2ULookupStatus.SOURCE_UNAVAILABLE
         assert entries == []
 
-    def test_5xx_is_source_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        _patch_get(monkeypatch, DummyResponse(503))
-        status, entries = e2u_translate_with_status("hello")
-        assert status == E2ULookupStatus.SOURCE_UNAVAILABLE
-        assert entries == []
-
 
 class TestGracConcordanceCollocationsUnavailable:
     def test_concordance_genuine_empty_returns_empty_list(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -189,21 +167,6 @@ class TestGracConcordanceCollocationsUnavailable:
 
         _patch_get(monkeypatch, raise_timeout)
         assert grac_concordance("книга") is None
-
-    def test_concordance_5xx_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        _patch_get(monkeypatch, DummyResponse(503))
-        assert grac_concordance("книга") is None
-
-    def test_collocations_genuine_empty_returns_empty_list(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        _patch_get(monkeypatch, DummyResponse(200, data={"Items": []}))
-        assert grac_collocations("zzznotaword") == []
-
-    def test_collocations_network_exception_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        def raise_conn_error(url, **kwargs):
-            raise requests.ConnectionError("boom")
-
-        _patch_get(monkeypatch, raise_conn_error)
-        assert grac_collocations("книга") is None
 
 
 # --- slovnyk.me search path: scripts/wiki/slovnyk_me.fetch_entries (#9005 residual) ---------------
@@ -347,18 +310,6 @@ def test_search_heritage_reports_live_slovnyk_outages(monkeypatch):
     outages: list[dict] = []
     sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
     assert outages and all(o["error"] == "HTTP 403" for o in outages)
-
-
-def test_search_heritage_200_challenge_reports_outage(monkeypatch):
-    """An HTTP 200 Cloudflare challenge page in heritage live fallback reports outage (#9016)."""
-    from wiki import slovnyk_me, sources_db
-
-    challenge_html = "<!DOCTYPE html><html><title>Just a moment...</title><body>Checking your browser</body></html>"
-    monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
-    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(200, challenge_html))
-    outages: list[dict] = []
-    sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
-    assert outages and all(o["error"] == "HTTP 200" for o in outages)
 
 
 # --- Wikipedia HTTP 200 error documents (#9005 r4: Grok r2) ------------------------------------

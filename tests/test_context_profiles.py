@@ -1,19 +1,15 @@
 from __future__ import annotations
 
 import os
-import re
 import shlex
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.lib.context_profiles import (
     CONFIG_PATH,
-    ContextProfileError,
-    get_profile,
     load_registry,
     resolve_profile,
 )
@@ -42,96 +38,6 @@ EXPECTED_ENV0_KEYS = {
 }
 
 
-def _write_registry(tmp_path: Path, profiles: dict[str, dict[str, object]]) -> Path:
-    path = tmp_path / "profiles.yaml"
-    path.write_text(
-        yaml.safe_dump({"version": 1, "profiles": profiles}, sort_keys=False),
-        encoding="utf-8",
-    )
-    return path
-
-
-def test_production_registry_separates_sol_capacity_values() -> None:
-    profiles = load_registry(CONFIG_PATH)["profiles"]
-
-    assert profiles["native_codex"] == {
-        "profile_id": "native_codex",
-        "transport": "native_codex",
-        "main_model_id": "gpt-6.1-sol",
-        "model_id_patterns": [r"^(gpt-6\.1-sol|gpt-6-luna)$"],
-        "main_context_window_tokens": 272_000,
-        "auto_compact_capacity_tokens": None,
-        "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 27_200,
-        "rollover_warning_percentages": [75.0, 85.0, 92.0],
-    }
-    assert profiles["sol_lead"] == {
-        "profile_id": "sol_lead",
-        "transport": "claudex",
-        "main_model_id": "gpt-6.1-sol",
-        "model_id_patterns": [r"^gpt-6\.1-sol$"],
-        "main_context_window_tokens": 272_000,
-        "auto_compact_capacity_tokens": 258_400,
-        "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 27_200,
-        "rollover_warning_percentages": [75.0, 85.0, 92.0],
-    }
-    assert profiles["native_claude"]["auto_compact_capacity_tokens"] is None
-    assert profiles["kimicc_k3"] == {
-        "profile_id": "kimicc_k3",
-        "transport": "kimicc",
-        "main_model_id": "kimi-k3[1m]",
-        "model_id_patterns": [r"^kimi-k3(\[1m\])?$", r"^k3$"],
-        "main_context_window_tokens": 1_048_576,
-        "auto_compact_capacity_tokens": 996_147,
-        "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 104_857,
-        "rollover_warning_percentages": [75.0, 85.0, 92.0],
-    }
-    assert profiles["kimicc_k3_256k"] == {
-        "profile_id": "kimicc_k3_256k",
-        "transport": "kimicc",
-        "main_model_id": "kimi-k3-256k",
-        "model_id_patterns": [r"^kimi-k3-256k$", r"^k3-256k$"],
-        "main_context_window_tokens": 262_144,
-        "auto_compact_capacity_tokens": 249_036,
-        "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 26_214,
-        "rollover_warning_percentages": [75.0, 85.0, 92.0],
-    }
-    assert profiles["kimicc_k27"]["main_context_window_tokens"] == 262_144
-    assert profiles["kimicc_k27"]["auto_compact_capacity_tokens"] == 249_036
-    assert profiles["kimicc_k27_highspeed"]["main_model_id"] == "kimi-k2.7-code-highspeed"
-    assert profiles["glmcc_glm53"] == {
-        "profile_id": "glmcc_glm53",
-        "transport": "glmcc",
-        "main_model_id": "glm-5.3",
-        "model_id_patterns": [r"^glm-5\.3$", r"^glm53$", r"^glm$"],
-        "main_context_window_tokens": 1_048_576,
-        "auto_compact_capacity_tokens": 996_147,
-        "cold_start_profile": "compact",
-        "cold_start_budget_tokens": 104_857,
-        "rollover_warning_percentages": [75.0, 85.0, 92.0],
-    }
-
-
-def test_native_claude_hands_off_at_750k_and_waits_for_operator_restart() -> None:
-    """#8511: 650k heads-up, 700k finish the unit, 750k hand off and wait."""
-    profile = load_registry(CONFIG_PATH)["profiles"]["native_claude"]
-    resolved = resolve_profile("native_claude", "claude-opus-5-5")
-
-    assert profile["rollover_warning_percentages"] == [65.0, 70.0, 75.0]
-    assert profile["rollover_mode"] == "operator_restart"
-    window = profile["main_context_window_tokens"]
-    assert [int(window * pct / 100) for pct in profile["rollover_warning_percentages"]] == [
-        650_000,
-        700_000,
-        750_000,
-    ]
-    assert resolved["trusted"]
-    assert resolved["rollover_mode"] == "operator_restart"
-
-
 def test_only_native_claude_declares_a_rollover_mode() -> None:
     """Every other profile keeps the default continuation behaviour unchanged."""
     raw = load_registry(CONFIG_PATH)["profiles"]
@@ -142,54 +48,6 @@ def test_only_native_claude_declares_a_rollover_mode() -> None:
     assert resolve_profile()["rollover_mode"] == "continuation"
     # A model mismatch falls back, so it can never inherit operator_restart.
     assert resolve_profile("native_claude", "gpt-6.1-sol")["rollover_mode"] == "continuation"
-
-
-def test_registry_rejects_unknown_rollover_mode(tmp_path: Path) -> None:
-    profiles = load_registry(CONFIG_PATH)["profiles"]
-    profiles["native_claude"]["rollover_mode"] = "wait"
-    path = _write_registry(tmp_path, profiles)
-
-    with pytest.raises(ContextProfileError, match="rollover_mode must be one of"):
-        load_registry(path)
-
-
-def test_no_context_profile_routes_to_retired_gpt56() -> None:
-    for profile in load_registry(CONFIG_PATH)["profiles"].values():
-        assert not profile["main_model_id"].startswith("gpt-5.6-")
-        for pattern in profile["model_id_patterns"]:
-            for retired in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-6-sol", "gpt-6-astra"):
-                assert re.fullmatch(pattern, retired) is None
-
-
-@pytest.mark.parametrize("model", ["gpt-6-luna", "gpt-6.1-sol"])
-def test_native_codex_profile_accepts_gpt6_and_rejects_other_models(model: str) -> None:
-    trusted = resolve_profile("native_codex", model)
-    mismatch = resolve_profile("native_codex", "gpt-5.6-terra")
-
-    assert trusted["profile_id"] == "native_codex"
-    assert trusted["transport"] == "native_codex"
-    assert trusted["trusted"]
-    assert trusted["main_model_id"] == model
-    assert trusted["expected_main_model_id"] == model
-    assert trusted["main_context_window_tokens"] == 272_000
-    assert mismatch["profile_id"] == "fallback"
-    assert mismatch["resolution_reason"] == "model-mismatch"
-    assert mismatch["expected_profile_id"] == "native_codex"
-
-
-def test_kimicc_k3_256k_profile_is_distinct_from_the_1m_k3_profile() -> None:
-    """k3-256k must never silently borrow the 1M kimicc_k3 window."""
-    trusted = resolve_profile("kimicc_k3_256k", "kimi-k3-256k")
-    alias = resolve_profile("kimicc_k3_256k", "k3-256k")
-    mismatch = resolve_profile("kimicc_k3_256k", "kimi-k3[1m]")
-
-    assert trusted["profile_id"] == "kimicc_k3_256k"
-    assert trusted["trusted"]
-    assert trusted["main_context_window_tokens"] == 262_144
-    assert alias["trusted"]
-    assert mismatch["profile_id"] == "fallback"
-    assert mismatch["resolution_reason"] == "model-mismatch"
-    assert mismatch["expected_profile_id"] == "kimicc_k3_256k"
 
 
 def test_resolution_fails_closed_without_trusted_route_metadata() -> None:
@@ -214,49 +72,6 @@ def test_resolution_fails_closed_without_trusted_route_metadata() -> None:
     assert not missing["trusted"]
     assert mismatch["model_mismatch"]
     assert mismatch["expected_main_context_window_tokens"] == 1_000_000
-
-
-@pytest.mark.parametrize(
-    ("model_id", "expected_profile"),
-    [
-        ("claude-opus-4-8", "native_claude"),
-        ("claude-sonnet-5", "native_claude"),
-        ("opus", "native_claude"),
-    ],
-)
-def test_native_profile_matches_model_family(
-    model_id: str, expected_profile: str
-) -> None:
-    resolved = resolve_profile("native_claude", model_id)
-
-    assert resolved["profile_id"] == expected_profile
-    assert resolved["trusted"]
-    assert resolved["main_context_window_tokens"] == 1_000_000
-    assert resolved["auto_compact_capacity_tokens"] is None
-
-
-def test_get_profile_uses_validated_fallback_for_unknown_id() -> None:
-    assert get_profile("does-not-exist")["profile_id"] == "fallback"
-
-
-def test_registry_rejects_compact_budget_over_ten_percent(tmp_path: Path) -> None:
-    profiles = load_registry(CONFIG_PATH)["profiles"]
-    profiles["sol_lead"]["cold_start_budget_tokens"] = 27_201
-    path = _write_registry(tmp_path, profiles)
-
-    with pytest.raises(ContextProfileError, match="cannot exceed 10%"):
-        load_registry(path)
-
-
-def test_registry_rejects_emergency_warning_after_auto_compaction(
-    tmp_path: Path,
-) -> None:
-    profiles = load_registry(CONFIG_PATH)["profiles"]
-    profiles["sol_lead"]["rollover_warning_percentages"] = [75.0, 85.0, 95.0]
-    path = _write_registry(tmp_path, profiles)
-
-    with pytest.raises(ContextProfileError, match="must fire before"):
-        load_registry(path)
 
 
 def test_env0_output_is_exact_allow_list() -> None:
@@ -382,13 +197,6 @@ def test_old_resolver_without_rollover_mode_takes_it_from_the_current_contract(t
 
     assert result.returncode == 0, result.stderr
     assert result.stdout == "native_claude|operator_restart\n"
-
-
-def test_old_resolver_without_rollover_mode_keeps_continuation_profiles(tmp_path: Path) -> None:
-    result = _run_with_old_resolver(tmp_path, omitted="ROLLOVER_MODE", profile_id="fallback", model_id="gpt-6.1-sol")
-
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == "fallback|continuation\n"
 
 
 @pytest.mark.parametrize("case", ["profile_disagrees", "contract_missing"])

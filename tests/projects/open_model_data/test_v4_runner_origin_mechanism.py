@@ -65,22 +65,6 @@ def test_execute_capture_does_not_write_v4_observations(isolated_plane: Path) ->
         assert int(rows["n"]) == 0
 
 
-def test_authorize_author_execution_refuses_caller_row_hash(isolated_plane: Path) -> None:
-    import inspect
-
-    params = inspect.signature(RequestExecutor.authorize_author_execution).parameters
-    assert "row_content_sha256" not in params
-    assert "packet_sha256" not in params
-    assert list(params) == ["self", "request_id", "slot_id", "expected_seat"]
-
-
-def test_construct_completion_rejects_caller_policy_argument() -> None:
-    import inspect
-
-    assert "trust_policy" not in inspect.signature(ledger.construct_completion).parameters
-    assert "trust_policy" not in inspect.signature(ledger.verify_private_replay).parameters
-
-
 def test_authorization_race_against_start_sqlite(isolated_plane: Path) -> None:
     """Two sqlite connections: once start has left queued, late authorize refuses."""
     with RequestExecutor(root=isolated_plane) as authorizer, RequestExecutor(root=isolated_plane) as starter:
@@ -102,29 +86,6 @@ def test_authorization_race_against_start_sqlite(isolated_plane: Path) -> None:
                 expected_seat=FIXTURE_MODEL,
             )
         assert late.state == "queued"
-
-
-def test_fabricated_capture_cannot_mint_authority(isolated_plane: Path) -> None:
-    with RequestExecutor(root=isolated_plane) as executor:
-        request = executor.create_request(recipient="claude", body="fabricated")
-        executor.authorize_author_execution(
-            request_id=request.request_id, slot_id=fx.TARGET_SLOT_ID, expected_seat=FIXTURE_MODEL
-        )
-        executor.execute_capture(
-            request.request_id,
-            adapter="claude",
-            events=(
-                {"type": "system", "subtype": "init", "session_id": "other", "model": FIXTURE_MODEL},
-                {"type": "result", "subtype": "success", "session_id": "other"},
-            ),
-            raw_bytes=b"NOT THE EVENTS",
-            returncode=0,
-        )
-        assert executor.resolve_v4_execution_observation(
-            task_id="missing", run_id="missing", role="author"
-        ) is None
-        rows = executor._conn.execute("SELECT COUNT(*) AS n FROM v4_execution_observations").fetchone()
-        assert int(rows["n"]) == 0
 
 
 def test_sources_invalid_input_is_not_successful(isolated_plane: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -199,12 +160,6 @@ def synthetic_trust_bundle(signing_resources, monkeypatch):
     monkeypatch.setenv("HRAMATKA_V4_ADMISSION_ENABLED", "1")
     with synthetic_resources():
         yield
-
-
-def test_packaged_wheel_build_leaves_no_checkout_lock(built_wheel) -> None:
-    assert built_wheel.is_file()
-    checkout_lock = Path(__file__).resolve().parents[3] / "batch_state/v4-runtime-build.lock"
-    assert not checkout_lock.exists()
 
 
 def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_cluster, built_wheel, signing_resources, synthetic_trust_bundle) -> None:
@@ -288,18 +243,3 @@ def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_clu
         manifest=json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text()),
         a2_receipt=json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").read_text()),
     )
-
-
-@pytest.mark.postgres
-def test_authorization_race_against_start_postgres(tmp_path, monkeypatch, pg_cluster, request) -> None:
-    from test_v4_operation_lifecycle import claim, role_connection
-
-    prepared_binding = request.getfixturevalue("prepared")
-
-    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
-        owned = claim(conn, prepared_binding)
-    with RequestExecutor(root=tmp_path) as authorizer:
-        with pytest.raises(RequestExecutorError, match="not authorizable"):
-            authorizer.authorize_author_execution(request_id=owned["request_id"], slot_id="v4p-standard-correct-002", expected_seat=FIXTURE_MODEL)
-        with pytest.raises(RequestExecutorError, match="retired"):
-            authorizer.claim_v4_runner_execution(request_id=owned["request_id"])

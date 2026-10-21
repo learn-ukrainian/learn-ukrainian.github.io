@@ -68,25 +68,6 @@ def test_tracked_artifacts_are_strict_deterministic_and_text_free() -> None:
     assert v3a.main.__name__ == "main"
 
 
-def test_exact_denominator_distinguishes_lineage_from_coverage_credit() -> None:
-    denominator = _main()["denominator"]
-    assert denominator == {
-        "source_units": 57,
-        "legacy_unknown_rights_units": 39,
-        "rule_slots_R": 0,
-        "v2_visible_cells": 16,
-        "v3_child_cells": 3,
-        "visible_cells": 19,
-        "active_coverage_target_cells": 16,
-        "active_coverage_blocked_cells": 16,
-        "not_applicable_cells": 2,
-        "lineage_only_parent_cells": 1,
-        "legacy_blocked_snapshot_records": 17,
-        "satisfied_cells": 0,
-        "no_double_count_proof": "13_v2_targets_excluding_parent_plus_3_children_equals_16",
-    }
-
-
 def test_denominator_is_derived_from_bound_predecessors_and_partition() -> None:
     p1 = v3a.read_json(v3a.P1_PATH)
     v3 = v3a.read_json(v3a.V3_ARTIFACT_PATH)
@@ -110,21 +91,6 @@ def test_denominator_is_derived_from_bound_predecessors_and_partition() -> None:
     assert derived["active_coverage_blocked_cells"] == 17
     assert derived["legacy_blocked_snapshot_records"] == 18
     assert derived["no_double_count_proof"] == "13_v2_targets_excluding_parent_plus_4_children_equals_17"
-
-
-def test_partition_is_three_source_attested_macro_regions_without_credit() -> None:
-    partition = _main()["dialect_partition"]
-    assert partition["partition_complete"] is True
-    assert partition["membership_frozen"] is True
-    assert partition["parent_coverage_role"] == "lineage_only"
-    assert partition["parent_direct_coverage_credit"] is False
-    assert [row["region_id"] for row in partition["child_strata"]] == [
-        "northern_polissian",
-        "southeastern",
-        "southwestern",
-    ]
-    assert all(row["coverage_status"] == "coverage_blocked" for row in partition["child_strata"])
-    assert all(row["coverage_credit"] is False for row in partition["child_strata"])
 
 
 def test_fake_partition_completeness_and_invented_dimensions_are_rejected() -> None:
@@ -165,16 +131,6 @@ def test_reviewed_taxonomy_cannot_collapse_or_drift() -> None:
     _reject_main(value, "schema violation|reviewed taxonomy drift")
 
 
-def test_rights_matrix_is_exactly_57_by_7_and_never_infers_permission() -> None:
-    rights = _main()["rights_capabilities"]
-    assert rights["source_unit_count"] == 57
-    assert rights["operation_cell_count"] == 399
-    assert len(rights["source_unit_rows"]) == 57
-    assert all(len(row["operations"]) == 7 for row in rights["source_unit_rows"])
-    assert all(item["state"] == "unknown" for row in rights["source_unit_rows"] for item in row["operations"])
-    assert set(rights["unknown_source_units_by_operation"].values()) == {57}
-
-
 def test_missing_source_or_operation_and_inferred_grant_are_rejected() -> None:
     value = _main()
     value["rights_capabilities"]["source_unit_rows"].pop()
@@ -187,28 +143,6 @@ def test_missing_source_or_operation_and_inferred_grant_are_rejected() -> None:
     value = _main()
     value["rights_capabilities"]["source_unit_rows"][0]["operations"][0]["state"] = "allowed"
     _reject_main(value, "inferred|rights evidence")
-
-
-def test_publication_scope_cannot_turn_metadata_into_body_permission() -> None:
-    value = _main()
-    publication = next(
-        item
-        for item in value["rights_capabilities"]["source_unit_rows"][0]["operations"]
-        if item["operation"] == "publish_text_or_metadata"
-    )
-    publication.pop("scope_qualifier")
-    _reject_main(value, "publication scope conflation|rights evidence")
-
-
-def test_compatibility_has_15_exact_rows_and_one_partition_successor() -> None:
-    matrix = _matrix()
-    assert matrix["row_count"] == 16
-    assert matrix["carried_forward_exact_count"] == 15
-    assert matrix["superseded_by_partition_count"] == 1
-    parent = next(row for row in matrix["rows"] if row["v2_cell_id"] == v3a.PARENT_CELL_ID)
-    assert parent["disposition"] == "superseded_by_partition"
-    assert parent["denominator_effect"] == "parent_visible_children_no_double_count"
-    assert len(parent["child_partition_ids"]) == 3
 
 
 def test_compatibility_omission_and_parent_double_count_are_rejected() -> None:

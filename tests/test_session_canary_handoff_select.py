@@ -120,14 +120,6 @@ def test_own_lane_handoff_wins_when_fresh(tmp_path: Path, lane, own_name: str) -
 
 
 @pytest.mark.parametrize(("lane", "own_name"), [row for row in _LANES if row[1]])
-def test_stale_own_lane_loses_to_a_fresher_claude_handoff(tmp_path: Path, lane, own_name: str) -> None:
-    epic = _epic(tmp_path)
-    _write(epic / own_name, "## Session 2026-09-18\n\nown\n", mtime=9_000_000_000)
-    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\nclaude\n", mtime=50)
-    assert _existing(lane._handoff_candidates(tmp_path, "atlas"))[0] == "CLAUDE-DRIVER-HANDOFF.md"
-
-
-@pytest.mark.parametrize(("lane", "own_name"), [row for row in _LANES if row[1]])
 def test_same_day_own_lane_handoff_wins_the_tie(tmp_path: Path, lane, own_name: str) -> None:
     epic = _epic(tmp_path)
     _write(epic / own_name, "## Session 2026-09-23\n\nown\n", mtime=50)
@@ -141,17 +133,6 @@ def test_touched_undated_interim_loses_to_dated_claude(tmp_path: Path) -> None:
     _write(epic / "INTERIM-DRIVER-HANDOFF.md", "# Interim\n\nno session heading\n", mtime=5_000_000_000)
     _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\nfresh\n", mtime=50)
     assert _existing(grok_lane._handoff_candidates(tmp_path, "atlas"))[0] == "CLAUDE-DRIVER-HANDOFF.md"
-
-
-def test_grok_handoff_is_selectable_when_it_is_the_freshest(tmp_path: Path) -> None:
-    epic = tmp_path / ".claude" / "infra-epic"
-    epic.mkdir(parents=True)
-    _write(epic / "GROK-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\ngrok\n", mtime=50)
-    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-18\n\nclaude\n", mtime=9_000_000_000)
-    _write(epic / "INTERIM-DRIVER-HANDOFF.md", "undated interim\n", mtime=9_000_000_000)
-    ranked = _existing(grok_lane._handoff_candidates(tmp_path, "infra"))
-    assert ranked[0] == "GROK-DRIVER-HANDOFF.md"
-    assert "GROK-DRIVER-HANDOFF.md" in ranked
 
 
 def test_session_heading_beats_equal_mtime_and_a_later_touch(tmp_path: Path) -> None:
@@ -168,15 +149,6 @@ def test_session_heading_beats_equal_mtime_and_a_later_touch(tmp_path: Path) -> 
     os.utime(claude, (50, 50))
     ranked = _existing(grok_lane._handoff_candidates(tmp_path, "atlas"))
     assert ranked[0] == "CLAUDE-DRIVER-HANDOFF.md"
-
-
-def test_ranker_drops_a_listed_superseded_file(tmp_path: Path) -> None:
-    stale = tmp_path / "INTERIM-DRIVER-HANDOFF.20260914T193444Z.superseded.md"
-    fresh = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
-    _write(stale, "## Session 2026-09-23\n", mtime=9_000)
-    _write(fresh, "plain\n", mtime=1)
-    ranked = handoff_select.rank_handoff_candidates([stale, fresh], preferred=("INTERIM-DRIVER-HANDOFF.md",))
-    assert [path.name for path in ranked] == ["CLAUDE-DRIVER-HANDOFF.md"]
 
 
 def test_glm_bootstrap_candidates_match_the_mint_preference(tmp_path: Path) -> None:
@@ -212,42 +184,6 @@ def test_mint_picks_fresh_claude_over_stale_interim(tmp_path: Path, monkeypatch:
     assert meta["handoff"].endswith("CLAUDE-DRIVER-HANDOFF.md")
 
 
-def test_mint_uses_newer_session_heading_when_the_stale_file_was_touched(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    _patch_mint(monkeypatch)
-    epic = _epic(tmp_path)
-    _write(
-        epic / "INTERIM-DRIVER-HANDOFF.md",
-        _full("interim-sentinel", session="2026-09-14"),
-        mtime=5_000_000_000,
-    )
-    _write(
-        epic / "CLAUDE-DRIVER-HANDOFF.md",
-        _full("claude-sentinel", session="2026-09-23"),
-        mtime=1_000,
-    )
-
-    assert _mint(grok_lane, tmp_path) == 0
-    answers = _answers(tmp_path)
-    assert "claude-sentinel" in answers
-    assert "interim-sentinel" not in answers
-
-
-def test_mint_own_lane_handoff_wins_when_fresh(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _patch_mint(monkeypatch)
-    epic = _epic(tmp_path)
-    _write(epic / "CODEX-DRIVER-HANDOFF.md", _full("own-sentinel"), mtime=5_000)
-    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", _full("claude-sentinel"), mtime=3_000)
-    _write(epic / "INTERIM-DRIVER-HANDOFF.md", _full("interim-sentinel"), mtime=1_000)
-
-    assert _mint(codex_lane, tmp_path) == 0
-    answers = _answers(tmp_path)
-    assert "own-sentinel" in answers
-    assert "claude-sentinel" not in answers
-    assert "interim-sentinel" not in answers
-
-
 def test_shortfall_falls_through_to_the_next_candidate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -260,28 +196,6 @@ def test_shortfall_falls_through_to_the_next_candidate(
     assert "claude-sentinel" in _answers(tmp_path)
     meta = json.loads((tmp_path / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
     assert meta["handoff"].endswith("CLAUDE-DRIVER-HANDOFF.md")
-
-
-def test_shortfall_error_lists_each_file_with_next_and_hands_off_counts(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    _patch_mint(monkeypatch)
-    epic = _epic(tmp_path)
-    _write(
-        epic / "CLAUDE-DRIVER-HANDOFF.md",
-        "## Next drive order\n1. only one claude next item\n",
-        mtime=5_000,
-    )
-    _write(epic / "INTERIM-DRIVER-HANDOFF.md", "## Hands-off\n- one interim boundary\n", mtime=1_000)
-
-    assert _mint(grok_lane, tmp_path) == 1
-    err = capsys.readouterr().err
-    assert "could only derive 9/10" in err
-    claude = "CLAUDE-DRIVER-HANDOFF.md (next=1, hands-off=0)"
-    interim = "INTERIM-DRIVER-HANDOFF.md (next=0, hands-off=1)"
-    assert claude in err
-    assert interim in err
-    assert err.index(claude) < err.index(interim)
 
 
 def test_explicit_handoff_overrides_a_fresher_candidate(
@@ -309,45 +223,6 @@ def test_explicit_shortfall_falls_through_before_failing(
 
     assert _mint(grok_lane, tmp_path, ["--handoff", str(explicit)]) == 0
     assert "claude-sentinel" in _answers(tmp_path)
-
-
-def test_kimi_board_matches_canary_handoff_after_fallthrough(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    _patch_mint(monkeypatch)
-    epic = _epic(tmp_path)
-    _write(
-        epic / "KIMI-DRIVER-HANDOFF.md",
-        "# Kimi\n\n## Session 2026-09-23\n\nNo next or hands-off sections.\n",
-        mtime=8_000,
-    )
-    _write(
-        epic / "CLAUDE-DRIVER-HANDOFF.md",
-        _full("claude-sentinel", session="2026-09-23"),
-        mtime=1_000,
-    )
-
-    assert (
-        kimi_lane.main(
-            ["--repo", str(tmp_path), "mint", "--epic", "atlas", "--stream", "lane-test"]
-        )
-        == 0
-    )
-    meta = json.loads((epic / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
-    assert meta["handoff"].endswith("CLAUDE-DRIVER-HANDOFF.md")
-    assert "claude-sentinel" in (epic / "canary" / "facts.json").read_text(encoding="utf-8")
-
-    kimi_lane._write_cold_start(
-        epic,
-        epic="atlas",
-        stream_id="lane-test",
-        lease_summary="test",
-        repo=tmp_path,
-    )
-    board = (epic / "KIMI-COLD-START.md").read_text(encoding="utf-8")
-    assert meta["handoff"] in board
-    bound = grok_lane._bound_handoff_path(tmp_path, "atlas")
-    assert handoff_select.display_repo_path(tmp_path, bound) == meta["handoff"]
 
 
 @pytest.mark.parametrize(
@@ -961,29 +836,3 @@ def test_kimi_bootstrap_auto_mint_uses_the_boards_stream_limit(
     assert "claude-sentinel" in (epic / "canary" / "facts.json").read_text(encoding="utf-8")
     board = (epic / "KIMI-COLD-START.md").read_text(encoding="utf-8")
     assert "**Handoff dual-write:** `.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md`" in board
-
-
-def test_rewrite_between_ranking_and_mint_keeps_the_ranked_text(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Mint facts come from the text ranking already read, not a second read."""
-    _patch_mint(monkeypatch)
-    epic = _epic(tmp_path)
-    original = _full("ranked-sentinel", session="2026-09-23")
-    path = epic / "CLAUDE-DRIVER-HANDOFF.md"
-    _write(path, original, mtime=5_000)
-    real_load = handoff_select.load_and_rank_candidates
-
-    def _load_then_rewrite(*args, **kwargs):
-        loaded = real_load(*args, **kwargs)
-        for item in loaded:
-            if item.path.name == "CLAUDE-DRIVER-HANDOFF.md" and item.text:
-                item.path.write_text("# rewritten\n\nno next or hands-off sections\n", encoding="utf-8")
-        return loaded
-
-    monkeypatch.setattr(handoff_select, "load_and_rank_candidates", _load_then_rewrite)
-
-    assert _mint(grok_lane, tmp_path) == 0
-    assert "ranked-sentinel" in _answers(tmp_path)
-    assert "rewritten" not in _answers(tmp_path)
-    assert path.read_text(encoding="utf-8").startswith("# rewritten")

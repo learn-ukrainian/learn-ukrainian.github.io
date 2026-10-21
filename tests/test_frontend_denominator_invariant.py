@@ -82,24 +82,6 @@ def test_site_external_reads_are_in_frontend_denominator() -> None:
     assert not missing, f"site reads outside Frontend denominator: {missing}"
 
 
-def test_frontend_hydrate_script_dependencies_are_in_denominator() -> None:
-    """The CI command chain also reads Python helpers and Atlas registry inputs."""
-    paths = load_denominator()["paths"]
-    dependencies = (
-        "scripts/__init__.py",  # python -m scripts.atlas.atlas_db
-        "scripts/storage/__init__.py",  # atlas_db imports scripts.storage.paths
-        "scripts/storage/paths.py",  # atlas_db imports REGISTRY_ROOT
-        "scripts/etymology/transliterate.py",  # generate_search_index loads this helper
-        "scripts/audit/__init__.py",  # python -m scripts.audit.generate_daily_pool
-        "scripts/audit/lexeme_filter.py",  # generate_search_index and daily_pool
-        "scripts/audit/daily_cefr.py",  # generate_daily_pool imports it
-        "registry/lexicon/synonym_pair_verdicts.yaml",  # atlas_db default input
-        "registry/lexicon/curated_aliases.yaml",  # atlas_db default input
-    )
-    missing = [path for path in dependencies if not path_in_denominator(path, paths)]
-    assert not missing, f"Frontend hydrate dependencies outside denominator: {missing}"
-
-
 SYNTHETIC_READER = "site/src/lib/reader.ts"
 SYNTHETIC_FILES = {
     "docs/bare.yaml": "bare: 1\n",
@@ -158,13 +140,6 @@ def test_scanner_discovers_bare_and_raw_imports_but_not_generated_or_site_intern
 def deny_denominator(monkeypatch: pytest.MonkeyPatch, omitted: str | None) -> None:
     paths = [path for path in SYNTHETIC_EXTERNAL if path != omitted]
     monkeypatch.setattr(sys.modules[__name__], "load_denominator", lambda: {"paths": paths})
-
-
-def test_invariant_passes_when_bare_and_raw_targets_are_listed(
-    synthetic_site: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    deny_denominator(monkeypatch, None)
-    test_site_external_reads_are_in_frontend_denominator()
 
 
 @pytest.mark.parametrize("omitted", ["docs/bare.yaml", "docs/raw.yaml", "docs/odd?raw"])

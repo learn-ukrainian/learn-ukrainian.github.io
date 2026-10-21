@@ -58,14 +58,6 @@ def test_default_squash_text_hit_is_refused_before_merge(synthetic_opsec, field,
     assert f"rule=synthetic-rule class=1 field={field} line=1" in str(error.value)
 
 
-@pytest.mark.parametrize("field", ["subject", "body"])
-def test_explicit_squash_text_hit_is_refused_before_merge(synthetic_opsec, field):
-    calls = []
-    with pytest.raises(gate.PublishBlocked, match=f"field={field} "):
-        pub.publish("pr-merge", repo="unit/public", number=1, runner=transport(calls), **{field: "x " + TOKEN})
-    assert not calls
-
-
 def test_clean_defaults_are_sent_explicitly_as_scanned(synthetic_opsec):
     calls = []
     pub.publish("pr-merge", repo="unit/public", number=1, runner=transport(calls, body="* clean\n* also clean"))

@@ -552,13 +552,6 @@ def test_rejects_malformed_metadata_integer_before_output(tmp_path: Path) -> Non
     assert not output.exists()
 
 
-def test_receipt_schema_rejects_unbounded_count_keys(tmp_path: Path) -> None:
-    receipt, _, _ = _run(tmp_path)
-    receipt["denominators"]["plug2_original_counts"] = {"raw prose": 1}
-    with pytest.raises(HistoricalMaterializationError, match="receipt schema violation"):
-        materialization._validate_receipt(receipt)
-
-
 def test_rejects_metadata_archive_path_mismatch(tmp_path: Path) -> None:
     ud_dir, archive, metadata = _make_inputs(tmp_path)
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as handle:

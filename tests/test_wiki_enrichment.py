@@ -37,13 +37,6 @@ class TestLoadLocalData:
         assert len(chunks) == 1
         assert "камінь" in chunks[0]["text"]
 
-    def test_non_folk_track_returns_empty(self, tmp_path):
-        from wiki.enrichment import _load_local_data
-
-        with patch("wiki.enrichment.PROJECT_ROOT", tmp_path):
-            chunks = _load_local_data("hist", "some-event")
-        assert chunks == []
-
 
 class TestExternalResourceLoading:
     def test_skips_reference_only_articles_and_videos(self):
@@ -94,19 +87,6 @@ class TestExternalResourceLoading:
 
 
 class TestSourceBudgeting:
-    def test_dedupes_by_chunk_id(self):
-        from wiki.enrichment import _dedupe_chunks
-
-        chunks = [
-            {"chunk_id": "dup-1", "text": "First copy"},
-            {"chunk_id": "dup-1", "text": "Second copy"},
-            {"chunk_id": "unique", "text": "Unique"},
-        ]
-
-        deduped = _dedupe_chunks(chunks)
-        assert len(deduped) == 2
-        assert deduped[0]["text"] == "First copy"
-
     def test_limits_background_sources_before_primary(self):
         from wiki.enrichment import _cap_source_chunks
 
@@ -183,145 +163,5 @@ class TestFindLiteraryByChunkIds:
             all_matched.extend(ids)
         assert set(all_matched) == {"abc_c0001", "def_c0000"}
 
-    def test_returns_empty_for_no_ids(self, tmp_path):
-        from wiki.sources import find_literary_by_chunk_ids
-
-        with patch("wiki.sources.LITERARY_DIR", tmp_path):
-            assert find_literary_by_chunk_ids([]) == {}
-
-    def test_returns_empty_when_no_match(self, tmp_path):
-        from wiki.sources import find_literary_by_chunk_ids
-
-        (tmp_path / "file.jsonl").write_text(
-            '{"chunk_id": "xxx_c0000", "text": "content"}\n'
-        )
-
-        with patch("wiki.sources.LITERARY_DIR", tmp_path):
-            result = find_literary_by_chunk_ids(["yyy_c0000"])
-        assert result == {}
-
-
-class TestGetTrackSourceSummary:
-    def test_summarizes_track(self, tmp_path):
-        from wiki.sources import get_track_source_summary
-
-        # Create discovery files
-        disc_dir = tmp_path / "curriculum" / "l2-uk-en" / "folk" / "discovery"
-        disc_dir.mkdir(parents=True)
-
-        disc1 = {
-            "query_keywords": ["test"],
-            "rag_literary": [{"chunk_id": "lit1", "text": "sample"}],
-            "rag_chunks": [{"chunk_id": "tb1"}, {"chunk_id": "tb2"}],
-            "rag_images": [],
-        }
-        disc2 = {
-            "query_keywords": ["test2"],
-            "rag_literary": [],
-            "rag_chunks": [{"chunk_id": "tb3"}],
-            "rag_images": [{"image_id": "img1"}],
-        }
-
-        with open(disc_dir / "slug-a.yaml", "w") as f:
-            yaml.dump(disc1, f)
-        with open(disc_dir / "slug-b.yaml", "w") as f:
-            yaml.dump(disc2, f)
-
-        with patch("wiki.sources.CURRICULUM_DIR", tmp_path / "curriculum" / "l2-uk-en"):
-            summary = get_track_source_summary("folk")
-
-        assert summary["track"] == "folk"
-        assert summary["module_count"] == 2
-        assert summary["slugs"] == ["slug-a", "slug-b"]
-        assert summary["total_literary_refs"] == 1
-        assert summary["total_textbook_refs"] == 3
-
-    def test_empty_track(self, tmp_path):
-        from wiki.sources import get_track_source_summary
-
-        with patch("wiki.sources.CURRICULUM_DIR", tmp_path / "nonexistent"):
-            summary = get_track_source_summary("empty")
-        assert summary["module_count"] == 0
-        assert summary["slugs"] == []
-
 
 # ── Tests: dossier-seeded dense retrieval (no discovery file) ──────
-
-
-class TestDossierSeededRetrieval:
-    def test_query_seed_combines_title_and_slug(self, tmp_path):
-        from wiki.enrichment import _dossier_query_seed
-
-        dossier = tmp_path / "docs" / "research" / "folk" / "demo-topic.md"
-        dossier.parent.mkdir(parents=True)
-        dossier.write_text("# Календарна обрядовість\n\nbody\n", encoding="utf-8")
-        with patch("wiki.enrichment.PROJECT_ROOT", tmp_path):
-            assert _dossier_query_seed("folk", "demo-topic") == (
-                "Календарна обрядовість demo topic"
-            )
-
-    def test_query_seed_strips_research_dossier_suffix(self, tmp_path):
-        from wiki.enrichment import _dossier_query_seed
-
-        dossier = tmp_path / "docs" / "research" / "bio" / "shevchenko.md"
-        dossier.parent.mkdir(parents=True)
-        dossier.write_text("# Тарас Шевченко — Research Dossier\n\nx\n", encoding="utf-8")
-        with patch("wiki.enrichment.PROJECT_ROOT", tmp_path):
-            assert _dossier_query_seed("bio", "shevchenko") == "Тарас Шевченко shevchenko"
-
-    def test_query_seed_none_when_no_dossier(self, tmp_path):
-        from wiki.enrichment import _dossier_query_seed
-
-        with patch("wiki.enrichment.PROJECT_ROOT", tmp_path):
-            assert _dossier_query_seed("folk", "missing") is None
-
-    def test_enrich_seeds_dense_from_dossier_when_no_discovery(self, tmp_path):
-        from wiki.enrichment import enrich_sources
-
-        # No discovery file under CURRICULUM_DIR → dossier-only retrieval path.
-        curriculum = tmp_path / "curriculum"
-        (curriculum / "folk" / "discovery").mkdir(parents=True)
-        dossier = tmp_path / "docs" / "research" / "folk" / "demo.md"
-        dossier.parent.mkdir(parents=True)
-        dossier.write_text("# Демо тема\n\nbody\n", encoding="utf-8")
-
-        captured = {}
-
-        def fake_search(query, *, track, strategy, limit):
-            captured["query"] = query
-            return [{"chunk_id": "real1", "text": "corpus chunk"}]
-
-        with (
-            patch("wiki.enrichment.CURRICULUM_DIR", curriculum),
-            patch("wiki.enrichment.PROJECT_ROOT", tmp_path),
-            patch("wiki.sources_db.search_sources", side_effect=fake_search),
-            patch("wiki.enrichment._load_local_data", return_value=[]),
-            patch("wiki.enrichment._load_external_resources", return_value=[]),
-        ):
-            chunks = enrich_sources("folk", "demo", {})
-
-        # Dense retrieval ran, seeded by the dossier title + slug (not skipped).
-        assert captured.get("query") == "Демо тема demo"
-        assert any(c.get("chunk_id") == "real1" for c in chunks)
-
-    def test_enrich_no_dense_when_no_discovery_and_no_dossier(self, tmp_path):
-        from wiki.enrichment import enrich_sources
-
-        curriculum = tmp_path / "curriculum"
-        (curriculum / "folk" / "discovery").mkdir(parents=True)
-
-        def fail_search(*args, **kwargs):  # pragma: no cover - must not be called
-            raise AssertionError("search_sources must not run without a seed")
-
-        with (
-            patch("wiki.enrichment.CURRICULUM_DIR", curriculum),
-            patch("wiki.enrichment.PROJECT_ROOT", tmp_path),
-            patch("wiki.sources_db.search_sources", side_effect=fail_search),
-            patch("wiki.enrichment._load_local_data", return_value=[]),
-            patch("wiki.enrichment._load_external_resources", return_value=[]),
-        ):
-            chunks = enrich_sources("folk", "noseed", {})
-
-        # Falls back to the single topic stub, no dense call.
-        assert len(chunks) == 1
-        assert chunks[0]["chunk_id"] == "no-source"

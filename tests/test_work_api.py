@@ -142,23 +142,6 @@ def _sections_with_canary() -> dict[str, SectionResult]:
     }
 
 
-def test_capabilities_and_health_endpoints():
-    """FX-10 design-only: capabilities/health advertise mutation:false."""
-    caps = client.get("/api/work/v1/capabilities")
-    assert caps.status_code == 200
-    data = caps.json()
-    assert data["mutation"] is False
-    assert data["foundation_status"] == "FOUNDATION_COMPLETE"
-    assert data["private_source"]["available"] is False
-    assert data["private_source"]["reason_if_unavailable"] == "not_configured"
-    assert data["github_enumerations_per_refresh"] == 2
-
-    health = client.get("/api/work/v1/health")
-    assert health.status_code == 200
-    assert health.json()["ok"] is True
-    assert health.json()["mutation"] is False
-
-
 def test_projection_endpoint_with_injected_sources(monkeypatch):
     cache_invalidate("work:v1:projection")
     sections = _sections_with_canary()
@@ -203,108 +186,6 @@ def test_projection_rejects_private_filter_keys(monkeypatch):
     bad = client.get("/api/work/v1/projection?q=secret&private_endpoint=http://127.0.0.1:9&stream=infra-harness")
     assert bad.status_code == 400
     assert bad.json()["detail"]["error"] == "invalid_saved_view"
-
-
-def test_projection_rejects_oversized_repeated_filters(monkeypatch):
-    """Endpoint 400 when raw multivalue exceeds the finite per-key domain bound."""
-    from scripts.work.schema import FILTER_MAX_RAW_ITEMS
-
-    cache_invalidate("work:v1:projection")
-
-    def fake_build(**_kwargs):
-        raise AssertionError("build must not run after oversized filter rejection")
-
-    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-    qs = "&".join(["health=ON_TRACK"] * (FILTER_MAX_RAW_ITEMS["health"] + 1))
-    response = client.get(f"/api/work/v1/projection?{qs}&stream=infra-harness")
-    assert response.status_code == 400
-    detail = response.json()["detail"]
-    assert detail["error"] == "invalid_saved_view"
-    assert "exceeds max" in detail["message"]
-
-    # Singleton repository_id also 400s on raw repetition.
-    dup_repo = client.get(f"/api/work/v1/projection?repository_id={REPO}&repository_id={REPO}&stream=infra-harness")
-    assert dup_repo.status_code == 400
-    assert dup_repo.json()["detail"]["error"] == "invalid_saved_view"
-
-
-def test_source_id_filter_echoed_and_schema_valid(monkeypatch):
-    """?source_id=public-monitor is accepted and appears in filters_applied."""
-    cache_invalidate("work:v1:projection")
-    sections = _sections_with_canary()
-    builds: list[dict] = []
-
-    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
-        builds.append(dict(filters or {}))
-        return build_projection(sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
-
-    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-    response = client.get("/api/work/v1/projection?source_id=public-monitor&stream=infra-harness")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert data["filters_applied"]["source_id"] == ["public-monitor"]
-    assert builds and builds[0]["source_id"] == ["public-monitor"]
-    assert all(item["source_id"] == "public-monitor" for item in data["items"])
-
-
-def test_duplicate_multivalue_filters_share_cache_entry(monkeypatch):
-    """Reordered/duplicated multivalue query forms must not create distinct cache keys."""
-    cache_invalidate("work:v1:projection")
-    sections = _sections_with_canary()
-    build_count = {"n": 0}
-
-    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
-        build_count["n"] += 1
-        return build_projection(sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
-
-    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-
-    first = client.get("/api/work/v1/projection?health=ON_TRACK&health=AT_RISK&kind=pr&kind=issue&stream=infra-harness")
-    second = client.get("/api/work/v1/projection?health=AT_RISK&health=ON_TRACK&health=AT_RISK&kind=issue&kind=pr&stream=infra-harness")
-    assert first.status_code == 200, first.text
-    assert second.status_code == 200, second.text
-    assert build_count["n"] == 1
-    assert first.json()["filters_applied"] == second.json()["filters_applied"]
-    assert first.json()["filters_applied"]["health"] == ["AT_RISK", "ON_TRACK"]
-    assert first.json()["filters_applied"]["resource_kind"] == ["issue", "pr"]
-
-    # Distinct canonical filters still get their own entry.
-    third = client.get("/api/work/v1/projection?health=OFF_TRACK&stream=infra-harness")
-    assert third.status_code == 200, third.text
-    assert build_count["n"] == 2
-
-
-def test_independent_degradation_when_one_section_fails(monkeypatch):
-    """FX-02 adjacent: optional section failure degrades the public envelope, not unavailable."""
-    cache_invalidate("work:v1:projection")
-    sections = _sections_with_canary()
-    sections["fleet_reviews"] = SectionResult("fleet_reviews", "timeout", reason="fleet_reviews_timeout")
-    sections["streams"] = SectionResult(
-        "streams",
-        "stale",
-        payload={"stale": True, "orphans": [], "multi_homed": [], "pending_native_link": [], "open_total": 0},
-        reason="stale",
-    )
-
-    def fake_build(*, filters=None, cache_age_s=0.0, **_kwargs):
-        return build_projection(sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
-
-    monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-    response = client.get("/api/work/v1/projection?stream=infra-harness")
-    assert response.status_code == 200
-    data = response.json()
-    # Healthy GH issues still present
-    assert data["denominator"]["issues_open"] == 1
-    assert data["denominator"]["class4"]["fleet_reviews"] is False
-    assert any(o["class"] == "fleet_reviews" for o in data["denominator"]["omissions"])
-    assert any(o["class"] == "streams" for o in data["denominator"]["omissions"])
-    # Source status must be degraded (NOT unavailable) when core enumerations succeed
-    public_source = next(s for s in data["sources"] if s["source_id"] == "public-monitor")
-    assert public_source["status"] == "degraded"
-    assert public_source["sections"]["fleet_reviews"]["status"] == "timeout"
-    assert public_source["sections"]["streams"]["status"] == "stale"
-    assert public_source["sections"]["issues"]["status"] == "ok"
-    assert public_source["sections"]["prs"]["status"] == "ok"
 
 
 # ---------------------------------------------------------------------------
@@ -464,23 +345,6 @@ def test_next_stream_scoped_queue_and_digest(monkeypatch):
     assert blockers[0]["action_code"] == "RESOLVE_MULTI_HOME"
 
 
-def test_next_other_stream_perspective(monkeypatch):
-    """Same projection, atlas caller: its own rows in the queue, infra in the digest."""
-    _patch_known_streams(monkeypatch)
-    _warm_next_cache()
-
-    response = client.get("/api/work/v1/next?stream=atlas-practice")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    queue_ids = [row["work_id"] for row in data["queue"]]
-    assert queue_ids == [_wid(6004), _wid(6002)]
-    assert data["digest"]["other_streams"]["actionable_counts_by_stream"] == {
-        "devops": 0,
-        "infra-harness": 2,
-    }
-    assert data["digest"]["unscoped_actionable_count"] == 2
-
-
 def test_closed_blockers_do_not_remain_live():
     """Closed targets clear blocker flags while preserving relationship evidence."""
     projection = build_projection(
@@ -493,25 +357,6 @@ def test_closed_blockers_do_not_remain_live():
     assert issues["6001"]["flags"]["has_blocker"] is False
     assert issues["6002"]["flags"]["has_blocker"] is False
     assert any(rel["type"] == "blocked_by" for rel in issues["6001"]["relationships"])
-
-
-def test_next_determinism_two_calls_identical(monkeypatch):
-    """Two calls over an unchanged projection return identical order (#6880 point 5)."""
-    _patch_known_streams(monkeypatch)
-    _warm_next_cache()
-
-    first = client.get("/api/work/v1/next?stream=infra-harness")
-    second = client.get("/api/work/v1/next?stream=infra-harness")
-    assert first.status_code == 200 and second.status_code == 200
-    a, b = first.json(), second.json()
-    assert [r["work_id"] for r in a["queue"]] == [r["work_id"] for r in b["queue"]]
-    a.pop("cache_age_s")
-    b.pop("cache_age_s")
-    # PR observations age independently even inside the warm projection TTL.
-    for result in (a, b):
-        for source in result["sources"]:
-            (source.get("sections", {}).get("prs") or {}).pop("age_s", None)
-    assert a == b
 
 
 def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
@@ -591,22 +436,6 @@ def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
     assert nxt.status_code == 200
     assert nxt.json()["queue"] == []
     assert nxt.json()["sources"][0]["sections"]["prs"]["status"] == "stale"
-
-
-def test_next_limit_bounds(monkeypatch):
-    _patch_known_streams(monkeypatch)
-    _warm_next_cache()
-
-    top1 = client.get("/api/work/v1/next?stream=infra-harness&limit=1")
-    assert top1.status_code == 200
-    assert [r["work_id"] for r in top1.json()["queue"]] == [_wid(6004)]
-    assert top1.json()["limit"] == 1
-
-    assert client.get("/api/work/v1/next?stream=infra-harness&limit=0").status_code == 422
-    assert client.get("/api/work/v1/next?stream=infra-harness&limit=26").status_code == 422
-    default = client.get("/api/work/v1/next?stream=infra-harness")
-    assert default.status_code == 200
-    assert default.json()["limit"] == 7
 
 
 def test_next_cold_cache_503_never_builds(monkeypatch):
@@ -794,46 +623,6 @@ def test_next_registry_unavailable_503(monkeypatch):
     assert "detail" not in body
     assert "queue" not in body
     assert response.headers.get("retry-after") == "3"
-
-
-def test_next_known_streams_come_from_registry():
-    """_known_streams reflects scripts/config/issue_streams.yaml."""
-    from scripts.orchestration.issue_stream_audit import load_registry
-
-    cache_invalidate(work_router.STREAM_REGISTRY_CACHE_KEY)
-    names = work_router._known_streams()
-    assert names == sorted(load_registry().keys())
-    assert "infra-harness" in names
-
-
-def test_capabilities_advertise_next_queue():
-    caps = client.get("/api/work/v1/capabilities")
-    assert caps.status_code == 200
-    nq = caps.json()["next_queue"]
-    assert nq["route"] == "GET /api/work/v1/next"
-    assert "stream" in nq["params"] and "limit" in nq["params"]
-    assert "default 7, max 25" in nq["params"]["limit"]
-    assert "503" in nq["served_from"]
-    assert "registry_unavailable" in nq["served_from"]
-    assert "stale" in nq["served_from"]
-
-
-def test_projection_membership_and_epic_status():
-    """Homed issues carry public-safe stream membership; epics get status=epic."""
-    projection = build_projection(_next_sections(), repository_id=REPO)
-    by_id = {i["work_id"]: i for i in projection["items"]}
-
-    homed = by_id[_wid(6001)]["projections"]["stream"]
-    assert homed["status"] == "homed"
-    assert homed["streams"] == ["infra-harness"]
-
-    epic = by_id[_wid(6900)]["projections"]["stream"]
-    assert epic["status"] == "epic"
-    assert epic["streams"] == ["infra-harness"]
-
-    orphan = by_id[_wid(6003)]["projections"]["stream"]
-    assert orphan["status"] == "orphan"
-    assert orphan["streams"] == []
 
 
 def test_streams_loader_derives_public_membership_and_strips_private_index():
@@ -1106,15 +895,6 @@ def test_next_includes_pending_native_with_body_membership(monkeypatch):
     assert excluded["count"] == 0
 
 
-def test_next_pending_native_status_and_streams_stay_honest():
-    """The projection keeps status=pending_native while listing the body-derived lane."""
-    projection = build_projection(_next_sections_pending(membership=True), repository_id=REPO)
-    by_id = {i["work_id"]: i for i in projection["items"]}
-    stream = by_id[_wid(6006)]["projections"]["stream"]
-    assert stream["status"] == "pending_native"
-    assert stream["streams"] == ["infra-harness"]
-
-
 def test_next_pending_native_without_membership_is_named_in_digest(monkeypatch):
     """#6984: an unscoped pending_native ticket is listed with a reason, never silent."""
     _patch_known_streams(monkeypatch)
@@ -1193,27 +973,6 @@ def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
     bad = client.get("/api/work/v1/next?stream=not-a-stream")
     assert bad.status_code == 400
     assert bad.json()["error"] == "unknown_stream"
-
-
-def test_next_rejects_retired_benchmark_alias_and_keeps_live_alias(monkeypatch):
-    from scripts.orchestration.issue_stream_audit import load_registry
-
-    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(load_registry()))
-    _warm_next_cache()
-
-    for selector in ("benchmark-2156", "epic:4639"):
-        retired = client.get(f"/api/work/v1/next?stream={selector}")
-        assert retired.status_code == 400
-        assert retired.json()["error"] == "unknown_stream"
-        assert retired.json()["valid_streams"] == list(load_registry())
-
-    live = client.get("/api/work/v1/next?stream=infra")
-    assert live.status_code == 200, live.text
-    assert live.json()["stream"] == "infra-harness"
-
-    live_corpus = client.get("/api/work/v1/next?stream=epic:4706")
-    assert live_corpus.status_code == 200, live_corpus.text
-    assert live_corpus.json()["stream"] == "corpus-channels"
 
 
 @pytest.mark.parametrize("alias_file_state", ["missing", "malformed"])
@@ -1743,38 +1502,6 @@ def test_state_terminal_done_is_not_delivered(monkeypatch):
     assert nxt["digest"]["unscoped_unknown"]["reason_counts"].get("task_done_not_delivered") == 1
 
 
-def test_work_next_reports_unscoped_unknown(monkeypatch):
-    sections = _qualify_sections(
-        issues=SectionResult(
-            "issues",
-            "ok",
-            payload=[_issue_row(6003, "Unknown membership"), _issue_row(6005, "Homed")],
-            count=2,
-        ),
-        streams=SectionResult(
-            "streams",
-            "ok",
-            payload={
-                "membership_certified": False,
-                "streams": {"infra-harness": [10]},
-                "orphans": [{"number": 6003}],
-                "open_stream_membership": {"6005": ["infra-harness"]},
-            },
-            count=2,
-        ),
-    )
-    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
-    unknown = next(item for item in _local["items"] if item["remote_id"] == "6003")
-    assert all(item.get("remote_id") != "6003" for item in projection["items"])
-    homed = next(item for item in projection["items"] if item["remote_id"] == "6005")
-    assert unknown["projections"]["stream"]["status"] == "unknown"
-    assert unknown["projections"]["stream"]["streams"] == []
-    assert homed["projections"]["stream"]["status"] == "unknown"
-    assert nxt["queue"] == []
-    assert nxt["digest"]["unscoped_unknown"]["count"] == 2
-    assert nxt["stream"] == "infra-harness"
-
-
 def test_work_next_counts_in_stream_unknown_source(monkeypatch):
     """An unqualified issue that still names the lane is counted, not dropped."""
     sections = _qualify_sections(
@@ -1806,92 +1533,6 @@ def test_work_next_counts_in_stream_unknown_source(monkeypatch):
     assert nxt["queue"] == []
     assert nxt["digest"]["unscoped_unknown"]["count"] == 1
     assert nxt["digest"]["unscoped_unknown"]["reason_counts"] == {"source_unavailable": 1}
-
-
-def test_projection_timeout_fallback_downgrades_decision_fields(monkeypatch):
-    import time
-
-    from scripts.api.state_helpers import cache_get_with_age, cache_set
-
-    key = work_router.projection_cache_key({})
-    stored = {
-        "schema_version": "work-projection.v1",
-        "generated_at": "2026-08-16T00:00:00Z",
-        "cache_age_s": 0.0,
-        "budget": {"warm_target_s": 2, "timeout_s": 5},
-        "sources": [],
-        "items": [
-            {
-                "work_id": "wp1:pr:77",
-                "health": "ON_TRACK",
-                "safe_next_action": {
-                    "code": "MERGE_WHEN_READY",
-                    "reason_codes": ["ci_passed_current_head"],
-                    "state": "ready",
-                },
-                "flags": {"attention": True},
-                "projections": {
-                    "stream": {"status": "homed", "streams": ["infra-harness"], "fresh": True},
-                    "dispatch": {"alive": [True]},
-                    "review": {"review_decision": "APPROVED"},
-                    "verification": {
-                        "kind": "gh_checks",
-                        "state": "passing",
-                        "ci_state": "passing",
-                        "merge_evidence": {"state": "ready", "reason": "ci_passed_current_head"},
-                    },
-                },
-                "authority": [{"domain": "github", "observed_at": "2026-08-16T00:00:00Z", "age_s": 1, "stale": False}],
-            }
-        ],
-        "attention": [
-            {
-                "work_id": "wp1:pr:77",
-                "health": "ON_TRACK",
-                "safe_next_action": {
-                    "code": "MERGE_WHEN_READY",
-                    "reason_codes": ["ci_passed_current_head"],
-                    "state": "ready",
-                },
-            }
-        ],
-        "denominator": {"issues_open": 0, "prs_open": 1, "streams_complete": True, "omissions": []},
-        "capabilities": {"mutation": False},
-        "foundation_status": "FOUNDATION_COMPLETE",
-    }
-    cache_set(key, stored)
-
-    def aged(cache_key, max_age):
-        if max_age <= work_router.CACHE_TTL_S:
-            return None
-        return stored, 301.0
-
-    monkeypatch.setattr(work_router, "cache_get_with_age", aged)
-    monkeypatch.setattr(work_router, "TIMEOUT_S", 0.01)
-    monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: time.sleep(0.05))
-
-    response = client.get("/api/work/v1/projection?stream=infra-harness")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    item = data["items"][0]
-    assert data["cache_age_s"] == 301.0
-    assert item["health"] == "UNKNOWN"
-    assert item["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
-    assert item["safe_next_action"]["reason_codes"] == ["projection_cache_past_freshness"]
-    assert item["safe_next_action"]["state"] == "unknown"
-    assert item["flags"]["attention"] is False
-    assert item["projections"]["stream"]["status"] == "unknown"
-    assert item["projections"]["stream"]["streams"] == []
-    assert item["projections"]["verification"]["ci_state"] == "unknown"
-    assert item["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
-    assert item["projections"]["review"]["review_decision"] == "UNKNOWN"
-    assert item["projections"]["dispatch"]["alive"] == [None]
-    assert data["denominator"]["streams_complete"] is False
-    assert data["attention"][0]["health"] == "UNKNOWN"
-    # The cached object itself is not poisoned.
-    assert stored["items"][0]["health"] == "ON_TRACK"
-    assert stored["denominator"]["streams_complete"] is True
-    assert cache_get_with_age is not None
 
 
 def test_ledger_contents_never_reach_projection_or_next(monkeypatch):

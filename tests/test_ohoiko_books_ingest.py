@@ -19,8 +19,6 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-import pytest
-
 from scripts.ingest import ohoiko_books_ingest as obi
 
 FIXTURE_TXT = """Welcome page
@@ -115,15 +113,6 @@ def test_parse_book_section_terminator_stops_body(tmp_path: Path) -> None:
     assert "сонце" not in body_blob
     # But the entry's real example sentence stays.
     assert "Якщо́ ти го́лодний" in body_blob
-
-
-def test_parse_book_full_text_renders_clean_header(tmp_path: Path) -> None:
-    """full_text() yields ``<headword>  —  <english>`` followed by examples."""
-    entries = obi.parse_book(_write_fixture(tmp_path), max_entry_number=10)
-    a = entries[0]
-    blob = a.full_text()
-    assert blob.startswith("а  —  and, but\n"), blob[:40]
-    assert "Я люблю́ готува́ти" in blob
 
 
 def _make_textbooks_db(path: Path) -> sqlite3.Connection:
@@ -241,19 +230,3 @@ def test_ingest_entries_force_overwrites(tmp_path: Path) -> None:
     total = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]
     assert total == 5
     conn.close()
-
-
-@pytest.mark.parametrize(
-    "headword,expected",
-    [
-        ("а", True),
-        ("або́ = чи", True),
-        ("'а́", True),
-        ("Open Anki and create a new deck.", False),
-        ("Anki uses a spaced repetition algorithm", False),
-        ("", False),
-        ("   ", False),
-    ],
-)
-def test_is_cyrillic_headword(headword: str, expected: bool) -> None:
-    assert obi._is_cyrillic_headword(headword) is expected

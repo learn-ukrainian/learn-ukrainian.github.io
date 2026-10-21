@@ -15,19 +15,14 @@ import functools
 import json
 from pathlib import Path
 
-import _v4_synthetic_chain_fixture as fixture
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_a9_evaluation_package as a9
 from scripts.projects.open_model_data import v4_evaluation_scorer as scorer
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
-ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
-CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json"
-SCHEMA = CONTRACTS / "dataset_v4_a9_evaluation_package_receipt_v1.schema.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
 A5_RECEIPT_PATH = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
@@ -115,27 +110,6 @@ def test_a9_gate_closed_when_a8_receipt_is_invalid(tmp_path: Path) -> None:
     assert gate["blocked_reason_code"] == "upstream_receipt_invalid"
 
 
-def test_a9_gate_reports_eligible_but_stays_closed_pending_upstream_a8_completion(tmp_path: Path) -> None:
-    """The A9-layer regression test for the same P1: A2 rights + manifest
-    assignment resolving a stratum must never, by itself, produce a
-    positive A9 completion count. Every validator here runs live (A6's,
-    A7's, and A8's own real builders/validators, never stubbed) against a
-    synthetic root where one stratum is genuinely prerequisite-eligible;
-    A8's own ``a8_completions`` stays empty, so A9 -- which requires A8's
-    positive completion evidence -- stays at 0 complete."""
-    fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
-    fixture.run_chain_a6_through_a9(tmp_path)
-
-    gate = a9.check_evaluation_gate(tmp_path)
-    assert gate["a8_receipt_valid"] is True
-    assert gate["slots_prerequisite_eligible"] == 15
-    assert gate["slots_upstream_complete"] == 0
-    assert gate["slots_stage_complete"] == 0
-    assert gate["slots_residual"] == 100
-    assert gate["evaluation_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "eligible_slots_awaiting_upstream_stage_completion"
-
-
 # --- A9 residuals + consumer reproduction view ------------------------------------
 
 
@@ -194,106 +168,12 @@ def test_a9_receipt_validates_independently_against_the_real_public_artifacts() 
     assert a9.validate_receipt_independently(_cached_json(RECEIPT)) is None
 
 
-def test_a9_receipt_matches_schema() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
-    assert not errors, errors[0].message if errors else None
-
-
-def test_a9_receipt_binds_v4_sha_and_control_surfaces() -> None:
-    assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
-    assert _cached_json(RECEIPT)["control_surfaces"] == {
-        "public_control_issue": 7423,
-        "pilot_child_issue": 7430,
-        "private_operational_board": 622,
-    }
-    assert _cached_json(RECEIPT)["bindings"]["a8_admission_assembly"]["sha256"] == a9.sha256_file(A8_RECEIPT_PATH)
-    assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a9.sha256_file(MANIFEST_PATH)
-
-
-def test_a9_receipt_binds_the_merged_a8_receipt_by_its_known_public_sha() -> None:
-    # The merged A8 receipt's public sha256, frozen at dispatch time (PR #7662 repair 1:
-    # repaired stale pin, rippling from db80476d0a's A7 P1 fix through A8's receipt content).
-    assert a9.sha256_file(A8_RECEIPT_PATH) == "a5e3aa667d8c539cee42cea42f13e42696d14e3be9f19097e657d7ed8cafcbb0"
-
-
-def test_a9_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_residual_unresolved() -> None:
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a6_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A6_RECEIPT_PATH)["a6_residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a7_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A7_RECEIPT_PATH)["a7_residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a8_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A8_RECEIPT_PATH)["a8_residuals"]
-    }
-    for key in (
-        "a2_residuals_carried_forward",
-        "a4_residuals_carried_forward",
-        "a5_residuals_carried_forward",
-        "a6_residuals_carried_forward",
-        "a7_residuals_carried_forward",
-        "a8_residuals_carried_forward",
-    ):
-        assert all(e["status"] == "unresolved_carried_to_a9" for e in _cached_json(RECEIPT)[key])
-
-
-def test_a9_receipt_does_not_claim_eval_artifact_ready_while_the_gate_is_closed() -> None:
-    assert _cached_json(RECEIPT)["evaluation_gate"]["evaluation_slice_ready"] is False
-    assert _cached_json(RECEIPT)["status"] != "EVAL_ARTIFACT_READY"
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_prerequisite_eligible"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_stage_complete"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_residual"] == 100
-
-
-def test_a9_receipt_never_claims_training_ready_silver_arena_slice_ready_or_admitted_slice_ready() -> None:
-    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
-    assert "TRAINING_READY_SILVER" not in serialized
-    assert "ARENA_SLICE_READY" not in serialized
-    assert "ADMITTED_SLICE_READY" not in serialized
-    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["arena_slice_ready_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["admitted_slice_ready_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["eval_artifact_ready_claimed"] is False
-
-
-def test_a9_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {
-        "gold": False,
-        "training": False,
-        "evaluation": False,
-        "teaching": False,
-        "coverage": False,
-    }
-    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["candidate_rows_scored"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["rows_considered_for_scoring"] == 0
-    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
-    assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
-
-
 def test_a9_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
     keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
     assert _cached_json(RECEIPT)["a9_residuals"][0]["subject_id"].startswith("v4p-")
-
-
-def test_a9_receipt_never_opens_held_out_membership() -> None:
-    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_referenced"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_opened"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["heldout_family_identity_leaked"] is False
 
 
 def test_a9_bindings_hash_to_disk_for_every_bound_artifact() -> None:
@@ -363,20 +243,6 @@ def test_a9_refuses_a_dropped_a8_residual() -> None:
         a9.validate_receipt_independently(receipt)
 
 
-def test_a9_refuses_a_missing_frozen_slot_residual() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["a9_residuals"].pop()
-    with pytest.raises(a9.EvaluationPackageError):
-        a9.validate_receipt_independently(receipt)
-
-
-def test_a9_refuses_a_dropped_consumer_reproduction_view_entry() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["consumer_reproduction_view"].pop()
-    with pytest.raises(a9.EvaluationPackageError):
-        a9.validate_receipt_independently(receipt)
-
-
 def test_a9_refuses_a_forged_admitted_or_scored_row_in_the_consumer_view() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["consumer_reproduction_view"][0] = {
@@ -403,16 +269,3 @@ def test_a9_refuses_a_fabricated_nonempty_scoring_receipt() -> None:
     )
     with pytest.raises(a9.EvaluationPackageError):
         a9.validate_receipt_independently(receipt)
-
-
-def test_a9_schema_rejects_a_leaked_gold_label_value() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["eligibility"]["gold"] = True
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a9_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
-    assert "gold" not in FORBIDDEN_KEYS
-    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False

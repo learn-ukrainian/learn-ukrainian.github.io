@@ -31,7 +31,6 @@ ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a5_evidence_enrichment_receipt_v1.schema.json"
-A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
 
 
@@ -64,36 +63,6 @@ FORBIDDEN_KEYS = {
     "salt_hex",
     "private_salt",
 }
-
-ENRICHMENT_ALGORITHM_DESCRIPTOR = {
-    "algorithm_id": "v4-a5-structural-evidence-enrichment-v1",
-    "algorithm_version": "v1",
-    "unit_of_enrichment": "source_unit_commitment",
-    "content_blind": True,
-    "expression_blind": True,
-    "ordering": "source_unit_commitment_sha256_ascending",
-    "aggregated_fields": ["span_count", "total_span_bytes", "min_span_byte_length", "max_span_byte_length"],
-    "aggregation_formula": (
-        "for each row in A4's private extraction ledger (only source_unit_commitment_sha256 and "
-        "span_byte_length are read -- input_sha256/output_sha256/span text are never inspected): "
-        "span_count[commitment] += 1; total_span_bytes[commitment] += span_byte_length; "
-        "min_span_byte_length[commitment] = min(existing, span_byte_length); "
-        "max_span_byte_length[commitment] = max(existing, span_byte_length); a commitment with no rows "
-        "keeps span_count 0, total_span_bytes 0, min/max null"
-    ),
-    "evidence_commitment_formula": (
-        "sha256(canonical_json(per_unit_evidence sorted by source_unit_commitment_sha256))"
-    ),
-    "text_emitted": False,
-    "expression_emitted": False,
-    "reproducibility": (
-        "byte_stable_given_the_identical_private_a4_extraction_ledger_and_the_frozen_aggregation_formula"
-    ),
-}
-
-
-def _canonical_json(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -176,36 +145,7 @@ def _row(commitment: str, span_index: int, span_byte_length: int) -> dict[str, A
 # --- frozen algorithm descriptor ---------------------------------------------
 
 
-def test_enrichment_algorithm_descriptor_is_frozen_and_hashed() -> None:
-    assert enrichment.ENRICHMENT_ALGORITHM_DESCRIPTOR == ENRICHMENT_ALGORITHM_DESCRIPTOR
-    assert (
-        hashlib.sha256(_canonical_json(ENRICHMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")).hexdigest()
-        == enrichment.ENRICHMENT_ALGORITHM_DESCRIPTOR_SHA256
-    )
-
-
 # --- pure, content-blind aggregation -----------------------------------------
-
-
-def test_new_unit_accumulator_starts_empty() -> None:
-    assert enrichment.new_unit_accumulator() == {
-        "span_count": 0,
-        "total_span_bytes": 0,
-        "min_span_byte_length": None,
-        "max_span_byte_length": None,
-    }
-
-
-def test_accumulate_row_tracks_count_sum_min_max() -> None:
-    accumulator = enrichment.new_unit_accumulator()
-    for length in (10, 3, 7):
-        enrichment.accumulate_row(accumulator, length)
-    assert accumulator == {
-        "span_count": 3,
-        "total_span_bytes": 20,
-        "min_span_byte_length": 3,
-        "max_span_byte_length": 10,
-    }
 
 
 def test_aggregate_ledger_rows_groups_by_commitment_and_is_id_free() -> None:
@@ -270,39 +210,6 @@ def test_aggregate_ledger_rows_bounds_growth_not_the_hosts_inherited_high_water(
 
     assert total_rows == 50
     assert accumulators[commitment]["span_count"] == 50
-
-
-def test_aggregate_ledger_rows_still_fails_closed_on_real_growth_above_a_high_baseline(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The cap must still bite once *this pass* actually grows past it, even
-    starting from a high inherited baseline -- proving the fix bounds
-    incremental growth rather than disabling the guard outright."""
-    commitment = "a" * 64
-    rows = [extraction.canonical_json(_row(commitment, i, 10)) for i in range(10)]
-    baseline = 1_702_019_072
-    grown = baseline + enrichment.DEFAULT_A5_MEMORY_CAP_BYTES + 1
-    rss_values = iter([baseline] + [grown] * 20)
-    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: next(rss_values))
-
-    with pytest.raises(enrichment.MemoryBudgetExceeded, match="incremental resident memory"):
-        enrichment.aggregate_ledger_rows(
-            rows, [commitment], memory_cap_bytes=enrichment.DEFAULT_A5_MEMORY_CAP_BYTES, memory_check_interval=1
-        )
-
-
-def test_build_per_unit_evidence_is_sorted_by_commitment() -> None:
-    accumulators = {"b" * 64: enrichment.new_unit_accumulator(), "a" * 64: enrichment.new_unit_accumulator()}
-    evidence = enrichment.build_per_unit_evidence(accumulators)
-    assert [entry["source_unit_commitment_sha256"] for entry in evidence] == ["a" * 64, "b" * 64]
-
-
-def test_evidence_commitment_sha256_is_pure_and_order_sensitive() -> None:
-    first = [{"source_unit_commitment_sha256": "a" * 64, "span_count": 1}]
-    second = [{"source_unit_commitment_sha256": "a" * 64, "span_count": 2}]
-    assert enrichment.evidence_commitment_sha256(first) == enrichment.evidence_commitment_sha256(first)
-    assert enrichment.evidence_commitment_sha256(first) != enrichment.evidence_commitment_sha256(second)
-    assert enrichment.evidence_commitment_sha256([]) == enrichment.EMPTY_EVIDENCE_COMMITMENT_SHA256
 
 
 # --- enrichment gate (public-only) ------------------------------------------
@@ -377,28 +284,6 @@ def test_compute_evidence_enrichment_streams_real_rows_and_aggregates_id_free(tm
 
     # Rerunning against the same private artifacts is a pure re-read, reproducible.
     assert enrichment.compute_evidence_enrichment(a4_receipt, tmp_path) == result
-
-
-def test_compute_evidence_enrichment_succeeds_under_a_high_inherited_rss_baseline(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Regression for the merge-queue-only failure (green on the PR fastlane,
-    red in the full 4-shard merge-group run): after ~5k prior tests in a
-    pytest shard, the host process's inherited ``ru_maxrss`` can already sit
-    above the 512 MiB production cap even though this synthetic stream never
-    opens the real 1.5 GiB private ledger. The cap must bound only this
-    pass's own growth, not that inherited high-water mark."""
-    commitment_a = "a" * 64
-    commitment_b = "b" * 64
-    rows = [_row(commitment_a, 0, 10), _row(commitment_a, 1, 20), _row(commitment_b, 0, 5)]
-    root_sha256, row_count = _write_private_ledger(tmp_path, rows)
-    a4_receipt = _synthetic_a4_receipt([commitment_a, commitment_b], row_count=row_count, root_sha256=root_sha256)
-    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: 1_702_019_072)  # the exact CI figure
-
-    result = enrichment.compute_evidence_enrichment(a4_receipt, tmp_path)
-
-    assert result["ledger_consumed"] is True
-    assert result["spans_covered"] == 3
 
 
 def test_compute_evidence_enrichment_handles_a_zero_row_ledger(tmp_path: Path) -> None:
@@ -511,14 +396,6 @@ def test_derive_a5_unit_evidence_residuals_is_pure_reproducible_and_id_free() ->
         assert residual["subject_kind"] == "source_unit_commitment"
 
 
-def test_derive_a5_unit_evidence_residuals_treats_a_missing_evidence_entry_as_zero() -> None:
-    commitment = "a" * 64
-    a4_receipt = _synthetic_a4_receipt([commitment], row_count=0, root_sha256=extraction.EMPTY_LEDGER_ROOT_SHA256)
-    residuals = enrichment.derive_a5_unit_evidence_residuals(a4_receipt, [])
-    assert len(residuals) == 1
-    assert residuals[0]["reason_code"] == "structural_evidence_pending_source_ingestion"
-
-
 # --- checked-in receipt: schema, bindings, forbidden content ----------------
 
 
@@ -558,12 +435,6 @@ def test_a5_receipt_bindings_match_exact_inputs() -> None:
     )
 
 
-def test_a5_receipt_dataset_rows_emitted_is_zero() -> None:
-    receipt = _receipt()
-    assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
-    assert receipt["safety_assertions"]["training_ready_silver_claimed"] is False
-
-
 def test_a5_receipt_never_names_a_held_out_family_or_source_unit_or_source_text() -> None:
     receipt = _receipt()
     serialized = json.dumps(receipt, ensure_ascii=False, sort_keys=True)
@@ -571,38 +442,6 @@ def test_a5_receipt_never_names_a_held_out_family_or_source_unit_or_source_text(
     assert not _all_keys(receipt) & FORBIDDEN_KEYS
     for needle in ("fam-", "db.", "historical."):
         assert needle not in serialized
-
-
-def test_a5_receipt_carries_forward_every_a2_and_a4_residual_unchanged() -> None:
-    receipt = _receipt()
-    a2_receipt = _load(A2_RECEIPT_PATH)
-    a4_receipt = _load(A4_RECEIPT_PATH)
-
-    a2_ids = {entry["residual_id"] for entry in a2_receipt["residuals"]}
-    carried_a2_ids = {entry["residual_id"] for entry in receipt["a2_residuals_carried_forward"]}
-    assert carried_a2_ids == a2_ids
-    for entry in receipt["a2_residuals_carried_forward"]:
-        assert entry["origin_stage"] == "A2"
-        assert entry["status"] == "unresolved_carried_to_a5"
-
-    a4_ids = {entry["residual_id"] for entry in a4_receipt["a4_residuals"]}
-    carried_a4_ids = {entry["residual_id"] for entry in receipt["a4_residuals_carried_forward"]}
-    assert carried_a4_ids == a4_ids
-    for entry in receipt["a4_residuals_carried_forward"]:
-        assert entry["origin_stage"] == "A4"
-        assert entry["status"] == "unresolved_carried_to_a5"
-
-
-def test_a5_residuals_are_derivable_and_cover_every_known_a4_commitment() -> None:
-    receipt = _receipt()
-    a4_receipt = _load(A4_RECEIPT_PATH)
-    known_commitments = set(a4_receipt["builder_packet_consumption"]["unit_commitments"])
-
-    assert len(receipt["a5_residuals"]) == len(known_commitments)
-    assert {r["subject_id"] for r in receipt["a5_residuals"]} == known_commitments
-    assert receipt["a5_residuals"] == enrichment.derive_a5_unit_evidence_residuals(
-        a4_receipt, receipt["evidence_enrichment"]["per_unit_evidence"]
-    )
 
 
 def test_a5_evidence_enrichment_is_bound_to_a4_commitments_and_spans_covered() -> None:

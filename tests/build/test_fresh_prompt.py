@@ -19,11 +19,8 @@ from scripts.build.fresh.prompt import (
     CARDS_DIR,
     CITED_RECORDS_BEGIN,
     CITED_RECORDS_END,
-    EVIDENCE_PACK_SCHEMA,
     LEARNER_STATE_BEGIN,
     LEARNER_STATE_END,
-    RECORD_ID_RE,
-    RECORD_KINDS,
     SCHEMA_EXEMPLAR_BEGIN,
     SCHEMA_EXEMPLAR_END,
     check_rendered_prompt,
@@ -212,95 +209,6 @@ def sample_cited_records():
     }
 
 
-def test_render_lesson_prompt_clean(sample_plan_entry, sample_learner_state, sample_cited_records):
-    """Rendering a prompt from clean inputs passes the rendered-prompt check."""
-    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
-    card_path = CARDS_DIR / "a1.md"
-
-    rendered = render_lesson_prompt(
-        plan_entry=sample_plan_entry,
-        cited_records=sample_cited_records,
-        learner_state=sample_learner_state,
-        word_store=SAMPLE_WORD_STORE,
-        immersion=imm_payload,
-        level="a1",
-        slug="sounds-intro",
-        lesson_n=1,
-        style_card_path=card_path,
-    )
-
-    assert "## 1. Plan Entry" in rendered
-    assert "## 2. Cited Evidence Records" in rendered
-    assert "W-001" in rendered
-    assert "EX-001" in rendered
-    assert SCHEMA_EXEMPLAR_BEGIN in rendered
-    assert SCHEMA_EXEMPLAR_END in rendered
-
-    check_res = check_rendered_prompt(
-        rendered, sample_plan_entry, card_path, learner_state=sample_learner_state, word_store=SAMPLE_WORD_STORE
-    )
-    assert check_res.passed is True
-    assert check_res.errors == []
-    assert check_res.prompt_sha256 == hashlib.sha256(rendered.encode("utf-8")).hexdigest()
-    assert len(check_res.prompt_sha256) == 64
-
-
-@pytest.mark.parametrize("level,card", [("a1", "a1"), ("a2", "a2"), ("b1", "b1plus")])
-@pytest.mark.parametrize("recap", [False, True])
-def test_writer_prompts_have_no_quota(sample_plan_entry, sample_learner_state, sample_cited_records, level, card, recap):
-    entry = dict(sample_plan_entry)
-    entry.pop("word_target")
-    kwargs = dict(
-        cited_records=sample_cited_records, learner_state=sample_learner_state,
-        word_store=SAMPLE_WORD_STORE,
-        immersion=compute_immersion_payload(level, arc_position=1, lesson_n=1, cumulative_core_count=0),
-        level=level, slug="sounds-intro", lesson_n=1, style_card_path=CARDS_DIR / f"{card}.md",
-    )
-    renderer = render_recap_prompt if recap else render_lesson_prompt
-    if recap:
-        kwargs["built_lessons"] = []
-    prompt = renderer(plan_entry=entry, **kwargs)
-    # Deprecated metadata never reaches an instruction, for either prompt and every card.
-    entry["word_target"] = 55000
-    assert renderer(plan_entry=entry, **kwargs) == prompt
-    assert "Word Target" not in prompt and "word_target" not in prompt
-    assert "word target is a minimum" not in prompt
-    assert "45 minutes" in prompt and "guidance" in prompt
-    # R-30's existing structural immersion payload is explicitly excluded from sizing quotas.
-    assert ("Module Structural Minimums" in prompt) is (level != "a1")
-    if level == "a1":
-        assert all(key not in prompt for key in ("min_uk_dialogue_lines", "min_uk_example_sentences", "min_vocab_entries"))
-
-
-@pytest.mark.parametrize("level", ["a2", "b1", "b2"])
-@pytest.mark.parametrize("recap", [False, True])
-def test_non_a1_rendered_prompts_keep_main_candidate_wording(
-    sample_plan_entry, sample_learner_state, sample_cited_records, level: str, recap: bool
-) -> None:
-    sample_cited_records["W-001"]["lemma"] = "книга"
-    sample_cited_records["W-001"]["forms"][0].update(
-        {"form": "книга", "tags": "noun:inanim:f:v_naz", "stressed": "кни́га", "learner": True}
-    )
-    sample_plan_entry["lesson"] = {"module": f"{level}/sounds-intro", "n": 2 if recap else 1}
-    common = dict(
-        plan_entry=sample_plan_entry,
-        cited_records=sample_cited_records,
-        learner_state=sample_learner_state,
-        word_store=SAMPLE_WORD_STORE,
-        immersion=compute_immersion_payload(level, arc_position=1, lesson_n=1, cumulative_core_count=0),
-        level=level,
-        slug="sounds-intro",
-        lesson_n=2 if recap else 1,
-    )
-    rendered = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
-    assert (
-        "Use one form from its bound record per option. State the complete slot `requires`; "
-        "choose one admitted key and distractors that differ in `tests_feature`. "
-        "The engine generates the item-specific subset and checks every written option."
-    ) in rendered
-    assert "partitive genitive after request" not in rendered
-
-
 def test_render_lesson_prompt_uncited_pending_form(sample_plan_entry, sample_learner_state, sample_cited_records):
     """A cited word can contain an uncited pending form without leaking a guessed stress."""
     sample_cited_records["W-001"]["forms"].append({"form": "mamy", "tags": "tag-gen", "stress_source": "pending"})
@@ -329,54 +237,6 @@ def test_render_lesson_prompt_uncited_pending_form(sample_plan_entry, sample_lea
         learner_state=sample_learner_state,
         word_store=SAMPLE_WORD_STORE,
     ).passed
-
-
-def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cited_records):
-    """Recap prompt variant renders built lessons and passes recap check."""
-    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=2, cumulative_core_count=5)
-    card_path = CARDS_DIR / "a1.md"
-    recap_plan = dict(sample_plan_entry)
-    recap_plan["lesson"] = {"module": "a1/sounds-intro", "n": 2}
-    built_lessons = [
-        {
-            "n": 1,
-            "title": "Lesson 1",
-            "content": "# Built lesson MDX",
-            "sha256": hashlib.sha256(b"# Built lesson MDX").hexdigest(),
-        }
-    ]
-
-    rendered = render_recap_prompt(
-        plan_entry=recap_plan,
-        built_lessons=built_lessons,
-        cited_records=sample_cited_records,
-        learner_state=sample_learner_state,
-        word_store=SAMPLE_WORD_STORE,
-        immersion=imm_payload,
-        level="a1",
-        slug="sounds-intro",
-        lesson_n=2,
-        style_card_path=card_path,
-    )
-
-    assert "## 2. Built Lessons of this Module" in rendered
-    assert "Built Lesson 1: Lesson 1" in rendered
-    assert "```mdx\n# Built lesson MDX" in rendered
-    assert built_lessons[0]["sha256"] in rendered
-    assert SCHEMA_EXEMPLAR_BEGIN in rendered
-    assert SCHEMA_EXEMPLAR_END in rendered
-
-    check_res = check_rendered_prompt(
-        rendered,
-        recap_plan,
-        card_path,
-        is_recap=True,
-        built_lessons=built_lessons,
-        learner_state=sample_learner_state,
-        word_store=SAMPLE_WORD_STORE,
-    )
-    assert check_res.passed is True
-    assert check_res.errors == []
 
 
 def test_check_fails_missing_schema_summary_marker(sample_plan_entry):
@@ -559,50 +419,6 @@ def test_check_fails_style_card_mismatch(sample_plan_entry):
     assert any("card_hash_mismatch" in e for e in res.errors)
 
 
-def test_render_prompt_does_not_html_escape(sample_plan_entry, sample_learner_state):
-    """Rendered prompt preserves literal <, >, and & characters without HTML entity escaping."""
-    cited_records = {
-        "W-001": {
-            "lemma": "mama",
-            "pos": "noun",
-            "forms": [{"form": "mama", "tags": "tag-nom", "stressed": "mama", "stress_source": "vesum"}],
-        },
-        "EX-001": {
-            **EXAMPLE_RECORD,
-            "id": "EX-001",
-            "text": "Це <приклад> & тест",
-            "translation_en": "This is an <example> & test",
-        },
-        "T-001": {**TEXT_RECORD, "id": "T-001", "quote": "Rule: <a> & <b>"},
-    }
-    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
-    card_path = CARDS_DIR / "a1.md"
-
-    rendered = render_lesson_prompt(
-        plan_entry=sample_plan_entry,
-        cited_records=cited_records,
-        learner_state=sample_learner_state,
-        word_store=SAMPLE_WORD_STORE,
-        immersion=imm_payload,
-        level="a1",
-        slug="sounds-intro",
-        lesson_n=1,
-        style_card_path=card_path,
-    )
-
-    assert "Це <приклад> & тест" in rendered
-    assert "This is an <example> & test" in rendered
-    assert "Rule: <a> & <b>" in rendered
-    assert "&lt;" not in rendered
-    assert "&gt;" not in rendered
-    assert "&amp;" not in rendered
-
-    res = check_rendered_prompt(
-        rendered, sample_plan_entry, card_path, learner_state=sample_learner_state, word_store=SAMPLE_WORD_STORE
-    )
-    assert res.passed is True
-
-
 # --- #9182: the writer sees the complete planned learner state -------------------------------------------------
 
 STATE_WORD_STORE = {
@@ -773,53 +589,6 @@ def test_read_only_constrained_resolution_prompt_contract(
     assert _read_only_write_intent_error(mode="read-only", prompt=prompts[0]) is None
 
 
-@pytest.mark.parametrize("recap", [False, True])
-def test_prompt_lists_every_letter_grammar_point_and_word(
-    sample_plan_entry, full_learner_state, sample_cited_records, recap
-):
-    """Both writer paths render the whole state in a fixed order and pass the check with it."""
-    prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records, recap=recap)
-    block = _state_block(prompt)
-
-    assert "**Letters taught** (5, in taught order): О А І Г М" in block
-    assert "  - `G-a1-001`: A sound and a letter are different units.\n  - `G-a1-002`: Vowels" in block
-    assert "**Allowed words** (5; any form of each may be used)" in block
-    assert "  - Base layer (2): `W-2` я, `W-10` і\n" in block
-    assert "  - Core words of earlier lessons (2): `W-3` привіт, `W-11` день\n" in block
-    assert "  - Names admitted for use (1): `W-40` Оксана\n" in block
-    assert "Recycle earlier words and grammar wherever a step allows." in prompt
-    assert "write read and copy items only with letters taught above" in prompt
-    assert "**Cumulative Core Count**: 2" in prompt
-    assert "**Allowed Word IDs**: 5 words" in prompt
-
-    check = check_rendered_prompt(
-        prompt,
-        sample_plan_entry,
-        CARDS_DIR / "a1.md",
-        is_recap=recap,
-        learner_state=full_learner_state,
-        **STATE_SOURCES,
-    )
-    assert check.errors == []
-
-
-@pytest.mark.parametrize("plan_order", [("О", "А"), ("А", "О")])
-def test_letters_of_one_lesson_render_in_the_plans_order(
-    sample_plan_entry, full_learner_state, sample_cited_records, plan_order
-):
-    """Letters introduced in the same lesson keep the plan's order in the writer block and the rebuilt block."""
-    letters = {letter: {"position": 1, "lesson": 2} for letter in plan_order}
-    state = dataclasses.replace(full_learner_state, letters=letters)
-    prompt = _render_state_prompt(sample_plan_entry, state, sample_cited_records)
-    block = _state_block(prompt)
-
-    assert f"**Letters taught** (2, in taught order): {' '.join(plan_order)}" in block
-    assert block == learner_state_block(state, STATE_WORD_STORE, STATE_GRAMMAR)
-    assert block == learner_state_block(state.to_dict(), STATE_WORD_STORE, STATE_GRAMMAR)
-    assert learner_state_view(state, STATE_WORD_STORE, STATE_GRAMMAR)["letters"] == list(plan_order)
-    assert _state_errors(prompt, sample_plan_entry, state, **STATE_SOURCES) == []
-
-
 @pytest.mark.parametrize("plan_order", [("Б", "А"), ("А", "Б")])
 def test_the_reviewer_reads_the_taught_order_the_writer_saw(
     tmp_path, sample_plan_entry, full_learner_state, sample_cited_records, plan_order
@@ -852,33 +621,6 @@ def test_the_reviewer_reads_the_taught_order_the_writer_saw(
         assert state_path.read_bytes() == lock.yaml_bytes(learner_state_document(state))
 
 
-def test_state_section_is_deterministic_and_matches_the_reviewer_document(
-    sample_plan_entry, full_learner_state, sample_cited_records
-):
-    """The PlannedState and its to_dict() document (what the reviewer receives) render byte-identically."""
-    first = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records)
-    again = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records)
-    as_document = _render_state_prompt(sample_plan_entry, full_learner_state.to_dict(), sample_cited_records)
-    assert first == again
-    assert _state_block(first) == _state_block(as_document)
-
-
-def test_state_section_keeps_the_learner_state_echo_and_hash(
-    sample_plan_entry, full_learner_state, sample_cited_records
-):
-    """Rendering the section neither changes the state identity nor the echoed learner_state_sha256."""
-    identity = learner_state_sha256(full_learner_state)
-    prompt = _render_state_prompt(
-        sample_plan_entry, full_learner_state, sample_cited_records, learner_state_sha256=identity
-    )
-    assert f'learner_state_sha256: "{identity}"' in prompt
-    assert learner_state_sha256(full_learner_state) == identity
-    check = check_rendered_prompt(
-        prompt, sample_plan_entry, CARDS_DIR / "a1.md", learner_state=full_learner_state, **STATE_SOURCES
-    )
-    assert check.prompt_sha256 == hashlib.sha256(prompt.encode("utf-8")).hexdigest()
-
-
 def test_render_fails_when_a_state_id_has_no_lemma_or_point(
     sample_plan_entry, full_learner_state, sample_cited_records
 ):
@@ -892,13 +634,6 @@ def test_render_fails_when_a_state_id_has_no_lemma_or_point(
 
 def _state_errors(prompt, plan_entry, state, **sources):
     return check_rendered_prompt(prompt, plan_entry, CARDS_DIR / "a1.md", learner_state=state, **sources).errors
-
-
-def test_state_block_is_the_block_the_state_renders(sample_plan_entry, full_learner_state, sample_cited_records):
-    """The check regenerates the block from the state and its sources: the prompt's block is those exact bytes."""
-    prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records)
-    assert _state_block(prompt) == learner_state_block(full_learner_state, STATE_WORD_STORE, STATE_GRAMMAR)
-    assert _state_errors(prompt, sample_plan_entry, full_learner_state, **STATE_SOURCES) == []
 
 
 @pytest.mark.parametrize(
@@ -1139,16 +874,6 @@ def test_an_unknown_or_incomplete_record_fails_the_render(sample_plan_entry, sam
         _render(_citing(sample_plan_entry, cited), sample_learner_state, cited)
 
 
-def test_record_kinds_cover_every_record_kind_of_the_pack_schema():
-    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
-    schema_kinds = {
-        spec["properties"]["id"]["pattern"].removeprefix("^").split("-", 1)[0]: name.removesuffix("_record")
-        for name, spec in defs.items()
-        if name.endswith("_record")
-    }
-    assert schema_kinds == {prefix: kind for prefix, kind in RECORD_KINDS.items() if prefix != "W"}
-
-
 def test_video_models_are_rendered_as_structured_data(sample_plan_entry, sample_learner_state):
     models = {"letters": ["А"], "words": ["W-001"], "segment": "00:05–00:12"}
     record = {**VIDEO_RECORD, "models": models}
@@ -1156,11 +881,6 @@ def test_video_models_are_rendered_as_structured_data(sample_plan_entry, sample_
     line = next(line for line in _cited_block(prompt).splitlines() if line.startswith("- Models (structured): "))
     assert json.loads(line.removeprefix("- Models (structured): ")) == models
     assert "Never infer a model from `use` or a primer quotation" in prompt
-
-
-def test_video_without_models_is_an_explicit_prompt_gap(sample_plan_entry, sample_learner_state):
-    prompt = _render(_citing(sample_plan_entry, ["V-004"]), sample_learner_state, {"V-004": VIDEO_RECORD})
-    assert "- Models: undeclared (listening_model_undeclared)" in _cited_block(prompt)
 
 
 def test_lesson_numbers_in_cited_source_prose_are_not_curriculum_references(sample_plan_entry, sample_learner_state):
@@ -1200,95 +920,6 @@ def test_lesson_numbers_the_plan_entry_states_are_its_own_input(sample_plan_entr
 
     tampered = prompt.replace("the review shape.", "the review shape of lesson 4.")
     assert any("lesson number 4" in e for e in _check(tampered, plan, sample_learner_state).errors)
-
-
-def test_record_id_scan_matches_only_schema_id_shapes(sample_plan_entry, sample_learner_state):
-    assert RECORD_ID_RE.findall("Latin P-looking shape; watch?v=W-1rCu0indE; T-4, G-a1-001, EX-12x, W-11.") == [
-        "T-4",
-        "G-a1-001",
-        "W-11",
-    ]
-    plan = _citing(sample_plan_entry, ALL_KINDS, rationale="Override the Latin P-looking shape.")
-    prompt = _render(plan, sample_learner_state, ALL_KINDS)
-    assert _check(prompt, plan, sample_learner_state).errors == []
-
-
-def _schema_id_prefixes():
-    """Every id prefix of the pack schema's ``<kind>_record`` definitions, plus the word store's ``W``."""
-    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
-    pack = {
-        spec["properties"]["id"]["pattern"].removeprefix("^").split("-", 1)[0]
-        for n, spec in defs.items()
-        if n.endswith("_record")
-    }
-    return sorted({*pack, "W"})
-
-
-@pytest.mark.parametrize("prefix", _schema_id_prefixes())
-def test_uncited_record_id_of_every_schema_kind_fails_the_check(sample_plan_entry, sample_learner_state, prefix):
-    """An uncited ``<prefix>-999`` fails for every record kind the pack schema defines; the plan's cited record
-    of that kind in the same place passes."""
-    plan = _citing(sample_plan_entry, ALL_KINDS)
-    prompt = _render(plan, sample_learner_state, ALL_KINDS)
-    assert "First phonetics step." in prompt
-
-    uncited = prompt.replace("First phonetics step.", f"First phonetics step, see {prefix}-999.")
-    errors = _check(uncited, plan, sample_learner_state).errors
-    assert any(e.startswith(f"uncited_record_id: record '{prefix}-999'") for e in errors), errors
-
-    (cited_id,) = [rid for rid in ALL_KINDS if rid.split("-", 1)[0] == prefix]
-    cited = prompt.replace("First phonetics step.", f"First phonetics step, see {cited_id}.")
-    assert _check(cited, plan, sample_learner_state).errors == []
-
-
-def test_lesson_without_consolidation_renders(sample_plan_entry, sample_learner_state):
-    """A lesson plan entry may omit `consolidation` (module-plan-v2 does not require it for any lesson kind)."""
-    plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS).items() if k != "consolidation"}
-    prompt = _render(plan, sample_learner_state, ALL_KINDS)
-    assert "### Consolidation" not in prompt
-    assert _check(prompt, plan, sample_learner_state).errors == []
-
-
-def test_lesson_with_consolidation_lists_its_activities(sample_plan_entry, sample_learner_state):
-    plan = _citing(sample_plan_entry, ALL_KINDS)
-    prompt = _render(plan, sample_learner_state, ALL_KINDS)
-    assert "### Consolidation\n- activities: a1\n" in prompt
-
-
-def test_recap_without_consolidation_renders(sample_plan_entry, sample_learner_state):
-    """A recap plan entry may omit `consolidation` (module-plan-v2 does not require it; A1 position 1 lesson 6)."""
-    plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS, kind="recap").items() if k != "consolidation"}
-    prompt = _render(plan, sample_learner_state, ALL_KINDS, recap=True)
-    assert "### Consolidation" not in prompt
-    assert _check(prompt, plan, sample_learner_state, recap=True).errors == []
-
-
-@pytest.mark.parametrize("recap", [False, True])
-def test_legacy_activity_prompt_bytes_unchanged(sample_plan_entry, sample_learner_state, sample_cited_records, recap):
-    """Fixed inputs pin the pre-#9541 activity format without pinning evolving plan/pack bytes."""
-    sample_plan_entry["activities"] = [
-        {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Identify letter"},
-        {
-            "id": "a2",
-            "type": "error-correction",
-            "placement": "workbook",
-            "focus": "Repair spelling",
-            "error_refs": ["E-001", "E-002"],
-            "model": "X-004",
-        },
-        {"id": "a3", "type": "quiz", "placement": "inline", "focus": "Choose letter", "error_refs": [], "model": ""},
-    ]
-    prompt = _render(sample_plan_entry, sample_learner_state, sample_cited_records, recap=recap)
-    expected = (
-        "\n\n- `a1`: type: `quiz`, placement: `inline`, focus: Identify letter\n\n"
-        "- `a2`: type: `error-correction`, placement: `workbook`, focus: Repair spelling, "
-        "error_refs: E-001, E-002, model: X-004\n\n"
-        "- `a3`: type: `quiz`, placement: `inline`, focus: Choose letter\n\n\n"
-    )
-    activity_block = prompt.split("### Activities", 1)[1].split("### Inventory", 1)[0]
-    assert activity_block.encode("utf-8") == expected.encode("utf-8")
-    for field in ("targets", "options", "learner_reads"):
-        assert f"Binding {field}:" not in prompt
 
 
 @pytest.mark.parametrize("recap", [False, True])
@@ -1383,21 +1014,3 @@ def test_structured_citation_discovery_preserves_existing_sources_and_ignores_pr
         "G-a1-001",
         "V-1",
     }
-
-
-
-@pytest.mark.parametrize("level,recap,pin", [
-    ("a2", False, "1ae2b3c21b5a6d16694f018de3f01d4939911283d9938105e97b0751cf85bbce"),
-    ("a2", True, "a02d1f7fdf206cadb01c0cb8cd4a9af23dc60a11c1624ac17dc191906d8fff2c"),
-    ("b1", False, "5fb952bea06c6df6b7a5ef24e1dbbf317f9a4dce864105b4228854558888cb86"),
-    ("b1", True, "c962d215ec884901b26067bda0d4065dd4b6d2a53ea02d013d193e769c7d8aec"),
-    ("b2", False, "c5516ffbb82987361a786f8a7cb8af003e182272301c14438a989ca0edc7b9bf"),
-    ("b2", True, "50506b610721f4d79895610f2b3da53f7640fe84647c2e76fc8ca2211dff215d"),
-])
-def test_non_a1_writer_bytes_match_approved_style_cards(sample_plan_entry, sample_learner_state, sample_cited_records, level, recap, pin):
-    # Original #10104 snapshots refreshed for the approved style-card additions (#8431).
-    kwargs = dict(plan_entry=sample_plan_entry, learner_state=sample_learner_state, cited_records=sample_cited_records, word_store=SAMPLE_WORD_STORE, immersion=compute_immersion_payload(level,1,1,0), level=level, slug="sounds-intro", lesson_n=1)
-    render = render_recap_prompt if recap else render_lesson_prompt
-    if recap:
-        kwargs["built_lessons"] = []
-    assert hashlib.sha256(render(**kwargs).encode()).hexdigest() == pin

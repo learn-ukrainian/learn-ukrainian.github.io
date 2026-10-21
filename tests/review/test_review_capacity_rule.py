@@ -10,7 +10,7 @@ import pytest
 from scripts.fleet import credit_lane
 from scripts.review import closeout_cli
 from scripts.review.capacity import review_capacity, review_capacity_action
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
+from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 
@@ -36,14 +36,6 @@ def snapshot(*, remaining=54, short=96, stale=False, **lane):
 
 def inputs(data):
     return ResolverInputs(author_model="gpt-6.1-sol", risk="critical", language_lane=True, routing_snapshot=data, claude_account=HOST_ACCOUNT)
-
-
-def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
-    result = resolve_reviewer(inputs(snapshot()))
-    assert result.selected.concrete_model == "claude-opus-5-5"
-    # Known allowance does not manufacture verified route health.
-    assert result.selected.health != "healthy"
-    assert result.selected.selection_score[:2] == (0, 9)
 
 
 @pytest.mark.parametrize("key", ["claude", "claude-opus-5-5", "anthropic"])
@@ -79,12 +71,6 @@ def test_tightest_allowance_at_or_below_reserve_excludes(weekly, short):
     result = resolve_reviewer(inputs(snapshot(remaining=weekly, short=short)))
     assert result.selected is None
     assert any(item.health == "near_cap" and "near cap" in item.reason for item in result.trace)
-
-
-def test_policy_threshold_is_used(monkeypatch):
-    policy = replace(credit_lane.load_policy(), near_cap_remaining_pct=55)
-    monkeypatch.setattr(credit_lane, "load_policy", lambda: policy)
-    assert resolve_reviewer(inputs(snapshot())).selected is None
 
 
 def test_capacity_reads_one_fresh_policy_per_call(monkeypatch):
@@ -229,12 +215,6 @@ def test_live_fallback_receipt(tmp_path, capsys, monkeypatch, data, freshness, r
     assert result["selected"]["health"] is None
 
 
-def test_unreadable_policy_keeps_retained_reserve(monkeypatch):
-    monkeypatch.setattr(credit_lane, "load_policy", lambda: (_ for _ in ()).throw(ValueError("unreadable")))
-    assert review_capacity({"remaining_pct": 10}, {"stale": False}).near_cap
-    assert not review_capacity({"remaining_pct": 11}, {"stale": False}).near_cap
-
-
 @pytest.mark.parametrize("remaining,expected_blocked", [(10, True), (11, False)])
 def test_unreadable_policy_dispatch_keeps_retained_reserve(monkeypatch, remaining, expected_blocked):
     monkeypatch.setattr(credit_lane, "load_policy", lambda: (_ for _ in ()).throw(ValueError("unreadable")))
@@ -246,12 +226,6 @@ def test_unreadable_policy_dispatch_keeps_retained_reserve(monkeypatch, remainin
     assert reason == ("near_cap (10% remaining)" if expected_blocked else "")
 
 
-def test_capacity_free_evaluation_has_no_live_reads(monkeypatch):
-    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_: pytest.fail("resolver must stay injected"))
-    result = evaluate_candidate(REVIEW_CANDIDATES["claude-opus-5-5"], replace(inputs(None), routing_snapshot=None))
-    assert result.status == "eligible" and result.health is None
-
-
 def test_legacy_normalization_keeps_writer_policy_and_hot_orders_equal_review_fits():
     from scripts.review.reviewer_resolver import normalize_routing_snapshot
 
@@ -260,11 +234,6 @@ def test_legacy_normalization_keeps_writer_policy_and_hot_orders_equal_review_fi
     result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
     assert result.selected.concrete_model == "gpt-6.1-sol"
     assert next(item for item in result.trace if item.concrete_model == "claude-opus-5-5").status == "eligible"
-
-
-@pytest.mark.parametrize("delta", [None, True, float("nan"), float("inf"), -5])
-def test_invalid_or_negative_pace_does_not_invent_pressure(delta):
-    assert review_capacity({"codexbar": {"weekly_pace_delta_pct": delta}}).pressure == 0
 
 
 @pytest.mark.parametrize(

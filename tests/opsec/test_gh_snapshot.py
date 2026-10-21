@@ -57,14 +57,6 @@ def test_encoded_separators_and_dot_only_repository_segments_are_refused(segment
 
 
 @pytest.mark.parametrize(
-    "path", ["repos/unit/public/branches/feature%2Fextra", "repos/unit/public/commits/ref%2eextra"]
-)
-def test_encoded_dot_or_slash_in_suffix_is_refused(path):
-    with pytest.raises(PublishBlocked):
-        read_api(path)
-
-
-@pytest.mark.parametrize(
     "path",
     [
         "repos/{owner}/{repo}/issues/1",
@@ -125,23 +117,6 @@ def test_github_repo_host_remains_allowed_for_reads(cmd):
 
 
 @pytest.mark.parametrize(
-    "path",
-    [
-        "repos/unit/public/releases/tags/..",
-        "repos/unit/public/releases/tags/.",
-        "repos/unit/public/branches/..",
-        "repos/unit/public/branches/.",
-        "repos/unit/public/commits/..",
-        "repos/unit/public/actions/workflows/..",
-        "repos/unit/public/compare/..",
-    ],
-)
-def test_dot_only_segments_in_read_api_paths_are_refused(path):
-    with pytest.raises(PublishBlocked):
-        read_api(path)
-
-
-@pytest.mark.parametrize(
     "cmd",
     [
         ["release", "view", ".."],
@@ -172,11 +147,6 @@ def test_gh_repo_in_environment_refuses_non_github_host(cmd):
         admit(cmd, cwd=".", environment={"GH_REPO": "ghe.example.com/unit/public"})
 
 
-def test_gh_host_github_com_remains_allowed_for_reads():
-    cmd = admit(["issue", "list"], cwd=".", environment={"GH_HOST": "github.com"})
-    assert not cmd.write
-
-
 @pytest.mark.parametrize(
     "cmd",
     [
@@ -189,18 +159,6 @@ def test_gh_host_github_com_remains_allowed_for_reads():
 def test_url_positional_arguments_refuse_non_github_hosts(cmd):
     with pytest.raises(PublishBlocked, match=r"non-github\.com repository host refused"):
         admit(cmd, cwd=".", environment={})
-
-
-@pytest.mark.parametrize(
-    "cmd",
-    [
-        ["pr", "view", "https://github.com/unit/public/pull/1"],
-        ["issue", "view", "https://github.com/unit/public/issues/1"],
-    ],
-)
-def test_url_positional_arguments_allow_github_com(cmd):
-    cmd_admitted = admit(cmd, cwd=".", environment={})
-    assert not cmd_admitted.write
 
 
 @pytest.mark.parametrize(

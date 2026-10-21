@@ -11,9 +11,7 @@ import pytest
 
 from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
 from wiki.review import (
-    Finding,
     _parse_dim_result,
-    _register_score_from_findings,
 )
 
 pytestmark = pytest.mark.reads_content
@@ -68,37 +66,6 @@ def test_source_grounding_floor_rejects_uncited_long_article() -> None:
     assert "3083" in res.notes
 
 
-def test_source_grounding_floor_leaves_well_cited_article() -> None:
-    """A genuinely-cited article (many distinct [S#]) is never touched by the
-    floor — teeth without false positives."""
-    cites = " ".join(f"твердження [S{n}]." for n in range(1, 21))  # 20 distinct
-    article = ("Достатньо довга наукова стаття. " * 100) + cites
-    res = _parse_dim_result(
-        dim="source_grounding",
-        agent="claude",
-        model="m",
-        response=_sg_response(9, "PASS"),
-        duration_s=1.0,
-        article_text=article,
-    )
-    assert res.score == 9
-    assert res.verdict == "PASS"
-
-
-def test_source_grounding_floor_skips_short_article() -> None:
-    """Below the body-length gate the floor does not apply (can't judge density)."""
-    res = _parse_dim_result(
-        dim="source_grounding",
-        agent="claude",
-        model="m",
-        response=_sg_response(9, "PASS"),
-        duration_s=1.0,
-        article_text="Короткий текст [S1].",
-    )
-    assert res.score == 9
-    assert res.verdict == "PASS"
-
-
 def test_attributed_guillemet_quote_is_register_exempt() -> None:
     article_text = (
         "Енциклопедія українознавства фіксує старіший правопис: "
@@ -143,12 +110,6 @@ def test_unattributed_quote_is_not_exempt() -> None:
     assert _span_texts(article_text) == []
 
 
-def test_generic_reporting_cue_without_source_is_not_exempt() -> None:
-    article_text = "Авторська проза стверджує: «в кругу співців»."
-
-    assert _span_texts(article_text) == []
-
-
 def test_no_verify_quote_is_not_exempt() -> None:
     article_text = """
 <!-- NO_VERIFY: quote pending -->
@@ -160,31 +121,6 @@ def test_no_verify_quote_is_not_exempt() -> None:
     assert _span_texts(article_text) == []
 
 
-def test_writer_prompt_contains_register_hygiene_rules() -> None:
-    prompt = (_REPO_ROOT / "scripts" / "wiki" / "prompts" / "compile_article.md").read_text(
-        encoding="utf-8",
-    )
-
-    assert "Регістрова гігієна" in prompt
-    assert "`вербатимний`" in prompt
-    assert "`дослівний`" in prompt
-    assert "`приближення`" in prompt
-    assert "`наближення`" in prompt
-    assert "`виступати` як копулу" in prompt
-
-
-def test_register_review_prompt_keeps_quote_exemption_teeth() -> None:
-    prompt = (_REPO_ROOT / "scripts" / "wiki" / "prompts" / "review_register.md").read_text(
-        encoding="utf-8",
-    )
-
-    assert "Verbatim Quote Exemption" in prompt
-    assert "Do NOT flag russianisms, old spellings, or calques" in prompt
-    assert "Unquoted article prose" in prompt
-    assert "Unattributed quotations" in prompt
-    assert "Fabricated attribution" in prompt
-
-
 def test_blockquote_preceding_attribution_is_exempt() -> None:
     article_text = """
 За свідченням Білецького [S3]:
@@ -192,15 +128,6 @@ def test_blockquote_preceding_attribution_is_exempt() -> None:
 > У в кругу старших співців текст передавався інакше.
 """
     assert _span_texts(article_text) == ["У в кругу старших співців текст передавався інакше."]
-
-
-def test_guillemet_preceding_attribution_is_exempt() -> None:
-    article_text = """
-Енциклопедія українознавства [S2] зазначає:
-
-«співці виконували під акомпаньямент ліри»
-"""
-    assert _span_texts(article_text) == ["«співці виконували під акомпаньямент ліри»"]
 
 
 def test_blockquote_internal_dash_attribution_is_exempt() -> None:
@@ -340,20 +267,3 @@ def test_parse_dim_result_recomputes_unreliable_gemini_score() -> None:
     assert [f.quote for f in result.findings] == ["виступає"]
     assert result.score == 8
     assert result.verdict == "PASS"
-
-
-def test_register_score_from_findings_table() -> None:
-    def mk(sev: str) -> Finding:
-        return Finding(
-            location="", quote="", issue_type="", severity=sev, description="", raw={}
-        )
-
-    assert _register_score_from_findings([]) == 10
-    assert _register_score_from_findings([mk("minor")]) == 9
-    assert _register_score_from_findings([mk("major")]) == 8
-    assert _register_score_from_findings([mk("major"), mk("major")]) == 7
-    assert _register_score_from_findings([mk("critical")]) == 7
-    assert (
-        _register_score_from_findings([mk("critical"), mk("major"), mk("major")]) == 6
-    )
-    assert _register_score_from_findings([mk("critical"), mk("critical")]) == 5

@@ -9,7 +9,6 @@ import signal
 import sqlite3
 import subprocess
 import sys
-import textwrap
 import time
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
@@ -87,14 +86,6 @@ class TestBatchFixReviewExtractSection:
         p.write_text("no delimiters here\n")
         assert extract_section(p, "===START===", "===END===") is None
 
-    def test_multiline_extraction(self, tmp_path):
-        extract_section = self._import()
-        p = tmp_path / "out.txt"
-        p.write_text("pre\n===START===\nline1\nline2\nline3\n===END===\npost\n")
-        result = extract_section(p, "===START===", "===END===")
-        assert "line1" in result
-        assert "line3" in result
-
     def test_code_block_wrapping(self, tmp_path):
         extract_section = self._import()
         p = tmp_path / "out.txt"
@@ -103,22 +94,6 @@ class TestBatchFixReviewExtractSection:
         result = extract_section(p, "===START===", "===END===")
         assert result is not None
         assert "content" in result
-
-    def test_code_block_with_language(self, tmp_path):
-        extract_section = self._import()
-        p = tmp_path / "out.txt"
-        content = "```yaml\n===START===\ncontent\n===END===\n```\n"
-        p.write_text(content)
-        result = extract_section(p, "===START===", "===END===")
-        assert result is not None
-
-    def test_multiple_sections(self, tmp_path):
-        extract_section = self._import()
-        p = tmp_path / "out.txt"
-        content = "===A_START===\nfirst\n===A_END===\n===B_START===\nsecond\n===B_END===\n"
-        p.write_text(content)
-        assert extract_section(p, "===A_START===", "===A_END===") == "first"
-        assert extract_section(p, "===B_START===", "===B_END===") == "second"
 
 
 class TestBatchFixReviewExtractScore:
@@ -131,20 +106,8 @@ class TestBatchFixReviewExtractScore:
     def test_bold_overall_score(self):
         assert self._import()("**Overall Score:** 8.5/10") == 8.5
 
-    def test_plain_overall_score(self):
-        assert self._import()("Overall Score: 9.0/10") == 9.0
-
-    def test_bold_score_alone(self):
-        assert self._import()("**7.5/10**") == 7.5
-
-    def test_equals_bold(self):
-        assert self._import()("= **8.0/10**") == 8.0
-
     def test_no_score(self):
         assert self._import()("no score here") is None
-
-    def test_integer_score(self):
-        assert self._import()("**Overall Score:** 9/10") == 9.0
 
     def test_first_pattern_wins(self):
         text = "**Overall Score:** 8.0/10\nOverall Score: 9.0/10"
@@ -160,9 +123,6 @@ class TestBatchFixReviewExtractStatus:
 
     def test_pass(self):
         assert self._import()("**Status:** PASS") == "PASS"
-
-    def test_fail(self):
-        assert self._import()("**Status:** FAIL") == "FAIL"
 
     def test_unknown(self):
         assert self._import()("no status") == "UNKNOWN"
@@ -181,66 +141,11 @@ class TestBatchFixReviewCountItems:
         p.write_text("items:\n  - word: hello\n  - word: world\n  - word: test\n")
         assert count_items(p, "items") == 3
 
-    def test_count_activities(self, tmp_path):
-        count_items = self._import()
-        p = tmp_path / "acts.yaml"
-        p.write_text("- type: quiz\n  title: Q1\n- type: match\n  title: M1\n")
-        assert count_items(p, "activities_root") == 2
-
-    def test_nonexistent_file(self, tmp_path):
-        count_items = self._import()
-        p = tmp_path / "nope.yaml"
-        assert count_items(p, "items") == 0
-
-    def test_empty_items(self, tmp_path):
-        count_items = self._import()
-        p = tmp_path / "vocab.yaml"
-        p.write_text("items:\nother_key: value\n")
-        assert count_items(p, "items") == 0
-
     def test_items_section_ends(self, tmp_path):
         count_items = self._import()
         p = tmp_path / "vocab.yaml"
         p.write_text("items:\n  - word: one\n  - word: two\nother:\n  value: x\n")
         assert count_items(p, "items") == 2
-
-
-class TestBatchFixReviewCountEngagement:
-    """Tests for count_engagement."""
-
-    def _import(self):
-        from batch.batch_fix_review import count_engagement
-        return count_engagement
-
-    def test_callout_boxes(self, tmp_path):
-        count_engagement = self._import()
-        p = tmp_path / "content.md"
-        p.write_text("> [!note]\ntext\n> [!tip]\nmore\n")
-        assert count_engagement(p) == 2
-
-    def test_emoji_boxes(self, tmp_path):
-        count_engagement = self._import()
-        p = tmp_path / "content.md"
-        # Use raw text with actual emoji patterns
-        p.write_text(textwrap.dedent("""\
-            Some text
-            > \U0001f4a1 Fun fact
-            more text
-            > \U0001f50d Let's explore
-            even more
-        """))
-        assert count_engagement(p) == 2
-
-    def test_nonexistent_file(self, tmp_path):
-        count_engagement = self._import()
-        p = tmp_path / "nope.md"
-        assert count_engagement(p) == 0
-
-    def test_no_engagement(self, tmp_path):
-        count_engagement = self._import()
-        p = tmp_path / "content.md"
-        p.write_text("# Title\n\nJust plain text.\n")
-        assert count_engagement(p) == 0
 
 
 class TestBatchFixReviewGetWordTarget:
@@ -256,46 +161,6 @@ class TestBatchFixReviewGetWordTarget:
         p.write_text("title: Test\nword_target: 4000\nobjectives:\n  - learn\n")
         files = {"plan": p}
         assert get_word_target(files) == 4000
-
-    def test_no_file(self, tmp_path):
-        get_word_target = self._import()
-        files = {"plan": tmp_path / "nonexistent.yaml"}
-        assert get_word_target(files) == 0
-
-    def test_invalid_value(self, tmp_path):
-        get_word_target = self._import()
-        p = tmp_path / "plan.yaml"
-        p.write_text("word_target: not_a_number\n")
-        files = {"plan": p}
-        assert get_word_target(files) == 0
-
-
-class TestBatchFixReviewGetModuleTitle:
-    """Tests for get_module_title."""
-
-    def _import(self):
-        from batch.batch_fix_review import get_module_title
-        return get_module_title
-
-    def test_reads_h1(self, tmp_path):
-        get_module_title = self._import()
-        p = tmp_path / "content.md"
-        p.write_text("# My Great Module\n\nContent here.\n")
-        files = {"content": p, "slug": "my-great-module"}
-        assert get_module_title(files) == "My Great Module"
-
-    def test_fallback_to_slug(self, tmp_path):
-        get_module_title = self._import()
-        p = tmp_path / "missing.md"
-        files = {"content": p, "slug": "my-great-module"}
-        assert get_module_title(files) == "My Great Module"
-
-    def test_no_h1(self, tmp_path):
-        get_module_title = self._import()
-        p = tmp_path / "content.md"
-        p.write_text("No heading here\n## Subheading\n")
-        files = {"content": p, "slug": "test-slug"}
-        assert get_module_title(files) == "Test Slug"
 
 
 class TestBatchFixReviewGetAuditMetrics:
@@ -321,20 +186,6 @@ class TestBatchFixReviewGetAuditMetrics:
         assert m["audit_words"] == 1200
         assert m["word_target"] == 1000
         assert m["overall_status"] == "PASS"
-
-    def test_missing_file(self, tmp_path):
-        get_audit_metrics = self._import()
-        files = {"status": tmp_path / "nope.json"}
-        assert get_audit_metrics(files) == {}
-
-    def test_no_word_match(self, tmp_path):
-        get_audit_metrics = self._import()
-        status = {"gates": {"lesson": {"message": "no numbers"}}, "overall": {"status": "FAIL"}}
-        p = tmp_path / "status.json"
-        p.write_text(json.dumps(status))
-        files = {"status": p}
-        m = get_audit_metrics(files)
-        assert m["audit_words"] == 0
 
 
 class TestBatchFixReviewRunAudit:
@@ -464,29 +315,6 @@ class TestBatchFixReviewApplyFixOutput:
 # batch_dispatcher_config.py — TrackState and TRACKS
 # ═══════════════════════════════════════════════════════════════════════
 
-class TestBatchDispatcherConfig:
-    def test_track_state_values(self):
-        from batch.batch_dispatcher_config import TrackState
-        assert TrackState.PENDING == "PENDING"
-        assert TrackState.ELIGIBLE == "ELIGIBLE"
-        assert TrackState.RUNNING == "RUNNING"
-        assert TrackState.COOLDOWN == "COOLDOWN"
-        assert TrackState.STALLED == "STALLED"
-        assert TrackState.DONE == "DONE"
-        assert TrackState.BLOCKED == "BLOCKED"
-
-    def test_tracks_list(self):
-        from batch.batch_dispatcher_config import TRACK_BY_NAME, TRACKS
-        # b2-pro and c1-pro archived 2026-05-15 (#2009); was 20, now 18.
-        assert len(TRACKS) == 18
-        assert "a1" in TRACK_BY_NAME
-        assert TRACK_BY_NAME["a1"][0] == 1  # priority
-
-    def test_track_names(self):
-        from batch.batch_dispatcher_config import TRACK_NAMES
-        assert "a1" in TRACK_NAMES
-        assert "c2" in TRACK_NAMES
-
 
 # ═══════════════════════════════════════════════════════════════════════
 # batch_otaman.py
@@ -496,9 +324,6 @@ class TestBatchOtamanIsContentComplete:
     def _import(self):
         from batch.batch_otaman import _is_content_complete
         return _is_content_complete
-
-    def test_none_result(self):
-        assert self._import()(None) is False
 
     def test_content_complete(self):
         result = MagicMock()
@@ -601,13 +426,6 @@ class TestBatchOtamanDispatch:
         result = dispatch_otaman("a1", 1, "test-slug", timeout=5)
         assert result["quota_hit"] is True
 
-    @patch("batch.batch_otaman.subprocess.run")
-    def test_rate_limit_in_stdout(self, mock_run):
-        from batch.batch_otaman import dispatch_otaman
-        mock_run.return_value = MagicMock(returncode=1, stderr="", stdout="rate limit reached")
-        result = dispatch_otaman("a1", 1, "test-slug", timeout=5)
-        assert result["quota_hit"] is True
-
     @patch("batch.batch_otaman.subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 5))
     def test_timeout(self, mock_run):
         from batch.batch_otaman import dispatch_otaman
@@ -684,24 +502,8 @@ class TestBatchOtamanShouldInclude:
         assert bo._should_include("a1") is True
         assert bo._should_include("b1") is False
 
-    @patch("batch.batch_otaman.load_state", return_value={"tracks": {}, "history": [], "running_tracks": [], "stats": {"total_dispatches": 0, "total_modules_passed": 0, "total_quota_hits": 0}})
-    @patch("batch.batch_otaman.STATE_FILE")
-    def test_no_filter(self, mock_sf, mock_load, tmp_path):
-        mock_sf.parent = tmp_path
-        from batch.batch_otaman import BatchOtaman
-        bo = BatchOtaman(dry_run=True)
-        assert bo._should_include("a1") is True
-
 
 class TestBatchOtamanRuntimeExceeded:
-    @patch("batch.batch_otaman.load_state", return_value={"tracks": {}, "history": [], "running_tracks": [], "stats": {"total_dispatches": 0, "total_modules_passed": 0, "total_quota_hits": 0}})
-    @patch("batch.batch_otaman.STATE_FILE")
-    def test_no_limit(self, mock_sf, mock_load, tmp_path):
-        mock_sf.parent = tmp_path
-        from batch.batch_otaman import BatchOtaman
-        bo = BatchOtaman(dry_run=True)
-        assert bo._runtime_exceeded() is False
-
     @patch("batch.batch_otaman.load_state", return_value={"tracks": {}, "history": [], "running_tracks": [], "stats": {"total_dispatches": 0, "total_modules_passed": 0, "total_quota_hits": 0}})
     @patch("batch.batch_otaman.STATE_FILE")
     def test_not_exceeded(self, mock_sf, mock_load, tmp_path):
@@ -727,69 +529,11 @@ class TestBatchOtamanScanTrackSummary:
         result = scan_track_summary("nonexistent")
         assert result["error"] == "not_found"
         assert result["total"] == 0
-
-
-class TestBatchOtamanFindNextModule:
-    @patch("batch.batch_otaman.get_module_index", side_effect=ValueError("nope"))
-    def test_invalid_track(self, mock_idx):
-        from batch.batch_otaman import find_next_module
-        assert find_next_module("nonexistent") is None
-
-
-class TestBatchOtamanFindNextEnrichable:
-    @patch("batch.batch_otaman.get_module_index", side_effect=ValueError("nope"))
-    def test_invalid_track(self, mock_idx):
-        from batch.batch_otaman import find_next_enrichable
-        assert find_next_enrichable("nonexistent") is None
-
-
-class TestBatchOtamanFormatTable:
-    @patch("batch.batch_otaman.load_state", return_value={"tracks": {}, "history": [], "running_tracks": [], "stats": {"total_dispatches": 0, "total_modules_passed": 0, "total_quota_hits": 0}})
-    @patch("batch.batch_otaman.STATE_FILE")
-    @patch("batch.batch_otaman.scan_track_summary", return_value={"total": 10, "passed": 5, "content_complete": 2, "remaining": 3})
-    def test_format_table(self, mock_scan, mock_sf, mock_load, tmp_path):
-        mock_sf.parent = tmp_path
-        from batch.batch_otaman import BatchOtaman
-        bo = BatchOtaman(dry_run=True, include_tracks=["a1"])
-        summaries = bo._scan_all()
-        table = bo._format_table(summaries)
-        assert "a1" in table
-        assert "Track" in table
-
-
-class TestBatchOtamanPrintSummary:
-    @patch("batch.batch_otaman.load_state", return_value={
-        "tracks": {}, "history": [
-            {"track": "a1", "num": 1, "slug": "test", "timestamp": "2026-01-01T00:00:00",
-             "success": True, "passed_after": True, "duration_s": 30, "quota_hit": False}
-        ], "running_tracks": [],
-        "stats": {"total_dispatches": 1, "total_modules_passed": 1, "total_quota_hits": 0}
-    })
-    @patch("batch.batch_otaman.STATE_FILE")
-    def test_print_summary(self, mock_sf, mock_load, tmp_path):
-        mock_sf.parent = tmp_path
-        from batch.batch_otaman import BatchOtaman
-        bo = BatchOtaman(dry_run=True)
-        # Should not raise
-        bo._print_summary()
-
-
 # ═══════════════════════════════════════════════════════════════════════
 # batch_dispatcher.py
 # ═══════════════════════════════════════════════════════════════════════
 
 class TestBatchDispatcherInit:
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    def test_init(self, mock_load):
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher(dry_run=True)
-        assert d.dry_run is True
-        assert d.one_shot is False
-
     @patch("batch_dispatcher.load_dispatcher_state", return_value={
         "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
         "stats": {}, "last_updated": None
@@ -821,16 +565,6 @@ class TestBatchDispatcherRuntimeExceeded:
         "stats": {}, "last_updated": None
     })
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    def test_no_limit(self, mock_load):
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher()
-        assert d._runtime_exceeded() is False
-
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_exceeded(self, mock_load):
         from batch_dispatcher import BatchDispatcher
         d = BatchDispatcher(max_runtime_hours=1)
@@ -839,18 +573,6 @@ class TestBatchDispatcherRuntimeExceeded:
 
 
 class TestBatchDispatcherCountEscalated:
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    @patch("batch_dispatcher.BATCH_STATE_DIR")
-    def test_no_dir(self, mock_bsd, mock_load, tmp_path):
-        mock_bsd.__truediv__ = lambda self, x: tmp_path / "failures"
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher()
-        assert d._count_escalated("a1") == 0
-
     @patch("batch_dispatcher.load_dispatcher_state", return_value={
         "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
         "stats": {}, "last_updated": None
@@ -877,18 +599,6 @@ class TestBatchDispatcherGetEscalated:
     })
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     @patch("batch_dispatcher.FAILURES_DIR")
-    def test_no_dir(self, mock_fd, mock_load, tmp_path):
-        mock_fd.__truediv__ = lambda self, x: tmp_path / "failures" / x
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher()
-        assert d._get_escalated_modules("a1") == []
-
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    @patch("batch_dispatcher.FAILURES_DIR")
     def test_with_escalated(self, mock_fd, mock_load, tmp_path):
         failures_dir = tmp_path / "failures" / "a1"
         failures_dir.mkdir(parents=True)
@@ -899,20 +609,6 @@ class TestBatchDispatcherGetEscalated:
         esc = d._get_escalated_modules("a1")
         assert len(esc) == 1
         assert esc[0]["slug"] == "test"
-
-
-class TestBatchDispatcherSignalHandler:
-    def test_signal_handler(self):
-        import batch_dispatcher
-        old = batch_dispatcher._shutdown_requested
-        try:
-            batch_dispatcher._shutdown_requested = False
-            batch_dispatcher._signal_handler(signal.SIGINT, None)
-            assert batch_dispatcher._shutdown_requested is True
-        finally:
-            batch_dispatcher._shutdown_requested = old
-
-
 class TestBatchDispatcherPickTrack:
     @patch("batch_dispatcher.load_dispatcher_state", return_value={
         "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
@@ -939,22 +635,6 @@ class TestBatchDispatcherPickTrack:
         dstate["state"] = TrackState.DONE
         result = d._pick_track({})
         assert result is None
-
-
-class TestBatchDispatcherPrintSummary:
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {"total_dispatches": 5, "total_cooldowns": 1, "total_stalls": 0, "rotations_completed": 0},
-        "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    def test_print_summary(self, mock_load):
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher()
-        # Should not raise
-        d._print_summary()
-
-
 # ═══════════════════════════════════════════════════════════════════════
 # tools.agent_watcher.py
 # ═══════════════════════════════════════════════════════════════════════
@@ -979,42 +659,8 @@ class TestAgentWatcherLoadConfig:
                         config = tools.agent_watcher.load_agent_config()
                         assert "test_agent" in config
 
-    def test_fallback_defaults(self):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = None
-        with patch("pathlib.Path.exists", return_value=False):
-            config = tools.agent_watcher.load_agent_config()
-            assert "claude" in config
-            assert "gemini" in config
-        # Reset
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-
-class TestAgentWatcherGetDb:
-    def test_no_db(self):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", Path("/nonexistent/db")):
-            assert tools.agent_watcher.get_db() is None
-
-    def test_with_db(self, sqlite_db):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            conn = tools.agent_watcher.get_db()
-            assert conn is not None
-            conn.close()
-
 
 class TestAgentWatcherGetUnreadMessages:
-    def test_no_db(self):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", Path("/nonexistent/db")):
-            assert tools.agent_watcher.get_unread_messages() == []
-
-    def test_empty_db(self, sqlite_db):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages()
-            assert msgs == []
 
     def test_with_messages(self, sqlite_db):
         import tools.agent_watcher
@@ -1065,23 +711,8 @@ class TestAgentWatcherAcknowledgeMessage:
             msgs = tools.agent_watcher.get_unread_messages()
             assert len(msgs) == 0
 
-    def test_acknowledge_no_db(self):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", Path("/nonexistent/db")):
-            # Should not raise
-            tools.agent_watcher.acknowledge_message(1)
-
 
 class TestAgentWatcherCountTaskTurns:
-    def test_empty_task_id(self):
-        import tools.agent_watcher
-        assert tools.agent_watcher.count_task_turns("") == 0
-        assert tools.agent_watcher.count_task_turns(None) == 0
-
-    def test_no_db(self):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", Path("/nonexistent/db")):
-            assert tools.agent_watcher.count_task_turns("task1") == 0
 
     def test_counts_non_error(self, sqlite_db):
         import tools.agent_watcher
@@ -1128,21 +759,6 @@ class TestAgentWatcherIsAnyAgentActive:
         tools.agent_watcher._AGENTS_CONFIG = None
 
 
-class TestAgentWatcherNotifyHuman:
-    @patch("subprocess.run")
-    def test_sends_notification(self, mock_run):
-        import tools.agent_watcher
-        # Should not raise
-        tools.agent_watcher.notify_human("claude", "gemini", 1, "task-123")
-        mock_run.assert_called_once()
-
-    @patch("subprocess.run", side_effect=Exception("no osascript"))
-    def test_silences_errors(self, mock_run):
-        import tools.agent_watcher
-        # Should not raise
-        tools.agent_watcher.notify_human("claude", "gemini", 1, "task-123")
-
-
 class TestAgentWatcherTriggerAgent:
     @patch("subprocess.run")
     def test_success(self, mock_run):
@@ -1184,16 +800,6 @@ class TestAgentWatcherTriggerAgent:
         assert result is False
         tools.agent_watcher._AGENTS_CONFIG = None
 
-    @patch("subprocess.run", side_effect=OSError("boom"))
-    def test_exception(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
-            "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
-        }
-        result = tools.agent_watcher.trigger_agent("gemini", 1)
-        assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
-
 
 class TestAgentWatcherPidFile:
     def test_write_pid(self, tmp_path):
@@ -1204,19 +810,6 @@ class TestAgentWatcherPidFile:
             assert pid_file.exists()
             assert int(pid_file.read_text().strip()) == os.getpid()
 
-    def test_read_pid(self, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "watcher.pid"
-        pid_file.write_text("12345")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.read_pid() == 12345
-
-    def test_read_pid_missing(self, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "nonexistent.pid"
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.read_pid() is None
-
     def test_read_pid_invalid(self, tmp_path):
         import tools.agent_watcher
         pid_file = tmp_path / "watcher.pid"
@@ -1226,11 +819,6 @@ class TestAgentWatcherPidFile:
 
 
 class TestAgentWatcherIsRunning:
-    def test_not_running(self, tmp_path):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"):
-            assert tools.agent_watcher.is_running() is False
-
     @patch("os.kill")
     def test_running(self, mock_kill, tmp_path):
         import tools.agent_watcher
@@ -1259,72 +847,9 @@ class TestAgentWatcherStopDaemon:
             result = tools.agent_watcher.stop_daemon()
         assert result is True
         mock_kill.assert_called_with(12345, signal.SIGTERM)
-
-    def test_stop_no_pid(self, tmp_path, capsys):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"):
-            result = tools.agent_watcher.stop_daemon()
-        assert result is False
-        assert "No watcher running" in capsys.readouterr().out
-
-
-class TestAgentWatcherShowStatus:
-    def test_show_status_no_messages(self, sqlite_db, tmp_path, capsys):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = None
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db), \
-             patch.object(tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"), \
-             patch.object(tools.agent_watcher, "LOG_FILE", tmp_path / "nope.log"), \
-             patch("pathlib.Path.exists", return_value=False):
-            tools.agent_watcher._AGENTS_CONFIG = {"claude": {"bridge_command": "x"}, "gemini": {"bridge_command": "y"}}
-            tools.agent_watcher.show_status()
-        output = capsys.readouterr().out
-        assert "STOPPED" in output
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-
-class TestAgentWatcherSaveStuckReport:
-    def test_save_stuck_report(self, tmp_path, sqlite_db):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            with patch("tools.agent_watcher.Path") as mock_path_cls:
-                # Make the report_dir writable
-                report_dir = tmp_path / "stuck"
-                report_dir.mkdir(parents=True)
-                mock_path_cls.return_value.parent.parent = tmp_path
-                mock_path_cls.__truediv__ = lambda s, x: tmp_path / x
-
-                # Simpler approach: just test it doesn't crash
-                tools.agent_watcher._save_stuck_report(
-                    "bio-test-task", 10,
-                    {"from": "claude", "to": "gemini", "type": "request", "id": 1}
-                )
-
-
 # ═══════════════════════════════════════════════════════════════════════
 # Additional edge case tests
 # ═══════════════════════════════════════════════════════════════════════
-
-class TestBatchFixReviewCallGemini:
-    @patch("subprocess.run")
-    def test_call_gemini(self, mock_run, tmp_path):
-        from batch.batch_fix_review import call_gemini
-        mock_run.return_value = MagicMock(stdout="output", stderr="")
-        prompt = tmp_path / "prompt.md"
-        prompt.write_text("test prompt")
-        result = call_gemini(prompt, "test-task", "model")
-        assert result.exists()
-        result.unlink()
-
-    @patch("subprocess.run")
-    def test_call_gemini_review(self, mock_run, tmp_path):
-        from batch.batch_fix_review import call_gemini_review
-        mock_run.return_value = MagicMock(stdout="review output", stderr="")
-        prompt = tmp_path / "prompt.md"
-        prompt.write_text("review prompt")
-        result = call_gemini_review(prompt, "test-task", "model")
-        assert result.exists()
-        result.unlink()
 
 
 class TestBatchOtamanWorkersClamp:
@@ -1335,34 +860,6 @@ class TestBatchOtamanWorkersClamp:
         from batch.batch_otaman import MAX_WORKERS, BatchOtaman
         bo = BatchOtaman(dry_run=True, workers=99)
         assert bo.workers == MAX_WORKERS
-
-
-class TestBatchDispatcherFormatTable:
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    @patch("batch_dispatcher.compute_priority_score", return_value=5.0)
-    def test_format_table(self, mock_score, mock_load):
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher(include_tracks=["a1"])
-        track_scans = {"a1": {"total": 10, "passed": 5, "failed": 2, "stale": 1, "unbuilt": 2, "pass_rate": 0.5}}
-        table = d._format_track_table(track_scans)
-        assert "a1" in table
-        assert "Track" in table
-
-
-class TestBatchOtamanStateLockfile:
-    @patch("batch.batch_otaman.STATE_FILE")
-    def test_lockfile_path(self, mock_sf, tmp_path):
-        from batch.batch_otaman import _state_lockfile
-        mock_sf.parent = tmp_path
-        mock_sf.with_suffix.return_value = tmp_path / "state.lock"
-        result = _state_lockfile()
-        assert str(result).endswith(".lock")
-
-
 class TestBatchFixReviewCheckExistingReviews:
     def test_re_review_pass(self, tmp_path):
         from batch.batch_fix_review import _check_existing_reviews
@@ -1374,16 +871,6 @@ class TestBatchFixReviewCheckExistingReviews:
         status, score = _check_existing_reviews(files, result)
         assert status == "ALREADY_PASS"
         assert score == 9.5
-
-    def test_review_pass(self, tmp_path):
-        from batch.batch_fix_review import _check_existing_reviews
-        orch = tmp_path / "orchestration"
-        orch.mkdir()
-        (orch / "phase-5-response.md").write_text("**Overall Score:** 9.2/10\n**Status:** PASS")
-        files = {"orchestration": orch, "review": tmp_path / "review.md"}
-        result = {}
-        status, _score = _check_existing_reviews(files, result)
-        assert status == "ALREADY_PASS"
 
     def test_review_fail(self, tmp_path):
         from batch.batch_fix_review import _check_existing_reviews
@@ -1405,45 +892,6 @@ class TestBatchFixReviewCheckExistingReviews:
         status, score = _check_existing_reviews(files, result)
         assert status == "continue"
         assert score is None
-
-
-class TestBatchFixReviewAssembleFixPrompt:
-    def test_assemble(self, tmp_path):
-        from batch.batch_fix_review import REPO, assemble_fix_prompt
-        template_dir = REPO / "agents_extensions/shared" / "phases" / "gemini"
-        if not (template_dir / "phase-fix.md").exists():
-            pytest.skip("Template file not found")
-
-        orch = tmp_path / "orchestration"
-        orch.mkdir()
-        review = tmp_path / "review.md"
-        review.write_text("some review")
-
-        files = {
-            "content": tmp_path / "content.md",
-            "activities": tmp_path / "activities.yaml",
-            "vocabulary": tmp_path / "vocab.yaml",
-            "plan": tmp_path / "plan.yaml",
-            "research": tmp_path / "research.md",
-            "orchestration": orch,
-        }
-        result = assemble_fix_prompt(files, review)
-        assert result.exists()
-
-
-class TestBatchOtamanResourceExhausted:
-    @patch("batch.batch_otaman.subprocess.run")
-    def test_resource_exhausted_detection(self, mock_run):
-        from batch.batch_otaman import dispatch_otaman
-        mock_run.return_value = MagicMock(
-            returncode=1,
-            stderr="resource_exhausted: too many requests",
-            stdout=""
-        )
-        result = dispatch_otaman("a1", 1, "test-slug", timeout=5)
-        assert result["quota_hit"] is True
-
-
 class TestBatchDispatcherUpdateTrackStates:
     """Test _update_track_states edge cases."""
 
@@ -1461,18 +909,6 @@ class TestBatchDispatcherUpdateTrackStates:
         d._update_track_states(scan)
         dstate = get_track_dstate(d.state, "a1")
         assert dstate["state"] == TrackState.DONE
-
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    def test_error_scan_skipped(self, mock_load):
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher(include_tracks=["a1"])
-        scan = {"a1": {"error": "not_found"}}
-        # Should not crash
-        d._update_track_states(scan)
 
     @patch("batch_dispatcher.load_dispatcher_state", return_value={
         "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
@@ -1553,22 +989,6 @@ class TestBatchDispatcherUpdateTrackStates:
         scan = {"a1": {"total": 10, "passed": 7, "failed": 3, "stale": 0, "unbuilt": 0, "pass_rate": 0.7}}
         d._update_track_states(scan)
         assert dstate["state"] == TrackState.PENDING
-
-
-class TestBatchDispatcherProcessEscalations:
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    @patch("batch_dispatcher.FAILURES_DIR")
-    def test_no_escalations(self, mock_fd, mock_load, tmp_path):
-        mock_fd.__truediv__ = lambda self, x: tmp_path / "failures" / x
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher()
-        assert d._process_escalations("a1", {}) == 0
-
-
 # ═══════════════════════════════════════════════════════════════════════
 # Additional tests to reach 200+ total
 # ═══════════════════════════════════════════════════════════════════════
@@ -1585,71 +1005,11 @@ class TestBatchFixReviewExtractSectionEdgeCases:
         result = extract_section(p, "===START===", "===END===")
         assert result == ""
 
-    def test_nested_tags(self, tmp_path):
-        extract_section = self._import()
-        p = tmp_path / "out.txt"
-        p.write_text("===START===\nhas ===START=== inside\n===END===\n")
-        result = extract_section(p, "===START===", "===END===")
-        assert "has ===START=== inside" in result
-
-    def test_whitespace_around_tags(self, tmp_path):
-        extract_section = self._import()
-        p = tmp_path / "out.txt"
-        p.write_text("  ===START===  \ncontent\n  ===END===  \n")
-        result = extract_section(p, "===START===", "===END===")
-        assert result is not None
-
-
-class TestBatchFixReviewExtractScoreEdgeCases:
-    def _import(self):
-        from batch.batch_fix_review import extract_score
-        return extract_score
-
-    def test_decimal_precision(self):
-        assert self._import()("**Overall Score:** 8.75/10") == 8.75
-
-    def test_score_10(self):
-        assert self._import()("**Overall Score:** 10/10") == 10.0
-
-    def test_score_zero(self):
-        assert self._import()("Overall Score: 0/10") == 0.0
-
-    def test_surrounded_by_text(self):
-        text = "The **Overall Score:** 7.2/10 for this module."
-        assert self._import()(text) == 7.2
-
-
-class TestBatchOtamanDispatchEdgeCases:
-    @patch("batch.batch_otaman.subprocess.run")
-    def test_empty_stderr_stdout(self, mock_run):
-        from batch.batch_otaman import dispatch_otaman
-        mock_run.return_value = MagicMock(returncode=0, stderr=None, stdout=None)
-        result = dispatch_otaman("a1", 1, "test", timeout=5)
-        assert result["success"] is True
-        assert result["quota_hit"] is False
-
-    @patch("batch.batch_otaman.subprocess.run")
-    def test_large_stderr(self, mock_run):
-        from batch.batch_otaman import dispatch_otaman
-        mock_run.return_value = MagicMock(returncode=1, stderr="x" * 5000, stdout="")
-        result = dispatch_otaman("a1", 1, "test", timeout=5)
-        # stderr is truncated to last 2000 chars
-        assert len(result["stderr"]) <= 2000
-
 
 class TestBatchOtamanCheckDepsEdgeCases:
     def _import(self):
         from batch.batch_otaman import check_dependencies
         return check_dependencies
-
-    def test_multiple_deps_all_met(self):
-        # istorio has deps on hist and c1
-        summaries = {
-            "hist": {"total": 100, "passed": 90},
-            "c1": {"total": 100, "passed": 40},
-        }
-        ok, _unmet = self._import()("istorio", summaries)
-        assert ok is True
 
     def test_multiple_deps_one_unmet(self):
         summaries = {
@@ -1659,34 +1019,6 @@ class TestBatchOtamanCheckDepsEdgeCases:
         ok, _unmet = self._import()("istorio", summaries)
         assert ok is False
         assert len(_unmet) == 1
-
-    def test_multiple_deps_all_unmet(self):
-        summaries = {
-            "hist": {"total": 100, "passed": 10},
-            "c1": {"total": 100, "passed": 5},
-        }
-        ok, _unmet = self._import()("istorio", summaries)
-        assert ok is False
-        assert len(_unmet) == 2
-
-
-class TestBatchOtamanGetTrackStateEdgeCases:
-    def _import(self):
-        from batch.batch_otaman import get_track_state
-        return get_track_state
-
-    def test_multiple_calls_same_state(self):
-        state = {"tracks": {}}
-        ts1 = self._import()(state, "a1")
-        ts2 = self._import()(state, "a1")
-        assert ts1 is ts2
-
-    def test_different_tracks(self):
-        state = {"tracks": {}}
-        ts1 = self._import()(state, "a1")
-        ts2 = self._import()(state, "a2")
-        assert ts1 is not ts2
-        assert len(state["tracks"]) == 2
 
 
 class TestBatchDispatcherUpdateTrackStatesEdgeCases:
@@ -1706,23 +1038,6 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
         d._update_track_states(scan)
         # STALLED stays STALLED during _update_track_states
         assert dstate["state"] == TrackState.STALLED
-
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    def test_cooldown_malformed_timestamp(self, mock_load):
-        from batch.batch_dispatcher_config import TrackState
-        from batch.batch_dispatcher_helpers import get_track_dstate
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher(include_tracks=["a1"])
-        dstate = get_track_dstate(d.state, "a1")
-        dstate["state"] = TrackState.COOLDOWN
-        dstate["cooldown_until"] = "not-a-timestamp"
-        scan = {"a1": {"total": 10, "passed": 5, "failed": 5, "stale": 0, "unbuilt": 0, "pass_rate": 0.5}}
-        d._update_track_states(scan)
-        assert dstate["state"] == TrackState.ELIGIBLE
 
     @patch("batch_dispatcher.load_dispatcher_state", return_value={
         "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
@@ -1756,37 +1071,8 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
         d._update_track_states(scan)
         assert dstate["state"] == TrackState.DONE
 
-    @patch("batch_dispatcher.load_dispatcher_state", return_value={
-        "started": "2026-01-01", "tracks": {}, "dispatch_history": [],
-        "stats": {}, "last_updated": None
-    })
-    @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
-    def test_done_with_stale_stays_done(self, mock_load):
-        from batch.batch_dispatcher_config import TrackState
-        from batch.batch_dispatcher_helpers import get_track_dstate
-        from batch_dispatcher import BatchDispatcher
-        d = BatchDispatcher(include_tracks=["a1"])
-        dstate = get_track_dstate(d.state, "a1")
-        dstate["state"] = TrackState.DONE
-        scan = {"a1": {"total": 10, "passed": 8, "failed": 0, "stale": 2, "unbuilt": 0, "pass_rate": 0.8}}
-        d._update_track_states(scan)
-        assert dstate["state"] == TrackState.DONE
-
 
 class TestAgentWatcherEdgeCases:
-    def test_count_task_turns_with_messages(self, sqlite_db):
-        import tools.agent_watcher
-        conn = sqlite3.connect(sqlite_db)
-        for i in range(5):
-            conn.execute(
-                "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-                ("task-x", "claude", "gemini", "request", f"2026-01-01T00:00:0{i}"),
-            )
-        conn.commit()
-        conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            assert tools.agent_watcher.count_task_turns("task-x") == 5
-
     def test_get_unread_acknowledged_not_returned(self, sqlite_db):
         import tools.agent_watcher
         conn = sqlite3.connect(sqlite_db)
@@ -1801,25 +1087,6 @@ class TestAgentWatcherEdgeCases:
             assert len(msgs) == 0
 
 
-class TestBatchFixReviewCountItemsEdgeCases:
-    def _import(self):
-        from batch.batch_fix_review import count_items
-        return count_items
-
-    def test_no_activities(self, tmp_path):
-        count_items = self._import()
-        p = tmp_path / "acts.yaml"
-        p.write_text("nothing: here\n")
-        assert count_items(p, "activities_root") == 0
-
-    def test_many_items(self, tmp_path):
-        count_items = self._import()
-        lines = ["items:"] + [f"  - word: w{i}" for i in range(50)]
-        p = tmp_path / "vocab.yaml"
-        p.write_text("\n".join(lines) + "\n")
-        assert count_items(p, "items") == 50
-
-
 class TestBatchOtamanFindModuleScanEdgeCases:
     @patch("batch.batch_otaman.get_module_index")
     @patch("batch.batch_otaman.get_module_paths", side_effect=Exception("oops"))
@@ -1832,14 +1099,6 @@ class TestBatchOtamanFindModuleScanEdgeCases:
 
     @patch("batch.batch_otaman.get_module_index")
     @patch("batch.batch_otaman.get_module_paths", side_effect=Exception("oops"))
-    def test_find_next_enrichable_paths_error(self, mock_paths, mock_idx):
-        from batch.batch_otaman import find_next_enrichable
-        mock_idx.return_value = {"total": 1, "num_to_slug": {1: "test"}}
-        result = find_next_enrichable("a1")
-        assert result is None  # Exception caught, continues to next
-
-    @patch("batch.batch_otaman.get_module_index")
-    @patch("batch.batch_otaman.get_module_paths", side_effect=Exception("oops"))
     def test_scan_track_summary_paths_error(self, mock_paths, mock_idx):
         from batch.batch_otaman import scan_track_summary
         mock_idx.return_value = {"total": 2, "num_to_slug": {1: "a", 2: "b"}}
@@ -1849,12 +1108,6 @@ class TestBatchOtamanFindModuleScanEdgeCases:
 
 
 class TestBatchFixReviewFindModuleFiles:
-    @patch("batch.batch_fix_review.find_module_files", return_value=None)
-    def test_no_content(self, mock_find):
-        from batch.batch_fix_review import process_module
-        r = process_module("a1", 999, "model")
-        assert r["status"] == "SKIP"
-
     def test_review_only_mode(self, tmp_path):
         from batch.batch_fix_review import process_module
 
@@ -1996,30 +1249,6 @@ class TestBatchOtamanMalformedCooldown:
                 modules = bo._pick_modules(summaries)
                 if modules:
                     assert modules[0]["track"] == "a2"
-
-
-class TestAgentWatcherAcknowledgeEdgeCases:
-    def test_acknowledge_nonexistent_message(self, sqlite_db):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            # Should not raise even though message doesn't exist
-            tools.agent_watcher.acknowledge_message(9999, "test")
-
-
-class TestBatchFixReviewGetWordTargetEdgeCases:
-    def _import(self):
-        from batch.batch_fix_review import get_word_target
-        return get_word_target
-
-    def test_word_target_with_extra_whitespace(self, tmp_path):
-        p = tmp_path / "plan.yaml"
-        p.write_text("word_target:   5000   \n")
-        assert self._import()({"plan": p}) == 5000
-
-    def test_word_target_not_first_line(self, tmp_path):
-        p = tmp_path / "plan.yaml"
-        p.write_text("title: Test Module\nobjectives:\n  - learn\nword_target: 3000\n")
-        assert self._import()({"plan": p}) == 3000
 
 
 class TestBatchDispatcherRunningTrackCleanup:

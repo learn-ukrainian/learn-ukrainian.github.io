@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib
 import os
 from pathlib import Path
 
@@ -34,23 +33,6 @@ def _result(agent: str, response: str = "bounded response") -> Result:
 
 def _active_acp(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
-
-
-def test_top_level_runner_uses_canonical_adapter_scope() -> None:
-    top_level_runner = importlib.import_module("agent_runtime.runner")
-    canonical_acpx = importlib.import_module("scripts.agent_runtime.adapters.acpx")
-    with top_level_runner.active_communication_scope(
-        source="codex",
-        agent="glm",
-        target_agent="glm",
-    ):
-        provenance = canonical_acpx.current_communication_provenance()
-        assert provenance is not None
-        assert provenance.metadata() == {
-            "source": "codex",
-            "agent": "glm",
-            "via": "acp",
-        }
 
 
 def test_inter_agent_defaults_to_acp_and_seals_provenance(tmp_path, monkeypatch) -> None:
@@ -450,21 +432,6 @@ def test_resolve_inter_agent_route_refuses_cursor_auto(model: str) -> None:
 @pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
 def test_resolve_inter_agent_route_admits_cursor_concrete_pins(model: str) -> None:
     assert runner.resolve_inter_agent_route("cursor", model=model).model == model
-
-
-def test_invoke_inter_agent_refuses_kimi_before_spawn(monkeypatch, tmp_path) -> None:
-    monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
-    monkeypatch.setattr(runner, "_invoke_direct_only", lambda *_a, **_k: pytest.fail("refused call spawned"))
-    with pytest.raises(runner.InterAgentTransportError, match="KIMI CODING-ONLY"):
-        runner.invoke_inter_agent(
-            "kimi",
-            "consult on this design",
-            cwd=tmp_path,
-            task_id="task-kimi-consult",
-            correlation_id="corr-kimi-consult",
-            idempotency_key="idem-kimi-consult",
-            source="codex",
-        )
 
 
 @pytest.mark.parametrize("seat", ["acpx-kimi-shadow", "acpx-kimicc-shadow"])

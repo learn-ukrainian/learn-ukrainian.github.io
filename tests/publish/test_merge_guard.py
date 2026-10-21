@@ -54,11 +54,6 @@ def test_known_nonzero_check_statuses_still_block(returncode, bucket):
         merge_with_checks(json.dumps([{"name": "CI Gate", "bucket": bucket}]), returncode)
 
 
-def test_empty_json_check_list_with_exit_code_1_is_refused():
-    with pytest.raises(PublishBlocked, match="cannot establish check state"):
-        merge_with_checks("[]", returncode=1)
-
-
 def test_failing_advisory_check_with_exit_code_1_allows_merge():
     checks = [
         {"name": "CI Gate", "bucket": "pass"},

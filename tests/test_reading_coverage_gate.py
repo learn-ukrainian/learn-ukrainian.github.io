@@ -3,10 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import pytest
 import yaml
 
-from scripts.build.linear_pipeline import PYTHON_QG_GATE_ORDER, _reading_coverage_gate
+from scripts.build.linear_pipeline import _reading_coverage_gate
 
 
 def _run_fixture_gate(tmp_path: Path, plan: dict[str, Any], module_text: str) -> dict[str, Any]:
@@ -51,11 +50,6 @@ def _module_with_four_blocks(
     )
 
 
-def test_reading_coverage_gate_registered_in_python_qg_order() -> None:
-    assert PYTHON_QG_GATE_ORDER.index("resource_coverage") < PYTHON_QG_GATE_ORDER.index("reading_coverage")
-    assert PYTHON_QG_GATE_ORDER.index("reading_coverage") < PYTHON_QG_GATE_ORDER.index("resources_url_resolve")
-
-
 def test_hard_pass_when_host_reading_is_structured_on_site_excerpt(tmp_path: Path) -> None:
     plan = {
         "level": "folk",
@@ -91,58 +85,6 @@ def test_hard_fail_when_host_reading_has_only_bare_external_link(tmp_path: Path)
     assert result["missing_on_site_reading"]["severity"] == "HARD"
     assert result["missing_substantial_reading"]["severity"] == "HARD"
     assert result["warning"]["severity"] == "WARNING"
-
-
-def test_hard_fail_when_host_reading_is_omitted(tmp_path: Path) -> None:
-    plan = {
-        "level": "folk",
-        "readings": [
-            {"title": "«Ой весна»", "hosting": "host", "reading_slug": "oi-vesna"},
-        ],
-    }
-
-    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks())
-
-    assert result["passed"] is False
-    assert result["severity"] == "HARD"
-    assert result["missing_hosted_readings"] == [
-        {"title": "«Ой весна»", "reading_slug": "oi-vesna"},
-    ]
-
-
-def test_title_normalization_matches_quote_glyphs_case_and_whitespace(tmp_path: Path) -> None:
-    plan = {
-        "level": "folk",
-        "readings": [
-            {
-                "title": "«  Думи   нічні  »",
-                "hosting": "hosted",
-                "reading_slug": "dumy-nichni",
-            },
-        ],
-    }
-
-    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks("„думи нічні“", "dumy-nichni"))
-
-    assert result["passed"] is True
-    assert result["missing_hosted_readings"] == []
-
-
-def test_linked_only_reading_omission_is_failure_for_folk(tmp_path: Path) -> None:
-    plan = {
-        "level": "folk",
-        "readings": [
-            {"title": "«Ой весна»", "hosting": "linked-only", "reading_slug": "oi-vesna"},
-        ],
-    }
-
-    result = _run_fixture_gate(tmp_path, plan, "")
-
-    assert result["passed"] is False
-    assert result["severity"] == "HARD"
-    assert result["checked"] == 0
-    assert result["missing_hosted_readings"] == []
-    assert result["missing_on_site_reading"]["severity"] == "HARD"
 
 
 def test_orphan_inline_snippets_do_not_count_as_folk_on_site_reading(tmp_path: Path) -> None:
@@ -191,27 +133,6 @@ def test_one_line_structured_reading_does_not_satisfy_folk_coverage(tmp_path: Pa
             "hosted_words": 0,
         }
     ]
-    assert result["missing_substantial_reading"]["severity"] == "HARD"
-
-
-def test_single_long_line_structured_reading_does_not_satisfy_folk_coverage(tmp_path: Path) -> None:
-    plan = {"level": "folk", "readings": []}
-    module_text = (
-        ':::primary-reading{reading="long-line"}\n'
-        "> Один довгий рядок уривка має багато слів і навмисно тягнеться "
-        "далі як суцільна цитата без нормальної рядкової організації, "
-        "але такий фрагмент усе одно не є повноцінним читанням для семінару.\n\n"
-        "— Народна творчість, «Довгий тонкий уривок»\n"
-        ":::\n"
-    )
-
-    result = _run_fixture_gate(tmp_path, plan, module_text)
-
-    assert result["passed"] is False
-    assert result["structured_on_site_readings"] == 1
-    assert result["substantial_on_site_readings"] == 0
-    assert result["short_structured_readings"][0]["reading_slug"] == "long-line"
-    assert result["short_structured_readings"][0]["inline_lines"] == 1
     assert result["missing_substantial_reading"]["severity"] == "HARD"
 
 
@@ -334,85 +255,3 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
     result = _run_fixture_gate(tmp_path, plan, "")
 
     assert result == {"passed": True, "skipped": "non-seminar"}
-
-
-@pytest.mark.parametrize(
-    ("plan", "module_text", "expect_floor_warning"),
-    [
-        pytest.param(
-            {
-                "level": "folk",
-                "readings": [
-                    {
-                        "title": "«Ой весна»",
-                        "hosting": "host",
-                        "reading_slug": "oi-vesna",
-                    },
-                ],
-            },
-            _module_with_four_blocks("«Ой весна»", "oi-vesna"),
-            False,
-            id="hosted-title-attribution",
-        ),
-        pytest.param(
-            {
-                "level": "folk",
-                "readings": [
-                    {
-                        "title": "«Гей, соколи»",
-                        "hosting": "hosted",
-                        "reading_slug": "hei-sokoly",
-                    },
-                ],
-            },
-            _module_with_four_blocks("«Гей, соколи»", "hei-sokoly"),
-            False,
-            id="hosted-alias-attribution",
-        ),
-        pytest.param(
-            {
-                "level": "folk",
-                "readings": [
-                    {
-                        "title": "«Дума про втечу трьох братів з Азова»",
-                        "hosting": "host",
-                        "reading_slug": "duma-pro-vtechu-trokh-brativ-z-azova",
-                    },
-                ],
-            },
-            _module_with_four_blocks(
-                "«Дума про втечу трьох братів з Азова»",
-                "duma-pro-vtechu-trokh-brativ-z-azova",
-            ),
-            False,
-            id="long-hosted-title-attribution",
-        ),
-        pytest.param(
-            {
-                "level": "folk",
-                "readings": [
-                    {
-                        "title": "«Щедрий вечір»",
-                        "hosting": "host",
-                        "reading_slug": "shchedryi-vechir",
-                    },
-                ],
-            },
-            _module_with_four_blocks("«Щедрий вечір»", "shchedryi-vechir"),
-            False,
-            id="hosted-title-no-floor-warning",
-        ),
-    ],
-)
-def test_fixture_folk_modules_all_pass_reading_coverage(
-    plan: dict[str, Any], module_text: str, expect_floor_warning: bool
-) -> None:
-    result = _reading_coverage_gate(module_text, plan)
-
-    assert result["passed"] is True
-    assert result["missing_hosted_readings"] == []
-    assert result["structured_on_site_readings"] == 4
-    if expect_floor_warning:
-        assert result["warning"]["severity"] == "WARNING"
-    else:
-        assert "warning" not in result

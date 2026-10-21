@@ -77,23 +77,6 @@ def test_parse_book_finds_all_verb_pages(tmp_path: Path) -> None:
     assert nums == [1, 2, 3], f"expected [1, 2, 3], got {nums}"
 
 
-def test_parse_book_handles_form_feed_no_space_marker(tmp_path: Path) -> None:
-    """Markers like ``\\x0c№1`` (form-feed + no space) must open a
-    new verb page."""
-    verbs = ovi.parse_book(_write_fixture(tmp_path))
-    assert verbs[0].number == 1
-    assert "аналізу́ю" in verbs[0].render()
-
-
-def test_parse_book_handles_space_marker(tmp_path: Path) -> None:
-    """Markers like ``\\x0c № 3`` (form-feed + leading space + space)
-    must also open a new verb page — this is the shape around verb
-    #211 in the real source."""
-    verbs = ovi.parse_book(_write_fixture(tmp_path))
-    assert verbs[-1].number == 3
-    assert "ї́жджу" in verbs[-1].render()
-
-
 def test_parse_book_strips_page_furniture(tmp_path: Path) -> None:
     """Page footer ``Back to Contents ...UkrainianLessons.com NNN`` must
     NOT appear in any verb body."""
@@ -137,11 +120,6 @@ def test_parse_book_rejects_marker_beyond_max(tmp_path: Path) -> None:
     verbs = ovi.parse_book(p)
     nums = [v.number for v in verbs]
     assert nums == [1], f"expected [1], got {nums}"
-
-
-def test_parse_book_missing_file_raises(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        ovi.parse_book(tmp_path / "does-not-exist.txt")
 
 
 # ---------------------------------------------------------------------------

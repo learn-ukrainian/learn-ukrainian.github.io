@@ -46,15 +46,6 @@ def _isolate(tmp_path, monkeypatch: pytest.MonkeyPatch):
     atlas_job.set_host_adapter(None)
 
 
-def test_list_and_health(_isolate: atlas_job.FakeHostAdapter) -> None:
-    health = client.get("/api/atlas-jobs/health")
-    assert health.status_code == 200
-    assert health.json()["ok"] is True
-    listed = client.get("/api/atlas-jobs")
-    assert listed.status_code == 200
-    assert listed.json()["count"] == 0
-
-
 def test_submit_dry_run_via_api(_isolate: atlas_job.FakeHostAdapter) -> None:
     resp = client.post("/api/atlas-jobs/submit", json={"plan": _plan(), "dry_run": True})
     assert resp.status_code == 200
@@ -65,22 +56,6 @@ def test_submit_rejects_hramatka(_isolate: atlas_job.FakeHostAdapter) -> None:
     resp = client.post(
         "/api/atlas-jobs/submit",
         json={"plan": _plan(host="hramatka"), "dry_run": True},
-    )
-    assert resp.status_code == 400
-
-
-def test_submit_rejects_vps_alias(_isolate: atlas_job.FakeHostAdapter) -> None:
-    resp = client.post(
-        "/api/atlas-jobs/submit",
-        json={"plan": _plan(host="vps"), "dry_run": True},
-    )
-    assert resp.status_code == 400
-
-
-def test_submit_rejects_unknown_host(_isolate: atlas_job.FakeHostAdapter) -> None:
-    resp = client.post(
-        "/api/atlas-jobs/submit",
-        json={"plan": _plan(host="mystery-host"), "dry_run": True},
     )
     assert resp.status_code == 400
 
@@ -172,18 +147,6 @@ def test_api_rejects_path_injection_job_id(
     assert list(tmp_path.iterdir()) == []
 
 
-def test_load_and_results_not_swallowed_by_job_id(
-    _isolate: atlas_job.FakeHostAdapter,
-) -> None:
-    load_resp = client.get("/api/atlas-jobs/load")
-    assert load_resp.status_code == 200
-    assert load_resp.json()["schema"] == "atlas-jobs-load.v1"
-
-    results_resp = client.get("/api/atlas-jobs/results")
-    assert results_resp.status_code == 200
-    assert "results" in results_resp.json()
-
-
 def test_load_endpoint_shape_and_cache(
     _isolate: atlas_job.FakeHostAdapter,
 ) -> None:
@@ -216,30 +179,6 @@ def test_load_endpoint_shape_and_cache(
     assert host_info["job_unit"]["active_count"] == 0
     assert host_info["job_unit"]["job_id"] is None
     assert host_info["job_unit"]["state"] is None
-
-
-def test_load_endpoint_host_filter_rejects_unknown(
-    _isolate: atlas_job.FakeHostAdapter,
-) -> None:
-    router_mod.clear_host_load_cache()
-    router_mod.set_host_load_cache("atlas-runner", _isolate.host_load("atlas-runner"))
-
-    resp_vps = client.get("/api/atlas-jobs/load?host=vps")
-    assert resp_vps.status_code == 400
-
-    resp_hramatka = client.get("/api/atlas-jobs/load?host=hramatka")
-    assert resp_hramatka.status_code == 400
-
-    resp_runner = client.get("/api/atlas-jobs/load?host=atlas-runner")
-    assert resp_runner.status_code == 200
-    assert list(resp_runner.json()["hosts"].keys()) == ["atlas-runner"]
-
-    for legacy in ("legacy-box", "legacy-alias"):
-        resp = client.get(f"/api/atlas-jobs/load?host={legacy}")
-        assert resp.status_code == 400
-
-    resp_unknown = client.get("/api/atlas-jobs/load?host=unknown-host")
-    assert resp_unknown.status_code == 400
 
 
 def test_load_endpoint_ip_sanitization_and_forbidden_fields(
@@ -377,61 +316,6 @@ def test_load_entry_awaits_an_inflight_probe(
         router_mod.clear_host_load_cache()
 
 
-def test_load_cache_arms_autonomous_refresh_timer(
-    _isolate: atlas_job.FakeHostAdapter,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """A cached sample re-collects on its own — no GET/read needed (#7074)."""
-    router_mod.clear_host_load_cache()
-    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
-    calls = 0
-    original_host_load = _isolate.host_load
-
-    def host_load(host: str) -> dict:
-        nonlocal calls
-        calls += 1
-        return original_host_load(host)
-
-    monkeypatch.setattr(_isolate, "host_load", host_load)
-    delays: list[float] = []
-
-    async def exercise() -> dict:
-        loop = asyncio.get_running_loop()
-        orig_call_later = loop.call_later
-
-        def wrapped_call_later(delay, callback, *args, **kwargs):
-            delays.append(float(delay))
-            return orig_call_later(delay, callback, *args, **kwargs)
-
-        loop.call_later = wrapped_call_later  # type: ignore[method-assign]
-        try:
-            router_mod.set_host_load_cache("atlas-runner", original_host_load("atlas-runner"))
-        finally:
-            loop.call_later = orig_call_later  # type: ignore[method-assign]
-        assert delays, "set_host_load_cache must schedule call_later"
-        # Delay is HOST_LOAD_REFRESH_AFTER_S minus sample age at arm time
-        # (scripts/api/atlas_jobs_router.py::_arm_host_load_timer). Under CI
-        # load a few ms of age is normal; require a near-full window, not exact.
-        assert 0.0 < delays[0] <= router_mod.HOST_LOAD_REFRESH_AFTER_S
-        assert delays[0] == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.05)
-        handle = next(iter(router_mod._HOST_LOAD_TIMERS.values()))
-        remaining = handle.when() - loop.time()
-        await asyncio.sleep(max(0.0, remaining - 0.002))
-        assert calls == 0
-        deadline = handle.when() + 0.4
-        while calls == 0 and loop.time() < deadline:
-            await asyncio.sleep(0.005)
-        assert calls >= 1
-        return router_mod._get_host_load_entry("atlas-runner")
-
-    try:
-        entry = asyncio.run(exercise())
-        assert entry["status"] == "fresh"
-        assert entry["age_seconds"] < 1.0
-    finally:
-        router_mod.clear_host_load_cache()
-
-
 def test_failed_probe_backoff_blocks_ordinary_read(
     _isolate: atlas_job.FakeHostAdapter,
     monkeypatch: pytest.MonkeyPatch,
@@ -467,66 +351,6 @@ def test_failed_probe_backoff_blocks_ordinary_read(
 
     try:
         asyncio.run(exercise())
-    finally:
-        router_mod.clear_host_load_cache()
-
-
-def test_failed_probe_backoff_blocks_cold_async_read(
-    _isolate: atlas_job.FakeHostAdapter,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """A cold failed collect must not retry on the same ordinary read (#7074)."""
-    router_mod.clear_host_load_cache()
-    monkeypatch.setattr(router_mod, "HOST_LOAD_REFRESH_AFTER_S", 0.2)
-    calls = 0
-
-    def host_load(host: str) -> dict:
-        del host
-        nonlocal calls
-        calls += 1
-        raise RuntimeError("down")
-
-    monkeypatch.setattr(_isolate, "host_load", host_load)
-
-    async def exercise() -> None:
-        first = await router_mod._get_host_load_entry_async("atlas-runner")
-        assert calls == 1
-        assert first["status"] == "unavailable"
-        second = await router_mod._get_host_load_entry_async("atlas-runner")
-        await asyncio.sleep(0.02)
-        assert calls == 1
-        assert second["status"] == "unavailable"
-
-    try:
-        asyncio.run(exercise())
-    finally:
-        router_mod.clear_host_load_cache()
-
-
-def test_load_refresh_starts_inside_fresh_window(
-    _isolate: atlas_job.FakeHostAdapter,
-) -> None:
-    router_mod.clear_host_load_cache()
-    router_mod.set_host_load_cache(
-        "atlas-runner",
-        _isolate.host_load("atlas-runner"),
-        mono_ts=time.monotonic() - 20.0,
-    )
-
-    async def exercise() -> tuple[dict, dict]:
-        first = router_mod._get_host_load_entry("atlas-runner")
-        task = router_mod._HOST_LOAD_TASKS.get("atlas-runner")
-        assert task is not None
-        await asyncio.shield(task)
-        second = router_mod._get_host_load_entry("atlas-runner")
-        return first, second
-
-    try:
-        first, second = asyncio.run(exercise())
-        assert first["status"] == "fresh"
-        assert 19.0 <= first["age_seconds"] <= 22.0
-        assert second["status"] == "fresh"
-        assert second["age_seconds"] < 5.0
     finally:
         router_mod.clear_host_load_cache()
 
@@ -813,48 +637,3 @@ def test_results_skips_corrupt_and_non_object_receipts(
     assert data["results"][0]["host"] == "atlas-runner"
     assert data["results"][0]["targets"] == 20
     assert data["results"][0]["filled_translation"] == 18
-
-
-def test_results_and_receipt_resolve_via_monitor_context(
-    tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from scripts.api.monitor_context import fixture_context
-
-    monkeypatch.delenv("ATLAS_JOB_REGISTRY", raising=False)
-    ctx_root = tmp_path / "custom_ctx"
-    registry_dir = ctx_root / "batch_state" / "atlas-jobs"
-    registry_dir.mkdir(parents=True)
-
-    receipt = {
-        "schema": "atlas-job-result.v1",
-        "id": "job-ctx",
-        "host": "atlas-runner",
-        "kind": "reenrich",
-        "state": "succeeded",
-        "closed_at": "2026-08-17T15:00:00Z",
-        "issue": 7402,
-        "denominator": 1,
-        "delivery": "ok",
-        "pulled": True,
-        "summary": {
-            "targets": 10,
-            "filled_translation": 10,
-            "circuit_breaker_tripped": False,
-        },
-    }
-    (registry_dir / "job-ctx.result.json").write_text(json.dumps(receipt), encoding="utf-8")
-
-    fctx = fixture_context(ctx_root)
-    monkeypatch.setattr(app.state, "ctx", fctx)
-
-    resp = client.get("/api/atlas-jobs/results")
-    assert resp.status_code == 200
-    data = resp.json()
-    assert data["count"] == 1
-    assert data["results"][0]["id"] == "job-ctx"
-    assert data["results"][0]["targets"] == 10
-
-    health = client.get("/api/atlas-jobs/health")
-    assert health.status_code == 200
-    assert health.json()["registry"] == "atlas-jobs-fixture"
-

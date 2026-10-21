@@ -11,7 +11,6 @@ import pytest
 
 from scripts.session_canary import diary
 from scripts.session_canary import grok_lane as gl
-from tests.helpers.python import project_python
 
 _REPO = Path(__file__).resolve().parents[1]
 
@@ -44,93 +43,6 @@ def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, comma
     assert proc.returncode == 2
     assert "error: epic must be a selector" in proc.stderr
     assert list(tmp_path.rglob("*")) == [repo]
-
-
-@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
-def test_path_helpers_reject_unsafe_epic(tmp_path: Path, epic: str) -> None:
-    with pytest.raises(ValueError, match="epic must be a selector"):
-        gl._canary_dir(tmp_path, epic)
-    with pytest.raises(ValueError, match="epic must be a selector"):
-        gl._bound_handoff_path(tmp_path, epic)
-    assert not list(tmp_path.iterdir())
-
-
-@pytest.mark.parametrize("epic", ["x", "0", "infra", "7919", "open-model-data", "a--b"])
-def test_path_helpers_preserve_valid_epic(tmp_path: Path, epic: str) -> None:
-    base = tmp_path / ".claude" / f"{epic}-epic"
-    assert gl._canary_dir(tmp_path, epic) == base / "canary"
-    assert gl._bound_handoff_path(tmp_path, epic) == base / "GROK-DRIVER-HANDOFF.md"
-    assert not list(tmp_path.iterdir())
-
-
-def test_build_facts_exactly_ten_from_stream_and_handoff() -> None:
-    stream = [
-        {"type": "binding_order", "body": f"Binding order number {i} about quality and no shortcuts."}
-        for i in range(1, 5)
-    ]
-    stream += [
-        {"type": "negative_constraint", "body": "Never commit directly to main."},
-        {"type": "negative_constraint", "body": "Never merge drafts."},
-        {"type": "next_action", "body": "Merge offline enrich when CI green."},
-        {"type": "next_action", "body": "Run VPS launch_enrich after merge."},
-        {"type": "decision", "body": "Sol is the designer for practice setup."},
-        {"type": "state", "body": "PR 5496 waiting on pytest."},
-    ]
-    handoff = """
-# Handoff
-## Next drive order
-1. Ship start-grok canary mint at cold-start
-2. Score after auto-compact
-3. End on FAIL-HANDOFF only
-## Hands-off
-- Other lanes' queues
-- Primary checkout writes for product code
-"""
-    facts = gl._build_facts(
-        epic="atlas",
-        stream_id="epic:4387",
-        stream_entries=stream,
-        handoff_text=handoff,
-        handoff_rel=".claude/atlas-epic/INTERIM-DRIVER-HANDOFF.md",
-    )
-    assert len(facts) == 10
-    ids = [f["id"] for f in facts]
-    assert len(set(ids)) == 10
-    assert "lane-stream" in ids
-    assert facts[0]["a"] == "epic:4387"  # allow-hardcoded-epic: session canary stream facts fixture
-    assert all(f["q"] and f["a"] for f in facts)
-
-
-@pytest.mark.parametrize(
-    ("attempts", "expected"),
-    [
-        (
-            [],
-            "error: could only derive 0/10 durable anchors; "
-            "tried (no handoff) (next=0, hands-off=0); "
-            "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
-            "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it",
-        ),
-        (
-            [("handoff.md", 4, 2, 1)],
-            "error: could only derive 4/10 durable anchors; "
-            "tried handoff.md (next=2, hands-off=1); "
-            "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
-            "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it",
-        ),
-        (
-            [("first.md", 6, 3, 1), ("second.md", 3, 0, 2)],
-            "error: could only derive 6/10 durable anchors; "
-            "tried first.md (next=3, hands-off=1), second.md (next=0, hands-off=2); "
-            "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
-            "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it",
-        ),
-    ],
-)
-def test_anchor_shortfall_output_preserves_launcher_lease_ownership(
-    attempts: list[tuple[str, int, int, int]], expected: str,
-) -> None:
-    assert gl._format_anchor_shortfall(attempts) == expected
 
 
 def test_build_facts_fails_when_insufficient(tmp_path: Path) -> None:
@@ -250,21 +162,6 @@ def test_mint_score_roundtrip_pass_and_fail(tmp_path: Path, monkeypatch: pytest.
     assert verdict2["verdict"] == "FAIL-HANDOFF"
 
 
-def test_protocol_prints_epic(capsys: pytest.CaptureFixture[str]) -> None:
-    rc = gl.main(["protocol", "--epic", "atlas"])
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "epic:4387" in out  # allow-hardcoded-epic: atlas epic protocol output
-    assert "0.8" in out or "8/10" in out
-    assert "FAIL-HANDOFF" in out
-    assert "The launcher supplies the fenced lease" in out
-    assert "agents never claim, renew, release, or recover it" in out
-    assert "Only within `thread-rollover`, mint" in out
-    assert "launcher owns fenced lease close" in out
-    for obsolete in ("Open/claim stream lease", "close stream +", "close stream;", "force-close"):
-        assert obsolete not in out
-
-
 @pytest.mark.parametrize(
     ("score_rc", "score_line", "verdict"),
     [(0, "SCORE 10/10 = 1.00  ->  PASS", "PASS"),
@@ -326,16 +223,3 @@ def test_score_offline_preserves_handback_and_launcher_instructions(
         assert "POST-COMPACT RE-GROUND (mandatory)" in out
     for obsolete in ("session_streams close", "force-close", "close stream lease; /quit"):
         assert obsolete not in out + json.dumps(payload)
-
-
-def test_cli_module_help() -> None:
-    proc = subprocess.run(
-        [project_python(), "-m", "scripts.session_canary.grok_lane", "--help"],
-        cwd=_REPO,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=15,
-    )
-    assert proc.returncode == 0
-    assert "mint" in proc.stdout

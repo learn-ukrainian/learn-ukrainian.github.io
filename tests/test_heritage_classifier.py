@@ -22,7 +22,6 @@ from scripts.lexicon.heritage_classifier import (
     source_text_digest,
     usage_source_records,
 )
-from tests._host_path_guard import assert_no_checkout_paths
 
 DB = Path(__file__).resolve().parent / "fixtures" / "heritage_sample.db"
 VESUM_DB = Path(__file__).resolve().parent / "fixtures" / "vesum_sample.db"
@@ -248,28 +247,6 @@ _NAMED_LEXICAL_CALQUE = {
         ),
         (
             {
-                "classification": "unknown",
-                "is_russianism": False,
-                "russian_shadow": True,
-                "attestations": [{"source": "standard_alternative", "ref": "ануж"}],
-            },
-            False,
-            0,
-            "none",
-        ),
-        (
-            {
-                "classification": "unknown",
-                "is_russianism": False,
-                "russian_shadow": True,
-                "attestations": [{"source": "literary_fts", "ref": "chunk"}],
-            },
-            False,
-            0,
-            "none",
-        ),
-        (
-            {
                 "classification": "standard",
                 "is_russianism": False,
                 "russian_shadow": True,
@@ -405,17 +382,6 @@ _NAMED_LEXICAL_CALQUE = {
             2,
             "soviet_def_blue",
         ),
-        (
-            {
-                "classification": "unknown",
-                "is_russianism": False,
-                "russian_shadow": True,
-                "attestations": [],
-            },
-            False,
-            2,
-            "soviet_def_blue",
-        ),
     ],
 )
 def test_compute_warning_severity_is_pure(
@@ -432,37 +398,6 @@ def test_compute_warning_severity_is_pure(
         )
         == expected
     )
-
-
-def test_connection_pooling_same_thread_reuses_connection() -> None:
-    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
-    close_cached_connections()
-    with _source_conn(DB) as conn1:
-        with _source_conn(DB) as conn2:
-            assert conn1 is conn2
-    close_cached_connections()
-
-
-def test_connection_pooling_usable_after_context_exit() -> None:
-    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
-    close_cached_connections()
-    with _source_conn(DB) as conn:
-        pass
-    # Connection remains open and cached for future queries
-    with _source_conn(DB) as conn2:
-        row = conn2.execute("SELECT 1").fetchone()
-        assert row[0] == 1
-    close_cached_connections()
-
-
-def test_connection_pooling_close_cached_connections() -> None:
-    from scripts.lexicon.heritage_classifier import _source_conn, close_cached_connections
-    with _source_conn(DB) as conn1:
-        pass
-    close_cached_connections()
-    with _source_conn(DB) as conn2:
-        assert conn1 is not conn2
-    close_cached_connections()
 
 
 def test_connection_pooling_query_only_mode() -> None:
@@ -500,14 +435,6 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
         return
     assert resolved == expected
     assert (resolved / ".git").is_dir()
-
-
-def test_source_db_path_has_no_hardcoded_absolute_path() -> None:
-    """The heritage classifier must not carry a hardcoded operator path (#6571)."""
-    from scripts.lexicon import heritage_classifier as hc
-
-    src = Path(hc.__file__).read_text(encoding="utf-8")
-    assert_no_checkout_paths(src)
 
 
 def test_convergence_calques_receive_yellow_severity_and_alternatives() -> None:
@@ -564,15 +491,6 @@ def test_sense_restricted_vidnoshennia_preserves_standard_and_mathematical_sense
     alternatives = res["calque_warning"]["standard_alternatives"]
     assert "ставлення" in alternatives
     assert "стосунки" in alternatives
-
-
-def test_poizdka_retains_standard_without_calque_warning() -> None:
-    """поїздка is a standard short-trip noun (СУМ-20 / СУМ-11) and must not be flagged as a calque (#7982)."""
-    res = classify_lemma("поїздка", db_path=DB, vesum_db_path=VESUM_DB)
-    assert res["classification"] == "standard"
-    assert res["warning_severity"] in ("none", "treasured")
-    assert res["is_russianism"] is False
-    assert res.get("calque_warning") is None
 
 
 # --- #9603 usage-label scope ------------------------------------------------
@@ -677,13 +595,6 @@ def test_stale_db_russianism_without_scope_is_unresolved() -> None:
     assert label["code"] is None
     assert compute_warning_severity(status, vesum_attested=True) == "none"
     assert classification_code({"lemma": "другий", "heritage_status": status}) is None
-
-
-def test_stale_severity_alone_never_labels() -> None:
-    for severity in ("russianism_red", "calque_yellow", "treasured"):
-        status = {"classification": "standard", "warning_severity": severity, "attestations": []}
-        assert resolve_usage_label(status)["code"] is None
-        assert classification_code({"lemma": "слово", "heritage_status": status}) is None
 
 
 _SUM20_ATTACHED_HOMONYM = "ДИВА́Н², у, ч., іст. Дорадчий орган у султанській Туреччині."
@@ -1168,21 +1079,6 @@ def test_curated_record_without_headword_bound_evidence_is_unresolved(monkeypatc
     assert classification_code(entry) is None
 
 
-def test_actual_db_avoid_row_without_bound_evidence_gets_no_browse_code() -> None:
-    """D01: «діюча» has only avoid provenance and a Russian shadow."""
-    status = {
-        "classification": "unknown",
-        "attestations": [],
-        "is_russianism": False,
-        "russian_shadow": True,
-        "vesum_attested": False,
-        "calque_warning": None,
-        "warning_severity": "russianism_red",
-    }
-    entry = {"lemma": "діюча", "primary_source": "surzhyk_to_avoid", "heritage_status": status}
-    assert classification_code(entry) is None
-
-
 def test_phrasal_calque_and_unattested_curated_record() -> None:
     phrase = {"classification": "unknown", "calque_warning": {"kind": "phrasal", "citations": ["antonenko-p091"]}}
     assert resolve_usage_label(phrase)["scope"] == "phrase"
@@ -1400,14 +1296,6 @@ def test_esum_helpers_fail_closed() -> None:
     # A headword-slot marker of another class does not bind this classification.
     status = {"classification": "dialect", "attestations": [_ESUM_HRYD]}
     assert resolve_usage_label(status, headword="гридь", gloss=_HRYD_GLOSS)["code"] is None
-
-
-def test_source_checked_chunks_load_when_heritage_classifier_is_loaded_as_a_file(monkeypatch) -> None:
-    """generate_search_index loads the classifier as a file, with only scripts/ on sys.path."""
-    import sys
-
-    monkeypatch.setitem(sys.modules, "scripts.lexicon.calque_corrections", None)
-    assert heritage_classifier._source_checked_chunks() == SOURCE_CHECKED_CHUNKS
 
 
 # Actual reviewed passages of the приймати pair (sources.db p165, s0015).

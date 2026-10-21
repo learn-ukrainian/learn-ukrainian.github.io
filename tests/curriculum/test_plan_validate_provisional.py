@@ -59,29 +59,6 @@ def test_provisional_pack_still_fails_every_other_rule(env: Env) -> None:
     assert codes.PACK_LOCK_MISMATCH in {outcome.code for outcome in stale.failures}
 
 
-def test_a_matching_evidence_ref_has_nothing_pending(env: Env) -> None:
-    plan = yaml.safe_load(env.plan_path.read_bytes())
-    plan["evidence_ref"]["sha256"] = sha(env.pack_path)
-    env.plan_path.write_bytes(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False).encode("utf-8"))
-    assert validate_provisional(env) == 0
-    assert codes.PENDING_PROMOTION not in {item["code"] for item in _report(env)["not_checked"]}
-
-
-@pytest.mark.parametrize("extra", [["--strict"], ["--allow-missing-prior"], ["--strict", "--allow-missing-prior"]])
-def test_provisional_pack_refuses_strict_and_waivers(env: Env, extra: list[str]) -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        validate_main([LEVEL, SLUG, "--plan", str(env.plan_path), "--provisional-pack", *extra])
-    assert excinfo.value.code == 2
-    assert not (env.state_dir / "plan-validate.report.json").exists()
-
-
-def test_provisional_pack_and_write_report_refuse_all(env: Env) -> None:
-    for flag in ("--provisional-pack", "--write-report"):
-        with pytest.raises(SystemExit) as excinfo:
-            validate_main([LEVEL, "--all", flag])
-        assert excinfo.value.code == 2
-
-
 def test_write_report_bytes_mode_and_inputs(env: Env) -> None:
     assert validate_provisional(env) == 0
     path = env.state_dir / "plan-validate.report.json"

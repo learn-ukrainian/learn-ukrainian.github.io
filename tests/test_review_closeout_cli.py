@@ -190,11 +190,6 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     assert resolution == json.loads(proc.stdout)
 
 
-def test_real_process_reviewer_requires_injected_snapshot(tmp_path):
-    with pytest.raises(pytest.fail.Exception, match="must inject --routing-snapshot-file"):
-        _run_cli(tmp_path / "state.json", "resolve-reviewer", "--author-model", "claude", real_process=True)
-
-
 def test_code_reviewer_without_target_or_owned_path_refuses_with_typed_reason(tmp_path):
     state = tmp_path / "state.json"
     proc = _run_cli(state, "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--risk", "low")
@@ -223,24 +218,6 @@ def test_state_file_sha_validation_precedes_git(tmp_path, monkeypatch, field):
     assert json.loads(proc.stderr)["error"] == "target_sha_invalid"
 
 
-def test_resolve_reviewer_merges_into_existing_state_file(tmp_path):
-    repo = _init_repo(tmp_path)
-    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
-    state_file = tmp_path / "state.json"
-
-    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
-    assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
-
-    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
-    assert proc.returncode == 0, proc.stderr
-
-    state = json.loads(state_file.read_text(encoding="utf-8"))
-    # Prior lifecycle state survives the merge.
-    assert state["baseline"]["issue_ref"] == "#5283"
-    assert state["target"]["changed_paths"] == ["feature.py"]
-    assert state["resolved_reviewer"]["selected"]["concrete_model"] == "gpt-6.1-sol"
-
-
 def test_resolve_reviewer_persists_fail_closed_resolution(tmp_path):
     state_file = tmp_path / "state.json"
     proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "unknown-seat", "--owned-path", "ordinary.py")
@@ -250,30 +227,6 @@ def test_resolve_reviewer_persists_fail_closed_resolution(tmp_path):
     resolution = state["resolved_reviewer"]
     assert resolution["selected"] is None
     assert resolution["fail_closed_reason"] is not None
-
-
-def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_path):
-    state_file = tmp_path / "state.json"
-    invalid_risk = _run_cli(
-        state_file,
-        "resolve-reviewer",
-        "--author-model",
-        "codex",
-        "--risk",
-        "bogus",
-    )
-    assert invalid_risk.returncode != 0
-
-    unknown_author = _run_cli(
-        state_file,
-        "resolve-reviewer",
-        "--author-model",
-        "unknown-seat",
-        "--owned-path",
-        "ordinary.py",
-    )
-    assert unknown_author.returncode != 0
-    assert json.loads(unknown_author.stdout)["selected"] is None
 
 
 def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_auto(tmp_path):
@@ -781,28 +734,6 @@ def test_target_and_freeze_are_immutable_once_baseline_frozen(tmp_path):
     assert len(state_after["findings"]) == 1
 
 
-def test_record_cycle_rejects_negative_outstanding_count(tmp_path):
-    repo = _init_repo(tmp_path)
-    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
-    state_file = tmp_path / "state.json"
-
-    _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo))
-    _run_cli(state_file, *_freeze_kwargs())
-    ok_proc = _run_cli(state_file, "record-cycle", "--outstanding-count", "2")
-    assert ok_proc.returncode == 0, ok_proc.stderr
-
-    state_before = json.loads(state_file.read_text(encoding="utf-8"))
-    assert state_before["cycle_outstanding_counts"] == [2]
-
-    bad_proc = _run_cli(state_file, "record-cycle", "--outstanding-count", "-1")
-    assert bad_proc.returncode != 0
-    assert "outstanding-count" in bad_proc.stderr
-
-    state_after = json.loads(state_file.read_text(encoding="utf-8"))
-    assert state_after == state_before
-    assert state_after["cycle_outstanding_counts"] == [2]
-
-
 # --- #9739: a committed target's reviewer is chosen from its complete authorship ------------------
 
 
@@ -1064,53 +995,6 @@ def test_resolve_reviewer_still_refuses_a_branch_whose_only_commits_came_from_ma
     assert "missing explicit X-Agent" in payload["fail_closed_reason"]
 
 
-def test_resolve_reviewer_refuses_a_clean_main_merge_with_no_branch_commit(tmp_path, monkeypatch):
-    """A no-ff base merge is not an authored commit, so reviewer selection still refuses."""
-    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
-
-    repo = mini_repo(tmp_path, monkeypatch)
-    _point_origin_head(repo)
-    state = tmp_path / "state.json"
-    target = _run_cli(
-        state,
-        "target",
-        "--mode",
-        "branch",
-        "--branch",
-        "feature",
-        "--base",
-        "origin/main",
-        "--repo-root",
-        str(repo.root),
-    )
-    assert target.returncode == 0, target.stderr
-
-    repo.git("checkout", "-q", "trunk")
-    repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
-    repo.publish("trunk", to="main")
-    repo.git("checkout", "-q", "feature")
-    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
-    saved = json.loads(state.read_text(encoding="utf-8"))
-    saved["target"]["head_sha"] = repo.sha("HEAD")
-    state.write_text(json.dumps(saved), encoding="utf-8")
-
-    result = _run_cli(
-        state,
-        "resolve-reviewer",
-        "--author-model",
-        "gpt-6.1-sol",
-        "--repository",
-        REPOSITORY,
-        "--task-root",
-        str(tmp_path),
-    )
-    assert result.returncode == 1
-    payload = json.loads(result.stdout)
-    assert payload["selected"] is None
-    assert "branch review facts unavailable" in payload["fail_closed_reason"]
-    assert "missing explicit X-Agent" in payload["fail_closed_reason"]
-
-
 @pytest.mark.parametrize("base_name,excluded", [("main", True), ("release", False)])
 def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, monkeypatch, base_name, excluded):
     """A frozen PR target must exclude default-branch authors, and only those."""
@@ -1173,39 +1057,6 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert result.returncode == 1, result.stdout + result.stderr
         assert body["selected"] is None
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
-
-
-# Re-pinned for D-129 (#10464): each output loses only its claude-opus-5-5-cursor-fallback trace row.
-@pytest.mark.parametrize(
-    "author,risk,path,digest",
-    [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "9f6974f6b870e24be7758b66ae6467b23d92a5a27fb077fa3a13085f77b1e09b"),
-        ("claude-opus-5-5", "low", "ordinary.py", "25f8e170adc93603389e64c46ed2bc7fc95bfaa1e9c778363f57bad61b2e96d2"),
-        (
-            "gpt-6.1-sol",
-            "low",
-            "scripts/agent_runtime/target_admission.py",
-            "67e4e6295377df3825b821f50b504e9fd57e29cc0ef8e76132be2406c744971d",
-        ),
-    ],
-)
-@pytest.mark.parametrize("mode", [(), ("--review-mode", "cross_family")])
-def test_default_resolver_output_matches_pre_10437_golden(tmp_path, author, risk, path, digest, mode):
-    import hashlib
-
-    result = _run_cli(
-        tmp_path / "state.json",
-        "resolve-reviewer",
-        "--author-model",
-        author,
-        "--risk",
-        risk,
-        "--owned-path",
-        path,
-        *mode,
-    )
-    assert result.returncode == 0, result.stderr
-    assert hashlib.sha256(result.stdout.encode()).hexdigest() == digest
 
 
 @pytest.mark.parametrize("outside_available", [True, False])

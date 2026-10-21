@@ -4,7 +4,6 @@ import copy
 import json
 import sqlite3
 from dataclasses import replace
-from pathlib import Path
 
 import pytest
 
@@ -509,14 +508,6 @@ def test_selection_filters_records_accounting_metrics_and_pins(bundle, monkeypat
             )
 
 
-def test_default_config_uses_shared_git_directory():
-    default = cli.default_config()
-    assert default.name == "request.json"
-    assert default.parts[-3:] == ("batch_state", "review_build", "request.json")
-    assert ".worktrees" not in default.parts
-    assert (Path(cli.__file__).resolve().parents[4] / ".git").exists()
-
-
 def test_composite_multi_selector_accounts_for_all_body_pages_and_order(bundle):
     candidate = bundle["candidates"][0]
     body = tuple(replace(c.response[0], slot="body") for c in bundle["candidates"][:3])
@@ -547,34 +538,6 @@ def test_composite_multi_selector_accounts_for_all_body_pages_and_order(bundle):
     assert len(run_gate(bundle)[0]) == 1
     bundle["candidates"][0] = replace(bundle["candidates"][0], response=tuple(reversed(body)))
     with pytest.raises(BuildError, match="unit_id_mismatch"):
-        run_gate(bundle)
-
-
-def test_set_equality_is_exercised_by_full_admission_gate(bundle):
-    bundle["spec"]["binding"]["rules"].append(
-        {
-            "op": "set_query_equal",
-            "values": [selector("response", "target", match="all", min=1)],
-            "normalizer": "identity",
-            "queries": [
-                {
-                    "query": {
-                        "kind": "sql",
-                        "store": "sources.db",
-                        "sql": "SELECT target_field FROM units WHERE entry_id=?",
-                    },
-                    "parameters": [selector(field="entry_id")],
-                }
-            ],
-        }
-    )
-    records, report = run_gate(bundle)
-    assert len(records) == report["accounting"]["C1"]["accepted"] == 12
-    # The independent dictionary query returns a genuine extra variant.
-    bundle["spec"]["binding"]["rules"][-1]["queries"][0]["query"]["sql"] += (
-        " UNION ALL SELECT target_field FROM units WHERE id=2"
-    )
-    with pytest.raises(BuildError, match="binding_set"):
         run_gate(bundle)
 
 

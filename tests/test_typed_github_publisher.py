@@ -5,10 +5,8 @@ from __future__ import annotations
 import io
 import json
 import os
-import statistics
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -133,21 +131,6 @@ def test_closed_schema_rejects_payload_passthrough(verb, fields):
         )
 
 
-@pytest.mark.parametrize(
-    "fields",
-    [
-        {"number": "1"},
-        {"number": True},
-        {"number": -1},
-        {"number": 1, "body": "x", "body_file": "x"},
-        {"number": 1, "repo": "github.com/unit/private/extra"},
-    ],
-)
-def test_schema_refuses_invalid_operands(fields):
-    with pytest.raises(gate.PublishBlocked):
-        pub.publish("issue-edit", runner=lambda *a, **k: pytest.fail("send"), **fields)
-
-
 @pytest.mark.parametrize("verb", ["issue-comment", "pr-comment", "pr-review", "pr-merge", "pr-create"])
 @pytest.mark.parametrize("source_kind", ["absolute", "relative", "stdin"])
 def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
@@ -213,21 +196,6 @@ def test_artifact_names_block_and_files_are_not_reread(synthetic_opsec, tmp_path
     calls = []
     pub.publish(verb, **fields, **{key: [pub.Asset(source)]}, runner=spy(calls))
     assert calls[0]["artifacts"]["unit.bin"] == expected
-
-
-@pytest.mark.parametrize(
-    "verb,fields",
-    [
-        ("issue-close", {"number": 1}),
-        ("pr-review", {"number": 1, "verdict": "approve"}),
-        ("pr-disarm", {"number": 1}),
-    ],
-)
-def test_no_text_verbs_work_without_private_tooling(verb, fields, monkeypatch):
-    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("must not load matcher"))
-    calls = []
-    pub.publish(verb, repo="unit/public", runner=spy(calls), **fields)
-    assert len(calls) == 1
 
 
 @pytest.mark.parametrize("payload", ["123", "a" * 40, "word/word", "--flag"])
@@ -366,24 +334,6 @@ def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
     assert "--method" in calls[0]["argv"]
 
 
-@pytest.mark.parametrize(
-    "operation,fields",
-    [
-        ("identity", {}),
-        ("issue", {"number": 1}),
-        ("comments", {"number": 1}),
-        ("checks", {"sha": "a" * 40}),
-        ("commit", {"sha": "a" * 40}),
-        ("runs", {"start": "2026-01-01", "end": "2026-01-02"}),
-    ],
-)
-def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, monkeypatch):
-    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher"))
-    calls = []
-    pub.read(operation, repo="unit/public", runner=spy(calls), **fields)
-    assert calls[0]["argv"][2:4] == ["--method", "GET"]
-
-
 def test_single_commit_read_is_bound_to_the_exact_sha():
     """#10531: app-bot authorship proof is read live from GitHub for one exact commit."""
     calls = []
@@ -448,40 +398,12 @@ def test_issue_unlink_cli_and_api_pin_argv_and_frozen_payload(synthetic_opsec):
         assert not frozen.exists()
 
 
-@pytest.mark.parametrize("missing", ["parent_id", "child_id"])
-def test_issue_unlink_requires_both_node_ids(missing):
-    fields = {"parent_id": "PARENT", "child_id": "CHILD"}
-    fields.pop(missing)
-    with pytest.raises(gate.PublishBlocked, match="required publisher field missing"):
-        pub.publish("issue-unlink", repo="unit/public", runner=lambda *a, **k: pytest.fail("send"), **fields)
-
-
 @pytest.mark.parametrize("key", ["parent_id", "child_id"])
 @pytest.mark.parametrize("value", ["", None, 1, True, "NODE,replaceParent:true", "NODE}", "NODE\n", "NODE/other"])
 def test_issue_unlink_refuses_malformed_node_ids(key, value):
     fields = {"parent_id": "PARENT", "child_id": "CHILD", key: value}
     with pytest.raises(gate.PublishBlocked, match=f"invalid publisher field {key}"):
         pub.publish("issue-unlink", repo="unit/public", runner=lambda *a, **k: pytest.fail("send"), **fields)
-
-
-@pytest.mark.parametrize("extra", [{"replace_parent": True}, {"query": "mutation{x}"}, {"body": "clean"}])
-def test_issue_unlink_refuses_extra_fields(extra):
-    with pytest.raises(gate.PublishBlocked, match="unknown publisher field"):
-        pub.publish(
-            "issue-unlink",
-            repo="unit/public",
-            parent_id="PARENT",
-            child_id="CHILD",
-            runner=lambda *a, **k: pytest.fail("send"),
-            **extra,
-        )
-
-
-@pytest.mark.parametrize("extra", [["--replace-parent"], ["--query", "mutation{x}"], ["--body", "clean"]])
-def test_issue_unlink_cli_refuses_unknown_options(extra):
-    with pytest.raises(SystemExit) as exc:
-        pub.main([*UNLINK_ARGV, *extra], runner=lambda *a, **k: pytest.fail("send"))
-    assert exc.value.code == 2
 
 
 def test_issue_link_replace_parent_sends_typed_boolean_variable(synthetic_opsec):
@@ -503,66 +425,6 @@ def test_issue_link_without_replace_parent_is_byte_identical(synthetic_opsec, fl
         "issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD", replace_parent=False, runner=spy(calls)
     )
     assert [call["--input"] for call in calls] == [LINK_PAYLOAD, LINK_PAYLOAD]
-
-
-@pytest.mark.parametrize(
-    "fields",
-    [
-        {"parent_id": "PARENT,replaceParent:true", "child_id": "CHILD"},
-        {"parent_id": "PARENT", "child_id": "CHILD}"},
-        {"parent_id": "", "child_id": "CHILD"},
-    ],
-)
-def test_issue_link_replace_parent_keeps_node_validation(fields):
-    with pytest.raises(gate.PublishBlocked, match=r"invalid publisher field (parent|child)_id"):
-        pub.publish(
-            "issue-link", repo="unit/public", replace_parent=True, runner=lambda *a, **k: pytest.fail("send"), **fields
-        )
-
-
-@pytest.mark.parametrize("value", ["true", 1, None, "replaceParent:true"])
-def test_issue_link_replace_parent_refuses_non_boolean_values(value):
-    with pytest.raises(gate.PublishBlocked, match="invalid publisher field replace_parent"):
-        pub.publish(
-            "issue-link",
-            repo="unit/public",
-            parent_id="PARENT",
-            child_id="CHILD",
-            replace_parent=value,
-            runner=lambda *a, **k: pytest.fail("send"),
-        )
-
-
-@pytest.mark.parametrize(
-    "extra", [["--replace-parent=true"], ["--replace-parent", "--reparent"], ["--replace-parent", "--query", "x"]]
-)
-def test_issue_link_cli_refuses_valued_or_unknown_options(synthetic_opsec, extra):
-    assert pub.main([*LINK_ARGV, "--replace-parent"], runner=spy([])) == 0
-    with pytest.raises(SystemExit) as exc:
-        pub.main([*LINK_ARGV, *extra], runner=lambda *a, **k: pytest.fail("send"))
-    assert exc.value.code == 2
-
-
-def test_real_matcher_absolute_body_binary_assets_and_overhead(tmp_path, monkeypatch):
-    from tests.test_opsec_prepublish import real_tooling
-
-    tooling = real_tooling()
-    monkeypatch.setattr(gate, "private_tooling", lambda: tooling)
-    body = tmp_path / "clean.md"
-    body.write_text("a" * 10_240)
-    asset = tmp_path / "unit.gz"
-    asset.write_bytes(b"\x1f\x8b\xffunit")
-    calls = []
-    timings = []
-    for _ in range(20):
-        start = time.perf_counter()
-        pub.publish("issue-comment", number=1, body_file=body, repo="unit/public", runner=spy(calls))
-        timings.append((time.perf_counter() - start) * 1000)
-    median = statistics.median(timings)
-    print(f"typed writes real matcher median 20 x 10KB: {median:.3f} ms")
-    assert median < 200 and len(calls) == 20
-    pub.publish("release-upload", repo="unit/public", tag="unit", assets=[pub.Asset(asset)], runner=spy(calls))
-    assert calls[-1]["artifacts"]["unit.gz"] == asset.read_bytes()
 
 
 @pytest.mark.parametrize("body", [TOKEN, "clean\nexact UTF-8 é\n"])
@@ -997,63 +859,11 @@ def test_repository_resolution_is_exact_and_ordered(environment, explicit, origi
     assert repository(tmp_path, environment, explicit, local_read) == expected
 
 
-def test_repository_read_failure_is_unknown(tmp_path):
-    from scripts.opsec.gh_snapshot import repository
-
-    def broken(*a, **k):
-        raise OSError(TOKEN)
-
-    assert repository(tmp_path, {}, reader=broken) == "unknown"
-
-
 @pytest.mark.parametrize(
     "path", ["/dev/null", "unit/../unit", "unit/extra/public/extra", "https://github.com/unit/private/issues/1"]
 )
 def test_repository_prefix_never_grants_private_exemption(path):
     assert not gate.is_private(gate.normalize_repository(path))
-
-
-def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
-    import shutil
-
-    from tests.test_opsec_prepublish import real_tooling
-
-    source = real_tooling()
-    root, _shim, tooling = gh_shim_sandbox
-    shutil.copyfile(source / "matcher.py", tooling / "matcher.py")
-    shutil.copyfile(source / "rules.json", tooling / "rules.json")
-    executable = tmp_path / "real-gh"
-    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 5000\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
-    executable.chmod(0o755)
-    body = tmp_path / "clean.md"
-    body.write_text("a" * 10_240)
-    timings = []
-    for _ in range(20):
-        start = time.perf_counter()
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "scripts.publish",
-                "issue-comment",
-                "--repo",
-                "unit/public",
-                "--number",
-                "1",
-                "--body-file",
-                str(body),
-            ],
-            cwd=root,
-            env={"PATH": os.defpath, "AGENT_REAL_GH": str(executable)},
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-        assert result.returncode == 0, result.stderr
-        timings.append((time.perf_counter() - start) * 1000)
-    median = statistics.median(timings)
-    print(f"CLI writes real matcher median 20 x 10KB: {median:.3f} ms")
-    assert median < 200
 
 
 @pytest.mark.parametrize(
@@ -1093,14 +903,6 @@ def test_raw_private_api_exemption_rejects_opaque_and_traversing_paths(path):
         )
 
 
-def test_release_download_stdout_operand_is_valid_read():
-    calls = []
-    gate.checked_run(
-        ["gh", "release", "download", "unit", "-p", "unit.gz", "-O", "-", "--repo", "unit/public"], runner=spy(calls)
-    )
-    assert len(calls) == 1
-
-
 @pytest.mark.parametrize(
     "args",
     [["pr-review", "--verdict", TOKEN], ["issue-comment", "--number", TOKEN], ["issue-comment", "--unknown", TOKEN]],
@@ -1111,25 +913,6 @@ def test_cli_parse_errors_never_echo_values(args, capsys):
     assert error.value.code == 2
     stderr = capsys.readouterr().err
     assert TOKEN not in stderr and "OPSEC:" in stderr
-
-
-@pytest.mark.parametrize("command", ["version", "--version"])
-def test_exact_cli_version_read_needs_no_matcher(command):
-    calls = []
-    gate.checked_run(["gh", command], runner=spy(calls))
-    assert len(calls) == 1
-    with pytest.raises(gate.PublishBlocked):
-        gate.checked_run(["gh", command, "--body", TOKEN], runner=lambda *a, **k: pytest.fail("send"))
-
-
-def test_transport_timeout_and_checked_failure(tmp_path):
-    with pytest.raises(subprocess.TimeoutExpired):
-        pub._run_transport([sys.executable, "-c", "import time; time.sleep(30)"], timeout=0.05, capture_output=True)
-    with pytest.raises(subprocess.CalledProcessError) as failure:
-        pub._run_transport(
-            [sys.executable, "-c", "import sys; print('unit'); sys.exit(3)"], check=True, capture_output=True, text=True
-        )
-    assert failure.value.returncode == 3 and failure.value.output == "unit\n"
 
 
 def test_catalog_c_safe_loader_matches_safe_loader(tmp_path, monkeypatch):

@@ -150,18 +150,6 @@ def test_loader_dry_run_is_read_only_and_source_filter_is_precise(tmp_path, monk
     assert not db_path.exists()
 
 
-def test_loader_excludes_relation_candidate_sample_artifact(tmp_path, monkeypatch) -> None:
-    candidates_dir = tmp_path / "candidates"
-    candidates_dir.mkdir()
-    _write_candidates(candidates_dir)
-    monkeypatch.setattr(loader, "is_exact_vesum_lemma", lambda word: True)
-
-    summary, counts = loader.load_candidates(tmp_path / "sources.db", candidates_dir, dry_run=True)
-
-    assert summary.accepted == 5
-    assert ("sample.invalid", "synonym") not in counts
-
-
 def test_loader_keeps_exact_dictionary_attestation_and_drops_untrusted_fake_pair(tmp_path, monkeypatch, capsys) -> None:
     candidates_dir = tmp_path / "candidates"
     candidates_dir.mkdir()

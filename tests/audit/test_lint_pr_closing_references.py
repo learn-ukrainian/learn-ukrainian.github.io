@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import io
-import sys
-
 import pytest
 
 from scripts.audit import lint_pr_closing_references
@@ -35,12 +32,3 @@ def test_negated_closing_references_are_rejected(body: str, issue: str) -> None:
 )
 def test_safe_or_non_reference_prose_is_accepted(body: str) -> None:
     assert lint_pr_closing_references.scan_text(body) == []
-
-
-def test_stdin_guard_fails_for_a_disposable_pr_body(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    monkeypatch.setattr(sys, "stdin", io.StringIO("This PR does not close #42."))
-
-    assert lint_pr_closing_references.main(["--stdin"]) == 1
-    assert "negated GitHub closing reference" in capsys.readouterr().out

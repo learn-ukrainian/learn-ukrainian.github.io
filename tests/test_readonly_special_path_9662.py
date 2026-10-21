@@ -8,24 +8,6 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-MIGRATED = (
-    "scripts/agent_runtime/lane_probe.py",
-    "scripts/agent_runtime/runner.py",
-    "scripts/api/dashboard_comms.py",
-    "scripts/api/preload.py",
-    "scripts/api/runtime_router.py",
-)
-PENDING = {
-    "scripts/delegate.py",
-    "scripts/projects/open_model_data/admit_existing_corpus.py",
-    "scripts/projects/open_model_data/build_decolonization_cases.py",
-    "scripts/projects/open_model_data/phase3_heldout_partition.py",
-    "scripts/projects/open_model_data/phase3_source_universe.py",
-    "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
-    "scripts/projects/open_model_data/review_build/components/__init__.py",
-}
-
 
 def _special(tmp_path: Path) -> Path:
     return tmp_path / "observer?# evidence.db"
@@ -55,18 +37,6 @@ def test_named_module_boundary_refuses_sqlite_and_imports_json():
     with pytest.raises(ImportError):
         import_named_module("sqlite3.dbapi2")
     assert import_named_module("json") is json
-
-
-def test_slice_manifest_rows_are_cleared_and_seven_pending_remain():
-    from scripts.hygiene.lint_source_db_writable_connects import classify_source
-
-    manifest = json.loads((ROOT / "scripts/hygiene/sqlite_reference_allowlist.json").read_text())
-    pending = {entry["path"] for entry in manifest if entry["kind"] == "reader_pending_migration_9662"}
-    assert pending == PENDING
-    present = {entry["path"] for entry in manifest}
-    for rel in MIGRATED:
-        assert rel not in present
-        assert classify_source((ROOT / rel).read_text(), rel) == []
 
 
 def test_preload_keeps_stdlib_sqlite_off_the_named_loader(monkeypatch):

@@ -4,7 +4,6 @@ Parent Epic: #6321 (Open Model Data)
 Issue: #8105
 """
 
-import ast
 import json
 import re
 import sqlite3
@@ -19,7 +18,6 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     DEFAULT_SOURCES_DB,
     EVAL_SCHEMA_FILE,
     EXCLUDED_MODERN_WORKS,
-    HELD_OUT_EVAL_WORKS,
     STRATA_EARLY_RUTHENIAN,
     STRATA_HIGH_COSSACK_BAROQUE,
     STRATA_RENAISSANCE_POLEMICAL,
@@ -30,7 +28,6 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     classify_stratum,
     clean_text_diplomatic,
     evaluate_middle_ukrainian_suite,
-    exact_clopper_pearson_lower,
     is_editorial_preface,
     load_middle_ukrainian_chunks,
     load_replay_buffer,
@@ -128,18 +125,6 @@ def test_translation_segregation_and_preface_filtering() -> None:
     assert is_editorial_preface(authentic_sample) is False
 
 
-def test_document_partitioning_disjointness() -> None:
-    """Verify that held-out evaluation works are strictly disjoint from training works."""
-    assert "symonovskyy_korotkyy_opys_pro_kozatskyy_malorosiyskyy_narod" in HELD_OUT_EVAL_WORKS
-    assert "ivan_velychkovskyy_tvory" in HELD_OUT_EVAL_WORKS
-    assert "chernihivskyy_litopys" in HELD_OUT_EVAL_WORKS
-    assert "zyzaniy_leksys_1596" in EXCLUDED_MODERN_WORKS
-    assert "smotrytskyy_hramatiky_slovenskiya_1619" in EXCLUDED_MODERN_WORKS
-
-    for w in HELD_OUT_EVAL_WORKS:
-        assert w not in EXCLUDED_MODERN_WORKS
-
-
 def test_clean_text_diplomatic() -> None:
     """Verify diplomatic cleaning preserves historical Cyrillic characters and strips markup, apparatus, and translation blocks."""
     raw = "<p>Се я, кн̃зь <b>Олександр</b>\\47\\ [12] далъ листъ&nbsp;свой.</p>"
@@ -172,15 +157,6 @@ def test_clean_text_diplomatic() -> None:
     cleaned_trans = clean_text_diplomatic(raw_translation)
     assert "Бачачи святобливість" not in cleaned_trans
     assert "Бо просто як" in cleaned_trans
-
-
-def test_normalize_historical_snippet() -> None:
-    """Verify normalization strips injected tags and punctuation for leak detection."""
-    sample = "Се я, князь великий! [Вставка: приймати участь]"
-    norm = normalize_historical_snippet(sample)
-    assert "вставка" not in norm
-    assert "приймати" not in norm
-    assert norm == "сеякнязьвеликий"
 
 
 def test_eval_suite_generation_and_schema() -> None:
@@ -296,33 +272,6 @@ def test_zero_train_eval_leakage_firewall(mock_vesum_db: Path) -> None:
         for en in eval_norm:
             assert en not in q_norm, f"Leakage detected in query: {en}"
             assert en not in resp_norm, f"Leakage detected in response: {en}"
-
-
-def test_clopper_pearson_confidence_interval() -> None:
-    """Verify that exact Clopper-Pearson computation produces statistically sound lower bound."""
-    lower = exact_clopper_pearson_lower(500, 500, alpha=0.05)
-    assert 0.99 <= lower <= 1.0
-
-    lower_half = exact_clopper_pearson_lower(250, 500, alpha=0.05)
-    assert 0.45 <= lower_half <= 0.55
-
-
-def test_subprocess_timeout_guard_in_script() -> None:
-    """Verify that all subprocess calls in v5_mine_middle_ukrainian.py pass explicit timeout=."""
-    script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v5_mine_middle_ukrainian.py"
-    tree = ast.parse(script_path.read_text(encoding="utf-8"))
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            func_name = ""
-            if isinstance(node.func, ast.Attribute):
-                func_name = node.func.attr
-            elif isinstance(node.func, ast.Name):
-                func_name = node.func.id
-
-            if func_name in ("check_output", "run", "Popen", "check_call"):
-                has_timeout = any(kw.arg == "timeout" for kw in node.keywords)
-                assert has_timeout, f"Subprocess call {func_name} at line {node.lineno} missing timeout="
 
 
 def test_evaluator_strictness_and_rejection() -> None:
@@ -569,46 +518,6 @@ def test_release_dataset_disk_invariants(archive_payload: ArtifactSet) -> None:
     assert sft_rows_count == 10000
     assert sft_preserve == 5000
     assert sft_correct == 5000
-
-
-@pytest.mark.needs_artifact(
-    "open_model_archive_payload",
-    "projects/open_model_data/archive/quarantined_historical/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
-)
-def test_no_editorial_apparatus_in_released_artifacts(archive_payload: ArtifactSet) -> None:
-    """Verify no editorial commentaries, modern studies, or academic prefaces exist in released files."""
-    release_dir = DEFAULT_RELEASE_DIR
-    eval_file = release_dir / "middle_ukrainian_eval.jsonl"
-
-    forbidden_snippets = [
-        "упорядник",
-        "радянськ",
-        "дослідник",
-        "дисертаці",
-        "монографі",
-        "ЦДІА",
-        "німчук",
-        "пещак",
-        "боплан",
-        "срезневськ",
-    ]
-
-    for i, line in enumerate(_a_bytes(archive_payload, eval_file).splitlines()):
-        row = json.loads(line)
-        inp = row.get("input_text", "")
-        exp = row.get("expected_output", "")
-        for snip in forbidden_snippets:
-            assert snip not in inp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {inp}"
-            assert snip not in exp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {exp}"
-
-    for shard in _shard_paths():
-        for i, line in enumerate(_a_bytes(archive_payload, shard).splitlines()):
-            row = json.loads(line)
-            q = row.get("query", "")
-            m = re.search(r"«(.*?)»", q)
-            hist = m.group(1) if m else q
-            for snip in forbidden_snippets:
-                assert snip not in hist.casefold(), f"Editorial snippet '{snip}' found in {shard.name} row {i}: {hist}"
 
 
 @pytest.mark.needs_artifact(

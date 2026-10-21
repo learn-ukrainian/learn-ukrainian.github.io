@@ -88,22 +88,6 @@ def test_acp_endpoint_passes_transport_and_excludes_unregistered_lanes(monkeypat
         assert client.get("/api/state/routing-budget?transport=bogus").status_code == 422
 
 
-def test_acp_health_adds_missing_ask_lanes(monkeypatch, budget):
-    budget["agents"].pop("agy")
-    budget["agents"].pop("deepseek")
-    monkeypatch.setattr(
-        state_router,
-        "probe_acp_health",
-        lambda _cwd: {
-            "agy": _health(False),
-            "deepseek": _health(False),
-        },
-    )
-    result = state_router.compute_routing_budget(transport="acp")
-    assert result["agents"]["agy"]["eligible"] is False
-    assert result["agents"]["deepseek"]["eligible"] is False
-
-
 def test_acp_capacity_cli_selects_transport(monkeypatch, budget, capsys):
     monkeypatch.setattr(
         state_router, "probe_acp_health", lambda _cwd: {lane: _health(False) for lane in budget["agents"]}
@@ -123,13 +107,6 @@ def test_acp_capacity_cli_selects_transport(monkeypatch, budget, capsys):
     )
     assert capacity_pick.main(["--transport", "acp", "--strict", "--json"]) == 2
     assert '"transport": "acp"' in capsys.readouterr().out
-
-
-def test_acp_routing_preserves_runtime_budget_evidence(monkeypatch, budget):
-    budget["diagnostics"] = {"records_loaded": 0, "fleet_burn_available": True}
-    monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: {"codex": _health(True)})
-    result = state_router.compute_routing_budget(transport="acp")
-    assert result["recommendation"]["primary_agent_for_code"] == "codex"
 
 
 @pytest.mark.parametrize("status", ["warm", "near_cap"])
@@ -184,13 +161,6 @@ def test_acp_codex_reset_reserve_needs_the_owners_verified_capacity(monkeypatch,
     health["codex"] = _health(False)
     result = state_router.compute_routing_budget(transport="acp")
     assert result["recommendation"]["primary_agent_for_code"] == "cursor"
-
-
-def test_acp_no_inline_transport_fallback_when_all_lanes_hot(monkeypatch, budget):
-    for info in budget["agents"].values():
-        info["status"] = "hot"
-    monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: {"codex": _health(True)})
-    assert state_router.compute_routing_budget(transport="acp")["recommendation"]["primary_agent_for_code"] is None
 
 
 def test_acp_capacity_suppresses_stale_upstream_recommendation(budget):

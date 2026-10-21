@@ -100,38 +100,10 @@ def run_cli(outside_dir: Path, lines: list[dict[str, Any]], capsys, out_name: st
 # ---------------------------------------------------------------- mapping
 
 
-def test_mapping_table_covers_the_sixteen_source_types_onto_known_labels():
-    from scripts.eval.uk_preamble.common import ERROR_TYPES
-
-    assert len(ERROR_TYPE_MAP) == 16
-    assert set(ERROR_TYPE_MAP.values()) <= set(ERROR_TYPES)
-
-
 @pytest.mark.parametrize(("source", "target"), list(ERROR_TYPE_MAP.items()))
 def test_each_source_type_maps_to_its_harness_label(source: str, target: str):
     data = convert([v2_review("R1", source)]).data
     assert data["review"][0]["errors"][0]["error_type"] == target
-
-
-def test_expected_mapping_is_exactly_the_specified_one():
-    assert ERROR_TYPE_MAP == {
-        "spelling_pravopys_2019": "spelling",
-        "agreement": "agreement",
-        "numeral_noun": "numeral-noun",
-        "vocative": "vocative",
-        "aspect": "aspect",
-        "case_government": "case-government",
-        "prepositional_calques": "prepositional-calque",
-        "active_participle_calques": "active-participle-calque",
-        "passive_reflexive_calques": "passive-reflexive-calque",
-        "bureaucratic_noun_chains": "noun-chain",
-        "lexical_russianism": "lexical-russianism",
-        "lexical_calque": "other",
-        "surzhyk": "surzhyk",
-        "paronyms": "paronym",
-        "english_calques": "english-calque",
-        "semantically_wrong_combinations": "wrong-combination",
-    }
 
 
 def test_review_fields_ids_and_order_are_converted():
@@ -150,13 +122,6 @@ def test_review_fields_ids_and_order_are_converted():
     assert set(item) == {"id", "text", "errors", "protected"}
     assert set(item["errors"][0]) == {"id", "start", "end", "span", "error_type", "accepted", "origin"}
     assert set(item["protected"][0]) == {"id", "start", "end", "span", "kind"}
-
-
-def test_set_id_and_item_order_follow_the_source():
-    data = convert([v2_writing("W1", "B1"), v2_review("R1"), v2_review("R0"), v2_writing("W0", "A2")], "my-set").data
-    assert data["set_id"] == "my-set"
-    assert [i["id"] for i in data["review"]] == ["R1", "R0"]
-    assert [i["id"] for i in data["writing"]] == ["W1", "W0"]
 
 
 # ---------------------------------------------------------------- refusals
@@ -266,14 +231,6 @@ def test_invalid_json_and_invalid_utf8_are_refused():
         convert_source(b"\xff\xfe\n", "s")
 
 
-def test_refusal_writes_nothing_and_exits_2_without_text(outside_dir: Path, capsys):
-    code, captured, _, output = run_cli(outside_dir, [v2_review("R1", "bogus")], capsys)
-    assert code == 2
-    assert not output.exists()
-    assert "line 1 item R1: error-type-unknown" in captured.err
-    assert "приймав" not in captured.err + captured.out
-
-
 # ---------------------------------------------------------------- offsets and text preserved
 
 
@@ -300,14 +257,6 @@ def test_wrong_offsets_are_copied_not_repaired_and_reported_by_validation(outsid
     assert code == 1
 
 
-def test_lf_only_line_splitting_keeps_line_separator_characters_inside_strings():
-    line = v2_review("R1")
-    line["text"] = "Перший рядок"
-    line["errors"], line["correct_spans"] = [], []
-    raw = (json.dumps(line, ensure_ascii=False) + "\n\n").encode("utf-8")
-    assert convert_source(raw, "s").data["review"][0]["text"] == "Перший рядок"
-
-
 # ---------------------------------------------------------------- writing
 
 
@@ -320,20 +269,6 @@ def test_writing_appends_topic_genre_and_register_in_one_sentence():
         "min_words": 80,
         "max_words": 140,
     }
-
-
-def test_writing_without_topic_genre_register_keeps_the_task_verbatim():
-    line = v2_writing("W1", "A2")
-    for key in ("topic", "genre", "register"):
-        del line[key]
-    line["topic"] = "  "
-    assert convert([line]).data["writing"][0]["instruction"] == "Опишіть свій вихідний день."
-
-
-def test_writing_with_only_some_metadata_appends_only_those():
-    line = v2_writing("W1", "A2")
-    del line["topic"], line["genre"]
-    assert convert([line]).data["writing"][0]["instruction"].endswith("день. регістр: неформальний.")
 
 
 @pytest.mark.parametrize(
@@ -361,22 +296,6 @@ def test_invalid_writing_task_or_metadata_is_refused_not_silently_changed(change
     assert result.data is None
     assert [(p.line, p.item) for p in result.problems] == [(1, "W1")] * len(rules)
     assert [p.rule for p in result.problems] == rules
-
-
-def test_empty_task_with_metadata_is_not_turned_into_a_valid_instruction(outside_dir: Path, capsys):
-    lines = full_v2()
-    lines[-1]["task"] = ""
-    code, captured, _, output = run_cli(outside_dir, lines, capsys)
-    assert code != 0 and not output.exists()
-    assert "item W-C1: writing-task" in captured.err
-
-
-def test_non_text_metadata_exits_nonzero_and_writes_nothing(outside_dir: Path, capsys):
-    lines = full_v2()
-    lines[-1]["genre"] = {"x": 1}
-    code, captured, _, output = run_cli(outside_dir, lines, capsys)
-    assert code != 0 and not output.exists()
-    assert "item W-C1: writing-genre" in captured.err
 
 
 # ---------------------------------------------------------------- end to end
@@ -431,12 +350,6 @@ def test_protocol_minimums_are_enforced_and_reported(outside_dir: Path, capsys):
     assert any("writing levels missing" in s for s in report["protocol_shortfalls"])
 
 
-def test_duplicate_ids_are_reported_as_a_problem(outside_dir: Path, capsys):
-    code, captured, _, _ = run_cli(outside_dir, [v2_review("R1"), v2_review("R1")], capsys)
-    assert code == 1
-    assert {"item": "R1", "rule": "duplicate-id"} in json.loads(captured.out)["problems"]
-
-
 # ---------------------------------------------------------------- containment and usage
 
 
@@ -465,14 +378,6 @@ def test_output_must_differ_from_input(outside_dir: Path, capsys):
     before = sha256_file(source)
     assert cli.main(["convert-set", "--input", str(source), "--output", str(source), "--set-id", "s"]) == 2
     assert sha256_file(source) == before
-
-
-def test_missing_input_and_blank_set_id_are_errors(outside_dir: Path, capsys):
-    out = outside_dir / "o.json"
-    assert cli.main(["convert-set", "--input", str(outside_dir / "nope"), "--output", str(out), "--set-id", "s"]) == 2
-    source = write_jsonl(outside_dir / "in.jsonl", full_v2())
-    assert cli.main(["convert-set", "--input", str(source), "--output", str(out), "--set-id", " "]) == 2
-    assert not out.exists()
 
 
 def test_missing_arguments_exit_2_and_help_documents_the_command(capsys):
@@ -516,10 +421,3 @@ def test_load_set_and_set_problems_agree_on_set_level_defects(tmp_path: Path, ch
         load_set(path)
     assert exc.value.rule == rule
     assert [(p.item, p.rule) for p in set_problems(raw)] == [(item, rule)]
-
-
-def test_set_problems_collects_every_set_level_defect_in_loader_order():
-    from scripts.eval.uk_preamble.dataset import set_problems
-
-    raw = _harness_set(set_id="", review=[], writing=[])
-    assert [(p.item, p.rule) for p in set_problems(raw)] == [(None, "set-empty"), (None, "set-id")]

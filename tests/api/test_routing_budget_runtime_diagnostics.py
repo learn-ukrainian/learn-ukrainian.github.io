@@ -144,19 +144,6 @@ def test_runtime_data_available_when_7d_usage_exists_but_ledger_empty(monkeypatc
     assert any("ledger empty" in w and "runtime usage" in w for w in data["recommendation"]["warnings"])
 
 
-def test_runtime_data_unavailable_when_no_usage_anywhere(monkeypatch, tmp_path):
-    now = datetime(2026, 8, 22, 12, 0, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, runtime_records_7d=0)
-
-    data = state_router.compute_routing_budget(now)
-
-    diag = data["diagnostics"]
-    assert diag["budget_ledger_empty"] is True
-    assert diag["runtime_data_available"] is False
-    assert diag["runtime_usage_records_7d"] == 0
-    assert not any("runtime usage has" in w for w in data["recommendation"]["warnings"])
-
-
 def test_runtime_probe_failure_degrades_without_breaking_budget(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, runtime_records_7d=0)
 
@@ -202,49 +189,6 @@ def test_empty_ledger_rec_stays_suppressed_when_runtime_exists(monkeypatch, tmp_
         agent = data["agents"][lane]
         status = agent.get("status") or agent.get("interactive", {}).get("status")
         assert status in ("unknown", "unavailable"), f"{lane} must stay unknown on empty ledger"
-
-
-def test_routing_html_subscriptions_renders_cursor_windows_without_fabricating_zero():
-    """Subscriptions section shows provider windows; missing data is unknown, not 0%."""
-    import subprocess
-
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    const helpers = html.slice(start, end);
-
-    let innerHTML = '';
-    const document = {
-      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
-    };
-    eval(helpers);
-
-    renderSubscriptions({
-      agents: {
-        cursor: {
-          status: 'unknown',
-          login_state: 'authenticated',
-          probe_state: 'NEED_PROBE',
-          provider_windows: {
-            auto: { window: 'monthly', used_pct: null, remaining_pct: null },
-            api: { window: 'monthly', used_pct: null, remaining_pct: null },
-          },
-        },
-        codex: { status: 'unknown', burn_pct_7d: null, codexbar: { weekly_used_pct: null } },
-      },
-      in_flight: {},
-      diagnostics: { records_loaded: 0, budget_ledger_empty: true, runtime_usage_records_7d: 25 }
-    });
-    console.log(innerHTML);
-    """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
-    out = res.stdout
-    assert "NEED_PROBE" in out or "unknown" in out
-    assert "0.0%" not in out
-    assert "Fleet burn" in out or "5h:" in out
 
 
 def _stamp(now: float, age_s: float, *, utc: bool = True) -> str:

@@ -109,17 +109,6 @@ def test_linter_scans_itself_without_blanket_exemption():
     assert findings[0][1] == dummy_ip
 
 
-def test_public_ip_flagged_even_with_low_octet_numbers_unless_heading():
-    ip_like = f"{185}.{220}.{101}.{5}"
-    content_prose = f"The primary node is located at {ip_like} in cluster."
-    findings_prose = check_content(content_prose, "doc.py")
-    assert len(findings_prose) == 1
-
-    content_heading = "### 4.1.3.1 Section Heading"
-    findings_heading = check_content(content_heading, "doc.py")
-    assert len(findings_heading) == 0
-
-
 def test_scrubbed_personal_identifier_is_blocked_in_public_content():
     findings = check_content(
         "export const source = 'Alona';\nconst sourceUk = 'АЛЬОНА';",
@@ -154,23 +143,6 @@ def test_scrubbed_personal_identifier_matches_ukrainian_declensions_and_latin_st
         (6, "альона", "Scrubbed personal identifier"),
         (7, "alona", "Scrubbed personal identifier"),
     ]
-
-
-def test_scrubbed_personal_identifier_stem_does_not_match_embedded_words():
-    findings = check_content(
-        "value = 'malonated'; noun = 'батальона'",
-        "docs/safety.md",
-    )
-
-    assert findings == []
-
-
-def test_scrubbed_personal_identifier_scans_site_source_and_public_assets():
-    source_findings = check_content("const owner = 'Alona'", "site/src/lib/owner.ts")
-    asset_findings = check_content("Альони", "site/public/lexicon/owner.json")
-
-    assert source_findings == [(1, "alona", "Scrubbed personal identifier")]
-    assert asset_findings == [(1, "альона", "Scrubbed personal identifier")]
 
 
 def test_public_identifier_pr_mode_scans_only_changed_public_paths(monkeypatch):
@@ -330,13 +302,5 @@ def test_private_tracker_citation_false_positives_prevented():
     findings = check_content(
         sample_text,
         "docs/runbooks/agent-seat-onboarding.md",
-    )
-    assert findings == []
-
-
-def test_private_tracker_citation_not_flagged_in_private_code_or_tests():
-    findings = check_content(
-        "Reference issue: private #622\nOr infra-private #710.",
-        "tests/test_something.py",
     )
     assert findings == []

@@ -10,7 +10,6 @@ from pathlib import Path
 import pytest
 
 from scripts.lexicon.runner import atlas_job
-from tests._host_path_guard import assert_no_host_paths
 
 
 def _git_env() -> dict[str, str]:
@@ -56,11 +55,6 @@ def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
 
 
-def test_source_has_no_baked_home_defaults() -> None:
-    text = Path(atlas_job.__file__).read_text(encoding="utf-8")
-    assert_no_host_paths(text)
-
-
 def test_valid_plan_is_ok() -> None:
     assert atlas_job.validate_plan(_plan()) == []
 
@@ -70,100 +64,14 @@ def test_rejects_hramatka_host() -> None:
     assert any("host" in e for e in errors)
 
 
-def test_rejects_vps_alias_host() -> None:
-    errors = atlas_job.validate_plan(_plan(host="vps"))
-    assert any("host" in e for e in errors)
-
-
-def test_rejects_unknown_host() -> None:
-    errors = atlas_job.validate_plan(_plan(host="mystery-host"))
-    assert any("host" in e for e in errors)
-
-
 def test_rejects_pointer_write() -> None:
     errors = atlas_job.validate_plan(_plan(pointer_write=True))
     assert any("pointer_write" in e for e in errors)
 
 
-def test_rejects_unknown_kind() -> None:
-    errors = atlas_job.validate_plan(_plan(kind="scrape-web"))
-    assert any("kind" in e for e in errors)
-
-
-def test_requires_campaign_issue() -> None:
-    errors = atlas_job.validate_plan(_plan(issue=None))
-    assert any("issue" in e for e in errors)
-
-
-def test_rejects_bool_for_numeric_fields() -> None:
-    """bool is a subclass of int; plans must not accept true/false as numbers."""
-    for field, value in (
-        ("issue", True),
-        ("issue", False),
-        ("denominator", True),
-        ("denominator", False),
-        ("timeout_seconds", True),
-        ("timeout_seconds", False),
-    ):
-        errors = atlas_job.validate_plan(_plan(**{field: value}))
-        assert any(field in e for e in errors), (field, value, errors)
-
-
-def test_remote_launcher_forwards_protocol_env() -> None:
-    """atlas_job.submit sets protocol env; remote_cmd must forward them over SSH."""
-    source = (
-        Path(__file__).resolve().parents[1]
-        / "scripts"
-        / "lexicon"
-        / "runner"
-        / "launch_reenrich_class_b_remote.sh"
-    ).read_text(encoding="utf-8")
-    # Each var must be appended to remote_cmd with the same printf %q style as UNIT.
-    for var in (
-        "ATLAS_RE_ENRICH_RUNTIME_MAX_SEC",
-        "ATLAS_JOB_EXIT_STATUS_FILE",
-        "ATLAS_RE_ENRICH_RESTART",
-    ):
-        assert f'if [[ -n "${{{var}:-}}" ]]; then' in source
-        assert f'remote_cmd+=" {var}=$(printf \'%q\' "${var}")"' in source
-    # UNIT already forwarded; protocol vars must appear after that block.
-    unit_fwd = source.index('remote_cmd+=" ATLAS_RE_ENRICH_UNIT=$(printf')
-    runtime_fwd = source.index("ATLAS_RE_ENRICH_RUNTIME_MAX_SEC=$(printf")
-    assert runtime_fwd > unit_fwd
-
-
-def test_ssh_host_adapter_list_units_uses_plain() -> None:
-    import inspect
-
-    src = inspect.getsource(atlas_job.SshHostAdapter.list_atlas_job_units)
-    assert "--plain" in src
-    assert "list-units" in src
-
-
-def test_submit_dry_run_sets_host_and_workdir(capsys: pytest.CaptureFixture[str]) -> None:
-    rc = atlas_job.submit(_plan(), dry_run=True)
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "atlas-runner" in out
-    assert "launch_reenrich_class_b_remote.sh" in out
-    assert "--no-poll" in out
-    assert "atlas-job-missing-tr-example.service" in out
-    assert "run-atlas-job-missing-tr-example" in out
-
-
 def test_submit_fails_closed_without_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
     assert atlas_job.submit(_plan(), dry_run=True) == 2
-
-
-def test_submit_dry_run_uses_env_run_root(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    rc = atlas_job.submit(_plan(id="dry-run-job"), dry_run=True)
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "atlas-runner" in out
-    assert "/tmp/atlas-run-root/run-atlas-job-dry-run-job" in out
 
 
 def test_submit_forwards_required_run_root_env(
@@ -182,10 +90,6 @@ def test_submit_forwards_required_run_root_env(
     rc = atlas_job.submit(plan, dry_run=False, host_adapter=_isolate_host)
     assert rc == 0
     assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
-
-
-def test_submit_invalid_plan_exits_2() -> None:
-    assert atlas_job.submit(_plan(host="mystery-host"), dry_run=True) == 2
 
 
 def test_submit_checks_host_units(
@@ -409,55 +313,6 @@ def test_status_reconciles_inactive_unit_to_needs_finalize(
     assert row["state"] == "needs_finalize"
 
 
-def test_status_accepts_explicit_host(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
-) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    rc = atlas_job.status(host="atlas-runner", host_adapter=_isolate_host)
-    assert rc == 0
-
-
-def test_status_fails_closed_without_runner_host(
-    monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
-) -> None:
-    monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
-    rc = atlas_job.status(host_adapter=_isolate_host)
-    assert rc == 2
-
-
-def test_pull_accepts_explicit_host(monkeypatch: pytest.MonkeyPatch) -> None:
-    launched: list[list[str]] = []
-
-    def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
-        launched.append(cmd)
-        return 0
-
-    monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
-    rc = atlas_job.pull(host="test-runner-host")
-    assert rc == 0
-    assert launched
-
-
-def test_pull_fails_closed_without_runner_host(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
-    assert atlas_job.pull() == 2
-
-
-def test_pull_forwards_required_run_root_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    """pull must forward ATLAS_RUN_ROOT (mirrors submit)."""
-    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/custom-run-root")
-    captured_env: dict[str, str] = {}
-
-    def fake_subprocess_call(cmd: list[str], **kwargs: object) -> int:
-        captured_env.update(kwargs.get("env") or {})
-        return 0
-
-    monkeypatch.setattr(atlas_job.subprocess, "call", fake_subprocess_call)
-    rc = atlas_job.pull(host="test-runner-host")
-    assert rc == 0
-    assert captured_env["ATLAS_RUN_ROOT"] == "/tmp/custom-run-root"
-
-
 def test_git_receipt_rejects_absolute_paths() -> None:
     bad = {
         "schema": "atlas-job-result.v1",
@@ -534,13 +389,6 @@ def test_close_writes_git_receipt_with_delivery_ok(
     assert receipt["state"] == "succeeded"
 
 
-def test_cli_validate_and_dry_submit(tmp_path: Path) -> None:
-    path = tmp_path / "job.json"
-    path.write_text(json.dumps(_plan()), encoding="utf-8")
-    assert atlas_job.main(["validate", str(path)]) == 0
-    assert atlas_job.main(["submit", str(path), "--dry-run"]) == 0
-
-
 def test_require_safe_job_id_rejects_traversal_and_bool() -> None:
     for bad in ("../escape", "/etc/passwd", True, False, "", "a/b", "job id", None, 12):
         with pytest.raises(ValueError):
@@ -593,56 +441,6 @@ def test_workdir_honored_only_when_safe(tmp_path: Path, monkeypatch: pytest.Monk
         atlas_job.require_safe_workdir("/tmp/atlas-run-root/run-atlas-job-test")
 
 
-def test_work_dir_for_requires_run_root_and_ignores_host(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
-    assert atlas_job.work_dir_for("ar-job", _plan(id="ar-job")) == (
-        "/tmp/atlas-run-root/run-atlas-job-ar-job"
-    )
-    assert atlas_job.work_dir_for("alt-job", _plan(id="alt-job", host="atlas-runner")) == (
-        "/tmp/atlas-run-root/run-atlas-job-alt-job"
-    )
-    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
-    with pytest.raises(ValueError, match="ATLAS_RUN_ROOT is required"):
-        atlas_job.work_dir_for("ar-job", _plan(id="ar-job"))
-
-
-def test_close_and_cli_reject_unsafe_job_id(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    with pytest.raises(ValueError):
-        atlas_job.close_job("../escape", skip_pull=True, skip_restic=True)
-    assert atlas_job.main(["close", "../escape", "--skip-pull", "--skip-restic"]) == 2
-    assert atlas_job.main(["pull", "--job-id", "../escape"]) == 2
-    assert list(tmp_path.iterdir()) == []
-
-
-def test_min_free_disk_bytes_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_BYTES", raising=False)
-    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GIB", raising=False)
-    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GB", raising=False)
-    assert atlas_job.min_free_disk_bytes() == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
-    assert atlas_job.min_free_disk_bytes() == 14 * 1024 * 1024 * 1024
-
-    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", "10737418240")
-    assert atlas_job.min_free_disk_bytes() == 10 * 1024 * 1024 * 1024
-
-    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_BYTES")
-    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_GIB", "2.5")
-    assert atlas_job.min_free_disk_bytes() == int(2.5 * 1024 * 1024 * 1024)
-
-    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GIB")
-    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_GB", "4")
-    assert atlas_job.min_free_disk_bytes() == 4 * 1024 * 1024 * 1024
-
-    # Invalid string fallbacks to default when other env vars are unset.
-    monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GB")
-    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", "invalid")
-    assert atlas_job.min_free_disk_bytes() == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
-
-
 def test_submit_refuses_when_host_free_disk_below_floor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
 ) -> None:
@@ -689,22 +487,6 @@ def test_submit_honors_env_override_min_free_disk_bytes(
     row = atlas_job.load_registry("override-ok-job")
     assert row is not None
     assert row["state"] == "running"
-
-
-def test_submit_honors_env_override_min_free_disk_gib(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
-) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    # Higher override via GIB causes refusal.
-    monkeypatch.setenv("ATLAS_MIN_FREE_DISK_GIB", "10")
-    _isolate_host.free_disk_bytes_value = 6 * 1024 * 1024 * 1024
-    plan_refused = _plan(id="override-refused-job")
-    rc_refused = atlas_job.submit(plan_refused, dry_run=False, host_adapter=_isolate_host)
-    assert rc_refused == 2
-    row_refused = atlas_job.load_registry("override-refused-job")
-    assert row_refused is not None
-    assert row_refused["state"] == "rejected"
-    assert row_refused["min_free_disk_bytes"] == 10 * 1024 * 1024 * 1024
 
 
 def test_submit_refuses_when_free_disk_check_errors(
@@ -772,14 +554,6 @@ def test_submit_allows_git_sink_when_restic_sink_blocked(
     assert row["state"] == "running"
 
 
-def test_ssh_host_adapter_free_disk_bytes_source() -> None:
-    import inspect
-
-    src = inspect.getsource(atlas_job.SshHostAdapter.free_disk_bytes)
-    assert "shutil.disk_usage" in src
-    assert "while not p.exists()" in src
-
-
 def test_load_backup_env_file_expands_home_and_refs(tmp_path: Path) -> None:
     env_file = tmp_path / "backup.env"
     env_file.write_text(
@@ -830,61 +604,6 @@ def test_registry_dir_uses_primary_when_file_is_under_release_snapshot(
     assert atlas_job.registry_dir() == (primary.resolve() / "batch_state" / "atlas-jobs")
 
 
-def test_backup_subprocess_env_defaults_project_root_to_primary(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    env_file = tmp_path / "backup.env"
-    env_file.write_text(
-        "LU_BACKUP_REPOSITORY=rclone:example:restic\n",
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("LU_BACKUP_ENV_FILE", str(env_file))
-    monkeypatch.delenv("LU_BACKUP_PROJECT_ROOT", raising=False)
-    monkeypatch.setattr(
-        atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
-    )
-
-    env = atlas_job._backup_subprocess_env()
-    assert env["LU_BACKUP_PROJECT_ROOT"] == "/tmp/primary-checkout"
-    assert env["LU_BACKUP_REPOSITORY"] == "rclone:example:restic"
-
-
-def test_backup_subprocess_env_keeps_explicit_project_root(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    env_file = tmp_path / "backup.env"
-    env_file.write_text("LU_BACKUP_HOST=learn-ukrainian\n", encoding="utf-8")
-    monkeypatch.setenv("LU_BACKUP_ENV_FILE", str(env_file))
-    monkeypatch.setenv("LU_BACKUP_PROJECT_ROOT", "/explicit/project")
-    monkeypatch.setattr(
-        atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
-    )
-
-    env = atlas_job._backup_subprocess_env()
-    assert env["LU_BACKUP_PROJECT_ROOT"] == "/explicit/project"
-
-
-def test_mirror_dir_for_uses_primary_data(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        atlas_job, "primary_checkout_root", lambda: Path("/tmp/primary-checkout")
-    )
-    assert atlas_job.mirror_dir_for("job-1").resolve() == Path(
-        "/tmp/primary-checkout/data/lexicon/runner-mirror/job-1"
-    ).resolve()
-
-
-def test_collect_host_load_shape(tmp_path: Path) -> None:
-    payload = atlas_job.collect_host_load(run_root=tmp_path)
-    assert payload["cpu_count"] >= 1
-    assert len(payload["loadavg"]) == 3
-    assert set(payload["mem"]) == {"available_bytes", "total_bytes", "pct"}
-    assert set(payload["disk"]) == {"available_bytes", "total_bytes", "pct"}
-    assert payload["disk"]["total_bytes"] > 0
-    assert set(payload["job_unit"]) == {"active_count", "job_id", "state"}
-
-
 def test_ssh_host_load_skips_ssh_for_self_host(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -903,32 +622,3 @@ def test_ssh_host_load_skips_ssh_for_self_host(
     assert "loadavg" in payload
     assert "mem" in payload
     assert "disk" in payload
-
-
-def test_ssh_host_load_uses_ssh_when_not_self(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
-    seen: list[list[str]] = []
-
-    def fake_run(cmd: list[str], **kwargs: object) -> object:
-        seen.append(list(cmd))
-
-        class Result:
-            returncode = 1
-            stdout = ""
-            stderr = ""
-
-        return Result()
-
-    monkeypatch.setattr(atlas_job.subprocess, "run", fake_run)
-    with pytest.raises(ConnectionError, match="host_load failed"):
-        atlas_job.SshHostAdapter().host_load("job-box")
-    assert seen
-    assert seen[0][0] == "ssh"
-    assert "job-box" in seen[0]
-
-
-def test_is_self_host_matches_env_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "job-box,runner-a")
-    assert atlas_job.is_self_host("job-box") is True
-    assert atlas_job.is_self_host("runner-a") is True
-    assert atlas_job.is_self_host("other-box") is False

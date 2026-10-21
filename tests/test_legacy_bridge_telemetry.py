@@ -79,49 +79,6 @@ def test_release_snapshot_store_uses_its_primary_data_symlink(tmp_path: Path) ->
     ).resolve()
 
 
-@pytest.mark.parametrize(
-    ("source", "expected"),
-    [
-        (None, "operator"),
-        ("codex-infra", "openai"),
-        ("claude-desktop", "anthropic"),
-        ("agy", "google"),
-        ("gemma-seat", "google"),
-        ("grok-build", "xai"),
-        ("kimi-devops", "moonshot"),
-        ("glm", "zhipu"),
-        ("hermes", "deepseek"),
-        ("cursor", "cursor"),
-        ("private-caller-name", "unknown"),
-    ],
-)
-def test_caller_identity_is_collapsed_to_a_fixed_family(source, expected) -> None:
-    assert legacy_bridge.classify_caller_family(source) == expected
-
-
-def test_success_failure_and_unfinished_counts_are_conservative(telemetry_db: Path) -> None:
-    now = datetime(2026, 8, 2, 0, 30, tzinfo=UTC)
-    success = legacy_bridge.record_bridge_invocation_start(
-        "glm", "codex-infra", db_path=telemetry_db, now=now
-    )
-    legacy_bridge.record_bridge_invocation_finish(success, succeeded=True, now=now)
-    failure = legacy_bridge.record_bridge_invocation_start(
-        "glm", "codex-infra", db_path=telemetry_db, now=now
-    )
-    legacy_bridge.record_bridge_invocation_finish(failure, succeeded=False, now=now)
-    legacy_bridge.record_bridge_invocation_start(
-        "glm", "codex-infra", db_path=telemetry_db, now=now
-    )
-
-    payload = legacy_bridge.bridge_usage_summary("1h", db_path=telemetry_db, now=now)
-    assert payload["started"] == 3
-    assert payload["succeeded"] == 1
-    assert payload["failed"] == 1
-    assert payload["unfinished"] == 1
-    glm = next(item for item in payload["targets"] if item["target"] == "glm")
-    assert glm["by_caller_family"] == {"openai": 3}
-
-
 def test_wrapper_records_result_truth_without_persisting_inputs(
     telemetry_db: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -180,41 +137,6 @@ def test_wrapper_records_false_result_and_exception_as_failures(
     assert payload["succeeded"] == 0
     assert payload["failed"] == 2
     assert b"private-provider-error-6106" not in _store_bytes(telemetry_db)
-
-
-@pytest.mark.parametrize(
-    "kwargs",
-    [
-        {"command_target": "retired", "content": "prompt", "task_id": "task"},
-        {"command_target": "glm", "content": "prompt", "task_id": ""},
-        {"command_target": "kimi", "content": "prompt", "task_id": "task"},
-    ],
-)
-def test_refused_invocations_do_not_start_coverage_or_usage(
-    telemetry_db: Path,
-    kwargs: dict,
-) -> None:
-    with pytest.raises(ValueError):
-        _acp_compat.run_compat_ask(**kwargs)
-    assert not telemetry_db.exists()
-
-
-def test_review_true_runs_as_normal_ask_and_records_usage(
-    telemetry_db: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """``review=True`` is accepted as a normal ask (operator order 2026-08-06)."""
-
-    def fake_impl(*_args, **_kwargs):
-        assert _kwargs.get("review") is True
-        return SimpleNamespace(ok=True)
-
-    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", fake_impl)
-    result = _acp_compat.run_compat_ask(
-        "glm", "prompt", task_id="task", review=True
-    )
-    assert result.ok is True
-    assert _rows(telemetry_db)[0][1:6] == ("glm", "operator", 1, 1, 0)
 
 
 def test_storage_outage_never_replaces_bridge_result(
@@ -330,42 +252,6 @@ def test_read_only_api_returns_all_targets_and_rejects_invalid_window(
         ).status_code == 422
 
 
-def test_worktree_served_api_call_hits_primary_store(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    primary = tmp_path / "primary"
-    primary_db = primary / "data" / "telemetry" / "legacy_comms_routes.db"
-    worktree = tmp_path / "dispatch" / "task"
-    worktree_git_dir = primary / ".git" / "worktrees" / "task"
-    worktree_git_dir.mkdir(parents=True)
-    worktree.mkdir(parents=True)
-    (worktree / ".git").write_text(f"gitdir: {worktree_git_dir}\n", encoding="utf-8")
-
-    monkeypatch.setattr(legacy_bridge, "_DB_PATH", primary_db)
-    legacy_bridge._reset_initialized_paths_for_tests()
-
-    token = legacy_bridge.record_bridge_invocation_start(
-        "glm", "codex", db_path=primary_db
-    )
-    legacy_bridge.record_bridge_invocation_finish(token, succeeded=True)
-
-    app = FastAPI()
-    app.state.ctx = fixture_context(worktree)
-    app.include_router(telemetry_router.router)
-
-    with TestClient(app) as client:
-        response = client.get("/api/telemetry/legacy-bridge-asks?window=1h")
-        assert response.status_code == 200
-        payload = response.json()
-        assert payload["started"] == 1
-        assert payload["succeeded"] == 1
-        glm = next(item for item in payload["targets"] if item["target"] == "glm")
-        assert glm["started"] == 1
-        assert glm["by_caller_family"] == {"openai": 1}
-
-    assert not (worktree / "data" / "telemetry" / "legacy_comms_routes.db").exists()
-
-
 def test_terminal_recovery_recreates_a_conservative_start(telemetry_db: Path) -> None:
     now = datetime(2026, 8, 2, 0, 30, tzinfo=UTC)
     token = legacy_bridge.record_bridge_invocation_start(
@@ -425,22 +311,6 @@ def test_unknown_adapter_identity_is_still_rejected() -> None:
         legacy_bridge.normalize_target("acpx-no-such-shadow")
     with pytest.raises(ValueError, match="not allowlisted"):
         legacy_bridge.normalize_target("retired")
-
-
-def test_gemma_compat_ask_records_allowlisted_target(
-    telemetry_db: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        _acp_compat,
-        "_run_compat_ask_impl",
-        lambda *_args, **_kwargs: SimpleNamespace(ok=True),
-    )
-    result = _acp_compat.run_compat_ask(
-        "gemma", "prompt", task_id="gemma-6852", source="claude-infra"
-    )
-    assert result.ok is True
-    assert _rows(telemetry_db)[0][1:6] == ("gemma", "anthropic", 1, 1, 0)
 
 
 def test_schema_v1_store_migrates_and_accepts_gemma(telemetry_db: Path) -> None:

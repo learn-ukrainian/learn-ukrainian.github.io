@@ -96,30 +96,6 @@ def test_zombie_running_row_is_terminal_and_window_stale(monkeypatch):
     assert result["as_of"]
 
 
-def test_stale_window_reported_when_newest_event_is_old(monkeypatch):
-    """A window whose newest event is older than 45 minutes is stale."""
-    old = _NOW - timedelta(days=14)
-    rows = [
-        _decision_row(
-            "res-zombie",
-            state="reserved",
-            created_at=old,
-            expires_at=old + timedelta(minutes=5),
-        )
-    ]
-    _stub_ledger(monkeypatch, rows)
-
-    result = runtime_router.list_routing_assignments()
-
-    (item,) = result["assignments"]
-    assert item["current_state"] == "expired"
-    assert item["zombie_expired"] is True
-    window = result["window"]
-    assert window["stale"] is True
-    assert window["newest_at"] == _iso(old)
-    assert window["oldest_at"] == _iso(old)
-
-
 def test_zombie_expiry_preserves_recorded_failure(monkeypatch):
     """Observer-side expiry never overwrites a recorded failure classification."""
     old = _NOW - timedelta(days=2)

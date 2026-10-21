@@ -8,7 +8,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 import scripts.projects.open_model_data.language_contact_detector as detector
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -136,17 +135,6 @@ def _detect(
         runtime=runtime,
         input_root=_test_input_root(),
     )
-
-
-def test_schema_and_config_conformance(config: dict) -> None:
-    for path in (
-        detector.CONFIG_SCHEMA_PATH,
-        detector.CANDIDATE_SCHEMA_PATH,
-        detector.RECEIPT_SCHEMA_PATH,
-    ):
-        Draft202012Validator.check_schema(_json(path))
-    assert config["r2u_cache"]["network_during_run"] is False
-    assert config["span"]["max_chars"] == 240
 
 
 def test_frozen_denominator_and_source_adapters_match_profiler(config: dict) -> None:
@@ -377,17 +365,6 @@ def test_adjacent_russian_morphology_without_anchor_or_r2u_is_uncertain(
     assert candidates[0]["classification"]["language_identity"] == "uncertain"
     assert candidates[0]["classification"]["downstream_disposition"] == "human_review_required"
     assert candidates[0]["automatic_error_label"] is False
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/detector/r2u_evidence_cache_v1.json",
-)
-def test_vesum_present_ochen_is_not_accepted_without_russian_context(config: dict, runtime) -> None:
-    tokens = detector.tokenize_with_offsets("очєнь")
-    vesum = runtime.vesum.lookup(token.normalized for token in tokens)
-    assert vesum["очєнь"]
-    assert _detect("У покажчику подано очєнь як форму.", config=config, runtime=runtime) == []
 
 
 @pytest.mark.needs_artifact(

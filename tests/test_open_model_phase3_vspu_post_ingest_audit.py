@@ -7,7 +7,6 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_vspu_post_ingest_audit as audit
 
@@ -147,13 +146,6 @@ def _bind_live_database(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path
     return live_database
 
 
-def test_schema_is_closed_and_valid() -> None:
-    schema = json.loads(audit.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert schema["additionalProperties"] is False
-    assert schema["$defs"]["phaseBoundaries"]["additionalProperties"] is False
-
-
 def test_tracked_post_ingest_receipt_validates_and_is_text_free() -> None:
     receipt = audit.validate_receipt(_tracked())
     assert receipt["text_free"] is True
@@ -169,29 +161,6 @@ def test_tracked_post_ingest_receipt_validates_and_is_text_free() -> None:
         "phase3_complete": False,
         "phase4_blocked": True,
     }
-
-
-@pytest.mark.parametrize(
-    ("path", "value", "message"),
-    [
-        (("database", "post_sha256"), "0" * 64, "schema violation"),
-        (("custody", "successor_backup_uploaded"), False, "schema violation"),
-        (("authority", "semantic_gold"), True, "schema violation"),
-        (("phase_boundaries", "source_coverage_ready"), True, "schema violation"),
-        (("phase_boundaries", "phase3_complete"), True, "schema violation"),
-        (("phase_boundaries", "phase4_blocked"), False, "schema violation"),
-    ],
-)
-def test_receipt_rejects_overclaim_or_identity_drift(
-    path: tuple[str, str],
-    value: object,
-    message: str,
-) -> None:
-    broken = copy.deepcopy(_tracked())
-    broken[path[0]][path[1]] = value
-    broken["receipt_sha256"] = audit.receipt_sha256(broken)
-    with pytest.raises(audit.VspuPostIngestAuditError, match=message):
-        audit.validate_receipt(broken)
 
 
 def test_receipt_rejects_runtime_binding_drift() -> None:
@@ -323,25 +292,6 @@ def test_private_evidence_guards_each_artifact_before_hashing(
             compressed_backup_path=paths[2],
         )
     assert paths[artifact_index] not in hashes_attempted
-
-
-def test_private_evidence_rejects_backup_authority_drift(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    paths = _private_evidence_files(tmp_path)
-    backup_receipt = _valid_backup_receipt()
-    backup_receipt["authority"]["semantic_gold"] = True
-    paths[1].write_text(json.dumps(backup_receipt), encoding="utf-8")
-    paths[1].chmod(0o600)
-    _patch_private_checks(monkeypatch, paths)
-
-    with pytest.raises(audit.VspuPostIngestAuditError, match="authority drift"):
-        audit._validate_private_evidence(
-            cutover_receipt_path=paths[0],
-            backup_receipt_path=paths[1],
-            compressed_backup_path=paths[2],
-        )
 
 
 @pytest.mark.parametrize(

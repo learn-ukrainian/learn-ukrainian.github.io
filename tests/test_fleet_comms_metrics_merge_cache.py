@@ -101,18 +101,6 @@ def test_warm_cache_issues_zero_gh_calls(tmp_path: Path, github_transport) -> No
     assert second["by_stream_epic"]["4707"]["gate_to_merge"]["n"] == 3
 
 
-def test_misses_read_each_pull_request_once_across_batch_boundary(tmp_path: Path, github_transport) -> None:
-    numbers = list(range(1, 52))
-    calls: list[list[str]] = []
-    answers = {(REPO, number): MERGED for number in numbers}
-    payload, _cache = _collect(tmp_path, numbers, _runner(calls, answers), github_transport)
-
-    assert len(calls) == 51
-    assert [_key(endpoint) for endpoint in calls] == [(REPO, n) for n in numbers]
-    assert payload["by_stream_epic"]["4707"]["gate_to_merge"]["n"] == 51
-    assert payload["source_errors"] == []
-
-
 def test_two_repositories_use_their_qualified_rest_endpoints(tmp_path: Path, github_transport) -> None:
     calls: list[list[str]] = []
     answers = {("acme/widgets", 1): MERGED, ("acme/other", 2): MERGED}
@@ -289,31 +277,4 @@ def test_unparseable_rest_body_fails_each_lookup(tmp_path: Path, github_transpor
     assert len(calls) == 2
     assert {item["pr_number"] for item in payload["source_errors"]} == {4, 5}
     assert {item["error_kind"] for item in payload["source_errors"]} == {"pr_lookup_failed"}
-    assert not cache.exists()
-
-
-def test_rest_payload_without_merge_fact_fails_each_lookup(tmp_path: Path, github_transport) -> None:
-    calls: list[list[str]] = []
-
-    def runner(method, endpoint, headers, body, timeout):
-        calls.append(endpoint)
-        return Response(200, {}, b'{"message":"Something went wrong"}')
-
-    github_transport(runner)
-
-    tasks = tmp_path / "tasks"
-    tasks.mkdir()
-    plane = tmp_path / "plane.sqlite3"
-    _plane(plane, [6, 7])
-    cache = tmp_path / "cache.json"
-
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks,
-        plane_db=plane,
-        now=NOW,
-        merge_cache_path=cache,
-    )
-
-    assert len(calls) == 2
-    assert {item["pr_number"] for item in payload["source_errors"]} == {6, 7}
     assert not cache.exists()

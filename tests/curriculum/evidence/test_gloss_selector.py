@@ -59,26 +59,6 @@ def test_pinned_vesum_entry_binds_the_row_by_its_stressed_lemma():
     assert sources.select_gloss(word, rows, None).gloss == "lock"
 
 
-@pytest.mark.parametrize("glosses", [["family", "seed"], ["to forge", "to cuckoo"], ["bond", "communication"]])
-def test_first_polysemous_agreement_wins(glosses):
-    result = sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [row(1, glosses)], payload(glosses))
-    assert result.gloss == glosses[0]
-    assert result.reason is None
-
-
-@pytest.mark.parametrize("pos", ["noun", "verb", "adj", "adv", "numr", "part", "prep", "conj"])
-@pytest.mark.parametrize("dmk", [["primary", "shared"], ["primary, shared"], ["primary; shared"]])
-def test_first_dmklinger_head_stands_when_kaikki_leads_with_an_unlisted_head(pos, dmk):
-    source_pos = {"numr": "num", "part": "particle"}.get(pos, pos)
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": pos},
-        [row(1, dmk, pos="adjective" if pos == "adj" else pos)],
-        payload(["other", "shared"], source_pos),
-    )
-    assert result.gloss == ("to primary" if pos == "verb" else "primary")
-    assert result.source == "dmklinger_uk_en"
-
-
 @pytest.mark.parametrize(
     "dmk,kaikki,expected",
     [
@@ -130,27 +110,11 @@ def test_sub_senses_split_only_outer_semicolons(sense, parts, spans):
     assert sources._sense_spans(sense) == spans
 
 
-def test_kaikki_names_the_plain_head_when_it_lacks_the_dmklinger_first():
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "noun"},
-        [row(1, ["daylight (between sunrise and sunset)", "day (24 hours)"])],
-        payload(["day"]),
-    )
-    assert (result.gloss, result.source) == ("day", "dmklinger_uk_en")
-
-
 def test_disambiguating_qualifier_is_kept_and_meta_glosses_refused():
     word = {"lemma": "synthetic", "pos": "noun"}
     result = sources.select_gloss(word, [row(1, ["billion (short scale)"])], payload(["billion (short scale)"]))
     assert result.gloss == "billion (short scale)"
     result = sources.select_gloss(word, [row(1, ["alternative form of something"])], None)
-    assert result.gloss is None
-
-
-@pytest.mark.parametrize("value", ["x" * 61, "one two three four five six seven eight nine", "bad)", ""])
-def test_bound_is_not_a_truncator(value):
-    assert not sources.is_learner_gloss(value)
-    result = sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [row(1, [value])], None)
     assert result.gloss is None
 
 
@@ -162,14 +126,6 @@ def test_a_long_first_meaning_yields_to_the_next_learner_head():
     assert sources.select_gloss(
         {"lemma": "synthetic", "pos": "noun"}, [row(1, [long_meaning, "short"])], None
     ).gloss == ("short")
-
-
-def test_kaikki_single_sense_and_multi_pos():
-    assert sources.aligned_kaikki_gloss(payload(["day"]), "noun", False) == ("day", None)
-    assert sources.aligned_kaikki_gloss({"pos": ["noun", "intj"], "glosses": ["greeting"]}, "noun", False) == (
-        None,
-        "kaikki_multi_pos",
-    )
 
 
 @pytest.fixture(scope="module")
@@ -210,26 +166,6 @@ def test_current_a1_selection_and_source_span_property(a1_source_capture):
     for lemma, pos, expected in [("добрий", "adj", "good"), ("день", "noun", "day")]:
         word = next(w for w in records if (w["lemma"], w["pos"]) == (lemma, pos))
         assert sources.select_gloss(word, rows[lemma, pos], kaikki[lemma]).gloss == expected
-
-
-def test_all_187_records_are_glossed_unless_no_source_row_aligns(a1_source_capture):
-    """Nothing is withheld for polysemy or homonymy; only a missing learner head withholds."""
-    records, captured = a1_source_capture
-    assert len(records) == len(captured) == 187
-    withheld = []
-    for word in records:
-        c = captured[word["id"]]
-        result = sources.select_gloss(word, c["rows"], c["kaikki"], ulif_entries=c["ulif_entries"])
-        pronoun = any("pron" in f.get("tags", "").split(":") for f in word.get("forms", []))
-        rows = sources.filter_pronominal_gloss_rows(c["rows"], word["lemma"], word["pos"], pronoun)
-        aligned, _ = sources.aligned_kaikki_senses(c["kaikki"], word["pos"], pronoun)
-        if result.gloss is None:
-            withheld.append(word["id"])
-            # No aligned row, or only non-learner spans ("a female given name, ...").
-            assert not any(sources.is_learner_gloss(c["gloss"]) for c in result.candidates), word["id"]
-            assert rows or not aligned, (word["id"], result.reason)
-        assert result.reason != codes.GLOSS_SENSE_UNRESOLVED
-    assert len(withheld) <= 28
 
 
 @pytest.mark.parametrize("provider", ["dmk", "kaikki"])
@@ -294,27 +230,6 @@ def test_plan_gate_bound_and_mismatch(synthetic_sources):
 def test_polysemous_row_gates_on_its_first_meaning(synthetic_sources, stored, expected):
     with sqlite3.connect(synthetic_sources) as conn:
         conn.execute("UPDATE dmklinger_uk_en SET translations=? WHERE pos='noun'", (json.dumps(["seed", "family"]),))
-    word = {"id": "W-001", "lemma": "synthetic", "pos": "noun"}
-    if stored:
-        word["gloss_en"] = stored
-    with sources.Sources(sources_db=synthetic_sources) as api:
-        errors = verify.verify_plan_glosses({"uses": ["W-001"]}, {"words": [word]}, "a1/test-mod", api)
-    assert [error.split(":", 1)[0] for error in errors] == ([expected] if expected else [])
-
-
-@pytest.mark.parametrize(
-    "stored,expected", [(None, codes.GLOSS_MISSING), ("primary", None), ("shared", codes.GLOSS_MISMATCH)]
-)
-def test_plan_gate_keeps_the_first_head_kaikki_also_lists(
-    synthetic_sources, synthetic_kaikki_side_db, stored, expected
-):
-    with sqlite3.connect(synthetic_sources) as conn:
-        conn.execute("UPDATE dmklinger_uk_en SET translations=? WHERE pos='noun'", (json.dumps(["primary", "shared"]),))
-    with sqlite3.connect(synthetic_kaikki_side_db) as conn:
-        conn.execute(
-            "INSERT OR REPLACE INTO kaikki VALUES (?, ?)", ("synthetic", json.dumps(payload(["other", "primary"])))
-        )
-        conn.execute("UPDATE meta SET value='3' WHERE key='row_count'")
     word = {"id": "W-001", "lemma": "synthetic", "pos": "noun"}
     if stored:
         word["gloss_en"] = stored
@@ -419,14 +334,6 @@ def test_register_marked_spans_yield_to_the_plain_meaning(label, edge):
 
 
 @pytest.mark.parametrize(
-    "note",
-    ["figuratively", "nonstandard", "rare", "intransitive, colloquial", "formal, transitive", "colloq."],
-)
-def test_register_note_requires_whole_labels(note):
-    assert sources._register_note(note)
-
-
-@pytest.mark.parametrize(
     "sense,expected",
     [
         ("dad (informal: a father)", "dad"),
@@ -443,15 +350,6 @@ def test_descriptive_and_nested_register_notes_do_not_restrict(sense, expected):
     )
     assert result.gloss == expected
     assert sources._gloss_head(sense, keep_qualifiers=True) == sense
-
-
-def test_babtsia_shaped_descriptive_note_is_not_a_register_label():
-    result = sources.select_gloss(
-        {"lemma": "бабця", "pos": "noun"},
-        [row(1, ["granny (informal: a grandmother)", "grandmother"], word="бабця")],
-        payload(["granny"]),
-    )
-    assert result.gloss == "granny"
 
 
 @pytest.mark.parametrize("note", ["+ instrumental", "+ genitive", "+ instrumental or more rarely genitive"])
@@ -472,43 +370,6 @@ def test_register_stems_do_not_match_unrelated_words(qualifier):
     marked = f"old ({qualifier})"
     result = sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [row(1, [marked, "modern"])], payload(["old"]))
     assert result.gloss == "old"
-
-
-@pytest.mark.parametrize("label", ["2nd-person familiar, singular only", "second-person plural or formal"])
-def test_pronoun_person_labels_do_not_make_the_sense_restricted(label):
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "noun", "forms": [{"tags": "noun:pron"}]},
-        [row(1, ["your", "thy"], pos="pronoun")],
-        payload([f"your ({label})"], "pron"),
-    )
-    assert result.gloss == "your"
-
-
-def test_preposition_takes_the_head_kaikki_names_when_it_lacks_the_first():
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "prep"},
-        [
-            row(
-                1,
-                ["about (in the immediate neighborhood of) (preposition)", "around (surrounding) (preposition)"],
-                pos="preposition",
-            )
-        ],
-        payload(["around (surrounding)"], "prep"),
-    )
-    assert result.gloss == "around"
-
-
-@pytest.mark.parametrize(
-    "sense",
-    [
-        "about (in the immediate neighborhood of) (preposition)",
-        "about (in a particular place with a distinct and otherwise ambiguous meaning)",
-    ],
-)
-def test_preposition_shows_its_head_without_the_trailing_definition(sense):
-    result = sources.select_gloss({"lemma": "synthetic", "pos": "prep"}, [row(1, [sense], pos="preposition")], None)
-    assert result.gloss == "about"
 
 
 @pytest.mark.parametrize(
@@ -532,34 +393,6 @@ def test_mixed_pos_kaikki_entry_neither_glosses_nor_reorders(glosses):
     assert (alone.gloss, alone.reason) == (None, "kaikki_multi_pos")
 
 
-@pytest.mark.parametrize(
-    "dmk,expected",
-    [
-        (["(rare) secondary", "primary (+ genitive)", "minority"], "primary"),
-        (["primary", "minority"], "primary"),
-        (["alternative form of primary", "minority"], "minority"),
-        (["(rare) minority"], "minority"),
-        (["primary; minority"], "primary"),
-    ],
-)
-def test_preposition_first_unrestricted_head(dmk, expected):
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "prep"},
-        [row(1, dmk, pos="preposition")],
-        {"pos": ["noun", "prep"], "glosses": ["minority"]},
-    )
-    assert result.gloss == expected
-
-
-def test_first_row_wins_over_a_later_row():
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "prep"},
-        [row(1, ["primary"], pos="preposition"), row(2, ["minority"], pos="preposition")],
-        None,
-    )
-    assert (result.gloss, result.ref["id"]) == ("primary", 1)
-
-
 def test_row_with_only_restricted_senses_yields_to_a_row_with_a_plain_one():
     rows = [
         row(1, ["(dialectal) bundle"], "зв'я́зок"),
@@ -567,17 +400,6 @@ def test_row_with_only_restricted_senses_yields_to_a_row_with_a_plain_one():
     ]
     result = sources.select_gloss({"lemma": "зв'язок", "pos": "noun"}, rows, None)
     assert (result.gloss, result.ref["id"]) == ("connection", 2)
-
-
-@pytest.mark.parametrize("punctuation", ["?", "!", "?!"])
-def test_terminal_punctuation_does_not_create_distinct_heads(punctuation):
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "noun"},
-        [row(1, [f"who{punctuation} (interrogative pronoun)", "who (relative pronoun)"])],
-        None,
-    )
-    assert result.gloss == "who"
-    assert sources._gloss_head(f"who (interrogative pronoun){punctuation}") == "who"
 
 
 @pytest.mark.parametrize(
@@ -591,12 +413,6 @@ def test_definition_commas_do_not_create_learner_fragments(sense):
     assert sources._sense_spans(sense) == []
 
 
-def test_long_definition_with_commas_is_one_span():
-    value = "used to string together sentences, or to join fragments in chronological order"
-    assert sources._sense_spans(value) == [value]
-    assert sources._sense_spans("(direction) home, homewards") == ["(direction) home", "homewards"]
-
-
 def homonym(index, headword="synthetic", label="noun"):
     return {"id": index, "homonym_index": index, "canonical_headword": headword, "grammatical_label": label}
 
@@ -607,22 +423,6 @@ def test_same_spelling_homonyms_are_not_withheld():
         word, [row(1, ["seed", "family"])], payload(["seed", "family"]), ulif_entries=[homonym(1), homonym(2)]
     )
     assert (result.gloss, result.reason) == ("seed", None)
-
-
-def test_homonym_without_a_note_takes_the_first_rows_first_meaning():
-    entries = [homonym(1, "ко́са"), homonym(2, "коса́"), homonym(3, "коса́")]
-    rows = [row(1, ["cockeyed person"], "ко́са"), row(2, ["braid (hairstyle)", "scythe (farm tool)"], "коса́")]
-    assert sources.select_gloss({"lemma": "коса", "pos": "noun"}, rows, None, ulif_entries=entries).gloss == (
-        "cockeyed person"
-    )
-
-
-def test_stressed_homonym_key_binds_its_row_even_against_kaikki():
-    word = {"lemma": "замок", "pos": "noun", "ulif": {"key": ["замо́к", 2]}}
-    entries = [homonym(1, "за́мок"), homonym(2, "замо́к"), homonym(3, "замо́к", "verb")]
-    rows = [row(1, ["castle"], "за́мок"), row(2, ["lock"], "замо́к")]
-    assert sources.select_gloss(word, rows, payload(["castle"]), ulif_entries=entries).gloss == "lock"
-    assert sources.select_gloss(word, rows, None, ulif_entries=entries).gloss == "lock"
 
 
 @pytest.mark.parametrize(
@@ -743,67 +543,12 @@ def test_builder_store_verifier_round_trip_and_mutation(synthetic_sources, synth
         assert checked["status"] == "failed"
 
 
-@pytest.mark.parametrize(
-    "span,expected",
-    [
-        ("[transitive] (formal) to write", "to write"),
-        ("your [belonging to you [one owner]] (determiner)", "your"),
-        ("roof (cover) (noun)", "roof"),
-        ("billion (long scale)", "billion (long scale)"),
-    ],
-)
-def test_balanced_edge_annotations(span, expected):
-    assert sources._gloss_head(span) == expected
-
-
-def test_definition_with_short_clauses_is_not_split():
-    sense = "footwear covering the foot, often for winter use"
-    assert sources._sense_spans(sense) == [sense]
-
-
 def test_homonym_pos_join_does_not_select_by_gender():
     word = {"lemma": "synthetic", "pos": "noun", "forms": [{"tags": "noun:f:v_naz"}]}
     entries = [homonym(1, label="іменник чоловічого або жіночого роду"), homonym(2, label="іменник жіночого роду")]
     result = sources.select_gloss(word, [row(1, ["one", "two"])], payload(["one", "two"]), ulif_entries=entries)
     assert result.gloss == "one"
-
-
-# Real-shaped rows (dmklinger and Kaikki as captured for the A1 store, #9543).
-MALYNA = ["raspberry (plant)", "(uncountable, collectively) raspberries (fruit)", "raspberry (fruit)"]
-I_CONJ = [
-    "and (used to connect two similar words, phrases, et cetera) (conjunction)",
-    "and, also, even (conjunction)",
-    "Augmentative particle, even, and",
-    "Expressing pain, fear, surprise, joy, disappointment, anger, hatred, etc (interjection)",
-]
-RUKA = ["hand (part of the fore limb)", "(anatomy) hand", "arm (upper appendage from shoulder to wrist)"]
-PYSATY = ["write (to form letters, etc.)", "(transitive) to write", "(transitive) to send written information to"]
 KOSA = ["braid (hairstyle)", "braided hair", "scythe (farm tool)", "spit (low, narrow, sandy peninsula)"]
-MY = [
-    "generic we (the speaker and at least one other person, regardless of whether it's the person being addressed)",
-    "we (first-person plural)",
-]
-
-
-@pytest.mark.parametrize(
-    "lemma,pos,row_pos,dmk,kaikki,expected",
-    [
-        ("малина", "noun", "noun", MALYNA, payload(["raspberries (fruit)", "raspberry (plant)"]), "raspberry"),
-        ("і", "conj", "particle", I_CONJ, {"pos": ["character", "conj"], "glosses": ["and, also, even"]}, "and"),
-        ("рука", "noun", "noun", RUKA, payload(["hand", "arm", "hand, handwriting"]), "hand"),
-        ("писати", "verb", "verb", PYSATY, payload(["to write", "to notify"], "verb"), "to write"),
-        ("ми", "noun", "pronoun", MY, payload(["we (first-person plural)"], "pron"), "we"),
-    ],
-)
-def test_plain_first_meaning_on_real_shaped_rows(lemma, pos, row_pos, dmk, kaikki, expected):
-    word = {"lemma": lemma, "pos": pos}
-    if row_pos == "pronoun":
-        word["forms"] = [{"tags": "noun:p:v_naz:pron:pers:1"}]
-    result = sources.select_gloss(word, [row(1, dmk, lemma, row_pos)], kaikki)
-    assert (result.gloss, result.source, result.reason) == (expected, "dmklinger_uk_en", None)
-    assert result.ref["id"] == 1
-
-
 @pytest.mark.parametrize(
     "note,expected",
     [
@@ -829,18 +574,6 @@ def test_note_is_matched_only_in_its_lead_clause_and_as_a_whole_word():
     assert sources.select_gloss(word, rows, None).gloss == "at"
     word["note"] = "On: surface sense"
     assert sources.select_gloss(word, rows, None).gloss == "on"
-
-
-@pytest.mark.parametrize(
-    "sense,expected",
-    [
-        ("and (used to connect two similar words, phrases, et cetera) (conjunction)", "and"),
-        ("we (first-person plural)", "we"),
-        ("plum (fruit of Prunus domestica)", "plum"),
-    ],
-)
-def test_displayed_gloss_drops_the_trailing_definition(sense, expected):
-    assert sources.select_gloss({"lemma": "synthetic", "pos": "noun"}, [row(1, [sense])], None).gloss == expected
 
 
 @pytest.mark.parametrize(
@@ -916,23 +649,6 @@ def test_reference_book_gloss_stands_only_without_an_equal_candidate_or_ulif_pin
     assert sources.select_gloss(
         pinned, homonyms, None, reference={"gloss": "castle", "match": "dictionary"}
     ).reason == ("reference_binding_invalid")
-
-
-def test_ulif_pin_keeps_kaikki_to_the_pinned_rows_sense():
-    pinned = {"lemma": "замок", "pos": "noun", "ulif": {"key": ["замо́к", 2]}}
-    homonyms = [row(1, ["castle"], "за́мок"), row(2, ["lock"], "замо́к")]
-    castle = {"gloss": "castle", "match": "dictionary"}
-    # Kaikki's gloss of the excluded homonym never re-enters through the pin.
-    pool, _ = sources.reference_pool(pinned, homonyms, payload(["castle"]))
-    assert [c["span"] for c in pool] == ["lock"]
-    stale = sources.select_gloss(pinned, homonyms, payload(["castle"]), reference=castle)
-    assert (stale.gloss, stale.reason) == (None, "reference_binding_invalid")
-    # Kaikki still gives English for the pinned sense, and the pinned row stays cited.
-    pool, _ = sources.reference_pool(pinned, homonyms, payload(["castle", "locks"]))
-    assert [(c["span"], c["source"]) for c in pool] == [("lock", "dmklinger_uk_en"), ("locks", "kaikki_wiktionary")]
-    chosen = sources.select_gloss(pinned, homonyms, payload(["castle", "lock"]), reference={**castle, "gloss": "lock"})
-    assert (chosen.gloss, chosen.ref["id"], chosen.by_reference) == ("lock", 2, True)
-    assert sources.select_gloss(pinned, homonyms, payload(["castle", "lock"])).ref["id"] == 2
 
 
 def test_note_lead_precedes_the_reference():

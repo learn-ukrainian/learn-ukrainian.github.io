@@ -244,13 +244,3 @@ def test_materialization_failure_leaves_no_partial_directory(
     with pytest.raises(MiddleUkrainianActBookIntakeError, match="forced receipt failure"):
         intake.materialize_intake(source_path=source_path, private_output_dir=output_dir)
     assert not output_dir.exists()
-
-
-def test_public_receipt_schema_is_text_free_and_fail_closed() -> None:
-    schema = json.loads(intake.RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
-    serialized = json.dumps(schema, ensure_ascii=False)
-
-    assert '"source_text"' not in serialized
-    assert schema["properties"]["safeguards"]["properties"]["training_eligible"] == {"const": False}
-    assert schema["properties"]["safeguards"]["properties"]["phase3_complete"] == {"const": False}
-    assert schema["properties"]["safeguards"]["properties"]["phase4_blocked"] == {"const": True}

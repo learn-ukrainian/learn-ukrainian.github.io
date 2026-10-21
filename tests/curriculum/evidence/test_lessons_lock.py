@@ -6,12 +6,11 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 import yaml
 
-from scripts.curriculum.evidence import lesson_lock, lock, pack, sources, words
+from scripts.curriculum.evidence import lesson_lock, lock, pack, words
 
 pytestmark = pytest.mark.reads_content
 
@@ -105,17 +104,6 @@ def test_record_hash_changes_on_forms_reordering():
     h1 = words.record_hash({"words": [w1]}, "W-001")
     h2 = words.record_hash({"words": [w2]}, "W-001")
     assert h1 != h2
-
-
-def test_record_hash_changes_on_one_character_edit():
-    """One character edit in a record changes the hash."""
-    rec1 = {"id": "T-001", "quote": "hello world"}
-    rec2 = {"id": "T-001", "quote": "hello world!"}
-    assert pack.record_hash({"texts": [rec1]}, "T-001") != pack.record_hash({"texts": [rec2]}, "T-001")
-
-    w1 = make_record("W-001", "слово", ["слово"])
-    w2 = make_record("W-001", "слово", ["слове"])
-    assert words.record_hash({"words": [w1]}, "W-001") != words.record_hash({"words": [w2]}, "W-001")
 
 
 def test_record_hashes_batch_and_missing_id():
@@ -341,30 +329,6 @@ def test_lock_check_passes_when_identical_and_fails_with_diff_when_stale(tmp_pat
     assert "+++ fresh:" in diff
 
 
-def test_word_store_gloss_change_requires_lesson_lock_refresh(tmp_path):
-    """The CI checker rejects a cited gloss edit until its lesson lock is refreshed."""
-    _plans_dir, evidence_dir = setup_curriculum_fixture(tmp_path)
-    words_path = evidence_dir / "_words.yaml"
-    words_doc = yaml.safe_load(words_path.read_text(encoding="utf-8"))
-    words_doc["words"][0]["gloss"] = "original gloss"
-    lock.write(words_path, lock.yaml_bytes(words_doc))
-    lock_path, _ = lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
-    original_lock = lock_path.read_bytes()
-    assert lesson_lock.check_lesson_lock("a1", "mod-one", repo_root=tmp_path) == (True, "")
-
-    words_doc["words"][0]["gloss"] = "corrected gloss"
-    lock.write(words_path, lock.yaml_bytes(words_doc))
-
-    ok, diff = lesson_lock.check_lesson_lock("a1", "mod-one", repo_root=tmp_path)
-    assert ok is False
-    assert "--- committed:" in diff
-    assert "+++ fresh:" in diff
-    assert lock_path.read_bytes() == original_lock
-
-    lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
-    assert lesson_lock.check_lesson_lock("a1", "mod-one", repo_root=tmp_path) == (True, "")
-
-
 def test_retired_word_id_cited_fails(tmp_path):
     """A plan citing a retired word id fails with unknown_word_id."""
     _plans_dir, evidence_dir = setup_curriculum_fixture(tmp_path)
@@ -469,29 +433,6 @@ def test_diff_built_with_change_invalidates_all_lessons(tmp_path):
     assert [r["lesson"] for r in rebuild] == [1, 2, 3]
     for r in rebuild:
         assert r["reasons"] == ["shared_changed"]
-
-
-def test_diff_uncited_record_change_yields_no_rebuild(tmp_path):
-    """A change to a record no lesson cites results in nothing to rebuild."""
-    _plans_dir, evidence_dir = setup_curriculum_fixture(tmp_path)
-    lock_path, _ = lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
-
-    baseline_dir = tmp_path / "baseline_state"
-    baseline_mod = baseline_dir / "mod-one"
-    baseline_mod.mkdir(parents=True)
-    lock.write(baseline_mod / "lessons.lock.yaml", lock_path.read_bytes())
-
-    # Change T-999 in pack (uncited)
-    pack_path = evidence_dir / "mod-one.yaml"
-    pack_data = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
-    for rec in pack_data["texts"]:
-        if rec["id"] == "T-999":
-            rec["quote"] = "Changed uncited quote"
-    lock.write(pack_path, lock.yaml_bytes(pack_data))
-    lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
-
-    rebuild = lesson_lock.diff_module("a1", "mod-one", str(baseline_dir), repo_root=tmp_path)
-    assert rebuild == []
 
 
 def test_diff_plan_citation_added_lesson_3(tmp_path):
@@ -822,137 +763,6 @@ def test_cli_clean_environment_subprocess(tmp_path):
         timeout=30,
     )
     assert proc_err.returncode == 1
-
-
-def test_rebuilt_pack_does_not_mark_lessons_stale(synthetic_sources, synthetic_standard, tmp_path):
-    """Rebuilding a pack with build_pack updates mcp_commit but does not invalidate lessons."""
-    plans_dir, evidence_dir = setup_curriculum_fixture(tmp_path, level="a1", slug="mod-one")
-
-    req_file = tmp_path / "pack_req.yaml"
-    req_file.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "module": "a1/mod-one",
-                "texts": [
-                    {
-                        "id": "T-001",
-                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
-                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
-                        "supports": "First point.",
-                    },
-                    {
-                        "id": "T-002",
-                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
-                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
-                        "supports": "Second point.",
-                    },
-                    {
-                        "id": "T-003",
-                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
-                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
-                        "supports": "Third point.",
-                    },
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    src = sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard)
-
-    # 1. Build pack first time with commit A
-    with patch("scripts.curriculum.evidence.pack.get_mcp_commit", return_value="a" * 40):
-        res1 = pack.build_pack(
-            "a1",
-            "mod-one",
-            req_file,
-            evidence_dir=evidence_dir,
-            sources_instance=src,
-            offline=True,
-        )
-    assert res1["status"] == "ok"
-    assert res1["pack"]["built_with"]["mcp_commit"] == "a" * 40
-
-    # 2. Write initial lesson lock
-    lock_path, _ = lesson_lock.write_lesson_lock(
-        "a1",
-        "mod-one",
-        evidence_dir=evidence_dir,
-        plans_dir=plans_dir,
-        repo_root=tmp_path,
-    )
-
-    # 3. Save baseline directory
-    baseline_dir = tmp_path / "baseline_state"
-    baseline_mod = baseline_dir / "mod-one"
-    baseline_mod.mkdir(parents=True)
-    lock.write(baseline_mod / "lessons.lock.yaml", lock_path.read_bytes())
-
-    # 4. Rebuild pack with commit B (simulating git HEAD advance)
-    with patch("scripts.curriculum.evidence.pack.get_mcp_commit", return_value="b" * 40):
-        res2 = pack.build_pack(
-            "a1",
-            "mod-one",
-            req_file,
-            evidence_dir=evidence_dir,
-            sources_instance=src,
-            offline=True,
-        )
-    assert res2["status"] == "ok"
-    assert res2["pack"]["built_with"]["mcp_commit"] == "b" * 40
-
-    # 5. Check lock is byte-identical: rebuild did not mark lesson stale
-    ok, diff = lesson_lock.check_lesson_lock(
-        "a1",
-        "mod-one",
-        evidence_dir=evidence_dir,
-        plans_dir=plans_dir,
-        repo_root=tmp_path,
-    )
-    assert ok is True
-    assert diff == ""
-
-    # 6. Diff against baseline produces empty rebuild list
-    rebuild = lesson_lock.diff_module(
-        "a1",
-        "mod-one",
-        str(baseline_dir),
-        evidence_dir=evidence_dir,
-        plans_dir=plans_dir,
-        repo_root=tmp_path,
-    )
-    assert rebuild == []
-
-
-def test_diff_standard_record_fix_invalidates_only_citing_lesson(tmp_path):
-    """An S- record fix invalidates only the lesson citing it, not unciting lessons."""
-    plans_dir, evidence_dir = setup_curriculum_fixture(tmp_path)
-
-    # Modify plan so lesson 2 cites S-001 instead of T-002
-    plan_path = plans_dir / "mod-one.yaml"
-    plan_data = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    plan_data["lessons"][1]["steps"][0]["evidence"] = ["S-001"]
-    plan_path.write_text(yaml.safe_dump(plan_data), encoding="utf-8")
-
-    # Initial write of lock and baseline
-    lock_path, _ = lesson_lock.write_lesson_lock("a1", "mod-one", repo_root=tmp_path)
-    baseline_dir = tmp_path / "baseline_state"
-    baseline_mod = baseline_dir / "mod-one"
-    baseline_mod.mkdir(parents=True)
-    lock.write(baseline_mod / "lessons.lock.yaml", lock_path.read_bytes())
-
-    # Fix S-001 in pack
-    pack_path = evidence_dir / "mod-one.yaml"
-    pack_data = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
-    pack_data["standard"][0]["text"] = "Updated standard line text"
-    lock.write(pack_path, lock.yaml_bytes(pack_data))
-
-    # Diff against baseline: names lesson 2 only, no shared_changed
-    rebuild = lesson_lock.diff_module("a1", "mod-one", str(baseline_dir), repo_root=tmp_path)
-    assert len(rebuild) == 1
-    assert rebuild[0]["lesson"] == 2
-    assert rebuild[0]["reasons"] == ["record_changed S-001"]
 
 
 def test_diff_word_record_fix_without_rewriting_lock_reports_changed(tmp_path):

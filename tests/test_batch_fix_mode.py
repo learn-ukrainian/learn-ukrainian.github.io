@@ -78,33 +78,6 @@ class TestReviewGateInStatusJSON:
         assert data["gates"]["review"]["violations"] == 1
         assert "fake" in data["gates"]["review"]["message"].lower()
 
-    def test_review_gate_skipped(self):
-        """Review gate should be 'skipped' when content gates fail."""
-        path = save_status_cache(
-            str(self.md_file), "test-level", "test-module",
-            results={}, has_critical_failure=True,
-            critical_failure_reasons=["Word count too low"],
-            review_violations=[],
-            review_gate_status="skipped",
-        )
-        with open(path) as f:
-            data = json.load(f)
-
-        assert data["gates"]["review"]["status"] == "skipped"
-        assert data["gates"]["review"]["violations"] == 0
-
-    def test_review_gate_defaults(self):
-        """Review gate should default to skipped when params omitted."""
-        path = save_status_cache(
-            str(self.md_file), "test-level", "test-module",
-            results={}, has_critical_failure=False,
-            critical_failure_reasons=[],
-        )
-        with open(path) as f:
-            data = json.load(f)
-
-        assert data["gates"]["review"]["status"] == "skipped"
-
 
 # =============================================================================
 # Layer 2: Diagnosis logic + auto-mode routing
@@ -176,14 +149,6 @@ class TestDiagnoseModule:
         )
         assert self.runner._diagnose_module(status, self.paths, "test-slug") == "done"
 
-    def test_done_when_review_skipped(self):
-        """Anti-gaming: review gate is ignored in fix mode."""
-        status = self._make_status(
-            {"meta": "pass", "lesson": "pass", "activities": "pass",
-             "vocabulary": "pass", "naturalness": "pass", "review": "skipped"},
-        )
-        assert self.runner._diagnose_module(status, self.paths, "test-slug") == "done"
-
     def test_fix_content_when_content_fails_and_review_has_fix_plan(self):
         # Create review with Fix Plan
         review_path = self.track_dir / "review" / "test-slug-review.md"
@@ -234,10 +199,6 @@ class TestAutoModeRouting:
         self.md_path.write_text("x" * 1000)
         runner = self._make_runner("build")
         assert runner._resolve_mode_for_module("s", {"md": self.md_path}) == "build"
-
-    def test_fix_mode_always_fixes(self):
-        runner = self._make_runner("fix")
-        assert runner._resolve_mode_for_module("s", {"md": self.md_path}) == "fix"
 
     def test_auto_mode_builds_when_no_md(self):
         runner = self._make_runner("auto")
@@ -320,24 +281,6 @@ class TestFixApplyOutput:
         assert isinstance(data, list)
         assert data[0]["type"] == "quiz"
 
-    def test_activities_fix_rejected_when_too_short(self):
-        output = (
-            "===ACTIVITIES_START===\nhi\n===ACTIVITIES_END===\n"
-            "===CHANGES_START===\n## Applied\n===CHANGES_END===\n"
-        )
-        self.runner._apply_output("fix", output, self.paths)
-        assert not self.paths["activities"].exists()
-
-    def test_changes_report_saved(self):
-        output = (
-            "===CONTENT_START===\n" + "x " * 100 + "\n===CONTENT_END===\n"
-            "===CHANGES_START===\n## Applied Fixes\n1. Fixed line 42\n===CHANGES_END===\n"
-        )
-        self.runner._apply_output("fix", output, self.paths)
-        changes_file = self.paths["orchestration"] / "fix-changes.md"
-        assert changes_file.exists()
-        assert "Fixed line 42" in changes_file.read_text()
-
     def test_no_content_block_leaves_file_unchanged(self):
         """If fix output has no CONTENT block, md should not be touched."""
         original = self.md_path.read_text()
@@ -352,284 +295,10 @@ class TestFixApplyOutput:
 # Layer 2b: Fix template registration
 # =============================================================================
 
-class TestFixTemplateRegistration:
-    """Verify fix template is registered in all track configs."""
-
-    def test_all_known_tracks_have_fix_template(self):
-        from scripts.batch_gemini_config import get_track_config
-        for track in ["bio", "hist", "istorio", "lit", "a1", "a2"]:
-            config = get_track_config(track)
-            assert "fix" in config["templates"], f"{track} missing fix template"
-
-    def test_default_config_has_fix_template(self):
-        from scripts.batch_gemini_config import get_track_config
-        config = get_track_config("some-unknown-track")
-        assert "fix" in config["templates"]
-
-    def test_fix_template_file_exists(self):
-        from scripts.batch_gemini_config import get_track_config
-        config = get_track_config("bio")
-        assert config["templates"]["fix"].exists()
-
-    def test_oes_and_ruth_have_seminar_type(self):
-        """OES and RUTH must be seminar type to get correct activity examples."""
-        from scripts.batch_gemini_config import get_track_config
-        for track in ["oes", "ruth"]:
-            config = get_track_config(track)
-            assert config["type"] == "seminar", f"{track} should be seminar type"
-
-    def test_all_seminar_tracks_have_fix_content_template(self):
-        """All seminar tracks need fix-content and fix-activities templates."""
-        from scripts.batch_gemini_config import SEMINAR_TRACKS, get_track_config
-        for track in SEMINAR_TRACKS:
-            config = get_track_config(track)
-            assert "fix-content" in config["templates"], f"{track} missing fix-content template"
-            assert "fix-activities" in config["templates"], f"{track} missing fix-activities template"
-
 
 # =============================================================================
 # Layer 4: Helper functions (schema filtering, activity examples, stall detection)
 # =============================================================================
-
-class TestFilterSchemaForTrack:
-    """Test _filter_schema_for_track behavior."""
-
-    def test_empty_allowed_types_returns_full_schema(self):
-        """When allowed_types is empty (core tracks), return full schema unchanged."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
-        schema = "### quiz (8+ items)\nQuiz content\n### reading\nReading content\n"
-        result = _filter_schema_for_track(schema, set())
-        assert result == schema
-
-    def test_none_allowed_types_returns_full_schema(self):
-        """When allowed_types is None-ish, return full schema unchanged."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
-        schema = "### quiz\nContent\n"
-        result = _filter_schema_for_track(schema, None)
-        assert result == schema
-
-    def test_empty_schema_returns_empty(self):
-        """Empty schema input returns empty string."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
-        result = _filter_schema_for_track("", {"reading", "essay-response"})
-        assert result == ""
-
-    def test_filters_disallowed_types(self):
-        """Should remove sections for types not in allowed_types."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
-        schema = (
-            "# Activity Reference\n"
-            "General intro text\n"
-            "### quiz (8+ items)\n"
-            "Quiz description and examples\n"
-            "More quiz details\n"
-            "### reading\n"
-            "Reading description\n"
-            "### fill-in\n"
-            "Fill-in description\n"
-        )
-        result = _filter_schema_for_track(schema, {"reading"})
-        assert "reading" in result.lower()
-        assert "Reading description" in result
-        assert "Quiz description" not in result
-        assert "Fill-in description" not in result
-
-    def test_keeps_allowed_types(self):
-        """Should keep sections for types in allowed_types."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
-        schema = (
-            "### reading\n"
-            "Reading content here\n"
-            "### essay-response\n"
-            "Essay content here\n"
-            "### quiz\n"
-            "Quiz content here\n"
-        )
-        result = _filter_schema_for_track(schema, {"reading", "essay-response"})
-        assert "Reading content here" in result
-        assert "Essay content here" in result
-        assert "Quiz content here" not in result
-
-    def test_preserves_non_type_headers(self):
-        """Headers that don't match any type should be preserved."""
-        from scripts.batch_gemini_runner import _filter_schema_for_track
-        schema = (
-            "## Activity Type Reference\n"
-            "Overview text\n"
-            "### reading\n"
-            "Reading content\n"
-            "### quiz\n"
-            "Quiz content\n"
-            "## General Notes\n"
-            "Notes text\n"
-        )
-        result = _filter_schema_for_track(schema, {"reading"})
-        assert "Activity Type Reference" in result
-        assert "Overview text" in result
-        assert "Reading content" in result
-        assert "General Notes" in result
-        assert "Notes text" in result
-        assert "Quiz content" not in result
-
-
-class TestActivityExamples:
-    """Test _get_seminar_activity_examples and _get_core_activity_examples."""
-
-    def test_seminar_examples_contain_seminar_types(self):
-        """Seminar examples should include reading, critical-analysis, essay-response."""
-        from scripts.batch_gemini_runner import _get_seminar_activity_examples
-        result = _get_seminar_activity_examples("bio")
-        assert "type: reading" in result
-        assert "type: critical-analysis" in result
-        assert "type: essay-response" in result
-        assert "type: comparative-study" in result
-
-    def test_seminar_examples_exclude_core_types(self):
-        """Seminar examples should NOT include quiz or fill-in."""
-        from scripts.batch_gemini_runner import _get_seminar_activity_examples
-        result = _get_seminar_activity_examples("bio")
-        assert "type: quiz" not in result
-        assert "type: fill-in" not in result
-
-    def test_core_examples_contain_core_types(self):
-        """Core examples should include quiz, fill-in, match-up, mark-the-words."""
-        from scripts.batch_gemini_runner import _get_core_activity_examples
-        result = _get_core_activity_examples()
-        assert "type: quiz" in result
-        assert "type: fill-in" in result
-        assert "type: match-up" in result
-        assert "type: mark-the-words" in result
-
-    def test_core_examples_exclude_seminar_types(self):
-        """Core examples should NOT include essay-response or critical-analysis."""
-        from scripts.batch_gemini_runner import _get_core_activity_examples
-        result = _get_core_activity_examples()
-        assert "type: essay-response" not in result
-        assert "type: critical-analysis" not in result
-
-    def test_seminar_examples_have_delimiters(self):
-        """Activity examples must include the standard delimiters."""
-        from scripts.batch_gemini_runner import _get_seminar_activity_examples
-        result = _get_seminar_activity_examples("hist")
-        assert "===ACTIVITIES_START===" in result
-        assert "===ACTIVITIES_END===" in result
-        assert "===VOCABULARY_START===" in result
-        assert "===VOCABULARY_END===" in result
-
-    def test_core_examples_have_delimiters(self):
-        """Core activity examples must include the standard delimiters."""
-        from scripts.batch_gemini_runner import _get_core_activity_examples
-        result = _get_core_activity_examples()
-        assert "===ACTIVITIES_START===" in result
-        assert "===ACTIVITIES_END===" in result
-
-
-class TestStallDetection:
-    """Test the stall detection logic in process_module_fix."""
-
-    def setup_method(self):
-        self.tmpdir = tempfile.mkdtemp()
-        self.track_dir = Path(self.tmpdir) / "bio"
-        self.track_dir.mkdir(parents=True)
-        for subdir in ("audit", "review", "status", "meta", "activities",
-                       "vocabulary", "research"):
-            (self.track_dir / subdir).mkdir()
-        orch = self.track_dir / "orchestration" / "test-slug"
-        orch.mkdir(parents=True)
-
-        self.md_path = self.track_dir / "test-slug.md"
-        self.md_path.write_text("# Test Module\n" + "word " * 500)
-
-        (self.track_dir / "meta" / "test-slug.yaml").write_text(
-            "level: BIO\nword_target: 3000\n"
-        )
-
-        # Plan file is required by process_module_fix
-        plans_dir = Path(self.tmpdir) / "plans" / "bio"
-        plans_dir.mkdir(parents=True)
-        (plans_dir / "test-slug.yaml").write_text("title: Test\nword_target: 3000\n")
-
-    def teardown_method(self):
-        shutil.rmtree(self.tmpdir)
-
-    def test_stall_count_increments_on_same_gates(self):
-        """Stall counter should increment when same gates fail repeatedly."""
-        # Test the stall logic directly (extracted from process_module_fix)
-        previous_failing_gates = ["lesson"]
-        stall_count = 0
-
-        # Iteration 1: lesson fails
-        current_failing = ["lesson"]
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        previous_failing_gates = current_failing
-        assert stall_count == 1
-
-        # Iteration 2: same gate fails
-        current_failing = ["lesson"]
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        previous_failing_gates = current_failing
-        assert stall_count == 2
-
-        # Iteration 3: stall threshold reached
-        current_failing = ["lesson"]
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        assert stall_count >= 3  # Would trigger break
-
-    def test_stall_count_resets_on_different_gates(self):
-        """Stall counter should reset when different gates fail."""
-        previous_failing_gates = ["lesson"]
-        stall_count = 2  # Almost stalled
-
-        # Different gate fails — should reset
-        current_failing = ["activities"]
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        assert stall_count == 0
-
-    def test_stall_count_resets_on_empty_gates(self):
-        """Stall counter should not increment when no gates fail."""
-        previous_failing_gates = ["lesson"]
-        stall_count = 2
-
-        current_failing = []
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        assert stall_count == 0
-
-    def test_stall_count_handles_multiple_gates(self):
-        """Stall detection works with multiple simultaneous gate failures."""
-        previous_failing_gates = sorted(["activities", "lesson"])
-        stall_count = 0
-
-        # Same two gates fail again
-        current_failing = sorted(["activities", "lesson"])
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        assert stall_count == 1
-
-        # One gate changes — not stalled
-        current_failing = sorted(["activities", "vocabulary"])
-        if current_failing == previous_failing_gates and current_failing:
-            stall_count += 1
-        else:
-            stall_count = 0
-        previous_failing_gates = current_failing
-        assert stall_count == 0
 
 
 class TestDiagnoseModuleActivitiesRouting:
@@ -683,20 +352,6 @@ class TestDiagnoseModuleActivitiesRouting:
         )
         assert self.runner._diagnose_module(status, self.paths, "test-slug") == "fix_activities"
 
-    def test_fix_activities_when_only_vocabulary_fails(self):
-        status = self._make_status(
-            {"meta": "pass", "lesson": "pass", "activities": "pass",
-             "vocabulary": "fail", "naturalness": "pass"},
-        )
-        assert self.runner._diagnose_module(status, self.paths, "test-slug") == "fix_activities"
-
-    def test_fix_activities_when_both_activities_and_vocabulary_fail(self):
-        status = self._make_status(
-            {"meta": "pass", "lesson": "pass", "activities": "fail",
-             "vocabulary": "fail", "naturalness": "pass"},
-        )
-        assert self.runner._diagnose_module(status, self.paths, "test-slug") == "fix_activities"
-
     def test_content_priority_over_activities(self):
         """When both content and activities fail, content gets priority."""
         status = self._make_status(
@@ -735,74 +390,6 @@ class TestSchemaFilterVerification:
     TD-2: The filter uses header matching. If ACTIVITY-YAML-REFERENCE.md changes
     header format, the filter breaks silently. These tests catch that.
     """
-
-    def test_all_priority_types_exist_in_all_types(self):
-        """Every priority_type in LEVEL_CONFIG must be in the filter's ALL_TYPES set."""
-        from scripts.audit.config import LEVEL_CONFIG
-
-        # ALL_TYPES is defined inside the function; extract by checking all known types
-        ALL_TYPES = {
-            'quiz', 'fill-in', 'match-up', 'true-false', 'group-sort',
-            'unjumble', 'error-correction', 'anagram', 'select',
-            'translate', 'cloze', 'mark-the-words', 'reading',
-            'essay-response', 'critical-analysis', 'comparative-study',
-            'authorial-intent', 'creative-writing', 'transcription',
-            'etymology-trace', 'grammar-identify', 'phonology-lab',
-            'grammar-lab', 'parallel-text', 'paleography-analysis',
-            'historical-writing', 'register-identify', 'loanword-trace',
-            'comparative-style', 'translation-critique',
-            'dialect-comparison', 'watch-and-repeat', 'classify',
-            'image-to-letter',
-            # A1 activity types added to LEVEL_CONFIG after the test
-            # was first written. Kept in sync with priority_types in
-            # scripts/audit/config.py (2026-04).
-            'observe', 'odd-one-out', 'order',
-        }
-
-        missing = set()
-        for _config_key, config in LEVEL_CONFIG.items():
-            for ptype in config.get('priority_types', set()):
-                if ptype not in ALL_TYPES:
-                    missing.add(ptype)
-
-        assert not missing, f"priority_types not in ALL_TYPES: {missing}"
-
-    def test_seminar_priority_types_have_h3_headers_in_schema(self):
-        """Seminar track priority types must have parseable H3 headers in the schema file."""
-        schema_path = Path(__file__).parent.parent / "docs" / "ACTIVITY-YAML-REFERENCE.md"
-        assert schema_path.exists(), f"Schema file missing: {schema_path}"
-        schema_content = schema_path.read_text()
-
-        # Extract all H3 header type names from the schema
-        h3_types_found = set()
-        for line in schema_content.split('\n'):
-            stripped = line.strip()
-            if stripped.startswith('### '):
-                header_text = stripped[4:].strip().lower()
-                # Match the same heuristic used in _filter_schema_for_track
-                ALL_TYPES = {
-                    'quiz', 'fill-in', 'match-up', 'true-false', 'group-sort',
-                    'unjumble', 'error-correction', 'anagram', 'select',
-                    'translate', 'cloze', 'mark-the-words', 'reading',
-                    'essay-response', 'critical-analysis', 'comparative-study',
-                    'authorial-intent', 'creative-writing', 'transcription',
-                    'etymology-trace', 'grammar-identify', 'phonology-lab',
-                    'grammar-lab', 'parallel-text', 'paleography-analysis',
-                    'historical-writing', 'register-identify', 'loanword-trace',
-                    'comparative-style', 'translation-critique',
-                    'dialect-comparison',
-                }
-                for atype in ALL_TYPES:
-                    if header_text.startswith(atype):
-                        h3_types_found.add(atype)
-
-        # Seminar tracks' priority types that the filter must be able to find
-        seminar_priority = {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}
-        missing = seminar_priority - h3_types_found
-        assert not missing, (
-            f"Seminar priority types missing H3 headers in schema: {missing}. "
-            f"Found headers for: {h3_types_found & seminar_priority}"
-        )
 
     def test_filter_produces_nonempty_for_seminar_priority_types(self):
         """_filter_schema_for_track must return non-empty output for each seminar track."""

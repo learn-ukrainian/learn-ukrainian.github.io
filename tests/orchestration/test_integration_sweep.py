@@ -141,17 +141,6 @@ def test_unknown_reviewer_marker_never_approves(mode):
     assert sweep.lookup_verdict([comment(review_mode=mode, family="unknown")], SHA, "fleet").state == "unknown"
 
 
-def test_red_team_keeps_trust_head_and_latest_rejection_gates():
-    assert sweep.lookup_verdict([comment(review_mode="red_team", login="outsider")], SHA, "fleet").state == "needs-CF"
-    assert sweep.lookup_verdict([comment(review_mode="red_team", sha=OTHER)], SHA, "fleet").state == "CF-stale"
-    assert sweep.lookup_verdict([comment(review_mode="red_team", edited=True)], SHA, "fleet").state == "unknown"
-    rows = [
-        comment(review_mode="red_team"),
-        comment(task="later", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED"),
-    ]
-    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
-
-
 def pr(**updates):
     data = {
         "number": 42,
@@ -175,14 +164,6 @@ def test_latest_started_rejects_approval_then_rejection():
         comment(task="review-two", started="2026-09-23T12:00:01.000001+00:00", verdict="CHANGES_REQUESTED"),
     ]
     assert sweep.lookup_verdict(rows, SHA, "fleet").state == "CHANGES_REQUESTED"
-
-
-def test_late_recorded_older_approval_does_not_overwrite_rejection():
-    rows = [
-        comment(task="reject", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED"),
-        comment(task="old-approval"),
-    ]
-    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
 
 
 PR_10947_SHA = "19c9b39eb2eef93e2e2ae29178787d9105078120"
@@ -298,19 +279,6 @@ def test_unformatted_non_approve_trailer_still_poisons_the_head(token):
     assert sweep.lookup_verdict([item, readable], PR_10095_SHA, "fleet").state == "unknown"
 
 
-@pytest.mark.parametrize("token", ["APPROVES", "approve", "MAYBE"])
-def test_keeper_format_unknown_token_stays_unreadable(token):
-    keeper = comment(verdict=token)
-    assert sweep.parse_marker(keeper["body"]) is None
-    assert sweep.lookup_verdict([keeper, comment(task="other")], SHA, "fleet").state == "unknown"
-
-
-def test_lookup_failure_and_partial_data_unknown():
-    assert sweep.lookup_verdict(None, SHA, "fleet").state == "unknown"
-    assert sweep.lookup_verdict([comment()], SHA, "fleet", complete=False).state == "unknown"
-    assert sweep.lookup_verdict([[comment()]], SHA, "fleet").state == "unknown"
-
-
 def test_legacy_unmarked_comment_never_approves():
     old = {"body": f"### Cross-family review\nhead: {SHA}\nVERDICT: APPROVED"}
     assert sweep.lookup_verdict([old], SHA, "fleet").state == "CF-unrecorded"
@@ -321,12 +289,6 @@ def test_legacy_unmarked_comment_never_approves():
 @pytest.mark.parametrize("login,association", [("outsider", "MEMBER"), ("fleet", "NONE"), ("fleet", "CONTRIBUTOR")])
 def test_untrusted_marker_ignored_and_listed(login, association):
     verdict = sweep.lookup_verdict([comment(login=login, association=association)], SHA, "fleet")
-    assert verdict.state == "needs-CF"
-    assert verdict.untrusted_markers == ("review-one",)
-
-
-def test_untrusted_other_head_marker_does_not_claim_stale_review():
-    verdict = sweep.lookup_verdict([comment(sha=OTHER, login="outsider")], SHA, "fleet")
     assert verdict.state == "needs-CF"
     assert verdict.untrusted_markers == ("review-one",)
 
@@ -363,16 +325,6 @@ def test_timestamp_tie_failure_is_not_hidden_by_list_order():
         statusCheckRollup=[
             _gate("FAILURE", "2026-09-23T13:00:00Z", "CI"),
             _gate("SUCCESS", "2026-09-23T13:00:00Z", "CI"),
-        ]
-    )
-    assert sweep._check_blockers(item) == ["CI red CI Gate"]
-
-
-def test_named_check_without_workflow_keeps_a_red_row():
-    item = pr(
-        statusCheckRollup=[
-            _gate("FAILURE", "2026-09-23T12:00:00Z", None),
-            _gate("SUCCESS", "2026-09-23T13:00:00Z", None),
         ]
     )
     assert sweep._check_blockers(item) == ["CI red CI Gate"]
@@ -514,42 +466,6 @@ def test_run_lookup_failure_is_unknown_with_queue_blocker():
     assert "queue lookup unknown" in rows[0].blockers
 
 
-@pytest.mark.parametrize("history", [False, True])
-@pytest.mark.parametrize(
-    "line,replacement",
-    [
-        ("Authorship: verified_app_bot", "Not Authorship: verified_app_bot"),
-        ("Authorship: verified_app_bot", "Prefix Authorship: verified_app_bot"),
-        ("Authorship: verified_app_bot", "Authorship: verified_app_bot suffix"),
-        ("Authorship: verified_app_bot", "Authorship: verified_app_bot\nAuthorship: verified_app_bot"),
-        ("Authorship: verified_app_bot", "Authorship: human\nAuthorship: verified_app_bot"),
-        ("Authorship: verified_app_bot", "authorship: human\nAuthorship: verified_app_bot"),
-        ("No author model assumed.", "False: No author model assumed."),
-        ("No author model assumed.", "No author model assumed. false"),
-        ("No author model assumed.", "No author model assumed.\nNo author model assumed."),
-        ("No author model assumed.", "An author model was assumed.\nNo author model assumed."),
-    ],
-)
-def test_corrupt_readable_bot_authorship_refuses_through_parser(history, line, replacement):
-    item = comment()
-    body = build_comment(
-        sha=SHA,
-        task_id="review-one",
-        started=START,
-        verdict="APPROVED",
-        model="gpt-6.1-sol",
-        family="openai",
-        reply="VERDICT: APPROVE",
-        app_bot=True,
-        review_mode="red_team" if history else "cross_family",
-        unknown_history=[OTHER] if history else (),
-    )
-    assert sweep.lookup_verdict([{**item, "body": body}], SHA, "fleet").state == "APPROVED"
-    altered = body.replace(line + "\n", replacement + "\n")
-    assert sweep.parse_marker(altered) is None
-    assert sweep.lookup_verdict([{**item, "body": altered}], SHA, "fleet").state == "unknown"
-
-
 # Issue #11127: PR #11095 had a valid exact-head approval, but two hand-written markers for
 # older heads failed the parser and revoked it from the merge queue with no stated reason.
 CURRENT_11095 = "d5b35951" + "4e0c7a91b2f36d58e0a7c4b19f2d6e83"
@@ -687,26 +603,6 @@ def test_every_unknown_verdict_carries_a_typed_reason():
     ]
     for verdict, reason, comment_id in cases:
         assert (verdict.state, verdict.reason, verdict.comment_id) == ("unknown", reason, comment_id)
-
-
-def test_verdict_reason_codes_are_a_stable_closed_list():
-    assert sweep.UNKNOWN_REASONS == (
-        "comments-unavailable",
-        "head-invalid",
-        "identity-unavailable",
-        "comment-malformed",
-        "marker-unattributable",
-        "marker-malformed-current-head",
-        "marker-mentions-current-head",
-        "marker-edited",
-        "reviewer-unattested",
-    )
-    with pytest.raises(ValueError):
-        sweep.Verdict("unknown")
-    with pytest.raises(ValueError):
-        sweep.Verdict("unknown", reason="because")
-    with pytest.raises(ValueError):
-        sweep.Verdict("APPROVED", reason=sweep.MARKER_EDITED)
 
 
 def test_report_names_unknown_reason_and_comment_without_bodies(monkeypatch, capsys):

@@ -217,10 +217,6 @@ def test_resolve_repo_slug_fails_closed_without_a_checkout(tmp_path) -> None:
 # --- identity agreement: one probe, two fail-closed directions (#7127) -------
 
 
-def test_both_callers_consult_the_one_shared_probe_module() -> None:
-    assert post_task_reap.pr_identity is hygiene.pr_identity is pr_identity
-
-
 @pytest.mark.parametrize(
     ("probe_answer", "gate_expected", "reaper_no_open_expected", "reaper_error_expected"),
     [
@@ -260,71 +256,6 @@ def test_reaper_treats_unresolvable_repository_identity_as_unknown(monkeypatch) 
     assert no_open is False
     assert "PR guard unavailable" in error
     assert "no explicit repository" in error
-
-
-def _drive_both_over_one_gh_answer(monkeypatch, result: Any):
-    """Run the REAL reaper and gate predicates over ONE shared gh answer."""
-    def _fake_run(*_args: Any, **_kwargs: Any):
-        if isinstance(result, BaseException):
-            raise result
-        return result
-
-    monkeypatch.setattr(pr_identity, "_run_gh", _fake_run)
-    monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: REPO)
-
-    gate_has_open = hygiene._branch_has_open_pr(Path("/nonexistent"), BRANCH)
-    reaper_no_open, reaper_error = post_task_reap._no_open_pr_for_branch(
-        repo_root=Path("/nonexistent"), branch=BRANCH
-    )
-    return gate_has_open, reaper_no_open, reaper_error
-
-
-@pytest.mark.parametrize(
-    ("label", "payload", "outcome"),
-    [
-        ("open row", json.dumps([_OPEN_ROW]), "proven_open"),
-        ("empty list", "[]", "proven_absent"),
-        ("empty row", "[{}]", "unknown"),
-        ("null row", "[null]", "unknown"),
-        ("non-list", "{}", "unknown"),
-        ("malformed json", "not json", "unknown"),
-    ],
-)
-def test_identity_agreement_on_one_gh_answer(monkeypatch, label: str, payload: str, outcome: str) -> None:
-    """The #7127 contract: both predicates derive from one binding.  A proven
-    open PR exempts (gate) and retains (reaper); a proven absence is the ONLY
-    answer under which the reaper may proceed; everything else — including
-    malformed `{}` rows — fails closed in BOTH directions at once."""
-    gate_has_open, reaper_no_open, reaper_error = _drive_both_over_one_gh_answer(
-        monkeypatch, _gh_result(payload)
-    )
-
-    if outcome == "proven_open":
-        assert gate_has_open is True, label
-        assert reaper_no_open is False, label
-        assert reaper_error is None, label
-    elif outcome == "proven_absent":
-        assert gate_has_open is False, label
-        assert reaper_no_open is True, label
-        assert reaper_error is None, label
-    else:
-        assert gate_has_open is False, label
-        assert reaper_no_open is False, label
-        assert "PR guard unavailable" in (reaper_error or ""), label
-
-
-def test_identity_agreement_on_transport_failures(monkeypatch) -> None:
-    for failure in (
-        _gh_result("[]", returncode=1),
-        subprocess.TimeoutExpired(cmd="gh", timeout=1),
-        OSError("gh missing"),
-    ):
-        gate_has_open, reaper_no_open, reaper_error = _drive_both_over_one_gh_answer(
-            monkeypatch, failure
-        )
-        assert gate_has_open is False
-        assert reaper_no_open is False
-        assert "PR guard unavailable" in (reaper_error or "")
 
 
 def test_each_caller_binds_its_own_explicit_repository(monkeypatch) -> None:

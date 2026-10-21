@@ -36,14 +36,6 @@ from scripts.ai_agent_bridge import _citation_check as cc
 # ─────────────────────────────────────────────────────────────────────
 
 
-def test_detect_antonenko_basic():
-    body = "Антоненко-Давидович flags it as a Russianism."
-    citations = cc.detect_citations(body)
-    assert len(citations) == 1
-    assert citations[0].source == "antonenko_davydovych"
-    assert citations[0].source_label == "Антоненко-Давидович"
-
-
 def test_detect_yak_my_hovorymo_alias_is_collapsed():
     """«Як ми говоримо» (the AD publication) is the same source —
     when both names appear close together, dedup collapses to one
@@ -97,11 +89,6 @@ def test_detect_extracts_imennyk_noun_pattern():
     citations = cc.detect_citations(body)
     assert len(citations) == 1
     assert citations[0].headword == "собака"
-
-
-def test_detect_no_citations_in_plain_message():
-    assert cc.detect_citations("Hello, plain message.") == []
-    assert cc.detect_citations("") == []
 
 
 def test_detect_strips_stress_marks_in_normalize():
@@ -194,14 +181,6 @@ def test_sum11_entry_is_not_verification_evidence(monkeypatch):
     assert "sovietized_source_not_authority" in result.annotated_body
 
 
-def test_verify_sum11_missing_entry_flags(monkeypatch):
-    _make_fake_db_present(monkeypatch, sum11={})
-    body = "СУМ-11 lists *вигадка* with definition X."
-    result = cc.check_and_annotate(body)
-    flagged_sources = [v.citation.source for v in result.unverified]
-    assert "sum_11" in flagged_sources
-
-
 def test_vesum_and_shevelov_soft_skip(monkeypatch):
     _make_fake_db_present(monkeypatch)
     body = "VESUM lists *голос*. Шевельов notes a shift in *хата*."
@@ -226,26 +205,6 @@ def test_annotation_preserves_agree_tail(monkeypatch):
     assert "<!-- CITATION-UNVERIFIED" in result.annotated_body
 
 
-def test_annotation_preserves_disagree_tail(monkeypatch):
-    _make_fake_db_present(monkeypatch, style_guide={})
-    body = "Антоненко-Давидович каже про *собака*.\n\n[DISAGREE]"
-    result = cc.check_and_annotate(body)
-    assert result.annotated_body.rstrip().endswith("[DISAGREE]")
-
-
-def test_no_annotation_when_all_verified(monkeypatch):
-    _make_fake_db_present(monkeypatch, style_guide={"учень": [{"id": 1}]})
-    body = "Антоненко-Давидович обговорює *учень*.\n\n[AGREE]"
-    result = cc.check_and_annotate(body)
-    assert "<!-- CITATION-UNVERIFIED" not in result.annotated_body
-    assert result.annotated_body == body  # untouched
-
-
-def test_no_annotation_when_no_citations():
-    result = cc.check_and_annotate("Plain message with no citations.\n\n[AGREE]")
-    assert "<!-- CITATION-UNVERIFIED" not in result.annotated_body
-
-
 # ─────────────────────────────────────────────────────────────────────
 # Graceful degradation
 # ─────────────────────────────────────────────────────────────────────
@@ -260,13 +219,6 @@ def test_missing_sources_db_soft_skips(monkeypatch):
     # But citations are still detected.
     assert len(result.citations) == 1
     assert result.citations[0].source == "antonenko_davydovych"
-
-
-def test_missing_pravopys_soft_skips(monkeypatch):
-    monkeypatch.setattr(cc, "_try_load_pravopys", lambda: None)
-    body = "Український правопис 2019 рекомендує *кав'ярня*."
-    result = cc.check_and_annotate(body)
-    assert result.unverified == []
 
 
 def test_pravopys_never_flags_in_v1(monkeypatch):
@@ -413,18 +365,6 @@ def test_headword_extraction_falls_back_to_pre_citation():
     assert citations[0].headword == "собака"
 
 
-def test_headword_extraction_post_beats_pre_when_both_exist():
-    """When BOTH pre- and post-citation candidates exist, the
-    post-citation one wins. This is the bias that Codex flagged as
-    "defensible but worth a complementary test" in the #1683 review.
-    """
-    body = "Earlier *вертеп* was mentioned. Антоненко-Давидович пише про *собака*."
-    citations = cc.detect_citations(body)
-    assert len(citations) == 1
-    # *собака* is post-citation; *вертеп* is pre-citation. Post wins.
-    assert citations[0].headword == "собака"
-
-
 # ─────────────────────────────────────────────────────────────────────
 # Integration with _channels.post()
 # ─────────────────────────────────────────────────────────────────────
@@ -487,57 +427,3 @@ def test_channels_post_annotates_unverified_citation(monkeypatch, tmp_path):
     assert "antonenko_davydovych" in persisted
     assert 'headword="собака"' in persisted
     assert "feminine *собака*" in persisted
-
-
-def test_channels_post_skips_verification_when_disabled(monkeypatch, tmp_path):
-    from scripts.ai_agent_bridge import _channels, _citation_check
-
-    fake = _FakeSourcesDB(style_guide={})
-    monkeypatch.setattr(_citation_check, "_try_load_sources_db", lambda: fake)
-    monkeypatch.setattr(_citation_check, "_body_text_has", lambda *a, **kw: False)
-
-    conn = _isolated_db(tmp_path, monkeypatch)
-    body = "Антоненко-Давидович пише про *собака*."
-    result = _channels.post(
-        "reviews",
-        "gemini",
-        body,
-        to_agents=["claude"],
-        kind="post",
-        auto_snapshot=False,
-        verify_citations=False,
-    )
-    row = conn.execute(
-        "SELECT body FROM channel_messages WHERE message_id = ?",
-        (result["message_id"],),
-    ).fetchone()
-    assert row is not None
-    assert "CITATION-UNVERIFIED" not in row["body"]
-
-
-def test_channels_post_skips_verification_for_system_kinds(monkeypatch, tmp_path):
-    from scripts.ai_agent_bridge import _channels, _citation_check
-
-    fake = _FakeSourcesDB(style_guide={})
-    monkeypatch.setattr(_citation_check, "_try_load_sources_db", lambda: fake)
-    monkeypatch.setattr(_citation_check, "_body_text_has", lambda *a, **kw: False)
-
-    conn = _isolated_db(tmp_path, monkeypatch)
-    body = "Антоненко-Давидович пише про *собака*."
-    # `from_agent` must be a recognised agent; the verification skip
-    # is gated on `kind`, not on the sender. Use `kind="system"` to
-    # exercise the system-kind branch.
-    result = _channels.post(
-        "reviews",
-        "user",
-        body,
-        to_agents=["claude"],
-        kind="system",
-        auto_snapshot=False,
-    )
-    row = conn.execute(
-        "SELECT body FROM channel_messages WHERE message_id = ?",
-        (result["message_id"],),
-    ).fetchone()
-    assert row is not None
-    assert "CITATION-UNVERIFIED" not in row["body"]

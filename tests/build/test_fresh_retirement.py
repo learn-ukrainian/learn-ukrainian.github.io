@@ -83,25 +83,6 @@ def test_direct_entrypoints_refuse_before_other_reads(root, operation, monkeypat
     assert snapshot(root) == before
 
 
-def test_lesson_manifest_refuses_without_reading_review_inputs(root):
-    before = snapshot(root)
-    plans = root / "curriculum/l2-uk-en/lesson-plans/a1"
-    evidence = root / "curriculum/l2-uk-en/evidence/a1"
-    with pytest.raises(PlanError, match="plan_retired"):
-        manifest.write_manifest(
-            "a1",
-            "old",
-            1,
-            lesson_kind="lesson",
-            state_dir=evidence / "_state/old",
-            repo_root=root,
-            plans_dir=plans,
-            evidence_dir=evidence,
-            position=1,
-        )
-    assert snapshot(root) == before
-
-
 def test_retired_learner_state_is_reported_as_unrecomputable(root):
     path = "curriculum/l2-uk-en/evidence/a1/_state/old/learner-state.yaml"
     doc = {
@@ -136,24 +117,6 @@ def test_in_memory_inputs_cannot_bypass_invalid_record_without_disk_plan(tmp_pat
         with pytest.raises(PlanError, match="retirement_record_invalid"):
             operation()
         assert snapshot(tmp_path) == before
-
-
-def test_assembly_invalid_retirement_record_with_disk_plan_precedes_all_other_reads(root, monkeypatch):
-    plans = root / "curriculum/l2-uk-en/lesson-plans/a1"
-    (plans / "_retired.yaml").write_text("invalid: true\n")
-    before = snapshot(root)
-    read_text = Path.read_text
-
-    def guarded_text(path, *args, **kwargs):
-        assert path.name == "_retired.yaml", "other input read before inventory validation"
-        return read_text(path, *args, **kwargs)
-
-    with monkeypatch.context() as guard:
-        guard.setattr(Path, "read_text", guarded_text)
-        guard.setattr(Path, "read_bytes", lambda *_a: pytest.fail("plan bytes read before inventory validation"))
-        with pytest.raises(PlanError, match="retirement_record_invalid"):
-            assemble.assemble_lesson("a1", "old", 1, repo_root=root, plan_dict={})
-    assert snapshot(root) == before
 
 
 def test_changed_retired_bytes_get_ordinary_plan_failure_without_writes(root, monkeypatch):

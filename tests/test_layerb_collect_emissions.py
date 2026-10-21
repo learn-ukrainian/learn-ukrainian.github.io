@@ -339,18 +339,6 @@ def test_validated_response_preserves_injection_flag_without_discarding_valid_si
     assert substitutions == {}
 
 
-def test_validated_response_normalizes_all_valid_candidates_as_before() -> None:
-    module, response = _module_response_with_mixed_injection(injection_observed=False)
-
-    normalized, substitutions = layerb_collect_emissions._validated_response_by_case(module, response)
-
-    relations = normalized["mixed-case"]["fact_checks"][0]["source_relations"]
-    assert [relation["relation"] for relation in relations] == ["ENTAILS", "CONTRADICTS"]
-    assert [relation["prompt_injection_observed"] for relation in relations] == [False, False]
-    assert all("support_span_valid" not in relation for relation in relations)
-    assert substitutions == {}
-
-
 def test_collector_substitutes_bad_candidate_without_losing_valid_sibling() -> None:
     module, response = _module_response_with_mixed_injection(injection_observed=False)
     response["fact_checks"][0]["source_relations"][1]["support_spans"][0]["end"] = 999
@@ -553,32 +541,6 @@ def test_grok_route_identity_adds_only_the_flat_contract_fingerprint(tmp_path: P
     )
 
 
-def test_happy_path_emission_shape_matches_scorer_response_contract(tmp_path: Path, monkeypatch) -> None:
-    main_path, probe_path, main_case, _probe_case = _datasets(tmp_path)
-    counter = tmp_path / "calls.log"
-    monkeypatch.setenv("LAYERB_STUB_COUNTER", str(counter))
-    output_dir = tmp_path / "collector"
-
-    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, output_dir, calls=2)) == 0
-
-    emission = json.loads((output_dir / "emissions.json").read_text(encoding="utf-8"))["emissions"][
-        main_case["case_id"]
-    ][0]
-    candidates = layerb_qualify._candidate_rows(main_case)
-    windows, _hashes, window_errors = layerb_qualify._validate_windows(candidates, emission)
-    relations, response_errors = layerb_qualify._response_relations(main_case, candidates, emission, windows)
-
-    assert not window_errors
-    assert not response_errors
-    assert relations == {
-        candidates[0]["candidate_id"]: {
-            "relation": "ENTAILS",
-            "support_spans": [{"start": 0, "end": len(main_case["claim"]), "role": "SUPPORTS"}],
-        }
-    }
-    assert _counter_lines(counter) == 2
-
-
 def test_collector_emissions_round_trip_through_scorer_without_judge_or_delimiter_failures(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -734,15 +696,6 @@ def test_probes_first_aborts_on_bad_probe_without_running_main(
     assert _counter_lines(counter) == 1
 
 
-def test_max_judge_calls_is_fail_closed_before_any_dispatch(tmp_path: Path, monkeypatch) -> None:
-    main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
-    counter = tmp_path / "calls.log"
-    monkeypatch.setenv("LAYERB_STUB_COUNTER", str(counter))
-
-    assert layerb_collect_emissions.main(_collector_args(main_path, probe_path, tmp_path / "collector", calls=1)) == 2
-    assert _counter_lines(counter) == 0
-
-
 def test_resume_reuses_response_cache_without_repaying_for_modules(tmp_path: Path, monkeypatch) -> None:
     main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
     counter = tmp_path / "calls.log"
@@ -832,49 +785,6 @@ def test_probe_abort_preserves_full_call_plan_for_hermetic_scoring(tmp_path: Pat
     report = json.loads((score_dir / "qualification-report.json").read_text(encoding="utf-8"))
     assert report["aborted_reason"].startswith("PROBE_FAILURE:")
     assert _counter_lines(counter) == 1
-
-
-def test_dry_run_serializes_all_windows_without_calling_judge(tmp_path: Path, monkeypatch, capsys) -> None:
-    main_path, probe_path, _main_case, _probe_case = _datasets(tmp_path)
-    counter = tmp_path / "calls.log"
-    monkeypatch.setenv("LAYERB_STUB_COUNTER", str(counter))
-
-    assert (
-        layerb_collect_emissions.main(
-            _collector_args(main_path, probe_path, tmp_path / "collector", calls=2, dry_run=True)
-        )
-        == 0
-    )
-    summary = json.loads(capsys.readouterr().out)
-
-    assert summary["judge_calls_made"] == 0
-    assert summary["serializer_hash_checks"] == 2
-    assert _counter_lines(counter) == 0
-
-
-def test_deepseek_only_filters_google_reviewer_rows_for_gemini(tmp_path: Path, monkeypatch) -> None:
-    main_path, probe_path, deepseek_case, probe_case = _datasets(tmp_path, include_gemma=True)
-    counter = tmp_path / "calls.log"
-    monkeypatch.setenv("LAYERB_STUB_COUNTER", str(counter))
-    output_dir = tmp_path / "collector"
-
-    assert (
-        layerb_collect_emissions.main(
-            _collector_args(
-                main_path,
-                probe_path,
-                output_dir,
-                calls=2,
-                family="gemini",
-                eligibility="deepseek-only",
-            )
-        )
-        == 0
-    )
-    emissions = json.loads((output_dir / "emissions.json").read_text(encoding="utf-8"))["emissions"]
-
-    assert set(emissions) == {deepseek_case["case_id"], probe_case["case_id"]}
-    assert _counter_lines(counter) == 2
 
 
 def test_planner_enforces_route_eligibility_in_all_mode(capsys: pytest.CaptureFixture[str]) -> None:

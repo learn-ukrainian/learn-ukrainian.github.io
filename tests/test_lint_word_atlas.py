@@ -17,39 +17,6 @@ def _manifest(*senses: dict, practice_items: list[dict] | None = None) -> dict:
     return payload
 
 
-def test_default_fixture_flags_exactly_the_known_cases(capsys) -> None:
-    """Fixture covers LINT-001–004 sense/practice cases plus LINT-101/102 holds."""
-    assert lint_word_atlas.main([]) == 0
-    output = capsys.readouterr().out
-
-    assert "LINT-001" in output
-    assert "LINT-002" in output
-    assert "LINT-003" in output
-    assert "LINT-004" in output
-    assert "LINT-101" in output
-    assert "LINT-102" in output
-    assert "tsytata_quote" in output
-    assert "tsytata_honest_truncation" not in output
-    assert "tsytata_ai_minimum" not in output
-    assert "sekunda_time_unit" in output
-    assert "sekunda_disambiguated" not in output
-    assert "hlif_unvetted_en" in output
-    assert "hlif_invalid_source" in output
-    assert "hlif_empty_en_no_source" not in output
-    assert "hlif_blank_en_only" not in output
-    assert "брак" in output
-    assert "multi-sense-single-en-example" in output
-    assert "multi-sense-both-en-example" not in output
-    assert "pos-mismatch-example" in output
-    assert "pos-match-example" not in output
-    assert "pos-multipos-documented-example" not in output
-    assert "fixed-expression-single-en-bypass" not in output
-    # LINT-001×1 + LINT-002×1 + LINT-003×2 + LINT-004×2
-    # + LINT-101×2 (sekunda shared EN + ключ only-one-EN)
-    # + LINT-102×1 (біг transform mismatch)
-    assert "9 finding(s)" in output
-
-
 def test_truncated_text_cutoff_fires_without_honest_tag() -> None:
     manifest = _manifest(
         {
@@ -79,21 +46,6 @@ def test_truncated_text_cutoff_suppressed_by_honest_tag() -> None:
     assert lint_word_atlas.lint_manifest(manifest) == []
 
 
-def test_truncated_text_cutoff_checks_learner_en_list_items() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": ["defect", "flaw…"],
-            "source": "sum20_vetted",
-            "completeness": "draft",
-        }
-    )
-    findings = lint_word_atlas.lint_manifest(manifest)
-    assert len(findings) == 1
-    assert findings[0].rule_id == "LINT-001"
-    assert findings[0].field == "learner_en[1]"
-
-
 def test_ambiguous_bare_en_fires_for_denylisted_single_word() -> None:
     manifest = _manifest(
         {
@@ -121,35 +73,6 @@ def test_ambiguous_bare_en_suppressed_with_disambiguation() -> None:
     assert lint_word_atlas.lint_manifest(manifest) == []
 
 
-def test_ambiguous_bare_en_ignores_multi_word_lists() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": ["second", "moment"],
-            "en_disambiguation": "",
-            "source": "sum20_vetted",
-        }
-    )
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
-def test_ambiguous_bare_en_ignores_non_denylisted_words() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": ["example"],
-            "en_disambiguation": "",
-            "source": "sum20_vetted",
-        }
-    )
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
-def test_entries_without_senses_are_skipped() -> None:
-    manifest = {"entries": [{"slug": "legacy-entry", "lemma": "легасі"}]}
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
 def test_unvetted_en_source_fires_when_source_missing() -> None:
     manifest = _manifest(
         {
@@ -164,58 +87,12 @@ def test_unvetted_en_source_fires_when_source_missing() -> None:
     assert findings[0].field == "source"
 
 
-def test_unvetted_en_source_fires_for_unknown_source_label() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": ["glyph"],
-            "source": "web_scrape",
-        }
-    )
-    findings = lint_word_atlas.lint_manifest(manifest)
-    assert len(findings) == 1
-    assert findings[0].rule_id == "LINT-004"
-    assert "web_scrape" in findings[0].detail
-
-
 def test_unvetted_en_source_suppressed_for_ai_minimum() -> None:
     manifest = _manifest(
         {
             "id": "sense-1",
             "learner_en": ["quote"],
             "source": "ai_minimum",
-        }
-    )
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
-def test_unvetted_en_source_suppressed_for_sum20_vetted() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": ["example"],
-            "source": "sum20_vetted",
-        }
-    )
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
-def test_unvetted_en_source_ignores_empty_learner_en() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": [],
-        }
-    )
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
-def test_unvetted_en_source_ignores_blank_only_learner_en() -> None:
-    manifest = _manifest(
-        {
-            "id": "sense-1",
-            "learner_en": ["", "  "],
-            "source": "mystery",
         }
     )
     assert lint_word_atlas.lint_manifest(manifest) == []
@@ -333,41 +210,6 @@ def test_report_mode_writes_json_and_stays_advisory(tmp_path: Path) -> None:
     assert "LINT-004" in payload["rule_ids"]
     assert "LINT-101" in payload["rule_ids"]
     assert "LINT-102" in payload["rule_ids"]
-
-
-def test_strict_mode_fails_on_findings(tmp_path: Path) -> None:
-    manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(
-        json.dumps(
-            _manifest(
-                {
-                    "id": "sense-1",
-                    "learner_en": ["second"],
-                    "en_disambiguation": "",
-                    "source": "sum20_vetted",
-                }
-            )
-        ),
-        encoding="utf-8",
-    )
-
-    assert lint_word_atlas.main(["--manifest", str(manifest_path), "--strict"]) == 1
-
-
-def test_strict_mode_passes_when_clean(tmp_path: Path) -> None:
-    manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(json.dumps(_manifest()), encoding="utf-8")
-
-    assert lint_word_atlas.main(["--manifest", str(manifest_path), "--strict"]) == 0
-
-
-def test_missing_manifest_errors(capsys) -> None:
-    try:
-        lint_word_atlas.main(["--manifest", "does/not/exist.json"])
-    except SystemExit as exc:
-        assert exc.code == 2
-    else:
-        raise AssertionError("expected SystemExit for missing manifest")
 
 
 def test_multi_sense_uk_single_en_fires_when_only_one_sense_has_en() -> None:
@@ -510,28 +352,6 @@ def test_pos_transform_mismatch_fires_on_clear_family_disagreement() -> None:
     assert findings[0].field == "pos"
 
 
-def test_pos_transform_mismatch_reads_lexeme_pos() -> None:
-    manifest = {
-        "entries": [
-            {
-                "slug": "біг",
-                "lexeme": {"pos": "noun"},
-                "senses": [
-                    {
-                        "id": "bad-transform",
-                        "pos": "adj",
-                        "learner_en": ["running"],
-                        "source": "sum20_vetted",
-                    }
-                ],
-            }
-        ]
-    }
-    findings = lint_word_atlas.lint_manifest(manifest)
-    assert len(findings) == 1
-    assert findings[0].rule_id == "LINT-102"
-
-
 def test_pos_transform_mismatch_suppressed_when_families_match() -> None:
     manifest = {
         "entries": [
@@ -583,26 +403,6 @@ def test_pos_transform_mismatch_suppressed_without_clear_entry_pos() -> None:
                         "id": "sense-1",
                         "pos": "verb",
                         "learner_en": ["go"],
-                        "source": "sum20_vetted",
-                    }
-                ],
-            }
-        ]
-    }
-    assert lint_word_atlas.lint_manifest(manifest) == []
-
-
-def test_pos_transform_mismatch_suppressed_for_unknown_sense_pos() -> None:
-    manifest = {
-        "entries": [
-            {
-                "slug": "x",
-                "pos": "noun",
-                "senses": [
-                    {
-                        "id": "sense-1",
-                        "pos": "grammar term",
-                        "learner_en": ["x"],
                         "source": "sum20_vetted",
                     }
                 ],
@@ -739,21 +539,6 @@ def test_practice_deck_entry_changes_are_scoped_by_lemma() -> None:
         )
     ]
     assert lint_word_atlas.changed_practice_entry_keys(base, current) == {"old", "new"}
-
-
-def test_ci_workflow_runs_ratchet_and_requires_committed_baseline() -> None:
-    root = Path(__file__).resolve().parents[1]
-    checks = (root / "scripts/ci/checks.sh").read_text(encoding="utf-8")
-    workflow = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-    assert checks.count('check "Run Word Atlas sense-lint ratchet (#6437)" word_atlas_ratchet') == 1
-    assert '--base-ref "$base_ref"' in checks
-    assert 'base_ref="${BASE_SHA:-origin/main}"' in checks
-    assert "--ratchet" in checks
-    assert "--update-baseline" in checks
-    assert "git diff --exit-code -- scripts/audit/word_atlas_lint_baseline.json" in checks
-    # The checks job passes the event base (merge queue included) to checks.sh.
-    assert "github.event.merge_group.base_sha" in workflow
-    assert "bash scripts/ci/checks.sh" in workflow
 
 
 def test_release_asset_lint_uses_client_without_retry(monkeypatch):

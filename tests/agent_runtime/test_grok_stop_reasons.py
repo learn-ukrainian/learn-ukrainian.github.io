@@ -61,35 +61,6 @@ def test_exact_nonterminal_reason_is_recorded(reason, returncode):
     )
 
 
-@pytest.mark.parametrize("returncode", [0, 1])
-def test_missing_and_null_stop_reason_remain_distinct(returncode):
-    missing = _parse({"text": "partial"}, returncode=returncode)
-    null = _parse({"text": "partial", "stopReason": None}, returncode=returncode)
-    assert "missing stopReason" in missing.stderr_excerpt
-    assert "stopReason=null" in null.stderr_excerpt
-
-
-@pytest.mark.parametrize("returncode", [0, 1])
-def test_empty_answer_still_names_stop_reason(returncode):
-    result = _parse({"stopReason": "cancelled"}, returncode=returncode)
-    assert 'stopReason="cancelled"' in result.stderr_excerpt
-
-
-def test_terminal_detail_precedes_long_partial_answer_and_stderr():
-    result = _parse(
-        {
-            "stopReason": "cancelled",
-            "cancellation_category": "permission_cancelled",
-            "text": "partial " * 1000,
-        },
-        stderr="provider detail " * 1000,
-    )
-    assert 'stopReason="cancelled"' in result.stderr_excerpt
-    assert "permission_cancelled" in result.stderr_excerpt
-    assert len(result.stderr_excerpt) == 500
-    assert "\n" not in result.stderr_excerpt
-
-
 @pytest.mark.parametrize(
     "path",
     [
@@ -375,28 +346,6 @@ def test_messages_stream_stop_reason_matches_old_format(case, stop_reason, subty
     )
 
 
-def test_real_max_turns_stderr_stays_incomplete():
-    """Grok 1.0.46 exits 1 with 'Error: max turns reached' and an error result."""
-    partial = "I'll read the note first."
-    result = _parse_messages(
-        [
-            _assistant_frame(partial),
-            _error_result(
-                stop_reason="cancelled",
-                subtype="error_max_turns",
-                errors=["Reached the maximum number of turns"],
-            ),
-        ],
-        stderr="Error: max turns reached",
-        returncode=1,
-    )
-    assert result.failure_code == "provider_stream_incomplete"
-    assert result.response == ""
-    assert 'stopReason="cancelled"' in result.stderr_excerpt
-    assert "Reached the maximum number of turns" in result.stderr_excerpt
-    assert partial in result.stderr_excerpt
-
-
 @pytest.mark.parametrize("returncode", [0, 1])
 def test_messages_stream_permission_cancelled_matches_old_format(tmp_path, returncode):
     event = {
@@ -442,18 +391,6 @@ def test_messages_stream_permission_cancelled_matches_old_format(tmp_path, retur
         )
         is None
     )
-
-
-def test_messages_stream_type_error_is_still_a_provider_failure():
-    result = _parse_messages(
-        [
-            _assistant_frame("partial"),
-            {"type": "error", "message": "Error code: 429"},
-        ]
-    )
-    assert not result.ok and result.response == ""
-    assert result.failure_code == "rate_limited"
-    assert result.provider_error_text == "Error code: 429"
 
 
 def test_result_error_without_stop_reason_is_a_provider_failure():

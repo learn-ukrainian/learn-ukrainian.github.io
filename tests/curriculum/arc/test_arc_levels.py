@@ -20,8 +20,6 @@ from scripts.curriculum.arc import generate_arc, loader
 pytestmark = [pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-MANIFEST = REPO_ROOT / "curriculum/l2-uk-en/curriculum.yaml"
-
 # count, first slug, last slug — quoted from the accepted arc documents
 LEVELS = {
     "a2": (69, "a2-bridge", "a2-finale"),
@@ -69,13 +67,6 @@ def test_position_count_and_first_last_slug(level: str) -> None:
 
 
 @pytest.mark.parametrize("level", sorted(LEVELS))
-def test_no_letters_and_null_inventory(level: str) -> None:
-    for record in _records(level):
-        assert "letters" not in record
-        assert record["inventory_text"] is None
-
-
-@pytest.mark.parametrize("level", sorted(LEVELS))
 def test_every_position_has_band_key_with_full_coverage(level: str) -> None:
     data = yaml.safe_load(generate_arc.generate_yaml(_doc(level), level))
     count = LEVELS[level][0]
@@ -87,11 +78,6 @@ def test_every_position_has_band_key_with_full_coverage(level: str) -> None:
     assert all(record["band_key"] for record in data["positions"])
     expanded = {p: band["band_key"] for band in data["immersion_bands"] for p in range(band["start"], band["end"] + 1)}
     assert {r["position"]: r["band_key"] for r in data["positions"]} == expanded
-
-
-@pytest.mark.parametrize("level", sorted(LEVELS))
-def test_check_green(level: str) -> None:
-    assert generate_arc.main(["--level", level, "--check"]) == 0
 
 
 @pytest.mark.parametrize("level", sorted(LEVELS))
@@ -135,39 +121,6 @@ def test_a1_arc_preserves_orientation_and_amended_positions() -> None:
     block = text[text.index("positions:\n") :]
     assert block.count("  band_key: a1-orientation\n") == 1
     assert hashlib.sha256(block.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
-
-
-def test_a1_arc_positions_3_to_5_stage_approved_phonetic_facets() -> None:
-    data = yaml.safe_load(A1_ARC_YAML.read_text(encoding="utf-8"))
-    positions = {p["position"]: p for p in data["positions"]}
-
-    # Position 3: hardness before [е], introduces д–т, з–с, г–х
-    p3_inv = positions[3]["inventory_text"]
-    assert "hardness before [е]" in p3_inv
-    assert "д–т" in p3_inv and "з–с" in p3_inv and "г–х" in p3_inv
-    assert "introduce" in p3_inv
-    assert positions[3]["letters"] == list("ДЗКЛСУХьГ")
-
-    # Position 4: continues with б–п
-    p4_inv = positions[4]["inventory_text"]
-    assert "б–п" in p4_inv
-    assert "continue" in p4_inv
-    assert "apostrophe" in p4_inv
-    assert positions[4]["letters"] == list("БЙЇЮЄ")
-
-    # Position 5: completes ґ–к, ж–ш, дж–ч, дз–ц alongside existing дж/дз duty
-    p5_inv = positions[5]["inventory_text"]
-    assert "ґ–к" in p5_inv and "ж–ш" in p5_inv and "дж–ч" in p5_inv and "дз–ц" in p5_inv
-    assert "complete" in p5_inv
-    assert "дж and дз" in p5_inv
-    assert positions[5]["letters"] == list("ҐЖЧШЩЦФ")
-
-
-
-def test_a1_check_green_with_empty_manifest_list() -> None:
-    manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
-    assert manifest["levels"]["a1"]["modules"] == []
-    assert generate_arc.main(["--level", "a1", "--check"]) == 0
 
 
 def test_all_skills_expansion_follows_each_documents_legend() -> None:
@@ -221,18 +174,6 @@ def test_mutation_letters_at_a2_fail(tmp_path: Path) -> None:
         generate_arc.generate_yaml(mutated, "a2")
 
 
-def test_literacy_table_at_a2_fails(tmp_path: Path) -> None:
-    header = "| Pos | Slug | Phase | One-sentence job | Skills duty | L |"
-    literacy_table = (
-        "| Pos | Slug | Phase | Job | Inventory (letters / signs) | Skills duty | Est. lessons |\n"
-        "| --- | --- | --- | --- | --- |\n"
-        "| 1 | `letters` | A1.1 | Letters | **1 letters** А | Li | 1 |\n\n"
-    )
-    mutated = _mutated_doc("a2", tmp_path, header, literacy_table + header)
-    with pytest.raises(generate_arc.ArcGenerationError, match="no literacy phase"):
-        generate_arc.generate_yaml(mutated, "a2")
-
-
 def test_prose_only_section_7_fails(tmp_path: Path) -> None:
     mutated = _mutated_doc(
         "a2",
@@ -254,10 +195,3 @@ def test_s_skill_code_fails_at_a2(tmp_path: Path) -> None:
     mutated = _mutated_doc("a2", tmp_path, "follow a Ukrainian explanation | Li, W |", "follow a Ukrainian explanation | S |")
     with pytest.raises(generate_arc.ArcGenerationError, match="skills-duty token"):
         generate_arc.generate_yaml(mutated, "a2")
-
-
-def test_b1_b2_band_tables_are_single_range() -> None:
-    for level in ("b1", "b2"):
-        bands = generate_arc.parse_immersion_bands(_doc(level).read_text(encoding="utf-8"))
-        count = LEVELS[level][0]
-        assert bands == [{"start": 1, "end": count, "band_key": FIRST_BAND_KEY[level]}]

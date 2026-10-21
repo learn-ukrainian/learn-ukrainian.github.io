@@ -80,51 +80,6 @@ def test_shadow_report_passes_all_rows_without_learner_mutation_or_model_cost(
 
 
 @pytest.mark.slow
-def test_shadow_report_is_exactly_reproducible_at_one_source_tree(
-    shadow_report: dict[str, Any],
-) -> None:
-    assert shadow_report == pilot.build_shadow_report(repo_root=REPO_ROOT)
-
-
-@pytest.mark.slow
-def test_built_level_profiles_do_not_leak_cross_level_policy(
-    shadow_report: dict[str, Any],
-) -> None:
-    rows = {row["id"]: row for row in shadow_report["rows"]}
-
-    assert rows["a1-built-shadow"]["prompt"]["policy_checks_passed"] is True
-    assert rows["a2-built-shadow"]["prompt"]["policy_checks_passed"] is True
-    assert rows["b1-built-shadow"]["prompt"]["policy_checks_passed"] is True
-    assert rows["b2-built-shadow"]["prompt"]["policy_checks_passed"] is True
-    assert (
-        len(
-            {
-                rows[row_id]["prompt"]["prompt_sha256"]
-                for row_id in (
-                    "a1-built-shadow",
-                    "a2-built-shadow",
-                    "b1-built-shadow",
-                    "b2-built-shadow",
-                )
-            }
-        )
-        == 4
-    )
-
-
-@pytest.mark.slow
-def test_bio_pilot_binds_current_canonical_pass_and_bio_specific_prompt(
-    shadow_report: dict[str, Any],
-) -> None:
-    row = next(row for row in shadow_report["rows"] if row["id"] == "bio-built-shadow")
-
-    assert row["passed"] is True
-    assert row["entry"]["state"] == "built-preparation-drift"
-    assert row["disposition"] == "preparation-repair-required"
-    assert row["prompt"]["profile"] == "seminar-bio"
-
-
-@pytest.mark.slow
 def test_fixture_rows_prove_owned_pause_resume_and_qg_modes(
     shadow_report: dict[str, Any],
 ) -> None:

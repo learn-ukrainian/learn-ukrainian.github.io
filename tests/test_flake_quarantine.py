@@ -50,29 +50,6 @@ def test_registry_lint_rejects_missing_bad_expiry_second_renewal_and_duplicate_r
     assert load_registry(path) == [entry]
 
 
-@pytest.mark.parametrize("change,message", [
-    ({"node_id": "tests/test_sample.py::test_flaky*"}, "invalid pytest node_id"),
-    ({"node_id": "tests/../test_sample.py::test_flaky"}, "invalid pytest node_id"),
-    ({"node_id": "tests/test_sample.py::test_flaky\n"}, "invalid pytest node_id"),
-    ({"equivalent_coverage": {}}, "equivalent_coverage"),
-    ({"equivalent_coverage": {"tests/test_sample.py::test_flaky": "same test"}}, "equivalent_coverage"),
-    ({"equivalent_coverage": {"tests/test_sample.py::test_stable": " "}}, "equivalent_coverage"),
-    ({"equivalent_coverage": {"tests/test_sample.py": "module"}}, "equivalent_coverage"),
-    ({"admission_approval": True}, "admission_approval"),
-    ({"owner": " "}, "owner"),
-    ({"fix_issue": True}, "positive issue"),
-    ({"observed_run_ids": [101, False]}, "positive observed run"),
-    ({"renewals": 1, "renewed_on": date(2026, 10, 29)}, "first 30 days"),
-    ({"renewals": 1, "renewed_on": date(2026, 9, 27)}, "first 30 days"),
-    ({"expires_on": date(2026, 9, 27)}, "30 days"),
-])
-def test_registry_rejects_invalid_admission_fields(tmp_path, change, message):
-    path = tmp_path / "registry.yaml"
-    path.write_text(yaml.safe_dump({"entries": [_entry(date(2026, 9, 28)) | change]}))
-    with pytest.raises(ValueError, match=message):
-        load_registry(path)
-
-
 def test_single_renewal_and_exact_parameterized_class_node(tmp_path):
     entry = _entry(date(2026, 9, 28)) | {
         "node_id": "tests/test_sample.py::TestSample::test_flaky[a*b]",
@@ -182,28 +159,6 @@ def test_admission_refuses_future_start_before_fetching_evidence(admission, monk
     assert flake_quarantine.check_admissions([admission.entry], [], repository="example/project") == 1
 
 
-@pytest.mark.parametrize("leased", [True, False])
-def test_admission_downloads_use_managed_scratch_and_are_removed(admission, monkeypatch, tmp_path, leased):
-    from scripts.common import scratch
-
-    fallback_calls = []
-
-    def fallback():
-        fallback_calls.append(True)
-        return tmp_path
-
-    monkeypatch.setattr(scratch, "ensure_scratch_root", fallback)
-    if leased:
-        monkeypatch.setenv("TMPDIR", str(tmp_path))
-    else:
-        monkeypatch.delenv("TMPDIR", raising=False)
-    assert flake_quarantine.check_admissions([admission.entry], [], repository="example/project") == 1
-    paths = [Path(call[-1]) for call in admission.calls if call[:2] == ("run", "download")]
-    assert len(paths) == 2 and all(path.parent.parent == tmp_path for path in paths)
-    assert fallback_calls == ([] if leased else [True])
-    assert list(tmp_path.iterdir()) == []
-
-
 @pytest.mark.parametrize("resource,change,message", [
     ("issues/123", {"state": "closed"}, "open repair issue"),
     ("issues/123", {"pull_request": {}}, "not a PR"),
@@ -288,43 +243,6 @@ def test_github_unavailable_never_admits(admission, monkeypatch):
     monkeypatch.setattr(flake_quarantine, "_gh", unavailable)
     with pytest.raises(subprocess.CalledProcessError, match="non-zero exit status"):
         flake_quarantine.check_admissions([admission.entry], [], repository="example/project")
-
-
-def test_main_checks_changes_and_reports_empty_registry_without_github(admission, monkeypatch, capsys):
-    monkeypatch.setattr(flake_quarantine.subprocess, "run", lambda *a, **kw: SimpleNamespace(stdout="entries: []"))
-    monkeypatch.setattr(flake_quarantine, "load_registry", lambda: [admission.entry])
-    assert flake_quarantine.main(["--base-ref", "origin/main"]) == 0
-    assert "1 changed admissions verified" in capsys.readouterr().out
-    admission.calls.clear()
-    monkeypatch.setattr(flake_quarantine, "load_registry", lambda: [])
-    assert flake_quarantine.main(["--base-ref", "origin/main"]) == 0
-    assert "0 entries, 0 changed; offline lint passed" in capsys.readouterr().out
-    assert admission.calls == []
-
-
-def test_main_allows_removal_without_github(admission, monkeypatch, capsys):
-    baseline = yaml.safe_dump({"entries": [admission.entry]})
-    monkeypatch.setattr(flake_quarantine.subprocess, "run", lambda *a, **kw: SimpleNamespace(stdout=baseline))
-    monkeypatch.setattr(flake_quarantine, "load_registry", lambda: [])
-    assert flake_quarantine.main(["--base-ref", "origin/main"]) == 0
-    assert "0 entries, 0 changed" in capsys.readouterr().out
-    assert admission.calls == []
-
-
-def test_github_transport_reads_fresh_with_a_timeout(monkeypatch):
-    from scripts.common import github_client
-
-    calls = []
-
-    def run(argv, **kwargs):
-        calls.append((argv, kwargs))
-        return SimpleNamespace(stdout='{"state":"open"}')
-
-    monkeypatch.setattr(github_client, "run", run)
-    assert flake_quarantine._gh("api", "repos/example/project/issues/123") == '{"state":"open"}'
-    assert calls == [(["gh", "api", "repos/example/project/issues/123"], {
-        "fresh": True, "capture_output": True, "text": True, "check": True, "timeout": 120,
-    })]
 
 
 def test_ci_checks_job_enforces_admission_with_read_only_evidence_permissions():

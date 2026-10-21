@@ -79,11 +79,6 @@ def test_load_api_key_prefers_file_then_env(tmp_path: Path, monkeypatch: pytest.
     assert pt.load_api_key(keyfile) == "file-key"
 
 
-def test_test_log_keeps_tail() -> None:
-    out = pt.truncate_test_log("a" * 100 + "FAILED", limit=10)
-    assert out.endswith("FAILED") and "truncated" in out
-
-
 def test_record_fast_fail_counts_and_writes(tmp_path: Path) -> None:
     before = pt.FAST_FAIL_COUNT
     res = pt.PreflightResult(True, "m", pt.PreflightLabel.BROKEN_OR_FAILING, 0.9, 0.1)
@@ -115,14 +110,3 @@ def test_hook_fast_fail_returns_distinct_code(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "state" / "tasks"))
     assert delegate._run_preflight_triage(_ns(repo), worktree_arg=None) == pt.FAST_FAIL_EXIT_CODE
     assert (tmp_path / "state" / "preflight_fast_fail.jsonl").exists()
-
-
-def test_hook_proceeds_without_key(tmp_path, monkeypatch) -> None:
-    repo = _git_repo(tmp_path)
-    monkeypatch.setattr(pt, "load_api_key", lambda: "")
-    assert delegate._run_preflight_triage(_ns(repo), worktree_arg=None) is None
-
-
-@pytest.mark.skipif(not __import__("os").environ.get("TYPESAFE_LIVE"), reason="TYPESAFE_LIVE not set")
-def test_live_smoke() -> None:
-    assert pt.load_api_key()

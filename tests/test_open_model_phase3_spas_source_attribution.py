@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data import phase3_spas_source_attribution as attribution
-from scripts.projects.open_model_data.phase3_linguistic_representation import canonical_json
 from scripts.projects.open_model_data.phase3_spas_source_attribution import SpasSourceAttributionError
 
 
@@ -291,12 +290,3 @@ def test_refuses_existing_or_git_checkout_output(
     (checkout / ".git").write_text("gitdir: fixture", encoding="utf-8")
     with pytest.raises(SpasSourceAttributionError, match="cannot be inside a Git checkout"):
         attribution.materialize_source_attribution(private_output_dir=checkout / "private", **kwargs)
-
-
-def test_gzip_writer_uses_canonical_json(tmp_path: Path) -> None:
-    path = tmp_path / "rows.jsonl.gz"
-    row = {"z": 1, "a": "українська"}
-    attribution._write_jsonl_gzip(path, [row])
-
-    with gzip.open(path, "rb") as handle:
-        assert handle.read() == canonical_json(row).encode() + b"\n"

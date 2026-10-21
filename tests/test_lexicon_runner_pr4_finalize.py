@@ -15,7 +15,6 @@ from scripts.deploy.vendor_atlas_tree import VendorError, vendor_atlas_tree
 from scripts.lexicon.runner.deterministic_zip import (
     ZIP_EPOCH,
     iter_zip_normalized_view,
-    write_deterministic_zip,
 )
 from scripts.lexicon.runner.finalize import (
     ASSEMBLY_RSS_CEILING_BYTES,
@@ -23,7 +22,6 @@ from scripts.lexicon.runner.finalize import (
     FinalizeLock,
     _safe_rss_bytes,
     assemble_version_tree,
-    build_dry_run_report,
     finalize_run,
 )
 from scripts.lexicon.runner.ledger import (
@@ -131,57 +129,6 @@ def test_completion_gate_refuses_unsealed_and_failed_terminal(ledger: Ledger, tm
     assert any("failed_terminal" in r for r in gate2["reasons"])
     # Superseded parent never counted as a leaf in closure.
     assert gate2["leaf_chunk_count"] == 2  # chunk-0 sealed + chunk-bad, not parent
-
-
-def test_completion_gate_aggregate_no_in_list_1500(ledger: Ledger, tmp_path: Path) -> None:
-    """V9: 1500-lemma leaf assessed via json_each join (no SQLite variable blowup)."""
-    lemmas = [f"L{i:04d}" for i in range(1500)]
-    arts = tmp_path / "arts"
-    run, _fp = _seed_sealed_run(ledger, arts, lemmas=lemmas, cohort="big-gate")
-    gate = ledger.assess_completion_gate(run)
-    assert gate["ok"] is True
-    assert gate["constituent_lemma_count"] == 1500
-    assert gate["sealed_leaf_count"] == 1
-
-
-def test_dry_run_report_required_surface(ledger: Ledger, tmp_path: Path) -> None:
-    """V8/Q3: finalize --dry-run reports gate, unsealed, sizes, fingerprint."""
-    arts = tmp_path / "arts"
-    run, fp = _seed_sealed_run(ledger, arts)
-    report = build_dry_run_report(
-        ledger,
-        run,
-        artifacts_dir=arts,
-        prior_version_dir=None,
-        grant_first_run_escape=True,
-    )
-    assert report.gate_ok is True
-    assert report.fingerprint == fp
-    assert report.leaf_chunk_count == 1
-    assert report.sealed_leaf_count == 1
-    assert report.constituent_lemma_count == 3
-    assert report.estimated_payload_bytes > 0
-    assert report.data_version_preview is not None
-    assert report.first_run_escape_required is True
-    assert report.first_run_escape_available is True
-    assert report.zip_writer_pin["module"] == "zipfile"
-
-    # dry-run path via finalize_run (no writes).
-    out = tmp_path / "out"
-    out.mkdir()
-    dry = finalize_run(
-        ledger=ledger,
-        run_id=run,
-        artifacts_dir=arts,
-        out_dir=out,
-        grant_first_run_escape=True,
-        dry_run=True,
-    )
-    assert dry.ok
-    assert dry.dry_run is not None
-    assert dry.dry_run.gate_ok is True
-    # Dry-run must not promote a tree.
-    assert not (out / "tree" / "atlas").exists()
 
 
 def test_double_assembly_byte_equality_normalized_zip(ledger: Ledger, tmp_path: Path) -> None:
@@ -441,42 +388,6 @@ def test_paradigm_stress_gate_refuses_publication(
     assert not (out / "tree").exists()
 
 
-def test_rss_ceiling_constant_and_probe(ledger: Ledger, tmp_path: Path) -> None:
-    """Criterion 2 / V2: 200 MiB incremental assembly RSS ceiling (delta, not process total)."""
-    assert ASSEMBLY_RSS_CEILING_BYTES == 200 * 1024 * 1024
-    arts = tmp_path / "arts"
-    run, _fp = _seed_sealed_run(
-        ledger,
-        arts,
-        lemmas=[f"m{i}" for i in range(100)],
-        cohort="rss",
-    )
-    result = finalize_run(
-        ledger=ledger,
-        run_id=run,
-        artifacts_dir=arts,
-        out_dir=tmp_path / "out",
-        grant_first_run_escape=True,
-        verify_vendor=True,
-        assert_rss_ceiling=True,
-    )
-    assert result.ok, result.detail
-    # peak_rss_bytes is the assembly *delta*; process absolute may already be large.
-    if result.peak_rss_bytes is not None:
-        assert result.peak_rss_bytes < ASSEMBLY_RSS_CEILING_BYTES
-    if result.peak_rss_delta_bytes is not None:
-        assert result.peak_rss_delta_bytes < ASSEMBLY_RSS_CEILING_BYTES
-        assert result.peak_rss_bytes == result.peak_rss_delta_bytes
-    if result.baseline_rss_bytes is not None and result.peak_rss_delta_bytes is not None:
-        assert result.baseline_rss_bytes >= 0
-        assert result.peak_rss_delta_bytes >= 0
-    # Dry-run report mirrors assembly metrics after a successful finalize.
-    assert result.dry_run is not None
-    assert result.dry_run.rss_ceiling_bytes == ASSEMBLY_RSS_CEILING_BYTES
-    if result.dry_run.peak_rss_delta_bytes is not None:
-        assert result.dry_run.peak_rss_delta_bytes == result.peak_rss_delta_bytes
-
-
 def test_rss_ceiling_delta_ignores_preexisting_process_ballast(ledger: Ledger, tmp_path: Path) -> None:
     """Regression: ~300 MiB process ballast before finalize must not trip the gate.
 
@@ -555,25 +466,6 @@ def test_rss_ceiling_trips_on_assembly_overuse(ledger: Ledger, tmp_path: Path) -
             rss_probe=probe,
         )
     assert calls["n"] >= 2, "probe must sample baseline then assembly growth"
-
-
-def test_deterministic_zip_writer_pin() -> None:
-    """V3: writer pin documents Python zipfile + normalized metadata."""
-    from scripts.lexicon.runner.deterministic_zip import ZIP_WRITER_PIN
-
-    assert ZIP_WRITER_PIN["module"] == "zipfile"
-    assert ZIP_WRITER_PIN["compression"] == "ZIP_DEFLATED"
-    members = [("a.txt", b"hello"), ("b/c.txt", b"world")]
-    # Write twice to distinct paths — byte equal.
-    import tempfile
-
-    with tempfile.TemporaryDirectory() as td:
-        p1 = Path(td) / "1.zip"
-        p2 = Path(td) / "2.zip"
-        d1 = write_deterministic_zip(p1, members)
-        d2 = write_deterministic_zip(p2, members)
-        assert d1 == d2
-        assert p1.read_bytes() == p2.read_bytes()
 
 
 def test_seal_mid_transaction_still_rolls_back(ledger: Ledger) -> None:

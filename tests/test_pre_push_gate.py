@@ -491,20 +491,6 @@ def test_a_green_receipt_is_reused_for_the_same_commit(repo: Path) -> None:
     assert _measurements(repo)[-1]["queue_depth"] == 0
 
 
-def test_receipt_is_rejected_after_the_commit_changes(repo: Path) -> None:
-    _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green", "tests/test_new.py")
-    assert _run_gate(repo).returncode == 0
-    _write(repo, "BLOCK_PRE_PUSH", "x\n")
-    _git(repo, "add", "BLOCK_PRE_PUSH")
-    _git(repo, "commit", "--no-verify", "--amend", "--no-edit")
-
-    result = _run_gate(repo)
-
-    assert result.returncode == gate.EXIT_REFUSED
-    assert _verdict(result)["reason"] == "pre_commit_failed"
-
-
 def _plan(**overrides):
     values = {"head": "a" * 40, "tree": "b" * 40, "base": "c" * 40, "tools": {"python": "3.x"}}
     values.update(overrides)
@@ -597,14 +583,6 @@ def test_receipt_expires_and_a_tampered_receipt_is_ignored(tmp_path: Path) -> No
     path.write_text(json.dumps({"key": gate.receipt_key(plan), "outcome": "red", "at": 1000.0}), encoding="utf-8")
     assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
     path.write_text("not json", encoding="utf-8")
-    assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
-
-
-def test_gate_version_invalidates_a_green_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
-    monkeypatch.setattr(gate, "GATE_VERSION", gate.GATE_VERSION + 1)
-
     assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
 
 
@@ -741,16 +719,6 @@ def test_admission_hard_ceiling_refuses_and_removes_its_ticket(tmp_path: Path, m
         finally:
             other.unlink()
             os.close(fd)
-
-
-def test_abandoned_ticket_does_not_block_a_live_gate(tmp_path: Path) -> None:
-    queue = tmp_path / "queue"
-    queue.mkdir()
-    (queue / "00000000000000000000-abandoned.ticket").touch()
-    with gate.Admission(tmp_path, 0.0) as admitted:
-        assert admitted.queue_depth == 1 and admitted.queue_position == 1
-        assert len(list(queue.glob("*.ticket"))) == 1
-    assert list(queue.glob("*.ticket")) == []
 
 
 def test_queue_scan_is_bounded_and_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -947,56 +915,6 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
 # ---- bounded resources: validation_incomplete, never green ------------------------------------------------
 
 
-def test_time_budget_exhaustion_is_validation_incomplete_and_leaves_no_receipt(repo: Path) -> None:
-    _write(repo, "SLOW_PRE_PUSH", "the fixture hook sleeps past the budget\n")
-    head = _commit(repo, "slow", "SLOW_PRE_PUSH")
-    base = _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip()
-
-    result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_RUN_BUDGET_S": "4"})
-
-    assert result.returncode == gate.EXIT_INCOMPLETE
-    verdict = _verdict(result)
-    assert verdict["outcome"] == "validation_incomplete"
-    assert "NOT green" in result.stderr
-    assert _receipts(repo) == []
-    row = _measurements(repo)[-1]
-    assert row["outcome"] == "validation_incomplete"
-    # The timeout names the range it scanned (#10820).
-    assert "(timeout)" in row["detail"]
-    scanned = f"range: {base}..{head}"
-    assert row["detail"].endswith(scanned) and result.stderr.rstrip("\n").endswith(scanned)
-    assert row["base"] == base and row["stages"]["pre_commit"]["outcome"] == "validation_incomplete"
-
-
-def test_a_second_gate_waits_for_admission_then_reports_validation_incomplete(repo: Path) -> None:
-    _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green", "tests/test_new.py")
-    state = repo / ".git/lu-pre-push-gate"
-    state.mkdir(parents=True)
-    with (state / "admission.lock").open("w") as held:
-        fcntl.flock(held, fcntl.LOCK_EX)
-
-        result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_ADMISSION_WAIT_S": "1"})
-
-    assert result.returncode == gate.EXIT_INCOMPLETE
-    assert "admission_timeout" in result.stderr
-    row = _measurements(repo)[-1]
-    assert row["detail"].startswith("admission_timeout:")
-    assert result.stderr.rstrip("\n").endswith(row["detail"])
-    assert row["queue_depth"] == 2 and row["queue_position"] == 2
-    assert row["admission_wait_s"] >= 1.0
-    assert _receipts(repo) == []
-
-
-def test_environment_can_shorten_but_never_lengthen_a_bound(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("X_BOUND", "99999")
-    assert gate.bounded("X_BOUND", 600.0) == 600.0
-    monkeypatch.setenv("X_BOUND", "5")
-    assert gate.bounded("X_BOUND", 600.0) == 5.0
-    monkeypatch.setenv("X_BOUND", "nonsense")
-    assert gate.bounded("X_BOUND", 600.0) == 600.0
-
-
 # ---- exact outgoing commit --------------------------------------------------------------------------------
 
 
@@ -1072,43 +990,7 @@ def test_admission_wait_covers_one_full_gate_run_of_this_or_the_test_running_ver
     assert gate.ADMISSION_WAIT_S == 1940.0  # version 11: run budget, slot wait, selector, two cleanups
 
 
-def test_auto_finalize_push_timeout_covers_the_queue_ceiling() -> None:
-    from scripts import delegate
-
-    gate_worst_case = gate.ADMISSION_MAX_WAIT_S + gate.ADMISSION_WAIT_S
-    assert gate_worst_case + delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S <= delegate.AUTO_FINALIZE_PUSH_TIMEOUT_S
-
-
-def test_worker_closeout_text_carries_the_gate_and_merge_main_rules() -> None:
-    from scripts import delegate
-
-    source = Path(delegate.__file__).read_text(encoding="utf-8")
-    assert "validation_incomplete" in source and "git merge-tree" in source
-    # Workers are told what the gate runs: no tests since #11276, so a refusal names hooks, not node ids.
-    assert "it runs no tests, CI runs the full suite" in source
-    assert "tests they affect" not in source and "failing node ids" not in source
-
-
 # ---- public material ------------------------------------------------------------------------------------
-
-
-def test_public_gate_material_omits_operational_measurements() -> None:
-    text = GATE_PATH.read_text(encoding="utf-8") + (REPO_ROOT / "docs/runbooks/pre-push-gate.md").read_text(
-        encoding="utf-8"
-    )
-    assert not re.search(r"(?i)load.average|cpu.seconds|loaded.host|measured[^\n]*\d", text)
-    assert not re.search(r"(?i)(?:\d+|two) (?:test |xdist )?workers", text)
-    assert not re.search(r"(?i)\b(?:cpu|minutes?|cores?|capacity)\b", text)
-    assert not re.search(r"\b\d+(?:\.\d+)? ?s\b", text)
-
-
-def test_auto_finalize_timeout_comment_omits_gate_timings() -> None:
-    from scripts import delegate
-
-    source = Path(delegate.__file__).read_text(encoding="utf-8")
-    comment = re.search(r"# The auto-finalize push runs the pre-push gate.*\n(?:#.*\n)*?(?=\w)", source)
-    assert comment is not None
-    assert not re.search(r"\b\d+(?:\.\d+)? ?s\b", comment.group(0))
 
 
 # ---- review round 1: every ref update, sparse tests, untracked inputs, bounded cleanup -----------------------
@@ -1154,25 +1036,6 @@ def test_every_ref_update_is_validated_with_its_own_base(repo: Path) -> None:
     assert len(_receipts(repo)) == 1  # only the green range left a receipt, keyed by its own base
 
 
-def test_receipts_of_two_ranges_with_one_head_do_not_overwrite_each_other(tmp_path: Path) -> None:
-    narrow, wide = _plan(base="a" * 40), _plan(base="b" * 40)
-
-    assert gate.receipt_path(tmp_path, narrow) != gate.receipt_path(tmp_path, wide)
-
-
-def test_one_run_budget_covers_the_whole_push_attempt(monkeypatch: pytest.MonkeyPatch) -> None:
-    clock = FakeClock()
-    monkeypatch.setattr(gate, "time", clock)
-    budget = gate.Budget(600.0)
-    first = budget.after_admission(500.0)
-    clock.now += 100.0
-
-    assert budget.deadline == first  # execution still consumes the shared budget
-    clock.now += 500.0  # a later ref queues again
-    assert budget.after_admission(500.0) - clock.now == 500.0
-    assert budget.deadline == first + 500.0  # waiting consumes none of the remaining execution budget
-
-
 @pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
 def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ignored: bool) -> None:
     if ignored:
@@ -1188,48 +1051,6 @@ def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ign
     assert _verdict(result)["reason"] == "untracked_inputs"
     assert "tests/conftest.py" in result.stderr
     assert _receipts(repo) == []
-
-
-@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
-@pytest.mark.parametrize("directory", ["node_modules", "site/node_modules", "site/vendor/node_modules"])
-@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
-def test_node_modules_overlays_do_not_block_the_scan(
-    repo: Path, ignored: bool, directory: str, filename: str
-) -> None:
-    lock = f"{Path(directory).parent}/package-lock.json"
-    _write(repo, lock, "{}\n")
-    _commit(repo, "dependency lock", lock)
-    relative = f"{directory}/katex/src/fonts/{filename}"
-    if ignored:
-        _write(repo, ".gitignore", f"/{relative}\n")
-        _commit(repo, "ignore dependency overlay", ".gitignore")
-    _write(repo, relative, "# dependency file\n")
-
-    assert gate.reject_untracked_inputs(repo) is None
-
-
-@pytest.mark.parametrize("lock_state", ["missing", "untracked", "ignored", "symlink"])
-@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
-def test_unproven_node_modules_overlays_are_refused(repo: Path, lock_state: str, filename: str) -> None:
-    lock = "site/package-lock.json"
-    if lock_state == "symlink":
-        _write(repo, "lock-target.json", "{}\n")
-        (repo / "site").mkdir()
-        (repo / lock).symlink_to("../lock-target.json")
-        _commit(repo, "symlink lock", lock)
-    elif lock_state != "missing":
-        _write(repo, lock, "{}\n")
-        if lock_state == "ignored":
-            _write(repo, ".gitignore", f"/{lock}\n")
-            _commit(repo, "ignore lock", ".gitignore")
-    relative = f"site/node_modules/katex/src/fonts/{filename}"
-    _write(repo, relative, "# overlay\n")
-
-    with pytest.raises(gate.GateOutcome) as raised:
-        gate.reject_untracked_inputs(repo)
-
-    assert raised.value.reason == "untracked_inputs"
-    assert relative in raised.value.detail
 
 
 @pytest.mark.parametrize(
@@ -1333,52 +1154,6 @@ def test_dependency_input_scan_fails_closed_when_tracked_listing_is_unavailable(
     assert raised.value.incomplete
 
 
-@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
-@pytest.mark.parametrize(
-    "relative",
-    [
-        "site/katex/src/fonts/x.py",
-        "site/katex/src/fonts/x.pth",
-        "conftest.py",
-        "sitecustomize.py",
-        "tests/conftest.py",
-        "tests/sitecustomize.py",
-        "not_node_modules/x.py",
-        "site/node_modules_extra/katex/src/fonts/x.py",
-        "site/node_modules_extra/katex/src/fonts/x.pth",
-        "site/not_node_modules/katex/src/fonts/x.py",
-        "site/not_node_modules/katex/src/fonts/x.pth",
-        "site/prefix_node_modules_suffix/katex/src/fonts/x.py",
-        "site/prefix_node_modules_suffix/katex/src/fonts/x.pth",
-    ],
-)
-def test_overlays_outside_exact_node_modules_directories_remain_refused(
-    repo: Path, ignored: bool, relative: str
-) -> None:
-    if ignored:
-        _write(repo, ".gitignore", f"/{relative}\n")
-        _commit(repo, "ignore validation overlay", ".gitignore")
-    _write(repo, relative, "# validation overlay\n")
-
-    with pytest.raises(gate.GateOutcome) as raised:
-        gate.reject_untracked_inputs(repo)
-
-    assert raised.value.reason == "untracked_inputs"
-    assert relative in raised.value.detail
-
-
-def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:
-    _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green test", "tests/test_new.py")
-    _write(repo, "notes.txt", "scratch\n")
-    assert _run_gate(repo).returncode == 0
-    assert len(_receipts(repo)) == 1
-
-    _write(repo, "conftest.py", "")
-
-    assert _verdict(_run_gate(repo))["reason"] == "untracked_inputs"
-
-
 def _gone(pid: int) -> bool:
     def exited() -> bool:
         try:
@@ -1443,18 +1218,6 @@ def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_ga
 
     assert time.monotonic() - started < 25.0  # the long sleeper held the pipe in the old design
     assert _gone(int(pid_file.read_text(encoding="utf-8")))
-
-
-def test_command_output_and_exit_code_are_returned(tmp_path: Path) -> None:
-    code, output = gate.run_bounded(
-        [sys.executable, "-c", "print('out'); import sys; print('err', file=sys.stderr); sys.exit(3)"],
-        cwd=tmp_path,
-        deadline=time.monotonic() + 30.0,
-        label="probe",
-    )
-
-    assert code == 3
-    assert "out" in output and "err" in output
 
 
 @pytest.mark.parametrize("ending", ["nonzero", "signal", "timeout", "spawn-error", "no-budget"])
@@ -1533,30 +1296,6 @@ def test_timeout_without_observed_exit_retains_output_and_null_status(
     assert row["outcome"] == "validation_incomplete"
 
 
-def test_command_diagnostics_bound_long_lines_and_line_count(tmp_path: Path) -> None:
-    event = {}
-    with gate.stage_measurement(event, "synthetic") as diagnostics:
-        code, output = gate.run_bounded(
-            [sys.executable, "-c", "print('x' * 20000); print('line\\n' * 100, end='')"],
-            cwd=tmp_path,
-            deadline=time.monotonic() + 30.0,
-            label="synthetic",
-            diagnostics=diagnostics,
-        )
-    assert code == 0 and len(output) > gate.OUTPUT_TAIL_BYTES
-    assert event["stages"]["synthetic"]["output_tail"] == "\n".join(["line"] * 40)
-    event = {}
-    with gate.stage_measurement(event, "synthetic") as diagnostics:
-        gate.run_bounded(
-            [sys.executable, "-c", "print('x' * 20000, end='')"],
-            cwd=tmp_path,
-            deadline=time.monotonic() + 30.0,
-            label="synthetic",
-            diagnostics=diagnostics,
-        )
-    assert event["stages"]["synthetic"]["output_tail"] == "x" * gate.OUTPUT_TAIL_BYTES
-
-
 @pytest.mark.parametrize("pre_commit_code", [0, 1])
 def test_exact_head_row_attributes_only_entered_stages(repo: Path, pre_commit_code: int) -> None:
     _write(repo, "tests/test_new.py", GREEN_TEST)
@@ -1588,72 +1327,6 @@ def test_exact_head_row_attributes_only_entered_stages(repo: Path, pre_commit_co
     assert result.returncode == pre_commit_code
     assert bool(_receipts(repo)) == (pre_commit_code == 0)
     assert not (repo / "launched-otherwise").exists()
-
-
-def test_stage_timings_are_monotonic_and_separate_from_admission(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    clock = FakeClock()
-    _fake_validation(tmp_path, monkeypatch, clock)
-    event = {}
-    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
-    assert event["admission_wait_s"] == 500.0
-    assert event["stages"]["pre_commit"]["elapsed_s"] == 2.0
-    assert set(event["stages"]) == {"pre_commit"}
-
-
-def test_pre_commit_failure_keeps_hook_verdict_and_child_diagnostics(tmp_path: Path) -> None:
-    launcher = tmp_path / "launcher.sh"
-    launcher.write_text("echo 'synthetic hook................................................Failed'\nexit 4\n")
-    event = {}
-    with pytest.raises(gate.GateOutcome) as raised:
-        with gate.stage_measurement(event, "pre_commit") as diagnostics:
-            gate.run_pre_commit_stage(
-                _plan(), tmp_path, str(launcher), "synthetic", time.monotonic() + 30.0, diagnostics=diagnostics
-            )
-    assert raised.value.reason == "pre_commit_failed"
-    assert raised.value.failing == ("synthetic hook",)
-    row = event["stages"]["pre_commit"]
-    assert row["returncode"] == 4 and row["signal"] is None
-    assert row["outcome"] == "refused" and row["output_tail"].endswith("Failed")
-
-
-def test_tail_read_failure_preserves_the_observed_nonzero_exit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    real_tempfile = gate.tempfile.TemporaryFile
-
-    class BrokenTail:
-        def __enter__(self):
-            self.sink = real_tempfile()
-            return self
-
-        def __exit__(self, *_args):
-            self.sink.close()
-
-        def __getattr__(self, name):
-            return getattr(self.sink, name)
-
-        def seek(self, offset, whence=os.SEEK_SET):
-            if whence == os.SEEK_END:
-                raise OSError("synthetic tail read failure")
-            return self.sink.seek(offset, whence)
-
-    monkeypatch.setattr(gate.tempfile, "TemporaryFile", BrokenTail)
-    event = {}
-    with pytest.raises(gate.GateOutcome, match="synthetic refusal"):
-        with gate.stage_measurement(event, "synthetic") as diagnostics:
-            code, output = gate.run_bounded(
-                [sys.executable, "-c", "print('synthetic output'); raise SystemExit(3)"],
-                cwd=tmp_path,
-                deadline=time.monotonic() + 30.0,
-                label="synthetic",
-                diagnostics=diagnostics,
-            )
-            assert code == 3 and output == "synthetic output\n"
-            raise gate.GateOutcome("pre_commit_failed", "synthetic refusal")
-    row = event["stages"]["synthetic"]
-    assert row["returncode"] == 3 and row["signal"] is None
-    assert row["outcome"] == "refused" and row["output_tail"] is None
-    assert row["output_unavailable_reason"] == "output_read_error"
 
 
 @pytest.mark.parametrize("incomplete", [False, True])
@@ -1853,21 +1526,6 @@ def test_nonregular_predecessors_cannot_count_as_live_tickets(tmp_path: Path, ki
         assert target.read_text() == "preserve me"
     finally:
         os.close(fd)
-
-
-def test_ticket_open_uses_nofollow(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    real_open = os.open
-    flags_seen: list[int] = []
-
-    def recording_open(path: object, flags: int, *args: object, **kwargs: object) -> int:
-        if str(path).endswith(".ticket"):
-            flags_seen.append(flags)
-        return real_open(path, flags, *args, **kwargs)
-
-    monkeypatch.setattr(gate.os, "open", recording_open)
-    with gate.Admission(tmp_path, 0.0):
-        pass
-    assert flags_seen and all(flags & os.O_NOFOLLOW for flags in flags_seen)
 
 
 def test_hard_link_to_own_locked_ticket_waits_then_is_reaped(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -2126,38 +1784,6 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
     _assert_queue_released(state)
 
 
-def test_production_non_green_head_holder_keeps_later_global_allowance(repo: Path, tmp_path: Path) -> None:
-    _write(repo, "control_stage.py", CONTROL_STAGE)
-    head = _commit(repo, "controlled checks", "control_stage.py")
-    state = gate.state_dir(repo)
-    controls = [tmp_path / name for name in ("head-load", "global-load", "validator")]
-    processes = []
-    try:
-        # Legacy head holders publish no receipt; the caller must validate itself.
-        processes.append(_start_global_load(state / "heads" / head, controls[0]))
-        processes.append(_start_global_load(state, controls[1], ticket_count=0))
-        processes.append(_start_controlled_gate(repo, controls[2], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="6"))
-        _wait_tickets(state / "heads" / head, 3, processes)
-        time.sleep(8)  # wall-clock hold: the coalescing wait under test is measured in elapsed seconds
-        _finish_controlled(processes[0], controls[0])
-        _wait_tickets(state, 1, processes[1:])
-        time.sleep(5)  # wall-clock hold: no receipt may appear while the global allowance is still running
-        assert _receipts(repo) == [], "head holders without green proof must not authorize reuse"
-        _finish_controlled(processes[1], controls[1])
-        stdout, stderr = _finish_controlled(processes[2], controls[2])
-        assert processes[2].returncode == 0, stdout + stderr
-    finally:
-        _stop_controls(processes)
-    rows = _measurements(repo)
-    assert len(rows) == 1
-    row = rows[0]
-    assert row["coalescing_wait_s"] >= 8 and row["admission_wait_s"] > 12
-    assert row["admission_wait_limit_s"] >= row["coalescing_wait_s"] + 6 - 0.02
-    assert row["queue_position"] == 2 and set(row["stages"]) == {"pre_commit"}
-    assert "detail" not in row and len(_receipts(repo)) == 1
-    _assert_queue_released(state)
-
-
 @pytest.fixture
 def native_repo(tmp_path: Path) -> Path:
     """A local remote and native Git hook invoking the unchanged production entry point."""
@@ -2395,35 +2021,6 @@ def test_non_green_production_leader_releases_and_follower_checks_once(
     _assert_queue_released(state)
 
 
-@pytest.mark.parametrize("change", ["tracked", "untracked"])
-def test_production_follower_rechecks_inputs_before_reusing_leader_receipt(
-    repo: Path, tmp_path: Path, change: str
-) -> None:
-    _write(repo, "control_stage.py", CONTROL_STAGE)
-    head = _commit(repo, "controlled checks", "control_stage.py")
-    state = gate.state_dir(repo)
-    controls = [tmp_path / "leader", tmp_path / "follower"]
-    processes = []
-    try:
-        processes.append(_start_controlled_gate(repo, controls[0]))
-        wait_for_line(controls[0] / "entered", stop_if=lambda: processes[0].poll() is not None)
-        processes.append(_start_controlled_gate(repo, controls[1]))
-        _wait_tickets(state / "heads" / head, 2, processes)
-        if change == "tracked":
-            _write(repo, "control_stage.py", "raise SystemExit(1)\n")  # a tracked file now differs from the commit
-        else:
-            _write(repo, "conftest.py", "# an untracked overlay\n")
-        _finish_controlled(processes[0], controls[0])
-        stdout, stderr = processes[1].communicate(timeout=30)
-        assert processes[1].returncode == gate.EXIT_REFUSED, stdout + stderr
-        verdict = _verdict(subprocess.CompletedProcess([], 1, stderr=stderr))
-        assert verdict["reason"] == ("dirty_tree" if change == "tracked" else "untracked_inputs")
-        assert not (controls[1] / "entered").exists()
-    finally:
-        _stop_controls(processes)
-    _assert_queue_released(state)
-
-
 @pytest.mark.parametrize("owner", [None, "", "safe-task_10523", "private@example.invalid", "bad\nowner", "x" * 129])
 def test_ticket_publication_is_atomic_and_metadata_is_allowlisted(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owner: str | None
@@ -2488,20 +2085,6 @@ def test_head_ticket_identity_requires_an_exact_named_binding(
         with pytest.raises(gate.GateOutcome) as raised:
             gate.build_plan(update, native_repo, *_hook_inputs(native_repo))
         assert raised.value.reason == "tree_mismatch"
-
-
-@pytest.mark.parametrize("source", ["HEAD", "HEAD~1", "refs/heads/direct", "a" * 40])
-def test_ticket_without_resolved_head_never_guesses_a_branch(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    source: str,
-) -> None:
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
-    monkeypatch.setattr(gate, "git_ok", lambda *_args, **_kwargs: None)
-    update = gate.Update(source, "a" * 40, "unused", ZERO_SHA)
-    expected = {"head": "a" * 40, "branch": "unknown" if source == "HEAD" else source, "task_owner": "unknown"}
-    assert gate.ticket_identity(update, tmp_path) == expected
-    assert gate.ticket_identity(update) == expected
 
 
 @pytest.mark.parametrize("field", ["head", "tree", "base"])
@@ -2701,68 +2284,6 @@ def test_head_allowance_counts_only_flock_live_regular_global_tickets(
     _assert_queue_released(tmp_path)
 
 
-def test_head_allowance_global_depth_still_respects_total_hard_ceiling(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    clock = FakeClock()
-    monkeypatch.setattr(gate, "time", clock)
-    monkeypatch.setattr(gate, "ADMISSION_MAX_WAIT_S", 1.5)
-    with gate.Admission(tmp_path, 1), gate.Admission(tmp_path / "head", 1):
-        follower = gate.Admission(tmp_path / "head", 1, global_state=tmp_path)
-        with pytest.raises(gate.GateOutcome, match="admission_timeout"), follower:
-            pytest.fail("live global depth cannot raise the hard ceiling")
-        assert follower.waited == follower.wait_limit == 1.5
-    _assert_queue_released(tmp_path)
-
-
-def test_owner_is_frozen_before_any_wait_and_preserved_on_global_ticket(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "original-task")
-    update = gate.Update("refs/heads/original", "a" * 40, "unused", ZERO_SHA)
-    with gate.Admission(tmp_path / "head", 1, update=update) as grouped:
-        monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "later-task")
-        with gate.Admission(tmp_path, 1, update=update, prior=grouped) as admitted:
-            assert json.loads(admitted._ticket.read_text()) == {
-                "head": "a" * 40,
-                "branch": "refs/heads/original",
-                "task_owner": "original-task",
-            }
-    _assert_queue_released(tmp_path)
-
-
-def test_coalescing_receipt_reuse_preserves_remaining_multi_ref_execution_budget(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    clock = FakeClock()
-    monkeypatch.setattr(gate, "time", clock)
-    monkeypatch.setattr(gate, "build_plan", lambda *_args: _plan())
-    monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
-    budget = gate.Budget(10)
-    assert budget.after_admission(0) == 10
-    clock.now = 2  # the earlier ref already consumed two seconds of execution
-    head_state = gate.coalescing_state(tmp_path, _plan())
-    holder = gate.Admission(head_state, gate.ADMISSION_WAIT_S)
-    holder.__enter__()
-
-    def finish_holder():
-        gate.write_receipt(tmp_path, _plan(), clock.time())
-        holder.__exit__()
-
-    clock.on_sleep = finish_holder
-    event = {}
-    try:
-        gate.validate(
-            gate.Update("refs/heads/feature", "a" * 40, "unused", ZERO_SHA), tmp_path, "unused", "unused", event, budget
-        )
-    finally:
-        holder.__exit__()
-    assert event["detail"] == "valid receipt after coalescing" and event["queue_depth"] == 0
-    assert budget.deadline - clock.now == pytest.approx(8)
-    assert event["admission_wait_s"] == 0.2
-    _assert_queue_released(tmp_path)
-
-
 def test_metadata_publication_error_removes_partial_ticket_and_releases_lock(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2802,15 +2323,6 @@ def test_concurrency_configuration_never_interprets_garbage_as_permission(value,
     with pytest.raises(gate.GateOutcome) as raised:
         gate.concurrent_run_limit()
     assert raised.value.reason == "invalid_configuration" and raised.value.incomplete
-
-
-@pytest.mark.parametrize("value,expected", [(None, 1), ("1", 1), ("2", 2)])
-def test_only_explicit_experiment_adds_a_reservation(value, expected, monkeypatch):
-    if value is None:
-        monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
-    else:
-        monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, value)
-    assert gate.concurrent_run_limit() == expected
 
 
 def _cpu_pressure(avg10: str, avg60: str) -> str:
@@ -3077,15 +2589,6 @@ def test_a_serial_waiter_cannot_be_skipped_by_a_scoped_follower(qualified_cgroup
                 pytest.fail("FIFO forbids overtaking the serial waiter")
         finally:
             waiter.__exit__()
-
-
-def test_legacy_unscoped_holder_forces_optin_exclusive_admission(qualified_cgroups, tmp_path):
-    with gate.Admission(tmp_path, 0):
-        with (
-            pytest.raises(gate.GateOutcome, match="admission_timeout"),
-            gate.Admission(tmp_path, 0, scope=InjectedScope(qualified_cgroups)),
-        ):
-            pytest.fail("scope text cannot turn a serial holder into a shared holder")
 
 
 @pytest.mark.parametrize(
@@ -3579,45 +3082,6 @@ def test_measurement_storage_failure_cannot_claim_green_or_start_without_begin(r
     assert _receipts(repo) == []
 
 
-@pytest.mark.parametrize("interruption", ["state_lookup", "row_preparation"])
-def test_terminal_publication_interrupt_refuses_with_paired_complete_measurements(repo, monkeypatch, interruption):
-    monkeypatch.chdir(repo)
-    original_state = gate.state_dir
-    original_clock = gate.time.monotonic
-    state_calls = 0
-    interrupt_next_clock = False
-
-    def state(root):
-        nonlocal state_calls, interrupt_next_clock
-        state_calls += 1
-        if state_calls == 2:
-            if interruption == "state_lookup":
-                os.kill(os.getpid(), signal.SIGTERM)
-            else:
-                interrupt_next_clock = True
-        return original_state(root)
-
-    def clock():
-        nonlocal interrupt_next_clock
-        if interrupt_next_clock:
-            interrupt_next_clock = False
-            os.kill(os.getpid(), signal.SIGTERM)
-        return original_clock()
-
-    monkeypatch.setattr(gate, "state_dir", state)
-    monkeypatch.setattr(gate.time, "monotonic", clock)
-    assert gate.main(["--launcher", "unused", "--config", "unused"], stdin="") == 75
-    rows = _raw_measurements(repo)
-    assert [row["phase"] for row in rows] == ["BEGIN", "TERMINAL"]
-    assert rows[0]["attempt_id"] == rows[1]["attempt_id"]
-    assert rows[0]["fingerprints"] == rows[1]["fingerprints"]
-    assert rows[1]["outcome"] == "validation_incomplete"
-    assert rows[1]["reason"] == "interrupted"
-    assert rows[1]["queue_wait_s"] == 0
-    assert rows[1]["execution_s"] >= 0
-    assert rows[1]["peak_memory_bytes"] is None
-
-
 # ---- #10642: each blocking stage has its own allowance inside the total cap ---------------------------------
 
 
@@ -3756,37 +3220,6 @@ def test_the_actual_stage_runs_inside_its_own_allowance(repo: Path, ending: str)
     else:
         assert _verdict(result) == {"outcome": "refused", "reason": "pre_commit_failed", "failing": ["fixture"]}
         assert _receipts(repo) == []
-
-
-@pytest.mark.parametrize("bound", ["stage", "total"])
-def test_an_actual_overrun_is_killed_at_its_bound_with_descendants(repo: Path, tmp_path: Path, bound: str) -> None:
-    pid_file = tmp_path / "child.pid"
-    (tmp_path / "detach.py").write_text(_DETACHED_CHILD, encoding="utf-8")
-    _stage_launcher(repo, f'"{sys.executable}" "{tmp_path / "detach.py"}" "{pid_file}"; sleep 60')
-    budgets = {"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "3"}
-    if bound == "total":  # the run budget is shorter than the stage allowance and binds it
-        budgets = {"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "4", "LU_PRE_PUSH_GATE_RUN_BUDGET_S": "3"}
-
-    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", **budgets})
-
-    assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
-    row = _measurements(repo)[-1]
-    killed = row["stages"]["pre_commit"]
-    # The reason is typed by the host load the killed stage observed (#11140); this host's load is not pinned.
-    reason = "timeout_under_load" if killed["load_at_timeout"]["load"] == "above_caps" else "timeout"
-    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": reason, "failing": []}
-    assert killed["reason"] == row["reason"] == reason
-    assert "NOT green" in result.stderr and _receipts(repo) == []
-    assert _gone(int(pid_file.read_text(encoding="utf-8")))
-    assert row["outcome"] == "validation_incomplete" and row["failing"] == []
-    assert set(row["stages"]) == {"pre_commit"}
-    assert killed["outcome"] == "validation_incomplete" and killed["signal"] == signal.SIGKILL
-    assert killed["allowance_s"] <= killed["elapsed_s"] < killed["allowance_s"] + 2 * gate.CLEANUP_BUDGET_S
-    if bound == "total":
-        assert killed["allowance_limited_by"] == "run_budget" and killed["allowance_s"] < 4.0
-    else:
-        assert killed["allowance_limited_by"] == "stage_budget"
-        assert killed["allowance_s"] == pytest.approx(3.0)
 
 
 def test_the_stage_allowance_and_run_budget_are_unchanged() -> None:

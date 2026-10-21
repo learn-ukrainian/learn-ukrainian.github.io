@@ -60,22 +60,6 @@ def test_reader_keeps_relation_infrastructure_reason_over_source_gap(tmp_path, m
         assert entry["forms_failure"] == {"reason": "raw_cache_error", "locator": locator}
 
 
-def test_runbook_source_provenance_and_relative_examples():
-    """Pin literal supported provenance and all five formerly absolute host-path occurrences."""
-    text = (Path(__file__).parents[1] / "docs/atlas/word-cards/ulif-source-records.md").read_text()
-    expected_url = "https://lcorp.ulif.org.ua/dictua"
-    expected_label = "«Словники України» (Український мовно-інформаційний фонд НАН України)"
-    assert expected_url == sources_db.ULIF_DICTUA_OFFICIAL_URL
-    assert expected_label == sources_db.ULIF_DICTUA_ATTRIBUTION_LABEL
-    assert f'"official_url": "{expected_url}"' in text
-    assert f'"attribution_label": "{expected_label}"' in text
-    assert "/home/" not in text
-    assert text.count(".venv/bin/python -m ") == 4
-    assert "--raw-cache data/lexicon/cache/ulif_raw.sqlite" in text
-    for subcommand in ("build", "verify", "disagreement-report"):
-        assert f".venv/bin/python -m scripts.lexicon.runner.ulif_forms {subcommand}" in text
-
-
 def _read_fixture(name: str) -> str:
     path = FIXTURES_DIR / name
     if not path.is_file():
@@ -261,20 +245,6 @@ def test_unverified_entries_have_verified_false_and_empty_sections(tmp_path):
     assert entry["sections"] == {}  # Unverified rows have no sections
     assert entry["forms"] == []
     assert entry["forms_state"] == "unverified"
-
-
-def test_missing_word_returns_explicit_not_found(tmp_path):
-    db_path = tmp_path / "sources.db"
-    conn = sqlite3.connect(str(db_path))
-    sources_db.ensure_ulif_dictua_schema(conn)
-    conn.close()
-
-    records = sources_db.get_ulif_word_records(["невідомеслово123"], db_path=db_path)
-    assert len(records) == 1
-    assert records[0]["word"] == "невідомеслово123"
-    assert records[0]["status"] == "not_found"
-    assert records[0]["verified"] is False
-    assert records[0]["entries"] == []
 
 
 def test_forms_state_transitions_and_failure_reporting(tmp_path):

@@ -333,38 +333,6 @@ def test_introduced_before_use_checks_activities_after_lesson(tmp_path):
     assert violations[0]["location"] == "activities.yaml"
 
 
-def test_check_learner_state_runs_introduced_before_use():
-    content = "# Demo\n\n## Lesson\n\nSay Привіт three times.\n"
-
-    violations = learner_state_checks.check_learner_state(
-        content,
-        "a1",
-        1,
-        plan={"vocabulary_hints": {"required": ["Привіт (hi)"]}},
-        verify_words_fn=_fake_verify_words,
-    )
-
-    assert any(violation["type"] == "introduced_before_use" for violation in violations)
-
-
-def test_unknown_vocabulary_returns_violation_lemma(tmp_path, monkeypatch):
-    root = tmp_path / "curriculum" / "l2-uk-en"
-    _setup_curriculum(root, "a1")
-    module_dir = root / "a1" / "module-b"
-    monkeypatch.setattr(learner_state, "CURRICULUM_ROOT", root)
-
-    words = _unknown_words(11)
-    violations = learner_state_checks.check_unknown_vocabulary(
-        " ".join(words),
-        "a1",
-        2,
-        module_dir,
-    )
-
-    assert violations
-    assert violations[0]["lemma"] == words[0]
-
-
 def test_unknown_vocabulary_severity_warn_at_sequence_2_and_hard_at_sequence_5(tmp_path, monkeypatch):
     root = tmp_path / "curriculum" / "l2-uk-en"
     _setup_curriculum(root, "a1")

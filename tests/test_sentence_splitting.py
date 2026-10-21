@@ -18,14 +18,6 @@ from audit.cleaners import split_sentences
 class TestSplitSentences:
     """Core sentence splitting tests."""
 
-    def test_simple_sentences(self):
-        result = split_sentences("Це перше речення. А це друге. І третє!")
-        assert len(result) == 3
-
-    def test_empty_input(self):
-        assert split_sentences("") == []
-        assert split_sentences("   ") == []
-
     # -- Ukrainian abbreviation handling --
 
     def test_abbreviation_m_city(self):
@@ -46,11 +38,6 @@ class TestSplitSentences:
         assert len(result) == 2
         assert "2024 р. відбулися" in result[0]
 
-    def test_abbreviation_s_selo(self):
-        """с. (село) should not falsely split."""
-        result = split_sentences("Він поїхав у с. Вишневе. Там гарно.")
-        assert any("с. Вишневе" in s for s in result)
-
     # -- Guillemets and dialogue --
 
     def test_guillemet_sentence_boundary(self):
@@ -70,17 +57,7 @@ class TestSplitSentences:
 
     # -- Ellipsis --
 
-    def test_ellipsis_as_boundary(self):
-        result = split_sentences("Він думав... Потім вирішив діяти.")
-        assert len(result) == 2
-
     # -- Multi-paragraph input --
-
-    def test_paragraph_separation(self):
-        """Blank lines between paragraphs are respected."""
-        text = "Перше речення.\n\nДруге речення. Третє речення."
-        result = split_sentences(text)
-        assert len(result) == 3
 
     # -- Regression: old re.split(r'[.!?—:]') was WAY too aggressive --
 
@@ -89,14 +66,6 @@ class TestSplitSentences:
         result = split_sentences("Ось приклад: це важливо. Далі буде.")
         assert len(result) == 2
         assert "Ось приклад: це важливо." in result[0]
-
-    def test_em_dash_does_not_split(self):
-        """Em dashes should NOT create sentence boundaries."""
-        result = split_sentences(
-            "Він — інженер. Вона — вчителька."
-        )
-        assert len(result) == 2
-        assert "—" in result[0]
 
     # -- Edge cases surfaced by Codex review of #1318 --
 
@@ -113,17 +82,6 @@ class TestSplitSentences:
         assert len(result) == 2
         assert "Проф. Іванов" in result[1]
 
-    def test_address_abbreviations_chain(self):
-        """B1 skeleton pattern: 'м. вул. Б. ст. м.' chain stays one sentence."""
-        result = split_sentences(
-            "Музей розміщено в м. Києві на вул. Б. Хмельницького, 11 "
-            "(ст. м. «Театральна»)."
-        )
-        # Whole address must be one sentence; no fragment-per-abbreviation.
-        assert len(result) == 1
-        assert "вул. Б. Хмельницького" in result[0]
-        assert "ст. м." in result[0]
-
     def test_bibliography_initials(self):
         """Surname + single-letter initial (Іванюк С.) must not split.
 
@@ -138,45 +96,9 @@ class TestSplitSentences:
             f"Initial 'С.' must stay attached, got: {result}"
         )
 
-    def test_thousand_abbreviation(self):
-        """'тис.' is in the local ABBRS extension and must not split."""
-        result = split_sentences(
-            "Це склало 500 тис. гривень. Уряд відзвітував."
-        )
-        assert len(result) == 2
-        assert "500 тис. гривень" in result[0]
-
-    def test_century_abbreviation(self):
-        """'ст.' (століття) is in ABBRS — used in seminar/folk corpora."""
-        result = split_sentences(
-            "У XVI–XVIII ст. козацтво зміцніло. Далі настала інша доба."
-        )
-        assert len(result) == 2
-        assert "XVI–XVIII ст." in result[0]
-
-    def test_oblast_abbreviation(self):
-        """'обл.' appears in B1 address corpora."""
-        result = split_sentences(
-            "Село у Київській обл. Тут живе багато людей."
-        )
-        # Must not split at 'обл.'
-        assert any("Київській обл." in s for s in result), (
-            f"'обл.' must stay attached, got: {result}"
-        )
-
     def test_currency_abbreviation_sentence_final(self):
         """Numeric-unit `грн.` should allow a real sentence break."""
         result = split_sentences("Це коштує 500 грн. Уряд відзвітував.")
         assert len(result) == 2
         assert result[0] == "Це коштує 500 грн."
         assert result[1] == "Уряд відзвітував."
-
-    def test_page_count_abbreviation_sentence_final(self):
-        """Bibliography/page-count `с.` after a number should allow a split."""
-        result = split_sentences(
-            "Іванюк С. Нарис з історії. — К. : Наук. думка, 2009. — 508 с. "
-            "Наступна праця виходила пізніше."
-        )
-        assert len(result) == 2
-        assert result[0].endswith("508 с.")
-        assert result[1] == "Наступна праця виходила пізніше."

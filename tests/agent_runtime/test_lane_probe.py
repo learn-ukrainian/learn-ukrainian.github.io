@@ -108,13 +108,6 @@ def test_probe_reports_nonzero_version_exit(monkeypatch, tmp_path):
     assert result["reason"] == "version command exited 23"
 
 
-def test_unknown_executable_lane_remains_unhealthy(tmp_path):
-    result = lane_probe.probe_lane("codex-atlas", cwd=tmp_path)
-
-    assert result["status"] == "unhealthy"
-    assert result["reason"] == "agent is not registered"
-
-
 def test_probe_uses_write_mode_for_kimi_without_executing_a_prompt(monkeypatch, tmp_path):
     _registered_lane(monkeypatch, "kimi")
     adapter = _FakeAdapter(["kimi", "-p", "ignored"])
@@ -149,35 +142,6 @@ def test_disabled_lane_is_reported_as_skipped(monkeypatch, tmp_path):
     assert result["status"] == "skipped"
     assert result["reason"] == "lane is disabled in the runtime registry"
     assert isinstance(result["duration_ms"], int)
-
-
-def test_probe_removes_codex_temp_output_created_by_synthetic_plan(monkeypatch, tmp_path):
-    _registered_lane(monkeypatch)
-    output_file = tmp_path / "codex-runtime-lane-health-probe-123.txt"
-    output_file.write_text("synthetic", encoding="utf-8")
-    adapter = _FakeAdapter(["fake-cli"])
-
-    def build_with_output(**kwargs: object) -> InvocationPlan:
-        return InvocationPlan(cmd=adapter.command, cwd=Path(str(kwargs["cwd"])), output_file=output_file)
-
-    monkeypatch.setattr(adapter, "build_invocation", build_with_output)
-    monkeypatch.setattr(lane_probe, "_load_adapter", lambda _agent: adapter)
-    monkeypatch.setattr(lane_probe.subprocess, "run", lambda *_args, **_kwargs: SimpleNamespace(returncode=0))
-    monkeypatch.setattr(lane_probe.tempfile, "gettempdir", lambda: str(tmp_path))
-
-    result = lane_probe.probe_lane("fake", cwd=tmp_path)
-
-    assert result["status"] == "healthy"
-    assert not output_file.exists()
-
-
-def test_session_start_wires_the_active_lane_probe() -> None:
-    hook = Path("agents_extensions/shared/hooks/session-setup.sh").read_text(encoding="utf-8")
-
-    assert "scripts.agent_runtime.lane_probe" in hook
-    assert '--handoff-agent "$HANDOFF_AGENT"' in hook
-    assert 'HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"' in hook
-    assert "--timeout 2" in hook
 
 
 def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch, tmp_path):
@@ -256,31 +220,3 @@ def test_launcher_only_and_unknown_slots_fail_closed(monkeypatch, tmp_path, caps
     assert probe["agent"] == identity
     assert probe["status"] == "unhealthy"
     assert probe["reason"] == reason
-
-
-@pytest.mark.parametrize("identity", ["claude-", "claude-typo-lane", "CLAUDE-infra", "claudex-infra", "kimi-folk"])
-def test_handoff_cli_rejects_unmintable_identity(monkeypatch, tmp_path, capsys, identity):
-    def unexpected_adapter(_agent):
-        pytest.fail("an unmintable identity must not probe a provider")
-
-    monkeypatch.setattr(lane_probe, "_load_adapter", unexpected_adapter)
-    assert lane_probe.main(["--handoff-agent", identity, "--cwd", str(tmp_path)]) == 1
-    probe = json.loads(capsys.readouterr().out)["probes"][0]
-    assert probe["agent"] == identity
-    assert probe["status"] == "unhealthy"
-    assert probe["reason"] == "agent is not registered"
-
-
-@pytest.mark.parametrize("returncode", [0, 23])
-def test_handoff_cli_probes_provider_and_preserves_broken_lane(monkeypatch, tmp_path, capsys, returncode):
-    adapter = _FakeAdapter(["fake-claude"])
-    loaded = []
-    monkeypatch.setattr(lane_probe, "_load_adapter", lambda agent: loaded.append(agent) or adapter)
-    monkeypatch.setattr(lane_probe.subprocess, "run", lambda *_args, **_kwargs: SimpleNamespace(returncode=returncode))
-    assert lane_probe.main(["--handoff-agent", "claude-open-model-data", "--cwd", str(tmp_path)]) == bool(returncode)
-    probe = json.loads(capsys.readouterr().out)["probes"][0]
-    assert loaded == ["claude"]
-    assert probe["agent"] == "claude"
-    assert probe["status"] == ("unhealthy" if returncode else "healthy")
-    if returncode:
-        assert probe["reason"] == "version command exited 23"

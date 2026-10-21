@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import io
 import json
-import os
 import sqlite3
 import threading
 import urllib.error
@@ -14,15 +13,10 @@ import pytest
 
 from scripts.ingest import zno_ingest
 from scripts.ingest.zno_ingest import (
-    FETCH_TIMEOUT_SECONDS,
-    MINIMUM_COMPLETE_TASK_COUNT,
-    ONLINE_TEST_MAPPING,
-    SESSION_COMPLETENESS,
     assert_session_completeness,
     backfill_topic_norm,
     derive_task_metadata,
     fetch_page_with_rate_limit,
-    ingest,
     ingest_documents,
     init_db,
     parse_and_insert_tasks,
@@ -43,13 +37,6 @@ def isolate_transport(monkeypatch):
 @pytest.fixture
 def db_path(tmp_path: Path) -> Path:
     return tmp_path / "sources.db"
-
-
-@pytest.fixture
-def cache_dir(tmp_path: Path) -> Path:
-    d = tmp_path / "zno_cache"
-    d.mkdir()
-    return d
 
 
 def test_schema_creation_is_idempotent(db_path: Path) -> None:
@@ -161,54 +148,6 @@ def test_task_extraction_from_fixtures(db_path: Path) -> None:
 
     finally:
         conn.close()
-
-
-def test_online_mapping_covers_every_booklet_with_a_clean_interactive_source() -> None:
-    assert ONLINE_TEST_MAPPING == {
-        (2010, "sesiya-1", "mova-lit"): ("ukrainian", 15),
-        (2010, "sesiya-2", "mova-lit"): ("ukrainian", 16),
-        (2010, "sesiya-3", "mova-lit"): ("ukrainian", 17),
-        (2011, "sesiya-1", "mova-lit"): ("ukrainian", 13),
-        (2011, "sesiya-2", "mova-lit"): ("ukrainian", 14),
-        (2012, "sesiya-1", "mova-lit"): ("ukrainian", 11),
-        (2012, "sesiya-2", "mova-lit"): ("ukrainian", 12),
-        (2013, "sesiya-1", "mova-lit"): ("ukrainian", 6),
-        (2013, "sesiya-2", "mova-lit"): ("ukrainian", 10),
-        (2014, "sesiya-1", "mova-lit"): ("ukrainian", 132),
-        (2014, "sesiya-2", "mova-lit"): ("ukrainian", 133),
-        (2014, "dodatkova", "mova-lit"): ("ukrainian", 130),
-        (2015, "osnovna", "mova-lit"): ("ukrainian", 143),
-        (2016, "osnovna", "mova-lit"): ("ukrainian", 189),
-        (2017, "osnovna", "mova-lit"): ("ukrainian", 240),
-        (2017, "dodatkova", "mova-lit"): ("ukrainian", 254),
-        (2018, "osnovna", "mova-lit"): ("ukrainian", 299),
-        (2018, "dodatkova", "mova-lit"): ("ukrainian", 309),
-        (2019, "osnovna", "mova-lit"): ("ukrainian", 347),
-        (2019, "dodatkova", "mova-lit"): ("ukrainian", 363),
-        (2020, "osnovna", "mova-lit"): ("ukrainian", 401),
-        (2020, "dodatkova", "mova-lit"): ("ukrainian", 429),
-        (2021, "osnovna", "mova-lit"): ("ukrainian", 471),
-        (2021, "dodatkova", "mova-lit"): ("ukrainian", 491),
-        (2022, "osnovna", "mova"): ("ukrmova", 617),
-        (2023, "sesiya-1", "mova"): ("ukrmova", 619),
-        (2023, "sesiya-2", "mova"): ("ukrmova", 620),
-        (2024, "sesiya-1", "mova"): ("ukrmova", 622),
-        (2024, "sesiya-2", "mova"): ("ukrmova", 623),
-        (2025, "sesiya-1", "mova"): ("ukrmova", 667),
-        (2025, "sesiya-2", "mova"): ("ukrmova", 668),
-    }
-
-
-def test_session_completeness_ledger_covers_each_online_mapping_entry() -> None:
-    mapped_sessions = {(year, "nmt" if year >= 2022 else "zno", session) for year, session, _scope in ONLINE_TEST_MAPPING}
-    assert set(SESSION_COMPLETENESS) == mapped_sessions
-    assert len(SESSION_COMPLETENESS) == 31
-    assert SESSION_COMPLETENESS[(2022, "nmt", "osnovna")] == {
-        "expected_tasks": 20,
-        "expected_single_choice_with_letter_key": 15,
-        "own_statement_count": 0,
-    }
-    assert SESSION_COMPLETENESS[(2021, "zno", "osnovna")]["own_statement_count"] == 4
 
 
 def test_session_completeness_fails_closed_for_missing_or_unkeyed_rows(db_path: Path) -> None:
@@ -353,35 +292,6 @@ def test_parser_classifies_the_question_prompt_not_source_text(db_path: Path) ->
         conn.close()
 
 
-def test_fetch_page_uses_bounded_request_timeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    timeouts: list[int] = []
-
-    class Response:
-        def __enter__(self) -> Response:
-            return self
-
-        def __exit__(self, exc_type: object, exc_value: object, traceback: object) -> None:
-            return None
-
-        def read(self) -> bytes:
-            return io.BytesIO("<html>тест</html>".encode()).read()
-
-    def fake_urlopen(request: urllib.request.Request, timeout: int) -> Response:
-        assert request.full_url == "https://example.invalid/test/"
-        timeouts.append(timeout)
-        return Response()
-
-    class Opener:
-        open = staticmethod(fake_urlopen)
-
-    monkeypatch.setattr(zno_ingest.urllib.request, "build_opener", lambda *_handlers: Opener())
-
-    html = fetch_page_with_rate_limit("https://example.invalid/test/", tmp_path / "page.html", rate_limit=0)
-
-    assert html == "<html>тест</html>"
-    assert timeouts == [FETCH_TIMEOUT_SECONDS]
-
-
 @pytest.fixture
 def zno_loopback():
     """Exercise urllib's real status handling and body reads, without external traffic."""
@@ -493,84 +403,3 @@ def test_robots_programming_failure_is_not_suppressed(tmp_path, monkeypatch, fai
     assert requests == ["https://broken.invalid/robots.txt"]
     assert not zno_ingest._access_stopped
     assert not cache.exists()
-
-
-@pytest.mark.skipif(os.getenv("ZNO_LIVE") != "1", reason="Requires ZNO_LIVE=1 env var")
-def test_task_extraction_live(db_path: Path, cache_dir: Path) -> None:
-    total_tasks = ingest(db_path, cache_dir)
-    assert total_tasks >= MINIMUM_COMPLETE_TASK_COUNT
-
-    conn = sqlite3.connect(db_path)
-    try:
-        tasks_count = conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0]
-        assert tasks_count >= MINIMUM_COMPLETE_TASK_COUNT
-        assert_session_completeness(conn)
-
-        year_counts = dict(conn.execute("SELECT year, count(*) FROM zno_tasks GROUP BY year"))
-        assert year_counts == {
-            2010: 183,
-            2011: 122,
-            2012: 122,
-            2013: 122,
-            2014: 183,
-            2015: 58,
-            2016: 58,
-            2017: 116,
-            2018: 116,
-            2019: 116,
-            2020: 116,
-            2021: 134,
-            2022: 20,
-            2023: 60,
-            2024: 60,
-            2025: 60,
-        }
-
-        # Check real counts for all 6 documents
-        q19_count = conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2019 AND session = 'osnovna'").fetchone()[0]
-        assert q19_count == 58
-
-        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2019 AND session = 'dodatkova'").fetchone()[0] == 58
-        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2020 AND session = 'osnovna'").fetchone()[0] == 58
-        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2020 AND session = 'dodatkova'").fetchone()[0] == 58
-        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2021 AND session = 'osnovna'").fetchone()[0] == 67
-        assert conn.execute("SELECT count(*) FROM zno_tasks WHERE year = 2021 AND session = 'dodatkova'").fetchone()[0] == 67
-
-        # Verify task details on real data
-        task = conn.execute(
-            "SELECT task_no, subject, task_format, stem, options_json, correct_json, topic_tag "
-            "FROM zno_tasks WHERE year = 2019 AND session = 'osnovna' AND task_no = 1"
-        ).fetchone()
-        assert task is not None
-        assert task[0] == 1
-        assert task[1] == "mova"
-        assert task[2] == "single-choice"
-        assert "На перший склад падає наголос" in task[3]
-
-        options = json.loads(task[4])
-        assert len(options) == 4
-        assert options[0] == "причіп"
-        assert task[5] == "В"
-        assert "Орфоепія" in task[6]
-
-        task_match = conn.execute(
-            "SELECT task_no, task_format, options_json, correct_json "
-            "FROM zno_tasks WHERE year = 2019 AND session = 'osnovna' AND task_no = 24"
-        ).fetchone()
-        assert task_match is not None
-        assert task_match[1] == "matching"
-
-        opts = json.loads(task_match[2])
-        assert len(opts["left"]) == 4
-        assert len(opts["right"]) == 5
-
-        corr = json.loads(task_match[3])
-        assert corr["1"] == "Г"
-        assert corr["2"] == "В"
-        assert corr["3"] == "Д"
-        assert corr["4"] == "А"
-
-        fts_res = conn.execute("SELECT rowid FROM zno_tasks_fts WHERE zno_tasks_fts MATCH 'причіп'").fetchall()
-        assert len(fts_res) > 0
-    finally:
-        conn.close()

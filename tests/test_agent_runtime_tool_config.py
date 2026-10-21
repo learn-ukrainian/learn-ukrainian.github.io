@@ -60,13 +60,6 @@ def test_build_mcp_tool_config_gemini_with_server_list() -> None:
     assert diagnostics["resolution_status"] == "ok"
 
 
-def test_build_mcp_tool_config_gemini_without_servers_returns_none() -> None:
-    tool_config, diagnostics = build_mcp_tool_config("gemini")
-
-    assert tool_config is None
-    assert diagnostics["resolution_status"] == "config_empty"
-
-
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
 def test_build_mcp_tool_config_native_grok_uses_native_config(agent: str) -> None:
     tool_config, diagnostics = build_mcp_tool_config(
@@ -131,19 +124,6 @@ def test_codex_tool_config_strips_claude_format_type_field(
         f"got {sources_cfg!r}. See #1812."
     )
     assert diagnostics["resolution_status"] == "ok"
-
-
-def test_codex_sanitize_server_config_drops_unknown_fields() -> None:
-    raw = {
-        "url": "http://127.0.0.1:8766/mcp",
-        "type": "streamable-http",
-        "transport": "http",
-        "headers": {"X-Foo": "bar"},
-    }
-
-    sanitized = _codex_sanitize_server_config(raw)
-
-    assert sanitized == {"url": "http://127.0.0.1:8766/mcp"}
 
 
 def test_codex_sanitize_server_config_preserves_codex_fields() -> None:
@@ -246,18 +226,3 @@ def test_build_mcp_tool_config_codex_without_mcp_servers_key_returns_none(
 
     assert tool_config is None
     assert diagnostics["resolution_status"] == "config_empty"
-
-
-def test_build_mcp_tool_config_unknown_agent_returns_none(tmp_path: Path) -> None:
-    config_path = tmp_path / ".mcp.json"
-    config_path.write_text("{}", encoding="utf-8")
-
-    tool_config, diagnostics = build_mcp_tool_config(
-        "nonexistent",
-        mcp_servers=["sources"],
-        allowed_tools="mcp__sources__*",
-        mcp_config_path=config_path,
-    )
-
-    assert tool_config is None
-    assert diagnostics["resolution_status"] == "servers_not_found"

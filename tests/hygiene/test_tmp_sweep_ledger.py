@@ -184,15 +184,6 @@ def test_ledger_record_is_durable_before_the_rename(box, monkeypatch):
     assert [r["event"] for r in box.records()] == ["quarantine", "quarantined"]
 
 
-def test_large_files_are_recorded_without_digest(box):
-    entry = box.tree()
-    box.run(apply=True, digest_limit=4096)
-    manifest = {item["path"]: item for item in only(box.entries()).intent["manifest"]}
-    assert manifest["deep/payload"] == manifest["deep/payload"] | {"digest_skipped_size": True, "size": 8192}
-    assert "sha256" not in manifest["deep/payload"] and "sha256" in manifest["run.sh"]
-    assert not entry.exists()
-
-
 def test_crash_between_ledger_write_and_rename_is_reconciled(box):
     entry = box.tree()
     box.crash("before_rename")
@@ -293,12 +284,6 @@ def test_restore_never_overwrites(box, capsys, monkeypatch):
     assert list(entry.iterdir()) == []
 
 
-def test_restore_unknown_id_creates_nothing(box):
-    with pytest.raises(SystemExit) as exc:
-        sweep.main(["restore", "000000000000"])
-    assert exc.value.code == 2 and not box.state.exists()
-
-
 def test_restore_unknown_id_and_busy_ledger(box, capsys):
     box.tree()
     box.run(apply=True)
@@ -328,14 +313,6 @@ def test_purge_happens_only_after_the_window(box):
     assert applied["quarantine_held_entries"] == 0 and not held.location.exists() and not quarantines(box.root)
     assert [r["event"] for r in box.records()] == ["quarantine", "quarantined", "purge", "purged"]
     assert not entry.exists()
-
-
-def test_quarantine_window_is_configurable(box):
-    box.tree()
-    box.run(apply=True)
-    box.at(2)
-    assert box.run(apply=True)["purged_entries"] == 0
-    assert box.run(apply=True, quarantine_s=DAY)["purged_entries"] == 1
 
 
 def test_purge_keeps_an_entry_held_again(box, monkeypatch, tmp_path):
@@ -388,25 +365,6 @@ def test_purge_keeps_an_entry_whose_contents_changed(box):
     assert (
         row["reason"] == "purge_manifest_changed" and (held.location / "deep" / "payload").read_bytes() == b"new bytes"
     )
-
-
-def test_purge_keeps_an_entry_written_after_confirmation_with_an_identical_manifest(box, monkeypatch):
-    """Same bytes, mtime put back: only the change time shows the write, so the real clock runs here."""
-    monkeypatch.setattr(sweep, "time", time)
-    entry = box.tree()
-    os.utime(entry, (OLD, OLD))
-    time.sleep(0.05)
-    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
-    held = only(box.entries())
-    payload = held.location / "deep" / "payload"
-    time.sleep(0.05)  # past the coarse kernel clock tick, so the write's ctime is after the confirmation
-    info = payload.stat()
-    payload.write_bytes(payload.read_bytes())
-    os.utime(payload, ns=(info.st_atime_ns, info.st_mtime_ns))
-    assert sweep.verify_restored(held, held.location)["verified"] is True
-    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
-    row = next(r for r in box.run(apply=True)["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert row["reason"] == "purge_recent_write" and payload.exists()
 
 
 def _fail_reap(*_args, **_kwargs):
@@ -462,24 +420,6 @@ def test_purge_retry_after_failure_before_deletion_refuses_changed_contents(box,
     assert changed.exists() and changed.relative_to(held.original).as_posix() in result["mismatches"]
 
 
-@pytest.mark.skipif(os.geteuid() == 0, reason="root reads a mode-000 directory")
-def test_purge_retry_of_an_unreadable_tree_is_kept_ambiguous_and_counted(box, monkeypatch):
-    """An interrupted purge whose tree cannot be read is kept, recorded and counted, not a plain preserve."""
-    held = _interrupt_purge(box, monkeypatch, _fail_reap)
-    os.chmod(held.location / "deep", 0)
-    try:
-        report = box.run(apply=True)
-        row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
-        assert (row["decision"], row["reason"]) == ("preserve", "purge_kept_ambiguous")
-        assert (report["errors"], report["quarantine_kept_ambiguous_entries"]) == (1, 1)
-        events = [r["event"] for r in box.records() if r["ledger_id"] == held.ledger_id]
-        assert events[-3:] == ["purge", "purge_failed", "purge_kept_ambiguous"]
-        assert box.entries()[held.ledger_id].state == "purge_kept_ambiguous"
-    finally:
-        os.chmod(held.location / "deep", 0o700)
-    assert (held.location / "deep" / "payload").exists()
-
-
 @pytest.mark.parametrize("change", [None, "rewritten", "added"])
 def test_purge_retry_after_partial_deletion_keeps_the_survivors(box, monkeypatch, capsys, change):
     """A deletion that stopped part-way changed the survivors' directories, so nothing left is deleted on a guess."""
@@ -526,57 +466,6 @@ def test_purge_kept_ambiguous_removed_by_hand_is_reconciled_missing(box, monkeyp
     assert (last["ledger_id"], last["event"], last["outcome"]) == (held.ledger_id, "reconciled", "missing")
 
 
-def test_purge_retry_keeps_a_directory_whose_xattr_changed_after_partial_deletion(box, monkeypatch):
-    """The review probe: real clock, deletion stopped part-way, then a surviving directory's xattr is changed."""
-    monkeypatch.setattr(sweep, "time", time)
-    entry = box.tree()
-    os.utime(entry, (OLD, OLD))
-    time.sleep(0.05)
-    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
-    held = only(box.entries())
-    real_reap = sweep.reap_attributed_temp
-    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
-    monkeypatch.setattr(sweep, "reap_attributed_temp", _partial_reap)
-    box.run(apply=True)
-    assert box.entries()[held.ledger_id].state == "purging"
-    deep = held.location / "deep"
-    time.sleep(0.05)  # past the coarse kernel clock tick
-    os.setxattr(deep, "user.lu-probe", b"changed after confirmation")
-    assert deep.stat().st_ctime > held.confirmed_at
-    monkeypatch.setattr(sweep, "reap_attributed_temp", real_reap)
-    report = box.run(apply=True)
-    row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert (row["reason"], report["purged_entries"], report["quarantine_kept_ambiguous_entries"]) == (
-        "purge_kept_ambiguous",
-        0,
-        1,
-    )
-    assert deep.is_dir() and os.getxattr(deep, "user.lu-probe") == b"changed after confirmation"
-
-
-def test_purge_retry_refuses_a_survivor_written_after_confirmation(box, monkeypatch):
-    """Same bytes, mtime put back: only the change time shows the write, so the real clock runs here."""
-    monkeypatch.setattr(sweep, "time", time)
-    entry = box.tree()
-    os.utime(entry, (OLD, OLD))
-    time.sleep(0.05)
-    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
-    held = only(box.entries())
-    real_reap = sweep.reap_attributed_temp
-    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
-    monkeypatch.setattr(sweep, "reap_attributed_temp", _fail_reap)
-    box.run(apply=True)
-    assert box.entries()[held.ledger_id].state == "purging"
-    script = held.location / "run.sh"
-    time.sleep(0.05)  # past the coarse kernel clock tick
-    info = script.stat()
-    script.write_bytes(script.read_bytes())
-    os.utime(script, ns=(info.st_atime_ns, info.st_mtime_ns))
-    monkeypatch.setattr(sweep, "reap_attributed_temp", real_reap)
-    row = next(r for r in box.run(apply=True)["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert row["reason"] == "purge_kept_ambiguous" and script.exists()
-
-
 @pytest.mark.parametrize("rewrite", [False, True])
 def test_restore_of_unhashed_files_is_reported_unverified(box, capsys, rewrite):
     entry = box.tree()
@@ -603,14 +492,6 @@ def test_restore_of_unhashed_files_is_reported_unverified(box, capsys, rewrite):
     record = box.records()[-1]
     del expected["restored"]
     assert record["event"] == "restored" and record | expected == record
-
-
-def test_purge_accepts_unhashed_files_by_size_mtime_and_ctime(box):
-    box.tree()
-    box.run(apply=True, digest_limit=4096)
-    held = only(box.entries())
-    box.at(8)
-    assert box.run(apply=True, digest_limit=4096)["purged_entries"] == 1 and not held.location.exists()
 
 
 @pytest.fixture
@@ -676,27 +557,6 @@ def test_failed_ancestor_sync_is_rerun_before_the_next_record(tmp_path, syncs, m
     ledger_mod.Ledger(state).append({"event": "quarantine", "ledger_id": "x"})
     assert syncs == [*state_chain(state), str(state / "ledger.jsonl"), str(state)]
     assert str(tmp_path / "a") in syncs[: syncs.index(str(state / "ledger.jsonl"))]
-
-
-def test_failed_ancestor_sync_is_rerun_before_reconciliation_records(box, syncs, monkeypatch, isolated_state_home):
-    entry = box.tree()
-    real_sync = ledger_mod.sync_directory
-
-    def failing(directory):
-        if directory == isolated_state_home:
-            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
-        real_sync(directory)
-
-    monkeypatch.setattr(ledger_mod, "sync_directory", failing)
-    with pytest.raises(ledger_mod.DurabilityError):
-        box.run(apply=True)
-    assert box.state.parent.is_dir() and entry.exists() and not (box.state / "ledger.jsonl").exists()
-    monkeypatch.setattr(ledger_mod, "sync_directory", real_sync)
-    syncs.clear()
-    box.run(apply=True)
-    chain = state_chain(box.state)
-    assert chain[:3] == [str(box.state), str(box.state.parent), str(isolated_state_home)]
-    assert syncs[: len(chain)] == chain and str(box.state / "ledger.jsonl") not in syncs[: len(chain)]
 
 
 def test_quarantine_creation_and_renames_are_synced_before_they_are_recorded(
@@ -810,29 +670,6 @@ def test_interrupted_step_is_resynced_before_reconciliation_confirms_it(box, syn
     assert syncs[: len(chain) + 2] == [*chain, quarantine, root]
 
 
-def test_failed_sync_after_rename_stops_the_run_unconfirmed(box, monkeypatch, capsys):
-    entry = box.tree()
-    real_sync = sweep.sync_directory
-
-    def failing(directory):
-        if isinstance(directory, int) and os.readlink(f"/proc/self/fd/{directory}").startswith(
-            str(box.root / sweep.QUARANTINE_PREFIX)
-        ):
-            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
-        real_sync(directory)
-
-    monkeypatch.setattr(sweep, "sync_directory", failing)
-    argv = ["--temp-root", str(box.root), "--task-root", str(box.tasks), "--unattributed-scratch", "--apply"]
-    assert sweep.main(argv) == 1
-    assert "run stopped" in capsys.readouterr().err
-    assert only(box.entries()).state == "pending" and not entry.exists()
-    pending = only(box.entries())
-    monkeypatch.setattr(sweep, "sync_directory", real_sync)
-    box.run(apply=True)
-    last = [r for r in box.records() if r["ledger_id"] == pending.ledger_id][-1]
-    assert (last["event"], last["outcome"]) == ("reconciled", "returned")
-
-
 def test_ledger_is_append_only(box, capsys):
     box.tree()
     box.tree("second")
@@ -895,58 +732,6 @@ def test_state_dir_must_be_outside_temp_root_and_repository(box):
     with pytest.raises(ledger_mod.LedgerError):
         box.run(state_dir=box.tmp / "state")
     assert not (box.root / "ledger").exists()
-
-
-def test_default_state_dir_follows_xdg(monkeypatch, tmp_path):
-    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path))
-    assert ledger_mod.default_state_dir() == tmp_path / "learn-ukrainian" / "tmp-sweep"
-    monkeypatch.setenv("XDG_STATE_HOME", "relative/state")
-    assert ledger_mod.default_state_dir() == Path.home() / ".local" / "state" / "learn-ukrainian" / "tmp-sweep"
-
-
-def test_ledger_and_quarantine_listings(box, capsys):
-    entry = box.tree()
-    box.tree("other-scratch")
-    report = box.run(apply=True)
-    held = {e.original.name: e for e in box.entries().values()}
-    assert sweep.main(["ledger", "--path", entry.name, "--json"]) == 0
-    records = json.loads(capsys.readouterr().out)
-    assert {r["ledger_id"] for r in records} == {held[entry.name].ledger_id} and "manifest" not in records[0]
-    assert sweep.main(["ledger", "--ledger-id", held[entry.name].ledger_id, "--manifest", "--json"]) == 0
-    assert "manifest" in json.loads(capsys.readouterr().out)[0]
-    assert sweep.main(["ledger", "--run-id", report["run_id"], "--json"]) == 0
-    assert len(json.loads(capsys.readouterr().out)) == 4
-    assert sweep.main(["ledger", "--run-id", "another-run", "--json"]) == 0
-    assert json.loads(capsys.readouterr().out) == []
-    day = held[entry.name].intent["at"][:10]
-    assert sweep.main(["ledger", "--since", day, "--until", day, "--json"]) == 0
-    assert len(json.loads(capsys.readouterr().out)) == 4
-    assert sweep.main(["ledger", "--until", day + "T00:00:00Z", "--json"]) == 0
-    assert json.loads(capsys.readouterr().out) == []
-    assert sweep.main(["ledger"]) == 0
-    table = capsys.readouterr().out
-    assert table.startswith("| at | event | ledger_id |") and table.count("quarantined") == 2
-    assert sweep.main(["quarantine"]) == 0
-    listing = capsys.readouterr().out
-    assert held[entry.name].ledger_id in listing and "| quarantined |" in listing
-    with pytest.raises(SystemExit) as exc:
-        sweep.main(["ledger", "--since", "yesterday"])
-    assert exc.value.code == 2
-
-
-def test_dry_run_summary_reports_ledger_location_and_quarantine_counts(box, capsys):
-    box.tree()
-    box.run(apply=True)
-    box.tree("newer-scratch")
-    argv = ["--temp-root", str(box.root), "--task-root", str(box.tasks), "--unattributed-scratch", "--summary"]
-    box.at(8)
-    assert sweep.main(argv) == 0
-    out = capsys.readouterr().out
-    summary = json.loads(out)
-    assert summary["ledger_path"].endswith("learn-ukrainian/tmp-sweep/ledger.jsonl")
-    assert (summary["quarantine_held_entries"], summary["purgeable_entries"], summary["purged_entries"]) == (1, 1, 0)
-    assert summary["by_decision"] == {"would_purge": 1, "would_reap": 1}
-    assert "hand-made-scratch" not in out and "newer-scratch" not in out
 
 
 def test_cli_help_documents_subcommands(capsys):

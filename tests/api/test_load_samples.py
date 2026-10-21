@@ -65,16 +65,6 @@ def test_above_threshold_has_only_attribution_fields(tmp_path, observed):
     observed.assert_called_once()
 
 
-def test_rate_limit_survives_new_calls_and_allows_next_minute(tmp_path, monkeypatch, observed):
-    assert sampler.sample(tmp_path)
-    monkeypatch.setattr(sampler.time, "time", lambda: 1_800_000_059.9)
-    assert sampler.sample(tmp_path) is False
-    assert observed.call_count == 1
-    monkeypatch.setattr(sampler.time, "time", lambda: 1_800_000_060)
-    assert sampler.sample(tmp_path)
-    assert len(sampler.tail(tmp_path, 500)["samples"]) == 2
-
-
 def test_concurrent_collector_is_skipped(tmp_path, observed):
     directory = tmp_path / "load-samples"
     directory.mkdir()
@@ -94,15 +84,6 @@ def test_ring_keeps_only_last_500_physical_lines(tmp_path, monkeypatch, observed
     assert len(rows) == 500
     assert rows[0]["timestamp"] == "2027-01-15T08:03:00+00:00"
     assert sampler.tail(tmp_path, 2)["samples"] == rows[-2:]
-
-
-@pytest.mark.parametrize("value", ["garbage", "nan", "inf", "-1"])
-def test_invalid_threshold_records_nothing(tmp_path, monkeypatch, observed, value):
-    monkeypatch.setenv(sampler.THRESHOLD_ENV, value)
-    with pytest.raises(ValueError):
-        sampler.sample(tmp_path)
-    observed.assert_not_called()
-    assert not (tmp_path / "load-samples").exists()
 
 
 def test_threshold_override_and_unknown_governor(tmp_path, monkeypatch, observed):

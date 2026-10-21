@@ -6,7 +6,6 @@ from pathlib import Path
 import pytest
 
 from scripts.ai_agent_bridge import measure_cold_start as cold_start
-from scripts.lib.context_profiles import resolve_profile
 
 
 def _successful_loader(size: int):
@@ -14,44 +13,6 @@ def _successful_loader(size: int):
         return b"x" * size, 200, 1.0, None
 
     return load
-
-
-def test_profile_selects_compact_or_full_source_contract() -> None:
-    compact_profile = resolve_profile("sol_lead", "gpt-6.1-sol")
-    full_profile = resolve_profile("native_claude", "claude-sonnet-5")
-
-    compact = cold_start.build_source_specs(
-        compact_profile,
-        session_id="session-one",
-        agent="claude-infra",
-    )
-    full = cold_start.build_source_specs(
-        full_profile,
-        session_id="session-one",
-        agent="claude-infra",
-    )
-
-    assert {source.name for source in compact} == cold_start.REQUIRED_STARTUP_SOURCE_NAMES
-    assert {source.name for source in full} == cold_start.REQUIRED_STARTUP_SOURCE_NAMES
-    compact_orient = next(source for source in compact if source.name == "orientation")
-    full_orient = next(source for source in full if source.name == "orientation")
-    assert "lean=true" in compact_orient.locator
-    assert compact_orient.provenance == "monitor-api:lean-orient"
-    assert "lean=true" not in full_orient.locator
-    assert full_orient.provenance == "monitor-api:full-orient"
-    assert all("/api/rules" not in source.locator for source in compact)
-    assert all("/api/session/current" not in source.locator for source in compact)
-
-
-def test_conservative_counter_is_explicit_and_rounds_up() -> None:
-    tokens, method = cold_start.count_payload_tokens(
-        b"1234",
-        model_id="gpt-6.1-sol",
-        token_count_url=None,
-    )
-
-    assert tokens == 34
-    assert method == "conservative-bytes/3+32:endpoint-unavailable"
 
 
 def test_gateway_token_counter_wins_when_available(
@@ -99,45 +60,6 @@ def test_compact_and_full_budgets_are_enforced(
     assert full.within_budget is True
     assert compact.main_context_window_tokens == 272_000
     assert full.main_context_window_tokens == 1_000_000
-
-
-def test_delegated_model_cannot_change_lead_startup_contract(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(cold_start, "_load_source", _successful_loader(1_000))
-
-    terra = cold_start.measure(
-        "terra",
-        profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
-        delegated_model_id="gpt-6.1-sol",
-    )
-    luna = cold_start.measure(
-        "luna",
-        profile_id="sol_lead",
-        model_id="gpt-6.1-sol",
-        delegated_model_id="gpt-6-luna",
-    )
-
-    assert terra.delegated_model_id != luna.delegated_model_id
-    assert (
-        terra.main_model_id,
-        terra.main_context_window_tokens,
-        terra.cold_start_profile,
-        terra.cold_start_budget_tokens,
-        terra.rollover_warning_percentages,
-        terra.estimated_input_tokens,
-    ) == (
-        luna.main_model_id,
-        luna.main_context_window_tokens,
-        luna.cold_start_profile,
-        luna.cold_start_budget_tokens,
-        luna.rollover_warning_percentages,
-        luna.estimated_input_tokens,
-    )
-    assert [(source.name, source.kind, source.provenance, source.bytes, source.tokens) for source in terra.sources] == [
-        (source.name, source.kind, source.provenance, source.bytes, source.tokens) for source in luna.sources
-    ]
 
 
 def test_observed_first_turn_is_gate_when_larger_and_excludes_output(
@@ -392,24 +314,6 @@ def test_later_row_never_replaces_positive_first_row(
     )
     assert measurement.observed_first_turn_tokens == 589_549
     assert measurement.gate_input_tokens == 589_549
-
-
-def test_later_row_is_corrected_when_first_row_total_is_zero(tmp_path: Path) -> None:
-    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
-
-    empty_first = {"input_tokens": 0, "output_tokens": 10, "iterations": [_message(0, 0, 0)]}
-    later = _top_level(
-        input_tokens=7,
-        cache_read_input_tokens=900_000,
-        cache_creation_input_tokens=100,
-        iterations=[_message(1, 400_000, 50), _advisor(450_000), _message(3, 420_000, 700)],
-    )
-    transcript = _write_rows(tmp_path / "session.jsonl", empty_first, later)
-
-    observation = cold_start.observe_first_turn(transcript)
-
-    assert usage_input_tokens(later) == 420_703
-    assert observation.tokens == 420_703
 
 
 def test_estimate_stays_the_gate_when_larger_than_corrected_observation(

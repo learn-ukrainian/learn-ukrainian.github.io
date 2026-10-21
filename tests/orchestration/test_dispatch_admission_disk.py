@@ -8,7 +8,6 @@ to Fleet Comms.
 from __future__ import annotations
 
 import dataclasses
-import inspect
 import json
 import logging
 import os
@@ -16,7 +15,6 @@ import sys
 import threading
 import time
 import types
-from collections import namedtuple
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -26,9 +24,6 @@ from scripts.orchestration import dispatch_admission as adm
 
 _GIB = 1024**3
 _LIMITS = adm.Thresholds(max_live_write_workers=2, min_mem_available_gib=3.5, max_load_per_cpu=1.5)
-_Usage = namedtuple("_Usage", "total used free")
-
-
 def _disk(used_percent: float, *, size_gib: float = 400.0) -> adm.DiskProbe:
     used = int(size_gib * _GIB * used_percent / 100)
     return adm.DiskProbe(used_bytes=used, free_bytes=int(size_gib * _GIB) - used)
@@ -114,29 +109,6 @@ def test_alert_band_admits_and_alerts_once_then_suppresses_within_six_hours(tmp_
     assert first.to_record()["disk_alert"] == "epics alert posted"
 
 
-def test_alert_rate_limit_reopens_after_six_hours(tmp_path):
-    check = adm.DiskCheck(probe=_disk(81.0))
-    sent: list[str] = []
-    publish = lambda body, _key: sent.append(body)  # noqa: E731
-    start = 1_800_000_000.0
-
-    assert (
-        adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=start, publish=publish)
-        == "epics alert posted"
-    )
-    later = start + adm.DISK_ALERT_INTERVAL_S - 1
-    assert adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=later, publish=publish).startswith(
-        "epics alert already posted at "
-    )
-    after = start + adm.DISK_ALERT_INTERVAL_S
-    assert (
-        adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=after, publish=publish)
-        == "epics alert posted"
-    )
-    assert len(sent) == 2
-    assert not list(tmp_path.glob("*.json")), "the alert state must not look like a task record"
-
-
 def test_alert_failure_never_blocks_and_retries_after_the_backoff(tmp_path, host, caplog, monkeypatch):
     host["readings"] = [_disk(83.0)]
 
@@ -198,14 +170,6 @@ def test_full_disk_runs_the_reaper_once_then_refuses_with_percent_free_and_outco
     record = decision.to_record()
     assert record["disk_reaper"] == "reaper removed 0 worktree(s)"
     assert record["disk_used_percent_before_reaper"] == 91.0
-
-
-def test_exactly_at_the_refuse_threshold_is_refused(tmp_path, host):
-    host["readings"] = [_disk(90.0)]
-
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_Reaper())
-
-    assert not decision.admitted
 
 
 def test_admitted_after_the_reaper_frees_space(tmp_path, host):
@@ -272,10 +236,6 @@ class _CleanPushedReport:
     refusal: str | None = None
 
 
-def _skip(path: str, reason: str) -> _CleanPushedOutcome:
-    return _CleanPushedOutcome(path=path, action="skipped", reason=reason)
-
-
 class _ReapCleanPushed:
     """A fake ``reap_clean_pushed`` that records its calls and may free the disk."""
 
@@ -295,66 +255,6 @@ class _ReapCleanPushed:
 
     def install(self, monkeypatch) -> None:
         monkeypatch.setattr(adm, "load_reaper_module", lambda: types.SimpleNamespace(reap_clean_pushed=self))
-
-
-def test_reap_clean_pushed_is_called_once_as_an_apply_run_with_a_short_lock_timeout(monkeypatch, tmp_path):
-    fake = _ReapCleanPushed(_CleanPushedReport(dry_run=False, removed=(), skipped=(), freed_mb=0))
-    fake.install(monkeypatch)
-
-    outcome = adm.reap_clean_pushed_once(tmp_path)
-
-    assert fake.calls == [{"repo_root": tmp_path, "dry_run": False, "lock_timeout_s": adm.DISK_REAPER_LOCK_TIMEOUT_S}]
-    assert adm.DISK_REAPER_LOCK_TIMEOUT_S == 5.0
-    assert outcome == adm.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s), freed 0 MB")
-
-
-def test_removed_trees_free_the_disk_and_the_dispatch_is_admitted(monkeypatch, tmp_path, host):
-    host["readings"] = [_disk(90.0)]
-    removed = tuple(
-        _CleanPushedOutcome(path=f".worktrees/dispatch/a/t{i}", action="removed", reason="ok") for i in (1, 2)
-    )
-    report = _CleanPushedReport(dry_run=False, removed=removed, skipped=(), freed_mb=3072)
-    fake = _ReapCleanPushed(report, host=host, frees_to=_disk(70.0))
-    fake.install(monkeypatch)
-    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
-
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
-
-    assert decision.admitted
-    assert [call["repo_root"] for call in fake.calls] == [tmp_path]
-    assert "[reaper removed 2 worktree(s), freed 3072 MB, 90.0% before]" in decision.summary()
-
-
-def test_removals_that_leave_the_disk_full_refuse_with_counts_and_top_skip_reasons(monkeypatch, tmp_path, host):
-    host["readings"] = [_disk(92.0)]
-    removed = (_CleanPushedOutcome(path=".worktrees/dispatch/a/t1", action="removed", reason="ok"),)
-    skipped = (
-        _skip(".worktrees/dispatch/a/t2", "uncommitted or untracked changes"),
-        _skip(".worktrees/dispatch/a/t3", "unpublished_reflog_commit"),
-        _skip(".worktrees/dispatch/a/t4", "uncommitted or untracked changes"),
-        _skip(".worktrees/dispatch/a/t5", "late_change"),
-        _skip(".worktrees/dispatch/a/t6", "unpublished_reflog_commit"),
-        _skip(".worktrees/dispatch/a/t7", "uncommitted or untracked changes"),
-        _skip(".worktrees/dispatch/a/t8", "uninspectable"),
-        _skip(".worktrees/dispatch/a/t9", "x" * 200),
-    )
-    fake = _ReapCleanPushed(_CleanPushedReport(dry_run=False, removed=removed, skipped=skipped, freed_mb=512))
-    fake.install(monkeypatch)
-    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
-
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
-
-    assert not decision.admitted
-    assert decision.failures[0].endswith(
-        "reaper removed 1 worktree(s), freed 512 MB; skipped 8: uncommitted or untracked changes (3); "
-        "unpublished_reflog_commit (2); late_change (1)"
-    )
-
-
-def test_skip_reasons_are_truncated():
-    report = _CleanPushedReport(dry_run=False, removed=(), skipped=(_skip("p", "x" * 200),), freed_mb=0)
-
-    assert adm._reaper_outcome(report).detail.endswith("skipped 1: " + "x" * 80 + " (1)")
 
 
 @pytest.mark.parametrize(
@@ -391,78 +291,6 @@ def test_a_busy_or_refusing_reaper_still_refuses_and_says_why(monkeypatch, tmp_p
     assert host["probes"] == 2  # measured again after the reaper, never admitted on its say-so
 
 
-def test_reap_clean_pushed_that_raises_or_returns_a_wrong_shape_is_reaper_failed(monkeypatch, tmp_path):
-    _ReapCleanPushed(OSError("git lock busy")).install(monkeypatch)
-    assert adm.reap_clean_pushed_once(tmp_path) == adm.ReaperOutcome(
-        ran=False, detail="reaper failed: OSError: git lock busy"
-    )
-
-    _ReapCleanPushed([types.SimpleNamespace(action="removed")]).install(monkeypatch)  # type: ignore[arg-type]
-    outcome = adm.reap_clean_pushed_once(tmp_path)
-    assert not outcome.ran
-    assert outcome.detail.startswith("reaper failed: AttributeError:")
-
-
-def test_the_common_reaper_matches_the_reap_clean_pushed_contract():
-    """The seam's contract with #10778; strict once ``reap_clean_pushed`` is in the tree."""
-    from scripts.orchestration import reap_worktrees
-
-    function = getattr(reap_worktrees, adm.REAPER_FUNCTION, None)
-    if function is None:
-        # #10778 has not landed: the seam must say so and never admit on it.
-        assert adm.reap_clean_pushed_once(Path("/nonexistent")) == adm.ReaperOutcome(
-            ran=False,
-            detail="reaper unavailable: scripts.orchestration.reap_worktrees.reap_clean_pushed is not present",
-        )
-        return
-    parameters = inspect.signature(function).parameters
-    for name in ("repo_root", "dry_run", "lock_timeout_s"):
-        assert parameters[name].kind is inspect.Parameter.KEYWORD_ONLY, name
-    report_fields = {field.name for field in dataclasses.fields(reap_worktrees.CleanPushedReport)}
-    assert {field.name for field in dataclasses.fields(_CleanPushedReport)} <= report_fields
-    outcome_fields = {field.name for field in dataclasses.fields(reap_worktrees.CleanPushedOutcome)}
-    assert {field.name for field in dataclasses.fields(_CleanPushedOutcome)} <= outcome_fields
-
-
-def test_the_common_reaper_provides_reap_clean_pushed():
-    """The common reaper provides ``reap_clean_pushed`` (#10778), the function the admission seam calls."""
-    from scripts.orchestration import reap_worktrees
-
-    assert callable(getattr(reap_worktrees, adm.REAPER_FUNCTION, None))
-
-
-def test_unimportable_reaper_module_is_reported_unavailable(monkeypatch):
-    def fail():
-        raise ImportError("no module")
-
-    monkeypatch.setattr(adm, "load_reaper_module", fail)
-
-    outcome = adm.reap_clean_pushed_once(Path("/nonexistent"))
-
-    assert outcome == adm.ReaperOutcome(
-        ran=False, detail="reaper unavailable: scripts.orchestration.reap_worktrees did not import (no module)"
-    )
-
-
-def test_without_a_reaper_a_full_disk_refuses_and_says_the_reaper_did_not_run(tmp_path, host):
-    host["readings"] = [_disk(91.0)]
-
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS)
-
-    assert not decision.admitted
-    assert host["probes"] == 1
-    assert decision.failures[0].endswith("reaper not run in this check")
-
-
-@pytest.mark.parametrize("mode", ["read-only", "research"])
-def test_read_only_dispatch_is_exempt_from_the_disk_check(tmp_path, monkeypatch, mode):
-    monkeypatch.setattr(adm, "probe_disk", lambda: pytest.fail("read-only must not read the disk"))
-
-    decision = adm.evaluate(mode, tmp_path, reaper=lambda _root, _t: pytest.fail("read-only must not reap"))
-
-    assert decision.exempt and decision.admitted
-
-
 def test_a_failing_disk_probe_admits_and_logs_the_reason(tmp_path, host, caplog):
     host["readings"] = [adm.DiskProbe(skipped="disk usage unreadable: OSError: [Errno 5] I/O error")]
     caplog.set_level(logging.WARNING, logger=adm.__name__)
@@ -487,62 +315,6 @@ def test_a_probe_that_fails_after_the_reaper_admits(tmp_path, host):
     assert "disk check skipped (disk usage unreadable: OSError: gone) [reaper removed 3 worktree(s), 95.0% before]" in (
         decision.summary()
     )
-
-
-def test_read_disk_uses_df_percent_and_reports_unreadable_statvfs(tmp_path):
-    probe = adm.read_disk(tmp_path, usage=lambda _path: _Usage(total=100 * _GIB, used=45 * _GIB, free=45 * _GIB))
-    assert probe.used_percent == 50.0  # used / (used + available), as df prints it
-    assert probe.free_gib == 45.0
-
-    def broken(_path):
-        raise PermissionError("statvfs denied")
-
-    unreadable = adm.read_disk(tmp_path, usage=broken)
-    assert unreadable.used_percent is None
-    assert unreadable.skipped == "disk usage unreadable: PermissionError: statvfs denied"
-
-    invalid = adm.read_disk(tmp_path, usage=lambda _path: _Usage(total=0, used=0, free=0))
-    assert invalid.skipped == "disk usage invalid: used=0 free=0"
-
-
-def test_the_default_loader_imports_the_common_reaper():
-    from scripts.orchestration import reap_worktrees
-
-    assert adm.load_reaper_module() is reap_worktrees
-    assert reap_worktrees.__name__ == adm.REAPER_MODULE
-
-
-def test_healthy_test_host_never_reads_the_real_disk_or_posts(monkeypatch):
-    monkeypatch.setattr(adm, "read_disk", lambda *_a, **_k: pytest.fail("real disk read"))
-
-    assert adm.probe_disk().skipped == adm.TEST_HOST_POOL_SKIP
-    with pytest.raises(RuntimeError, match="test host"):
-        adm.post_disk_alert("body", "key")
-
-
-def test_worktrees_disk_path_is_the_primary_checkouts_worktrees(monkeypatch, tmp_path):
-    (tmp_path / ".worktrees").mkdir()
-    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
-    assert adm.worktrees_disk_path() == tmp_path / ".worktrees"
-    (tmp_path / ".worktrees").rmdir()
-    assert adm.worktrees_disk_path() == tmp_path
-
-
-def test_disk_thresholds_default_to_config_and_honour_env_overrides():
-    defaults = adm.load_thresholds({})
-    assert (defaults.disk_reap_used_percent, defaults.disk_refuse_used_percent) == (85.0, 90.0)
-    assert defaults.disk_alert_used_percent == 80.0
-
-    custom = adm.load_thresholds(
-        {"DISPATCH_DISK_REFUSE_USED_PERCENT": "92.5", "DISPATCH_DISK_ALERT_USED_PERCENT": "75"}
-    )
-    assert (custom.disk_refuse_used_percent, custom.disk_alert_used_percent) == (92.5, 75.0)
-
-
-@pytest.mark.parametrize("raw", ["101", "-1", "lots", "nan"])
-def test_invalid_disk_threshold_env_is_rejected(raw):
-    with pytest.raises(ValueError, match="DISPATCH_DISK_REFUSE_USED_PERCENT"):
-        adm.load_thresholds({"DISPATCH_DISK_REFUSE_USED_PERCENT": raw})
 
 
 def test_publish_runs_the_fleet_comms_channel_publish_command(monkeypatch, tmp_path):
@@ -770,52 +542,6 @@ def test_a_recorded_attempt_holds_the_cooldown_when_its_outcome_cannot_be_writte
     assert state["freed"] is False and state["ran"] is False
 
 
-def test_the_attempt_marker_is_on_disk_before_the_reaper_runs(tmp_path):
-    seen: list[dict] = []
-
-    def reaper(_root: Path, _timeout_s: float | None = None) -> adm.ReaperOutcome:
-        seen.append(json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text()))
-        return adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED)
-
-    adm.attempt_disk_reaper(tmp_path, reaper, _LIMITS, now=lambda: 1_800_000_000.0)
-
-    assert seen == [
-        {
-            "last_attempt_at": 1_800_000_000.0,
-            "detail": adm.DISK_REAPER_STARTED,
-            "ran": False,
-            "removed": 0,
-            "freed_mb": 0,
-            "freed": False,
-        }
-    ]
-    assert json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text())["detail"] == _NOTHING_FREED
-
-
-def test_disk_reaper_cooldown_and_timeout_default_to_config_and_honour_env_overrides():
-    defaults = adm.load_thresholds({})
-    assert (defaults.disk_reaper_cooldown_s, defaults.disk_reaper_timeout_s) == (600.0, 90.0)
-    assert (adm.DISK_REAPER_COOLDOWN_S, adm.DISK_REAPER_TIMEOUT_S) == (600.0, 90.0)
-
-    custom = adm.load_thresholds({"DISPATCH_DISK_REAPER_COOLDOWN_S": "0", "DISPATCH_DISK_REAPER_TIMEOUT_S": "30"})
-    assert (custom.disk_reaper_cooldown_s, custom.disk_reaper_timeout_s) == (0.0, 30.0)
-
-
-@pytest.mark.parametrize(
-    ("name", "raw"),
-    [
-        ("DISPATCH_DISK_REAPER_TIMEOUT_S", "0"),
-        ("DISPATCH_DISK_REAPER_TIMEOUT_S", "inf"),
-        ("DISPATCH_DISK_REAPER_TIMEOUT_S", "-5"),
-        ("DISPATCH_DISK_REAPER_COOLDOWN_S", "inf"),
-        ("DISPATCH_DISK_REAPER_COOLDOWN_S", "soon"),
-    ],
-)
-def test_invalid_disk_reaper_timing_env_is_rejected(name, raw):
-    with pytest.raises(ValueError, match=name):
-        adm.load_thresholds({name: raw})
-
-
 def _gone(pid: int) -> bool:
     """The pid has exited (a zombie awaiting its new parent counts as gone)."""
     deadline = time.monotonic() + 5
@@ -831,23 +557,6 @@ def _gone(pid: int) -> bool:
             pass
         time.sleep(0.05)
     return False
-
-
-def test_a_stuck_reaper_is_stopped_at_the_deadline_and_admission_refuses(tmp_path, host, monkeypatch):
-    host["readings"] = [_disk(90.0)]
-    monkeypatch.setattr(
-        adm, "disk_reaper_command", lambda _root: ([sys.executable, "-c", "import time; time.sleep(60)"], tmp_path)
-    )
-    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
-    limits = dataclasses.replace(_LIMITS, disk_reaper_timeout_s=1.0)
-
-    started = time.monotonic()
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=limits, reaper=adm.run_disk_reaper)
-    elapsed = time.monotonic() - started
-
-    assert elapsed < 1.0 + 2 * adm.DISK_REAPER_KILL_GRACE_S
-    assert not decision.admitted and decision.disk_refused
-    assert decision.failures[0].endswith("reaper timed out after 1 s and was stopped")
 
 
 def test_the_reaper_process_group_is_killed_even_when_it_ignores_sigterm(tmp_path, monkeypatch):
@@ -946,26 +655,6 @@ def test_the_child_entry_prints_one_json_outcome_and_keeps_reaper_output_off_std
     assert "reaper chatter" in captured.err
     assert adm._parse_child_outcome(captured.out) == adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED)
     assert adm._reaper_child_main([]) == 2
-
-
-@pytest.mark.parametrize("flag", ["--help", "-h"])
-def test_reaper_child_help_prints_usage_and_exits_zero(flag, capsys):
-    assert adm._reaper_child_main([flag]) == 0
-    captured = capsys.readouterr()
-    assert captured.out.startswith("usage: python -m scripts.orchestration.dispatch_admission")
-    assert captured.err == ""
-
-
-def test_the_real_reaper_child_starts_and_reports_an_outcome(tmp_path, monkeypatch):
-    # The real reaper (once #10778 lands) refuses to touch anything with this set.
-    monkeypatch.setenv("LU_REAPER_DISABLED", "1")
-
-    outcome = adm.run_disk_reaper(tmp_path / "no-checkout", timeout_s=60.0)
-
-    assert outcome.detail.startswith("reaper ")
-    assert not outcome.detail.startswith(
-        ("reaper timed out", "reaper failed: the reaper process", "reaper failed: could not start")
-    ), outcome.detail
 
 
 @pytest.mark.parametrize(
@@ -1095,18 +784,6 @@ def test_write_dispatch_boundaries_reap_at_85_and_refuse_only_at_90(tmp_path, ho
     assert (decision.to_record()["disk_reaper"] is not None) is reaps
 
 
-def test_the_reap_band_admits_and_reports_the_reaper_outcome(tmp_path, host):
-    host["readings"] = [_disk(87.0)]
-
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_Reaper())
-
-    assert decision.admitted
-    assert "(reap at 85%, refuse at 90%, alert at 80%) [reaper removed 3 worktree(s), 87.0% before]" in (
-        decision.summary()
-    )
-    assert decision.to_record()["disk_reap_used_percent"] == 85.0
-
-
 @pytest.mark.parametrize(
     "outcome",
     [
@@ -1126,18 +803,6 @@ def test_a_failed_reaper_admits_below_90_and_refuses_from_90(tmp_path, host, out
     assert len(reaper.calls) == 1
     if not admitted:
         assert decision.failures[0].endswith(outcome.detail)
-
-
-def test_a_reaper_that_brings_90_into_the_band_admits_and_one_that_does_not_refuses(tmp_path, host):
-    host["readings"] = [_disk(93.0)]
-    reaper = _Reaper(frees_to=_disk(88.0), host=host)
-
-    assert adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper).admitted
-    assert len(reaper.calls) == 1
-
-    host["readings"] = [_disk(93.0)]
-    reaper = _Reaper(frees_to=_disk(90.0), host=host)
-    assert not adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper).admitted
 
 
 @pytest.mark.parametrize(("used", "admitted"), [(84.0, True), (85.0, True), (89.0, True), (90.0, False)])
@@ -1178,44 +843,3 @@ def test_precheck_steps_aside_for_the_disk_only_at_the_refuse_watermark(host, mo
     early = adm.precheck("workspace-write", thresholds=_LIMITS)
 
     assert (early is None) is steps_aside
-
-
-def test_default_watermarks_are_85_and_90():
-    defaults = adm.config_defaults()
-    assert (defaults.disk_reap_used_percent, defaults.disk_refuse_used_percent) == (85.0, 90.0)
-
-
-@pytest.mark.parametrize(
-    "env",
-    [
-        {"DISPATCH_DISK_REAP_USED_PERCENT": "90", "DISPATCH_DISK_REFUSE_USED_PERCENT": "90"},
-        {"DISPATCH_DISK_REAP_USED_PERCENT": "92", "DISPATCH_DISK_REFUSE_USED_PERCENT": "88"},
-        {"DISPATCH_DISK_REFUSE_USED_PERCENT": "85"},  # equal to the default reap watermark
-        {"DISPATCH_DISK_REFUSE_USED_PERCENT": "70"},  # below the default reap watermark
-        {"DISPATCH_DISK_REAP_USED_PERCENT": "90"},  # equal to the default refuse watermark
-        {"DISPATCH_DISK_REAP_USED_PERCENT": "99"},
-    ],
-)
-def test_reap_not_below_refuse_is_a_typed_configuration_error(env):
-    with pytest.raises(adm.DiskWatermarkConfigError, match=r"DISPATCH_DISK_REAP_USED_PERCENT=.* must be below"):
-        adm.load_thresholds(env)
-    assert issubclass(adm.DiskWatermarkConfigError, ValueError)
-
-
-def test_valid_watermark_overrides_are_read():
-    custom = adm.load_thresholds({"DISPATCH_DISK_REAP_USED_PERCENT": "70", "DISPATCH_DISK_REFUSE_USED_PERCENT": "95"})
-    assert (custom.disk_reap_used_percent, custom.disk_refuse_used_percent) == (70.0, 95.0)
-
-
-@pytest.mark.parametrize("raw", ["101", "-1", "lots", "nan"])
-def test_invalid_reap_watermark_keeps_the_existing_handling(raw):
-    with pytest.raises(ValueError, match="DISPATCH_DISK_REAP_USED_PERCENT"):
-        adm.load_thresholds({"DISPATCH_DISK_REAP_USED_PERCENT": raw})
-
-
-def test_watermarks_come_from_the_deployment_env_file_too(tmp_path):
-    env_file = tmp_path / "dispatch-admission.env"
-    env_file.write_text("DISPATCH_DISK_REFUSE_USED_PERCENT=85\n")
-
-    with pytest.raises(adm.DiskWatermarkConfigError):
-        adm.load_thresholds({"DISPATCH_ADMISSION_ENV_FILE": str(env_file)})

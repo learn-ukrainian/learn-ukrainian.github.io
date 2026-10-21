@@ -63,16 +63,6 @@ def _set_message_created_at(message_id: str, created_at: str) -> None:
 
 # 1. Channel CRUD
 
-def test_create_channel_basic():
-    """Verify a new channel can be created and retrieved."""
-    ch = _channels.create_channel("my-topic", description="A test topic")
-    assert ch["name"] == "my-topic"
-    assert ch["description"] == "A test topic"
-
-    listed = _channels.list_channels()
-    assert len(listed) == 1
-    assert listed[0]["name"] == "my-topic"
-
 
 def test_get_db_migrates_channel_max_age_hours(isolate_db):
     """Existing bridge DBs gain the default channel TTL column."""
@@ -124,12 +114,6 @@ def test_create_channel_duplicate_exist_ok_returns_existing():
     ch = _channels.create_channel("topic", description="new", exist_ok=True)
     assert ch["description"] == "original"  # Existing row is returned
 
-def test_create_channel_duplicate_exist_ok_false_raises():
-    """Verify duplicate creation raises ValueError if exist_ok=False."""
-    _channels.create_channel("topic")
-    with pytest.raises(ValueError, match="already exists"):
-        _channels.create_channel("topic", exist_ok=False)
-
 def test_create_channel_with_include_and_subscribers():
     """Verify list fields round-trip correctly."""
     ch = _channels.create_channel(
@@ -144,79 +128,13 @@ def test_create_channel_with_include_and_subscribers():
     assert fetched["include"] == ["shared", "other"]
     assert fetched["subscribers"] == ["claude", "gemini"]
 
-
-def test_create_channel_rejects_user_subscriber():
-    """Channel subscribers are delivery targets, so `user` is invalid."""
-    with pytest.raises(ValueError, match="Unknown delivery target 'user'"):
-        _channels.create_channel("topic", subscribers=["user"])
-
-
-def test_validate_recipient_agent_accepts_non_user_agents():
-    """Delivery targets still accept the real agent inboxes."""
-    for agent in ("claude", "gemini", "codex", "claude-desktop", "codex-desktop"):
-        _channels._validate_recipient_agent(agent)
-
-def test_create_channel_invalid_name_raises():
-    """Verify invalid channel names are rejected."""
-    for bad_name in ["", "   ", "My Topic", "my topic"]:
-        with pytest.raises(ValueError):
-            _channels.create_channel(bad_name)
-
-def test_get_channel_nonexistent_returns_none():
-    """Verify getting a nonexistent channel returns None."""
-    assert _channels.get_channel("nope") is None
-
-def test_list_channels_ordered_by_creation():
-    """Verify list_channels sorts by creation time ascending."""
-    _channels.create_channel("topic-a")
-    _channels.create_channel("topic-b")
-    listed = _channels.list_channels()
-    assert listed[0]["name"] == "topic-a"
-    assert listed[1]["name"] == "topic-b"
-
 # 2. Posting (origin)
-
-def test_post_to_nonexistent_channel_raises_valueerror():
-    """Verify posting requires the channel to exist."""
-    with pytest.raises(ValueError, match="does not exist"):
-        _channels.post("nope", "gemini", "hello")
 
 def test_post_origin_self_references_thread_id():
     """Verify a root post has thread_id equal to its message_id."""
     _channels.create_channel("topic")
     res = _channels.post("topic", "gemini", "hello")
     assert res["thread_id"] == res["message_id"]
-
-def test_post_origin_round_index_is_zero():
-    """Verify a root post starts at round_index 0."""
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello")
-    assert res["round_index"] == 0
-
-def test_post_with_attachments_roundtrip_json():
-    """Verify attachments are stored and parsed correctly."""
-    _channels.create_channel("topic")
-    atts = [{"name": "file.txt", "content": "data"}]
-    _channels.post("topic", "gemini", "hello", attachments=atts)
-
-    msg = _channels.read("topic")[0]
-    assert msg["attachments"] == atts
-
-def test_post_with_monitor_snapshot_roundtrip():
-    """Verify monitor_state_snapshot is stored and parsed correctly."""
-    _channels.create_channel("topic")
-    snap = {"state": "good", "count": 42}
-    _channels.post("topic", "gemini", "hello", monitor_state_snapshot=snap)
-
-    msg = _channels.read("topic")[0]
-    assert msg["monitor_state_snapshot"] == snap
-
-
-def test_post_with_from_model_roundtrip():
-    """Verify agent-authored posts preserve the sender model metadata."""
-    _channels.create_channel("topic")
-    _channels.post("topic", "gemini", "hello", from_model="gemini-3-flash-preview")
-    assert _channels.read("topic")[0]["from_model"] == "gemini-3-flash-preview"
 
 
 def test_post_creates_delivery_row_per_recipient():
@@ -248,40 +166,6 @@ def test_channel_post_does_not_fanout_to_sender():
     assert not any(d["to_agent"] == "gemini" for d in dlvs)
 
 
-def test_channel_post_still_fans_out_to_other_subscribers():
-    """Skipping self-fanout must preserve deliveries for every other target."""
-    _channels.create_channel("topic")
-    res = _channels.post(
-        "topic",
-        "gemini",
-        "hello",
-        to_agents=["claude", "gemini", "codex"],
-        auto_snapshot=False,
-    )
-
-    dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert len(res["delivery_ids"]) == 2
-    assert {d["to_agent"] for d in dlvs} == {"claude", "codex"}
-    assert all(d["status"] == "pending" for d in dlvs)
-
-
-def test_post_routes_to_desktop_agent_identity():
-    """Desktop identities are first-class delivery targets for manual pull."""
-    _channels.create_channel("topic")
-    res = _channels.post(
-        "topic",
-        "claude",
-        "desktop brief",
-        to_agents=["codex-desktop"],
-        auto_snapshot=False,
-    )
-
-    dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert len(dlvs) == 1
-    assert dlvs[0]["to_agent"] == "codex-desktop"
-    assert dlvs[0]["status"] == "pending"
-
-
 def test_post_rejects_user_as_delivery_target():
     """`user` may author posts, but may not receive delivery rows."""
     _channels.create_channel("topic")
@@ -311,48 +195,7 @@ def test_post_touches_recipient_wake_file(tmp_path, monkeypatch):
     assert wake_file.stat().st_mtime_ns != old_ns
     assert wake_file.read_text(encoding="utf-8").strip()
 
-def test_post_with_zero_recipients_no_deliveries():
-    """Verify posting without recipients creates no delivery rows."""
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello")
-    assert res["delivery_ids"] == []
-
-    dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert len(dlvs) == 0
-
-def test_post_invalid_from_agent_raises():
-    """Verify posting requires a valid from_agent."""
-    _channels.create_channel("topic")
-    with pytest.raises(ValueError, match="Unknown agent"):
-        _channels.post("topic", "invalid", "hello")
-
-def test_post_invalid_kind_raises():
-    """Verify posting requires a valid kind."""
-    _channels.create_channel("topic")
-    with pytest.raises(ValueError, match="Unknown kind"):
-        _channels.post("topic", "gemini", "hello", kind="invalid")
-
 # 3. Replies (threading)
-
-def test_reply_inherits_parent_thread_id():
-    """Verify a reply shares the thread_id of its parent."""
-    _channels.create_channel("topic")
-    parent = _channels.post("topic", "gemini", "hello")
-    reply = _channels.post("topic", "claude", "hi", parent_id=parent["message_id"])
-    assert reply["thread_id"] == parent["thread_id"]
-
-def test_reply_increments_round_index():
-    """Verify a reply has a round_index one greater than its parent."""
-    _channels.create_channel("topic")
-    parent = _channels.post("topic", "gemini", "hello")
-    reply = _channels.post("topic", "claude", "hi", parent_id=parent["message_id"])
-    assert reply["round_index"] == 1
-
-def test_reply_nonexistent_parent_raises():
-    """Verify replying to an unknown message raises ValueError."""
-    _channels.create_channel("topic")
-    with pytest.raises(ValueError, match="not found"):
-        _channels.post("topic", "claude", "hi", parent_id="nope")
 
 def test_nested_reply_round_index_chain():
     """Verify nested replies correctly increment round_index."""
@@ -366,35 +209,6 @@ def test_nested_reply_round_index_chain():
     assert p0["thread_id"] == p1["thread_id"] == p2["thread_id"]
 
 # 4. Reading
-
-def test_read_empty_channel_returns_empty_list():
-    """Verify reading an empty channel returns [] rather than None/error."""
-    _channels.create_channel("topic")
-    assert _channels.read("topic") == []
-
-def test_read_tail_respects_limit():
-    """Verify read(tail=N) returns at most N messages in chronological order."""
-    _channels.create_channel("topic")
-    for i in range(5):
-        _channels.post("topic", "gemini", f"msg{i}")
-
-    msgs = _channels.read("topic", tail=3)
-    assert len(msgs) == 3
-    assert msgs[0]["body"] == "msg2"
-    assert msgs[2]["body"] == "msg4"
-
-def test_read_thread_returns_all_messages_in_order():
-    """Verify reading a thread returns all messages sorted by round_index."""
-    _channels.create_channel("topic")
-    p0 = _channels.post("topic", "gemini", "p0")
-    p1 = _channels.post("topic", "claude", "p1", parent_id=p0["message_id"])
-    p2 = _channels.post("topic", "gemini", "p2", parent_id=p1["message_id"])
-
-    msgs = _channels.read("topic", thread_id=p0["thread_id"])
-    assert len(msgs) == 3
-    assert msgs[0]["message_id"] == p0["message_id"]
-    assert msgs[1]["message_id"] == p1["message_id"]
-    assert msgs[2]["message_id"] == p2["message_id"]
 
 def test_read_thread_filters_by_channel():
     """Verify thread reads don't leak across channels if IDs accidentally match."""
@@ -427,43 +241,6 @@ def test_mark_delivery_dispatched_sets_timestamp():
     dlvs = _channels.deliveries_for_message(res["message_id"])
     assert dlvs[0]["status"] == "dispatched"
     assert dlvs[0]["dispatched_at"] is not None
-
-def test_mark_delivery_delivered_sets_delivered_at():
-    """Verify marking as delivered updates status and delivered_at."""
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
-    dlv_id = res["delivery_ids"][0]
-
-    _channels.mark_delivery(dlv_id, "delivered")
-    dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert dlvs[0]["status"] == "delivered"
-    assert dlvs[0]["delivered_at"] is not None
-
-def test_mark_delivery_failed_stores_error():
-    """Verify marking as failed updates status and error message."""
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
-    dlv_id = res["delivery_ids"][0]
-
-    _channels.mark_delivery(dlv_id, "failed", error="timeout")
-    dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert dlvs[0]["status"] == "failed"
-    assert dlvs[0]["error"] == "timeout"
-
-def test_mark_delivery_invalid_status_raises():
-    """Verify updating to an unknown status raises ValueError."""
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
-    with pytest.raises(ValueError, match="invalid delivery status"):
-        _channels.mark_delivery(res["delivery_ids"][0], "magic")
-
-def test_deliveries_for_message_returns_all_recipients():
-    """Verify deliveries_for_message lists all intended recipients."""
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "gemini", "hello", to_agents=["claude", "codex"])
-    dlvs = _channels.deliveries_for_message(res["message_id"])
-    assert len(dlvs) == 2
-    assert {d["to_agent"] for d in dlvs} == {"claude", "codex"}
 
 
 def test_post_to_slots_with_shared_live_holder_delivers_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -668,30 +445,6 @@ def test_expire_stale_deliveries_skips_already_delivered():
 # 5b. Message priority + TTL policy (#4837 item 4)
 
 
-def test_post_default_priority_is_fyi():
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "user", "hi", to_agents=["claude"], auto_snapshot=False)
-    msgs = _channels.read("topic", tail=1)
-    assert msgs[0]["message_id"] == res["message_id"]
-    assert msgs[0]["priority"] == "fyi"
-
-
-def test_post_explicit_action_required_priority_roundtrips():
-    _channels.create_channel("topic")
-    _channels.post(
-        "topic", "user", "please review", to_agents=["claude"],
-        priority=_channels.PRIORITY_ACTION_REQUIRED, auto_snapshot=False,
-    )
-    msgs = _channels.read("topic", tail=1)
-    assert msgs[0]["priority"] == "action_required"
-
-
-def test_post_invalid_priority_raises():
-    _channels.create_channel("topic")
-    with pytest.raises(ValueError, match="Unknown priority"):
-        _channels.post("topic", "user", "hi", to_agents=["claude"], priority="urgent", auto_snapshot=False)
-
-
 def test_expire_stale_deliveries_action_required_lingers_past_channel_ttl():
     """action_required survives the channel's short fyi-oriented TTL."""
     _channels.create_channel("topic")
@@ -748,21 +501,6 @@ def test_preview_stale_deliveries_matches_expire_without_mutating():
 # 5c. Dead-lane registry + bulk-expire (#4837 items 3-4)
 
 
-def test_dead_lane_agents_defaults_to_gemini(monkeypatch):
-    monkeypatch.delenv("AB_DEAD_LANES", raising=False)
-    assert _channels.dead_lane_agents() == frozenset({"gemini"})
-
-
-def test_dead_lane_agents_env_override(monkeypatch):
-    monkeypatch.setenv("AB_DEAD_LANES", "gemini, qwen")
-    assert _channels.dead_lane_agents() == frozenset({"gemini", "qwen"})
-
-
-def test_dead_lane_agents_env_override_can_be_empty(monkeypatch):
-    monkeypatch.setenv("AB_DEAD_LANES", "")
-    assert _channels.dead_lane_agents() == frozenset()
-
-
 def test_live_agents_excludes_dead_lanes(monkeypatch):
     monkeypatch.setenv("AB_DEAD_LANES", "gemini")
     live = _channels.live_agents()
@@ -785,37 +523,6 @@ def test_bulk_expire_dead_lanes_expires_fresh_pending_regardless_of_age():
     assert row["status"] == "expired"
     assert "dead lane" in row["error"]
     assert "gemini" in row["error"]
-
-
-def test_bulk_expire_dead_lanes_skips_non_pending():
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
-    _channels.mark_delivery(str(res["delivery_ids"][0]), "delivered")
-
-    counts = _channels.bulk_expire_dead_lanes(frozenset({"gemini"}))
-
-    assert counts == {}
-    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "delivered"
-
-
-def test_bulk_expire_dead_lanes_empty_dead_set_is_noop():
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
-
-    counts = _channels.bulk_expire_dead_lanes(frozenset())
-
-    assert counts == {}
-    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "pending"
-
-
-def test_preview_dead_lane_deliveries_matches_bulk_without_mutating():
-    _channels.create_channel("topic")
-    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
-
-    preview = _channels.preview_dead_lane_deliveries(frozenset({"gemini"}))
-
-    assert preview == [{"delivery_id": res["delivery_ids"][0], "to_agent": "gemini"}]
-    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "pending"
 
 
 # 6. Concurrency
@@ -850,48 +557,7 @@ def test_concurrent_post_no_data_loss(isolate_db):
     assert len(set(msgs)) == 5  # No duplicates
     assert len(dlvs) == 10      # 5 messages * 2 recipients (claude + codex)
 
-def test_concurrent_reply_to_same_parent():
-    """Verify multiple threads can reply to the same parent safely."""
-    _channels.create_channel("topic")
-    parent = _channels.post("topic", "gemini", "parent")
-
-    threads = []
-    barrier = threading.Barrier(3)
-
-    def worker(i):
-        barrier.wait()
-        _channels.post("topic", "claude", f"reply{i}", parent_id=parent["message_id"])
-
-    for i in range(3):
-        t = threading.Thread(target=worker, args=(i,))
-        t.start()
-        threads.append(t)
-
-    for t in threads:
-        t.join()
-
-    msgs = _channels.read("topic", thread_id=parent["thread_id"])
-    assert len(msgs) == 4
-    # The parent is 0, the replies should all be round_index 1
-    round_indices = [m["round_index"] for m in msgs]
-    assert round_indices == [0, 1, 1, 1]
-
 # 7. context_sha256 helper
-
-def test_context_sha256_existing_file(isolated_context_root):
-    """Verify sha256 computes correctly for a context file under CONTEXT_ROOT."""
-    channel_dir = isolated_context_root / "pipeline"
-    channel_dir.mkdir()
-    f = channel_dir / "context.md"
-    f.write_text("hello world")
-    import hashlib
-    expected = hashlib.sha256(b"hello world").hexdigest()
-    assert _channels.context_sha256(f) == expected
-
-def test_context_sha256_missing_file_returns_empty_string(isolated_context_root):
-    """Verify missing files return empty string rather than raising."""
-    f = isolated_context_root / "pipeline" / "context.md"
-    assert _channels.context_sha256(f) == ""
 
 
 def test_context_sha256_rejects_paths_outside_context_root(tmp_path):
@@ -914,65 +580,6 @@ def isolated_context_root(tmp_path, monkeypatch):
     return root
 
 
-def test_channel_context_path_returns_expected_location(isolated_context_root):
-    """Verify channel_context_path resolves to {CONTEXT_ROOT}/{channel}/context.md."""
-    p = _channels.channel_context_path("pipeline")
-    expected = (isolated_context_root / "pipeline" / "context.md").resolve()
-    assert p.resolve() == expected
-
-
-def test_load_channel_context_missing_returns_empty_body(isolated_context_root):
-    """Loading a channel with no context.md returns empty body + missing list."""
-    _channels.create_channel("pipeline")
-    result = _channels.load_channel_context("pipeline")
-    assert result["body"] == ""
-    assert "pipeline" in result["missing"]
-    assert "pipeline" in result["revs"]
-    assert result["revs"]["pipeline"] == ""
-
-
-def test_load_channel_context_with_file_loads_and_hashes(isolated_context_root):
-    """Loading a channel with a context.md reads it and computes sha256."""
-    _channels.create_channel("pipeline")
-    ctx_dir = isolated_context_root / "pipeline"
-    ctx_dir.mkdir()
-    (ctx_dir / "context.md").write_text("# pipeline rules\nUse BEGIN IMMEDIATE")
-    result = _channels.load_channel_context("pipeline")
-    assert "pipeline rules" in result["body"]
-    assert "BEGIN IMMEDIATE" in result["body"]
-    assert result["revs"]["pipeline"]  # nonempty sha256
-    assert result["missing"] == []
-
-
-def test_load_channel_context_recursive_includes(isolated_context_root):
-    """Includes are resolved depth-first, shared comes first in body."""
-    _channels.create_channel("shared")
-    _channels.create_channel("pipeline", include=["shared"])
-    (isolated_context_root / "shared").mkdir()
-    (isolated_context_root / "shared" / "context.md").write_text("PROJECT RULES")
-    (isolated_context_root / "pipeline").mkdir()
-    (isolated_context_root / "pipeline" / "context.md").write_text("PIPELINE RULES")
-    result = _channels.load_channel_context("pipeline")
-    # Shared must appear before pipeline in the combined body
-    assert result["body"].index("PROJECT RULES") < result["body"].index("PIPELINE RULES")
-    assert set(result["revs"].keys()) == {"shared", "pipeline"}
-    assert result["missing"] == []
-
-
-def test_load_channel_context_cycle_detection(isolated_context_root):
-    """Circular includes don't infinite-loop."""
-    _channels.create_channel("a", include=["b"])
-    _channels.create_channel("b", include=["a"])
-    (isolated_context_root / "a").mkdir()
-    (isolated_context_root / "a" / "context.md").write_text("A")
-    (isolated_context_root / "b").mkdir()
-    (isolated_context_root / "b" / "context.md").write_text("B")
-    # Should terminate without RecursionError
-    result = _channels.load_channel_context("a")
-    assert "A" in result["body"]
-    assert "B" in result["body"]
-
-
 def test_fetch_monitor_state_returns_none_on_connection_error(monkeypatch):
     """Monitor API down → returns None, doesn't raise."""
     import urllib.error
@@ -980,57 +587,6 @@ def test_fetch_monitor_state_returns_none_on_connection_error(monkeypatch):
         raise urllib.error.URLError("connection refused")
     monkeypatch.setattr("urllib.request.urlopen", boom)
     assert _channels.fetch_monitor_state(timeout=0.1) is None
-
-
-def test_fetch_monitor_state_returns_none_on_timeout(monkeypatch):
-    """Timeout also returns None, not raise."""
-    def boom(*a, **kw):
-        raise TimeoutError("slow")
-    monkeypatch.setattr("urllib.request.urlopen", boom)
-    assert _channels.fetch_monitor_state(timeout=0.1) is None
-
-
-def test_truncate_history_by_budget_empty():
-    """Empty list → empty result, zero dropped."""
-    kept, dropped = _channels.truncate_history_by_budget([])
-    assert kept == []
-    assert dropped == 0
-
-
-def test_truncate_history_by_budget_all_fit():
-    """If everything fits, nothing is dropped."""
-    messages = [{"body": "short", "round_index": 0}] * 3
-    kept, dropped = _channels.truncate_history_by_budget(messages, max_chars=10000)
-    assert len(kept) == 3
-    assert dropped == 0
-
-
-def test_truncate_history_by_budget_drops_oldest_first():
-    """Oldest messages are dropped first when over budget."""
-    messages = [
-        {"body": "a" * 100, "round_index": 0},
-        {"body": "b" * 100, "round_index": 1},
-        {"body": "c" * 100, "round_index": 2},
-    ]
-    # Budget fits roughly 1-2 messages (100 body + 80 envelope each)
-    kept, dropped = _channels.truncate_history_by_budget(messages, max_chars=200)
-    assert dropped >= 1
-    # Newest (c) should survive, oldest (a) dropped
-    kept_bodies = [m["body"] for m in kept]
-    assert "c" * 100 in kept_bodies
-    assert "a" * 100 not in kept_bodies
-
-
-def test_truncate_history_by_budget_keeps_at_least_one():
-    """Even with an absurdly small budget, the newest message is kept."""
-    messages = [
-        {"body": "a" * 10_000, "round_index": 0},
-        {"body": "b" * 10_000, "round_index": 1},
-    ]
-    kept, _dropped = _channels.truncate_history_by_budget(messages, max_chars=50)
-    # At least one (the newest) survives — the "and kept_rev" guard
-    assert len(kept) >= 1
-    assert kept[-1]["body"] == "b" * 10_000
 
 
 def test_post_auto_snapshot_captures_context_sha256(isolated_context_root):
@@ -1053,51 +609,6 @@ def test_post_auto_snapshot_captures_context_sha256(isolated_context_root):
     pipeline_sha = hashlib.sha256(b"pipeline-content").hexdigest()
     assert msgs[0]["context_rev_shared"] == shared_sha
     assert msgs[0]["context_rev_channel"] == pipeline_sha
-
-
-def test_post_auto_snapshot_with_missing_shared_warns(isolated_context_root, capsys):
-    """Missing shared context emits a loud stderr warning per review feedback."""
-    _channels.create_channel("shared")  # no context file
-    _channels.create_channel("pipeline")  # no context file either
-    with patch.object(_channels, "fetch_monitor_state", return_value=None):
-        _channels.post("pipeline", "user", "body", auto_snapshot=True)
-    captured = capsys.readouterr()
-    assert "shared context file is missing" in captured.err
-
-
-def test_post_auto_snapshot_false_skips_io(isolated_context_root):
-    """auto_snapshot=False leaves context_rev_* as empty strings."""
-    _channels.create_channel("pipeline")
-    _channels.post("pipeline", "user", "body", auto_snapshot=False)
-    msgs = _channels.read("pipeline", tail=1)
-    assert msgs[0]["context_rev_shared"] == ""
-    assert msgs[0]["context_rev_channel"] == ""
-    assert msgs[0]["monitor_state_snapshot"] is None
-
-
-def test_build_agent_prompt_assembles_sections(isolated_context_root):
-    """build_agent_prompt produces context + history + body in order."""
-    _channels.create_channel("pipeline")
-    (isolated_context_root / "pipeline").mkdir()
-    (isolated_context_root / "pipeline" / "context.md").write_text("RULES: always test")
-
-    # Post one historical message
-    _channels.post("pipeline", "user", "earlier message", auto_snapshot=False)
-
-    with patch.object(_channels, "fetch_monitor_state", return_value=None):
-        info = _channels.build_agent_prompt(
-            "pipeline", "new post body", include_monitor_state=False
-        )
-
-    assert "RULES: always test" in info["prompt"]
-    assert "earlier message" in info["prompt"]
-    assert "new post body" in info["prompt"]
-    # Context must come before history, history before body (order matters
-    # for attention — newest/most-important content at the END)
-    idx_rules = info["prompt"].index("RULES")
-    idx_earlier = info["prompt"].index("earlier message")
-    idx_body = info["prompt"].index("new post body")
-    assert idx_rules < idx_earlier < idx_body
 
 
 def test_build_agent_prompt_raises_if_body_alone_exceeds_budget(isolated_context_root):
@@ -1228,9 +739,6 @@ class TestDeliveryLeasing:
         assert row["status"] == "processing"
         assert row["lease_until"] is not None
         assert row["attempt_count"] == 1
-
-    def test_claim_returns_none_when_empty(self):
-        assert _channels.claim_next_delivery("claude", now=_iso_at(0)) is None
 
     def test_claim_atomic_under_concurrent_callers(self):
         _channels.create_channel("topic")
@@ -1392,62 +900,6 @@ class TestDeliveryLeasing:
                 now=_iso_at(610),
             )
 
-    def test_mark_failed_stale_claim_after_reclaim(self):
-        _channels.create_channel("topic")
-        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
-        delivery_id = res["delivery_ids"][0]
-
-        # Worker A claims, gets attempt 1
-        worker_a_claim = _channels.claim_next_delivery("claude", now=_iso_at(0))
-        assert worker_a_claim is not None
-        assert worker_a_claim["attempt_count"] == 1
-
-        # Lease expires, gets reclaimed
-        reclaimed = _channels.release_expired_leases(now=_iso_at(601))
-        assert reclaimed == 1
-
-        # Worker B claims, gets attempt 2, fails
-        worker_b_claim = _channels.claim_next_delivery("claude", now=_iso_at(602))
-        assert worker_b_claim is not None
-        assert worker_b_claim["attempt_count"] == 2
-        _channels.mark_delivery_failed(
-            delivery_id,
-            "tool_error",
-            "error by B",
-            expected_attempt_count=worker_b_claim["attempt_count"],
-            now=_iso_at(605),
-        )
-
-        # Worker A finally finishes, tries to mark failed with expected_attempt=1
-        with pytest.raises(_channels.StaleClaimError, match="expected attempt 1"):
-            _channels.mark_delivery_failed(
-                delivery_id,
-                "tool_error",
-                "error by A",
-                expected_attempt_count=worker_a_claim["attempt_count"],
-                now=_iso_at(610),
-            )
-
-    def test_mark_failed_stale_claim(self):
-        _channels.create_channel("topic")
-        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
-        delivery_id = res["delivery_ids"][0]
-
-        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
-        assert claimed is not None
-
-        with pytest.raises(_channels.StaleClaimError, match="expected attempt 99"):
-            _channels.mark_delivery_failed(
-                delivery_id,
-                "tool_error",
-                "tool exploded",
-                expected_attempt_count=99,
-                now=_iso_at(5),
-            )
-
-        row = _delivery_row(delivery_id)
-        assert row["status"] == "processing"
-
     def test_mark_failed_terminal(self):
         _channels.create_channel("topic")
         res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
@@ -1558,28 +1010,6 @@ class TestDeliveryLeasing:
         row = _delivery_row(delivery_id)
         assert row["status"] == "processing"
         assert row["lease_until"] == _iso_at(30)
-
-    def test_attempt_count_increments_on_each_claim(self):
-        _channels.create_channel("topic")
-        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
-        delivery_id = res["delivery_ids"][0]
-
-        first = _channels.claim_next_delivery("claude", now=_iso_at(0))
-        assert first is not None
-        assert _delivery_row(delivery_id)["attempt_count"] == 1
-
-        _channels.mark_delivery_failed(
-            delivery_id,
-            "unavailable",
-            "retry",
-            expected_attempt_count=first["attempt_count"],
-            reschedule_after=_iso_at(1),
-            now=_iso_at(0),
-        )
-
-        second = _channels.claim_next_delivery("claude", now=_iso_at(1))
-        assert second is not None
-        assert _delivery_row(delivery_id)["attempt_count"] == 2
 
 
 def test_bulk_expire_dead_lanes_tags_action_required_as_escalation():

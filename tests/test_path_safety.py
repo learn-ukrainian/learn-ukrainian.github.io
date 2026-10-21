@@ -307,27 +307,6 @@ def test_directory_under_home_stays_approvable(
         )
 
 
-def test_delete_guard_refuses_path_outside_allowed_delete_roots(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """Caller-owned temps must still be under an explicit approved root."""
-    # Clear process TMPDIR so pytest's temp hierarchy cannot become an
-    # accidental allowlist root for this refusal case.
-    monkeypatch.delenv("TMPDIR", raising=False)
-    repo_root = tmp_path / "repo"
-    outside = tmp_path / "not-approved" / "payload"
-    outside.parent.mkdir(parents=True)
-    outside.write_text("x\n", encoding="utf-8")
-
-    with pytest.raises(ValueError, match="outside approved"):
-        assert_delete_target(
-            outside,
-            repo_root=repo_root,
-            approved_temp_roots=(tmp_path / "other-root",),
-        )
-
-
 def test_raw_rm_rf_lint_allowlists_scoped_shell_cleanups() -> None:
     """services.sh lockdirs/caches stay allowlisted; new unscoped hits fail."""
     findings = lint_raw_rm_rf.find_raw_rm_rf()

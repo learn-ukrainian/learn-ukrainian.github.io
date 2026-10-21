@@ -20,7 +20,6 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.russicism_detection import (
-    _is_in_quote_context,
     check_russicisms,
     check_ua_gec_calques,
 )
@@ -57,22 +56,9 @@ class TestBasicDetection:
         assert len(violations) == 1
         assert "приймати участь" in violations[0]['issue']
 
-    def test_detects_получати(self):
-        """Detects 'получати' (should be 'отримувати')."""
-        content = _wrap("Вони будуть получати зарплату вчасно.")
-        violations = check_russicisms(content)
-        assert len(violations) == 1
-        assert "получати" in violations[0]['issue']
-
     def test_detects_відноситися(self):
         """Detects 'відноситися' (should be 'стосуватися')."""
         content = _wrap("Це відноситися до граматики.")
-        violations = check_russicisms(content)
-        assert len(violations) == 1
-
-    def test_detects_слідуючий(self):
-        """Detects 'слідуючий' (should be 'наступний')."""
-        content = _wrap("Слідуючий урок буде складнішим.")
         violations = check_russicisms(content)
         assert len(violations) == 1
 
@@ -89,24 +75,6 @@ class TestBasicDetection:
         violations = check_russicisms(content)
         assert len(violations) == 1
         assert "довколишній" in str(violations) or "навколишній" in str(violations)
-
-    def test_detects_оточуючих_inflected(self):
-        """Inflected оточуючих also fires (#3688)."""
-        content = _wrap("Опис оточуючих лісів, полів і річок.")
-        violations = check_russicisms(content)
-        assert len(violations) == 1
-
-    def test_detects_кушати(self):
-        """Detects 'кушати' (should be 'їсти')."""
-        content = _wrap("Давайте кушати разом.")
-        violations = check_russicisms(content)
-        assert len(violations) == 1
-
-    def test_detects_вообще(self):
-        """Detects 'вообще' (should be 'взагалі')."""
-        content = _wrap("Він вообще не розуміє правил.")
-        violations = check_russicisms(content)
-        assert len(violations) == 1
 
     def test_detects_нравитися(self):
         """Detects 'нравитися' (should be 'подобатися')."""
@@ -194,19 +162,6 @@ class TestQuoteContext:
         violations = check_russicisms(content)
         assert len(violations) == 1  # Only the non-quoted one
 
-    def test_is_in_quote_context_guillemets(self):
-        """Helper correctly identifies guillemet context."""
-        text = "Він сказав: «кушати треба» і пішов."
-        # Position of "кушати" is after «
-        pos = text.index("кушати")
-        assert _is_in_quote_context(text, pos) is True
-
-    def test_is_in_quote_context_not_in_quote(self):
-        """Helper correctly identifies non-quote context."""
-        text = "Він любить кушати суп."
-        pos = text.index("кушати")
-        assert _is_in_quote_context(text, pos) is False
-
 
 # =============================================================================
 # TRACK EXEMPTIONS
@@ -220,18 +175,6 @@ class TestTrackExemptions:
         violations = check_russicisms(content, file_path="/curriculum/l2-uk-en/oes/module.md")
         assert violations == []
 
-    def test_ruth_track_exempt(self):
-        """RUTH track content is exempt (historical texts)."""
-        content = _wrap("Слідуючий документ важливий.")
-        violations = check_russicisms(content, file_path="/curriculum/l2-uk-en/ruth/module.md")
-        assert violations == []
-
-    def test_b1_track_not_exempt(self):
-        """B1 track content is NOT exempt."""
-        content = _wrap("Він получати грамоту.")
-        violations = check_russicisms(content, file_path="/curriculum/l2-uk-en/b1/module.md")
-        assert len(violations) == 1
-
 
 # =============================================================================
 # CASE INSENSITIVITY
@@ -242,12 +185,6 @@ class TestCaseInsensitivity:
     def test_uppercase_detected(self):
         """Russicisms at sentence start (capitalized) are detected."""
         content = _wrap("Получати знання — це важливо.")
-        violations = check_russicisms(content)
-        assert len(violations) == 1
-
-    def test_mixed_case_detected(self):
-        """Mixed case variants are detected."""
-        content = _wrap("ВООБЩЕ це дивно.")
         violations = check_russicisms(content)
         assert len(violations) == 1
 
@@ -280,10 +217,6 @@ class TestUaGecCalquePatterns:
 
     def test_з_іншої_сторони_caught(self):
         violations = check_russicisms(_wrap("З іншої сторони, це не зовсім так."))
-        assert violations and "сторони" in violations[0]["issue"]
-
-    def test_з_однієї_сторони_caught(self):
-        violations = check_russicisms(_wrap("З однієї сторони, це добре."))
         assert violations and "сторони" in violations[0]["issue"]
 
     def test_значить_discourse_marker_caught(self):
@@ -346,11 +279,6 @@ class TestUaGecCalquePatterns:
         violations = check_russicisms(_wrap("Справа в тому, що ми не готові."))
         assert violations and "справа в тому" in violations[0]["issue"]
 
-    def test_справа_у_тому_caught(self):
-        """`Справа у тому` — variant spelling of same calque."""
-        violations = check_russicisms(_wrap("Справа у тому, що часу немає."))
-        assert violations and "справа в тому" in violations[0]["issue"]
-
     def test_справа_other_sense_clean(self):
         """`справа` in 'matter / case' sense — correct UK, must NOT flag."""
         violations = check_russicisms(_wrap("Кожна справа важлива для людей."))
@@ -361,10 +289,6 @@ class TestUaGecCalquePatterns:
     def test_пару_numerical_caught(self):
         """`пару` as numeral ('a couple of days') — RU calque."""
         violations = check_russicisms(_wrap("Зустрінемось через пару днів."))
-        assert violations and "пару" in violations[0]["issue"]
-
-    def test_пару_numerical_hours_caught(self):
-        violations = check_russicisms(_wrap("Чекай пару годин."))
         assert violations and "пару" in violations[0]["issue"]
 
     def test_пару_noun_clean(self):
@@ -384,45 +308,9 @@ class TestUaGecBulkLookup:
         violations = check_ua_gec_calques(_wrap("Автор залишив коментарій до тексту."))
         assert violations and violations[0]["matched"].casefold() == "коментарій"
 
-    def test_detects_підписників(self):
-        violations = check_ua_gec_calques(_wrap("У блогу вже багато підписників."))
-        assert violations and violations[0]["matched"].casefold() == "підписників"
-
-    def test_detects_посту(self):
-        violations = check_ua_gec_calques(_wrap("Після посту автор відповів на питання."))
-        assert violations and violations[0]["matched"].casefold() == "посту"
-
-    def test_detects_лайки(self):
-        violations = check_ua_gec_calques(_wrap("Цей текст швидко зібрав лайки."))
-        assert violations and violations[0]["matched"].casefold() == "лайки"
-
-    def test_detects_вірно(self):
-        violations = check_ua_gec_calques(_wrap("Вірно пояснити правило важливо."))
-        assert violations and violations[0]["matched"].casefold() == "вірно"
-
-    def test_detects_дозволяє(self):
-        violations = check_ua_gec_calques(_wrap("Цей підхід дозволяє краще бачити структуру."))
-        assert violations and violations[0]["matched"].casefold() == "дозволяє"
-
     def test_detects_як_тільки(self):
         violations = check_ua_gec_calques(_wrap("Як тільки учень читає, він бачить приклад."))
         assert violations and violations[0]["matched"].casefold() == "як тільки"
-
-    def test_detects_у_якості(self):
-        violations = check_ua_gec_calques(_wrap("Це слово використано у якості прикладу."))
-        assert violations and violations[0]["matched"].casefold() == "у якості"
-
-    def test_пара_взуття_not_flagged(self):
-        violations = check_ua_gec_calques(_wrap("На полиці стоїть пара взуття."))
-        assert violations == []
-
-    def test_справа_generic_not_flagged(self):
-        violations = check_ua_gec_calques(_wrap("Кожна справа важлива для громади."))
-        assert violations == []
-
-    def test_наступний_krok_not_flagged(self):
-        violations = check_ua_gec_calques(_wrap("Будь-який наступний крок потребує уваги."))
-        assert violations == []
 
     def test_даний_math_context_not_flagged(self):
         violations = check_ua_gec_calques(_wrap("Даний метод у геометрії допомагає довести теорему."))

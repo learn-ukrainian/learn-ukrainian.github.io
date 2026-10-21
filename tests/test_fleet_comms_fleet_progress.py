@@ -2,21 +2,11 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from scripts.fleet_comms.cli import (
-    EXIT_OK,
-    _monitor_base_url,
     fleet_progress_payload,
-    main,
 )
-
-
-def test_monitor_base_url_strips_trailing_slash_before_suffix() -> None:
-    assert _monitor_base_url("http://127.0.0.1:8765/api/state/summary/") == "http://127.0.0.1:8765"
-    assert _monitor_base_url("http://127.0.0.1:8765/api/") == "http://127.0.0.1:8765"
-    assert _monitor_base_url("http://127.0.0.1:8765/") == "http://127.0.0.1:8765"
 
 
 def test_fleet_progress_payload_surfaces_idle_and_work_exceptions(tmp_path: Path) -> None:
@@ -129,46 +119,3 @@ def test_fleet_progress_payload_surfaces_idle_and_work_exceptions(tmp_path: Path
     assert "delegate_failed" in kinds
     assert "delegate_stale_active" in kinds
     assert payload["exception_count"] >= 6
-
-
-def test_fleet_progress_fail_open_when_monitor_down(tmp_path: Path) -> None:
-    payload = fleet_progress_payload(
-        repo_root=tmp_path,
-        idle_store=tmp_path / "missing.jsonl",
-        idle_events=[],
-        work_next={"available": False, "reason": "URLError"},
-        delegate_active={"available": False, "reason": "TimeoutError"},
-        delegate_failed={"available": False, "reason": "TimeoutError"},
-    )
-    assert payload["work_next"]["available"] is False
-    assert payload["delegate"]["active_available"] is False
-    assert payload["delegate"]["failed_available"] is False
-    assert payload["exception_count"] == 0
-
-
-def test_fleet_progress_cli_emits_json(tmp_path: Path, capsys) -> None:
-    store = tmp_path / "events.jsonl"
-    store.write_text("", encoding="utf-8")
-    code = main(
-        [
-            "fleet",
-            "progress",
-            "--repo-root",
-            str(tmp_path),
-            "--idle-store",
-            str(store),
-            "--monitor-url",
-            "http://127.0.0.1:59999",
-        ]
-    )
-    assert code == EXIT_OK
-    out = json.loads(capsys.readouterr().out)
-    assert out["ac"] == "AC-PROGRESS"
-    assert "exceptions" in out
-
-
-def test_fleet_help_marks_progress_cli_only() -> None:
-    from scripts.fleet_comms.cli import fleet_help_payload
-
-    progress = fleet_help_payload()["eyes"]["progress"]
-    assert "CLI-only" in progress

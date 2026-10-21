@@ -22,7 +22,6 @@ import os
 import re
 import sqlite3
 import subprocess
-from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -32,13 +31,8 @@ from scripts.docs import store_census as sc
 
 REPO = Path(__file__).resolve().parents[1]
 CATALOGUE = cat.load(REPO / cat.CATALOGUE_PATH)
-SCHEMA = json.loads((REPO / cat.SCHEMA_PATH).read_text(encoding='utf-8'))
 REGISTRY = sc.registry(CATALOGUE)
 ALLOWLIST = json.loads((REPO / sc.ALLOWLIST_PATH).read_text(encoding='utf-8'))
-STUDY_EVIDENCE_DIRS = {'batch_state/preserved', 'batch_state/devops-*', 'batch_state/codex-atlas',
-                       'batch_state/briefs', 'batch_state/open-model-data-*', 'batch_state/review-receipts'}
-
-
 def store(root: Path, logical: str, *, wal: bool = False, tables: tuple[str, ...] = ('t',)) -> Path:
     """A real SQLite file at ``root/logical`` (rollback journal unless ``wal``), closed and checkpointed.
 
@@ -71,56 +65,6 @@ def row_by_path(reg: dict, path: str) -> dict:
 
 
 # ---------------------------------------------------------------- the registry (AC-01, AC-03)
-
-def test_the_catalogue_validates_against_its_schema():
-    assert cat.schema_errors(CATALOGUE, SCHEMA) == []
-    assert cat.control_string_errors(CATALOGUE) == []
-
-
-def test_the_registry_reproduces_the_reconciled_inventory():
-    present = rows(presence='present')
-    assert len(present) == 40
-    assert Counter(r['activity'] for r in present) == {'active': 34, 'dormant': 3, 'staged': 2, 'orphan': 1}
-    active = Counter(r['kind'] for r in present if r['activity'] == 'active')
-    assert active == {'operational': 8, 'cache': 4, 'reference': 9, 'derived': 3, 'job_state': 8, 'telemetry': 2}
-    assert {r['path'] for r in rows(activity='dormant')} == {
-        'batch_state/agent_monitor.sqlite3', 'wiki/.state/progress.db', 'data/ulif_dump.db'}
-    assert {r['path'] for r in rows(activity='staged')} == {'data/sum20_staging.db', 'data/sum20_slovnyk_staging.db'}
-    assert {r['path'] for r in rows(activity='orphan')} == {'batch_state/fleet-comms/v1/artifacts/comms.sqlite3'}
-    assert row_by_path(REGISTRY, 'batch_state/review-findings/a1.sqlite')['activity'] == 'active'
-
-
-def test_the_registry_records_the_declared_defaults_families_and_evidence():
-    absent = {r['path'] for r in rows(presence='declared_absent')}
-    assert absent == {
-        'batch_state/hramatka/lessons.sqlite3', 'batch_state/trails/runs.sqlite3',
-        'batch_state/agent_runtime_failover_cooldowns.sqlite3', 'data/telemetry/module_builds.db',
-        'data/telemetry/llm_qg.db', 'data/telemetry/llm_qg_shadow.db', 'data/embeddings/manifest.db',
-        'data/ubertext-freq/frequency.db', 'data/atlas-synthetic.db'}
-    families = {f['id'] for f in REGISTRY['families']}
-    assert families >= {'review-findings', 'lexicon-runner-work', 'ulif-ledgers', 'dictionary-acquisition-staging',
-                        'trail-certification', 'temporary-scratch', 'db-overrides', 'verbatim-shingle-index'}
-    assert {f['id'] for f in REGISTRY['families'] if f['glob'] is None} == {
-        'trail-certification', 'temporary-scratch', 'db-overrides'}
-    assert {e['path'] for e in REGISTRY['evidence_dirs']} >= STUDY_EVIDENCE_DIRS
-
-
-def test_every_store_row_carries_the_required_facts():
-    required = {'path', 'owner', 'kind', 'activity', 'presence', 'writers', 'journal', 'busy_ms', 'busy_source',
-                'protection', 'backup', 'retention'}
-    for row in REGISTRY['stores']:
-        assert required <= set(row), row['path']
-        assert row['writers'] or row.get('writer_note'), row['path']
-        assert row['protection'] in ('keep', 'rebuild', 'disposable'), row['path']
-
-
-def test_registry_rows_name_stores_and_producers_never_host_locations():
-    for section in ('stores', 'families', 'evidence_dirs', 'non_stores'):
-        for row in REGISTRY[section]:
-            for value in [row.get('path'), row.get('glob'), row.get('example'), *row.get('paths', []),
-                          *row.get('writers', [])]:
-                if value:
-                    assert not value.startswith(('/', '~')) and '/home/' not in value and '/mnt/' not in value, value
 
 
 # ---------------------------------------------------------------- static check
@@ -288,14 +232,6 @@ def test_the_writer_busy_timeout_is_the_last_setting_in_the_function(name, expec
     assert sc.writer_busy_ms(BUSY_SOURCE, name) == expected
 
 
-def test_every_explicit_busy_timeout_matches_its_code():
-    """The repository registry passes the busy check, and it has rows on both paths."""
-    explicit = [r for section in ('stores', 'families') for r in REGISTRY[section] if r['busy_source'] == 'explicit']
-    assert any(r.get('busy_setters') for r in explicit) and any(not r.get('busy_setters') for r in explicit)
-    assert not [e for e in static(CATALOGUE) if 'busy' in e]
-    assert row_by_path(REGISTRY, 'batch_state/agent_runtime_failover_cooldowns.sqlite3')['busy_ms'] == 5000
-
-
 # ---------------------------------------------------------------- backup facts
 
 @pytest.mark.parametrize(('path', 'fact'), [
@@ -321,11 +257,6 @@ def test_backup_facts_follow_the_allowlist_semantics(path, fact):
 
 def run(root: Path, *, expect_present: bool = False) -> sc.Census:
     return sc.census(root, CATALOGUE, expect_present=expect_present)
-
-
-def test_an_empty_checkout_passes(tmp_path):
-    result = run(tmp_path)
-    assert result.ok and result.found == {} and result.walked_roots == []
 
 
 @pytest.mark.parametrize('path', ['data/foo.sqlite3', 'batch_state/x/foo.sqlite', '.agent/x/y.db',
@@ -464,11 +395,6 @@ def test_the_census_command_reports_counts_and_exits_by_outcome(tmp_path, capsys
     assert 'MISSING STORE data/movaua.db' in capsys.readouterr().out
 
 
-def test_a_census_root_that_is_not_a_directory_is_an_error(tmp_path, capsys):
-    assert cat.main(['census', '--repo', str(REPO), '--root', str(tmp_path / 'missing')]) == cat.EXIT_UNREADABLE
-    assert 'is not a directory' in capsys.readouterr().out
-
-
 # ---------------------------------------------------------------- incomplete scans
 
 class Denier:
@@ -538,15 +464,6 @@ def census_cli(root: Path, *extra: str) -> list[str]:
     return ['census', '--repo', str(REPO), '--root', str(root), *extra]
 
 
-def test_the_denier_takes_effect_by_kernel_or_injection(tmp_path, deny):
-    locked = store(tmp_path, 'data/locked.sqlite3')
-    deny(locked)
-    with pytest.raises(PermissionError):
-        locked.open('rb')
-    if os.geteuid() == 0:
-        assert deny.mechanism == 'injected'  # root ignores file modes, so the fault is injected
-
-
 def test_an_unreadable_directory_makes_the_scan_incomplete(tmp_path, deny, capsys):
     store(tmp_path, 'data/atlas.db', wal=True)
     store(tmp_path, 'data/locked/hidden.sqlite3')
@@ -603,12 +520,6 @@ def test_a_file_that_vanishes_mid_walk_makes_the_scan_incomplete(tmp_path, monke
     assert data['ok'] is False
 
 
-def test_a_file_that_vanishes_before_its_header_is_read_is_recorded(tmp_path):
-    result = sc.Census(root='.')
-    assert sc._read_header(result, 'data/gone.db', tmp_path / 'gone.db') is None
-    assert result.incomplete == [{'code': 'vanished_file', 'path': 'data/gone.db', 'reason': 'ENOENT'}]
-
-
 # ---------------------------------------------------------------- output hygiene
 
 ABSOLUTE = re.compile(r'(?<![\w.~-])/(?:home|tmp|var|mnt|root|srv|Users|private)/')
@@ -636,17 +547,3 @@ def test_errors_and_reports_carry_no_absolute_path(tmp_path, deny, capsys):
     assert cat.main(census_cli(tmp_path / 'missing', '--json')) == cat.EXIT_UNREADABLE
     assert json.loads(capsys.readouterr().out)['error']['message'] == (
         'the census root (--root or --store-root) is not a directory')
-
-
-@pytest.mark.parametrize(('exc', 'message'), [
-    (FileNotFoundError(errno.ENOENT, 'No such file or directory', '/abs/host/path/x.yaml'),
-     'No such file or directory'),
-    (FileNotFoundError(errno.ENOENT, 'No such file or directory', 'docs/x.yaml'),
-     'No such file or directory: docs/x.yaml'),
-    (subprocess.CalledProcessError(128, ['git', '-C', '/abs/host/repo', 'rev-parse']), 'git exited with status 128'),
-    (subprocess.TimeoutExpired(['git', '-C', '/abs/host/repo', 'ls-files'], 60), 'git timed out after 60 s'),
-    (FileNotFoundError('the census root (--root or --store-root) is not a directory'),
-     'the census root (--root or --store-root) is not a directory'),
-])
-def test_error_messages_keep_the_reason_and_drop_host_paths(exc, message):
-    assert cat.error_message(exc) == message

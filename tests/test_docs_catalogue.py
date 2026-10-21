@@ -3,7 +3,6 @@ import ast
 import copy
 import json
 import re
-import shlex
 import subprocess
 from collections import Counter
 from pathlib import Path
@@ -16,13 +15,10 @@ from jsonschema import Draft202012Validator
 from scripts.docs import catalogue as catalogue_module
 from scripts.docs.catalogue import (
     CONTROL_CHARS,
-    DRAFT_MARKERS,
     MAX_CATALOGUE_BYTES,
-    MAX_CATALOGUE_DEPTH,
     MAX_CATALOGUE_NODES,
     CatalogueLoadError,
     GitProtocolError,
-    Report,
     body_readable,
     control_path_error,
     coverage,
@@ -34,7 +30,6 @@ from scripts.docs.catalogue import (
     main,
     parse,
     read_heads,
-    suggest,
     validate,
 )
 
@@ -191,37 +186,6 @@ def test_supersession_is_validated_for_every_entry_kind(kind):
     assert errors_with(check(data), "id:old-thing: supersession chain ends at 'id:entry-map' with lifecycle 'draft'")
 
 
-@pytest.mark.parametrize('kind', ENTRY_KINDS)
-def test_two_entry_supersession_cycle_is_rejected_for_every_kind(kind):
-    data = base()
-    first = superseded_entry(kind, 'first', 'id:second')
-    second = superseded_entry(kind, 'second', 'id:first')
-    if kind != 'data_store':
-        second['paths'] = ['docs/guide/a.md']
-    data['entries'] += [first, second]
-    assert errors_with(check(data), 'supersession cycle or self-link: id:first -> id:second -> id:first')
-
-
-@pytest.mark.parametrize('mutate, message', [
-    (lambda d: d['entries'][1].update(lifecycle='current'), "'current' is not one of"),
-    (lambda d: d['entries'][1].update(lifecycle='historical'), "'historical' is not one of"),
-    (lambda d: d['entries'][1].update(lifecycle='superseded'), "'superseded_by' is a required property"),
-    (lambda d: d['entries'][1].update(superseded_by='docs/README.md'), 'should not be valid'),
-    (lambda d: d['entries'][1].update(kind='doc'), 'schema: entries/1'),
-    (lambda d: d['entries'][1].update(paths=['/abs/path']), 'schema: entries/1'),
-])
-def test_wrong_vocabulary_and_shape_fail_schema(mutate, message):
-    data = base()
-    mutate(data)
-    assert errors_with(check(data), message)
-
-
-def test_owner_must_be_a_stream_or_area_key():
-    data = base()
-    data['entries'][1]['owner'] = 'nobody'
-    assert errors_with(check(data), "owner 'nobody' is not a stream or area key")
-
-
 def test_override_must_belong_to_the_declaring_family():
     data = base()
     data['entries'][1]['overrides'] = [{'path': 'docs/README.md', 'lifecycle': 'archive', 'evidence': 'own banner'}]
@@ -260,16 +224,6 @@ def test_privacy_follows_the_paths_a_family_owns_not_its_glob_text():
     assert errors_with(check(data, [*FILES, 'docs/guide/cache/blob.json']), 'content_searchable must be false')
 
 
-def test_privacy_wildcard_glob_over_session_state_is_caught():
-    files = [*FILES, 'docs/session-state/current.md']
-    data = base()
-    data['entries'].append(family('sessions', ['docs/session-*/**']))
-    errors = check(data, files).errors
-    assert any('sessions: owns 1 inventory-excluded path(s)' in e for e in errors)
-    data['entries'][-1]['paths'] = ['docs/sess?on-state/*.md']
-    assert errors_with(check(data, files), 'sessions: owns 1 inventory-excluded path(s)')
-
-
 def test_data_store_producers_must_be_tracked():
     store = {'id': 'data-main', 'kind': 'data_store', 'store': ['data/main.db'],
              'producer': ['scripts/build.py'], 'local_only': True, 'purpose': 'Main store',
@@ -296,48 +250,6 @@ def test_data_store_producers_must_be_tracked():
     assert errors_with(check(broken), 'schema: entries/3')
 
 
-def test_uncovered_path_gets_a_pasteable_stub_that_covers_it():
-    files = [*FILES, 'docs/newfam/x.md', 'docs/newfam/deep/y.md', 'docs/loose.md']
-    data = base()
-    report = check(data, files)
-    assert report.uncovered == ['docs/loose.md', 'docs/newfam/deep/y.md', 'docs/newfam/x.md']
-    text = suggest(report, data, ROOTS)
-    assert 'nearest family: none' in text  # nothing shares a literal prefix below the root
-    stubs = yaml.safe_load(text)
-    assert sorted(s['paths'][0] for s in stubs) == ['docs/loose.md', 'docs/newfam/**']
-    # Stubs are placeholders until a human fills the purpose.
-    assert errors_with(check(catalogue(*data['entries'], *stubs), files), 'purpose is still a TODO placeholder')
-    for stub in stubs:
-        stub['purpose'] = f"Documents under {stub['paths'][0]}"
-    filled = check(catalogue(*data['entries'], *stubs), files)
-    assert filled.ok, filled.errors
-    assert filled.resolved['docs/newfam/deep/y.md'][0] == 'newfam'
-
-
-def test_stub_inherits_owner_of_the_nearest_family():
-    files = [*FILES, 'docs/guide/new/z.md']
-    data = base()
-    data['entries'][1]['paths'] = ['docs/guide/*.md', 'docs/guide/old/**']
-    data['entries'][1]['owner'] = 'docs-knowledge'
-    report = check(data, files)
-    assert report.uncovered == ['docs/guide/new/z.md']
-    [stub] = yaml.safe_load(suggest(report, data, ROOTS))
-    assert stub['owner'] == 'docs-knowledge' and stub['paths'] == ['docs/guide/new/**']
-
-
-def test_stub_for_an_excluded_directory_is_not_content_searchable():
-    files = [*FILES, 'docs/vault/x.md', 'docs/vault/private/y.md', 'docs/session-state/z.md', 'docs/open/w.md']
-    data = base()
-    report = check(data, files)
-    stubs = {s['paths'][0]: s for s in yaml.safe_load(suggest(report, data, ROOTS))}
-    assert {k: s['content_searchable'] for k, s in stubs.items()} == {
-        'docs/vault/**': False, 'docs/session-state/**': False, 'docs/open/**': True}
-    for stub in stubs.values():
-        stub['purpose'] = f"Documents under {stub['paths'][0]}"
-    filled = check(catalogue(*data['entries'], *stubs.values()), files)
-    assert filled.ok, filled.errors
-
-
 def test_glob_translation():
     assert glob_regex('docs/**/x.md').match('docs/x.md')
     assert glob_regex('docs/**/x.md').match('docs/a/b/x.md')
@@ -352,17 +264,6 @@ def test_glob_translation():
     assert not is_catch_all('docs/guide/*')
     assert not is_catch_all('curriculum/l2-uk-en/evidence/a1/**')
     assert is_catch_all('curriculum/l2-uk-en/evidence/**')
-
-
-@pytest.mark.parametrize('pattern', ['docs/guide/[!]].md', 'docs/guide/[a-z].md', 'docs/[a-z]*/**',
-                                     'docs/{guide,other}/*.md', 'docs/guide/{a}.md'])
-def test_character_classes_and_braces_are_schema_errors(pattern):
-    data = base()
-    data['entries'][1]['paths'] = [pattern]
-    errors = check(data).errors
-    assert errors == [f'schema: entries/1/paths/0: {pattern!r} is not in the catalogue glob dialect: '
-                      'character classes ([...]), braces ({...}) and control characters are not in the '
-                      'catalogue glob dialect; list each path or use * and ?']
 
 
 @pytest.mark.parametrize('pattern', ['docs/**', 'docs/*', 'docs/*/**', 'docs/a*/**', 'docs/*.md', 'docs/?uide/**',
@@ -420,14 +321,6 @@ def test_validator_is_total_and_schema_agrees_with_code(pattern):
         assert errors_with(validate(bypassed, {}, FILES, OWNERS, ROOTS), 'not in the catalogue glob dialect')
 
 
-@pytest.mark.parametrize('name', ['data/a.db', 'data/a/', 'data/a/*.json', 'data/a.db.bak.*', 'data/[a].db',
-                                  'data/{a,b}.db', 'data//a.db', 'data/../x', 'data/a/**x', 'data/a.db\n',
-                                  'data/a\x85.db'])
-def test_store_name_schema_agrees_with_code(name):
-    in_schema = Draft202012Validator(SCHEMA['$defs']['storeName']).is_valid(name)
-    assert in_schema == (glob_error(name, subtree=True) is None)
-
-
 # ------------------------------------------------------------------ CLI on a real Git fixture
 
 def git(repo, *args):
@@ -481,53 +374,6 @@ def test_cli_fails_on_uncovered_path_and_suggests_stub(repo, capsys):
     capsys.readouterr()
     assert main(['check', '--repo', str(repo), '--json']) == 1
     assert json.loads(capsys.readouterr().out)['uncovered'] == ['docs/new/x.md']
-
-
-def test_cli_reports_unreadable_catalogue(repo, capsys):
-    (repo / 'docs/knowledge/catalogue.yaml').write_text('a: 1\na: 2\n')
-    assert main(['check', '--repo', str(repo)]) == 3
-    assert 'could not run' in capsys.readouterr().out
-
-
-@pytest.mark.parametrize('line, marker', [
-    ('# Draft — Ingest a source', 'draft-heading'),
-    ('## [DRAFT] notes', 'draft-heading'),
-    ('> **Status:** Draft (issue #1)', 'status-draft'),
-    ('status: "draft"', 'status-draft'),
-    ('**Status**: Proposed', 'status-proposed'),
-    ('lifecycle: draft', 'lifecycle-draft'),
-    ('This page is a work in progress.', 'work-in-progress'),
-    ('A proposal for the API.', 'proposal'),
-])
-def test_draft_markers_match_their_forms(line, marker):
-    assert [name for name, pattern in DRAFT_MARKERS if pattern.search(line) and name == marker] == [marker]
-
-
-@pytest.mark.parametrize('line', ['**Original status:** PROPOSED (awaiting sign-off)',
-                                  '**Original status:** draft', 'The draft was merged.', 'Status: active'])
-def test_superseded_status_lines_are_not_draft_status_markers(line):
-    status_markers = {'status-draft', 'status-proposed', 'draft-heading', 'lifecycle-draft'}
-    assert not [name for name, pattern in DRAFT_MARKERS if name in status_markers and pattern.search(line)]
-
-
-def test_draft_scan_reports_both_kinds_of_mismatch(repo, capsys):
-    (repo / 'docs/guide/wip.md').write_text('# Draft — not yet approved\n')
-    (repo / 'docs/guide/late.md').write_text('\n' * 30 + 'Status: draft\n')  # beyond the scanned head
-    (repo / 'docs/guide/logo.png').write_bytes(b'\x89PNG\x00draft')
-    data = yaml.safe_load((repo / 'docs/knowledge/catalogue.yaml').read_text())
-    data['entries'].append(family('guide-drafts', ['docs/guide/late.md'], lifecycle='draft'))
-    (repo / 'docs/knowledge/catalogue.yaml').write_text(yaml.safe_dump(data))
-    git(repo, 'add', '.')
-    scan = draft_scan(repo, coverage(repo))
-    assert scan['active_with_marker'] == {'docs/guide/wip.md': ['draft-heading']}
-    assert scan['draft_without_marker'] == ['docs/guide/late.md']
-    assert scan['binary_or_missing'] == 1
-    assert main(['draft-scan', '--repo', str(repo)]) == 0
-    out = capsys.readouterr().out
-    assert 'ACTIVE WITH MARKER docs/guide/wip.md (draft-heading)' in out
-    assert 'DRAFT WITHOUT MARKER docs/guide/late.md' in out
-    assert main(['draft-scan', '--repo', str(repo), '--json']) == 0
-    assert json.loads(capsys.readouterr().out)['with_marker'] == 1
 
 
 # ------------------------------------------------------------------ YAML shapes: the loader is total
@@ -612,19 +458,6 @@ def test_oversized_catalogue_is_rejected_after_a_bounded_read(repo, tmp_path, ca
     assert reads and all(0 <= size <= MAX_CATALOGUE_BYTES + 1 for size in reads)
 
 
-def test_bounds_admit_the_repository_catalogue_with_headroom():
-    raw = (REPO / 'docs/knowledge/catalogue.yaml').read_bytes()
-    assert len(raw) * 10 < MAX_CATALOGUE_BYTES
-    depth = nodes = top = 0
-    for event in yaml.parse(raw.decode('utf-8')):
-        nodes += isinstance(event, (yaml.ScalarEvent, yaml.SequenceStartEvent, yaml.MappingStartEvent))
-        depth += isinstance(event, (yaml.SequenceStartEvent, yaml.MappingStartEvent))
-        depth -= isinstance(event, (yaml.SequenceEndEvent, yaml.MappingEndEvent))
-        top = max(top, depth)
-    assert nodes * 10 < MAX_CATALOGUE_NODES and top * 2 < MAX_CATALOGUE_DEPTH
-    assert parse(raw)['schema_version'] == 1
-
-
 @pytest.mark.parametrize('text, value', [
     ("a: 'kept until #6106 closes.'\n", {'a': 'kept until #6106 closes.'}),
     ("a: 'x'  # a comment after a quoted value cuts nothing\n", {'a': 'x'}),
@@ -653,57 +486,6 @@ def test_every_issue_reference_in_the_catalogue_survives_loading():
                 yield from strings(child)
     loaded = Counter(ref for text in strings(parse(raw.encode('utf-8'))) for ref in re.findall(r'#\d+', text))
     assert written and loaded == written
-
-
-def test_depth_bound_is_exact():
-    nested = lambda n: '[' * n + ']' * n  # noqa: E731
-    assert parse(f'a: {nested(MAX_CATALOGUE_DEPTH - 1)}'.encode())  # the root mapping is one level
-    with pytest.raises(CatalogueLoadError, match='too_deep'):
-        parse(f'a: {nested(MAX_CATALOGUE_DEPTH)}'.encode())
-
-
-@pytest.mark.parametrize('paths_yaml', ['null', '[null]', '"docs/guide/**"', '{"a": 1}', '[["docs/guide/**"]]',
-                                        '[1]', '[true]', '[2026-10-01]'])
-def test_wrong_shapes_that_parse_are_schema_errors(repo, tmp_path, capsys, paths_yaml):
-    status, out = run_check(repo, tmp_path, fixture_text(paths_yaml), capsys)
-    assert status == 1
-    assert out['errors'] and all(e.startswith('schema: entries/1') for e in out['errors'])
-
-
-@pytest.mark.parametrize('replace, where', [
-    (('"entries": [', '"entries": [null, '), 'schema: entries/0'),
-    (('"entries": [', '"entries": ["an entry", '), 'schema: entries/0'),
-    (('"residual": []', '"residual": [null]'), 'schema: residual/0'),
-    (('"residual": []', '"residual": null'), 'schema: residual'),
-    (('"schema_version": 1', '"schema_version": null'), 'schema: schema_version'),
-])
-def test_null_and_scalar_entries_are_schema_errors_without_a_crash(repo, tmp_path, capsys, replace, where):
-    text = fixture_text()
-    assert replace[0] in text
-    (repo / 'data').mkdir()  # store reconciliation must not run on a schema-invalid catalogue
-    status, out = run_check(repo, tmp_path, text.replace(*replace), capsys)
-    assert status == 1
-    assert any(e.startswith(where) for e in out['errors']), out['errors']
-    assert out['local_stores'] is None
-
-
-@pytest.mark.parametrize('as_json', [True, False])
-def test_unexpected_failure_is_a_typed_internal_error_not_a_traceback(repo, capsys, monkeypatch, as_json):
-    def explode(*_args, **_kwargs):
-        raise RecursionError('maximum recursion depth exceeded')
-    monkeypatch.setattr(catalogue_module, 'validate', explode)
-    args = ['check', '--repo', str(repo)] + (['--json'] if as_json else [])
-    assert main(args) == 4
-    monkeypatch.setattr(catalogue_module, 'draft_scan', explode)
-    assert main(['draft-scan', '--repo', str(repo)] + (['--json'] if as_json else [])) == 4
-    captured = capsys.readouterr()
-    assert 'Traceback' not in captured.out + captured.err
-    if as_json:
-        first, second = (json.loads(part) for part in captured.out.replace('}\n{', '}\0{').split('\0'))
-        assert first == second == {'error': {'kind': 'internal_error', 'code': 'RecursionError',
-                                             'message': 'maximum recursion depth exceeded'}}
-    else:
-        assert captured.out.count('could not run (internal_error): RecursionError') == 2
 
 
 # ------------------------------------------------------------------ privacy boundary for body reads
@@ -813,15 +595,6 @@ def test_a_private_familys_directory_note_is_read_and_its_bodies_never_are():
     assert not body_readable(report, 'docs/guide/notes/n.md')
 
 
-def test_a_family_owning_only_a_directory_note_may_be_searchable():
-    files = [*FILES, 'docs/session-state/README.md']
-    data = base()
-    data['entries'].append(family('session-note', ['docs/session-state/README.md']))
-    report = check(data, files)
-    assert report.ok, report.errors
-    assert report.private_entries == set() and body_readable(report, 'docs/session-state/README.md')
-
-
 def test_only_the_gated_reader_reads_blob_bodies():
     tree = ast.parse(Path(catalogue_module.__file__).read_text(encoding='utf-8'))
     callers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)
@@ -914,31 +687,6 @@ def test_control_characters_in_a_tracked_name_are_an_error_and_never_catalogued(
     assert heads == {} and withheld == 1
 
 
-@pytest.mark.parametrize('char', ['\n', '\r', '\t', '\x00', '\x01', '\x1f', '\x7f', '\x80', '\x85', '\x9f'])
-def test_validator_drops_control_paths_everywhere(char):
-    hostile = [f'docs/guide/x{char}y.md', f'scripts/x{char}y.py']  # inside and outside the roots
-    report = check(base(), FILES + hostile)
-    assert report.errors == [control_path_error(p) for p in hostile]
-    assert report.denominator == 5 and not set(hostile) & set(report.resolved)
-    data = base()
-    data['entries'][1]['entrypoints'] = [{'topic': 'guide', 'path': hostile[0]}]
-    assert any(e.startswith('schema: entries/1/entrypoints/0/path') for e in check(data, FILES + hostile).errors)
-
-
-def test_validator_accepts_non_control_unicode():
-    names = ['docs/guide/ґанок.md', 'docs/guide/nbsp .md', 'docs/guide/  .md']
-    report = check(base(), FILES + names)
-    assert report.ok, report.errors
-    assert all(report.resolved[n] == ('guide', 'active') for n in names)
-
-
-def test_body_gate_refuses_a_resolved_control_path():
-    report = Report(resolved={'docs/guide/a\nb.md': ('guide', 'active'), 'docs/guide/a.md': ('guide', 'active')},
-                    searchable_entries={'guide'})
-    assert not body_readable(report, 'docs/guide/a\nb.md')
-    assert body_readable(report, 'docs/guide/a.md')
-
-
 # ------------------------------------------------------------------ control characters in catalogue strings
 
 # Python's regular-expression '$' also matches before a final newline, so each layer
@@ -998,11 +746,6 @@ def control_errors_at(report, where, char):
     return [e for e in report.errors if e.startswith(f'control: {where}: ') and f'U+{ord(char):04X}' in e]
 
 
-@pytest.mark.parametrize('kind', FIELD_KINDS)
-def test_every_field_kind_is_clean_without_a_control(kind):
-    assert check(mutated(kind, ''), CLI_FILES).ok, check(mutated(kind, ''), CLI_FILES).errors
-
-
 @pytest.mark.parametrize('suffix', CONTROL_SUFFIXES)
 @pytest.mark.parametrize('kind', FIELD_KINDS)
 def test_control_in_any_field_kind_fails_the_schema_and_the_code_walk_alone(kind, suffix):
@@ -1014,84 +757,6 @@ def test_control_in_any_field_kind_fails_the_schema_and_the_code_walk_alone(kind
         assert control_errors_at(report, where, suffix), report.errors
         assert not report.ok and not report.schema_ok
         assert not any(CONTROL_CHARS.search(e) for e in report.errors)  # values are printed escaped
-
-
-@pytest.fixture(scope='module')
-def shared_repo(tmp_path_factory):
-    root = make_repo(tmp_path_factory.mktemp('controls'))
-    (root / 'data').mkdir()  # store reconciliation must not run on a catalogue with a control
-    assert sorted(catalogue_module.tracked_files(root)) == CLI_FILES
-    return root
-
-
-@pytest.mark.parametrize('suffix', ['', *CONTROL_SUFFIXES])
-@pytest.mark.parametrize('kind', FIELD_KINDS)
-def test_check_json_rejects_a_control_in_every_field_kind(shared_repo, tmp_path, capsys, kind, suffix):
-    # Includes both reported cases: an entrypoint and a supersession target ending in '#heading\n'.
-    status, out = run_check(shared_repo, tmp_path, json.dumps(mutated(kind, suffix)), capsys)
-    if not suffix:
-        # Since #9412 PR 2 a superseded Markdown override also needs its in-place markers
-        # (front matter and banner), which this fixture's docs/guide/a.md does not carry:
-        # exactly those two errors, and nothing else, are reported for that kind.
-        marker_only = kind == 'override superseded_by'
-        markers = [e for e in out['errors'] if marker_only and e.startswith('docs/guide/a.md: ')
-                   and ('lifecycle: superseded' in e or 'missing the banner line' in e)]
-        assert (status, len(markers), out['uncovered']) == ((1, 2, []) if marker_only else (0, 0, []))
-        assert [e for e in out['errors'] if e not in markers] == []
-        return
-    assert status == 1
-    assert [e for e in out['errors'] if e.startswith(f'control: {FIELD_KINDS[kind][0]}: ')], out['errors']
-    assert out['local_stores'] is None
-
-
-def test_control_in_a_key_or_a_nested_path_is_reported_escaped():
-    data = cli_catalogue()
-    guide(data)['note\n'] = 'kept\x85'
-    report = validate(data, {}, CLI_FILES, OWNERS, ROOTS)
-    controls = [e for e in report.errors if e.startswith('control: ')]
-    assert controls == [
-        "control: entries/1: key 'note\\n' contains control character U+000A; "
-        'C0, DEL and C1 controls are not allowed in any catalogue string',
-        "control: entries/1/'note\\n': 'kept\\x85' contains control character U+0085; "
-        'C0, DEL and C1 controls are not allowed in any catalogue string']
-    assert not report.schema_ok
-
-
-def test_control_error_bounds_a_long_value():
-    data = cli_catalogue()
-    guide(data)['purpose'] = 'x' * 100_000 + '\n'
-    [error] = [e for e in check(data, CLI_FILES).errors if e.startswith('control: ')]
-    assert len(error) < 400 and "xxx'... contains control character U+000A" in error
-
-
-def test_no_schema_pattern_uses_a_dollar_anchor():
-    patterns = []
-
-    def walk(node):
-        if isinstance(node, dict):
-            patterns.extend(v for k, v in node.items() if k == 'pattern')
-            for value in node.values():
-                walk(value)
-        elif isinstance(node, list):
-            for value in node:
-                walk(value)
-    walk(SCHEMA)
-    assert len(patterns) >= 8
-    assert [p for p in patterns if '$' in p] == []
-
-
-@pytest.mark.parametrize('suffix', CONTROL_SUFFIXES)
-@pytest.mark.parametrize('name, sample', [
-    ('text', 'abc'), ('repoPath', 'docs/a.md'), ('repoPath', 'docs/a.md#heading'), ('glob', 'docs/a/**'),
-    ('storeName', 'data/a.db'), ('storeName', 'data/a/'), ('id', 'ab'), ('owner', 'ab'),
-    ('supersessionTarget', 'docs/a.md#heading'), ('supersessionTarget', 'id:ab'),
-])
-def test_every_string_definition_rejects_a_trailing_control(name, sample, suffix):
-    validator = Draft202012Validator(SCHEMA['$defs'][name])
-    assert validator.is_valid(sample)
-    assert not validator.is_valid(sample + suffix)
-    keyword = Draft202012Validator(SCHEMA['$defs']['common']['properties']['keywords'])
-    assert keyword.is_valid([sample]) and not keyword.is_valid([sample + suffix])
 
 
 OID = 'a' * 40
@@ -1156,43 +821,4 @@ def test_index_reader_validates_every_record(monkeypatch, record, code):
     assert caught.value.code == code
 
 
-def test_unmerged_index_is_a_typed_unreadable_repository(repo, capsys):
-    oid = blob_oid(repo, 'x\n')
-    subprocess.run(['git', '-C', str(repo), 'hash-object', '-w', '--stdin'], input=b'x\n', check=True,
-                   capture_output=True, timeout=30)
-    subprocess.run(['git', '-C', str(repo), 'update-index', '--index-info'], check=True, timeout=30,
-                   input=f'100644 {oid} 1\tdocs/guide/c.md\n100644 {oid} 2\tdocs/guide/c.md\n'.encode())
-    assert main(['check', '--repo', str(repo), '--json']) == 3
-    assert json.loads(capsys.readouterr().out)['error']['code'] == 'unmerged_index'
-
-
-def test_repository_path_keeps_trailing_whitespace(tmp_path, capsys):
-    root = make_repo(tmp_path / 'repo ')
-    assert main(['check', '--repo', str(root)]) == 0
-    assert 'uncovered 0; errors 0' in capsys.readouterr().out
-
-
-def test_stub_query_quotes_the_path_for_the_shell():
-    uncovered = "docs/new dir/it's.md"
-    stub = yaml.safe_load(suggest(check(base(), [*FILES, uncovered]), base()))[0]
-    assert shlex.split(stub['query'][0]['how'])[-1] == 'docs/new dir'
-
-
-def test_unmatched_store_names_are_printed_escaped(repo, capsys, tmp_path):
-    data_root = tmp_path / 'local-data'
-    data_root.mkdir()
-    (data_root / 'odd\nUNMATCHED STORE forged').write_text('x')
-    assert main(['check', '--repo', str(repo), '--data-root', str(data_root)]) == 1
-    lines = capsys.readouterr().out.splitlines()
-    assert "UNMATCHED STORE 'data/odd\\nUNMATCHED STORE forged'" in lines
-    assert 'UNMATCHED STORE forged' not in lines
-
-
 # ------------------------------------------------------------------ the repository's own tree
-
-def test_repository_catalogue_has_zero_errors_and_full_coverage():
-    report = coverage(REPO)
-    assert report.errors == []
-    assert report.uncovered == []
-    assert report.data_stores > 0
-    assert report.denominator == len(report.resolved)

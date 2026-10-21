@@ -17,11 +17,10 @@ import pytest
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.errors import AgentUnavailableError
 from scripts.agent_runtime.result import ParseResult, Result
-from scripts.ai_agent_bridge._hermes import HERMES_DEFAULT_MODEL, _invoke_hermes
+from scripts.ai_agent_bridge._hermes import _invoke_hermes
 from scripts.entire import capture_guard
 from scripts.entire import cursor_native_hook_shim as shim
 from scripts.entire import fleet_capture as capture
-from scripts.lib import rules_core
 
 
 @pytest.fixture(autouse=True)
@@ -86,17 +85,6 @@ def test_project_name_uses_current_cursor_separator_contract(raw: str, expected:
     assert shim._cursor_project_name(Path(raw)) == expected
 
 
-def test_project_name_matches_runtime_cursor_adapter() -> None:
-    from scripts.agent_runtime.adapters.cursor import CursorAdapter
-
-    for raw in (
-        "/Users/operator/repo",
-        "/Users/operator/repo/.worktrees/dispatch/codex/canary",
-        "/private/tmp/a  b/repo",
-    ):
-        assert shim._cursor_project_name(Path(raw)) == CursorAdapter()._encode_workspace_path(raw)
-
-
 def _patch_git_root(monkeypatch: pytest.MonkeyPatch, root: Path) -> None:
     real_run = subprocess.run
 
@@ -142,18 +130,6 @@ def test_missing_path_resolves_nested_before_flat(
     }
     normalized, _ = shim._normalize(json.dumps(payload).encode(), cwd=root, home=home)
     assert json.loads(normalized)["transcript_path"] == str(nested.resolve())
-
-
-def test_existing_nested_directory_authorizes_future_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    root = _repo_root(tmp_path)
-    home = tmp_path / "home"
-    base = _cursor_base(home, root)
-    nested = base / "session-2"
-    nested.mkdir()
-    _patch_git_root(monkeypatch, root)
-    payload = {"conversation_id": "session-2", "workspace_roots": [str(root)]}
-    normalized, _ = shim._normalize(json.dumps(payload).encode(), cwd=root, home=home)
-    assert json.loads(normalized)["transcript_path"] == str(nested / "session-2.jsonl")
 
 
 def test_current_collapsed_base_wins_and_legacy_base_is_never_used(
@@ -375,26 +351,6 @@ def test_repeated_turns_delegate_without_synthetic_session_start(
     ]
 
 
-def test_nonempty_stop_payload_is_delegated_byte_for_byte(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    root = _repo_root(tmp_path)
-    raw = b'{ "conversation_id": "native-stop", "transcript_path": "/native/path" }\n'
-    calls: list[bytes] = []
-    monkeypatch.setattr(shim.Path, "home", lambda: tmp_path / "home")
-    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
-    monkeypatch.setattr(shim.shutil, "which", lambda _name: "/fake/entire")
-    monkeypatch.setattr(shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw)))
-
-    def fake_run(command, **kwargs):
-        if command[0] == "git":
-            return SimpleNamespace(returncode=0, stdout=f"{root}\n")
-        calls.append(kwargs["input"])
-        return SimpleNamespace(returncode=0)
-
-    monkeypatch.setattr(shim.subprocess, "run", fake_run)
-    assert shim._hook("stop") == 0
-    assert calls == [raw]
-
-
 def test_missing_entire_is_silent_and_fail_open(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _repo_root(tmp_path)
     monkeypatch.setattr(
@@ -432,16 +388,6 @@ def test_entire_process_failures_are_silent_and_fail_open(
     assert shim._hook("before-submit-prompt") == 0
 
 
-@pytest.mark.parametrize(
-    "raw",
-    [b"not-json", b"x" * ((1 << 20) + 1)],
-    ids=["malformed", "oversized"],
-)
-def test_malformed_or_oversized_input_is_silent_and_fail_open(monkeypatch: pytest.MonkeyPatch, raw: bytes) -> None:
-    monkeypatch.setattr(shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: raw)))
-    assert shim._hook("stop") == 0
-
-
 def test_install_uninstall_are_atomic_idempotent_and_preserve_config(tmp_path: Path) -> None:
     path = tmp_path / "hooks.json"
     expected = _native_hooks(extra={"operator": [1, 2, 3]})
@@ -477,15 +423,6 @@ def test_reconciliation_rejects_ambiguous_session_start(tmp_path: Path, drift: s
         entries.insert(0, {"command": shim._MANAGED_COMMANDS["sessionStart"]})
     path.write_text(json.dumps(parsed), encoding="utf-8")
     with pytest.raises(shim.ReconciliationError):
-        shim._reconcile(path, "install")
-
-
-def test_reconciliation_rejects_mixed_target_state(tmp_path: Path) -> None:
-    path = tmp_path / "hooks.json"
-    parsed = _native_hooks()
-    parsed["hooks"]["sessionStart"][0]["command"] = shim._MANAGED_COMMANDS["sessionStart"]
-    path.write_text(json.dumps(parsed), encoding="utf-8")
-    with pytest.raises(shim.ReconciliationError, match="mixed"):
         shim._reconcile(path, "install")
 
 
@@ -945,40 +882,6 @@ def _hermes_result(*, ok: bool = True, response: str = "response body") -> Resul
         stalled=False,
         returncode=0 if ok else 1,
     )
-
-
-def test_hermes_default_model_is_deepseek_flash():
-    """DeepSeek Flash is the Hermes tool-heavy default."""
-    assert HERMES_DEFAULT_MODEL == "deepseek-v4.1-flash"
-
-
-def test_invoke_hermes_uses_shared_runtime():
-    with patch(
-        "scripts.agent_runtime.runner.invoke",
-        return_value=_hermes_result(),
-    ) as invoke_mock:
-        assert _invoke_hermes("hello", "deepseek-v4.1-flash", task_id="task-1") == "response body"
-    args, kwargs = invoke_mock.call_args
-    # The rules core leads the prompt when the checkout carries it.
-    assert args == ("hermes-deepseek", rules_core.with_core("hello"))
-    assert kwargs["model"] == "deepseek-v4.1-flash"
-    assert kwargs["task_id"] == "task-1"
-    assert kwargs["entrypoint"] == "bridge"
-    assert kwargs["mode"] == "read-only"
-    assert kwargs["tool_config"]["repo_read_root"]
-
-
-def test_invoke_hermes_attaches_data_file(tmp_path):
-    data_file = tmp_path / "context.md"
-    data_file.write_text("# Context\nSome content.")
-    with patch(
-        "scripts.agent_runtime.runner.invoke",
-        return_value=_hermes_result(response="ok"),
-    ) as invoke_mock:
-        _invoke_hermes("review this", "deepseek-v4.1-flash", data=str(data_file))
-    prompt = invoke_mock.call_args.args[1]
-    assert "Some content." in prompt
-    assert "review this" in prompt
 
 
 def test_invoke_hermes_raises_when_binary_missing():

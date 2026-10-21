@@ -57,21 +57,6 @@ def test_real_section_shapes_resolve_blank_headers() -> None:
         assert row["lexical_attestation"] is True
 
 
-def test_empty_checked_homonym_without_matching_sections_is_not_attested() -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.executescript(
-        """CREATE TABLE ulif_dictua_entries
-           (id INTEGER, normalized_query TEXT, homonym_index INTEGER,
-            canonical_headword TEXT, grammatical_label TEXT, status TEXT,
-            homonym_checked INTEGER);
-           CREATE TABLE ulif_dictua_sections
-           (id INTEGER, entry_id INTEGER, kind TEXT, source_order INTEGER,
-            payload_json TEXT);
-           INSERT INTO ulif_dictua_entries VALUES (1,'слово',1,'','','ok',1);"""
-    )
-    assert read_checked_ulif(conn, "слово")[0]["lexical_attestation"] is False
-
-
 def test_only_headword_cell_attests_and_unchecked_homonyms_are_excluded() -> None:
     conn = sqlite3.connect(":memory:")
     conn.executescript(

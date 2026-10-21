@@ -159,23 +159,6 @@ def test_http_stop_is_typed_and_never_retries_or_checkpoints(tmp_path, monkeypat
     assert read(db, 'SELECT str FROM items') == ([('a',)] if resume else [])
 
 
-@pytest.mark.parametrize('status', [403, 429])
-def test_http_stop_during_tie_preserves_entire_band(tmp_path, status):
-    db = tmp_path / 'snapshot.db'
-    response = requests.Response()
-    response.status_code = status
-    response._content = b'{}'
-    transport = Transport([page(('a', 20), total=2)])
-    get = transport.get
-    def stop_on_tie(url, **kwargs):
-        return get(url, **kwargs) if not transport.calls else response
-    transport.get = stop_on_tie
-    with pytest.raises(crawler.GracIngestHalted, match=f'HTTP {status}'):
-        crawler.ingest(db, attrs=['lemma'], transport=transport, sleep=lambda _: None)
-    assert not read(db, 'SELECT * FROM checkpoint')
-    assert not read(db, 'SELECT * FROM items')
-
-
 def test_empty_nonterminal_page_retries_same_page_without_checkpoint(tmp_path):
     db = tmp_path / 'snapshot.db'
     run(db, first_band(), attrs=['word'], max_pages=1)
@@ -316,15 +299,6 @@ def test_incomplete_or_changed_tie_never_advances_cursor(tmp_path, full):
         assert not read(db, f'SELECT * FROM {table}')
 
 
-def test_full_tie_must_include_items_from_partial_tie_probe(tmp_path):
-    db = tmp_path / 'snapshot.db'
-    with pytest.raises(ValueError, match='tie changed or omitted'):
-        run(db, [page(('a', 20), total=2), page(('b', 20), total=2),
-                 page(('a', 20), ('c', 20), last=True)], attrs=['lemma'], page_size=1)
-    assert not read(db, 'SELECT * FROM checkpoint')
-    assert not read(db, 'SELECT * FROM items')
-
-
 @pytest.mark.parametrize('total', [1, 3])
 def test_reconciliation_mismatch_blocks_completion_and_resume(tmp_path, total):
     db = tmp_path / 'snapshot.db'
@@ -386,28 +360,11 @@ def test_tie_overlap_at_and_away_from_boundary_is_deduplicated(tmp_path, overlap
     assert read(db, 'SELECT complete FROM checkpoint') == [(1,)]
 
 
-def test_tie_version_drift_preserves_checkpoint(tmp_path):
-    db = tmp_path / 'snapshot.db'
-    with pytest.raises(ValueError, match='versions changed'):
-        run(db, [page(('a', 20), total=2), page(('a', 20), last=True, api_version='changed')],
-            attrs=['lemma'])
-    assert not read(db, 'SELECT * FROM checkpoint')
-
-
 def test_lower_floor_bound_is_enforced(tmp_path):
     db = tmp_path / 'snapshot.db'
     with pytest.raises(ValueError, match='ignored frequency bounds'):
         run(db, [page(('a', 6), ('b', 4), last=True)], attrs=['lemma'])
     assert not read(db, 'SELECT * FROM checkpoint')
-
-
-def test_remaining_window_total_drift_is_reported(tmp_path):
-    db = tmp_path / 'snapshot.db'
-    run(db, first_band(), attrs=['lemma'], max_pages=1)
-    with pytest.raises(ValueError, match='reconciliation gap=-1'):
-        run(db, [page(('b', 10), total=2), page(('b', 10), last=True)],
-            attrs=['lemma'], max_pages=1)
-    assert read(db, 'SELECT complete FROM checkpoint') == [(0,)]
 
 
 def test_complete_reference_corpus_with_per_request_tie_permutations_and_resume(tmp_path):

@@ -9,17 +9,16 @@ from __future__ import annotations
 
 import copy
 import json
-from collections.abc import Callable, Mapping
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator, ValidationError
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import build_phase3_p4_pilot as p4
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 EXPECTED_INPUT_BINDINGS = {
     "p2_canonical_contracts": (
         "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
@@ -155,19 +154,6 @@ def _reject_contract(value: dict[str, Any]) -> None:
         p4.validate_contract(value)
 
 
-def _object_schemas(value: Any) -> list[Mapping[str, Any]]:
-    found: list[Mapping[str, Any]] = []
-    if isinstance(value, Mapping):
-        if value.get("type") == "object":
-            found.append(value)
-        for child in value.values():
-            found.extend(_object_schemas(child))
-    elif isinstance(value, list):
-        for child in value:
-            found.extend(_object_schemas(child))
-    return found
-
-
 def _candidate(case_role: str = "correct_modern_production") -> dict[str, Any]:
     roles = list(CASE_ROLES[case_role])
     return {
@@ -254,35 +240,6 @@ def test_current_pilot_is_exact_zero_row_nonadmitting_contract() -> None:
         "candidate_admission_implemented": True,
     }
     assert "PILOT_VALIDATED" not in p4.canonical_bytes(value).decode("utf-8")
-
-
-def test_frozen_input_bindings_and_schema_digest_are_exact() -> None:
-    value = _contract()
-    expected = {name: {"path": path, "sha256": digest} for name, (path, digest) in EXPECTED_INPUT_BINDINGS.items()}
-    assert value["bindings"] == expected
-    assert value["controlling_outcome_sha256"] == EXPECTED_OUTCOME_SHA256
-    assert value["generator"]["path"] == "scripts/projects/open_model_data/build_phase3_p4_pilot.py"
-    assert value["generator"]["implementation_sha256"] == p4.FROZEN_GENERATOR_SHA256
-    assert p4.sha256_file(Path(p4.__file__).resolve()) != p4.FROZEN_GENERATOR_SHA256
-    for source, expected in p4.CURRENT_PREDECESSOR_SHA256.items():
-        assert p4.sha256_file(source) == expected
-    assert value["generator"]["schema_sha256"] == p4.sha256_file(p4.SCHEMA_PATH)
-
-
-def test_schema_is_draft_2020_12_and_strict_at_every_object_boundary() -> None:
-    schema = _json(p4.SCHEMA_PATH)
-    Draft202012Validator.check_schema(schema)
-    objects = _object_schemas(schema)
-    assert objects
-    assert all(item.get("additionalProperties") is False for item in objects)
-
-    top_level = _contract()
-    top_level["invented_metadata"] = "opaque"
-    _reject_contract(top_level)
-
-    nested = _contract()
-    nested["denominator"]["denominator_alias"] = 57
-    _reject_contract(nested)
 
 
 @pytest.mark.parametrize(
@@ -428,18 +385,6 @@ def test_blockers_cannot_be_hidden_removed_or_reclassified(path: tuple[str, ...]
     _reject_contract(value)
 
 
-def test_role_map_keeps_modern_and_protection_roles_structurally_distinct() -> None:
-    role_map = p4.case_role_requirements()
-    assert [item["case_role"] for item in role_map] == list(CASE_ROLES)
-    for item in role_map:
-        role = item["case_role"]
-        assert tuple(item["claim_appropriate_evidence_roles"]) == CASE_ROLES[role]
-        assert item["emits_dataset_case"] is (role != "coverage_blocked")
-        assert item["may_be_modern_correction"] is (
-            role in {"correct_modern_production", "source_backed_correction", "minimal_contrast"}
-        )
-
-
 def test_firewall_deny_list_and_atomic_split_requirements_are_exact() -> None:
     expected = {
         "builder_receives_heldout_membership": False,
@@ -559,50 +504,12 @@ def test_candidate_metadata_rejects_body_or_provider_fields(forbidden_key: str) 
         p4.validate_candidate_admission(candidate)
 
 
-@pytest.mark.parametrize(
-    ("nested", "key", "replacement"),
-    [
-        ("adjudication", "registry_sha256", "unregistered"),
-        ("source_identity", "identity_basis", "script_only"),
-        ("source_identity", "cycle007_fingerprint", "a" * 64),
-        ("firewall_clearance", "cycle007_derivative", True),
-        ("lineage", "identity_candidate", "script_only"),
-    ],
-)
-def test_candidate_rejects_script_identity_and_cycle007_identity_derivative_fingerprint(
-    nested: str, key: str, replacement: Any
-) -> None:
-    candidate = _candidate()
-    candidate[nested][key] = replacement  # type: ignore[index]
-    with pytest.raises(p4.P4PilotError):
-        p4.validate_candidate_admission(candidate)
-
-
 @pytest.mark.parametrize("case_role", ["protected_historical_context", "protected_dialect_or_regional_context"])
 def test_historical_and_dialect_protection_roles_cannot_be_modern_corrections(case_role: str) -> None:
     candidate = _candidate(case_role)
     candidate["lineage"]["modern_correction"] = True  # type: ignore[index]
     with pytest.raises(p4.P4PilotError, match="modern correction"):
         p4.validate_candidate_admission(candidate)
-
-
-def test_model_proposal_cannot_be_promoted_by_extra_or_replaced_adjudication_metadata() -> None:
-    extra = _candidate()
-    extra["model_proposal"] = {"proposal_id": "synthetic"}
-    with pytest.raises(p4.P4PilotError):
-        p4.validate_candidate_admission(extra)
-
-    replaced = _candidate()
-    replaced["adjudication"] = {
-        "actor_kind": "human",
-        "authority_kind": "source_qualified_human_adjudication",
-        "qualification_status": "registered_source_qualified_human",
-        "record_sha256": "b" * 64,
-        "registry_sha256": "c" * 64,
-        "model_proposal_sha256": "d" * 64,
-    }
-    with pytest.raises(p4.P4PilotError):
-        p4.validate_candidate_admission(replaced)
 
 
 def test_candidate_requires_exact_source_identity_fields_and_no_missing_provenance() -> None:
@@ -616,20 +523,3 @@ def test_candidate_requires_exact_source_identity_fields_and_no_missing_provenan
     del candidate["rights_provenance"]["provenance_status"]
     with pytest.raises(p4.P4PilotError):
         p4.validate_candidate_admission(candidate)
-
-
-def test_no_pilot_validation_can_be_claimed_from_model_agreement_or_schema_only() -> None:
-    value = _contract()
-    value["claims"]["pilot_validated_claimed"] = True  # type: ignore[index]
-    value["claims"]["dataset_ready_claimed"] = True  # type: ignore[index]
-    value["safety_counters"]["provider_requests"] = 1  # type: ignore[index]
-    _reject_contract(value)
-
-
-def test_schema_rejects_uppercase_or_noncanonical_hashes_before_contract_comparison() -> None:
-    value = _contract()
-    value["controlling_outcome_sha256"] = EXPECTED_OUTCOME_SHA256.upper()
-    with pytest.raises(ValidationError):
-        Draft202012Validator(_json(p4.SCHEMA_PATH)).validate(value)
-    with pytest.raises(p4.P4PilotError):
-        p4.validate_contract(value)

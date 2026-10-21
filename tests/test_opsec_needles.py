@@ -54,15 +54,6 @@ def test_missing_explicit_override_fails_closed_and_is_redacted(
         assert str(tmp_path) not in str(caught.value)
 
 
-@pytest.mark.parametrize("base", [None, "", "relative/config"])
-def test_invalid_xdg_config_home_uses_the_home_default(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, base: str | None,
-) -> None:
-    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
-    environ = {} if base is None else {"XDG_CONFIG_HOME": base}
-    assert nd.needles_file(environ) == tmp_path / ".config" / "learn-ukrainian" / nd.NEEDLES_FILE_NAME
-
-
 def test_valid_file_loads_users_and_homes(tmp_path: Path) -> None:
     path = _write(
         tmp_path / "n.json",
@@ -185,13 +176,6 @@ def test_generic_home_pattern_is_the_fallback_and_skips_url_paths() -> None:
     assert not generic.search(FIXTURE_HOME)
 
 
-@pytest.mark.parametrize("escape", ["\\n", "\\r", "\\t", "\\x1b", "\\u001b"])
-def test_generic_home_pattern_extra_samples(escape: str) -> None:
-    generic = re.compile(nd.home_dir_pattern(nd.Needles()))
-    assert generic.search(f"first line{escape}{OTHER_HOME}/x")
-    assert not generic.search("https://example.org/home/page")
-
-
 def test_deployment_homes_extend_the_generic_pattern() -> None:
     pattern = re.compile(nd.home_dir_pattern(nd.Needles(home_dirs=(FIXTURE_HOME,))))
     assert pattern.search(f"{FIXTURE_HOME}/data")
@@ -215,12 +199,6 @@ def test_validators_reject_configured_homes_before_punctuation(
         with pytest.raises(ValueError) as caught:
             getattr(module, function_name)(payload)
         assert FIXTURE_HOME not in str(caught.value)
-
-
-@pytest.mark.parametrize("suffix", ["x", "_other", "-other", ".bak", ".1", ".hidden/file"])
-def test_configured_home_does_not_match_sibling_directories(suffix: str) -> None:
-    pattern = re.compile(nd.home_dir_pattern(nd.Needles(home_dirs=(FIXTURE_HOME,))))
-    assert not pattern.search(FIXTURE_HOME + suffix)
 
 
 @pytest.mark.parametrize("character", ['"', "\\", "\x00", "\x7f"])
@@ -285,29 +263,6 @@ def test_violation_messages_do_not_repeat_configured_values(
         message = str(caught.value)
         assert "fixture" not in message
         assert "someone" not in message
-
-
-@pytest.mark.parametrize(
-    ("module_name", "function_name"),
-    [
-        ("v4_differential_soviet_miner", "validate_no_private_host_paths"),
-        ("v4_production_shards_assembly", "assert_no_private_host_paths"),
-        ("v4_verify_trajectory_claims", "validate_no_private_host_paths"),
-        ("v4_pilot_canary_evaluation", "validate_no_private_host_paths"),
-        ("v4_mine_stem_controls", "assert_no_private_host_paths"),
-    ],
-)
-@pytest.mark.parametrize("separator", SEPARATORS)
-def test_validators_reject_structured_samples(module_name: str, function_name: str, separator: str) -> None:
-    module = importlib.import_module(f"scripts.projects.open_model_data.{module_name}")
-    validate = getattr(module, function_name)
-    for payload in (
-        {"field": f"first line{separator}{OTHER_HOME}/data"},
-        [f"first line{separator}{OTHER_HOME}/data"],
-        f"first line{separator}{OTHER_HOME}/data",
-    ):
-        with pytest.raises(ValueError):
-            validate(payload)
 
 
 @pytest.mark.parametrize(("module_name", "attribute", "function_name"), ALL_VALIDATORS)

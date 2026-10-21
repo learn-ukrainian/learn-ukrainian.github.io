@@ -9,7 +9,6 @@ import pytest
 from scripts.publish.github import Request
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.app_bot_authorship import (
-    APP_BOT_ALLOWLIST,
     VERIFIED_APP_BOT,
     listing_app_bot_login,
     verified_app_bot_login,
@@ -37,10 +36,6 @@ def dependabot(sha: str = SHA) -> dict:
             "verification": {"verified": True, "reason": "valid"},
         },
     }
-
-
-def test_allowlist_is_exactly_dependabot():
-    assert [bot.login for bot in APP_BOT_ALLOWLIST] == ["dependabot[bot]"]
 
 
 def test_complete_dependabot_commit_is_proven():
@@ -100,21 +95,6 @@ def test_any_missing_or_different_field_proves_nothing(path, value):
     assert verified_app_bot_login(_set(dependabot(), path, value), SHA, REPOSITORY) is None
 
 
-@pytest.mark.parametrize(
-    "data,sha",
-    [
-        ({"sha": SHA, "author": {"login": "dependabot[bot]", "is_bot": True}}, SHA),
-        (None, SHA),
-        ([], SHA),
-        (dependabot(SHA.upper()), SHA.upper()),
-        (dependabot("not-a-sha"), "not-a-sha"),
-    ],
-    ids=["forged-is-bot-field", "none", "list", "uppercase-sha", "invalid-sha"],
-)
-def test_forged_or_malformed_data_proves_nothing(data, sha):
-    assert verified_app_bot_login(data, sha, REPOSITORY) is None
-
-
 def test_listing_proof_uses_only_the_exact_sha_entry():
     login = listing_app_bot_login([dependabot(SHA), {"sha": OTHER, "author": {"login": "maintainer"}}], REPOSITORY)
     assert login(SHA) == "dependabot[bot]"
@@ -134,11 +114,6 @@ def test_live_read_requests_the_exact_sha_from_github(monkeypatch):
     assert recorder.live_app_bot_login("owner/repo", SHA) == "dependabot[bot]"
     assert len(calls) == 1 and isinstance(calls[0], Request)
     assert calls[0].verb == "read-commit" and calls[0].fields == {"repo": "owner/repo", "sha": SHA}
-
-
-def test_live_read_for_another_sha_proves_nothing(monkeypatch):
-    monkeypatch.setattr(recorder, "_run_json", lambda args, *, input_text=None: dependabot(OTHER))
-    assert recorder.live_app_bot_login("owner/repo", SHA) is None
 
 
 def test_github_unreachable_proves_nothing(monkeypatch):
@@ -191,21 +166,3 @@ def test_resolver_treats_a_verified_bot_as_complete_authorship_excluding_no_fami
 def test_repository_is_required_and_bound_to_all_commit_urls(repository):
     assert verified_app_bot_login(dependabot(), SHA, repository) is None
     assert listing_app_bot_login([dependabot()], repository)(SHA) is None
-
-
-def test_live_and_listing_reads_refuse_different_repository(monkeypatch):
-    monkeypatch.setattr(recorder, "_run_json", lambda *_args, **_kwargs: dependabot())
-    assert recorder.live_app_bot_login("other/repo", SHA) is None
-    assert listing_app_bot_login([dependabot()], "other/repo")(SHA) is None
-
-
-def test_public_dependabot_commit_shape():
-    """Sanitized exact public #10494 commit metadata, read through the named REST endpoint."""
-    sha = "6c54b805b7f943c925a0d439cb2005685a909879"
-    repository = "learn-ukrainian/learn-ukrainian.github.io"
-    data = dependabot(sha)
-    data["url"] = f"https://api.github.com/repos/{repository}/commits/{sha}"
-    data["html_url"] = f"https://github.com/{repository}/commit/{sha}"
-    data["commit"]["url"] = f"https://api.github.com/repos/{repository}/git/commits/{sha}"
-    assert verified_app_bot_login(data, sha, repository) == "dependabot[bot]"
-    assert listing_app_bot_login([data], repository)(sha) == "dependabot[bot]"

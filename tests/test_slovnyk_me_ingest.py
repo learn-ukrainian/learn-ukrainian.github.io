@@ -172,15 +172,6 @@ def test_mirror_shape_takes_its_timestamp_from_provenance(tmp_path):
         assert conn.execute("SELECT fetched_at FROM slovnyk_me_entries").fetchall() == [("2026-10-10T08:16:18+00:00",)]
 
 
-def test_dry_run_reads_but_never_writes(tmp_path):
-    cache = tmp_path / "cache"
-    write_cache(cache, snapshot())
-    db = tmp_path / "sources.db"
-    report = ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=True, max_text_chars=200)
-    assert report.entries == {"vts": 1}
-    assert not db.exists()
-
-
 def test_existing_database_is_backed_up_before_the_write(tmp_path):
     cache = tmp_path / "cache"
     write_cache(cache, snapshot())

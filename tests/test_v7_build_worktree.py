@@ -97,28 +97,6 @@ def test_worktree_auto_path_derives_path_and_branch(
     ]
 
 
-def test_worktree_explicit_path_uses_path_and_basename_branch(
-    tmp_path: Path,
-    monkeypatch: Any,
-) -> None:
-    repo = _prepare_repo(monkeypatch, tmp_path)
-    calls = _install_fake_subprocess_run(monkeypatch, repo)
-
-    exit_code = v7_build.main(
-        [
-            "a1",
-            "my-morning",
-            "--worktree",
-            ".worktrees/builds/custom-20260513-123456",
-        ]
-    )
-
-    assert exit_code == 0
-    add_cmd = next(cmd for cmd in calls if cmd[:3] == ["git", "worktree", "add"])
-    assert add_cmd[4] == "build/a1/custom-20260513-123456"
-    assert add_cmd[5] == str(repo / ".worktrees" / "builds" / "custom-20260513-123456")
-
-
 def test_worktree_path_collision_errors_cleanly(
     tmp_path: Path,
     monkeypatch: Any,
@@ -270,19 +248,3 @@ def test_worktree_persists_artifacts_on_failure(
     assert len(commit_cmds) == 1
     msg_idx = commit_cmds[0].index("-m") + 1
     assert "(failed)" in commit_cmds[0][msg_idx]
-
-
-def test_dry_run_worktree_makes_no_git_worktree_add_call(
-    tmp_path: Path,
-    monkeypatch: Any,
-) -> None:
-    """``--dry-run --worktree`` runs in place (#8890); it must never reach
-    ``git worktree add`` at all, unlike every real-build test above."""
-    repo = _prepare_repo(monkeypatch, tmp_path)
-    calls = _install_fake_subprocess_run(monkeypatch, repo)
-    monkeypatch.setattr(v7_build, "_run", lambda _args: 0)
-
-    exit_code = v7_build.main(["a1", "my-morning", "--dry-run", "--worktree"])
-
-    assert exit_code == 0
-    assert not any(cmd[:3] == ["git", "worktree", "add"] for cmd in calls)

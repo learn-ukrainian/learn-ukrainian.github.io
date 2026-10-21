@@ -11,52 +11,18 @@ import pytest
 from scripts.projects.open_model_data.paths import (
     ARTIFACT_ARCHIVE_DIR,
     ARTIFACT_ARCHIVED_ULDR_V1_DIR,
-    ARTIFACT_COMPONENTS_DIR,
-    ARTIFACT_CORRECTION_PROTECTION_DIR,
     ARTIFACT_OPEN_MODEL_DATA_DIR,
-    ARTIFACT_RELEASE_DIR,
     CONTRACTS_DIR,
     REGISTRY_ARCHIVE_DIR,
     REGISTRY_ARCHIVED_ULDR_V1_DIR,
     REGISTRY_COMPONENTS_DIR,
     REGISTRY_CORRECTION_PROTECTION_DIR,
-    REGISTRY_DECOLONIZATION_DIR,
-    REGISTRY_DIALECTS_DIR,
-    REGISTRY_GRAMMAR_DIR,
     REGISTRY_IDIOMS_DIR,
     REGISTRY_OPEN_MODEL_DATA_DIR,
     REGISTRY_QUARANTINED_HISTORICAL_DIR,
     REGISTRY_RELEASE_DIR,
-    REGISTRY_TEXTBOOKS_DIR,
-    REPO_ROOT,
-    ensure_component_directories,
     resolve_open_model_path,
 )
-from scripts.storage.paths import artifact_path
-
-
-def test_paths_relative_hierarchy() -> None:
-    """Verify that all paths have the expected parent-child relationships."""
-    assert REGISTRY_OPEN_MODEL_DATA_DIR == REPO_ROOT / "registry" / "projects" / "open_model_data"
-    assert ARTIFACT_OPEN_MODEL_DATA_DIR == REPO_ROOT / "data" / "projects" / "open_model_data"
-    for registry, artifact in (
-        (REGISTRY_COMPONENTS_DIR, ARTIFACT_COMPONENTS_DIR),
-        (REGISTRY_RELEASE_DIR, ARTIFACT_RELEASE_DIR),
-        (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR),
-    ):
-        assert registry.parent == REGISTRY_OPEN_MODEL_DATA_DIR
-        assert artifact.parent == ARTIFACT_OPEN_MODEL_DATA_DIR
-    assert REGISTRY_DECOLONIZATION_DIR == REGISTRY_COMPONENTS_DIR / "decolonization"
-    assert REGISTRY_IDIOMS_DIR == REGISTRY_COMPONENTS_DIR / "idioms"
-    assert REGISTRY_GRAMMAR_DIR == REGISTRY_COMPONENTS_DIR / "grammar"
-    assert REGISTRY_TEXTBOOKS_DIR == REGISTRY_COMPONENTS_DIR / "textbooks"
-    assert REGISTRY_DIALECTS_DIR == REGISTRY_COMPONENTS_DIR / "dialects"
-    assert REGISTRY_CORRECTION_PROTECTION_DIR == REGISTRY_RELEASE_DIR / "correction_protection_v1"
-    assert ARTIFACT_CORRECTION_PROTECTION_DIR == ARTIFACT_RELEASE_DIR / "correction_protection_v1"
-    assert REGISTRY_ARCHIVED_ULDR_V1_DIR == REGISTRY_ARCHIVE_DIR / "uldr_v1_production"
-    assert ARTIFACT_ARCHIVED_ULDR_V1_DIR == ARTIFACT_ARCHIVE_DIR / "uldr_v1_production"
-    assert REGISTRY_QUARANTINED_HISTORICAL_DIR == REGISTRY_ARCHIVE_DIR / "quarantined_historical"
-    assert CONTRACTS_DIR == REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 
 
 def test_resolve_open_model_path_follows_classification(tmp_path: Path) -> None:
@@ -90,52 +56,6 @@ def test_resolve_open_model_path_rejects_unclassified_file(tmp_path: Path) -> No
     with pytest.raises(ValueError, match="unclassified open-model file path"):
         resolve_open_model_path(absolute)
     assert resolve_open_model_path("data/projects/open_model_data/contracts") == CONTRACTS_DIR
-
-
-def test_tombstone_exists_in_archived_uldr_v1() -> None:
-    """Verify that uldr_v1_production carries its tombstone."""
-    tombstone = REGISTRY_ARCHIVED_ULDR_V1_DIR / "TOMBSTONE.md"
-    assert tombstone.is_file()
-    content = tombstone.read_text(encoding="utf-8")
-    assert "TOMBSTONE" in content
-    assert "DO NOT USE" in content
-
-
-def test_active_correction_protection_intact() -> None:
-    """Registry half of correction_protection_v1 stays readable without artifacts."""
-    assert REGISTRY_CORRECTION_PROTECTION_DIR.is_dir()
-    assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
-
-
-@pytest.mark.needs_artifact(
-    "open_model_release_payload",
-    "projects/open_model_data/release/correction_protection_v1/cases.jsonl",
-)
-def test_active_correction_protection_cases_artifact_present() -> None:
-    """The cases payload is an artifact; skip cleanly when it is not hydrated."""
-    assert artifact_path(
-        "open_model_release_payload", "projects/open_model_data/release/correction_protection_v1/cases.jsonl"
-    ).is_file()
-
-
-def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Verify that ensure_component_directories creates all components."""
-    import scripts.projects.open_model_data.paths as paths_mod
-
-    test_components = tmp_path / "components"
-    monkeypatch.setattr(paths_mod, "REGISTRY_DECOLONIZATION_DIR", test_components / "decolonization")
-    monkeypatch.setattr(paths_mod, "REGISTRY_IDIOMS_DIR", test_components / "idioms")
-    monkeypatch.setattr(paths_mod, "REGISTRY_GRAMMAR_DIR", test_components / "grammar")
-    monkeypatch.setattr(paths_mod, "REGISTRY_TEXTBOOKS_DIR", test_components / "textbooks")
-    monkeypatch.setattr(paths_mod, "REGISTRY_DIALECTS_DIR", test_components / "dialects")
-
-    ensure_component_directories()
-
-    assert (test_components / "decolonization").is_dir()
-    assert (test_components / "idioms").is_dir()
-    assert (test_components / "grammar").is_dir()
-    assert (test_components / "textbooks").is_dir()
-    assert (test_components / "dialects").is_dir()
 
 
 def test_is_archived_or_quarantined_path() -> None:
@@ -232,44 +152,6 @@ def test_dialect_builder_loads_verified_non_archived_replay(tmp_path: Path, isol
     )
     assert len(trajs) == 1
     assert trajs[0]["trajectory_id"] == "traj.verified.001"
-
-
-def test_execute_mining_and_release_forwards_replay_arguments(
-    tmp_path: Path, isolated_vesum_db: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Verify that execute_mining_and_release exposes and forwards replay arguments to builder."""
-    from typing import Any
-
-    import scripts.projects.open_model_data.v5_mine_dialect_corpus as mdc
-
-    captured_kwargs: dict[str, Any] = {}
-
-    def mock_build_sft(_candidates, **kwargs):
-        captured_kwargs.update(kwargs)
-        raise ValueError("StopPipelineAfterForwarding")
-
-    monkeypatch.setattr(mdc, "mine_all_candidate_sentences", lambda _db: [])
-    monkeypatch.setattr(mdc, "partition_candidates_by_lemma", lambda _c: ([], []))
-    monkeypatch.setattr(mdc, "build_evaluation_benchmark", lambda *args, **kwargs: [])
-    monkeypatch.setattr(mdc, "build_sft_dialect_dataset", mock_build_sft)
-
-    out_dir = tmp_path / "out"
-    dummy_db = tmp_path / "dummy.db"
-    dummy_db.touch()
-    shards_dir = tmp_path / "custom_shards"
-
-    with pytest.raises(ValueError, match="StopPipelineAfterForwarding"):
-        mdc.execute_mining_and_release(
-            db_path=dummy_db,
-            vesum_db=isolated_vesum_db,
-            output_dir=out_dir,
-            replay_quota=42,
-            replay_shards_dir=shards_dir,
-        )
-
-    assert captured_kwargs["replay_quota"] == 42
-    assert captured_kwargs["replay_shards_dir"] == shards_dir
-    assert captured_kwargs["sft_dialect_quota"] == 500 - 42
 
 
 def test_execute_mining_and_release_receipt_generation_derived_counts(

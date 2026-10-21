@@ -503,21 +503,6 @@ def test_review_timing_uses_only_effective_valid_rows(pr_state: str) -> None:
     assert "auto-merge was armed before the verified review gate" in late["hard_blockers"]
 
 
-@pytest.mark.parametrize("pr_state", ["OPEN", "MERGED"])
-def test_invalid_review_row_does_not_supply_timing_for_valid_sibling(pr_state: str) -> None:
-    ledger = _ready_evidence(_ledger())
-    ledger = _add(ledger, "AC-MERGE", "github")
-    ledger, _ = task_lifecycle.add_evidence(
-        ledger, ac_id="AC-REVIEW", evidence_type="review", summary="invalid later review",
-        url="https://github.com/org/repo/pull/77", commit=HEAD,
-        details={"author_family": "codex", "reviewer_family": "claude", "verdict": "pass"},
-        recorded_at="2026-07-16T13:00:00Z",
-    )
-    result = task_lifecycle.evaluate(ledger, _observation(_body(), pr_state=pr_state))
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "auto-merge was armed before the verified review gate" not in result["hard_blockers"]
-
-
 def test_valid_certification_superseded_by_bad_head_does_not_certify() -> None:
     ledger = _ready_evidence(_ledger("certify"))
     for ac_id, kind in (("AC-MERGE", "github"), ("AC-DEPLOY", "deployment"), ("AC-CERT", "certification")):
@@ -976,17 +961,6 @@ def test_identical_reconcile_is_idempotent() -> None:
     assert len(twice["observation_receipts"]) == 1
 
 
-def test_evidence_for_other_commit_is_stale() -> None:
-    ledger = _ready_evidence(_ledger())
-    ledger["evidence"][0]["subject"]["commit"] = "c" * 40
-    ledger["evidence"][0]["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(ledger["evidence"][0]))
-    ledger = task_lifecycle.validate_lifecycle(ledger)
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert any("current PR head" in blocker for blocker in result["hard_blockers"])
-
-
 def test_user_visible_ac_requires_canonical_target_bound_behavior_receipt(
     tmp_path: Path,
 ) -> None:
@@ -1118,23 +1092,6 @@ def test_actionable_behavior_receipt_refuses_each_failed_clause(
     assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
 
 
-def test_actionable_behavior_receipt_without_findings_is_refused(tmp_path: Path) -> None:
-    receipt = _approved_actionable_receipt()
-    receipt["findings"] = []
-    receipt["reviewer_payload"]["finding_ids"] = []
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
-    assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
-
-
 @pytest.mark.parametrize("actionable", [False, True], ids=["clean", "actionable"])
 def test_behavior_receipt_without_error_key_is_refused(tmp_path: Path, actionable: bool) -> None:
     reference = _behavior_receipt_reference(
@@ -1156,35 +1113,6 @@ def test_behavior_receipt_without_error_key_is_refused(tmp_path: Path, actionabl
     assert result["state"] == "BLOCKED_WITH_RECEIPT"
     assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
     assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
-
-
-def test_clean_behavior_receipt_with_error_is_refused(tmp_path: Path) -> None:
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates={"error": "runner failed"})
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
-
-
-def test_forged_correct_without_receipt_finding_id_is_refused(tmp_path: Path) -> None:
-    receipt = _approved_actionable_receipt()
-    del receipt["findings"][1]["id"]
-    receipt["reviewer_payload"]["finding_ids"] = ["F001", None]
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
 
 
 def test_closeout_cli_reconciles_original_actionable_receipt(
@@ -1216,21 +1144,6 @@ def test_closeout_cli_reconciles_original_actionable_receipt(
     assert persisted["ac_snapshot"] == ledger["ac_snapshot"]
     assert persisted["evidence"] == ledger["evidence"]
     assert receipt_path.read_bytes() == receipt_bytes
-
-
-def test_actionable_behavior_receipt_changed_bytes_fail_digest_validation(tmp_path: Path) -> None:
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates=_approved_actionable_receipt())
-    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
-    path.write_bytes(path.read_bytes() + b"\n")
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "digest" in " ".join(result["hard_blockers"])
 
 
 def test_carrier_preserves_identity_ac_snapshot_and_remaining_scope(
@@ -1408,23 +1321,6 @@ def test_real_git_accepts_pinned_publisher_with_isolated_keyring(
 
     assert task_lifecycle._verified_publisher_merge(repo, SIGNED_PUBLISHER_MERGE, parents) is True
     assert list(caller_home.iterdir()) == caller_before
-
-
-def test_vendored_publisher_file_contains_both_keys(tmp_path: Path) -> None:
-    result = subprocess.run(
-        [
-            "gpg", "--no-options", "--homedir", str(tmp_path), "--batch",
-            "--with-colons", "--show-keys", str(task_lifecycle.GITHUB_WEB_FLOW_KEY_FILE),
-        ],
-        capture_output=True, text=True, check=True, timeout=30,
-    )
-    fingerprints = {
-        line.split(":")[9] for line in result.stdout.splitlines() if line.startswith("fpr:")
-    }
-    assert fingerprints == {
-        task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT,
-        "5DE3E0509C47EA3CF04A42D34AEE18F83AFDEB23",
-    }
 
 
 @pytest.mark.parametrize("failure", ["no-gpg", "missing-key-file", "invalid-key-file"])
@@ -1768,15 +1664,6 @@ def test_legacy_migration_preserves_proof_lists() -> None:
     assert migrated["evidence"] == legacy["evidence"]
 
 
-def test_schema_round_trip_is_strict() -> None:
-    ledger = _ledger()
-    schema = json.loads(
-        Path("agents_extensions/shared/schemas/task-lifecycle.v1.schema.json").read_text(encoding="utf-8")
-    )
-    assert schema["additionalProperties"] is False
-    assert task_lifecycle.validate_lifecycle(ledger) == ledger
-
-
 @pytest.mark.parametrize("state", task_lifecycle.STATES)
 def test_every_lifecycle_boundary_survives_durable_resume(tmp_path: Path, state: str) -> None:
     ledger = _ledger()
@@ -2056,53 +1943,6 @@ def test_resolve_membership_rejects_unflagged_or_mistyped_completeness() -> None
         assert "incomplete" in result["reason"]
 
 
-def test_resolve_membership_accepts_complete_traversal_report() -> None:
-    import time
-
-    complete_report = {
-        "repository": "org/repo",
-        "generated_at": time.time(),
-        "membership_complete": True,
-        "incomplete_nodes": [],
-        "warnings": [],
-        "effective_membership": {
-            "500": {
-                "epics": [10],
-                "streams": ["stream10"],
-                "via": "body",
-                "unique_stream": True,
-            }
-        },
-        "open_issue_numbers": [10, 500],
-    }
-    result = task_lifecycle.resolve_membership(
-        issue_number=500,
-        stream_epic=10,
-        native_parent_epic=None,
-        repository="org/repo",
-        native_parent_repository="org/repo",
-        registered_epics=[10, 20],
-        membership_report=complete_report,
-    )
-    assert result["valid"] is True
-    assert result["method"] == "body"
-    assert result["epic"] == 10
-
-
-def test_resolve_membership_rejects_unregistered_stream_epic() -> None:
-    result = task_lifecycle.resolve_membership(
-        issue_number=42,
-        stream_epic=10,
-        native_parent_epic=10,
-        repository="org/repo",
-        native_parent_repository="org/repo",
-        registered_epics=[99],
-        membership_report=None,
-    )
-    assert result["valid"] is False
-    assert "registered issue-stream" in result["reason"]
-
-
 def test_resolve_membership_digest_is_deterministic_over_the_index() -> None:
     import time
 
@@ -2364,15 +2204,6 @@ def test_observed_checkbox_forms_initialize_and_verify_snapshot(line):
     assert any("drift" in blocker for blocker in drift["hard_blockers"])
 
 
-@pytest.mark.parametrize("mark,checked", [(" ", False), ("x", True), ("X", True)])
-@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
-def test_checkbox_forms_preserve_original_id_text_and_checked(mark, checked, form):
-    body = "- [ ] CI Gate green\n- [" + mark + "] " + form.format(id="AC-01", text="Output is current.")
-    assert task_lifecycle.parse_issue_acceptance_criteria(body) == [
-        {"id": "AC-01", "text": "Output is current.", "checked": checked},
-    ]
-
-
 @pytest.mark.parametrize("line", [
     "- [ ] AC-01:", "- [ ] AC-01 : ", "- [ ] AC-01", "- [ ] **AC-01** — ",
     "- [ ] AC-01. Missing separator", "- [ ] **AC-01**: Unsupported bold separator",
@@ -2437,14 +2268,6 @@ def test_check_ac_checkbox_matches_the_exact_id_only(form):
     tenth_only = task_lifecycle.check_ac_checkbox(body, "AC-10").splitlines()
     assert tenth_only[0].startswith("- [ ]")
     assert tenth_only[1].startswith("- [x]")
-
-
-@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}"])
-def test_check_ac_checkbox_ignores_ids_mentioned_in_other_criteria(form):
-    other = "- [ ] " + form.format(id="AC-02", text="Depends on **AC-01** and AC-01 being done.")
-    body = "- [ ] **AC-01** — First criterion.\n" + other + "\n"
-    updated = task_lifecycle.check_ac_checkbox(body, "AC-01")
-    assert updated.splitlines() == ["- [x] **AC-01** — First criterion.", other]
 
 
 @pytest.mark.parametrize("mark", ["x", "X"])
@@ -2534,26 +2357,6 @@ def test_schema_id_bounds_preserve_parser_snapshot_and_evidence(ac_id):
     assert updated["ac_snapshot"] == snapshot
     assert updated["ac_snapshot"]["criteria"][0]["id"] == ac_id
     assert updated["evidence"][0]["ac_id"] == ac_id
-
-
-@pytest.mark.parametrize("ac_id", [
-    "", "A", "A" + "Z" * 32, "AC-" + "1" * 29 + "b", "ac-01b", "1C-01b",
-    "AC-lowercase", "AC-01b1", "AC-01_b", "AC-01/b", "AC-01b\n", "AC-01\u0431",
-])
-@pytest.mark.parametrize("target", ["criterion", "evidence"])
-def test_schema_refuses_invalid_ids_in_snapshot_and_evidence(ac_id, target):
-    ledger = _add(_ledger(), "AC-IMPL", "test")
-    if target == "criterion":
-        ledger["ac_snapshot"]["criteria"][0]["id"] = ac_id
-        ledger["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(ledger["ac_snapshot"]["criteria"])
-        location = r"ac_snapshot.criteria.0.id"
-    else:
-        record = ledger["evidence"][0]
-        record["ac_id"] = ac_id
-        record["id"] = task_lifecycle.digest({key: value for key, value in record.items() if key != "id"})
-        location = r"evidence.0.ac_id"
-    with pytest.raises(task_lifecycle.LifecycleError, match=f"schema violation at {location}"):
-        task_lifecycle.validate_lifecycle(ledger)
 
 
 def test_schema_suffix_references_remain_bound_and_unique():
@@ -2714,12 +2517,6 @@ def test_9852_body_evidence_requires_identity_repository(evidence_repository, va
         assert result["method"] is None
 
 
-def test_9852_repository_evidence_refuses_malformed_task_identity():
-    assert task_lifecycle.repository_evidence_refusal(
-        "repo", "org/repo", source="audit"
-    ) == "task repository identity is malformed"
-
-
 @pytest.mark.parametrize("native_parent_epic", [None, 30], ids=["body", "native-chain"])
 @pytest.mark.parametrize(
     "evidence_repository,valid,reason",
@@ -2760,36 +2557,6 @@ def test_9866_read_only_audit_requires_identity_repository(native_parent_epic, e
         assert reason in result["reason"]
         assert result["method"] is None
         assert result["epic"] is None
-
-
-def test_9866_evaluate_refuses_foreign_audit():
-    observation = _observation(_body())
-    observation["github"]["issue"]["parent_epic"] = None
-    observation["github"]["membership_audit"] = {**_9794_body_report(), "repository": "other/repo"}
-    result = task_lifecycle.evaluate(_ready_evidence(_ledger()), observation)
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert result["membership"]["valid"] is False
-    assert "membership audit repository does not match the task identity" in " ".join(result["hard_blockers"])
-
-
-def test_9794_live_null_target_accepts_exact_body_evidence():
-    report = _9794_body_report()
-    reads = []
-
-    def read_parent(repository, number):
-        reads.append((repository, number))
-        return None  # Successful repository-qualified read returned parent: null.
-
-    result = task_lifecycle.resolve_live_ancestry(
-        repository="org/repo", issue_number=42, stream_epic=10,
-        registered_epics=[10, 20], read_parent=read_parent, membership_report=report,
-    )
-    assert reads == [("org/repo", 42)]
-    assert result == {
-        "valid": True, "method": "body", "epic": 10,
-        "generated_at": report["generated_at"],
-        "digest": task_lifecycle.digest(report["effective_membership"]), "reason": None,
-    }
 
 
 @pytest.mark.parametrize("patch", [

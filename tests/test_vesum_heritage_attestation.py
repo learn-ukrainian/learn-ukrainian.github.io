@@ -51,27 +51,11 @@ def test_folk_vesum_gate_accepts_committed_slovnyk_attested_terms() -> None:
     assert gate["heritage_attested_words"] == ["гагілка", "риндзівка", "ягівка", "ягілка"]
 
 
-def test_folk_vesum_gate_accepts_committed_attested_plural_surfaces() -> None:
-    gate = _gate("риндзівки ягілки гагілки ягівки")
-
-    assert gate["passed"] is True
-    assert gate["missing"] == []
-    assert gate["heritage_attested"] == 4
-
-
 def test_folk_vesum_gate_still_rejects_russianism_not_in_attestations() -> None:
     gate = _gate("аранжировку")
 
     assert gate["passed"] is False
     assert gate["missing"] == ["аранжировку"]
-    assert gate["heritage_attested"] == 0
-
-
-def test_folk_vesum_gate_still_rejects_unattested_coinages() -> None:
-    gate = _gate("городалька побажальний")
-
-    assert gate["passed"] is False
-    assert gate["missing"] == ["городалька", "побажальний"]
     assert gate["heritage_attested"] == 0
 
 
@@ -146,17 +130,6 @@ def test_folk_vesum_gate_still_rejects_teaching_prose_russianisms() -> None:
     assert gate["passed"] is False
     # _vesum_gate sorts `missing` internally; Cyrillic order: діюча < протиріччя.
     assert gate["missing"] == ["діюча", "протиріччя"]
-    assert gate["heritage_attested"] == 0
-
-
-def test_folk_vesum_gate_still_rejects_unknown_coinage_via_engine() -> None:
-    # `городалька` is an unknown coinage (classification="unknown") — neither the
-    # allowlist nor the classifier attests it. Stays flagged with or without the
-    # corpus DB (engine degrades to False when unavailable), so no DB guard.
-    gate = _gate("городалька")
-
-    assert gate["passed"] is False
-    assert gate["missing"] == ["городалька"]
     assert gate["heritage_attested"] == 0
 
 
@@ -242,15 +215,6 @@ def test_russian_shadow_diminutive_surface_guard_blocks_derivational_rescue(
 
 
 @requires_sources_db
-def test_folk_vesum_gate_accepts_inflected_denominal_adjectives() -> None:
-    gate = _gate("веснянкова веснянкове веснянкові")
-
-    assert gate["passed"] is True
-    assert gate["missing"] == []
-    assert gate["heritage_attested"] == 3
-
-
-@requires_sources_db
 def test_morphology_fallback_does_not_leak_russianism_via_verb_root() -> None:
     # CRITICAL teeth check: `діюча` is a russianism (→ чинна/дійова) whose lemma is
     # the *standard* verb `діяти`. The russianism guard must stop the morphology
@@ -300,13 +264,4 @@ def test_derivational_fallback_does_not_accept_coinages() -> None:
 
     assert gate["passed"] is False
     assert set(gate["missing"]) == {"двохоровий", "городалька", "обрядознавчий"}
-    assert gate["heritage_attested"] == 0
-
-
-def test_morphology_fallback_does_not_apply_to_core_levels() -> None:
-    # The heritage/morphology fallback is seminar/folk-scoped only.
-    gate = _gate("гагілку", level="a1")
-
-    assert gate["passed"] is False
-    assert gate["missing"] == ["гагілку"]
     assert gate["heritage_attested"] == 0

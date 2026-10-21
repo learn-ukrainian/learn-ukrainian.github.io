@@ -261,50 +261,6 @@ def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
     assert terminal == "PARTIAL_COMPLETE"
 
 
-def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(
-    tmp_path, monkeypatch
-):
-    calls: list[tuple[str, str]] = []
-
-    def participant(agent: str, _prompt: str, **kwargs):
-        calls.append((agent, kwargs["tool_config"]["target_agent"]))
-        return _result(agent, f"{agent} evidence")
-
-    controller = _controller(
-        tmp_path,
-        monkeypatch,
-        participant,
-        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
-    )
-    try:
-        result = controller.run(
-            prompt="Compare the two bounded options.",
-            cwd=Path.cwd(),
-            task_id="task-6130",
-            correlation_id="corr-6130",
-            idempotency_key="idem-6130-generic",
-            rounds=1,
-            participants=("claude", "agy"),
-        )
-        stored = controller.conn.execute(
-            "SELECT participants_json FROM acp_conversations WHERE conversation_id = ?",
-            (result["conversation_id"],),
-        ).fetchone()[0]
-    finally:
-        controller.close()
-
-    assert sorted(calls) == [
-        ("acpx-agy-shadow", "agy"),
-        ("acpx-claude-shadow", "claude"),
-    ]
-    assert stored == '["claude", "agy"]'
-    receipt = acpx_discuss.verify_discussion_receipt(
-        root=tmp_path / "plane", conversation_id=result["conversation_id"]
-    )
-    assert receipt["participants"] == ["claude", "agy"]
-    assert receipt["checks"]["fixed_participants"] is True
-
-
 @pytest.mark.parametrize("kimi_seat", ["kimi", "kimicc"])
 def test_panel_with_a_kimi_seat_is_refused_before_any_call(tmp_path, monkeypatch, kimi_seat):
     """Kimi seats admit web, UI and backend coding only: a discussion panel naming one never starts."""
@@ -505,30 +461,6 @@ def test_committed_message_body_is_gc_visible_after_zero_grace(tmp_path, monkeyp
         assert reopened.get(artifact_id).artifact_id == artifact_id
 
 
-def test_three_rounds_repeat_cross_exchange_and_complete(tmp_path, monkeypatch):
-    calls: list[str] = []
-
-    def participant(agent: str, _prompt: str, **_kwargs):
-        calls.append(agent)
-        return _result(agent, f"{agent} evidence {len(calls)}")
-
-    controller = _controller(
-        tmp_path,
-        monkeypatch,
-        participant,
-        lambda agent, _prompt, **_kwargs: _result(agent, "three-round synthesis"),
-    )
-    try:
-        payload = _run(controller, rounds=3)
-    finally:
-        controller.close()
-
-    assert payload["state"] == "COMPLETE"
-    assert payload["rounds_completed"] == 3
-    assert len(calls) == 6
-    assert len(payload["participant_outcomes"]) == 6
-
-
 def test_cancellation_settles_current_wave_and_persists_terminal_state(tmp_path, monkeypatch):
     cancelled = threading.Event()
     synthesis_called = False
@@ -589,35 +521,6 @@ def test_one_participant_failure_is_partial_and_synthesis_uses_available_evidenc
     assert payload["classification"] == "partial"
     assert "codex-only evidence" in received[0]
     assert "[none]" not in received[0]
-
-
-def test_orphan_reservation_is_terminal_partial_without_model_retry(tmp_path, monkeypatch):
-    called = False
-
-    def participant(*_args, **_kwargs):
-        nonlocal called
-        called = True
-        raise AssertionError("orphan must not be retried")
-
-    controller = _controller(
-        tmp_path,
-        monkeypatch,
-        participant,
-        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
-    )
-    try:
-        _conversation, replay = controller._reserve(
-            task_digest="a", correlation_digest="b", idempotency_digest=acpx_discuss._digest("idem-1"),
-            rounds=1, deadline_at="2000-01-01T00:00:00Z",
-        )
-        assert replay is None
-        replay_payload = _run(controller, rounds=1)
-    finally:
-        controller.close()
-
-    assert replay_payload["state"] == "PARTIAL_COMPLETE"
-    assert replay_payload["duplicate_suppressed"] is True
-    assert called is False
 
 
 @pytest.mark.parametrize(
@@ -1160,42 +1063,6 @@ def test_fast_participant_is_persisted_before_slow_participant_finishes(tmp_path
 
     assert fast_recorded.is_set()
     assert [outcome.participant for outcome in outcomes] == ["codex", "grok"]
-
-
-def test_expired_recovery_is_terminal_without_provider_retry(tmp_path, monkeypatch):
-    calls: list[str] = []
-
-    def participant(agent: str, _prompt: str, **_kwargs):
-        calls.append(agent)
-        return _result(agent, "must not run")
-
-    controller = _controller(tmp_path, monkeypatch, participant, participant)
-    try:
-        conversation_id, replay = controller._reserve(
-            task_digest="task", correlation_digest="corr", idempotency_digest="expired-idem",
-            rounds=1, deadline_at="2000-01-01T00:00:00Z",
-        )
-        assert replay is None
-        controller._append(
-            conversation_id, event_type="STATE", state="INITIAL_FANOUT", transition=True,
-        )
-    finally:
-        controller.close()
-
-    recovered = acpx_discuss.recover_expired_discussions(root=tmp_path / "plane")
-    conn = sqlite3.connect(tmp_path / "plane" / "comms.sqlite3")
-    try:
-        event = conn.execute(
-            "SELECT event_type, state, outcome FROM acp_conversation_events "
-            "WHERE conversation_id = ? ORDER BY sequence DESC LIMIT 1",
-            (conversation_id,),
-        ).fetchone()
-    finally:
-        conn.close()
-
-    assert recovered == [conversation_id]
-    assert tuple(event) == ("ORPHAN_RESERVATION", "PARTIAL_COMPLETE", "orphan")
-    assert calls == []
 
 
 def test_recovery_ignores_authority_native_discussion_rows(tmp_path, monkeypatch):

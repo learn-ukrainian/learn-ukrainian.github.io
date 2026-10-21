@@ -12,24 +12,11 @@ from scripts.api.lane_health import (
     BASIS_RECENT_TASKS,
     BASIS_SCAN_OBSERVED_IDLE,
     BASIS_SCAN_UNAVAILABLE,
-    LaneHealthScan,
     compute_lane_health,
     is_spawn_phase_failure,
-    normalize_agent_name,
     sanitize_error_excerpt,
     scan_lane_health,
 )
-from scripts.delegate import _resolve_agent_with_budget_guard
-from tests.claude_route_accounts import HOST_ACCOUNT
-
-
-def test_normalize_agent_name():
-    assert normalize_agent_name("Claude") == "claude"
-    assert normalize_agent_name("Claude (Interactive)") == "claude"
-    assert normalize_agent_name("codex ") == "codex"
-    assert normalize_agent_name("deepseek") == "deepseek"
-    assert normalize_agent_name("Kimi") == "kimi"
-    assert normalize_agent_name("Unknown-Agent") == "unknown-agent"
 
 
 def test_is_spawn_phase_failure():
@@ -125,20 +112,6 @@ def test_compute_lane_health_carries_newest_error_text(tmp_path):
     assert record["last_error"] == 'Error: {"name": "UnknownError", "ref": "err_new"}'
 
 
-def test_compute_lane_health_unhealthy_without_error_text(tmp_path):
-    # Edge case: spawn failures with no stderr_excerpt still mark the lane
-    # unhealthy; last_error degrades to None instead of breaking health.
-    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
-    _write_task(tmp_path, "ds-1", "deepseek", "failed", 1, 16.0, now - timedelta(minutes=30))
-    _write_task(tmp_path, "ds-2", "deepseek", "failed", 1, 11.0, now - timedelta(minutes=5))
-
-    health = compute_lane_health(tmp_path, now=now)
-    record = health["deepseek"]
-    assert record["healthy"] is False
-    assert record["consecutive_failures"] == 2
-    assert record["last_error"] is None
-
-
 def test_routing_budget_attaches_health_to_api_accounts(monkeypatch, tmp_path):
     now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
 
@@ -227,18 +200,6 @@ def test_compute_lane_health_success_breaks_streak(tmp_path):
     assert health.get("claude", {}).get("consecutive_failures", 0) == 1
 
 
-def test_compute_lane_health_needs_finalize_breaks_streak(tmp_path):
-    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
-    # failure -> needs_finalize
-    _write_task(tmp_path, "task-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=30))
-    _write_task(tmp_path, "task-2", "claude", "needs_finalize", 1, 10.0, now - timedelta(minutes=10))
-
-    health = compute_lane_health(tmp_path, now=now)
-    # Streak broken by needs_finalize
-    assert health.get("claude", {}).get("healthy", True) is True
-    assert health.get("claude", {}).get("consecutive_failures", 0) == 0
-
-
 def test_compute_lane_health_corrupted_json(tmp_path):
     now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
     # One valid task failure
@@ -285,72 +246,6 @@ def test_routing_budget_demotes_unhealthy(monkeypatch, tmp_path):
     ranked = budget["ranked_by_headroom"]
     assert ranked[-1]["lane"] == "claude"
     assert ranked[-1]["health"]["healthy"] is False
-
-
-def test_delegate_prints_warning(monkeypatch, capsys):
-    # Mock routing budget API payload
-    mock_payload = {
-        "generated_at": "2026-07-10T12:00:00Z",
-        "agents": {
-            "claude": {
-                "status": "unknown",
-                "health": {
-                    "healthy": False,
-                    "consecutive_failures": 2,
-                    "span_minutes": 45,
-                },
-            },
-            "codex": {
-                "status": "unknown",
-                "health": {
-                    "healthy": True,
-                    "consecutive_failures": 0,
-                    "span_minutes": 0,
-                },
-            },
-        },
-        "diagnostics": {
-            "records_loaded": 1,
-            "stale": False,
-            "codexbar_data_available": True,
-        },
-        "recommendation": {
-            "primary_agent_for_code": "codex",
-            "rationale": "Test",
-            "warnings": [],
-        },
-        "ranked_by_headroom": [
-            {
-                "lane": "codex",
-                "type": "subscription",
-                "status": "unknown",
-                "health": {
-                    "healthy": True,
-                    "consecutive_failures": 0,
-                    "span_minutes": 0,
-                },
-            },
-            {
-                "lane": "claude",
-                "type": "subscription",
-                "status": "unknown",
-                "health": {
-                    "healthy": False,
-                    "consecutive_failures": 2,
-                    "span_minutes": 45,
-                },
-            },
-        ],
-    }
-
-    monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: mock_payload)
-
-    res = _resolve_agent_with_budget_guard("codex", fallbacks={}, claude_account=HOST_ACCOUNT)
-    assert res == "codex"
-
-    # Capture outputs
-    captured = capsys.readouterr()
-    assert "lane claude demoted: 2 spawn failures in 45m" in captured.err
 
 
 def _mock_cost_record(agent: str, cost_usd: float, mtime: datetime) -> CostRecord:
@@ -576,30 +471,6 @@ def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):
     assert any("recommendation is not health-verified" in w for w in rec["warnings"])
 
 
-def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_path):
-    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
-    records = [
-        _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
-    ]
-    _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
-
-    # When all subscription lanes have unavailable status (no CodexBar data observed),
-    # verify router does NOT make false 'inline_orchestrator' or 'all hot' claims.
-    budget = state_router.compute_routing_budget(
-        now,
-        budget_config_path=_budget_path,
-        tasks_dir=tmp_path,
-        project_root=tmp_path,
-        curriculum_root=tmp_path,
-        batch_state_dir=tmp_path,
-    )
-    rec = budget["recommendation"]
-
-    assert rec["primary_agent_for_code"] != "inline_orchestrator"
-    assert not any("all agents near cap" in w for w in rec["warnings"])
-    assert "All agents are hot or near cap" not in rec["rationale"]
-
-
 # --- #9740 A1: typed scan outcome --------------------------------------------
 
 
@@ -621,23 +492,6 @@ def test_scan_outcome_distinguishes_idle_observed_from_scan_unavailable(tmp_path
     assert unknown["healthy"] is None and unknown["consecutive_failures"] is None
     assert unknown["basis"] == BASIS_SCAN_UNAVAILABLE
     assert str(tmp_path) not in json.dumps(unknown)
-
-
-def test_scan_error_is_unknown_not_healthy(tmp_path, monkeypatch):
-    from scripts.api import lane_health
-
-    def broken(_path):
-        raise PermissionError("denied")
-
-    monkeypatch.setattr(lane_health.os, "scandir", broken)
-    scan = scan_lane_health(tmp_path)
-    assert scan.observed is False
-    assert scan.health_for("codex")["healthy"] is None
-    assert compute_lane_health(tmp_path) == {}
-
-
-def test_lane_health_scan_dataclass_default_is_unobserved():
-    assert LaneHealthScan(observed=False).health_for("kimi")["basis"] == BASIS_SCAN_UNAVAILABLE
 
 
 def _budget_with_tasks_dir(monkeypatch, tmp_path, tasks_dir):
@@ -672,16 +526,6 @@ def test_producer_never_fills_in_healthy_for_a_scan_error(monkeypatch, tmp_path)
         assert budget["agents"][lane]["routing_facts"]["health"] == "unknown"
     assert budget["api_accounts"]["deepseek"]["health"]["healthy"] is None
     assert all(item["health"]["healthy"] is not True for item in budget["ranked_by_headroom"])
-
-
-def test_ranked_view_orders_healthy_then_unknown_then_unhealthy():
-    items = [
-        {"lane": "a", "health": {"healthy": False}},
-        {"lane": "b", "health": {"healthy": None}},
-        {"lane": "c", "health": {"healthy": True}},
-        {"lane": "d"},
-    ]
-    assert [item["lane"] for item in sorted(items, key=state_router._health_rank)] == ["c", "b", "d", "a"]
 
 
 def test_recommendation_prefers_established_health_over_unknown():

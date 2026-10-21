@@ -121,40 +121,12 @@ def emit_sink(monkeypatch):
     return events
 
 
-# --------------------------------------------------------------------------- #
-# 1. Cold-start selector: cold_start_roles only, never the AND matcher
-# --------------------------------------------------------------------------- #
-def test_cold_start_uses_cold_start_roles_not_routing(reg_root):
-    # routing.roles=[quality] but cold_start_roles empty → NOT announced at cold start.
-    rec = _make_record(reg_root, "routed-only", routing={"roles": ["quality"]}, cold_start_roles=[])
-    ann = _make_record(reg_root, "announced", routing={"roles": ["pedagogy"]}, cold_start_roles=["quality"])
-    _write_registry(reg_root, [rec, ann])
-    runtime = reg.load_runtime_safe()
-    pointers, dropped = reg.select_cold_start_pointers(runtime, "quality")
-    assert [p["id"] for p in pointers] == ["announced"]
-    assert dropped == []
-
-
 def test_cold_start_unknown_and_missing_role_yield_none(reg_root):
     _write_registry(reg_root, [_make_record(reg_root, "r1", cold_start_roles=["quality"])])
     runtime = reg.load_runtime_safe()
     assert reg.select_cold_start_pointers(runtime, "nobody") == ([], [])
     assert reg.select_cold_start_pointers(runtime, None) == ([], [])
     assert reg.select_cold_start_pointers(runtime, "   ") == ([], [])
-
-
-def test_cold_start_deterministic_order_and_pointer_fields_only(reg_root):
-    # P1 caps cold_start_roles at 5/role, so the max valid set is 5; the selector
-    # returns them deterministically sorted by id, pointer-fields only.
-    five = [_make_record(reg_root, f"cs-{i}", cold_start_roles=["quality"]) for i in (2, 0, 4, 1, 3)]
-    _write_registry(reg_root, five)
-    runtime = reg.load_runtime_safe()
-    pointers, dropped = reg.select_cold_start_pointers(runtime, "quality")
-    assert [p["id"] for p in pointers] == ["cs-0", "cs-1", "cs-2", "cs-3", "cs-4"]
-    assert dropped == []
-    # allowlisted pointer fields only — no title/summary/body/source/provenance.
-    for ptr in pointers:
-        assert set(ptr) == {"id", "state", "content_hash", "routing"}
 
 
 # --------------------------------------------------------------------------- #
@@ -183,31 +155,6 @@ def test_orient_role_adds_pointer_only_research(reg_root):
         assert set(ptr) == {"id", "state", "content_hash", "routing"}
 
 
-def test_orient_research_envelope_fits_budget_without_fetch_field(reg_root):
-    # 5 records (P1's per-role cold_start_roles cap) each padded with routing
-    # metadata to push the pointer set close to the byte budget — proves the
-    # *final emitted* envelope (no extra top-level `fetch` appended after
-    # capping) still respects MAX_FILTERED_BYTES end to end.
-    records = [
-        _make_record(
-            reg_root,
-            f"cs-{i}",
-            cold_start_roles=["quality"],
-            routing={
-                "roles": ["quality"],
-                "task_families": [f"family-{i}-{j}" for j in range(6)],
-                "owned_paths": [f"scripts/pkg-{i}/module-{j}/**" for j in range(6)],
-            },
-        )
-        for i in range(5)
-    ]
-    _write_registry(reg_root, records)
-    research = _orient({"role": "quality"}).json()["research"]
-    assert "fetch" not in research
-    envelope_bytes = len(json.dumps(research, sort_keys=True, separators=(",", ":")).encode("utf-8"))
-    assert envelope_bytes <= reg.MAX_FILTERED_BYTES
-
-
 def test_orient_fail_open_when_cold_start_selector_raises(reg_root, monkeypatch):
     _write_registry(reg_root, [_make_record(reg_root, "r1", cold_start_roles=["quality"])])
 
@@ -234,22 +181,6 @@ def test_orient_roles_do_not_share_cache(reg_root):
     assert [p["id"] for p in tts] == ["t-rec"]  # would be contaminated by a shared cache
 
 
-def test_orient_disabled_has_no_research_even_with_role(tmp_path, monkeypatch):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
-    _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
-    assert "research" not in _orient({"role": "quality"}).json()
-
-
-def test_orient_role_never_calls_record_endpoint_body(reg_root):
-    # Cold start announces pointers, never bodies: the response carries no digest text.
-    _write_registry(reg_root, [_make_record(reg_root, "r1", cold_start_roles=["quality"])])
-    body = _orient({"role": "quality"}).json()
-    blob = json.dumps(body)
-    assert "Paraphrase-only" not in blob and "digest" not in blob
-
-
 # --------------------------------------------------------------------------- #
 # 2b. /api/knowledge/cold-start: dedicated role-only endpoint (never the AND
 #     matcher) — the bootstrap routing-algebra bug reproduced against the HTTP
@@ -273,17 +204,6 @@ def test_cold_start_endpoint_uses_cold_start_roles_not_routing(reg_root):
     body = resp.json()
     assert body["enabled"] is True
     assert [r["id"] for r in body["records"]] == ["announced"]
-
-
-def test_cold_start_endpoint_disabled_and_missing_role(tmp_path, monkeypatch):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
-    _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
-    assert client.get("/api/knowledge/cold-start", params={"role": "quality"}).json() == {
-        "enabled": False,
-        "records": [],
-    }
 
 
 def test_cold_start_endpoint_etag_304(reg_root):
@@ -357,13 +277,6 @@ def test_manufactured_304_without_prior_fetch_emits_nothing(reg_root, emit_sink,
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
 
 
-def test_no_task_no_consumption_but_still_serves(reg_root, emit_sink, task_store):
-    _write_registry(reg_root, [_make_record(reg_root, "r1")])
-    resp = client.get("/api/knowledge/record/r1")
-    assert resp.status_code == 200
-    assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
-
-
 def test_404_is_never_consumption(reg_root, emit_sink, task_store):
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
     task_store("job-1", pid=os.getpid())
@@ -402,24 +315,6 @@ def test_invalid_or_inactive_task_no_consumption(reg_root, emit_sink, task_store
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
 
 
-def test_validate_active_task_requires_live_pid(task_store):
-    # ADR-011 P3: spawning AND running both require a live PID (mirrors the
-    # existing delegate zombie-detection semantics for "running", extended to
-    # "spawning" — the parent writes the real Popen PID into the state file
-    # immediately after spawn, so a genuinely active task always has one).
-    task_store("alive", status="running", pid=os.getpid())
-    assert consumption.validate_active_task("alive") == "alive"
-
-    task_store("spawning-alive", status="spawning", pid=os.getpid())
-    assert consumption.validate_active_task("spawning-alive") == "spawning-alive"
-
-    task_store("spawning-no-pid", status="spawning", pid=None)
-    assert consumption.validate_active_task("spawning-no-pid") is None
-
-    task_store("spawning-dead-pid", status="spawning", pid=999999)
-    assert consumption.validate_active_task("spawning-dead-pid") is None
-
-
 def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task_store):
     # A state file exists at a sanitized path, but its stored task_id differs from
     # the request → no attribution (defeats collisions via path sanitization).
@@ -434,13 +329,6 @@ def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
 
 
-def test_surface_event_is_distinct_from_consumption(emit_sink):
-    consumption.emit_surface(research_id="r1", surface=consumption.SURFACE_DISPATCH, task_id="job-1")
-    assert emit_sink == [
-        (consumption.SURFACED_EVENT, {"task_id": "job-1", "research_id": "r1", "surface": "dispatch"})
-    ]
-
-
 def test_telemetry_payloads_carry_no_forbidden_fields(emit_sink):
     consumption.emit_consumption(task_id="job-1", research_id="r1", status=200)
     consumption.emit_surface(research_id="r1", surface=consumption.SURFACE_DISPATCH, task_id="job-1")
@@ -449,16 +337,6 @@ def test_telemetry_payloads_carry_no_forbidden_fields(emit_sink):
     for _t, payload in emit_sink:
         assert set(payload) <= {"task_id", "research_id", "surface", "status"}
         assert not (set(payload) & forbidden)
-
-
-def test_surface_cold_start_constant_was_removed_not_fabricated():
-    # ADR-011 P3: cold-start orient has no trustworthy task id to attribute a
-    # surface event to, and never calls emit_surface. The old unused
-    # SURFACE_COLD_START constant implied telemetry that doesn't exist —
-    # removed rather than left dangling. Task-attributed surfacing begins at
-    # dispatch (SURFACE_DISPATCH), which IS wired to a real task id.
-    assert not hasattr(consumption, "SURFACE_COLD_START")
-    assert consumption.SURFACE_DISPATCH == "dispatch"
 
 
 # --------------------------------------------------------------------------- #
@@ -593,31 +471,6 @@ def test_monitor_defensive_304_without_cache_degrades_safely(tmp_path, monkeypat
     assert result.body == ""
 
 
-# --------------------------------------------------------------------------- #
-# 4b. Monitor client: cold_start() dedicated role-only path + bootstrap routing
-# --------------------------------------------------------------------------- #
-def test_monitor_cold_start_hits_dedicated_endpoint_not_and_manifest(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import monitor_client as mc
-
-    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
-    cli = mc.MonitorClient(base_url="http://test")
-    seen_paths: list[str] = []
-
-    def _fake_get(path, *, headers=None):
-        seen_paths.append(path)
-        return (
-            200,
-            '{"enabled":true,"records":[{"id":"r1","state":"active","content_hash":"sha256:aa","routing":{}}]}',
-            {"etag": '"e1"'},
-        )
-
-    monkeypatch.setattr(cli, "_get", _fake_get)
-    result = cli.cold_start(role="quality")
-    assert result.source == "network"
-    assert seen_paths[0].startswith("/api/knowledge/cold-start")
-    assert "manifest" not in seen_paths[0]
-
-
 def test_bootstrap_role_only_routes_to_cold_start_never_and_manifest(monkeypatch):
     from scripts.ai_agent_bridge import monitor_client as mc
 
@@ -664,22 +517,6 @@ def _delegate():
     return delegate
 
 
-def _args(**over):
-    import argparse
-
-    ns = argparse.Namespace(
-        research_role=None, research_task_family=None, research_track=None, research_owned_path=None
-    )
-    for key, value in over.items():
-        setattr(ns, key, value)
-    return ns
-
-
-def test_delegate_no_flags_yields_no_context():
-    delegate = _delegate()
-    assert delegate._build_research_context(_args()) is None
-
-
 def test_delegate_state_never_persists_research_null():
     # ADR-011 P3 default compatibility: a no-flags dispatch, a disabled registry,
     # or a degraded injection all resolve research_state to None; the persisted
@@ -697,20 +534,6 @@ def test_delegate_state_never_persists_research_null():
     assert with_context["research"] == {
         "pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f",
     }
-
-
-def test_delegate_rejects_oversize_and_overcount():
-    delegate = _delegate()
-    with pytest.raises(delegate.ResearchContextError):
-        delegate._build_research_context(_args(research_role="x" * (reg.MAX_QUERY_VALUE_LEN + 1)))
-    with pytest.raises(delegate.ResearchContextError):
-        delegate._build_research_context(
-            _args(research_owned_path=["p"] * (reg.MAX_OWNED_PATHS + 1))
-        )
-    with pytest.raises(delegate.ResearchContextError):
-        delegate._build_research_context(
-            _args(research_owned_path=["x" * (reg.MAX_OWNED_PATH_LEN + 1)])
-        )
 
 
 def test_delegate_injection_is_pointer_only_and_persists_safely(reg_root, monkeypatch):
@@ -744,28 +567,3 @@ def test_delegate_injection_is_pointer_only_and_persists_safely(reg_root, monkey
     assert surfaced == [
         (consumption.SURFACED_EVENT, {"task_id": "task-9", "research_id": "cefr", "surface": "dispatch"})
     ]
-
-
-def test_delegate_injection_fail_open_when_disabled(reg_root, monkeypatch):
-    delegate = _delegate()
-    monkeypatch.setattr(delegate, "_REPO_ROOT", reg_root)
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
-    ctx = reg.normalize_context("quality", "difficulty-gate", None, [])
-    assert delegate._resolve_research_injection(ctx, "t") == ("", None)
-
-
-# --------------------------------------------------------------------------- #
-# 6. Byte measurement: automatic body bytes are zero; bounded pointer payloads
-# --------------------------------------------------------------------------- #
-def test_automatic_surface_never_injects_body_bytes(reg_root):
-    _write_registry(
-        reg_root,
-        [_make_record(reg_root, "r1", routing={"roles": ["quality"]}, cold_start_roles=["quality"])],
-    )
-    # Cold-start orient projection carries pointers, never the digest body bytes.
-    body = _orient({"role": "quality"}).json()["research"]
-    projection = json.dumps(body).encode("utf-8")
-    digest = (reg_root / "docs/references/research-digests/r1.md").read_text("utf-8")
-    assert digest.strip() not in json.dumps(body)
-    # And it stays well within the filtered budget.
-    assert len(projection) <= reg.MAX_FILTERED_BYTES

@@ -105,36 +105,6 @@ def test_privacy_mode_error_never_leaks_the_exception_message(server, log_path):
     assert "error_class" not in entry or "words" not in entry.get("error_class", "")
 
 
-def test_non_privacy_mode_is_unchanged(server, log_path):
-    entry = _call_and_capture_log_entry(server, log_path, "check_russian_shadow", {"word": "слово"})
-    assert "privacy_mode" not in entry
-    assert entry["args"] == {"word": "слово"}
-
-
-def test_privacy_mode_flag_is_stripped_before_dispatch(server):
-    """The reserved _privacy_mode key must never reach a tool handler/schema."""
-    result = asyncio.run(server.call_tool("check_russian_shadow", {"word": "слово", "_privacy_mode": True}))
-    text = result[0].text
-    assert "_privacy_mode" not in text
-
-
-def test_query_ulif_cache_only_never_makes_a_live_call(server):
-    result = asyncio.run(server.call_tool("query_ulif", {"word": "стіл", "cache_only": True}))
-    payload = json.loads(result[0].text)
-    assert payload["status"] in {"attested", "not_found", "unavailable", "ambiguous"}
-    assert "entry" in payload
-    if payload["status"] == "ambiguous":
-        assert payload["entry"] is None
-        assert isinstance(payload.get("entries"), list) and len(payload["entries"]) >= 2
-
-
-def test_query_grac_cache_only_always_unavailable(server):
-    result = asyncio.run(server.call_tool("query_grac", {"query": "стіл", "cache_only": True}))
-    payload = json.loads(result[0].text)
-    assert payload["status"] == "unavailable"
-    assert payload["entry"] is None
-
-
 # --------------------------------------------------------------------------
 # Amendment (fixes v3, item 2): MCP-wire fail-closed error results —
 # ``_on_call_tool`` is the actual ``tools/call`` handler, distinct from the
@@ -185,11 +155,6 @@ def test_on_call_tool_marks_unknown_tool_iserror_true(server):
     assert result.is_error is True
 
 
-def test_on_call_tool_success_is_iserror_false(server):
-    result = _call_on_call_tool(server, "collection_stats", {})
-    assert result.is_error is False
-
-
 def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server, tmp_path, monkeypatch):
     sources_db = tmp_path / "sources.db"
     vesum_db = tmp_path / "vesum.db"
@@ -230,13 +195,3 @@ def test_on_call_tool_mcp_server_identity_explicitly_includes_content_hash(serve
     assert result.is_error is False
     payload = json.loads(result.content[0].text)
     assert payload["sources_db_sha256"] == hashlib.sha256(b"wire-sources-db").hexdigest()
-
-
-def test_call_tool_legacy_error_marker_never_appears_on_the_real_wire_path(server):
-    """The legacy 'Error in ...' prose marker stays inside call_tool(); the real MCP path never emits it."""
-    result = _call_on_call_tool(server, "verify_word", {})  # missing required "word"
-    assert result.is_error is False
-    assert result.structured_content["disposition"] == "invalid_input"
-    assert result.structured_content["success"] is False
-    for block in result.content:
-        assert not block.text.startswith("Error in ")

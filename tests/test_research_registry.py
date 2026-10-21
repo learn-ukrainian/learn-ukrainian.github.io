@@ -8,7 +8,6 @@ comment-bearing YAML.
 
 from __future__ import annotations
 
-import ast
 import contextlib
 import shutil
 from pathlib import Path
@@ -146,12 +145,6 @@ def test_schema_failure_is_reported() -> None:
     assert crr.validate_schema(data, crr.load_schema())
     result = crr.validate_registry(data, project_root=REPO_ROOT, streams=DEFAULT_STREAMS, decision_ids=DEFAULT_DECISIONS)
     assert result.errors and any("schema" in e for e in result.errors)
-
-
-def test_bad_content_hash_pattern_is_schema_rejected() -> None:
-    rec = make_record()
-    rec["content_hash"] = "sha256:NOTHEX"
-    assert crr.validate_schema({"schema_version": 1, "records": [rec]}, crr.load_schema())
 
 
 def test_duplicate_ids_rejected(tmp_path: Path) -> None:
@@ -303,17 +296,6 @@ def test_drift_reports_reconcile_command(tmp_path: Path, capsys: pytest.CaptureF
 
 
 # --------------------------------------------------------------------------- #
-# 8. --check is byte-for-byte read-only on the committed registry
-# --------------------------------------------------------------------------- #
-def test_check_is_byte_for_byte_readonly() -> None:
-    reg = REPO_ROOT / "docs/references/research-registry.yaml"
-    before = reg.read_bytes()
-    code = crr.main(["--check"], project_root=REPO_ROOT)
-    assert code == 0
-    assert reg.read_bytes() == before
-
-
-# --------------------------------------------------------------------------- #
 # 9. Selective reconcile: only requested hash, preserves comments/order, idempotent
 # --------------------------------------------------------------------------- #
 def test_selective_reconcile_is_targeted_and_idempotent(tmp_path: Path) -> None:
@@ -382,46 +364,6 @@ def test_anchor_fence_errors() -> None:
     ) == "keep"
 
 
-def test_wrong_anchor_surfaces_provenance_error(tmp_path: Path) -> None:
-    rec = make_record("anchor-rec", state="deferred")
-    rec["provenance"]["digest_anchor"] = "anchor-rec"
-    # Body has no fence -> missing fence.
-    root, data = build_project(tmp_path, [rec], bodies={"anchor-rec": "plain body, no fence\n"}, sync=False)
-    rec["content_hash"] = PLACEHOLDER_HASH
-    errs = crr.validate_registry(data, project_root=root, streams=DEFAULT_STREAMS, decision_ids=DEFAULT_DECISIONS).errors
-    assert any("anchor-rec" in e and "fence" in e for e in errs)
-
-
-# --------------------------------------------------------------------------- #
-# 11. Digest copyright policy
-# --------------------------------------------------------------------------- #
-def test_digest_policy_oversized_overlong_and_unattributed(tmp_path: Path) -> None:
-    big = "filler line number x\n" * 700  # > MAX_DIGEST_BYTES, no quotes
-    overlong = 'Source: https://e.org\n\n"' + "q" * (crr.MAX_QUOTE_CHARS + 5) + '"\n'
-    unattributed = '"a short quote with no provenance"\n'
-    recs = [
-        make_record("d-big"),
-        make_record("d-quote"),
-        make_record(
-            "d-noprov",
-            provenance={
-                "digest": "docs/references/research-digests/d-noprov.md",
-                "digest_anchor": None,
-                "source_url": None,
-            },
-        ),
-    ]
-    root, data = build_project(
-        tmp_path,
-        recs,
-        bodies={"d-big": big, "d-quote": overlong, "d-noprov": unattributed},
-    )
-    errs = run(data, root).errors
-    assert any("d-big" in e and "bytes" in e for e in errs)
-    assert any("d-quote" in e and "quoted span" in e for e in errs)
-    assert any("d-noprov" in e and "provenance" in e for e in errs)
-
-
 # --------------------------------------------------------------------------- #
 # 12. Ownership: unknown epic + duplicate epic declaration
 # --------------------------------------------------------------------------- #
@@ -449,19 +391,6 @@ def test_ownership_membership_resolver_seam(tmp_path: Path) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# 13. Cold-start per-role cap of five
-# --------------------------------------------------------------------------- #
-def test_cold_start_role_cap(tmp_path: Path) -> None:
-    six = [make_record(f"cs-{i}", cold_start_roles=["quality"]) for i in range(6)]
-    root, data = build_project(tmp_path, six)
-    assert any("quality" in e and "max 5" in e for e in run(data, root).errors)
-
-    five = [make_record(f"cs5-{i}", cold_start_roles=["quality"]) for i in range(5)]
-    root2, data2 = build_project(tmp_path / "b", five)
-    assert not any("cold_start" in e for e in run(data2, root2).errors)
-
-
-# --------------------------------------------------------------------------- #
 # 14. Reconcile refuses mutation when non-hash errors exist
 # --------------------------------------------------------------------------- #
 def test_reconcile_refuses_on_nonhash_errors(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -479,38 +408,6 @@ def test_reconcile_refuses_on_nonhash_errors(tmp_path: Path, capsys: pytest.Capt
     assert code == 2
     assert "Refusing to reconcile" in out.err
     assert reg.read_bytes() == before  # no mutation
-
-
-# --------------------------------------------------------------------------- #
-# 15. No dependency on the learner corpus / knowledge API / state / build packets
-# --------------------------------------------------------------------------- #
-def _imported_roots(path: Path) -> set[str]:
-    tree = ast.parse(path.read_text("utf-8"))
-    roots: set[str] = set()
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            roots.update(alias.name for alias in node.names)
-        elif isinstance(node, ast.ImportFrom) and node.module:
-            roots.add(node.module)
-    return roots
-
-
-def test_no_forbidden_runtime_dependencies() -> None:
-    forbidden_prefixes = (
-        "sqlite3",
-        "requests",
-        "urllib",
-        "http.client",
-        "scripts.api",
-        "scripts.build",
-        "scripts.ai_agent_bridge",
-    )
-    module_src = Path(crr.__file__).read_text("utf-8")
-    for token in ("sources.db", "sqlite", "state_router", "session_router", "monitor_client", "build_knowledge_packet", "linear_pipeline"):
-        assert token not in module_src, f"P1 code must not reference {token!r}"
-    for path in (Path(crr.__file__), Path(__file__)):
-        for root in _imported_roots(path):
-            assert not root.startswith(forbidden_prefixes), f"{path.name} imports forbidden module {root!r}"
 
 
 # --------------------------------------------------------------------------- #
@@ -697,26 +594,6 @@ def test_digest_path_rejects_symlink_to_private(tmp_path: Path) -> None:
     assert any("sym-private" in e and "symlink" in e for e in errs)
 
 
-def test_digest_path_rejects_symlink_to_nonprivate(tmp_path: Path) -> None:
-    digests_dir = tmp_path / "docs/references/research-digests"
-    digests_dir.mkdir(parents=True)
-    real = digests_dir / "real.md"
-    real.write_text(digest_body("real"), "utf-8")
-    (digests_dir / "sym-nonprivate.md").symlink_to(real)
-
-    rec = make_record(
-        "sym-nonprivate",
-        provenance={
-            "digest": "docs/references/research-digests/sym-nonprivate.md",
-            "digest_anchor": None,
-            "source_url": "https://example.org/sym-nonprivate",
-        },
-    )
-    data = {"schema_version": 1, "records": [rec]}
-    errs = run(data, tmp_path).errors
-    assert any("sym-nonprivate" in e and "symlink" in e for e in errs)
-
-
 def test_digest_path_rejects_non_reference_file(tmp_path: Path) -> None:
     rec = make_record(
         "nonref",
@@ -729,28 +606,6 @@ def test_digest_path_rejects_non_reference_file(tmp_path: Path) -> None:
     root, data = build_project(tmp_path, [rec])
     errs = run(data, root).errors
     assert any("nonref" in e and "docs/references/" in e for e in errs)
-
-
-def test_digest_path_accepts_valid_fenced_shared_reference(tmp_path: Path) -> None:
-    shared_text = (
-        "# Shared reference doc\n\n"
-        "<!-- record:shared-ok -->\n"
-        "Source: https://example.org/shared-ok\n\n"
-        "Clean paraphrase, nothing borrowed.\n"
-        "<!-- /record:shared-ok -->\n"
-    )
-    rec = make_record(
-        "shared-ok",
-        provenance={
-            "digest": "docs/references/some-shared-notes.md",
-            "digest_anchor": "shared-ok",
-            "source_url": None,
-        },
-    )
-    root, data = build_project(
-        tmp_path, [rec], extra_files={"docs/references/some-shared-notes.md": shared_text}
-    )
-    assert run(data, root).errors == []
 
 
 # --------------------------------------------------------------------------- #

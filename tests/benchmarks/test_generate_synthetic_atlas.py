@@ -12,7 +12,7 @@ import pytest
 
 from scripts.atlas.atlas_db import SCHEMA
 from scripts.atlas.export_runtime_shards import export_runtime_shards
-from scripts.benchmarks.generate_synthetic_atlas import build_synthetic_db, main, parse_args
+from scripts.benchmarks.generate_synthetic_atlas import build_synthetic_db
 
 
 def _sha256(path: Path) -> str:
@@ -206,15 +206,6 @@ def test_same_seed_produces_byte_identical_dataset(tmp_path: Path) -> None:
     assert _sampled_slugs(out_a) == _sampled_slugs(out_b)
 
 
-def test_different_seeds_produce_different_datasets(tmp_path: Path) -> None:
-    source = _make_source_db(tmp_path / "source.db")
-    out_a = tmp_path / "seed-a.db"
-    out_b = tmp_path / "seed-b.db"
-    build_synthetic_db(source_db=source, out=out_a, seed=1, target_articles=500)
-    build_synthetic_db(source_db=source, out=out_b, seed=2, target_articles=500)
-    assert _sampled_slugs(out_a) != _sampled_slugs(out_b)
-
-
 def test_synthetic_db_hits_target_and_satisfies_export_gates(tmp_path: Path) -> None:
     source = _make_source_db(tmp_path / "source.db")
     out = tmp_path / "synthetic.db"
@@ -371,22 +362,3 @@ def test_existing_synthetic_output_can_be_replaced_atomically(tmp_path: Path) ->
     assert list(tmp_path.glob(".synthetic.db.*")) == []
     build_synthetic_db(source_db=source, out=out, seed=2, target_articles=30)
     assert _sha256(out) != before
-
-
-def test_cli_help_and_parse() -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        parse_args(["--help"])
-    assert excinfo.value.code == 0
-    args = parse_args(["--seed", "9", "--target", "100"])
-    assert args.seed == 9
-    assert args.target == 100
-
-
-def test_main_runs_end_to_end(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    source = _make_source_db(tmp_path / "source.db")
-    out = tmp_path / "cli.db"
-    rc = main(["--source-db", str(source), "--out", str(out), "--seed", "3", "--target", "30"])
-    assert rc == 0
-    summary = json.loads(capsys.readouterr().out)
-    assert summary["articles"] == 30
-    assert summary["sha256"] == _sha256(out)

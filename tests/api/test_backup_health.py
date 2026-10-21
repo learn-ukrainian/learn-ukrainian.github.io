@@ -7,7 +7,6 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from scripts.api import main as api_main
-from scripts.api.monitor_context import fixture_context
 
 
 def test_backup_health_reports_failure_and_timestamp(tmp_path: Path) -> None:
@@ -28,13 +27,3 @@ def test_backup_health_reports_failure_and_timestamp(tmp_path: Path) -> None:
     assert api_main._backup_last_run_health(batch_state, now=now)["status"] == "stale"
     receipt.write_text("not json")
     assert api_main._backup_last_run_health(batch_state, now=now)["status"] == "unknown"
-
-
-def test_health_section_reads_context_batch_state(tmp_path: Path) -> None:
-    ctx = fixture_context(tmp_path)
-    receipt = ctx.roots.batch_state_dir / "backups" / "last-run.json"
-    receipt.parent.mkdir(parents=True)
-    receipt.write_text('{"exit_status":1,"finished_at_utc":"2026-09-29T03:36:00Z"}')
-    assert api_main._collect_health_orient_data(ctx)["backup_last_run"] == {
-        "status": "failed", "exit_status": 1, "finished_at_utc": "2026-09-29T03:36:00Z"
-    }

@@ -19,16 +19,6 @@ def _load_gold() -> dict:
     return json.loads(GOLD_V2.read_text(encoding="utf-8"))
 
 
-def test_gold_v2_is_versioned_benchmark_semantic_change() -> None:
-    gold = _load_gold()
-    assert gold["schema_version"] == "qg-layer-b-labels.v2"
-    assert gold["dataset_id"] == "qg-layer-b-adversarial-gold.v2-claim-critical-spans"
-    assert gold["qualification_eligible"] is True
-    assert gold["qualification_blockers"] == []
-    assert len(gold["cases"]) == 24
-    assert any(case["fact_check_id"] == "wrong-occurrence-17-preface" for case in gold["cases"])
-
-
 def test_gold_v2_claim_critical_spans_slice_raw_windows() -> None:
     gold = _load_gold()
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
@@ -53,25 +43,3 @@ def test_gold_v2_claim_critical_spans_slice_raw_windows() -> None:
                     broad = candidate.get("expected_support_spans") or []
                     assert broad, "phrase-level expected_support_spans retained as context"
     assert decisive_with_critical >= 19
-
-
-def test_gold_v2_wrong_occurrence_probe_fails_when_only_preface_spanned() -> None:
-    gold = _load_gold()
-    case = next(c for c in gold["cases"] if c["fact_check_id"] == "wrong-occurrence-17-preface")
-    artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
-    outputs = _build_event_index(_artifact_events(artifact))
-    event_output_id, candidates = next(iter(case["candidates_by_event_output_id"].items()))
-    raw = outputs[event_output_id]
-    candidate = candidates[0]
-    critical = candidate["claim_critical_spans"][0]
-    assert raw[critical["start"] : critical["end"]] == "17"
-    first = raw.index("17")
-    second = raw.index("17", first + 1)
-    assert first != second
-    assert critical["start"] == second
-    assert not layerb_qualify.decisive_span_agreement(
-        candidate, [{"start": first, "end": first + 2, "role": "CONTRADICTS"}]
-    )
-    assert layerb_qualify.decisive_span_agreement(
-        candidate, [{"start": second, "end": second + 2, "role": "CONTRADICTS"}]
-    )

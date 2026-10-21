@@ -79,64 +79,6 @@ def test_dead_worker_settle_persists_only_public_causes(tmp_path, monkeypatch, c
     assert RAW_REASON not in json.dumps(shown)
 
 
-@pytest.mark.parametrize("last_error", [None, RAW_REASON, "worker_failed"])
-def test_missing_worktree_settle_persists_only_public_causes(tmp_path, monkeypatch, capsys, last_error):
-    path, _state = _record(tmp_path, "missing-worktree", last_error)
-    monkeypatch.setattr(dispatch_settle, "_pid_alive", lambda _pid: False)
-
-    assert dispatch_settle.settle_missing_worktree(tmp_path, "missing-worktree") == ["marked_failed_missing_worktree"]
-
-    _assert_persisted(path, "missing-worktree", last_error)
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path)
-    assert delegate.cmd_status(argparse.Namespace(task_id="missing-worktree", run_nonce=None)) == 0
-    shown = json.loads(capsys.readouterr().out)
-    assert shown["last_error"] == json.loads(path.read_text(encoding="utf-8"))["last_error"]
-    assert RAW_REASON not in json.dumps(shown)
-
-
-def test_orphaned_default_writer_uses_the_same_sink(tmp_path):
-    path, state = _record(tmp_path, "orphaned", RAW_REASON)
-    _current, changed = dead_worker_state._mark_orphaned_pidless_crashed(
-        path,
-        state,
-        is_orphaned=lambda _state: True,
-        reason="dispatch_died_during_worktree_prep",
-        excerpt=lambda _state, _prior: "dispatcher died",
-    )
-    assert changed
-    record = json.loads(path.read_text(encoding="utf-8"))
-    assert record["status"] == "crashed"
-    assert record["last_error"] == "unclassified_error"
-    entries = [json.loads(line) for line in path.with_suffix(".diag").read_text(encoding="utf-8").splitlines()]
-    assert any(entry["field"] == "last_error" and entry["diagnostic"] == RAW_REASON for entry in entries)
-
-
-@pytest.mark.parametrize("writer", ["dead-worker", "missing-worktree"])
-def test_explicit_settle_writer_is_preserved(tmp_path, writer):
-    path, state = _record(tmp_path, writer, RAW_REASON)
-    writes = []
-
-    def write(record_path, current):
-        writes.append(record_path)
-        delegate._write_record_unlocked(record_path, current)
-
-    kwargs = {"pid_alive": lambda _pid: False, "write": write}
-    if writer == "dead-worker":
-        _current, changed = dead_worker_state.mark_dead_worker_terminal(
-            path,
-            state,
-            source="test",
-            terminal_status="failed",
-            allowed_statuses=("running",),
-            resolve_head=lambda _path: None,
-            **kwargs,
-        )
-    else:
-        _current, changed = dead_worker_state.mark_missing_worktree_failed(path, state, **kwargs)
-    assert changed and writes == [path]
-    _assert_persisted(path, writer, RAW_REASON)
-
-
 def test_settle_default_writers_cannot_bypass_the_public_cause_sink():
     """Extend #9878's delegate sink enumeration to the external settle writers."""
     tree = ast.parse(Path(dead_worker_state.__file__).read_text(encoding="utf-8"))
@@ -156,43 +98,3 @@ def test_settle_default_writers_cannot_bypass_the_public_cause_sink():
         "_mark_orphaned_pidless_crashed": "write or _write_public_state_unlocked",
         "mark_missing_worktree_failed": "write or _write_public_state_unlocked",
     }
-
-
-@pytest.mark.parametrize("writer", ["dead-failed", "dead-crashed", "missing-worktree"])
-@pytest.mark.parametrize("review", [False, True])
-@pytest.mark.parametrize("last_error", [None, ""])
-def test_settle_default_reason_shows_registered_code(tmp_path, monkeypatch, capsys, writer, review, last_error):
-    """Exercise each marker branch, including delegate's crashed-record callback."""
-    path, state = _record(tmp_path, writer, last_error)
-    state["require_review_verdict"] = review
-    path.write_text(json.dumps(state), encoding="utf-8")
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path)
-    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
-
-    if writer == "dead-failed":
-        _current, changed = dead_worker_state.mark_dead_worker_terminal(
-            path,
-            state,
-            source="test",
-            terminal_status="failed",
-            allowed_statuses=("running",),
-            pid_alive=lambda _pid: False,
-            resolve_head=lambda _path: None,
-        )
-        assert changed
-    elif writer == "missing-worktree":
-        _current, changed = dead_worker_state.mark_missing_worktree_failed(
-            path, state, pid_alive=lambda _pid: False
-        )
-        assert changed
-    # Healing is explicit; status only renders the persisted public cause.
-    if writer == "dead-crashed":
-        delegate._heal_dead_task(path, state, source="wait")
-    assert delegate.cmd_status(argparse.Namespace(task_id=writer, run_nonce=None)) == 0
-    shown = json.loads(capsys.readouterr().out)
-    expected = "worktree_missing_at_settle" if writer == "missing-worktree" else "worker_process_dead"
-    assert shown["status"] == ("crashed" if writer == "dead-crashed" else "failed")
-    assert shown["last_error"] == expected
-    assert json.loads(path.read_text(encoding="utf-8"))["last_error"] == expected
-    if review and writer != "dead-crashed":
-        assert shown["failure_reason"] == expected

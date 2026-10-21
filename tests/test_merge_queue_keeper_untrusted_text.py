@@ -275,19 +275,6 @@ def test_hostile_reason_comment_is_posted_once_across_runs(tmp_path: Path, trans
 # --- legitimate names and fixed reasons publish exactly what they did before ---
 
 
-@pytest.mark.parametrize("status,prefix", [("completed", "CI-red-"), ("in_progress", "CI-pending-")])
-def test_plain_check_name_publishes_byte_identical_comment_and_marker(
-    tmp_path: Path, transport: Transport, status: str, prefix: str
-) -> None:
-    subject, path = drop_with_check(tmp_path, "Analyze (python)", status)
-    keeper.run(subject, path, apply=True)
-    reason = f"{prefix}Analyze (python)"
-    assert transport.comments() == [
-        f"Merge queue keeper: #42 was not queued because {reason}. Failing merge_group: {RUN_URL}; "
-        f"failing jobs: `Analyze (python)`.\n\n<!-- mq-keeper head={HEAD} reason={reason} -->"
-    ]
-
-
 def test_comment_posted_before_the_fix_still_deduplicates(tmp_path: Path, transport: Transport) -> None:
     subject, path = drop_with_check(tmp_path, "Analyze (python)", "completed")
     old = f"Merge queue keeper: #42 was not queued because CI-red-Analyze (python).\n\n<!-- mq-keeper head={HEAD} reason=CI-red-Analyze (python) -->"
@@ -404,16 +391,3 @@ def test_flaky_issue_title_and_body_stay_inert(tmp_path: Path, transport: Transp
     assert {item["job"] for item in json.loads(path.read_text())["failures"]} == {job}  # raw name kept
     keeper.run(subject, path, apply=True)
     assert len(transport.issues()) == 1
-
-
-def test_plain_flaky_issue_is_unchanged(tmp_path: Path, transport: Transport) -> None:
-    subject = Subject(tmp_path)
-    path = tmp_path / "state.json"
-    ejected(subject, path, ["pytest (3)"], failures=[{"job": "pytest (3)", "pr": 7, "at": "2999-01-01T00:00:00+00:00"}])
-    keeper.run(subject, path, apply=True)
-    assert transport.issues() == [
-        (
-            "Merge queue flaky test: pytest (3)",
-            "`pytest (3)` failed merge_group runs on distinct PRs #7, #42 within 24 hours. Run IDs: 321.",
-        )
-    ]

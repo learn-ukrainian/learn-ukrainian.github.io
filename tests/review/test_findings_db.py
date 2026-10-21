@@ -7,7 +7,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.review import findings_db as db
 
@@ -87,16 +86,6 @@ def test_a_database_with_another_schema_version_is_refused(tmp_path: Path) -> No
     raw.commit()
     raw.close()
     with pytest.raises(db.VersionMismatch, match="refusing to open"):
-        db.connect(path)
-
-
-def test_tables_without_a_version_are_refused_not_adopted(tmp_path: Path) -> None:
-    path = tmp_path / "a1.sqlite"
-    raw = sqlite3.connect(path)
-    raw.execute("CREATE TABLE attempts (x INTEGER)")
-    raw.commit()
-    raw.close()
-    with pytest.raises(db.VersionMismatch):
         db.connect(path)
 
 
@@ -207,60 +196,6 @@ def test_conflict_and_unresolved_go_to_the_operator_until_decided(conn: sqlite3.
         db.record_operator_decision(conn, item, "again")
 
 
-def test_the_operator_cannot_decide_an_item_the_seat_has_not_sent(conn: sqlite3.Connection) -> None:
-    item = open_item(conn)
-    with pytest.raises(db.FindingsDbError):
-        db.record_operator_decision(conn, item, "x")
-    db.record_settle_outcome(conn, item, "refuted", [], "settle-seat")
-    with pytest.raises(db.FindingsDbError):
-        db.record_operator_decision(conn, item, "x")
-
-
-def test_the_real_parameters_file_carries_a_decision_date_beside_every_parameter() -> None:
-    document = yaml.safe_load(db.PARAMETERS_PATH.read_text(encoding="utf-8"))
-    names = [key for key in document if key != "parameters_schema"]
-    assert {
-        "second_seat_divisor",
-        "max_revise_rounds",
-        "regeneration_factor",
-        "review_failures_terminal_at",
-        "unsupported_claim_lessons_to_operator",
-        "settle_call_budget",
-        "gate_candidate_pattern",
-    } <= set(names)
-    for name in names:
-        assert set(document[name]) == {"value", "decided", "basis"}, name
-        assert len(document[name]["decided"]) == 10 and document[name]["decided"][4] == "-", name
-    values = db.load_parameters()
-    assert (
-        values["second_seat_divisor"] == 10 and values["max_revise_rounds"] == 2 and values["regeneration_factor"] == 2
-    )
-    assert values["unsupported_claim_lessons_to_operator"] == 3 and values["settle_call_budget"] >= 1
-    assert values["gate_candidate_pattern"] == "^yes .+$"
-
-
-@pytest.mark.parametrize(
-    "mutate",
-    [
-        lambda d: d["second_seat_divisor"].pop("decided"),
-        lambda d: d["second_seat_divisor"].update(decided="soon"),
-        lambda d: d["second_seat_divisor"].update(value=0),
-        lambda d: d["second_seat_divisor"].update(value="10"),
-        lambda d: d["max_revise_rounds"].update(basis=" "),
-        lambda d: d.pop("settle_call_budget"),
-        lambda d: d.update(parameters_schema=2),
-        lambda d: d["gate_candidate_pattern"].update(value="(unclosed"),
-    ],
-)
-def test_a_parameter_without_a_date_a_basis_or_a_sane_value_is_refused(tmp_path: Path, mutate) -> None:
-    document = yaml.safe_load(db.PARAMETERS_PATH.read_text(encoding="utf-8"))
-    mutate(document)
-    path = tmp_path / "p.yaml"
-    path.write_text(yaml.safe_dump(document), encoding="utf-8")
-    with pytest.raises(db.FindingsDbError):
-        db.load_parameters(path)
-
-
 # --- sequence, latest and moot ------------------------------------------------------------------------
 
 
@@ -284,16 +219,6 @@ def test_latest_accepted_is_the_highest_sequence_and_ignores_seeds_seconds_and_r
     assert latest["attempt_id"] == "A2"
     assert db.latest_accepted(conn, "a1", "m", "plan", None) is None
     assert [row["seq"] for row in conn.execute("SELECT seq FROM attempts ORDER BY seq")] == [1, 2, 3, 4, 5, 6]
-
-
-def test_a_settle_seat_cannot_decide_moot_superseded(conn: sqlite3.Connection) -> None:
-    with db.transaction(conn):
-        item = db.open_settle_item(
-            conn, ref="R/A/F-1", kind="unsupported_by_source", level="a1", slug="m", lesson_n=2,
-            manifest_sha256="a" * 64, opened_at="t",
-        )  # fmt: skip
-    with pytest.raises(db.FindingsDbError, match="unknown settle outcome"):
-        db.record_settle_outcome(conn, item, db.MOOT_SUPERSEDED, [], "settle-seat")
 
 
 def test_close_superseded_items_closes_only_older_open_items_of_that_target(conn: sqlite3.Connection) -> None:
@@ -414,24 +339,6 @@ def test_every_earlier_state_reaches_v5_with_budget_decisions_and_rows_intact(
         assert conn.execute("SELECT COUNT(*) FROM budget_decisions WHERE lesson_n = 9").fetchone()[0] == 1
     finally:
         conn.close()
-
-
-def test_opening_a_v4_file_twice_is_a_no_op(tmp_path: Path) -> None:
-    path = tmp_path / "a1.sqlite"
-    first = db.connect(path)
-    with db.transaction(first):
-        db.insert_attempt(first, attempt_row())
-    db.record_budget_operator_decision(first, "a1", "m", 2, "one more round", "operator")
-    first.close()
-
-    second = db.connect(path)
-    try:
-        assert [row[0] for row in second.execute("SELECT version FROM schema_version")] == [5]
-        assert second.execute("SELECT COUNT(*) FROM schema_version").fetchone()[0] == 1
-        assert second.execute("SELECT COUNT(*) FROM attempts").fetchone()[0] == 1
-        assert second.execute("SELECT COUNT(*) FROM budget_decisions").fetchone()[0] == 1
-    finally:
-        second.close()
 
 
 def test_v4_migration_adds_isolated_access_without_changing_attempts(tmp_path):

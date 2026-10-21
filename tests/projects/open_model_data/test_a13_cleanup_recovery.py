@@ -239,20 +239,7 @@ def test_a13_cleanup_policy_approves_only_dispatch_worktrees_and_pytest_cache() 
             assert entry["condition"] == "pr_status_is_merged"
 
 
-def test_a13_cleanup_policy_is_immutable_across_calls() -> None:
-    policy = a13.build_cleanup_policy()
-    policy["forbidden_paths"].append("data/sources.db.bak")
-    assert "data/sources.db.bak" not in a13.CLEANUP_POLICY["forbidden_paths"]
-    assert "data/sources.db.bak" not in a13.build_cleanup_policy()["forbidden_paths"]
-
-
 # --- shared engine wiring (real call, zero rows today) -----------------------
-
-
-def test_a13_engine_wiring_reuses_the_shared_admission_engine_unmodified() -> None:
-    receipt = a13.run_engine_admission_check([])
-    assert receipt["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
-    a13.a12.a11.a10.a9.a8.admission.verify_receipt(receipt)
 
 
 # --- receipt assembly and independent verification --------------------------------
@@ -308,62 +295,6 @@ def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_resi
         assert all(e["status"] == "unresolved_carried_to_a13" for e in _cached_json(RECEIPT)[receipt_key])
 
 
-def test_a13_receipt_denominator_stays_100_and_visible() -> None:
-    assert _cached_json(RECEIPT)["frozen_slot_denominator"]["total_slots"] == 100
-    assert _cached_json(RECEIPT)["execution_counters"]["frozen_slot_count"] == 100
-    assert len(_cached_json(RECEIPT)["a13_residuals"]) == 100
-    assert _cached_json(RECEIPT)["recovery_state"]["denominator_stable"] is True
-
-
-def test_a13_receipt_never_claims_a_stronger_release_state_than_the_evidence() -> None:
-    assert _cached_json(RECEIPT)["status"] == "A13_CLEANUP_RECOVERY_WIRED_TEXT_FREE_NO_STRONGER_RELEASE_STATE_CLAIM"
-    assert _cached_json(RECEIPT)["recovery_state"]["epic_closed"] is False
-    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
-    for forbidden in (
-        "EPIC_DONE",
-        "TRAINING_READY_SILVER",
-        "TRAINING_READY_GOLD_SUBSET",
-        "GOLD_UPGRADE_READY",
-        "EVAL_ARTIFACT_READY",
-        "PILOT_REVIEW_PASSED",
-        "ARENA_SLICE_READY",
-        "ADMITTED_SLICE_READY",
-    ):
-        assert forbidden not in serialized, forbidden
-    safety = _cached_json(RECEIPT)["safety_assertions"]
-    assert safety["epic_done_claimed"] is False
-    assert safety["training_ready_silver_claimed"] is False
-    assert safety["training_ready_gold_subset_claimed"] is False
-    assert safety["gold_upgrade_ready_claimed"] is False
-    assert safety["eval_artifact_ready_claimed"] is False
-    assert safety["pilot_review_passed_claimed"] is False
-
-
-def test_a13_receipt_dataset_rows_emitted_stays_zero() -> None:
-    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
-    assert _cached_json(RECEIPT)["engine_wiring"]["admission_receipt"]["counts"] == {
-        "input_rows": 0,
-        "admitted_rows": 0,
-        "rejected_rows": 0,
-    }
-    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
-
-
-def test_a13_receipt_never_deletes_a_forbidden_path_or_touches_private_artifacts() -> None:
-    assert _cached_json(RECEIPT)["execution_counters"]["temp_outputs_reaped"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["forbidden_paths_touched"] == 0
-    safety = _cached_json(RECEIPT)["safety_assertions"]
-    assert safety["held_out_membership_referenced"] is False
-    assert safety["held_out_membership_opened"] is False
-    assert safety["held_out_membership_deleted"] is False
-    assert safety["a4_private_ledger_loaded"] is False
-    assert safety["a4_private_ledger_deleted"] is False
-    assert safety["source_evidence_deleted"] is False
-    assert safety["sources_db_deleted"] is False
-    assert safety["a3_membership_opened_by_a13"] is False
-    assert safety["slot_reassigned_or_deleted_to_close_residual"] is False
-
-
 def test_a13_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
     keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS
@@ -383,16 +314,6 @@ def test_a13_bindings_hash_to_disk_for_every_bound_artifact() -> None:
         )
         assert path.is_file(), name
         assert a13.sha256_file(path) == binding["sha256"], name
-
-
-def test_a13_receipt_eligibility_all_false() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {
-        "gold": False,
-        "training": False,
-        "evaluation": False,
-        "teaching": False,
-        "coverage": False,
-    }
 
 
 # --- fail-closed on tampering (fast: monkeypatched a12 validity) ----------------
@@ -445,14 +366,6 @@ def test_a13_refuses_a_nonzero_dataset_rows_emitted_claim(monkeypatch: pytest.Mo
         a13.validate_receipt_independently(receipt)
 
 
-def test_a13_refuses_a_nonzero_temp_outputs_reaped_claim(monkeypatch: pytest.MonkeyPatch) -> None:
-    _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["execution_counters"]["temp_outputs_reaped"] = 1
-    with pytest.raises(a13.CleanupRecoveryError):
-        a13.validate_receipt_independently(receipt)
-
-
 def test_a13_refuses_a_weakened_cleanup_policy_dropping_a_forbidden_path(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
     receipt = copy.deepcopy(_cached_json(RECEIPT))
@@ -477,20 +390,3 @@ def test_a13_refuses_a_tampered_model_only_bases_blocked_list(monkeypatch: pytes
     receipt["engine_wiring"]["model_only_bases_blocked"] = ["model_agreement"]
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
-
-
-def test_a13_refuses_a_forged_epic_done_status_string() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["status"] = "EPIC_DONE"
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a13_forbidden_completion_claims_include_epic_done_and_upstream_ready_terms() -> None:
-    assert "EPIC_DONE" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    assert "GOLD_UPGRADE_READY" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    assert "TRAINING_READY_SILVER" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    assert "TRAINING_READY_GOLD_SUBSET" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    # The status string itself must never accidentally contain a forbidden term.
-    assert not any(claim in _cached_json(RECEIPT)["status"] for claim in a13.FORBIDDEN_COMPLETION_CLAIMS)

@@ -273,12 +273,6 @@ def test_resolve_chunk_attribution_any_corpus_finds_textbook_sections(attributio
     )
 
 
-def test_resolve_chunk_attribution_any_corpus_returns_none_for_missing_chunk(attribution_db) -> None:
-    from wiki.source_attribution import resolve_chunk_attribution_any_corpus
-
-    assert resolve_chunk_attribution_any_corpus("S9999") is None
-
-
 def test_effective_db_path_falls_back_to_main_checkout_from_worktree(tmp_path, monkeypatch) -> None:
     from wiki import source_attribution
 

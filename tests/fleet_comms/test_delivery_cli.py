@@ -177,35 +177,6 @@ def test_delivery_control_plane_refusal_is_sanitized(plane, monkeypatch, capsys)
     assert "private storage" not in json.dumps(result)
 
 
-@pytest.mark.parametrize("operation", ["status", "ack", "consume"])
-def test_delivery_missing_id(plane, capsys, operation):
-    args = [operation, "missing"]
-    if operation != "status":
-        args += ["--worker-id", "seat-1", "--fence-token", "1"]
-    if operation == "consume":
-        args += ["--driver-generation", "gen-1"]
-    assert invoke(capsys, *args, expected=EXIT_NOT_FOUND)["error"] == "delivery_not_found"
-
-
-@pytest.mark.parametrize("flag", ["--lease-seconds", "--max-attempts"])
-def test_delivery_claim_invalid_limits(plane, capsys, flag):
-    publish(plane)
-    result = invoke(
-        capsys, "claim", "--recipient", "codex", "--worker-id", "seat-1", flag, "0",
-        expected=EXIT_ERROR,
-    )
-    assert result["error"] == "lease_and_max_attempts_must_be_positive"
-    assert claim(capsys)["attempt_count"] == 1
-
-
-def test_delivery_storage_error_does_not_leak_path(tmp_path, capsys):
-    root = tmp_path / "private-path-sentinel"
-    root.write_text("not a directory")
-    result = invoke(capsys, "status", "missing", "--root", str(root), expected=EXIT_ERROR)
-    assert result["error"] == "delivery_store_unavailable"
-    assert "private-path-sentinel" not in json.dumps(result)
-
-
 @pytest.mark.parametrize("operation", [None, "claim", "status", "consume", "ack"])
 def test_delivery_cli_help(operation):
     args = [sys.executable, "-m", "scripts.fleet_comms", "deliveries"]

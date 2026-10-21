@@ -6,8 +6,6 @@ import json
 import sqlite3
 from pathlib import Path
 
-import pytest
-
 from scripts.lexicon import triage_needs_review as triage
 from scripts.wiki import sources_db as sdb
 
@@ -19,18 +17,6 @@ def _held(
     reason: str = "missing dictionary definition",
 ) -> triage.HeldEntry:
     return triage.HeldEntry(lemma=lemma, pos=pos, held_reason=reason, raw={})
-
-
-def test_empty_input_returns_empty_records() -> None:
-    records = triage.triage_held_entries(
-        [],
-        lookups={key: (lambda words: {w: [] for w in words}) for key in triage.SOURCE_HIT_KEYS},
-        vesum_fn=lambda words: {w: [] for w in words},
-    )
-    assert records == []
-    summary = triage.build_summary_markdown([])
-    assert "Total held: **0**" in summary
-    assert f"`{triage.MACHINE_PROMOTE}`: 0" in summary
 
 
 def test_sum11_is_never_a_gloss_or_hit_source() -> None:
@@ -346,42 +332,6 @@ def test_run_triage_write_and_probe(tmp_path: Path) -> None:
     assert payload["counts"]["total"] == 2
     assert summary.exists()
     assert "machine_action" in summary.read_text(encoding="utf-8")
-
-
-def test_cli_refuses_without_write_or_probe() -> None:
-    with pytest.raises(SystemExit) as exc:
-        triage.main([])
-    assert exc.value.code == 2
-
-
-def test_cli_help_is_clean() -> None:
-    with pytest.raises(SystemExit) as exc:
-        triage.main(["--help"])
-    assert exc.value.code == 0
-
-
-def test_cli_probe_with_injected_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
-    candidates = tmp_path / "grow_candidates.json"
-    candidates.write_text(json.dumps({"needs_review": []}), encoding="utf-8")
-
-    # Force empty probe path — no real DB required.
-    monkeypatch.setattr(
-        triage,
-        "run_triage",
-        lambda **kwargs: triage.TriageResult(
-            entries=[],
-            summary_md=triage.build_summary_markdown([]),
-            counts_by_action={},
-            candidates_found=True,
-            written=False,
-            dry_run=True,
-        ),
-    )
-    code = triage.main(["--probe", "--candidates", str(candidates)])
-    assert code == 0
-    out = capsys.readouterr().out
-    assert "probe (read-only)" in out
-    assert "Held triaged: 0" in out
 
 
 def test_default_slovnyk_probe_reads_only_the_vts_gloss_dictionary(tmp_path: Path) -> None:

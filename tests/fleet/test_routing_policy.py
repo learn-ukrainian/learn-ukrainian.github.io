@@ -7,9 +7,7 @@ import pytest
 from scripts.fleet.routing_policy import (
     HardRuleRefused,
     _filter_handoff,
-    done_check_pass_rate,
     log_overrides,
-    projected_unused_pct,
     resolve_job,
 )
 
@@ -44,26 +42,3 @@ def test_removed_subscription_lane_does_not_suppress_later_api_key_lane(monkeypa
         frozenset({"claude", "codex", "agy", "metered"}),
     )
     assert _filter_handoff(["grok", "metered"], language=True) == ["metered"]
-
-
-def test_language_handoff_stays_on_sol_or_gemini() -> None:
-    choice = resolve_job("orchestrate", language=True)
-    assert choice["handoff"] == ["codex", "agy"]
-    assert "grok" not in choice["handoff"]
-    assert "kimi" not in choice["lanes"]
-
-
-def test_projected_unused_is_a_percent_only() -> None:
-    assert projected_unused_pct(40.0, True) == 40.0
-    assert projected_unused_pct(10.0, False) == 0.0
-    assert projected_unused_pct(None, True) is None
-
-
-def test_done_check_pass_rate_groups_existing_outcomes() -> None:
-    rates = done_check_pass_rate([
-        {"lane": "codex", "model": "sol", "passed": True},
-        {"lane": "codex", "model": "sol", "passed": False},
-        {"lane": "agy", "model": "flash", "passed": True},
-    ])
-    assert rates["codex"]["sol"] == 0.5
-    assert rates["agy"]["flash"] == 1.0

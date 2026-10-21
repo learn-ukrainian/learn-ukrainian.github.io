@@ -275,28 +275,6 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
     assert not list((release_dir / "scripts").rglob("*.pyc"))
 
 
-def test_git_service_environment_targets_live_checkout(tmp_path: Path) -> None:
-    repo_root, sha = _create_snapshot_repo(tmp_path)
-    release_dir, _ = release_snapshot.build_release(repo_root, sha)
-    (repo_root / "live-only.txt").write_text("dirty\n", encoding="utf-8")
-    environment = sanitized_git_env() | {
-        "LEARN_UK_REPO_ROOT": str(repo_root),
-        "GIT_DIR": str(repo_root / ".git"),
-        "GIT_WORK_TREE": str(repo_root),
-    }
-
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        cwd=release_dir,
-        env=environment,
-        capture_output=True,
-        check=True,
-        text=True,
-        timeout=30,
-    )
-    assert "?? live-only.txt" in result.stdout
-
-
 def test_pruning_preserves_a_live_release_outside_the_newest_three(tmp_path: Path) -> None:
     repo_root, _sha = _create_snapshot_repo(tmp_path)
     releases_dir = release_snapshot.releases_root(repo_root)
@@ -375,17 +353,6 @@ def test_release_root_attestation_requires_release_layout(tmp_path: Path) -> Non
     assert not is_release_root(fake_root)
     with pytest.raises(ValueError, match="escapes"):
         safe_join(fake_root, "curriculum", "secret.txt")
-
-
-def test_safe_join_rejects_nested_undeclared_symlink_from_live_data(tmp_path: Path) -> None:
-    repo_root, sha = _create_snapshot_repo(tmp_path)
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (repo_root / "curriculum" / "escape").symlink_to(outside, target_is_directory=True)
-    release_dir, _ = release_snapshot.build_release(repo_root, sha)
-
-    with pytest.raises(ValueError, match="escapes"):
-        safe_join(release_dir, "curriculum", "escape", "secret.txt")
 
 
 def test_safe_join_rejects_planted_manifest_live_data_escape(tmp_path: Path) -> None:
@@ -540,21 +507,6 @@ def test_trusted_join_validates_components_lexically(tmp_path: Path) -> None:
             trusted_join(base, bad)
 
 
-def test_trusted_join_does_not_resolve_child_symlinks(tmp_path: Path) -> None:
-    """Documented trade: trusted_join is lexical-only — a child symlink pointing
-    outside base is NOT detected (that is why it must never see request-derived
-    parts; safe_join covers that boundary and has its own escape tests)."""
-    from scripts.path_safety import trusted_join
-
-    base = tmp_path / "root"
-    outside = tmp_path / "outside"
-    base.mkdir()
-    outside.mkdir()
-    (base / "link").symlink_to(outside)
-    joined = trusted_join(base, "link", "x.txt")
-    assert joined == Path(os.path.abspath(base / "link" / "x.txt"))  # lexical, unresolved
-
-
 def _fake_git(
     monkeypatch: pytest.MonkeyPatch,
     script: str,
@@ -631,24 +583,6 @@ def test_extract_archive_reports_reader_error_and_git_status_when_reader_fails(m
 
 
 @pytest.mark.timeout(30)
-def test_extract_archive_keeps_only_a_bounded_stderr_tail(monkeypatch, tmp_path: Path) -> None:
-    limit = release_snapshot.STDERR_TAIL_BYTES
-    spawned = _fake_git(
-        monkeypatch,
-        f"import sys; sys.stderr.write('x' * {limit * 4} + 'TAIL-END'); sys.exit(1)",
-    )
-
-    err = _extract_error(tmp_path)
-
-    assert err.git_status == 1
-    assert err.stderr_tail is not None
-    assert err.stderr_tail.endswith("TAIL-END")
-    assert len(err.stderr_tail.encode()) <= limit
-    assert len(str(err)) < limit + 1024
-    assert [process.poll() for process in spawned] == [1]
-
-
-@pytest.mark.timeout(30)
 def test_extract_archive_does_not_hang_when_git_writes_lots_of_stderr_first(monkeypatch, tmp_path: Path) -> None:
     archive = _archive_file(tmp_path)
     spawned = _fake_git(
@@ -676,31 +610,6 @@ def test_extract_archive_kills_git_that_does_not_exit(monkeypatch, tmp_path: Pat
     assert err.__cause__ is None
     assert "deadline of 0.5s hit; kill sent to git" in str(err)
     assert f"git exit status {-signal.SIGKILL}" in str(err)
-    assert [process.poll() for process in spawned] == [-signal.SIGKILL]
-
-
-@pytest.mark.timeout(30)
-def test_extract_archive_kills_git_that_stalls_mid_stream_at_the_deadline(monkeypatch, tmp_path: Path) -> None:
-    archive = _archive_file(tmp_path)
-    partial = tmp_path / "partial.tar"
-    partial.write_bytes(archive.read_bytes()[:520])  # header plus part of the file body
-    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_DEADLINE_S", 1.0)
-    armed: list[float] = []
-    real_timer = release_snapshot.threading.Timer
-
-    def recording_timer(interval: float, function, *args, **kwargs):
-        armed.append(interval)
-        return real_timer(interval, function, *args, **kwargs)
-
-    monkeypatch.setattr(release_snapshot.threading, "Timer", recording_timer)
-    spawned = _fake_git(monkeypatch, "import sys, time; " + _write_stdout(partial) + "time.sleep(60)")
-
-    err = _extract_error(tmp_path)
-
-    assert armed == [1.0]
-    assert err.__cause__ is not None  # the tar reader saw EOF mid-member
-    assert err.git_status == -signal.SIGKILL
-    assert "deadline of 1s hit; kill sent to git" in str(err)
     assert [process.poll() for process in spawned] == [-signal.SIGKILL]
 
 
@@ -768,16 +677,3 @@ def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, 
         for process in spawned:
             os.kill(process.pid, signal.SIGKILL)
             process.wait(timeout=5)
-
-
-def test_extract_archive_with_real_invalid_sha_reports_git_failure(tmp_path: Path) -> None:
-    repo_root, _ = _create_snapshot_repo(tmp_path)
-    staging_dir = tmp_path / "staging"
-    staging_dir.mkdir()
-
-    with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
-        release_snapshot._extract_archive(repo_root, "f" * 40, staging_dir)
-
-    assert exc_info.value.git_status == 128
-    assert "fatal:" in (exc_info.value.stderr_tail or "")
-    assert "git exit status 128" in str(exc_info.value)

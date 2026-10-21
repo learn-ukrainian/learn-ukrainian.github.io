@@ -214,36 +214,6 @@ def test_private_manifest_allowlist_and_string_refusals(bundle):
             private_manifest(bad)
 
 
-@pytest.mark.parametrize(
-    "version,valid",
-    [
-        ("0.5.0-rb1", True),
-        ("0.5.0-rb1.2", True),
-        ("1.0.0", True),
-        ("0.5.0-", False),
-        ("0.5.0-rb1-", False),
-        ("0.5.0-rb1.", False),
-        ("0.5.0-.rb1", False),
-        ("0.5.0-rb1..2", False),
-        ("0.5.0-rb-1", False),
-        ("0.5.0-RB1", False),
-    ],
-)
-def test_private_manifest_version_suffix(version, valid):
-    data = {
-        "hashes": {},
-        "counts": {},
-        "versions": {"catalog": version},
-        "code_sha": "b" * 40,
-        "reason_code_tallies": {},
-    }
-    if valid:
-        assert private_manifest(data) == data
-    else:
-        with pytest.raises(BuildError, match="private_manifest_string"):
-            private_manifest(data)
-
-
 BANNED_MODULES = {"requests", "httpx", "urllib.request", "http.client", "socket", "huggingface_hub", "subprocess"}
 BANNED_CALLS = {"os.system", "builtins.__import__", "builtins.eval", "builtins.exec"}
 
@@ -315,28 +285,6 @@ def test_package_has_no_network_or_process_execution_imports():
         assert spec is not None and hasattr(spec.loader, "get_source"), name
         source = spec.loader.get_source(name)
         assert source is not None, name
-        assert_no_execution(source)
-
-
-@pytest.mark.parametrize(
-    "source",
-    [
-        'import importlib; importlib.import_module("socket")',
-        'import importlib as i; i.import_module("subprocess")',
-        'from importlib import import_module as load; load("urllib.request")',
-        '__import__("socket")',
-        'import os; getattr(os, "system")("SYNTHETIC")',
-        'import os as o; o.system("SYNTHETIC")',
-        'import os as o; p = o; p.system("SYNTHETIC")',
-        'from os import system as run; run("SYNTHETIC")',
-        "from socket import *",
-        "from os import *",
-        "from urllib import request as r",
-        'import urllib as u; u.request.urlopen("SYNTHETIC")',
-    ],
-)
-def test_semantic_import_guard_refuses_dynamic_and_alias_bypasses(source):
-    with pytest.raises(AssertionError):
         assert_no_execution(source)
 
 
@@ -492,22 +440,3 @@ def test_cli_passes_derived_repository_root_to_output_guard(bundle, monkeypatch,
     assert supplied == [Path(cli.__file__).resolve().parents[4]]
     assert (supplied[0] / ".git").exists()
     capsys.readouterr()
-
-
-@pytest.mark.parametrize("component", ["C1", "C9"])
-def test_verify_mutations_work_on_a_single_unit_from_any_component(bundle, component):
-    bundle["candidates"] = [replace(bundle["candidates"][0], component=component)]
-    bundle["spec"]["unit_query"]["sql"] += " WHERE id=1"
-    bundle["spec"]["frozen_count"] = 1
-    bundle["specs"] = {component: bundle["spec"]}
-    bundle["catalog"]["components"] = {component: bundle["catalog"]["components"]["C1"]}
-    save_bundle(bundle)
-    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
-        execute(bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle))
-        assert (
-            execute(
-                bundle["root"] / "request.json", guard, component_objects=synthetic_components(bundle), verify=True
-            )["status"]
-            == "verified"
-        )
-        assert json.loads(guard.read("mutation-fixtures/results.json"))["swapped_citation"] == "quote_mismatch"

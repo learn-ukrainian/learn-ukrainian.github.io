@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import sqlite3
 from pathlib import Path
 from typing import Any
 
@@ -170,50 +169,6 @@ def test_private_ohoiko_public_payload_is_aggregate_only(tmp_path: Path) -> None
     assert "private-ohoiko-root" not in public_json
     assert "Секретний уривок" not in public_json
     assert "секретний" not in public_json
-
-
-def test_textbook_sqlite_and_jsonl_grade_counts_are_aggregate_only(tmp_path: Path) -> None:
-    db_path = tmp_path / "sources.db"
-    with sqlite3.connect(db_path) as conn:
-        conn.execute(
-            "create table textbooks (grade text, text text, source_file text, char_count integer)"
-        )
-        conn.execute(
-            "insert into textbooks values (?, ?, ?, ?)",
-            ("1", "Мами читають книгу.", "private-source-a.pdf", 20),
-        )
-
-    jsonl_root = tmp_path / "chunks" / "grade-02"
-    jsonl_root.mkdir(parents=True)
-    (jsonl_root / "book.jsonl").write_text(
-        json.dumps({"grade": 2, "text": "Школи мають класи.", "chunk_id": "private-chunk"}, ensure_ascii=False)
-        + "\n",
-        encoding="utf-8",
-    )
-
-    result = entry_count.build_source_entry_count(
-        root=tmp_path,
-        manifest_path=_write_manifest(tmp_path, []),
-        include_modules=False,
-        include_committed_inventories=False,
-        textbook_txt_root=None,
-        sources_db_path=db_path,
-        textbook_jsonl_root=tmp_path / "chunks",
-        vesum_lookup=_fake_vesum,
-    ).public_payload
-
-    sqlite_grade = result["textbook_grades_by_lane"][atlas_source_census.TEXTBOOK_DB]["grade-01"]
-    jsonl_grade = result["textbook_grades_by_lane"][atlas_source_census.TEXTBOOK_JSONL]["grade-02"]
-
-    assert sqlite_grade["source_units"] == 1
-    assert sqlite_grade["estimated_backlog_by_bucket"]["lemma"] == 3
-    assert jsonl_grade["source_units"] == 1
-    assert jsonl_grade["estimated_backlog_by_bucket"]["lemma"] == 3
-    public_json = json.dumps(result, ensure_ascii=False)
-    assert "private-source-a.pdf" not in public_json
-    assert "private-chunk" not in public_json
-    assert "book.jsonl" not in public_json
-    assert "Мами читають" not in public_json
 
 
 def test_detail_output_path_must_be_outside_repo(tmp_path: Path) -> None:

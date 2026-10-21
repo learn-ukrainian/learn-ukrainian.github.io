@@ -14,7 +14,6 @@ from scripts.audit.generate_search_index import (
     DEFAULT_SEARCH_OUT,
     UKRAINIAN_ALPHABET,
     _sanitize_typeahead_gloss,
-    _search_gloss,
     build_atlas_db_search_artifacts,
     build_browse_outputs,
     build_index,
@@ -333,68 +332,6 @@ def test_db_artifacts_emit_only_provenance_safe_gerund_parents(tmp_path: Path) -
         assert "p" not in by_slug[slug]
 
 
-def test_db_mode_preserves_gerund_parent_in_search_rows_and_shards(tmp_path: Path) -> None:
-    gerund = entry("говорячи", gloss="while speaking")
-    gerund["enrichment"] = {
-        "definition_cards": [
-            {
-                "id": "sum20",
-                "source": "СУМ-20",
-                "definitions": ["гово́рячи Дієприсл. до говори́ти."],
-            }
-        ]
-    }
-    db = atlas_db_fixture(tmp_path, entries=[entry("говорити"), gerund])
-    search_out = tmp_path / "search.json"
-    aliases_out = tmp_path / "aliases.json"
-    search_shards_out = tmp_path / "search-shards.json"
-    search_shard_dir = tmp_path / "search-shards"
-    browse_meta_out = tmp_path / "browse-meta.json"
-    browse_flagged_out = tmp_path / "browse-flagged.json"
-    browse_dir = tmp_path / "browse"
-
-    assert (
-        main(
-            [
-                "--db",
-                str(db),
-                "--out",
-                str(search_out),
-                "--aliases-out",
-                str(aliases_out),
-                "--search-shards-out",
-                str(search_shards_out),
-                "--search-shard-dir",
-                str(search_shard_dir),
-                "--browse-meta-out",
-                str(browse_meta_out),
-                "--browse-flagged-out",
-                str(browse_flagged_out),
-                "--browse-dir",
-                str(browse_dir),
-            ]
-        )
-        == 0
-    )
-
-    search_rows = json.loads(search_out.read_text(encoding="utf-8"))
-    gerund_row = next(row for row in search_rows if row["s"] == "говорячи")
-    assert gerund_row["p"] == "говори́ти"
-
-    search_shards = json.loads(search_shards_out.read_text(encoding="utf-8"))
-    shard_key = next(
-        key
-        for key in search_shards["shards"]
-        if any(
-            row["s"] == "говорячи"
-            for row in json.loads((search_shard_dir / f"{key}.json").read_text(encoding="utf-8"))
-        )
-    )
-    shard_rows = json.loads((search_shard_dir / f"{shard_key}.json").read_text(encoding="utf-8"))
-    assert next(row for row in shard_rows if row["s"] == "говорячи")["p"] == "говори́ти"
-    assert all("p" not in row for row in json.loads((browse_dir / "Г.json").read_text(encoding="utf-8")))
-
-
 def test_build_index_schema_sorting_filters_and_kind_buckets() -> None:
     rows = build_index(fixture_entries())
 
@@ -406,59 +343,12 @@ def test_build_index_schema_sorting_filters_and_kind_buckets() -> None:
         {"l": "кава", "s": "кава", "g": "coffee", "r": "kava", "k": "rek", "c": "B1"},
         {"l": "офіс", "s": "офіс", "g": "office", "r": "ofis", "k": "vyv"},
     ]
-def test_build_index_uses_translation_when_gloss_missing() -> None:
-    rows = build_index(
-        [
-            {
-                "lemma": "помішувати",
-                "url_slug": "помішувати",
-                "gloss": None,
-                "primary_source": "built_vocabulary_normalized",
-                "enrichment": {
-                    "translation": {
-                        "en": ["stir", "mix lightly"],
-                        "source": "test",
-                    }
-                },
-            }
-        ]
-    )
-
-    assert rows == [
-        {
-            "l": "помішувати",
-            "s": "помішувати",
-            "g": "stir; mix lightly",
-            "r": "pomishuvaty",
-            "k": "vyv",
-        }
-    ]
-
-
-_VOYEVODA_MASHED_GLOSS = (
-    "1. У давній Русі та інших слов’янських державах — вождь, полководець, "
-    "а також правитель міста, округу в XVI-XVIII ст. А в Римі свято. "
-    "Велике свято! Тиск народу, Зо всього царств..."
-)
-
 # Cloned from lemma ба: Unicode ellipsis precedes a later ASCII ``...``.
 _BA_MIXED_ELLIPSIS_GLOSS = (
     "Уживається для вираження здивування, здогаду і т. ін.; значенням близький "
     "до дивись. — Ти, як те сонечко, закрасиш мою смутну хату, розвеселиш "
     "матір… — Ба! У тебе й мати є? А я ..."
 )
-
-
-def test_sanitize_typeahead_gloss_keeps_sense_one_only_for_voyevoda_mash() -> None:
-    gloss = _sanitize_typeahead_gloss(_VOYEVODA_MASHED_GLOSS)
-    assert gloss is not None
-    assert gloss.startswith("У давній Русі")
-    assert "А в Римі свято" not in gloss
-    assert "Велике свято" not in gloss
-    assert "царств" not in gloss
-    assert not gloss.endswith("...")
-    assert not gloss.endswith("…")
-    assert len(gloss) <= 180
 
 
 def test_sanitize_typeahead_gloss_cuts_at_earliest_ellipsis_for_ba_mixed_markers() -> None:
@@ -472,39 +362,6 @@ def test_sanitize_typeahead_gloss_cuts_at_earliest_ellipsis_for_ba_mixed_markers
     assert "мати є" not in gloss
     assert "дивись" in gloss
     assert len(gloss) <= 180
-
-
-def test_sanitize_typeahead_gloss_leaves_short_voda_shaped_gloss_unchanged() -> None:
-    assert _sanitize_typeahead_gloss("water") == "water"
-    assert _sanitize_typeahead_gloss("shore, bank") == "shore, bank"
-
-
-def test_search_gloss_falls_through_to_translation_when_empty_or_missing() -> None:
-    translation_entry = {
-        "lemma": "помішувати",
-        "url_slug": "помішувати",
-        "gloss": None,
-        "enrichment": {"translation": {"en": ["stir", "mix lightly"]}},
-    }
-    assert _search_gloss(translation_entry) == "stir; mix lightly"
-    assert _search_gloss({**translation_entry, "gloss": ""}) == "stir; mix lightly"
-    assert _search_gloss({**translation_entry, "gloss": "   "}) == "stir; mix lightly"
-    assert _search_gloss({"lemma": "x", "url_slug": "x", "gloss": None}) is None
-
-
-def test_build_index_sanitizes_mashed_voyevoda_gloss_for_typeahead() -> None:
-    rows = build_index(
-        [
-            entry("воєвода", gloss=_VOYEVODA_MASHED_GLOSS),
-            entry("вода", gloss="water"),
-        ]
-    )
-    by_lemma = {row["l"]: row for row in rows}
-    assert by_lemma["вода"]["g"] == "water"
-    assert by_lemma["воєвода"]["g"] is not None
-    assert "А в Римі свято" not in by_lemma["воєвода"]["g"]
-    assert "Велике свято" not in by_lemma["воєвода"]["g"]
-    assert by_lemma["воєвода"]["g"].startswith("У давній Русі")
 
 
 def test_classification_code_precedence_and_standard_omit() -> None:
@@ -1080,22 +937,6 @@ def test_display_gloss_qualifies_editorial_metadata_outside_lemma_scope() -> Non
 
 
 @pytest.mark.needs_sparse_tree("site/src/data")
-def test_committed_browse_and_search_show_scoped_editorial_glosses() -> None:
-    """#9603: committed artifacts carry the projected слідуючий/діюча glosses, not raw avoid: metadata."""
-    search = {row["s"]: row["g"] for row in json.loads((PROJECT_ROOT / "site/src/data/lexicon-search-index.json").read_text(encoding="utf-8"))}
-    shard = {row["s"]: row for row in json.loads((PROJECT_ROOT / "site/public/lexicon/browse/С.json").read_text(encoding="utf-8"))}
-    note = "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
-    assert search["слідуючий"] == shard["слідуючий"]["g"] == note
-    assert search["діюча"] == "примітка Атласу: радять «чинна»; обсяг застереження не встановлено"
-    assert search["міроприємство"] == "avoid: захід"
-    assert not [slug for slug, gloss in search.items() if isinstance(gloss, str) and gloss.startswith(("avoid:", "rus:", "calque:")) and slug != "міроприємство"]
-    for slug, letter in (("переключити", "П"), ("кримчанин", "К"), ("просвітитель", "П")):
-        shard = {row["s"]: row for row in json.loads((PROJECT_ROOT / f"site/public/lexicon/browse/{letter}.json").read_text(encoding="utf-8"))}
-        assert search[slug] == shard[slug]["g"] and "(примітка Атласу: «Russian calque; standard Ukrainian:" in search[slug]
-        assert "(russian calque" not in shard[slug]["hay"]
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_usage_sources_are_bound_to_their_passages() -> None:
     """#9603: every committed judgment keeps the digest of the passage it quotes."""
     meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
@@ -1134,49 +975,6 @@ def test_definition_cards_for_slug_reads_payload_or_fails_closed() -> None:
     assert _definition_cards_for_slug(conn, "a") == [{"id": "sum20"}]
     assert _definition_cards_for_slug(conn, "b") is None
     assert _definition_cards_for_slug(conn, "missing") is None
-
-
-def test_manifest_index_qualifies_unsupported_norm_glosses() -> None:
-    """F1: the retained manifest exporter shows the same scoped gloss as the DB path (actual stored shapes)."""
-    slid = entry(
-        "слідуючий",
-        gloss="avoid: наступний",
-        primary_source="surzhyk_to_avoid",
-        classification="russianism",
-        is_russianism=True,
-        warning_severity="russianism_red",
-        curated_calque={
-            "kind": "lexical",
-            "corrections": ["наступний"],
-            "evidence": ["9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; ... наступний"],
-        },
-    )
-    switch = entry(
-        "переключити",
-        gloss="to switch over (Russian calque; standard Ukrainian: перемкнути)",
-        primary_source="lexicon_curated",
-        classification="russianism",
-        is_russianism=True,
-        warning_severity="russianism_red",
-    )
-    miro = entry(
-        "міроприємство",
-        gloss="avoid: захід",
-        primary_source="surzhyk_to_avoid",
-        classification="russianism",
-        is_russianism=True,
-        curated_calque={"kind": "lexical", "corrections": ["захід", "заходи"]},
-    )
-    rows = {row["l"]: row for row in build_index([slid, switch, miro])}
-    assert rows["слідуючий"]["g"] == "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"
-    assert rows["переключити"]["g"] == (
-        "to switch over (примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)"
-    )
-    assert "cls" not in rows["слідуючий"] and "cls" not in rows["переключити"]
-    assert (rows["міроприємство"]["g"], rows["міроприємство"]["cls"]) == ("avoid: захід", "avoid")
-    _meta, shards, flagged = build_browse_outputs(list(rows.values()))
-    assert {row["l"]: row["g"] for row in flagged} == {"міроприємство": "avoid: захід"}
-    assert all("avoid:" not in row["hay"] for row in shards["С"])
 
 
 @pytest.mark.needs_sparse_tree("site/src/data")

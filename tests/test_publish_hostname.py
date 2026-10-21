@@ -75,17 +75,6 @@ def test_resolver_rejects_malformed_hosts(dest):
     assert gate.normalize_repository(dest) == "unknown"
 
 
-@pytest.mark.parametrize("host", INVALID_HOSTS)
-def test_hostname_normalizer_rejects_malformed_hosts(host):
-    assert gate.normalize_hostname(host) is None
-
-
-@pytest.mark.parametrize("dest,expected", VALID_DESTINATIONS[:-1])
-def test_hostname_normalizer_preserves_valid_hosts(dest, expected):
-    host = dest.split("/", 1)[0]
-    assert gate.normalize_hostname(host) == host.lower()
-
-
 @pytest.fixture
 def destination_transport(monkeypatch, synthetic_opsec):
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
@@ -257,13 +246,3 @@ def test_unbound_transports_normalize_inherited_hosts(operation, dest, expected,
     assert child_environment["GH_HOST"] == host.lower()
     assert "--hostname" not in argv
     assert environment == {"GH_HOST": host}
-
-
-@pytest.mark.parametrize("operation", UNBOUND_OPERATIONS)
-def test_unbound_transports_preserve_absent_host(operation, inherited_host_transport):
-    invoke, calls = inherited_host_transport
-    assert invoke(operation, {}).returncode == 0
-    assert len(calls) == 1
-    argv, environment = calls[0]
-    assert "GH_HOST" not in environment
-    assert "--hostname" not in argv

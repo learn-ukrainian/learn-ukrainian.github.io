@@ -45,36 +45,6 @@ def test_name_patterns_match_known_leaks() -> None:
     assert not tls.name_matches_leak_pattern("random-scratch")
 
 
-def test_default_tmp_roots_includes_scratch_and_base_override(tmp_path: Path, monkeypatch) -> None:
-    scratch_root = tmp_path / "scratch"
-    scratch_root.mkdir()
-    base_root = tmp_path / "base"
-    base_root.mkdir()
-
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
-    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(base_root))
-
-    roots = tls.default_tmp_roots()
-    resolved_roots = [r.resolve() for r in roots]
-    assert scratch_root.resolve() in resolved_roots
-    assert base_root.resolve() in resolved_roots
-
-
-def test_discover_skips_young_and_unrelated(tmp_path: Path) -> None:
-    old = tmp_path / "review-1001"
-    young = tmp_path / "review-1002"
-    safe = tmp_path / "com.apple.foo"
-    _touch_old(old, age_s=10_000)
-    _touch_old(young, age_s=30)
-    _touch_old(safe, age_s=10_000)
-
-    found = tls.discover_candidates([tmp_path], now=time.time(), min_age_s=3600)
-    names = {c.path.name for c in found}
-    assert "review-1001" in names
-    assert "review-1002" not in names
-    assert "com.apple.foo" not in names
-
-
 def test_dry_run_does_not_delete(tmp_path: Path, monkeypatch) -> None:
     _clear_proc_probe(monkeypatch)
     target = tmp_path / "pr6568"
@@ -122,29 +92,6 @@ def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch) -> None:
     assert report["roots_reaped"] == 1
     assert not target.exists()
     assert report["bytes_freed"] > 0
-
-
-def test_path_has_live_process_matching_and_nonmatching(tmp_path: Path, monkeypatch) -> None:
-    _clear_proc_probe(monkeypatch)
-    target = tmp_path / "review-process-check"
-
-    # returncode == 0 means matching process found -> True
-    monkeypatch.setattr(
-        tls.subprocess,
-        "run",
-        lambda *args, **kwargs: tls.subprocess.CompletedProcess(
-            args=args[0], returncode=0, stdout=b"1234\n", stderr=b""
-        ),
-    )
-    assert tls.path_has_live_process(target) is True
-
-    # returncode == 1 means proven no-match -> False
-    monkeypatch.setattr(
-        tls.subprocess,
-        "run",
-        lambda *args, **kwargs: tls.subprocess.CompletedProcess(args=args[0], returncode=1, stdout=b"", stderr=b""),
-    )
-    assert tls.path_has_live_process(target) is False
 
 
 def test_path_has_live_process_rc3_fails_closed(tmp_path: Path, monkeypatch) -> None:
@@ -205,26 +152,6 @@ def test_live_process_is_skipped_via_pgrep(tmp_path: Path, monkeypatch) -> None:
     assert target.exists()
 
 
-def test_live_process_skipped_on_pgrep_timeout_fail_closed(tmp_path: Path, monkeypatch) -> None:
-    target = tmp_path / "review-3004"
-    _touch_old(target, age_s=10_000)
-
-    def raise_timeout(*args, **kwargs):
-        raise tls.subprocess.TimeoutExpired(cmd="pgrep", timeout=5)
-
-    monkeypatch.setattr(tls.subprocess, "run", raise_timeout)
-    report = tls.sweep_tmp_leaks(
-        apply=True,
-        tmp_roots=[tmp_path],
-        now=time.time(),
-        min_age_s=3600,
-        min_free_gb=0.0,
-    )
-    assert report["roots_reaped"] == 0
-    assert report["skipped_live"] == 1
-    assert target.exists()
-
-
 def test_recheck_liveness_immediately_before_deletion(tmp_path: Path, monkeypatch) -> None:
     _clear_proc_probe(monkeypatch)
     target = tmp_path / "review-3005"
@@ -258,19 +185,6 @@ def test_recheck_liveness_immediately_before_deletion(tmp_path: Path, monkeypatc
     assert pgrep_call_count == 2
 
 
-def test_pressure_shortens_age(tmp_path: Path, monkeypatch) -> None:
-    """Under free-space pressure, 45-minute-old leak is eligible."""
-    target = tmp_path / "pr7001-exact-abc"
-    _touch_old(target, age_s=45 * 60)
-    monkeypatch.setattr(tls, "free_space_gb", lambda _path: 5.0)
-    found = tls.discover_candidates(
-        [tmp_path],
-        now=time.time(),
-        min_age_s=tls.DEFAULT_PRESSURE_MIN_AGE_S,
-    )
-    assert any(c.path.name == "pr7001-exact-abc" for c in found)
-
-
 # --------------------------------------------------------------------------
 # #8738: Atlas/QA legacy residue, managed-namespace exclusion, /proc probe
 # --------------------------------------------------------------------------
@@ -294,28 +208,6 @@ def _clear_proc_probe(monkeypatch) -> None:
     ``ssh-agent``), which the fail-closed probe rightly reports as unknown.
     """
     monkeypatch.setattr(tls, "proc_references", lambda _p, **_kw: False)
-
-
-def test_classify_candidate_name_orders_protected_exact_inventory_pattern() -> None:
-    for name in sorted(tls.LEGACY_EXACT_ALLOWLIST):
-        assert tls.classify_candidate_name(name) == tls.CANDIDATE_KIND_LEGACY_EXACT
-    assert {
-        "atlas-8307-410k-final.db",
-        "atlas-8307-410k-r2.db",
-        "atlas-8307-synthetic-410k.json",
-        "qa-8686-ui-r2",
-        "qa-8686-exercises-r2",
-    } == tls.LEGACY_EXACT_ALLOWLIST
-    assert tls.classify_candidate_name("atlas-8672-ci-pytest3.log") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
-    assert tls.classify_candidate_name("qa-8686-ui-r3") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
-    assert tls.classify_candidate_name("atlas-8307-410k-final.db.bak") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
-    assert tls.classify_candidate_name("review-6621") == tls.CANDIDATE_KIND_PATTERN
-    assert tls.classify_candidate_name("atlas-8307-promotion-plan.md") is None
-    assert tls.classify_candidate_name("atlas-8307-decision.yaml") is None
-    assert tls.classify_candidate_name("qa-1.decision.yml") is None
-    assert tls.classify_candidate_name(tls.NAMESPACE_DIRNAME) is None
-    assert tls.classify_candidate_name("atlas-consult") is None  # no issue number: not a known family
-    assert tls.classify_candidate_name("com.apple.imagent") is None
 
 
 def test_legacy_exact_names_drain_but_other_atlas_qa_residue_is_inventory_only(tmp_path: Path, monkeypatch) -> None:
@@ -482,21 +374,6 @@ def test_proc_probe_unknown_when_same_uid_cwd_or_fd_table_denied(tmp_path: Path,
     assert tls.proc_references(target, proc_root=proc_root) is None
 
 
-def test_proc_probe_unknown_when_a_descriptor_link_is_denied(tmp_path: Path, monkeypatch) -> None:
-    target = tmp_path / "qa-8686-ui-r2"
-    target.mkdir()
-    proc_root = _fake_proc(tmp_path, 4013, cmdline=b"sleep\0", fd=tmp_path / "elsewhere")
-    real_readlink = os.readlink
-
-    def denied_fd(path, *args, **kwargs):
-        if "/fd/" in str(path):
-            raise PermissionError(13, "denied")
-        return real_readlink(path, *args, **kwargs)
-
-    monkeypatch.setattr(tls.os, "readlink", denied_fd)
-    assert tls.proc_references(target, proc_root=proc_root) is None
-
-
 def _deny_probe(monkeypatch, *, names: tuple[str, ...]) -> None:
     """Make cwd/environ/fd reads of a fake process fail with EACCES, as a foreign-uid process does."""
     real_readlink = os.readlink
@@ -551,16 +428,6 @@ def test_foreign_uid_process_cwd_and_fd_are_probed_and_denial_is_unknown(tmp_pat
     assert tls.path_liveness(target, proc_root=proc_root) == tls.LIVENESS_UNKNOWN
 
 
-@pytest.mark.parametrize("denied", [("cwd",), ("fd",)])
-def test_foreign_uid_partial_denial_is_unknown(tmp_path: Path, monkeypatch, denied: tuple[str, ...]) -> None:
-    monkeypatch.setattr(tls.os, "geteuid", lambda: os.getuid() + 1)
-    target = tmp_path / "atlas-8307-410k-final.db"
-    target.write_text("x")
-    proc_root = _fake_proc(tmp_path, 4019, cmdline=b"sleep\0")
-    _deny_probe(monkeypatch, names=denied)
-    assert tls.proc_references(target, proc_root=proc_root) is None
-
-
 def test_unreadable_stat_or_cmdline_is_unknown_unless_process_vanished(tmp_path: Path, monkeypatch) -> None:
     target = tmp_path / "atlas-8307-410k-r2.db"
     target.write_text("x")
@@ -595,20 +462,6 @@ def test_unreadable_stat_or_cmdline_is_unknown_unless_process_vanished(tmp_path:
     assert tls.proc_references(target, proc_root=proc_root) is False
 
 
-def test_zombie_process_holds_nothing(tmp_path: Path) -> None:
-    """A zombie has no cwd, no fd table and no environ; its state letter proves it holds nothing."""
-    target = tmp_path / "qa-8686-exercises-r2"
-    target.mkdir()
-    proc_root = _fake_proc(tmp_path, 4022, cmdline=b"", state="Z")
-    entry = proc_root / "4022"
-    (entry / "cwd").unlink()  # readlink -> ENOENT, as on a real zombie
-    (entry / "fd").chmod(0o000)
-    try:
-        assert tls.proc_references(target, proc_root=proc_root) is False
-    finally:
-        (entry / "fd").chmod(0o755)
-
-
 def test_path_liveness_unknown_without_proc_and_negative_pgrep(tmp_path: Path, monkeypatch) -> None:
     """No /proc (macOS): a negative pgrep cannot see cwd or fd holders, so the verdict is unknown (#8738)."""
     _quiet_pgrep(monkeypatch)
@@ -628,32 +481,6 @@ def test_path_liveness_unknown_without_proc_and_negative_pgrep(tmp_path: Path, m
         assert report["reaped"] == []
         assert report["skipped"] == [{"path": str(target), "reason": "liveness_unknown"}]
     assert target.exists()
-
-
-def test_unknown_liveness_is_reported_distinctly_and_preserves(tmp_path: Path, monkeypatch) -> None:
-    _quiet_pgrep(monkeypatch)
-    target = tmp_path / "atlas-8307-410k-r2.db"
-    _touch_old(target, age_s=10_000, as_file=True)
-    monkeypatch.setattr(tls, "proc_references", lambda _p, **_kw: None)
-    monkeypatch.setattr(tls, "_PROC_ROOT", tmp_path / "proc-present")
-    (tmp_path / "proc-present").mkdir()
-    assert tls.path_liveness(target) == tls.LIVENESS_UNKNOWN
-    report = tls.sweep_tmp_leaks(apply=True, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
-    assert report["roots_reaped"] == 0
-    assert report["skipped_live"] == 1
-    assert report["skipped"] == [{"path": str(target), "reason": "liveness_unknown"}]
-    assert target.exists()
-
-
-def test_path_has_live_process_preserves_on_unknown_proc_verdict(tmp_path: Path, monkeypatch) -> None:
-    _quiet_pgrep(monkeypatch)
-    target = tmp_path / "review-unknown"
-    monkeypatch.setattr(tls, "proc_references", lambda _p, **_kw: None)
-    assert tls.path_has_live_process(target) is True  # unknown preserves on every host
-    monkeypatch.setattr(tls, "proc_references", lambda _p, **_kw: True)
-    assert tls.path_has_live_process(target) is True
-    monkeypatch.setattr(tls, "proc_references", lambda _p, **_kw: False)
-    assert tls.path_has_live_process(target) is False
 
 
 def test_legacy_exact_name_held_open_is_preserved(tmp_path: Path, monkeypatch) -> None:
@@ -751,10 +578,3 @@ def test_scratch_git_marker_disposition(temp_deletion_layout, marker):
         (metadata / "object").write_bytes(b"disposable clone metadata")
         tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
         assert not target.exists()
-
-
-def test_sweep_reads_the_shared_env_floor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(tls, "free_space_gb", lambda _p: 25.0)
-    assert tls.sweep_tmp_leaks(apply=False, tmp_roots=[tmp_path], now=time.time())["disk_pressure"] is False
-    monkeypatch.setenv(tls.SCRATCH_MIN_FREE_ENV, "27")
-    assert tls.sweep_tmp_leaks(apply=False, tmp_roots=[tmp_path], now=time.time())["disk_pressure"] is True

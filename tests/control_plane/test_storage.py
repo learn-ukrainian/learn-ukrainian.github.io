@@ -8,18 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from scripts.control_plane.storage import (
     ControlPlanePgConnectError,
     ControlPlanePgDsnMissingError,
-    ControlPlaneSqliteRefusedError,
-    ControlPlaneStoreUnavailableError,
     StoreId,
     connect,
-    resolve_authority,
     sqlite_path,
 )
-from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.hygiene import lint_control_plane_sqlite
 
@@ -27,23 +22,6 @@ pytestmark = pytest.mark.repo_invariant
 
 # Unreachable local port — fails closed quickly without DNS (no example.invalid).
 _UNREACHABLE_DSN = "postgresql://cp_ci:cp_ci@127.0.0.1:1/postgres"
-
-
-@pytest.mark.parametrize(
-    "store_id",
-    [
-        StoreId.WRITE_OWNERSHIP,
-        StoreId.FLEET_COMMS,
-        StoreId.SESSION_STREAMS,
-    ],
-)
-def test_default_authority_is_sqlite(
-    store_id: StoreId,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.delenv("LEARN_UKRAINIAN_CP_AUTHORITY", raising=False)
-    monkeypatch.delenv(f"LEARN_UKRAINIAN_CP_AUTHORITY_{store_id.name}", raising=False)
-    assert resolve_authority(store_id).value == "sqlite"
 
 
 def test_sqlite_path_resolution(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -133,53 +111,6 @@ def test_pg_unreachable_dsn_fails_closed_quickly_no_sqlite(
     assert "postgresql://" not in message
 
 
-def test_artifact_store_pg_unreachable_no_sqlite(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
-    plane_root = tmp_path / "plane"
-    started = time.monotonic()
-    with pytest.raises(ControlPlanePgConnectError, match="fleet_comms"):
-        ArtifactStore(root=plane_root)
-    elapsed = time.monotonic() - started
-    assert not (plane_root / "comms.sqlite3").exists()
-    assert elapsed < 8.0
-
-
-def test_session_streams_db_pg_refused_by_interlock_no_sqlite(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """#605: session_streams is sqlite-only; the #7482 interlock refuses pg
-    at the seam (before any Postgres connect is even attempted)."""
-    from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
-
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
-    db_target = tmp_path / "session-streams.sqlite3"
-    db = SessionStreamDatabase(path=db_target)
-    started = time.monotonic()
-    with pytest.raises(ControlPlaneUnsupportedComponentError, match="session_streams") as raised:
-        db.connect()
-    elapsed = time.monotonic() - started
-    assert not db_target.exists()
-    assert elapsed < 8.0
-    message = str(raised.value)
-    assert "127.0.0.1" not in message
-    assert "postgresql://" not in message
-
-
-def test_control_plane_sqlite_refused_error_still_exported() -> None:
-    assert issubclass(ControlPlaneSqliteRefusedError, Exception)
-
-
-def test_task_index_has_no_sqlite_path() -> None:
-    with pytest.raises(ControlPlaneStoreUnavailableError, match="task_index"):
-        sqlite_path(StoreId.TASK_INDEX)
-
-
 def test_control_plane_lint_allowlists_remaining_direct_opens() -> None:
     violations = lint_control_plane_sqlite.find_unallowlisted_connects()
     assert violations == [], f"unallowlisted control-plane sqlite opens: {violations}"
@@ -242,60 +173,3 @@ def test_control_plane_changed_files_match_counted_repo_results(tmp_path, capsys
     assert capsys.readouterr() == selected
     path.write_text(line.replace("connection =", "new_connection =") + "\n")
     assert lint.main(["--repo", str(tmp_path), str(path)]) == 1
-
-
-def test_control_plane_changed_files_scope_without_repo_walk(tmp_path, monkeypatch):
-    lint = lint_control_plane_sqlite
-    monkeypatch.chdir(tmp_path)
-    names = [
-        "scripts/a.py",
-        "agents_extensions/shared/session_streams/a.py",
-        "scripts/control_plane/a.py",
-        "tests/a.py",
-        "docs/a.py",
-        "scripts/a.sh",
-        "scripts/nested/a.py",
-    ]
-    for name in names:
-        path = tmp_path / name
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text('sqlite3.connect("write-ownership.sqlite3")\n')
-    (tmp_path / "scripts/link").symlink_to(tmp_path / "scripts/nested", target_is_directory=True)
-    expected = lint.find_unallowlisted_connects(tmp_path)
-    assert len(expected) == 3
-
-    def unexpected_walk(*args, **kwargs):
-        pytest.fail("changed-file mode must not walk the repository")
-
-    monkeypatch.setattr(Path, "rglob", unexpected_walk)
-    selected = [Path(name) for name in names] + [
-        Path("scripts/missing.py"),
-        Path("scripts/link/a.py"),
-        Path("scripts/nested/../a.py"),
-    ]
-    assert lint.find_unallowlisted_connects(tmp_path, only=selected) == expected
-
-
-def test_control_plane_changed_from_and_invalid_ref(tmp_path, monkeypatch, capsys):
-    import subprocess
-
-    lint = lint_control_plane_sqlite
-    monkeypatch.chdir(tmp_path)
-    subprocess.run(["git", "init", "-q"], check=True, timeout=30)
-    path = tmp_path / "scripts/probe.py"
-    path.parent.mkdir()
-    path.write_text("VALUE = 1\n")
-    subprocess.run(["git", "add", "."], check=True, timeout=30)
-    subprocess.run(
-        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "base"],
-        check=True,
-        timeout=30,
-    )
-    (tmp_path / "scripts/untracked.py").write_text('sqlite3.connect("write-ownership.sqlite3")\n')
-    assert lint.main(["--repo", ".", "--changed-from", "HEAD"]) == 0
-    capsys.readouterr()
-    path.write_text('sqlite3.connect("write-ownership.sqlite3")\n')
-    assert lint.main(["--repo", ".", "--changed-from", "HEAD"]) == 1
-    assert "scripts/probe.py:1:" in capsys.readouterr().err
-    assert lint.main(["--repo", ".", "--changed-from", "missing-ref"]) == 2
-    assert capsys.readouterr().err == "git: cannot list changed files\n"

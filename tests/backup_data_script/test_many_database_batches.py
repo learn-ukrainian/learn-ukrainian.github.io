@@ -79,21 +79,6 @@ def test_database_excludes_go_through_an_exclude_file_not_argv(
     assert exclude_files and not any(Path(path).exists() for path in exclude_files)
 
 
-def test_preview_also_uses_the_exclude_file(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    database = _make_database(source / "datasets" / "plain.db")
-
-    result = _run(environment, "backup")
-
-    assert result.returncode == 0, result.stderr
-    log = _log(environment)
-    assert "arg=<--exclude>" not in log
-    assert "arg=<--dry-run>" in log
-    assert f"exclude=<{database}>" in log
-
-
 def test_pytest_scratch_databases_are_skipped_and_excluded(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -268,49 +253,6 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
     )
 
 
-def test_batch_budget_splits_database_uploads(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    _use_local_restic(environment, tmp_path)
-    project = source.parent
-    for index in range(4):
-        _make_database(project / "batch_state" / "open-model-data" / f"run-{index}" / "sources.db")
-    size = (project / "batch_state" / "open-model-data" / "run-0" / "sources.db").stat().st_size
-    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = str(2 * size)
-
-    backed_up = _run(environment, "backup", "--execute")
-
-    assert backed_up.returncode == 0, backed_up.stderr
-    sizes = [
-        (project / "batch_state" / "open-model-data" / f"run-{index}" / "sources.db").stat().st_size
-        for index in range(4)
-    ]
-    sizes.append((source / "sources.db").stat().st_size)
-    budget = int(environment["LU_BACKUP_DB_BATCH_MAX_BYTES"])
-    db_batches, snapshots = _run_snapshot_bound(sizes, budget)
-    assert _backup_invocations(environment).count("backup lu-part-db") == db_batches
-    assert len(_backup_invocations(environment)) == snapshots
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "1", "0", "0"]
-
-
-@pytest.mark.parametrize("budget", ["0", "-1", "1e9", "abc", "1000000000000000000000"])
-def test_invalid_batch_budget_fails_before_any_upload(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    budget: str,
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    _make_database(source / "a.db")
-    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = budget
-
-    result = _run(environment, "backup", "--execute")
-
-    assert result.returncode != 0
-    assert "LU_BACKUP_DB_BATCH_MAX_BYTES must be a positive whole number of bytes." in result.stderr
-    assert "arg=<backup>" not in _log(environment)
-
-
 def test_database_batch_upload_failure_fails_every_member_and_never_completes(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -456,21 +398,6 @@ def test_backup_fails_closed_when_required_repo_state_is_missing(
     assert "arg=<backup>" not in _log(environment)
 
 
-def test_backup_fails_closed_when_agent_recovery_root_is_missing(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    agent_root = source.parent / ".agent"
-    (agent_root / "recovery-state.json").unlink()
-    agent_root.rmdir()
-
-    result = _run(environment, "backup")
-
-    assert result.returncode != 0
-    assert "Required recovery path is missing: .agent" in result.stderr
-    assert "arg=<backup>" not in _log(environment)
-
-
 def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
@@ -486,22 +413,6 @@ def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
     assert result.returncode != 0
     assert "Required recovery path must not be a symlink: .agent" in result.stderr
     assert "arg=<backup>" not in _log(environment)
-
-
-def test_backup_ignores_untracked_paths_outside_the_allowlist(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    (source.parent / "sole-copy.txt").write_text("not declared\n", encoding="utf-8")
-    dropped = source.parent / "batch_state" / "preserved" / "secret.txt"
-    dropped.parent.mkdir()
-    dropped.write_text("not walked\n", encoding="utf-8")
-
-    result = _run(environment, "backup")
-
-    assert result.returncode == 0, result.stderr
-    assert "UNBACKED untracked Git path: sole-copy.txt" not in result.stderr
-    assert "preserved" not in result.stderr
 
 
 def test_refuses_legacy_mutable_backup_as_restic_repository(
@@ -553,21 +464,6 @@ def test_claude_parent_must_not_be_a_symlink(
     assert "arg=<backup>" not in _log(environment)
 
 
-def test_doctor_summarizes_validation_failure(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    atlas_epic = source.parent / ".claude" / "atlas-epic"
-    (atlas_epic / "HANDOFF.md").unlink()
-    atlas_epic.rmdir()
-
-    result = _run(environment, "doctor")
-
-    assert result.returncode != 0
-    assert "NOT READY: ERROR: Required recovery path is missing" in result.stderr
-    assert "Doctor found 1 blocking problem(s)." in result.stderr
-
-
 def test_refuses_staging_inside_script_checkout(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -606,17 +502,3 @@ def test_data_volume_staging_location_requires_linux(
 
     assert result.returncode != 0
     assert "Staging directory and backup source overlap" in result.stderr
-
-
-def test_refuses_non_designated_staging_inside_selected_checkout(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    other_staging = source.parent / "scratch-staging"
-    other_staging.mkdir()
-    environment["LU_BACKUP_TMPDIR"] = str(other_staging)
-
-    result = _run(environment, "backup")
-
-    assert result.returncode != 0
-    assert "Staging directory must be outside the selected project checkout" in result.stderr

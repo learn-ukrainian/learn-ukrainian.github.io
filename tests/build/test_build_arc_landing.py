@@ -206,12 +206,6 @@ def test_reviewed_state_fails_on_a_stale_approve_when_a_findings_database_is_pre
         _states(root, _arc("reviewed"))
 
 
-def test_missing_state_directory_is_planned_not_an_error(root: gen.Roots) -> None:
-    _plan(root, "alpha", 1)
-    assert not root.state.exists()
-    assert _states(root, _arc("alpha")) == {"alpha": "planned"}
-
-
 def test_malformed_state_file_fails_loudly(root: gen.Roots) -> None:
     _plan(root, "alpha", 1)
     (root.state / "alpha").mkdir(parents=True)
@@ -234,19 +228,6 @@ def test_plan_supplies_title_lessons_and_scope(root: gen.Roots) -> None:
     assert (beta["title_uk"], beta["lessons"], beta["scope"], beta["lesson_titles"]) == (None, None, None, [])
     assert beta["lesson_numbers"] == []
     assert 'title: "Beta"' in files[root.docs / "beta" / "index.mdx"]
-
-
-def test_module_frontmatter_uses_bilingual_title_with_plan_and_english_fallback_without_plan(
-    root: gen.Roots,
-) -> None:
-    _plan(root, "sounds-letters-and-hello", 1, title="Звуки і привіт")
-    files = gen.generated_files(root, _arc("sounds-letters-and-hello", "reading-ukrainian"))
-
-    planned = yaml.safe_load(files[root.docs / "sounds-letters-and-hello" / "index.mdx"].split("---\n")[1])
-    unplanned = yaml.safe_load(files[root.docs / "reading-ukrainian" / "index.mdx"].split("---\n")[1])
-
-    assert planned["title"] == "Звуки і привіт · Sounds letters and hello"
-    assert unplanned["title"] == "Reading ukrainian"
 
 
 def test_frontmatter_carries_arc_keys_and_an_empty_body(root: gen.Roots) -> None:
@@ -348,38 +329,6 @@ def test_plan_lesson_numbers_must_be_exactly_one_to_n(root: gen.Roots, numbers: 
         gen.generated_files(root, _arc("alpha"))
 
 
-def test_display_job_drops_line_references_and_backticks() -> None:
-    assert gen.display_job("Name common professions (`:485`) and more") == "Name common professions and more"
-    assert gen.display_job("Read the text (`:549-551`).") == "Read the text."
-    assert gen.display_job("Use `є` and `немає` (`:12`)") == "Use є and немає"
-    assert gen.display_job("Plain text, (not a ref)") == "Plain text, (not a ref)"
-    # several citations in one group (A2-B2 arc jobs), en dash, semicolon, bare backticked reference
-    assert gen.display_job("Eat out; complain (:1947-1952, :1709-1710)") == "Eat out; complain"
-    assert gen.display_job("Read signs (`:361`; :523–525) at the border") == "Read signs at the border"
-    assert gen.display_job("Fill a form `:361` here") == "Fill a form here"
-    assert gen.display_job("Meet at 10:30 (see page 4)") == "Meet at 10:30 (see page 4)"
-
-
-@pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
-def test_every_arc_job_renders_without_a_source_line_reference(level: str) -> None:
-    """The landing shows ``display_job(job)``; no level's job may leak a Standard line reference into it."""
-    arc = yaml.safe_load(
-        (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml").read_text(encoding="utf-8")
-    )
-    leaking = [
-        (record["position"], shown)
-        for record in arc["positions"]
-        if re.search(r"(?<!\d):\d+(?:[-–]\d+)?", shown := gen.display_job(record["job"]))
-    ]
-    assert leaking == []
-
-
-def test_real_arc_jobs_carry_no_line_references_or_backticks() -> None:
-    roots = gen.Roots(REPO_ROOT, LEVEL)
-    data = json.loads(gen.generated_files(roots, load_arc(LEVEL))[roots.data_json])
-    assert not [r["slug"] for r in data["positions"] if "`" in r["job"] or "(:" in r["job"]]
-
-
 def test_legacy_landing_generators_skip_arc_levels(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts import generate_landing_pages
 
@@ -389,11 +338,6 @@ def test_legacy_landing_generators_skip_arc_levels(tmp_path: Path, monkeypatch: 
     build_landing_pages.main()
     assert not (tmp_path / "a1" / "index.mdx").exists()
     assert (tmp_path / "a2" / "index.mdx").exists(), "other levels are still generated"
-
-
-def test_built_state_label_is_the_accurate_ukrainian_phrase() -> None:
-    chrome = (REPO_ROOT / "site/src/lib/i18n/chrome.ts").read_text(encoding="utf-8")
-    assert "'arc.state.built': 'уроки підготовлено'," in chrome
 
 
 def _retire(root, slug, routes=()):

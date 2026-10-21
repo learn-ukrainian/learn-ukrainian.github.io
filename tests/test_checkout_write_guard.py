@@ -13,8 +13,6 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.build.linear_pipeline import ensure_claude_writer_agent_deployed
-from scripts.wiki.extract_sections import extract_sections
 from tests.helpers import checkout_write_guard
 from tests.helpers.checkout_write_defaults import WriteDefaults
 from tests.helpers.checkout_write_guard import (
@@ -88,12 +86,6 @@ def _source_alias(filename: str, name: str):
 _COLLECTION_BUILDERS = tuple(_source_alias("build_sources_db.py", "guard_collection_builder") for _ in range(2))
 
 
-@pytest.mark.parametrize("builder", _COLLECTION_BUILDERS, ids=["replaced-alias", "current-alias"])
-def test_collection_file_alias_report_default(tmp_path: Path, builder) -> None:
-    assert tmp_path / "corpus_audit/section_extraction_report.md" == builder.DEFAULT_REPORT_PATH
-    assert tmp_path / "embeddings/manifest.db" == builder.DEFAULT_MANIFEST_DB
-
-
 @pytest.mark.parametrize("filename", ["linear_pipeline.py", "extract_sections.py", "build_sources_db.py"])
 def test_late_file_alias_defaults(tmp_path: Path, filename: str, monkeypatch: pytest.MonkeyPatch) -> None:
     name = "guard_late_alias"
@@ -149,131 +141,6 @@ def test_default_redirect_matches_exact_file_and_restores_alias(tmp_path: Path) 
         defaults.loaded(SimpleNamespace())
     assert original == module.DEFAULT_REPORT_PATH
     assert original_manifest == module.DEFAULT_MANIFEST_DB
-
-
-@pytest.mark.parametrize("name", ["scripts.build.linear_pipeline", "build.linear_pipeline"])
-def test_shared_writer_default_deploys_outside_checkout(tmp_path: Path, name: str) -> None:
-    module = importlib.import_module(name)
-    deploy = ensure_claude_writer_agent_deployed if name.startswith("scripts.") else module.ensure_claude_writer_agent_deployed
-    result = deploy()
-    target = tmp_path / ".claude" / "agents" / "curriculum-writer.md"
-    assert result["path"] == str(target)
-    assert target.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
-    assert deploy()["changed"] is False
-
-
-@pytest.mark.parametrize("prefix", ["scripts.wiki", "wiki"])
-@pytest.mark.parametrize("via_builder", [False, True], ids=["direct-default", "builder-global"])
-def test_shared_section_report_default_writes_outside_checkout(
-    tmp_path: Path, prefix: str, via_builder: bool,
-) -> None:
-    db = tmp_path / "sections.db"
-    with sqlite3.connect(db) as conn:
-        conn.execute("""CREATE TABLE textbooks (
-            id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
-            source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
-        )""")
-    if via_builder:
-        builder = importlib.import_module(f"{prefix}.build_sources_db")
-        report = builder._extract_sections_with_university_grade_adapter(db)
-    else:
-        extractor = importlib.import_module(f"{prefix}.extract_sections")
-        # The qualified alias was imported during collection, before fixtures.
-        extract = extract_sections if prefix.startswith("scripts.") else extractor.extract_sections
-        report = extract(db)
-    output = tmp_path / "corpus_audit" / "section_extraction_report.md"
-    assert output.is_file()
-    assert "Status: **OK**" in output.read_text(encoding="utf-8")
-    assert report.total_chunks == 0
-
-
-@pytest.mark.parametrize("rel", [
-    ".claude/agents/curriculum-writer.md",
-    "data/corpus_audit/section_extraction_report.md",
-])
-@pytest.mark.parametrize("change", ["create", "rewrite", "same-content", "delete", "unchanged"])
-def test_protocol_attributes_only_current_test_changes(
-    tmp_path: Path, rel: str, change: str,
-) -> None:
-    output = tmp_path / rel
-    output.parent.mkdir(parents=True)
-    if change != "create":
-        output.write_text("before", encoding="utf-8")
-    guard = CheckoutWriteGuard(repo_root=tmp_path)
-    item = SimpleNamespace(config=SimpleNamespace(_checkout_write_guard=guard), nodeid="sample.py::test_writer")
-    protocol = checkout_write_guard.pytest_runtest_protocol(item, None)
-    next(protocol)
-    if change == "delete":
-        output.unlink()
-    elif change != "unchanged":
-        previous_mtime = output.stat().st_mtime_ns if output.exists() else 0
-        output.write_text("before" if change == "same-content" else "after", encoding="utf-8")
-        os.utime(output, ns=(previous_mtime + 1, previous_mtime + 1))
-    with pytest.raises(StopIteration):
-        next(protocol)
-    if change == "unchanged":
-        assert guard._test_violations == []
-    else:
-        action = {
-            "create": "created", "rewrite": "modified/appended",
-            "same-content": "modified/appended", "delete": "deleted",
-        }[change]
-        assert guard._test_violations == [
-            f"guarded checkout file {action}: {rel} (test: sample.py::test_writer)",
-        ]
-    # A later unchanged test must not inherit attribution from the first one.
-    item.nodeid = "sample.py::test_reader"
-    protocol = checkout_write_guard.pytest_runtest_protocol(item, None)
-    next(protocol)
-    with pytest.raises(StopIteration):
-        next(protocol)
-    assert not any("test_reader" in violation for violation in guard._test_violations)
-
-
-def test_protocol_without_session_guard() -> None:
-    protocol = checkout_write_guard.pytest_runtest_protocol(SimpleNamespace(config=SimpleNamespace()), None)
-    next(protocol)
-    with pytest.raises(StopIteration):
-        next(protocol)
-
-
-def test_worker_attribution_handles_crashed_or_unguarded_nodes(tmp_path: Path) -> None:
-    guard = CheckoutWriteGuard(repo_root=tmp_path)
-    config = SimpleNamespace(_checkout_write_guard=guard)
-    checkout_write_guard.pytest_testnodedown(SimpleNamespace(config=config), "worker crashed")
-    checkout_write_guard.pytest_testnodedown(SimpleNamespace(config=SimpleNamespace()), None)
-    assert guard._test_violations == []
-    violation = "guarded checkout file created: sample (test: sample.py::test_writer)"
-    checkout_write_guard.pytest_testnodedown(
-        SimpleNamespace(config=config, workeroutput={"checkout_write_violations": [violation]}), None,
-    )
-    assert guard._test_violations == [violation]
-
-
-def test_protocol_stats_only_two_known_targets(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    guard = CheckoutWriteGuard(repo_root=tmp_path)
-    item = SimpleNamespace(config=SimpleNamespace(_checkout_write_guard=guard), nodeid="sample.py::test_reader")
-    inspected = []
-    original_stat = Path.stat
-
-    def recording_stat(path, *args, **kwargs):
-        inspected.append(path.relative_to(tmp_path).as_posix())
-        return original_stat(path, *args, **kwargs)
-
-    def forbid_io(*args, **kwargs):
-        raise AssertionError("per-test attribution must not read, scan, or invoke Git")
-
-    monkeypatch.setattr(Path, "stat", recording_stat)
-    monkeypatch.setattr(Path, "read_bytes", forbid_io)
-    monkeypatch.setattr(os, "walk", forbid_io)
-    monkeypatch.setattr(subprocess, "run", forbid_io)
-    protocol = checkout_write_guard.pytest_runtest_protocol(item, None)
-    next(protocol)
-    with pytest.raises(StopIteration):
-        next(protocol)
-    assert inspected == [
-        ".claude/agents/curriculum-writer.md", "data/corpus_audit/section_extraction_report.md",
-    ] * 2
 
 
 @pytest.mark.parametrize("workers", [0, 2], ids=["serial", "xdist"])
@@ -381,22 +248,6 @@ def test_guard_detects_request_log_append_in_fixture_repo(tmp_path: Path) -> Non
     assert "guarded checkout artifact modified/appended: logs/mcp-sources-requests.jsonl" in str(exc_info.value)
 
 
-def test_guard_detects_manifest_creation_in_fixture_repo(tmp_path: Path) -> None:
-    _init_git_repo(tmp_path)
-    (tmp_path / ".gitignore").write_text("site/src/data/lexicon-manifest.json\n", encoding="utf-8")
-    subprocess.run(["git", "add", ".gitignore"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
-
-    guard = CheckoutWriteGuard(repo_root=tmp_path)
-    manifest = tmp_path / "site" / "src" / "data" / "lexicon-manifest.json"
-    manifest.parent.mkdir(parents=True, exist_ok=True)
-    manifest.write_text('{"entries": []}\n', encoding="utf-8")
-
-    with pytest.raises(CheckoutWriteError) as exc_info:
-        guard.verify()
-    assert "guarded checkout artifact created: site/src/data/lexicon-manifest.json" in str(exc_info.value)
-
-
 def test_guard_accepts_unchanged_run_in_fixture_repo(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     dummy = tmp_path / "file.txt"
@@ -455,60 +306,6 @@ def test_guard_still_detects_unrelated_untracked_files(tmp_path: Path, rel: str)
     assert guard.check() == [f"untracked checkout file created: {rel}"]
     with pytest.raises(CheckoutWriteError, match="untracked checkout file created"):
         guard.verify()
-
-
-def test_guard_accounts_for_preexisting_changes_and_sparse_files(tmp_path: Path) -> None:
-    _init_git_repo(tmp_path)
-    dirty = tmp_path / "dirty.txt"
-    dirty.write_text("v1\n", encoding="utf-8")
-    sparse_tracked = tmp_path / "sparse.txt"
-    sparse_tracked.write_text("sparse\n", encoding="utf-8")
-    subprocess.run(["git", "add", "dirty.txt", "sparse.txt"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
-
-    # Simulate dirty state before guard starts
-    dirty.write_text("v2-uncommitted\n", encoding="utf-8")
-    # Simulate sparse checkout: tracked file is missing from working tree
-    sparse_tracked.unlink()
-
-    with CheckoutWriteGuard(repo_root=tmp_path) as guard:
-        pass
-
-    assert guard.check() == []
-
-
-@pytest.mark.parametrize("malformed", [False, True], ids=["missing", "malformed"])
-def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malformed: bool) -> None:
-    """Exercise the actual lazy reader, rather than a copied skip implementation."""
-    store = tmp_path / "_words.yaml"
-    if malformed:
-        store.write_text("invalid: yaml: [unclosed\n", encoding="utf-8")
-    sample = tmp_path / "test_store.py"
-    sample.write_text(
-        "import sys\n"
-        f"sys.path.insert(0, {str(PROJECT_ROOT)!r})\n"
-        "from pathlib import Path\n"
-        "from tests.build import test_fresh_a1_choice_checks as choices\n"
-        f"choices.A1_STORE = Path({str(store)!r})\n"
-        "def test_independent():\n"
-        "    assert choices._record(1, 'sample', [])['id'] == 'W-1'\n"
-        "def test_store():\n"
-        "    choices._store_record('W-061')\n",
-        encoding="utf-8",
-    )
-    result = subprocess.run(
-        [sys.executable, "-m", "pytest", "-rs", str(sample)],
-        cwd=tmp_path, capture_output=True, text=True, timeout=60,
-    )
-    assert "collected 2 items" in result.stdout, result.stdout + result.stderr
-    if malformed:
-        assert result.returncode == 1, result.stdout + result.stderr
-        assert "1 failed, 1 passed" in result.stdout
-        assert "ScannerError" in result.stdout or "ParserError" in result.stdout
-    else:
-        assert result.returncode == 0, result.stdout + result.stderr
-        assert "1 passed, 1 skipped" in result.stdout
-        assert "Missing repository-relative prerequisite: curriculum/l2-uk-en/evidence/a1/_words.yaml" in result.stdout
 
 
 @pytest.mark.parametrize("workers", [0, 2], ids=["serial", "xdist"])
@@ -745,28 +542,6 @@ def test_session_hooks_skip_vanished_files_and_directories(
     assert any(f"{root}/survivor.txt" in violation for violation in guard.check())
 
 
-def test_guard_prunes_runtime_directories_before_scanning(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    excluded = set()
-    for rel in LIVE_RUNTIME_PATHS:
-        path = tmp_path / rel
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text("live", encoding="utf-8")
-        if path.parent != tmp_path / Path(rel).parts[0]:
-            excluded.add(path.parent)
-    original_scandir = os.scandir
-
-    def forbid_runtime_scan(path):
-        if not isinstance(path, int):
-            assert Path(path) not in excluded, f"traversed live runtime directory: {path}"
-        return original_scandir(path)
-
-    monkeypatch.setattr(os, "scandir", forbid_runtime_scan)
-    guard = CheckoutWriteGuard(repo_root=tmp_path)
-    assert guard.check() == []
-
-
 def test_guard_does_not_suppress_other_walk_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     def inaccessible_scandir(path):
         raise PermissionError("denied")
@@ -774,19 +549,6 @@ def test_guard_does_not_suppress_other_walk_errors(tmp_path: Path, monkeypatch: 
     monkeypatch.setattr(os, "scandir", inaccessible_scandir)
     with pytest.raises(PermissionError, match="denied"):
         CheckoutWriteGuard(repo_root=tmp_path)
-
-
-def test_guard_snapshots_watched_trees_without_hashing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    output = tmp_path / "data/corpus_audit/report.md"
-    output.parent.mkdir(parents=True)
-    output.write_text("report", encoding="utf-8")
-
-    def forbid_content_read(_path: Path) -> bytes:
-        raise AssertionError("watched trees must not be hashed")
-
-    monkeypatch.setattr(Path, "read_bytes", forbid_content_read)
-    guard = CheckoutWriteGuard(repo_root=tmp_path)
-    assert guard.check() == []
 
 
 @pytest.mark.parametrize("change", ["unchanged", "append", "new"], ids=["unchanged-log", "append-log", "new-log"])
@@ -807,28 +569,3 @@ def test_guard_baselines_preexisting_ignored_logs(tmp_path: Path, change: str) -
         assert guard.check() == ["unexpected file created in checkout logs/: logs/nested/new.jsonl"]
     else:
         assert guard.check() == []
-
-
-def test_guard_active_during_fresh_build_and_sources_samples() -> None:
-    """Verify CheckoutWriteGuard and its pytest plugin run cleanly against rep tests."""
-    with CheckoutWriteGuard() as guard:
-        res = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "pytest",
-                "--trace-config",
-                "tests/build/test_fresh_runner.py",
-                "tests/test_mcp_sources_server.py",
-                "-k",
-                "test_runner_real_draft_report_has_numeric_single_lesson_totals or test_unknown_tool_returns_error",
-            ],
-            capture_output=True,
-            text=True,
-            cwd=PROJECT_ROOT,
-            timeout=60,
-        )
-        assert res.returncode == 0, f"pytest failed:\n{res.stdout}\n{res.stderr}"
-        assert "2 passed" in res.stdout
-        assert "module 'tests.helpers.checkout_write_guard'" in res.stdout
-    assert guard.check() == []

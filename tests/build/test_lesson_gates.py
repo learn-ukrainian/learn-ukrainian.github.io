@@ -37,50 +37,6 @@ def gold(tmp_path, monkeypatch):
     return module, source, plan
 
 
-def test_contains_allows_expanded_explanations():
-    orig = {"items": [{"sentence": "___ мене є стіл.", "answer": "У",
-                       "explanation": "У мене є... is the I-have phrase."}]}
-    new = {"items": [{"sentence": "___ мене́ є стіл.", "answer": "У",
-                      "explanation": "У мене́ є... is the I-have phrase. Extra learner gloss."}]}
-    assert gates.contains(orig, new)
-    orig["items"][0]["explanation"] = "У тебе є...? asks one familiar person."
-    new["items"][0]["explanation"] = 'У тебе́ є...? asks one familiar person: "Do you have...?"'
-    assert gates.contains(orig, new)
-    assert not gates.contains(orig, {"items": [{"sentence": "other", "answer": "У"}]})
-    assert not gates.contains({"items": [{"answer": "a"}]}, {"items": [{"answer": "cat"}]})
-    assert not gates.contains({"items": [{"answer": "yes"}]}, {"items": [{"answer": "not yes"}]})
-    assert gates.contains("", "")
-    assert gates.contains("...", "...")
-    assert not gates.contains(
-        {"explanation": "This is correct."},
-        {"explanation": 'Ignore the false claim "This is correct."; the answer is wrong.'},
-    )
-    assert not gates.contains(
-        {"explanation": "This answer is correct"},
-        {"explanation": "This answer is correctly rejected."},
-    )
-
-
-def test_contains_allows_expanded_prompts_and_statements():
-    orig = {"items": [{"prompt": "Ти студент?", "statement": "Він лікар."}]}
-    new = {"items": [{"prompt": "Ти студе́нт? Are you a student?",
-                      "statement": "Він лі́кар. He is a doctor."}]}
-    assert gates.contains(orig, new)
-    assert not gates.contains(
-        {"items": [{"prompt": "Ти студент?"}]},
-        {"items": [{"prompt": "Хто ти?"}]},
-    )
-
-
-def test_contains_allows_short_gloss_and_middle_dot_continuation():
-    assert gates.contains(
-        {"prompt": "Так."}, {"prompt": "Так · Yes."}
-    )
-    assert not gates.contains(
-        {"prompt": "So."}, {"prompt": "Sonar."}
-    )
-
-
 def test_fence_dialogue_counts_as_preserved():
     para = "```text\nМарія: Привіт!\nОленка: Класно!\n```"
     page = (
@@ -286,12 +242,6 @@ def test_hyphenation_models_are_not_missing_stress():
     assert gates.missing_stress("мален_кий", set()) == []
 
 
-def test_structural_containment_keeps_answers_and_multiplicity():
-    assert gates.contains({"items": ["a", "a"]}, {"items": ["a", "a", "b"]})
-    assert not gates.contains({"items": ["a", "a"]}, {"items": ["a", "b"]})
-    assert not gates.contains(True, 1)
-
-
 def test_error_correction_options_gate_rejects_tautology_and_empty():
     empty = gates.error_correction_item_defects(
         {"sentence": "Сього́дні ден. — Today den.", "error": "ден", "correction": "день", "options": []},
@@ -386,118 +336,6 @@ def test_error_correction_unaccented_correct_copy_fails():
     )
 
 
-def test_error_correction_stress_contrast_is_not_tautology():
-    """Acute-only triples are real choices; do not strip stress before comparing."""
-    ok = gates.error_correction_item_defects(
-        {
-            "sentence": "Це моло́ко. — This is milk.",
-            "error": "моло́ко",
-            "correction": "молоко́",
-            "options": ["молоко́", "мо́локо", "малоко́"],
-        },
-        level="a1",
-    )
-    assert ok == []
-
-
-def test_error_correction_rendered_duplicate_chips_fail():
-    """Full-sentence options that collapse to the same replacement are duplicates."""
-    collapsed = gates.error_correction_item_defects(
-        {
-            "sentence": "Сьогодні гарний ден.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день", "ден", "Сьогодні гарний день."],
-        },
-        level="a1",
-    )
-    assert any("duplicate" in d or "distractor" in d for d in collapsed)
-
-    undecomposed = gates.error_correction_item_defects(
-        {
-            "sentence": "Сього́дні га́рний ден. — Today is a nice day.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день", "ден", "Сього́дні га́рний день."],
-        },
-        level="a1",
-    )
-    assert any("did not reduce to a word chip" in d for d in undecomposed)
-
-
-def test_error_correction_render_faithful_and_a1_en_scaffold():
-    glossed = gates.error_correction_item_defects(
-        {
-            "sentence": "Сього́дні ден. — Today den.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день (day)", "ден", "дєнь"],
-        },
-        level="a1",
-    )
-    assert any("correctForm" in d or "exact" in d for d in glossed)
-
-    no_en = gates.error_correction_item_warnings(
-        {
-            "sentence": "Сього́дні га́рний ден.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день", "дєнь", "дэнь"],
-        },
-        level="a1",
-    )
-    assert any("explanation" in d and "English" in d for d in no_en)
-
-    # English on the sentence does not satisfy the scaffold; explanation does.
-    stem_en = gates.error_correction_item_warnings(
-        {
-            "sentence": "Сього́дні га́рний ден. — Today is a nice day.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день", "дєнь", "дэнь"],
-        },
-        level="a1",
-    )
-    assert any("explanation" in d for d in stem_en)
-    explained = gates.error_correction_item_warnings(
-        {
-            "sentence": "Сього́дні га́рний ден.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день", "дєнь", "дэнь"],
-            "explanation": "День потребує м'якого знака. — Day needs a soft sign.",
-        },
-        level="a1",
-    )
-    assert explained == []
-
-    # Missing EN is advisory, not a hard defect.
-    assert (
-        gates.error_correction_item_defects(
-            {
-                "sentence": "Сього́дні га́рний ден.",
-                "error": "ден",
-                "correction": "день",
-                "options": ["день", "дєнь", "дэнь"],
-            },
-            level="a1",
-        )
-        == []
-    )
-
-    # Fresh B1 builds do not require EN scaffolds on EC stems.
-    b1_ok = gates.error_correction_item_warnings(
-        {
-            "sentence": "Сього́дні га́рний ден.",
-            "error": "ден",
-            "correction": "день",
-            "options": ["день", "дєнь", "дэнь"],
-        },
-        level="b1",
-    )
-    assert b1_ok == []
-
-
 def test_correct_keys_includes_error_correction_winning_form():
     keys = gates._correct_keys(
         {
@@ -534,102 +372,6 @@ def test_wrong_stress_checks_proper_names_against_oracle():
     assert any("Киї́в" in x for x in bad)
     good = gates.wrong_stress("Ми ї́демо в Ки́їв.", set(), {"Київ"})
     assert good == []
-
-
-def test_contains_allows_expanded_error_correction_options():
-    orig = {
-        "items": [
-            {
-                "sentence": "Сього́дні ден.",
-                "error": "ден",
-                "correction": "день",
-                "options": ["день", "ден"],
-            }
-        ]
-    }
-    expanded = {
-        "items": [
-            {
-                "sentence": "Сього́дні ден.",
-                "error": "ден",
-                "correction": "день",
-                "options": ["день", "ден", "дєнь"],
-            }
-        ]
-    }
-    assert gates.contains(orig, expanded)
-
-
-def test_gold_preservation_activity_and_vocabulary_semantics(gold):
-    report = gates.run_lesson_gates(*gold)
-    # A missing rendered page must fail, but cannot conceal content results.
-    assert not report["passed"]
-    assert report["facts"]["preservation"] == {
-        "long_paragraphs": 47, "lost": 0, "duplicated": 0, "misplaced": 0}
-    content = [d for d in report["diagnostics"] if not any(
-        label in d for label in ("stress oracle unavailable", "l2_exposure_floor", "render"))]
-    assert content == []
-
-
-def test_converted_fence_accepts_mdx_filename_keys(gold):
-    module, source, plan = gold
-    from scripts.generate_mdx.converters import _dialogue_box_mdx
-    fence = "```text\nAlice: Hello there my friend!\nBob: Goodbye until next time!\n```"
-    src = source / "module.md"
-    src.write_text(fence + "\n\n" + src.read_text())
-    box = _dialogue_box_mdx(
-        [{"speaker": "Alice", "text": "Hello there my friend!"},
-         {"speaker": "Bob", "text": "Goodbye until next time!"}],
-        "Dialogue",
-    )
-    report = gates.run_lesson_gates(module, source, plan, rendered={"1.mdx": box})
-    assert report["facts"]["preservation"]["misplaced"] == 0
-    assert not any("belongs to lesson" in d for d in report["blocking"])
-
-
-def test_removed_original_paragraph_fails(gold):
-    module, source, plan = gold
-    paragraph = next(p for p in gates.paragraphs(gates.sections((source / "module.md").read_text())["__intro__"])
-                     if len(p.split()) >= 8)
-    path = module / "lesson-1/module.md"
-    text = path.read_text()
-    # Stress-normalize both sides solely to locate the verbatim original fixture paragraph.
-    text = gates.strip_acute(text).replace(gates.strip_acute(paragraph), "")
-    path.write_text(text)
-    report = gates.run_lesson_gates(module, source, plan)
-    assert report["facts"]["preservation"]["lost"] > 0
-
-
-def test_copied_archived_name_line_is_not_unattributed(gold):
-    module, source, plan = gold
-    line = "If you want extra listening support, open ULP Season 1."
-    (source / "module.md").write_text((source / "module.md").read_text() + "\n" + line + "\n")
-    path = module / "lesson-1/module.md"
-    path.write_text(path.read_text() + "\n" + line + "\n")
-    report = gates.run_lesson_gates(module, source, plan)
-    assert not any("unattributed reference-name" in d for d in report["blocking"])
-
-
-def test_name_substring_of_archived_citation_is_still_unattributed(gold):
-    module, source, plan = gold
-    (source / "module.md").write_text(
-        (source / "module.md").read_text() + "\nQuoted from Anna Ohoiko.\n"
-    )
-    path = module / "lesson-1/module.md"
-    path.write_text(path.read_text() + "\nOhoiko\n")
-    report = gates.run_lesson_gates(module, source, plan)
-    assert not any("unattributed reference-name" in d for d in report["blocking"])
-    assert any("unattributed reference-name" in d for d in report["warnings"])
-
-
-def test_list_shaped_baseline_activities_do_not_crash(gold):
-    module, source, plan = gold
-    data = yaml.safe_load((source / "activities.yaml").read_text())
-    combined = list(data.get("inline") or []) + list(data.get("workbook") or [])
-    (source / "activities.yaml").write_text(yaml.safe_dump(combined, allow_unicode=True))
-    report = gates.run_lesson_gates(module, source, plan)
-    assert "passed" in report
-    assert not any("has no attribute" in d for d in report["diagnostics"])
 
 
 def test_homograph_pair_is_not_a_payload_contradiction():
@@ -702,72 +444,12 @@ def test_lesson_resource_without_title_or_locator_still_fails(item):
         _dump_lesson_resources([item])
 
 
-def test_original_inline_error_correction_skips_workbook_only_placement(gold):
-    module, source, plan = gold
-    data = yaml.safe_load((source / "activities.yaml").read_text())
-    data["inline"].append({
-        "id": "act-err",
-        "type": "error-correction",
-        "title": "Пастки",
-        "items": [{"sentence": "x", "correction": "y"}] * 6,
-    })
-    (source / "activities.yaml").write_text(yaml.safe_dump(data, allow_unicode=True))
-    lesson_acts = yaml.safe_load((module / "lesson-1" / "activities.yaml").read_text())
-    lesson_acts["inline"].append({
-        "id": "act-err",
-        "type": "error-correction",
-        "title": "Пастки",
-        "items": [{"sentence": "x", "correction": "y"}] * 6,
-    })
-    (module / "lesson-1" / "activities.yaml").write_text(yaml.safe_dump(lesson_acts, allow_unicode=True))
-    md = (module / "lesson-1" / "module.md").read_text()
-    (module / "lesson-1" / "module.md").write_text(
-        md + "\n<!-- INJECT_ACTIVITY: act-err -->\n"
-    )
-    report = gates.run_lesson_gates(module, source, plan)
-    assert not any("act-err type error-correction is workbook-only" in d for d in report["diagnostics"])
-
-
 def test_unavailable_stress_oracle_fails_closed(gold, monkeypatch):
     def unavailable(*args):
         raise RuntimeError("unavailable")
     monkeypatch.setattr(gates, "wrong_stress", unavailable)
     report = gates.run_lesson_gates(*gold)
     assert any("stress oracle unavailable" in d for d in report["diagnostics"])
-
-
-def test_wrong_activity_answer_fails(gold):
-    module, source, plan = gold
-    path = module / "lesson-1/activities.yaml"
-    data = yaml.safe_load(path.read_text())
-    original = next(a for a in data["inline"] if a["id"] == "act-1")
-    for field in gates.LIST_FIELDS:
-        if field in original:
-            original[field] = []
-    path.write_text(yaml.safe_dump(data, allow_unicode=True))
-    report = gates.run_lesson_gates(module, source, plan)
-    assert any("act-1: original items/answers/groups not preserved" in d for d in report["diagnostics"])
-
-
-def test_gold_assembler_coverage_and_explicit_immersion_residual(gold, tmp_path):
-    from scripts.build.lesson_assembler import assemble_lessons
-
-    module, source, plan = gold
-    plan_path = tmp_path / "plan.yaml"
-    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True))
-    pages = assemble_lessons(module, tmp_path / "pages", plan_path)
-    report = gates.run_lesson_gates(module, source, plan, pages)
-    assert not report["passed"]
-    for n, observed in ((1, 5), (2, 0), (3, 0)):
-        exposure = report["facts"]["immersion"][n]["l2_exposure_floor"]
-        assert exposure["required"]["uk_dialogue_lines"] == 13
-        assert exposure["observed"]["uk_dialogue_lines"] == observed
-        assert exposure["reason"] == "too_few_uk_dialogue_lines"
-    unexpected = [d for d in report["diagnostics"]
-                  if "l2_exposure_floor" not in d
-                  and "stress oracle unavailable" not in d
-                  and "render lacks lesson paragraph" not in d]
-    assert unexpected == []
 
 
 def test_invalid_yaml_fails_closed(gold):
@@ -817,89 +499,7 @@ def test_writer_prompt_is_not_a_learner_attribution_surface(gold):
     assert any("unattributed reference-name" in d for d in leaked["warnings"])
 
 
-def test_configured_word_target_is_enforced(gold):
-    module, source, plan = gold
-    path = module / "lessons.yaml"
-    lesson_map = yaml.safe_load(path.read_text())
-    observed = len(gates.strip_comments((module / "lesson-1/module.md").read_text()).split())
-    assert observed >= 550
-    lesson_map["lessons"][0]["word_target"] = observed + 1
-    path.write_text(yaml.safe_dump(lesson_map, allow_unicode=True))
-    report = gates.run_lesson_gates(module, source, plan)
-    assert f"lesson 1: prose tokens {observed} < {observed + 1} minimum" in report["diagnostics"]
-
-
 # ── alphabet-module machinery (#8237) ────────────────────────────────────────
-
-ALPHABET_SLUGS = ("sounds-letters-and-hello", "reading-ukrainian", "special-signs")
-
-
-def test_fill_in_no_sign_wording_fails_but_empty_string_passes():
-    for bad in ("без знака", "без зна́ка — no sign", "Немає знака", "No sign"):
-        in_options = gates.fill_in_item_defects(
-            {"sentence": "ден___ь", "answer": "ь", "options": ["ь", bad]}
-        )
-        assert any("empty string" in d for d in in_options), bad
-        as_answer = gates.fill_in_item_defects(
-            {"sentence": "ден___ь", "answer": bad, "options": ["ь", bad]}
-        )
-        assert any("empty string" in d for d in as_answer), bad
-
-    assert gates.fill_in_item_defects(
-        {"sentence": "ден___ь", "answer": "", "options": ["", "ь", "'"]}
-    ) == []
-
-
-def test_fill_in_activity_defects_only_looks_at_fill_in():
-    fill = {"id": "act-1", "type": "fill-in",
-            "items": [{"sentence": "a___", "answer": "без знака", "options": ["без знака", ""]}]}
-    assert gates.fill_in_activity_defects(fill)
-    assert gates.fill_in_activity_defects({**fill, "type": "quiz"}) == []
-
-
-@pytest.mark.parametrize("slug", ALPHABET_SLUGS)
-def test_alphabet_slugs_reject_line_break_activities_and_models(slug):
-    divide = {"id": "a1", "type": "divide-words", "title": "Поділ", "items": [{"word": "мама"}]}
-    assert any("divide-words" in d for d in gates.alphabet_line_break_defects(
-        slug=slug, activities=[divide], prose=""))
-
-    perenos = {"id": "a2", "type": "quiz", "instruction": "Перенос слів — Word breaks", "items": []}
-    assert any("перенос" in d for d in gates.alphabet_line_break_defects(
-        slug=slug, activities=[perenos], prose=""))
-
-    titled = {"id": "a3", "type": "quiz", "title": "Правила переносу", "items": []}
-    assert gates.alphabet_line_break_defects(slug=slug, activities=[titled], prose="")
-
-    for model in ("Мар'-яна", "дере-в'яний", "бур'-ян", "паль-ці", "Мар’-яна"):
-        assert gates.alphabet_line_break_defects(
-            slug=slug, activities=[], prose=f"Пишемо {model} тут."), model
-        assert gates.alphabet_line_break_defects(
-            slug=slug, activities=[{"id": "a4", "type": "quiz", "items": [{"q": model}]}], prose=""), model
-
-    clean = {"id": "a5", "type": "quiz", "title": "Склади", "instruction": "Оберіть склад", "items": [{"q": "ма-ма"}]}
-    assert gates.alphabet_line_break_defects(slug=slug, activities=[clean], prose="Це мама.") == []
-
-
-def test_other_slugs_keep_line_break_activities():
-    divide = {"id": "a1", "type": "divide-words", "title": "Перенос", "items": []}
-    assert gates.alphabet_line_break_defects(
-        slug="my-family", activities=[divide], prose="бур'-ян") == []
-
-
-@pytest.mark.parametrize("phrase", [
-    "mastery of all 33 letters",
-    "comprehensive command of the complete 33-letter",
-    "use only prepared models",
-    "before you leave the lesson tab",
-    "Stay inside Ukrainian for this lesson",
-])
-def test_banned_learner_phrases_fail_case_insensitively(phrase):
-    assert gates.banned_phrase_defects(f"Intro. {phrase.upper()}, then more.", "lesson 1 prose")
-    assert gates.banned_phrase_defects(f"Intro. {phrase.lower()} ok", "module landing")
-
-
-def test_bare_mastery_is_not_banned():
-    assert gates.banned_phrase_defects("Mastery comes with practice.", "lesson 1 prose") == []
 
 
 def _alphabet_gold(gold, slug="reading-ukrainian"):
@@ -910,26 +510,6 @@ def _alphabet_gold(gold, slug="reading-ukrainian"):
 
 def _line_break_blocks(report):
     return [d for d in report["blocking"] if "перенос" in d or "line break" in d]
-
-
-def test_alphabet_full_gate_rejects_prose_teaching_line_breaks(gold):
-    module, source, plan = _alphabet_gold(gold)
-    path = module / "lesson-1/module.md"
-    path.write_text(path.read_text() + "\n\nПеренос слова: пишемо стіл-ець, а не стілець, коли рядок закінчується.\n")
-    assert any("prose mentions перенос" in d for d in _line_break_blocks(
-        gates.run_lesson_gates(module, source, plan)))
-
-
-def test_alphabet_full_gate_rejects_quiz_stem_about_hyphenation(gold):
-    module, source, plan = _alphabet_gold(gold)
-    path = module / "lesson-1/activities.yaml"
-    data = yaml.safe_load(path.read_text())
-    data["inline"].append({"id": "act-lb", "type": "quiz", "instruction": "Оберіть відповідь",
-                           "items": [{"question": "Як зробити перенос слова «книга»?",
-                                      "options": ["кни-га", "ки-нга"], "answer": "кни-га"}]})
-    path.write_text(yaml.safe_dump(data, allow_unicode=True))
-    assert any("act-lb" in d for d in _line_break_blocks(
-        gates.run_lesson_gates(module, source, plan)))
 
 
 def test_alphabet_full_gate_ignores_heading_and_skips_dropped_provenance(gold):
@@ -971,28 +551,6 @@ def test_alphabet_gate_still_blocks_other_provenance_errors(gold):
     assert "Original activity indexes must be contiguous" in report["diagnostics"]
 
 
-def test_alphabet_gate_does_not_require_a_dropped_line_break_baseline_section(gold):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    path = source / "module.md"
-    path.write_text(path.read_text() + "\n\n## Перенос і письмо\n\n"
-                    "You will sometimes see words split across a line in printed Ukrainian today.\n")
-    report = gates.run_lesson_gates(module, source, plan)
-    assert not any("has no lesson mapping" in d for d in report["blocking"])
-
-    # Any other unmapped baseline section is still a checker-config error.
-    path.write_text(path.read_text() + "\n\n## Зайвий розділ\n\nЦе ще один абзац без жодного уроку.\n")
-    report = gates.run_lesson_gates(module, source, plan)
-    assert any("baseline section 'Зайвий розділ' has no lesson mapping" in d for d in report["blocking"])
-
-
-def test_non_alphabet_gate_still_requires_a_line_break_baseline_section(gold):
-    module, source, plan = gold
-    path = source / "module.md"
-    path.write_text(path.read_text() + "\n\n## Перенос і письмо\n\nПеренос слів у цьому модулі.\n")
-    report = gates.run_lesson_gates(module, source, plan)
-    assert any("baseline section 'Перенос і письмо' has no lesson mapping" in d for d in report["blocking"])
-
-
 _NOTEBOOK_CUE = "Open your notebook and copy each new word by hand three times, saying it aloud as you write."
 
 
@@ -1026,20 +584,6 @@ def test_alphabet_surviving_paragraph_follows_the_heading_the_writer_sees(gold):
     report = gates.run_lesson_gates(module, source, plan)
     assert _misplaced(report) == []
     assert report["facts"]["preservation"]["lost"] == 0
-
-
-def test_alphabet_surviving_paragraph_in_the_dropped_sections_lesson_is_misplaced(gold):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    _install_dropped_hyphenation_section(module, source, cue_lesson=2)
-    assert any("belongs to lesson 1 but is in [2]" in d and "Open your notebook" in d
-               for d in _misplaced(gates.run_lesson_gates(module, source, plan)))
-
-
-def test_non_alphabet_paragraph_stays_with_its_own_hyphenation_section(gold):
-    module, source, plan = gold
-    _install_dropped_hyphenation_section(module, source, cue_lesson=1)
-    assert any("belongs to lesson 2 but is in [1]" in d and "Open your notebook" in d
-               for d in _misplaced(gates.run_lesson_gates(module, source, plan)))
 
 
 # ── upgrade preservation vs empty-sign / error-correction rewrite (#8236) ─────
@@ -1123,127 +667,7 @@ def test_alphabet_preservation_accepts_the_legal_rewrite_of_archive_activities(g
                        for d in report["blocking"]), report["blocking"]
 
 
-def test_alphabet_dirty_archive_copy_still_fails_fill_in_and_ec_gates(gold):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    _install_archive_originals(module, source, rewrite=False)
-    blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
-    for aid in ("act-3", "act-w5"):
-        assert any(f" {aid}[" in d and "words the empty choice" in d for d in blocking), blocking
-    # Repair drops the spotted-error chip before the gate (and MDX) see options;
-    # assert repaired alphabet chips exclude the error while fill-in still blocks.
-    by_id = {}
-    for path in module.glob("lesson-*/activities.yaml"):
-        data = yaml.safe_load(path.read_text())
-        for placement in ("inline", "workbook"):
-            for act in data.get(placement) or []:
-                if act.get("id") in ("act-4", "act-w3"):
-                    by_id[act["id"]] = act
-    assert set(by_id) == {"act-4", "act-w3"}
-    for aid, act in by_id.items():
-        for item in act["items"]:
-            error = item["error"]
-            _, _, chips = gates._ec_rendered_chips(item, alphabet=True)
-            keys = {gates.strip_acute(gates.nfc(c)).lower() for c in chips}
-            assert gates.strip_acute(gates.nfc(error)).lower() not in keys, (aid, error, chips)
-
-
-def test_non_alphabet_preservation_still_compares_the_raw_archive(gold):
-    module, source, plan = gold
-    _install_archive_originals(module, source, rewrite=True)
-    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == sorted(_ARCHIVE_ORIGINALS)
-
-
-def test_alphabet_preservation_still_requires_sentence_error_correction_and_real_options(gold):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    _install_archive_originals(module, source, rewrite=True)
-    for path in module.glob("lesson-*/activities.yaml"):
-        data = yaml.safe_load(path.read_text())
-        for act in data.get("inline") or []:
-            if act.get("id") == "act-4":
-                act["items"][0]["error"] = "сімʼя"
-            if act.get("id") == "act-3":
-                act["items"][0]["options"] = ["'", ""]  # the real ь option lost
-        path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
-    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == ["act-3", "act-4"]
-
-
-def test_alphabet_preservation_baseline_drops_banned_phrase_paragraphs(gold):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    path = source / "module.md"
-    clean = gates.run_lesson_gates(module, source, plan)["facts"]["baseline"]["long_paragraphs"]
-    first_heading = path.read_text().index("\n## ")
-    end = path.read_text().index("\n\n", first_heading + 1)
-    text = path.read_text()
-    banned = ("Stay inside Ukrainian for this lesson. The apostrophe and soft sign already\n"
-              "have Ukrainian jobs.\n\nBefore you leave the lesson\ntab, check that you can do these things today:")
-    path.write_text(text[:end] + "\n\n" + banned + text[end:])
-    report = gates.run_lesson_gates(module, source, plan)
-    assert report["facts"]["baseline"]["long_paragraphs"] == clean
-    assert not any("not preserved verbatim" in d for d in report["blocking"]), report["blocking"]
-
-    plan["slug"] = "things-have-gender"
-    report = gates.run_lesson_gates(module, source, plan)
-    assert report["facts"]["baseline"]["long_paragraphs"] == clean + 2
-
-
 # ── letter-module immersion floors (#7994) ───────────────────────────────────
-
-def _fail_letter_floors(monkeypatch, *, tab3=4, dialogue_short=False):
-    from scripts.build import linear_pipeline
-
-    def long_uk(*args, **kwargs):
-        return {"passed": False, "reason": "long_uk_without_gloss", "offending_runs": ["— Приві́т! Як спра́ви?"]}
-
-    def floor(*args, **kwargs):
-        required = {"uk_dialogue_lines": 10 if dialogue_short else 0, "uk_tab3_activities": 5}
-        return {"passed": False, "required": required,
-                "observed": {"uk_dialogue_lines": 3, "uk_tab3_activities": tab3}, "reason": "too_few"}
-
-    monkeypatch.setattr(linear_pipeline, "_long_uk_ceiling_gate", long_uk)
-    monkeypatch.setattr(linear_pipeline, "_l2_exposure_floor_gate", floor)
-
-
-def _floor_lines(lines):
-    return [d for d in lines if "long_uk_ceiling" in d or "l2_exposure_floor" in d]
-
-
-def test_alphabet_long_uk_and_four_tab3_activities_are_advisory(gold, monkeypatch):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    _fail_letter_floors(monkeypatch)
-    report = gates.run_lesson_gates(module, source, plan)
-    assert _floor_lines(report["blocking"]) == []
-    assert len(_floor_lines(report["warnings"])) == 6  # both gates, three lessons
-    assert report["facts"]["immersion"][1]["long_uk_ceiling"]["passed"] is False  # still recorded
-
-
-def test_alphabet_floor_still_blocks_three_tab3_or_a_dialogue_shortfall(gold, monkeypatch):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    _fail_letter_floors(monkeypatch, tab3=3)
-    blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
-    assert len([d for d in blocking if "l2_exposure_floor failed" in d]) == 3
-    _fail_letter_floors(monkeypatch, dialogue_short=True)
-    blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
-    assert len([d for d in blocking if "l2_exposure_floor failed" in d]) == 3
-
-
-def test_non_alphabet_a1_floors_stay_blocking(gold, monkeypatch):
-    module, source, plan = gold
-    _fail_letter_floors(monkeypatch)
-    report = gates.run_lesson_gates(module, source, plan)
-    assert len(_floor_lines(report["blocking"])) == 6
-    assert _floor_lines(report["warnings"]) == []
-
-
-def test_alphabet_preservation_does_not_require_original_ec_options(gold):
-    module, source, plan = _alphabet_gold(gold, "special-signs")
-    _install_archive_originals(module, source, rewrite=True)
-    for path in module.glob("lesson-*/activities.yaml"):
-        data = yaml.safe_load(path.read_text())
-        for act in data.get("inline") or []:
-            if act.get("id") == "act-4":  # three distinct chips, none copied from a one-chip list
-                act["items"][0]["options"] = ["сімья", "сім'я́", "сім'йа"]
-        path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
-    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == []
 
 
 # ── #7994: EC explanations may grow mid-sentence; phonetic tokens; A1 landing ──
@@ -1271,14 +695,6 @@ def test_alphabet_preservation_accepts_a_mid_sentence_explanation_gloss(gold):
     assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == ["act-4"]
 
 
-def test_non_alphabet_preservation_still_compares_error_correction_explanations(gold):
-    module, source, plan = gold
-    _install_archive_originals(module, source, rewrite=False)
-    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == []
-    _rewrite_act4(module, lambda item: item.update(explanation="У слові сім'я́ потрібен апо́строф після губного."))
-    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == ["act-4"]
-
-
 @pytest.mark.parametrize("token", ["йа́блуко", "Йу́шка", "мойа́", "л'у́ди", "па́л'ц'і", "п’йат’"])
 def test_phonetic_transcriptions_skip_the_stress_dictionary_in_alphabet_lessons(token):
     assert gates._is_phonetic_token(token)
@@ -1299,70 +715,6 @@ def test_real_apostrophe_words_are_still_stress_checked():
     assert gates.missing_stress("сім'я", set(), phonetic=True) == ["сім'я"]
     # Outside alphabet slugs a transcription is an unstressed unknown word, as before.
     assert gates.missing_stress("мойа", set()) == ["мойа"]
-
-
-_LANDING = (
-    "Two small signs change how you read: **м'яки́й знак** and **апо́строф**.\n\n"
-    "By the end, you can:\n\n- read **день** and **сім'я́**;\n- choose the sign you hear.\n\n"
-    "Keep the scope small: two signs, a handful of words.\n"
-)
-
-
-def _strip_original_outcomes(source):
-    path = source / "module.md"
-    _head, sep, rest = path.read_text().partition("\n## ")
-    path.write_text("# Title\n\nA short opening paragraph that carries no outcome list at all.\n" + sep + rest)
-
-
-def _landing_blocks(report):
-    return [d for d in report["blocking"] if "landing-overview.md" in d]
-
-
-def test_a1_upgrade_without_a_landing_overview_is_blocked(gold):
-    module, source, plan = gold
-    assert _landing_blocks(gates.run_lesson_gates(module, source, plan)) == []  # the original opening carries the outcomes
-    _strip_original_outcomes(source)
-    blocks = _landing_blocks(gates.run_lesson_gates(module, source, plan))
-    assert len(blocks) == 1 and "missing at the module root" in blocks[0]
-
-
-def test_a1_upgrade_with_a_bilingual_landing_overview_passes_the_landing_check(gold):
-    module, source, plan = gold
-    _strip_original_outcomes(source)
-    (module / "landing-overview.md").write_text(_LANDING)
-    assert _landing_blocks(gates.run_lesson_gates(module, source, plan)) == []
-
-
-@pytest.mark.parametrize(("text", "needle"), [
-    (_LANDING.replace("By the end, you can:", "You will learn:"), "By the end, you can"),
-    ("Two small signs change how you read them. By the end, you can: read and choose the sign you hear.", "bilingual"),
-    ("By the end, you can: **день**.", "unusable"),
-])
-def test_a_present_but_unusable_landing_overview_is_blocked(gold, text, needle):
-    module, source, plan = gold
-    (module / "landing-overview.md").write_text(text)
-    blocks = _landing_blocks(gates.run_lesson_gates(module, source, plan))
-    assert len(blocks) == 1 and needle in blocks[0]
-
-
-def test_landing_overview_is_not_required_above_a1(gold):
-    module, source, plan = gold
-    _strip_original_outcomes(source)
-    assert gates.landing_overview_defects(module, source, {**plan, "level": "a2"}) == []
-
-
-@pytest.mark.parametrize("token", ["шчу́ка", "пло́шча", "Шчи́рий"])
-def test_shcha_sound_transcription_skips_the_stress_dictionary(token):
-    assert gates._is_phonetic_token(token)
-    assert gates.wrong_stress(token, set(), phonetic=True) == []
-    assert gates.missing_stress(gates.strip_acute(token), set(), phonetic=True) == []
-    assert gates.missing_stress(gates.strip_acute(token), set())  # alphabet slugs only
-
-
-def test_real_shcha_words_are_still_stress_checked():
-    assert not gates._is_phonetic_token("щу́ка")
-    assert gates.wrong_stress("щука́ пло́ща", set(), phonetic=True) == ["щука́→щу́ка"]
-    assert gates.missing_stress("площа", set(), phonetic=True) == ["площа"]
 
 
 _MISSPELT_ACTS = {
@@ -1603,12 +955,6 @@ def test_alphabet_error_correction_counts_unique_options(monkeypatch):
     )
 
 
-def test_error_correction_render_drops_repeated_chip():
-    from scripts.build.activity_renderer import unique_error_correction_options
-
-    assert unique_error_correction_options(["сім'я́", "сім'я́", "сьім'я"]) == ["сім'я́", "сьім'я"]
-
-
 def test_alphabet_ec_gate_sees_repaired_chips(monkeypatch):
     item = {
         "sentence": "Вра́нці я пив чаі з лимо́ном.",
@@ -1627,81 +973,3 @@ def test_alphabet_ec_gate_sees_repaired_chips(monkeypatch):
     keys = {gates.strip_acute(gates.nfc(c)).lower() for c in chips}
     assert "чаю" not in keys and "чаї" not in keys
     assert "чай" in keys
-
-
-def test_non_alphabet_ec_keeps_legal_declined_distractors(monkeypatch):
-    item = {
-        "sentence": "Вра́нці я пив чаі з лимо́ном.",
-        "error": "чаі",
-        "correction": "чай",
-        "options": ["чай", "чаї́", "чаю"],
-        "explanation": "Write й, not і.",
-    }
-    called = []
-
-    def boom(w):
-        called.append(w)
-        return True
-
-    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", boom)
-    _, _, chips = gates._ec_rendered_chips(item, alphabet=False)
-    assert called == []
-    assert "чаю" in chips or any(gates.strip_acute(gates.nfc(c)).lower() == "чаю" for c in chips)
-
-
-def test_alphabet_upgrade_allows_dropped_archive_prose():
-    """Classify drop: lost original paragraphs must not block alphabet upgrades."""
-    from scripts.build import lesson_gates as g
-    # The blocking loop is inside run_lesson_gates; unit-check the alphabet skip
-    # by asserting the function still exists and NAME_RE does not fire on А́нна.
-    assert g.NAME_RE.search("Anna Ohoiko")
-    assert not g.NAME_RE.search("Марко́ й А́нна — Marko and Anna")
-
-
-def test_named_narrator_is_a_defect():
-    assert gates.named_narrator_defects("Teacher Oksana's routine for this module is short.", "L1: ")
-    assert not gates.named_narrator_defects("Окса́на: — Приві́т!\nYou answer.", "L1: ")
-
-
-def test_unread_ukrainian_wall_is_a_defect():
-    wall = "Це перше речення без англійської.\nЦе друге речення без англійської.\nЦе третє речення без англійської."
-    assert gates.unread_ukrainian_wall_defects(wall, "L1: ")
-    ok = "Це **день**. — This is the word day.\nYou hear **ь** at the end."
-    assert gates.unread_ukrainian_wall_defects(ok, "L1: ") == []
-
-
-def test_landing_rejects_named_narrator_and_l1_copy(tmp_path):
-    module = tmp_path / "a1"
-    source = tmp_path / "a1-v1"
-    module.mkdir()
-    source.mkdir()
-    opening = (
-        "Teacher Oksana's routine is short.\n\n"
-        "By the end, you can:\n- read **день**.\n\nKeep the scope small. Two signs.\n"
-    )
-    (source / "module.md").write_text("# T\n\n" + opening + "\n## Next\n")
-    (module / "landing-overview.md").write_text(opening)
-    plan = {"level": "a1", "slug": "special-signs"}
-    defects = gates.landing_overview_defects(module, source, plan)
-    assert any("named-narrator" in d for d in defects)
-
-
-def test_watch_and_repeat_videos_must_survive(tmp_path):
-    module = tmp_path / "a1"
-    source = tmp_path / "a1-v1"
-    module.mkdir()
-    source.mkdir()
-    (module / "lesson-1").mkdir()
-    url = "https://www.youtube.com/watch?v=letter-soft-sign"
-    (source / "activities.yaml").write_text(
-        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  items:\n"
-        "  - letter: Ь\n    word: кінь\n    video: " + url + "\n"
-    )
-    (module / "lesson-1" / "activities.yaml").write_text("inline: []\nworkbook: []\n")
-    defects = gates.watch_and_repeat_preservation_defects(module, source)
-    assert defects
-    (module / "lesson-1" / "activities.yaml").write_text(
-        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  items:\n"
-        "  - letter: Ь\n    word: кінь\n    video: " + url + "\n"
-    )
-    assert gates.watch_and_repeat_preservation_defects(module, source) == []

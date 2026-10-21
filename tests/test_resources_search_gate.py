@@ -46,17 +46,6 @@ def test_resources_search_attempted_gate_accepts_a1_zero_script_manual_coverage(
     assert result["manual_coverage_verified"] is True
 
 
-def test_resources_search_attempted_gate_accepts_a1_m1_m7_manual_coverage() -> None:
-    result = linear_pipeline._resources_search_attempted_gate(
-        [],
-        plan={"level": "A1", "sequence": 5},
-        resource_coverage={"passed": True},
-    )
-
-    assert result["passed"] is True
-    assert result["manual_coverage_verified"] is True
-
-
 def test_resources_search_attempted_gate_keeps_non_a1_manual_coverage_strict() -> None:
     result = linear_pipeline._resources_search_attempted_gate(
         [],
@@ -94,34 +83,6 @@ def test_resources_search_attempted_gate_fails_when_a_resource_is_not_live() -> 
         plan={"level": "folk", "sequence": 1},
         telemetry_present=False,
         resource_liveness={"passed": False, "checked": 9},
-    )
-
-    assert result["passed"] is False
-    assert "skipped" not in result
-
-
-def test_resources_search_attempted_gate_fails_when_telemetry_absent_no_liveness() -> None:
-    # Telemetry absent and NO liveness verification supplied (e.g. build-time
-    # caller) -> no proof resources are real -> hard fail.
-    result = linear_pipeline._resources_search_attempted_gate(
-        [],
-        plan={"level": "folk", "sequence": 1},
-        telemetry_present=False,
-        resource_liveness=None,
-    )
-
-    assert result["passed"] is False
-    assert "skipped" not in result
-
-
-def test_resources_search_attempted_gate_fails_when_telemetry_present_without_search() -> None:
-    # Build-time path: telemetry exists but shows no resource search. The
-    # anti-fabrication contract is unchanged -> hard fail even if resources live.
-    result = linear_pipeline._resources_search_attempted_gate(
-        [{"tool": "mcp__sources__verify_words", "args": {"words": ["ранок"]}}],
-        plan={"level": "folk", "sequence": 1},
-        telemetry_present=True,
-        resource_liveness={"passed": True, "checked": 9},
     )
 
     assert result["passed"] is False

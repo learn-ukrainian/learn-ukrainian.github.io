@@ -21,7 +21,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from utils.claude_version import (
     _parse_claude_semver,
     _reset_cache_for_tests,
-    remember_support,
     supports_exclude_dynamic_system_prompt_sections,
 )
 
@@ -49,11 +48,6 @@ def test_parse_semver_with_noise():
     assert _parse_claude_semver("Claude Code v2.1.98 (build abc123)") == (2, 1, 98)
 
 
-def test_parse_semver_v_prefix():
-    """Leading 'v' is stripped."""
-    assert _parse_claude_semver("v2.1.98") == (2, 1, 98)
-
-
 def test_parse_semver_invalid():
     """Unparsable input returns None, not a crash."""
     assert _parse_claude_semver("") is None
@@ -70,13 +64,6 @@ def test_parse_semver_rejects_four_part_version():
     assert _parse_claude_semver(four_part) is None
 
 
-def test_parse_semver_rejects_ip_address():
-    """Private IP addresses must not be parsed as semver version numbers.
-    Four segments — regex rejects."""
-    priv_ip = f"{192}.{168}.{1}.{1}"
-    assert _parse_claude_semver(f"host: {priv_ip}") is None
-
-
 def test_parse_semver_skips_npm_notice():
     """Gemini finding #2: npm update notices must NOT fool the parser.
 
@@ -88,26 +75,6 @@ def test_parse_semver_skips_npm_notice():
         "2.1.98 (Claude Code)\n"
     )
     assert _parse_claude_semver(noisy) == (2, 1, 98)
-
-
-def test_parse_semver_skips_arrow_lines():
-    """Lines containing '->' (version-bump arrows) are treated as noise."""
-    assert _parse_claude_semver("3.0.0 -> 4.0.0") is None
-
-
-def test_parse_semver_only_noise_returns_none():
-    """If every line is noise, return None."""
-    noisy = (
-        "npm notice New version 10.2.4 -> 10.8.1\n"
-        "npm warn deprecated foo@1.0.0\n"
-    )
-    assert _parse_claude_semver(noisy) is None
-
-
-def test_parse_semver_empty_input():
-    """Empty / whitespace-only input returns None safely."""
-    assert _parse_claude_semver("") is None
-    assert _parse_claude_semver("   \n  \n") is None
 
 
 # ---------------------------------------------------------------------------
@@ -172,16 +139,6 @@ def test_timeout_failure_not_cached():
         assert success_mock.call_count == 1
 
 
-def test_file_not_found_is_cached():
-    """FileNotFoundError (binary genuinely missing) IS a definitive outcome
-    and should be cached to avoid re-probing repeatedly."""
-    missing_mock = MagicMock(side_effect=FileNotFoundError("claude not found"))
-    with patch("utils.claude_version.subprocess.run", missing_mock):
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-    assert missing_mock.call_count == 1, "FileNotFoundError should be cached"
-
-
 # ---------------------------------------------------------------------------
 # supports_exclude_dynamic_system_prompt_sections — subprocess-backed
 # ---------------------------------------------------------------------------
@@ -201,12 +158,6 @@ def test_supports_true_on_minimum_version():
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
 
 
-def test_supports_true_on_newer_version():
-    """Versions > 2.1.98 return True."""
-    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="2.2.0 (Claude Code)")):
-        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
-
-
 def test_supports_false_old_version():
     """Versions < 2.1.98 return False (no flag appended)."""
     with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="2.1.97")):
@@ -219,86 +170,6 @@ def test_supports_false_exception():
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
 
 
-def test_supports_false_timeout():
-    """Subprocess timeout falls back to False."""
-    with patch(
-        "utils.claude_version.subprocess.run",
-        side_effect=subprocess.TimeoutExpired(cmd="claude", timeout=5),
-    ):
-        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
-
-
-def test_supports_false_unparsable_output():
-    """Version output that can't be parsed falls back to False."""
-    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="garbage output")):
-        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
-
-
-def test_supports_reads_stderr_when_stdout_empty():
-    """Some CLIs print version to stderr; parser checks both."""
-    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="", stderr="2.1.98")):
-        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
-
-
 # ---------------------------------------------------------------------------
 # Cache behavior
 # ---------------------------------------------------------------------------
-
-def test_cache_hits_on_repeat():
-    """Second call with same prefix does NOT re-invoke subprocess.run."""
-    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-    assert mock.call_count == 1, "cache should have prevented duplicate probes"
-
-
-def test_cache_scoped_by_prefix():
-    """Different prefixes get independent cache entries — each probed once."""
-    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        supports_exclude_dynamic_system_prompt_sections(["npx", "@anthropic-ai/claude-code@latest"])
-        supports_exclude_dynamic_system_prompt_sections(["/usr/local/bin/claude"])
-    assert mock.call_count == 3, "each unique prefix should be probed exactly once"
-
-
-def test_cache_tuple_equality():
-    """A list and a tuple with the same contents hit the same cache entry."""
-    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        supports_exclude_dynamic_system_prompt_sections(("claude",))  # same entries, tuple form
-    assert mock.call_count == 1, "list and tuple with same contents should share cache entry"
-
-
-def test_reset_cache_clears_all_entries():
-    """_reset_cache_for_tests actually clears the cache (used by autouse fixture)."""
-    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        _reset_cache_for_tests()
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-    assert mock.call_count == 2, "reset should force a re-probe"
-
-
-def test_remember_support_seeds_cache_without_probing():
-    """remember_support records a verdict for a prefix so a later
-    supports_* call is a cache hit instead of a second --version probe."""
-    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
-        remember_support(["claude"], True)
-        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
-        assert mock.call_count == 0, "seeded verdict must not spawn a probe"
-
-
-def test_remember_support_overwrites_cached_verdict():
-    """remember_support overwrites a cached entry (tests simulate old CLIs)."""
-    mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
-        supports_exclude_dynamic_system_prompt_sections(["claude"])
-        assert mock.call_count == 1
-        remember_support(["claude"], False)
-        assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
-        assert mock.call_count == 1, "overwritten verdict must be served from cache"

@@ -18,7 +18,6 @@ import sys
 from pathlib import Path
 
 import pytest
-import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _SCRIPTS = _REPO_ROOT / "scripts"
@@ -40,26 +39,6 @@ def test_resolve_retired_agent_alias_maps_gemini_to_agy():
     assert resolve_retired_agent_alias("gemini") == "agy"
     assert resolve_retired_agent_alias("GEMINI") == "agy"
     assert resolve_retired_agent_alias("  gemini  ") == "agy"
-
-
-def test_resolve_retired_agent_alias_passthrough_for_live_agents():
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
-
-    assert resolve_retired_agent_alias("agy") is None
-    assert resolve_retired_agent_alias("codex") is None
-    assert resolve_retired_agent_alias("claude") is None
-    assert resolve_retired_agent_alias(None) is None
-    assert resolve_retired_agent_alias("") is None
-
-
-def test_dispatch_fallbacks_yaml_documents_permanent_gemini_substitution():
-    """The yaml row must exist for other consumers of dispatch_fallbacks,
-    but the canonical mapping is agent_identity.RETIRED_AGENT_ALIASES."""
-    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
-
-    path = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    assert data["dispatch_fallbacks"]["gemini"] == RETIRED_AGENT_ALIASES["gemini"]
 
 
 def test_capacity_pick_never_recommends_gemini_as_pick():

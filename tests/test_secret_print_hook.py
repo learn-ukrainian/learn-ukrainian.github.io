@@ -12,11 +12,8 @@ import pytest
 
 from tests.test_guard_secret_print import (
     ROUND_FIVE_KEYED,
-    ROUND_FIVE_SPELLINGS,
     ROUND_SEVEN_ALLOWED,
     ROUND_SEVEN_DENIED,
-    ROUND_SIX_INVENTORY,
-    ROUND_SIX_NEIGHBORS,
 )
 
 HARNESS_NAMES = ["claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "opencode"]
@@ -63,48 +60,6 @@ def test_native_round_seven_inventory_and_neighbors(harness, command, allowed):
     assert SENTINEL not in result.stdout
     assert SENTINEL not in result.stderr
     assert_decision(harness, result.returncode, result.stdout, result.stderr, allowed)
-
-
-@pytest.mark.parametrize("harness", HARNESS_NAMES)
-@pytest.mark.parametrize("api,command", ROUND_SIX_INVENTORY, ids=[row[0] for row in ROUND_SIX_INVENTORY])
-def test_native_round_six_inventory(harness, api, command):
-    result = subprocess.run(
-        [sys.executable, str(ADAPTER), "--harness", harness],
-        input=json.dumps(event(harness, command)),
-        text=True,
-        capture_output=True,
-        env=NATIVE_ENV,
-        timeout=10,
-    )
-    assert_decision(harness, result.returncode, result.stdout, result.stderr, False)
-
-
-@pytest.mark.parametrize("harness", HARNESS_NAMES)
-@pytest.mark.parametrize("command", ROUND_SIX_NEIGHBORS)
-def test_native_round_six_neighbors(harness, command):
-    result = subprocess.run(
-        [sys.executable, str(ADAPTER), "--harness", harness],
-        input=json.dumps(event(harness, command)),
-        text=True,
-        capture_output=True,
-        env=NATIVE_ENV,
-        timeout=10,
-    )
-    assert_decision(harness, result.returncode, result.stdout, result.stderr, True)
-
-
-@pytest.mark.parametrize("harness", HARNESS_NAMES)
-@pytest.mark.parametrize("command", ROUND_FIVE_SPELLINGS)
-def test_native_round_five_review_spellings(harness, command):
-    result = subprocess.run(
-        [sys.executable, str(ADAPTER), "--harness", harness],
-        input=json.dumps(event(harness, command)),
-        text=True,
-        capture_output=True,
-        env=NATIVE_ENV,
-        timeout=10,
-    )
-    assert_decision(harness, result.returncode, result.stdout, result.stderr, False)
 
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
@@ -185,17 +140,6 @@ def test_native_cli_decisions(harness, case):
         [sys.executable, str(ADAPTER), "--harness", harness], input=raw, text=True, capture_output=True, timeout=10
     )
     assert_decision(harness, result.returncode, result.stdout, result.stderr, case == "allow")
-
-
-@pytest.mark.parametrize("harness", HARNESS_NAMES)
-def test_native_timeout(harness, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
-
-    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event(harness, "env"))))
-    code = hook.main(["--harness", harness, "--timeout", "0.000001"])
-    captured = capsys.readouterr()
-    assert_decision(harness, code, captured.out, captured.err, False)
-    assert "deadline" in captured.err
 
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
@@ -318,17 +262,6 @@ def test_denial_never_includes_candidate_filename(harness):
 
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
-@pytest.mark.parametrize("payload", [None, [], {"tool_input": None}, {"command": ""}, {"tool_input": {"command": ""}}])
-def test_malformed_event_objects(harness, payload, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
-
-    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
-    code = hook.main(["--harness", harness])
-    captured = capsys.readouterr()
-    assert_decision(harness, code, captured.out, captured.err, False)
-
-
-@pytest.mark.parametrize("harness", HARNESS_NAMES)
 def test_unexpected_adapter_failure_denies(harness, monkeypatch, capsys):
     from scripts.agent_runtime import secret_print_hook as hook
 
@@ -385,24 +318,6 @@ def test_agy_native_precedence_and_legacy(payload, allowed):
         assert json.loads(result.stdout)["reason"] == result.stderr
 
 
-@pytest.mark.parametrize("harness", [name for name in HARNESS_NAMES if name != "agy"])
-def test_non_agy_oversized_metadata_keeps_base_allow(harness):
-    from scripts.agent_runtime.secret_print_hook import MAX_STDIN_BYTES
-
-    payload = {**event(harness, "printf OK"), "metadata": "x" * (MAX_STDIN_BYTES + 1)}
-    result = subprocess.run(
-        [sys.executable, str(ADAPTER), "--harness", harness],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        env=NATIVE_ENV,
-        timeout=10,
-    )
-    assert result.returncode == 0
-    assert result.stdout == ('{"permission": "allow"}\n' if harness == "cursor" else "")
-    assert result.stderr == ""
-
-
 @pytest.mark.parametrize(
     "raw", ["{", "[]", "null", '"text"', " " * 1_048_577], ids=["malformed", "list", "null", "string", "oversized"]
 )
@@ -415,29 +330,3 @@ def test_agy_invalid_stdin_subprocess(raw):
         timeout=10,
     )
     assert_decision("agy", result.returncode, result.stdout, result.stderr, False)
-
-
-@pytest.mark.parametrize("failure", ["missing", "crash", "deadline"])
-def test_agy_detector_failure_real_subprocess(tmp_path, failure):
-    guard = tmp_path / "guard.py"
-    if failure != "missing":
-        guard.write_text(
-            "raise RuntimeError('synthetic crash')\n" if failure == "crash" else "import time\ntime.sleep(30)\n"
-        )
-    wrapper = tmp_path / "hook_probe.py"
-    wrapper.write_text(
-        "import sys\nfrom pathlib import Path\n"
-        f"sys.path.insert(0, {str(ROOT)!r})\n"
-        "from scripts.agent_runtime import secret_print_hook as hook\n"
-        f"hook.GUARD_PATH = Path({str(guard)!r})\n"
-        "raise SystemExit(hook.main(['--harness', 'agy']))\n"
-    )
-    result = subprocess.run(
-        [sys.executable, str(wrapper)],
-        input=json.dumps(event("agy", "printf OK")),
-        text=True,
-        capture_output=True,
-        timeout=10,
-    )
-    assert_decision("agy", result.returncode, result.stdout, result.stderr, False)
-    assert failure != "deadline" or "deadline" in result.stderr

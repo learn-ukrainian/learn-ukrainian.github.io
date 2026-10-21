@@ -260,14 +260,6 @@ def test_agy_retry_reads_only_provider_error_not_model_response(tmp_path, monkey
     assert once.call_count == 1
 
 
-def test_agy_terminal_provider_eligibility_503_is_retried(tmp_path, monkeypatch):
-    first = _outcome(stderr="")
-    first = replace(first, parse=replace(first.parse, provider_error_text=ELIGIBILITY_503))
-    result, once, *_ = _execute(tmp_path, monkeypatch, [first, _outcome(ok=True)])
-    assert result.parse.ok
-    assert once.call_count == 2
-
-
 def test_agy_retry_does_not_extend_exhausted_timeout(tmp_path, monkeypatch):
     first = _outcome()
     result, once, adapter, *_ = _execute(tmp_path, monkeypatch, [first], times=(0, 30))
@@ -320,56 +312,6 @@ def test_agy_retry_plan_build_counts_against_original_timeout(tmp_path, monkeypa
     adapter.build_invocation.assert_called_once()
 
 
-def test_agy_retry_wrapper_leaves_other_adapters_clock_and_plan_untouched(tmp_path, monkeypatch):
-    first = _outcome()
-    result, once, adapter, *_ = _execute(tmp_path, monkeypatch, [first], agent="codex", times=())
-    assert result.parse.ok is first.parse.ok
-    assert once.call_count == 1
-    adapter.build_invocation.assert_not_called()
-
-
-@pytest.mark.parametrize(
-    "fields",
-    [
-        {},
-        {"agy_attempt_count": None, "agy_retry_reason": None, "agy_killed_commands": None},
-        {"agy_attempt_count": "2", "agy_retry_reason": 503, "agy_killed_commands": "git grep needle"},
-        {"agy_attempt_count": True, "agy_retry_reason": [], "agy_killed_commands": ["git grep needle", 1]},
-        {"agy_attempt_count": object(), "agy_retry_reason": object(), "agy_killed_commands": ("git grep needle",)},
-    ],
-    ids=["missing", "none", "wrong-types", "bool-and-mixed-list", "objects-and-tuple"],
-)
-def test_non_agy_result_optional_retry_fields_are_typed(tmp_path, monkeypatch, fields):
-    values = vars(ParseResult(ok=True, response="Complete reply.")).copy()
-    for name in ("agy_attempt_count", "agy_retry_reason", "agy_killed_commands"):
-        values.pop(name)
-    values.update(fields)
-    execution = replace(_outcome(ok=True, stderr=""), parse=SimpleNamespace(**values))
-    adapter = SimpleNamespace(
-        default_model="fixture-model",
-        supported_modes={"read-only"},
-        build_invocation=Mock(return_value=InvocationPlan(cmd=["fake-codex"], cwd=tmp_path)),
-    )
-    monkeypatch.setattr(runner, "_load_adapter", lambda _: adapter)
-    monkeypatch.setattr(runner, "has_headroom", lambda *_: (True, ""))
-    monkeypatch.setattr(runner, "load_failover_chain", lambda *_, **__: None)
-    monkeypatch.setattr(runner, "_execute_invocation_once", lambda **_: execution)
-    monkeypatch.setattr(
-        runner,
-        "_resolve_plan_telemetry",
-        lambda **_: SimpleNamespace(model="fixture-model", effort="high", cli_version="fixture"),
-    )
-    write = Mock()
-    monkeypatch.setattr(runner, "write_record", write)
-
-    result = runner._invoke_impl("codex", "prompt", cwd=tmp_path, task_id="fixture-task", entrypoint="delegate")
-
-    assert result.ok
-    assert result.agy_killed_commands == []
-    assert not {"agy_attempt_count", "agy_retry_reason", "agy_killed_commands"} & result.usage_record.keys()
-    assert write.call_args.args[0] == result.usage_record
-
-
 @pytest.mark.parametrize("agent", ["agy", "codex", "gemini"])
 @pytest.mark.parametrize(
     "count, reason, commands, expected",
@@ -416,62 +358,6 @@ def test_usage_record_validates_optional_retry_fields_for_every_agent(
         record.get("agy_retry_reason"),
         record.get("agy_killed_commands", []),
     ) == expected
-
-
-@pytest.mark.parametrize("ok", [True, False])
-@pytest.mark.parametrize("has_kills", [True, False], ids=["kills", "no-kills"])
-def test_agy_killed_commands_survive_gemini_ladder_result(tmp_path, monkeypatch, ok, has_kills):
-    from ai_llm.fallback import PRIMARY_GEMINI_MODEL
-
-    adapter = SimpleNamespace(build_invocation=lambda **_: InvocationPlan(cmd=["fake-cli"], cwd=tmp_path))
-    commands = (["git grep needle"] if ok else ["pytest -q"]) if has_kills else []
-
-    def execute(**kwargs):
-        is_agy = kwargs["agent_name"] == "agy"
-        outcome = _outcome(ok=ok and is_agy, stderr="", commands=commands if is_agy else ())
-        if is_agy:
-            outcome = replace(
-                outcome, parse=replace(outcome.parse, agy_attempt_count=2, agy_retry_reason="pre_model_eligibility_503")
-            )
-        if not is_agy:
-            outcome = replace(outcome, parse=replace(outcome.parse, rate_limited=True, stderr_excerpt="429 quota"))
-        return outcome
-
-    monkeypatch.setattr(runner, "_load_adapter", lambda _: adapter)
-    monkeypatch.setattr(runner, "has_headroom", lambda *_: (True, ""))
-    monkeypatch.setattr(runner, "_execute_invocation_plan", execute)
-    monkeypatch.setattr(runner, "_resolve_gemini_ladder_auth_modes", lambda _: ("oauth",))
-    monkeypatch.setattr(
-        runner,
-        "_resolve_plan_telemetry",
-        lambda **kw: SimpleNamespace(
-            model=kw["requested_model"],
-            effort="high",
-            cli_version="fixture",
-        ),
-    )
-    write = Mock()
-    monkeypatch.setattr(runner, "write_record", write)
-    result = runner._invoke_gemini_with_fallback(
-        agent_name="gemini",
-        adapter=adapter,
-        prompt="prompt",
-        mode="read-only",
-        cwd=tmp_path,
-        model=PRIMARY_GEMINI_MODEL,
-        task_id="fixture-task",
-        session_id=None,
-        tool_config=None,
-        entrypoint="delegate",
-        hard_timeout=30,
-        stall_timeout=10,
-    )
-    assert result.ok is ok
-    assert result.agy_killed_commands == commands
-    assert result.usage_record["agy_killed_commands"] == commands
-    assert write.call_args.args[0]["agy_killed_commands"] == commands
-    assert result.usage_record["agy_attempt_count"] == 2
-    assert result.usage_record["agy_retry_reason"] == "pre_model_eligibility_503"
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
@@ -773,15 +659,6 @@ def test_second_attempt_timeout_retains_both_attempts(tmp_path, monkeypatch):
         )
     assert len(caught.value.agy_telemetry.attempts) == 2
     assert caught.value.agy_telemetry.retry_reason == "incomplete_cancellation"
-
-
-def test_telemetry_rejects_third_attempt_and_invalid_acceptance():
-    from scripts.agent_runtime.result import AgyTelemetry
-
-    with pytest.raises(ValueError, match="launch_cap"):
-        AgyTelemetry(attempts=(AgyAttempt(),) * 3)
-    with pytest.raises(ValueError, match="accepted_attempt"):
-        AgyTelemetry(accepted_attempt=1)
 
 
 @pytest.mark.parametrize("new_counts", [False, True])

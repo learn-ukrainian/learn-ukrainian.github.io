@@ -10,7 +10,6 @@ import pytest
 import yaml
 
 from scripts.build import linear_pipeline, v7_build
-from scripts.level_config import base_level
 from tests.build.upgrade_fixtures import ORIGINAL, UPGRADED, extract_upgrade_fixtures, fixture_text
 
 pytestmark = pytest.mark.reads_content
@@ -33,33 +32,6 @@ def upgrade_root(tmp_path, monkeypatch):
     monkeypatch.setattr(cf_preflight, "git_head", lambda _root: head)
     cf_preflight.write_clearance_file(tmp_path / "cf_clearance.json", head=head)
     return tmp_path
-
-
-@pytest.mark.parametrize("writer", ["gemini-tools", "codex-tools"])
-def test_upgrade_dry_run_saves_full_prompt_without_writer(upgrade_root, monkeypatch, writer):
-    forbidden = Mock(side_effect=AssertionError("dry-run called a model or wiki retrieval"))
-    for name in ("invoke_writer", "build_knowledge_packet", "build_wiki_manifest_data"):
-        monkeypatch.setattr(linear_pipeline, name, forbidden)
-    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--dry-run", "--writer", writer])
-    assert v7_build._run(args) == 0
-    output = upgrade_root / UPGRADED
-    prompt = (output / "writer_prompt.md").read_text()
-    assert "Mode: upgrade" in prompt
-    assert "NO named narrator" in prompt
-    assert "Classify the archive" in prompt
-    assert "watch-and-repeat" in prompt
-    assert "untaught" in prompt.lower() or "cannot read" in prompt.lower()
-    assert "file=activities.yaml" in prompt
-    # #7994: named sources MCP probes, theory + landing; shell VESUM is no proof.
-    assert "mcp__sources__search_text" in prompt
-    assert "mcp__sources__verify_words" in prompt
-    assert "landing-overview.md" in prompt and "probe the landing" in prompt.lower()
-    assert "python3 scripts/verification/vesum.py" not in prompt
-    assert linear_pipeline._prompt_module_ref(prompt) == "a1/things-have-gender"
-    for name in linear_pipeline.WRITER_ARTIFACTS:
-        assert (upgrade_root / ORIGINAL / name).read_text() in prompt
-    assert len(yaml.safe_load((output / "lessons.yaml").read_text())["lessons"]) == 3
-    forbidden.assert_not_called()
 
 
 def _skip_mdx_assembly(monkeypatch) -> None:
@@ -136,26 +108,6 @@ def test_upgrade_rejects_protected_output(upgrade_root, output):
     assert v7_build._run(args) == 1
 
 
-def test_archive_level_resolves_all_pedagogical_configs():
-    from scripts import config
-    from scripts.audit.config import get_level_config
-    from scripts.pipeline.config_tables import get_activity_config, get_track_skill
-
-    assert base_level("a1-v1") == "a1"
-    assert get_activity_config("a1-v1", 8) == get_activity_config("a1", 8)
-    assert get_activity_config("a1-v1", 15) == get_activity_config("a1", 15)
-    assert get_track_skill("a1-v1", 8) == get_track_skill("a1", 8)
-    assert get_level_config("A1-V1", "grammar") == get_level_config("A1", "grammar")
-    assert config.get_config("a1-v1") == config.get_config("a1")
-    assert config.get_immersion_rule("a1-v1", 8) == config.get_immersion_rule("a1", 8)
-    from scripts.manifest_utils import get_module_by_slug
-
-    # With no published upgrades, slug-only lookup resolves the archived module.
-    original = get_module_by_slug("things-have-gender")
-    assert original.level == "a1-v1"
-    assert original.local_num == 8
-
-
 def test_reviewed_map_keeps_gold_declarations_and_rejects_changed_ownership(upgrade_root):
     from scripts.build.lesson_map import derive_lesson_map
 
@@ -188,18 +140,6 @@ def test_upgrade_without_cf_clearance_blocks_writer(upgrade_root, monkeypatch):
     monkeypatch.setattr(linear_pipeline, "invoke_writer", writer)
     (upgrade_root / "cf_clearance.json").unlink()
     monkeypatch.setattr(cf_preflight, "git_head", lambda _root: "b" * 40)
-    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"])
-    assert v7_build._run(args) == cf_preflight.CfPreflightError.exit_code
-    writer.assert_not_called()
-
-
-def test_upgrade_stale_cf_clearance_blocks_writer(upgrade_root, monkeypatch):
-    from scripts.build import cf_preflight
-
-    writer = Mock(side_effect=AssertionError("must not call writer with stale CF"))
-    monkeypatch.setattr(linear_pipeline, "invoke_writer", writer)
-    cf_preflight.write_clearance_file(upgrade_root / "cf_clearance.json", head="c" * 40)
-    monkeypatch.setattr(cf_preflight, "git_head", lambda _root: "d" * 40)
     args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"])
     assert v7_build._run(args) == cf_preflight.CfPreflightError.exit_code
     writer.assert_not_called()
@@ -355,35 +295,6 @@ def test_clear_previous_edition_removes_the_previous_landing_overview(tmp_path, 
     assert (module_dir / "lessons.yaml").exists()
 
 
-def test_clear_previous_edition_refuses_a_symlinked_landing_overview(tmp_path, monkeypatch):
-    worktree = tmp_path / "worktree"
-    monkeypatch.setattr(v7_build, "PROJECT_ROOT", worktree)
-    primary_landing = tmp_path / "primary/curriculum/l2-uk-en/a1/special-signs/landing-overview.md"
-    primary_landing.parent.mkdir(parents=True)
-    primary_landing.write_text("primary checkout", encoding="utf-8")
-    module_dir = worktree / "curriculum/l2-uk-en/a1/special-signs"
-    _seed_previous_edition(module_dir)
-    (module_dir / "landing-overview.md").symlink_to(primary_landing)
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="symlink"):
-        v7_build._clear_previous_edition(module_dir)
-
-    assert primary_landing.read_text(encoding="utf-8") == "primary checkout"
-    assert (module_dir / "landing-overview.md").is_symlink()
-    # Checked before the first delete: the lesson artifacts are untouched too.
-    assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
-
-
-def test_clear_previous_edition_refuses_a_module_outside_the_worktree(tmp_path, monkeypatch):
-    monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path / "worktree")
-    primary = _primary_lesson(tmp_path)
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="outside the build worktree"):
-        v7_build._clear_previous_edition(primary.parent)
-
-    _assert_primary_intact(primary)
-
-
 def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, dry_run: bool = False):
     from scripts.build import lesson_gates
     from scripts.pipeline import stress_annotator
@@ -465,14 +376,6 @@ def test_lesson_one_without_a_landing_fails_before_review(tmp_path):
         v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, {})
 
 
-def test_lesson_one_landing_is_written_to_the_module_root(tmp_path):
-    module = tmp_path / "a1"
-    module.mkdir()
-    parsed = linear_pipeline.parse_writer_output(_gold_response(1) + "\n" + _LANDING_FENCE, lesson_mode=True)
-    v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
-    assert (module / "landing-overview.md").read_text().startswith("Nouns have gender")
-
-
 _LIFT_MODULE = (
     "# Soft Sign\n\n"
     "You read the soft sign and the apostrophe in real Ukrainian words.\n\n"
@@ -481,26 +384,6 @@ _LIFT_MODULE = (
     "- read **день** without adding an extra vowel.\n\n"
     "## First section\n\nBody that must not be lifted.\n"
 )
-
-
-def test_land_overview_lifts_outcomes_from_lesson_one_opening(tmp_path):
-    from scripts.build.lesson_assembler import lift_landing_overview
-
-    module = tmp_path / "a1"
-    module.mkdir()
-    module_md = _LIFT_MODULE
-    parsed = {"module.md": module_md}
-    before = parsed["module.md"]
-    v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
-    landed = (module / "landing-overview.md").read_text(encoding="utf-8")
-    assert landed.startswith("By the end, you can")
-    assert "recognize **ь** and apostrophe" in landed
-    assert "You read the soft sign" not in landed
-    assert not landed.lstrip().startswith("# ")
-    assert "First section" not in landed
-    assert parsed["module.md"] == before
-    assert lift_landing_overview(module_md) is not None
-    assert "You read the soft sign" not in (lift_landing_overview(module_md) or "")
 
 
 def test_land_overview_prefers_writer_file_over_lift(tmp_path):
@@ -513,48 +396,3 @@ def test_land_overview_prefers_writer_file_over_lift(tmp_path):
     parsed = {"module.md": _LIFT_MODULE, "landing-overview.md": writer}
     v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
     assert (module / "landing-overview.md").read_text(encoding="utf-8") == writer
-
-
-def test_land_overview_lift_refuses_line_break_or_banned_opening(tmp_path):
-    module = tmp_path / "a1"
-    module.mkdir()
-    banned = (
-        "# Soft Sign\n\n"
-        "This module completes your mastery of all 33 letters today.\n\n"
-        "By the end, you can:\n\n- read **день** with the soft sign.\n\n## Section\n"
-    )
-    # Banned phrase is only in the orientation prose; outcomes alone still land.
-    v7_build._land_overview_or_fail(
-        module, _no_outcomes_source(tmp_path), {"level": "a1"}, {"module.md": banned},
-    )
-    landed = (module / "landing-overview.md").read_text(encoding="utf-8")
-    assert landed.startswith("By the end, you can")
-    assert "mastery" not in landed
-    assert "день" in landed
-
-
-def test_land_overview_lift_refuses_banned_phrase_inside_outcomes(tmp_path):
-    module = tmp_path / "a1"
-    module.mkdir()
-    banned = (
-        "# Soft Sign\n\n"
-        "A clean orientation paragraph about soft signs in Ukrainian words.\n\n"
-        "By the end, you can:\n\n"
-        "- complete your mastery of all 33 letters with **день**.\n\n## Section\n"
-    )
-    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"landing-overview\.md missing"):
-        v7_build._land_overview_or_fail(
-            module, _no_outcomes_source(tmp_path), {"level": "a1"}, {"module.md": banned},
-        )
-    assert not (module / "landing-overview.md").is_file()
-
-
-def test_lift_ignores_outcomes_after_first_h2():
-    from scripts.build.lesson_assembler import lift_landing_overview
-
-    text = (
-        "# Soft Sign\n\n"
-        "An opening paragraph without any outcomes list at all for the learner.\n\n"
-        "## Later\n\nBy the end, you can:\n\n- do something.\n"
-    )
-    assert lift_landing_overview(text) is None

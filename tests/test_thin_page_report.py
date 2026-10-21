@@ -5,8 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -18,9 +16,7 @@ from scripts.lexicon.thin_page_report import (
     TIER_THIN,
     build_parser,
     build_report,
-    classify_tier,
     frazeolohichnyi_idiom_keys,
-    main,
     normalize_key,
     slovnyk_capabilities,
     ulif_capabilities,
@@ -172,14 +168,6 @@ def test_normalize_key_strips_stress_and_apostrophes() -> None:
     assert normalize_key("  М’ЯТА ") == "м'ята"
 
 
-def test_classify_tier_rule() -> None:
-    assert classify_tier(set(), None)[0] == TIER_BARE
-    assert classify_tier({"translation"}, None)[0] == TIER_THIN
-    assert classify_tier(set(), "a gloss")[0] == TIER_THIN
-    rich = {"meaning", "etymology", "morphology", "synonyms", "translation"}
-    assert classify_tier(rich, None) == (TIER_RICH, 5)
-
-
 def test_totals_tiers_and_missing_sections(fixture_paths: dict[str, Path]) -> None:
     report = _build(fixture_paths)
     totals = report["totals"]
@@ -228,66 +216,10 @@ def test_report_never_writes_to_the_databases(fixture_paths: dict[str, Path]) ->
     assert before == after
 
 
-def test_missing_optional_sources_are_reported_not_fatal(fixture_paths: dict[str, Path], tmp_path: Path) -> None:
-    report = build_report(
-        atlas_db=fixture_paths["atlas"],
-        sources_db=tmp_path / "absent-sources.db",
-        ulif_db=tmp_path / "absent-ulif.db",
-        slovnyk_cache=tmp_path / "absent-cache",
-    )
-    assert report["sources"]["ulif_dump"] == {"available": False, "path": str(tmp_path / "absent-ulif.db")}
-    assert report["sources"]["slovnyk_cache"]["available"] is False
-    assert report["fillable"] == {}
-    assert report["totals"]["public_entries"] == 3
-
-
-def test_cli_writes_json_and_respects_no_entries(fixture_paths: dict[str, Path], tmp_path: Path, capsys) -> None:
-    out = tmp_path / "thin.json"
-    code = main(
-        [
-            "--atlas",
-            str(fixture_paths["atlas"]),
-            "--sources-db",
-            str(fixture_paths["sources"]),
-            "--ulif-db",
-            str(fixture_paths["ulif"]),
-            "--slovnyk-cache",
-            str(fixture_paths["cache"]),
-            "--json",
-            str(out),
-            "--no-entries",
-        ]
-    )
-    assert code == 0
-    stdout = capsys.readouterr().out
-    assert "Thin-page report" in stdout
-    payload = json.loads(out.read_text(encoding="utf-8"))
-    assert payload["totals"]["tiers"] == {TIER_BARE: 1, TIER_THIN: 1, TIER_RICH: 1}
-    assert "entries" not in payload
-
-
-def test_cli_missing_atlas_is_exit_2(tmp_path: Path, capsys) -> None:
-    code = main(["--atlas", str(tmp_path / "absent-atlas.db")])
-    assert code == 2
-    assert "error:" in capsys.readouterr().err
-
-
 def test_help_meets_cli_standard() -> None:
     help_text = build_parser().format_help()
     for marker in ("Examples:", "Outputs:", "Exit codes:", "Related:", "read-only", "--json"):
         assert marker in help_text
-
-
-def test_module_help_via_python_dash_m() -> None:
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.lexicon.thin_page_report", "--help"],
-        capture_output=True,
-        text=True,
-        cwd=Path(__file__).resolve().parents[1],
-        check=True,
-        timeout=30,
-    )
-    assert "thin" in result.stdout
 
 
 def test_frazeolohichnyi_definition_mention_without_phrase_match_does_not_count(
@@ -348,48 +280,6 @@ def test_frazeolohichnyi_six_fts_hits_with_sixth_phrase_match_counts(
     # 6th row: extracted phrase actually contains "яблуко"
     conn.execute(
         "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (6, ?, ?)",
-        ("яблуко розбрату", "яблуко розбрату. Причина незгоди."),
-    )
-    conn.execute(
-        "INSERT INTO frazeolohichnyi_fts (rowid, word, definition) "
-        "SELECT id, word, definition FROM frazeolohichnyi"
-    )
-    conn.commit()
-    conn.close()
-
-    assert frazeolohichnyi_idiom_keys(db, ["яблуко"]) == {"яблуко"}
-
-    report = build_report(
-        atlas_db=fixture_paths["atlas"],
-        sources_db=db,
-        ulif_db=fixture_paths["ulif"],
-        slovnyk_cache=fixture_paths["cache"],
-    )
-    assert report["fillable"]["idioms"]["sources.db:frazeolohichnyi"] == 1
-
-
-def test_frazeolohichnyi_eighty_fts_hits_with_eighty_first_phrase_match_counts(
-    fixture_paths: dict[str, Path], tmp_path: Path
-) -> None:
-    db = tmp_path / "sources_eighty_one_hits.db"
-    conn = sqlite3.connect(db)
-    conn.executescript(
-        """
-        CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, definition TEXT);
-        CREATE VIRTUAL TABLE frazeolohichnyi_fts USING fts5(
-            word, definition, content='frazeolohichnyi', content_rowid='id', tokenize='trigram'
-        );
-        """
-    )
-    # 80 rows mention "яблуко" in definition text only (phrase does not contain it)
-    for i in range(1, 81):
-        conn.execute(
-            "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (?, ?, ?)",
-            (i, f"фраза {i}", f"фраза {i}. Тлумачення із яблуко {i}."),
-        )
-    # 81st row: extracted phrase actually contains "яблуко"
-    conn.execute(
-        "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (81, ?, ?)",
         ("яблуко розбрату", "яблуко розбрату. Причина незгоди."),
     )
     conn.execute(

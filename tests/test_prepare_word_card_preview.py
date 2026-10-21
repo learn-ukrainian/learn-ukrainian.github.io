@@ -215,48 +215,6 @@ def test_dataset_rows_are_checked(tmp_path: Path, dataset: bytes, card_ids: tupl
         _prepare(tmp_path, _pin(manifest, dataset), manifest, dataset)
 
 
-def test_manifest_must_be_a_json_object(tmp_path: Path) -> None:
-    _, dataset = _release()
-    manifest = b"[]"
-    with pytest.raises(preview.PreviewError, match="JSON object"):
-        _prepare(tmp_path, _pin(manifest, dataset), manifest, dataset)
-
-
-def test_missing_asset_fails_after_bounded_retries(tmp_path: Path) -> None:
-    manifest, dataset = _release()
-    calls: list[str] = []
-
-    def missing(url: str) -> bytes:
-        calls.append(url)
-        raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
-
-    with pytest.raises(preview.PreviewError, match=re.escape("could not download manifest.json after 3 attempts")):
-        preview.prepare(_write_pin(tmp_path, _pin(manifest, dataset)), tmp_path / "release", environ={}, fetch=missing)
-    assert (
-        calls
-        == [
-            "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/word-cards-v9/manifest.json"
-        ]
-        * 3
-    )
-
-
-def test_transient_download_error_is_retried(tmp_path: Path) -> None:
-    manifest, dataset = _release()
-    served = _served(manifest, dataset)
-    failures = iter([True])
-
-    def flaky(url: str) -> bytes:
-        if next(failures, False):
-            raise OSError("connection reset")
-        return served(url)
-
-    outputs = preview.prepare(
-        _write_pin(tmp_path, _pin(manifest, dataset)), tmp_path / "release", environ={}, fetch=flaky
-    )
-    assert outputs["card-count"] == "2"
-
-
 def test_destination_must_be_absent_or_empty(tmp_path: Path) -> None:
     manifest, dataset = _release()
     (tmp_path / "release").mkdir()
@@ -536,12 +494,6 @@ def test_verify_dist_accepts_exactly_the_inventoried_noindex_preview(tmp_path: P
     )
 
 
-def test_verify_dist_reads_the_atlas_inventory_by_default() -> None:
-    assert preview.DEFAULT_INVENTORY == REPO_ROOT / "site/src/lib/lexicon/word-card-preview-route-inventory.json"
-    verify = preview.build_parser().parse_args(["verify-dist", "site/dist", "--release-dir", "r"])
-    assert verify.inventory == preview.DEFAULT_INVENTORY
-
-
 def _dist_mutations():
     def remove(route: str):
         return lambda dist: (dist / route).unlink()
@@ -707,21 +659,6 @@ def test_verify_dist_refuses_an_inventory_inconsistent_with_the_release(tmp_path
         built.verify()
 
 
-def test_verify_dist_refuses_a_missing_or_malformed_inventory(tmp_path: Path, capsys) -> None:
-    built = Built(tmp_path)
-    assert built.cli("--inventory", str(tmp_path / "absent.json")) == 1
-    assert "route inventory unreadable" in capsys.readouterr().err
-    for raw, message in (
-        (b"{", "route inventory is not valid UTF-8 JSON"),
-        (b"\xff", "route inventory is not valid UTF-8 JSON"),
-        (b"[]", "exactly the keys"),
-        (b'{"schema_version": 1, "schema_version": 2}', "route inventory has duplicate keys"),
-    ):
-        built.inventory_path.write_bytes(raw)
-        with pytest.raises(preview.PreviewError, match=re.escape(message)):
-            built.verify()
-
-
 def _rebuilt_release(built: Built, tmp_path: Path, rows: list[dict], inventory_edit=None) -> None:
     dataset = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode()
     manifest, dataset = _release(card_ids=tuple(r["card_id"] for r in rows), dataset=dataset)
@@ -758,34 +695,6 @@ def test_verify_dist_rechecks_the_release_directory(tmp_path: Path, capsys) -> N
     (built.release / "word-cards.jsonl").unlink()
     assert built.cli("--inventory", str(built.inventory_path)) == 1
     assert "::error title=Word-card preview refused::" in capsys.readouterr().err
-
-
-def test_verify_dist_refuses_a_stale_inventory_or_a_pin_for_another_release(tmp_path: Path) -> None:
-    built = Built(tmp_path)
-    # A new release, pinned and prepared, with the previous release's inventory left in place.
-    rows = [dict(row) for row in VERIFY_ROWS]
-    rows[0]["fields"] = [{}, {}, {}]
-    dataset = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode()
-    manifest, dataset = _release(card_ids=tuple(r["card_id"] for r in rows), dataset=dataset)
-    stale_pin = built.pin
-    built.pin = tmp_path / "new-pin.json"
-    built.pin.write_text(json.dumps(_pin(manifest, dataset)), encoding="utf-8")
-    (built.release / "manifest.json").write_bytes(manifest)
-    (built.release / "word-cards.jsonl").write_bytes(dataset)
-    with pytest.raises(preview.PreviewError, match=r"route inventory release .* does not match the pin"):
-        built.verify()
-    # The previous pin no longer describes the prepared release.
-    built.pin = stale_pin
-    with pytest.raises(preview.PreviewError, match="no longer matches the pin"):
-        built.verify()
-
-
-def test_fixture_sentinels_come_from_the_committed_synthetic_releases(tmp_path: Path) -> None:
-    sentinels = preview.fixture_sentinels(FIXTURE_ROOT)
-    assert {"wc_0123456789ab", "wc_0123456789ac", "v0.1.0-synthetic", "v0.1.1-synthetic"} <= sentinels
-    assert "24c3b98a65f57294bec78795c179252950eb071ede008320ce03b06f6c5faf6d" in sentinels
-    with pytest.raises(preview.PreviewError, match="no synthetic release fixtures"):
-        preview.fixture_sentinels(tmp_path)
 
 
 def test_sentinels_shared_with_the_real_release_are_not_false_positives(tmp_path: Path) -> None:

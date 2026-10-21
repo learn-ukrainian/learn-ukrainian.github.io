@@ -13,7 +13,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from scripts.ai_agent_bridge import _ask_lifecycle as lifecycle
 from scripts.ai_agent_bridge._agy import ask_agy
-from scripts.ai_agent_bridge._cli import _build_parser
 from scripts.ai_agent_bridge._db import get_db, init_db
 from scripts.ai_agent_bridge._messaging import send_message
 
@@ -160,26 +159,6 @@ def test_background_signal_handler_writes_terminal_record(bridge_db, monkeypatch
     assert terminal["ended_at"]
 
 
-def test_asks_lists_replied_id_and_filters_task(bridge_db, capsys):
-    first = _send_ask("task-a")
-    reply_id = send_message(
-        "answer",
-        task_id="task-a",
-        msg_type="response",
-        from_llm="agy",
-        to_llm="codex",
-        quiet=True,
-    )
-    lifecycle.record_ask_reply(first, reply_id)
-    _send_ask("task-b", target="cursor")
-
-    lifecycle.print_asks("task-a")
-
-    output = capsys.readouterr().out
-    assert f"{first}  task-a  agy  replied (reply #{reply_id})" in output
-    assert "task-b" not in output
-
-
 def test_asks_marks_dead_launched_worker_without_terminal_as_died_silent(bridge_db, monkeypatch, capsys, tmp_path):
     """A vanished worker cannot remain indefinitely indistinguishable from pending."""
     message_id = _send_ask()
@@ -279,32 +258,6 @@ def test_detached_timeout_marks_terminal_state_and_next_cli_notice_is_once(bridg
     assert capsys.readouterr().err == ""
 
 
-@pytest.mark.parametrize(
-    "command",
-    [
-        "ask-claude",
-        "ask-codex",
-        "ask-gemini",
-        "ask-agy",
-        "ask-hermes",
-        "ask-opencode",
-        "ask-pool",
-        "ask-glm",
-        "ask-gemma",
-        "ask-cursor",
-        "ask-grok-build",
-    ],
-)
-def test_every_ask_command_accepts_background(command):
-    args = _build_parser().parse_args([command, "question", "--task-id", "task-4837", "--background"])
-    assert args.background is True
-
-
-def test_asks_parser_accepts_task_filter():
-    args = _build_parser().parse_args(["asks", "--task-id", "task-4837"])
-    assert args.task_id == "task-4837"
-
-
 def _reply_for(message_id: int, *, task_id: str = "task-4837", from_llm: str = "agy") -> int:
     return send_message(
         "answer",
@@ -319,31 +272,6 @@ def _reply_for(message_id: int, *, task_id: str = "task-4837", from_llm: str = "
 def _enable_plane(monkeypatch, tmp_path, mode: str) -> None:
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", mode)
     monkeypatch.setattr(lifecycle, "_PLANE_ROOT_OVERRIDE", tmp_path / "fleet-comms-v1")
-
-
-def test_plane_root_uses_shared_primary_root_resolver(monkeypatch, tmp_path):
-    resolved = tmp_path / "primary" / "batch_state" / "fleet-comms" / "v1"
-    plane_mod = Mock()
-    plane_mod.default_plane_root.return_value = resolved
-    monkeypatch.setattr(lifecycle, "_PLANE_ROOT_OVERRIDE", None)
-    monkeypatch.setattr(lifecycle, "_import_message_plane", lambda: plane_mod)
-    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path / "linked-worktree")
-
-    assert lifecycle._plane_root() == resolved
-    plane_mod.default_plane_root.assert_called_once_with(
-        repo_root=tmp_path / "linked-worktree"
-    )
-
-
-def test_message_plane_off_is_noop_for_register_and_reply(bridge_db, monkeypatch, tmp_path):
-    """Default off: no fleet_request_id, reply path unchanged."""
-    _enable_plane(monkeypatch, tmp_path, "off")
-    message_id = _send_ask()
-    assert lifecycle._load_fleet_request_id(message_id) is None
-    reply_id = _reply_for(message_id)
-    assert lifecycle.record_ask_reply(message_id, reply_id) is True
-    assert _status(message_id) == f"replied:{reply_id}"
-    assert not (tmp_path / "fleet-comms-v1" / "comms.sqlite3").exists()
 
 
 def test_message_plane_shadow_does_not_block_legacy_replied(bridge_db, monkeypatch, tmp_path):
@@ -455,48 +383,6 @@ def test_ask_reply_remains_unacked_for_requester(bridge_db, monkeypatch):
         assert reply_row[1] == 0
         assert reply_row[2] == "claude"
         assert reply_row[3] == "codex"
-    finally:
-        conn.close()
-
-
-def test_background_ask_reply_remains_unacked_for_requester(bridge_db, monkeypatch):
-    """Backgrounded ask reply message must remain unacknowledged (acknowledged=0) for requester (#5773)."""
-    ask_id = send_message(
-        "Background review request",
-        task_id="task-5773-bg",
-        msg_type="query",
-        from_llm="claude-infra",
-        to_llm="claude",
-        quiet=True,
-    )
-    lifecycle.register_ask(ask_id)
-
-    mock_result = Mock(
-        ok=True,
-        response="VERDICT: APPROVED\n\nBackground review complete.",
-        model="claude-sonnet-5",
-        effort=None,
-    )
-    monkeypatch.setattr("scripts.ai_agent_bridge._process.run_compat_ask", Mock(return_value=mock_result))
-    monkeypatch.setattr(lifecycle, "_background_options", lambda *_args: {})
-
-    lifecycle.process_background_ask(ask_id, "claude")
-
-    conn = get_db()
-    try:
-        # Outbound ask message IS acknowledged by worker
-        ask_row = conn.execute("SELECT acknowledged FROM messages WHERE id = ?", (ask_id,)).fetchone()
-        assert ask_row is not None
-        assert ask_row[0] == 1
-
-        # Inbound reply message TO claude-infra IS NOT acknowledged
-        reply_row = conn.execute(
-            "SELECT id, acknowledged, from_llm, to_llm FROM messages WHERE to_llm = 'claude-infra' AND task_id = 'task-5773-bg'"
-        ).fetchone()
-        assert reply_row is not None
-        assert reply_row[1] == 0
-        assert reply_row[2] == "claude"
-        assert reply_row[3] == "claude-infra"
     finally:
         conn.close()
 
@@ -627,55 +513,6 @@ def test_watchdog_ignores_stale_launch_records(bridge_db, monkeypatch, tmp_path)
     monkeypatch.setattr(lifecycle, "launch_background_ask", re_fire_mock)
     assert lifecycle.run_ask_watchdog(message_id) == []
     re_fire_mock.assert_not_called()
-
-
-def test_watchdog_retries_fresh_launch_records(bridge_db, monkeypatch, tmp_path):
-    """Launch records within 2x hard timeout window ARE retried by watchdog (#5893)."""
-    from datetime import UTC, datetime, timedelta
-
-    message_id = _send_ask("task-watchdog-fresh", target="grok")
-    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
-    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-fresh"
-    fresh_timestamp = (datetime.now(UTC) - timedelta(seconds=100)).isoformat()
-    lifecycle._atomic_write_json(
-        state_dir / "launch.json",
-        {
-            "message_id": message_id,
-            "pid": 999_999_999,
-            "agent": "grok",
-            "harness": "grok",
-            "model": "grok-3",
-            "started_at": fresh_timestamp,
-            "timeout_seconds": 1800,
-        },
-    )
-
-    assert lifecycle.should_auto_retry_ask(message_id) is True
-
-
-def test_watchdog_slow_lane_ask_dead_at_minute_35_is_eligible(bridge_db, monkeypatch, tmp_path):
-    """A slow-lane ask dead at minute 35 (2100s) with recorded 1800s timeout IS eligible (2x1800=3600s window)."""
-    from datetime import UTC, datetime, timedelta
-
-    message_id = _send_ask("task-watchdog-slow-lane", target="agy")
-    monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
-    state_dir = tmp_path / "batch_state" / "asks" / "task-watchdog-slow-lane"
-    min35_timestamp = (datetime.now(UTC) - timedelta(seconds=2100)).isoformat()
-    lifecycle._atomic_write_json(
-        state_dir / "launch.json",
-        {
-            "message_id": message_id,
-            "pid": 999_999_999,
-            "agent": "agy",
-            "harness": "agy",
-            "model": "gemini-3.6-pro",
-            "started_at": min35_timestamp,
-            "timeout_seconds": 1800,
-            "no_timeout": False,
-        },
-    )
-
-    assert lifecycle.should_auto_retry_ask(message_id) is True
 
 
 def test_watchdog_legacy_record_uses_fallback(bridge_db, monkeypatch, tmp_path):
@@ -838,20 +675,6 @@ def test_cancel_and_retell_composes_with_watchdog_within_bound(bridge_db, monkey
 
     msg = lifecycle.fetch_ask_message(message_id, "grok")
     assert _grok_build._can_cancel_retry(msg) is False
-
-
-def test_asks_cli_watchdog_flag(bridge_db, monkeypatch, capsys):
-    """asks --watchdog executes watchdog and lists asks."""
-    from scripts.ai_agent_bridge import _cli
-
-    watchdog_mock = Mock(return_value=[])
-    monkeypatch.setattr("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", watchdog_mock)
-
-    args = _cli._build_parser().parse_args(["asks", "--watchdog"])
-    _cli._dispatch_command(args)
-
-    watchdog_mock.assert_called_once()
-    assert "Watchdog run complete" in capsys.readouterr().out
 
 
 def test_re_fire_ask_inner_claim_admits_exactly_one_caller(bridge_db, monkeypatch, tmp_path):

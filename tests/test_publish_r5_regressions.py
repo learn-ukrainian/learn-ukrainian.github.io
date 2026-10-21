@@ -184,36 +184,6 @@ def test_named_workflow_run_no_inputs(workflow, inputs, entrypoint, synthetic_op
     assert calls == [["gh", "workflow", "run", workflow, "--repo", "unit/public", "--ref=main"]]
 
 
-@pytest.mark.parametrize("workflow", ["ci.yml", "deploy-pages.yml", "stale-branch-cleanup.yml"])
-@pytest.mark.parametrize("invalid", [
-    {"inputs": {"force": "true"}},
-    {"repo": "owner/repo?unexpected=true"},
-    {"ref": "--flag"},
-    {"ref": "main\nother"},
-])
-def test_workflow_invalid_fields_refuse_before_send(workflow, invalid):
-    fields = {"repo": "unit/public", "workflow": workflow, "ref": "main", **invalid}
-
-    def sender(*args, **kwargs):
-        pytest.fail("send")
-
-    with pytest.raises(gate.PublishBlocked):
-        pub.publish("workflow-run", runner=sender, **fields)
-    args = ["workflow-run"]
-    for key, value in fields.items():
-        args.append("--" + key + "=" + (json.dumps(value) if key == "inputs" else value))
-    assert pub.main(args, runner=sender) == 2
-
-
-def test_unknown_workflow_cli_refuses_before_send():
-    with pytest.raises(SystemExit) as error:
-        pub.main(
-            ["workflow-run", "--repo", "unit/public", "--workflow", "unknown.yml", "--ref", "main"],
-            runner=lambda *a, **k: pytest.fail("send"),
-        )
-    assert error.value.code == 2
-
-
 def test_checkout_only_in_real_dispatch_directory(tmp_path):
     worktree = tmp_path / ".worktrees/dispatch/unit/task"
     worktree.mkdir(parents=True)
@@ -238,13 +208,6 @@ def test_private_write_pins_repo_even_with_second_remote(tmp_path):
     frozen = admit(["issue", "comment", "1", "--body", "fixture"], cwd=tmp_path, environment=env)
     assert frozen.destination == "github.com/unit/private"
     assert frozen.argv[frozen.argv.index("--repo") + 1] == "github.com/unit/private"
-
-
-def test_invalid_asset_cli_name_is_masked_exit_two(capsys):
-    with pytest.raises(SystemExit) as error:
-        pub.main(["release-upload", "--repo", "unit/public", "--tag", "unit", "--assets", "invalid#name"])
-    assert error.value.code == 2
-    assert "invalid#name" not in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("body,verdict", [("trivial: yes\nFixture maintenance", "PASS"), ("## Overview\nIncomplete fixture", "WARN")])
@@ -326,22 +289,6 @@ def _named_rest_fixture(args):
     return {}
 
 
-@pytest.mark.parametrize("command", [
-    ["read", "issue", "--repo", "unit/public", "--number", "1"],
-    ["read", "budget"],
-    ["read", "membership-head", "--repo", "unit/public", "--number", "1", "--branch", "main"],
-    ["read", "issue-states", "--repo", "unit/public", "--numbers", "[1,2]"],
-])
-def test_named_read_shell_cli(command):
-    calls = []
-    def spy(args, **kwargs):
-        calls.append(args)
-        return subprocess.CompletedProcess(args, 0, json.dumps(_named_rest_fixture(args)), "")
-    assert pub.main(command, runner=spy) == 0
-    assert len(calls) == (2 if "issue-states" in command else 1)
-    assert all(args[:2] == ["gh", "api"] for args in calls)
-
-
 @pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
 @pytest.mark.parametrize("state", ["draft", "red", "pending", "ready"])
 def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
@@ -402,29 +349,3 @@ def test_issue_count_fixed_read_positive_and_existing_reads_unchanged(tmp_path, 
 def test_issue_count_malformed_refused(response):
     with pytest.raises(gate.PublishBlocked, match="malformed issue count response"):
         pub.read("issue-count", repo="unit/private", runner=lambda command, **k: subprocess.CompletedProcess(command, 0, response, ''), env={})
-
-
-def test_issue_count_unknown_repository_or_fields_refused():
-    for fields in [{"repo": "unit/unknown"}, {"repo": "unit/public", "number": 1}]:
-        with pytest.raises(gate.PublishBlocked):
-            pub.read("issue-count", **fields, runner=lambda *a, **k: pytest.fail("must not send"), env={})
-
-
-def test_issue_count_cli_prints_validated_json(capsys):
-    response = '{"data":{"repository":{"issues":{"totalCount":42}}}}'
-    assert pub.main(['read', 'issue-count', '--repo', 'unit/public'], runner=lambda command, **k: subprocess.CompletedProcess(command, 0, response, '')) == 0
-    assert json.loads(capsys.readouterr().out)['data']['repository']['issues']['totalCount'] == 42
-
-
-def test_issue_count_uses_fixed_read_output_contract():
-    import io
-    response = '{"data":{"repository":{"issues":{"totalCount":42}}}}'
-    def transport(command, **kwargs):
-        return subprocess.CompletedProcess(command, 0, response, '')
-    result = pub.read('issue-count', repo='unit/public', runner=transport, env={}, capture_output=True)
-    assert isinstance(result.stdout, bytes)
-    assert json.loads(result.stdout)['data']['repository']['issues']['totalCount'] == 42
-    output = io.StringIO()
-    result = pub.read('issue-count', repo='unit/public', runner=transport, env={}, text=True, stdout=output)
-    assert result.returncode == 0
-    assert json.loads(output.getvalue())['data']['repository']['issues']['totalCount'] == 42

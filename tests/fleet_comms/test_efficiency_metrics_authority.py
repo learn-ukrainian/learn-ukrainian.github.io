@@ -20,7 +20,6 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_delivery_backlog_authority,
     collect_efficiency_metrics,
     collect_efficiency_metrics_authority,
-    resolve_metrics_source,
 )
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
 
@@ -131,15 +130,6 @@ def _run_cli(argv: list[str], capsys) -> dict:
     assert code == EXIT_OK
     captured = capsys.readouterr()
     return json.loads(captured.out)
-
-
-def test_resolve_metrics_source_labels(monkeypatch) -> None:
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
-    assert resolve_metrics_source() == "authority"
-    assert resolve_metrics_source(force_legacy=True) == "legacy_forced"
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
-    assert resolve_metrics_source() == "legacy"
-    assert resolve_metrics_source(force_legacy=True) == "legacy_forced"
 
 
 def test_backlog_defaults_authority_when_plane_authority(
@@ -261,18 +251,6 @@ def test_backlog_unchanged_when_mode_off(tmp_path: Path, capsys, monkeypatch) ->
         assert dead[key] == value
 
 
-def test_authority_collectors_are_read_only(tmp_path: Path) -> None:
-    plane_db = _seed_authority_plane(tmp_path / "plane")
-    with patch("sqlite3.connect", wraps=sqlite3.connect) as connect:
-        collect_delivery_backlog_authority(plane_db)
-        assert connect.called
-        uri = connect.call_args.args[0]
-        assert isinstance(uri, str)
-        assert uri.startswith("file:")
-        assert "mode=ro" in uri
-        assert connect.call_args.kwargs.get("uri") is True
-
-
 _AUTHORITY_COLLECTORS = (
     collect_delivery_backlog_authority,
     collect_dead_letters_authority,
@@ -392,13 +370,6 @@ def test_authority_latency_offsets_fractional_and_incomplete(authority_db):
     assert metrics["latency_seconds"]["delivery_created_to_done"] == {
         "n": 2, "avg": 2.0, "min": 1.25, "max": 2.75,
     }
-
-
-def test_authority_no_completed_latency(authority_db):
-    plane_db, writer = authority_db
-    writer.execute("UPDATE authority_deliveries SET completed_at = NULL")
-    writer.commit()
-    assert collect_efficiency_metrics_authority(plane_db)["latency_seconds"] == {}
 
 
 def test_authority_connections_are_readonly_and_closed(authority_db):

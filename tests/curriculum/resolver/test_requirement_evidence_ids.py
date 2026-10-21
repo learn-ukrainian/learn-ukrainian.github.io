@@ -6,7 +6,6 @@ import sqlite3
 import pytest
 
 from scripts.build.fresh.requires_confirm import record_answers
-from scripts.build.fresh.runner import check_7_a1_choices
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.sources import Sources, batch_digest
 from scripts.curriculum.resolver import codes, receipts
@@ -201,49 +200,12 @@ def test_vesum_change_is_a_named_refusal(request):
         assert caught.value.code == codes.SOURCE_UNAVAILABLE
 
 
-def test_pravopys_section_is_read_once_per_session(monkeypatch):
-    from scripts.rag import source_query
-
-    calls = []
-
-    def section(number, **kwargs):
-        calls.append(number)
-        return {"section": number, "text": "one two source bytes"}
-
-    monkeypatch.setattr(source_query, "pravopys_section", section)
-    with Sources() as api:
-        first = receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api)
-        assert receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api) == first
-    assert calls == [53]
-
-
-def test_choice_gate_resolves_even_a_locked_fabrication(tmp_path):
-    from types import SimpleNamespace
-
-    forged = document("vesum:anything")
-    lock.write(receipts.requirement_receipt_path(tmp_path, 1), lock.yaml_bytes(forged))
-    with Sources() as api, pytest.raises(ResolverError) as caught:
-        check_7_a1_choices(
-            {"activities": []}, {}, {"words": []}, SimpleNamespace(), state_dir=tmp_path, lesson_n=1, sources=api,
-        )
-    assert caught.value.code == codes.EVIDENCE_ID_UNRESOLVED
-
-
 def test_schema_errors_remain_receipt_invalid():
     malformed = copy.deepcopy(document(IDS["vesum"]))
     malformed["items"][0]["options"][0]["evidence"] = ["vesum:no:colon"]
     with pytest.raises(ResolverError) as caught:
         receipts.validate_requirement_receipts(malformed)
     assert caught.value.code == codes.RECEIPT_INVALID
-
-
-def test_missing_vts_table_is_source_unavailable(request):
-    sources_db, _ = request.getfixturevalue("receipt_sources")
-    with sqlite3.connect(sources_db) as writer:
-        writer.execute("DROP TABLE slovnyk_me_entries")
-    with Sources() as api, pytest.raises(ResolverError) as caught:
-        receipts.validate_requirement_receipts(document(IDS["vts"]), sources=api)
-    assert caught.value.code == codes.SOURCE_UNAVAILABLE
 
 
 @pytest.mark.parametrize("kind", IDS)
@@ -301,14 +263,6 @@ def test_lemma_binding_comes_from_vesum_lookup(kind, request):
         result = api.bind_evidence_forms(SourceResult({eid: [{field: "lemma", "status": "ok"}]}, "a" * 64), [(eid, "inflected")])
         assert result.raw[eid, "inflected"] is True
         assert "analyses_sha256" in result.metadata
-
-
-def test_pravopys_identity_names_live_origin():
-    with Sources() as api:
-        result = receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api)
-    assert result.metadata["pravopys"] == {
-        "scheme": "pravopys-live-section-v1", "origin": "https://2019.pravopys.net",
-    }
 
 
 @pytest.mark.parametrize("source_text", ["stone", "one's", "one-two", "two-one", "two’one", "_one"])

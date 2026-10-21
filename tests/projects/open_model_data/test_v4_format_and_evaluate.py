@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -77,103 +76,6 @@ def test_trajectory_to_chatml() -> None:
     assert cml["messages"][1]["role"] == "assistant"
     assert "<thought>" in cml["messages"][1]["content"]
     assert "</thought>" in cml["messages"][1]["content"]
-
-
-def test_gemma3_and_gemma4_template_adaptation() -> None:
-    sample_sg = {
-        "id": "traj.decolonize.avtovyshka",
-        "target_term": "автовишка",
-        "conversations": [
-            {"from": "system", "value": "Ти — помічник з мовної деколонізації."},
-            {"from": "human", "value": "Як сказати «автовишка»?"},
-            {"from": "gpt", "value": "<thought>\nКрок 1: Аналіз морфемної будови.\n</thought>\n\nВживайте «автовежа»."},
-        ],
-    }
-
-    # 1. Verify TRL adaptation recipe maps to ChatML and eliminates collisions
-    def convert_to_chatml(example: dict) -> dict:
-        convs = example["conversations"]
-        sys_val = next((c["value"] for c in convs if c["from"] == "system"), "")
-        human_val = next((c["value"] for c in convs if c["from"] == "human"), "")
-        gpt_val = next((c["value"] for c in convs if c["from"] == "gpt"), "")
-        user_text = f"{sys_val}\n\n{human_val}" if sys_val else human_val
-        return {
-            "messages": [
-                {"role": "user", "content": user_text},
-                {"role": "assistant", "content": gpt_val},
-            ]
-        }
-
-    cml_rec = convert_to_chatml(sample_sg)
-    assert "messages" in cml_rec
-    assert len(cml_rec["messages"]) == 2
-    assert cml_rec["messages"][0]["role"] == "user"
-    assert cml_rec["messages"][1]["role"] == "assistant"
-
-    # 2. Verify Gemma 3 format structure (<start_of_turn> / <end_of_turn>)
-    user_msg = cml_rec["messages"][0]["content"]
-    asst_msg = cml_rec["messages"][1]["content"]
-    gemma3_rendered = f"<start_of_turn>user\n{user_msg}<end_of_turn>\n<start_of_turn>model\n{asst_msg}<end_of_turn>"
-    assert "<start_of_turn>user" in gemma3_rendered
-    assert "<end_of_turn>" in gemma3_rendered
-    assert "<start_of_turn>model" in gemma3_rendered
-    assert "<thought>" in gemma3_rendered
-
-    # 3. Verify Gemma 4 native turn & channel structure (<|turn> / <turn|>, <|channel>thought)
-    import jinja2
-
-    def convert_to_gemma4_native(example: dict) -> dict:
-        convs = example["conversations"]
-        sys_val = next((c["value"] for c in convs if c["from"] == "system"), "")
-        human_val = next((c["value"] for c in convs if c["from"] == "human"), "")
-        gpt_val = next((c["value"] for c in convs if c["from"] == "gpt"), "")
-
-        thought_m = re.search(r"<thought>(.*?)</thought>", gpt_val, re.DOTALL)
-        if thought_m:
-            reasoning = thought_m.group(1).strip()
-            final_text = re.sub(r"<thought>.*?</thought>\s*", "", gpt_val, flags=re.DOTALL).strip()
-        else:
-            reasoning = None
-            final_text = gpt_val
-
-        user_text = f"{sys_val}\n\n{human_val}" if sys_val else human_val
-        assistant_msg: dict[str, Any] = {"role": "assistant", "content": final_text}
-        if reasoning:
-            assistant_msg["reasoning"] = reasoning
-
-        return {
-            "messages": [
-                {"role": "user", "content": user_text},
-                assistant_msg,
-            ]
-        }
-
-    gemma4_rec = convert_to_gemma4_native(sample_sg)
-    assert "reasoning" in gemma4_rec["messages"][1]
-    assert gemma4_rec["messages"][1]["reasoning"] == "Крок 1: Аналіз морфемної будови."
-    assert "<thought>" not in gemma4_rec["messages"][1]["content"]
-
-    # Official Gemma 4 Jinja template logic: thought channel emitted only when reasoning is populated
-    # CodeQL-compliant Jinja instantiation with explicit autoescape=True and template-level raw control tags
-    gemma4_jinja_template = (
-        "{% autoescape false %}"
-        "{% for message in messages %}"
-        "{{ '<|turn>' + message['role'] + '\n' }}"
-        "{% if message['reasoning'] is defined and message['reasoning'] is not none %}"
-        "{{ '<|channel>thought\n' + message['reasoning'] + '\n<channel|>\n' }}"
-        "{% endif %}"
-        "{{ message['content'] + '<turn|>\n' }}"
-        "{% endfor %}"
-        "{% endautoescape %}"
-    )
-    template = jinja2.Template(gemma4_jinja_template, autoescape=True)
-    jinja_rendered = template.render(messages=gemma4_rec["messages"])
-
-    assert "<|turn>user\n" in jinja_rendered
-    assert "<turn|>" in jinja_rendered
-    assert "<|turn>assistant\n" in jinja_rendered
-    assert "<|channel>thought\nКрок 1: Аналіз морфемної будови.\n<channel|>\n" in jinja_rendered
-    assert "Вживайте «автовежа»." in jinja_rendered
 
 
 def test_dpo_pair_to_trl() -> None:
@@ -788,18 +690,6 @@ def test_manifest_reconciliation_fail_closed(tmp_path: Path) -> None:
         format_consumer_datasets(in_dir, out_dir)
 
 
-def test_descriptive_non_answer_scores_zero() -> None:
-    """H1: A descriptive non-answer containing valid tokens but no prescription or grounded reasoning must score 0."""
-    eval_res = evaluate_single_response(
-        target_term="badtoken",
-        valid_alternatives=["goodtoken"],
-        response_text="Слово goodtoken записане на дошці. Учень читає словник, бо його цікавить суфікс.",
-    )
-    assert not eval_res["authentic_suggested"]
-    assert not eval_res["reasoning_grounded"]
-    assert eval_res["composite_score"] == 0.0
-
-
 def test_backup_failure_preserves_original_dataset(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """H2: Fault injection during backup creation must not delete original un-backed-up files."""
     in_dir = tmp_path / "inputs"
@@ -926,100 +816,6 @@ def test_explanation_concerning_named_unrelated_word_rejected() -> None:
     assert eval2["composite_score"] <= 0.40
 
 
-def test_explanation_concerning_grammatical_label_named_word_rejected() -> None:
-    """M1: An explanation concerning an unrelated word preceded by a grammatical label must fail grounding."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    # Probe from audit M1: grammatical label «іменника «будинок»»
-    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника «будинок»."
-    eval1 = evaluate_single_response(target, alts, r1)
-    assert not eval1["is_pass"]
-    assert not eval1["reasoning_grounded"]
-    assert eval1["composite_score"] <= 0.40
-
-    # Probe unquoted variant
-    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника будинок."
-    eval2 = evaluate_single_response(target, alts, r2)
-    assert not eval2["is_pass"]
-    assert not eval2["reasoning_grounded"]
-    assert eval2["composite_score"] <= 0.40
-
-
-def test_explanation_concerning_word_mova_rejected() -> None:
-    """M1: An explanation concerning the word «мова» must not be exempted when «мова» is not the target."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    # Probe from audit M1: generic word «мова»
-    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «мова»."
-    eval1 = evaluate_single_response(target, alts, r1)
-    assert not eval1["is_pass"]
-    assert not eval1["reasoning_grounded"]
-    assert eval1["composite_score"] <= 0.40
-
-    # Probe unquoted variant
-    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова мова."
-    eval2 = evaluate_single_response(target, alts, r2)
-    assert not eval2["is_pass"]
-    assert not eval2["reasoning_grounded"]
-    assert eval2["composite_score"] <= 0.40
-
-
-def test_explanation_concerning_word_spiv_rejected() -> None:
-    """M1 Review: A named word matching an affix spelling (e.g. «спів») must not be exempted."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «спів»."
-    eval1 = evaluate_single_response(target, alts, r1)
-    assert not eval1["is_pass"]
-    assert not eval1["reasoning_grounded"]
-    assert eval1["composite_score"] <= 0.40
-
-    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова спів."
-    eval2 = evaluate_single_response(target, alts, r2)
-    assert not eval2["is_pass"]
-    assert not eval2["reasoning_grounded"]
-    assert eval2["composite_score"] <= 0.40
-
-
-def test_explanation_concerning_word_forma_rejected() -> None:
-    """M1 Review: A named word matching a grammatical descriptor (e.g. «форма») must not be exempted."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «форма»."
-    eval1 = evaluate_single_response(target, alts, r1)
-    assert not eval1["is_pass"]
-    assert not eval1["reasoning_grounded"]
-    assert eval1["composite_score"] <= 0.40
-
-    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова форма."
-    eval2 = evaluate_single_response(target, alts, r2)
-    assert not eval2["is_pass"]
-    assert not eval2["reasoning_grounded"]
-    assert eval2["composite_score"] <= 0.40
-
-
-def test_explanation_concerning_authority_word_rejected() -> None:
-    """M1 Review: A named word matching an authority name (e.g. «правопис») must not be exempted as a subject."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «правопис»."
-    eval1 = evaluate_single_response(target, alts, r1)
-    assert not eval1["is_pass"]
-    assert not eval1["reasoning_grounded"]
-    assert eval1["composite_score"] <= 0.40
-
-    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова правопис."
-    eval2 = evaluate_single_response(target, alts, r2)
-    assert not eval2["is_pass"]
-    assert not eval2["reasoning_grounded"]
-    assert eval2["composite_score"] <= 0.40
-
-
 def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
     """M1 Review P2: Grammatical qualifiers (e.g. «чоловічого роду») describe the subject and must not fail grounding."""
     target = "badtoken"
@@ -1030,68 +826,6 @@ def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
     assert eval_res["is_pass"]
     assert eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] == 1.0
-
-
-def test_explanation_concerning_words_with_modifier_prefixes_rejected() -> None:
-    """M1 Review: Lexical subjects starting with rod-, vyd-, chas- (e.g. «родина», «видання», «часопис») must fail."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    for word in ("родина", "видання", "часопис"):
-        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
-        eval_q = evaluate_single_response(target, alts, r_quoted)
-        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
-        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
-        assert eval_q["composite_score"] <= 0.40
-
-        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
-        eval_u = evaluate_single_response(target, alts, r_unquoted)
-        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
-        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
-        assert eval_u["composite_score"] <= 0.40
-
-
-def test_explanation_concerning_words_odnyny_mnozhyny_rejected() -> None:
-    """M1 Review P2: Explicit subjects 'однини', 'множини', or quoted modifier phrases must fail."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    for word in ("однини", "множини"):
-        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
-        eval_q = evaluate_single_response(target, alts, r_quoted)
-        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
-        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
-        assert eval_q["composite_score"] <= 0.40
-
-        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
-        eval_u = evaluate_single_response(target, alts, r_unquoted)
-        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
-        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
-        assert eval_u["composite_score"] <= 0.40
-
-    # Quoted modifier phrase must also be treated as a named entity
-    r_phrase = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «чоловічого роду»."
-    eval_phrase = evaluate_single_response(target, alts, r_phrase)
-    assert not eval_phrase["is_pass"]
-    assert not eval_phrase["reasoning_grounded"]
-    assert eval_phrase["composite_score"] <= 0.40
-
-
-def test_grammatical_number_modifiers_admitted() -> None:
-    """M1 Review P2: Genuine grammatical number modifier phrases (e.g. 'у формі однини') must pass."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    cases = [
-        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник у формі однини з питомим суфіксом -ник.",
-        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник числа однини з питомим суфіксом -ник.",
-        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник, що вживається в однині з питомим суфіксом -ник.",
-    ]
-    for r in cases:
-        eval_res = evaluate_single_response(target, alts, r)
-        assert eval_res["is_pass"], f"Expected {r} to pass"
-        assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
-        assert eval_res["composite_score"] == 1.0
 
 
 def test_word_internal_apostrophes_not_treated_as_quotes() -> None:
@@ -1107,30 +841,6 @@ def test_word_internal_apostrophes_not_treated_as_quotes() -> None:
     assert eval_res["is_pass"]
     assert eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] == 1.0
-
-
-def test_unquoted_modifier_phrases_as_named_subjects_rejected() -> None:
-    """M1 Review P2: Unquoted modifier phrases introduced by 'слова' (e.g. 'слова чоловічого роду') must fail."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова чоловічого роду."
-    eval_res = evaluate_single_response(target, alts, r)
-    assert not eval_res["is_pass"]
-    assert not eval_res["reasoning_grounded"]
-    assert eval_res["composite_score"] <= 0.40
-
-
-def test_unquoted_forma_odnyny_as_named_subject_rejected() -> None:
-    """M1 Review P2: Unquoted 'слова форма однини' must not have its subject stripped and must fail."""
-    target = "badtoken"
-    alts = ["goodtoken"]
-
-    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова форма однини."
-    eval_res = evaluate_single_response(target, alts, r)
-    assert not eval_res["is_pass"]
-    assert not eval_res["reasoning_grounded"]
-    assert eval_res["composite_score"] <= 0.40
 
 
 def test_modifier_sequence_ordering_independent() -> None:

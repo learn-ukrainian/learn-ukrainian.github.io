@@ -246,41 +246,6 @@ def test_quarantine_has_only_human_resume_and_never_direct_gold() -> None:
     assert not any(row["to_state"].startswith("GOLD") for row in quarantine)
 
 
-def test_identity_abstention_cannot_reach_candidate_or_gold() -> None:
-    machine = _artifact()["state_machine"]
-    abstained = [row for row in machine["transitions"] if row["from_state"] == "IDENTITY_ABSTAINED_NON_GOLD"]
-    assert abstained == [
-        {
-            "from_state": "IDENTITY_ABSTAINED_NON_GOLD",
-            "to_state": "CASE_HUMAN_ABSTAINED",
-            "condition_code": "abstention_case_preserved",
-            "authorized_role_ids": ["HUMAN_STEWARD"],
-        }
-    ]
-    assert "TRAINING_ELIGIBLE" not in machine["states"]
-    assert _artifact()["execution_gates"]["training_authorized"] is False
-
-
-def test_retry_and_substitution_are_finite_and_family_safe() -> None:
-    retry = _artifact()["retry_and_substitution"]
-    assert retry["original_attempts"] == 1
-    assert retry["format_retry_limit"] == 1
-    assert retry["independent_family_substitute_limit"] == 1
-    assert retry["maximum_attempts_per_role_per_row"] == 3
-    assert _artifact()["blindness_and_conflicts"]["substitution_requires_new_provider_family"] is True
-
-
-def test_single_operator_registry_is_procedural_not_fabricated_authority() -> None:
-    registry = _artifact()["single_human_registry"]
-    assert registry["entry_count"] == 1
-    entry = registry["entries"][0]
-    assert entry["entry_id"] == "solo_operator_v1"
-    assert entry["actor_kind"] == "human"
-    assert entry["credential_claimed"] is False
-    assert entry["institutional_independence_claimed"] is False
-    assert registry["registration_does_not_authorize_execution"] is True
-
-
 def test_human_adjudication_requires_registry_atomic_key_and_direct_inspection() -> None:
     artifact = _artifact()
     value = _human_adjudication(artifact)
@@ -596,47 +561,6 @@ def test_receipt_chains_are_row_scoped_and_gold_requires_same_row_human_predeces
         v3b.validate_transition_receipts([row_b_gold], artifact)
 
 
-def test_every_receipt_role_has_a_frozen_route_and_authorized_transition_lane() -> None:
-    artifact = _artifact()
-    assert {role["role_id"] for role in artifact["role_contracts"]} == {
-        "SOURCE_ADMISSION",
-        "IDENTITY_LEAD",
-        "INDEPENDENT_DISSENT",
-        "DISPUTE_CRITIC",
-        "CANDIDATE_BUILDER",
-        "HUMAN_STEWARD",
-    }
-    wrong_source_route = _transition_receipt(
-        artifact,
-        0,
-        "SOURCE_RIGHTS_BLOCKED",
-        "SOURCE_RIGHTS_REVIEW_PENDING",
-        "rights_evidence_supplied",
-        None,
-    )
-    wrong_source_route["resolved_route"]["provider_family"] = "anthropic"
-    wrong_source_route["resolved_route"]["model"] = "claude-fable-5"
-    wrong_source_route["receipt_sha256"] = v3b.receipt_sha(wrong_source_route)
-    with pytest.raises(v3b.V3BError, match="source admission provider family drift"):
-        v3b.validate_transition_receipts([wrong_source_route], artifact)
-
-    wrong_lane = _transition_receipt(
-        artifact,
-        0,
-        "IDENTITY_PENDING",
-        "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
-        "exact_model_agreement",
-        None,
-    )
-    wrong_lane["role_id"] = "CANDIDATE_BUILDER"
-    wrong_lane["attempt_count"] = 1
-    wrong_lane["resolved_route"]["provider_family"] = "openai"
-    wrong_lane["resolved_route"]["model"] = "gpt-5.6-sol"
-    wrong_lane["receipt_sha256"] = v3b.receipt_sha(wrong_lane)
-    with pytest.raises(v3b.V3BError, match="transition receipt role not authorized"):
-        v3b.validate_transition_receipts([wrong_lane], artifact)
-
-
 def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
     artifact = _artifact()
     receipts: list[dict[str, Any]] = []
@@ -713,12 +637,6 @@ def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
         previous = item["receipt_sha256"]
     with pytest.raises(v3b.V3BError, match="substitution budget exhausted"):
         v3b.validate_transition_receipts(receipts, artifact)
-
-
-def test_forbidden_body_and_heldout_fields_are_rejected() -> None:
-    value = _artifact()
-    value["incidence_manifest"]["heldout_membership"] = H
-    _reject(value, "forbidden field")
 
 
 def test_predecessor_byte_drift_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:

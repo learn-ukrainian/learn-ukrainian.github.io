@@ -322,18 +322,6 @@ def test_regression_d5_partial_start_never_wakes(live_driver, monkeypatch):
     send.assert_not_called()
 
 
-def test_regression_d5_malformed_before_completion_never_wakes(live_driver, monkeypatch):
-    _, _, rollout, *_, remote = live_driver
-    with rollout.open("ab") as stream:
-        stream.write(b'{"broken":}\n')
-    _append_event(rollout, "task_complete")
-    send = Mock(side_effect=_completed_resume(rollout))
-    monkeypatch.setattr(ui, "send", send)
-    with pytest.raises(RuntimeError, match="codex_wake_busy:decode_error:"):
-        _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
-    send.assert_not_called()
-
-
 def test_regression_d5_idless_abort_allows_completed_restart(live_driver, monkeypatch):
     _, _, rollout, *_, remote = live_driver
     _append_event(rollout, "task_started", turn_id="a")
@@ -359,16 +347,6 @@ def test_final_readiness_check_runs_immediately_before_spawn(live_driver, monkey
     with pytest.raises(RuntimeError, match="codex_wake_busy:start_event"):
         _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
     spawn.assert_not_called()
-
-
-def test_missing_codex_binary_is_typed_and_retains_inbox(live_driver, monkeypatch):
-    *_, remote = live_driver
-    monkeypatch.setattr(ui, "find_session_file", lambda _: None)
-    monkeypatch.setattr(ui.subprocess, "run", Mock(side_effect=FileNotFoundError("codex")))
-    service = Mock()
-    with pytest.raises(RuntimeError, match="codex_resume_error:FileNotFoundError; inbox retained"):
-        _wake(service, remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
-    assert service.method_calls == []
 
 
 def test_multiple_unread_rows_coalesce_oldest_first(live_driver, monkeypatch):

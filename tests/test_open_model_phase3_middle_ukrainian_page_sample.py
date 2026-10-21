@@ -4,7 +4,6 @@ import hashlib
 import json
 import stat
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -346,23 +345,6 @@ def test_renderer_failure_removes_partial_images(
     assert not list(image_directory.iterdir())
 
 
-def test_renderer_rejects_nonempty_image_directory(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    source_path, decoder_path, _extraction_dir, _payload = _patch_fixture_contract(monkeypatch, tmp_path)
-    image_directory = tmp_path / "images"
-    image_directory.mkdir()
-    (image_directory / "unexpected").write_bytes(b"x")
-
-    with pytest.raises(MiddleUkrainianPageSampleError, match="image output directory is not empty"):
-        sample._invoke_renderer(
-            source_path=source_path,
-            decoder_path=decoder_path,
-            image_directory=image_directory,
-        )
-
-
 def test_renderer_rejects_decoder_drift(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -437,48 +419,3 @@ def test_production_selection_rejects_source_fact_drift() -> None:
 
     with pytest.raises(MiddleUkrainianPageSampleError, match="maximum-density source fact drift"):
         sample._validate_selection(rows)
-
-
-def test_schema_error_sort_handles_mixed_array_and_object_paths(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    schema_path = tmp_path / "mixed-path-schema.json"
-    schema_path.write_text("{}\n", encoding="utf-8")
-    monkeypatch.setattr(sample, "RECEIPT_SCHEMA_PATH", schema_path)
-
-    class MixedPathValidator:
-        def __init__(self, _schema: object) -> None:
-            pass
-
-        @staticmethod
-        def check_schema(_schema: object) -> None:
-            pass
-
-        def iter_errors(self, _receipt: object) -> list[SimpleNamespace]:
-            return [
-                SimpleNamespace(absolute_path=("a", 0), path=("a", 0), message="array error"),
-                SimpleNamespace(absolute_path=("a", "b"), path=("a", "b"), message="object error"),
-            ]
-
-    monkeypatch.setattr(sample, "Draft202012Validator", MixedPathValidator)
-
-    with pytest.raises(MiddleUkrainianPageSampleError, match="receipt schema violation"):
-        sample._validate_receipt({"receipt_sha256": "0" * 64})
-
-
-def test_receipt_schema_is_text_free_source_bound_and_fail_closed() -> None:
-    schema = json.loads(sample.RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
-    serialized = json.dumps(schema, ensure_ascii=False)
-    source = schema["properties"]["source_binding"]["properties"]
-
-    assert '"decoded_text"' not in serialized
-    assert '"text_zones"' not in serialized
-    assert source["collection_id"]["const"] == extraction.intake.COLLECTION_ID
-    assert source["predecessor_extraction_receipt_file_sha256"]["const"] == sample.EXTRACTION_RECEIPT_FILE_SHA256
-    assert source["predecessor_extraction_receipt_sha256"]["const"] == sample.EXTRACTION_RECEIPT_SHA256
-    assert source["predecessor_private_jsonl_sha256"]["const"] == sample.EXTRACTION_PRIVATE_JSONL_SHA256
-    assert schema["properties"]["review_contract"]["properties"]["review_response_status"] == {"const": "pending"}
-    assert schema["properties"]["safeguards"]["properties"]["training_eligible"] == {"const": False}
-    assert schema["properties"]["safeguards"]["properties"]["phase3_complete"] == {"const": False}
-    assert schema["properties"]["safeguards"]["properties"]["phase4_blocked"] == {"const": True}

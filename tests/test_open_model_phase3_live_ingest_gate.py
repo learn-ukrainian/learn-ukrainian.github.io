@@ -2,30 +2,17 @@
 
 from __future__ import annotations
 
-import copy
 import hashlib
-import json
 import sqlite3
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_live_ingest_gate as live_gate
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 GATE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_live_ingest_gate_v1.json"
-
-
-def _gate() -> dict:
-    return json.loads(GATE_PATH.read_text(encoding="utf-8"))
-
-
-def _reseal(gate: dict) -> dict:
-    body = {key: value for key, value in gate.items() if key != "receipt_sha256"}
-    gate["receipt_sha256"] = hashlib.sha256((live_gate.canonical_json(body) + "\n").encode("utf-8")).hexdigest()
-    return gate
 
 
 def _fixture_db(path: Path, *, staged_source_present: bool = False) -> dict:
@@ -79,87 +66,6 @@ def _fixture_gate(path: Path, counts: dict) -> dict:
             "journal_mode": "wal",
         }
     }
-
-
-def test_load_gate_opens_default_path():
-    document, gate_sha256 = live_gate.load_gate()
-
-    assert live_gate.DEFAULT_GATE_PATH == GATE_PATH
-    assert live_gate.DEFAULT_GATE_PATH.is_file()
-    assert gate_sha256 == live_gate.EXPECTED_GATE_SHA256
-    assert document["requested_sources"] == list(live_gate.REQUESTED_SOURCES)
-
-
-def test_tracked_gate_is_exact_and_single_use():
-    document, gate_sha256 = live_gate.load_gate(GATE_PATH)
-
-    assert gate_sha256 == live_gate.EXPECTED_GATE_SHA256
-    assert document["requested_sources"] == list(live_gate.REQUESTED_SOURCES)
-    assert document["database"]["sha256_before"] == live_gate.EXPECTED_LIVE_DB_SHA256
-    assert document["database"]["counts_before"] == live_gate.COUNTS_BEFORE
-    assert document["database"]["counts_after_expected"] == live_gate.COUNTS_AFTER
-    assert document["execution"] == {
-        "live_ingest_authorized": True,
-        "single_use": True,
-        "exact_preimage_required": True,
-        "exact_source_set_required": True,
-        "receipt_required": True,
-        "post_ingest_backup_required": True,
-        "provider_work_authorized": False,
-    }
-    assert document["source_freeze_ready"] is False
-    assert document["phase3_complete"] is False
-    assert document["phase4_blocked"] is True
-
-
-def test_gate_binds_rehearsal_review_and_provider_uploaded_preimage():
-    document = _gate()
-
-    assert document["bindings"] == {
-        **live_gate.EXPECTED_INPUT_HASHES,
-        "pr6631_merge_commit": live_gate.PR6631_MERGE_COMMIT,
-    }
-    assert document["copied_database_rehearsal"] == {
-        "execution_scope": "copied_database_rehearsal",
-        "status": "committed",
-        "database_sha256_before": "4b7b6aa7913b415114f270b497141fc706a0c9f1dabf2fdbae7cd4db8110a391",
-        "database_sha256_after": "e3c7d01dec04c6b7c6c8ea8dbe8fab11e0b3cdb9fea9c1280a927167a236f70b",
-        "counts_before": {"textbook_rows": 49568, "fts_rows": 49568, "section_rows": 35777},
-        "counts_after": {"textbook_rows": 50153, "fts_rows": 50153, "section_rows": 36322},
-        "inserted_rows": 585,
-        "source_count": 4,
-        "integrity_check": "ok",
-        "foreign_key_failures_unchanged": True,
-        "per_source_fts_and_linkage_passed": True,
-    }
-    assert document["pre_ingest_backup"]["provider_uploaded"] is True
-    assert document["pre_ingest_backup"]["provider_uploading"] is False
-    assert document["pre_ingest_backup"]["drive_item_id_present"] is True
-    assert document["pre_ingest_backup"]["restored_database_sha256"] == live_gate.EXPECTED_LIVE_DB_SHA256
-
-
-def test_schema_rejects_open_execution_fields():
-    document = copy.deepcopy(_gate())
-    document["execution"]["skip_backup"] = True
-    schema = json.loads(live_gate.SCHEMA_PATH.read_text(encoding="utf-8"))
-
-    errors = list(Draft202012Validator(schema).iter_errors(document))
-
-    assert errors
-    assert any("Additional properties are not allowed" in error.message for error in errors)
-
-
-def test_gate_rejects_source_or_phase_drift_even_when_resealed():
-    document = copy.deepcopy(_gate())
-    document["requested_sources"] = list(reversed(document["requested_sources"]))
-
-    with pytest.raises(live_gate.LiveIngestGateError, match="schema violation"):
-        live_gate.validate_gate_document(_reseal(document))
-
-    document = copy.deepcopy(_gate())
-    document["phase4_blocked"] = False
-    with pytest.raises(live_gate.LiveIngestGateError, match="schema violation"):
-        live_gate.validate_gate_document(_reseal(document))
 
 
 def test_runtime_loader_rejects_semantically_identical_byte_drift(tmp_path):

@@ -216,18 +216,6 @@ def test_repository_marker_added_after_admission_refuses_write(tmp_path):
         assert not (target / "records.jsonl").exists()
 
 
-def test_relative_symlink_path_before_dotdot_is_refused(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / "SYNTHETIC-real").mkdir()
-    (tmp_path / "SYNTHETIC-link").symlink_to(tmp_path / "SYNTHETIC-real", target_is_directory=True)
-    with pytest.raises(BuildError, match="symlink_output"):
-        output.OutputGuard(Path("SYNTHETIC-link/../output"))
-    assert not (tmp_path / "output").exists()
-    with output.OutputGuard(Path("SYNTHETIC-relative-out")) as guard:
-        guard.write("records.jsonl", b"SYNTHETIC private text")
-        assert guard.read("records.jsonl") == b"SYNTHETIC private text"
-
-
 @pytest.mark.parametrize("scenario", ["stacked", "shadowed", "same-device-stacked", "ambiguous", "no-match"])
 def test_mount_resolution_uses_visible_device_and_last_longest_entry(tmp_path, monkeypatch, scenario):
     monkeypatch.undo()

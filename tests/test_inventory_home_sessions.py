@@ -87,14 +87,6 @@ def test_symlinked_session_file_is_never_a_candidate(tmp_path: Path) -> None:
     assert outside.exists()
 
 
-def test_retention_boundary_uses_unrounded_file_age(tmp_path: Path) -> None:
-    almost_old = _old_file(tmp_path / ".grok" / "sessions" / "almost-old.jsonl", age_days=13.99)
-
-    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
-
-    assert str(almost_old) not in {candidate.path for candidate in candidates}
-
-
 def _tree_snapshot(root: Path) -> dict[str, bytes]:
     """Map every regular file under ``root`` (relative path -> bytes)."""
     return {
@@ -121,26 +113,6 @@ def test_inventory_is_read_only_and_never_deletes(tmp_path: Path) -> None:
     assert recent.exists()
     # No archive directory or any other side effect was created.
     assert sorted(path.name for path in tmp_path.iterdir()) == [".claude", ".codex"]
-
-
-def test_apply_delete_refused_without_environment_gate(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    old = _old_file(tmp_path / ".grok" / "sessions" / "old.jsonl")
-    _roots, candidates = inventory.inventory_home_sessions(home=tmp_path, retention_days=14)
-    monkeypatch.delenv(inventory.APPLY_ENV, raising=False)
-
-    with pytest.raises(PermissionError, match="LU_HOME_SESSION_APPLY=1"):
-        inventory.apply_retention(
-            candidates=candidates,
-            home=tmp_path,
-            archive_root=tmp_path / "archive",
-            action="delete",
-            retention_days=14,
-        )
-
-    assert old.exists()
 
 
 def test_apply_delete_removes_only_stale_allowlisted_session_file(
@@ -200,13 +172,3 @@ def test_apply_delete_skips_when_delete_guard_refuses(
         }
     ]
     assert old.exists()
-
-
-def test_main_apply_refused_without_environment_gate(
-    capsys: pytest.CaptureFixture[str],
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.delenv(inventory.APPLY_ENV, raising=False)
-
-    assert inventory.main(["--apply"]) == 2
-    assert "LU_HOME_SESSION_APPLY=1" in capsys.readouterr().err

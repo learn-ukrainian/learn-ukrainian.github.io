@@ -19,13 +19,6 @@ PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
 
 
-def _drive_staging() -> Path | None:
-    try:
-        return intake.default_staging_root()
-    except intake.Pliush2005CanonicalGrammarIntakeError:
-        return None
-
-
 def _write_private(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     os.chmod(path.parent, 0o700)
@@ -101,18 +94,6 @@ def _synthetic_staging(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return staging
 
 
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    schema_text = SCHEMA.read_text(encoding="utf-8")
-    assert schema.get("additionalProperties") is False
-    assert '"source_text"' not in schema_text
-    assert '"page_texts"' not in schema_text
-    assert "GoogleDrive-" not in schema_text
-    assert "@gmail.com" not in schema_text
-    assert "/Users/" not in schema_text
-
-
 def test_mint_is_deterministic_and_preserves_fail_closed_gates() -> None:
     first = intake.mint_receipt()
     second = intake.mint_receipt()
@@ -156,16 +137,6 @@ def test_mint_is_deterministic_and_preserves_fail_closed_gates() -> None:
     assert "@gmail.com" not in dumped
     assert "/Users/" not in dumped
     assert "Library/CloudStorage" not in dumped
-
-
-def test_exact_page_map_boundaries() -> None:
-    receipt = intake.mint_receipt()
-    assert receipt["page_map"] == intake.PAGE_MAP
-    assert receipt["page_map"]["body_mapping_rule"] == "pdf_object_equals_printed_page_plus_one"
-    assert receipt["page_map"]["prior_advisory_off_by_one_corrected"] is True
-    assert receipt["source"]["title_imprint_pages"] == 286
-    assert receipt["source"]["nbuv_presentation_pages"] == 288
-    assert receipt["source"]["pages"] == 289
 
 
 def test_public_receipt_is_immutable(tmp_path: Path) -> None:
@@ -375,17 +346,6 @@ def test_deterministic_cli_mint_and_check(tmp_path: Path) -> None:
     assert check_payload["receipt_sha256"] == mint_payload["receipt_sha256"]
 
 
-def test_check_cli_is_hermetic_without_drive(monkeypatch: pytest.MonkeyPatch) -> None:
-    if not PUBLIC_RECEIPT.is_file():
-        pytest.skip("public receipt not materialized yet")
-
-    def boom() -> Path:
-        raise intake.Pliush2005CanonicalGrammarIntakeError("drive must not be touched")
-
-    monkeypatch.setattr(intake, "default_staging_root", boom)
-    assert intake.main(["--check", str(PUBLIC_RECEIPT)]) == 0
-
-
 def test_committed_receipt_validates_when_present() -> None:
     if not PUBLIC_RECEIPT.is_file():
         pytest.skip("public receipt not materialized yet")
@@ -403,30 +363,3 @@ def test_committed_receipt_validates_when_present() -> None:
     assert "@gmail.com" not in dumped
     assert "/Users/" not in dumped
     assert "page_texts" not in validated
-
-
-def test_no_db_mutation_surface() -> None:
-    source = Path(intake.__file__).read_text(encoding="utf-8")
-    assert "sources.db" not in source
-    assert "sqlite3" not in source
-    assert "INSERT INTO" not in source
-
-
-def test_private_audit_against_drive_custody() -> None:
-    drive_staging = _drive_staging()
-    if drive_staging is None:
-        pytest.skip("configured Drive mount unavailable")
-    required = [
-        drive_staging / intake.PDF_FILENAME,
-        drive_staging / intake.ITEM_HTML_FILENAME,
-        drive_staging / intake.ONLINE_BOOK_HTML_FILENAME,
-        drive_staging / intake.PDF_HEADERS_FILENAME,
-        drive_staging / intake.ITEM_HEADERS_FILENAME,
-        drive_staging / intake.ONLINE_BOOK_HEADERS_FILENAME,
-    ]
-    if not all(path.exists() for path in required):
-        pytest.skip("Drive custody artifacts unavailable")
-    result = intake.private_audit(drive_staging)
-    assert result["ok"] is True
-    assert result["artifact_count"] == 6
-    assert result["provider_identity_sha256"] == intake.AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256

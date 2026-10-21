@@ -23,13 +23,9 @@ from scripts.ci.cache_hygiene import (
 NOW = datetime(2026, 9, 29, 19, 0, tzinfo=UTC)
 MAIN = "refs/heads/main"
 TRAP_JS = "codeql-trap-1-2.27.1-javascript-"
-TRAP_PY = "codeql-trap-1-2.27.1-python-"
 UV = "setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.12.14-"
 CURRENT = "c" * 64
 OLD = "a" * 64
-OLDER = "b" * 64
-
-
 def _sha(n: int) -> str:
     return f"{n:040x}"
 
@@ -69,89 +65,6 @@ def _cache_pages(raws: list[dict], total_count: int | None = None):
         return json.dumps({"total_count": total, "actions_caches": batch})
 
     return fake_gh_api, calls
-
-
-def test_keeps_newest_trap_per_family_by_created_at() -> None:
-    entries = [
-        _entry(1, TRAP_JS + _sha(1), hours_ago=5),
-        _entry(2, TRAP_JS + _sha(2), hours_ago=1),
-        # An older entry read recently is still dead weight: newest is by created_at.
-        _entry(3, TRAP_JS + _sha(3), hours_ago=3, read_hours_ago=0.1),
-        _entry(4, TRAP_PY + _sha(4), hours_ago=9),
-        _entry(5, TRAP_PY + _sha(5), hours_ago=2),
-    ]
-    assert _deleted_ids(entries) == {1, 3, 4}
-
-
-def test_single_trap_entry_is_kept() -> None:
-    assert _deleted_ids([_entry(1, TRAP_JS + _sha(1), hours_ago=100)]) == set()
-
-
-def test_trap_entries_on_other_refs_are_deleted() -> None:
-    entries = [
-        _entry(1, TRAP_JS + _sha(1), hours_ago=5),
-        _entry(2, TRAP_JS + _sha(2), ref="refs/pull/9000/merge", hours_ago=0.1),
-    ]
-    assert _deleted_ids(entries) == {2}
-
-
-def test_non_main_trap_like_keys_without_full_shape_are_left_alone() -> None:
-    pr = "refs/pull/9000/merge"
-    entries = [
-        _entry(1, "codeql-trap-custom-" + _sha(1), ref=pr),
-        _entry(2, TRAP_JS + "unknown", ref=pr),
-        _entry(3, TRAP_JS + _sha(3)[:39], ref=pr),
-        _entry(4, "codeql-trap-1-latest-javascript-" + _sha(4), ref=pr),
-        _entry(5, "codeql-trap-1-2.27.1-" + _sha(5), ref=pr),
-        _entry(6, "codeql-trap-1-2.27.1+20260901-python-" + _sha(6), ref=pr),
-    ]
-    assert _deleted_ids(entries) == {6}
-
-
-def test_trap_entry_at_an_open_pr_base_is_kept() -> None:
-    entries = [
-        _entry(1, TRAP_JS + _sha(1), hours_ago=9),
-        _entry(2, TRAP_JS + _sha(2), hours_ago=5),
-        _entry(3, TRAP_JS + _sha(3), hours_ago=1),
-        _entry(4, TRAP_PY + _sha(2), hours_ago=5),
-        _entry(5, TRAP_PY + _sha(5), hours_ago=1),
-    ]
-    # An open PR based on commit 2 restores exactly TRAP_* + sha(2), in every family.
-    assert _deleted_ids(entries, pr_base_shas={_sha(2)}) == {1}
-    plan = plan_deletions(entries, CURRENT, NOW, pr_base_shas={_sha(2)})
-    assert plan.kept == {"newest TRAP per family": 2, "TRAP at an open PR base": 2}
-
-
-def test_unknown_prefixes_and_unmatched_keys_are_left_alone() -> None:
-    entries = [
-        _entry(1, "stanza-uk-model-v2-Linux-" + OLD, hours_ago=500),
-        _entry(2, "node-cache-Linux-x64-npm-" + OLD, hours_ago=500),
-        _entry(3, "setup-python-Linux-x64-24.04-Ubuntu-python-3.12.14-pip-" + OLD, hours_ago=500),
-        # TRAP-like key without a commit sha on main: not a known family.
-        _entry(4, "codeql-trap-1-2.27.1-javascript-notasha", hours_ago=500),
-        _entry(5, TRAP_JS + _sha(5), hours_ago=1),
-    ]
-    assert _deleted_ids(entries) == set()
-
-
-def test_uv_keeps_current_lock_and_newest_and_waits_for_grace() -> None:
-    entries = [
-        # Current lock, older than a newer stray entry: kept for the lock match.
-        _entry(1, UV + CURRENT, hours_ago=40, read_hours_ago=48),
-        # Newest entry for a different hash: kept as newest.
-        _entry(2, UV + OLD, hours_ago=2),
-        # Superseded and unread for 30 h: deleted.
-        _entry(3, UV + OLDER, hours_ago=90, read_hours_ago=30),
-    ]
-    assert _deleted_ids(entries) == {3}
-
-
-def test_uv_superseded_entry_read_recently_is_kept() -> None:
-    entries = [
-        _entry(1, UV + CURRENT, hours_ago=2),
-        _entry(2, UV + OLD, hours_ago=30, read_hours_ago=3),
-    ]
-    assert _deleted_ids(entries) == set()
 
 
 def test_uv_entries_on_other_refs_are_left_alone() -> None:

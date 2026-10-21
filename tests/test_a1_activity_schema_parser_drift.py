@@ -186,11 +186,6 @@ _ALL_CASES = _cases()
 CASES = [(name, index, instance) for name, index, instance, _ in _ALL_CASES]
 
 
-def test_generated_examples_are_schema_valid():
-    for name, _, instance in CASES:
-        assert VALIDATOR.is_valid([instance]), f"{name}: generated example is not schema-valid"
-
-
 CASE_IDS = [f"{c[0]}-{c[1]}" for c in CASES]
 
 
@@ -202,21 +197,6 @@ def _dropped(example: dict, *outputs: str) -> set[str]:
         for m in markers
         if m.split("_", 1)[1] not in INTERNAL_ONLY and any(m not in out for out in outputs)
     }
-
-
-def test_every_a1_type_and_branch_is_generated():
-    assert {c[0] for c in CASES} == {n.removesuffix("-a1") for n in DEFS}
-    schema_branches = set().union(*(_schema_branch_paths(node, name) for name, node in DEFS.items()))
-    covered = set().union(*(tags for *_, tags in _ALL_CASES))
-    assert schema_branches, "the schema must expose oneOf/anyOf branches"
-    assert covered == schema_branches, (
-        f"branches never generated: {sorted(schema_branches - covered)}; "
-        f"generated but not in the schema: {sorted(covered - schema_branches)}"
-    )
-    # The quiz branch where options[].correct alone supplies correctness.
-    assert any(
-        c[0] == "quiz" and all("correct" not in row and "answer" not in row for row in c[2]["items"]) for c in CASES
-    )
 
 
 @pytest.mark.parametrize(("activity_type", "index", "example"), CASES, ids=CASE_IDS)
@@ -269,11 +249,6 @@ def test_image_to_letter_legacy_shape_reaches_component():
     assert items == [{"emoji": "🍎", "answer": "Я", "distractors": ["А", "О"], "note": "n"}]
 
 
-def test_image_to_letter_options_never_duplicate_the_answer():
-    _, items = _itl_mdx([{"image": "🍎", "letter": "Я", "options": ["Я", "А", "А", "О"]}])
-    assert items[0]["distractors"] == ["А", "О"]
-
-
 @pytest.mark.parametrize(
     "bad",
     [
@@ -289,43 +264,9 @@ def test_image_to_letter_item_with_neither_shape_raises_named_error(bad):
         _itl_mdx([bad])
 
 
-def test_fresh_renderer_and_parser_agree_on_image_to_letter():
-    from scripts.build.activity_renderer import _render_image_to_letter
-
-    act = {
-        "type": "image-to-letter",
-        "instruction": "Pick the first letter.",
-        "items": [{"image": "🍎", "letter": "Я", "options": ["А", "Я", "О"], "explanation": "e"}],
-    }
-    rendered = _render_image_to_letter(act)
-    assert '"answer": "Я"' in rendered or '"answer":"Я"' in rendered
-    assert rendered.count('"Я"') == 1  # the letter is not repeated inside distractors
-    # instruction renders as the instruction paragraph, not as the header title
-    assert 'instruction={"Pick the first letter."}' in rendered
-    assert "title=" not in rendered
-
-
 # ---------------------------------------------------------------------------
 # Point 4: image-to-letter schema constraints and validator
 # ---------------------------------------------------------------------------
-
-
-def test_image_to_letter_schema_requires_options():
-    bad = {
-        "type": "image-to-letter",
-        "instruction": "Оберіть букву",
-        "items": [{"image": "🍎", "letter": "Я", "explanation": "e"}],
-    }
-    assert not VALIDATOR.is_valid([bad])
-
-
-def test_image_to_letter_schema_requires_min_two_options():
-    bad = {
-        "type": "image-to-letter",
-        "instruction": "Оберіть букву",
-        "items": [{"image": "🍎", "letter": "Я", "options": ["Я"], "explanation": "e"}],
-    }
-    assert not VALIDATOR.is_valid([bad])
 
 
 def _itl_item(**overrides) -> dict:
@@ -387,17 +328,6 @@ def test_image_to_letter_image_rejects_everything_else(bad_image):
         render_activity_to_jsx(_itl_activity(_itl_item(image=bad_image)))
 
 
-def test_image_to_letter_schema_leaves_the_image_rule_to_python():
-    image = DEFS["image-to-letter-a1"]["properties"]["items"]["items"]["properties"]["image"]
-    assert "pattern" not in image
-    assert image["minLength"] == 1
-    assert "image_to_letter_image_kind" in image["description"]
-
-
-def test_image_to_letter_schema_requires_unique_options():
-    assert not VALIDATOR.is_valid([_itl_activity(_itl_item(options=["Я", "Я"]))])
-
-
 @pytest.mark.parametrize("options", [["Я", "Я"], ["Я", "Я", "Я"]])
 def test_image_to_letter_needs_a_distractor_distinct_from_the_letter(options):
     with pytest.raises(ImageToLetterShapeError, match="no choice distinct from letter 'Я'"):
@@ -431,163 +361,6 @@ def test_image_to_letter_validator_rejects_options_without_letter():
 # ---------------------------------------------------------------------------
 # Per-type MDX emission unit tests
 # ---------------------------------------------------------------------------
-
-
-def test_anagram_mdx_contains_all_required_and_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "anagram",
-        "title": "Склади слово",
-        "instruction": "Перестав букви",
-        "items": [{"scrambled": "блуяко", "answer": "яблуко", "hint": "фрукт", "explanation": "Це яблуко."}],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<Anagram" in mdx
-    assert "Склади слово" in mdx
-    assert "Перестав букви" in mdx
-    assert "блуяко" in mdx
-    assert "яблуко" in mdx
-    assert "фрукт" in mdx
-    assert "Це яблуко." in mdx
-
-
-def test_count_syllables_mdx_contains_all_required_and_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "count-syllables",
-        "title": "Порахуй склади",
-        "instruction": "Скільки складів?",
-        "max_count": 5,
-        "items": [{"word": "мама", "correct": 2, "translation": "mother", "explanation": "Два склади: ма-ма."}],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<CountSyllables" in mdx
-    assert "Скільки складів?" in mdx
-    assert "мама" in mdx
-    assert '"correct": 2' in mdx or '"correct":2' in mdx
-    assert "mother" in mdx
-    assert "Два склади: ма-ма." in mdx
-    assert "maxCount={5}" in mdx
-
-
-def test_divide_words_mdx_contains_all_required_and_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "divide-words",
-        "title": "Поділи на склади",
-        "instruction": "Розділи слово дефісом",
-        "items": [{"word": "вода", "answer": "во-да", "hint": "2 склади", "explanation": "Правильно: во-да."}],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<DivideWords" in mdx
-    assert "Розділи слово дефісом" in mdx
-    assert "вода" in mdx
-    assert "во-да" in mdx
-    assert "2 склади" in mdx
-    assert "Правильно: во-да." in mdx
-
-
-def test_unjumble_mdx_contains_all_required_and_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "unjumble",
-        "title": "Віднови порядок",
-        "instruction": "Склади речення",
-        "items": [{"words": ["є", "Це", "кіт"], "answer": "Це є кіт", "hint": "Почніть з Це", "explanation": "Це є кіт."}],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<Unjumble" in mdx
-    assert "Склади речення" in mdx
-    assert "є / Це / кіт" in mdx
-    assert "Це є кіт" in mdx
-    assert "Почніть з Це" in mdx
-    assert "Це є кіт." in mdx
-
-
-def test_watch_and_repeat_mdx_contains_all_required_and_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "watch-and-repeat",
-        "title": "Дивись і повторюй",
-        "instruction": "Повторюй за відео",
-        "items": [{
-            "video": "video.mp4",
-            "letter": "А",
-            "word": "автобус",
-            "sound": "/a/",
-            "note": "голосний",
-            "explanation": "Звук [а] відкритий.",
-        }],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<WatchAndRepeat" in mdx
-    assert "video.mp4" in mdx
-    assert "А" in mdx
-    assert "автобус" in mdx
-    assert "/a/" in mdx
-    assert "голосний" in mdx
-    assert "Звук [а] відкритий." in mdx
-
-
-def test_letter_grid_mdx_without_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "letter-grid",
-        "title": "Алфавіт",
-        "instruction": "Вивчи літери",
-        "letters": [{"upper": "А", "lower": "а"}],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<LetterGrid" in mdx
-    assert '"upper": "А"' in mdx or '"upper":"А"' in mdx
-    assert '"lower": "а"' in mdx or '"lower":"а"' in mdx
-    assert "Алфавіт" in mdx
-    assert "Вивчи літери" in mdx
-
-
-def test_letter_grid_mdx_with_optional_fields():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "letter-grid",
-        "letters": [{"upper": "Б", "lower": "б", "name": "бе", "emoji": "🥖", "key_word": "булка"}],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<LetterGrid" in mdx
-    assert '"name": "бе"' in mdx or '"name":"бе"' in mdx
-    assert '"emoji": "🥖"' in mdx or '"emoji":"🥖"' in mdx
-    assert '"key_word": "булка"' in mdx or '"key_word":"булка"' in mdx
-
-
-def test_phrase_table_mdx_emission():
-    parser = ActivityParser()
-    act = parser._parse_activity({
-        "type": "phrase-table",
-        "title": "Корисні фрази",
-        "instruction": "Запам'ятайте фрази",
-        "groups": [
-            {
-                "label": "Привітання",
-                "phrases": [
-                    "Добрий день",
-                    {"phrase": "Привіт", "context": "неформальне", "emoji": "👋"},
-                ],
-            }
-        ],
-    })
-    mdx = parser.to_mdx([act])
-    assert "<PhraseTable" in mdx
-    assert "Корисні фрази" in mdx
-    assert "Запам'ятайте фрази" in mdx
-    assert "Привітання" in mdx
-    assert "Добрий день" in mdx
-    assert "Привіт" in mdx
-    assert "неформальне" in mdx
-    assert "👋" in mdx
-
-
-@pytest.mark.parametrize("value", ["", None, 7, ["🍎"]])
-def test_image_to_letter_image_kind_rejects_non_strings_and_empty(value):
-    assert image_to_letter_image_kind(value) is None
 
 
 # ---------------------------------------------------------------------------

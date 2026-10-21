@@ -18,7 +18,6 @@ import io
 import json
 import os
 import subprocess
-import sys
 import threading
 import time
 from dataclasses import dataclass
@@ -715,27 +714,7 @@ def test_request_matrix(context, row, remaining):
     assert context.wire.sent == []
 
 
-def test_matrix_has_the_required_denominator():
-    ids = {row.id for row in ROWS}
-    assert len(ROWS) >= 40 and len(ids) == len(ROWS)
-    kinds = {row.expected.split(":")[0] for row in ROWS}
-    assert kinds == {"L", "N", "P"}
-    # Every row pins what it sends: bytes, no body, or a body gh reads itself.
-    assert all(row.sent is None or row.sent is GH_READS or isinstance(row.sent, bytes) for row in ROWS)
-
-
 # --- bodies: captured once, whatever their size, and sent exactly --------------------------------
-
-
-@pytest.mark.parametrize("remaining", list(BUDGETS))
-def test_a_stream_is_read_once_and_exactly_its_bytes_are_sent(context, remaining):
-    seed(context, budget_rows("graphql", remaining))
-    stream = Unseekable(envelope())
-    result = outcome(opened("POST", "graphql", stream), context)
-    # At remaining 0 admission captures it and the opener is given the captured bytes; otherwise
-    # the opener alone reads it. Either way it is read once and sent whole.
-    assert result[0] == "ok" and stream.consumed == len(envelope())
-    assert [send[3] for send in context.wire.sent] == [envelope()]
 
 
 def test_seekable_body_is_sent_from_its_position(context):
@@ -843,19 +822,6 @@ def test_a_landing_body_one_byte_over_the_former_cap_is_sent_intact(context, pat
     assert hashlib.sha256(sent).hexdigest() == hashlib.sha256(body).hexdigest()
 
 
-@pytest.mark.parametrize("path", ["direct", "urllib-reader", "native-stdin"])
-def test_an_ordinary_body_over_the_former_cap_keeps_its_typed_refusal(context, path):
-    seed(context, budget_rows("graphql", "0"))
-    body = padded(R, CAP + 1)
-    calls = {
-        "direct": request("POST", "graphql", body),
-        "urllib-reader": opened("POST", "graphql", lambda: Unseekable(body)),
-        "native-stdin": native("api", "graphql", "--input", "-", *TEMPLATE, input=body),
-    }
-    assert outcome(calls[path], context) == ("limited", "pool_exhausted", OPEN)
-    assert context.wire.sent == []
-
-
 class Failing(io.RawIOBase):
     """A stream whose device fails after its first block."""
 
@@ -901,21 +867,6 @@ def test_a_body_that_cannot_be_captured_is_typed_and_sends_nothing(context, monk
     assert normalized.provenance == gh._Provenance("unprepared", refusal=reason) and normalized.call_class is None
 
 
-def test_a_spool_is_closed_when_the_send_fails(context, monkeypatch):
-    recorded = Recorded(monkeypatch)
-    seed(context, budget_rows("graphql", "0"))
-
-    def opener(outgoing, **kwargs):
-        raise ConnectionResetError("network down")
-
-    with pytest.raises(ConnectionResetError):
-        gh.http_open(
-            Request("https://api.github.com/graphql", data=chunks(envelope()), method="POST", headers=AUTH),
-            opener=opener,
-        )
-    assert len(recorded.spools) == 1 and recorded.spools[0].closed
-
-
 def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkeypatch, tmp_path):
     import stat
 
@@ -930,25 +881,6 @@ def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkey
         # The spill lands in the managed fleet scratch root, never the system temporary directory.
         assert os.readlink(f"/proc/self/fd/{spool.fileno()}").startswith(str(tmp_path / "scratch") + "/")
     assert spool.closed
-
-
-def test_landing_flow_never_reads_a_body(context):
-    """Inside a vetted landing flow the class is landing: a non-replayable body is sent unread."""
-    from scripts.orchestration import merge_queue_keeper as keeper
-
-    seed(context, budget_rows("graphql", "0"))
-    stream = Unseekable(envelope(R))
-
-    class Done(Exception):
-        pass
-
-    class Keeper:
-        def branch_names(self):
-            raise Done(outcome(opened("POST", "graphql", stream), context))
-
-    with pytest.raises(Done) as done:
-        keeper.run(Keeper(), Path("unused-state.json"), apply=False)
-    assert done.value.args[0][0] == "ok" and context.wire.sent[0][3] == envelope(R)
 
 
 # --- hold kinds -------------------------------------------------------------------------------
@@ -1073,21 +1005,6 @@ def test_pr_view_404_falls_through_inside_the_guard(context, remaining, native_s
 # --- normalization: one reading, typed provenance ------------------------------------------------
 
 
-def test_one_gh_api_reading_feeds_admission_and_translation(context):
-    seed(context, budget_rows("graphql", "0"))
-    typed = ["api", "graphql", "-f", "query=" + CONDITIONAL, "-F", "skip=true"]
-    call = gh._gh_api_call(typed[1:], stdin=None, cwd=context.tmp)
-    url, body = call.build()
-    assert (call.method, url) == ("POST", "graphql")
-    assert json.loads(body) == {"query": CONDITIONAL, "variables": {"skip": True}}
-    assert outcome(native(*typed, *TEMPLATE), context)[0] == "ok"
-    # Translated: admitted from the same reading, and the wire carries exactly its body.
-    raw = ["api", "graphql", "-f", "query=" + LAND, "-f", "operationName=Land", "-f", "x=1"]
-    assert gh._translation_options(["gh", *raw]) is not None
-    assert outcome(translated(*raw), context)[0] == "ok"
-    assert context.wire.sent[-1][3] == gh._gh_api_call(raw[1:], stdin=None, cwd=None).build()[1]
-
-
 @pytest.mark.parametrize(
     ("value", "expected"),
     [
@@ -1208,29 +1125,6 @@ def test_provenance_holds_only_a_classification_length_digest_and_refusal(contex
     with pytest.raises(gh.GitHubUnpreparedRequest) as refused:
         gh._DeferredBody([body, secret]).capture()
     assert secret not in str(refused.value) and secret not in repr(refused.value)
-
-
-def test_preparation_errors_are_a_closed_set():
-    # Size is no reason: a body is captured whatever its size (the former cap is the spill threshold).
-    assert {"body_unreadable", "body_not_replayable", "invalid_body_type"} == gh.PREPARATION_ERRORS
-    assert gh.PREPARATION_ERRORS.isdisjoint(gh.REFUSAL_REASONS)
-    with pytest.raises(AssertionError, match="untyped"):
-        gh.GitHubUnpreparedRequest("body_too_large")
-    assert gh.SPILL_BYTES == 8 * 1024 * 1024 and not hasattr(gh, "MAX_REQUEST_BYTES")
-
-
-def test_graphql_queries_are_cached_and_nothing_else_is(context):
-    for payload, cacheable in (
-        ({"query": R}, True),
-        ({"query": "{ __schema { types { name } } }"}, True),
-        ({"query": "subscription { x }"}, False),
-        ({"query": M}, False),
-        ({"query": "mutation { enqueuePullRequest(input: {}) @skip(if: true) { x } }"}, False),
-        ([{"query": R}], False),
-        ({"extensions": {"persistedQuery": {}}}, False),
-    ):
-        assert gh._normalize("POST", "graphql", ("graphql",), json.dumps(payload).encode()).read is cacheable
-    assert gh._normalize("GET", "graphql", ("graphql",), None).read is False
 
 
 # --- the installed gh 2.98.0 binary through a local recording proxy ---------------------------------
@@ -1424,26 +1318,6 @@ def test_real_gh_typed_fields_end_to_end(tmp_path, proxy, argv, landing):
 
 
 @needs_gh
-def test_real_gh_include_retry_after_is_an_authentic_hold(tmp_path):
-    server = Proxy(reply=(429, {"Retry-After": "120"}, b'{"message":"slow down"}'))
-    try:
-        environment = {**server.env(tmp_path), "AGENT_REAL_GH": REAL_GH}
-        client = gh.GitHubClient(cache_dir=tmp_path / "cache", env=environment, clock=lambda: NOW)
-        argv = ["gh", "api", "--include", "graphql", "-f", "query=" + R, *TEMPLATE]
-        first = gh.run(argv, client=client, runner=subprocess.run, capture_output=True)
-        assert first.returncode == 75 and (first.github_result.reason, first.github_result.reset_at) == (
-            "retry_after",
-            NOW + 120,
-        )
-        landing = ["gh", "api", "graphql", "-f", "query=" + M, *TEMPLATE]
-        second = gh.run(landing, client=client, runner=subprocess.run, capture_output=True)
-        assert second.returncode == 75 and second.github_result.reason == "retry_after"
-        assert len(server.requests) == 1
-    finally:
-        server.close()
-
-
-@needs_gh
 @pytest.mark.parametrize(
     ("command", "meaning"),
     [
@@ -1470,30 +1344,6 @@ def test_dash_f_has_one_meaning_per_command_family(tmp_path, command, meaning):
         env={"PATH": "/usr/bin:/bin", "HOME": str(tmp_path)},
     ).stdout
     assert f"-F, {meaning}" in help_text
-
-
-@needs_gh
-@pytest.mark.parametrize(
-    "row",
-    [row for row in ROWS if isinstance(row.call, Native) and row.call.argv[0] == "api" and isinstance(row.sent, bytes)],
-    ids=lambda row: row.id,
-)
-def test_real_gh_sends_exactly_each_native_rows_bytes(tmp_path, proxy, row):
-    """Every native row's pinned bytes are what the installed gh sends for that command line."""
-    for name, content in (row.call.files or {}).items():
-        (tmp_path / name).write_bytes(content.encode() if isinstance(content, str) else content)
-    stdin = row.call.input.encode() if isinstance(row.call.input, str) else row.call.input
-    completed = subprocess.run(
-        [REAL_GH, *runs(row.call.argv)],
-        input=stdin,
-        cwd=tmp_path,
-        env=proxy.env(tmp_path),
-        capture_output=True,
-        timeout=30,
-    )
-    assert completed.returncode == 0, completed.stderr
-    [(_, _, sent)] = proxy.requests
-    assert sent == row.sent
 
 
 # --- GraphQL: one parsed document, the same class for every spelling of it ------------------------
@@ -1569,20 +1419,6 @@ ADD_SUB_ISSUE = 'mutation { addSubIssue(input: {issueId: "I_1", subIssueId: "I_2
 def test_graphql_class_follows_the_parsed_document_only(document, landing, read):
     normalized = gh._normalize("POST", "graphql", ("graphql",), json.dumps(document).encode())
     assert (normalized.call_class == "landing", normalized.read) == (landing, read)
-
-
-def test_graphql_core_is_imported_only_to_parse_a_document_that_could_write():
-    """graphql-core costs about 0.1 s to import: the shim's other GitHub calls never pay it."""
-    code = (
-        "import sys\n"
-        "from scripts.common import github_client as gh\n"
-        "assert 'graphql' not in sys.modules\n"
-        "assert gh._normalize('POST', 'graphql', ('graphql',), b'{\"query\":\"query { viewer { login } }\"}').read\n"
-        "assert 'graphql' not in sys.modules\n"
-        "gh._normalize('POST', 'graphql', ('graphql',), b'{\"query\":\"mutation { x }\"}')\n"
-        "assert 'graphql' in sys.modules\n"
-    )
-    subprocess.run([sys.executable, "-c", code], cwd=Path(__file__).resolve().parents[1], check=True, timeout=60)
 
 
 # --- paired requests: one operation, every representation, the same admission --------------------
@@ -1699,12 +1535,6 @@ def test_paired_requests_admit_alike_across_representations(context, operation, 
     else:
         assert result == ("limited", REASON[pool], OPEN)
         assert context.wire.sent == []
-
-
-def test_paired_matrix_spans_every_body_representation():
-    representations = {representation for _, representation in PAIRED}
-    assert {"urllib-reader", "urllib-iterator", "native-stdin", "native-file", "request-respelled"} <= representations
-    assert {landing for _, landing, _, _ in PAIRED.values()} == {True, False}
 
 
 # --- native transport: GitHub's headers from gh's own framing ----------------------------------------

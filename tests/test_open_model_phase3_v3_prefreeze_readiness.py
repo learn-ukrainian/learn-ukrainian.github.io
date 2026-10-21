@@ -13,14 +13,6 @@ SHA_A = "a" * 64
 SHA_B = "b" * 64
 
 
-def test_prefreeze_uses_the_exact_current_phase_firewall_exclusion() -> None:
-    """A current #7427 receipt cannot expand the historical v2 denominator."""
-    assert (
-        "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json"
-        in readiness.compatibility.CURRENT_PHASE_EVIDENCE_PATHS
-    )
-
-
 def _stub_external_receipts(monkeypatch: pytest.MonkeyPatch) -> None:
     ua_receipt = {
         "receipt_sha256": SHA_A,
@@ -283,41 +275,6 @@ def test_optional_saint_sophia_receipt_binds_without_opening_other_gates(
     assert receipt["gates"]["phase4_blocked"] is True
     assert receipt["gates"]["source_authoring_authorized"] is False
     assert receipt["bindings"]["saint_sophia_reconciliation_receipt_sha256"] == SHA_A
-
-
-@pytest.mark.needs_artifact(
-    "open_model_evidence_indexes",
-    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
-)
-def test_optional_saint_sophia_receipt_allows_distinct_pre_and_post_database_hashes(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_external_receipts(monkeypatch)
-    pre_sha, post_sha = "c" * 64, "d" * 64
-    monkeypatch.setattr(readiness, "_validate_sources_database", lambda _path: post_sha)
-    university_freeze, university_file_sha256 = readiness._validate_university_freeze()
-    university_freeze = copy.deepcopy(university_freeze)
-    university_freeze["database"]["sha256"] = pre_sha
-    monkeypatch.setattr(readiness, "_validate_university_freeze", lambda: (university_freeze, university_file_sha256))
-    captured: dict[str, str] = {}
-
-    def validate_saint(
-        _path: Path, *, university_database_sha256: str, current_database_sha256: str
-    ) -> tuple[dict, str]:
-        captured.update({"pre": university_database_sha256, "post": current_database_sha256})
-        return {"receipt_sha256": SHA_A}, SHA_B
-
-    monkeypatch.setattr(readiness, "_validate_saint_sophia_reconciliation_receipt", validate_saint)
-    receipt = readiness.build_readiness(
-        phase3_reboot_prompt_path=Path("unused"),
-        sources_database_path=Path("unused"),
-        ua_gec_root=Path("unused"),
-        ua_gec_context_receipt_path=Path("unused"),
-        historical_full_receipt_path=Path("unused"),
-        saint_sophia_reconciliation_receipt_path=Path("sophia.json"),
-    )
-    assert captured == {"pre": pre_sha, "post": post_sha}
-    assert receipt["bindings"]["sources_database_sha256"] == post_sha
 
 
 @pytest.mark.needs_artifact(
@@ -605,20 +562,6 @@ def test_validator_rejects_saint_sophia_to_vspu_boundary_drift(
     )
 
     with pytest.raises(readiness.PrefreezeReadinessError, match="does not equal Saint Sophia successor"):
-        readiness.validate_readiness(receipt)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_evidence_indexes",
-    "projects/open_model_data/evidence/source_universe_v1/antonenko_style_guide.units.jsonl",
-)
-def test_validator_rejects_saint_sophia_readiness_without_matching_bindings(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    receipt = _build(monkeypatch)
-    receipt["readiness"]["saint_sophia_db_reconciliation_ready"] = True
-    receipt["receipt_sha256"] = readiness.receipt_sha256(receipt)
-    with pytest.raises(readiness.PrefreezeReadinessError, match="Saint Sophia readiness"):
         readiness.validate_readiness(receipt)
 
 

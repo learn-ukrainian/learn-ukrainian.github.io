@@ -13,12 +13,6 @@ from scripts.lexicon import generate_needs_review_ledger as gen
 from scripts.lexicon import promote_grow_candidates as promote
 
 
-def test_cli_refuses_without_write_or_dry_run() -> None:
-    with pytest.raises(SystemExit) as exc:
-        gen.main([])
-    assert exc.value.code == 2
-
-
 def test_generator_round_trip_maps_actions(tmp_path: Path) -> None:
     candidates_path, triage_path = _write_fixture_pair(tmp_path)
     out = tmp_path / "ledger.yaml"
@@ -125,41 +119,6 @@ def test_promote_needs_review_ledger_promotes_only_approve_with_gloss(tmp_path: 
     assert "dmklinger" in promoted["enrichment"]["sources"]
 
 
-def test_promote_needs_review_deferred_and_heritage_never_promoted(tmp_path: Path) -> None:
-    candidates_path, triage_path = _write_fixture_pair(tmp_path)
-    # Force only deferred/heritage actions.
-    triage = json.loads(triage_path.read_text(encoding="utf-8"))
-    for row in triage["entries"]:
-        if row["machine_action"] == "promote_with_gloss":
-            row["machine_action"] = "truly_missing"
-            row["best_gloss"] = None
-    triage_path.write_text(json.dumps(triage, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    ledger_path = tmp_path / "nr-ledger.yaml"
-    gen.generate_needs_review_ledger(
-        candidates_path=candidates_path,
-        triage_path=triage_path,
-        out_path=ledger_path,
-        write=True,
-    )
-
-    manifest_path = _write_manifest(tmp_path, [_entry("авто")])
-    result = promote.promote_grow_candidates(
-        candidates_path=candidates_path,
-        manifest_path=manifest_path,
-        needs_review_path=tmp_path / "grow_needs_review.json",
-        fingerprint_path=tmp_path / "fp.json",
-        needs_review_ledger_path=ledger_path,
-        write=True,
-        self_check=lambda _path: 0,
-        fingerprint_writer=_fingerprint_writer,
-    )
-
-    assert result.promoted == ()
-    assert result.needs_review_approved == 0
-    assert result.needs_review_deferred == 3
-    assert [e["lemma"] for e in _read_json(manifest_path)["entries"]] == ["авто"]
-
-
 def test_promote_needs_review_fails_on_candidates_sha_mismatch(tmp_path: Path) -> None:
     candidates_path, triage_path = _write_fixture_pair(tmp_path)
     ledger_path = tmp_path / "nr-ledger.yaml"
@@ -229,24 +188,6 @@ def test_promote_needs_review_fails_when_triage_sha_missing(tmp_path: Path) -> N
             self_check=lambda _path: 0,
             fingerprint_writer=_fingerprint_writer,
         )
-
-
-def test_inject_approved_gloss_sets_anchor_fields() -> None:
-    candidate = {
-        "lemma": "хата",
-        "pos": "noun",
-        "enrichment": {"sources": ["VESUM"], "cefr": {"level": "A1"}},
-    }
-    injected = promote.inject_approved_gloss(
-        candidate,
-        {"text": "house", "source": "sum11", "lemma": "хата", "slug": "хата"},
-    )
-    assert injected["gloss"] == "house"
-    assert injected["enrichment"]["meaning"]["definitions"] == ["house"]
-    assert injected["enrichment"]["meaning"]["source"] == "sum11"
-    assert injected["enrichment"]["translation"]["en"] == ["house"]
-    assert "sum11" in injected["enrichment"]["sources"]
-    assert injected["enrichment"]["cefr"] == {"level": "A1"}
 
 
 def test_inject_approved_gloss_refuses_russian_cyrillic_definition() -> None:

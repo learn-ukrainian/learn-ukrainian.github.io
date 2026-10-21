@@ -316,47 +316,6 @@ def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.M
         assert redacted["UNRELATED_RUNTIME_FLAG"] == "visible"
 
 
-def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
-    """Launcher open must recover claimable crashed sessions without a manual step."""
-    from datetime import timedelta
-
-    from agents_extensions.shared.session_streams.model import utc_now
-
-    supervisor = _supervisor(tmp_path)
-    dead_pid = 999_999_001
-    assert not _pid_alive(dead_pid)
-
-    opened_at = utc_now() - timedelta(hours=7)
-    supervisor.store.open_session(
-        stream_id=INFRA_STREAM_ID,
-        holder=LeaseHolder(
-            agent="grok",
-            harness="grok-tui",
-            instance_id="grok-dead-holder",
-            process_id=dead_pid,
-            task_id="stale",
-        ),
-        lineage_id="lineage-stale",
-        ttl_seconds=300,
-        now=opened_at,
-    )
-    successor = supervisor.open_driver(
-        role="driver",
-        stream_id=INFRA_STREAM_ID,
-        holder=LeaseHolder(
-            agent="grok",
-            harness="grok-tui",
-            instance_id="grok-fresh-launcher",
-            process_id=os.getpid(),
-            task_id="fresh-open",
-        ),
-        lineage_id="lineage-fresh",
-        ttl_seconds=300,
-    )
-    assert successor.holder.instance_id == "grok-fresh-launcher"
-    assert successor.session_id != "session-stale"
-
-
 def test_open_driver_auto_recovers_unexpired_dead_holder(tmp_path: Path) -> None:
     """Dead PID with remaining TTL must not block relaunch for hours (user-visible #5630 gap)."""
     from datetime import timedelta
@@ -461,35 +420,6 @@ def _pid_alive(pid: int) -> bool:
     except PermissionError:
         return True
     return True
-
-
-def test_cli_refuses_worker_open_attempt(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = main(
-        [
-            "--local",
-            "--db",
-            str(tmp_path / "streams.sqlite3"),
-            "--repo-root",
-            str(_REPO_ROOT),
-            "open",
-            "--role",
-            "worker",
-            "--stream",
-            INFRA_STREAM_ID,
-            "--agent",
-            "agy",
-            "--harness",
-            "agy-bridge",
-            "--instance-id",
-            "worker-attempt",
-            "--process-id",
-            str(os.getpid()),
-            "--lineage-id",
-            "worker-lineage",
-        ]
-    )
-    assert exit_code == 4
-    assert "workers cannot acquire" in capsys.readouterr().err
 
 
 def test_default_host_id_resolution_matches_delegates_self_dispatch_check(

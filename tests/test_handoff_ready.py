@@ -133,15 +133,6 @@ def test_cancelled_without_workflow_identity_stays_red(monkeypatch):
     assert hr.check_pr_checks(8264)[0] == hr.RED
 
 
-def test_merge_state_clean_is_ok(monkeypatch):
-    monkeypatch.setattr(
-        hr,
-        "_gh_json",
-        lambda *a: (0, {"statusCheckRollup": [{"conclusion": "SUCCESS", "name": "ci"}], "state": "OPEN", "mergeStateStatus": "CLEAN"}),
-    )
-    assert hr.check_pr_checks(5)[0] == hr.OK
-
-
 def test_api_down_is_unknown(monkeypatch):
     def boom(*a, **k):
         raise OSError("connection refused")

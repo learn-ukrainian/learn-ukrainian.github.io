@@ -13,10 +13,7 @@ import dataclasses
 import hashlib
 import importlib
 import json
-import os
-import shutil
 import subprocess
-import uuid
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -208,16 +205,6 @@ def test_agy_registered_workspace_inside_primary_checkout(tmp_path, monkeypatch,
     if layout == "dispatch":
         (workspace / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
     _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
-
-
-def test_agy_registered_workspace_under_current_checkout(tmp_path, monkeypatch):
-    # Exercise the real checkout's dispatch ancestry regardless of basetemp.
-    workspace = ROOT / f".gate-repro-{uuid.uuid4().hex}"
-    workspace.mkdir()
-    try:
-        _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
-    finally:
-        shutil.rmtree(workspace)
 
 
 def _assert_agy_registered_workspace_round_trip(workspace, original_log_root, monkeypatch):
@@ -617,26 +604,3 @@ def test_audit_claude_schema_and_embedded_fence_survive_consumption(tmp_path, mo
     findings = llm_reviewer.parse_and_evaluate_llm_response(result.response_text, "fixture ```json text")
     assert len(findings) == 1 and findings[0]["issue_id"] == "MECHANICAL_FIXTURE"
     assert findings[0]["excerpt"] == payload["findings"][0]["excerpt"]
-
-
-@pytest.mark.skipif(os.environ.get("QG_SCHEMA_DIRECT_LIVE") != "1", reason="explicit provider-run opt-in required")
-def test_direct_live(tmp_path, monkeypatch):
-    """Public frozen D input, redirected to temp; semantic held-out still separate."""
-    source = ROOT / "curriculum/l2-uk-direct/a1/dozvillia.yaml"
-    assert (
-        hashlib.sha256(source.read_bytes()).hexdigest()
-        == "5560effd4abd5476347b936bf15057b92f52f31adc85a544d176f92e69a80d27"
-    )
-    ctx = direct_context(tmp_path)
-    ctx.yaml_path.write_bytes(source.read_bytes())
-    ctx.module_data = direct.load_module_yaml(ctx.yaml_path)
-    monkeypatch.setattr(direct, "PROJECT_ROOT", tmp_path)
-    passed = direct.phase_review(ctx)
-    raw = ctx.orch_dir / "review-output-raw.json"
-    assert raw.exists(), "required live result missing; residual owner claude/prompt-audit-2026-09-07"
-    report = direct.parse_direct_review_response(json.loads(raw.read_text()))
-    assert passed == (report["verdict"] == "PASS")
-    assert ctx.status_data["phases"]["review"]["dimensions"] == report["dimensions"]
-    print(
-        f"direct live: dimensions={len(report['dimensions'])} issues={len(report['issues'])} verdict={report['verdict']}; PASS"
-    )

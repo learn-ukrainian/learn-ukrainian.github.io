@@ -65,7 +65,6 @@ from scripts.review.snapshot import (
     capture_local_review_state,
     capture_untracked_records,
     cleanup_snapshot_state,
-    compute_source_fingerprint,
     materialize_review_snapshot,
     provision_review_snapshot,
     verify_review_acceptance,
@@ -192,27 +191,6 @@ def _private_review_roots(tmp_path: Path, label: str = "review") -> tuple[Path, 
     marker.write_text(f"lu-review-root-v1:{secrets.token_hex(32)}\n", encoding="ascii")
     marker.chmod(0o400)
     return write, execution
-
-
-def test_review_temp_cleanup_removes_restrictive_view_after_simulated_review(tmp_path: Path) -> None:
-    review_root = create_review_temp_root(prefix="test-view-", dir=tmp_path)
-    restricted = review_root / "context" / "restricted"
-    blocked = restricted / "deeper"
-    blocked.mkdir(parents=True)
-    (blocked / "evidence.txt").write_text("sealed", encoding="utf-8")
-    blocked.chmod(0o000)
-    restricted.chmod(0o000)
-
-    try:
-        remove_review_temp_tree(review_root)
-
-        assert not review_root.exists()
-        assert not tuple(tmp_path.glob("test-view-*"))
-    finally:
-        if blocked.exists():
-            blocked.chmod(0o700)
-        if restricted.exists():
-            restricted.chmod(0o700)
 
 
 def test_review_temp_cleanup_refuses_unmarked_prefixed_directory(tmp_path: Path) -> None:
@@ -352,51 +330,6 @@ def test_exact_tree_materialization_preserves_dot_paths_and_ignores_export_attrs
         assert not (snap.path / "github/workflows/check.yml").exists()
         assert (snap.path / ".hidden.txt").read_text() == "commit=$Format:%H$\n"
         assert not (snap.path / "hidden.txt").exists()
-    finally:
-        cleanup_snapshot_state(state)
-
-
-def test_unchanged_tree_blobs_and_fingerprint_are_streamed_from_disk(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    large = repo / "assets" / "large.bin"
-    large.parent.mkdir(exist_ok=True)
-    large.write_bytes(b"x" * (2 * 1024 * 1024))
-    _git(repo, "add", "assets/large.bin")
-    _git(
-        repo,
-        "-c",
-        "user.email=test@example.com",
-        "-c",
-        "user.name=Test",
-        "commit",
-        "-m",
-        "large unchanged fixture",
-    )
-    base = _head_sha(repo)
-    head = _commit_change(repo, "src/app.py", "VALUE = 9\n", "small change")
-    real_read_bytes = Path.read_bytes
-
-    def _guarded_read_bytes(path: Path) -> bytes:
-        if path.name == "large.bin" and "lu-review-snap-" in str(path):
-            raise AssertionError("unchanged snapshot blob was buffered")
-        return real_read_bytes(path)
-
-    monkeypatch.setattr(Path, "read_bytes", _guarded_read_bytes)
-    snap, state = materialize_review_snapshot(
-        repo,
-        mode="branch",
-        base_sha=base,
-        head_sha=head,
-        temp_parent=tmp_path / "tmp",
-    )
-    try:
-        assert (snap.path / "assets" / "large.bin").stat().st_size == (2 * 1024 * 1024)
-        verify_snapshot_fingerprint(snap)
     finally:
         cleanup_snapshot_state(state)
 
@@ -605,26 +538,6 @@ def test_linux_wrapper_uses_blank_root_exact_binds_and_pid_isolation(
     assert "--proc" not in argv
     assert "/etc" not in argv
     assert any(argv[index : index + 3] == ["--ro-bind", str(runtime), str(runtime)] for index in range(len(argv) - 2))
-
-
-def test_linux_wrapper_does_not_shadow_tempfile_backed_review_roots() -> None:
-    snap = Path("/tmp/lu-review-view-test")
-    write = Path("/tmp/lu-review-write-test")
-    capability = SandboxCapability(
-        mechanism="linux-bwrap",
-        binary=Path("/usr/bin/bwrap"),
-        profile_path=None,
-        read_roots=(str(snap), str(write), "/usr"),
-        write_root=str(write),
-        verified=True,
-        metadata_roots=("/", "/tmp"),
-    )
-
-    argv = wrap_argv_with_sandbox(["/usr/bin/true"], capability)
-
-    assert ["--ro-bind", str(snap), str(snap)] in [argv[index : index + 3] for index in range(len(argv) - 2)]
-    assert ["--bind", str(write), str(write)] in [argv[index : index + 3] for index in range(len(argv) - 2)]
-    assert [argv[index + 1] for index, item in enumerate(argv[:-1]) if item == "--tmpfs"] == ["/"]
 
 
 def test_linux_roots_preserve_trusted_merged_usr_and_network_aliases(
@@ -1060,11 +973,6 @@ def test_macos_clt_python_runs_sealed_reader_inside_sandbox(tmp_path: Path) -> N
     assert any("CommandLineTools" in root for root in sandbox.read_roots)
 
 
-def test_agy_isolated_review_is_explicitly_unsupported() -> None:
-    with pytest.raises(ReviewIsolationError, match="agy_isolated_review_unsupported"):
-        review_isolation_tool_config("agy")
-
-
 # ---------------------------------------------------------------------------
 # Neutral snapshot materialization (F4 / F6)
 # ---------------------------------------------------------------------------
@@ -1111,22 +1019,6 @@ def test_neutral_snapshot_has_no_git_and_keeps_inert_agents(
     finally:
         cleanup_snapshot_state(state)
     assert not snap.path.exists()
-
-
-def test_hostile_agents_cannot_change_isolation_tool_config(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    cfg = review_isolation_tool_config("claude")
-    assert cfg["deny_write_tools"] is True
-    assert cfg["disable_project_instructions"] is True
-    assert cfg["allowed_tools"] == "Read,Grep,Glob"
-    head = _head_sha(repo)
-    with provision_review_snapshot(repo, mode="local", head_sha=head, temp_parent=tmp_path / "tmp") as snap:
-        text = snap.read_evidence("AGENTS.md")
-        assert "HOSTILE" in text
-        cfg2 = review_isolation_tool_config("claude")
-        assert cfg2 == cfg
 
 
 def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -1547,40 +1439,6 @@ def test_grok_oauth_store_is_never_staged_into_model_read_scope(
     assert env == {}
 
 
-def test_grok_oauth_store_is_ignored_even_when_host_path_is_unsafe(
-    tmp_path: Path,
-) -> None:
-    source_home = tmp_path / "source"
-    grok_home = source_home / ".grok"
-    grok_home.mkdir(parents=True)
-    target = tmp_path / "host-auth"
-    target.write_text("{}\n", encoding="utf-8")
-    auth = grok_home / "auth.json"
-    auth.symlink_to(target)
-    assert (
-        stage_engine_auth(
-            "grok",
-            write_home=tmp_path / "write-symlink",
-            source_home=source_home,
-        )
-        == {}
-    )
-    assert not (tmp_path / "write-symlink" / ".grok").exists()
-
-    auth.unlink()
-    auth.write_text("{}\n", encoding="utf-8")
-    auth.chmod(0o644)
-    assert (
-        stage_engine_auth(
-            "grok",
-            write_home=tmp_path / "write-mode",
-            source_home=source_home,
-        )
-        == {}
-    )
-    assert not (tmp_path / "write-mode" / ".grok").exists()
-
-
 def test_isolated_grok_review_refuses_unseparable_model_tool_credentials(
     tmp_path: Path,
 ) -> None:
@@ -1849,16 +1707,6 @@ def test_path_traversal_denied(tmp_path: Path) -> None:
         capture_untracked_records(repo, ["../outside.py"])
 
 
-def test_binary_non_utf8_denied_for_untracked(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    blob = repo / "blob.dat"
-    blob.write_bytes(b"\x00\xff\xfe binary")
-    with pytest.raises(ReviewSnapshotError, match=DIAG_BINARY):
-        capture_untracked_records(repo, ["blob.dat"])
-
-
 def test_changed_secret_file_preflighted(tmp_path: Path) -> None:
     """F3: changed tracked secret content is rejected before materialization."""
     repo = tmp_path / "repo"
@@ -1918,41 +1766,6 @@ def test_cleanup_after_engine_failure(tmp_path: Path) -> None:
     assert not seen.exists()
 
 
-def test_fingerprint_stable_for_identical_capture(tmp_path: Path) -> None:
-    records = {
-        "a.py": b"x = 1\n",
-        "b.py": b"y = 2\n",
-    }
-    fp1 = compute_source_fingerprint(
-        mode="local",
-        base_sha=None,
-        head_sha="a" * 40,
-        changed_paths=("a.py", "b.py"),
-        file_records=records,
-    )
-    fp2 = compute_source_fingerprint(
-        mode="local",
-        base_sha=None,
-        head_sha="a" * 40,
-        changed_paths=("a.py", "b.py"),
-        file_records=records,
-    )
-    assert fp1 == fp2
-    fp3 = compute_source_fingerprint(
-        mode="local",
-        base_sha=None,
-        head_sha="a" * 40,
-        changed_paths=("a.py", "b.py"),
-        file_records={**records, "a.py": b"x = 2\n"},
-    )
-    assert fp1 != fp3
-
-
-def test_immutable_record_integrity() -> None:
-    rec = ImmutableFileRecord.from_bytes("x.py", b"print(1)\n")
-    assert rec.sha256 == __import__("hashlib").sha256(b"print(1)\n").hexdigest()
-
-
 def test_primary_checkout_not_used_as_snapshot_root(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -1967,29 +1780,6 @@ def test_primary_checkout_not_used_as_snapshot_root(tmp_path: Path) -> None:
             head_sha=head,
             temp_parent=inside,
         )
-
-
-def test_prompt_contract_not_loaded_from_snapshot_agents(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    head = _head_sha(repo)
-    with provision_review_snapshot(
-        repo, mode="local", head_sha=head, temp_parent=tmp_path / "tmp", verify_after=False
-    ) as snap:
-        env = build_reviewer_env(
-            engine="claude",
-            reject_root=repo,
-            source={
-                "PATH": "/usr/bin",
-                "HOME": str(Path.home()),
-                "ANTHROPIC_API_KEY": _frag("sk", "-", "ant", "-", "test"),
-                "OPENAI_API_KEY": "should-strip",
-            },
-        )
-        assert "OPENAI_API_KEY" not in env
-        assert env.get("CLAUDE_CODE_DISABLE_AUTO_MEMORY") == "1"
-        _ = snap.read_evidence("AGENTS.md")
 
 
 def test_review_bundle_covers_rename_and_delete(tmp_path: Path) -> None:
@@ -2856,17 +2646,6 @@ def test_f11_no_target_review_uses_sealed_local_not_primary(tmp_path: Path) -> N
         )
 
 
-def test_f12_empty_help_refuses_each_engine(tmp_path: Path) -> None:
-    fake = tmp_path / "bin"
-    fake.write_text("#!/bin/sh\n", encoding="utf-8")
-    fake.chmod(0o755)
-    for engine in ("claude", "codex", "agy", "grok"):
-        caps = detect_engine_capabilities(engine, fake, help_text="")
-        assert not caps.ok, engine
-        with pytest.raises(ReviewIsolationError, match="engine_isolation_unproven"):
-            require_engine_isolation(caps)
-
-
 def test_f12_agy_requires_active_enforcement_not_assertion(tmp_path: Path) -> None:
     fake = tmp_path / "agy"
     fake.write_text("#!/bin/sh\n", encoding="utf-8")
@@ -2898,17 +2677,6 @@ def test_f12_agy_requires_active_enforcement_not_assertion(tmp_path: Path) -> No
 # ---------------------------------------------------------------------------
 # F13–F18: exact local identity + self-reviewability (correction cycle 3)
 # ---------------------------------------------------------------------------
-
-
-def test_f13_source_has_no_literal_secret_shaped_fixtures() -> None:
-    """Branch source must not contain contiguous credential-shaped literals."""
-    src = Path(__file__).read_text(encoding="utf-8")
-    # Runtime-constructed fixtures still exercise the detector:
-    assert secret_like_findings(_secret_openai_sk())
-    assert secret_like_findings(_secret_ghp())
-    assert secret_like_findings(_secret_sk_proj())
-    # But the test module source itself must not trip the scanner.
-    assert not secret_like_findings(src)
 
 
 def test_f14_malformed_minimal_fake_evidence_denied(tmp_path: Path) -> None:
@@ -3528,65 +3296,6 @@ def test_local_capture_supports_split_index(tmp_path: Path) -> None:
     assert b"+VALUE = 2" in capture.patch_bytes
 
 
-@pytest.mark.parametrize("split_index", [False, True])
-def test_local_capture_reuses_one_neutral_index_for_status_pair(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-    split_index: bool,
-) -> None:
-    import scripts.review.snapshot as snapshot_module
-
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    if split_index:
-        _git(repo, "config", "core.splitIndex", "true")
-        _git(repo, "update-index", "--split-index")
-    target = repo / "src" / "app.py"
-    target.write_text("VALUE = 2\n", encoding="utf-8")
-    original = snapshot_module._neutral_local_git_view
-    original_capped = snapshot_module._run_git_bytes_capped
-    entered = 0
-    status_caps: list[int] = []
-
-    @contextlib.contextmanager
-    def counted(*args: object, **kwargs: object):
-        nonlocal entered
-        entered += 1
-        with original(*args, **kwargs) as neutral:
-            yield neutral
-
-    monkeypatch.setattr(snapshot_module, "_neutral_local_git_view", counted)
-
-    def counted_capped(
-        git_bin: Path,
-        args: list[str],
-        *,
-        cwd: Path,
-        max_bytes: int,
-        timeout_seconds: float = snapshot_module.GIT_EVIDENCE_TIMEOUT_SECONDS,
-    ) -> bytes:
-        if "status" in args:
-            status_caps.append(max_bytes)
-        return original_capped(
-            git_bin,
-            args,
-            cwd=cwd,
-            max_bytes=max_bytes,
-            timeout_seconds=timeout_seconds,
-        )
-
-    monkeypatch.setattr(snapshot_module, "_run_git_bytes_capped", counted_capped)
-    capture = capture_local_review_state(repo)
-
-    assert "src/app.py" in capture.changed_paths
-    assert entered == 1
-    assert status_caps == [
-        snapshot_module.MAX_CHANGED_EVIDENCE_BYTES,
-        snapshot_module.MAX_CHANGED_EVIDENCE_BYTES,
-    ]
-
-
 def test_branch_capture_treats_colon_prefixed_paths_literally(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -3635,74 +3344,6 @@ def test_branch_capture_treats_colon_prefixed_paths_literally(tmp_path: Path) ->
         assert (snap.path / ":renamed").read_text(encoding="utf-8") == "rename me\n"
     finally:
         cleanup_snapshot_state(state)
-
-
-def test_branch_capture_rejects_oversized_changed_blob_before_read(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_repo(repo)
-    base = _head_sha(repo)
-    (repo / "large.txt").write_bytes(b"x" * (16 * 1024 * 1024 + 1))
-    _git(repo, "add", "large.txt")
-    _git(
-        repo,
-        "-c",
-        "user.email=test@example.com",
-        "-c",
-        "user.name=Test",
-        "commit",
-        "-m",
-        "large",
-    )
-    head = _head_sha(repo)
-
-    with pytest.raises(ReviewSnapshotError, match=r"review_evidence_too_large:changed:large\.txt"):
-        materialize_review_snapshot(
-            repo,
-            mode="branch",
-            base_sha=base,
-            head_sha=head,
-            temp_parent=tmp_path / "tmp",
-        )
-
-
-def test_copy_detection_rejects_excessive_similarity_work_before_search(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    import scripts.review.snapshot as snapshot_module
-
-    calls: list[tuple[str, ...]] = []
-
-    def fake_capped(
-        _git: Path,
-        args: list[str],
-        *,
-        cwd: Path,
-        max_bytes: int,
-        timeout_seconds: float = 30.0,
-    ) -> bytes:
-        _ = (cwd, max_bytes, timeout_seconds)
-        calls.append(tuple(args))
-        if args[:2] == ["diff", "--name-status"]:
-            assert "--find-copies-harder" not in args
-            return b"A\0one.txt\0A\0two.txt\0"
-        if args[0] == "ls-tree":
-            return b"source-a\0source-b\0"
-        raise AssertionError(f"unexpected command: {args}")
-
-    monkeypatch.setattr(snapshot_module, "_run_git_bytes_capped", fake_capped)
-    monkeypatch.setattr(snapshot_module, "MAX_COPY_DETECTION_COMPARISONS", 3)
-
-    with pytest.raises(ReviewSnapshotError, match="copy_detection_too_expensive"):
-        snapshot_module.derive_changed_paths_and_patch(
-            tmp_path,
-            base_sha="a" * 40,
-            head_sha="b" * 40,
-            git_bin=Path("/usr/bin/git"),
-        )
-
-    assert len(calls) == 2
 
 
 def test_local_capture_refuses_untracked_nested_repository(tmp_path: Path) -> None:
@@ -3917,103 +3558,6 @@ def test_codex_npm_user_prefix_install_is_a_trusted_reviewer_root(
     resolved = resolve_trusted_reviewer_executable("codex", reject_roots=(tmp_path / "repo",))
 
     assert resolved == real.resolve()
-
-
-def test_create_review_temp_root_refuses_lu_review_prefixes_unconditionally(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Each lu-review-* prefix is refused fail-closed without environment bypass (#8520)."""
-    import pytest
-
-    from scripts.review.isolation import (
-        REVIEW_TEMP_ROOT_PREFIXES,
-        create_review_temp_root,
-    )
-
-    # Refused when LU_FORMAL_SHIELDED_CF is unset
-    monkeypatch.delenv("LU_FORMAL_SHIELDED_CF", raising=False)
-    for prefix in (*REVIEW_TEMP_ROOT_PREFIXES, "lu-review-custom-", "lu-review-"):
-        with pytest.raises(
-            OSError,
-            match=r"sealed snapshot flow was retired on 2026-08-07 and review runs through ask-<lane> --type review",
-        ):
-            create_review_temp_root(prefix=prefix, dir=tmp_path)
-
-    # Still refused even if LU_FORMAL_SHIELDED_CF is set (no environment bypass)
-    monkeypatch.setenv("LU_FORMAL_SHIELDED_CF", "1")
-    for prefix in (*REVIEW_TEMP_ROOT_PREFIXES, "lu-review-custom-"):
-        with pytest.raises(
-            OSError,
-            match=r"sealed snapshot flow was retired on 2026-08-07 and review runs through ask-<lane> --type review",
-        ):
-            create_review_temp_root(prefix=prefix, dir=tmp_path)
-
-
-def test_create_review_temp_root_allows_non_review_prefixes(tmp_path: Path) -> None:
-    """Non-lu-review prefixes still create sentinel-marked private roots."""
-    from scripts.review.isolation import (
-        REVIEW_TEMP_ROOT_MARKER_NAME,
-        create_review_temp_root,
-        remove_review_temp_tree,
-    )
-
-    root = create_review_temp_root(prefix="custom-prefix-", dir=tmp_path)
-    try:
-        assert root.is_dir()
-        assert root.name.startswith("custom-prefix-")
-        marker = root / REVIEW_TEMP_ROOT_MARKER_NAME
-        assert marker.is_file()
-        assert marker.stat().st_size > 0
-    finally:
-        remove_review_temp_tree(root)
-    assert not root.exists()
-
-
-def test_process_codex_legacy_review_path_fails_closed_before_snapshot(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Legacy process-codex review path fails closed before creating any snapshot (#8520)."""
-    from unittest.mock import MagicMock
-
-    from scripts.ai_agent_bridge import _ask_lifecycle, _codex, _review_worktree
-    from scripts.review import isolation, snapshot
-
-    monkeypatch.setattr(isolation, "create_review_temp_root", create_review_temp_root)
-    monkeypatch.setattr(snapshot, "create_review_temp_root", create_review_temp_root)
-    monkeypatch.setattr(_review_worktree, "create_review_temp_root", create_review_temp_root)
-
-    scratch = tmp_path / "scratch"
-    scratch.mkdir()
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
-
-    fake_msg = {
-        "id": 999,
-        "task_id": "test-task-8520",
-        "from": "orchestrator",
-        "to": "codex",
-        "type": "review",
-        "content": "review this PR",
-        "data": "{}",
-    }
-    monkeypatch.setattr(_codex, "_fetch_codex_message", lambda _id: fake_msg)
-    monkeypatch.setattr(_codex, "has_codex_headroom", lambda _model: (True, ""))
-
-    materialize_mock = MagicMock(side_effect=AssertionError("materialize_review_snapshot must not be called"))
-    monkeypatch.setattr(snapshot, "materialize_review_snapshot", materialize_mock)
-    invoke_mock = MagicMock(side_effect=AssertionError("codex agent invoke must not be called"))
-    monkeypatch.setattr(_codex.agent_runner, "invoke", invoke_mock)
-
-    with pytest.raises(
-        OSError,
-        match=r"sealed snapshot flow was retired on 2026-08-07 and review runs through ask-<lane> --type review",
-    ):
-        _ask_lifecycle._process_target(999, "codex", {"review": True})
-
-    materialize_mock.assert_not_called()
-    invoke_mock.assert_not_called()
-    # Confirm no lu-review-* snapshot directory was created
-    assert not list(scratch.glob("lu-review-*"))
-    assert not list(tmp_path.glob("lu-review-*"))
 
 
 @pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

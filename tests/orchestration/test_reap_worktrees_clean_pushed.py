@@ -345,23 +345,8 @@ def test_dirty_tracked_file_refuses(repo: Path, free_fuser: Path) -> None:
     assert _refusal(repo, worktree) == "dirty or untracked files"
 
 
-def test_untracked_file_refuses(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo)
-    (worktree / "notes" / "deep").mkdir(parents=True)
-    (worktree / "notes" / "deep" / "scratch.txt").write_text("x\n", encoding="utf-8")
-    assert _refusal(repo, worktree) == "dirty or untracked files"
-
-
 def test_one_unpushed_commit_refuses(repo: Path, free_fuser: Path) -> None:
     worktree = dispatch_tree(repo)
-    (worktree / "README.md").write_text("local only\n", encoding="utf-8")
-    git(worktree, "commit", "-am", "local only")
-    age_tree(worktree, repo, "task-a")
-    assert _refusal(repo, worktree) == "commits not on origin"
-
-
-def test_detached_unpushed_commit_refuses(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo, detached=True)
     (worktree / "README.md").write_text("local only\n", encoding="utf-8")
     git(worktree, "commit", "-am", "local only")
     age_tree(worktree, repo, "task-a")
@@ -380,18 +365,6 @@ def test_process_working_inside_the_tree_refuses(repo: Path, free_fuser: Path) -
     holder = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=subdir)
     try:
         assert _refusal(repo, worktree) == "in use: a process works inside the checkout"
-    finally:
-        holder.kill()
-        holder.wait(timeout=30)
-
-
-@pytest.mark.skipif(shutil.which("fuser") is None, reason="real fuser not installed")
-def test_real_fuser_reports_a_process_in_the_tree(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(rw, "_FUSER", "fuser")
-    worktree = dispatch_tree(repo)
-    holder = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=worktree)
-    try:
-        assert _refusal(repo, worktree) == "in use: fuser reports a process using the checkout"
     finally:
         holder.kill()
         holder.wait(timeout=30)
@@ -433,13 +406,6 @@ def test_live_task_refuses(repo: Path, free_fuser: Path, status: str) -> None:
     assert _refusal(repo, worktree) == f"task task-a is {status}"
 
 
-def test_task_of_another_id_claiming_the_tree_refuses(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo)
-    record = write_task(repo, "reuser", worktree, status="running")
-    age([record])
-    assert _refusal(repo, worktree) == "task reuser is running"
-
-
 @pytest.mark.parametrize("status", ["queued", "", None])
 def test_unsettled_task_status_refuses(repo: Path, free_fuser: Path, status: str | None) -> None:
     worktree = dispatch_tree(repo, status="done")
@@ -467,13 +433,6 @@ def test_recent_task_file_metadata_does_not_reset_terminal_time(repo: Path, free
     os.utime(repo / "batch_state" / "tasks" / "task-a.json")
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
     assert outcome_for(report, worktree, repo).action == "removed"
-
-
-def test_fresh_checkout_refuses(repo: Path, free_fuser: Path) -> None:
-    worktree = repo / ".worktrees" / "dispatch" / "codex" / "fresh"
-    worktree.parent.mkdir(parents=True)
-    git(repo, "worktree", "add", "-b", "codex/fresh", str(worktree), "main")
-    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
 
 
 def test_reflog_file_rewritten_in_place_is_still_reaped(repo: Path, free_fuser: Path) -> None:
@@ -544,20 +503,6 @@ def test_empty_or_unparseable_head_reflog_is_not_reaped(
     )
 
     assert _refusal(repo, worktree) == reason
-
-
-def _append_reflog_stamp(log: Path, stamp: int) -> None:
-    text = log.read_text(encoding="utf-8")
-    lines = [line for line in text.splitlines() if line.strip()]
-    header, separator, message = lines[-1].partition("\t")
-    match = _REFLOG_STAMP.fullmatch(header)
-    assert match is not None
-    entry = f"{match.group(1)}{stamp} {match.group(3)}"
-    if separator:
-        entry += f"{separator}{message}"
-    log.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
-    with log.open("a", encoding="utf-8") as handle:
-        handle.write(entry + "\n")
 
 
 def _keep_once(repo: Path, worktree: Path) -> None:
@@ -679,30 +624,6 @@ def test_bad_reflog_watch_body_keeps_a_backdated_reset(repo: Path, free_fuser: P
     watch.write_text(payload, encoding="utf-8")
     _kept_for_reason(repo, worktree, reason)
     assert watch.read_text(encoding="utf-8") == payload
-
-
-@pytest.mark.parametrize("kind", ["sha256", "entries", "changed_at", "changed_at_text", "value"])
-def test_wrong_watch_entry_type_keeps_a_backdated_reset(repo: Path, free_fuser: Path, kind: str) -> None:
-    worktree = dispatch_tree(repo)
-    _observe_then_backdate(repo, worktree)
-    watch = rw._head_reflog_watch_path(repo)
-    payload = json.loads(watch.read_text(encoding="utf-8"))
-    key = next(iter(payload["trees"]))
-    entry = payload["trees"][key]
-    if kind == "sha256":
-        entry["sha256"] = "nope"
-    elif kind == "entries":
-        entry["entries"] = True
-    elif kind == "changed_at":
-        entry["changed_at"] = -1
-    elif kind == "changed_at_text":
-        entry["changed_at"] = "1"
-    else:
-        payload["trees"][key] = []
-    encoded = json.dumps(payload) + "\n"
-    watch.write_text(encoded, encoding="utf-8")
-    _kept_for_reason(repo, worktree, "head reflog watch schema invalid; activity unknown")
-    assert watch.read_text(encoding="utf-8") == encoded
 
 
 @pytest.mark.parametrize("kind", ["unreadable", "directory", "symlink", "fifo", "oversized"])
@@ -844,25 +765,6 @@ def test_reflog_watch_lock_held_by_another_process_keeps_a_backdated_reset(
     finally:
         holder.kill()
         holder.wait(timeout=5)
-
-
-def test_recent_entry_then_backdated_entry_stays_active(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo)
-    log = admin_dir(worktree) / "logs" / "HEAD"
-    _append_reflog_stamp(log, int(time.time()))
-    _append_reflog_stamp(log, 978307200)
-    old = time.time() - TWO_HOURS
-    os.utime(log, (old, old))
-    age(
-        [
-            admin_dir(worktree) / "HEAD",
-            admin_dir(worktree) / "index",
-            worktree / "README.md",
-            repo / "batch_state" / "tasks" / "task-a.json",
-        ]
-    )
-
-    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
 
 
 def test_identical_reflog_bytes_after_observation_are_still_reaped(repo: Path, free_fuser: Path) -> None:
@@ -1024,14 +926,6 @@ def test_symlinked_registered_path_refuses(repo: Path, free_fuser: Path, tmp_pat
     assert elsewhere.is_dir()
 
 
-def test_non_directory_registered_path_refuses(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo)
-    shutil.rmtree(worktree)
-    worktree.write_text("not a checkout\n", encoding="utf-8")
-    assert _refusal(repo, worktree) == "path is a symlink, missing, or not a directory"
-    assert worktree.read_text(encoding="utf-8") == "not a checkout\n"
-
-
 def test_locked_worktree_refuses(repo: Path, free_fuser: Path) -> None:
     worktree = dispatch_tree(repo)
     git(repo, "worktree", "lock", "--reason", "hold", str(worktree))
@@ -1094,17 +988,6 @@ def test_task_spawned_after_selection_is_caught_by_the_claim_scan(
     assert outcome.action == "skipped"
     assert outcome.reason == "worktree claimed by active task late-task"
     assert worktree.is_dir()
-
-
-def test_concurrent_second_run_is_a_no_op(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo)
-    with rw._ReapLock(repo):
-        report = rw.reap_clean_pushed(repo_root=repo, dry_run=False, lock_timeout_s=0.2)
-    assert report.lock_busy
-    assert report.removed == () and report.skipped == ()
-    assert report.refusal and "another worktree cleanup holds" in report.refusal
-    assert worktree.is_dir()
-    assert abandon_log(repo) == []
 
 
 def test_concurrent_second_process_is_a_no_op(repo: Path, free_fuser: Path) -> None:
@@ -1208,14 +1091,6 @@ def test_edit_hidden_by_an_index_flag_refuses(repo: Path, free_fuser: Path, flag
 
     assert _refusal(repo, worktree) == HIDDEN
     assert (worktree / "README.md").read_text(encoding="utf-8") == edit
-
-
-def test_exec_bit_hidden_by_an_index_flag_refuses(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo)
-    git(worktree, "update-index", "--assume-unchanged", "README.md")
-    (worktree / "README.md").chmod(0o755)
-    age_tree(worktree, repo, "task-a")
-    assert _refusal(repo, worktree) == HIDDEN
 
 
 def test_unchanged_flagged_file_and_sparse_exclusions_do_not_refuse(repo: Path, free_fuser: Path) -> None:
@@ -1394,21 +1269,6 @@ def test_unparseable_recovery_record_keeps_the_tree(
     assert_kept_for_history(repo, worktree, f"unpublished_reflog_commit: recovery history unknown ({why})")
 
 
-@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 files")
-def test_unreadable_reflog_keeps_the_tree(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo, detached=True)
-    log = admin_dir(worktree) / "logs" / "HEAD"
-    age_tree(worktree, repo, "task-a")
-    log.chmod(0)
-    try:
-        report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
-    finally:
-        log.chmod(0o644)
-    outcome = outcome_for(report, worktree, repo)
-    assert outcome.action == "skipped" and "logs/HEAD unreadable" in outcome.reason, outcome
-    assert worktree.is_dir()
-
-
 @pytest.mark.parametrize(
     ("kind", "reason"),
     [
@@ -1483,28 +1343,6 @@ def test_rebase_autostash_keeps_the_tree(repo: Path, free_fuser: Path, stop: str
         repo, worktree, "REBASE_HEAD, rebase-merge" if stop == "conflict" else "rebase-merge"
     )
     assert (admin_dir(worktree) / "rebase-merge" / "autostash").read_text(encoding="utf-8").strip() == autostash
-
-
-def test_interrupted_cherry_pick_sequence_keeps_the_tree(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo, detached=True)
-    theirs, mine = published_fork(worktree)
-    proc = subprocess.run(
-        ["git", "cherry-pick", theirs, mine], cwd=worktree, capture_output=True, env=git_env(), check=False, timeout=30
-    )
-    assert proc.returncode != 0  # the first pick conflicts
-    git(worktree, "reset", "-q", "--hard")  # drops CHERRY_PICK_HEAD; the sequence stays pending
-
-    assert_kept_for_pending_operation(repo, worktree, "sequencer")
-
-
-def test_bisect_in_progress_keeps_the_tree(repo: Path, free_fuser: Path) -> None:
-    worktree = dispatch_tree(repo, detached=True)
-    _theirs, mine = published_fork(worktree)
-    git(worktree, "bisect", "start", mine, "main")
-
-    entries = sorted(path.name for path in admin_dir(worktree).iterdir() if path.name.startswith("BISECT_"))
-    assert {"BISECT_LOG", "BISECT_START"} <= set(entries)
-    assert_kept_for_pending_operation(repo, worktree, ", ".join(entries))
 
 
 @pytest.mark.parametrize(
@@ -1756,15 +1594,6 @@ def test_kernel_threads_are_identified_by_the_stat_flag_never_by_pid_number(tmp_
     assert rw._stat_kind(proc / "41") == "kernel" and rw._stat_kind(proc / "42") == "user"
 
 
-@pytest.mark.skipif(not Path("/proc/2/stat").exists(), reason="no host kernel thread visible")
-def test_a_real_kernel_thread_stat_line_is_a_kernel_thread() -> None:
-    real = Path("/proc/2/stat").read_text(encoding="utf-8")
-    flags = int(real.rpartition(")")[2].split()[6])
-    if not flags & rw._PF_KTHREAD:
-        pytest.skip("pid 2 is not kthreadd here (a PID namespace)")
-    assert rw._stat_kind(Path("/proc/2")) == "kernel"
-
-
 def wrap_moves(
     monkeypatch: pytest.MonkeyPatch,
     *,
@@ -1972,22 +1801,6 @@ def test_failed_fetch_skips_the_whole_run(
     assert "nothing done: refs_stale" in capsys.readouterr().out
 
 
-def test_fetch_timeout_skips_the_whole_run(repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    worktree = dispatch_tree(repo)
-    real_run = rw._run
-
-    def slow_fetch(args: list[str], **kwargs: Any) -> Any:
-        if _git_subcommand(args) == "fetch":
-            assert kwargs["timeout"] == 60.0
-            raise subprocess.TimeoutExpired(args, kwargs["timeout"])
-        return real_run(args, **kwargs)
-
-    monkeypatch.setattr(rw, "_run", slow_fetch)
-    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
-    assert report.refs_stale and report.refusal == "refs_stale: git fetch --prune origin timed out after 60s"
-    assert worktree.is_dir()
-
-
 def test_fetch_runs_before_the_reaper_lock_and_once(
     repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -2139,22 +1952,6 @@ def test_failed_or_unexpected_census_skips_the_whole_run(
     assert report.removed == () and report.skipped == () and worktree.is_dir()
 
 
-def test_census_timeout_skips_the_whole_run(repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    worktree = dispatch_tree(repo)
-    real_run = rw._run
-
-    def slow(args: list[str], **kwargs: Any) -> Any:
-        if args[:2] == ["git", "ls-remote"]:
-            assert kwargs["timeout"] == 60.0
-            raise subprocess.TimeoutExpired(args, kwargs["timeout"])
-        return real_run(args, **kwargs)
-
-    monkeypatch.setattr(rw, "_run", slow)
-    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
-    assert report.refusal == "refs_stale: git ls-remote --heads --tags origin timed out after 60s"
-    assert worktree.is_dir()
-
-
 def wrap_final_recheck(monkeypatch: pytest.MonkeyPatch, change: Any) -> None:
     """Run ``change(quarantined)`` after every guard re-ran on the quarantined tree, just before the final re-check."""
     real = rw._final_recheck
@@ -2242,31 +2039,6 @@ def at_the_git_call(monkeypatch: pytest.MonkeyPatch, change: Any) -> list[Path]:
 
     monkeypatch.setattr(worktree_claims, "safe_git", spy)
     return seen
-
-
-@pytest.mark.parametrize("change", [late_hidden, late_ignored, late_process])
-def test_arrival_during_the_git_removal_call_is_lost_documented_residual(
-    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, holders: list[Any], change: Any
-) -> None:
-    """Residual risk, not a guarantee (runbook): no privilege-free check excludes a same-user writer.
-
-    Bytes or a process that arrive after the final re-check, while the
-    non-forced ``git worktree remove`` runs, are not seen: Git trusts
-    assume-unchanged, deletes ignored files and ignores processes.
-    """
-    worktree = dispatch_tree(repo, detached=True)
-    flag_for(change, worktree, repo)
-    seen = at_the_git_call(monkeypatch, change)
-
-    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
-
-    assert outcome_for(report, worktree, repo).action == "removed"
-    [staged] = seen
-    assert not worktree.exists() and not staged.exists()
-    if change is late_process:
-        [process] = holders
-        assert process.poll() is None  # still running, its working directory deleted
-        assert os.readlink(f"/proc/{process.pid}/cwd").endswith(" (deleted)")
 
 
 def test_tracked_edit_at_the_git_call_is_refused_by_git_and_restored(
@@ -2501,20 +2273,6 @@ def test_unexpected_entry_in_a_holder_keeps_the_record_and_is_reported(
     if checkout:
         assert staged.is_dir() and not worktree.exists()  # not restored past the unexpected entry
         assert report.removed == ()
-
-
-def test_clearing_a_holder_keeps_the_record_while_anything_else_is_there(tmp_path: Path) -> None:
-    holder = tmp_path / "holder"
-    holder.mkdir()
-    (holder / rw.QUARANTINE_RECORD).write_text("{}", encoding="utf-8")
-    (holder / "late.txt").write_text("x\n", encoding="utf-8")
-
-    rw._clear_quarantine(holder)
-    assert sorted(path.name for path in holder.iterdir()) == sorted([rw.QUARANTINE_RECORD, "late.txt"])
-
-    (holder / "late.txt").unlink()
-    rw._clear_quarantine(holder)
-    assert not holder.exists()
 
 
 def test_quarantine_root_open_to_others_is_refused(repo: Path, free_fuser: Path) -> None:

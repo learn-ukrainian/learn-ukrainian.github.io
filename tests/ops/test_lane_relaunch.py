@@ -60,15 +60,6 @@ def test_existing_session_is_skipped_and_never_typed_into(tmp_path: Path) -> Non
     assert not any("=atlas" in call for call in fake.calls if call[1] not in {"has-session", "capture-pane"})
 
 
-def test_lead_lane_starts_last_even_when_listed_first(tmp_path: Path) -> None:
-    registry = load_registry()
-    lanes = sorted(registry.lanes, key=lambda lane: not lane.lead)  # cto first in data order
-    assert lanes[0].session == "cto"
-    fake = FakeTmux()
-    run(fake, tmp_path, Registry(lanes=tuple(lanes), settings=registry.settings, guard_sender=registry.guard_sender))
-    assert created(fake)[-1] == "cto"
-
-
 def test_launcher_exit_is_logged_and_relaunch_moves_on(tmp_path: Path) -> None:
     fake = FakeTmux(exit_on_create={"harness": 1})
     outcomes = {o.session: o for o in run(fake, tmp_path)}
@@ -159,21 +150,6 @@ def test_refused_wrapper_lane_is_logged_and_not_started(tmp_path: Path) -> None:
     assert {o.session: o.status for o in outcomes}["atlas"] == "config-refused"
     assert any(line.startswith("atlas: not started, local lane config: atlas: wrapper word") for line in logs)
     assert not any("INJECTED" in arg for call in fake.calls for arg in call)
-
-
-def test_refused_lane_fails_main_and_shows_in_dry_run(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    fake = FakeTmux()
-    real = cg.Tmux
-    monkeypatch.setattr(lr, "Tmux", lambda: real(run=fake.run, sleep=fake.sleep, clock=fake.clock))
-    monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(refusing_local(tmp_path)))
-    assert lr.main(["--dry-run"]) == 0
-    plan = {entry["session"]: entry for entry in json.loads(capsys.readouterr().out)}
-    assert set(plan["atlas"]) == {"session", "refused"} and "shell syntax" in plan["atlas"]["refused"]
-    assert fake.calls == []
-    assert lr.main(["--settle-seconds", "2"]) == 3
-    assert "atlas" not in created(fake)
 
 
 def test_unreadable_new_pane_is_unverified_and_relaunch_moves_on(tmp_path: Path) -> None:

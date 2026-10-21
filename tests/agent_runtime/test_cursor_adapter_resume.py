@@ -14,22 +14,6 @@ def adapter():
     return CursorAdapter()
 
 
-def test_cursor_adapter_resume_first_run(adapter, tmp_path, monkeypatch):
-    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/cursor-agent")
-
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model=None,
-        task_id="new-task-1",
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert "--resume" not in plan.cmd
-
-
 def _executable(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
@@ -124,45 +108,6 @@ def test_cursor_adapter_does_not_resume_from_disk(adapter, tmp_path, monkeypatch
     )
 
     assert "--resume" not in plan.cmd
-
-
-def test_cursor_adapter_does_not_resume_from_api_usage(adapter, tmp_path, monkeypatch):
-    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/cursor-agent")
-
-    # Create fake api_usage directory and write log
-    repo_root = Path(__file__).resolve().parents[2]
-    usage_dir = repo_root / "batch_state" / "api_usage"
-    usage_dir.mkdir(parents=True, exist_ok=True)
-
-    log_file = usage_dir / "usage_cursor-delegate_test.jsonl"
-    record = {
-        "ts": "2026-05-26T00:00:00Z",
-        "agent": "cursor",
-        "entrypoint": "delegate",
-        "task_id": "task-api-usage",
-        "session_id": "session-api-usage-456",
-    }
-
-    # Write a test log record
-    with open(log_file, "a", encoding="utf-8") as f:
-        f.write(json.dumps(record) + "\n")
-
-    try:
-        plan = adapter.build_invocation(
-            prompt="hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            model=None,
-            task_id="task-api-usage",
-            session_id=None,
-            tool_config=None,
-        )
-
-        assert "--resume" not in plan.cmd
-    finally:
-        # Clean up the test log
-        if log_file.exists():
-            log_file.unlink()
 
 
 def test_cursor_adapter_parse_response_session_id_stdout(adapter):

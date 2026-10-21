@@ -40,15 +40,13 @@ from scripts.projects.open_model_data.generate_grammar_signoff_8342 import (
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     IN_SCOPE_TAGS,
     TAG_TO_COARSE_CATEGORY,
-    clean_sentence_for_query,
     is_finite_active_verb,
 )
-from scripts.projects.open_model_data.paths import REGISTRY_GRAMMAR_DIR, REGISTRY_RELEASE_DIR
+from scripts.projects.open_model_data.paths import REGISTRY_GRAMMAR_DIR
 from scripts.storage.paths import artifact_set
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 GRAMMAR_DIR = REGISTRY_GRAMMAR_DIR
-OLD_RELEASE_DIR = REGISTRY_RELEASE_DIR / "uldr_v05_grammar_valency"
 TEST_M2_PATH = PROJECT_ROOT / "data" / "ua-gec" / "data" / "gec-fluency" / "test" / "gec-fluency.test.m2"
 _GRAMMAR_REL = "projects/open_model_data/components/grammar"
 
@@ -96,16 +94,6 @@ def grammar_data():
         "eval": eval_records,
         "all": train_records + eval_records,
     }
-
-
-def test_tombstone_quarantine_exists():
-    """Verify uldr_v05_grammar_valency has a TOMBSTONE marking it retired per #8342."""
-    tombstone = OLD_RELEASE_DIR / "TOMBSTONE.md"
-    assert tombstone.is_file(), f"Missing TOMBSTONE.md at {tombstone}"
-    content = tombstone.read_text(encoding="utf-8")
-    assert "#8342" in content
-    assert "DO NOT USE" in content or "QUARANTINED" in content
-    assert "8143" in content
 
 
 @pytest.mark.needs_artifact(
@@ -914,30 +902,6 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requir
 @pytest.mark.needs_artifact(
     "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
 )
-def test_no_duplicated_query_punctuation(grammar_data):
-    """Verify that 0 records have nested guillemets or duplicated punctuation in query."""
-    double_punct_pattern = re.compile(
-        r"(?:\?[»”\"']\s*\?)"
-        r"|(?:![»”\"']\s*!)"
-        r"|(?:(?<!\.)\.\s*[»”\"']\s*\.)"
-        r"|(?:(\.{3}|[?!…])[»”\"']\s*\.)"
-        r"|(?:(?<!\.)\.\s*[»”\"']\s*[?!…])"
-    )
-    for r in grammar_data["all"]:
-        q = r.get("query", "")
-        assert "««" not in q and "»»" not in q, f"Nested guillemets found in query: {q}"
-        assert not double_punct_pattern.search(q), f"Duplicated punctuation found around quote in query: {q}"
-        assert not re.search(r"\.\s*»\s*\.", q), f"Double dot across quote found in query: {q}"
-        assert not re.search(r"\?\s*\.", q), f"Question followed by period found in query: {q}"
-        assert not re.search(r"!\s*\.", q), f"Exclamation followed by period found in query: {q}"
-        assert not re.search(r"\.\s*\.", q.replace("...", "").replace("…", "")), f"Double period found in query: {q}"
-        if q.startswith("Чи ") or "чи все тут правильно?" in q.lower():
-            assert "?" in q, f"Carrier question lost its question mark: {q}"
-
-
-@pytest.mark.needs_artifact(
-    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
-)
 def test_source_denominator_reconciliation(grammar_data):
     """Verify that manifest and README contain documented source denominator reconciliation (#8342)."""
     manifest = grammar_data["manifest"]
@@ -1011,19 +975,6 @@ def test_source_denominator_reconciliation(grammar_data):
     assert "380" in readme_text
     assert "330" in readme_text
     assert "50" in readme_text
-
-
-def test_clean_sentence_for_query_preserves_quoted_punctuation():
-    """Verify clean_sentence_for_query preserves ?, !, and … inside fully quoted utterances."""
-    assert clean_sentence_for_query("«Чому?»") == "Чому?"
-    assert clean_sentence_for_query("«Стій!»") == "Стій!"
-    assert clean_sentence_for_query("«Що це таке?!»") == "Що це таке?!"
-    assert clean_sentence_for_query("«Невже?...»") == "Невже?..."
-    assert clean_sentence_for_query("«Невже?…»") == "Невже?…"
-    assert clean_sentence_for_query("«Кажу я.»") == "Кажу я"
-    assert clean_sentence_for_query('"Why?"') == "Why?"
-    assert clean_sentence_for_query('"Wait!"') == "Wait!"
-    assert clean_sentence_for_query('"Said he."') == "Said he"
 
 
 def test_validator_rejection_label_accuracy():

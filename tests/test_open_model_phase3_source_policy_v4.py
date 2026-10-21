@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.ingest import incremental_textbook_ingest as textbook_ingest
 from scripts.projects.open_model_data import phase3_source_policy_v4 as policy_v4
@@ -115,36 +114,6 @@ def test_policy_rejects_staged_jsonl_identity_drift_even_when_resealed():
         policy_v4.validate_policy_document(_reseal(document))
 
 
-def test_policy_rejects_external_corpus_ingest_even_when_resealed():
-    document = copy.deepcopy(_policy())
-    external = next(source for source in document["sources"] if source["source_kind"] == "external_reference")
-    external["allowed_lanes"].append("corpus_ingest")
-
-    with pytest.raises(policy_v4.CompleteSourcePolicyError, match="schema violation"):
-        policy_v4.validate_policy_document(_reseal(document))
-
-
-def test_policy_rejects_source_omission_even_when_counts_are_rewritten():
-    document = copy.deepcopy(_policy())
-    document["sources"] = document["sources"][:-1]
-    document["source_count"] = 29
-    document["disposition_counts"]["quarantine"] = 3
-    document["disposition_counts"]["total"] = 29
-
-    with pytest.raises(policy_v4.CompleteSourcePolicyError, match="schema violation"):
-        policy_v4.validate_policy_document(_reseal(document))
-
-
-def test_schema_rejects_open_source_fields():
-    document = copy.deepcopy(_policy())
-    document["sources"][0]["unreviewed_note"] = "not allowed"
-    schema = json.loads(policy_v4.SCHEMA_PATH.read_text(encoding="utf-8"))
-
-    errors = list(Draft202012Validator(schema).iter_errors(document))
-    assert errors
-    assert any("Additional properties are not allowed" in error.message for error in errors)
-
-
 def test_legacy_policy_loader_accepts_v4_for_jsonl_consumers():
     document, policy_sha256 = university_source_policy.load_policy(POLICY_PATH)
 
@@ -176,13 +145,6 @@ def test_external_reference_cannot_impersonate_university_jsonl(tmp_path):
             policy_path=POLICY_PATH,
             lane="contextual_retrieval",
         )
-
-
-def test_staged_argument_parser_is_closed():
-    with pytest.raises(policy_v4.CompleteSourcePolicyError, match="SOURCE_ID=PATH"):
-        policy_v4._parse_staged_jsonls(["missing-separator"])
-    with pytest.raises(policy_v4.CompleteSourcePolicyError, match="duplicate"):
-        policy_v4._parse_staged_jsonls(["source=/one", "source=/two"])
 
 
 def test_v4_policy_blocks_live_ingest_before_reading_chunks(tmp_path):

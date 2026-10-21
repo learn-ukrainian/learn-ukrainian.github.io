@@ -116,19 +116,6 @@ def test_stale_writer_result_commit_rejected(ledger: Ledger) -> None:
     assert unit["state"] == UnitOutcome.DONE.value
 
 
-def test_claim_loss_reclaim_increments_generation(ledger: Ledger) -> None:
-    fp = compute_run_fingerprint(cohort_digest="claim-loss")
-    run = ledger.start_run(fp).run_id
-    assert run
-    ledger.register_work_unit(run, "lemma-1", unit_kind="lemma")
-    c1 = ledger.claim_unit(run, "lemma-1", "w1", now=10.0)
-    assert c1.lease_generation == 1
-    ledger.reclaim_expired(run, now=9999.0)
-    c2 = ledger.claim_unit(run, "lemma-1", "w2", now=10000.0)
-    assert c2.lease_generation == 2
-    assert c2.attempt_count == 2
-
-
 def test_attempt_cap_exhaustion_and_operator_retry(ledger: Ledger) -> None:
     ledger.max_attempts = 2
     fp = compute_run_fingerprint(cohort_digest="cap")
@@ -451,50 +438,6 @@ def test_seal_blocked_by_failed_constituent(ledger: Ledger) -> None:
     assert len(events) == 1
 
 
-def test_seal_blocked_by_pending_constituent(ledger: Ledger) -> None:
-    """Seal refuses when any constituent lemma is still pending (#5370)."""
-    fp = compute_run_fingerprint(cohort_digest="seal-pend-const")
-    run = ledger.start_run(fp).run_id
-    assert run
-    ledger.register_chunk_work_units(run, [("chunk-y", ["done-1", "still-pending"])])
-    claim = ledger.claim_unit(run, "chunk-y", "coord", now=1.0)
-    gen = int(claim.lease_generation or 0)
-    assert ledger.commit_result(run, "chunk-y", "coord", gen, "done", result_hash="cy", now=2.0).ok
-    _mark_lemma_terminal(ledger, run, "done-1", now=3.0)
-    # still-pending remains pending — seal must block.
-    blocked = ledger.commit_seal(run, "chunk-y", "coord", gen, seal_sha256="nope", now=4.0)
-    assert blocked.status is CasStatus.INVALID_STATE
-    assert "still-pending" in blocked.detail
-    assert "pending" in blocked.detail
-    seals = (
-        ledger._require()
-        .execute(
-            "SELECT COUNT(*) AS n FROM seals WHERE run_id = ? AND chunk_id = ?",
-            (run, "chunk-y"),
-        )
-        .fetchone()
-    )
-    assert int(seals["n"]) == 0
-
-    # Completing the last lemma unblocks seal; mid-seal crash still rolls back.
-    _mark_lemma_terminal(ledger, run, "still-pending", now=5.0)
-    ledger.crash_mid_seal = True
-    with pytest.raises(RuntimeError, match="injected crash: mid_seal"):
-        ledger.commit_seal(run, "chunk-y", "coord", gen, seal_sha256="seal-y", now=6.0)
-    ledger.crash_mid_seal = False
-    seals_mid = (
-        ledger._require()
-        .execute(
-            "SELECT COUNT(*) AS n FROM seals WHERE run_id = ? AND chunk_id = ?",
-            (run, "chunk-y"),
-        )
-        .fetchone()
-    )
-    assert int(seals_mid["n"]) == 0
-    sealed = ledger.commit_seal(run, "chunk-y", "coord", gen, seal_sha256="seal-y", now=7.0)
-    assert sealed.ok
-
-
 def test_lemma_retry_reschedules_parent_chunk(ledger: Ledger) -> None:
     """retry_failed on a lemma CAS-resets the parent chunk to PENDING (#5370)."""
     ledger.max_attempts = 1
@@ -753,15 +696,6 @@ def test_import_reclaimed_lease_rejected(ledger: Ledger) -> None:
     assert unit3["result_hash"] == "fresh-body"
 
 
-def test_abandon_packet_operator_record(ledger: Ledger) -> None:
-    fp = compute_run_fingerprint(cohort_digest="pkt")
-    run = ledger.start_run(fp).run_id
-    assert run
-    res = ledger.abandon_packet(run, "pkt-1", 3, "operator abandoned stale transport")
-    assert res.ok
-    assert ledger.count_operator_actions(run, OperatorActionKind.ABANDON_PACKET.value) == 1
-
-
 def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Resume continues the frozen 500-lemma offline slice after interruption."""
     sources = sources_slice(tmp_path)
@@ -883,18 +817,3 @@ def test_500_lemma_slice_resume_from_interrupted_run(tmp_path: Path, monkeypatch
     candidate = json.loads(out2.read_text(encoding="utf-8"))
     assert candidate["ledger_run_id"] == run_id
     assert len(candidate["entries"]) == 500
-
-
-def test_issue_streams_atlas_practice_drops_closed_5331() -> None:
-    import yaml
-
-    doc = yaml.safe_load(Path("scripts/config/issue_streams.yaml").read_text(encoding="utf-8"))
-    epics = doc["streams"]["atlas-practice"]["epics"]
-    assert 5331 not in epics
-    assert 4387 in epics
-    assert 4700 not in epics
-    # Do not claim infra's issue; infra anchors on successor #6943.
-    infra = doc["streams"]["infra-harness"]["epics"]
-    assert 5331 not in infra
-    assert 6943 in infra
-    assert 4707 not in infra

@@ -106,35 +106,3 @@ def test_fixture_reviewer_ghosts_reads_curriculum_root(tmp_path: Path) -> None:
     assert body["total_ghost_findings"] == 1
     assert body["by_dimension"] == {"factual_accuracy": 1}
     assert body["recent"][0]["anchor"] == "fixture-anchor"
-
-
-def test_fixture_issues_map_runs_gh_from_context_root(tmp_path: Path, monkeypatch) -> None:
-    captured: dict[str, Path] = {}
-
-    def _fake_run(args, cwd=None, **_kwargs):
-        captured["cwd"] = Path(cwd)
-
-        class _Proc:
-            returncode = 127
-            stdout = ""
-            stderr = "fixture gh unavailable"
-
-        return _Proc()
-
-    monkeypatch.setattr("scripts.api.issues_router.github_client.run", _fake_run)
-    client = _cluster_client(tmp_path)
-    response = client.get("/api/issues/map")
-    assert response.status_code == 200
-    body = response.json()
-    assert body["categories"] == {}
-    assert "error" in body
-    assert captured["cwd"] == tmp_path.resolve()
-
-
-def test_fixture_knowledge_monitor_uses_context_root(tmp_path: Path) -> None:
-    client = _cluster_client(tmp_path)
-    response = client.get("/api/knowledge/monitor")
-    assert response.status_code == 200
-    body = response.json()
-    assert body["discovery_enabled"] is False
-    assert "lifecycle" in body

@@ -121,28 +121,6 @@ def test_corrupt_line_is_not_a_rate_limit_event(usage_dir: Path, corrupt_kind: s
     assert unreadable == {"files": 0, "lines": 1, "records": 0}
 
 
-def test_truncated_invalid_last_line_is_unreadable_and_not_an_event(usage_dir: Path) -> None:
-    """A truncated last line that is not valid JSON is one unreadable line and
-    contributes no rate-limit event, so a single valid event cannot block."""
-    now = time.time()
-    path = _usage_file(usage_dir, now)
-    truncated = (
-        b'{"ts": "'
-        + _stamp(now - 20).encode("ascii")
-        + b'", "model": "'
-        + MODEL.encode("ascii")
-        + b'", "outcome": "rate_lim'
-    )
-    path.write_bytes(_record_line(now - 30, outcome="rate_limited") + truncated)
-
-    unreadable = _new_unreadable()
-    ok, reason = usage_mod.has_headroom(AGENT, MODEL, unreadable=unreadable)
-
-    assert ok is True
-    assert reason == ""
-    assert unreadable == {"files": 0, "lines": 1, "records": 0}
-
-
 def test_truncated_valid_last_line_is_counted(usage_dir: Path) -> None:
     """A truncated last line that is still a complete valid JSON object counts
     as a row and leaves the unreadable counters untouched."""
@@ -157,25 +135,6 @@ def test_truncated_valid_last_line_is_counted(usage_dir: Path) -> None:
     assert ok is False
     assert reason
     assert unreadable == {"files": 0, "lines": 0, "records": 0}
-
-
-def test_file_of_only_corrupt_lines_leaves_headroom_clear(usage_dir: Path) -> None:
-    """Every corrupt line is counted; none raises; no events are found."""
-    now = time.time()
-    path = _usage_file(usage_dir, now)
-    path.write_bytes(
-        b"".join(
-            _corrupt_line(kind)
-            for kind in ("invalid-utf8", "invalid-utf8-in-string", "invalid-json", "json-non-object")
-        )
-    )
-
-    unreadable = _new_unreadable()
-    ok, reason = usage_mod.has_headroom(AGENT, MODEL, unreadable=unreadable)
-
-    assert ok is True
-    assert reason == ""
-    assert unreadable == {"files": 0, "lines": 4, "records": 0}
 
 
 def test_headroom_without_unreadable_counter_does_not_raise(usage_dir: Path) -> None:

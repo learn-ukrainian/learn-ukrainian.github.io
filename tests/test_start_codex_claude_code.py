@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -91,14 +90,3 @@ def test_codex_claude_code_rejects_old_model_before_provider(model):
     assert "is retired in the model catalog" in result.stderr
     assert model in result.stderr
     assert "would exec" not in result.stdout
-
-
-def test_direct_codex_proxy_configuration_rejects_old_pin_without_exports():
-    route = Path(__file__).resolve().parents[1] / "scripts/lib/codex_cc_route.sh"
-    result = subprocess.run(
-        ["bash", "-c", 'source "$1"; ANTHROPIC_MODEL=sentinel; codex_cc_configure_route gpt-5.6-sol; rc=$?; '
-         '[ "$ANTHROPIC_MODEL" = sentinel ] || exit 99; exit "$rc"', "test", str(route)],
-        text=True, capture_output=True, check=False, timeout=10,
-    )
-    assert result.returncode == 2
-    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr

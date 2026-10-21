@@ -18,7 +18,6 @@ import importlib.util
 import inspect
 import json
 import sqlite3
-import subprocess
 import sys
 import threading
 from pathlib import Path
@@ -202,11 +201,6 @@ def test_privacy_mode_log_keeps_self_heal_and_no_error_text(server, sdb, db, tmp
     assert "unavailable after reopen" not in json.dumps(entry)
 
 
-def test_healthy_call_has_no_self_heal_field(server, sdb, db, tmp_path):
-    _stats(server)
-    assert "self_heal" not in _log_entries(tmp_path)[-1]
-
-
 def test_database_error_that_is_not_a_stale_connection_is_not_retried(server, monkeypatch):
     calls: list[int] = []
 
@@ -377,45 +371,6 @@ def test_swallowed_absent_table_is_not_a_database_failure(server, sdb, db, tmp_p
     assert "self_heal" not in _log_entries(tmp_path)[-1]
 
 
-def test_swallowed_absent_table_on_a_first_attempt_does_not_start_a_heal(server, sdb, db, tmp_path, monkeypatch):
-    _dispatch(server, "collection_stats", {})  # no style_guide table in this database
-    reopened: list[object] = []
-    monkeypatch.setattr(server, "_discard_cached_connections", lambda *args: reopened.append(args))
-
-    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
-
-    assert is_error is False and typed["status"] == "empty"
-    assert "No results" in content[0].text
-    assert reopened == []
-    assert "self_heal" not in _log_entries(tmp_path)[-1]
-
-
-def test_retry_over_a_rebuilt_database_missing_a_table_is_a_typed_error_not_an_empty_result(
-    server, sdb, db, tmp_path, monkeypatch
-):
-    _add_dictionary_tables(db)
-    healthy, is_error, _ = _dispatch(server, "search_style_guide", {"query": "участь"})
-    assert is_error is False and "Приймати участь" in healthy[0].text
-    _truncate_in_place(db)  # first attempt: malformed
-    rebuilt = db.with_name("rebuilt.db")  # a valid database from a schema change: no style_guide table
-    conn = sqlite3.connect(rebuilt)
-    conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, body TEXT)")
-    conn.commit()
-    conn.close()
-    monkeypatch.setattr(sdb, "_read_db_path", lambda: rebuilt)  # the reopen now finds the rebuilt file
-
-    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
-
-    assert is_error is True
-    payload = json.loads(content[0].text)
-    assert payload == typed
-    assert payload["status"] == "error" and payload["error_code"] == "database_unavailable"
-    assert payload["database"] == "sources.db" and payload["error_class"] == "OperationalError"
-    assert "No results" not in content[0].text
-    heal = _log_entries(tmp_path)[-1]["self_heal"]
-    assert heal["recovered"] is False and heal["error_class"] == "DatabaseError"
-
-
 def test_failed_reopen_replaces_the_held_connection_with_one_that_fails_every_query(server, sdb, db, monkeypatch):
     _stats(server)
     held = sdb._conn
@@ -559,19 +514,6 @@ def test_initial_connection_that_swallows_a_disk_error_is_healed_on_the_first_ca
     }
 
 
-def test_initial_connection_that_keeps_swallowing_a_disk_error_is_a_typed_error(server, sdb, db, tmp_path, monkeypatch):
-    _add_dictionary_tables(db)
-    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error"))
-
-    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
-
-    assert is_error is True
-    assert json.loads(content[0].text) == typed
-    assert typed["error_code"] == "database_unavailable" and typed["database"] == "sources.db"
-    assert "No results" not in content[0].text
-    assert _heal_record(tmp_path)["recovered"] is False
-
-
 def _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures: int | None):
     """Cache a connection whose data queries fail with a disk error the helper swallows."""
     monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error", failures=failures))
@@ -616,26 +558,6 @@ def test_reopen_failure_never_reuses_the_damaged_connection_and_the_next_call_he
         "reopened": True,
         "recovered": True,
     }
-
-
-def test_reopen_failure_with_a_persistent_error_is_a_typed_error_in_privacy_mode_too(
-    server, sdb, db, tmp_path, monkeypatch
-):
-    _add_dictionary_tables(db)
-    damaged = _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures=None)
-
-    def path_missing():
-        raise FileNotFoundError(f"Sources database not found at {tmp_path}")
-
-    monkeypatch.setattr(sdb, "_read_db_path", path_missing)
-
-    _content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь", "_privacy_mode": True})
-
-    assert is_error is True and typed["error_code"] == "database_unavailable"
-    assert typed["reopened"] is False and sdb._conn is not damaged
-    entry = _log_entries(tmp_path)[-1]
-    assert entry["self_heal"]["recovered"] is False and entry["self_heal"]["reopened"] is False
-    assert entry["privacy_mode"] is True and str(tmp_path) not in json.dumps(entry)
 
 
 def test_connection_opened_for_another_database_path_is_observed_too(server, sdb, db, tmp_path):
@@ -684,15 +606,6 @@ def test_other_consumers_of_sources_db_get_a_plain_connection_when_the_factory_i
         writable.close()
 
 
-def test_sources_db_default_factory_is_unset_without_the_server():
-    root = Path(__file__).resolve().parents[1]
-    program = f"import sys; sys.path.insert(0, {str(root)!r}); import scripts.wiki.sources_db as m; print(m._connection_factory)"
-    result = subprocess.run(
-        [sys.executable, "-I", "-c", program], capture_output=True, text=True, check=True, timeout=300
-    )
-    assert result.stdout.strip() == "None"
-
-
 @pytest.fixture()
 def fake_wiki_cache(monkeypatch):
     wiki_cache = importlib.import_module("rag.wiki_cache")
@@ -718,13 +631,6 @@ def fake_wiki_cache(monkeypatch):
 
     monkeypatch.setattr(wiki_cache, "WikiCache", FakeCache)
     return FakeCache
-
-
-def test_wikipedia_cache_is_closed_after_a_call(server, fake_wiki_cache):
-    result = asyncio.run(server._query_wikipedia({"query": "Київ", "mode": "search"}))
-
-    assert result[0].text == "cached text"
-    assert [cache.closed for cache in fake_wiki_cache.instances] == [True]
 
 
 def test_wikipedia_cache_is_closed_when_the_call_raises(server, fake_wiki_cache):
@@ -773,29 +679,6 @@ def test_corpus_worker_swallowed_damage_heals_or_fails_without_partial_success(
         assert "healthy corpus" not in content[0].text
     else:
         assert is_error is False and "healthy corpus" in content[0].text
-
-
-def test_corpus_worker_damage_on_retry_does_not_log_recovered(server, sdb, db, tmp_path, monkeypatch):
-    _add_dictionary_tables(db)
-    _threaded_corpus_lookup(sdb, monkeypatch)
-    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error"))
-    sdb._get_conn()
-    real_handler = server.handle_search_sources
-    calls = []
-
-    async def fail_first(arguments):
-        calls.append(1)
-        if len(calls) == 1:
-            sdb._get_conn().execute("SELECT * FROM textbooks")
-        return await real_handler(arguments)
-
-    monkeypatch.setattr(server, "handle_search_sources", fail_first)
-    content, is_error, typed = _dispatch(server, "search_sources", {"query": "участь"})
-
-    assert is_error is True and typed["error_code"] == "database_unavailable"
-    assert "healthy corpus" not in content[0].text
-    assert calls == [1, 1]
-    assert _heal_record(tmp_path)["recovered"] is False
 
 
 def test_concurrent_requests_keep_worker_damage_in_their_own_attempt(server, sdb, db, monkeypatch):

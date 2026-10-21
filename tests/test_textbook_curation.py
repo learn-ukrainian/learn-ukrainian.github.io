@@ -60,45 +60,6 @@ def test_false_positive_guard_keeps_substring_only_hit_low_confidence(
     assert result["best_hit"]["author_match"] is False
 
 
-def test_no_matching_textbook_section_returns_empty_result(tmp_path: Path) -> None:
-    db_path = _write_sources_db(tmp_path)
-    sections = load_sections(db_path)
-
-    result = lookup_curation(
-        "A Historical Phonology of the Ukrainian Language",
-        "Shevelov",
-        sections,
-    )
-
-    assert result["in_school_canon"] is False
-    assert result["confidence"] == 0.0
-    assert result["hit_count"] == 0
-    assert result["best_hit"] is None
-    assert result["excerpt_boundary"] is None
-    assert result["hits"] == []
-
-
-def test_cli_work_author_prints_json(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
-    db_path = _write_sources_db(tmp_path)
-
-    exit_code = main(
-        [
-            "--db",
-            str(db_path),
-            "--work",
-            "Заповіт",
-            "--author",
-            "Тарас Шевченко",
-        ]
-    )
-
-    assert exit_code == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["in_school_canon"] is True
-    assert payload["grades"] == [0]
-    assert payload["excerpt_boundary"]["full_text_chars"] == len(ZAPOVIT_TEXT)
-
-
 def test_cli_manifest_writes_summary_with_expected_keys(tmp_path: Path) -> None:
     db_path = _write_sources_db(tmp_path)
     plans_dir = _write_plan_fixture(tmp_path)

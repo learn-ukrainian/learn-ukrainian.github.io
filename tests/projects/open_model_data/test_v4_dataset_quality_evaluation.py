@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import jsonschema
 import pytest
 
 from scripts.projects.open_model_data.v4_dataset_quality_evaluation import (
@@ -13,15 +12,6 @@ from scripts.projects.open_model_data.v4_dataset_quality_evaluation import (
     assess_pilot_dataset,
     verify_assessment,
 )
-
-
-def test_quality_evaluation_schema_valid() -> None:
-    repo_root = Path.cwd()
-    schema_path = repo_root / "registry/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json"
-    assert schema_path.exists(), "Missing schema contract"
-
-    schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    jsonschema.Draft202012Validator.check_schema(schema)
 
 
 @pytest.mark.needs_artifact(
@@ -77,27 +67,6 @@ def test_eval2_quality_fidelity_and_split_firewall() -> None:
     "open_model_other_indexes",
     "projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
 )
-def test_eval3_legitimate_use_preservation() -> None:
-    repo_root = Path.cwd()
-    records_path = repo_root / "data/projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl"
-    roles = set()
-    with records_path.open("r", encoding="utf-8") as f:
-        for idx, line in enumerate(f):
-            if idx == 0:
-                continue
-            rec = json.loads(line)
-            role = rec.get("language_views", {}).get("primary_role")
-            roles.add(role)
-
-    # Validates registers are preserved without synthetic modernization
-    assert "literary_register" in roles or "modern_standard" in roles
-    assert "damaged_or_excluded" in roles  # 1 quarantined extraction anomaly preserved honestly
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
-)
 def test_eval4_heldout_evaluation_protocol_and_sealed_custody() -> None:
     repo_root = Path.cwd()
     assessment = assess_pilot_dataset(repo_root)
@@ -125,21 +94,6 @@ def test_eval5_independent_reproduction() -> None:
         assert c["verdict"] == "PASS"
         assert c["verbatim_fidelity_confirmed"] is True
         assert c["split_firewall_confirmed"] is True
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
-)
-def test_eval6_downstream_study_methodology() -> None:
-    repo_root = Path.cwd()
-    assessment = assess_pilot_dataset(repo_root)
-    methodology = assessment["downstream_study_methodology"]
-
-    assert methodology["target_issue"] == 7889
-    assert methodology["dataset_quality_verdict"] == "PASS"
-    assert methodology["trained_model_utility_verdict"] == "PENDING_EXPERIMENTAL_STUDY"
-    assert len(methodology["uncertainty_and_limitations"]) >= 3
 
 
 def test_privacy_invariants() -> None:

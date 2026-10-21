@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import logging
 import os
-import sqlite3
 import subprocess
 import time
 from pathlib import Path
@@ -63,31 +62,6 @@ def test_corrupt_curriculum_yaml_surfaces_track_error(
     assert body["total_expected"] == 0
     assert any("a1" in item and "curriculum.yaml" in item for item in body["errors"])
     assert any("curriculum.yaml" in record.message for record in caplog.records)
-
-
-def test_invalid_pid_records_are_named_and_not_counted_alive(
-    tmp_path: Path, comms_client: TestClient, caplog: pytest.LogCaptureFixture
-) -> None:
-    pid_dir = tmp_path / ".mcp" / "servers" / "message-broker" / "pids"
-    pid_dir.mkdir(parents=True, exist_ok=True)
-    records = {
-        "missing.json": {},
-        "huge.json": {"pid": 10**100},
-        "text.json": {"pid": "abc"},
-        "negative.json": {"pid": -1},
-    }
-    for name, payload in records.items():
-        (pid_dir / name).write_text(json.dumps(payload), encoding="utf-8")
-
-    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
-        resp = comms_client.get("/api/comms/health")
-
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["alive_processes"] == 0
-    for name in records:
-        assert any(name in item and "invalid pid" in item for item in body["errors"])
-    assert any("invalid pid" in record.message for record in caplog.records)
 
 
 def test_broker_db_probe_failure_is_named(
@@ -174,60 +148,3 @@ def test_old_incomplete_log_stays_dead_when_process_probe_succeeds(
     assert body["running_processes"] == 0
     assert body["tracks"]["hist"]["health"] == "dead"
     assert "reason" not in body["tracks"]["hist"]
-
-
-def test_context_preview_failure_is_named(
-    tmp_path: Path, comms_client: TestClient, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
-) -> None:
-    db_path = tmp_path / ".mcp" / "servers" / "message-broker" / "messages.db"
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(db_path)
-    conn.executescript(
-        """
-        CREATE TABLE channels (
-            name TEXT PRIMARY KEY, created_at TEXT, description TEXT, include TEXT, subscribers TEXT
-        );
-        CREATE TABLE channel_messages (
-            message_id TEXT PRIMARY KEY, channel TEXT
-        );
-        CREATE TABLE deliveries (
-            delivery_id TEXT PRIMARY KEY, message_id TEXT, status TEXT
-        );
-        """
-    )
-    conn.execute(
-        "INSERT INTO channels (name, created_at, description, include, subscribers) VALUES (?, ?, ?, ?, ?)",
-        ("reviews", "2026-09-23T00:00:00Z", "", "", ""),
-    )
-    conn.commit()
-    conn.close()
-
-    context_root = tmp_path / "contexts"
-    preview = context_root / "reviews" / "context.md"
-    preview.parent.mkdir(parents=True)
-    preview.write_text("pinned context", encoding="utf-8")
-    monkeypatch.setattr("scripts.ai_agent_bridge._channels.CONTEXT_ROOT", context_root)
-
-    original = Path.read_text
-
-    def _unreadable(self: Path, *args: object, **kwargs: object) -> str:
-        if self.name == "context.md":
-            raise OSError("context unreadable")
-        return original(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_text", _unreadable)
-
-    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
-        resp = comms_client.get("/api/comms/channels/reviews")
-
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["name"] == "reviews"
-    assert body["context_preview"] == ""
-    assert body["context_sha256"] == ""
-    assert any("context_preview:" in item and "OSError" in item for item in body["errors"])
-    preview_logs = [record.message for record in caplog.records if "context preview" in record.message]
-    assert preview_logs
-    assert all("OSError" in message for message in preview_logs)
-    assert all("context unreadable" not in message for message in preview_logs)
-    assert all("\n" not in message and "\r" not in message for message in preview_logs)

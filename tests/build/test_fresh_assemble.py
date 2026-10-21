@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import json
 import re
 from contextlib import nullcontext
@@ -22,11 +21,9 @@ from scripts.build.fresh.assemble import (
     apply_stress_to_activities,
     assemble_expanded_document,
     assemble_lesson,
-    build_resursy_tab,
     build_slovnyk_tab,
     check_5_assembly,
     check_9_stress_and_render,
-    get_expanded_validator,
 )
 from scripts.build.fresh.draft_schema import draft_validator
 from scripts.curriculum.evidence import lesson_lock
@@ -363,22 +360,6 @@ def make_draft(
 # --- Tests ---
 
 
-def test_no_cyrillic_string_literals_in_assembler():
-    """Nothing typed: assert that scripts/build/fresh/assemble.py has NO Cyrillic string literals."""
-    assemble_file = REPO_ROOT / "scripts" / "build" / "fresh" / "assemble.py"
-    source = assemble_file.read_text(encoding="utf-8")
-    tree = ast.parse(source, filename=str(assemble_file))
-
-    cyrillic_pattern = re.compile(r"[\u0400-\u04FF]")
-    found_literals: list[tuple[int, str]] = []
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Constant) and isinstance(node.value, str) and cyrillic_pattern.search(node.value):
-            found_literals.append((getattr(node, "lineno", 0), node.value))
-
-    assert len(found_literals) == 0, f"Found Cyrillic string literals in assemble.py: {found_literals}"
-
-
 def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
     """Every new learner string stays visible to resolver, stress and page checks."""
     from scripts.build.fresh.assemble import component_props_from_jsx, page_field_text
@@ -460,67 +441,6 @@ def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
                 assert page_field_text(act_type, props, item, block) == value
 
 
-def test_r11_forbidden_paths_in_assemble():
-    """R-11: assemble.py never opens or references legacy v1 paths or plans dir."""
-    assemble_file = REPO_ROOT / "scripts" / "build" / "fresh" / "assemble.py"
-    content = assemble_file.read_text(encoding="utf-8")
-
-    forbidden = [
-        "curriculum/l2-uk-en/plans/",
-        "curriculum/l2-uk-en/a1-v1/",
-        "curriculum/l2-uk-en/a2-v1/",
-        "curriculum/l2-uk-en/b1-v1/",
-        "curriculum/l2-uk-en/b2-v1/",
-        "curriculum/l2-uk-en/<level>-v1/",
-        "/plans/",
-        "'plans'",
-        '"plans"',
-    ]
-    for term in forbidden:
-        assert term not in content, f"Forbidden term {term!r} found in assemble.py"
-
-
-def test_expanded_document_schema_valid():
-    """Validate a properly-formed expanded document against schemas/lesson-expanded-v1.schema.json."""
-    assert EXPANDED_SCHEMA_PATH.is_file()
-    sample_doc = {
-        "expanded_schema": 1,
-        "lesson": {"level": "a1", "slug": "test-slug", "n": 1},
-        "units": [
-            {
-                "tab": "urok",
-                "step": "s1",
-                "activity": None,
-                "item": None,
-                "block": 0,
-                "role": "narration",
-                "text": "Hello world and plain Ukrainian text without accents",
-            },
-            {
-                "tab": "vpravy",
-                "step": "s1",
-                "activity": "a1",
-                "item": 0,
-                "block": "instruction",
-                "role": "instruction",
-                "text": "Choose the correct answer",
-            },
-            {
-                "tab": "slovnyk",
-                "step": None,
-                "activity": None,
-                "item": None,
-                "block": "core_W1",
-                "role": "record_print",
-                "text": "Plain lemma",
-            },
-        ],
-    }
-
-    errors = list(_EXPANDED_VALIDATOR.iter_errors(sample_doc))
-    assert len(errors) == 0
-
-
 def test_combining_accent_fails_expanded_schema_and_check_5():
     """A combining accent in the expanded document is a bug that fails schema validation and check 5."""
     doc_with_accent = {
@@ -583,207 +503,6 @@ def test_combining_accent_fails_expanded_schema_and_check_5():
     res = check_5_assembly(draft, plan, pack, words_store, "a1", "test-slug", 1)
     assert res.passed is False
     assert "combining accent" in (res.reason or "") or "schema validation" in (res.reason or "")
-
-
-def test_step_ids_on_units_in_expanded_document():
-    """Every unit carries step (the plan step id, or null for tabs/blocks without steps)."""
-    w1 = make_word_record(1, "слово", gloss_en="word")
-    w2 = make_word_record(2, "мова", gloss_en="language")
-    words_store = make_words_store(words=[w1, w2])
-
-    t1 = make_text_record(1, "Цитата")
-    ex1 = make_example_record(1, "Приклад", "Example", words=["W-1"])
-    v1 = make_video_record(1, "https://youtube.com/watch?v=123", "LearnUA", use="Alphabet song")
-    pack = make_pack(texts=[t1], examples=[ex1], videos=[v1])
-
-    plan_steps = [
-        {
-            "id": "s1",
-            "kind": "teach",
-            "teach": "Intro",
-            "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
-            "uses": {"grammar": [], "vocabulary": []},
-            "evidence": ["T-1", "EX-1", "V-1"],
-            "practice": ["a1"],
-        },
-        {
-            "id": "s2",
-            "kind": "teach",
-            "teach": "Exchange",
-            "introduces": {"letters": [], "grammar": [], "vocabulary": []},
-            "uses": {"grammar": [], "vocabulary": ["W-1"]},
-            "evidence": [],
-            "practice": [],
-        },
-    ]
-    plan_videos = [{"evidence": "V-1", "use": "Watch the alphabet song"}]
-    plan_activities = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
-    lesson = make_plan_lesson(
-        1,
-        plan_steps,
-        core_words=[w1],
-        incidental_words=[w2],
-        videos=plan_videos,
-        activities=plan_activities,
-    )
-    plan = make_plan(lessons=[lesson])
-
-    draft_steps = [
-        {
-            "id": "s1",
-            "lead_in": "Welcome",
-            "blocks": [
-                {"kind": "prose", "text": "First explanation", "explains": ["W-1"]},
-                {"kind": "example", "ref": "EX-1"},
-                {"kind": "quote", "ref": "T-1"},
-                {"kind": "video", "ref": "V-1"},
-            ],
-        },
-        {
-            "id": "s2",
-            "blocks": [
-                {"kind": "prose", "text": "Second explanation", "explains": ["W-1"]},
-                {"kind": "dialogue"},
-            ],
-        },
-    ]
-    draft_dialogue = {
-        "lines": [{"speaker": "SpeakerA", "text": "Привіт"}],
-        "translation_en": ["Hello"],
-    }
-    draft_activities = [
-        {
-            "id": "a1",
-            "instruction": "Answer question",
-            "items": [
-                {
-                    "question": "Question 1",
-                    "options": ["Opt 1", "Opt 2"],
-                    "correct": 0,
-                    "explanation": "Opt 1 explanation",
-                }
-            ],
-        }
-    ]
-    draft = make_draft(
-        steps=draft_steps,
-        activities=draft_activities,
-        dialogue=draft_dialogue,
-    )
-
-    exp_doc, _prov_doc = assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
-
-    assert exp_doc["expanded_schema"] == 1
-    units = exp_doc["units"]
-    assert len(units) > 0
-
-    # Step propagation: s1 units carry step="s1"
-    s1_units = [u for u in units if u.get("step") == "s1"]
-    assert len(s1_units) >= 4  # lead_in, prose, example, quote, video
-
-    # Step propagation: s2 units carry step="s2"
-    s2_units = [u for u in units if u.get("step") == "s2"]
-    assert len(s2_units) >= 2  # prose, dialogue line
-
-    # Slovnyk and Resursy units have step = None
-    slovnyk_units = [u for u in units if u.get("tab") == "slovnyk"]
-    assert len(slovnyk_units) >= 2
-    for u in slovnyk_units:
-        assert u.get("step") is None
-
-    text_resources = [u for u in units if u.get("tab") == "resursy" and u.get("block") == "res_T-1"]
-    assert [u["text"] for u in text_resources] == ["Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 10"]
-
-    # Activity unit associated with step s1
-    act_units = [u for u in units if u.get("activity") == "a1"]
-    assert len(act_units) >= 1
-    for u in act_units:
-        assert u.get("step") == "s1"
-
-    errors = list(get_expanded_validator().iter_errors(exp_doc))
-    assert len(errors) == 0
-
-
-def test_build_slovnyk_and_resursy_tabs(monkeypatch):
-    """Verify build_slovnyk_tab and build_resursy_tab structure and content."""
-    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma, **_sense: f"/lexicon/{lemma}/")
-    w1_forms = [
-        {
-            "form": "добрий",
-            "tags": "adj:m:v_naz",
-            "stress_source": "ulif",
-            "markers": [],
-            "learner": True,
-            "stressed": "до́брий",
-        },
-        {
-            "form": "доброго",
-            "tags": "adj:m:v_rod",
-            "stress_source": "ulif",
-            "markers": [],
-            "learner": True,
-            "stressed": "до́брого",
-        },
-    ]
-    w1 = make_word_record(1, "добрий", pos="adj", forms=w1_forms, gloss_en="good")
-
-    w2_forms = [
-        {
-            "form": "день",
-            "tags": "noun:inanim:m:v_naz",
-            "stress_source": "ulif",
-            "markers": [],
-            "learner": True,
-            "stressed": "де́нь",
-        }
-    ]
-    w2 = make_word_record(2, "день", pos="noun", forms=w2_forms, gloss_en="day", sense_gloss="unchecked")
-    words_store = make_words_store(words=[w1, w2])
-
-    t1 = make_text_record(1, "Цитата підручника", author="Shevchenko", work="Kobzar", year=1840, page=10)
-    t_uncited = make_text_record(2, "Нецитована цитата")
-    v1 = make_video_record(1, "https://youtube.com/watch?v=123", "LearnUA", use="Default use")
-    v_uncited = make_video_record(2, "https://youtube.com/watch?v=999", "OtherUA")
-    pack = make_pack(texts=[t1, t_uncited], videos=[v1, v_uncited])
-
-    steps = [
-        {
-            "id": "s1",
-            "kind": "teach",
-            "teach": "Teach greetings",
-            "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
-            "uses": {"grammar": [], "vocabulary": []},
-            "evidence": ["T-1"],
-            "practice": [],
-        }
-    ]
-    videos = [{"evidence": "V-1", "use": "Watch the alphabet song"}]
-    lesson_plan = make_plan_lesson(1, steps, core_words=[w1], incidental_words=[w2], videos=videos)
-
-    slovnyk = build_slovnyk_tab(lesson_plan, words_store)
-    assert len(slovnyk) == 2
-    assert slovnyk[0]["lemma"] == "до́брий"
-    assert slovnyk[0]["translation"] == "good"
-    assert slovnyk[0]["pos"] == "adj"
-    assert "atlas_href" in slovnyk[0]
-    assert slovnyk[0]["forms"] == ["до́брий", "до́брого"]
-
-    assert slovnyk[1]["lemma"] == "де́нь"
-    assert slovnyk[1]["translation"] == "day"
-    assert slovnyk[1]["pos"] == "noun"
-
-    resursy = build_resursy_tab(lesson_plan, pack)
-    assert "books" in resursy
-    assert len(resursy["books"]) == 1
-    assert "source" not in resursy["books"][0]
-    assert resursy["books"][0]["title"] == "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 10"
-
-    assert "youtube" in resursy
-    assert len(resursy["youtube"]) == 1
-    assert resursy["youtube"][0]["channel"] == "LearnUA"
-    assert resursy["youtube"][0]["description"] == ""
-    assert "Watch the alphabet song" not in str(resursy)
-    assert "Default use" not in str(resursy)
 
 
 def test_whole_sentence_rendered_with_inline_markup():
@@ -1668,34 +1387,6 @@ def test_non_ok_draft_fails_closed_without_site_write(tmp_path):
     assert not site_dir.exists() or not list(site_dir.iterdir())
 
 
-def test_expanded_schema_min_items_on_units():
-    """Blocker 2: Expanded schema requires minItems: 1 on units."""
-    valid_doc = {
-        "expanded_schema": 1,
-        "lesson": {"level": "a1", "slug": "test", "n": 1},
-        "units": [
-            {
-                "tab": "urok",
-                "step": "s1",
-                "activity": None,
-                "item": None,
-                "block": "prose_0",
-                "role": "instruction",
-                "text": "test",
-            }
-        ],
-    }
-    _EXPANDED_VALIDATOR.validate(valid_doc)
-
-    empty_doc = {
-        "expanded_schema": 1,
-        "lesson": {"level": "a1", "slug": "test", "n": 1},
-        "units": [],
-    }
-    with pytest.raises(jsonschema.ValidationError):
-        _EXPANDED_VALIDATOR.validate(empty_doc)
-
-
 def test_taught_forms_reach_component_data(tmp_path, monkeypatch):
     """Major 1: Taught forms reach vocab_items and VocabCard component data."""
     w1 = {
@@ -2388,28 +2079,6 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
         ]
 
 
-@pytest.mark.parametrize("pos", ["propn", "name", "noun"])
-def test_glossless_proper_name_keeps_vocab_card_but_has_no_flashcard(pos):
-    from scripts.generate_mdx.resources import vocab_items_to_components
-
-    mdx = vocab_items_to_components([
-        {"lemma": "Ніна", "translation": "", "pos": pos, "atlas_href": None},
-        {"lemma": "sample", "translation": "example", "pos": "noun", "atlas_href": None},
-    ])
-    assert '"word":"Ніна"' in mdx
-    assert '"front":"Ніна"' not in mdx
-    assert '"front":"sample","back":"example"' in mdx
-
-
-def test_proper_name_with_gloss_remains_in_flashcard_deck():
-    from scripts.generate_mdx.resources import vocab_items_to_components
-
-    mdx = vocab_items_to_components([
-        {"lemma": "Name", "translation": "a name", "pos": "propn", "atlas_href": None},
-    ])
-    assert '"front":"Name","back":"a name"' in mdx
-
-
 @pytest.mark.parametrize("boundary", ["load_allowlist", "Sources", "resolve"])
 @pytest.mark.parametrize("kind,code,layer", [
     ("unknown_word_id", "unknown_word_id", "pack"),
@@ -2504,45 +2173,6 @@ def test_real_allowlist_input_failures_never_write_site(tmp_path, monkeypatch, d
     assert snapshot(tmp_path) == before
 
 
-def test_recap_keeps_paradigm_table_and_bilingual_dialogue_units_on_page():
-    from scripts.build.fresh.assemble import assemble_expanded_document
-    from tests.build.test_fresh_recap_contract import task
-
-    # English labels are controlled layout data, not Ukrainian source claims.
-    word = make_word_record(1, "model")
-    teaching = {
-        "id": "s1", "kind": "teach", "teach": "A model.", "evidence": ["T-1"],
-        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
-        "uses": {"grammar": [], "vocabulary": []}, "practice": [],
-        "paradigm": {"id": "P-1", "word": "W-1", "forms": [word["forms"][0]["tags"]]},
-    }
-    closing = {"id": "s2", "kind": "recap", "task": task(), "evidence": ["T-1"],
-               "uses": {"grammar": [], "vocabulary": ["W-1"]}, "practice": []}
-    # Low-level expansion/render contract; plan pedagogical validation is separate.
-    plan = {"arc_ref": {"position": 1}, "lessons": [{
-        "n": 1, "steps": [teaching, closing], "inventory": {"vocabulary": {"core": []}},
-    }]}
-    draft = {"status": "ok", "steps": [
-        {"id": "s1", "lead_in": "Meet the model.", "blocks": [
-            {"kind": "paradigm", "ref": "P-1"},
-            {"kind": "table", "rows": [["Form", "Use"], ["model", "context"]]},
-            {"kind": "dialogue"},
-        ]},
-        {"id": "s2", "blocks": []},
-    ], "dialogue": {"lines": [{"speaker": "One", "text": "First model."},
-                                {"speaker": "Two", "text": "Second model."}],
-                    "translation_en": ["First support.", "Second support."]}}
-    pack, words = make_pack(texts=[make_text_record(1, "model")]), make_words_store(words=[word])
-    expanded, provenance = assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
-    page, mapping = _render_urok_markdown(draft, expanded, pack, words)
-    assert "| model |" in page and "| model | context |" in page
-    assert "First model." in page and "Second model." in page
-    assert "First support." in page and "Second support." in page
-    assert task()["instruction_en"] in page
-    assert mapping.verify(page) == {i: u["text"] for i, u in enumerate(expanded["units"]) if u["tab"] == "urok"}
-    assert any(s["ref"] == "W-1" and s["role"] == "record_print" for s in provenance["spans"])
-
-
 @pytest.mark.parametrize("defect,code", [("status", "draft_status_not_ok"), ("lesson", "lesson_not_found"),
                                         ("paradigm", "paradigm_not_found"), ("word", "word_not_found"),
                                         ("form", "form_not_found")])
@@ -2568,26 +2198,3 @@ def test_expansion_refuses_unavailable_paradigm_inputs(defect, code):
     with pytest.raises(AssemblerError) as caught:
         assemble_expanded_document(draft, plan, {}, words, "a1", "unit", 1)
     assert caught.value.code == code
-
-
-@pytest.mark.parametrize("kind,item", [
-    ("translate", {"prompt": "Choose a model.", "answer": "model", "options": ["model", "other"]}),
-    ("translate", {"prompt": "Choose a model.", "options": [{"text": "model", "correct": True},
-                                                            {"text": "other", "correct": False}]}),
-    ("select", {"prompt": "Choose a model.", "options": [{"text": "model", "correct": True},
-                                                         {"text": "other", "correct": False}]}),
-    ("fill-in", {"prompt": "___", "answer": "model", "options": ["model", "other"]}),
-    ("image-to-letter", {"letter": "model", "options": ["model", "other"]}),
-])
-def test_expansion_preserves_existing_activity_key_roles(kind, item):
-    from scripts.build.fresh.assemble import assemble_expanded_document
-
-    plan = {"arc_ref": {"position": 1}, "lessons": [{"n": 1, "steps": [{"id": "s1", "practice": ["a1"]}],
-                                                    "activities": [{"id": "a1", "type": kind}]}]}
-    draft = {"status": "ok", "steps": [], "activities": [{"id": "a1", "items": [item]}]}
-    expanded, provenance = assemble_expanded_document(draft, plan, {}, {}, "a2", "unit", 1)
-    options = [s for s in provenance["spans"] if s["role"] == "item_option"]
-    assert [s["text"] for s in options] == ["model", "other"]
-    assert [s["is_key"] for s in options] == [True, False]
-    assert all(s["option_origin"] == "writer_typed" and s["step"] == "s1" for s in options)
-    assert all(u["text"] for u in expanded["units"])

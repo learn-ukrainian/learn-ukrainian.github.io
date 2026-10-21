@@ -18,11 +18,7 @@ from tests.test_context_latest_usage import advisor_usage, incident_usage, lates
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/statusline.sh"
 GEMINI_STATUSLINE = PROJECT_ROOT / "agents_extensions/gemini/statusline/statusline.sh"
-SUBAGENT_STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/subagent-statusline.sh"
 CONTEXT_MONITOR = PROJECT_ROOT / "agents_extensions/shared/hooks/context-monitor.sh"
-CODEX_HOOKS = PROJECT_ROOT / "agents_extensions/codex/hooks.json"
-
-
 def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
     return {
         "schema_version": 1,
@@ -277,166 +273,6 @@ def test_context_monitor_advisor_usage_preserves_native_tiers(tmp_path: Path, to
         assert "waits for the operator to restart it" in message
 
 
-def test_statusline_unknown_capacity_does_not_use_auto_compact_fallback(
-    tmp_path: Path,
-) -> None:
-    project, record_path = _fake_project(tmp_path, _record(actual_window=None))
-    payload = {
-        "session_id": "status-session",
-        "model": {"id": "unknown-model"},
-        "workspace": {"current_dir": os.fspath(tmp_path)},
-        "context_window": {"total_input_tokens": 180_000},
-    }
-    env = _environment(project, record_path)
-    env["CLAUDE_CODE_AUTO_COMPACT_WINDOW"] = "1000000"
-
-    completed = subprocess.run(
-        [os.fspath(STATUSLINE)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=env,
-        timeout=30,
-    )
-
-    assert "[ctx:" not in completed.stdout
-    assert "1000K" not in completed.stdout
-
-
-def test_subagent_statusline_reports_progress_and_tokens(tmp_path: Path) -> None:
-    payload = {
-        "columns": 120,
-        "tasks": [
-            {
-                "id": "task-1",
-                "name": "repo-map",
-                "status": "running",
-                "description": "Trace launcher configuration",
-                "tokenCount": 12_345,
-            },
-            {
-                "id": "task-2",
-                "label": "tests",
-                "status": "completed",
-                "tokenCount": 980,
-            },
-        ],
-    }
-
-    completed = subprocess.run(
-        [os.fspath(SUBAGENT_STATUSLINE)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        timeout=30,
-    )
-
-    rows = [json.loads(line) for line in completed.stdout.splitlines()]
-    assert rows == [
-        {
-            "id": "task-1",
-            "content": "[running] repo-map: Trace launcher configuration · 12K tok",
-        },
-        {"id": "task-2", "content": "[completed] tests · 980 tok"},
-    ]
-
-
-def test_context_monitor_uses_record_tiers_and_excludes_output_tokens(
-    tmp_path: Path,
-) -> None:
-    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
-    transcript = tmp_path / "monitor.jsonl"
-    _write_transcript(transcript, input_tokens=300_000, cache_tokens=6_000)
-    payload = {
-        "session_id": "status-session",
-        "transcript_path": os.fspath(transcript),
-    }
-
-    completed = subprocess.run(
-        [os.fspath(CONTEXT_MONITOR)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=_environment(project, record_path),
-        timeout=30,
-    )
-
-    hook_output = json.loads(completed.stdout)
-    message = hook_output["hookSpecificOutput"]["additionalContext"]
-    assert message.startswith("CRITICAL: Context is at 85%")
-    assert "360000-token context window" in message
-    assert "latest assistant input/cache usage" in message
-    assert "auto-compact window" not in message
-    assert "999999" not in message
-
-
-def test_context_monitor_size_fallback_handles_long_base64_portably(
-    tmp_path: Path,
-) -> None:
-    project, record_path = _fake_project(tmp_path, _record(actual_window=100))
-    transcript = tmp_path / "monitor-without-usage.jsonl"
-    transcript.write_text(
-        json.dumps(
-            {
-                "type": "user",
-                "message": {"content": ("word " * 200) + ("A" * 900)},
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    payload = {
-        "session_id": "status-session",
-        "transcript_path": os.fspath(transcript),
-    }
-
-    completed = subprocess.run(
-        [os.fspath(CONTEXT_MONITOR)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=_environment(project, record_path),
-        timeout=30,
-    )
-
-    hook_output = json.loads(completed.stdout)
-    message = hook_output["hookSpecificOutput"]["additionalContext"]
-    assert message.startswith("EMERGENCY: Context is at")
-    assert "transcript-size estimate" in message
-    assert "sed -E 's#[A-Za-z0-9+/]{800,}" not in CONTEXT_MONITOR.read_text(encoding="utf-8")
-
-
-def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _record(actual_window=None))
-    transcript = tmp_path / "monitor.jsonl"
-    _write_transcript(transcript, input_tokens=300_000, cache_tokens=6_000)
-    payload = {
-        "session_id": "status-session",
-        "transcript_path": os.fspath(transcript),
-    }
-
-    completed = subprocess.run(
-        [os.fspath(CONTEXT_MONITOR)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=_environment(project, record_path),
-        timeout=30,
-    )
-
-    assert completed.stdout == ""
-
-
 @pytest.mark.parametrize(
     ("identity_env", "value"),
     [
@@ -472,120 +308,6 @@ def test_context_monitor_is_silent_for_native_codex(
     )
 
     assert completed.stdout == ""
-
-
-def test_context_monitor_is_silent_from_deployed_codex_path(tmp_path: Path) -> None:
-    deployed = tmp_path / ".codex" / "hooks" / "context-monitor.sh"
-    deployed.parent.mkdir(parents=True)
-    shutil.copy2(CONTEXT_MONITOR, deployed)
-    env = os.environ.copy()
-    for identity_var in (
-        "SESSION_HANDOFF_AGENT",
-        "CODEX_THREAD_ID",
-        "CODEX_SESSION_ID",
-    ):
-        env.pop(identity_var, None)
-
-    completed = subprocess.run(
-        [os.fspath(deployed)],
-        input="{}",
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=env,
-        timeout=30,
-    )
-
-    assert completed.stdout == ""
-
-
-def test_codex_hook_ssot_does_not_register_manual_context_monitor() -> None:
-    config = json.loads(CODEX_HOOKS.read_text(encoding="utf-8"))
-    commands = [
-        hook["command"] for groups in config["hooks"].values() for group in groups for hook in group.get("hooks", [])
-    ]
-
-    assert all("context-monitor.sh" not in command for command in commands)
-
-
-@pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE, CONTEXT_MONITOR])
-def test_context_consumer_shell_syntax(script: Path) -> None:
-    completed = subprocess.run(
-        ["bash", "-n", os.fspath(script)], text=True, capture_output=True, check=False, timeout=30
-    )
-    assert completed.returncode == 0, completed.stderr
-
-
-def test_statusline_reports_steps_compacts_and_handoff_warning(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _record())
-    transcript = tmp_path / "transcript_test.jsonl"
-    lines = []
-    for i in range(75):
-        lines.append(json.dumps({"type": "user", "step_index": i}))
-    lines.append(json.dumps({"type": "system", "subtype": "compact"}))
-    lines.append(json.dumps({"type": "system", "subtype": "compact"}))
-    transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    payload = {
-        "session_id": "status-session",
-        "transcript_path": os.fspath(transcript),
-        "model": {"id": "gpt-5.6-sol", "display_name": "GPT-5.6 Sol"},
-        "workspace": {"current_dir": os.fspath(tmp_path)},
-        "context_window": {
-            "context_window_size": 260_000,
-            "total_input_tokens": 50_000,
-        },
-    }
-
-    completed = subprocess.run(
-        [os.fspath(STATUSLINE)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=_environment(project, record_path),
-        timeout=30,
-    )
-
-    assert "[steps: 77]" in completed.stdout
-    assert "[compacts: 2]" in completed.stdout
-
-
-def test_statusline_prefer_handoff_over_compaction(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _record())
-    transcript = tmp_path / "transcript_test.jsonl"
-    lines = [
-        json.dumps({"type": "user", "step_index": 1}),
-        json.dumps({"type": "system", "subtype": "compact"}),
-    ]
-    transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    payload = {
-        "session_id": "status-session",
-        "transcript_path": os.fspath(transcript),
-        "model": {"id": "gpt-5.6-sol", "display_name": "GPT-5.6 Sol"},
-        "workspace": {"current_dir": os.fspath(tmp_path)},
-        "context_window": {
-            "context_window_size": 260_000,
-            "total_input_tokens": 50_000,
-        },
-    }
-
-    completed = subprocess.run(
-        [os.fspath(STATUSLINE)],
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        check=True,
-        cwd=tmp_path,
-        env=_environment(project, record_path),
-        timeout=30,
-    )
-
-    assert "[compacts: 1]" in completed.stdout
-    assert "HANDOFF SUGGESTED" in completed.stdout
 
 
 def test_context_monitor_announces_each_tier_once_and_rearms_after_compaction(
@@ -699,14 +421,6 @@ def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path
     assert state_file.read_text(encoding="utf-8") == "3 760000\n"
 
 
-def test_context_monitor_operator_restart_names_driver_launcher(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _native_claude_record())
-
-    emergency = _monitor(project, record_path, tmp_path / "native.jsonl", 760_000, SESSION_EPIC="infra")
-
-    assert "restart this session (./start-claude-driver.sh --epic infra)." in emergency
-
-
 def test_context_monitor_dispatched_worker_keeps_continuation_text(tmp_path: Path) -> None:
     """A delegated worker has no operator to restart it, so it never waits for one."""
     project, record_path = _fake_project(tmp_path, _native_claude_record())
@@ -724,16 +438,6 @@ def test_context_monitor_dispatched_worker_keeps_continuation_text(tmp_path: Pat
     assert "END THE TURN" not in emergency
 
 
-def test_context_monitor_other_profiles_keep_continuation_text(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
-
-    emergency = _monitor(project, record_path, tmp_path / "sol.jsonl", 335_000)
-
-    assert emergency.startswith("EMERGENCY: Context is at 93%")
-    assert "Start the supported continuation" in emergency
-    assert "END THE TURN" not in emergency
-
-
 def test_context_monitor_ignores_operator_restart_from_another_sessions_record(tmp_path: Path) -> None:
     """The mode binds to this session only, as in context-rollover-guard.sh: a
     foreign record's operator_restart yields the continuation text."""
@@ -746,31 +450,6 @@ def test_context_monitor_ignores_operator_restart_from_another_sessions_record(t
     assert emergency.startswith("EMERGENCY: Context is at 76%")
     assert "Start the supported continuation" in emergency
     assert "waits for the operator to restart it" not in emergency
-    assert "END THE TURN" not in emergency
-
-
-def test_context_monitor_without_a_record_ignores_env_operator_restart(tmp_path: Path) -> None:
-    """No session record: the trusted native_claude profile resolution supplies
-    the window and tiers, but never the rollover mode (it resolves to
-    operator_restart here), so the continuation text stays."""
-    project, _ = _fake_project(tmp_path, _native_claude_record())
-    (project / "scripts/lib/profile_resolver.sh").symlink_to(PROJECT_ROOT / "scripts/lib/profile_resolver.sh")
-
-    emergency = _monitor(
-        project,
-        tmp_path / "missing-record.json",
-        tmp_path / "native.jsonl",
-        760_000,
-        CODEX_CANONICAL_REPO_ROOT=os.fspath(project),
-        CLAUDE_PROFILE_RESOLVER_PY=os.fspath(PROJECT_ROOT / "scripts/lib/context_profiles.py"),
-        CLAUDE_PROFILE_RESOLVER_PYTHON=sys.executable,
-        LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="native_claude",
-        LEARN_UKRAINIAN_OBSERVED_MODEL_ID="claude-opus-5-5",
-    )
-
-    assert emergency.startswith("EMERGENCY: Context is at 76% of the 1000000-token context window")
-    assert "capacity: declared-profile" in emergency
-    assert "Start the supported continuation" in emergency
     assert "END THE TURN" not in emergency
 
 

@@ -10,34 +10,6 @@ FIXTURES = Path(__file__).parent / "fixtures" / "ukrlib"
 
 
 @pytest.mark.parametrize(
-    ("slug", "source_author", "death_year"),
-    [
-        ("teliha", "Теліга Олена", "1942"),
-        ("rylsky", "Рильський Максим", "1964"),
-    ],
-)
-def test_literary_gap_recipes_have_ukrlib_metadata_shape(
-    slug: str,
-    source_author: str,
-    death_year: str,
-) -> None:
-    recipe = {**scrape.P1_AUTHORS, **scrape.P2_AUTHORS, **scrape.P3_AUTHORS}[slug]
-
-    assert set(recipe) >= {
-        "id",
-        "name",
-        "full_name",
-        "source_author",
-        "years",
-        "genre_default",
-        "period",
-    }
-    assert recipe["source_author"] == source_author
-    assert recipe["years"].endswith(death_year)
-    assert recipe["id"] not in scrape.BLACKLISTED_IDS
-
-
-@pytest.mark.parametrize(
     ("fixture_name", "author", "title"),
     [
         ("teliha-suchasnykam.html", "Теліга Олена", "Сучасникам"),

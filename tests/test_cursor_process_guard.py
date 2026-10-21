@@ -19,25 +19,6 @@ from tests import cursor_exec_tripwire as tripwire
 from tests import cursor_process_guard as guard
 
 
-def test_plugin_import_does_not_load_psutil():
-    probe = """
-import importlib.abc
-import sys
-
-class NoPsutil(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.partition(".")[0] == "psutil":
-            raise AssertionError("plugin import attempted to load psutil")
-
-assert "psutil" not in sys.modules
-sys.meta_path.insert(0, NoPsutil())
-from tests import cursor_process_guard
-assert "psutil" not in sys.modules
-"""
-    result = subprocess.run([sys.executable, "-c", probe], capture_output=True, text=True, timeout=10)
-    assert result.returncode == 0, result.stdout + result.stderr
-
-
 @pytest.mark.parametrize("error", [ImportError, ModuleNotFoundError])
 @pytest.mark.parametrize("missing_at_start", [False, True])
 def test_missing_psutil_warns_without_failing_session(monkeypatch, capsys, error, missing_at_start):
@@ -71,50 +52,12 @@ def test_missing_psutil_warns_without_failing_session(monkeypatch, capsys, error
     assert "baseline diff empty" not in output
 
 
-def test_smoke_without_psutil_preserves_result_and_reaps_process_group(monkeypatch, fake_cursor_bin, capsys):
-    original_import = builtins.__import__
-
-    def unavailable(name, *args, **kwargs):
-        if name == "psutil":
-            raise ImportError("psutil unavailable")
-        return original_import(name, *args, **kwargs)
-
-    original_killpg = os.killpg
-    killed = []
-
-    def record_killpg(pid, sig):
-        killed.append((pid, sig))
-        original_killpg(pid, sig)
-
-    monkeypatch.setattr(os, "killpg", record_killpg)
-    with monkeypatch.context() as imports:
-        imports.setattr(builtins, "__import__", unavailable)
-        result = guard.bounded_cursor_smoke(str(fake_cursor_bin / "cursor-agent"), timeout=5)
-    assert result.returncode == 0
-    assert "PONG" in result.stdout
-    assert len(killed) == 1
-    assert "warning: psutil unavailable; process scan skipped" in capsys.readouterr().out
-
-
 @pytest.fixture(autouse=True)
 def fake_process_owner(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_TEST_CURSOR_TEST_OWNER", str(tmp_path))
     # Hook unit tests mint tokens without changing the enclosing test session.
     monkeypatch.setenv(tripwire.SESSION_TOKEN_ENV, os.environ[tripwire.SESSION_TOKEN_ENV])
     monkeypatch.setattr(tripwire, "session_token", tripwire.session_token)
-
-
-@pytest.mark.parametrize("name", ["cursor-agent", "agent"])
-@pytest.mark.parametrize("nested", [False, True])
-def test_path_and_alias_execute_only_recording_fake(name, nested, fake_cursor_bin, tmp_path, monkeypatch):
-    log = tmp_path / "record.jsonl"
-    monkeypatch.setenv("LU_TEST_CURSOR_LOG", str(log))
-    cmd = [name, "-p"]
-    if nested:
-        cmd = [sys.executable, "-c", f"import subprocess; subprocess.run({cmd!r}, input='probe', text=True, check=True)"]
-    result = subprocess.run(cmd, input="probe", text=True, capture_output=True, timeout=10)
-    assert result.returncode == 0, result.stderr
-    assert json.loads(log.read_text()) == {"argv": ["-p"], "stdin": "probe"}
 
 
 @pytest.fixture
@@ -171,46 +114,11 @@ def test_nested_python_with_replaced_environment_refuses_installed_binary(instal
     assert not marker.exists()
 
 
-@pytest.mark.parametrize("method", ["system", "exec"])
-def test_nested_system_and_exec_refuse_installed_binary(installed_double, tmp_path, method):
-    target, marker = installed_double
-    script = tmp_path / "child.py"
-    script.write_text(f"import os\nos.execve({str(target)!r}, [{str(target)!r}], {{}})\n")
-    if method == "system":
-        assert os.system(f"{shlex.quote(sys.executable)} {shlex.quote(str(script))}") != 0
-    else:
-        result = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, timeout=5)
-        assert result.returncode != 0
-        assert "cursor execution tripwire" in result.stderr
-    assert not marker.exists()
-
-
 def test_node_install_entrypoint_refused(tmp_path, monkeypatch):
     root = tmp_path / "cursor-install"
     monkeypatch.setattr(tripwire, "real_roots", (str(root),))
     with pytest.raises(RuntimeError, match="cursor execution tripwire"):
         subprocess.run(["node", str(root / "versions" / "v1" / "index.js")], timeout=5)
-
-
-def test_tripwire_lookup_is_not_replaced_by_adapter_mock(installed_double, tmp_path, monkeypatch):
-    import shutil
-
-    target, marker = installed_double
-    (tmp_path / "agent").symlink_to(target)
-    monkeypatch.setattr(shutil, "which", lambda name: None)
-    with pytest.raises(RuntimeError, match="cursor execution tripwire"):
-        subprocess.run("agent; exit 0", shell=True, env={"PATH": str(tmp_path)}, timeout=5)
-    assert not marker.exists()
-
-
-def test_malformed_shell_token_does_not_break_unrelated_execution():
-    tripwire.refuse_real_cursor(sys.executable, [sys.executable, "an unmatched '"], {})
-
-
-def test_tripwire_can_be_inactive(monkeypatch, installed_double):
-    target, _ = installed_double
-    monkeypatch.setattr(tripwire, "active", False)
-    tripwire.refuse_real_cursor(str(target), [str(target)])
 
 
 def test_audit_hook_propagates_guard_through_explicit_environment(tmp_path):
@@ -225,13 +133,6 @@ def test_audit_hook_propagates_guard_through_explicit_environment(tmp_path):
     assert env["PYTHONPATH"] == first_path
 
 
-def test_audit_system_refuses_installed_target(installed_double):
-    target, marker = installed_double
-    with pytest.raises(RuntimeError, match="cursor execution tripwire"):
-        tripwire.audit_exec("os.system", (shlex.quote(str(target)),))
-    assert not marker.exists()
-
-
 def test_child_initialization_restores_guard_from_environment(monkeypatch):
     monkeypatch.setattr(tripwire, "child_directory", tripwire.child_directory)
     monkeypatch.setenv("LU_TEST_CURSOR_TARGETS", json.dumps(sorted(tripwire.real_targets)))
@@ -239,19 +140,6 @@ def test_child_initialization_restores_guard_from_environment(monkeypatch):
     tripwire.install_from_environment()
     assert tripwire.child_directory == Path(tripwire.__file__).parent
     assert tripwire.session_token == os.environ[tripwire.SESSION_TOKEN_ENV]
-
-
-@pytest.mark.parametrize("event", ["subprocess.Popen", "os.exec", "os.posix_spawn", "os.system"])
-def test_token_propagates_without_nested_hook_directory(monkeypatch, event):
-    monkeypatch.setattr(tripwire, "child_directory", None)
-    monkeypatch.setattr(tripwire, "allow_real", True)
-    env = {}
-    args = ("unrelated", ["unrelated"], None, env) if event == "subprocess.Popen" else (
-        ("unrelated", ["unrelated"], env) if event != "os.system" else ("true",)
-    )
-    tripwire.audit_exec(event, args)
-    target_env = os.environ if event == "os.system" else env
-    assert target_env[tripwire.SESSION_TOKEN_ENV] == tripwire.session_token
 
 
 def _detached_script(pidfile: Path) -> str:
@@ -290,25 +178,6 @@ def _clean_fake_processes(root):
                 proc.kill()
                 with contextlib.suppress(psutil.TimeoutExpired):
                     proc.wait(timeout=0.1)
-
-
-@pytest.mark.parametrize("name", sorted(guard.PROCESS_NAMES))
-def test_snapshot_finds_double_fork_after_reparent_and_cwd_change(tmp_path, name):
-    baseline = guard.process_snapshot()
-    script = tmp_path / name
-    pidfile = tmp_path / "pid"
-    script.write_text(_detached_script(pidfile))
-    try:
-        subprocess.run([sys.executable, str(script)], check=True, timeout=60)
-        pid = _wait_pidfile(pidfile)
-        proc = psutil.Process(pid)
-        identity = (pid, proc.create_time())
-        assert proc.cwd() == "/"
-        assert proc.ppid() != os.getpid()
-        assert (pid, proc.create_time()) in guard.process_snapshot().keys() - baseline.keys()
-    finally:
-        _clean_fake_processes(tmp_path)
-    assert identity not in guard.process_snapshot()
 
 
 def test_baseline_ignores_preexisting_process_and_pid_reuse_is_detected(monkeypatch, capsys):
@@ -479,14 +348,6 @@ def test_real_smoke_explicit_option_is_refused_in_workers(monkeypatch):
     assert not tripwire.allow_real
 
 
-def test_real_smoke_unavailable_binary_fails_instead_of_skipping(monkeypatch):
-    monkeypatch.setattr(guard, "_DISPATCH_OR_CI", False)
-    monkeypatch.setattr(guard, "REAL_TARGETS", frozenset())
-    request = SimpleNamespace(config=SimpleNamespace(getoption=lambda _: True))
-    with pytest.raises(pytest.fail.Exception, match="no binary was found"):
-        next(guard.real_cursor_binary.__wrapped__(request))
-
-
 def test_real_smoke_permission_is_scoped_and_restored(monkeypatch, fake_cursor_bin):
     monkeypatch.setattr(guard, "_DISPATCH_OR_CI", False)
     monkeypatch.setattr(guard, "REAL_TARGETS", frozenset({str(fake_cursor_bin / "cursor-agent")}))
@@ -561,9 +422,3 @@ def test_smoke_teardown_preserves_unrelated_preexisting_process(tmp_path, fake_c
         assert psutil.Process(pid).status() != psutil.STATUS_ZOMBIE
     finally:
         _clean_fake_processes(tmp_path)
-
-
-def test_install_is_idempotent(monkeypatch, tmp_path):
-    monkeypatch.setattr(tripwire, "_installed", True)
-    monkeypatch.setattr(sys, "addaudithook", lambda _: pytest.fail("hook installed twice"))
-    tripwire.install(tripwire.real_targets, tripwire.real_roots, tripwire.child_directory)

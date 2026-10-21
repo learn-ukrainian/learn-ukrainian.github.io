@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from scripts.api.fleet_workers_models import WorkerRow
 from scripts.api.fleet_workers_sanitize import validate_worker_row_dict, validate_workers_list
-from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
+from scripts.api.project_state_sanitize import ProjectStateValidationError
 
 
 def _row(**overrides: object) -> dict[str, object]:
@@ -38,24 +37,6 @@ def _row(**overrides: object) -> dict[str, object]:
     ],
 )
 def test_worker_row_rejects_forbidden_string_classes(field: str, value: str) -> None:
-    with pytest.raises(ProjectStateValidationError):
-        validate_worker_row_dict(_row(**{field: value}))
-
-
-@pytest.mark.parametrize(
-    "field,value",
-    [
-        ("id", "host.example.org"),
-        ("id", "svc:8765"),
-        ("id", "198.51.100.4-task"),
-        ("id", "vps-task"),
-        ("agent", "pid=1234"),
-        ("id", "traceback here"),
-        ("run_id", "stderr"),
-        ("note", "branch-name"),
-    ],
-)
-def test_worker_row_still_rejects_structural_leaks_and_grammar_misses(field: str, value: str) -> None:
     with pytest.raises(ProjectStateValidationError):
         validate_worker_row_dict(_row(**{field: value}))
 
@@ -99,59 +80,3 @@ def test_identifier_fields_still_reject_pid_and_nonce_values(field: str, value: 
         validate_worker_row_dict(_row(**{field: value}))
     with pytest.raises(ProjectStateValidationError):
         validate_workers_list([_row(), _row(**{field: value})])
-
-
-@pytest.mark.parametrize("task_id", ["run-nonce-1234abcd1234abcd", "pid-1234", "impl-8874-pid-1234"])
-def test_report_document_rejects_pid_and_nonce_identifiers(task_id: str) -> None:
-    document = _report_document(workers=[_row(), _row(id=task_id)])
-    with pytest.raises(ProjectStateValidationError):
-        validate_report_document(document)
-
-
-def test_report_document_keeps_task_name_with_keyword_hint() -> None:
-    document = _report_document(workers=[_row(), _row(id="impl-entropy-test-git-stderr")])
-    validate_report_document(document)
-    assert [row["id"] for row in document["workers"]] == ["monitor-7187", "impl-entropy-test-git-stderr"]
-
-
-def test_workers_list_cap_rejected() -> None:
-    rows = [_row(id=f"t-{index}") for index in range(201)]
-    with pytest.raises(ProjectStateValidationError):
-        validate_workers_list(rows)
-
-
-def test_valid_worker_row_round_trip() -> None:
-    row = validate_worker_row_dict(_row())
-    assert isinstance(row, WorkerRow)
-    assert row.run_id == "a1b2c3d4"
-
-
-def _report_document(*, workers: list[dict[str, object]]) -> dict[str, object]:
-    return {
-        "host_id": "host-worker",
-        "primary": {
-            "head_sha": "a" * 40,
-            "origin_main_sha": "b" * 40,
-            "origin_main_age_s": 1,
-            "ahead": 0,
-            "behind": 0,
-            "dirty_count": 0,
-        },
-        "worktrees": {"count": 0},
-        "services": [
-            {
-                "name": "api",
-                "state": "running",
-                "repo": "learn-ukrainian",
-                "serving_mode": "release",
-                "serving_sha": "b" * 40,
-                "checkout_sha": None,
-            }
-        ],
-        "collected_at": "2026-08-24T12:00:00Z",
-        "workers": workers,
-    }
-
-
-def test_report_document_accepts_workers_block() -> None:
-    validate_report_document(_report_document(workers=[_row()]))

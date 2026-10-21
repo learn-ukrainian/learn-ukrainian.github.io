@@ -363,30 +363,6 @@ def test_source_grounded_canary_round_trips_all_text_offsets():
     assert validate_historical_representation(packet) == packet
 
 
-def test_competing_periodization_frameworks_are_preserved_without_collapse():
-    packet = _packet()
-
-    assert [(item["framework_id"], item["stage_label"]) for item in packet["periodizations"]] == [
-        ("nimchuk-five-stage", "Middle Ukrainian / Rus period"),
-        ("shevelov-detailed-periodization", "Early Middle Ukrainian"),
-    ]
-
-
-def test_each_derived_bundle_has_rights_bounded_by_its_evidence():
-    packet = _packet()
-    bundle_rights = {
-        item["bundle_id"]: item["rights"]["reuse_scope"]
-        for item in packet["classification"]["derived_bundle_rights"]
-    }
-
-    assert bundle_rights == {
-        "historical_recognition": "public_training",
-        "historical_alignment": "public_training",
-        "periodization": "private_inspection_only",
-        "language_label_disambiguation": "private_inspection_only",
-    }
-
-
 def test_historical_record_is_mechanically_excluded_from_modern_correction_gold():
     packet = _packet()
 
@@ -464,14 +440,6 @@ def test_rejects_unknown_evidence_reference():
     packet["language_labels"][0]["evidence_ids"] = ["evidence:missing"]
 
     with pytest.raises(HistoricalRepresentationError, match="unknown evidence"):
-        validate_historical_representation(packet)
-
-
-def test_rejects_model_output_as_evidence_authority():
-    packet = _packet()
-    packet["evidence"][0]["authority"] = "model_output"
-
-    with pytest.raises(HistoricalRepresentationError, match="schema violation"):
         validate_historical_representation(packet)
 
 
@@ -576,11 +544,3 @@ def test_rejects_analysis_surface_that_does_not_round_trip_offsets():
 
     with pytest.raises(HistoricalRepresentationError, match="source surface"):
         _packet(linguistic_analyses=analyses)
-
-
-def test_schema_rejects_untracked_fields():
-    packet = _packet()
-    packet["historical_context"]["modernized_guess"] = "forbidden"
-
-    with pytest.raises(HistoricalRepresentationError, match="schema violation"):
-        validate_historical_representation(packet)

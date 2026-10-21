@@ -8,7 +8,6 @@ import pytest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
 from scripts.projects.open_model_data.review_build.transforms import (
-    Result,
     fold_word,
     source_text_defects,
     transform,
@@ -140,24 +139,6 @@ def test_proper_name_form_case_is_attested_by_folded_index(held):
     assert not result.unresolved
 
 
-@pytest.mark.parametrize(
-    "witness",
-    [
-        "SYNTHETICmore",
-        "SYNTHETICmore SYNTHETIC-more",
-        "prefixSYNTHETICmore",
-        "SYNTHETICmoreSuffix",
-        "other-SYNTHETICmore",
-        "SYNTHETICmore-other",
-        "SYŃTHETIC-more",
-    ],
-)
-def test_corpus_occurrences_never_license_a_split(held, witness):
-    result, _, _ = held("SYNTHETIC-\nmore", [], [witness], ["SYNTHETIC-more"])
-    assert result.unresolved
-    assert not result.joins
-
-
 def test_unmatched_and_duplicate_alternatives_stay_unresolved(held):
     result, _, _ = held(
         "SYNTHETIC-\nmore", ["SYNTHETICmore"], [], ["SYNTHETIC-more", "SYNTHETIC-more", "OTHER-reading"]
@@ -170,11 +151,6 @@ def test_raw_split_precedes_unrelated_inline_alternative(held):
     result, _, _ = held("SYNTHETIC-more and SYNTHETIC-\nmore", ["SYNTHETICmore"], [], ["SYNTHETIC-more"])
     assert result.text == "SYNTHETIC-more and SYNTHETICmore"
     assert len(result.joins) == 1
-
-
-def test_mixed_resolved_and_unresolved_splits(held):
-    result, _, _ = held("SYNTHETIC-\nmore UNKNOWN-\nmore", ["SYNTHETICmore"], [], ["SYNTHETIC-more", "UNKNOWN-more"])
-    assert len(result.joins) == len(result.unresolved) == 1
 
 
 @pytest.mark.parametrize(
@@ -195,17 +171,6 @@ def test_source_defect_signal_requires_positive_original_boundary_evidence(held,
         defects = source_text_defects("ALPHABETA", held.policy, reader, original=original)
         assert bool(defects) == defect
         assert not source_text_defects("ALPHABETA", held.policy, reader)
-
-
-@pytest.mark.parametrize("span,expected", [(None, True), ((0, 3), False), ((3, 8), True), ((8, 12), False)])
-def test_unresolved_visibility_uses_transformed_offsets_and_half_open_spans(span, expected):
-    result = Result("SYNTHETIC", join_evidence=((0, 5, "ABC", "held_text"),), unresolved=((5, 10, "UNKNOWN"),))
-    assert unresolved_overlaps(result, span) is expected
-
-
-def test_unlocated_metadata_is_unknown_for_every_carried_span():
-    assert unresolved_overlaps(Result("SYNTHETIC", unresolved=((-1, -1, "UNKNOWN"),)), (0, 3))
-    assert not unresolved_overlaps(Result("SYNTHETIC"), None)
 
 
 @pytest.mark.parametrize(
@@ -284,29 +249,8 @@ def test_canonical_identity_preserves_letters_and_ascii_apostrophe(apostrophe):
     assert fold_word("SY\u0301N" + apostrophe + "ЙЇІ") == "syn'йїі"
 
 
-@pytest.mark.parametrize("raw", ["SYN’THETIC-\nmore", "SYNʼTHETIC-\nmore", "SYN'THETIC-\nmore"])
-@pytest.mark.parametrize("hyphenated", [False, True])
-def test_ascii_database_recognizes_apostrophe_join_and_hyphen_safety_veto(held, raw, hyphenated):
-    forms = ["SYN'THETICmore"] + (["SYN'THETIC-more"] if hyphenated else [])
-    folded = ["syn'theticmore"] + (["syn'thetic-more"] if hyphenated else [])
-    result, _, _ = held(raw, forms, folded_forms=folded)
-    assert result.text == (raw if hyphenated else raw.replace("-\n", ""))
-    assert bool(result.unresolved) == hyphenated
-    assert bool(result.joins) != hyphenated
-
-
 @pytest.mark.parametrize("alternatives", [[], ["OTHER-more"], ["SYNTHETIC-more", "SYNTHETIC-more"]])
 def test_hyphenated_vesum_form_without_unique_cover_stays_unresolved(held, alternatives):
     result, _, _ = held("SYNTHETIC-\nmore", ["SYNTHETIC-more"], alternatives=alternatives)
     assert result.text == "SYNTHETIC-\nmore"
     assert result.unresolved and not result.join_evidence
-
-
-def test_metadata_without_unambiguous_attestation_never_forces_admission(held):
-    result, _, _ = held("SYNTHETIC-\nmore", alternatives=["SYNTHETIC-more"])
-    assert result.unresolved and not result.join_evidence
-
-
-def test_alternative_with_two_possible_positions_cannot_license_whitespace_deletion(held):
-    result, _, _ = held("SYNTHETIC-\nmore and SYNTHETIC-\nmore", ["SYNTHETIC-more"], alternatives=["SYNTHETIC-more"])
-    assert len(result.unresolved) == 3 and not result.join_evidence

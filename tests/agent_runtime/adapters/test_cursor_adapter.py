@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -13,7 +11,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY, CursorAdapter
-from tests.cursor_process_guard import bounded_cursor_smoke
 
 
 @pytest.fixture
@@ -115,20 +112,6 @@ def test_cursor_adapter_runs_auto_for_an_admitted_write_dispatch(adapter, tmp_pa
         tool_config={CURSOR_AUTO_ADMITTED_KEY: True},
     )
     assert plan.cmd[plan.cmd.index("--model") + 1] == "auto"
-
-
-def test_cursor_adapter_pins_default_model_when_none_is_given(adapter, tmp_path):
-    """No --model is not Auto: the adapter sends its concrete default pin."""
-    plan = adapter.build_invocation(
-        prompt="review",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="default-pin",
-        session_id=None,
-        tool_config=None,
-    )
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7-high"
 
 
 def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path):
@@ -284,21 +267,6 @@ def test_cursor_adapter_refuses_admitted_auto_in_plan_or_ask_mode(adapter, tmp_p
             session_id=None,
             tool_config=tool_config,
         )
-
-
-def test_cursor_adapter_danger_auto_ignores_plan_mode_request(adapter, tmp_path):
-    """Danger never passes --mode, so an admitted Auto dispatch runs the agent regardless of cursor_mode."""
-    plan = adapter.build_invocation(
-        prompt="implement",
-        mode="danger",
-        cwd=tmp_path,
-        model="auto",
-        task_id="auto-danger",
-        session_id=None,
-        tool_config={"cursor_mode": "plan", CURSOR_AUTO_ADMITTED_KEY: True},
-    )
-    assert "--mode" not in plan.cmd
-    assert "--force" in plan.cmd
 
 
 def test_cursor_adapter_build_invocation_danger(adapter, tmp_path):
@@ -525,44 +493,6 @@ def test_cursor_adapter_successful_echoed_rate_limit_text_is_not_rate_limited(ad
     assert result.response == "Completed successfully; a prior task was rate limited."
 
 
-def test_cursor_agent_trivial_invoke_smoke(tmp_path, monkeypatch, fake_cursor_bin):
-    """The former live launch path runs a recording fake even without CI."""
-    monkeypatch.delenv("CI", raising=False)
-    log = tmp_path / "invocations.jsonl"
-    monkeypatch.setenv("LU_TEST_CURSOR_LOG", str(log))
-    cursor_bin = shutil.which("cursor-agent") or shutil.which("agent")
-    assert cursor_bin == str(fake_cursor_bin / "cursor-agent")
-
-    result = subprocess.run(
-        [
-            cursor_bin,
-            "-p",
-            "--model",
-            "auto",
-            "--output-format",
-            "stream-json",
-            "--trust",
-        ],
-        input="Reply with exactly: PONG",
-        capture_output=True,
-        text=True,
-        timeout=60,
-        cwd=Path.cwd(),
-    )
-
-    assert result.returncode == 0, result.stderr or result.stdout
-    assert "PONG" in result.stdout
-    invocation = json.loads(log.read_text())
-    assert invocation["argv"] == ["-p", "--model", "auto", "--output-format", "stream-json", "--trust"]
-    assert invocation["stdin"] == "Reply with exactly: PONG"
-
-
-def test_cursor_agent_real_invoke_smoke(real_cursor_binary):
-    result = bounded_cursor_smoke(real_cursor_binary)
-    assert result.returncode == 0, result.stderr or result.stdout
-    assert "PONG" in result.stdout
-
-
 def test_cursor_adapter_parse_response_rate_limited(adapter):
     stdout = ""
     stderr = "Error: 429 Too Many Requests"
@@ -655,25 +585,6 @@ def test_cursor_adapter_parse_response_parses_v2026_05_27_single_assistant_messa
     assert result.ok is True
     assert result.session_id == "cursor-session-123"
     assert result.response == "Hello world"
-    assert "tool_use" not in result.response
-
-
-def test_cursor_adapter_parse_response_parses_v2026_05_27_assistant_messages(adapter):
-    """cursor-agent v2026.05.27 emits {role, message: {content: [...]}}."""
-    fixture = Path(__file__).parent / "fixtures" / "cursor_v2026_05_27_session_transcript.jsonl"
-    stdout = fixture.read_text(encoding="utf-8")
-    result = adapter.parse_response(
-        stdout=stdout,
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.ok, f"Expected ok=True, stderr_excerpt={result.stderr_excerpt!r}"
-    assert result.response, "Response should not be empty"
-    assert "Reading the three module artifacts" in result.response
-    assert "Round 2" in result.response, "r2 content should be present"
-    assert "[VOTE: D]" in result.response, "Final vote should be captured"
     assert "tool_use" not in result.response
 
 

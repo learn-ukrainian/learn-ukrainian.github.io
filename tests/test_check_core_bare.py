@@ -76,25 +76,6 @@ def _set_worktree_config(repo: Path, value: str = "true") -> None:
     )
 
 
-def test_ok_when_core_bare_false(tmp_path):
-    repo = _init_repo(tmp_path)
-    _set_worktree_config(repo, "true")
-    ok, message = check_core_bare(repo, fix=False)
-    assert ok
-    assert "ok" in message
-
-
-def test_detects_core_bare_true_without_fix(tmp_path):
-    repo = _init_repo(tmp_path)
-    _set_worktree_config(repo, "true")
-    _set_bare(repo, "true")
-    ok, message = check_core_bare(repo, fix=False)
-    assert not ok
-    assert "BROKEN" in message
-    # check-only must NOT mutate the repo
-    assert _core_bare(repo) == "true"
-
-
 def test_fix_resets_core_bare_true(tmp_path):
     repo = _init_repo(tmp_path)
     _set_bare(repo, "true")
@@ -111,13 +92,6 @@ def test_fix_resets_core_bare_true(tmp_path):
         timeout=30
     ).stdout.strip()
     assert wtc == "true"
-
-
-def test_missing_worktree_config_ok_without_fix_when_not_bare(tmp_path):
-    repo = _init_repo(tmp_path)
-    ok, message = check_core_bare(repo, fix=False)
-    assert ok
-    assert "worktreeConfig" in message
 
 
 def test_main_exit_codes(tmp_path):

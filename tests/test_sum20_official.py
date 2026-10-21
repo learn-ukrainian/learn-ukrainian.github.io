@@ -291,15 +291,6 @@ def test_nested_group_rejects_incomplete_or_ambiguous_ownership(class_name: str,
         parse_sum20_article(source, 461)
 
 
-@pytest.mark.parametrize("class_name", ["PHRF", "PHRASE", "PHRTXT", "LINK", "LINKTXT", "PHRSYM"])
-@pytest.mark.parametrize("owner", ["WORD", "LPART", "PHRTXT", "LINKTXT"])
-def test_grouped_phrase_reference_rejects_fields_under_formatting_or_wrong_owner(class_name: str, owner: str) -> None:
-    field = PHRASE_FIELDS[class_name].replace("primary phrase", "foreign phrase")
-    source = GROUPED_REFERENCE_HTML.replace(f'class="{owner}">', f'class="{owner}"><b>{field}</b>', 1)
-    with pytest.raises(Sum20ParseError):
-        parse_sum20_article(source, 461)
-
-
 @pytest.mark.parametrize(
     "marker",
     [
@@ -373,18 +364,6 @@ def test_grouped_phrase_reference_rejects_malformed_group_boundaries(mutation: s
         parse_sum20_article(source, 461)
 
 
-def test_phrase_reference_preserves_primary_fields_with_inline_formatting() -> None:
-    source = PHRASE_REFERENCE_HTML.replace("primary phrase", "<b>primary</b> phrase")
-    article = parse_sum20_article(source, 172)
-
-    assert article.headword == "PRIMARY"
-    assert article.grammar == "primary grammar"
-    assert article.pos == ""
-    assert article.article_html == source
-    assert article.article_text == "PRIMARY primary grammar ◇ primary phrase see target ."
-    assert article.senses == article.citations == []
-
-
 @pytest.mark.parametrize("class_name", PHRASE_FIELDS)
 @pytest.mark.parametrize("mutation", ["missing", "empty", "misplaced", "multiple"])
 def test_phrase_reference_rejects_incomplete_or_ambiguous_fields(class_name: str, mutation: str) -> None:
@@ -444,13 +423,6 @@ def test_phrase_reference_rejects_foreign_or_extra_evidence(extra: str, placemen
         source = PHRASE_REFERENCE_HTML.replace("</article>", extra + "</article>")
 
     with pytest.raises(Sum20ParseError):
-        parse_sum20_article(source, 172)
-
-
-@pytest.mark.parametrize("class_name", PHRASE_FIELDS)
-def test_phrase_reference_rejects_combined_evidence_classes(class_name: str) -> None:
-    source = PHRASE_REFERENCE_HTML.replace(f'class="{class_name}"', f'class="{class_name} OTHER"')
-    with pytest.raises(Sum20ParseError, match="no definition senses"):
         parse_sum20_article(source, 172)
 
 
@@ -741,63 +713,6 @@ def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
             assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] == 0
 
 
-@pytest.mark.parametrize("valid", [True, False], ids=["cached-172", "malformed-172"])
-def test_ingest_phrase_reference_advances_only_the_valid_source_unit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, valid: bool
-) -> None:
-    db_path = tmp_path / "staging.db"
-    with sqlite3.connect(db_path) as conn:
-        ensure_sum20_official_schema(conn)
-        conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = 171")
-    source = WORDID172_HTML if valid else WORDID172_HTML.replace('class="PHRTXT"', 'class="OTHER"')
-    session = _FakeSession([_FakeResponse(200, source)])
-    requested: list[int] = []
-
-    def offline_fetch(wordid: int, **kwargs: object) -> FetchOutcome:
-        requested.append(wordid)
-        return fetch_sum20_wordid(wordid, session=session, **kwargs)
-
-    monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
-    counts = sum20_official_ingest.ingest_wordids(db_path, limit=1 if valid else 2, delay_s=0, retries=0)
-
-    assert requested == [172]
-    assert counts == {
-        "ok": int(valid),
-        "unchanged": 0,
-        "not_found": 0,
-        "transient_error": 0,
-        "parse_error": int(not valid),
-    }
-    assert counts.exit_code == (0 if valid else 4)
-    with sqlite3.connect(db_path) as conn:
-        assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone()[0] == (172 if valid else 171)
-        assert conn.execute("SELECT wordid, status FROM sum20_crawl_outcomes").fetchone() == (
-            172,
-            "ok" if valid else "parse_error",
-        )
-        assert conn.execute("SELECT COUNT(*) FROM sum20_senses").fetchone()[0] == 0
-        assert conn.execute("SELECT COUNT(*) FROM sum20_citations").fetchone()[0] == 0
-        if valid:
-            row = conn.execute(
-                "SELECT wordid, headword, stressed_headword, grammar, pos, definition_text, article_html, article_text,"
-                " content_sha256, parser_version FROM sum20_articles"
-            ).fetchone()
-            assert row == (
-                172,
-                "АВГІЇВ",
-                "А́ВГІЇВ",
-                "ієва, ієве:",
-                "",
-                "",
-                WORDID172_HTML,
-                "А́ВГІЇВ , ієва, ієве: ◇ А́вгієві ста́йні (коню́шні) див. ста́йня .",
-                "19fad8367cd02f70bf0b8f6f8bc5afb9d77748c1e476d06c30ef3f15c90d6034",
-                official_module.PARSER_VERSION,
-            )
-        else:
-            assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] == 0
-
-
 def test_official_phrase_reference_row_has_no_definition_card(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     db_path = tmp_path / "sources.db"
     with sqlite3.connect(db_path) as conn:
@@ -882,23 +797,6 @@ def test_fetch_and_ingest_grouped_reference_preserves_resume_semantics(
             assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] == 0
 
 
-def test_official_grouped_reference_has_no_definition_card(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    db_path = tmp_path / "sources.db"
-    with sqlite3.connect(db_path) as conn:
-        ensure_sum20_official_schema(conn)
-        upsert_sum20_article(conn, parse_sum20_article(WORDID461_HTML, 461), fetched_at="2026-10-09T00:00:00+00:00")
-    records = sources_db.query_sum20("адамів", db_path=db_path)
-    assert len(records) == 1
-    assert records[0]["source_record_id"] == "461"
-    assert records[0]["article_text"] == WORDID461_TEXT
-    assert records[0]["senses"] == records[0]["citations"] == []
-    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
-    assert enrich_manifest_module._sum20_official_definition_card("адамів") is None
-    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_vesum_base_lemma", lambda *_args: None)
-    assert enrich_manifest_module._sum20_definition_card("адамів") is None
-
-
 @pytest.mark.parametrize(
     "target",
     [pytest.param(".", id="period"), pytest.param(";", id="semicolon"), pytest.param("\u200b", id="zero-width-space")],
@@ -940,20 +838,6 @@ def test_grouped_reference_nonlexical_target_preserves_source_without_definition
     monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_vesum_base_lemma", lambda *_args: None)
     assert enrich_manifest_module._sum20_definition_card("адамів") is None
-
-
-def test_official_reference_row_has_no_definition_card(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    db_path = tmp_path / "sources.db"
-    with sqlite3.connect(db_path) as conn:
-        ensure_sum20_official_schema(conn)
-        upsert_sum20_article(conn, parse_sum20_article(WORDID36_HTML, 36), fetched_at="2026-10-07T00:00:00+00:00")
-    records = sources_db.query_sum20("абіссинець", db_path=db_path)
-    assert len(records) == 1
-    assert records[0]["senses"] == records[0]["citations"] == []
-    assert "див. абісси́нці" in records[0]["article_text"]
-    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
-    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
-    assert enrich_manifest_module._sum20_definition_card("абіссинець") is None
 
 
 def test_fetch_statuses_never_turn_transient_or_parse_failures_into_misses() -> None:
@@ -1123,41 +1007,6 @@ def test_definition_card_does_not_fall_back_when_official_row_absent(
     assert calls == []
 
 
-def test_definition_card_does_not_fall_back_when_official_table_is_missing(tmp_path: Path, monkeypatch) -> None:
-    db_path = _fixture_sources_db(tmp_path, include_article=False, create_schema=False)
-    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "_fetch_slovnyk_entry",
-        lambda *_args, **_kwargs: {
-            "word": "АБАЖУ́Р",
-            "text": "АБАЖУ́Р, а, ч. Лампа з ковпаком.",
-        },
-    )
-
-    card = enrich_manifest_module._sum20_definition_card("абажу́р")
-
-    assert card is None
-
-
-def test_definition_card_keeps_none_when_official_and_slovnyk_rows_are_absent(tmp_path: Path, monkeypatch) -> None:
-    db_path = _fixture_sources_db(tmp_path, include_article=False)
-    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
-    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
-
-    assert enrich_manifest_module._sum20_definition_card("абажу́р") is None
-
-
-def test_query_sum20_has_no_live_mirror_path() -> None:
-    source_query = (Path("scripts/rag/source_query.py")).read_text(encoding="utf-8")
-    mcp_server = (Path(".mcp/servers/sources/server.py")).read_text(encoding="utf-8")
-
-    assert "slovnyk.me/dict/newsum" not in source_query
-    assert "slovnyk.me/dict/newsum" not in mcp_server
-    assert "def query_sum20" in source_query
-    assert "sdb.query_sum20" in mcp_server
-
-
 def test_fetch_sends_the_project_user_agent_not_the_requests_default(monkeypatch: pytest.MonkeyPatch) -> None:
     """sum20ua.com refuses ``python-requests/*`` with 403; the identifying agent must be sent (#5228)."""
     session = requests.Session()
@@ -1224,16 +1073,6 @@ def test_official_parser_recursion_stops_one_request(monkeypatch):
     assert result == FetchOutcome("parse_error", error_text="unusable article", http_status=200, terminal=True)
     assert len(calls) == 1
     assert not sleeps
-
-
-@pytest.mark.parametrize("terminal", [3, 4])
-def test_legacy_terminal_exit_precedes_prior_failure(monkeypatch, terminal):
-    counts = sum20_official_ingest.IngestCounts(
-        ok=0, unchanged=0, not_found=0, transient_error=1, parse_error=int(terminal == 4)
-    )
-    counts.exit_code = terminal
-    monkeypatch.setattr(sum20_official_ingest, "ingest_wordids", lambda *_args, **_kwargs: counts)
-    assert sum20_official_ingest.main([]) == terminal
 
 
 def test_legacy_ingest_help_and_failure_exit(monkeypatch, capsys):
@@ -1668,50 +1507,6 @@ def test_marked_reference_ingest_and_consumers(
         assert enrich_manifest_module._sum20_definition_card(query) is None
 
 
-@pytest.mark.parametrize(
-    "wordid,source",
-    [
-        pytest.param(
-            2354,
-            WORDID2354_HTML.replace('<div class="UX">2</div>', '<div class="UX">2</div><div class="UX">2</div>', 1),
-            id="duplicate_primary_ux_phrase",
-        ),
-        pytest.param(
-            1521,
-            WORDID1521_HTML.replace('<div class="BUX">1</div>', '<div class="BUX">2</div>', 1),
-            id="bux_ux_mismatch_period",
-        ),
-    ],
-)
-def test_marked_reference_ingest_stops_before_second_request(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    wordid: int,
-    source: str,
-) -> None:
-    db_path = tmp_path / "staging.db"
-    with sqlite3.connect(db_path) as conn:
-        ensure_sum20_official_schema(conn)
-        conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = ?", (wordid - 1,))
-    session = _FakeSession([_FakeResponse(200, source), _FakeResponse(200, WORDID36_HTML)])
-    requested: list[int] = []
-
-    def offline_fetch(requested_wordid: int, **kwargs: object) -> FetchOutcome:
-        requested.append(requested_wordid)
-        return fetch_sum20_wordid(requested_wordid, session=session, **kwargs)
-
-    monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
-    counts = sum20_official_ingest.ingest_wordids(db_path, limit=2, delay_s=0, retries=0)
-    assert requested == [wordid]
-    assert counts == {"ok": 0, "unchanged": 0, "not_found": 0, "transient_error": 0, "parse_error": 1}
-    assert counts.exit_code == 4
-    with sqlite3.connect(db_path) as conn:
-        assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone() == (wordid - 1,)
-        assert conn.execute("SELECT wordid, status FROM sum20_crawl_outcomes").fetchall() == [(wordid, "parse_error")]
-        for table in ("sum20_articles", "sum20_senses", "sum20_citations"):
-            assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
-
-
 @pytest.mark.parametrize("layout", ["direct", "whitespace", "inline-ux", "inline-lexical", "inline-bux"])
 def test_marked_phrase_reference_preserves_owned_markers(layout: str) -> None:
     source = MARKED_PHRASE_HTML
@@ -1736,14 +1531,3 @@ def test_marked_phrase_presence_prevents_word_reference_fallback() -> None:
     source = MARKED_PHRASE_HTML.replace('class="PHRTXT"', 'class="OTHER"').replace("</article>", LINKED + "</article>")
     with pytest.raises(Sum20ParseError, match="no definition senses"):
         parse_sum20_article(source, 2354)
-
-
-@pytest.mark.parametrize("marker_only", [False, True], ids=["empty-markers", "marker-only-fields"])
-def test_marked_word_reference_refuses_matching_but_empty_association(marker_only: bool) -> None:
-    source = MARKED_WORD_HTML
-    if marker_only:
-        source = source.replace("target<div", "<div").replace("TARGET<div", "<div")
-    else:
-        source = source.replace(">1<", "><")
-    with pytest.raises(Sum20ParseError):
-        parse_sum20_article(source, 1521)

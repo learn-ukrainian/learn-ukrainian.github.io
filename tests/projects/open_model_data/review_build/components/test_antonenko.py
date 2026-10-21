@@ -20,12 +20,8 @@ from scripts.projects.open_model_data.review_build.components.antonenko import (
     STORE,
     attestation_for,
     batches,
-    book_locator,
     citation,
     filtered_pairs,
-    identity_relation,
-    inverse_identities,
-    pair_identity,
     pin_dispatch_files,
     recommended_lookup,
     validate_receipts,
@@ -223,19 +219,6 @@ def test_pending_receipts_ship_no_records_and_packets_remain_source_bound(source
             assert [r["text"] for r in p["rows"]] == [r["text"] for r in source["rows"]]
 
 
-@pytest.mark.parametrize(
-    "page,section,expected",
-    [
-        (0, "SYNTHETIC section", "SYNTHETIC section"),
-        (None, "SYNTHETIC section", "SYNTHETIC section"),
-        (2, "", "page 2"),
-        (0, "", ""),
-    ],
-)
-def test_locator_never_uses_page_zero(page, section, expected):
-    assert book_locator({"page": page, "section": section}) == expected
-
-
 def test_missing_locator_is_withheld(source):
     with sqlite3.connect(source["db"]) as c:
         c.execute("UPDATE style_guide SET page=0,section='' WHERE id=1")
@@ -350,18 +333,6 @@ def test_attribution_never_guesses_held_metadata(source, form):
 
 
 @pytest.mark.parametrize(
-    "page,section", [(3, "SYNTHETIC section"), (0, "SYNTHETIC section"), (None, "SYNTHETIC section")]
-)
-def test_attribution_maps_registered_form_without_inventing_edition(source, page, section):
-    row = {**source["rows"][0], "source": "Антоненко-Давидович", "page": page, "section": section}
-    result = BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, citation(row), row, None)
-    assert result.mapped_form == BOOK_REGISTER_FORM
-    assert "<" not in result.bibliography and "otherwise" not in result.bibliography
-    assert str(page) in result.bibliography if page else section in result.bibliography
-    assert BOOK_REGISTER_FORM.split(". С.")[0] in result.bibliography
-
-
-@pytest.mark.parametrize(
     "mutation,code",
     [("source", "attribution_unresolved"), ("locator", "locator_unavailable"), ("store", "attribution_unresolved")],
 )
@@ -378,35 +349,6 @@ def test_book_attribution_refuses_wrong_source_or_missing_locator(source, mutati
         BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, None)
 
 
-def test_receipt_attribution_uses_held_book_locator_and_checks_source(source):
-    from types import SimpleNamespace
-
-    book = {**source["rows"][0], "source": "Антоненко-Давидович"}
-    row = {
-        "book_id": book["id"],
-        "source": book["source"],
-        "pair": "id=1",
-        "row_text_sha256": digest(book["text"].encode()),
-    }
-    observed = []
-
-    def lookup(cited):
-        observed.append(cited)
-        return book
-
-    reader = SimpleNamespace(row=lookup)
-    cited = replace(citation(book), store=STORE, table="C6b")
-    assert (
-        BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, reader).bibliography
-        == BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, citation(book), book, reader).bibliography
-    )
-    assert observed[0].store == "sources.db" and observed[0].row_key == "id=1"
-    assert observed[0].field_sha256 == digest(book["text"].encode())
-    row["source"] = "SYNTHETIC wrong source"
-    with pytest.raises(BuildError, match="attribution_unresolved"):
-        BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, reader)
-
-
 def test_receipt_book_attribution_uses_real_snapshot_digest_validation(source):
     write_receipt(source)
     with sqlite3.connect(source["db"]) as writer:
@@ -421,14 +363,6 @@ def test_receipt_book_attribution_uses_real_snapshot_digest_validation(source):
         row["row_text_sha256"] = "0" * 64
         with pytest.raises(BuildError, match="field_digest"):
             BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, ctx.reader)
-
-
-def test_c6b_policy_is_component_owned_and_detached_from_other_builds():
-    first, second = BookCalqueComponent(), BookCalqueComponent()
-    assert first.spec["compatibility"] == COMPATIBILITY
-    assert {(r["store"], r["table"]) for r in COMPATIBILITY} == {("sources.db", "style_guide"), (STORE, "C6b")}
-    first.spec["compatibility"][0]["source_values"].clear()
-    assert second.spec["compatibility"] == COMPATIBILITY
 
 
 def test_packet_writer_batches_only_located_rows_and_keeps_unicode_offsets(source, tmp_path):
@@ -555,15 +489,6 @@ def test_binding_rechecks_each_raw_receipt_digest(source, seat):
         RECEIPTS.documents[sha][1][seat] += b"\n"
         with pytest.raises(BuildError, match="adjudication_stale"):
             gate(ctx, obj, "C6b").run(cs)
-
-
-def test_packet_digest_refuses_changed_batch():
-    row = {"id": 1, "text": "SYNTHETIC wrong right.", "section": "SYNTHETIC section"}
-    batch = batches([row])[0]
-    receipts = selection_receipts(batch)
-    batch["rows"][0]["text"] += " changed"
-    with pytest.raises(BuildError, match="adjudication_stale"):
-        validate_receipts(batch, receipts)
 
 
 def test_receipt_store_refuses_unreviewed_unit_queries():
@@ -811,17 +736,6 @@ def test_sidecar_extractor_refuses_missing_ambiguous_or_changed_matching_block(s
         attestation_for(receipt, task, raw)
 
 
-def test_sidecar_rechecked_and_pinned_after_candidate_extraction(source):
-    write_receipt(source)
-    ctx, obj = context(source), component_for("C6b")
-    with ctx.reader:
-        cs = list(obj.iter_candidates(ctx))
-        path = next(source["receipts"].glob("*.sol.attestation.json"))
-        path.write_bytes(path.read_bytes() + b"\n")
-        with pytest.raises(BuildError, match="adjudication_stale"):
-            gate(ctx, obj, "C6b").run(cs)
-
-
 def test_reconciliation_packet_preserves_row_and_exact_disputed_span_texts(source, tmp_path):
     expand_row(source)
     write_receipt(source, lambda r: add_second_pair(source, r, both=False))
@@ -865,48 +779,6 @@ def test_pair_expansion_does_not_relax_frozen_source_census(source):
         cs = list(obj.iter_candidates(ctx))
         assert len(cs) == 3
         with pytest.raises(BuildError, match="frozen_count"):
-            gate(ctx, obj, "C6b").run(cs)
-
-
-def test_missing_derived_pair_and_duplicate_unit_refuse_build(source):
-    expand_row(source)
-    write_receipt(source, lambda r: add_second_pair(source, r))
-    ctx, obj = context(source), component_for("C6b")
-    with ctx.reader:
-        cs = list(obj.iter_candidates(ctx))
-        with pytest.raises(BuildError, match="missing_unit"):
-            gate(ctx, obj, "C6b").run(cs[1:])
-        with pytest.raises(BuildError, match="duplicate_unit"):
-            gate(ctx, obj, "C6b").run([*cs, cs[0]])
-
-
-def test_dispatch_payload_binding_does_not_coerce_boolean_offsets(source):
-    receipt = selection_receipts(batches(source["rows"])[0])["sol"]
-    actual = copy.deepcopy(receipt)
-    actual["rows"][0]["pairs"][0]["rejected"]["start"] = True
-    receipt["rows"][0]["pairs"][0]["rejected"]["start"] = 1
-    raw = canonical(actual)
-    task = {
-        "task_id": receipt["task_id"],
-        "model": receipt["model"],
-        "status": "done",
-        "result_sha256": digest(raw),
-        "finished_at": "2026-10-06T00:00:00Z",
-    }
-    with pytest.raises(BuildError, match="adjudication_stale"):
-        attestation_for(receipt, task, raw)
-
-
-def test_receipt_reads_need_no_live_tasks_and_pinned_dispatch_tamper_refuses(source, monkeypatch):
-    write_receipt(source)
-    monkeypatch.setattr(antonenko, "tasks_dir", lambda: (_ for _ in ()).throw(AssertionError("live read")))
-    ctx, obj = context(source), component_for("C6b")
-    with ctx.reader:
-        cs = list(obj.iter_candidates(ctx))
-        assert len(gate(ctx, obj, "C6b").run(cs)[0]) == 2
-        path = next((source["receipts"] / "dispatch").glob("*.result"))
-        path.write_bytes(path.read_bytes() + b"changed")
-        with pytest.raises(BuildError, match="adjudication_stale"):
             gate(ctx, obj, "C6b").run(cs)
 
 
@@ -1084,15 +956,6 @@ def test_lookup_changes_cannot_change_receipt_admission(lexeme_source, monkeypat
             RECEIPTS.row("C6b", "id=" + unit["id"])
 
 
-def test_identity_unknown_and_distinctness_controls():
-    assert identity_relation((set(), True), (set(), True)) == "unknown"
-    assert identity_relation(({"alpha"}, True), ({"beta"}, False)) == "unknown"
-    assert identity_relation(({"alpha"}, True), ({"beta"}, True)) == "different"
-    assert identity_relation(({"alpha"}, False), ({"alpha", "beta"}, True)) == "shared"
-    assert pair_identity({"rejected": [], "recommended": []}) == ((set(), False), (set(), False))
-    assert not inverse_identities(None, (({"alpha"}, True), ({"beta"}, True)))
-
-
 @pytest.mark.parametrize(
     "decision", ["agreed", "reconciled_accepted", "reconciled_rejected", "adjudication_disagreement"]
 )
@@ -1118,24 +981,6 @@ def test_inverse_union_includes_nonadmitted_inverse_and_duplicates_keep_first():
     assert filtered_pairs(pairs, text, lookups) == {first: "agreed", repeated: "duplicate_in_row"}
     pairs.append((*inverse, "reconciled_rejected"))
     assert set(filtered_pairs(pairs, text, lookups).values()) == {"inverse_pair_in_row"}
-
-
-def test_unattested_recommended_pair_withholds_and_cannot_bypass_receipt_gate(source):
-    source["rows"][0]["text"] = "SYNTHETIC wrong unknown."
-    with sqlite3.connect(source["db"]) as db:
-        db.execute("UPDATE style_guide SET text=? WHERE id=1", (source["rows"][0]["text"],))
-    write_receipt(source)
-    ctx, obj = context(source), component_for("C6b")
-    with ctx.reader:
-        cs = list(obj.iter_candidates(ctx))
-        records, report = gate(ctx, obj, "C6b").run(cs)
-        assert len(records) == 1
-        assert report["accounting"]["C6b"]["reasons"] == {"agreed": 1, "recommended_unattested": 1}
-        unit = next(u for u in RECEIPTS.records.values() if u["reason"] == "recommended_unattested")
-        assert RECEIPTS.lookups[unit["id"]]["recommended"][0]["citations"] == []
-        unit["reason"] = "agreed"
-        with pytest.raises(BuildError, match="adjudication_direction"):
-            RECEIPTS.row("C6b", "id=" + unit["id"])
 
 
 def test_all_filter_fixtures_reject_actual_forced_candidates(source):

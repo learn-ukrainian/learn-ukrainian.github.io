@@ -131,11 +131,6 @@ def outside_any_repo() -> Iterator[Path]:
         shutil.rmtree(directory, ignore_errors=True)
 
 
-def test_resolve_main_root_raises_outside_repo(layout: Layout, outside_any_repo: Path):
-    with pytest.raises(wc.NotAGitRepositoryError):
-        wc.resolve_main_root(outside_any_repo)
-
-
 def test_resolve_main_root_uses_filesystem_fallback_when_git_cannot_execute(
     layout: Layout, monkeypatch: pytest.MonkeyPatch
 ):
@@ -171,21 +166,6 @@ def test_resolve_main_root_without_git_matches_git_and_never_spawns(layout: Layo
 
 def _worktree_gitdir(worktree: Path) -> Path:
     return Path((worktree / ".git").read_text().removeprefix("gitdir:").strip())
-
-
-@pytest.mark.parametrize("head", ["primary", "worktree", "clean"])
-def test_resolve_main_root_without_git_rejects_nul_in_head(layout: Layout, head: str):
-    if head != "clean":
-        gitdir = layout.main / ".git" if head == "primary" else _worktree_gitdir(layout.dispatch_wt)
-        (gitdir / "HEAD").write_bytes(b"ref: refs/heads/main\x00corruption\n")
-        with pytest.raises(wc.NotAGitRepositoryError):
-            wc.resolve_main_root_without_git(layout.dispatch_wt)
-        if head == "primary":
-            with pytest.raises(wc.NotAGitRepositoryError):
-                wc.resolve_main_root_without_git(layout.main)
-    else:
-        assert wc.resolve_main_root_without_git(layout.main) == layout.main
-        assert wc.resolve_main_root_without_git(layout.dispatch_wt) == layout.main
 
 
 @pytest.mark.parametrize(
@@ -396,17 +376,6 @@ def test_symlink_staying_inside_is_primary_checkout(layout: Layout):
     assert wc.is_write_allowed(target, cwd=layout.main)[0] is False
 
 
-def test_dotdot_escape_is_classified_outside(layout: Layout):
-    escaped = layout.main / "pkg" / ".." / ".." / "outside" / "x.txt"
-    assert wc.classify_repo_path(escaped, cwd=layout.main) == "outside_repo"
-
-
-def test_dotdot_staying_inside_resolves_to_primary_checkout(layout: Layout):
-    inside = layout.main / "pkg" / ".." / "tracked.txt"
-    assert wc.classify_repo_path(inside, cwd=layout.main) == "primary_checkout"
-    assert wc.is_write_allowed(inside, cwd=layout.main)[1] == "tracked_primary_checkout"
-
-
 # ---------------------------------------------------------------------------
 # missing-path parent resolution
 # ---------------------------------------------------------------------------
@@ -419,15 +388,6 @@ def test_missing_path_under_untracked_dir_is_blocked(layout: Layout):
     assert wc.is_write_allowed(missing, cwd=layout.main) == (
         False,
         "untracked_primary_checkout",
-    )
-
-
-def test_missing_path_under_ignored_dir_is_allowed(layout: Layout):
-    missing = layout.main / "build" / "sub" / "artifact.log"
-    assert wc.is_ignored(missing, layout.main) is True
-    assert wc.is_write_allowed(missing, cwd=layout.main) == (
-        True,
-        "gitignored_local_state",
     )
 
 

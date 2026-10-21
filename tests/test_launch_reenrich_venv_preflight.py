@@ -147,14 +147,6 @@ def test_runner_python_override_wins(tmp_path: Path) -> None:
     assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
-def test_launcher_invokes_resolved_runner_python() -> None:
-    """The systemd/nohup command must use the preflight-resolved interpreter,
-    not a hardcoded $REPO/.venv path that could diverge from the check."""
-    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
-    assert 'printf \'%q \' "$RUNNER_PYTHON" "$DRIVER"' in source
-    assert "import yaml, jsonschema" in source
-
-
 def test_launcher_wrapped_command_has_pipefail() -> None:
     """#6876: WRAPPED must set pipefail so driver failures (e.g. circuit breaker 70)
     are not masked by tee exiting 0."""

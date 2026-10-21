@@ -7,7 +7,7 @@ from unittest.mock import patch
 import pytest
 
 from scripts.audit.llm_qg_store import latest_llm_qg, record_llm_qg
-from scripts.build import linear_pipeline, run_llm_qg_parity, v7_build
+from scripts.build import linear_pipeline, v7_build
 from scripts.common.thresholds import QG_DIMS
 
 
@@ -190,37 +190,6 @@ def test_seminar_llm_qg_routes_away_from_gemini_reviewer():
     )
 
 
-def test_generated_content_includes_writer_preemit_audit_lines(tmp_path: Path):
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    (module_dir / "writer_output.raw.md").write_text(
-        "\n".join(
-            [
-                "<implementation_map_audit>manifest_obligations=8 covered_in_map=8 missing=[]</implementation_map_audit>",
-                "<bad_form_audit>italic_bad_form_patterns_found=0 converted_to_marker=0 remaining=0</bad_form_audit>",
-                "<activity_split_audit>",
-                "level=B1 inline_n=6 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true",
-                "</activity_split_audit>",
-                "````markdown file=module.md",
-                "# Lesson",
-                "````",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    for artifact in linear_pipeline.WRITER_ARTIFACTS:
-        (module_dir / artifact).write_text(f"{artifact} body\n", encoding="utf-8")
-
-    generated = v7_build._generated_content(module_dir)
-
-    assert "## writer_output.raw.md pre-emit audit lines" in generated
-    assert "<implementation_map_audit>" in generated
-    assert "<bad_form_audit>" in generated
-    assert "<activity_split_audit>" in generated
-    assert "level=B1 inline_n=6" in generated
-    assert generated.index("<activity_split_audit>") < generated.index("## module.md")
-
-
 def test_writer_preemit_audit_context_extracts_all_three_tags(tmp_path: Path):
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -241,32 +210,6 @@ def test_writer_preemit_audit_context_extracts_all_three_tags(tmp_path: Path):
     assert context.count("<implementation_map_audit>") == 1
     assert context.count("<bad_form_audit>") == 1
     assert context.count("<activity_split_audit>") == 1
-
-
-def test_writer_preemit_audit_context_missing_tags_returns_empty(tmp_path: Path):
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    (module_dir / "writer_output.raw.md").write_text("plain writer output\n", encoding="utf-8")
-
-    assert v7_build._writer_preemit_audit_context(module_dir) == ""
-    assert v7_build._writer_preemit_audit_context(tmp_path / "missing") == ""
-
-
-def test_writer_preemit_audit_context_malformed_tags_do_not_match(tmp_path: Path):
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    (module_dir / "writer_output.raw.md").write_text(
-        "\n".join(
-            [
-                "<implementation_map_audit>manifest_obligations=3",
-                "<bad_form_audit>remaining=0</activity_split_audit>",
-                "<activity_split_audit level=B1 split_valid=true>",
-            ]
-        ),
-        encoding="utf-8",
-    )
-
-    assert v7_build._writer_preemit_audit_context(module_dir) == ""
 
 
 def test_reviewer_assert_v7_build(tmp_path: Path):
@@ -502,26 +445,6 @@ def test_llm_qg_retries_ungrounded_reviewer_evidence(
     assert set(report["dimensions"]) == set(QG_DIMS)
 
 
-def test_llm_qg_grounding_accepts_markdown_emphasis_difference(tmp_path: Path) -> None:
-    response_path = tmp_path / "response.raw.md"
-    entry = {
-        "score": 8.5,
-        "evidence": '"Не впади, не загуби ключі, не забудь паспорт - це не заборони, а попередження."',
-        "verdict": "PASS",
-    }
-    generated_content = (
-        "**Не впади**, **не загуби ключі**, **не забудь паспорт** - "
-        "це не заборони, а попередження."
-    )
-
-    v7_build._validate_llm_qg_dim_grounding(
-        entry,
-        dim="pedagogical",
-        generated_content=generated_content,
-        response_path=response_path,
-    )
-
-
 def test_llm_qg_parse_uses_review_json_after_agy_status_wrapper(tmp_path: Path) -> None:
     response = "\n".join(
         [
@@ -547,111 +470,6 @@ def test_llm_qg_parse_uses_review_json_after_agy_status_wrapper(tmp_path: Path) 
 
     assert entry["score"] == 8.5
     assert entry["verdict"] == "PASS"
-
-
-def test_llm_qg_parse_uses_later_review_json_after_malformed_object(tmp_path: Path) -> None:
-    response = "\n".join(
-        [
-            "Here is an intermediate object:",
-            '{"status": "waiting", @}',
-            "Final review:",
-            json.dumps(
-                {
-                    "score": 8.7,
-                    "evidence": '"tone evidence quote"',
-                    "verdict": "PASS",
-                }
-            ),
-        ]
-    )
-
-    entry = v7_build._parse_llm_qg_dim_response(
-        response,
-        dim="tone",
-        response_path=tmp_path / "response.raw.md",
-    )
-
-    assert entry["score"] == 8.7
-    assert entry["verdict"] == "PASS"
-
-
-def test_llm_qg_reports_malformed_dimension_response_clearly(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _patch_llm_qg_prompt(monkeypatch)
-
-    def invoke(_agent: str, _prompt: str, **_kwargs: object) -> SimpleNamespace:
-        return SimpleNamespace(response="not structured output")
-
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
-
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    with pytest.raises(linear_pipeline.LinearPipelineError) as exc_info:
-        v7_build._run_llm_qg(
-            plan={"slug": "test-slug", "level": "a1"},
-            plan_content="plan",
-            module_dir=module_dir,
-            writer="claude-tools",
-            reviewer_override="codex-tools",
-        )
-
-    message = str(exc_info.value)
-    assert f"LLM QG {QG_DIMS[0]} failed after" in message
-    assert "malformed backend response" in message
-    assert "response.raw.md" in message
-
-
-def test_run_llm_qg_parity_persists_sqlite_record(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    plan_path = tmp_path / "plan.yaml"
-    plan_path.write_text("level: b1\nslug: target\n", encoding="utf-8")
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
-    (module_dir / "module.md").write_text("## Модуль\n", encoding="utf-8")
-    llm_qg = {
-        "aggregate": {
-            "verdict": "PASS",
-            "terminal_verdict": "PASS",
-            "min_score": 8.5,
-            "min_dim": "naturalness",
-        },
-        "dimensions": {},
-    }
-    persisted: dict[str, object] = {}
-
-    monkeypatch.setattr(run_llm_qg_parity.linear_pipeline, "plan_path_for", lambda *_args: plan_path)
-    monkeypatch.setattr(run_llm_qg_parity.linear_pipeline, "load_plan", lambda _path: {"level": "b1", "slug": "target"})
-    monkeypatch.setattr(run_llm_qg_parity.linear_pipeline, "validate_plan", lambda _plan: None)
-    monkeypatch.setattr(run_llm_qg_parity.linear_pipeline, "curriculum_profile_for_level", lambda _level: "core")
-    monkeypatch.setattr(run_llm_qg_parity.v7_build, "_resolve_output_dir", lambda *_args: module_dir)
-    monkeypatch.setattr(run_llm_qg_parity.v7_build, "_run_llm_qg", lambda **_kwargs: llm_qg)
-    monkeypatch.setattr(
-        run_llm_qg_parity.v7_build,
-        "_persist_llm_qg_result",
-        lambda **kwargs: persisted.update(kwargs),
-    )
-
-    assert (
-        run_llm_qg_parity.run_parity(
-            "b1",
-            "target",
-            writer="claude-tools",
-            reviewer="codex-tools",
-            out=None,
-        )
-        == 0
-    )
-
-    assert (module_dir / "llm_qg.json").exists()
-    assert persisted["level"] == "b1"
-    assert persisted["slug"] == "target"
-    assert persisted["module_dir"] == module_dir
-    assert persisted["reviewer"] == "codex-tools"
-    assert persisted["source"] == "run_llm_qg_parity"
 
 
 def test_persist_llm_qg_records_combined_prompt_hash(

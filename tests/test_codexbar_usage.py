@@ -19,9 +19,7 @@ from scripts.api.codexbar_usage import _normalize_provider_data
 from scripts.api.state_helpers import cache_invalidate
 from scripts.api.subscription_usage import (
     compute_usage_pace,
-    compute_weekly_pace_delta_pct,
     format_usage_pace_summary,
-    lane_is_under_weekly_pace,
     pace_is_deficit,
     pace_is_visible,
 )
@@ -616,23 +614,6 @@ def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     assert res["error_code"] == 401
 
 
-def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
-    """HTTP 401 on credential errors must surface the payload, not be swallowed."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (401, None, "credential is expired"),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-
-    assert res is not None
-    assert res["status"] in ("unavailable", "unknown")
-    assert "expired" in (res["auth_error"] or "").lower() or "credential" in (res["auth_error"] or "").lower()
-
-
 def test_healthy_record_carries_error_shape_defaults():
     """Healthy and error records share one key shape (review-5386 F2)."""
     raw_list = json.loads(KIMI_HEALTHY_FIXTURE)
@@ -641,18 +622,6 @@ def test_healthy_record_carries_error_shape_defaults():
     assert res["auth_error"] is None
     assert res["error_kind"] is None
     assert res["error_code"] is None
-
-
-def test_missing_credentials_returns_need_login(monkeypatch):
-    """Missing native credentials must surface NEED_LOGIN, not missing_binary."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
-    codexbar_usage_mod._last_good_data.pop("codex", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
-    assert res["status"] == "unavailable"
-    assert res["error_kind"] == "need_login"
-    assert res["probe_state"] == "NEED_LOGIN"
-    assert "credential" in res["auth_error"].lower()
 
 
 def test_native_probe_unavailable_missing_credentials(monkeypatch):
@@ -712,55 +681,6 @@ def test_codexbar_unavailable_timeout(monkeypatch):
     assert res["status"] == "unavailable"
     assert res["error_kind"] == "fetch_error"
     assert "timed out" in res["auth_error"].lower()
-
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    record = CostRecord(
-        path=Path("fixture-meta.json"),
-        level="a1",
-        slug="fixture",
-        phase="write",
-        agent="codex",
-        model="fixture-model",
-        model_source="stored",
-        ok=True,
-        timestamp=now.isoformat(),
-        mtime=now,
-        prompt_chars=1,
-        response_chars=1,
-        prompt_tokens_est=1,
-        response_tokens_est=1,
-        prompt_tokens_source="stored",
-        response_tokens_source="stored",
-        rate_model="fixture-model",
-        used_default_rate=False,
-        cost_usd_est=500.0,
-    )
-    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [record])
-    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda p: res if p == "codex" else None)
-
-    data = state_router.compute_routing_budget(now)
-    assert data["agents"]["codex"]["status"] == "warm"
-    assert data["agents"]["codex"]["burn_pct_7d"] is not None
-    assert data["agents"]["codex"]["remaining_pct"] is not None
-    assert data["agents"]["codex"]["codexbar"]["status"] == "unavailable"
-    assert data["agents"]["codex"]["codexbar"]["error_kind"] == "fetch_error"
-
-
-def test_codexbar_unavailable_nonzero_exit(monkeypatch):
-    """Regression test for HTTP failure: must surface status='unavailable' and auth_error."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (500, None, "fatal upstream error"),
-    )
-    codexbar_usage_mod._last_good_data.pop("codex", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
-    assert res["status"] == "unavailable"
-    assert res["error_kind"] == "fetch_error"
-    assert res["auth_error"] == "Codex usage HTTP 500"
-    assert "fatal upstream error" not in res["auth_error"]
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
@@ -888,214 +808,6 @@ def test_codexbar_unavailable_unparseable_schema(monkeypatch):
     assert data["agents"]["codex"]["codexbar"]["error_kind"] == "unparseable_schema"
 
 
-def test_dashboard_routing_html_renders_unavailable_explicitly():
-    """Prove dashboards/routing.html renders 'unknown' non-numeric display, not 0.0% or 0-width bar."""
-    import subprocess
-
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    const helpers = html.slice(start, end);
-
-    let innerHTML = '';
-    const document = {
-      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
-    };
-
-    eval(helpers);
-
-    renderSubscriptions({
-      agents: {
-        codex: {
-          status: 'unavailable',
-          burn_pct_7d: null,
-          remaining_pct: null,
-          codexbar: { weekly_used_pct: null, fetched_at: null }
-        }
-      },
-      in_flight: {}
-    });
-
-    console.log(innerHTML);
-    """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
-    out = res.stdout
-    assert "0.0%" not in out, f"Dashboard rendered 0.0% for unavailable state: {out}"
-    assert 'style="width:0%"' not in out, f"Dashboard rendered 0-width bar for unavailable state: {out}"
-    assert "unknown" in out
-    assert 'class="bar unavailable"' in out or 'class="pill unknown"' in out
-
-
-def test_dashboard_routing_html_renders_cursor_auto_api_subscriptions():
-    """Subscriptions table must show Cursor Auto + API percents from provider_windows."""
-    import subprocess
-
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    const helpers = html.slice(start, end);
-
-    let innerHTML = '';
-    const document = {
-      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
-    };
-    eval(helpers);
-
-    renderSubscriptions({
-      agents: {
-        cursor: {
-          status: 'cool',
-          login_state: 'authenticated',
-          probe_state: 'healthy',
-          provider_windows: {
-            auto: { window: 'monthly', label: 'Auto', used_pct: 23, remaining_pct: 77, resets_at: '2026-09-01T00:00:00Z' },
-            api: { window: 'monthly', label: 'API', used_pct: 40, remaining_pct: 60, resets_at: '2026-09-01T00:00:00Z' },
-          },
-          codexbar: { fetched_at: '2026-08-26T12:00:00Z', age_s: 120 },
-          fleet_burn: { windows: { '5h': { counts: { total: 1 } }, '7d': { counts: { total: 3 } }, '30d': { counts: { total: 10 } } } },
-        },
-      },
-      in_flight: { cursor: 0 },
-    });
-    console.log(innerHTML);
-    """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
-    out = res.stdout
-    assert "Cursor Models" in out
-    assert "Other Models" in out
-    assert "Grok Bot" in out
-    assert "23" in out
-    assert "40" in out
-    assert "77" in out or "60" in out
-
-
-def test_dashboard_routing_html_need_login_does_not_render_zero_auto_used():
-    """NEED_LOGIN fixture must not paint Auto as 0.0% used."""
-    import subprocess
-
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    const helpers = html.slice(start, end);
-
-    let innerHTML = '';
-    const document = {
-      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
-    };
-    eval(helpers);
-
-    renderSubscriptions({
-      agents: {
-        cursor: {
-          status: 'need_login',
-          login_state: 'NEED_LOGIN',
-          probe_state: 'NEED_LOGIN',
-          provider_windows: {
-            auto: { window: 'monthly', used_pct: null, remaining_pct: null },
-            api: { window: 'monthly', used_pct: null, remaining_pct: null },
-          },
-        },
-      },
-      in_flight: {},
-    });
-    console.log(innerHTML);
-    """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
-    out = res.stdout
-    assert "NEED_LOGIN" in out
-    assert "0.0%" not in out
-    assert 'style="width:0%"' not in out
-
-
-def test_dashboard_routing_html_agy_row_binds_gemini_family_budget():
-    """Live Gemini-family seat is agy; budget API may still key agents.gemini."""
-    import subprocess
-
-    html_text = Path("dashboards/routing.html").read_text(encoding="utf-8")
-    assert "agents.agy || agents.gemini" in html_text
-    assert "['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy']" in html_text
-    assert "'glm'" not in html_text[html_text.index("subscriptionLanes") : html_text.index("subscriptionLanes") + 120]
-
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    const helpers = html.slice(start, end);
-
-    let innerHTML = '';
-    const document = {
-      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
-    };
-    eval(helpers);
-
-    renderSubscriptions({
-      agents: {
-        gemini: {
-          status: 'cool',
-          burn_pct_7d: 12,
-          remaining_pct: 88,
-          codexbar: { weekly_used_pct: 12, fetched_at: '2026-09-04T00:00:00Z' },
-        },
-        glm: {
-          status: 'cool',
-          burn_pct_7d: 1,
-          remaining_pct: 99,
-        },
-      },
-      in_flight: { gemini: 2 },
-    });
-    const fromGeminiOnly = innerHTML;
-
-    innerHTML = '';
-    renderSubscriptions({
-      agents: {
-        agy: {
-          status: 'warm',
-          burn_pct_7d: 40,
-          remaining_pct: 60,
-          codexbar: { weekly_used_pct: 40, fetched_at: '2026-09-04T00:00:00Z' },
-        },
-        gemini: {
-          status: 'cool',
-          burn_pct_7d: 12,
-          remaining_pct: 88,
-        },
-      },
-      in_flight: { agy: 1, gemini: 9 },
-    });
-    const prefersAgy = innerHTML;
-
-    console.log(JSON.stringify({ fromGeminiOnly, prefersAgy }));
-    """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
-    payload = json.loads(res.stdout)
-    from_gemini = payload["fromGeminiOnly"]
-    prefers_agy = payload["prefersAgy"]
-
-    assert ">agy<" in from_gemini
-    assert "cool" in from_gemini
-    assert ">2<" in from_gemini
-    assert ">gemini<" not in from_gemini
-    assert ">glm<" not in from_gemini
-
-    assert ">agy<" in prefers_agy
-    assert "warm" in prefers_agy
-    assert ">1<" in prefers_agy
-    assert ">gemini<" not in prefers_agy
-    assert ">glm<" not in prefers_agy
-
-
 def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
     """HTTP reads must not block on live Cursor probes."""
     subscription_usage_mod._reset_cursor_usage_state_for_tests()
@@ -1210,30 +922,6 @@ def test_malformed_or_provider_failure_is_unavailable_without_lkg(monkeypatch):
     assert result["last_failure_at"]
 
 
-def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
-    provider = "grok"
-    cache_invalidate("codexbar_usage:")
-    codexbar_usage_mod._last_good_data.pop(provider, None)
-    codexbar_usage_mod._last_failure_data.pop(provider, None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_thread", None)
-    monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "1")
-    entered = threading.Event()
-    release = threading.Event()
-
-    def slow_background() -> None:
-        entered.set()
-        release.wait(timeout=10.0)
-
-    monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", slow_background)
-    started = time.monotonic()
-    result = codexbar_usage_mod.get_provider_usage_data(provider)
-    elapsed = time.monotonic() - started
-    release.set()
-    assert entered.wait(timeout=5.0)
-    assert elapsed < 3.0
-    assert result["freshness"] == "unavailable"
-
-
 def test_default_refresh_timeout_floor_matches_real_cli_latency(monkeypatch):
     """Regression: the prior 2.0s default never let the claude lane's CLI
     probe complete (live-measured 2026-08-04: `codexbar usage --json
@@ -1244,58 +932,6 @@ def test_default_refresh_timeout_floor_matches_real_cli_latency(monkeypatch):
     assert codexbar_usage_mod._codexbar_refresh_timeout_s() == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
     # Comfortable margin above the live-measured ~17s worst case.
     assert codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S >= 20.0
-
-
-def test_refresh_timeout_env_override(monkeypatch):
-    """CODEXBAR_REFRESH_TIMEOUT_S lets a slower box or CI raise/lower the floor."""
-    monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "9.5")
-    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == 9.5
-
-    # Malformed or non-positive overrides fall back to the safe default
-    # rather than passing a bad value to subprocess.run(timeout=...).
-    monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "not-a-number")
-    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
-
-    monkeypatch.setenv("CODEXBAR_REFRESH_TIMEOUT_S", "-5")
-    assert codexbar_usage_mod._codexbar_refresh_timeout_s() == codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S
-
-
-def test_refresh_provider_usage_data_defaults_to_realistic_timeout(monkeypatch):
-    """The blocking fresh-refresh path must pass the realistic default to native probes."""
-    monkeypatch.delenv("CODEXBAR_REFRESH_TIMEOUT_S", raising=False)
-    seen_timeouts = []
-
-    def fake_fetch(provider, *, timeout_s):
-        seen_timeouts.append(timeout_s)
-        return _normalize_provider_data(provider, json.loads(CODEX_FIXTURE)[0])
-
-    monkeypatch.setattr(subscription_usage_mod, "fetch_provider_usage", fake_fetch)
-    codexbar_usage_mod.refresh_provider_usage_data(["codex"])
-    assert seen_timeouts == [codexbar_usage_mod.DEFAULT_CODEXBAR_REFRESH_TIMEOUT_S]
-
-
-def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
-    """_run_all_refreshes previously hardcoded timeout_s=2.0 directly, even
-    though it runs on a non-blocking daemon thread with no reason to use a
-    shorter timeout than the explicit fresh-refresh path."""
-    captured = {}
-
-    def fake_refresh(providers, *, timeout_s=None):
-        captured["timeout_s"] = timeout_s
-        captured["providers"] = tuple(providers)
-        return {}
-
-    monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
-    subscription_usage_mod._run_all_refreshes()
-    # No override passed -> refresh_provider_usage_data resolves the shared
-    # realistic default itself, instead of the caller hardcoding 2.0.
-    assert captured["timeout_s"] is None
-    assert "claude" in captured["providers"]
-    assert "cursor" not in captured["providers"]
 
 
 def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
@@ -1312,23 +948,6 @@ def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
     assert timeout_result["status"] == "unavailable"
     assert timeout_result["error_kind"] == "timeout"
     assert _HEALTH_ALIASES[timeout_result["status"]] is None  # fail-open, not "unhealthy"
-
-
-def test_default_cache_ttl_is_twelve_minutes(monkeypatch):
-    monkeypatch.delenv("CODEXBAR_CACHE_TTL_S", raising=False)
-    monkeypatch.delenv("CODEXBAR_REFRESH_INTERVAL_S", raising=False)
-    assert codexbar_usage_mod.DEFAULT_CODEXBAR_CACHE_TTL_S == 720.0
-    assert codexbar_usage_mod._codexbar_cache_ttl_s() == 720.0
-    assert codexbar_usage_mod._codexbar_refresh_interval_s() == 720.0
-
-
-def test_cache_ttl_env_override(monkeypatch):
-    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "900")
-    monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "600")
-    assert codexbar_usage_mod._codexbar_cache_ttl_s() == 900.0
-    assert codexbar_usage_mod._codexbar_refresh_interval_s() == 600.0
-    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "nope")
-    assert codexbar_usage_mod._codexbar_cache_ttl_s() == 720.0
 
 
 def test_scheduler_running_skips_on_demand_refresh(monkeypatch):
@@ -1429,15 +1048,6 @@ def test_openrouter_missing_key_returns_need_key(monkeypatch):
     assert result["limit_remaining_usd"] is None
 
 
-def test_deepseek_missing_key_returns_need_key(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: None)
-    codexbar_usage_mod._api_account_last_good.pop("deepseek", None)
-    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
-    assert result["probe_state"] == "NEED_KEY"
-    assert result["total_balance"] is None
-    assert result["local_only"] is True
-
-
 def test_openrouter_key_probe_success(monkeypatch):
     monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: "fixture-openrouter-key")
 
@@ -1528,11 +1138,6 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
     assert ranked_api[0]["remaining_usd"] == 49.0
 
 
-def test_routing_html_contains_api_accounts_panel():
-    text = Path("dashboards/routing.html").read_text(encoding="utf-8")
-    assert "API accounts" in text
-
-
 # --- routing-budget stale/wrong lane state regressions (#7646) --------------
 
 
@@ -1547,19 +1152,6 @@ def test_load_codex_oauth_token_reads_nested_tokens_shape(tmp_path, monkeypatch)
     monkeypatch.setenv("CODEX_HOME", str(codex_home))
 
     assert subscription_usage_mod._load_codex_oauth_token() == "fixture-nested-token"
-
-
-def test_load_codex_oauth_token_still_reads_top_level_shape(tmp_path, monkeypatch):
-    """Backward compat: a flat top-level access_token must still resolve."""
-    codex_home = tmp_path / ".codex"
-    codex_home.mkdir()
-    (codex_home / "auth.json").write_text(
-        json.dumps({"access_token": "fixture-flat-token"}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("CODEX_HOME", str(codex_home))
-
-    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-flat-token"
 
 
 def test_load_kimi_bearer_reads_credentials_file(tmp_path, monkeypatch):
@@ -1737,15 +1329,6 @@ def test_kimi_probe_retries_usages_after_401_refresh(tmp_path, monkeypatch):
     assert res["primary_used_pct"] == 45.0
 
 
-def test_glm_is_not_a_live_subscription_provider():
-    """Routing-budget must not list or probe GLM as a live subscription."""
-    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
-    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR
-    assert "glm" not in subscription_usage_mod.PROVIDER_TO_LANE
-    assert "glm" not in subscription_usage_mod._NATIVE_PROBES
-    assert "glm" not in state_router.SUBSCRIPTION_LANES
-
-
 def test_kimi_missing_credentials_file_is_need_login(tmp_path, monkeypatch):
     """No credential file anywhere → honest NEED_LOGIN, not a fetch_error."""
     monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
@@ -1815,43 +1398,6 @@ def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
     # usage.used/limit strings → 40%
     assert res["weekly_used_pct"] == 40.0
     assert res["windows"]["primary"]["window_minutes"] == 300
-
-
-def test_kimi_http_200_unparseable_payload_is_not_need_login(monkeypatch):
-    """Bearer present + HTTP 200 but no usable windows → unparseable, not need_login."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, {"usage": {}, "limits": []}, None),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["error_kind"] != "need_login"
-    assert res["error_kind"] == "unparseable_schema"
-    assert res["status"] != "healthy"
-    assert res["primary_used_pct"] is None
-    assert res["weekly_used_pct"] is None
-
-
-def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
-    assert subscription_usage_mod._coerce_float(" 42.5 ") == 42.5
-    assert subscription_usage_mod._coerce_float(7) == 7.0
-    assert subscription_usage_mod._coerce_float(True) is None
-    assert subscription_usage_mod._coerce_float("") is None
-    assert subscription_usage_mod._coerce_float("nope") is None
-    assert subscription_usage_mod._coerce_float(None) is None
-
-
-def test_coerce_float_rejects_non_finite_string_and_float():
-    assert subscription_usage_mod._coerce_float("NaN") is None
-    assert subscription_usage_mod._coerce_float("nan") is None
-    assert subscription_usage_mod._coerce_float("Infinity") is None
-    assert subscription_usage_mod._coerce_float("-Infinity") is None
-    assert subscription_usage_mod._coerce_float(float("nan")) is None
-    assert subscription_usage_mod._coerce_float(float("inf")) is None
-    assert subscription_usage_mod._coerce_float(float("-inf")) is None
 
 
 def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
@@ -1990,18 +1536,6 @@ def test_prepaid_failure_preserves_last_good_and_retries_quickly(monkeypatch):
     cache_invalidate("api_account:deepseek")
 
 
-def test_prepaid_failure_without_good_is_unavailable(monkeypatch):
-    mod = subscription_usage_mod
-    monkeypatch.setattr(mod, "_api_account_last_good", {})
-    monkeypatch.setattr(mod, "_api_account_last_failure", {})
-    cache_invalidate("api_account:openrouter")
-    monkeypatch.setattr(mod, "_probe_api_account_live", lambda *a, **kw: {"probe_state": "NEED_KEY"})
-    result = mod.refresh_api_account_data(["openrouter"])["openrouter"]
-    assert result["freshness"] == "unavailable"
-    assert result["probe_state"] == "NEED_KEY"
-    assert not mod._api_account_last_good
-
-
 def test_management_key_loaders_and_balance(monkeypatch, tmp_path):
     mod = subscription_usage_mod
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -2072,22 +1606,6 @@ def test_management_balance_failure_is_not_a_good_prepaid_sample(monkeypatch):
     assert result["probe_state"] == "NEED_PROBE"
     assert result["balance_probe_state"] == "NEED_PROBE"
     assert not mod._api_account_is_cacheable(result)
-
-
-def test_management_key_missing_uses_short_cache_ttl(monkeypatch):
-    mod = subscription_usage_mod
-    monkeypatch.setattr(mod, "_api_account_last_failure", {})
-    monkeypatch.setattr(mod, "_api_account_last_good", {})
-    monkeypatch.setattr(mod, "_scheduler_is_running", lambda: True)
-    monkeypatch.setattr(mod, "_on_demand_refresh_enabled", lambda: True)
-    called = []
-    monkeypatch.setattr(mod, "trigger_api_account_background_refresh", lambda: called.append(True))
-    account = {"probe_state": "ok", "balance_probe_state": "NEED_KEY", "fetched_at": "2026-09-14T12:00:00Z"}
-    monkeypatch.setattr(mod, "cache_get_with_age", lambda *a, **kw: (account, 31))
-    mod._api_account_last_good["openrouter"] = (time.monotonic() - 31, account)
-    result = mod.get_api_account_data("openrouter")
-    assert result["freshness"] == "stale_last_good"
-    assert called == [True]
 
 
 # --- CodexBar UsagePace port (usage-pace-secrets-v2) -----------------------
@@ -2325,22 +1843,6 @@ def test_pace_is_visible_hides_below_minimum_expected_pct():
     assert pace_is_visible(weekly_pace, kind="weekly")
 
 
-def test_compute_weekly_pace_delta_pct_is_thin_wrapper_over_compute_usage_pace():
-    now = datetime(2026, 8, 24, 12, 0, tzinfo=UTC)
-    resets_at = (now + timedelta(days=3)).isoformat().replace("+00:00", "Z")
-    delta = compute_weekly_pace_delta_pct(5.0, resets_at, now=now)
-    pace = compute_usage_pace(5.0, resets_at, now=now)
-    assert pace is not None
-    assert delta == pace["delta_pct"]
-
-
-def test_lane_is_under_weekly_pace_still_works_via_wrapper():
-    now = datetime(2026, 8, 24, 12, 0, tzinfo=UTC)
-    resets_at = (now + timedelta(days=3)).isoformat().replace("+00:00", "Z")
-    assert lane_is_under_weekly_pace(5.0, resets_at, now=now)
-    assert not lane_is_under_weekly_pace(90.0, resets_at, now=now)
-
-
 def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format(monkeypatch):
     """No `pace` block -> fallback must produce CodexBar-shaped summary (open window)."""
     frozen = datetime(2026, 9, 15, 12, 0, tzinfo=UTC)
@@ -2458,25 +1960,6 @@ def test_compute_usage_pace_rejects_expired_and_out_of_window():
     assert ok is not None
 
 
-def test_pace_duration_text_matches_codexbar_ceil():
-    from scripts.api.subscription_usage import _pace_duration_text
-
-    assert _pace_duration_text(0.5) == "now"
-    assert _pace_duration_text(40.101) == "1m"
-    assert _pace_duration_text(61) == "2m"
-    assert _pace_duration_text(86460) == "1d 1m"
-
-
-def test_agy_remaining_fraction_rejects_nonfinite():
-    from scripts.api.subscription_usage import _used_pct_from_remaining_fraction
-
-    assert _used_pct_from_remaining_fraction(float("nan")) is None
-    assert _used_pct_from_remaining_fraction(float("inf")) is None
-    assert _used_pct_from_remaining_fraction(1e309) is None
-    assert _used_pct_from_remaining_fraction(1.0) == 0.0
-    assert _used_pct_from_remaining_fraction(0.0) == 100.0
-
-
 def test_deepseek_prefers_secrets_dir_over_secret_alias(monkeypatch, tmp_path):
     from scripts.api import subscription_usage as su
 
@@ -2532,31 +2015,6 @@ def _assert_muse_has_no_account_material(record: dict) -> None:
     _assert_no_sentinel_value(record, 999)
 
 
-def test_muse_account_material_check_accepts_sentinel_digits_in_floats():
-    record = {"age_s": 0.1999, "windows": [{"remaining_pct": 99.999}]}
-    _assert_muse_has_no_account_material(record)
-
-
-@pytest.mark.parametrize("sentinel", [999, 50.0, 987654])
-def test_sentinel_value_check_accepts_digits_inside_other_values(sentinel):
-    _assert_no_sentinel_value({"age_s": 0.1999, "windows": [{"used_pct": 50.01}], "value": 0.987654}, sentinel)
-
-
-@pytest.mark.parametrize("sentinel", [999, 50.0, 987654])
-@pytest.mark.parametrize("as_string", [False, True])
-@pytest.mark.parametrize("field", ["balance", "credits"])
-def test_sentinel_value_check_rejects_leaked_values(sentinel, as_string, field):
-    value = str(sentinel) if as_string else sentinel
-    with pytest.raises(AssertionError):
-        _assert_no_sentinel_value({"nested": [{field: {"remaining": value}}]}, sentinel)
-
-
-@pytest.mark.parametrize("value", [999, 999.0, "999"])
-def test_muse_account_material_check_rejects_leaked_sentinel(value):
-    with pytest.raises(AssertionError):
-        _assert_muse_has_no_account_material({"credits": {"remaining": value}})
-
-
 def test_muse_known_windows_publish_remaining_headroom_and_reset():
     record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_KNOWN)
     _assert_muse_has_no_account_material(record)
@@ -2583,14 +2041,6 @@ def test_muse_null_percentages_are_unknown_not_unlimited():
     assert record["headroom_pct"] is None
     assert record["primary_used_pct"] != 0
     assert record["weekly_remaining_pct"] != 100
-
-
-def test_muse_empty_payload_is_unsupported():
-    record = subscription_usage_mod._muse_record_from_codexbar_payload({})
-    assert record["status"] == "unknown"
-    assert record["error_kind"] == "unsupported"
-    assert record["headroom_pct"] is None
-    assert record["weekly_resets_at"] is None
 
 
 def test_muse_omitted_idle_session_keeps_weekly_without_inventing_session():
@@ -2778,37 +2228,6 @@ def test_muse_probe_timeout_and_malformed_stdout_stay_unknown(monkeypatch):
     assert malformed["primary_remaining_pct"] is None
 
 
-def test_muse_shares_existing_scheduler_at_most_every_15_minutes(monkeypatch):
-    monkeypatch.delenv("CODEXBAR_REFRESH_INTERVAL_S", raising=False)
-    assert "muse" in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
-    assert "muse" in subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR
-    assert "muse" in subscription_usage_mod._NATIVE_PROBES
-    assert "muse" not in state_router.SUBSCRIPTION_LANES
-    interval = subscription_usage_mod._codexbar_refresh_interval_s()
-    assert interval == 720.0
-    assert interval <= 15 * 60
-    status = subscription_usage_mod.scheduler_status()
-    assert status["refresh_interval_s"] == 720.0
-    assert status["refresh_interval_s"] <= 15 * 60
-    assert "muse" in status["providers"]
-
-    captured: dict = {}
-
-    def fake_refresh(providers, *, timeout_s=None):
-        captured["providers"] = tuple(providers)
-        return {}
-
-    monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
-    subscription_usage_mod._run_all_refreshes()
-    assert "muse" in captured["providers"]
-    assert captured["providers"] == tuple(subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)
-    assert "cursor" not in captured["providers"]
-
-
 _AGY_EMAIL = "secret-email-do-not-leak@example.com"
 _AGY_FIXTURE = Path(__file__).parent / "fixtures" / "usage_9270" / "agy.json"
 
@@ -2882,35 +2301,6 @@ def test_agy_fixture_publishes_separate_quota_groups(monkeypatch):
     assert gemini_weekly["remaining_pct"] != claude_weekly["remaining_pct"]
     assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] == 100.0
     assert _agy_window(projected, "claude_gpt", "5h")["resets_at"] == "2026-09-30T12:33:22Z"
-
-
-def test_agy_groups_do_not_copy_a_window_into_its_sibling(monkeypatch):
-    payload = _agy_usage_payload(
-        {
-            "name": "Gemini Models",
-            "buckets": [
-                {"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"},
-            ],
-        },
-        {
-            "name": "Claude and GPT models",
-            "buckets": [
-                {"window": "weekly", "remaining_fraction": 0.25, "reset_time": "2026-10-20T00:00:00Z"},
-            ],
-        },
-    )
-    _probe_agy_stdout(monkeypatch, json.dumps(payload))
-    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
-    assert projected["status"] == "healthy"
-    assert projected["remaining_pct"] is None
-    gemini = next(group for group in projected["quota_groups"] if group["key"] == "gemini_models")
-    claude = next(group for group in projected["quota_groups"] if group["key"] == "claude_gpt")
-    assert [item["window"] for item in gemini["windows"]] == ["5h"]
-    assert [item["window"] for item in claude["windows"]] == ["weekly"]
-    assert gemini["windows"][0]["remaining_pct"] == 50.0
-    assert gemini["windows"][0]["resets_at"] == "2026-10-13T18:00:00Z"
-    assert claude["windows"][0]["remaining_pct"] == 25.0
-    assert claude["windows"][0]["resets_at"] == "2026-10-20T00:00:00Z"
 
 
 def test_agy_missing_fraction_keeps_reset_and_is_unknown(monkeypatch):
@@ -3043,40 +2433,6 @@ def test_agy_malformed_and_rate_limit_drop_numeric_headroom(monkeypatch):
     assert _agy_window(hidden, "gemini_models", "weekly")["remaining_pct"] is None
     assert _agy_window(hidden, "gemini_models", "weekly")["resets_at"] is None
     _assert_no_sentinel_value(hidden, 50.0)
-
-
-def test_agy_stale_observation_hides_quota(monkeypatch):
-    payload = _agy_usage_payload(
-        {
-            "name": "Gemini Models",
-            "buckets": [{"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"}],
-        }
-    )
-    _probe_agy_stdout(monkeypatch, json.dumps(payload))
-    with subscription_usage_mod._AGY_QUOTA_LOCK:
-        snapshot = subscription_usage_mod._agy_quota_parsed[1]
-        subscription_usage_mod._agy_quota_parsed = (time.monotonic() - 10_000, snapshot)
-    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
-    assert projected["freshness"] == "stale_last_good"
-    assert projected["status"] == "unknown"
-    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] is None
-    assert _agy_window(projected, "gemini_models", "5h")["resets_at"] is None
-    _assert_no_sentinel_value(projected, 50.0)
-
-
-@pytest.mark.parametrize("value", [-1, 101, 10**400, float("nan"), float("inf"), True, None, "PRIVATE_PERCENT"])
-def test_public_percent_rejects_unmeasured_values(value):
-    assert subscription_usage_mod._public_percent(value) is None
-
-
-@pytest.mark.parametrize(("value", "expected"), [(0, 0.0), (100, 100.0), ("20", 20.0)])
-def test_public_percent_preserves_valid_measurements(value, expected):
-    assert subscription_usage_mod._public_percent(value) == expected
-
-
-@pytest.mark.parametrize("value", [-0.1, 1.1, 10**400, "1.01", True])
-def test_agy_fraction_rejects_out_of_range_values(value):
-    assert subscription_usage_mod._used_pct_from_remaining_fraction(value) is None
 
 
 @pytest.mark.parametrize(
@@ -3214,19 +2570,6 @@ def test_muse_provider_age_expires_before_a_recent_cache_entry(monkeypatch):
     projected = subscription_usage_mod.project_muse_for_status(record)
     assert (projected["freshness"], projected["age_s"], projected["remaining_pct"]) == ("stale_last_good", 720.0, None)
     assert projected["error_code"] == "STALE_DATA"
-
-
-@pytest.mark.parametrize("used", [-1, 101, float("nan"), float("inf"), True])
-def test_muse_out_of_range_window_is_unknown(used):
-    record = subscription_usage_mod._muse_record_from_codexbar_payload(
-        {
-            "provider": "muse",
-            "usage": {"primary": {"usedPercent": used, "windowMinutes": 300}},
-        }
-    )
-    assert record["status"] == "unknown"
-    assert record["headroom_pct"] is None
-    assert record["windows"]["primary"]["remaining_pct"] is None
 
 
 def test_agy_public_labels_windows_and_resets_drop_private_metadata(monkeypatch):

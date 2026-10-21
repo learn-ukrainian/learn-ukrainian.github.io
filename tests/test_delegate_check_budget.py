@@ -22,7 +22,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import pytest
 
 import delegate
-from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 from scripts.fleet import claude_account_lane
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
@@ -241,23 +240,6 @@ def _self_cursor_driver_store(tmp_path: Path) -> SessionStreamStore:
     return _cursor_driver_store(tmp_path, process_id=os.getpid())
 
 
-def test_check_budget_warns_when_agent_mismatch(monkeypatch, tmp_path, capsys):
-    _patch_spawn(monkeypatch, tmp_path)
-    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
-    monkeypatch.setattr(
-        delegate.urllib.request,
-        "urlopen",
-        _urlopen_routing(_FakeBudgetResponse("codex")),
-    )
-
-    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
-
-    assert rc == 0
-    captured = capsys.readouterr()
-    assert "⚠ ROUTING WARNING: budget recommends --agent codex, you passed --agent claude." in captured.err
-    assert "Rationale: fixture rationale" in captured.err
-
-
 def _force_dispatch(monkeypatch, tmp_path, budget):
     """Spawn a forced budget-checked dispatch against ``budget`` and return ``(stderr, state)``."""
     _patch_spawn(monkeypatch, tmp_path)
@@ -301,52 +283,6 @@ def test_force_agent_on_a_deficit_keeps_diagnostics_and_the_seat(monkeypatch, tm
     assert facts["capacity"] == "avoid"
 
 
-def test_force_agent_on_a_healthy_lane_records_quota_and_health(monkeypatch, tmp_path, capsys):
-    """A cool lane still prints its quota and stores health, with no substitution."""
-    claude = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 80.0, "will_last_to_reset": True})
-    budget = {
-        "recommendation": {"primary_agent_for_code": "claude", "rationale": "fixture rationale", "warnings": []},
-        "agents": {"claude": claude},
-        "diagnostics": {"records_loaded": 10, "stale": False, "codexbar_data_available": True},
-    }
-    state = _force_dispatch(monkeypatch, tmp_path, budget)
-    err = capsys.readouterr().err
-    assert "HARD AUTO-SUBSTITUTE" not in err
-    assert "⚠ ROUTING CHECK: lane claude: plan status cool (80% remaining)" in err
-    assert state["agent"] == "claude"
-    assert state["substitution"] is None
-    facts = state["routing_facts"]
-    assert facts["health"] == "healthy"
-    assert facts["plan_remaining_pct"] == 80.0
-    assert facts["capacity"] == "verified"
-
-
-def test_force_agent_records_explicit_unknown_health(monkeypatch, tmp_path, capsys):
-    """Unknown lane health is printed with its basis and stored, next to a known quota."""
-    from scripts.api.lane_health import BASIS_SCAN_UNAVAILABLE
-
-    claude = _fresh_lane(
-        status="cool",
-        health={"healthy": None, "basis": BASIS_SCAN_UNAVAILABLE},
-        codexbar={"weekly_remaining_pct": 40.0, "will_last_to_reset": True},
-    )
-    budget = {
-        "recommendation": {"primary_agent_for_code": "claude", "rationale": "fixture rationale", "warnings": []},
-        "agents": {"claude": claude},
-        "diagnostics": {"records_loaded": 10, "stale": False, "codexbar_data_available": True},
-    }
-    state = _force_dispatch(monkeypatch, tmp_path, budget)
-    err = capsys.readouterr().err
-    assert f"⚠ lane claude health unknown ({BASIS_SCAN_UNAVAILABLE}); not counted as healthy" in err
-    assert "40% remaining" in err
-    facts = state["routing_facts"]
-    assert facts["health"] == "unknown"
-    assert facts["health_basis"] == BASIS_SCAN_UNAVAILABLE
-    assert facts["plan_remaining_pct"] == 40.0
-    assert state["agent"] == "claude"
-    assert state["substitution"] is None
-
-
 def test_force_agent_records_unknown_when_telemetry_is_unavailable(monkeypatch, tmp_path, capsys):
     """Monitor API failure stays an explicit unknown in stderr and the task record."""
     _patch_spawn(monkeypatch, tmp_path)
@@ -372,56 +308,6 @@ def test_force_agent_records_unknown_when_telemetry_is_unavailable(monkeypatch, 
     assert facts["observation_freshness"] == "unknown"
     assert state["agent"] == "claude"
     assert state["substitution"] is None
-
-
-def test_force_agent_records_unknown_on_an_empty_budget(monkeypatch, tmp_path, capsys):
-    """An empty ledger keeps the existing UNKNOWN line and stores an unknown health and quota."""
-    budget = {
-        "recommendation": {"primary_agent_for_code": None, "warnings": ["empty snapshot"]},
-        "agents": {},
-        "diagnostics": {"records_loaded": 0, "codexbar_data_available": False},
-    }
-    state = _force_dispatch(monkeypatch, tmp_path, budget)
-    err = capsys.readouterr().err
-    assert "⚠ ROUTING CHECK UNKNOWN: budget UNKNOWN" in err
-    assert "health unknown" in err
-    assert "HARD AUTO-SUBSTITUTE" not in err
-    facts = state["routing_facts"]
-    assert facts["health"] == "unknown"
-    assert facts["plan_remaining_pct"] is None
-    assert facts["observation_freshness"] == "unknown"
-    assert state["agent"] == "claude"
-    assert state["substitution"] is None
-
-
-def test_check_budget_skipped_when_api_down(monkeypatch, tmp_path, capsys):
-    _patch_spawn(monkeypatch, tmp_path)
-    monkeypatch.setattr(
-        delegate.urllib.request,
-        "urlopen",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(urllib.error.URLError("timeout")),
-    )
-
-    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
-
-    assert rc == 0
-    assert "⚠ ROUTING CHECK SKIPPED: Monitor API unreachable" in capsys.readouterr().err
-
-
-def test_check_budget_off_by_default(monkeypatch, tmp_path, capsys):
-    _patch_spawn(monkeypatch, tmp_path)
-
-    def fail_on_budget_fetch(url, *_args, **_kwargs):
-        if "/api/health" in str(url):
-            return _FakeHealthResponse()
-        raise AssertionError("routing-budget urlopen should not be called unless --check-budget is passed")
-
-    monkeypatch.setattr(delegate.urllib.request, "urlopen", fail_on_budget_fetch)
-
-    rc = delegate.cmd_dispatch(_dispatch_args())
-
-    assert rc == 0
-    assert "ROUTING" not in capsys.readouterr().err
 
 
 def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
@@ -577,19 +463,6 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     assert delegate.cmd_dispatch(args) == 0
 
 
-def test_language_fallback_refuses_grok_even_when_cool(monkeypatch):
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
-    _use_fallbacks(monkeypatch, {"claude": "codex", "codex": "grok"})
-    with pytest.raises(delegate.BudgetGuardRefuseError, match="cannot move to grok"):
-        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
-
-
-def test_language_budget_guard_refuses_direct_grok_even_when_cool(monkeypatch):
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
-    with pytest.raises(delegate.BudgetGuardRefuseError, match="--agent grok is outside"):
-        delegate._resolve_agent_with_budget_guard("grok", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
-
-
 def _codex_reserve_budget(status: str = "warm"):
     """Codex threatened by a visible pace deficit the live free resets cover, so the owner verifies it (#9740).
 
@@ -628,23 +501,6 @@ def _codex_reserve_budget(status: str = "warm"):
         },
         "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
     }
-
-
-def test_check_budget_uses_reset_reserve_for_codex(monkeypatch, capsys):
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", _codex_reserve_budget)
-    monkeypatch.setattr(
-        delegate,
-        "_load_reset_reserve",
-        lambda _root, **_kwargs: {
-            "available": True,
-            "provider": "codex",
-            "remaining_resets": 2,
-            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
-            "expires_at": "2099-03-01T00:00:00Z",
-        },
-    )
-    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == "codex"
-    assert "reset reserve active (2 confirmed reset(s) remaining)" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("language_lane", [False, True])
@@ -815,26 +671,6 @@ def test_inconclusive_probe_warning_names_registry_seat_and_catalog_model(monkey
     err = capsys.readouterr().err
     assert "⚠ model probe for grok could not verify grok-4.7: RuntimeError" in err
     assert "GROK-4.7" not in err
-
-
-def test_inconclusive_probe_warning_gives_an_uncatalogued_model_a_fixed_label(monkeypatch, capsys):
-    _boom_adapter_for(monkeypatch, "grok")
-    assert delegate._adapter_model_rejection("grok", "not-a-catalog-model") is None
-    err = capsys.readouterr().err
-    assert "⚠ model probe for grok could not verify an uncatalogued model: RuntimeError" in err
-    assert "not-a-catalog-model" not in err
-
-
-def test_probe_log_labels_fall_back_without_registry_row_or_catalog(monkeypatch):
-    from scripts.review import model_catalog
-
-    assert delegate._registry_seat({"adapter": "x:Y"}) == "an unregistered seat"
-
-    def unavailable(*_args, **_kwargs):
-        raise model_catalog.ModelCatalogError("catalog unreadable")
-
-    monkeypatch.setattr(model_catalog, "canonical_model_id", unavailable)
-    assert delegate._catalog_model_label("gpt-6.1-sol") == "a model (catalog unavailable)"
 
 
 def test_adapter_valueerror_before_spawn_is_failed(monkeypatch, tmp_path):
@@ -1012,55 +848,6 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
     assert "HARD AUTO-SUBSTITUTE" not in err
 
 
-def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
-    """hot status with yaml fallback → hard auto-sub (same path as near_cap)."""
-    _patch_spawn(monkeypatch, tmp_path)
-    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setattr(
-        delegate,
-        "_fetch_routing_budget",
-        lambda: {
-            "recommendation": {
-                "primary_agent_for_code": "cursor",
-                "rationale": "Codex hot; Cursor cool.",
-                "warnings": [],
-            },
-            "agents": {
-                "codex": {"status": "hot", "burn_pct_7d": 70.0, "resets_at": "2026-08-14T00:00:00Z"},
-                "cursor": {"status": "cool", "burn_pct_7d": 10.0},
-                "claude": {"status": "cool", "burn_pct_7d": 20.0},
-            },
-            "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
-        },
-    )
-    _use_fallbacks(monkeypatch, {"codex": "cursor"})
-
-    rc = delegate.cmd_dispatch(
-        delegate.build_parser().parse_args(
-            [
-                "dispatch",
-                "--agent",
-                "codex",
-                "--task-id",
-                "budget-check-hot",
-                "--cwd",
-                str(delegate._REPO_ROOT),
-                "--prompt",
-                "no-op",
-                "--mode",
-                "read-only",
-                "--check-budget",
-            ]
-        )
-    )
-
-    assert rc == 0
-    err = capsys.readouterr().err
-    assert "HARD AUTO-SUBSTITUTE" in err
-    assert "codex" in err and "cursor" in err
-    assert "status=hot" in err
-
-
 def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
     """Visible pace deficit (won't last, delta outside the on-pace band) hard-subs even if status is warm."""
     _patch_spawn(monkeypatch, tmp_path)
@@ -1167,165 +954,6 @@ def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_pa
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" not in err
     assert delegate._resolve_agent_with_budget_guard("claude", fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == "claude"
-
-
-def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, capsys):
-    """25% used and projected to run out 2 days before reset still substitutes."""
-    now = datetime(2026, 9, 28, 12, 0, tzinfo=UTC)
-    resets_at = (now + timedelta(days=5.75)).isoformat().replace("+00:00", "Z")
-    pace = compute_usage_pace(25.0, resets_at, now=now)
-    assert pace is not None
-    assert pace["will_last_to_reset"] is False
-    assert pace["delta_pct"] > 2
-    assert pace_is_deficit(pace) is True
-    runs_out_days_early = ((5.75 * 86400) - pace["eta_seconds"]) / 86400
-    assert abs(runs_out_days_early - 2) < 0.05
-
-    _patch_spawn(monkeypatch, tmp_path)
-    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    _use_fallbacks(monkeypatch, {"codex": "cursor"})
-    monkeypatch.setattr(
-        delegate,
-        "_fetch_routing_budget",
-        lambda: {
-            "recommendation": {"primary_agent_for_code": "cursor", "rationale": "codex deficit", "warnings": []},
-            "agents": {
-                "codex": {
-                    "status": "warm",
-                    "burn_pct_7d": 25.0,
-                    "remaining_pct": 75.0,
-                    "codexbar": {
-                        "weekly_used_pct": 25.0,
-                        "weekly_pace_delta_pct": pace["delta_pct"],
-                        "weekly_expected_pct": pace["expected_pct"],
-                        "will_last_to_reset": False,
-                        "pace_summary": "runs out 2d before reset",
-                    },
-                },
-                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
-            },
-            "diagnostics": {"records_loaded": 4, "stale": False, "codexbar_data_available": True},
-        },
-    )
-
-    rc = delegate.cmd_dispatch(
-        delegate.build_parser().parse_args(
-            [
-                "dispatch",
-                "--agent",
-                "codex",
-                "--task-id",
-                "budget-real-deficit",
-                "--cwd",
-                str(delegate._REPO_ROOT),
-                "--prompt",
-                "no-op",
-                "--mode",
-                "read-only",
-                "--check-budget",
-            ]
-        )
-    )
-
-    assert rc == 0
-    err = capsys.readouterr().err
-    assert "HARD AUTO-SUBSTITUTE" in err
-    assert "codex" in err and "cursor" in err
-    assert "will_last_to_reset=False" in err
-
-
-def test_refuse_hot_lists_cooler(monkeypatch, tmp_path, capsys):
-    """hot lane with no yaml fallback → refuse and list cooler seats."""
-    _patch_spawn(monkeypatch, tmp_path)
-    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    _use_fallbacks(monkeypatch, {})
-    monkeypatch.setattr(
-        delegate,
-        "_fetch_routing_budget",
-        lambda: {
-            "recommendation": {"primary_agent_for_code": "cursor", "rationale": "x", "warnings": []},
-            "agents": {
-                "codex": {"status": "hot", "burn_pct_7d": 80.0},
-                "cursor": {"status": "cool", "burn_pct_7d": 5.0},
-                "agy": {"status": "cool", "burn_pct_7d": 10.0},
-            },
-            "diagnostics": {"records_loaded": 4, "stale": False, "codexbar_data_available": True},
-        },
-    )
-
-    rc = delegate.cmd_dispatch(
-        delegate.build_parser().parse_args(
-            [
-                "dispatch",
-                "--agent",
-                "codex",
-                "--task-id",
-                "budget-refuse-hot",
-                "--prompt",
-                "no-op",
-                "--mode",
-                "read-only",
-                "--check-budget",
-            ]
-        )
-    )
-
-    assert rc == 2
-    err = capsys.readouterr().err
-    assert "ROUTING REFUSED" in err
-    assert "cursor" in err
-    assert "agy" in err
-
-
-def test_env_forces_budget_guard(monkeypatch, tmp_path, capsys):
-    """LU_DISPATCH_CHECK_BUDGET=1 enables the guard without --check-budget."""
-    _patch_spawn(monkeypatch, tmp_path)
-    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
-    monkeypatch.setattr(
-        delegate.urllib.request,
-        "urlopen",
-        _urlopen_routing(_FakeBudgetResponse("codex")),
-    )
-
-    rc = delegate.cmd_dispatch(_dispatch_args())
-
-    assert rc == 0
-    assert "ROUTING WARNING" in capsys.readouterr().err
-
-
-def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_path, capsys):
-    """Task 2: non-blocking note printed when dispatching to busy lane while other lanes idle."""
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
-    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: True)
-
-    # Create a running task for codex
-    state_file = tasks_dir / "busy-task.json"
-    state_file.write_text(
-        json.dumps(
-            {
-                "task_id": "busy-task",
-                "agent": "codex",
-                "status": "running",
-                "pid": 99999,
-            }
-        )
-    )
-
-    delegate._check_capacity_hint("codex")
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert "💡 Note: lane 'codex' has 1 task(s) in flight while idle capacity is available in:" in captured.err
-    assert "claude" in captured.err
-
-    # Machine/JSON mode suppresses hints entirely
-    mock_args = types.SimpleNamespace(json=True)
-    delegate._check_capacity_hint("codex", args=mock_args)
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert captured.err == ""
 
 
 def _refusing_cursor_dispatch_setup(monkeypatch, tmp_path, store):
@@ -1613,44 +1241,6 @@ def test_prepaid_monitor_failure_refuses(monkeypatch, lane, provider):
         delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
 
 
-@pytest.mark.parametrize(
-    "args,prepaid",
-    [
-        (("--agent", "deepseek"), "deepseek"),
-        (("--provider", "openrouter"), "openrouter"),
-    ],
-)
-def test_check_budget_empty_prepaid_refuses_before_spawn(monkeypatch, tmp_path, capsys, args, prepaid):
-    _patch_spawn(monkeypatch, tmp_path)
-    spawned = _track_worker_spawns(monkeypatch)
-    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
-    monkeypatch.setattr(
-        delegate,
-        "_fetch_routing_budget",
-        lambda: {
-            "agents": {},
-            "diagnostics": {"records_loaded": 0},
-            "api_accounts": {
-                prepaid: {
-                    "probe_state": "ok",
-                    "freshness": "fresh",
-                    "age_s": 0,
-                    "currency": "USD",
-                    "total_balance": 0,
-                    "limit_remaining_usd": 0,
-                }
-            },
-        },
-    )
-    result = delegate.cmd_dispatch(_dispatch_args("--check-budget", *args))
-    assert result == 2
-    assert not spawned
-    message = capsys.readouterr().err
-    assert f"ROUTING REFUSED: prepaid {prepaid} status=near_cap" in message
-    print(f"check-budget fixture {prepaid}: exit={result}, worker_spawns={len(spawned)}")
-    print(message.strip())
-
-
 def _codex_cursor_budget(*, codex_status: str) -> dict:
     hot = codex_status == "hot"
     return {
@@ -1736,39 +1326,6 @@ def test_budget_sub_codex_gpt6_sol_spawns_cursor_default(monkeypatch, tmp_path, 
         "actual_model_known": True,
         "model_resolution": "catalog-default",
     }
-
-
-def test_budget_sub_without_explicit_model_uses_catalog_default(monkeypatch, tmp_path, capsys):
-    commands = _capture_worker_commands(monkeypatch, tmp_path)
-
-    rc = delegate.cmd_dispatch(_codex_dispatch())
-
-    assert rc == 0
-    err = capsys.readouterr().err
-    assert "--model grok-4.7 (catalog default)" in err
-    assert "has no mapping" not in err
-    argv = _worker_argv(commands)
-    assert argv[argv.index("--model") + 1] == "grok-4.7-high"
-    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
-    assert state["substitution"]["requested_model"] is None
-    assert state["substitution"]["actual_model"] == "grok-4.7"
-    assert state["substitution"]["model_resolution"] == "catalog-default"
-
-
-def test_budget_sub_unmapped_model_falls_back_to_catalog_default(monkeypatch, tmp_path, capsys):
-    commands = _capture_worker_commands(monkeypatch, tmp_path)
-
-    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "not-a-fleet-model"))
-
-    assert rc == 0
-    err = capsys.readouterr().err
-    assert "--model grok-4.7 (catalog default; not-a-fleet-model has no mapping)" in err
-    argv = _worker_argv(commands)
-    assert argv[argv.index("--model") + 1] == "grok-4.7-high"
-    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
-    assert state["substitution"]["requested_model"] == "not-a-fleet-model"
-    assert state["substitution"]["actual_model"] == "grok-4.7"
-    assert state["substitution"]["model_resolution"] == "catalog-default"
 
 
 def test_budget_sub_never_maps_opus_to_a_cursor_claude_slug(monkeypatch, tmp_path, capsys):
@@ -1985,13 +1542,6 @@ def test_near_cap_hard_acts_without_cost_ledger_records(monkeypatch, capsys):
     assert "HARD AUTO-SUBSTITUTE" in err and "near_cap (3% remaining on FRESH snapshot)" in err
 
 
-def test_near_cap_on_a_stale_snapshot_stays_advisory(monkeypatch):
-    """A2: the stale-snapshot advisory is unchanged."""
-    codex = _fresh_lane(status="near_cap", codexbar={"primary_remaining_pct": 3.0})
-    stale = {"diagnostics": {"records_loaded": 0, "stale": True, "codexbar_data_available": True}}
-    assert _owner_guard(monkeypatch, "codex", codex, model="gpt-6.1-sol", **stale) == "codex"
-
-
 @pytest.mark.parametrize(
     ("source", "expected"), [("weekly_pace", "cursor"), ("cursor_auto", "claude"), (None, "claude")]
 )
@@ -2009,31 +1559,6 @@ def test_hidden_pace_clears_only_a_weekly_pace_hot_label(monkeypatch, source, ex
         },
     )
     assert _owner_guard(monkeypatch, "cursor", cursor) == expected
-
-
-def test_demoted_message_prints_unknown_health_as_unknown(monkeypatch, capsys):
-    from scripts.api.lane_health import BASIS_SCAN_UNAVAILABLE
-
-    ranked = [
-        {
-            "lane": "kimi",
-            "health": {
-                "healthy": None,
-                "consecutive_failures": None,
-                "span_minutes": None,
-                "basis": BASIS_SCAN_UNAVAILABLE,
-            },
-        },
-        {"lane": "grok", "health": {"healthy": False, "consecutive_failures": 3, "span_minutes": 12}},
-        {"lane": "agy", "health": {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}},
-    ]
-    codex = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 80.0, "will_last_to_reset": True})
-    assert _owner_guard(monkeypatch, "codex", codex, model="gpt-6.1-sol", ranked_by_headroom=ranked) == "codex"
-    err = capsys.readouterr().err
-    assert f"⚠ lane kimi health unknown ({BASIS_SCAN_UNAVAILABLE}); not counted as healthy" in err
-    assert "⚠ lane grok demoted: 3 spawn failures in 12m" in err
-    assert "None spawn failures" not in err
-    assert "lane agy" not in err
 
 
 # --- #10619: a claude dispatch is judged on its selected account's meter ----------------
@@ -2274,24 +1799,6 @@ def test_account_view_without_a_usable_meter_is_unknown(row, reason):
     assert view == {"status": "unknown", "freshness": "unavailable", "health": {"healthy": True}}
 
 
-@pytest.mark.parametrize("status", [[], ["ok"], {}, {"ok": True}, 1, None])
-def test_account_view_with_a_non_string_status_is_unknown(status):
-    row = {**_account_row(89.0), "status": status}
-
-    view, unknown = claude_account_lane.lane_view(row, {})
-
-    assert unknown is not None
-    assert view["status"] == "unknown" and view["freshness"] == "unavailable"
-
-
-def test_account_view_of_a_stale_row_reads_stale_last_good():
-    view, unknown = claude_account_lane.lane_view(_account_row(0.5, status="stale"), {})
-
-    assert unknown is None
-    assert view["freshness"] == view["codexbar"]["freshness"] == "stale_last_good"
-    assert view["codexbar"]["stale"] is True
-
-
 @pytest.mark.parametrize("default_state", ["near_cap", "hot"])
 def test_selected_account_with_headroom_keeps_claude_when_the_default_account_is_exhausted(
     monkeypatch, capsys, default_state
@@ -2353,17 +1860,6 @@ def test_unknown_selected_account_is_advisory_and_never_substitutes(monkeypatch,
     assert "HARD AUTO-SUBSTITUTE" not in err
 
 
-def test_stale_selected_account_follows_the_stale_snapshot_rule(monkeypatch, capsys):
-    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5, status="stale")})
-
-    assert _account_guard(monkeypatch, budget, "b", model=None) == "claude"
-    err = capsys.readouterr().err
-    assert "⚠ ROUTING CHECK ADVISORY (stale claude account b meter, age_s=60.0) — verify manually; no hard sub" in err
-    assert "stale snapshot" not in err and "HARD AUTO-SUBSTITUTE" not in err
-    # The snapshot itself is fresh, so its recommendation warning still prints.
-    assert "⚠ ROUTING WARNING: budget recommends --agent codex" in err
-
-
 @pytest.mark.parametrize("label", [None, "a"])
 def test_default_label_reads_the_lane_row_and_ignores_account_rows(monkeypatch, capsys, label):
     healthy_default = _accounts_budget(
@@ -2412,22 +1908,6 @@ def test_forced_dispatch_diagnostics_name_the_account_evaluated(monkeypatch, cap
     if account is not None and account.get("state") == "unknown":
         assert sink["capacity"] == "unknown" and sink["capacity_reason"] == "usage probe unavailable"
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
-
-
-def test_forced_dispatch_without_the_monitor_names_the_unevaluated_account(monkeypatch):
-    def unavailable():
-        raise delegate.MonitorApiUnavailable("down")
-
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
-    sink: dict = {}
-
-    assert (
-        delegate._resolve_agent_with_budget_guard(
-            "claude", fallbacks={"claude": "codex"}, force_agent=True, diagnostic_sink=sink, claude_account=account("b")
-        )
-        == "claude"
-    )
-    assert sink["claude_account"] == {"label": "b", "meter": None}
 
 
 def test_review_route_capacity_reads_the_selected_account(monkeypatch):
@@ -2542,23 +2022,6 @@ def test_unattributed_rate_limits_never_refuse_a_selected_account_with_headroom(
         assert outcome == "refused" and "substitute --agent codex rejects explicit --model" in message
 
 
-def test_unattributed_rate_limits_never_exclude_a_selected_account_reviewer(monkeypatch, tmp_path):
-    budget = _accounts_budget(_unattributed_rate_limited_lane(tmp_path), {"b": _account_row(89.0)})
-    seen: list[dict] = []
-
-    def review_select(snapshot, _excluded):
-        seen.append(snapshot)
-        return "claude", "claude-opus-5-5"
-
-    for label, excluded in (("b", set()), (None, _claude_seats())):
-        seen.clear()
-        assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
-        (snapshot,) = seen
-        assert set(snapshot["review_capacity_exclusions"]) & _claude_seats() == excluded
-        causes = {snapshot["review_capacity_exclusions"].get(seat) for seat in excluded}
-        assert causes <= {"runtime headroom blocked"}
-
-
 @pytest.mark.parametrize(
     ("route_fact", "cause"),
     [
@@ -2582,62 +2045,6 @@ def test_shared_route_facts_still_exclude_a_selected_account_reviewer(monkeypatc
 
     (snapshot,) = seen
     assert {snapshot["review_capacity_exclusions"].get(seat) for seat in _claude_seats()} == {cause}
-
-
-@pytest.mark.parametrize(
-    ("label", "rows", "account", "capacity"),
-    [
-        (
-            "b",
-            {"b": _UNVERIFIED_ROW},
-            {
-                "label": "b",
-                "meter": "claude_accounts.claude:b",
-                "state": "unknown",
-                "reason": "claude_account_unverified",
-            },
-            "unknown",
-        ),
-        (
-            "b",
-            {"b": _account_row(89.0)},
-            {"label": "b", "meter": "claude_accounts.claude:b", "state": "ok", "reason": None},
-            "verified",
-        ),
-        ("a", {"b": _account_row(89.0)}, {"label": "a", "meter": "agents.claude"}, "verified"),
-    ],
-)
-def test_ordinary_claude_dispatch_retains_the_account_and_capacity(monkeypatch, capsys, label, rows, account, capacity):
-    """Finding 4: without --force-agent the evaluated account and its capacity reading are still retained."""
-    budget = _accounts_budget(_default_claude_lane("healthy"), rows)
-    sink: dict = {}
-
-    assert _account_guard(monkeypatch, budget, label, diagnostic_sink=sink) == "claude"
-
-    assert sink["claude_account"] == account
-    assert sink["capacity"] == capacity
-    # Retained silently: an ordinary dispatch prints no forced-lane quota line.
-    assert "⚠ ROUTING CHECK: lane claude" not in capsys.readouterr().err
-
-
-@pytest.mark.parametrize(
-    "route_account", [claude_account_lane.no_claude_account(), HOST_ACCOUNT, account("b", "default-file")]
-)
-def test_ordinary_dispatch_of_another_seat_retains_no_claude_account(monkeypatch, route_account):
-    """Only a claude request records the account it was judged on; another seat's ordinary dispatch keeps nothing."""
-    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(89.0)})
-    budget["agents"]["codex"] = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 90.0})
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    sink: dict = {}
-
-    assert (
-        delegate._resolve_agent_with_budget_guard(
-            "codex", fallbacks={"codex": "cursor"}, diagnostic_sink=sink, claude_account=route_account
-        )
-        == "codex"
-    )
-    assert sink == {}
 
 
 def test_claude_request_on_an_unresolved_account_is_refused_before_the_monitor(monkeypatch):

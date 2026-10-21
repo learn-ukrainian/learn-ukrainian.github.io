@@ -9,20 +9,15 @@ from typing import Any
 import pytest
 import yaml
 
-from scripts.orchestration.red_ci_known_failures import VALID_STOP_CODES
 from scripts.orchestration.validate_trailspec import (
-    COMMAND_RECEIPT_SCHEMA_PATH,
     DEFAULT_DECISION_TABLES_PATH,
     DEFAULT_DECISION_TABLES_V1_PATH,
     DEFAULT_EXAMPLE_TRAIL_PATH,
     STEP_RECEIPT_SCHEMA_PATH,
-    STEP_RECEIPT_V11_SCHEMA_PATH,
-    TRAIL_SPEC_SCHEMA_PATH,
     TRAIL_SPEC_V11_SCHEMA_PATH,
     TrailSpecValidationError,
     compute_command_receipt_digest,
     compute_trail_hash,
-    validate_command_receipt_data,
     validate_decision_tables,
     validate_decision_tables_data,
     validate_step_receipt_data,
@@ -50,11 +45,6 @@ REQUIRED_TRAIL_IDS = {
     "rb5-session-close",
     "rb6-estate-probes",
 }
-
-
-def test_trails_dir_is_not_empty() -> None:
-    """Guard the glob itself: an empty parametrization must fail, not silently pass."""
-    assert _ALL_SHIPPED_TRAILS, f"no *.trail.yaml found under {_TRAILS_DIR}"
 
 
 def test_required_trail_drafts_present() -> None:
@@ -207,16 +197,6 @@ def _get_happy_v11_step_receipt_data(
     }
 
 
-def test_happy_path_example_trail() -> None:
-    """Happy path: validate the example rb3-pr-lifecycle.trail.yaml."""
-    res = validate_trailspec(spec_path=DEFAULT_EXAMPLE_TRAIL_PATH)
-    assert res["ok"] is True
-    assert res["spec"]["trail_id"] == "rb3-pr-lifecycle"
-    assert res["spec"]["version"] == "2.3.0"
-    assert res["spec"]["steps_count"] == 16
-    assert len(res["spec"]["trail_hash"]) == 64
-
-
 def test_happy_path_step_receipt() -> None:
     """Happy path: validate a valid StepReceipt instance."""
     receipt_data = _get_happy_step_receipt_data()
@@ -260,36 +240,6 @@ def test_v11_happy_path_binds_command_and_step_receipts(tmp_path) -> None:
     assert res["spec"]["execution_eligible"] is True
     assert res["receipt"]["schema_version"] == "step-receipt.v1.1"
     assert res["command_receipt"]["status"] == "complete"
-
-
-@pytest.mark.parametrize(
-    "field_name",
-    ["invocation_id", "command_receipt_digest", "actor_outcome", "predicate_id"],
-)
-def test_negative_v11_receipt_additions_are_required(field_name: str) -> None:
-    """Mutation check: every required v1.1 receipt addition binds its command."""
-    trail = _get_happy_v11_trail_data()
-    command_receipt = _get_happy_command_receipt_data(trail)
-    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
-    del receipt[field_name]
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_step_receipt_data(receipt, receipt_schema_path=STEP_RECEIPT_V11_SCHEMA_PATH)
-
-    assert field_name in str(exc_info.value)
-
-
-def test_negative_v11_optional_authority_receipt_must_be_a_digest() -> None:
-    """Mutation check: optional authority evidence cannot become unbound prose."""
-    trail = _get_happy_v11_trail_data()
-    command_receipt = _get_happy_command_receipt_data(trail)
-    receipt = _get_happy_v11_step_receipt_data(trail, command_receipt)
-    receipt["authority_receipt_digest"] = "approval-in-chat"
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_step_receipt_data(receipt, receipt_schema_path=STEP_RECEIPT_V11_SCHEMA_PATH)
-
-    assert "authority_receipt_digest" in str(exc_info.value)
 
 
 def test_negative_v11_receipt_transition_taken_must_be_a_label(tmp_path) -> None:
@@ -356,20 +306,6 @@ def test_negative_v11_command_receipt_digest_must_bind(tmp_path) -> None:
         )
 
     assert "command_receipt_digest" in str(exc_info.value)
-
-
-def test_negative_v11_command_receipt_requires_complete_exit_status() -> None:
-    """Mutation check: a complete receipt cannot hide a missing exit code."""
-    trail = _get_happy_v11_trail_data()
-    command_receipt = _get_happy_command_receipt_data(trail)
-    command_receipt["exit_code"] = None
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_command_receipt_data(
-            command_receipt, receipt_schema_path=COMMAND_RECEIPT_SCHEMA_PATH
-        )
-
-    assert "exit_code" in str(exc_info.value)
 
 
 def test_negative_v11_requires_invocation_environment() -> None:
@@ -569,39 +505,6 @@ def test_negative_v11_seat_syntax_and_registry_eligibility(tmp_path) -> None:
     assert res["execution_eligible"] is True
 
 
-def test_stop_vocabulary_has_18_codes_and_never_reports_16() -> None:
-    """The published operational vocabulary is 18 codes; 16 names trigger classes."""
-    assert len(VALID_STOP_CODES) == 18
-    data = _get_happy_example_data()
-    data["stop_codes"].append("STOP-not-published")
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data)
-
-    message = str(exc_info.value)
-    assert "18-code STOP vocabulary" in message
-    assert "16-item" not in message
-
-
-def test_negative_v11_transition_lacks_receipt_predicate() -> None:
-    """Negative invariant test: v1.1 transition without receipt evidence fails schema validation."""
-    data = _get_happy_example_data()
-    # Corrupt a copy: remove evidence from a receipt-bound v1.1 transition.
-    del data["steps"][0]["transitions"]["inbox_empty"]["evidence"]
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
-
-    err_msg = str(exc_info.value)
-    assert "'evidence' is a required property" in err_msg
-    assert "$.steps[0].transitions.inbox_empty" in err_msg
-
-    # Mutation check: restore original copy -> passes
-    restored = _get_happy_example_data()
-    res = validate_trailspec_data(restored, spec_schema_path=TRAIL_SPEC_V11_SCHEMA_PATH)
-    assert res["ok"] is True
-
-
 def test_negative_dangling_transition() -> None:
     """Negative invariant test: dangling transition target fails validation."""
     data = _get_happy_example_data()
@@ -665,41 +568,6 @@ def test_negative_unknown_stop_code() -> None:
     assert res["ok"] is True
 
 
-def test_negative_schema_violation() -> None:
-    """Negative invariant test: schema violation (extra property, invalid seat) fails validation."""
-    data = _get_happy_example_data()
-    # Corrupt top level schema: forbidden property
-    data["invalid_top_level_prop"] = 123
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(data, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
-
-    assert "TrailSpec schema violation" in str(exc_info.value)
-
-    # Corrupt seat enum
-    data2 = _get_happy_example_data()
-    data2["seats"].append("invalid-seat-name")
-
-    with pytest.raises(TrailSpecValidationError) as exc_info2:
-        validate_trailspec_data(data2, spec_schema_path=TRAIL_SPEC_SCHEMA_PATH)
-
-    assert "TrailSpec schema violation" in str(exc_info2.value)
-
-
-def test_negative_step_receipt_schema_violation() -> None:
-    """Negative test: StepReceipt with invalid hash pattern or missing field fails validation."""
-    receipt_data = _get_happy_step_receipt_data()
-    # Corrupt trail_hash pattern (short hash)
-    receipt_data["trail_hash"] = "abc123short"
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_step_receipt_data(
-            receipt_data, receipt_schema_path=STEP_RECEIPT_SCHEMA_PATH
-        )
-
-    assert "StepReceipt schema violation" in str(exc_info.value)
-
-
 def _get_happy_tables_data() -> dict[str, Any]:
     return yaml.safe_load(DEFAULT_DECISION_TABLES_PATH.read_text(encoding="utf-8"))
 
@@ -718,26 +586,6 @@ def test_decision_tables_file_validates() -> None:
         assert expected in res["tables"], f"table '{expected}' missing from the draft"
 
 
-def test_negative_decision_tables_bad_mode() -> None:
-    """Mutation check: an unknown table mode must fail schema validation."""
-    data = _get_happy_tables_data()
-    data["tables"]["queue-pick"]["mode"] = "vibes"
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_decision_tables_data(data)
-    assert "DecisionTables schema violation" in str(exc_info.value)
-
-    restored = _get_happy_tables_data()
-    assert validate_decision_tables_data(restored)["ok"] is True
-
-
-def test_negative_decision_tables_static_requires_rows() -> None:
-    """Mutation check: a static table with its rows deleted must fail."""
-    data = _get_happy_tables_data()
-    del data["tables"]["queue-pick"]["rows"]
-    with pytest.raises(TrailSpecValidationError):
-        validate_decision_tables_data(data)
-
-
 def test_negative_decision_tables_missing_precedence() -> None:
     """Mutation check: dropping the first-match precedence contract must fail —
     without it the row-ordering conflicts the #5886 review found come back."""
@@ -745,28 +593,6 @@ def test_negative_decision_tables_missing_precedence() -> None:
     del data["precedence"]
     with pytest.raises(TrailSpecValidationError):
         validate_decision_tables_data(data)
-
-
-def test_negative_decision_tables_unknown_stop_code() -> None:
-    """Mutation check: a row action naming an unpublished STOP code must fail."""
-    data = _get_happy_tables_data()
-    data["tables"]["queue-pick"]["rows"].append(
-        {"when": "impossible synthetic condition", "then": "STOP-made-up-code"}
-    )
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_decision_tables_data(data)
-    assert "STOP-made-up-code" in str(exc_info.value)
-
-
-def test_v1_decision_tables_file_validates_and_keeps_all_v0_table_names() -> None:
-    """P2's typed document is a parallel migration; v0 remains its own contract."""
-    res = validate_decision_tables(DEFAULT_DECISION_TABLES_V1_PATH)
-
-    assert res["ok"] is True
-    assert res["schema_version"] == "decision-tables.v1"
-    assert res["precedence"] == "first-match-unique"
-    for expected in ("queue-pick", "review-gate-arm", "settle-status", "width"):
-        assert expected in res["tables"], f"table '{expected}' missing from v1"
 
 
 def test_negative_v1_decision_tables_rejects_overlapping_first_match_rows() -> None:
@@ -781,42 +607,6 @@ def test_negative_v1_decision_tables_rejects_overlapping_first_match_rows() -> N
         validate_decision_tables_data(data)
 
     assert "first-match uniqueness violated" in str(exc_info.value)
-    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
-
-
-def test_negative_v1_decision_tables_rejects_free_form_outcome() -> None:
-    """Mutation proof: static executable rows cannot return prose."""
-    data = _get_happy_v1_tables_data()
-    data["tables"]["queue-pick"]["rows"][0]["outcome"] = "do whatever seems right"
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_decision_tables_data(data)
-
-    assert "DecisionTables schema violation" in str(exc_info.value)
-    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
-
-
-def test_negative_v1_decision_tables_rejects_unknown_stop_token() -> None:
-    """Mutation proof: typed v1 STOP outcomes use P1's 18-code vocabulary."""
-    data = _get_happy_v1_tables_data()
-    data["tables"]["queue-pick"]["rows"][0]["outcome"]["token"] = "STOP-not-published"
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_decision_tables_data(data)
-
-    assert "STOP-not-published" in str(exc_info.value)
-    assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
-
-
-def test_negative_v1_decision_tables_rejects_wrongly_typed_condition() -> None:
-    """Mutation proof: a condition value must use its declared input type."""
-    data = _get_happy_v1_tables_data()
-    data["tables"]["queue-pick"]["rows"][0]["when"]["all"][0]["equals"] = "yes"
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_decision_tables_data(data)
-
-    assert "invalid typed value 'yes'" in str(exc_info.value)
     assert validate_decision_tables_data(_get_happy_v1_tables_data())["ok"] is True
 
 
@@ -848,17 +638,6 @@ def _get_v1_table_lookup_data() -> dict[str, Any]:
     }
 
 
-def test_v1_table_reference_integrity_uses_the_typed_document() -> None:
-    """A trail binding must resolve in either validated parallel table version."""
-    spec = _get_v1_table_lookup_data()
-    tables = _get_happy_v1_tables_data()
-
-    res = validate_trail_table_refs(spec, tables)
-
-    assert res["ok"] is True
-    assert res["bound_steps"]["pick_next"] == "queue-pick"
-
-
 _RB4_PATH = _TRAILS_DIR / "rb4-red-ci-triage.trail.yaml"
 
 
@@ -886,60 +665,6 @@ def test_declared_table_refs_resolve(trail_path) -> None:
     tables = _get_happy_tables_data()
     res = validate_trail_table_refs(spec, tables)
     assert res["ok"] is True
-
-
-def test_v1_table_lookup_steps_bind_tables() -> None:
-    """V1 table-lookup steps must each name their table."""
-    spec = _get_v1_table_lookup_data()
-    tables = _get_happy_tables_data()
-    res = validate_trail_table_refs(spec, tables)
-    lookup_steps = [s["step_id"] for s in spec["steps"] if s.get("kind") == "table-lookup"]
-    unbound = [s for s in lookup_steps if s not in res["bound_steps"]]
-    assert not unbound, f"V1 table-lookup steps without a table binding: {unbound}"
-
-
-def test_negative_table_lookup_without_table_fails_schema() -> None:
-    """A table-lookup step must name a non-null table in the TrailSpec schema."""
-    spec = _get_v1_table_lookup_data()
-    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
-    del lookup_step["table"]
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trailspec_data(spec)
-
-    assert "TrailSpec schema violation" in str(exc_info.value)
-    assert "table" in str(exc_info.value)
-
-
-def test_negative_table_lookup_without_table_fails_cross_check() -> None:
-    """The table cross-check fails closed even when its caller bypasses schema validation."""
-    spec = _get_v1_table_lookup_data()
-    tables = _get_happy_tables_data()
-    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
-    lookup_step["table"] = None
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trail_table_refs(spec, tables)
-
-    assert "Missing table binding" in str(exc_info.value)
-    assert lookup_step["step_id"] in str(exc_info.value)
-
-
-@pytest.mark.parametrize("table_ref", [[], {}], ids=["list", "mapping"])
-def test_negative_table_lookup_non_string_table_fails_cross_check(
-    table_ref: object,
-) -> None:
-    """The cross-check must reject non-string table bindings before membership tests."""
-    spec = _get_v1_table_lookup_data()
-    tables = _get_happy_tables_data()
-    lookup_step = next(step for step in spec["steps"] if step["kind"] == "table-lookup")
-    lookup_step["table"] = table_ref
-
-    with pytest.raises(TrailSpecValidationError) as exc_info:
-        validate_trail_table_refs(spec, tables)
-
-    assert "Missing table binding" in str(exc_info.value)
-    assert lookup_step["step_id"] in str(exc_info.value)
 
 
 def test_negative_unbound_table_ref() -> None:

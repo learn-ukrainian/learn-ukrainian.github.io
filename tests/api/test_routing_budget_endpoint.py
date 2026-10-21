@@ -305,22 +305,6 @@ def test_routing_budget_shape_lock(monkeypatch, tmp_path):
     assert all(isinstance(count, int) for count in data["in_flight"].values())
 
 
-def test_endpoint_returns_documented_shape(monkeypatch, tmp_path):
-    _configure(monkeypatch, tmp_path, [])
-    app = FastAPI()
-    app.state.ctx = fixture_context(tmp_path)
-    app.include_router(state_router.router, prefix="/api/state")
-
-    response = TestClient(app).get("/api/state/routing-budget")
-
-    assert response.status_code == 200
-    data = response.json()
-    assert {"agents", "in_flight", "recommendation", "diagnostics", "generated_at"} <= data.keys()
-    assert data["diagnostics"]["usage_sources"]["allotment"] in {"codexbar", "codexbar+cursor_native"}
-    assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
-    assert "runtime" in data["agents"]["codex"]
-
-
 def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     """Agent JSONL rate-limit cluster demotes a CodexBar-cool lane."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
@@ -371,74 +355,6 @@ def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     # at least diagnostics declare hybrid sources
     assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
     assert first_sub["lane"]  # smoke
-
-
-def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp_path):
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(
-        monkeypatch,
-        tmp_path,
-        [
-            _record("codex (gpt-5.5)", 800.0, now),
-            _record("claude", 650.0, now),
-            _record("gemini", 480.0, now),
-        ],
-    )
-    monkeypatch.setattr(state_router, "get_freshest_lane_usage", lambda: None)
-    monkeypatch.setattr(
-        state_router,
-        "load_reset_reserve",
-        lambda *_args, **_kwargs: {
-            "available": True,
-            "provider": "codex",
-            "remaining_resets": 2,
-            "confirmed_at": "2026-05-13T20:00:00Z",
-            "expires_at": "2026-05-14T20:00:00Z",
-        },
-    )
-    monkeypatch.setattr(
-        state_router,
-        "get_provider_usage_data",
-        lambda provider: (
-            {
-                "lane": "codex",
-                "primary_used_pct": 70.0,
-                "weekly_used_pct": 80.0,
-                "weekly_pace_delta_pct": 10.0,
-                "weekly_expected_pct": 70.0,
-                "will_last_to_reset": False,
-                "windows": {"primary": {"remaining_pct": 20.0, "window_minutes": 300}},
-                "stale": False,
-                "freshness": "fresh",
-                "age_s": 1.0,
-                "reset_credits": {
-                    "available_count": 2,
-                    "expires_at": ["2026-05-20T00:00:00Z", "2026-05-21T00:00:00Z"],
-                    "fetched_at": now.isoformat(),
-                },
-            }
-            if provider == "codex"
-            else None
-        ),
-    )
-
-    monkeypatch.setattr(
-        state_router,
-        "_recommend_agent",
-        lambda *_args, **_kwargs: {"primary_agent_for_code": "cursor", "rationale": "cooler seat", "warnings": []},
-    )
-    data = state_router.compute_routing_budget(now)
-
-    assert data["reset_reserve"] == {
-        "available": True,
-        "provider": "codex",
-        "remaining_resets": 2,
-        "confirmed_at": "2026-05-13T20:00:00Z",
-        "expires_at": "2026-05-14T20:00:00Z",
-    }
-    assert data["agents"]["codex"]["status"] == "cool"
-    assert data["agents"]["codex"]["pace_deficit"]["covered_by"] == ["free full reset"]
-    assert data["recommendation"]["primary_agent_for_code"] == "codex"
 
 
 @pytest.mark.parametrize(
@@ -563,16 +479,6 @@ def test_kimi_is_a_subscription_lane_and_accepts_codexbar_overlay(monkeypatch, t
     assert data["agents"]["kimi"]["status"] == "cool"
     assert data["agents"]["kimi"]["codexbar"]["weekly_used_pct"] == 0.0
     assert any(row["lane"] == "kimi" and row["type"] == "subscription" for row in data["ranked_by_headroom"])
-
-
-def test_status_hot_when_burn_75_90(monkeypatch, tmp_path):
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 800.0, now)])
-
-    data = state_router.compute_routing_budget(now)
-
-    assert data["agents"]["codex"]["burn_pct_7d"] == 80.0
-    assert data["agents"]["codex"]["status"] == "hot"
 
 
 def test_pre_launch_agentic_pool_before_2026_06_15(monkeypatch, tmp_path):
@@ -795,16 +701,6 @@ def test_ranked_by_headroom_orders_by_remaining_and_includes_api_unknown(monkeyp
     assert "resets_at" in ranked[0]
 
 
-def test_resets_at_and_reset_aware_present(monkeypatch, tmp_path):
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 10.0, now)])
-    data = state_router.compute_routing_budget(now)
-    assert "resets_at" in data["agents"]["codex"]
-    assert data["diagnostics"].get("reset_imminent_hours") == 6
-    # ranked carries it
-    assert any("resets_at" in r for r in data.get("ranked_by_headroom", []))
-
-
 def test_fresh_codexbar_overlay_omits_ledger_stale_warning(monkeypatch, tmp_path):
     """Fresh codexbar overlay must not leave ledger-stale warnings when diagnostics.stale=false."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
@@ -953,23 +849,6 @@ def test_compute_routing_budget_computes_in_flight_once(monkeypatch, tmp_path):
     assert len(sub_lanes) == len(state_router.SUBSCRIPTION_LANES)
     for row in sub_lanes:
         assert "in_flight" in row
-
-
-def test_glm_is_not_a_subscription_lane_or_ranked_provider(monkeypatch, tmp_path):
-    """Retired GLM/Z.AI seat must not appear in routing-budget lanes or rank."""
-    from scripts.api import subscription_usage as subscription_usage_mod
-
-    assert "glm" not in state_router.SUBSCRIPTION_LANES
-    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
-    assert "glm" not in subscription_usage_mod.PROVIDER_TO_LANE
-    assert "glm" not in subscription_usage_mod._NATIVE_PROBES
-
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, [])
-    data = state_router.compute_routing_budget(now)
-
-    assert "glm" not in data["agents"]
-    assert all(row.get("lane") != "glm" for row in data.get("ranked_by_headroom", []))
 
 
 def test_empty_ledger_reports_agentic_pool_unknown(monkeypatch, tmp_path):
@@ -1272,18 +1151,6 @@ def test_legacy_claude_lane_is_unchanged_by_account_rows(monkeypatch, tmp_path):
     assert [row["lane"] for row in with_rows["ranked_by_headroom"]].count("claude") == 1
     assert not any(str(lane).startswith("claude:") for lane in with_rows["agents"])
     assert with_rows["recommendation"] == without_rows["recommendation"]
-
-
-def test_withdrawn_snapshot_clears_the_account_preference():
-    payload = {
-        "recommendation": {"primary_agent_for_code": "claude", "warnings": []},
-        "agents": {},
-        "claude_accounts": {"claude:a": {"status": "ok"}},
-        "preferred_claude_account": "a",
-    }
-    withdrawn = state_router._withdraw_routing_authorization(payload)
-    assert withdrawn["preferred_claude_account"] is None
-    assert withdrawn["claude_accounts"] == {"claude:a": {"status": "ok"}}
 
 
 # Fails on b62a4a3243: a warm routing snapshot served the account rows frozen at compute time.

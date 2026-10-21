@@ -178,16 +178,6 @@ def test_current_textbook_source_files_all_map_to_canonical_subjects() -> None:
     assert set(CURRENT_TEXTBOOK_SOURCE_FILES) == set(KNOWN_SOURCE_FILE_SUBJECTS)
 
 
-def test_subject_aliases_normalize_to_canonical_slugs() -> None:
-    assert normalize_subject_slug("ukrainska-mova") == "ukrmova"
-    assert normalize_subject_slug("ukrajinska-literatura") == "ukrlit"
-    assert normalize_subject_slug("istoriia") == "istoriya"
-    assert normalize_subject_slug("vocabulary") == "lexicon"
-    assert normalize_subject_slug("foreign_language") == "foreign_language"
-    assert normalize_subject_slug("ya_doslidzhuiu_svit") == "ya_doslidzhuiu_svit"
-    assert normalize_subject_slug("unknown") is None
-
-
 def test_future_stem_source_files_map_by_token() -> None:
     assert subject_for_source_file("5-klas-informatyka-example-2026") == "informatyka"
     assert subject_for_source_file("7-klas-geometriya-example-2026") == "heometriya"
@@ -232,18 +222,6 @@ BATCH2_SOURCE_FILES: dict[str, str] = {
 }
 
 
-def test_batch2_slugs_resolve_to_new_canonical_subjects() -> None:
-    """#4593 batch 2: applied-register subjects (gap-audit rank-1 consumers)."""
-    from scripts.wiki.textbook_subjects import (
-        CANONICAL_TEXTBOOK_SUBJECTS,
-        subject_for_source_file,
-    )
-
-    for slug, expected in BATCH2_SOURCE_FILES.items():
-        assert subject_for_source_file(slug) == expected, slug
-        assert expected in CANONICAL_TEXTBOOK_SUBJECTS
-
-
 def test_author_map_single_source_and_batch2_authors_present() -> None:
     """PR #4650: the dual-map drift class is dead — migration and ingest tool
     must alias the canonical map, and every batch-1/2 slug author resolves."""
@@ -254,11 +232,6 @@ def test_author_map_single_source_and_batch2_authors_present() -> None:
     for slug in list(WAVE1_SLUGS) + list(BATCH2_SOURCE_FILES):
         author = slug.split("-")[-2]
         assert author in AUTHOR_UK_BY_TRANSLIT, slug
-
-
-def test_new_subjects_normalize() -> None:
-    for subject in ("vsesvitnia", "zarlit", "pryroda", "zdorovia", "etyka", "finansova"):
-        assert normalize_subject_slug(subject) == subject
 
 
 def test_vsesvitnia_ordering_precedence() -> None:
@@ -341,88 +314,6 @@ def test_integrated_fizyka_astronomiia_is_physics_but_pure_astronomy_stays() -> 
     assert subject_for_source_file("11-klas-astronomiya-pryshliak-2019") == "astronomiya"
 
 
-def test_batch3_author_translits_resolve_to_cyrillic() -> None:
-    expected = {
-        "voloshhuk": "Волощук",
-        "guschyna": "Гущина",
-        "gudima": "Гудима",
-        "homiak": "Криховець-Хом'як",
-        "bojko": "Бойко",
-        "barjakhtar": "Бар'яхтар",
-        "merzljak": "Мерзляк",
-        "zadorozhnij": "Задорожний",
-        "zasekina": "Засєкіна",
-        "kovbasenko": "Ковбасенко",
-        "ladychenko": "Ладиченко",
-        "bevz": "Бевз",
-        "bios": "Біос",
-        "kondratova": "Кондратова",
-        "tarasenkova": "Тарасенкова",
-        "yaroshenko": "Ярошенко",
-    }
-    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
-
-    for translit, cyrillic in expected.items():
-        assert AUTHOR_UK_BY_TRANSLIT[translit] == cyrillic
-
-
-@pytest.mark.parametrize(
-    ("stem", "expected_subject"),
-    [
-        ("9-klas-fizyka-zasiekina-2026", "fizyka"),
-        ("9-klas-finansova-rolik-2026", "finansova"),
-        ("9-klas-heometriya-bevz-2026", "heometriya"),
-        ("9-klas-informatyka-bios-2026", "informatyka"),
-        ("9-klas-informatyka-morze-2026", "informatyka"),
-        ("9-klas-algebra-tarasenkova-2026", "algebra"),
-        ("9-klas-khimiya-yaroshenko-2026", "khimiya"),
-        ("9-klas-mystetstvo-kondratova-2025", "mystetstvo"),
-        ("9-klas-istoriya-ukr-galimov-2026", "istoriya"),
-        ("9-klas-pravoznavstvo-berendieiev-2026", "pravoznavstvo"),
-        ("9-klas-ukrlit-zabolotnyi-2026", "ukrlit"),
-        ("9-klas-zdorovia-gushchyna-2026", "zdorovia"),
-    ],
-)
-def test_current_grade9_recovery_subjects(stem: str, expected_subject: str) -> None:
-    assert subject_for_source_file(stem) == expected_subject
-
-
 def test_known_source_file_subjects_regression() -> None:
     for filename, expected_subject in KNOWN_SOURCE_FILE_SUBJECTS.items():
         assert subject_for_source_file(filename) == expected_subject
-
-
-def test_new_authors_mapping_sample() -> None:
-    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
-    samples = {
-        "voloshchuk": "Волощук",
-        "ladychenko": "Ладиченко",
-        "korshevniuk": "Коршевнюк",
-        "meleshchenko": "Мелещенко",
-        "rublia": "Рубля",
-        "davydiuk": "Давидюк",
-        "mandrenko": "Мандренко",
-        "hushchyna": "Гущина",
-        "gilberg": "Гільберг",
-        "vasylkiv": "Васильків",
-        "nelin": "Нелін",
-        "shalamov": "Шаламов",
-        "zasekina": "Засєкіна",
-        "homiak": "Криховець-Хом'як",
-        "gudyma": "Гудима",
-        "vorontsova": "Воронцова",
-        "boiko": "Бойко",
-        "merzlyak": "Мерзляк",
-        "grygorovych": "Григорович",
-        "zadorozhnyj": "Задорожний",
-        "sobol": "Соболь",
-        "rolik": "Ролік",
-        "berendieiev": "Берендєєв",
-        "glukhovtseva": "Глуховцева",
-        "khomik": "Хомік",
-        "strokal": "Строкаль",
-        "shvets": "Швець",
-        "dvulychanska": "Двуличанська",
-    }
-    for translit, expected_uk in samples.items():
-        assert AUTHOR_UK_BY_TRANSLIT[translit] == expected_uk

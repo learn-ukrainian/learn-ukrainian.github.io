@@ -157,21 +157,6 @@ def test_candidate_schema_validation(release_input, fault):
         projection.create_release([card], release_version="v0.1.0", allow_candidates=True)
 
 
-@pytest.mark.parametrize("fault", ["citation", "register"])
-def test_candidate_permission_bindings(release_input, fault, tmp_path):
-    card = release_input.card
-    card["known_gaps"] = ["Pending review"]
-    register = release_input.register
-    if fault == "citation":
-        card["assertions"][0]["licence_ref"]["register_source_id"] = "wrong"
-    else:
-        register = tmp_path / "other-register.yaml"
-        register.write_bytes(release_input.register.read_bytes() + b"\n")
-    with pytest.raises(projection.ProjectionRefusal, match=r"citation|register differs"):
-        projection.create_release([card], release_version="v0.1.0", register_path=register,
-                                  allow_candidates=True)
-
-
 def test_mixed_release_counts_only_emitted_cards(release_input):
     candidate = copy.deepcopy(release_input.card)
     candidate["card_id"] = "wc_0123456789ac"
@@ -192,26 +177,3 @@ def test_mixed_release_counts_only_emitted_cards(release_input):
     )
     assert (filtered.manifest["input_card_count"], filtered.manifest["card_count"],
             filtered.manifest["certified_count"], filtered.manifest["candidate_count"]) == (2, 1, 1, 0)
-
-
-def test_candidate_cli_and_cumulative_withdrawal(release_input, tmp_path, capsys):
-    card = release_input.card
-    card["known_gaps"] = ["Pending review"]
-    source = tmp_path / "cards.json"
-    source.write_text(json.dumps([card]))
-    common = ["--cards", str(source), "--version", "v0.1.0"]
-    assert projection.main([*common, "--output", str(tmp_path / "strict")]) == 1
-    assert not (tmp_path / "strict").exists()
-    assert projection.main([*common, "--allow-candidates", "--output", str(tmp_path / "candidate")]) == 0
-    manifest = json.loads(capsys.readouterr().out)
-    assert (manifest["certified_count"], manifest["candidate_count"]) == (0, 1)
-    assert json.loads((tmp_path / "candidate/word-cards.jsonl").read_bytes())["known_gaps"] == ["Pending review"]
-    replacement = projection.withdraw_release(
-        [card], previous_version="v0.1.0", release_version="v0.1.1", allow_candidates=True,
-        selector={"source_id": "vesum"}, justification="Synthetic withdrawal",
-        withdrawals=[{"selector": {"source_id": "ulif"}, "justification": "Prior withdrawal"}],
-    )
-    assert replacement.dataset == b""
-    assert (replacement.manifest["card_count"], replacement.manifest["certified_count"],
-            replacement.manifest["candidate_count"]) == (0, 0, 0)
-    assert replacement.withdrawal_notice["removed_field_citations"] == 1

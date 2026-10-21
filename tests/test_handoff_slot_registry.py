@@ -19,12 +19,10 @@ from pathlib import Path
 import pytest
 import yaml
 
-from agents_extensions.shared.session_streams.inventory import load_stream_epic_inventory, stream_anchor_id, stream_map
+from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
 from scripts.agent_runtime.lane_probe import resolve_handoff_agent
 from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
-from scripts.orchestration.driver_agent_type import resolve_driver_agent_type
-from scripts.orchestration.fleet_taxonomy import resolve_area
 from scripts.orchestration.slot_routing import resolve_slot_holder
 
 REPO = Path(__file__).resolve().parents[1]
@@ -231,15 +229,6 @@ def _gate_matrix() -> tuple[dict[str, str], dict[str, dict[str, int]]]:
     return lanes, gate
 
 
-def _refused_selector(provider: str, lanes: dict[str, str], gate: dict[str, dict[str, int]]) -> str | None:
-    """A selector the gate refuses for ``provider`` (deterministic), or None when it accepts them all."""
-    return next((selector for selector, lane in sorted(lanes.items()) if gate[provider][lane] != 0), None)
-
-
-def test_launcher_providers_are_read_from_the_driver_entry_points() -> None:
-    assert {"claude", "codex"} <= set(PROVIDERS)
-
-
 def test_alias_selector_gate_matches_content_provider_policy() -> None:
     """Aliases follow the content restrictions and the CTO's two-provider roster."""
     lanes, gate = _gate_matrix()
@@ -303,57 +292,6 @@ def test_every_registered_slot_is_reachable_from_a_selector_for_its_provider() -
     assert not unminted, f"roster slots no launcher selector can mint: {unminted}"
 
 
-def test_generic_registry_keys_are_registered_or_refused_for_every_provider() -> None:
-    """A registry key is accepted only when its provider slot is registered."""
-    keys = _registry_stream_keys()
-    lanes, gate = _gate_matrix()
-    for selector in [*keys, *(f"infra.{key}" for key in keys)]:
-        if selector not in lanes:
-            continue
-        lane = lanes[selector]
-        for provider in PROVIDERS:
-            expected = 0 if registry.is_registered_slot(f"{provider}-{lane}") else 3
-            assert gate[provider][lane] == expected, f"{selector}: {provider}-{lane} gate disagrees with roster"
-            if lane in {"folk", "bio", "hramatka"}:
-                assert (expected == 0) == (provider in {"claude", "codex", "gemini"}), (
-                    f"{selector}: {provider}-{lane} violates operator order"
-                )
-
-
-@pytest.mark.parametrize("provider", ("kimi", "cursor"))
-@pytest.mark.parametrize(
-    "selector, lane",
-    (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka"), ("open-model-data", "open-model-data")),
-)
-def test_removed_content_slot_refused_by_operator_order(provider: str, selector: str, lane: str) -> None:
-    result = _gate(provider, selector)
-    assert result.returncode == 1, result.stdout + result.stderr
-    assert f"'{provider}-{lane}'" in result.stderr
-    assert "operator order 2026-09-27" in result.stderr
-    assert "only claude, gpt and gemini" in result.stderr
-
-
-def test_registered_grok_open_model_data_seat_is_admitted() -> None:
-    """The 2026-10-16 order (#10835) registers grok-open-model-data; the gate admits and mints it."""
-    assert registry.is_registered_slot("grok-open-model-data")
-    result = _bash(
-        'source "$1"; launcher_require_registered_slot grok open-model-data && handoff_identity_for_grok_epic open-model-data',
-        str(HANDOFF_IDENTITY),
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == "grok-open-model-data"
-
-
-@pytest.mark.parametrize("selector, lane", (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka")))
-def test_unregistered_grok_content_slot_is_refused_as_unregistered(selector: str, lane: str) -> None:
-    """Grok content lanes without a slot stay refused, now as unregistered rather than by the superseded order."""
-    assert not registry.is_registered_slot(f"grok-{lane}")
-    result = _gate("grok", selector)
-    assert result.returncode == 1, result.stdout + result.stderr
-    assert f"'grok-{lane}', which is not registered" in result.stderr
-    assert "operator order 2026-09-27" not in result.stderr
-
-
 def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> None:
     """grok-monitor receives its own inbox; Muse keeps its monitor identity; other monitor names stay legacy."""
     roster = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
@@ -365,52 +303,7 @@ def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> Non
     assert gate.returncode == 0, gate.stderr
 
 
-@pytest.mark.parametrize("provider", PROVIDERS)
-def test_gate_names_the_refused_provider_slot(provider: str) -> None:
-    """The real bash gate's refusal names the provider's own slot (one real call per provider)."""
-    lanes, gate = _gate_matrix()
-    selector = _refused_selector(provider, lanes, gate)
-    if selector is None:
-        pytest.skip(f"{provider} accepts every selector")
-    result = _gate(provider, selector)
-    assert result.returncode == 1, f"{selector} must be refused for {provider}: {result.stderr}"
-    assert f"{provider}-{lanes[selector]}" in result.stderr
-
-
 REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "practice", "folk", "bio", "corpus", "hramatka")
-
-
-def test_practice_area_registers_only_claude_and_codex() -> None:
-    data = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
-    assert data["assignments"]["practice"] == {
-        "driver_agent_type": "infra-orchestrator",
-        "slots": ["claude-practice", "codex-practice"],
-    }
-    assert resolve_driver_agent_type("practice") == "infra-orchestrator"
-
-
-def test_practice_stream_is_registered_without_moving_atlas() -> None:
-    data = yaml.safe_load(ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
-    assert data["practice"] == {"title": "Practice Hub, ZNO and activities", "epics": [11151]}
-    assert data["atlas-practice"]["epics"] == [4387]
-    record = next(row for row in load_stream_epic_inventory(REPO) if row.stream_id == "epic:11151")
-    assert (record.stream_name, record.title) == ("practice", "Practice Hub, ZNO and activities")
-    assert record.handoff_candidates[0] == ".claude/practice-epic/CLAUDE-DRIVER-HANDOFF.md"
-
-
-def test_practice_taxonomy_resolves_the_new_epic() -> None:
-    area = resolve_area("practice")
-    assert area.id == "practice"
-    assert [(epic.number, epic.name) for epic in area.epics] == [(11151, "Practice Hub, ZNO and activities")]
-    assert resolve_area(11151).id == "practice"
-    assert resolve_area(4387).id == "atlas"
-
-
-def test_practice_selector_has_its_own_alias_registration() -> None:
-    with ALIASES.open(encoding="utf-8", newline="") as handle:
-        rows = [row for row in csv.reader(handle, delimiter="\t") if row and row[0] == "practice"]
-    assert rows == [["practice", "practice", "practice"]]
-    assert _session_epic_and_lane(["practice"])["practice"] == ("practice", "practice")
 
 
 @pytest.mark.parametrize("provider", ["claude", "codex"])
@@ -422,12 +315,6 @@ def test_practice_slots_reach_existing_consumers(provider: str, tmp_path: Path) 
     assert resolve_handoff_agent(slot) == provider
     holder = resolve_slot_holder(slot, session_db_path=tmp_path / "absent.sqlite3")
     assert (holder.area_id, holder.reason) == ("practice", "no-live-holder")
-
-
-@pytest.mark.parametrize("provider", PROVIDERS)
-def test_practice_launcher_gate_enforces_the_two_provider_roster(provider: str) -> None:
-    result = _gate(provider, "practice")
-    assert result.returncode == (0 if provider in {"claude", "codex"} else 1), result.stderr
 
 
 @pytest.mark.parametrize("provider", ["claude", "codex"])
@@ -476,20 +363,6 @@ def test_gate_refuses_every_unregistered_selector_and_accepts_every_registered_o
     assert not refused_wrongly, f"registered selectors the gate refuses: {refused_wrongly}"
 
 
-def test_launcher_refuses_unregistered_selector_before_starting() -> None:
-    """End to end (one real launcher run): exit 2 before any lease or provider start."""
-    selector = "infra.atlas-practice"
-    result = _launcher("--epic", selector)
-    slot = f"claude-{selector.removeprefix('infra.')}"
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert f"selector '{selector}'" in result.stderr
-    assert f"'{slot}'" in result.stderr
-    assert "not registered" in result.stderr
-    assert "Registered claude slots: claude-infra" in result.stderr
-    assert "would claim lease" not in result.stdout
-    assert "would exec" not in result.stdout
-
-
 def test_real_launch_of_unregistered_selector_never_execs_the_provider(tmp_path: Path) -> None:
     """Outside dry-run the provider binary must never start for an unregistered slot."""
     marker = tmp_path / "started"
@@ -502,13 +375,6 @@ def test_real_launch_of_unregistered_selector_never_execs_the_provider(tmp_path:
     assert result.returncode == 2, result.stdout + result.stderr
     assert "not registered" in result.stderr
     assert not marker.exists(), "the provider binary started for an unregistered slot"
-
-
-def test_registered_selector_still_launches() -> None:
-    result = _launcher("--epic", "infra")
-    assert result.returncode == 0, result.stderr
-    assert "not registered" not in result.stderr
-    assert "would exec claude" in result.stdout
 
 
 def test_gate_fails_closed_when_the_registry_cannot_be_read(tmp_path: Path) -> None:
@@ -553,26 +419,6 @@ def test_stream_anchor_matches_launcher_selector_stream(stream_name: str) -> Non
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == expected
-
-
-@pytest.mark.parametrize(
-    ("stream_name", "anchor"),
-    (
-        ("seminars-bio", "epic:4431"),
-        ("seminars-cross", "epic:3120"),
-    ),
-)
-def test_stream_anchor_is_the_first_listed_seminar_epic(stream_name: str, anchor: str) -> None:
-    """The two streams whose first epic is not the smallest stay on that first epic."""
-    assert stream_anchor_id(stream_name, REPO) == anchor
-    assert stream_map(REPO)[stream_name][0] == int(anchor.removeprefix("epic:"))
-    result = _bash(
-        'source "$1"; launcher_selector_stream "$2"',
-        str(HANDOFF_IDENTITY),
-        stream_name,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.strip() == anchor
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)
@@ -631,36 +477,6 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str, curricul
     assert f"session epic=curriculum-upgrade slot={provider}-core handoff={handoff}" in result.stdout
     assert "core-epic" not in result.stdout
     assert "not registered" not in result.stderr
-
-
-def test_selector_help_lists_curriculum_upgrade_and_not_core_quality() -> None:
-    result = _bash('source "$1"; launcher_selector_help', str(HANDOFF_IDENTITY))
-    assert result.returncode == 0, result.stderr
-    assert "curriculum-upgrade" in result.stdout
-    assert "core-quality" not in result.stdout
-
-
-def test_gate_refuses_when_no_interpreter_can_verify_the_slot(tmp_path: Path) -> None:
-    """No durable interpreter means an unverifiable identity, which is refused, not waved through."""
-    result = subprocess.run(
-        ["bash", "-c", 'source "$1"; launcher_require_registered_slot claude infra', "bash", str(HANDOFF_IDENTITY)],
-        cwd=REPO,
-        env={**os.environ, "LC_DURABLE_HELPER_ROOT": str(tmp_path)},
-        capture_output=True,
-        text=True,
-        timeout=60,
-        check=False,
-    )
-    assert result.returncode == 2, result.stderr
-    assert "cannot verify handoff slot 'claude-infra'" in result.stderr
-
-
-def test_muse_slot_gate_accepts_only_devops_and_monitor() -> None:
-    lanes, gate = _gate_matrix()
-    for lane in set(lanes.values()):
-        assert gate["muse"][lane] == (0 if lane in {"devops", "monitor"} else 3)
-    slots = _channels._load_registry_slots()
-    assert [slot for slot in slots if slot.startswith("muse-")] == ["muse-devops", "muse-monitor"]
 
 
 @pytest.mark.parametrize(

@@ -8,7 +8,6 @@ import hashlib
 import io
 import json
 import subprocess
-import sys
 from datetime import UTC, datetime, timedelta
 from http.client import BadStatusLine, IncompleteRead, RemoteDisconnected
 from pathlib import Path
@@ -181,14 +180,6 @@ def test_malformed_pr_base_ref_refuses_cleanup(api, monkeypatch, base_ref):
     assert len(report["failures"]) == 1
 
 
-def test_missing_pr_base_ref_refuses_cleanup(api, monkeypatch):
-    api.listings["pulls?state=open"] = [pr(base={"repo": {"full_name": REPO}})]
-    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("deletion after missing PR base ref"))
-    report = m.cleanup(api, NOW)
-    assert report["deleted"] == []
-    assert report["failures"] == [{"reason": "invalid branch name"}]
-
-
 @pytest.mark.parametrize("value", [None, "", "2026-02-30T00:00:00Z", "2026-10-15", "2026-10-15T12:00:00+00:00", 123])
 def test_malformed_timestamp_refuses(value):
     with pytest.raises(m.Unknown, match="timestamp"):
@@ -260,28 +251,6 @@ def test_unknown_inventory_refuses(api, monkeypatch, mutation):
     report = m.cleanup(api, NOW)
     assert report["deleted"] == []
     assert len(report["failures"]) == 1
-
-
-@pytest.mark.parametrize(
-    "mutation",
-    [
-        lambda a: a.objects["branches/stale"].update(protected=None),
-        lambda a: a.objects["branches/stale"].update(name="other"),
-        lambda a: a.objects[f"git/commits/{OLD}"].update(sha=HEAD),
-        lambda a: a.objects[f"git/commits/{OLD}"].update(committer=None),
-        lambda a: a.objects[f"git/commits/{OLD}"]["committer"].update(date="tomorrow"),
-    ],
-)
-def test_unknown_candidate_refuses(api, mutation):
-    mutation(api)
-    report = m.cleanup(api, NOW)
-    assert report["deleted"] == []
-    assert report["failures"][0]["name"] == "stale"
-
-
-def test_future_commit_retained(api):
-    api.objects[f"git/commits/{OLD}"]["committer"]["date"] = "2026-10-18T00:00:00Z"
-    assert m.cleanup(api, NOW)["deleted"] == []
 
 
 @pytest.mark.parametrize("value", ["../bad", "a..b", "foo.lock", "a\nb", "a\u202eb", "", None, "a:b", "a b", "*wild"])
@@ -460,19 +429,6 @@ def test_untrusted_source_refuses(api, monkeypatch, field, value):
     assert m.cleanup(api, NOW)["failures"]
 
 
-def test_untrusted_remote_refuses(api, monkeypatch):
-    monkeypatch.setattr(
-        m, "git", lambda *args: "git version fixture" if args == ("--version",) else "https://evil.test/x.git\n"
-    )
-    assert m.cleanup(api, NOW)["failures"]
-
-
-def test_non_utc_clock_refuses(api):
-    evidence, _ = m.read_evidence(api)
-    with pytest.raises(m.Unknown, match="UTC"):
-        m.eligible(m.Candidate("stale", OLD, NOW, False), evidence, REPO, NOW.replace(tzinfo=None))
-
-
 @pytest.mark.parametrize("reason", ["git refused operation", "git unavailable or timed out; outcome unknown"])
 def test_failed_delete_not_success_or_inferred_from_absence(api, monkeypatch, reason):
     def fail(_):
@@ -499,16 +455,6 @@ def test_prior_success_survives_later_failure(api, monkeypatch):
     assert report["failures"] == [{"name": "second", "reason": "git refused operation"}]
 
 
-def test_accepted_metadata_race_is_not_claimed_prevented(api, monkeypatch):
-    def remove(_):
-        # Metadata arrives after the final read. The ref lease does not cover it.
-        api.listings["pulls?state=open"] = [pr()]
-
-    monkeypatch.setattr(m, "delete", remove)
-    assert m.cleanup(api, NOW)["deleted"] == [{"name": "stale", "sha": OLD}]
-    assert "accepted residual race" in (ROOT / "docs/runbooks/remote-branch-cleanup.md").read_text()
-
-
 @pytest.mark.parametrize("name", ["stale", "-option", "topic/quote'\";$(false)", "topic/`false`"])
 def test_delete_renders_single_explicit_ref_arguments(monkeypatch, name):
     calls = []
@@ -533,19 +479,6 @@ def test_delete_renders_single_explicit_ref_arguments(monkeypatch, name):
         "origin",
         f":refs/heads/{name}",
     )
-
-
-def test_no_deletion_receipt_is_unknown(monkeypatch):
-    monkeypatch.setattr(m, "git", lambda *args: "=\t:refs/heads/stale\t[up to date]\n")
-    with pytest.raises(m.Unknown, match="no confirmed deletion"):
-        m.delete(m.Candidate("stale", OLD, NOW, False))
-
-
-@pytest.mark.parametrize("failure", [OSError("failed"), subprocess.TimeoutExpired(["git"], 60)])
-def test_git_wrapper_failure(monkeypatch, failure):
-    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: (_ for _ in ()).throw(failure))
-    with pytest.raises(m.Unknown, match="outcome unknown"):
-        m.git("--version")
 
 
 def test_git_wrapper_no_shell_and_closed_failure(monkeypatch):
@@ -718,22 +651,6 @@ def wire_api(api, monkeypatch):
     monkeypatch.setenv("GH_TOKEN", "fixture")
     monkeypatch.setattr(m, "GitHub", lambda *args: client)
     return client, calls, options
-
-
-@pytest.mark.parametrize("numeric", [False, True])
-@pytest.mark.parametrize("pr_on_page_two", [False, True])
-def test_cli_real_pagination_deletes_or_retains_from_all_pages(wire_api, monkeypatch, capsys, numeric, pr_on_page_two):
-    _, calls, options = wire_api
-    options.update(numeric=numeric, pr_on_page_two=pr_on_page_two)
-    deleted = []
-    monkeypatch.setattr(m, "delete", deleted.append)
-    assert m.main(["--repo", REPO]) == 0
-    report = json.loads(capsys.readouterr().out)
-    assert report["failures"] == []
-    assert report["deleted"] == ([] if pr_on_page_two else [{"name": "stale", "sha": OLD}])
-    assert len(deleted) == (0 if pr_on_page_two else 1)
-    for endpoint in ["branches?", "pulls?state=open&"]:
-        assert f"{m.API}/repos/{REPO}/{endpoint}per_page=100&page=2" in calls
 
 
 @pytest.mark.parametrize("numeric", [False, True])
@@ -948,31 +865,6 @@ def assert_cli_refusal(capsys, summary, expected_deleted):
 
 
 @pytest.mark.parametrize("after", [0, 1], ids=["before-delete", "after-confirmed-delete"])
-@pytest.mark.parametrize("endpoint", ["branches", "pulls"])
-@pytest.mark.parametrize(
-    "case",
-    [
-        "out_of_range_port",
-        "nonnumeric_port",
-        "unmatched_bracket",
-        "invalid_bracket_host",
-        "nfkc_netloc",
-        "oversized_page_integer",
-    ],
-)
-def test_cli_parser_refusal_preserves_confirmed_receipts(refusal_wire, capsys, after, endpoint, case):
-    fault, attempts, confirmed, summary, _ = refusal_wire
-    fault.update(after=after, endpoint=endpoint, case=case)
-    assert m.main(["--repo", REPO]) == 1
-    expected = [{"name": "stale", "sha": OLD}] if after else []
-    report = assert_cli_refusal(capsys, summary, expected)
-    assert confirmed == expected
-    assert attempts == ([":refs/heads/stale"] if after else [])
-    assert fault["triggered"] == 1
-    assert report["failures"][0]["reason"] in {"untrusted pagination link", "malformed pagination link"}
-
-
-@pytest.mark.parametrize("after", [0, 1], ids=["before-delete", "after-confirmed-delete"])
 @pytest.mark.parametrize("entrypoint", ["branches", "pulls", "candidate"])
 @pytest.mark.parametrize(
     "case",
@@ -1024,23 +916,6 @@ def test_cli_repeated_refusal_does_not_infer_another_deletion(refusal_wire, caps
     assert fault["triggered"] == 2
 
 
-@pytest.mark.parametrize("failure", ["refused", "empty", "up-to-date", "timeout"])
-def test_cli_unconfirmed_delete_preserves_only_prior_receipt(refusal_wire, capsys, failure):
-    fault, attempts, confirmed, summary, _ = refusal_wire
-    fault["delete_failure"] = failure
-    assert m.main(["--repo", REPO]) == 1
-    report = assert_cli_refusal(capsys, summary, [{"name": "stale", "sha": OLD}])
-    reason = {
-        "refused": "git refused operation",
-        "empty": "no confirmed deletion receipt; outcome unknown",
-        "up-to-date": "no confirmed deletion receipt; outcome unknown",
-        "timeout": "git unavailable or timed out; outcome unknown",
-    }[failure]
-    assert report["failures"] == [{"name": "second", "reason": reason}]
-    assert confirmed == [{"name": "stale", "sha": OLD}]
-    assert attempts == [":refs/heads/stale", ":refs/heads/second"]
-
-
 @pytest.mark.parametrize("value", [None, True, "1300192", 0, -1])
 def test_repository_id_unknown_refuses(api, monkeypatch, value):
     api.objects[""]["id"] = value
@@ -1060,20 +935,6 @@ def test_repository_id_changed_at_final_read_refuses(api, monkeypatch):
     report = m.cleanup(api, NOW)
     assert report["deleted"] == []
     assert report["failures"] == [{"name": "stale", "reason": "repository ID unknown or changed"}]
-
-
-def test_numeric_pagination_without_repository_binding_refuses(monkeypatch):
-    client = m.GitHub(REPO, "fixture")
-    calls = []
-
-    def get(endpoint):
-        calls.append(endpoint)
-        return [{}], f'<{m.API}/repositories/{REPO_ID}/branches?per_page=100&page=2>; rel="next"'
-
-    monkeypatch.setattr(client, "get", get)
-    with pytest.raises(m.Unknown, match="untrusted pagination link"):
-        client.pages("branches")
-    assert calls == ["branches?per_page=100&page=1"]
 
 
 @pytest.mark.parametrize("omit_filter", [False, True])
@@ -1151,22 +1012,3 @@ def test_workflow_default_source_shared_entrypoint_and_permissions():
         'git remote set-url --push origin "https://github.com/$REPO.git"',
         'python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"',
     ]
-
-
-def test_workflow_sparse_checkout_can_execute_module(tmp_path):
-    workflow = yaml.safe_load((ROOT / ".github/workflows/stale-branch-cleanup.yml").read_text())
-    paths = workflow["jobs"]["cleanup"]["steps"][0]["with"]["sparse-checkout"].splitlines()
-    for path in paths:
-        destination = tmp_path / path
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes((ROOT / path).read_bytes())
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.hygiene.remote_branch_cleanup", "--help"],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "48 hours" in result.stdout

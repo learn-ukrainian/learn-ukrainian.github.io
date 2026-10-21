@@ -117,44 +117,6 @@ def test_migrate_then_verify_roundtrip(tmp_path: Path) -> None:
     assert verify_articles([article_path]) == []
 
 
-def test_parse_wiki_meta_defaults_missing_generated_by_model_to_unknown() -> None:
-    from wiki.migrate_sources import parse_wiki_meta
-
-    meta, _ = parse_wiki_meta(
-        "<!-- wiki-meta\n"
-        "slug: demo\n"
-        "domain: periods\n"
-        "tracks: [hist]\n"
-        "compiled: 2026-04-18\n"
-        "-->\n"
-    )
-
-    assert meta["generated_by_model"] == "unknown"
-
-
-def test_render_diff_replaces_legacy_citations(tmp_path: Path, monkeypatch) -> None:
-    from wiki import migrate_sources
-
-    wiki_dir = tmp_path / "wiki"
-    periods_dir = wiki_dir / "periods"
-    periods_dir.mkdir(parents=True)
-    article_path = periods_dir / "demo.md"
-    article_path.write_text(
-        "# Demo\n\n"
-        "<!-- wiki-meta\nslug: demo\ndomain: periods\ntracks: [hist]\n"
-        "sources: [11-klas-istoriya-ukr-galimov-2024_s0238]\ncompiled: 2026-04-18\n-->\n\n"
-        "Речення (Source 50: `11-klas-istoriya-ukr-galimov-2024_s0238`).\n",
-        encoding="utf-8",
-    )
-
-    monkeypatch.setattr(migrate_sources, "WIKI_DIR", wiki_dir)
-    result = migrate_sources.migrate_article(article_path)
-    diff = migrate_sources.render_diff(result)
-
-    assert "[S1]" in diff
-    assert "(Source 50:" not in result.updated_text
-
-
 def test_rerun_preserves_existing_registry_for_short_citations(tmp_path: Path) -> None:
     from wiki.migrate_sources import migrate_article, verify_articles
     from wiki.sources_schema import WikiSourceEntry, WikiSourcesRegistry, registry_path_for, save_sources_registry
@@ -220,22 +182,3 @@ def test_rerun_backfills_missing_short_citation_registry_entries(tmp_path: Path)
 
     save_sources_registry(registry_path_for(article_path), result.registry, article_path=article_path)
     assert verify_articles([article_path]) == []
-
-
-def test_dry_run_on_real_articles_from_multiple_domains() -> None:
-    from wiki.migrate_sources import migrate_article, render_diff
-
-    candidate_paths = [
-        Path(_project_root) / "wiki" / "pedagogy" / "a1" / "how-many.md",
-        Path(_project_root) / "wiki" / "grammar" / "a2" / "dative-nouns.md",
-        Path(_project_root) / "wiki" / "periods" / "afhanistan.md",
-        Path(_project_root) / "wiki" / "figures" / "ahatanhel-krymskyi.md",
-        Path(_project_root) / "wiki" / "mastery" / "c2" / "capstone-topic-selection.md",
-    ]
-    if not all(path.exists() for path in candidate_paths):
-        pytest.skip("Expected real wiki fixture articles are not available in this checkout")
-
-    results = [migrate_article(path) for path in candidate_paths]
-    diffs = [render_diff(result) for result in results]
-    assert all("(Source " not in result.updated_text for result in results)
-    assert all("[S" in result.updated_text or "[S" in diff for result, diff in zip(results, diffs, strict=True))

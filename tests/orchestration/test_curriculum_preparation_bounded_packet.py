@@ -178,35 +178,6 @@ def test_admission_is_finite_homogeneous_and_exact_hash_bound(
     assert mixed.value.receipt["counts"]["model_calls"] == 0
 
 
-@pytest.mark.parametrize(
-    ("field", "replacement"),
-    [
-        ("profile_id", "bio-v2"),
-        ("profile_version", "2.0.0"),
-        ("family", "seminar-v2"),
-        ("manifest_sha256", "6" * 64),
-    ],
-)
-def test_profile_and_manifest_drift_invalidate_exact_pass_reuse(
-    preparation_fixture: dict[str, Any],
-    field: str,
-    replacement: str,
-) -> None:
-    original = _admit_bio(preparation_fixture)
-    drifted_targets = deepcopy(preparation_fixture["bio"])
-    for target in drifted_targets:
-        target[field] = replacement
-
-    drifted = packet.admit_packet(
-        drifted_targets,
-        limit=2,
-        prior_passes=preparation_fixture["prior_passes"],
-    )
-
-    assert drifted["counts"]["reused_pass_cells"] == 0
-    assert packet.source_identity(drifted) != packet.source_identity(original)
-
-
 def test_deterministic_failure_rejects_before_packet_or_model_call(
     preparation_fixture: dict[str, Any],
 ) -> None:

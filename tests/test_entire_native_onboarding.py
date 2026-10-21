@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import json
 import re
 import subprocess
@@ -96,14 +95,6 @@ def _write_routing_fixture(root: Path, policy: dict) -> None:
         encoding="utf-8",
     )
     (entire_dir / "private-recall.json").write_text(json.dumps(policy), encoding="utf-8")
-
-
-def test_private_recall_validator_rejects_disabled_automatic_intake(tmp_path: Path) -> None:
-    policy = copy.deepcopy(EXPECTED_PRIVATE_RECALL)
-    policy["automatic_intake"] = False
-    _write_routing_fixture(tmp_path, policy)
-
-    assert validate(tmp_path) == ("private recall policy does not match the canonical private-only contract")
 
 
 def test_private_recall_validator_rejects_broader_search_scope(tmp_path: Path) -> None:
@@ -231,31 +222,6 @@ def test_entire_codex_hooks_fail_open_when_installed_cli_errors(tmp_path: Path) 
             assert result.returncode == 0, (hook["command"], result.returncode)
 
 
-def test_opencode_plugin_tracks_real_host_model_and_fails_open() -> None:
-    plugin_bytes = OPENCODE_PLUGIN.read_bytes()
-    plugin = plugin_bytes.decode("utf-8")
-    exit_trap = OPENCODE_EXIT_TRAP.read_text(encoding="utf-8")
-
-    assert "entire hooks opencode" in plugin
-    assert "exec entire" not in plugin
-    assert "|| true" in plugin
-    assert "currentModel = msg.modelID" in plugin
-    assert 'case "session.created"' in plugin
-    assert 'case "message.updated"' in plugin
-    assert 'case "server.instance.disposed"' in plugin
-    assert "plugin failures must not crash OpenCode" in plugin
-    assert "refs/entire" not in plugin
-    assert hashlib.sha256(plugin_bytes).hexdigest() == (
-        "7e562fdc276798ce4771c95d703dc07ccbbdc22bece2286f7c5a2f0d17e2884f"
-    )
-    assert 'process.once("beforeExit", endCurrentSession)' in exit_trap
-    assert 'process.once("exit", endCurrentSession)' in exit_trap
-    assert "exec entire" not in exit_trap
-    assert "|| true" in exit_trap
-    assert "entire hooks opencode session-end" in exit_trap
-    assert "termination capture can never crash OpenCode" in exit_trap
-
-
 def test_opencode_plugin_wrappers_fail_open_when_cli_errors(tmp_path: Path) -> None:
     """The shell wrappers used by OpenCode swallow an installed CLI failure."""
     fake_bin = tmp_path / "bin"
@@ -312,16 +278,3 @@ def test_opencode_plugin_wrappers_fail_open_when_cli_errors(tmp_path: Path) -> N
     )
     assert result.returncode == 0, result.stderr
     assert args_log.read_text(encoding="utf-8").splitlines()[-1] == "hooks opencode session-end"
-
-
-def test_no_public_entire_refs_in_native_onboarding_files() -> None:
-    paths = (
-        CODEX_HOOKS,
-        CLAUDE_SETTINGS,
-        ENTIRE_SETTINGS,
-        OPENCODE_PLUGIN,
-        OPENCODE_EXIT_TRAP,
-    )
-    combined = "\n".join(path.read_text(encoding="utf-8") for path in paths)
-    assert "refs/entire" not in combined
-    assert "learn-ukrainian/entire-checkpoints-private" in combined

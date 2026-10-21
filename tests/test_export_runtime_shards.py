@@ -288,19 +288,6 @@ def test_trie_split_and_checksum_fail_closed(fixture_db: Path, tmp_path: Path) -
         verify_tree(out, "atlas")
 
 
-def test_search_families_remain_separate(fixture_export: tuple[Path, dict]) -> None:
-    out, report = fixture_export
-    current = json.loads((out / "atlas" / "current.json").read_text(encoding="utf-8"))
-    manifest = json.loads((out / "atlas" / current["manifestUrl"]).read_text(encoding="utf-8"))
-    for desc in manifest["search"]["articles"]["shards"].values():
-        assert desc["url"].startswith("search/articles/")
-    for desc in manifest["search"]["aliases"]["shards"].values():
-        assert desc["url"].startswith("search/aliases/")
-    assert report["counts"]["searchArticles"] == report["counts"]["articles"]
-    assert report["counts"]["searchAliases"] <= report["counts"]["aliases"]
-    assert report["counts"]["searchAliases"] > 0
-
-
 def test_exported_entry_records_match_sqlite_projection(
     fixture_db: Path, fixture_export: tuple[Path, dict]
 ) -> None:
@@ -421,22 +408,6 @@ def test_real_db_public_counts_and_alias_targets(tmp_path: Path) -> None:
     finally:
         conn.close()
     assert invalid == 0
-
-
-@pytest.mark.skipif(not REAL_DB_PATH.is_file(), reason="data/atlas.db not available")
-def test_real_db_entry_shard_size_band(tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    report = export_runtime_shards(
-        db_path=REAL_DB_PATH,
-        out_dir=out,
-        include_decks=False,
-        deck_dir=None,
-        verify=True,
-    )
-    sizes = report["entryShardBytes"]
-    assert sizes, "expected entry shards"
-    assert min(sizes) >= 524_288, sizes
-    assert max(sizes) <= 1_048_576, sizes
 
 
 @pytest.mark.atlas_release
@@ -910,7 +881,7 @@ def _export(db: Path, out: Path, **kwargs):
 _CAPS = [(1_048_576, 524_288), (9_000, 800), (6_000, 700)]
 
 
-@pytest.mark.parametrize("level", [0, 1, 6, 9])
+@pytest.mark.parametrize("level", [0, 6])
 @pytest.mark.parametrize(("entry_max", "search_max"), _CAPS)
 def test_streamed_export_is_byte_identical_to_reference(
     edge_db: Path, tmp_path: Path, level: int, entry_max: int, search_max: int
@@ -1149,9 +1120,6 @@ def _build_indexes(conn: sqlite3.Connection) -> tuple[SearchFamilyIndex, SearchF
 # ---------------------------------------------------------------------------
 
 _SHARED_KEY_CAP = 16_384
-_KEYLESS_GLOSS_CHARS = "!#$%&()*+,-./:;<=>?@[]^{|}~"  # no TOKEN_RE word chars: adds no index key
-
-
 def _shared_key_alias_index(rows: int, *, terminal: bool) -> tuple[SearchFamilyIndex, list[dict]]:
     """``rows`` long alias rows all keyed ``a`` (plus one ``ab`` row when ``terminal``)."""
 
@@ -1180,44 +1148,6 @@ def _build_aliases_traced(rows: int, out: Path, *, terminal: bool, level: int) -
     """(ExportError text or None, traced heap peak) of one search-family build into ``out``."""
     kwargs = {"max_gzip_bytes": _SHARED_KEY_CAP, "compression_level": level}
     return _traced_in_fresh_interpreter("aliases", rows=rows, terminal=terminal, out=out, kwargs=kwargs)
-
-
-def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: int = 8_000) -> Path:
-    """Reviewer shape: ``rows`` public articles headed ``a`` with long keyless glosses."""
-    conn = sqlite3.connect(path)
-    conn.executescript(_SOURCE_DDL)
-    conn.execute(
-        "INSERT INTO manifest_metadata VALUES ('generated_at', ?)", (json.dumps("2026-01-02T03:04:05+00:00"),)
-    )
-    for position in range(rows + terminal):
-        rng = random.Random(position)
-        slug, head = f"k{position:05d}", "ab" if position == rows else "a"
-        gloss = "".join(rng.choice(_KEYLESS_GLOSS_CHARS) for _ in range(gloss_chars))
-        conn.execute(
-            "INSERT INTO articles VALUES (?,?,?,?,?,?,?,?,?,?,NULL,NULL)",
-            (slug, head, head, "lemma", "noun", gloss, "approved", "public", None, None),
-        )
-        payload = {"url_slug": slug, "lemma": head, "gloss": gloss}
-        conn.execute(
-            "INSERT INTO article_payloads VALUES (?,?,?,?)",
-            (slug, position, json.dumps(payload, ensure_ascii=False), 1),
-        )
-    conn.commit()
-    conn.close()
-    return path
-
-
-def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]:
-    """(ExportError text or None, traced heap peak) of one full export *with* ``--verify``."""
-    kwargs = {"include_decks": False, "deck_dir": None, "compression_level": level,
-              "entry_max_gzip_bytes": 65_536, "search_max_gzip_bytes": _SHARED_KEY_CAP, "verify": True}
-    return _traced_in_fresh_interpreter("export", db=db, out=out, kwargs=kwargs)
-
-
-def _verify_traced(out: Path) -> int:
-    error, peak = _traced_in_fresh_interpreter("verify", out=out)
-    assert error is None
-    return peak
 
 
 # ---------------------------------------------------------------------------

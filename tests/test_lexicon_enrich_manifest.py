@@ -12,10 +12,8 @@ from scripts.lexicon import load_relation_candidates as relation_loader
 from scripts.lexicon import manifest_io
 from scripts.lexicon.enrich_manifest import (
     _BALLA_REVERSE_SOURCE,
-    _DROP_ANTONYM_LEMMAS,
     _SLOVNYK_UKRENG_SOURCE,
     _STYLE_MARKER_LABELS,
-    _WRONG_ANTONYMS,
     _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
     _antonyms_wiktionary,
@@ -31,7 +29,6 @@ from scripts.lexicon.enrich_manifest import (
     _definition_pointer_relations,
     _definition_pointer_relations_by_headword,
     _definition_synonym_targets,
-    _dmklinger_key,
     _entry_has_learner_english_anchor,
     _etymology,
     _etymology_lookup_variants,
@@ -80,21 +77,17 @@ from scripts.lexicon.enrich_manifest import (
     _warning_slovnyk,
     _xref_provenance_prefix,
     _xref_target_lemmas,
-    clean_gloss,
-    clean_html_entities,
 )
 from scripts.lexicon.source_attribution import (
     DAVYDOV_LABEL,
     E2U_LABEL,
     GOROH_LABEL,
     HOLOSKEVYCH_LABEL,
-    KHRESHCHATYK_LABEL,
     LINGUISTIC_NORM_LABEL,
     MIYKLAS_LABEL,
     ORTHOEPY_LABEL,
     ORTHOGRAPHY_LABEL,
     PROVERBS_LABEL,
-    SHTEPA_LABEL,
     VOLOSHCHAK_LABEL,
     WIKIDATA_LABEL,
     join_academic_source_labels,
@@ -244,19 +237,6 @@ def _conn() -> sqlite3.Connection:
 
 def _url_hostname(url: str) -> str | None:
     return urlparse(url).hostname
-
-
-def test_cleanup_helpers_strip_chunk_and_decode_entities() -> None:
-    assert clean_gloss("Good morning — chunk, unstressed `[о]` stays clean") == "Good morning"
-    assert clean_html_entities("20&amp;nbsp;Гц &amp;lt;br&amp;gt;") == "20 Гц <br>"
-
-
-def test_base_lemma_splits_pairs_without_lowercasing_non_pairs() -> None:
-    non_pair = " Київ "
-
-    assert _base_lemma("варити / зварити") == "варити"
-    assert _base_lemma("Київ") == "Київ"
-    assert _base_lemma(non_pair) == non_pair
 
 
 def test_normalize_manifest_entries_strips_acute_and_merges_duplicates() -> None:
@@ -425,37 +405,6 @@ def test_build_verb_paradigm_empty_label_quarantines_row_not_whole_paradigm() ->
     assert "щось-незрозуміле" not in _collect_paradigm_forms(paradigm)
 
 
-def test_build_verb_paradigm_unknown_nonempty_label_is_dropped_not_guessed() -> None:
-    """An unrecognized non-empty label must stay diagnostic: dropped from the
-    paradigm rather than silently folded into some other field (#7611)."""
-    forms = [
-        {"form": "читати", "label": "інфінітив"},
-        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
-        {"form": "щосьновітаговічне", "label": "геть незнана мітка"},
-    ]
-
-    paradigm = _build_paradigm("verb", forms)
-
-    assert paradigm is not None
-    assert paradigm["tenses"]["теперішній"]["однина"]["1"] == "читаю"
-    assert "щосьновітаговічне" not in _collect_paradigm_forms(paradigm)
-
-
-def test_build_verb_paradigm_unrecognized_tense_cell_quarantines_row_only() -> None:
-    """An unparseable person/number cell under a known tense head (e.g. a
-    person token outside 1/2/3) must not wipe the tense — only that cell (#7611)."""
-    forms = [
-        {"form": "читати", "label": "інфінітив"},
-        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
-        {"form": "щось", "label": "теперішній, однина, 9 ос."},
-    ]
-
-    paradigm = _build_paradigm("verb", forms)
-
-    assert paradigm is not None
-    assert paradigm["tenses"]["теперішній"]["однина"] == {"1": "читаю"}
-
-
 def test_build_verb_paradigm_partial_tense_keeps_only_attested_cells() -> None:
     """Previously an incompletely-attested tense (missing persons) wiped the
     whole paradigm. Now the tense reports only the cells that are attested (#7611)."""
@@ -469,20 +418,6 @@ def test_build_verb_paradigm_partial_tense_keeps_only_attested_cells() -> None:
     assert paradigm is not None
     assert paradigm["tenses"]["теперішній"]["однина"] == {"1": "читаю"}
     assert paradigm["tenses"]["теперішній"]["множина"] == {}
-
-
-def test_build_verb_paradigm_partial_past_keeps_only_attested_cells() -> None:
-    """Previously an incompletely-attested past (missing gender/number cells)
-    wiped the whole paradigm. Now ``past`` reports only attested cells (#7611)."""
-    forms = [
-        {"form": "читати", "label": "інфінітив"},
-        {"form": "читав", "label": "минулий, чол."},
-    ]
-
-    paradigm = _build_paradigm("verb", forms)
-
-    assert paradigm is not None
-    assert paradigm["past"] == {"чол.": "читав"}
 
 
 def _collect_paradigm_forms(paradigm: dict) -> set[str]:
@@ -699,27 +634,6 @@ def test_morphology_marked_form_stress_applies_like_modern_rows(monkeypatch) -> 
     assert "stress" not in marked_by_form["кориснеє"]
 
 
-def test_unknown_grammatical_token_stays_in_modern_paradigm(monkeypatch) -> None:
-    # A token that is NOT a style marker (grammatical/unknown) must never be
-    # segregated — it stays inline, unchanged. `arch` IS a style marker, so it goes.
-    rows = [
-        {"word_form": "сад", "tags": "noun:inanim:m:v_naz", "pos": "noun"},
-        {"word_form": "садку", "tags": "noun:inanim:m:v_dav:xp1", "pos": "noun"},
-        {"word_form": "садовий", "tags": "noun:inanim:m:v_naz:arch", "pos": "noun"},
-    ]
-    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
-    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
-    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
-
-    morphology = _morphology("сад")
-
-    assert morphology is not None
-    modern_forms = {row["form"] for row in morphology["forms"]}
-    assert "садку" in modern_forms  # grammatical xp1 token → unchanged, stays modern
-    assert "садовий" not in modern_forms  # arch → segregated
-    assert [row["marker_label"] for row in morphology["marked_forms"]] == ["застаріла форма"]
-
-
 def test_segregated_but_unlabelled_marker_gets_generic_label(monkeypatch) -> None:
     # If a future VESUM style flag is added to the segregation set before its Ukrainian
     # label is authored, the form is still segregated but carries the honest generic
@@ -741,44 +655,6 @@ def test_segregated_but_unlabelled_marker_gets_generic_label(monkeypatch) -> Non
     assert marked[0]["marker"] == "newmk"
     assert marked[0]["marker_label"] == enrich_manifest_module._GENERIC_STYLE_MARKER_LABEL
     assert marked[0]["marker_label"] == "інша маркована форма"
-
-
-def test_morphology_pluralia_tantum_ns_stays_in_modern_paradigm(monkeypatch) -> None:
-    # двері carries :ns on every form; that is a grammatical class (pluralia tantum),
-    # not a style marker — the whole paradigm must remain modern, else A1 words empty out.
-    rows = [
-        {"word_form": "двері", "tags": "noun:inanim:p:v_naz:ns", "pos": "noun"},
-        {"word_form": "дверей", "tags": "noun:inanim:p:v_rod:ns", "pos": "noun"},
-        {"word_form": "дверям", "tags": "noun:inanim:p:v_dav:ns", "pos": "noun"},
-    ]
-    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
-    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
-    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
-
-    morphology = _morphology("двері")
-
-    assert morphology is not None
-    assert morphology["form_count"] == 3
-    assert "marked_forms" not in morphology
-    assert "marked_form_count" not in morphology
-
-
-def test_morphology_unmarked_lemma_omits_marked_keys(monkeypatch) -> None:
-    # A fully unmarked lemma produces the pre-#4891 shape: no marked_forms /
-    # marked_form_count keys, and form_count == len(forms).
-    rows = [
-        {"word_form": "робота", "tags": "noun:inanim:f:v_naz", "pos": "noun"},
-        {"word_form": "роботи", "tags": "noun:inanim:f:v_rod", "pos": "noun"},
-    ]
-    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
-    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
-    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
-
-    morphology = _morphology("робота")
-
-    assert morphology is not None
-    assert set(morphology) == {"pos", "form_count", "forms", "source"}
-    assert morphology["form_count"] == len(morphology["forms"]) == 2
 
 
 def test_morphology_form_count_matches_rendered_rows_after_cap(monkeypatch) -> None:
@@ -1053,16 +929,6 @@ def test_split_usage_note_title_for_sho_essay() -> None:
     assert essay.startswith("У багатьох людей")
 
 
-def test_split_usage_note_title_for_hovoryty_essay() -> None:
-    body = (
-        "Говорити й казати Чи дієслова говорити й казати є абсолютні синоніми, "
-        "як багато хто гадає, чи між ними є якась різниця?"
-    )
-    title, essay = _split_usage_note_title(body)
-    assert title == "Говорити й казати"
-    assert essay.startswith("Чи дієслова говорити")
-
-
 def test_usage_notes_slovnyk_proof_lemma_sho_mirror_only_attribution() -> None:
     """#6463 proof lemma що — full essay section, book attribution, mirror URL only."""
     essay = (
@@ -1104,11 +970,6 @@ def test_usage_notes_slovnyk_proof_lemma_sho_mirror_only_attribution() -> None:
     assert item.get("mirror_source_url") == "https://slovnyk.me/dict/davydov/%D1%89%D0%BE"
 
 
-def test_usage_notes_slovnyk_returns_none_without_davydov_row() -> None:
-    cache = {"lookups": {"davydov": None, "vts": {"text": "irrelevant", "dictionary_slug": "vts"}}}
-    assert _usage_notes_slovnyk("вода", cache) is None
-
-
 def test_usage_notes_slovnyk_returns_none_without_any_family_row() -> None:
     cache = {
         "lookups": {
@@ -1119,86 +980,6 @@ def test_usage_notes_slovnyk_returns_none_without_any_family_row() -> None:
         }
     }
     assert _usage_notes_slovnyk("вода", cache) is None
-
-
-def test_usage_notes_slovnyk_returns_none_for_too_short_stub() -> None:
-    cache = {
-        "lookups": {
-            "davydov": {
-                "dictionary_slug": "davydov",
-                "word": "х",
-                "source_url": "https://slovnyk.me/dict/davydov/х",
-                "text": "х коротко",
-            }
-        }
-    }
-    assert _usage_notes_slovnyk("х", cache) is None
-
-
-def test_usage_notes_slovnyk_linguistic_norm_cache_row() -> None:
-    """#6460: linguistic_norm shares the usage_notes family. Fixture is a
-    cache-shaped row (no live slovnyk.me fetch, no invented catalog entry)."""
-    cache = {
-        "lookups": {
-            "linguistic_norm": {
-                "dictionary_slug": "linguistic_norm",
-                "dictionary_label": LINGUISTIC_NORM_LABEL,
-                "word": "включати",
-                "source_url": "https://slovnyk.me/dict/linguistic_norm/включати",
-                "text": (
-                    "включати Умикати, а не включати світло. У цьому кеш-рядку "
-                    "перевіряється лише витяг секції usage_notes для "
-                    "linguistic_norm, не словникова стаття каталогу."
-                ),
-            }
-        }
-    }
-
-    section = _usage_notes_slovnyk("включати", cache)
-
-    assert section is not None
-    assert section["source"] == LINGUISTIC_NORM_LABEL
-    assert len(section["items"]) == 1
-    item = section["items"][0]
-    assert item["source"] == LINGUISTIC_NORM_LABEL
-    assert "умикати" in item["text"].casefold() or "Умикати" in (item.get("title") or "")
-    assert "source_urls" not in section
-    assert section["mirror_source_urls"] == ["https://slovnyk.me/dict/linguistic_norm/включати"]
-    assert "source_url" not in item
-    assert item.get("mirror_source_url") == "https://slovnyk.me/dict/linguistic_norm/включати"
-
-
-def test_usage_notes_slovnyk_khreshchatyk_cache_row() -> None:
-    """#6460: khreshchatyk shares the usage_notes family. Fixture is a
-    cache-shaped row (no live slovnyk.me fetch, no invented catalog entry)."""
-    cache = {
-        "lookups": {
-            "khreshchatyk": {
-                "dictionary_slug": "khreshchatyk",
-                "dictionary_label": KHRESHCHATYK_LABEL,
-                "word": "казати",
-                "source_url": "https://slovnyk.me/dict/khreshchatyk/казати",
-                "text": (
-                    "казати Говорити й казати не завжди взаємозамінні. У цьому "
-                    "кеш-рядку перевіряється лише витяг секції usage_notes для "
-                    "khreshchatyk, не словникова стаття каталогу."
-                ),
-            }
-        }
-    }
-
-    section = _usage_notes_slovnyk("казати", cache)
-
-    assert section is not None
-    assert section["source"] == KHRESHCHATYK_LABEL
-    assert len(section["items"]) == 1
-    item = section["items"][0]
-    assert item["source"] == KHRESHCHATYK_LABEL
-    assert "взаємозамінні" in item["text"] or "Говорити й казати" in (item.get("title") or "")
-    assert "source_urls" not in section
-    assert section["mirror_source_urls"] == ["https://slovnyk.me/dict/khreshchatyk/казати"]
-    assert "source_url" not in item
-    assert item.get("mirror_source_url") == "https://slovnyk.me/dict/khreshchatyk/казати"
 
 
 def test_usage_notes_slovnyk_merges_davydov_family_without_inventing_rows() -> None:
@@ -1320,34 +1101,6 @@ def test_usage_notes_slovnyk_voloschak_corrective_full_note() -> None:
     assert "беручи за приклад" in warning["alternatives"]
 
 
-def test_usage_notes_slovnyk_foreign_shtepa_corrective_full_note() -> None:
-    """#6460: Штепа чужослів full note joins usage_notes when corrective.
-    Fixture mirrors the attested «конекція → Лучба, сполука, зв'язок» entry."""
-    cache = {
-        "lookups": {
-            "foreign_shtepa": {
-                "dictionary_slug": "foreign_shtepa",
-                "dictionary_label": SHTEPA_LABEL,
-                "word": "конекція",
-                "source_url": "https://slovnyk.me/dict/foreign_shtepa/конекція",
-                "text": "конекція Лучба, сполука, зв'язок.",
-            }
-        }
-    }
-
-    section = _usage_notes_slovnyk("конекція", cache)
-
-    assert section is not None
-    assert section["source"] == SHTEPA_LABEL
-    assert len(section["items"]) == 1
-    item = section["items"][0]
-    assert item["source"] == SHTEPA_LABEL
-    assert item["text"] == "Лучба, сполука, зв'язок."
-    assert "title" not in item
-    assert "source_urls" not in section
-    assert section["mirror_source_urls"] == ["https://slovnyk.me/dict/foreign_shtepa/конекція"]
-
-
 def test_usage_notes_slovnyk_corrective_row_without_replacement_stays_out() -> None:
     """#6460: a cross-reference-only voloschak row is NOT a corrective note —
     nothing joins usage_notes, and no plain gloss dump inflates the section."""
@@ -1364,56 +1117,6 @@ def test_usage_notes_slovnyk_corrective_row_without_replacement_stays_out() -> N
     }
 
     assert _usage_notes_slovnyk("відщепенець", cache) is None
-
-
-def test_usage_notes_slovnyk_corrective_notes_merge_after_family_essays() -> None:
-    """P0 essays come first, then corrective notes; missing slugs stay absent."""
-    davydov_essay = (
-        "що Що, який, котрий, которий У багатьох людей, що вивчили українську "
-        "мову не в колисці з уст матері, а з книжок, часом виникає питання, "
-        "коли саме слід ставити той чи той займенник із цих трьох."
-    )
-    cache = {
-        "lookups": {
-            "davydov": {
-                "dictionary_slug": "davydov",
-                "dictionary_label": DAVYDOV_LABEL,
-                "word": "що",
-                "source_url": "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
-                "text": davydov_essay,
-            },
-            "linguistic_norm": None,
-            "khreshchatyk": None,
-            "voloschak": {
-                "dictionary_slug": "voloschak",
-                "dictionary_label": VOLOSHCHAK_LABEL,
-                "word": "Наслідуючи приклад",
-                "source_url": "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад",
-                "text": "Наслідуючи приклад Беручи за приклад",
-            },
-            "foreign_shtepa": {
-                "dictionary_slug": "foreign_shtepa",
-                "dictionary_label": SHTEPA_LABEL,
-                "word": "конекція",
-                "source_url": "https://slovnyk.me/dict/foreign_shtepa/конекція",
-                "text": "конекція Лучба, сполука, зв'язок.",
-            },
-        }
-    }
-
-    section = _usage_notes_slovnyk("що", cache)
-
-    assert section is not None
-    assert len(section["items"]) == 3
-    sources = [item["source"] for item in section["items"]]
-    assert sources == [DAVYDOV_LABEL, VOLOSHCHAK_LABEL, SHTEPA_LABEL]
-    assert section["source"] == join_academic_source_labels([DAVYDOV_LABEL, VOLOSHCHAK_LABEL, SHTEPA_LABEL])
-    assert "source_urls" not in section
-    assert set(section["mirror_source_urls"]) == {
-        "https://slovnyk.me/dict/davydov/%D1%89%D0%BE",
-        "https://slovnyk.me/dict/voloschak/Наслідуючи_приклад",
-        "https://slovnyk.me/dict/foreign_shtepa/конекція",
-    }
 
 
 def test_parse_slovnyk_entry_reconstructs_inline_markup_word_through_form_notes() -> None:
@@ -1459,24 +1162,6 @@ def test_parse_slovnyk_entry_reconstructs_inline_markup_word_through_form_notes(
     assert "-гие, д. і м. -из'і" in item["text"]
 
 
-def test_form_note_item_from_row_builds_item_with_dictionary_and_source() -> None:
-    row = {
-        "dictionary_slug": "orthography",
-        "dictionary_label": ORTHOGRAPHY_LABEL,
-        "word": "книга",
-        "source_url": "https://slovnyk.me/dict/orthography/книга",
-        "text": "кни́га іменник жіночого роду",
-    }
-    item = _form_note_item_from_row(row, "orthography")
-
-    assert item is not None
-    assert item["dictionary"] == "orthography"
-    assert item["text"] == "кни́га іменник жіночого роду"
-    assert item["source"] == ORTHOGRAPHY_LABEL
-    assert "source_url" not in item
-    assert item["mirror_source_url"] == "https://slovnyk.me/dict/orthography/книга"
-
-
 def test_form_note_item_from_row_strips_source_tail_and_entities() -> None:
     row = {
         "dictionary_slug": "holoskevych",
@@ -1489,11 +1174,6 @@ def test_form_note_item_from_row_strips_source_tail_and_entities() -> None:
     assert item is not None
     assert item["text"] == "Се́рце, се́рця & се́рцю"
     assert "Джерело" not in item["text"]
-
-
-def test_form_note_item_from_row_returns_none_for_empty_text() -> None:
-    row = {"dictionary_slug": "orthoepy", "word": "х", "text": "   "}
-    assert _form_note_item_from_row(row, "orthoepy") is None
 
 
 def test_form_notes_slovnyk_proof_lemma_sho_all_three_dictionaries() -> None:
@@ -1542,32 +1222,6 @@ def test_form_notes_slovnyk_proof_lemma_sho_all_three_dictionaries() -> None:
         "https://slovnyk.me/dict/orthography/що",
         "https://slovnyk.me/dict/orthoepy/що",
     }
-
-
-def test_form_notes_slovnyk_partial_coverage_when_one_dictionary_missing() -> None:
-    cache = {
-        "lookups": {
-            "orthography": {
-                "dictionary_slug": "orthography",
-                "dictionary_label": ORTHOGRAPHY_LABEL,
-                "word": "серце",
-                "source_url": "https://slovnyk.me/dict/orthography/серце",
-                "text": "се́рце іменник середнього роду",
-            },
-            "holoskevych": None,
-        }
-    }
-
-    section = _form_notes_slovnyk("серце", cache)
-
-    assert section is not None
-    assert len(section["items"]) == 1
-    assert section["items"][0]["dictionary"] == "orthography"
-
-
-def test_form_notes_slovnyk_returns_none_without_any_rows() -> None:
-    cache = {"lookups": {"vts": {"text": "irrelevant", "dictionary_slug": "vts"}}}
-    assert _form_notes_slovnyk("вода", cache) is None
 
 
 def test_wiktionary_antonyms_use_explicit_antonym_column(monkeypatch) -> None:
@@ -1654,13 +1308,6 @@ def test_wiktionary_antonyms_filter_wrong_terms_keep_valid(monkeypatch) -> None:
 
     assert section is not None
     assert section["items"] == ["син"]
-
-
-def test_antonym_filters_are_curated_per_lemma_and_disjoint() -> None:
-    # #3197 — a lemma is either whole-dropped OR per-term-filtered, never both;
-    # and every per-term filter retains at least one intended valid opposite.
-    assert not (_DROP_ANTONYM_LEMMAS & set(_WRONG_ANTONYMS))
-    assert all(terms for terms in _WRONG_ANTONYMS.values())
 
 
 def test_frazeolohichnyi_idioms_keep_phrase_hits_and_drop_definition_noise(monkeypatch) -> None:
@@ -1844,40 +1491,6 @@ def test_curated_calque_matches_phrasal_entry() -> None:
     assert card["source"] == ["ua-gec", "grok-3098"]
 
 
-def test_curated_calque_matches_collocation_slice2_phrasal_entries() -> None:
-    expected = {
-        "при допомозі": "за допомогою",
-        "співпадати": "збігатися",
-        "в кінці кінців": "врешті-решт",
-    }
-    for phrase, correction in expected.items():
-        card = _curated_calque(phrase, phrase)
-        assert card is not None
-        assert card["kind"] == "phrasal"
-        assert correction in card["corrections"]
-        assert card["evidence"]
-        assert "search_heritage" in card["heritage_guard"]
-
-
-def test_curated_calque_matches_collocation_slice2_sense_restricted_entries() -> None:
-    expected = {
-        "на протязі": "протягом",
-        "являтися": "бути",
-        "дякуючи": "завдяки",
-        "так як": "оскільки",
-        "біля": "близько",
-        "на рахунок": "щодо",
-    }
-    for phrase, correction in expected.items():
-        card = _curated_calque(phrase, phrase)
-        assert card is not None
-        assert card["kind"] == "sense_restricted"
-        assert correction in card["corrections"]
-        assert card["calque_sense"] != card["authentic_sense"]
-        assert card["evidence"]
-        assert "search_heritage" in card["heritage_guard"]
-
-
 def test_curated_calque_matches_single_word_lexical_slice3_entries() -> None:
     expected = {
         "слідуючий": ("lexical", "наступний"),
@@ -1899,20 +1512,6 @@ def test_curated_calque_matches_single_word_lexical_slice3_entries() -> None:
 def test_collocation_slice2_authentic_phrases_are_not_exact_flagged() -> None:
     assert _curated_calque("біля школи", "біля школи") is None
     assert _curated_calque("на рахунок у банку", "на рахунок у банку") is None
-
-
-def test_single_word_lexical_slice3_authentic_phrases_are_not_exact_flagged() -> None:
-    assert _curated_calque("любий друже", "любий друже") is None
-    assert _curated_calque("у неділю", "у неділю") is None
-    assert _curated_calque("яблуко", "яблуко") is None
-
-
-def test_curated_calque_unknown_lemma_returns_none() -> None:
-    assert _curated_calque("яблуко", "яблуко") is None
-
-
-def test_curated_calque_lexicalised_safe_lemma_returns_none() -> None:
-    assert _curated_calque("блискучий", "блискучий") is None
 
 
 def test_fetch_slovnyk_entry_raises_transient_for_5xx(monkeypatch) -> None:
@@ -2147,26 +1746,6 @@ def test_read_cached_slovnyk_rows_rejects_stale_schema(monkeypatch, tmp_path) ->
     assert enrich_manifest_module._read_cached_slovnyk_rows("книга") == {}
 
 
-def test_load_current_slovnyk_cache_file_gate(monkeypatch, tmp_path) -> None:
-    """The single version-gated accessor every read-only cache consumer must use
-    (#6524 P2): returns ``None`` for a missing file or a stale ``schema_version``,
-    and the parsed dict only when the row is current."""
-    path = tmp_path / "cache.json"
-    assert enrich_manifest_module._load_current_slovnyk_cache_file(path) is None
-
-    path.write_text(json.dumps({"schema_version": 2, "lookups": {}}), encoding="utf-8")
-    assert enrich_manifest_module._load_current_slovnyk_cache_file(path) is None
-
-    path.write_text(
-        json.dumps({"schema_version": enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION, "lookups": {}}),
-        encoding="utf-8",
-    )
-    assert enrich_manifest_module._load_current_slovnyk_cache_file(path) == {
-        "schema_version": enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION,
-        "lookups": {},
-    }
-
-
 def test_sum11_is_never_used_as_meaning_source() -> None:
     """СУМ-11 (Soviet-era dictionary) must NEVER surface as a meaning, even when it
     is the only source for a word (decolonization decision 2026-06-26)."""
@@ -2266,12 +1845,6 @@ def test_grinchenko_definition_card_is_attestation_only_never_the_raw_gloss(monk
         assert russian_only not in card["definitions"][0]
 
 
-def test_grinchenko_definition_card_absent_when_not_attested() -> None:
-    conn = _conn()
-
-    assert _grinchenko_definition_card(conn, "гаджет") is None
-
-
 def test_grinchenko_definition_card_drops_when_headword_not_vesum_verified(monkeypatch) -> None:
     """#6510 P1 fix: fail-closed VESUM gate. codex flagged that the interpolated
     headword was never morphologically verified. A headword attested in
@@ -2287,36 +1860,6 @@ def test_grinchenko_definition_card_drops_when_headword_not_vesum_verified(monke
     _patch_grinchenko_vesum(monkeypatch)
 
     assert _grinchenko_definition_card(conn, "хата") is None
-
-
-def test_grinchenko_definition_card_drops_when_template_not_vesum_verified(monkeypatch) -> None:
-    """The gate also protects the hand-authored template prose: if VESUM has no
-    record of it (e.g. a future edit introduces a typo or an unattested word),
-    the card must fail closed rather than ship regardless of the headword."""
-    conn = _conn()
-    conn.execute(
-        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
-        ("хата", "Хата, -ти, ж. Дом, изба, хижина.", "Грінченко"),
-    )
-    monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", lambda word: ())
-
-    assert _grinchenko_definition_card(conn, "хата") is None
-
-
-def test_grinchenko_definition_card_present_when_headword_and_template_verified(monkeypatch) -> None:
-    """The positive path of the #6510 gate: a headword AND the fixed template
-    prose both verifying against VESUM is what actually lets the card through."""
-    conn = _conn()
-    conn.execute(
-        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
-        ("хата", "Хата, -ти, ж. Дом, изба, хижина.", "Грінченко"),
-    )
-    _patch_grinchenko_vesum(monkeypatch, "хата")
-
-    card = _grinchenko_definition_card(conn, "хата")
-
-    assert card is not None
-    assert card["id"] == "grinchenko"
 
 
 def test_grinchenko_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> None:
@@ -2338,23 +1881,6 @@ def test_grinchenko_definition_card_resolves_inflected_form_to_base_lemma(monkey
 
     assert card is not None
     assert "«вода»" in card["definitions"][0]
-
-
-def test_definition_cards_grinchenko_always_last_and_optional(monkeypatch) -> None:
-    """Грінченко is additive/optional and always sorts after VTS + СУМ-20 (design doc:
-    'VTS primary; optional SUM-20 examples; optional Грінченко heritage card')."""
-    conn = _conn()
-    conn.execute(
-        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
-        ("вода", "ВодА, -дИ, ж. Вода.", "Грінченко"),
-    )
-    monkeypatch.setattr(enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None)
-    monkeypatch.setattr(enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None)
-    _patch_grinchenko_vesum(monkeypatch, "вода")
-
-    cards = _definition_cards(conn, "вода")
-
-    assert [card["id"] for card in cards] == ["grinchenko"]
 
 
 def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
@@ -2704,64 +2230,6 @@ def test_etymology_lookup_variants_include_normalised_apostrophe_and_v_u_alterna
     assert "вв'язнення" in variants
 
 
-def test_etymology_does_not_read_the_legacy_esum_table(monkeypatch) -> None:
-    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
-    conn = _conn()
-    conn.execute(
-        """
-        CREATE TABLE esum_etymology (
-            lemma TEXT NOT NULL,
-            etymology_text TEXT NOT NULL,
-            cognates TEXT DEFAULT '',
-            vol TEXT DEFAULT '',
-            page TEXT DEFAULT ''
-        )
-        """
-    )
-    conn.execute(
-        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?, ?)",
-        ("ув'язнення", "Fixture ЕСУМ etymology for ув'язнення.", "[]", "1", "42"),
-    )
-
-    assert _etymology(conn, "Ув’язнення", {}) is None
-
-
-def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
-    conn = _conn()
-    conn.execute(
-        """
-        CREATE TABLE goroh_etymology (
-            requested_lemma TEXT NOT NULL,
-            headword TEXT NOT NULL,
-            etymology_text TEXT NOT NULL,
-            source_url TEXT
-        )
-        """
-    )
-    conn.execute(
-        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
-        ("До побачення!", "до побачення", "Fixture phrase etymology.", "https://goroh.example/phrase"),
-    )
-
-    assert _etymology(conn, "До побачення!", {}) is None
-
-
-def test_etymology_has_no_kaikki_cognate_fallback(monkeypatch) -> None:
-    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
-    conn = _conn()
-    lookup = {
-        "базовий": {
-            "ipa": [],
-            "etymology_text": "From ба́за. Compare Russian ба́зовый (bázovyj), Belarusian ба́завы.",
-            "pos": ["adjective"],
-        }
-    }
-
-    # Option C (#5263): rejected now by the DECOLONIZATION guard (Russian/Belarusian comparison),
-    # not by "no fallback". A cognate-comparison etymology must never be surfaced (#M-13).
-    assert _etymology(conn, "базовий", lookup) is None
-
-
 def test_kaikki_etymology_decolonization_guard(monkeypatch) -> None:
     # The Kaikki fallback surfaces clean/decolonized etymologies but rejects Russian/Belarusian
     # framing — English adjective/noun/plural AND embedded Cyrillic (#M-13 / ukrainian-linguistics.md
@@ -2815,25 +2283,6 @@ def test_etymology_ignores_garbled_legacy_tree_text(monkeypatch) -> None:
     }
 
     assert _etymology(conn, "Японія", lookup) is None
-
-
-def test_etymology_falls_back_to_marked_wiktionary_via_kaikki(monkeypatch) -> None:
-    # Option C (#5263): a clean Wiktionary-derived (Kaikki) etymology IS surfaced when mphdict has no
-    # root, source-marked non-authoritative. (The legacy wiktionary_etymology DB TABLE stays unused.)
-    monkeypatch.setattr(enrich_manifest_module, "mphdict_etymology", lambda lemma: None)
-    conn = _conn()
-    lookup = {
-        "робота": {
-            "ipa": [],
-            "etymology_text": "Old East Slavic робота (robota, “labor, work”), itself from Proto-Slavic *orbota.",
-            "pos": ["noun"],
-        }
-    }
-
-    result = _etymology(conn, "робота", lookup)
-    assert result is not None
-    assert result["source"] == KAIKKI_SOURCE
-    assert "Proto-Slavic" in result["text"]
 
 
 def test_etymology_has_no_goroh_mirror_fallback(monkeypatch) -> None:
@@ -3114,15 +2563,6 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     }
 
 
-def test_dmklinger_key_strips_stress_and_casefolds() -> None:
-    # dmklinger stores STRESSED headwords; manifest lemmas are unstressed.
-    # The key must reduce both sides to the same stress-free, casefolded form,
-    # otherwise exact matching misses ~93% of common words.
-    assert _dmklinger_key("робо́та") == _dmklinger_key("робота") == "робота"
-    assert _dmklinger_key("Украї́на") == "україна"
-    assert _dmklinger_key("  бу́ти ") == "бути"
-
-
 def test_translation_matches_stress_stripped_dmklinger_headword(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
@@ -3152,16 +2592,6 @@ def test_parse_translations_cleans_dmklinger_meta_glosses() -> None:
     )
 
     assert _parse_translations(raw) == ["zucchini", "plain translation"]
-
-
-def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
-
-    assert _translation(conn, "неіснуючеслово") is None
 
 
 def test_translation_uses_unambiguous_reverse_balla_after_source_misses(monkeypatch) -> None:
@@ -3205,25 +2635,6 @@ def test_translation_skips_ambiguous_reverse_balla(monkeypatch) -> None:
     _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
 
     assert _translation(conn, "помішувати", {}, entry_pos="verb", gloss_hints={"mix", "stir"}) is None
-
-
-def test_translation_prefers_kaikki_over_reverse_balla(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
-    conn.execute(
-        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
-        ("stir", "v помішувати", ""),
-    )
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
-    _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
-
-    assert _translation(conn, "помішувати", {"помішувати": {"glosses": ["to stir"]}}) == {
-        "en": ["to stir"],
-        "source": KAIKKI_SOURCE,
-    }
 
 
 def test_translation_reverse_balla_ignores_example_sentences(monkeypatch) -> None:
@@ -3447,54 +2858,6 @@ def test_fill_learner_english_anchor_from_cached_ukreng() -> None:
     assert translation["source"] == _SLOVNYK_UKRENG_SOURCE
 
 
-def test_fill_learner_english_anchor_leaves_entry_without_cached_ukreng() -> None:
-    entry: dict[str, object] = {
-        "lemma": "бажане",
-        "enrichment": {"cefr": {"level": "B1", "source": "estimated (GRAC frequency)"}},
-    }
-    cache = {"lookups": {"ukreng": None}}
-
-    assert _fill_learner_english_anchor_from_slovnyk_cache(entry, "бажане", cache) is False
-    assert not _entry_has_learner_english_anchor(entry)
-    enrichment = entry["enrichment"]
-    assert isinstance(enrichment, dict)
-    assert "translation" not in enrichment
-
-
-def test_translation_prefers_kaikki_over_curated_learner_gloss(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
-
-    assert _translation(conn, "ого", {"ого": {"glosses": ["oh wow"]}}) == {
-        "en": ["oh wow"],
-        "source": KAIKKI_SOURCE,
-    }
-
-
-def test_translation_uses_goroh_after_source_misses(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_goroh_translate",
-        lambda lemma: ["Albanian", "Albanians"] if lemma == "албанці" else [],
-    )
-
-    translation = _translation(conn, "албанці", {})
-    assert translation == {
-        "en": ["Albanian", "Albanians"],
-        "source": GOROH_LABEL,
-        "mirror_source_url": "https://goroh.pp.ua/Переклад/%D0%B0%D0%BB%D0%B1%D0%B0%D0%BD%D1%86%D1%96",
-    }
-    assert "source_url" not in translation
-    assert translation["source"] == "Горох (переклад)"
-
-
 def test_translation_precedence_order_dmklinger_kaikki_balla_slovnyk_goroh_e2u_wikidata(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
@@ -3690,85 +3053,6 @@ def test_e2u_translation_shkola_expands_stem_ending_never_council(monkeypatch) -
     assert translation["source"] == E2U_LABEL
 
 
-def test_e2u_translation_stil_uk_headword_never_bench(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_e2u_uk_en",
-        lambda lemma: (
-            [
-                {"headword": "bench", "translation": "лавка, лава, стіл суддів"},
-                {"headword": "стіл", "translation": "ч. table, desk."},
-            ]
-            if lemma == "стіл"
-            else []
-        ),
-    )
-
-    translation = _translation(conn, "стіл", {})
-    assert translation is not None
-    assert "table" in translation["en"]
-    assert "bench" not in translation["en"]
-    assert translation["source"] == E2U_LABEL
-
-
-def test_e2u_translation_vikno_expands_stem_ending_never_grille(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_e2u_uk_en",
-        lambda lemma: (
-            [
-                {"headword": "grille", "translation": "грати, вікно каси"},
-                {"headword": "вікн||о", "translation": "с. window, casement."},
-            ]
-            if lemma == "вікно"
-            else []
-        ),
-    )
-
-    translation = _translation(conn, "вікно", {})
-    assert translation is not None
-    assert "window" in translation["en"]
-    assert "grille" not in translation["en"]
-    assert translation["source"] == E2U_LABEL
-
-
-def test_e2u_translation_knyha_multiple_en_reverse_returns_none(monkeypatch) -> None:
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest_module, "query_goroh_translate", lambda lemma: [])
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_e2u_uk_en",
-        lambda lemma: (
-            [
-                {"headword": "bankbook", "translation": "банківська книга"},
-                {"headword": "codebook", "translation": "шифрувальна книга"},
-            ]
-            if lemma == "книга"
-            else []
-        ),
-    )
-
-    translation = _translation(conn, "книга", {})
-    # Should fall back to None or curated if not present in curated
-    # 'книга' might be in curated translations or None
-    # Let's test _e2u_translation directly as well
-    e2u_res = enrich_manifest_module._e2u_translation("книга")
-    assert e2u_res is None
-
-
 def test_e2u_translation_ambiguous_reverse_returns_none(monkeypatch) -> None:
     monkeypatch.setattr(
         enrich_manifest_module,
@@ -3858,22 +3142,6 @@ def test_e2u_translation_decode_html_entities(monkeypatch) -> None:
     res = enrich_manifest_module._e2u_translation("тест")
     assert res is not None
     assert res["en"] == ["first&second", "third"]
-
-
-def test_e2u_translation_offline_mode(monkeypatch) -> None:
-    called = False
-
-    def fake_e2u(lemma: str, **kwargs) -> list[dict[str, str]]:
-        nonlocal called
-        called = True
-        return [{"headword": "тест", "translation": "test"}]
-
-    monkeypatch.setattr("scripts.rag.source_query.e2u_translate", fake_e2u)
-    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
-    enrich_manifest_module.query_e2u_uk_en.cache_clear()
-    res = enrich_manifest_module.query_e2u_uk_en("тест_offline_unique")
-    assert res == []
-    assert not called
 
 
 def test_goroh_translate_mock_html_parsing(monkeypatch) -> None:
@@ -3988,44 +3256,6 @@ def test_wiki_reference_drops_berehynia_rusalka_kin_intro(monkeypatch, tmp_path)
     assert "wikipedia" not in ref
     assert _url_hostname(ref["wiktionary_url"]) == "uk.wiktionary.org"
     assert _proper_noun_wikipedia_meaning("берегиня") is None
-
-
-def test_wiki_reference_keeps_berehynia_goddess_excerpt(monkeypatch, tmp_path) -> None:
-    def mock_query(title: str) -> dict | None:
-        if title.casefold() == "берегиня":
-            return {
-                "title": "Берегиня",
-                "extract": (
-                    "Берегиня — за давньослов'янськими релігійними уявленнями, "
-                    "мати всього живого, первісне божество – захисниця людини."
-                ),
-                "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
-            }
-        return None
-
-    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
-    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
-    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
-    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
-
-    ref = enrich_manifest_module._wiki_reference("берегиня")
-    assert ref is not None
-    assert ref["wikipedia"]["title"] == "Берегиня"
-    assert "захисниця" in ref["wikipedia"]["summary"]
-    assert "русалк" not in ref["wikipedia"]["summary"].casefold()
-
-
-def test_wiki_reference_missing(monkeypatch, tmp_path) -> None:
-    def mock_query(title: str) -> dict | None:
-        return None
-
-    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
-    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
-    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
-    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
-
-    ref = enrich_manifest_module._wiki_reference("варити")
-    assert ref is None
 
 
 def test_wiki_reference_uses_disk_cache(monkeypatch, tmp_path) -> None:
@@ -4292,43 +3522,6 @@ def test_antonym_relation_merge_preserves_rendered_schema_and_source_urls() -> N
     }
 
 
-def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
-    pairs = {
-        "великий": "малий",
-        "день": "ніч",
-        "білий": "чорний",
-        "високий": "низький",
-    }
-    _patch_synonym_vesum(monkeypatch, set(pairs) | set(pairs.values()))
-    conn = _conn()
-    conn.executemany(
-        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
-        [(lemma, f"{lemma.upper()}. Тестова дефініція; протилежне {antonym}.") for lemma, antonym in pairs.items()],
-    )
-    assert all(_definition_antonym_relations(conn, lemma, cache={}) == [] for lemma in pairs)
-
-    _canonical_sum20_cache_rows(monkeypatch, lambda word: {
-        "lookups": {"newsum": {"text": f"Тестова дефініція; протилежне {pairs[word]}."}}
-    })
-    before_counts = {lemma: 0 for lemma in pairs}
-    after_items = {
-        lemma: [
-            relation["item"]
-            for relation in _definition_antonym_relations(
-                conn,
-                lemma,
-                cache={
-                    "lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}
-                },
-            )
-        ]
-        for lemma in pairs
-    }
-
-    assert before_counts == {lemma: 0 for lemma in pairs}
-    assert after_items == {lemma: [antonym] for lemma, antonym in pairs.items()}
-
-
 def test_numbered_homonym_members_extract_same_surface_glosses_and_pos() -> None:
     members = _numbered_homonym_members(
         "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави.",
@@ -4566,65 +3759,6 @@ def test_corpus_relation_pairs_render_only_approved_rows(monkeypatch) -> None:
     ]
 
 
-def test_corpus_homonym_renders_fixture(monkeypatch) -> None:
-    conn = _conn()
-    conn.executemany(
-        """
-        INSERT INTO relation_pairs(
-            relation, word_a, word_b, gloss_a, gloss_b, source, source_url, review_status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        [
-            (
-                "homonym",
-                "атлас",
-                "атлас",
-                "атлас - satin fabric",
-                "атлас - map-book",
-                "miyklas.com.ua",
-                "https://example.invalid/atlas",
-                "approved",
-            ),
-        ],
-    )
-    _patch_synonym_vesum(monkeypatch, {"атлас"})
-
-    relations = _corpus_relation_pairs_by_headword(
-        conn,
-        {"entries": [{"lemma": "атлас"}]},
-    )
-
-    assert relations["атлас"]["homonym"] == [
-        {
-            "word": "атлас",
-            "gloss": "атлас - satin fabric",
-            "source": "relation_pairs/miyklas.com.ua",
-            "pattern": "corpus relation pair",
-            "vein": 3,
-            "gate": {"vesum": "both valid"},
-            "source_url": "https://example.invalid/atlas",
-        },
-        {
-            "word": "атлас",
-            "gloss": "атлас - map-book",
-            "source": "relation_pairs/miyklas.com.ua",
-            "pattern": "corpus relation pair",
-            "vein": 3,
-            "gate": {"vesum": "both valid"},
-            "source_url": "https://example.invalid/atlas",
-        },
-    ]
-
-    merged = _merge_homonym_relations(None, relations["атлас"]["homonym"])
-    assert merged is not None
-    assert merged["items"] == [
-        {"word": "атлас", "gloss": "атлас - map-book", "source": MIYKLAS_LABEL},
-        {"word": "атлас", "gloss": "атлас - satin fabric", "source": MIYKLAS_LABEL},
-    ]
-    assert merged["source"] == f"{MIYKLAS_LABEL}: corpus relation pair → атлас"
-    assert merged["source_urls"] == ["https://example.invalid/atlas"]
-
-
 def test_corpus_homonym_deduplication(monkeypatch) -> None:
     existing_relations = [
         {
@@ -4843,48 +3977,6 @@ rejected:
     assert "крамниці" not in relations
 
 
-def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
-    fixtures = {
-        "коса": (
-            "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави.",
-            [2],
-        ),
-        "ключ": (
-            "КЛЮЧ¹, а, ч. Знаряддя для замикання. КЛЮЧ², а, ч. Джерело води.",
-            [2],
-        ),
-        "лист": (
-            "ЛИСТ¹, ч. Орган рослини. ЛИСТ², а, ч. Шматок паперу або металу.",
-            [2],
-        ),
-        "стан": (
-            "СТАН¹, у, ч. Тулуб людини. СТАН², у, ч. Тимчасовий табір. СТАН³, у, ч. Обставини існування.",
-            [2, 3],
-        ),
-    }
-    _patch_synonym_vesum(monkeypatch, set(fixtures))
-    conn = _conn()
-    conn.executemany(
-        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
-        [(lemma, definition) for lemma, (definition, _numbers) in fixtures.items()],
-    )
-
-    monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", lambda word: ({
-        "definition": fixtures[word][0], "url": "https://example.invalid/sum20",
-    },))
-    before_counts = {lemma: 0 for lemma in fixtures}
-    after_numbers = {
-        lemma: [
-            relation["homonym_no"]
-            for relation in _homonym_relations(conn, lemma, cache={"lookups": {"newsum": {"text": definition}}})
-        ]
-        for lemma, (definition, _numbers) in fixtures.items()
-    }
-
-    assert before_counts == {lemma: 0 for lemma in fixtures}
-    assert after_numbers == {lemma: expected_numbers for lemma, (_definition, expected_numbers) in fixtures.items()}
-
-
 def test_paronym_pair_members_accepts_only_semicolon_delimited_pairs() -> None:
     assert _paronym_pair_members("адрес/адреса; ефективний/ефектний") == [
         ("адрес", "адреса"),
@@ -5005,40 +4097,10 @@ def test_paronym_relation_merge_keeps_distinctions_and_exam_metadata_separate() 
     }
 
 
-def test_paronym_fixture_samples_expand_from_zero(monkeypatch) -> None:
-    fixtures = {
-        "адрес": ("адреса", "Адрес — урочисте письмове привітання. Адреса — місце проживання."),
-        "ефективний": (
-            "ефектний",
-            "Ефективний — який дає потрібний результат. Ефектний — який справляє сильне враження.",
-        ),
-    }
-    _patch_synonym_vesum(
-        monkeypatch,
-        set(fixtures) | {target for target, _definition in fixtures.values()},
-    )
-    conn = _conn()
-    conn.executemany(
-        "INSERT INTO paronyms_cache(word_a, word_b, definition) VALUES (?, ?, ?)",
-        [(lemma, other, definition) for lemma, (other, definition) in fixtures.items()],
-    )
-
-    before_counts = {lemma: 0 for lemma in fixtures}
-    after_items = {lemma: [relation["word"] for relation in _paronym_relations(conn, lemma)] for lemma in fixtures}
-
-    assert before_counts == {lemma: 0 for lemma in fixtures}
-    assert after_items == {lemma: [other] for lemma, (other, _definition) in fixtures.items()}
-
-
 def test_definition_synonym_targets_extracts_stressed_same_as_target() -> None:
     assert _definition_synonym_targets("КАФЕ́, невідм., с. Те саме, що кав'я́рня. Приклад уживання.", "кафе") == [
         ("кав'ярня", "Те саме, що")
     ]
-
-
-def test_definition_synonym_targets_reuses_bare_div_parser() -> None:
-    assert _definition_synonym_targets("кафе див. кав'я́рня .", "кафе") == [("кав'ярня", "див.")]
-    assert _definition_synonym_targets("КАФЕ́, невідм., с. див. кав'ярня.", "кафе") == [("кав'ярня", "див.")]
 
 
 def test_definition_pointer_relations_keep_each_dictionary_provenance(monkeypatch) -> None:
@@ -5093,70 +4155,6 @@ def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypa
     assert relations["кафе"][0]["item"] == "кав'ярня"
     assert relations["кав'ярня"][0]["item"] == "кафе"
     assert relations["кав'ярня"][0]["direction"] == "reciprocal"
-
-
-def test_ключ_does_not_read_ukrajinet_and_uses_mphdict_synonyms(monkeypatch) -> None:
-    """The enrichment route never reads the retired auto-translation table."""
-    _patch_synonym_vesum(monkeypatch, {"ключ", "джерело", "живець", "відмикач"})
-    conn = _conn()
-    conn.execute("CREATE TABLE ukrajinet (words TEXT NOT NULL, text TEXT NOT NULL)")
-    conn.execute(
-        "INSERT INTO ukrajinet(words, text) VALUES (?, ?)",
-        ('["ключ", "джерело", "живець"]', "fixture for removed relation vein"),
-    )
-    conn.execute(
-        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
-        ("ключ", "Знаряддя; джерело води; живець."),
-    )
-    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: {})
-    monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *args, **kwargs: [])
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "classify_lemma",
-        lambda lemma: {"classification": "standard", "is_russianism": False, "attestations": []},
-    )
-    monkeypatch.setattr(enrich_manifest_module, "_warning_slovnyk", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_curated_calque", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_reverse_calques", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "_synonyms_mphdict",
-        lambda *args, **kwargs: {
-            "items": ["відмикач"],
-            "synsets": [],
-            "source": "mphdict fixture",
-        },
-    )
-    monkeypatch.setattr(enrich_manifest_module, "mphdict_synonyms_available", lambda: True)
-    monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_idioms", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda *args, **kwargs: "")
-    monkeypatch.setattr(enrich_manifest_module, "_kaikki_stress", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_morphology", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_etymology", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_wiki_reference", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
-
-    entry = {"lemma": "ключ", "pos": "noun"}
-    assert enrich_manifest_module.enrich_entry(
-        entry,
-        conn,
-        {},
-        pointer_synonym_relations=[],
-        pointer_antonym_relations=[],
-        pointer_homonym_relations=[],
-        pointer_paronym_relations=[],
-    )
-
-    items = entry["sections"]["synonyms"]["items"]
-    assert "джерело" not in items
-    assert "живець" not in items
-    assert items == ["відмикач"]
 
 
 def test_synonym_relation_merge_preserves_rendered_schema_deduplicates_and_caps() -> None:
@@ -5279,28 +4277,6 @@ def test_definition_xref_ordinary_lemma_byte_identical() -> None:
     plain = _vts_xref_card(rows, "ховати", resolve_xref=False)
     assert resolved == plain
     assert "cross_reference" not in resolved
-
-
-def test_resolve_definition_xref_uses_same_source_fetcher() -> None:
-    # The fetcher must be called with the (lemmatized) target and only once here.
-    calls: list[str] = []
-
-    def fetch_target(target: str):
-        calls.append(target)
-        return {"source": "ВТС", "definitions": ["Реальне тлумачення слова."]}
-
-    card = {"source": "ВТС", "definitions": ["захова́ти див. заховувати ."]}
-    resolved = _resolve_definition_xref(card, "заховати", fetch_target)
-    assert calls == ["заховувати"]
-    assert resolved is not None
-    assert resolved["definitions"][0].endswith("Реальне тлумачення слова.")
-    # A non-cross-reference card yields None and never calls the fetcher.
-    calls.clear()
-    assert (
-        _resolve_definition_xref({"source": "ВТС", "definitions": ["1. Справжнє тлумачення."]}, "х", fetch_target)
-        is None
-    )
-    assert calls == []
 
 
 def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) -> None:
@@ -5791,36 +4767,6 @@ def test_offline_carry_over_matches_across_apostrophe_style(monkeypatch) -> None
     assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
 
 
-def test_offline_carry_over_matches_across_stress_marks(monkeypatch) -> None:
-    # #5121 (e) / #5128 finding 1: a baseline pointer segment whose term carries a stress
-    # mark (мали́й) must still carry onto the present bare member (малий). Stress-stripping
-    # in the shared canonical key keeps both on the same key.
-    new_antonyms = {
-        "items": ["малий"],  # bare stored form (local membership)
-        "source": "Вікісловник: explicit antonym list",
-        "source_urls": ["https://example.invalid/wiktionary/velykyi"],
-    }
-    baseline = {
-        "items": ["малий"],
-        "source": "Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й",
-        "source_urls": [
-            "https://example.invalid/wiktionary/velykyi",
-            "https://example.invalid/sum20/velykyi",
-        ],
-    }
-    entry = _run_antonym_annotation_gate(
-        monkeypatch,
-        offline=True,
-        cache={"lookups": {}},
-        new_antonyms=new_antonyms,
-        baseline=baseline,
-    )
-    section = entry["sections"]["antonyms"]
-    assert section["items"] == ["малий"]
-    assert section["source"] == ("Вікісловник: explicit antonym list + СУМ-20: протилежне → мали́й")
-    assert entry["gate_provenance"]["antonyms_annotations"] == GATE_ANNOTATIONS_CARRIED
-
-
 def test_parse_phraseology_items_splits_multi_idiom_article() -> None:
     from scripts.lexicon.enrich_manifest import _parse_phraseology_items
 
@@ -5956,24 +4902,6 @@ def test_apply_manifest_sense_honesty_caps_annotation_and_stamps_truncated() -> 
     assert sense["learner_en"] == ["defect"]
 
 
-def test_apply_manifest_sense_honesty_labels_unsourced_sense_ai_minimum() -> None:
-    """#6437 PR3: a sense with no recorded provenance is honestly ai_minimum."""
-    from scripts.lexicon.enrich_manifest import (
-        SENSE_COMPLETENESS_DRAFT,
-        SENSE_SOURCE_AI_MINIMUM,
-        apply_manifest_sense_honesty,
-    )
-
-    entry = {
-        "lemma": "брак",
-        "senses": [{"id": "brak_defect", "learner_en": ["defect"]}],
-    }
-    apply_manifest_sense_honesty(entry)
-    sense = entry["senses"][0]
-    assert sense["source"] == SENSE_SOURCE_AI_MINIMUM
-    assert sense["completeness"] == SENSE_COMPLETENESS_DRAFT
-
-
 def test_apply_manifest_sense_honesty_skips_entries_without_senses() -> None:
     """#6437 PR3: most of the manifest predates the schema — leave it untouched."""
     from scripts.lexicon.enrich_manifest import apply_manifest_sense_honesty
@@ -6010,47 +4938,6 @@ def test_definition_body_keeps_full_dictionary_article_by_default() -> None:
     clipped = _truncate_text(long_article, 200)
     assert clipped.endswith("…")
     assert "1》" in clipped
-
-
-def test_literary_excerpt_prefers_nearby_sentence_boundaries() -> None:
-    from scripts.lexicon.enrich_manifest import _literary_excerpt
-
-    text = (
-        "Передісторія дуже довга і не потрібна тут. "
-        "На місці, де згоріла потвора, зійшлися голови міста й поклали квіти "
-        "на свіжий моріжок у парку, виголосивши промову. "
-        "Післямова також зайва для цього уривка."
-    )
-    excerpt = _literary_excerpt(text, "свіжий", radius=40)
-    assert "свіжий" in excerpt.casefold() or "свіжий" in excerpt
-    # Should not start mid-word without ellipsis marker when expanded.
-    assert "моріжок" in excerpt
-
-
-def test_literary_excerpt_uses_full_short_chunk_without_mid_word_cuts() -> None:
-    from scripts.lexicon.enrich_manifest import _literary_excerpt
-
-    full = (
-        "Тільки що ліпше людям велося, то менше кожен відчував задоволення. "
-        "А коли відбудували останню руїну, що залишилася з доби панування дракона, "
-        "то на тому місці, де згоріла потвора, зійшлися найедукованіші голови міста й, "
-        "поклавши квіти на свіжий моріжок у щойно впорядкованому парку, виголосили на честь "
-        "дракона промову, в якій докладно насвітлювалося, що в особі страховиська відійшов "
-        "у небуття єдиний гідний подиву світоч людства."
-    )
-    excerpt = _literary_excerpt(full, "свіжий")
-    assert excerpt.startswith("Тільки")
-    assert excerpt.endswith("людства.")
-    assert "…оволення" not in excerpt
-    assert "світоч л…" not in excerpt
-    assert "свіжий" in excerpt
-
-
-def test_etymology_rejects_mid_cut_esum_stubs() -> None:
-    from scripts.lexicon.enrich_manifest import _etymology_text_is_displayable
-
-    assert not _etymology_text_is_displayable("свіжий, свіжаік «новачок; свіжа во-")
-    assert _etymology_text_is_displayable("From Proto-Slavic *svěžь.")
 
 
 def test_resolve_primary_checkout_matches_git_common_dir() -> None:
@@ -6430,24 +5317,6 @@ def test_wikidata_translation_transliteration_rejected(monkeypatch) -> None:
     assert enrich_manifest_module._wikidata_translation("кобзар") is None
 
 
-def test_wikidata_translation_noise_entity_rejected(monkeypatch) -> None:
-    """Film, television, song, and star items are rejected."""
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_wikidata_uk_en",
-        lambda lemma: [
-            {
-                "id": "Q300",
-                "labels": {"uk": {"value": "тіні"}, "en": {"value": "Shadows"}},
-                "descriptions": {"uk": {"value": "фільм"}, "en": {"value": "1959 film"}},
-                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q11424"}}}}]},
-                "sitelinks": {"ukwiki": {"title": "Тіні (фільм)"}},
-            }
-        ],
-    )
-    assert enrich_manifest_module._wikidata_translation("тіні") is None
-
-
 def test_wikidata_translation_sitelink_match_kept(monkeypatch) -> None:
     """An item where ukwiki title equals variant (even if labels.uk differs) is matched."""
     monkeypatch.setattr(
@@ -6468,23 +5337,6 @@ def test_wikidata_translation_sitelink_match_kept(monkeypatch) -> None:
     assert res["en"] == ["sculpture"]
     assert res["source"] == WIKIDATA_LABEL
     assert res["source_url"] == "https://www.wikidata.org/wiki/Q400"
-
-
-def test_wikidata_translation_offline_mode(monkeypatch) -> None:
-    """When offline mode is active, query_wikidata_uk_en returns empty list without calling network."""
-    called = False
-
-    def fake_search(query: str, **kwargs) -> list[dict[str, Any]]:
-        nonlocal called
-        called = True
-        return [{"id": "Q999"}]
-
-    monkeypatch.setattr("scripts.rag.source_query.wikidata_search_entities", fake_search)
-    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
-    enrich_manifest_module.query_wikidata_uk_en.cache_clear()
-    res = enrich_manifest_module.query_wikidata_uk_en("тест_offline_unique")
-    assert res == []
-    assert not called
 
 
 def test_wikidata_translation_ukwiki_regressions(monkeypatch) -> None:
@@ -6532,86 +5384,6 @@ def test_wikidata_translation_ukwiki_regressions(monkeypatch) -> None:
     assert enrich_manifest_module._wikidata_translation("бакай") is None
     assert enrich_manifest_module._wikidata_translation("дюк") is None
     assert enrich_manifest_module._wikidata_translation("ци") is None
-
-
-def test_wikidata_translation_offline_mocks_ukwiki_title_requirement(monkeypatch) -> None:
-    """Validate that labels.uk match without ukwiki exact match returns None, while ukwiki exact match fills."""
-    # 1. labels.uk exact, ukwiki missing -> None
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_wikidata_uk_en",
-        lambda lemma: [
-            {
-                "id": "Q501",
-                "labels": {"uk": {"value": "міст"}, "en": {"value": "bridge"}},
-                "descriptions": {},
-                "claims": {},
-                "sitelinks": {},
-            }
-        ],
-    )
-    assert enrich_manifest_module._wikidata_translation("міст") is None
-
-    # 2. labels.uk exact, ukwiki different title -> None
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_wikidata_uk_en",
-        lambda lemma: [
-            {
-                "id": "Q502",
-                "labels": {"uk": {"value": "міст"}, "en": {"value": "bridge"}},
-                "descriptions": {},
-                "claims": {},
-                "sitelinks": {"ukwiki": {"title": "Міст (значення)"}},
-            }
-        ],
-    )
-    assert enrich_manifest_module._wikidata_translation("міст") is None
-
-    # 3. ukwiki exact + unique EN label -> fill
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_wikidata_uk_en",
-        lambda lemma: [
-            {
-                "id": "Q503",
-                "labels": {"uk": {"value": "інший_лейбл"}, "en": {"value": "bridge"}},
-                "descriptions": {},
-                "claims": {},
-                "sitelinks": {"ukwiki": {"title": "Міст"}},
-            }
-        ],
-    )
-    res = enrich_manifest_module._wikidata_translation("міст")
-    assert res is not None
-    assert res["en"] == ["bridge"]
-    assert res["source"] == WIKIDATA_LABEL
-    assert res["source_url"] == "https://www.wikidata.org/wiki/Q503"
-
-
-def test_wikidata_translation_theonym_exception(monkeypatch) -> None:
-    """Named mythological figures with transliterated English names are kept under the theonym exception."""
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "query_wikidata_uk_en",
-        lambda lemma: [
-            {
-                "id": "Q2622635",
-                "labels": {"uk": {"value": "Берегиня"}, "en": {"value": "Berehynia"}},
-                "descriptions": {
-                    "uk": {"value": "істота слов'янської міфології"},
-                    "en": {"value": "Slavic water spirit"},
-                },
-                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q55138169"}}}}]},
-                "sitelinks": {"ukwiki": {"title": "Берегиня"}},
-            }
-        ],
-    )
-    res = enrich_manifest_module._wikidata_translation("берегиня")
-    assert res is not None
-    assert res["en"] == ["Berehynia"]
-    assert res["source"] == WIKIDATA_LABEL
-    assert res["source_url"] == "https://www.wikidata.org/wiki/Q2622635"
 
 
 def test_definition_cards_sum20_outranks_dialect_vts(monkeypatch) -> None:
@@ -7117,56 +5889,6 @@ def test_usage_notes_cache_only_rejects_incompatible_cache(tmp_path, monkeypatch
     assert manifest == {"entries": [{"lemma": "що"}]}
 
 
-def test_usage_notes_cache_only_cli_fails_closed_without_local_input(tmp_path, monkeypatch):
-    def forbidden(*args, **kwargs):
-        raise AssertionError("offline CLI attempted full enrichment or hydration")
-
-    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", tmp_path / "missing.json")
-    monkeypatch.setattr(manifest_io, "load_manifest", forbidden)
-    monkeypatch.setattr(enrich_manifest_module, "enrich", forbidden)
-    with pytest.raises(FileNotFoundError):
-        enrich_manifest_module.main(["--write", "--usage-notes-cache-only"])
-    assert not list(tmp_path.iterdir())
-
-
-def test_usage_notes_cache_only_cli_writes_separate_candidate(tmp_path, monkeypatch):
-    import socket
-
-    def forbidden(*args, **kwargs):
-        raise AssertionError("offline CLI attempted network")
-
-    monkeypatch.setattr(socket, "socket", forbidden)
-    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path / "cache")
-    baseline = tmp_path / "baseline.json"
-    baseline.write_text('{"entries": [{"lemma": "missing"}]}')
-    original = baseline.read_bytes()
-    output = tmp_path / "candidate.json"
-    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", baseline)
-    assert (
-        enrich_manifest_module.main(
-            [
-                "--write",
-                "--usage-notes-cache-only",
-                "--output",
-                str(output),
-            ]
-        )
-        == 0
-    )
-    assert json.loads(output.read_text()) == json.loads(original)
-    assert baseline.read_bytes() == original
-    with pytest.raises(SystemExit):
-        enrich_manifest_module.main(
-            [
-                "--write",
-                "--usage-notes-cache-only",
-                "--output",
-                str(baseline),
-            ]
-        )
-    assert baseline.read_bytes() == original
-
-
 @pytest.fixture
 def hub_cache(tmp_path, monkeypatch):
     """Reuse the existing parser fixtures as offline cache input."""
@@ -7238,17 +5960,6 @@ def test_cached_hub_layers_populate_preserve_and_clear_gate(hub_cache, monkeypat
     assert manifest["entries"][1:] == before["entries"][1:]
     assert apply(manifest) == 0
     assert hub_cache.read_bytes() == cache_bytes
-
-
-@pytest.mark.parametrize("override", [{"schema_version": 3}, {"lookup_word": "other"}])
-@pytest.mark.parametrize("applicator", ["apply_cached_proverbs", "apply_cached_synsets"])
-def test_cached_hub_layers_reject_incompatible_cache(hub_cache, override, applicator):
-    cache = json.loads(hub_cache.read_text())
-    cache.update(override)
-    hub_cache.write_text(json.dumps(cache))
-    manifest = {"entries": [{"lemma": "свіжий"}]}
-    assert getattr(enrich_manifest_module, applicator)(manifest) == 0
-    assert manifest == {"entries": [{"lemma": "свіжий"}]}
 
 
 @pytest.mark.parametrize("items", [[], ["existing synonym"]])

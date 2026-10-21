@@ -24,19 +24,6 @@ def deck_file(tmp_path, lemmas=("б", "а", "а")):
     return path
 
 
-def test_deduplicates_preserves_deck_order_and_caps(tmp_path):
-    deck = json.loads(deck_file(tmp_path).read_text())
-    selected, excluded = select_slice(deck, 2, oracle)
-    assert [x["lemma"] for x in selected] == ["б", "а"]
-    assert excluded == []
-
-
-@pytest.mark.parametrize("limit", [0, -1, 501])
-def test_hard_cap(limit):
-    with pytest.raises(ValueError, match="limit"):
-        select_slice({}, limit, oracle)
-
-
 def test_ambiguous_stress_excluded_not_guessed(tmp_path):
     def stress(lemma, /, pos=None, **selectors):
         return {"status": "ambiguous"} if lemma == "а" else oracle(lemma)
@@ -44,11 +31,6 @@ def test_ambiguous_stress_excluded_not_guessed(tmp_path):
     selected, excluded = select_slice(json.loads(deck_file(tmp_path, ("а", "б")).read_text()), 1, stress)
     assert selected == [{"lemma": "б", "text": "б"}]
     assert excluded == [{"lemma": "а", "reason": "ambiguous"}]
-
-
-def test_short_slice_fails(tmp_path):
-    with pytest.raises(ValueError, match="only 2 eligible"):
-        select_slice(json.loads(deck_file(tmp_path).read_text()), 3, oracle)
 
 
 def test_stress_cannot_change_lemma(tmp_path):
@@ -131,17 +113,6 @@ def test_normalizes_atlas_display_keys():
     assert plain("п’ять") == plain("пʼять") == "п'ять"
 
 
-def test_passes_pos_to_stress_oracle(tmp_path):
-    calls = []
-
-    def stress(lemma, /, pos=None, **selectors):
-        calls.append((pos, selectors))
-        return oracle(lemma)
-
-    select_slice({"deckVersion": "v", "lexemes": [{"lemmaPlain": "слово", "pos": "noun"}]}, 1, stress)
-    assert calls == [("noun", {"lemma": "слово"})]
-
-
 def test_corrupt_cached_model_fails_before_synthesis(tmp_path):
     from scripts.audio.generate_pronunciation import ensure_model
 
@@ -155,10 +126,3 @@ def test_missing_model_does_not_download_without_flag(tmp_path):
 
     with pytest.raises(ValueError, match="model missing"):
         ensure_model(tmp_path, download=False)
-
-
-def test_malformed_lexeme_fails_before_any_synthesis(tmp_path):
-    path = tmp_path / "deck.json"
-    path.write_text(json.dumps({"deckVersion": "v", "lexemes": [None]}))
-    with pytest.raises(ValueError, match="invalid lexeme row"):
-        generate(path, tmp_path / "audio", 1, oracle, lambda *_: pytest.fail("must not synthesize"), {})

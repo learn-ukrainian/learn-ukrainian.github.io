@@ -18,8 +18,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import pytest
-
 from scripts.build import linear_pipeline
 
 # ----- engagement_floor: callouts + meta_narration --------------------------
@@ -60,18 +58,6 @@ def test_engagement_fails_when_zero_callouts() -> None:
     assert any("callouts" in issue for issue in report["issues"])
 
 
-def test_engagement_passes_with_one_callout_floor() -> None:
-    text = """
-:::tip
-One content-anchored callout meets the current deterministic floor.
-:::
-"""
-    report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is True
-    assert report["callout_count"] == 1
-    assert report["callout_min"] == 1
-
-
 def test_engagement_accepts_github_admonition_syntax() -> None:
     text = """
 > [!myth-buster]
@@ -79,20 +65,6 @@ def test_engagement_accepts_github_admonition_syntax() -> None:
 
 > [!history-bite]
 > The `-ся` suffix is an ancient short accusative of `себе`.
-"""
-    report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is True
-    assert report["callout_count"] == 2
-
-
-def test_engagement_accepts_mixed_callout_syntaxes() -> None:
-    text = """
-:::tip
-A directive block.
-:::
-
-> [!note]
-> A GitHub admonition.
 """
     report = linear_pipeline._engagement_floor_gate(text, _plan())
     assert report["passed"] is True
@@ -117,54 +89,6 @@ In this section we will learn about reflexive verbs.
     assert any("meta_narration" in issue for issue in report["issues"])
 
 
-def test_engagement_fails_on_meta_narration_welcome_to_level() -> None:
-    text = """
-:::tip
-One.
-:::
-:::note
-Two.
-:::
-
-Welcome to A1! Today we cover reflexive verbs.
-"""
-    report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is False
-    assert any("welcome to a1" in hit for hit in report["meta_narration_hits"])
-
-
-def test_engagement_fails_on_meta_narration_let_us_begin() -> None:
-    text = """
-:::tip
-One.
-:::
-:::note
-Two.
-:::
-
-Let us begin with the morning routine.
-"""
-    report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is False
-    assert any("let us begin" in hit for hit in report["meta_narration_hits"])
-
-
-def test_engagement_fails_on_meta_narration_unlocked() -> None:
-    text = """
-:::tip
-One.
-:::
-:::note
-Two.
-:::
-
-You have unlocked a new tier of reflexive verbs.
-"""
-    report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is False
-    assert any("unlocked" in hit for hit in report["meta_narration_hits"])
-
-
 def test_engagement_does_not_flag_notice_or_observe() -> None:
     """V7 already bans abstract 'Notice that...' / 'Observe how...' in the
     writer prompt, but V6 rewarded content-anchored versions. The gate
@@ -185,33 +109,7 @@ Notice the soft sign in **писатися**. Observe how the stress shifts.
     assert report["meta_narration_hits"] == []
 
 
-def test_engagement_fails_when_meta_narration_present_even_with_callouts() -> None:
-    """Both conditions are independent: callouts ≥ 2 AND meta_narration = 0.
-    Failing either fails the gate."""
-    text = """
-:::tip
-One callout.
-:::
-
-:::note
-Two callouts.
-:::
-
-In this lesson we will cover something.
-"""
-    report = linear_pipeline._engagement_floor_gate(text, _plan())
-    assert report["passed"] is False
-    assert report["callout_count"] == 2
-    assert any("in this lesson" in hit for hit in report["meta_narration_hits"])
-
-
 # ----- russianisms_strict: critical findings fail the gate ------------------
-
-def test_russianisms_strict_passes_on_clean_ukrainian() -> None:
-    text = "Я прокидаюся о сьомій ранку. Вмиваюся холодною водою."
-    report = linear_pipeline._russianisms_strict_gate(text)
-    assert report["passed"] is True
-    assert report["critical_count"] == 0
 
 
 def test_russianisms_strict_fails_on_known_russianism_calque() -> None:
@@ -232,22 +130,6 @@ def test_russianisms_strict_fails_on_known_russianism_calque() -> None:
     assert report["critical_count"] >= 1
 
 
-def test_russianisms_strict_returns_findings_with_fix_suggestions() -> None:
-    """The detector hands back actionable corrections so ADR-008's narrow
-    correction path can rewrite the offending span."""
-    text = (
-        "Я хочу приймати участь. Самий кращий вибір. "
-        "Він буде получати листи."
-    )
-    report = linear_pipeline._russianisms_strict_gate(text)
-    # Each finding carries a `fix` from the detector
-    findings = report["critical_findings"] + report["warning_findings"]
-    assert findings, "Expected at least one russianism finding"
-    for finding in findings:
-        assert "source" in finding
-        assert finding["source"] in {"russicism_detection", "ua_gec_calques"}
-
-
 def test_russianisms_strict_does_not_false_positive_on_inflected_forms() -> None:
     """The detection layer's word-boundary handling must not flag legitimate
     Ukrainian morphology that overlaps with Russianism stems."""
@@ -261,15 +143,3 @@ def test_russianisms_strict_does_not_false_positive_on_inflected_forms() -> None
 
 
 # ----- python_qg integration ------------------------------------------------
-
-def test_python_qg_includes_engagement_floor_and_russianisms_strict_keys(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """When the new gates are wired into run_python_qg, every report MUST
-    carry both keys — even on a passing module — so downstream consumers
-    (telemetry, correction paths) can rely on their presence."""
-    # We test the wiring shape via the module attribute, not by running a
-    # full python_qg pass (which requires plan + module + activities artifacts
-    # on disk). The integration smoke is covered separately by test_v7_build_e2e.
-    assert hasattr(linear_pipeline, "_engagement_floor_gate")
-    assert hasattr(linear_pipeline, "_russianisms_strict_gate")

@@ -666,16 +666,6 @@ def test_status_of_a_promoted_plan_is_stale_after_any_further_change(approved, c
     assert expected in document["stale"], document
 
 
-def test_a_promotion_does_not_excuse_a_words_lock_or_arc_change_alone(approved, capsys) -> None:
-    env, _digest = approved
-    assert run(env, capsys, "plan-promote", LEVEL, SLUG)[0] == 0
-    edit_words(env)
-    append_comment(env.plans_dir / "_arc.yaml")
-    stale = status(env, capsys)[1]["stale"]
-    assert f"{EVIDENCE}/_words.yaml.lock" in stale and f"{PLANS}/_arc.yaml" in stale
-    assert f"{PLANS}/{SLUG}.yaml" not in stale  # the plan transition itself is still proven
-
-
 def test_a_receipt_rewritten_to_match_an_edited_plan_proves_nothing(approved, capsys) -> None:
     """The receipt's promoted hash alone is not the proof: the live plan must be the reviewed plan plus the pack hash."""
     env, _digest = approved

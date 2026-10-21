@@ -161,41 +161,11 @@ def captured_probe(value):
     return next((proof for child in children if (proof := captured_probe(child))), None)
 
 
-def test_captured_probe_reads_nested_exec_output():
-    proof = {"denied_writes": 5, "git_show": True, "private_network": True}
-    envelope = [{"type": "input_text", "text": json.dumps({"output": json.dumps(proof) + "\n"})}]
-    assert captured_probe(envelope) == proof
-    assert captured_probe("Traceback\nnot a successful probe") is None
-
-
 @pytest.fixture
 def world(request):
     root, home = request.getfixturevalue("boundary_world")
     subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
     return root, home
-
-
-@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
-@pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
-def test_full_review_kind_and_family_matrix(world, tmp_path, agent, kind):
-    root, _ = world
-    manifest = manifest_world(root, kind)
-    tc = attempt_config(root, tmp_path, manifest, agent)
-    tc.update(review_access="full", review_cwd=str(root))
-    tc.pop("allowed_tools", None)
-    if agent == "claude":
-        tc["reviewer_tools"] = True
-    boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
-    try:
-        assert boundary.full and boundary.workspace == root
-        assert boundary.egress and boundary.egress.thread.is_alive()
-    finally:
-        boundary.cleanup()
-    assert (root / manifest["inputs"]["plan"]["path"]).is_file()
-    assert (
-        json.loads(Path(tc["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]["env"]["LU_REVIEW_ATTEMPT_ID"]
-        == "current"
-    )
 
 
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])

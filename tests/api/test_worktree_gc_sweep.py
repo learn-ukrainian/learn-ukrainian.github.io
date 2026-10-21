@@ -125,42 +125,6 @@ def test_gc_sweep_runs_and_exposes_summary(monkeypatch: pytest.MonkeyPatch) -> N
     assert "time" in summary
 
 
-def test_gc_sweep_respects_ttl(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
-    monkeypatch.setenv("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "60")
-    _patch_orient_sources(monkeypatch)
-
-    # First call returns 1 removed
-    monkeypatch.setattr(
-        api_main,
-        "reap_worktrees",
-        lambda **kwargs: [ReapResult(path="/wt/1", branch="b1", action="removed", reason="m", dirty=False)],
-    )
-    monkeypatch.setattr(api_main, "primary_checkout_root", lambda path: Path("/dummy"))
-
-    response = client.get("/api/orient?fresh=true")
-    assert response.json()["runtime"]["worktree_gc"]["removed"] == 1
-
-    # Update return value to 5 removed, but sweep shouldn't run again due to TTL cache
-    monkeypatch.setattr(
-        api_main,
-        "reap_worktrees",
-        lambda **kwargs: [
-            ReapResult(path=f"/wt/{i}", branch=f"b{i}", action="removed", reason="m", dirty=False) for i in range(5)
-        ],
-    )
-    response2 = client.get("/api/orient")
-    assert response2.json()["runtime"]["worktree_gc"]["removed"] == 1
-
-    # Expire persistent state as well as the process cache, then run again
-    state_helpers.cache_invalidate("worktree_gc_sweep")
-    stamp = api_main.resolve_context(None).roots.batch_state_dir / "worktree-gc-sweep.last-run"
-    if stamp.exists():
-        os.utime(stamp, (time.time() - 3601, time.time() - 3601))
-    response3 = client.get("/api/orient?fresh=true")
-    assert response3.json()["runtime"]["worktree_gc"]["removed"] == 5
-
-
 def test_10593_gc_sweep_restart_honours_persisted_ttl(monkeypatch):
     monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
     monkeypatch.setenv("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "60")

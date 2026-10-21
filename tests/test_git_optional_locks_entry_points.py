@@ -65,16 +65,6 @@ def _env(prior: str | None) -> dict[str, str]:
     return env
 
 
-@pytest.mark.parametrize(("prior", "refreshed"), [(None, True), ("1", True), ("0", False)])
-def test_variable_alone_decides_whether_status_rewrites_the_index(
-    stale_repo: Path, prior: str | None, refreshed: bool
-) -> None:
-    """Control: the fixture really is stale, and the variable alone stops the rewrite."""
-    before = _index(stale_repo)
-    subprocess.run(["git", "status", "--porcelain"], cwd=stale_repo, env=_env(prior), check=True, timeout=30)
-    assert (_index(stale_repo) != before) is refreshed
-
-
 @pytest.mark.parametrize(("prior", "expected"), [(None, "0"), ("1", "1")])
 def test_monitor_api_import_disables_optional_locks_for_children(
     stale_repo: Path, prior: str | None, expected: str

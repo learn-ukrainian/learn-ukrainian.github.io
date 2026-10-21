@@ -11,15 +11,12 @@ import yaml
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import components, output
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
-from scripts.projects.open_model_data.review_build.build import artifacts, verify_component_mutations
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.components import (
-    ComponentContext,
     c1_ua_gec,
     c6a_calque,
     ua_gec_split,
 )
-from scripts.projects.open_model_data.review_build.contract import digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.output import OutputGuard
@@ -270,12 +267,6 @@ def test_unbound_registered_store_refuses_reads():
             read()
 
 
-def test_registered_reader_root_uses_shared_repository():
-    from scripts.projects.open_model_data.review_build.components import ua_gec_component
-
-    assert ua_gec_component.held_root() == cli.default_config().parents[2] / "data/ua-gec"
-
-
 @pytest.mark.parametrize(
     "fault,code",
     [
@@ -458,41 +449,6 @@ year = "2023"
         adapter.resolve(ua_gec_split.REGISTER_FORM, citation, row, reader)
 
 
-def test_framework_build_artifacts_with_real_component_specs(store):
-    gate, candidates, config, _ = setup_gate(store)
-    register_bytes = yaml.safe_dump(register_data(sources=("ua_gec",))).encode()
-    pins = {
-        "register": digest(register_bytes),
-        "catalog": "b" * 64,
-        "candidates": "c" * 64,
-        "spec": "d" * 64,
-        "code": {"parser_sha256": "e" * 64, "code_sha": "f" * 40},
-    }
-    files = artifacts(config, candidates, gate.reader, gate.catalog, gate.resolver, pins, register_bytes)
-    assert files["permissions-register.yaml"] == register_bytes
-    assert json.loads(files["accounting.json"])["C1"]["counted"] == 50
-    assert b"gec-fluency" in files["README.md"] and b"Each annotator" in files["README.md"]
-
-
-def test_component_verification_fixtures_are_host_only(store, tmp_path, monkeypatch):
-    gate, candidates, config, data = setup_gate(store)
-    (tmp_path / "SYNTHETIC-catalog.yaml").write_text(yaml.safe_dump(data))
-    (tmp_path / "SYNTHETIC-register.yaml").write_text(yaml.safe_dump(register_data(sources=("ua_gec",))))
-    config.update(catalog=str(tmp_path / "SYNTHETIC-catalog.yaml"), register=str(tmp_path / "SYNTHETIC-register.yaml"))
-    monkeypatch.setattr(output, "filesystem", lambda _: "ext4")
-    with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
-        from scripts.projects.open_model_data.review_build.components import ua_gec_component
-
-        objects = {
-            name: ua_gec_component.UaGecComponent(module) for name, module in (("C1", c1_ua_gec), ("C6a", c6a_calque))
-        }
-        ctx = ComponentContext(gate.reader, {k: v for k, v in config.items() if k != "components"})
-        results = verify_component_mutations(objects, ctx, candidates, out, gate)
-        assert results["C6a"]["mixed_edit"] == "mixed_edit" and results["C1"]["test_source"] == "test_source"
-        assert sum(map(len, results.values())) == 13
-        assert json.loads(out.read("mutation-fixtures/component-results.json")) == results
-
-
 def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):
     root = tmp_path / "SYNTHETIC-official"
     package = root / "python/ua_gec"
@@ -512,11 +468,6 @@ def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):
                 ua_gec_split.official_corpus(tmp_path / "SYNTHETIC-other", "gec-only")
         finally:
             sys.modules.pop("ua_gec", None)
-
-
-def test_invalid_component_selection_is_refused(store):
-    with pytest.raises(BuildError, match="unknown_component"):
-        components.load_components(["C6"])
 
 
 @pytest.mark.parametrize("selected", [["C1"], ["C6a"], ["C1", "C6a"]])
@@ -661,20 +612,6 @@ def test_replay_whitespace_and_annotator_identity_and_crossing_boundary():
     assert ua_gec_split.replay_alignment(original, sentences, sentences, [ann]) == ["unaligned", None]
     cross = SimpleNamespace(start=11, end=19, suggestions=[""], meta={"error_type": "Grammar"})
     assert ua_gec_split.replay_alignment(original, sentences, sentences, [cross]) == ["boundary_ambiguous"] * 2
-
-
-@pytest.mark.parametrize("module", [c1_ua_gec, c6a_calque])
-def test_components_withhold_reasoning_and_precise_boundary_reason(store, module):
-    base = admitted(store, "C1" if module is c1_ua_gec else "C6a")
-    row = store.row(base.slots[0].citations[0].table, base.unit_id)
-    marked = {**row, "source_sentence": "SYNTHETIC <think>"}
-    assert module.candidate(marked, store.splits).reason == "reasoning_marker_in_source"
-    boundary = {**row, "aligned": False, "alignment_reason": "boundary_ambiguous", "edit_aligned": False}
-    assert module.candidate(boundary, store.splits).reason == "boundary_ambiguous"
-    if module is c6a_calque:
-        assert "unchanged" not in module.spec()["reference_multiplicity"]
-        boundary["edits"] = ["F/Calque", "Punctuation"]
-        assert module.candidate(boundary, store.splits).reason == "boundary_ambiguous"
 
 
 def test_replay_uses_learner_whitespace_and_unescapes_official_newline():

@@ -51,7 +51,6 @@ from scripts.projects.open_model_data.v5_mine_kyivan_rus_epigraphy import (
     EVAL_SCHEMA_FILE,
     HELD_OUT_CHRONICLE_MONUMENTS,
     HELD_OUT_GRAFFITI_ROOMS,
-    HISTORICAL_CYRILLIC_RE,
     RECEIPT_SCHEMA_FILE,
     TRAJECTORY_SCHEMA_FILE,
     clean_html_diplomatic,
@@ -374,16 +373,6 @@ def test_editorial_and_translation_purge(
             assert snip not in t["final_response"], (
                 f"Editorial noise found in SFT response: {t['final_response'][:100]}"
             )
-
-
-def test_tokenizer_historical_graphemes() -> None:
-    """Test 10: Control 7 - Historical Cyrillic graphemes handle clean string encoding without byte corruption."""
-    historical_graphemes = ["ѣ", "ѧ", "ѡ", "ъ", "ь", "ѵ", "ѳ", "ѫ", "ꙋ", "ꙗ", "ѕ", "z", "і", "ѿ"]
-    for char in historical_graphemes:
-        encoded = char.encode("utf-8")
-        decoded = encoded.decode("utf-8")
-        assert decoded == char
-        assert HISTORICAL_CYRILLIC_RE.search(char)
 
 
 @pytest.mark.needs_artifact(

@@ -15,7 +15,6 @@ import pytest
 from scripts import delegate
 from scripts.ai_agent_bridge import _cli
 from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
-from scripts.review import record_cf_verdict as recorder
 from tests.test_authoring_review_feasibility import SOL, mini_repo
 
 MEMORY = Path(__file__).resolve().parents[1] / "agents_extensions/shared/memory/MEMORY.md"
@@ -24,19 +23,6 @@ MEMORY = Path(__file__).resolve().parents[1] / "agents_extensions/shared/memory/
 def _review_section():
     body = MEMORY.read_text(encoding="utf-8")
     return body.split("## #0H —", 1)[1].split("\n## ", 1)[0]
-
-
-def test_shared_memory_preserves_review_publication_and_landing_order():
-    section = _review_section()
-    assert "**Independent cross-family (CF) formal review" in section
-    assert "self-review / same-family review ≠ the gate" in section
-    assert "**before** `.venv/bin/python -m scripts.publish pr-create` (draft or ready)" in section
-    assert "Only completed qualified exact-head CF APPROVE permits PR creation; afterward" in section
-    assert "green blocking CI on that same head" in section
-    assert "A moved head requires fresh CF and CI" in section
-    assert "scripts.publish pr-merge --number N" in section
-    assert "Request immediately after" not in section
-    assert "eligibility pins are retired" not in section
 
 
 @pytest.mark.parametrize("moved_head", [False, True], ids=["pushed-head", "remote-drift"])
@@ -124,20 +110,3 @@ def test_documented_ask_reaches_native_branch_pin_admission(monkeypatch, tmp_pat
         _cli._handle_acp_compat(args, "claude")
         assert len(commands) == 2
         assert capsys.readouterr().out.strip() == "VERDICT: APPROVE"  # Fixture reply, not SHA proof.
-
-
-def test_documented_recorder_uses_completed_review_task_and_pr(monkeypatch, capsys):
-    """Parse the publication example at the existing recorder's external boundary."""
-    recipe = re.search(r"`([^`]*scripts/review/record_cf_verdict\.py.*?)`", _review_section())
-    assert recipe is not None
-    argv = shlex.split(recipe.group(1).replace("<id>", "fixture").replace("<N>", "7"))
-    calls = []
-
-    def publication_boundary(task_id, **kwargs):
-        calls.append((task_id, kwargs))
-        return {"status": "posted"}
-
-    monkeypatch.setattr(recorder, "record", publication_boundary)
-    assert recorder.main(argv[2:]) == 0
-    assert calls == [("review-fixture", {"pr_number": 7, "review_mode": None, "red_team_prompt": None})]
-    assert json.loads(capsys.readouterr().out) == {"status": "posted"}

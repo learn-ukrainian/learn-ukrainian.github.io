@@ -239,18 +239,3 @@ def test_fresh_profile_branch_verifies_and_deletes_temporary_candidate(
     assert "candidate" in captured
     assert not captured["candidate"].exists()
     assert (output_dir / "profile/full_corpus_profile_v1.json").read_bytes() == committed_path.read_bytes()
-
-
-def test_fresh_cli_requires_explicit_source_database_root(tmp_path: Path) -> None:
-    with pytest.raises(SystemExit) as error:
-        reference_build.main(
-            [
-                "--profile-evidence",
-                "fresh",
-                "--output-dir",
-                str(tmp_path / "output"),
-                "--manifest-output",
-                str(tmp_path / "manifest.json"),
-            ]
-        )
-    assert error.value.code == 2

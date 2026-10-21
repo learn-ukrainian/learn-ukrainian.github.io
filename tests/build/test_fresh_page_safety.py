@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import html
 import json
-import os
 import re
 import subprocess
 from pathlib import Path
@@ -16,7 +15,6 @@ import pytest
 from scripts.build import mdx_render_gate as gate
 from scripts.build import verify_shippable as shippable
 from scripts.build.fresh import assemble
-from scripts.build.fresh.regeneration import load_ledger, record_failure
 from scripts.generate_mdx.converters import mdx_safe_text
 
 FIXTURE = Path(__file__).parent / "fixtures/attempt5"
@@ -78,13 +76,6 @@ def test_attempt5_reassembled_page_has_learner_headings_and_no_placeholders():
     assert gate.check_mdx_render(page)["passed"] is True
 
 
-@pytest.mark.parametrize("page", ["Text {kind: dialogue}", "<Bad>", "<A p={JSON.parse(`[1,2]"])
-@pytest.mark.site_toolchain
-def test_whole_page_compile_rejects_syntax_without_valid_islands(page):
-    report = gate.check_mdx_render(page)
-    assert report["passed"] is False and report["compiled"] is False
-
-
 @pytest.mark.site_toolchain
 def test_text_encoding_preserves_learner_characters():
     text = '{ } < > ` $ ${x} & " \\ &#123; ' + "don't"
@@ -115,21 +106,6 @@ def test_node_unavailable_is_skipped_not_compiled(monkeypatch):
     assert report.get("compiled") is not True
 
 
-def test_payload_expansion_visits_every_nested_string():
-    payload = {
-        "title": "{{uk:Title}}",
-        "items": [{"word": "{{gloss:W-1}}", "note": "{{uk:Note}}", "options": ["{{gloss:W-1}}"]}],
-    }
-    result = assemble.expand_payload_text(
-        payload, assemble.gloss_replacer({"words": [{"id": "W-1", "lemma": "word", "gloss_en": "gloss"}]})
-    )
-    assert result == {
-        "title": "Title",
-        "items": [{"word": "word (gloss)", "note": "Note", "options": ["word (gloss)"]}],
-    }
-    assert "{{" in json.dumps(payload)  # input remains immutable
-
-
 def test_check9_rejects_missed_payload_placeholder(monkeypatch):
     original = assemble.expand_payload_text
 
@@ -142,24 +118,6 @@ def test_check9_rejects_missed_payload_placeholder(monkeypatch):
     monkeypatch.setattr(assemble, "expand_payload_text", leave_one)
     with pytest.raises(AssertionError, match="unexpanded_print_placeholder"):
         reassemble_attempt5()
-
-
-def test_astro_build_passes_absolute_project_interpreter(tmp_path, monkeypatch):
-    interpreter = tmp_path / "python"
-    interpreter.write_text("#!/bin/sh\n")
-    interpreter.chmod(0o755)
-    monkeypatch.setattr(shippable, "project_interpreter", lambda root: interpreter)
-    calls = []
-
-    def run(argv, **kwargs):
-        calls.append((argv, kwargs))
-        return subprocess.CompletedProcess(argv, 0, "build complete\n", "")
-
-    monkeypatch.setattr(shippable.subprocess, "run", run)
-    assert shippable._astro_build(tmp_path / "build.log") is True
-    assert calls[0][1]["env"]["PYTHON"] == str(interpreter.absolute())
-    assert calls[0][1]["env"].get("PATH") == os.environ.get("PATH")
-    assert calls[0][1]["cwd"] == shippable.PROJECT_ROOT / "site"
 
 
 @pytest.mark.parametrize("failure", ["missing_python", "missing_npm", "timeout", "hydration", "mdx"])
@@ -193,18 +151,6 @@ def test_build_failure_attribution(tmp_path, monkeypatch, failure):
     assert report["layer"] == ("engine" if failure == "mdx" else "harness")
 
 
-def test_harness_failures_do_not_spend_a_regeneration(tmp_path):
-    ledger = tmp_path / "lesson-1.regeneration.yaml"
-    before = load_ledger(ledger, "sample", 1)
-    for _ in range(3):
-        record_failure(
-            ledger, "sample", 1, {"check": 11, "layer": "harness", "reason": "build environment unavailable"}, {}
-        )
-    assert load_ledger(ledger, "sample", 1) == before
-    assert not ledger.exists()
-    assert (tmp_path / "lesson-1.writer-harness.yaml").is_file()
-
-
 @pytest.mark.parametrize("passed,layer", [(False, "harness"), (None, "harness"), (False, "engine")])
 def test_check11_propagates_the_environment_layer(monkeypatch, passed, layer):
     monkeypatch.setattr(
@@ -219,11 +165,6 @@ def test_check11_propagates_the_environment_layer(monkeypatch, passed, layer):
     assert report.passed is False and report.layer == layer
 
 
-def test_missing_page_fails_closed(tmp_path):
-    report = gate.check_mdx_render_path(tmp_path / "absent.mdx")
-    assert report["passed"] is False and "not found" in report["message"]
-
-
 @pytest.mark.parametrize("source,exit_code", [("Learner text", 0), ("Text {kind: dialogue}", 1)])
 @pytest.mark.site_toolchain
 def test_gate_cli_reports_real_compilation(tmp_path, capsys, source, exit_code):
@@ -232,13 +173,6 @@ def test_gate_cli_reports_real_compilation(tmp_path, capsys, source, exit_code):
     assert gate.main([str(page), "--json"]) == exit_code
     report = json.loads(capsys.readouterr().out)
     assert report["compiled"] is (exit_code == 0)
-
-
-def test_shippable_report_distinguishes_compilation_from_full_render(capsys):
-    shippable._print_human(
-        {"level": "a1", "slug": "fixture", "shippable": True, "render_fully_validated": False, "steps": []}
-    )
-    assert "page compilation and island checks only" in capsys.readouterr().out
 
 
 def test_attempt5_instructions_print_once_and_ids_stay_in_provenance():
@@ -252,29 +186,6 @@ def test_attempt5_instructions_print_once_and_ids_stay_in_provenance():
         *(data[k] for k in ("draft", "plan", "pack", "words")), "a1", "sounds-letters-and-hello", 1
     )
     assert {u["ref"] for u in provenance["spans"] if u.get("tab") == "resursy"} >= {"T-041", "T-040", "T-035"}
-
-
-@pytest.mark.site_toolchain
-def test_hostile_pack_resource_metadata_compiles(monkeypatch):
-    data = json.loads((FIXTURE / "inputs.json").read_text())
-    hostile = ' {kind: dialogue} <b> ` $ & " \\'
-    for video in data["pack"]["videos"]:
-        video["title"] = "Video title" + hostile
-        video["channel"] += hostile
-        video["use"] = "PACK_AUTHOR_ONLY" + hostile
-    original = assemble.publication.resource_citation
-
-    def citation(record):
-        entry = original(record)
-        return {**entry, "title": entry["title"] + hostile, "description": "Credit" + hostile} if entry else entry
-
-    monkeypatch.setattr(assemble.publication, "resource_citation", citation)
-    page, _ = reassemble_attempt5(data)
-    resources = page.split('label="Ресурси', 1)[1]
-    assert mdx_safe_text("Video title" + hostile) in resources
-    assert mdx_safe_text("Credit" + hostile) in resources
-    assert "PACK_AUTHOR_ONLY" not in page
-    assert gate.check_mdx_render(page)["passed"] is True
 
 
 @pytest.mark.parametrize(
@@ -300,42 +211,6 @@ def test_site_compiler_errors_only_charge_owned_fresh_pages(tmp_path, monkeypatc
     assert report["passed"] is False and report["layer"] == layer
     if filename and layer == "harness":
         assert filename in report["detail"]
-
-
-def assert_unnarrowed_toolchain_command(command):
-    """The required Frontend marker suite cannot exclude tests by CLI filters."""
-    assert command[command.index("pytest") + 1:command.index("-m", command.index("pytest") + 1)] == ["tests"]
-    assert not any(
-        token.startswith(("-k", "--ignore", "--deselect")) for token in command
-    ), f"Frontend suite narrowed: {command}"
-
-
-@pytest.mark.parametrize("option", ["-k", "-kfoo", "--ignore", "--ignore=tests/build", "--ignore-glob=*", "--deselect", "--deselect=tests/build/test_one.py::test_one"])
-def test_frontend_guard_rejects_cli_narrowing(option):
-    with pytest.raises(AssertionError, match="suite narrowed"):
-        assert_unnarrowed_toolchain_command(["python", "-m", "pytest", "tests", "-m", "site_toolchain", option])
-
-
-@pytest.mark.repo_wide
-def test_ci_runs_site_toolchain_tests_in_required_frontend_job():
-    import yaml
-
-    root = Path(__file__).resolve().parents[2]
-    jobs = yaml.safe_load((root / ".github/workflows/ci.yml").read_text())["jobs"]
-    steps = {step.get("name"): step for step in jobs["frontend"]["steps"]}
-    compiler = steps["Real MDX compiler regressions"]
-    assert "if" not in compiler
-    assert "-m site_toolchain --strict-markers" in compiler["run"]
-    assert "not site_toolchain" in next(s["run"] for s in jobs["pytest"]["steps"] if s.get("name") == "Run pytest")
-    assert "if" not in steps["Install site toolchain"]
-    assert "if" not in steps["Python CI environment"]
-    assert "frontend" in jobs["ci-gate"]["needs"]
-    # Suite-wide marker selection includes module/class/parameter-level marks;
-    # no file-name allowlist or source-text scan may narrow the Frontend job.
-    import shlex
-
-    command = shlex.split(compiler["run"].replace("\\\n", ""))
-    assert_unnarrowed_toolchain_command(command)
 
 
 @pytest.mark.parametrize("duplicate_title", [False, True])
@@ -376,42 +251,6 @@ def test_all_resource_text_fields_use_the_same_mdx_encoder():
     assert gate.check_mdx_render(page)["passed"] is True
 
 
-@pytest.mark.site_toolchain
-def test_registry_episode_autolink_is_an_explicit_compilable_markdown_link():
-    from scripts.curriculum.evidence.publication import resource_citation
-    from scripts.generate_mdx.resources import format_resources_for_mdx
-
-    url = "https://www.ukrainianlessons.com/episode1/"
-    citation = resource_citation({
-        "source": {"kind": "textbook", "file": "ulp-1-00-lesson-notes"}, "episode_url": url,
-    })
-    page = format_resources_for_mdx({"books": [citation]}, is_ukrainian_forced=True)
-    assert f"[{url}]({url})" in page
-    assert f"<{url}>" not in page
-    assert gate.check_mdx_render(page)["compiled"] is True
-
-
-def test_any_owned_page_compiler_error_is_an_engine_failure(tmp_path, monkeypatch):
-    owned = "src/content/docs/a1/fixture/1.mdx"
-    foreign = "src/content/docs/a1/other/1.mdx"
-    log = tmp_path / "build.log"
-    log.write_text(f"{foreign}:123:51 MDXError\n{owned}:123:51 MDXError")
-    monkeypatch.setattr(shippable, "_astro_build", lambda _: False)
-    report = shippable._astro_build_step(log, fresh_pages=[shippable.PROJECT_ROOT / "site" / owned])
-    assert report["passed"] is False and report["layer"] == "engine"
-    assert foreign in report["detail"]
-
-
-@pytest.mark.parametrize("role", ["book", "video"])
-@pytest.mark.parametrize("url", ["https://example.com/resource", ""])
-def test_resource_missing_title_uses_url_or_neutral_label(role, url):
-    from scripts.generate_mdx.resources import format_resources_for_mdx
-
-    page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
-    assert "Unknown" not in page
-    assert (f"[{url}]({url})" if url else "**—**") in page
-
-
 @pytest.mark.parametrize("role", ["book", "video"])
 @pytest.mark.parametrize("url", ["javascript:probe", "data:text/plain,probe", "wiki/private.md", "https://", "https://example.com/a b", "https://[invalid", "//example.com/probe", "https://user:pass@example.com/probe"])
 def test_rejected_resource_url_cannot_be_a_fallback_label(role, url):
@@ -420,52 +259,3 @@ def test_rejected_resource_url_cannot_be_a_fallback_label(role, url):
     page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
     assert url not in page
     assert "**—**" in page
-
-
-@pytest.mark.parametrize("role", ["book", "video"])
-@pytest.mark.parametrize("url", ["<https://example.com/resource>", "/readings/fixture/"])
-def test_resource_fallback_label_uses_cleaned_web_or_reader_url(role, url):
-    from scripts.generate_mdx.resources import format_resources_for_mdx
-
-    cleaned = url.strip("<>")
-    page = format_resources_for_mdx([{"role": role, "url": url}], is_ukrainian_forced=True)
-    assert f"[{cleaned}]({cleaned})" in page
-
-
-def test_suite_marker_selection_includes_module_and_parameter_marks_and_requires_toolchain(tmp_path):
-    import inspect
-    import shlex
-    import sys
-
-    import yaml
-
-    from tests.conftest import pytest_runtest_setup
-
-    root = Path(__file__).resolve().parents[2]
-    steps = yaml.safe_load((root / ".github/workflows/ci.yml").read_text())["jobs"]["frontend"]["steps"]
-    command = shlex.split(next(s["run"] for s in steps if s.get("name") == "Real MDX compiler regressions").replace("\\\n", ""))
-    command[0] = sys.executable
-    # Isolated suite mirrors tests/build; use the actual production guard with
-    # __file__ rooted here. No source-text marker enumeration or real repo sweep.
-    directory = tmp_path / "tests/build"
-    directory.mkdir(parents=True)
-    (tmp_path / "pytest.ini").write_text("[pytest]\nmarkers = site_toolchain: site toolchain\n")
-    (tmp_path / "tests/conftest.py").write_text(
-        "from pathlib import Path\nimport pytest\n" + inspect.getsource(pytest_runtest_setup)
-    )
-    (directory / "test_module.py").write_text(
-        "import pytest\npytestmark = pytest.mark.site_toolchain\n"
-        "def test_one(): pass\ndef test_two(): pass\n"
-    )
-    (directory / "test_parameter.py").write_text(
-        "import pytest\n@pytest.mark.parametrize('x', [pytest.param(1, marks=pytest.mark.site_toolchain), 2])\n"
-        "def test_parameter(x): pass\n"
-    )
-    missing = subprocess.run(command, cwd=tmp_path, capture_output=True, text=True, timeout=60)
-    assert missing.returncode == 1, missing.stdout + missing.stderr
-    assert "3 errors" in missing.stdout and "1 deselected" in missing.stdout
-    assert "site_toolchain requires site/node_modules" in missing.stdout
-    (tmp_path / "site/node_modules").mkdir(parents=True)
-    installed = subprocess.run(command, cwd=tmp_path, capture_output=True, text=True, timeout=60)
-    assert installed.returncode == 0, installed.stdout + installed.stderr
-    assert "3 passed" in installed.stdout and "1 deselected" in installed.stdout

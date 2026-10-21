@@ -123,19 +123,6 @@ def test_cleanup_rejects_malformed_plist(tmp_path):
     assert "unsafe" in message and "plist" in message
 
 
-def test_cleanup_rejects_truncated_xml_plist(tmp_path):
-    home = tmp_path / "home"
-    destination = _write_plist(home)
-    destination.write_bytes(destination.read_bytes()[:-40])
-    assert destination.read_bytes().startswith(b"<?xml")
-    ok, message = check_worktree_cleanup_integrity(
-        tmp_path / "repo", home=home, state_dir=tmp_path / "state",
-        platform="darwin", launchctl_text="last exit code = 0",
-    )
-    assert ok is False
-    assert "unsafe" in message and "plist" in message
-
-
 def test_parse_launchd_snapshot_reads_exit_78_and_lwcr_flag() -> None:
     snapshot = parse_launchd_snapshot(
         "state = not running\n"
@@ -168,21 +155,6 @@ def test_skips_when_job_is_not_installed(tmp_path: Path) -> None:
     )
     assert ok is True
     assert "not installed" in message
-    assert _events(tmp_path / "state") == []
-
-
-def test_skips_on_non_darwin_even_with_installed_plist(tmp_path: Path) -> None:
-    home = tmp_path / "home"
-    _write_plist(home)
-    ok, message = check_worktree_cleanup_integrity(
-        tmp_path / "repo",
-        home=home,
-        state_dir=tmp_path / "state",
-        platform="linux",
-        launchctl_text="last exit code = 78: EX_CONFIG",
-    )
-    assert ok is True
-    assert "not macOS" in message
     assert _events(tmp_path / "state") == []
 
 

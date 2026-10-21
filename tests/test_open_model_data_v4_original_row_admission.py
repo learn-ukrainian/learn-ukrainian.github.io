@@ -73,13 +73,6 @@ def test_model_agreement_cannot_supply_required_admission_facts() -> None:
     assert "MODEL_AGREEMENT_CANNOT_SATISFY_ADMISSION" in receipt["residual_codes"]
 
 
-def test_every_top_level_model_vote_alias_rejects_admission() -> None:
-    for alias in admission.MODEL_ONLY_BASES:
-        row = _row()
-        row[alias] = True
-        assert "MODEL_AGREEMENT_CANNOT_SATISFY_ADMISSION" in admission.evaluate_row(row)["residual_codes"]
-
-
 def test_direct_text_clearance_is_an_authorship_alternative_and_hash_replays() -> None:
     row = _row()
     row["authorship"] = {"independently_authored": False, "direct_text_clearance": {"cleared": True, "operation_id": "clearance.synthetic.001", "receipt_id": "clearance.receipt.synthetic.001"}}

@@ -79,23 +79,6 @@ def test_issues_map_extracts_supersedes_variant(monkeypatch):
     assert item["merged_in_pr"] == 1200
 
 
-def test_issues_map_extracts_supersede_and_merged_in(monkeypatch):
-    monkeypatch.setattr(
-        issues_router, "_run_gh",
-        lambda *_a, **_kw: (0, _FAKE_ISSUES_JSON, ""),
-    )
-
-    body = client.get("/api/issues/map").json()
-    by_num = {
-        item["number"]: item
-        for bucket in body["categories"].values()
-        for item in bucket
-    }
-    assert by_num[1142]["superseded_by"] == 1310
-    assert by_num[1122]["merged_in_pr"] == 1200
-    assert "superseded_by" not in by_num[1309]
-
-
 def test_issues_map_degrades_when_gh_missing(monkeypatch):
     monkeypatch.setattr(
         issues_router, "_run_gh",

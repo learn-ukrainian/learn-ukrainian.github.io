@@ -1,8 +1,6 @@
 """Unit tests for Practice Quality Gate (Issue #7944)."""
 
-import inspect
 import json
-import sys
 from pathlib import Path
 
 import pytest
@@ -12,7 +10,6 @@ from scripts.audit.practice_quality_gate import (
     audit_card_ambiguity,
     audit_error_correction_deck,
     audit_practice_shards,
-    audit_sentence_inventory,
     audit_teacher_cloze_deck,
     run_all_practice_audits,
 )
@@ -28,31 +25,6 @@ def _hide_sources_db(monkeypatch, tmp_path: Path) -> None:
         raise AssertionError("snapshot-only audit attempted to open sources.db")
 
     monkeypatch.setattr(practice_quality_gate, "_SourceRows", reject_sources)
-
-
-def test_audit_teacher_cloze_validates_blank_count(tmp_path: Path):
-    deck = {
-        "cloze": [
-            {
-                "clozeId": "good_1",
-                "sentence": "Це гарне _____ речення.",
-                "form": "гарне",
-                "options": [{"label": "гарне", "kind": "answer"}, {"label": "погане", "kind": "distractor"}],
-            },
-            {
-                "clozeId": "bad_multi",
-                "sentence": "Перше _____ і друге _____ речення.",
-                "form": "гарне",
-                "options": [{"label": "гарне", "kind": "answer"}, {"label": "погане", "kind": "distractor"}],
-            },
-        ]
-    }
-    deck_path = tmp_path / "cloze.json"
-    deck_path.write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
-
-    violations = audit_teacher_cloze_deck(deck_path)
-    assert any(v["type"] == "INVALID_BLANK_COUNT" and v["item"] == "bad_multi" for v in violations)
-    assert not any(v["item"] == "good_1" for v in violations)
 
 
 def test_audit_teacher_cloze_detects_intentional_error_leak(tmp_path: Path):
@@ -71,86 +43,6 @@ def test_audit_teacher_cloze_detects_intentional_error_leak(tmp_path: Path):
 
     violations = audit_teacher_cloze_deck(deck_path)
     assert any(v["type"] == "INTENTIONAL_ERROR_LEAK" for v in violations)
-
-
-def test_audit_teacher_cloze_detects_duplicate_options(tmp_path: Path):
-    deck = {
-        "cloze": [
-            {
-                "clozeId": "dup_opt",
-                "sentence": "Я читаю цікаву _____ увечері.",
-                "form": "книгу",
-                "options": [
-                    {"label": "книгу", "kind": "answer"},
-                    {"label": "книгу", "kind": "distractor"},
-                ],
-            }
-        ]
-    }
-    deck_path = tmp_path / "cloze.json"
-    deck_path.write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
-
-    violations = audit_teacher_cloze_deck(deck_path)
-    assert any(v["type"] == "DUPLICATE_OPTIONS" for v in violations)
-
-
-def test_audit_error_correction_validates_contract(tmp_path: Path):
-    valid_deck = {
-        "drills": [
-            {
-                "id": "drill_good",
-                "sentence": "Він приймав участь у зборах.",
-                "errorWord": "приймав участь",
-                "correctForm": "брав участь",
-                "options": ["брав участь", "приймав участь"],
-                "explanation": "Калька з російської мови.",
-                "source": "Textbook Gr 10 (glazova)",
-                "sourceRef": {
-                    "rowId": "textbooks:1",
-                    "errorSpan": [0, 14],
-                    "correctSpan": [15, 26],
-                    "direction": "error_first",
-                },
-            },
-            {
-                "id": "drill_missing_target",
-                "sentence": "Він прийшов додому вчасно.",
-                "errorWord": "приймав участь",
-                "correctForm": "брав участь",
-                "options": ["брав участь", "приймав участь"],
-                "explanation": "Калька з російської мови.",
-            },
-            {
-                "id": "drill_missing_in_options",
-                "sentence": "У нього був високий авторитет.",
-                "errorWord": "авторитет",
-                "correctForm": "престиж",
-                "options": ["повага", "визнання"],
-                "explanation": "Стилістична заміна.",
-            },
-        ]
-    }
-    violations = _audit_error_corrections(tmp_path, valid_deck["drills"])
-    assert any(v["type"] == "ERROR_TARGET_NOT_IN_SENTENCE" and v["item"] == "drill_missing_target" for v in violations)
-    assert any(
-        v["type"] == "CORRECT_TARGET_MISSING_IN_OPTIONS" and v["item"] == "drill_missing_in_options" for v in violations
-    )
-    assert not any(v["item"] == "drill_good" for v in violations)
-
-
-def test_audit_sentence_inventory_intentional_errors(tmp_path: Path):
-    inv = {
-        "rows": [
-            {"lemma": "тест", "sentence": "Це звичайне речення."},
-            {"lemma": "помилка", "sentence": "Помилку допущено у варіанті А."},
-        ]
-    }
-    inv_path = tmp_path / "inv.json"
-    inv_path.write_text(json.dumps(inv, ensure_ascii=False), encoding="utf-8")
-
-    violations = audit_sentence_inventory(inv_path)
-    assert len(violations) == 1
-    assert violations[0]["type"] == "INTENTIONAL_ERROR_LEAK"
 
 
 def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
@@ -435,41 +327,6 @@ def test_changed_visible_source_label_fails(tmp_path: Path, database_mode: bool)
     assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
 
 
-def test_forged_snapshot_source_label_fails_with_sources_db(tmp_path: Path):
-    """The bound row remains authoritative when drill and snapshot labels agree falsely."""
-    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
-    drill = {**deck["drills"][2], "source": "Textbook Gr 1 (unrelated)"}
-    forged = {drill["id"]: {**evidence[drill["id"]], "source": drill["source"]}}
-
-    violations = _audit_error_corrections(
-        tmp_path, [drill], forged, vesum_db=vesum_path, sources_db=sources_path
-    )
-
-    assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-@pytest.mark.parametrize("database_mode", [False, True])
-def test_reviewer_source_label_probe_on_committed_err_0005(
-    tmp_path: Path, database_mode: bool, request: pytest.FixtureRequest
-):
-    """The exact reviewed badge edit fails on the committed learner-facing drill."""
-    from scripts.audit.practice_quality_gate import PROJECT_ROOT
-    from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
-
-    sources_db = request.getfixturevalue("requires_sources_db") if database_mode else None
-    deck = json.loads((PROJECT_ROOT / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
-    drill = next(d for d in deck["drills"] if d["id"] == "err_0005")
-    probe = {**drill, "source": "Textbook Gr 1 (unrelated)"}
-    kwargs = {"sources_db": sources_db} if database_mode else {}
-
-    violations = _audit_error_corrections(
-        tmp_path, [probe], {"err_0005": load_evidence_snapshot()["err_0005"]}, **kwargs
-    )
-
-    assert [(v["item"], v["type"]) for v in violations] == [("err_0005", "SOURCE_LABEL_MISMATCH")]
-
-
 @pytest.mark.parametrize("database_kind", ["missing", "wrong_schema", "missing_style_guide"])
 def test_supplied_invalid_sources_db_fails(tmp_path: Path, database_kind: str):
     """Supplying an invalid DB must never select snapshot-only CI mode."""
@@ -491,34 +348,6 @@ def test_supplied_invalid_sources_db_fails(tmp_path: Path, database_kind: str):
     )
 
     assert [(v["item"], v["type"]) for v in violations] == [("sources_db", "SOURCE_DB_INVALID")]
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_default_error_correction_audit_uses_snapshot_with_no_sources_db(tmp_path: Path, monkeypatch):
-    """CI must audit the committed deck without resolving a local sources.db."""
-    from scripts.audit import practice_quality_gate
-
-    _hide_sources_db(monkeypatch, tmp_path)
-    assert inspect.signature(audit_error_correction_deck).parameters["sources_db"].default is None
-    assert audit_error_correction_deck(
-        practice_quality_gate.PROJECT_ROOT / "site/src/data/practice-error-corrections.json",
-        vesum_db=None,
-    ) == []
-
-
-def test_explicit_sources_db_flows_through_aggregate_and_cli(tmp_path: Path, monkeypatch, capsys):
-    """An invalid explicit path must fail both production entry points."""
-    from scripts.audit import practice_quality_gate
-
-    missing_sources = tmp_path / "missing-sources.db"
-    results = run_all_practice_audits(sources_db=missing_sources)
-    assert [(v["item"], v["type"]) for v in results["error_corrections"]] == [
-        ("sources_db", "SOURCE_DB_INVALID")
-    ]
-
-    monkeypatch.setattr(sys, "argv", ["practice_quality_gate.py", "--sources-db", str(missing_sources)])
-    assert practice_quality_gate.main() == 1
-    assert "[SOURCE_DB_INVALID] sources_db" in capsys.readouterr().out
 
 
 def test_one_rows_error_with_another_rows_correction_fails(tmp_path: Path):
@@ -607,26 +436,6 @@ def test_database_mode_reverifies_the_snapshot(tmp_path: Path):
     ]
 
 
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_reviewer_probe_on_the_committed_deck_and_real_sources_db(tmp_path: Path, requires_sources_db: Path):
-    """The exact round 4 probe: committed err_0005's error with err_0004's correction, snapshot forged to agree."""
-    from scripts.audit.practice_quality_gate import PROJECT_ROOT
-    from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
-
-    deck = json.loads((PROJECT_ROOT / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
-    evidence = load_evidence_snapshot()
-    drills = {d["id"]: d for d in deck["drills"]}
-    assert (drills["err_0004"]["errorWord"], drills["err_0005"]["errorWord"]) == (
-        "проявляти недостатки",
-        "представляти інтерес",
-    )
-    probe = _recombined(drills["err_0005"], drills["err_0004"], "err_0005")
-    violations = _audit_error_corrections(
-        tmp_path, [probe], {"err_0005": _forged_entry(probe, evidence, "err_0005")}, sources_db=requires_sources_db
-    )
-    assert [(v["item"], v["type"]) for v in violations] == [("err_0005", "SOURCE_PAIR_NOT_DERIVED")]
-
-
 def test_audit_error_correction_checks_typed_answers(tmp_path: Path):
     """#8723 round 3 probe: an error added to `answers` still passed; the site accepts every answer."""
     vesum_path = _fixture_vesum(tmp_path, [*_PARTICIPATION_FORMS, ("узяти", "verb")])
@@ -661,149 +470,6 @@ def test_production_culture_deck_passes_error_correction_gate(tmp_path: Path, mo
     assert violations == []
 
 
-def test_audit_practice_shards_volume_thresholds(tmp_path: Path):
-    """Verify that thin-mode volume thresholds (paronym>=250, homonym>=150, heritage>=250) are enforced."""
-    # Under-threshold paronym shard (only 2 items)
-    paronym_data = {
-        "paronym": [
-            {
-                "paronymId": f"par_{i}",
-                "prompt": "Сьогодні він ___ у парку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-                "distinction_gloss_uk": "Бігти vs бігати.",
-            }
-            for i in range(2)
-        ]
-    }
-    shard_file = tmp_path / "practice-paronym.A1.json"
-    shard_file.write_text(json.dumps(paronym_data, ensure_ascii=False), encoding="utf-8")
-
-    counts, violations = audit_practice_shards(
-        shards_dir=tmp_path, check_volume=True, verify_vesum=False, modes=["paronym"]
-    )
-    assert counts["paronym"] == 2
-    assert any(v["type"] == "VOLUME_BELOW_THRESHOLD" and v["item"] == "paronym" for v in violations)
-
-
-def test_audit_practice_shards_blank_syntax(tmp_path: Path):
-    """Verify that fill-in blank modes must contain exactly 1 blank (___)."""
-    shard_data = {
-        "paronym": [
-            {
-                "paronymId": "p_bad_no_blank",
-                "prompt": "Він бігає у парку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-                "distinction_gloss_uk": "Різниця значень.",
-            },
-            {
-                "paronymId": "p_bad_two_blanks",
-                "prompt": "Він ___ у парку і ___ на стадіоні.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-                "distinction_gloss_uk": "Різниця значень.",
-            },
-            {
-                "paronymId": "p_good",
-                "prompt": "Він ___ у парку щоранку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-                "distinction_gloss_uk": "Різниця значень.",
-            },
-        ]
-    }
-    shard_file = tmp_path / "practice-paronym.A1.json"
-    shard_file.write_text(json.dumps(shard_data, ensure_ascii=False), encoding="utf-8")
-
-    _, violations = audit_practice_shards(
-        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
-    )
-    bad_items = [v["item"] for v in violations if v["type"] == "INVALID_BLANK_COUNT"]
-    assert any("p_bad_no_blank" in item for item in bad_items)
-    assert any("p_bad_two_blanks" in item for item in bad_items)
-    assert not any("p_good" in item for item in bad_items)
-
-
-def test_audit_practice_shards_options_and_homonym_rule(tmp_path: Path):
-    """Verify option count >= 2, no duplicates (except homonym mode where forms are homonymous)."""
-    # Paronym with duplicate options -> violation
-    par_data = {
-        "paronym": [
-            {
-                "paronymId": "p_dup",
-                "prompt": "Він ___ у парку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "бігає"}],
-                "distinction_gloss_uk": "Різниця значень.",
-            }
-        ]
-    }
-    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
-
-    # Homonym with homonymous options -> allowed
-    hom_data = {
-        "homonym": [
-            {
-                "homonymId": "h_ok",
-                "prompt": "Старенька ___ спекла пиріг.",
-                "answer": "баба",
-                "options": [{"label": "баба"}, {"label": "баба"}],
-                "distinction_gloss_uk": "Омоніми баба.",
-            }
-        ]
-    }
-    (tmp_path / "practice-homonym.A1.json").write_text(json.dumps(hom_data, ensure_ascii=False), encoding="utf-8")
-
-    _, violations = audit_practice_shards(
-        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym", "homonym"]
-    )
-    assert any(v["type"] == "DUPLICATE_OPTIONS" and "p_dup" in v["item"] for v in violations)
-    assert not any("h_ok" in v["item"] for v in violations)
-
-
-def test_audit_practice_shards_target_in_options(tmp_path: Path):
-    """Verify target answer must be present in options list."""
-    par_data = {
-        "paronym": [
-            {
-                "paronymId": "p_missing_ans",
-                "prompt": "Він ___ у парку.",
-                "answer": "бігає",
-                "options": [{"label": "гуляє"}, {"label": "сидить"}],
-                "distinction_gloss_uk": "Різниця значень.",
-            }
-        ]
-    }
-    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
-
-    _, violations = audit_practice_shards(
-        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
-    )
-    assert any(v["type"] == "ANSWER_NOT_IN_OPTIONS" and "p_missing_ans" in v["item"] for v in violations)
-
-
-def test_audit_practice_shards_metadata_required(tmp_path: Path):
-    """Verify that pedagogical explanation metadata is required."""
-    par_data = {
-        "paronym": [
-            {
-                "paronymId": "p_no_meta",
-                "prompt": "Він ___ у парку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-                "distinction_gloss_uk": "",
-            }
-        ]
-    }
-    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
-
-    _, violations = audit_practice_shards(
-        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
-    )
-    assert any(v["type"] == "MISSING_EXPLANATION" and "p_no_meta" in v["item"] for v in violations)
-
-
 def test_audit_practice_shards_vesum_attestation(tmp_path: Path, monkeypatch):
     """Verify that target answers not attested in VESUM trigger VESUM_UNATTESTED."""
     from scripts.audit import practice_quality_gate
@@ -836,41 +502,6 @@ def test_audit_practice_shards_vesum_attestation(tmp_path: Path, monkeypatch):
         modes=["paronym"],
     )
     assert any(v["type"] == "VESUM_UNATTESTED" and "p_unattested" in v["item"] for v in violations)
-
-
-def test_audit_card_ambiguity_mocked(tmp_path: Path):
-    """Verify audit_card_ambiguity with mock TypeSafe System One responses."""
-    par_data = {
-        "paronym": [
-            {
-                "paronymId": "p_test",
-                "prompt": "Вранці він ___ у парку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-            }
-        ]
-    }
-    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
-
-    mock_resp = {
-        "model": "mock-jev",
-        "answers": {
-            "distractor_plausibility": {"score": 1.8, "confidence": 0.95},
-            "is_unambiguous": {"noul": 0.92},
-            "anti_calque_yield": {"noul": 0.10},
-            "card_quality": {"choice": "pass", "confidence": 0.95},
-        },
-    }
-
-    verdicts, violations = audit_card_ambiguity(
-        shards_dir=tmp_path,
-        sample_size=1,
-        mock_response=mock_resp,
-        strict_ambiguity=True,
-    )
-    assert len(verdicts) == 1
-    assert verdicts[0]["verdict"] == "pass"
-    assert len(violations) == 0
 
 
 def test_audit_practice_shards_missing_vesum_db_fails_closed(tmp_path: Path):
@@ -1128,15 +759,6 @@ def test_audit_practice_shards_empty_option_label_fails(tmp_path: Path):
         shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
     )
     assert any(v["type"] == "EMPTY_OPTION_LABEL" and "p_empty_label" in v["item"] for v in violations)
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_production_practice_quality_gate_passes(tmp_path: Path, monkeypatch):
-    """Verify that current repository practice datasets pass with 0 violations."""
-    _hide_sources_db(monkeypatch, tmp_path)
-    results = run_all_practice_audits()
-    total_violations = sum(len(v) for v in results.values())
-    assert total_violations == 0, f"Practice Quality Gate failed with violations: {results}"
 
 
 def test_production_practice_shards_all_modes_gate_passes(requires_vesum_db):

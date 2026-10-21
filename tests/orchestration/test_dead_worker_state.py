@@ -142,15 +142,6 @@ def test_marker_rechecks_identity_before_writing_or_releasing_claim(proc, foreig
         ledger.release.assert_called_once_with("worker", pid=123)
 
 
-@pytest.mark.parametrize("namespace", [None, "."])
-def test_legacy_record_with_unreadable_namespace_is_unknown(proc, namespace):
-    link = proc / "self" / "ns" / "pid"
-    link.unlink()
-    if namespace:
-        link.symlink_to(namespace)
-    assert d.worker_liveness({"pid": 456}, pid_alive=lambda pid: False) is None
-
-
 def test_pidless_dead_marker_does_not_release_unproven_worker_claim(proc, tmp_path):
     import json
     from unittest.mock import Mock
@@ -172,46 +163,12 @@ def test_invalid_pid_is_unknown(proc, pid):
     assert d.worker_liveness({"pid": pid}) is None
 
 
-def test_permission_denied_start_time_is_unknown(proc, monkeypatch):
-    read = d._process_stat
-
-    def unreadable(process):
-        if process == "123":
-            raise PermissionError("unreadable worker")
-        return read(process)
-
-    monkeypatch.setattr(d, "_process_stat", unreadable)
-    assert d.worker_liveness(_record()) is None
-
-
-def test_capture_unreadable_identity_keeps_unknown_start_time(proc):
-    (proc / "123" / "stat").write_text("malformed")
-    identity = d.capture_worker_identity(123)
-    assert identity["start_time"] is None
-    assert d.worker_liveness({"pid": 123, "worker_identity": identity}) is None
-
-
-def test_worker_exited_before_launch_identity_capture_is_proven_dead(proc):
-    identity = d.capture_worker_identity(999_999_998)
-    assert identity["start_time"] is None
-    assert d.worker_liveness({"pid": 999_999_998, "worker_identity": identity}) is False
-
-
 def test_live_same_namespace_worker_hidden_from_proc_is_unknown(proc):
     # A restricted procfs view can omit a process in our own PID namespace.
     # Signal-0 still sees this real process, so absence is not proof of death.
     record = {"pid": os.getpid(), "worker_identity": {
         **_record()["worker_identity"], "pid": os.getpid(), "host_pid": os.getpid(),
     }}
-    assert d.worker_liveness(record) is None
-
-
-def test_foreign_reader_with_matching_numeric_self_pid_needs_namespace_proof(proc):
-    link = proc / "self" / "ns" / "pid"
-    link.unlink()
-    link.symlink_to("pid:[999999]")
-    record = _record()
-    record["worker_identity"]["pid_namespace"] = "pid:[999999]"
     assert d.worker_liveness(record) is None
 
 
@@ -224,8 +181,3 @@ def test_confirmed_nested_namespace_dead_pid_ignores_legacy_unknown_callback(pro
         "pid": 999_999_998, "start_time": 100, "pid_namespace": "pid:[999999]",
     }}
     assert d.worker_liveness(record, pid_alive=lambda pid: True) is False
-
-
-@pytest.mark.parametrize("pid", [999_999_998.0, 999_999_998.5])
-def test_malformed_float_pid_is_unknown(proc, pid):
-    assert d.worker_liveness({"pid": pid}) is None

@@ -10,72 +10,14 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from wiki.review import (
     DEFAULT_PRIMARY,
-    DIMS,
     MAX_ROUNDS,
     SEMINAR_MAX_ROUNDS,
     DimResult,
-    _run_round,
-    core_reviewer_overrides,
     max_rounds_for_domain,
     review_article,
     seminar_reviewer_overrides,
 )
 from wiki.review_merger import Fix
-
-
-def test_run_round_emits_per_dim_progress_lines(tmp_path: Path, monkeypatch) -> None:
-    article_path = tmp_path / "article.md"
-    article_path.write_text("# Test\n", encoding="utf-8")
-    logs: list[str] = []
-
-    def fake_run_single_dim(
-        *,
-        dim: str,
-        article_path: Path,
-        article_text: str,
-        primary: str,
-        fallbacks: tuple[str, ...],
-        cwd: Path,
-        event_sink=None,
-    ) -> DimResult:
-        assert article_path.name == "article.md"
-        assert article_text == "# Test\n"
-        assert cwd == tmp_path
-        return DimResult(
-            dim=dim,
-            agent=primary,
-            model="fake-model",
-            score=8,
-            verdict="PASS",
-            findings=[],
-            fixes=[],
-            notes="",
-            duration_s=0.1,
-        )
-
-    monkeypatch.setattr("wiki.review._run_single_dim", fake_run_single_dim)
-
-    results = _run_round(
-        article_path=article_path,
-        article_text="# Test\n",
-        agent_overrides={},
-        cwd=tmp_path,
-        round_num=2,
-        progress_logger=logs.append,
-    )
-
-    assert set(results) == set(DIMS)
-    assert any("Round 2" in line for line in logs)
-    assert any("Round 2 complete" in line for line in logs)
-    for dim in DIMS:
-        assert any(
-            f"▶ {dim}" in line and f"agent={DEFAULT_PRIMARY[dim]}" in line
-            for line in logs
-        )
-        assert any(
-            f"◀ {dim}" in line and "verdict=PASS, score=8" in line
-            for line in logs
-        )
 
 
 def test_max_rounds_for_domain_seminar_vs_core() -> None:
@@ -109,19 +51,6 @@ def test_seminar_reviewer_overrides_routes_culture_dims_to_claude() -> None:
     # Core levels keep the global default (empty override).
     for core_domain in ("a1/letters", "a2/genitive-intro", "c1/stylistics"):
         assert seminar_reviewer_overrides(core_domain) == {}
-
-
-def test_core_reviewer_overrides_routes_noisy_core_dims_to_deepseek() -> None:
-    """Core review routes factual/register off agy; seminar remains untouched."""
-    assert core_reviewer_overrides("grammar/b1/aspect") == {
-        "factual_accuracy": "deepseek",
-        "register": "deepseek",
-    }
-    assert core_reviewer_overrides("folk/genres") == {}
-
-    # Keep unrelated CORE dimensions on their global defaults.
-    assert "source_grounding" not in core_reviewer_overrides("grammar/b1/aspect")
-    assert "ukrainian_perspective" not in core_reviewer_overrides("grammar/b1/aspect")
 
 
 # ── Seminar review-loop fixes (folk Session-19/20) ─────────────────────

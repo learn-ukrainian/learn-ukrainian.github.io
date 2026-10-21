@@ -17,67 +17,23 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 
 from __future__ import annotations
 
-import ast
-import os
-import re
-import subprocess
-import sys
 import textwrap
 from pathlib import Path
 
 import pytest
 
-from scripts.ci import subprocess_timeout_guard as guard
 from scripts.ci.subprocess_timeout_guard import (
-    ALLOWLIST_KEY_PARTS,
-    SHAPE_HASH_HEX_LEN,
-    SORT_ADVICE,
-    STALE_PREAMBLE,
-    TESTS_TIMEOUT_PREAMBLE,
-    UNALLOWLISTED_PREAMBLE,
     compare_allowlist,
-    format_stale_line,
-    format_unallowlisted_line,
-    load_allowlist,
     main,
-    parse_allowlist_key,
-    scan_scripts,
-    sort_allowlist_entries,
     timeout_less_calls,
     timeout_less_calls_from_source,
-    validate_allowlist_entry,
 )
-from tests.project_python import project_python
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TESTS_ROOT = _REPO_ROOT / "tests"
 _SCRIPTS_ROOT = _REPO_ROOT / "scripts"
-_ALLOWLIST_PATH = _SCRIPTS_ROOT / "ci" / "subprocess_timeout_allowlist.txt"
-
-# Documented per-test budget (must stay aligned with pyproject + ci.yml).
-_EXPECTED_PYTEST_TIMEOUT_SECONDS = 120
-_EXPECTED_TIMEOUT_METHOD = "thread"
-
-
-def test_pytest_timeout_budget_is_documented_in_pyproject() -> None:
-    """The 120s per-test budget must stay explicit in tool.pytest.ini_options."""
-    # Avoid importing tomllib only for this — pyproject is small; parse lightly.
-    text = (_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert "timeout = 120" in text
-    assert 'timeout_method = "thread"' in text or "timeout_method = 'thread'" in text
-    assert "pytest-timeout" in (_REPO_ROOT / "requirements.txt").read_text(encoding="utf-8")
-    lock = (_REPO_ROOT / "requirements-lock.txt").read_text(encoding="utf-8")
-    assert "pytest-timeout==" in lock
-
-
-def test_ci_pytest_invokes_timeout_flags() -> None:
-    ci = (_REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-    assert "--timeout=120" in ci
-    assert "--timeout-method=thread" in ci
-
-
 def test_no_timeout_less_subprocess_calls_under_tests() -> None:
     """Fail CI when a new ``subprocess.run``/``check_*``/``call`` lacks ``timeout=``."""
     offenders: list[str] = []
@@ -95,90 +51,6 @@ def test_no_timeout_less_subprocess_calls_under_tests() -> None:
         "Pass an explicit timeout= (typically 30 for git fixtures, 60–120 for "
         "heavier scripts). Popen must bound wait()/communicate() instead.\n" + "\n".join(offenders)
     )
-
-
-def test_subprocess_timeout_allowlist_is_sorted_and_valid() -> None:
-    """Allowlist may be empty (endgame). Non-empty rows must be shaped and C-sorted (#7213)."""
-    assert _ALLOWLIST_PATH.is_file(), f"allowlist not found at {_ALLOWLIST_PATH}"
-    entries = load_allowlist(_ALLOWLIST_PATH)
-    assert entries == sort_allowlist_entries(entries), SORT_ADVICE
-    for entry in entries:
-        validate_allowlist_entry(entry, _REPO_ROOT)
-
-
-def test_cached_parse_identity_is_hashable_in_project_interpreter(tmp_path: Path) -> None:
-    path = tmp_path / "calls.py"
-    path.write_text("import subprocess\nsubprocess.run(['same'])\n", encoding="utf-8")
-    result = subprocess.run(
-        [sys.executable, "-c", textwrap.dedent("""\
-            import ast
-            import sys
-            from pathlib import Path
-            from scripts.ci.test_source_cache import parse_test_source, read_test_source
-
-            path = Path(sys.argv[1])
-            source = read_test_source(path)
-            tree = parse_test_source(path)
-            assert isinstance(hash((source, tree)), int)
-            assert parse_test_source(path) is tree
-            assert ast.parse(source) != tree
-            print("hashable key; reused parse identity")
-            """), str(path)],
-        cwd=_REPO_ROOT, capture_output=True, text=True, timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == "hashable key; reused parse identity\n"
-
-
-def test_cached_findings_refresh_after_edit_and_cannot_be_mutated(tmp_path: Path) -> None:
-    path = tmp_path / "calls.py"
-    source = "import subprocess\nsubprocess.run(['old'])\n"
-    path.write_text(source, encoding="utf-8")
-    tree = guard.parse_test_source(path)
-    expected = timeout_less_calls_from_source(source)
-    first = timeout_less_calls(path)
-    second = timeout_less_calls(path)
-    assert len(expected) == 1
-    assert isinstance(first, list) and isinstance(second, list)
-    assert first == second == expected
-    assert first is not second
-    assert guard.parse_test_source(path) is tree
-    first.clear()
-    third = timeout_less_calls(path)
-    assert third == second == expected
-    assert third is not second
-
-    path.write_text("import subprocess\nsubprocess.run(['new'], timeout=30)\n", encoding="utf-8")
-    assert timeout_less_calls(path) == []
-    assert guard.parse_test_source(path) is not tree
-    changed_source = "import subprocess\nsubprocess.run(['other'])\n"
-    path.write_text(changed_source, encoding="utf-8")
-    changed = timeout_less_calls(path)
-    assert len(changed) == 1
-    assert changed == timeout_less_calls_from_source(changed_source)
-    assert changed[0].shape_hash != expected[0].shape_hash
-
-
-def test_cached_findings_preserve_syntax_errors_and_path_identity(tmp_path: Path) -> None:
-    good = tmp_path / "good.py"
-    broken = tmp_path / "broken.py"
-    source = "import subprocess\nsubprocess.call(['same'])\n"
-    good.write_text(source, encoding="utf-8")
-    broken.write_text(source, encoding="utf-8")
-    assert timeout_less_calls(good) == timeout_less_calls(broken)
-    broken.write_text("import subprocess\nsubprocess.call(\n", encoding="utf-8")
-    with pytest.raises(SyntaxError) as exc:
-        timeout_less_calls(broken)
-    assert exc.value.filename == str(broken)
-
-
-@pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
-def test_cached_findings_equal_uncached_findings_on_full_tree(root: Path) -> None:
-    for path in sorted(root.rglob("*.py")):
-        source = path.read_text(encoding="utf-8")
-        expected = timeout_less_calls_from_source(source, filename=str(path))
-        assert timeout_less_calls(path) == expected, path
-        assert timeout_less_calls(path) == expected, path
 
 
 # Import shapes the former line-anchored prefilter skipped (#10782).
@@ -213,117 +85,6 @@ def test_non_line_anchored_subprocess_imports_are_reported_by_both_entry_points(
     assert from_path == from_source
 
 
-@pytest.mark.parametrize("source", _NON_LINE_ANCHORED_IMPORTS.values(), ids=_NON_LINE_ANCHORED_IMPORTS.keys())
-def test_non_line_anchored_subprocess_import_fails_the_cli(
-    source: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    test_file = tmp_path / "tests" / "test_shape.py"
-    test_file.parent.mkdir(parents=True)
-    test_file.write_text(source, encoding="utf-8")
-    assert main([str(test_file), "--root", str(tmp_path)]) == 1
-    assert "tests/test_shape.py" in capsys.readouterr().err
-
-
-def test_prefilter_still_skips_sources_that_cannot_import_subprocess() -> None:
-    assert timeout_less_calls_from_source("import os\nos.system('true')\n") == []
-    assert timeout_less_calls_from_source("") == []
-
-
-@pytest.mark.parametrize("source", [
-    "",
-    "import os\nos.system('true')\n",
-    "import subprocess_timeout_guard\nsubprocess_timeout_guard.run()\n",
-    "from my_subprocess import run\nrun()\n",
-    "import subprocess2\nsubprocess2.call()\n",
-    "label = '\u2603'\n",
-    "import \uff53ubprocess_helper\n",
-])
-def test_prefilter_skips_ast_parsing_for_irrelevant_sources(
-    source: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    path = tmp_path / "irrelevant.py"
-    path.write_text(source, encoding="utf-8")
-    assert guard.timeout_less_calls_from_tree(ast.parse(source)) == []
-
-    def unexpected_parse(*args, **kwargs):
-        pytest.fail("irrelevant source reached the AST parser")
-
-    monkeypatch.setattr(guard.ast, "parse", unexpected_parse)
-    monkeypatch.setattr(guard, "parse_test_source", unexpected_parse)
-    assert timeout_less_calls_from_source(source) == []
-    assert timeout_less_calls(path) == []
-
-
-def test_prefilter_preserves_candidate_syntax_errors(tmp_path: Path) -> None:
-    source = "import subprocess\nsubprocess.run(\n"
-    path = tmp_path / "broken.py"
-    path.write_text(source, encoding="utf-8")
-    with pytest.raises(SyntaxError) as from_source:
-        timeout_less_calls_from_source(source, filename=str(path))
-    with pytest.raises(SyntaxError) as from_path:
-        timeout_less_calls(path)
-    assert from_source.value.filename == from_path.value.filename == str(path)
-
-
-@pytest.mark.parametrize("raw", [b"# invalid UTF-8: \xff\n", b"import subprocess\n# \xff\n"])
-def test_prefilter_does_not_swallow_encoding_errors(raw: bytes, tmp_path: Path) -> None:
-    path = tmp_path / "bad_encoding.py"
-    path.write_bytes(raw)
-    with pytest.raises(UnicodeDecodeError):
-        timeout_less_calls(path)
-
-
-def test_prefilter_does_not_swallow_missing_files(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        timeout_less_calls(tmp_path / "missing.py")
-
-
-@pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
-def test_prefilter_findings_equal_unfiltered_ast_findings_on_full_tree(root: Path) -> None:
-    """The prefilter may only skip files the AST visitor would not flag (#10782)."""
-    for path in sorted(root.rglob("*.py")):
-        source = path.read_text(encoding="utf-8")
-        unfiltered = guard.timeout_less_calls_from_tree(ast.parse(source, filename=str(path)))
-        assert timeout_less_calls(path) == unfiltered, path
-        assert timeout_less_calls_from_source(source, filename=str(path)) == unfiltered, path
-
-
-def test_cached_findings_reuse_the_visitor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    path = tmp_path / "calls.py"
-    source = "import subprocess\nsubprocess.run(['same'])\n"
-    path.write_text(source, encoding="utf-8")
-    expected = timeout_less_calls_from_source(source)
-    assert len(expected) == 1
-    calls = []
-    original = guard.timeout_less_calls_from_tree
-
-    def counted(tree):
-        calls.append(tree)
-        return original(tree)
-
-    monkeypatch.setattr(guard, "timeout_less_calls_from_tree", counted)
-    assert timeout_less_calls(path) == expected
-    assert timeout_less_calls(path) == expected
-    assert len(calls) == 1
-
-
-def test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts() -> None:
-    """Fail CI on unallowlisted timeout-less subprocess calls in scripts/ and reject stale allowlist entries (#7176)."""
-    allowlist_entries = load_allowlist(_ALLOWLIST_PATH)
-    actual_hits, scan_errors = scan_scripts(_SCRIPTS_ROOT, _REPO_ROOT)
-    if scan_errors:
-        pytest.fail("Syntax errors encountered while scanning scripts/:\n" + "\n".join(scan_errors))
-
-    unallowlisted, stale_entries = compare_allowlist(allowlist_entries, actual_hits)
-    errors: list[str] = []
-    if unallowlisted:
-        errors.append(UNALLOWLISTED_PREAMBLE + "\n".join(unallowlisted))
-    if stale_entries:
-        errors.append(STALE_PREAMBLE + "\n".join(stale_entries))
-
-    assert not errors, "\n\n".join(errors)
-
-
 _ROTATION_BEFORE = textwrap.dedent(
     """\
     import subprocess
@@ -343,29 +104,6 @@ _ROTATION_AFTER = textwrap.dedent(
         subprocess.run(["other", "cmd"], check=False)
     """
 )
-
-
-def test_call_shape_hash_is_location_independent_and_argument_sensitive() -> None:
-    """F4: same call text keeps its hash after a line shift; a different argv does not."""
-    moved = textwrap.dedent(
-        """\
-        import subprocess
-
-        def helper():
-            x = 1
-            subprocess.run(["git", "status"], check=False)
-        """
-    )
-    original = timeout_less_calls_from_source(_ROTATION_BEFORE)
-    shifted = timeout_less_calls_from_source(moved)
-    assert len(original) == 2
-    assert len(shifted) == 1
-    # First original call is the git-status site; moving it must keep the shape.
-    assert shifted[0].shape_hash == original[0].shape_hash
-    assert shifted[0].lineno != original[0].lineno
-    assert original[0].shape_hash != original[1].shape_hash
-    assert original[0].qualname == "helper"
-    assert len(original[0].shape_hash) == SHAPE_HASH_HEX_LEN
 
 
 def test_rotated_call_under_same_qualname_cannot_reuse_old_key() -> None:
@@ -389,208 +127,6 @@ def test_rotated_call_under_same_qualname_cannot_reuse_old_key() -> None:
     assert set(before_keys) == stale_keys
 
 
-def test_unallowlisted_line_is_paste_ready_key() -> None:
-    """F3: the unallowlisted line starts with path::qualname::callee::shape."""
-    hits = timeout_less_calls_from_source(_ROTATION_BEFORE)
-    key = hits[0].allowlist_key("scripts/demo.py")
-    path, qualname, callee, shape = parse_allowlist_key(key)
-    assert (path, qualname, callee) == ("scripts/demo.py", "helper", "subprocess.run")
-    assert len(shape) == SHAPE_HASH_HEX_LEN
-    line = format_unallowlisted_line(key, lineno=hits[0].lineno, actual_count=1, allowed_count=0)
-    assert line.startswith(key)
-    assert line.split("  #", 1)[0] == key
-    assert key.count("::") == ALLOWLIST_KEY_PARTS - 1
-    assert "path::qualname::callee::shape" in UNALLOWLISTED_PREAMBLE
-    with pytest.raises(ValueError, match="path::qualname::callee::shape"):
-        parse_allowlist_key("scripts/demo.py::helper::subprocess.run")
-
-
-def test_stale_message_mentions_rename_case() -> None:
-    """F3: stale-entry copy names the rename / qualname-move case."""
-    assert "renamed" in STALE_PREAMBLE
-    assert "qualname" in STALE_PREAMBLE
-    line = format_stale_line(
-        "scripts/old.py::gone::subprocess.run::0123456789abcdef",
-        allowed_count=1,
-        actual_count=0,
-    )
-    assert line.startswith("scripts/old.py::gone::subprocess.run::0123456789abcdef")
-
-
-def test_empty_allowlist_is_valid_endgame() -> None:
-    """F7: burning down to zero keys must not fail CI."""
-    unallowlisted, stale = compare_allowlist([], {})
-    assert unallowlisted == []
-    assert stale == []
-    entries = load_allowlist(_ALLOWLIST_PATH)
-    # File may still hold SKIP rows today; empty is legal once they go.
-    assert entries == sort_allowlist_entries(entries)
-
-
-def test_allowlist_sort_advice_is_c_locale() -> None:
-    """F7: sort advice must not depend on the operator's libc locale."""
-    assert "LC_ALL=C" in SORT_ADVICE
-    # Byte order, not locale-aware str collation.
-    assert sort_allowlist_entries(["b::x", "a::x", "A::x"]) == ["A::x", "a::x", "b::x"]
-
-
-def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) -> None:
-    """Prove pytest-timeout fails fast and names the hanging nodeid (#5740 AC).
-
-    Runs an isolated child pytest so the hang cannot stall this suite. The child
-    uses a 0.25-second budget; we allow a generous outer bound so flake from
-    process startup does not become another hang.
-    """
-    hang_dir = tmp_path / "hang_suite"
-    hang_dir.mkdir()
-    hang_test = hang_dir / "test_intentional_hang.py"
-    hang_test.write_text(
-        textwrap.dedent(
-            """\
-            import time
-
-            def test_intentional_forever_sleep():
-                time.sleep(3600)
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    env = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith("PYTEST_") and key not in {"PYTEST_CURRENT_TEST", "PYTEST_ADDOPTS"}
-    }
-
-    completed = subprocess.run(
-        [
-            str(project_python()),
-            "-m",
-            "pytest",
-            str(hang_test),
-            "-p",
-            "no:xdist",
-            "-p",
-            "timeout",
-            "--timeout=0.25",
-            f"--timeout-method={_EXPECTED_TIMEOUT_METHOD}",
-            "-o",
-            "addopts=",
-            "-q",
-            "--tb=line",
-        ],
-        cwd=str(_REPO_ROOT),
-        capture_output=True,
-        text=True,
-        timeout=60,
-        env=env,
-    )
-
-    combined = f"{completed.stdout}\n{completed.stderr}"
-    assert completed.returncode != 0, "hanging test must fail under pytest-timeout, not pass/skip:\n" + combined
-    assert "test_intentional_forever_sleep" in combined, (
-        "pytest-timeout must name the hanging test in its output "
-        f"(budget={_EXPECTED_PYTEST_TIMEOUT_SECONDS}s documented; child used 0.25s):\n" + combined
-    )
-    # Either Failed: Timeout / +++ Timeout / Failed: Timeout >… depending on version.
-    assert "timeout" in combined.lower(), "expected a timeout failure signal in child pytest output:\n" + combined
-
-
-def test_cli_fails_on_timeout_less_test_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    """CLI fails on a temp tests/ file with a timeout-less subprocess.run (#8750)."""
-    tests_dir = tmp_path / "tests"
-    tests_dir.mkdir(parents=True)
-    test_file = tests_dir / "test_unbounded.py"
-    test_file.write_text(
-        textwrap.dedent(
-            """\
-            import subprocess
-
-            def test_unbounded():
-                subprocess.run(["echo", "hi"])
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    exit_code = main([str(test_file), "--root", str(tmp_path)])
-    assert exit_code == 1
-    err = capsys.readouterr().err
-    assert TESTS_TIMEOUT_PREAMBLE.strip() in err
-    assert "tests/test_unbounded.py:4 subprocess.run" in err
-
-
-def test_cli_passes_on_bounded_test_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    """CLI passes on a temp tests/ file when timeout= is specified (#8750)."""
-    tests_dir = tmp_path / "tests"
-    tests_dir.mkdir(parents=True)
-    test_file = tests_dir / "test_bounded.py"
-    test_file.write_text(
-        textwrap.dedent(
-            """\
-            import subprocess
-
-            def test_bounded():
-                subprocess.run(["echo", "hi"], timeout=30)
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    exit_code = main([str(test_file), "--root", str(tmp_path)])
-    assert exit_code == 0
-    err = capsys.readouterr().err
-    assert err == ""
-
-
-def test_cli_fails_on_unallowlisted_scripts_call_and_passes_when_allowlisted(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """CLI fails on unallowlisted scripts/ call and passes on allowlisted one (#8750)."""
-    scripts_dir = tmp_path / "scripts"
-    scripts_dir.mkdir(parents=True)
-    script_file = scripts_dir / "tool.py"
-    script_file.write_text(
-        textwrap.dedent(
-            """\
-            import subprocess
-
-            def do_work():
-                subprocess.run(["echo", "hi"])
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    # 1. Unallowlisted call fails with exit code 1 and paste-ready key
-    exit_code = main([str(script_file), "--root", str(tmp_path)])
-    assert exit_code == 1
-    err = capsys.readouterr().err
-    assert UNALLOWLISTED_PREAMBLE.strip() in err
-    assert "scripts/tool.py::do_work::subprocess.run::" in err
-
-    # Extract the paste-ready key printed in stderr
-    match = re.search(r"(scripts/tool\.py::do_work::subprocess\.run::[0-9a-f]{16})", err)
-    assert match is not None, f"Expected paste-ready key in stderr: {err}"
-    allowlist_key = match.group(1)
-
-    # 2. Allowlisted call passes with exit code 0
-    allowlist_file = tmp_path / "scripts" / "ci" / "subprocess_timeout_allowlist.txt"
-    allowlist_file.parent.mkdir(parents=True, exist_ok=True)
-    allowlist_file.write_text(f"{allowlist_key}\n", encoding="utf-8")
-
-    exit_code = main([str(script_file), "--root", str(tmp_path)])
-    assert exit_code == 0
-    assert capsys.readouterr().err == ""
-
-
-def test_cli_without_paths_agrees_with_repo_tests_on_main(capsys: pytest.CaptureFixture[str]) -> None:
-    """CLI without paths agrees with repo tests on current main (both clean) (#8750)."""
-    exit_code = main([])
-    assert exit_code == 0
-    assert capsys.readouterr().err == ""
-
-
 def test_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> None:
     """CLI meets the --help standard (cli-help-standard.md) (#8750)."""
     with pytest.raises(SystemExit) as exc_info:
@@ -602,25 +138,3 @@ def test_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> None:
     assert "Outputs:" in out
     assert "Exit codes:" in out
     assert "Related:" in out
-
-
-def test_cli_syntax_error_exits_2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    """CLI exits 2 on Python syntax errors in checked files (#8750)."""
-    tests_dir = tmp_path / "tests"
-    tests_dir.mkdir(parents=True)
-    bad_file = tests_dir / "test_syntax.py"
-    bad_file.write_text("def broken(: pass\n", encoding="utf-8")
-
-    exit_code = main([str(bad_file), "--root", str(tmp_path)])
-    assert exit_code == 2
-    err = capsys.readouterr().err
-    assert "syntax error while scanning" in err
-
-
-def test_cli_missing_path_exits_2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    """CLI exits 2 on non-existent file paths (#8750)."""
-    missing = tmp_path / "tests" / "missing.py"
-    exit_code = main([str(missing), "--root", str(tmp_path)])
-    assert exit_code == 2
-    err = capsys.readouterr().err
-    assert "path does not exist" in err

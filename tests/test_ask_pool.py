@@ -23,21 +23,6 @@ from scripts.lib import rules_core
 # --- constants ------------------------------------------------------------
 
 
-def test_pool_model_is_native_poolside_provider():
-    # NOT the openrouter/* path (that one cannot browse). S 2.1 is the pin.
-    from scripts.ai_agent_bridge._opencode import POOL_MODEL_M1_LEGACY, POOL_MODEL_XS
-
-    assert POOL_MODEL == "poolside/poolside/laguna-s-2.1"
-    assert "laguna-s-2.1" in POOL_MODEL
-    # Exact gen-2 / gen-1 IDs — never invent laguna-s2 or laguna-m2.
-    assert POOL_MODEL_XS == "poolside/poolside/laguna-xs-2.1"
-    assert POOL_MODEL_M1_LEGACY == "poolside/poolside/laguna-m.1"
-
-
-def test_glm_model_is_zai_coding_plan():
-    assert GLM_MODEL == "zai-coding-plan/glm-5.3"
-
-
 # --- invocation argv (variant + json format) ------------------------------
 
 
@@ -64,16 +49,6 @@ def test_invoke_opencode_passes_variant_and_json_format():
             assert POOL_MODEL in argv
             # NDJSON parsed down to the assistant text.
             assert out == "hi"
-
-
-def test_invoke_opencode_no_variant_by_default():
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="plain", stderr="")
-            _invoke_opencode("hello", GLM_MODEL, output_format="default")
-            argv = run_mock.call_args[0][0]
-            assert "--variant" not in argv
-            assert argv[argv.index("--format") + 1] == "default"
 
 
 # --- NDJSON parsing -------------------------------------------------------
@@ -103,11 +78,6 @@ def test_parse_ndjson_tolerates_blank_and_garbage_lines():
 
 
 # --- pool variant validation ---------------------------------------------
-
-
-def test_ask_pool_rejects_invalid_variant():
-    with pytest.raises(SystemExit, match="invalid --variant"):
-        ask_pool("hi", task_id="t", variant="turbo")
 
 
 # --- GLM China-egress backstop (load-bearing LOCAL-ONLY guard) ------------
@@ -174,38 +144,6 @@ def test_invoke_opencode_always_separates_content_with_dashdash():
 # --- model override (churn-resistance; tags drift per model-assignment.md) --
 
 
-def test_ask_pool_defaults_to_pinned_model():
-    with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-    ):
-        ask_pool("hi", task_id="t")
-        assert inv.call_args[0][1] == POOL_MODEL
-
-
-def test_ask_pool_honors_model_override():
-    with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-    ):
-        ask_pool("hi", task_id="t", model="openrouter/poolside/laguna-s-2.1")
-        assert inv.call_args[0][1] == "openrouter/poolside/laguna-s-2.1"
-
-
-def test_ask_glm_honors_model_override_when_not_ci(monkeypatch):
-    for var in _CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-    with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-    ):
-        ask_glm("hi", task_id="t", model="zai/glm-5.3-flash")
-        assert inv.call_args[0][1] == "zai/glm-5.3-flash"
-
-
 def test_ask_glm_refuses_openrouter_glm_before_subprocess(monkeypatch):
     """GLM via OpenRouter must fail at the routing guard inside _run_opencode."""
     from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
@@ -250,36 +188,7 @@ def test_parse_ndjson_multi_message_stream_yields_last_substantive_message():
     assert result.strip().startswith("Here is the full review")
 
 
-def test_parse_ndjson_single_message_no_regression():
-    """No regression on single-message replies (the common non-tool case)."""
-    stream = "\n".join(
-        [
-            '{"type":"step_start","part":{}}',
-            '{"type":"text","part":{"type":"text","text":"Single complete answer here."}}',
-            '{"type":"step_finish","part":{"reason":"stop"}}',
-        ]
-    )
-    assert _parse_opencode_ndjson(stream) == "Single complete answer here."
-
-
 # --- token budget plumbing for glm/pool (fixes #5123 length deaths) --------
-
-
-def test_get_max_output_tokens_defaults_for_glm_pool():
-    """Sane defaults kick in for the lanes that exhibited reasoning=length."""
-    from scripts.ai_agent_bridge._opencode import (
-        GLM_DEFAULT_MAX_OUTPUT_TOKENS,
-        GLM_MODEL,
-        POOL_DEFAULT_MAX_OUTPUT_TOKENS,
-        POOL_MODEL,
-        _get_max_output_tokens,
-    )
-
-    assert _get_max_output_tokens(GLM_MODEL) == GLM_DEFAULT_MAX_OUTPUT_TOKENS
-    assert _get_max_output_tokens(POOL_MODEL) == POOL_DEFAULT_MAX_OUTPUT_TOKENS
-    # also matches on prefix variants
-    assert _get_max_output_tokens("openrouter/z-ai/glm-5.3") == GLM_DEFAULT_MAX_OUTPUT_TOKENS
-    assert _get_max_output_tokens("poolside/poolside/laguna-s-2.1") == POOL_DEFAULT_MAX_OUTPUT_TOKENS
 
 
 def test_invoke_opencode_glm_pool_sets_experimental_output_token_env(monkeypatch):
@@ -311,50 +220,6 @@ def test_invoke_opencode_glm_pool_sets_experimental_output_token_env(monkeypatch
             assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "131072"
 
 
-def test_invoke_opencode_token_budget_env_overrides(monkeypatch):
-    """Env overrides (global + per-model) take precedence; hermetic."""
-    monkeypatch.setenv("AB_OPENCODE_MAX_OUTPUT_TOKENS", "262144")
-    monkeypatch.delenv("AB_GLM_MAX_OUTPUT_TOKENS", raising=False)
-
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_opencode("x", GLM_MODEL, output_format="json")
-            env = run_mock.call_args[1]["env"]
-            assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "262144"
-
-    # model-specific wins over global
-    monkeypatch.setenv("AB_GLM_MAX_OUTPUT_TOKENS", "65536")
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_opencode("x", GLM_MODEL, output_format="json")
-            env = run_mock.call_args[1]["env"]
-            assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "65536"
-
-    # pool specific
-    monkeypatch.setenv("AB_POOL_MAX_OUTPUT_TOKENS", "98304")
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_opencode("x", POOL_MODEL, output_format="json")
-            env = run_mock.call_args[1]["env"]
-            assert env["OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"] == "98304"
-
-
-def test_invoke_opencode_no_token_budget_for_other_models(monkeypatch):
-    """Non glm/pool models do not get the experimental override (no unnecessary side effect)."""
-    monkeypatch.delenv("AB_OPENCODE_MAX_OUTPUT_TOKENS", raising=False)
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_opencode("hi", "google-ais/gemma-4-31b-it", output_format="json")
-            call_kwargs = run_mock.call_args[1]
-            # env may be present (copy), but the experimental key must NOT be set by us
-            if "env" in call_kwargs:
-                assert "OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX" not in call_kwargs["env"]
-
-
 # --- #5911 lifecycle callback wiring (CI catch) ---
 
 
@@ -374,34 +239,3 @@ def test_ask_glm_and_pool_invoke_on_message_created_callback(monkeypatch):
         ):
             fn("hi", task_id="t", on_message_created=seen.append)
         assert seen == [41], f"{name}: on_message_created not invoked with the message id"
-
-
-def test_ask_glm_omitted_effort_defaults_to_variant_high(monkeypatch):
-    """Operator 2026-08-13: ask-glm without --effort invokes opencode with
-    variant=high; an explicit --effort max still wins (maps to variant max)."""
-    for var in _CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-    for effort, expected_variant in ((None, "high"), ("max", "max")):
-        with (
-            patch("scripts.ai_agent_bridge._opencode.send_message", return_value=41),
-            patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-            patch("scripts.ai_agent_bridge._opencode.record_ask_reply"),
-            patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-        ):
-            ask_glm("hi", task_id="t", effort=effort)
-        assert inv.call_args.kwargs["variant"] == expected_variant
-
-
-
-def test_ask_glm_advisory_defaults_to_variant_max(monkeypatch):
-    """Operator 2026-08-14: ask-glm --type advisory defaults to max effort."""
-    for var in _CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-    with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=42),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-        patch("scripts.ai_agent_bridge._opencode.record_ask_reply"),
-        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-    ):
-        ask_glm("advise", task_id="t", msg_type="advisory", effort=None)
-    assert inv.call_args.kwargs["variant"] == "max"

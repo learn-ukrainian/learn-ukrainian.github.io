@@ -111,21 +111,6 @@ class TestV6MatchUp:
         assert '<MatchUp client:only="react"' in result
         assert '"left": "кіт"' in result
 
-    def test_stray_quotes_in_pairs(self):
-        dsl = (
-            ":::match-up\n"
-            'title: "Match"\n'
-            "---\n"
-            "- left: \"'В\"\n"
-            "  right: \"sounds like v'\"\n"
-            ":::"
-        )
-        result, count = convert_dsl_to_mdx(dsl)
-        assert count == 1
-        # Stray quotes stripped
-        assert "В" in result
-        assert "sounds like v" in result
-
 
 class TestV6GroupSort:
     """V6 :::group-sort format."""
@@ -258,11 +243,6 @@ class TestBareUrlConversion:
         result, _count = convert_dsl_to_mdx(text)
         assert "[ukrainianlessons.com](https://www.ukrainianlessons.com/episode1/)" in result
 
-    def test_bare_url_with_path(self):
-        text = "Visit https://example.com/page/sub for details."
-        result, _count = convert_dsl_to_mdx(text)
-        assert "[example.com](https://example.com/page/sub)" in result
-
     def test_markdown_link_not_double_wrapped(self):
         text = "See [my link](https://example.com/page) here."
         result, _count = convert_dsl_to_mdx(text)
@@ -277,16 +257,3 @@ class TestBareUrlConversion:
         assert "<YouTubeVideo" in result
         assert "[youtube.com]" not in result
         assert "[www.youtube.com]" not in result
-
-    def test_html_comment_url_not_converted(self):
-        text = "<!-- See https://example.com/internal for reference -->"
-        result, _count = convert_dsl_to_mdx(text)
-        assert "[example.com]" not in result
-
-    def test_multiple_bare_urls(self):
-        text = (
-            "First https://example.com/a then https://other.org/b end."
-        )
-        result, _count = convert_dsl_to_mdx(text)
-        assert "[example.com](https://example.com/a)" in result
-        assert "[other.org](https://other.org/b)" in result

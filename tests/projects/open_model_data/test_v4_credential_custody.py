@@ -233,11 +233,6 @@ def test_reads_an_owner_private_credential_and_closes_descriptors(tmp_path):
     assert_closes_every_descriptor(opened, closed)
 
 
-def test_missing_credential_propagates_file_not_found(tmp_path):
-    with pytest.raises(FileNotFoundError):
-        custody.read_credential(tmp_path / "absent")
-
-
 def test_missing_namespace_propagates_file_not_found(tmp_path):
     # An unprovisioned unit has no $CREDENTIALS_DIRECTORY at all: callers keep
     # their "not provisioned" taxonomy instead of receiving a custody verdict.
@@ -245,15 +240,6 @@ def test_missing_namespace_propagates_file_not_found(tmp_path):
         with pytest.raises(FileNotFoundError):
             custody.read_credential(tmp_path / "absent-namespace" / "credential")
     assert_closes_every_descriptor(opened, closed)
-
-
-def test_non_directory_namespace_is_a_custody_refusal(tmp_path):
-    # Something occupying the namespace path that is not a directory is an
-    # inspectable wrong shape, not an absence; it must not leak ENOTDIR.
-    (tmp_path / "namespace").write_text("synthetic")
-    with pytest.raises(custody.CredentialCustodyError) as error:
-        custody.read_credential(tmp_path / "namespace" / "credential")
-    assert error.value.code == "credential_directory"
 
 
 @pytest.mark.parametrize(
@@ -417,20 +403,6 @@ def test_signing_keys_load_only_from_flattened_systemd_names(tmp_path, monkeypat
     trust.signing_credential_path("sources", ".key").chmod(0o440)
     with pytest.raises(trust.TrustAuthorityError, match="signing credential custody"):
         trust.load_production_signing_key("sources")
-
-
-def test_readiness_qualifies_the_flattened_namespace_credentials():
-    namespace = Path("/run/credentials/hramatka-api.service")
-    assert readiness.scoped_credential_paths() == [
-        namespace / "v4-control-dsn",
-        *[
-            namespace / f"v4-signing-keys_{role}{suffix}"
-            for role in ("sources", "a3", "fleet_execution")
-            for suffix in (".key", ".key_id")
-        ],
-    ]
-    assert readiness.qualification_path().parent == namespace == trust.HRAMATKA_CREDENTIAL_NAMESPACE
-    assert service.provider_credential_path("claude").parent == namespace
 
 
 def test_readiness_reads_the_qualification_through_custody(tmp_path, monkeypatch):

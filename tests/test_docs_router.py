@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import time
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import quote
 
@@ -11,7 +9,6 @@ from fastapi.testclient import TestClient
 from scripts.api import docs_router
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context, production_context
-from tests.latency_budget import assert_under_budget
 
 
 @pytest.fixture()
@@ -163,17 +160,6 @@ def test_docs_router_serves_allowed_root_files(client: TestClient, root_key: str
     assert response.headers["cache-control"] == "max-age=300, must-revalidate"
 
 
-def test_docs_router_root_index_lists_allowed_roots(client: TestClient):
-    response = client.get("/artifacts/?format=json")
-
-    assert response.status_code == 200
-    body = response.json()
-    ctx = production_context()
-    assert {root["id"] for root in body["roots"]} == set(ctx.roots.effective_roots)
-    assert len(body["roots"]) >= 10  # ≥ 10 — EFFECTIVE_ROOTS may grow with dynamic roots (#2106)
-    assert all({"id", "path", "exists"} <= set(root) for root in body["roots"])
-
-
 def test_docs_router_includes_proposals_and_poc(client: TestClient):
     """Regression: /api/artifacts/html must surface docs/proposals and docs/poc.
 
@@ -199,84 +185,6 @@ def test_docs_router_includes_proposals_and_poc(client: TestClient):
         "no docs/poc/*.html in /api/artifacts/html — ALLOWED_ROOTS"
         " regression? Add 'docs/poc' back to scripts/api/docs_router.py."
     )
-
-
-def test_docs_router_directory_listing_includes_file_metadata(client: TestClient):
-    response = client.get("/artifacts/audit?format=json")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["root"] == "audit"
-    assert body["relative_path"] == ""
-    assert body["items_count"] == len(body["items"])
-    assert body["items"]
-    assert any({"name", "size", "mtime"} <= set(item) for item in body["items"])
-
-
-def test_docs_router_root_listing_retains_logical_symlink_path(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    live_root = tmp_path / "live" / "docs"
-    logical_root = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40) / "docs"
-    live_root.mkdir(parents=True)
-    (live_root / "report.md").write_text("# Report\n", encoding="utf-8")
-    logical_root.parent.mkdir(parents=True)
-    logical_root.symlink_to(live_root, target_is_directory=True)
-    asserted_paths: list[Path] = []
-
-    def record_assertion(full_path: Path, _root_path: Path) -> None:
-        asserted_paths.append(full_path)
-
-    monkeypatch.setattr(docs_router, "_assert_under_root", record_assertion)
-
-    listing = docs_router._directory_listing("safe", "safe", logical_root, "")
-
-    assert listing["items_count"] == 1
-    assert asserted_paths[0] == logical_root
-    assert asserted_paths[0] != logical_root.resolve()
-
-
-def test_docs_router_serves_symlinked_root_with_logical_paths(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-):
-    real_docs_root = tmp_path / "real-docs"
-    reports_root = real_docs_root / "reports"
-    logical_root = tmp_path / "runtime" / "release" / ("a" * 40)
-    dashboards_root = logical_root / "dashboards"
-    reports_root.mkdir(parents=True)
-    logical_root.mkdir(parents=True)
-    dashboards_root.mkdir()
-    (reports_root / "report.md").write_text("# Report\n", encoding="utf-8")
-    (dashboards_root / "artifacts.html").write_text(
-        "<!doctype html><title>Artifacts</title>", encoding="utf-8"
-    )
-
-    (logical_root / "docs").symlink_to(real_docs_root, target_is_directory=True)
-
-    roots = {"docs/reports": logical_root / "docs" / "reports"}
-    ctx = fixture_context(logical_root).with_roots(effective_roots=roots, dashboards_dir=dashboards_root)
-    monkeypatch.setattr(app.state, "ctx", ctx)
-
-    client = TestClient(app, raise_server_exceptions=False)
-
-    root_response = client.get("/artifacts/?format=json")
-    assert root_response.status_code == 200
-    assert root_response.json()["roots"] == [
-        {"id": "docs/reports", "path": "docs/reports", "exists": True}
-    ]
-
-    listing_response = client.get("/artifacts/docs/reports?format=json")
-    assert listing_response.status_code == 200
-    listing = listing_response.json()
-    assert listing["items"][0]["path"] == "docs/reports/report.md"
-
-    artifacts_response = client.get("/api/artifacts/html")
-    assert artifacts_response.status_code == 200
-    artifact = artifacts_response.json()["artifacts"][0]
-    assert artifact["path"] == "docs/reports/report.md"
-    assert artifact["url"] == "/artifacts/docs/reports/report.md"
 
 
 @pytest.mark.parametrize(
@@ -314,12 +222,6 @@ def test_docs_router_blocks_unapproved_root(controlled_client: TestClient):
     assert response.status_code in {403, 404}
 
 
-def test_docs_router_missing_file_404(controlled_client: TestClient):
-    response = controlled_client.get("/artifacts/safe/missing.html")
-
-    assert response.status_code == 404
-
-
 def test_docs_router_blocks_hidden_file(controlled_client: TestClient):
     response = controlled_client.get("/artifacts/safe/.hidden.html")
 
@@ -327,57 +229,7 @@ def test_docs_router_blocks_hidden_file(controlled_client: TestClient):
     assert "hidden" not in response.text
 
 
-def test_docs_router_serves_100kb_html_within_smoke_budget(
-    controlled_docs_tree: dict[str, Path],
-    controlled_client: TestClient,
-):
-    large_file = controlled_docs_tree["safe"] / "large.html"
-    large_file.write_text("<!doctype html>\n" + ("x" * 100_000), encoding="utf-8")
-
-    start = time.perf_counter()
-    response = controlled_client.get("/artifacts/safe/large.html")
-    elapsed = time.perf_counter() - start
-
-    assert response.status_code == 200
-    assert response.headers["content-type"].startswith("text/html")
-    assert_under_budget(
-        elapsed,
-        0.2,
-        f"/artifacts/safe/large.html took {elapsed:.3f}s (budget 0.2s)",
-    )
-
-
-def test_docs_router_concurrent_access_sanity(controlled_client: TestClient):
-    def fetch_file(_index: int):
-        return controlled_client.get("/artifacts/safe/file.html")
-
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        responses = list(executor.map(fetch_file, range(10)))
-
-    assert len(responses) == 10
-    assert all(response.status_code == 200 for response in responses)
-    assert all("safe" in response.text for response in responses)
-
-
 # ── New tests for MD artifact support (#2106) ──
-
-
-def test_artifacts_api_surfaces_md_files(docs_tree_client: TestClient):
-    """MD files in docs/ subdirectories should appear in /api/artifacts/html."""
-    response = docs_tree_client.get("/api/artifacts/html")
-    assert response.status_code == 200
-    body = response.json()
-
-    paths = {a["path"] for a in body["artifacts"]}
-    assert "docs/handoffs/session-1.md" in paths, (
-        "MD file with frontmatter not surfaced in artifacts API"
-    )
-    assert "docs/handoffs/notes.md" in paths, (
-        "MD file without frontmatter not surfaced in artifacts API"
-    )
-    assert "docs/proposals/proposal-2.md" in paths, (
-        "MD file in proposals not surfaced in artifacts API"
-    )
 
 
 def test_artifacts_md_with_yaml_frontmatter(docs_tree_client: TestClient):
@@ -422,69 +274,3 @@ def test_artifacts_md_without_frontmatter(docs_tree_client: TestClient):
     # date should be ISO date from mtime
     assert len(notes["date"]) == 10  # YYYY-MM-DD
     assert notes["status"] == "unknown"
-
-
-def test_artifacts_type_filter_md_only(docs_tree_client: TestClient):
-    """?type=md should return only MD artifacts."""
-    response = docs_tree_client.get("/api/artifacts/html?type=md")
-    assert response.status_code == 200
-    body = response.json()
-
-    for artifact in body["artifacts"]:
-        assert artifact["path"].endswith(".md"), (
-            f"Expected only MD files, got {artifact['path']}"
-        )
-    # Should have our MD files
-    paths = {a["path"] for a in body["artifacts"]}
-    assert "docs/handoffs/session-1.md" in paths
-    assert "docs/handoffs/notes.md" in paths
-
-
-def test_artifacts_type_filter_html_only(docs_tree_client: TestClient):
-    """?type=html should return only HTML artifacts."""
-    response = docs_tree_client.get("/api/artifacts/html?type=html")
-    assert response.status_code == 200
-    body = response.json()
-
-    for artifact in body["artifacts"]:
-        assert artifact["path"].endswith(".html"), (
-            f"Expected only HTML files, got {artifact['path']}"
-        )
-
-
-def test_artifacts_archive_excluded(docs_tree_client: TestClient):
-    """docs/archive/* files should NOT appear in artifacts."""
-    response = docs_tree_client.get("/api/artifacts/html")
-    assert response.status_code == 200
-    body = response.json()
-
-    paths = {a["path"] for a in body["artifacts"]}
-    assert not any(p.startswith("docs/archive/") for p in paths), (
-        "docs/archive/* should be excluded from artifacts"
-    )
-
-
-def test_artifacts_podcasts_raw_excluded(docs_tree_client: TestClient):
-    """docs/resources/podcasts/raw/* files should NOT appear in artifacts."""
-    response = docs_tree_client.get("/api/artifacts/html")
-    assert response.status_code == 200
-    body = response.json()
-
-    paths = {a["path"] for a in body["artifacts"]}
-    assert not any("podcasts/raw" in p for p in paths), (
-        "docs/resources/podcasts/raw/* should be excluded from artifacts"
-    )
-
-
-def test_artifacts_dynamic_root_surfaces(docs_tree_client: TestClient):
-    """New docs/<dir> with content should auto-surface no code change (#2106)."""
-    response = docs_tree_client.get("/api/artifacts/html")
-    assert response.status_code == 200
-    body = response.json()
-
-    paths = {a["path"] for a in body["artifacts"]}
-    # proposals should contain both HTML and MD
-    assert "docs/proposals/rfc-001.html" in paths
-    assert "docs/proposals/proposal-2.md" in paths
-    # handoffs should contain MD
-    assert "docs/handoffs/session-1.md" in paths

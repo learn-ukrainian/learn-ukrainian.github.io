@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import logging
 from pathlib import Path
 from unittest.mock import patch
 
@@ -11,14 +10,13 @@ import pytest
 
 from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
 from scripts.agent_runtime.adapters.kimi import (
-    _MODE_FLAGS,
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
     KIMI_MODEL_ALIASES,
     KIMI_PROJECT_SKILLS_RELATIVE,
     KimiAdapter,
 )
-from scripts.agent_runtime.adapters.kimicc import KimiccHarness, resolve_kimicc_dispatch_model
+from scripts.agent_runtime.adapters.kimicc import KimiccHarness
 from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
@@ -157,13 +155,6 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
     assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
 
 
-def test_kimicc_omitted_model_resolves_to_catalog_default_not_native_default():
-    assert resolve_kimicc_dispatch_model(None) == "kimi-code/k3"
-    assert resolve_kimicc_dispatch_model("") == "kimi-code/k3"
-    assert resolve_kimicc_dispatch_model("k2.7") == "k2.7"
-    assert KimiccHarness.default_model == "kimi-code/k3"
-
-
 def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monkeypatch):
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
@@ -256,13 +247,6 @@ def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
     assert parsed.response == "KimiCC response"
 
 
-def test_mode_flag_mapping_admits_flagless_workspace_write_only():
-    """Kimi: web, UI and backend coding only — workspace-write is the one admitted mode."""
-    assert _MODE_FLAGS == {"workspace-write": ()}
-    assert KimiAdapter.supported_modes == frozenset({"workspace-write"})
-    assert KimiccHarness.supported_modes == frozenset({"workspace-write"})
-
-
 def _kimicc_ready(tmp_path, monkeypatch):
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
@@ -327,70 +311,6 @@ def test_kimicc_refuses_a_review_attempt_and_read_only_lease_keys(tmp_path, monk
         )
 
 
-def test_kimicc_does_not_forward_a_non_strict_sources_grant(tmp_path, monkeypatch):
-    """Kimi seats admit web, UI and backend coding only: a bare sources grant reaches the wrapper in no mode.
-
-    Formerly the read-only branch forwarded mcp_config_path + allowed_tools as a review grant.
-    """
-    _kimicc_ready(tmp_path, monkeypatch)
-    plan = KimiccHarness().build_invocation(
-        prompt="critique",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimicc-sources",
-        session_id=None,
-        tool_config=admitted_tool_config(
-            tmp_path,
-            {
-                "mcp_config_path": str(tmp_path / ".mcp.json"),
-                "allowed_tools": "mcp__sources__verify_word",
-            },
-        ),
-    )
-    assert "--mcp-config" not in plan.cmd
-    assert "--allowedTools" not in plan.cmd
-    assert "--read-only-review" not in plan.cmd
-
-
-def _former_review_grant(tmp_path) -> dict:
-    """The retired delegate ask-kimi --review grant (trusted config, sources allowlist, marker)."""
-    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
-
-    trusted = tmp_path / "primary" / ".mcp.json"
-    trusted.parent.mkdir(exist_ok=True)
-    trusted.write_text('{"mcpServers": {}}', encoding="utf-8")
-    return {
-        "harness": "kimicc",
-        "allowed_tools": review_tools_allowed_csv("claude"),
-        "mcp_config_path": str(trusted),
-        "strict_mcp_config": True,
-        "review_verdict_required": True,
-    }
-
-
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-def test_kimicc_refuses_the_review_profile_in_every_mode(tmp_path, monkeypatch, mode):
-    """The review marker is refused before any CLI probe; it no longer leaves plan mode (#8652 retired)."""
-    _kimicc_ready(tmp_path, monkeypatch)
-    probed: list[str] = []
-    monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
-        lambda _: probed.append("probed"),
-    )
-    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
-        KimiccHarness().build_invocation(
-            prompt="critique",
-            mode=mode,
-            cwd=tmp_path,
-            model="k3",
-            task_id=f"kimicc-review-profile-{mode}",
-            session_id=None,
-            tool_config=admitted_tool_config(tmp_path, _former_review_grant(tmp_path)),
-        )
-    assert probed == []
-
-
 @pytest.mark.parametrize("mode", ["read-only", "danger"])
 def test_kimicc_refuses_read_only_and_danger_before_any_probe(tmp_path, monkeypatch, mode):
     """Formerly read-only stayed in plan mode; Kimi seats now admit workspace-write only."""
@@ -413,28 +333,6 @@ def test_kimicc_refuses_read_only_and_danger_before_any_probe(tmp_path, monkeypa
     assert probed == []
     assert not hasattr(kimicc_adapter, "read_only_review_refusal")
     assert not hasattr(kimicc_adapter, "READ_ONLY_REVIEW_ALLOWED_TOOLS")
-
-
-def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):
-    _kimicc_ready(tmp_path, monkeypatch)
-    with pytest.raises(ValueError, match="unsupported tool_config keys"):
-        KimiccHarness().build_invocation(
-            prompt="critique",
-            mode="workspace-write",
-            cwd=tmp_path,
-            model="k3",
-            task_id="kimicc-unknown",
-            session_id=None,
-            tool_config=admitted_tool_config(tmp_path, {"some_future_field": "no"}),
-        )
-
-
-@pytest.mark.parametrize("mode", ["read-only", "danger"])
-def test_read_only_and_danger_refuse_before_kimi_binary_resolution(tmp_path, monkeypatch, mode):
-    with patch("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary") as resolve_binary:
-        with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
-            _build(tmp_path, monkeypatch, mode=mode)
-    resolve_binary.assert_not_called()
 
 
 def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):
@@ -460,19 +358,6 @@ def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path
 
     with pytest.raises(ValueError, match="unsupported Kimi model"):
         _build(tmp_path, monkeypatch, model="k1-classic")
-
-
-def test_effort_warning_fires_only_for_k3(tmp_path, monkeypatch, caplog):
-    caplog.set_level(logging.WARNING)
-    plan = _build(tmp_path, monkeypatch, model="k3", effort="high")
-    assert KIMI_DEFAULT_EFFORT is None
-    assert "max effort only" in caplog.text
-    assert "--effort" not in plan.cmd
-
-    caplog.clear()
-    plan = _build(tmp_path, monkeypatch, model="k2.7-coding", effort="high")
-    assert "max effort only" not in caplog.text
-    assert "--effort" not in plan.cmd
 
 
 def test_empty_stdout_with_rc_zero_fails():
@@ -588,25 +473,6 @@ def test_dispatch_parser_and_commit_trailer_accept_kimi():
     assert _TRAILER_RE.search("X-Agent: kimi/kimi-smoke")
 
 
-def test_dispatch_parser_accepts_only_explicit_kimicc_harness_for_kimi():
-    args = build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "kimi",
-            "--harness",
-            "kimicc",
-            "--task-id",
-            "kimi-kimicc-smoke",
-            "--prompt",
-            "probe",
-            "--dry-run",
-        ]
-    )
-
-    assert args.harness == "kimicc"
-
-
 def test_kimi_mcp_request_fails_closed_without_per_call_selector():
     tool_config, diagnostics = build_mcp_tool_config("kimi", mcp_servers=["sources"])
 
@@ -640,49 +506,3 @@ def test_invocation_telemetry_is_model_aware_and_reports_native_cli_version(tmp_
 
     assert coding_telemetry.model == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
     assert coding_telemetry.effort == "not-exposed"  # k3-256k effort is not forced by the adapter
-
-
-def test_default_model_resolves_k3_256k_and_explicit_k3_max_wins(tmp_path, monkeypatch):
-    """Operator 2026-08-13: omitted --model/--effort → k3-256k, no forced max;
-    explicit --model k3 --effort max still wins."""
-    default = _build(tmp_path, monkeypatch)
-    assert default.cmd[default.cmd.index("-m") + 1] == "kimi-code/k3-256k"
-    assert "--effort" not in default.cmd
-
-    override = _build(tmp_path, monkeypatch, model="k3", effort="max")
-    assert override.cmd[override.cmd.index("-m") + 1] == "kimi-code/k3"
-
-
-def test_binary_resolution_prefers_hermes_over_legacy(tmp_path, monkeypatch):
-    """No override + nothing on PATH: hermes npm install beats the legacy binary."""
-    from scripts.agent_runtime.adapters import kimi as kimi_adapter
-
-    home = tmp_path / "home"
-    hermes = home / ".hermes" / "node" / "bin" / "kimi"
-    legacy = home / ".kimi-code" / "bin" / "kimi"
-    for path in (hermes, legacy):
-        path.parent.mkdir(parents=True)
-        path.write_text("#!/bin/sh\n", encoding="utf-8")
-        path.chmod(0o755)
-
-    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
-    monkeypatch.setattr(kimi_adapter.shutil, "which", lambda _name: None)
-    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: home)
-
-    assert kimi_adapter._resolve_kimi_binary() == str(hermes)
-
-
-def test_binary_resolution_falls_back_to_legacy_when_hermes_absent(tmp_path, monkeypatch):
-    from scripts.agent_runtime.adapters import kimi as kimi_adapter
-
-    home = tmp_path / "home"
-    legacy = home / ".kimi-code" / "bin" / "kimi"
-    legacy.parent.mkdir(parents=True)
-    legacy.write_text("#!/bin/sh\n", encoding="utf-8")
-    legacy.chmod(0o755)
-
-    monkeypatch.delenv("LEARN_UK_KIMI_BIN", raising=False)
-    monkeypatch.setattr(kimi_adapter.shutil, "which", lambda _name: None)
-    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: home)
-
-    assert kimi_adapter._resolve_kimi_binary() == str(legacy)

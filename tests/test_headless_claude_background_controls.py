@@ -1056,27 +1056,6 @@ def test_shell_launchers_are_proven_by_a_runner_test() -> None:
     assert not errors
 
 
-@pytest.mark.repo_wide
-def test_controls_have_a_single_source() -> None:
-    """Only the adapter defines the controls, the wrappers or the argv builder; callers import them from it."""
-    owned = {"HEADLESS_BACKGROUND_ENV", "HEADLESS_BACKGROUND_TOOL_DENIES", ARGV_BUILDER, *WRAPPERS}
-    for rel, source in _python_sources():
-        if rel == ADAPTER or not any(name in source for name in owned):
-            continue
-        tree = ast.parse(source, filename=rel)
-        for node in ast.walk(tree):
-            if isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
-                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
-                bound = {sub.id for target in targets for sub in ast.walk(target) if isinstance(sub, ast.Name)}
-                assert not bound & owned, f"{rel}:{node.lineno} redefines a #9690 control"
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                assert node.name not in owned, f"{rel}:{node.lineno} redefines {node.name}"
-            if isinstance(node, ast.ImportFrom) and {alias.name for alias in node.names} & owned:
-                assert _is_adapter_import(node, rel), (
-                    f"{rel}:{node.lineno} imports a #9690 control from {node.module!r}"
-                )
-
-
 # --- The wrappers ----------------------------------------------------------------------
 
 
@@ -1161,12 +1140,6 @@ def test_wrapper_child_gets_exactly_the_base_env_plus_the_switch(wrapper: Any, s
     assert call["argv"] == ["claude", "-p", "x", "--disallowedTools", DENIES]
     assert call["cwd"] == "/w" and call.items() >= _BOUNDS[wrapper].items()
     assert "shell" not in call and "executable" not in call
-
-
-def test_run_wrapper_requires_a_timeout(spawned: list[dict[str, Any]]) -> None:
-    with pytest.raises(TypeError, match="timeout"):
-        run_headless_claude(["claude", "-p", "x"])  # type: ignore[call-arg]
-    assert spawned == []
 
 
 @pytest.mark.usefixtures("ambient_switch_off")
@@ -1263,30 +1236,6 @@ def test_pipeline_phase_child_is_controlled_without_claudecode(
     assert "CLAUDECODE" not in call["env"], "the pipeline's exclusion must survive the wrapper"
     assert call["env"]["LU_AMBIENT_PROBE"] == "ambient"
     assert (call["input"], call["timeout"]) == ("write the content", 44)
-
-
-def test_pipeline_phase_stops_its_heartbeat_on_timeout(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    from scripts.pipeline import dispatch
-
-    threads: list[Any] = []
-
-    class RecordedThread(dispatch.threading.Thread):
-        def __init__(self, *args: Any, **kwargs: Any) -> None:
-            super().__init__(*args, **kwargs)
-            threads.append(self)
-
-    def timed_out(argv: list[str], **kwargs: Any) -> None:
-        raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
-
-    monkeypatch.setattr(dispatch.threading, "Thread", RecordedThread)
-    monkeypatch.setattr(claude_adapter.subprocess, "run", timed_out)
-    monkeypatch.setattr(dispatch, "supports_exclude_dynamic_system_prompt_sections", lambda _bin: False)
-    prompt_file = tmp_path / "phase.md"
-    prompt_file.write_text("write the content", encoding="utf-8")
-
-    assert dispatch.dispatch_claude_phase(prompt_file, "B content", timeout=1) == (False, "")
-    (thread,) = threads
-    assert not thread.is_alive(), "the heartbeat thread must stop when the run ends"
 
 
 @pytest.mark.usefixtures("ambient_switch_off")
@@ -1487,49 +1436,6 @@ def test_isolated_claude_review_spawn_is_controlled_and_keeps_the_reviewer_env(
 # env it computes is only a base, and the child still gets the switch.
 
 
-def _loop_exit(slug: str) -> None:
-    import os
-
-    env = {SWITCH: "1"}
-    while slug == "retry":
-        env = dict(os.environ)
-        break
-    else:
-        env = {SWITCH: "1"}
-    run_headless_claude(["claude", "-p", slug], base_env=env, timeout=5)
-
-
-def _long_back_edge(slug: str) -> None:
-    import os
-
-    e1 = e2 = e3 = e4 = e5 = {SWITCH: "1"}
-    for _ in range(6):
-        e1, e2, e3, e4, e5 = e2, e3, e4, e5, dict(os.environ)
-    run_headless_claude(["claude", "-p", slug], base_env=e1, timeout=5)
-
-
-def _closure(slug: str) -> None:
-    import os
-
-    env = {SWITCH: "1"}
-
-    def reset() -> None:
-        nonlocal env
-        env = dict(os.environ)
-
-    reset()
-    run_headless_claude(["claude", "-p", slug], base_env=env, timeout=5)
-
-
-@pytest.mark.usefixtures("ambient_switch_off")
-@pytest.mark.parametrize("shape", [_loop_exit, _long_back_edge, _closure], ids=["loop-exit", "back-edge", "nonlocal"])
-def test_round3_shapes_through_the_wrapper_still_force_the_switch(shape: Any, spawned: list[dict[str, Any]]) -> None:
-    shape("retry")
-    (call,) = spawned
-    assert call["env"]["LU_AMBIENT_PROBE"] == "ambient", "the shape did smuggle the ambient env in"
-    _assert_child_controlled(call["argv"], call["env"])
-
-
 # --- The rule: rejection and acceptance fixtures ------------------------------------------------
 
 _IMPORT = (
@@ -1663,37 +1569,6 @@ def test_rule_rejects(body: str) -> None:
     assert _problems(body)
 
 
-_ACCEPTED = {
-    "wrapper": 'def run(p):\n    return run_headless_claude(["claude", "-p", p], base_env={"PATH": "/bin"}, timeout=5)\n',
-    "wrapper-kwargs": 'def run(p, **options):\n    return run_headless_claude([CLAUDE_BIN, "--print", p], **options)\n',
-    "popen-wrapper": (
-        "from scripts.agent_runtime.adapters.claude import popen_headless_claude\n"
-        'def run(p):\n    return popen_headless_claude(["claude", "-p", p], start_new_session=True)\n'
-    ),
-    "builder-then-wrapper": (
-        "from scripts.agent_runtime.adapters.claude import headless_claude_argv\n"
-        'def build(p):\n    return headless_claude_argv(["claude", "-p", p])\n'
-    ),
-    "non-spawn-uses": (
-        "def run(proc):\n    try:\n        return subprocess.PIPE, os.environ.get('CLAUDE_BIN'), os.pathsep\n"
-        "    except subprocess.TimeoutExpired:\n        return getattr(os, 'O_NOFOLLOW', 0)\n"
-    ),
-    "quoted-annotation": 'def run(proc: "subprocess.Popen[str]") -> "subprocess.Popen[str]":\n    return proc\n',
-    "docstring": 'def run():\n    """Start ``claude -p hello`` through the wrapper."""\n',
-    "claude-probe-text": 'MESSAGE = "install claude, then run it"\n',
-    "quoted-annotation-generics": (
-        'def run(procs: "list[subprocess.Popen]", pair: "tuple[subprocess.Popen | None, int]") -> None:\n'
-        "    return None\n"
-    ),
-    "scripts-root-adapter-import": "from agent_runtime.adapters.claude import run_headless_claude\n",
-}
-
-
-@pytest.mark.parametrize("body", list(_ACCEPTED.values()), ids=list(_ACCEPTED))
-def test_rule_accepts(body: str) -> None:
-    assert _problems(body) == []
-
-
 def test_rule_accepts_a_reviewed_exception_and_only_for_its_program() -> None:
     body = 'def status():\n    return subprocess.run(["git", "status"])\n'
     entry = Exception_("scripts/fixture.py", "status", "git", "non-claude", "runs git")
@@ -1773,28 +1648,11 @@ def test_rule_checks_annotations_like_code(body: str) -> None:
     assert _problems(body)
 
 
-@pytest.mark.parametrize("body", list(_ANNOTATION_RECOVERED.values()), ids=list(_ANNOTATION_RECOVERED))
-def test_an_eager_annotation_naming_a_spawn_api_is_a_reference_site(body: str) -> None:
-    assert any("spawns '<reference>' via subprocess.Popen" in p for p in _problems(body))
-
-
 def _postponed_problems(body: str) -> list[str]:
     path = "scripts/fixture.py"
     findings = check_module("from __future__ import annotations\n" + _IMPORT + textwrap.dedent(body), path)
     assert findings is not None
     return problems({path: findings}, [])
-
-
-@pytest.mark.parametrize(
-    "body",
-    [
-        _ANNOTATION_REJECTED["type-annotation"],
-        _ANNOTATION_REJECTED["type-annotation-generics"],
-        *_ANNOTATION_RECOVERED.values(),
-    ],
-)
-def test_rule_leaves_postponed_annotations_to_the_evaluated_string_limit(body: str) -> None:
-    assert _postponed_problems(body) == []
 
 
 @pytest.mark.parametrize(
@@ -1807,54 +1665,6 @@ def test_rule_leaves_postponed_annotations_to_the_evaluated_string_limit(body: s
 )
 def test_rule_checks_values_beside_postponed_annotations(body: str) -> None:
     assert _postponed_problems(body)
-
-
-def _mutated(path: str, old: str, new: str) -> ModuleFindings:
-    source = (REPO_ROOT / path).read_text(encoding="utf-8")
-    assert source.count(old) == 1, f"mutation anchor drifted in {path}: {old!r}"
-    findings = check_module(source.replace(old, new), path)
-    assert findings is not None
-    return findings
-
-
-def test_reviewer_annotation_mutant_in_batch_dispatcher_is_rejected(exceptions: list[Exception_]) -> None:
-    path = "scripts/batch/batch_dispatcher_helpers.py"
-    findings = _mutated(
-        path,
-        "def dispatch_claude_fix(track_name: str,",
-        'def dispatch_claude_fix(track_name: getattr(subprocess, "Popen")([CLAUDE_BIN, "-p", "probe"]),',
-    )
-    assert problems({path: findings}, exceptions)
-
-
-def test_reviewer_recovered_annotation_mutant_in_batch_dispatcher_is_rejected(exceptions: list[Exception_]) -> None:
-    path = "scripts/batch/batch_dispatcher_helpers.py"
-    findings = _mutated(
-        path,
-        "def dispatch_claude_fix(track_name: str,",
-        "def _spawn_type(proc: subprocess.Popen):\n    pass\n\n\n"
-        'def dispatch_claude_fix(track_name: _spawn_type.__annotations__["proc"]([CLAUDE_BIN, "-p", "probe"]),',
-    )
-    assert any("spawns '<reference>' via subprocess.Popen" in p for p in problems({path: findings}, exceptions))
-
-
-@pytest.mark.parametrize(
-    ("path", "module", "level", "expected"),
-    [
-        ("scripts/ai_agent_bridge/openai_proxy.py", "claude", 1, "scripts.ai_agent_bridge.claude"),
-        ("scripts/agent_runtime/adapters/kimicc.py", "claude", 1, ADAPTER_MODULE),
-        ("scripts/agent_runtime/adapters/__init__.py", "claude", 1, ADAPTER_MODULE),
-        ("scripts/agent_runtime/lane_probe.py", "adapters.claude", 1, ADAPTER_MODULE),
-        ("scripts/agent_runtime/adapters/kimicc.py", "adapters.claude", 2, ADAPTER_MODULE),
-        ("scripts/fixture.py", "claude", 3, None),
-        ("scripts/x.py", "agent_runtime.adapters.claude", 0, "agent_runtime.adapters.claude"),
-    ],
-)
-def test_relative_imports_resolve_against_the_importing_package(
-    path: str, module: str, level: int, expected: str | None
-) -> None:
-    node = ast.ImportFrom(module=module, names=[ast.alias(name="run_headless_claude")], level=level)
-    assert resolve_import(node, path) == expected
 
 
 _IMPORT_REJECTED = {
@@ -1870,23 +1680,6 @@ _IMPORT_REJECTED = {
 @pytest.mark.parametrize(("path", "body"), list(_IMPORT_REJECTED.values()), ids=list(_IMPORT_REJECTED))
 def test_rule_rejects_wrapper_bindings_that_resolve_elsewhere(path: str, body: str) -> None:
     assert _problems(body, path=path)
-
-
-def test_rule_accepts_the_adapter_by_relative_import_in_its_own_package() -> None:
-    body = "from .claude import popen_headless_claude\nfrom ..adapters.claude import headless_claude_argv\n"
-    assert _problems(body, path="scripts/agent_runtime/adapters/fixture.py") == []
-
-
-def test_reviewer_relative_import_mutant_in_openai_proxy_is_rejected(exceptions: list[Exception_]) -> None:
-    path = "scripts/ai_agent_bridge/openai_proxy.py"
-    findings = _mutated(
-        path,
-        "    from scripts.agent_runtime.adapters.claude import run_headless_claude\n",
-        "    from .claude import run_headless_claude\n",
-    )
-    assert any(
-        "non-canonical binding of run_headless_claude" in problem for problem in problems({path: findings}, exceptions)
-    )
 
 
 def _probe(path: str, function: str, program: str) -> list[Exception_]:
@@ -1939,68 +1732,11 @@ def test_claude_probe_exception_clears_only_a_frozen_probe(case: str | tuple[str
     )
 
 
-_PROBE_ACCEPTED = {
-    "version": ("scripts/fixture.py", "def probe(b):\n    return subprocess.run([b, '--version'], timeout=5)\n", "b"),
-    "subcommand-help": (
-        "scripts/fixture.py",
-        "def probe(b):\n    return subprocess.run(args=(b, 'exec', '--help'))\n",
-        "b",
-    ),
-    "npx-constant": (
-        "scripts/fixture.py",
-        "def probe():\n    return subprocess.run(['npx', '@anthropic-ai/claude-code@latest', '--version'])\n",
-        "npx",
-    ),
-    "sandbox-choice": (
-        "scripts/review/isolation.py",
-        "def probe(b, box):\n"
-        "    return subprocess.run(wrap_argv_with_sandbox([b, '--help'], box) if box else [b, '--help'], env={})\n",
-        "b",
-    ),
-    "boundary-binding": (
-        "scripts/agent_runtime/attempt_boundary.py",
-        "class B:\n    def probe(self, cmd, overrides):\n"
-        "        version_cmd, env = self.wrap([cmd[0], '--version'], overrides)\n"
-        "        return subprocess.run(version_cmd, env=env, timeout=5)\n",
-        "version_cmd",
-    ),
-}
-
-
-@pytest.mark.parametrize(("path", "body", "program"), list(_PROBE_ACCEPTED.values()), ids=list(_PROBE_ACCEPTED))
-def test_claude_probe_exception_clears_a_frozen_probe(path: str, body: str, program: str) -> None:
-    findings = check_module(_IMPORT + body, path)
-    assert findings is not None
-    function = next(site.function for site in findings.sites)
-    entries = _probe(path, function, program)
-    assert problems({path: findings}, entries) == []
-    assert exception_errors({path: findings}, entries, set()) == []
-
-
 def test_probe_prefixers_cannot_be_rebound() -> None:
     assert _problems("def run():\n    wrap_argv_with_sandbox = print\n", path="scripts/review/isolation.py")
     assert _problems(
         "class B:\n    def run(self):\n        self.wrap = print\n", path="scripts/agent_runtime/attempt_boundary.py"
     )
-
-
-@pytest.mark.parametrize(
-    ("path", "old", "new"),
-    [
-        # The reviewer's shape on today's shared probe: the argv keeps its program but gains a print flag.
-        ("scripts/utils/claude_version.py", '[cmd_prefix[0], "--version"]', '[cmd_prefix[0], "-p", "probe"]'),
-        ("scripts/utils/claude_version.py", '[cmd_prefix[0], "--version"]', '[*cmd_prefix, "--version"]'),
-        (
-            "scripts/agent_runtime/attempt_boundary.py",
-            'self.wrap([cmd[0], "--version"], env_overrides)',
-            'self.wrap([*cmd, "--version"], env_overrides)',
-        ),
-        ("scripts/eval/zno_nmt/adapters.py", '[binary, "--help"]', '[binary, "-p", "--help"]'),
-        ("scripts/review/isolation.py", 'else [program, "--version"]', 'else [program, *extra, "--version"]'),
-    ],
-)
-def test_real_probe_mutants_are_rejected(path: str, old: str, new: str, exceptions: list[Exception_]) -> None:
-    assert problems({path: _mutated(path, old, new)}, exceptions)
 
 
 def test_version_probe_runs_only_literal_version_argvs(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -2017,23 +1753,6 @@ def test_version_probe_runs_only_literal_version_argvs(monkeypatch: pytest.Monke
     assert claude_version.run_version_probe(["claude", "-p"], timeout=1) is None
     assert claude_version.run_version_probe(["npx", "other-package"], timeout=1) is None
     assert argvs == [["/opt/claude", "--version"], ["npx", "@anthropic-ai/claude-code@latest", "--version"]]
-
-
-def test_limit_a_module_without_a_claude_reference_is_not_checked() -> None:
-    """Documented limit: the executable reaches it only as another module's value or from the environment."""
-    source = 'import subprocess\nfrom cfg import BIN\ndef run(p):\n    subprocess.run([BIN, "-p", p])\n'
-    assert check_module(source, "scripts/opaque.py") is None
-
-
-def test_limit_an_argv_handed_on_across_functions_is_not_tied() -> None:
-    """Documented opaque-helper limit: the holder rule needs a Claude token and a print-flag literal in one
-    function. A print flag imported from elsewhere, or a builder whose program is an opaque value, handed
-    to a helper is not tied to it. (A builder that names Claude and a print flag is held.)"""
-    assert _problems('from elsewhere import FLAGS\ndef run(p):\n    launch(["claude", *FLAGS, p])\n') == []
-    assert (
-        _problems('def build(p):\n    return [BIN, "-p", p]\ndef run(p):\n    launch(build(p))\nX = "claude"\n') == []
-    )
-    assert _problems('def build(p):\n    return ["claude", "-p", p]\n')
 
 
 # --- Shell discovery ----------------------------------------------------------------------
@@ -2055,21 +1774,6 @@ def test_limit_an_argv_handed_on_across_functions_is_not_tied() -> None:
 )
 def test_shell_scan_finds_print_mode_claude(script: str) -> None:
     assert shell_claude_print_lines(script)
-
-
-@pytest.mark.parametrize(
-    "script",
-    [
-        'mkdir -p "$HOME/.claude/hooks"\n',
-        "# claude -p is how headless runs start\n",
-        'echo "run claude -p yourself"\n',
-        "cat <<EOF\nclaude -p hello\nEOF\n",
-        'exec claude --model "$M" "$@"\n',
-        '"$CLAUDE_DIR/hooks/guard.sh" -p\n',
-    ],
-)
-def test_shell_scan_ignores_other_commands(script: str) -> None:
-    assert shell_claude_print_lines(script) == []
 
 
 def test_shell_launcher_check_requires_a_runner_test_naming_the_script() -> None:

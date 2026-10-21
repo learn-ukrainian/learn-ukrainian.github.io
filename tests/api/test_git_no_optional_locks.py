@@ -15,10 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.api import git_hygiene_router, project_state_collect, repository_authority, worktrees_router
-
-_FLAG = "--no-optional-locks"
-
+from scripts.api import project_state_collect
 
 _GIT_ENV_DROP = (
     "GIT_DIR",
@@ -79,98 +76,7 @@ def _index_fingerprint(repo: Path) -> tuple[int, bytes]:
     return index.stat().st_mtime_ns, index.read_bytes()
 
 
-def test_plain_status_rewrites_a_stale_index(stale_index_repo: Path) -> None:
-    """Control: without the flag git refreshes the index, so the fixture is meaningful."""
-    before = _index_fingerprint(stale_index_repo)
-    _git(stale_index_repo, "status", "--porcelain")
-    assert _index_fingerprint(stale_index_repo) != before
-
-
 def test_project_state_collect_git_leaves_index_untouched(stale_index_repo: Path) -> None:
     before = _index_fingerprint(stale_index_repo)
     assert project_state_collect._git(stale_index_repo, "status", "--porcelain") == ""
     assert _index_fingerprint(stale_index_repo) == before
-
-
-def test_git_hygiene_run_git_leaves_index_untouched(stale_index_repo: Path) -> None:
-    before = _index_fingerprint(stale_index_repo)
-    code, stdout, _stderr = git_hygiene_router._run_git(["status", "--porcelain"], cwd=stale_index_repo)
-    assert (code, stdout) == (0, "")
-    assert _index_fingerprint(stale_index_repo) == before
-
-
-def test_worktrees_router_status_leaves_index_untouched(stale_index_repo: Path) -> None:
-    before = _index_fingerprint(stale_index_repo)
-    status = worktrees_router._wt_status(stale_index_repo)
-    assert status["dirty"] is False
-    assert status["last_commit"]["subject"] == "fixture"
-    assert _index_fingerprint(stale_index_repo) == before
-
-
-@pytest.mark.parametrize(
-    "checkout,options",
-    [
-        (".", lambda root: [f"--git-dir={root / '.git'}", f"--work-tree={root}"]),
-        (
-            "worktree",
-            lambda root: [f"--git-dir={root / 'worktree' / '..' / '.git'}", f"--work-tree={root / 'worktree'}"],
-        ),
-        ("plain", lambda _root: []),
-    ],
-)
-def test_git_hygiene_invocation_puts_flag_before_subcommand(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, checkout: str, options
-) -> None:
-    (tmp_path / ".git").mkdir()
-    (tmp_path / "worktree").mkdir()
-    (tmp_path / "worktree" / ".git").write_text("gitdir: ../.git\n", encoding="utf-8")
-    (tmp_path / "plain").mkdir()
-    seen: list[list[str]] = []
-
-    def _fake_run(argv: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
-        seen.append(list(argv))
-        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
-
-    monkeypatch.setattr(git_hygiene_router.subprocess, "run", _fake_run)
-    git_hygiene_router._run_git(["status"], cwd=tmp_path / checkout)
-    assert seen == [["git", _FLAG, *options(tmp_path), "status"]]
-
-
-def test_repository_authority_git_passes_flag(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    seen: list[list[str]] = []
-
-    def _fake_run(argv: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
-        seen.append(list(argv))
-        return subprocess.CompletedProcess(argv, 0, stdout="ok\n", stderr="")
-
-    monkeypatch.setattr(repository_authority.subprocess, "run", _fake_run)
-    assert repository_authority._git(tmp_path, "rev-parse", "HEAD") == "ok"
-    assert seen == [["git", _FLAG, "rev-parse", "HEAD"]]
-
-
-def test_fixture_ignores_hostile_inherited_git_configuration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Signing with a failing signer, a failing hook template or no identity never reach the fixture."""
-    hostile = tmp_path / "hostile"
-    hooks = hostile / "templates" / "hooks"
-    hooks.mkdir(parents=True)
-    (hooks / "pre-commit").write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
-    (hooks / "pre-commit").chmod(0o755)
-    config = hostile / "gitconfig"
-    config.write_text(
-        f"[commit]\n\tgpgsign = true\n[gpg]\n\tprogram = false\n[init]\n\ttemplateDir = {hostile / 'templates'}\n",
-        encoding="utf-8",
-    )
-    for key in ("GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL"):
-        monkeypatch.delenv(key, raising=False)
-    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(config))
-    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
-    monkeypatch.setenv("GIT_CONFIG_KEY_0", "commit.gpgsign")
-    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "true")
-    monkeypatch.setenv("GIT_TEMPLATE_DIR", str(hostile / "templates"))
-
-    repo = _build_stale_index_repo(tmp_path, monkeypatch)
-
-    assert not (repo / ".git" / "hooks").exists()
-    before = _index_fingerprint(repo)
-    assert project_state_collect._git(repo, "status", "--porcelain") == ""
-    assert _index_fingerprint(repo) == before

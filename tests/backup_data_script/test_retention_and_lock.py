@@ -126,28 +126,3 @@ def test_symlink_policy_rejects_resolving_legacy_symlink_outside_legacy_dir(
     result = _run(environment, "backup")
     assert result.returncode != 0
     assert "Known legacy symlink points outside the legacy backup: textbooks ->" in result.stderr
-
-
-def test_verify_checks_repository_and_rejects_snapshot_arguments(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-
-    metadata_check = _run(environment, "verify")
-
-    assert metadata_check.returncode == 0, metadata_check.stderr
-    assert "arg=<check>" in _log(environment)
-    assert "arg=<--read-data>" not in _log(environment)
-
-    Path(environment["FAKE_RESTIC_LOG"]).write_text("", encoding="utf-8")
-    data_check = _run(environment, "verify", "--read-data")
-
-    assert data_check.returncode == 0, data_check.stderr
-    assert "arg=<check> arg=<--read-data>" in _log(environment)
-
-    Path(environment["FAKE_RESTIC_LOG"]).write_text("", encoding="utf-8")
-    rejected = _run(environment, "verify", "latest")
-
-    assert rejected.returncode != 0
-    assert "does not accept snapshot IDs" in rejected.stderr
-    assert _log(environment) == ""

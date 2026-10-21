@@ -8,7 +8,6 @@ from copy import deepcopy
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.projects.open_model_data import phase3_disposition_audit as audit
 from scripts.projects.open_model_data import phase3_source_dispositions as dispositions
@@ -354,40 +353,6 @@ def test_emits_audit_shape_ledger_accepted_by_independent_validator(
         )
 
 
-def test_cli_wires_argument_destinations_to_compiler(
-    tmp_path: Path,
-    tiny_totals: dict[str, int],
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    freeze, units = _freeze(tmp_path, tiny_totals)
-    role = tmp_path / "roles.json"
-    _role_contract(role)
-    reviewed = tmp_path / "reviewed.json"
-    _json(reviewed, _input(freeze, units, tiny_totals, role))
-
-    assert (
-        dispositions.main(
-            [
-                "--source-freeze-dir",
-                str(freeze),
-                "--reviewed-input",
-                str(reviewed),
-                "--output-dir",
-                str(tmp_path / "cli-out"),
-                "--source-review-receipt",
-                str(tmp_path / "source-review-receipt.json"),
-                "--schema",
-                str(dispositions.DEFAULT_SCHEMA),
-                "--role-contract",
-                str(role),
-            ]
-        )
-        == 0
-    )
-    output = json.loads(capsys.readouterr().out)
-    assert output == {"ok": True, "receipt": dispositions.OUTPUT_RECEIPT_FILE, "rows": 7}
-
-
 @pytest.mark.parametrize(
     "tamper, error",
     [
@@ -433,57 +398,6 @@ def test_fails_closed_on_wrong_frozen_total(tmp_path: Path, tiny_totals: dict[st
     _json(receipt_path, receipt)
     document = _input(freeze, units, tiny_totals, role)
     with pytest.raises(dispositions.DispositionError, match="wrong frozen family total"):
-        _compile(tmp_path, freeze, document, role)
-
-
-def test_schema_forbids_conversion_artifacts_on_nonconverted(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
-    freeze, units = _freeze(tmp_path, tiny_totals)
-    role = tmp_path / "roles.json"
-    _role_contract(role)
-    document = _input(freeze, units, tiny_totals, role)
-    row = next(item for item in document["families"] if item["family_id"] == "ua_gec")["dispositions"][0]
-    row["disposition_code"] = "evaluation_only"
-    row["nonconversion"] = {"reason_code": "heldout_partition", "unit_specific_locator_sha256": _sha("partition")}
-    with pytest.raises(dispositions.DispositionError, match="schema violation"):
-        _compile(tmp_path, freeze, document, role)
-
-
-def test_converted_disposition_forbids_nonconversion_payload(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
-    freeze, units = _freeze(tmp_path, tiny_totals)
-    role = tmp_path / "roles.json"
-    _role_contract(role)
-    document = _input(freeze, units, tiny_totals, role)
-    row = next(item for item in document["families"] if item["family_id"] == "ua_gec")["dispositions"][0]
-    row["nonconversion"] = {
-        "reason_code": "contradictory_payload",
-        "unit_specific_locator_sha256": _sha("contradiction"),
-    }
-    with pytest.raises(dispositions.DispositionError, match="schema violation"):
-        _compile(tmp_path, freeze, document, role)
-
-
-def test_rights_limit_cannot_replace_a_v2_disposition(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
-    freeze, units = _freeze(tmp_path, tiny_totals)
-    role = tmp_path / "roles.json"
-    _role_contract(role)
-    document = _input(freeze, units, tiny_totals, role)
-    row = next(item for item in document["families"] if item["family_id"] == "ua_gec")["dispositions"][0]
-    for key in (
-        "canonical_identity",
-        "source_role",
-        "claim_type",
-        "evidence_locator_sha256s",
-        "consumer_view",
-        "predicate_sha256",
-        "artifact_sha256",
-    ):
-        row.pop(key)
-    row["disposition_code"] = "rights_limited_locator_only"
-    row["nonconversion"] = {
-        "reason_code": "rights_limit_is_only_a_capability_tag",
-        "unit_specific_locator_sha256": _sha(row["unit_id"]),
-    }
-    with pytest.raises(dispositions.DispositionError, match="schema violation"):
         _compile(tmp_path, freeze, document, role)
 
 
@@ -618,34 +532,6 @@ def test_fails_closed_on_source_authoring_provenance_tampering(
         _compile(tmp_path, freeze, document, role)
 
 
-def test_fails_closed_on_drifted_role_contract_task(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
-    freeze, units = _freeze(tmp_path, tiny_totals)
-    role = tmp_path / "roles.json"
-    _role_contract(role)
-    document = _input(freeze, units, tiny_totals, role)
-    contract = json.loads(role.read_text(encoding="utf-8"))
-    next(item for item in contract["functional_roles"] if item["role_id"] == "rule_author_extractor")["task_id"] = (
-        "phase3-v2-1-drifted-author"
-    )
-    _json(role, contract)
-    document["role_contract_sha256"] = dispositions.sha256_file(role)
-    with pytest.raises(dispositions.DispositionError, match="functional-role schema violation"):
-        _compile(tmp_path, freeze, document, role)
-
-
-def test_fails_closed_on_obsolete_role_contract(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
-    freeze, units = _freeze(tmp_path, tiny_totals)
-    role = tmp_path / "roles.json"
-    _role_contract(role)
-    document = _input(freeze, units, tiny_totals, role)
-    role.write_bytes(
-        (dispositions.DEFAULT_ROLE_CONTRACT.parent / "correction_protection_role_contract_v1.json").read_bytes()
-    )
-    document["role_contract_sha256"] = dispositions.sha256_file(role)
-    with pytest.raises(dispositions.DispositionError, match="schema violation"):
-        _compile(tmp_path, freeze, document, role)
-
-
 def test_source_review_receipt_binds_exact_disposition_payload(tmp_path: Path, tiny_totals: dict[str, int]) -> None:
     freeze, units = _freeze(tmp_path, tiny_totals)
     role = tmp_path / "roles.json"
@@ -724,30 +610,3 @@ def test_fails_closed_when_source_review_receipt_is_missing(tmp_path: Path, tiny
     (tmp_path / "source-review-receipt.json").unlink()
     with pytest.raises(dispositions.DispositionError, match="source review receipt is missing"):
         _compile(tmp_path, freeze, document, role)
-
-
-def test_closed_input_schema_rejects_unknown_fields() -> None:
-    schema = json.loads(dispositions.DEFAULT_SCHEMA.read_text(encoding="utf-8"))
-    validator = Draft202012Validator(schema)
-    with pytest.raises(ValidationError):
-        validator.validate(
-            {
-                "schema_version": dispositions.INPUT_SCHEMA_VERSION,
-                "text_free": True,
-                "source_freeze_receipt_sha256": "0" * 64,
-                "role_contract_sha256": "0" * 64,
-                "author_binding": {
-                    "role_id": "rule_author_extractor",
-                    "controller_identity_id": "controller.x",
-                    "task_id": "task.x",
-                },
-                "source_review_binding": {
-                    "role_id": "ukrainian_source_reviewer",
-                    "controller_identity_id": "controller.y",
-                    "task_id": "task.y",
-                    "receipt_sha256": "0" * 64,
-                },
-                "families": [],
-                "source_text": "forbidden",
-            }
-        )

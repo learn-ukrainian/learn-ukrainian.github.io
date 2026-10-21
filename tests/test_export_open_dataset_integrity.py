@@ -7,7 +7,6 @@ import gzip
 import hashlib
 import json
 import sqlite3
-from pathlib import Path
 
 import pytest
 
@@ -18,8 +17,6 @@ from scripts.lexicon import export_open_dataset as export_mod
 from scripts.lexicon import manifest_io, publish_manifest
 from scripts.open_dataset import hydrate, publish
 from tests.word_card_certification_fixtures import certification_fixture, sha  # noqa: F401
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 def save(path, value):
@@ -221,28 +218,6 @@ def test_scope_schema_and_draft_rules(tmp_path, certification):
         card.update(original)
 
 
-def test_authority_cache_is_per_run(monkeypatch, certification):
-    calls = []
-    original = Path.open
-
-    def counted(path, *args, **kwargs):
-        calls.append(path)
-        return original(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, 'open', counted)
-    with cert.certification_run():
-        for _ in range(25):
-            cert.load_certified_card_for_export(certification.card)
-    assert calls.count(certification.ledger_path) == 1
-    assert calls.count(certification.register) == 1
-    assert calls.count(certification.code) == 1
-    for path in certification.snapshots.values():
-        assert calls.count(path) == 1
-    invalidate(certification, 'withdrawn')
-    with pytest.raises(cert.UncertifiedCardRefusal):
-        cert.load_certified_card_for_export(certification.card)
-
-
 @pytest.mark.parametrize('fault', FAULTS)
 def test_manifest_cache_rechecks_authority(tmp_path, monkeypatch, certification, fault):
     original = json.dumps({'cards': [certification.card]}).encode()
@@ -297,18 +272,6 @@ def test_runtime_certification(tmp_path, monkeypatch, certification, fault):
         if fault not in {'head', 'gloss', 'cefr', 'form_route', 'kind'}:
             with pytest.raises(runtime.ExportError):
                 runtime.verify_tree(out, 'atlas')
-
-
-def test_authoritative_ledger_and_census():
-    ledger = json.loads((ROOT / 'docs/atlas/word-cards/review-evidence-ledger.json').read_bytes())
-    assert ledger['approved_reviews'] == []
-    census = json.loads((ROOT / 'docs/atlas/word-cards/acceptance-export-path-census.json').read_bytes())
-    assert census['source_census_issue'] == 9401
-    assert {row['path_id'] for row in census['frozen_paths']} == {
-        'dataset_export', 'acceptance', 'runtime_export', 'runtime_verify', 'package_collect', 'package_build',
-        'dataset_publish', 'dataset_hydrate', 'manifest_read', 'manifest_publish', 'versioned_dataset_projection'}
-    for row in census['frozen_paths']:
-        assert (ROOT / row['entry_point']).is_file()
 
 
 @pytest.mark.parametrize('kind,expected', [('lexeme', 'lemma'), ('mwe', 'multiword_term'),

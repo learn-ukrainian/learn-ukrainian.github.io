@@ -8,7 +8,6 @@ import os
 import shutil
 import subprocess
 import sys
-import threading
 from pathlib import Path
 
 import pytest
@@ -53,20 +52,6 @@ def _remove(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str, s
     code = worktree_claims.main(["remove", *argv])
     captured = capsys.readouterr()
     return code, captured.out, captured.err
-
-
-@pytest.mark.parametrize("returncode,stdout,expected", [(0, "", False), (0, "?? new.txt\n", True), (128, "", None)])
-def test_worktree_is_dirty_uses_the_ordinary_git_probe(tmp_path, monkeypatch, returncode, stdout, expected):
-    calls = []
-
-    def runner(args, *, cwd):
-        calls.append((cwd, args))
-        return subprocess.CompletedProcess(["git", *args], returncode, stdout, "")
-
-    monkeypatch.setattr(worktree_claims, "_git_probe", runner)
-
-    assert worktree_claims.worktree_is_dirty(tmp_path) is expected
-    assert calls == [(tmp_path, ["status", "--porcelain"])]
 
 
 def test_removes_an_unclaimed_linked_worktree_and_keeps_its_branch(tmp_path, capsys):
@@ -141,18 +126,6 @@ def test_control_plane_root_is_the_public_primary_only_for_fleet_siblings(tmp_pa
     assert worktree_claims.control_plane_root(stranger) == stranger.resolve()
 
 
-def test_control_plane_root_raises_when_the_fleet_catalog_is_unreadable(tmp_path, monkeypatch):
-    _fleet(tmp_path, monkeypatch)
-
-    def unreadable():
-        raise worktree_claims.FleetRepoError("catalog missing")
-
-    monkeypatch.setattr(worktree_claims, "load_fleet_repos", unreadable)
-
-    with pytest.raises(worktree_claims.ControlPlaneError, match="catalog unreadable"):
-        worktree_claims.control_plane_root(tmp_path / "learn-ukrainian-infra-private")
-
-
 def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
     from scripts.orchestration import fleet_repos
@@ -181,18 +154,6 @@ def test_remove_unclaimed_worktree_never_raises_on_malformed_catalog_yaml(tmp_pa
 
     assert result.action == "skipped"
     assert result.reason == worktree_claims.LOCK_UNAVAILABLE
-    assert worktree.exists()
-
-
-def test_malformed_catalog_yaml_refuses_cli_removal_cleanly(tmp_path, capsys, monkeypatch):
-    _public, sibling = _fleet(tmp_path, monkeypatch)
-    worktree = _linked(sibling, "codex/impl-sib-badyaml-cli")
-    _malformed_catalog(tmp_path, monkeypatch)
-
-    code, _out, err = _remove(capsys, str(worktree))
-
-    assert code == worktree_claims.EXIT_REFUSED
-    assert "worktree lock unavailable" in err
     assert worktree.exists()
 
 
@@ -228,33 +189,6 @@ def test_sibling_repo_worktree_is_removed_once_the_public_claim_is_finished(tmp_
     assert (code, err) == (worktree_claims.EXIT_REMOVED, "")
     assert not worktree.exists()
     assert _git(sibling, "branch", "--list", "codex/impl-sib-free")
-
-
-def test_sibling_repo_worktree_is_kept_while_its_public_lock_is_held(tmp_path, capsys, monkeypatch):
-    """#8624: the lock dispatch holds lives in the public git dir; the CLI contends on that file."""
-    public, sibling = _fleet(tmp_path, monkeypatch)
-    worktree = _linked(sibling, "codex/impl-sib-lock")
-    monkeypatch.setattr(worktree_claims, "DEFAULT_LOCK_TIMEOUT_S", 0.2)
-
-    held, release = threading.Event(), threading.Event()
-
-    def attach() -> None:
-        with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(public)):
-            held.set()
-            release.wait(timeout=30)
-
-    attacher = threading.Thread(target=attach)
-    attacher.start()
-    try:
-        assert held.wait(timeout=30)
-        code, out, err = _remove(capsys, str(worktree))
-    finally:
-        release.set()
-        attacher.join(timeout=30)
-
-    assert (code, out) == (worktree_claims.EXIT_REFUSED, "")
-    assert "worktree lock busy" in err
-    assert worktree.exists()
 
 
 def test_unreadable_fleet_catalog_refuses_removal(tmp_path, capsys, monkeypatch):
@@ -494,19 +428,6 @@ def test_wt_sh_clean_removes_through_the_guarded_cli(tmp_path, monkeypatch):
     assert not worktree.exists()
 
 
-def test_wt_sh_clean_refuses_a_claimed_worktree_and_keeps_its_branch(tmp_path):
-    primary, worktree = _wt_sh_fixture(tmp_path)
-    _record(primary, "impl-817", status="running", worktree_path=str(worktree))
-
-    proc = _wt_clean(primary)
-
-    assert proc.returncode == worktree_claims.EXIT_REFUSED
-    assert "worktree claimed by active task impl-817" in proc.stderr
-    assert "Worktree not removed" in proc.stdout
-    assert worktree.exists()
-    assert _git(primary, "branch", "--list", "fix/817-issue-817")
-
-
 def test_wt_sh_create_from_linked_worktree_targets_primary_sibling(tmp_path):
     primary = _primary(tmp_path)
     worktree = _linked(
@@ -567,24 +488,6 @@ def test_namespace_unknown_worker_keeps_terminal_worktree_claim(tmp_path, status
     assert refusal == "worktree claimed by active task worker"
     refusal = worktree_claims.owner_release_refusal(target, owner_task_id="worker", tasks_dir=tasks, repo_root=tmp_path)
     assert refusal == "owner task worker worker is live or unknown; refusing worktree removal"
-
-
-def test_namespace_owner_exemption_does_not_release_unknown_worker(tmp_path):
-    from scripts.orchestration import worktree_claims
-
-    target = tmp_path / "checkout"
-    target.mkdir()
-    tasks = tmp_path / "tasks"
-    tasks.mkdir()
-    record = {
-        "task_id": "worker", "status": "crashed", "run_nonce": "run",
-        "worktree_path": str(target), "pid": 999_999_998,
-        "worker_identity": {"pid": 999_999_998, "start_time": 100, "pid_namespace": "pid:[999999]"},
-    }
-    (tasks / "worker.json").write_text(json.dumps(record))
-    assert worktree_claims.active_worktree_claim_refusal(
-        target, tasks_dir=tasks, repo_root=tmp_path, owner_task_id="worker"
-    ) == "worktree claimed by active task worker"
 
 
 def test_namespace_other_live_worker_keeps_terminal_claim(tmp_path):

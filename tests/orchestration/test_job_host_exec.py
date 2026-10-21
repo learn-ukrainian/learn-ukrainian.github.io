@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import io
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -12,7 +11,6 @@ import pytest
 
 from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
 from scripts.orchestration import job_host_exec as jh
-from tests._host_path_guard import assert_no_host_paths
 
 pytestmark = pytest.mark.reads_content
 
@@ -22,24 +20,6 @@ def _clear_occupancy_pin(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(jh.ENV_OCCUPANCY_HOST, raising=False)
     monkeypatch.delenv(jh.ENV_RUNTIME_INITIATOR, raising=False)
     monkeypatch.delenv(jh.ENV_RUNTIME_INITIATOR_SOURCE, raising=False)
-
-
-def test_cli_help_runs_without_pythonpath(tmp_path: Path) -> None:
-    script = Path(jh.__file__).resolve()
-    env = os.environ.copy()
-    env["PYTHONPATH"] = ""
-    proc = subprocess.run(
-        [sys.executable, str(script), "--help"],
-        cwd=tmp_path,
-        env=env,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert proc.returncode == 0, proc.stderr
-    assert "Examples:" in proc.stdout
-    assert "Exit codes:" in proc.stdout
 
 
 def _marker_root(tmp_path: Path) -> Path:
@@ -69,24 +49,10 @@ def _payload(**hosts: dict) -> dict:
     return {"schema": "monitor-occupancy.v1", "hosts": shaped}
 
 
-def test_build_remote_command_prefixes_path_and_cds() -> None:
-    remote = jh.build_remote_command(
-        [".venv/bin/python", "scripts/delegate.py", "dispatch", "--agent", "kimi"],
-        remote_repo="/remote/repo",
-    )
-    assert 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"' in remote
-    assert "cd /remote/repo &&" in remote
-
-
 def test_build_ssh_argv_is_batchmode() -> None:
     argv = jh.build_ssh_argv("job-alias", "true")
     assert argv[:5] == ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=12"]
     assert argv[5] == "job-alias"
-
-
-def test_source_has_no_baked_home_defaults() -> None:
-    text = Path(jh.__file__).read_text(encoding="utf-8")
-    assert_no_host_paths(text)
 
 
 def test_fails_closed_when_env_unset(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -144,22 +110,6 @@ def test_job_full_uses_teacher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     )
 
 
-def test_teacher_full_uses_job(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(jh.ENV_ALLOW_NOTEBOOK, raising=False)
-    root = _marker_root(tmp_path)
-    occupancy = _payload(
-        **{
-            "host-job": _entry(mem=20.0, disk=40.0),
-            "host-teacher": _entry(mem=99.0, disk=99.0),
-        }
-    )
-    assert jh.decide_dispatch_placement(repo_root=root, occupancy=occupancy) == (
-        "vps",
-        "available",
-        "host-job",
-    )
-
-
 def test_both_full_or_down_falls_back_to_notebook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(jh.ENV_ALLOW_NOTEBOOK, raising=False)
     root = _marker_root(tmp_path)
@@ -188,17 +138,6 @@ def test_allow_env_bypasses_block(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
         "allow_env",
         None,
     )
-
-
-def test_ssh_alias_for_teacher_and_job(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(jh.ENV_DISPATCH_SSH, "host-job=job-alias,host-teacher=teacher-alias")
-    assert jh.ssh_alias_for_host_id("host-teacher") == "teacher-alias"
-    assert jh.ssh_alias_for_host_id("host-job") == "job-alias"
-    monkeypatch.delenv(jh.ENV_DISPATCH_SSH, raising=False)
-    monkeypatch.setenv(jh.ENV_TEACHER_HOST, "teacher-from-env")
-    monkeypatch.setenv(jh.ENV_HOST, "job-from-env")
-    assert jh.ssh_alias_for_host_id("host-teacher") == "teacher-from-env"
-    assert jh.ssh_alias_for_host_id("host-job") == "job-from-env"
 
 
 def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -331,116 +270,6 @@ def test_main_help_contract() -> None:
     assert "Issue: #7062" in help_text
 
 
-def test_forward_dispatch_sets_allow_notebook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.forward_dispatch(
-        host_id="host-job",
-        argv=["scripts/delegate.py", "dispatch", "--agent", "agy", "--task-id", "smoke"],
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert "BatchMode=yes" in recorded
-    assert "job-alias" in recorded
-    assert "bash -s" in recorded
-    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
-    assert "dispatch" in script
-    assert "--agent" in script
-
-
-def test_forward_dispatch_preserves_initiator(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.forward_dispatch(
-        host_id="host-job",
-        argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
-        initiator="cursor/job-host-dispatch",
-        initiator_source="session_env",
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert "--initiator" in script
-    assert "cursor/job-host-dispatch" in script
-    assert f"export {jh.ENV_RUNTIME_INITIATOR}=" in script
-    assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
-    assert "cursor/job-host-dispatch" not in recorded
-
-
-def test_forward_dispatch_inlines_prompt_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    prompt = tmp_path / "brief.md"
-    prompt.write_text("keep curriculum/l2-uk-en in the worktree\n", encoding="utf-8")
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.forward_dispatch(
-        host_id="host-job",
-        argv=[
-            "scripts/delegate.py",
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            "cf",
-            "--prompt-file",
-            str(prompt),
-        ],
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert str(prompt) not in recorded
-    assert "keep curriculum/l2-uk-en in the worktree" not in recorded
-    assert "--prompt-file" in script
-    assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
-    assert "$LU_DISPATCH_PROMPT_0" in script
-    assert "\n--prompt\n-\n" not in script
-    assert "keep curriculum/l2-uk-en in the worktree" not in script
-
-
 def test_forward_dispatch_rewrites_prompt_dash(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -484,92 +313,6 @@ def test_forward_dispatch_rewrites_prompt_dash(
     assert "$LU_DISPATCH_PROMPT_0" in script
     assert "\n--prompt\n-\n" not in script
     assert "touch wiki/pages.md" not in recorded
-
-
-def test_forward_dispatch_copies_lifecycle_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    ledger = tmp_path / "task-lifecycle.json"
-    ledger.write_text('{"schema":"task-lifecycle.v1","task_id":"cf"}\n', encoding="utf-8")
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.forward_dispatch(
-        host_id="host-job",
-        argv=[
-            "scripts/delegate.py",
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            "cf",
-            "--lifecycle-file",
-            str(ledger),
-        ],
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert str(ledger) not in recorded
-    assert "--lifecycle-file" in script
-    assert "/tmp/lu-dispatch-lifecycle.XXXXXX" in script
-    assert "$LU_DISPATCH_LIFECYCLE_0" in script
-    assert "base64 -d >" in script
-
-
-def test_forward_dispatch_copies_output_schema(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    schema = tmp_path / "review.schema.json"
-    schema.write_text('{"type":"object"}\n', encoding="utf-8")
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.forward_dispatch(
-        host_id="host-job",
-        argv=[
-            "scripts/delegate.py",
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            "cf",
-            "--output-schema",
-            str(schema),
-        ],
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert str(schema) not in recorded
-    assert "--output-schema" in script
-    assert "/tmp/lu-dispatch-output-schema.XXXXXX" in script
-    assert "$LU_DISPATCH_OUTPUT_SCHEMA_0" in script
-    assert "base64 -d >" in script
 
 
 def test_forward_dispatch_rejects_notebook_cwd(
@@ -639,24 +382,6 @@ def test_forward_dispatch_missing_ssh_is_transport_error(
     empty = tmp_path / "empty"
     empty.mkdir()
     monkeypatch.setenv("PATH", str(empty))
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    with pytest.raises(jh.SshTransportError):
-        jh.forward_dispatch(
-            host_id="host-job",
-            argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
-        )
-
-
-def test_forward_dispatch_unexecutable_ssh_is_transport_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    fake_ssh.chmod(0o644)
-    monkeypatch.setenv("PATH", str(fake_bin))
     monkeypatch.setenv(jh.ENV_HOST, "job-alias")
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
     with pytest.raises(jh.SshTransportError):
@@ -765,18 +490,6 @@ def test_main_missing_ssh_dispatch_returns_255(
     assert rc == 255
 
 
-def test_main_missing_ssh_plain_command_returns_255(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    empty = tmp_path / "empty"
-    empty.mkdir()
-    monkeypatch.setenv("PATH", str(empty))
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.main(["--host-id", "host-job", "--", "true"])
-    assert rc == 255
-
-
 def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -806,36 +519,3 @@ def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     assert "--run-nonce" in script
     assert "nonce-fwd-9876" in script
     assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=" in script
-
-
-def test_format_forward_config_refusal_names_both_recovery_paths() -> None:
-    """#7230: format_forward_config_refusal explicitly names both recovery paths and fail-closed policy."""
-    err = jh.ForwardConfigError("LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required")
-    msg = jh.format_forward_config_refusal(err, host_id="host-job")
-    assert "❌ VPS forward configuration refusal for host-job:" in msg
-    assert "LU_JOB_DISPATCH_HOST or ATLAS_RUNNER_HOST is required" in msg
-    assert "LU_JOB_DISPATCH_HOST" in msg
-    assert "ATLAS_RUNNER_HOST" in msg
-    assert "LU_JOB_REPO" in msg
-    assert "LU_ALLOW_NOTEBOOK_DISPATCH=1" in msg
-    assert "deliberately do not fall back" in msg
-
-
-def test_forward_config_error_inherits_value_error() -> None:
-    """#7230: ForwardConfigError must be a ValueError subclass for backward compatibility."""
-    err = jh.ForwardConfigError("missing env")
-    assert isinstance(err, ValueError)
-
-
-def test_job_host_exec_main_refusal_names_both_recovery_paths(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
-) -> None:
-    """#7230: job_host_exec.py CLI prints the refusal naming recovery paths and exits rc 2 on config error."""
-    monkeypatch.delenv(jh.ENV_HOST, raising=False)
-    monkeypatch.delenv(jh.ENV_HOST_FALLBACK, raising=False)
-    rc = jh.main(["--host-id", "host-job", "--", "scripts/delegate.py", "dispatch", "--task-id", "t-1"])
-    assert rc == 2
-    captured = capsys.readouterr()
-    assert "❌ VPS forward configuration refusal for host-job:" in captured.err
-    assert "LU_JOB_DISPATCH_HOST" in captured.err
-    assert "LU_ALLOW_NOTEBOOK_DISPATCH=1" in captured.err

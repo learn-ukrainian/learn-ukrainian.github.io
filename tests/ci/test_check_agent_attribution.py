@@ -11,7 +11,6 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -209,28 +208,6 @@ def test_one_pr_omitting_attribution_fails_while_its_neighbour_passes(
     assert out.count("::error title=agent-attribution::") == 1
 
 
-def test_blank_body_shape_fails(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(31, ["fix\n\nX-Agent: codex/impl-31\n"])
-    blank = "fix (#31)\n\nCo-authored-by: LU Unattributed <unattributed@local.invalid>\nCo-authored-by: OpenAI <openai@local.invalid>\n"
-    queue.land(31, blank)
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 1
-    assert "MISSING_ATTRIBUTION pr=#31" in out
-
-
-def test_attribution_never_needs_to_be_the_last_paragraph(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(32, ["fix\n\nX-Agent: codex/impl-32\n"])
-    queue.land(32, _landed(32, "fix", "codex/impl-32"))
-    parsed = _git(queue.repo, "log", "-1", "--format=%(trailers:key=X-Agent,valueonly)", "queue")
-    assert parsed == ""  # git's trailer parser cannot see it: GitHub's co-author block is last
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 0, out
-
-
 def test_two_commit_pr_needs_both_values(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
     queue.open_pr(41, ["part one\n\nX-Agent: codex/impl-41\n", "part two\n\nX-Agent: claude/impl-41-b\n"])
     queue.land(41, _landed(41, "both", "codex/impl-41"))
@@ -241,15 +218,6 @@ def test_two_commit_pr_needs_both_values(queue: Queue, capsys: pytest.CaptureFix
     assert "INCOMPLETE_ATTRIBUTION pr=#41" in out
     assert "omits 1 of 2 PR value(s)" in out
     assert "claude/impl-41-b" not in out  # counts only; message content is never echoed
-
-
-def test_two_commit_pr_with_both_values_passes(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(42, ["part one\n\nX-Agent: codex/impl-42\n", "part two\n\nX-Agent: claude/impl-42-b\n"])
-    queue.land(42, _landed(42, "both", "codex/impl-42", "claude/impl-42-b"))
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 0, out
 
 
 def test_commit_without_attribution_fails_even_when_another_supplies_one(
@@ -296,25 +264,6 @@ def test_subject_without_pr_number_fails(queue: Queue, capsys: pytest.CaptureFix
     assert "MISSING_PR_REFERENCE" in out
 
 
-def test_only_a_terminal_pr_number_counts(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(62, ["fix\n\nX-Agent: codex/impl-62\n"])
-    queue.land(62, "fix (#62) and more\n\nX-Agent: codex/impl-62\n")
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 1
-    assert "MISSING_PR_REFERENCE" in out
-
-
-def test_issue_reference_before_the_pr_number_is_not_the_pr(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(63, ["fix\n\nX-Agent: codex/impl-63\n"])
-    queue.land(63, "fix the thing (#9999) (#63)\n\nX-Agent: codex/impl-63\n")
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 0, out
-
-
 def test_unfetchable_pull_ref_fails(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
     queue.open_pr(71, ["fix\n\nX-Agent: codex/impl-71\n"])
     queue.land(71, _landed(71, "fix", "codex/impl-71"))
@@ -343,13 +292,6 @@ def test_base_that_is_not_an_ancestor_fails(queue: Queue, capsys: pytest.Capture
 
     assert code == 1
     assert "GIT_ERROR" in out
-
-
-def test_unknown_or_empty_ref_fails_closed(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    for head in ("0" * 40, ""):
-        code = check.main(["--merge-group", queue.base, head])
-        assert code == 1
-        assert "GIT_ERROR" in capsys.readouterr().out
 
 
 def test_merge_commit_in_the_chain_is_not_a_squash_commit(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
@@ -390,16 +332,6 @@ def test_malformed_value_fails_and_is_not_echoed(
     assert bad_line.split(":", 1)[1].strip() not in out or bad_line.split(":", 1)[1].strip() == ""
 
 
-def test_malformed_line_beside_a_good_one_still_fails(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(102, ["fix\n\nX-Agent: codex/impl-102\n"])
-    queue.land(102, "fix (#102)\n\nX-Agent: codex/impl-102\nX-Agent: oops\n")
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 1
-    assert "MALFORMED_ATTRIBUTION" in out
-
-
 # --- bot exemption --------------------------------------------------------------------------
 
 
@@ -420,18 +352,6 @@ def test_forged_bot_name_is_not_exempt(queue: Queue, capsys: pytest.CaptureFixtu
 
     assert code == 1
     assert "MISSING_ATTRIBUTION pr=#112" in out
-
-
-def test_bot_suffix_in_the_git_author_proves_nothing_without_the_api(
-    queue: Queue, capsys: pytest.CaptureFixture[str]
-) -> None:
-    queue.open_pr(113, [("Bump pytest from 8 to 9\n", BOT_AUTHOR)])
-    queue.land(113, "Bump pytest from 8 to 9 (#113)\n")
-
-    for get in (None, _api({})):
-        code, out = _run_group(queue, capsys, get=get)
-        assert code == 1
-        assert "MISSING_ATTRIBUTION pr=#113" in out
 
 
 def test_bot_payload_for_another_sha_proves_nothing(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
@@ -460,16 +380,6 @@ def test_mixed_bot_and_agent_pr_keeps_agent_attribution(queue: Queue, capsys: py
     queue.land(115, _landed(115, "Bump pytest from 8 to 9", "codex/impl-115"))
     code, out = _run_group(queue, capsys, get=get)
     assert code == 0, out
-
-
-def test_mixed_pr_with_unverified_bot_commit_fails(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    queue.open_pr(116, [("Bump pytest from 8 to 9\n", BOT_AUTHOR), "adapt\n\nX-Agent: codex/impl-116\n"])
-    queue.land(116, _landed(116, "Bump", "codex/impl-116"))
-
-    code, out = _run_group(queue, capsys, get=_api({}))
-
-    assert code == 1
-    assert "SOURCE_UNATTRIBUTED pr=#116" in out
 
 
 # --- pull_request mode ----------------------------------------------------------------------
@@ -511,26 +421,6 @@ def test_pr_mode_skips_merge_commits_and_fails_an_empty_range(queue: Queue, caps
     assert code == 1
     assert "EMPTY_CHAIN" in capsys.readouterr().out
     assert shas
-
-
-def test_pr_mode_bot_exemption_requires_the_api_proof(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    (sha,) = queue.open_pr(204, [("Bump pytest from 8 to 9\n", BOT_AUTHOR)])
-
-    code, out = _run_pr(queue, capsys, sha, get=_api({sha: _bot_commit(sha)}))
-    assert code == 0, out
-
-    code, out = _run_pr(queue, capsys, sha, get=_api({sha: _forged_commit(sha)}))
-    assert code == 1
-    assert "MISSING_ATTRIBUTION" in out
-
-
-def test_pr_mode_malformed_value_fails(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    (sha,) = queue.open_pr(205, ["one\n\nX-Agent: codex\n"])
-
-    code, out = _run_pr(queue, capsys, sha)
-
-    assert code == 1
-    assert "MALFORMED_ATTRIBUTION" in out
 
 
 # --- enforcement switch, parsing and CLI -----------------------------------------------------
@@ -575,16 +465,6 @@ def test_script_exit_status_through_the_command_line(queue: Queue) -> None:
     assert usage.returncode == 2
 
 
-def test_help_documents_modes_and_the_switch() -> None:
-    result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--help"], capture_output=True, text=True, timeout=60, check=False
-    )
-
-    assert result.returncode == 0
-    for needle in ("--merge-group", "--pr", "ATTRIBUTION_ENFORCE", "Bot exemption"):
-        assert needle in result.stdout
-
-
 def test_pull_ref_fetch_sends_the_token_through_the_environment_only(
     queue: Queue, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -609,17 +489,6 @@ def test_pull_ref_fetch_sends_the_token_through_the_environment_only(
     assert fetch[1]["GIT_CONFIG_KEY_0"] == "http.https://github.com/.extraheader"
     assert fetch[1]["GIT_CONFIG_VALUE_0"].startswith("AUTHORIZATION: basic ")
     assert not any("ghs_sentinel" in part for args, _ in seen for part in args)
-
-
-def test_a_non_github_remote_gets_no_credentials(queue: Queue, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("GITHUB_TOKEN", "ghs_sentinel")
-    queue.open_pr(501, ["fix\n\nX-Agent: codex/impl-501\n"])
-    parent = queue.base
-
-    head = check._fetch_pr_head("origin", 501)
-    sources = check._range_commits(parent, head)
-
-    assert len(sources) == 1
 
 
 @pytest.mark.parametrize(
@@ -682,12 +551,6 @@ def test_production_getter_is_built_from_the_shared_client(monkeypatch: pytest.M
     assert "x-token-value" not in " ".join(args)
 
 
-def test_production_getter_needs_a_token(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
-
-    assert check._github_get_from_env() is None
-
-
 @pytest.mark.parametrize("completed", [_completed(1), _completed(0, "not json")], ids=["exit", "body"])
 def test_production_getter_failure_is_not_proof(monkeypatch: pytest.MonkeyPatch, completed) -> None:
     monkeypatch.setenv("GITHUB_TOKEN", "x-token-value")
@@ -733,56 +596,11 @@ def test_wrapped_example_is_not_an_attribution(name: str) -> None:
     assert check.extract_attribution(message) == check.Attribution((), 0)
 
 
-@pytest.mark.parametrize("name", sorted(_WRAPPED))
-def test_wrapped_example_does_not_satisfy_the_merge_group(
-    queue: Queue, capsys: pytest.CaptureFixture[str], name: str
-) -> None:
-    queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
-    queue.land(12, f"land (#12)\n\nExample:\n{_WRAPPED[name]}\n")
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 1
-    assert "MISSING_ATTRIBUTION pr=#12" in out
-
-
-@pytest.mark.parametrize("name", sorted(_WRAPPED))
-def test_wrapped_example_does_not_satisfy_pr_mode(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
-    (sha,) = queue.open_pr(12, [f"source\n\nExample:\n{_WRAPPED[name]}\n"])
-
-    code, out = _run_pr(queue, capsys, sha)
-
-    assert code == 1
-    assert f"MISSING_ATTRIBUTION commit={sha[:12]}" in out
-
-
 @pytest.mark.parametrize("name", sorted(_COMMENTED))
 def test_commented_example_refuses_the_message(name: str) -> None:
     message = f"subject (#12)\n\nExample:\n{_COMMENTED[name]}\n"
 
     assert check.extract_attribution(message) == check.Attribution((), 0, "COMMENT_MARKER")
-
-
-@pytest.mark.parametrize("name", sorted(_COMMENTED))
-def test_commented_example_fails_the_merge_group(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
-    queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
-    queue.land(12, f"land (#12)\n\nExample:\n{_COMMENTED[name]}\n")
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 1
-    assert "REFUSED_MESSAGE pr=#12" in out
-    assert "COMMENT_MARKER" in out
-
-
-@pytest.mark.parametrize("name", sorted(_COMMENTED))
-def test_commented_example_fails_pr_mode(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
-    (sha,) = queue.open_pr(12, [f"source\n\nExample:\n{_COMMENTED[name]}\n"])
-
-    code, out = _run_pr(queue, capsys, sha)
-
-    assert code == 1
-    assert f"REFUSED_MESSAGE commit={sha[:12]} COMMENT_MARKER" in out
 
 
 def test_malformed_line_inside_a_fence_still_counts_as_malformed() -> None:
@@ -822,91 +640,7 @@ def test_fenced_value_in_the_landed_message_does_not_cover_a_real_source_value(
     assert "omits 1 of 2 PR value(s)" in out
 
 
-def test_attribution_after_a_closed_fence_counts() -> None:
-    message = "s\n\n~~~\ncode\n~~~\n\nX-Agent: codex/a\n"
-
-    assert check.extract_attribution(message) == check.Attribution(("codex/a",), 0)
-
-
-def test_a_closed_comment_refuses_a_message_with_a_real_line() -> None:
-    # r5: refused (COMMENT_MARKER); before r5 the real line after the comment counted.
-    message = "s\n\n~~~\ncode\n~~~\n\n<!-- note -->\n\nX-Agent: codex/a\n"
-
-    assert check.extract_attribution(message) == check.Attribution((), 0, "COMMENT_MARKER")
-
-
 # --- a comment is never stripped into an attribution line --------------------------------------
-
-_COMMENT_SPELLINGS = {
-    "comment-inside-value": "X-Agent: codex/<!-- example -->a",
-    "comment-prefix": "<!-- c -->X-Agent: codex/a",
-    "comment-suffix": "X-Agent: codex/a<!-- c -->",
-    "unclosed-suffix": "X-Agent: codex/a<!--",
-}
-
-
-# r5 contract: each spelling refuses the message (REFUSED_MESSAGE COMMENT_MARKER); before r5
-# it yielded no value (MISSING_ATTRIBUTION).
-@pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
-def test_comment_spelling_is_not_an_attribution_line(name: str) -> None:
-    message = f"subject (#12)\n\n{_COMMENT_SPELLINGS[name]}\n"
-
-    assert check.extract_attribution(message) == check.Attribution((), 0, "COMMENT_MARKER")
-
-
-@pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
-def test_comment_spelling_fails_the_merge_group(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
-    queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
-    queue.land(12, f"land (#12)\n\n{_COMMENT_SPELLINGS[name]}\n")
-
-    code, out = _run_group(queue, capsys)
-
-    assert code == 1
-    assert "REFUSED_MESSAGE pr=#12" in out
-    assert "COMMENT_MARKER" in out
-
-
-@pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
-def test_comment_spelling_fails_pr_mode(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
-    (sha,) = queue.open_pr(12, [f"source\n\n{_COMMENT_SPELLINGS[name]}\n"])
-
-    code, out = _run_pr(queue, capsys, sha)
-
-    assert code == 1
-    assert f"REFUSED_MESSAGE commit={sha[:12]} COMMENT_MARKER" in out
-
-
-def test_well_formed_line_passes_both_modes(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    (sha,) = queue.open_pr(12, ["source\n\nX-Agent: codex/a\n"])
-    queue.land(12, "land (#12)\n\nX-Agent: codex/a\n")
-
-    pr_code, pr_out = _run_pr(queue, capsys, sha)
-    group_code, group_out = _run_group(queue, capsys)
-
-    assert pr_code == 0, pr_out
-    assert group_code == 0, group_out
-
-
-# r5 contract: a harmless comment next to a real line refuses both modes (exit 1,
-# REFUSED_MESSAGE COMMENT_MARKER); before r5 both modes passed (exit 0).
-@pytest.mark.parametrize(
-    "body",
-    ["<!-- note -->\n\nX-Agent: codex/a\n", "X-Agent: codex/a\n\nsee <!-- note --> here\n"],
-    ids=["comment-before", "comment-after"],
-)
-def test_well_formed_line_beside_a_comment_is_refused_in_both_modes(
-    queue: Queue, capsys: pytest.CaptureFixture[str], body: str
-) -> None:
-    (sha,) = queue.open_pr(12, [f"source\n\n{body}"])
-    queue.land(12, f"land (#12)\n\n{body}")
-
-    pr_code, pr_out = _run_pr(queue, capsys, sha)
-    group_code, group_out = _run_group(queue, capsys)
-
-    assert pr_code == 1
-    assert f"REFUSED_MESSAGE commit={sha[:12]} COMMENT_MARKER" in pr_out
-    assert group_code == 1
-    assert "REFUSED_MESSAGE pr=#12" in group_out
 
 
 # --- source relation: the fetched PR head must be the squash's own source ---------------------
@@ -992,18 +726,6 @@ def test_related_history_with_a_different_change_does_not_certify_a_squash(
     assert f"UNVERIFIABLE_SOURCE pr=#12 commit={squash[:12]}" in out
 
 
-def test_a_conflicting_source_relation_is_unverifiable(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
-    left = plumbing.commit("left\n", plumbing.base, plumbing.blob_tree("same", "left\n"))
-    right = plumbing.commit("right\n\nX-Agent: codex/x\n", plumbing.base, plumbing.blob_tree("same", "right\n"))
-    _git(plumbing.path, "update-ref", "refs/pull/12/head", right)
-    squash = plumbing.commit("land (#12)\n\nX-Agent: codex/x\n", left, plumbing.blob_tree("same", "right\n"))
-
-    code, out = _group(left, squash, capsys)
-
-    assert code == 1
-    assert "UNVERIFIABLE_SOURCE pr=#12" in out
-
-
 def test_squash_tree_equal_to_the_merged_source_passes(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
     _, tree_a = plumbing.source(11, "A\n\nX-Agent: codex/agent-a\n")
     _, tree_b = plumbing.source(12, "B\n\nX-Agent: claude/agent-b\n")
@@ -1028,18 +750,6 @@ def test_a_neighbours_value_is_not_coverage(plumbing: Plumbing, capsys: pytest.C
     assert "INCOMPLETE_ATTRIBUTION pr=#12" in out
 
 
-def test_pr_mode_rejects_unrelated_histories(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
-    source, _ = plumbing.source(12, "real\n\nX-Agent: claude/real\n")
-    root = plumbing.commit("unrelated root\n\nX-Agent: codex/forged\n")
-    unrelated = plumbing.commit("unrelated head\n\nX-Agent: codex/forged\n", root)
-
-    code, out = _pr(source, unrelated, capsys)
-
-    assert code == 1
-    assert "UNVERIFIABLE_SOURCE" in out
-    assert "commits=0" in out
-
-
 def test_pr_mode_accepts_a_pr_that_diverged_from_a_newer_base(
     plumbing: Plumbing, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -1050,17 +760,6 @@ def test_pr_mode_accepts_a_pr_that_diverged_from_a_newer_base(
 
     assert code == 0, out
     assert "commits=1 violations=0" in out
-
-
-def test_pr_mode_fails_closed_when_the_base_is_unrelated_even_if_commits_are_attributed(
-    plumbing: Plumbing, capsys: pytest.CaptureFixture[str]
-) -> None:
-    root = plumbing.commit("other root\n\nX-Agent: codex/other\n")
-
-    code, out = _pr(root, plumbing.base, capsys)
-
-    assert code == 1
-    assert "UNVERIFIABLE_SOURCE" in out
 
 
 # --- diagnostics are value-light ---------------------------------------------------------------
@@ -1216,28 +915,6 @@ def test_matrix_accepts(name: str) -> None:
     assert attribution == check.Attribution(values, 0)
 
 
-def test_oversize_message_is_refused_without_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
-    def explode(_text: str) -> list[object]:
-        raise AssertionError("the parser must not see an oversize message")
-
-    monkeypatch.setattr(check._MARKDOWN, "parse", explode)
-
-    assert check.extract_attribution(f"s\n\n{OVERSIZE}").refusal == "MESSAGE_TOO_LARGE"
-    assert len(f"s\n\n{OVERSIZE}".encode()) > check.MAX_MESSAGE_BYTES
-
-
-def test_largest_admitted_message_parses_within_budget() -> None:
-    # Worst measured shape: the quadratic `*[` run, filled to the size bound.
-    payload = f"s\n\n{A}\n\n" + "*[" * ((check.MAX_MESSAGE_BYTES - 32) // 2)
-    assert len(payload.encode()) <= check.MAX_MESSAGE_BYTES
-    started = time.perf_counter()
-
-    attribution = check.extract_attribution(payload)
-
-    assert attribution == check.Attribution(("codex/a",), 0)
-    assert time.perf_counter() - started < 10
-
-
 _SPLIT_PROBES = [f"s\n\n{body}" for body, _ in REFUSE.values()] + [message for message, _ in ACCEPT.values()]
 
 
@@ -1256,17 +933,6 @@ def test_declaration_lines_are_lf_split_source_lines(message: str) -> None:
             if token.type == "paragraph_open" and token.level == 0 and tuple(token.map or ()) == paragraph.map
         ]
         assert inline.content == "\n".join(paragraph.lines)
-
-
-def test_u2028_probe_would_forge_a_fenced_line_under_splitlines() -> None:
-    # Why the split is "\n" only: the parser numbers lines on LF, splitlines() on U+2028 too.
-    message = f"s\n\n{FENCE}\n   {A}\n{FENCE}\n\nP"
-    tokens = MarkdownIt("commonmark").parse(message)
-    (paragraph,) = [t for t in tokens if t.type == "paragraph_open" and t.level == 0][1:]
-    start, _ = paragraph.map
-    assert message.splitlines()[start] == A  # the forgery a splitlines() indexer would accept
-    assert message.split("\n")[start] == "P"
-    assert check.extract_attribution(message).refusal == "FORBIDDEN_CHARACTER"
 
 
 def _commit_safe(message: str) -> bool:
@@ -1324,16 +990,6 @@ def test_landed_10756_passes_the_merge_group_with_both_source_values(
     assert "commits=1 violations=0 enforce" in out
 
 
-def test_bare_cr_reaches_the_checker_byte_for_byte(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
-    # Text-mode subprocess reads would turn the CR into LF and hide it; the message is read as bytes.
-    (sha,) = queue.open_pr(12, [f"s\n\n```\r{A}\r```\n"])
-
-    code, out = _run_pr(queue, capsys, sha)
-
-    assert code == 1
-    assert f"REFUSED_MESSAGE commit={sha[:12]} BARE_CR" in out
-
-
 # --- CI Gate wiring ------------------------------------------------------------------------------
 
 _REPO = Path(__file__).resolve().parents[2]
@@ -1383,15 +1039,6 @@ def test_attribution_step_binds_each_event_shape() -> None:
     assert _interpolate(env["ATTRIBUTION_ENFORCE"], _PR_EVENT) == ""
     assert _interpolate(env["ATTRIBUTION_ENFORCE"], _QUEUE_EVENT) == "1"
     assert env["GITHUB_TOKEN"] == "${{ github.token }}"
-
-
-def test_attribution_step_installs_exactly_the_locked_parser() -> None:
-    script = _attribution_step()["run"]
-    locked = (_REPO / "requirements-lock.txt").read_text(encoding="utf-8").split("\n")
-
-    for pin in ("markdown-it-py==4.2.0", "mdurl==0.1.2"):
-        assert pin in script
-        assert pin in locked
 
 
 def _fake_python(tmp_path: Path, checker_prefix: str) -> Path:

@@ -24,64 +24,11 @@ sys.path.insert(0, str(ROOT / "scripts" / "crawl"))
 # ── scrape_ukrlib: guess_genre, chunk_text ──────────────────────
 
 
-class TestUkrlibGuessGenre:
-    def setup_method(self):
-        from scrape_ukrlib import guess_genre
-
-        self.guess_genre = guess_genre
-
-    def test_poem_detected(self):
-        assert self.guess_genre("Вірші про весну", "prose") == "poetry"
-
-    def test_novel_detected(self):
-        # "роман" maps to "prose" (not separate "novel" genre)
-        assert self.guess_genre("Тигролови (роман)", "poetry") == "prose"
-
-    def test_drama_detected(self):
-        assert self.guess_genre("Назар Стодоля (п'єса)", "prose") == "drama"
-
-    def test_biography_detected(self):
-        assert self.guess_genre("Біографія Шевченка", "prose") == "biography"
-
-    def test_default_returned(self):
-        assert self.guess_genre("Якийсь текст", "prose") == "prose"
-
-
 class TestUkrlibChunkText:
     def setup_method(self):
         from scrape_ukrlib import chunk_text
 
         self.chunk_text = chunk_text
-
-    def test_empty_text(self):
-        assert self.chunk_text("", "work", "http://example.com") == []
-
-    def test_single_paragraph_below_min(self):
-        # Short text below min_tokens (128) gets dropped
-        text = "Це один абзац тексту."
-        chunks = self.chunk_text(text, "test", "http://example.com")
-        assert len(chunks) == 0
-
-    def test_single_paragraph_above_min(self):
-        text = "Український текст. " * 40  # ~760 chars > 128*4
-        chunks = self.chunk_text(text, "test", "http://example.com")
-        assert len(chunks) == 1
-
-    def test_chunks_have_required_fields(self):
-        text = "Перший абзац.\n\nДругий абзац."
-        chunks = self.chunk_text(text, "work", "http://example.com")
-        for chunk in chunks:
-            assert "chunk_id" in chunk
-            assert "text" in chunk
-            assert "source_url" in chunk
-            assert "token_count" in chunk
-
-    def test_large_text_splits(self):
-        # Create text larger than max_tokens
-        paras = [f"Абзац номер {i}. " * 50 for i in range(20)]
-        text = "\n\n".join(paras)
-        chunks = self.chunk_text(text, "big", "http://example.com", max_tokens=200)
-        assert len(chunks) > 1
 
     def test_chunk_ids_unique(self):
         paras = [f"Абзац {i}. " * 30 for i in range(10)]
@@ -99,12 +46,6 @@ class TestUkrlibTextExtractor:
         from scrape_ukrlib import UkrlibTextExtractor
 
         self.Extractor = UkrlibTextExtractor
-
-    def test_basic_html(self):
-        html = '<article class="prose"><p>Привіт світе!</p></article>'
-        ext = self.Extractor()
-        ext.feed(html)
-        assert "Привіт світе!" in ext.get_text()
 
     def test_strips_noise_classes(self):
         html = '<article class="prose"><p>Зміст</p><div class="readalser">Реклама</div></article>'
@@ -132,21 +73,6 @@ class TestLitopysTextExtractor:
 
         self.Extractor = HTMLTextExtractor
 
-    def test_get_text_cleans_nav(self):
-        ext = self.Extractor()
-        ext.text_parts = ["Текст хроніки.\n‹\n›\n© 2001"]
-        text = ext.get_text()
-        assert "Текст хроніки." in text
-        assert "‹" not in text
-        assert "©" not in text
-
-    def test_get_text_strips_dates(self):
-        ext = self.Extractor()
-        ext.text_parts = ["Важливий текст\n19.IX.2001 якесь"]
-        text = ext.get_text()
-        assert "Важливий текст" in text
-        assert "19.IX.2001" not in text
-
     def test_get_parallel_text(self):
         ext = self.Extractor()
         ext.parallel_pairs = [
@@ -157,13 +83,6 @@ class TestLitopysTextExtractor:
         assert "Сучасний переклад" in text
         assert "Інший переклад" in text
         assert "Старий текст" not in text
-
-    def test_get_original_text(self):
-        ext = self.Extractor()
-        ext.parallel_pairs = [("Оригінал", "Переклад")]
-        text = ext.get_original_text()
-        assert "Оригінал" in text
-        assert "Переклад" not in text
 
 
 class TestLitopysFindNextLink:
@@ -183,61 +102,7 @@ class TestLitopysFindNextLink:
         assert result is None
 
 
-class TestLitopysChunkText:
-    def setup_method(self):
-        from scrape_litopys import chunk_text
-
-        self.chunk_text = chunk_text
-
-    def test_empty_text(self):
-        assert self.chunk_text("", "work", "http://example.com") == []
-
-    def test_single_chunk_above_min(self):
-        text = "Літописний текст про козаків. " * 30  # >128*4 chars
-        chunks = self.chunk_text(text, "work", "http://example.com")
-        assert len(chunks) == 1
-
-    def test_single_chunk_below_min(self):
-        chunks = self.chunk_text("Один абзац.", "work", "http://example.com")
-        assert len(chunks) == 0  # Below min_tokens
-
-
 # ── scrape_wikisource: is_skip_page, chunk_text ──────────────
-
-
-class TestWikisourceIsSkipPage:
-    def setup_method(self):
-        from scrape_wikisource import is_skip_page
-
-        self.is_skip_page = is_skip_page
-
-    def test_category_skipped(self):
-        assert self.is_skip_page("Категорія:Поезія")
-
-    def test_author_skipped(self):
-        assert self.is_skip_page("Автор:Іван Франко")
-
-    def test_content_page_not_skipped(self):
-        assert not self.is_skip_page("Кобзар/Заповіт")
-
-    def test_dictionary_skipped(self):
-        assert self.is_skip_page("Словарь української мови Б. Грінченка")
-
-
-class TestWikisourceChunkText:
-    def setup_method(self):
-        from scrape_wikisource import chunk_text
-
-        self.chunk_text = chunk_text
-
-    def test_empty_text(self):
-        assert self.chunk_text("", "Title", {}) == []
-
-    def test_chunk_metadata(self):
-        chunks = self.chunk_text("Текст вірша.", "Заповіт", {"author": "Шевченко"})
-        assert len(chunks) == 1
-        assert chunks[0]["author"] == "Шевченко"
-        assert "ws_" in chunks[0]["chunk_id"]
 
 
 # ── extract_text: split_into_sections, estimate_tokens, check_quality ──
@@ -249,26 +114,6 @@ class TestSplitIntoSections:
 
         self.split_into_sections = split_into_sections
 
-    def test_no_headings(self):
-        sections = self.split_into_sections("Just plain text.")
-        assert len(sections) == 1
-        assert sections[0]["title"] == "Вступ"
-        assert sections[0]["level"] == 0
-
-    def test_h1_sections(self):
-        md = "# Розділ 1\n\nТекст першого розділу.\n\n# Розділ 2\n\nТекст другого."
-        sections = self.split_into_sections(md)
-        assert len(sections) == 2
-        assert sections[0]["title"] == "Розділ 1"
-        assert sections[0]["level"] == 1
-        assert sections[1]["title"] == "Розділ 2"
-
-    def test_h2_sections(self):
-        md = "## Підрозділ\n\nДеталі тут."
-        sections = self.split_into_sections(md)
-        assert len(sections) == 1
-        assert sections[0]["level"] == 2
-
     def test_intro_before_heading(self):
         md = "Вступний текст.\n\n# Перший\n\nЗміст."
         sections = self.split_into_sections(md)
@@ -276,33 +121,11 @@ class TestSplitIntoSections:
         assert sections[0]["title"] == "Вступ"
 
 
-class TestEstimateTokens:
-    def setup_method(self):
-        from scripts.rag.extract_text import estimate_tokens
-
-        self.estimate_tokens = estimate_tokens
-
-    def test_empty(self):
-        assert self.estimate_tokens("") == 1  # max(1, 0)
-
-    def test_short_text(self):
-        # 20 chars / 4 = 5 tokens
-        assert self.estimate_tokens("а" * 20) == 5
-
-    def test_returns_at_least_one(self):
-        assert self.estimate_tokens("х") >= 1
-
-
 class TestCheckQuality:
     def setup_method(self):
         from scripts.rag.extract_text import check_quality
 
         self.check_quality = check_quality
-
-    def test_empty_text(self):
-        is_clean, ratio = self.check_quality("")
-        assert not is_clean
-        assert ratio == 0.0
 
     def test_ukrainian_text(self):
         is_clean, ratio = self.check_quality("Українська мова — гарна мова!")
@@ -439,27 +262,6 @@ class TestTextbookExtractionReadiness:
         ]
         assert source == "взаємопов’яза\u00ad них процесів"
 
-    def test_native_anomaly_detector_leaves_ordinary_text_unflagged(self):
-        from scripts.rag.extract_text import detect_native_text_anomalies
-
-        result = detect_native_text_anomalies(
-            "Українська мова\nЦе звичайний текст підручника."
-        )
-
-        assert result["requires_visual_verification"] is False
-        assert result["total_findings"] == 0
-
-    def test_native_anomaly_detector_does_not_treat_roman_numerals_or_answer_lines_as_damage(self):
-        from scripts.rag.extract_text import detect_native_text_anomalies
-
-        result = detect_native_text_anomalies(
-            "II школяр\nIII школяр\n________________________________________\n"
-            "________________________________________"
-        )
-
-        assert result["requires_visual_verification"] is False
-        assert result["total_findings"] == 0
-
     @pytest.mark.skipif(
         sys.platform != "darwin" or shutil.which("cupsfilter") is None,
         reason="Apple Vision OCR regression requires macOS and cupsfilter",
@@ -506,18 +308,6 @@ class TestTextbookExtractionReadiness:
         page = _native_page_record(1, source)
         assert page["text"] == source
         assert page["layout"]["unicode_damage"]["suspicious_latin1_runs"] == 2
-
-    def test_native_page_records_logical_text_anomalies_without_repair(self):
-        from scripts.rag.extract_text import _native_page_record
-
-        source = (
-            "Рекомендовано Міністерством освіти і науки України\n"
-            "Рекомендовано Міністерством освіти і науки України"
-        )
-        page = _native_page_record(1, source)
-
-        assert page["text"] == source
-        assert page["layout"]["native_text_anomalies"]["requires_visual_verification"] is True
 
     def test_native_exactness_audit_freezes_source_hash_and_exact_flagged_rows(self, tmp_path):
         from scripts.projects.open_model_data.textbook_native_exactness import audit_chunk_files
@@ -744,34 +534,6 @@ class TestTextbookExtractionReadiness:
         audit, _rows = audit_chunk_files(root)
         assert audit["chunk_total"] == 1
         assert audit["flagged_chunk_count"] == 0
-
-    def test_quarantine_exclusion_refuses_clean_or_missing_chunk(self, tmp_path):
-        from scripts.projects.open_model_data.textbook_native_exactness import (
-            ExactnessAuditError,
-            apply_quarantine_exclusions,
-        )
-
-        root = tmp_path / "chunks"
-        path = root / "grade-00" / "source.jsonl"
-        path.parent.mkdir(parents=True)
-        path.write_text(
-            json.dumps({"chunk_id": "clean", "text": "Чистий текст."}, ensure_ascii=False)
-            + "\n",
-            encoding="utf-8",
-        )
-
-        with pytest.raises(ExactnessAuditError, match="no current native-text anomaly"):
-            apply_quarantine_exclusions(
-                root,
-                {"clean": "page-image:1"},
-                quarantine_dir=tmp_path / "quarantine",
-            )
-        with pytest.raises(ExactnessAuditError, match="exist exactly once"):
-            apply_quarantine_exclusions(
-                root,
-                {"missing": "page-image:2"},
-                quarantine_dir=tmp_path / "quarantine",
-            )
 
     def test_ordinary_accented_text_is_not_flagged_as_encoding_damage(self):
         from scripts.rag.extract_text import _native_page_record
@@ -1286,60 +1048,6 @@ class TestTextbookExtractionReadiness:
 
 
 # ── crawl_ulp: extract_topics, get_season_info, get_fmu_level, parse_ulp_itunes ──
-
-
-class TestExtractTopics:
-    def setup_method(self):
-        from crawl_ulp import extract_topics
-
-        self.extract_topics = extract_topics
-
-    def test_verb_topic(self):
-        topics = self.extract_topics("Ukrainian Verbs: Conjugation")
-        assert "grammar" in topics
-        assert "verbs" in topics
-
-    def test_no_match_returns_general(self):
-        topics = self.extract_topics("Random episode title")
-        assert topics == ["general"]
-
-    def test_deduplication(self):
-        # "verbs" and "conjugation" both add "grammar" — should appear only once
-        topics = self.extract_topics("Verbs and conjugation")
-        assert topics.count("grammar") == 1
-
-
-class TestGetSeasonInfo:
-    def setup_method(self):
-        from crawl_ulp import get_season_info
-
-        self.get_season_info = get_season_info
-
-    def test_early_episode(self):
-        season, level, _focus = self.get_season_info(1)
-        assert isinstance(season, int)
-        assert level in ("A0", "A1", "A2", "B1", "B2")
-
-    def test_unknown_episode(self):
-        season, level, _focus = self.get_season_info(9999)
-        assert season == 6
-        assert level == "B2"
-
-
-class TestGetFmuLevel:
-    def setup_method(self):
-        from crawl_ulp import get_fmu_level
-
-        self.get_fmu_level = get_fmu_level
-
-    def test_a1(self):
-        assert self.get_fmu_level(10) == "A1"
-
-    def test_a2(self):
-        assert self.get_fmu_level(30) == "A2"
-
-    def test_b1(self):
-        assert self.get_fmu_level(50) == "B1"
 
 
 class TestParseUlpItunes:

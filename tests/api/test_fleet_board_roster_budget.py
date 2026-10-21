@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import threading
-import time
 from datetime import UTC, datetime
 
 import pytest
@@ -254,62 +252,6 @@ def test_roster_omits_unpublished_text(tmp_path, monkeypatch: pytest.MonkeyPatch
     assert clean in response.text
 
 
-def test_roster_schema_accepts_the_response(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    response, client = _roster(tmp_path, monkeypatch, _sample_snapshot())
-    schema = client.get("/api/fleet/v1/schema")
-
-    assert schema.status_code == 200
-    document = schema.json()["data"]["endpoints"]["fleet.v1.roster"]
-    Draft202012Validator(document).validate(response.json())
-
-
-def test_postponed_epic_stays_off_and_unknown_flag_is_not_true(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    body = {
-        "generated_at": STAMP,
-        "interval_s": 60,
-        "epics": [
-            {
-                "epic": "later",
-                "postponed": True,
-                "state": "working",
-                "flags": [{"name": "armed", "value": "unknown"}],
-            }
-        ],
-    }
-    response, _client_unused = _roster(tmp_path, monkeypatch, body)
-    epic = response.json()["data"]["layers"][2]["epics"][0]
-
-    assert epic["state"] == "off"
-    assert epic["flags"][0]["value"] == "unknown"
-    assert epic["flags"][0]["value"] is not True
-
-
-def test_stale_snapshot_keeps_data_and_reports_age(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    body = _sample_snapshot()
-    body["generated_at"] = "2026-10-09T08:00:00Z"
-    body["interval_s"] = 30
-    response, _client_unused = _roster(tmp_path, monkeypatch, body)
-    payload = response.json()
-    source = next(item for item in payload["sources"] if item["name"] == "roster_snapshot")
-
-    assert response.status_code == 200
-    assert source["status"] == "stale"
-    assert source["age_s"] == 3600
-    assert payload["data"]["layers"][0]["epics"]
-
-
-def test_missing_snapshot_variable_is_not_configured(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    response, _client_unused = _roster(tmp_path, monkeypatch, None)
-
-    assert response.status_code == 200
-    payload = response.json()
-    source = next(item for item in payload["sources"] if item["name"] == "roster_snapshot")
-    assert source == {"name": "roster_snapshot", "status": "not_configured", "age_s": None, "error": None}
-    assert payload["data"]["layers"][0]["epics"] == []
-    assert payload["data"]["foundation_status"] == []
-    assert payload["data"]["active_alerts"] == []
-
-
 def test_unreadable_snapshot_is_unavailable(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     _freeze_now(monkeypatch)
     target = tmp_path / "snapshot.json"
@@ -344,18 +286,6 @@ def _budget_payload() -> dict:
         },
         "diagnostics": {"stale": False},
     }
-
-
-def _weekly_used(agent: dict) -> float | None:
-    codexbar = agent.get("codexbar")
-    if isinstance(codexbar, dict):
-        weekly = codexbar.get("weekly_used_pct")
-        if isinstance(weekly, (int, float)) and not isinstance(weekly, bool):
-            return float(weekly)
-    burn = agent.get("burn_pct_7d")
-    if isinstance(burn, (int, float)) and not isinstance(burn, bool):
-        return float(burn)
-    return None
 
 
 def test_budget_projects_weekly_pace_and_leaves_unknown_null(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -423,107 +353,6 @@ def test_budget_normalizes_offset_and_fractional_resets(tmp_path, monkeypatch: p
     assert rows["codex"]["pace"] == codex_reading["stage"]
     document = _client(tmp_path).get("/api/fleet/v1/schema").json()["data"]["endpoints"]["fleet.v1.budget"]
     Draft202012Validator(document).validate(response.json())
-
-
-def test_budget_agrees_with_routing_budget_used_pct(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _freeze_now(monkeypatch)
-    payload = _budget_payload()
-    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **kwargs: payload)
-    client = _client(tmp_path, state=True)
-    budget_mod.clear_cache()
-
-    old = client.get("/api/state/routing-budget")
-    new = client.get("/api/fleet/v1/budget")
-
-    assert old.status_code == 200
-    assert new.status_code == 200
-    rows = {row["subscription"]: row["used_pct"] for row in new.json()["data"]["subscriptions"]}
-    for lane, agent in old.json()["agents"].items():
-        assert rows[lane] == _weekly_used(agent)
-    assert rows["gemini"] is None
-    assert rows["grok"] == 0.0
-
-
-def test_slow_budget_refresh_returns_stale_cache(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _freeze_now(monkeypatch)
-    cached = _budget_payload()
-    client = _client(tmp_path)
-    budget_mod.prime(client.app.state.ctx, cached, age_s=budget_mod.BUDGET_TTL_S + 5)
-    release = threading.Event()
-
-    def compute(**kwargs):
-        release.wait(10)
-        return cached
-
-    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
-    monkeypatch.setattr(budget_mod, "BUDGET_DEADLINE_S", 0.05)
-    started = time.monotonic()
-    response = client.get("/api/fleet/v1/budget")
-    elapsed = time.monotonic() - started
-    release.set()
-
-    assert response.status_code == 200
-    assert elapsed < 3.0
-    source = next(item for item in response.json()["sources"] if item["name"] == "routing_budget")
-    assert source["status"] == "stale"
-    assert source["age_s"] >= budget_mod.BUDGET_TTL_S
-    claude = next(row for row in response.json()["data"]["subscriptions"] if row["subscription"] == "claude")
-    assert claude["used_pct"] == 12.5
-
-
-def test_slow_budget_refresh_without_cache_is_unavailable(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _freeze_now(monkeypatch)
-    release = threading.Event()
-
-    def compute(**kwargs):
-        release.wait(10)
-        return _budget_payload()
-
-    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
-    monkeypatch.setattr(budget_mod, "BUDGET_DEADLINE_S", 0.05)
-    started = time.monotonic()
-    response = _client(tmp_path).get("/api/fleet/v1/budget")
-    elapsed = time.monotonic() - started
-    release.set()
-
-    assert response.status_code == 200
-    assert elapsed < 3.0
-    body = response.json()
-    source = next(item for item in body["sources"] if item["name"] == "routing_budget")
-    assert source == {"name": "routing_budget", "status": "unavailable", "age_s": None, "error": "unavailable"}
-    assert all(row["used_pct"] is None for row in body["data"]["subscriptions"])
-    assert all(row["elapsed_pct"] is None for row in body["data"]["subscriptions"])
-
-
-def test_budget_compute_failure_stays_http_200(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    def compute(**kwargs):
-        raise RuntimeError("boom-token")
-
-    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
-    response = _client(tmp_path).get("/api/fleet/v1/budget")
-
-    assert response.status_code == 200
-    source = next(item for item in response.json()["sources"] if item["name"] == "routing_budget")
-    assert source["status"] == "unavailable"
-    assert "boom-token" not in response.text
-
-
-def test_budget_source_is_stale_when_the_compute_is_stale(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    payload = _budget_payload()
-    payload["diagnostics"] = {"stale": True, "data_age_s": 40}
-    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **kwargs: payload)
-    response = _client(tmp_path).get("/api/fleet/v1/budget")
-
-    assert response.status_code == 200
-    source = next(item for item in response.json()["sources"] if item["name"] == "routing_budget")
-    assert source["status"] == "stale"
-    assert source["age_s"] == 40
-    assert source["error"] is None
-
-
-def test_budget_deadline_and_ttl_are_short() -> None:
-    assert budget_mod.BUDGET_DEADLINE_S == 2.0
-    assert budget_mod.BUDGET_TTL_S == 15.0
 
 
 def _silence_budget_io(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:

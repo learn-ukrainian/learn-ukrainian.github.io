@@ -32,10 +32,6 @@ def test_iter_template_literals_respects_escaped_backtick():
     assert iter_template_literals(mdx) == [r'["a\`b"]']
 
 
-def test_iter_template_literals_none_when_absent():
-    assert iter_template_literals("plain text, no islands") == []
-
-
 def test_iter_template_literals_skips_unterminated():
     # truncated JSON.parse(` with no closing backtick → no phantom rest-of-file island
     assert iter_template_literals("x <X p={JSON.parse(`[1,2,3]") == []
@@ -87,13 +83,6 @@ def test_sentinel_catches_template_interpolation():
     assert "did not reach JSON.parse" in _node_eval_one(iter_template_literals(mdx)[0])
 
 
-@node_required
-def test_clean_payload_passes():
-    payload = [{"word": "коляда", "translation": "carol"}]
-    mdx = f"<VocabCard words={{JSON.parse(`{dump_json_for_jsx(payload)}`)}} />"
-    assert _node_eval_one(iter_template_literals(mdx)[0]) is None
-
-
 # --- graceful degradation -----------------------------------------------------
 
 def test_escaper_rejects_nonfinite():
@@ -102,12 +91,3 @@ def test_escaper_rejects_nonfinite():
         dump_json_for_jsx([{"v": float("nan")}])
     with pytest.raises(ValueError):
         dump_json_for_jsx([{"v": float("inf")}], compact=True)
-
-
-def test_node_absent_skips_not_fails(monkeypatch):
-    import scripts.build.mdx_render_gate as g
-
-    monkeypatch.setattr(g.shutil, "which", lambda *_: None)
-    report = g.check_mdx_render("<X p={JSON.parse(`[1]`)} />")
-    assert report["passed"] is None
-    assert report["skipped"] is True

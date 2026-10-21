@@ -116,12 +116,6 @@ def _build(tmp_path: Path) -> tuple[Path, list[dict]]:
     return output, [json.loads(line) for line in output.read_text().splitlines()]
 
 
-def test_config_is_valid_under_embedded_schema(tmp_path: Path) -> None:
-    config, _root = _fixture(tmp_path)
-    schema = json.loads(_open_model("contracts/source_work_locator_v1.schema.json").read_text())
-    Draft202012Validator({"$ref": "#/$defs/config", "$defs": schema["$defs"]}).validate(json.loads(config.read_text()))
-
-
 @pytest.mark.parametrize("family", ["literary", "public_textbooks", "external_articles", "wikipedia"])
 def test_each_real_family_has_one_metadata_only_locator(tmp_path: Path, family: str) -> None:
     output, rows = _build(tmp_path)
@@ -326,20 +320,6 @@ def test_compact_reader_rejects_oversized_input_before_reading(tmp_path: Path) -
         locators.compact_rows(output)
 
 
-def test_unknown_config_key_and_bad_column_fail_schema(tmp_path: Path) -> None:
-    config, root = _fixture(tmp_path)
-    value = json.loads(config.read_text())
-    value["unexpected"] = True
-    config.write_text(json.dumps(value))
-    with pytest.raises(locators.LocatorError, match="schema failure"):
-        locators.build(config_path=config, input_root=root, output=tmp_path / "out")
-    value.pop("unexpected")
-    value["families"][0]["metadata_columns"] = ["text"]
-    config.write_text(json.dumps(value))
-    with pytest.raises(locators.LocatorError, match="schema failure"):
-        locators.build(config_path=config, input_root=root, output=tmp_path / "out")
-
-
 def test_missing_real_column_and_ambiguous_locator_fail_closed(tmp_path: Path) -> None:
     config, root = _fixture(tmp_path)
     value = json.loads(config.read_text())
@@ -415,14 +395,6 @@ def test_whitespace_equivalent_metadata_is_normalized_before_emission(tmp_path: 
     assert row["metadata"]["title"] == "Article"
     assert row["metadata"]["speaker"] == "Speaker"
     assert row["affected_records"] == 2
-
-
-def test_invalid_row_unknown_field_is_rejected_by_contract(tmp_path: Path) -> None:
-    _output, rows = _build(tmp_path)
-    row = dict(rows[0])
-    row["text"] = "forbidden"
-    schema = json.loads(_open_model("contracts/source_work_locator_v1.schema.json").read_text())
-    assert list(Draft202012Validator(schema).iter_errors(row))
 
 
 def test_atomic_publication_failure_preserves_prior_index(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

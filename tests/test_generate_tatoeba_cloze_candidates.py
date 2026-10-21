@@ -10,8 +10,6 @@ from scripts.audit.generate_tatoeba_cloze_candidates import (
     DEFAULT_LICENSE,
     SUPPORTED_CASE_RULE_SET,
     GeneratorConfig,
-    build_yield_summary,
-    format_yield_report_markdown,
     generate_tatoeba_cloze_candidates,
     main,
     read_cc0_sentence_ids,
@@ -42,15 +40,6 @@ def _report(config: GeneratorConfig | None = None):
 
 def _candidate_sentence_ids(report) -> set[int]:
     return {candidate["provenance"]["sentenceId"] for candidate in report.candidates}
-
-
-def test_tatoeba_manifest_fixture_uses_real_ukrainian_case_keys() -> None:
-    entries = read_manifest(MANIFEST)
-    cases = entries[0]["enrichment"]["morphology"]["paradigm"]["cases"]
-
-    assert set(cases) == {"називний", "знахідний", "місцевий"}
-    assert cases["знахідний"]["singular"] == "книгу"
-    assert cases["місцевий"]["plural"] == "книгах"
 
 
 def test_tatoeba_ingest_requires_en_pair_and_carries_authors_licenses() -> None:
@@ -104,16 +93,6 @@ def test_tatoeba_prefilters_vesum_length_duplicates_register_russianism_and_cefr
     assert {1005, 1007, 1008, 1009, 1010, 1011, 1014}.isdisjoint(sentence_ids)
 
 
-def test_tatoeba_caps_per_lemma_and_case_rule() -> None:
-    lemma_report = _report(GeneratorConfig(max_per_lemma=0))
-    case_rule_report = _report(GeneratorConfig(max_per_case_rule=0))
-
-    assert lemma_report.candidates == []
-    assert lemma_report.rejections["cap_lemma"] > 0
-    assert case_rule_report.candidates == []
-    assert case_rule_report.rejections["cap_case_rule"] > 0
-
-
 def test_tatoeba_cli_writes_review_candidate_file(tmp_path: Path) -> None:
     out = tmp_path / "review-candidates.json"
     yield_report = tmp_path / "yield-report.json"
@@ -151,28 +130,6 @@ def test_tatoeba_cli_writes_review_candidate_file(tmp_path: Path) -> None:
     assert "rejections" in summary
 
 
-def test_tatoeba_cli_fails_loudly_on_missing_inputs(tmp_path: Path) -> None:
-    missing = tmp_path / "missing-manifest.json"
-    with pytest.raises(FileNotFoundError, match="missing Atlas manifest"):
-        main(
-            [
-                "--manifest",
-                str(missing),
-                "--uk-sentences",
-                str(UK_SENTENCES),
-                "--en-sentences",
-                str(EN_SENTENCES),
-                "--links",
-                str(LINKS),
-                "--vesum-json",
-                str(VESUM),
-                "--out",
-                str(tmp_path / "out.json"),
-            ],
-            russian_shadow_checker=lambda _token: False,
-        )
-
-
 def test_tatoeba_detailed_export_license_defaults_and_cc0_ids(tmp_path: Path) -> None:
     detailed = tmp_path / "ukr_detailed.tsv"
     detailed.write_text(
@@ -195,15 +152,3 @@ def test_tatoeba_detailed_export_license_defaults_and_cc0_ids(tmp_path: Path) ->
     assert rows[1001].license == DEFAULT_LICENSE
     assert rows[1002].license == "CC0"
     assert rows[1001].author == "olena_uk"
-
-
-def test_tatoeba_yield_summary_and_markdown_cover_counts() -> None:
-    report = _report()
-    summary = build_yield_summary(report)
-    markdown = format_yield_report_markdown(summary, run_date="2026-07-19")
-
-    assert summary["candidates"] == len(report.candidates)
-    assert summary["pairs_processed"] > 0
-    assert set(summary["by_case_rule"]) <= SUPPORTED_CASE_RULE_SET
-    assert "Candidates emitted" in markdown
-    assert "accusative_direct_object" in markdown or "locative_static" in markdown

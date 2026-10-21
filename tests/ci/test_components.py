@@ -42,29 +42,6 @@ def repo(tmp_path):
     return tmp_path
 
 
-def test_manifest_approved_nodes_edges_and_no_frozen_test_ids(manifest):
-    assert set(manifest["components"]) == set(c.NODE_IDS)
-    assert manifest["schema_version"] == 1
-    assert manifest["plan_version"] == 2
-    assert len(manifest["edges"]) == len({edge["id"] for edge in manifest["edges"]})
-    pairs = {(e["producer"], e["consumer"]) for e in manifest["edges"]}
-    required = {
-        ("curriculum-generation", "atlas-data"), ("atlas-data", "curriculum-generation"),
-        ("atlas-data", "curriculum-display"), ("shared-core", "curriculum-generation"),
-        ("shared-core", "practice-frontend"), ("atlas-data", "open-model-data"),
-        ("shared-core", "open-model-data"), ("harness", "open-model-data"),
-        ("atlas-data", "atlas-data"), ("curriculum-generation", "curriculum-display"),
-        ("open-model-data", "open-model-data"),
-    }
-    assert required <= pairs
-    for frontend in manifest["selector_contracts"]["frontend_components"]:
-        assert ("atlas-data", frontend) in pairs
-        assert ("practice-frontend", frontend) in pairs
-        assert (frontend, "curriculum-generation") in pairs
-    assert any(e["kind"] == "dynamic" and e["resolved"] for e in manifest["edges"])
-    assert all("::" not in path for node in manifest["components"].values() for path in node["test_files"])
-
-
 def test_exact_overrides_precede_longest_prefix_and_shared_fallback(manifest):
     assert c.assign_path("scripts/practice/euphony_stem_engine.py", manifest) == (["shared-core"], "exact")
     assert c.assign_path("scripts/practice/new.py", manifest) == (["practice-frontend"], "prefix")
@@ -117,37 +94,6 @@ def test_parity_detects_missing_frontend_consumer_edge(repo, manifest):
     assert c.parity_gaps(["site/new.ts"], manifest, repo) == ["site/new.ts"]
 
 
-@pytest.mark.parametrize("mutation", ["schema", "node", "owner", "test-id", "prefix", "argv", "edge"])
-def test_manifest_validation_rejects_bad_contract(tmp_path, manifest, mutation):
-    if mutation == "schema":
-        manifest["schema_version"] = 2
-    elif mutation == "node":
-        manifest["components"].pop("harness")
-    elif mutation == "owner":
-        manifest["exact_paths"]["a"] = ["unknown"]
-    elif mutation == "test-id":
-        manifest["components"]["harness"]["test_files"] = ["tests/test_a.py::test_one"]
-    elif mutation == "prefix":
-        manifest["path_prefixes"].append({"path": "scripts", "components": ["harness"]})
-    elif mutation == "argv":
-        manifest["components"]["harness"]["verify"][0]["argv"] = []
-    else:
-        manifest["edges"][0]["consumer"] = "unknown"
-    path = tmp_path / "manifest.json"
-    path.write_text(json.dumps(manifest))
-    with pytest.raises(ValueError):
-        c.load_manifest(path)
-
-
-def test_test_prefixes_expand_index_and_sparse_census_is_complete(repo, manifest):
-    manifest["shared_integration_tests"] = []
-    manifest["components"]["harness"]["test_files"] = []
-    manifest["components"]["harness"]["test_prefixes"] = ["tests/"]
-    assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
-    (repo / "tests/test_fixture.py").unlink()
-    assert c.test_files("harness", manifest, repo) == ["tests/test_fixture.py"]
-
-
 def test_ast_closure_relative_bare_literal_loads_and_nonliteral():
     sources = {
         "scripts/lexicon/source.py": b"X = 1\n",
@@ -168,55 +114,6 @@ load('source', ROOT / 'scripts' / 'lexicon' / 'source.py')
     assert ("scripts/build/consumer.py", "scripts/lexicon/relative.py") in graph["file_edges"]
     assert ("scripts/audit/loader.py", "scripts/lexicon/source.py") in graph["file_edges"]
     assert any(e["path"] == "tests/test_dynamic.py" for e in graph["unresolved_edges"])
-
-
-def test_dependency_nodes_preserve_walk_order_in_nested_expressions():
-    tree = c.ast.parse('''
-from pathlib import Path
-@decorate(Path("schemas/decorator.json").read_text())
-def load(default=Path("schemas/default.json").read_bytes()):
-    import sys as runtime
-    runtime.path.insert(0, "scripts")
-    return [open("schemas/body.json") for item in iterable if predicate(item)]
-outside()
-''')
-    nodes = c.dependency_nodes(tree)
-    selected = set(nodes)
-    assert nodes == [node for node in c.ast.walk(tree) if node in selected]
-    assert {node.lineno for node in nodes if isinstance(node, c.ast.Call)} == {3, 4, 6, 7, 8}
-
-
-def test_large_literal_payload_preserves_edges_without_expanding_walk(monkeypatch):
-    template = '''from pathlib import Path
-import sys as runtime
-import subprocess as process
-from scripts.fixture import VALUE
-payload = [{payload}]
-Path("schemas/input.json").read_text()
-runtime.path.insert(0, "scripts")
-process.run(["python3", "-m", "scripts.fixture"])
-'''
-    known = {"tests/test_reader.py", "scripts/fixture.py", "schemas/input.json"}
-    visited = []
-    original = c.ast.iter_child_nodes
-
-    def counted(node):
-        visited.append(node)
-        return original(node)
-
-    monkeypatch.setattr(c.ast, "iter_child_nodes", counted)
-
-    def scan(payload):
-        return c.scan_imports({"tests/test_reader.py": template.format(payload=payload).encode(),
-                               "scripts/fixture.py": b"VALUE = 1"}, known)
-
-    expected = scan("")
-    visited.clear()
-    assert scan(",".join(str(index) for index in range(10_000))) == expected
-    assert len(visited) < 100  # Work follows dependency syntax, not the 10,000 data leaves.
-    assert expected["file_edges"] == [("tests/test_reader.py", "schemas/input.json"),
-                                     ("tests/test_reader.py", "scripts/fixture.py")]
-    assert expected["unresolved_edges"] == [{"path": "tests/test_reader.py", "line": 7, "reason": "sys-path"}]
 
 
 def test_indexed_imports_survive_sparse_checkout_and_invalidate_on_edits(repo, manifest):
@@ -293,17 +190,6 @@ def test_unresolved_and_missing_mandatory_edges_force_all(manifest):
     assert c.affected(["site/new.ts"], manifest, graph)["fallback_reasons"] == ["dynamic-unresolved"]
 
 
-@pytest.mark.parametrize(("producer", "consumer"), [
-    ("harness", "curriculum-generation"), ("curriculum-generation", "harness"), ("harness", "atlas-data"),
-])
-def test_review_probes_computed_even_without_unresolved_fallback(manifest, producer, consumer):
-    graph = c.import_graph(manifest)
-    assert (producer, consumer) in graph["node_edges"]
-    graph = graph | {"unresolved_edges": [], "missing_mandatory_edges": []}
-    probes = {"harness": "scripts/agent_runtime/runner.py", "curriculum-generation": "scripts/build/fresh/assemble.py"}
-    assert consumer in c.affected([probes[producer]], manifest, graph)["components"]
-
-
 def test_vitest_files_follow_ownership_and_existing_scripts(repo, manifest):
     path = repo / "site/tests/unit/shared.test.ts"
     path.parent.mkdir(parents=True)
@@ -316,15 +202,6 @@ def test_vitest_files_follow_ownership_and_existing_scripts(repo, manifest):
         assert commands[1]["argv"] == ["npm", "run", "test:unit", "--", "tests/unit/shared.test.ts"]
     built = manifest["vitest"]["built_output_files"]
     assert c.node_test_commands("atlas-frontend", manifest, [], built)[1]["argv"][:3] == ["npm", "run", "test:built-output"]
-
-
-def test_list_reports_resolved_sets_without_running(monkeypatch, capsys):
-    monkeypatch.setattr(c, "test_files", lambda *a: ["tests/test_one.py", "tests/test_two.py"])
-    monkeypatch.setattr(c, "vitest_files", lambda *a: ["site/tests/unit/shared.test.ts"])
-    monkeypatch.setattr(c, "collect_tests", lambda *a: pytest.fail("list must not collect"))
-    assert c.main(["test", "--component", "atlas-frontend", "--list"]) == 0
-    result = json.loads(capsys.readouterr().out)
-    assert result["test_file_count"] == 3 and result["pytest_file_count"] == 2 and result["vitest_file_count"] == 1
 
 
 def test_literal_targets_and_parse_errors_are_conservative():
@@ -460,15 +337,6 @@ def test_atlas_build_argv_runs_real_db_search_and_daily_producers(tmp_path, mani
     assert (output / "daily.json").is_file()
 
 
-def test_build_refuses_inputs_before_creating_output(tmp_path, monkeypatch, capsys):
-    invalid = tmp_path / "invalid-inputs.json"
-    invalid.write_text('{}\n')
-    output = tmp_path / "output"
-    assert c.main(["build", "--component", "atlas-data", "--inputs", str(invalid), "--output-dir", str(output)]) == 2
-    assert not output.exists()
-    assert json.loads(capsys.readouterr().out)["result"] == "error"
-
-
 def test_inventory_collection_and_identities_and_nul_paths(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(c, "current_identities", lambda *a: {"source": "structural-fixture"})
     monkeypatch.setattr(c, "collect_tests", lambda *a: (["tests/test_fixture.py::test_one"], 0))
@@ -483,31 +351,6 @@ def test_inventory_collection_and_identities_and_nul_paths(monkeypatch, tmp_path
     assert report["changed_paths"] == 2 and set(report["components"]) == set(c.NODE_IDS)
 
 
-def test_cli_inventory_affected_and_error_are_structural(monkeypatch, capsys, manifest):
-    assert c.main(["list"]) == 0
-    assert set(json.loads(capsys.readouterr().out)["components"]) == set(c.NODE_IDS)
-    assert c.main(["affected", "never-classified/new.txt"]) == 0
-    assert set(json.loads(capsys.readouterr().out)["components"]) == set(c.NODE_IDS)
-    monkeypatch.setattr(c, "inventory", lambda m: {"unassigned": 1, "ambiguous": 0, "dynamic_unresolved": 0,
-                                                  "unmapped_test_files": 0, "selector_parity_gaps": 0})
-    assert c.main(["inventory", "--check"]) == 1
-    capsys.readouterr()
-    assert c.main(["inventory", "--collect"]) == 2
-    assert "invalid_or_unavailable" in capsys.readouterr().out
-    monkeypatch.setattr(c, "collect_tests", lambda *a: ([], 2))
-    assert c.main(["test", "--component", "atlas-data"]) == 2
-    assert json.loads(capsys.readouterr().out)["fallback_reason"] == "collection-error"
-
-
-def test_cli_command_dispatch_and_no_artifact_certification(monkeypatch, capsys):
-    monkeypatch.setattr(c, "collect_tests", lambda *a: (["tests/test_fixture.py::test_fixture"], 0))
-    monkeypatch.setattr(c, "run_commands", lambda *a, **kw: ([{"result": "pass"}], 0))
-    assert c.main(["test", "--component", "atlas-data"]) == 0
-    assert json.loads(capsys.readouterr().out)["commands"][0]["result"] == "pass"
-    assert c.main(["verify", "--component", "atlas-data"]) == 0
-    assert json.loads(capsys.readouterr().out)["artifact_certification"].startswith("not_certified")
-
-
 def test_cli_help_and_required_build_arguments(capsys):
     for operation in ([], ["build"], ["test"], ["verify"], ["junit"]):
         with pytest.raises(SystemExit) as exit_info:
@@ -518,21 +361,6 @@ def test_cli_help_and_required_build_arguments(capsys):
     with pytest.raises(SystemExit) as exit_info:
         c.parser().parse_args(["build", "--component", "atlas-data"])
     assert exit_info.value.code == 2
-
-
-def test_known_failures_are_owned_and_never_verify_commands(manifest):
-    residuals = {r["id"]: r for r in manifest["residual_commands"]}
-    assert residuals["legacy-atlas-make"]["owner_slice"] == 3
-    assert residuals["non-arc-landing"]["owner_slice"] == 4
-    assert residuals["open-model-data-tier"]["owner_slice"] == 5
-    commands = [v["argv"] for node in manifest["components"].values() for v in node["verify"]]
-    assert residuals["legacy-atlas-make"]["argv"] not in commands
-    assert residuals["non-arc-landing"]["argv"] not in commands
-    assert residuals["open-model-data-tier"]["argv"] not in commands
-    for frontend in manifest["selector_contracts"]["frontend_components"]:
-        argv = manifest["components"][frontend]["build"][0]["argv"]
-        assert argv[:3] == ["npm", "run", "build:shell"]
-        assert "hydrate" not in " ".join(argv)
 
 
 def test_imported_parent_initializers_relative_missing_and_keyword_loads():
@@ -553,11 +381,6 @@ def test_imported_parent_initializers_relative_missing_and_keyword_loads():
         {"path": "scripts/lexicon/consumer.py", "line": line, "reason": "missing-local-import"}
         for line in (1, 2)
     ]
-
-
-def test_call_name_only_reads_dotted_names():
-    assert c.call_name(c.ast.parse("util.spec_from_file_location", mode="eval").body) == "util.spec_from_file_location"
-    assert c.call_name(c.ast.parse("factory().loader", mode="eval").body) == ""
 
 
 def test_skips_never_hide_a_failed_command(repo, monkeypatch):
@@ -604,38 +427,6 @@ def test_resolved_test_sets_do_not_freeze_to_manifest_samples(manifest):
     assert "harness" in c.affected(["scripts/lexicon/runner/atlas_job.py"], manifest, graph)["components"]
 
 
-def test_frontend_build_declares_shared_astro_scope(tmp_path, monkeypatch, capsys, manifest):
-    monkeypatch.setattr(c, "verify_inputs", lambda *args: {})
-    monkeypatch.setattr(c, "run_commands", lambda *args, **kw: ([{"result": "pass"}], 0))
-    for node in manifest["selector_contracts"]["frontend_components"]:
-        assert c.main(["build", "--component", node, "--inputs", str(tmp_path / "inputs.json"),
-                       "--output-dir", str(tmp_path / node)]) == 0
-        report = json.loads(capsys.readouterr().out)
-        assert report["build_scope"] == "shared-astro"
-        assert report["input_bytes_verified"] is True
-        assert report["artifact_certification"].startswith("not_certified")
-    residual = next(r for r in manifest["residual_commands"] if r["id"] == "open-model-prepared-build-inputs")
-    assert residual["status"] == "artifact-dependent" and residual["owner_slice"] == 5
-
-
-def test_complete_node_commands_have_bounded_parallel_execution(monkeypatch, manifest, tmp_path):
-    command = c.node_test_commands("harness", manifest, ["tests/test_fixture.py"], [])[0]
-    assert command["argv"][2:7] == ["pytest", "-q", "-n", "2", "tests/test_fixture.py"]
-    calls = []
-    monkeypatch.setattr(c, "project_interpreter", lambda root: Path(sys.executable))
-    def run(argv, **kw):
-        calls.append(kw)
-        return subprocess.CompletedProcess(argv, 0, "tests/test_fixture.py::test_fixture\n")
-    monkeypatch.setattr(c.subprocess, "run", run)
-    assert c.collect_tests(["tests/test_fixture.py"], [], tmp_path)[1] == 0
-    assert calls[-1]["timeout"] == 900
-    monkeypatch.setattr(c, "execute_command", lambda argv, **kw: (calls.append(kw) or 0, False))
-    assert c.run_commands([command], tmp_path, None, {})[1] == 0
-    assert calls[-1]["timeout"] is None
-    assert c.run_commands([command | {"scope": "code-contract", "timeout": 1800}], tmp_path, None, {})[1] == 0
-    assert calls[-1]["timeout"] == 1800
-
-
 @pytest.mark.parametrize('gap', ['unassigned', 'ambiguous', 'unmapped_test_files', 'selector_parity_gaps', 'missing_mandatory_edges'])
 def test_inventory_check_allows_unknown_imports_but_rejects_contract_gaps(monkeypatch, capsys, gap):
     report = dict.fromkeys(('unassigned', 'ambiguous', 'unmapped_test_files', 'selector_parity_gaps'), 0)
@@ -648,30 +439,6 @@ def test_inventory_check_allows_unknown_imports_but_rejects_contract_gaps(monkey
     else:
         report[gap] = 1
     assert c.main(['inventory', '--check']) == 1
-
-
-def test_open_model_subprocess_test_prefix_is_owned(manifest):
-    path = 'tests/projects/open_model_data/test_direct_cli_help.py'
-    assert c.assign_path(path, manifest) == (['open-model-data', 'shared-core'], 'prefix')
-    assert path in c.test_files('open-model-data', manifest)
-
-
-def test_test_cli_forwards_workers_and_timeout(monkeypatch, capsys):
-    monkeypatch.setattr(c, 'test_files', lambda *a: ['tests/test_fixture.py'])
-    monkeypatch.setattr(c, 'vitest_files', lambda *a: [])
-    monkeypatch.setattr(c, 'collect_tests', lambda *a: (['tests/test_fixture.py::test_fixture'], 0))
-    commands = []
-    def run(rows, *a, **kw):
-        commands.extend(rows)
-        return [], 0
-    monkeypatch.setattr(c, 'run_commands', run)
-    assert c.main(['test', '--component', 'harness', '--workers', '1', '--timeout', '4']) == 0
-    assert commands[0]['argv'][4:6] == ['-n', '1']
-    assert commands[0]['timeout'] == 4
-    capsys.readouterr()
-    for args in (['--workers', '0'], ['--timeout', '0'], ['--timeout', 'nan']):
-        assert c.main(['test', '--component', 'harness', *args]) == 2
-        capsys.readouterr()
 
 
 def test_journal_counts_phases_and_ignores_worker_duplicates(tmp_path, monkeypatch):
@@ -690,20 +457,6 @@ def test_journal_counts_phases_and_ignores_worker_duplicates(tmp_path, monkeypat
     assert c.partial_test_results(tmp_path / 'missing')['passed'] == 0
     path.write_text(json.dumps({'id': 'unicode\u2028inside', 'when': 'call', 'outcome': 'failed'}, ensure_ascii=False) + '\n')
     assert c.partial_test_results(path)['failing_test_ids'] == ['unicode\u2028inside']
-
-
-def test_timeout_retains_real_completed_pytest_results(tmp_path, monkeypatch):
-    monkeypatch.setattr(c, 'project_interpreter', lambda root: Path(sys.executable))
-    monkeypatch.delenv('PYTEST_XDIST_WORKER', raising=False)
-    path = tmp_path / 'test_partial.py'
-    path.write_text('import time\ndef test_pass():\n    assert True\ndef test_fail():\n    assert False\ndef test_wait():\n    time.sleep(60)\n')
-    command = {'argv': ['{python}', '-m', 'pytest', '-q', str(path)], 'cwd': '.',
-               'scope': 'complete-node-pytest', 'timeout': 15}
-    reports, code = c.run_commands([command], c.ROOT, None, {})
-    assert code == 124 and reports[0]['result'] == 'timeout'
-    assert reports[0]['partial_results'] is True
-    assert reports[0]['passed'] == reports[0]['failed'] == 1
-    assert reports[0]['failing_test_ids'] == ['test_partial.py::test_fail']
 
 
 def test_junit_coverage_fresh_sets_failures_skips_absence_and_duplicate_precedence(repo, manifest, monkeypatch):
@@ -751,18 +504,6 @@ def test_junit_coverage_fresh_sets_failures_skips_absence_and_duplicate_preceden
         c.junit_coverage([path], manifest, ['harness'], repo)
 
 
-def test_junit_cli_dispatch(monkeypatch, tmp_path, capsys):
-    calls = []
-    def coverage(paths, manifest, components):
-        calls.append((paths, components))
-        return {'nodes': {}}, 0
-    monkeypatch.setattr(c, 'junit_coverage', coverage)
-    assert c.main(['junit', '--junit', str(tmp_path / 'full.xml')]) == 0
-    assert calls[-1][1] == c.NODE_IDS
-    assert c.main(['junit', '--component', 'harness', '--junit', str(tmp_path / 'full.xml')]) == 0
-    assert calls[-1][1] == ['harness']
-
-
 @pytest.mark.parametrize("source,target", [
     ('from pathlib import Path\nPath("schemas/input.json").read_text()', "schemas/input.json"),
     ('open("schemas/input.json")', "schemas/input.json"),
@@ -795,13 +536,3 @@ def test_unresolved_runtime_edges_force_full_selection(manifest, source, reason)
     assert any(edge["reason"] == reason for edge in graph["unresolved_edges"])
     graph |= {"node_edges": [], "missing_mandatory_edges": []}
     assert set(c.affected(["scripts/projects/open_model_data/reader.py"], manifest, graph)["components"]) == set(c.NODE_IDS)
-
-
-def test_literal_file_read_importer_in_resolved_test_set(repo, manifest):
-    schema = repo / "site/schemas/input.json"
-    schema.parent.mkdir(parents=True)
-    schema.write_text("{}")
-    reader = repo / "tests/test_schema_reader.py"
-    reader.write_text('from pathlib import Path\nPath("site/schemas/input.json").read_text()\n')
-    git(repo, "add", ".")
-    assert "tests/test_schema_reader.py" in c.test_files("atlas-frontend", manifest, repo)

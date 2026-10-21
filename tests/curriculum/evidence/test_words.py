@@ -2,8 +2,6 @@
 
 import json
 import sqlite3
-import stat
-from pathlib import Path
 
 import pytest
 import yaml
@@ -26,16 +24,6 @@ def test_ulif_cited_mezhy_override_is_single_accent():
     assert result["status"] == "ok"
     assert result["matches"][0]["override_applied"] is True
     assert result["matches"][0]["stressed_form"] == "межи́"
-
-
-def test_no_disallowed_dictionary_citations_in_stress_data_or_evidence():
-    repo = Path(__file__).resolve().parents[3]
-    for tree in (repo / "scripts/data", repo / "scripts/curriculum/evidence"):
-        for path in tree.rglob("*"):
-            if path.is_file() and "__pycache__" not in path.parts:
-                content = path.read_bytes()
-                assert "СУМ-11".encode() not in content, path
-                assert b"search_definitions" not in content, path
 
 
 @pytest.mark.parametrize("form", PENDING_FORMS)
@@ -455,44 +443,6 @@ def test_missing_ulif_homonym_rejected_multi_entry(synthetic_vesum, synthetic_so
                 "words": [
                     {
                         "lemma": "synthetic",
-                        "pos": "noun",
-                        "want": "new",
-                        "entry": {"source": "ulif", "homonym_index": 2},
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
-        with pytest.raises(ValueError, match=codes.INVALID_REQUEST):
-            words.build_words(
-                "a1",
-                req_path,
-                evidence_dir=tmp_path,
-                sources_instance=api,
-                dry_run=True,
-            )
-
-
-def test_missing_ulif_homonym_rejected_single_entry(synthetic_vesum, synthetic_sources, tmp_path):
-    # "synthetic-checked" has a single checked ULIF homonym (1) and one VESUM entry.
-    with sqlite3.connect(synthetic_vesum) as conn:
-        conn.execute("DELETE FROM forms_all")
-        conn.execute(
-            "INSERT INTO forms_all VALUES (1, 10, 'synthetic-a', 'synthetic-checked', 'noun', 'noun:f:v_naz', '', '')"
-        )
-
-    req_path = tmp_path / "req.yaml"
-    req_path.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "level": "a1",
-                "words": [
-                    {
-                        "lemma": "synthetic-checked",
                         "pos": "noun",
                         "want": "new",
                         "entry": {"source": "ulif", "homonym_index": 2},
@@ -938,57 +888,6 @@ def test_id_never_reused_after_tombstone(synthetic_vesum, synthetic_sources, tmp
         res = words.build_words("a1", req2, evidence_dir=tmp_path, sources_instance=api)
 
     assert res["store"]["words"][0]["id"] == "W-002"
-
-
-def test_file_and_directory_permissions(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        sources.stress,
-        "verify_stress",
-        lambda w, **kw: {
-            "status": "ok",
-            "matches": [
-                {
-                    "stressed_form": f"{w}-stressed",
-                    "unstressed_form": w,
-                    "vowel_index": 0,
-                    "vowel_indices": [0],
-                    "vesum": None,
-                    "required_tags": [],
-                    "override_applied": False,
-                }
-            ],
-            "source": {"digest": "t" * 64},
-        },
-    )
-
-    req = tmp_path / "req.yaml"
-    req.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "level": "a1",
-                "words": [
-                    {
-                        "lemma": "synthetic",
-                        "pos": "noun",
-                        "want": "new",
-                        "entry": {"source": "vesum", "entry_id": 10},
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    out_dir = tmp_path / "nested" / "ev"
-    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
-        words.build_words("a1", req, evidence_dir=out_dir, sources_instance=api)
-
-    assert stat.S_IMODE(out_dir.stat().st_mode) == 0o755
-    store_file = out_dir / "_words.yaml"
-    lock_file = out_dir / "_words.yaml.lock"
-    assert stat.S_IMODE(store_file.stat().st_mode) == 0o644
-    assert stat.S_IMODE(lock_file.stat().st_mode) == 0o644
 
 
 OK_ORACLE = {

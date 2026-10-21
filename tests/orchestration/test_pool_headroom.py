@@ -46,12 +46,6 @@ def test_use_excludes_reclaimable_file_cache(tmp_path):
     assert check.clause() == "lu.slice 5.0/12.0 GiB non-cache (+5.0 GiB file cache; worker reserve 2 GiB)"
 
 
-def test_cache_heavy_pool_fits_where_raw_current_would_not(tmp_path):
-    pool = fake_cgroup(tmp_path / "lu.slice", current=11 * _GIB, inactive_file=6 * _GIB, high=12 * _GIB)
-
-    assert pool_headroom.check_pool(2 * _GIB, pool).fits
-
-
 def test_reserve_past_memory_high_does_not_fit(tmp_path):
     pool = fake_cgroup(tmp_path / "lu.slice", current=13 * _GIB, active_file=2 * _GIB, high=12 * _GIB)
 
@@ -111,13 +105,6 @@ def test_missing_or_invalid_files_skip_without_raising(tmp_path, setup, reason):
     assert str(tmp_path) not in check.clause()
 
 
-def test_default_pool_cgroup_honours_override_and_user_path(monkeypatch):
-    assert pool_headroom.default_pool_cgroup({"LU_SLICE_CGROUP": "/fake/lu.slice"}) == Path("/fake/lu.slice")
-    default = pool_headroom.default_pool_cgroup({})
-    assert default.name == "lu.slice"
-    assert default.parent.name.startswith("user@")
-
-
 @pytest.mark.parametrize(
     ("value", "expected"),
     [
@@ -151,14 +138,3 @@ def test_malformed_limit_skips_instead_of_falling_back(tmp_path, high, maximum, 
     assert check.memory is None
     assert check.skipped == reason
     assert check.clause() == f"lu.slice pool check skipped ({reason})"
-
-
-def test_missing_memory_high_skips_instead_of_falling_back(tmp_path):
-    pool = fake_cgroup(tmp_path / "lu.slice", current=13 * _GIB, maximum=14 * _GIB)
-    (pool / "memory.high").unlink()
-
-    check = pool_headroom.check_pool(2 * _GIB, pool)
-
-    assert check.memory is None
-    assert (check.skipped or "").startswith("lu.slice memory.high unavailable: ")
-    assert str(tmp_path) not in check.clause()

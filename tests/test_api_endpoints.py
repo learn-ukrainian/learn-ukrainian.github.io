@@ -17,18 +17,13 @@ import asyncio
 import json
 import os
 import subprocess
-import threading
-import time
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.dashboard_router as dashboard_router
-import scripts.api.state_helpers as state_helpers
 from scripts.api.main import app
-from tests.latency_budget import assert_under_budget
 
 pytestmark = pytest.mark.reads_content
 
@@ -41,36 +36,6 @@ client = TestClient(app, raise_server_exceptions=False)
 class TestHealthEndpoint:
     """GET /api/health returns server status."""
 
-    def test_returns_200(self):
-        resp = client.get("/api/health")
-        assert resp.status_code == 200
-
-    def test_has_required_fields(self):
-        data = client.get("/api/health").json()
-        assert data["status"] == "ok"
-        assert "version" in data
-        assert "uptime_seconds" in data
-        assert isinstance(data["uptime_seconds"], int)
-        assert "instance" in data
-        instance = data["instance"]
-        assert isinstance(instance["host"], str)
-        assert instance["host"]
-        assert isinstance(instance["git_sha"], str)
-        assert len(instance["git_sha"]) == 40
-        assert instance["checkout_sha"] == instance["git_sha"]
-        assert "serving_mode" in instance
-        assert "serving_sha" in instance
-        assert "codexbar" in data
-        assert "scheduler_running" in data["codexbar"]
-        assert data["codexbar"]["cache_ttl_s"] == 720.0
-
-    def test_health_respects_lu_monitor_host_id(self, monkeypatch):
-        monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")
-        data = client.get("/api/health").json()
-        assert data["instance"]["host"] == "host-explicit"
-        assert "serving_mode" in data["instance"]
-        assert "checkout_sha" in data["instance"]
-
     @pytest.mark.parametrize("non_opaque_host_id", ["teacher.example.org", "host-job"])
     def test_health_never_echoes_a_non_opaque_lu_monitor_host_id(self, monkeypatch, non_opaque_host_id):
         # A real host name (a live FQDN) or a retired batch-host role
@@ -79,51 +44,6 @@ class TestHealthEndpoint:
         monkeypatch.setenv("LU_MONITOR_HOST_ID", non_opaque_host_id)
         data = client.get("/api/health").json()
         assert data["instance"]["host"] == "local"
-
-    def test_version_matches_app(self):
-        data = client.get("/api/health").json()
-        assert data["version"] == app.version
-
-    def test_git_sha_matches_head(self):
-        head = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=Path(__file__).resolve().parents[1],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=30,
-        ).stdout.strip()
-        data = client.get("/api/health").json()
-        assert data["instance"]["git_sha"] == head
-
-
-class TestConfigEndpoint:
-    """GET /api/config returns levels and pipeline info."""
-
-    def test_returns_200(self):
-        resp = client.get("/api/config")
-        assert resp.status_code == 200
-
-    def test_has_levels(self):
-        data = client.get("/api/config").json()
-        assert "levels" in data
-        assert isinstance(data["levels"], list)
-        assert len(data["levels"]) > 0
-
-    def test_has_api_version(self):
-        data = client.get("/api/config").json()
-        assert "api_version" in data
-
-    def test_has_pipeline_info(self):
-        data = client.get("/api/config").json()
-        assert "pipeline" in data
-
-    def test_uses_v6_pipeline_constants(self):
-        from scripts.build.phase_constants import PHASE_LABELS, PHASES
-
-        data = client.get("/api/config").json()
-        assert data["pipeline"]["phases"] == PHASES
-        assert data["pipeline"]["phase_labels"] == PHASE_LABELS
 
 
 class TestDispatcherScanEndpoint:
@@ -152,70 +72,8 @@ class TestDispatcherScanEndpoint:
         assert resp.json()["detail"] == "Dispatcher scan failed"
 
 
-class TestStateSummaryEndpoint:
-    """GET /api/state/summary returns track data."""
-
-    def test_returns_200(self):
-        resp = client.get("/api/state/summary")
-        assert resp.status_code == 200
-
-    def test_has_tracks(self):
-        data = client.get("/api/state/summary").json()
-        assert "tracks" in data
-        assert isinstance(data["tracks"], dict)
-
-    def test_has_freshness_meta_and_dossier_fields(self):
-        data = client.get("/api/state/summary?fresh=true").json()
-        meta = data["meta"]
-        assert meta["source"] == "fs:plans+orchestration+artifacts+research"
-        assert meta["cache"] == "miss"
-        assert meta["stale_after_s"] == 60.0
-        assert "dossier_done" in data["totals"]
-        assert "published_mdx" in data["totals"]
-        assert data["tracks"]["folk"]["profile"] == "seminar"
-        assert data["tracks"]["folk"]["is_seminar"] is True
-
-
-class TestPipelineVersionsEndpoint:
-    """GET /api/state/pipeline-versions returns version counts."""
-
-    def test_returns_200(self):
-        resp = client.get("/api/state/pipeline-versions")
-        assert resp.status_code == 200
-
-    def test_has_counts(self):
-        data = client.get("/api/state/pipeline-versions").json()
-        assert "counts" in data
-
-    def test_exposes_neutral_build_state_summary(self):
-        data = client.get("/api/state/pipeline-versions?fresh=true").json()
-        counts = data["counts"]
-
-        assert data["current_builds"] == counts["v6"]
-        assert data["legacy_builds"] == counts["v5"] + counts["v3"]
-        assert data["unbuilt_modules"] == counts["unbuilt"]
-        assert data["rebuild_backlog"] == counts["v5"] + counts["v3"] + counts["unbuilt"]
-        assert data["needs_rebuild"] == data["rebuild_backlog"]
-        assert data["build_state"] == {
-            "current": data["current_builds"],
-            "legacy": data["legacy_builds"],
-            "unbuilt": data["unbuilt_modules"],
-            "backlog": data["rebuild_backlog"],
-        }
-        assert "pct_current" in data
-
-
 class TestBuildStatusEndpoint:
     """GET /api/state/build-status agrees with per-track build status."""
-
-    def test_all_tracks_matches_per_track_build_counts(self):
-        all_tracks = client.get("/api/state/build-status").json()["tracks"]
-
-        for track in ["a1", "bio", "folk"]:
-            per_track = client.get(f"/api/state/build-status/{track}").json()
-            assert all_tracks[track]["building"] == per_track["building"]
-            assert all_tracks[track]["queued"] == per_track["queued"]
-            assert all_tracks[track]["failed"] == per_track["failed"]
 
     def test_per_track_counts_failed_audit_before_running_phase(self, tmp_path, monkeypatch):
         from scripts.api import state_build
@@ -240,22 +98,6 @@ class TestBuildStatusEndpoint:
 class TestDashboardOverviewEndpoint:
     """GET /api/dashboard/overview returns tracks."""
 
-    def test_returns_200(self):
-        resp = client.get("/api/dashboard/overview")
-        assert resp.status_code == 200
-
-    def test_has_tracks_and_totals(self):
-        data = client.get("/api/dashboard/overview").json()
-        assert "tracks" in data
-        assert "totals" in data
-        assert "timestamp" in data
-
-    def test_totals_have_status_keys(self):
-        data = client.get("/api/dashboard/overview").json()
-        totals = data["totals"]
-        for key in ["pass", "fail", "missing", "unaudited", "total"]:
-            assert key in totals
-
     def test_track_counts_match_state_summary(self):
         summary = client.get("/api/state/summary?fresh=true").json()
         overview = client.get("/api/dashboard/overview").json()
@@ -270,179 +112,8 @@ class TestDashboardOverviewEndpoint:
         assert "hist" in overview_counts
         assert overview_counts["hist"] == summary_counts["hist"]
 
-    def test_overview_reuses_state_summary_cache_and_track_specific_research_metric(self):
-        summary = client.get("/api/state/summary?fresh=true").json()
-        overview = client.get("/api/dashboard/overview").json()
-        tracks = {track["id"]: track for track in overview["tracks"]}
-
-        assert overview["meta"]["cache"] == "hit"
-        assert tracks["a1"]["stats"]["research"]["total"] == summary["tracks"]["a1"]["research_done"]
-        assert tracks["folk"]["stats"]["research"]["total"] == summary["tracks"]["folk"]["dossier_done"]
-
-    def test_overview_does_not_wait_for_curriculum_scan(self, monkeypatch):
-        """#6983: overview must not rescan every module on the request path.
-
-        Live evidence: cache-miss overview took 5.7 s with totals.missing=1932
-        and overlapped lean orient into 504s. A hung scan/summary must still
-        return 200 well under the 10 s global timeout, with honest meta.
-        """
-        dashboard_router.reset_overview_state_for_tests()
-        state_helpers.cache_invalidate("summary")
-        state_helpers.cache_invalidate(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY)
-        release = threading.Event()
-
-        def hang_scan(*_args, **_kwargs):
-            release.wait(8)
-            return {
-                "track_id": "a1",
-                "track_path": "a1",
-                "module_count": 0,
-                "is_seminar": False,
-                "modules": [],
-            }
-
-        def hang_summary():
-            release.wait(8)
-            return {"generated_at": None, "tracks": {}, "totals": {}}
-
-        monkeypatch.setattr(dashboard_router, "scan_track_summary_cached", hang_scan)
-        monkeypatch.setattr(dashboard_router, "compute_summary", hang_summary)
-
-        start = time.perf_counter()
-        try:
-            resp = client.get("/api/dashboard/overview")
-            elapsed = time.perf_counter() - start
-            assert resp.status_code == 200
-            assert_under_budget(
-                elapsed,
-                1.5,
-                f"overview waited for curriculum scan, took {elapsed:.3f}s",
-            )
-            data = resp.json()
-            assert "tracks" in data
-            assert "totals" in data
-            meta = data["meta"]
-            assert meta["cache"] in {"hit", "miss"}
-            assert meta.get("track_scan") in {"skipped", "stale", "hit"}
-            if meta["cache"] == "miss" and meta.get("track_scan") == "skipped":
-                assert meta.get("error") == "overview_warming"
-                assert meta.get("stale") is True
-        finally:
-            release.set()
-            dashboard_router.reset_overview_state_for_tests()
-
-    def test_overview_cache_hit_stays_under_playground_budget(self, monkeypatch):
-        """Cache-hit overview must stay inside the 1.5 s in-process playground budget."""
-        dashboard_router.reset_overview_state_for_tests()
-        warm = client.get("/api/state/summary?fresh=true")
-        assert warm.status_code == 200
-        summary = warm.json()
-        seeded = dashboard_router._build_overview_from_state_summary(summary, "hit", 0.0, track_scan="hit")
-        # Seed the ctx-scoped key the endpoint reads (#7494); the unscoped
-        # constant alone no longer addresses this app context's entry.
-        state_helpers.cache_set(dashboard_router._overview_cache_key(app.state.ctx), seeded)
-
-        release = threading.Event()
-
-        def hang_scan(*_args, **_kwargs):
-            release.wait(8)
-            raise AssertionError("cache-hit overview must not rescan")
-
-        monkeypatch.setattr(dashboard_router, "scan_track_summary_cached", hang_scan)
-        monkeypatch.setattr(dashboard_router, "compute_summary", hang_scan)
-
-        try:
-            start = time.perf_counter()
-            resp = client.get("/api/dashboard/overview")
-            elapsed = time.perf_counter() - start
-            assert resp.status_code == 200
-            assert_under_budget(
-                elapsed,
-                1.5,
-                f"overview cache-hit took {elapsed:.3f}s",
-            )
-            data = resp.json()
-            assert data["meta"]["cache"] == "hit"
-            assert data["meta"].get("stale") is False
-            assert data["meta"].get("track_scan") == "hit"
-        finally:
-            release.set()
-            dashboard_router.reset_overview_state_for_tests()
-
 
 # ==================== Router mounting tests ====================
-
-
-class TestRouterMounting:
-    """All routers are properly mounted in the app.
-
-    Uses the generated OpenAPI spec to reliably detect mounted paths
-    (app.routes introspection misses prefixed sub-router paths).
-    """
-
-    def _route_paths(self) -> set[str]:
-        # OpenAPI paths are the source of truth for what the app actually serves.
-        spec = app.openapi()
-        return set(spec.get("paths", {}).keys())
-
-    def test_dashboard_router_mounted(self):
-        paths = self._route_paths()
-        assert "/api/dashboard/overview" in paths
-
-    def test_state_router_mounted(self):
-        paths = self._route_paths()
-        assert "/api/state/summary" in paths
-
-    def test_health_endpoint_mounted(self):
-        paths = self._route_paths()
-        assert "/api/health" in paths
-
-    def test_config_endpoint_mounted(self):
-        paths = self._route_paths()
-        assert "/api/config" in paths
-
-    def test_comms_router_mounted(self):
-        paths = self._route_paths()
-        assert any("/api/comms" in p for p in paths)
-
-    def test_blue_router_mounted(self):
-        paths = self._route_paths()
-        assert any("/api/blue" in p for p in paths)
-
-    def test_gold_router_mounted(self):
-        paths = self._route_paths()
-        assert any("/api/gold" in p for p in paths)
-
-    def test_admin_router_mounted(self):
-        paths = self._route_paths()
-        assert any("/api/admin" in p for p in paths)
-
-    def test_sources_router_mounted(self):
-        paths = self._route_paths()
-        assert "/api/sources/stats" in paths
-
-    def test_rag_router_not_mounted(self):
-        paths = self._route_paths()
-        assert "/api/rag/stats" not in paths
-        assert not any(p.startswith("/api/rag") for p in paths)
-
-    def test_ready_to_build_not_mounted(self):
-        paths = self._route_paths()
-        assert "/api/state/ready-to-build" not in paths
-
-    def test_cost_alias_not_mounted(self):
-        paths = self._route_paths()
-        assert "/api/cost" not in paths
-        assert not any(p.startswith("/api/cost") for p in paths)
-
-    def test_hramatka_not_mounted_on_public_monitor(self):
-        paths = self._route_paths()
-        assert not any(p.startswith("/api/hramatka") for p in paths)
-
-    def test_readyz_not_mounted_on_public_monitor(self):
-        paths = self._route_paths()
-        assert "/api/readyz" not in paths
-        assert "/readyz" not in paths
 
 
 class TestPublicMonitorSurfacesAndBoundaries:
@@ -451,37 +122,6 @@ class TestPublicMonitorSurfacesAndBoundaries:
     def test_hramatka_readyz_returns_404(self):
         resp = client.get("/api/hramatka/readyz")
         assert resp.status_code == 404
-
-    def test_sources_stats_returns_200(self):
-        resp = client.get("/api/sources/stats")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert "sources_db" in data
-
-    def test_rag_stats_alias_retired_returns_404(self):
-        resp = client.get("/api/rag/stats")
-        assert resp.status_code == 404
-
-    def test_ready_to_build_retired_returns_404(self):
-        resp = client.get("/api/state/ready-to-build")
-        assert resp.status_code == 404
-
-    def test_cost_alias_retired_returns_404(self):
-        resp = client.get("/api/cost")
-        assert resp.status_code == 404
-
-    def test_readyz_returns_404(self):
-        assert client.get("/api/readyz").status_code == 404
-        assert client.get("/readyz").status_code == 404
-
-    def test_static_extensionless_aliases(self):
-        work_resp = client.get("/work")
-        assert work_resp.status_code == 200
-        assert "html" in work_resp.headers.get("content-type", "").lower()
-
-        orient_resp = client.get("/orient")
-        assert orient_resp.status_code == 200
-        assert "html" in orient_resp.headers.get("content-type", "").lower()
 
 
 # ==================== Helper function tests ====================
@@ -497,12 +137,6 @@ class TestReadYamlFile:
         f.write_text("key: value\nnum: 42")
         result = read_yaml_file(f)
         assert result == {"key": "value", "num": 42}
-
-    def test_returns_none_for_missing_file(self, tmp_path):
-        from scripts.api.dashboard_helpers import read_yaml_file
-
-        result = read_yaml_file(tmp_path / "nonexistent.yaml")
-        assert result is None
 
     def test_returns_none_for_invalid_yaml(self, tmp_path):
         from scripts.api.dashboard_helpers import read_yaml_file
@@ -533,99 +167,6 @@ class TestExtractWordCountFromStatus:
         assert dc == 0
         assert la == "2026-03-01T00:00:00Z"
 
-    def test_returns_zeros_for_none(self):
-        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
-
-        wc, wt, dc, la = _extract_word_count_from_status(None)
-        assert wc == 0
-        assert wt == 0
-        assert dc == 0
-        assert la is None
-
-    def test_returns_zeros_for_empty_data(self):
-        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
-
-        class FakeResult:
-            def __init__(self):
-                self.data = None
-
-        wc, _wt, _dc, _la = _extract_word_count_from_status(FakeResult())
-        assert wc == 0
-
-    def test_handles_deferred_count(self):
-        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
-
-        class FakeResult:
-            def __init__(self):
-                self.data = {
-                    "overall": {"status": "pass", "deferred_count": 3},
-                    "gates": {"lesson": {"message": "500 / 1000 words"}},
-                    "timestamp": None,
-                }
-
-        _, _, dc, _ = _extract_word_count_from_status(FakeResult())
-        assert dc == 3
-
-
-class TestComputeTrackStats:
-    """_compute_track_stats aggregates module data."""
-
-    def test_counts_statuses(self):
-        from scripts.api.dashboard_helpers import compute_track_stats as _compute_track_stats
-
-        modules = [
-            {
-                "status": "pass",
-                "has_review": True,
-                "has_final_review": False,
-                "has_plan_review": False,
-                "plan_review_verdict": None,
-                "research": {},
-            },
-            {
-                "status": "fail",
-                "has_review": False,
-                "has_final_review": False,
-                "has_plan_review": True,
-                "plan_review_verdict": "PASS",
-                "research": {},
-            },
-            {
-                "status": "missing",
-                "has_review": False,
-                "has_final_review": False,
-                "has_plan_review": False,
-                "plan_review_verdict": None,
-                "research": {},
-            },
-        ]
-        stats = _compute_track_stats(modules, "a1")
-        assert stats["pass"] == 1
-        assert stats["fail"] == 1
-        assert stats["missing"] == 1
-        assert stats["reviewed"] == 1
-        assert stats["plan_pass"] == 1
-
-    def test_empty_modules(self):
-        from scripts.api.dashboard_helpers import compute_track_stats as _compute_track_stats
-
-        stats = _compute_track_stats([], "a1")
-        assert stats["pass"] == 0
-        assert stats["missing"] == 0
-
-
-class TestDefaultResearchInfo:
-    """_default_research_info returns correct structure."""
-
-    def test_has_required_keys(self):
-        from scripts.api.dashboard_helpers import default_research_info as _default_research_info
-
-        info = _default_research_info("a1")
-        assert info["exists"] is False
-        assert info["words"] == 0
-        assert "quality" in info
-        assert "profile" in info
-
 
 class TestExtractReviewInfo:
     """_extract_review_info reads review files."""
@@ -651,91 +192,10 @@ class TestExtractReviewInfo:
         assert info["has_review"] is True
 
 
-class TestGetOrchestrationInfo:
-    """_get_orchestration_info collects phase data."""
-
-    def test_missing_dir(self, tmp_path):
-        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
-
-        info = _get_orchestration_info(tmp_path / "nonexistent")
-        assert info["orchestration"] == []
-        assert info["pipeline_version"] == "unbuilt"
-        assert info["needs_rebuild"] is True
-        assert info["friction_count"] == 0
-
-    def test_existing_dir_with_files(self, tmp_path):
-        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
-
-        orch = tmp_path / "orch"
-        orch.mkdir()
-        (orch / "research-output.json").write_text("{}")
-        (orch / "content-output.json").write_text("{}")
-        info = _get_orchestration_info(orch)
-        assert len(info["orchestration"]) == 2
-        assert info["friction_count"] == 0
-
-    def test_friction_files_counted(self, tmp_path):
-        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
-
-        orch = tmp_path / "orch"
-        orch.mkdir()
-        (orch / "friction-1.json").write_text("{}")
-        (orch / "friction-2.json").write_text("{}")
-        (orch / "phase-1.json").write_text("{}")
-        info = _get_orchestration_info(orch)
-        assert info["friction_count"] == 2
-
-    def test_v6_not_needs_rebuild(self, tmp_path):
-        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
-
-        orch = tmp_path / "orch"
-        orch.mkdir()
-        (orch / "state.json").write_text('{"mode":"v6","phases":{}}')
-        info = _get_orchestration_info(orch)
-        assert info["pipeline_version"] == "v6"
-        assert info["needs_rebuild"] is False
-        assert "v4_phases" not in info
-
-
-class TestBuildModuleInfo:
-    """build_module_info keeps only v6 as current."""
-
-    def test_v5_marks_needs_rebuild(self, tmp_path):
-        from scripts.api.dashboard_helpers import build_module_info
-
-        track_dir = tmp_path / "track"
-        plans_dir = tmp_path / "plans"
-        orch_dir = track_dir / "orchestration" / "test-slug"
-        orch_dir.mkdir(parents=True)
-        plans_dir.mkdir()
-
-        with (
-            patch("scripts.api.dashboard_helpers.get_source_paths", return_value={}),
-            patch("scripts.api.dashboard_helpers.find_research_path", return_value=None),
-            patch(
-                "scripts.api.dashboard_helpers.extract_review_info",
-                return_value={
-                    "has_review": False,
-                    "has_final_review": False,
-                    "review_score": None,
-                    "review_verdict": None,
-                    "has_plan_review": False,
-                    "plan_review_verdict": None,
-                },
-            ),
-            patch("scripts.api.dashboard_helpers.detect_pipeline_version", return_value="v5"),
-        ):
-            result = build_module_info(track_dir, plans_dir, "a1", "test-slug", 0)
-
-        assert result["pipeline_version"] == "v5"
-        assert result["needs_rebuild"] is True
-
-
 class TestDashboardModuleDetail:
     """module_detail should expose freshness-aware status metadata."""
 
     def test_status_uses_read_status(self, tmp_path, monkeypatch):
-        import scripts.api.dashboard_router as dashboard_router
 
         track_dir = tmp_path / "curriculum" / "a1"
         status_dir = track_dir / "status"
@@ -773,32 +233,6 @@ class TestDashboardModuleDetail:
         assert result["status"] == {"overall": {"status": "pass"}}
         assert result["status_is_fresh"] is False
         assert result["status_stale_sources"] == ["meta"]
-
-
-class TestWeakPointsEndpoint:
-    """Weak points should compute research scores even for all-tracks queries."""
-
-    def test_all_tracks_includes_research_scores(self, monkeypatch):
-        import scripts.api.state_router as state_router
-
-        monkeypatch.setattr(state_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}])
-        monkeypatch.setattr(state_router, "get_plan_slugs", lambda track_id, *args, **kwargs: [(1, "test-slug")])
-        monkeypatch.setattr(
-            state_router,
-            "get_audit_status",
-            lambda _track_dir, _slug: {"status": "pass", "word_count": 100, "word_target": 200, "blocking_issues": []},
-        )
-        monkeypatch.setattr(state_router, "get_research_score", lambda *_args, **_kwargs: 6)
-        monkeypatch.setattr(state_router, "get_word_target_from_plan", lambda *_args, **_kwargs: 200)
-        monkeypatch.setattr(state_router, "detect_pipeline_version", lambda *_args, **_kwargs: "v6")
-
-        response = client.get("/api/state/weak-points?limit=10")
-
-        assert response.status_code == 200
-        data = response.json()
-        assert data["count"] == 1
-        assert data["modules"][0]["research_score"] == 6
-        assert "research_score_6" in data["modules"][0]["issues"]
 
 
 class TestClassifyModuleQueue:

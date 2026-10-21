@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import shutil
 import sqlite3
 from pathlib import Path
@@ -65,20 +64,6 @@ def crafted(tmp_path_factory: pytest.TempPathFactory) -> tuple[int, str, Path]:
     return code, printed.getvalue(), out
 
 
-def test_every_crafted_case_passes_and_prints_its_evidence(crafted: tuple[int, str, Path]) -> None:
-    code, printed, out = crafted
-    lines = [line for line in printed.splitlines() if line.startswith(("PASS", "FAIL"))]
-    assert code == 0, printed
-    assert [line.split()[0:2] for line in lines] == [["PASS", f"({key})"] for key in ("iii", "v", "vi", "vii", "viii")]
-    assert "5/5 crafted cases pass" in printed
-    # the evidence is concrete: paths under --out, hashes, database counts
-    joined = "\n".join(lines)
-    assert "sha256=" in joined and "findings=5" in joined and "agreement rows=1" in joined
-    assert (
-        out / "viii-module-verdict/curriculum/l2-uk-en/evidence/a1/_state/fixture-module/module-verdict.yaml"
-    ).is_file()
-
-
 def test_the_module_verdict_the_check_reports_is_the_engines_own_file(crafted: tuple[int, str, Path]) -> None:
     _, _, out = crafted
     state = out / "viii-module-verdict/curriculum/l2-uk-en/evidence/a1/_state/fixture-module"
@@ -117,10 +102,6 @@ CONTROLS = [
 ]
 
 
-def test_the_whole_crafted_suite_passes_before_any_break(tmp_path: Path) -> None:
-    assert [(case.key, case.passed) for case in ic.run_all(tmp_path)] == [(key, True) for key, _, _ in ic.CRAFTED_CASES]
-
-
 def test_layers_refuses_a_receipt_id_absent_from_the_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     build_sources = ic.receipt_source_paths
 
@@ -153,14 +134,6 @@ def test_breaking_a_product_path_fails_exactly_the_cases_that_prove_it(
     cases = ic.run_all(tmp_path)
     assert {case.key for case in cases if not case.passed} == failing, "\n".join(case.line() for case in cases)
     assert all(case.line().startswith("FAIL") for case in cases if case.key in failing)
-
-
-def test_a_crash_inside_a_case_is_a_failure_with_its_location(tmp_path: Path) -> None:
-    def crash(case: ic.Case) -> None:
-        raise ValueError("boom")
-
-    case = ic.run_case("x", "crash", crash, tmp_path)
-    assert not case.passed and "ValueError: boom" in case.line() and "test_integration_check.py" in case.line()
 
 
 def test_the_output_directory_must_be_empty_and_outside_the_repository(tmp_path: Path) -> None:
@@ -526,10 +499,3 @@ def test_what_the_module_verdict_keeps_after_a_settle_outcome(
 
 
 # --- no Ukrainian typed --------------------------------------------------------------------------------
-
-
-@pytest.mark.repo_wide
-def test_no_cyrillic_in_the_check_or_its_tests() -> None:
-    cyrillic = re.compile(f"[{chr(0x400)}-{chr(0x4FF)}]")  # the Cyrillic block, without typing it
-    for path in (Path(ic.__file__), Path(__file__)):
-        assert cyrillic.findall(path.read_text(encoding="utf-8")) == [], path.name

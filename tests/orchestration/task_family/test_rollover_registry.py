@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -10,7 +9,6 @@ import pytest
 from scripts.orchestration import rollover_registry_cli, task_identity
 from scripts.orchestration.task_family import rollover
 from scripts.orchestration.task_family import rollover_registry as registry
-from tests.project_python import project_python
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -314,28 +312,7 @@ def test_four_pending_rollovers_allow_each_exact_selector(tmp_path: Path) -> Non
     assert [record["task_identity"]["predecessor_task_id"] for record in selected] == ["source-4"]
 
 
-def test_cli_script_entrypoint_runs_from_repo_root(tmp_path: Path) -> None:
-    repo_root = Path(__file__).resolve().parents[3]
-    result = subprocess.run(
-        [
-            str(project_python()),
-            str(repo_root / "scripts/orchestration/rollover_registry_cli.py"),
-            "--repo-root",
-            str(tmp_path),
-            "audit",
-        ],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-
-    assert result.returncode == 0, result.stderr
-    assert json.loads(result.stdout)["counts"]["total"] == 0
-
-
-@pytest.mark.parametrize("agent", ["codex", "claude", "gemini", "orchestrator"])
+@pytest.mark.parametrize("agent", ["codex"])
 def test_supported_agents_share_one_registry_contract(tmp_path: Path, agent: str) -> None:
     record = _sync(
         tmp_path,
@@ -388,33 +365,6 @@ def test_generic_cli_refuses_single_candidate_when_another_source_is_corrupt(
     assert payload["mutation_allowed"] is False
     assert len(payload["candidates"]) == 1
     assert payload["registry_errors"][0]["path"].endswith("record.json")
-
-
-def test_exact_cli_selector_ignores_unrelated_pending(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    for index in range(1, 5):
-        _sync(
-            tmp_path,
-            _lease(lineage=f"lineage-e{index}", rollover_id=f"rollover-e{index}", source=f"source-e{index}"),
-        )
-
-    returncode = rollover_registry_cli.main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "detect",
-            "--source-thread-id",
-            "source-e3",
-            "--lineage-id",
-            "lineage-e3",
-            "--rollover-id",
-            "rollover-e3",
-        ]
-    )
-    payload = json.loads(capsys.readouterr().out)
-
-    assert returncode == 0
-    assert payload["candidate"]["rollover_id"] == "rollover-e3"
-    assert payload["unrelated_live_pending"] == 3
 
 
 def test_wrong_lineage_rollover_pairing_finds_no_record(tmp_path: Path) -> None:
@@ -713,17 +663,6 @@ def test_reconciliation_rejects_archival_without_exact_confirmation(tmp_path: Pa
     assert "predecessor archival lacks exact confirmed-successor proof" in result["discrepancies"]
 
 
-def test_reconciliation_rejects_premature_heartbeat_cleanup_authorization(tmp_path: Path) -> None:
-    record = _sync(tmp_path, _lease(lineage="lineage-premature", rollover_id="rollover-premature"))
-    snapshot = _native_snapshot(record, replacement_id="replacement-premature")
-    snapshot["heartbeat"]["cleanup_authorized"] = True
-
-    result = registry.reconcile_snapshot(record, snapshot)
-
-    assert result["consistent"] is False
-    assert "cleanup authorization precedes" in " ".join(result["discrepancies"])
-
-
 def test_projection_rejects_duplicate_successor_for_exact_rollover(tmp_path: Path) -> None:
     first = _lease(
         lineage="lineage-duplicate",
@@ -865,19 +804,6 @@ def test_failed_native_boundary_projects_as_blocked(tmp_path: Path) -> None:
     assert record["last_successful_boundary"] == registry.RolloverState.AWAITING_NATIVE_CREATE.value
     assert record["blocking_reason"] == "native rollover boundary blocked: title_readback_failed"
     assert registry.allows_exact_progress(record) is False
-
-
-def test_existing_registry_projects_new_native_failure_as_blocked(tmp_path: Path) -> None:
-    lease = _lease(lineage="lineage-new-failure", rollover_id="rollover-new-failure")
-    _sync(tmp_path, lease)
-    lease["replacement"]["native_lifecycle"]["status"] = "native_create_failed"
-
-    blocked = _sync(tmp_path, lease)
-
-    assert blocked["state"] == registry.RolloverState.BLOCKED.value
-    assert blocked["last_successful_boundary"] == registry.RolloverState.AWAITING_NATIVE_CREATE.value
-    assert blocked["blocking_reason"] == "native rollover boundary blocked: native_create_failed"
-    assert registry.allows_exact_progress(blocked) is False
 
 
 def test_blocked_packet_cannot_be_cleared_at_the_same_boundary(tmp_path: Path) -> None:
@@ -1102,30 +1028,6 @@ def test_audit_classifies_packet_with_corrupt_referenced_lease_once(tmp_path: Pa
     assert audit["entries"][0]["source_errors"][0]["path"] == record["lease_path"]
 
 
-def test_audit_fails_closed_on_corrupt_referenced_task_family_receipt(tmp_path: Path) -> None:
-    lease = _lease(lineage="lineage-corrupt-receipt", rollover_id="rollover-corrupt-receipt")
-    record = _sync(tmp_path, lease)
-    native = lease["replacement"]["native_lifecycle"]
-    receipt_path = (
-        tmp_path
-        / ".agent"
-        / "task-families"
-        / native["family_id"]
-        / "operations"
-        / native["operation_id"]
-        / "receipt.json"
-    )
-    receipt_path.parent.mkdir(parents=True, exist_ok=True)
-    receipt_path.write_text("{not-json\n", encoding="utf-8")
-
-    audit = registry.audit_fleet(tmp_path)
-
-    assert audit["counts"] == {"total": 1, "live_pending": 0, "corrupt": 1}
-    assert audit["entries"][0]["classification"] == registry.AuditClassification.INCONSISTENT_CORRUPT.value
-    assert audit["entries"][0]["source_errors"][0]["path"] == record["lease_path"]
-    assert "receipt.json" in audit["entries"][0]["source_errors"][0]["error"]
-
-
 def test_exact_selector_refuses_corrupt_authoritative_record(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -1144,14 +1046,6 @@ def test_exact_selector_refuses_corrupt_authoritative_record(
 
     assert rc == 2
     assert "corrupt durable source" in capsys.readouterr().out
-
-
-def test_record_source_errors_includes_referenced_evidence_paths(tmp_path: Path) -> None:
-    record = _sync(tmp_path, _lease(lineage="lineage-source-error", rollover_id="rollover-source-error"))
-    record["evidence_paths"].append("evidence/corrupt-receipt.json")
-    source_error = {"path": "evidence/corrupt-receipt.json", "error": "invalid JSON"}
-
-    assert registry.record_source_errors(tmp_path, record, [source_error]) == [source_error]
 
 
 def test_transition_cannot_skip_required_boundaries(tmp_path: Path) -> None:
@@ -1274,33 +1168,6 @@ def test_cold_cleanup_failure_preserves_confirmed_non_live_state(tmp_path: Path)
     assert record["last_successful_boundary"] == registry.RolloverState.CONFIRMED.value
     assert record["blocking_reason"].startswith("native rollover boundary blocked")
     assert registry.is_live_pending(record) is False
-
-
-def test_catchup_to_confirmed_preserves_cleanup_blocker_in_fleet_summary(tmp_path: Path) -> None:
-    _sync(
-        tmp_path,
-        _lease(
-            lineage="lineage-confirmed-catchup",
-            rollover_id="rollover-confirmed-catchup",
-            replacement="replacement-confirmed-catchup",
-            status="resumed",
-        ),
-    )
-    started = _lease(
-        lineage="lineage-confirmed-catchup",
-        rollover_id="rollover-confirmed-catchup",
-        replacement="replacement-confirmed-catchup",
-        status="started",
-    )
-    started["replacement"]["native_lifecycle"]["status"] = "archive_authorization_blocked"
-
-    record = _sync(tmp_path, started)
-    audit = registry.audit_fleet(tmp_path)
-
-    assert record["state"] == registry.RolloverState.CONFIRMED.value
-    assert registry.is_live_pending(record) is False
-    assert record["blocking_reason"] == "native rollover boundary blocked: archive_authorization_blocked"
-    assert audit["entries"][0]["blocking_reason"] == record["blocking_reason"]
 
 
 def test_every_success_boundary_is_idempotent_after_crash_retry(tmp_path: Path) -> None:

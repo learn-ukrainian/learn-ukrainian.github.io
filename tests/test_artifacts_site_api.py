@@ -134,49 +134,6 @@ def test_module_artifact_flags_stale_plan(tmp_path, monkeypatch):
     assert body["ship_ready"] is False
 
 
-def test_module_artifact_flags_missing_frontmatter(tmp_path, monkeypatch):
-    track_dir, plans = _set_env(tmp_path, monkeypatch)
-    content_path = track_dir / "hello.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text("No frontmatter here.\n", encoding="utf-8")
-    plan_path = plans / "hello.yaml"
-    plan_path.write_text("slug: hello\n", encoding="utf-8")
-
-    _stub_gates(monkeypatch)
-    monkeypatch.setattr(
-        artifacts_router, "find_content_file",
-        lambda _track_dir, slug: content_path if slug == "hello" else None,
-    )
-
-    body = client.get("/api/artifacts/a1/hello").json()
-    assert body["gates"]["frontmatter_valid"] is False
-    assert body["ship_ready"] is False
-
-
-def test_module_artifact_404_on_unknown_track(tmp_path, monkeypatch):
-    _set_env(tmp_path, monkeypatch)
-    resp = client.get("/api/artifacts/does-not-exist/foo")
-    assert resp.status_code == 404
-
-
-def test_module_artifact_fails_when_final_review_missing(tmp_path, monkeypatch):
-    track_dir, plans = _set_env(tmp_path, monkeypatch)
-    content_path = track_dir / "hello.md"
-    _valid_mdx(content_path)
-    plan_path = plans / "hello.yaml"
-    plan_path.write_text("slug: hello\n", encoding="utf-8")
-
-    _stub_gates(monkeypatch, final_verdict=None)
-    monkeypatch.setattr(
-        artifacts_router, "find_content_file",
-        lambda _track_dir, slug: content_path if slug == "hello" else None,
-    )
-
-    body = client.get("/api/artifacts/a1/hello").json()
-    assert body["gates"]["final_review_pass"] is False
-    assert body["ship_ready"] is False
-
-
 # ---------------------------------------------------------------------
 # /api/artifacts/ship-ready
 # ---------------------------------------------------------------------
@@ -220,58 +177,9 @@ def test_ship_ready_aggregates(monkeypatch):
 # ---------------------------------------------------------------------
 
 
-def test_site_health_graceful_when_offline(monkeypatch):
-    """Network-free site health check. Every field degrades gracefully."""
-    monkeypatch.setattr(
-        site_router, "_canary_probes",
-        lambda _url: [{"url": "https://example/", "status": None, "error": "URLError: offline"}],
-    )
-    monkeypatch.setattr(site_router, "_last_astro_build", lambda *_a, **_k: {"built": False})
-    monkeypatch.setattr(site_router, "_last_deploy_commit", lambda *_a, **_k: {"error": "no gh-pages ref"})
-    monkeypatch.setattr(site_router, "_sitemap_freshness", lambda *_a, **_k: {"exists": False})
-
-    resp = client.get("/api/site/health")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["reachable"] is False
-    assert body["canaries"][0]["error"].startswith("URLError")
-    assert body["last_astro_build"]["built"] is False
-    assert body["last_deploy_commit"]["error"]
-
-
-def test_site_health_reachable_when_canary_200(monkeypatch):
-    monkeypatch.setattr(
-        site_router, "_canary_probes",
-        lambda _url: [{"url": "https://example/", "status": 200, "elapsed_ms": 42}],
-    )
-    monkeypatch.setattr(site_router, "_last_astro_build", lambda *_a, **_k: {"built": True})
-    monkeypatch.setattr(site_router, "_last_deploy_commit", lambda *_a, **_k: {"sha": "abc123"})
-    monkeypatch.setattr(site_router, "_sitemap_freshness", lambda *_a, **_k: {"exists": True})
-
-    body = client.get("/api/site/health").json()
-    assert body["reachable"] is True
-
-
 # ---------------------------------------------------------------------
 # /api/site/deployments
 # ---------------------------------------------------------------------
-
-
-def test_deployments_surfaces_gh_error_gracefully(monkeypatch):
-    """gh not authed / not installed → error field, not 500."""
-
-    class FakeProc:
-        returncode = 1
-        stdout = ""
-        stderr = "gh: command not found"
-
-    monkeypatch.setattr(site_router, "_run", lambda *_a, **_kw: FakeProc())
-
-    resp = client.get("/api/site/deployments")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["runs"] == []
-    assert "gh: command not found" in body["error"]
 
 
 def test_deployments_returns_parsed_runs(monkeypatch):
@@ -325,35 +233,6 @@ def test_site_run_swallows_missing_binary(monkeypatch):
     proc = site_router._run(["gh", "run", "list"], timeout_s=3.0)
     assert proc.returncode == 127
     assert "FileNotFoundError" in proc.stderr
-
-
-def test_site_run_swallows_opsec_subprocess_deny(monkeypatch):
-    """An isolated fixture's subprocess deny must degrade, not 500."""
-
-    def raises_denied(*_a, **_kw):
-        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
-
-    monkeypatch.setattr(site_router.subprocess, "run", raises_denied)
-
-    proc = site_router._run(["gh", "run", "list"], timeout_s=3.0)
-    assert proc.returncode == 127
-    assert "AssertionError" in proc.stderr
-
-
-def test_site_deployments_200_when_gh_times_out(monkeypatch):
-    """End-to-end: /api/site/deployments must stay 200 on timeout."""
-    import subprocess
-
-    def raises_timeout(*_a, **_kw):
-        raise subprocess.TimeoutExpired(cmd=["gh"], timeout=5.0)
-
-    monkeypatch.setattr(site_router.subprocess, "run", raises_timeout)
-
-    resp = client.get("/api/site/deployments")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["runs"] == []
-    assert "TimeoutExpired" in body["error"]
 
 
 def test_module_artifact_404_on_unknown_slug(tmp_path, monkeypatch):

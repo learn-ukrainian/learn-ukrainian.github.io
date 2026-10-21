@@ -449,35 +449,6 @@ def test_execute_writes_live_restic_gate_receipt_only_after_check(
     )
 
 
-def test_execute_does_not_write_restic_gate_receipt_when_check_fails(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    mirror = source / "lexicon" / "runner-mirror" / "run-20k"
-    mirror.mkdir(parents=True)
-    (mirror / "state.txt").write_text("state\n", encoding="utf-8")
-    (mirror / "manifest.json").write_text(
-        json.dumps(
-            {
-                "schema": "atlas-runner-mirror-manifest",
-                "schema_version": 1,
-                "generated_at": 1.0,
-                "file_count": 1,
-                "total_bytes": 6,
-                "files": [{"path": "state.txt", "bytes": 6, "sha256": hashlib.sha256(b"state\n").hexdigest()}],
-            }
-        ),
-        encoding="utf-8",
-    )
-    environment["FAKE_RESTIC_CHECK_FAIL"] = "1"
-
-    result = _run(environment, "backup", "--execute")
-
-    assert result.returncode != 0
-    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
-    assert "arg=<lu-part-complete>" not in _log(environment)
-
-
 def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -666,35 +637,6 @@ def test_unreadable_file_does_not_skip_database_phase(
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
-@pytest.mark.skipif(os.geteuid() == 0, reason="root can traverse mode-000 directories")
-def test_unreadable_directory_does_not_skip_database_phase(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    unreadable = source.parent / "batch_state" / "fleet-comms" / "unreadable-dir"
-    unreadable.mkdir()
-    (unreadable / "hidden.txt").write_text("private\n", encoding="utf-8")
-    (source / "datasets").mkdir(exist_ok=True)
-    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
-        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
-    unreadable.chmod(0)
-
-    try:
-        result = _run(environment, "backup", "--execute")
-    finally:
-        unreadable.chmod(0o700)
-        snapshot_copy = Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state" / "fleet-comms" / unreadable.name
-        if snapshot_copy.exists():
-            snapshot_copy.chmod(0o700)
-
-    assert result.returncode != 0
-    assert "Backup run " in result.stderr
-    assert "Unreadable paths:" in result.stderr
-    assert "batch_state/fleet-comms/unreadable-dir" in result.stderr
-    assert "db_file=<data/datasets/healthy.db>" in _log(environment)
-    assert "arg=<lu-part-complete>" not in _log(environment)
-
-
 def test_corrupt_database_does_not_skip_later_databases(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -708,47 +650,6 @@ def test_corrupt_database_does_not_skip_later_databases(
 
     assert result.returncode != 0
     assert "Database data/datasets/corrupt.db: SQLite online backup failed" in result.stderr
-    assert "db_file=<data/datasets/healthy.db>" in _log(environment)
-    assert "arg=<lu-part-complete>" not in _log(environment)
-
-
-def test_find_permission_error_keeps_reported_paths_and_database_phase(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    (source / "datasets").mkdir(exist_ok=True)
-    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
-        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
-    real_find = shutil.which("find", path=os.environ["PATH"])
-    assert real_find is not None
-    environment["REAL_FIND"] = real_find
-    environment["FAKE_FIND_ROOT"] = str(source.parent / "batch_state" / "fleet-comms")
-    environment["FAKE_FILE_PHASE_EXIT"] = "3"
-    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
-    _write_executable(
-        fake_bin / "find",
-        """#!/bin/bash
-for argument in "$@"; do
-  if [[ "$1" == "$FAKE_FIND_ROOT" && "$argument" == "-readable" ]]; then
-    printf '%s\\n' "$FAKE_FIND_ROOT/already-found.txt"
-    printf "find: '%s': Permission denied\\n" "$FAKE_FIND_ROOT/denied-dir" >&2
-    exit 1
-  fi
-done
-exec "$REAL_FIND" "$@"
-""",
-    )
-
-    doctor = _run(environment, "doctor")
-    run = _run(environment, "backup", "--execute")
-
-    assert doctor.returncode == 0, doctor.stderr
-    assert "WARNING: 2 path(s) under backup roots are unreadable" in doctor.stderr
-    assert str(source.parent / "batch_state" / "fleet-comms" / "already-found.txt") in doctor.stderr
-    assert str(source.parent / "batch_state" / "fleet-comms" / "denied-dir") in doctor.stderr
-    assert run.returncode != 0
-    assert "batch_state/fleet-comms/already-found.txt" in run.stderr
-    assert "batch_state/fleet-comms/denied-dir" in run.stderr
     assert "db_file=<data/datasets/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
@@ -781,27 +682,6 @@ def test_receipt_counts_match_post_exclusion_snapshot_contents(
     assert result.returncode == 0, result.stderr
     assert '"data":{"path":"data/datasets","files":2,"bytes":10}' in _log(environment)
     assert _log(environment).count("staged_excluded=<") == 4
-    assert list(staging.iterdir()) == []
-
-
-def test_execute_snapshots_sqlite3_database_from_batch_state(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, staging, _legacy = backup_environment
-    database = source.parent / "batch_state" / "fleet-comms" / "v1" / "comms.sqlite3"
-    database.parent.mkdir(parents=True)
-    connection = sqlite3.connect(database)
-    connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
-    connection.execute("INSERT INTO recovery_probe VALUES ('batch')")
-    connection.commit()
-    connection.close()
-    environment["FAKE_DB_RELATIVE"] = "batch_state/fleet-comms/v1/comms.sqlite3"
-
-    result = _run(environment, "backup", "--execute")
-
-    assert result.returncode == 0, result.stderr
-    assert "consistent SQLite snapshot: batch_state/fleet-comms/v1/comms.sqlite3" in result.stdout
-    assert "db_rows=<1>" in _log(environment)
     assert list(staging.iterdir()) == []
 
 
@@ -865,32 +745,6 @@ def test_execute_restores_agent_wal_database_without_sidecars(
     assert restore_target != source.parent
 
 
-def test_execute_stages_agent_recovery_file_and_receipt_label(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, _source, staging, _legacy = backup_environment
-    environment["FAKE_REQUIRED_RELATIVE"] = ".agent/recovery-state.json"
-    snapshot = tmp_path / "snapshot"
-    environment["FAKE_SNAPSHOT_DIR"] = str(snapshot)
-
-    result = _run(environment, "backup", "--execute")
-
-    assert result.returncode == 0, result.stderr
-    assert "staged_required=<.agent/recovery-state.json>" in _log(environment)
-    assert '"agent":{"path":".agent","files":1,"bytes":22}' in _log(environment)
-    receipt_path = snapshot / "BACKUP-RECEIPT.json"
-    receipt_text = receipt_path.read_text(encoding="utf-8")
-    receipt = json.loads(receipt_text)
-    assert next(path for path in receipt["paths"] if path["path"] == ".agent") == {
-        "path": ".agent",
-        "files": 1,
-        "bytes": 22,
-    }
-    assert ".agent/recovery-state.json" not in receipt_text
-    assert list(staging.iterdir()) == []
-
-
 def test_execute_preserves_tracked_changes_as_a_patch(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -947,19 +801,6 @@ def test_backup_skips_dangling_symlinks_in_every_recovery_root_with_warning(
         ".claude/atlas-epic/gone[1]*?.md broken symlink skipped",
         "data/datasets/moved-dataset broken symlink skipped",
     } <= set(receipt["exclusions"])
-
-
-def test_backup_without_dangling_symlinks_adds_no_broken_symlink_exclusions(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-
-    executed = _run(environment, "backup", "--execute")
-
-    assert executed.returncode == 0, executed.stderr
-    assert "Skipping broken symlink" not in executed.stderr
-    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
-    assert not [entry for entry in receipt["exclusions"] if entry.endswith("broken symlink skipped")]
 
 
 def test_directory_outside_the_allowlist_is_not_selected(

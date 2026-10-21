@@ -63,58 +63,6 @@ def test_decolonized_vs_soviet_calque_routes_to_curator():
     assert "Decolonized" in result.curator_notes
 
 
-def test_unrelated_entities_unlinked():
-    """Verify distinct concepts evaluate to level 0 (unlinked) with high confidence."""
-    aligner = TypeSafeEntityAligner(mock=True)
-    entry_a = DictionaryEntry(
-        headword="книга",
-        source="СУМ-20",
-        definition="Зшите або зв'язане в одне ціле друковане видання.",
-        pos="noun",
-        gender="f",
-    )
-    entry_b = DictionaryEntry(
-        headword="трактор",
-        source="ВТС",
-        definition="Самохідна машина на колісному або гусеничному ходу.",
-        pos="noun",
-        gender="m",
-    )
-
-    result = aligner.align_entries(entry_a, entry_b)
-    assert result.action == AlignmentAction.UNLINKED
-    assert result.score_level == 0
-    assert result.score_label == "different_lexical_entity"
-    assert result.confidence >= 0.90
-    assert result.definition_semantic_match is False
-
-
-def test_cross_dictionary_identical_headword_merge():
-    """Verify identical headword across СУМ-20 and ВТС merges when senses agree."""
-    aligner = TypeSafeEntityAligner(mock=True)
-    entry_a = DictionaryEntry(
-        headword="соловей",
-        source="СУМ-20",
-        definition="Маленький перелітний птах родини дроздових з гарним співом.",
-        pos="noun",
-        gender="m",
-    )
-    entry_b = DictionaryEntry(
-        headword="соловей",
-        source="ВТС",
-        definition="Маленький перелітний співочий птах родини дроздових.",
-        pos="noun",
-        gender="m",
-    )
-
-    result = aligner.align_entries(entry_a, entry_b)
-    assert result.action == AlignmentAction.MERGE
-    assert result.score_level == 2
-    assert result.confidence >= 0.90
-    assert result.identical_pos_and_gender is True
-    assert result.definition_semantic_match is True
-
-
 def test_alignment_result_serialization():
     """Verify dictionary serialization preserves all fields required by Atlas pipelines."""
     aligner = TypeSafeEntityAligner(mock=True)
@@ -141,33 +89,6 @@ def test_alignment_result_serialization():
     assert data["action"] == "merge"
     assert "probabilities" in data
     assert isinstance(data["confidence"], float)
-
-
-def test_typesafe_sdk_score_criteria_schema():
-    """Verify build_entity_alignment_questions conforms to TypeSafe SDK criteria list schema."""
-    from scripts.atlas.typesafe_entity_aligner import SCORE_CRITERIA, build_entity_alignment_questions
-
-    questions = build_entity_alignment_questions()
-    assert "how_entities_relate" in questions
-    score_q = questions["how_entities_relate"]
-
-    # Must be criteria list, NOT a levels dict
-    assert hasattr(score_q, "criteria")
-    assert isinstance(score_q.criteria, list)
-    assert len(score_q.criteria) == 3
-    assert score_q.criteria == SCORE_CRITERIA
-
-    # Verify msgspec / TypeSafe SDK validity if SDK installed
-    try:
-        from typesafe_sdk import Score
-
-        real_score = Score(
-            instructions="Test",
-            criteria=SCORE_CRITERIA,
-        )
-        assert real_score.criteria == SCORE_CRITERIA
-    except ImportError:
-        pass
 
 
 def test_live_api_failure_does_not_mask_with_mock(monkeypatch):

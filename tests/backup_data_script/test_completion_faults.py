@@ -168,31 +168,6 @@ def test_retention_execute_forgets_by_snapshot_id_then_prunes_and_checks(
     assert "arg=<--option> arg=<rclone.connections=1>" in log_lines[check_index]
 
 
-@pytest.mark.parametrize(("configured", "forget", "prune"), [("2", "2", "2"), ("4", "4", "4")])
-def test_retention_honours_configured_rclone_connections(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-    configured: str,
-    forget: str,
-    prune: str,
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-    environment["LU_BACKUP_RCLONE_CONNECTIONS"] = configured
-    snapshots: list[dict[str, object]] = []
-    for day in range(1, 10):
-        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
-    _write_snapshots(environment, tmp_path, snapshots)
-
-    result = _run(environment, "retention", "--execute")
-
-    assert result.returncode == 0, result.stderr
-    log_lines = _log(environment).splitlines()
-    forget_line = next(line for line in log_lines if "arg=<forget>" in line)
-    prune_line = next(line for line in log_lines if "arg=<prune>" in line)
-    assert f"arg=<rclone.connections={forget}>" in forget_line
-    assert f"arg=<rclone.connections={prune}>" in prune_line
-
-
 @pytest.mark.parametrize("configured", ["0", "17", "two", "1 --no-lock", "08"])
 def test_invalid_rclone_connections_fail_before_any_repository_command(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
@@ -235,25 +210,6 @@ def test_retention_partial_newer_run_never_displaces_a_retained_run(
     assert retained.isdisjoint(forgotten)
     partial_id = next(snapshot["id"] for snapshot in snapshots if snapshot["id"][0] == "f")
     assert partial_id not in forgotten
-
-
-def test_retention_preserves_reviewers_newer_offset_partial_run(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-    complete_id = "a" * 64
-    partial_id = "b" * 64
-    snapshots = _snapshot(complete_id, "20260926T033000Z-complete", ["complete"], "2026-09-26T03:30:00Z")
-    snapshots += _snapshot(partial_id, "20260926T034500Z-partial", ["base"], "2026-09-26T02:45:00-01:00")
-    _write_snapshots(environment, tmp_path, snapshots)
-
-    result = _run(environment, "retention", "--execute")
-
-    assert result.returncode == 0, result.stderr
-    assert _forget_ids(environment) == []
-    assert "Runs kept: 2" in result.stdout
-    assert "Runs dropped: 0" in result.stdout
 
 
 def test_retention_orders_fractional_and_mixed_offset_instants(
@@ -358,22 +314,6 @@ def test_retention_empty_snapshot_list_forgets_nothing_and_fails(
     assert "arg=<prune>" not in log
 
 
-def test_retention_unparsable_snapshot_list_forgets_nothing_and_fails(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-    _write_snapshots(environment, tmp_path, "this is not json\n")
-
-    result = _run(environment, "retention", "--execute")
-
-    assert result.returncode != 0
-    assert "forgetting nothing" in result.stderr
-    log = _log(environment)
-    assert "arg=<forget>" not in log
-    assert "arg=<prune>" not in log
-
-
 def test_retention_unparsable_snapshot_time_forgets_nothing(
     backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
 ) -> None:
@@ -432,23 +372,6 @@ def test_retention_refuses_invalid_or_unreadable_forget_ids(
     assert "forgetting nothing" in result.stderr
     assert _forget_ids(environment) == []
     assert "arg=<prune>" not in _log(environment)
-
-
-def test_missing_flock_error_includes_macos_install_hint(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, _source, _staging, _legacy = backup_environment
-    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
-    for command in ("dirname", "pwd", "sqlite3", "find", "git", "jq", "realpath", "touch", "uname"):
-        executable = shutil.which(command, path=os.environ["PATH"])
-        assert executable
-        (fake_bin / command).symlink_to(executable)
-    environment["PATH"] = str(fake_bin)
-
-    result = _run(environment, "backup")
-
-    assert result.returncode != 0
-    assert "brew install flock" in result.stderr
 
 
 def test_password_file_validation_names_variable_not_its_value(

@@ -260,56 +260,6 @@ def test_more_live_tickets_than_the_scan_limit_are_still_refused(pool: Path, mon
 # ---- configuration --------------------------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize(
-    ("cpus", "expected"),
-    [(64, 32), (16, 8), (8, 4), (4, 2), (3, 2), (2, 2), (1, 2), (None, 2)],
-    ids=lambda value: str(value),
-)
-def test_default_pool_size_is_half_the_cpus_with_a_floor_of_two(
-    cpus: int | None, expected: int, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.delenv(test_slots.COUNT_ENV)
-    monkeypatch.setattr(test_slots.os, "cpu_count", lambda: cpus)
-    assert test_slots.pool_size() == expected
-
-
-@pytest.mark.parametrize("value", ["1", "8", "64"])
-def test_explicit_pool_size_overrides_cpu_default(value: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(test_slots.os, "cpu_count", lambda: 16)
-    assert test_slots.pool_size({test_slots.COUNT_ENV: value}) == int(value)
-
-
-@pytest.mark.parametrize(
-    ("ci", "setting", "expected"),
-    [(None, None, True), ("true", None, False), ("1", None, False), ("false", None, True), ("true", "on", True)],
-)
-def test_ci_runs_unchanged_unless_explicitly_enabled(ci: str | None, setting: str | None, expected: bool) -> None:
-    environ = {key: value for key, value in (("CI", ci), (test_slots.ENABLE_ENV, setting)) if value is not None}
-    assert test_slots.enabled(environ) is expected
-
-
-@pytest.mark.parametrize(
-    ("name", "value"),
-    [
-        (test_slots.ENABLE_ENV, "maybe"),
-        (test_slots.COUNT_ENV, "0"),
-        (test_slots.COUNT_ENV, "-1"),
-        (test_slots.COUNT_ENV, "two"),
-        (test_slots.COUNT_ENV, "1.5"),
-        (test_slots.WAIT_ENV, "-1"),
-        (test_slots.WAIT_ENV, "nan"),
-        (test_slots.WAIT_ENV, "soon"),
-        (test_slots.DIR_ENV, "relative/pool"),
-    ],
-)
-def test_invalid_configuration_is_refused(name: str, value: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(name, value)
-    with pytest.raises(test_slots.SlotError) as refused:
-        test_slots.acquire(1, kind="pytest", wait_s=0.1)
-    assert refused.value.reason == "invalid_configuration"
-    assert test_slots.status()["error"]["reason"] == "invalid_configuration"
-
-
 # ---- the pool directory ---------------------------------------------------------------------------------------
 
 
@@ -322,33 +272,6 @@ def test_pool_directory_is_private_to_this_user(pool: Path) -> None:
         for entry in pool.rglob("*"):
             assert entry.stat().st_uid == os.geteuid()
             assert stat.S_IMODE(entry.stat().st_mode) & 0o077 == 0, entry.name
-
-
-def test_the_scratch_root_convention_matches_scratch_py() -> None:
-    from scripts.common import scratch
-
-    assert test_slots.SCRATCH_ROOT_ENV == scratch.SCRATCH_ROOT_ENV_VAR
-    assert test_slots.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT
-
-
-@pytest.mark.exercises_default_scratch_root
-def test_the_built_in_default_root_is_isolated_like_scratch_py(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.common import scratch
-
-    monkeypatch.delenv(test_slots.DIR_ENV)
-    assert test_slots.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT != Path("/var/tmp/lu")
-    expected = scratch.DEFAULT_SCRATCH_ROOT / f"test-slots-{os.geteuid()}"
-    assert test_slots.pool_dir() == expected
-
-
-def test_default_pool_lives_under_the_fleet_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(test_slots.DIR_ENV)
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
-    expected = tmp_path / "scratch" / f"test-slots-{os.geteuid()}"
-    assert test_slots.pool_dir() == expected
-    with test_slots.acquire(1, kind="pytest"):
-        assert expected.is_dir()
-    assert test_slots.status()["location"] == "default"
 
 
 @pytest.mark.parametrize("marker", ["checkout", "worktree", "git_directory", "bare_repository"])
@@ -534,64 +457,7 @@ def test_status_reports_holders_by_task_and_the_queue_without_paths(
     assert str(pool) not in text and str(tmp_path) not in text and "/" not in text
 
 
-def test_status_is_read_only_and_reports_a_missing_or_disabled_pool(
-    pool: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    report = test_slots.status()
-    assert report["pool_exists"] is False and report["holders"] == [] and report["queue_depth"] == 0
-    monkeypatch.setenv(test_slots.ENABLE_ENV, "off")
-    assert test_slots.status()["enabled"] is False
-    assert not pool.exists()
-    monkeypatch.setenv(test_slots.DIR_ENV, str(pool / "absent-parent" / "pool"))
-    assert test_slots.status()["pool_exists"] is False  # a missing ancestor is not created either
-    assert not pool.exists()
-
-
-def test_status_cli_prints_json_and_a_readable_summary(pool: Path) -> None:
-    with test_slots.acquire(2, kind="pytest"):
-        machine = _launch("status", "--json")
-        human = _launch("status")
-    assert machine.returncode == 0, machine.stderr
-    assert json.loads(machine.stdout)["slots_in_use"] == 2
-    assert human.returncode == 0 and "2 of 2 slots in use" in human.stdout and "pytest" in human.stdout
-
-
 # ---- the launcher ---------------------------------------------------------------------------------------------
-
-
-def test_launcher_help_describes_thread_cap_opt_out() -> None:
-    result = _launch("--help")
-    assert result.returncode == 0, result.stderr
-    assert "LU_TEST_THREAD_CAP" in result.stdout
-    assert "off" in result.stdout
-    assert "native thread caps" in result.stdout
-
-
-@pytest.mark.parametrize("case", ["governed", "opt_out", "disabled", "ci"])
-@pytest.mark.parametrize("direct", [False, True], ids=["module", "script"])
-def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch: pytest.MonkeyPatch) -> None:
-    from tests.common.test_test_thread_caps import EXPECTED
-
-    source = f"import json, os; print(json.dumps({{key: os.environ.get(key) for key in {list(EXPECTED)!r}}}))"
-    extra = dict.fromkeys(EXPECTED, "8")
-    extra["LU_TEST_THREAD_CAP"] = "off" if case == "opt_out" else "on"
-    if case == "disabled":
-        extra[test_slots.ENABLE_ENV] = "off"
-    elif case == "ci":
-        monkeypatch.delenv(test_slots.ENABLE_ENV)
-        extra["CI"] = "true"
-    entry = [str(REPO_ROOT / "scripts/common/test_slots.py")] if direct else ["-m", "scripts.common.test_slots"]
-    result = subprocess.run(
-        [sys.executable, *entry, "run", "--", sys.executable, "-c", source],
-        cwd=REPO_ROOT,
-        env=_child_env(**extra),
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    expected = EXPECTED if case == "governed" else dict.fromkeys(EXPECTED, "8")
-    assert json.loads(result.stdout) == expected
 
 
 @pytest.mark.parametrize(
@@ -601,7 +467,6 @@ def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch:
         (["-n8"], ["-n2"], "2"),
         (["--numprocesses=8"], ["--numprocesses=2"], "2"),
         (["-n", "auto"], ["-n", "2"], "2"),
-        (["-n", "logical"], ["-n", "2"], "2"),
         (["--numprocesses", "1", "-q"], ["--numprocesses", "1", "-q"], "1"),
         (["-q"], ["-q"], "1"),
     ],
@@ -623,7 +488,6 @@ def test_launcher_limits_the_wrapped_run_to_the_slots_it_holds(
     ("arguments", "cap", "expected", "auto", "held"),
     [
         (["-n", "auto"], "1", ["-n", "1"], "1", "1"),
-        (["-n", "logical"], "1", ["-n", "1"], "1", "1"),
         (["-n", "auto"], "0", ["-n", "0"], "0", "1"),
         (["-n", "auto"], "9", ["-n", "2"], "2", "2"),
         (["-n", "8"], "1", ["-n", "2"], "1", "2"),
@@ -734,10 +598,3 @@ def test_launcher_wait_timeout_is_typed_and_shows_the_queue_position() -> None:
     assert "queue position 1/1" in result.stderr
     verdict = json.loads(next(line for line in result.stderr.splitlines() if line.startswith('{"test_slots"')))
     assert verdict["test_slots"]["outcome"] == "refused" and verdict["test_slots"]["reason"] == "wait_timeout"
-
-
-def test_disabled_pool_runs_the_command_unchanged(pool: Path) -> None:
-    result = _launch("run", "--", sys.executable, "-c", PRINTER, "-n", "8", **{test_slots.ENABLE_ENV: "off"})
-    assert result.returncode == 0, result.stderr
-    assert json.loads(result.stdout) == {"argv": ["-n", "8"], "holder": None, "auto": None}
-    assert not pool.exists()

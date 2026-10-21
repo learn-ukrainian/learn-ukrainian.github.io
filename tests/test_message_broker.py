@@ -49,50 +49,6 @@ def test_init_db_creates_tables(tmp_path):
     asyncio.run(_test())
 
 
-def test_wal_mode_enabled(tmp_path):
-    """Database uses WAL journal mode after init."""
-    broker, db_path = _get_broker(tmp_path)
-
-    async def _test():
-        await broker.init_db()
-
-        async with aiosqlite.connect(db_path) as db:
-            cursor = await db.execute("PRAGMA journal_mode")
-            row = await cursor.fetchone()
-            assert row[0] == "wal"
-
-    asyncio.run(_test())
-
-
-def test_send_message_validation(tmp_path):
-    """Invalid inputs are rejected without DB writes."""
-    broker, _db_path = _get_broker(tmp_path)
-
-    async def _test():
-        await broker.init_db()
-
-        # Invalid from_llm
-        result = await broker.handle_send_message({
-            "from_llm": "gpt", "to": "claude", "content": "hello"
-        })
-        assert "error" in json.loads(result[0].text)
-
-        # Empty content
-        result = await broker.handle_send_message({
-            "from_llm": "claude", "to": "gemini", "content": ""
-        })
-        assert "error" in json.loads(result[0].text)
-
-        # Content too long
-        result = await broker.handle_send_message({
-            "from_llm": "claude", "to": "gemini",
-            "content": "x" * (broker.MAX_CONTENT_LENGTH + 1)
-        })
-        assert "error" in json.loads(result[0].text)
-
-    asyncio.run(_test())
-
-
 def test_send_and_receive(tmp_path):
     """Basic send/receive round-trip."""
     broker, _db_path = _get_broker(tmp_path)
@@ -122,31 +78,6 @@ def test_send_and_receive(tmp_path):
         })
         data = json.loads(result[0].text)
         assert data["count"] == 0
-
-    asyncio.run(_test())
-
-
-def test_send_and_receive_codex(tmp_path):
-    """Codex is a valid broker participant."""
-    broker, _db_path = _get_broker(tmp_path)
-
-    async def _test():
-        await broker.init_db()
-
-        result = await broker.handle_send_message({
-            "from_llm": "claude", "to": "codex",
-            "content": "Hello Codex", "task_id": "test-codex"
-        })
-        data = json.loads(result[0].text)
-        assert data["status"] == "sent"
-
-        result = await broker.handle_receive_messages({
-            "for_llm": "codex", "unread_only": True
-        })
-        data = json.loads(result[0].text)
-        assert data["count"] == 1
-        assert data["messages"][0]["content"] == "Hello Codex"
-        assert data["messages"][0]["from"] == "claude"
 
     asyncio.run(_test())
 

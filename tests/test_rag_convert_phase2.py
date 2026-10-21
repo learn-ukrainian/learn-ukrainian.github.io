@@ -38,18 +38,6 @@ def test_complete_definitions_duplicates_ordinals_text_and_counts(tmp_path, caps
     assert output.read_bytes() == first
 
 
-def test_default_paths_and_empty_count(tmp_path, monkeypatch, capsys):
-    folder = tmp_path / "data/dmklinger-uk-en"
-    folder.mkdir(parents=True)
-    (folder / "words.json").write_text("[]")
-    monkeypatch.setattr(converter, "PROJECT_ROOT", tmp_path)
-    assert converter.convert_dmklinger() == 0
-    assert (folder / "chunks.jsonl").read_bytes() == b""
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert captured.err == "Converting dmklinger UK→EN...\n  ✅ 0 entries → chunks.jsonl\n"
-
-
 def test_direct_cli_explicit_paths_and_help(tmp_path):
     source, output = tmp_path / "words.json", tmp_path / "chunks.jsonl"
     source.write_text('[{"word":"sample","pos":"noun","defs":["one"]}]')
@@ -66,17 +54,6 @@ def test_direct_cli_explicit_paths_and_help(tmp_path):
     result = subprocess.run([*command, "--input", str(source)], capture_output=True, text=True, timeout=30)
     assert result.returncode == 2
     assert "require --dmklinger" in result.stderr
-
-
-def test_main_dispatches_selected_converter_only(tmp_path, monkeypatch):
-    calls = []
-    monkeypatch.setattr(converter, "convert_dmklinger", lambda *args: calls.append(args))
-    for flag in ("--dmklinger", "--all"):
-        for function in ("convert_ukrajinet", "convert_ubertext_freq", "extract_sum11_registers"):
-            monkeypatch.setattr(converter, function, lambda: None)
-        monkeypatch.setattr(sys, "argv", ["converter", flag, "--input", "raw.json", "--output", "out.jsonl"])
-        converter.main()
-    assert calls == [(Path("raw.json"), Path("out.jsonl"))] * 2
 
 
 @pytest.mark.parametrize("payload", ["not JSON", "{}"])

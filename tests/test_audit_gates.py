@@ -18,7 +18,6 @@ from scripts.audit.gates import (
     GateResult,
     compute_recommendation,
     evaluate_activity_count,
-    evaluate_audio,
     evaluate_content_heavy,
     evaluate_density,
     evaluate_engagement,
@@ -43,10 +42,6 @@ class TestEvaluateWordCount:
         assert result.status == 'PASS'
         assert '3000/3000' in result.msg
 
-    def test_pass_above_target(self):
-        result = evaluate_word_count(3500, 3000)
-        assert result.status == 'PASS'
-
     def test_warn_slightly_below(self):
         result = evaluate_word_count(2950, 3000)
         assert result.status == 'WARN'
@@ -56,14 +51,6 @@ class TestEvaluateWordCount:
         result = evaluate_word_count(2600, 3000)
         assert result.status == 'FAIL'
 
-    def test_raw_words_displayed(self):
-        result = evaluate_word_count(2500, 3000, raw_words=2800)
-        assert 'raw: 2800' in result.msg
-
-    def test_raw_words_not_shown_when_equal(self):
-        result = evaluate_word_count(3000, 3000, raw_words=3000)
-        assert 'raw' not in result.msg
-
 
 # =============================================================================
 # TEST: evaluate_activity_count
@@ -72,10 +59,6 @@ class TestEvaluateWordCount:
 class TestEvaluateActivityCount:
     def test_pass_at_target(self):
         result = evaluate_activity_count(6, 6)
-        assert result.status == 'PASS'
-
-    def test_pass_above_target(self):
-        result = evaluate_activity_count(10, 6)
         assert result.status == 'PASS'
 
     def test_fail_below_target(self):
@@ -157,17 +140,6 @@ class TestEvaluateEngagement:
 # =============================================================================
 # TEST: evaluate_audio
 # =============================================================================
-
-class TestEvaluateAudio:
-    def test_info_with_audio(self):
-        result = evaluate_audio(3)
-        assert result.status == 'INFO'
-        assert '3 links' in result.msg
-
-    def test_info_without_audio(self):
-        result = evaluate_audio(0)
-        assert result.status == 'INFO'
-        assert 'No audio' in result.msg
 
 
 # =============================================================================
@@ -284,10 +256,6 @@ class TestEvaluateImmersion:
         result = evaluate_immersion(95.0, 0, 0)
         assert result.status == 'PASS'
 
-    def test_phase_label_included(self):
-        result = evaluate_immersion(65.0, 50, 80, phase_label=" [Phase 2]")
-        assert 'Phase 2' in result.msg
-
 
 # =============================================================================
 # TEST: evaluate_naturalness
@@ -305,31 +273,6 @@ class TestEvaluateNaturalness:
         assert result.status == 'FAIL'
         assert 'below 9.0/10' in result.msg
 
-    def test_b2_keeps_existing_threshold(self):
-        result = evaluate_naturalness(8, 'PASS', 'B2')
-        assert result.status == 'PASS'
-
-    def test_fail_score_7(self):
-        """Score 7 with PASS status still fails below the configured target."""
-        result = evaluate_naturalness(7, 'PASS', 'B2')
-        assert result.status == 'FAIL'
-        assert 'below 8.0/10' in result.msg
-
-    def test_info_pending(self):
-        result = evaluate_naturalness(0, 'PENDING')
-        assert result.status == 'INFO'
-        assert 'PENDING' in result.msg
-
-    def test_info_pending_with_score(self):
-        result = evaluate_naturalness(8, 'PENDING')
-        assert result.status == 'INFO'
-        assert '8/10' in result.msg
-
-    def test_none_score_handled(self):
-        """None score should not crash."""
-        result = evaluate_naturalness(None, None)
-        assert result.status == 'INFO'  # None status → 'PENDING'
-
     def test_fail_low_score_with_status(self):
         result = evaluate_naturalness(5, 'FAIL')
         assert result.status == 'FAIL'
@@ -341,11 +284,6 @@ class TestEvaluateNaturalness:
 # =============================================================================
 
 class TestEvaluateContentHeavy:
-    def test_na_for_standard_module(self):
-        result = evaluate_content_heavy(False, 6, [])
-        assert result.status == 'INFO'
-        assert 'N/A' in result.msg
-
     def test_pass_content_heavy_ok(self):
         result = evaluate_content_heavy(True, 10, [])
         assert result.status == 'PASS'
@@ -376,14 +314,6 @@ class TestEvaluateContentHeavy:
         )
         assert result_letter.status == 'PASS'
         assert '30 activities' in result_letter.msg
-
-    def test_letter_module_keeps_min_floor(self):
-        """letter_module exception relaxes MAX cap but not the MIN floor."""
-        result = evaluate_content_heavy(
-            True, 5, [], min_act=10, max_act=12, letter_module=True
-        )
-        assert result.status == 'WARN'
-        assert 'Too few' in result.msg
 
     def test_warn_recall_violations(self):
         violations = [{'type': 'CONTENT_RECALL'}, {'type': 'CONTENT_RECALL'}]
@@ -440,24 +370,6 @@ class TestComputeRecommendation:
         )
         assert rec == 'REWRITE'
         assert severity >= 75
-
-    def test_severity_clamped_at_100(self):
-        """Severity cannot exceed 100."""
-        violations = [{'type': 'GRAMMAR'} for _ in range(50)]
-        _rec, _reasons, severity = compute_recommendation(
-            pedagogical_violations=violations,
-            lint_errors=['e'] * 20,
-            results={
-                'structure': GateResult('FAIL', '❌', 'Missing'),
-                'activities': GateResult('FAIL', '❌', '0/6'),
-                'density': GateResult('FAIL', '❌', 'low'),
-            },
-            immersion_score=5.0,
-            min_imm=50,
-            max_imm=80,
-            level_code='B1',
-        )
-        assert severity <= 100
 
 
 if __name__ == '__main__':

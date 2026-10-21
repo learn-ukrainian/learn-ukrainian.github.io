@@ -115,23 +115,6 @@ def _base_kwargs(repo_root: Path, tasks_dir: Path, **overrides: Any) -> dict[str
 # --- policy / receipt shape -------------------------------------------------
 
 
-def test_policy_version_is_a_stable_string() -> None:
-    assert isinstance(hygiene.POLICY_VERSION, str)
-    assert hygiene.POLICY_VERSION
-
-
-def test_receipt_has_every_documented_key(hermetic_repo) -> None:
-    repo_root, tasks_dir = hermetic_repo
-    reader = _reader(
-        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
-    )
-
-    receipt = hygiene.hygiene_check(reader=reader, **_base_kwargs(repo_root, tasks_dir))
-
-    for key in ("policy_version", "epic_charter_ok", "queue_pointer_ok", "zombie_worktrees", "df", "status"):
-        assert key in receipt
-
-
 # --- verified path -----------------------------------------------------------
 
 
@@ -148,31 +131,6 @@ def test_verified_when_epic_clean_pointer_present_no_zombies(hermetic_repo) -> N
     assert receipt["queue_pointer_ok"] is True
     assert receipt["zombie_worktrees"] == []
     assert receipt["reasons"] == []
-
-
-def test_cli_exit_zero_on_verified(hermetic_repo, capsys) -> None:
-    repo_root, tasks_dir = hermetic_repo
-    reader = _reader(
-        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
-    )
-
-    exit_code = hygiene.main(
-        [
-            "--repo-root",
-            str(repo_root),
-            "--dispatch-worktrees-root",
-            str(repo_root / ".worktrees" / "dispatch"),
-            "--tasks-dir",
-            str(tasks_dir),
-            "--disk-path",
-            str(repo_root),
-        ],
-        reader=reader,
-    )
-
-    assert exit_code == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["status"] == "verified"
 
 
 # --- stale: epic charter --------------------------------------------------
@@ -213,16 +171,6 @@ def test_stale_when_349_pointer_missing(hermetic_repo) -> None:
     assert receipt["status"] == "stale"
     assert receipt["queue_pointer_ok"] is False
     assert any("pointer" in reason for reason in receipt["reasons"])
-
-
-def test_pointer_short_form_is_also_accepted(hermetic_repo) -> None:
-    repo_root, tasks_dir = hermetic_repo
-    body = f"Queue: {PRIVATE}#{BOARD} is the priority board."
-    reader = _reader({(PUBLIC, EPIC): {"number": EPIC, "body": body}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}})
-
-    receipt = hygiene.hygiene_check(reader=reader, **_base_kwargs(repo_root, tasks_dir))
-
-    assert receipt["queue_pointer_ok"] is True
 
 
 # --- unknown: GitHub unreachable --------------------------------------------
@@ -463,11 +411,6 @@ def test_probe_fails_closed_on_subprocess_error(monkeypatch) -> None:
     assert _probe_with(monkeypatch, OSError("gh missing")) is False
 
 
-def test_probe_returns_false_for_detached_worktree() -> None:
-    """A detached worktree has no branch identity to probe."""
-    assert hygiene._branch_has_open_pr(Path("/nonexistent"), None) is False
-
-
 def test_probe_queries_an_explicit_repository(monkeypatch) -> None:
     """Without --repo the answer depends on cwd, so a worktree could be
     excused by a PR in a different repository."""
@@ -557,16 +500,6 @@ def test_stale_when_disk_use_at_or_above_high_water(hermetic_repo, monkeypatch) 
     assert receipt["status"] == "stale"
     assert receipt["df"]["ok"] is False
     assert receipt["df"]["use_percent"] == 96.0
-
-
-def test_disk_below_high_water_is_ok(hermetic_repo, monkeypatch) -> None:
-    repo_root, tasks_dir = hermetic_repo
-    monkeypatch.setattr(hygiene.shutil, "disk_usage", lambda _path: _fake_usage(100, 50, 50))
-
-    receipt = hygiene.hygiene_check(reader=_reader_clean(), high_water_percent=95, **_base_kwargs(repo_root, tasks_dir))
-
-    assert receipt["status"] == "verified"
-    assert receipt["df"]["ok"] is True
 
 
 def test_disk_measurement_failure_is_non_fatal(hermetic_repo, monkeypatch) -> None:

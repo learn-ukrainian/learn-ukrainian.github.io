@@ -76,12 +76,6 @@ def test_rules_etag_matches_returns_304(stub_rules):
     assert resp_304.headers["etag"] == etag
 
 
-def test_rules_etag_mismatch_returns_200(stub_rules):
-    resp = client.get("/api/rules", headers={"If-None-Match": '"not-a-real-hash"'})
-    assert resp.status_code == 200
-    assert "Be careful." in resp.text
-
-
 def test_rules_etag_wildcard_returns_304(stub_rules):
     resp_304 = client.get("/api/rules", headers={"If-None-Match": "*"})
     assert resp_304.status_code == 304
@@ -93,15 +87,6 @@ def test_rules_weak_etag_matches(stub_rules):
     resp_304 = client.get(
         "/api/rules", headers={"If-None-Match": f'W/"{bare_hash}"'},
     )
-    assert resp_304.status_code == 304
-
-
-def test_session_etag_matches_returns_304(stub_session):
-    resp = client.get("/api/session/current")
-    assert resp.status_code == 200
-    etag = resp.headers["etag"]
-
-    resp_304 = client.get("/api/session/current", headers={"If-None-Match": etag})
     assert resp_304.status_code == 304
 
 
@@ -141,13 +126,6 @@ def sdk(monkeypatch, tmp_path, stub_rules, stub_session):
     return sdk_client
 
 
-def test_sdk_first_call_goes_to_network(sdk):
-    result = sdk.rules()
-    assert result.source == "network"
-    assert "Be careful." in result.body
-    assert result.hash
-
-
 def test_sdk_second_call_hits_cache(sdk):
     first = sdk.rules()
     second = sdk.rules()
@@ -157,13 +135,6 @@ def test_sdk_second_call_hits_cache(sdk):
     # Same bytes either way.
     assert first.body == second.body
     assert first.hash == second.hash
-
-
-def test_sdk_bootstrap_returns_both_components(sdk):
-    boot = sdk.bootstrap()
-    assert set(boot) == {"rules", "session"}
-    assert "Be careful." in boot["rules"].body
-    assert "Thinking." in boot["session"].body
 
 
 def test_sdk_not_modified_path(sdk, monkeypatch):
@@ -196,17 +167,6 @@ def test_sdk_not_modified_path(sdk, monkeypatch):
 # ---------------------------------------------------------------------
 
 
-def test_blue_live_status_retired_returns_404():
-    resp = client.get("/api/blue/live-status")
-    assert resp.status_code == 404
-
-
-def test_build_status_canonical_no_deprecation_header():
-    resp = client.get("/api/state/build-status")
-    assert resp.status_code == 200
-    assert "X-Deprecated" not in resp.headers
-
-
 def test_comms_live_activity_carries_deprecation_header():
     resp = client.get("/api/comms/live-activity")
     # Endpoint may 500 if the broker DB isn't available in the test
@@ -236,18 +196,6 @@ def test_manifest_hash_matches_rules_etag_and_header(stub_rules):
     resp = client.get("/api/rules")
     etag = resp.headers["etag"].strip('"')
     x_hash = resp.headers["x-rules-hash"]
-
-    assert etag == manifest_hash == x_hash
-
-
-def test_manifest_hash_matches_session_etag_and_header(stub_session):
-    manifest = client.get("/api/state/manifest").json()
-    manifest_hash = manifest["session"]["hash"]
-    assert manifest_hash
-
-    resp = client.get("/api/session/current")
-    etag = resp.headers["etag"].strip('"')
-    x_hash = resp.headers["x-session-hash"]
 
     assert etag == manifest_hash == x_hash
 

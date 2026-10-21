@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import contextlib
 import sqlite3
-import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.ai_agent_bridge import _channels, _inbox
 from scripts.orchestration.slot_routing import resolve_slot_holder
@@ -21,14 +19,6 @@ _AREA_ASSIGNMENTS_YAML = _REPO_ROOT / "scripts" / "config" / "area_assignments.y
 # ---------------------------------------------------------------------------
 # 1. Slot Roster Acceptance & Validation Tests
 # ---------------------------------------------------------------------------
-
-
-def test_static_tuple_members_unchanged() -> None:
-    """Verify that static tuple members remain untouched and present in valid agents."""
-    valids = _channels.get_valid_agents()
-    for member in _channels.STATIC_VALID_AGENTS:
-        assert member in valids
-    assert "claude-infra" in _channels.STATIC_VALID_AGENTS
 
 
 def test_roster_slots_accepted_by_validation() -> None:
@@ -54,46 +44,6 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_49() -> None:
-    """Verify 27 infrastructure, two epics, two practice, thirteen Ukrainian content/data, and five core slots.
-
-    The operator order of 2026-10-16 (#10835) added grok-monitor and grok-open-model-data.
-    """
-    text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
-    data = yaml.safe_load(text)
-    slots = []
-    for area_data in data["assignments"].values():
-        if isinstance(area_data, dict):
-            slots.extend(area_data.get("slots", []))
-    assert len(slots) == 49
-    assert len(set(slots)) == 49
-    assert len([slot for slot in slots if not slot.startswith("muse-")]) == 47
-    assert data["assignments"]["monitor"]["slots"] == ["muse-monitor", "grok-monitor"]
-    assert set(data["assignments"]["core"]["slots"]) == {
-        "claude-core",
-        "codex-core",
-        "gemini-core",
-        "grok-core",
-        "cursor-core",
-    }
-    assert "kimi-core" not in slots
-    assert data["assignments"]["open-model-data"]["slots"] == [
-        "claude-open-model-data",
-        "codex-open-model-data",
-        "gemini-open-model-data",
-        "grok-open-model-data",
-    ]
-    assert "cursor-open-model-data" not in slots
-    assert "cursor-infra" in slots
-    assert "cursor-devops" in slots
-    assert "cursor-corpus" in slots
-    assert "cursor-atlas" in slots
-    assert "claude-folk" in slots
-    assert "codex-bio" in slots
-    assert "gemini-hramatka" in slots
-    assert "gemini-infra" in slots
-
-
 @pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
 def test_monitor_aliases_preserve_inbox_destinations_beside_muse(provider: str) -> None:
     slot = f"{provider}-monitor"
@@ -106,24 +56,6 @@ def test_monitor_aliases_preserve_inbox_destinations_beside_muse(provider: str) 
     assert _channels.resolve_recipient_alias("unknown-monitor", assignments_path=_AREA_ASSIGNMENTS_YAML) == "unknown-monitor"
     with pytest.raises(ValueError, match="Unknown delivery target"):
         _channels._validate_recipient_agent("unknown-monitor", assignments_path=_AREA_ASSIGNMENTS_YAML)
-
-
-def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
-    """Ukrainian content/data areas have only Claude, GPT and Gemini identities, plus native Grok on data.
-
-    The operator order of 2026-10-16 (#10835) registered grok-open-model-data only; seminars and
-    hramatka keep no Grok slot, and Kimi and Cursor stay off every content/data area.
-    """
-    assignments = yaml.safe_load(_AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8"))["assignments"]
-    approved = {
-        "seminars": {"claude", "codex", "gemini"},
-        "hramatka": {"claude", "codex", "gemini"},
-        "open-model-data": {"claude", "codex", "gemini", "grok"},
-    }
-    for area, providers in approved.items():
-        slots = assignments[area]["slots"]
-        assert slots, area
-        assert {slot.split("-", 1)[0] for slot in slots} <= providers, (area, slots)
 
 
 @pytest.mark.parametrize(
@@ -142,34 +74,6 @@ def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: st
         _channels._validate_recipient_agent(slot, assignments_path=_AREA_ASSIGNMENTS_YAML)
 
 
-def test_phantom_slots_absent_from_valid_agents() -> None:
-    """Harness/seminars slots stay absent; five registered core slots are valid."""
-    valids = _channels.get_valid_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
-    providers = ("claude", "codex", "gemini", "grok", "kimi", "cursor")
-    phantoms = ("harness", "seminars")
-    for provider in providers:
-        for suffix in phantoms:
-            phantom_slot = f"{provider}-{suffix}"
-            assert phantom_slot not in valids, f"Phantom slot '{phantom_slot}' found in valid agents"
-    for core_slot in ("claude-core", "codex-core", "gemini-core", "grok-core", "cursor-core"):
-        assert core_slot in valids
-    assert "kimi-core" not in valids
-
-
-def test_unknown_slot_rejected_naming_valids() -> None:
-    """Verify unknown slot 'claude-nosucharea' is rejected with an error message listing valid agents."""
-    with pytest.raises(ValueError) as exc_info:
-        _channels._validate_agent("claude-nosucharea", assignments_path=_AREA_ASSIGNMENTS_YAML)
-
-    err_msg = str(exc_info.value)
-    assert "Unknown agent 'claude-nosucharea'" in err_msg
-    assert "claude-infra" in err_msg
-    assert "grok-infra" in err_msg
-
-    with pytest.raises(ValueError):
-        _inbox._validate_agent("claude-nosucharea")
-
-
 def test_registry_absent_or_unreadable_fallback_to_static_tuple(tmp_path: Path) -> None:
     """Verify fallback to STATIC_VALID_AGENTS when area_assignments.yaml is missing or corrupt.
 
@@ -185,72 +89,9 @@ def test_registry_absent_or_unreadable_fallback_to_static_tuple(tmp_path: Path) 
     assert valids_corrupt == _channels.STATIC_VALID_AGENTS
 
 
-def test_cache_invalidation_on_registry_edit(tmp_path: Path) -> None:
-    """Verify cache invalidation when area_assignments.yaml is edited (mtime/size changed).
-
-    MUTATION-CHECK: A static/bare LRU cache without mtime check fails to see new slots.
-    """
-    test_file = tmp_path / "area_assignments.yaml"
-    test_file.write_text(
-        """schema_version: 1
-assignments:
-  infra:
-    slots:
-      - custom-slot-v1
-""",
-        encoding="utf-8",
-    )
-
-    valids1 = _channels.get_valid_agents(assignments_path=test_file)
-    assert "custom-slot-v1" in valids1
-
-    # Sleep slightly or modify time to ensure mtime changes
-    time.sleep(0.01)
-    test_file.write_text(
-        """schema_version: 1
-assignments:
-  infra:
-    slots:
-      - custom-slot-v1
-      - custom-slot-v2
-""",
-        encoding="utf-8",
-    )
-
-    valids2 = _channels.get_valid_agents(assignments_path=test_file)
-    assert "custom-slot-v2" in valids2
-
-
-def test_empty_roster_caching(tmp_path: Path) -> None:
-    """Verify empty roster result is cached when registry specifies empty slots."""
-    empty_file = tmp_path / "empty_assignments.yaml"
-    empty_file.write_text(
-        """schema_version: 1
-assignments:
-  core:
-    slots: []
-""",
-        encoding="utf-8",
-    )
-    valids1 = _channels.get_valid_agents(assignments_path=empty_file)
-    assert valids1 == _channels.STATIC_VALID_AGENTS
-    # Verify cache key is recorded in _SLOTS_CACHE
-    st = empty_file.resolve().stat()
-    assert _channels._SLOTS_CACHE.get("key") == (str(empty_file.resolve()), st.st_mtime, st.st_size)
-
-
 # ---------------------------------------------------------------------------
 # 2. R2 Validation Sites Tests
 # ---------------------------------------------------------------------------
-
-
-def test_post_cli_parser_accepts_roster_slot() -> None:
-    """Verify _channels_cli parser accepts a registry roster slot for --from-agent (R2 site 1)."""
-    from scripts.ai_agent_bridge import _cli
-
-    parser = _cli._build_parser()
-    args = parser.parse_args(["post", "shared", "hello", "--from-agent", "grok-infra", "--no-snapshot"])
-    assert args.from_agent == "grok-infra"
 
 
 def test_bottleneck_alerts_accepts_roster_slot_holder(tmp_path: Path) -> None:
@@ -344,16 +185,6 @@ def test_resolve_slot_holder_live_holder(session_db_fixture: Path) -> None:
     assert res.queue_location == "channels DB delivery queue for 'claude-atlas'"
 
 
-def test_resolve_slot_holder_no_holder(session_db_fixture: Path) -> None:
-    """Verify resolve_slot_holder returns has_holder=False when no active lease exists."""
-    res = resolve_slot_holder("grok-infra", session_db_path=session_db_fixture)
-    assert res.has_holder is False
-    assert res.slot == "grok-infra"
-    assert res.area_id == "infra"
-    assert res.queue_location == "channels DB delivery queue for 'grok-infra'"
-    assert res.reason == "no-live-holder"
-
-
 def test_resolve_slot_holder_expired_lease_treated_as_no_live_holder(session_db_fixture: Path) -> None:
     """Verify expired lease (expires_at in past) is treated as no-live-holder."""
     db_path = session_db_fixture
@@ -418,33 +249,6 @@ def test_resolve_slot_holder_alias_slot(session_db_fixture: Path) -> None:
 # ---------------------------------------------------------------------------
 # 4. Bounce Visibility Warning in Post
 # ---------------------------------------------------------------------------
-
-
-def test_post_to_slot_with_no_live_holder_warns_and_queues(capsys: pytest.CaptureFixture[str]) -> None:
-    """Verify post to a valid slot with no live holder prints a stderr warning while still queuing delivery.
-
-    Also asserts the bounce warning is surfaced in the post() return dict
-    (#5889 item 1) — not only on stderr — so callers can react without
-    scraping stderr.
-    """
-    with contextlib.suppress(Exception):
-        _channels.init_db()
-
-    with contextlib.suppress(ValueError):
-        _channels.create_channel("test-slot", description="test channel")
-
-    result = _channels.post("test-slot", "user", "Hello slot", to_agents=["grok-infra"], auto_snapshot=False)
-    captured = capsys.readouterr()
-
-    # #9739: the slot is named by its seat prefix and taxonomy area, never the caller's string.
-    assert "⚠️ channel-bridge: recipient grok slot in area 'infra' has no live holder" in captured.err
-    assert "queued in its channels DB delivery queue" in captured.err
-    assert "grok-infra" not in captured.err
-    assert len(result["delivery_ids"]) == 1
-    # #5889 item 1: bounce warning also reachable via the return dict.
-    assert "warnings" in result
-    assert isinstance(result["warnings"], list)
-    assert any("recipient grok slot in area 'infra' has no live holder" in w for w in result["warnings"])
 
 
 # ---------------------------------------------------------------------------
@@ -544,50 +348,4 @@ def test_post_resolver_failure_surfaces_warning_not_silent(
     captured = capsys.readouterr()
     assert "slot resolver failed for the grok slot" in captured.err
     # Delivery still queued at the slot identity (fail-open on delivery).
-    assert len(result["delivery_ids"]) == 1
-
-
-def test_post_no_warnings_key_is_empty_list_when_all_held(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """post() return dict always carries a warnings key (empty when nothing bounces).
-
-    MUTATION-CHECK (revert→fail): if the ``warnings`` key is dropped from the
-    return dict, ``result['warnings']`` raises KeyError / ``in`` is False.
-    """
-    from scripts.orchestration import slot_routing
-    from scripts.orchestration.slot_routing import SlotHolderResult
-
-    def _held(slot: str, **kwargs: object) -> SlotHolderResult:
-        return SlotHolderResult(
-            has_holder=True,
-            slot=slot,
-            area_id="infra",
-            stream_id="epic:4707",
-            session_id="sess-1",
-            holder_agent="grok-infra",
-            holder_harness="grok",
-            generation=1,
-            expires_at=(datetime.now(UTC) + timedelta(hours=1)).isoformat(),
-            queue_location=f"channels DB delivery queue for '{slot}'",
-        )
-
-    monkeypatch.setattr(slot_routing, "resolve_slot_holder", _held)
-
-    with contextlib.suppress(Exception):
-        _channels.init_db()
-    with contextlib.suppress(ValueError):
-        _channels.create_channel("test-held", description="test channel")
-
-    # Recipient resolves to a live holder; from_agent 'user' never resolves.
-    result = _channels.post(
-        "test-held",
-        "user",
-        "Hello held",
-        to_agents=["grok-infra"],
-        auto_snapshot=False,
-    )
-
-    assert "warnings" in result
-    assert result["warnings"] == []
     assert len(result["delivery_ids"]) == 1

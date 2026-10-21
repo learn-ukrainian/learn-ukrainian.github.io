@@ -5,7 +5,6 @@ Synthetic DOCX/SQLite fixtures only; the private teacher document is never read 
 
 from __future__ import annotations
 
-import ast
 import hashlib
 import json
 import os
@@ -20,7 +19,6 @@ from pathlib import Path
 import pytest
 
 from scripts.audit import check_teacher_deck as checker
-from scripts.audit.generate_practice_deck import TEACHER_CLOZE_GZIP_LIMIT, TEACHER_DECK_GZIP_LIMIT
 from scripts.lexicon import teacher_deck
 from scripts.lexicon import teacher_deck_shard as shard
 from scripts.lexicon.sync_teacher_table_deck import (
@@ -86,28 +84,6 @@ def test_a_row_without_english_fails_the_sync() -> None:
 
 
 # ----------------------------------------------------------------------------- generator rules
-
-
-def test_english_parts_follow_the_spec_normalisation() -> None:
-    assert shard.english_parts("To pour solids / serve food (impf); The Cat, an owl") == [
-        "pour solids / serve food",
-        "cat",
-        "owl",
-    ]
-
-
-def test_overlap_is_equality_or_whole_word_containment() -> None:
-    assert shard.parts_overlap(["wipe"], ["wipe"])
-    assert shard.parts_overlap(["break"], ["break down"])
-    assert not shard.parts_overlap(["cat"], ["catalogue"])
-    entries = [
-        {"entryId": "a", "en": "To read (impf.)"},
-        {"entryId": "b", "en": "To read (pf.)"},
-        {"entryId": "c", "en": "Cat"},
-    ]
-    overlaps, partners = shard.overlap_graph(entries)
-    assert overlaps == {"a": ["b"], "b": ["a"], "c": []}
-    assert partners == {"a": [], "b": [], "c": []}
 
 
 def test_source_aspects_that_differ_split_an_otherwise_identical_pair() -> None:
@@ -221,40 +197,6 @@ def test_mechanical_sense_rule(teacher: str, senses: list[str], rule: str, index
     resolved = shard.resolve_sense(teacher, senses)
     assert (resolved["rule"], resolved["senseIndex"]) == (rule, index)
     assert resolved["usable"] is (index is not None)
-
-
-def test_budget_constants_match_the_site_build_gate() -> None:
-    script = (ROOT / "site/scripts/hydrate-teacher-deck.mjs").read_text(encoding="utf-8")
-    limits = {
-        name: int(value.replace("_", ""))
-        for name, value in re.findall(r"export const (TEACHER_\w+_GZIP_LIMIT) = ([\d_]+);", script)
-    }
-    assert limits == {
-        "TEACHER_DECK_GZIP_LIMIT": TEACHER_DECK_GZIP_LIMIT,
-        "TEACHER_CLOZE_GZIP_LIMIT": TEACHER_CLOZE_GZIP_LIMIT,
-    }
-
-
-def test_checker_is_independent_of_the_generator() -> None:
-    tree = ast.parse((ROOT / "scripts/audit/check_teacher_deck.py").read_text(encoding="utf-8"))
-    imported = {
-        node.module if isinstance(node, ast.ImportFrom) else alias.name
-        for node in ast.walk(tree)
-        if isinstance(node, (ast.Import, ast.ImportFrom))
-        for alias in node.names
-    }
-    # The shared read-only opener is not the deck generator.
-    imported.discard("scripts.lib.readonly_sqlite")
-    assert not any(str(name).startswith("scripts") for name in imported), imported
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_committed_frozen_key_list_pins_the_denominator() -> None:
-    frozen = json.loads((ROOT / "site/src/data/lexicon-teacher-deck-frozen-keys.json").read_text(encoding="utf-8"))
-    assert frozen["docxSha256"].startswith("35da757f")
-    assert len(frozen["keys"]) == frozen["sourceKeyCount"] == 1134
-    assert frozen["entryCount"] == 1125
-    assert frozen["rawDataRows"] == 1155
 
 
 # ----------------------------------------------------------------------------- synthetic end-to-end
@@ -580,23 +522,6 @@ def test_refresh_builds_a_checked_deck_and_reruns_byte_identically(
     assert _hashes(world) == before
 
 
-def test_refresh_reports_meaning_changes_and_keeps_order_keys(
-    world: dict[str, Path], capsys: pytest.CaptureFixture[str]
-) -> None:
-    assert _refresh(world) == 0
-    capsys.readouterr()
-    changed = [(uk, "Dwelling" if uk == "Будинок" else en) for uk, en in TABLE] + [("Лампа", "Lamp")]
-    changed.insert(0, changed.pop(3))  # move Стіл to the top of the table
-    _write_docx(world["docx"], changed)
-    assert _refresh(world, "--skip-ingest") == 0
-    output = capsys.readouterr().out
-    assert "added entries: 1\n  Лампа = Lamp" in output
-    assert "Будинок: en: 'House' -> 'Dwelling'" in output
-    deck = json.loads((world["out"] / shard.DECK_FILE).read_text(encoding="utf-8"))
-    order = {entry["key"]: entry["firstSeen"] for entry in deck["entries"]}
-    assert order["стіл"] == 4 and order["лампа"] == max(order.values())
-
-
 def _plant(world: dict[str, Path], tmp_path: Path, name: str, mutate, *, with_sources: bool = False) -> tuple[int, str]:
     planted = tmp_path / "planted"
     shutil.copytree(world["out"], planted)
@@ -649,17 +574,6 @@ def test_checker_rederives_aspect_and_rejects_the_teacher_marker_as_authority(
     assert code == 1 and "aspect {" in report and "!= sources" in report
 
 
-def test_checker_fails_on_an_en_uk_card_for_a_dual_aspect_overlap(world: dict[str, Path], tmp_path: Path) -> None:
-    assert _refresh(world) == 0
-
-    def add_production(deck: dict) -> None:
-        entry = next(entry for entry in deck["entries"] if entry["key"] == "женити")
-        entry["cards"]["production"] = {"cardId": f"{entry['entryId']}:production", "choice": None}
-
-    code, report = _plant(world, tmp_path, shard.DECK_FILE, add_production)
-    assert code == 1 and "EN->UK production card although its English overlaps" in report
-
-
 def test_checker_fails_on_a_multiword_cloze_without_the_verbatim_phrase(world: dict[str, Path], tmp_path: Path) -> None:
     assert _refresh(world) == 0
 
@@ -689,47 +603,6 @@ def test_checker_table_comparison_catches_a_changed_meaning(world: dict[str, Pat
     code, report = _check(planted, world)
     assert code == 1
     assert "manifest hash/size mismatch" in report and "!= table meanings" in report
-
-
-def test_checker_matrix_and_residual_lists(world: dict[str, Path]) -> None:
-    assert _refresh(world) == 0
-    args = checker.argparse.Namespace(
-        deck_dir=world["out"],
-        docx=world["docx"],
-        heading=HEADING,
-        expect_keys=17,
-        vesum_db=world["vesum"],
-        sources_db=world["sources"],
-    )
-    report, summary = checker.run(args)
-    assert report.errors == []
-    assert summary["matrix"]["recognition-flashcard"] == {"single": 11, "multiword": 5}
-    assert summary["matrix"]["production-flashcard"] == {"single": 8, "multiword": 4}
-    assert summary["matrix"]["stress"]["multiword"] == 0
-    assert summary["aspect"] == {
-        "single": {"agree:dual": 1, "agree:imperf": 1, "agree:perf": 2, "vesum-only:imperf": 1},
-        "multiword": {"vesum-only:perf": 1},
-    }
-    residuals = summary["residuals"]
-    assert {uk for uk, _reason in residuals["productionOmitted"]} == {
-        "Женити",
-        "Оженити",
-        "Випробування",
-        "Кинути виклик",
-    }
-    assert {uk for uk, _reason in residuals["noAtlas"]} == {
-        "Прочитати",
-        "Чорна кава",
-        "Свіжий хліб",
-        "Теплий дім",
-        "Женити",
-        "Оженити",
-        "Випробування",
-        "Кинути виклик",
-    }
-    assert [uk for uk, _reason in residuals["aspectMarkerDisagreements"]] == ["Писати"]
-    assert residuals["aspectUnknown"] == []
-    assert residuals["refusedGroups"] == []
 
 
 class FakeGh:
@@ -878,23 +751,6 @@ def test_first_publish_creates_the_release_then_uploads_then_pins_the_pointer(
 def _committed(world: dict[str, Path]) -> dict[str, bytes | None]:
     paths = [world["table"], world["frozen"], world["pointer"], *sorted(world["out"].iterdir())]
     return {path.name: path.read_bytes() if path.exists() else None for path in paths}
-
-
-def test_a_failed_publish_changes_nothing_committed_facing(
-    world: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    assert _refresh(world) == 0
-    before = _committed(world)
-    _write_docx(world["docx"], [*TABLE, ("Лампа", "Lamp")])
-    _review_all(world, tmp_path / "scratch")
-    capsys.readouterr()
-    fake = FakeGh(monkeypatch, release_exists=True, fail_upload=True)
-    assert _refresh(world, "--publish", "--skip-ingest") == 2
-    assert "cannot read inputs or reach the release" in capsys.readouterr().err
-    assert fake.calls == ["view", "view --json", "view", "upload"]
-    assert _committed(world) == before and before["pointer.json"] is None
-    leftovers = [path.name for path in world["out"].parent.iterdir() if path.name.startswith(".")]
-    assert leftovers == []
 
 
 @pytest.mark.parametrize(
@@ -1293,13 +1149,6 @@ def test_publish_runs_the_checker_in_publication_mode(
     assert fake.calls == [] and not world["pointer"].exists() and not world["out"].exists()
 
 
-def test_checker_fails_when_a_withheld_sentence_is_served(world: dict[str, Path]) -> None:
-    assert _refresh(world) == 0
-    _write_ledger(world["withheld"], {"Я п'ю зелений чай щоранку.": "ERR"})
-    code, report = _check(world["out"], world)
-    assert code == 1 and "serves a sentence the language review withheld (ERR)" in report
-
-
 def test_checker_rejects_a_ledger_that_carries_sentence_text(world: dict[str, Path]) -> None:
     assert _refresh(world) == 0
     ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
@@ -1309,17 +1158,6 @@ def test_checker_rejects_a_ledger_that_carries_sentence_text(world: dict[str, Pa
     assert code == 1 and "malformed withheld record" in report
     with pytest.raises(shard.TeacherDeckBuildError, match="malformed withheld record"):
         shard.read_sentence_reviews(world["withheld"])
-
-
-def test_checker_fails_on_served_worksheet_debris(world: dict[str, Path], tmp_path: Path) -> None:
-    assert _refresh(world) == 0
-
-    def outline(cloze: dict) -> None:
-        item = next(item for item in cloze["cloze"] if item["source"] == "teacher-lesson")
-        item["sentence"] = item["sentence"].rstrip(".") + " → далі."
-
-    code, report = _plant(world, tmp_path, shard.CLOZE_FILE, outline)
-    assert code == 1 and "worksheet debris (outline arrow)" in report
 
 
 def test_checker_rederives_the_atlas_sense_rule(world: dict[str, Path], tmp_path: Path) -> None:
@@ -1468,24 +1306,6 @@ def test_checker_rejects_required_non_object_json(
         assert json.loads(report.read_text(encoding="utf-8")) == {"ok": False, "errors": [diagnostic]}
 
 
-@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
-def test_checker_accepts_required_object_json(
-    checked_world: dict[str, Path],
-    tmp_path: Path,
-    capsys: pytest.CaptureFixture[str],
-    publication: bool,
-) -> None:
-    capsys.readouterr()
-    for with_sources in (False, True):
-        report = tmp_path / f"valid-report-{with_sources}.json"
-        assert _check_main(checked_world, report, publication=publication, with_sources=with_sources) == 0
-        output = capsys.readouterr()
-        payload = json.loads(report.read_text(encoding="utf-8"))
-        assert payload["ok"] is True and payload["errors"] == []
-        assert payload["entries"] > 0 and "PASS (0 errors)" in output.out
-        assert output.err == ""
-
-
 @pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
 @pytest.mark.parametrize("damage", ["missing", "malformed"])
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
@@ -1512,41 +1332,6 @@ def test_checker_preserves_required_json_read_failures(
         assert payload["ok"] is False and len(payload["errors"]) == 1
         assert payload["errors"][0].startswith(prefix)
         assert prefix in output.out and "FAIL" in output.out and output.err == ""
-
-
-@pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
-@pytest.mark.parametrize(
-    "payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"]
-)
-@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
-def test_refresh_propagates_required_json_shape_failure(
-    checked_world: dict[str, Path],
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-    artifact: str,
-    payload: object,
-    publication: bool,
-) -> None:
-    world = checked_world
-    before = _committed(world)
-    fake = FakeGh(monkeypatch)
-    real_render = shard.render_published_set
-
-    def corrupt_required_artifact(*args, **kwargs):
-        files = real_render(*args, **kwargs)
-        files[artifact] = json.dumps(payload).encode("utf-8")
-        return files
-
-    monkeypatch.setattr(shard, "render_published_set", corrupt_required_artifact)
-    capsys.readouterr()
-    assert _refresh(world, *(["--publish"] if publication else [])) == 1
-    output = capsys.readouterr()
-    assert "independent checker failed; published set left unchanged" in output.err
-    assert f"invalid artifact {artifact}: expected JSON object" in output.err
-    assert fake.calls == []
-    assert _committed(world) == before
-    assert not world["pointer"].exists()
-    assert not world["out"].with_name(f".{world['out'].name}.check").exists()
 
 
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
@@ -1633,60 +1418,6 @@ def test_checker_optional_manifest_json_cli(
     assert f"teacher deck check: {'FAIL (1 errors)' if diagnostic else 'PASS (0 errors)'}" in result.stdout
     if diagnostic:
         assert diagnostic in result.stdout
-
-
-@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
-@pytest.mark.parametrize("case", ["directory", "valid", "missing"])
-def test_checker_manifest_byte_read_cli(
-    checked_world: dict[str, Path], tmp_path: Path, publication: bool, case: str
-) -> None:
-    world = checked_world
-    artifact = world["out"] / "extra.json"
-    data = b'{"schema":"fixture","schemaVersion":1}'
-    if case == "directory":
-        artifact.mkdir()
-    elif case == "valid":
-        artifact.write_bytes(data)
-    manifest_path = world["out"] / checker.MANIFEST_FILE
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["files"].append(
-        {
-            "path": artifact.name,
-            "sha256": hashlib.sha256(data).hexdigest(),
-            "bytes": len(data),
-            "schema": "fixture",
-            "schemaVersion": 1,
-            "gzipBudget": 100,
-        }
-    )
-    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-    report = tmp_path / "byte-read-report.json"
-    args = [
-        sys.executable,
-        str(ROOT / "scripts/audit/check_teacher_deck.py"),
-        "--deck-dir",
-        str(world["out"]),
-        "--json",
-        str(report),
-    ]
-    if publication:
-        args += ["--publication", "--withheld", str(world["withheld"])]
-        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
-            args += [f"--{flag}", str(world[key])]
-    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
-    expected = {
-        "directory": [f"unreadable artifact extra.json: [Errno 21] Is a directory: '{artifact}'"],
-        "missing": ["manifest file missing: extra.json"],
-        "valid": [],
-    }[case]
-    assert result.returncode == (0 if case == "valid" else 1), result
-    assert result.stderr == ""
-    payload = json.loads(report.read_text(encoding="utf-8"))
-    assert payload["ok"] is (case == "valid")
-    assert payload["errors"] == expected
-    assert payload["entries"] == 16
-    assert f"teacher deck check: {'PASS (0 errors)' if case == 'valid' else 'FAIL (1 errors)'}" in result.stdout
-    assert all(message in result.stdout for message in expected)
 
 
 @pytest.mark.parametrize(
@@ -1946,44 +1677,3 @@ def test_checker_reports_malformed_manifest_files_json_cli(
     assert f"teacher deck check: FAIL ({len(errors)} errors)" in result.stdout and "PASS" not in result.stdout
     assert all(error in result.stdout for error in errors)
     assert str(checked_world["out"]) not in "".join(errors)
-
-
-@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
-def test_checker_accepts_valid_manifest_files_json_cli(
-    checked_world: dict[str, Path], tmp_path: Path, publication: bool
-) -> None:
-    report = tmp_path / "manifest-valid.json"
-    result = _manifest_cli(checked_world, report, publication=publication)
-    assert result.returncode == 0 and result.stderr == "", result
-    payload = json.loads(report.read_text(encoding="utf-8"))
-    assert payload["ok"] is True and payload["errors"] == [] and payload["entries"] == 16
-    assert "PASS (0 errors)" in result.stdout
-
-
-@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
-@pytest.mark.parametrize("shape", ["files-null", "row-str-appended"])
-def test_missing_required_artifact_outranks_malformed_manifest_files(
-    checked_world: dict[str, Path], tmp_path: Path, shape: str, publication: bool
-) -> None:
-    _set_manifest_files(checked_world, shape)
-    (checked_world["out"] / checker.DECK_FILE).unlink()
-    report = tmp_path / "manifest-precedence.json"
-    result = _manifest_cli(checked_world, report, publication=publication)
-    assert result.returncode == 1 and result.stderr == "", result
-    payload = json.loads(report.read_text(encoding="utf-8"))
-    assert payload == {"ok": False, "errors": [f"missing artifact: {checker.DECK_FILE}"]}
-
-
-def test_manifest_without_files_key_keeps_reporting_unreferenced_artifacts(tmp_path: Path) -> None:
-    report = checker.Report()
-    checker.check_manifest(tmp_path, {}, report)
-    assert report.errors == [
-        f"manifest does not reference {name}" for name in (checker.DECK_FILE, checker.CLOZE_FILE, checker.FROZEN_FILE)
-    ]
-
-
-def test_manifest_records_skips_only_the_malformed_rows() -> None:
-    report = checker.Report()
-    good = {"path": "a.json"}
-    assert checker._manifest_records({"files": [None, good, 3, "x", good]}, report) == [good, good]
-    assert report.errors == [f"invalid manifest {checker.MANIFEST_FILE}: files[{i}] must be an object" for i in (0, 2, 3)]

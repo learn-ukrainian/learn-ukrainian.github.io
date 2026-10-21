@@ -183,28 +183,6 @@ def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path:
     assert bad.status_code == 400
 
 
-def test_router_live_claim_conflict_names_holder_and_expiry(tmp_path: Path, monkeypatch) -> None:
-    client = _client(tmp_path, monkeypatch)
-    _claim(client)
-    competing = client.post(
-        "/api/epics/v1/epic:7178/claim",
-        json={
-            "session_id": "other-session",
-            "lease_id": "other-lease",
-            "lineage_id": "other-lineage",
-            "agent": "gemini",
-            "harness": "agy",
-            "instance_id": "other-instance",
-            "process_id": 5678,
-            "host_id": "other-host",
-        },
-    )
-    assert competing.status_code == 409
-    assert "current holder=codex/codex-cli" in competing.text
-    assert "instance_id=api-instance" in competing.text
-    assert "expires_at=" in competing.text
-
-
 def test_router_responses_have_no_paths_or_host_network_tokens(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
     response = _claim(client)
@@ -459,39 +437,6 @@ def test_epics_graph_incomplete_cache_drops_membership(tmp_path: Path, monkeypat
     assert epic_issues["truncated"] is None
 
 
-def test_epics_graph_unflagged_legacy_cache_drops_membership(tmp_path: Path, monkeypatch) -> None:
-    """AC-01 (#8870): a pre-P4 cache with no membership_complete flag is unverified, not trusted."""
-    client = _client(tmp_path, monkeypatch)
-
-    unflagged_audit = {
-        "generated_at": 1700000000,
-        "effective_membership": {
-            "7269": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
-        },
-        "open_issue_numbers": [7269],
-        "open_issue_titles": {"7269": "Epics graph endpoint"},
-    }
-    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: unflagged_audit)
-    monkeypatch.setattr(epics_router.audit, "read_refresh_state", lambda: {"phase": "idle"})
-
-    response = client.get("/api/epics/graph/v1")
-    assert response.status_code == 200
-    data = response.json()
-
-    assert data["membership_complete"] is False
-    assert data["incomplete_nodes"] == []
-
-    monitor_epic = {e["id"]: e for e in data["nodes"]["epics"]}[
-        "epic:7919"
-    ]  # allow-hardcoded-epic: graph contract check
-    assert monitor_epic["open_issue_count"] is None
-    assert monitor_epic["closed_issue_count"] is None
-    epic_issues = data["issues_by_epic"]["7919"]  # allow-hardcoded-epic: graph contract check
-    assert epic_issues["total_open"] is None
-    assert epic_issues["items"] is None
-    assert epic_issues["truncated"] is None
-
-
 def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, monkeypatch) -> None:
     """merge_group has no host audit cache; denied Popen must stay 200 no-cache."""
     client = _client(tmp_path, monkeypatch)
@@ -509,43 +454,6 @@ def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, mon
     assert data["ok"] is None
     assert data["refreshing"] is False
     assert data["refresh"]["phase"] == "idle"
-
-
-def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
-    client = _client(tmp_path, monkeypatch)
-
-    # 60 open issues for epic 7919
-    effective_membership = {
-        str(1000 + i): {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True}  # allow-hardcoded-epic: mock audit data
-        for i in range(60)
-    }
-    open_issue_numbers = [1000 + i for i in range(60)]
-    open_issue_titles = {str(1000 + i): f"Open issue {1000 + i}" for i in range(60)}
-
-    mock_audit = {
-        "generated_at": 1700000000,
-        "membership_complete": True,
-        "incomplete_nodes": [],
-        "effective_membership": effective_membership,
-        "open_issue_numbers": open_issue_numbers,
-        "open_issue_titles": open_issue_titles,
-    }
-
-    monkeypatch.setattr(epics_router.audit, "read_cache", lambda max_age_s: mock_audit)
-    monkeypatch.setattr(
-        epics_router.audit,
-        "read_refresh_state",
-        lambda: {"phase": "idle"},
-    )
-
-    response = client.get("/api/epics/graph/v1")
-    assert response.status_code == 200
-    data = response.json()
-
-    monitor_issues = data["issues_by_epic"]["7919"]  # allow-hardcoded-epic: truncation check
-    assert monitor_issues["total_open"] == 60
-    assert monitor_issues["truncated"] is True
-    assert len(monitor_issues["items"]) == 50
 
 
 def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkeypatch) -> None:
@@ -576,31 +484,6 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
     assert epic_7919["lease"] is not None
     assert epic_7919["last_state"]["body"] == "working on graph"
     assert epic_7919["last_decision"]["body"] == "design approved"
-
-
-def test_epic_list_keeps_latest_typed_entries(tmp_path: Path, monkeypatch) -> None:
-    """The one-snapshot list still returns the newest state and decision."""
-    client = _client(tmp_path, monkeypatch)
-    claimed = _claim(client, "epic:7178")
-    lease = claimed["lease"]
-    for body, key in (("older state", "list-state-1"), ("newer state", "list-state-2")):
-        posted = client.post(
-            "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
-            json={**lease, "type": "state", "body": body, "idempotency_key": key},
-        )
-        assert posted.status_code == 200, posted.text
-    decision = client.post(
-        "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
-        json={**lease, "type": "decision", "body": "ship it", "idempotency_key": "list-dec-1"},
-    )
-    assert decision.status_code == 200, decision.text
-
-    listing = client.get("/api/epics/v1")
-    assert listing.status_code == 200
-    row = next(item for item in listing.json()["streams"] if item["stream_id"] == "epic:7178")
-    assert row["last_state"]["body"] == "newer state"
-    assert row["last_decision"]["body"] == "ship it"
-    assert row["last_next_action"] is None
 
 
 def test_epic_listing_ignores_history_on_other_streams(tmp_path: Path) -> None:

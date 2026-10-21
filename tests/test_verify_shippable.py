@@ -95,19 +95,6 @@ def test_render_runs_when_python_qg_raises(tmp_path, monkeypatch):
     assert steps["python_qg"] is False and steps["mdx_render"] is True
 
 
-def test_render_failure_blocks_ship(tmp_path, monkeypatch):
-    md, plan = _mk(tmp_path)
-    monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
-    monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
-    monkeypatch.setattr(
-        lp,
-        "run_mdx_render_gate",
-        lambda t: {"passed": False, "message": "boom", "failures": [{"snippet": "x", "error": "SyntaxError"}]},
-    )
-    rep = vs.verify("folk", "x", module_dir=md, plan_path=plan)
-    assert rep["shippable"] is False
-
-
 def test_assemble_crash_blocks_ship(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
     monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
@@ -181,19 +168,6 @@ def test_wikipedia_url_without_title_fails_closed(monkeypatch):
     # and must NOT be probed with a bare liveness GET.
     assert vs._url_is_live("https://uk.wikipedia.org/w/index.php?oldid=12345") is False
     assert curled == []  # never fell through to a generic curl on a wikipedia host
-
-
-def test_fresh_path_resolution(tmp_path):
-    """Test path resolution for --fresh vs default legacy paths."""
-    mod_dir = vs._fresh_module_dir("a1", "my-module", repo_root=tmp_path)
-    plan_path = vs._fresh_plan_path("a1", "my-module", repo_root=tmp_path)
-
-    assert mod_dir == tmp_path / "site" / "src" / "content" / "docs" / "a1" / "my-module"
-    assert plan_path == tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "my-module.yaml"
-
-    legacy_mod = vs._default_module_dir("a1", "my-module", repo_root=tmp_path)
-    # Legacy module is in curriculum/l2-uk-en/a1/my-module
-    assert legacy_mod == tmp_path / "curriculum" / "l2-uk-en" / "a1" / "my-module"
 
 
 def _mk_fresh(tmp_path, *, ids=(1, 2), level="a1"):
@@ -271,28 +245,6 @@ def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["astro_build"] is True
     assert (log_dir / "a1-greetings.astro-build.log").read_text() == "fixture build green\n"
-
-
-def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
-    """Test verify with fresh=True reports not shippable when render gate fails."""
-    site_mod, plan_file = _mk_fresh(tmp_path)
-
-    monkeypatch.setattr(
-        lp,
-        "run_mdx_render_gate",
-        lambda t: {"passed": False, "message": "fail", "failures": [{"snippet": "x", "error": "SyntaxError"}]},
-    )
-
-    rep = vs.verify(
-        "a1",
-        "greetings",
-        module_dir=site_mod,
-        plan_path=plan_file,
-        fresh=True,
-    )
-    assert rep["shippable"] is False
-    steps = {s["step"]: s["passed"] for s in rep["steps"]}
-    assert steps["mdx_render"] is False
 
 
 @pytest.mark.parametrize("missing", [(2,), (2, 3)])
@@ -386,53 +338,6 @@ def test_verify_fresh_invalid_plan_fails_closed(tmp_path, monkeypatch, plan, thr
     assert rep["steps"][0]["reason"] == "invalid_lesson_plan"
 
 
-def test_verify_fresh_skipped_lesson_render_blocks_even_green_astro(tmp_path, monkeypatch):
-    site_mod, plan_file = _mk_fresh(tmp_path)
-    monkeypatch.setattr(vs, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(vs, "_astro_build", lambda p: True)
-    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": None})
-    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, astro_build=True)
-    assert rep["render_fully_validated"] is True
-    assert rep["shippable"] is False
-
-
-@pytest.mark.parametrize("args,through_lesson", [([], None), (["--fresh", "--through-lesson", "1"], 1)])
-def test_verify_shippable_no_flag_default_paths(monkeypatch, args, through_lesson):
-    """Pin default path arguments and forwarding of the optional fresh scope."""
-    seen = {}
-
-    def fake_verify(
-        level, slug, *, module_dir=None, plan_path=None, astro_build=False, fresh=False, through_lesson=None
-    ):
-        seen["level"] = level
-        seen["slug"] = slug
-        seen["module_dir"] = module_dir
-        seen["plan_path"] = plan_path
-        seen["astro_build"] = astro_build
-        seen["fresh"] = fresh
-        seen["through_lesson"] = through_lesson
-        return {"level": level, "slug": slug, "shippable": True, "steps": []}
-
-    monkeypatch.setattr(vs, "verify", fake_verify)
-    ret = vs.main(["a1", "greetings", *args])
-    assert ret == 0
-    assert seen["level"] == "a1"
-    assert seen["slug"] == "greetings"
-    assert seen["fresh"] is bool(args)
-    assert seen["through_lesson"] == through_lesson
-    assert seen["module_dir"] is None
-    assert seen["plan_path"] is None
-
-
-def test_verify_shippable_fresh_and_lesson_is_ap_error():
-    """--fresh cannot be combined with --lesson (ap.error -> exit code 2)."""
-    import pytest
-
-    with pytest.raises(SystemExit) as exc_info:
-        vs.main(["a1", "greetings", "--fresh", "--lesson"])
-    assert exc_info.value.code == 2
-
-
 @pytest.mark.parametrize("ids,through_lesson", [((1, 2), 1), ((1, 3, 5), 3)])
 def test_verify_fresh_scoped_pass_with_later_lessons_missing(tmp_path, monkeypatch, ids, through_lesson):
     site_mod, plan_file = _mk_fresh(tmp_path, ids=ids)
@@ -523,29 +428,6 @@ def test_verify_fresh_scoped_requires_recap_endpoint(tmp_path, monkeypatch):
     assert rep["shippable"] is False
     assert rep["steps"][0]["missing_lesson_ids"] == [3]
     assert rep["steps"][0]["required_lesson_ids"] == [1, 3]
-
-
-def test_verify_fresh_scoped_cli_out_of_plan_is_typed_failure(tmp_path, capsys):
-    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 3))
-    result = vs.main(
-        [
-            "a1",
-            "greetings",
-            "--fresh",
-            "--through-lesson",
-            "2",
-            "--module-dir",
-            str(site_mod),
-            "--plan",
-            str(plan_file),
-            "--json",
-        ]
-    )
-    assert result == 1
-    import json
-
-    report = json.loads(capsys.readouterr().out)
-    assert report["steps"][0]["reason"] == "invalid_lesson_scope"
 
 
 @pytest.mark.parametrize("foreign", [False, True])

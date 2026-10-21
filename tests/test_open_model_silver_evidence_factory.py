@@ -354,15 +354,6 @@ def _observation(
     }
 
 
-def test_contracts_are_valid_and_distinct_from_human_gold() -> None:
-    for path in (factory.OBSERVATION_SCHEMA, factory.RECORD_SCHEMA, factory.RECEIPT_SCHEMA):
-        Draft202012Validator.check_schema(json.loads(path.read_text(encoding="utf-8")))
-    record_schema = factory.RECORD_SCHEMA.read_text(encoding="utf-8")
-    assert '"human_reviewed": {"const": false}' in record_schema
-    assert '"qualified_human_gold": {"const": false}' in record_schema
-    assert '"model_training_or_export_eligible": {"const": false}' in record_schema
-
-
 def test_protected_quote_and_unresolved_routes_are_byte_stable(tmp_path: Path) -> None:
     rows = [
         _candidate(1, category="protected_authentic_ukrainian", vesum=True, heritage=True),

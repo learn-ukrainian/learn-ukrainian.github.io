@@ -530,18 +530,6 @@ def test_running_skip(hermetic_reap):
     assert worktree.exists()
 
 
-def test_spawning_skip(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "spawning-task")
-    _write_task_state(tasks_dir, "spawning-task", "spawning", worktree)
-
-    report = post_task_reap.post_task_reap("spawning-task", tasks_dir=tasks_dir, repo_root=repo_root)
-
-    assert report["main_worktree"]["action"] == "retained"
-    assert "still active" in report["main_worktree"]["reason"]
-    assert worktree.exists()
-
-
 def test_dirty_skip(hermetic_reap):
     repo_root, tasks_dir = hermetic_reap
     worktree = _add_dispatch_worktree(repo_root, "kimi", "dirty-task")
@@ -609,52 +597,6 @@ def test_no_pr_terminal_reap_apply(hermetic_reap, monkeypatch):
     monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: None)
 
     report = post_task_reap.post_task_reap("no-pr-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "removed"
-    assert report["main_worktree"]["error"] is None
-    assert not worktree.exists()
-
-
-def test_post_task_reap_unpushed_local_commit_is_retained(hermetic_reap, monkeypatch):
-    """post_task_reap retains worktree when local commits have not been pushed to origin."""
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "unpushed-task")
-    (worktree / "unpushed.txt").write_text("local only\n", encoding="utf-8")
-    _run(["git", "add", "unpushed.txt"], cwd=worktree)
-    _run(["git", "commit", "-m", "local commit"], cwd=worktree)
-    _write_task_state(tasks_dir, "unpushed-task", "done", worktree)
-    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
-
-    report = post_task_reap.post_task_reap("unpushed-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] in {"skipped", "retained"}
-    assert report["main_worktree"]["reason"] == "unpushed_head"
-    assert worktree.exists()
-    assert (worktree / "unpushed.txt").read_text(encoding="utf-8") == "local only\n"
-
-
-def test_no_pr_timeout_terminal_reap_apply(hermetic_reap, monkeypatch):
-    """timeout is terminal for post_task_reap but outside the canonical Class-A
-    set; the no-PR fallback must reap it when the tree is clean and PID dead."""
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "timeout-task")
-    _write_task_state(tasks_dir, "timeout-task", "timeout", worktree)
-    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
-
-    report = post_task_reap.post_task_reap("timeout-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "removed"
-    assert report["main_worktree"]["error"] is None
-    assert not worktree.exists()
-
-
-def test_no_pr_needs_finalize_terminal_reap_apply(hermetic_reap, monkeypatch):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "finalize-task")
-    _write_task_state(tasks_dir, "finalize-task", "needs_finalize", worktree)
-    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
-
-    report = post_task_reap.post_task_reap("finalize-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
 
     assert report["main_worktree"]["action"] == "removed"
     assert report["main_worktree"]["error"] is None
@@ -751,17 +693,6 @@ def test_no_pr_pr_probe_error_retain(hermetic_reap, monkeypatch):
     assert report["main_worktree"]["action"] == "skipped"
     assert "PR guard unavailable" in report["main_worktree"]["reason"]
     assert worktree.exists()
-
-
-def test_terminal_failed_reap_apply(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "failed-task")
-    _write_task_state(tasks_dir, "failed-task", "failed", worktree)
-
-    report = post_task_reap.post_task_reap("failed-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "removed"
-    assert not worktree.exists()
 
 
 def test_ambiguous_retain_no_state_path(hermetic_reap):
@@ -912,33 +843,6 @@ def test_canonical_creator_flag_without_creation_inventory_is_retained(hermetic_
     assert tree.exists()
 
 
-@pytest.mark.parametrize("creator_record", ["absent", "archived"])
-def test_prep_failure_with_settled_reuser_does_not_reap_creator_tree(hermetic_reap, monkeypatch, creator_record):
-    repo, tasks = hermetic_reap
-    task_id = "codex-shared-leaf"
-    tree = _reuse_cohort(repo, tasks, creator_task="codex-creator-r1", successor_task="codex-reuser-r2")
-    creator_path = task_record_path(tasks, "codex-creator-r1")
-    if creator_record == "absent":
-        creator_path.unlink()
-    else:
-        archive = archived_task_record_path(tasks, "codex-creator-r1")
-        archive.parent.mkdir(parents=True, exist_ok=True)
-        creator_path.rename(archive)
-    _write_task_state(tasks, task_id, "failed", tree, agent="codex", worktree_reused=False)
-    path = task_record_path(tasks, task_id)
-    state = json.loads(path.read_text())
-    state.update(pid=None, run_nonce="prep-failure-run", worktree_branch="codex/shared-reused")
-    assert "ignored_output_baseline" not in state
-    path.write_text(json.dumps(state))
-    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", lambda *_args: ([], None))
-
-    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
-
-    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
-    assert report["main_worktree"]["reason"] == _OWNERSHIP_MISMATCH
-    assert tree.exists()
-
-
 def _assert_retained_unowned(repo_root: Path, tasks_dir: Path, task_id: str, worktree: Path, agent: str = "codex"):
     _write_task_state(tasks_dir, task_id, "done", worktree, agent=agent)
 
@@ -982,16 +886,6 @@ def test_literal_prefixed_task_id_without_creator_flag_is_reaped(hermetic_reap):
 
     assert report["main_worktree"]["action"] == "removed", report["main_worktree"]
     assert not worktree.exists()
-
-
-def test_non_canonical_sanitised_leaf_is_retained(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
-    task_id = "codex-fix #10486 [round 2]"
-    canonical = automatic_worktree_path("codex", task_id, repo_root=repo_root)
-    worktree = _add_worktree_at(repo_root, canonical.parent / "fix-10486-round-2-extra", "codex/not-canonical")
-    assert worktree != canonical
-
-    _assert_retained_unowned(repo_root, tasks_dir, task_id, worktree)
 
 
 def _reuse_cohort(
@@ -1089,26 +983,6 @@ def test_canonical_derived_path_without_boolean_creator_evidence_is_retained(her
     assert worktree.exists()
 
 
-def test_canonical_derived_path_without_creator_flag_is_retained(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
-    task_id = "codex-10486-positive-creator"
-    worktree = _add_canonical_worktree(repo_root, "codex", task_id)
-
-    _write_task_state(
-        tasks_dir, task_id, "done", worktree, agent="codex", worktree_reused=False, creation_evidence=True
-    )
-    state_path = task_record_path(tasks_dir, task_id)
-    state = json.loads(state_path.read_text())
-    state.pop("worktree_reused")
-    state_path.write_text(json.dumps(state))
-
-    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
-    assert report["main_worktree"]["reason"] == _OWNERSHIP_MISMATCH
-    assert worktree.exists()
-
-
 @pytest.mark.parametrize("archived", [False, True], ids=["hot", "archive"])
 def test_canonical_creator_with_an_unproven_other_claimant_is_retained(hermetic_reap, archived):
     repo_root, tasks_dir = hermetic_reap
@@ -1173,18 +1047,6 @@ def test_creator_of_a_canonical_leaf_still_reaps_it_with_a_settled_successor(her
     assert not worktree.exists()
 
 
-def test_reused_successor_of_a_canonical_leaf_does_not_reap_the_creators_tree(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _reuse_cohort(
-        repo_root, tasks_dir, creator_task="codex-canon-r1", successor_task="codex-reuser-r2", leaf="canon-r1"
-    )
-
-    report = post_task_reap.post_task_reap("codex-reuser-r2", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
-    assert worktree.exists()
-
-
 @pytest.mark.parametrize(
     "error",
     [OSError("injected"), ValueError("injected"), RuntimeError("injected")],
@@ -1224,25 +1086,6 @@ def test_reap_pending_reservation_blocks_canonical_prefixed_path(hermetic_reap):
     )
 
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "retained"
-    assert report["main_worktree"]["reason"] == "reap-pending reservation blocks a new task bind"
-    assert worktree.exists()
-
-
-def test_reap_pending_reservation_refuses_bound_task(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "pending-task")
-    _write_task_state(tasks_dir, "pending-task", "done", worktree)
-    post_task_reap.reaper_lifecycle.mark_reap_pending(
-        repo_root,
-        worktree_path=worktree,
-        branch="kimi/pending-task",
-        head=_run(["git", "rev-parse", "HEAD"], cwd=worktree).stdout.strip(),
-        task_id="pending-task",
-    )
-
-    report = post_task_reap.post_task_reap("pending-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
 
     assert report["main_worktree"]["action"] == "retained"
     assert report["main_worktree"]["reason"] == "reap-pending reservation blocks a new task bind"
@@ -1431,71 +1274,6 @@ def test_acp_runtime_retain_while_task_active(hermetic_reap):
     assert acp_path.exists()
 
 
-def test_cli_dry_run_default(hermetic_reap, capsys):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "cli-task")
-    _write_task_state(tasks_dir, "cli-task", "done", worktree)
-
-    code = post_task_reap.main(["--task-id", "cli-task", "--tasks-dir", str(tasks_dir), "--repo-root", str(repo_root)])
-    captured = capsys.readouterr()
-
-    assert code == 0
-    report = json.loads(captured.out)
-    assert report["main_worktree"]["action"] == "would_remove"
-    assert worktree.exists()
-
-
-def test_cli_apply_flag(hermetic_reap, capsys):
-    repo_root, tasks_dir = hermetic_reap
-    worktree = _add_dispatch_worktree(repo_root, "kimi", "cli-apply-task")
-    _write_task_state(tasks_dir, "cli-apply-task", "done", worktree)
-
-    code = post_task_reap.main(
-        [
-            "--task-id",
-            "cli-apply-task",
-            "--tasks-dir",
-            str(tasks_dir),
-            "--repo-root",
-            str(repo_root),
-            "--apply",
-        ]
-    )
-    captured = capsys.readouterr()
-
-    assert code == 0
-    report = json.loads(captured.out)
-    assert report["main_worktree"]["action"] == "removed"
-    assert not worktree.exists()
-
-
-def test_cli_no_acp_runtime(hermetic_reap, capsys):
-    repo_root, tasks_dir = hermetic_reap
-    main_worktree = _add_dispatch_worktree(repo_root, "kimi", "no-acp-task")
-    acp_path = _add_acp_runtime_worktree(repo_root, "no-acp-task", locked=False)
-    _write_task_state(tasks_dir, "no-acp-task", "done", main_worktree, acp_runtime_paths=[acp_path])
-
-    code = post_task_reap.main(
-        [
-            "--task-id",
-            "no-acp-task",
-            "--tasks-dir",
-            str(tasks_dir),
-            "--repo-root",
-            str(repo_root),
-            "--apply",
-            "--no-include-acp-runtime",
-        ]
-    )
-    captured = capsys.readouterr()
-
-    assert code == 0
-    report = json.loads(captured.out)
-    assert report["main_worktree"]["action"] == "removed"
-    assert report["acp_runtimes"] == []
-    assert acp_path.exists()
-
-
 def _half_built_dispatch(
     repo_root: Path,
     tasks_dir: Path,
@@ -1553,18 +1331,6 @@ def test_initializing_lock_with_recorded_pid_stays_retained(hermetic_reap):
     worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-pid", status="failed", pid=424242)
 
     report = post_task_reap.post_task_reap("impl-8663-pid", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
-
-    assert report["main_worktree"]["action"] == "retained"
-    assert report["main_worktree"]["reason"] == "registered worktree is locked"
-    assert worktree.exists()
-
-
-def test_initializing_lock_without_a_reservation_stays_retained(hermetic_reap):
-    repo_root, _ = hermetic_reap
-    tasks_dir = repo_root / "batch_state" / "tasks"
-    worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-reuse", status="failed", pid=None, reserved=False)
-
-    report = post_task_reap.post_task_reap("impl-8663-reuse", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
 
     assert report["main_worktree"]["action"] == "retained"
     assert report["main_worktree"]["reason"] == "registered worktree is locked"

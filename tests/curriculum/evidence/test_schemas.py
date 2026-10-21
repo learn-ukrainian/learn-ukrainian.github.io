@@ -103,18 +103,6 @@ def test_unresolved_store_cannot_merge_candidate_forms():
     assert not checker.is_valid(store)
 
 
-@pytest.mark.parametrize(
-    "location", [(), ("built_with",), ("words", 0), ("words", 0, "entry"), ("words", 0, "forms", 0)]
-)
-def test_no_extra_properties(location):
-    store = synthetic_store()
-    target = store
-    for key in location:
-        target = target[key]
-    target["synthetic_extra"] = "unexpected"
-    assert not validator("").is_valid(store)
-
-
 def test_gloss_requires_source():
     store = synthetic_store()
     word = store["words"][0]

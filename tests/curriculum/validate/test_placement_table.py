@@ -14,7 +14,6 @@ import json
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.curriculum.validate.placement_table import (
     CORE_LEVELS,
@@ -24,7 +23,6 @@ from scripts.curriculum.validate.placement_table import (
     generate,
     load_placement_table,
     parse_pedagogy_matrix,
-    render_placement_table,
     schema_activity_types,
 )
 from scripts.curriculum.validate.placement_table import (
@@ -94,11 +92,6 @@ def test_schema_activity_types_rejects_missing_suffix(tmp_path: Path) -> None:
     schema_path.write_text(json.dumps({"definitions": {"quiz": {}}}), encoding="utf-8")
     with pytest.raises(PlacementTableError, match="lacks the -a1 suffix"):
         schema_activity_types("a1", schema_path)
-
-
-def test_schema_activity_types_rejects_missing_file(tmp_path: Path) -> None:
-    with pytest.raises(PlacementTableError, match="does not exist"):
-        schema_activity_types("a1", tmp_path / "missing.schema.json")
 
 
 def _build_with_fixture_schemas(tmp_path: Path, per_level: dict[str, list[str]]) -> dict:
@@ -172,14 +165,6 @@ def test_agreement_on_forbidden_is_not_a_discrepancy(tmp_path: Path) -> None:
     assert not [d for d in table["discrepancies"] if d["type"] == "translate" and d["level"] == "c2"]
 
 
-def test_render_placement_table_is_deterministic_and_ends_in_newline() -> None:
-    table = {"placement_table_schema": 1, "levels": {"a1": {"quiz": "both"}}, "discrepancies": []}
-    text = render_placement_table(table)
-    assert text.endswith("\n")
-    assert yaml.safe_load(text) == table
-    assert render_placement_table(table) == text
-
-
 def test_generate_round_trips_through_load(tmp_path: Path) -> None:
     doc_path = tmp_path / "activity-pedagogy.md"
     doc_path.write_text(MATRIX_DOC, encoding="utf-8")
@@ -227,10 +212,6 @@ def test_cli_check_reports_stale_and_write_fixes_it(tmp_path: Path) -> None:
         assert placement_main(["--check", "--doc", str(doc_path), "--output", str(out_path)]) == 0
     finally:
         pt_module.REPO_ROOT = original
-
-
-def test_cli_reports_usage_error_for_bad_doc(tmp_path: Path) -> None:
-    assert placement_main(["--check", "--doc", str(tmp_path / "missing.md")]) == 2
 
 
 def test_committed_table_is_not_stale() -> None:

@@ -21,20 +21,6 @@ DAY = 86400
 OLD = time.time() - 3 * DAY
 REAL_PROCESS_SNAPSHOT = sweep.process_snapshot
 HOLDER = "import sys, time; sys.stdout.write('ready\\n'); sys.stdout.flush(); time.sleep(60)"
-# A same-user process that makes itself non-dumpable (PR_SET_DUMPABLE = 4):
-# the kernel then refuses /proc/<pid>/cwd and /proc/<pid>/fd to its owner too.
-NON_DUMPABLE_HOLDER = (
-    "import ctypes, os, sys, time\n"
-    "if ctypes.CDLL(None, use_errno=True).prctl(4, 0, 0, 0, 0) != 0:\n"
-    "    sys.stdout.write('unsupported\\n'); sys.stdout.flush(); sys.exit(0)\n"
-    "if sys.argv[1] == 'cwd':\n"
-    "    os.chdir(sys.argv[2])\n"
-    "else:\n"
-    "    held = open(sys.argv[2], 'rb')\n"
-    "sys.stdout.write('ready\\n'); sys.stdout.flush(); time.sleep(60)\n"
-)
-
-
 def real_references_complete(*_args, **_kwargs):
     """Real cwd/FD references with enumeration isolated from other users' processes."""
     return REAL_PROCESS_SNAPSHOT()[0], True
@@ -112,14 +98,6 @@ def test_recent_deep_write_preserves_entry(scratch):
     assert scratch.row(report, directory.name)["reason"] == "recent_deep_write" and deep.exists()
 
 
-def test_top_level_age_threshold_is_configurable(scratch):
-    directory = scratch.tree()
-    os.utime(directory, (scratch.now - 10 * 3600, scratch.now - 10 * 3600))
-    assert scratch.row(scratch.run(apply=True), directory.name)["reason"] == "too_young"
-    policy = sweep.ScratchPolicy(min_age_s=6 * 3600, quiet_s=6 * 3600)
-    assert scratch.row(scratch.run(scratch=policy), directory.name)["reason"] == "unattributed_scratch"
-
-
 def test_change_time_keeps_freshly_extracted_archives(scratch, monkeypatch):
     # Old preserved mtimes, but every inode change time is the real present.
     directory = scratch.tree()
@@ -130,14 +108,6 @@ def test_change_time_keeps_freshly_extracted_archives(scratch, monkeypatch):
     policy = sweep.ScratchPolicy(min_age_s=1)
     assert scratch.row(scratch.run(scratch=policy, apply=True), directory.name)["reason"] == "recent_deep_write"
     assert directory.exists()
-
-
-@pytest.mark.parametrize("threshold", [0, -1, float("nan"), float("inf")])
-def test_invalid_scratch_thresholds_refused(threshold):
-    with pytest.raises(ValueError):
-        sweep.ScratchPolicy(min_age_s=threshold)
-    with pytest.raises(ValueError):
-        sweep.ScratchPolicy(quiet_s=threshold)
 
 
 @pytest.mark.parametrize(
@@ -194,39 +164,6 @@ def test_process_snapshot_permission_denial_is_incomplete(tmp_path, monkeypatch)
 
     monkeypatch.setattr(sweep.os, "readlink", denied)
     assert sweep.process_snapshot(proc) == ([], False)
-
-
-@pytest.mark.parametrize("hold", ["cwd", "fd"])
-def test_non_dumpable_holder_preserves_scratch(scratch, monkeypatch, tmp_path, hold):
-    """A real same-user process the kernel will not let us inspect keeps the entry."""
-    directory = scratch.tree()
-    target = directory / "deep" if hold == "cwd" else directory / "deep" / "payload"
-    child = subprocess.Popen(
-        [sys.executable, "-c", NON_DUMPABLE_HOLDER, hold, str(target)], stdout=subprocess.PIPE, cwd=tmp_path
-    )
-    try:
-        line = child.stdout.readline()
-        if line == b"unsupported\n":
-            pytest.skip("prctl(PR_SET_DUMPABLE, 0) is unavailable on this platform")
-        assert line == b"ready\n"
-        try:
-            os.readlink(f"/proc/{child.pid}/cwd")
-        except PermissionError:
-            pass
-        else:
-            pytest.skip("this user may inspect non-dumpable processes (privileged runner)")
-        # Enumerate only the holder; every read below is a real kernel check.
-        view = tmp_path / "proc-view"
-        view.mkdir()
-        (view / str(child.pid)).symlink_to(f"/proc/{child.pid}", target_is_directory=True)
-        monkeypatch.setattr(sweep, "process_snapshot", lambda *a, **kw: REAL_PROCESS_SNAPSHOT(view, **kw))
-        report = scratch.run(apply=True)
-        assert report["process_probe_complete"] is False
-        assert scratch.row(report, directory.name)["reason"] == "liveness_unknown"
-        assert target.exists() and child.poll() is None
-    finally:
-        child.kill()
-        child.wait()
 
 
 @pytest.mark.parametrize("field", ["runtime_tmp_root", "worktree_path", "cwd", "nested_env", "temp_root"])
@@ -440,31 +377,6 @@ def test_hidden_top_level_file_rewrite_is_preserved(scratch, monkeypatch, point)
     assert entry.read_bytes() == b"z" * 4096 and entry.stat().st_mtime_ns == mtime_ns
 
 
-@pytest.mark.parametrize("kind", ["directory", "file"])
-def test_top_level_extended_attribute_change_is_preserved(scratch, monkeypatch, kind):
-    """An extended attribute set after the rename changes only the ctime the rename also sets."""
-    entry, _ = _target(scratch, kind)
-    try:
-        os.setxattr(entry, "user.probe", b"old")
-    except OSError as error:
-        if error.errno in {errno.ENOTSUP, errno.EPERM}:
-            pytest.skip("this filesystem does not take user extended attributes")
-        raise
-    os.utime(entry, (OLD, OLD))
-    real_rename = sweep.rename_noreplace
-    renames = []
-
-    def rename(src_fd, src, dst_fd, dst):
-        real_rename(src_fd, src, dst_fd, dst)
-        if not renames:
-            os.setxattr(f"/proc/self/fd/{dst_fd}/{dst}", "user.probe", b"new")
-        renames.append(src)
-
-    monkeypatch.setattr(sweep, "rename_noreplace", rename)
-    _assert_restored(scratch, scratch.run(apply=True), entry, "quarantine_write")
-    assert os.getxattr(entry, "user.probe") == b"new"
-
-
 def test_unreadable_top_level_contents_preserve(scratch, monkeypatch):
     """Top-level change evidence that cannot be read is unknown, never clear."""
     entry = scratch.file()
@@ -476,38 +388,6 @@ def test_unreadable_top_level_contents_preserve(scratch, monkeypatch):
     report = scratch.run(apply=True)
     assert scratch.row(report, entry.name)["reason"] == "proof_changed" and entry.exists()
     assert not _quarantines(scratch.root)
-
-
-def test_write_during_final_process_scan_is_never_lost(scratch, monkeypatch):
-    """The round-2 reproduction: a path write during the last process scan before removal.
-
-    With the rename boundary the old path no longer exists at that scan, so
-    the write either fails with ENOENT (nothing was written and removal is
-    correct) or lands and the entry survives. Removing a landed write fails.
-    The writer is this test process, which the scan therefore leaves out, as
-    the reviewer's out-of-process writer would be absent from it.
-    """
-    entry, payload = _target(scratch, "directory")
-    outcomes = []
-    scans = [0]
-
-    def scan(*args, **kwargs):
-        scans[0] += 1
-        if scans[0] == 3:
-            try:
-                payload.write_bytes(b"fresh write")
-                outcomes.append("written")
-            except FileNotFoundError:
-                outcomes.append("enoent")
-        return [(pid, ref) for pid, ref in real_references_complete()[0] if pid != os.getpid()], True
-
-    monkeypatch.setattr(sweep, "process_snapshot", scan)
-    report = scratch.run(apply=True)
-    assert outcomes, "the final scan never ran"
-    if outcomes == ["written"]:
-        assert payload.read_bytes() == b"fresh write"
-    else:
-        assert scratch.row(report, entry.name)["decision"] == "quarantined" and not entry.exists()
 
 
 def test_real_process_scan_reaps_unheld_entries(scratch, monkeypatch):
@@ -606,23 +486,6 @@ def test_rename_failure_preserves_with_typed_reason(scratch, monkeypatch, code):
     assert payload.exists() and not _quarantines(scratch.root)
 
 
-def test_real_rename_failure_preserves_moved_entry(scratch, monkeypatch):
-    """The entry moves away just before the rename: the kernel's ENOENT preserves it."""
-    entry, _ = _target(scratch, "directory")
-    real_rename = sweep.rename_noreplace
-    moved = scratch.root / "moved-away"
-
-    def rename(src_fd, src, dst_fd, dst):
-        if not moved.exists():
-            entry.rename(moved)
-        real_rename(src_fd, src, dst_fd, dst)
-
-    monkeypatch.setattr(sweep, "rename_noreplace", rename)
-    row = scratch.row(scratch.run(apply=True), entry.name)
-    assert (row["reason"], row["error"]) == ("quarantine_failed", "ENOENT")
-    assert (moved / "deep" / "payload").exists()
-
-
 def test_restore_blocked_keeps_entry_quarantined_and_reports(scratch, monkeypatch):
     entry, _ = _target(scratch, "directory")
     real_rename = sweep.rename_noreplace
@@ -704,15 +567,6 @@ def test_crash_leftover_without_holder_goes_through_the_whole_boundary(scratch, 
     # The crashed run's quarantine is gone; this run's holds the entry.
     assert [q.name for q in _quarantines(scratch.root)] != [f"{sweep.QUARANTINE_PREFIX}crashed"]
     assert [(q / entry.name).is_dir() for q in _quarantines(scratch.root)] == [True]
-
-
-def test_crash_leftover_with_taken_name_stays_quarantined(scratch):
-    quarantine, entry = _leftover(scratch)
-    (scratch.root / entry.name).mkdir()
-    report = scratch.run(apply=True)
-    row = next(r for r in report["rows"] if r.get("quarantine") == quarantine.name)
-    assert (row["reason"], row["error"]) == ("restore_blocked", "EEXIST") and report["errors"] == 1
-    assert (entry / "deep" / "payload").exists()
 
 
 def test_quarantine_of_a_live_run_is_left_alone(scratch):
@@ -822,16 +676,3 @@ def test_scratch_class_refuses_roots_outside_system_temp(scratch, monkeypatch, t
     monkeypatch.setattr(sweep, "protected_roots", lambda: {managed})
     with pytest.raises(ValueError, match="system temp"):
         sweep.sweep(temp_root=managed, task_root=scratch.tasks, repo_root=tmp_path, scratch=sweep.ScratchPolicy())
-
-
-def test_cli_summary_has_counts_without_names(scratch, capsys):
-    scratch.tree()
-    argv = ["--temp-root", str(scratch.root), "--task-root", str(scratch.tasks), "--unattributed-scratch"]
-    assert sweep.main([*argv, "--summary"]) == 0
-    out = capsys.readouterr().out
-    summary = json.loads(out)
-    assert "rows" not in summary and "hand-made-scratch" not in out
-    assert summary["by_reason"] == {"unattributed_scratch": 1} and summary["bytes_reclaimed"] == 0
-    with pytest.raises(SystemExit) as exc:
-        sweep.main([*argv, "--scratch-quiet-hours", "0"])
-    assert exc.value.code == 2

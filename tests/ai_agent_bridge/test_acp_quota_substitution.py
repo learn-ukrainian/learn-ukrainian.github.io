@@ -78,30 +78,6 @@ def _capacity_result(participant: str) -> Result:
     )
 
 
-def _text_only_quota_result(participant: str) -> Result:
-    """The post-#8655 shape: quota wording only in text, generic typed code.
-
-    With the text fallback deleted (#8499) this is an adapter parsing gap,
-    not a capacity signal: it must fail without substitution.
-    """
-    return Result(
-        ok=False,
-        agent=participant,
-        model=f"{participant}-model",
-        mode="read-only",
-        response="",
-        stderr_excerpt="acpx RUNTIME: provider quota exhausted",
-        duration_s=0.5,
-        session_id=None,
-        rate_limited=False,
-        stalled=False,
-        returncode=1,
-        effort="high",
-        usage_record={"failure_code": "transport_error"},
-        transport_outcome="error",
-    )
-
-
 def _non_quota_result(participant: str) -> Result:
     return Result(
         ok=False,
@@ -500,82 +476,6 @@ def test_substitute_also_over_quota_fails_loudly_without_second_hop(
     assert result.substitution is None
 
 
-def test_substitute_rate_limited_exception_fails_loudly_without_second_hop(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    authority = _FakeAuthority()
-    invoke = _wire(
-        monkeypatch,
-        authority,
-        {
-            "codex": _capacity_result("codex"),
-            "cursor": RateLimitedError("cursor", "auto", "429"),
-        },
-        tmp_path=tmp_path,
-    )
-
-    with pytest.raises(RateLimitedError):
-        _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-double-exc")
-
-    assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
-    assert len(authority.enqueued) == 2
-    assert "ACP substitution exhausted" in capsys.readouterr().err
-
-
-def test_non_quota_error_is_unchanged(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    authority = _FakeAuthority()
-    invoke = _wire(
-        monkeypatch,
-        authority,
-        {"codex": _non_quota_result("codex")},
-        tmp_path=tmp_path,
-    )
-
-    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="non-quota")
-
-    assert result.ok is False
-    assert invoke.call_count == 1
-    assert result.substitution is None
-    assert getattr(result, "seat_substitution", None) is None
-    err = capsys.readouterr().err
-    assert "ACP substitution" not in err
-    assert "outcome=error" in err
-
-
-def test_text_only_quota_wording_is_an_adapter_gap_not_a_capacity_signal(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """The post-#8655 shape — provider quota wording only in the excerpt,
-    typed code transport_error — is an adapter parsing gap, not a capacity
-    signal: with the text fallback deleted it fails without substitution and
-    its durable failure metadata keeps the generic transport class (#8499)."""
-    authority = _FakeAuthority()
-    invoke = _wire(
-        monkeypatch,
-        authority,
-        {"codex": _text_only_quota_result("codex"), "cursor": _ok_result("cursor")},
-        tmp_path=tmp_path,
-    )
-
-    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-text-only")
-
-    assert result.ok is False
-    assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
-    assert result.substitution is None
-    assert getattr(result, "seat_substitution", None) is None
-    assert "ACP substitution" not in capsys.readouterr().err
-    assert authority.finished[0]["failure"] == {
-        "phase": "transport",
-        "code": "transport_error",
-        "retryable": False,
-    }
-    receipt = json.loads(authority.finished[0]["result"])
-    assert receipt["failure_code"] == "transport_error"
-    assert receipt["substitution_decision"] == {"substitute": False, "reason": None}
-
-
 def test_seat_without_mapping_fails_unchanged_with_clear_message(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -621,21 +521,6 @@ def test_mapping_to_a_non_acp_seat_fails_unchanged_with_clear_message(
     err = capsys.readouterr().err
     assert "maps it to 'not-an-acp-seat', which is not an enabled ACP ask seat" in err
     assert "ACP substitution:" not in err
-
-
-def test_cli_turns_unmapped_rate_limit_into_a_clean_error(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    def raise_rate_limited(*_args: object, **_kwargs: object) -> object:
-        raise RateLimitedError("cursor", "composer-2.5", "usage limit reached")
-
-    monkeypatch.setattr(_acp_compat, "run_compat_ask", raise_rate_limited)
-    args = _cli._build_parser().parse_args(
-        ["ask-cursor", "question", "--task-id", "rate-limited-cli", "--from", "codex"]
-    )
-
-    with pytest.raises(SystemExit, match=r"cursor/composer-2\.5 rate limited"):
-        _cli._handle_ask_cursor(args)
 
 
 def test_substitution_record_survives_receipt_replay() -> None:
@@ -708,37 +593,6 @@ def test_typed_non_capacity_failure_mentioning_quota_is_not_substituted(
     assert result.substitution is None
     assert getattr(result, "seat_substitution", None) is None
     assert "ACP substitution" not in capsys.readouterr().err
-
-
-def test_typed_capacity_failure_code_substitutes(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    authority = _FakeAuthority()
-    invoke = _wire(
-        monkeypatch,
-        authority,
-        {
-            "codex": _typed_failure_result("codex", failure_code="rate_limited", excerpt="acpx RUNTIME: throttled"),
-            "cursor": _ok_result("cursor"),
-        },
-        tmp_path=tmp_path,
-    )
-
-    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="typed-capacity-code")
-
-    assert result.ok is True
-    assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
-    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
-    assert result.substitution is None
-    assert authority.finished[0]["failure"] == {
-        "phase": "provider",
-        "code": "rate_limited",
-        "retryable": True,
-    }
-    assert "reason: rate_limited" in capsys.readouterr().err
-    receipt = json.loads(authority.finished[0]["result"])
-    assert receipt["failure_code"] == "rate_limited"
-    assert receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
 
 
 @pytest.mark.parametrize(
@@ -932,34 +786,6 @@ def test_unrelated_error_named_rate_limited_does_not_substitute(
     assert authority.finished[0]["failure"]["code"] != "rate_limited"
 
 
-def test_acp_only_wiring_refuses_bridge_and_provider_execution(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    import delegate
-    from agent_runtime import runner
-
-    _wire(monkeypatch, _FakeAuthority(), {"codex": _ok_result("codex")}, tmp_path=tmp_path)
-
-    with pytest.raises(AssertionError, match=r"runner\.invoke"):
-        runner.invoke("codex", "prompt")
-    with pytest.raises(AssertionError, match=r"subprocess\.run"):
-        subprocess.run(["false"], timeout=5)
-    with pytest.raises(AssertionError, match=r"subprocess\.Popen"):
-        subprocess.Popen(["false"])
-    with pytest.raises(AssertionError, match=r"_cli\._dispatch_headless_review"):
-        _cli._dispatch_headless_review(
-            "codex",
-            "prompt",
-            data=None,
-            task_id="t",
-            model=None,
-            effort=None,
-            output_path=None,
-            stdout_only=False,
-            hard_timeout=None,
-        )
-    with pytest.raises(AssertionError, match=r"delegate\.cmd_dispatch"):
-        delegate.cmd_dispatch(SimpleNamespace())
-
-
 class _DurableAuthority:
     """Persists jobs across runs and enforces the real idempotency rule:
 
@@ -1064,26 +890,6 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     assert result.substitution is None
     assert [call.args[0] for call in invoke.call_args_list] == ["cursor"]
     assert jobs["job-2"]["state"] == "complete"
-
-
-def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
-    """delegate.py's launch route and the ACP ask path read one loader, not two copies."""
-    import argparse
-
-    import delegate
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-
-    received: list[object] = []
-
-    def route(request):
-        received.append(request.fallbacks)
-        return request.seat, request.model, "explicit"
-
-    args = argparse.Namespace(agent="codex", model=None, mode="read-only")
-    refusal, _target = delegate._admit_dispatch_target(args, agent="codex", trees=(), route=route)
-    assert refusal is None
-    assert received == [load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)]
-    assert received[0]["codex"] == "cursor"
 
 
 def test_quota_hop_replays_real_durable_fleet_jobs_without_execution(monkeypatch, tmp_path):

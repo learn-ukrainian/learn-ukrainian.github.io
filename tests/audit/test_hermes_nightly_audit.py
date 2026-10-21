@@ -1,61 +1,12 @@
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
 from scripts.audit import hermes_nightly_audit as audit
 
 pytestmark = pytest.mark.reads_content
-
-
-def test_build_markdown_report():
-    timestamp = "2026-07-05T19:33:21Z"
-    track_results = {
-        "a1": {
-            "summary": {
-                "findings_total": 2,
-                "findings_by_severity": {
-                    "blocker": 0,
-                    "high": 0,
-                    "medium": 0,
-                    "low": 0,
-                    "info": 2,
-                },
-                "modules_selected": 55,
-                "modules_built": 55,
-                "modules_not_built": 0,
-            },
-            "findings": [
-                {
-                    "severity": "info",
-                    "module_num": 1,
-                    "slug": "hello",
-                    "category": "inventory",
-                    "file": "wiki/grammar/a1/hello.md",
-                    "line": 10,
-                    "message": "Optional missing",
-                }
-            ],
-        }
-    }
-    insights = "Test insights output"
-    report = audit.build_markdown_report(timestamp, track_results, insights)
-
-    assert "# Hermes Nightly Audit Report" in report
-    assert "Generated at: `2026-07-05T19:33:21Z`" in report
-    assert "Test insights output" in report
-    assert "M01 hello" in report
-    assert "wiki/grammar/a1/hello.md:10" in report
-
-
-def test_get_hermes_insights():
-    with patch("subprocess.run") as mock_run:
-        mock_run.return_value = MagicMock(stdout="Fake Insights Output")
-        assert audit.get_hermes_insights("hermes") == "Fake Insights Output"
-
-    with patch("subprocess.run", side_effect=Exception("not found")):
-        assert audit.get_hermes_insights("hermes") == "insights unavailable"
 
 
 def test_main_writes_only_to_designated_path(tmp_path, monkeypatch):

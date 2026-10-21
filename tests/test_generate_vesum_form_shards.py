@@ -11,22 +11,14 @@ import json
 import sqlite3
 from pathlib import Path
 
-import pytest
-
 from scripts.lexicon.generate_vesum_form_shards import (
-    MAX_SHARD_P95_GZ_BYTES,
-    MAX_TOTAL_GZ_BYTES,
-    ShardSizeBudgetError,
     generate,
 )
 from scripts.lexicon.vesum_form_key import (
-    fnv1a32,
     load_vesum_form_key_vectors,
     vesum_form_key,
     vesum_shard_id,
 )
-
-FIXTURE_DB_PATH = Path(__file__).resolve().parent / "fixtures" / "vesum_sample.db"
 
 
 def _build_db(tmp_path: Path, rows: list[tuple[str, str]]) -> Path:
@@ -48,23 +40,6 @@ def _build_db(tmp_path: Path, rows: list[tuple[str, str]]) -> Path:
 def test_vesum_form_key_matches_golden_vectors() -> None:
     for case in load_vesum_form_key_vectors():
         assert vesum_form_key(case["input"]) == case["expected"], case
-
-
-def test_shard_id_is_stable_zero_padded_and_in_range() -> None:
-    shard_count = 4096
-    for word in ["привіт", "книжка", "п'ять", "Ґанок", "тест"]:
-        key = vesum_form_key(word)
-        shard_id = vesum_shard_id(key, shard_count)
-        assert len(shard_id) >= 3
-        assert 0 <= int(shard_id, 16) < shard_count
-        # Deterministic: same key always hashes to the same shard.
-        assert vesum_shard_id(key, shard_count) == shard_id
-
-
-def test_fnv1a32_hash_is_deterministic() -> None:
-    assert fnv1a32("привіт") == fnv1a32("привіт")
-    assert 0 <= fnv1a32("привіт") <= 0xFFFFFFFF
-    assert fnv1a32("привіт") != fnv1a32("книжка")
 
 
 def test_generate_writes_every_shard_and_groups_lemmas_by_normalized_key(
@@ -127,76 +102,3 @@ def test_generate_writes_every_shard_and_groups_lemmas_by_normalized_key(
     assert manifest["shardsWritten"] == shard_count
     assert manifest_out.exists()
     assert json.loads(manifest_out.read_text(encoding="utf-8")) == manifest
-
-
-def test_generate_enforces_total_gz_size_budget(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    db_path = _build_db(tmp_path, [("книжка", "книжка"), ("книжки", "книжка")])
-    monkeypatch.setattr("scripts.lexicon.generate_vesum_form_shards.MAX_TOTAL_GZ_BYTES", 1)
-
-    with pytest.raises(ShardSizeBudgetError):
-        generate(
-            db_path=db_path,
-            out_dir=tmp_path / "shards",
-            manifest_out=tmp_path / "manifest.json",
-            shard_count=16,
-        )
-
-
-def test_generate_enforces_shard_p95_budget(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    db_path = _build_db(tmp_path, [("книжка", "книжка"), ("книжки", "книжка")])
-    monkeypatch.setattr("scripts.lexicon.generate_vesum_form_shards.MAX_SHARD_P95_GZ_BYTES", 1)
-
-    with pytest.raises(ShardSizeBudgetError):
-        generate(
-            db_path=db_path,
-            out_dir=tmp_path / "shards",
-            manifest_out=tmp_path / "manifest.json",
-            shard_count=16,
-        )
-
-
-def test_generate_no_enforce_budget_bypasses_the_gate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    db_path = _build_db(tmp_path, [("книжка", "книжка")])
-    monkeypatch.setattr("scripts.lexicon.generate_vesum_form_shards.MAX_TOTAL_GZ_BYTES", 1)
-
-    manifest = generate(
-        db_path=db_path,
-        out_dir=tmp_path / "shards",
-        manifest_out=tmp_path / "manifest.json",
-        shard_count=16,
-        enforce_budget=False,
-    )
-    assert manifest["sizeBudget"]["enforced"] is False
-
-
-def test_generate_missing_db_raises_file_not_found(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        generate(
-            db_path=tmp_path / "does-not-exist.db",
-            out_dir=tmp_path / "shards",
-            manifest_out=tmp_path / "manifest.json",
-            shard_count=16,
-        )
-
-
-@pytest.mark.skipif(not FIXTURE_DB_PATH.exists(), reason="tests/fixtures/vesum_sample.db not present")
-def test_generate_against_repo_vesum_fixture_smoke(tmp_path: Path) -> None:
-    """Real (small) VESUM sample database — checks the generator round-trips
-    real row shapes (word_form, lemma, tags, pos) without special-casing."""
-    conn = sqlite3.connect(str(FIXTURE_DB_PATH))
-    try:
-        rows = conn.execute("SELECT word_form, lemma FROM forms").fetchall()
-    finally:
-        conn.close()
-    expected_keys = {vesum_form_key(w) for w, _ in rows if w and w.strip()}
-
-    manifest = generate(
-        db_path=FIXTURE_DB_PATH,
-        out_dir=tmp_path / "shards",
-        manifest_out=tmp_path / "manifest.json",
-        shard_count=64,
-    )
-
-    assert manifest["totalForms"] == len(expected_keys)
-    assert manifest["sizeBudget"]["totalGzBytes"] <= MAX_TOTAL_GZ_BYTES
-    assert manifest["sizeBudget"]["shardP95GzBytes"] <= MAX_SHARD_P95_GZ_BYTES

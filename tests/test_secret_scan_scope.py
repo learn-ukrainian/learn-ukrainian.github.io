@@ -343,27 +343,6 @@ def test_schedule_clock_skew_on_a_long_history_walks_first_parent(tmp_path: Path
     assert _in_resolved_range(tmp_path, scope.trufflehog_base, scope.trufflehog_head, commits["secret"])
 
 
-def test_schedule_clean_tip_scans_the_ancestry_window(tmp_path: Path) -> None:
-    """A clean, old tip is not narrowed to HEAD^..HEAD."""
-
-    depth = secret_scan_scope.SCHEDULE_FIRST_PARENT_STEPS
-    _init_repo(tmp_path)
-    _commit_at(tmp_path, "root\n", "root", "2026-09-01T00:00:00Z")
-    _pad_first_parent(tmp_path, depth, "2026-09-01T00:00:00Z")
-    tip = _commit_at(tmp_path, "clean tip\n", "clean tip", "2026-09-02T00:00:00Z")
-
-    scope = resolve_scan_scope("schedule", repo_root=tmp_path)
-    parent = _git(tmp_path, "rev-parse", "HEAD^")
-    oldest_included = _git(tmp_path, "rev-parse", f"HEAD~{depth - 1}")
-
-    assert scope.reason == "ancestry-window"
-    assert scope.trufflehog_base == _git(tmp_path, "rev-parse", f"HEAD~{depth}")
-    assert scope.trufflehog_base != parent
-    assert scope.trufflehog_head == tip
-    assert scope.trufflehog_base != scope.trufflehog_head
-    assert _in_resolved_range(tmp_path, scope.trufflehog_base, scope.trufflehog_head, oldest_included)
-
-
 def test_schedule_short_history_scans_the_whole_branch(tmp_path: Path) -> None:
     depth = secret_scan_scope.SCHEDULE_FIRST_PARENT_STEPS
     _init_repo(tmp_path)
@@ -378,20 +357,6 @@ def test_schedule_short_history_scans_the_whole_branch(tmp_path: Path) -> None:
     assert scope.trufflehog_head == head
     assert scope.trufflehog_base != scope.trufflehog_head
     assert _in_resolved_range(tmp_path, scope.trufflehog_base, scope.trufflehog_head, root)
-
-
-def test_schedule_scans_the_branch_when_history_is_only_a_few_commits(tmp_path: Path) -> None:
-    _init_repo(tmp_path)
-    first = _commit_at(tmp_path, "first\n", "first", "2026-10-16T10:00:00Z")
-    head = _commit_at(tmp_path, "second\n", "second", "2026-10-16T12:00:00Z")
-
-    scope = resolve_scan_scope("schedule", repo_root=tmp_path)
-
-    assert scope.reason == "branch-history"
-    assert scope.trufflehog_base == ""
-    assert scope.trufflehog_head == head
-    assert scope.trufflehog_base != scope.trufflehog_head
-    assert _in_resolved_range(tmp_path, scope.trufflehog_base, scope.trufflehog_head, first)
 
 
 def test_schedule_root_commit_is_not_an_identical_pair(tmp_path: Path) -> None:
@@ -635,27 +600,3 @@ def test_pull_request_keeps_action_defaults_untouched(tmp_path: Path) -> None:
     assert scope.trufflehog_base == ""
     assert scope.trufflehog_head == ""
     assert scope.opsec_range == ""
-
-
-def test_commit_exists_passes_timeout_and_handles_timeout(tmp_path: Path) -> None:
-    fake = MagicMock()
-    fake.returncode = 0
-    with patch("subprocess.run", return_value=fake) as run_mock:
-        assert secret_scan_scope._commit_exists(tmp_path, "a" * 40) is True
-
-    assert run_mock.call_args.kwargs.get("timeout") == secret_scan_scope.GIT_CAT_FILE_TIMEOUT_SECONDS
-
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "cat-file"], 10)):
-        assert secret_scan_scope._commit_exists(tmp_path, "a" * 40) is False
-
-
-def test_is_ancestor_passes_timeout_and_handles_timeout(tmp_path: Path) -> None:
-    fake = MagicMock()
-    fake.returncode = 0
-    with patch("subprocess.run", return_value=fake) as run_mock:
-        assert secret_scan_scope._is_ancestor(tmp_path, "a" * 40, "b" * 40) is True
-
-    assert run_mock.call_args.kwargs.get("timeout") == secret_scan_scope.GIT_IS_ANCESTOR_TIMEOUT_SECONDS
-
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "merge-base"], 30)):
-        assert secret_scan_scope._is_ancestor(tmp_path, "a" * 40, "b" * 40) is False

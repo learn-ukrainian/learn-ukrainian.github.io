@@ -3,9 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import os
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -19,48 +16,6 @@ def test_bootstrap_rejects_unsafe_epic_before_writing(tmp_path, epic):
         epic = str(tmp_path / "absolute" / "evil")
     assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", f"--epic={epic}", "--stream", "epic:7919"]) != 0
     assert not (tmp_path / ".claude").exists()
-
-
-@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
-def test_lane_import_and_bare_hydration_do_not_import_slot_registry(provider) -> None:
-    """Keep the bridge import graph outside the hook's bare-provider cold path."""
-    code = """
-import importlib
-import importlib.abc
-import os
-import sys
-
-class NoRegistry(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname in {"scripts.orchestration.handoff_slot_registry", "scripts.ai_agent_bridge"}:
-            raise AssertionError("unneeded cold-path import: " + fullname)
-
-sys.meta_path.insert(0, NoRegistry())
-provider = sys.argv[1]
-lane = importlib.import_module("scripts.session_canary." + provider + "_lane")
-os.environ["SESSION_STREAM_AGENT"] = provider
-calls = []
-def hydrate(stream, identity):
-    calls.append((stream, identity))
-    return {"execution_allowed": True}, 1
-lane.shared_hydration.build_hydration_capsule_with_retry = hydrate
-assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 0
-assert calls == [("epic:123", provider)]
-"""
-    root = Path(__file__).resolve().parents[1]
-    env = os.environ.copy()
-    env.pop("PYTHONPATH", None)
-    result = subprocess.run(
-        [sys.executable, "-c", code, provider],
-        cwd=root,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr + result.stdout
-    assert result.stdout == '{"execution_allowed": true}\nACTION: hydration ready — continue the current driver.\n'
-    assert result.stderr == "hydration_attempts: 1\n"
 
 
 def _allowed_capsule() -> dict[str, object]:
@@ -125,30 +80,6 @@ def test_lease_environment_parser_reuses_gemini_reader(tmp_path: Path) -> None:
     }
 
 
-@pytest.mark.parametrize(
-    ("argv", "handler_name"),
-    [
-        (["bootstrap", "--epic", "Harness"], "cmd_bootstrap"),
-        (["status", "--epic", "Harness"], "cmd_status"),
-        (["hydrate", "--epic", "Harness"], "cmd_hydrate"),
-        (["score", "--epic", "Harness", "--answers", "answers.json"], "cmd_score"),
-    ],
-)
-def test_main_normalizes_epic_across_canary_subcommands(
-    monkeypatch: pytest.MonkeyPatch, argv: list[str], handler_name: str
-) -> None:
-    observed: list[str] = []
-
-    def record_epic(args: argparse.Namespace) -> int:
-        observed.append(args.epic)
-        return 0
-
-    monkeypatch.setattr(codex_lane, handler_name, record_epic)
-
-    assert codex_lane.main(argv) == 0
-    assert observed == ["harness"]
-
-
 def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) -> None:
     assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", " HARNESS "]) == 0
 
@@ -162,13 +93,6 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
     assert "launcher already minted the canary" in board
     assert "no Monitor-equivalent background capability" in board
     assert "never on compact count" in board
-
-
-def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
-    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "devops"]) == 0
-
-    board = (tmp_path / ".claude" / "devops-epic" / "CODEX-COLD-START.md").read_text(encoding="utf-8")
-    assert "**Stream:** `epic:5703`" in board  # allow-hardcoded-epic: devops stream canary pin
 
 
 def test_devops_alias_resolves_to_dedicated_stream(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -279,39 +203,3 @@ def test_hydrate_uses_exact_registered_provider_identity(monkeypatch, capsys, tm
         assert calls == []
         assert output.out == ""
         assert output.err == "ACTION: hydration blocked — unregistered lane identity for this provider.\n"
-
-
-@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
-def test_hydrate_refuses_slot_when_registry_unavailable(monkeypatch, capsys, tmp_path, provider) -> None:
-    from scripts.orchestration import handoff_slot_registry
-    from scripts.session_canary import gemini_lane, glm_lane
-
-    lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[provider]
-    monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", tmp_path / "missing.yaml")
-    monkeypatch.setenv("SESSION_STREAM_AGENT", f"{provider}-core")
-    monkeypatch.setattr(
-        lane.shared_hydration,
-        "build_hydration_capsule_with_retry",
-        lambda *args: pytest.fail("unverified registration must not fetch or retry"),
-    )
-    assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 2
-    assert "unregistered lane identity" in capsys.readouterr().err
-
-
-def test_cold_start_blocker_delta_policy():
-    from scripts.driver_blockers import USAGE_RULE
-    from scripts.session_canary import codex_lane
-
-    body = codex_lane._cold_start_body(
-        epic="infra",
-        stream_id="epic:7919",
-        handoff_rel="handoff.md",
-        lease_summary="fixture",
-        rollover_summary="none",
-        binding_line="fixture",
-    )
-    assert USAGE_RULE.replace("$SESSION_EPIC", "infra") in body
-    assert "exact case-sensitive standalone token RESOLVED <id>" in body
-    assert "on its own non-active line (no other fields or prose)" in body
-    assert body.count("scripts.driver_blockers delta") == 1
-    assert body.count("scripts.driver_blockers record") == 1

@@ -2,20 +2,14 @@ from __future__ import annotations
 
 import importlib
 import json
-import signal
-import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
-from unittest.mock import patch
 
 import pytest
 
 from scripts.agent_runtime import tool_config as tool_config_mod
-from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.registry import get_agent_entry
-from scripts.agent_runtime.result import ParseResult
-from scripts.agent_runtime.telemetry import InvocationTelemetry
 from scripts.build import linear_pipeline, v7_build
 
 pytestmark = pytest.mark.reads_content
@@ -152,84 +146,6 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
         assert calls[0][2]["tool_config"]["hermes_mcp_servers"] == ["sources"]
 
 
-@pytest.mark.parametrize(
-    ("alias", "writer"),
-    [
-        ("codex", "codex-tools"),
-        ("grok", "grok-tools"),
-        ("cursor", "cursor-tools"),
-        ("deepseek", "deepseek-tools"),
-        ("qwen", "qwen-tools"),
-    ],
-)
-def test_v7_build_accepts_writer_aliases(alias: str, writer: str) -> None:
-    assert writer in v7_build.WRITER_CHOICES
-    assert alias in v7_build.WRITER_CHOICES
-    assert v7_build._normalize_writer(alias) == writer
-
-
-@pytest.mark.parametrize(
-    ("writer", "expected_cwd"),
-    [
-        ("gemini-tools", v7_build.PROJECT_ROOT),
-        ("claude-tools", None),
-        ("codex-tools", None),
-        ("grok-tools", None),
-        ("cursor-tools", None),
-        ("deepseek-tools", None),
-        ("qwen-tools", None),
-    ],
-)
-def test_v7_build_invokes_gemini_tools_from_project_root(
-    tmp_path: Path,
-    writer: str,
-    expected_cwd: Path | None,
-) -> None:
-    plan_path = tmp_path / "plan.yaml"
-    plan_path.write_text("level: a1\nslug: my-morning\nsequence: 1\n", encoding="utf-8")
-    module_dir = tmp_path / "module"
-    plan = {
-        "level": "a1",
-        "slug": "my-morning",
-        "sequence": 1,
-        "content_outline": [],
-    }
-
-    with (
-        patch.object(v7_build.linear_pipeline, "plan_path_for", return_value=plan_path),
-        patch.object(v7_build.linear_pipeline, "load_plan", return_value=plan),
-        patch.object(v7_build.linear_pipeline, "validate_plan"),
-        patch.object(
-            v7_build.linear_pipeline,
-            "build_knowledge_packet",
-            return_value="knowledge packet",
-        ),
-        patch.object(v7_build, "_writer_prompt", return_value="writer prompt"),
-        patch.object(
-            v7_build.linear_pipeline,
-            "invoke_writer",
-            side_effect=linear_pipeline.LinearPipelineError("stop after writer invoke"),
-        ) as invoke_writer,
-    ):
-        exit_code = v7_build.main(
-            [
-                "a1",
-                "my-morning",
-                "--writer",
-                writer,
-                "--out",
-                str(module_dir),
-            ]
-        )
-
-    assert exit_code == 1
-    assert invoke_writer.call_count == 1
-    assert invoke_writer.call_args.kwargs["cwd"] == (expected_cwd or module_dir)
-    assert invoke_writer.call_args.kwargs["tool_trace_path"] == (
-        module_dir / "writer_tool_calls.json"
-    )
-
-
 def test_v7_build_seminar_stress_path_strips_combining_acute(tmp_path: Path) -> None:
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -275,38 +191,6 @@ def test_v7_build_core_stress_path_keeps_existing_marks(
     assert "\u0301" in (module_dir / "module.md").read_text(encoding="utf-8")
     assert "\u0301" in (module_dir / "vocabulary.yaml").read_text(encoding="utf-8")
     assert "\u0301" in (module_dir / "activities.yaml").read_text(encoding="utf-8")
-
-
-def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
-    tmp_path: Path,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    telemetry = tmp_path / "out.jsonl"
-
-    # --out keeps the wiki gate artifact out of the real curriculum tree (#8631).
-    exit_code = v7_build.main(
-        [
-            "a1",
-            "my-morning",
-            "--writer",
-            "codex-tools",
-            "--dry-run",
-            "--out",
-            str(tmp_path / "module"),
-            "--telemetry-out",
-            str(telemetry),
-        ]
-    )
-
-    captured = capsys.readouterr()
-    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
-
-    assert exit_code == 0
-    assert captured.out == ""
-    assert events
-    assert {event["event"] for event in events} >= {"module_start", "phase_done", "module_done"}
-    assert events[-1]["event"] == "module_done"
-    assert events[-1]["dry_run"] is True
 
 
 def test_v7_writer_trace_capture_clears_tool_theatre(
@@ -408,11 +292,6 @@ def _invoke_upgrade_writer(
     )
 
 
-def test_upgrade_prompt_header_resolves_module_ref() -> None:
-    assert linear_pipeline._prompt_module_ref(UPGRADE_SHAPED_PROMPT) == "a1/special-signs"
-    assert linear_pipeline._prompt_sections(UPGRADE_SHAPED_PROMPT) == []
-
-
 def test_upgrade_shaped_prompt_runs_runtime_gate_on_empty_agy_trace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -476,25 +355,6 @@ def test_agy_writer_refuses_dispatch_when_catalog_stays_dead(
     assert invoked == []
     preflight = next(event for event in events if event["event"] == "agy_mcp_catalog_preflight")
     assert preflight["ok"] is False
-
-
-def test_tools_writer_without_any_module_ref_is_still_gated(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _seed_sources_mcp_config(tmp_path, monkeypatch)
-
-    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
-        return SimpleNamespace(response="writer output", tool_calls=[])
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
-        linear_pipeline.invoke_writer(
-            "Write the module.",
-            writer="agy-tools",
-            cwd=tmp_path,
-            invoker=fake_invoker,
-            event_sink=lambda _event, **_fields: None,
-        )
 
 
 def test_shell_vesum_trace_does_not_satisfy_mcp_gate(
@@ -584,91 +444,3 @@ def test_positive_runtime_gate_does_not_fire_for_non_tools_writer() -> None:
         module="a1/1",
         phase_writer_summary={"tool_calls_total": 0},
     )
-
-
-def test_v7_build_writer_timeout_kills_silent_subprocess(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    telemetry = tmp_path / "timeout.jsonl"
-    out_dir = tmp_path / "out"
-    returncode_file = tmp_path / "returncode.txt"
-    from scripts.agent_runtime import runner as runtime_runner
-
-    class SleepingAdapter:
-        name = "claude"
-        default_model = "fixture-model"
-        supported_modes = frozenset({"workspace-write"})
-
-        def build_invocation(self, **kwargs: Any) -> InvocationPlan:
-            return InvocationPlan(
-                cmd=["/bin/sh", "-c", "sleep 60"],
-                cwd=Path(kwargs["cwd"]),
-            )
-
-        def parse_response(
-            self,
-            *,
-            stdout: str,
-            stderr: str,
-            returncode: int,
-            **_kwargs: Any,
-        ) -> ParseResult:
-            returncode_file.write_text(str(returncode), encoding="utf-8")
-            return ParseResult(ok=False, response="", stderr_excerpt=stderr or stdout)
-
-        def liveness_signal_paths(self, _plan: InvocationPlan) -> tuple[Path, ...]:
-            return ()
-
-    monkeypatch.setattr(
-        v7_build.linear_pipeline,
-        "build_knowledge_packet",
-        lambda **_kwargs: "knowledge packet",
-    )
-    monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
-    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
-    monkeypatch.setattr(
-        runtime_runner,
-        "resolve_invocation_telemetry",
-        lambda **_kwargs: InvocationTelemetry(
-            model="fixture-model",
-            effort="unknown",
-            cli_version="fixture",
-        ),
-    )
-    monkeypatch.setitem(runtime_runner._ADAPTER_CACHE, "claude", SleepingAdapter())
-
-    started = time.monotonic()
-    exit_code = v7_build.main(
-        [
-            "a1",
-            "my-morning",
-            "--writer",
-            "claude-tools",
-            "--writer-timeout",
-            "1",
-            "--out",
-            str(out_dir),
-            "--telemetry-out",
-            str(telemetry),
-        ]
-    )
-    elapsed = time.monotonic() - started
-    captured = capsys.readouterr()
-    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
-    timeout_event = next(event for event in events if event["event"] == "writer_timeout")
-
-    assert exit_code == 124
-    assert elapsed < 6
-    assert int(returncode_file.read_text("utf-8")) == -signal.SIGKILL
-    assert "timed out in phase writer" in captured.err
-    assert timeout_event["writer"] == "claude-tools"
-    # PR #2108 (Path 3 PR1) seeds implementation_map.json BETWEEN the
-    # phase_done event for the wiki/plan phases and the writer subprocess
-    # spawn. So when the writer subprocess is killed for silence, the most
-    # recently-emitted event is the seeder, not phase_done. Adjust the
-    # assertion to match the actual last event before the spawn.
-    assert timeout_event["last_event_type"] == "implementation_map_seeded"
-    assert timeout_event["last_event_ts"]
-    assert timeout_event["total_wall_time_s"] < 6

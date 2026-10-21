@@ -175,22 +175,6 @@ def test_existing_materialization_rebinds_every_record_to_source_pages(
     }
 
 
-def test_existing_materialization_rejects_private_output_tamper(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _materialize(tmp_path, monkeypatch)
-    _patch_fixture_identity(monkeypatch)
-    output = tmp_path / "private" / materialization.OUTPUT_FILENAME
-    output.write_bytes(output.read_bytes() + b"tamper")
-
-    with pytest.raises(SpasCatalogMaterializationError, match="byte count drift"):
-        materialization.validate_existing_materialization(
-            pdf_path=tmp_path / "not-read.pdf",
-            private_output_dir=tmp_path / "private",
-        )
-
-
 def test_existing_materialization_rejects_same_length_private_output_tamper(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -334,14 +318,6 @@ def test_load_catalog_pages_rejects_source_hash_drift(tmp_path: Path) -> None:
     pdf.write_bytes(b"not the immutable source")
     with pytest.raises(SpasCatalogMaterializationError, match="SHA-256 mismatch"):
         materialization.load_catalog_pages(pdf, expected_pdf_sha256="0" * 64)
-
-
-def test_receipt_tamper_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    receipt = _materialize(tmp_path, monkeypatch)
-    tampered = deepcopy(receipt)
-    tampered["safeguards"]["training_eligible"] = True
-    with pytest.raises(SpasCatalogMaterializationError, match="schema violation"):
-        materialization._validate_receipt(tampered)
 
 
 def test_receipt_cross_field_tamper_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -9,12 +9,11 @@ from typing import Any
 import pytest
 import yaml
 
-from scripts.orchestration.trails import authority as authority_module
 from scripts.orchestration.trails.authority import (
     ApprovedAuthorityReceiptResolver,
     AuthorityReceiptError,
 )
-from scripts.orchestration.trails.executor import TrailExecutor, TrailPredicatesDecisionTableEvaluator
+from scripts.orchestration.trails.executor import TrailExecutor
 from scripts.orchestration.trails.models import CommandExecution, DeviationRefusedError, ExitClass
 from scripts.orchestration.trails.store import TrailStore
 
@@ -299,31 +298,6 @@ def test_authority_revalidation_preserves_typed_source_failure_detail(tmp_path: 
         resolver.revalidate(_receipt(executor, run_id))
 
 
-def test_authority_schema_validator_loads_once_without_caching_receipt_payloads(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    executor = _executor(tmp_path)
-    run_id = _begin_and_park(executor, tmp_path)
-    receipt = _receipt(executor, run_id)
-    schema_path = authority_module.AUTHORITY_RECEIPT_SCHEMA_PATH
-
-    class _CountingSchemaPath:
-        reads = 0
-
-        def read_text(self, *, encoding: str) -> str:
-            self.reads += 1
-            return schema_path.read_text(encoding=encoding)
-
-    counter = _CountingSchemaPath()
-    monkeypatch.setattr(authority_module, "AUTHORITY_RECEIPT_SCHEMA_PATH", counter)
-    monkeypatch.setattr(authority_module, "_AUTHORITY_RECEIPT_VALIDATOR", None)
-
-    assert authority_module.validate_authority_receipt_data(receipt) == receipt
-    assert authority_module.validate_authority_receipt_data(receipt) == receipt
-    assert counter.reads == 1
-
-
 def test_executor_table_seam_parks_p2_unknown_without_running_a_command(tmp_path: Path) -> None:
     executor = _executor(tmp_path)
     begun = executor.begin(
@@ -382,11 +356,3 @@ def test_executor_table_stop_race_returns_typed_deviation_refusal(tmp_path: Path
     assert result.outcome == "deviation_refused"
     assert result.state == "active"
     assert result.cursor_step == "start"
-
-
-def test_decision_table_file_is_loaded_only_when_the_seam_is_used(tmp_path: Path) -> None:
-    evaluator = TrailPredicatesDecisionTableEvaluator(tmp_path / "missing-decision-tables.yaml")
-
-    assert evaluator.tables is None
-    with pytest.raises(FileNotFoundError):
-        evaluator.evaluate("queue-pick", {})

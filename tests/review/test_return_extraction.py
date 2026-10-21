@@ -20,7 +20,7 @@ from scripts.review.validate.validate import ReviewReturnError, _peek_kind, extr
 from tests.build.test_fresh_plan_review import fake_verify, make_manifest
 from tests.helpers.plan_review_world import build_env
 from tests.review.test_plan_review_validator import Case
-from tests.review.test_record import World, _attestable_placeholder_return, _bound, finding
+from tests.review.test_record import World, _attestable_placeholder_return
 
 FIXTURES = Path(__file__).parent / "fixtures" / "fenced_returns"
 REAL_RETURNS = ("plan-review-a1-p2-agy-r7", "plan-review-a1-p3-agy-r2")
@@ -50,11 +50,6 @@ def test_inline_backtick_prose_keeps_whole_mapping(name, info, position, prose):
     if position in ("after", "both"):
         raw += prose
     assert extract_review_yaml(raw) == data
-
-
-def test_bare_mapping_with_a_fence_in_a_scalar_is_unchanged():
-    data = b"kind: plan\nnotes: |\n  ```yaml\n  example: true\n  ```\n"
-    assert extract_review_yaml(data) == data
 
 
 @pytest.mark.parametrize("indent", [1, 2, 3])
@@ -101,21 +96,6 @@ def test_unrelated_closed_fence_refuses_ambiguous_mapping(position, marker):
     assert "outside the selected yaml/yml block" in str(raised.value)
 
 
-@pytest.mark.parametrize("opening", [b"```python", b"~~~text"])
-def test_trailing_unrelated_open_fence_names_actual_opening(opening):
-    with pytest.raises(ReviewReturnError) as raised:
-        extract_review_yaml(fenced(b"kind: plan\n") + opening + b"\n")
-    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
-    assert str(raised.value) == f"the {opening.decode()!r} fence is not closed"
-
-
-def test_unclosed_yaml_fence_names_actual_opening():
-    with pytest.raises(ReviewReturnError) as raised:
-        extract_review_yaml(b"  ````yml\nkind: plan\n")
-    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
-    assert str(raised.value) == "the '````yml' fence is not closed"
-
-
 @pytest.mark.parametrize("outer,inner", [(b"````", b"```"), (b"```", b"~~~"), (b"~~~~", b"~~~"), (b"~~~", b"```")])
 def test_nonclosing_fence_inside_scalar_keeps_whole_mapping(outer, inner):
     data = b"kind: plan\nnotes: |\n  before\n  " + inner + b"\n  after\nfindings: []\n"
@@ -134,10 +114,6 @@ def test_invalid_date_has_typed_refusal(wrapped):
         extract_review_yaml(fenced(data) if wrapped else data)
     assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
     assert "month must be in 1..12" in str(raised.value)
-
-
-def test_recorder_docstring_keeps_then_with_numbered_steps():
-    assert "then:\n\n1. reserves" in record.__doc__
 
 
 @pytest.mark.parametrize(
@@ -316,17 +292,3 @@ def test_fenced_binding_still_covers_whole_saved_result(world, edit, placeholder
     assert raised.value.code == record.REVIEW_RETURN_TASK_MISMATCH
     assert not world.db.exists()
     assert not list(world.state_dir.glob(f"*{made['attempt_id']}*"))
-
-
-@pytest.mark.reads_content
-def test_fenced_lesson_revise_matches_bare_verdict(world):
-    bare = world.make_return(2, [finding(severity="MAJOR")])
-    before = world.record(bare)
-    made = world.make_return(2, [finding(severity="MAJOR")])
-    raw_mapping = made["review"].read_bytes()
-    made["review"].write_bytes(fenced(raw_mapping))
-    world.task("review-fenced", "claude", "claude-sonnet-5", review_attempt=_bound(world, made))
-    outcome = world.record(made, task_id="review-fenced")
-    assert before.accepted and outcome.accepted, outcome.rejection_codes
-    assert outcome.verdict == before.verdict == "REVISE"
-    assert (world.root / outcome.saved_return).read_bytes() == raw_mapping

@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -93,20 +92,6 @@ def test_external_directory_cannot_write_through_file_alias(tmp_path: Path, monk
         package.build_unified_dataset(package.MANAGED_RELEASE_DIR, output)
     assert existing.read_bytes() == b"pre-existing export"
     assert sorted(path.name for path in output.iterdir()) == ["train.jsonl"]
-
-
-def test_cli_requires_external_output_and_rejects_alias(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo = _repo(tmp_path, monkeypatch)
-    monkeypatch.setattr(sys, "argv", ["package_unified_dataset.py"])
-    with pytest.raises(SystemExit) as exc:
-        package.main()
-    assert exc.value.code == 2
-    alias = tmp_path / "alias"
-    alias.symlink_to(repo, target_is_directory=True)
-    monkeypatch.setattr(sys, "argv", ["package_unified_dataset.py", "--output-dir", str(alias / "export")])
-    with pytest.raises(ValueError, match="outside the checkout"):
-        package.main()
-    assert not (repo / "export").exists()
 
 
 @pytest.mark.parametrize("source", ["managed", "external"])

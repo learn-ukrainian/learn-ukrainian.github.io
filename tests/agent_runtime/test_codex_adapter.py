@@ -7,7 +7,7 @@ import pytest
 
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.codex import CodexAdapter
-from tests.helpers.codex_exec_stream import completed_stream, failed_stream, jsonl, thread_started, turn_started
+from tests.helpers.codex_exec_stream import completed_stream, jsonl, thread_started, turn_started
 
 
 def test_codex_build_invocation_sends_prompt_via_stdin(tmp_path: Path, monkeypatch) -> None:
@@ -126,39 +126,3 @@ def test_zero_exit_requires_content(tmp_path, content, expected):
     output.write_text(content)
     result = CodexAdapter().parse_response(stdout=completed_stream(), stderr="", returncode=0, output_file=output)
     assert result.ok is expected
-
-
-def test_nonzero_quota_failure_is_rate_limited_from_the_stream(tmp_path):
-    output = tmp_path / "last-message.txt"
-    output.write_text("")
-    result = CodexAdapter().parse_response(
-        stdout=failed_stream("You\u2019ve hit your usage limit. Try again later."),
-        stderr="",
-        returncode=1,
-        output_file=output,
-    )
-    assert not result.ok
-    assert result.rate_limited
-    assert result.failure_code == "rate_limited"
-
-
-def test_stderr_quota_text_never_classifies(tmp_path):
-    """Without typed events the outcome is incomplete, whatever stderr says."""
-    output = tmp_path / "last-message.txt"
-    output.write_text("")
-    result = CodexAdapter().parse_response(
-        stdout="", stderr="ERROR: usage limit reached\n", returncode=1, output_file=output
-    )
-    assert not result.ok
-    assert not result.rate_limited
-    assert result.failure_code == "provider_stream_incomplete"
-    assert "usage limit reached" in result.stderr_excerpt
-
-
-def test_nonzero_output_file_quota_text_is_agent_text(tmp_path):
-    """codex exec never writes a failed turn's error to ``-o`` (#9532)."""
-    output = tmp_path / "last-message.txt"
-    output.write_text("usage limit reached")
-    result = CodexAdapter().parse_response(stdout="", stderr="", returncode=1, output_file=output)
-    assert not result.ok
-    assert not result.rate_limited

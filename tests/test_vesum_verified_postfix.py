@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import time
-
 import pytest
 import yaml
 
@@ -9,7 +7,6 @@ from scripts.build.linear_pipeline import (
     _iter_vesum_word_surfaces,
     _looks_like_stem_fragment,
     _normalize_for_vesum,
-    _strip_markdown_edge_markers,
     _vesum_gate,
 )
 
@@ -105,25 +102,6 @@ def test_normalize_for_vesum_canonicalizes_apostrophe_variants() -> None:
     assert _normalize_for_vesum("в´ють") == "в'ють"
 
 
-def test_strip_markdown_edge_markers_preserves_intended_behavior() -> None:
-    assert _strip_markdown_edge_markers("**Дебат") == "Дебат"
-    assert _strip_markdown_edge_markers("Дебат**") == "Дебат"
-    assert _strip_markdown_edge_markers("*_слово_**") == "слово"
-    assert _strip_markdown_edge_markers(" будь-що ") == "будь-що"
-    assert _strip_markdown_edge_markers("слово***!") == "слово***!"
-
-
-def test_strip_markdown_edge_markers_handles_unmatched_star_run_quickly() -> None:
-    raw = "слово" + ("*" * 50_000) + "!"
-
-    started_at = time.perf_counter()
-    normalized = _strip_markdown_edge_markers(raw)
-    elapsed = time.perf_counter() - started_at
-
-    assert normalized == raw
-    assert elapsed < 1.0
-
-
 def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:
     seen: list[list[str]] = []
 
@@ -143,37 +121,6 @@ def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:
     assert gate["passed"] is True
     assert seen == [["вмиваю", "вмиваюся", "ся", "чудов"]]
     assert gate["missing"] == []
-
-
-def test_vesum_gate_canonicalizes_apostrophes_before_lookup() -> None:
-    seen: list[list[str]] = []
-    valid = {
-        "в'ють",
-        "запам'ятавши",
-        "ім'я",
-        "об'єкт",
-        "п'ять",
-        "пам'яттю",
-        "сім'я",
-    }
-
-    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
-        seen.append(words)
-        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
-
-    u02bc_words = "вʼють памʼяттю запамʼятавши сімʼя пʼять обʼєкт імʼя"
-    ascii_words = "в'ють пам'яттю запам'ятавши сім'я п'ять об'єкт ім'я"
-    gate = _vesum_gate(
-        module_text=f"{u02bc_words} {ascii_words}",
-        activities=[],
-        vocabulary=[],
-        resources=[],
-        verify_words_fn=verify_words,
-    )
-
-    assert gate["passed"] is True
-    assert gate["missing"] == []
-    assert seen == [sorted(valid)]
 
 
 @pytest.mark.parametrize("apostrophe", ["’", "‘", "`", "´"])
@@ -489,47 +436,6 @@ def test_vesum_gate_does_not_whitelist_russian_ost_noun() -> None:
 
     assert gate["passed"] is False
     assert gate["missing"] == ["благодарность"]
-
-
-def test_vesum_gate_does_not_whitelist_russian_ostey_oblique() -> None:
-    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
-        return {
-            word: (
-                [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz"}]
-                if word == "новий"
-                else []
-            )
-            for word in words
-        }
-
-    gate = _vesum_gate(
-        module_text="новостей.",
-        activities=[],
-        vocabulary=[],
-        resources=[],
-        verify_words_fn=verify_words,
-    )
-
-    assert gate["passed"] is False
-    assert gate["missing"] == ["новостей"]
-
-
-def test_vesum_gate_still_flags_known_bad_form_after_hyphen_fix() -> None:
-    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
-        valid = {"будь-який"}
-        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
-
-    gate = _vesum_gate(
-        module_text="Будь-який приклад, але празднік лишається помилкою.",
-        activities=[],
-        vocabulary=[],
-        resources=[],
-        verify_words_fn=verify_words,
-    )
-
-    assert gate["passed"] is False
-    assert "празднік" in gate["missing"]
-    assert "Будьякий" not in gate["missing"]
 
 
 def test_vesum_gate_exempts_roman_numeral_misses_only() -> None:

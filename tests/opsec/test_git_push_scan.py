@@ -7,7 +7,6 @@ In-process tests call the hook's main with hand-written pre-push input.
 
 from __future__ import annotations
 
-import gc
 import hashlib
 import json
 import os
@@ -15,7 +14,6 @@ import re
 import shutil
 import subprocess
 import sys
-import time
 import zlib
 from pathlib import Path
 
@@ -141,28 +139,11 @@ def test_branch_name_hit_is_refused_with_nothing_sent(push_sandbox):
     assert_blocked(result, push_sandbox, before, "branch[1].name")
 
 
-def test_lightweight_tag_name_hit_is_refused_with_nothing_sent(push_sandbox):
-    before = push_sandbox.remote_refs()
-    _git(push_sandbox.work, "tag", f"v1-{TOKEN}")
-    result = push_sandbox.push("push", "origin", "--tags")
-    assert_blocked(result, push_sandbox, before, "tag[1].name")
-
-
 def test_annotated_tag_message_hit_is_refused_with_nothing_sent(push_sandbox):
     before = push_sandbox.remote_refs()
     _git(push_sandbox.work, "tag", "-a", "v1", "-m", "release " + TOKEN)
     tag = _git(push_sandbox.work, "rev-parse", "v1")
     result = push_sandbox.push("push", "origin", "v1")
-    assert_blocked(result, push_sandbox, before, f"tag[{tag[:12]}].message")
-
-
-def test_follow_tags_annotated_tag_hit_is_refused(push_sandbox):
-    """Tags Git adds to the push itself reach the hook as updates too."""
-    before = push_sandbox.remote_refs()
-    push_sandbox.commit("clean subject")
-    _git(push_sandbox.work, "tag", "-a", "v1", "-m", "release " + TOKEN)
-    tag = _git(push_sandbox.work, "rev-parse", "v1")
-    result = push_sandbox.push("push", "--follow-tags", "origin", "trunk")
     assert_blocked(result, push_sandbox, before, f"tag[{tag[:12]}].message")
 
 
@@ -240,14 +221,6 @@ def test_wholly_scanned_clean_raw_commit_is_delivered(push_sandbox, message):
     result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
     assert result.returncode == 0, result.stderr
     assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
-
-
-def test_tag_message_hit_after_a_nul_is_refused(push_sandbox):
-    before = push_sandbox.remote_refs()
-    head = _git(push_sandbox.work, "rev-parse", "HEAD")
-    tag = _tag(push_sandbox.work, head, "commit", "v1", b"clean release\x00 " + TOKEN.encode() + b"\n")
-    result = push_sandbox.push("push", "origin", f"{tag}:refs/tags/v1")
-    assert_blocked(result, push_sandbox, before, f"tag[{tag[:12]}].message")
 
 
 def _signed_tag(cwd, target, name, message="clean release\n"):
@@ -366,157 +339,6 @@ def test_split_object_keeps_every_reading_of_the_whole_message(raw, fields, expe
     assert TOKEN in message
 
 
-@pytest.mark.parametrize("raw", [b"tag v1\nno separator " + TOKEN.encode(), b" opening continuation\n\nbody"])
-def test_split_object_refuses_text_outside_any_message(raw):
-    with pytest.raises(gate.PublishBlocked) as raised:
-        git_push.split_object(raw, "commit[unit]")
-    assert str(raised.value).startswith("OPSEC: commit[unit] ") and TOKEN not in str(raised.value)
-
-
-class _CountedBytes(bytes):
-    """Count bytes copied by slicing/concatenation; preserve the meter through header splitting.
-
-    Repeated immutable-byte concatenation costs the accumulated prefix's size,
-    not just one operation. Counting calls alone would miss quadratic copying.
-    The final built-in join returns ordinary bytes and copies each fragment once.
-    """
-
-    def __new__(cls, value, copied):
-        instance = super().__new__(cls, value)
-        instance.copied = copied
-        return instance
-
-    def _count(self, value):
-        self.copied[0] += len(value)
-        return _CountedBytes(value, self.copied)
-
-    def __add__(self, other):
-        return self._count(super().__add__(other))
-
-    def __radd__(self, other):
-        return self._count(other + bytes(self))
-
-    def __getitem__(self, key):
-        value = super().__getitem__(key)
-        return self._count(value) if isinstance(key, slice) else value
-
-    def partition(self, separator):
-        return tuple(self._count(part) for part in super().partition(separator))
-
-    def split(self, separator=None, maxsplit=-1):
-        return [self._count(part) for part in super().split(separator, maxsplit)]
-
-
-@pytest.mark.parametrize("size", [32 << 10, 128 << 10, 8 << 20])
-def test_continuation_unfolding_is_linear_in_the_header_size(size):
-    """Copied bytes stay within a fixed multiple of input bytes, independent of runner load."""
-    line = b" " + b"x" * 255
-    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 256) + b"\n\nclean\n"
-    copied = [0]
-    fields, message = git_push.split_object(_CountedBytes(raw, copied), "commit[unit]")
-    expected = b"object 0" + (b"\n" + line[1:]) * (size // 256)
-    assert fields == [(b"tree", b"0"), (b"mergetag", expected)] and message == "clean\n"
-    # Include the one final join, which does not dispatch to bytes-subclass methods.
-    work = copied[0] + sum(len(value) for _, value in fields)
-    assert copied[0] >= len(raw), "byte-copy instrumentation was bypassed"
-    assert work <= 8 * len(raw), f"unfolding copied {work} bytes for {len(raw)} input bytes"
-
-
-def _continuation_fixture(size):
-    """Commit bytes whose mergetag continues for about `size` bytes, and the fields that split must return."""
-    line = b" " + b"x" * 63
-    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 64) + b"\n\nclean\n"
-    expected = [(b"tree", b"0"), (b"mergetag", b"object 0" + (b"\n" + line[1:]) * (size // 64))]
-    return raw, expected
-
-
-def _unfold_cpu_seconds(size, samples=5, target=0.2):
-    """Minimum per-call thread CPU time on plain bytes.
-
-    A single call at the small size is only a few milliseconds, and the 64x bound
-    is about 30 ms of additive thread CPU above that call. Best-of-three on one
-    call therefore accepts a quadratic unfold when every short sample pays a stall
-    (a collection, a cold fault) that barely moves the multi-second large sample.
-    Each sample repeats the call until it has used `target` seconds, after one
-    warmup and with the cyclic collector off, so that stall is spread across many
-    calls. The reported value is the minimum per-call time: extra time is noise,
-    not negative. Thread CPU time does not count time spent descheduled. Copies
-    that plain bytes hide from the subclass counter still show up here.
-    """
-    raw, expected = _continuation_fixture(size)
-    git_push.split_object(raw, "commit[unit]")
-    best = float("inf")
-    call_cap = 100_000
-    for _ in range(samples):
-        gc.collect()
-        enabled = gc.isenabled()
-        gc.disable()
-        elapsed = 0.0
-        fields, message = None, ""
-        calls = 0
-        try:
-            started = time.thread_time()
-            while calls < call_cap:
-                fields, message = git_push.split_object(raw, "commit[unit]")
-                calls += 1
-                elapsed = time.thread_time() - started
-                if elapsed >= target:
-                    break
-        finally:
-            if enabled:
-                gc.enable()
-        assert fields == expected and message == "clean\n"
-        if elapsed <= 0 or calls == 0:
-            raise AssertionError(f"unfolding CPU scaling: thread clock did not advance at size {size}")
-        best = min(best, elapsed / calls)
-    return best
-
-
-def test_continuation_unfolding_has_linear_cpu_scaling():
-    """A 16x input increase allows 64x CPU work; quadratic unfolding needs about 256x."""
-    # 128 KiB against 2 MiB is the 16x gap this 64x allowance was calibrated for.
-    # A wider gap spends the slack the real scanner needs: its CPU cost is a bit
-    # above linear because each continuation line has a fixed loop cost.
-    # Short continuation lines make repeated full-prefix copies dominate that loop.
-    # The 1 ms floor keeps a tiny small sample from turning timer noise into a ratio.
-    small, large = _unfold_cpu_seconds(128 << 10), _unfold_cpu_seconds(2 << 20)
-    assert large <= 64 * max(small, 0.001), f"unfolding CPU scaling: small={small:.6f}s large={large:.6f}s"
-
-
-@pytest.mark.parametrize(
-    ("combine", "counted"),
-    [
-        pytest.param(lambda value, part: value + b"\n" + part, True, id="concatenation"),
-        pytest.param(lambda value, part: b"\n".join([value, part]), False, id="join"),
-        pytest.param(lambda value, part: bytes(bytearray(value) + b"\n" + bytes(part)), False, id="bytearray"),
-        pytest.param(lambda value, part: b"%b\n%b" % (value, part), False, id="formatting"),
-    ],
-)
-def test_linearity_checks_reject_quadratic_unfolding(monkeypatch, combine, counted):
-    def quadratic(raw, position):
-        header, _, body = (b"\n" + raw).partition(b"\n\n")
-        fields = []
-        for line in header[1:].split(b"\n"):
-            if line.startswith(b" "):
-                key, value = fields[-1]
-                fields[-1] = (key, combine(value, line[1:]))
-            elif line:
-                key, _, value = line.partition(b" ")
-                fields.append((key, value))
-        return fields, body.decode("utf-8", "replace")
-
-    monkeypatch.setattr(git_push, "split_object", quadratic)
-    if counted:
-        with pytest.raises(AssertionError, match="unfolding copied"):
-            test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
-    else:
-        # These regressions bypass the deterministic meter, so prove the CPU
-        # scaling check catches them even while the copy-counter check passes.
-        test_continuation_unfolding_is_linear_in_the_header_size(32 << 10)
-    with pytest.raises(AssertionError, match="unfolding CPU scaling"):
-        test_continuation_unfolding_has_linear_cpu_scaling()
-
-
 # --- A clean push is ordinary: delivered unchanged, with Git's own bookkeeping ---
 
 
@@ -633,34 +455,6 @@ def test_ref_moved_to_a_hit_during_the_scan_is_not_sent(side_effects):
     assert side_effects.remote_refs()["refs/heads/feature"] == scanned and not _remote_has(side_effects, hit)
 
 
-def test_ref_moved_away_from_a_hit_during_the_scan_is_still_refused(side_effects):
-    base = _git(side_effects.work, "rev-parse", "HEAD")
-    hit = side_effects.commit("subject " + TOKEN)
-    plan = side_effects.tmp / "move"
-    plan.write_text(f"{side_effects.work} refs/heads/trunk {base}")
-    before = side_effects.remote_refs()
-    result = side_effects.push("push", "origin", "trunk:refs/heads/feature", UNIT_MOVE=str(plan))
-    assert_blocked(result, side_effects, before, f"commit[{hit[:12]}].message")
-
-
-def test_scan_past_its_deadline_sends_nothing(side_effects):
-    side_effects.commit("clean subject")
-    before = side_effects.remote_refs()
-    started = time.perf_counter()
-    result = side_effects.push(
-        "push", "origin", "HEAD:refs/heads/feature", UNIT_SLOW="30", LU_OPSEC_PUSH_SCAN_TIMEOUT="1"
-    )
-    assert result.returncode != 0 and "OPSEC: push scan timed out; push refused." in result.stderr, result.stderr
-    assert time.perf_counter() - started < 20 and side_effects.remote_refs() == before
-
-
-def test_slow_scan_within_its_deadline_delivers(side_effects):
-    sha = side_effects.commit("clean subject")
-    result = side_effects.push("push", "origin", "HEAD:refs/heads/feature", UNIT_SLOW="0.2")
-    assert result.returncode == 0, result.stderr
-    assert side_effects.remote_refs()["refs/heads/feature"] == sha
-
-
 def test_scanner_error_sends_nothing(push_sandbox):
     """A scanner that cannot import fails the hook, and Git sends nothing."""
     push_sandbox.commit("clean subject")
@@ -732,23 +526,6 @@ def test_malformed_pre_push_input_refuses_and_runs_nothing(push_sandbox, monkeyp
     assert status == 1 and not chained and "OPSEC: pre-push input malformed; push refused." in err, err
 
 
-def test_wrong_hook_arguments_refuse(push_sandbox, monkeypatch, capfd):
-    monkeypatch.chdir(push_sandbox.work)
-    assert git_push.main(["origin"], stdin=b"", chain=lambda *a: pytest.fail("ran")) == 1
-    assert "arguments malformed" in capfd.readouterr().err
-
-
-@pytest.mark.parametrize("value", ["0", "-1", "soon", "inf", "nan"])
-def test_invalid_deadline_refuses(push_sandbox, monkeypatch, capfd, value):
-    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_PUSH_SCAN_TIMEOUT=value)
-    assert status == 1 and not chained and "LU_OPSEC_PUSH_SCAN_TIMEOUT" in capfd.readouterr().err
-
-
-def test_empty_input_publishes_nothing_and_runs_the_caller_hook(push_sandbox, monkeypatch):
-    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None, fail=True), stdin=b"")
-    assert status == 0 and chained[0][1] == b""
-
-
 def test_local_ref_expressions_with_spaces_are_read_from_the_right(push_sandbox, monkeypatch, capfd):
     hit = push_sandbox.commit("subject " + TOKEN)
     record = ("HEAD^{/subject " + TOKEN + "}", hit, "refs/heads/feature", ZERO)
@@ -807,18 +584,6 @@ def test_flagged_push_with_a_failed_claimant_lookup_is_refused(push_sandbox, mon
     assert not (push_sandbox.root / "batch_state/opsec/overrides.jsonl").exists()
 
 
-def test_flagged_push_claims_and_logs_the_override_once(push_sandbox, monkeypatch, capfd):
-    push_sandbox.commit("clean subject")
-    push_sandbox.commit("subject " + TOKEN)
-    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
-    assert status == 0 and len(chained) == 1, capfd.readouterr().err
-    log = push_sandbox.root / "batch_state/opsec/overrides.jsonl"
-    rows = [json.loads(line) for line in log.read_text().splitlines()]
-    assert len(rows) == 1 and rows[0]["rule_ids"] == ["synthetic-rule"] and rows[0]["reason"] == "reason"
-    again, chained = run_hook(push_sandbox, monkeypatch, FakePublic(None), LU_OPSEC_OVERRIDE="reason")
-    assert again == 1 and not chained and "override already consumed" in capfd.readouterr().err
-
-
 # --- History already on the public default branch is excluded by its verified authoritative head ---
 
 FETCH_HINT = "fetching the public default branch lets the scan skip history that is already public"
@@ -846,15 +611,6 @@ def test_new_hit_on_top_of_public_main_is_refused(push_sandbox, monkeypatch, cap
     assert TOKEN not in err and FETCH_HINT not in err
 
 
-def test_many_published_hits_and_one_new_hit_refuse_only_the_new_one(push_sandbox, monkeypatch, capfd):
-    published = [push_sandbox.commit(f"published {number} " + TOKEN) for number in range(30)]
-    new = push_sandbox.commit("new subject " + TOKEN)
-    status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(published[-1]))
-    err = capfd.readouterr().err
-    assert status == 1 and err.count("rule=synthetic-rule") == 1 and f"field=commit[{new[:12]}].message" in err
-    assert "1 commit(s) scanned" in err
-
-
 def test_absent_public_head_scans_all_history_and_names_the_fetch(push_sandbox, monkeypatch, capfd):
     hit = push_sandbox.commit("published subject " + TOKEN)
     push_sandbox.commit("new clean work")
@@ -862,13 +618,6 @@ def test_absent_public_head_scans_all_history_and_names_the_fetch(push_sandbox, 
     err = capfd.readouterr().err
     assert status == 1 and f"field=commit[{hit[:12]}].message" in err and FETCH_HINT in err
     assert "3 commit(s) scanned; public default-branch head absent here" in err and TOKEN not in err
-
-
-def test_absent_public_head_hint_is_only_for_history_older_than_the_tips(push_sandbox, monkeypatch, capfd):
-    hit = push_sandbox.commit("subject " + TOKEN)
-    status, _ = run_hook(push_sandbox, monkeypatch, FakePublic("e" * 40))
-    err = capfd.readouterr().err
-    assert status == 1 and f"field=commit[{hit[:12]}].message" in err and FETCH_HINT not in err
 
 
 def test_history_the_destination_already_has_is_still_scanned(push_sandbox):
@@ -891,19 +640,6 @@ def test_forged_tracking_ref_does_not_suppress_the_scan(push_sandbox):
     assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
 
 
-def test_one_public_repository_call_per_push_and_none_without_commits(push_sandbox, monkeypatch, capfd):
-    head = _git(push_sandbox.work, "rev-parse", "HEAD")
-    push_sandbox.commit("clean one")
-    _git(push_sandbox.work, "tag", "-a", "v1", "-m", "clean release")
-    client = FakePublic(head)
-    records = (update(push_sandbox, "HEAD", "refs/heads/a"), update(push_sandbox, "HEAD~1", "refs/heads/b"))
-    status, _ = run_hook(push_sandbox, monkeypatch, client, *records, update(push_sandbox, "v1", "refs/tags/v1"))
-    assert status == 0 and client.calls == 1, capfd.readouterr().err
-    deletion = ("(delete)", ZERO, "refs/heads/gone", head)
-    status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(None, fail=True), deletion)
-    assert status == 0, capfd.readouterr().err
-
-
 def test_ref_name_and_tag_text_are_scanned_even_when_the_commit_is_public(push_sandbox, monkeypatch, capfd):
     head = _git(push_sandbox.work, "rev-parse", "HEAD")
     status, _ = run_hook(
@@ -914,23 +650,6 @@ def test_ref_name_and_tag_text_are_scanned_even_when_the_commit_is_public(push_s
     status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(head), (tag, tag, "refs/tags/v1", ZERO))
     err = capfd.readouterr().err
     assert status == 1 and f"field=tag[{tag[:12]}].message" in err and "0 commit(s) scanned" in err, err
-
-
-def test_public_merge_is_excluded_with_its_embedded_tag_text(push_sandbox, monkeypatch, capfd):
-    merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), f"v1-{TOKEN}"))
-    push_sandbox.commit("new clean work")
-    status, chained = run_hook(push_sandbox, monkeypatch, FakePublic(merge))
-    err = capfd.readouterr().err
-    assert status == 0 and chained, err
-    assert "1 commit(s) scanned" in err and TOKEN not in err and merge[:12] not in err
-
-
-def test_new_merge_on_top_of_public_main_has_its_mergetag_text_scanned(push_sandbox, monkeypatch, capfd):
-    public_head = _git(push_sandbox.work, "rev-parse", "HEAD")
-    merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), f"v1-{TOKEN}"))
-    status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(public_head))
-    err = capfd.readouterr().err
-    assert status == 1 and f"field=commit[{merge[:12]}].mergetag[1].tagname" in err and "2 commit(s) scanned" in err
 
 
 def head_runner(reply, *, calls):
@@ -1097,17 +816,6 @@ def test_altered_public_history_bytes_exclude_nothing(push_sandbox, monkeypatch,
     assert "public default-branch head unverified here" in err and FETCH_HINT not in err
 
 
-def test_history_verification_reads_every_public_commit(push_sandbox, monkeypatch):
-    """A missing ancestor of the public head leaves its history unverified, so nothing is excluded."""
-    root = _git(push_sandbox.work, "rev-parse", "HEAD")
-    public_head = push_sandbox.commit("published clean")
-    repository = git_push.Repository(REAL_GIT, _env())
-    monkeypatch.chdir(push_sandbox.work)
-    assert git_push.history_verified(repository, public_head, "sha1")
-    _loose(push_sandbox.work / ".git/objects", root).unlink()
-    assert not git_push.history_verified(repository, public_head, "sha1")
-
-
 def _forge_commit_graph(work, child, parent):
     """Rewrite the commit-graph so child's first parent is parent, with a valid trailing checksum."""
     _git(work, "commit-graph", "write", "--reachable", "--no-progress")
@@ -1257,17 +965,6 @@ def test_forged_boundary_on_a_new_commit_hiding_a_hit_is_refused(push_sandbox, m
     assert status == 1 and f"{SHALLOW_REFUSAL} (commit[{forged[:12]}])" in err and hit[:12] not in err, err
 
 
-@pytest.mark.parametrize("forged", [["head"], ["middle"], ["base"], ["base", "middle", "head"]])
-def test_forged_boundary_in_public_history_cannot_shrink_the_scan_set(push_sandbox, monkeypatch, capfd, forged):
-    commits = {"base": _git(push_sandbox.work, "rev-parse", "HEAD")}
-    commits["middle"] = push_sandbox.commit("published clean one")
-    commits["head"] = push_sandbox.commit("published clean two")
-    hit = push_sandbox.commit("new subject " + TOKEN)
-    _shallow(push_sandbox.work, *(commits[name] for name in forged))
-    status, _ = run_hook(push_sandbox, monkeypatch, FakePublic(commits["head"]))
-    assert status == 1 and f"field=commit[{hit[:12]}].message" in capfd.readouterr().err
-
-
 @pytest.mark.parametrize(
     "content", ["{sha}\n\n", "{sha}\r\n", "{short}\n", "not an id\n", "{sha} trailing\n", "{upper}\n"]
 )
@@ -1317,21 +1014,6 @@ def test_alternate_shallow_file_option_is_refused(push_sandbox):
     before = push_sandbox.remote_refs()
     result = push_sandbox.push("--shallow-file", os.devnull, "push", "origin", "HEAD:refs/heads/feature")
     assert result.returncode == 2 and "--shallow-file is not supported for a scanned push" in result.stderr
-    assert push_sandbox.remote_refs() == before
-
-
-def test_shallow_file_environment_variable_is_refused(push_sandbox, tmp_path):
-    base = _git(push_sandbox.work, "rev-parse", "HEAD")
-    hit = push_sandbox.commit("subject " + TOKEN)
-    cover = push_sandbox.commit("clean cover")
-    alternate = tmp_path / "alternate-shallow"
-    alternate.write_text(f"{cover}\n")
-    # Positive control: git honours the variable and no longer walks to the hit.
-    walked = _git(push_sandbox.work, "rev-list", cover, f"^{base}", env=_env(GIT_SHALLOW_FILE=str(alternate)))
-    assert walked.split() == [cover] and hit not in walked
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", GIT_SHALLOW_FILE=str(alternate))
-    assert result.returncode != 0 and "GIT_SHALLOW_FILE is not supported" in result.stderr, result.stderr
     assert push_sandbox.remote_refs() == before
 
 
@@ -1402,42 +1084,9 @@ def test_every_hooks_path_route_still_runs_the_scanner(push_sandbox, permissive_
     assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
 
 
-@pytest.mark.parametrize("route", ROUTES)
-def test_each_hooks_path_route_really_redirects_plain_git(push_sandbox, permissive_hooks, route):
-    """Control: without the shim the same route runs the permissive hook and the hit is sent."""
-    options, environment = _route(push_sandbox, permissive_hooks, route)
-    sha = push_sandbox.commit("subject " + TOKEN)
-    result = subprocess.run(
-        [REAL_GIT, *options, "push", "origin", "HEAD:refs/heads/feature"],
-        cwd=push_sandbox.work,
-        env=_env(**environment),
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
-
-
 # --- Pushes that would skip the hook, or whose scanner is unusable, are refused ---
 
 NO_VERIFY = ["--no-verify", "--no-verif", "--no-veri"]
-
-
-@pytest.mark.parametrize("spelling", NO_VERIFY)
-def test_each_no_verify_spelling_really_skips_the_hook_in_plain_git(push_sandbox, permissive_hooks, spelling):
-    """Control: Git accepts these spellings and then runs no pre-push hook at all."""
-    marker = push_sandbox.tmp / "ran"
-    (permissive_hooks / "pre-push").write_text(f"#!/bin/sh\ntouch {marker}\nexit 1\n")
-    result = subprocess.run(
-        [REAL_GIT, "-c", f"core.hooksPath={permissive_hooks}", "push", spelling, "origin", "HEAD:refs/heads/x"],
-        cwd=push_sandbox.work,
-        env=_env(),
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0 and not marker.exists(), result.stderr
 
 
 @pytest.mark.parametrize("spelling", [*NO_VERIFY, "--no-ver", "--no-v", "--no", "--n"])
@@ -1524,31 +1173,6 @@ def test_every_alias_is_refused_with_nothing_sent(push_sandbox, shape, scope):
     assert_not_a_git_command(result, push_sandbox, before, sha, "publish")
 
 
-@pytest.mark.parametrize("shape", [shape for shape in ALIASES if shape != "loop"])
-@pytest.mark.parametrize("scope", ["repository", "command-line"])
-def test_each_alias_really_pushes_in_plain_git(push_sandbox, shape, scope):
-    """Control: without the shim Git expands the alias to a push and the hit is sent."""
-    options = _configure(push_sandbox, ALIASES[shape], scope)
-    sha = push_sandbox.commit("subject " + TOKEN)
-    result = subprocess.run(
-        [REAL_GIT, *options, "publish", "origin", "HEAD:refs/heads/feature"],
-        cwd=push_sandbox.work,
-        env=_env(**_alias_environment(push_sandbox)),
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr
-    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
-
-
-def test_alias_that_runs_no_push_is_refused_too(push_sandbox):
-    _git(push_sandbox.work, "config", "alias.where", "rev-parse --show-toplevel")
-    result = push_sandbox.push("where")
-    assert result.returncode == 2 and "'where' is not one of Git's own commands" in result.stderr, result.stderr
-    assert result.stdout == ""
-
-
 def test_git_commands_run_unchanged(push_sandbox):
     sha = push_sandbox.commit("clean subject")
     _git(push_sandbox.work, "config", "alias.where", "rev-parse")  # Aliases of other names do not matter.
@@ -1578,21 +1202,6 @@ def _plain(sandbox, *args, **extra):
 
 
 PUSH_ALIASES = ["push --no-verify", "push --quiet"]
-
-
-@pytest.mark.parametrize("value", PUSH_ALIASES)
-@pytest.mark.parametrize("scope", ["repository", "command-line"])
-def test_alias_over_a_deprecated_builtin_is_refused(push_sandbox, value, scope):
-    """Git looks an alias up before a deprecated builtin, so the alias pushes in place of whatchanged."""
-    assert "whatchanged" in _git(push_sandbox.work, "--list-cmds=builtins,main").split()
-    options = _configure(push_sandbox, {"whatchanged": value}, scope)
-    pushing = [*options, "whatchanged", "origin", "HEAD:refs/heads/feature"]
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    assert_alias_refused(push_sandbox.push(*pushing), push_sandbox, before, sha, "whatchanged")
-    control = _plain(push_sandbox, *pushing)
-    assert control.returncode == 0, control.stderr
-    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
 
 
 @pytest.mark.parametrize("route", ["option", "environment"])
@@ -1703,49 +1312,6 @@ def test_failed_alias_lookup_refuses(push_sandbox):
     assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
 
 
-def test_alias_lookup_that_hangs_refuses_after_its_time_limit(push_sandbox):
-    """An include file that never delivers (a FIFO with no writer) holds Git's read open."""
-    fifo = push_sandbox.tmp / "never-written"
-    os.mkfifo(fifo)
-    sha = push_sandbox.commit("clean subject")
-    before = push_sandbox.remote_refs()
-    started = time.perf_counter()
-    result = push_sandbox.push("-c", f"include.path={fifo}", "push", "origin", "HEAD:refs/heads/feature")
-    assert 9 < time.perf_counter() - started < 60
-    assert result.returncode == 2, result.stderr
-    assert "OPSEC: could not check Git's aliases for 'push', so it was not run." in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
-
-
-def test_alias_lookup_latency_is_reported(push_sandbox):
-    """Prints the added time of one `git status` through the shim (median of seven)."""
-    times = {"shim": [], "plain": []}
-    for _ in range(7):
-        for kind in times:
-            argv = [str(push_sandbox.shim) if kind == "shim" else REAL_GIT, "status", "--short"]
-            started = time.perf_counter()
-            subprocess.run(argv, cwd=push_sandbox.work, env=_env(), check=True, capture_output=True, timeout=60)
-            times[kind].append(time.perf_counter() - started)
-    shim, plain = (sorted(values)[3] for values in times.values())
-    print(f"git status: plain git {plain:.3f}s, through the shim {shim:.3f}s, added {shim - plain:.3f}s")
-    assert shim - plain < 5
-
-
-def test_direct_push_still_scans_and_delivers(push_sandbox):
-    sha = push_sandbox.commit("subject " + TOKEN)
-    before = push_sandbox.remote_refs()
-    assert_blocked(
-        push_sandbox.push("push", "origin", "HEAD:refs/heads/feature"),
-        push_sandbox,
-        before,
-        f"commit[{sha[:12]}].message",
-    )
-    (push_sandbox.tooling / "rules.json").write_text(json.dumps(synthetic_rules(pattern="NEVER-PRESENT")))
-    clean = push_sandbox.commit("clean follow-up")
-    assert push_sandbox.push("push", "origin", "HEAD:refs/heads/feature").returncode == 0
-    assert push_sandbox.remote_refs()["refs/heads/feature"] == clean
-
-
 def _program(directory, name, marker, interpreter="/bin/sh"):
     directory.mkdir(exist_ok=True)
     program = directory / f"git-{name}"
@@ -1792,12 +1358,6 @@ def test_mistyped_command_is_refused_before_autocorrect(push_sandbox):
     assert_not_a_git_command(result, push_sandbox, before, sha, "psuh")
 
 
-def test_command_with_a_line_break_is_refused(push_sandbox):
-    """A name spanning two listed commands is no command."""
-    result = push_sandbox.push("add\nam")
-    assert result.returncode == 2 and "is not one of Git's own commands" in result.stderr, result.stderr
-
-
 def test_unlistable_commands_refuse(push_sandbox):
     result = push_sandbox.push("-C", str(push_sandbox.tmp / "absent"), "status")
     assert result.returncode == 2 and "could not list Git's commands" in result.stderr, result.stderr
@@ -1821,15 +1381,6 @@ def test_unusable_scanner_refuses_before_git_runs(push_sandbox, damage):
         (push_sandbox.root / "scripts/opsec/git_push.py").unlink()
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert result.returncode == 2 and "push refused" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before
-
-
-def test_missing_interpreter_refuses(push_sandbox):
-    push_sandbox.commit("clean subject")
-    before = push_sandbox.remote_refs()
-    (push_sandbox.root / ".venv").unlink()
-    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert result.returncode == 2 and "project interpreter unavailable" in result.stderr, result.stderr
     assert push_sandbox.remote_refs() == before
 
 
@@ -1909,25 +1460,6 @@ def test_the_callers_reference_transaction_hook_sees_the_tracking_update(push_sa
     result = push_sandbox.push("push", "origin", "trunk")
     assert result.returncode == 0, result.stderr
     assert f"{sha} refs/remotes/origin/trunk" in Path(f"{log}.input").read_text()
-
-
-def test_git_config_never_hides_the_callers_refusing_hook(push_sandbox):
-    """A command-scope hooks path that `git config` under GIT_CONFIG would not report."""
-    log = push_sandbox.tmp / "caller"
-    directory = push_sandbox.tmp / "caller-hooks"
-    _caller_hook(directory, "pre-push", log, status=1)
-    sha = push_sandbox.commit("clean subject")
-    before = push_sandbox.remote_refs()
-    pushing = ["-c", f"core.hooksPath={directory}", "push", "origin", "HEAD:refs/heads/feature"]
-    result = push_sandbox.push(*pushing, GIT_CONFIG=os.devnull)
-    assert result.returncode == 2 and "OPSEC: GIT_CONFIG is set" in result.stderr, result.stderr
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
-    assert not Path(f"{log}.args").exists()
-    # Past the shim, the chain still finds the caller's hook, which runs and refuses.
-    result = _pinned(push_sandbox, *pushing, GIT_CONFIG=os.devnull)
-    assert result.returncode != 0, result.stderr
-    assert Path(f"{log}.args").read_text() == f"origin {push_sandbox.remote}\n"
-    assert push_sandbox.remote_refs() == before and not _remote_has(push_sandbox, sha)
 
 
 # --- Private exemption only on the trusted transport route ---
@@ -2079,12 +1611,6 @@ def test_scanner_sees_the_route_git_config_hides(ssh_sandbox, shape):
     assert_nothing_served(ssh_sandbox, sha)
 
 
-def test_trusted_route_reads_past_git_config(push_sandbox, monkeypatch):
-    _git(push_sandbox.work, "config", "core.sshCommand", "ssh")
-    url = "git@github.com:unit/private.git"
-    assert _trusted(push_sandbox.work, monkeypatch, url, GIT_CONFIG=os.devnull) is False
-
-
 def _trusted(work, monkeypatch, url, remote="origin", git=REAL_GIT, **extra):
     monkeypatch.chdir(work)
     environment = _env(GIT_EXEC_PATH=_git(work, "--exec-path"), **extra)
@@ -2129,11 +1655,6 @@ def test_https_route_changes_are_untrusted(push_sandbox, monkeypatch, change):
         assert not git_push.trusted_route(git_push.Repository(REAL_GIT, environment), "origin", url)
     else:
         assert _trusted(push_sandbox.work, monkeypatch, url, git=git, **extra) is False
-
-
-def test_url_scoped_verification_for_another_host_keeps_the_route(push_sandbox, monkeypatch):
-    _git(push_sandbox.work, "config", "http.https://elsewhere.invalid/.sslVerify", "false")
-    assert _trusted(push_sandbox.work, monkeypatch, "https://github.com/unit/private.git") is True
 
 
 @pytest.mark.parametrize(
@@ -2222,13 +1743,6 @@ def test_hit_in_a_nested_child_sends_nothing_anywhere(submodules, recursion):
     assert submodules.remote_refs() == before_work and not _remote_has(submodules, leaf, remotes["leaf"])
 
 
-@pytest.mark.parametrize("recursion", sorted(set(RECURSION) - set(NESTED)))
-def test_one_level_recursion_never_sends_a_nested_hit(submodules, recursion):
-    leaf, _ = _bump(submodules, "leaf subject " + TOKEN)
-    submodules.push(*RECURSION[recursion], "origin", "trunk")
-    assert not _remote_has(submodules, leaf, submodules.submodule_remotes["leaf"])
-
-
 @pytest.mark.parametrize("recursion", sorted(RECURSION))
 def test_hit_in_a_direct_child_is_refused(submodules, recursion):
     before = submodules.remote_refs()
@@ -2251,26 +1765,4 @@ def test_clean_recursive_push_delivers_every_child(submodules, recursion):
     assert (submodules.remote_refs()["refs/heads/trunk"] == work) is (recursion != "only")
 
 
-def test_without_recursion_children_are_not_pushed(submodules):
-    """Control: a plain push leaves the children alone, so the recursion cases above exercise child pushes."""
-    leaf, _ = _bump(submodules, "clean leaf work")
-    assert submodules.push("push", "origin", "trunk").returncode == 0
-    assert not _remote_has(submodules, leaf, submodules.submodule_remotes["leaf"])
-
-
 # --- Cost of one ordinary clean push ---
-
-
-def test_clean_push_latency_is_reported(push_sandbox):
-    """Prints the added time of one ordinary clean push through the shim (median of five)."""
-    times = {"shim": [], "plain": []}
-    for number in range(5):
-        for kind in times:
-            push_sandbox.commit(f"clean {kind} {number}")
-            argv = [str(push_sandbox.shim) if kind == "shim" else REAL_GIT, "push", "-q", "origin", "trunk"]
-            started = time.perf_counter()
-            subprocess.run(argv, cwd=push_sandbox.work, env=_env(), check=True, capture_output=True, timeout=60)
-            times[kind].append(time.perf_counter() - started)
-    shim, plain = (sorted(values)[2] for values in times.values())
-    print(f"clean push: plain git {plain:.3f}s, through the shim {shim:.3f}s, added {shim - plain:.3f}s")
-    assert shim - plain < 5

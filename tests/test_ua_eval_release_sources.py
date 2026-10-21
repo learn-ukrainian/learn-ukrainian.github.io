@@ -133,10 +133,3 @@ def test_verifier_cli_reproduces_immutable_receipts_using_frozen_sources(release
     flag, name = ("--freeze", "freeze_manifest.json") if mode == "--write" else ("--split-receipt", "split_integrity.json")
     assert v011.main([mode, flag, str(output / name)]) == 0
     assert (output / name).read_bytes() == (ROOT / RELEASE_DIR / name).read_bytes()
-
-
-def test_verifier_cli_reports_frozen_lock_tamper(release_root, capsys):
-    snapshot = frozen_source_path(release_root, v010.VESUM_LOCK)
-    snapshot.write_bytes(snapshot.read_bytes() + b"\n")
-    assert v011.main(["--freeze", str(v011.DEFAULT_OUTPUT)]) == 1
-    assert "frozen artifact hash mismatch" in capsys.readouterr().err

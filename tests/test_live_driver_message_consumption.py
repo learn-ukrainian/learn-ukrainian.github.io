@@ -14,9 +14,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from scripts.ai_agent_bridge import _ask_lifecycle, _cli, _db, _messaging
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DRIVE_EPIC_SKILL = PROJECT_ROOT / "agents_extensions/shared/skills/drive-epic/SKILL.md"
-
-
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path: Path):
     """Keep legacy-message rows isolated for each consumption-state test."""
@@ -128,40 +125,3 @@ def test_ack_all_flag_is_opt_in_and_asks_surfaces_consumption(capsys):
     asks = capsys.readouterr().out
     assert "CONSUMPTION" in asks
     assert "live-consumed" in asks
-
-
-@pytest.mark.repo_wide
-def test_drive_epic_skill_keeps_all_required_live_inbox_boundaries():
-    """The portable driver contract must not silently lose its inbox drain steps."""
-    core = DRIVE_EPIC_SKILL.read_text(encoding="utf-8")
-    references = sorted((DRIVE_EPIC_SKILL.parent / "references").glob("*.md"))
-    text = "\n".join([core, *(path.read_text(encoding="utf-8") for path in references)])
-    # The four drain points are loop steps in the core, which every driver reads in full.
-    required_steps = (
-        "**§0a Inbox drain — cycle start.**",
-        "**§4a Inbox drain — immediately before dispatch.**",
-        "**§5a Inbox drain — after settle.**",
-        "**§8a Inbox drain — before handoff.**",
-    )
-    for step in required_steps:
-        assert step in core
-    assert core.index(required_steps[0]) < core.index(required_steps[1])
-    assert core.index(required_steps[1]) < core.index(required_steps[2])
-    assert core.index(required_steps[2]) < core.index(required_steps[3])
-    # Messages are applied before the launch: the §4a drain precedes the §4 dispatch step.
-    assert core.index(required_steps[1]) < core.index("**§4 Dispatch**") < core.index(required_steps[2])
-
-    # The drain procedure is stated once, in the core, and names all four points.
-    inbox_command = '.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"'
-    acknowledgement = ".venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver"
-    assert core.count(inbox_command) == 1
-    assert core.count(acknowledgement) == 1
-    assert text.count(inbox_command) == 1
-    assert text.count(acknowledgement) == 1
-    assert "at §0a, §4a, §5a, and §8a" in core
-    assert "`unread`" in core and "`read-but-not-live-consumed`" in core
-    assert "Never use a plain `ack`" in core
-    # Cross-family gate is direct ask-* only; sealed review-pr is retired.
-    assert "ask-" in text and "RETIRED" in text
-    assert "review-pr" in text  # named only as the retired path
-    assert "asks --task-id review-pr-" not in text

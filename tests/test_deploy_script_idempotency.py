@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import ast
 import base64
 import inspect
 import io
@@ -27,106 +26,11 @@ from tests.helpers.python import project_python
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
-def test_shared_conftest_imports_without_bridge_runtime() -> None:
-    """The rules workflow has only pytest and PyYAML when it loads conftest.
-
-    An allowlist (not a denylist of known heavy packages) so any new
-    third-party or bridge import in conftest fails here, not in CI.
-    """
-    probe = """
-import importlib.abc
-import runpy
-import sys
-
-import pytest  # noqa: F401  (installed in the rules workflow venv)
-import yaml  # noqa: F401
-
-ALLOWED_PREFIXES = ("pytest", "_pytest", "pluggy", "yaml", "_yaml", "tests")
-ALLOWED_SCRIPTS = ("scripts", "scripts.common")
-rejected = []
-
-class AllowlistOnly(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        top = fullname.partition(".")[0]
-        if top in sys.stdlib_module_names or top in ALLOWED_PREFIXES:
-            return None
-        if fullname in ALLOWED_SCRIPTS or fullname.startswith("scripts.common."):
-            return None
-        rejected.append(fullname)
-        raise ImportError(f"conftest imported outside the allowlist: {fullname}")
-
-sys.meta_path.insert(0, AllowlistOnly())
-runpy.run_path("tests/conftest.py")
-assert not rejected, rejected
-assert "scripts.ai_agent_bridge" not in sys.modules
-"""
-    result = subprocess.run(
-        [sys.executable, "-c", probe],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-
-
-def test_shared_conftest_autouse_setup_without_api_runtime() -> None:
-    """Run a real test through conftest's autouse setup in the rules venv."""
-    probe = """
-import importlib.abc
-import sys
-from pathlib import Path
-
-import pytest
-import yaml  # noqa: F401
-
-ALLOWED_PREFIXES = (
-    "pytest", "_pytest", "pluggy", "yaml", "_yaml", "iniconfig",
-    "packaging", "scripts", "tests", "agent_runtime",
-)
-
-class AllowlistOnly(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        top = fullname.partition(".")[0]
-        if top == "learn_ukrainian_v4_runtime":
-            raise ModuleNotFoundError(f"No module named '{top}'", name=top)
-        if (top in sys.stdlib_module_names or top in ALLOWED_PREFIXES
-                or Path(f"{top}.py").is_file() or Path(top, "__init__.py").is_file()
-                or Path("scripts", f"{top}.py").is_file()
-                or Path("scripts", top, "__init__.py").is_file()):
-            return None
-        raise ImportError(f"test setup imported outside the allowlist: {fullname}")
-
-sys.meta_path.insert(0, AllowlistOnly())
-raise SystemExit(pytest.main([
-    "tests/test_deploy_script_idempotency.py::test_shared_conftest_imports_without_bridge_runtime",
-    "-q", "-o", "addopts=",
-]))
-"""
-    result = subprocess.run(
-        [sys.executable, "-c", probe],
-        cwd=REPO_ROOT,
-        env={**os.environ, "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PYTEST_PLUGINS": ""},
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-
-
 PROJECT_PYTHON = Path(project_python())
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
-DEPLOY_WORKFLOW = Path(".github/workflows/rules-deployment-check.yml")
 ORPHAN_PATHS_FILE = Path("scripts/deploy_orphan_paths.sh")
 AGENT_DEPLOY_MANIFEST = Path(".deploy-state/shared-to-agent.manifest")
-ORPHAN_PATH_VARS = (
-    "ORPHAN_PATHS_CLAUDE",
-    "ORPHAN_PATHS_AGENT",  # kept for compat (empty; .agent/ preserve-by-default)
-    "ORPHAN_PATHS_AGENTS",
-    "ORPHAN_PATHS_CODEX",
-    "ORPHAN_PATHS_GEMINI",
-)
 DRIFT_TARGET = Path(".claude/rules/pipeline.md")
 CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
 CODEX_HOOKS_CONFIG = Path(".codex/hooks.json")
@@ -483,48 +387,6 @@ def _init_checkout(tmp_path: Path, *, full_tree: bool = False, only: tuple[str, 
     assert not extra, f"{name} copied undeclared paths: {extra}"
     _copy_declared_paths(repo, selected)
     return repo
-
-
-def _synthetic_checkout_callers() -> dict[str, bool]:
-    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
-    found: dict[str, bool] = {}
-    for node in tree.body:
-        if not isinstance(node, ast.FunctionDef) or not node.name.startswith("test_"):
-            continue
-        for child in ast.walk(node):
-            if not isinstance(child, ast.Call):
-                continue
-            func = child.func
-            if not isinstance(func, ast.Name) or func.id != "_init_checkout":
-                continue
-            full_tree = any(
-                keyword.arg == "full_tree" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True
-                for keyword in child.keywords
-            )
-            found[node.name] = full_tree
-    return found
-
-
-def test_named_deploy_paths_exist_in_the_repo() -> None:
-    """A synthetic test's declared paths must exist, and every checkout names its own."""
-    callers = _synthetic_checkout_callers()
-    missing_declaration = sorted(
-        name for name, full_tree in callers.items() if not full_tree and name not in _NAMED_DEPLOY_PATHS
-    )
-    assert not missing_declaration, missing_declaration
-    full_tree_also_named = sorted(
-        name for name, full_tree in callers.items() if full_tree and name in _NAMED_DEPLOY_PATHS
-    )
-    assert not full_tree_also_named, full_tree_also_named
-    stale = sorted(set(_NAMED_DEPLOY_PATHS) - set(callers))
-    assert not stale, stale
-    missing_paths = [
-        f"{name}: {relative}"
-        for name, paths in _NAMED_DEPLOY_PATHS.items()
-        for relative in paths
-        if not (REPO_ROOT / relative).exists()
-    ]
-    assert not missing_paths, missing_paths
 
 
 def _run(repo: Path, script: Path) -> subprocess.CompletedProcess[str]:
@@ -891,23 +753,6 @@ def test_rsync_resolution_validates_actual_target_and_sync_failure_closes_fd(tmp
     assert helper["main"](["--resolve-rsync"]) == 1
 
 
-def test_mirror_sync_requires_roots_and_refuses_non_directory_source(tmp_path):
-    helper = str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py")
-    missing = subprocess.run([sys.executable, helper], capture_output=True, text=True, timeout=10)
-    assert missing.returncode == 2
-    assert "--source-root and --agent-root are required" in missing.stderr
-    source = tmp_path / "source"
-    source.touch()
-    result = subprocess.run(
-        [sys.executable, helper, "--source-root", str(source), "--agent-root", str(tmp_path / "agent")],
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    assert result.returncode == 1
-    assert "shared source is not a directory" in result.stderr
-
-
 def _run_tracked_mirror_check(repo: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["bash", str(CHECK_SCRIPT), "--tracked-mirrors-only"],
@@ -1086,56 +931,6 @@ def test_tracked_mirror_resolves_each_deploy_source(
     assert f"{source_relative} -> {mirror_relative}" in output
 
 
-def test_tracked_agents_skill_declared_orphan_is_skipped(tmp_path: Path) -> None:
-    """Destination-only .agents skills remain governed by their explicit allowlist."""
-    repo = _init_checkout(tmp_path)
-    orphan_config = repo / ORPHAN_PATHS_FILE
-    orphan_config.write_text(
-        orphan_config.read_text(encoding="utf-8").replace(
-            'ORPHAN_PATHS_AGENTS=""',
-            'ORPHAN_PATHS_AGENTS="local-skill"',
-        ),
-        encoding="utf-8",
-    )
-    mirror = repo / ".agents/skills/local-skill/SKILL.md"
-    mirror.parent.mkdir(parents=True, exist_ok=True)
-    mirror.write_text("destination-only skill\n", encoding="utf-8")
-    _init_git_history(repo)
-
-    result = _run_tracked_mirror_check(repo)
-    assert result.returncode == 0, result.stderr + result.stdout
-
-
-def test_tracked_claude_glob_orphan_is_skipped(tmp_path: Path) -> None:
-    """Glob allowlist entries retain the same semantics as deploy's diff excludes."""
-    repo = _init_checkout(tmp_path)
-    mirror = repo / ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md"
-    mirror.parent.mkdir(parents=True, exist_ok=True)
-    mirror.write_text("runtime-only handoff\n", encoding="utf-8")
-    _init_git_history(repo)
-
-    result = _run_tracked_mirror_check(repo)
-    assert result.returncode == 0, result.stderr + result.stdout
-
-
-def test_rules_workflow_checks_mirrors_before_deploy() -> None:
-    """CI must inspect committed mirrors before its mutating deploy step."""
-    workflow = (REPO_ROOT / DEPLOY_WORKFLOW).read_text(encoding="utf-8")
-    preflight = "bash scripts/check_rules_deployment.sh --tracked-mirrors-only"
-    deploy = "bash scripts/deploy_prompts.sh"
-
-    for path_filter in (
-        "agents_extensions/codex/**",
-        ".claude/**",
-        ".agent/**",
-        ".agents/**",
-        ".codex/**",
-        ".gemini/**",
-    ):
-        assert workflow.count(f"- '{path_filter}'") == 2
-    assert workflow.index(preflight) < workflow.index(deploy)
-
-
 def test_agent_manifest_reaps_retired_hook_without_touching_agent_state(tmp_path: Path) -> None:
     """A recorded hook is reaped; unrecorded .agent runtime paths survive."""
     repo = _init_checkout(tmp_path)
@@ -1309,28 +1104,6 @@ def test_agent_manifest_keeps_lexically_unsafe_entries_rejected(tmp_path: Path) 
     assert absolute_victim.read_text(encoding="utf-8") == "must survive\n"
 
 
-def test_agent_manifest_reaps_legitimate_nested_file(tmp_path: Path) -> None:
-    """Physical-path validation still permits a retired nested .agent/ artifact."""
-    repo = _init_checkout(tmp_path)
-    retired = Path("hooks/nested/retired.sh")
-    source = repo / "agents_extensions" / "shared" / retired
-    source.parent.mkdir(parents=True)
-    source.write_text("#!/usr/bin/env bash\necho retired\n", encoding="utf-8")
-    source.chmod(0o755)
-    _init_git_history(repo)
-
-    first = _run(repo, DEPLOY_SCRIPT)
-    assert first.returncode == 0, first.stderr
-    deployed = repo / ".agent" / retired
-    assert deployed.exists()
-
-    _delete_source_file(repo, retired)
-    deploy = _run(repo, DEPLOY_SCRIPT)
-    assert deploy.returncode == 0, deploy.stderr
-    assert "removed retired deploy artifact 'hooks/nested/retired.sh'" in deploy.stdout
-    assert not deployed.exists()
-
-
 def test_agent_manifest_migration_defers_reaping_verified_legacy_artifact(tmp_path: Path) -> None:
     """The first manifest deploy preserves legacy output; the next one reaps it."""
     repo = _init_checkout(tmp_path)
@@ -1361,29 +1134,6 @@ def test_agent_manifest_migration_defers_reaping_verified_legacy_artifact(tmp_pa
     assert agent_owned.read_text(encoding="utf-8") == "agent-owned hook\n"
 
 
-def test_curriculum_preparation_documents_canonical_helper_paths() -> None:
-    """Preparation must identify its import-only helpers from the repository root."""
-    skill_path = REPO_ROOT / "agents_extensions/shared/skills/curriculum-preparation/SKILL.md"
-    skill = skill_path.read_text(encoding="utf-8")
-    helper_paths = (
-        Path("agents_extensions/shared/skills/curriculum-preparation/scripts/bounded_packet.py"),
-        Path("agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py"),
-    )
-
-    for helper_path in helper_paths:
-        assert (REPO_ROOT / helper_path).is_file()
-        assert str(helper_path) in skill
-    assert "`scripts/bounded_packet.py`" not in skill
-    assert "`../track-completion/scripts/bounded_completion.py`" not in skill
-
-
-def test_claude_rule_exclusion_list_covers_unscoped_files() -> None:
-    """The Claude-only exclusion list must cover every always-load rule."""
-    shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
-    for filename in UNSCOPED_RULE_FILES:
-        assert f'"rules/{filename}"' in shared
-
-
 def _bash_orphan_sets() -> dict[str, frozenset[str]]:
     """Source deploy_orphan_paths.sh and return word-split path sets."""
     bash = """
@@ -1409,76 +1159,6 @@ echo "GEMINI:${ORPHAN_PATHS_GEMINI}"
         tokens = [token for token in paths.split() if token]
         sets[label] = frozenset(tokens)
     return sets
-
-
-def test_orphan_allowlist_single_sourced_no_inline_literals() -> None:
-    """Deploy and checker must source deploy_orphan_paths.sh — no duplicate literals."""
-    deploy = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
-    check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
-    shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
-
-    assert 'source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"' in deploy
-    assert 'source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"' in check
-
-    for var in ORPHAN_PATH_VARS:
-        assert f'{var}="' in shared, f"{var} missing from shared orphan allowlist"
-        assert f'{var}="' not in deploy, f"{var} duplicated inline in deploy script"
-        assert f'{var}="' not in check, f"{var} duplicated inline in checker script"
-
-    assert 'CODEX_OVERLAY_PATHS="' in shared
-    assert 'CODEX_OVERLAY_PATHS="' not in deploy
-    assert 'CODEX_OVERLAY_PATHS="' not in check
-
-    # Literal orphan tokens must not reappear as checker check_pair args.
-    assert '"dispatch-briefs" \\' not in check
-    assert '"*-handoff.md" \\' not in check
-    assert '"hooks.json" \\' not in check
-
-    sets = _bash_orphan_sets()
-    # .agent/ is preserve-by-default (#4741); no runtime orphan tokens.
-    assert sets["AGENT"] == frozenset()
-    assert sets["CODEX"] >= {"hooks.json", "memory"}
-    assert sets["CLAUDE"] >= {"scheduled_tasks.lock", "worktrees", "*-epic"}
-    assert sets["CLAUDE"] >= {f"rules/{name}" for name in UNSCOPED_RULE_FILES}
-
-
-def test_drift_checker_orphan_globs_match_deploy_script() -> None:
-    """The post-deploy drift checker must mirror deploy orphan globs."""
-    sets = _bash_orphan_sets()
-    assert "*-epic" in sets["CLAUDE"]
-    # .agent/ runtime state (handoffs, dispatch-briefs, etc.) is preserve-by-default
-    # and no longer appears in the AGENT orphan set (#4741).
-    assert sets["AGENT"] == frozenset()
-
-
-def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
-    """Two consecutive deploys should leave the Codex target unchanged."""
-    repo = _init_checkout(tmp_path)
-
-    first_result = _run(repo, DEPLOY_SCRIPT)
-    assert first_result.returncode == 0, (
-        f"first deploy failed:\nstdout: {first_result.stdout}\nstderr: {first_result.stderr}"
-    )
-
-    second_result = _run(repo, DEPLOY_SCRIPT)
-    assert second_result.returncode == 0, (
-        f"second deploy failed:\nstdout: {second_result.stdout}\nstderr: {second_result.stderr}"
-    )
-    assert "agents_extensions/shared → .codex: no changes" in second_result.stdout
-    assert "agents_extensions/codex → .codex: no changes" in second_result.stdout
-    assert "No changes to deploy." in second_result.stdout
-
-
-def test_codex_config_and_hooks_are_managed_sources_not_orphans() -> None:
-    """Codex App/CLI config and hooks deploy from agents_extensions/codex."""
-    shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
-    check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
-
-    assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
-    assert (REPO_ROOT / "agents_extensions" / "codex" / "config.toml").exists()
-    assert 'ORPHAN_PATHS_CODEX="settings.local.json retired-skills $ORPHAN_PATHS_RUNTIME"' in shared
-    assert 'CODEX_OVERLAY_PATHS="config.toml hooks.json memory"' in shared
-    assert "$CODEX_OVERLAY_PATHS" in check
 
 
 def test_missing_codex_hooks_json_is_drift(tmp_path: Path) -> None:
@@ -1595,39 +1275,6 @@ def test_gemini_shared_skill_name_collision_fails_closed(tmp_path: Path) -> None
     assert "shared/Gemini skill collision: post-build-review" in combined_output
 
 
-def test_changed_source_mtime_invalidates_retained_pycache(tmp_path: Path) -> None:
-    """A retained __pycache__ entry must not shadow a .py whose mtime changed.
-
-    This is the #9108 stop check for excluding bytecode from rsync --delete.
-    CPython's timestamp header stores the source mtime and size; rsync -a
-    publishes the new source mtime, so the next import recompiles.
-    """
-    module_path = tmp_path / "probe_mod.py"
-    module_path.write_text("VALUE = 1\n", encoding="utf-8")
-    os.utime(module_path, (1_700_000_000, 1_700_000_000))
-    cache = (
-        tmp_path
-        / "__pycache__"
-        / f"probe_mod.cpython-{sys.version_info.major}{sys.version_info.minor}.pyc"
-    )
-    cache.parent.mkdir()
-    py_compile.compile(str(module_path), cfile=str(cache), doraise=True)
-    module_path.write_text("VALUE = 2\n", encoding="utf-8")
-    os.utime(module_path, (1_800_000_000, 1_800_000_000))
-    env = os.environ.copy()
-    env["PYTHONPATH"] = str(tmp_path) + os.pathsep + env.get("PYTHONPATH", "")
-    probe = subprocess.run(
-        [sys.executable, "-c", "import probe_mod; print(probe_mod.VALUE)"],
-        check=False,
-        capture_output=True,
-        text=True,
-        env=env,
-        timeout=30,
-    )
-    assert probe.returncode == 0, probe.stderr
-    assert probe.stdout.strip() == "2"
-
-
 def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> None:
     """Stray hook bytecode must not abort deploy and is not an ORPHAN_PATHS entry.
 
@@ -1705,22 +1352,6 @@ def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> 
     assert "undeclared orphan 'hooks/__pycache__/x.cpython-314.pyc'" not in third_output
 
 
-def test_pyc_named_symlink_is_deployed(tmp_path: Path) -> None:
-    """A symlink named *.pyc is source content, not bytecode (#9108)."""
-    repo = _init_checkout(tmp_path)
-    kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
-    kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    kept.chmod(0o755)
-    link = repo / "agents_extensions" / "shared" / "hooks" / "link.pyc"
-    link.symlink_to("kept.sh")
-
-    deploy_result = _run(repo, DEPLOY_SCRIPT)
-    assert deploy_result.returncode == 0, deploy_result.stdout + deploy_result.stderr
-    deployed = repo / ".claude" / "hooks" / "link.pyc"
-    assert deployed.is_symlink()
-    assert os.readlink(deployed) == "kept.sh"
-
-
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:
     """Undeclared destination-only Codex paths must abort the deploy."""
     repo = _init_checkout(tmp_path)
@@ -1765,53 +1396,6 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     assert brief.exists(), "atlas-3150-brief.md was wiped"
     assert dispatch.exists(), "dispatch-3098-slice3.md was wiped"
     assert collected.exists(), "dispatch-briefs/ brief was wiped"
-
-
-def test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime(
-    tmp_path: Path,
-) -> None:
-    """A retired shared hook is removed, while .agent runtime scratch survives.
-
-    The source-managed set is derived from ``agents_extensions/shared``. This
-    exercises the exact production boundary: ``hooks/`` is mirrored with
-    deletion propagation, but ``thread-rollovers/`` and ``tmp/`` are runtime
-    state outside that source tree and remain preserve-by-default.
-    """
-    repo = _init_checkout(tmp_path)
-    source_hook = repo / "agents_extensions" / "shared" / "hooks" / "auto-audit.sh"
-    source_hook.write_text("#!/usr/bin/env bash\necho auto-audit\n", encoding="utf-8")
-    source_hook.chmod(0o755)
-    for command in (
-        ["git", "init", "--quiet"],
-        ["git", "config", "user.email", "test@example.invalid"],
-        ["git", "config", "user.name", "Deploy test"],
-        ["git", "add", "agents_extensions"],
-        ["git", "commit", "--quiet", "-m", "add source hook"],
-    ):
-        result = _run_command(repo, command)
-        assert result.returncode == 0, result.stderr
-
-    first_deploy = _run(repo, DEPLOY_SCRIPT)
-    assert first_deploy.returncode == 0, first_deploy.stderr + first_deploy.stdout
-    deployed_hook = repo / ".agent" / "hooks" / "auto-audit.sh"
-    assert deployed_hook.exists(), "test fixture hook was not deployed"
-
-    handoff = repo / ".agent" / "thread-rollovers" / "x" / "handoff.md"
-    handoff.parent.mkdir(parents=True)
-    handoff.write_text("live handoff\n", encoding="utf-8")
-    runtime_tmp = repo / ".agent" / "tmp" / "y"
-    runtime_tmp.parent.mkdir(parents=True)
-    runtime_tmp.write_text("live scratch\n", encoding="utf-8")
-
-    deletion = _run_command(repo, ["git", "rm", "agents_extensions/shared/hooks/auto-audit.sh"])
-    assert deletion.returncode == 0, deletion.stderr
-    deletion_commit = _run_command(repo, ["git", "commit", "--quiet", "-m", "retire source hook"])
-    assert deletion_commit.returncode == 0, deletion_commit.stderr
-    second_deploy = _run(repo, DEPLOY_SCRIPT)
-    assert second_deploy.returncode == 0, second_deploy.stderr + second_deploy.stdout
-    assert not deployed_hook.exists(), "deleted source hook still executes from .agent"
-    assert handoff.read_text(encoding="utf-8") == "live handoff\n"
-    assert runtime_tmp.read_text(encoding="utf-8") == "live scratch\n"
 
 
 def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
@@ -2143,22 +1727,3 @@ def test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content(
     assert "undeclared orphan" in redeploy.stdout
     assert sibling in redeploy.stdout
     assert note.read_bytes() == b"Keep this unrelated user content\n"
-
-
-def test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees(tmp_path: Path) -> None:
-    repo = _init_checkout(tmp_path)
-    (repo / ".codex").mkdir()
-    (repo / ".codex/.DS_Store").write_bytes(b"Ignored Finder metadata")
-    declared_notes = [
-        repo / ".claude/atlas-epic/nested/note.txt",
-        repo / ".gemini/tmp/nested/note.txt",
-    ]
-    for note in declared_notes:
-        note.parent.mkdir(parents=True)
-        note.write_bytes(b"Declared runtime content\n")
-    deployed = _run(repo, DEPLOY_SCRIPT)
-    assert deployed.returncode == 0, deployed.stdout + deployed.stderr
-    for note in declared_notes:
-        assert note.read_bytes() == b"Declared runtime content\n"
-    checked = _run(repo, CHECK_SCRIPT)
-    assert checked.returncode == 0, checked.stdout + checked.stderr

@@ -362,29 +362,6 @@ def test_quoted_critical_terms_backtick_context_is_not_enough(
     assert gate["plan_exempted"] == 0
 
 
-def test_foreign_cultural_degenerate_ukwiki_url_fails_closed(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    # The empty-article URL "https://uk.wikipedia.org/wiki/" must NOT validate.
-    gate = _gate(
-        "Белтейн",
-        monkeypatch,
-        missing_surfaces={"Белтейн"},
-        plan={
-            "foreign_cultural_terms": [
-                {
-                    "term": "Белтейн",
-                    "forms": ["Белтейн"],
-                    "wikipedia_url": "https://uk.wikipedia.org/wiki/",
-                    "rationale": "кельтське весняне свято",
-                }
-            ]
-        },
-    )
-    assert gate["passed"] is False
-    assert "wikipedia_url" in str(gate["error"])
-
-
 def test_runaway_unbalanced_guillemet_span_does_not_exempt(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

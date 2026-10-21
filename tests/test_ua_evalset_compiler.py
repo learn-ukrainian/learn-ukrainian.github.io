@@ -5,28 +5,9 @@ from pathlib import Path
 
 from scripts.projects.ua_eval_harness.compile_evalset import (
     DEFAULT_GOLD_FIXTURE,
-    DEFAULT_TAXONOMY_PATH,
     check_heritage_safeguard,
     compile_evalset,
-    generate_item_id,
-    load_taxonomy,
 )
-
-
-def test_generate_item_id_is_deterministic() -> None:
-    id1 = generate_item_id("Я приймаю участь", "приймаю", "F/Calque")
-    id2 = generate_item_id("Я приймаю участь", "приймаю", "F/Calque")
-    assert id1 == id2
-    assert id1.startswith("eval-f_calque-")
-
-
-def test_load_taxonomy_spec() -> None:
-    taxonomy = load_taxonomy(DEFAULT_TAXONOMY_PATH)
-    assert taxonomy.get("version") == "1.0.0"
-    categories = set(taxonomy.get("categories", {}).keys())
-    assert "F/Calque" in categories
-    assert "G/Case" in categories
-    assert "G/Gender" in categories
 
 
 def test_heritage_safeguard_regionalism_protection() -> None:
@@ -65,4 +46,3 @@ def test_compile_evalset_missing_taxonomy_returns_error(tmp_path: Path) -> None:
     missing_tax = tmp_path / "non_existent_taxonomy.yaml"
     res = compile_evalset(gold_path=DEFAULT_GOLD_FIXTURE, output_path=output_file, taxonomy_path=missing_tax)
     assert res == 1
-

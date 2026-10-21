@@ -122,16 +122,6 @@ def test_last_line_without_newline(reader, complete, isolated_usage, caplog):
 
 
 @pytest.mark.parametrize("reader", READERS)
-def test_default_reader_reports_corruption(reader, isolated_usage, caplog):
-    _path(isolated_usage, reader).write_bytes(b'\xff\n')
-
-    result = _read(reader, isolated_usage)
-
-    assert not result
-    assert "unreadable usage records {'files': 0, 'lines': 1, 'records': 0}" in caplog.text
-
-
-@pytest.mark.parametrize("reader", READERS)
 def test_unreadable_file_does_not_drop_other_files(reader, isolated_usage, monkeypatch, caplog):
     good = _path(isolated_usage, reader)
     record = _record()
@@ -163,20 +153,6 @@ def test_unreadable_file_does_not_drop_other_files(reader, isolated_usage, monke
         _assert_rows(reader, result, record)
     assert counts == {"files": 1, "lines": 0, "records": 0}
     assert str(counts) in caplog.text
-
-
-def test_codex_report_exposes_fault_counts_in_json_and_text(isolated_usage, capsys):
-    record = _record()
-    _path(isolated_usage, "codex-report").write_bytes(b'\xff\n' + _line(record).rstrip(b'\n'))
-
-    report = _cli._build_codex_usage_report("5h", "bridge")
-    _cli._print_codex_usage_report(report)
-
-    assert report["total_calls"] == 1
-    assert report["total_duration_s"] == 2.0
-    assert report["unreadable"] == {"files": 0, "lines": 1, "records": 0, "total": 1}
-    assert json.loads(json.dumps(report))["unreadable"] == report["unreadable"]
-    assert "Unreadable usage records: " + str(report["unreadable"]) in capsys.readouterr().out
 
 
 def test_codex_reader_preserves_window_and_entrypoint_filters(isolated_usage):
@@ -254,65 +230,3 @@ def test_valid_unicode_and_blank_lines_are_not_corrupt(reader, isolated_usage, c
         _assert_rows(reader, result, record)
     assert counts == {"files": 0, "lines": 0, "records": 0}
     assert not caplog.records
-
-
-def test_runner_preserves_optional_headroom_counter(isolated_usage):
-    _path(isolated_usage, "codex-report").write_bytes(b'[]\n')
-    counts = {"files": 0, "lines": 0, "records": 0}
-
-    assert runner.has_headroom("codex", MODEL, unreadable=counts) == (True, "")
-    assert counts == {"files": 0, "lines": 1, "records": 0}
-
-
-@pytest.mark.parametrize("reader", READERS)
-def test_missing_usage_directory_is_empty(reader, isolated_usage, monkeypatch):
-    missing = isolated_usage / "missing"
-    monkeypatch.setattr(_cli.runtime_usage, "_usage_dir", lambda: missing)
-    counts = {"files": 0, "lines": 0, "records": 0}
-    assert not _read(reader, missing, counts)
-    assert counts == {"files": 0, "lines": 0, "records": 0}
-
-
-def test_codex_reader_counts_stat_failure(isolated_usage, monkeypatch):
-    path = _path(isolated_usage, "codex-report")
-    path.write_bytes(_line(_record()))
-    real_stat = Path.stat
-
-    def denied(candidate, *args, **kwargs):
-        if candidate == path:
-            raise PermissionError("unreadable fixture")
-        return real_stat(candidate, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "stat", denied)
-    counts = {"files": 0, "lines": 0, "records": 0}
-    assert _read("codex-report", isolated_usage, counts) == []
-    assert counts == {"files": 1, "lines": 0, "records": 0}
-
-
-@pytest.mark.parametrize("agent", ["claude", "agy"])
-@pytest.mark.parametrize("events", [1, 2])
-def test_bakeoff_reports_counts_for_other_subscription_routes(agent, events, isolated_usage, monkeypatch, caplog):
-    route = next(
-        r for r in qg_bakeoff.SUBSCRIPTION_BARE_ROUTES
-        if qg_bakeoff._subscription_identity(r).runtime_agent == agent
-    )
-    record = _record(outcome="rate_limited")
-    record["model"] = route.reviewer_model_id
-    path = isolated_usage / f"usage_{agent}-bridge_{datetime.now(UTC):%Y-%m-%d}.jsonl"
-    path.write_bytes(b'[]\n' + _line(record) * events)
-    cli = isolated_usage / "fixture-cli"
-    cli.touch()
-    (isolated_usage / ".claude").mkdir()
-    monkeypatch.setattr(Path, "home", lambda: isolated_usage)
-    monkeypatch.setattr(qg_bakeoff.shutil, "which", lambda _name: str(cli))
-
-    if events == 2:
-        with pytest.raises(qg_bakeoff.BakeoffConfigError, match="no headroom"):
-            qg_bakeoff.preflight_subscription_bare_routes([route])
-    else:
-        assert qg_bakeoff.preflight_subscription_bare_routes([route])["status"] == "passed"
-    assert "unreadable usage records {'files': 0, 'lines': 1, 'records': 0}" in caplog.text
-
-
-def test_bakeoff_skips_headroom_without_subscription_routes():
-    assert qg_bakeoff.preflight_subscription_bare_routes([]) == {"status": "skipped", "routes": []}

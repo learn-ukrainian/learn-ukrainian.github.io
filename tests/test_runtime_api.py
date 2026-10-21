@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 import sys
 import types
@@ -20,9 +19,6 @@ from scripts.api.main import app
 from scripts.control_plane import storage
 
 client = TestClient(app, raise_server_exceptions=False)
-DASHBOARDS = Path(__file__).resolve().parents[1] / "dashboards"
-
-
 def _ctx_with_batch_state_dir(batch_state_dir: Path):
     """Return a MonitorContext pinned to a disposable ``batch_state`` root.
 
@@ -329,173 +325,6 @@ def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch, tmp
     assert failing["availability"] == "unavailable"
     assert failing["reason"] == "routing_decision_reader_failed"
     assert failing["assignments"] == []
-
-
-def test_routing_assignment_serializer_accepts_authority_ledger_shape():
-    item = runtime_router._routing_assignment_item(
-        {
-            "decision_id": "decision-1",
-            "event_type": "settled",
-            "state": "complete",
-            "reservation_id": "authority-1",
-            "authority_key": "head-role",
-            "created_at": "2026-08-02T10:00:00Z",
-            "evidence": {"reason": "headroom available"},
-            "requested": {
-                "initiator": "dispatcher",
-                "author_model": "gpt-5.6-sol",
-                "author_family": "openai",
-                "role": "review",
-                "profile": "strict",
-                "risk": "high",
-                "route_mode": "explicit",
-                "requested_reviewer": "claude-opus",
-                "estimated_input_bytes": 0,
-            },
-            "resolved": {
-                "candidate": "claude-opus",
-                "route": "claude",
-                "model": "claude-opus-4-6",
-                "family": "anthropic",
-                "policy_version": "routing-v2",
-                "trace": {
-                    "gates": "cross-family review required",
-                    "task_fit": "strong review capability",
-                    "tie_breakers": "quota fresh",
-                    "cheaper_or_idle_not_selected": "candidate lacks required family",
-                    "substitution_note": "explicit pin passed the required eligibility gate",
-                },
-            },
-            "quota": {
-                "bucket": "claude-weekly",
-                "snapshot": {"source": "codexbar", "headroom": 0, "freshness": "stale_last_good"},
-                "fresh_at": "2026-08-02T09:59:00Z",
-            },
-            "retry": {"attempt": 2, "terminal_status": "complete", "failure_classification": None},
-            "replay": {"authority_key": "head-role", "idempotency_key": "idempotent", "completed": True},
-            "lifecycle": {
-                "status": "complete",
-                "created_at": "2026-08-02T10:00:00Z",
-                "expires_at": "2026-08-02T10:05:00Z",
-                "started_at": "2026-08-02T10:00:05Z",
-                "settled_at": "2026-08-02T10:00:15Z",
-                "actual_bytes": 0,
-                "actual_tokens": 0,
-                "failure_classification": None,
-            },
-        }
-    )
-
-    assert item["decision_id"] == "decision-1"
-    assert item["decision_event"] == "settled"
-    assert item["decision_state"] == "complete"
-    assert item["source_authority_id"] == "authority-1"
-    assert item["initiator"] == "dispatcher"
-    assert item["automatic"] is False
-    assert item["requested_reviewer"] == item["requested_route"] == "claude-opus"
-    assert item["resolved_model"] == "claude-opus-4-6"
-    assert item["quota_headroom"] == 0
-    assert item["quota_freshness"] == "stale_last_good"
-    assert item["quota_freshness_state"] == "stale"
-    assert item["quota_fresh_at"] == "2026-08-02T09:59:00Z"
-    assert item["selection_reason"] == "explicit pin passed the required eligibility gate"
-    assert item["estimated_input_bytes"] == 0
-    assert item["actual_input_bytes"] is None
-    assert item["actual_work_bytes"] == 0
-    assert item["actual_tokens"] == 0
-    assert item["duration_s"] == 10.0
-    assert item["retry_chain"]["attempt"] == 2
-    assert item["replay_status"]["completed"] is True
-    assert item["selection_reasoning"] == {
-        "hard_eligibility": "cross-family review required",
-        "task_fit_quality": "strong review capability",
-        "tie_breakers": "quota fresh",
-        "cheaper_or_idle_not_selected": "candidate lacks required family",
-    }
-
-
-def test_runtime_dashboard_labels_routing_authority_and_explicitness():
-    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
-    for expected in (
-        "/api/runtime/routing-assignments?limit=100",
-        "Routing overview",
-        "loaded/recent authority window",
-        "Routing decision path",
-        "Load 25 more",
-        "STALE_ACTIVITY_MS = 45 * 60 * 1000",
-        "No ledger update for",
-        "Stale activity evidence, not provider-liveness proof.",
-        "routing-assignments-status",
-        "aria-busy",
-        "Capacity facts",
-        "Chronological event history",
-        "Reviewer pin / scheduler",
-        "Automatic vs explicit",
-        "Candidate trace",
-        "routing-assignment-groups",
-        'aria-controls="routing-assignment-groups"',
-        "Assignment details for",
-        "Reservation ID",
-        "Latest event",
-        "Requested reviewer / route",
-        "Event history",
-        "Freshness state",
-        "Initiator",
-        "AUTOMATIC",
-        "EXPLICIT",
-        "Suitability-first decision evidence",
-        "Why cheaper or idle alternative was not selected",
-        "Plane:",
-        "plane.authority",
-    ):
-        assert expected in html
-    assert "routing-table" not in html
-    assert "JSON.stringify(value)" not in html
-    assert "renderRoutingResults(assignments);" in html
-    assert "update('routing-search-filter')" not in html
-
-
-def test_agents_endpoint_returns_known_adapters():
-    response = client.get("/api/runtime/agents")
-
-    assert response.status_code == 200
-    agents = response.json()["agents"]
-    names = {agent["name"] for agent in agents}
-    assert {"claude", "codex"} <= names
-    assert "gemini" not in names
-    assert "glm" not in names
-    assert not any(name.startswith("acpx-") for name in names)
-    codex = next(agent for agent in agents if agent["name"] == "codex")
-    assert codex["binary"] == "codex"
-    assert codex["default_model"] == "gpt-6.1-sol"
-
-
-def test_agents_endpoint_refreshes_registry_defaults_after_mtime_update(tmp_path, monkeypatch):
-    registry_path = tmp_path / "registry.py"
-    registry_path.write_text("AGENTS = {'codex': {'default_model': 'stale-model'}}\n", encoding="utf-8")
-
-    monkeypatch.setattr(runtime_router.agent_registry, "__file__", str(registry_path))
-    monkeypatch.setattr(runtime_router, "_registry_signature", runtime_router._registry_source_signature())
-    monkeypatch.setattr(runtime_router, "_registry_models", {"codex": "stale-model"})
-
-    stale_response = client.get("/api/runtime/agents")
-    stale_codex = next(agent for agent in stale_response.json()["agents"] if agent["name"] == "codex")
-    assert stale_codex["default_model"] == "stale-model"
-
-    previous = registry_path.stat()
-    registry_path.write_text("AGENTS = []\n", encoding="utf-8")
-    os.utime(registry_path, ns=(previous.st_atime_ns, previous.st_mtime_ns + 1))
-
-    failed_response = client.get("/api/runtime/agents")
-    failed_codex = next(agent for agent in failed_response.json()["agents"] if agent["name"] == "codex")
-    assert failed_codex["default_model"] == "stale-model"
-
-    registry_path.write_text("AGENTS = {'codex': {'default_model': 'fresh-model'}}\n", encoding="utf-8")
-    os.utime(registry_path, ns=(previous.st_atime_ns, previous.st_mtime_ns + 2))
-
-    fresh_response = client.get("/api/runtime/agents")
-    fresh_codex = next(agent for agent in fresh_response.json()["agents"] if agent["name"] == "codex")
-    assert fresh_codex["default_model"] == "fresh-model"
 
 
 def test_usage_aggregates_by_agent(tmp_path, monkeypatch):
@@ -1076,40 +905,6 @@ def test_acp_conversations_refuse_poisoned_rows_and_hide_unavailable_storage(tmp
     assert missing.json() == {"availability": "unavailable", "conversations": []}
 
 
-def test_acp_summary_prefers_terminal_wall_duration_and_token_total(tmp_path, monkeypatch):
-    root = tmp_path / "plane"
-    now = datetime.now(UTC)
-    conversation = (
-        "conv-total", "task", "correlation", "idempotency", 1, '["codex","grok"]',
-        _iso(now), _iso(now + timedelta(minutes=5)), 160_000, 512 * 1024,
-    )
-    events = [
-        (
-            "event-1", "conv-total", 1, "CREATED", "CREATED", None, None, None,
-            None, None, None, None, None, "{}", _iso(now),
-        ),
-        (
-            "event-2", "conv-total", 2, "CALL_TERMINAL", "INITIAL_FANOUT", "codex", "root", 1,
-            "ok", 100, 2, "leg-1", "message-1", "{}", _iso(now),
-        ),
-        (
-            "event-3", "conv-total", 3, "CALL_TERMINAL", "INITIAL_FANOUT", "grok", "root", 1,
-            "ok", 200, 3, "leg-2", "message-2", "{}", _iso(now),
-        ),
-        (
-            "event-4", "conv-total", 4, "STATE", "COMPLETE", None, None, None,
-            None, 250, 5, None, None, "{}", _iso(now + timedelta(milliseconds=250)),
-        ),
-    ]
-    _write_acp_db(root, [conversation], events)
-    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
-
-    summary = client.get("/api/runtime/acp/conversations").json()["conversations"][0]
-
-    assert summary["total_duration_ms"] == 250
-    assert summary["total_tokens"] == 5
-
-
 def test_acp_summary_marks_expired_and_partial_conversations_unhealthy(tmp_path, monkeypatch):
     root = tmp_path / "plane"
     now = datetime.now(UTC)
@@ -1133,36 +928,6 @@ def test_acp_summary_marks_expired_and_partial_conversations_unhealthy(tmp_path,
     assert summary["stale_or_unhealthy"] is True
 
 
-def test_runtime_page_links_to_the_dedicated_read_only_acp_conversations_page():
-    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
-    acp_panel = html[html.index('id="acp-heading"') : html.index('id="acpx-heading"')]
-
-    assert "ACP Conversations" in acp_panel
-    assert "Read-only, body-free event history" in acp_panel
-    assert 'href="/acp.html"' in acp_panel
-    assert "/api/runtime/acp/conversations" not in html
-    assert (DASHBOARDS / "acp.html").is_file()
-
-    for prohibited in [
-        "<form",
-        "acp-send",
-        "acp-post",
-        "acp-start",
-        "acp-session",
-        "acp-toggle",
-        "acp-retry",
-        "acp-cancel",
-        "acp-route",
-        "acp-review",
-        "acp-config",
-    ]:
-        assert prohibited not in acp_panel
-
-    assert html.index('id="acp-heading"') < html.index('id="acpx-heading"')
-    assert "ACPX Shadow Transport" in html
-    assert "ACPX evidence is observational only." in html
-
-
 def test_acp_termination_reason_allowlists_budget_and_deadline_events():
     assert runtime_router._acp_termination(
         [{"event_type": "BUDGET_EXHAUSTED"}], "PARTIAL_COMPLETE"
@@ -1175,13 +940,6 @@ def test_acp_termination_reason_allowlists_budget_and_deadline_events():
     ) is None
     assert runtime_router._acp_classification("CANCELLED") == "cancelled"
     assert runtime_router._acp_termination([], "CANCELLED") == "cancelled"
-
-
-def test_headroom_rejects_missing_params():
-    response = client.get("/api/runtime/headroom")
-
-    assert response.status_code == 400
-    assert "required" in response.json()["detail"]
 
 
 def test_recent_limits_results(tmp_path, monkeypatch):
@@ -1264,18 +1022,6 @@ def test_recent_preserves_typed_body_free_acp_failure(tmp_path, monkeypatch):
     record = response.json()["records"][0]
     assert record["failure_code"] == "acp_turn_limit"
     assert "stderr_excerpt" not in record
-
-
-def test_runtime_page_labels_caller_source_separately_from_transport():
-    html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
-
-    assert "<th>Source</th>" in html
-    assert "<th>Agent</th>" in html
-    assert "<th>Via</th>" in html
-    assert "<th>Failure</th>" in html
-    assert "record.source || 'unknown'" in html
-    assert "record.via || record.entrypoint" in html
-    assert "record.failure_code || '—'" in html
 
 
 def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):

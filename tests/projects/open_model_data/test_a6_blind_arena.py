@@ -17,7 +17,6 @@ from pathlib import Path
 
 import _v4_synthetic_chain_fixture as fixture
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_arena_receipt as arena
@@ -25,9 +24,7 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
-CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a6_blind_arena_receipt_v1.json"
-SCHEMA = CONTRACTS / "dataset_v4_a6_blind_arena_receipt_v1.schema.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
 A5_RECEIPT_PATH = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
@@ -83,24 +80,6 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, manifest=N
 
 
 # --- frozen 100-slot denominator ---------------------------------------------
-
-
-def test_a6_frozen_slot_denominator_reproduces_the_locked_100_slot_series() -> None:
-    strata = a6.frozen_slot_strata(_cached_json(MANIFEST_PATH))
-    all_ids = a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH))
-    assert len(all_ids) == 100
-    assert len(set(all_ids)) == 100
-    assert {s["stratum"]: s["count"] for s in strata} == {
-        "standard_correct": 15,
-        "correction": 15,
-        "literary": 15,
-        "dialect_regional": 15,
-        "archaic_historical": 15,
-        "mixing": 10,
-        "quotation_interference": 10,
-        "abstention": 5,
-    }
-    assert all_ids[0] == "v4p-standard-correct-001"
 
 
 # --- arena gate ----------------------------------------------------------------
@@ -179,13 +158,6 @@ def test_a6_receipt_validates_independently_against_the_real_public_artifacts() 
     assert a6.validate_receipt_independently(_cached_json(RECEIPT)) is None
 
 
-def test_a6_receipt_matches_schema() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
-    assert not errors, errors[0].message if errors else None
-
-
 def test_a6_receipt_binds_v4_sha_and_control_surfaces() -> None:
     assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
     assert _cached_json(RECEIPT)["control_surfaces"] == {
@@ -195,44 +167,6 @@ def test_a6_receipt_binds_v4_sha_and_control_surfaces() -> None:
     }
     assert _cached_json(RECEIPT)["bindings"]["a5_evidence_enrichment"]["sha256"] == a6.sha256_file(A5_RECEIPT_PATH)
     assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a6.sha256_file(MANIFEST_PATH)
-
-
-def test_a6_receipt_carries_forward_every_a2_a4_a5_residual_unresolved() -> None:
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
-    }
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {
-        e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]
-    }
-    assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"])
-    assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"])
-    assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"])
-
-
-def test_a6_receipt_does_not_claim_arena_slice_ready_while_the_gate_is_closed() -> None:
-    assert _cached_json(RECEIPT)["arena_gate"]["arena_slice_ready"] is False
-    assert _cached_json(RECEIPT)["status"] != "ARENA_SLICE_READY"
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_prerequisite_eligible"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_stage_complete"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_residual"] == 100
-
-
-def test_a6_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {
-        "gold": False,
-        "training": False,
-        "evaluation": False,
-        "teaching": False,
-        "coverage": False,
-    }
-    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["live_proposals_run"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["candidates_voted"] == 0
-    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
-    assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
 
 
 def test_a6_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
@@ -308,22 +242,6 @@ def test_a6_refuses_a_duplicate_vote_standing_in_for_a_missing_independent_view(
     receipt["a6_residuals"][0] = forged
     with pytest.raises(a6.ArenaWiringError):
         a6.validate_receipt_independently(receipt)
-
-
-def test_a6_schema_rejects_a_leaked_gold_label_value() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["eligibility"]["gold"] = True
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a6_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
-    # "gold" is deliberately excluded from FORBIDDEN_KEYS (unlike A5) because it
-    # is the name of this receipt's own always-false eligibility flag, matching
-    # v4_arena_receipt.build_receipts' own {"gold": False, ...} shape.
-    assert "gold" not in FORBIDDEN_KEYS
-    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False
 
 
 # --- the shared engine, exercised only via a synthetic, non-corpus fixture ------

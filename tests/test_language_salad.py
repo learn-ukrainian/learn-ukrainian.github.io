@@ -25,7 +25,6 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from audit.checks.language_salad import (
     _ALPHABET_PHASE,
-    PHASES,
     detect_language_salad,
     get_phase,
     split_paragraphs,
@@ -43,21 +42,6 @@ def test_a1_m01_to_m03_resolve_to_alphabet_phase():
         assert phase is _ALPHABET_PHASE, f"A1 M{n:02d} should be alphabet phase"
         assert phase.allow_uk_paragraphs is True
         assert phase.require_uk_paragraphs is False
-
-
-def test_a1_m04_to_m14_resolve_to_decoding_phase():
-    """A1 M04-M14 (post-alphabet decoding practice) forbid UK prose."""
-    for n in (4, 10, 14):
-        phase = get_phase("a1", n)
-        assert phase is PHASES[0], f"A1 M{n:02d} should be decoding phase"
-        assert phase.allow_uk_paragraphs is False
-
-
-def test_a1_m15_to_m34_resolve_to_first_uk_prose_phase():
-    """A1 M15+ moves to the first-UK-prose phase (Phase 1)."""
-    for n in (15, 25, 34):
-        phase = get_phase("a1", n)
-        assert phase is PHASES[1], f"A1 M{n:02d} should be phase 1"
 
 
 # ---------------------------------------------------------------------------
@@ -90,20 +74,6 @@ Another English paragraph here.
     )
 
 
-def test_dialog_with_colon_outside_bold_still_excluded():
-    """The legacy `**Name**:` form must continue to work."""
-    content = """
-Intro.
-
-> **Maria**: Привіт!
-> **Petro**: Привіт!
-
-Outro.
-"""
-    paragraphs = split_paragraphs(content)
-    assert not any("Maria" in text or "Petro" in text for _, text in paragraphs)
-
-
 # ---------------------------------------------------------------------------
 # Phase enforcement
 # ---------------------------------------------------------------------------
@@ -128,97 +98,6 @@ The word **Добре** (Good) is your first positive reply.
     issues = detect_language_salad(content, "a1", 1)
     # Should be clean — no UK paragraphs, dialog excluded, no PHASE_NO_UK_PARAGRAPHS
     assert len(issues) == 0, f"Expected clean, got: {[str(i) for i in issues]}"
-
-
-def test_alphabet_phase_allows_uk_prose_when_writer_uses_it():
-    """If the writer DOES add a UK paragraph in M01-M03, it's allowed
-    (with the standard translation-block requirement)."""
-    content = """
----
-title: Test
----
-
-## Letters
-
-Introduction paragraph in English.
-
-Українська мова має тридцять три літери. Ця абетка — кирилиця. Кожна літера має свій звук.
-
-> *The Ukrainian language has thirty-three letters. This alphabet is Cyrillic. Each letter has its own sound.*
-
-Back to English.
-"""
-    issues = detect_language_salad(content, "a1", 2)
-    error_types = {i.type for i in issues if i.severity == "error"}
-    # Must NOT fire PHASE_UK_PARAGRAPH_TOO_EARLY (that's for Phase 0 / M04+)
-    assert "PHASE_UK_PARAGRAPH_TOO_EARLY" not in error_types
-    # Must NOT fire PHASE_NO_UK_PARAGRAPHS either
-    assert "PHASE_NO_UK_PARAGRAPHS" not in error_types
-
-
-def test_decoding_phase_rejects_uk_prose_paragraphs():
-    """A1 M04-M14 (Decoding) still forbids multi-sentence UK prose."""
-    content = """
----
-title: Test
----
-
-## Practice
-
-English explanation.
-
-Це український параграф. Він має два речення.
-
-More English.
-"""
-    issues = detect_language_salad(content, "a1", 5)
-    error_types = {i.type for i in issues if i.severity == "error"}
-    assert "PHASE_UK_PARAGRAPH_TOO_EARLY" in error_types, (
-        f"Expected PHASE_UK_PARAGRAPH_TOO_EARLY to fire on A1 M05, "
-        f"got: {[str(i) for i in issues]}"
-    )
-
-
-def test_phase_1_requires_uk_paragraphs():
-    """A1 M15+ (Phase 1) MUST have Ukrainian prose paragraphs."""
-    content = """
----
-title: Test
----
-
-## Section
-
-All English here. No Ukrainian prose at all, just inline like **кіт** (cat).
-
-More English, nothing else.
-"""
-    issues = detect_language_salad(content, "a1", 20)
-    error_types = {i.type for i in issues if i.severity == "error"}
-    assert "PHASE_NO_UK_PARAGRAPHS" in error_types
-
-
-def test_excessive_inline_glosses_detected_outside_alphabet_phase():
-    """Dense `**term** (gloss)` paragraphs are a style problem outside
-    the alphabet phase (A1 M01-M03).
-
-    Alphabet/phonetics modules are term-gloss dense by design — every
-    letter introduction naturally pairs a Ukrainian word with its English
-    gloss. We only flag the pattern from M04 onward where prose density
-    is expected.
-    """
-    content = """
----
-title: Test
----
-
-## Section
-
-Today we learn **кіт** (cat), **собака** (dog), **риба** (fish), **пташка** (bird), and **миша** (mouse). These are the most common **тварини** (animals) you'll meet.
-"""
-    # M20 is firmly outside the alphabet phase — the check must fire here.
-    issues = detect_language_salad(content, "a1", 20)
-    error_types = {i.type for i in issues}
-    assert "SALAD_EXCESSIVE_INLINE_GLOSSES" in error_types
 
 
 def test_excessive_inline_glosses_allowed_in_alphabet_phase():

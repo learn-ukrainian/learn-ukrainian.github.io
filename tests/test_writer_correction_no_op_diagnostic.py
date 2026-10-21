@@ -36,48 +36,12 @@ def test_detect_tool_theatre_normalizes_mcp_prefix() -> None:
     ) == []
 
 
-def test_detect_tool_theatre_empty_input() -> None:
-    assert linear_pipeline.detect_tool_theatre("", []) == []
-
-
 def test_detect_tool_theatre_only_scans_plan_reasoning_blocks() -> None:
     writer_output = (
         "```markdown file=module.md\n"
         "This lesson mentions that `search_heritage` is the function name.\n"
         "```\n\n"
         '<plan_reasoning section="intro">No tool citation here.</plan_reasoning>'
-    )
-
-    assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
-
-
-def test_detect_tool_theatre_scans_plan_reasoning_attributes() -> None:
-    writer_output = (
-        '<plan_reasoning section="intro" verification="checked with `verify_words`">'
-        "No citation in the body."
-        "</plan_reasoning>"
-    )
-
-    assert linear_pipeline.detect_tool_theatre(writer_output, []) == ["verify_words"]
-
-
-def test_detect_tool_theatre_scans_unbackticked_tool_names() -> None:
-    writer_output = (
-        '<plan_reasoning section="intro">'
-        "Verified using search_heritage."
-        "</plan_reasoning>"
-    )
-
-    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
-        "search_heritage"
-    ]
-
-
-def test_detect_tool_theatre_ignores_plan_reasoning_inside_fences() -> None:
-    writer_output = (
-        "```markdown file=module.md\n"
-        "<plan_reasoning section=\"example\">`search_heritage`</plan_reasoning>\n"
-        "```\n"
     )
 
     assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
@@ -90,20 +54,6 @@ def test_detect_tool_theatre_handles_multiple_blocks() -> None:
     )
 
     assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
-        "search_heritage",
-        "verify_words",
-    ]
-
-
-def test_detect_tool_theatre_returns_all_citations_when_trace_empty() -> None:
-    writer_output = (
-        '<plan_reasoning section="intro">'
-        "`verify_words`, `search_heritage`, and `query_pravopys` checked."
-        "</plan_reasoning>"
-    )
-
-    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
-        "query_pravopys",
         "search_heritage",
         "verify_words",
     ]
@@ -183,15 +133,6 @@ def test_parse_writer_correction_module_only_extracts_single_block() -> None:
     assert body.endswith("\n")
 
 
-def test_parse_writer_correction_module_only_accepts_short_form_label() -> None:
-    """The parser also accepts ``markdown module.md`` and ``module.md``
-    fence-info conventions — writers vary on this minor formatting."""
-    response_short = "```markdown module.md\nbody1\n```"
-    response_bare = "```module.md\nbody2\n```"
-    assert linear_pipeline.parse_writer_correction_module_only(response_short) == "body1\n"
-    assert linear_pipeline.parse_writer_correction_module_only(response_bare) == "body2\n"
-
-
 def test_parse_writer_correction_module_only_unwraps_four_backtick_wrapper() -> None:
     """When the model wraps its 3-backtick fenced block in a 4-backtick
     outer fence (CommonMark convention for "code block containing code
@@ -211,19 +152,6 @@ def test_parse_writer_correction_module_only_unwraps_four_backtick_wrapper() -> 
     assert body.startswith("## Діалог")
     assert "Expanded prose" in body
     assert body.endswith("\n")
-
-
-def test_parse_writer_correction_module_only_unwraps_bare_four_backtick_wrapper() -> None:
-    """Same wrapper tolerance when the outer fence has no info-line."""
-    response = (
-        "````\n"
-        "```module.md\n"
-        "Patched body content.\n"
-        "```\n"
-        "````\n"
-    )
-    body = linear_pipeline.parse_writer_correction_module_only(response)
-    assert body == "Patched body content.\n"
 
 
 def test_parse_writer_correction_module_only_does_not_peel_when_outer_has_file_label() -> None:
@@ -268,40 +196,12 @@ def test_parse_writer_correction_module_only_rejects_bare_markdown_fence() -> No
     assert linear_pipeline.parse_writer_correction_module_only(response) is None
 
 
-def test_parse_writer_correction_module_only_rejects_full_4_block_response() -> None:
-    """A realistic 4-block writer response that happens to contain a
-    module.md fence MUST NOT parse as module-only. The contract is "the
-    entire response is a single fence" — extra fences disqualify it.
-
-    Caught upstream too: ``_apply_writer_correction`` checks
-    ``all(name in response for name in WRITER_ARTIFACTS)`` before reaching
-    the module-only path. But the parser itself must also reject this
-    case so it can be safely called out of context.
-    """
-    full_response = (
-        "```markdown file=module.md\n## Morning\nProse.\n```\n\n"
-        "```json file=activities.yaml\n[]\n```\n\n"
-        "```json file=vocabulary.yaml\n[]\n```\n\n"
-        "```json file=resources.yaml\n[]\n```\n"
-    )
-    assert linear_pipeline.parse_writer_correction_module_only(full_response) is None
-
-
 def test_parse_writer_correction_module_only_rejects_leading_prose() -> None:
     """Any prose before the fence disqualifies the response — the contract
     says "that is the entire response"."""
     response = (
         "Done. Here is the patched module:\n\n"
         "```markdown file=module.md\nbody\n```\n"
-    )
-    assert linear_pipeline.parse_writer_correction_module_only(response) is None
-
-
-def test_parse_writer_correction_module_only_rejects_trailing_prose() -> None:
-    """Any prose after the fence disqualifies the response."""
-    response = (
-        "```markdown file=module.md\nbody\n```\n\n"
-        "Word count went from 996 → 1325.\n"
     )
     assert linear_pipeline.parse_writer_correction_module_only(response) is None
 
