@@ -514,10 +514,16 @@ def merged_run_evidence(
             raise ObservationRefusal("CLOSEOUT_REQUIRED_CHECK_NOT_EXECUTED")
 
     execution = {
-        "run": {key: run.get(key) for key in (
+        "pull": {
+            **{key: pull.get(key) for key in (
+                "number", "html_url", "state", "merged", "merge_commit_sha", "merged_at", "created_at",
+            )},
+            "head": {"sha": head}, "base": {"ref": base_ref, "repo": {"full_name": repository}},
+        },
+        "run": {**{key: run.get(key) for key in (
             "id", "run_attempt", "event", "head_sha", "head_branch", "path", "html_url",
             "created_at", "run_started_at", "status", "conclusion",
-        )},
+        )}, "repository": {"full_name": repository}},
         "jobs": [{key: job.get(key) for key in (
             "id", "run_id", "run_attempt", "head_sha", "html_url", "name", "status", "conclusion",
             "started_at", "completed_at", "steps",
@@ -590,6 +596,7 @@ def merged_run_evidence(
         "worktree_present", "local_branch_present", "remote_branch_present",
     ))
     report = {
+        "observed_at": observation["observed_at"],
         "repository": repository, "issue": updated["identity"]["github_issue_number"], "pr": pr_number,
         "head_sha": head, "merge_sha": merge, "run_id": run_id, "run_attempt": attempt, "run_url": run_url,
         "execution_sha256": tl.digest(execution), "execution": execution, "criteria": criteria,
@@ -607,3 +614,25 @@ def merged_run_evidence(
     if not report["criteria_passed"]:
         github["error"] = "CLOSEOUT_CRITERION_EXECUTION_OR_PROOF_MISSING"
     return updated, report
+
+
+def validated_merged_criteria(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> dict[str, Any]:
+    """Recompute closure proof instead of trusting copied receipt status flags."""
+    from copy import deepcopy
+
+    try:
+        report = observation["github"]["closeout_run"]
+        execution = report["execution"]
+        if (report["observed_at"] != observation["observed_at"]
+                or report["execution_sha256"] != tl.digest(execution)):
+            raise ObservationRefusal("CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED")
+        _, verified = merged_run_evidence(
+            ledger, deepcopy(observation), pull=execution["pull"], run=execution["run"],
+            jobs=execution["jobs"], now=observation["observed_at"],
+        )
+        for key in ("repository", "issue", "pr", "head_sha", "merge_sha", "run_id", "run_attempt", "run_url"):
+            if type(report[key]) is not type(verified[key]) or report[key] != verified[key]:
+                raise ObservationRefusal("CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED")
+        return verified
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
+        raise ObservationRefusal("CLOSEOUT_RECEIPT_MISSING_OR_INVALID") from exc

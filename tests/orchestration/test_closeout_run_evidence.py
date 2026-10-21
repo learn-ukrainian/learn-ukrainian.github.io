@@ -258,7 +258,8 @@ def test_capture_persists_bound_receipt_without_inventing_local_history(bound_ca
 
 @pytest.mark.parametrize("failure", ["moved_head", "missing_merge", "no_run", "invalid_run", "unreadable"])
 def test_capture_failure_does_not_append_evidence(bound_case, tmp_path, monkeypatch, failure):
-    ledger, _, pull, run, _ = bound_case
+    ledger, observation, pull, run, _ = bound_case
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "observe", lambda *a, **k: deepcopy(observation))
     monkeypatch.setattr(tl, "canonical_state_root", lambda _: tmp_path)
     path = tl.lifecycle_path(tmp_path, ledger["identity"])
     tl.write_lifecycle(path, ledger)
@@ -345,7 +346,8 @@ def test_unchecked_late_criterion_cannot_pass_close_gate(bound_case):
 
 
 def test_run_attempt_moving_during_read_is_not_persisted(bound_case, tmp_path, monkeypatch):
-    ledger, _, pull, run, _ = bound_case
+    ledger, observation, pull, run, _ = bound_case
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "observe", lambda *a, **k: deepcopy(observation))
     monkeypatch.setattr(tl, "canonical_state_root", lambda _: tmp_path)
     path = tl.lifecycle_path(tmp_path, ledger["identity"])
     tl.write_lifecycle(path, ledger)

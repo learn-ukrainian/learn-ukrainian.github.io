@@ -468,6 +468,42 @@ def _closeout_pages(repo_root: Path, request: Request, key: str) -> list[dict[st
     return rows
 
 
+def collect_merged_run_evidence(
+    repo_root: Path, ledger: dict[str, Any], observation: dict[str, Any], *, now: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Freshly validate one bound ledger against its actual merged execution."""
+    repository = ledger["identity"]["repository"]
+    pr_number = ledger["pr"]["number"]
+    pull = _closeout_api(repo_root, Request("read-pull", repo=repository, number=pr_number))
+    if not isinstance(pull.get("head"), dict) or pull["head"].get("sha") != observation["github"]["pr"].get("head_sha"):
+        raise MergeCloseoutError("CLOSEOUT_PR_HEAD_MOVED")
+    merge_sha = pull.get("merge_commit_sha")
+    if not isinstance(merge_sha, str) or not merge_sha:
+        raise MergeCloseoutError("CLOSEOUT_MERGE_SHA_MISSING")
+    runs = _closeout_pages(
+        repo_root, Request("read-runs", repo=repository, start=pull.get("created_at"), end=pull.get("merged_at"),
+                           paginate=True, slurp=True), "workflow_runs",
+    )
+    candidates = [run for run in runs if run.get("path") == ".github/workflows/ci.yml"
+                  and run.get("head_sha") == merge_sha]
+    if not candidates:
+        raise MergeCloseoutError("CLOSEOUT_MERGE_RUN_MISSING")
+    # Never fall back to an older green execution when the latest is red.
+    run = max(candidates, key=lambda row: row.get("id", 0))
+    run_id, attempt = run.get("id"), run.get("run_attempt")
+    if type(run_id) is not int or type(attempt) is not int or min(run_id, attempt) < 1:
+        raise MergeCloseoutError("CLOSEOUT_RUN_ID_INVALID")
+    run = _closeout_api(repo_root, Request("read-run", repo=repository, number=run_id))
+    if run.get("id") != run_id or run.get("run_attempt") != attempt:
+        raise MergeCloseoutError("CLOSEOUT_RUN_ATTEMPT_MOVED")
+    jobs = _closeout_pages(
+        repo_root, Request("read-jobs", repo=repository, number=run_id, paginate=True, slurp=True), "jobs",
+    )
+    return lifecycle_observation.merged_run_evidence(
+        ledger, observation, pull=pull, run=run, jobs=jobs, now=now,
+    )
+
+
 def collect_criterion_receipts(repo_root: Path, pr: PullRequestInfo, *, repo: str | None) -> list[dict[str, Any]]:
     """Enrich existing bound ledgers, without manufacturing historical task facts.
 
@@ -493,40 +529,15 @@ def collect_criterion_receipts(repo_root: Path, pr: PullRequestInfo, *, repo: st
                     continue
                 if ledger["identity"]["repository"] != slug:
                     raise MergeCloseoutError("CLOSEOUT_REPOSITORY_MISMATCH")
-                pull = _closeout_api(repo_root, Request("read-pull", repo=slug, number=pr.number))
-                if not isinstance(pull.get("head"), dict) or pull["head"].get("sha") != pr.head_sha:
-                    raise MergeCloseoutError("CLOSEOUT_PR_HEAD_MOVED")
-                merge_sha = pull.get("merge_commit_sha")
-                if not isinstance(merge_sha, str) or not merge_sha:
-                    raise MergeCloseoutError("CLOSEOUT_MERGE_SHA_MISSING")
-                runs = _closeout_pages(
-                    repo_root, Request("read-runs", repo=slug, start=pull.get("created_at"), end=pull.get("merged_at"),
-                                       paginate=True, slurp=True), "workflow_runs",
-                )
-                candidates = [run for run in runs if run.get("path") == ".github/workflows/ci.yml"
-                              and run.get("head_sha") == merge_sha]
-                if not candidates:
-                    raise MergeCloseoutError("CLOSEOUT_MERGE_RUN_MISSING")
-                # Never fall back to an older green execution when the latest is red.
-                run = max(candidates, key=lambda row: row.get("id", 0))
-                run_id, attempt = run.get("id"), run.get("run_attempt")
-                if type(run_id) is not int or type(attempt) is not int or min(run_id, attempt) < 1:
-                    raise MergeCloseoutError("CLOSEOUT_RUN_ID_INVALID")
-                run = _closeout_api(repo_root, Request("read-run", repo=slug, number=run_id))
-                if run.get("id") != run_id or run.get("run_attempt") != attempt:
-                    raise MergeCloseoutError("CLOSEOUT_RUN_ATTEMPT_MOVED")
-                jobs = _closeout_pages(
-                    repo_root, Request("read-jobs", repo=slug, number=run_id, paginate=True, slurp=True), "jobs",
-                )
                 now = datetime.now(UTC).isoformat()
                 prior = tl._latest_premerge_local(ledger)
                 worktree = prior.get("worktree") if prior else None
                 if worktree and not Path(worktree).is_absolute():
                     worktree = str(primary / worktree)
                 observation = task_closeout.GhGitHubAdapter(repo_root).observe(ledger, now=now, worktree=worktree)
-                updated, report = lifecycle_observation.merged_run_evidence(
-                    ledger, observation, pull=pull, run=run, jobs=jobs, now=now,
-                )
+                if observation["github"]["pr"].get("head_sha") != pr.head_sha:
+                    raise MergeCloseoutError("CLOSEOUT_PR_HEAD_MOVED")
+                updated, report = collect_merged_run_evidence(repo_root, ledger, observation, now=now)
                 updated, receipt, _ = tl.reconcile(updated, observation, now=now)
                 tl.write_lifecycle(path, updated)
                 reports.append({**report, "receipt_id": receipt["id"]})
