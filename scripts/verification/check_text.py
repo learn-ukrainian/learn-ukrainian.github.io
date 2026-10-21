@@ -67,7 +67,11 @@ _VESUM_LABEL_MARKUP = str.maketrans("", "", "*_`[]")
 
 
 _LINE_BREAK = re.compile(r"\r\n|[\n\r\v\f\x1c-\x1e\x85\u2028\u2029]")
-_LABEL_WORD = rf"[^\W\d_]+(?:[{re.escape(''.join(APOSTROPHES))}][^\W\d_]+)*"
+_APOSTROPHE_CLASS = re.escape("".join(sorted(APOSTROPHES)))
+# The letter class excludes apostrophes (``ʼ`` is a letter), so letter runs and separators are
+# disjoint and the nested repetition has exactly one parse: matching stays linear.
+_LABEL_LETTER = rf"[^\W\d_{_APOSTROPHE_CLASS}]"
+_LABEL_WORD = rf"{_LABEL_LETTER}+(?:[{_APOSTROPHE_CLASS}]{_LABEL_LETTER}+)*"
 _LABEL_SHAPE = re.compile(rf"{_LABEL_WORD}(?:[ \t-]+{_LABEL_WORD})*")
 _LABEL_SEPARATORS = re.compile(r"[ \t-]+")
 
@@ -434,9 +438,9 @@ def check_text(
     total_tokens = 0
     tokens_by_form: dict[str, list[tuple[int, Any, Token]]] = {}
     unit_sentences: list[tuple[int, Any, str, list[Token]]] = []
-    sent_init_caps: set[str] = set()
-    unlicensed_caps: set[str] = set()  # capitalised forms with an occurrence that needs its own capitalised row
-    label_candidates: dict[str, list[list[str]]] = {}
+    # Per capitalised form, one licence per occurrence: True (sentence-initial), the words of a
+    # colon label that must prove nominal, or False (needs its own capitalised row).
+    occurrence_licences: dict[str, list[bool | list[str]]] = {}
 
     for item_idx, item_id, item_text in units:
         unit_toks = tokenize(item_text)
@@ -453,12 +457,10 @@ def check_text(
             total_tokens += 1
             tokens_by_form.setdefault(t.lookup, []).append((item_idx, item_id, t))
             if "vesum" in active_checks and t.capitalised:
-                if _vesum_sentence_initial(item_text, t):
-                    sent_init_caps.add(t.lookup)
-                elif (label := _vesum_lowercase_label(item_text, t)) is not None:
-                    label_candidates.setdefault(t.lookup, []).append(label)
-                else:
-                    unlicensed_caps.add(t.lookup)
+                licence: bool | list[str] = _vesum_sentence_initial(item_text, t)
+                if not licence:
+                    licence = _vesum_lowercase_label(item_text, t) or False
+                occurrence_licences.setdefault(t.lookup, []).append(licence)
 
             if t.sentence_initial and current_sentence:
                 unit_sentences.append((item_idx, item_id, item_text, current_sentence))
@@ -501,8 +503,9 @@ def check_text(
     if "vesum" in active_checks and unique_forms:
         label_words = [
             variant
-            for labels in label_candidates.values()
-            for label in labels
+            for licences in occurrence_licences.values()
+            for label in licences
+            if isinstance(label, list)
             for word in label
             for variant in (lookup_form(word), lookup_form(word).lower(), _lower_first(lookup_form(word)))
         ]
@@ -518,30 +521,34 @@ def check_text(
                 "error": f"source_unavailable: {err}",
             }
 
-        # Caption acceptance is per occurrence: every label occurrence must be nominal and
-        # no other occurrence of the form may lack its own licence.
-        for form, labels in label_candidates.items():
-            if form not in unlicensed_caps and all(_label_is_nominal(label, vesum_map) for label in labels):
-                sent_init_caps.add(form)
-
         for form in unique_forms:
-            is_verified = bool(vesum_map.get(form) or (form in sent_init_caps and vesum_map.get(_lower_first(form))))
-
-            if is_verified:
+            occurrences = tokens_by_form[form]
+            if vesum_map.get(form):
                 vesum_verified_forms.add(form)
-            else:
-                occurrences = tokens_by_form[form]
-                locs = [[item_id, t.start, t.end] for _, item_id, t in occurrences]
-                first_occ = occurrences[0]
-                raw_problems.append(
-                    {
-                        "form": form,
-                        "check": "vesum",
-                        "detail": {"status": "no_vesum_row"},
-                        "locations": locs,
-                        "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
-                    }
-                )
+                continue
+            # A lowercase row licenses only the occurrences that are sentence-initial or a nominal
+            # caption; every other occurrence stays a problem of its own.
+            unlicensed = occurrences
+            if vesum_map.get(_lower_first(form)) and form in occurrence_licences:
+                unlicensed = [
+                    occ
+                    for occ, licence in zip(occurrences, occurrence_licences[form], strict=True)
+                    if licence is False or (isinstance(licence, list) and not _label_is_nominal(licence, vesum_map))
+                ]
+            if not unlicensed:
+                vesum_verified_forms.add(form)
+                continue
+            locs = [[item_id, t.start, t.end] for _, item_id, t in unlicensed]
+            first_occ = unlicensed[0]
+            raw_problems.append(
+                {
+                    "form": form,
+                    "check": "vesum",
+                    "detail": {"status": "no_vesum_row"},
+                    "locations": locs,
+                    "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
+                }
+            )
     elif "russian_shadow" in active_checks and unique_forms:
         # If vesum was not requested in checks, but russian_shadow needs verified set:
         query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms] + book_range_parts))

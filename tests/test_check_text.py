@@ -698,6 +698,33 @@ def test_caption_evidence_does_not_leak_to_other_occurrences():
 
 
 @pytest.mark.usefixtures("label_vesum")
+def test_sentence_initial_licence_does_not_leak_to_later_occurrences():
+    text = "Мар'яна: Так\nСлово дня: Так\nВін сказав: Так"
+    result = check_text(text=text, checks=["vesum"])
+    last = text.rindex("Так")
+    assert [(p["form"], p["locations"]) for p in result["problems"]] == [("Так", [[None, last, last + 3]])]
+    # A mid-sentence capital is flagged even when the same form also opens a sentence.
+    assert _vesum_problem_forms("Так. Він Так") == ["Так"]
+    assert _vesum_problem_forms("Так. Так") == []
+
+
+@pytest.mark.usefixtures("label_vesum")
+@pytest.mark.parametrize("apostrophe", ("'", "’", "ʼ", "`", "‘"))
+def test_label_shape_is_linear_on_apostrophe_runs(apostrophe):
+    import time
+
+    text = "С" + (apostrophe + "С") * 24 + ",: Добре"
+    start = time.perf_counter()
+    assert _vesum_problem_forms(text)
+    assert time.perf_counter() - start < 0.5
+    from scripts.verification.check_text import _LABEL_SHAPE
+
+    start = time.perf_counter()
+    assert _LABEL_SHAPE.fullmatch("С" + (apostrophe + "С") * 24 + ",") is None
+    assert time.perf_counter() - start < 0.05
+
+
+@pytest.mark.usefixtures("label_vesum")
 def test_uppercase_noun_row_does_not_hide_lowercase_verb_reading():
     assert _vesum_problem_forms("Мили посуд: Так") == ["Так"]
 
@@ -723,6 +750,7 @@ def test_label_shapes_real_vesum(requires_vesum_db):
     for text in ("**Мар'яна:** Добре", "**Мар’яна:** Добре", "**Дар'я:** Добре", "Слово дня: Добре"):
         assert _vesum_problem_forms(text) == []
     assert _vesum_problem_forms("Він сказав: Так") == ["Так"]
+    assert _vesum_problem_forms("Мар'яна: Так\nСлово дня: Так\nВін сказав: Так") == ["Так"]
     assert _vesum_problem_forms("**Мар'яна:** Технологіческа") == ["Технологіческа"]
 
 
