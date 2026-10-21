@@ -8172,7 +8172,7 @@ def _finalize_execution_context(worktree: Path, *, prepare: bool = False) -> Ite
         if driver.returncode:
             raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
         context.driver_base = driver.stdout.strip()
-        context.interpreter = _REPO_ROOT / ".venv/bin/python"
+        context.interpreter = project_interpreter(_REPO_ROOT)
         yield context
 
 

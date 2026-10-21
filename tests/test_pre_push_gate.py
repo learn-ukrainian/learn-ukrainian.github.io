@@ -240,8 +240,61 @@ def _tripwire(name: str, log: Path) -> str:
     )
 
 
+def _bind_local_finalization(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Bind the real isolated finalizer to fixture inputs and retain its gate evidence."""
+    from scripts import delegate
+    from scripts.orchestration.safe_git_context import SafeGitContext
+    from tests.test_delegate import _PinnedRemotePublicHead
+
+    origin = tmp_path / "remote.git"
+    base = _git(repo, "rev-parse", "origin/main").stdout.strip()
+    public = _PinnedRemotePublicHead()
+    public.origin = origin
+
+    class GateContext(SafeGitContext):
+        def prepare_validation(self, **kwargs):
+            super().prepare_validation(**kwargs)
+            # The untracked-input case must contaminate the checkout the gate
+            # actually reads, now that validation no longer runs in the source.
+            for name in _git(repo, "ls-files", "--others", "--exclude-standard").stdout.splitlines():
+                destination = self.checkout / name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(repo / name, destination)
+
+    @contextlib.contextmanager
+    def execution(source, **kwargs):
+        assert source == repo
+        with GateContext(
+            objects=repo / ".git/objects",
+            borrow_objects=kwargs.get("prepare", False),
+            temp_root=tmp_path,
+            origin=str(origin),
+            local_remote=True,
+        ) as context:
+            context.source_git_dir = repo / ".git"
+            context.driver_base = base
+            context.interpreter = Path(PYTHON)
+            for name in ("PATH", "TMPDIR", "XDG_CACHE_HOME", "LU_PRE_PUSH_GATE_STAGE_BUDGET_S"):
+                if name in os.environ:
+                    context.env[name] = os.environ[name]
+            try:
+                yield context
+            finally:
+                measurements = context.git_dir / "lu-pre-push-gate"
+                if measurements.is_dir():
+                    shutil.copytree(measurements, repo / ".git/lu-pre-push-gate", dirs_exist_ok=True)
+
+    @contextlib.contextmanager
+    def no_credentials():
+        yield []
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
+    monkeypatch.setattr(delegate, "_finalize_public_repository", lambda: public)
+    monkeypatch.setattr(delegate, "_finalize_transport_credentials", no_credentials)
+
+
 @pytest.fixture
-def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec) -> Path:
     """``repo`` with the test-stage tripwires and the real OPSEC scanner hook at the ``pre-push`` stage."""
     log = tmp_path / "tripwire.log"
     for relative, name in TRIPWIRES.items():
@@ -255,7 +308,7 @@ def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Pa
     _commit(repo, "tripwires", ".")
     _git(repo, "push", "--no-verify", "origin", "main")
     _git(repo, "checkout", "-q", "-B", "feature")
-    _git(repo, "config", "core.hooksPath", str(repo / ".githooks"))
+    _git(repo, "config", "core.hooksPath", ".githooks")
     tools = tmp_path / "push-bin"
     tools.mkdir()
     (tools / "git-lfs").write_text("#!/usr/bin/env bash\ncat >/dev/null\nexit 0\n", encoding="utf-8")
@@ -268,6 +321,7 @@ def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Pa
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))  # the auto-finalize env drops PRE_COMMIT_*
     for name in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "LU_TEST_SLOTS_HOLDER", "AGENT_NO_MERGE"):
         monkeypatch.delenv(name, raising=False)
+    _bind_local_finalization(repo, tmp_path, monkeypatch)
     return repo
 
 
@@ -292,10 +346,31 @@ def _push(repo: Path, path: str) -> tuple[bool, str]:
     from scripts import delegate
 
     try:
-        delegate._push_auto_finalize_branch(repo, "feature")
+        delegate._push_auto_finalize_branch(
+            repo,
+            "feature",
+            owned_paths=["tests", "scripts", "docs", "site", "SLOW_PRE_PUSH"],
+            base_sha=_git(repo, "rev-parse", "origin/main").stdout.strip(),
+        )
     except RuntimeError as error:
         return False, str(error)
     return True, ""
+
+
+def test_finalization_context_resolves_the_interpreter_without_a_local_venv(repo: Path, monkeypatch):
+    """A checkout without .venv must use the shared project-interpreter resolver."""
+    from scripts import delegate
+
+    linked = repo.parent / "linked"
+    _git(repo, "worktree", "add", "-b", "linked", str(linked))
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+    monkeypatch.setattr(delegate, "project_interpreter", lambda root: Path(PYTHON))
+
+    with delegate._finalize_execution_context(linked) as context:
+        assert context.interpreter == Path(PYTHON)
+        assert context.interpreter.is_file()
+    assert not (repo / ".venv").exists()
+    assert not (linked / ".venv").exists()
 
 
 def _remote_feature(repo: Path) -> str:
