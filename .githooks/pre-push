@@ -13,7 +13,8 @@ tee "$updates_file" >/dev/null
 
 run_project_python "$hook_dir/check-pytest-stamp.py" "$@" <"$updates_file"
 # The gate runs the pre-commit pre-push stage over the explicit outgoing range,
-# the repo-wide invariant registry and the changed tests (#10033).
+# then the changed tests and the tests they affect (#10033, #11207). CI runs the
+# full suite and remains the merge gate.
 run_project_python "$hook_dir/pre_push_gate.py" \
   --launcher "$project_python" --config "$source_root/.pre-commit-config.yaml" "$@" <"$updates_file"
 require_git_lfs

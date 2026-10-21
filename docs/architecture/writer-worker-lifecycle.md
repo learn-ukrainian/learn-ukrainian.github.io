@@ -225,7 +225,8 @@ PUSHED requires all of the following at the final candidate head H:
 1. The normal pre-push gate completed successfully for H. `validation_incomplete` and gate refusal are failures.
    A hook bypass, stale successful run, or remote branch presence alone is insufficient.
    At push time, freshness follows `.githooks/pre_push_gate.py:receipt_is_fresh`: the `{head}-{base}` receipt
-   has the exact `receipt_key(plan)`, outcome `green`, and age from zero through `RECEIPT_TTL_S`, currently 3600 seconds.
+   matches the bound `receipt_inputs(plan)` (since #11207 the key also records the affected-test selection
+   that ran), outcome `green`, and age from zero through `RECEIPT_TTL_S`, currently 3600 seconds.
    The publication record copies that receipt's SHA-256 and key at successful push, with affected command/results evidence.
    Later expiry does not erase a historical gated publication. Removal validates that immutable publication record,
    not a new claim that an expired hook receipt is currently fresh. A new delta/head requires its own fresh gate and push.
