@@ -63,7 +63,9 @@ _UA_GEC_DROPPED_SKIPPED_KIND: int = 0
 
 _VESUM_BLOCK_PREFIX = re.compile(r"(?:[ \t]*(?:>|#{1,6}(?=[ \t])|[-+*](?=[ \t])|[0-9]{1,9}[.)](?=[ \t]))[ \t]*)*")
 _VESUM_WRAPPERS = " \t\u00a0\"'«»„“”‘’()[]{}—–-*_`"
-_VESUM_LABEL_MARKUP = str.maketrans("", "", "*_`[]")
+_VESUM_LABEL_MARKUP = str.maketrans("", "", "*_[]")
+# A backtick between two letters is an apostrophe (``пам`яті``); any other backtick is code markup.
+_LABEL_MARKUP_BACKTICK = re.compile(r"(?<![^\W\d_])`|`(?![^\W\d_])")
 
 
 _LINE_BREAK = re.compile(r"\r\n|[\n\r\v\f\x1c-\x1e\x85\u2028\u2029]")
@@ -87,7 +89,8 @@ def _vesum_prefix(text: str, token: Token) -> tuple[str, str]:
 
 def _colon_label_words(before: str) -> list[str] | None:
     """Words of a speaker or caption label that ends ``before`` with a colon, else None."""
-    label = re.split(r"[.!?…|]", before[:-1])[-1].translate(_VESUM_LABEL_MARKUP).strip()
+    label = re.split(r"[.!?…|]", before[:-1])[-1].translate(_VESUM_LABEL_MARKUP)
+    label = _LABEL_MARKUP_BACKTICK.sub("", label).strip()
     if not _LABEL_SHAPE.fullmatch(label):
         return None
     words = _LABEL_SEPARATORS.split(label)

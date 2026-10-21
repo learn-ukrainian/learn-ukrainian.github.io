@@ -601,6 +601,9 @@ LABEL_VESUM_ROWS = {
     "Мили": [{"pos": "noun", "tags": "noun:anim:f:v_naz"}],
     "мили": [{"pos": "verb", "tags": "verb:imperf:past:p"}],
     "посуд": [{"pos": "noun", "tags": "noun:inanim:m:v_rod"}],
+    "день": [{"pos": "noun", "tags": "noun:inanim:m:v_naz"}],
+    "пам'ять": [{"pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+    "пам'яті": [{"pos": "noun", "tags": "noun:inanim:f:v_rod"}],
 }
 
 
@@ -646,6 +649,19 @@ def test_label_shapes_clean(text):
 def test_label_shapes_still_flag_mid_sentence_colon(text):
     word = text.split()[-1]
     assert _vesum_problem_forms(text) == [word]
+
+
+@pytest.mark.usefixtures("label_vesum")
+@pytest.mark.parametrize("apostrophe", ("'", "’", "ʼ", "`", "‘"))
+@pytest.mark.parametrize("template", ("День пам{a}яті: Добре", "**День пам{a}яті:** Добре", "Мар{a}яна: Добре"))
+def test_label_licenses_every_apostrophe_variant(apostrophe, template):
+    assert _vesum_problem_forms(template.format(a=apostrophe)) == []
+
+
+@pytest.mark.usefixtures("label_vesum")
+@pytest.mark.parametrize("text", ("`День пам`яті:` Добре", "День пам`яті`: Добре"))
+def test_label_strips_backtick_code_markup_but_keeps_apostrophe(text):
+    assert _vesum_problem_forms(text) == []
 
 
 @pytest.mark.usefixtures("label_vesum")
@@ -749,6 +765,8 @@ def test_setext_lookahead_is_bounded_to_next_line(text, expected):
 def test_label_shapes_real_vesum(requires_vesum_db):
     for text in ("**Мар'яна:** Добре", "**Мар’яна:** Добре", "**Дар'я:** Добре", "Слово дня: Добре"):
         assert _vesum_problem_forms(text) == []
+    for apostrophe in "'’ʼ`‘":
+        assert _vesum_problem_forms(f"День пам{apostrophe}яті: Добре") == []
     assert _vesum_problem_forms("Він сказав: Так") == ["Так"]
     assert _vesum_problem_forms("Мар'яна: Так\nСлово дня: Так\nВін сказав: Так") == ["Так"]
     assert _vesum_problem_forms("**Мар'яна:** Технологіческа") == ["Технологіческа"]
