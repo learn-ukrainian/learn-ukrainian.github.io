@@ -34,8 +34,10 @@ def _fd_path(fd: int) -> Path:
     return Path(os.readlink(f"/proc/self/fd/{fd}"))
 
 
-def install_readonly(root: Path, patch: Callable[[object, str, object], None] = setattr) -> list[tuple[str, str]]:
-    """Fail every write at or below ``root`` like a read-only bind; return the refused attempts."""
+def install_readonly(
+    root: Path, patch: Callable[[object, str, object], None] = setattr, code: int = errno.EROFS
+) -> list[tuple[str, str]]:
+    """Fail every write at or below ``root`` like a read-only bind (or with ``code``); return the refused attempts."""
     root = Path(os.path.realpath(root))
     real_mkdir, real_chmod, real_fchmod, real_open = os.mkdir, os.chmod, os.fchmod, os.open
     refused: list[tuple[str, str]] = []
@@ -49,15 +51,15 @@ def install_readonly(root: Path, patch: Callable[[object, str, object], None] = 
     def guarded(path: Path) -> bool:
         return path == root or root in path.parents
 
-    def refuse(op: str, path: Path, code: int = errno.EROFS):
+    def refuse(op: str, path: Path, errcode: int = code):
         refused.append((op, str(path)))
-        raise OSError(code, os.strerror(code), str(path))
+        raise OSError(errcode, os.strerror(errcode), str(path))
 
     def mkdir(path, mode=0o777, *, dir_fd=None):
         resolved = target(path, dir_fd)
         if guarded(resolved):
             # The kernel reports an existing name before the read-only mount.
-            refuse("mkdir", resolved, errno.EEXIST if os.path.lexists(resolved) else errno.EROFS)
+            refuse("mkdir", resolved, errno.EEXIST if os.path.lexists(resolved) else code)
         return real_mkdir(path, mode, dir_fd=dir_fd)
 
     def chmod(path, mode, *, dir_fd=None, follow_symlinks=True):
@@ -98,8 +100,8 @@ class World:
         self.runs_root.chmod(mode)
         return self.runs_root
 
-    def readonly(self) -> list[tuple[str, str]]:
-        return install_readonly(self.shared, self.monkeypatch.setattr)
+    def readonly(self, code: int = errno.EROFS) -> list[tuple[str, str]]:
+        return install_readonly(self.shared, self.monkeypatch.setattr, code)
 
     def configure(self, *, basetemp: str | None = None, worker: bool = False) -> SimpleNamespace:
         config = SimpleNamespace(option=SimpleNamespace(basetemp=basetemp), add_cleanup=self.cleanups.append)
@@ -306,6 +308,115 @@ def test_symlinked_root_refuses(world, tmp_path, mount):
         world.configure()
     assert list(elsewhere.iterdir()) == []
     assert list(world.temp.iterdir()) == [] and list(world.shm.iterdir()) == []
+
+
+@pytest.mark.parametrize("mount", ["writable", "readonly"])
+@pytest.mark.parametrize("mode", [0o333, 0o303], ids=oct)
+def test_unreadable_group_or_other_writable_root_refuses(world, mount, mode):
+    """AC-02. Defect class: a tamperable root the owner cannot open is bypassed by the fallback, not refused."""
+    world.make_runs_root(mode)
+    real_chmod = os.chmod
+    if mount == "readonly":
+        world.readonly()
+    try:
+        with pytest.raises(TaskScratchError, match="group- or other-writable"):
+            world.configure()
+    finally:
+        real_chmod(world.runs_root, 0o700)  # let tmp_path cleanup list the root
+    assert list(world.temp.iterdir()) == [] and list(world.shm.iterdir()) == []
+    assert world.cleanups == []
+
+
+def test_root_open_denied_does_not_fall_back(world):
+    """Defect class: a denied read-open of the root (never a read-only-mount symptom) is taken for one."""
+    world.make_runs_root(0o700)
+    world.readonly()
+    guarded_open = os.open
+
+    def open_(path, flags, mode=0o777, *, dir_fd=None):
+        if dir_fd is None and Path(os.fsdecode(path)) == world.runs_root:
+            raise OSError(errno.EACCES, os.strerror(errno.EACCES), os.fsdecode(path))
+        return guarded_open(path, flags, mode, dir_fd=dir_fd)
+
+    world.monkeypatch.setattr(os, "open", open_)
+    with pytest.raises(OSError) as raised:
+        world.configure()
+    assert raised.value.errno == errno.EACCES
+    assert list(world.temp.iterdir()) == [] and list(world.shm.iterdir()) == []
+
+
+@pytest.mark.parametrize("mode", [0o700, 0o750], ids=oct)
+def test_other_write_errors_on_the_shared_root_stay_loud(world, mode):
+    """Defect class: any OSError (a full disk, an I/O error) is taken for a read-only mount and hidden."""
+    world.make_runs_root(mode)
+    world.readonly(errno.ENOSPC)
+    with pytest.raises(OSError) as raised:
+        world.configure()
+    assert raised.value.errno == errno.ENOSPC
+    assert list(world.temp.iterdir()) == [] and list(world.shm.iterdir()) == []
+
+
+# ---- fallback containment ------------------------------------------------------------------------------------
+
+
+def _swap_fallback_root(world: World, outside: Path, *, under: Path, when: str) -> list[Path]:
+    """Rename the fresh fallback directory away and plant a symlink to ``outside`` in its place."""
+    swapped: list[Path] = []
+
+    def swap(private: Path) -> None:
+        if private.parent == under and not swapped:
+            private.rename(private.with_name(private.name + ".moved"))
+            private.symlink_to(outside, target_is_directory=True)
+            swapped.append(private)
+
+    if when == "after-create":
+        real_mkdtemp = tempfile.mkdtemp
+
+        def mkdtemp(suffix=None, prefix=None, dir=None):
+            created = real_mkdtemp(suffix, prefix, dir)
+            if prefix == pytest_scratch.FALLBACK_PREFIX:
+                swap(Path(created))
+            return created
+
+        world.monkeypatch.setattr(tempfile, "mkdtemp", mkdtemp)
+    else:
+        real_allocate = pytest_scratch.allocate
+
+        def allocate(task_id, *, root, namespace_dirname):
+            swap(root)
+            return real_allocate(task_id, root=root, namespace_dirname=namespace_dirname)
+
+        world.monkeypatch.setattr(pytest_scratch, "allocate", allocate)
+    return swapped
+
+
+@pytest.mark.parametrize("when", ["after-create", "before-allocate"])
+def test_fallback_directory_swapped_for_a_symlink_fails_closed(world, tmp_path, when):
+    """Defect class: a fallback path replaced after its check redirects the run outside the temp."""
+    outside = tmp_path / "outside"
+    outside.mkdir(mode=0o700)
+    world.make_runs_root(0o700)
+    world.readonly()
+    swapped = _swap_fallback_root(world, outside, under=world.temp, when=when)
+    with pytest.raises(TaskScratchError, match=r"changed|symlink"):
+        world.configure()
+    assert swapped
+    assert world.cleanups == []
+    assert os.environ["TMPDIR"] == str(world.temp)
+
+
+@pytest.mark.parametrize("mode", [0o777, 0o770], ids=oct)
+def test_fallback_skips_a_temp_others_can_rename_entries_in(world, tmp_path, mode):
+    """Defect class: a non-sticky shared temp lets another user swap the run directory after allocation."""
+    outside = tmp_path / "outside"
+    outside.mkdir(mode=0o700)
+    world.make_runs_root(0o700)
+    world.temp.chmod(mode)
+    world.readonly()
+    swapped = _swap_fallback_root(world, outside, under=world.temp, when="before-allocate")
+    config = world.configure()
+    _assert_private_fallback(world, config, world.shm)
+    assert swapped == [] and list(world.temp.iterdir()) == [] and list(outside.iterdir()) == []
 
 
 # ---- callers that own their base temp ------------------------------------------------------------------------

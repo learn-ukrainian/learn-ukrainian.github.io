@@ -4,6 +4,8 @@ A reviewer sandbox mounts the shared scratch root read-only (#11317). The root
 is then still verified, and refused if a symlink, foreign-owned or writable by
 group or others, but the run itself is allocated in a fresh owner-only
 directory under the sandbox's writable temp: ``TMPDIR``, else shared memory.
+A temp where others may rename entries (writable, not sticky) is skipped, and
+the run must land in the very directory created there.
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ RUNS_DIRNAME = "runs"
 PRIVATE_MODE = 0o700
 FALLBACK_PREFIX = "lu-pytest-"
 SHARED_MEMORY_TEMP = Path("/dev/shm")
+_DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
 
@@ -32,12 +35,29 @@ def _is_unwritable(exc: OSError) -> bool:
     return exc.errno in _UNWRITABLE_ERRNOS
 
 
-def _private_shared_root() -> Path:
-    """Return the verified shared pytest root, changing its mode only when it differs."""
+def _not_private(root: Path) -> TaskScratchError:
+    return TaskScratchError(f"pytest scratch root is group- or other-writable and cannot be made private: {root}")
+
+
+def _private_shared_root() -> Path | None:
+    """Return the verified shared pytest root, or None when it is safe but this sandbox cannot write it."""
     root = ensure_scratch_root() / NAMESPACE
-    root.mkdir(mode=PRIVATE_MODE, exist_ok=True)
+    try:
+        os.mkdir(root, PRIVATE_MODE)
+    except FileExistsError:
+        pass
+    except OSError as exc:
+        if not _is_unwritable(exc) or os.path.lexists(root):
+            raise
+        return None  # No root exists to verify, and none can be made here.
     checked = _verify_private_dir(root, what="pytest scratch root")
-    fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        fd = os.open(root, _DIR_FLAGS)
+    except OSError as exc:
+        # A read-only mount still opens for reading: this is the root's own mode, never a fallback.
+        if stat.S_IMODE(checked.st_mode) & 0o022:
+            raise _not_private(root) from exc
+        raise
     try:
         # Recheck what the descriptor holds: the path may have been replaced since the check.
         st = os.fstat(fd)
@@ -52,11 +72,11 @@ def _private_shared_root() -> Path:
             try:
                 os.fchmod(fd, PRIVATE_MODE)
             except OSError as exc:
-                if _is_unwritable(exc) and mode & 0o022:
-                    raise TaskScratchError(
-                        f"pytest scratch root is group- or other-writable and cannot be made private: {root}"
-                    ) from exc
-                raise
+                if not _is_unwritable(exc):
+                    raise
+                if mode & 0o022:
+                    raise _not_private(root) from exc
+                return None
     finally:
         os.close(fd)
     return root
@@ -71,20 +91,56 @@ def _fallback_bases() -> list[Path]:
     return bases
 
 
+def _others_can_rename_in(base: Path) -> bool:
+    """Group or others may write ``base`` without the sticky bit, so may swap our entry in it."""
+    mode = os.stat(base).st_mode
+    return bool(mode & 0o022) and not mode & stat.S_ISVTX
+
+
+def _allocate_in_created(private: Path) -> TaskScratch:
+    """Allocate below ``private`` only if the run lands in the directory this process just created."""
+    try:
+        fd = os.open(private, _DIR_FLAGS)
+    except OSError as exc:
+        raise TaskScratchError(f"pytest private temp changed after creation: {private}") from exc
+    try:
+        st = os.fstat(fd)
+        if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) != PRIVATE_MODE:
+            raise TaskScratchError(f"pytest private temp is not owner-only: {private}")
+        scratch = allocate("pytest", root=private, namespace_dirname=RUNS_DIRNAME)
+        # allocate() walks the path again; reach the run from the descriptor and compare.
+        expected = (scratch.lease["dir"]["dev"], scratch.lease["dir"]["ino"])
+        try:
+            runs_fd = os.open(RUNS_DIRNAME, _DIR_FLAGS, dir_fd=fd)
+            try:
+                run = os.stat(scratch.invocation_id, dir_fd=runs_fd, follow_symlinks=False)
+            finally:
+                os.close(runs_fd)
+            contained = (run.st_dev, run.st_ino) == expected
+        except OSError:
+            contained = False
+        if not contained:
+            scratch.preserve()
+            raise TaskScratchError(f"pytest private temp changed during allocation: {private}")
+        return scratch
+    finally:
+        os.close(fd)
+
+
 def _allocate_private_fallback() -> TaskScratch:
-    """Allocate in a fresh owner-only directory below the first writable temp."""
+    """Allocate in a fresh owner-only directory below the first writable temp no other user can rename in."""
     failures = []
     for base in _fallback_bases():
         try:
-            # A new 0700 directory with a random name: safe even in a world-writable parent.
+            if _others_can_rename_in(base):
+                failures.append("not-sticky")
+                continue
+            # A new 0700 directory with a random name: exclusive even in a shared sticky parent.
             private = Path(tempfile.mkdtemp(prefix=FALLBACK_PREFIX, dir=base))
         except OSError as exc:
             failures.append(errno.errorcode.get(exc.errno or 0, "error"))
             continue
-        st = _verify_private_dir(private, what="pytest private temp")
-        if stat.S_IMODE(st.st_mode) != PRIVATE_MODE:
-            raise TaskScratchError(f"pytest private temp is not owner-only: {private}")
-        return allocate("pytest", root=private, namespace_dirname=RUNS_DIRNAME)
+        return _allocate_in_created(private)
     raise TaskScratchError(
         "pytest scratch root is not writable and no private writable temp could be created "
         f"(TMPDIR, then shared memory): {', '.join(failures)}"
@@ -92,11 +148,13 @@ def _allocate_private_fallback() -> TaskScratch:
 
 
 def _allocate_run() -> TaskScratch:
-    try:
-        return allocate("pytest", root=_private_shared_root(), namespace_dirname=RUNS_DIRNAME)
-    except OSError as exc:
-        if not _is_unwritable(exc):
-            raise
+    root = _private_shared_root()
+    if root is not None:
+        try:
+            return allocate("pytest", root=root, namespace_dirname=RUNS_DIRNAME)
+        except OSError as exc:
+            if not _is_unwritable(exc):
+                raise
     return _allocate_private_fallback()
 
 
