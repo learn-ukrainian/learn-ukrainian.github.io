@@ -61,7 +61,9 @@ def acceptance_items(body: str) -> list[dict]:
 
 def item_assignment(text: str) -> tuple[str | None, str | None]:
     """Read one recognized owner and one valid ISO calendar deadline."""
-    owners = re.findall(r"\bowner:\s*([^\s,;|]+)", text, re.I)
+    owners = re.findall(r"(?<![\w-])(?:\*\*)?owner:(?:\*\*)?\s*([^\s,;|]+)", text, re.I)
+    owners = [value.removesuffix(".") for value in owners]
+    owners = [value[1:-1] if value.startswith("`") and value.endswith("`") else value for value in owners]
     dates = re.findall(r"\bdue:\s*([^\s,;|]+)", text, re.I)
     owner = owners[0] if len(owners) == 1 and owners[0] in LANES else None
     due = None

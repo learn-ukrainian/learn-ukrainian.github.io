@@ -14,6 +14,16 @@ OWNED = "- [ ] AC-01: After merge, review receipts; owner: codex-devops; due: 20
 UNOWNED = "- [ ] AC-02: Unit tests pass"
 
 
+@pytest.mark.parametrize("field,owner", [
+    ("owner: `codex-devops`", "codex-devops"),
+    ("**owner:** codex-devops", "codex-devops"),
+    ("owner: codex-devops.", "codex-devops"),
+    ("co-owner: codex-devops", None),
+])
+def test_owner_markdown_and_label_boundary(field, owner):
+    assert pc.item_assignment(f"{field}; due: 2026-11-20") == (owner, "2026-11-20")
+
+
 @pytest.fixture
 def transport(monkeypatch):
     pr = {"state": "MERGED", "url": "https://github.com/unit/public/pull/3", "body": "Closes #7",

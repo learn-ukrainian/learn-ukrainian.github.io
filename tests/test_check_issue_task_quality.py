@@ -128,6 +128,8 @@ def test_generic_measurement_does_not_require_assignment(phrase):
     "owner: codex-devops; due: 2028-02-29", "owner: claude-infra; due: 2026-11-20",
     "owner: codex-atlas; due: 2026-11-20", "owner: grok-monitor; due: 2026-11-20",
     "owner: gemini-open-model-data; due: 2026-11-20", "owner: claude-cto; due: 2026-11-20",
+    "owner: `codex-devops`; due: 2026-11-20", "**owner:** codex-devops; due: 2026-11-20",
+    "owner: codex-devops. due: 2026-11-20",
 ])
 def test_postmerge_valid_assignment(fields):
     assert score_body(COMPLETE + f"\n- [ ] AC-03: After merge, review evidence; {fields}\n")["verdict"] == "PASS"
@@ -139,6 +141,7 @@ def test_postmerge_valid_assignment(fields):
     "owner: codex-devops; due: 2026-1-01", "owner: codex-devops; due: tomorrow",
     "owner: codex-devops; due: 2026-11-20junk", "owner: codex-devops\ndue: 2026-11-20",
     "owner: codex-devops; owner: claude-cto; due: 2026-11-20",
+    "co-owner: codex-devops; due: 2026-11-20",
 ])
 def test_postmerge_invalid_assignment(fields):
     assert "post_merge_unowned" in score_body(
