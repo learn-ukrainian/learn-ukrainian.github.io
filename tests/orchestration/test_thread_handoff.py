@@ -4622,6 +4622,134 @@ def test_alias_lane_detect_compares_stream_without_regard_to_case(
     assert "Skipped foreign candidate" not in context
 
 
+class _EmptyBundleList:
+    """Bundle API whose list has no row for any seat (#11259)."""
+
+    def __init__(self) -> None:
+        self.paths: list[str] = []
+
+    def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
+        self.paths.append(path)
+        return 200, json.dumps({"bundles": []}), {}
+
+
+def _prepare_stream_packet(tmp_path: Path, capsys, *, owner: str, thread_id: str, family: str = "atlas") -> dict:
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "prepare",
+                "--agent",
+                owner,
+                # Headless: no native title adapter, so the rendered command alone binds.
+                "--harness",
+                "headless",
+                "--active-thread-id",
+                thread_id,
+                "--task-family",
+                family,
+                "--stream-epic",
+                "1001",
+                "--semantic-title",
+                f"Drive {family} lane",
+                "--terminal-goal",
+                "merge",
+            ]
+        )
+        == 0
+    )
+    return json.loads(capsys.readouterr().out)
+
+
+def _gate_args(tmp_path: Path, *, agent: str) -> SimpleNamespace:
+    return SimpleNamespace(
+        repo_root=str(tmp_path),
+        agent=agent,
+        session_id="new-thread",
+        task_family="atlas",
+        stream="epic:1001",
+        detect=True,
+        import_bundle=True,
+    )
+
+
+def _run_rendered(tmp_path: Path, line: str, **substitutions: str) -> int:
+    """Run one SessionStart command line exactly as rendered, against ``tmp_path``."""
+    for placeholder, value in substitutions.items():
+        line = line.replace(placeholder, value)
+    words = line.split()
+    script = words.index("scripts/orchestration/thread_handoff.py")
+    return th.main(["--repo-root", str(tmp_path), *words[script + 1 :]])
+
+
+def test_session_start_delivers_provider_fallback_packet_when_api_has_no_row(tmp_path: Path, capsys, monkeypatch):
+    """#11259 AC-01: seat codex-atlas, packet under codex, empty bundle list."""
+    from scripts.hooks import session_start_gate as gate
+
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    packet = _prepare_stream_packet(tmp_path, capsys, owner="codex", thread_id="old-thread")
+    server = _EmptyBundleList()
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+
+    imported = gate.phase_rollover_import(_gate_args(tmp_path, agent="codex-atlas"))
+    assert imported["status"] == "ok", imported
+    assert "warning" not in imported
+    assert server.paths, "the bundle API list was not consulted"
+
+    detected = gate.phase_rollover_detect(_gate_args(tmp_path, agent="codex-atlas"))
+    assert detected["status"] == "stop"
+    assert detected["detect_status"] == "pending_start"
+    context = detected["context"]
+    bootstrap = next(line for line in context.splitlines() if "bootstrap-replacement" in line)
+    assert f" -a codex -l {packet['lineage_id']} " in bootstrap
+
+    # The rendered command binds the packet with no hand-edited namespace.
+    assert _run_rendered(tmp_path, bootstrap, **{"<binding>": "session-start"}) == 0
+    assert '"status": "bootstrap_ready"' in capsys.readouterr().out
+    state = json.loads((tmp_path / packet["state_file"]).read_text(encoding="utf-8"))
+    assert state["replacement"]["status"] == "resumed"
+    assert state["replacement"]["resumed_thread_id"] == "new-thread"
+    confirm = next(line for line in context.splitlines() if "confirm-replacement" in line)
+    assert f" -a codex -l {packet['lineage_id']} " in confirm
+
+
+def test_session_start_lists_multiple_pending_without_formatting_failure(tmp_path: Path, capsys, monkeypatch):
+    """#11259 AC-02: two live packets for one seat render, not 'Formatting lookup failed'."""
+    from scripts.hooks import session_start_gate as gate
+
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    packets = {
+        owner: _prepare_stream_packet(tmp_path, capsys, owner=owner, thread_id=f"old-{owner}")
+        for owner in ("codex", "codex-atlas")
+    }
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: _EmptyBundleList())
+
+    imported = gate.phase_rollover_import(_gate_args(tmp_path, agent="codex-atlas"))
+    assert imported == {"status": "ok", "elapsed_seconds": imported["elapsed_seconds"]}
+
+    detected = gate.phase_rollover_detect(_gate_args(tmp_path, agent="codex-atlas"))
+    assert detected["status"] == "stop"
+    assert detected["detect_status"] == "ambiguous"
+    context = detected["context"]
+    assert "Formatting lookup failed" not in context
+    assert context.startswith(th.MULTIPLE_PENDING_SESSION_START_HEADER)
+    binds = [line.strip().removeprefix("bind: ") for line in context.splitlines() if "bind-replacement" in line]
+    assert len(binds) == 2
+    for owner, packet in packets.items():
+        line = next(line for line in binds if packet["lineage_id"] in line)
+        assert f"--agent {owner} --lineage-id {packet['lineage_id']} " in line
+
+    # Each bind line names an existing lease: the provider-fallback one binds as rendered.
+    fallback = next(line for line in binds if packets["codex"]["lineage_id"] in line)
+    assert _run_rendered(tmp_path, fallback, **{"<this-thread-id>": "new-thread", "<harness-binding>": "test"}) == 0
+    capsys.readouterr()
+    state = json.loads((tmp_path / packets["codex"]["state_file"]).read_text(encoding="utf-8"))
+    assert state["replacement"]["identity"]["replacement_task_id"] == "new-thread"
+
+
 @pytest.mark.parametrize(
     ("stream_match", "family_match", "use_environment"),
     [(False, True, False), (True, False, False), (False, False, True), (True, True, False)],
