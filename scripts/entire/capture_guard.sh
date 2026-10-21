@@ -13,6 +13,18 @@ if [ ! -x "$python" ]; then
     echo "[entire] capture refused (project_python_missing): no checkpoint written" >&2
     exit 0
 fi
-"$python" -I "$root/scripts/entire/capture_guard.py" "$@" ||
+case "$*" in
+    "hooks git post-commit" | "--budget "*" hooks git post-commit") post_commit=1 ;;
+    *) post_commit= ;;
+esac
+set -- "$python" -I "$root/scripts/entire/capture_guard.py" "$@"
+# The post-commit capture yields CPU and disk to foreground work (#11289): the
+# guard, its probes and Entire all inherit niceness +10 and idle I/O. A wrapper
+# that is missing or fails its probe is dropped, so it can never stop a capture.
+if [ -n "$post_commit" ]; then
+    ionice -c3 -t true >/dev/null 2>&1 && set -- ionice -c3 -t "$@"
+    nice -n 10 true >/dev/null 2>&1 && set -- nice -n 10 "$@"
+fi
+"$@" ||
     echo "[entire] capture guard failed (exit $?): no checkpoint written" >&2
 exit 0

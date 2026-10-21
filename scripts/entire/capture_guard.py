@@ -162,6 +162,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Example: scripts/entire/capture_guard.sh --budget 25 hooks git pre-push origin\n"
             "Outputs: Entire's own output when capture runs; one '[entire]' stderr line when\n"
             "capture is refused or fails. Writes nothing itself.\n"
+            "Priority: the wrapper runs 'hooks git post-commit' (guard, probes and Entire)\n"
+            "under 'nice -n 10' and 'ionice -c3' when available; other commands are unchanged.\n"
             "Exit codes: 0 always (capture is optional and never blocks the host or git).\n"
             f"Related: {RUNBOOK}; scripts/entire/private_mode_preflight.py; #10846."
         ),
