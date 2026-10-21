@@ -485,6 +485,12 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 - **Finish before starting (#10665)**: a lane with an open PR that has waited more than
   24 h on review or finalize takes no new issue until that wait clears. The only exception
   is an external dependency named in the lane's blocker post. Lane worker caps still apply.
+- **Jammed pipe (D4, as replaced by OO-54)**: while the push, review and merge pipe is
+  jammed, a lane does not start new product authoring. New PRs are only for the
+  critical path already ordered. Landing a PR that already exists, a cross-family
+  review, read-only triage and closing an issue that is done do not count against
+  that limit. In-flight product work may finish. Every PR older than 12 h gets a
+  named owner action each cycle; age alone does not close a PR.
 - **Pull order (#10665; trial from 2026-10-14, reviewed after one week on delivered
   outcomes)**: product ready work (the curriculum product and its data, in the operator's
   current focus order) comes first.
@@ -526,12 +532,17 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    canonical #5302 receipt path/digest, target-input fingerprint, and exact
    reviewed SHA; never copy a `behavior_proof_status` string.
 6. **Pass the independent review and CI gates** — ONE cross-family review round:
-   qualified toolful reviewer outside the author model family, exact-head APPROVE
-   before PR creation; then `record_cf_verdict.py` binds verdict + findings to
-   the PR head, followed by same-head CI (drive-epic §6–§7). The
+   qualified toolful reviewer outside the author model family. A PR may be opened
+   before approval so CI exists; merge still needs exact-head cross-family APPROVE
+   and same-head green CI. `record_cf_verdict.py` binds verdict + findings to
+   the PR head (drive-epic §6–§7). The
    shielded formal path remains retired, including for high-risk code. Non-blocking
    findings may remain documented. If a fix changes the head, obtain approval and
    green CI for that new head before enqueue. Do not fold unreviewed edits into merge.
+   **Gate freeze (D3, until 2026-10-28):** no new gate, admission check or refusal
+   path without operator approval. Repairs to existing gates are permitted. A gate
+   is removed or relaxed only with a demonstrated replacement or an approved
+   removal; zero catches alone are not enough for a security gate.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining
@@ -570,6 +581,65 @@ printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - \
     --task-id review-NNN --review --branch <branch>
 ```
+
+### Tests (#11226)
+
+A new test must be able to fail for a real defect class; name that class in the
+test name or docstring. D1–D7 are "do not write"; K1–K13 are "must test". K is
+evaluated first and overrides every D class. Unresolved protection means keep the
+test. Protection is for demonstrated behaviour, not blanket immunity for a
+directory. Canonical text: `docs/best-practices/test-quality.md`.
+
+Do not write (all qualifiers must hold):
+- **D1** asserts only what a runtime-enforced schema/validator already rejects AND
+  another kept test exercises that rejection. Python annotations are not runtime
+  enforcement; schema-rejection tests (e.g. `tests/api/test_fleet_board_v1.py:80-110`) stay.
+- **D2** asserts only that a mock was called, where the call is not itself the
+  contract. Interaction contracts stay: dispatch destination, read-only access, no
+  network/process launch, exactly-once cleanup (e.g. `tests/test_mcp_sources_server.py:823-827`).
+- **D3** import/smoke test duplicated by a behaviour test AND not a clean-process
+  startup/packaging test (`tests/test_delegate_import_clean.py:11-28` and
+  `tests/test_source_clis_entrypoint.py:44-58` stay).
+- **D4** duplicate case: same semantic input partition, not merely the same code
+  path/assert shape (Unicode NEL/LS/PS cases in `tests/test_cli_tail_timeouts.py:120-140` stay).
+- **D5** speed claim (wall-clock "is fast") or fixed real sleep to force ordering.
+  Bounded-liveness/stall guards and documented budgets stay until an equivalent
+  replacement passes (`tests/api/test_context_cost.py:178-198`,
+  `tests/api/test_fleet_board_ops.py:92-120`). Deterministic-clock tests are never
+  "timer" tests.
+- **D6** incidental wording/format assertions. Required CLI help sections and
+  exit-code descriptions (`cli-help-standard.md:11-26`; e.g.
+  `tests/hygiene/test_retention_engine_cli_help.py:19-24`) and operational messages
+  that are contracts stay.
+- **D7** retired path, only with verified absence of supported callers,
+  compatibility/migration/rollback use and historical readers; a governing doc alone
+  is not enough.
+
+Must test (protected):
+- **K1** security code (hooks, launchers, credentials, admission, sandbox, opsec
+  scans, write/merge guards).
+- **K2** shipping gates and audits.
+- **K3** Ukrainian-language correctness (VESUM/sources, stress, morphology,
+  Russian-shadow, word-card certification).
+- **K4** persistence, migrations, storage topology, dataset integrity/export, lexdata.
+- **K5** orchestration lifecycle and deterministic race fixes.
+- **K6** external-format parsing and protocol translation.
+- **K7** any identified regression test, any age.
+- **K8** fixture mirrors for rules/prompt deploy checks.
+- **K9** application lifecycle, resource cleanup (e.g.
+  `tests/api/test_context_cost.py:149-175`), bounded liveness, resource/call-count budgets.
+- **K10** public CLI/API/output contracts, clean-process packaging/startup,
+  dependency-patch guards, platform/environment isolation.
+- **K11** test manifests/registries that name test files or node ids
+  (`tests/test_repo_wide_marker_invariant.py` `KNOWN_REPO_WIDE_*`,
+  `scripts/ci/history-tests.txt` + `split_tests.py:201-203`, `scripts/ci/components.json`,
+  `scripts/ci/pytest_shards.py` serial/perf lists and `SELECTION_DIGEST`, workflow path
+  lists, `store_access_baseline.json`, `lint_tmp_paths.py`): a deletion must update the
+  manifest in the same PR or is refused.
+- **K12** repo-wide AST/source-tree invariant scanners (`repo_wide` / `repo_invariant` markers).
+- **K13** learner-facing frontend, e2e, accessibility, locale purity, MDX/Astro build
+  contracts (`site/e2e`, `site/tests`); JS/TS deletion is out of scope until a TS rule
+  set exists.
 
 ## Channel bridge (#1190, shipped 2026-04-12)
 

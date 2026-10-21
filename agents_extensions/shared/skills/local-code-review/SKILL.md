@@ -69,7 +69,9 @@ outcome, the threat and input model and the dispositions (checklist Step 2);
 findings are one per input class, each with a reproducer (Step 4); blocking
 follows the stated contract, existing invariants on the change's paths and
 regressions against main, verdicts are proportional, and a missing required
-capability is INCONCLUSIVE, which still blocks (Step 5); the breakers are
+capability is INCONCLUSIVE, which still blocks (Step 5); exact-head CI that
+answers the execution questions is valid evidence, a capability note is not a
+verdict, and new tests name their defect class (Step 5); the breakers are
 unchanged (Step 6).
 
 ## Output
