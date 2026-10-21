@@ -1,0 +1,16 @@
+[Unit]
+Description=Learn Ukrainian hourly sanitized weekly-quota sample (observed history, no provider call)
+After=learn-ukrainian-api.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PYTHONUNBUFFERED=1
+Environment=LANG=C.UTF-8
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.fleet.quota_history collect
+TimeoutStartSec=2min
+Nice=15
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+# The Monitor is loopback-only; the collector needs no other socket family.
+RestrictAddressFamilies=AF_UNIX AF_INET

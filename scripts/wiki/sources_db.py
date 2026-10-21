@@ -1676,14 +1676,14 @@ def _read_db_path() -> Path:
     return require_local_active_sources_db(main_checkout_root(PROJECT_ROOT)).resolve()
 
 
-# Class ``_open_conn`` opens every connection with. ``None`` (the default) is a
-# plain ``sqlite3.Connection``; the Sources MCP server installs a subclass that
-# reports database errors the helpers below swallow (#11115).
+# ``None`` keeps the default factory: a serialized reader or a plain writer.
+# The Sources MCP server installs a subclass that also reports database errors
+# the helpers below swallow (#11115).
 _connection_factory: type[sqlite3.Connection] | None = None
 
 
 def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
-    """Open every later ``_open_conn`` connection as ``factory`` (``None``: plain)."""
+    """Open every later ``_open_conn`` connection as ``factory`` (``None``: unobserved)."""
     global _connection_factory
     _connection_factory = factory
 
