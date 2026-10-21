@@ -9,6 +9,10 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    __package__ = "scripts.eval.uk_preamble"
+
 from scripts.common.repo_root import project_interpreter
 
 from .common import (

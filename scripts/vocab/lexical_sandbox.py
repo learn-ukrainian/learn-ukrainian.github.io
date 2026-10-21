@@ -559,7 +559,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 3:
         print("Usage: lexical_sandbox.py <track> <module_num> [plan.yaml]")
-        sys.exit(1)
+        sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"} else 1)
 
     track = sys.argv[1]
     module_num = int(sys.argv[2])

@@ -10,6 +10,7 @@ Usage:
 """
 
 import re
+import sys
 from collections import OrderedDict
 from pathlib import Path
 
@@ -205,4 +206,7 @@ def main():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print(__doc__.strip())
+        raise SystemExit(0)
     main()
