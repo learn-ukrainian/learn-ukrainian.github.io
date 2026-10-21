@@ -864,7 +864,10 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 
 def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
     jobs = _jobs_of_ci()
-    assert jobs["pytest"]["needs"] == ["reuse"]
+    assert jobs["pytest"]["needs"] == ["reuse", "refresh-pytest-durations"]
+    refresh = jobs["refresh-pytest-durations"]
+    assert refresh["needs"] == ["reuse"]
+    assert refresh["if"] == "${{ !cancelled() }}"
     assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
     assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}

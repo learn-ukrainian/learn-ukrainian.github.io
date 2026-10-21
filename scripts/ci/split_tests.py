@@ -181,6 +181,16 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
     return len(samples)
 
 
+def tracked_test_files(root: Path | None = None) -> list[str]:
+    """Tracked ``tests/**/test_*.py`` paths, the same denominator ci.yml shards split.
+
+    ``git ls-files`` is the selection. A duration snapshot never adds or drops a file.
+    """
+    repo = root or Path(__file__).resolve().parents[2]
+    listed = subprocess.check_output(["git", "ls-files", "--", "tests"], cwd=repo, text=True, timeout=30)
+    return [line for line in listed.splitlines() if re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", line)]
+
+
 def read_list(path: Path) -> list[str]:
     """Paths in a list file, one per line; ``#`` starts a comment."""
     lines = (line.split("#", 1)[0].strip() for line in path.read_text(encoding="utf-8").splitlines())
