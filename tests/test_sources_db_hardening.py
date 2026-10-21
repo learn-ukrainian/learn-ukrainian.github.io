@@ -63,6 +63,7 @@ def test_shared_connect_scanner_flags_plain_connect() -> None:
     assert _shared_connects("sqlite3.connect('x')\nopen_readonly('x', check_same_thread=False)\n") == []
 
 
+@pytest.mark.repo_wide
 def test_shared_sqlite_connections_route_through_open_readonly() -> None:
     violations: list[str] = []
     seen: set[tuple[str, str]] = set()

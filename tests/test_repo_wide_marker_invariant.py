@@ -201,6 +201,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_session_streams.py::test_embedded_host_exemptions_are_required_by_tracked_basenames",
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
+    "tests/test_sources_db_hardening.py::test_shared_sqlite_connections_route_through_open_readonly",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
     "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
 )
