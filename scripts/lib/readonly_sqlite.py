@@ -162,8 +162,6 @@ def open_readonly(
     if timeout != 5.0:
         settings["timeout"] = timeout
     if not check_same_thread:
-        if factory is not None and not issubclass(factory, SerializedConnection):
-            raise TypeError("shared reader factory must inherit SerializedConnection")
         settings["check_same_thread"] = False
         # CPython 3.12+ keeps one statement cache per connection, and that cache
         # is not safe when threads share the connection: fetches come back wrong

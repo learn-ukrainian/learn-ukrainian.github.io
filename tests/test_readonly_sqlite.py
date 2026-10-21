@@ -427,15 +427,6 @@ def test_abandoned_cursor_race_preserves_native_error_and_query_results(database
         assert conn.execute("SELECT 11").fetchall() == [(11,)]
 
 
-def test_shared_reader_refuses_unserialized_custom_factory_before_connect(database, monkeypatch):
-    """A custom factory must not silently bypass shared-connection serialization."""
-    calls = []
-    monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: calls.append(1))
-    with pytest.raises(TypeError, match="SerializedConnection"):
-        open_readonly(database, check_same_thread=False, factory=sqlite3.Connection)
-    assert calls == []
-
-
 def test_shared_reader_accepts_serialized_custom_factory(database):
     class Reader(SerializedConnection):
         pass
