@@ -39,9 +39,15 @@ that could change what the hooks import (`untracked_inputs`, below). The pre-com
 hook `.pre-commit-config.yaml` places at the `pre-push` stage, unchanged, including the secret scans.
 
 **The gate runs no tests of its own (#11276).** It has no pytest stage, takes no host test slots and
-runs no affected-test selector. The pytest-based guard hooks the configuration places at the `pre-push`
-stage are part of the pre-commit stage and are unchanged. CI Gate runs the full suite on every pull
-request and again in the merge queue, and remains the merge gate; the nightly slow run stays advisory.
+runs no affected-test selector. One pytest-based guard hook remains at the `pre-push` stage, inside the
+pre-commit stage: `sparse-collection-guard` (about 4 s), whose test is marked `slow`, so no CI shard runs
+it and only the advisory nightly slow run would otherwise. The other two (#11315),
+`repo-wide-marker-invariant` and `task-store-resolver-guard`, were removed from `.pre-commit-config.yaml`
+(about 85 s per push): CI Gate's pytest shards run `tests/test_repo_wide_marker_invariant.py` (shard 9) and
+`tests/test_conftest_task_store_guard.py` (shard 16) on every pull request and in the merge queue, and
+`tests/test_ruff_ci_scope.py` pins their absence. Shard numbers follow the committed duration weights and
+can move; the shards partition all of `tests`. CI Gate runs the full suite on every pull request and again
+in the merge queue, and remains the merge gate; the nightly slow run stays advisory.
 A green pre-push is never evidence that the suite passes. Run the tests your change touches yourself
 before pushing, as the rules require.
 
@@ -178,7 +184,7 @@ the same Git-common authority. It adds no stream lease or external coordination 
 `<git-common-dir>/lu-pre-push-gate/receipts/<head>-<base>.json` lets a retry of the same commit skip the
 run. It is bound to the commit, tree, base and its fallback reason, the gate version and `tools`
 (digests of the gate, launcher and pre-commit configuration; the interpreter, pytest and pre-commit
-versions, pytest being what the configuration's pytest-based `pre-push` hooks run under), and carries a
+versions, pytest being what the configuration's remaining pytest-based `pre-push` hook runs under), and carries a
 `seal`, the SHA-256 of its key, outcome and time. It expires after one hour.
 
 Reuse requires every field (#11207): exactly the key, outcome, time and seal; a seal that matches; and
