@@ -288,6 +288,7 @@ def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() 
             assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS" not in env_file.read_text(encoding="utf-8")
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_preview_pin_changes_keep_manual_deployment_semantics() -> None:
     """#11194 leaves eligibility unchanged: a release-pin change is content drift, not auto-deployable."""
     pin = "site/src/data/word-card-preview-release.pointer.json"
