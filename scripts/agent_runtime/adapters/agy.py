@@ -2142,7 +2142,6 @@ def _headless_denial_evidence(
             notice_key is None
             or notice_matches != 1
             or notice_key != call_key
-            or (native_target is not None and notice_key != _denial_target_key(native_target, kind, plan))
         ):
             return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
     target, reason, via_symlink = _sanitized_denial_target(
@@ -3315,7 +3314,7 @@ def _decode_jsonish(value: Any) -> Any:
         return ""
     try:
         return json.loads(stripped)
-    except json.JSONDecodeError:
+    except (ValueError, RecursionError):
         return stripped.strip('"')
 
 

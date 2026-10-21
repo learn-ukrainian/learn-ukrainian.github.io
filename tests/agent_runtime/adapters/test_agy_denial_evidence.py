@@ -569,6 +569,72 @@ def test_cli_notice_mismatch_never_attributes_leftover_call(tmp_path, completed_
     assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
 
 
+def test_cli_notice_for_completed_slot_never_attributes_leftover_call(tmp_path):
+    events = [
+        _planner(("read_file", "Path", "really-denied.txt"), ("list_dir", "DirectoryPath", "done-dir")),
+        _result("DONE", "Directory listing completed."),
+    ]
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(really-denied.txt)"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, events),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "workspace:really-denied.txt"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+def test_deep_cli_notice_target_stays_unknown(tmp_path):
+    deep = "[" * 20000
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial(f"read_file({deep})"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, [_planner(("view_file", "AbsolutePath", "x.txt"))]),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "target_missing"
+
+
+def test_deep_argument_on_other_call_does_not_block_notice_attribution(tmp_path):
+    planner = _planner(("list_dir", "DirectoryPath", "unused"), ("view_file", "AbsolutePath", "x.txt"))
+    planner["tool_calls"][0]["args"]["DirectoryPath"] = "[" * 20000
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(x.txt)"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, [planner, _result("DONE", "Directory listing completed.")]),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] == "view_file"
+    assert attempt["permission_target"] == "workspace:x.txt"
+    assert attempt["permission_target_unknown_reason"] is None
+
+
+@pytest.mark.parametrize("concrete_notice", [False, True])
+def test_deep_argument_on_attributed_call_stays_uncertain(tmp_path, concrete_notice):
+    planner = _planner(("view_file", "AbsolutePath", "unused"))
+    planner["tool_calls"][0]["args"]["AbsolutePath"] = "[" * 20000
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(x.txt)" if concrete_notice else "read_file"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, [planner]),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] == (None if concrete_notice else "view_file")
+    assert attempt["permission_target"] == ("workspace:x.txt" if concrete_notice else "unknown")
+    assert attempt["permission_target_unknown_reason"] == ("trigger_ambiguous" if concrete_notice else "target_missing")
+
+
 def test_leftover_without_current_turn_results_is_attributed(tmp_path):
     events = [
         _planner(("list_dir", "DirectoryPath", "done-dir")),
@@ -629,9 +695,7 @@ def test_non_string_cli_notice_never_matches_missing_call_target(tmp_path):
     event = _planner(("list_dir", "DirectoryPath", "unused"))
     event["tool_calls"][0]["args"] = {}
     plan = review_plan(tmp_path, [event])
-    evidence = agy._headless_denial_evidence(
-        agy._invocation_transcript(plan), plan, "read_file", notice_target="null"
-    )
+    evidence = agy._headless_denial_evidence(agy._invocation_transcript(plan), plan, "read_file", notice_target="null")
     assert evidence.denied_tool_name is None
     assert evidence.permission_target_unknown_reason == "trigger_ambiguous"
     result = agy.AgyAdapter().parse_response(
