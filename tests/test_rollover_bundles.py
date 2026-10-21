@@ -841,6 +841,188 @@ def test_from_api_listing_row_contradicting_its_manifest_refuses(
     assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
 
 
+# Values no canonical identity field takes: the handoff slot and bundle store
+# validators reject each, whatever the field (#11257).
+NONCANONICAL_VALUES = {
+    "null": None,
+    "empty": "",
+    "whitespace": " ",
+    "tab": "\t",
+    "bool-true": True,
+    "bool-false": False,
+    "negative": -1,
+    "zero": 0,
+    "float": 7.0,
+    "str-digits": "7",
+    "unicode-digits": "٧",
+    "very-long": "a" * 4096,
+    "control-char": "claude\x07devops",
+    "nul": "claude\x00devops",
+    "list": ["claude-devops"],
+    "mapping": {"agent": "claude-devops"},
+}
+# Values only one field rejects: each is the near miss of that field's syntax.
+NONCANONICAL_FIELD_VALUES = {
+    "agent": {
+        "uppercase": "Claude-Devops",
+        "underscore": "claude_devops",
+        "leading-hyphen": "-claude-devops",
+        "leading-space": " claude-devops",
+        "trailing-newline": "claude-devops\n",
+        "over-store-bound": "a" * 257,
+        "stream-shaped": "epic:9999",
+    },
+    "stream_id": {
+        "epic-zero": "epic:0",
+        "epic-leading-zero": "epic:09999",
+        "epic-negative": "epic:-9999",
+        "epic-empty": "epic:",
+        "epic-uppercase": "EPIC:9999",
+        "epic-leading-space": " epic:9999",
+        "epic-trailing-newline": "epic:9999\n",
+        "epic-unicode-digits": "epic:٩٩٩٩",
+        "epic-bare-number": 9999,
+        "shared-empty": "shared:",
+        "no-kind": "9999",
+    },
+    "upload_seq": {
+        "over-sqlite-max": 2**63,
+        "huge": 10**100,
+        "str-digits-with-space": " 7",
+        "float-fraction": 7.5,
+    },
+}
+IDENTITY_FIELDS = ("agent", "stream_id", "upload_seq")
+
+
+def _canonical_foreign_row() -> dict:
+    identity = {"agent": "claude-devops", "stream_id": STREAM, "upload_seq": 7}
+    return {**identity, "manifest": dict(identity)}
+
+
+def _noncanonical_row(field: str, value: object, position: str) -> dict:
+    """A foreign row whose only defect is ``field`` = ``value`` in ``position``.
+
+    ``row`` and ``manifest`` carry the value in that copy alone (the other copy
+    omits the field), so neither disagreement nor absence can refuse the row;
+    ``both`` carries it in both copies, so the copies agree."""
+    row = _canonical_foreign_row()
+    if position in {"row", "both"}:
+        row[field] = value
+    else:
+        del row[field]
+    if position in {"manifest", "both"}:
+        row["manifest"][field] = value
+    else:
+        del row["manifest"][field]
+    return row
+
+
+NONCANONICAL_CASES = [
+    pytest.param(field, value, position, id=f"{field}-{name}-{position}")
+    for field in IDENTITY_FIELDS
+    for name, value in {**NONCANONICAL_VALUES, **NONCANONICAL_FIELD_VALUES[field]}.items()
+    for position in ("row", "manifest", "both")
+]
+
+
+@pytest.mark.parametrize(("field", "value", "position"), NONCANONICAL_CASES)
+@pytest.mark.parametrize("neighbour", ["alone", "after-foreign", "before-foreign"])
+def test_from_api_noncanonical_row_identity_refuses_the_listing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: object,
+    position: str,
+    neighbour: str,
+) -> None:
+    bad = _noncanonical_row(field, value, position)
+    rows = {
+        "alone": [bad],
+        "after-foreign": [_canonical_foreign_row(), bad],
+        "before-foreign": [bad, _canonical_foreign_row()],
+    }[neighbour]
+    server = _BundleServer({}, answers={"list": (200, {"bundles": rows})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    refusal = _refusal(capsys)
+
+    assert refusal == {
+        "code": "invalid_rollover_bundle",
+        "error": f"bundle API list row has no valid {field}",
+        "action": "import-bundle",
+    }
+    assert _tree(target) == {}
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+@pytest.mark.parametrize("field", IDENTITY_FIELDS)
+def test_from_api_row_without_an_identity_field_refuses_the_listing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+) -> None:
+    row = _canonical_foreign_row()
+    del row[field], row["manifest"][field]
+    server = _BundleServer({}, answers={"list": (200, {"bundles": [_canonical_foreign_row(), row]})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    assert _refusal(capsys)["error"] == f"bundle API list row has no valid {field}"
+    assert _tree(target) == {}
+
+
+@pytest.mark.parametrize("position", ["row", "manifest", "both"])
+def test_from_api_row_of_another_stream_refuses_the_listing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    position: str,
+) -> None:
+    # A canonical stream id, but not the stream this listing was requested for.
+    row = _noncanonical_row("stream_id", "epic:1", position)
+    server = _BundleServer({}, answers={"list": (200, {"bundles": [row]})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    assert _refusal(capsys)["error"] == "bundle API list row is not of the listed stream"
+    assert _tree(target) == {}
+
+
+@pytest.mark.parametrize("position", ["row", "manifest", "both"])
+def test_from_api_canonical_foreign_rows_in_every_position_are_still_none(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    position: str,
+) -> None:
+    # Every identity copy in ``position`` only, at the store's bounds, stays a foreign slot.
+    longest_agent = "a" * 256
+    rows = [
+        _noncanonical_row("agent", longest_agent, position),
+        _noncanonical_row("stream_id", STREAM, position),
+        _noncanonical_row("upload_seq", 2**63 - 1, position),
+        _noncanonical_row("upload_seq", 1, position),
+    ]
+    server = _BundleServer({}, answers={"list": (200, {"bundles": rows})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert _tree(target) == {}
+
+
 class _DownBundleClient:
     def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
         raise urllib.error.URLError("connection refused")
