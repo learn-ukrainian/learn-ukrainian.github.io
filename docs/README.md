@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-122 document families and 33 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+123 document families and 33 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -144,6 +144,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `runbooks-data-foundry` | doc_family | current | `docs/runbooks/ukrainian-data-foundry-*.md` | Ukrainian Data Foundry build, admission, treatment, correction and model-view recipes. |
 | `templates` | doc_family | current | `docs/templates/**` | Task handoff templates (issue, infrastructure, batch review, module correction, plan review, bug investigation) and the bio research dossier template. |
 | `bug-autopsies` | doc_family | current | `docs/bug-autopsies/**` | Root-cause write-ups of past incidents with a one-line-per-bug INDEX.md (date, issue, category, summary). |
+| `test-prune-selections` | doc_family | current | `docs/test-prune/**` | Low-signal test prune (#11226) rubric, swarm selection of tests to delete with per-test reasons and votes, and the phase report with counts, restores and CI duration. |
 | `small-harness-docs` | doc_family | current | `docs/guardrails/**`, `docs/ops/**`, `docs/entire/**`, `docs/examples/**`, `docs/specs/**`, `docs/third-party/**`, `docs/playbooks/**` | Fleet tooling guardrail, fleet session-awareness charter, Entire recall receipts, launchd example, task-family manager spec and vendored third-party licence text. |
 | `legacy-agent-docs` | doc_family | historical | `docs/agents/**`, `docs/ai_team/**`, `docs/dispatch-queue/**`, `docs/evidence/**`, `docs/workflows/**` | Legacy agent-team docs - the May 2026 capability snapshot, Blue/Yellow team personas, a fired May dispatch queue, a Gemini CLI dry-run receipt and the old /review-content command. |
 | `ocr-setup-note` | doc_family | historical | `docs/ocr/**` | OCR provider note and credential-loading pattern (May 2026). |
