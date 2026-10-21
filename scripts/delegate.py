@@ -14356,18 +14356,23 @@ def _dispatch(
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
     # the shared ownership ledger entirely (Claude CF #5649 r11).
+    # A concrete overlap waits in the ledger's bounded FIFO queue
+    # (DELEGATE_OWNERSHIP_WAIT_S) instead of refusing at once (#11281); only
+    # this dispatch's own worktree lock is held while it waits.
     if not bool(getattr(args, "dry_run", False)):
         try:
             from scripts.guardrails.delegate_ownership import (
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
+                env_queue_wait_s,
             )
         except ImportError:  # pragma: no cover - flat script path
             from guardrails.delegate_ownership import (  # type: ignore
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
+                env_queue_wait_s,
             )
 
         guard_mode = env_guard_mode()
@@ -14379,6 +14384,8 @@ def _dispatch(
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
                 pid=os.getpid(),
                 guard_mode=guard_mode,
+                wait_s=env_queue_wait_s(),
+                on_queued=lambda notice: print(f"⏳ {notice}", file=sys.stderr, flush=True),
             )
         except Exception as own_exc:
             # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
@@ -14394,6 +14401,9 @@ def _dispatch(
                 )
                 return 2
         else:
+            if ownership.queue_timeout:
+                print(f"❌ {ownership.reason} for task_id={task_id!r}", file=sys.stderr)
+                return 2
             if ownership.would_refuse or ownership.override_reason:
                 # Only report a conflict count when there ARE conflicts: an
                 # unprovable-disjointness refusal has none, and printing
@@ -19989,6 +19999,8 @@ def build_parser() -> argparse.ArgumentParser:
             "dirty danger-mode worktree commits only changes under these paths; without "
             "any it commits nothing and the task ends needs_finalize. Required for a "
             "write-capable --mode: review admission checks the branch's scope from it (#9739). "
+            "A writer whose paths overlap an active writer's waits in the ownership queue for "
+            "up to DELEGATE_OWNERSHIP_WAIT_S seconds (default 1800) (#11281). "
             "Independent of --research-owned-path."
         ),
     )
@@ -20036,8 +20048,9 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="REASON",
         help=(
             "Explicitly admit a write-capable dispatch that intersects another "
-            "active claim. Records task, conflicts, reason, and caller in the "
-            "ownership ledger. Required text reason; empty string is ignored."
+            "active claim, without waiting in the ownership queue. Records task, "
+            "conflicts, reason, and caller in the ownership ledger. Required text "
+            "reason; empty string is ignored."
         ),
     )
     d.add_argument(

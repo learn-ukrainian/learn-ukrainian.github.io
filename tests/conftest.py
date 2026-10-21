@@ -1551,6 +1551,9 @@ def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
     conn.close()
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_file))
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
+    # A dispatch whose paths overlap a holder waits up to 30 min in the
+    # ownership queue (#11281). Tests answer at once; queue tests set a bound.
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_WAIT_S", "0")
 
 
 class _RedirectRefreshSidecarLoader:
