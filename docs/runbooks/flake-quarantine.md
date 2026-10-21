@@ -17,7 +17,7 @@ property, Actions summary and existing nightly flake ledger.
   - Merge-group runs for at least two distinct PRs, created within the last seven
     days. Neither queue diff may touch the test file or its transitive import
     dependencies. The checker fetches the tested commits and reuses the import
-    scanner behind `scripts/ci/pre_push_shadow.py`. Missing test sources or
+    scanner in `scripts/ci/components.py`. Missing test sources or
     unresolved import loaders with changed Python sources refuse admission.
     For a multi-PR group, a change by any member to these files refuses the evidence.
   PR runs and other workflows remain inadmissible. One main run plus one
