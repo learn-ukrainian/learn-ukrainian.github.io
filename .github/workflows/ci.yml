@@ -118,6 +118,9 @@ jobs:
       # secret_scan_scope walks a fixed first-parent ancestry window, or the
       # whole branch when history is shorter, and never the same base and head.
       # A git failure exits non-zero instead of narrowing that window.
+      # Manual dispatches use the default-branch merge-base through github.sha;
+      # main refs or equal heads reuse the schedule window. Full checkout above
+      # fetches all branch refs, including origin/main. Resolution errors fail.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
         env:
@@ -126,6 +129,9 @@ jobs:
           MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha || '' }}
           PUSH_BEFORE_SHA: ${{ github.event.before || '' }}
           PUSH_AFTER_SHA: ${{ github.event.after || '' }}
+          DISPATCH_HEAD_SHA: ${{ github.sha }}
+          DISPATCH_REF: ${{ github.ref }}
+          DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
         run: python3 scripts/ci/secret_scan_scope.py
       - name: Gate scrubbed public identifiers
         env:

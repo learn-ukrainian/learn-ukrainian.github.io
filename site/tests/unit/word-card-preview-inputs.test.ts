@@ -14,9 +14,12 @@ describe('public and controlled build selection', () => {
   });
   it('retains explicit controls, including both literal identities', () => {
     const inputs = releasePreviewInputs(controlled);
-    expect(inputs.map(input => input.name)).toEqual(['release', 'release/wc_0123456789ab', 'release/wc_0123456789ac']);
+    expect(inputs.map(input => input.name)).toEqual(['release', 'release/wc_0123456789ab', 'release/wc_0123456789ac', 'word/fixture-head']);
     expect(inputs.every(input => input.current === null)).toBe(true);
     expect(inputs[1]?.card).toMatchObject({ kind: 'release-card', row: { status: 'CERTIFIED' }, pin: pins.jsonl });
+    // Same-spelling cards share one grouped page as separate numbered entries, in release order.
+    expect(inputs[3]?.card).toMatchObject({ kind: 'release-page', pin: pins.jsonl, page: { key: 'fixture-head', entries: [
+      { ordinal: 1, row: { card_id: 'wc_0123456789ab' } }, { ordinal: 2, row: { card_id: 'wc_0123456789ac' } }] } });
   });
   it('refuses synthetic provenance in public mode before reading artifacts', () => {
     const inputs = releasePreviewInputs({ ...controlled, controlled: false });
@@ -38,6 +41,7 @@ describe('public and controlled build selection', () => {
       ['release', publicReleasePin.dataset_sha256, 'v0.1.0-pilot'],
       ['release/wc_0123456789ab', publicReleasePin.dataset_sha256, 'v0.1.0-pilot'],
       ['release/wc_0123456789ac', publicReleasePin.dataset_sha256, 'v0.1.0-pilot'],
+      ['word/fixture-head', publicReleasePin.dataset_sha256, 'v0.1.0-pilot'],
     ]);
     spy.mockReturnValue({ ...release, pin: { ...publicReleasePin, dataset_sha256: '0'.repeat(64) } });
     expect(releasePreviewInputs({ enabled: true, controlled: false })[0]?.card).toMatchObject({ reason: 'Public release pin mismatch' });

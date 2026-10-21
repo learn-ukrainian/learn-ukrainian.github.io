@@ -92,6 +92,79 @@ def test_bound_execution_derives_only_ci_and_replays_without_duplicate(bound_cas
     assert again["closure_ready"] is True
 
 
+@pytest.mark.parametrize("consumer", ["sync-acs", "close-issue", "issue-body"])
+@pytest.mark.parametrize("target,key,value,expected", [
+    ("observation", "observed_at", "2026-07-17T10:00:00Z", "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "execution_sha256", "bad", "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "repository", "other/repo", "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "issue", 999, "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "pr", 78, "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "head_sha", "c" * 40, "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "merge_sha", "c" * 40, "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "run_id", "123", "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "run_attempt", 3, "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("report", "run_url", RUN_URL + "0", "CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED"),
+    ("github", "closeout_run", None, "CLOSEOUT_RECEIPT_MISSING_OR_INVALID"),
+    ("github", "closeout_run", {}, "CLOSEOUT_RECEIPT_MISSING_OR_INVALID"),
+    ("github", "closeout_run", [], "CLOSEOUT_RECEIPT_MISSING_OR_INVALID"),
+    ("report", "execution", None, "CLOSEOUT_RECEIPT_MISSING_OR_INVALID"),
+    ("run", "run_attempt", 3, "CLOSEOUT_JOB_RUN_MISMATCH"),
+    ("run", "event", "pull_request", "CLOSEOUT_MERGE_RUN_MISMATCH"),
+    ("run", "created_at", None, "CLOSEOUT_MERGE_RUN_STALE"),
+    ("pull", "number", 78, "CLOSEOUT_MERGED_PR_MISMATCH"),
+    ("job", "conclusion", "skipped", "CLOSEOUT_REQUIRED_CHECK_NOT_EXECUTED"),
+    ("execution", "jobs", [], "CLOSEOUT_JOBS_INCOMPLETE"),
+])
+def test_merged_consumers_preserve_refusal_cause(bound_case, consumer, target, key, value, expected):
+    """A generic ValueError handler must not relabel typed closeout refusals."""
+    ledger, report = derive(bound_case)
+    observation = bound_case[1]
+    execution = report["execution"]
+    targets = {"observation": observation, "github": observation["github"], "report": report,
+               "execution": execution, "pull": execution["pull"], "run": execution["run"],
+               "job": execution["jobs"][0]}
+    targets[target][key] = value
+    if target in {"execution", "pull", "run", "job"}:
+        report["execution_sha256"] = tl.digest(execution)
+    elif target == "report" and key == "execution":
+        report["execution_sha256"] = tl.digest(value)
+    with pytest.raises(lo.ObservationRefusal) as caught:
+        if consumer == "issue-body":
+            task_closeout.evidenced_issue_body(ledger, observation)
+        else:
+            task_closeout._assert_mutation_ready(consumer, ledger, observation)
+    assert str(caught.value) == expected
+
+
+def test_missing_merged_receipt_remains_refused(bound_case):
+    ledger, _ = derive(bound_case)
+    observation = bound_case[1]
+    del observation["github"]["closeout_run"]
+    with pytest.raises(lo.ObservationRefusal) as caught:
+        task_closeout._assert_mutation_ready("close-issue", ledger, observation)
+    assert str(caught.value) == "CLOSEOUT_RECEIPT_MISSING_OR_INVALID"
+
+
+def test_current_merged_receipt_still_permits_closeout(bound_case):
+    ledger, _ = derive(bound_case)
+    observation = bound_case[1]
+    evaluation = task_closeout._assert_mutation_ready("close-issue", ledger, observation)
+    assert evaluation["goal_reached"] is True
+    assert evaluation["hard_blockers"] == []
+    assert task_closeout.evidenced_issue_body(ledger, observation) == (BODY, ["AC-RUN"])
+
+
+def test_copied_success_cannot_bypass_recomputed_criterion_gate(bound_case):
+    ledger, report = derive(bound_case)
+    observation = bound_case[1]
+    report["execution"]["jobs"][0]["steps"][0]["conclusion"] = "skipped"
+    report["execution_sha256"] = tl.digest(report["execution"])
+    assert report["closure_ready"] is True
+    assert task_closeout.evidenced_issue_body(ledger, observation)[1] == []
+    with pytest.raises(tl.LifecycleError, match="merged criterion execution and closure proof"):
+        task_closeout._assert_mutation_ready("close-issue", ledger, observation)
+
+
 @pytest.mark.parametrize("target,key,value,reason", [
     ("pull", "head", None, "MERGED_PR_MISMATCH"),
     ("run", "repository", None, "MERGE_RUN_MISMATCH"),
