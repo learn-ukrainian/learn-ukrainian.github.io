@@ -1189,7 +1189,7 @@
   },
   {
     "path": "scripts/wiki/sources_db.py",
-    "reference_count": 29,
+    "reference_count": 30,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "write branch migrates and ingests ULIF schema",

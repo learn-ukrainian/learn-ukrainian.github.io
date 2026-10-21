@@ -1685,16 +1685,22 @@ def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
     _connection_factory = factory
 
 
+def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connection:
+    """Writable connection (schema create / migrate): never a shared reader.
+
+    Allowlisted in tests/test_sources_db_hardening.py; ``_open_conn`` is not.
+    """
+    return sqlite3.connect(str(db_path), check_same_thread=False, **options)
+
+
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
     if read_only:
         # Shared across threads: open_readonly disables the statement cache
         # that CPython 3.12 corrupts under concurrent use (#11217).
         conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
     else:
-        # Writable path (schema create / migrate): never a shared reader, so it
-        # keeps the plain connect. Allowlisted in tests/test_sources_db_hardening.py.
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
-        conn = sqlite3.connect(str(db_path), check_same_thread=False, **options)
+        conn = _open_writer_conn(db_path, options)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
