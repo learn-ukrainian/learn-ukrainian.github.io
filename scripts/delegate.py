@@ -11354,7 +11354,9 @@ def _run_worker(
                 if agent in {"deepseek", "glm"}:
                     from scripts.agent_runtime.adapters.deepseek import initialize_opencode_dependencies
 
-                    initialize_opencode_dependencies(cwd, timeout=min(hard_timeout, 120) if hard_timeout > 0 else 120)
+                    initialize_opencode_dependencies(
+                        cwd, agent=agent, model=model, timeout=min(hard_timeout, 120) if hard_timeout > 0 else 120
+                    )
                 if agent == "agy":
                     _provision_agy_read_only_guard(cwd)
                 read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(

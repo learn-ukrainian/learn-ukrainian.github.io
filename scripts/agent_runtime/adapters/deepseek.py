@@ -23,6 +23,7 @@ from pathlib import Path
 
 from scripts.review.model_catalog import retired_model_refusal
 
+from ..env_sanitize import build_agent_env
 from ..failure_codes import opencode_provider_error, provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..routes import (
@@ -45,16 +46,24 @@ DEEPSEEK_OPENCODE_MODEL_ROUTES: dict[str, str] = {
 _FLASH_MODEL_LINE = "DeepSeek V4.1 Flash"
 
 
-def initialize_opencode_dependencies(cwd: Path, *, timeout: float = 120) -> None:
+def initialize_opencode_dependencies(cwd: Path, *, agent: str, model: str | None, timeout: float = 120) -> None:
     """Finish OpenCode's own bootstrap without starting a model turn (#11347).
 
     ``debug config`` uses the same instance bootstrap as ``run``. Discard
     resolved configuration and subprocess diagnostics, which may contain secrets.
     OpenCode logs background install failures without a nonzero exit status.
+    Checkout plugins execute during bootstrap, so use the run's environment
+    policy and login-bin resolution before executing any checkout code.
     """
+    from ..runner import _load_adapter, _prepare_spawn_command
+
     try:
+        plan = _load_adapter(agent).build_invocation(prompt="", mode="read-only", cwd=cwd, model=model)
+        env = build_agent_env(provider=agent, model=model, overrides=plan.env_overrides)
+        cmd, env = _prepare_spawn_command([plan.cmd[0], "debug", "config", "--print-logs"], env)
         result = subprocess.run(
-            [shutil.which("opencode") or "opencode", "debug", "config", "--print-logs"],
+            cmd,
+            env=env,
             cwd=cwd,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,

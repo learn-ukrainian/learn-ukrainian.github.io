@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -21,6 +22,7 @@ _DEPENDENCY = ".opencode/node_modules/example/index.js"
 _PLUGIN = ".opencode/plugins/example.js"
 _ROUTES = ("deepseek-v4.1-flash", "openrouter/deepseek/deepseek-v4.1-flash")
 _FAKE_OPENCODE = r"""
+import json
 import os
 import sys
 from pathlib import Path
@@ -29,12 +31,19 @@ if sys.argv[1:] == ["--version"]:
     print("1.19.3")
     raise SystemExit(0)
 initializing = sys.argv[1:3] == ["debug", "config"]
-with open(os.environ["INIT_LOG"], "a") as log:
+with open(os.environ["LU_HARNESS_INIT_LOG"], "a") as log:
     log.write("init\n" if initializing else "run\n")
-if initializing and os.environ.get("INIT_FAILURE") == "exit":
+Path("../init-env.json" if initializing else "../run-env.json").write_text(json.dumps({
+        "secrets_present": [name for name in (
+            "FAKE_SECRET_TOKEN", "OPENROUTER_API_KEY", "DEEPSEEK_API_KEY"
+        ) if name in os.environ],
+        "LANG": os.environ.get("LANG"),
+        "output_token_max": os.environ.get("OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX"),
+    }))
+if initializing and os.environ.get("LU_HARNESS_INIT_FAILURE") == "exit":
     print("private diagnostic must not escape", file=sys.stderr)
     raise SystemExit(7)
-if initializing and os.environ.get("INIT_FAILURE") == "warning":
+if initializing and os.environ.get("LU_HARNESS_INIT_FAILURE") == "warning":
     print("WARN background dependency install failed private diagnostic", file=sys.stderr)
     raise SystemExit(0)
 for name, content in {
@@ -83,7 +92,7 @@ def checkout(tmp_path, monkeypatch):
     binary.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(script))} "$@"\n')
     binary.chmod(0o700)
     monkeypatch.setenv("PATH", f"{tmp_path}{os.pathsep}{os.environ['PATH']}")
-    monkeypatch.setenv("INIT_LOG", str(tmp_path / "init.log"))
+    monkeypatch.setenv("LU_HARNESS_INIT_LOG", str(tmp_path / "init.log"))
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     return repo
 
@@ -107,7 +116,13 @@ def _launch(checkout, *, model=_ROUTES[0], mutation=None, agent="deepseek", mode
         pre = delegate._read_only_snapshot_sidecar_path(task_id, "pre")
         launches.append(json.loads(pre.read_text()) if pre.exists() else {})
         if agent in {"deepseek", "glm"}:
-            subprocess.run(["opencode", "run"], cwd=checkout, check=True, capture_output=True, timeout=30)
+            from scripts.agent_runtime.env_sanitize import build_agent_env
+            from scripts.agent_runtime.runner import _load_adapter, _prepare_spawn_command
+
+            plan = _load_adapter(agent).build_invocation(prompt="", mode=mode, cwd=checkout, model=model)
+            env = build_agent_env(provider=agent, model=model, overrides=plan.env_overrides)
+            command, env = _prepare_spawn_command([plan.cmd[0], "run"], env)
+            subprocess.run(command, env=env, cwd=checkout, check=True, capture_output=True, timeout=30)
         if mutation:
             mutation(checkout)
         return SimpleNamespace(
@@ -241,7 +256,7 @@ def test_unreadable_opencode_snapshot_fails_closed(checkout, monkeypatch):
 @pytest.mark.parametrize("failure", ["exit", "warning"])
 def test_failed_initialization_starts_no_worker_and_does_not_expose_output(checkout, monkeypatch, capsys, failure):
     """A failed install, including OpenCode's swallowed install error, cannot start the worker."""
-    monkeypatch.setenv("INIT_FAILURE", failure)
+    monkeypatch.setenv("LU_HARNESS_INIT_FAILURE", failure)
     rc, state, launches = _launch(checkout)
     assert rc == 1
     assert state["status"] == "failed"
@@ -272,3 +287,44 @@ def test_other_harness_starts_without_opencode_initialization(checkout):
     assert rc == 0
     assert state["status"] == "done"
     assert not (checkout.parent / "init.log").exists()
+
+
+@pytest.mark.parametrize("agent,model", [("deepseek", route) for route in _ROUTES] + [("glm", "glm-5.3-flash")])
+def test_initialization_withholds_runtime_secrets_and_preserves_allowed_context(checkout, monkeypatch, agent, model):
+    """B1: checkout plugin code must not receive credentials withheld from the actual run."""
+    for name in ("FAKE_SECRET_TOKEN", "OPENROUTER_API_KEY", "DEEPSEEK_API_KEY"):
+        monkeypatch.setenv(name, "fixture-value")
+    monkeypatch.setenv("LANG", "C.UTF-8")
+    monkeypatch.setenv("OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX", "1")
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+
+    with patch("scripts.agent_runtime.adapters.deepseek.build_agent_env", wraps=build_agent_env) as build_env:
+        rc, state, _ = _launch(checkout, agent=agent, model=model)
+    assert build_env.call_args.kwargs == {
+        "provider": agent,
+        "model": model,
+        "overrides": {"OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX": "131072"},
+    }
+    observed = json.loads((checkout.parent / "init-env.json").read_text())
+    assert observed["secrets_present"] == []
+    assert observed["LANG"] == "C.UTF-8"
+    assert observed == json.loads((checkout.parent / "run-env.json").read_text())
+    assert rc == 0
+    assert state["status"] == "done"
+
+
+@pytest.mark.parametrize("login_bin", [".local/bin", ".opencode/bin"])
+def test_minimal_path_finds_login_only_binary_for_initialization_and_run(checkout, monkeypatch, login_bin):
+    """S1: bootstrap must find the same login-installed CLI as the runtime under a minimal PATH."""
+    home = checkout.parent / "home"
+    binary = home / login_bin / "opencode"
+    binary.parent.mkdir(parents=True)
+    (checkout.parent / "opencode").rename(binary)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", os.pathsep.join(("/usr/bin", "/bin")))
+    assert shutil.which("opencode") is None
+    rc, state, launches = _launch(checkout)
+    assert rc == 0
+    assert state["status"] == "done"
+    assert _DEPENDENCY in launches[0]
+    assert (checkout.parent / "init.log").read_text() == "init\nrun\n"
