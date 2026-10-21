@@ -1022,3 +1022,34 @@ def test_merge_closeout_keeps_unattributed_worktree_when_unrelated_file_sits_bes
     receipt = result.reap_results[0]["preserved_artifacts"]
     assert [entry["path"] for entry in receipt["paths"]] == [".cache/transcriptions/page.txt"]
     assert (worktree / "batch_state/issue_stream_audit_refresh.json").exists()
+
+
+def test_cleanup_report_keeps_criterion_eligibility_separate(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    pr = mc.PullRequestInfo(77, "MERGED", None, "a" * 40)
+    report = {"closure_ready": False, "error": "CLOSEOUT_CRITERION_EXECUTION_OR_PROOF_MISSING"}
+    monkeypatch.setattr(mc, "fetch_pr_info", lambda *a, **k: pr)
+    monkeypatch.setattr(mc, "collect_criterion_receipts", lambda *a, **k: [report])
+    result = mc.run_merge_closeout(repo, 77, apply=True, live_cwds=set())
+    assert result.ok is True  # Existing exit status proves cleanup only.
+    assert mc._result_to_dict(result)["criterion_receipts"] == [report]
+    assert '"closure_ready": false' in mc._format_text(result)
+    assert mc.run_merge_closeout(repo, 77, apply=False).criterion_receipts == []
+
+
+def test_text_report_renders_cleanup_and_criterion_residuals():
+    result = mc.CloseoutResult(
+        pr=mc.PullRequestInfo(77, "MERGED", "codex/branch", "a" * 40), apply=True,
+        matched_worktrees=[".worktrees/dispatch/codex/example"],
+        reap_results=[{"action": "retained", "path": ".worktrees/dispatch/codex/example", "reason": "active owner"}],
+        branch_status=mc.BranchStatus("codex/branch", False, False, "remote unavailable", "local retained"),
+        ok=False, errors=["cleanup residual"], lifecycle_observations=[{"status": "recorded"}],
+        criterion_receipts=[{"criteria_passed": True, "cleanup_residual": True, "closure_ready": False}],
+    )
+    text = mc._format_text(result)
+    assert "active owner" in text
+    assert '"criteria_passed": true' in text
+    assert '"closure_ready": false' in text
+    assert "remote_error: remote unavailable" in text
+    assert "local_error: local retained" in text
+    assert text.endswith("errors:\n  cleanup residual\nRESIDUAL / ERROR")

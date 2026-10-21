@@ -16,10 +16,12 @@ Default is dry-run. See docs/runbooks/worktree-cleanup.md
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
 from dataclasses import asdict, dataclass, field
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +33,7 @@ from scripts.common import github_client
 from scripts.orchestration import lifecycle_observation
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
+from scripts.publish.github import Request, request_run
 
 DEFAULT_TIMEOUT = 30
 LIVE_PR_FETCH_TIMEOUT = 30
@@ -67,6 +70,7 @@ class CloseoutResult:
     ok: bool
     errors: list[str] = field(default_factory=list)
     lifecycle_observations: list[dict[str, Any]] = field(default_factory=list)
+    criterion_receipts: list[dict[str, Any]] = field(default_factory=list)
 
 
 def _run_gh(
@@ -429,6 +433,108 @@ def verify_branch_gone(
     )
 
 
+def _closeout_api(repo_root: Path, request: Request) -> Any:
+    """Use named, fresh read operations; unreadable execution is not proof."""
+    try:
+        proc = request_run(
+            request, runner=partial(github_client.run, fresh=True),
+            cwd=repo_root, capture_output=True, text=True, check=False, timeout=DEFAULT_TIMEOUT,
+        )
+        value = json.loads(proc.stdout) if proc.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError, ValueError, RuntimeError) as exc:
+        raise MergeCloseoutError("CLOSEOUT_EXECUTION_UNREADABLE") from exc
+    expected = list if request.fields.get("slurp") else dict
+    if not isinstance(value, expected):
+        raise MergeCloseoutError("CLOSEOUT_EXECUTION_UNREADABLE")
+    return value
+
+
+def _closeout_pages(repo_root: Path, request: Request, key: str) -> list[dict[str, Any]]:
+    """Require complete counted collections from the named paginated reads."""
+    pages = _closeout_api(repo_root, request)
+    if not isinstance(pages, list) or not pages:
+        raise MergeCloseoutError("CLOSEOUT_EXECUTION_INCOMPLETE")
+    rows: list[dict[str, Any]] = []
+    total = pages[0].get("total_count") if isinstance(pages[0], dict) else None
+    for page in pages:
+        if (not isinstance(page, dict) or type(total) is not int or total < 0
+                or page.get("total_count") != total or not isinstance(page.get(key), list)
+                or not all(isinstance(item, dict) for item in page[key])):
+            raise MergeCloseoutError("CLOSEOUT_EXECUTION_INCOMPLETE")
+        rows.extend(page[key])
+    ids = [row.get("id") for row in rows]
+    if len(rows) != total or any(type(value) is not int or value < 1 for value in ids) or len(set(ids)) != len(ids):
+        raise MergeCloseoutError("CLOSEOUT_EXECUTION_INCOMPLETE")
+    return rows
+
+
+def collect_criterion_receipts(repo_root: Path, pr: PullRequestInfo, *, repo: str | None) -> list[dict[str, Any]]:
+    """Enrich existing bound ledgers, without manufacturing historical task facts.
+
+    This supplies evidence to the existing explicit issue-close workflow. It
+    performs no remote mutation and leaves the cleanup CLI's exit contract intact.
+    """
+    from datetime import UTC, datetime
+
+    from scripts.orchestration import task_closeout
+    from scripts.orchestration import task_lifecycle as tl
+
+    primary = tl.canonical_state_root(repo_root)
+    slug = repo or "/".join(rw._github_owner_repo(repo_root) or ())
+    if not slug:
+        return [{"closure_ready": False, "error": "CLOSEOUT_REPOSITORY_UNKNOWN"}]
+    namespace = hashlib.sha256(slug.encode()).hexdigest()[:16]
+    reports = []
+    for path in sorted((primary / ".agent/task-lifecycle" / namespace).glob("issue-*.json")):
+        try:
+            with lifecycle_observation.repository_context(repo_root), tl.lifecycle_lock(path):
+                ledger = tl.load_lifecycle(path)
+                if ledger["pr"]["number"] != pr.number:
+                    continue
+                if ledger["identity"]["repository"] != slug:
+                    raise MergeCloseoutError("CLOSEOUT_REPOSITORY_MISMATCH")
+                pull = _closeout_api(repo_root, Request("read-pull", repo=slug, number=pr.number))
+                if not isinstance(pull.get("head"), dict) or pull["head"].get("sha") != pr.head_sha:
+                    raise MergeCloseoutError("CLOSEOUT_PR_HEAD_MOVED")
+                merge_sha = pull.get("merge_commit_sha")
+                if not isinstance(merge_sha, str) or not merge_sha:
+                    raise MergeCloseoutError("CLOSEOUT_MERGE_SHA_MISSING")
+                runs = _closeout_pages(
+                    repo_root, Request("read-runs", repo=slug, start=pull.get("created_at"), end=pull.get("merged_at"),
+                                       paginate=True, slurp=True), "workflow_runs",
+                )
+                candidates = [run for run in runs if run.get("path") == ".github/workflows/ci.yml"
+                              and run.get("head_sha") == merge_sha]
+                if not candidates:
+                    raise MergeCloseoutError("CLOSEOUT_MERGE_RUN_MISSING")
+                # Never fall back to an older green execution when the latest is red.
+                run = max(candidates, key=lambda row: row.get("id", 0))
+                run_id, attempt = run.get("id"), run.get("run_attempt")
+                if type(run_id) is not int or type(attempt) is not int or min(run_id, attempt) < 1:
+                    raise MergeCloseoutError("CLOSEOUT_RUN_ID_INVALID")
+                run = _closeout_api(repo_root, Request("read-run", repo=slug, number=run_id))
+                if run.get("id") != run_id or run.get("run_attempt") != attempt:
+                    raise MergeCloseoutError("CLOSEOUT_RUN_ATTEMPT_MOVED")
+                jobs = _closeout_pages(
+                    repo_root, Request("read-jobs", repo=slug, number=run_id, paginate=True, slurp=True), "jobs",
+                )
+                now = datetime.now(UTC).isoformat()
+                prior = tl._latest_premerge_local(ledger)
+                worktree = prior.get("worktree") if prior else None
+                if worktree and not Path(worktree).is_absolute():
+                    worktree = str(primary / worktree)
+                observation = task_closeout.GhGitHubAdapter(repo_root).observe(ledger, now=now, worktree=worktree)
+                updated, report = lifecycle_observation.merged_run_evidence(
+                    ledger, observation, pull=pull, run=run, jobs=jobs, now=now,
+                )
+                updated, receipt, _ = tl.reconcile(updated, observation, now=now)
+                tl.write_lifecycle(path, updated)
+                reports.append({**report, "receipt_id": receipt["id"]})
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
+            reports.append({"closure_ready": False, "error": str(exc)})
+    return reports
+
+
 def run_merge_closeout(
     repo_root: Path,
     pr_number: int,
@@ -491,6 +597,7 @@ def run_merge_closeout(
         or (branch_status is not None and not (branch_status.remote_gone and branch_status.local_gone))
     )
 
+    criterion_receipts = collect_criterion_receipts(repo_root, pr, repo=repo) if apply else []
     return CloseoutResult(
         pr=pr,
         apply=apply,
@@ -500,6 +607,7 @@ def run_merge_closeout(
         ok=not errors and not residual,
         errors=errors,
         lifecycle_observations=observations,
+        criterion_receipts=criterion_receipts,
     )
 
 
@@ -513,6 +621,7 @@ def _result_to_dict(result: CloseoutResult) -> dict[str, Any]:
         "ok": result.ok,
         "errors": result.errors,
         "lifecycle_observations": result.lifecycle_observations,
+        "criterion_receipts": result.criterion_receipts,
     }
 
 
@@ -530,6 +639,8 @@ def _format_text(result: CloseoutResult) -> str:
         lines.append(f"  reap {entry['action']}: {entry['path']} ({entry['reason']})")
     for entry in result.lifecycle_observations:
         lines.append(f"  lifecycle observation: {json.dumps(entry, sort_keys=True)}")
+    for entry in result.criterion_receipts:
+        lines.append(f"  criterion receipt: {json.dumps(entry, sort_keys=True)}")
     if result.branch_status is not None:
         status = result.branch_status
         lines.append(

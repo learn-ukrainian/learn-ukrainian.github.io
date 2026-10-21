@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -420,3 +421,189 @@ def recover(
                     raise ObservationRefusal(refusal)
                 break
         return _append(state_file, ledger, local, now)
+
+
+def _execution_succeeded(
+    row: Mapping[str, Any], *, merged_at: str, not_before: str, not_after: str | None = None,
+) -> bool:
+    """Success includes actual execution before merge, not a skipped check."""
+    if not all(isinstance(value, str) for value in (row.get("started_at"), row.get("completed_at"), merged_at, not_before)):
+        return False
+    try:
+        start = tl._utc_timestamp(row["started_at"])
+        end = tl._utc_timestamp(row["completed_at"])
+        merged = tl._utc_timestamp(merged_at)
+        return (
+            row.get("status") == "completed" and row.get("conclusion") == "success"
+            and tl._utc_timestamp(not_before) <= start <= end <= merged
+            and (not_after is None or end <= tl._utc_timestamp(not_after))
+        )
+    except (KeyError, TypeError, ValueError, tl.LifecycleError):
+        return False
+
+
+def merged_run_evidence(
+    ledger: Mapping[str, Any],
+    observation: dict[str, Any],
+    *,
+    pull: Mapping[str, Any],
+    run: Mapping[str, Any],
+    jobs: list[dict[str, Any]],
+    now: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Derive CI receipts only from explicitly mapped, executed job steps.
+
+    Existing typed test/CI rows map by their exact job URL and details.step_names.
+    The immutable AC policy decides evidence kinds; no check can supply product,
+    deployment, review, checkout history or author/reviewer attestation.
+    """
+    updated = tl.validate_lifecycle(ledger)
+    repository = updated["identity"]["repository"]
+    pr_number = updated["pr"]["number"]
+    if (not isinstance(pull.get("head"), Mapping) or not isinstance(pull.get("base"), Mapping)
+            or not isinstance(pull["base"].get("repo"), Mapping)):
+        raise ObservationRefusal("CLOSEOUT_MERGED_PR_MISMATCH")
+    head = pull["head"].get("sha")
+    merge = pull.get("merge_commit_sha")
+    merged_at = pull.get("merged_at")
+    base_ref = pull.get("base", {}).get("ref")
+    pr_url = f"https://github.com/{repository}/pull/{pr_number}"
+    observed_pr = observation.get("github", {}).get("pr", {})
+    if (
+        pull.get("number") != pr_number or pull.get("html_url") != pr_url
+        or pull.get("base", {}).get("repo", {}).get("full_name") != repository
+        or pull.get("state") != "closed" or pull.get("merged") is not True
+        or not isinstance(merged_at, str) or not isinstance(base_ref, str) or not base_ref
+        or not all(isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{40}", sha) for sha in (head, merge))
+        or observed_pr.get("number") != pr_number or observed_pr.get("url") != pr_url
+        or observed_pr.get("state") != "MERGED" or observed_pr.get("head_sha") != head
+        or observed_pr.get("merge_sha") != merge
+    ):
+        raise ObservationRefusal("CLOSEOUT_MERGED_PR_MISMATCH")
+    run_id, attempt = run.get("id"), run.get("run_attempt")
+    run_url = f"https://github.com/{repository}/actions/runs/{run_id}"
+    if (
+        type(run_id) is not int or type(attempt) is not int or min(run_id, attempt) < 1
+        or not isinstance(run.get("repository"), Mapping) or run["repository"].get("full_name") != repository
+        or run.get("event") != "merge_group" or run.get("head_sha") != merge
+        or run.get("html_url") != run_url or run.get("path") != ".github/workflows/ci.yml"
+        or not re.fullmatch(rf"gh-readonly-queue/{re.escape(base_ref)}/pr-{pr_number}-[0-9a-f]+", str(run.get("head_branch", "")))
+        or run.get("status") != "completed" or run.get("conclusion") != "success"
+    ):
+        raise ObservationRefusal("CLOSEOUT_MERGE_RUN_MISMATCH")
+    try:
+        if (not all(isinstance(run.get(key), str) for key in ("created_at", "run_started_at"))
+                or not isinstance(pull.get("created_at"), str)
+                or not tl._utc_timestamp(pull["created_at"]) <= tl._utc_timestamp(run["created_at"]) <= tl._utc_timestamp(run["run_started_at"]) <= tl._utc_timestamp(merged_at)):
+            raise ObservationRefusal("CLOSEOUT_MERGE_RUN_STALE")
+    except (KeyError, TypeError, ValueError, tl.LifecycleError) as exc:
+        raise ObservationRefusal("CLOSEOUT_MERGE_RUN_STALE") from exc
+    if not jobs or len({job.get("id") for job in jobs}) != len(jobs):
+        raise ObservationRefusal("CLOSEOUT_JOBS_INCOMPLETE")
+    for job in jobs:
+        job_id = job.get("id")
+        if (
+            type(job_id) is not int or job_id < 1 or job.get("run_id") != run_id
+            or type(job.get("run_attempt")) is not int or job.get("run_attempt") != attempt or job.get("head_sha") != merge
+            or job.get("html_url") != f"{run_url}/job/{job_id}"
+        ):
+            raise ObservationRefusal("CLOSEOUT_JOB_RUN_MISMATCH")
+    for name in updated["required_checks"]:
+        required = [job for job in jobs if job.get("name") == name]
+        if not required or not all(_execution_succeeded(job, merged_at=merged_at, not_before=run["run_started_at"]) for job in required):
+            raise ObservationRefusal("CLOSEOUT_REQUIRED_CHECK_NOT_EXECUTED")
+
+    execution = {
+        "run": {key: run.get(key) for key in (
+            "id", "run_attempt", "event", "head_sha", "head_branch", "path", "html_url",
+            "created_at", "run_started_at", "status", "conclusion",
+        )},
+        "jobs": [{key: job.get(key) for key in (
+            "id", "run_id", "run_attempt", "head_sha", "html_url", "name", "status", "conclusion",
+            "started_at", "completed_at", "steps",
+        )} for job in jobs],
+    }
+    github = observation["github"]
+    # Preserve the branch-head rollup while evaluating the verified merged run.
+    github["pr"]["branch_checks"] = github["pr"].get("checks", [])
+    github["pr"]["checks"] = [{
+        "name": job.get("name"), "status": str(job.get("status", "")).upper(),
+        "conclusion": str(job.get("conclusion", "")).upper(), "url": job["html_url"],
+    } for job in jobs]
+    status = tl._evidence_status(
+        updated, head_sha=head,
+        comment_urls={comment["url"] for comment in github.get("comments", []) if comment.get("url")},
+    )
+    valid_ids = status["valid_evidence_ids"]
+    mapped: dict[str, list[dict[str, Any]]] = {}
+    valid: dict[str, set[str]] = {}
+    for record in updated["evidence"]:
+        if record["id"] not in valid_ids:
+            continue
+        kind = record["type"]
+        if kind in {"test", "ci"}:
+            names = record["details"].get("step_names")
+            matching = [job for job in jobs if job["html_url"] == record["url"]]
+            if (not isinstance(names, list) or not names or not all(isinstance(name, str) and name for name in names)
+                    or len(matching) != 1 or not _execution_succeeded(matching[0], merged_at=merged_at, not_before=run["run_started_at"])):
+                continue
+            job = matching[0]
+            steps = job.get("steps")
+            if not isinstance(steps, list) or not all(isinstance(step, dict) for step in steps):
+                continue
+            if not all(
+                len(found := [step for step in steps if step.get("name") == name]) == 1
+                and _execution_succeeded(found[0], merged_at=merged_at, not_before=job["started_at"], not_after=job["completed_at"])
+                for name in names
+            ):
+                continue
+            mapped.setdefault(record["ac_id"], []).append({
+                "evidence_id": record["id"], "type": kind, "job_id": job["id"], "check": job["name"],
+                "step_names": names, "url": job["html_url"],
+            })
+        valid.setdefault(record["ac_id"], set()).add(kind)
+
+    criteria = []
+    for criterion in updated["ac_snapshot"]["criteria"]:
+        if not criterion["applicable"] or tl.STATE_RANK[criterion["due_state"]] > tl.STATE_RANK["CLEANED_UP"]:
+            continue
+        ac_id = criterion["id"]
+        executed = mapped.get(ac_id, [])
+        # An existing criterion-specific test mapping may supply CI execution,
+        # but can never supply another required evidence kind.
+        if executed and "ci" in criterion["required_evidence"] and "ci" not in valid.get(ac_id, set()):
+            source = executed[0]
+            updated, evidence = tl.add_evidence(
+                updated, ac_id=ac_id, evidence_type="ci", summary="Exact merged-run execution of mapped criterion steps",
+                url=source["url"], commit=head, recorded_at=now,
+                details={"step_names": source["step_names"], "source_evidence_id": source["evidence_id"],
+                         "run_id": run_id, "run_attempt": attempt, "merge_sha": merge,
+                         "execution_sha256": tl.digest(execution)},
+            )
+            valid.setdefault(ac_id, set()).add("ci")
+            executed.append({**source, "type": "ci", "evidence_id": evidence["id"]})
+        missing = sorted(set(criterion["required_evidence"]) - valid.get(ac_id, set()))
+        criteria.append({"ac_id": ac_id, "passed": not missing, "missing": missing, "executed": executed})
+    evaluation = tl.evaluate(updated, observation)
+    cleanup = observation["local"]
+    cleanup_residual = any(cleanup.get(key, True) for key in (
+        "worktree_present", "local_branch_present", "remote_branch_present",
+    ))
+    report = {
+        "repository": repository, "issue": updated["identity"]["github_issue_number"], "pr": pr_number,
+        "head_sha": head, "merge_sha": merge, "run_id": run_id, "run_attempt": attempt, "run_url": run_url,
+        "execution_sha256": tl.digest(execution), "execution": execution, "criteria": criteria,
+        "criteria_passed": bool(criteria) and all(item["passed"] for item in criteria),
+        "cleanup_residual": cleanup_residual, "blockers": evaluation["hard_blockers"],
+    }
+    checked = {item["id"] for item in tl.parse_issue_acceptance_criteria(github.get("issue", {}).get("body", ""))
+               if item["checked"]}
+    report["unchecked_criteria"] = [item["ac_id"] for item in criteria if item["ac_id"] not in checked]
+    report["closure_ready"] = (
+        report["criteria_passed"] and not cleanup_residual and evaluation["goal_reached"]
+        and not evaluation["hard_blockers"] and not report["unchecked_criteria"]
+    )
+    github["closeout_run"] = report
+    if not report["criteria_passed"]:
+        github["error"] = "CLOSEOUT_CRITERION_EXECUTION_OR_PROOF_MISSING"
+    return updated, report
