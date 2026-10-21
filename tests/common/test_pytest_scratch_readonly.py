@@ -72,10 +72,10 @@ def install_readonly(
             refuse("fchmod", _fd_path(fd))
         return real_fchmod(fd, mode)
 
-    def open_(path, flags, mode=0o777, *, dir_fd=None):
+    def open_(path, flags, *mode, dir_fd=None):
         if flags & _WRITE_FLAGS and guarded(target(path, dir_fd)):
             refuse("open", target(path, dir_fd))
-        return real_open(path, flags, mode, dir_fd=dir_fd)
+        return real_open(path, flags, *mode, dir_fd=dir_fd)
 
     for name, value in (("mkdir", mkdir), ("chmod", chmod), ("fchmod", fchmod), ("open", open_)):
         patch(os, name, value)
@@ -347,10 +347,10 @@ def test_root_open_denied_does_not_fall_back(world):
     world.readonly()
     guarded_open = os.open
 
-    def open_(path, flags, mode=0o777, *, dir_fd=None):
+    def open_(path, flags, *mode, dir_fd=None):
         if dir_fd is None and Path(os.fsdecode(path)) == world.runs_root:
             raise OSError(errno.EACCES, os.strerror(errno.EACCES), os.fsdecode(path))
-        return guarded_open(path, flags, mode, dir_fd=dir_fd)
+        return guarded_open(path, flags, *mode, dir_fd=dir_fd)
 
     world.monkeypatch.setattr(os, "open", open_)
     with pytest.raises(OSError) as raised:
@@ -426,10 +426,10 @@ def _swap_fallback_root(world: World, outside: Path, *, under: Path, when: str) 
         before_create(path, dir_fd)
         return real_mkdir(path, mode, dir_fd=dir_fd)
 
-    def open_(path, flags, mode=0o777, *, dir_fd=None):
+    def open_(path, flags, *mode, dir_fd=None):
         if flags & os.O_CREAT:
             before_create(path, dir_fd)
-        return real_open(path, flags, mode, dir_fd=dir_fd)
+        return real_open(path, flags, *mode, dir_fd=dir_fd)
 
     world.monkeypatch.setattr(os, "mkdir", mkdir)
     world.monkeypatch.setattr(os, "open", open_)
