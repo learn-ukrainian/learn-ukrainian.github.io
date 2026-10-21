@@ -10,8 +10,10 @@ import types
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
+import scripts.api.fleet_router as fleet_router
 import scripts.api.runtime_router as runtime_router
 from scripts.agent_runtime.acpx_discuss import AcpxDiscussionController
 from scripts.api.main import app
@@ -1335,3 +1337,70 @@ def test_transport_health_is_unknown_without_probe_receipt(tmp_path, monkeypatch
     assert data["status"] == "unknown"
     assert data["fresh"] is False
     assert data["failure_class"] == "no_probe_receipt"
+
+
+def test_recent_accounting_projections_preserve_legacy_aggregates(tmp_path, monkeypatch):
+    usage_dir = tmp_path / "api_usage"
+    ctx = _ctx_with_batch_state_dir(usage_dir.parent)
+    monkeypatch.setattr(app.state, "ctx", ctx)
+    expected = {
+        "requested_selector": "requested-model", "observed_model": "observed-model",
+        "identity_state": "observed", "observed_model_source": "provider-init",
+        "observed_model_provenance": {"requested_model": "attempt-model", "invocation_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"},
+    }
+    path = usage_dir / f"usage_agy-dispatch_{datetime.now(UTC):%Y-%m-%d}.jsonl"
+    original = [
+        {"ts": _iso(datetime.now(UTC)), "agent": "agy", "entrypoint": "dispatch",
+         "model": "accounting-model", "outcome": "error", "duration_s": 3.0},
+        {"ts": _iso(datetime.now(UTC)), "agent": "codex", "entrypoint": "dispatch",
+         "model": "legacy-model", "outcome": "ok", "duration_s": 1.0},
+    ]
+    _write_usage_file(path, original)
+    before = runtime_router.summarize_runtime_usage(ctx=ctx)
+    last_used = runtime_router._last_used_agent_models(ctx=ctx)
+    _write_usage_file(path, [{**original[0], **expected}, original[1]])
+    assert runtime_router.summarize_runtime_usage(ctx=ctx) == before
+    assert runtime_router._last_used_agent_models(ctx=ctx) == last_used
+    response = client.get("/api/runtime/recent")
+    assert response.status_code == 200
+    rows = {row["agent"]: row for row in response.json()["records"]}
+    assert rows["agy"]["model"] == "accounting-model"
+    assert {key: rows["agy"][key] for key in expected} == expected
+    assert {key: rows["codex"][key] for key in expected} == {
+        "requested_selector": None, "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
+    }
+
+
+@pytest.mark.parametrize("conflicting", [False, True])
+def test_activity_projects_runtime_model_identity(monkeypatch, conflicting):
+    projection = {
+        "requested_selector": "requested-model",
+        "observed_model": "observed-model",
+        "identity_state": "observed",
+        "observed_model_source": "provider-init",
+        "observed_model_provenance": {
+            "requested_model": "attempt-model",
+            "invocation_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        },
+    }
+    raw = {
+        "model": "accounting-model",
+        **projection,
+        "model_identity": {
+            "actual_model_known": True,
+            "actual_model": "conflicting-model" if conflicting else "observed-model",
+            "source": "provider-init",
+        },
+    }
+    monkeypatch.setattr(fleet_router, "recent_runtime_records", lambda **kwargs: {"records": [raw]})
+
+    response = client.get("/api/fleet/activity")
+
+    assert response.status_code == 200
+    record, = response.json()["records"]
+    assert record["model"] == "accounting-model"
+    assert {key: record[key] for key in projection} == (projection if not conflicting else {
+        "requested_selector": "requested-model", "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
+    })
