@@ -1274,9 +1274,12 @@ def _round4_launcher_probe(
 
 
 @pytest.mark.parametrize("provider", ["glm", "kimi"])
-def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: str) -> None:
+def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: str, monkeypatch) -> None:
     import json
 
+    from tests.agent_runtime.adapters.kimi_admitted import install_historical_kimi_catalog
+
+    route_python = install_historical_kimi_catalog(tmp_path, monkeypatch) if provider == "kimi" else sys.executable
     proc = _round4_launcher_probe(
         tmp_path,
         "import json, os\n"
@@ -1295,7 +1298,7 @@ def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: 
             "OPENAI_API_KEY": SYNTHETIC_KEY,
             "OTHER_PASSWORD": SYNTHETIC_KEY,
             "GLMCC_ROUTE_PYTHON": sys.executable,
-            "KIMICC_ROUTE_PYTHON": sys.executable,
+            "KIMICC_ROUTE_PYTHON": str(route_python),
         },
         setup=(
             f"LC_MODEL={'glm' if provider == 'glm' else 'k3'} LC_ENDPOINT=platform LC_ISOLATE_CONFIG=1 LC_DRY_RUN=0\n"

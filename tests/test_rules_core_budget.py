@@ -73,7 +73,7 @@ def test_model_table_names_only_active_catalog_models() -> None:
         "Unhealthy routes are unavailable.",
         "Effort `high`, including reviews.",
         "Formal code review uses catalog `review_ladders` and its resolver for current seat order",
-        "Fable is retired in the catalog.",
+        "Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision.",
         "Former Astra: no advice, approval or review.",
         "Sol 6.1 @ high: orchestration, advanced coding, Ukrainian authoring and red-team.",
         "Luna @ high: scouting and bounded repeatable work",

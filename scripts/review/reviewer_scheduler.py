@@ -17,6 +17,9 @@ from typing import Any
 from scripts.fleet import credit_lane
 from scripts.fleet.claude_account_lane import CLAUDE_LANE, is_claude_lane_key, require_bound
 from scripts.review.capacity import review_capacity
+from scripts.review.model_catalog import load_model_catalog, usage_pool_for_seat
+
+_MODEL_CATALOG = load_model_catalog()
 
 
 @dataclass(frozen=True)
@@ -73,7 +76,7 @@ def _route_record(
         candidate.name, candidate.route, candidate.concrete_model, getattr(candidate, "family", ""),
         *sorted(candidate.health_keys),
     )
-    if prefer_route:
+    if prefer_route or usage_pool_for_seat(candidate.route, _MODEL_CATALOG) != candidate.route:
         # Allowance belongs to the canonical seat; model health aliases must
         # not hide an exhausted shared window. Aliases remain a fallback.
         keys = (candidate.route, *keys)
@@ -86,6 +89,7 @@ def _route_record(
             if isinstance(status, str):
                 return {"status": status.strip().lower()}
         return {}
+    agents = credit_lane.shared_usage_agents(agents, catalog=_MODEL_CATALOG)
     if candidate.route == CLAUDE_LANE or any(is_claude_lane_key(key) for key in keys):
         require_bound(snapshot, reading=f"reviewer candidate {candidate.name}")
     for key in keys:

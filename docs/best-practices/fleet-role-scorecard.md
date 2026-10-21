@@ -42,7 +42,7 @@
 
 | Model | Strengths | Weaknesses | Route / egress notes | Project seat |
 |---|---|---|---|---|
-| **Fable 5.1** | Retired (OO-58, #11327) | Not selectable | Anthropic | No executable route |
+| **Fable 5.1** | Active catalog entry | High cost; explicit pin only | Anthropic | Parked: not routed by default; reintroduction or a successor model is an operator decision |
 | **GPT-6.1 Sol** | Accountable driving, coding, adversarial review, and hard OpenAI advisory judgment | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Regular driver, coder, reviewer and advisor @ high; designated approver with Opus 5.5 (#9583, #9616) |
 | **Claude Opus 5.5** | Hard Claude-lane coding, deep code review and hard advisory judgment | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding, review and advisor @ high; designated approver with Sol 6.1 (#9583, #9616) |
 | **GPT-6 Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / native Codex | Bounded worker / recon @ high |
@@ -63,7 +63,7 @@ Never use a fixed unordered list that can pick the author’s family.
 
 | Author family | Prefer CF reviewers (code/infra) | Avoid as sole CF |
 |---|---|---|
-| Anthropic (Opus/Sonnet; Fable retired) | Grok, GPT-6.1 Sol, GLM local, Gemini | Sonnet/Opus self-family |
+| Anthropic (Opus/Sonnet; Fable parked) | Grok, GPT-6.1 Sol, GLM local, Gemini | Sonnet/Opus self-family |
 | OpenAI (GPT-6.1 Sol, GPT-6 Luna) | Grok, Opus/Sonnet, GLM local, Gemini; for security-sensitive diffs use `--risk critical`, which excludes Sonnet 5.5 (#9125 tracks resolver enforcement at lower risk levels) | GPT-6 self-family |
 | xAI (Grok) | Opus/Sonnet, GPT-6.1 Sol, GLM local, Gemini; for security-sensitive diffs use `--risk critical`, which excludes Sonnet 5.5 (#9125 tracks resolver enforcement at lower risk levels) | Grok self-family |
 | Google (Gemini via AGY) | Grok, OpenAI, Anthropic, GLM local | Gemini self-family alone for CF of Gemini-authored infra |

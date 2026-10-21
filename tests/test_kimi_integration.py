@@ -80,8 +80,12 @@ def test_kimi_background_worker_refuses_before_any_processor(monkeypatch):
         _ask_lifecycle._process_target(12, "kimi", {"new_session": True, "no_timeout": True, "review": True})
 
 
-def test_check_model_refuses_read_only_native_kimi_probe():
-    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+def test_check_model_refuses_read_only_native_kimi_probe(monkeypatch):
+    def forbidden(**_kwargs):
+        pytest.fail("retired probe reached adapter planning")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._model._KIMI_ADAPTER.build_invocation", forbidden)
+    with pytest.raises(ValueError, match="retired in the model catalog"):
         _build_kimi_probe_plan("k3")
 
 

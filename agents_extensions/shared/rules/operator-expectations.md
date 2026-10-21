@@ -190,7 +190,7 @@ are the tie-breakers.
     and **Sol 6.1** (`gpt-6.1-sol`). When one of them authored the proposal, the other's
     approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)
     needs both; if they disagree, the operator decides (#9583, #9616; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;
-    do not treat stale digests as roster). Fable is retired (OO-58, #11327). The former Astra seat holds no advisory,
+    do not treat stale digests as roster). Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. The former Astra seat holds no advisory,
     approval or review role.
     **Kimi models are retired (OO-58, #11327). Do not dispatch them.** Discussion/panels improve quality but do **not** replace advisor approval
     for design. This gate governs *deciding*, not *implementing*: once the operator or an

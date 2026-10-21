@@ -1,8 +1,8 @@
-"""OO-58 / #11327: Fable 5.1 and every Kimi catalog id are retired.
+"""OO-58 / #11327: Fable 5.1 is parked; every Kimi catalog id is retired.
 
-Defect class: a dispatch, substitution, fallback, or review ladder can still
-select Claude Fable 5.1 or a Kimi model, or budget routing counts native Grok
-and Cursor as two usage pools.
+Defect class: a default, substitution, fallback, or review ladder selects
+parked Fable 5.1 or a retired Kimi model, or budget routing counts native
+Grok and Cursor as two usage pools. Explicit Fable pins remain available.
 """
 
 from __future__ import annotations
@@ -16,9 +16,8 @@ import yaml
 from scripts import delegate
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
 
-# The six ids this issue retires. claude-fable-5 was already retired.
+# The five ids this issue retires. claude-fable-5 was already retired.
 RETIRED_IDS = (
-    "claude-fable-5-1",
     "kimi-code/k3",
     "kimi-code/k3-256k",
     "kimi-k3-max",
@@ -29,7 +28,6 @@ RETIRED_IDS = (
 # Aliases and the old Cursor slug must resolve to a retired id and be refused.
 RETIRED_PINS = (
     *RETIRED_IDS,
-    "claude-fable-5-1-thinking-high",
     "k3",
     "k3-256k",
     "k3-max",
@@ -58,22 +56,19 @@ def _clear_message(model: str) -> str:
 
 
 @pytest.mark.parametrize("model_id", RETIRED_IDS)
-def test_six_ids_are_retired_with_no_executable_transport(model_id: str) -> None:
+def test_five_kimi_ids_are_retired_with_no_executable_transport(model_id: str) -> None:
     """A retired id keeps its historical record and has no transport."""
     model = load_model_catalog()["models"][model_id]
     assert model["lifecycle"] == "retired"
     assert model["transports"] == []
-    if model_id == "claude-fable-5-1":
-        assert model["replaced_by"] == "claude-opus-5-5"
-    else:
-        assert "replaced_by" not in model
+    assert "replaced_by" not in model
 
 
 def test_predecessor_fable_successor_is_an_active_model() -> None:
     """claude-fable-5 cannot name a retired successor."""
     catalog = load_model_catalog()
     successor = catalog["models"]["claude-fable-5"]["replaced_by"]
-    assert successor == "claude-opus-5-5"
+    assert successor == "claude-fable-5-1"
     assert catalog["models"][successor]["lifecycle"] == "active"
 
 

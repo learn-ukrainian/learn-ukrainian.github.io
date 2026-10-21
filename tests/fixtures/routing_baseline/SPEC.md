@@ -396,20 +396,24 @@ surface changes. Historical baselines, inputs, the occurrence ledger,
 `SHA256SUMS` and `capture.py` stay byte-identical. Any other difference blocks
 regeneration.
 
-## Retired Fable 5.1, retired Kimi, one Grok/Cursor pool (#11327)
+## Parked Fable 5.1, retired Kimi, one Grok/Cursor pool (#11327)
 
 `tests/review/fixtures/routing-11327.json` is applied last, after the AGY mode
 overlay, for both CLI configurations. Historical compressed baselines, input
 matrices, the occurrence ledger, `SHA256SUMS` and `capture.py` stay
 byte-identical. The overlay's digest is pinned beside the function that applies it.
 
-Catalog changes are the six retired ids (`claude-fable-5-1` and the five Kimi
-ids), `claude-fable-5.replaced_by`, empty `kimicc` endpoint models, three policy
-notes, removal of the Cursor `claude-fable-5-1` budget pin, and the new
-`usage_pools.grok_cursor` record. Dispatch drops only the rows whose pin is
-`claude-fable-5-1`. The only other dispatch change is the cooler-seat list:
-Cursor and Grok share one meter, so the list names `grok` once, and a hot Grok
-seat does not offer Cursor. Launcher `retired` rows name `claude-opus-5-5` as
-the Fable 5 successor. The two Kimi default rows refuse `k3-256k`. The approval
-contract text records the retirement; its holders and vote rows stay. Every
-other seat's chosen substitute and every other surface stay.
+Fable 5.1 stays active with its catalog entry and Fable 5 predecessor unchanged.
+It is parked: not routed by default, explicit pin only; reintroduction or a
+successor model is an operator decision. Default routing omits its Cursor budget
+substitution row; a separate CLI test proves an explicit native pin works and
+prints one cost warning. The five Kimi ids are retired with empty transports;
+the kimicc endpoint has no executable models.
+
+The overlay records those Kimi fields, policy notes, the omitted default budget
+pin and `usage_pools.grok_cursor`. Dispatch drops only the old Fable automatic
+substitution cases. Grok and Cursor share allowance and freshness for admission,
+capacity ordering and cooler advice, with separate transport health. Cooler
+lists name the shared meter once. The two Kimi launcher defaults refuse
+`k3-256k`. Approval holders and vote rows stay unchanged. Every unrelated seat's
+substitute and every unrelated surface stay unchanged.

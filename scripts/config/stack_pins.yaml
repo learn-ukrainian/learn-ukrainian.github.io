@@ -115,7 +115,7 @@ pins:
     source: scripts/config/model_catalog.yaml
     owner: Infra
     review_by: "2026-11-16"
-    note: schema_version model-catalog.v1, reviewed_on 2026-09-24. Current pins omit retired Fable 5.1 and Kimi ids (OO-58, #11327). Admitted ids are the models map in that file.
+    note: schema_version model-catalog.v1, reviewed_on 2026-09-24. Current default pins omit parked Fable 5.1 (explicit pin only) and retired Kimi ids (OO-58, #11327). Admitted ids are the models map in that file.
   - name: ci-literals
     pinned: ubuntu-latest
     source: .github/workflows/ci.yml

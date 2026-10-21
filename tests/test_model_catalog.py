@@ -455,12 +455,12 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
 
 
 def test_fable_holds_no_review_or_advisory_role():
-    """#9583 removed the review role. OO-58 (#11327) retires the model with no executable route."""
+    """#9583 roles still bar review/advice while OO-58 parks the active model."""
     catalog = load_model_catalog()
     fable = catalog["models"]["claude-fable-5-1"]
-    assert fable["lifecycle"] == "retired"
-    assert fable["transports"] == []
-    assert fable["replaced_by"] == "claude-opus-5-5"
+    assert fable["lifecycle"] == "active"
+    assert fable["transports"] == ["native_claude", "cursor"]
+    assert "replaced_by" not in fable
     assert not {"architecture", "critical_review", "consequential_advisory", "bounded_advisory_envelope"} & set(
         fable["roles"]
     )
@@ -479,7 +479,9 @@ def test_fable_is_refused_every_review_and_consult_activity(model, activity):
     from scripts.review.model_catalog import activity_role_refusal
 
     refusal = activity_role_refusal(model, activity)
-    assert refusal and "is retired in the model catalog (claude-fable-5-1)" in refusal
+    expected = "holds no review, critique or approval role" if activity == "review" else "holds no ACP ask, consult or discussion role"
+    assert refusal and expected in refusal
+    assert f"review_scheduler.activity_roles.{activity}" in refusal
 
 
 @pytest.mark.parametrize("activity", ["review", "consult"])
@@ -525,15 +527,15 @@ def test_unknown_activity_and_unknown_model():
                     "claude-opus-5-5", "claude-fable-5-1"
                 ),
             ),
-            r"review_candidates\.claude-opus-5-5\.model_id references retired model 'claude-fable-5-1'",
+            r"review_candidates\.claude-opus-5-5: model 'claude-fable-5-1'.*holds no review",
         ),
         (
             lambda c: c["review_scheduler"]["endpoints"]["claude"]["models"].append("claude-fable-5-1"),
-            r"review_scheduler\.endpoints\.claude\.models references retired model 'claude-fable-5-1'",
+            r"review_scheduler\.endpoints\.claude\.models: model 'claude-fable-5-1'.*holds no review",
         ),
         (
             lambda c: c["review_scheduler"]["risk_reviewer_models"]["high"].append("claude-fable-5-1"),
-            r"review_scheduler\.risk_reviewer_models\.high references retired model 'claude-fable-5-1'",
+            r"review_scheduler\.risk_reviewer_models\.high: model 'claude-fable-5-1'.*holds no review",
         ),
         (
             lambda c: c["models"]["gpt-6.1-sol"]["roles"].remove("bounded_advisory_envelope"),
@@ -1349,7 +1351,7 @@ def test_replaced_by_must_sit_on_retired_model_and_name_active_model():
 
 @pytest.mark.parametrize(
     ("retired", "successor"), [
-        ("claude-fable-5", "claude-opus-5-5"),
+        ("claude-fable-5", "claude-fable-5-1"),
         ("grok-4.6", "grok-4.7"),
         ("claude-opus-5", "claude-opus-5-5"),
         ("claude-opus-4-8", "claude-opus-5-5"),
@@ -1466,8 +1468,8 @@ def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
 @pytest.mark.parametrize(("model", "retired_id", "successor"), [
     ("gpt-6-sol", "gpt-6-sol", "gpt-6.1-sol"),
     ("gpt-5.6-sol", "gpt-5.6-sol", "gpt-6.1-sol"),
-    ("claude-fable-5", "claude-fable-5", "claude-opus-5-5"),
-    ("claude-fable-5[1m]", "claude-fable-5", "claude-opus-5-5"),
+    ("claude-fable-5", "claude-fable-5", "claude-fable-5-1"),
+    ("claude-fable-5[1m]", "claude-fable-5", "claude-fable-5-1"),
 ])
 def test_catalog_cli_retired_model_prints_only_refusal(model, retired_id, successor):
     result = subprocess.run(

@@ -13306,7 +13306,9 @@ def _dispatch(
     if not str(requested_model or "").strip():
         from scripts.agent_runtime.telemetry import _default_model_for
 
-        requested_model = _default_model_for(getattr(args, "agent", None))
+        default_model = _default_model_for(getattr(args, "agent", None))
+        if is_kimi_seat(args.agent, model=default_model):
+            requested_model = default_model
     retired_refusal = retired_model_refusal(requested_model)
     if retired_refusal:
         print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
@@ -13322,6 +13324,12 @@ def _dispatch(
 
     # #10799: an overloaded host refuses here, before routing, the DoR and
     # authoring preflights, the runtime tmp sweep and the capacity hint.
+    if getattr(args, "model", None):
+        from scripts.review.model_catalog import resolve_catalog_model_id
+
+        pinned = resolve_catalog_model_id(args.model)
+        if pinned and "fable" in pinned:
+            print(f"Warning: explicit pin {pinned} has high cost.", file=sys.stderr)
     early_refusal_rc = _early_host_refusal(args)
     if early_refusal_rc is not None:
         return early_refusal_rc
@@ -15611,15 +15619,17 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
     Seats that share the excluded seat's pool are the same meter, so they are
     not offered as a cooler alternative (OO-58: grok and cursor).
     """
-    from scripts.review.model_catalog import usage_pool_for_seat, usage_pool_representative
+    from scripts.review.model_catalog import load_model_catalog, usage_pool_for_seat, usage_pool_representative
 
-    excluded_pool = usage_pool_for_seat(exclude)
+    catalog = load_model_catalog()
+    agents = credit_lane.shared_usage_agents(agents, catalog=catalog)
+    excluded_pool = usage_pool_for_seat(exclude, catalog)
     members: dict[str, list[str]] = {}
     for lane, info in agents.items():
         if not isinstance(info, dict):
             continue
         lane_l = str(lane).strip().lower()
-        pool = usage_pool_for_seat(lane_l)
+        pool = usage_pool_for_seat(lane_l, catalog)
         if lane_l == str(exclude).strip().lower() or pool == excluded_pool:
             continue
         deficit = credit_lane.pace_deficit_state(lane_l, info)
@@ -15629,10 +15639,9 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
         if status in {"cool", "warm"}:
             members.setdefault(pool, []).append(lane_l)
     cool: list[str] = []
-    for pool, lanes in members.items():
-        representative = usage_pool_representative(lanes[0])
+    for lanes in members.values():
+        representative = usage_pool_representative(lanes[0], catalog)
         cool.append(representative if representative in lanes else sorted(lanes)[0])
-        del pool
     return sorted(cool)
 
 
@@ -18414,7 +18423,7 @@ def _resolve_agent_with_budget_guard(
     # #10619, #10630, #10770: every lane record below is read from the snapshot bound to the
     # dispatch's claude account; the raw payload is kept only to bind the cooler-seat advice.
     payload, account_evidence = claude_account_lane.select_account(routing_payload, account=claude_account)
-    agents = claude_account_lane.account_agents(payload, account=claude_account)
+    agents = credit_lane.shared_usage_agents(claude_account_lane.account_agents(payload, account=claude_account))
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))

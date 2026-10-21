@@ -452,7 +452,7 @@ def approved_agy_mode_baseline(baseline):
 
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
 RETIREMENT_11327_PATH = CAPACITY_FIXTURE / "routing-11327.json"
-RETIREMENT_11327_DIGEST = "bbde4fd6c171dc9891d4dcf6c7aac017ca4522587b45ef441f18bc4caaefba9d"
+RETIREMENT_11327_DIGEST = "bc635ddab7ff07d1d3c267047e561d5c17be546ee11c09b99df78a7b531995fb"
 PRE_RETIREMENT_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
 
 
@@ -468,7 +468,7 @@ def _drop_cooler_seat(refusal: str, seat: str) -> str:
 
 
 def approved_retirement_11327_inputs(inputs):
-    """Drop the retired Fable 5.1 budget pin from the dispatch matrix."""
+    """Drop the parked Fable 5.1 default budget pin from the dispatch matrix."""
     return {
         **inputs,
         "dispatch": [row for row in inputs["dispatch"] if row["model"] != "claude-fable-5-1"],
@@ -476,7 +476,7 @@ def approved_retirement_11327_inputs(inputs):
 
 
 def approved_retirement_11327_baseline(baseline, inputs):
-    """Apply #11327 last: retire Fable 5.1 and every Kimi id; record one Grok/Cursor meter.
+    """Apply #11327 last: park Fable 5.1, retire Kimi, and share the Grok/Cursor meter.
 
     The historical fixture bytes stay. This edits the catalog fields those ids
     own, drops only their removed dispatch pin, collapses the shared cooler
@@ -521,15 +521,6 @@ def approved_retirement_11327_baseline(baseline, inputs):
         dispatch.append(updated)
 
     launchers = deepcopy(baseline["launchers"])
-    before_s = fixture["launcher_successor"]["before"]
-    after_s = fixture["launcher_successor"]["after"]
-    replaced = 0
-    for row in launchers:
-        if before_s in row["stderr"]:
-            assert row["stderr"].count(before_s) == 1
-            row["stderr"] = row["stderr"].replace(before_s, after_s)
-            replaced += 1
-    assert replaced == 14
     for index, recorded in fixture["launcher_rows"].items():
         assert launchers[int(index)] == recorded["old"]
         launchers[int(index)] = recorded["new"]
@@ -576,7 +567,7 @@ def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configura
 
 
 def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter():
-    """#11327 retires six ids and collapses the Grok/Cursor cooler meter. Other seats stay."""
+    """#11327 parks Fable, retires five Kimi ids, and shares the Grok/Cursor meter."""
     before = approved_agy_mode_baseline(approved_word_card_tool_baseline(deepcopy(DRIVER_BRIEF_BASELINE)))
     after = approved_retirement_11327_baseline(deepcopy(before), PRE_RETIREMENT_INPUTS)
     untouched = set(before) - {"catalog", "approval", "dispatch", "launchers"}
@@ -584,17 +575,16 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
         assert before[surface] == after[surface], surface
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
     assert {mid for mid in old_models if old_models[mid] != new_models[mid]} == {
-        "claude-fable-5",
-        "claude-fable-5-1",
         "kimi-code/k3",
         "kimi-code/k3-256k",
         "kimi-code/kimi-for-coding",
         "kimi-code/kimi-for-coding-highspeed",
         "kimi-k3-max",
     }
-    assert new_models["claude-fable-5"]["replaced_by"] == "claude-opus-5-5"
-    assert new_models["claude-fable-5-1"]["lifecycle"] == "retired"
-    assert new_models["claude-fable-5-1"]["transports"] == []
+    assert new_models["claude-fable-5"] == old_models["claude-fable-5"]
+    assert new_models["claude-fable-5-1"] == old_models["claude-fable-5-1"]
+    assert new_models["claude-fable-5-1"]["lifecycle"] == "active"
+    assert new_models["claude-fable-5-1"]["transports"] == ["native_claude", "cursor"]
     assert all(new_models[mid]["lifecycle"] == "retired" and new_models[mid]["transports"] == [] for mid in (
         "kimi-code/k3",
         "kimi-code/k3-256k",
@@ -635,10 +625,10 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
     launcher_changed = [
         index for index, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
     ]
-    assert launcher_changed == [3, 8, 13, 18, 23, 28, 33, 38, 43, 48, 50, 53, 55, 58, 63, 68]
+    assert launcher_changed == [50, 55]
     assert after["approval"]["rows"] == before["approval"]["rows"]
     assert after["approval"]["holders"] == before["approval"]["holders"]
-    assert "Fable is retired (OO-58, #11327)." in after["approval"]["contract"]
+    assert "Fable 5.1 is parked: not routed by default, explicit pin only;" in after["approval"]["contract"]
     with pytest.raises(AssertionError):
         approved_retirement_11327_baseline(after, PRE_RETIREMENT_INPUTS)
 
@@ -1222,8 +1212,8 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
     cursor = catalog["budget_substitution_models"]["cursor"]
     assert "claude-opus-5-5" not in cursor
     assert "claude-fable-5-1" not in cursor
-    assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "retired"
-    assert catalog["models"]["claude-fable-5-1"]["transports"] == []
+    assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "active"
+    assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude", "cursor"]
     assert "cursor" in catalog["models"]["claude-sonnet-5-5"]["transports"]
 
 
@@ -1343,7 +1333,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "3b413e875f6d1dd9d6762eea178ac5c3a2254d3965f5d9ce8a60a173ea833aa0",
+    "SPEC.md": "a7a7cc9a16faca183b80550bae3d60d92c3f2477c71a089ecea4de483823f756",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",

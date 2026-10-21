@@ -3680,6 +3680,9 @@ def _invoke_impl(
             f"Agent {agent_name!r} does not support mode {mode!r}. Supported modes: {sorted(adapter.supported_modes)}"
         )
 
+    # Catalog retirement binds explicit pins and the retired Kimi defaults.
+    _refuse_retired_launch_model(agent_name, model, tool_config)
+
     # ---------- 3. Validate cwd for write modes ----------
     if mode in _WRITE_CAPABLE_MODES:
         if cwd is None:
@@ -3717,14 +3720,6 @@ def _invoke_impl(
         effective_model = resolve_kimicc_dispatch_model(model)
     else:
         effective_model = model or adapter.default_model
-    # Refuse the model that would actually run, including a retired seat default
-    # (OO-58). An explicit retired pin is still refused. This is the existing
-    # catalog refusal, applied after the default is filled in.
-    from scripts.review.model_catalog import retired_model_refusal
-
-    retired_refusal = retired_model_refusal(effective_model)
-    if retired_refusal:
-        raise ValueError(f"Agent {agent_name!r}: {retired_refusal}")
     failover_chain = load_failover_chain(agent_name, effective_model=effective_model) if allow_runner_failover else None
     if allow_direct_only and failover_chain is not None:
         raise AgentUnavailableError(f"Direct-only agent {agent_name!r} may not use runner failover")
@@ -3972,7 +3967,13 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
 
         effective_model = KIMI_DEFAULT_MODEL
     else:
-        return
+        from .kimi_admission import is_kimi_seat
+        from .registry import AGENTS
+
+        default_model = AGENTS.get(agent_name, {}).get("default_model")
+        if not default_model or not is_kimi_seat(agent_name, model=default_model):
+            return
+        effective_model = default_model
     from scripts.review.model_catalog import retired_model_refusal
 
     refusal = retired_model_refusal(effective_model)

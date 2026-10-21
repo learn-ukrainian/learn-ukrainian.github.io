@@ -100,7 +100,7 @@ This lease↔dispatch coupling is fail-closed by default. Full charter:
 **Opus 5.5 @ high is the DEFAULT Anthropic driver seat** (operator decision 2026-09-22,
 superseding the 2026-08-03 Opus 5 @ xhigh pin). `./start-claude-driver.sh --epic <epic>`
 pins `claude-opus-5-5[1m]` with `--effort high` by default; pass
-`--model sonnet` for the supported alternate and `--effort …` to override effort. Fable is retired (OO-58, #11327).
+`--model sonnet` for the supported alternate and `--effort …` to override effort. Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision.
 (Opus 5.5's API default is `medium`; `xhigh` thinks much longer than it did on Opus 5). Keep the SUMMONED cadence —
 1-2 short scheduled sessions/day, dispatch-heavy, never a resident polling loop
 (see model-assignment.md § Orchestration operating pattern). Both Anthropic wrappers
@@ -125,7 +125,7 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 `drive-epic` skill enforces this.
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
-- **Fable 5.1** — retired (OO-58, #11327). Do not pass `--model fable`. **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
+- **Fable 5.1** — parked: not routed by default, explicit pin only (`--model claude-fable-5-1`); reintroduction or a successor model is an operator decision. **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
   (`claude-opus-5-5`). Designated approval is given by the operator, or when
   `claude-opus-5-5` and `gpt-6.1-sol` agree; when one of them authored the proposal, the
   other's approval completes it; a proposal by any other agent needs both; if they

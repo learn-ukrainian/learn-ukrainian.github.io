@@ -79,8 +79,9 @@ policy:
     - >-
       Wave 1 CF SCORECARD 2026-08-23 (operator/CTO GO, provisional): letter grades
       are advisory labels on existing quality_tiers — not a parallel ranking and
-      not a reviewed_on refresh. Retired Fable (claude-fable-5, claude-fable-5-1)
-      historical grade S+ (frontier_authority); not a route (OO-58, #11327).
+      not a reviewed_on refresh. Retired claude-fable-5 historical grade S+ (frontier_authority).
+      Fable 5.1 is parked: not routed by default, explicit pin only;
+      reintroduction or a successor model is an operator decision (OO-58, #11327).
       gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C
       (keep frontier_practical; do not demote). Retired Kimi historical scorecard:
       strong root-cause / densest useful CI nits. AGY gemini-3.7-flash-high = fast
@@ -118,7 +119,7 @@ review_scheduler:
   # model's catalog `roles`. A review, critique or approval of record (delegate
   # review dispatch, bridge review, recorded verdict) needs a `review` role; an
   # ACP ask, consult or discussion needs a `review` or `consult` role. A model
-  # holding only coding or orchestration roles (retired claude-fable-5-1) is refused
+  # holding only coding or orchestration roles (claude-fable-5-1) is refused
   # on every seat and transport; a retired model holds no role.
   activity_roles:
     review:
@@ -466,7 +467,7 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: retired
-    replaced_by: claude-opus-5-5
+    replaced_by: claude-fable-5-1
     roles: [architecture, critical_review, long_horizon_coding]
     transports: []
     strengths: [highest_anthropic_capability, long_horizon_work]
@@ -479,20 +480,19 @@ models:
   claude-fable-5-1:
     family: anthropic
     tier: frontier_authority
-    lifecycle: retired
-    replaced_by: claude-opus-5-5
-    # OO-58 (#11327, 2026-10-21): unused and expensive. Historical record only.
-    # The alias remains so the old Cursor slug resolves here and dispatch refuses it.
+    lifecycle: active
+    # #9583: no architecture/advisory or review role; launchable model only.
+    # The alias is the Cursor slug budget substitution sends.
     aliases: [claude-fable-5-1-thinking-high]
     roles: [long_horizon_coding, orchestration]
-    transports: []
+    transports: [native_claude, cursor]
     strengths: [highest_anthropic_capability, long_horizon_work, always_on_thinking]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
-      OO-58 (#11327, 2026-10-21): retired, no executable route. Operator decision
-      2026-10-03 (#9583) had already removed advisory, approval, review and
-      critique roles. replaced_by is claude-opus-5-5. Historical effort notes
-      follow. Thinking was always on (never send
+      Operator decision 2026-10-03 (#9583): Fable 5.1 holds no advisory, approval,
+      review or critique role and is not a last resort for any of them; Opus 5.5 /
+      Sol 6.1 hold those roles. It succeeds claude-fable-5 as a launchable Claude
+      model only. Thinking is always on (never send
       thinking: disabled). Effort decision topology (operator 2026-09-09): default
       high (API default; start here — do not port Opus/xhigh habits); medium/low
       for routine interactive work (low often beats prior-gen xhigh/max; medium
