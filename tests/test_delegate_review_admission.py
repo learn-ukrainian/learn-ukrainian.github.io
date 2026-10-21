@@ -1775,14 +1775,14 @@ FABLE_PINS = [
     ("claude", "claude-fable-5-1[1m]"),
     ("cursor", "claude-fable-5-1-thinking-high"),  # the Cursor fallback slug
 ]
-NO_REVIEW_ROLE = "holds no review, critique or approval role in the model catalog"
+NO_REVIEW_ROLE = "is retired in the model catalog"
 
 
 @pytest.mark.parametrize("seat,model", FABLE_PINS)
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_fable_code_review_pin_is_refused(monkeypatch, seat, model, risk, flags):
-    """#9583: Fable holds no review role in the catalog, so an explicit pin is refused, never substituted."""
+    """OO-58: a retired Fable pin is refused, never substituted."""
     args = _args(
         "--agent",
         seat,

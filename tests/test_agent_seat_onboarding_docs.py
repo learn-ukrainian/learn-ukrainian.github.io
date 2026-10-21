@@ -268,22 +268,28 @@ def test_no_bare_ab_command_guidance(all_owned: dict[str, str]) -> None:
     assert not failures, "Bare `ab` command guidance found:\n" + "\n".join(failures)
 
 
-def test_kimicc_high_vs_native_max_distinction(onboarding: str, all_owned: dict[str, str]) -> None:
-    lower = onboarding.lower()
-    assert "kimicc" in lower
-    assert "native" in lower and "kimi" in lower
-    assert re.search(r"\bhigh\b", lower)
-    assert re.search(r"max-only|max only|\bmax\b", lower)
-    # KimiCC high default is stated; native remains max-only.
-    assert "defaults to" in lower or "defaults to **`high`**" in onboarding or "default" in lower
-    runtime = all_owned["docs/agent-runtime-guide.md"].lower()
-    assert "kimicc" in runtime
-    assert "max-only" in runtime or "max only" in runtime
-    assert re.search(r"\bhigh\b", runtime)
-    scripts = all_owned["docs/SCRIPTS.md"].lower()
-    assert "kimicc" in scripts
-    assert "high" in scripts
-    assert "max-only" in scripts or "max only" in scripts
+def test_kimi_routes_are_retired_not_a_live_effort_default(
+    onboarding: str, all_owned: dict[str, str]
+) -> None:
+    """OO-58: owned docs must not state a live KimiCC-high or native-max route.
+
+    The defect is a present-tense effort default that would send a dispatch
+    to a retired catalog id. Retirement wording is the required contract.
+    """
+    for rel in (
+        "docs/runbooks/agent-seat-onboarding.md",
+        "docs/agent-runtime-guide.md",
+        "docs/SCRIPTS.md",
+        "docs/best-practices/agent-cooperation.md",
+        "agents_extensions/shared/rules/fleet-comms-coordination.md",
+    ):
+        folded = all_owned[rel].lower()
+        assert "kimi" in folded, rel
+        assert "retired" in folded, rel
+        assert "k3 defaults" not in folded, rel
+        assert "max-only" not in folded, rel
+    assert "do not dispatch" in onboarding.lower()
+    assert "do not\nselect kimicc" in onboarding.lower()
 
 
 def test_buzz_deferral(onboarding: str, all_owned: dict[str, str]) -> None:
@@ -473,9 +479,14 @@ def test_acpx_does_not_fabricate_cli_flags(onboarding: str) -> None:
 
 
 def test_onboarding_uses_real_project_entrypoints(onboarding: str) -> None:
+    """Real entrypoints stay; a Kimi harness command must not be offered.
+
+    The defect is an onboarding example that dispatches a retired Kimi id.
+    """
     assert "--prompt-file" in onboarding
     assert "--brief" not in onboarding
-    assert "delegate.py --agent kimi --harness kimicc" in onboarding
+    assert "delegate.py --agent kimi --harness kimicc" not in onboarding
+    assert "do not dispatch" in onboarding.lower()
     assert "localhost:8765" not in onboarding
 
 

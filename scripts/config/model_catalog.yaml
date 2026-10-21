@@ -53,20 +53,16 @@ policy:
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
       Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
     - >-
-      Kimi K3 workers (`kimi`, `kimicc`, and catalog ids `kimi-code/k3*`) use the
-      native `kimi` CLI subscription path only (`catalog_transport` /
-      `transports`: `native_kimi`). OpenRouter is forbidden as a Kimi worker
-      bus. Do not relaunch OpenRouter-for-subscribed-models patterns for
-      Moonshot/Kimi K3. OpenRouter remains mainly Pool + Gemma access.
+      Kimi models are retired (OO-58, #11327, 2026-10-21; unused since
+      2026-10-13, reconfirmed 2026-10-18 and 2026-10-21). Dispatch refuses
+      every Kimi id. Historical workers used the native `kimi` CLI only;
+      OpenRouter was never a Kimi worker bus. OpenRouter remains mainly
+      Pool + Gemma access.
     - >-
-      Kimi: web, UI and backend coding only — no Ukrainian-language content, no
-      reviews, consults, design or rules. Kimi seats (`kimi`, `kimicc`, every
-      `kimi-code/*` / `kimi-k3*` id) take workspace-write implementation of the
-      allowlisted UI and backend paths (KIMI_OWNED_ROOTS) only; they carry no review,
-      consult, advisor, or ACP-discussion role and are absent from
-      review_candidates and review_ladders; dispatch, the runtime, ACP and the
-      fleet-comms authority refuse everything else before any side effect
-      (scripts/agent_runtime/kimi_admission.py).
+      Kimi seats are not a usable lane (OO-58, #11327). Historical limit, kept
+      as record: web, UI and backend coding only, no Ukrainian-language content,
+      no reviews, consults, design or rules. The ids stay in the catalog with
+      empty transports so dispatch can refuse them by name.
     - >-
       EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION
       still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer /
@@ -83,15 +79,17 @@ policy:
     - >-
       Wave 1 CF SCORECARD 2026-08-23 (operator/CTO GO, provisional): letter grades
       are advisory labels on existing quality_tiers — not a parallel ranking and
-      not a reviewed_on refresh. Fable (claude-fable-5) = S+ (frontier_authority).
+      not a reviewed_on refresh. Retired Fable (claude-fable-5, claude-fable-5-1)
+      historical grade S+ (frontier_authority); not a route (OO-58, #11327).
       gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C
-      (keep frontier_practical; do not demote). Kimi = strong root-cause / densest
-      useful CI nits (native `kimi` CLI only). AGY gemini-3.7-flash-high = fast
+      (keep frontier_practical; do not demote). Retired Kimi historical scorecard:
+      strong root-cause / densest useful CI nits. AGY gemini-3.7-flash-high = fast
       scoped CF. GLM-5.3 = ships-heavier, LOCAL-ONLY (zai-coding-plan; never
       OpenRouter). Codex/Sol = careful/small, thorough/heavy advisory — not a
       speed winner. Evidence: AGY #7137, Kimi #7143, Codex/Sol #7142, Grok #7133,
       GLM #7144 (also addresses #7121 fetch refspecs). OpenRouter remains mainly
-      Pool+Gemma; Kimi/Gemini/GLM subscribed seats never OpenRouter.
+      Pool+Gemma. Gemini and GLM subscribed seats never use OpenRouter.
+      Kimi is retired and is not a seat.
 
 # Canonical sealed formal-review transports. Resolver policy consumes these
 # endpoint records before considering balance. A route with
@@ -120,7 +118,7 @@ review_scheduler:
   # model's catalog `roles`. A review, critique or approval of record (delegate
   # review dispatch, bridge review, recorded verdict) needs a `review` role; an
   # ACP ask, consult or discussion needs a `review` or `consult` role. A model
-  # holding only coding or orchestration roles (claude-fable-5-1) is refused
+  # holding only coding or orchestration roles (retired claude-fable-5-1) is refused
   # on every seat and transport; a retired model holds no role.
   activity_roles:
     review:
@@ -236,11 +234,9 @@ review_scheduler:
     kimicc:
       formal_review_eligible: false
       formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
-      # Routable kimicc models only. kimi-code/k3-256k is omitted: the live
-      # coding endpoint rejects coding_model_id k3-256k with
-      # [claude-code:unrecognized_model] (#8745). No replacement 256k id.
-      # The first entry is the omitted-model default (kimi-code/k3).
-      models: [kimi-code/k3, kimi-k3-max, kimi-code/kimi-for-coding, kimi-code/kimi-for-coding-highspeed]
+      # OO-58 (#11327): every Kimi id is retired. No routable kimicc model.
+      # Historical note (#8745): the coding endpoint rejected k3-256k.
+      models: []
       participant: kimicc
       adapter_transport: acp
       # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
@@ -470,7 +466,7 @@ models:
     family: anthropic
     tier: frontier_authority
     lifecycle: retired
-    replaced_by: claude-fable-5-1
+    replaced_by: claude-opus-5-5
     roles: [architecture, critical_review, long_horizon_coding]
     transports: []
     strengths: [highest_anthropic_capability, long_horizon_work]
@@ -483,19 +479,20 @@ models:
   claude-fable-5-1:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
-    # #9583: no architecture/advisory or review role; launchable model only.
-    # The alias is the Cursor slug budget substitution sends.
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    # OO-58 (#11327, 2026-10-21): unused and expensive. Historical record only.
+    # The alias remains so the old Cursor slug resolves here and dispatch refuses it.
     aliases: [claude-fable-5-1-thinking-high]
     roles: [long_horizon_coding, orchestration]
-    transports: [native_claude, cursor]
+    transports: []
     strengths: [highest_anthropic_capability, long_horizon_work, always_on_thinking]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
-      Operator decision 2026-10-03 (#9583): Fable 5.1 holds no advisory, approval,
-      review or critique role and is not a last resort for any of them; Opus 5.5 /
-      Sol 6.1 hold those roles. It succeeds claude-fable-5 as a launchable Claude
-      model only. Thinking is always on (never send
+      OO-58 (#11327, 2026-10-21): retired, no executable route. Operator decision
+      2026-10-03 (#9583) had already removed advisory, approval, review and
+      critique roles. replaced_by is claude-opus-5-5. Historical effort notes
+      follow. Thinking was always on (never send
       thinking: disabled). Effort decision topology (operator 2026-09-09): default
       high (API default; start here — do not port Opus/xhigh habits); medium/low
       for routine interactive work (low often beats prior-gen xhigh/max; medium
@@ -796,7 +793,9 @@ models:
   kimi-code/k3:
     family: moonshot
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    # OO-58 (#11327, 2026-10-21): unused since 2026-10-13; reconfirmed 2026-10-18
+    # and 2026-10-21. Historical route metadata only. No executable transport.
     # Every Kimi launcher/runtime input is listed here. The canonical model id
     # above is also accepted implicitly; consumers resolve aliases through
     # scripts.review.model_catalog rather than carrying local maps.
@@ -806,10 +805,9 @@ models:
       platform_model_id: "kimi-k3[1m]"
       coding_model_id: k3
       context_profile: kimicc_k3
-    # Kimi: web, UI and backend coding only — no review, consult, advisor, or ACP-discussion role.
+    # Historical limit: web, UI and backend coding only. Not a usable lane (OO-58).
     roles: [consequential_coding, long_context_debugging]
-    # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
-    transports: [native_kimi]
+    transports: []
     strengths: [strong_agentic_coding, max_effort, image_video_tools, strong_root_cause, dense_ci_nits]
     # 2026-08-07 release notes (operator-supplied): k3 now supports low/high/max
     # thinking effort; 1M window requires Allegretto tier+. Reserve k3 for
@@ -818,27 +816,19 @@ models:
     # 256K at ~half quota).
     weaknesses: [public_context_spec_is_not_verified]
     notes: >-
-      Wave 1 SCORECARD 2026-08-23: CF #7143 pass with nits — densest useful
-      CI-style nits; strong root-cause. Native `kimi` CLI only; never OpenRouter.
+      Historical scorecard 2026-08-23: CF #7143 pass with nits. Not a route (OO-58).
     sources:
       - https://moonshotai.github.io/kimi-code/en/configuration/providers.html
   kimi-code/k3-256k:
     family: moonshot
     tier: frontier_practical
-    lifecycle: active
-    # K3 capped at 256K context: identical outputs to k3 within the window,
-    # ~half quota consumption. Recommended DEFAULT for headless dispatch
-    # (Q&A, routine coding, small/medium edits). No video input. Supports
-    # low/high/max thinking effort. Operator-adopted 2026-08-07.
-    # Parity ("identical outputs") and the ~half-quota figure are Moonshot's
-    # release-note claims, not independently measured on this fleet — treat
-    # as provisional until a side-by-side run confirms them (mirrors the
-    # public_context_spec_is_not_verified caveat on kimi-code/k3 above).
-    # Not a kimicc route (#8745): the coding endpoint rejects the id k3-256k
-    # with [claude-code:unrecognized_model]. Native kimi still uses this
-    # model. The route block stays because native_kimi requires it; the
-    # kimicc endpoint model list above does not include this id, and the
-    # harness refuses it. Do not invent a replacement 256k coding id.
+    lifecycle: retired
+    # OO-58 (#11327, 2026-10-21): unused since 2026-10-13; reconfirmed 2026-10-18
+    # and 2026-10-21. Was the native dispatch default. No executable transport.
+    # Historical: K3 capped at 256K, once the headless default (operator 2026-08-07).
+    # Not a kimicc route (#8745): the coding endpoint rejected k3-256k.
+    # kimi_routes stays as historical metadata, the same way retired GLM keeps
+    # glm_routes. Do not invent a replacement 256k coding id.
     aliases: [k3-256k, kimi-k3-256k]
     kimi_routes:
       kimicc_alias: k3-256k
@@ -846,8 +836,7 @@ models:
       coding_model_id: k3-256k
       context_profile: kimicc_k3_256k
     roles: [routine_coding]
-    # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
-    transports: [native_kimi]
+    transports: []
     strengths: [strong_agentic_coding, half_quota_vs_k3, effort_low_high_max]
     weaknesses: [no_video_input, context_capped_256k, parity_and_quota_claims_not_verified]
     sources:
@@ -855,7 +844,8 @@ models:
   kimi-k3-max:
     family: moonshot
     tier: frontier_authority
-    lifecycle: active
+    lifecycle: retired
+    # OO-58 (#11327, 2026-10-21): unused since 2026-10-13. No executable transport.
     aliases: [k3-max]
     kimi_routes:
       kimicc_alias: k3-max
@@ -863,8 +853,7 @@ models:
       coding_model_id: kimi-k3-max
       context_profile: kimicc_k3
     roles: [consequential_coding, long_context_debugging]
-    # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
-    transports: [native_kimi]
+    transports: []
     strengths: [frontier_reasoning, max_effort, long_context_review]
     weaknesses: [max_effort_only, subscription_quota]
     sources:
@@ -872,7 +861,8 @@ models:
   kimi-code/kimi-for-coding:
     family: moonshot
     tier: economical
-    lifecycle: active
+    lifecycle: retired
+    # OO-58 (#11327, 2026-10-21): unused since 2026-10-13. No executable transport.
     aliases: [k2.7, k2.7-coding, kimi-for-coding, kimi-k2.7-code]
     kimi_routes:
       kimicc_alias: k2.7
@@ -880,7 +870,7 @@ models:
       coding_model_id: kimi-for-coding
       context_profile: kimicc_k27
     roles: [routine_coding, bounded_implementation]
-    transports: [native_kimi]
+    transports: []
     strengths: [coding_specialization, subscription_capacity]
     weaknesses: [not_critical_authority]
     sources:
@@ -888,7 +878,8 @@ models:
   kimi-code/kimi-for-coding-highspeed:
     family: moonshot
     tier: economical
-    lifecycle: active
+    lifecycle: retired
+    # OO-58 (#11327, 2026-10-21): unused since 2026-10-13. No executable transport.
     aliases: [k2.7-highspeed, k2.7-coding-highspeed, kimi-for-coding-highspeed, kimi-k2.7-code-highspeed]
     kimi_routes:
       kimicc_alias: k2.7-highspeed
@@ -896,7 +887,7 @@ models:
       coding_model_id: kimi-for-coding-highspeed
       context_profile: kimicc_k27_highspeed
     roles: [fast_routine_coding]
-    transports: [native_kimi]
+    transports: []
     strengths: [speed]
     weaknesses: [not_critical_authority]
     sources:
@@ -1342,14 +1333,16 @@ review_ladders:
 # anything outside gpt-6.1-sol/gpt-6-luna). Cursor forwards an unrecognized
 # --model, so an unmapped slug such as gpt-6.1-sol still uses grok-4.7.
 # GPT-6 has no Cursor row: native Codex only, until Cursor has a verified slug.
+# Operator 2026-10-21 (OO-58, #11327): native Grok and Cursor draw from one usage
+# meter. Budget routing reads this record; the two seats are not two pools.
+usage_pools:
+  grok_cursor:
+    seats: [grok, cursor]
 budget_substitution_models:
   codex:
     gpt-6.1-sol: {role: openai_frontier_coder}
     gpt-6-luna: {role: bounded_recon}
   cursor:
-    # Read-only cursor-agent --list-models verified 2026-09-30:
-    # claude-fable-5-1-thinking-high - Claude Fable 5.1 1M Thinking (NO ZDR)
-    claude-fable-5-1: claude-fable-5-1-thinking-high
     grok-4.7: {role: legacy_reviewers, seat: xai_reviewer}
     composer-2.5: {role: legacy_reviewers, seat: cursor_coder}
 

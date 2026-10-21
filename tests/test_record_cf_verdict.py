@@ -239,8 +239,8 @@ def test_missing_or_ambiguous_verdict_refused(reply):
         ({}, "VERDICT: APPROVE\nVERDICT: BLOCKED", "ambiguous"),
         ({}, "No verdict", "missing"),
         # #9583: a model the catalog gives no review role never approves, on any harness.
-        ({"agent": "claude", "model": "claude-fable-5-1"}, "VERDICT: APPROVE", "holds no review"),
-        ({"agent": "claude", "model": "claude-fable-5-1[1m]"}, "VERDICT: APPROVE", "holds no review"),
+        ({"agent": "claude", "model": "claude-fable-5-1"}, "VERDICT: APPROVE", "retired in the model catalog"),
+        ({"agent": "claude", "model": "claude-fable-5-1[1m]"}, "VERDICT: APPROVE", "retired in the model catalog"),
         (
             {
                 "agent": "cursor",

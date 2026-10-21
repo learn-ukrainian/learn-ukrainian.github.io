@@ -288,8 +288,6 @@ LAUNCHER_ROWS = (
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
     ("grok-hermes", "start-grok.sh", ("--harness", "hermes"), "hermes", "--query", "core"),
-    ("kimi-native", "start-kimi.sh", (), None, "--agent-file", "core"),
-    ("kimicc", "start-kimicc.sh", (), "kimi", "--append-system-prompt", "core"),
     ("glm-opencode", "start-glm.sh", (), None, "positional", "core"),
     ("glmcc", "start-glmcc.sh", (), "glm", "--append-system-prompt", "core"),
 )
@@ -420,10 +418,10 @@ _KIMI_REFUSED = (
 
 @pytest.mark.parametrize("forwarded", _KIMI_REFUSED, ids=lambda forwarded: " ".join(forwarded))
 def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, core_root: Path) -> None:
+    """OO-58: the retired default refuses before the fresh-session classifier, and nothing execs."""
     result, _ = _launch(core_root, "start-kimi.sh", ("--", *forwarded), tmp_path, None, expect_launch=False)
     assert result.returncode == 2, result.stdout + result.stderr
-    assert "Kimi Code starts fresh sessions only" in result.stderr
-    assert "fresh web/UI/backend coding tasks" in result.stderr
+    assert "is retired in the model catalog" in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -444,15 +442,27 @@ def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, co
     ids=lambda forwarded: " ".join(forwarded) or "plain",
 )
 def test_kimi_code_fresh_launch_carries_the_core(forwarded, tmp_path: Path, core_root: Path) -> None:
-    _, argv = _launch(core_root, "start-kimi.sh", ("--", *forwarded) if forwarded else (), tmp_path, None)
-    _assert_core(_carrier(argv, "--agent-file"), "core", "kimi-fresh")
-    assert argv[len(argv) - len(forwarded) :] == list(forwarded)
+    """OO-58: a fresh Kimi launch is refused before argv, so the core is never attached to a command."""
+    result, _ = _launch(
+        core_root,
+        "start-kimi.sh",
+        ("--", *forwarded) if forwarded else (),
+        tmp_path,
+        None,
+        expect_launch=False,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "is retired in the model catalog" in result.stderr
 
 
 def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_root: Path) -> None:
-    _, argv = _launch(core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi")
-    assert "--continue" in argv
-    _assert_core(_carrier(argv, "--append-system-prompt"), "core", "kimicc-continue")
+    """OO-58: kimicc resume is refused with the retired default before a core-bearing argv exists."""
+    result, _ = _launch(
+        core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi", expect_launch=False
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_launcher_ignores_the_old_env_override(tmp_path: Path, core_root: Path) -> None:
@@ -602,8 +612,6 @@ WORKER_ROWS = (
     ("gemini-legacy", "scripts.agent_runtime.adapters.gemini:GeminiAdapter", "read-only", None),
     ("grok", "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter", "read-only", None),
     ("cursor", "scripts.agent_runtime.adapters.cursor:CursorAdapter", "read-only", None),
-    ("kimi-native", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "workspace-write", None),
-    ("kimicc", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "workspace-write", {"harness": "kimicc"}),
     ("glm", "scripts.agent_runtime.adapters.glm:GlmAdapter", "read-only", None),
     ("deepseek", "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter", "read-only", None),
     ("hermes-deepseek", "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter", "read-only", None),
@@ -667,8 +675,6 @@ def test_worker_row_carries_the_core(
     _, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
     _stub_worker_clis(tmp_path, monkeypatch)
     module, cls = adapter.split(":")
-    if row.startswith("kimi"):
-        tool_config = admitted_tool_config(tmp_path, tool_config)
     if row == "agy":
         home = tmp_path / "agy-home"
         register_agy_hooks(tmp_path, home=home)
@@ -684,6 +690,30 @@ def test_worker_row_carries_the_core(
     )
     sent = len("\0".join(plan.cmd).encode("utf-8")) + len(plan.stdin_payload.encode("utf-8"))
     _assert_core(_plan_context(plan), "core", f"delegate-worker-{row}", context_bytes=sent)
+
+
+@pytest.mark.parametrize(
+    ("row", "tool_config"),
+    [("kimi-native", None), ("kimicc", {"harness": "kimicc"})],
+)
+def test_retired_kimi_worker_refuses_before_a_core_bearing_plan(
+    row: str, tool_config: dict | None, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """OO-58: a Kimi worker plan is refused, so the rules core is not attached to a command."""
+    from scripts.agent_runtime.adapters.kimi import KimiAdapter
+
+    _dispatched_worker_prompt(tmp_path, monkeypatch, [])
+    _stub_worker_clis(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiAdapter().build_invocation(
+            prompt="implement the widget",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id=f"rules-core-{row}",
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path, tool_config),
+        )
 
 
 # --------------------------------------------------------------------------- ACP asks, discussion legs, sealed reviews

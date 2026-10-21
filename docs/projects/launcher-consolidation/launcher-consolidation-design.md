@@ -6,6 +6,9 @@
 >
 > Sequencing prerequisite (per the memo §6): #5931 (glmcc launcher) and the Kimi
 > shared-route work (#5937, merged) land first; #5932 stays separate.
+>
+> Later retirement (OO-58, #11327): Fable and every Kimi model have no executable
+> route. This memo's Fable-default and Kimi launcher instructions are historical.
 
 ---
 

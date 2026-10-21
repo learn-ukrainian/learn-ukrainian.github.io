@@ -37,11 +37,13 @@ def test_claude_interactive_keeps_tui_model_unless_explicit() -> None:
     fable = run_launcher("start-claude.sh", "--model", "fable")
     sonnet = run_launcher("start-claude.sh", "--model", "sonnet")
     assert default.returncode == sonnet.returncode == 0
-    assert fable.returncode == 0
+    assert fable.returncode == 2
     assert "would exec claude --model" not in default.stdout
     assert "--effort" not in default.stdout
     assert "would exec claude " in default.stdout
-    assert "would exec claude --model claude-fable-5-1" in fable.stdout
+    assert "is retired in the model catalog" in fable.stderr
+    assert "claude-fable-5-1" in fable.stderr
+    assert "would exec" not in fable.stdout
     assert "would exec claude --model claude-sonnet-5-5" in sonnet.stdout
 
 
@@ -52,8 +54,9 @@ def test_claude_interactive_injects_effort_when_explicit() -> None:
     assert "would exec claude --model" not in result.stdout
 
     both = run_launcher("start-claude.sh", "--model", "fable", "--effort", "xhigh")
-    assert both.returncode == 0, both.stderr
-    assert "would exec claude --model claude-fable-5-1 --effort xhigh" in both.stdout
+    assert both.returncode == 2, both.stdout
+    assert "is retired in the model catalog" in both.stderr
+    assert "would exec" not in both.stdout
 
 
 @pytest.mark.parametrize("model", ("not-certified", "gpt-6.1-sol"))
@@ -64,10 +67,13 @@ def test_claude_rejects_models_outside_native_profile(model: str) -> None:
 
 
 def test_certified_claude_driver_models_are_revalidated() -> None:
-    for model in ("fable", "sonnet"):
-        result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", model)
-        assert result.returncode == 0, result.stderr
-        assert "would claim lease" in result.stdout
+    sonnet = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "sonnet")
+    assert sonnet.returncode == 0, sonnet.stderr
+    assert "would claim lease" in sonnet.stdout
+    fable = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "fable")
+    assert fable.returncode == 2, fable.stdout
+    assert "is retired in the model catalog" in fable.stderr
+    assert "would claim lease" not in fable.stdout
     # Opus stays certified in the catalog but is always blocked by the cap policy.
     opus = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "opus")
     assert opus.returncode == 7, opus.stderr
@@ -187,8 +193,9 @@ def test_claude_driver_default_yields_to_launcher_env() -> None:
         "devops",
         env={"LAUNCHER_MODEL": "fable", "LAUNCHER_EFFORT": "medium"},
     )
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-fable-5-1 --effort medium" in result.stdout
+    assert result.returncode == 2, result.stdout
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_claude_opus_aliases_resolve_and_are_blocked() -> None:
@@ -230,8 +237,9 @@ def test_claude_driver_injects_model_and_effort_when_explicit() -> None:
         "--effort",
         "high",
     )
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-fable-5-1 --effort high" in result.stdout
+    assert result.returncode == 2, result.stdout
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_claude_rejects_unknown_effort() -> None:

@@ -21,11 +21,9 @@ pins:
 
 # Catalog models whose lifecycle is active or fallback, in map order.
 _ADMITTED_MODEL_IDS = (
-    "gpt-6.1-sol, gpt-6-luna, claude-fable-5-1, claude-opus-5-5, "
+    "gpt-6.1-sol, gpt-6-luna, claude-opus-5-5, "
     "claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high, "
-    "gemini-3.1-pro-high, grok-4.7, kimi-code/k3, kimi-code/k3-256k, "
-    "kimi-k3-max, kimi-code/kimi-for-coding, "
-    "kimi-code/kimi-for-coding-highspeed, glm-5.3, deepseek-v4.1-flash, "
+    "gemini-3.1-pro-high, grok-4.7, glm-5.3, deepseek-v4.1-flash, "
     "poolside/laguna-s-2.1, poolside/laguna-xs-2.1, poolside/laguna-m.1, "
     "composer-2.5, google-ais/gemma-4-31b-it, glm-5.3-flash"
 )

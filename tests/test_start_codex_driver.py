@@ -144,7 +144,6 @@ printf 'CODEX_EXEC %s\\n' "$*"
     ("arguments", "expected"),
     [
         (("--check-retired-model", "gpt-6.1-sol"), ""),
-        (("--resolve-kimi-model", "k3"), "kimi-code/k3\n"),
         (("--resolve-glm-model", "glm"), "glm-5.3\n"),
         (("--resolve-role", "bounded_advisor"), '"role": "bounded_advisor"'),
     ],
@@ -165,6 +164,23 @@ def test_runtime_launcher_stages_catalog_command_imports(
     )
     assert result.returncode == 0, result.stderr
     assert expected in result.stdout
+
+
+def test_runtime_launcher_refuses_a_retired_kimi_alias(tmp_path: Path) -> None:
+    """OO-58: --resolve-kimi-model names the retired id and does not print a route."""
+    launcher, _ = _runtime_launcher(tmp_path)
+    result = subprocess.run(
+        [sys.executable, "-I", str(launcher.parent / "scripts/review/model_catalog.py"), "--resolve-kimi-model", "k3"],
+        cwd=tmp_path,
+        env=_clean_environ(),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 2, result.stdout
+    assert "is retired in the model catalog" in result.stderr
+    assert "kimi-code/k3" in result.stderr
 
 
 def _run_runtime_governor(

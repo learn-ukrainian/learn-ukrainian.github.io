@@ -364,9 +364,8 @@ def test_shell_api_returns_structured_evidence_and_typed_refusal(tmp_path):
 @pytest.mark.parametrize("args,expected_status,expected_output", [
     (["--check-retired-model", "claude-opus-5-5"], 0, ""),
     (["--check-retired-model", "claude-fable-5"], 2, ""),
-    (["--resolve-kimi-model", "k3"], 0, "kimi-code/k3\n"),
-    (["--resolve-kimi-model", "k3", "--format", "kimicc"], 0,
-     "k3\tkimi-k3[1m]\tk3\tkimicc_k3\n"),
+    (["--resolve-kimi-model", "k3"], 2, ""),
+    (["--resolve-kimi-model", "k3", "--format", "kimicc"], 2, ""),
     (["--resolve-role", "bounded_advisor"], 0, None),
     (["--resolve-role", "bounded_advisor", "--purpose", "launch"], 0, None),
     (["--resolve-role", "unregistered"], 2, ""),
@@ -379,6 +378,8 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
     )
     assert result.returncode == expected_status, result.stderr
     assert "Traceback" not in result.stderr
+    if args and args[0] == "--resolve-kimi-model":
+        assert "is retired in the model catalog" in result.stderr
     if expected_output is not None:
         assert result.stdout == expected_output
     else:
@@ -389,7 +390,8 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
         if "launch" in args:
             assert row["argv"][row["argv"].index("--model") + 1] == row["wire_id"]
     if expected_status == 2:
-        assert ("is retired" if "--check-retired-model" in args else "unknown routing role") in result.stderr
+        retired = "--check-retired-model" in args or "--resolve-kimi-model" in args
+        assert ("is retired" if retired else "unknown routing role") in result.stderr
     else:
         assert result.stderr == ""
 

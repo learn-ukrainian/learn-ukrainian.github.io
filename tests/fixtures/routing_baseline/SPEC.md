@@ -395,3 +395,21 @@ literal replacements, and a scope test checks that no other row, field or
 surface changes. Historical baselines, inputs, the occurrence ledger,
 `SHA256SUMS` and `capture.py` stay byte-identical. Any other difference blocks
 regeneration.
+
+## Retired Fable 5.1, retired Kimi, one Grok/Cursor pool (#11327)
+
+`tests/review/fixtures/routing-11327.json` is applied last, after the AGY mode
+overlay, for both CLI configurations. Historical compressed baselines, input
+matrices, the occurrence ledger, `SHA256SUMS` and `capture.py` stay
+byte-identical. The overlay's digest is pinned beside the function that applies it.
+
+Catalog changes are the six retired ids (`claude-fable-5-1` and the five Kimi
+ids), `claude-fable-5.replaced_by`, empty `kimicc` endpoint models, three policy
+notes, removal of the Cursor `claude-fable-5-1` budget pin, and the new
+`usage_pools.grok_cursor` record. Dispatch drops only the rows whose pin is
+`claude-fable-5-1`. The only other dispatch change is the cooler-seat list:
+Cursor and Grok share one meter, so the list names `grok` once, and a hot Grok
+seat does not offer Cursor. Launcher `retired` rows name `claude-opus-5-5` as
+the Fable 5 successor. The two Kimi default rows refuse `k3-256k`. The approval
+contract text records the retirement; its holders and vote rows stay. Every
+other seat's chosen substitute and every other surface stay.

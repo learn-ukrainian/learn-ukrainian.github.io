@@ -1,0 +1,207 @@
+{
+  "issue": 11327,
+  "model_fields": [
+    {
+      "model": "claude-fable-5",
+      "field": "replaced_by",
+      "before": "claude-fable-5-1",
+      "after": "claude-opus-5-5",
+      "before_missing": false
+    },
+    {
+      "model": "claude-fable-5-1",
+      "field": "lifecycle",
+      "before": "active",
+      "after": "retired",
+      "before_missing": false
+    },
+    {
+      "model": "claude-fable-5-1",
+      "field": "notes",
+      "before": "Operator decision 2026-10-03 (#9583): Fable 5.1 holds no advisory, approval, review or critique role and is not a last resort for any of them; Opus 5.5 / Sol 6.1 hold those roles. It succeeds claude-fable-5 as a launchable Claude model only. Thinking is always on (never send thinking: disabled). Effort decision topology (operator 2026-09-09): default high (API default; start here — do not port Opus/xhigh habits); medium/low for routine interactive work (low often beats prior-gen xhigh/max; medium ≈ Fable 5 cheaper); xhigh for hard multi-file / long autonomous turns and for curriculum/linguistic review skills that pin effort: xhigh (content-review, plan-review, plan-review-seminar, batch-review, prompt-review — do not step those down); max almost never. Long deliverables stay at high unless a measured quality gain says otherwise; at xhigh/max leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort, do not prompt around it); low searches less (bump for retrieval-heavy named products); effort does not shorten visible output. Keep verification scaffolding — the Opus 5 guidance to delete it does not apply. claude-fable-5 is retired with no executable routes; historical attribution remains unchanged. Full prose: docs/best-practices/fleet-shared-doctrine.md § Effort.",
+      "after": "OO-58 (#11327, 2026-10-21): retired, no executable route. Operator decision 2026-10-03 (#9583) had already removed advisory, approval, review and critique roles. replaced_by is claude-opus-5-5. Historical effort notes follow. Thinking was always on (never send thinking: disabled). Effort decision topology (operator 2026-09-09): default high (API default; start here — do not port Opus/xhigh habits); medium/low for routine interactive work (low often beats prior-gen xhigh/max; medium ≈ Fable 5 cheaper); xhigh for hard multi-file / long autonomous turns and for curriculum/linguistic review skills that pin effort: xhigh (content-review, plan-review, plan-review-seminar, batch-review, prompt-review — do not step those down); max almost never. Long deliverables stay at high unless a measured quality gain says otherwise; at xhigh/max leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort, do not prompt around it); low searches less (bump for retrieval-heavy named products); effort does not shorten visible output. Keep verification scaffolding — the Opus 5 guidance to delete it does not apply. claude-fable-5 is retired with no executable routes; historical attribution remains unchanged. Full prose: docs/best-practices/fleet-shared-doctrine.md § Effort.",
+      "before_missing": false
+    },
+    {
+      "model": "claude-fable-5-1",
+      "field": "replaced_by",
+      "before": null,
+      "after": "claude-opus-5-5",
+      "before_missing": true
+    },
+    {
+      "model": "claude-fable-5-1",
+      "field": "transports",
+      "before": [
+        "native_claude",
+        "cursor"
+      ],
+      "after": [],
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/k3",
+      "field": "lifecycle",
+      "before": "active",
+      "after": "retired",
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/k3",
+      "field": "notes",
+      "before": "Wave 1 SCORECARD 2026-08-23: CF #7143 pass with nits — densest useful CI-style nits; strong root-cause. Native `kimi` CLI only; never OpenRouter.",
+      "after": "Historical scorecard 2026-08-23: CF #7143 pass with nits. Not a route (OO-58).",
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/k3",
+      "field": "transports",
+      "before": [
+        "native_kimi"
+      ],
+      "after": [],
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/k3-256k",
+      "field": "lifecycle",
+      "before": "active",
+      "after": "retired",
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/k3-256k",
+      "field": "transports",
+      "before": [
+        "native_kimi"
+      ],
+      "after": [],
+      "before_missing": false
+    },
+    {
+      "model": "kimi-k3-max",
+      "field": "lifecycle",
+      "before": "active",
+      "after": "retired",
+      "before_missing": false
+    },
+    {
+      "model": "kimi-k3-max",
+      "field": "transports",
+      "before": [
+        "native_kimi"
+      ],
+      "after": [],
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/kimi-for-coding",
+      "field": "lifecycle",
+      "before": "active",
+      "after": "retired",
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/kimi-for-coding",
+      "field": "transports",
+      "before": [
+        "native_kimi"
+      ],
+      "after": [],
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/kimi-for-coding-highspeed",
+      "field": "lifecycle",
+      "before": "active",
+      "after": "retired",
+      "before_missing": false
+    },
+    {
+      "model": "kimi-code/kimi-for-coding-highspeed",
+      "field": "transports",
+      "before": [
+        "native_kimi"
+      ],
+      "after": [],
+      "before_missing": false
+    }
+  ],
+  "usage_pools": {
+    "grok_cursor": {
+      "seats": [
+        "grok",
+        "cursor"
+      ]
+    }
+  },
+  "kimicc_models": {
+    "before": [
+      "kimi-code/k3",
+      "kimi-k3-max",
+      "kimi-code/kimi-for-coding",
+      "kimi-code/kimi-for-coding-highspeed"
+    ],
+    "after": []
+  },
+  "policy_notes": {
+    "before": [
+      "CodexBar is a health and quota signal, not a complete model inventory.",
+      "Cursor auto is a harness choice, never a model identity for formal review. Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task (a write-capable dispatch typed --research-role implementation, with owned paths and a green DoR issue card); every other Cursor use pins a concrete approved model (orchestrator_seats.cursor).",
+      "GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug. Claude Opus 5.5 reviews and drives through native Claude only; no Claude model reviews through Cursor (operator decision D-129, #10464). Grok is native CLI ONLY at grok-4.7 for every seat (interactive, orchestrator, ask, dispatch), with the Cursor transport fallback. Operator decision 2026-10-05 (#9769): native Grok and the Cursor seat pinned to grok-4.7-high are regular code/infra reviewers at every risk, including critical; verdicts require runtime model attestation and exclude xAI-authored changes. Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok. Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.",
+      "Kimi K3 workers (`kimi`, `kimicc`, and catalog ids `kimi-code/k3*`) use the native `kimi` CLI subscription path only (`catalog_transport` / `transports`: `native_kimi`). OpenRouter is forbidden as a Kimi worker bus. Do not relaunch OpenRouter-for-subscribed-models patterns for Moonshot/Kimi K3. OpenRouter remains mainly Pool + Gemma access.",
+      "Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules. Kimi seats (`kimi`, `kimicc`, every `kimi-code/*` / `kimi-k3*` id) take workspace-write implementation of the allowlisted UI and backend paths (KIMI_OWNED_ROOTS) only; they carry no review, consult, advisor, or ACP-discussion role and are absent from review_candidates and review_ladders; dispatch, the runtime, ACP and the fleet-comms authority refuse everything else before any side effect (scripts/agent_runtime/kimi_admission.py).",
+      "EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer / cross_family_code_infra_reviewer / textbook_nonhit_auditor (and OPENCODE_REVIEW_MODEL xai/grok-4.5). Those pins live in hash-bound v2.1 evidence/validator artifacts (phase3_functional_roles.py validator_sha256 + phase3_source_production_transport.py inventory sha); rotating or rewriting them is outside the fleet seat list and requires a separate open-model-data rebind (#6870 item 3). The same rebind must cover gemini-3.6/3.7 (including Flash variants), claude-fable-5 and grok-4.6 pins in those hash-bound Phase 3 artifacts. Fleet routing must not read them.",
+      "Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged. Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.",
+      "Wave 1 CF SCORECARD 2026-08-23 (operator/CTO GO, provisional): letter grades are advisory labels on existing quality_tiers — not a parallel ranking and not a reviewed_on refresh. Fable (claude-fable-5) = S+ (frontier_authority). gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C (keep frontier_practical; do not demote). Kimi = strong root-cause / densest useful CI nits (native `kimi` CLI only). AGY gemini-3.7-flash-high = fast scoped CF. GLM-5.3 = ships-heavier, LOCAL-ONLY (zai-coding-plan; never OpenRouter). Codex/Sol = careful/small, thorough/heavy advisory — not a speed winner. Evidence: AGY #7137, Kimi #7143, Codex/Sol #7142, Grok #7133, GLM #7144 (also addresses #7121 fetch refspecs). OpenRouter remains mainly Pool+Gemma; Kimi/Gemini/GLM subscribed seats never OpenRouter."
+    ],
+    "after": [
+      "CodexBar is a health and quota signal, not a complete model inventory.",
+      "Cursor auto is a harness choice, never a model identity for formal review. Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task (a write-capable dispatch typed --research-role implementation, with owned paths and a green DoR issue card); every other Cursor use pins a concrete approved model (orchestrator_seats.cursor).",
+      "GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug. Claude Opus 5.5 reviews and drives through native Claude only; no Claude model reviews through Cursor (operator decision D-129, #10464). Grok is native CLI ONLY at grok-4.7 for every seat (interactive, orchestrator, ask, dispatch), with the Cursor transport fallback. Operator decision 2026-10-05 (#9769): native Grok and the Cursor seat pinned to grok-4.7-high are regular code/infra reviewers at every risk, including critical; verdicts require runtime model attestation and exclude xAI-authored changes. Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok. Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.",
+      "Kimi models are retired (OO-58, #11327, 2026-10-21; unused since 2026-10-13, reconfirmed 2026-10-18 and 2026-10-21). Dispatch refuses every Kimi id. Historical workers used the native `kimi` CLI only; OpenRouter was never a Kimi worker bus. OpenRouter remains mainly Pool + Gemma access.",
+      "Kimi seats are not a usable lane (OO-58, #11327). Historical limit, kept as record: web, UI and backend coding only, no Ukrainian-language content, no reviews, consults, design or rules. The ids stay in the catalog with empty transports so dispatch can refuse them by name.",
+      "EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer / cross_family_code_infra_reviewer / textbook_nonhit_auditor (and OPENCODE_REVIEW_MODEL xai/grok-4.5). Those pins live in hash-bound v2.1 evidence/validator artifacts (phase3_functional_roles.py validator_sha256 + phase3_source_production_transport.py inventory sha); rotating or rewriting them is outside the fleet seat list and requires a separate open-model-data rebind (#6870 item 3). The same rebind must cover gemini-3.6/3.7 (including Flash variants), claude-fable-5 and grok-4.6 pins in those hash-bound Phase 3 artifacts. Fleet routing must not read them.",
+      "Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged. Composer 2.5 conservatively shares Moonshot independence lineage with Kimi.",
+      "Wave 1 CF SCORECARD 2026-08-23 (operator/CTO GO, provisional): letter grades are advisory labels on existing quality_tiers — not a parallel ranking and not a reviewed_on refresh. Retired Fable (claude-fable-5, claude-fable-5-1) historical grade S+ (frontier_authority); not a route (OO-58, #11327). gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C (keep frontier_practical; do not demote). Retired Kimi historical scorecard: strong root-cause / densest useful CI nits. AGY gemini-3.7-flash-high = fast scoped CF. GLM-5.3 = ships-heavier, LOCAL-ONLY (zai-coding-plan; never OpenRouter). Codex/Sol = careful/small, thorough/heavy advisory — not a speed winner. Evidence: AGY #7137, Kimi #7143, Codex/Sol #7142, Grok #7133, GLM #7144 (also addresses #7121 fetch refspecs). OpenRouter remains mainly Pool+Gemma. Gemini and GLM subscribed seats never use OpenRouter. Kimi is retired and is not a seat."
+    ]
+  },
+  "remove_budget_pin": {
+    "lane": "cursor",
+    "model": "claude-fable-5-1"
+  },
+  "approval_contract": {
+    "before": " (binding) — new decisions only.** Agents must **not**\n    invent or unilaterally adopt **new** architecture, local layout, process, or policy\n    without **present-tense approval** from the **operator** or **designated approval**: two\n    frontier families agree through the designated advisors, **Opus 5.5** (`claude-opus-5-5`)\n    and **Sol 6.1** (`gpt-6.1-sol`). When one of them authored the proposal, the other's\n    approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)\n    needs both; if they disagree, the operator decides (#9583, #9616; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;\n    do not treat stale digests as roster). Fable and the former Astra seat hold no advisory,\n    approval or review role.\n    **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,\n    consults, design or rules.** Discussion/panels improve quality but do **not** replace advisor approval\n    for design. This gate governs *deciding*, not *implementing*: once the operator or an\n    advisor has ordered or approved the work, item 10 governs — drive it to a complete outcome\n    without re-opening a GO request. Routine implementation of already-queued work does not\n    need a new advisor turn. Slicing an already-approved user-visible outcome into PR-sized\n    stages is item-10 disobedience, not an extra exemption from this gate; unrelated outcomes\n    stay in other PRs.\n    Violations: shipping\n    helpers/layouts/process \"for now\", redefining primary-checkout semantics, flipping gates\n    without an advisor record, or citing this gate to pause already-decided implementation.\n",
+    "after": " (binding) — new decisions only.** Agents must **not**\n    invent or unilaterally adopt **new** architecture, local layout, process, or policy\n    without **present-tense approval** from the **operator** or **designated approval**: two\n    frontier families agree through the designated advisors, **Opus 5.5** (`claude-opus-5-5`)\n    and **Sol 6.1** (`gpt-6.1-sol`). When one of them authored the proposal, the other's\n    approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)\n    needs both; if they disagree, the operator decides (#9583, #9616; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;\n    do not treat stale digests as roster). Fable is retired (OO-58, #11327). The former Astra seat holds no advisory,\n    approval or review role.\n    **Kimi models are retired (OO-58, #11327). Do not dispatch them.** Discussion/panels improve quality but do **not** replace advisor approval\n    for design. This gate governs *deciding*, not *implementing*: once the operator or an\n    advisor has ordered or approved the work, item 10 governs — drive it to a complete outcome\n    without re-opening a GO request. Routine implementation of already-queued work does not\n    need a new advisor turn. Slicing an already-approved user-visible outcome into PR-sized\n    stages is item-10 disobedience, not an extra exemption from this gate; unrelated outcomes\n    stay in other PRs.\n    Violations: shipping\n    helpers/layouts/process \"for now\", redefining primary-checkout semantics, flipping gates\n    without an advisor record, or citing this gate to pause already-decided implementation.\n"
+  },
+  "launcher_successor": {
+    "before": "use claude-fable-5-1",
+    "after": "use claude-opus-5-5"
+  },
+  "launcher_rows": {
+    "50": {
+      "old": {
+        "exit_status": 0,
+        "stderr": "",
+        "stdout": "k3-256k\n\nkimi-code\ncoding\n1\n"
+      },
+      "new": {
+        "exit_status": 2,
+        "stdout": "",
+        "stderr": "model 'k3-256k' is retired in the model catalog (kimi-code/k3-256k); use an active catalog model\n"
+      }
+    },
+    "55": {
+      "old": {
+        "exit_status": 4,
+        "stderr": "Error: model 'k3-256k' is not certified for the kimi driver.\n",
+        "stdout": ""
+      },
+      "new": {
+        "exit_status": 2,
+        "stdout": "",
+        "stderr": "model 'k3-256k' is retired in the model catalog (kimi-code/k3-256k); use an active catalog model\n"
+      }
+    }
+  }
+}

@@ -248,7 +248,7 @@ Record pass/fail with timestamp + receipt for each command above.
 
 Keep the DoR fields current. Material scope change → re-DoR + comment.
 Mission-shrinking non-goals need operator/advisor approval (Opus 5.5 and Sol 6.1 agreeing; when one of them
-authored the proposal, the other's approval completes it; any other author needs both; Kimi: web, UI and backend coding only).
+authored the proposal, the other's approval completes it; any other author needs both; Kimi models are retired, OO-58).
 Re-run **dispatch preflight immediately before each dispatch wave and before
 each CF request** (not only when conditions “might” have moved).
 

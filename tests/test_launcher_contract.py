@@ -188,41 +188,45 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "name",
+    ("name", "message"),
     (
-        "start-claude.sh",
-        "start-codex.sh",
-        "start-gemini.sh",
-        "start-grok.sh",
-        "start-kimi.sh",
-        "start-kimicc.sh",
-        "start-glm.sh",
-        "start-glmcc.sh",
+        ("start-claude.sh", "interactive launchers reject --epic"),
+        ("start-codex.sh", "interactive launchers reject --epic"),
+        ("start-gemini.sh", "interactive launchers reject --epic"),
+        ("start-grok.sh", "interactive launchers reject --epic"),
+        ("start-glm.sh", "interactive launchers reject --epic"),
+        ("start-glmcc.sh", "interactive launchers reject --epic"),
+        # OO-58: the retired default is refused before the interactive --epic check.
+        ("start-kimi.sh", "is retired in the model catalog"),
+        ("start-kimicc.sh", "is retired in the model catalog"),
     ),
 )
-def test_interactive_launchers_reject_driver_epic(name: str) -> None:
+def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> None:
     result = run_launcher(name, "--epic", "devops")
     assert result.returncode == 2
-    assert "interactive launchers reject --epic" in result.stderr
+    assert message in result.stderr
+    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize(
-    "name",
+    ("name", "message"),
     (
-        "start-claude.sh",
-        "start-codex.sh",
-        "start-gemini.sh",
-        "start-grok.sh",
-        "start-kimi.sh",
-        "start-kimicc.sh",
-        "start-glm.sh",
-        "start-glmcc.sh",
+        ("start-claude.sh", "interactive launchers reject --force"),
+        ("start-codex.sh", "interactive launchers reject --force"),
+        ("start-gemini.sh", "interactive launchers reject --force"),
+        ("start-grok.sh", "interactive launchers reject --force"),
+        ("start-glm.sh", "interactive launchers reject --force"),
+        ("start-glmcc.sh", "interactive launchers reject --force"),
+        # OO-58: the retired default is refused before the interactive --force check.
+        ("start-kimi.sh", "is retired in the model catalog"),
+        ("start-kimicc.sh", "is retired in the model catalog"),
     ),
 )
-def test_interactive_launchers_reject_force(name: str) -> None:
+def test_interactive_launchers_reject_force(name: str, message: str) -> None:
     result = run_launcher(name, "--force")
     assert result.returncode == 2
-    assert "interactive launchers reject --force" in result.stderr
+    assert message in result.stderr
+    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize(
@@ -1202,9 +1206,10 @@ def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> 
         "k3",
         env={"HOME": str(home), "KIMICC_AUTH_TOKEN": kimi_secret},
     )
-    assert kimi.returncode == 0, kimi.stderr
-    assert "credential_source=KIMICC_AUTH_TOKEN" in kimi.stdout
+    assert kimi.returncode == 2, kimi.stdout
+    assert "is retired in the model catalog" in kimi.stderr
     assert kimi_secret not in kimi.stdout + kimi.stderr
+    assert "would exec" not in kimi.stdout
 
     glm_secret = "glm-secret-must-not-appear"
     glm = run_launcher(
@@ -1228,8 +1233,8 @@ def test_kimi_never_uses_ambient_anthropic_token(tmp_path: Path) -> None:
         "claude-code",
         env={"HOME": str(tmp_path / "home"), "ANTHROPIC_AUTH_TOKEN": foreign},
     )
-    assert result.returncode == 3
-    assert "no Kimi API credential" in result.stderr
+    assert result.returncode == 2, result.stdout
+    assert "is retired in the model catalog" in result.stderr
     assert foreign not in result.stdout + result.stderr
 
 
@@ -1312,9 +1317,10 @@ def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
         "k3",
         env={"HOME": str(home), "KIMICC_AUTH_TOKEN": "kimi-compat-secret"},
     )
-    assert kimi.returncode == 0, kimi.stderr
-    assert "credential_source=KIMICC_AUTH_TOKEN" in kimi.stdout
+    assert kimi.returncode == 2, kimi.stdout
+    assert "is retired in the model catalog" in kimi.stderr
     assert "kimi-compat-secret" not in kimi.stdout + kimi.stderr
+    assert "would exec" not in kimi.stdout
 
     glm = run_launcher(
         "start-glmcc.sh",

@@ -13300,7 +13300,14 @@ def _dispatch(
     from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
-    retired_refusal = retired_model_refusal(getattr(args, "model", None))
+    # An omitted --model is the seat's registry default. A retired default is
+    # the same refusal (OO-58: kimi's default is k3-256k).
+    requested_model = getattr(args, "model", None)
+    if not str(requested_model or "").strip():
+        from scripts.agent_runtime.telemetry import _default_model_for
+
+        requested_model = _default_model_for(getattr(args, "agent", None))
+    retired_refusal = retired_model_refusal(requested_model)
     if retired_refusal:
         print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
         return 2
@@ -15599,19 +15606,33 @@ def _budget_will_last_to_reset(agent_info: dict[str, Any]) -> bool | None:
 
 
 def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
-    cool: list[str] = []
+    """Cool or warm lanes, one name per usage pool.
+
+    Seats that share the excluded seat's pool are the same meter, so they are
+    not offered as a cooler alternative (OO-58: grok and cursor).
+    """
+    from scripts.review.model_catalog import usage_pool_for_seat, usage_pool_representative
+
+    excluded_pool = usage_pool_for_seat(exclude)
+    members: dict[str, list[str]] = {}
     for lane, info in agents.items():
         if not isinstance(info, dict):
             continue
         lane_l = str(lane).strip().lower()
-        if lane_l == exclude:
+        pool = usage_pool_for_seat(lane_l)
+        if lane_l == str(exclude).strip().lower() or pool == excluded_pool:
             continue
         deficit = credit_lane.pace_deficit_state(lane_l, info)
         status = deficit["status"] or _budget_lane_status(lane_l, info)
         if status in {"hot", "near_cap"} or deficit["uncovered"] is True:
             continue
         if status in {"cool", "warm"}:
-            cool.append(lane_l)
+            members.setdefault(pool, []).append(lane_l)
+    cool: list[str] = []
+    for pool, lanes in members.items():
+        representative = usage_pool_representative(lanes[0])
+        cool.append(representative if representative in lanes else sorted(lanes)[0])
+        del pool
     return sorted(cool)
 
 

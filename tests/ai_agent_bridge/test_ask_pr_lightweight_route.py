@@ -349,7 +349,7 @@ def test_ask_review_refuses_a_fable_pin_before_any_dispatch(monkeypatch, target,
     monkeypatch.setattr(
         _dispatch_wrappers, "build_ask_review_dispatch_command", lambda *_a, **_k: pytest.fail("refused review dispatched")
     )
-    with pytest.raises(SystemExit, match="holds no review, critique or approval role"):
+    with pytest.raises(SystemExit, match="is retired in the model catalog"):
         _cli._dispatch_headless_review(
             target,
             "Review the branch.",

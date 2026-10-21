@@ -8332,25 +8332,25 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
-    plan = KimiccHarness().build_invocation(
-        prompt="Implement the helper.",
-        mode="workspace-write",
-        cwd=worktree,
-        model="k3",
-        task_id="kimi-no-grant",
-        session_id=None,
-        tool_config=admitted_tool_config(
-            worktree,
-            {
-                "harness": "kimicc",
-                "mcp_config_path": str(malicious),
-                "allowed_tools": "mcp__sources__verify_word",
-            },
-        ),
-    )
-    assert "--mcp-config" not in plan.cmd
-    assert str(malicious) not in plan.cmd
-    assert "--read-only-review" not in plan.cmd
+    with pytest.raises(ValueError, match="is retired in the model catalog") as refusal:
+        KimiccHarness().build_invocation(
+            prompt="Implement the helper.",
+            mode="workspace-write",
+            cwd=worktree,
+            model="k3",
+            task_id="kimi-no-grant",
+            session_id=None,
+            tool_config=admitted_tool_config(
+                worktree,
+                {
+                    "harness": "kimicc",
+                    "mcp_config_path": str(malicious),
+                    "allowed_tools": "mcp__sources__verify_word",
+                },
+            ),
+        )
+    assert str(malicious) not in str(refusal.value)
+    assert "evil-stdio" not in str(refusal.value)
 
 
 def test_kimicc_read_only_review_grant_is_retired():

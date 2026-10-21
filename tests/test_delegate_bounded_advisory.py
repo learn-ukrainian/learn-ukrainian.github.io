@@ -824,10 +824,8 @@ def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, 
 
 @pytest.mark.parametrize("agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
 def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch):
-    """#9583: the advisor is the catalog's advisor model; Fable holds no advisory role on any seat."""
-    if agent == "cursor":
-        import scripts.agent_runtime.adapters.claude as claude_module
-        monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
+    """OO-58: a retired Fable pin is refused before the advisor route, on every seat."""
+    del monkeypatch
     rc = _dispatch(
         _argv(
             "--advisory-role",
@@ -843,7 +841,7 @@ def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch
         env,
         capsys,
         rc,
-        ("CURSOR_CLAUDE_REFUSED" if agent == "cursor" else bounded_advisory.ADVISOR_ROUTE_REFUSED),
+        "is retired in the model catalog",
         task_id=_advisor_id(),
     )
 

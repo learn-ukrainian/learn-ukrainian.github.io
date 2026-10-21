@@ -343,8 +343,8 @@ approval of record — a review-typed `delegate.py dispatch` of any profile, an
 pin with no `review_scheduler.activity_roles.review` role; an ACP ask, consult
 or discussion refuses one with neither a `review` nor a `consult` role. The
 refusal applies on every seat and transport, including the Cursor slug, so
-`claude-fable-5-1` (coding and orchestration roles only) and retired models
-such as `gpt-6-astra` are refused rather than substituted.
+`claude-fable-5-1` is retired (OO-58, #11327) and refused rather than substituted, as are retired models
+such as `gpt-6-astra`.
 
 Read `status`, `reason`, `suitability_rank`, and `selection_score` for every
 candidate; do not infer provider health or review eligibility from selection.
