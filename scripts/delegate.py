@@ -5738,7 +5738,11 @@ _READ_ONLY_AGY_HOOK_PATH = ".agents/hooks.json"
 _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR = "agy hook snapshot failed:"
 # Snapshot errors that withhold content evidence Git status cannot provide.
 # A read-only task with one never settles ``done``.
-_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = ("linked database snapshot failed:", _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR)
+_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = (
+    "linked database snapshot failed:",
+    _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR,
+    "opencode snapshot failed:",
+)
 
 
 def _read_only_snapshot_error_fails_closed(error: str | None) -> bool:
@@ -5837,6 +5841,13 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
+    # Initialization precedes the baseline. Hash its output as well as tracked
+    # plugins so an ignored-to-ignored rewrite after that baseline still trips.
+    try:
+        for path, fingerprint in _read_only_opencode_fingerprints(cwd).items():
+            entries[path] = entries.get(path, "!!") + ":" + fingerprint
+    except OSError as exc:
+        return None, f"opencode snapshot failed: {type(exc).__name__}"
     # Discover database links directly so every provisioned link is covered
     # without duplicating the provisioning paths in another scope.
     try:
@@ -5881,6 +5892,58 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
             entries.get(_READ_ONLY_AGY_HOOK_PATH, "!!") + ":" + json.dumps(hook_fingerprint)
         )
     return entries, None
+
+
+def _read_only_opencode_fingerprints(cwd: Path) -> dict[str, str]:
+    """Hash the exact OpenCode tree without traversing symlinks (#11347).
+
+    Directory descriptors and no-follow opens keep a replaced directory from
+    redirecting the walk outside the checkout. Links record their text, never
+    grant a directory exemption, and never cause an external tree to be read.
+    """
+    fingerprints: dict[str, str] = {}
+
+    def visit(parent_fd: int, name: str, relative: str) -> None:
+        info = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        value: list[Any] = [info.st_mode]
+        if stat.S_ISLNK(info.st_mode):
+            value.append(os.readlink(name, dir_fd=parent_fd))
+        elif stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode):
+            flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+            if stat.S_ISDIR(info.st_mode):
+                flags |= os.O_DIRECTORY
+            fd = os.open(name, flags, dir_fd=parent_fd)
+            try:
+                acquired = os.fstat(fd)
+                if (acquired.st_dev, acquired.st_ino, acquired.st_mode) != (info.st_dev, info.st_ino, info.st_mode):
+                    raise OSError("OpenCode entry changed during snapshot")
+                if stat.S_ISDIR(info.st_mode):
+                    for child in sorted(os.listdir(fd)):
+                        visit(fd, child, f"{relative}/{child}")
+                else:
+                    with os.fdopen(os.dup(fd), "rb") as handle:
+                        value.append(hashlib.file_digest(handle, "sha256").hexdigest())
+                after = os.fstat(fd)
+                if (info.st_mtime_ns, info.st_ctime_ns, info.st_size) != (
+                    after.st_mtime_ns,
+                    after.st_ctime_ns,
+                    after.st_size,
+                ):
+                    raise OSError("OpenCode entry changed during snapshot")
+            finally:
+                os.close(fd)
+        fingerprints[relative] = json.dumps(value)
+
+    root_fd = os.open(cwd, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        try:
+            os.stat(".opencode", dir_fd=root_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return fingerprints
+        visit(root_fd, ".opencode", ".opencode")
+    finally:
+        os.close(root_fd)
+    return fingerprints
 
 
 def _provision_agy_read_only_guard(cwd: Path) -> None:
@@ -6296,6 +6359,11 @@ def _is_read_only_runtime_state_exemption(
     after_state: str | None,
 ) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
+    normalized = _normalize_read_only_relpath(path)
+    if normalized == ".opencode" or normalized.startswith(".opencode/"):
+        # Its install is in the baseline. Later writes, even cache-shaped
+        # names inside dependencies, belong to the worker (#11347).
+        return False
     if not _is_read_only_runtime_state_path(path):
         return False
     if _is_read_only_package_build_path(path):
@@ -11196,19 +11264,6 @@ def _run_worker(
     # Only AGY executes the workspace guard, so only AGY acquires it, before
     # and after alike; other agents keep the base snapshot call (#10727).
     read_only_snapshot_options: dict[str, bool] = {"agy_hook": True} if agent == "agy" else {}
-    if mode == "read-only":
-        if agent == "agy":
-            _provision_agy_read_only_guard(cwd)
-        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
-            cwd, **read_only_snapshot_options
-        )
-        task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
-        task_records_snapshot_error = task_records_error
-        if read_only_snapshot_error is None:
-            read_only_snapshot_error = task_records_error
-        _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
-        state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
-        _write_state_atomic(state_path, state)
     start = time.monotonic()
     ok_outcome = False
     stderr_excerpt = None
@@ -11295,6 +11350,23 @@ def _run_worker(
 
     try:
         try:
+            if mode == "read-only":
+                if agent in {"deepseek", "glm"}:
+                    from scripts.agent_runtime.adapters.deepseek import initialize_opencode_dependencies
+
+                    initialize_opencode_dependencies(cwd, timeout=min(hard_timeout, 120) if hard_timeout > 0 else 120)
+                if agent == "agy":
+                    _provision_agy_read_only_guard(cwd)
+                read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
+                    cwd, **read_only_snapshot_options
+                )
+                task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
+                task_records_snapshot_error = task_records_error
+                if read_only_snapshot_error is None:
+                    read_only_snapshot_error = task_records_error
+                _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
+                state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
+                _write_state_atomic(state_path, state)
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}

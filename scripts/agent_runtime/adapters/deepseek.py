@@ -18,6 +18,7 @@ import json
 import logging
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 from scripts.review.model_catalog import retired_model_refusal
@@ -42,6 +43,31 @@ DEEPSEEK_OPENCODE_MODEL_ROUTES: dict[str, str] = {
 }
 
 _FLASH_MODEL_LINE = "DeepSeek V4.1 Flash"
+
+
+def initialize_opencode_dependencies(cwd: Path, *, timeout: float = 120) -> None:
+    """Finish OpenCode's own bootstrap without starting a model turn (#11347).
+
+    ``debug config`` uses the same instance bootstrap as ``run``. Discard
+    resolved configuration and subprocess diagnostics, which may contain secrets.
+    OpenCode logs background install failures without a nonzero exit status.
+    """
+    try:
+        result = subprocess.run(
+            [shutil.which("opencode") or "opencode", "debug", "config", "--print-logs"],
+            cwd=cwd,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            timeout=timeout,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ValueError(
+            f"OpenCode dependency initialization failed ({type(exc).__name__}); worker not started"
+        ) from None
+    if result.returncode != 0 or b"background dependency install failed" in result.stderr:
+        raise ValueError(f"OpenCode dependency initialization failed (exit {result.returncode}); worker not started")
 
 
 def _is_flash_model_line(name: str) -> bool:
