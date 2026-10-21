@@ -104,8 +104,9 @@ def _named_paths(blob: bytes, cwd: str, forms: dict[str, set[Path]]) -> tuple[se
     """Paths an argument, ``VAR=value`` value or ``:`` list entry names: (absolute, relative to the cwd).
 
     Each spelling gets the general sweep's reference forms (``..`` and ``.``
-    folded lexically, plus the resolved form), so ancestor-relative, dot-dot
-    and aliased spellings reach the same run as its canonical path.
+    folded lexically, plus the form the kernel resolves, which follows a
+    symlink before a later ``..``), so ancestor-relative, dot-dot and aliased
+    spellings, alone or combined, reach the same run as its canonical path.
     ``forms`` caches them across processes for one snapshot.
     """
     base = cwd.removesuffix(" (deleted)")

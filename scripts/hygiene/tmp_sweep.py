@@ -139,12 +139,16 @@ def _absolute_paths(value: Any) -> Iterator[str]:
 
 
 def _reference_forms(value: str) -> set[Path]:
-    """The lexical and resolved forms of a recorded path, so ``/tmp`` aliases still match."""
-    lexical = Path(os.path.normpath(value))
-    forms = {lexical}
+    """The lexical and resolved forms of a recorded path, so ``/tmp`` aliases still match.
+
+    The resolved form comes from the spelling itself: like the kernel, it
+    follows a symlink before a later ``..`` (``alias/../x`` leaves the alias
+    target), which folding ``..`` first would misread as a different path.
+    """
+    forms = {Path(os.path.normpath(value))}
     # A looping alias keeps only its lexical form.
     with contextlib.suppress(OSError, RuntimeError):
-        forms.add(lexical.resolve())
+        forms.add(Path(value).resolve())
     return forms
 
 

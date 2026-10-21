@@ -278,10 +278,15 @@ def _spelled_holder(channel: str, cwd: Path, value: str):
 
 @pytest.mark.parametrize("channel", ["argv", "environ"])
 @pytest.mark.parametrize(
-    "spelling", ["ancestor_relative", "namespace_dotdot", "absolute_dotdot", "symlink_alias", "path_list"],
+    "spelling",
+    [
+        "ancestor_relative", "namespace_dotdot", "absolute_dotdot", "symlink_alias", "path_list",
+        "symlink_dotdot", "absolute_symlink_dotdot", "path_list_symlink_dotdot",
+    ],
 )
 def test_noncanonical_argv_and_environment_spellings_hold_the_run(area, monkeypatch, tmp_path, channel, spelling):
-    """Defect class: a live path named relative to an ancestor cwd, through ``..`` or an alias went unmatched."""
+    """Defect class: a live path named relative to an ancestor cwd, through ``..``, an alias, or an alias
+    followed by ``..`` (which the kernel resolves through the alias target, not lexically) went unmatched."""
     root, args = area
     run = unowned(root, "spelled")
     quiet = unowned(root, "quiet-run")
@@ -289,14 +294,20 @@ def test_noncanonical_argv_and_environment_spellings_hold_the_run(area, monkeypa
     alias = tmp_path / "alias"
     alias.symlink_to(ns, target_is_directory=True)
     below = f"{pytest_scratch.NAMESPACE}/{ns.name}/{run.name}/scratch"
+    through = f"alias/../{ns.name}/{run.name}/scratch"  # alias -> ns, so its .. is ns's parent, not tmp_path
     cwd, value = {
         "ancestor_relative": (root, below),
         "namespace_dotdot": (ns, f"../{ns.name}/{run.name}/scratch"),
         "absolute_dotdot": (REPO, f"{ns}/../{ns.name}/{run.name}/scratch"),
         "symlink_alias": (REPO, f"{alias}/{run.name}/scratch"),
         "path_list": (root, f"/absent-11297:{below}"),
+        "symlink_dotdot": (tmp_path, through),
+        "absolute_symlink_dotdot": (REPO, f"{tmp_path}/{through}"),
+        "path_list_symlink_dotdot": (tmp_path, f"/absent-11297:{through}"),
     }[spelling]
     assert str(run) not in value  # none of these spellings carries the canonical path
+    # Kernel oracle: the spelling, read from the holder's cwd, reaches the run.
+    assert os.path.samestat(os.stat(cwd / value.rpartition(":")[2]), os.stat(run / "scratch"))
     later(monkeypatch, 3 * HOUR)
     proc = _spelled_holder(channel, cwd, value)
     try:
@@ -492,10 +503,10 @@ def _after_rename(monkeypatch, run: Path, action):
     "race",
     [
         "write", "holder_new_path", "holder_new_relative", "holder_old_path", "holder_old_relative",
-        "holder_old_dotdot", "unknown", "replaced",
+        "holder_old_dotdot", "holder_old_symlink_dotdot", "unknown", "replaced",
     ],
 )
-def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatch, race):
+def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatch, tmp_path, race):
     root, args = area
     run = unowned(root, "raced")
     later(monkeypatch, 3 * HOUR)
@@ -520,6 +531,10 @@ def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatc
         elif race == "holder_old_dotdot":
             dotdot = f"{run.parent}/../{run.parent.name}/{run.name}/scratch"
             procs.append(spawn("idle", env={**os.environ, "SCRATCH_HOME": dotdot}))
+            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
+        elif race == "holder_old_symlink_dotdot":
+            (tmp_path / "alias").symlink_to(run.parent, target_is_directory=True)
+            procs.append(spawn("idle", cwd=tmp_path, argv=[f"alias/../{run.parent.name}/{run.name}/scratch"]))
             expose(pytest_retention.PROC_ROOT, procs[-1].pid)
         else:
             fake_process(pytest_retention.PROC_ROOT, 4343, "S")
@@ -551,6 +566,7 @@ def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatc
     expected = {
         "write": "recent_write", "holder_new_path": "live_process", "holder_new_relative": "live_process",
         "holder_old_path": "live_process", "holder_old_relative": "live_process", "holder_old_dotdot": "live_process",
+        "holder_old_symlink_dotdot": "live_process",
         "unknown": "liveness_unknown", "replaced": "identity_changed",
     }[race]
     assert row["reason"] == expected
@@ -913,6 +929,18 @@ def test_named_paths_resolve_aliases_and_skip_empty_values(tmp_path):
     assert str(target / "run-1") in relative and str(tmp_path / "alias" / "run-1") in relative
     assert str(tmp_path) not in relative  # an empty argument or value names nothing
     assert set(forms) == {str(tmp_path / "alias" / "run-1"), str(tmp_path / "FLAG=")}
+
+
+def test_named_paths_follow_a_symlink_before_a_later_dotdot(tmp_path):
+    """Defect class: folding ``..`` before resolving reads ``alias/../x`` as a sibling of the alias."""
+    target = tmp_path / "deep" / "ns"
+    target.mkdir(parents=True)
+    (tmp_path / "alias").symlink_to(target, target_is_directory=True)
+    absolute, relative = pytest_retention._named_paths(b"alias/../ns/run-1\0", str(tmp_path), {})
+    assert absolute == set()
+    assert str(target / "run-1") in relative  # where the kernel lands, not tmp_path/ns/run-1
+    listed = b"X=/absent-11297:" + os.fsencode(tmp_path) + b"/alias/../ns/run-1\0"
+    assert str(target / "run-1") in pytest_retention._named_paths(listed, "/", {})[0]
 
 
 def test_relative_spellings_inside_a_held_cwd_report_only_the_cwd():

@@ -61,7 +61,8 @@ these hold:
   environment. A reference is the folder's path or a path below it in any
   spelling the process can use: an argument, a `VAR=value` value or a `:`
   list entry, read relative to the process's working directory, with `.`
-  and `..` folded and symlinked aliases resolved. Command lines and
+  and `..` folded and symlinked aliases resolved as the kernel does (a
+  symlink is followed before a later `..`). Command lines and
   environment values are never reported. Rows carry only PIDs and channel
   names (`cwd`, `fd`, `maps`, `argv`, `environ`).
 
