@@ -856,6 +856,8 @@ def _run_pytest_script() -> str:
 def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     script = _run_pytest_script()
     assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
+    assert "scripts.ci.split_tests duration-source" in script
+    assert '--durations "$durations"' in script
     assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in script
     assert "-m 'not atlas_release and not slow and not site_toolchain' --strict-markers" in script
     assert "not site_toolchain" in script
@@ -884,7 +886,11 @@ def test_pytest_matrix_is_contiguous_and_counted_by_the_job() -> None:
     shards = pytest_job["strategy"]["matrix"]["shard"]
     assert shards == list(range(1, len(shards) + 1))
     env = next(step["env"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
-    assert env == {"SHARD": "${{ matrix.shard }}", "SHARDS": "${{ strategy.job-total }}"}
+    assert env == {
+        "SHARD": "${{ matrix.shard }}",
+        "SHARDS": "${{ strategy.job-total }}",
+        "REFRESH_RESULT": "${{ needs.refresh-pytest-durations.result }}",
+    }
 
 
 def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
