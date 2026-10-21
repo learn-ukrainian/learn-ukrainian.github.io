@@ -2194,6 +2194,14 @@ def test_check_states_supported_exits_still_parse(monkeypatch, returncode, bucke
     ("5", None, {**_META, "url": "http://github.com/owner/repo/pull/5"}, None),
     ("5", None, {**_META, "url": None}, None),
     ("5", None, None, None),
+    # gh reads a selector outside Go's 64-bit int range as a branch name, not a number.
+    ("9223372036854775808", None, _META, "owner/repo"),
+    ("+9223372036854775808", None, _META, "owner/repo"),
+    ("#9223372036854775808", None, _META, "owner/repo"),
+    ("#+9223372036854775808", None, _META, "owner/repo"),
+    ("9223372036854775807", None, _META, None),
+    ("9223372036854775807", None, {**_META, "number": 9223372036854775807,
+                                    "url": "https://github.com/owner/repo/pull/9223372036854775807"}, "owner/repo"),
 ])
 def test_judged_repo_requires_the_selected_pr(pr, repo, meta, expected):
     assert guard._judged_repo(pr, repo, meta) == expected
@@ -2205,9 +2213,70 @@ def test_judged_repo_requires_the_selected_pr(pr, repo, meta, expected):
     ("+9", False), ("#+9", False), ("+0009", False), ("#+0009", False), ("#9", False), ("-9", False),
     ("0", False), ("0009", False), ("https://github.com/owner/repo/pull/09", False),
     ("https://github.com/owner/repo/issues/9", False), ("ftp://github.com/owner/repo/pull/9", False),
+    # strconv.Atoi's 64-bit range decides number versus branch, exactly at both edges.
+    ("9223372036854775807", True), ("#9223372036854775807", False), ("+9223372036854775807", False),
+    ("#+9223372036854775807", False), ("09223372036854775807", False), ("#-5", False),
+    ("#-9223372036854775808", False), ("-9223372036854775809", False),
+    ("9223372036854775808", True), ("+9223372036854775808", True), ("#9223372036854775808", True),
+    ("#+9223372036854775808", True), ("#-9223372036854775809", True), ("99999999999999999999", True),
 ])
 def test_canonical_selector(pr, canonical):
     assert guard._canonical_selector(pr) is canonical
+
+
+@pytest.mark.parametrize("pr,number", [
+    ("9", 9), ("#9", 9), ("+9", 9), ("#+9", 9), ("0009", 9), ("-9", -9), ("#-0", 0),
+    ("9223372036854775807", 2**63 - 1), ("-9223372036854775808", -(2**63)),
+    ("9223372036854775808", None), ("#+9223372036854775808", None), ("-9223372036854775809", None),
+    ("##9", None), ("+", None), ("#", None), ("", None), ("+-9", None), ("9 ", None), (" 9", None),
+    ("1_0", None), ("٩", None), ("feature", None),
+])
+def test_gh_selector_number_mirrors_strconv_atoi(pr, number):
+    assert guard._gh_selector_number(pr) == number
+
+
+def _branch_replies(selector, rollup):
+    meta = {"isDraft": False, "body": "", "number": 5, "headRefOid": _HEAD, "url": _URL, "baseRefName": "main"}
+    rows = [{"name": r["name"], "bucket": "pass" if r["status"] == "COMPLETED" else "pending",
+             "workflow": r["workflowName"]} for r in rollup]
+    replies = {
+        ("pr", "checks", selector): (0 if all(row["bucket"] == "pass" for row in rows) else 8, json.dumps(rows)),
+        ("pr", "view", selector, "--json", "headRefOid,statusCheckRollup"): (
+            0, json.dumps({"headRefOid": _HEAD, "statusCheckRollup": rollup})),
+        ("pr", "view", selector): (0, json.dumps(meta)),
+    }
+    return {**replies, **{key: value for key, value in _provenance_replies().items() if key[0] == "api"}}
+
+
+@pytest.mark.parametrize("selector", [
+    "9223372036854775808", "+9223372036854775808", "#9223372036854775808", "#+9223372036854775808",
+])
+@pytest.mark.parametrize("rollup", [_BOUND_ROLLUP, _BOUND_ROLLUP[:1]], ids=["entire-proven", "green-only"])
+def test_overflow_branch_selector_is_judged_as_the_branch_gh_merges(monkeypatch, selector, rollup):
+    calls = _scripted_gh(monkeypatch, _branch_replies(selector, rollup))
+    command = f"gh pr merge '{selector}' --squash"
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 0
+    assert all(call[2] == selector for call in calls if call[0] == "pr")
+
+
+@pytest.mark.parametrize("selector", ["#9223372036854775807", "+9223372036854775807", "#+9223372036854775807"])
+def test_in_range_non_canonical_selector_still_blocks_before_any_gh_read(monkeypatch, capsys, selector):
+    calls = _scripted_gh(monkeypatch, {})
+    command = f"gh pr merge '{selector}' --squash"
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert "is not canonical" in capsys.readouterr().err
+    assert calls == []
+
+
+def test_in_range_number_is_still_bound_to_the_metadata_number(monkeypatch, capsys):
+    # gh reads 9223372036854775807 as a PR number; PR 5's metadata does not prove its exemption.
+    selector = "9223372036854775807"
+    _scripted_gh(monkeypatch, _branch_replies(selector, _BOUND_ROLLUP))
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": f"gh pr merge {selector}"}})))
+    assert guard.main() == 2
+    assert "GitHub App provenance at the PR head is unproven" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("selector", ["+9", "#+9", "+0009", "#+0009", "#9", "0009"])

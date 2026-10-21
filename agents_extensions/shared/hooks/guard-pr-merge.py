@@ -839,21 +839,38 @@ def _gh_api_json(endpoint: str, cwd: str | None = None) -> object:
 
 _PR_PATH = r"/([\w.-]+)/([\w.-]+)/pull/(\d+)"
 _URL_SELECTOR_RE = re.compile(r"https?://[^/?#]+/[^/?#]+/[^/?#]+/pull/([0-9]+)(?:[/?#]|$)", re.IGNORECASE)
+# Go's `int` on the 64-bit builds gh ships; strconv.Atoi refuses values outside it.
+_GO_INT_MIN, _GO_INT_MAX = -(2**63), 2**63 - 1
+
+
+def _gh_selector_number(pr: str) -> int | None:
+    """The PR number gh reads from a non-URL selector, or None when gh reads a branch.
+
+    gh's finder takes ``strconv.Atoi(strings.TrimPrefix(selector, "#"))`` as the number
+    and the selector as a branch name on any Atoi error, including ``ErrRange``: so
+    ``#+9`` is PR 9 while ``9223372036854775808`` and ``#9223372036854775808`` are
+    branches.
+    """
+    digits = pr.removeprefix("#")
+    if not re.fullmatch(r"[+-]?[0-9]+", digits):
+        return None
+    number = int(digits)
+    return number if _GO_INT_MIN <= number <= _GO_INT_MAX else None
 
 
 def _canonical_selector(pr: str) -> bool:
     """True when gh reads ``pr`` exactly as this hook reads it.
 
-    gh's finder reads ``strconv.Atoi(strings.TrimPrefix(selector, "#"))`` as a PR number,
-    so ``#9``, ``+9``, ``#+9`` and ``0009`` all name PR 9 while looking like branch
+    gh reads ``#9``, ``+9``, ``#+9`` and ``0009`` as PR 9 while they look like branch
     names here. Only a canonical decimal number, an http(s) PR URL with a canonical
-    number, or a branch name gh cannot read as a number (``+topic``, ``#topic``) is
-    judged; git refuses branch names starting with ``-``.
+    number, or a branch name gh cannot read as a number (``+topic``, ``#topic``, an
+    out-of-range ``9223372036854775808``) is judged; git refuses branch names starting
+    with ``-``.
     """
     if "://" in pr:
         url = _URL_SELECTOR_RE.match(pr)
         return url is not None and not url.group(1).startswith("0")
-    if re.fullmatch(r"#?[+-]?[0-9]+", pr):
+    if _gh_selector_number(pr) is not None:
         return re.fullmatch(r"[1-9][0-9]*", pr) is not None
     return not pr.startswith("-")
 
@@ -879,10 +896,10 @@ def _judged_repo(pr: str, repo: str | None, data: object) -> str | None:
     if own is None or number is None or int(own.group(3)) != int(number) or not _canonical_selector(pr):
         return None
     owner_repo = f"{own.group(1)}/{own.group(2)}"
-    numeric = re.fullmatch(r"([0-9]+)", pr)
+    numeric = None if "://" in pr else _gh_selector_number(pr)
     selected = re.match(r"https?://(?:www\.)?github\.com" + _PR_PATH + r"(?:[/?#]|$)", pr, flags=re.IGNORECASE)
     if (
-        (numeric is not None and int(numeric.group(1)) != int(number))
+        (numeric is not None and numeric != int(number))
         or ("://" in pr and (selected is None or int(selected.group(3)) != int(number)))
         or (selected is not None and f"{selected.group(1)}/{selected.group(2)}".lower() != owner_repo.lower())
         or (repo is not None and _repo_name(repo) != owner_repo.lower())
