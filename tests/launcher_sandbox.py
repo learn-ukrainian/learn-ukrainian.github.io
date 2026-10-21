@@ -97,8 +97,12 @@ opened = set()
 def _record(event, args):
     if event == "open" and isinstance(args[0], (str, bytes, os.PathLike)):
         path = os.fsdecode(args[0])
-        if path.endswith(".pyc") and os.path.basename(os.path.dirname(path)) == "__pycache__":
-            path = importlib.util.source_from_cache(path)
+        if path.endswith(".pyc"):
+            # importlib handles both __pycache__ and PYTHONPYCACHEPREFIX layouts.
+            try:
+                path = importlib.util.source_from_cache(path)
+            except (ValueError, NotImplementedError):
+                return  # A non-source cache is not part of the source closure.
         opened.add(path)
 
 sys.addaudithook(_record)
