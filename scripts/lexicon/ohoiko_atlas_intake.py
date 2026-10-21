@@ -22,6 +22,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.ingest import ohoiko_books_ingest as words_ingest
 from scripts.ingest import ohoiko_verbs_ingest as verbs_ingest
 from scripts.lexicon import atlas_intake_core as core

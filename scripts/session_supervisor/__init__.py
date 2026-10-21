@@ -19,6 +19,10 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.session_supervisor"
+
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.dual_write import resolve_handoff_path
 from agents_extensions.shared.session_streams.handoff import diagnose_handoff, remote_lease_reason

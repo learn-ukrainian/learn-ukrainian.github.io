@@ -33,6 +33,9 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, TypeGuard
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common.repo_root import main_checkout_root
 from scripts.guardrails import worktree_containment
 from scripts.orchestration.dead_worker_state import worker_liveness

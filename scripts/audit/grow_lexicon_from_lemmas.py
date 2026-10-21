@@ -18,6 +18,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 from scripts.lexicon.grow_lexicon_from_content import (

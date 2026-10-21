@@ -497,7 +497,7 @@ def main():
         print("Usage: python3 scripts/generate_skeleton.py <curriculum> <level> <module_id> [--track TRACK]")
         print("Example: python3 scripts/generate_skeleton.py l2-uk-en b1 43")
         print("Example: python3 scripts/generate_skeleton.py l2-uk-en bio some-slug --track bio")
-        sys.exit(1)
+        sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"} else 1)
 
     curriculum = sys.argv[1]
     level = sys.argv[2].upper()

@@ -96,6 +96,9 @@ def run_canary(
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print(__doc__.strip())
+        return 0
     return run_canary().exit_code
 
 

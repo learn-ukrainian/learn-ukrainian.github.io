@@ -44,6 +44,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
 from scripts.common.task_scratch import TaskScratchError, mount_points
 from scripts.common.task_store_paths import tasks_dir
