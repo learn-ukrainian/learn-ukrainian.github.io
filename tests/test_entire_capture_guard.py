@@ -93,7 +93,9 @@ def _calls(env: dict[str, str]) -> list[str]:
     return log.read_text(encoding="utf-8").splitlines() if log.exists() else []
 
 
-def _guard(env: dict[str, str], cwd: Path, *args: str, stdin: str = "{}\n") -> subprocess.CompletedProcess[str]:
+def _guard(
+    env: dict[str, str], cwd: Path, *args: str, stdin: str = "{}\n", timeout: float = 60
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["sh", str(GUARD), *args],
         input=stdin,
@@ -102,7 +104,7 @@ def _guard(env: dict[str, str], cwd: Path, *args: str, stdin: str = "{}\n") -> s
         check=False,
         cwd=cwd,
         env=env,
-        timeout=60,
+        timeout=timeout,
     )
 
 
@@ -217,6 +219,7 @@ OTHER_ENTRY_POINTS = (
     ("hooks", "git", "pre-push", "origin"),
     ("--budget", "25", "hooks", "claude-code", "stop"),
     ("--budget", "25", "hooks", "codex", "stop"),
+    ("--budget=25", "hooks", "claude-code", "stop"),
 )
 
 
@@ -235,13 +238,22 @@ def _guard_python() -> Path:
     return Path(common).parent / ".venv/bin/python"
 
 
-def _fake_wrappers(tmp_path: Path, env: dict[str, str], *, ionice_fails: bool = False) -> Path:
-    """Logging stand-ins for `nice` and `ionice` that exec the wrapped command."""
+def _fake_wrappers(tmp_path: Path, env: dict[str, str], *, fails: tuple[str, ...] = (), hang: str = "") -> Path:
+    """Logging stand-ins for `nice` and `ionice` that exec the wrapped command.
+
+    Wrappers named in ``fails`` exit 1 without running anything. ``hang`` makes
+    both wrappers never return: ``"term"`` dies on SIGTERM, ``"ignore-term"`` ignores it.
+    """
     bin_dir = Path(env["PATH"].split(os.pathsep)[0])
     log = tmp_path / "wrappers.log"
     for name in ("nice", "ionice"):
         # Both wrappers take two options before the command: -n 10 and -c3 -t.
-        body = "exit 1\n" if name == "ionice" and ionice_fails else 'shift 2\nexec "$@"\n'
+        body = 'shift 2\nexec "$@"\n'
+        if name in fails:
+            body = "exit 1\n"
+        elif hang:
+            # An ignored signal stays ignored across exec, so sleep inherits it.
+            body = ("trap '' TERM\n" if hang == "ignore-term" else "") + "exec sleep 300\n"
         (bin_dir / name).write_text(f'#!/bin/sh\nprintf "{name} %s\\n" "$*" >> "$WRAP_LOG"\n{body}', encoding="utf-8")
         (bin_dir / name).chmod(0o755)
     env["WRAP_LOG"] = str(log)
@@ -253,10 +265,13 @@ def _wrapper_calls(log: Path) -> list[str]:
 
 
 def _without_system_wrappers(tmp_path: Path, env: dict[str, str], *keep: str) -> None:
-    """Replace the system PATH with only the tools the guard and the fake CLI need."""
+    """Replace the system PATH with only the tools the guard and the fake CLI need.
+
+    ``keep`` names the priority tools that stay available: `nice`, `ionice`, `timeout`.
+    """
     tools = tmp_path / "tools"
     tools.mkdir()
-    for tool in ("sh", "dirname", "git", "cat", "sleep", "true"):
+    for tool in ("sh", "dirname", "git", "cat", "sleep", "true", *(t for t in keep if t == "timeout")):
         (tools / tool).symlink_to(shutil.which(tool, path=SYSTEM_PATH))
     bin_dir = env["PATH"].split(os.pathsep)[0]
     for name in ("nice", "ionice"):
@@ -287,7 +302,9 @@ def _priority_now() -> tuple[str, str]:
 
 
 @pytest.mark.parametrize("trailer", [True, False], ids=["trailer", "no-trailer"])
-@pytest.mark.parametrize("budget", [(), ("--budget", "30")], ids=["hook-argv", "budget"])
+@pytest.mark.parametrize(
+    "budget", [(), ("--budget", "30"), ("--budget=30",)], ids=["hook-argv", "budget", "budget-equals"]
+)
 def test_post_commit_runs_guard_probes_and_capture_under_nice_and_ionice(
     tmp_path: Path, trailer: bool, budget: tuple[str, ...]
 ) -> None:
@@ -350,11 +367,13 @@ def test_other_entry_points_keep_their_priority_and_calls(tmp_path: Path, args: 
 @pytest.mark.parametrize(
     ("keep", "expected"),
     [
-        (("nice",), ["nice -n 10 true", "nice -n 10 {guarded}"]),
-        (("ionice",), ["ionice -c3 -t true", "ionice -c3 -t {guarded}"]),
-        ((), []),
+        (("nice", "timeout"), ["nice -n 10 true", "nice -n 10 {guarded}"]),
+        (("ionice", "timeout"), ["ionice -c3 -t true", "ionice -c3 -t {guarded}"]),
+        (("timeout",), []),
+        # Without `timeout` no probe can be bounded, so none runs and no wrapper applies.
+        (("nice", "ionice"), []),
     ],
-    ids=["ionice-missing", "nice-missing", "both-missing"],
+    ids=["ionice-missing", "nice-missing", "both-missing", "timeout-missing"],
 )
 def test_missing_priority_tool_still_captures(tmp_path: Path, keep: tuple[str, ...], expected: list[str]) -> None:
     _state, env = _fake_entire(tmp_path)
@@ -369,17 +388,42 @@ def test_missing_priority_tool_still_captures(tmp_path: Path, keep: tuple[str, .
     assert _wrapper_calls(wrappers) == [line.format(guarded=guarded) for line in expected]
 
 
-def test_ionice_that_cannot_run_the_command_is_dropped_not_fatal(tmp_path: Path) -> None:
-    """An ionice that fails its probe (unsupported -t, denied) never aborts the capture."""
+@pytest.mark.parametrize(
+    ("fails", "wrapped"),
+    [(("ionice",), "nice -n 10 {guarded}"), (("nice",), "ionice -c3 -t {guarded}"), (("nice", "ionice"), None)],
+    ids=["ionice-fails", "nice-fails", "both-fail"],
+)
+def test_wrapper_that_cannot_run_the_command_is_dropped_not_fatal(
+    tmp_path: Path, fails: tuple[str, ...], wrapped: str | None
+) -> None:
+    """A wrapper that fails at exec time (old ionice without -t, denied) never aborts the capture."""
     _state, env = _fake_entire(tmp_path)
-    wrappers = _fake_wrappers(tmp_path, env, ionice_fails=True)
+    wrappers = _fake_wrappers(tmp_path, env, fails=fails)
     guarded = f"{_guard_python()} -I {REPO_ROOT.resolve()}/scripts/entire/capture_guard.py hooks git post-commit"
 
     result = _guard(env, tmp_path, *POST_COMMIT)
 
     assert (result.returncode, result.stderr) == (0, "")
     assert _calls(env) == POST_COMMIT_CALLS
-    assert _wrapper_calls(wrappers) == ["ionice -c3 -t true", "nice -n 10 true", f"nice -n 10 {guarded}"]
+    probes = ["ionice -c3 -t true", "nice -n 10 true"]
+    assert _wrapper_calls(wrappers) == probes + ([wrapped.format(guarded=guarded)] if wrapped else [])
+
+
+@pytest.mark.parametrize("hang", ["term", "ignore-term"])
+def test_hung_priority_wrapper_never_blocks_the_capture(tmp_path: Path, hang: str) -> None:
+    """A priority probe that never returns is cut off, and the capture still runs unwrapped."""
+    _state, env = _fake_entire(tmp_path)
+    wrappers = _fake_wrappers(tmp_path, env, hang=hang)
+
+    started = time.monotonic()
+    result = _guard(env, tmp_path, "--budget", "1", *POST_COMMIT, timeout=30)
+    elapsed = time.monotonic() - started
+
+    # Each probe gets SIGTERM at 1 s and SIGKILL 1 s later: at most 4 s before the guard's 1 s budget.
+    assert elapsed < 8, f"capture delayed {elapsed:.1f}s by a hung priority probe"
+    assert (result.returncode, result.stderr) == (0, "")
+    assert _calls(env) == POST_COMMIT_CALLS
+    assert _wrapper_calls(wrappers) == ["ionice -c3 -t true", "nice -n 10 true"]
 
 
 def test_missing_cli_is_a_silent_no_op(tmp_path: Path) -> None:
