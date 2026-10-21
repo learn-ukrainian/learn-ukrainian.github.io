@@ -269,6 +269,78 @@ def test_every_live_holder_channel_preserves_the_run(area, monkeypatch, tmp_path
         stop(proc)
 
 
+def _spelled_holder(channel: str, cwd: Path, value: str):
+    env = {**os.environ, "SECRET_MARKER": SECRET}
+    if channel == "environ":
+        return spawn("idle", cwd=cwd, env={**env, "SCRATCH_HOME": value})
+    return spawn("idle", cwd=cwd, argv=[value, SECRET], env=env)
+
+
+@pytest.mark.parametrize("channel", ["argv", "environ"])
+@pytest.mark.parametrize(
+    "spelling", ["ancestor_relative", "namespace_dotdot", "absolute_dotdot", "symlink_alias", "path_list"],
+)
+def test_noncanonical_argv_and_environment_spellings_hold_the_run(area, monkeypatch, tmp_path, channel, spelling):
+    """Defect class: a live path named relative to an ancestor cwd, through ``..`` or an alias went unmatched."""
+    root, args = area
+    run = unowned(root, "spelled")
+    quiet = unowned(root, "quiet-run")
+    ns = run.parent
+    alias = tmp_path / "alias"
+    alias.symlink_to(ns, target_is_directory=True)
+    below = f"{pytest_scratch.NAMESPACE}/{ns.name}/{run.name}/scratch"
+    cwd, value = {
+        "ancestor_relative": (root, below),
+        "namespace_dotdot": (ns, f"../{ns.name}/{run.name}/scratch"),
+        "absolute_dotdot": (REPO, f"{ns}/../{ns.name}/{run.name}/scratch"),
+        "symlink_alias": (REPO, f"{alias}/{run.name}/scratch"),
+        "path_list": (root, f"/absent-11297:{below}"),
+    }[spelling]
+    assert str(run) not in value  # none of these spellings carries the canonical path
+    later(monkeypatch, 3 * HOUR)
+    proc = _spelled_holder(channel, cwd, value)
+    try:
+        expose(pytest_retention.PROC_ROOT, proc.pid)
+        dry = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
+        assert (dry["decision"], dry["reason"], dry["live_pids"], dry["holders"]) == (
+            "preserve", "live_process", [proc.pid], [channel],
+        )
+        report = tmp_sweep.sweep(**args, apply=True)
+        retention = report["pytest_retention"]
+        row = row_for(retention, run)
+        assert (row["decision"], row["reason"], row["holders"]) == ("preserve", "live_process", [channel])
+        assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+        assert row_for(retention, quiet)["decision"] == "deleted" and not quiet.exists()
+        emitted = json.dumps(report) + json.dumps(tmp_sweep.summarize(report))
+        assert SECRET not in emitted and value not in emitted
+    finally:
+        stop(proc)
+
+
+@pytest.mark.parametrize("channel", ["argv", "environ"])
+@pytest.mark.parametrize("spelling", ["longer_name", "wrong_anchor", "dotdot_out"])
+def test_lookalike_relative_spellings_do_not_hold_the_run(area, monkeypatch, channel, spelling):
+    """Defect class: over-broad relative matching would keep an eligible run forever."""
+    root, args = area
+    run = unowned(root, "spelled")
+    ns = run.parent
+    cwd, value = {
+        "longer_name": (ns, f"{run.name}-other/scratch"),
+        "wrong_anchor": (root, f"{ns.name}/{run.name}"),
+        "dotdot_out": (ns, f"{run.name}x/../../{run.name}"),
+    }[spelling]
+    later(monkeypatch, 3 * HOUR)
+    proc = _spelled_holder(channel, cwd, value)
+    try:
+        expose(pytest_retention.PROC_ROOT, proc.pid)
+        dry = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
+        assert (dry["decision"], dry["live_pids"]) == ("would_delete", [])
+        assert row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)["decision"] == "deleted"
+        assert not run.exists()
+    finally:
+        stop(proc)
+
+
 @pytest.mark.parametrize("channel", ["cwd", "fd"])
 def test_callers_own_preexisting_references_still_count(area, monkeypatch, channel):
     """Only the sweep's own lock handles are excused; the caller's real cwd and descriptors are holders."""
@@ -416,7 +488,13 @@ def _after_rename(monkeypatch, run: Path, action):
     return calls
 
 
-@pytest.mark.parametrize("race", ["write", "holder_new_path", "holder_old_path", "unknown", "replaced"])
+@pytest.mark.parametrize(
+    "race",
+    [
+        "write", "holder_new_path", "holder_new_relative", "holder_old_path", "holder_old_relative",
+        "holder_old_dotdot", "unknown", "replaced",
+    ],
+)
 def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatch, race):
     root, args = area
     run = unowned(root, "raced")
@@ -430,8 +508,18 @@ def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatc
         elif race == "holder_new_path":
             procs.append(spawn("idle", cwd=held / "scratch"))
             expose(pytest_retention.PROC_ROOT, procs[-1].pid)
+        elif race == "holder_new_relative":
+            procs.append(spawn("idle", cwd=held.parent, argv=[f"{run.name}/scratch"]))
+            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
         elif race == "holder_old_path":
             procs.append(spawn("idle", argv=[str(run / "scratch")]))
+            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
+        elif race == "holder_old_relative":
+            procs.append(spawn("idle", cwd=root, argv=[str((run / "scratch").relative_to(root))]))
+            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
+        elif race == "holder_old_dotdot":
+            dotdot = f"{run.parent}/../{run.parent.name}/{run.name}/scratch"
+            procs.append(spawn("idle", env={**os.environ, "SCRATCH_HOME": dotdot}))
             expose(pytest_retention.PROC_ROOT, procs[-1].pid)
         else:
             fake_process(pytest_retention.PROC_ROOT, 4343, "S")
@@ -461,7 +549,8 @@ def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatc
     row = row_for(report, run)
     assert row["decision"] == "preserve"
     expected = {
-        "write": "recent_write", "holder_new_path": "live_process", "holder_old_path": "live_process",
+        "write": "recent_write", "holder_new_path": "live_process", "holder_new_relative": "live_process",
+        "holder_old_path": "live_process", "holder_old_relative": "live_process", "holder_old_dotdot": "live_process",
         "unknown": "liveness_unknown", "replaced": "identity_changed",
     }[race]
     assert row["reason"] == expected
@@ -796,14 +885,44 @@ def test_missing_pytest_namespaces_do_not_probe_processes(area, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "blob,expected",
+    "blob,cwd,side,expected",
     [
-        (b"run-1\0", True), (b"./run-1/scratch\0", True), (b"TMPDIR=run-1/scratch\0", True),
-        (b"run-10\0", False), (b"other/run-1\0", False), (b"", False),
+        (b"run-1\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1"),
+        (b"./run-1/scratch\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1/scratch"),
+        (b"TMPDIR=run-1/scratch\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1/scratch"),
+        (b"ns/run-1\0", "/absent-11297", 1, "/absent-11297/ns/run-1"),
+        (b"../ns/run-1\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1"),
+        (b"/absent-11297/ns/../ns/run-1\0", "/elsewhere", 0, "/absent-11297/ns/run-1"),
+        (b"PYTHONPATH=/x:ns/run-1\0", "/absent-11297", 1, "/absent-11297/ns/run-1"),
+        (b"run-1\0", "/absent-11297/ns (deleted)", 1, "/absent-11297/ns/run-1"),
     ],
 )
-def test_relative_reference_matching(blob, expected):
-    assert pytest_retention._names_relative(blob, b"run-1") is expected
+def test_named_paths_fold_relative_and_dotdot_spellings(blob, cwd, side, expected):
+    """Defect class: a spelling that the kernel resolves to the run but the matcher never derives."""
+    named = pytest_retention._named_paths(blob, cwd, {})
+    assert expected in named[side] and expected not in named[1 - side]
+
+
+def test_named_paths_resolve_aliases_and_skip_empty_values(tmp_path):
+    target = tmp_path / "ns"
+    target.mkdir()
+    (tmp_path / "alias").symlink_to(target, target_is_directory=True)
+    forms: dict = {}
+    absolute, relative = pytest_retention._named_paths(b"alias/run-1\0\0FLAG=\0", str(tmp_path), forms)
+    assert absolute == set()
+    assert str(target / "run-1") in relative and str(tmp_path / "alias" / "run-1") in relative
+    assert str(tmp_path) not in relative  # an empty argument or value names nothing
+    assert set(forms) == {str(tmp_path / "alias" / "run-1"), str(tmp_path / "FLAG=")}
+
+
+def test_relative_spellings_inside_a_held_cwd_report_only_the_cwd():
+    """Defect class: every word of a process in the run misreported as an argv/environment holder."""
+    run = Path("/absent-11297/ns/run-1")
+    holders = pytest_retention.Holders(
+        paths=[(7, "cwd", str(run / "scratch")), (8, "cwd", "/absent-11297/ns")],
+        relative=[(7, "argv", str(run / "scratch" / "x")), (8, "environ", str(run / "y"))],
+    )
+    assert holders.holding([run]) == ([7, 8], ["cwd", "environ"])
 
 
 def test_live_pytest_session_is_held_by_its_own_channels(area, monkeypatch):

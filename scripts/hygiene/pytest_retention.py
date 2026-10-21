@@ -65,13 +65,18 @@ def _same(path: Path, fd: int) -> bool:
 class Holders:
     """One pass over every process: path references and raw argv/environment, never emitted.
 
+    ``paths`` holds descriptor, cwd and map targets plus every path an
+    absolute argument or environment value names; ``relative`` holds the
+    paths their relative spellings name from the process cwd; ``texts``
+    keeps the raw blobs so an absolute path embedded anywhere in a value
+    still counts.
     ``complete`` is False when any live process could not be fully read.
     ``unreadable`` counts those processes for the privacy-safe report.
     """
 
     paths: list[tuple[int, str, str]] = field(default_factory=list)
+    relative: list[tuple[int, str, str]] = field(default_factory=list)
     texts: list[tuple[int, str, bytes]] = field(default_factory=list)
-    cwds: dict[int, str] = field(default_factory=dict)
     complete: bool = True
     unreadable: int = 0
 
@@ -82,25 +87,40 @@ class Holders:
             needle = str(path)
             prefix = needle + "/"
             encoded = os.fsencode(needle)
-            parent, name = str(path.parent), os.fsencode(path.name)
             for pid, channel, target in self.paths:
                 if target == needle or target.startswith(prefix):
                     found.add((pid, channel))
             for pid, channel, blob in self.texts:
-                # A relative argument or value counts when the process sits in the parent.
-                if encoded in blob or (self.cwds.get(pid) == parent and _names_relative(blob, name)):
+                if encoded in blob:
+                    found.add((pid, channel))
+            for pid, channel, target in self.relative:
+                # Inside a held cwd every word reads as a path below it; the cwd already says so.
+                if (target == needle or target.startswith(prefix)) and (pid, "cwd") not in found:
                     found.add((pid, channel))
         return sorted({pid for pid, _ in found}), sorted({channel for _, channel in found})
 
 
-def _names_relative(blob: bytes, name: bytes) -> bool:
-    """True when an argument or ``VAR=value`` value is ``name``, ``./name`` or a path below it."""
+def _named_paths(blob: bytes, cwd: str, forms: dict[str, set[Path]]) -> tuple[set[str], set[str]]:
+    """Paths an argument, ``VAR=value`` value or ``:`` list entry names: (absolute, relative to the cwd).
+
+    Each spelling gets the general sweep's reference forms (``..`` and ``.``
+    folded lexically, plus the resolved form), so ancestor-relative, dot-dot
+    and aliased spellings reach the same run as its canonical path.
+    ``forms`` caches them across processes for one snapshot.
+    """
+    base = cwd.removesuffix(" (deleted)")
+    absolute: set[str] = set()
+    relative: set[str] = set()
     for token in blob.split(b"\0"):
         for value in {token, token.partition(b"=")[2]}:
-            value = value.removeprefix(b"./")
-            if value == name or value.startswith(name + b"/"):
-                return True
-    return False
+            for item in value.split(b":"):
+                if not item:
+                    continue
+                spelling = os.path.join(base, os.fsdecode(item))
+                if spelling not in forms:
+                    forms[spelling] = sweep._reference_forms(spelling)
+                (absolute if item.startswith(b"/") else relative).update(map(str, forms[spelling]))
+    return absolute, relative
 
 
 def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
@@ -120,6 +140,7 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
         holders.complete = False
         return holders
     me = os.getpid()
+    forms: dict[str, set[Path]] = {}
     for name in entries:
         entry = PROC_ROOT / name
         pid = int(name)
@@ -149,8 +170,11 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
                 holders.complete = False
                 holders.unreadable += 1
             continue
-        holders.cwds[pid] = cwd
         holders.paths.extend((p, channel, target.removesuffix(" (deleted)")) for p, channel, target in found)
+        for p, channel, blob in texts:
+            absolute, relative = _named_paths(blob, cwd, forms)
+            holders.paths.extend((p, channel, named) for named in absolute)
+            holders.relative.extend((p, channel, named) for named in relative)
         holders.texts.extend(texts)
     return holders
 

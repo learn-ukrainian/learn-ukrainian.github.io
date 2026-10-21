@@ -58,8 +58,10 @@ these hold:
   with old preserved mtimes stays young. Exactly two hours is still young.
 - No live process holds it. The sweep reads every process's working
   directory, open descriptors, memory-mapped files, command line and
-  environment. A reference is the folder's path or a path below it, or a
-  relative name when the process sits in the namespace. Command lines and
+  environment. A reference is the folder's path or a path below it in any
+  spelling the process can use: an argument, a `VAR=value` value or a `:`
+  list entry, read relative to the process's working directory, with `.`
+  and `..` folded and symlinked aliases resolved. Command lines and
   environment values are never reported. Rows carry only PIDs and channel
   names (`cwd`, `fd`, `maps`, `argv`, `environ`).
 
