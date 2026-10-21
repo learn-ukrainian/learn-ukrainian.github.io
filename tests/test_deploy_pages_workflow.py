@@ -176,3 +176,13 @@ def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() 
         env_file = REPO_ROOT / "site" / name
         if env_file.is_file():
             assert "PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS" not in env_file.read_text(encoding="utf-8")
+
+
+@pytest.mark.needs_sparse_tree("site/src/data")
+def test_preview_pin_changes_keep_manual_deployment_semantics() -> None:
+    """#11194 leaves eligibility unchanged: a release-pin change is content drift, not auto-deployable."""
+    pin = "site/src/data/word-card-preview-release.pointer.json"
+    assert (REPO_ROOT / pin).is_file()
+    assert decide_auto_deploy([pin]).reason == "content_drift"
+    assert decide_auto_deploy(["scripts/deploy/prepare_word_card_preview.py"]).reason == "unknown_path"
+    assert decide_auto_deploy([".github/workflows/deploy-pages.yml"]).reason == "unknown_path"

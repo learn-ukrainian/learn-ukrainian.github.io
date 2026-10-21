@@ -562,3 +562,33 @@ Pass-level delete shares: pass 1 35.6% and pass 2 37.1% (40,173 rows each), tie-
 | K-E | `test_word_card_assembly.py::test_r3_output_rejects_common_noun_vesum_entry_on_proper_name` | verifier-side proper-name vs common-noun VESUM binding (case-distinct homograph); kept test_r3_output_rejects_foreign_vesum_homograph cov... |
 | K-E | `verification/test_antonenko_patterns.py::test_adjectives_auxiliaries_and_duration` | only positive test of the adjective-transparent gap (приймати активну участь) and auxiliary/newline-spanning calque matches; kept positiv... |
 | K-E | `verification/test_antonenko_round3.py::test_missing_morphology_does_not_manufacture_duration` | only fail-closed test of the temporal-protiah duration-case check when VESUM readings are missing; no kept test in the file covers empty... |
+
+
+### Phase B conflict refresh for PR #11329
+
+Merged main `465b2bcf702508d8ec260233bb395df02c967117` into the phase B branch. Functions changed on main are kept verbatim; unchanged function deletions remain selected. Frozen hashes and ratchet baselines are unchanged.
+
+| File | Function | Decision | Reason |
+| --- | --- | --- | --- |
+| `tests/test_deploy_pages_workflow.py` | `test_pages_build_installs_atlas_python_dependencies` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_deploy_pages_workflow.py` | `test_pages_deploy_uses_normal_build_and_fail_closed_size_gate` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_deploy_pages_workflow.py` | `test_pages_deploy_vendors_atlas_tree_after_build_before_size_gate` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_deploy_pages_workflow.py` | `test_pages_build_publishes_the_pinned_word_card_preview` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_deploy_pages_workflow.py` | `test_preview_pin_changes_keep_manual_deployment_semantics` | kept | Main PR #11271 added the sparse-tree declaration; preserve its reviewed version. |
+| `tests/test_deploy_pages_workflow.py` | `test_pages_workflow_uses_fail_closed_auto_deploy_preflight` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_guard_list_matches_the_wired_guards` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_refusing_guard_timeouts_cover_loaded_latency` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_non_refusing_hooks_stay_fail_open` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_heal_core_bare_is_fail_open_and_bounded` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_claude_worker_settings_inherit_the_failure_policy` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_reviewer_publish_guard_blocks_on_failure` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_live_claude_runs_the_tool_call_when_a_fail_open_guard_times_out` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_branch_guard_spawns_no_git_for_commands_it_cannot_refuse` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_guard_keeps_the_shim_when_no_other_git_exists` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `_heal_fixture` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_heal_core_bare_spawns_the_checker_only_on_possible_drift` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_codex_outer_timeout_exceeds_the_inner_deadline_chain` | kept | Main PR #11323 added the dirt-audit snapshot timeout budget; preserve its reviewed version. |
+| `tests/test_hook_failure_policy.py` | `test_agy_outer_timeout_exceeds_the_secret_guard_deadline` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_grok_outer_timeout_exceeds_the_bridge_deadline` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_grok_interactive_seats_run_guards_through_a_deadline_to_deny_runner` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |
+| `tests/test_hook_failure_policy.py` | `test_cursor_fail_open_detector_flags_a_guard_without_fail_closed` | deleted | Main did not change this function since the merge base; preserve the phase B prune. |

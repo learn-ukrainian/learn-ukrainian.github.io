@@ -94,6 +94,7 @@ def _prepare(tmp_path: Path, pin: dict, manifest: bytes, dataset: bytes, environ
 # --- independently frozen negatives -------------------------------------------------------------
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_pin_matches_the_published_release_runbook_and_site_selector() -> None:
     """A wrong committed byte size, digest, version or provenance must fail here before any build."""
     pin = preview.load_pin(COMMITTED_PIN)
