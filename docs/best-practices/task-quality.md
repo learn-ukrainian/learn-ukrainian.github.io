@@ -83,15 +83,22 @@ parent traversal does not read the cache or run the audit.
 The daily issue-quality report and successful bounded live checks publish the
 cache through `write_membership_cache`. It validates the repository, current
 registry, complete traversal, listing denominator and conflict-free effective
-membership before writing. A sibling temporary file is flushed and synced,
-then renamed over the shared cache atomically. Failed validation or a failed
-write leaves the previous cache intact. The payload retains the audit's original
-`generated_at`, `membership_complete`, index and open-issue numbers. It adds
-`schema_version: 1` and `root_results`, which lists each registered root's
-effective native and body members. Readers validate versioned per-root results
-against the index; existing unversioned audit reports retain their canonical
-validation. No new process or timer is required. Daily publication retries
-reuse the saved report bytes and do not renew the membership timestamp.
+membership before writing. Every writer of the file, including the Monitor's
+`run_audit` refresh, uses the one atomic publisher `publish_cache`: a sibling
+temporary file is flushed and synced, then renamed over the shared cache.
+Failed validation or a failed write leaves the previous cache intact. The
+payload retains the audit's original `generated_at`, `membership_complete`,
+index and open-issue numbers. It adds `schema_version: 1` and `root_results`,
+which lists each registered root's effective native and body members, or is
+`null` when the report cannot certify membership (`run_audit` still publishes
+such a report for the Monitor). The strict checker trusts a cache only when
+`schema_version` is the integer `1` and `root_results` equals its
+recomputation from the index. A missing, mistyped or other version, or a
+missing or mismatched `root_results`, is the typed refusal
+`membership_audit_cache_schema` and falls back to the live audit; the legacy
+unversioned shape is never trusted. No new process or timer is required. Daily
+publication retries reuse the saved report bytes and do not renew the
+membership timestamp.
 
 The Monitor serves this same file at `/api/issues/streams`, so every
 publication is a complete hygiene report. The writer appends the closed-epic and
