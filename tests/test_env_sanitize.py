@@ -88,6 +88,64 @@ def test_hyphen_preceded_key_path_remains_rejected_with_spoofed_dispatch():
     assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "task-7828-sk-something"
 
 
+# Each fragment is a random pytest run-directory name holding one provider
+# key-prefix alternative. The surrounding word and the short body make it a
+# directory name, not a credential (#11326). ``sk-`` is only exercised inside a
+# word: its word boundary predates this fix and its short task-id tails must
+# stay sensitive.
+_RUN_DIRECTORY_KEY_FRAGMENTS = (
+    "xgithub_pat_ab",
+    "bghp_56ac",
+    "bsk-56ac",
+    "bxoxb-56ac",
+    "bhf_56ac",
+    "bnpm_56ac",
+    "bAKIAFAKEFAKEFAKE",
+    "bAIzaFakeValue",
+    "github_pat_ab",
+    "ghp_56ac",
+    "xoxb-56ac",
+    "hf_56ac",
+    "npm_56ac",
+    "AIzaFAKE",
+)
+
+_REAL_KEY_SHAPED_VALUES = (
+    "github_pat_" + "FAKE" * 6,
+    "ghp_" + "FAKE" * 9,
+    "sk-" + "FAKE" * 5,
+    "xoxb-" + "FAKE" * 6,
+    "hf_" + "FAKE" * 8,
+    "npm_" + "FAKE" * 9,
+    "AKIA" + "FAKE" * 4,
+    "AIza" + "FAKE" * 8,
+)
+
+
+@pytest.mark.parametrize("provider", ["claude", "acpx-claude-shadow"])
+@pytest.mark.parametrize("fragment", _RUN_DIRECTORY_KEY_FRAGMENTS)
+def test_run_directory_name_containing_a_key_prefix_keeps_path(provider, fragment):
+    """#11326: a random run-directory name must not make PATH look sensitive."""
+    run_root = f"/var/tmp/lu/pytest-runs/runs/pytest.{fragment}/scratch/base"
+    path = f"{run_root}/bin:/usr/bin:/bin"
+    home = f"{run_root}/home"
+    with patch.dict(os.environ, {"PATH": path, "HOME": home}, clear=True):
+        env = build_agent_env(provider=provider)
+    assert env["PATH"] == path
+    assert env["HOME"] == home
+
+
+@pytest.mark.parametrize("key", _REAL_KEY_SHAPED_VALUES)
+def test_real_key_shaped_values_are_still_dropped(key):
+    """#11326: the word boundary and body floor must not weaken real detection."""
+    path = f"/usr/bin:{key}:/bin"
+    with patch.dict(os.environ, {"PATH": path, "HOME": "/fixture/home", "AB_TRACE": key}, clear=True):
+        env = build_agent_env(provider="claude")
+    assert "AB_TRACE" not in env
+    assert "PATH" not in env
+    assert all(key not in value for value in env.values())
+
+
 @pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "bridge"])
 @pytest.mark.parametrize("override", [False, True])
 def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, provider, override):

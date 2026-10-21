@@ -26,18 +26,28 @@ _SENSITIVE_NAME_RE = re.compile(
     re.IGNORECASE,
 )
 
+# A real credential body is long: every provider key carries at least eight
+# characters after its prefix. A random pytest run-directory name such as
+# ``pytest.bhf_56ac`` embeds a prefix plus a short fragment, so the length floor
+# keeps a PATH entry that merely contains the directory ordinary process
+# context (#11326).
+_MIN_KEY_BODY = 8
+
+# A credential starts at a word boundary; the tail of "task-" is not a key
+# prefix. Separators, including a hyphen, still expose short keys. ``sk-`` has
+# no length floor: a launch-gate test relies on a short task-id tail
+# (``task-sk-att``) still looking sensitive, and this alternative already had
+# its word boundary before #11326.
 _SENSITIVE_VALUE_RE = re.compile(
     r"(?:"
-    r"github_pat_[A-Za-z0-9_]+|"
-    r"gh[pousr]_[A-Za-z0-9_]+|"
-    # A credential starts at a word boundary; the tail of "task-" is not a
-    # key prefix. Separators, including a hyphen, still expose short keys.
+    rf"\bgithub_pat_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"\bgh[pousr]_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     r"\bsk-[A-Za-z0-9_-]+|"
-    r"xox[baprs]-[A-Za-z0-9-]+|"
-    r"hf_[A-Za-z0-9_]+|"
-    r"npm_[A-Za-z0-9_]+|"
-    r"AKIA[A-Z0-9]{12,}|"
-    r"AIza[A-Za-z0-9_-]+"
+    rf"\bxox[baprs]-[A-Za-z0-9-]{{{_MIN_KEY_BODY},}}|"
+    rf"\bhf_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"\bnpm_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    r"\bAKIA[A-Z0-9]{12,}|"
+    rf"\bAIza[A-Za-z0-9_-]{{{_MIN_KEY_BODY},}}"
     r")"
 )
 
