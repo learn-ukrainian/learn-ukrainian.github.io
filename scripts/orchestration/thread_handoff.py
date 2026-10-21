@@ -6670,15 +6670,20 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
 
             def row_agent(row: Mapping[str, Any]) -> str:
-                if row.get("agent") is not None:
-                    return str(row["agent"])
                 manifest = row.get("manifest")
                 if not isinstance(manifest, Mapping):
                     raise ValueError("bundle API list manifest is malformed")
-                return str(manifest.get("agent") or "")
+                # Only a present, well-formed identity can make a row foreign; a
+                # missing or malformed one never reads as an empty slot (#11257).
+                identity = row["agent"] if "agent" in row else manifest.get("agent")
+                if not isinstance(identity, str) or not AGENT_NAME_RE.fullmatch(identity):
+                    raise ValueError("bundle API list row has no valid agent identity")
+                return identity
 
             # Only this handoff slot's own bundles are candidates; another
             # slot's bundle never installs here, whatever its upload sequence.
+            # Every row's identity is checked, so one malformed row refuses
+            # the whole listing.
             own_rows = [row for row in listed if row_agent(row) == agent]
             if not own_rows:
                 # An empty slot is a normal state, not a refusal (#11257).

@@ -711,6 +711,73 @@ def test_from_api_agent_mismatch_still_exits_invalid_rollover_bundle(
     assert _tree(target) == {}
 
 
+FOREIGN_ROW = {"manifest": {"agent": "claude-devops", "upload_seq": 7}, "upload_seq": 7}
+
+# Listings whose slot identity is missing or malformed. None of them proves the
+# slot empty, so each must refuse rather than read as the typed none (#11257).
+MALFORMED_LISTINGS = {
+    "manifest-without-agent": {"bundles": [{"manifest": {}}]},
+    "manifest-missing": {"bundles": [{"upload_seq": 3}]},
+    "manifest-not-a-mapping": {"bundles": [{"manifest": ["claude-devops"]}]},
+    "manifest-agent-null": {"bundles": [{"manifest": {"agent": None}}]},
+    "manifest-agent-empty": {"bundles": [{"manifest": {"agent": ""}}]},
+    "manifest-agent-int": {"bundles": [{"manifest": {"agent": 7}}]},
+    "manifest-agent-list": {"bundles": [{"manifest": {"agent": ["claude-devops"]}}]},
+    "manifest-agent-not-a-slot-name": {"bundles": [{"manifest": {"agent": "Claude Devops"}}]},
+    "row-agent-null": {"bundles": [{"agent": None, "manifest": {}}]},
+    # A present but null row identity is malformed even beside a manifest agent.
+    "row-agent-null-over-manifest-agent": {"bundles": [{"agent": None, "manifest": {"agent": "claude-devops"}}]},
+    "row-agent-empty": {"bundles": [{"agent": "", "manifest": {"agent": "claude-devops"}}]},
+    "row-agent-int": {"bundles": [{"agent": 7, "manifest": {"agent": "claude-devops"}}]},
+    "row-agent-list": {"bundles": [{"agent": ["claude-devops"], "manifest": {"agent": "claude-devops"}}]},
+    "row-not-an-object": {"bundles": ["claude-devops"]},
+    "bundles-not-a-list": {"bundles": {"agent": "claude-devops"}},
+    "bundles-null": {"bundles": None},
+    "bundles-missing": {},
+    "foreign-then-malformed": {"bundles": [FOREIGN_ROW, {"manifest": {}}]},
+    "malformed-then-foreign": {"bundles": [{"manifest": {"agent": 7}}, FOREIGN_ROW]},
+}
+
+
+@pytest.mark.parametrize("listing", list(MALFORMED_LISTINGS.values()), ids=list(MALFORMED_LISTINGS))
+def test_from_api_listing_without_a_valid_slot_identity_refuses(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    listing: dict,
+) -> None:
+    server = _BundleServer({}, answers={"list": (200, listing)})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    captured = capsys.readouterr()
+
+    assert captured.out != TYPED_NONE
+    refusal = json.loads(captured.out)
+    assert refusal == {"code": "invalid_rollover_bundle", "error": refusal["error"], "action": "import-bundle"}
+    assert _tree(target) == {}
+    # Nothing past the listing is fetched.
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+def test_from_api_well_formed_foreign_row_alone_is_still_none(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    listing = {"bundles": [FOREIGN_ROW, {**FOREIGN_ROW, "agent": "gpt-infra"}]}
+    server = _BundleServer({}, answers={"list": (200, listing)})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert _tree(target) == {}
+
+
 class _DownBundleClient:
     def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
         raise urllib.error.URLError("connection refused")
@@ -788,6 +855,27 @@ def test_session_start_still_warns_on_a_refusal_and_on_unavailability(
     assert down["status"] == "issue"
     assert down["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
     assert "bundle API unavailable" in down["warning"]
+    assert _tree(target) == {}
+
+
+@pytest.mark.parametrize(
+    "listing",
+    [MALFORMED_LISTINGS["manifest-without-agent"], MALFORMED_LISTINGS["foreign-then-malformed"]],
+    ids=["identity-missing", "mixed-foreign-and-malformed"],
+)
+def test_session_start_warns_when_a_listed_row_has_no_valid_slot_identity(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    listing: dict,
+) -> None:
+    target = tmp_path / "target"
+    target.mkdir()
+
+    result = _gate_import(monkeypatch, target, _BundleServer({}, answers={"list": (200, listing)}))
+
+    assert result["status"] == "issue"
+    assert result["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
+    assert "invalid_rollover_bundle" in result["warning"]
     assert _tree(target) == {}
 
 
