@@ -198,6 +198,18 @@ def test_nonprivate_namespace_preserves_all_runs(area):
     assert all((path / "scratch" / "payload").is_file() for path in runs)
 
 
+def test_untrusted_legacy_namespace_does_not_suppress_neutral_retention(area):
+    root, args = area
+    legacy = completed(root, 2)
+    neutral = completed(root, 5, namespace="runs")
+    legacy[0].parent.chmod(0o755)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert report["errors"] == 1
+    assert report["by_reason"]["namespace_untrusted"] == 1
+    assert [path for path in neutral if path.exists()] == neutral[-3:]
+    assert all((path / "scratch" / "payload").is_file() for path in legacy)
+
+
 def test_postrename_recheck_preserves_when_owner_probe_becomes_unknown(area, monkeypatch):
     root, args = area
     runs = completed(root, 4)
