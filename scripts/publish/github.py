@@ -971,6 +971,9 @@ def read(
         return github_client.queue_read(operation, gh_repo, fields, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
     if operation in REST_READS:
         endpoint, schema = REST_READS[operation]
+        if operation == "runs" and "sha" in fields:
+            endpoint += "&head_sha={sha}"
+            schema = {**schema, "sha": "sha"}
         if operation == "code-scanning-alerts" and set(fields) == {"number"}:
             # PR filtering covers analyses uploaded to either head or merge refs.
             endpoint = "repos/{repo}/code-scanning/alerts?state=open&pr={number}"

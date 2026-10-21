@@ -482,7 +482,7 @@ def collect_merged_run_evidence(
         raise MergeCloseoutError("CLOSEOUT_MERGE_SHA_MISSING")
     runs = _closeout_pages(
         repo_root, Request("read-runs", repo=repository, start=pull.get("created_at"), end=pull.get("merged_at"),
-                           paginate=True, slurp=True), "workflow_runs",
+                           sha=merge_sha, paginate=True, slurp=True), "workflow_runs",
     )
     candidates = [run for run in runs if run.get("path") == ".github/workflows/ci.yml"
                   and run.get("head_sha") == merge_sha]
