@@ -185,6 +185,7 @@ exceptions:
   - {module: scripts/delegate.py, function: "_ensure_worktree", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_fetch_existing_branch", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_fetch_remote_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_finalize_transport_push", program: "GIT", category: non-claude, reason: "runs `git push origin <head>:refs/heads/<branch>` with the absolute safe_git_context.GIT and an empty hooks path; Git transport only"}
   - {module: scripts/delegate.py, function: "_git_common_dir_identity", program: "git", category: non-claude, reason: "runs `git rev-parse --git-common-dir`"}
   - {module: scripts/delegate.py, function: "_git_is_ancestor", program: "git", category: non-claude, reason: "runs `git merge-base --is-ancestor`"}
   - {module: scripts/delegate.py, function: "_git_rev_count", program: "git", category: non-claude, reason: "runs `git rev-list --count`"}

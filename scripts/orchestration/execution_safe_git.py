@@ -285,9 +285,16 @@ def prepare_scoped_commit(
         raise ValueError("unsupported scoped preparation branch")
     source = context.source_git_dir
     source_index = source / "index"
-    original_index = source_index.read_bytes() if source_index.exists() else None
+    # Stat before reading: a concurrent rewrite leaves an older stamp, which
+    # only makes Git re-hash more entries, and the final compare refuses it.
+    source_stat = source_index.stat() if source_index.exists() else None
+    original_index = source_index.read_bytes() if source_stat is not None else None
     if original_index is not None:
+        # Git re-hashes entries whose mtime is not older than the index file
+        # mtime (racy-git). Keep the source stamp so a same-size edit made in
+        # the index's second is still seen; copy no other metadata.
         (context.root / "index").write_bytes(original_index)
+        os.utime(context.root / "index", ns=(source_stat.st_atime_ns, source_stat.st_mtime_ns))
     else:
         context.checked("read-tree", expected_head)
     context.checked("update-ref", ref, expected_head)

@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
+import os
+import struct
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -142,6 +146,61 @@ def test_scoped_commit_keeps_unowned_index_and_admits_only_closed_operations(tmp
         assert _git(repo, "diff-tree", "--no-commit-id", "--name-only", "-r", "-z", "HEAD") == filename + "\0"
         assert _git(repo, "show", ":unowned.txt") == "staged"
         assert (repo / "unowned.txt").read_bytes() == b"current\r\n"
+
+
+def _restat_index_entry(index: Path, name: bytes, stat: os.stat_result) -> None:
+    """Rewrite one v2 entry's ctime/mtime to ``stat`` and re-seal the checksum."""
+    data = bytearray(index.read_bytes()[:-20])
+    assert data[:4] == b"DIRC" and struct.unpack(">I", data[4:8])[0] == 2
+    offset = 12
+    for _ in range(struct.unpack(">I", data[8:12])[0]):
+        length = struct.unpack(">H", data[offset + 60 : offset + 62])[0] & 0xFFF
+        if bytes(data[offset + 62 : offset + 62 + length]) == name:
+            times = (*divmod(stat.st_ctime_ns, 10**9), *divmod(stat.st_mtime_ns, 10**9))
+            data[offset : offset + 16] = struct.pack(">IIII", *times)
+            assert struct.unpack(">I", data[offset + 36 : offset + 40])[0] == stat.st_size
+            index.write_bytes(bytes(data) + hashlib.sha1(data).digest())
+            return
+        offset += (62 + length + 8) & ~7
+    raise AssertionError(f"index entry {name!r} not found")
+
+
+def test_scoped_commit_sees_same_size_edit_in_the_index_timestamp(tmp_path):
+    """A racily clean entry stays racy in the private index copy (#10931)."""
+    from scripts.lib.git_identity import git_identity_env
+    from scripts.orchestration.safe_git_context import SafeGitContext
+
+    repo = _primary(tmp_path)
+    _git(repo, "branch", "codex/scoped")
+    _git(repo, "symbolic-ref", "HEAD", "refs/heads/codex/scoped")
+    owned = repo / "owned.txt"
+    owned.write_bytes(b"before\n")
+    _git(repo, "add", "owned.txt")
+    _git(repo, "commit", "-m", "owned")
+    head = _git(repo, "rev-parse", "HEAD")
+    # Same-size edit whose stat matches the recorded entry, stamped in the same
+    # nanosecond as the index file: only the racy-git rule can expose it.
+    stamp = 1_000_000_000_123_456_789
+    owned.write_bytes(b"after!\n")
+    os.utime(owned, ns=(stamp, stamp))
+    _restat_index_entry(repo / ".git/index", b"owned.txt", owned.lstat())
+    os.utime(repo / ".git/index", ns=(stamp, stamp))
+    with SafeGitContext(objects=repo / ".git/objects", temp_root=tmp_path) as context:
+        context.source_git_dir = repo / ".git"
+        result = safe.prepare_scoped_commit(
+            context,
+            worktree=repo,
+            branch="codex/scoped",
+            expected_head=head,
+            paths=("owned.txt",),
+            subject="scoped",
+            body="Refs #10931",
+            trailer="X-Agent: codex/scoped",
+            identity=git_identity_env("codex"),
+        )
+    assert result.process.returncode == 0, result.process.stdout + result.process.stderr
+    assert _git(repo, "rev-parse", "HEAD") != head
+    assert _git(repo, "show", "HEAD:owned.txt") == "after!"
 
 
 @pytest.mark.parametrize(
