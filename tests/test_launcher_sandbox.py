@@ -15,7 +15,10 @@ from tests import launcher_sandbox
 
 
 @pytest.mark.parametrize("layout", ["default", "external"])
-def test_copy_registry_keeps_cached_alias_sources_only_when_tracked(tmp_path: Path, layout: str) -> None:
+@pytest.mark.parametrize("dont_write_bytecode", [False, True], ids=["bytecode-on", "bytecode-off"])
+def test_copy_registry_keeps_cached_alias_sources_only_when_tracked(
+    tmp_path: Path, layout: str, dont_write_bytecode: bool,
+) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
     sources = {
@@ -57,7 +60,7 @@ def main(args):
     # Only this controlled child selects a cache layout. The actual launcher
     # modules run separately with the worker's inherited cache prefix intact.
     controller = r'''
-import importlib.util, json, subprocess, sys
+import importlib.util, json, os, subprocess, sys
 from pathlib import Path
 
 spec = importlib.util.spec_from_file_location("launcher_sandbox", sys.argv[1])
@@ -66,14 +69,17 @@ spec.loader.exec_module(sandbox)
 repo, destination = map(Path, sys.argv[2:])
 sandbox._REPO_ROOT = repo
 
-def probe():
+def probe(*, warm_cache=False):
     result = subprocess.run(
         [sys.executable, "-X", "pycache_prefix=" + (sys.pycache_prefix or ""), "-c", sandbox._PROBE],
         cwd=repo, capture_output=True, text=True, check=True, timeout=30,
+        env={**os.environ, "PYTHONDONTWRITEBYTECODE": ""} if warm_cache else None,
     )
     return json.loads(result.stdout.splitlines()[-1])
 
-probe()  # Populate the cache before measuring, including the aliasing shim.
+# Only warm-up may override inherited bytecode suppression. Measurement and
+# discovery retain it, so cached alias recovery is exercised even without writes.
+probe(warm_cache=True)
 recorded = probe()
 alias = repo / "scripts/compat.py"
 cache = importlib.util.cache_from_source(str(alias))
@@ -82,7 +88,6 @@ assert Path(cache).is_file()
 
 # slot_registry_sources starts another interpreter; explicitly forward the
 # controlled layout, while leaving the real worker's environment untouched.
-import os
 os.environ["PYTHONPYCACHEPREFIX"] = sys.pycache_prefix or ""
 selected = sandbox.slot_registry_sources()
 sandbox.copy_slot_registry(destination)
@@ -90,6 +95,7 @@ print(json.dumps({
     "alias_recorded": str(alias) in recorded,
     "cache_recorded": cache in recorded,
     "cache_is_local": Path(cache).parent.name == "__pycache__",
+    "dont_write_bytecode": sys.dont_write_bytecode,
     "selected": [p.as_posix() for p in selected],
     "copied": sorted(p.relative_to(destination).as_posix() for p in destination.rglob("*") if p.is_file() and p.suffix != ".pyc"),
 }))
@@ -100,12 +106,14 @@ print(json.dumps({
         [sys.executable, "-X", f"pycache_prefix={cache_prefix}", "-c", controller,
          str(Path(launcher_sandbox.__file__)), str(repo), str(destination)],
         capture_output=True, text=True, check=True, timeout=60,
+        env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1" if dont_write_bytecode else ""},
     )
     expected = sorted(relative for relative in sources if not relative.endswith(".pyc"))
     assert json.loads(result.stdout) == {
         "alias_recorded": True,
         "cache_recorded": False,
         "cache_is_local": layout == "default",
+        "dont_write_bytecode": dont_write_bytecode,
         "selected": expected,
         "copied": expected,
     }
