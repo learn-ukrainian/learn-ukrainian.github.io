@@ -12858,7 +12858,7 @@ def _run_dor_preflight(
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
     if unknown:
         details = "; ".join(f"{('#' + label) if label.isdigit() else label}: {codes}" for label, codes in unknown.items())
-        print(f"⚠️ DoR UNKNOWN (timeout) ({details}); membership unverified, advisory only", file=sys.stderr)
+        print(f"⚠️ DoR UNKNOWN (timeout) ({details}); membership unverified", file=sys.stderr)
     return None, record
 
 
@@ -14043,7 +14043,7 @@ def _dispatch(
         print(cursor_auto_error, file=sys.stderr)
         return 2
     cursor_auto_admission = (
-        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
+        {"admitted": dor_record.get("dor", "PASS") == "PASS", "model": args.model, "issues": list(dor_record["issues"])}
         if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
         else None
     )

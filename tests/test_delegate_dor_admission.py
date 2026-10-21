@@ -429,9 +429,24 @@ def test_pass_dor_records_remain_cursor_auto_evidence(record):
     "_synthetic_routing_budget",
     "_worktree_add_via_run",
 )
-@pytest.mark.parametrize("final_status", ["UNKNOWN (timeout)", "PASS"])
-def test_full_dispatch_cursor_auto_uses_final_dor(monkeypatch, tmp_path, capsys, final_status):
-    """F2: an early PASS must not admit Auto after the changed prompt's DoR times out."""
+@pytest.mark.parametrize(
+    "agent,final_status,changed,override,guard_disabled",
+    [
+        pytest.param("cursor", "UNKNOWN (timeout)", True, False, False, id="late-timeout"),
+        pytest.param("cursor", "WARN", True, False, False, id="late-warn"),
+        pytest.param("cursor", "non-overridable", True, False, False, id="late-hard-failure"),
+        pytest.param("cursor", "PASS", True, False, False, id="late-pass"),
+        pytest.param("cursor", "PASS", False, False, False, id="unchanged-pass"),
+        pytest.param("cursor", "WARN", True, True, False, id="override-refuses-before-late-warn"),
+        pytest.param("cursor", "PASS", False, True, False, id="override-refuses-clean-pass"),
+        pytest.param("codex", "UNKNOWN (timeout)", True, False, False, id="non-cursor-late-timeout"),
+        pytest.param("cursor", "UNKNOWN (timeout)", True, False, True, id="flag-stays-false-if-guard-regresses"),
+    ],
+)
+def test_full_dispatch_cursor_auto_uses_final_dor(
+    monkeypatch, tmp_path, capsys, agent, final_status, changed, override, guard_disabled
+):
+    """Defect classes: stale PASS admission, misleading timeout advice, and a false PASS flag."""
     _tmp_dispatch_repo_root(tmp_path, monkeypatch)
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setenv("LU_ALLOW_NOTEBOOK_DISPATCH", "1")
@@ -448,37 +463,66 @@ def test_full_dispatch_cursor_auto_uses_final_dor(monkeypatch, tmp_path, capsys,
         if "--issue" in command:
             issue = int(command[command.index("--issue") + 1])
             checked_issues.append(issue)
-            membership = TIMEOUT if issue == 124 and final_status != "PASS" else checker.section("PASS")
-            payload = checker.evaluate_issue({"body": COMPLETE}, membership)
+            status = final_status if issue == 124 else "PASS"
+            membership = {
+                "UNKNOWN (timeout)": TIMEOUT,
+                "WARN": checker.membership_error("membership_missing_parent"),
+            }.get(status, checker.section("PASS"))
+            body = COMPLETE + "\n- [ ] AC-01: duplicate" if status == "non-overridable" else COMPLETE
+            payload = checker.evaluate_issue({"body": body}, membership)
             # Deterministic prompt drift between the early read and launch read.
-            prompt_file.write_text("Implement #124", encoding="utf-8")
+            if changed:
+                prompt_file.write_text("Implement #124", encoding="utf-8")
             return subprocess.CompletedProcess(command, int(payload["verdict"] != "PASS"), json.dumps(payload), "")
         return git_run(command, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
     spawn = MagicMock(return_value=MagicMock(pid=24681))
     monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
+    write_state = MagicMock(wraps=delegate._write_state_atomic)
+    monkeypatch.setattr(delegate, "_write_state_atomic", write_state)
+    if guard_disabled:
+        # Fault injection proves that the stored flag itself cannot certify UNKNOWN.
+        monkeypatch.setattr(delegate, "_cursor_auto_refusal", lambda *a, **k: None)
+    options = ["--model", "auto"] if agent == "cursor" else []
+    if override:
+        options += ["--allow-dor-warn", "accepted evidence gap"]
     args = delegate.build_parser().parse_args(
         [
-            "dispatch", "--agent", "cursor", "--model", "auto", "--mode", "danger",
+            "dispatch", "--agent", agent, *options, "--mode", "danger",
             "--task-id", "final-dor", "--prompt-file", str(prompt_file),
             "--research-role", "implementation", "--owned-path", "scripts/example.py",
-            "--worktree", str(tmp_path / ".worktrees/dispatch/cursor/final-dor"),
+            "--worktree", str(tmp_path / ".worktrees" / "dispatch" / agent / "final-dor"),
         ]
     )
     result = delegate.cmd_dispatch(args)
     state = delegate._read_state(delegate._state_path("final-dor"))
-    assert checked_issues == [123, 124]
-    if final_status == "PASS":
+    assert checked_issues == ([123, 124] if changed and not override else [123])
+    admitted = not override and (agent != "cursor" or final_status == "PASS" or guard_disabled)
+    if admitted:
         assert result == 0
         assert spawn.call_count == 1
-        assert state["dor_preflight"]["dor"] == "PASS"
-        assert state["cursor_auto_admission"] == {"admitted": True, "model": "auto", "issues": [124]}
+        assert state["dor_preflight"]["dor"] == final_status
+        assert "allow_warn_reason" not in state["dor_preflight"]
+        if agent == "cursor":
+            assert state["cursor_auto_admission"] == {
+                "admitted": final_status == "PASS", "model": "auto", "issues": [124 if changed else 123]
+            }
+        else:
+            assert "cursor_auto_admission" not in state
     else:
         assert result == 2
         spawn.assert_not_called()
+        write_state.assert_not_called()
         assert state is None
         assert not any(command[:3] == ["git", "worktree", "add"] for command in calls)
         err = capsys.readouterr().err
-        assert "UNKNOWN (timeout)" in err
-        assert "cursor_auto_outside_coding_task" in err
+        if final_status == "UNKNOWN (timeout)":
+            assert "UNKNOWN (timeout)" in err
+            assert "advisory only" not in err
+        if final_status == "UNKNOWN (timeout)" or override:
+            assert "cursor_auto_outside_coding_task" in err
+        elif final_status == "non-overridable":
+            assert "dod_structure_malformed" in err and "no override applies" in err
+        else:
+            assert "DoR issue card WARN" in err
