@@ -2091,7 +2091,21 @@ def test_command_with_a_line_break_is_refused(push_sandbox):
 
 def test_unlistable_commands_refuse(push_sandbox):
     result = push_sandbox.push("-C", str(push_sandbox.tmp / "absent"), "status")
-    assert result.returncode == 2 and "could not list Git's commands" in result.stderr, result.stderr
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == "OPSEC: could not list Git's commands, so the command was not run.\n"
+
+
+def test_discovery_refusal_does_not_disclose_config_or_change_remote(push_sandbox):
+    """A malformed discovery configuration must not expose its filename or publish anything."""
+    before = push_sandbox.remote_refs()
+    broken = push_sandbox.tmp / "synthetic-config-token.gitconfig"
+    broken.write_text("[broken\n")
+    result = push_sandbox.push("status", "--short", GIT_CONFIG_GLOBAL=str(broken))
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == "OPSEC: could not list Git's commands, so the command was not run.\n"
+    assert push_sandbox.remote_refs() == before
 
 
 # --- A push whose scanner is unusable is refused ---
