@@ -124,21 +124,25 @@ def test_read_only_exempt(tmp_path: Path):
     assert result.admitted is True
 
 
-@pytest.mark.parametrize("failure", ["oserror", "timeout", "invalid-output", "relative-output"])
+@pytest.mark.parametrize("failure", ["oserror", "invalid-output", "missing-target", "nul-output"])
 def test_repository_probe_failure_preserves_conflict_protection(tmp_path, monkeypatch, failure):
-    """Git probe failure cannot bypass writable-path admission or leak its diagnostics."""
-    import subprocess
+    """Filesystem probe failure cannot bypass admission or leak its diagnostics."""
+    marker = tmp_path / ".git"
+    marker.write_text("gitdir: ../unused\n")
+    read_bytes = Path.read_bytes
 
-    from scripts.guardrails import delegate_ownership as ownership
-
-    def probe(*_args, **_kwargs):
+    def probe(path):
+        if path != marker:
+            return read_bytes(path)
         if failure == "oserror":
             raise OSError("private diagnostic")
-        if failure == "timeout":
-            raise subprocess.TimeoutExpired("private diagnostic", 10)
-        return subprocess.CompletedProcess([], 0, ".git" if failure == "relative-output" else "", "private diagnostic")
+        return {
+            "invalid-output": b"private diagnostic",
+            "missing-target": b"gitdir: ../missing\n",
+            "nul-output": b"gitdir: invalid\x00path\n",
+        }[failure]
 
-    monkeypatch.setattr(ownership.subprocess, "run", probe)
+    monkeypatch.setattr(Path, "read_bytes", probe)
     kwargs = dict(mode="workspace-write", owned_paths=["tests/held.py"], pid=os.getpid(),
                   ledger_path=tmp_path / "own.sqlite3", task_state_dir=tmp_path, cwd=tmp_path)
     assert admit_write_paths(task_id="holder", **kwargs).admitted

@@ -52,6 +52,17 @@ def _ledger(tmp_path, repo, monkeypatch):
         return ownership.OwnershipLedger(tmp_path / "ownership.sqlite3", task_state_dir=tmp_path)
 
 
+def test_linked_identity_matches_primary_without_spawning(tmp_path, repositories, monkeypatch):
+    """A Git subprocess in ledger construction must fail this regression (#11375)."""
+    def no_spawn(*_args, **_kwargs):
+        raise AssertionError("identity resolution must not spawn")
+
+    monkeypatch.setattr(subprocess, "Popen", no_spawn)
+    primary = _ledger(tmp_path, repositories[0], monkeypatch)
+    linked = _ledger(tmp_path, repositories[2], monkeypatch)
+    assert primary.repository_identity == linked.repository_identity == str((repositories[0] / ".git").resolve())
+
+
 def _admit(ledger, task, paths, **kwargs):
     return ledger.admit(task_id=task, mode="workspace-write", owned_paths=paths, pid=PID, **kwargs)
 

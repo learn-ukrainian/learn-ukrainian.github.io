@@ -34,7 +34,6 @@ import math
 import os
 import posixpath
 import sqlite3
-import subprocess
 import sys
 import time
 import unicodedata
@@ -66,7 +65,6 @@ try:
 except ImportError:  # pragma: no cover - flat script path
     from common.repo_root import resolve_repo_root  # type: ignore
 
-from scripts.common.git_context import sanitized_git_env
 from scripts.common.task_store_paths import tasks_dir
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
@@ -205,20 +203,40 @@ class AdmissionResult:
 
 
 def _repository_identity(cwd: str | Path | None) -> str | None:
-    """Resolve one checkout's shared Git directory; never expose probe errors or paths."""
+    """Read Git's checkout metadata without spawning; unresolved stays ledger-global."""
     try:
         checkout = (Path(cwd) if cwd is not None else Path.cwd()).resolve(strict=True)
-        probe = subprocess.run(
-            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
-            cwd=checkout, env=sanitized_git_env(), capture_output=True, text=True,
-            check=False, timeout=10,
-        )
-        common = probe.stdout.removesuffix("\n") if probe.returncode == 0 else ""
-        if not common or not Path(common).is_absolute():
+        if not checkout.is_dir():
             return None
-        resolved = Path(common).resolve(strict=True)
-        return str(resolved) if resolved.is_dir() else None
-    except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired):
+        for parent in (checkout, *checkout.parents):
+            marker = parent / ".git"
+            try:
+                marker.lstat()
+            except FileNotFoundError:
+                continue
+            if marker.is_dir():
+                git_dir = marker.resolve(strict=True)
+            elif marker.is_file():
+                pointer = marker.read_bytes().removesuffix(b"\n").removesuffix(b"\r")
+                if not pointer.startswith(b"gitdir: ") or not pointer[8:]:
+                    return None
+                git_dir = (parent / os.fsdecode(pointer[8:])).resolve(strict=True)
+            else:
+                return None
+            if not git_dir.is_dir():
+                return None
+            common_file = git_dir / "commondir"
+            try:
+                common_file.lstat()
+            except FileNotFoundError:
+                return str(git_dir)
+            common = common_file.read_bytes().removesuffix(b"\n").removesuffix(b"\r")
+            if not common:
+                return None
+            resolved = (git_dir / os.fsdecode(common)).resolve(strict=True)
+            return str(resolved) if resolved.is_dir() else None
+        return None
+    except (OSError, ValueError, RuntimeError):
         return None
 
 
