@@ -175,7 +175,8 @@ class CacheImportReport:
     unproven: Counter = field(default_factory=Counter)  # nulls without 404 evidence: not recorded
     inserted: int = 0  # new slovnyk_me_entries rows; the rest of `entries` upserted existing keys
     inserted_misses: int = 0
-    backup_path: Path | None = None
+    backup_path: Path | None = None  # set only while a safety copy exists; cleared after commit
+    backup_removed: bool = False  # the safety copy was deleted after the successful commit
 
     def summary(self) -> str:
         lines = [
@@ -303,21 +304,37 @@ def read_cache(
 
 
 def backup_database(conn: SQLiteConnection, db_path: Path, backup_dir: Path | None = None) -> Path:
-    """Consistent copy of the open (possibly live, WAL) store via ``VACUUM INTO``."""
+    """Temporary copy of the open (possibly live, WAL) store via ``VACUUM INTO``.
+
+    The caller deletes the copy once the write commits, so it is a safety net only.
+    An unresolved predecessor from an earlier failed run refuses rather than piling
+    up another full-size copy.
+    """
     backup_dir = backup_dir or db_path.parent / "backups"
     if is_network_filesystem_path(backup_dir):
         raise ValueError("sources.db backups must stay on local storage")
     backup_dir.mkdir(parents=True, exist_ok=True)
+    older = sorted(backup_dir.glob(f"{db_path.stem}.pre-slovnyk-cache-ingest.*.db"))
+    if older:
+        raise ValueError(
+            f"refusing to back up: unresolved pre-import copy {older[0]} is still present in "
+            f"{backup_dir}; restore or remove it (a previous failed run must be resolved first)"
+        )
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
     target = backup_dir / f"{db_path.stem}.pre-slovnyk-cache-ingest.{stamp}.db"
-    conn.execute("VACUUM INTO ?", (str(target),))
-    probe = "SELECT count(*) FROM sqlite_master"
-    copy = open_readonly(target)
     try:
-        if copy.execute(probe).fetchone() != conn.execute(probe).fetchone():
-            raise ValueError(f"backup {target.name} does not match its source")
-    finally:
-        copy.close()
+        conn.execute("VACUUM INTO ?", (str(target),))
+        probe = "SELECT count(*) FROM sqlite_master"
+        copy = open_readonly(target)
+        try:
+            if copy.execute(probe).fetchone() != conn.execute(probe).fetchone():
+                raise ValueError(f"backup {target.name} does not match its source")
+        finally:
+            copy.close()
+    except BaseException as exc:
+        if target.exists():
+            exc.add_note(f"pre-import copy retained at {target}")
+        raise
     return target
 
 
@@ -335,7 +352,8 @@ def ingest_cache(
     Original source URLs and fetched_at survive, each row names its cache file, the
     full-text SHA-256 and the importer version, and observed 404s become rows in
     ``slovnyk_me_lookup_misses``. A malformed snapshot refuses before any write; an
-    existing database is backed up first and must be on local storage.
+    existing database gets a temporary local copy first, deleted after the commit
+    and kept, with its path, if the write fails.
     """
     entries, misses, report = read_cache(
         cache_dir, words=words, dictionaries=dictionaries, max_text_chars=max_text_chars,
@@ -347,10 +365,12 @@ def ingest_cache(
     db_path.parent.mkdir(parents=True, exist_ok=True)
     existed = db_path.exists()
     conn = sqlite3.connect(str(db_path))
+    backup: Path | None = None
     try:
         conn.execute("PRAGMA busy_timeout = 60000")
         if existed:
-            report.backup_path = backup_database(conn, db_path, backup_dir)
+            backup = backup_database(conn, db_path, backup_dir)
+            report.backup_path = backup
         ensure_slovnyk_me_schema(conn)
         entries_before = _table_count(conn, "slovnyk_me_entries")
         misses_before = _table_count(conn, "slovnyk_me_lookup_misses")
@@ -358,8 +378,16 @@ def ingest_cache(
             conn.executemany(INSERT_SQL, [_entry_values(row) for row in entries])
             conn.executemany(MISS_INSERT_SQL, [_miss_values(row) for row in misses])
             conn.execute(MISS_SUPERSEDED_SQL)
+        if backup is not None:
+            backup.unlink(missing_ok=True)
+            report.backup_path = None
+            report.backup_removed = True
         report.inserted = _table_count(conn, "slovnyk_me_entries") - entries_before
         report.inserted_misses = _table_count(conn, "slovnyk_me_lookup_misses") - misses_before
+    except BaseException as exc:
+        if backup is not None and report.backup_path is not None:
+            exc.add_note(f"pre-import copy retained at {backup}")
+        raise
     finally:
         conn.close()
     return report
@@ -471,10 +499,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.dry_run:
             print("[dry-run] nothing written")
         else:
+            backup = (
+                "removed after successful commit" if report.backup_removed
+                else report.backup_path or "none (database did not exist)"
+            )
             print(
                 f"Loaded {sum(report.entries.values())} cached slovnyk.me row(s) "
                 f"({report.inserted} new) and {report.inserted_misses} new not_found row(s) into {args.db}; "
-                f"backup: {report.backup_path or 'none (database did not exist)'}"
+                f"backup: {backup}"
             )
         return 0
     dicts = args.dicts or list(DEFAULT_SLOVNYK_ME_DICTS)
