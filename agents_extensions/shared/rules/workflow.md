@@ -521,8 +521,8 @@ default); unknown attribution or liveness always preserves them.
 Every task follows this workflow. No exceptions for non-trivial changes.
 
 1. **Use the CTO's issue** — only the CTO opens GitHub issues; epic and lane drivers
-   report findings to the CTO through Fleet Comms. The issue is linked to exactly one
-   stream epic.
+   report findings to the CTO through Fleet Comms. When the CTO orders a brief with no
+   issue, use that brief as the card. The issue is linked to exactly one stream epic.
 2. **Review the plan** — obtain outside input and incorporate the disposition.
 3. **Finalize stable ACs** — use `- [ ] **AC-ID** — text`, then snapshot their
    applicability, due state, evidence types, and content hash in

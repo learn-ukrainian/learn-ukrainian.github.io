@@ -25,11 +25,12 @@ disposition and leave it idle — never manufacture busywork (quality > utilizat
 ### Friction report
 
 After checking the lane's actual work, send one friction report to the CTO through
-Fleet Comms. Create it on the first finding, then update it in place each cycle:
-replace the fields, do not append. Include the affected outcome,
+Fleet Comms. Fleet Comms messages are immutable: create a report on the first
+finding, then each cycle send a new report that names and supersedes the earlier
+one; earlier messages are never edited. Include the affected outcome,
 sanitized evidence, known or unknown cause, measured waste only when measured,
 working path, smallest correction, accountable owner, and falsifiable DoD. Write
-NONE only after that check by updating the same report if one already exists;
+NONE only after that check by sending a superseding report if one already exists;
 never create a report just to say NONE. Put the final state in the CTO's issue closing
 comment. Keep sensitive evidence in private operational evidence. Do not create a
 channel, and do not post one report per message.
