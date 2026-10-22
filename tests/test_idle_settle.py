@@ -468,7 +468,7 @@ def test_idle_lane_with_no_recent_tasks_counts() -> None:
 
     budget = {
         "agents": {
-            "kimi": {
+            "codex": {
                 "status": "cool",
                 "remaining_pct": 80.0,
                 "health": {"healthy": True, "basis": "scan_observed_idle"},
@@ -477,6 +477,6 @@ def test_idle_lane_with_no_recent_tasks_counts() -> None:
         "in_flight": {},
         "diagnostics": {"stale": False},
     }
-    rows = capacity_pick.build_lane_rows(budget, lanes=("kimi",), reset_reserve=unavailable_reserve())
+    rows = capacity_pick.build_lane_rows(budget, lanes=("codex",), reset_reserve=unavailable_reserve())
     [lane] = idle.lanes_from_capacity_rows(rows)
     assert lane.is_healthy_available() is True

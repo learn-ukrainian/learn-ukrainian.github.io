@@ -1157,8 +1157,10 @@ def test_9959_claude_author_deficit_does_not_replace_explicit_openai(monkeypatch
 
 
 def test_9959_skips_capacity_constrained_resolver_pick(monkeypatch):
-    budget = _budget(claude="near_cap", codex="cool", cursor="near_cap")
-    budget["agents"]["grok"] = {"status": "cool"}
+    # Grok/Cursor share allowance; a Cursor runtime block stays route-local.
+    budget = _budget(claude="near_cap", codex="cool", cursor="cool")
+    budget["agents"]["cursor"]["runtime"] = {"headroom_blocked": True}
+    budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 60}
     budget["agents"]["codex"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,14 +11,12 @@ import pytest
 
 from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
 from scripts.agent_runtime.adapters.kimi import (
+    _MODE_FLAGS,
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
-    KIMI_MODEL_ALIASES,
-    KIMI_PROJECT_SKILLS_RELATIVE,
     KimiAdapter,
 )
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
-from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
 from scripts.delegate import build_parser
@@ -49,110 +48,46 @@ def _build(
     )
 
 
-def test_build_invocation_uses_flagless_workspace_write(tmp_path, monkeypatch):
-    plan = _build(tmp_path, monkeypatch, mode="workspace-write")
-
-    assert plan.cmd[0] == str(tmp_path / "kimi")
-    assert plan.cmd[plan.cmd.index("-m") + 1] == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
-    assert plan.cmd[plan.cmd.index("--output-format") + 1] == "stream-json"
-    assert not ({"--auto", "--yolo", "--plan"} & set(plan.cmd))
-    assert plan.metadata == {}
-
-
-def test_native_kimi_loads_canonical_project_skills_in_fresh_worktree(tmp_path, monkeypatch):
+def test_retired_default_refuses_before_a_command_or_skills_dir(tmp_path, monkeypatch):
+    """OO-58: the historical k3-256k default is retired and must not assemble argv."""
     from scripts.agent_runtime.adapters import kimi as kimi_adapter
 
-    fake_home = tmp_path / "home"
-    fake_home.mkdir()
-    monkeypatch.delenv("KIMI_CODE_HOME", raising=False)
-    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: fake_home)
-    skills_dir = tmp_path / KIMI_PROJECT_SKILLS_RELATIVE
-    skill = skills_dir / "entire-context" / "SKILL.md"
-    skill.parent.mkdir(parents=True)
-    skill.write_text("---\nname: entire-context\ndescription: recall\n---\n", encoding="utf-8")
-
-    plan = _build(tmp_path, monkeypatch)
-
-    assert plan.cmd.count("--skills-dir") == 1
-    assert plan.cmd[plan.cmd.index("--skills-dir") + 1] == str(skills_dir.resolve())
+    with (
+        patch.object(kimi_adapter, "_resolve_kimi_binary") as resolve_binary,
+        patch.object(kimi_adapter, "_resolve_kimi_skills_dirs") as resolve_skills,
+        pytest.raises(ValueError, match="is retired in the model catalog"),
+    ):
+        _build(tmp_path, monkeypatch, mode="workspace-write")
+    resolve_binary.assert_not_called()
+    resolve_skills.assert_not_called()
+    assert KIMI_DEFAULT_MODEL == "k3-256k"
+    assert _MODE_FLAGS == {"workspace-write": ()}
 
 
-def test_native_kimi_preserves_existing_project_and_user_skill_roots(tmp_path, monkeypatch):
-    from scripts.agent_runtime.adapters import kimi as kimi_adapter
-
-    project_kimi = tmp_path / ".kimi-code" / "skills"
-    project_shared = tmp_path / KIMI_PROJECT_SKILLS_RELATIVE
-    fake_home = tmp_path / "home"
-    user_kimi = fake_home / ".kimi-code" / "skills"
-    user_generic = fake_home / ".agents" / "skills"
-    for directory in (project_kimi, project_shared, user_kimi, user_generic):
-        directory.mkdir(parents=True)
-    monkeypatch.delenv("KIMI_CODE_HOME", raising=False)
-    monkeypatch.setattr(kimi_adapter.Path, "home", lambda: fake_home)
-
-    plan = _build(tmp_path, monkeypatch)
-    configured_roots = [plan.cmd[index + 1] for index, value in enumerate(plan.cmd) if value == "--skills-dir"]
-
-    assert configured_roots == [
-        str(project_kimi),
-        str(project_shared.resolve()),
-        str(user_kimi),
-        str(user_generic),
-    ]
-
-
-def test_native_kimi_omits_default_skills_flag_when_canonical_directory_is_missing(tmp_path, monkeypatch):
-    plan = _build(tmp_path, monkeypatch)
-
-    assert "--skills-dir" not in plan.cmd
-
-
-def test_native_kimi_skills_override_is_explicit_deduplicated_and_can_disable_default(tmp_path, monkeypatch):
-    (tmp_path / KIMI_PROJECT_SKILLS_RELATIVE).mkdir(parents=True)
-    override = tmp_path / "custom-skills"
-    override.mkdir()
-
-    configured = _build(
-        tmp_path,
-        monkeypatch,
-        tool_config=admitted_tool_config(tmp_path, {"kimi_skills_dirs": [str(override), str(override)]}),
-    )
-    disabled = _build(tmp_path, monkeypatch, tool_config={"kimi_skills_dirs": []})
-
-    assert configured.cmd.count("--skills-dir") == 1
-    assert configured.cmd[configured.cmd.index("--skills-dir") + 1] == str(override)
-    assert "--skills-dir" not in disabled.cmd
-
-
-def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monkeypatch):
-    native = _build(tmp_path, monkeypatch)
+def test_kimicc_harness_opt_in_refuses_the_retired_historical_pin(tmp_path, monkeypatch):
+    """OO-58: kimicc stays opt-in, and its historical pin is refused before the wrapper argv."""
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-
-    kimicc = KimiAdapter().build_invocation(
-        prompt="Inspect the target.",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model=None,
-        task_id="kimi-kimicc-test",
-        session_id=None,
-        tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
+    probed: list[str] = []
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: probed.append("probed"),
     )
 
-    assert native.cmd[0] == str(tmp_path / "kimi")
-    assert native.cmd[native.cmd.index("-m") + 1] == "kimi-code/k3-256k"
-    assert kimicc.cmd[0].endswith("scripts/agent_runtime/kimicc_headless.sh")
-    # An omitted kimicc model is the catalog default (kimi-code/k3 → alias k3).
-    # Full k3 injects --effort high. Native kimi still defaults to k3-256k.
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiAdapter().build_invocation(
+            prompt="Inspect the target.",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id="kimi-kimicc-test",
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
+        )
     assert KimiccHarness.default_model == "kimi-code/k3"
-    assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3"
-    assert kimicc.cmd[kimicc.cmd.index("--effort") + 1] == "high"
-    assert kimicc.metadata["harness"] == "kimicc"
-    assert kimicc.env_overrides["KIMICC_CLAUDE_BIN"] == str(claude)
-    assert kimicc.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
-    assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
+    assert probed == []
 
 
 def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monkeypatch):
@@ -160,7 +95,7 @@ def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monk
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    with pytest.raises(ValueError, match="not a routable kimicc model"):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
         KimiccHarness().build_invocation(
             prompt="Inspect the target.",
             mode="workspace-write",
@@ -172,68 +107,43 @@ def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monk
         )
 
 
-def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_path, monkeypatch):
+@pytest.mark.parametrize("model", ["k3", "k2.7", None])
+def test_kimicc_effort_overrides_never_build_a_retired_model(tmp_path, monkeypatch, model):
+    """OO-58: effort flags do not revive a retired Kimi id."""
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-
-    native_k3 = _build(tmp_path, monkeypatch, model="k3", effort="high")
-    default = KimiccHarness().build_invocation(
-        prompt="Inspect the target.",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimi-kimicc-default-effort",
-        session_id=None,
-        tool_config=admitted_tool_config(tmp_path),
-    )
-    override = KimiccHarness().build_invocation(
-        prompt="Inspect the target.",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimi-kimicc-override-effort",
-        session_id=None,
-        tool_config=admitted_tool_config(tmp_path),
-        effort="max",
-    )
-    k2_7 = KimiccHarness().build_invocation(
-        prompt="Inspect the target.",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="k2.7",
-        task_id="kimi-kimicc-k2-7-effort",
-        session_id=None,
-        tool_config=admitted_tool_config(tmp_path),
-    )
-
-    # Operator 2026-08-13: native dispatch no longer forces max; effort is
-    # omitted unless the caller passes it explicitly.
     assert KIMI_DEFAULT_EFFORT is None
-    assert "--effort" not in native_k3.cmd
-    assert default.cmd[default.cmd.index("--effort") + 1] == "high"
-    assert default.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
-    assert override.cmd[override.cmd.index("--effort") + 1] == "max"
-    assert override.env_overrides["KIMICC_EFFORT_LEVEL"] == "max"
-    assert "--effort" not in k2_7.cmd
-    assert "KIMICC_EFFORT_LEVEL" not in k2_7.env_overrides
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiccHarness().build_invocation(
+            prompt="Inspect the target.",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=model,
+            task_id="kimi-kimicc-effort",
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path),
+            effort="max",
+        )
 
 
 def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
-    claude = tmp_path / "claude"
-    claude.write_text("#!/bin/sh\n", encoding="utf-8")
-    claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    plan = KimiccHarness().build_invocation(
-        prompt="Inspect the target.",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimi-kimicc-parser",
-        session_id=None,
-        tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
-    )
+    """The parser still reads a kimicc plan. Building one from a retired id is refused."""
+    del monkeypatch
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiccHarness().build_invocation(
+            prompt="Inspect the target.",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimi-kimicc-parser",
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
+        )
+    plan = InvocationPlan(cmd=["kimicc"], cwd=tmp_path, metadata={"harness": "kimicc"})
 
     parsed = KimiAdapter().parse_response(
         stdout=json.dumps({"type": "result", "result": "KimiCC response"}),
@@ -255,35 +165,30 @@ def _kimicc_ready(tmp_path, monkeypatch):
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
 
 
-def test_kimicc_accepts_delegate_attempt_keys_on_workspace_write(tmp_path, monkeypatch):
+def test_kimicc_delegate_attempt_keys_do_not_launch_a_retired_model(tmp_path, monkeypatch):
+    """OO-58: admitted tool keys still meet the retired-model refusal before argv."""
     _kimicc_ready(tmp_path, monkeypatch)
-    plan = KimiccHarness().build_invocation(
-        prompt="implement",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimicc-write",
-        session_id=None,
-        tool_config=admitted_tool_config(
-            tmp_path,
-            {
-                "harness": "kimicc",
-                "mcp_config_path": str(tmp_path / "writer.mcp.json"),
-                "strict_mcp_config": True,
-                "mcp_server_names": ["sources"],
-                "attempt_id": "att-1",
-                "codex_home_override": str(tmp_path / "codex-home"),
-                "agy_home_override": str(tmp_path / "agy-home"),
-            },
-        ),
-    )
-
-    assert plan.cmd[plan.cmd.index("--mode") + 1] == "workspace-write"
-    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(tmp_path / "writer.mcp.json")
-    assert "--strict-mcp-config" in plan.cmd
-    assert "TMPDIR" not in plan.env_overrides
-    assert "codex_home_override" not in plan.cmd
-    assert "agy_home_override" not in plan.cmd
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiccHarness().build_invocation(
+            prompt="implement",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimicc-write",
+            session_id=None,
+            tool_config=admitted_tool_config(
+                tmp_path,
+                {
+                    "harness": "kimicc",
+                    "mcp_config_path": str(tmp_path / "writer.mcp.json"),
+                    "strict_mcp_config": True,
+                    "mcp_server_names": ["sources"],
+                    "attempt_id": "att-1",
+                    "codex_home_override": str(tmp_path / "codex-home"),
+                    "agy_home_override": str(tmp_path / "agy-home"),
+                },
+            ),
+        )
 
 
 def test_kimicc_refuses_a_review_attempt_and_read_only_lease_keys(tmp_path, monkeypatch):
@@ -299,7 +204,7 @@ def test_kimicc_refuses_a_review_attempt_and_read_only_lease_keys(tmp_path, monk
             session_id=None,
             tool_config=admitted_tool_config(tmp_path, {"review_id": "rev-1"}),
         )
-    with pytest.raises(ValueError, match="unsupported tool_config keys"):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
         KimiccHarness().build_invocation(
             prompt="implement",
             mode="workspace-write",
@@ -335,29 +240,58 @@ def test_kimicc_refuses_read_only_and_danger_before_any_probe(tmp_path, monkeypa
     assert not hasattr(kimicc_adapter, "READ_ONLY_REVIEW_ALLOWED_TOOLS")
 
 
-def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):
-    for requested, resolved in (
-        ("k3", "kimi-code/k3"),
-        ("kimi-k3", "kimi-code/k3"),
-        ("kimi-k3[1m]", "kimi-code/k3"),
-        ("k3-256k", "kimi-code/k3-256k"),
-        ("kimi-k3-256k", "kimi-code/k3-256k"),
-        ("kimi-code/k3-256k", "kimi-code/k3-256k"),
-        ("k2.7-coding", "kimi-code/kimi-for-coding"),
-        ("k2.7", "kimi-code/kimi-for-coding"),
-        ("kimi-for-coding", "kimi-code/kimi-for-coding"),
-        ("kimi-k2.7-code", "kimi-code/kimi-for-coding"),
-        ("k2.7-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
-        ("k2.7-highspeed", "kimi-code/kimi-for-coding-highspeed"),
-        ("kimi-for-coding-highspeed", "kimi-code/kimi-for-coding-highspeed"),
-        ("kimi-k2.7-code-highspeed", "kimi-code/kimi-for-coding-highspeed"),
-        ("kimi-code/k3", "kimi-code/k3"),
-    ):
-        plan = _build(tmp_path, monkeypatch, model=requested)
-        assert plan.cmd[plan.cmd.index("-m") + 1] == resolved
+def test_kimicc_unknown_tool_config_keys_meet_the_retired_model_first(tmp_path, monkeypatch):
+    """OO-58: model retirement is before the unknown-key check, and still builds no argv."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiccHarness().build_invocation(
+            prompt="critique",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimicc-unknown",
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path, {"some_future_field": "no"}),
+        )
 
+
+@pytest.mark.parametrize(
+    "requested",
+    [
+        "k3",
+        "kimi-k3",
+        "kimi-k3[1m]",
+        "k3-256k",
+        "kimi-k3-256k",
+        "kimi-code/k3-256k",
+        "k2.7-coding",
+        "k2.7",
+        "kimi-for-coding",
+        "kimi-k2.7-code",
+        "k2.7-coding-highspeed",
+        "k2.7-highspeed",
+        "kimi-for-coding-highspeed",
+        "kimi-k2.7-code-highspeed",
+        "kimi-code/k3",
+    ],
+)
+def test_short_names_and_full_aliases_are_refused_as_retired(tmp_path, monkeypatch, requested):
+    """OO-58: aliases still resolve, then the catalog refusal stops the command."""
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build(tmp_path, monkeypatch, model=requested)
+
+
+def test_unknown_model_is_still_unsupported_rather_than_retired(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="unsupported Kimi model"):
         _build(tmp_path, monkeypatch, model="k1-classic")
+
+
+def test_effort_does_not_launch_a_retired_kimi_model(tmp_path, monkeypatch, caplog):
+    caplog.set_level(logging.WARNING)
+    assert KIMI_DEFAULT_EFFORT is None
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build(tmp_path, monkeypatch, model="k3", effort="high")
+    assert "max effort only" not in caplog.text
 
 
 def test_empty_stdout_with_rc_zero_fails():
@@ -481,28 +415,18 @@ def test_kimi_mcp_request_fails_closed_without_per_call_selector():
     assert diagnostics["missing_server_names"] == ["sources"]
 
 
-def test_invocation_telemetry_is_model_aware_and_reports_native_cli_version(tmp_path, monkeypatch):
-    k3_plan = _build(tmp_path, monkeypatch, model="k3", effort="medium")
-    with patch("scripts.agent_runtime.telemetry.kimi_cli_version", return_value="0.26.0"):
-        k3_telemetry = resolve_invocation_telemetry(
-            agent_name="kimi",
-            plan=k3_plan,
-            requested_model=None,
-            requested_effort="medium",
-        )
+def test_invocation_telemetry_is_not_reached_for_a_retired_model(tmp_path, monkeypatch):
+    """OO-58: a retired id raises before telemetry can label a command that was not built."""
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build(tmp_path, monkeypatch, model="k3", effort="medium")
+    with pytest.raises(ValueError, match="kimi-code/k3-256k"):
+        _build(tmp_path, monkeypatch, effort="medium")
 
-    assert k3_telemetry.model == "kimi-code/k3"
-    assert k3_telemetry.effort == "max"  # K3 is always-max; caller request never mislabeled
-    assert k3_telemetry.cli_version == "0.26.0"
 
-    coding_plan = _build(tmp_path, monkeypatch, effort="medium")  # default: k3-256k
-    with patch("scripts.agent_runtime.telemetry.kimi_cli_version", return_value="0.26.0"):
-        coding_telemetry = resolve_invocation_telemetry(
-            agent_name="kimi",
-            plan=coding_plan,
-            requested_model=None,
-            requested_effort="medium",
-        )
-
-    assert coding_telemetry.model == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
-    assert coding_telemetry.effort == "not-exposed"  # k3-256k effort is not forced by the adapter
+def test_default_model_names_the_retired_pin_and_does_not_launch(tmp_path, monkeypatch):
+    """The historical default stays k3-256k so the refusal names it. It is not executed."""
+    assert KIMI_DEFAULT_MODEL == "k3-256k"
+    with pytest.raises(ValueError, match=r"model 'k3-256k' is retired in the model catalog \(kimi-code/k3-256k\)"):
+        _build(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match=r"model 'k3' is retired in the model catalog \(kimi-code/k3\)"):
+        _build(tmp_path, monkeypatch, model="k3", effort="max")

@@ -5,6 +5,10 @@ Area: `atlas-practice` (Stream: `atlas-practice`)
 Parent Issue: #8156 · Parent Epic: #4387
 Authority: Frozen consensus of designated advisors Fable (`claude-fable-5-1`) and Astra/Sol (`gpt-6-astra`)
 
+OO-58 (#11327) retires every Kimi model. Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. The role
+rows below are that frozen assignment record, not a current route. Linguistic
+review uses an active catalog seat.
+
 ---
 
 ## 1. Executive Summary & Objective

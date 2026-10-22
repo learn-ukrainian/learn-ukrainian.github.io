@@ -130,3 +130,50 @@ def test_sha_input_cannot_expand_other_workflow_permissions(workflow):
             inputs={"sha": SHA},
             runner=lambda *args, **kwargs: pytest.fail("send"),
         )
+
+
+@pytest.mark.parametrize("value", [True, False])
+def test_coverage_workflow_admits_typed_contexts_boolean(value, synthetic_opsec):
+    calls = []
+
+    def sender(args, **kwargs):
+        calls.append(args)
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    assert (
+        pub.publish(
+            "workflow-run",
+            repo="unit/public",
+            workflow="coverage-ref.yml",
+            ref="main",
+            inputs={"sha": SHA, "contexts": value},
+            runner=sender,
+        ).returncode
+        == 0
+    )
+    assert calls == [
+        [
+            "gh",
+            "workflow",
+            "run",
+            "coverage-ref.yml",
+            "--repo",
+            "unit/public",
+            "--ref=main",
+            f"--raw-field=sha={SHA}",
+            f"--raw-field=contexts={str(value).lower()}",
+        ]
+    ]
+
+
+@pytest.mark.parametrize("contexts", ["true", "false", 1, 0, None])
+def test_contexts_must_be_a_json_boolean(contexts):
+    with pytest.raises(gate.PublishBlocked, match=r"^OPSEC: invalid publisher field inputs\.$"):
+        pub.publish(
+            "workflow-run",
+            repo="unit/public",
+            workflow="coverage-ref.yml",
+            ref="main",
+            inputs={"sha": SHA, "contexts": contexts},
+            runner=lambda *args, **kwargs: pytest.fail("invalid inputs reached transport"),
+        )

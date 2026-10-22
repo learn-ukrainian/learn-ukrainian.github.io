@@ -98,8 +98,6 @@ INTERACTIVE = {
     "start-codex.sh": ("codex", "codex"),
     "start-gemini.sh": ("gemini", "gemini"),
     "start-grok.sh": ("grok", "grok"),
-    "start-kimi.sh": ("kimi", "kimi"),
-    "start-kimicc.sh": ("kimi", "kimicc"),
     "start-glm.sh": ("glm", "glm"),
     "start-glmcc.sh": ("glm", "glmcc"),
     "scripts/start-bio-driver.sh": ("claude", "bio"),
@@ -446,8 +444,6 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
         # The provider-derived name would replay start-glm.sh and export the flag.
         ("start-glmcc.sh", "unset", "claude-code", []),
         ("start-glm.sh", "1", "claude-code", []),
-        ("start-kimicc.sh", "unset", "claude-code", []),
-        ("start-kimi.sh", "unset", "kimi-code", []),
         ("scripts/start-bio-driver.sh", "unset", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
     ],
 )
@@ -468,7 +464,6 @@ def test_route_identity_survives_reentry(
 @pytest.mark.parametrize(
     ("wrapper", "mode"),
     [
-        ("start-kimicc.sh", "interactive"),
         ("scripts/start-bio-driver.sh", "interactive"),
         ("start-claude-cto.sh", "driver"),
     ],
@@ -576,9 +571,18 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
 
 
 def test_entry_point_must_run_its_listed_provider_and_mode(tmp_path: Path) -> None:
+    """A wrapper must refuse a provider that does not match its filename.
+
+    The stand-in is an active provider. Kimi's default model is retired and
+    refused in ``launcher_normalize_model``, before this scope gate.
+    """
     root, env = _checkout(tmp_path)
     wrapper = root / "start-glmcc.sh"
-    wrapper.write_text(wrapper.read_text().replace("launcher_main glm interactive", "launcher_main kimi interactive"))
+    wrapper.write_text(
+        wrapper.read_text().replace(
+            "launcher_main glm interactive", "launcher_main grok interactive"
+        )
+    )
     result = _launch(root, env, "start-glmcc.sh")
     assert result.returncode == 6, result.stdout + result.stderr
     assert "DRIVER_SCOPE_REFUSED reason=entrypoint-mismatch;" in result.stderr

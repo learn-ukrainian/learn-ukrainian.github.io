@@ -6,7 +6,7 @@ Current operational reference for repo-local scripts and agent workflows.
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
 - Typed sub-issue removal: `.venv/bin/python -m scripts.publish issue-unlink --repo owner/repo --parent-id PARENT_NODE_ID --child-id CHILD_NODE_ID` (#9647)
 - This document intentionally omits retired pipelines and legacy script paths
-- **Seat onboarding (ownership matrix, ACPX boundary, Kimi native vs KimiCC, Buzz deferral):**
+- **Seat onboarding (ownership matrix, ACPX boundary, Kimi routes retired, Buzz deferral):**
   [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md)
 
 Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
@@ -185,8 +185,8 @@ Project-local wrappers for interactive agent sessions:
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
-./start-kimi.sh        # native Kimi Code (default harness)
-./start-kimicc.sh      # Claude Code routed to Kimi (compat → start-kimi --harness claude-code)
+./start-kimi.sh        # retired catalog ids; the wrapper refuses (OO-58)
+./start-kimicc.sh      # retired catalog ids; the wrapper refuses (OO-58)
 ./start-glm.sh         # Claude Code routed to Z.AI GLM
 ./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
@@ -194,14 +194,9 @@ Project-local wrappers for interactive agent sessions:
 ./start-grok-driver.sh --epic devops
 ```
 
-Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
-coding lane via `scripts/delegate.py dispatch --agent kimi --mode workspace-write` (web, UI
-and backend coding only). The bridge is not a Kimi route: it refuses every Kimi recipient,
-ask, inbox and discussion. Interactive native
-Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
-`~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
-Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
-Use `./start-kimicc.sh` or `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
+Kimi models are retired (OO-58, #11327). Do not dispatch `--agent kimi` or start a Kimi model.
+The bridge refuses every Kimi recipient, ask, inbox and discussion. Launcher names remain
+so a short name resolves and is refused.
 
 ### Rules core loading
 
@@ -210,12 +205,9 @@ Every launcher starts its seat with the rules core
 `core-curriculum.md`), read offline by `scripts/lib/rules_core.py` through
 `scripts/lib/rules_core.sh`. The core always comes from the checkout the code
 runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
-native Codex `-c developer_instructions=…`, Grok `--rules`, native Kimi an
-`--agent-file` that keeps its default prompt; AGY, Cursor, OpenCode and Hermes
-receive the core at the head of the initial prompt. Native Kimi refuses
-`--continue`, `--session`, `--resume`, `--agent` and `--agent-file` (exit 2): a
-resumed or custom agent would not carry the core, and Kimi seats take fresh
-web/UI/backend coding tasks. `delegate.py dispatch`
+native Codex `-c developer_instructions=…`, Grok `--rules`; AGY, Cursor, OpenCode and Hermes
+receive the core at the head of the initial prompt. A Kimi launcher exits 2 on the catalog
+retirement before rules attachment, so it never starts a coding task. `delegate.py dispatch`
 (`--rules-seat core|content`, default `$LU_RULES_SEAT`), ACP calls and the
 legacy bridge prompts prepend the same block unless the prompt already starts
 with it. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
@@ -231,8 +223,7 @@ and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
 
 ### Parallel routes and original Claude config
 
-`start-codex.sh --harness claude-code`,
-`start-kimicc.sh` / `start-kimi.sh --harness claude-code`, and
+`start-codex.sh --harness claude-code` and
 `start-glmcc.sh` / `start-glm.sh` route through process-scoped
 configuration. They **never rewrite** the live `~/.claude/settings.json`. That means:
 
@@ -272,61 +263,13 @@ repository.
 
 ### Kimi through Claude Code
 
-`start-kimicc.sh` (or `start-kimi.sh --harness claude-code`) is **Claude Code UI + Kimi models** (not the native Kimi TUI).
-It is a **bounded explicit opt-in**. Native Kimi Code remains the **default**
-interactive and headless/fleet route. On KimiCC, **K3 defaults to effort
-`high`**; native Kimi K3 stays **max-only**. Do not collapse those policies.
+Retired (OO-58, #11327). `start-kimi.sh` and `start-kimicc.sh` remain so a short
+name resolves, then the catalog refusal exits 2. There is no default Kimi model,
+no KimiCC opt-in, and no headless `--agent kimi` route. Do not log in or point a
+job at these wrappers. Historically the Claude Code UI reached Kimi models through
+an isolated config and an explicit Kimi credential, never an ambient
+`ANTHROPIC_AUTH_TOKEN`. Every Kimi catalog id now has empty transports.
 See [`agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
-
-Use KimiCC when you want Claude Code ergonomics with K3 or K2.7 in a second
-terminal while native Claude runs in the first.
-
-```bash
-./start-kimicc.sh                                    # coding endpoint + isolated config
-./start-kimicc.sh --model k2.7
-./start-kimicc.sh --endpoint platform
-./start-kimicc.sh --no-isolate-config
-./start-kimi.sh --harness claude-code                # same route, explicit harness
-```
-
-**Defaults (operator lane):** `--endpoint coding` (subscription),
-`--isolate-config` (CLAUDE_CONFIG_DIR=$HOME/.claude-kimicc), K3 effort **`high`**
-on the KimiCC route. Interactive launchers reject `--epic`; use a certified
-provider driver for lease-bound work. Overrides: `--endpoint platform`,
-`--no-isolate-config`; env: `KIMICC_AUTH_TOKEN`, `MOONSHOT_API_KEY`, or
-`KIMI_API_KEY` (and supported KimiCC effort overrides when set).
-
-**Subscription auth (no platform API key):** run `kimi login` once — the
-launcher picks up the OAuth credential automatically
-(`scripts/lib/kimi_coding_oauth.py`, refresh_token grant against
-`https://auth.kimi.com/api/oauth/token`). OAuth access tokens live ~15 minutes;
-with the default isolated config an `apiKeyHelper` is written into the
-**isolated** settings.json and Claude Code re-mints the token on a schedule
-(`CLAUDE_CODE_API_KEY_HELPER_TTL_MS`, default 300000). With
-`--no-isolate-config` the token is fixed at launch — fine for short sessions.
-`LAUNCHER_DRY_RUN=1` validates the route, prints its credential source, and
-exits before launch. An ambient `ANTHROPIC_AUTH_TOKEN` is never a Kimi credential.
-
-The same helper also keeps CodexBar's Kimi tile alive (CodexBar never
-refreshes CLI-owned credentials): the launchd agent
-`~/Library/LaunchAgents/com.learnukrainian.kimi-coding-oauth.plist` runs
-`scripts/lib/kimi_coding_oauth.py token` every 10 minutes (stdout to
-/dev/null, errors to `~/.kimi-code/logs/oauth-refresh.log`). Manage with
-`launchctl bootout gui/$(id -u)/com.learnukrainian.kimi-coding-oauth` (unload)
-and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.kimi-coding-oauth.plist` (load).
-
-| Model alias | Platform model id | Context | Auto-compact |
-| --- | --- | --- | --- |
-| `k3` (default) | `kimi-k3[1m]` | 1 048 576 | 996 147 |
-| `k2.7` | `kimi-k2.7-code` | 262 144 | 249 036 |
-| `k2.7-highspeed` | `kimi-k2.7-code-highspeed` | 262 144 | 249 036 |
-
-**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py dispatch
---agent kimi --mode workspace-write`; the bridge is not a Kimi route). Do not point headless
-jobs at kimicc.
-
-K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
-rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
 
 ### GLM through Claude Code (Z.AI)
 
@@ -986,12 +929,14 @@ work uses AGY; the legacy Gemini CLI route is unsupported.
 
 ```bash
 .venv/bin/python scripts/delegate.py dispatch \
-  --agent {codex|claude|agy|grok|grok-build|grok-hermes|kimi|deepseek|cursor} \
+  --agent {codex|claude|agy|grok|grok-build|grok-hermes|deepseek|cursor} \
   --task-id <id> \
   --prompt-file <file> \
   --worktree \
   --mode danger
 ```
+
+`kimi` is not in that list. Every Kimi id is retired (OO-58, #11327) and dispatch refuses it.
 
 Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ai_agent_bridge` channel bridge, `ask-*`).
 
@@ -1563,10 +1508,10 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/audit/curriculum_manifest_canary.py` | SHA-256 integrity and drift canary for published curriculum; regenerates or verifies canonical file hashes | `.venv/bin/python scripts/audit/curriculum_manifest_canary.py {--check\|--write}` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
-| `scripts/ci/coverage_diff.py` | Compare lost executed lines and arcs in paired branch coverage reports from `coverage-ref.yml` (#11226, PR #11343) | `.venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json` |
-| `scripts/ci/coverage_ref.py` | Record selected, completed, failed and crashed test IDs; combine valid branch data even after failures. `manifest.json` separates measurement `complete` from `tests_passed`; incomplete reports retain available data but cannot certify a comparison | `.venv/bin/python scripts/ci/coverage_ref.py combine --input ci-artifacts/shards --output ci-artifacts/combined --sha <40-hex> --matrix-result success` |
+| `scripts/ci/coverage_diff.py` | Compare lost executed lines and arcs in paired branch coverage reports from `coverage-ref.yml` (#11226, PR #11343). With `--baseline-data` it names the baseline tests covering each lost line/arc lists every deleted test covering a loss in non-dead production files (`candidate_tests`), picks a small `restore_set` from them with greedy set cover (within ln(n) + 1 of the minimum), and reports losses no deleted test covered as `unrestorable_identities` | `.venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json --baseline-data baseline/.coverage --git-range <base>..<head>` |
+| `scripts/ci/coverage_ref.py` | Record selected, completed, failed and crashed test IDs; combine valid branch data even after failures. `manifest.json` separates measurement `complete` from `tests_passed` and lists non-Python measured paths as non-reportable. Set `COVERAGE_REF_CONTEXTS=true` to retain pytest-cov per-test contexts | `.venv/bin/python scripts/ci/coverage_ref.py combine --input ci-artifacts/shards --output ci-artifacts/combined --sha <40-hex> --matrix-result success` |
 | `scripts/ci/coverage_ref_environment.py` | Install coverage storage isolation in the disposable coverage-ref runner venv only. Source write guards remain active; never install in a shared interpreter | `.venv/bin/python scripts/ci/coverage_ref_environment.py` |
-| `scripts.publish workflow-run` | Dispatch `coverage-ref.yml` with exactly one required 40-hex `sha` input; other admitted workflows accept no inputs | `.venv/bin/python -m scripts.publish workflow-run --workflow coverage-ref.yml --ref main --inputs '{"sha":"<40 hex>"}'` |
+| `scripts.publish workflow-run` | Dispatch `coverage-ref.yml` with a required 40-hex `sha` and optional typed boolean `contexts`; other admitted workflows accept no inputs | `.venv/bin/python -m scripts.publish workflow-run --workflow coverage-ref.yml --ref main --inputs '{"sha":"<40 hex>","contexts":true}'` |
 | `scripts/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16` |
 | `scripts/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
 | `scripts/ci/reuse_green_run.py` | Merge queue: reuse a green full run (pytest, secret scan, Checks, Frontend) of the identical tree, bound to the queued PR, its tested merge commit and the complete job inventory of one attempt, else run everything | run by ci.yml's `reuse` job |
@@ -2071,7 +2016,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
-| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi/K3, which takes web, UI and backend coding only; feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
+| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi/K3; retired, OO-58; feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |

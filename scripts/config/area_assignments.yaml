@@ -37,7 +37,7 @@ assignments:
       - cursor-devops
       - muse-devops
   monitor:
-    # Human name: Ops API + UI (#7919). Kimi may implement UI code (dispatch --agent kimi, web/UI/backend paths only; design and review go to other seats);
+    # Human name: Ops API + UI (#7919). Kimi models are retired (OO-58, #11327); do not dispatch them.
     # Muse and Grok hold monitor slots (Grok added by the operator order of 2026-10-16, #10835).
     # Other launcher-minted *-monitor names drain their bare provider inbox (#7597).
     driver_agent_type: infra-orchestrator

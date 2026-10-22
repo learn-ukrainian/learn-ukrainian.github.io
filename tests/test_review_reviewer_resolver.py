@@ -1570,9 +1570,9 @@ _AUTHORITY_DOWN = {
 def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallback):
     """Whole-ladder choices preserve other models' suitability at every risk."""
     if fallback:
-        if author == "grok-4.7" or state == "all-down":
+        if author == "grok-4.7" or state in {"all-down", "native-near-cap"}:
             expected = None
-        elif state in {"native-near-cap", "native-down"}:
+        elif state == "native-down":
             # Cursor's allowlist-union independence excludes Moonshot authors.
             expected = None if author == "kimi-code/k3" else "grok-4.7-cursor-fallback"
         else:

@@ -40,7 +40,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
-- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; native grok for plan and create, operator 2026-10-16, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi takes web, UI and backend coding only, never plan, review or design).
+- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; native grok for plan and create, operator 2026-10-16, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi is retired (OO-58, #11327) and is not a seat).
 - Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = qualified toolful approval before PR, then `record_cf_verdict.py` binding + same-head CI (drive-epic §6–§7).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
@@ -181,7 +181,7 @@ Every epic driver session (any harness) MUST:
 ## Operator launch surface (#5632)
 
 - Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
-  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5-1|claude-sonnet-5-5]`,
+  `./start-claude-driver.sh --epic <epic> [--model claude-sonnet-5-5]`,
   and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
 - Gemini/AGY (Flash) is not an epic-driver seat (operator decision 2026-10-03, #9584).
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
@@ -203,9 +203,9 @@ Supported fleet seats cold-start through:
 2. **`docs/runbooks/agent-seat-onboarding.md`** — ownership matrix for `discuss`,
    `delegate.py dispatch`, Fleet Comms authority + read-only legacy projections,
    experimental ACPX (default-off/shadow, one read-only/stateless Codex
-   participant), and **Buzz deferred**. Also covers Kimi native (default; K3
-   max-only) vs explicit KimiCC (K3 defaults `high`), rollback, and no-auth
-   fresh-agent smoke.
+   participant), and **Buzz deferred**. Kimi routes are retired (OO-58,
+   #11327): do not select a Kimi model or KimiCC. Also covers rollback and
+   no-auth fresh-agent smoke.
 
 Discussion is never the review of record. **Shielded formal CF (`review-pr` /
 `publish-review-verdict` / sealed `lu-review-*`) is RETIRED** (operator 2026-08-07).
@@ -234,7 +234,7 @@ Never auto-reset branches for review thrash. Do not reintroduce sealed formal CF
 For normal **read-only inter-agent communication**, ACP is the only provider
 transport. Fleet launchers make ordinary (non-review) `ask-*` and `discuss`
 calls that name **2 to 4 distinct enabled seats** use the durable ACP controller:
-Codex, Grok, Claude, Cursor, Pool, AGY, GLM, and DeepSeek. Kimi seats are never participants (web, UI and backend coding only; the runtime refuses them).
+Codex, Grok, Claude, Cursor, Pool, AGY, GLM, and DeepSeek. Kimi seats are never participants (retired, OO-58, #11327; the runtime refuses them).
 Any other participant count is rejected
 loudly before a conversation begins. The direct `.venv/bin/python -m
 scripts.fleet_comms acp-discuss` surface remains available to operators.

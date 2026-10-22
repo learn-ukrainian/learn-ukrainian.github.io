@@ -11,7 +11,7 @@
 > **Seat onboarding (canonical ownership matrix):**
 > [`docs/runbooks/agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md) —
 > `discuss` vs `delegate.py` vs fleet-comms/file handoffs vs experimental ACPX vs
-> Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
+> Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 > `ask-* --type review` (shielded `review-pr` RETIRED); fresh-agent smoke.
 
 ---
@@ -907,8 +907,8 @@ Current formal reviewer endpoints are `codex|claude|glm|grok|cursor`; the canoni
 a regular reviewer at every risk with runtime modelUsage attestation; `cursor` is
 formal for its pinned, runtime-attested `grok-4.7-high` seat at every risk
 (operator decision 2026-10-05, #9769). `agy` is a
-recognized request identity that is not formally eligible. Kimi is not a
-reviewer: Kimi seats take web, UI and backend coding only.
+recognized request identity that is not formally eligible. Kimi is retired
+(OO-58, #11327) and is not a reviewer or a coding lane.
 For **Codex/Luna-authored** PRs, use the deterministic routing budget rather
 than default-stacking one provider. An explicit `--model` may select another
 formally eligible model on the requested native route, but still requires

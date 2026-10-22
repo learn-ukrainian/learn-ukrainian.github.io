@@ -56,10 +56,14 @@ def test_absent_or_local_only_branch_refuses_before_admission(branch_repo, monke
     before = branch_repo.snapshot()
     assert delegate.main(_argv(branch=branch, agent=agent)) == 2
     err = capsys.readouterr().err
-    assert err.count("DISPATCH_BRANCH_NOT_FOUND:") == 1
-    assert "does not exist on the canonical remote" in err
-    assert "--branch continues an existing remote branch" in err
-    assert "omit --branch (default: <agent>/<task-id>), optionally with --base" in err
+    if agent == "kimi":
+        assert "retired in the model catalog (kimi-code/k3-256k)" in err
+        assert "DISPATCH_BRANCH_NOT_FOUND:" not in err
+    else:
+        assert err.count("DISPATCH_BRANCH_NOT_FOUND:") == 1
+        assert "does not exist on the canonical remote" in err
+        assert "--branch continues an existing remote branch" in err
+        assert "omit --branch (default: <agent>/<task-id>), optionally with --base" in err
     assert "KIMI CODING-ONLY" not in err and "AUTHORING_REVIEW" not in err
     assert branch_repo.snapshot() == before
 

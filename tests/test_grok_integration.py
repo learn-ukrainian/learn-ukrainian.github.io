@@ -15,8 +15,11 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_delegate_dispatch_accepts_grok_agent_and_alias():
+def test_delegate_dispatch_accepts_grok_agent_and_alias(tmp_path):
     """``--agent grok`` and permanent alias ``--agent grok-build`` parse."""
+    from tests.launcher_sandbox import copy_interactive_launcher_checkout
+
+    copy_interactive_launcher_checkout(tmp_path)
     for agent, task in (
         ("grok", "test-grok-argparse-probe"),
         ("grok-build", "test-grok-build-argparse-probe"),
@@ -25,7 +28,7 @@ def test_delegate_dispatch_accepts_grok_agent_and_alias():
         result = subprocess.run(
             [
                 sys.executable,
-                str(_REPO_ROOT / "scripts" / "delegate.py"),
+                str(tmp_path / "scripts" / "delegate.py"),
                 "dispatch",
                 "--agent",
                 agent,
@@ -39,7 +42,7 @@ def test_delegate_dispatch_accepts_grok_agent_and_alias():
             capture_output=True,
             text=True,
             timeout=30,
-            cwd=str(_REPO_ROOT),
+            cwd=str(tmp_path),
         )
         assert result.returncode == 0, (
             f"delegate dispatch --agent {agent} failed:\nstdout={result.stdout!r}\nstderr={result.stderr!r}"

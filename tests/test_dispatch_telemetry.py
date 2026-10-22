@@ -740,12 +740,16 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
     )
 
 
-def test_kimicc_telemetry_omitted_model_agrees_at_dispatch_and_after_spawn(tmp_path):
+def test_kimicc_telemetry_omitted_model_agrees_at_dispatch_and_after_spawn(tmp_path, monkeypatch):
     """An omitted --model spawns the catalog kimicc default.
 
     Dispatch-time telemetry and the after-spawn plan must record the same
-    model and effort. The default route is full k3, so both say k3 / high.
+    model and effort. The historical fixture's default is full k3, so both
+    say k3 / high; the production catalog refuses this default before spawning.
     """
+    from tests.agent_runtime.adapters.kimi_admitted import install_historical_kimi_catalog
+
+    install_historical_kimi_catalog(tmp_path, monkeypatch)
     plan = InvocationPlan(
         cmd=["kimicc_headless.sh", "--model", "k3", "--effort", "high"],
         cwd=tmp_path,
