@@ -65,6 +65,98 @@ def rows(path):
         return {name: db.execute(f"SELECT * FROM {name} ORDER BY rowid").fetchall() for name in ("cache", "budget")}
 
 
+@pytest.fixture
+def ancestor_cache(cache, tmp_path, monkeypatch, request):
+    parent = tmp_path / "synthetic-parent"
+    parent.mkdir(mode=request.param)
+    # Set only the disposable ancestor explicitly, independent of the host umask.
+    parent.chmod(request.param)
+    directory = parent / "private-cache"
+    cache.parent.rename(directory)
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(directory))
+    assert parent.stat().st_uid == os.geteuid()
+    assert parent.stat().st_mode & 0o777 == request.param
+    assert directory.stat().st_mode & 0o777 == 0o700
+    return directory / cache.name
+
+
+def stored_state(path):
+    with sqlite3.connect(path.as_uri() + "?mode=ro", uri=True) as db:
+        schema = db.execute("SELECT type,name,sql FROM sqlite_schema ORDER BY name").fetchall()
+    typed_rows = {
+        name: [tuple((type(value).__name__, value) for value in row) for row in values]
+        for name, values in rows(path).items()
+    }
+    return schema, typed_rows
+
+
+@pytest.mark.parametrize("ancestor_cache", [0o775], indirect=True)
+@pytest.mark.parametrize("apply", [False, True])
+def test_user_owned_0775_ancestor_refuses_before_sql_without_creation_or_fallback(
+    ancestor_cache, monkeypatch, apply, capsys
+):
+    before = ancestor_cache.read_bytes()
+    original = stored_state(ancestor_cache)
+    directory = ancestor_cache.parent
+    listing = sorted(path.relative_to(directory.parent) for path in directory.parent.rglob("*"))
+
+    def forbidden_connect(*args, **kwargs):
+        pytest.fail("unsafe ancestry opened SQLite or a fallback database")
+
+    # Refusal must precede every SQLite open, including :memory: and other files.
+    with monkeypatch.context() as patch:
+        patch.setattr(maintenance.sqlite3, "connect", forbidden_connect)
+        assert maintenance.main(["--apply"] if apply else []) == 2
+    output = capsys.readouterr()
+    assert json.loads(output.out) == {
+        "outcome": "refused",
+        "reason": "unsafe_path",
+        "eligible": False,
+        "applied": False,
+    }
+    assert output.err == ""
+    assert str(directory.parent) not in output.out
+    assert ancestor_cache.read_bytes() == before
+    assert stored_state(ancestor_cache) == original
+    assert sorted(path.relative_to(directory.parent) for path in directory.parent.rglob("*")) == listing
+    assert sorted(path.name for path in directory.iterdir()) == ["cache.sqlite3"]
+    assert directory.parent.stat().st_mode & 0o777 == 0o775
+
+
+@pytest.mark.parametrize("ancestor_cache", [0o755], indirect=True)
+def test_user_owned_0755_ancestor_allows_report_and_physical_reclaim_preserving_typed_values(ancestor_cache, request):
+    before = ancestor_cache.read_bytes()
+    original = stored_state(ancestor_cache)
+    report = maintenance.maintain()
+    assert report["outcome"] == "report" and report["eligible"] is True and report["applied"] is False
+    assert ancestor_cache.read_bytes() == before
+    assert sorted(path.name for path in ancestor_cache.parent.iterdir()) == ["cache.sqlite3"]
+    applied = maintenance.maintain(apply=True)
+    assert applied["outcome"] == "reclaimed" and applied["eligible"] is True and applied["applied"] is True
+    assert ancestor_cache.stat().st_size < len(before)
+    assert applied["reclaimed_file_bytes"] == len(before) - ancestor_cache.stat().st_size
+    observed = stored_state(ancestor_cache)
+    assert observed == original
+    assert sorted(path.name for path in ancestor_cache.parent.iterdir()) == ["cache.sqlite3"]
+    assert ancestor_cache.parent.parent.stat().st_mode & 0o777 == 0o755
+    request.node.user_properties.append(
+        (
+            "ancestor_prerequisite_probe",
+            json.dumps(
+                {
+                    "proof_role": "supplemental_author_fixture",
+                    "ancestor_mode": "0755",
+                    "report": report,
+                    "apply": applied,
+                    "schema_and_typed_rows_before": hashlib.sha256(repr(original).encode()).hexdigest(),
+                    "schema_and_typed_rows_after": hashlib.sha256(repr(observed).encode()).hexdigest(),
+                    "integrity_check": "ok",
+                }
+            ),
+        )
+    )
+
+
 def test_report_never_prunes_or_changes_file_bytes(cache):
     before = cache.read_bytes()
     result = maintenance.maintain()

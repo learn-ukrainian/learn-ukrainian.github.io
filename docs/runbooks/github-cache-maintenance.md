@@ -50,6 +50,23 @@ directories. The command pins directory and file descriptors and checks target
 identity before SQL and before maintenance. This assumes the current user and
 root do not maliciously replace their own trusted directories during maintenance.
 
+The non-group/world-writable ancestor chain is an operational prerequisite for
+both report and apply. A user-owned `0775` ancestor is refused even when its cache
+child is `0700` and the database is `0600`. Both commands fail closed with the fixed
+reason `unsafe_path`, without opening SQLite, changing permissions or falling back
+to another database. The receipt does not identify the offending ancestor or print
+private paths. A user-owned `0755` ancestor satisfies this mode requirement when
+the remaining ownership, path and database checks also pass.
+
+Before operational maintenance, inspect ownership and permissions locally under
+the existing authorization. Do not publish deployment-specific paths or inspection
+output. Any required live permission correction is a separate operator-controlled
+prerequisite. Agents must report it privately and must not change live permissions
+or bypass the guard. After the operator resolves it, repeat the report to check
+eligibility. Recreated directories can inherit group-write permission from the
+umask, so verify the chain again after recreation. This prerequisite does not
+authorize recursive permission changes or a umask change.
+
 The client creates a rollback-journal database by default. Maintenance accepts
 that existing format without changing journal mode. A WAL-format file or nonempty
 journal/WAL/shared-memory sidecar is refused before SQLite opens it. Reporting
@@ -66,7 +83,11 @@ and measures under that lock. Exclusive locking mode retains the lock across
 writers that prevent exclusive acquisition cause `busy`; there is no retry or
 force. New connections wait or fail according to their own SQLite lock timeout.
 Idle connections without a transaction do not prevent safe maintenance. Existing
-client fallback behavior during contention is unchanged.
+client fallback behavior during contention is unchanged. If maintenance holds the
+lock beyond the client's five-second SQLite timeout, an affected client instance
+can fall back to an in-memory cache and lose shared budget authority for that
+instance. The logical 64 MiB cap does not bound physical file size or maintenance
+time. Account for this consequence when scheduling authorized maintenance.
 
 Each lock wait lasts at most one second, or the requested smaller deadline.
 The default SQL deadline is 30 seconds; accepted values are greater than zero
