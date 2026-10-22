@@ -39,31 +39,53 @@ The CTO inbox worker ID is `claude-cto-<session id>`. Export it for every inbox 
 
 ## 4. Drain the inbox
 
-Drain four recipients: `epics`, `cto`, `claude-cto`, `claude-epics`. For each, claim into
-an empty scratch directory, read every message, record consumption for supervisory
-requests, then ack. Claim without ack lets the lease expire; the delivery is re-queued and
-dead-letters after three attempts, so ack every claim in the same pass.
+Drain four recipients: `epics`, `cto`, `claude-cto`, `claude-epics`. Each message goes
+through this order, and the acknowledgement always comes after the action, never before:
 
-Put the loop in a scratch script, not an inline shell loop (see
-[recipes](recipes.md#primary-checkout-write-guard)). The installed `lu-inbox` helper does
-claim and ack (`command -v lu-inbox`):
+1. **Claim** into an empty scratch directory.
+2. **Consume**: for a `supervisory-request`, record consumption (below).
+3. **Reconcile**: if consumption reports `replay` or `reconciliation`, this delivery was
+   seen before. Inspect the external outcome of the earlier action (PR, dispatch, comment)
+   before doing anything; never repeat it blindly. Consumption proves intent, not completion.
+4. **Act or refuse**: do what the message asks, or decide not to and say why.
+5. **Persist the outcome**: record what was done (or the refusal) where the next session
+   will find it.
+6. **Acknowledge** last.
+
+A crash between an early ack and the action loses the request for good, which is why the
+ack waits. Claim without ack lets the lease expire; the delivery is re-queued and
+dead-letters after three attempts, so finish each claimed message in the same pass.
+
+The installed `lu-inbox` helper does claim and ack (`command -v lu-inbox`):
 
 ```bash
 LU_INBOX_WORKER=claude-cto-<session id> .venv/bin/python <lu-inbox> claim <recipient> <scratch>/in<n>-<recipient>
 LU_INBOX_WORKER=claude-cto-<session id> .venv/bin/python <lu-inbox> ack <scratch>/in<n>-<recipient>
 ```
 
-Between claim and ack, for each `claims.json` entry whose `kind` is `supervisory-request`:
+For each `claims.json` entry whose `kind` is `supervisory-request`, consume, then record the
+outcome after acting; `act_on_supervisory_delivery` and `refuse_supervisory_delivery` record
+the outcome and acknowledge in one step:
 
 ```python
 from scripts.fleet_comms.authority import AuthorityService
-AuthorityService(root=None).record_supervisory_consumption(
+svc = AuthorityService(root=None)
+seen = svc.record_supervisory_consumption(
     c["delivery_id"], worker_id="claude-cto-<session id>",
     fence_token=c["fence_token"], driver_generation="claude-cto-<session id>-g1")
+# seen["replay"] or seen["reconciliation"]: inspect the earlier outcome first.
+# ... act, or decide to refuse ...
+svc.act_on_supervisory_delivery(
+    c["delivery_id"], worker_id="claude-cto-<session id>",
+    fence_token=c["fence_token"], acknowledgment=b"<outcome>")
+# or svc.refuse_supervisory_delivery(..., result=b"<reason>")
 ```
 
-Apply each message (act, answer or record why not) before the next dispatch. An ack that
-prints `"error"` means some deliveries were not acked: rerun the drain.
+`lu-inbox ack` re-acknowledges every entry in the directory without an outcome, which
+conflicts with a supervisory delivery already finished with one. Use it only for a claim
+directory with no supervisory entries; otherwise acknowledge each other entry after acting
+on it with `svc.acknowledge_delivery(c["delivery_id"], worker_id=..., fence_token=c["fence_token"])`.
+An ack that prints `"error"` means some deliveries were not acked: rerun the drain.
 
 ## 5. Re-arm what died with the last session
 

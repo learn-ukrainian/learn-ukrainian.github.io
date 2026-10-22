@@ -39,7 +39,7 @@ memory or this file.
   finding.
 - Never wait for a quota reset. If the dispatcher will not seat a reviewer, open the PR and
   let the automatic review trigger seat it, or use a documented override
-  ([recipes](references/recipes.md#reviewer-seating)).
+  ([recipes](references/recipes.md), § Reviewer seating).
 - Timestamps come only from `date -u`, taken in the same command that uses them.
 
 ## Routing

@@ -6,18 +6,9 @@ the same ground (merge policy, recovery, cleanup) stay authoritative in
 
 ## Primary-checkout write guard
 
-The CTO works from the primary checkout, where a PreToolUse guard
-(`agents_extensions/shared/hooks/guard-primary-checkout-write.py`) blocks any shell write
-whose target it cannot resolve. A variable assigned by `for`, `read`, `$(...)` or inside a
-loop is unknown to it, so an inline loop such as `for r in a b; do mkdir -p "$d/$r"; done`
-is refused as `unresolved_shell_variable`. Any `$'` in a Bash command is refused outright,
-even inside quotes. Ways that work:
-
-- Put loops in a short scratch Python script (or a script file) and run the file; the guard
-  parses the command line, not the script.
-- Or write literal paths; `cd <scratch>` first and use relative names.
-- Do not put `2>&1` inside `cp` arguments, and never put backticks inside an unquoted
-  heredoc (they execute).
+The primary checkout is read-only. Write work happens in a dispatch worktree or the session
+scratchpad. If the guard refuses a command, rewrite it with literal paths or move the work
+into a worktree.
 
 ## Public and private writes
 
@@ -46,14 +37,16 @@ enqueueing by hand.
 
 ## Private PRs and the review trigger
 
-The private review trigger only picks up a private PR whose body carries the lifecycle
-marker with the author's family:
+The private review trigger only picks up a private PR whose body carries the full lifecycle
+marker; a partial marker fails the private repo's lifecycle validation
+(`.github/scripts/pr_lifecycle.py`). All eight fields are required:
 
 ```
-<!-- hramatka-pr-lifecycle:v1 {"author_family": "anthropic"} -->
+<!-- hramatka-pr-lifecycle:v1 {"owner":"<author lane>","state":"review","blocked_by":"none","next_action":"<next step>","author_family":"anthropic","review_receipt":null,"reviewer_family":null,"review_head":null} -->
 ```
 
-Use `openai`, `anthropic`, `xai` and so on for the actual author. The trigger's review
+Use `openai`, `anthropic`, `xai` and so on for the actual author. The three review fields
+stay `null` until the PR is ready. The trigger's review
 prompt carries a capped diff and no checkout. A large private PR therefore comes back
 `NO_VERDICT` or `REVIEW_INFRA_FAILURE` (two attempts per head, then it stops). That is not
 a code finding: seat a toolful reviewer on a detached checkout (next section).
@@ -136,4 +129,6 @@ that builds each `delegate.py dispatch` argv from a table and logs stdout and st
 task; grep the log for `run_nonce=`, `SUBSTITUTE` and `queued behind` to learn the nonce,
 any seat substitution, and queueing. Classify research dimensions for every dispatch
 (`--research-role`, `--research-task-family`, `--research-owned-path`) per the
-CLAUDE.md research-registry duty.
+CLAUDE.md research-registry duty. A dispatch whose `--owned-path` overlaps a live worker's
+owned path waits until that worker releases it; give exact file paths to avoid serializing
+unrelated jobs.
