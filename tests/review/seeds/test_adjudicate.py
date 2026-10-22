@@ -117,6 +117,7 @@ class Case:
         worktree_path: str | None = None,
         output_schema: str | None = None,
         dispatch_args_sha256: Any = _NO_OVERRIDE,
+        evidence_dir: str | None = None,
     ) -> str:
         """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt,
         dispatched read-only from the primary cwd into its automatic detached full checkout).
@@ -128,6 +129,7 @@ class Case:
         task_id = task_id or self.task_id
         sha = prompt_sha256 or hashlib.sha256(self.task_file.read_bytes()).hexdigest()
         expected_worktree = delegate._auto_worktree_path(agent, task_id)
+        evidence_dir = evidence_dir or str(self.env.root / "runtime-tmp" / task_id / "evidence")
         canonical_blocks: list[str] = []
         composed = delegate._compose_dispatch_prompt(
             self.task_file.read_text(encoding="utf-8"),
@@ -141,6 +143,7 @@ class Case:
             rules_seat=None,
             blocks=canonical_blocks,
             agent=agent,
+            evidence_dir=evidence_dir,
         )
         blocks = canonical_blocks if prompt_blocks is None else prompt_blocks
         args_hash = (
@@ -170,6 +173,7 @@ class Case:
             "prompt_sha256": sha,
             "effective_prompt_sha256": effective_prompt_sha256 or hashlib.sha256(composed.encode()).hexdigest(),
             "prompt_blocks": blocks,
+            "evidence_dir": evidence_dir,
             "dispatch_args_sha256": args_hash,
         }
         (self.env.tasks / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")

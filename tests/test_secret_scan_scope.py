@@ -631,7 +631,8 @@ def test_trufflehog_reproducer_ranges_exit_183_and_a_clean_range_exits_0(tmp_pat
 def test_pull_request_keeps_action_defaults_untouched(tmp_path: Path) -> None:
     scope = resolve_scan_scope("pull_request", repo_root=tmp_path)
 
-    assert scope == resolve_scan_scope("workflow_dispatch", repo_root=tmp_path)
+    assert scope.mode == "unchanged"
+    assert scope.reason == "event-not-scoped"
     assert scope.trufflehog_base == ""
     assert scope.trufflehog_head == ""
     assert scope.opsec_range == ""
@@ -659,3 +660,288 @@ def test_is_ancestor_passes_timeout_and_handles_timeout(tmp_path: Path) -> None:
 
     with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "merge-base"], 30)):
         assert secret_scan_scope._is_ancestor(tmp_path, "a" * 40, "b" * 40) is False
+
+
+def _repo_with_dispatch(root: Path) -> tuple[str, str, str]:
+    base, head, unrelated = _repo_with_range(root)
+    _git(root, "update-ref", "refs/remotes/origin/main", base)
+    _git(root, "update-ref", "refs/heads/manual", head)
+    return base, head, unrelated
+
+
+@pytest.mark.parametrize(
+    "mode", [None, "bounded", "full-history-audit", "", "garbage", "FULL-HISTORY-AUDIT", " full-history-audit "]
+)
+def test_dispatch_cli_audit_requires_exact_named_input(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], mode: str | None
+) -> None:
+    """Missing/empty inputs stay bounded; invalid choices fail without scan outputs."""
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    output = tmp_path / "outputs.txt"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("DISPATCH_HEAD_SHA", head)
+    monkeypatch.setenv("DISPATCH_REF", "refs/heads/manual")
+    monkeypatch.setenv("DEFAULT_BRANCH_REF", "refs/heads/main")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    if mode is None:
+        monkeypatch.delenv("DISPATCH_SCAN_MODE", raising=False)
+    else:
+        monkeypatch.setenv("DISPATCH_SCAN_MODE", mode)
+
+    code = secret_scan_scope.main()
+    if mode not in (None, "", "bounded", "full-history-audit"):
+        assert code == 1
+        assert "invalid-dispatch-scan-mode" in capsys.readouterr().err
+        assert not output.exists()
+        return
+    assert code == 0
+    if mode == "full-history-audit":
+        assert output.read_text().splitlines() == [
+            "trufflehog_base=",
+            "trufflehog_head=HEAD",
+            "opsec_range=",
+            "mode=audit",
+            "reason=explicit-full-history-audit",
+        ]
+        assert base in _git(tmp_path, "rev-list", "HEAD").splitlines()
+    else:
+        assert output.read_text().splitlines() == [
+            f"trufflehog_base={base}",
+            f"trufflehog_head={head}",
+            f"opsec_range={base}..{head}",
+            "mode=scoped",
+            "reason=validated-range",
+        ]
+
+
+@pytest.mark.parametrize("event", ["pull_request", "merge_group", "push", "schedule"])
+@pytest.mark.parametrize("mode", ["", "bounded", "full-history-audit", "garbage"])
+def test_dispatch_mode_cannot_change_other_event_scopes(tmp_path: Path, event: str, mode: str) -> None:
+    """An audit input on another event must not bypass that event's range handling."""
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    inputs = dict(
+        repo_root=tmp_path,
+        merge_group_base_sha=base,
+        merge_group_head_sha=head,
+        push_before_sha=base,
+        push_after_sha=head,
+    )
+    expected = resolve_scan_scope(event, **inputs)
+    assert resolve_scan_scope(event, dispatch_scan_mode=mode, **inputs) == expected
+    assert expected.mode != "audit"
+
+
+def test_dispatch_branch_ahead_scans_every_commit_since_merge_base(tmp_path: Path) -> None:
+    """A branch dispatch must not scan all history or omit its middle commit."""
+    base, middle, _ = _repo_with_dispatch(tmp_path)
+    _git(tmp_path, "commit", "--allow-empty", "-m", "tip")
+    head = _git(tmp_path, "rev-parse", "HEAD")
+    _git(tmp_path, "update-ref", "refs/heads/manual", head)
+    main_tip = _commit_tree(
+        tmp_path,
+        "main-only\n",
+        "main advances",
+        "2026-10-21T00:00:00Z",
+        [base],
+        move_head=False,
+    )
+    _git(tmp_path, "update-ref", "refs/remotes/origin/main", main_tip)
+    scope = resolve_scan_scope(
+        "workflow_dispatch",
+        dispatch_head_sha=head,
+        dispatch_ref="refs/heads/manual",
+        default_branch_ref="refs/heads/main",
+        repo_root=tmp_path,
+    )
+
+    assert scope.trufflehog_base == base
+    assert scope.trufflehog_head == head
+    assert scope.opsec_range == f"{base}..{head}"
+    assert _git(tmp_path, "rev-list", scope.opsec_range).splitlines() == [head, middle]
+    assert not _ancestor(tmp_path, main_tip, head)
+
+
+@pytest.mark.parametrize("dispatch_ref", ["refs/heads/manual", "refs/heads/main"])
+def test_dispatch_equal_to_main_reuses_first_parent_window(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    dispatch_ref: str,
+) -> None:
+    """An equal branch or main ref must not yield an empty range or equal endpoints."""
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    _git(tmp_path, "update-ref", "refs/remotes/origin/main", head)
+    monkeypatch.setattr(secret_scan_scope, "SCHEDULE_FIRST_PARENT_STEPS", 1)
+    scope = resolve_scan_scope(
+        "workflow_dispatch",
+        dispatch_head_sha=head,
+        dispatch_ref=dispatch_ref,
+        default_branch_ref="refs/heads/main",
+        repo_root=tmp_path,
+    )
+
+    assert scope.trufflehog_base == base
+    assert scope.trufflehog_head == head
+    assert scope.reason == "ancestry-window"
+
+
+def test_dispatch_main_window_uses_dispatched_sha_when_checkout_has_moved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Main dispatches use the schedule window even when the remote main is behind."""
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    _git(tmp_path, "commit", "--allow-empty", "-m", "later")
+    monkeypatch.setattr(secret_scan_scope, "SCHEDULE_FIRST_PARENT_STEPS", 1)
+    scope = resolve_scan_scope(
+        "workflow_dispatch",
+        dispatch_head_sha=head,
+        dispatch_ref="refs/heads/main",
+        default_branch_ref="refs/heads/main",
+        repo_root=tmp_path,
+    )
+
+    assert scope.reason == "ancestry-window"
+    assert scope.trufflehog_base == base
+    assert scope.trufflehog_head == head
+
+
+def test_dispatch_short_main_history_includes_root_instead_of_skipping(tmp_path: Path) -> None:
+    _, head, _ = _repo_with_dispatch(tmp_path)
+    scope = resolve_scan_scope(
+        "workflow_dispatch",
+        dispatch_head_sha=head,
+        dispatch_ref="refs/heads/main",
+        default_branch_ref="refs/heads/main",
+        repo_root=tmp_path,
+    )
+
+    assert scope.trufflehog_base == ""
+    assert scope.trufflehog_head == head
+    assert scope.reason == "branch-history"
+
+
+@pytest.mark.parametrize("failure", ["unrelated", "missing-base", "shallow"])
+def test_dispatch_incomplete_or_unrelated_history_exits_nonzero_without_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    failure: str,
+) -> None:
+    """Missing ancestry must fail, never fall back to an unscoped scan."""
+    _, head, unrelated = _repo_with_dispatch(tmp_path)
+    if failure == "unrelated":
+        _git(tmp_path, "update-ref", "refs/remotes/origin/main", unrelated)
+    elif failure == "missing-base":
+        _git(tmp_path, "update-ref", "-d", "refs/remotes/origin/main")
+    else:
+        source = tmp_path / "shallow"
+        # file transport makes --depth effective for this real local clone.
+        _git(tmp_path, "clone", "--depth=1", "--no-local", "--branch=manual", tmp_path.as_uri(), str(source))
+        assert _git(source, "rev-parse", "--is-shallow-repository") == "true"
+        _git(source, "update-ref", "refs/remotes/origin/main", head)
+        tmp_path = source
+
+    output = tmp_path / "outputs.txt"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("DISPATCH_HEAD_SHA", head)
+    monkeypatch.setenv("DISPATCH_REF", "refs/heads/manual")
+    monkeypatch.setenv("DEFAULT_BRANCH_REF", "refs/heads/main")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+
+    assert secret_scan_scope.main() == 1
+    assert "secret-scan-scope:" in capsys.readouterr().err
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("dispatch_head_sha", ""),
+        ("dispatch_head_sha", "0" * 40),
+        ("dispatch_head_sha", "not-a-sha"),
+        ("dispatch_head_sha", "f" * 40),
+        ("dispatch_ref", ""),
+        ("default_branch_ref", ""),
+        ("default_branch_ref", "refs/heads/bad..ref"),
+    ],
+)
+def test_dispatch_invalid_inputs_raise_instead_of_scanning_unscoped(tmp_path: Path, field: str, value: str) -> None:
+    _, head, _ = _repo_with_dispatch(tmp_path)
+    inputs = dict(dispatch_head_sha=head, dispatch_ref="refs/heads/manual", default_branch_ref="refs/heads/main")
+    inputs[field] = value
+
+    with pytest.raises(secret_scan_scope.SecretScanScopeError):
+        resolve_scan_scope("workflow_dispatch", repo_root=tmp_path, **inputs)
+
+
+def test_dispatch_rejects_a_nonancestor_returned_by_merge_base(tmp_path: Path) -> None:
+    """Even a malformed merge-base result cannot bypass ancestor validation."""
+    _, head, unrelated = _repo_with_dispatch(tmp_path)
+    real_run = subprocess.run
+
+    def wrong_merge_base(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if args[1] == "merge-base" and "--is-ancestor" not in args:
+            return subprocess.CompletedProcess(args, 0, stdout=unrelated + "\n", stderr="")
+        return real_run(args, **kwargs)  # type: ignore[arg-type]
+
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=wrong_merge_base):
+        with pytest.raises(secret_scan_scope.SecretScanScopeError):
+            resolve_scan_scope(
+                "workflow_dispatch",
+                dispatch_head_sha=head,
+                dispatch_ref="refs/heads/manual",
+                default_branch_ref="refs/heads/main",
+                repo_root=tmp_path,
+            )
+
+
+@pytest.mark.parametrize("failure", ["timeout", "exit", "oserror", "invalid-output"])
+def test_dispatch_git_failure_raises_instead_of_falling_back(tmp_path: Path, failure: str) -> None:
+    _, head, _ = _repo_with_dispatch(tmp_path)
+    real_run = subprocess.run
+
+    def fail_merge_base(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if args[1] == "merge-base" and "--is-ancestor" not in args:
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(args, 30)
+            if failure == "oserror":
+                raise OSError("git unavailable")
+            return subprocess.CompletedProcess(
+                args,
+                128 if failure == "exit" else 0,
+                stdout="invalid\n",
+                stderr="git failed",
+            )
+        return real_run(args, **kwargs)  # type: ignore[arg-type]
+
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=fail_merge_base):
+        with pytest.raises(secret_scan_scope.SecretScanScopeError):
+            resolve_scan_scope(
+                "workflow_dispatch",
+                dispatch_head_sha=head,
+                dispatch_ref="refs/heads/manual",
+                default_branch_ref="refs/heads/main",
+                repo_root=tmp_path,
+            )
+
+
+def test_dispatch_cli_writes_bounded_scanner_and_opsec_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    output = tmp_path / "outputs.txt"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("DISPATCH_HEAD_SHA", head)
+    monkeypatch.setenv("DISPATCH_REF", "refs/heads/manual")
+    monkeypatch.setenv("DEFAULT_BRANCH_REF", "refs/heads/main")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+
+    assert secret_scan_scope.main() == 0
+    lines = output.read_text().splitlines()
+    assert f"trufflehog_base={base}" in lines
+    assert f"trufflehog_head={head}" in lines
+    assert f"opsec_range={base}..{head}" in lines

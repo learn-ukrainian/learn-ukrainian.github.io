@@ -275,11 +275,14 @@ def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: 
         target = target_dir / name
         # SQLite's online backup gives a consistent snapshot even if ingestion
         # has left a WAL beside the primary database. The source is read-only.
+        # One step (pages=-1), because a stepwise backup restarts from the start
+        # whenever another connection writes the source between steps, which can
+        # loop forever on a large, actively written database.
         with (
             contextlib.closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True, timeout=30)) as reader,
             contextlib.closing(sqlite3.connect(target)) as writer,
         ):
-            reader.backup(writer, pages=1024, sleep=0.1)
+            reader.backup(writer, pages=-1)
     return missing
 
 

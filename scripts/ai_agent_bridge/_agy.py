@@ -264,7 +264,7 @@ def _run_changed_path_command(
 
 
 def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, str]:
-    """Return ``(head branch, full head SHA)`` from one ``gh pr view``.
+    """Return a same-repository PR branch and its live canonical head pin.
 
     The SHA is the only commit the path gate and the later dispatch may use.
     A second lookup is a different moment: callers keep this pair and pass the
@@ -273,7 +273,7 @@ def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, s
     number = int(pr_number)
     if number < 1:
         raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
-    from scripts.review.target_resolution import _origin_github_repo
+    from scripts.review.target_resolution import TargetResolutionError, _origin_github_repo, live_canonical_branch_head
 
     slug = _origin_github_repo(Path(repo_root))
     if slug is None:
@@ -311,6 +311,10 @@ def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, s
         branch = validate_plain_branch_name(branch, repo_root=repo_root)
     except UnsafeBranchNameError as exc:
         raise GeminiChangedPathListError(f"PR head branch {branch!r} is not a local branch name: {exc}") from exc
+    try:
+        sha = live_canonical_branch_head(Path(repo_root), branch, repository=slug)
+    except TargetResolutionError as exc:
+        raise GeminiChangedPathListError(str(exc)) from exc
     return branch, sha
 
 

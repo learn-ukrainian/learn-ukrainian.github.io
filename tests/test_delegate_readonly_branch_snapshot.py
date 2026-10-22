@@ -11,10 +11,12 @@ from types import SimpleNamespace
 
 import pytest
 
+from scripts.orchestration.dead_worker_state import capture_worker_identity, worker_liveness
 from tests.test_authoring_review_feasibility import SOL, mini_repo, pin_review_target
 from tests.test_delegate import (
     _fixture_runtime_tmp_root,  # noqa: F401 - shared pytest fixture
     _fixture_worktree_lock_dir,  # noqa: F401 - shared pytest fixture
+    _GuardFakeProc,
     _patch_worker_popen,
     _rendered_attempt_prompt,
     _review_code,
@@ -78,6 +80,22 @@ def review_args(head, **overrides):
         review_author_model="gpt-6.1-sol", review_risk="medium", prompt="Review the exact branch head.",
         **overrides,
     )
+
+
+def test_fabricated_worker_pid_cannot_alias_a_live_process():
+    """#11406: a fake worker PID inside ``pid_max`` can be a live process and block its own settle.
+
+    ``_settle_worktree_reap`` exempts the settling task's own record only when
+    ``_worker_blocks_release`` sees no live worker. A fabricated PID that
+    aliases a live process makes ``worker_liveness`` report the fake worker
+    alive, so the record written as ``done`` still claims the snapshot it
+    created and removal is skipped. The fabricated PID must therefore sit
+    outside the kernel's allocatable range.
+    """
+    pid = _GuardFakeProc().pid
+    pid_max = int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii").strip())
+    assert pid > pid_max, f"fabricated worker pid {pid} can alias a live process (pid_max={pid_max})"
+    assert worker_liveness({"pid": pid, "worker_identity": capture_worker_identity(pid)}) is False
 
 
 @pytest.mark.usefixtures("recorder_matcher")

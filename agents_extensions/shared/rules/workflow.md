@@ -470,14 +470,17 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 `scripts/config/issue_streams.yaml` (streams → epic numbers; mirrored in
 `docs/WORKSTREAMS.md` § Streams). This is how orchestrators stay on track and schedule:
 
+**Only the CTO opens GitHub issues.** Epic and lane drivers report findings to the CTO
+through Fleet Comms; the CTO opens, folds or drops them.
+
 - **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
   issue list. Check `/api/issues/streams` (from `scripts.orchestration.issue_stream_audit`) for drift.
-- **Before filing (#10665)**: search open issues for duplicates by symptom AND by
+- **Before the CTO files (#10665)**: search open issues for duplicates by symptom AND by
   affected file. When an open parent issue has the same outcome, add the finding there as
-  a checklist item. File a new linked issue only when the work needs its own PR or has a
+  a checklist item. Open a new linked issue only when the work needs its own PR or has a
   different outcome, and give it an owner and acceptance criteria. Security work and
   evidence-backed preventive reliability work may keep their own issue.
-- **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
+- **Creating an issue (CTO only)**: link it to its stream epic AT CREATION — native sub-issue
   (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
   and gets flagged at every agent's cold start until adopted.
 - **Finish before starting (#10665)**: a lane with an open PR that has waited more than
@@ -517,8 +520,9 @@ default); unknown attribution or liveness always preserves them.
 
 Every task follows this workflow. No exceptions for non-trivial changes.
 
-1. **Create GH issue** — after the duplicate search in § Work intake, describe the problem
-   and link it to exactly one stream epic.
+1. **Use the CTO's issue** — only the CTO opens GitHub issues; epic and lane drivers
+   report findings to the CTO through Fleet Comms. When the CTO orders a brief with no
+   issue, use that brief as the card. The issue is linked to exactly one stream epic.
 2. **Review the plan** — obtain outside input and incorporate the disposition.
 3. **Finalize stable ACs** — use `- [ ] **AC-ID** — text`, then snapshot their
    applicability, due state, evidence types, and content hash in
@@ -545,7 +549,7 @@ Every task follows this workflow. No exceptions for non-trivial changes.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining
-   scope first, close the issue explicitly, then remove the exact branch/worktree.
+   scope first, close the issue if one exists, then remove the exact branch/worktree.
 
 The machine gate is:
 
@@ -583,7 +587,9 @@ printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
 
 ### Tests (#11226)
 
-A new test must be able to fail for a real defect class; name that class in the
+Do not add a test file or test case unless the CTO approves that specific test. Never
+brief a worker for a reproducer, a regression test or repeated runs. A CTO-approved new
+test must be able to fail for a real defect class; name that class in the
 test name or docstring. D1–D7 are "do not write"; K1–K13 are "must test". K is
 evaluated first and overrides every D class. Unresolved protection means keep the
 test. Protection is for demonstrated behaviour, not blanket immunity for a
@@ -699,10 +705,10 @@ channels for anything that will have >1 turn.
 **Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken.
 
 **Issue discipline (coding issues)**:
-- **Never leave half-done.** If you open it, finish it. If you can't finish it now, document exactly where you stopped and what remains.
+- **Never leave half-done.** If the CTO opened it for you, finish it. If you can't finish it now, document exactly where you stopped and what remains.
 - **Never close unless ALL acceptance criteria are verified.** Partial completion = still open.
 - **Aim to fully resolve and close.** Open issues are debt. Minimize them aggressively.
-- **The human manages content generation issues.** Claude owns coding/infrastructure issues. But proactively remind when it's time to start building a new track or batch — initiative is welcome.
+- **The human manages content generation issues.** The CTO opens coding/infrastructure issues. But proactively remind when it's time to start building a new track or batch — initiative is welcome.
 
 **Proactive issue hygiene**: At the start of each session, check open coding issues. Prioritize, resolve, close — don't let them go stale.
 

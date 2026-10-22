@@ -205,6 +205,36 @@ def _condition(raw: Any, context: dict[str, Any]) -> bool:
     return _truthy(_evaluate(text, context))
 
 
+@pytest.mark.parametrize(
+    "mode,budget", [(None, 5), ("bounded", 5), ("full-history-audit", 60), ("", 5), ("garbage", 5)]
+)
+@pytest.mark.parametrize("event", ["workflow_dispatch", "pull_request", "merge_group", "push", "schedule"])
+def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: str | None, budget: int) -> None:
+    """Only an explicit manual audit gets the larger job budget; the scan still runs."""
+    workflow = _load("ci.yml")
+    dispatch = _triggers(workflow)["workflow_dispatch"]["inputs"]["secret_scan_mode"]
+    assert dispatch["type"] == "choice"
+    assert dispatch["default"] == "bounded"
+    assert dispatch["options"] == ["bounded", "full-history-audit"]
+    scan = workflow["jobs"]["secret-scan"]
+    context = {
+        "github": {"event_name": event},
+        "inputs": {} if mode is None else {"secret_scan_mode": mode},
+        "needs": {"reuse": {"outputs": {"reuse": "false"}}},
+    }
+    assert _interpolate(scan["timeout-minutes"], context) == str(budget if event == "workflow_dispatch" else 5)
+    assert _condition(scan["if"], context)
+    scope = next(step for step in scan["steps"] if step.get("id") == "secret-scan-scope")
+    assert _interpolate(scope["env"]["DISPATCH_SCAN_MODE"], context) == (mode or "")
+    assert "if" not in scope
+    scanner = next(
+        step for step in scan["steps"] if str(step.get("uses", "")).startswith("trufflesecurity/trufflehog@")
+    )
+    assert "if" not in scanner
+    assert scanner["uses"] == "trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9"
+    assert scanner["with"]["version"] == "3.99.0"
+
+
 # --- ci.yml job simulation -------------------------------------------------
 
 

@@ -2756,3 +2756,30 @@ print(json.dumps({"disk": client.cache_dir is not None, "shared_budget_observed"
             if process.poll() is None:
                 process.terminate()
             process.communicate(timeout=30)
+
+
+def test_physical_maintenance_keeps_owner_schema_cache_reuse_and_live_budget_authority(tmp_path, monkeypatch):
+    """Compaction must not prune responses, re-scope keys, or reset a live budget."""
+    from scripts.maintenance.github_cache import maintain
+
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path))
+    store, calls = client(tmp_path, [response({"state": "open"}, remaining=499)])
+    assert store.request("GET", "repos/o/r/issues/1").value == {"state": "open"}
+    with store._db() as db:
+        db.execute("INSERT INTO cache VALUES('unknown','malformed',42,'invalid',NULL)")
+        db.execute("INSERT INTO cache VALUES('deleted','payload',zeroblob(2097152),'invalid',NULL)")
+        db.execute("DELETE FROM cache WHERE scope='deleted'")
+    path = tmp_path / "cache.sqlite3"
+    with sqlite3.connect(path) as db:
+        before = {
+            table: db.execute(f"SELECT * FROM {table} ORDER BY rowid").fetchall() for table in ("cache", "budget")
+        }
+    assert maintain(apply=True)["outcome"] == "reclaimed"
+    with sqlite3.connect(path) as db:
+        after = {table: db.execute(f"SELECT * FROM {table} ORDER BY rowid").fetchall() for table in ("cache", "budget")}
+    assert after == before
+    observed = store.request("GET", "repos/o/r/issues/1", allow_stale=True)
+    assert observed.value == {"state": "open"} and observed.stale
+    refused = store.request("GET", "repos/o/r/uncached")
+    assert refused.error == "github_rate_limited" and refused.reason == "core_below_landing_reserve"
+    assert len(calls) == 1

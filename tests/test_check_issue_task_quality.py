@@ -1198,3 +1198,196 @@ def test_event_api_cost_and_exit_status(monkeypatch, tmp_path, action, body, par
     assert ("membership_missing_parent" if parent is None else "Membership: PASS") in comments[0]
     assert "membership_unknown" not in comments[0]
     assert "synchronized" in capsys.readouterr().out
+
+
+# #11283 (R6): the dispatch reading of a strict --json result. A membership
+# timeout on a fully read, complete card is UNKNOWN; it never reads as PASS,
+# and it never stands in for the card evidence it did not cover.
+@pytest.mark.parametrize(
+    "code",
+    [
+        "membership_timeout",
+        "membership_timeout_cached_audit_validation",
+        "membership_timeout_live_audit_open_issues",
+        "membership_timeout_live_audit_root_2_of_9_issue_123",
+    ],
+)
+def test_membership_timeout_on_complete_card_is_unknown(code):
+    payload = checker.evaluate_issue({"body": COMPLETE}, checker.membership_error(code))
+    assert payload["verdict"] == "WARN"
+    assert checker.admission_state(payload) is checker.AdmissionState.UNKNOWN
+
+
+def test_admission_state_unknown_cannot_be_read_as_pass():
+    state = checker.AdmissionState.UNKNOWN
+    assert state is not checker.AdmissionState.PASS
+    assert state != checker.AdmissionState.PASS
+    assert state != "PASS" and state.value != "PASS"
+    assert not isinstance(state, str)
+    assert state.value == "UNKNOWN (timeout)"
+    for member in checker.AdmissionState:
+        with pytest.raises(TypeError):
+            bool(member)
+
+
+def test_admission_state_pass_needs_clean_pass_payload():
+    assert checker.admission_state(checker.evaluate_issue({"body": COMPLETE}, checker.section("PASS"))) is (
+        checker.AdmissionState.PASS
+    )
+    assert checker.admission_state({"verdict": "PASS", "missing": ["membership_timeout"]}) is not (
+        checker.AdmissionState.PASS
+    )
+    assert checker.admission_state({"verdict": "WARN", "missing": []}) is checker.AdmissionState.WARN
+    assert checker.admission_state({}) is checker.AdmissionState.WARN
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        # The card itself is incomplete: a timeout elsewhere does not hide it.
+        pytest.param(
+            checker.evaluate_issue(
+                {"body": COMPLETE.replace("## User-visible outcome\nShip the advisory checker.\n", "")},
+                checker.membership_error("membership_timeout_live_audit"),
+            ),
+            id="missing-outcome",
+        ),
+        pytest.param(
+            checker.evaluate_issue(
+                {"body": COMPLETE.split("## Acceptance Criteria")[0]},
+                checker.membership_error("membership_timeout"),
+            ),
+            id="missing-acceptance-criteria",
+        ),
+        # The target fetch timed out: the card was never read.
+        pytest.param(
+            {
+                "verdict": "WARN",
+                "missing": ["input", "checker_error", "membership_timeout_target_fetch"],
+                "dor": checker.section("unchecked"),
+            },
+            id="target-fetch-timeout",
+        ),
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout_target_fetch"], "dor": checker.section("PASS")},
+            id="target-fetch-code-alone",
+        ),
+        # No positive card evidence (legacy or partial payload shape).
+        pytest.param({"verdict": "WARN", "missing": ["membership_timeout"]}, id="no-dor-section"),
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout"], "dor": checker.section("unchecked")},
+            id="dor-unchecked",
+        ),
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout", 7], "dor": checker.section("PASS")},
+            id="non-string-code",
+        ),
+    ],
+)
+def test_timeout_never_manufactures_hard_tier_success(payload):
+    assert checker.admission_state(payload) is checker.AdmissionState.WARN
+
+
+# #11283 review F1: UNKNOWN needs consistent positive evidence. Every section
+# must be present and agree with the top-level codes; the membership section
+# must carry exactly the producer's timeout code (no prefix match). Anything
+# partial, contradictory or forged keeps the WARN refusal.
+def _timeout_card(code="membership_timeout", **overrides):
+    payload = checker.evaluate_issue({"body": COMPLETE}, checker.membership_error(code))
+    payload.update(overrides)
+    return payload
+
+
+def _without(payload, key):
+    return {k: v for k, v in payload.items() if k != key}
+
+
+MALFORMED_DOD = checker.section(
+    "WARN", [checker.error("dod", "acceptance_criteria", "dod_structure_malformed", "malformed")]
+)
+TIMEOUT_ERROR = checker.membership_error("membership_timeout")["errors"][0]
+STALE_ERROR = checker.membership_error("membership_audit_stale")["errors"][0]
+
+
+@pytest.mark.parametrize(
+    "stage",
+    [
+        "registry",
+        "cached_audit_validation",
+        "live_audit",
+        "live_audit_repository",
+        "live_audit_open_issues",
+        "live_audit_root_1_of_12_issue_9876",
+        "live_audit_classification",
+    ],
+)
+def test_every_produced_membership_timeout_code_is_unknown(stage):
+    """Defect class: an exact-code allowlist that drops a real producer stage."""
+    assert checker.admission_state(_timeout_card(f"membership_timeout_{stage}")) is checker.AdmissionState.UNKNOWN
+    rejected = checker.membership_error(f"membership_timeout_{stage}")
+    rejected["cache_rejection"] = "membership_audit_stale"
+    payload = checker.evaluate_issue({"body": COMPLETE}, rejected)
+    assert checker.admission_state(payload) is checker.AdmissionState.UNKNOWN
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        # Reproducer A: no DoD and no membership section at all.
+        pytest.param(
+            {"verdict": "WARN", "missing": ["membership_timeout"], "dor": {"status": "PASS"}}, id="review-reproducer-a"
+        ),
+        pytest.param(_without(_timeout_card(), "dod"), id="no-dod-section"),
+        pytest.param(_timeout_card(dod=checker.section("unchecked")), id="dod-unchecked"),
+        pytest.param(_timeout_card(dod=MALFORMED_DOD), id="dod-error-omitted-from-top-level"),
+        pytest.param(
+            _timeout_card(dod=checker.section("PASS", MALFORMED_DOD["errors"])), id="dod-pass-with-errors"
+        ),
+        pytest.param(
+            checker.evaluate_issue(
+                {"body": COMPLETE, "labels": [{"name": "trivial"}]}, checker.membership_error("membership_timeout")
+            ),
+            id="dod-exempt-trivial",
+        ),
+        pytest.param(
+            _timeout_card(dor=checker.section("PASS", [checker.error("dor", "verify", "verify", "absent")])),
+            id="dor-pass-with-errors",
+        ),
+        pytest.param(_timeout_card(dor={"status": "PASS"}), id="dor-errors-absent"),
+        pytest.param(_without(_timeout_card(), "membership"), id="no-membership-section"),
+        pytest.param(_timeout_card(membership=checker.section("unchecked")), id="membership-unchecked"),
+        pytest.param(
+            _timeout_card(membership=checker.membership_error("membership_audit_stale")), id="membership-section-stale"
+        ),
+        pytest.param(
+            _timeout_card(membership=checker.section("WARN", [TIMEOUT_ERROR, STALE_ERROR])),
+            id="membership-section-extra-error",
+        ),
+        pytest.param(
+            _timeout_card(membership=checker.membership_error("membership_timeout_live_audit")),
+            id="membership-section-code-mismatch",
+        ),
+        pytest.param(
+            _timeout_card(membership=checker.section("PASS", [TIMEOUT_ERROR])), id="membership-status-pass"
+        ),
+        pytest.param(
+            _timeout_card(membership=checker.section("WARN", [{**TIMEOUT_ERROR, "section": "dor"}])),
+            id="timeout-error-outside-membership",
+        ),
+        pytest.param(_timeout_card(missing=["membership_timeout", "membership_timeout"]), id="duplicated-top-level"),
+        pytest.param(_timeout_card(missing="membership_timeout"), id="missing-not-a-list"),
+        pytest.param(_timeout_card(verdict="PASS"), id="verdict-pass-with-timeout"),
+        pytest.param(_timeout_card(trivial=True), id="trivial-flag"),
+        # Forged or unproduced codes: exact match only, never a prefix.
+        pytest.param(_timeout_card("membership_timeout_target_fetch_extra"), id="forged-target-fetch-prefix"),
+        pytest.param(_timeout_card("membership_timeout_target_fetch"), id="target-fetch-in-section"),
+        pytest.param(_timeout_card("membership_timeout_bogus"), id="forged-stage"),
+        pytest.param(_timeout_card("membership_timeout_"), id="empty-stage"),
+        pytest.param(_timeout_card("membership_timeout_live_audit_root_x_of_3_issue_1"), id="forged-root-stage"),
+        pytest.param(_timeout_card("membership_timeout_live_audit_cache_write"), id="unproduced-cache-write"),
+        pytest.param(_timeout_card("membership_timeout\n"), id="trailing-newline"),
+    ],
+)
+def test_partial_or_contradictory_timeout_evidence_is_warn(payload):
+    """Defect class: a timeout admitted without consistent DoR, DoD and membership evidence."""
+    assert checker.admission_state(payload) is checker.AdmissionState.WARN

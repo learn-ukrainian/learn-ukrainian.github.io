@@ -17,6 +17,11 @@ pytestmark = pytest.mark.repo_invariant
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
+_ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
+_LOCK = _REPO_ROOT / "requirements-lock.txt"
+_DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
+
+
 def _git(cwd: Path, *args: str) -> str:
     env = os.environ | {"AGENT_NO_MERGE": "0"}
     return subprocess.check_output(["git", *args], cwd=cwd, text=True, timeout=30, env=env).strip()
@@ -281,11 +286,28 @@ def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
         assert step.get("if") == "steps.scope.outputs.run == 'true'", step
 
 
+def _declared_selector_graph(manifest: dict) -> dict:
+    """Project declared manifest edges into the graph shape ``affected`` reads.
+
+    ``affected`` adds every declared pair unless the repository import scan
+    reports an unresolved edge, which selects all nodes. The declared closure
+    is therefore the guaranteed floor of the real selection, and it decides
+    rule mutations without the full repository scan (#11411).
+    """
+    return {
+        "file_edges": [],
+        "unresolved_edges": [],
+        "missing_mandatory_edges": [],
+        "node_edges": sorted({(edge["producer"], edge["consumer"]) for edge in manifest["edges"]}),
+    }
+
+
 def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
     """Shared/all-node obligations must not replace today's cheap-exit policy."""
     from scripts.ci import components
 
     manifest = components.load_manifest()
-    assert set(components.affected(["scripts/config.py"], manifest)["components"]) == set(components.NODE_IDS)
+    owned = components.affected(["scripts/config.py"], manifest, _declared_selector_graph(manifest))
+    assert set(owned["components"]) == set(components.NODE_IDS)
     run, _, matched = scope.decide_from_changed(["scripts/config.py", "docs/a.md"])
     assert run is False and matched == []

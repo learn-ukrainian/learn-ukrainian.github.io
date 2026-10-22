@@ -454,3 +454,10 @@ Trace: {full candidate trace, so every exclusion/substitution is visible}
 ### Summary
 {final disposition: closed out / stop_and_escalate with reason / blocked on X}
 ```
+
+Write the report and every artifact a later reader needs (archives, logs,
+screenshots, reproducer scripts) under `$LU_TASK_EVIDENCE_DIR` (#11342), then
+cite its preserved `batch_state/preserved/<task>/` path from the result. Files
+left in the worktree are not durable: a later dispatch that reuses the worktree
+runs a cone sparse-checkout that removes ignored files, and worktree reuse is
+refused while a terminal task's evidence has no retrieval receipt.

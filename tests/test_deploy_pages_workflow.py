@@ -18,6 +18,9 @@ pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
+REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
+
+
 def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:
     """#5274: deploy must not run build:full; size gate before artifact upload."""
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
@@ -166,6 +169,42 @@ def test_auto_deploy_step_summary_and_cli(tmp_path: Path, capsys: pytest.Capture
     assert "offending: docs/readme.md" in captured.out
     assert "deploy=false\nreason=unknown_path\n" in output_file.read_text(encoding="utf-8")
     assert "### ⚠️ Pages Auto-Deploy: Skipped" in cli_summary_file.read_text(encoding="utf-8")
+
+
+def test_pages_marker_is_audited_then_uploaded_with_hidden_files() -> None:
+    """#11194 publication defect: the upload action dropped the dot-named marker.
+
+    The audit must run after every step that writes ``site/dist`` and directly
+    before upload, with nothing able to skip it, and only then may the upload
+    include hidden files — explicitly, never by action default.
+    """
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["deploy"]["steps"]
+    by_name = {step.get("name"): step for step in steps}
+
+    emit = by_name["Emit immutable deployment marker"]
+    assert emit["run"].splitlines() == [
+        "mkdir -p dist/.well-known",
+        'printf \'%s\\n\' "$GITHUB_SHA" > "dist/.well-known/learn-ukrainian-deployment-${GITHUB_SHA}.txt"',
+    ]
+
+    audit = by_name["Audit hidden Pages outputs (deployment marker only)"]
+    upload = by_name["Upload artifact"]
+    assert audit["working-directory"] == "."
+    assert audit["run"] == (
+        '.venv/bin/python scripts/deploy/verify_pages_deployment_marker.py site/dist --sha "$GITHUB_SHA"'
+    )
+    for gated in (audit, upload):
+        assert "if" not in gated
+        assert "continue-on-error" not in gated
+
+    audit_index = steps.index(audit)
+    assert steps.index(upload) == audit_index + 1
+    for writer in ("Build Site", "Emit immutable deployment marker", "Vendor Atlas runtime tree"):
+        assert steps.index(by_name[writer]) < audit_index
+
+    assert upload["uses"].startswith("actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9")
+    assert upload["with"] == {"path": "./site/dist", "include-hidden-files": True}
 
 
 def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() -> None:

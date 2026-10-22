@@ -1,0 +1,102 @@
+{
+  "reviewer_fail_closed_reason_replacements": [
+    {
+      "rows": [
+        124,
+        312,
+        500,
+        688,
+        876,
+        1064,
+        1252,
+        1440
+      ],
+      "before": "unknown subject seat 'openai_frontier'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'openai_frontier'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    },
+    {
+      "rows": [
+        133,
+        321,
+        509,
+        697,
+        885,
+        1073,
+        1261,
+        1449
+      ],
+      "before": "unknown subject seat 'glm-5.3'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'glm-5.3'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    },
+    {
+      "rows": [
+        136,
+        324,
+        512,
+        700,
+        888,
+        1076,
+        1264,
+        1452
+      ],
+      "before": "unknown subject seat 'claude-opus-5-5'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'claude-opus-5-5'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    },
+    {
+      "rows": [
+        139,
+        327,
+        515,
+        703,
+        891,
+        1079,
+        1267,
+        1455
+      ],
+      "before": "unknown subject seat 'claude-sonnet-5-5'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'claude-sonnet-5-5'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    },
+    {
+      "rows": [
+        142,
+        330,
+        518,
+        706,
+        894,
+        1082,
+        1270,
+        1458
+      ],
+      "before": "unknown subject seat 'composer-2.5'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'composer-2.5'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    },
+    {
+      "rows": [
+        148,
+        336,
+        524,
+        712,
+        900,
+        1088,
+        1276,
+        1464
+      ],
+      "before": "unknown subject seat 'pool-xs'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'pool-xs'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    },
+    {
+      "rows": [
+        151,
+        339,
+        527,
+        715,
+        903,
+        1091,
+        1279,
+        1467
+      ],
+      "before": "unknown subject seat 'gemini-3.8-flash-high'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen (or a documented alias such as grok-build or grok-4.7)",
+      "after": "unknown subject seat 'gemini-3.8-flash-high'; expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen (or a documented alias such as grok-build or grok-4.7)"
+    }
+  ]
+}

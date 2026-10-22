@@ -242,7 +242,10 @@ def test_glm_delegate_worker_state_lifecycle_success(tmp_path, monkeypatch):
 def test_glm_delegate_worker_state_lifecycle_failure(tmp_path, monkeypatch):
     fake_bin = tmp_path / "bin" / "opencode"
     fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text("#!/bin/sh\necho 'CLI internal error' >&2\nexit 1\n")
+    fake_bin.write_text(
+        '#!/bin/sh\nif [ "$1" = debug ] && [ "$2" = config ]; then exit 0; fi\n'
+        "echo 'CLI internal error' >&2\nexit 1\n"
+    )
     fake_bin.chmod(0o755)
 
     tasks_dir = tmp_path / "batch_state" / "tasks"

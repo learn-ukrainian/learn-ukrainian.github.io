@@ -1005,12 +1005,14 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
     _point_origin_head(repo)
     tasks = tmp_path / "tasks"
     repo.commit(OPUS, message="branch author")
+    repo.publish()
     payload = {
         "number": 10028,
         "baseRefName": base_name,
         "baseRefOid": repo.sha("origin/main"),
         "headRefName": "feature",
         "headRefOid": repo.sha("feature"),
+        "isCrossRepository": False,
     }
 
     def fake_run_gh(args, cwd, timeout=30.0):

@@ -764,6 +764,16 @@
     ]
   },
   {
+    "path": "scripts/maintenance/github_cache.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "GitHub client cache",
+    "reason": "reports storage and explicitly reclaims free pages in the existing owner-selected cache outside source databases; target, schema and locking checks remain the maintenance module's responsibility",
+    "calls": [
+      "sqlite3.connect(uri, uri=True, timeout=min(timeout_seconds, 1), isolation_level=None)"
+    ]
+  },
+  {
     "path": "scripts/migrations/2026-05-06-broker-indexes.py",
     "reference_count": 4,
     "kind": "writer",

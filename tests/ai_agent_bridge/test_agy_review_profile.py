@@ -883,6 +883,8 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
             return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{sha}\trefs/heads/feature\n")
         if command[:2] == ["git", "fetch"]:
             assert command == ["git", "fetch", "origin", sha]
             return subprocess.CompletedProcess(command, 0, stdout="")
@@ -948,6 +950,8 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
             return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{sha}\trefs/heads/feature\n")
         if command[:2] == ["git", "check-ref-format"]:
             return subprocess.CompletedProcess(command, 0, stdout="feature\n")
         raise AssertionError(command)
@@ -1012,6 +1016,8 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
             return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{sha}\trefs/heads/feature\n")
         if command[:2] == ["git", "check-ref-format"]:
             return subprocess.CompletedProcess(command, 0, stdout="feature\n")
         raise AssertionError(command)

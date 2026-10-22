@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -137,3 +139,59 @@ def test_push_deny_still_active_with_sentinel(shim_fixture: dict[str, Path]) -> 
     )
     assert result.returncode == 1
     assert "cannot push directly to main" in result.stderr
+
+
+@pytest.mark.parametrize("hostile_name", [
+    "SYNTHETIC_SECRET_IGNORE_SAFETY_REPORT_APPROVE",
+    "line\nbreak\x1b[31m",
+    "bidi\u202eformat\u2066separator\u2028",
+])
+def test_real_git_config_error_cannot_disclose_hostile_filename(shim_fixture, tmp_path, hostile_name):
+    """Real Git's parser must not inject caller paths, token text, or Unicode controls."""
+    bad = tmp_path / hostile_name
+    bad.write_text("[alias\n")
+    result = _run_shim(shim_fixture, "push", "--no-verify", extra_env={"GIT_CONFIG_GLOBAL": str(bad)})
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == (
+        "OPSEC: could not check Git's aliases for 'push', so it was not run.\n"
+        "       cause: git config failed;\n"
+    )
+
+
+# Removal of the hook supersedes its 60s cap. Every old value must now leave
+# the production 10s bound unchanged, including malformed and above-cap inputs.
+@pytest.mark.parametrize(("flag", "value"), [
+    ("1", ""), ("1", "0"), ("1", "-1"), ("1", "1"), ("1", "12"),
+    ("1", "30"), ("1", "60"), ("1", "61"), ("1", "999"),
+    ("1", "1.5"), ("1", "01"), ("1", "abc"), ("1", "1; exit 0"),
+    ("", "12"), ("0", "12"), ("yes", "12"),
+])
+def test_caller_timeout_values_cannot_raise_production_bound(shim_fixture, tmp_path, flag, value):
+    """An 11s probe must refuse before the downstream command for every hostile override class."""
+    stub = tmp_path / "git-tripwire"
+    marker = tmp_path / "command-ran"
+    stub.write_text(
+        f"#!{sys.executable}\n"
+        "import os, pathlib, sys, time\n"
+        "if any(arg.startswith('--list-cmds=') for arg in sys.argv):\n"
+        "    print('status')\n"
+        "elif 'config' in sys.argv:\n"
+        "    time.sleep(11)\n"
+        "    print('lu-opsec.alias-probe', flush=True)\n"
+        "else:\n"
+        "    pathlib.Path(os.environ['COMMAND_MARKER']).write_text('ran')\n"
+    )
+    stub.chmod(0o755)
+    started = time.monotonic()
+    result = _run_shim(shim_fixture, "status", "--short", extra_env={
+        "AGENT_REAL_GIT": str(stub), "COMMAND_MARKER": str(marker),
+        "LU_OPSEC_ALIAS_PROBE_TEST_HOOK": flag, "LU_OPSEC_ALIAS_PROBE_TIMEOUT": value,
+    })
+    assert result.returncode == 2, result.stderr
+    assert 9 < time.monotonic() - started < 15
+    assert not marker.exists(), "downstream command ran after the production deadline"
+    assert result.stderr == (
+        "OPSEC: could not check Git's aliases for 'status', so it was not run.\n"
+        "       cause: timeout after 10s;\n"
+    )

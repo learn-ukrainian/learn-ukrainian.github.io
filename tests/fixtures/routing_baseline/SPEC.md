@@ -1,5 +1,37 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Pinned Claude model on a shed lane (#11110)
+
+Both configurations were captured with the documented `capture.py` command
+against this checkout, using the test module's scoped `CAPTURE_RUNNER` cache,
+and compared with every approved surface. Only five dispatch `refusal` fields
+change, identically in both configurations:
+
+| Historical input row | Row after existing overlays | Explicit model |
+| --- | --- | --- |
+| 70 | 62 | `claude-sonnet-5-5` |
+| 74 | 66 | `claude-fable-5-1` |
+| 82 | 70 | `composer-2.5` |
+| 94 | 82 | `grok-4.7` |
+| 98 | 86 | `unregistered-model` |
+
+Every row requests the Claude lane at `near_cap` with an explicit model that
+Codex rejects and has no mapped substitute. The refusal changes from
+`ROUTING REFUSED: substitute --agent codex rejects explicit --model ...` to
+`BUDGET_PINNED_MODEL_EXHAUSTED: ...`, preserving refusal before spawn. The
+message reports the missing percentage as `unknown` and names the supported
+remedies, including the other Claude account where policy permits. Account
+remedies apply only to the Claude lane. Routing, telemetry, exit status and
+streams do not change. Historical input row 78 and mapped rows 86 and 90
+remain byte-identical; the existing seat overlay removed row 78.
+
+`tests/review/fixtures/budget-pin-11110.json` applies exact-once literal
+replacements after the other overlays. Its SHA-256 and this specification's
+SHA-256 are pinned in `tests/review/test_model_catalog.py`. Scope tests require
+these five refusals and reject other row or field changes. Historical
+baselines, inputs, occurrence ledgers, `SHA256SUMS` and `capture.py` stay
+byte-identical. Any other difference blocks regeneration.
+
 ## Required Claude account in the capture driver (#10630)
 
 `ResolverInputs.claude_account` has no default (#10630): a construction

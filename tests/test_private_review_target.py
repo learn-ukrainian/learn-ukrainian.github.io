@@ -96,6 +96,9 @@ def _init_committed_repo(repo: Path, origin: str, filename: str) -> str:
     _git(repo, "commit", "-qm", "change\n\nX-Agent: codex/gpt-6.1-sol")
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     _git(repo, "update-ref", "refs/remotes/origin/review", "HEAD")
+    from tests.test_review_target_resolution import _publish_pr_branch
+
+    _publish_pr_branch(repo, "review", head)
     return head
 
 
@@ -177,6 +180,7 @@ def test_dispatch_private_only_sha_resolves(review_repositories, monkeypatch, ki
                         "baseRefOid": base,
                         "headRefName": "review",
                         "headRefOid": heads[1],
+                        "isCrossRepository": False,
                     }
                 ),
                 "",
@@ -293,6 +297,7 @@ def _mock_pr_view(monkeypatch, private, base, head):
                     "baseRefOid": base,
                     "headRefName": "review",
                     "headRefOid": head,
+                    "isCrossRepository": False,
                 }
             ),
             "",

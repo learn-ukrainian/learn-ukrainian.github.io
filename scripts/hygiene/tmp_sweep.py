@@ -139,12 +139,16 @@ def _absolute_paths(value: Any) -> Iterator[str]:
 
 
 def _reference_forms(value: str) -> set[Path]:
-    """The lexical and resolved forms of a recorded path, so ``/tmp`` aliases still match."""
-    lexical = Path(os.path.normpath(value))
-    forms = {lexical}
+    """The lexical and resolved forms of a recorded path, so ``/tmp`` aliases still match.
+
+    The resolved form comes from the spelling itself: like the kernel, it
+    follows a symlink before a later ``..`` (``alias/../x`` leaves the alias
+    target), which folding ``..`` first would misread as a different path.
+    """
+    forms = {Path(os.path.normpath(value))}
     # A looping alias keeps only its lexical form.
     with contextlib.suppress(OSError, RuntimeError):
-        forms.add(lexical.resolve())
+        forms.add(Path(value).resolve())
     return forms
 
 
@@ -1055,19 +1059,17 @@ def sweep(
     state_dir: Path | None = None,
     quarantine_s: float = DEFAULT_QUARANTINE_S,
     digest_limit: int = DEFAULT_DIGEST_LIMIT,
-    pytest_keep: int = 3,
 ) -> dict[str, Any]:
     """Inventory top-level unmanaged entries; on ``apply``, purge expired quarantine, then quarantine proven ones.
 
     Apply runs hold the ledger lock throughout and, in order, reconcile
     crashed steps, restore unledgered quarantine leftovers, purge expired
     entries, and quarantine newly proven candidates. Dry runs report the
-    same passes without changing anything.
+    same passes without changing anything. Inactive pytest scratch follows
+    its own rule (:mod:`scripts.hygiene.pytest_retention`, #11297).
     """
     if not math.isfinite(min_age_s) or min_age_s <= 0:
         raise ValueError("minimum age must be finite and positive")
-    if isinstance(pytest_keep, bool) or not isinstance(pytest_keep, int) or pytest_keep < 1:
-        raise ValueError("pytest retention count must be a positive integer")
     if not math.isfinite(quarantine_s) or quarantine_s <= 0 or digest_limit < 0:
         raise ValueError("quarantine window must be finite and positive, digest limit non-negative")
     if (
@@ -1103,8 +1105,7 @@ def sweep(
         from scripts.hygiene.pytest_retention import sweep_pytest_runs
 
         report["pytest_retention"] = sweep_pytest_runs(
-            keep=pytest_keep, apply=apply, ledger=ledger, run_id=run_id,
-            task_root=tasks, digest_limit=digest_limit, quarantine_s=quarantine_s, repo_root=repo_root,
+            apply=apply, ledger=ledger, run_id=run_id, task_root=tasks, quarantine_s=quarantine_s, repo_root=repo_root,
         )
         report["errors"] += report["pytest_retention"]["errors"]
         report["digest"] = plan_digest(report)
@@ -1557,8 +1558,8 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Attribute unmanaged top-level temp entries; quarantine proven ones recoverably and purge expired ones.\n"
             "Use for legacy task residue and, with --unattributed-scratch, quiet hand-made scratch; "
-            "also retains completed owned pytest runs, preserving live and unknown runs. Other managed "
-            "scratch and harness state are excluded. Subcommands ledger, quarantine and restore "
+            "also deletes pytest run folders idle for over two hours that no live process holds, "
+            "preserving held and unknown ones. Other managed scratch and harness state are excluded. Subcommands ledger, quarantine and restore "
             "inspect and undo removals (see `tmp_sweep ledger --help`)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1570,10 +1571,10 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore <ledger-id>\n"
             "Outputs: stdout inventory (or --summary counts) with ledger location, quarantine and purge totals; "
             "with --apply, appends to the ledger, moves proven entries into quarantine and deletes only "
-            "expired, re-verified quarantined entries.\n"
+            "expired, re-verified quarantined entries and inactive, unheld pytest run folders.\n"
             "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors (including entries kept as "
             "purge_kept_ambiguous until restored or removed by hand) or ledger unavailable; 2 invalid arguments.\n"
-            "Related: #8755, #9737, #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
+            "Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
             "scripts.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
@@ -1626,13 +1627,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _state_dir_argument(parser)
     parser.add_argument(
-        "--pytest-keep", type=int, default=3,
-        help="Keep this many newest completed eligible pytest runs per managed root (positive integer; default 3).",
-    )
-    parser.add_argument(
         "--apply",
         action="store_true",
-        help="Purge expired quarantine, then recheck proofs and quarantine proven entries (default dry-run).",
+        help=(
+            "Purge expired quarantine, recheck proofs and quarantine proven entries, and delete inactive "
+            "unheld pytest run folders (default dry-run)."
+        ),
     )
     output = parser.add_mutually_exclusive_group()
     output.add_argument(
@@ -1669,7 +1669,6 @@ def main(argv: list[str] | None = None) -> int:
             state_dir=args.state_dir,
             quarantine_s=args.quarantine_days * 86400,
             digest_limit=int(args.digest_limit_mib * (1 << 20)),
-            pytest_keep=args.pytest_keep,
         )
     except LedgerError as error:
         # The step in progress stays unconfirmed in the ledger, and the next run reconciles it.

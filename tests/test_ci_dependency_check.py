@@ -23,7 +23,8 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     pytest_steps = workflow["jobs"]["pytest"]["steps"]
     action = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))
     uv = next(step for step in action["runs"]["steps"] if step.get("name") == "Set up uv")
-    assert uv["with"]["save-cache"] == "${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}"
+    assert action["inputs"]["save-cache"]["default"] == "${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}"
+    assert uv["with"]["save-cache"] == "${{ inputs.save-cache }}"
     assert uv["id"] == "setup-uv"
     assert action["outputs"]["uv-cache-key"]["value"] == "${{ steps.setup-uv.outputs.cache-key }}"
     assert uv["with"]["enable-cache"] is True

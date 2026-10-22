@@ -114,7 +114,12 @@ SCHEMAS = {
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
-WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}, "stale-branch-cleanup.yml": {}}
+WORKFLOWS = {
+    "ci.yml": {},
+    "deploy-pages.yml": {},
+    "stale-branch-cleanup.yml": {},
+    "coverage-ref.yml": {"sha": "sha"},
+}
 # The merge-queue reader trusts review-verdict markers from the shared fleet login, so
 # only scripts/review/record_cf_verdict.py may write them (#11127). Comment fields
 # refuse the prefix unless the value is a CfVerdictRecord on the recorder's verb.
@@ -174,6 +179,8 @@ def _validate(verb, fields):
     )
     if required - effective:
         raise gate.PublishBlocked("OPSEC: required publisher field missing.")
+    if verb == "workflow-run":
+        fields = {**fields, "inputs": fields.get("inputs", {})}
     for key, value in fields.items():
         kind = schema[key]
         valid = True
@@ -186,7 +193,17 @@ def _validate(verb, fields):
         elif kind == "texts":
             valid = isinstance(value, (list, tuple)) and all(isinstance(x, str) for x in value)
         elif kind == "workflow_inputs":
-            valid = isinstance(value, dict) and not value  # admitted workflows have no inputs
+            workflow = fields["workflow"]
+            input_schema = WORKFLOWS.get(workflow) if isinstance(workflow, str) else None
+            valid = (
+                isinstance(value, dict)
+                and input_schema is not None
+                and set(value) == set(input_schema)
+                and all(
+                    isinstance(value[name], str) and re.fullmatch(PATTERNS[input_kind], value[name]) is not None
+                    for name, input_kind in input_schema.items()
+                )
+            )
         elif kind == "assets":
             valid = isinstance(value, (list, tuple)) and bool(value) and all(isinstance(x, Asset) for x in value)
         elif kind in ENUMS:
@@ -625,6 +642,8 @@ def publish(
         elif verb == "workflow-run":
             argv.insert(3, fields["workflow"])
             option("ref")
+            for name, value in fields.get("inputs", {}).items():
+                argv.append(f"--raw-field={name}={value}")
         elif verb == "pr-disarm":
             argv = ["gh", "pr", "merge", str(fields["number"]), "--repo", gh_repo, "--disable-auto"]
         elif verb.startswith("release-"):
@@ -971,6 +990,9 @@ def read(
         return github_client.queue_read(operation, gh_repo, fields, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
     if operation in REST_READS:
         endpoint, schema = REST_READS[operation]
+        if operation == "runs" and "sha" in fields:
+            endpoint += "&head_sha={sha}"
+            schema = {**schema, "sha": "sha"}
         if operation == "code-scanning-alerts" and set(fields) == {"number"}:
             # PR filtering covers analyses uploaded to either head or merge refs.
             endpoint = "repos/{repo}/code-scanning/alerts?state=open&pr={number}"

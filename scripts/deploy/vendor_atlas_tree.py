@@ -4,7 +4,9 @@
 Downloads a GitHub Release asset pinned by **immutable asset id + sha256** (never a
 mutable tag name), verifies archive checksum + internal packaging manifest, enforces
 generation retention (CURRENT + PRIOR version dirs), applies scale gates, then
-byte-preserves the tree into ``<dist>/atlas/``.
+byte-preserves the tree into ``<dist>/atlas/``. Public article search, aliases,
+and typeahead shards are then projected from that same verified immutable pin;
+entry/search set drift aborts before installation.
 
 Feature flag: when ``ATLAS_TREE_ASSET_ID`` / ``ATLAS_TREE_SHA256`` are unset (and no
 ``--archive`` is supplied), the script logs a skip message and exits 0 so deploys
@@ -24,6 +26,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import os
@@ -36,7 +39,8 @@ import time
 import urllib.error
 import urllib.request
 import zipfile
-from collections.abc import Mapping
+import zlib
+from collections.abc import Iterator, Mapping
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -44,6 +48,19 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.atlas.normalization import normalize_atlas_text
+from scripts.audit.generate_search_index import (
+    _gerund_parent,
+    _sanitize_typeahead_gloss,
+    _search_gloss,
+    _uk_sort_key,
+    build_search_shards,
+    classification_code,
+    display_gloss,
+    write_aliases,
+    write_index,
+    write_search_shards,
+)
 from scripts.common import github_client
 
 # ---------------------------------------------------------------------------
@@ -90,6 +107,7 @@ class VendorMetrics:
     asset_id: str | None = None
     warnings: list[str] = field(default_factory=list)
     skipped: bool = False
+    search_parity: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -533,6 +551,196 @@ def install_atlas_tree(extract_root: Path, dist: Path) -> Path:
     return dest
 
 
+def _runtime_shard_records(
+    version_root: Path,
+    index: Mapping[str, Any],
+    *,
+    schema: str,
+    data_version: str,
+) -> Iterator[list[dict[str, Any]]]:
+    """Read each pinned shard after checking its path, hashes and envelope.
+
+    Search prefix shards replicate rows, so retain shard boundaries for duplicate
+    detection. Entry shards partition routes and never replicate them.
+    """
+    for descriptor in index["shards"].values():
+        rel = descriptor["url"]
+        if (
+            not isinstance(rel, str)
+            or not rel
+            or "\\" in rel
+            or any(part in {"", ".", ".."} for part in rel.split("/"))
+        ):
+            raise VendorError("unsafe runtime shard path")
+        path = version_root / rel
+        blob = path.read_bytes()
+        if (
+            descriptor["encoding"] != "gzip"
+            or len(blob) != descriptor["bytes"]
+            or sha256_hex(blob) != descriptor["sha256"]
+        ):
+            raise VendorError(f"runtime shard compressed integrity mismatch: {rel}")
+        size = descriptor["uncompressedBytes"]
+        if not isinstance(size, int) or size < 0:
+            raise VendorError(f"invalid runtime shard uncompressedBytes: {rel}")
+        with gzip.GzipFile(fileobj=io_bytes_zip(blob)) as stream:
+            raw = stream.read(size + 1)
+        if len(raw) != size or sha256_hex(raw) != descriptor["jsonSha256"]:
+            raise VendorError(f"runtime shard JSON integrity mismatch: {rel}")
+        payload = json.loads(raw)
+        if payload["schema"] != schema or payload["schemaVersion"] != 1 or payload["dataVersion"] != data_version:
+            raise VendorError(f"runtime shard identity mismatch: {rel}")
+        rows = payload["records"]
+        if (
+            not isinstance(rows, list)
+            or len(rows) != descriptor["count"]
+            or any(not isinstance(row, dict) for row in rows)
+        ):
+            raise VendorError(f"runtime shard records/count mismatch: {rel}")
+        yield rows
+
+
+def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    """Project search from the installed pin, refusing full-set or alias drift.
+
+    The immutable runtime owns membership. Apply the established public display
+    projection using only that pin's article payloads; never consult another DB.
+    """
+    try:
+        current = json.loads((extract_root / CURRENT_REL).read_bytes())
+        data_version = current["dataVersion"]
+        _validate_data_version(data_version)
+        directory = _pointed_version_dir(current["manifestUrl"], data_version)
+        version_root = extract_root / VERSIONS_REL / directory
+        manifest_bytes = (version_root / "manifest.json").read_bytes()
+        manifest = json.loads(manifest_bytes)
+        if (
+            manifest["schema"] != "atlas-runtime-manifest"
+            or manifest["schemaVersion"] != 1
+            or manifest["dataVersion"] != data_version
+        ):
+            raise VendorError("runtime manifest identity mismatch")
+        routes: set[str] = set()
+        articles: set[str] = set()
+        forms: set[str] = set()
+        public_fields: dict[str, tuple[str | None, str | None, str | None]] = {}
+        for rows in _runtime_shard_records(
+            version_root, manifest["entries"], schema="atlas-entry-shard", data_version=data_version
+        ):
+            for row in rows:
+                slug = row["slug"]
+                if not isinstance(slug, str) or not slug or slug in routes:
+                    raise VendorError("invalid or duplicate runtime route slug")
+                routes.add(slug)
+                if row["kind"] == "article":
+                    articles.add(slug)
+                    entry = row.get("entry") or {}
+                    public_fields[slug] = (classification_code(entry), _gerund_parent(entry), _search_gloss(entry))
+                elif row["kind"] == "form_route":
+                    forms.add(slug)
+                else:
+                    raise VendorError("unknown runtime route kind")
+
+        families: dict[str, list[dict[str, Any]]] = {}
+        replicas: dict[str, int] = {}
+        for family, schema in (("articles", "atlas-search-article-shard"), ("aliases", "atlas-search-alias-shard")):
+            unique: dict[Any, dict[str, Any]] = {}
+            replicas[family] = 0
+            for rows in _runtime_shard_records(
+                version_root, manifest["search"][family], schema=schema, data_version=data_version
+            ):
+                local: set[Any] = set()
+                for row in rows:
+                    slug = row["s"]
+                    fields = ("l", "r", "t") if family == "articles" else ("a", "h", "k")
+                    if not isinstance(slug, str) or not slug or any(not isinstance(row[key], str) for key in fields):
+                        raise VendorError(f"invalid runtime search {family} row")
+                    key = slug if family == "articles" else (normalize_atlas_text(row["a"]), slug)
+                    if key in local:
+                        raise VendorError(f"duplicate runtime search {family} row within shard")
+                    local.add(key)
+                    if key in unique:
+                        if unique[key] != row:
+                            raise VendorError(f"conflicting runtime search {family} replicas")
+                        replicas[family] += 1
+                    else:
+                        unique[key] = row
+            families[family] = list(unique.values())
+        search_slugs = {row["s"] for row in families["articles"]}
+        advertised_only = sorted(search_slugs - articles)
+        runtime_only = sorted(articles - search_slugs)
+        if advertised_only or runtime_only:
+            raise VendorError(
+                "article search/runtime set mismatch: "
+                + json.dumps(
+                    {
+                        "advertisedOnly": advertised_only,
+                        "runtimeOnly": runtime_only,
+                    },
+                    ensure_ascii=False,
+                )
+            )
+        if any(row["s"] not in articles for row in families["aliases"]):
+            raise VendorError("runtime search alias target is not a runtime article")
+        counts = manifest["counts"]
+        for name, actual in (
+            ("articles", len(articles)),
+            ("formRoutes", len(forms)),
+            ("publicRoutes", len(routes)),
+            ("searchArticles", len(search_slugs)),
+            ("searchAliases", len(families["aliases"])),
+        ):
+            if counts[name] != actual:
+                raise VendorError(f"runtime {name} count mismatch: {counts[name]} != {actual}")
+        article_rows = []
+        for runtime_row in families["articles"]:
+            row = dict(runtime_row)
+            cls, parent, gloss = public_fields[row["s"]]
+            # Use the raw payload's public gloss when present. New runtimes may
+            # already qualify editorial notes; sanitizing those a second time
+            # can truncate the qualification. Old pins still need projection.
+            row["g"] = display_gloss(gloss or _sanitize_typeahead_gloss(row.get("g")), cls)
+            row.pop("cls", None)
+            row.pop("p", None)
+            if cls:
+                row["cls"] = cls
+            if parent:
+                row["p"] = parent
+            article_rows.append(row)
+        article_rows.sort(key=lambda row: (_uk_sort_key(row["l"]), row["s"]))
+        aliases = sorted(families["aliases"], key=lambda row: (_uk_sort_key(row["a"]), row["s"], row["k"]))
+        return (
+            article_rows,
+            aliases,
+            {
+                "dataVersion": data_version,
+                "runtimeManifestSha256": sha256_hex(manifest_bytes),
+                "articles": len(articles),
+                "formRoutes": len(forms),
+                "aliases": len(aliases),
+                "advertisedOnly": advertised_only,
+                "runtimeOnly": runtime_only,
+                "articleDuplicates": 0,
+                "runtimeDuplicates": 0,
+                "aliasDuplicates": 0,
+                "replicatedArticleRows": replicas["articles"],
+                "replicatedAliasRows": replicas["aliases"],
+            },
+        )
+    except (OSError, EOFError, ValueError, KeyError, TypeError, AttributeError, zlib.error) as exc:
+        raise VendorError(f"pinned runtime search unreadable: {exc}") from exc
+
+
+def install_pinned_search(dist: Path, articles: list[dict[str, Any]], aliases: list[dict[str, Any]]) -> None:
+    """Replace built public search endpoints using the existing shard contract."""
+    index = dist / "lexicon/search-index.json"
+    write_index(articles, index)
+    write_index(articles, dist / "api/lexicon/search-index.json")
+    write_aliases(aliases, dist / "lexicon/search-aliases.json")
+    manifest, shards = build_search_shards(articles)
+    write_search_shards(manifest, shards, dist / "lexicon/search-shards.json", dist / "lexicon/search")
+
+
 def _serialize_tree_manifest(files: list[dict[str, Any]]) -> bytes:
     """Serialize packaging manifest JSON (UTF-8, trailing newline)."""
     body = {
@@ -637,15 +845,8 @@ def vendor_atlas_tree(
     else:
         if not asset_id:
             raise VendorError("ATLAS_TREE_ASSET_ID is required when --archive is omitted")
-        resolved_repo = (
-            repo
-            or os.environ.get("ATLAS_TREE_REPO")
-            or os.environ.get("GITHUB_REPOSITORY")
-            or DEFAULT_REPO
-        )
-        archive_bytes = download_release_asset(
-            asset_id, repo=resolved_repo, token=token
-        )
+        resolved_repo = repo or os.environ.get("ATLAS_TREE_REPO") or os.environ.get("GITHUB_REPOSITORY") or DEFAULT_REPO
+        archive_bytes = download_release_asset(asset_id, repo=resolved_repo, token=token)
 
     digest = verify_archive_digest(archive_bytes, sha256)
     thr = dict(thresholds) if thresholds is not None else resolve_thresholds()
@@ -671,8 +872,10 @@ def vendor_atlas_tree(
             object_count=object_count,
             thresholds=thr,
         )
+        articles, aliases, search_parity = build_pinned_search(extract_root)
         dist.mkdir(parents=True, exist_ok=True)
         install_atlas_tree(extract_root, dist)
+        install_pinned_search(dist, articles, aliases)
 
     duration_ms = int((time.perf_counter() - started) * 1000)
     metrics = VendorMetrics(
@@ -686,6 +889,7 @@ def vendor_atlas_tree(
         asset_id=asset_id,
         warnings=warnings,
         skipped=False,
+        search_parity=search_parity,
     )
     _emit_metrics(metrics)
     _write_metrics(metrics, metrics_path)
@@ -701,6 +905,7 @@ def _emit_metrics(metrics: VendorMetrics) -> None:
     print(f"data_version={metrics.data_version}")
     print(f"prior_versions={','.join(metrics.prior_versions)}")
     print(f"archive_sha256={metrics.archive_sha256}")
+    print(f"search_parity={json.dumps(metrics.search_parity, sort_keys=True)}")
     if metrics.asset_id:
         print(f"asset_id={metrics.asset_id}")
     for warning in metrics.warnings:

@@ -467,6 +467,16 @@ def test_scan_error_and_reap_error_are_reported(inventory, monkeypatch):
     assert inventory.run()["rows"][0]["reason"] == "tree_unknown"
 
 
+def test_reference_forms_follow_a_symlink_before_a_later_dotdot(tmp_path):
+    """Defect class: folding ``..`` first resolves ``alias/../x`` beside the alias, not where the kernel goes."""
+    target = tmp_path / "deep" / "ns"
+    target.mkdir(parents=True)
+    (tmp_path / "alias").symlink_to(target, target_is_directory=True)
+    forms = sweep._reference_forms(f"{tmp_path}/alias/../ns/entry")
+    assert target / "entry" in forms
+    assert sweep.task_referenced(target / "entry", frozenset(forms)) is True
+
+
 def test_task_loader_rejects_malformed_or_mismatched_records(tmp_path):
     (tmp_path / "bad.json").write_text("not json")
     (tmp_path / "wrong.json").write_text(json.dumps({"task_id": "someone-else"}))

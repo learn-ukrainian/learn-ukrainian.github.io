@@ -1290,7 +1290,7 @@ def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
         "Implement issue #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO
     )
     assert "#8886: verify" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "verify"}, "dor": "WARN"}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
     assert calls[1][-6:] == [
         "--issue",
@@ -1328,7 +1328,7 @@ def test_dor_preflight_skips_pr_numbers_and_query_values(monkeypatch):
     prompt = "PR #8750, feat: gate dor (#8750), ?q=#8750, x=#8750; Fixes #8886 and #8886"
     error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert error is None
-    assert record == {"issues": [8886], "warnings": {}}
+    assert record == {"issues": [8886], "warnings": {}, "dor": "PASS"}
     assert [call for call in calls if call[:2] == ["gh", "api"]] == [
         ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8750"],
         ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"],
@@ -1347,7 +1347,7 @@ def test_dor_preflight_lookup_failure_fails_closed_with_override(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "run", failed_gh)
     error, record = delegate._run_dor_preflight("Fixes #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert "#8886: checker_error" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}, "dor": "WARN"}
     error, record = delegate._run_dor_preflight(
         "Fixes #8886", "urgent repair", dispatch_repo=delegate._CANONICAL_GITHUB_REPO
     )
@@ -1365,7 +1365,7 @@ def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "run", wrong_issue)
     error, record = delegate._run_dor_preflight("Fixes #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert "#8886: checker_error" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}, "dor": "WARN"}
 
 
 @pytest.mark.parametrize(
@@ -1410,6 +1410,7 @@ def test_dor_preflight_cross_repo_references_deduplicate_by_repo_and_number(monk
     assert record == {
         "issues": [690, 690],
         "warnings": {},
+        "dor": "PASS",
         "issue_repositories": [{"issue": 690, "repo": "acme/other"}],
     }
     assert [call for call in calls if call[:2] == ["gh", "api"]] == [
@@ -1473,7 +1474,7 @@ def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
     calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
     error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
     assert error is None
-    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
     assert not [call for call in calls if call[-1].endswith("/issues/6943")]
 
@@ -1546,7 +1547,7 @@ def test_dor_preflight_local_epic_full_url_and_qualified_forms_are_exempt(monkey
         dispatch_repo=_LOCAL,
     )
     assert error is None
-    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
 
 
@@ -1965,7 +1966,7 @@ def test_parser_spans_container_exit_preserves_dor_warn(monkeypatch, container):
     error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert error is not None
     assert "#9672: verify" in error
-    assert record == {"issues": [9672], "warnings": {"9672": "verify"}}
+    assert record == {"issues": [9672], "warnings": {"9672": "verify"}, "dor": "WARN"}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/9672"]
     assert len(calls) == 2
     assert calls[1][-6:] == ["--issue", "9672", "--repo", delegate._CANONICAL_GITHUB_REPO, "--strict", "--json"]
@@ -3814,7 +3815,10 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         },
     )()
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke:
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke,
+        patch("scripts.agent_runtime.adapters.deepseek.initialize_opencode_dependencies"),
+    ):
         rc = delegate._run_worker(
             task_id="worker-dispatch-event",
             agent="deepseek",
@@ -7415,10 +7419,9 @@ def test_check_budget_refuses_an_exhausted_claude_account_as_before(
     )
 
     assert rc == 2
-    assert (
-        "❌ ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-opus-5-5"
-        in capsys.readouterr().err
-    )
+    err = capsys.readouterr().err
+    assert "❌ BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude" in err
+    assert "explicit --model claude-opus-5-5" in err
     assert not delegate._state_path_no_create("claude-budget-exhausted").exists()
 
 
@@ -10283,13 +10286,13 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     # Automatic isolation adds the worktree block around the bound source prompt.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-plain", [])
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_blocks"] == ["worktree", "evidence"]
     assert state["effective_prompt_sha256"] != source
 
     # An explicit primary target gets the same worktree instructions.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
     assert state["mode"] == "read-only"
-    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_blocks"] == ["worktree", "evidence"]
     assert state["prompt_sha256"] == source
     assert state["effective_prompt_sha256"] != source
 
@@ -10311,7 +10314,7 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
         tmp_path, monkeypatch, "eff-all", ["--worktree", str(worktree)]
     )
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == ["worktree", "lifecycle", "research"]
+    assert state["prompt_blocks"] == ["worktree", "lifecycle", "evidence", "research"]
     assert state["effective_prompt_sha256"] == hashlib.sha256(worker_prompt.encode("utf-8")).hexdigest()
     assert state["effective_prompt_sha256"] != source
     assert worker_prompt.startswith("[delegate worktree]\n")
@@ -12573,16 +12576,31 @@ class _GuardFakeStdin:
         pass
 
 
+def _fake_worker_pid() -> int:
+    """Return a PID above the kernel's allocatable range (#11406).
+
+    A fabricated PID inside ``pid_max`` can alias a live process. Launch then
+    records that process's start time, ``worker_liveness`` reports the fake
+    worker alive, and its own terminal record blocks settle as an active
+    claim. PIDs above ``pid_max`` are never allocated, so there is no alias.
+    """
+    try:
+        return int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii").strip()) + 1000
+    except (OSError, ValueError):
+        return 5_000_000
+
+
 class _GuardFakeProc:
     """Stand-in for the detached worker.
 
     Scope startup calls ``poll`` while it waits for the one-byte start marker,
     then ``returncode``, ``kill`` and ``wait`` if that marker never arrives.
     ``kill`` and ``wait`` update only this object. ``pid`` is not a process,
-    and nothing here signals it.
+    and nothing here signals it; it sits above ``pid_max`` so it cannot alias
+    a live one.
     """
 
-    pid = 44551
+    pid = _fake_worker_pid()
     stdin = _GuardFakeStdin()
     returncode = None
 
@@ -13780,7 +13798,7 @@ def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir,
     checkout = delegate._auto_worktree_path("codex", case.task_id)
     assert checkout.is_dir() and state["worktree_branch"] is None
     assert state["prompt_sha256"] != state["effective_prompt_sha256"]
-    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
     assert state["worktree_sparse"]["full_checkout"] is True
     assert adj.check_dispatch_binding(
         case.unit_id, case.review_id, case.attempt_id, case.task_id, case.env.tasks, case.env.root

@@ -54,7 +54,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_chars": int,
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
-        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "lifecycle", "research"
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "evidence", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "review_input_paths": [str] | absent,  # attempt reads outside input_root; claimed until terminal (#9597)
@@ -63,6 +63,9 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "result_file": str | null,   # path to the full response text
         "held_work": [str] | absent,  # explicit runtime-root relative files to preserve (#10000)
         "preserved_held_work": object | absent,  # verified runtime-held-work.v1 retrieval manifest
+        "runtime_tmp_root": str,  # task-scoped runtime lease (the worker's TMPDIR)
+        "evidence_dir": str,      # supported evidence directory under that lease (#11342)
+        "preserved_evidence": object | absent,  # verified runtime-evidence.v1 retrieval manifest
         "stderr_excerpt": str | null,   # the worker's raw stderr: local; never quote it in a PR or issue
         "returncode": int | null,
         "returncode_reason": str | null,
@@ -1622,10 +1625,21 @@ def _preserve_runtime_tmp_held_work(
     record: dict[str, Any] | None,
     response: str | None = None,
 ) -> dict[str, Any]:
-    """Publish held-work retrieval metadata before any runtime lease deletion."""
+    """Publish held-work and evidence retrieval metadata before any lease deletion.
+
+    The supported ``evidence/`` directory (#11342) is preserved first: a review
+    that writes only there keeps an auditable copy after task cleanup. The
+    citation-driven held-work pass stays as before. A preservation failure is a
+    typed refusal, so the caller retains the lease instead of deleting bytes.
+    """
     from scripts.fleet import runtime_held_work
 
     if record is None:
+        # A stateless lease has no task store entry to attribute a receipt to.
+        # The dispatch marker distinguishes supported evidence from a tool's
+        # own evidence directory, which keeps its existing age-based retention.
+        if os.path.lexists(_runtime_tmp_task_id_marker_path(lease)):
+            runtime_held_work.require_empty_evidence(lease)
         return {}
     if response is None:
         task_id = record.get("task_id")
@@ -1636,12 +1650,17 @@ def _preserve_runtime_tmp_held_work(
         bound_root = record.get("runtime_tmp_root")
         if bound_root and Path(bound_root).absolute() != lease.absolute():
             raise runtime_held_work.HeldWorkPreservationError()
+        evidence = runtime_held_work.preserve_evidence(lease, primary=_main_checkout_root(_REPO_ROOT), record=record)
         receipt = runtime_held_work.preserve(
             lease, primary=_main_checkout_root(_REPO_ROOT), record=record, response=response or ""
         )
-        if receipt is None:
+        updates: dict[str, Any] = {}
+        if receipt is not None:
+            updates["preserved_held_work"] = receipt
+        if evidence is not None:
+            updates["preserved_evidence"] = evidence
+        if not updates:
             return {}
-        updates = {"preserved_held_work": receipt}
         path = _state_path_no_create(record["task_id"])
         with task_state_lock(path):
             current = _read_state_json(path)
@@ -1651,8 +1670,34 @@ def _preserve_runtime_tmp_held_work(
             _write_record_unlocked(path, current)
         record.update(updates)
         return updates
+    except runtime_held_work.EvidencePreservationError:
+        raise
     except (OSError, ValueError, TypeError):
         raise runtime_held_work.HeldWorkPreservationError() from None
+
+
+def _require_preserved_evidence_still_matches(
+    lease: Path, updates: Mapping[str, Any], *, dispatch_lease: bool
+) -> None:
+    """Refuse lease deletion when supported evidence changed after its receipt (#11342).
+
+    ``preserve_evidence`` copies to a fixed point and receipts only a set verified
+    identical to the source. Recheck immediately before deletion so a file that
+    appeared or changed after the final enumeration is never silently lost; the
+    typed refusal keeps the lease.
+    Without a receipt, dispatch evidence must still be absent or empty.
+    ``dispatch_lease`` is captured before preservation and accounting, so losing
+    the marker during either operation cannot bypass the final recheck.
+    """
+    from scripts.fleet import runtime_held_work
+
+    receipt = updates.get("preserved_evidence") if isinstance(updates, Mapping) else None
+    if receipt is None:
+        if dispatch_lease:
+            runtime_held_work.require_empty_evidence(lease)
+        return
+    if not runtime_held_work.evidence_matches_receipt(lease, receipt):
+        raise runtime_held_work.EvidencePreservationError()
 
 
 def _sweep_runtime_tmp_orphans(
@@ -1743,8 +1788,10 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
-                _preserve_runtime_tmp_held_work(lease, state)
+                dispatch_lease = state is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
+                updates = _preserve_runtime_tmp_held_work(lease, state)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
+                _require_preserved_evidence_still_matches(lease, updates, dispatch_lease=dispatch_lease)
                 _remove_runtime_tmp_lease(lease, namespace)
             except (OSError, ValueError) as exc:
                 result["errors"] += 1
@@ -1849,8 +1896,10 @@ def _reap_runtime_tmp_lease(
                 if _read_runtime_tmp_task_id_marker(lease) is None
                 else None,
             )
+        dispatch_lease = task_record is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
+        _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
@@ -2540,6 +2589,7 @@ def _ensure_sibling_repo_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
+        _refuse_unretrieved_worktree_evidence(worktree_path)
         telemetry["reused"] = True
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -5738,7 +5788,11 @@ _READ_ONLY_AGY_HOOK_PATH = ".agents/hooks.json"
 _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR = "agy hook snapshot failed:"
 # Snapshot errors that withhold content evidence Git status cannot provide.
 # A read-only task with one never settles ``done``.
-_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = ("linked database snapshot failed:", _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR)
+_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = (
+    "linked database snapshot failed:",
+    _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR,
+    "opencode snapshot failed:",
+)
 
 
 def _read_only_snapshot_error_fails_closed(error: str | None) -> bool:
@@ -5837,6 +5891,13 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
+    # Initialization precedes the baseline. Hash its output as well as tracked
+    # plugins so an ignored-to-ignored rewrite after that baseline still trips.
+    try:
+        for path, fingerprint in _read_only_opencode_fingerprints(cwd).items():
+            entries[path] = entries.get(path, "!!") + ":" + fingerprint
+    except OSError as exc:
+        return None, f"opencode snapshot failed: {type(exc).__name__}"
     # Discover database links directly so every provisioned link is covered
     # without duplicating the provisioning paths in another scope.
     try:
@@ -5881,6 +5942,58 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
             entries.get(_READ_ONLY_AGY_HOOK_PATH, "!!") + ":" + json.dumps(hook_fingerprint)
         )
     return entries, None
+
+
+def _read_only_opencode_fingerprints(cwd: Path) -> dict[str, str]:
+    """Hash the exact OpenCode tree without traversing symlinks (#11347).
+
+    Directory descriptors and no-follow opens keep a replaced directory from
+    redirecting the walk outside the checkout. Links record their text, never
+    grant a directory exemption, and never cause an external tree to be read.
+    """
+    fingerprints: dict[str, str] = {}
+
+    def visit(parent_fd: int, name: str, relative: str) -> None:
+        info = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        value: list[Any] = [info.st_mode]
+        if stat.S_ISLNK(info.st_mode):
+            value.append(os.readlink(name, dir_fd=parent_fd))
+        elif stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode):
+            flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+            if stat.S_ISDIR(info.st_mode):
+                flags |= os.O_DIRECTORY
+            fd = os.open(name, flags, dir_fd=parent_fd)
+            try:
+                acquired = os.fstat(fd)
+                if (acquired.st_dev, acquired.st_ino, acquired.st_mode) != (info.st_dev, info.st_ino, info.st_mode):
+                    raise OSError("OpenCode entry changed during snapshot")
+                if stat.S_ISDIR(info.st_mode):
+                    for child in sorted(os.listdir(fd)):
+                        visit(fd, child, f"{relative}/{child}")
+                else:
+                    with os.fdopen(os.dup(fd), "rb") as handle:
+                        value.append(hashlib.file_digest(handle, "sha256").hexdigest())
+                after = os.fstat(fd)
+                if (info.st_mtime_ns, info.st_ctime_ns, info.st_size) != (
+                    after.st_mtime_ns,
+                    after.st_ctime_ns,
+                    after.st_size,
+                ):
+                    raise OSError("OpenCode entry changed during snapshot")
+            finally:
+                os.close(fd)
+        fingerprints[relative] = json.dumps(value)
+
+    root_fd = os.open(cwd, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        try:
+            os.stat(".opencode", dir_fd=root_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return fingerprints
+        visit(root_fd, ".opencode", ".opencode")
+    finally:
+        os.close(root_fd)
+    return fingerprints
 
 
 def _provision_agy_read_only_guard(cwd: Path) -> None:
@@ -6296,6 +6409,11 @@ def _is_read_only_runtime_state_exemption(
     after_state: str | None,
 ) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
+    normalized = _normalize_read_only_relpath(path)
+    if normalized == ".opencode" or normalized.startswith(".opencode/"):
+        # Its install is in the baseline. Later writes, even cache-shaped
+        # names inside dependencies, belong to the worker (#11347).
+        return False
     if not _is_read_only_runtime_state_path(path):
         return False
     if _is_read_only_package_build_path(path):
@@ -7997,6 +8115,7 @@ def _build_worker_env(
     if runtime_tmp_root is not None:
         worker_env["TMPDIR"] = str(runtime_tmp_root)
         worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+        worker_env["LU_TASK_EVIDENCE_DIR"] = str(Path(runtime_tmp_root) / "evidence")
         worker_env.update(_worker_tool_cache_env(Path(runtime_tmp_root)))
     if runtime_tmp_namespace_root is not None:
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
@@ -10062,6 +10181,26 @@ def _mark_review_attempt_worktree(worktree_path: Path, task_id: str) -> None:
     marker.write_text(f"{task_id}\n", encoding="utf-8")
 
 
+def _refuse_unretrieved_worktree_evidence(worktree_path: Path) -> None:
+    """Refuse reuse of a checkout that holds a terminal task's unretrieved evidence (#11342).
+
+    Dispatch preparation mutates a reused worktree: cone sparse-checkout removes
+    untracked/ignored directories inside a tracked cone directory. A finished task
+    that never had its ignored output preserved would lose its only copy, so reuse
+    waits until the owner preserves it (``scripts.fleet.post_task_reap``).
+    """
+    from scripts.fleet import ignored_task_output
+
+    refusal = ignored_task_output.unretrieved_reuse_refusal(
+        worktree_path,
+        tasks_dir=tasks_dir(),
+        repo_root=_REPO_ROOT,
+        primary=_REPO_ROOT,
+    )
+    if refusal is not None:
+        raise RuntimeError(refusal)
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -10160,6 +10299,7 @@ def _ensure_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
+        _refuse_unretrieved_worktree_evidence(worktree_path)
         telemetry["reused"] = True
         if resolved_base_sha is None:
             telemetry["rebased"] = _validate_existing_worktree(
@@ -10586,6 +10726,27 @@ def _recorded_research_block(block: object) -> str:
     return text
 
 
+def _evidence_prompt_block() -> str:
+    """Name the supported evidence directory whose contents task cleanup preserves (#11342).
+
+    The block is deliberately independent of the task's runtime lease: the
+    worker reads the concrete ``evidence/`` path from ``$LU_TASK_EVIDENCE_DIR``
+    (see :func:`_build_worker_env`) and the task record keeps it in
+    ``evidence_dir``. Keeping the path out of the prompt means the prompt text,
+    its SHA-256 and the evaluation harness's paired frame stay identical across
+    tasks, so exact-prompt verification still holds.
+    """
+    return (
+        "\n[evidence]\n"
+        "Durable evidence (reports, archives, logs, screenshots) belongs in "
+        "`$LU_TASK_EVIDENCE_DIR`, this task's `evidence/` directory.\n"
+        "Task cleanup copies that directory to `batch_state/preserved/<task>/` with a retrieval "
+        "receipt before it removes the runtime lease. Files left elsewhere in the worktree or "
+        "runtime temp root are not preserved and can be deleted when the task ends.\n"
+        "Put every artifact a later reader needs there and cite it from your result.\n"
+    )
+
+
 def _compose_dispatch_prompt(
     base: str,
     *,
@@ -10600,13 +10761,20 @@ def _compose_dispatch_prompt(
     blocks: list[str] | None = None,
     agent: str | None = None,
     review_route: bool = False,
+    evidence_dir: Path | str | None = None,
 ) -> str:
     """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
 
-    In prompt order: the rules core, the worktree block, ``base``, the research
-    pointers and the advisory block. ``blocks``, when given, gets the kinds
-    added, in prompt order. The bounded worker rebuilds its expected prompt
-    with this function (#9275), so the two cannot drift apart.
+    In prompt order: the rules core, the worktree block, ``base``, the evidence
+    block, the research pointers and the advisory block. ``blocks``, when given,
+    gets the kinds added, in prompt order. The bounded worker rebuilds its
+    expected prompt with this function (#9275), so the two cannot drift apart.
+
+    ``evidence_dir`` is the *presence* signal for the supported evidence
+    directory (``None`` means the dispatch has none): its concrete, task-specific
+    lease path is never interpolated, so every task's prompt and SHA-256 stay
+    comparable. The worker reads the path from ``$LU_TASK_EVIDENCE_DIR`` and the
+    task record keeps it in ``evidence_dir``.
     """
     prompt = _augment_prompt_with_worktree(
         base,
@@ -10617,6 +10785,10 @@ def _compose_dispatch_prompt(
     )
     if worktree_path is not None and blocks is not None:
         blocks.insert(0, "worktree")
+    if evidence_dir is not None:
+        prompt = prompt + _evidence_prompt_block()
+        if blocks is not None:
+            blocks.append("evidence")
     if research_block and blocks is not None:
         blocks.append("research")
     prompt = prompt + research_block
@@ -11196,19 +11368,6 @@ def _run_worker(
     # Only AGY executes the workspace guard, so only AGY acquires it, before
     # and after alike; other agents keep the base snapshot call (#10727).
     read_only_snapshot_options: dict[str, bool] = {"agy_hook": True} if agent == "agy" else {}
-    if mode == "read-only":
-        if agent == "agy":
-            _provision_agy_read_only_guard(cwd)
-        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
-            cwd, **read_only_snapshot_options
-        )
-        task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
-        task_records_snapshot_error = task_records_error
-        if read_only_snapshot_error is None:
-            read_only_snapshot_error = task_records_error
-        _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
-        state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
-        _write_state_atomic(state_path, state)
     start = time.monotonic()
     ok_outcome = False
     stderr_excerpt = None
@@ -11295,6 +11454,25 @@ def _run_worker(
 
     try:
         try:
+            if mode == "read-only":
+                if agent in {"deepseek", "glm"}:
+                    from scripts.agent_runtime.adapters.deepseek import initialize_opencode_dependencies
+
+                    initialize_opencode_dependencies(
+                        cwd, agent=agent, model=model, timeout=min(hard_timeout, 120) if hard_timeout > 0 else 120
+                    )
+                if agent == "agy":
+                    _provision_agy_read_only_guard(cwd)
+                read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
+                    cwd, **read_only_snapshot_options
+                )
+                task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
+                task_records_snapshot_error = task_records_error
+                if read_only_snapshot_error is None:
+                    read_only_snapshot_error = task_records_error
+                _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
+                state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
+                _write_state_atomic(state_path, state)
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
@@ -12743,8 +12921,12 @@ def _run_dor_preflight(
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
     (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
     says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+
+    A membership timeout on a card that otherwise read PASS is an UNKNOWN advisory (#11283): it is recorded
+    under ``unknown`` with ``dor: UNKNOWN (timeout)`` and needs no ``--allow-dor-warn``. Card findings, issue
+    lookup and checker failures keep their refusals; ``dor`` is PASS only when every issue read PASS.
     """
-    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE
+    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE, AdmissionState, admission_state
 
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
@@ -12760,6 +12942,7 @@ def _run_dor_preflight(
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
+    unknown: dict[str, str] = {}
     non_overridable: set[str] = set()
     membership_records: dict[str, Any] = {}
     issue_numbers: list[int] = []
@@ -12805,7 +12988,10 @@ def _run_dor_preflight(
                 # section is explicitly unchecked, never evidence of membership.
                 if "membership" in payload:
                     membership_records[label] = payload["membership"] or {"status": "unchecked"}
-                if result.returncode or payload.get("verdict") != "PASS":
+                state = admission_state(payload)
+                if state is AdmissionState.UNKNOWN and result.returncode == 1:
+                    unknown[label] = ",".join(payload["missing"])
+                elif result.returncode or state is not AdmissionState.PASS:
                     warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
             except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
                 if not recorded:
@@ -12829,7 +13015,10 @@ def _run_dor_preflight(
         stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
         return None, None
-    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    verdict = AdmissionState.WARN if warnings else AdmissionState.UNKNOWN if unknown else AdmissionState.PASS
+    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings, "dor": verdict.value}
+    if unknown:
+        record["unknown"] = unknown
     if membership_records:
         record["membership"] = membership_records
     if stream_epics:
@@ -12845,6 +13034,9 @@ def _run_dor_preflight(
             f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()
         )
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
+    if unknown:
+        details = "; ".join(f"{('#' + label) if label.isdigit() else label}: {codes}" for label, codes in unknown.items())
+        print(f"⚠️ DoR UNKNOWN (timeout) ({details}); membership unverified", file=sys.stderr)
     return None, record
 
 
@@ -13579,12 +13771,6 @@ def _dispatch(
     if cursor_auto_error:
         print(cursor_auto_error, file=sys.stderr)
         return 2
-    cursor_auto_admission = (
-        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
-        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
-        else None
-    )
-
     task_id = args.task_id
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
@@ -14029,6 +14215,17 @@ def _dispatch(
             print(dor_error, file=sys.stderr)
             return 2
 
+    # Bind Auto admission to the final DoR check, including a changed prompt (#11283).
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": dor_record.get("dor", "PASS") == "PASS", "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
+
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
     if write_intent_error:
@@ -14410,8 +14607,8 @@ def _dispatch(
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
     # the shared ownership ledger entirely (Claude CF #5649 r11).
-    # A concrete overlap waits in the ledger's bounded FIFO queue
-    # (DELEGATE_OWNERSHIP_WAIT_S) instead of refusing at once (#11281); only
+    # A concrete overlap waits on live holders and requeues expired tickets
+    # (#11351; DELEGATE_OWNERSHIP_WAIT_S is the unknown-holder fallback); only
     # this dispatch's own worktree lock is held while it waits.
     if not bool(getattr(args, "dry_run", False)):
         try:
@@ -14420,6 +14617,7 @@ def _dispatch(
                 admit_write_paths,
                 env_guard_mode,
                 env_queue_wait_s,
+                publish_requeue_notice,
             )
         except ImportError:  # pragma: no cover - flat script path
             from guardrails.delegate_ownership import (  # type: ignore
@@ -14427,12 +14625,14 @@ def _dispatch(
                 admit_write_paths,
                 env_guard_mode,
                 env_queue_wait_s,
+                publish_requeue_notice,
             )
 
         guard_mode = env_guard_mode()
         try:
             ownership = admit_write_paths(
                 task_id=task_id,
+                cwd=validated_cwd or target_repo_root,
                 mode=str(args.mode),
                 owned_paths=_declared_owned_paths(getattr(args, "owned_path", None)),
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
@@ -14440,6 +14640,10 @@ def _dispatch(
                 guard_mode=guard_mode,
                 wait_s=env_queue_wait_s(),
                 on_queued=lambda notice: print(f"⏳ {notice}", file=sys.stderr, flush=True),
+                requeue_on_timeout=True,
+                on_requeued=lambda notice: publish_requeue_notice(
+                    notice, task_id=task_id, initiator=attribution.initiator, run_nonce=run_nonce,
+                ),
             )
         except Exception as own_exc:
             # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
@@ -14892,6 +15096,7 @@ def _dispatch(
                 return 1
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
+                _refuse_unretrieved_worktree_evidence(resolved_wt)
             except (OSError, ValueError, RuntimeError) as exc:
                 discard_logs()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -15015,6 +15220,15 @@ def _dispatch(
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
 
+    try:
+        (runtime_tmp_root / "evidence").mkdir(mode=0o700)
+    except OSError as exc:
+        _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+        stdout_fd.close()
+        stderr_fd.close()
+        print(f"❌ failed to create the evidence directory for {task_id!r}: {exc}", file=sys.stderr)
+        return 1
+
     spawned = False
     try:
         cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
@@ -15046,6 +15260,7 @@ def _dispatch(
             blocks=prompt_blocks,
             agent=dispatch_agent,
             review_route=(review_attempt is not None),
+            evidence_dir=runtime_tmp_root / "evidence",
         )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
@@ -15100,6 +15315,7 @@ def _dispatch(
             "worktree_local_venv": worktree_telemetry.get("local_venv"),
             "ignored_output_baseline": worktree_telemetry.get("ignored_output_baseline"),
             "runtime_tmp_root": str(runtime_tmp_root),
+            "evidence_dir": str(runtime_tmp_root / "evidence"),
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
             "keep_worktree": keep_worktree,
@@ -15433,7 +15649,7 @@ def _dispatch(
                 from guardrails.delegate_ownership import update_write_claim_pid  # type: ignore
 
             try:
-                update_write_claim_pid(task_id, int(proc.pid))
+                update_write_claim_pid(task_id, int(proc.pid), cwd=validated_cwd or target_repo_root)
             except Exception as own_exc:
                 print(
                     f"⚠️  write-path ownership: failed to bind worker pid: {own_exc}",
@@ -15526,6 +15742,10 @@ class MonitorApiUnavailable(RuntimeError):
 
 class BudgetGuardRefuseError(RuntimeError):
     """Raised when --check-budget must refuse dispatch (hot/deficit/near_cap, no fallback)."""
+
+
+class _UnmappedSubstitutionModelError(BudgetGuardRefuseError):
+    """The substitute rejects an explicit model with no catalog mapping."""
 
 
 class CapacityGuardRefuseError(RuntimeError):
@@ -15980,6 +16200,7 @@ def _bounded_prompt_composer(
             rules_seat=args.get("rules_seat"),
             agent=agent,
             review_route=(record.get("review_attempt") is not None),
+            evidence_dir=record.get("evidence_dir") or None,
         )
 
     return compose
@@ -16181,9 +16402,12 @@ def _cursor_auto_refusal(
     Auto needs positive evidence of that task: ``--research-role implementation``
     (the declared functional role; a missing or any other role is unclassified for
     Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
-    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
-    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    checked an issue card and found it PASS (``--allow-dor-warn`` and UNKNOWN are not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default. An explicit
+    ``dor`` state other than PASS refuses on its own; a legacy record without ``dor`` keeps its
+    warning-map reading.
     """
+    from scripts.ci.check_issue_task_quality import AdmissionState
     from scripts.review.model_catalog import (
         CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
         cursor_pinned_models,
@@ -16206,7 +16430,12 @@ def _cursor_auto_refusal(
         reasons.append("no --owned-path")
     if not dor_record or not dor_record.get("issues"):
         reasons.append("no DoR issue card was checked")
-    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+    elif (
+        ("dor" in dor_record and dor_record["dor"] != AdmissionState.PASS.value)
+        or dor_record.get("warnings")
+        or dor_record.get("unknown")
+        or dor_record.get("allow_warn_reason") is not None
+    ):
         reasons.append("the DoR issue card is not PASS")
     if not reasons:
         return None
@@ -17682,13 +17911,29 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
 
             try:
                 pr = _run_json(
-                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid"]
+                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid,isCrossRepository"]
                 )
             except RecordError as exc:
                 raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
-            if not isinstance(pr, dict) or pr.get("headRefOid") != target.head_sha or not pr.get("headRefName"):
+            if (
+                not isinstance(pr, dict)
+                or pr.get("isCrossRepository") is not False
+                or not isinstance(pr.get("headRefName"), str)
+                or not pr["headRefName"]
+                or not isinstance(pr.get("headRefOid"), str)
+                or not re.fullmatch(r"[0-9a-fA-F]{40}", pr["headRefOid"])
+                or pr["headRefOid"] == "0" * 40
+            ):
                 raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
             branch = pr["headRefName"]
+            from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+            try:
+                live_head = live_canonical_branch_head(repo_root, branch, repository=repository)
+            except TargetResolutionError as exc:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
+            if live_head != target.head_sha:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
         if branch:
             unknown_history = admitted_unknown_history(
                 repository=repository,
@@ -18138,7 +18383,7 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
     if explicit_model and mapped is None:
         rejection = _adapter_model_rejection(target_agent, explicit_model)
         if rejection:
-            raise BudgetGuardRefuseError(
+            raise _UnmappedSubstitutionModelError(
                 "ROUTING REFUSED: substitute "
                 f"--agent {target_agent} rejects explicit --model {explicit_model} "
                 f"({rejection}). Refusing before spawn."
@@ -18153,6 +18398,53 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
         f"catalog default {default or '(none)'}). "
         "Refusing before spawn."
     )
+
+
+def _resolve_budget_substitution_model(
+    requested: str,
+    target: str,
+    model: str | None,
+    *,
+    info: dict[str, Any],
+    reason: str,
+    snapshot_metadata: Mapping[str, Any] | None,
+    diagnostic_sink: dict[str, Any] | None,
+) -> tuple[str, str] | None:
+    """Resolve a writer's budget shed, retaining an incompatible pin unless exhausted (#11110)."""
+    try:
+        return _resolve_substitution_model(target, model)
+    except _UnmappedSubstitutionModelError:
+        facts = _budget_owner_facts(requested, info, model=model, is_stale=False, snapshot_metadata=snapshot_metadata)
+        exhausted = "near_cap" in {
+            _budget_lane_status(requested, info),
+            facts.status,
+            credit_lane.allowance_status(facts.plan_remaining_pct),
+        } or credit_lane.plan_window_exhausted(requested, info)
+        if exhausted:
+            remaining = f"{facts.plan_remaining_pct}% remaining" if facts.plan_remaining_pct is not None else "unknown"
+            remedies = "wait for reset, request a mapped model"
+            if requested == "claude":
+                remedies += ", or select the other Claude account label where policy permits"
+            raise BudgetGuardRefuseError(
+                f"BUDGET_PINNED_MODEL_EXHAUSTED: --agent {requested} is exhausted/near_cap "
+                f"({remaining}; {reason}); explicit --model {model} has no mapping "
+                f"accepted by --agent {target}. Supported remedies: {remedies}. Refusing before spawn."
+            ) from None
+        note = {
+            "code": "BUDGET_PIN_RETAINED",
+            "agent": requested,
+            "model": model,
+            "substitute_agent": target,
+            "trigger": reason,
+        }
+        if diagnostic_sink is not None:
+            diagnostic_sink["pinned_model_retained"] = note
+        print(
+            f"NOTE: BUDGET_PIN_RETAINED: keeping --agent {requested} --model {model} "
+            f"on {reason}; the pin has no mapping accepted by --agent {target} and the original lane is not exhausted.",
+            file=sys.stderr,
+        )
+        return None
 
 
 def _substitution_model_phrase(chosen: str, how: str, explicit_model: str | None) -> str:
@@ -18291,7 +18583,10 @@ def _resolve_agent_with_budget_guard(
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError). ``force_agent`` disables that writer substitution and
+    BudgetGuardRefuseError). An unmapped explicit model rejected by the substitute
+    stays on its original lane for hot/pace triggers, with a task-record note;
+    exhaustion instead refuses with BUDGET_PINNED_MODEL_EXHAUSTED (#11110).
+    ``force_agent`` disables that writer substitution and
     the capacity refusal, and still prints and stores the lane's quota and
     health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
@@ -18656,8 +18951,20 @@ def _resolve_agent_with_budget_guard(
                 requested_model=requested_model,
                 model_resolution=model_resolution,
                 origin_agent=origin_agent or requested,
+                diagnostic_sink=diagnostic_sink,
             )
-        chosen, how = _resolve_substitution_model(fallback, requested_model)
+        resolved = _resolve_budget_substitution_model(
+            requested,
+            fallback,
+            requested_model,
+            info=agent_dict,
+            reason=reason,
+            snapshot_metadata=diags,
+            diagnostic_sink=diagnostic_sink,
+        )
+        if resolved is None:
+            return requested
+        chosen, how = resolved
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {fallback} "
             f"{_substitution_model_phrase(chosen, how, requested_model)} "
@@ -18707,6 +19014,7 @@ def _language_lane_substitute(
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
     origin_agent: str | None = None,
+    diagnostic_sink: dict[str, Any] | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
@@ -18754,7 +19062,18 @@ def _language_lane_substitute(
                 f"Language work on --agent {requested} cannot move to "
                 f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
-        chosen, how = _resolve_substitution_model(nxt, current_model)
+        resolved = _resolve_budget_substitution_model(
+            seat,
+            nxt,
+            current_model,
+            info=info_dict,
+            reason=why,
+            snapshot_metadata=snapshot_metadata,
+            diagnostic_sink=diagnostic_sink,
+        )
+        if resolved is None:
+            return seat
+        chosen, how = resolved
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
             f"{_substitution_model_phrase(chosen, how, current_model)} "
@@ -19504,6 +19823,13 @@ def build_parser() -> argparse.ArgumentParser:
             "  that slice is installed with its memory limits; otherwise dispatch warns and uses plain Popen.\n"
             "  A scoped start that does not prove the worker never started is marked failed and is not relaunched.\n"
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
+            "Worker evidence (#11342):\n"
+            "  Every worker gets an empty `$LU_TASK_EVIDENCE_DIR` (the task runtime lease's `evidence/`\n"
+            "  directory). Task cleanup copies that directory to `batch_state/preserved/<task>/` with a\n"
+            "  retrieval receipt before it deletes the lease, capped at 256 MiB; an over-cap or unreadable\n"
+            "  evidence directory is a typed refusal that keeps the lease. Write reports, archives, logs and\n"
+            "  screenshots there, because ignored files elsewhere in a worktree can be removed by a later\n"
+            "  sparse-checkout, and a terminal task's unretrieved worktree evidence now refuses reuse.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
             "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission);\n"
@@ -19582,7 +19908,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--allow-dor-warn",
         metavar="REASON",
-        help="Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON.",
+        help=(
+            "Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON. "
+            "A membership timeout on an otherwise PASS card is an UNKNOWN advisory and needs no override (#11283)."
+        ),
     )
     d.add_argument(
         "--lifecycle-file",

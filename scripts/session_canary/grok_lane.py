@@ -52,6 +52,7 @@ import re
 import subprocess
 import sys
 from collections.abc import Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -72,12 +73,9 @@ class StreamResolutionError(ValueError):
         super().__init__(f"{self.reason}: {selector!r}; pass --stream epic:N")
 
 
-def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
-    """CLI stream, launcher environment, then the shell selector SSOT."""
-    stream = explicit or os.environ.get("SESSION_STREAM_ID")
-    if stream:
-        return stream
-    selector = epic.strip().lower()
+def _launcher_selector_stream(selector: str) -> str:
+    """Resolve one selector through the launcher shell SSOT, ignoring the environment."""
+    selector = selector.strip().lower()
     try:
         result = subprocess.run(
             [
@@ -98,6 +96,26 @@ def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
     if result.returncode != 0 or not result.stdout.strip():
         raise StreamResolutionError(selector)
     return result.stdout.strip()
+
+
+def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
+    """CLI stream, launcher environment, then the shell selector SSOT."""
+    stream = explicit or os.environ.get("SESSION_STREAM_ID")
+    if stream:
+        return stream
+    return _launcher_selector_stream(epic)
+
+
+def launcher_stream_id(epic: str) -> str:
+    """The stream the launcher derives for ``epic``, never the ambient environment.
+
+    ``resolve_stream_id`` deliberately prefers ``SESSION_STREAM_ID`` for its
+    single-lane CLI callers. A supervisor that watches every lane must not apply
+    one lane's ambient stream to another lane's handoff, so the context guard
+    uses this helper, which resolves through ``launcher_selector_stream`` exactly
+    as ``codex.sh`` does with ``launcher_selector_stream "$LC_EPIC"``.
+    """
+    return _launcher_selector_stream(epic)
 
 
 def _stream_id(args: argparse.Namespace) -> str:
@@ -341,6 +359,79 @@ def _format_anchor_shortfall(attempts: list[tuple[str, int, int, int]]) -> str:
         f"tried {tried}; "
         "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
         "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it"
+    )
+
+
+@dataclass(frozen=True)
+class HandoffAnchorCheck:
+    """The verdict the launcher's anchor mint would reach for one handoff set.
+
+    ``ok`` is true only when the shared selector found a handoff whose facts
+    reach :data:`N_ANCHORS`. ``next_count`` and ``hands_off_count`` are the
+    section counts of the best attempt (the selected file when ``ok``).
+    ``shortfall`` is the launcher's own message when ``ok`` is false, else empty.
+    ``no_handoff`` is true when no candidate file existed at all, so the caller
+    can fail open instead of demanding a rewrite. The check writes no file,
+    opens no network connection, and touches no lease.
+    """
+
+    ok: bool
+    anchors: int
+    target: int
+    next_count: int
+    hands_off_count: int
+    shortfall: str
+    handoff_rel: str
+    no_handoff: bool
+
+
+def check_handoff_anchors(
+    *,
+    repo: Path,
+    epic: str,
+    candidates: Sequence[handoff_select.LoadedCandidate | Path],
+    stream_id: str = "",
+    stream_entries: Sequence[dict[str, str]] = (),
+) -> HandoffAnchorCheck:
+    """Run the launcher's selector over ``candidates`` without writing anything.
+
+    This calls :func:`select_handoff`, which counts sections through
+    :func:`_handoff_section_counts` exactly as mint does, on the text the
+    launcher already ranked. Callers pass the candidates the launcher resolves
+    (``handoff_select.load_codex_candidates`` for the Codex lane) and the stream
+    entries the launcher loads; the helper itself reads nothing.
+    """
+    selection = select_handoff(
+        repo=repo,
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=list(stream_entries),
+        candidates=candidates,
+    )
+    attempts = list(selection.attempts)
+    if selection.reason and selection.anchor_count >= N_ANCHORS:
+        _rel, anchors, next_n, hands_n = attempts[-1]
+        return HandoffAnchorCheck(
+            ok=True,
+            anchors=anchors,
+            target=N_ANCHORS,
+            next_count=next_n,
+            hands_off_count=hands_n,
+            shortfall="",
+            handoff_rel=selection.reason,
+            no_handoff=False,
+        )
+    no_handoff = not any(rel != handoff_select.NO_HANDOFF_LABEL for rel, _anchors, _next_n, _hands_n in attempts)
+    _rel, anchors, next_n, hands_n = max(attempts, key=lambda attempt: attempt[1]) if attempts else ("", 0, 0, 0)
+    return HandoffAnchorCheck(
+        ok=False,
+        anchors=anchors,
+        target=N_ANCHORS,
+        next_count=next_n,
+        hands_off_count=hands_n,
+        shortfall=_format_anchor_shortfall(attempts),
+        handoff_rel="" if no_handoff else _rel,
+        no_handoff=no_handoff,
     )
 
 
