@@ -25,7 +25,9 @@ Practices used:
 
 ## Tactical layer: per cycle
 
-- Orient on live [cycle](cycle.md) state, never on memory or the last handoff alone.
+- Orient on live [cycle](cycle.md) state and `lu-driver-state render --lane cto`, never on
+  memory or the last handoff alone. Record priority, sequence, routing and approach changes
+  with `lu-driver-state note <id> <text>` on the affected item.
 - Finish and land before starting; a new dispatch needs a free slot and a reason.
 - Triage PRs by leverage: land now; one action from landing; needs a fix round; needs a
   decision.

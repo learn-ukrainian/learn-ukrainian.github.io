@@ -21,6 +21,10 @@ branch again (`workflow.md` § Post-merge cleanup, `docs/runbooks/worktree-clean
 
 ## Dispatch helpers
 
+Record each new in-flight task with `lu-driver-state add --lane cto --kind inflight`, its
+owner and done condition. Attach its task ID with `link <id> task <task-id>` and record the
+FULL run nonce with `note <id> <text>` so the tracker handoff can re-arm its wait.
+
 Repeated dispatches belong in a scratch Python script that builds each
 `delegate.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
 for `run_nonce=`, `SUBSTITUTE` and `queued behind`. An `--owned-path` overlapping a live

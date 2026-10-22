@@ -11,9 +11,13 @@ run; you alone plan, route, dispatch bounded workers, seat reviews, land PRs and
 Lane mechanics (briefs, review, merge, cleanup) are in the `drive-epic` skill; this skill
 adds what only the CTO seat does.
 
-Live state is not here. Who runs, open PRs, pool headroom, standing orders and the mistakes
-ledger come from the CTO state file (`.claude/epics-epic/DRIVER-STATE.md`, gitignored) and
-from tools in this turn, never from memory or this file.
+Live state is in the driver-state database, read through `lu-driver-state` with `--lane cto`,
+and verified with tools in this turn. Orders, the program and plan, goals, in-flight work,
+blockers, mistakes and handoff changes go there. The CLI takes its actor from
+`LU_INBOX_WORKER`. The gitignored `.claude/epics-epic/DRIVER-STATE.md` is a pinned pointer
+under 4 KB: provider facts needed
+in every model call, plus instructions to run `lu-driver-state render --lane cto` and
+`lu-driver-state check --lane cto` first. It holds no task state or handoff blocks.
 
 ## Phases
 
@@ -51,7 +55,7 @@ from tools in this turn, never from memory or this file.
 
 Read fresh before every routing or budget decision: core.md P2,
 `agents_extensions/shared/rules/model-assignment.md`, `scripts/config/model_catalog.yaml`
-(`review_ladders`) and the served ruleset (`/api/rules`). Standing orders in the state file
+(`review_ladders`) and the served ruleset (`/api/rules`). Standing orders in the tracker
 bind until the rules absorb them; when they disagree with the catalog, the standing order
 wins and the mismatch is a rules-change item.
 
