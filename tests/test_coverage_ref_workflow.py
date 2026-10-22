@@ -185,6 +185,13 @@ def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():
     assert "continue-on-error" not in step(merge, "Validate receipts, combine and report")
 
 
+def test_test_failures_use_the_combine_summary_without_a_failure_only_duplicate():
+    """Pytest failures now leave shard jobs green, so failure() hides their IDs."""
+    assert all(item.get("name") != "List failing tests in job summary" for item in WORKFLOW["jobs"]["pytest"]["steps"])
+    assert WORKFLOW["jobs"]["combine"]["if"] == "${{ always() }}"
+    assert step(WORKFLOW["jobs"]["combine"], "Validate receipts, combine and report")["if"] == "${{ always() }}"
+
+
 def test_prepare_failure_keeps_tooling_and_dependency_lock_available_for_manifest():
     """A skipped target checkout must not remove the interpreter pin or coverage installer."""
     job = WORKFLOW["jobs"]["combine"]

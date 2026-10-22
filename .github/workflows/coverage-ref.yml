@@ -101,6 +101,8 @@ jobs:
     - prepare
     runs-on: ubuntu-latest
     # Two workers need twice the previous job budget; the per-test budget is unchanged.
+    # Residual: native code that never returns to Python can defer a signal
+    # timeout until the 90-minute job limit, losing the whole shard's data.
     timeout-minutes: 90
     permissions:
       contents: read
@@ -253,11 +255,6 @@ jobs:
         # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
         .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
           --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
-    - name: List failing tests in job summary
-      if: failure()
-      env:
-        SHARD: ${{ matrix.shard }}
-      run: python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
     - name: Upload pytest JUnit report
       if: ${{ !cancelled() }}
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9

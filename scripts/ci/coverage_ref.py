@@ -144,7 +144,9 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
     data_files = []
     seen_nodeids: set[str] = set()
     duration_hashes = set()
-    if matrix_result not in ("success", "failure"):
+    # Plain pytest failures return success from run_shard. Any failed job therefore
+    # has an additional failure, such as pg_skip_guard or an artifact upload.
+    if matrix_result != "success":
         errors.append(f"pytest matrix: {matrix_result}")
     try:
         import coverage
@@ -216,8 +218,6 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                 errors.append(f"shard {shard}: {error}")
         if len(duration_hashes) != 1:
             errors.append("missing or differing duration snapshots")
-        if matrix_result == "failure" and not errors and not manifest["failed_nodeids"]:
-            errors.append("pytest matrix: failure")
         if data_files:
             cov = coverage.Coverage(data_file=str(output / ".coverage"))
             cov.combine(data_paths=data_files, strict=True, keep=True)
@@ -244,8 +244,25 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
     }
     print(json.dumps(summary))
     if os.environ.get("GITHUB_STEP_SUMMARY"):
-        with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as stream:
-            stream.write(f"## Coverage measurement for `{sha}`\n\n```json\n{json.dumps(summary, indent=2)}\n```\n")
+        # Bound both entry counts and lengths, including errors. Full IDs and
+        # diagnostics remain in the artifact even for very large parameter sets.
+        preview = {}
+        for key, value in summary.items():
+            if isinstance(value, list):
+                preview[f"{key}_count"] = len(value)
+                preview[key] = [str(item)[:200] for item in value[:20]]
+            else:
+                preview[key] = value
+        try:
+            with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as stream:
+                stream.write(
+                    f"## Coverage measurement for `{sha}`\n\n"
+                    "Showing at most 20 entries per list, 200 characters per entry. "
+                    "See `coverage-combined/manifest.json` for the full lists.\n\n"
+                    f"```json\n{json.dumps(preview, indent=2, ensure_ascii=False)}\n```\n"
+                )
+        except OSError as error:
+            print(f"coverage_ref: could not write step summary: {error}", file=sys.stderr)
     return int(not manifest["complete"])
 
 

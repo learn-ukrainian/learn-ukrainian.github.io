@@ -68,13 +68,64 @@ def test_failed_test_keeps_both_shards_coverage_and_exact_failure_id(measurement
     receipt = json.loads(path.read_text())
     receipt.update(pytest_exit_status=1, failed_nodeids=["tests/test_2.py::test_ok"])
     path.write_text(json.dumps(receipt))
-    assert combine(raw, output, SHA, 2, "failure") == 0
+    assert combine(raw, output, SHA, 2, "success") == 0
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["complete"] is True
     assert manifest["tests_passed"] is False
     assert manifest["failed_nodeids"] == ["tests/test_2.py::test_ok"]
     assert manifest["crashed_nodeids"] == []
     assert json.loads((output / "coverage.json").read_text())["files"]["scripts/a.py"]["executed_lines"] == [1]
+
+
+def test_matrix_failure_cannot_be_hidden_by_another_shards_failed_test(measurement):
+    """A Postgres skip-guard or upload failure is not explained by pytest failures."""
+    raw, output = measurement
+    path = raw / "coverage-shard-2/receipt.json"
+    receipt = json.loads(path.read_text())
+    receipt.update(pytest_exit_status=1, failed_nodeids=["tests/test_2.py::test_ok"])
+    path.write_text(json.dumps(receipt))
+    assert combine(raw, output, SHA, 2, "failure") == 1
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is False
+    assert manifest["errors"] == ["pytest matrix: failure"]
+    assert manifest["failed_nodeids"] == ["tests/test_2.py::test_ok"]
+    assert json.loads((output / "coverage.json").read_text())["files"]["scripts/a.py"]["executed_lines"] == [1]
+
+
+def test_summary_oserror_cannot_fail_a_complete_measurement(measurement, monkeypatch, capsys):
+    """An unavailable Actions summary must not override the durable manifest verdict."""
+    raw, output = measurement
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(raw))  # Opening a directory raises OSError.
+    assert combine(raw, output, SHA, 2, "success") == 0
+    assert json.loads((output / "manifest.json").read_text())["complete"] is True
+    assert "could not write step summary" in capsys.readouterr().err
+
+
+def test_large_failure_inventory_is_capped_only_in_step_summary(measurement, monkeypatch, tmp_path, capsys):
+    """Large parameter IDs must not exceed Actions' summary limit or truncate evidence."""
+    raw, output = measurement
+    summary = tmp_path / "summary.md"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    path = raw / "coverage-shard-2/receipt.json"
+    receipt = json.loads(path.read_text())
+    nodeids = sorted(f"tests/test_2.py::test_bad[{index}-{'☃' * 2000}]" for index in range(600))
+    receipt.update(
+        pytest_exit_status=1,
+        collected_nodeids=nodeids,
+        collected_count=len(nodeids),
+        completed_nodeids=nodeids,
+        failed_nodeids=nodeids,
+    )
+    path.write_text(json.dumps(receipt))
+    assert combine(raw, output, SHA, 2, "success") == 0
+    capsys.readouterr()  # Keep the full stdout inventory out of assertion diagnostics.
+    assert json.loads((output / "manifest.json").read_text())["failed_nodeids"] == nodeids
+    text = summary.read_text()
+    assert len(text.encode("utf-8")) < 64 * 1024
+    assert "manifest.json" in text
+    preview = json.loads(text.split("```json\n", 1)[1].split("\n```", 1)[0])
+    assert preview["failed_nodeids_count"] == 600
+    assert len(preview["failed_nodeids"]) == 20
 
 
 def test_crash_keeps_surviving_data_but_names_unfinished_tests(measurement):
