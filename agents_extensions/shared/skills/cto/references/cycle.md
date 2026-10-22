@@ -1,0 +1,30 @@
+# Cycle checklist
+
+Run every cycle while work is in flight, and before any routing, budget or status report.
+Every line of a cycle report is tool output from this cycle; anything not read is unknown,
+never fine.
+
+1. **Inbox.** Drain the four recipients ([startup](startup.md#4-identity-and-inbox)) at
+   cycle start, after workers settle and before handoff.
+2. **Every pool's usage**, including unused ones: each Claude pool, Codex, Grok and Cursor,
+   AGY and any other catalog pool. No readable meter is unknown. Grok and Cursor share one
+   meter, never two pools of headroom. Keep readings in a scratch log for trends.
+3. **Disk and load.** `df -h .`, `uptime`, `git worktree list | wc -l`. When disk climbs,
+   run the reaper and retention tools before admitting write workers; never delete bulk
+   corpus or data without a separate operator-authorized task (core.md P6).
+4. **Open PRs** in every repository the fleet lands in, with `number`, `headRefOid`,
+   `mergeStateStatus`, `isDraft`, `reviewDecision`. Per PR: a review of record at the
+   current `headRefOid` (verdict, reviewer model) and green CI on that head; an older-head
+   verdict is stale. An approved green PR not enqueued gets its reason from the merge-queue
+   keeper's log, not a guess. A background watcher with a deadline replaces polling.
+5. **Live workers.** Active dispatches from the Monitor API, then
+   `.venv/bin/python scripts/delegate.py status <task-id> --run-nonce <nonce>` for each task
+   the handoff or the view names; task files outrank a partial view. Every running worker
+   has an armed background `delegate.py wait`. Any terminal status but `done` is an
+   attention item; before calling a dispatch dead check open PRs and its worktree for
+   unpushed work; reap after terminal status ([recipes](recipes.md#reap-before-re-dispatch)).
+6. **Residuals.** Quote open-issue and residual counts from `gh`. A free slot with a ready
+   item gets a dispatch; a residual above zero gets a next dispatch this session.
+7. **Decide.** Rank PRs by leverage, audit drift, look ahead, choose by the binding
+   constraint ([decisions](decisions.md#tactical-layer-per-cycle)); log any mistake found
+   in the ledger ([learning](learning.md)).
