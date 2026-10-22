@@ -3680,12 +3680,8 @@ def _invoke_impl(
             f"Agent {agent_name!r} does not support mode {mode!r}. Supported modes: {sorted(adapter.supported_modes)}"
         )
 
-    # ---------- 2b. Refuse catalog-retired models on every adapter ----------
-    from scripts.review.model_catalog import retired_model_refusal
-
-    retired_refusal = retired_model_refusal(model)
-    if retired_refusal:
-        raise ValueError(f"Agent {agent_name!r}: {retired_refusal}")
+    # Catalog retirement binds explicit pins and the retired Kimi defaults.
+    _refuse_retired_launch_model(agent_name, model, tool_config)
 
     # ---------- 3. Validate cwd for write modes ----------
     if mode in _WRITE_CAPABLE_MODES:
@@ -3952,6 +3948,39 @@ def _invoke_impl(
     )
 
 
+def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config: dict | None) -> None:
+    """Refuse the model public ``invoke`` would run, before ``_invoke_impl``.
+
+    Direct ``_invoke_impl`` callers keep the same check. An omitted model is
+    filled only for Kimi, so other seats are not loaded just to name a default.
+    Coding-only admission still runs first.
+    """
+    requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
+    if agent_name == "kimi" and requested_harness == "kimicc":
+        from .adapters.kimicc import resolve_kimicc_dispatch_model
+
+        effective_model = resolve_kimicc_dispatch_model(model)
+    elif str(model or "").strip():
+        effective_model = str(model).strip()
+    elif agent_name == "kimi":
+        from .adapters.kimi import KIMI_DEFAULT_MODEL
+
+        effective_model = KIMI_DEFAULT_MODEL
+    else:
+        from .kimi_admission import is_kimi_seat
+        from .registry import AGENTS
+
+        default_model = AGENTS.get(agent_name, {}).get("default_model")
+        if not default_model or not is_kimi_seat(agent_name, model=default_model):
+            return
+        effective_model = default_model
+    from scripts.review.model_catalog import retired_model_refusal
+
+    refusal = retired_model_refusal(effective_model)
+    if refusal:
+        raise ValueError(f"Agent {agent_name!r}: {refusal}")
+
+
 def invoke(
     agent_name: str,
     prompt: str,
@@ -3984,8 +4013,11 @@ def invoke(
     ``tool_config["kimi_owned_paths"]``, and no Cyrillic text in the owned
     files read in ``cwd``; anything else raises ``KimiAdmissionRefused``
     before attribution, trail provisioning, or adapter planning.
+    A retired model, including Kimi's historical default, is refused next,
+    still before attribution.
     """
     refuse_kimi_execution((agent_name,), (model,), mode=mode, cwd=cwd, tool_config=tool_config)
+    _refuse_retired_launch_model(agent_name, model, tool_config)
     attribution = resolve_invocation_attribution(
         explicit=initiator,
         task_id=task_id,

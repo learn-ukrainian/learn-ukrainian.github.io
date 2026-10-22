@@ -108,8 +108,7 @@ are the tie-breakers.
    **Tiers:** authority (Opus 5.5 / Sol 6.1) · practical
    (Terra/Sonnet/Flash-high) · heap (Luna and weaker with a complete Sol advisory envelope,
    or the narrow #10919 driver-brief exception in item 4).
-   **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
-   consults, design or rules.**
+   **Kimi models are retired (OO-58, #11327). Do not dispatch them.**
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
    operations, not an outage. On limit: check `/api/orient` runtime headroom; for
    Claude/Codex budget buckets at `near_cap`, substitute per
@@ -191,10 +190,9 @@ are the tie-breakers.
     and **Sol 6.1** (`gpt-6.1-sol`). When one of them authored the proposal, the other's
     approval completes it; a proposal by any other agent (Gemini, Grok, Kimi or another seat)
     needs both; if they disagree, the operator decides (#9583, #9616; roster may change — confirm via `/api/rules` / `model-assignment.md` when unsure;
-    do not treat stale digests as roster). Fable and the former Astra seat hold no advisory,
+    do not treat stale digests as roster). Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. The former Astra seat holds no advisory,
     approval or review role.
-    **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
-    consults, design or rules.** Discussion/panels improve quality but do **not** replace advisor approval
+    **Kimi models are retired (OO-58, #11327). Do not dispatch them.** Discussion/panels improve quality but do **not** replace advisor approval
     for design. This gate governs *deciding*, not *implementing*: once the operator or an
     advisor has ordered or approved the work, item 10 governs — drive it to a complete outcome
     without re-opening a GO request. Routine implementation of already-queued work does not

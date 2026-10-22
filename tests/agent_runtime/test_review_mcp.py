@@ -497,8 +497,9 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
     assert rc == 2
     captured = capsys.readouterr()
     # Kimi admission refuses before the review-attempt harness check.
-    assert "KIMI CODING-ONLY" in captured.err
-    assert "review dispatches" in captured.err
+    assert "retired in the model catalog (kimi-code/k3-256k)" in captured.err
+    assert "use an active catalog model" in captured.err
+    assert not delegate_cli._state_path_no_create("review-task-kimicc").exists()
 
 
 def test_delegate_dispatch_incomplete_review_attempt_flags(

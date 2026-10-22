@@ -275,6 +275,58 @@ def plan_remaining_pct(info: Mapping[str, Any] | None) -> float | None:
     return plan_remaining_reading(info)[0]
 
 
+def shared_usage_agents(
+    agents: Mapping[str, Any], *, catalog: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Read each catalogued usage pool once, retaining each transport's health.
+
+    Conflicting observations of one meter use the tightest known allowance.
+    Its pace and freshness travel with it; another transport cannot turn a
+    stale reading fresh. Missing observations stay unknown. Never mutate the
+    supplied snapshot or copy route health, login, concurrency or credits.
+    """
+    from scripts.review.model_catalog import load_model_catalog
+
+    source_catalog = catalog if catalog is not None else load_model_catalog()
+    result = dict(agents)
+    meter_fields = (
+        "codexbar", "pace", "freshness", "age_s", "stale", "fetched_at",
+        "resets_at", "burn_pct_7d", "status_source",
+    )
+    for pool in source_catalog.get("usage_pools", {}).values():
+        observed = [
+            (remaining, seat, record)
+            for seat in pool["seats"]
+            if isinstance(record := agents.get(seat), Mapping)
+            and (remaining := plan_remaining_pct(record)) is not None
+        ]
+        if not observed:
+            continue
+        remaining, meter_seat, meter = min(observed, key=lambda item: item[0])
+        for seat in pool["seats"]:
+            own = agents.get(seat, {})
+            if not isinstance(own, Mapping) or seat == meter_seat:
+                continue
+            merged = dict(own)
+            for field in meter_fields:
+                merged.pop(field, None)
+                if field in meter:
+                    merged[field] = meter[field]
+            merged["remaining_pct"] = remaining
+            # A route's runtime block is not a usage-pool block.
+            own_runtime = own.get("runtime") if isinstance(own.get("runtime"), Mapping) else {}
+            meter_runtime = meter.get("runtime") if isinstance(meter.get("runtime"), Mapping) else {}
+            if own.get("status") in {None, "unknown", "cool", "warm", "idle", "near_cap", "hot"} and not own_runtime.get("headroom_blocked"):
+                meter_status = meter.get("status")
+                if meter_status not in {"cool", "warm", "idle", "near_cap", "hot"} or meter_runtime.get("headroom_blocked"):
+                    meter_status = allowance_status(remaining)
+                merged["status"] = meter_status
+            if seat not in agents and merged.get("status") not in {"hot", "near_cap"}:
+                merged["status"] = "unknown"
+            result[seat] = merged
+    return result
+
+
 def plan_window_exhausted(lane: str, info: Mapping[str, Any] | None, policy: CreditPolicy | None = None) -> bool:
     """True when a credit-configured lane's tightest plan window is at or below the near-cap threshold.
 

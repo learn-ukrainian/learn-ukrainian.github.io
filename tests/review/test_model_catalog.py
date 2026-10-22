@@ -487,11 +487,94 @@ def approved_agy_mode_baseline(baseline):
 
 
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+RETIREMENT_11327_PATH = CAPACITY_FIXTURE / "routing-11327.json"
+RETIREMENT_11327_DIGEST = "354f97d4d02d46a98b966e59aa64ff46f1ccc484ee44989ff9bf1d77aace9774"
+PRE_RETIREMENT_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def _drop_cooler_seat(refusal: str, seat: str) -> str:
+    """Remove one exact cooler-list seat. Neighboring names such as grok-build stay."""
+    marker = "Cooler seats from budget snapshot: "
+    head, tail = refusal.split(marker, 1)
+    seats, rest = tail.split(". Re-route", 1)
+    items = [item.strip() for item in seats.split(",")]
+    assert items.count(seat) == 1, seat
+    items.remove(seat)
+    return f"{head}{marker}{', '.join(items)}. Re-route{rest}"
+
+
+def approved_retirement_11327_inputs(inputs):
+    """Drop the parked Fable 5.1 default budget pin from the dispatch matrix."""
+    return {
+        **inputs,
+        "dispatch": [row for row in inputs["dispatch"] if row["model"] != "claude-fable-5-1"],
+    }
+
+
+def approved_retirement_11327_baseline(baseline, inputs):
+    """Apply #11327 last: park Fable 5.1, retire Kimi, and share the Grok/Cursor meter.
+
+    The historical fixture bytes stay. This edits the catalog fields those ids
+    own, drops only their removed dispatch pin, collapses the shared cooler
+    meter, and refuses the Kimi launcher default.
+    """
+    assert hashlib.sha256(RETIREMENT_11327_PATH.read_bytes()).hexdigest() == RETIREMENT_11327_DIGEST
+    fixture = json.loads(RETIREMENT_11327_PATH.read_text(encoding="utf-8"))
+    catalog = deepcopy(baseline["catalog"])
+    assert "usage_pools" not in catalog
+    catalog["usage_pools"] = fixture["usage_pools"]
+    for row in fixture["model_fields"]:
+        model = catalog["models"][row["model"]]
+        if row["before_missing"]:
+            assert row["field"] not in model
+        else:
+            assert model[row["field"]] == row["before"], (row["model"], row["field"])
+        model[row["field"]] = row["after"]
+    endpoint = catalog["review_scheduler"]["endpoints"]["kimicc"]
+    assert endpoint["models"] == fixture["kimicc_models"]["before"]
+    endpoint["models"] = fixture["kimicc_models"]["after"]
+    assert catalog["policy"]["notes"] == fixture["policy_notes"]["before"]
+    catalog["policy"]["notes"] = fixture["policy_notes"]["after"]
+    lane = fixture["remove_budget_pin"]["lane"]
+    pin = fixture["remove_budget_pin"]["model"]
+    assert pin in catalog["budget_substitution_models"][lane]
+    del catalog["budget_substitution_models"][lane][pin]
+
+    approval = deepcopy(baseline["approval"])
+    assert approval["contract"] == fixture["approval_contract"]["before"]
+    approval["contract"] = fixture["approval_contract"]["after"]
+
+    assert len(inputs["dispatch"]) == len(baseline["dispatch"])
+    dispatch = []
+    for row_in, row in zip(inputs["dispatch"], baseline["dispatch"], strict=True):
+        if row_in["model"] == pin:
+            continue
+        updated = deepcopy(row)
+        refusal = (updated.get("value") or {}).get("refusal")
+        if isinstance(refusal, str) and "Cooler seats from budget snapshot:" in refusal:
+            drop = "grok" if row_in["agent"] == "cursor" else "cursor"
+            updated["value"]["refusal"] = _drop_cooler_seat(refusal, drop)
+        dispatch.append(updated)
+
+    launchers = deepcopy(baseline["launchers"])
+    for index, recorded in fixture["launcher_rows"].items():
+        assert launchers[int(index)] == recorded["old"]
+        launchers[int(index)] = recorded["new"]
+    return {
+        **baseline,
+        "catalog": catalog,
+        "approval": approval,
+        "dispatch": dispatch,
+        "launchers": launchers,
+    }
+
+
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
     approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
-APPROVED_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
-APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+PRE_RETIREMENT_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
+APPROVED_INPUTS = approved_retirement_11327_inputs(PRE_RETIREMENT_INPUTS)
+APPROVED_BASELINE = approved_retirement_11327_baseline(PRE_RETIREMENT_BASELINE, PRE_RETIREMENT_INPUTS)
 
 
 def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
@@ -557,6 +640,74 @@ def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configura
         approved_agy_mode_baseline(after)
 
 
+def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter():
+    """#11327 parks Fable, retires five Kimi ids, and shares the Grok/Cursor meter."""
+    before = deepcopy(PRE_RETIREMENT_BASELINE)
+    after = approved_retirement_11327_baseline(deepcopy(before), PRE_RETIREMENT_INPUTS)
+    untouched = set(before) - {"catalog", "approval", "dispatch", "launchers"}
+    for surface in untouched:
+        assert before[surface] == after[surface], surface
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert {mid for mid in old_models if old_models[mid] != new_models[mid]} == {
+        "claude-fable-5-1",
+        "kimi-code/k3",
+        "kimi-code/k3-256k",
+        "kimi-code/kimi-for-coding",
+        "kimi-code/kimi-for-coding-highspeed",
+        "kimi-k3-max",
+    }
+    assert new_models["claude-fable-5"] == old_models["claude-fable-5"]
+    assert new_models["claude-fable-5-1"] == {**old_models["claude-fable-5-1"], "transports": ["native_claude"]}
+    assert new_models["claude-fable-5-1"]["lifecycle"] == "active"
+    assert new_models["claude-fable-5-1"]["transports"] == ["native_claude"]
+    assert all(new_models[mid]["lifecycle"] == "retired" and new_models[mid]["transports"] == [] for mid in (
+        "kimi-code/k3",
+        "kimi-code/k3-256k",
+        "kimi-code/kimi-for-coding",
+        "kimi-code/kimi-for-coding-highspeed",
+        "kimi-k3-max",
+    ))
+    assert after["catalog"]["usage_pools"] == {"grok_cursor": {"seats": ["grok", "cursor"]}}
+    assert "claude-fable-5-1" not in after["catalog"]["budget_substitution_models"]["cursor"]
+    assert set(before["catalog"]["budget_substitution_models"]["cursor"]) - {"claude-fable-5-1"} == set(
+        after["catalog"]["budget_substitution_models"]["cursor"]
+    )
+    removed = [
+        row for row in PRE_RETIREMENT_INPUTS["dispatch"] if row["model"] == "claude-fable-5-1"
+    ]
+    assert removed and len(after["dispatch"]) == len(before["dispatch"]) - len(removed)
+    kept = [
+        (row_in, old, new)
+        for row_in, old, new in zip(
+            [row for row in PRE_RETIREMENT_INPUTS["dispatch"] if row["model"] != "claude-fable-5-1"],
+            [old for row_in, old in zip(PRE_RETIREMENT_INPUTS["dispatch"], before["dispatch"], strict=True) if row_in["model"] != "claude-fable-5-1"],
+            after["dispatch"],
+            strict=True,
+        )
+    ]
+    changed = [(row_in, old, new) for row_in, old, new in kept if old != new]
+    assert len(changed) == 33
+    for row_in, old, new in changed:
+        assert {key: value for key, value in old.items() if key != "value"} == {
+            key: value for key, value in new.items() if key != "value"
+        }
+        assert {key: value for key, value in old["value"].items() if key != "refusal"} == {
+            key: value for key, value in new["value"].items() if key != "refusal"
+        }
+        dropped = "grok" if row_in["agent"] == "cursor" else "cursor"
+        assert new["value"]["refusal"] == _drop_cooler_seat(old["value"]["refusal"], dropped)
+        assert row_in["model"] != "claude-fable-5-1"
+    launcher_changed = [
+        index for index, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
+    ]
+    assert launcher_changed == [50, 55]
+    assert after["approval"]["rows"] == before["approval"]["rows"]
+    assert after["approval"]["holders"] == before["approval"]["holders"]
+    assert "Fable 5.1 is parked: not routed by default, explicit pin only;" in after["approval"]["contract"]
+    with pytest.raises(AssertionError):
+        approved_retirement_11327_baseline(after, PRE_RETIREMENT_INPUTS)
+
+
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(configuration):
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
@@ -578,7 +729,7 @@ def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(conf
     assert set(fixture) == {"dispatch_refusal_replacements"}
     assert [r["rows"] for r in fixture["dispatch_refusal_replacements"]] == [[i] for i in models]
     for index, model in models.items():
-        assert APPROVED_INPUTS["dispatch"][index] == {
+        assert PRE_RETIREMENT_INPUTS["dispatch"][index] == {
             "agent": "claude", "budget_status": "near_cap", "model": model, "review_attempt": None,
         }
         old, new = before["dispatch"][index], after["dispatch"][index]
@@ -592,7 +743,7 @@ def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(conf
         assert new == expected
     # Historical input rows 86/90 become 74/78 after the existing seat overlay.
     for historical, index in ((86, 74), (90, 78)):
-        assert APPROVED_INPUTS["dispatch"][index] == INPUTS["dispatch"][historical]
+        assert PRE_RETIREMENT_INPUTS["dispatch"][index] == INPUTS["dispatch"][historical]
         assert after["dispatch"][index] == before["dispatch"][index]
 
 
@@ -1189,9 +1340,10 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
     )
     cursor = catalog["budget_substitution_models"]["cursor"]
     assert "claude-opus-5-5" not in cursor
-    assert cursor["claude-fable-5-1"] == "claude-fable-5-1-thinking-high"
-    for kept in ("claude-fable-5-1", "claude-sonnet-5-5"):
-        assert "cursor" in catalog["models"][kept]["transports"], kept
+    assert "claude-fable-5-1" not in cursor
+    assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "active"
+    assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude"]
+    assert "cursor" in catalog["models"]["claude-sonnet-5-5"]["transports"]
 
 
 def test_catalog_text_records_d129_and_grok_static_review():
@@ -1310,7 +1462,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "ae0434d10341cf742eff148b4702ba0c67a1f3a8906a0671703bb1cc0eaf850e",
+    "SPEC.md": "8d2e59acb08b7642874f6363d84cacea1c04a83a202f266b22b304c4f53c3e45",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -1694,7 +1846,10 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             "no-cli",
         )
     )))
-    assert actual == approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
+    assert actual == approved_retirement_11327_baseline(
+        approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved))),
+        PRE_RETIREMENT_INPUTS,
+    )
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

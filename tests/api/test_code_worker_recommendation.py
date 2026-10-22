@@ -191,7 +191,7 @@ def test_monitor_picker_seeded_fuzz(monkeypatch):
         if monitor == "inline_orchestrator":
             assert all(
                 info["status"] in {"hot", "near_cap"}
-                for info in agents.values() if info.get("eligible", True)
+                for info in credit_lane.shared_usage_agents(agents).values() if info.get("eligible", True)
             )
             counts["inline_orchestrator"] += 1
         elif monitor == pick([row for row in rows if row["health"] == "healthy"]) and any(

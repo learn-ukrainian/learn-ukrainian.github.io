@@ -49,7 +49,12 @@ for arguments in (
         try:
             runpy.run_path(str(script), run_name="__main__")
         except SystemExit as exc:
-            if exc.code != 0:
+            code = 0 if exc.code in (None, 0) else exc.code
+            # OO-58: k3 is retired. The refusal still opens the catalog, so the
+            # closure measurement continues. Every other command must exit 0.
+            if code != 0 and not (
+                arguments == ["--resolve-kimi-model", "k3"] and code == 2
+            ):
                 raise
 # The launcher now executes the shared credential policy rather than only
 # printing intermediate drop names. Include that real import closure too.

@@ -2644,11 +2644,16 @@ def test_claude_acp_refuses_a_fable_pin(tmp_path, monkeypatch):
         ("cursor", "claude-fable-5-1"),
     ],
 )
-def test_acp_consult_route_refuses_a_fable_pin_from_the_catalog_roles(participant, model):
-    """#9583: ACP admission reads the catalog roles, before any adapter allowlist or spawn."""
+def test_acp_consult_route_refuses_a_fable_pin_before_dispatch(participant, model):
+    """#9583: Fable lacks consult roles; its native-only transport also bars Cursor."""
     from scripts.agent_runtime import runner
 
-    with pytest.raises(runner.InterAgentTransportError, match="holds no ACP ask, consult or discussion role"):
+    reason = (
+        "does not implement catalog transport 'cursor'"
+        if participant == "cursor"
+        else "holds no ACP ask, consult or discussion role"
+    )
+    with pytest.raises(runner.InterAgentTransportError, match=reason):
         runner.resolve_inter_agent_route(participant, model=model)
 
 

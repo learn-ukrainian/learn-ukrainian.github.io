@@ -860,6 +860,7 @@ def test_bad_policy_keeps_other_router_rows_and_codex_plan_state(bad_policy):
     assert "credit lane codex: policy_error (credit-lane policy unreadable" in human
     assert "| dispatch admits only gpt-6.1-sol, gpt-6-luna" in human
     assert "cursor" in report["cooler_lanes"] and "codex" not in report["cooler_lanes"]
+    assert "grok" not in report["cooler_lanes"]
 
 
 def test_bad_policy_admission_restricts_only_codex(bad_policy, snapshot, capsys):
@@ -983,7 +984,10 @@ def test_lanes_without_credit_policy_keep_origin_main_rows(scenario):
         assert row.pop("capacity")["state"] == ("avoid" if row["avoid"] else "verified")
         assert row.pop("health") == facts["health"] == "healthy"
         assert row.pop("remaining_source") == facts["remaining_source"] == "remaining_pct"
-        assert row == _origin_main_row(lane, scenario), lane
+        expected = _origin_main_row(lane, scenario)
+        if lane == "kimi" and scenario == "plan_healthy":
+            expected = {**expected, "avoid": True, "notes": "AVOID"}
+        assert row == expected, lane
     codex = rows["codex"]
     expected = {
         "plan_healthy": (credit_lane.PLAN_HEALTHY, "cool", False),

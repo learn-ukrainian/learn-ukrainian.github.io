@@ -250,13 +250,15 @@ def test_kimi_is_absent_from_review_candidates_and_every_ladder() -> None:
 
 
 def test_kimi_models_carry_coding_roles_only() -> None:
-    """No Kimi model carries a review, consult, advisor, or architecture role."""
+    """Retired Kimi rows keep coding roles only and have no executable transport."""
     catalog = load_model_catalog()
-    kimi_models = {mid: model for mid, model in catalog["models"].items() if "native_kimi" in model["transports"]}
+    kimi_models = {mid: model for mid, model in catalog["models"].items() if "kimi" in mid}
     assert kimi_models
     for model_id, model in kimi_models.items():
         roles = set(model["roles"])
         assert roles, model_id
+        assert model["lifecycle"] == "retired", model_id
+        assert model["transports"] == [], model_id
         assert all(role.endswith(("_coding", "_implementation", "_debugging")) for role in roles), (model_id, roles)
     for endpoint in ("kimi", "kimicc"):
         scheduler = catalog["review_scheduler"]["endpoints"][endpoint]
@@ -303,23 +305,11 @@ def test_deepseek_metadata_is_preserved_without_review_seats() -> None:
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
-    aliases = kimi_model_aliases()
-    expected = {
-        "k3": "kimi-code/k3",
-        "kimi-k3": "kimi-code/k3",
-        "kimi-k3[1m]": "kimi-code/k3",
-        "k2.7": "kimi-code/kimi-for-coding",
-        "k2.7-coding": "kimi-code/kimi-for-coding",
-        "kimi-for-coding": "kimi-code/kimi-for-coding",
-        "kimi-k2.7-code": "kimi-code/kimi-for-coding",
-        "k2.7-highspeed": "kimi-code/kimi-for-coding-highspeed",
-        "k2.7-coding-highspeed": "kimi-code/kimi-for-coding-highspeed",
-        "kimi-for-coding-highspeed": "kimi-code/kimi-for-coding-highspeed",
-        "kimi-k2.7-code-highspeed": "kimi-code/kimi-for-coding-highspeed",
-    }
-    assert expected.items() <= aliases.items()
-    model_id, routes = resolve_kimi_model("kimi-k3[1m]")
-    assert model_id == "kimi-code/k3"
+    """OO-58: empty transports yield no executable alias. Historical routes stay on the record."""
+    assert kimi_model_aliases() == {}
+    with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
+        resolve_kimi_model("kimi-k3[1m]")
+    routes = load_model_catalog()["models"]["kimi-code/k3"]["kimi_routes"]
     assert routes == {
         "kimicc_alias": "k3",
         "platform_model_id": "kimi-k3[1m]",
@@ -330,33 +320,23 @@ def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
 
 
 def test_generic_model_aliases_resolve_k3_256k_but_kimicc_does_not_route_it() -> None:
-    """k3-256k stays a native alias. The coding endpoint rejects it, so kimicc omits it (#8745)."""
+    """k3-256k stays a historical alias. OO-58 leaves the kimicc endpoint with no routable model."""
     aliases = model_aliases()
     assert aliases["kimi-code/k3-256k"] == "kimi-code/k3-256k"
     assert aliases["k3-256k"] == "kimi-code/k3-256k"
     assert aliases["kimi-k3-256k"] == "kimi-code/k3-256k"
     endpoints = load_model_catalog()["review_scheduler"]["endpoints"]
-    assert "kimi-code/k3-256k" not in endpoints["kimicc"]["models"]
-    assert endpoints["kimicc"]["models"][0] == "kimi-code/k3"
+    assert endpoints["kimicc"]["models"] == []
 
 
 def test_every_kimicc_routable_alias_has_coding_model_id() -> None:
+    """OO-58: the endpoint lists no model, so resolve refuses the historical alias."""
     catalog = load_model_catalog()
     endpoint_ids = catalog["review_scheduler"]["endpoints"]["kimicc"]["models"]
-    aliases = kimi_model_aliases(catalog)
-    assert endpoint_ids
-    seen: set[str] = set()
-    for model_id in endpoint_ids:
-        coding_model_id = catalog["models"][model_id]["kimi_routes"]["coding_model_id"]
-        assert isinstance(coding_model_id, str) and coding_model_id.strip()
-        for alias, owner in aliases.items():
-            if owner != model_id:
-                continue
-            seen.add(alias)
-            _, route = resolve_kimi_model(alias, catalog)
-            assert isinstance(route["coding_model_id"], str) and route["coding_model_id"].strip()
-    assert "k3-256k" not in seen
-    assert "k3" in seen
+    assert endpoint_ids == []
+    assert kimi_model_aliases(catalog) == {}
+    with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
+        resolve_kimi_model("k3", catalog)
 
 
 def test_glm_model_aliases_and_consumer_lint() -> None:
@@ -380,8 +360,12 @@ def test_glm_model_aliases_and_consumer_lint() -> None:
 
 
 def test_catalog_rejects_kimi_route_without_its_friendly_alias():
+    """The alias rule still binds if a Kimi transport is put back. The live row stays retired."""
     broken = deepcopy(load_model_catalog())
-    broken["models"]["kimi-code/k3"]["aliases"].remove("k3")
+    model = broken["models"]["kimi-code/k3"]
+    model["lifecycle"] = "active"
+    model["transports"] = ["native_kimi"]
+    model["aliases"].remove("k3")
     with pytest.raises(ModelCatalogError, match="kimicc_alias must be listed"):
         validate_catalog(broken)
 
@@ -471,10 +455,12 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
 
 
 def test_fable_holds_no_review_or_advisory_role():
-    """#9583: Opus 5.5 and Sol 6.1 replace Fable as advisors, approvers and reviewers."""
+    """#9583 roles still bar review/advice while OO-58 parks the active model."""
     catalog = load_model_catalog()
     fable = catalog["models"]["claude-fable-5-1"]
     assert fable["lifecycle"] == "active"
+    assert fable["transports"] == ["native_claude"]
+    assert "replaced_by" not in fable
     assert not {"architecture", "critical_review", "consequential_advisory", "bounded_advisory_envelope"} & set(
         fable["roles"]
     )
@@ -483,8 +469,7 @@ def test_fable_holds_no_review_or_advisory_role():
         assert not any(name.startswith("claude-fable") for rung in ladder for name in rung), risk
     assert "claude-fable-5-1" not in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
     assert "claude-fable-5-1" not in catalog["formal_cf_defaults"]["claude"]["family_models"]
-    # A non-review Cursor dispatch of the launchable model still has an admitted slug.
-    assert catalog["budget_substitution_models"]["cursor"]["claude-fable-5-1"] in fable["aliases"]
+    assert "claude-fable-5-1" not in catalog["budget_substitution_models"]["cursor"]
 
 
 @pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5-1[1m]", "claude-fable-5-1-thinking-high"])
@@ -494,7 +479,9 @@ def test_fable_is_refused_every_review_and_consult_activity(model, activity):
     from scripts.review.model_catalog import activity_role_refusal
 
     refusal = activity_role_refusal(model, activity)
-    assert refusal and "(claude-fable-5-1) holds no" in refusal
+    expected = "holds no review, critique or approval role" if activity == "review" else "holds no ACP ask, consult or discussion role"
+    assert refusal and expected in refusal
+    assert f"review_scheduler.activity_roles.{activity}" in refusal
 
 
 @pytest.mark.parametrize("activity", ["review", "consult"])
@@ -540,15 +527,15 @@ def test_unknown_activity_and_unknown_model():
                     "claude-opus-5-5", "claude-fable-5-1"
                 ),
             ),
-            r"review_candidates\.claude-opus-5-5: .*holds no review",
+            r"review_candidates\.claude-opus-5-5: model 'claude-fable-5-1'.*holds no review",
         ),
         (
             lambda c: c["review_scheduler"]["endpoints"]["claude"]["models"].append("claude-fable-5-1"),
-            r"endpoints\.claude\.models: .*holds no review",
+            r"review_scheduler\.endpoints\.claude\.models: model 'claude-fable-5-1'.*holds no review",
         ),
         (
             lambda c: c["review_scheduler"]["risk_reviewer_models"]["high"].append("claude-fable-5-1"),
-            r"risk_reviewer_models\.high: .*holds no review",
+            r"review_scheduler\.risk_reviewer_models\.high: model 'claude-fable-5-1'.*holds no review",
         ),
         (
             lambda c: c["models"]["gpt-6.1-sol"]["roles"].remove("bounded_advisory_envelope"),
@@ -1250,7 +1237,7 @@ def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
     table = catalog["budget_substitution_models"]
     assert "gpt-6.1-sol" not in table["cursor"]
     assert "claude-opus-5-5" not in table["cursor"]
-    assert table["cursor"]["claude-fable-5-1"] == "claude-fable-5-1-thinking-high"
+    assert "claude-fable-5-1" not in table["cursor"]
     assert table["codex"]["gpt-6.1-sol"] == "gpt-6.1-sol"
     broken = deepcopy(catalog)
     broken["budget_substitution_models"]["cursor"]["gpt-6.1-sol"] = "gpt-6.1-sol"
@@ -1345,7 +1332,7 @@ def test_retired_model_refusal_names_id_and_replacement(model, retired_id):
 
 
 @pytest.mark.parametrize(
-    "model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "kimi-code/k3", "composer-2.5", "auto"]
+    "model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "composer-2.5", "auto"]
 )
 def test_retired_model_refusal_admits_non_retired_ids(model):
     assert retired_model_refusal(model) is None
@@ -1497,7 +1484,7 @@ def test_catalog_cli_retired_model_prints_only_refusal(model, retired_id, succes
     )
 
 
-@pytest.mark.parametrize("model", ["gpt-6.1-sol", "claude-fable-5-1", "unknown-model"])
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "claude-opus-5-5", "unknown-model"])
 def test_catalog_cli_non_retired_model_exits_silently(model):
     result = subprocess.run(
         [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],

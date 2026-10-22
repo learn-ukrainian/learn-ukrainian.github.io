@@ -1,19 +1,11 @@
 # Kimi interactive launcher
 
-Kimi has no certified public driver entrypoint. `start-kimi.sh` is therefore
-interactive-only: it never claims a stream lease and rejects `--epic`.
+Kimi models are retired (OO-58, #11327). `start-kimi.sh` and `start-kimicc.sh`
+refuse every catalog id before a session starts. There is no interactive default
+and no certified Kimi driver. Use a certified Claude, Codex, or Grok driver for
+lease-bound orchestration.
 
-```bash
-./start-kimi.sh --model k3 "fix the site card layout"
-./start-kimi.sh --harness claude-code --model k2.7
-LAUNCHER_DRY_RUN=1 ./start-kimi.sh --harness claude-code --endpoint coding
-```
-
-The native `kimi-code` harness is the default. The Claude-Code harness accepts
-only explicit Kimi credentials (`KIMICC_AUTH_TOKEN`, `MOONSHOT_API_KEY`, or
-`KIMI_API_KEY`) or Kimi OAuth; it never consumes an ambient
-`ANTHROPIC_AUTH_TOKEN`.
-
-Use a certified Claude, Codex, or Grok driver for lease-bound
-orchestration. If Kimi gains a T4-certified driver in the future, add its public
-entrypoint and lifecycle contract before documenting lane selection here.
+Historically `start-kimi.sh` was interactive-only: it never claimed a stream
+lease and rejected `--epic`. The Claude-Code harness accepted only explicit Kimi
+credentials and never an ambient `ANTHROPIC_AUTH_TOKEN`. Those commands are not
+a route.

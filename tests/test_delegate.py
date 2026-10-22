@@ -3799,26 +3799,31 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     tmp_path,
     monkeypatch,
 ):
-    """An instant Kimi CLI error must survive runtime and dispatch capture."""
+    """An instant active-lane CLI error must survive runtime and dispatch capture."""
     from agent_runtime import runner as runtime_runner
 
-    kimi_bin = tmp_path / "kimi"
-    kimi_bin.write_text(
+    cursor_bin = tmp_path / "cursor"
+    cursor_bin.write_text(
         "#!/bin/sh\nprintf '%s\\n' 'error: Cannot combine --prompt with --yolo.' >&2\nexit 2\n",
         encoding="utf-8",
     )
-    kimi_bin.chmod(0o755)
-    monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(kimi_bin))
+    cursor_bin.chmod(0o755)
+    from agent_runtime.adapters.base import InvocationPlan
+
+    adapter = runtime_runner._load_adapter("cursor")
+    monkeypatch.setattr(adapter, "build_invocation", lambda **kwargs: InvocationPlan(
+        cmd=[str(cursor_bin)], cwd=kwargs["cwd"],
+    ))
+    monkeypatch.setattr(runtime_runner, "_load_adapter", lambda _name: adapter)
     monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
     monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
     monkeypatch.setattr(runtime_runner, "_POLL_INTERVAL_S", 0.01)
     monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
-    runtime_runner._ADAPTER_CACHE.pop("kimi", None)
 
-    task_id = "kimi-instant-exit"
-    # A Kimi workspace-write worker runs only in its dispatch worktree.
+    task_id = "cursor-instant-exit"
+    # A workspace-write worker runs only in its dispatch worktree.
     _sanitize_git_env_for_test(monkeypatch)
-    worktree = _agy_dispatch_worktree(tmp_path, f"kimi/{task_id}")
+    worktree = _agy_dispatch_worktree(tmp_path, f"cursor/{task_id}")
     delegate._write_state_atomic(
         delegate._state_path(task_id),
         {
@@ -3828,11 +3833,11 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
             "owned_paths": ["site/src/components/Widget.tsx"],
         },
     )
-    stderr_log = tmp_path / "kimi-instant-exit.stderr.log"
+    stderr_log = tmp_path / "cursor-instant-exit.stderr.log"
     with stderr_log.open("w", encoding="utf-8") as handle, contextlib.redirect_stderr(handle):
         rc = delegate._run_worker(
             task_id=task_id,
-            agent="kimi",
+            agent="cursor",
             prompt="Inspect the target.",
             mode="workspace-write",
             cwd_str=str(worktree),
@@ -8586,9 +8591,9 @@ def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(
     )
     assert rc == 2
     err = capsys.readouterr().err
-    assert "KIMI CODING-ONLY" in err
-    assert "--mode read-only" in err
-    assert "review dispatches" in err
+    assert "retired in the model catalog (kimi-code/k3-256k)" in err
+    assert "model 'k3-256k'" in err
+    assert "use an active catalog model" in err
     popen.assert_not_called()
     assert not (tmp_tasks_dir / "kimi-review-sources.json").exists()
 
@@ -8608,25 +8613,25 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
-    plan = KimiccHarness().build_invocation(
-        prompt="Implement the helper.",
-        mode="workspace-write",
-        cwd=worktree,
-        model="k3",
-        task_id="kimi-no-grant",
-        session_id=None,
-        tool_config=admitted_tool_config(
-            worktree,
-            {
-                "harness": "kimicc",
-                "mcp_config_path": str(malicious),
-                "allowed_tools": "mcp__sources__verify_word",
-            },
-        ),
-    )
-    assert "--mcp-config" not in plan.cmd
-    assert str(malicious) not in plan.cmd
-    assert "--read-only-review" not in plan.cmd
+    with pytest.raises(ValueError, match="is retired in the model catalog") as refusal:
+        KimiccHarness().build_invocation(
+            prompt="Implement the helper.",
+            mode="workspace-write",
+            cwd=worktree,
+            model="k3",
+            task_id="kimi-no-grant",
+            session_id=None,
+            tool_config=admitted_tool_config(
+                worktree,
+                {
+                    "harness": "kimicc",
+                    "mcp_config_path": str(malicious),
+                    "allowed_tools": "mcp__sources__verify_word",
+                },
+            ),
+        )
+    assert str(malicious) not in str(refusal.value)
+    assert "evil-stdio" not in str(refusal.value)
 
 
 def test_kimicc_read_only_review_grant_is_retired():
