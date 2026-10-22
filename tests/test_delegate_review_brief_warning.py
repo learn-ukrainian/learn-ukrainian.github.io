@@ -154,6 +154,12 @@ def pr_review(tmp_path, monkeypatch):
     _git(repo, "remote", "add", "origin", f"https://github.com/{load_fleet_repos()['public'].github}.git")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
     _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", "HEAD")
+    remote = tmp_path / "canonical.git"
+    _git(repo, "init", "-q", "--bare", str(remote))
+    canonical = f"https://github.com/{load_fleet_repos()['public'].github}.git"
+    _git(repo, "config", f"url.{remote}.insteadOf", canonical)
+    _git(repo, "branch", "ordinary-review")
+    _git(repo, "--git-dir", str(remote), "fetch", "-q", str(repo), "refs/heads/ordinary-review:refs/heads/ordinary-review")
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_local_repo_root", repo)
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
