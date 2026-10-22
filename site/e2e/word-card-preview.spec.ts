@@ -1,4 +1,4 @@
-import { expect, test as base, type Locator } from '@playwright/test';
+import { expect, test as base, type Locator, type Page } from '@playwright/test';
 import { AxeBuilder } from '@axe-core/playwright';
 import { readFileSync, writeFileSync, mkdtempSync, existsSync, readdirSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -35,10 +35,12 @@ async function withScratch(prefix: string, logs: string, use: (scratch: string) 
 }
 
 const test = base.extend<{ fidelityScratch: string }, { releaseScratch: string }>({
-  fidelityScratch: async ({}, use, info) => {
+  fidelityScratch: async ({ page }, use, info) => {
+    void page;
     await withScratch('fidelity-browser-', info.outputPath('build-logs'), use);
   },
-  releaseScratch: [async ({}, use, info) => {
+  releaseScratch: [async ({ browser }, use, info) => {
+    void browser;
     await withScratch('release-browser-', join(info.project.outputDir, `release-build-logs-${info.workerIndex}`), use);
   }, { scope: 'worker' }],
 });
@@ -252,7 +254,8 @@ test('public configuration refuses synthetic, missing, tampered and malformed in
 });
 
 
-for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases ${prefix}scratch after success and failure`, async ({}, info) => {
+for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases ${prefix}scratch after success and failure`, async ({ page }, info) => {
+  void page;
   for (const fail of [false, true]) {
     let allocated = '';
     const logs = info.outputPath(fail ? 'failure' : 'success');
@@ -765,6 +768,71 @@ async function c37Server(root: string): Promise<C37Server> {
   return { origin: `http://127.0.0.1:${address.port}`, close: () => app.close() };
 }
 
+// A URL change alone is not article arrival. This predicate reads the rendered
+// current Atlas article: exactly one trusted shell, no error state, and a
+// word-title heading whose folded text carries the navigated slug.
+const foldUkrainian = (value: string): string => value.normalize('NFC')
+  .replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+
+export type ArticleArrival =
+  | { ok: true; url: string; heading: string }
+  | { ok: false; reason: string; url: string; heading?: string };
+
+export async function inspectCurrentAtlasArticle(page: Page, slug: string): Promise<ArticleArrival> {
+  const expected = `/lexicon/${encodeURIComponent(slug)}/`;
+  const url = new URL(page.url()).pathname;
+  if (url !== expected) return { ok: false, reason: `url ${url} is not ${expected}`, url };
+  const article = page.locator('[data-word-atlas]');
+  const articles = await article.count();
+  if (articles !== 1) return { ok: false, reason: `expected one [data-word-atlas], found ${articles}`, url };
+  const errorStates = await page.locator('[data-word-atlas-state]').count();
+  if (errorStates !== 0) return { ok: false, reason: `current Atlas shell reported ${errorStates} error state(s)`, url };
+  const titles = article.locator('h1.word-title:visible');
+  const titlesCount = await titles.count();
+  if (titlesCount < 1) return { ok: false, reason: 'no visible current-article word title', url };
+  const heading = ((await titles.first().textContent()) ?? '').replace(/\s+/g, ' ').trim();
+  const target = foldUkrainian(decodeURIComponent(slug));
+  if (!heading || !foldUkrainian(heading).includes(target)) {
+    return { ok: false, reason: `visible word title ${JSON.stringify(heading)} does not contain ${JSON.stringify(target)}`, url, heading };
+  }
+  if (!(await article.locator('.word-hero').first().isVisible())) {
+    return { ok: false, reason: 'word title rendered without an article hero', url, heading };
+  }
+  return { ok: true, url, heading };
+}
+
+/** Waits for rendering, then asserts real article arrival rather than a bare URL change. */
+export async function expectCurrentAtlasArticle(page: Page, slug: string, label: string, timeout = 20_000): Promise<string> {
+  await expect.poll(async () => (await inspectCurrentAtlasArticle(page, slug)).ok, {
+    message: `${label}: current Atlas article for ${JSON.stringify(slug)} did not arrive`, timeout,
+  }).toBe(true);
+  const arrival = await inspectCurrentAtlasArticle(page, slug);
+  if (!arrival.ok) throw Error(`${label}: ${arrival.reason}`);
+  return arrival.heading;
+}
+
+/** A tab is active only when its matching tabpanel is exposed and owned by that tab. */
+export async function inspectHeteronymTab(page: Page, index: number): Promise<{ ok: boolean; reason?: string; title?: string }> {
+  const tabs = page.getByRole('tab');
+  const count = await tabs.count();
+  if (index < 0 || index >= count) return { ok: false, reason: `tab index ${index} outside ${count} tabs` };
+  const tab = tabs.nth(index);
+  const selected = await tab.getAttribute('aria-selected');
+  if (selected !== 'true') return { ok: false, reason: `tab ${index} aria-selected=${JSON.stringify(selected)}` };
+  const controls = await tab.getAttribute('aria-controls');
+  if (!controls) return { ok: false, reason: `tab ${index} has no aria-controls` };
+  const panel = page.locator(`#${controls}`);
+  if (!(await panel.isVisible())) return { ok: false, reason: `panel ${controls} is not visible` };
+  const labelledBy = await panel.getAttribute('aria-labelledby');
+  const tabId = await tab.getAttribute('id');
+  if (!tabId || labelledBy !== tabId) return { ok: false, reason: `panel ${controls} labelled by ${JSON.stringify(labelledBy)}, not ${JSON.stringify(tabId)}` };
+  const visiblePanels = await page.locator('[role="tabpanel"]:visible').count();
+  if (visiblePanels !== 1) return { ok: false, reason: `expected one visible tabpanel, found ${visiblePanels}` };
+  const title = ((await panel.locator('h1.word-title:visible').first().textContent()) ?? '').trim();
+  if (!title) return { ok: false, reason: `panel ${controls} has no visible word title` };
+  return { ok: true, title };
+}
+
 test.describe('C37 candidate in-page search', () => {
   test.skip(!c37Root, 'ATLAS_WORD_CARD_C37_ROOT is not set');
   let publicServer: C37Server;
@@ -826,11 +894,63 @@ test.describe('C37 candidate in-page search', () => {
         await expect(options.first()).toHaveAttribute('aria-selected', 'true');
         await input.press('Enter');
         await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug!)}/`);
-        seen.push(`${viewport} ${route.class} ${route.path} -> ${slug}`);
+        const heading = await expectCurrentAtlasArticle(page, slug!, `${viewport} ${route.class} ${route.path}`);
+        seen.push(`${viewport} ${route.class} ${route.path} -> ${slug} -> ${heading}`);
       }
       await info.attach(`c37-keyboard-${viewport}`, { body: seen.join('\n'), contentType: 'text/plain' });
     });
   }
+
+  test('C37 URL-only navigation fails the article-arrival assertion (genuine negative control)', async ({ page }, info) => {
+    test.setTimeout(120_000);
+    if (!publicServer) throw Error('C37 public root is not configured');
+    const route = c37Inventory.routes.find(item => item.class === 'word-page')!;
+    await page.goto(publicServer.origin + route.path);
+    await expect(page.locator('[data-atlas-typeahead]')).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+    const input = page.locator('#atlas-candidate-search-input');
+    await input.fill('чит');
+    const options = page.locator('#atlas-candidate-search-list [role="option"][data-slug]');
+    await expect(options.first()).toBeVisible();
+    const slug = await options.first().getAttribute('data-slug');
+    if (!slug) throw Error('No search result slug');
+    await input.press('ArrowDown');
+    await input.press('Enter');
+    await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug)}/`);
+    const heading = await expectCurrentAtlasArticle(page, slug, 'negative-control baseline');
+    // Change only the address bar to another real Atlas word; the rendered article stays put.
+    const other = 'бабин';
+    expect(foldUkrainian(heading)).not.toContain(foldUkrainian(other));
+    await page.evaluate(path => window.history.pushState({}, '', path), `/lexicon/${encodeURIComponent(other)}/`);
+    const arrival = await inspectCurrentAtlasArticle(page, other);
+    expect(arrival.ok, 'URL-only navigation must not count as article arrival').toBe(false);
+    if (arrival.ok) throw Error('URL-only navigation was accepted as article arrival');
+    expect(arrival.reason).toContain('does not contain');
+    // The committed positive assertion rejects that same state, so it cannot regress to a bare URL check.
+    await expect(expectCurrentAtlasArticle(page, other, 'negative control', 2_000)).rejects.toThrow(/did not arrive/);
+    expect(new URL(page.url()).pathname).toBe(`/lexicon/${encodeURIComponent(other)}/`);
+    await info.attach('c37-url-only-negative-control', {
+      body: JSON.stringify({ baselineSlug: slug, baselineHeading: heading, urlOnlySlug: other, rejection: arrival.reason }, null, 2),
+      contentType: 'application/json',
+    });
+  });
+
+  test('C37 tab-activation assertion rejects an inactive tab (genuine negative control)', async ({ page }, info) => {
+    if (!publicServer) throw Error('C37 public root is not configured');
+    await page.goto(publicServer.origin + '/lexicon/' + encodeURIComponent('замок') + '/');
+    const tabs = page.getByRole('tab');
+    await expect(tabs).toHaveCount(2);
+    // Before any click tab 1 is inactive and its panel is hidden: the assertion must reject that state.
+    const inactive = await inspectHeteronymTab(page, 1);
+    expect(inactive.ok, 'an inactive tab must not read as activated').toBe(false);
+    await tabs.nth(1).click();
+    const active = await inspectHeteronymTab(page, 1);
+    expect(active.ok, active.reason).toBe(true);
+    expect(active.title ?? '').toContain('замо́к');
+    await info.attach('c37-tab-activation-control', {
+      body: JSON.stringify({ inactiveReason: inactive.reason, activeTitle: active.title }, null, 2),
+      contentType: 'application/json',
+    });
+  });
 
   test('C37 Atlas return link reaches the current Atlas', async ({ page }) => {
     const route = c37Inventory.routes.find(item => item.class === 'word-page')!;
@@ -838,6 +958,9 @@ test.describe('C37 candidate in-page search', () => {
     await page.getByRole('region', { name: 'Candidate presentation', exact: true })
       .getByRole('link', { name: 'До Атласу', exact: true }).click();
     await page.waitForURL(url => url.pathname === '/lexicon/');
+    const landing = page.locator('[data-word-atlas]');
+    await expect(landing).toBeVisible();
+    await expect(landing.locator('#lexicon-landing-search-input')).toBeVisible();
   });
 
   test('C37 current and candidate controls stay unique and independent', async ({ page }) => {
@@ -899,14 +1022,27 @@ test.describe('C37 candidate in-page search', () => {
         await page.waitForFunction(() => document.querySelector('[data-word-atlas],[data-release-page],[data-release-card],[data-word-atlas-state="not_found"]'), {}, { timeout: 30000 });
         const nodes = item.kind === 'disclosure' ? page.locator('details > summary') : page.getByRole('tab');
         const record: Record<string, unknown> = { ...item, clicks: [] as number[], timeouts: [] as Record<string, unknown>[] };
-        for (let i = 0; i < await nodes.count(); i++) {
+        // Exercise every original target, but end on the reported one so its own state is observable.
+        const order = [...Array.from({ length: await nodes.count() }, (_, i) => i).filter(i => i !== item.index), item.index];
+        for (const i of order) {
           try { await nodes.nth(i).click({ timeout: 2000 }); (record.clicks as number[]).push(i); }
           catch (error) { (record.timeouts as Record<string, unknown>[]).push({ index: i, error: (error as Error).message }); }
         }
         const target = nodes.nth(item.index);
-        const targetTimeout = (record.timeouts as { index: number }[]).some(timeout => timeout.index === item.index);
-        record.targetOpened = item.kind === 'disclosure'
-          ? await target.locator('..').getAttribute('open') !== null : !targetTimeout;
+        if (item.kind === 'disclosure') {
+          const opened = await target.locator('..').getAttribute('open') !== null;
+          const revealed = await target.locator('..').locator(':scope > :not(summary)').first().isVisible().catch(() => false);
+          record.targetVisible = await target.isVisible().catch(() => false);
+          record.targetOpened = opened && revealed;
+          // A timeout can mean the disclosure is present but covered: keep that distinction visible.
+          if (!opened) record.classification = record.targetVisible
+            ? 'unresolved-pointer-intercepted-on-current-page' : 'unresolved-not-visible-on-current-page';
+        } else {
+          const panel = await inspectHeteronymTab(page, item.index);
+          record.targetOpened = panel.ok;
+          record.panel = panel.title ?? null;
+          if (!panel.ok) record.classification = panel.reason;
+        }
         results.push(record);
       }
       await info.attach('c37-original-action-timeouts', { body: JSON.stringify(results, null, 2), contentType: 'application/json' });
@@ -915,6 +1051,16 @@ test.describe('C37 candidate in-page search', () => {
       expect(results.filter(item => !item.candidate).map(item => [item.route, item.kind, item.index, item.targetOpened]))
         .toEqual([['/lexicon/замок/', 'tab', 0, true], ['/lexicon/замок/', 'tab', 1, true], ['/lexicon/юридичний/', 'disclosure', 1, false]]);
       expect(results.filter(item => item.candidate).every(item => item.targetOpened === true)).toBe(true);
+      // Tab success means the matching panel is exposed and owned by that tab, not just that the click returned.
+      const currentTabs = results.filter(item => item.kind === 'tab');
+      expect(currentTabs.map(item => typeof item.panel)).toEqual(['string', 'string']);
+      for (const tab of currentTabs) expect(foldUkrainian(String(tab.panel))).toContain('замок');
+      expect(new Set(currentTabs.map(item => item.panel)).size).toBe(2);
+      // The current-page disclosure is classified from its observed state, never reported as working.
+      const unresolved = results.find(item => item.route === '/lexicon/юридичний/');
+      expect(unresolved?.targetOpened).toBe(false);
+      expect(unresolved?.targetVisible).toBe(true);
+      expect(unresolved?.classification).toBe('unresolved-pointer-intercepted-on-current-page');
       // The only surviving timeout is the shared current Atlas article, outside this repair's owned page.
       const timeouts = results.flatMap(item => (item.timeouts as { index: number; error: string }[])
         .map(timeout => ({ route: item.route as string, index: timeout.index, error: timeout.error })));

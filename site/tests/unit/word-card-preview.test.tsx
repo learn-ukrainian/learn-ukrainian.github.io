@@ -34,7 +34,7 @@ describe('source-bound preview mechanics', () => {
     for (const group of ['forms', 'stress', 'senses', 'examples', 'citations']) expect(screen.getByRole('region', { name: group })).toBeVisible();
     expect(screen.getByText('EXAMPLE_RAW')).toBeVisible();
     expect(card.fields.find(f => f.group === 'stress')?.raw).toEqual(['CONTROL_RAW']);
-    expect(card.fields.every(f => f.raw.every(v => !/[^\x00-\x7f]/.test(JSON.stringify(v))))).toBe(true);
+    expect(card.fields.every(f => f.raw.every(v => [...JSON.stringify(v)].every(ch => ch.charCodeAt(0) < 0x80)))).toBe(true);
     cleanup();
   });
   it('displays exact raw strings, keeps source citations and escapes untrusted text', () => {
