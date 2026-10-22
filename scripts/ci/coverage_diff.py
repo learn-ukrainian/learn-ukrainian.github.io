@@ -8,7 +8,8 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path, PurePosixPath
-from urllib.parse import quote
+
+from scripts.lib.readonly_sqlite import open_readonly
 
 SOURCES = ("scripts", ".mcp", "agents_extensions", "packages")
 # pytest-cov --cov-context=test records "<nodeid>|<phase>", not a bare node ID.
@@ -162,7 +163,7 @@ def arc_context_map(filename: Path, losses: list[dict]) -> dict[tuple[str, int, 
         return {}
     connection = None
     try:
-        connection = sqlite3.connect(f"file:{quote(str(filename.resolve()))}?mode=ro", uri=True)
+        connection = open_readonly(filename)
         rows = connection.execute(
             "SELECT file.path, context.context, arc.fromno, arc.tono "
             "FROM arc JOIN file ON file.id = arc.file_id JOIN context ON context.id = arc.context_id"
