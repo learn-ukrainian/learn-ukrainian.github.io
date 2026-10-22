@@ -31,8 +31,9 @@ reviewer exits.
 ## Reviewer seating
 
 Resolve code and infra reviewers with `.venv/bin/python -m scripts.review.closeout_cli
-resolve-reviewer --author-model <model> --review-profile code --risk <risk>` and run the
-invocation it returns. When a seat is near its budget cap, take the next eligible candidate
+--state-file <scratch>/review-<pr>.json resolve-reviewer --author-model <model>
+--review-profile code --risk <risk>` and run the invocation it returns. `--state-file` is a
+global argument and must precede the subcommand. When a seat is near its budget cap, take the next eligible candidate
 the resolver returns. Never park work waiting for a quota reset.
 
 ## CI failure on an unrelated diff
@@ -53,13 +54,6 @@ branch again (a fix round), reap it:
 
 A SKIPPED row is not a disposition: find the reason (live process, unpushed work) and
 resolve it safely; never force.
-
-## Claude headless calls
-
-`claude -p --bare` skips OAuth and the keychain and authenticates only with an API key; on a
-subscription login it fails with "Not logged in". For subscription seats use the fleet
-adapter (`delegate.py dispatch --agent claude`) or plain `claude -p`. Reserve `--bare` for
-explicit API-key runs.
 
 ## Dispatch helpers
 
