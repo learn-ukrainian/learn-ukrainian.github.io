@@ -114,8 +114,10 @@ _RUN_DIRECTORY_KEY_FRAGMENTS = (
 _KEY_PREFIX_BODIES = (
     ("github_pat_", "FAKE" * 6),
     ("ghp_", "FAKE" * 9),
+    *((prefix, "FAKE" * 9) for prefix in ("gho_", "ghu_", "ghs_", "ghr_")),
     ("sk-", "FAKE" * 5),
     ("xoxb-", "FAKE" * 6),
+    *((prefix, "FAKE" * 6) for prefix in ("xoxa-", "xoxp-", "xoxr-", "xoxs-")),
     ("hf_", "FAKE" * 8),
     ("npm_", "FAKE" * 9),
     ("AKIA", "FAKE" * 4),
@@ -125,10 +127,9 @@ _KEY_PREFIX_BODIES = (
 _REAL_KEY_SHAPED_VALUES = tuple(prefix + body for prefix, body in _KEY_PREFIX_BODIES)
 
 # A real key can be glued to a preceding word character, which is exactly what
-# a word boundary would hide. ``sk-`` is absent: it keeps its pre-#11326
-# boundary and therefore is not detected when glued.
+# a word boundary would hide.
 _GLUED_SEPARATORS = ("MY_", "x_", "abc", "9", "%3D", "%3A", "\\n", "і", "é")
-_GLUED_PREFIX_BODIES = tuple((prefix, body) for prefix, body in _KEY_PREFIX_BODIES if prefix != "sk-")
+_GLUED_PREFIX_BODIES = _KEY_PREFIX_BODIES
 
 
 @pytest.mark.parametrize("provider", ["claude", "acpx-claude-shadow"])
@@ -176,6 +177,55 @@ def test_glued_full_length_keys_are_still_dropped(separator, prefix, body):
     for name in context:
         assert name not in env, name
     assert all(key not in value for value in env.values())
+
+
+@pytest.mark.parametrize("value", ["sk-x", "task-sk-att", "sk-ant-fake", "sk-proj-fake"])
+def test_short_boundary_delimited_sk_values_remain_rejected(value):
+    """#11355: broadening glued detection must preserve existing short-key rejection."""
+    with patch.dict(os.environ, {"PATH": value, "HOME": "/fixture/home"}, clear=True):
+        env = build_agent_env(provider="claude")
+    assert "PATH" not in env
+
+
+@pytest.mark.parametrize("prefix,body", _KEY_PREFIX_BODIES)
+@pytest.mark.parametrize(
+    "template",
+    [
+        pytest.param("{}", id="bare"),
+        pytest.param("/usr/bin:/fixture/{}/bin:/bin", id="path"),
+        pytest.param("https://fixture.invalid/?key%3D{}", id="url"),
+        pytest.param("MY_{}", id="word"),
+        pytest.param("%3D{}", id="encoded-equals"),
+        pytest.param(r"\n{}", id="literal-backslash-n"),
+    ],
+)
+@pytest.mark.parametrize("override", [False, True], ids=["inherited", "override"])
+def test_all_key_prefixes_reject_glued_and_embedded_credentials(prefix, body, template, override):
+    """#11355: credential-shaped values must not escape through a leading word character."""
+    value = template.format(prefix + body)
+    context = {"PATH": value, "HOME": value, "AB_TRACE": value}
+    parent = {"HOME": "/fixture/home", "PATH": "/usr/bin"} if override else context
+    with patch.dict(os.environ, parent, clear=True):
+        env = build_agent_env(provider="claude", overrides=context if override else None)
+    for name in context:
+        assert name not in env, name
+    assert all(prefix + body not in item for item in env.values())
+
+
+@pytest.mark.parametrize("prefix,body", _KEY_PREFIX_BODIES)
+@pytest.mark.parametrize("override", [False, True], ids=["inherited", "override"])
+def test_short_glued_prefix_fragments_keep_process_path(prefix, body, override):
+    """#11355: a short run-directory fragment must not be treated as a full key.
+
+    Mixed-case and hyphenated prefixes cannot occur in mkdtemp's random tail;
+    these converse rows also cover manually named run directories.
+    """
+    path = f"/fixture/pytest.b{prefix}56ac/bin:/usr/bin:/bin"
+    context = {"PATH": path, "HOME": "/fixture/home"}
+    with patch.dict(os.environ, context, clear=True):
+        env = build_agent_env(provider="claude", overrides=context if override else None)
+    assert env["PATH"] == path
+    assert env["HOME"] == "/fixture/home"
 
 
 @pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "bridge"])

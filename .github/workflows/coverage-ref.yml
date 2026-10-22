@@ -127,6 +127,8 @@ jobs:
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: '5'
+      # Python 3.12.14 + coverage 7.16.2: sysmon cannot measure branches.
+      # https://coverage.readthedocs.io/en/7.16.2/config.html#run-core
       COVERAGE_CORE: ctrace
       COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage
     steps:
@@ -230,6 +232,8 @@ jobs:
         snapshot=ci-artifacts/pytest-file-durations.json
         durations=$(python3 -m scripts.ci.split_tests duration-source \
           --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
+        # Run 39690968174: integration-check setup alone took 119.06s, while
+        # other tests hit 120s. Allow 5x CI's budget under branch tracing (#11226).
         git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
           | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
             --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
@@ -237,7 +241,7 @@ jobs:
           --output ci-artifacts/raw --shard "$SHARD" -- tests \
           --cov=scripts --cov=.mcp --cov=agents_extensions --cov=packages \
           --cov-branch --cov-report= --cov-config="$COVERAGE_RCFILE" -n logical --dist=worksteal --max-worker-restart=0 \
-          --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
+          --timeout=600 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
           --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
         # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
         .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \

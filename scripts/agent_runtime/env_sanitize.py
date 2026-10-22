@@ -26,27 +26,24 @@ _SENSITIVE_NAME_RE = re.compile(
     re.IGNORECASE,
 )
 
-# A real credential body is long: every provider key carries at least eight
-# characters after its prefix. A random pytest run-directory name such as
-# ``pytest.bhf_56ac`` embeds a prefix plus a short fragment, so the length floor
-# keeps a PATH entry that merely contains the directory ordinary process
-# context (#11326).
+# Keep short random run-directory fragments such as ``pytest.bhf_56ac`` out
+# of credential detection (#11326). This is a conservative detection floor,
+# not a validator for the providers' complete key formats.
 _MIN_KEY_BODY = 8
 
-# A credential is matched even when it is glued to a preceding word character:
-# URLs (``%3D``/``%3A``), escaped JSON (a literal ``\n``), and text with a
-# digit, underscore, Cyrillic or accented letter before the key all carry real
-# keys that way. The body floor alone rules out the #11326 run-directory
-# collision, because mkdtemp's ``[a-z0-9_]`` alphabet leaves at most five body
-# characters after the only prefixes it can embed. ``sk-`` is the exception: it
-# keeps the word boundary it had before #11326 (a launch-gate test relies on a
-# short task-id tail, ``task-sk-att``, still looking sensitive) and it has no
-# length floor.
+# Word boundaries hide keys after ``MY_``, URL-encoded ``%3D`` and literal
+# ``\\n`` (#11355). Keep the existing short, boundary-delimited sk- matches,
+# including ``task-sk-att``, and also detect glued bodies of at least 20
+# characters. The higher glued floor preserves ordinary ``ask-codex-review``
+# and ``task-summary-finalize`` paths; other prefixes retain their own floors.
+_MIN_GLUED_SK_BODY = 20
+
 _SENSITIVE_VALUE_RE = re.compile(
     r"(?:"
     rf"github_pat_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     rf"gh[pousr]_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     r"\bsk-[A-Za-z0-9_-]+|"
+    rf"sk-[A-Za-z0-9_-]{{{_MIN_GLUED_SK_BODY},}}|"
     rf"xox[baprs]-[A-Za-z0-9-]{{{_MIN_KEY_BODY},}}|"
     rf"hf_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     rf"npm_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
