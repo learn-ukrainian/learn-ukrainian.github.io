@@ -6,6 +6,7 @@ import fcntl
 import json
 import math
 import os
+import resource
 import stat
 import subprocess
 import sys
@@ -397,6 +398,430 @@ def test_held_run_lock_preserves_even_when_the_holder_is_invisible(area, monkeyp
     assert row_for(report, run)["reason"] == "in_use" and run.is_dir()
 
 
+@pytest.mark.parametrize("cohort", ["young96", "eligible96", "cross_namespace50"])
+def test_run_locks_do_not_exhaust_descriptors_across_repeated_sweeps(area, cohort):
+    """Retained and disposed locks must not starve later runs or namespaces (#11386)."""
+    root, args = area
+    if cohort == "cross_namespace50":
+        runs = [malformed(root, f"run-{index:03d}", ns=ns)
+                for ns in (pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME) for index in range(25)]
+    else:
+        runs = [malformed(root, f"run-{index:03d}") for index in range(96)]
+    before = tree_state(root)
+    expected_bytes = sum(allocated(run) for run in runs)
+    parent_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+    result = subprocess.run(
+        [sys.executable, "-c", """
+import json, os, resource, sys, time
+from pathlib import Path
+from scripts.hygiene import pytest_retention as retention, tmp_sweep
+from scripts.hygiene.tmp_sweep_ledger import Ledger
+root, state, tasks, proc = map(Path, sys.argv[1:5])
+cohort = sys.argv[5]
+runs = [root / relative for relative in json.loads(sys.argv[6])]
+real_time = time.time
+if cohort != 'young96':
+    tmp_sweep.time.time = lambda: real_time() + 3 * 3600
+retention.scratch_scan_roots = lambda: [root]
+retention.PROC_ROOT = proc
+tmp_sweep.registered_worktrees = lambda _: set()
+def no_delete(*args, **kwargs):
+    raise AssertionError('young runs must never enter deletion')
+if cohort == 'young96':
+    retention._delete = no_delete
+real_lock = retention._lock
+def fd_open(fd):
+    try:
+        os.fstat(fd)
+        return True
+    except OSError:
+        return False
+fd_count = lambda: sum(fd_open(fd) for fd in range(64))
+peak = fd_count()
+lock_fd_counts = set()
+def measured_lock(fd):
+    global peak
+    result = real_lock(fd)
+    count = fd_count()
+    lock_fd_counts.add(count)
+    peak = max(peak, count)
+    return result
+retention._lock = measured_lock
+soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+assert soft >= 64
+resource.setrlimit(resource.RLIMIT_NOFILE, (64, hard))
+reports = []
+for index in range(3):
+    if index and cohort != 'young96':
+        for run in runs:
+            (run / 'scratch' / 'base').mkdir(parents=True)
+            (run / 'scratch' / 'base' / 'payload').write_bytes(b'x' * 8192)
+            (run / 'lease.json').write_text('{not json')
+            (run / 'lease.lock').touch(mode=0o600)
+    start = fd_count()
+    lock_fd_counts.clear()
+    report = retention.sweep_pytest_runs(
+        apply=True, ledger=Ledger(state), run_id=f'bounded-{index}', task_root=tasks,
+        quarantine_s=7 * 86400, repo_root=Path.cwd(),
+    )
+    reports.append(dict(
+        reasons=report['by_reason'], decisions=report['by_decision'], errors=report['errors'],
+        protected_bytes=report['protected_bytes'], deleted=report['deleted_entries'],
+        unmeasured=report['unmeasured_entries'], bytes_complete=report['bytes_complete'],
+        remaining=report['remaining_runs'], deleted_bytes=report['deleted_bytes'],
+        fd_start=start, fd_end=fd_count(), fd_peak=peak, lock_fd_counts=sorted(lock_fd_counts),
+    ))
+print(json.dumps(reports))
+""", str(root), str(args["state_dir"]), str(args["task_root"]), str(root.parent / "proc"), cohort,
+         json.dumps([str(run.relative_to(root)) for run in runs])],
+        cwd=REPO, capture_output=True, text=True, check=True, timeout=60,
+    )
+    reports = json.loads(result.stdout)
+    print("low-FD repeated sweeps:", result.stdout.strip())
+    assert resource.getrlimit(resource.RLIMIT_NOFILE) == parent_limit
+    for report in reports:
+        if cohort == "young96":
+            assert report["reasons"] == {"too_young": 96}
+            assert report["decisions"] == {"preserve": 96}
+            assert report["deleted"] == report["deleted_bytes"] == 0
+            assert report["protected_bytes"] == expected_bytes
+            assert report["remaining"] == 96
+        else:
+            count = 50 if cohort == "cross_namespace50" else 96
+            assert report["reasons"] == {"inactive_pytest_scratch": count}
+            assert report["decisions"] == {"deleted": count}
+            assert report["deleted"] == count
+            assert report["deleted_bytes"] == expected_bytes
+            assert report["remaining"] == report["protected_bytes"] == 0
+        assert report["errors"] == report["unmeasured"] == 0
+        assert report["bytes_complete"] is True
+        assert report["fd_start"] == report["fd_end"]
+        assert report["fd_peak"] < 64
+        assert len(report["lock_fd_counts"]) == 1  # no accumulation as earlier runs are disposed
+    if cohort == "young96":
+        assert tree_state(root) == before
+    else:
+        assert all(not run.exists() for run in runs)
+
+
+@pytest.mark.parametrize("rejection", ["too_young", "tree_unknown", "git_metadata", "scan_error"])
+def test_rejected_lock_is_released_before_the_next_eligible_run(area, monkeypatch, rejection):
+    """Preserve and exception paths must release their lock before inspecting the next run."""
+    root, args = area
+    rejected, eligible = malformed(root, "a-rejected"), malformed(root, "z-eligible")
+    now = later(monkeypatch, 3 * HOUR)
+    if rejection == "git_metadata":
+        (rejected / ".git").mkdir()
+    real_fingerprint, real_facts = tmp_sweep.tree_fingerprint, tmp_sweep.tree_facts
+
+    def fingerprint(path):
+        return None if path == rejected and rejection == "tree_unknown" else real_fingerprint(path)
+
+    def facts(path):
+        if path == rejected and rejection == "scan_error":
+            raise OSError(5, "inspection failed after locking")
+        return real_facts(path)
+
+    real_classify = pytest_retention._classify
+
+    def classify(name, *positional, **kwargs):
+        if name == rejected.name and rejection == "too_young":
+            kwargs["now"] = now - 3 * HOUR
+        if name == eligible.name:
+            with (rejected / "lease.lock").open("r+") as contender:
+                fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return real_classify(name, *positional, **kwargs)
+
+    monkeypatch.setattr(tmp_sweep, "tree_fingerprint", fingerprint)
+    monkeypatch.setattr(tmp_sweep, "tree_facts", facts)
+    monkeypatch.setattr(pytest_retention, "_classify", classify)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert (row_for(report, rejected)["decision"], row_for(report, rejected)["reason"]) == ("preserve", rejection)
+    assert row_for(report, eligible)["decision"] == "deleted"
+    assert rejected.is_dir() and not eligible.exists()
+    assert report["errors"] == (1 if rejection == "scan_error" else 0)
+
+
+@pytest.mark.parametrize("outcome", ["deleted", "recent_write", "delete_refused", "partial_failure"])
+@pytest.mark.parametrize("next_ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
+def test_eligible_lock_covers_rename_recheck_delete_and_return(area, monkeypatch, outcome, next_ns):
+    """Early lock release must not admit a competing owner during deletion or restoration."""
+    root, args = area
+    run = malformed(root, "locked")
+    following = malformed(root, "z-following", ns=next_ns)
+    later(monkeypatch, 3 * HOUR)
+    phases = []
+    with (run / "lease.lock").open("r+") as contender:
+        def locked(phase):
+            with pytest.raises(BlockingIOError):
+                fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            phases.append(phase)
+
+        def renamed(held):
+            locked("rename")
+            if outcome == "recent_write":
+                (held / "new-output").write_text("fresh")
+
+        _after_rename(monkeypatch, run, renamed)
+        real_recheck, real_return = pytest_retention._recheck, pytest_retention._return
+        real_classify = pytest_retention._classify
+        real_reap = tmp_sweep.reap_attributed_temp
+
+        def classify(name, *positional, **kwargs):
+            if name == following.name:
+                # The previous disposition is complete before another run or
+                # namespace is inspected, even if the previous run was restored.
+                fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                fcntl.flock(contender, fcntl.LOCK_UN)
+                phases.append("next_candidate")
+            return real_classify(name, *positional, **kwargs)
+
+        def recheck(*positional):
+            if positional[0].name == run.name:
+                locked("recheck")
+            return real_recheck(*positional)
+
+        def restore(*positional):
+            locked("before_return")
+            result = real_return(*positional)
+            locked("after_return")
+            return result
+
+        def reap(path, **kwargs):
+            if path.name != run.name:
+                return real_reap(path, **kwargs)
+            locked("delete")
+            if outcome == "partial_failure":
+                (path / "scratch" / "base" / "payload").unlink()
+            if outcome in {"delete_refused", "partial_failure"}:
+                raise OSError(13, "remover refused")
+            return real_reap(path, **kwargs)
+
+        monkeypatch.setattr(pytest_retention, "_recheck", recheck)
+        monkeypatch.setattr(pytest_retention, "_classify", classify)
+        monkeypatch.setattr(pytest_retention, "_return", restore)
+        monkeypatch.setattr(tmp_sweep, "reap_attributed_temp", reap)
+        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+        fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    row = row_for(report, run)
+    if outcome == "deleted":
+        assert row["decision"] == "deleted" and not run.exists()
+        assert phases == ["rename", "recheck", "delete", "next_candidate"]
+    else:
+        assert (row["decision"], row["reason"]) == (
+            "preserve", "recent_write" if outcome == "recent_write" else "delete_refused",
+        )
+        assert phases == ["rename", "recheck", *([] if outcome == "recent_write" else ["delete"]),
+                          "before_return", "after_return", "next_candidate"]
+        assert run.is_dir()
+        if outcome == "partial_failure":
+            assert not (run / "scratch" / "base" / "payload").exists()
+            assert (run / "lease.json").read_text() == "{not json"
+        else:
+            assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+    assert report["errors"] == (1 if outcome in {"delete_refused", "partial_failure"} else 0)
+    assert row_for(report, following)["decision"] == "deleted" and not following.exists()
+    assert report["unmeasured_entries"] == (0 if outcome == "deleted" else 1)
+    assert report["protected_bytes_complete"] is (outcome == "deleted")
+
+
+@pytest.mark.parametrize("failure", ["in_use", "lock_unknown"])
+def test_summary_keeps_lock_failures_visible_beside_measured_protected_bytes(area, monkeypatch, failure):
+    """Lock failures must remain counted even when their tree bytes could not be classified."""
+    root, args = area
+    young, uncertain = malformed(root, "young"), malformed(root, "uncertain")
+    expected_bytes = allocated(young)
+    real_open = os.open
+    identity = uncertain.stat().st_ino
+
+    def open_lock(path, flags, *positional, **kwargs):
+        if (failure == "lock_unknown" and path == "lease.lock" and "dir_fd" in kwargs
+                and os.fstat(kwargs["dir_fd"]).st_ino == identity):
+            raise PermissionError(13, "unreadable lock")
+        return real_open(path, flags, *positional, **kwargs)
+
+    monkeypatch.setattr(pytest_retention.os, "open", open_lock)
+    with (uncertain / "lease.lock").open("r+") as contender:
+        if failure == "in_use":
+            fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        report = tmp_sweep.sweep(**args, apply=True)
+    summary = tmp_sweep.summarize(report)["pytest_retention"]
+    assert summary["by_reason"] == {"too_young": 1, failure: 1}
+    assert summary["by_decision"] == {"preserve": 2}
+    assert summary["protected_bytes"] == summary["remaining_bytes"] == expected_bytes
+    assert summary["unmeasured_entries"] == summary["protected_unmeasured_entries"] == 1
+    assert summary["remaining_unmeasured_entries"] == 1
+    assert summary["bytes_complete"] is False
+    assert summary["protected_bytes_complete"] is summary["remaining_bytes_complete"] is False
+    assert summary["deleted_entries"] == summary["deleted_bytes"] == 0
+    assert row_for(report["pytest_retention"], uncertain)["reason"] == failure
+    assert row_for(report["pytest_retention"], uncertain)["bytes"] is None
+    assert young.is_dir() and uncertain.is_dir()
+
+
+@pytest.mark.parametrize("phase", ["initial", "recheck", "lock", "process_state", "process_maps"])
+def test_real_descriptor_exhaustion_is_an_error_and_preserves_runs(area, phase):
+    """EMFILE must not masquerade as successful liveness probing or measured zero bytes."""
+    root, args = area
+    run = malformed(root, "preserved")
+    expected = allocated(run)
+    parent_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
+    result = subprocess.run(
+        [sys.executable, "-c", """
+import json, os, resource, sys, time
+from pathlib import Path
+from scripts.hygiene import pytest_retention as retention, tmp_sweep
+from scripts.hygiene.tmp_sweep_ledger import Ledger
+root, state, tasks, proc = map(Path, sys.argv[1:5])
+phase = sys.argv[5]
+retention.scratch_scan_roots = lambda: [root]
+retention.PROC_ROOT = proc
+tmp_sweep.registered_worktrees = lambda _: set()
+real_time = time.time
+tmp_sweep.time.time = lambda: real_time() + 3 * 3600
+held = []
+def exhaust():
+    while True:
+        try:
+            held.append(os.open(os.devnull, os.O_RDONLY))
+        except OSError as error:
+            assert error.errno == 24
+            return
+def release():
+    for fd in held:
+        os.close(fd)
+    held.clear()
+if phase.startswith('process_'):
+    entry = proc / '4242'
+    entry.mkdir()
+    (entry / 'stat').write_bytes(b'4242 (fixture) S 1 2 3')
+    (entry / 'cwd').symlink_to(root.parent, target_is_directory=True)
+    (entry / 'fd').mkdir()
+    (entry / 'maps').write_bytes(b'')
+    (entry / 'cmdline').write_bytes(b'')
+    (entry / 'environ').write_bytes(b'')
+real_state = retention._process_state
+def process_state(entry):
+    if phase == 'process_state':
+        exhaust()
+    return real_state(entry)
+retention._process_state = process_state
+real_read = Path.read_bytes
+def read_bytes(path):
+    if phase == 'process_maps' and path.name == 'maps':
+        exhaust()
+    return real_read(path)
+Path.read_bytes = read_bytes
+real_snapshot = retention.holder_snapshot
+def snapshot(own_fds=frozenset()):
+    if phase == 'initial' or (phase == 'recheck' and own_fds):
+        exhaust()
+    try:
+        return real_snapshot(own_fds)
+    finally:
+        release()
+retention.holder_snapshot = snapshot
+real_lock = retention._lock
+def lock(fd):
+    if phase == 'lock':
+        exhaust()
+    try:
+        return real_lock(fd)
+    finally:
+        release()
+retention._lock = lock
+resource.setrlimit(resource.RLIMIT_NOFILE, (64, resource.getrlimit(resource.RLIMIT_NOFILE)[1]))
+report = retention.sweep_pytest_runs(
+    apply=True, ledger=Ledger(state), run_id='emfile', task_root=tasks,
+    quarantine_s=7 * 86400, repo_root=Path.cwd(),
+)
+print(json.dumps(report))
+""", str(root), str(args["state_dir"]), str(args["task_root"]), str(root.parent / "proc"), phase],
+        cwd=REPO, capture_output=True, text=True, check=True, timeout=60,
+    )
+    report = json.loads(result.stdout)
+    print("real EMFILE", phase, result.stdout.strip())
+    assert resource.getrlimit(resource.RLIMIT_NOFILE) == parent_limit
+    assert report["by_reason"] == {"descriptor_exhausted": 1}
+    assert report["by_decision"] == {"preserve": 1}
+    assert report["errors"] == report["descriptor_exhaustion_entries"] == 1
+    assert report["deleted_entries"] == 0
+    assert report["liveness_complete"] is (phase == "lock")
+    assert report["liveness_unreadable_processes"] == 0
+    if phase in {"lock", "recheck"}:
+        assert report["unmeasured_entries"] == report["protected_unmeasured_entries"] == 1
+        assert report["protected_bytes_complete"] is False
+        assert report["rows"][0]["bytes"] is None
+    else:
+        assert report["unmeasured_entries"] == 0
+        assert report["protected_bytes_complete"] is True
+        assert report["protected_bytes"] == expected
+    assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+
+
+@pytest.mark.parametrize("output", ["--summary", "--json", "table"])
+def test_cli_publishes_unmeasured_busy_bytes_without_claiming_a_complete_total(area, capsys, output):
+    """Every CLI output must expose unknown busy-run bytes while preserving numeric subtotal compatibility."""
+    root, args = area
+    busy = malformed(root, "busy")
+    with (busy / "lease.lock").open("r+") as contender:
+        fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        flags = ["--temp-root", str(args["temp_root"]), "--task-root", str(args["task_root"]),
+                 "--state-dir", str(args["state_dir"]), "--apply"]
+        assert tmp_sweep.main(flags + ([] if output == "table" else [output])) == 0
+    rendered = capsys.readouterr().out
+    if output == "table":
+        summary = json.loads(rendered.split("pytest_retention=", 1)[1])
+        assert "| None |" in rendered
+    else:
+        summary = json.loads(rendered)["pytest_retention"]
+        if output == "--json":
+            assert summary["rows"][0]["bytes"] is None
+    assert summary["by_reason"] == {"in_use": 1}
+    assert summary["protected_bytes"] == summary["remaining_bytes"] == 0  # measured subtotal only
+    assert summary["protected_bytes_complete"] is summary["remaining_bytes_complete"] is False
+    assert summary["protected_unmeasured_entries"] == summary["remaining_unmeasured_entries"] == 1
+    assert (busy / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+
+
+@pytest.mark.parametrize("phase", ["root", "namespace", "classify", "quarantine"])
+def test_descriptor_failure_does_not_duplicate_or_underreport_candidate_rows(area, monkeypatch, phase):
+    """A failed directory open must report exhaustion once and never leave a would-delete receipt."""
+    root, args = area
+    run = malformed(root, "kept")
+    later(monkeypatch, 3 * HOUR)
+    real_private, real_classify = pytest_retention._open_private, pytest_retention._classify
+
+    def private(path, *positional, **kwargs):
+        if (phase == "root" and path == root) or (phase == "namespace" and path == run.parent):
+            raise OSError(24, "descriptor limit")
+        return real_private(path, *positional, **kwargs)
+
+    def classify(*positional, **kwargs):
+        if phase == "classify":
+            raise OSError(24, "descriptor limit")
+        return real_classify(*positional, **kwargs)
+
+    def quarantine(*positional):
+        raise OSError(24, "descriptor limit")
+
+    monkeypatch.setattr(pytest_retention, "_open_private", private)
+    monkeypatch.setattr(pytest_retention, "_classify", classify)
+    if phase == "quarantine":
+        monkeypatch.setattr(tmp_sweep, "open_quarantine", quarantine)
+    report = tmp_sweep.sweep(**args, apply=True)
+    summary = report["pytest_retention"]
+    assert summary["by_reason"] == {"descriptor_exhausted": 1}
+    assert summary["by_decision"] == {"preserve": 1}
+    assert summary["runs"] == summary["errors"] == report["errors"] == 1
+    assert summary["unmeasured_entries"] == 1
+    assert summary["protected_bytes_complete"] is summary["remaining_bytes_complete"] is False
+    assert summary["rows"][0]["bytes"] is None
+    assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+    with (run / "lease.lock").open("r+") as contender:
+        fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
 def test_released_lock_idle_owner_without_reference_is_eligible(area, monkeypatch):
     """Ownership state is not a holder channel: an idle former owner that references nothing does not preserve."""
     root, args = area
@@ -783,6 +1208,9 @@ def test_crash_leftover_returns_to_its_name_and_waits_again(area, monkeypatch):
     run.rename(holding / run.name)
     dry = tmp_sweep.sweep(**args)["pytest_retention"]
     assert dry["by_reason"] == {"quarantine_leftover": 1}
+    assert dry["rows"][0]["bytes"] is None
+    assert dry["unmeasured_entries"] == dry["protected_unmeasured_entries"] == 1
+    assert dry["protected_bytes_complete"] is dry["remaining_bytes_complete"] is False
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     assert (run / "scratch" / "base" / "payload").is_file() and not holding.exists()
     assert row_for(report, run)["reason"] == "too_young"
