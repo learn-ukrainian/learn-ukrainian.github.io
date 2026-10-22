@@ -37,6 +37,30 @@ printf 'clause=%s\\n' "$clause"
     )
     assert proc.returncode == 0, proc.stderr
     out = proc.stdout
+    assert "PRs may open so CI runs" in out
+    assert "enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate" in out
+    assert "before opening" not in out
+    # Minimal checkouts use the fallback clause without the shared helper.
+    fallback_script = r'''
+set -euo pipefail
+source scripts/lib/launcher_core.sh
+LC_ROOT=/nonexistent
+LC_PROVIDER=codex
+LC_HARNESS=codex
+LC_EPIC=infra
+LC_DRY_RUN=1
+LC_FORWARD_ARGS=()
+launcher_bind_drive_epic
+printf '%s\n' "$LC_DRIVER_PROMPT"
+'''
+    fallback = subprocess.run(
+        ["bash", "-c", fallback_script], cwd=REPO, env=env,
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert fallback.returncode == 0, fallback.stderr
+    assert "PRs may open so CI runs" in fallback.stdout
+    assert "enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate" in fallback.stdout
+    assert "before opening" not in fallback.stdout
     assert "resolved=authority" in out or "resolved=dual_write" in out or "resolved=shadow" in out
     # When resolve returns authority, clause must carry it (not a hardcoded off).
     if "resolved=authority" in out:

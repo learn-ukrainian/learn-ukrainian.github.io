@@ -49,14 +49,35 @@ def test_grok_effort_injects_reasoning_effort_only_when_set() -> None:
 
 
 @pytest.mark.parametrize("selector", ("atlas", "infra.devops", "infra"))
-def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str) -> None:
-    result = run_launcher("start-grok-driver.sh", "--epic", selector)
+def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str, tmp_path) -> None:
+    """The injected binding must not become an extra Grok positional argument."""
+    prompts = {
+        "atlas": (),
+        "infra.devops": ("Continue the task",),
+        "infra": ("Continue", "  task\n$(exit 91); `exit 92` * --debug  \n"),
+    }[selector]
+    provider_args = ("--cwd", "directory with spaces\nand a newline", "--max-turns", "3")
+    argv_file = tmp_path / "grok.argv"
+    result = run_launcher(
+        "start-grok-driver.sh", "--epic", selector, *prompts, "--", *provider_args,
+        env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file)},
+    )
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
     assert "would run provider canary" in result.stdout
     assert "would bind drive-epic" in result.stdout
     assert "--model grok-4.5" not in result.stdout
     assert "--model" not in result.stdout
+    argv = argv_file.read_bytes().split(b"\0")[:-1]
+    assert argv[0] == b"grok"
+    assert argv[1] == b"--rules"
+    assert argv[3:-2] == [arg.encode() for arg in provider_args]
+    assert argv[-2] == b"--"
+    prompt = argv[-1].decode()
+    binding_start = "Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting."
+    assert prompt.count(binding_start) == 1
+    assert prompt.startswith(" ".join(prompts) + ("\n\n" if prompts else "") + binding_start)
+    assert "do not claim, renew, or reopen the lease" in prompt
 
 
 @pytest.mark.parametrize(
