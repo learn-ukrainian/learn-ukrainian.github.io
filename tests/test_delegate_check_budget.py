@@ -2721,13 +2721,11 @@ def test_unattributed_rate_limits_never_exclude_a_selected_account_reviewer(monk
         seen.append(snapshot)
         return "claude", "claude-opus-5-5"
 
-    for label, excluded in (("b", set()), (None, _claude_seats())):
+    for label in ("b", None):
         seen.clear()
         assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
         (snapshot,) = seen
-        assert set(snapshot["review_capacity_exclusions"]) & _claude_seats() == excluded
-        causes = {snapshot["review_capacity_exclusions"].get(seat) for seat in excluded}
-        assert causes <= {"runtime headroom blocked"}
+        assert set(snapshot["review_capacity_exclusions"]) & _claude_seats() == set()
 
 
 @pytest.mark.parametrize(

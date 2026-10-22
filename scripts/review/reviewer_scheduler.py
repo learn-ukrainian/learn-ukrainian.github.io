@@ -3,8 +3,8 @@
 Hard policy remains in :mod:`reviewer_resolver`.  This module intentionally
 does not query Fleet Comms, CodexBar, or process state: callers pass a bounded
 routing-budget snapshot and this code makes one reproducible choice from it.
-Remaining allowance and observation freshness are the shared owner's pure
-readings (:mod:`scripts.fleet.credit_lane`, #9740); nothing here re-derives them.
+Allowance observations remain diagnostic metadata. Selection uses workload,
+in-flight counts and failures after eligibility, never remaining usage or pace.
 """
 
 from __future__ import annotations
@@ -16,7 +16,6 @@ from typing import Any
 
 from scripts.fleet import credit_lane
 from scripts.fleet.claude_account_lane import CLAUDE_LANE, is_claude_lane_key, require_bound
-from scripts.review.capacity import review_capacity
 from scripts.review.model_catalog import load_model_catalog, usage_pool_for_seat
 
 
@@ -81,8 +80,7 @@ def _route_record(
         keys = (candidate.route, *keys)
     agents = snapshot.get("agents")
     if not isinstance(agents, Mapping):
-        # Legacy injected health maps carry no quota, but hot still orders
-        # otherwise equal review fits without becoming an exclusion.
+        # Legacy injected maps carry status labels without allowance observations.
         for key in keys:
             status = snapshot.get(key)
             if isinstance(status, str):
@@ -168,26 +166,11 @@ def selection_key(
     metrics = metrics_for(candidate, snapshot)
     weight = float(candidate.capacity_weight)
     load = metrics.load_bytes
-    # Fresh capacity evidence outranks stale last-known-good evidence, and both
-    # outrank a route with no usable headroom signal. This keeps an unknown
-    # account from looking infinitely available merely because it has no
-    # recorded work. Fairness then compares normalized work only within the
-    # same conservative evidence class.
     load_unknown = load is None
     normalized_load = (load / weight) if load is not None else 0.0
-    # Unknown freshness ranks after known-stale evidence; unknown in-flight and
-    # failure counts rank after any observed count, never as zero.
-    headroom_unknown = metrics.quota_remaining_pct is None
-    freshness_rank = {True: 0, False: 1, None: 2}[metrics.quota_fresh]
-    capacity_evidence_rank = 3 if headroom_unknown else freshness_rank
-    headroom = -(metrics.quota_remaining_pct or 0.0)
-    capacity = review_capacity(_route_record(candidate, snapshot, prefer_route=True), (snapshot or {}).get("diagnostics"))
     return (
-        capacity_evidence_rank,
-        capacity.pressure,
         load_unknown,
         normalized_load,
-        headroom,
         (metrics.inflight is None, metrics.inflight or 0),
         (metrics.failures is None, metrics.failures or 0),
         stable_tie_break(exact_head=exact_head, policy_version=policy_version, candidate_name=candidate.name),

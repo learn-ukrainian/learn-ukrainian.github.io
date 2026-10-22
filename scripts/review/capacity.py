@@ -20,7 +20,7 @@ class ReviewCapacity:
 
 
 def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, object] | None = None) -> ReviewCapacity:
-    """Keep stale allowance advisory and pace ordering-only; runtime blocks always bind."""
+    """Read allowance for diagnostics; only operational failures block every review lane."""
     remaining = credit_lane.plan_remaining_pct(record)
     try:
         policy = credit_lane.load_policy()
@@ -39,15 +39,12 @@ def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, obje
     )
     if str(record.get("status") or "").strip().lower() == "hot":
         pressure = max(pressure, 1.0)
-    runtime = record.get("runtime")
     scheduler = record.get("scheduler")
     hard_reason = None
     if record.get("eligible") is False:
         hard_reason = "ineligible route"
     elif record.get("login_state") == "NEED_LOGIN" or record.get("probe_state") == "NEED_LOGIN":
         hard_reason = "NEED_LOGIN"
-    elif isinstance(runtime, Mapping) and runtime.get("headroom_blocked"):
-        hard_reason = "runtime headroom blocked"
     elif isinstance(scheduler, Mapping) and scheduler.get("capacity_exhausted"):
         hard_reason = "credential bucket has no unreserved concurrency slot"
     return ReviewCapacity(
@@ -65,7 +62,7 @@ def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, obje
 def review_capacity_action(
     lane: str, record: Mapping[str, object], diagnostics: Mapping[str, object] | None, model: str | None
 ) -> tuple[bool, str]:
-    """Dispatch uses the same reserve and existing verified credit exception as selection."""
+    """Ignore usage for reviews except the existing Claude account protection."""
     capacity = review_capacity(record, diagnostics)
     health, _ = credit_lane.health_fact(record)
     if health == credit_lane.UNHEALTHY or str(record.get("status") or "").strip().lower() == "unhealthy":
@@ -80,7 +77,7 @@ def review_capacity_action(
         return True, "route circuit is open"
     if capacity.hard_reason:
         return True, capacity.hard_reason
-    if capacity.near_cap:
+    if lane == "claude" and capacity.near_cap:
         relief = credit_lane.published_credit_relief(
             lane, record.get("credit"), model, record=dict(record), snapshot_stale=False
         )

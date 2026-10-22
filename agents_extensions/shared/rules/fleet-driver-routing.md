@@ -105,7 +105,12 @@ stampede one hot lane.
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / GLM
+Review selection and dispatch ignore remaining weekly or five-hour usage, pace,
+near-cap state and runtime headroom forecasts. Claude keeps its existing weekly-cap
+protection. Eligibility, login, route health, circuits and credential concurrency
+still bind; actual provider rate limits or refusals fall back with a recorded substitution.
+
+**Codex writer near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / GLM
 (`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
 `resolve-reviewer` pick, which may be native or attested Cursor Grok at every risk (operator decision 2026-10-05, #9769). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides

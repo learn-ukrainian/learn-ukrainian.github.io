@@ -14278,7 +14278,11 @@ def _dispatch(
     # (router state irrelevant), only its credit-period models are admitted. Checked on the admitted route (aliases,
     # substitution and review selection applied; no --model means the lane default)
     # before any side effect.
-    credit_refusal = _credit_period_refusal(dispatch_agent, launch_target.model)
+    credit_refusal = (
+        None
+        if _dispatch_is_review_typed(args) and dispatch_agent != "claude"
+        else _credit_period_refusal(dispatch_agent, launch_target.model)
+    )
     if credit_refusal:
         print(f"❌ dispatch refused: {credit_refusal}", file=sys.stderr)
         return 2
@@ -19202,7 +19206,7 @@ def _resolve_agent_with_budget_guard(
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path;
-    pace only orders equal fits and ``force_agent`` never bypasses review hard gates.
+    usage is advisory except Claude cap protection, and operational hard gates bind.
     A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
 
     ``claude_account`` is required: the account the dispatch's claude routes
@@ -19303,13 +19307,52 @@ def _resolve_agent_with_budget_guard(
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
     subscription_data_available = codexbar_data_available or bool(agents)
-    initial_review_substitution = (
-        review_select is not None and (model_resolution or {}).get("record", {}).get("source") == "reviewer-resolver"
-    )
-    if initial_review_substitution and not (isinstance(agents.get(requested), Mapping) and agents[requested]):
-        raise BudgetGuardRefuseError(
-            f"REVIEW_ROUTE_REFUSED: substitute --agent {requested} has no usable budget snapshot; refusing before spawn"
+    if review_select is not None:
+        from scripts.review.capacity import review_capacity_action
+        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
+
+        if requested == "claude":
+            evaluated_account = account_evidence
+        record = agents.get(requested)
+        record = record if isinstance(record, Mapping) else {}
+        blocked, reason = review_capacity_action(requested, record, diags, requested_model)
+        retain(record, diags, payload.get("ranked_by_headroom"))
+        exclusions = {}
+        for candidate in REVIEW_CANDIDATES.values():
+            info = agents.get(candidate.route)
+            info = info if isinstance(info, Mapping) else {}
+            unavailable, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
+            if unavailable:
+                exclusions[candidate.name] = cause
+        review_snapshot = payload.evolve(
+            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            review_capacity_exclusions=exclusions,
         )
+        sub, chosen = review_select(review_snapshot, requested if blocked else "")
+        if (sub, chosen) == (requested, requested_model):
+            return requested
+        sub_info = agents.get(sub)
+        sub_info = sub_info if isinstance(sub_info, Mapping) else {}
+        sub_blocked, sub_reason = review_capacity_action(sub, sub_info, diags, chosen)
+        if sub_blocked:
+            raise BudgetGuardRefuseError(
+                f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
+            )
+        print(
+            f"REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
+            f"({reason or 'reviewer resolver admission'}).",
+            file=sys.stderr,
+        )
+        _remember_agent_substitution(
+            model_resolution,
+            source="reviewer-resolver",
+            requested_agent=origin_agent or requested,
+            requested_model=requested_model,
+            actual_agent=sub,
+            actual_model=chosen,
+            how="reviewer-resolver",
+        )
+        return sub
 
     # An empty ledger is only unknown when the explicit subscription refresh also
     # yielded no authoritative weekly data. Never quietly fail open here.
@@ -19458,82 +19501,9 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
         )
     )
-    if review_select is not None:
-        from scripts.review.capacity import review_capacity_action
-
-        review_blocked, review_reason = review_capacity_action(requested, agent_dict, diags, requested_model)
-        if review_blocked:
-            needs_action, reason = True, review_reason
     retain(agent_dict, diags, payload.get("ranked_by_headroom"))
-    if force_agent and review_select is None:
+    if force_agent:
         return requested
-    if review_select is not None:
-        # #9959: capacity is an exclusion before the resolver ranks candidates,
-        # not a veto on its first pick. Keep coding fallbacks out of review
-        # selection, and evaluate exact candidate models with this guard's
-        # existing thresholds/credit rules. The snapshot is caller-owned data.
-        from scripts.review.capacity import review_capacity_action
-        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
-
-        capacity_exclusions: dict[str, str] = {}
-        for candidate in REVIEW_CANDIDATES.values():
-            info = agents.get(candidate.route)
-            if candidate.route != requested and not (isinstance(info, Mapping) and info):
-                capacity_exclusions[candidate.name] = "substitute has no usable budget snapshot"
-                continue
-            info = info if isinstance(info, Mapping) else {}
-            blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
-            if blocked:
-                capacity_exclusions[candidate.name] = cause
-        review_snapshot = payload.evolve(
-            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
-            review_capacity_exclusions=capacity_exclusions,
-        )
-        sub, chosen = review_select(review_snapshot, requested if needs_action else "")
-        if sub == requested and chosen == requested_model:
-            if not needs_action:
-                return requested
-            if status in {"cool", "warm"} and "deficit" in reason:
-                note = "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer on pace-only deficit."
-            else:
-                note = "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer" + (
-                    ";" if not review_trusted_inputs else "."
-                )
-            if not review_trusted_inputs:
-                note += (
-                    " Legacy calls without trusted author/risk inputs prove only intrinsic eligibility. "
-                    "budget substitution requires --review-author-model and --review-risk (code profile only)"
-                )
-            print(note, file=sys.stderr)
-            return requested
-        sub_info = agents.get(sub)
-        if not (isinstance(sub_info, Mapping) and sub_info):
-            raise BudgetGuardRefuseError(
-                f"REVIEW_ROUTE_REFUSED: substitute --agent {sub} has no usable budget snapshot; refusing before spawn"
-            )
-        sub_dict = dict(sub_info)
-        # #10016: the primary and substitute both use this allowance rule;
-        # pace/reset-reserve writer routing cannot override review hard gates.
-        sub_blocked, sub_reason = review_capacity_action(sub, sub_dict, diags, chosen)
-        if sub_blocked:
-            raise BudgetGuardRefuseError(
-                f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
-            )
-        print(
-            f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
-            f"({reason}; reviewer resolver).",
-            file=sys.stderr,
-        )
-        _remember_agent_substitution(
-            model_resolution,
-            source="reviewer-resolver",
-            requested_agent=origin_agent or requested,
-            requested_model=requested_model,
-            actual_agent=sub,
-            actual_model=chosen,
-            how="reviewer-resolver",
-        )
-        return sub
 
     if not needs_action:
         return requested
@@ -20848,10 +20818,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested writer lane is near_cap/hot/deficit. Reviews always read "
-            "fresh capacity, even without this flag; pace alone orders equal fits. Code review admits a sole "
-            "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
-            "and health gates still bind. Review substitutes follow the resolver's eligible "
+            "when the requested writer lane is near_cap/hot/deficit. Reviews ignore "
+            "remaining usage and pace except Claude cap protection; operational "
+            "availability still binds. Review substitutes follow the resolver's eligible "
             "order; no-capacity refusals name every candidate and exclusion. Prepaid DeepSeek/OpenRouter "
             "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
