@@ -410,6 +410,111 @@ _DATABASE_SUFFIXES = frozenset(
 )
 
 
+def _external_copy_matches(worktree: Path, relative: Path) -> bool:
+    """Only a verified copy outside this checkout can exempt arbitrary output.
+
+    Discover the primary through Git, never through a basename or a supplied
+    output path. Existing task preservation receipts can locate archived output.
+    Neither a locator nor its recorded digest suffices without reading the copy.
+    """
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.common.task_store_paths import tasks_dir
+    from scripts.fleet import ignored_task_output
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    primary = main_checkout_root(worktree)
+    if primary == worktree or primary.is_relative_to(worktree):
+        return False
+    candidates = [relative] if os.path.lexists(primary / relative) else []
+    try:
+        if not os.path.lexists(primary / relative):
+            for _, record in ignored_task_output.matching_worktree_records(
+                worktree, tasks_dir(), repo_root=primary, publish_cache=False
+            ):
+                receipt = record.get("preserved_artifacts") or {}
+                if not isinstance(receipt, dict) or not isinstance(receipt.get("location"), str):
+                    continue
+                location = Path(receipt.get("location", ""))
+                if (
+                    not location.is_absolute() and ".." not in location.parts
+                    and location.is_relative_to("batch_state/preserved")
+                    and isinstance(receipt.get("paths"), list)
+                    and any(
+                        isinstance(entry, dict) and entry.get("path") == relative.as_posix()
+                        for entry in receipt["paths"]
+                    )
+                ):
+                    candidates.append(location / relative)
+        for candidate in candidates:
+            # Stream the external file, bounding memory even for large stores.
+            root_fd = artifacts._open_trusted_root(primary)
+            try:
+                parent_fd, owned = artifacts._open_parent(root_fd, candidate.parts[:-1])
+                try:
+                    fd = os.open(candidate.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
+                    try:
+                        before = os.fstat(fd)
+                        if not stat.S_ISREG(before.st_mode):
+                            continue
+                        digest = hashlib.sha256()
+                        size = 0
+                        while chunk := os.read(fd, 1024 * 1024):
+                            size += len(chunk)
+                            if size > before.st_size:
+                                break
+                            digest.update(chunk)
+                        pin = (size, digest.hexdigest())
+                        after = os.fstat(fd)
+                        if size != before.st_size or (
+                            before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns
+                        ) != (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns):
+                            continue
+                        if _matches_release_pin(worktree, relative, pin) and _matches_release_pin(primary, candidate, pin):
+                            return True
+                    finally:
+                        os.close(fd)
+                finally:
+                    if owned:
+                        os.close(parent_fd)
+            finally:
+                os.close(root_fd)
+    except (OSError, ValueError, TypeError, KeyError, ComponentOpenError, subprocess.SubprocessError):
+        return False
+    return False
+
+
+def _venv_is_rebuildable(worktree: Path, prefix: Path, tracked: set[str]) -> bool:
+    """Require local venv metadata and an unchanged committed dependency input.
+
+    Every classified leaf is separately walked without following links. Hard
+    links, nested repositories and links out of the environment cannot borrow
+    this proof. An arbitrary cache does not acquire the environment exemption.
+    """
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    try:
+        cfg = artifacts._read_preserved_bytes(worktree / prefix / "pyvenv.cfg", root=worktree)
+        if cfg.file_type != "regular" or not re.search(rb"(?m)^home\s*=\s*\S+", cfg.payload):
+            return False
+        for filename in ("uv.lock", "poetry.lock", "requirements.txt", "requirements.lock"):
+            lock = prefix.parent / filename
+            if lock.as_posix() not in tracked:
+                continue
+            blob = artifacts.safe_git(
+                ["cat-file", "blob", f"HEAD:{lock.as_posix()}"], cwd=worktree,
+                env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
+            ).stdout
+            artifacts.safe_git(
+                ["diff", "--cached", "--quiet", "HEAD", "--", lock.as_posix()], cwd=worktree,
+                env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
+            )
+            if _matches_release_pin(worktree, lock, (len(blob), hashlib.sha256(blob).hexdigest())):
+                return True
+    except (OSError, ValueError, ComponentOpenError, subprocess.SubprocessError):
+        return False
+    return False
+
+
 def is_regenerable_ignored_path(
     path: str,
     *,
@@ -424,7 +529,7 @@ def is_regenerable_ignored_path(
     without that proof remain output, including caches inside those environments.
     """
     relative = Path(path)
-    if relative.is_absolute() or ".." in relative.parts or ".venv" in relative.parts or not relative.parts:
+    if relative.is_absolute() or ".." in relative.parts or ".git" in relative.parts or not relative.parts:
         return False
     if relative.as_posix() in tracked:
         return False
@@ -434,6 +539,51 @@ def is_regenerable_ignored_path(
         ignored = set(artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard"))
     if relative.as_posix() not in ignored:
         return False
+    # Copy proof applies to arbitrary output, including databases and caches.
+    # The descriptor matcher refuses links, special files and identity changes.
+    if _external_copy_matches(worktree, relative):
+        return True
+    # A dependency/environment directory cannot prove local database content.
+    if _DATABASE_SUFFIXES.intersection(suffix.casefold() for suffix in relative.suffixes):
+        return False
+    venv_index = relative.parts.index(".venv") if ".venv" in relative.parts else None
+    if venv_index is not None:
+        from scripts.orchestration import worktree_artifacts as artifacts
+
+        prefix = Path(*relative.parts[:venv_index + 1])
+        try:
+            if not _venv_is_rebuildable(worktree, prefix, tracked):
+                return False
+            root_fd = artifacts._open_trusted_root(worktree)
+            try:
+                parent_fd, owned = artifacts._open_parent(root_fd, relative.parts[:-1])
+                try:
+                    fd = os.open(relative.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
+                    try:
+                        info = os.fstat(fd)
+                        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                            return False
+                        current_parent, current_owned = artifacts._open_parent(root_fd, relative.parts[:-1])
+                        try:
+                            current = os.stat(relative.name, dir_fd=current_parent, follow_symlinks=False)
+                            return (
+                                info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns
+                            ) == (
+                                current.st_dev, current.st_ino, current.st_mode, current.st_size,
+                                current.st_mtime_ns, current.st_ctime_ns,
+                            )
+                        finally:
+                            if current_owned:
+                                os.close(current_parent)
+                    finally:
+                        os.close(fd)
+                finally:
+                    if owned:
+                        os.close(parent_fd)
+            finally:
+                os.close(root_fd)
+        except (OSError, ValueError, ComponentOpenError):
+            return False
     # Site candidates require a complete component walk before pattern matching.
     site_tree = relative.parts[:2] in {("site", "dist"), ("site", "public")} or relative.parts[:3] == (
         "site",

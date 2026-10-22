@@ -691,6 +691,7 @@ def _reap_via_canonical(
         "branch": row.branch,
         "needs_attention": row.needs_attention,
         "preserved_artifacts": row.preserved_artifacts,
+        "freed_bytes": row.freed_bytes,
     }
 
 
@@ -797,6 +798,7 @@ def _reap_terminal_without_pr(
         "pr": result.pr,
         "recovery_ref": result.recovery_ref,
         "preserved_artifacts": result.preserved_artifacts,
+        "freed_bytes": result.freed_bytes,
     }
 
 
