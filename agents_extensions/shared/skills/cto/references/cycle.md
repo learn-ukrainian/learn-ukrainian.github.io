@@ -4,15 +4,23 @@ Run every cycle while work is in flight, and before any routing, budget or statu
 Every line of a cycle report is tool output from this cycle; anything not read is unknown,
 never fine.
 
+0. **Monitoring first.** Read the firing alerts and the CTO scorecard metrics from the
+   monitoring stack: Prometheus `ALERTS{alertstate="firing"}` and the `lu_cto_*` series (the
+   private operations doc names the endpoints). A source reported down
+   (`lu_cto_source_ok == 0`) is an attention item. Use hand-run commands (`gh`, usage
+   meters) only for what no metric covers; a missing or wrong metric is a monitoring task,
+   not a reason to keep measuring by hand.
 1. **Inbox.** Drain the four recipients ([startup](startup.md#4-identity-and-inbox)) at
    cycle start, after workers settle and before handoff.
-2. **Every pool's usage**, including unused ones: each Claude pool, Codex, Grok and Cursor,
-   AGY and any other catalog pool. No readable meter is unknown. Grok and Cursor share one
-   meter, never two pools of headroom. Keep readings in a scratch log for trends.
+2. **Every pool's usage**, from the scorecard metrics when present, including unused ones:
+   each Claude pool, Codex, Grok and Cursor, AGY and any other catalog pool. A pool with no
+   metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor
+   share one meter, never two pools of headroom. Keep readings in a scratch log for trends.
 3. **Disk and load.** `df -h .`, `uptime`, `git worktree list | wc -l`. When disk climbs,
    run the reaper and retention tools before admitting write workers; never delete bulk
    corpus or data without a separate operator-authorized task (core.md P6).
-4. **Open PRs** in every repository the fleet lands in, with `number`, `headRefOid`,
+4. **Open PRs**, from the scorecard metrics when present, in every repository the fleet
+   lands in, with `number`, `headRefOid`,
    `mergeStateStatus`, `isDraft`, `reviewDecision`. Per PR: a review of record at the
    current `headRefOid` (verdict, reviewer model) and green CI on that head; an older-head
    verdict is stale. An approved green PR not enqueued gets its reason from the merge-queue
