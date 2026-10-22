@@ -396,7 +396,7 @@ def parse_lease(raw: bytes | None) -> dict[str, Any] | None:
                 "pgid": int(child["pgid"]),
                 "start_time": _as_optional_int(child.get("start_time")),
             }
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, OverflowError, TypeError, ValueError):
         return None
     return lease
 

@@ -50,7 +50,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common import github_client, task_store_paths
+from scripts.common import github_client, task_scratch, task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -63,6 +63,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.fleet.regenerable_output import _COPY_PROOF_RUN, copy_proof_run
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
 from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
@@ -125,6 +126,191 @@ class ReapResult:
     # Report-only findings (#8663): kind, evidence, and a "verify first:"
     # removal command a human runs; the reaper never acts on them.
     needs_attention: dict[str, Any] | None = None
+    # Logical sizes of verified, last-link-unlinked regular files. Copies made
+    # by preservation are excluded; this is not a filesystem free-space estimate.
+    freed_bytes: int | None = 0
+
+
+class _MeasurementUnavailable(Exception):
+    """The pin directory cannot hard-link the checkout, so bytes stay unmeasured."""
+
+
+def _measured_removal(
+    measurement: dict[str, Any],
+    stage: worktree_claims.RemovalStager = contextlib.nullcontext,
+) -> worktree_claims.RemovalStager:
+    """Pin inodes without retaining one descriptor per file through Git removal.
+
+    Private same-filesystem hard links keep the original inodes observable. Git
+    remains the checkout remover. Afterwards each pin is opened, unlinked and
+    fstat'ed before closing, so only proven last-link releases are counted.
+
+    Measurement is best effort: if the pin directory is on another filesystem,
+    hard links fail and removal still proceeds with ``freed_bytes`` unmeasured.
+    """
+    from scripts.common.nofollow_walk import ComponentOpenError
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    @contextlib.contextmanager
+    def measured(target: Path) -> Iterator[Path]:
+        with stage(target) as staged, contextlib.ExitStack() as scratch_stack:
+            scratch = task_scratch.allocate("reaper-measure")
+            # Preserve closes the lease if removal fails; after successful
+            # removal it is a no-op. Existing orphan recovery owns killed runs.
+            scratch_stack.callback(scratch.preserve)
+            scratch_stack.callback(scratch.remove)
+            leaves: list[tuple[str, str, os.stat_result]] = []
+            snapshots: dict[tuple[int, int], os.stat_result] = {}
+            pin_root = scratch.payload_dir
+            root_fd = artifacts._open_trusted_root(staged)
+            pin_fd = artifacts._open_trusted_root(pin_root)
+
+            def identity(info: os.stat_result) -> tuple[int, ...]:
+                return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns)
+
+            def walk(prefix: tuple[str, ...] = ()) -> None:
+                # Reopen each directory from the root, so depth also consumes
+                # only a constant number of descriptors.
+                fd, owned = artifacts._open_parent(root_fd, prefix)
+                try:
+                    before = os.fstat(fd)
+                    names = sorted(os.listdir(fd))
+                finally:
+                    if owned:
+                        os.close(fd)
+                for name in names:
+                    fd, owned = artifacts._open_parent(root_fd, prefix)
+                    try:
+                        info = os.stat(name, dir_fd=fd, follow_symlinks=False)
+                        if stat.S_ISDIR(info.st_mode):
+                            if owned:
+                                os.close(fd)
+                                owned = False
+                            walk((*prefix, name))
+                            fd, owned = artifacts._open_parent(root_fd, prefix)
+                            current = os.stat(name, dir_fd=fd, follow_symlinks=False)
+                            if (current.st_dev, current.st_ino) != (info.st_dev, info.st_ino):
+                                raise ValueError("directory identity changed")
+                        elif stat.S_ISLNK(info.st_mode):
+                            continue
+                        elif stat.S_ISREG(info.st_mode):
+                            leaf = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
+                            try:
+                                opened = os.fstat(leaf)
+                                if identity(info) != identity(opened) or info.st_ctime_ns != opened.st_ctime_ns:
+                                    raise ValueError("file identity changed")
+                                previous = snapshots.get((opened.st_dev, opened.st_ino))
+                                if previous is not None and (
+                                    opened != previous or opened.st_ctime_ns != previous.st_ctime_ns
+                                ):
+                                    raise ValueError("linked file changed during walk")
+                                pin = str(len(leaves))
+                                try:
+                                    os.link(name, pin, src_dir_fd=fd, dst_dir_fd=pin_fd, follow_symlinks=False)
+                                except OSError:
+                                    # Hard links cannot cross filesystems. Measurement
+                                    # is optional; removal proceeds with bytes unmeasured.
+                                    raise _MeasurementUnavailable from None
+                                held = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
+                                after = os.fstat(leaf)
+                                if identity(held) != identity(opened) or identity(after) != identity(opened):
+                                    raise ValueError("file identity changed")
+                                snapshots[after.st_dev, after.st_ino] = after
+                                leaves.append((Path(*prefix, name).as_posix(), pin, after))
+                            finally:
+                                os.close(leaf)
+                        else:
+                            raise ValueError("unsupported entry")
+                    finally:
+                        if owned:
+                            os.close(fd)
+                fd, owned = artifacts._open_parent(root_fd, prefix)
+                try:
+                    after = os.fstat(fd)
+                    if names != sorted(os.listdir(fd)) or (
+                        before.st_dev, before.st_ino, before.st_mtime_ns, before.st_ctime_ns
+                    ) != (after.st_dev, after.st_ino, after.st_mtime_ns, after.st_ctime_ns):
+                        raise ValueError("directory changed")
+                finally:
+                    if owned:
+                        os.close(fd)
+
+            try:
+                try:
+                    proof = _COPY_PROOF_RUN.get()
+                    if proof is not None:
+                        proof.receipt_publication_attempted = True
+                        try:
+                            proof.retain_receipts()
+                        except (OSError, ValueError, TypeError):
+                            raise worktree_claims.RemovalStageRefused("copy proof receipt publication unproven") from None
+                    try:
+                        walk()
+                    except _MeasurementUnavailable:
+                        measurement["unmeasured"] = True
+                    else:
+                        # Hard-link creation changes ctime/nlink. Check the common
+                        # inode's final snapshot for all its names after pinning.
+                        for _name, pin, expected in leaves:
+                            info = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
+                            expected = snapshots[expected.st_dev, expected.st_ino]
+                            if info != expected or info.st_ctime_ns != expected.st_ctime_ns:
+                                raise ValueError("file changed during walk")
+                        for name, _pin, expected in leaves:
+                            parts = Path(name).parts
+                            parent_fd, owned = artifacts._open_parent(root_fd, parts[:-1])
+                            try:
+                                current = os.stat(parts[-1], dir_fd=parent_fd, follow_symlinks=False)
+                                expected = snapshots[expected.st_dev, expected.st_ino]
+                                if current != expected or current.st_ctime_ns != expected.st_ctime_ns:
+                                    raise ValueError("file changed during walk")
+                            finally:
+                                if owned:
+                                    os.close(parent_fd)
+                except (OSError, ValueError, ComponentOpenError):
+                    raise worktree_claims.RemovalStageRefused("freed-byte inventory unproven") from None
+                try:
+                    yield staged
+                finally:
+                    unlinked: dict[str, tuple[int, int, int]] = {}
+                    released = set()
+                    for _name, pin, before in leaves:
+                        leaf = os.open(pin, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=pin_fd)
+                        try:
+                            os.unlink(pin, dir_fd=pin_fd)
+                            after = os.fstat(leaf)
+                            if after.st_nlink == 0 and identity(before) == identity(after):
+                                released.add((before.st_dev, before.st_ino))
+                        finally:
+                            os.close(leaf)
+                    for name, _, before in leaves:
+                        if (before.st_dev, before.st_ino) in released:
+                            unlinked[name] = (before.st_dev, before.st_ino, before.st_size)
+                    measurement["unlinked"] = unlinked
+            finally:
+                os.close(pin_fd)
+                os.close(root_fd)
+
+    return measured
+
+
+def _freed_bytes(measurement: dict[str, Any], preserved: dict[str, Any] | None) -> int | None:
+    """Exclude every preserved original from the verified unlinked inventory.
+
+    ``None`` means the inventory could not be measured, which never blocks
+    removal or counts as zero.
+    """
+    if measurement.get("unmeasured"):
+        return None
+    kept = {entry["path"] for entry in (preserved or {}).get("paths", [])}
+    unlinked = measurement.get("unlinked", {})
+    kept_ids = {entry[:2] for name, entry in unlinked.items() if name in kept}
+    # Multiple removed names can share one inode. Count its bytes once, and
+    # exclude the whole inode if any name was preserved outside the checkout.
+    return sum({
+        entry[:2]: entry[2] for name, entry in unlinked.items()
+        if name not in kept and entry[:2] not in kept_ids
+    }.values())
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -5102,17 +5288,21 @@ def _reap_qualified_worktree(
                     recovery_ref=recovery_ref,
                     preserved_artifacts=preservation_receipt or None,
                 )
-        remove_error = worktree_claims.git_worktree_remove(
-            repo_root,
-            target,
-            force=merged_reuse_proof is None and not reason.endswith("MERGED; patch-equivalent"),
-            control_root=control_root,
-            task_id=_dispatch_task_id(repo_root, info),
-            tasks_dir=task_store_paths.tasks_dir(),
-            preservation_receipt=preservation_receipt,
-            **approval,
-        )
+        measurement: dict[str, Any] = {}
+        with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
+            remove_error = worktree_claims.git_worktree_remove(
+                repo_root,
+                target,
+                force=merged_reuse_proof is None and not reason.endswith("MERGED; patch-equivalent"),
+                control_root=control_root,
+                task_id=_dispatch_task_id(repo_root, info),
+                tasks_dir=task_store_paths.tasks_dir(),
+                preservation_receipt=preservation_receipt,
+                stage_removal=_measured_removal(measurement),
+                **approval,
+            )
         preserved_artifacts = preservation_receipt or None
+        freed_bytes = _freed_bytes(measurement, preserved_artifacts)
         if remove_error is not None:
             preservation_failed = remove_error.startswith("artifact preservation failed:")
             return ReapResult(
@@ -5125,6 +5315,7 @@ def _reap_qualified_worktree(
                 error=None if preservation_failed else remove_error,
                 recovery_ref=recovery_ref,
                 preserved_artifacts=preserved_artifacts,
+                freed_bytes=freed_bytes,
             )
 
         # Prune and the daily-cap write do not need the per-worktree lock.
@@ -5160,6 +5351,7 @@ def _reap_qualified_worktree(
                 error=branch_prune_error,
                 recovery_ref=recovery_ref,
                 preserved_artifacts=preserved_artifacts,
+                freed_bytes=freed_bytes,
             )
         return ReapResult(
             path=str(info.path),
@@ -5171,6 +5363,7 @@ def _reap_qualified_worktree(
             branch_pruned=branch_pruned,
             recovery_ref=recovery_ref,
             preserved_artifacts=preserved_artifacts,
+            freed_bytes=freed_bytes,
         )
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never
@@ -5724,6 +5917,7 @@ class CleanPushedOutcome:
     branch: str | None = None
     task_status: str | None = None
     size_mb: int | None = None
+    freed_bytes: int | None = 0
 
 
 @dataclass(frozen=True)
@@ -5753,6 +5947,7 @@ class CleanPushedReport:
     unpublished_reflog_commit: tuple[str, ...] = ()
     census_refs: int = 0
     census_missing: int = 0
+    freed_bytes: int | None = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -7634,19 +7829,24 @@ def reap_clean_pushed(
                         replace(outcome, action="error", reason=f"journal write failed ({exc}); run stopped")
                     )
                     break
-                removal = worktree_claims.remove_unclaimed_worktree(
-                    info.path,
-                    repo_root=primary,
-                    reason=CLEAN_PUSHED_REASON,
-                    owner_task_id=None,
-                    releasable=recheck,
-                    force=False,
-                    control_root=control_root,
-                    tasks_dir=tasks_dir,
-                    lock_timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
-                    settled_claim=_worker_proven_gone,
-                    stage_removal=_quarantine_stager(primary, info.path, guards, taken),
-                )
+                measurement: dict[str, Any] = {}
+                with copy_proof_run(primary=control_root, tasks=tasks_dir, publish_receipts=True):
+                    removal = worktree_claims.remove_unclaimed_worktree(
+                        info.path,
+                        repo_root=primary,
+                        reason=CLEAN_PUSHED_REASON,
+                        owner_task_id=None,
+                        releasable=recheck,
+                        force=False,
+                        control_root=control_root,
+                        tasks_dir=tasks_dir,
+                        lock_timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
+                        settled_claim=_worker_proven_gone,
+                        stage_removal=_measured_removal(
+                            measurement, _quarantine_stager(primary, info.path, guards, taken)
+                        ),
+                    )
+                outcome = replace(outcome, freed_bytes=_freed_bytes(measurement, removal.preserved_artifacts))
                 if removal.action != "removed":
                     detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
                     if detail.startswith(worktree_claims.REMOVAL_STAGE_REFUSED):
@@ -7680,11 +7880,17 @@ def reap_clean_pushed(
             busy_reason = str(exc)
             skipped.append(replace(outcome, action="skipped", reason=busy_reason))
             break
+    freed_values = [outcome.freed_bytes for outcome in (*removed, *skipped)]
     return CleanPushedReport(
         dry_run=dry_run,
         removed=tuple(removed),
         skipped=tuple(skipped),
         freed_mb=sum(outcome.size_mb or 0 for outcome in removed),
+        freed_bytes=(
+            None
+            if any(value is None for value in freed_values)
+            else sum(value for value in freed_values if value is not None)
+        ),
         lock_busy=bool(busy_reason),
         refusal=busy_reason,
         uninspectable=tuple(sorted(ctx.uninspectable)),

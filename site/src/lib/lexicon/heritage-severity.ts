@@ -612,6 +612,23 @@ export function displayGloss(gloss: string | null | undefined, label: UsageLabel
   return { text: `примітка Атласу: ${lead} «${match[2]}»; обсяг застереження не встановлено`, note: true };
 }
 
+/** Quote unchanged meaning fragments; keep qualified editorial clauses outside q. */
+export function quotedGlossParts(gloss: string, label: UsageLabel): Array<{ kind: "quotation" | "note"; text: string }> {
+  const shown = displayGloss(gloss, label);
+  if (!shown) return [];
+  if (!shown.note) return [{ kind: "quotation", text: gloss }];
+  if (EDITORIAL_GLOSS_RE.test(gloss)) return [{ kind: "note", text: shown.text }];
+  const parts: ReturnType<typeof quotedGlossParts> = [];
+  let start = 0;
+  for (const match of gloss.matchAll(EMBEDDED_NORM_RE)) {
+    if (match.index > start) parts.push({ kind: "quotation", text: gloss.slice(start, match.index) });
+    parts.push({ kind: "note", text: displayGloss(match[0], label)!.text });
+    start = match.index + match[0].length;
+  }
+  if (start < gloss.length) parts.push({ kind: "quotation", text: gloss.slice(start) });
+  return parts;
+}
+
 /** Atlas prose stored with a record is commentary, never a source excerpt (#9603). */
 export function atlasNoteDetail(note: string | undefined): string | undefined {
   return note?.trim() ? `Примітка Атласу, не підтверджена витягом із джерела: ${note.trim()}` : undefined;

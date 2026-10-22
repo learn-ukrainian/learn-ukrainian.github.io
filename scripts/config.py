@@ -66,12 +66,12 @@ DISPATCH_MAX_TEST_SLOT_QUEUE = 4
 # as df reports it. At or above the reap level the reaper runs once and the
 # dispatch is admitted; at or above the refuse level a new write dispatch is
 # refused if the disk is still that full after the reaper (reap must be below
-# refuse). At or above the alert level one alert is posted to the epics channel
-# per 6 hours. The scheduled hygiene run posts to the cto channel once each time
-# the disk crosses the reap level.
+# refuse). At or above the alert level (75% used) one alert is posted to the
+# epics channel per 6 hours. The scheduled hygiene run posts to the cto channel
+# once each time the disk crosses the reap level.
 DISPATCH_DISK_REAP_USED_PERCENT = 85.0
 DISPATCH_DISK_REFUSE_USED_PERCENT = 90.0
-DISPATCH_DISK_ALERT_USED_PERCENT = 80.0
+DISPATCH_DISK_ALERT_USED_PERCENT = 75.0
 # The reaper run a full disk triggers (#10776): one attempt per host at a time,
 # none again within the cooldown unless the last one freed space, and a child
 # process that is killed after the timeout so admission always regains control.
