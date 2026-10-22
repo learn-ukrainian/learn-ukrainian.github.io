@@ -1962,8 +1962,8 @@ def _git_global_prefix(
     """Strip git global options; return optional ``-C`` path and remaining args.
 
     Handles ``-C <path>``, ``-C<path>``, and common no-arg globals (``-c`` is
-    two-token). Unknown long options with ``=`` are skipped; bare long options
-    that take a value are not fully modeled — fail-open if we cannot parse.
+    two-token). The caller retains this prefix so Git can resolve the target
+    using all repository selectors, rather than just the final ``-C``.
     """
     c_path: Optional[str] = None  # noqa: UP045 - Python 3.9 parser
     i = 0
@@ -2046,6 +2046,7 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
 
     def record(intent: dict[str, object]) -> None:
         intent["segment_cwd"] = effective_cwd
+        intent["git_options"] = git_options
         intents.append(intent)
 
     for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
@@ -2062,7 +2063,9 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
             continue
         if not _is_git_binary(cmd):
             continue
-        c_path, rest = _git_global_prefix(segment[idx + 1 :])
+        args = segment[idx + 1 :]
+        c_path, rest = _git_global_prefix(args)
+        git_options = args[:len(args) - len(rest)]
         if not rest:
             continue
         sub = rest[0]
@@ -2318,19 +2321,6 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
             continue
 
     return intents
-
-
-def _effective_git_cwd(intent: dict[str, object], payload_cwd: str) -> Path | None:
-    """Resolve a git intent's worktree, or return unknown after navigation."""
-    segment_cwd = intent.get("segment_cwd", payload_cwd)
-    c_path = intent.get("c_path")
-    if isinstance(c_path, str) and c_path:
-        if Path(c_path).is_absolute():
-            return Path(c_path).resolve()
-        if not isinstance(segment_cwd, str):
-            return None
-        return _resolve(c_path, segment_cwd, expand_user=False).resolve()
-    return Path(segment_cwd).resolve() if isinstance(segment_cwd, str) else None
 
 
 def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
@@ -2637,42 +2627,44 @@ def main() -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if is_shell_tool(tool_name) and command and not allow_primary_git:
         try:
+            # The hook process owns the protected repository. The payload's
+            # execution cwd and Git selectors may instead name another one.
+            owner_common = None
             for intent in git_intents:
                 if intent.get("allowlisted"):
                     continue
                 summary = str(intent.get("summary") or "git write")
-                c_path = intent.get("c_path")
-                if getattr(c_path, "unresolved_at", None) is not None:
+                git_options = intent.get("git_options") or []
+                if any(getattr(arg, "unresolved_at", None) is not None for arg in git_options):
                     if main_root is not None:
                         return _block_git_mediated(summary, main_root, reason="unresolved_shell_variable")
-                    continue
-                git_cwd = _effective_git_cwd(intent, cwd)
-                if git_cwd is None:
+                    return _block_uncertain("unresolved_shell_variable")
+                segment_cwd = intent.get("segment_cwd", cwd)
+                if not isinstance(segment_cwd, str):
                     if main_root is not None:
                         return _block_git_mediated(summary, main_root, reason="undecidable_git_cwd_after_cd")
+                    return _block_uncertain("undecidable_git_cwd_after_cd")
+                if owner_common is None:
+                    owner_common, _, _ = wc.resolve_git_target(Path.cwd())
+                target_common, target_worktree, git_cwd = wc.resolve_git_target(segment_cwd, git_options)
+                intent_root = wc.resolve_main_root(Path.cwd())
+                if not wc.is_protected_branch(intent_root):
                     continue
-                intent_root = main_root
-                if intent_root is None:
-                    try:
-                        intent_root = wc.resolve_main_root(git_cwd)
-                        if not wc.is_protected_branch(intent_root):
-                            continue
-                    except Exception:
-                        continue
                 if intent.get("kind") == "worktree_remove":
                     for raw in intent.get("paths") or []:
                         decision = _bash_path_decision(raw, str(git_cwd), wc, intent_root)
                         if not decision.allowed:
                             return _block_git_mediated(summary, intent_root, reason=decision.reason)
                     continue
-                # Only care when the effective git worktree *is* the primary.
-                try:
-                    if not wc.is_primary_checkout(git_cwd):
-                        continue
-                except Exception:
+                if (
+                    target_common != owner_common
+                    and wc.classify_repo_path(target_worktree, cwd=Path.cwd()) != "primary_checkout"
+                ):
                     continue
                 paths = list(intent.get("paths") or [])
                 if not paths:
+                    if not wc.is_primary_checkout(target_worktree):
+                        continue
                     # Whole-tree mutator (apply / am / stash pop|apply / bare add).
                     return _block_git_mediated(summary, intent_root, reason="git_mediated_primary_worktree")
                 # Path-scoped mutators: block if any path is a protected primary write.

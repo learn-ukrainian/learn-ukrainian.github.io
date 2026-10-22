@@ -71,6 +71,7 @@ __all__ = [
     "is_write_allowed",
     "primary_checkout_dirty_status",
     "registered_worktrees",
+    "resolve_git_target",
     "resolve_main_root",
     "resolve_main_root_without_git",
 ]
@@ -238,6 +239,31 @@ def resolve_main_root(start: Path | str | None = None) -> Path:
     if root is None:
         raise NotAGitRepositoryError(f"{origin} is not inside a git repository")
     return root
+
+
+def resolve_git_target(cwd: Path | str, options: list[str] | None = None) -> tuple[Path, Path, Path]:
+    """Return a Git invocation's common directory, worktree root and path cwd.
+
+    Git interprets repository selectors itself, including chained relative
+    ``-C`` options and explicit ``--git-dir`` / ``--work-tree`` overrides.
+    Only read-only plumbing runs. A failed or ambiguous probe has no filesystem
+    fallback: it cannot establish that a write targets a different repository.
+    """
+    proc = _run_git(
+        Path(cwd), *(options or []), "rev-parse", "--path-format=absolute",
+        "--git-common-dir", "--show-toplevel", "--show-prefix",
+    )
+    lines = proc.stdout.splitlines()
+    if proc.returncode != 0 or len(lines) != 3:
+        raise NotAGitRepositoryError("cannot resolve git command target")
+    common, worktree, prefix = lines
+    if not Path(common).is_absolute() or not Path(worktree).is_absolute():
+        raise NotAGitRepositoryError("git command target is not absolute")
+    return (
+        Path(common).resolve(strict=True),
+        Path(worktree).resolve(strict=True),
+        (Path(worktree) / prefix).resolve(strict=True),
+    )
 
 
 # A worktree's ``.git`` file is one short ``gitdir:`` line; anything larger is not one.

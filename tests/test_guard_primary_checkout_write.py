@@ -1030,6 +1030,94 @@ def test_git_apply_dash_c_primary_from_worktree_blocked(repo: Path):
     assert result.returncode == 2, result.stderr
 
 
+@pytest.mark.parametrize(
+    "operation",
+    ["merge --ff-only origin/main", "pull", "add curriculum/tracked.md", "apply change.patch",
+     "checkout HEAD -- curriculum/tracked.md"],
+)
+@pytest.mark.parametrize("cwd_name", ["primary", "worktree"])
+def test_issue_11381_other_repository_git_writes_allowed(
+    repo: Path, repo_template: Path, tmp_path: Path, operation: str, cwd_name: str,
+):
+    """Another repository on main must not inherit the owning repository's refusal."""
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    cwd = repo if cwd_name == "primary" else repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, f"git -C {shlex.quote(str(other))} {operation}", cwd=cwd)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "cwd_name,options,operation,identity,expected",
+    [
+        pytest.param("other", (), "merge --ff-only origin/main", "other", 0, id="cwd-B"),
+        pytest.param("primary", ("-C", "{other}"), "pull", "other", 0, id="cwd-A-target-B"),
+        pytest.param("other", ("-C", "{primary}"), "merge --ff-only origin/main", "primary", 2,
+                     id="cwd-B-target-A"),
+        pytest.param("worktree", ("-C", "{primary}"), "merge --ff-only origin/main", "primary", 2,
+                     id="worktree-target-A"),
+        pytest.param("primary", ("-C", "../other"), "pull", "other", 0, id="relative-B"),
+        pytest.param("other", ("-C", "../main"), "pull", "primary", 2, id="relative-A"),
+        pytest.param("other", ("-C{primary}",), "pull", None, 2, id="invalid-attached-C-A"),
+        pytest.param("primary", ("-C{other}",), "pull", None, 2, id="invalid-attached-C-B"),
+        pytest.param("other", ("-C", "{link}"), "merge --ff-only origin/main", "primary", 2,
+                     id="symlink-A"),
+        pytest.param("primary", ("-C", "{other}", "-C", "../main"), "pull", "primary", 2,
+                     id="chained-C-A"),
+        pytest.param("primary", ("-C", "{other}", "-C", ""), "pull", "other", 0, id="empty-C-B"),
+        pytest.param("other", ("--git-dir", "{primary}/.git", "--work-tree", "{primary}"),
+                     "merge --ff-only origin/main", "primary", 2, id="explicit-A"),
+        pytest.param("primary", ("--git-dir", "{other}/.git", "--work-tree", "{other}"),
+                     "merge --ff-only origin/main", "other", 0, id="explicit-B"),
+        pytest.param("other", ("--git-dir={primary}/.git", "--work-tree={primary}"),
+                     "pull", "primary", 2, id="equals-A"),
+        pytest.param("primary", ("--git-dir={other}/.git", "--work-tree={other}"),
+                     "pull", "other", 0, id="equals-B"),
+        pytest.param("other", ("--git-dir={link}/.git", "--work-tree={link}"),
+                     "pull", "primary", 2, id="symlink-explicit-A"),
+        pytest.param("other", ("--git-dir=../main/.git", "--work-tree=../main"),
+                     "pull", "primary", 2, id="relative-explicit-A"),
+        pytest.param("primary", ("--git-dir=../other/.git", "--work-tree=../other"),
+                     "pull", "other", 0, id="relative-explicit-B"),
+        pytest.param("other", ("--git-dir=.git", "--work-tree=.", "-C", "{primary}"),
+                     "pull", "primary", 2, id="selectors-before-C-A"),
+        pytest.param("primary", ("-C", "missing"), "pull", None, 2, id="nonexistent-C"),
+        pytest.param("worktree", ("-C", "{worktree}"), "pull", "primary", 0, id="isolated-worktree"),
+        pytest.param("worktree", ("-C", "{worktree}"), "add {primary}/curriculum/tracked.md",
+                     "primary", 2, id="worktree-write-A"),
+        pytest.param("other", ("--git-dir={other}/.git", "--work-tree={primary}"),
+                     "pull", "other", 2, id="different-store-primary-worktree"),
+        pytest.param("worktree", ("--git-dir={primary}/.git", "--work-tree={primary}"),
+                     "pull", "primary", 2, id="worktree-explicit-A"),
+        pytest.param("primary", ("-C", "curriculum"), "add tracked.md", "primary", 2, id="subdirectory-A"),
+    ],
+)
+def test_issue_11381_git_target_repository(
+    repo: Path, repo_template: Path, tmp_path: Path, cwd_name: str, options: tuple[str, ...],
+    operation: str, identity: str | None, expected: int,
+):
+    """Repository selection must follow Git, including cwd overrides and symlinks."""
+    paths = {
+        "primary": repo,
+        "worktree": repo / ".worktrees/dispatch/claude/task-1",
+        "other": _materialize_repo(repo_template, tmp_path / "other"),
+        "link": tmp_path / "primary-link",
+    }
+    paths["link"].symlink_to(repo, target_is_directory=True)
+    argv = [arg.format_map(paths) for arg in options]
+    oracle = subprocess.run(
+        ["git", *argv, "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=paths[cwd_name], capture_output=True, text=True, env=_clean_env(), check=False, timeout=10,
+    )
+    if identity is None:
+        assert oracle.returncode != 0, oracle.stdout
+    else:
+        assert oracle.returncode == 0, oracle.stderr
+        assert Path(oracle.stdout.strip()).resolve() == paths[identity] / ".git"
+    command = shlex.join(["git", *argv]) + " " + operation.format_map(paths)
+    result = _bash(repo, command, cwd=paths[cwd_name])
+    assert result.returncode == expected, (command, result.stderr)
+
+
 def test_git_apply_override_env_allows(repo: Path, monkeypatch: pytest.MonkeyPatch):
     env = _clean_env()
     env["LEARN_UK_ALLOW_PRIMARY_GIT_WRITE"] = "1"
