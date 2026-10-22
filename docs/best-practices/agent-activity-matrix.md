@@ -496,7 +496,9 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 - v1.13: 2026-10-03 (#9583). Opus 5.5 and Sol 6.1 replace Fable / Astra as advisors
   and designated approvers (both approve, neither the author; operator decides on
   disagreement). At v1.13 Fable remained selectable with no advisory, approval or
-  review role. OO-58 (#11327) later retired it.
+  review role. The 2026-10-21 operator decision keeps Fable 5.1 available by
+  explicit pin only, never routed or selected by a resolver, substitution or
+  ladder. It retains no advisory, approval or review role.
 - v1.14: 2026-10-03 (#9616). Designated approval when Opus 5.5 or Sol 6.1 authored the
   proposal: the other one's approval completes it; a proposal by any other agent (Gemini,
   Grok, Kimi or another seat) needs both; disagreement still goes to the operator.

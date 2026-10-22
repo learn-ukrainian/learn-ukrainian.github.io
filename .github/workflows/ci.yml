@@ -25,6 +25,14 @@ on:
     types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
+    inputs:
+      secret_scan_mode:
+        description: Secret scan coverage (full-history-audit scans all history)
+        type: choice
+        default: bounded
+        options:
+          - bounded
+          - full-history-audit
   schedule:  # nightly full run on main; also saves main's uv cache
     - cron: '30 3 * * *'
 
@@ -104,7 +112,8 @@ jobs:
     needs: [reuse]
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # Only a deliberate manual audit gets the full-history budget.
+    timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -121,6 +130,7 @@ jobs:
       # Manual dispatches use the default-branch merge-base through github.sha;
       # main refs or equal heads reuse the schedule window. Full checkout above
       # fetches all branch refs, including origin/main. Resolution errors fail.
+      # Only secret_scan_mode=full-history-audit selects the explicit audit scope.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
         env:
@@ -130,6 +140,7 @@ jobs:
           PUSH_BEFORE_SHA: ${{ github.event.before || '' }}
           PUSH_AFTER_SHA: ${{ github.event.after || '' }}
           DISPATCH_HEAD_SHA: ${{ github.sha }}
+          DISPATCH_SCAN_MODE: ${{ inputs.secret_scan_mode }}
           DISPATCH_REF: ${{ github.ref }}
           DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
         run: python3 scripts/ci/secret_scan_scope.py
@@ -194,7 +205,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: |
-          npm ci
+          npm ci --prefer-offline --no-audit --no-fund
           PATH="$PWD/.venv/bin:$PATH" bash scripts/ci/checks.sh
 
   frontend:
@@ -222,7 +233,7 @@ jobs:
         uses: ./.github/actions/python-ci-env
       - name: Install site toolchain
         working-directory: site
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit --no-fund
       # Required even when the full frontend build is outside the changed-path scope.
       # Include tests/build/, normally excluded by pytest default traversal.
       - name: Real MDX compiler regressions

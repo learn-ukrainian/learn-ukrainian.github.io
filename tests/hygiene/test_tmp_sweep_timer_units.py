@@ -1,4 +1,4 @@
-"""Daily temp-sweep user units and installer contract (#9737)."""
+"""Hourly temp-sweep user units and installer contract (#9737, #11297)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,8 @@ import os
 import shutil
 import subprocess
 import sys
+from datetime import datetime, timedelta
+from itertools import pairwise
 from pathlib import Path
 
 import pytest
@@ -27,7 +29,8 @@ def test_service_and_timer_contract() -> None:
     # Enforced in user managers (seccomp); PrivateNetwork= is accepted there but isolates nothing.
     assert "RestrictAddressFamilies=AF_UNIX" in service.splitlines()
     assert "IPAddressDeny=any" in service.splitlines()
-    assert "OnCalendar=*-*-* 05:30:00 UTC" in timer
+    assert [line for line in timer.splitlines() if line.startswith("OnCalendar=")] == ["OnCalendar=*-*-* *:30:00 UTC"]
+    assert "RandomizedDelaySec=10min" in timer.splitlines()
     assert "Persistent=true" in timer
     assert "Unit=learn-ukrainian-tmp-sweep.service" in timer
     assert "WantedBy=timers.target" in timer
@@ -158,6 +161,27 @@ def test_help_names_project_interpreter_and_exit_codes(capsys: pytest.CaptureFix
     assert exc.value.code == 0 and "<project-python>" not in out
     assert ".venv/bin/python -m scripts.orchestration.install_tmp_sweep_timer --check" in out
     assert "2 = invalid usage" in out
+
+
+def test_timer_elapses_every_hour() -> None:
+    """The calendar expression as systemd computes it: consecutive elapses one hour apart."""
+    if not shutil.which("systemd-analyze"):
+        pytest.skip("systemd-analyze is not installed")
+    timer = (installer.TEMPLATE_DIR / installer.UNITS[1]).read_text()
+    spec = next(line for line in timer.splitlines() if line.startswith("OnCalendar=")).removeprefix("OnCalendar=")
+    result = subprocess.run(
+        ["systemd-analyze", "calendar", "--iterations=4", spec],
+        capture_output=True, text=True, check=False, timeout=60, env={**os.environ, "LC_ALL": "C", "TZ": "UTC"},
+    )
+    assert result.returncode == 0, result.stderr
+    stamps = [
+        datetime.strptime(line.split(":", 1)[1].strip().split(" ", 1)[1], "%Y-%m-%d %H:%M:%S %Z")
+        for line in result.stdout.splitlines()
+        if line.strip().startswith(("Next elapse:", "Iteration #"))
+    ]
+    assert len(stamps) == 4
+    assert {later - earlier for earlier, later in pairwise(stamps)} == {timedelta(hours=1)}
+    assert all(stamp.minute == 30 for stamp in stamps)
 
 
 def _systemd_analyze_usable(tmp_path: Path) -> str | None:

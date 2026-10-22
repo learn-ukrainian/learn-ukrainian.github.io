@@ -10,16 +10,82 @@
 #
 # Tasks:
 #   postgres  scripts/ci/start_postgres.sh (bubblewrap, PostgreSQL 16, DSN check)
-#   npm       npm ci --ignore-scripts (needs setup-node first)
+#   npm       npm ci --ignore-scripts from the setup-node cache, with bounded
+#             retries (needs setup-node first)
 set -euo pipefail
 
 : "${RUNNER_TEMP:?RUNNER_TEMP must be set}"
 dir="$RUNNER_TEMP/test-env"
 
+# npm ci revalidates registry data by default and its own fetch timeout (300 s)
+# outlives the shared wait deadline, so one registry incident can hang the
+# shard. Prefer the restored download cache, skip the registry-only audit/fund
+# calls, and own the retries here, inside a budget derived from the same
+# deadline `wait` enforces. The budget must leave room for the SIGKILL that
+# `timeout --kill-after` may need after a TERM-resistant npm, plus the final
+# message write, or a short deadline is reported as "did not finish" while npm
+# is still dying. npm's internal retry stack is disabled so the total bound is
+# deterministic. Each attempt may use the whole remaining budget, so a slow but
+# working cold install still completes; a dead registry returns from the
+# per-request fetch cap in time for a bounded retry, and a process-level hang is
+# cut off before the shared deadline. Any missing cache entry still comes from
+# the registry, but it fails instead of hanging.
+npm_install() {
+  local limit="${TEST_ENV_WAIT_TIMEOUT_S:-240}"
+  case "$limit" in
+    '' | *[!0-9]* | 0*) limit=240 ;;
+  esac
+  # Reserve the termination grace the per-attempt timeout may consume and a
+  # margin for the final message. A deadline too short for even one second of
+  # install after that reserve fails now, with a typed message, rather than
+  # letting the task outlive `wait`.
+  local kill_grace=1 report_margin=1
+  local reserve=$((kill_grace + report_margin))
+  [ "$reserve" -le "$limit" ] || reserve=$limit
+  local budget=$((limit - reserve))
+  if [ "$budget" -lt 1 ]; then
+    echo "npm ci cannot start within the ${limit}s shared wait deadline: ${reserve}s is reserved for termination (${kill_grace}s kill grace) and reporting (${report_margin}s); the registry may be unreachable and the npm cache cold" >&2
+    return 1
+  fi
+  local max_attempts=3
+  local start=$SECONDS attempt=0 rc=0 remaining slice fetch_ms backoff
+  local -a cmd=(npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --fetch-retries=0)
+  while [ "$attempt" -lt "$max_attempts" ]; do
+    attempt=$((attempt + 1))
+    remaining=$((budget - (SECONDS - start)))
+    [ "$remaining" -gt 0 ] || break
+    slice=$remaining
+    # One dead request must return while a retry still fits; 60 s is far below
+    # the 300 s npm default that outlives the deadline.
+    fetch_ms=$((slice * 1000))
+    [ "$fetch_ms" -le 60000 ] || fetch_ms=60000
+    if command -v timeout > /dev/null 2>&1; then
+      timeout --kill-after=1 "$slice" "${cmd[@]}" "--fetch-timeout=${fetch_ms}"
+      rc=$?
+    else
+      "${cmd[@]}" "--fetch-timeout=${fetch_ms}"
+      rc=$?
+    fi
+    if [ "$rc" -eq 0 ]; then
+      return 0
+    fi
+    remaining=$((budget - (SECONDS - start)))
+    if [ "$attempt" -ge "$max_attempts" ] || [ "$remaining" -le 0 ]; then
+      break
+    fi
+    backoff=$((1 << (attempt - 1)))
+    [ "$backoff" -le "$remaining" ] || backoff=$remaining
+    echo "npm ci attempt ${attempt}/${max_attempts} failed (exit ${rc}); retrying in ${backoff}s" >&2
+    sleep "$backoff"
+  done
+  echo "npm ci failed after ${attempt} attempt(s) within the ${budget}s install budget (shared wait deadline ${limit}s); the registry may be unreachable and the npm cache cold" >&2
+  return 1
+}
+
 run_task() {
   case "$1" in
     postgres) bash scripts/ci/start_postgres.sh ;;
-    npm) npm ci --ignore-scripts ;;
+    npm) npm_install ;;
     *)
       echo "unknown task: $1" >&2
       return 2

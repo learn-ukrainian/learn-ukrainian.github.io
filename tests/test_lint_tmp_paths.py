@@ -9,8 +9,14 @@ from scripts.hygiene import lint_tmp_paths as lint
 LITERAL = "/" + "tmp/fixture"
 
 
+@pytest.mark.timeout(300)  # whole-repository scan outruns the default 120 s timeout under xdist shard load
 def test_repository_literal_guard(capsys):
     assert lint.main([]) == 0, capsys.readouterr().out
+
+
+def test_repository_literal_guard_has_timeout_headroom():
+    marks = [mark for mark in test_repository_literal_guard.pytestmark if mark.name == "timeout"]
+    assert [mark.args for mark in marks] == [(300,)]
 
 
 def test_python_shell_tests_and_help_are_scanned(tmp_path):

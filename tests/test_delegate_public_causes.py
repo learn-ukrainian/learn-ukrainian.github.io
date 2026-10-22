@@ -21,6 +21,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.test_delegate import isolated_finalization_context  # noqa: F401
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
@@ -32,6 +34,7 @@ from tests.test_delegate import (  # noqa: F401
     _bg_mock_result,
     _fixture_runtime_tmp_root,
     _fixture_worktree_lock_dir,
+    _git_out,
     _keep_delegate_unit_tests_local,
     _review_target_from_fixture_refs,
     _sanitize_git_env_for_test,
@@ -75,7 +78,7 @@ PUBLIC_RECORD_FIELDS = (
     "rescue_status",
     "kimi_content_refusal",
 )
-PUBLIC_NESTED_FIELDS = (("auto_finalize", "error"),)
+PUBLIC_NESTED_FIELDS = (("auto_finalize", "error"), ("finalize_delivery", "reason"))
 PUBLIC_ROW_KEYS = ("reason", "failure_code")
 
 
@@ -174,7 +177,11 @@ def test_unsupported_verdict_cause_survives_public_persistence_without_free_text
     assert cause in delegate.public_causes()
     task_id = "unsupported-verdict-public"
     gate = delegate.run_completion_gate(
-        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=response, commits_ahead=None, worktree=None,
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=response,
+        commits_ahead=None,
+        worktree=None,
     )
     assert gate.failure == cause and gate.status == "failed"
     diagnostic = gate.detail
@@ -325,13 +332,14 @@ def test_a_record_write_replaces_free_text_in_every_public_field(field):
     assert _assert_kept_locally("sink-field", field=field)["source"] == "record"
 
 
-def test_a_record_write_replaces_free_text_in_the_auto_finalize_error():
+@pytest.mark.parametrize("parent,key", PUBLIC_NESTED_FIELDS)
+def test_a_record_write_replaces_free_text_in_nested_delivery_reasons(parent, key):
     path = delegate._state_path("sink-nested")
-    delegate._write_state_atomic(path, {"task_id": "sink-nested", "auto_finalize": {"ok": False, "error": HOSTILE}})
+    delegate._write_state_atomic(path, {"task_id": "sink-nested", parent: {"ok": False, key: HOSTILE}})
 
     record = json.loads(path.read_text(encoding="utf-8"))
-    assert record["auto_finalize"] == {"ok": False, "error": "unclassified_error"}
-    _assert_kept_locally("sink-nested", field="auto_finalize.error")
+    assert record[parent] == {"ok": False, key: "unclassified_error"}
+    _assert_kept_locally("sink-nested", field=f"{parent}.{key}")
 
 
 def test_a_typed_cause_in_a_record_field_is_rendered_and_its_text_kept():
@@ -488,8 +496,15 @@ def _failing_git(monkeypatch, subcommand: str, stderr: str = HOSTILE) -> None:
     def run(cmd, *args, **kwargs):
         words = [str(word) for word in cmd] if isinstance(cmd, (list, tuple)) else []
         scoped = subcommand not in ("add", "commit") or "--literal-pathspecs" in words
-        if words[:1] == ["git"] and delegate._git_subcommand(words) == subcommand and scoped:
-            return subprocess.CompletedProcess(cmd, 128, "", stderr)
+        if (
+            words
+            and Path(words[0]).name == "git"
+            and delegate._git_subcommand(["git", *words[1:]]) == subcommand
+            and scoped
+        ):
+            return subprocess.CompletedProcess(
+                cmd, 128, "" if kwargs.get("text") else b"", stderr if kwargs.get("text") else stderr.encode()
+            )
         return real_run(cmd, *args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
@@ -523,7 +538,7 @@ def test_an_auto_finalize_git_error_never_reaches_its_error(tmp_path, monkeypatc
     _assert_kept_locally(task_id, field="auto_finalize.error")
 
 
-def test_an_auto_finalize_exception_and_its_failed_reset_publish_their_classes_only(tmp_path, monkeypatch):
+def test_an_auto_finalize_exception_retains_commit_and_publishes_its_class_only(tmp_path, monkeypatch):
     _sanitize_git_env_for_test(monkeypatch)
     task_id = "sink-af-exception"
     worktree = _dirty_owned_worktree(tmp_path, task_id)
@@ -532,7 +547,14 @@ def test_an_auto_finalize_exception_and_its_failed_reset_publish_their_classes_o
         raise RuntimeError(HOSTILE)
 
     monkeypatch.setattr(delegate, "_push_auto_finalize_branch", crash)
-    _failing_git(monkeypatch, "reset")
+    before = delegate._resolve_sha(worktree)
+    real_run = delegate.subprocess.run
+
+    def refuse_reset(args, **kwargs):
+        assert delegate._git_subcommand(args) != "reset", "publication failure must never rewind HEAD"
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", refuse_reset)
 
     result = delegate._auto_finalize_dirty_worktree(
         worktree=worktree,
@@ -543,8 +565,12 @@ def test_an_auto_finalize_exception_and_its_failed_reset_publish_their_classes_o
         owned_paths=["scripts/"],
     )
 
-    assert result.error == "auto_finalize_failed, RuntimeError; auto_finalize_reset_failed, git reset, exit 128"
-    assert len(_diagnostics(task_id)) == 2
+    assert result.error == "auto_finalize_failed, RuntimeError"
+    assert len(_diagnostics(task_id)) == 1
+    assert result.ok is False
+    assert delegate._resolve_sha(worktree) == result.commit_sha != before
+    assert (worktree / "scripts/fix.py").read_bytes() == b"fixed = True\n"
+    assert _git_out(worktree, "show", "HEAD:scripts/fix.py") == "fixed = True\n"
     _assert_kept_locally(task_id, field="auto_finalize.error")
 
 
@@ -552,7 +578,7 @@ def test_an_auto_finalize_pr_error_never_reaches_its_error(tmp_path, monkeypatch
     _sanitize_git_env_for_test(monkeypatch)
     task_id = "sink-af-pr"
     worktree = _dirty_owned_worktree(tmp_path, task_id)
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a: None)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: None)
     monkeypatch.setattr(
         delegate,
         "request_run",
@@ -578,7 +604,7 @@ def test_an_auto_finalize_policy_refusal_is_typed_and_kept_privately(tmp_path, m
     _sanitize_git_env_for_test(monkeypatch)
     task_id = "sink-af-policy"
     worktree = _dirty_owned_worktree(tmp_path, task_id)
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a: None)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: None)
 
     def refuse(*_args, **_kwargs):
         raise delegate.PublishBlocked(HOSTILE)
@@ -871,8 +897,13 @@ def test_agy_unverified_identity_is_a_closed_public_cause():
     task_id = "agy-unverified-public"
     delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
     cause = delegate._worker_last_error(
-        task_id, stderr_excerpt=HOSTILE, failure_cause="agy_model_identity_unverified",
-        final_status="failed", returncode=0, runtime_failure_code=None, worker_exception=None,
+        task_id,
+        stderr_excerpt=HOSTILE,
+        failure_cause="agy_model_identity_unverified",
+        final_status="failed",
+        returncode=0,
+        runtime_failure_code=None,
+        worker_exception=None,
     )
     assert cause == "agy_model_identity_unverified"
     assert_no_host_details(cause)

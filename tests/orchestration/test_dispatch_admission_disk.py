@@ -82,7 +82,7 @@ class _Reaper:
 
 
 def test_below_the_alert_threshold_is_admitted_without_alert_or_reaper(tmp_path, host):
-    host["readings"] = [_disk(79.9)]
+    host["readings"] = [_disk(74.9)]
     reaper = _Reaper()
 
     decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper)
@@ -90,10 +90,10 @@ def test_below_the_alert_threshold_is_admitted_without_alert_or_reaper(tmp_path,
     assert decision.admitted
     assert reaper.calls == []
     assert host["alerts"] == []
-    assert "disk 79.9% used, 80.4 GiB free (reap at 85%, refuse at 90%, alert at 80%)" in decision.summary()
+    assert "disk 74.9% used, 100.4 GiB free (reap at 85%, refuse at 90%, alert at 75%)" in decision.summary()
     record = decision.to_record()
-    assert record["disk_used_percent"] == 79.9
-    assert record["disk_free_gib"] == 80.4
+    assert record["disk_used_percent"] == 74.9
+    assert record["disk_free_gib"] == 100.4
     assert record["disk_alert"] is None
 
 
@@ -218,7 +218,7 @@ def test_admitted_after_the_reaper_frees_space(tmp_path, host):
     assert len(reaper.calls) == 1
     assert host["alerts"] == []  # the disk is below the alert level once reaped
     assert (
-        "disk 70.0% used, 120.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [reaper removed 3 worktree(s), 88.0% before]"
+        "disk 70.0% used, 120.0 GiB free (reap at 85%, refuse at 90%, alert at 75%) [reaper removed 3 worktree(s), 88.0% before]"
         in (decision.summary())
     )
 
@@ -531,12 +531,12 @@ def test_worktrees_disk_path_is_the_primary_checkouts_worktrees(monkeypatch, tmp
 def test_disk_thresholds_default_to_config_and_honour_env_overrides():
     defaults = adm.load_thresholds({})
     assert (defaults.disk_reap_used_percent, defaults.disk_refuse_used_percent) == (85.0, 90.0)
-    assert defaults.disk_alert_used_percent == 80.0
+    assert defaults.disk_alert_used_percent == 75.0
 
     custom = adm.load_thresholds(
-        {"DISPATCH_DISK_REFUSE_USED_PERCENT": "92.5", "DISPATCH_DISK_ALERT_USED_PERCENT": "75"}
+        {"DISPATCH_DISK_REFUSE_USED_PERCENT": "92.5", "DISPATCH_DISK_ALERT_USED_PERCENT": "78"}
     )
-    assert (custom.disk_refuse_used_percent, custom.disk_alert_used_percent) == (92.5, 75.0)
+    assert (custom.disk_refuse_used_percent, custom.disk_alert_used_percent) == (92.5, 78.0)
 
 
 @pytest.mark.parametrize("raw", ["101", "-1", "lots", "nan"])
@@ -1101,7 +1101,7 @@ def test_the_reap_band_admits_and_reports_the_reaper_outcome(tmp_path, host):
     decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_Reaper())
 
     assert decision.admitted
-    assert "(reap at 85%, refuse at 90%, alert at 80%) [reaper removed 3 worktree(s), 87.0% before]" in (
+    assert "(reap at 85%, refuse at 90%, alert at 75%) [reaper removed 3 worktree(s), 87.0% before]" in (
         decision.summary()
     )
     assert decision.to_record()["disk_reap_used_percent"] == 85.0

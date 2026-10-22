@@ -1,0 +1,337 @@
+# Diagnostic only: never a PR gate. Refs #11226.
+# CI setup, duration snapshot and pytest partition copied from ci.yml.
+name: Coverage for an exact commit
+'on':
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Repository commit SHA to measure (40 hexadecimal characters)
+        required: true
+        type: string
+permissions:
+  contents: read
+env:
+  UV_HTTP_RETRIES: '6'
+  UV_HTTP_TIMEOUT: '60'
+  PIP_RETRIES: '6'
+  PIP_TIMEOUT: '60'
+jobs:
+  prepare:
+    name: Validate commit and refresh shared pytest durations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+    - name: Validate an exact repository commit
+      id: validate
+      env:
+        SHA: ${{ inputs.sha }}
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ github.repository }}
+      run: |
+        set -euo pipefail
+        [[ "$SHA" =~ ^[0-9a-fA-F]{40}$ ]] || { echo '::error::sha must be 40 hexadecimal characters'; exit 1; }
+        resolved=$(gh api "repos/$REPO/commits/$SHA" --jq .sha)
+        [ "$resolved" = "${SHA,,}" ] || { echo '::error::sha is not an exact repository commit'; exit 1; }
+        # The commit API also resolves fork commits retained only by refs/pull/*.
+        # Require an ancestor of an actual repository branch before executing code.
+        tips=$(gh api --paginate "repos/$REPO/branches?per_page=100" --jq '.[].commit.sha')
+        reachable=false
+        while IFS= read -r tip; do
+          [ -n "$tip" ] || continue
+          comparison=$(gh api "repos/$REPO/compare/$resolved...$tip" --jq .status)
+          if [ "$comparison" = identical ] || [ "$comparison" = ahead ]; then
+            reachable=true
+            break
+          fi
+        done <<< "$tips"
+        "$reachable" || { echo '::error::sha must be reachable from a repository branch, not only refs/pull/*'; exit 1; }
+        printf 'validated_revision=%s\n' "$resolved" >> "$GITHUB_OUTPUT"
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+        fetch-depth: 1
+        sparse-checkout: |
+          scripts/ci/
+          scripts/__init__.py
+          scripts/common/__init__.py
+          scripts/common/github_client.py
+          scripts/common/scratch.py
+          scripts/opsec/__init__.py
+          scripts/opsec/gh_snapshot.py
+          scripts/opsec/prepublish.py
+          .python-version
+        sparse-checkout-cone-mode: false
+        ref: ${{ steps.validate.outputs.validated_revision }}
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version-file: .python-version
+    - name: Refresh pytest duration snapshot
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ github.repository }}
+      run: |
+        set -euo pipefail
+        mkdir -p ci-artifacts
+        out=ci-artifacts/pytest-file-durations.json
+        set +e
+        log=$(python3 -m scripts.ci.split_tests refresh --repo "$REPO" --output "$out" 2>&1)
+        status=$?
+        set -e
+        printf '%s\n' "$log"
+        if [ "$status" -ne 0 ] || ! python3 -m scripts.ci.split_tests validate "$out"; then
+          echo "::notice::duration refresh failed; retaining committed weights"
+          cp scripts/ci/pytest-file-durations.json "$out"
+        elif printf '%s\n' "$log" | grep -q "retaining committed fallback"; then
+          echo "::notice::duration lookup unavailable; retaining committed weights"
+        fi
+    - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: pytest-duration-input
+        path: ci-artifacts/pytest-file-durations.json
+        if-no-files-found: error
+        retention-days: 1
+    outputs:
+      validated_revision: ${{ steps.validate.outputs.validated_revision }}
+  pytest:
+    name: Branch coverage (${{ matrix.shard }})
+    needs:
+    - prepare
+    runs-on: ubuntu-latest
+    # Two workers need twice the previous job budget; the per-test budget is unchanged.
+    # Residual: native code that never returns to Python can defer a signal
+    # timeout until the 90-minute job limit, losing the whole shard's data.
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+    env:
+      LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
+      LU_PYTEST_TMP_BUDGET_GB: '5'
+      # Python 3.12.14 + coverage 7.16.2: sysmon cannot measure branches.
+      # https://coverage.readthedocs.io/en/7.16.2/config.html#run-core
+      COVERAGE_CORE: ctrace
+      COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage
+      # Bound branch-tracing memory pressure; -n logical still selects the same tests.
+      PYTEST_XDIST_AUTO_NUM_WORKERS: '2'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+        fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
+        ref: ${{ needs.prepare.outputs.validated_revision }}
+    - name: Check out measurement tooling
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        ref: ${{ github.workflow_sha }}
+        path: coverage-tooling
+        persist-credentials: false
+        sparse-checkout: |
+          scripts/ci/
+          .github/actions/python-ci-env/
+          scripts/__init__.py
+          scripts/common/__init__.py
+          scripts/common/github_client.py
+          scripts/common/scratch.py
+          scripts/opsec/__init__.py
+          scripts/opsec/gh_snapshot.py
+          scripts/opsec/prepublish.py
+          .python-version
+        sparse-checkout-cone-mode: false
+    - name: Keep measurement tooling outside the measured checkout
+      run: |
+        mkdir -p "$RUNNER_TEMP/coverage-ref"
+        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage_ref_environment.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
+        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+    - run: bash scripts/ci/test_env.sh start postgres
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version-file: .python-version
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+      with:
+        node-version: '22'
+        package-manager-cache: false
+    - run: bash scripts/ci/test_env.sh start npm
+    - name: Python CI environment
+      # Use the workflow's action, including when measuring an older commit.
+      uses: ./coverage-tooling/.github/actions/python-ci-env # zizmor: ignore[self-repository] nested checkout pinned to github.workflow_sha
+      with:
+        save-cache: false
+    - run: bash scripts/ci/test_env.sh wait
+      timeout-minutes: 5
+    - name: Isolate coverage storage from import-smoke guards
+      # patch=subprocess uses interpreter startup, so this must also reach
+      # children that deliberately clear PYTHONPATH or change their cwd.
+      run: .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"
+    - name: Download pytest duration snapshot
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REFRESH_RESULT: ${{ needs.prepare.result }}
+      run: |
+        set -euo pipefail
+        mkdir -p ci-artifacts
+        snapshot=ci-artifacts/pytest-file-durations.json
+        rm -f "$snapshot"
+        decision=$(python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
+        if [ "$decision" = "committed" ]; then
+          echo "::notice::duration refresh did not succeed; using committed weights"
+          exit 0
+        fi
+        if [ "$decision" != "snapshot" ]; then
+          echo "::error::unexpected duration source decision"
+          exit 1
+        fi
+        attempt=1
+        while true; do
+          rm -f "$snapshot"
+          rm -rf ci-artifacts/pytest-duration-input
+          if gh run download "$GITHUB_RUN_ID" --name pytest-duration-input --dir ci-artifacts; then
+            nested=$(find ci-artifacts -name pytest-file-durations.json -type f ! -path "$snapshot" -print -quit || true)
+            if [ -n "$nested" ]; then
+              mv "$nested" "$snapshot"
+            fi
+          fi
+          if python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
+            exit 0
+          fi
+          if [ "$attempt" -ge 3 ]; then
+            echo "::error::shared duration snapshot unavailable after 3 attempts"
+            exit 1
+          fi
+          attempt=$((attempt + 1))
+          # Tests set LU_DURATION_RETRY_SLEEP=0. The pause is not the retry bound.
+          sleep "${LU_DURATION_RETRY_SLEEP:-1}"
+        done
+    - name: Run CI pytest suite with branch coverage
+      env:
+        SHARD: ${{ matrix.shard }}
+        SHARDS: ${{ strategy.job-total }}
+        REFRESH_RESULT: ${{ needs.prepare.result }}
+      run: |
+        set -euo pipefail
+        mkdir -p ci-artifacts/raw
+        export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"
+        # Every collected needs_artifact test, before -m deselects (pytest report audits it).
+        export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}-needs-artifact.txt"
+        # Shallow shards: a test that fetches from GitHub fails instead of
+        # quietly downloading history (scripts/ci/history-tests.txt).
+        [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
+        snapshot=ci-artifacts/pytest-file-durations.json
+        durations=$(python3 -m scripts.ci.split_tests duration-source \
+          --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
+        # Run 39690968174: integration-check setup alone took 119.06s, while
+        # other tests hit 120s. Allow 5x CI's budget under branch tracing (#11226).
+        git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
+          | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
+            --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
+        .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" run \
+          --output ci-artifacts/raw --shard "$SHARD" -- tests \
+          --cov=scripts --cov=.mcp --cov=agents_extensions --cov=packages \
+          --cov-branch --cov-report= --cov-config="$COVERAGE_RCFILE" -n logical --dist=worksteal --max-worker-restart=0 \
+          --timeout=600 --timeout-method=signal -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
+          --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
+        # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
+        .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
+          --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
+    - name: Upload pytest JUnit report
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: pytest-junit-shard-${{ matrix.shard }}
+        path: |
+          ci-artifacts/pytest-shard-*.xml
+          ci-artifacts/pytest-shard-*-files.txt
+          ci-artifacts/pytest-shard-*-needs-artifact.txt
+        if-no-files-found: error
+        retention-days: 14
+    - name: Upload raw branch coverage and receipt
+      if: ${{ always() }}
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: coverage-shard-${{ matrix.shard }}
+        path: ci-artifacts/raw/
+        include-hidden-files: true
+        if-no-files-found: error
+        retention-days: 14
+  combine:
+    name: Combine complete branch coverage
+    needs:
+    - prepare
+    - pytest
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      COVERAGE_CORE: ctrace
+    steps:
+    - name: Check out measured sources for JSON reporting
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        # On prepare failure, retain a usable interpreter pin and dependency lock.
+        ref: ${{ needs.prepare.outputs.validated_revision || github.workflow_sha }}
+        persist-credentials: false
+    - name: Check out measurement tooling
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        ref: ${{ github.workflow_sha }}
+        path: coverage-tooling
+        persist-credentials: false
+    - name: Keep measurement tooling outside the measured checkout
+      run: |
+        mkdir -p "$RUNNER_TEMP/coverage-ref"
+        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
+        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version-file: .python-version
+    - name: Install the measured coverage tools
+      run: |
+        grep -E '^(coverage|pytest-cov|pytest)==' requirements-lock.txt > "$RUNNER_TEMP/coverage-requirements.txt"
+        python -m pip install -r "$RUNNER_TEMP/coverage-requirements.txt"
+    - name: Download all available raw shards
+      id: download
+      continue-on-error: true
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+      with:
+        pattern: coverage-shard-*
+        path: ci-artifacts/shards
+    - name: Validate receipts, combine and report
+      if: ${{ always() }}
+      env:
+        MEASURED_SHA: ${{ needs.prepare.outputs.validated_revision || inputs.sha }}
+        MATRIX_RESULT: ${{ needs.pytest.result }}
+      run: |
+        python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" combine \
+          --input ci-artifacts/shards --output ci-artifacts/combined \
+          --sha "$MEASURED_SHA" --matrix-result "$MATRIX_RESULT"
+    - name: Publish combined report and completeness manifest
+      if: ${{ always() }}
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: coverage-combined
+        path: ci-artifacts/combined/
+        include-hidden-files: true
+        if-no-files-found: error
+        retention-days: 14

@@ -451,7 +451,7 @@ def test_cursor_claude_refusal_does_not_trip_for_non_claude() -> None:
     assert result.returncode == 0, result.stderr
     assert "--model composer-2.5" in result.stdout
 
-@pytest.mark.parametrize("model", ["opus", "sonnet", "haiku", "haiku-5-5", "claude-3-5-sonnet-20241022"])
+@pytest.mark.parametrize("model", ["opus", "sonnet", "haiku", "haiku-5-5", "claude-3-5-sonnet-20241022", "claude-fable-5-1"])
 def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None:
     binary = tmp_path / "claude"
     binary.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
@@ -467,16 +467,16 @@ def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None
     assert "would exec" not in result.stdout
 
 
-def test_cursor_driver_refuses_retired_fable_before_the_claude_gate(tmp_path: Path) -> None:
-    """OO-58: Fable 5.1 is retired, so the catalog refusal precedes CURSOR_CLAUDE_REFUSED."""
+def test_cursor_driver_refuses_retired_fable_5_before_the_claude_gate(tmp_path: Path) -> None:
+    """The retired Fable 5 predecessor fails before the Claude transport guard."""
     binary = tmp_path / "claude"
     binary.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     binary.chmod(0o755)
     result = run_launcher(
-        DRIVER, "--epic", "infra", "--model", "claude-fable-5-1",
+        DRIVER, "--epic", "infra", "--model", "claude-fable-5",
         env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"},
     )
     assert result.returncode == 2, result.stderr
     assert "is retired in the model catalog" in result.stderr
-    assert "claude-opus-5-5" in result.stderr
+    assert "claude-fable-5-1" in result.stderr
     assert "would exec" not in result.stdout

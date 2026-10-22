@@ -46,10 +46,7 @@ def clean_selection(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.parametrize("case", ("default", "model", "effort", "environment", "precedence"))
 def test_cto_selection_and_dry_run(name: str, case: str, launch_with_usage) -> None:
     model = "claude-sonnet-5-5" if name == WRAPPERS[0] else "gpt-6.1-sol"
-    # Explicit CLI Opus is the CTO epics exception. An environment pin is not,
-    # and Fable is retired, so the environment case stays on the certified default.
-    alternate = "claude-opus-5-5" if name == WRAPPERS[0] else model
-    env_model = model if name == WRAPPERS[0] else alternate
+    alternate = "claude-fable-5-1" if name == WRAPPERS[0] else model
     args: tuple[str, ...] = ()
     env: dict[str, str] = {}
     expected_model, effort = model, "high"
@@ -58,7 +55,7 @@ def test_cto_selection_and_dry_run(name: str, case: str, launch_with_usage) -> N
     elif case == "effort":
         args, effort = ("--effort=medium",), "medium"
     elif case == "environment":
-        env, expected_model, effort = {"LAUNCHER_MODEL": env_model, "LAUNCHER_EFFORT": "medium"}, env_model, "medium"
+        env, expected_model, effort = {"LAUNCHER_MODEL": alternate, "LAUNCHER_EFFORT": "medium"}, alternate, "medium"
     elif case == "precedence":
         env = {"LAUNCHER_MODEL": "not-certified", "LAUNCHER_EFFORT": "low"}
         args, effort = ("--model=" + model, "--effort", "xhigh"), "xhigh"

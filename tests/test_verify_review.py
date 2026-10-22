@@ -529,6 +529,9 @@ def test_pr_target(tmp_path, monkeypatch):
     _git(repo, "commit", "-aq", "-m", "pr head")
     head2 = _git(repo, "rev-parse", "HEAD").stdout.strip()
     base = _git(repo, "rev-parse", "HEAD^").stdout.strip()
+    from tests.test_review_target_resolution import _publish_pr_branch
+
+    _publish_pr_branch(repo, "feature", head2)
 
     def fake_gh(args, cwd, timeout=30.0):
         class R:
@@ -540,6 +543,7 @@ def test_pr_target(tmp_path, monkeypatch):
                     "baseRefOid": base,
                     "headRefName": "feature",
                     "headRefOid": head2,
+                    "isCrossRepository": False,
                 }
             )
             stderr = ""

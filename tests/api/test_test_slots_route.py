@@ -37,6 +37,9 @@ def test_route_reports_holders_by_task_without_paths(client: TestClient, tmp_pat
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == "test-slots.status.v1" and payload["enabled"] is True
+    assert payload["observed_at"].endswith("Z")
+    assert payload["age_s"] == 0.0
+    assert payload["requested_at"].endswith("Z")
     assert (payload["pool_size"], payload["slots_in_use"], payload["slots_free"]) == (3, 2, 1)
     assert payload["queue_depth"] == 0
     [holder] = payload["holders"]
@@ -54,7 +57,13 @@ def test_route_reports_a_missing_or_disabled_pool_without_creating_it(
     assert client.get(ROUTE).json()["enabled"] is False
     monkeypatch.setenv(test_slots.ENABLE_ENV, "maybe")
     broken = client.get(ROUTE)
-    assert broken.status_code == 200 and broken.json()["error"]["reason"] == "invalid_configuration"
+    assert broken.status_code == 200
+    failed = broken.json()
+    assert failed["error"]["reason"] == "invalid_configuration"
+    # A failed observation has no source freshness; the request time is separate.
+    assert failed["observed_at"] is None
+    assert failed["age_s"] is None
+    assert failed["requested_at"].endswith("Z")
     assert not (tmp_path / "pool").exists()
 
 

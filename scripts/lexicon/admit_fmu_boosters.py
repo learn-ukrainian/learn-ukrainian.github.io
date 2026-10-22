@@ -658,10 +658,11 @@ def build_inventory_and_decisions(*, dry_run: bool = False):
 
 def build_new_atlas_entry(lemma: str, pos: str, gloss: str, source_info: dict[str, Any]) -> dict[str, Any]:
     def_text = NEW_DEFINITIONS.get(lemma, f"{gloss.capitalize()}.")
-    ep_num = source_info.get("num", "00")
+    ep_num = source_info["num"]
     ep_id = f"ohoiko-fmu-booster-ep-{ep_num}"
     locator = f"fmu-booster-ep-{ep_num}"
-    ep_url = source_info.get("url", f"https://www.ukrainianlessons.com/fmu{int(ep_num)}/")
+    ep_url = source_info["url"]
+    ep_title = source_info["title"]
 
     en_terms = [g.strip() for g in re.split(r"[/,;]", gloss) if g.strip()]
     if not en_terms:
@@ -725,6 +726,11 @@ def build_new_atlas_entry(lemma: str, pos: str, gloss: str, source_info: dict[st
                 "terms": en_terms,
                 "source": "learner_english_gloss",
                 "gloss": gloss,
+                "attributions": [
+                    {"text": term, "source": "Anna Ohoiko", "source_title": ep_title,
+                     "source_url": ep_url, "locator": locator}
+                    for term in en_terms
+                ],
             },
             "sources": ["ohoiko", "learner_english_gloss"],
         },

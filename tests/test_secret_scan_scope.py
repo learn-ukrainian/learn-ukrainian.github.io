@@ -669,6 +669,69 @@ def _repo_with_dispatch(root: Path) -> tuple[str, str, str]:
     return base, head, unrelated
 
 
+@pytest.mark.parametrize(
+    "mode", [None, "bounded", "full-history-audit", "", "garbage", "FULL-HISTORY-AUDIT", " full-history-audit "]
+)
+def test_dispatch_cli_audit_requires_exact_named_input(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], mode: str | None
+) -> None:
+    """Missing/empty inputs stay bounded; invalid choices fail without scan outputs."""
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    output = tmp_path / "outputs.txt"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("DISPATCH_HEAD_SHA", head)
+    monkeypatch.setenv("DISPATCH_REF", "refs/heads/manual")
+    monkeypatch.setenv("DEFAULT_BRANCH_REF", "refs/heads/main")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    if mode is None:
+        monkeypatch.delenv("DISPATCH_SCAN_MODE", raising=False)
+    else:
+        monkeypatch.setenv("DISPATCH_SCAN_MODE", mode)
+
+    code = secret_scan_scope.main()
+    if mode not in (None, "", "bounded", "full-history-audit"):
+        assert code == 1
+        assert "invalid-dispatch-scan-mode" in capsys.readouterr().err
+        assert not output.exists()
+        return
+    assert code == 0
+    if mode == "full-history-audit":
+        assert output.read_text().splitlines() == [
+            "trufflehog_base=",
+            "trufflehog_head=HEAD",
+            "opsec_range=",
+            "mode=audit",
+            "reason=explicit-full-history-audit",
+        ]
+        assert base in _git(tmp_path, "rev-list", "HEAD").splitlines()
+    else:
+        assert output.read_text().splitlines() == [
+            f"trufflehog_base={base}",
+            f"trufflehog_head={head}",
+            f"opsec_range={base}..{head}",
+            "mode=scoped",
+            "reason=validated-range",
+        ]
+
+
+@pytest.mark.parametrize("event", ["pull_request", "merge_group", "push", "schedule"])
+@pytest.mark.parametrize("mode", ["", "bounded", "full-history-audit", "garbage"])
+def test_dispatch_mode_cannot_change_other_event_scopes(tmp_path: Path, event: str, mode: str) -> None:
+    """An audit input on another event must not bypass that event's range handling."""
+    base, head, _ = _repo_with_dispatch(tmp_path)
+    inputs = dict(
+        repo_root=tmp_path,
+        merge_group_base_sha=base,
+        merge_group_head_sha=head,
+        push_before_sha=base,
+        push_after_sha=head,
+    )
+    expected = resolve_scan_scope(event, **inputs)
+    assert resolve_scan_scope(event, dispatch_scan_mode=mode, **inputs) == expected
+    assert expected.mode != "audit"
+
+
 def test_dispatch_branch_ahead_scans_every_commit_since_merge_base(tmp_path: Path) -> None:
     """A branch dispatch must not scan all history or omit its middle commit."""
     base, middle, _ = _repo_with_dispatch(tmp_path)

@@ -3,7 +3,7 @@
 <critical>
 
 **Review admission:** `claude-fable-5` and `grok-4.6` are retired.
-Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. It holds no review role (#9583). Operator decision 2026-10-05 (#9769):
+Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. It is never routed or selected by a resolver, substitution or ladder and holds no advisory, approval or review role (operator decision 2026-10-21). Operator decision 2026-10-05 (#9769):
 Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through native
 `--agent grok --model grok-4.7` and Cursor `--agent cursor --model grok-4.7-high`.
 Operator decision 2026-10-07 (#9987): Grok reviewers have no sandbox and are

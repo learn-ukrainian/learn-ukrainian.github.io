@@ -4,6 +4,7 @@ import {
   atlasNoteDetail,
   cardHeadwordMatches,
   displayGloss,
+  quotedGlossParts,
   modernHeadwordLabels,
   resolveHeritageBoxes,
   resolveUsageLabel,
@@ -829,6 +830,22 @@ describe('displayGloss', () => {
     reason: scope,
   });
   const NOTE = 'примітка Атласу: радять «наступний»; обсяг застереження не встановлено';
+
+  test('quotation fragments keep source meaning exact and never put Atlas norm qualifications in q', () => {
+    expect(quotedGlossParts('to switch (Russian calque) again (standard Ukrainian: next)', label('unresolved'))).toEqual([
+      { kind: 'quotation', text: 'to switch ' },
+      { kind: 'note', text: '(примітка Атласу: «Russian calque»; обсяг застереження не встановлено)' },
+      { kind: 'quotation', text: ' again ' },
+      { kind: 'note', text: '(примітка Атласу: «standard Ukrainian: next»; обсяг застереження не встановлено)' },
+    ]);
+    expect(quotedGlossParts('avoid: наступний', label('unresolved'))).toEqual([{ kind: 'note', text: NOTE }]);
+    expect(quotedGlossParts('avoid: наступний', label('lemma', 'rus'))).toEqual([{ kind: 'quotation', text: 'avoid: наступний' }]);
+    expect(quotedGlossParts('ordinary (parenthetical)', label('none'))).toEqual([{ kind: 'quotation', text: 'ordinary (parenthetical)' }]);
+    expect(quotedGlossParts('', label('none'))).toEqual([]);
+    expect(quotedGlossParts('(Russian calque)', label('none'))).toEqual([
+      { kind: 'note', text: '(примітка Атласу: «Russian calque»; обсяг застереження не встановлено)' },
+    ]);
+  });
 
   test('keeps a lemma-bound Russianism or calque gloss verbatim (міроприємство)', () => {
     expect(displayGloss('avoid: захід', label('lemma', 'rus'))).toEqual({ text: 'avoid: захід', note: false });

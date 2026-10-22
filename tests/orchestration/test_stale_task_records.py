@@ -22,6 +22,7 @@ import pytest
 from scripts import delegate
 from scripts.orchestration import dead_worker_state, task_record_store, worktree_claims
 from scripts.orchestration import stale_task_records as str_mod
+from tests.test_delegate import isolated_finalization_context  # noqa: F401  (driver-pinned origin.git)
 
 SLUG = "owner/repo"
 NOW = datetime(2026, 9, 24, 12, 0, tzinfo=UTC)

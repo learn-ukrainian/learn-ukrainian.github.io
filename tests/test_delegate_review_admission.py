@@ -79,6 +79,9 @@ def ordinary_review_repo(tmp_path_factory):
     # Same-repository PR admission reads this origin before gh pr view.
     _git(repo, "remote", "add", "origin", f"https://github.com/{load_fleet_repos()['public'].github}.git")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
+    from tests.test_review_target_resolution import _publish_pr_branch
+
+    _publish_pr_branch(repo, "ordinary-review", _git(repo, "rev-parse", "HEAD"))
     # No authored commits past the base: a trusted review's complete authorship
     # (#9739) is then exactly its declared --review-author-model, the identity
     # these admission tests vary. Branch authorship has its own tests.
@@ -1775,14 +1778,14 @@ FABLE_PINS = [
     ("claude", "claude-fable-5-1[1m]"),
     ("cursor", "claude-fable-5-1-thinking-high"),  # the Cursor fallback slug
 ]
-NO_REVIEW_ROLE = "is retired in the model catalog"
+NO_REVIEW_ROLE = "holds no review, critique or approval role in the model catalog"
 
 
 @pytest.mark.parametrize("seat,model", FABLE_PINS)
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_fable_code_review_pin_is_refused(monkeypatch, seat, model, risk, flags):
-    """OO-58: a retired Fable pin is refused, never substituted."""
+    """#9583: Fable holds no review role in the catalog, so an explicit pin is refused, never substituted."""
     args = _args(
         "--agent",
         seat,
@@ -2621,7 +2624,7 @@ def test_pr_pinned_review_admits_independent_routes_for_cursor_author(
         target_resolution,
         "_run_gh",
         lambda *_args, **_kwargs: subprocess.CompletedProcess(
-            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefName": "feature", "headRefOid": head, "isCrossRepository": False}), ""
         ),
     )
     args = _args(
@@ -2660,7 +2663,7 @@ def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, 
         target_resolution,
         "_run_gh",
         lambda *_args, **_kwargs: subprocess.CompletedProcess(
-            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefName": "feature", "headRefOid": head, "isCrossRepository": False}), ""
         ),
     )
     args = _args(
@@ -3640,17 +3643,20 @@ def test_review_facts_pr_lookup_is_bound_to_the_frozen_head(tmp_path, monkeypatc
     args._review_target = SimpleNamespace(base_sha=repo.sha("origin/main"), head_sha=head)
 
     def read_pr(argv):
-        assert argv[-2:] == ["--json", "headRefName,headRefOid"]
+        assert argv[-2:] == ["--json", "headRefName,headRefOid,isCrossRepository"]
         if metadata == "unavailable":
             raise recorder.RecordError("GitHub unavailable")
         if metadata == "malformed":
             return None
         return {
             "headRefName": None if metadata == "missing-branch" else "feature",
-            "headRefOid": "b" * 40 if metadata == "moved" else head,
+            "headRefOid": head,
+            "isCrossRepository": False,
         }
 
     monkeypatch.setattr(recorder, "_run_json", read_pr)
+    if metadata == "moved":
+        repo.advance_remote("feature", "codex/gpt-6.1-sol")
     if metadata == "intact":
         facts = delegate._dispatch_review_facts(args, ())
         assert facts.head_sha == head and facts.existing_families == {"openai"}

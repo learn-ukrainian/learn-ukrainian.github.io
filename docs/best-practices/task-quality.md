@@ -137,7 +137,17 @@ triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot
 be overridden.
 Absent DoD, missing parent, unavailable registry and unknown membership refuse
 by default, with the existing recorded `--allow-dor-warn REASON` exception.
-Cursor Auto refuses any override. Registered fleet repositories without a
+A membership timeout on a card whose DoR and DoD read PASS is the one
+exception (#11283): dispatch records `dor: UNKNOWN (timeout)` with the timeout
+codes under `unknown`, prints an advisory and proceeds without the override.
+UNKNOWN is never PASS. It needs consistent positive evidence: DoR and DoD
+sections that read PASS with no errors, and a membership section whose single
+error is a timeout code the checker produces, matched whole (never by prefix)
+and listed exactly as the top-level `missing`. A target-fetch timeout, a
+checker failure, a card finding next to the timeout, or any missing, unchecked
+or contradictory section keeps the refusal, so a timeout never stands in for
+unread or incomplete card evidence. Cursor Auto refuses any override, any
+`unknown` entry and any explicit `dor` other than PASS. Registered fleet repositories without a
 membership registry report `membership_not_applicable` in admission, while DoR
 and DoD remain required. They need no permanent override.
 
@@ -347,7 +357,8 @@ fields listed), including when GitHub/API input cannot be read. It does **not**
 block issue creation or merge. Implementation dispatch uses `--strict`: WARN,
 GitHub/API lookup failure, or checker failure refuses dispatch by default.
 The recorded `--allow-dor-warn <reason>` exception covers absent DoD or missing
-and unknown membership. Malformed DoD and conflicting ancestry remain
+and unknown membership; a membership timeout alone on an otherwise PASS card is
+an UNKNOWN advisory that needs no override. Malformed DoD and conflicting ancestry remain
 non-overrideable. PR references are skipped after API resolution; a brief
 without an issue reference is not gated. The detailed admission rules are above.
 

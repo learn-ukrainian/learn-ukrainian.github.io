@@ -48,6 +48,9 @@ DASHBOARDS: tuple[tuple[str, str], ...] = (
     ("overview", "d/overview"),
     ("fleet", "d/fleet"),
 )
+# Dashboard origins (``scheme://host[:port]``) approved for public disclosure.
+# Approval is a reviewed change to this set; configuration alone never grants it.
+APPROVED_LINK_ORIGINS: frozenset[str] = frozenset()
 
 
 def _alert_name(value: object) -> str | None:
@@ -223,18 +226,63 @@ def load_stats(environ: Mapping[str, str] | None = None) -> Outcome:
     return _done("stats", {"stats": stats}, status, age_s=age)
 
 
+def _public_navigation_href(href: str) -> str | None:
+    """A link the public Monitor may disclose, or ``None`` to withhold it.
+
+    A configured destination can carry a private host, credentials, or a
+    loopback/private address. Those are navigation values, not diagnostic
+    configuration: the public surface withholds them and keeps D13 unmet rather
+    than publishing a locator. No DNS lookup is performed, so a DNS name cannot
+    establish its target; only a globally routable IP literal settles it.
+    Routability says nothing about audience, so the origin must also be listed
+    in ``APPROVED_LINK_ORIGINS``; every other destination is withheld.
+    """
+    try:
+        parts = urllib.parse.urlsplit(href)
+    except ValueError:
+        return None
+    if parts.scheme not in {"http", "https"} or not parts.hostname:
+        return None
+    if parts.username is not None or parts.password is not None:
+        return None
+    host = parts.hostname.rstrip(".").lower()
+    if not host or host == "localhost" or host.endswith(".local"):
+        return None
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        return None
+    if not address.is_global:
+        return None
+    if f"{parts.scheme}://{parts.netloc.lower()}" not in APPROVED_LINK_ORIGINS:
+        return None
+    return href
+
+
 def load_links(environ: Mapping[str, str] | None = None) -> Outcome:
-    """Fixed dashboard links built from the configured Grafana base."""
+    """Fixed dashboard links built from the configured Grafana base.
+
+    Only destinations approved for public delivery are published. A private,
+    unverifiable, or unapproved destination yields an empty list and ``unavailable`` rather
+    than a locator; an approved destination stays a source dependency (D13).
+    """
     location = read_location("FLEET_GRAFANA_URL", _env(environ))
     if location is None:
         return _done("links", {"links": []}, "not_configured")
 
     def load() -> list[dict[str, str]]:
-        return [{"name": name, "href": join_url(location, suffix)} for name, suffix in DASHBOARDS]
+        rows: list[dict[str, str]] = []
+        for name, suffix in DASHBOARDS:
+            href = _public_navigation_href(join_url(location, suffix))
+            if href is not None:
+                rows.append({"name": name, "href": href})
+        return rows
 
     try:
-        links, freshness, age = _cached_call("links", location, load, cacheable=lambda _value: True)
+        links, freshness, age = _cached_call("links", location, load, cacheable=lambda value: bool(value))
     except Exception:
+        return _done("links", {"links": []}, "unavailable")
+    if not links:
         return _done("links", {"links": []}, "unavailable")
     status = "stale" if freshness == "stale" else "ok"
     return _done("links", {"links": links}, status, age_s=age)

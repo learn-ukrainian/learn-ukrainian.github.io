@@ -411,6 +411,8 @@ const en = {
   // Thin-entry source disclosure (#8327).
   'atlas.enrichmentPending': 'This entry is being enriched.',
   'atlas.sourceWaiting': 'Layers awaiting sources',
+  'atlas.sourceUnknown': 'unknown',
+  'atlas.bookUnknown': 'Book unknown',
   'atlas.layer.meaning': 'Meaning',
   'atlas.layer.etymology': 'Etymology',
   'atlas.layer.morphology': 'Morphology',
@@ -812,6 +814,8 @@ const uk: Record<ChromeKey, string> = {
   // Thin-entry source disclosure (#8327).
   'atlas.enrichmentPending': 'Стаття доповнюється.',
   'atlas.sourceWaiting': 'Розділи, що очікують на джерела',
+  'atlas.sourceUnknown': 'невідоме',
+  'atlas.bookUnknown': 'Книга невідома',
   'atlas.layer.meaning': 'Значення',
   'atlas.layer.etymology': 'Етимологія',
   'atlas.layer.morphology': 'Морфологія',

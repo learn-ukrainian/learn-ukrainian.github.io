@@ -9,22 +9,28 @@ WARN mode admits on conflict but records would-refuse (opt-in via DELEGATE_OWNER
 Claims come from normalized ``--owned-path`` values but are stored
 separately from the fail-open research registry.
 
-#11281 (R7): a concrete overlap with an active writer (same file, or a
-directory claim that covers the file) no longer refuses at once. The writer
-waits in a FIFO queue (``write_waiters``) for a bounded time, like a lock
-manager's ``lock_timeout``, and gets a typed ``QUEUE_TIMEOUT`` when the bound
-passes. A claim is still released only when its author stops writing: a
-terminal task state or an explicit :meth:`OwnershipLedger.release`; a PR
-existing proves nothing. A bracket name such as ``[...path].astro`` is read the
-way a git pathspec is, as its literal file plus its glob matches, so it stays
-comparable; anything the ledger cannot enumerate still refuses.
+#11375: stored claim JSON also carries the resolved Git common directory,
+# shared by linked worktrees. Comparisons and cleanup are repository-scoped;
+# missing identity metadata remains global for legacy and unresolved callers.
+# Old readers ignore the extra key and retain conservative conflict behavior.
+# Public events/results contain only a short digest, never that local path.
+
+#11351: only live holders block admission. Waiting peers do not reserve paths,
+so their overlapping claims cannot propagate a queue beyond the actual holder.
+Each holder bounds a waiting window by its recorded hard_timeout; unknown
+metadata uses the existing fallback. Dispatch retries expired windows with a
+fresh ticket and one durable Fleet notice. Terminal task state or explicit
+release still decides holder quiescence, never a queue deadline or PR creation.
+Literal bracket paths remain comparable; unenumerable claims still refuse.
 """
 
 from __future__ import annotations
 
 import contextlib
 import fnmatch
+import hashlib
 import json
+import math
 import os
 import posixpath
 import sqlite3
@@ -95,9 +101,8 @@ def default_task_state_dir() -> Path:
 # Live-PID fast path only applies inside this grace window (seconds).
 ADMISSION_PID_GRACE_S = 180.0
 
-# Bounded write-path queue (#11281). dispatch reads the bound from the env;
-# library callers pass ``wait_s`` and default to no wait. The default covers
-# the median wait the retry loops saw; the cap bounds any requested wait.
+# Fallback queue budget for holders without usable hard_timeout metadata.
+# Known holder budgets are not clamped to this legacy environment override cap.
 QUEUE_WAIT_ENV_VAR = "DELEGATE_OWNERSHIP_WAIT_S"
 DEFAULT_QUEUE_WAIT_S = 1800.0
 MAX_QUEUE_WAIT_S = 7200.0
@@ -170,6 +175,8 @@ class AdmissionResult:
     skipped: bool = False
     queue_timeout: bool = False
     waited_s: float = 0.0
+    repository_id: str | None = None
+    notes: list[str] = field(default_factory=list)
 
     @property
     def outcome(self) -> AdmissionOutcome:
@@ -190,7 +197,47 @@ class AdmissionResult:
             "unknown_claims": [c.as_dict() for c in self.unknown_claims],
             "override_reason": self.override_reason,
             "skipped": self.skipped,
+            "repository_id": self.repository_id,
+            "notes": self.notes,
         }
+
+
+def _repository_identity(cwd: str | Path | None) -> str | None:
+    """Read Git's checkout metadata without spawning; unresolved stays ledger-global."""
+    try:
+        checkout = (Path(cwd) if cwd is not None else Path.cwd()).resolve(strict=True)
+        if not checkout.is_dir():
+            return None
+        for parent in (checkout, *checkout.parents):
+            marker = parent / ".git"
+            try:
+                marker.lstat()
+            except FileNotFoundError:
+                continue
+            if marker.is_dir():
+                git_dir = marker.resolve(strict=True)
+            elif marker.is_file():
+                pointer = marker.read_bytes().removesuffix(b"\n").removesuffix(b"\r")
+                if not pointer.startswith(b"gitdir: ") or not pointer[8:]:
+                    return None
+                git_dir = (parent / os.fsdecode(pointer[8:])).resolve(strict=True)
+            else:
+                return None
+            if not git_dir.is_dir():
+                return None
+            common_file = git_dir / "commondir"
+            try:
+                common_file.lstat()
+            except FileNotFoundError:
+                return str(git_dir)
+            common = common_file.read_bytes().removesuffix(b"\n").removesuffix(b"\r")
+            if not common:
+                return None
+            resolved = (git_dir / os.fsdecode(common)).resolve(strict=True)
+            return str(resolved) if resolved.is_dir() else None
+        return None
+    except (OSError, ValueError, RuntimeError):
+        return None
 
 
 def _posix_norm(path: str) -> str:
@@ -776,6 +823,37 @@ def _task_still_active(
     return False
 
 
+def publish_requeue_notice(notice: str, *, task_id: str, initiator: str, run_nonce: str) -> None:
+    """Reuse Fleet's immutable message/delivery API, deduplicated for this dispatch."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService() as service:
+        service.publish_message(
+            sender="delegate", recipients=(initiator,), body=notice,
+            kind="ownership_requeue", correlation_id=task_id,
+            idempotency_key=f"ownership-requeue:{task_id}:{run_nonce}",
+        )
+
+
+def _warn_broad_claims(paths: Sequence[str] | None) -> None:
+    """Warn once per broad claim; file claims and read-only admission stay quiet."""
+    for raw in dict.fromkeys(paths or ()):
+        text, body = _claim_text(raw)
+        claim = normalize_claim(raw)
+        if "**" in text:
+            prefix = text.split("*", 1)[0].rstrip("/")
+            alternative = f"{prefix}/<file>" if text.endswith("/**") else "specific files"
+        elif claim.kind != ClaimKind.UNKNOWN and (text.endswith("/") or (_REPO_ROOT / body).is_dir()):
+            alternative = f"{claim.norm}/<file>"
+        else:
+            continue
+        print(
+            f"write-path ownership warning: broad subtree {sanitize_for_display(text)}; "
+            f"prefer --owned-path {sanitize_for_display(alternative)} for each file",
+            file=sys.stderr,
+        )
+
+
 class OwnershipLedger:
     def __init__(
         self,
@@ -784,13 +862,51 @@ class OwnershipLedger:
         task_state_dir: Path | None = None,
         mode: GuardMode | None = None,
         process_matches_task: Callable[..., bool | None] | None = None,
+        cwd: str | Path | None = None,
     ) -> None:
         self.path = Path(path) if path is not None else default_ledger_path()
         self.task_state_dir = Path(task_state_dir) if task_state_dir is not None else default_task_state_dir()
         # Default follows env (REFUSE after #5645 soak). Explicit mode still wins.
         self.mode = mode if mode is not None else env_guard_mode()
         self.process_matches_task = process_matches_task
+        self.repository_identity = _repository_identity(cwd)
+        self.repository_id = (
+            hashlib.sha256(os.fsencode(self.repository_identity)).hexdigest()[:16]
+            if self.repository_identity is not None else None
+        )
         self.path.parent.mkdir(parents=True, exist_ok=True)
+
+    def _belongs_to_repository(self, claim: object) -> bool:
+        """Legacy and unresolved identities retain global conflict protection."""
+        identity = claim.get("repository_identity") if isinstance(claim, dict) else None
+        return self.repository_identity is None or identity is None or identity == self.repository_identity
+
+    def _stored_claim(self, claim: PathClaim) -> dict[str, str | None]:
+        # Additive JSON metadata leaves the schema and old-reader claim syntax
+        # intact. Old code ignores this key and conservatively compares paths
+        # across repositories too; within one repository it still blocks overlap.
+        return {**claim.as_dict(), "repository_identity": self.repository_identity}
+
+    def _claim_rows(self, conn: SQLiteConnection) -> list[sqlite3.Row]:
+        """Select this repository before comparing, reclaiming or mutating rows."""
+        rows = conn.execute("SELECT rowid AS claim_id, * FROM write_claims").fetchall()
+        scoped = []
+        for row in rows:
+            try:
+                payload = json.loads(row["claim_json"])
+            except (ValueError, TypeError):
+                payload = None
+            if self._belongs_to_repository(payload):
+                scoped.append(row)
+        return scoped
+
+    def _record_event(
+        self, conn: SQLiteConnection, task_id: str, event: str, payload: dict[str, object], *, ts: float | None = None
+    ) -> None:
+        _record_event(conn, task_id, event, {
+            **payload, "repository_id": self.repository_id,
+            "notes": [] if self.repository_identity is not None else ["repository_identity_unresolved"],
+        }, ts=ts)
 
     def _connect(self, *, read_only: bool = False) -> SQLiteConnection:
         conn = cp_connect(
@@ -826,9 +942,9 @@ class OwnershipLedger:
                 )
                 """
             )
-            # FIFO queue of writers waiting on a concrete overlap (#11281). A row
-            # lives only while its waiting dispatcher (pid) is alive and before
-            # its deadline; the ticket orders waiters on overlapping paths.
+            # Queue tickets track waiting dispatchers, not ownership reservations.
+            # A row lives while its dispatcher is alive and before its deadline;
+            # expiry only removes/requeues the waiter, never a holder's claims.
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS write_waiters (
@@ -850,6 +966,12 @@ class OwnershipLedger:
         rows = conn.execute("SELECT ticket, task_id, claims_json, pid, deadline FROM write_waiters").fetchall()
         ahead: list[tuple[str, PathClaim, int]] = []
         for row in rows:
+            try:
+                payload = json.loads(row["claims_json"])
+            except (ValueError, TypeError):
+                payload = []
+            if isinstance(payload, list) and payload and not any(self._belongs_to_repository(c) for c in payload):
+                continue
             if float(row["deadline"]) < now or not _pid_alive(int(row["pid"])):
                 conn.execute("DELETE FROM write_waiters WHERE ticket = ?", (row["ticket"],))
                 continue
@@ -858,7 +980,7 @@ class OwnershipLedger:
             try:
                 claims = [
                     PathClaim(raw=str(c.get("raw", "")), kind=ClaimKind(str(c.get("kind"))), norm=str(c.get("norm", "")))
-                    for c in json.loads(row["claims_json"])
+                    for c in payload if self._belongs_to_repository(c)
                 ]
             except (json.JSONDecodeError, ValueError, TypeError, AttributeError):
                 continue
@@ -867,14 +989,12 @@ class OwnershipLedger:
 
     def _reconcile_stale(self, conn: SQLiteConnection) -> list[str]:
         released: list[str] = []
-        rows = conn.execute(
-            "SELECT task_id, pid, MIN(created_at) AS created_at FROM write_claims GROUP BY task_id, pid"
-        ).fetchall()
-        for row in rows:
-            task_id = str(row["task_id"])
-            pid = row["pid"]
+        groups: dict[tuple[str, int | None], list[sqlite3.Row]] = {}
+        for row in self._claim_rows(conn):
+            groups.setdefault((str(row["task_id"]), row["pid"]), []).append(row)
+        for (task_id, pid), rows in groups.items():
             pid_i = int(pid) if pid is not None else None
-            created = float(row["created_at"]) if row["created_at"] is not None else None
+            created = min(float(row["created_at"]) for row in rows)
             if not _task_still_active(
                 task_id,
                 pid_i,
@@ -882,16 +1002,7 @@ class OwnershipLedger:
                 created_at=created,
                 process_matches_task=self.process_matches_task,
             ):
-                if pid_i is not None:
-                    conn.execute(
-                        "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
-                        (task_id, pid_i),
-                    )
-                else:
-                    conn.execute(
-                        "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
-                        (task_id,),
-                    )
+                conn.executemany("DELETE FROM write_claims WHERE rowid = ?", [(r["claim_id"],) for r in rows])
                 released.append(task_id)
         return released
 
@@ -900,52 +1011,56 @@ class OwnershipLedger:
 
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            if pid is not None:
-                conn.execute(
-                    "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
-                    (task_id, int(pid)),
-                )
-            else:
-                # When pid is None (unknown/pid-less settlement), only delete claims
-                # with no recorded PID (pid IS NULL) or claims whose PID is dead,
-                # never claims belonging to a live process/replacement run (#8659).
-                rows = conn.execute(
-                    "SELECT DISTINCT pid FROM write_claims WHERE task_id = ?",
-                    (task_id,),
-                ).fetchall()
-                state_path = self.task_state_dir / f"{_safe_task_state_name(task_id)}.json"
-                try:
-                    record = json.loads(state_path.read_text(encoding="utf-8"))
-                except (OSError, ValueError):
-                    record = {}
-                for row in rows:
-                    row_pid = row["pid"]
-                    if row_pid is None:
-                        conn.execute(
-                            "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
-                            (task_id,),
-                        )
-                    else:
-                        candidate = (
-                            record if isinstance(record, dict) and record.get("pid") in (row_pid, str(row_pid))
-                            else {"pid": int(row_pid)}
-                        )
-                        if worker_liveness(candidate, pid_alive=_pid_alive) is False:
-                            conn.execute(
-                                "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
-                                (task_id, int(row_pid)),
-                            )
+            state_path = self.task_state_dir / f"{_safe_task_state_name(task_id)}.json"
+            try:
+                record = json.loads(state_path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                record = {}
+            for row in self._claim_rows(conn):
+                if row["task_id"] != task_id:
+                    continue
+                row_pid = row["pid"]
+                if pid is not None:
+                    releasable = row_pid == int(pid)
+                elif row_pid is None:
+                    releasable = True
+                else:
+                    # Pid-less settlement preserves live and unknown workers.
+                    candidate = (
+                        record if isinstance(record, dict) and record.get("pid") in (row_pid, str(row_pid))
+                        else {"pid": int(row_pid)}
+                    )
+                    releasable = worker_liveness(candidate, pid_alive=_pid_alive) is False
+                if releasable:
+                    conn.execute("DELETE FROM write_claims WHERE rowid = ?", (row["claim_id"],))
             conn.execute("COMMIT")
 
     def update_claim_pid(self, task_id: str, new_pid: int) -> None:
         """Patch ledger PID after the long-lived worker is spawned."""
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            conn.execute(
-                "UPDATE write_claims SET pid = ? WHERE task_id = ?",
-                (int(new_pid), task_id),
-            )
+            for row in self._claim_rows(conn):
+                if row["task_id"] == task_id:
+                    conn.execute("UPDATE write_claims SET pid = ? WHERE rowid = ?", (int(new_pid), row["claim_id"]))
             conn.execute("COMMIT")
+
+    def _holder_wait_s(self, blockers: list[dict[str, object]], fallback: float) -> float:
+        """Bound this window by the longest actual blocker, never by waiter claims.
+
+        Task records are the dispatch source of hard_timeout. Missing, stale-PID,
+        or invalid metadata keeps the existing fallback; it cannot release a claim.
+        """
+        budgets: list[float] = []
+        for task_id, pid in {(str(b["other_task_id"]), b["other_pid"]) for b in blockers}:
+            path = self.task_state_dir / f"{_safe_task_state_name(task_id)}.json"
+            try:
+                record = json.loads(path.read_text(encoding="utf-8"))
+                raw = record.get("hard_timeout") if record.get("pid") in (pid, str(pid)) else None
+                value = float(raw) if not isinstance(raw, bool) else 0.0
+                budgets.append(value if math.isfinite(value) and value > 0 else fallback)
+            except (OSError, ValueError, TypeError, AttributeError):
+                budgets.append(fallback)
+        return max(budgets, default=fallback)
 
     def admit(
         self,
@@ -962,21 +1077,17 @@ class OwnershipLedger:
         clock: Callable[[], float] | None = None,
         monotonic: Callable[[], float] | None = None,
         on_queued: Callable[[str], None] | None = None,
+        requeue_on_timeout: bool = False,
+        on_requeued: Callable[[str], None] | None = None,
     ) -> AdmissionResult:
-        """Attempt admission. WARN always admits; REFUSE may refuse or queue.
+        """Atomically reserve disjoint paths, or wait for actual live holders.
 
-        In REFUSE mode without an override, a concrete overlap (with an active
-        claim, or with a live waiter queued earlier on an overlapping path)
-        waits up to ``wait_s`` seconds (capped at ``MAX_QUEUE_WAIT_S``),
-        re-checking every ``poll_s`` outside any transaction; ``on_queued``
-        hears once that it waits. At the bound the result is a typed
-        ``QUEUE_TIMEOUT``. ``wait_s=0`` refuses the overlap at once.
-        Unprovable disjointness never queues: it refuses as before.
-
-        The bound is elapsed ``monotonic`` time; ``clock`` (wall time) only
-        stamps ledger rows. A waiter row's wall ``deadline`` is the remaining
-        monotonic budget added to the wall time the row is written, so other
-        processes can expire an abandoned row without this process's clock.
+        Positive wait_s enables waiting and supplies the fallback for unknown
+        holder hard_timeout. Known holders set the window's budget, including
+        values above MAX_QUEUE_WAIT_S. Monotonic elapsed time bounds the window.
+        Dispatch opts into automatic requeue; library callers can still request
+        a typed QUEUE_TIMEOUT. Requeues preserve enqueued_at and notify once.
+        Wait expiry never releases a live holder's claims.
         """
         if mode not in WRITE_CAPABLE_MODES:
             return AdmissionResult(
@@ -987,16 +1098,21 @@ class OwnershipLedger:
                 skipped=True,
             )
 
+        _warn_broad_claims(owned_paths)
+        notes = [] if self.repository_identity is not None else ["repository_identity_unresolved"]
         sleep = sleep if sleep is not None else _sleep
         clock = clock if clock is not None else _clock
         monotonic = monotonic if monotonic is not None else _monotonic
         override = (allow_path_overlap or "").strip() or None
-        bound = _bounded_wait(wait_s)
+        fallback = bound = _bounded_wait(wait_s)
         poll_s = poll_s if poll_s > 0 else DEFAULT_QUEUE_POLL_S
         queue = bound > 0 and self.mode == GuardMode.REFUSE and not override
         started = monotonic()
+        cycle_started = started
+        enqueued_at: float | None = None
         ticket: int | None = None
         notified = False
+        requeue_notified = False
         try:
             while True:
                 with self._connect() as conn:
@@ -1020,9 +1136,14 @@ class OwnershipLedger:
                             conn.execute("DELETE FROM write_waiters WHERE ticket = ?", (ticket,))
                             ticket = None
                         conn.execute("COMMIT")
+                        result.repository_id = self.repository_id
+                        result.notes = notes
                         return result
                     summary = overlap_summary(blockers)
-                    if waited >= bound:
+                    bound = self._holder_wait_s(blockers, fallback)
+                    cycle_waited = monotonic() - cycle_started
+                    requeued = False
+                    if cycle_waited >= bound:
                         if ticket is not None:
                             conn.execute("DELETE FROM write_waiters WHERE ticket = ?", (ticket,))
                             ticket = None
@@ -1030,46 +1151,72 @@ class OwnershipLedger:
                             f"write-path ownership queue timed out after {waited:.0f}s "
                             f"(QUEUE_TIMEOUT): still behind {summary}"
                         )
-                        _record_event(
+                        self._record_event(
                             conn, task_id, "queue_timeout",
                             {"task_id": task_id, "conflicts": blockers, "caller": caller,
                              "waited_s": waited, "reason": reason},
                         )
-                        conn.execute("COMMIT")
-                        return AdmissionResult(
-                            admitted=False,
-                            mode=self.mode,
-                            would_refuse=True,
-                            reason=reason,
-                            conflicts=blockers,
-                            claims=concrete,
-                            queue_timeout=True,
-                            waited_s=waited,
-                        )
+                        if not requeue_on_timeout:
+                            conn.execute("COMMIT")
+                            return AdmissionResult(
+                                admitted=False, mode=self.mode, would_refuse=True,
+                                reason=reason, conflicts=blockers, claims=concrete,
+                                queue_timeout=True, waited_s=waited,
+                                repository_id=self.repository_id, notes=notes,
+                            )
+                        cycle_started = monotonic()
+                        cycle_waited = 0.0
+                        bound = self._holder_wait_s(blockers, fallback)
+                        requeued = True
                     present = ticket is not None and conn.execute(
                         "SELECT 1 FROM write_waiters WHERE ticket = ?", (ticket,)
                     ).fetchone()
                     if not present:
+                        if enqueued_at is None:
+                            enqueued_at = now
                         cursor = conn.execute(
                             "INSERT INTO write_waiters (task_id, claims_json, pid, enqueued_at, deadline) "
                             "VALUES (?,?,?,?,?)",
-                            (task_id, json.dumps([c.as_dict() for c in concrete], sort_keys=True),
-                             os.getpid(), now, now + bound - waited),
+                            (task_id, json.dumps([self._stored_claim(c) for c in concrete], sort_keys=True),
+                             os.getpid(), enqueued_at, now + bound - cycle_waited),
                         )
                         ticket = int(cursor.lastrowid)
-                        _record_event(
-                            conn, task_id, "queued",
+                        self._record_event(
+                            conn, task_id, "requeued" if requeued else "queued",
                             {"task_id": task_id, "conflicts": blockers, "caller": caller,
                              "ticket": ticket, "wait_s": bound},
                         )
+                    else:
+                        conn.execute(
+                            "UPDATE write_waiters SET deadline = ? WHERE ticket = ?",
+                            (now + max(0.0, bound - cycle_waited), ticket),
+                        )
                     conn.execute("COMMIT")
+                if requeued and not requeue_notified and on_requeued is not None:
+                    notice = (
+                        f"write-path ownership: {task_id} re-queued after wait expiry "
+                        f"(ticket {ticket}); still behind {summary}"
+                    )
+                    try:
+                        on_requeued(notice)
+                    except Exception:
+                        # Delivery is advisory; retry at the next expiry without
+                        # turning a Fleet failure into an ownership refusal.
+                        with contextlib.suppress(OSError):
+                            print(
+                                "write-path ownership warning: requeue notice failed; "
+                                f"continuing to wait: {sanitize_for_display(notice, limit=10 * len(notice))}",
+                                file=sys.stderr,
+                            )
+                    else:
+                        requeue_notified = True
                 if not notified and on_queued is not None:
                     notified = True
                     on_queued(
                         f"write-path ownership: queued behind {summary}; "
                         f"waiting up to {bound:.0f}s (ticket {ticket})"
                     )
-                sleep(max(0.0, min(poll_s, bound - (monotonic() - started))))
+                sleep(max(0.0, min(poll_s, bound - (monotonic() - cycle_started))))
         finally:
             # Interrupted while waiting (signal, ledger error): leave no queue row.
             # Best effort; an abandoned row is dropped by pid and deadline anyway.
@@ -1122,10 +1269,7 @@ class OwnershipLedger:
         # Same-task_id live reservation: concurrent duplicate dispatch race
         # between admission and state write (CF r7 F001). Refuse if another
         # live PID already holds claims for this task_id.
-        same_rows = conn.execute(
-            "SELECT pid, MIN(created_at) AS created_at FROM write_claims WHERE task_id = ? GROUP BY pid",
-            (task_id,),
-        ).fetchall()
+        same_rows = [row for row in self._claim_rows(conn) if row["task_id"] == task_id]
         for row in same_rows:
             other_pid = int(row["pid"]) if row["pid"] is not None else None
             if other_pid is None or other_pid <= 0:
@@ -1153,7 +1297,7 @@ class OwnershipLedger:
                     }
                 ]
                 if self.mode == GuardMode.REFUSE:
-                    _record_event(conn, task_id, "refused_same_task", event)
+                    self._record_event(conn, task_id, "refused_same_task", event)
                     return (
                         AdmissionResult(
                             admitted=False,
@@ -1166,7 +1310,7 @@ class OwnershipLedger:
                         concrete,
                     )
                 # WARN: keep existing claim; do not replace; admit with would_refuse
-                _record_event(conn, task_id, "would_refuse_same_task", event)
+                self._record_event(conn, task_id, "would_refuse_same_task", event)
                 return (
                     AdmissionResult(
                         admitted=True,
@@ -1182,10 +1326,7 @@ class OwnershipLedger:
                     concrete,
                 )
 
-        active_rows = conn.execute(
-            "SELECT task_id, claim_json, pid FROM write_claims WHERE task_id != ?",
-            (task_id,),
-        ).fetchall()
+        active_rows = [row for row in self._claim_rows(conn) if row["task_id"] != task_id]
         active: list[tuple[str, PathClaim, int | None]] = []
         for row in active_rows:
             try:
@@ -1217,21 +1358,10 @@ class OwnershipLedger:
                             "our_claim": mine.as_dict(),
                         }
                     )
-        # FIFO (#11281): a live waiter queued earlier on an overlapping path is
-        # served first, so a newcomer cannot take the file from under it.
+        # Waiters are not holders. A queued multi-path request must not reserve
+        # its free paths and transitively stall otherwise-disjoint writers.
+        # Reconcile abandoned tickets, but only active claims block concrete paths.
         waiting = self._live_waiters(conn, task_id=task_id, ticket=ticket, now=now)
-        for other_task, other_claim, other_pid in waiting:
-            for mine in concrete:
-                if claims_conflict(mine, other_claim):
-                    conflicts.append(
-                        {
-                            "other_task_id": other_task,
-                            "other_pid": other_pid,
-                            "other_claim": other_claim.as_dict(),
-                            "our_claim": mine.as_dict(),
-                            "queued": True,
-                        }
-                    )
 
         # Missing/unknown claims cannot prove disjointness against an active writer
         # (or a writer queued to become one).
@@ -1271,7 +1401,7 @@ class OwnershipLedger:
                 "caller": caller,
                 "reason": refusal_reason,
             }
-            _record_event(conn, task_id, "refused", event)
+            self._record_event(conn, task_id, "refused", event)
             return (
                 AdmissionResult(
                     admitted=False,
@@ -1290,12 +1420,14 @@ class OwnershipLedger:
         # Admit: replace this task's claims. Always leave a ledger footprint for
         # write-capable no-path tasks so later writers can see unprovable peers
         # (CF r8 F001) — solo still admitted with would_refuse=False.
-        conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
+        for row in self._claim_rows(conn):
+            if row["task_id"] == task_id:
+                conn.execute("DELETE FROM write_claims WHERE rowid = ?", (row["claim_id"],))
         created = time.time()
         for claim in concrete:
             conn.execute(
                 "INSERT INTO write_claims (task_id, claim_json, pid, created_at) VALUES (?,?,?,?)",
-                (task_id, json.dumps(claim.as_dict(), sort_keys=True), pid, created),
+                (task_id, json.dumps(self._stored_claim(claim), sort_keys=True), pid, created),
             )
         store_unknown = list(unknown)
         if not claims:
@@ -1303,7 +1435,7 @@ class OwnershipLedger:
         for claim in store_unknown:
             conn.execute(
                 "INSERT INTO write_claims (task_id, claim_json, pid, created_at) VALUES (?,?,?,?)",
-                (task_id, json.dumps(claim.as_dict(), sort_keys=True), pid, created),
+                (task_id, json.dumps(self._stored_claim(claim), sort_keys=True), pid, created),
             )
 
         event_name = "admitted"
@@ -1318,7 +1450,7 @@ class OwnershipLedger:
             "mode": self.mode.value,
             "waited_s": waited_s,
         }
-        _record_event(conn, task_id, event_name, event, ts=created)
+        self._record_event(conn, task_id, event_name, event, ts=created)
 
         if conflicts or unprovable:
             reason = f"would-refuse recorded ({event_name}); admitted under {self.mode.value}"
@@ -1367,7 +1499,7 @@ def _bounded_wait(wait_s: float) -> float:
 
 
 def env_queue_wait_s() -> float:
-    """Queue bound for dispatch from ``DELEGATE_OWNERSHIP_WAIT_S``; unparseable → default, then capped."""
+    """Unknown-holder fallback from ``DELEGATE_OWNERSHIP_WAIT_S``; invalid → capped default."""
     raw = (os.environ.get(QUEUE_WAIT_ENV_VAR) or "").strip()
     try:
         value = float(raw) if raw else DEFAULT_QUEUE_WAIT_S
@@ -1391,10 +1523,14 @@ def admit_write_paths(
     process_matches_task: Callable[..., bool | None] | None = None,
     wait_s: float = 0.0,
     on_queued: Callable[[str], None] | None = None,
+    requeue_on_timeout: bool = False,
+    on_requeued: Callable[[str], None] | None = None,
+    cwd: str | Path | None = None,
 ) -> AdmissionResult:
     """Admit writable paths. ``guard_mode=None`` → :func:`env_guard_mode` (default REFUSE).
 
-    ``wait_s`` bounds the queue wait on a concrete overlap (see :meth:`OwnershipLedger.admit`).
+    ``wait_s`` enables waiting and bounds unknown holders; known holders supply
+    their hard_timeout. Dispatch opts into requeue with one notification callback.
     """
     if guard_mode is None:
         gm = env_guard_mode()
@@ -1407,6 +1543,7 @@ def admit_write_paths(
         task_state_dir=task_state_dir,
         mode=gm,
         process_matches_task=process_matches_task,
+        cwd=cwd,
     )
     return ledger.admit(
         task_id=task_id,
@@ -1416,6 +1553,8 @@ def admit_write_paths(
         pid=pid,
         wait_s=wait_s,
         on_queued=on_queued,
+        requeue_on_timeout=requeue_on_timeout,
+        on_requeued=on_requeued,
     )
 
 
@@ -1443,6 +1582,7 @@ def update_write_claim_pid(
     *,
     ledger_path: Path | None = None,
     task_state_dir: Path | None = None,
+    cwd: str | Path | None = None,
 ) -> None:
     """Public helper: bind claim rows to the detached worker PID after Popen."""
-    OwnershipLedger(ledger_path, task_state_dir=task_state_dir).update_claim_pid(task_id, new_pid)
+    OwnershipLedger(ledger_path, task_state_dir=task_state_dir, cwd=cwd).update_claim_pid(task_id, new_pid)

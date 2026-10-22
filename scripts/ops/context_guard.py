@@ -14,12 +14,19 @@ watch
     at once, done, so it does not idle until the next threshold.
 handoff
     ``HANDOFF NOW`` is re-sent every ``handoff_renudge_seconds`` until
-    ``HANDOFF-DONE`` arrives; once it has, and the pane is idle, the guard types
-    ``/exit`` (Claude) or ``/quit`` (Codex) and retries it every
-    ``quit_retry_seconds``. When the agent and its launcher have exited, the pane is respawned with
-    the lane's launcher (fresh session; it reads its goal file). The guard
-    never kills a driver; it alerts ``epics`` once after
-    ``handoff_alert_seconds``.
+    ``HANDOFF-DONE`` arrives; once it has, and the pane is idle, the guard checks
+    a Codex lane's handoff with the launcher's own anchor selector
+    (:func:`scripts.session_canary.grok_lane.check_handoff_anchors`) and only
+    then types ``/exit`` (Claude) or ``/quit`` (Codex), retrying it every
+    ``quit_retry_seconds``. A failing check sends the lane back with the missing
+    sections and counts instead of exiting; the check is bounded and alerts
+    ``epics`` once per distinct failure. A check error or a missing handoff fails
+    open, with one alert, so the guard can never wedge a lane. When the agent and
+    its launcher have exited, the pane is respawned with the lane's launcher
+    (fresh session; it reads its goal file). The guard never kills a driver; it
+    alerts ``epics`` once after ``handoff_alert_seconds``. After a respawn it
+    watches the launcher; a non-zero launcher exit alerts once with the pane's
+    stderr tail and is not relaunched in a loop.
 
 ``HANDOFF-DONE`` counts only as a standalone response line, never as the echo
 of the guard's own prompt. ``ctx_pct`` is logged on every tick in both phases.
@@ -85,6 +92,13 @@ CLAUDE_BUSY_RE = re.compile(r"esc to interrupt|ing… \(")
 # prompt quotes the token mid-sentence, so its echo never starts a line with it.
 DONE_LINE_RE = re.compile(r"^\s*(?:[●⏺•✦]\s*)?HANDOFF-DONE(?=\s|:|$)")
 EXIT_DIALOG = ("Move to background and exit", "Exit and stop tasks")
+# The fixed pane script prints this after the launcher exits (scripts/ops/driver_lanes.py).
+LAUNCHER_EXIT_RE = re.compile(r"lane-relaunch: launcher exited rc=(-?\d+)")
+ANCHOR_MAX_SENDBACKS = 3
+ANCHOR_SENDBACK_PREFIX = "ANCHOR CHECK"
+RELAUNCH_SETTLE_SECONDS = 900
+RELAUNCH_TAIL_LINES = 6
+ALERT_DETAIL_CHARS = 600
 # lstart is five words (``Fri Oct 16 12:10:40 2026``) only in the C locale; comm stays last.
 PS_ARGV = ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="]
 LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
@@ -131,6 +145,24 @@ def context_pct(kind: str, text: str) -> int | None:
     return int(found[-1]) if found else None
 
 
+def launcher_exit(text: str) -> tuple[int | None, str]:
+    """The last launcher exit status in the pane, with the stderr lines before it.
+
+    The pane script prints ``lane-relaunch: launcher exited rc=<code>`` after the
+    launcher returns (``scripts/ops/driver_lanes.py``). Returns ``(None, "")``
+    while no launcher has exited in the captured pane.
+    """
+    lines = text.splitlines()
+    for index in range(len(lines) - 1, -1, -1):
+        match = LAUNCHER_EXIT_RE.search(lines[index])
+        if match is None:
+            continue
+        start = max(0, index - RELAUNCH_TAIL_LINES)
+        tail = " | ".join(line.strip() for line in lines[start:index] if line.strip())
+        return int(match.group(1)), tail[-ALERT_DETAIL_CHARS:]
+    return None, ""
+
+
 Runner = Callable[[list[str]], "subprocess.CompletedProcess[str]"]
 
 
@@ -163,7 +195,9 @@ class Tmux:
         return result.stdout or ""
 
     def capture(self, target: str) -> str:
-        return self._query(["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane")
+        return self._query(
+            ["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane"
+        )
 
     def pane_pid(self, target: str) -> str:
         pid = self._query(["tmux", "display-message", "-p", "-t", target, "#{pane_pid}"], "pane pid").strip()
@@ -279,7 +313,9 @@ class Guard:
     def _human(self, lane: Lane) -> bool:
         reason = self.tmux.human_activity(lane.session, self.setting("human_active_seconds"))
         if reason:
-            self.log(f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick")
+            self.log(
+                f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick"
+            )
             return True
         return False
 
@@ -320,6 +356,11 @@ class Guard:
             done_seen=done,
             nudges=0,
             last_nudge=None,
+            done_floor=None,
+            anchor_sendbacks=0,
+            anchor_alerts=[],
+            anchor_blocked=False,
+            anchor_check_failed=False,
         )
 
     def _unchanged(self, lane: Lane, snap: PaneSnapshot, action: str, pct: int | None) -> bool:
@@ -335,6 +376,138 @@ class Guard:
         self.log(
             f"{lane.name} handoff ctx_pct={pct}: pane changed before {action} (pane {snap.pane} -> {now.pane}, "
             f"agent {snap.agent} -> {now.agent}, busy {snap.busy} -> {now.busy}); nothing done, retry next tick"
+        )
+        return False
+
+    # ---- launcher anchor check (issue #11404) --------------------------
+    def _anchor_verdict(self, lane: Lane) -> Any:
+        """The launcher's own anchor verdict for this lane's handoff.
+
+        The lane registry gives the epic (``lane.epic``); the handoff candidates
+        and stream entries are resolved exactly as the Codex launcher does in
+        ``scripts/launchers/codex.sh`` -> ``codex_lane mint``: candidates from
+        ``handoff_select.load_codex_candidates`` under ``.claude/<epic>-epic/``,
+        the stream from ``grok_lane.launcher_stream_id``, and entries from
+        ``grok_lane._load_stream_entries``. Only the Codex launcher mints
+        anchors (the Claude adapter canary is a no-op), so other kinds are not
+        checked.
+
+        The stream comes from ``grok_lane.launcher_stream_id``, which is the
+        shell SSOT the launcher itself passes as ``--stream``, not
+        ``resolve_stream_id``: one guard process watches every lane, so an
+        ambient ``SESSION_STREAM_ID`` from the guard's own shell must never be
+        applied to another lane's handoff.
+        """
+        from scripts.session_canary import grok_lane, handoff_select
+
+        candidates = handoff_select.load_codex_candidates(self.repo_root, lane.epic)
+        stream_id = grok_lane.launcher_stream_id(lane.epic)
+        stream_entries = grok_lane._load_stream_entries(stream_id)
+        return grok_lane.check_handoff_anchors(
+            repo=self.repo_root,
+            epic=lane.epic,
+            candidates=candidates,
+            stream_id=stream_id,
+            stream_entries=stream_entries,
+        )
+
+    def _anchor_alert(self, lane: Lane, s: dict[str, Any], body: str, key: str) -> None:
+        """Send one Fleet alert per occurrence; ``key`` dedupes only this handoff phase.
+
+        The Fleet plane keeps an idempotency key forever and refuses a reused key
+        with a different payload (``authority._check_idempotency_tx``); every body
+        here carries a timestamp, so a fixed key would silently drop every repeat
+        alert after the first. The stable cause key therefore stays in
+        ``anchor_alerts`` for the once-per-phase check, and the send appends the
+        phase start (``since``) so a later phase is a new occurrence.
+        """
+        phase = s.get("since") or iso(self.now())
+        self.send("epics", body, f"{key}-{phase}")
+        alerts = s.setdefault("anchor_alerts", [])
+        if key not in alerts:
+            alerts.append(key)
+
+    def _anchor_gate(self, lane: Lane, s: dict[str, Any], text: str) -> bool:
+        """True when the exit may proceed; False after a send-back or a block.
+
+        A helper error or an absent handoff fails open with one alert, so a bug
+        in the new check never wedges a lane that would otherwise rotate.
+        """
+        if lane.kind != "codex":
+            return True
+        try:
+            verdict = self._anchor_verdict(lane)
+        except Exception as exc:  # fail open: a check bug must not wedge the lane
+            if not s.get("anchor_check_failed"):
+                detail = f"{type(exc).__name__}: {str(exc)[-ALERT_DETAIL_CHARS:]}"
+                self.log(f"{lane.name} handoff: anchor check unavailable ({detail}); exiting as before")
+                self._anchor_alert(
+                    lane,
+                    s,
+                    f"CTO-ALERT {iso(self.now())}: {lane.name} anchor check unavailable "
+                    f"({detail}); exiting as before (fail-open)",
+                    f"anchor-fail-open-{lane.name}",
+                )
+                s["anchor_check_failed"] = True
+            return True
+        if verdict.ok:
+            return True
+        if verdict.no_handoff:
+            if not s.get("anchor_check_failed"):
+                self.log(f"{lane.name} handoff: no handoff file to check; exiting as before")
+                self._anchor_alert(
+                    lane,
+                    s,
+                    f"CTO-ALERT {iso(self.now())}: {lane.name} has no handoff file to anchor-check; "
+                    "exiting as before (fail-open)",
+                    f"anchor-fail-open-{lane.name}",
+                )
+                s["anchor_check_failed"] = True
+            return True
+        sendbacks = int(s.get("anchor_sendbacks", 0))
+        if sendbacks >= ANCHOR_MAX_SENDBACKS:
+            if not s.get("anchor_blocked"):
+                self.log(f"{lane.name} handoff: cannot produce a valid handoff after {sendbacks} send-backs")
+                self._anchor_alert(
+                    lane,
+                    s,
+                    f"CTO-ALERT {iso(self.now())}: {lane.name} cannot produce a valid handoff after "
+                    f"{sendbacks} send-backs; pane left as is (no forced kill). {verdict.shortfall}",
+                    f"anchor-blocked-{lane.name}",
+                )
+                s["anchor_blocked"] = True
+            return False
+        missing = [
+            name for name, count in (("Next", verdict.next_count), ("Hands-off", verdict.hands_off_count)) if count == 0
+        ]
+        fix = (
+            f"restore the {' and '.join(missing)} heading{'s' if len(missing) != 1 else ''}"
+            if missing
+            else ("restore the Next and Hands-off headings")
+        )
+        message = (
+            f"{ANCHOR_SENDBACK_PREFIX}: handoff would give {verdict.anchors}/{verdict.target} anchors: "
+            f"next={verdict.next_count} hands-off={verdict.hands_off_count}; {fix}, then post HANDOFF-DONE again"
+        )
+        self.tmux.type_into(lane.target, message)
+        s["anchor_sendbacks"] = sendbacks + 1
+        s["done_seen"] = False
+        s["done_marks"] = done_lines(text)
+        s["done_floor"] = iso(self.now())
+        signature = f"{verdict.anchors}-{verdict.next_count}-{verdict.hands_off_count}"
+        key = f"anchor-shortfall-{lane.name}-{signature}"
+        if key not in s.setdefault("anchor_alerts", []):
+            self._anchor_alert(
+                lane,
+                s,
+                f"CTO-ALERT {iso(self.now())}: {lane.name} handoff would give {verdict.anchors} anchors "
+                f"(next={verdict.next_count}, hands-off={verdict.hands_off_count}); sent back to fix it. "
+                f"{verdict.shortfall}",
+                key,
+            )
+        self.log(
+            f"{lane.name} handoff: anchor shortfall {verdict.anchors}/{verdict.target} (next={verdict.next_count}, "
+            f"hands-off={verdict.hands_off_count}); send-back {s['anchor_sendbacks']}/{ANCHOR_MAX_SENDBACKS}, no exit"
         )
         return False
 
@@ -357,6 +530,11 @@ class Guard:
             self.log(f"{lane.name} {s['phase']}: telemetry unavailable ({exc}); no input or respawn, retry next tick")
 
     def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot) -> None:
+        if snap.agent is not None:
+            s.pop("relaunch_watch", None)
+            s.pop("relaunch_hold", None)
+        else:
+            self._watch_launcher_exit(lane, s, text)
         if snap.agent is None:
             self.log(f"{lane.name} watch: agent not running in session {lane.session}")
             return
@@ -389,6 +567,38 @@ class Guard:
         self._enter_handoff(s, pct, done=False)
         self._nudge(lane, s, pct)
         self.log(f"{lane.name} watch -> handoff: HANDOFF NOW sent")
+
+    def _watch_launcher_exit(self, lane: Lane, s: dict[str, Any], text: str) -> None:
+        """Alert once when the launcher a relaunch started has exited non-zero.
+
+        The relaunch records ``relaunch_watch``; the pane script prints the exit
+        status. A non-zero exit keeps ``relaunch_hold`` so the same failure is
+        never relaunched in a loop. An agent appearing (a human relaunch) clears
+        both markers.
+        """
+        started = s.get("relaunch_watch")
+        if not started:
+            return
+        rc, tail = launcher_exit(text)
+        if rc is None:
+            if self._seconds_since(started) > RELAUNCH_SETTLE_SECONDS:
+                s.pop("relaunch_watch", None)
+                self.log(f"{lane.name} watch: no launcher exit within {RELAUNCH_SETTLE_SECONDS}s of relaunch")
+            return
+        s.pop("relaunch_watch", None)
+        if rc == 0:
+            self.log(f"{lane.name} watch: relaunched launcher exited rc=0")
+            return
+        s["relaunch_hold"] = rc
+        self.log(f"{lane.name} watch: relaunched launcher exited rc={rc}; alerting once, no relaunch loop")
+        self.send(
+            "epics",
+            f"CTO-ALERT {iso(self.now())}: {lane.name} launcher exited rc={rc} after relaunch; "
+            f"pane left as is (no relaunch loop). stderr tail: {tail or '(none captured)'}",
+            # Keyed on the relaunch occurrence: a fixed key makes the Fleet plane
+            # refuse the next, differently timestamped alert for the same lane and rc.
+            f"launcher-exit-{lane.name}-{rc}-{started}",
+        )
 
     def _idle(self, lane: Lane, text: str) -> bool:
         tail = "\n".join(text.splitlines()[-8:])
@@ -425,6 +635,9 @@ class Guard:
                 return
             self._relaunch(lane, st, s, pct, snap)
             return
+        if s.get("anchor_blocked"):
+            self.log(f"{lane.name} handoff ctx_pct={pct}: handoff cannot meet the anchor check; pane left as is")
+            return
         tail = "\n".join(text.splitlines()[-8:])
         if lane.kind == "claude" and any(marker in tail for marker in EXIT_DIALOG):
             # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
@@ -434,13 +647,16 @@ class Guard:
                 self.log(f"{lane.name} handoff ctx_pct={pct}: exit dialog -> chose Exit and stop tasks")
             return
         pane_done = self._pane_done(s, done_lines(text), snap)
-        done = bool(s.get("done_seen")) or pane_done or self.handoff_posted(lane.sender, s["since"])
+        floor = s.get("done_floor") or s["since"]
+        done = bool(s.get("done_seen")) or pane_done or self.handoff_posted(lane.sender, floor)
         s["done_seen"] = done
         idle = self._idle(lane, text)
         quit_due = not s.get("quit_sent") or self._seconds_since(s.get("quit_sent")) >= self.setting(
             "quit_retry_seconds"
         )
         if done and idle and quit_due and not self._human(lane):
+            if not self._anchor_gate(lane, s, text):
+                return
             command = "/exit" if lane.kind == "claude" else "/quit"
             if not self._unchanged(lane, snap, command, pct):
                 return
@@ -494,6 +710,7 @@ class Guard:
             "watch_since": stamp,
             "last_handoff": stamp,
             "last_pct_at_trigger": s.get("pct_at_trigger"),
+            "relaunch_watch": stamp,
         }
 
     def run(self, st: dict[str, Any], only: list[str] | None = None) -> None:

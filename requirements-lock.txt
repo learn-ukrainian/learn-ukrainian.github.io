@@ -168,7 +168,7 @@ pymorphy3==2.0.6
 pymorphy3-dicts-ru==2.4.417150.4580142
 pymorphy3-dicts-uk==2.4.1.1.1663094765
 PyMuPDF==1.28.2
-pypdf==6.19.0
+pypdf==6.21.1
 pypdfium2==4.30.0
 pyproject_hooks==1.2.0
 pytest==9.1.1
@@ -234,7 +234,7 @@ ukrainian_word_stress==2.1.0
 unlzw3==0.2.3
 urllib3==2.8.0
 uvicorn==0.48.0
-virtualenv==21.7.13
+virtualenv==21.14.9
 vulture==2.16
 warc3-wet==0.2.5
 warc3-wet-clueweb09==0.2.5

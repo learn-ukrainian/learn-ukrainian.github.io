@@ -461,21 +461,88 @@ def test_stats_application_failure_without_a_cache_is_unavailable(monkeypatch: p
     assert "hidden-query-token" not in response.text
 
 
-def test_links_are_built_from_the_base_without_secrets(monkeypatch: pytest.MonkeyPatch) -> None:
+_PUBLIC_V4 = ".".join(("8", "8", "8", "8"))
+
+
+def test_links_publish_only_an_approved_public_ip_destination_without_secrets(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """D13: global routability alone is not audience approval."""
     monkeypatch.setenv(
         "FLEET_GRAFANA_URL",
-        _with_userinfo("boards.example", "/grafana") + "?" + "token" + "=" + "userinfo-token",
+        _with_userinfo(_PUBLIC_V4, "/grafana") + "?" + "token" + "=" + "userinfo-token",
     )
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    assert _PUBLIC_V4 not in response.text
+
+    monkeypatch.setattr(http_sources, "APPROVED_LINK_ORIGINS", frozenset({f"https://{_PUBLIC_V4}"}))
     response = client.get("/api/fleet/v1/links")
     assert response.status_code == 200
     body = response.json()
     _validate(body)
     assert _source(body)["status"] == "ok"
     assert body["data"]["links"] == [
-        {"name": "overview", "href": "https://boards.example/grafana/d/overview"},
-        {"name": "fleet", "href": "https://boards.example/grafana/d/fleet"},
+        {"name": "overview", "href": f"https://{_PUBLIC_V4}/grafana/d/overview"},
+        {"name": "fleet", "href": f"https://{_PUBLIC_V4}/grafana/d/fleet"},
     ]
     assert "userinfo-token" not in response.text
+
+
+@pytest.mark.parametrize(
+    "base",
+    [
+        "http://monitor.internal/grafana",
+        "https://boards.example/grafana",
+    ],
+)
+def test_unverified_dns_link_destinations_are_withheld(
+    monkeypatch: pytest.MonkeyPatch, base: str
+) -> None:
+    """D13: without a DNS lookup, target and audience approval stay unknown."""
+    monkeypatch.setenv("FLEET_GRAFANA_URL", base)
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    host = base.split("//", 1)[1].split("/", 1)[0]
+    assert host not in response.text
+
+
+_LOOPBACK_V4 = ".".join(("127", "0", "0", "1"))
+_LOOPBACK_V6 = "[::" + "1]"
+_PRIVATE_V4 = ".".join(("10", "0", "0", "5"))
+_LAN_V4 = ".".join(("192", "168", "1", "9"))
+
+
+@pytest.mark.parametrize(
+    "base",
+    [
+        f"http://{_LOOPBACK_V4}:3000/grafana",
+        f"http://{_LOOPBACK_V6}:3000/grafana",
+        f"http://{_PRIVATE_V4}:3000/grafana",
+        f"http://{_LAN_V4}/grafana",
+        "http://monitor.local/grafana",
+        "http://localhost:3000/grafana",
+    ],
+)
+def test_private_link_destinations_are_withheld(monkeypatch: pytest.MonkeyPatch, base: str) -> None:
+    """D13: a public surface never publishes a private or loopback locator."""
+    monkeypatch.setenv("FLEET_GRAFANA_URL", base)
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    host = base.split("//", 1)[1].split("/", 1)[0]
+    assert host not in response.text
 
 
 def test_links_reject_a_non_http_base(monkeypatch: pytest.MonkeyPatch) -> None:

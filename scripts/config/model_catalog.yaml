@@ -82,6 +82,8 @@ policy:
       not a reviewed_on refresh. Retired claude-fable-5 historical grade S+ (frontier_authority).
       Fable 5.1 is parked: not routed by default, explicit pin only;
       reintroduction or a successor model is an operator decision (OO-58, #11327).
+      Operator decision 2026-10-21: explicit pin only, never routed or selected
+      by a resolver, substitution or ladder; no advisory, approval or review role.
       gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C
       (keep frontier_practical; do not demote). Retired Kimi historical scorecard:
       strong root-cause / densest useful CI nits. AGY gemini-3.7-flash-high = fast
@@ -482,7 +484,7 @@ models:
     tier: frontier_authority
     lifecycle: active
     # #9583: no architecture/advisory or review role; launchable model only.
-    # The alias is the Cursor slug budget substitution sends.
+    # Explicit pins may use the Cursor alias; no automatic routing or substitution.
     aliases: [claude-fable-5-1-thinking-high]
     roles: [long_horizon_coding, orchestration]
     transports: [native_claude, cursor]

@@ -3,6 +3,14 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
+import { CHROME_STRINGS } from "@site/src/lib/i18n/chrome";
+
+test("unknown attribution labels remain Ukrainian on Ukrainian article chrome", () => {
+  expect(CHROME_STRINGS.uk["atlas.sourceUnknown"]).toBe("невідоме");
+  expect(CHROME_STRINGS.uk["atlas.bookUnknown"]).toBe("Книга невідома");
+  expect(CHROME_STRINGS.en["atlas.sourceUnknown"]).toBe("unknown");
+  expect(CHROME_STRINGS.en["atlas.bookUnknown"]).toBe("Book unknown");
+});
 
 describe("skip-link focus-visible dismissal (K3 B3)", () => {
   test("course.css hides skip link except on :focus-visible", () => {

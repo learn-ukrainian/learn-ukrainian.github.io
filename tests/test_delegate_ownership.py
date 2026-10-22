@@ -124,6 +124,34 @@ def test_read_only_exempt(tmp_path: Path):
     assert result.admitted is True
 
 
+@pytest.mark.parametrize("failure", ["oserror", "invalid-output", "missing-target", "nul-output"])
+def test_repository_probe_failure_preserves_conflict_protection(tmp_path, monkeypatch, failure):
+    """Filesystem probe failure cannot bypass admission or leak its diagnostics."""
+    marker = tmp_path / ".git"
+    marker.write_text("gitdir: ../unused\n")
+    read_bytes = Path.read_bytes
+
+    def probe(path):
+        if path != marker:
+            return read_bytes(path)
+        if failure == "oserror":
+            raise OSError("private diagnostic")
+        return {
+            "invalid-output": b"private diagnostic",
+            "missing-target": b"gitdir: ../missing\n",
+            "nul-output": b"gitdir: invalid\x00path\n",
+        }[failure]
+
+    monkeypatch.setattr(Path, "read_bytes", probe)
+    kwargs = dict(mode="workspace-write", owned_paths=["tests/held.py"], pid=os.getpid(),
+                  ledger_path=tmp_path / "own.sqlite3", task_state_dir=tmp_path, cwd=tmp_path)
+    assert admit_write_paths(task_id="holder", **kwargs).admitted
+    result = admit_write_paths(task_id="incoming", **kwargs)
+    assert not result.admitted and not result.skipped
+    assert result.notes == ["repository_identity_unresolved"]
+    assert "private diagnostic" not in json.dumps(result.as_dict())
+
+
 def test_solo_no_claims_admitted(tmp_path: Path):
     ledger = tmp_path / "own.sqlite3"
     state_dir = tmp_path / "tasks"
@@ -1956,3 +1984,25 @@ def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Pa
     finally:
         p.terminate()
         p.wait()
+
+
+def test_concurrent_overlapping_live_holders_are_serialized(tmp_path):
+    """AC-03: atomic admission must never reserve overlapping paths for two writers."""
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+
+    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=tmp_path, mode=GuardMode.REFUSE)
+    # Initialize schema before racing the transactions themselves.
+    with ledger._connect():
+        pass
+    barrier = Barrier(2)
+
+    def contender(task):
+        barrier.wait(timeout=10)
+        return ledger.admit(task_id=task, mode="workspace-write", owned_paths=["same.py"], pid=os.getpid())
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        outcomes = list(pool.map(contender, ("first", "second")))
+    assert sorted(result.admitted for result in outcomes) == [False, True]
+    with ledger._connect(read_only=True) as conn:
+        assert conn.execute("SELECT COUNT(DISTINCT task_id) FROM write_claims").fetchone()[0] == 1
