@@ -14632,6 +14632,7 @@ def _dispatch(
         try:
             ownership = admit_write_paths(
                 task_id=task_id,
+                cwd=validated_cwd or target_repo_root,
                 mode=str(args.mode),
                 owned_paths=_declared_owned_paths(getattr(args, "owned_path", None)),
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
@@ -15648,7 +15649,7 @@ def _dispatch(
                 from guardrails.delegate_ownership import update_write_claim_pid  # type: ignore
 
             try:
-                update_write_claim_pid(task_id, int(proc.pid))
+                update_write_claim_pid(task_id, int(proc.pid), cwd=validated_cwd or target_repo_root)
             except Exception as own_exc:
                 print(
                     f"⚠️  write-path ownership: failed to bind worker pid: {own_exc}",

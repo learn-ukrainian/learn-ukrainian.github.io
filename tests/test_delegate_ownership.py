@@ -124,6 +124,34 @@ def test_read_only_exempt(tmp_path: Path):
     assert result.admitted is True
 
 
+@pytest.mark.parametrize("failure", ["oserror", "invalid-output", "missing-target", "nul-output"])
+def test_repository_probe_failure_preserves_conflict_protection(tmp_path, monkeypatch, failure):
+    """Filesystem probe failure cannot bypass admission or leak its diagnostics."""
+    marker = tmp_path / ".git"
+    marker.write_text("gitdir: ../unused\n")
+    read_bytes = Path.read_bytes
+
+    def probe(path):
+        if path != marker:
+            return read_bytes(path)
+        if failure == "oserror":
+            raise OSError("private diagnostic")
+        return {
+            "invalid-output": b"private diagnostic",
+            "missing-target": b"gitdir: ../missing\n",
+            "nul-output": b"gitdir: invalid\x00path\n",
+        }[failure]
+
+    monkeypatch.setattr(Path, "read_bytes", probe)
+    kwargs = dict(mode="workspace-write", owned_paths=["tests/held.py"], pid=os.getpid(),
+                  ledger_path=tmp_path / "own.sqlite3", task_state_dir=tmp_path, cwd=tmp_path)
+    assert admit_write_paths(task_id="holder", **kwargs).admitted
+    result = admit_write_paths(task_id="incoming", **kwargs)
+    assert not result.admitted and not result.skipped
+    assert result.notes == ["repository_identity_unresolved"]
+    assert "private diagnostic" not in json.dumps(result.as_dict())
+
+
 def test_solo_no_claims_admitted(tmp_path: Path):
     ledger = tmp_path / "own.sqlite3"
     state_dir = tmp_path / "tasks"
