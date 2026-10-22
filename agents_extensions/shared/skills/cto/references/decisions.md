@@ -25,15 +25,17 @@ Practices used:
 
 ## Tactical layer: per cycle
 
-- Orient on live [cycle](cycle.md) state, never on memory or the last handoff alone.
+- Orient on live [cycle](cycle.md) state and `lu-driver-state render --lane cto`, never on
+  memory or the last handoff alone. Record priority, sequence, routing and approach changes
+  with `lu-driver-state note <id> <text>` on the affected item.
 - Finish and land before starting; a new dispatch needs a free slot and a reason.
 - Triage PRs by leverage: land now; one action from landing; needs a fix round; needs a
   decision.
 - Reversible and in scope: decide now and report; otherwise P6.
 - Probe a claimed limit, outage or impossibility before routing around it.
 - Diagnose from the failed-job log and the diff before the single recovery rerun.
-- Same finding class twice on one artifact: state the stopping rule and change approach
-  (author, scope, design note first), never a third patch of the same kind.
+- For review scope and repeated findings, apply the canonical
+  [review stopping rule](../../drive-epic/references/review-merge-cleanup.md#review-stopping-rule).
 - Never wait for a quota reset; reorder work to lanes with capacity.
 - Scarce seats go to the critical path; first passes, recon and triage go to cheaper seats.
 - Before seating a review, confirm that seat and path can satisfy the landing gate.

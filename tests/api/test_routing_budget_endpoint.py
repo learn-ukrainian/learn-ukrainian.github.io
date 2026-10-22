@@ -1060,11 +1060,11 @@ def _write_private_json(path: Path, value: object) -> None:
 _SYNTHETIC_TOKEN_PREFIX = "synthetic-access-token:"
 
 
-def _synthetic_token_owner(token: str) -> str:
+def _synthetic_token_owner(token: str) -> tuple[str, object]:
     """The provider's answer for the fixture tokens; never the network."""
     if not token.startswith(_SYNTHETIC_TOKEN_PREFIX):
         raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
-    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX)
+    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX), None
 
 
 def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:

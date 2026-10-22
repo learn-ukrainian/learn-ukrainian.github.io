@@ -71,8 +71,10 @@ follows the stated contract, existing invariants on the change's paths and
 regressions against main, verdicts are proportional, and a missing required
 capability is INCONCLUSIVE, which still blocks (Step 5); exact-head CI that
 answers the execution questions is valid evidence, a capability note is not a
-verdict, and new tests name their defect class (Step 5); the breakers are
-unchanged (Step 6).
+verdict, and new tests name their defect class (Step 5). From round 2 on, the
+reviewer brief uses DELTA scope. Step 6 applies the canonical
+[review stopping rule](../drive-epic/references/review-merge-cleanup.md#review-stopping-rule)
+alongside the scope breakers.
 
 ## Output
 

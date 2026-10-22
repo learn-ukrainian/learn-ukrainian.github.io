@@ -229,10 +229,10 @@ are the tie-breakers.
     over bespoke machinery. Add complexity only for a risk that is real and material in this
     system, not a hypothetical one. Reviews stay adversarial (item 13) but proportionate: rank
     every finding blocking or non-blocking by real impact and likelihood; a theoretical edge case
-    that an existing safety net already bounds is non-blocking. After two review rounds on the
-    same artifact, the driver states a stopping rule (what still blocks, what becomes a documented
-    residual). If rounds keep finding new classes of problem, step back and change the approach
-    instead of patching case by case. When two designs both meet the outcome, pick the one that is
+    that an existing safety net already bounds is non-blocking. Every driver and reviewer applies
+    the concrete [review stopping rule](../skills/drive-epic/references/review-merge-cleanup.md#review-stopping-rule)
+    for review scope, blockers, tracked follow-ups and approach changes.
+    When two designs both meet the outcome, pick the one that is
     easier to understand, test and undo. "Adequate" still means every quality gate above passes.
 16. **Authentic Ukrainian sources are used; their rights are decided, never a blocker.** The curriculum
     and its datasets are built from authentic Ukrainian sources, in-copyright ones included:

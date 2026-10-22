@@ -12,35 +12,38 @@ go in the decision journal (`docs/decisions/`).
 
 ## 1. Record
 
-Each mistake gets one entry in the "Mistakes ledger" section of the CTO state file (local,
-gitignored, private; never in public text):
+Each mistake gets one private tracker item: `lu-driver-state add --lane cto --kind commitment`
+with an alias prefixed `ML-`, an owner and a done condition:
 
-- date (`date -u`), what happened as fact, impact;
-- root cause in the CTO's process: ask why until you reach why the process allowed it
-  ("I forgot" is not a cause);
-- the change that prevents it; status (`open`, `changed`, `verified`); recurrence count.
+- statement: date (`date -u`), what happened as fact, impact and root cause in the CTO's
+  process. Ask why until you reach why the process allowed it ("I forgot" is not a cause);
+- done-when: the corrective change landed;
+- evidence: the PR or commit, recorded with `lu-driver-state evidence <id>`.
 
-Operator corrections are always entries, quoted only in the state file.
+Operator corrections are always entries, kept private in the tracker.
 
 ## 2. Change
 
 An entry closes only through a concrete change: a skill or rule edit (PR), a checklist
-item, or a tool check. `changed` means the change landed; `verified` means a later session
+item, or a tool check. Record the landed PR or commit with `evidence` before setting
+`status <id> done --reason <reason>`. Record later verification with `note`: a later session
 met the same situation and the change held. A lesson that changes nothing is not a lesson.
 
 ## 3. Escalate the control on a repeat
 
-A repeat raises the recurrence count and moves the control one step up the ladder:
+A repeat is a `lu-driver-state note <id> <text>` on the same item, with the recurrence count.
+Reopen it with `status` if the corrective work is unfinished. Move the control one step up the ladder:
 note, then skill text, then a checklist the CTO runs, then an automated check or guard in
 a tool, dispatched as a reviewed PR. Text that failed once is not trusted a second time.
 
 ## 4. Read it
 
-At session start read every open entry and the last ten closed ones before acting. The
+At session start use `lu-driver-state list --lane cto --kind commitment --all` to locate
+the `ML-` items, then `show <id>` for every open entry and the last ten done ones. The
 pre-post self-audit ([decisions](decisions.md#before-posting)) lists the open entries as
 known traps.
 
 ## 5. Measure it
 
 The handoff scorecard counts new mistakes and repeats this session. A repeat of a
-`verified` entry is reported to the operator with the next control step.
+previously verified correction is reported to the operator with the next control step.
