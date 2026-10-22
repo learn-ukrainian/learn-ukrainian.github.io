@@ -6,7 +6,9 @@ references it, it is not held in ``batch_state_retention.json``, its owner is
 known, and it is a readable tree that is neither a symlink nor a mount point.
 The task inventory and hold list are reloaded before each deletion, and an
 unreadable guard preserves the entry; a hold on any archive member protects the
-whole group, and only a real archive can be the protected newest one.
+whole group, and only a real archive can be the protected newest one. A
+removal that fails after an earlier member was deleted is reported as a
+partial deletion naming the deleted members, their bytes and the failure.
 The TTL numbers live in one JSON file beside this module; the shipped values
 are ``UNAPPROVED`` and the apply path refuses while any value is unapproved.
 Use this only for ``batch_state/preserved`` and ``batch_state/backups``: task
@@ -26,6 +28,9 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.task_store_paths import tasks_dir
 from scripts.hygiene import tmp_sweep as sweep
@@ -75,9 +80,12 @@ class Entry:
     decision: str = "preserve"
     identities: list[tuple[int, int]] = field(default_factory=list)
     fingerprints: list[dict[str, tuple[Any, ...]] | None] = field(default_factory=list)
+    deleted_members: list[str] = field(default_factory=list)
+    deleted_bytes: int = 0
+    failed_member: str | None = None
 
     def row(self) -> dict[str, Any]:
-        return {
+        row = {
             "path": self.relative,
             "owner": self.owner,
             "age_days": round(self.age_days, 2),
@@ -88,6 +96,11 @@ class Entry:
             if self.newest
             else None,
         }
+        if self.decision == "partial":
+            row["deleted_members"] = self.deleted_members
+            row["deleted_bytes"] = self.deleted_bytes
+            row["failed_member"] = self.failed_member
+        return row
 
 
 def _positive_days(value: Any) -> float | None:
@@ -433,23 +446,43 @@ def _remove(
         blocked = _restore_members(entry, root_fd, quarantine, renamed)
         entry.reason = "restore_blocked" if blocked else problem
         return 1 + blocked
+    deleted_members: list[str] = []
+    deleted_bytes = 0
+    failed_member: str | None = None
     for member, identity in zip(entry.members, entry.identities, strict=True):
+        held_path = quarantine.path / member.name
         try:
+            size, _written, _changed, problem = sweep.tree_facts(held_path)
+            if problem:
+                raise OSError(errno.EIO, f"unreadable member tree: {problem}")
             sweep.reap_attributed_temp(
-                quarantine.path / member.name,
+                held_path,
                 repo_root=repo_root,
                 temp_root=quarantine.path,
                 expected_dev=identity[0],
                 expected_ino=identity[1],
             )
-            if os.path.lexists(quarantine.path / member.name):
+            if os.path.lexists(held_path):
                 raise OSError(errno.ENOTEMPTY, "common reaper left residue")
         except (OSError, ValueError):
-            remaining = [path for path in entry.members if os.path.lexists(quarantine.path / path.name)]
-            blocked = _restore_members(entry, root_fd, quarantine, remaining)
-            entry.reason = "restore_blocked" if blocked else "delete_refused"
-            return 1 + blocked
-        sweep.sync_directory(quarantine.fd)
+            failed_member = member.name
+            break
+        deleted_members.append(member.name)
+        deleted_bytes += size
+        try:
+            sweep.sync_directory(quarantine.fd)
+        except OSError:
+            failed_member = member.name
+            break
+    if failed_member is not None:
+        remaining = [path for path in entry.members if os.path.lexists(quarantine.path / path.name)]
+        blocked = _restore_members(entry, root_fd, quarantine, remaining)
+        entry.reason = "restore_blocked" if blocked else "delete_refused"
+        entry.deleted_members = deleted_members
+        entry.deleted_bytes = deleted_bytes
+        entry.failed_member = failed_member
+        entry.decision = "partial" if deleted_members else "preserve"
+        return 1 + blocked
     entry.decision = "deleted"
     entry.reason = "expired"
     return 0
@@ -564,6 +597,7 @@ def sweep_batch_state(
         rows.extend(entry.row() for entry in entries)
     free_after = _free_bytes(roots)
     deleted = [row for row in rows if row["decision"] == "deleted"]
+    partial = [row for row in rows if row["decision"] == "partial"]
     report: dict[str, Any] = {
         "schema": SCHEMA,
         "mode": "apply" if apply else "dry_run",
@@ -586,6 +620,8 @@ def sweep_batch_state(
         "would_delete_bytes": sum(row["bytes"] or 0 for row in rows if row["decision"] == "would_delete"),
         "deleted_entries": len(deleted),
         "deleted_bytes_summed": sum(row["bytes"] or 0 for row in deleted),
+        "partial_entries": len(partial),
+        "partial_deleted_bytes": sum(row["deleted_bytes"] or 0 for row in partial),
         "free_bytes_before": free_before,
         "free_bytes_after": free_after,
         "freed_bytes_measured": max(0, free_after - free_before),
@@ -603,6 +639,8 @@ def sweep_batch_state(
             "freed_bytes_measured": report["freed_bytes_measured"],
             "freed_bytes_summed": report["deleted_bytes_summed"],
             "entries": deleted,
+            "partial_entries": partial,
+            "partial_deleted_bytes": report["partial_deleted_bytes"],
             "errors": errors,
         }
         _write_receipt(destination, receipt)

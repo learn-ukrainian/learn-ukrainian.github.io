@@ -8,6 +8,7 @@ accepts.
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
@@ -473,3 +474,37 @@ def test_orphan_sidecar_does_not_become_the_newest_archive(area):
     _sweep(area, apply=True, receipt_path=area["tmp"] / "receipt.json")
     assert (archives / "old-archive.tar.zst").exists()
     assert orphan.exists()
+
+
+def test_partial_deletion_records_deleted_members_bytes_and_receipt(area, monkeypatch):
+    """A later member failing must report the archive already deleted, not preserve it."""
+    archives = area["batch"] / "backups" / "archives"
+    expected_bytes = (archives / "old-archive.tar.zst").stat().st_blocks * 512
+    original = sweep_module.sweep.reap_attributed_temp
+
+    def flaky(path, **kwargs):
+        if Path(path).name == "old-archive.tar.zst.contents.sha256":
+            raise OSError(errno.EIO, "simulated reaper failure")
+        return original(path, **kwargs)
+
+    monkeypatch.setattr(sweep_module.sweep, "reap_attributed_temp", flaky)
+    receipt = area["tmp"] / "partial.json"
+    report = _sweep(area, apply=True, receipt_path=receipt)
+    row = next(row for row in report["rows"] if row["path"].endswith("/old-archive"))
+    assert row["decision"] == "partial"
+    assert row["reason"] == "delete_refused"
+    assert row["deleted_members"] == ["old-archive.tar.zst"]
+    assert row["deleted_bytes"] == expected_bytes
+    assert row["failed_member"] == "old-archive.tar.zst.contents.sha256"
+    assert report["partial_entries"] == 1
+    assert report["partial_deleted_bytes"] == expected_bytes
+    assert report["errors"] >= 1
+    data = json.loads(receipt.read_text())
+    assert data["partial_deleted_bytes"] == expected_bytes
+    partial = data["partial_entries"]
+    assert [entry["path"] for entry in partial] == ["batch_state/backups/archives/old-archive"]
+    assert partial[0]["deleted_members"] == ["old-archive.tar.zst"]
+    assert partial[0]["failed_member"] == "old-archive.tar.zst.contents.sha256"
+    assert not (archives / "old-archive.tar.zst").exists()
+    assert (archives / "old-archive.tar.zst.manifest").exists()
+    assert (archives / "old-archive.tar.zst.contents.sha256").exists()
