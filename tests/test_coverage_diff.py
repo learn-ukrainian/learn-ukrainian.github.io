@@ -137,3 +137,256 @@ def test_help_explains_usage_output_and_status(capsys):
         main(["--help"])
     help_text = capsys.readouterr().out
     assert all(word in help_text for word in ("Examples:", "Outputs:", "Exit codes:", "Related:", "manifest"))
+
+
+@pytest.fixture
+def context_data(tmp_path):
+    import coverage
+
+    def write(arcs_by_context):
+        path = tmp_path / "baseline" / ".coverage"
+        path.parent.mkdir(exist_ok=True)
+        data = coverage.CoverageData(basename=str(path))
+        for context, arcs in arcs_by_context.items():
+            data.set_context(context)
+            data.add_arcs({"scripts/a.py": arcs})
+        data.write()
+        return path
+
+    return write
+
+
+def test_lost_identities_name_covering_tests_and_a_restore_set(reports, context_data, tmp_path, capsys):
+    before = reports("before.json", {"scripts/a.py": measured([1, 2, 3], [[-1, 1], [1, 2], [2, 3], [3, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    data = context_data(
+        {
+            "tests/test_old.py::test_one": [(-1, 1), (1, 2), (2, 3), (3, -1)],
+            "tests/test_old.py::test_two": [(-1, 1), (1, 3), (3, -1)],
+            "tests/test_keep.py::test_keep": [(-1, 1), (1, 2)],
+        }
+    )
+    deleted = tmp_path / "deleted.txt"
+    deleted.write_text("tests/test_old.py::test_one\ntests/test_old.py::test_two\n")
+    candidate = tmp_path / "candidate"
+    (candidate / "scripts").mkdir(parents=True)
+    (candidate / "scripts/a.py").write_text("value = 1\n")
+
+    assert (
+        main(
+            [
+                before,
+                after,
+                "--baseline-data",
+                str(data),
+                "--deleted-test-nodes",
+                str(deleted),
+                "--candidate-root",
+                str(candidate),
+            ]
+        )
+        == 1
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["lost_identities"] == [
+        {"file": "scripts/a.py", "line": 2, "tests": ["tests/test_keep.py::test_keep", "tests/test_old.py::test_one"]},
+        {
+            "file": "scripts/a.py",
+            "line": 3,
+            "tests": ["tests/test_old.py::test_one", "tests/test_old.py::test_two"],
+        },
+        {
+            "file": "scripts/a.py",
+            "arc": [1, 2],
+            "tests": ["tests/test_keep.py::test_keep", "tests/test_old.py::test_one"],
+        },
+        {"file": "scripts/a.py", "arc": [2, 3], "tests": ["tests/test_old.py::test_one"]},
+        {
+            "file": "scripts/a.py",
+            "arc": [3, -1],
+            "tests": ["tests/test_old.py::test_one", "tests/test_old.py::test_two"],
+        },
+    ]
+    assert payload["deleted_test_nodes"] == ["tests/test_old.py::test_one", "tests/test_old.py::test_two"]
+    assert payload["dead_files"] == []
+    assert payload["restore_set"] == ["tests/test_old.py::test_one", "tests/test_old.py::test_two"]
+    assert payload["restore_coverage"] == {
+        "tests/test_old.py::test_one": ["scripts/a.py:2", "scripts/a.py:3"],
+        "tests/test_old.py::test_two": ["scripts/a.py:3"],
+    }
+
+
+def test_dead_production_file_does_not_require_restoring_its_tests(reports, context_data, tmp_path, capsys):
+    before = reports("before.json", {"scripts/gone.py": measured([1, 2], [[-1, 1], [1, 2], [2, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    data = context_data({"tests/test_gone.py::test_one": [(-1, 1), (1, 2), (2, -1)]})
+    deleted = tmp_path / "deleted.txt"
+    deleted.write_text("tests/test_gone.py::test_one\n")
+
+    assert (
+        main(
+            [
+                before,
+                after,
+                "--baseline-data",
+                str(data),
+                "--deleted-test-nodes",
+                str(deleted),
+                "--candidate-root",
+                str(tmp_path),
+            ]
+        )
+        == 1
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dead_files"] == ["scripts/gone.py"]
+    assert payload["restore_set"] == []
+    assert payload["restore_coverage"] == {}
+
+
+def test_baseline_without_test_contexts_is_invalid(reports, tmp_path, capsys):
+    import coverage
+
+    before = reports("before.json", {"scripts/a.py": measured([1, 2], [[-1, 1], [1, 2], [2, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    (tmp_path / "plain").mkdir()
+    data = coverage.CoverageData(basename=str(tmp_path / "plain/.coverage"))
+    data.add_arcs({"scripts/a.py": [(-1, 1), (1, 2), (2, -1)]})
+    data.write()
+    result = main([before, after, "--baseline-data", str(tmp_path / "plain/.coverage")])
+    assert result == 2
+    assert "expected per-test contexts" in capsys.readouterr().err
+
+
+def test_deleted_nodes_require_baseline_context_data(reports):
+    before = reports("before.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    assert main([before, after, "--deleted-test-nodes", "missing.txt"]) == 2
+
+
+def test_git_range_derives_deleted_test_node_ids(reports, context_data, tmp_path, capsys):
+    import subprocess
+
+    repo = tmp_path / "repo"
+    (repo / "tests").mkdir(parents=True)
+    (repo / "tests/test_old.py").write_text("def test_one():\n    pass\n")
+    (repo / "tests/test_keep.py").write_text("def test_keep():\n    pass\n")
+    git = ["git", "-C", str(repo), "-c", "user.name=Coverage test", "-c", "user.email=coverage@example.invalid"]
+    subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=30)
+    subprocess.run([*git, "add", "."], check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "base"], check=True, timeout=30)
+    base = subprocess.check_output([*git, "rev-parse", "HEAD"], text=True, timeout=30).strip()
+    (repo / "tests/test_old.py").unlink()
+    subprocess.run([*git, "commit", "-q", "-am", "delete"], check=True, timeout=30)
+    head = subprocess.check_output([*git, "rev-parse", "HEAD"], text=True, timeout=30).strip()
+
+    before = reports("before.json", {"scripts/a.py": measured([1, 2], [[-1, 1], [1, 2], [2, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    data = context_data(
+        {
+            "tests/test_old.py::test_one": [(-1, 1), (1, 2), (2, -1)],
+            "tests/test_keep.py::test_keep": [(-1, 1), (1, 2)],
+        }
+    )
+    candidate = tmp_path / "candidate"
+    (candidate / "scripts").mkdir(parents=True)
+    (candidate / "scripts/a.py").write_text("value = 1\n")
+    assert (
+        main(
+            [
+                before,
+                after,
+                "--baseline-data",
+                str(data),
+                "--git-range",
+                f"{base}..{head}",
+                "--git-repo",
+                str(repo),
+                "--candidate-root",
+                str(candidate),
+            ]
+        )
+        == 1
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["deleted_test_nodes"] == ["tests/test_old.py::test_one"]
+    assert payload["restore_set"] == ["tests/test_old.py::test_one"]
+
+
+def test_pytest_cov_phases_reduce_to_one_test_node_id(reports, context_data, tmp_path, capsys):
+    """--cov-context=test records nodeid|run; restore sets must still name the test once."""
+    before = reports("before.json", {"scripts/a.py": measured([1, 2], [[-1, 1], [1, 2], [2, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    data = context_data(
+        {
+            "tests/test_old.py::test_one|setup": [(-1, 1)],
+            "tests/test_old.py::test_one|run": [(1, 2), (2, -1)],
+            "tests/test_old.py::test_one|teardown": [],
+        }
+    )
+    deleted = tmp_path / "deleted.txt"
+    deleted.write_text("tests/test_old.py::test_one\n")
+    candidate = tmp_path / "candidate"
+    (candidate / "scripts").mkdir(parents=True)
+    (candidate / "scripts/a.py").write_text("value = 1\n")
+
+    assert (
+        main(
+            [
+                before,
+                after,
+                "--baseline-data",
+                str(data),
+                "--deleted-test-nodes",
+                str(deleted),
+                "--candidate-root",
+                str(candidate),
+            ]
+        )
+        == 1
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["lost_identities"][0]["tests"] == ["tests/test_old.py::test_one"]
+    assert payload["restore_set"] == ["tests/test_old.py::test_one"]
+
+
+def test_subprocess_only_lines_are_reported_as_unattributed(reports, tmp_path, capsys):
+    """Coverage's subprocess patch carries no test context; do not invent one."""
+    import coverage
+
+    before = reports("before.json", {"scripts/a.py": measured([1, 2, 3], [[-1, 1], [1, 2], [2, 3], [3, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    path = tmp_path / "baseline/.coverage"
+    path.parent.mkdir()
+    data = coverage.CoverageData(basename=str(path))
+    data.set_context("tests/test_old.py::test_one|run")
+    data.add_arcs({"scripts/a.py": [(-1, 1), (1, 2)]})
+    data.set_context("")
+    data.add_arcs({"scripts/a.py": [(1, 3), (3, -1)]})
+    data.write()
+    deleted = tmp_path / "deleted.txt"
+    deleted.write_text("tests/test_old.py::test_one\n")
+    candidate = tmp_path / "candidate"
+    (candidate / "scripts").mkdir(parents=True)
+    (candidate / "scripts/a.py").write_text("value = 1\n")
+
+    assert (
+        main(
+            [
+                before,
+                after,
+                "--baseline-data",
+                str(path),
+                "--deleted-test-nodes",
+                str(deleted),
+                "--candidate-root",
+                str(candidate),
+            ]
+        )
+        == 1
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert {"file": "scripts/a.py", "line": 3} in payload["unattributed_lost_identities"]
+    assert {"file": "scripts/a.py", "arc": [2, 3]} in payload["unattributed_lost_identities"]
+    assert {"file": "scripts/a.py", "arc": [3, -1]} in payload["unattributed_lost_identities"]
+    assert payload["restore_set"] == ["tests/test_old.py::test_one"]

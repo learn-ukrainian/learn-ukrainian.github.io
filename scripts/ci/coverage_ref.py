@@ -1,4 +1,18 @@
-"""Branch measurements with separate test outcomes and completeness (#11226)."""
+"""Branch measurements with separate test outcomes and completeness (#11226).
+
+Only Python production paths are reportable. Jinja2 executes compiled template
+code whose filename is the ``.j2`` template path, and one hook test compiles the
+shell hook's embedded Python under the ``.sh`` path, so both can appear in raw
+coverage data. ``coverage-ref.ini`` omits the known extensions at measurement
+time, and combine classifies any remaining non-``.py`` measured path as
+non-reportable instead of treating it as missing evidence.
+
+Pass ``contexts=true`` to the coverage-ref workflow, or set
+``COVERAGE_REF_CONTEXTS=true`` for ``run``, to record pytest-cov per-test
+dynamic contexts (``--cov-context=test``) in the raw and combined ``.coverage``
+data. Coverage 7.16.2 documents the underlying ``[run] dynamic_context``
+option: https://coverage.readthedocs.io/en/7.16.2/config.html#run-dynamic-context
+"""
 
 from __future__ import annotations
 
@@ -76,9 +90,22 @@ def versions() -> dict[str, str]:
     return {name: importlib.metadata.version(name) for name in ("coverage", "pytest-cov", "pytest")}
 
 
+def contexts_requested() -> bool:
+    """Read the opt-in per-test context switch, refusing an ambiguous value."""
+    value = os.environ.get("COVERAGE_REF_CONTEXTS", "")
+    if value in ("", "false"):
+        return False
+    if value == "true":
+        return True
+    raise ValueError("COVERAGE_REF_CONTEXTS must be 'true' or 'false'")
+
+
 def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
     import pytest
 
+    contexts = contexts_requested()
+    if contexts and not any(arg == "--cov-context" or arg.startswith("--cov-context=") for arg in pytest_args):
+        pytest_args = [*pytest_args, "--cov-context=test"]
     output.mkdir(parents=True, exist_ok=True)
     # Keep pytest optional for combine, but wrap xdist's first-result runtest hook.
     pytest.hookimpl(wrapper=True)(CollectionRecorder.pytest_runtestloop)
@@ -114,6 +141,7 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
         "versions": versions(),
         "core": recorder.core,
         "subprocess_patch": recorder.subprocess_patch,
+        "contexts": contexts,
         "config_sha256": hashlib.sha256(Path(os.environ["COVERAGE_RCFILE"]).read_bytes()).hexdigest(),
         "durations_sha256": hashlib.sha256(Path("ci-artifacts/pytest-file-durations.json").read_bytes()).hexdigest(),
     }
@@ -138,6 +166,7 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
         "workflow_run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
         "core": None,
         "subprocess_patch": None,
+        "contexts": None,
         "expected_shards": shard_count,
         "matrix_result": matrix_result,
         "versions": {},
@@ -150,6 +179,7 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
         "unfinished_nodeids": [],
         "unmapped_files": [],
         "unreported_files": [],
+        "non_reportable_files": [],
     }
     errors = manifest["errors"]
     data_files = []
@@ -172,8 +202,12 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                 if manifest["core"] is None:
                     manifest["core"] = receipt.get("core")
                     manifest["subprocess_patch"] = receipt.get("subprocess_patch")
+                if manifest["contexts"] is None:
+                    manifest["contexts"] = receipt.get("contexts")
                 if receipt.get("core") != "CTracer" or receipt.get("subprocess_patch") is not True:
                     raise ValueError("CTracer core or subprocess patch was not active")
+                if receipt.get("contexts") not in (True, False):
+                    raise ValueError("missing per-test contexts flag")
                 if any(
                     receipt.get(key) != manifest[key]
                     for key in (
@@ -183,6 +217,7 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                         "versions",
                         "core",
                         "subprocess_patch",
+                        "contexts",
                     )
                 ):
                     raise ValueError("receipt identity/version mismatch")
@@ -221,6 +256,8 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                         data.read()
                         if not data.has_arcs() or not data.measured_files():
                             raise ValueError("raw data lacks nonempty branch coverage")
+                        if receipt["contexts"] and not data.measured_contexts() - {""}:
+                            errors.append(f"shard {shard}: requested per-test contexts missing")
                         # Include pytest-cov's unsuffixed file explicitly.
                         data_files.append(str(path))
                     except (OSError, ValueError, coverage.CoverageException) as error:
@@ -240,6 +277,11 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
             reportable = []
             for name in sorted(cov.get_data().measured_files()):
                 path = Path(name)
+                # Jinja2 template code and the hook test's embedded Python carry
+                # non-.py filenames. They are listed, never missing evidence.
+                if path.suffix != ".py":
+                    manifest["non_reportable_files"].append(name)
+                    continue
                 if (
                     path.is_absolute()
                     or len(path.parts) < 2
@@ -253,6 +295,8 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                     errors.append(f"unmapped measured path: {name}")
                 else:
                     reportable.append(name)
+            if manifest["contexts"] and not cov.get_data().measured_contexts() - {""}:
+                errors.append("requested per-test contexts were not retained")
             report_path = output / "coverage.json"
             report = {"meta": {"branch_coverage": True}, "files": {}}
             if reportable:
@@ -319,6 +363,7 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs: receipt.json, manifest.json and coverage.json from all valid available data.\n"
             "Exit codes: 0 = complete measurement (tests may fail); 1 = incomplete; 2 = usage error.\n"
             "Requires: GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT, COVERAGE_RCFILE; run also needs the CI duration snapshot.\n"
+            "Contexts: set COVERAGE_REF_CONTEXTS=true to record pytest-cov per-test contexts.\n"
             "Related: .github/workflows/coverage-ref.yml; scripts/ci/coverage_diff.py; #11226."
         ),
     )
