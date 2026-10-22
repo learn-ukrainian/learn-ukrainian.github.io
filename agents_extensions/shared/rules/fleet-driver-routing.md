@@ -158,7 +158,7 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | --- | --- | --- | --- | --- | --- |
 | Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` — not a review route (D-129) |
 | Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` — not a review route (D-129) |
-| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | native Claude CLI only; unavailable through Cursor |
+| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | native Claude CLI only; unavailable through Cursor; not a review route (D-129) |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |
 
 Cursor's catalog has no GPT-6 slug; GPT-6.1 Sol and GPT-6 Luna run on the native Codex CLI.
