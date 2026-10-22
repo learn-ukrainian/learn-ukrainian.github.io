@@ -18,6 +18,25 @@ from tests.test_delegate_admission import (
 )
 
 
+def test_dispatch_passes_target_checkout_to_ownership_outside_launcher_cwd(tasks_dir, monkeypatch):
+    """Admission must use the target repository, even when the launcher runs elsewhere."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    expected = delegate._REPO_ROOT
+    launcher = tasks_dir.parent / "launcher"
+    launcher.mkdir()
+    monkeypatch.chdir(launcher)
+    observed = []
+
+    def admission(**kwargs):
+        observed.append(kwargs["cwd"])
+        return ownership.AdmissionResult(False, ownership.GuardMode.REFUSE, True, "test stop")
+
+    monkeypatch.setattr(ownership, "admit_write_paths", admission)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: pytest.fail("must stop before spawn"))
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "target-repository")) == 2
+    assert observed == [expected]
+
+
 @pytest.mark.parametrize(
     "held,incoming",
     [

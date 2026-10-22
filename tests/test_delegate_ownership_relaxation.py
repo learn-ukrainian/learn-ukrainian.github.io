@@ -58,11 +58,14 @@ class FakeTime:
             self.hooks.pop(0)()
 
 
-@pytest.fixture
-def env(tmp_path: Path):
+@pytest.fixture(params=[False, True], ids=["checkout", "unresolved-repository"])
+def env(tmp_path: Path, request):
     state_dir = tmp_path / "tasks"
     state_dir.mkdir()
-    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=state_dir, mode=GuardMode.REFUSE)
+    ledger = OwnershipLedger(
+        tmp_path / "own.sqlite3", task_state_dir=state_dir, mode=GuardMode.REFUSE,
+        cwd=tmp_path if request.param else None,
+    )
     return ledger, state_dir
 
 
