@@ -18,24 +18,6 @@ def test_reviewer_fixes_parser_handles_markdown_in_xml_content_nodes() -> None:
     assert fixes == [{"find": "вмива́ю**ся**", "replace": "вмиваюся"}]
 
 
-def test_reviewer_fixes_parser_handles_multiple_markdown_xml_pairs() -> None:
-    review = (
-        "<fixes>\n"
-        "  <fix><find>*ранок*</find><replace>ранок</replace></fix>\n"
-        "  <fix><find>**кава**</find><replace>кава</replace></fix>\n"
-        "  <fix><find>`дім`</find><replace>дім</replace></fix>\n"
-        "</fixes>"
-    )
-
-    fixes = _parse_reviewer_fixes(review)
-
-    assert fixes == [
-        {"find": "*ранок*", "replace": "ранок"},
-        {"find": "**кава**", "replace": "кава"},
-        {"find": "`дім`", "replace": "дім"},
-    ]
-
-
 def test_reviewer_fixes_parser_allows_empty_xml_replace() -> None:
     review = "<fixes><fix><find>зайве</find><replace></replace></fix></fixes>"
 

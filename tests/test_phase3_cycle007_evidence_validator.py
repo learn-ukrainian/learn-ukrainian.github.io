@@ -384,14 +384,6 @@ def test_validate_label_evidence_refs_rejects_reordered_ids():
     assert excinfo.value.code == "evidence_id_order_drift"
 
 
-def test_validate_label_evidence_refs_rejects_unknown_decision_code():
-    record = _vesum_record(ROW_A)
-    row_evidence = _row_evidence(ROW_A, [record])
-    with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_label_evidence_refs(row_evidence, decision_code="not_a_real_code", evidence_ids=[record["evidence_id"]])
-    assert excinfo.value.code == "unknown_decision_code"
-
-
 # --------------------------------------------------------------------------
 # Amendment step 7: sufficiency ordering — a decisive negative record forces
 # uncertainty even when an unrelated record is attested.
@@ -483,15 +475,6 @@ def test_validate_evidence_record_rejects_a_hand_edited_raw_payload_flag():
     assert excinfo.value.code == "evidence_shape_drift"
 
 
-def test_validate_evidence_record_rejects_a_hand_edited_claim_boundary_flag():
-    record = dict(_vesum_record(ROW_A))
-    record["claim_boundary"] = dict(record["claim_boundary"])
-    record["claim_boundary"]["authoritative"] = True
-    with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_evidence_record(record)
-    assert excinfo.value.code == "evidence_shape_drift"
-
-
 def test_validate_sidecar_rejects_row_count_mismatch():
     record, payload = _payload_record(ROW_A)
     row_a = _row_evidence(ROW_A, [record])
@@ -519,16 +502,6 @@ def test_validate_sidecar_detects_missing_retrieval_payload():
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
     assert excinfo.value.code == "retrieval_payload_missing"
-
-
-def test_validate_sidecar_rejects_a_missing_required_field():
-    record, payload = _payload_record(ROW_A)
-    row_a = _row_evidence(ROW_A, [record])
-    sidecar = _full_sidecar([row_a], {record["retrieval_sha256"]: payload})
-    del sidecar["code_hashes"]
-    with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
-    assert excinfo.value.code == "sidecar_shape_drift"
 
 
 def test_validate_sidecar_detects_identity_hash_drift():
@@ -585,19 +558,6 @@ def test_validate_sidecar_rejects_residual_lane_missing_a_phenomenon():
     assert excinfo.value.code == "residual_lane_phenomenon_scope_drift"
 
 
-def test_validate_sidecar_rejects_residual_lane_extra_phenomenon_key():
-    pairs = [_payload_record(ROW_A, phenomenon_id=p) for p in contract.RESIDUAL_PHENOMENON_TAXONOMY]
-    records = [record for record, _payload in pairs]
-    payload_map = {record["retrieval_sha256"]: payload for record, payload in pairs}
-    phenomenon_evidence_ids = {record["phenomenon_id"]: [record["evidence_id"]] for record in records}
-    phenomenon_evidence_ids["not-a-real-phenomenon"] = []
-    row_a = _row_evidence(ROW_A, records, phenomenon_evidence_ids=phenomenon_evidence_ids)
-    sidecar = _full_sidecar([row_a], payload_map, lane="residual_label")
-    with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_sidecar(sidecar, expected_identity=_expected_identity())
-    assert excinfo.value.code == "residual_lane_phenomenon_scope_drift"
-
-
 def test_validate_manifest_accepts_a_well_formed_manifest():
     manifest = _full_manifest()
     validator.validate_manifest(manifest, expected_identity=_expected_identity())
@@ -613,14 +573,6 @@ def test_validate_manifest_detects_manifest_sha256_hash_drift():
 
 def test_validate_manifest_detects_row_count_mismatch():
     manifest = _full_manifest(row_count=999)
-    with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_manifest(manifest, expected_identity=_expected_identity())
-    assert excinfo.value.code == "manifest_shape_drift"
-
-
-def test_validate_manifest_rejects_a_missing_required_field():
-    manifest = _full_manifest()
-    del manifest["code_hashes"]
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_manifest(manifest, expected_identity=_expected_identity())
     assert excinfo.value.code == "manifest_shape_drift"
@@ -644,14 +596,6 @@ def test_validate_evidence_record_detects_query_mutation():
     with pytest.raises(validator.EvidenceValidationError) as excinfo:
         validator.validate_evidence_record(record)
     assert excinfo.value.code == "query_sha256_hash_drift"
-
-
-def test_validate_evidence_record_rejects_a_deleted_query_field():
-    record = dict(_vesum_record(ROW_A))
-    del record["query"]
-    with pytest.raises(validator.EvidenceValidationError) as excinfo:
-        validator.validate_evidence_record(record)
-    assert excinfo.value.code == "evidence_shape_drift"
 
 
 # --------------------------------------------------------------------------

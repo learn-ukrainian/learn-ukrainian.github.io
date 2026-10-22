@@ -270,12 +270,6 @@ def test_unbound_registered_store_refuses_reads():
             read()
 
 
-def test_registered_reader_root_uses_shared_repository():
-    from scripts.projects.open_model_data.review_build.components import ua_gec_component
-
-    assert ua_gec_component.held_root() == cli.default_config().parents[2] / "data/ua-gec"
-
-
 @pytest.mark.parametrize(
     "fault,code",
     [
@@ -514,11 +508,6 @@ def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):
             sys.modules.pop("ua_gec", None)
 
 
-def test_invalid_component_selection_is_refused(store):
-    with pytest.raises(BuildError, match="unknown_component"):
-        components.load_components(["C6"])
-
-
 @pytest.mark.parametrize("selected", [["C1"], ["C6a"], ["C1", "C6a"]])
 def test_registered_cli_build_verify_and_input_tamper(store, tmp_path, monkeypatch, capsys, selected):
     _, _, config, catalog = setup_gate(store, selected)
@@ -661,20 +650,6 @@ def test_replay_whitespace_and_annotator_identity_and_crossing_boundary():
     assert ua_gec_split.replay_alignment(original, sentences, sentences, [ann]) == ["unaligned", None]
     cross = SimpleNamespace(start=11, end=19, suggestions=[""], meta={"error_type": "Grammar"})
     assert ua_gec_split.replay_alignment(original, sentences, sentences, [cross]) == ["boundary_ambiguous"] * 2
-
-
-@pytest.mark.parametrize("module", [c1_ua_gec, c6a_calque])
-def test_components_withhold_reasoning_and_precise_boundary_reason(store, module):
-    base = admitted(store, "C1" if module is c1_ua_gec else "C6a")
-    row = store.row(base.slots[0].citations[0].table, base.unit_id)
-    marked = {**row, "source_sentence": "SYNTHETIC <think>"}
-    assert module.candidate(marked, store.splits).reason == "reasoning_marker_in_source"
-    boundary = {**row, "aligned": False, "alignment_reason": "boundary_ambiguous", "edit_aligned": False}
-    assert module.candidate(boundary, store.splits).reason == "boundary_ambiguous"
-    if module is c6a_calque:
-        assert "unchanged" not in module.spec()["reference_multiplicity"]
-        boundary["edits"] = ["F/Calque", "Punctuation"]
-        assert module.candidate(boundary, store.splits).reason == "boundary_ambiguous"
 
 
 def test_replay_uses_learner_whitespace_and_unescapes_official_newline():

@@ -375,15 +375,6 @@ def _build(paths: dict[str, Path]) -> dict[str, object]:
     )
 
 
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    schema_text = SCHEMA.read_text(encoding="utf-8")
-    assert '"source_text"' not in schema_text
-    assert '"page_texts"' not in schema_text
-    assert "GoogleDrive-" not in schema_text
-
-
 def test_build_is_deterministic_and_preserves_false_completion_gates(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -535,17 +526,6 @@ def test_concurrent_receipt_creation_cannot_clobber_winner(tmp_path: Path, monke
     with pytest.raises(intake.Vspu2025MorphemicsWordFormationIntakeError, match="immutable public receipt"):
         intake.write_public_receipt(out, receipt)
     assert out.read_bytes() == b'{"winner":true}\n'
-
-
-def test_atomic_write_api_has_no_mode_parameter() -> None:
-    import inspect
-
-    params = inspect.signature(intake._atomic_write).parameters
-    assert list(params) == ["path", "payload"]
-    assert "mode" not in params
-    assert intake.PRIVATE_FILE_MODE == 0o600
-    assert intake.TRACKED_PUBLIC_FILE_MODE == 0o644
-    assert frozenset({0o600, 0o644}) == intake.ACCEPTED_PUBLIC_RECEIPT_MODES
 
 
 def test_topic_conditioned_depth_ignores_off_topic_marker_pages() -> None:

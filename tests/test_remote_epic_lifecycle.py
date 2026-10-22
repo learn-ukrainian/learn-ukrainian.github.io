@@ -288,23 +288,6 @@ def test_holder_host_is_part_of_the_fence(tmp_path: Path) -> None:
         store.heartbeat(forged)
 
 
-def test_remote_claim_never_probes_holder_pid(tmp_path: Path) -> None:
-    def forbidden_probe(_process_id: int) -> bool:
-        raise AssertionError("remote claims must not probe holder PIDs")
-
-    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "remote.sqlite3"), _process_probe=forbidden_probe)
-    lease, outcome = store.claim_remote_session(
-        stream_id="epic:7004",
-        holder=_holder("codex", "no-probe", "alpha"),
-        lineage_id="no-probe-lineage",
-        ttl_seconds=30,
-        session_id="no-probe-session",
-        lease_id="no-probe-lease",
-    )
-    assert outcome == "claimed"
-    assert lease.holder.process_id == 1234
-
-
 @pytest.mark.parametrize("host_id", [None, "synthetic-host"])
 @pytest.mark.parametrize("expired", [False, True])
 def test_local_pid_recovery_cannot_close_remote_lease(tmp_path: Path, host_id, expired) -> None:

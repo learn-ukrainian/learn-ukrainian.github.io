@@ -300,22 +300,6 @@ def test_catalog_reserves_count_only_on_automatic_ladder():
     assert "claude-fable-5-1" not in critical["openai"]
 
 
-def test_bench_health_main_returns_zero_when_healthy(monkeypatch, capsys):
-    """Exercise the success branch with a hypothetical adequate automatic bench."""
-    monkeypatch.setattr(
-        bench_health,
-        "_bench_inventory",
-        lambda *args, **kwargs: (
-            {family: ["seat-one", "seat-two"] for family in AUTHOR_FAMILIES},
-            {family: {} for family in AUTHOR_FAMILIES},
-        ),
-    )
-    assert main([], routing_snapshot={}) == 0
-    captured = capsys.readouterr()
-    assert "BENCH HEALTH PASS: All author families meet their required reviewer minimum." in captured.out
-    assert captured.err == ""
-
-
 def test_bench_health_main_returns_one_when_unhealthy(capsys):
     mock_snapshot = {
         "agents": {

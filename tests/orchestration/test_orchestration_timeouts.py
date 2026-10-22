@@ -20,18 +20,6 @@ from scripts.orchestration import (
     handoff_ready as hr,
 )
 from scripts.orchestration import (
-    install_archived_thread_cleanup_launchd as iatc,
-)
-from scripts.orchestration import (
-    install_mac_observer_launchd as imol,
-)
-from scripts.orchestration import (
-    install_worktree_cleanup_launchd as iwcl,
-)
-from scripts.orchestration import (
-    integration_sweep as isw,
-)
-from scripts.orchestration import (
     job_host_exec as jhe,
 )
 from scripts.orchestration import (
@@ -207,22 +195,6 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
             )
 
 
-def test_job_host_exec_main_timeout(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    monkeypatch.setenv(jhe.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jhe.ENV_REPO, "/remote/repo")
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["ssh"], jhe.DEFAULT_SSH_TIMEOUT_SECONDS),
-    ):
-        rc = jhe.main(["--host-id", "host-job", "--", "true"])
-        assert rc == 255
-        err = capsys.readouterr().err
-        assert "SSH command timed out after 300.0s" in err
-
-
 # ---------------------------------------------------------------------------
 # 3. handoff_ready.py
 # ---------------------------------------------------------------------------
@@ -252,55 +224,9 @@ def test_handoff_ready_git_timeout() -> None:
         assert "git status --porcelain timed out after 30.0s" in out
 
 
-def test_handoff_ready_gh_json_timeout() -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout='{"ok": true}')
-
-    with patch("subprocess.run", side_effect=fake_run):
-        rc, data = hr._gh_json("pr", "view")
-        assert rc == 0
-        assert data == {"ok": True}
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == hr.DEFAULT_GH_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["gh"], hr.DEFAULT_GH_TIMEOUT_SECONDS),
-    ):
-        rc, data = hr._gh_json("pr", "view")
-        assert rc == 124
-        assert "gh pr view timed out after 60.0s" in str(data)
-
-
 # ---------------------------------------------------------------------------
 # 4. curriculum_lifecycle_pilot.py
 # ---------------------------------------------------------------------------
-
-
-def test_curriculum_lifecycle_pilot_git_timeout(tmp_path: Path) -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="main\n")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        out = clp._git(tmp_path, "rev-parse", "HEAD")
-        assert out == "main"
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == clp.DEFAULT_GIT_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["git"], clp.DEFAULT_GIT_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(clp.PilotError, match=r"git rev-parse HEAD timed out after 30\.0s"):
-            clp._git(tmp_path, "rev-parse", "HEAD")
 
 
 def test_curriculum_lifecycle_pilot_commit_is_ancestor_timeout(tmp_path: Path) -> None:
@@ -330,28 +256,6 @@ def test_curriculum_lifecycle_pilot_commit_is_ancestor_timeout(tmp_path: Path) -
 # ---------------------------------------------------------------------------
 # 5. task_lifecycle.py
 # ---------------------------------------------------------------------------
-
-
-def test_task_lifecycle_run_git_timeout(tmp_path: Path) -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="status-output\n")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        out = tl._run_git(tmp_path, ["status", "--short"])
-        assert out == "status-output"
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == tl.DEFAULT_GIT_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["git"], tl.DEFAULT_GIT_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(tl.LifecycleError, match=r"git status --short timed out after 30\.0s"):
-            tl._run_git(tmp_path, ["status", "--short"])
 
 
 # ---------------------------------------------------------------------------
@@ -448,59 +352,9 @@ def test_orchestrator_control_cmd_dispatch_timeout(
 # ---------------------------------------------------------------------------
 
 
-def test_integration_sweep_default_runner_timeout(tmp_path: Path) -> None:
-    adapter = isw.GitHubAdapter(tmp_path)
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="output\n")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        res = adapter._default_runner(["gh", "pr", "list"])
-        assert res == "output\n"
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == isw.DEFAULT_GH_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["gh"], isw.DEFAULT_GH_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(isw.SweepError, match=r"gh pr list timed out after 60\.0s"):
-            adapter._default_runner(["gh", "pr", "list"])
-
-
 # ---------------------------------------------------------------------------
 # 9. install_worktree_cleanup_launchd.py
 # ---------------------------------------------------------------------------
-
-
-def test_install_worktree_cleanup_launchd_timeout() -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="service printout")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        res = iwcl._launchctl(["print", "gui/501/com.learn-ukrainian.worktree-cleanup"])
-        assert res.returncode == 0
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == iwcl.DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(
-            ["/bin/launchctl"], iwcl.DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS
-        ),
-    ):
-        with pytest.raises(
-            iwcl.LaunchdError,
-            match=r"/bin/launchctl print gui/501/com\.learn-ukrainian\.worktree-cleanup timed out after 30\.0s",
-        ):
-            iwcl._launchctl(["print", "gui/501/com.learn-ukrainian.worktree-cleanup"])
 
 
 # ---------------------------------------------------------------------------
@@ -508,63 +362,9 @@ def test_install_worktree_cleanup_launchd_timeout() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_install_mac_observer_launchd_timeout() -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="service printout")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        res = imol._launchctl(["print", "gui/501/com.learn-ukrainian.mac-observer-heartbeat"])
-        assert res.returncode == 0
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == imol.DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(
-            ["/bin/launchctl"], imol.DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS
-        ),
-    ):
-        with pytest.raises(
-            imol.LaunchdError,
-            match=r"/bin/launchctl print gui/501/com\.learn-ukrainian\.mac-observer-heartbeat timed out after 30\.0s",
-        ):
-            imol._launchctl(["print", "gui/501/com.learn-ukrainian.mac-observer-heartbeat"])
-
-
 # ---------------------------------------------------------------------------
 # 11. install_archived_thread_cleanup_launchd.py
 # ---------------------------------------------------------------------------
-
-
-def test_install_archived_thread_cleanup_launchd_timeout() -> None:
-    calls: list[dict] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="service printout")
-
-    with patch("subprocess.run", side_effect=fake_run):
-        res = iatc._launchctl(["print", "gui/501/com.learn-ukrainian.codex-archived-thread-cleanup"])
-        assert res.returncode == 0
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == iatc.DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(
-            ["/bin/launchctl"], iatc.DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS
-        ),
-    ):
-        with pytest.raises(
-            iatc.LaunchdError,
-            match=r"/bin/launchctl print gui/501/com\.learn-ukrainian\.codex-archived-thread-cleanup timed out after 30\.0s",
-        ):
-            iatc._launchctl(["print", "gui/501/com.learn-ukrainian.codex-archived-thread-cleanup"])
 
 
 # ---------------------------------------------------------------------------

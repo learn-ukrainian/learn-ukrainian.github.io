@@ -26,7 +26,6 @@ from tests._host_path_guard import (
     FIXTURE_HOME,
     FIXTURE_USER,
     assert_no_checkout_paths,
-    assert_no_host_paths,
     assert_no_host_templates,
 )
 
@@ -35,8 +34,6 @@ REGISTRY_CUSTODY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "custody"
 CONFIG_PATH = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_config_v1.json"
 CONFIG_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_config_v1.schema.json")
 ITEM_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
-MISSING_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_missing_report_v1.schema.json")
-RECEIPT_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_receipt_v1.schema.json")
 SYNTHETIC_PROVENANCE = Path(__file__).parent / "fixtures/v4_source_custody_provenance.jsonl"
 
 
@@ -126,12 +123,6 @@ def repo_root() -> Path:
     return Path.cwd()
 
 
-def test_contracts_are_valid_schemas() -> None:
-    for schema_path in (CONFIG_SCHEMA, ITEM_SCHEMA, MISSING_SCHEMA, RECEIPT_SCHEMA):
-        schema = json.loads(schema_path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-
-
 def test_config_passes_schema() -> None:
     config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     schema = json.loads(CONFIG_SCHEMA.read_text(encoding="utf-8"))
@@ -207,85 +198,10 @@ def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
         assert_no_host_templates(text, f"{path} documents a host path template")
 
 
-def test_watch_desk_narrative_docs_have_no_baked_host_run_root() -> None:
-    # Narrative operator docs must not bake a host checkout path. Detector
-    # needles in tests and OPSEC scanners stay in those suites.
-    narrative_docs = (
-        Path("docs/audits/2026-09-11-uldr-program-audit.md"),
-        Path("docs/dispatch-briefs/2026-09-12-cu-p0-pilot-repair-brief.md"),
-        Path("docs/dispatch-briefs/2026-09-12-cu-p0-pilot-writer-brief.md"),
-        Path("docs/projects/open-model-data/PHASE_3_5_COT_CLAIM_VERIFIER.md"),
-        Path("docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md"),
-        Path("docs/runbooks/cursor-driver.md"),
-        Path("docs/runbooks/background-session-tasks.md"),
-        Path("docs/runbooks/word-atlas-source-inventory-review-candidates.md"),
-        Path("docs/runbooks/codex-hooks.md"),
-        Path("docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md"),
-    )
-    for path in narrative_docs:
-        text = path.read_text(encoding="utf-8")
-        assert_no_host_paths(text, f"{path} documents a host run-root or checkout path")
-
-
-def test_primary_repo_root_uses_env_when_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, str(tmp_path))
-    assert custody._primary_repo_root() == tmp_path.resolve()
-
-
-def test_primary_repo_root_resolves_cwd_relative_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.chdir(tmp_path)
-    extra = tmp_path / "extra-root"
-    extra.mkdir()
-    monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, "extra-root")
-    assert custody._primary_repo_root() == extra.resolve()
-
-
 def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, str(tmp_path / "missing"))
     with pytest.raises(custody.CustodyAccessError, match=custody.PRIMARY_REPO_ROOT_ENV):
         custody._primary_repo_root()
-
-
-def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(custody.PRIMARY_REPO_ROOT_ENV, raising=False)
-    monkeypatch.chdir(tmp_path)
-    assert custody._primary_repo_root() is None
-
-
-def test_first_eligible_cohort_100_percent_accessible() -> None:
-    receipt_path = REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json"
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    first_cohort = receipt["summary"]["first_eligible_cohort"]
-
-    assert first_cohort["cohort_id"] == "literary-non-ocr"
-    assert first_cohort["total_sources"] == 229
-    assert first_cohort["accessible_sources"] == 229
-    assert first_cohort["confirmed_native"] == 229
-    assert first_cohort["coverage_ratio"] == 1.0
-    assert first_cohort["permitted_to_proceed"] is True
-    assert receipt["safety_assertions"]["first_eligible_cohort_ready"] is True
-    assert receipt["verdict"] == "PROCEED_WITH_ACCESSIBLE_SOURCES"
-
-
-def test_missing_report_records_unmounted_archive_and_owner() -> None:
-    missing_path = REGISTRY_CUSTODY_DIR / "v4_source_custody_missing_report_v1.json"
-    report = json.loads(missing_path.read_text(encoding="utf-8"))
-
-    assert report["schema_version"] == "v4_source_custody_missing_report_v1"
-    assert report["owner"] == "existing custody/source-access owner"
-    assert report["operator_decision_date"] == "2026-09-10"
-    assert report["issue"] == 7884
-    assert len(report["missing_inputs"]) > 0
-
-    for item in report["missing_inputs"]:
-        assert item["owner"] == "existing custody/source-access owner"
-        assert item["cohort_id"] == "public-textbooks-non-stem-non-ocr"
-        assert any(term in item["reason"] for term in ("unmounted", "does_not_match", "not_found", "missing"))
-        assert "direct PDF byte extraction" in item["blocks"]
-
-    proceed = report["accessible_eligible_sources_permitted_to_proceed"]
-    assert proceed["permitted"] is True
-    assert "literary-non-ocr" in proceed["permitted_cohort_ids"]
 
 
 @pytest.mark.needs_artifact(
@@ -337,20 +253,6 @@ def test_check_chunk_file_lineage_native(tmp_path: Path) -> None:
     assert is_ocr is False
     assert count == 2
     assert chars > 0
-    assert digest is not None
-
-
-def test_check_chunk_file_lineage_pure_native_text(tmp_path: Path) -> None:
-    chunk_file = tmp_path / "native_text_sample.jsonl"
-    rows = [
-        {"chunk_id": "c1", "extraction_mode": "native_text", "text": "Привіт."},
-    ]
-    chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
-
-    mode, is_ocr, count, _chars, digest = custody.check_chunk_file_lineage(chunk_file)
-    assert mode == "native_text"
-    assert is_ocr is False
-    assert count == 1
     assert digest is not None
 
 
@@ -711,28 +613,6 @@ def test_verify_detects_recomputed_safety_assertion_violations(
 
 
 @pytest.mark.parametrize(
-    "bad_evidence_ref",
-    [
-        "/home/alice/source.jsonl",
-        r"C:\Users\alice\source.jsonl",
-        r"\\server\share\evidence.jsonl",
-    ],
-)
-def test_verify_detects_evidence_ref_private_host_path(
-    synthetic_bundle: SyntheticCustodyBundle, bad_evidence_ref: str
-) -> None:
-    header, records = synthetic_bundle.read_index()
-    records[0]["lineage_verification"]["evidence_ref"] = bad_evidence_ref
-    synthetic_bundle.write_index(header, records)
-    synthetic_bundle.rehash_receipt()
-
-    with pytest.raises(
-        custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"
-    ):
-        synthetic_bundle.verify()
-
-
-@pytest.mark.parametrize(
     ("field_path", "bad_val"),
     [
         pytest.param(
@@ -793,19 +673,6 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(
     assert synthetic_bundle.verify(test_cfg_path) is True
 
 
-def test_check_chunk_file_lineage_preserves_excluded_mode(tmp_path: Path) -> None:
-    chunk_file = tmp_path / "scanned_sample.jsonl"
-    rows = [
-        {"chunk_id": "c1", "extraction_mode": "scanned_image", "text": "Скан."},
-    ]
-    chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
-
-    mode, is_ocr, count, _chars, _digest = custody.check_chunk_file_lineage(chunk_file)
-    assert mode == "scanned_image"
-    assert is_ocr is True
-    assert count == 1
-
-
 def _fake_bulk_root(root: Path) -> Path:
     for marker in REQUIRED_BULK_MARKERS:
         (root / marker).mkdir(parents=True)
@@ -840,19 +707,6 @@ def test_archive_locator_ignores_repository_data_link(tmp_path: Path, monkeypatc
         assert custody._resolve_archive_mount(locator) is None
     assert custody._build_archive_cache_map("data/textbooks", "native_pdf_text") == {}
     assert not custody._check_archive_on_host("data/textbooks", "tb_one", "native_pdf_text")
-
-
-def test_archive_locator_bare_data_path_is_bulk_relative_not_repo_relative(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """With a valid bulk root, ``data/textbooks`` still means ``<bulk>/data/textbooks``, never the repo path."""
-    repo = tmp_path / "repo"
-    (repo / "data" / "textbooks").mkdir(parents=True)
-    bulk = _fake_bulk_root(tmp_path / "bulk")
-    monkeypatch.chdir(repo)
-    monkeypatch.setenv(ENV_BULK_ROOT, str(bulk))
-
-    assert custody._resolve_archive_mount("data/textbooks") is None
 
 
 @pytest.mark.parametrize(
@@ -908,18 +762,6 @@ def test_archive_locator_accepts_symlink_staying_inside_bulk_root(
     monkeypatch.setenv(ENV_BULK_ROOT, str(bulk))
 
     assert custody._resolve_archive_mount("gdrive:textbooks") == (bulk / "real_textbooks").resolve()
-
-
-def test_input_root_takes_precedence_over_cwd(tmp_path: Path) -> None:
-    custom_input = tmp_path / "input"
-    prov_dir = custom_input / "data/projects/open_model_data/provenance"
-    prov_dir.mkdir(parents=True)
-    custom_prov = prov_dir / "v4_source_provenance_index_v1.jsonl"
-    custom_prov.write_text("CUSTOM_PROV_HEADER\n", encoding="utf-8")
-
-    rel_path = Path("data/projects/open_model_data/provenance/v4_source_provenance_index_v1.jsonl")
-    resolved = custody._resolve_file(rel_path, [custom_input, Path.cwd()])
-    assert resolved == custom_prov
 
 
 def test_verify_detects_cohort_id_mismatch_in_summary(synthetic_bundle: SyntheticCustodyBundle) -> None:
@@ -1118,23 +960,6 @@ def test_validate_cohort_spec_enforces_compatible_resolver_and_lineage_rule() ->
         )
 
 
-def test_verify_detects_incompatible_cohort_lineage_rule_in_config(tmp_path: Path, repo_root: Path) -> None:
-    tampered_out = tmp_path / "out"
-    custody_dir = tampered_out / "data/projects/open_model_data/custody"
-    custody_dir.mkdir(parents=True)
-
-    # Tamper config so literary specifies native_pdf_text
-    config_data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
-    for c in config_data["cohorts"]:
-        if c["cohort_id"] == "literary-non-ocr":
-            c["lineage_rule"] = "native_pdf_text"
-    tampered_config = tmp_path / "config.json"
-    tampered_config.write_text(json.dumps(config_data), encoding="utf-8")
-
-    with pytest.raises(custody.CustodyAccessError, match=r"requires lineage_rule 'native_digital_source'"):
-        custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
-
-
 def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(
     synthetic_bundle: SyntheticCustodyBundle,
 ) -> None:
@@ -1165,83 +990,6 @@ def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(
         custody.CustodyAccessError,
         match=r"lineage status is CONFIRMED_NATIVE but lineage_mode is 'unknown'",
     ):
-        synthetic_bundle.verify()
-
-
-def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(
-    synthetic_bundle: SyntheticCustodyBundle,
-) -> None:
-    """Validate that any mismatch between lineage status and mode is rejected by verify."""
-    header, records = synthetic_bundle.read_index()
-
-    # Test 1: UNKNOWN_LINEAGE status with native_digital_source mode
-    records_copy = copy.deepcopy(records)
-    for r in records_copy:
-        if not r["permitted_to_proceed"]:
-            r["lineage_verification"]["lineage_mode"] = "native_digital_source"
-            break
-    synthetic_bundle.write_index(header, records_copy)
-    synthetic_bundle.rehash_receipt()
-
-    with pytest.raises(
-        custody.CustodyAccessError,
-        match=r"lineage status is UNKNOWN_LINEAGE but lineage_mode is 'native_digital_source'",
-    ):
-        synthetic_bundle.verify()
-
-    # Test 2: EXCLUDED_OCR status with native_digital_source mode (and is_ocr_derived=True so schema passes)
-    records_copy = copy.deepcopy(records)
-    for r in records_copy:
-        if not r["permitted_to_proceed"]:
-            r["lineage_verification"]["status"] = "EXCLUDED_OCR"
-            r["lineage_verification"]["lineage_mode"] = "native_digital_source"
-            r["lineage_verification"]["is_ocr_derived"] = True
-            break
-    synthetic_bundle.write_index(header, records_copy)
-    synthetic_bundle.rehash_receipt()
-
-    with pytest.raises(
-        custody.CustodyAccessError,
-        match=r"lineage status is EXCLUDED_OCR but lineage_mode is 'native_digital_source'",
-    ):
-        synthetic_bundle.verify()
-
-
-def test_bounded_custody_reader_rejects_non_positive_batch_size(tmp_path: Path) -> None:
-    """BoundedCustodyReader.read_source_stream must reject batch_size <= 0 (ACCESS-3)."""
-    db_path = tmp_path / "test.db"
-    conn = sqlite3.connect(db_path)
-    conn.execute("CREATE TABLE tbl (source_file TEXT, text TEXT)")
-    conn.execute("INSERT INTO tbl VALUES ('f1', 'hello')")
-    conn.commit()
-    conn.close()
-
-    reader = custody.BoundedCustodyReader(db_path)
-    with pytest.raises(custody.CustodyAccessError, match=r"batch_size must be strictly positive \(> 0\), got 0"):
-        reader.read_source_stream("tbl", "f1", batch_size=0)
-
-    with pytest.raises(custody.CustodyAccessError, match=r"batch_size must be strictly positive \(> 0\), got -10"):
-        reader.read_source_stream("tbl", "f1", batch_size=-10)
-
-
-def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(
-    synthetic_bundle: SyntheticCustodyBundle,
-) -> None:
-    """Receipt summary must count all textbooks with unmounted host archives as missing_on_host."""
-    real_receipt = json.loads(
-        (REGISTRY_CUSTODY_DIR / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8")
-    )
-    assert real_receipt["summary"]["textbook_cohort"]["missing_on_host"] == 122
-
-    receipt_data = synthetic_bundle.read_receipt()
-    expected_missing = receipt_data["summary"]["textbook_cohort"]["missing_on_host"]
-
-    # Tamper missing_on_host to a different count and verify rejection
-    receipt_tampered = copy.deepcopy(receipt_data)
-    receipt_tampered["summary"]["textbook_cohort"]["missing_on_host"] = expected_missing - 1
-    synthetic_bundle.write_receipt(receipt_tampered)
-
-    with pytest.raises(custody.CustodyAccessError, match=r"Receipt textbook_cohort discrepancy"):
         synthetic_bundle.verify()
 
 

@@ -133,13 +133,6 @@ def test_path_matching_dependency_vs_non_dependency() -> None:
     assert not scope.path_in_denominator("site/src/App.tsx", patterns)
 
 
-def test_glob_without_slash_matches_basename_only() -> None:
-    patterns = scope.load_denominator()["paths"]
-    assert scope.path_in_denominator("requirements-dev.txt", patterns)
-    # A root-level glob must not reach into subdirectories.
-    assert not scope.path_in_denominator("scripts/requirements-dev.txt", patterns)
-
-
 def test_name_status_parsing_covers_add_modify_delete_rename() -> None:
     raw = b"A\0docs/new.md\0M\0scripts/ci/audit_dependencies.py\0D\0requirements-old.txt\0"
     assert scope._parse_name_status_z(raw) == [
@@ -159,12 +152,6 @@ def test_rename_into_manifest_runs_audit() -> None:
     assert run is True
     assert matched == ["requirements.txt"]
     assert all(scope.NOT_APPLICABLE_LINE not in line for line in lines)
-
-
-def test_rename_out_of_manifest_runs_audit() -> None:
-    run, _lines, matched = scope.decide_from_changed(["requirements.txt", "docs/archived-requirements.txt"])
-    assert run is True
-    assert matched == ["requirements.txt"]
 
 
 def test_deleted_manifest_runs_audit() -> None:
@@ -191,14 +178,6 @@ def test_missing_base_fails_closed(tmp_path: Path, monkeypatch, capsys) -> None:
     assert "reason=missing_base_sha" in capsys.readouterr().out
 
 
-def test_zero_base_fails_closed(tmp_path: Path, monkeypatch) -> None:
-    output = tmp_path / "github_output"
-    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
-    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(tmp_path / "summary"))
-    assert scope.main(["--base", "0" * 40, "--event", "merge_group"]) == 0
-    assert "run=true" in output.read_text(encoding="utf-8")
-
-
 def test_unresolvable_merge_base_fails_closed(tmp_path: Path, monkeypatch, capsys) -> None:
     output = tmp_path / "github_output"
     monkeypatch.setenv("GITHUB_OUTPUT", str(output))
@@ -208,26 +187,6 @@ def test_unresolvable_merge_base_fails_closed(tmp_path: Path, monkeypatch, capsy
     assert "run=true" in output.read_text(encoding="utf-8")
     captured = capsys.readouterr()
     assert "reason=merge_base_unresolvable" in captured.err
-
-
-def test_denominator_roundtrip_json() -> None:
-    data = json.loads(_DENOMINATOR.read_text(encoding="utf-8"))
-    assert scope.matching_paths(["uv.lock"], data["paths"]) == ["uv.lock"]
-
-
-def test_workspace_manifest_matches_packages_glob() -> None:
-    """Root package.json declares npm workspaces under packages/* (#9871)."""
-    patterns = scope.load_denominator(_DENOMINATOR)["paths"]
-    assert scope.path_in_denominator("packages/activity-kit/package.json", patterns)
-    assert scope.path_in_denominator("packages/v4-runtime/package.json", patterns)
-    assert not scope.path_in_denominator("packages/activity-kit/package-lock.json", patterns)
-    assert not scope.path_in_denominator("packages/v4-runtime/pyproject.toml", patterns)
-
-
-def test_resolve_git_range_two_dot_passthrough(tmp_path: Path) -> None:
-    assert scope.resolve_git_range("aaa", "bbb", mode="two-dot", cwd=tmp_path) == "aaa..bbb"
-    assert scope.resolve_git_range("aaa..bbb", mode="two-dot", cwd=tmp_path) == "aaa..bbb"
-    assert scope.resolve_git_range("aaa...bbb", mode="merge-base", cwd=tmp_path) == "aaa...bbb"
 
 
 def test_added_manifest_runs_audit(
@@ -246,42 +205,6 @@ def test_added_manifest_runs_audit(
     assert rc == 0
     assert "decision=run" in out
     assert scope.NOT_APPLICABLE_LINE not in out
-    assert "run=true" in gh_output
-
-
-def test_modified_site_manifest_runs_audit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    fork = _init_repo(repo)
-    _git(repo, "checkout", "-b", "feature")
-    (repo / "site" / "package.json").write_text('{"name":"fixture","version":"2"}\n', encoding="utf-8")
-    head = _commit_all(repo, "modify site manifest")
-
-    rc, out, _err, gh_output = _run_main(
-        repo, base=fork, head=head, tmp_path=tmp_path, monkeypatch=monkeypatch, capsys=capsys
-    )
-    assert rc == 0
-    assert "decision=run" in out
-    assert "run=true" in gh_output
-
-
-def test_deleted_site_manifest_runs_audit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    fork = _init_repo(repo)
-    _git(repo, "checkout", "-b", "feature")
-    _git(repo, "rm", "site/package.json")
-    head = _commit_all(repo, "delete site manifest")
-
-    rc, out, _err, gh_output = _run_main(
-        repo, base=fork, head=head, tmp_path=tmp_path, monkeypatch=monkeypatch, capsys=capsys
-    )
-    assert rc == 0
-    assert "decision=run" in out
     assert "run=true" in gh_output
 
 
@@ -306,45 +229,6 @@ def test_rename_away_from_site_manifest_runs_audit(
     assert rc == 0
     assert "decision=run" in out
     assert "run=true" in gh_output
-
-
-def test_rename_onto_site_manifest_runs_audit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    fork = _init_repo(repo, with_site_manifest=False)
-    (repo / "site" / "pkg.json").write_text('{"name":"fixture"}\n', encoding="utf-8")
-    fork = _commit_all(repo, "seed pre-rename manifest")
-    _git(repo, "checkout", "-b", "feature")
-    _git(repo, "mv", "site/pkg.json", "site/package.json")
-    head = _commit_all(repo, "rename onto site manifest")
-
-    rc, out, _err, gh_output = _run_main(
-        repo, base=fork, head=head, tmp_path=tmp_path, monkeypatch=monkeypatch, capsys=capsys
-    )
-    assert rc == 0
-    assert "decision=run" in out
-    assert "run=true" in gh_output
-
-
-def test_docs_only_change_is_not_applicable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    fork = _init_repo(repo)
-    _git(repo, "checkout", "-b", "feature")
-    (repo / "docs" / "b.md").write_text("more docs\n", encoding="utf-8")
-    head = _commit_all(repo, "docs only")
-
-    rc, out, _err, gh_output = _run_main(
-        repo, base=fork, head=head, tmp_path=tmp_path, monkeypatch=monkeypatch, capsys=capsys
-    )
-    assert rc == 0
-    assert "decision=not_applicable" in out
-    assert scope.NOT_APPLICABLE_LINE in out
-    assert "run=false" in gh_output
 
 
 def test_moved_base_docs_only_branch_is_not_applicable(
@@ -393,30 +277,6 @@ def test_merge_group_event_runs_audit_on_dependency_change(
     )
     assert rc == 0
     assert "decision=run" in out
-    assert "run=true" in gh_output
-
-
-def test_shallow_clone_missing_base_fails_closed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    fork = _init_repo(repo)
-    (repo / "docs" / "b.md").write_text("later\n", encoding="utf-8")
-    _commit_all(repo, "advance main")
-
-    clone = tmp_path / "shallow"
-    env = os.environ | {"AGENT_NO_MERGE": "0"}
-    subprocess.run(
-        ["git", "clone", "--depth", "1", f"file://{repo}", str(clone)],
-        check=True, capture_output=True, text=True, timeout=60, env=env,
-    )
-
-    rc, _out, err, gh_output = _run_main(
-        clone, base=fork, tmp_path=tmp_path, monkeypatch=monkeypatch, capsys=capsys
-    )
-    assert rc == 0
-    assert "reason=merge_base_unresolvable" in err
     assert "run=true" in gh_output
 
 

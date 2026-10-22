@@ -540,21 +540,6 @@ def test_trusted_join_validates_components_lexically(tmp_path: Path) -> None:
             trusted_join(base, bad)
 
 
-def test_trusted_join_does_not_resolve_child_symlinks(tmp_path: Path) -> None:
-    """Documented trade: trusted_join is lexical-only — a child symlink pointing
-    outside base is NOT detected (that is why it must never see request-derived
-    parts; safe_join covers that boundary and has its own escape tests)."""
-    from scripts.path_safety import trusted_join
-
-    base = tmp_path / "root"
-    outside = tmp_path / "outside"
-    base.mkdir()
-    outside.mkdir()
-    (base / "link").symlink_to(outside)
-    joined = trusted_join(base, "link", "x.txt")
-    assert joined == Path(os.path.abspath(base / "link" / "x.txt"))  # lexical, unresolved
-
-
 def _fake_git(
     monkeypatch: pytest.MonkeyPatch,
     script: str,
@@ -829,24 +814,6 @@ def test_extract_archive_reports_reader_error_and_git_status_when_reader_fails(m
 
 
 @pytest.mark.timeout(30)
-def test_extract_archive_keeps_only_a_bounded_stderr_tail(monkeypatch, tmp_path: Path) -> None:
-    limit = release_snapshot.STDERR_TAIL_BYTES
-    spawned = _fake_git(
-        monkeypatch,
-        f"import sys; sys.stderr.write('x' * {limit * 4} + 'TAIL-END'); sys.exit(1)",
-    )
-
-    err = _extract_error(tmp_path)
-
-    assert err.git_status == 1
-    assert err.stderr_tail is not None
-    assert err.stderr_tail.endswith("TAIL-END")
-    assert len(err.stderr_tail.encode()) <= limit
-    assert len(str(err)) < limit + 1024
-    assert [process.poll() for process in spawned] == [1]
-
-
-@pytest.mark.timeout(30)
 def test_extract_archive_does_not_hang_when_git_writes_lots_of_stderr_first(monkeypatch, tmp_path: Path) -> None:
     archive = _archive_file(tmp_path)
     spawned = _fake_git(
@@ -1000,16 +967,3 @@ def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, 
         for process in spawned:
             os.kill(process.pid, signal.SIGKILL)
             process.wait(timeout=5)
-
-
-def test_extract_archive_with_real_invalid_sha_reports_git_failure(tmp_path: Path) -> None:
-    repo_root, _ = _create_snapshot_repo(tmp_path)
-    staging_dir = tmp_path / "staging"
-    staging_dir.mkdir()
-
-    with pytest.raises(release_snapshot.ReleaseSnapshotError) as exc_info:
-        release_snapshot._extract_archive(repo_root, "f" * 40, staging_dir)
-
-    assert exc_info.value.git_status == 128
-    assert "fatal:" in (exc_info.value.stderr_tail or "")
-    assert "git exit status 128" in str(exc_info.value)

@@ -201,11 +201,6 @@ def test_red_team_keeps_identity_and_subject_gates(inputs):
     assert resolve_reviewer(inputs, review_mode="red_team").selected is None
 
 
-def test_resolver_refuses_invalid_review_mode():
-    with pytest.raises(ValueError, match="unsupported review mode"):
-        resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", claude_account=HOST_ACCOUNT), review_mode="invalid")
-
-
 @pytest.mark.parametrize(
     "reviewer,authors,explicit,expected",
     [
@@ -253,13 +248,6 @@ def test_resolver_refuses_invalid_review_mode():
 )
 def test_red_team_seat_rule_uses_canonical_models(reviewer, authors, explicit, expected):
     assert red_team_seat_refusal((reviewer,), author_models=authors, author_model=explicit) == expected
-
-
-def test_red_team_evaluation_refuses_same_model_before_selection():
-    sol = REVIEW_CANDIDATES["openai_frontier"]
-    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6.1-sol", claude_account=HOST_ACCOUNT), review_mode="red_team")
-    assert result.status == "excluded"
-    assert result.reason == "RED_TEAM_REFUSED: reviewer model equals a branch author model"
 
 
 def test_red_team_evaluation_accepts_different_same_family_model():

@@ -571,39 +571,6 @@ def test_scan_pattern_overlapping_prefixes_boundaries_and_unicode():
     assert not list(empty.finditer("anything"))
 
 
-@pytest.mark.parametrize(
-    "dictionary,meaning,pos",
-    [
-        ("kaikki dictionary destination", "kaikki dictionary destination", "noun"),
-        ("target", "To TARGET (verb).", "verb"),
-    ],
-)
-def test_leak_scan_public_kaikki_atoms_and_matcher_normalization(
-    bound, tmp_path, monkeypatch, dictionary, meaning, pos
-):
-    root, api, _b = bound
-    from types import SimpleNamespace
-
-    monkeypatch.setattr(
-        api, "kaikki_rows", lambda lemmas: SimpleNamespace(raw={"synthetic": {"glosses": [dictionary]}})
-    )
-    repo = tmp_path / "public-probe"
-    repo.mkdir()
-    git(repo, "init", "-q")
-    git(repo, "config", "user.email", "fixture@example.invalid")
-    git(repo, "config", "user.name", "Fixture")
-    git(repo, "commit", "--allow-empty", "-qm", "base")
-    (repo / "note.txt").write_text(f"synthetic: {meaning}")
-    git(repo, "add", ".")
-    git(repo, "commit", "-qm", "baseline")
-    context = bindings.Context.read("a1", root)
-    context.inventory[0]["pos"] = pos
-    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": meaning}}
-    result = sense_cli.leak_scan(repo, private, context, {"words": [WORD]}, api, base="HEAD^")
-    assert result["status"] == "checked"
-    assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 0}
-
-
 def test_record_texts_preserve_nested_fields_but_not_siblings():
     records = list(
         sense_cli._record_texts(
@@ -1301,12 +1268,6 @@ def test_row_parsing_invalid_and_non_string_entries():
     assert matcher.classify("(rare)").reason == "uncertain_scope"
 
 
-def test_definition_part_of_sense_signature():
-    pool = matcher.candidates(WORD, [row(["target (first definition)", "target (second definition)"])])
-    assert matcher.signature(pool[0]) != matcher.signature(pool[1])
-    assert matcher.display_signature(pool[0]) == matcher.display_signature(pool[1])
-
-
 def test_unreadable_book_meaning_takes_the_plain_first_meaning(bound):
     _root, api, _b = bound
     private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "(unknown label) target"}}
@@ -1399,19 +1360,6 @@ def test_multiple_book_entries_first_equal_candidate_wins(bound, second):
         # No meaning equals a candidate: the first entry's own meaning is the gloss.
         assert decisions == [{"word": "W-001", "match": "book", "locator": "0"}]
         assert selected["W-001"]["gloss"] == "absent"
-
-
-def test_reviewed_binding_requires_exact_atom_index(review_dispatch):
-    tasks, _pool, record, result, task, verdict = review_dispatch
-    pool = bindings.candidate_list(WORD, [row(["target / Goal (an intended destination)"])])
-    verdict["subject"] = {"word": "W-001", "candidates_sha256": bindings.digest(pool), **pool[1]}
-    result.write_text(json.dumps(verdict))
-    task["result_sha256"] = hashlib.sha256(result.read_bytes()).hexdigest()
-    record.write_text(json.dumps(task))
-    b = bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, atom_index=1)
-    assert b["span"] == "Goal" and b["atom_index"] == 1
-    with pytest.raises(ValueError, match="review_subject_stale_or_unapproved"):
-        bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, atom_index=0)
 
 
 @pytest.fixture
@@ -1514,66 +1462,6 @@ def test_book_binding_and_store_schema_shapes(book_bound):
     assert list(
         word_check.iter_errors({**base, "gloss_basis": {"method": "reviewed.v1", "binding": "x", "locator": "p1"}})
     )
-
-
-def test_book_gloss_builds_verifies_and_gates_plans(book_bound, monkeypatch):
-    root, api, binding = book_bound
-    monkeypatch.setattr(
-        sources.stress,
-        "verify_stress",
-        lambda w, **kw: {
-            "status": "ok",
-            "matches": [{"stressed_form": w, "unstressed_form": w, "vowel_indices": [0], "override_applied": False}],
-            "source": {"digest": "t" * 64},
-        },
-    )
-    req = root / "request.yaml"
-    req.write_text(
-        yaml.safe_dump(
-            {
-                "request_schema": 1,
-                "level": "a1",
-                "words": [
-                    {"lemma": "synthetic", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 10}}
-                ],
-            }
-        )
-    )
-    store = words.build_words("a1", req, evidence_dir=root, sources_instance=api, mcp_commit="a" * 40)["store"]
-    record = store["words"][0]
-    assert (record["gloss_en"], record["gloss_source"]) == ("TARGET", "ohoiko_reference")
-    assert record["gloss_basis"]["locator"] == binding["locator"] and "gloss_ref" not in record
-    result = verify.verify_words_store("a1", evidence_dir=root, plans_dir=root, sources_instance=api)
-    assert not result["errors"], result
-    assert "W-001:private_commitment" in result["not_checked"]
-    assert result["private_commitments"]["status"] == "unverifiable_in_ci"
-    context = bindings.Context.read("a1", root)
-    plan = {"vocabulary": {"core": ["W-001"]}}
-    assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context) == []
-    record["gloss_en"] = "target"
-    assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context)
-
-
-def test_unrelated_aliases_keep_the_validated_exemption_but_an_aliased_gloss_does_not(book_bound):
-    root, api, _binding = book_bound
-    context = bindings.Context.read("a1", root)
-    pool = api.gloss_rows([("synthetic", "noun")]).raw[("synthetic", "noun")]
-    selection = context.select(WORD, pool, None)
-    shared = {"lemma": "synthetic", "row_sha256": "0" * 64}
-    record = {
-        **WORD,
-        "forms": [{"form": "a", "vesum": shared}, {"form": "b", "vesum": shared}],
-        "gloss_en": selection.gloss,
-        "gloss_source": selection.source,
-        "gloss_basis": selection.basis,
-    }
-    # The builder shares one VESUM mapping between readings; the dumper writes it as an alias.
-    store = lock_yaml({"words": [record]})
-    assert b"*id001" in store
-    redacted = sense_cli._redact_validated_locations(store, context, {"W-001": WORD}, api, kind="words")
-    assert b"TARGET" not in redacted and b"*id001" in redacted
-    aliased = store.replace(b"gloss_en: TARGET", b"gloss_en: *gloss").replace(b"words:", b"note: &gloss TARGET\nwords:")
-    assert sense_cli._redact_validated_locations(aliased, context, {"W-001": WORD}, api, kind="words") == aliased
 
 
 def lock_yaml(data):

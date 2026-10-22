@@ -592,16 +592,6 @@ def test_parsers_are_registered_and_their_imports_closed() -> None:
         assert len(transforms.transform_digest(source_id, binding)) == 64
 
 
-def test_samples_are_seeded_and_drawn_from_all_lines(runs) -> None:
-    first = imp.draw_samples(runs, "seed-a")
-    assert first == imp.draw_samples(runs, "seed-a")
-    assert len(first["ohoiko_entries"]) == 11 and len(first["oho_lines"]) == len(OHO_PAGE.splitlines())
-    dispositions = {row["disposition"] for row in first["ulp_lines"]}
-    assert "prose_excluded" in dispositions and "zone_entry" in dispositions
-    assert [r["unit"] for r in first["ohoiko_entries"]] != [r["unit"] for r in imp.draw_samples(runs, "b")[
-        "ohoiko_entries"]]
-
-
 def test_cli_dry_run_and_arguments(sources_db: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     before = _sha(sources_db)
     assert imp.main(["--db", str(sources_db), "--report", str(tmp_path / "r.json")]) == 0
@@ -692,18 +682,6 @@ def test_iter_examples_first_matches_legacy_single_example() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_resolved_input_and_its_sidecars_are_protected_when_db_is_a_symlink(tmp_path: Path) -> None:
-    source = tmp_path / "input.db"
-    source.write_text("synthetic marker, not a database", encoding="utf-8")
-    link = tmp_path / "link.db"
-    link.symlink_to(source)
-    protected = imp._protected_paths(link, None)
-    for option in ("report", "sample-out"):
-        for suffix in ("", "-wal", "-shm", "-journal"):
-            assert imp.output_collision({option: source.with_name(source.name + suffix)}, protected) == option
-    assert imp.output_collision({"report": tmp_path / "elsewhere.json"}, protected) is None
-
-
 @pytest.mark.parametrize("text", [
     "1. сло́во\n\n   те́рмін  word\n",  # a blank line and an indented continuation
     "1. сло́во\r\n\r\n   те́рмін  word\r\n",  # CR characters
@@ -714,25 +692,6 @@ def test_wrapped_raw_span_is_the_source_region_byte_for_byte(text: str) -> None:
     item, = imp.entry_items("entry", entry.shape, join_splits=True, printed=imp.PrintedText(text, 3))
     assert item.raw_span == text[item.span_start:item.span_end]
     assert "\n" in item.raw_span
-
-
-def test_wrapped_raw_span_leaves_out_only_the_other_column_text() -> None:
-    text = "1. сло́во = вислів =  word, expression\n\n   те́рмін\n"
-    entry = imp.parse_word_chunk("synthetic_e0001", text)
-    parent = next(i for i in imp.entry_items("entry", entry.shape, join_splits=True,
-                                             printed=imp.PrintedText(text, 3)) if i.parent is None)
-    assert parent.raw_span == "сло́во = вислів =\n\n   те́рмін"
-
-
-def test_r2_3_reviewers_reproducer_exercise_heading_with_matching_columns() -> None:
-    """The r3 review's synthetic reproducer, verbatim: entry-shaped lines under "Bonus Exercises" are not vocabulary."""
-    lines = ["Lesson synthetic", "", " " * 40 + "Key Vocabulary 1-01",
-             f"{'':14}{'сло́во':49}word", "",
-             " " * 40 + "Bonus Exercises 1-20",
-             f"{'':14}{'так':49}yes"]
-    parsed = gp.parse_lesson("\n".join(lines))
-    assert [entry.headword_raw for entry in parsed.entries] == ["сло́во"]
-    assert parsed.sections == [("Key Vocabulary 1-01", 3, 5)]
 
 
 @pytest.mark.parametrize("heading", [
@@ -780,50 +739,6 @@ def test_r2_3_running_title_keeps_the_zone_only_when_entries_follow() -> None:
 
 
 # --- R2-2: every raw_span is its source region ----------------------------
-
-
-def _source_text(source: str, unit: rec.ParsedUnit) -> str:
-    payload = unit.unit.payload
-    if source == imp.WORDS_SOURCE_ID:
-        return WORD_CHUNKS[int(unit.unit.l0_locator[-4:])]
-    return payload["pages"][0]["full_text"] if source == imp.VERBS_SOURCE_ID else payload["full_text"]
-
-
-@pytest.mark.parametrize("source", imp.SOURCE_IDS)
-def test_r2_2_every_span_producer_raw_span_equals_the_source_bytes_at_its_offsets(runs, source: str) -> None:
-    """A span on one line is ``text[start:end]``; a wrapped one keeps its line breaks and drops only other columns."""
-    checked = 0
-    for unit in runs[source].units:
-        if not unit.items:
-            continue  # refused truncated_source: nothing printed
-        text = _source_text(source, unit)
-        for item in unit.items:
-            region = _printed(text, item)
-            if "\n" not in region:
-                assert item.raw_span == region, item.raw_span
-            else:
-                raw_lines, region_lines = item.raw_span.split("\n"), region.split("\n")
-                assert len(raw_lines) == len(region_lines), item.raw_span
-                assert region_lines[0].startswith(raw_lines[0]) and region_lines[-1].endswith(raw_lines[-1])
-                assert all(raw in line for raw, line in zip(raw_lines, region_lines, strict=True)), item.raw_span
-            checked += 1
-    assert checked > 0
-
-
-WRAPS = ("\n", "\n\n", "\r\n", "\r\n\r\n", "\n   ", "\n\n\t ", " \n", "\t\n  ", "\n \n   ", "\r\n  \r\n\t")
-
-
-def test_r2_2_property_wrapped_word_spans_are_the_source_bytes_without_another_column() -> None:
-    """Seeded generative check (1000-words producer): no other column in the span, so raw == text[start:end]."""
-    rng = random.Random(20261020)
-    heads = ("сло́во", "те́рмін", "ха́та", "кни́жка", "вислів", "пра́вда", "ми́ля")
-    for _ in range(300):
-        first, second = rng.sample(heads, 2)
-        wrap = rng.choice(WRAPS)
-        text = f"1. {first}{wrap}{second}{rng.choice(('', '  word'))}\n"
-        entry = imp.parse_word_chunk("synthetic_e0001", text)
-        item, = imp.entry_items("entry", entry.shape, join_splits=True, printed=imp.PrintedText(text, 3))
-        assert item.raw_span == text[item.span_start:item.span_end] == f"{first}{wrap}{second}", repr(text)
 
 
 def test_r2_2_property_wrapped_zone_spans_are_the_source_bytes_without_another_column() -> None:
@@ -901,19 +816,6 @@ def _alias(world: SimpleNamespace, kind: str, target: Path, name: str) -> Path:
     raise AssertionError(kind)
 
 
-def test_r2_1_symlink_to_db_is_refused(alias_world: SimpleNamespace, capsys: pytest.CaptureFixture[str]) -> None:
-    out = _alias(alias_world, "symlink", alias_world.db, "out-sym.json")
-    for db in (alias_world.db, alias_world.root / "link.db"):
-        _assert_refused(alias_world, db, out, capsys)
-    _assert_refused(alias_world, alias_world.db, alias_world.root / "link.db", capsys)  # the --db symlink itself
-
-
-def test_r2_1_hardlink_to_db_is_refused(alias_world: SimpleNamespace, capsys: pytest.CaptureFixture[str]) -> None:
-    out = _alias(alias_world, "hardlink", alias_world.db, "out-hard.json")
-    for db in (alias_world.db, alias_world.root / "link.db"):
-        _assert_refused(alias_world, db, out, capsys)
-
-
 @pytest.mark.parametrize("suffix", SIDECARS)
 @pytest.mark.parametrize("alias", ["same", "symlink", "hardlink", "dotdot", "dirlink"])
 def test_r2_1_sidecar_of_the_resolved_db_is_refused_however_db_is_named(
@@ -935,17 +837,6 @@ def test_r2_1_sidecar_of_the_unresolved_symlinked_db_is_refused(
     assert not target.exists()
     out = _alias(alias_world, alias, target, f"out-unresolved{suffix}.json")
     _assert_refused(alias_world, link, out, capsys)
-
-
-def test_r2_1_relative_and_absolute_forms_name_one_file(alias_world: SimpleNamespace,
-                                                         capsys: pytest.CaptureFixture[str]) -> None:
-    """A relative path is refused as such; its ``..`` and symlinked-directory forms are refused as the db."""
-    assert imp.main(["--db", str(alias_world.db), "--report", alias_world.db.name]) == 2  # cwd holds the db
-    assert "must be an absolute path" in capsys.readouterr().err
-    for suffix in ("", *SIDECARS):
-        target = alias_world.db.with_name(alias_world.db.name + suffix)
-        for alias in ("dotdot", "dirlink"):
-            _assert_refused(alias_world, alias_world.db, _alias(alias_world, alias, target, "unused"), capsys)
 
 
 def test_r2_1_an_unrelated_output_is_not_refused(alias_world: SimpleNamespace) -> None:

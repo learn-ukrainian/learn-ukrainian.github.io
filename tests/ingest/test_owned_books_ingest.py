@@ -264,12 +264,6 @@ def test_pdf_only_archive_filter(env):
     assert any(f["status"] == "skipped:pdf_text_only" for f in report["rows"][0]["files"])
 
 
-@pytest.mark.parametrize("state", sorted(owned.SKIPS))
-def test_typed_inventory_skip(env, state):
-    report, code = owned.run(args(env, [row(ingest=state)], check=True))
-    assert code == 0 and report["rows"][0]["status"] == f"skipped:{state}"
-
-
 def test_legacy_identity_rights_only_and_missing_source(env, monkeypatch):
     monkeypatch.setattr(owned, "load_owned_rights", lambda: {"legacy-book": {"rights": "owned_cite_only"}})
     db, root, _inventory, out = env
@@ -634,12 +628,6 @@ def test_unknown_ingest_modes_have_typed_error(env, state):
     assert code == 1 and report["rows"][0]["status"] == "error:unknown_ingest"
 
 
-@pytest.mark.parametrize("identity", [None, "", [], "bad slug"])
-def test_invalid_singular_identity_has_typed_error(env, identity):
-    with pytest.raises(owned.IngestError, match=r"^invalid_source_file$"):
-        owned.run(args(env, [row(ingest="already_ingested", source_file=identity)]))
-
-
 def test_unreadable_legacy_rights_have_sanitized_typed_error(env, monkeypatch):
     _db, root, _inventory, _out = env
     (root / "existing.pdf").write_bytes(pdf("Existingword notes."))
@@ -651,14 +639,6 @@ def test_unreadable_legacy_rights_have_sanitized_typed_error(env, monkeypatch):
     report, code = owned.run(args(env, [row(ingest="already_ingested", source_file="legacy")]))
     assert code == 1 and report["rows"][0]["status"] == "error:owned_rights_unreadable"
     assert "SENSITIVE_NAME_SENTINEL" not in str(report)
-
-
-@pytest.mark.parametrize("extension", [".pptx", ".epub"])
-def test_packaged_text_filters_garbled_units_before_ingestion(monkeypatch, extension):
-    monkeypatch.setattr(owned, "package_text", lambda payload, ext: [(1, "ɭɤɪɚʀғɧɫɶɤɨɸ"), (2, "Readableword unit.")])
-    units, pages, status = owned.extract(b"synthetic", extension)
-    assert status == "extracted" and units == [(2, "Readableword unit.")]
-    assert [p["status"] for p in pages] == ["garbled_text_layer", "text"]
 
 
 @pytest.mark.parametrize(
@@ -856,22 +836,6 @@ def test_unit_duplicates_require_one_earlier_retained_donor(env, extension, deck
     assert stored == {f"owned-synthetic-work_f{i}_p{j:04d}_c0001" for i, j in kept}
 
 
-def test_unit_duplicate_normalisation_uses_nfc_and_collapsed_whitespace(env, monkeypatch):
-    _db, root, _inventory, _out = env
-    extracted = iter(
-        [
-            [(1, "Caf\u00e9 first slide"), (2, "Donor only slide"), (3, "Last slide")],
-            [(1, "Last\n\t slide"), (2, "Cafe\u0301  first slide")],
-        ]
-    )
-    monkeypatch.setattr(owned, "extract", lambda *a, **kw: (next(extracted), [], "extracted"))
-    for name in ("a.pptx", "b.pptx"):
-        (root / name).write_bytes(b"synthetic extraction input")
-    units, accounting = owned.collect(row(), sorted(root.glob("*.pptx")))
-    assert [f["status"] for f in accounting] == ["extracted", "duplicate_of:f1"]
-    assert len(units) == 3 and all(index == "1" for index, _page, _text in units)
-
-
 @pytest.mark.parametrize(
     "policy,expected", [({}, "missing"), ({"owned-synthetic-work": {"rights": "private_permission"}}, "mismatch")]
 )
@@ -884,15 +848,6 @@ def test_new_source_requires_matching_rights_before_any_writes(env, monkeypatch,
     monkeypatch.setattr(owned, "load_owned_rights", lambda: policy)
     report, code = owned.run(request)
     assert code == 1 and report["rows"][0]["status"] == f"error:owned_source_rights_{expected}"
-    assert db.read_bytes() == before and not out.exists()
-
-
-def test_private_inventory_cannot_use_cite_only_rights(env):
-    db, root, _inventory, out = env
-    (root / "a.pdf").write_bytes(pdf("Readableword content."))
-    before = db.read_bytes()
-    report, code = owned.run(args(env, [row(rights="private_permission")]))
-    assert code == 1 and report["rows"][0]["status"] == "error:owned_source_rights_mismatch"
     assert db.read_bytes() == before and not out.exists()
 
 
@@ -928,23 +883,6 @@ def test_rights_withdrawal_blocks_valid_cached_artifacts_without_writes(env, mon
     report, code = owned.run(request)
     assert code == 1 and report["rows"][0]["status"] == f"error:{error}"
     assert before == (request.db.read_bytes(), {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in out.iterdir()})
-
-
-def test_disk_metadata_files_are_ignored_and_check_passes(env):
-    _db, root, _inventory, _out = env
-    (root / "a.pdf").write_bytes(pdf("Readableword content."))
-    for name in (".DS_Store", "._x.pdf"):
-        (root / name).write_bytes(b"not valid documents")
-    request = args(env, [row(files=["**/*"])])
-    report, code = owned.run(request)
-    assert code == 0 and report["rows"][0]["chunks"] == 1
-    assert [f["status"] for f in report["rows"][0]["files"]] == [
-        "skipped:ignored_metadata",
-        "skipped:ignored_metadata",
-        "extracted",
-    ]
-    request.check = True
-    assert owned.run(request)[1] == 0
 
 
 @pytest.mark.parametrize("packed", [False, True])

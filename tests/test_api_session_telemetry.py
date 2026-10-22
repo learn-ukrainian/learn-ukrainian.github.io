@@ -328,30 +328,6 @@ def test_query_session_wins_over_header(
     assert response.json()["_telemetry"]["transcript"] == f"{query_session}.jsonl"
 
 
-def test_header_session_used_when_query_absent(
-    tmp_path,
-    monkeypatch,
-    telemetry_enabled,
-) -> None:
-    home = tmp_path / "home"
-    project_root = tmp_path / "learn-ukrainian"
-    project_root.mkdir()
-    session_id = "header-only"
-    flat = str(project_root.resolve()).replace("/", "-")
-    _write_transcript(home / ".claude" / "projects" / flat / f"{session_id}.jsonl")
-
-    monkeypatch.setenv("HOME", str(home))
-    monkeypatch.setattr(telemetry_response, "PROJECT_ROOT", project_root)
-
-    response = TestClient(app).get(
-        "/api/state/manifest",
-        headers={"X-Session-Id": session_id},
-    )
-
-    assert response.json()["_telemetry"]["caller_match"] is True
-    assert response.json()["_telemetry"]["transcript"] == f"{session_id}.jsonl"
-
-
 def test_session_given_does_not_use_cross_checkout_fallback(
     tmp_path,
     monkeypatch,

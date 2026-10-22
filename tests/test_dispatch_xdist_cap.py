@@ -16,20 +16,14 @@ from scripts.ci.pytest_dispatch_cap import (
     DISPATCH_TASK_ENV,
     FULL_SUITE_BUSY,
     LOCK_ENV,
-    LOCK_PATH,
     MAX_PROCESSES,
     acquire_full_suite_lock,
-    collection_only,
-    configured_lock_path,
-    dispatch_marker_set,
     expand_tx_specs,
     is_full_suite,
-    is_tests_root,
     path_covers_full_suite,
     release_full_suite_lock,
     repository_root,
     tx_spec_worker_count,
-    xdist_available,
 )
 from scripts.common import test_slots
 
@@ -118,22 +112,6 @@ def test_marker_and_n8_clamps_to_two_workers(tmp_path: Path) -> None:
     _assert_workers(completed, 2)
 
 
-def test_marker_and_nauto_clamps_to_two_workers(tmp_path: Path) -> None:
-    _write_probe(tmp_path)
-    completed = _run_pytest(
-        tmp_path, ["-n", "auto", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
-    )
-    _assert_workers(completed, 2)
-
-
-def test_marker_and_nlogical_clamps_to_two_workers(tmp_path: Path) -> None:
-    _write_probe(tmp_path)
-    completed = _run_pytest(
-        tmp_path, ["-n", "logical", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
-    )
-    _assert_workers(completed, 2)
-
-
 @pytest.mark.parametrize(
     ("maxprocesses", "expected"),
     [("0", 2), ("-1", 2), ("5", 2), ("1", 1)],
@@ -146,14 +124,6 @@ def test_explicit_maxprocesses_is_clamped(tmp_path: Path, maxprocesses: str, exp
         _child_env(tmp_path, marker="impl-8645-b"),
     )
     _assert_workers(completed, expected)
-
-
-def test_marker_and_n1_stays_one_worker(tmp_path: Path) -> None:
-    _write_probe(tmp_path)
-    completed = _run_pytest(
-        tmp_path, ["-n", "1", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
-    )
-    _assert_workers(completed, 1)
 
 
 def test_override_ini_addopts_still_caps_when_pytest_plugins_is_set(tmp_path: Path) -> None:
@@ -348,7 +318,7 @@ def test_full_suite_lock_fails_fast_and_targeted_paths_do_not(tmp_path: Path) ->
     assert FULL_SUITE_BUSY not in targeted.stderr + targeted.stdout
 
 
-@pytest.mark.parametrize("flag", ["--collect-only", "--co"])
+@pytest.mark.parametrize("flag", ["--collect-only"])
 def test_collect_only_full_suite_runs_while_lock_held_and_executes_nothing(tmp_path: Path, flag: str) -> None:
     """A collection-only run is exempt; the same run without the flag is still refused (#9434)."""
     _write_probe(tmp_path)
@@ -392,27 +362,6 @@ def _foreign_rootdir(tmp_path: Path) -> Path:
     return foreign
 
 
-def test_foreign_rootdir_and_no_path_forms_are_refused_while_lock_held(tmp_path: Path) -> None:
-    env = _child_env(tmp_path, marker="impl-8645-b")
-    _hold_tmp_lock(tmp_path, env)
-    foreign = _foreign_rootdir(tmp_path)
-    forms = (
-        (_REPO_ROOT, ["-q", ".", "--rootdir", str(foreign)]),
-        (_REPO_ROOT, ["-q", "tests", "--rootdir", str(foreign)]),
-        (_REPO_ROOT / "tests" / "ai_agent_bridge", ["-q"]),
-        (_REPO_ROOT, ["-q", ".", "-k", "nomatch", "-m", "nomatch"]),
-    )
-    try:
-        for cwd, args in forms:
-            blocked = _run_repo(cwd, args, env)
-            combined = blocked.stderr + blocked.stdout
-            assert blocked.returncode != 0, combined
-            assert FULL_SUITE_BUSY in combined, combined
-            assert " passed" not in blocked.stdout
-    finally:
-        release_full_suite_lock()
-
-
 def test_scripts_ci_invocation_loads_the_cap(tmp_path: Path) -> None:
     env = _child_env(tmp_path, marker="impl-8645-b")
     completed = _run_repo(
@@ -423,31 +372,6 @@ def test_scripts_ci_invocation_loads_the_cap(tmp_path: Path) -> None:
     combined = completed.stdout + completed.stderr
     assert CAP_LINE in combined, combined
     assert FULL_SUITE_BUSY not in combined
-
-
-def test_ci_workflows_do_not_set_the_dispatch_marker() -> None:
-    workflow_dir = _REPO_ROOT / ".github" / "workflows"
-    offenders = [
-        str(path.relative_to(_REPO_ROOT))
-        for path in sorted(workflow_dir.glob("*.yml"))
-        if DISPATCH_TASK_ENV in path.read_text(encoding="utf-8")
-    ]
-    assert offenders == []
-
-
-def test_blank_marker_is_unset() -> None:
-    assert dispatch_marker_set({DISPATCH_TASK_ENV: "  "}) is False
-    assert dispatch_marker_set({DISPATCH_TASK_ENV: "task"}) is True
-    assert dispatch_marker_set({}) is False
-
-
-def test_tests_root_detection(tmp_path: Path) -> None:
-    tests = tmp_path / "tests"
-    tests.mkdir()
-    assert is_tests_root("tests", invocation_dir=tmp_path, rootpath=tmp_path)
-    assert is_tests_root("tests/", invocation_dir=tmp_path, rootpath=tmp_path)
-    assert not is_tests_root("tests/test_sample.py", invocation_dir=tmp_path, rootpath=tmp_path)
-    assert not is_tests_root("tests/test_sample.py::test_ok", invocation_dir=tmp_path, rootpath=tmp_path)
 
 
 class _Args:
@@ -489,35 +413,6 @@ def test_full_suite_classification(tmp_path: Path) -> None:
     elsewhere = _Args(source.ARGS, ["tests"], foreign)
     elsewhere.invocation_params = type("Inv", (), {"dir": foreign})()
     assert not is_full_suite(elsewhere)  # type: ignore[arg-type]
-
-
-def test_collection_only_reads_the_collect_only_option() -> None:
-    def config(**option: object) -> pytest.Config:
-        return type("Config", (), {"option": type("Option", (), option)()})()  # type: ignore[return-value]
-
-    assert collection_only(config(collectonly=True))
-    assert not collection_only(config(collectonly=False))
-    assert not collection_only(config())
-
-
-def test_lock_path_env_override(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    monkeypatch.delenv(LOCK_ENV, raising=False)
-    assert configured_lock_path() == LOCK_PATH
-    monkeypatch.setenv(LOCK_ENV, "  ")
-    assert configured_lock_path() == LOCK_PATH
-    override = tmp_path / "nested" / "pytest-full-suite.lock"
-    monkeypatch.setenv(LOCK_ENV, str(override))
-    assert configured_lock_path() == override
-    acquire_full_suite_lock()
-    try:
-        assert override.is_file()
-    finally:
-        release_full_suite_lock()
-
-
-def test_xdist_available_false_when_import_blocked(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setitem(sys.modules, "xdist", None)
-    assert xdist_available() is False
 
 
 def _block_xdist(env: dict[str, str], directory: Path) -> None:

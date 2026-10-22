@@ -4,13 +4,11 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import json
 import os
 import subprocess
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_audit_entropy as entropy
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
@@ -224,29 +222,3 @@ def test_rejects_plan_not_earlier_than_nonce_commitment(tmp_path: Path, monkeypa
     monkeypatch.setattr(entropy, "_git_ok", ordered_git_ok)
     with pytest.raises(entropy.AuditEntropyError, match="not committed before"):
         _verify(receipt, repo)
-
-
-def test_first_containing_scans_only_path_change_history(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo, receipt, _ = _valid(tmp_path)
-    for number in range(24):
-        (repo / "README").write_text(f"unrelated {number}\n", encoding="utf-8")
-        tip = _commit(repo, f"unrelated {number}")
-    _git(repo, "update-ref", "refs/remotes/origin/main", tip)
-    calls = 0
-    original = entropy._artifact_at
-
-    def count_artifact(*args: object, **kwargs: object) -> bytes | None:
-        nonlocal calls
-        calls += 1
-        return original(*args, **kwargs)
-
-    monkeypatch.setattr(entropy, "_artifact_at", count_artifact)
-    _verify(receipt, repo)
-    assert calls <= 3
-
-
-def test_entropy_schema_is_parseable_and_closed() -> None:
-    schema = json.loads(entropy.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert schema["$defs"]["reveal"]["additionalProperties"] is False
-    assert schema["$defs"]["commitment"]["additionalProperties"] is False

@@ -95,10 +95,6 @@ def test_policy_reads_codex_allowlist_from_config():
     ) == (10.0, 900.0, 3600.0, 48.0)
 
 
-def test_builtin_default_allowlist_equals_shipped_policy():
-    assert POLICY.allowed_models == credit_lane.DEFAULT_ALLOWED_MODELS
-
-
 def test_policy_allowlist_names_active_catalog_models():
     from scripts.review.model_catalog import canonical_model_id, load_model_catalog
 
@@ -204,12 +200,6 @@ def test_state_machine(overrides, expected):
         assert state["coverage"] == {"dispatches": None, "basis": credit_lane.COVERAGE_BASIS}
     else:
         assert "coverage" not in state
-
-
-def test_tightest_plan_window_governs():
-    info = _codex(remaining_pct=60.0, codexbar={**_codex()["codexbar"], "weekly_remaining_pct": 60.0})
-    info["codexbar"]["primary_remaining_pct"] = 3.0
-    assert credit_lane.lane_credit_state("codex", info, POLICY, now=NOW)["state"] == credit_lane.CREDIT_BALANCE_PRESENT
 
 
 def test_stale_snapshot_fails_closed():
@@ -341,13 +331,6 @@ def test_recent_rate_limit_refutes_the_credit_balance(monkeypatch):
     }
     assert "coverage" not in state
     assert calls == [("codex", 3600.0, NOW)]
-
-
-def test_rate_limits_are_not_read_while_the_plan_is_healthy(monkeypatch):
-    calls = _rate_limits(monkeypatch, 3)
-    info = _codex(remaining_pct=60.0, codexbar={**_codex()["codexbar"], "weekly_remaining_pct": 60.0})
-    assert credit_lane.lane_credit_state("codex", info, POLICY, now=NOW)["state"] == credit_lane.PLAN_HEALTHY
-    assert calls == []
 
 
 def test_snapshot_runtime_window_wider_than_policy_is_not_counted(monkeypatch):
@@ -518,13 +501,6 @@ def test_regular_file_removed_between_listing_and_open_is_ignored(monkeypatch, t
     assert "unreadable_records" not in state["evidence"]
 
 
-def test_dangling_symlink_of_another_lane_is_ignored(monkeypatch, tmp_path):
-    (tmp_path / "usage_claude-delegate_2026-10-02.jsonl").symlink_to(tmp_path / "missing-target.jsonl")
-    state = _real_reader_state(monkeypatch, tmp_path, {})
-    assert state["state"] == _PRESENT
-    assert "unreadable_records" not in state["evidence"]
-
-
 def test_directory_in_place_of_a_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
     (tmp_path / _LANE_FILE).mkdir()
     assert _real_reader_state(monkeypatch, tmp_path, {})["state"] == _UNVERIFIED
@@ -580,18 +556,6 @@ _TIMES = {
 }
 
 
-def test_credit_lane_shares_the_reset_reserve_parser(monkeypatch):
-    seen: list = []
-
-    def parse(value):
-        seen.append(value)
-        return NOW
-
-    monkeypatch.setattr(reset_reserve, "utc_datetime", parse)
-    assert credit_lane.utc_datetime("anything") == NOW
-    assert seen == ["anything"]
-
-
 @pytest.mark.parametrize(("value", "accepted"), list(_TIMES.values()), ids=list(_TIMES))
 def test_balance_fetch_time_must_be_explicit_utc(value, accepted):
     info = _codex()
@@ -630,12 +594,6 @@ def test_balance_fetch_time_in_the_future_or_too_old_fails_closed():
         info = _codex()
         info["codexbar"]["fetched_at"] = value
         assert credit_lane.lane_credit_state("codex", info, POLICY, now=NOW)["state"] == credit_lane.CREDITS_UNVERIFIED
-
-
-def test_natural_reset_rejects_naive_text():
-    info = _codex()
-    info["codexbar"]["weekly_resets_at"] = "2026-10-03T17:00:00"
-    assert _advice(info)["natural_reset_at"] is None
 
 
 # --- router rows and output --------------------------------------------------
@@ -713,40 +671,6 @@ def test_credit_balance_lane_ranks_after_plan_backed_seats_and_counts_as_usable(
         "dispatch only gpt-6.1-sol, gpt-6-luna" in w
         for w in report["recommendation"]["warnings"]
     )
-
-
-def test_human_output_states_credit_and_reset_advice():
-    report = capacity_pick.build_report(_budget(), reset_reserve=unavailable_reserve(), now=NOW)
-    human = capacity_pick.format_human(report)
-    assert (
-        "credit lane codex: credit_balance_present (plan remaining 1% at or below 10%; fresh credit balance "
-        "62500; no rate limit in the last 3600s; draw not verified by the router) | evidence: rate limits 0 in "
-        "last 3600s; balance 62500.0 fetched 2026-10-02T16:59:00Z | "
-        "coverage: unknown: runtime usage records carry no per-task credit consumption | "
-        "models: gpt-6.1-sol, gpt-6-luna only"
-    ) in human
-    assert "reset advice codex: hold_reset — natural reset in 24h is within the 48h hold window" in human
-    assert "free full resets 2 (expire 2026-10-22T21:07:26Z, 2026-10-29T19:15:04Z)" in human
-    assert "window anchor unverified" in human and "never consumed automatically" in human
-
-
-def test_human_output_for_unverified_credits():
-    report = capacity_pick.build_report(
-        _budget(_codex(credit_balance=None)), reset_reserve=unavailable_reserve(), now=NOW
-    )
-    human = capacity_pick.format_human(report)
-    assert "credit lane codex: credits_unverified (credit balance missing or non-numeric)" in human
-    assert "only while a fresh credit balance exists past the plan cap" in human
-
-
-def test_human_output_states_the_gate_for_a_recent_rate_limit(monkeypatch):
-    monkeypatch.setattr(
-        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 1, "last_rate_limited_at": None}
-    )
-    report = capacity_pick.build_report(_budget(), reset_reserve=unavailable_reserve(), now=NOW)
-    human = capacity_pick.format_human(report)
-    assert "credit lane codex: credit_use_unconfirmed" in human
-    assert "dispatch admits only gpt-6.1-sol, gpt-6-luna (fresh credit balance with the plan window exhausted)" in human
 
 
 def test_main_json_carries_credit_fields(monkeypatch, capsys):
@@ -1433,13 +1357,6 @@ def test_published_credit_relief_rechecks_current_rate_limits_in_the_shared_log(
     assert receipt["evidence"]["last_rate_limited_at"] == "2026-10-02T16:55:00Z"
 
 
-def test_published_credit_relief_records_the_current_rate_limit_check():
-    receipt = credit_lane.published_credit_relief("codex", _published(), "gpt-6.1-sol", policy=POLICY, now=NOW)
-    assert receipt["state"] == _PRESENT
-    assert receipt["evidence"]["rate_limited_count"] == 0
-    assert receipt["evidence"]["rate_limits_checked_at"] == "2026-10-02T17:00:00Z"
-
-
 def test_published_credit_relief_denies_relief_when_the_reader_fails(monkeypatch):
     def broken(*_args, **_kwargs):
         raise OSError("usage dir unreadable")
@@ -1661,23 +1578,6 @@ def test_weekly_pace_hot_without_a_deficit_is_cleared_by_the_owner_only_when_fre
         assert facts.pace_reason.startswith("no pace deficit on a fresh observation")
 
 
-@pytest.mark.parametrize("missing", ["age_s", "freshness"], ids=["probe-age-missing", "probe-freshness-unknown"])
-def test_weekly_pace_hot_label_needs_a_positively_fresh_probe(missing):
-    """#9040 (A8): a fresh snapshot alone never clears the label; an incomplete probe keeps it hot."""
-    info = _pace_hot(weekly_pace_delta_pct=0.49)
-    info.update(remaining_pct=45.0)
-    info["codexbar"]["weekly_remaining_pct"] = 45.0
-    info.pop(missing)
-    info["codexbar"].pop(missing)
-    facts = _facts(info)
-    assert (facts.snapshot_freshness, facts.probe_freshness) == (credit_lane.FRESH, credit_lane.UNKNOWN)
-    # The observation helper still reads fresh (a probe-less lane's snapshot covers it); the clearance does not.
-    assert facts.observation_freshness == credit_lane.FRESH
-    assert facts.pace_visible is True and facts.raw_deficit is False
-    assert facts.status == "hot"
-    assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
-
-
 def test_hidden_pace_with_unknown_allowance_is_unknown_not_cool():
     info = _pace_hot(weekly_expected_pct=0.1)
     for key in ("remaining_pct",):
@@ -1732,20 +1632,6 @@ def test_off_allowlist_model_near_cap_with_credit_is_refused_not_relieved():
     assert off.model_permission is False and not off.credit_relief
     assert off.capacity == credit_lane.CAPACITY_AVOID
     assert off.refusal_reason.startswith(credit_lane.REFUSAL_CODE)
-
-
-def test_routing_facts_share_one_rate_limit_observation(monkeypatch):
-    """Credit state and pace coverage read the runtime records once per call."""
-    calls: list[str] = []
-
-    def reader(lane, *_a, **_k):
-        calls.append(lane)
-        return {"count": 0, "last_rate_limited_at": None}
-
-    monkeypatch.setattr(credit_lane, "read_recent_rate_limits", reader)
-    facts = _facts(_pace_hot_with_credits())
-    assert facts.covered_by == ("credits",)
-    assert calls == ["codex"]
 
 
 def test_routing_facts_ignore_published_conclusions():

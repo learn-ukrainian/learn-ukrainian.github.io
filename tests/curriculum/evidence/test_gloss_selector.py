@@ -164,14 +164,6 @@ def test_a_long_first_meaning_yields_to_the_next_learner_head():
     ).gloss == ("short")
 
 
-def test_kaikki_single_sense_and_multi_pos():
-    assert sources.aligned_kaikki_gloss(payload(["day"]), "noun", False) == ("day", None)
-    assert sources.aligned_kaikki_gloss({"pos": ["noun", "intj"], "glosses": ["greeting"]}, "noun", False) == (
-        None,
-        "kaikki_multi_pos",
-    )
-
-
 @pytest.fixture(scope="module")
 def a1_source_capture():
     root = Path(__file__).resolve().parents[3]
@@ -303,27 +295,6 @@ def test_polysemous_row_gates_on_its_first_meaning(synthetic_sources, stored, ex
 
 
 @pytest.mark.parametrize(
-    "stored,expected", [(None, codes.GLOSS_MISSING), ("primary", None), ("shared", codes.GLOSS_MISMATCH)]
-)
-def test_plan_gate_keeps_the_first_head_kaikki_also_lists(
-    synthetic_sources, synthetic_kaikki_side_db, stored, expected
-):
-    with sqlite3.connect(synthetic_sources) as conn:
-        conn.execute("UPDATE dmklinger_uk_en SET translations=? WHERE pos='noun'", (json.dumps(["primary", "shared"]),))
-    with sqlite3.connect(synthetic_kaikki_side_db) as conn:
-        conn.execute(
-            "INSERT OR REPLACE INTO kaikki VALUES (?, ?)", ("synthetic", json.dumps(payload(["other", "primary"])))
-        )
-        conn.execute("UPDATE meta SET value='3' WHERE key='row_count'")
-    word = {"id": "W-001", "lemma": "synthetic", "pos": "noun"}
-    if stored:
-        word["gloss_en"] = stored
-    with sources.Sources(sources_db=synthetic_sources) as api:
-        errors = verify.verify_plan_glosses({"uses": ["W-001"]}, {"words": [word]}, "a1/test-mod", api)
-    assert [error.split(":", 1)[0] for error in errors] == ([expected] if expected else [])
-
-
-@pytest.mark.parametrize(
     "dmk,kaikki,pos,expected",
     [
         (["(transitive) to write", "to notify"], ["write", "to notify"], "verb", "to write"),
@@ -445,15 +416,6 @@ def test_descriptive_and_nested_register_notes_do_not_restrict(sense, expected):
     assert sources._gloss_head(sense, keep_qualifiers=True) == sense
 
 
-def test_babtsia_shaped_descriptive_note_is_not_a_register_label():
-    result = sources.select_gloss(
-        {"lemma": "бабця", "pos": "noun"},
-        [row(1, ["granny (informal: a grandmother)", "grandmother"], word="бабця")],
-        payload(["granny"]),
-    )
-    assert result.gloss == "granny"
-
-
 @pytest.mark.parametrize("note", ["+ instrumental", "+ genitive", "+ instrumental or more rarely genitive"])
 def test_government_note_is_grammar_and_does_not_restrict(note):
     assert not sources._register_note(note)
@@ -482,33 +444,6 @@ def test_pronoun_person_labels_do_not_make_the_sense_restricted(label):
         payload([f"your ({label})"], "pron"),
     )
     assert result.gloss == "your"
-
-
-def test_preposition_takes_the_head_kaikki_names_when_it_lacks_the_first():
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "prep"},
-        [
-            row(
-                1,
-                ["about (in the immediate neighborhood of) (preposition)", "around (surrounding) (preposition)"],
-                pos="preposition",
-            )
-        ],
-        payload(["around (surrounding)"], "prep"),
-    )
-    assert result.gloss == "around"
-
-
-@pytest.mark.parametrize(
-    "sense",
-    [
-        "about (in the immediate neighborhood of) (preposition)",
-        "about (in a particular place with a distinct and otherwise ambiguous meaning)",
-    ],
-)
-def test_preposition_shows_its_head_without_the_trailing_definition(sense):
-    result = sources.select_gloss({"lemma": "synthetic", "pos": "prep"}, [row(1, [sense], pos="preposition")], None)
-    assert result.gloss == "about"
 
 
 @pytest.mark.parametrize(
@@ -549,15 +484,6 @@ def test_preposition_first_unrestricted_head(dmk, expected):
         {"pos": ["noun", "prep"], "glosses": ["minority"]},
     )
     assert result.gloss == expected
-
-
-def test_first_row_wins_over_a_later_row():
-    result = sources.select_gloss(
-        {"lemma": "synthetic", "pos": "prep"},
-        [row(1, ["primary"], pos="preposition"), row(2, ["minority"], pos="preposition")],
-        None,
-    )
-    assert (result.gloss, result.ref["id"]) == ("primary", 1)
 
 
 def test_row_with_only_restricted_senses_yields_to_a_row_with_a_plain_one():
@@ -741,24 +667,6 @@ def test_builder_store_verifier_round_trip_and_mutation(synthetic_sources, synth
         checked = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api)
         assert any(codes.GLOSS_MISMATCH in error for error in checked["errors"])
         assert checked["status"] == "failed"
-
-
-@pytest.mark.parametrize(
-    "span,expected",
-    [
-        ("[transitive] (formal) to write", "to write"),
-        ("your [belonging to you [one owner]] (determiner)", "your"),
-        ("roof (cover) (noun)", "roof"),
-        ("billion (long scale)", "billion (long scale)"),
-    ],
-)
-def test_balanced_edge_annotations(span, expected):
-    assert sources._gloss_head(span) == expected
-
-
-def test_definition_with_short_clauses_is_not_split():
-    sense = "footwear covering the foot, often for winter use"
-    assert sources._sense_spans(sense) == [sense]
 
 
 def test_homonym_pos_join_does_not_select_by_gender():

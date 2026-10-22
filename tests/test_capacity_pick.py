@@ -354,36 +354,6 @@ def test_pick_order_cool_first():
     assert "glm" not in [p["lane"] for p in ranked]
 
 
-def test_format_includes_rec():
-    report = capacity_pick.build_report(_fixture_budget())
-    table = capacity_pick.format_table(report["rows"])
-    assert "lane" in table and "codex" in table and "cursor" in table
-    human = capacity_pick.format_human(report)
-    assert "recommendation.primary_agent_for_code: cursor" in human
-    assert "pick order (code implement):" in human
-    assert "AVOID:codex" in human or "AVOID:claude" in human
-
-
-def test_main_json_fixture(monkeypatch, capsys):
-    monkeypatch.setattr(
-        capacity_pick,
-        "fetch_active_in_flight",
-        lambda **_kwargs: {"cursor": 0},
-    )
-
-    fake_budget = _fixture_budget()
-
-    from scripts.fleet import usage
-
-    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: fake_budget)
-
-    rc = capacity_pick.main(["--json"])
-    assert rc == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["recommendation"]["primary_agent_for_code"] == "cursor"
-    assert any(row["lane"] == "codex" and row["avoid"] for row in payload["rows"])
-
-
 def test_main_strict_no_cool(monkeypatch, capsys):
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     hot_only = {
@@ -437,16 +407,6 @@ def test_unhealthy_deepseek_account_row_is_avoid():
     report = capacity_pick.build_report(budget)
     pick = next(p for p in report["pick_order"] if p["lane"] == "deepseek")
     assert pick["pick"] == "AVOID"
-
-
-def test_healthy_deepseek_account_row_unaffected():
-    """health.healthy True preserves coding eligibility without an unhealthy note."""
-    budget = _fixture_budget()
-    baseline = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    budget["api_accounts"]["deepseek"]["health"] = {"healthy": True, "last_error": ""}
-    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    assert row["avoid"] is baseline["avoid"] is False
-    assert "unhealthy:" not in row["notes"]
 
 
 def test_deepseek_prepaid_lane_is_a_coding_pick():

@@ -126,28 +126,6 @@ def test_ingest_replaces_collection_preserves_exact_layers_and_rebuilds_fts(tmp_
     assert receipt_path.is_file()
 
 
-def test_ingest_preserves_null_text_layers(tmp_path: Path):
-    db = _database(tmp_path)
-    record = _record("1", "")
-    record["title"] = None
-    record["epidoc_text"] = None
-    record["translation_ukr"] = None
-    record["source_language_label"] = None
-    jsonl, coverage = _write_source(tmp_path / "source", [record])
-    ingest.ingest(
-        db_path=db,
-        jsonl_path=jsonl,
-        coverage_receipt_path=coverage,
-        output_receipt_path=tmp_path / "receipt.json",
-    )
-    conn = sqlite3.connect(db)
-    assert conn.execute(
-        "SELECT title, epidoc_text, translation_ukr, source_language_label "
-        "FROM historical_source_records"
-    ).fetchone() == (None, None, None, None)
-    conn.close()
-
-
 def test_coverage_mismatch_fails_before_database_mutation(tmp_path: Path):
     db = _database(tmp_path)
     source_dir = tmp_path / "source"

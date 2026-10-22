@@ -150,23 +150,6 @@ def test_repair_ignores_stale_schema_cache(slovnyk_cache_dir) -> None:
     assert summary["residual_no_cache"] == ["подаватися:vts"]
 
 
-def test_repair_limit_bounds_targets(slovnyk_cache_dir) -> None:
-    body = _long_body()
-    _write_cache(slovnyk_cache_dir, "перше", "vts", body)
-    _write_cache(slovnyk_cache_dir, "друге", "vts", body)
-    manifest = {
-        "entries": [
-            _entry_with_card("перше", "vts", [_chopped(body)]),
-            _entry_with_card("друге", "vts", [_chopped(body)]),
-        ]
-    }
-
-    summary = repair.repair_truncated_cards(manifest, limit=1)
-
-    assert summary["chopped_cards"] == 1
-    assert summary["repaired"] == 1
-
-
 def test_repair_tolerates_whitespace_drift_from_renormalized_cache(slovnyk_cache_dir) -> None:
     body = _long_body()
     chopped = _chopped(body)

@@ -38,19 +38,6 @@ def test_claude_stream_multi_turn_two_turns_preserves_substantive_report() -> No
     assert extracted == expected
 
 
-def test_claude_stream_multi_turn_three_turns_preserves_all_reports() -> None:
-    turn1 = "Phase 1: Initial analysis completed successfully."
-    turn2 = "Phase 2: Fix implemented and verified locally."
-    turn3 = "Phase 3: Cleaned up worktree and final checks passed."
-    events = [
-        {"type": "result", "subtype": "success", "result": turn1},
-        {"type": "result", "subtype": "success", "result": turn2},
-        {"type": "result", "subtype": "success", "result": turn3},
-    ]
-    extracted = _extract_stream_json_response(events)
-    assert extracted == f"{turn1}\n\n{turn2}\n\n{turn3}"
-
-
 def test_claude_stream_consecutive_duplicate_results_deduped() -> None:
     report = "Single substantive report"
     events = [

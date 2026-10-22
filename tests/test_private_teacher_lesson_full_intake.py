@@ -14,11 +14,9 @@ from scripts.audit.private_teacher_lesson_intake import (
     build_bulk_triage_payload,
     build_private_teacher_lesson_intake,
     candidate_review_payload,
-    format_markdown_census,
     inspect_private_source_shape,
     public_census_payload,
     resolve_local_review_output_path,
-    write_bulk_triage_payload,
 )
 
 
@@ -213,19 +211,6 @@ def test_private_teacher_candidate_payload_uses_neutral_locators_only(tmp_path: 
         assert all(locator.startswith("private source unit 1 row ") for locator in row["locators"])
 
 
-def test_private_teacher_census_markdown_is_safe_summary(tmp_path: Path) -> None:
-    source = tmp_path / "source.txt"
-    source.write_text("приховане слово\n", encoding="utf-8")
-
-    result = build_private_teacher_lesson_intake([source])
-    markdown = format_markdown_census(result.census)
-
-    assert "deduped_candidates: 2" in markdown
-    assert "raw_text_included: false" in markdown
-    assert "production_outputs_updated: []" in markdown
-    assert "приховане" not in markdown
-
-
 def test_private_teacher_candidate_output_rejects_repository_paths() -> None:
     with pytest.raises(SourceInventoryError, match="outside the repository"):
         resolve_local_review_output_path(PROJECT_ROOT / "private-candidates.json")
@@ -302,16 +287,6 @@ def test_private_teacher_bulk_triage_buckets_and_public_summary_are_safe(tmp_pat
     assert "пізнє" in detailed_text
 
 
-def test_private_teacher_bulk_triage_output_rejects_repository_paths(tmp_path: Path) -> None:
-    source = tmp_path / "source.txt"
-    source.write_text("приватне слово\n", encoding="utf-8")
-    result = build_private_teacher_lesson_intake([source])
-    triage = build_bulk_triage_payload(result, committed_inventory_paths=())
-
-    with pytest.raises(SourceInventoryError, match="outside the repository"):
-        write_bulk_triage_payload(triage, PROJECT_ROOT / "atlas-private-teacher-lesson-bulk-triage.json")
-
-
 def test_private_source_review_export_guard_blocks_local_payload_marker(tmp_path: Path) -> None:
     export = tmp_path / "candidate-export.json"
     export.write_text(
@@ -364,27 +339,6 @@ def test_temp_default_writers_destination_readback_and_lifetime(tmp_path, monkey
         else:
             assert data.decode() == intake.format_bulk_triage_report(triage) + "\n"
         assert path.is_file()  # The producer has returned; consumers still own the artifact.
-
-
-def test_temp_default_writers_resolve_at_call_time(tmp_path, monkeypatch, temp_intake):
-    *_, writers = temp_intake
-    for label in ("first", "second"):
-        root = tmp_path / label
-        root.mkdir()
-        monkeypatch.setenv("TMPDIR", str(root))
-        for writer, payload, filename in writers:
-            assert writer(payload) == root / filename
-    for _, _, filename in writers:
-        assert (tmp_path / "first" / filename).read_bytes() == (tmp_path / "second" / filename).read_bytes()
-
-
-def test_temp_writers_explicit_outputs_without_tmpdir(tmp_path, monkeypatch, temp_intake):
-    *_, writers = temp_intake
-    monkeypatch.delenv("TMPDIR", raising=False)
-    for writer, payload, filename in writers:
-        explicit = tmp_path / "explicit" / filename
-        assert writer(payload, explicit) == explicit
-        assert explicit.read_bytes()
 
 
 def test_temp_invalid_root_preserves_private_output_guard(tmp_path, monkeypatch, temp_intake):

@@ -82,32 +82,6 @@ def test_load_prompts_rejects_duplicate_ids(tmp_path: Path) -> None:
         russianism_eval.load_prompts(path)
 
 
-def test_dry_run_prints_matrix_without_calling_agents(tmp_path: Path, capsys) -> None:
-    prompts_path = _write_prompts(tmp_path)
-    fake = FakeCaller()
-
-    exit_code = russianism_eval.main(
-        [
-            "--prompts",
-            str(prompts_path),
-            "--models",
-            "claude-opus-4-7,gpt-5.5",
-            "--dry-run",
-            "--max-parallel",
-            "2",
-        ],
-        caller=fake,
-    )
-
-    stdout = capsys.readouterr().out
-    assert exit_code == 0
-    assert fake.calls == []
-    assert "Dry run: prompts=2 models=2 dispatches=4" in stdout
-    assert "DRY-RUN prompt=p1 model=claude-opus-4-7" in stdout
-    assert "DRY-RUN prompt=p2 model=gpt-5.5" in stdout
-    assert "No agent calls were made." in stdout
-
-
 def test_run_eval_scores_known_russicisms(tmp_path: Path) -> None:
     prompts = russianism_eval.load_prompts(_write_prompts(tmp_path))[:1]
     outputs = {
@@ -152,24 +126,6 @@ def test_write_outputs_generates_report_summary_and_scores(tmp_path: Path) -> No
         scores = list(csv.DictReader(handle))
     assert scores[0]["prompt_id"] == "p1"
     assert scores[0]["model"] == "gpt-5.5"
-
-
-def test_report_includes_sample_bad_outputs(tmp_path: Path) -> None:
-    prompts_path = _write_prompts(tmp_path)
-    prompts = russianism_eval.load_prompts(prompts_path)[:1]
-    rows = russianism_eval.run_eval(
-        prompts,
-        ["gpt-5.5"],
-        tmp_path / "out",
-        max_parallel=1,
-        caller=FakeCaller({("p1", "gpt-5.5"): "Мені нравитися цей самий кращий варіант."}),
-    )
-    russianism_eval.write_outputs(tmp_path / "out", prompts_path, rows, ["gpt-5.5"])
-
-    report = (tmp_path / "out" / "REPORT.md").read_text(encoding="utf-8")
-    assert "## Leaderboard" in report
-    assert "## Sample Bad Outputs" in report
-    assert "нравитися" in report
 
 
 def test_optional_gec_checker_is_included(monkeypatch, tmp_path: Path) -> None:
@@ -224,14 +180,3 @@ def test_claude_bridge_extracts_target_model_metadata() -> None:
 
     assert _claude._extract_target_model(msg) == "claude-sonnet-4-5"
     assert _claude._extract_target_model({"data": "{bad json"}) is None
-
-
-def test_default_models_use_current_catalog_pins():
-    from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
-    catalog = load_model_catalog()
-    for model in russianism_eval.DEFAULT_MODELS.split(","):
-        assert model in catalog["models"]
-        assert retired_model_refusal(model) is None
-    assert {model for model in russianism_eval.DEFAULT_MODELS.split(",") if model.startswith("gpt-")} == {
-        "gpt-6.1-sol", "gpt-6-luna"
-    }

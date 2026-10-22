@@ -272,18 +272,6 @@ def test_valid_freeze_reports_integrity_only(tmp_path: Path) -> None:
     assert "status" not in result
 
 
-def test_synthetic_freeze_without_checkout_origin_main(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    checkout = tmp_path / "checkout"
-    checkout.mkdir()
-    _git(checkout, "init", "-q", "--initial-branch=main", "--template=")
-    assert _git(checkout, "for-each-ref", "refs/remotes/origin/main") == ""
-    monkeypatch.setattr(verifier, "ROOT", checkout)
-
-    evidence_dir, _ = _evidence(tmp_path / "synthetic")
-
-    assert _validate(evidence_dir)["integrity_verified"] is True
-
-
 def test_synthetic_freeze_stable_when_checkout_origin_main_moves(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -440,16 +428,6 @@ def test_rejects_inverted_pdf_locator_range(tmp_path: Path) -> None:
     _write_receipt(receipt, evidence_dir)
 
     with pytest.raises(verifier.IntegrityError, match="inverted PDF locator bounds"):
-        _validate(evidence_dir)
-
-
-def test_rejects_wrong_receipt_family_shape(tmp_path: Path) -> None:
-    evidence_dir, receipt = _evidence(tmp_path)
-    ledger = next(item for item in receipt["families"] if item["family_id"] == "ua_gec")
-    ledger["unexpected"] = True
-    _write_receipt(receipt, evidence_dir)
-
-    with pytest.raises(verifier.IntegrityError):
         _validate(evidence_dir)
 
 

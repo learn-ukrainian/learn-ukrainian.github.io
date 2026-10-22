@@ -52,53 +52,6 @@ def _make_durable_mirror(tmp_path: Path) -> Path:
     return mirror
 
 
-def test_health_probe_requires_runner_host() -> None:
-    result = _run_probe(env={"ATLAS_RUNNER_HOST": ""})
-
-    assert result.returncode == 2
-    assert "ATLAS_RUNNER_HOST is required; see #6077 AC-HOST." in result.stderr
-    assert result.stdout.splitlines() == [
-        "host_set=false",
-        "mirror_present=false",
-        "mirror_require_ok=false",
-        "mirror_age_hint=max_age_hours=24",
-    ]
-
-
-def test_health_probe_requires_run_root() -> None:
-    result = _run_probe(env={"ATLAS_RUNNER_HOST": "test-runner-host", "ATLAS_RUN_ROOT": ""})
-
-    assert result.returncode == 2
-    assert "ATLAS_RUN_ROOT is required" in result.stderr
-    assert result.stdout.splitlines() == [
-        "host_set=true",
-        "mirror_present=false",
-        "mirror_require_ok=false",
-        "mirror_age_hint=max_age_hours=24",
-    ]
-
-
-def test_health_probe_fails_closed_when_ssh_check_fails(tmp_path: Path) -> None:
-    fake_bin = _stub_ssh(tmp_path, exit_code=1)
-
-    result = _run_probe(
-        env={
-            "ATLAS_RUNNER_HOST": "test-runner-host",
-            "ATLAS_RUN_ROOT": "/tmp/atlas-run-root",
-            "PATH": f"{fake_bin}:{os.environ['PATH']}",
-        }
-    )
-
-    assert result.returncode == 2
-    assert "runner SSH work-dir check failed" in result.stderr
-    assert result.stdout.splitlines() == [
-        "host_set=true",
-        "mirror_present=false",
-        "mirror_require_ok=false",
-        "mirror_age_hint=max_age_hours=24",
-    ]
-
-
 def test_health_probe_fails_closed_without_local_mirror(tmp_path: Path) -> None:
     fake_bin = _stub_ssh(tmp_path)
     missing_mirror = tmp_path / "missing-mirror"

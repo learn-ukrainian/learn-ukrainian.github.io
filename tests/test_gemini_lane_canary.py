@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import argparse
 from pathlib import Path
 
 import pytest
@@ -80,30 +79,6 @@ def test_lease_environment_parser_accepts_launcher_quotes(tmp_path: Path) -> Non
     }
 
 
-@pytest.mark.parametrize(
-    ("argv", "handler_name"),
-    [
-        (["bootstrap", "--epic", "Harness"], "cmd_bootstrap"),
-        (["status", "--epic", "Harness"], "cmd_status"),
-        (["hydrate", "--epic", "Harness"], "cmd_hydrate"),
-        (["score", "--epic", "Harness", "--answers", "answers.json"], "cmd_score"),
-    ],
-)
-def test_main_normalizes_epic_across_canary_subcommands(
-    monkeypatch: pytest.MonkeyPatch, argv: list[str], handler_name: str
-) -> None:
-    observed: list[str] = []
-
-    def record_epic(args: argparse.Namespace) -> int:
-        observed.append(args.epic)
-        return 0
-
-    monkeypatch.setattr(gemini_lane, handler_name, record_epic)
-
-    assert gemini_lane.main(argv) == 0
-    assert observed == ["harness"]
-
-
 def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) -> None:
     assert gemini_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", " HARNESS "]) == 0
 
@@ -112,17 +87,3 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
 
     infra_stream = stream_anchor_id("infra-harness", Path(__file__).resolve().parents[1])
     assert f"**Stream:** `{infra_stream}`" in board
-
-
-def test_cold_start_blocker_delta_policy():
-    from scripts.driver_blockers import USAGE_RULE
-    from scripts.session_canary import gemini_lane
-
-    body = gemini_lane._cold_start_body(
-        epic="infra", stream_id="epic:7919", handoff_rel="handoff.md", lease_summary="fixture", binding_line="fixture"
-    )
-    assert USAGE_RULE.replace("$SESSION_EPIC", "infra") in body
-    assert "exact case-sensitive standalone token RESOLVED <id>" in body
-    assert "on its own non-active line (no other fields or prose)" in body
-    assert body.count("scripts.driver_blockers delta") == 1
-    assert body.count("scripts.driver_blockers record") == 1

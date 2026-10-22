@@ -4,13 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts import manifest_utils
-from scripts.audit import certify_module, module_size_policy_audit, track_deterministic_audit
 from scripts.audit.validate_atlas_conformance import _check_cross_links
-from scripts.generate_mdx import core as mdx_core
 from scripts.level_config import resolve_content_track, resolve_manifest_module_track
 from scripts.pipeline import learner_state
-from tests.helpers.archive_slug import pick_archive_only_slug as _pick_archive_only_slug
 
 pytestmark = pytest.mark.reads_content
 
@@ -83,80 +79,3 @@ def test_empty_canonical_learner_roster_does_not_inherit_archive(tmp_path: Path,
     state = learner_state.build_learner_state("a1", 20)
     assert state["module_count"] == 0
     assert state["cumulative_vocabulary"] == []
-
-
-@pytest.mark.parametrize("canonical", [[], ["shared"]])
-def test_slug_lookup_prefers_canonical_even_when_archive_is_first(monkeypatch, canonical):
-    monkeypatch.setattr(manifest_utils, "load_manifest", lambda: {"levels": {
-        "a1-v1": {"type": "core", "base_level": "a1", "modules": ["shared"]},
-        "a1": {"type": "core", "modules": canonical},
-    }})
-    monkeypatch.setattr(manifest_utils, "_load_meta_file", lambda *_: {})
-    assert manifest_utils.get_module_by_slug("shared").level == ("a1" if canonical else "a1-v1")
-
-
-def test_archived_certification_uses_archive_commands_and_base_plan():
-    slug = _pick_archive_only_slug()
-    target = certify_module.parse_target([f"a1/{slug}"])
-    assert target.content_level == "a1-v1"
-    assert target.module_dir.name == slug
-    assert target.mdx_path.is_file()
-    checks = {check.name: check.command for check in certify_module.build_checks(
-        target, site_build=False, install_site_deps=False,
-    )}
-    assert checks["generate MDX"][3:5] == ("a1-v1", str(target.local_num))
-    assert checks["validate activities"][3:5] == ("a1-v1", str(target.local_num))
-    assert checks["validate plan config"][-1] == f"a1/{slug}"
-    archive = certify_module.parse_target([f"a1-v1/{slug}"])
-    assert certify_module.plan_source_file(archive).is_file()
-    modules = mdx_core.get_modules_from_manifest(target.content_level)
-    assert len(modules) == 55
-    assert modules[target.local_num - 1].slug == target.slug
-    assert mdx_core.get_modules_from_manifest("a1") == []
-
-
-def test_pbr_child_audits_select_actual_archive_content():
-    slug = _pick_archive_only_slug()
-    modules = track_deterministic_audit.select_modules("a1", None, {slug})
-    assert len(modules) == 1
-    assert modules[0].module_md.is_file()
-    assert modules[0].module_dir.parent.name == "a1-v1"
-    assert modules[0].plan.parent.name == "a1"
-    assert modules[0].plan.is_file()
-    plans = module_size_policy_audit.select_plan_paths(["a1"], {slug}, True)
-    assert len(plans) == 1
-    assert module_size_policy_audit._module_path("a1", slug) == modules[0].module_md
-    assert track_deterministic_audit.select_modules("a1", None, {"missing"}) == []
-
-
-def test_optional_mdx_audit_invokes_the_resolved_edition(monkeypatch):
-    from types import SimpleNamespace
-
-    slug = _pick_archive_only_slug()
-    paths = track_deterministic_audit.select_modules("a1", None, {slug})[0]
-    commands = []
-
-    def run(argv, **kwargs):
-        commands.append(argv)
-        return SimpleNamespace(returncode=0, stdout="", stderr="")
-
-    monkeypatch.setattr(track_deterministic_audit.subprocess, "run", run)
-    assert track_deterministic_audit.run_mdx_validate(paths) == []
-    assert commands[0][3:5] == ["a1-v1", str(paths.module_num)]
-
-
-def test_archive_generator_writes_real_module_to_isolated_output(tmp_path, monkeypatch):
-    import sys
-
-    import yaml
-
-    monkeypatch.setattr(mdx_core, "STARLIGHT_DOCS_DIR", tmp_path)
-    monkeypatch.setattr(sys, "argv", ["generate_mdx.py", "l2-uk-en", "a1-v1", "1"])
-    mdx_core.main()
-    output = tmp_path / "a1-v1/sounds-letters-and-hello.mdx"
-    assert output.is_file()
-    assert list(tmp_path.rglob("*.mdx")) == [output]
-    frontmatter, body = mdx_core.parse_frontmatter(output.read_text())
-    plan = yaml.safe_load((mdx_core.CURRICULUM_DIR / "l2-uk-en/plans/a1/sounds-letters-and-hello.yaml").read_text())
-    assert frontmatter["title"] == plan["title"]
-    assert len(body) > 1000

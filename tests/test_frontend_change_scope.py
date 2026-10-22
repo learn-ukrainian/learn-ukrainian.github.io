@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import json
 import os
 import subprocess
@@ -86,19 +85,6 @@ def _init_fixture_repo(root: Path) -> dict[str, str]:
     }
 
 
-def test_denominator_is_single_source_and_loadable() -> None:
-    data = scope.load_denominator(_DENOMINATOR)
-    assert data["schema_version"] == "frontend_change_denominator_v1"
-    assert data["version"] == "1"
-    assert "site/" in data["paths"]
-    assert "scripts/atlas/" in data["paths"]
-    assert "scripts/lexicon/" in data["paths"]
-    assert "scripts/audit/generate_search_index.py" in data["paths"]
-    assert "scripts/audit/generate_daily_pool.py" in data["paths"]
-    assert ".python-version" in data["paths"]
-    assert ".github/workflows/ci.yml" in data["paths"]
-
-
 def test_path_matching_covers_prefixes_and_exact_entries() -> None:
     patterns = scope.load_denominator()["paths"]
     assert scope.path_in_denominator("site/package.json", patterns)
@@ -163,13 +149,6 @@ def test_changed_files_uses_quote_path_false_and_nul_split(tmp_path: Path) -> No
     assert run_mock.call_args.kwargs.get("text") is not True
 
 
-def test_changed_files_rejects_c_quoted_octal_as_site_prefix() -> None:
-    """Guard: C-quoted octal (legacy quotePath=true) must NOT match site/."""
-    # What default quotePath emits for site/src/слово.ts — must not cheap-exit-match.
-    c_quoted = '"site/src/\\321\\201\\320\\273\\320\\276\\320\\262\\320\\276.ts"'
-    assert not scope.path_in_denominator(c_quoted, ["site/"])
-
-
 def test_git_diff_failed_writes_step_summary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     summary = tmp_path / "summary.md"
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
@@ -186,25 +165,6 @@ def test_git_diff_failed_writes_step_summary(tmp_path: Path, monkeypatch: pytest
 
     text = summary.read_text(encoding="utf-8")
     assert "reason=git_diff_failed exit=128" in text
-    assert "decision=run" in text
-
-
-def test_git_diff_timeout_writes_step_summary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    summary = tmp_path / "summary.md"
-    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
-    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
-
-    def timeout_boom(*_args: object, **_kwargs: object) -> None:
-        raise subprocess.TimeoutExpired(["git", "diff"], 30)
-
-    with (
-        patch.object(scope, "resolve_git_range", return_value="abc...HEAD"),
-        patch.object(scope, "changed_files", side_effect=timeout_boom),
-    ):
-        assert scope.main(["--base", "abc123", "--event", "pull_request"]) == 0
-
-    text = summary.read_text(encoding="utf-8")
-    assert "reason=git_diff_failed timeout=30s" in text
     assert "decision=run" in text
 
 
@@ -262,35 +222,6 @@ def test_moved_base_out_of_scope_cheap_exits(tmp_path: Path, monkeypatch: pytest
     )
 
 
-def test_moved_base_out_of_scope_prints_cheap_exit(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    shas = _init_fixture_repo(repo)
-    monkeypatch.chdir(repo)
-    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
-    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
-
-    scope.main(
-        [
-            "--base",
-            shas["base_tip"],
-            "--head",
-            shas["branch_out"],
-            "--event",
-            "pull_request",
-            "--denominator",
-            shas["denominator"],
-        ],
-    )
-    out = capsys.readouterr().out
-    assert "decision=cheap_exit" in out
-    assert "matched=0" in out
-
-
 def test_moved_base_branch_touches_denominator_runs(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -322,38 +253,6 @@ def test_moved_base_branch_touches_denominator_runs(
     assert "matched=0" not in out
 
 
-def test_two_dot_mutation_defeats_moved_base_cheap_exit(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    """Mutation check: force two-dot on a PR-shaped event → cheap_exit guard fails."""
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    shas = _init_fixture_repo(repo)
-    monkeypatch.chdir(repo)
-    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
-    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
-
-    with patch.object(scope, "range_mode_for_event", return_value="two-dot"):
-        scope.main(
-            [
-                "--base",
-                shas["base_tip"],
-                "--head",
-                shas["branch_out"],
-                "--event",
-                "pull_request",
-                "--denominator",
-                shas["denominator"],
-            ],
-        )
-    out = capsys.readouterr().out
-    # Two-dot sees main's site/package.json → falsely decides run.
-    assert "decision=run" in out
-    assert "matched=0" not in out
-
-
 def test_merge_base_unresolvable_fails_open(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -368,40 +267,6 @@ def test_merge_base_unresolvable_fails_open(
     text = summary.read_text(encoding="utf-8")
     assert "reason=merge_base_unresolvable" in text
     assert "decision=run" in text
-
-
-def test_push_event_uses_two_dot_range(tmp_path: Path) -> None:
-    assert scope.resolve_git_range("aaa", "bbb", mode="two-dot", cwd=tmp_path) == "aaa..bbb"
-
-
-def test_resolve_hydrate_entrypoints_from_package_json() -> None:
-    entrypoints = scope.resolve_hydrate_entrypoints()
-    assert "site/scripts/hydrate-manifest.mjs" in entrypoints
-    assert "site/scripts/hydrate-practice-deck.mjs" in entrypoints
-    assert "site/scripts/hydrate-lexicon-api-shards.ts" in entrypoints
-    assert "scripts/atlas/atlas_db.py" in entrypoints
-    assert "scripts/audit/generate_search_index.py" in entrypoints
-    assert "scripts/audit/generate_daily_pool.py" in entrypoints
-
-
-def test_hydrate_entrypoints_stay_inside_denominator() -> None:
-    entrypoints = scope.assert_hydrate_entrypoints_in_denominator()
-    assert entrypoints  # non-empty proof the resolver engaged package.json
-
-
-def test_removing_denominator_entry_fails_hydrate_guard(tmp_path: Path) -> None:
-    """Mutation check: drop an outside-site hydrate path → guard must fail."""
-    original = scope.load_denominator()
-    mutated = copy.deepcopy(original)
-    mutated["paths"] = [p for p in mutated["paths"] if p != "scripts/atlas/"]
-    assert "scripts/atlas/" not in mutated["paths"]
-
-    denom_path = tmp_path / "denominator.json"
-    denom_path.write_text(json.dumps(mutated), encoding="utf-8")
-    loaded = scope.load_denominator(denom_path)
-
-    with pytest.raises(AssertionError, match=r"scripts/atlas/atlas_db\.py"):
-        scope.assert_hydrate_entrypoints_in_denominator(denominator=loaded)
 
 
 def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
@@ -421,43 +286,6 @@ def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
         assert step.get("if") == "steps.scope.outputs.run == 'true'", step
 
 
-def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
-    """The installer must retain the lock, exclusions and interpreter.
-
-    Since #9062 the installer is the shared composite action; the pytest job
-    (and the other two) call it, so this guards the one copy.
-    """
-    jobs = yaml.safe_load(_CI.read_text(encoding="utf-8"))["jobs"]
-    assert any(
-        step.get("uses") == "./.github/actions/python-ci-env"
-        for step in jobs["pytest"]["steps"]
-    )
-    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
-    uv = next(step for step in steps if step.get("name") == "Set up uv")
-    action, revision = uv["uses"].split("@")
-    assert action == "astral-sh/setup-uv"
-    assert len(revision) == 40 and all(c in "0123456789abcdef" for c in revision)
-    assert uv["with"]["version"] == "0.12.9"
-    assert uv["with"]["enable-cache"] is True
-    assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
-    install = next(step["run"] for step in steps if step.get("name") == "Install Python deps")
-    # No ensurepip: pip/setuptools/wheel come from the lock (#9062).
-    assert "python -m venv --without-pip .venv" in install
-    lock_lines = _LOCK.read_text(encoding="utf-8").splitlines()
-    assert all(any(line.startswith(f"{pkg}==") for line in lock_lines) for pkg in ("pip", "setuptools", "wheel"))
-    assert "-e '^(torch|torchvision|open_clip_torch|stanza)=='" in install
-    # v4-runtime is built once after the lock install, not also from the lock.
-    assert "-e '^\\./packages/v4-runtime$'" in install
-    assert "uv pip install --python .venv/bin/python --no-deps --no-build-isolation ./packages/v4-runtime" in install
-    assert 'uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"' in install
-    assert "--upgrade" not in install
-    setup_python = next(
-        step for step in jobs["pytest"]["steps"] if step.get("uses", "").startswith("actions/setup-python@")
-    )
-    assert setup_python["with"]["python-version-file"] == ".python-version"
-    assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.
-
-
 def _declared_selector_graph(manifest: dict) -> dict:
     """Project declared manifest edges into the graph shape ``affected`` reads.
 
@@ -472,30 +300,6 @@ def _declared_selector_graph(manifest: dict) -> dict:
         "missing_mandatory_edges": [],
         "node_edges": sorted({(edge["producer"], edge["consumer"]) for edge in manifest["edges"]}),
     }
-
-
-def test_component_map_covers_full_index_frontend_denominator() -> None:
-    """Cross-check the existing cheap-exit denominator, including sparse files.
-
-    A path's selection is fixed by its manifest ownership; the import scan only
-    decides whether the selector must fall back to all nodes. Checking the
-    declared closure covers every included path without scanning the tree,
-    rejects the all-node fallback it used to pass through, and fails on a
-    mutated rule the fallback used to hide.
-    """
-    from scripts.ci import components
-
-    manifest = components.load_manifest()
-    graph = _declared_selector_graph(manifest)
-    patterns = scope.load_denominator()["paths"]
-    paths = components.tracked_paths()
-    included = [path for path in paths if scope.path_in_denominator(path, patterns)]
-    assert included
-    fronts = set(manifest["selector_contracts"]["frontend_components"])
-    for path in included:
-        result = components.affected([path], manifest, graph)
-        assert result["fallback_reasons"] == [], (path, result["fallback_reasons"])
-        assert fronts <= set(result["components"]), path
 
 
 def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:

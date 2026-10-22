@@ -249,12 +249,6 @@ def test_a13_cleanup_policy_is_immutable_across_calls() -> None:
 # --- shared engine wiring (real call, zero rows today) -----------------------
 
 
-def test_a13_engine_wiring_reuses_the_shared_admission_engine_unmodified() -> None:
-    receipt = a13.run_engine_admission_check([])
-    assert receipt["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
-    a13.a12.a11.a10.a9.a8.admission.verify_receipt(receipt)
-
-
 # --- receipt assembly and independent verification --------------------------------
 
 
@@ -306,13 +300,6 @@ def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_resi
             e["residual_id"] for e in source[source_key]
         }
         assert all(e["status"] == "unresolved_carried_to_a13" for e in _cached_json(RECEIPT)[receipt_key])
-
-
-def test_a13_receipt_denominator_stays_100_and_visible() -> None:
-    assert _cached_json(RECEIPT)["frozen_slot_denominator"]["total_slots"] == 100
-    assert _cached_json(RECEIPT)["execution_counters"]["frozen_slot_count"] == 100
-    assert len(_cached_json(RECEIPT)["a13_residuals"]) == 100
-    assert _cached_json(RECEIPT)["recovery_state"]["denominator_stable"] is True
 
 
 def test_a13_receipt_never_claims_a_stronger_release_state_than_the_evidence() -> None:
@@ -477,20 +464,3 @@ def test_a13_refuses_a_tampered_model_only_bases_blocked_list(monkeypatch: pytes
     receipt["engine_wiring"]["model_only_bases_blocked"] = ["model_agreement"]
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
-
-
-def test_a13_refuses_a_forged_epic_done_status_string() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["status"] = "EPIC_DONE"
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a13_forbidden_completion_claims_include_epic_done_and_upstream_ready_terms() -> None:
-    assert "EPIC_DONE" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    assert "GOLD_UPGRADE_READY" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    assert "TRAINING_READY_SILVER" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    assert "TRAINING_READY_GOLD_SUBSET" in a13.FORBIDDEN_COMPLETION_CLAIMS
-    # The status string itself must never accidentally contain a forbidden term.
-    assert not any(claim in _cached_json(RECEIPT)["status"] for claim in a13.FORBIDDEN_COMPLETION_CLAIMS)

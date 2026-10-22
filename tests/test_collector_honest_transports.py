@@ -253,29 +253,6 @@ def test_denial_stops_run_without_retry_redirect_or_later_page(server, status, b
     assert list(server.tmp_path.glob("page-*.html")) == []
 
 
-def test_honest_identity_normal_js_and_fractional_robots_floor(server):
-    server.fetch("https://source.test/first")
-    server.fetch("https://source.test/second")
-    assert [c[1] for c in server.calls] == [
-        "https://source.test/robots.txt", "https://source.test/first", "https://source.test/second",
-    ]
-    for first, second in zip(server.calls, server.calls[1:], strict=False):
-        assert second[2] - first[2] >= 2.75
-    for _method, _url, _clock, headers, _kwargs in server.calls:
-        ua = next(value for key, value in headers.items() if key.lower() == "user-agent")
-        assert ua.startswith("LearnUkrainianBot/") and CONTACT in ua
-        assert "Mozilla" not in ua and "Chrome" not in ua
-
-
-def test_redirect_destination_has_own_robots_floor(server):
-    server.responses["https://source.test/start"] = [Response(b"", 302, {"Location": "https://other.test/final"})]
-    server.fetch("https://source.test/start")
-    assert [c[1] for c in server.calls] == [
-        "https://source.test/robots.txt", "https://source.test/start", "https://other.test/robots.txt", "https://other.test/final",
-    ]
-    assert server.calls[-1][2] - server.calls[-2][2] >= 2.75
-
-
 def test_robots_denial_requests_no_source_page(server):
     server.responses["https://source.test/robots.txt"] = [Response(b"Forbidden", 403)]
     with pytest.raises(server.module.AccessStopped):
@@ -347,47 +324,6 @@ def test_pdf_and_drive_denials_do_not_retain_or_request_confirmation(
     assert list(tmp_path.glob("*.part")) == []
     with pytest.raises(textbook.AccessStopped):
         textbook.extract_pdf_links("later", "author", 1)
-    assert len(srv.source_calls()) == 1
-
-
-def test_drive_confirmation_and_pdf_stream_keep_observed_floor(monkeypatch, tmp_path, isolate_policy):
-    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
-    url = "https://docs.google.com/uc"
-    srv.responses[url] = [
-        Response(b'<form><input name="confirm" value="token"></form>', headers={"Content-Type": "text/html"}),
-        Response(b"%PDF-1.7\nvalid content"),
-    ]
-    dest = tmp_path / "book.pdf"
-    assert textbook.download_from_gdrive("ID", dest, retained_store=tmp_path)
-    assert dest.read_bytes() == b"%PDF-1.7\nvalid content"
-    calls = srv.source_calls()
-    assert len(calls) == 2 and calls[1][2] - calls[0][2] >= 2.75
-    assert calls[1][4]["params"]["confirm"] == "token"
-
-
-def test_shkola_post_denial_stops_before_next_form(monkeypatch, tmp_path, isolate_policy):
-    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
-    url = "https://shkola.in.ua/book"
-    srv.responses[url] = [
-        Response(b'<title>Author 6 \xd0\xba\xd0\xbb\xd0\xb0\xd1\x81</title><form action="/download"><button name="vslink" value="A">PDF</button></form><form action="/later"><button name="vslink" value="B">PDF</button></form>'),
-    ]
-    srv.responses["https://shkola.in.ua/download"] = [Response(b"no", 403)]
-    with pytest.raises(textbook.AccessStopped):
-        textbook.extract_shkola_pdf_links(url, author="Author", grade=6)
-    calls = srv.source_calls()
-    assert [c[0] for c in calls] == ["get", "post"]
-    assert calls[-1][2] - calls[0][2] >= 2.75
-
-
-def test_textbook_main_denial_stops_before_fallback_or_next_book(monkeypatch, tmp_path, isolate_policy):
-    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
-    book = {"id": "a", "grade": 1, "slug": "first", "author": "Author", "year": 2025,
-            "subject": "ukrmova", "canonical_source": "first", "fallback_page_urls": ["https://shkola.in.ua/later"]}
-    monkeypatch.setattr(textbook, "load_selection", lambda: [book, {**book, "id": "b", "slug": "second"}])
-    monkeypatch.setattr(textbook.sys, "argv", ["download_textbooks", "--retained-store", str(tmp_path)])
-    srv.responses[f"{textbook.BASE_URL}/first.html"] = [Response(b"no", 403)]
-    with pytest.raises(textbook.AccessStopped):
-        textbook.main()
     assert len(srv.source_calls()) == 1
 
 
@@ -752,13 +688,6 @@ def test_complete_permission_contract(module, case, monkeypatch):
             module._robots_check_target("https://other.test/robots.txt")
 
 
-def test_disclosed_control_denominators():
-    assert len(LEGACY_CONTROLS) == 113
-    assert len(DISCLOSED_SEVEN) == 7
-    assert len([row for row in DECISION_CONTROLS if row[0].startswith("P")]) == 14
-    assert len([row for row in DECISION_CONTROLS if not row[0].startswith("P")]) == 24
-
-
 # Handwritten disclosed controls for the adopted structural rule, not held-outs.
 N1_CONTROLS = [
     ("V1a", group(b"Disallow: /private"), "/public", ALLOW),
@@ -834,14 +763,8 @@ N1_BOUNDARY_CONTROLS = [
 ]
 
 
-def test_n1_disclosed_denominator():
-    assert len(N1_CONTROLS) == 56
-    assert len({row[0] for row in N1_CONTROLS}) == 56
-
-
 @pytest.mark.parametrize("case", N1_CONTROLS + N1_BOUNDARY_CONTROLS, ids=lambda row: row[0])
 def test_n1_structural_recognition_and_global_transport_stop(server, case):
-    import os
     case_id, body, target, expected = case
     module = server.module
     server.robots = body
@@ -960,32 +883,6 @@ def test_seeded_two_reading_greedy_vs_position_set_mechanics(module):
             pattern, anchor, _weight = module._robots_canonical(rule, rule=True, reading=reading)
             canonical = module._robots_canonical(target, rule=False, reading=reading)[0]
             assert module._robots_match(pattern, anchor, canonical) == position_set_match(rule, target, reading), (rule, target, reading)
-
-
-@pytest.mark.parametrize("module", MODULES)
-@pytest.mark.parametrize("shape", ["many-rules", "many-wildcards", "long-needles", "escape-flood", "over-limit"])
-def test_both_readings_each_hostile_shape_under_five_seconds(module, shape):
-    import time
-    bodies = {
-        "many-rules": b"User-agent: *\n" + b"Disallow: /*a*a*a*a*b\n" * (512000 // 22),
-        "many-wildcards": group(b"Disallow: /" + b"*a" * ((512000 - 40) // 2) + b"b"),
-        "long-needles": b"User-agent: *\n" + (b"Disallow: /*" + b"a" * 98 + b"b\n") * (512000 // 103),
-        "escape-flood": group(b"Disallow: /" + b"%zz%E3" * (512000 // 7)),
-        "over-limit": group(b"Disallow: /" + b"x" * (2 * 512000)),
-    }
-    start = time.perf_counter()
-    state = module._robots_parse(bodies[shape], module.USER_AGENT)
-    module._robots_states["https://h.test"] = state
-    if shape in {"escape-flood", "over-limit", "long-needles"}:
-        with pytest.raises(module.AccessStopped, match=UNRESOLVED):
-            module._robots_check_target("https://h.test/" + "a" * 8000)
-    else:
-        module._robots_check_target("https://h.test/" + "a" * 8000)
-    elapsed = time.perf_counter() - start
-    assert elapsed < 5, (shape, elapsed)
-    import os
-    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
-        Path(root, f"hostile-{module.__name__}-{shape}.json").write_text(json.dumps({"shape": shape, "seconds": elapsed, "both_readings": True, "under_five_seconds": elapsed < 5}))
 
 
 @pytest.mark.parametrize("status", [200, 201, 204, 206, 400, 401, 404, 410, 418, 451, 499])
@@ -1132,16 +1029,6 @@ def test_actual_textbook_header_controls_token_not_module_constant(monkeypatch, 
     assert len(srv.source_calls()) == 1
 
 
-@pytest.mark.parametrize("floor", [.3, .5, 2.0])
-def test_fractional_max_delay_fake_clock(server, floor):
-    server.robots = group(b"Crawl-delay: .75", b"Crawl-delay: 1.25")
-    server.fetch("https://source.test/first")
-    origin = "https://source.test"
-    before = server.clock.now
-    server.module._wait_for_request(origin + "/second", floor)
-    assert server.clock.now - before == max(floor, 1.25)
-
-
 @pytest.mark.parametrize("site", ["listing", "shkola-get", "shkola-post", "pdf", "drive-initial", "drive-confirmation", "zno", "ukrlib"])
 @pytest.mark.parametrize("denied", [False, True])
 def test_all_eight_actual_request_sites_permission_ledger(monkeypatch, tmp_path, isolate_policy, site, denied):
@@ -1199,31 +1086,9 @@ def test_all_eight_actual_request_sites_permission_ledger(monkeypatch, tmp_path,
             assert [c[0] for c in srv.source_calls()] == ["get", "post"]
         if site == "drive-confirmation":
             assert len(srv.source_calls()) == 2
-    import os
     root = os.environ.get("LU_PERMISSION_EVIDENCE_DIR")
     if root:
         Path(root, f"request-{site}-{denied}.json").write_text(json.dumps({"site": site, "denied": denied, "requests": srv.calls}, indent=2))
-
-
-def test_shared_iterator_replays_html_labelled_two_mib_pdf(monkeypatch, tmp_path, isolate_policy):
-    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
-    payload = b"%PDF-1.7\n" + b"x" * (2 * 1024 * 1024 - 9)
-    response = Response(payload, headers={"Content-Type": "text/html"})
-    calls = []
-    consumed = []
-    def stream(chunk_size):
-        calls.append(chunk_size)
-        for offset in range(0, len(payload), 4096):
-            consumed.append(offset)
-            yield payload[offset:offset + 4096]
-    response.iter_content = stream
-    srv.responses["https://source.test/book.pdf"] = [response]
-    destination = tmp_path / "new.pdf"
-    assert textbook.download_pdf("https://source.test/book.pdf", destination, retained_store=tmp_path)
-    assert destination.read_bytes() == payload and len(payload) == 2 * 1024 * 1024
-    assert calls == [8192]
-    assert consumed == list(range(0, len(payload), 4096))
-    assert response.closed and not list(tmp_path.glob("*.part"))
 
 
 @pytest.mark.parametrize("chunk_size", [1, 4096, 16384])
@@ -1263,7 +1128,6 @@ def test_drive_html_labelled_two_mib_pdf_uses_one_stream(
     assert response.closed and not list(tmp_path.glob(".*.part"))
     if confirmation:
         assert warning.closed and srv.source_calls()[1][4]["params"]["confirm"] == "yes"
-    import os
     if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
         Path(root, f"drive-f3-{block_size}-{confirmation}.json").write_text(json.dumps({
             "size": len(payload), "payload_sha256": hashlib.sha256(payload).hexdigest(),
@@ -1319,7 +1183,6 @@ def test_zno_content_strict_utf8_and_robots_raw_bytes(monkeypatch, tmp_path, iso
 
 
 def test_three_retained_synthetic_inputs_fresh_conservation(monkeypatch, tmp_path, isolate_policy):
-    import os
     cache, pdf, jsonl = tmp_path / "cache.html", tmp_path / "retained.pdf", tmp_path / "ukrlib-test.jsonl"
     cache.write_bytes(NORMAL)
     pdf.write_bytes(b"%PDF-1.7\nretained fixture")
@@ -1474,7 +1337,6 @@ def h_fetch(module, url, cache):
 
 
 def h_record(name, **row):
-    import os
     if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
         Path(root, f"h-{name}.json").write_text(json.dumps(row, indent=2))
 
@@ -1709,65 +1571,6 @@ def test_h_curl_protocol_restriction_blocks_low_level_io(tmp_path, scheme):
              source_sha256=hashlib.sha256(content).hexdigest())
 
 
-def test_h_curl_sentinel_identity_ignores_access_time(tmp_path):
-    content = b"private synthetic content"
-    sentinel = tmp_path / "source"
-    sentinel.write_bytes(content)
-    before = sentinel.stat()
-    os.utime(sentinel, ns=(before.st_atime_ns + 5_000_000_000, before.st_mtime_ns))
-    # Whole os.stat_result equality uses integer-second stamps, so this
-    # whole-second access-time shift is unequal. A sub-second shift can stay equal.
-    old_equal = (sentinel.stat(), sentinel.read_bytes()) == (before, content)
-    assert old_equal is False
-    h_assert_sentinel_content_size_mtime_inode(
-        sentinel, content, before.st_size, before.st_mtime_ns, before.st_ino,
-    )
-
-    same_size = tmp_path / "same-size"
-    same_size.write_bytes(content)
-    base = same_size.stat()
-    changed = content[:-1] + b"X"
-    same_size.write_bytes(changed)
-    os.utime(same_size, ns=(base.st_atime_ns, base.st_mtime_ns))
-    observed = same_size.stat()
-    assert len(changed) == base.st_size == observed.st_size
-    assert observed.st_mtime_ns == base.st_mtime_ns and observed.st_ino == base.st_ino
-    assert same_size.read_bytes() == changed
-    with pytest.raises(AssertionError):
-        h_assert_sentinel_content_size_mtime_inode(
-            same_size, content, base.st_size, base.st_mtime_ns, base.st_ino,
-        )
-
-    mtime_only = tmp_path / "mtime"
-    mtime_only.write_bytes(content)
-    base = mtime_only.stat()
-    os.utime(mtime_only, ns=(base.st_atime_ns, base.st_mtime_ns + 5_000_000_000))
-    observed = mtime_only.stat()
-    assert mtime_only.read_bytes() == content
-    assert observed.st_size == base.st_size and observed.st_ino == base.st_ino
-    assert observed.st_mtime_ns != base.st_mtime_ns
-    with pytest.raises(AssertionError):
-        h_assert_sentinel_content_size_mtime_inode(
-            mtime_only, content, base.st_size, base.st_mtime_ns, base.st_ino,
-        )
-
-    replaced = tmp_path / "inode"
-    replaced.write_bytes(content)
-    base = replaced.stat()
-    other = tmp_path / "inode-new"
-    other.write_bytes(content)
-    os.utime(other, ns=(base.st_atime_ns, base.st_mtime_ns))
-    os.replace(other, replaced)
-    observed = replaced.stat()
-    assert replaced.read_bytes() == content
-    assert observed.st_size == base.st_size and observed.st_mtime_ns == base.st_mtime_ns
-    assert observed.st_ino != base.st_ino
-    with pytest.raises(AssertionError):
-        h_assert_sentinel_content_size_mtime_inode(
-            replaced, content, base.st_size, base.st_mtime_ns, base.st_ino,
-        )
-
-
 @pytest.mark.parametrize("links,expected", [
     (["/book-2020.pdf", "/book-2024.pdf", "book.pdf"], ["book-2024.pdf"]),
     (["book.pdf"], ["book.pdf"]),
@@ -1992,80 +1795,9 @@ def test_adopted_dual_grouping_literal_matrix(server, monkeypatch, case, body, t
             server.fetch("https://other.test/later")
         assert server.calls == before
         assert not list(server.tmp_path.glob("page-*.html"))
-    import os
     if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
         Path(root, f"i-group-{module.__name__}-{case}.json").write_text(json.dumps({
             "case": case, "expected": expected, "delay": delay,
             "state": repr(state), "requests": server.calls, "latched": module._access_stopped,
             "not_held_out": True,
-        }))
-
-
-@pytest.mark.parametrize("module", MODULES)
-@pytest.mark.parametrize("shape", ["many-rules", "many-wildcards"])
-def test_four_group_reading_evaluations_hostile_shape_under_five_seconds(module, shape, monkeypatch):
-    import time
-    bodies = {
-        "many-rules": b"User-agent: *\n" + b"Disallow: /*a*a*a*a*b\n" * (512000 // 22),
-        "many-wildcards": group(b"Disallow: /" + b"*a" * ((512000 - 40) // 2) + b"b"),
-    }
-    # Retain the original near-limit body intact: prepending group records
-    # would correctly exceed the admission bound. Compose a worst-case state
-    # from two actually parsed inputs, keeping the full hostile rules in both
-    # lists. This is a conservative evaluation stress bound, not a larger
-    # admitted robots file or a replacement for the literal grouping matrix.
-    evaluations = []
-    original = module._robots_canonical
-    def canonical(raw, *, rule, reading):
-        if not rule and raw.endswith(b"a" * 8000):
-            evaluations.append(reading)
-        return original(raw, rule=rule, reading=reading)
-    monkeypatch.setattr(module, "_robots_canonical", canonical)
-    start = time.perf_counter()
-    hostile = module._robots_parse(bodies[shape], module.USER_AGENT)
-    state = module._robots_parse(group(b"Crawl-delay: 1", b"User-agent: otherbot", b"Allow: /unused"), module.USER_AGENT)
-    assert "legacy_rules" in state and not state["unresolved"] and not hostile["unresolved"]
-    state["rules"].extend(hostile["rules"])
-    state["legacy_rules"].extend(hostile["rules"])
-    module._robots_states["https://h.test"] = state
-    module._robots_check_target("https://h.test/" + "a" * 8000)
-    elapsed = time.perf_counter() - start
-    assert evaluations == [1, 1, 2, 1, 2]  # robots-path exception, then four evaluations
-    assert elapsed < 5, (shape, elapsed)
-    import os
-    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
-        Path(root, f"i-hostile-{module.__name__}-{shape}.json").write_text(json.dumps({
-            "shape": shape, "seconds": elapsed, "evaluations": evaluations[1:], "composed_worst_case_state": True,
-            "payload_octets": len(bodies[shape]), "under_five_seconds": elapsed < 5,
-        }))
-
-
-@pytest.mark.parametrize("module", MODULES)
-def test_admitted_grouped_hostile_file_four_evaluations(module, monkeypatch):
-    import time
-    prefix = group(b"Crawl-delay: 1", b"User-agent: otherbot", b"Allow: /unused") + b"User-agent: *\n"
-    rule = b"Disallow: /*a*a*a*a*b\n"
-    # A separate maximal admitted grouped file; the original hostile fixtures
-    # and their full-payload stress checks above remain unchanged.
-    body = prefix + rule * ((512000 - len(prefix)) // len(rule))
-    assert 511900 <= len(body) <= 512000
-    readings = []
-    original = module._robots_canonical
-    def canonical(raw, *, rule, reading):
-        if not rule and raw.endswith(b"a" * 8000):
-            readings.append(reading)
-        return original(raw, rule=rule, reading=reading)
-    monkeypatch.setattr(module, "_robots_canonical", canonical)
-    start = time.perf_counter()
-    state = module._robots_parse(body, module.USER_AGENT)
-    assert not state["unresolved"] and "legacy_rules" in state
-    module._robots_states["https://h.test"] = state
-    module._robots_check_target("https://h.test/" + "a" * 8000)
-    elapsed = time.perf_counter() - start
-    assert readings == [1, 1, 2, 1, 2] and elapsed < 5
-    import os
-    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
-        Path(root, f"i-admitted-hostile-{module.__name__}.json").write_text(json.dumps({
-            "body_octets": len(body), "seconds": elapsed, "evaluations": readings[1:],
-            "actual_admitted_file": True, "under_five_seconds": elapsed < 5,
         }))

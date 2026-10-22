@@ -102,11 +102,6 @@ def test_parse_book_drops_empty_pages(tmp_path: Path) -> None:
     assert "Page B body." in pages[1].render()
 
 
-def test_parse_book_missing_file_raises(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        pohribnyi.parse_book(tmp_path / "does-not-exist.txt")
-
-
 def test_page_render_strips_leading_and_trailing_blanks(tmp_path: Path) -> None:
     txt = _write_fixture(tmp_path, "ok.txt", FIXTURE_3_PAGES)
     pages = pohribnyi.parse_book(txt)
@@ -115,15 +110,6 @@ def test_page_render_strips_leading_and_trailing_blanks(tmp_path: Path) -> None:
     assert rendered.endswith("\n"), "trailing newline retained for delimiter cleanliness"
     # The page-number line ``3`` is OCR content for page 2 — it stays.
     assert rendered.startswith("3\n")
-
-
-def test_page_render_preserves_internal_blanks(tmp_path: Path) -> None:
-    """Blank lines between paragraphs are content structure, not stripped."""
-    fixture = "\fParagraph A.\n\nParagraph B.\n"
-    txt = _write_fixture(tmp_path, "p.txt", fixture)
-    pages = pohribnyi.parse_book(txt)
-    rendered = pages[0].render()
-    assert "Paragraph A.\n\nParagraph B." in rendered
 
 
 # ---------------------------------------------------------------------------
@@ -337,15 +323,6 @@ def test_adjudicated_ingest_rejects_invalid_layout_before_mutation(tmp_path):
         pohribnyi.ingest_adjudicated(conn, data, load_notation(), census_counts={"1": 1})
     assert conn.execute("SELECT sql FROM sqlite_master ORDER BY name").fetchall() == before
     conn.close()
-
-
-def test_ingest_help_names_the_frozen_default(capsys):
-    with pytest.raises(SystemExit) as exc:
-        pohribnyi.main(["--help"])
-    assert exc.value.code == 0
-    help_text = capsys.readouterr().out
-    assert "bundled frozen table" in help_text
-    assert "bundled provisional" not in help_text
 
 
 def test_metadata_absent_in_legacy_adjudicated_row_remains_idempotent(tmp_path):

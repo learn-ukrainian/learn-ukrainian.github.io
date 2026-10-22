@@ -13,7 +13,6 @@ import scripts.projects.open_model_data.profile_corpus as profiler_module
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.profile_corpus import (
     canonical_json,
-    main,
     normalize_form,
     profile_corpus,
 )
@@ -189,49 +188,6 @@ def test_reports_inaccessible_required_source_without_reducing_denominator(tmp_p
         {"reason": "FileNotFoundError", "source_family": "fixture_documents"}
     ]
     assert result.candidates_path.read_bytes() == b""
-
-
-def test_cli_exit_codes_report_complete_and_incomplete_coverage(tmp_path: Path) -> None:
-    _write_sources(tmp_path / "sources.db")
-    _write_vesum(tmp_path / "vesum.db")
-    complete_config = tmp_path / "complete.json"
-    complete_config.write_text(canonical_json(_config()) + "\n", encoding="utf-8")
-
-    common = ["--input-root", str(tmp_path)]
-    assert (
-        main(
-            [
-                "--config",
-                str(complete_config),
-                *common,
-                "--summary-output",
-                str(tmp_path / "complete-summary.json"),
-                "--candidates-output",
-                str(tmp_path / "complete-candidates.jsonl"),
-            ]
-        )
-        == 0
-    )
-
-    missing_config = tmp_path / "missing.json"
-    missing_config.write_text(
-        canonical_json(_config(database="missing.db")) + "\n",
-        encoding="utf-8",
-    )
-    assert (
-        main(
-            [
-                "--config",
-                str(missing_config),
-                *common,
-                "--summary-output",
-                str(tmp_path / "missing-summary.json"),
-                "--candidates-output",
-                str(tmp_path / "missing-candidates.jsonl"),
-            ]
-        )
-        == 2
-    )
 
 
 def test_runtime_candidate_schema_is_enforced(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

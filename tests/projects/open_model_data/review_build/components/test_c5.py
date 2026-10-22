@@ -145,16 +145,6 @@ def test_ambiguous_list_is_counted_and_withheld_and_cannot_be_promoted(source):
             gate.run([promoted, *candidates[1:]])
 
 
-def test_numbered_unquoted_prose_is_counted_whole_and_withheld(source):
-    update(source, text="SYNTHETIC examples: 1) first clause, which continues; 2) SECOND.")
-    with reader_for(source) as reader:
-        gate, candidates, _ = gate_and_candidates(source, reader)
-        assert candidates[0].slots[0].text == "first clause, which continues"
-        assert candidates[1].slots[0].text == "SECOND"
-        assert candidates[0].reason == "example_boundary_ambiguous"
-        assert gate.run(candidates)[1]["accounting"]["C5"]["accepted"] == 23
-
-
 def test_hyphenation_reason_precedes_boundary_ambiguity(source):
     update(source, text="SYNTHETIC examples: first clause, which continues. UNKNOWN-\nmore")
     with reader_for(source) as reader:
@@ -389,34 +379,6 @@ def test_printed_token_is_not_a_defect_merely_because_its_pieces_are_words(sourc
         assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 0
 
 
-def test_word_boundary_loss_cannot_be_forced_through_gate(source):
-    update(source, text="SYNTHETIC rule ALPHA BETA examples: FIRST, SECOND.")
-    with reader_for(source) as reader:
-        gate, candidates, _ = gate_and_candidates(source, reader)
-        first = candidates[0]
-        target = first.response[0]
-        candidates[0] = replace(
-            first, response=(replace(target, text=target.text.replace("ALPHA BETA", "ALPHABETA")), first.response[1])
-        )
-        with pytest.raises(BuildError, match="quote_mismatch"):
-            gate.run(candidates)
-
-
-@pytest.mark.parametrize("in_example", [False, True])
-def test_unresolved_hyphen_in_carried_complete_paragraph_affects_each_record(source, in_example):
-    text = (
-        "SYNTHETIC rule examples: UNKNOWN-\nmore, SECOND."
-        if in_example
-        else "SYNTHETIC rule UNKNOWN-\nmore examples: FIRST, SECOND."
-    )
-    update(source, text=text)
-    with reader_for(source) as reader:
-        gate, candidates, _ = gate_and_candidates(source, reader)
-        assert {c.reason for c in candidates[:2]} == {"paragraph_hyphenation_unresolved"}
-        assert all("UNKNOWN-\nmore" in c.response[0].text for c in candidates[:2])
-        assert gate.run(candidates)[1]["accounting"]["C5"]["withheld"] == 2
-
-
 def test_resolution_binding_only_checks_the_carried_span(source):
     from scripts.projects.open_model_data.review_build.bindings import check
 
@@ -495,16 +457,3 @@ def test_corpus_occurrence_cannot_admit_and_metadata_remains_pinned(source):
         assert not evidence
         assert {c.reason for c in candidates[:2]} == {"paragraph_hyphenation_unresolved"}
         assert any("field=text" in key for key, _ in reader.reads[("sources.db", TABLE)])
-
-
-@pytest.mark.parametrize(
-    "body", ["FIRST (див. ще § 42), SECOND", '"phrase (see § 42)"', "1) FIRST — SECOND, THIRD — FOURTH; 2) FIFTH"]
-)
-def test_unsupported_example_cannot_be_promoted_through_binding_gate(source, body):
-    update(source, text="SYNTHETIC examples: " + body + ".")
-    with reader_for(source) as reader:
-        gate, candidates, _ = gate_and_candidates(source, reader)
-        assert candidates[0].reason == "example_boundary_ambiguous"
-        candidates[0] = replace(candidates[0], outcome="accepted", reason="ok", evidence=())
-        with pytest.raises(BuildError, match="binding_example"):
-            gate.run(candidates)

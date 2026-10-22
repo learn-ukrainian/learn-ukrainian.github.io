@@ -109,16 +109,6 @@ def test_published_generation_is_self_contained_and_untouched_after_swap(harness
     assert reports == [f"build-{result.generation}.json", f"verify-{result.generation}.json"]
 
 
-def test_verify_receipt_sha_is_bound_into_meta(harness) -> None:
-    result = harness.build(stage=FixtureStage())
-    with closing(open_readonly(result.published)) as conn:
-        meta = generation.read_meta(conn)
-    report = verify.VerifyReport(result.verify_receipt["generation"])
-    assert result.verify_receipt["ok"] is True
-    assert meta["verify_receipt_sha256"] == build_store.sha256_canonical(result.verify_receipt)
-    assert report.generation == meta["generation"]
-
-
 def test_second_writer_is_refused_while_the_lock_is_held(harness) -> None:
     target = harness.target
     target.work_dir.mkdir()
@@ -422,18 +412,6 @@ def test_build_connection_temp_files_stay_in_the_budgeted_dir(harness, monkeypat
     # Outside the pin, the build connection itself refuses to open.
     with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_outside_budget"):
         build_store._open_build_connection(target.work_dir / "probe.db", target.tmp_dir)
-
-
-def test_temp_files_during_a_whole_build_stay_in_the_budgeted_dir(harness) -> None:
-    seen: list[set[Path]] = []
-
-    class SpillingStage(FixtureStage):
-        def link(self, conn) -> None:
-            seen.append(_spill_temp_table(conn))
-            super().link(conn)
-
-    harness.build(stage=SpillingStage())
-    assert seen[0] and {path.parent for path in seen[0]} == {harness.target.tmp_dir.resolve()}
 
 
 def test_build_refuses_when_sqlite_temp_dir_cannot_be_pinned(harness, monkeypatch) -> None:

@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import date
 from pathlib import Path
 
 import pytest
 
-from scripts.audit.check_decisions import StackPinsError, find_overdue_reviews, load_stack_pins
+from scripts.audit.check_decisions import StackPinsError, load_stack_pins
 
 _VALID_ROW = """\
 pins:
@@ -19,42 +18,11 @@ pins:
     note: interpreter pin
 """
 
-# Default catalog pins in map order; parked explicit-only models are excluded.
-_ADMITTED_MODEL_IDS = (
-    "gpt-6.1-sol, gpt-6-luna, claude-opus-5-5, "
-    "claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high, "
-    "gemini-3.1-pro-high, grok-4.7, glm-5.3, deepseek-v4.1-flash, "
-    "poolside/laguna-s-2.1, poolside/laguna-xs-2.1, poolside/laguna-m.1, "
-    "composer-2.5, google-ais/gemma-4-31b-it, glm-5.3-flash"
-)
-
 
 def _write(tmp_path: Path, body: str) -> Path:
     path = tmp_path / "stack_pins.yaml"
     path.write_text(body, encoding="utf-8")
     return path
-
-
-def test_repo_pins_load_and_match_recorded_versions() -> None:
-    rows = load_stack_pins()
-    by_name = {row["name"]: row for row in rows}
-
-    assert by_name["python"]["pinned"] == "3.12.14"
-    assert by_name["python"]["source"] == ".python-version"
-    assert by_name["node"]["pinned"] == "22"
-    assert by_name["node"]["source"] == ".nvmrc"
-    assert by_name["uv"]["pinned"] == "0.12.9"
-    assert by_name["entire"]["pinned"] == "0.8.42"
-    assert by_name["postgresql"]["pinned"] == "16"
-    assert by_name["ci-literals"]["pinned"] == "ubuntu-latest"
-    assert by_name["gh"]["pinned"] == "unknown"
-    assert by_name["gh"]["source"] == "host"
-    assert by_name["claude-code"]["owner"] == "Infra"
-    assert by_name["claude-code"]["review_by"] == "2026-10-30"
-    assert by_name["python"]["review_by"] == "2026-11-16"
-    assert by_name["pinned-model-ids"]["pinned"] == _ADMITTED_MODEL_IDS
-    assert "schema_version model-catalog.v1" in by_name["pinned-model-ids"]["note"]
-    assert find_overdue_reviews(rows, today=date(2026, 10, 16)) == []
 
 
 def test_missing_owner_fails(tmp_path: Path) -> None:

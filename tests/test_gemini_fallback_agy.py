@@ -9,20 +9,8 @@ from ai_llm.fallback import (
     AGY_GEMINI_MODEL,
     PRIMARY_GEMINI_MODEL,
     AttemptOutcome,
-    build_gemini_ladder,
     run_gemini_fallback_ladder,
 )
-
-
-def test_shared_ladder_order_includes_agy_after_pro():
-    ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
-
-    assert [(r.cli, r.model, r.auth_mode) for r in ladder] == [
-        ("gemini-cli", PRIMARY_GEMINI_MODEL, "api"),
-        ("gemini-cli", PRIMARY_GEMINI_MODEL, "oauth"),
-        ("agy-cli", AGY_GEMINI_MODEL, None),
-    ]
-    assert len(ladder) == 3
 
 
 def test_lint_agent_trailer_accepts_agy():

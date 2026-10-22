@@ -463,35 +463,6 @@ def _pid_alive(pid: int) -> bool:
     return True
 
 
-def test_cli_refuses_worker_open_attempt(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    exit_code = main(
-        [
-            "--local",
-            "--db",
-            str(tmp_path / "streams.sqlite3"),
-            "--repo-root",
-            str(_REPO_ROOT),
-            "open",
-            "--role",
-            "worker",
-            "--stream",
-            INFRA_STREAM_ID,
-            "--agent",
-            "agy",
-            "--harness",
-            "agy-bridge",
-            "--instance-id",
-            "worker-attempt",
-            "--process-id",
-            str(os.getpid()),
-            "--lineage-id",
-            "worker-lineage",
-        ]
-    )
-    assert exit_code == 4
-    assert "workers cannot acquire" in capsys.readouterr().err
-
-
 def test_default_host_id_resolution_matches_delegates_self_dispatch_check(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

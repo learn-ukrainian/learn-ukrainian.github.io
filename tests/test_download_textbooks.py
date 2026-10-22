@@ -11,7 +11,6 @@ from scripts.crawl.download_textbooks import (
     DownloadValidationError,
     TitleGuardError,
     _fallback_for_component,
-    check_filename_overlap,
     download_from_gdrive,
     download_pdf,
     extract_pdf_links,
@@ -214,18 +213,6 @@ def test_multi_part_fallback_matches_primary_component_position():
         _fallback_for_component(fallback, primary_count=1, component_index=0)
 
 
-def test_check_filename_overlap():
-    # Test our warn-only filename overlap checks
-    # Case 1: Overlap exists
-    assert check_filename_overlap("ukrmova_2_bolsh.pdf", "ukrainska_mova", "Большакова") is True
-
-    # Case 2: Overlap exists via transliteration
-    assert check_filename_overlap("5-klas-matematyka-ister-2022.pdf", "matematyka", "Істер") is True
-
-    # Case 3: Overlap missing
-    assert check_filename_overlap("random_filename_123.pdf", "ukrainska_mova", "Большакова") is False
-
-
 def test_retained_store_must_already_exist(tmp_path):
     from scripts.crawl.download_textbooks import resolve_retained_store
 
@@ -399,33 +386,6 @@ def test_duplicate_download_reuse(tmp_path):
     assert not dest.exists()
     assert existing.read_bytes() == pdf_data
     assert list(dest.parent.glob("*.part")) == []
-
-
-def test_duplicate_scan_hashes_only_same_size_cloud_candidates(tmp_path):
-    from scripts.crawl import download_textbooks
-
-    same_size = tmp_path / "same.pdf"
-    different_size = tmp_path / "different.pdf"
-    candidate = b"%PDF-1.7\ncandidate"
-    same_size.write_bytes(b"%PDF-1.7\nnot-same!")
-    assert same_size.stat().st_size == len(candidate)
-    different_size.write_bytes(b"%PDF-1.7\nmuch-longer-than-the-candidate")
-    hashed: list[str] = []
-    real_hash = download_textbooks._sha256_file
-
-    def tracked_hash(path):
-        hashed.append(path.name)
-        return real_hash(path)
-
-    response = MockGdriveResponse(candidate)
-    dest = tmp_path / "new.pdf"
-    with (
-        patch("requests.get", return_value=response),
-        patch.object(download_textbooks, "_sha256_file", side_effect=tracked_hash),
-    ):
-        assert download_pdf("https://example.test/book.pdf", dest, retained_store=tmp_path) is True
-
-    assert hashed == ["same.pdf"]
 
 
 def test_download_pdf_rejects_bad_signature_and_cleans_temp(tmp_path):

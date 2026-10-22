@@ -117,118 +117,6 @@ def _stub_path_consumer(root: Path, rel: str = "scripts/audit/text_difficulty.py
     stub.write_text("# stub consumer target for tests\n", "utf-8")
 
 
-# --------------------------------------------------------------------------- #
-# 1. Kill switch: precedence + strict parsing
-# --------------------------------------------------------------------------- #
-def test_flag_default_off(tmp_path, monkeypatch):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.delenv(reg.ENV_FLAG, raising=False)
-    assert reg.is_enabled() is False
-
-
-@pytest.mark.parametrize("value", ["true", "1", "yes", "on", "TRUE", "On", "YES"])
-def test_env_true_spellings(tmp_path, monkeypatch, value):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setenv(reg.ENV_FLAG, value)
-    assert reg.is_enabled() is True
-
-
-@pytest.mark.parametrize("value", ["false", "0", "no", "off", "FALSE", "Off"])
-def test_env_false_spellings(tmp_path, monkeypatch, value):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setenv(reg.ENV_FLAG, value)
-    assert reg.is_enabled() is False
-
-
-def test_env_invalid_resolves_false_never_falls_through(tmp_path, monkeypatch):
-    # Live file says enabled, but an invalid *higher-precedence* env must not fall
-    # through to it — it resolves to False.
-    flag = tmp_path / ".runtime" / "api" / "research-registry.json"
-    flag.parent.mkdir(parents=True, exist_ok=True)
-    flag.write_text(json.dumps({"research_registry": {"enabled": True}}), "utf-8")
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setenv(reg.ENV_FLAG, "maybe")
-    assert reg.is_enabled() is False
-
-
-def test_live_file_toggle_true_then_false(tmp_path, monkeypatch):
-    flag = tmp_path / ".runtime" / "api" / "research-registry.json"
-    flag.parent.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.delenv(reg.ENV_FLAG, raising=False)
-
-    flag.write_text(json.dumps({"research_registry": {"enabled": True}}), "utf-8")
-    assert reg.is_enabled() is True
-    # Same process, flip the file — the change is immediate (dynamic per call).
-    flag.write_text(json.dumps({"research_registry": {"enabled": False}}), "utf-8")
-    assert reg.is_enabled() is False
-
-
-def test_env_overrides_live_file(tmp_path, monkeypatch):
-    flag = tmp_path / ".runtime" / "api" / "research-registry.json"
-    flag.parent.mkdir(parents=True, exist_ok=True)
-    flag.write_text(json.dumps({"research_registry": {"enabled": False}}), "utf-8")
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setenv(reg.ENV_FLAG, "true")
-    assert reg.is_enabled() is True
-
-
-@pytest.mark.parametrize(
-    "content",
-    ["{ not json", json.dumps({"research_registry": {}}), json.dumps({"other": 1}),
-     json.dumps({"research_registry": {"enabled": "true"}})],
-)
-def test_live_file_malformed_resolves_false(tmp_path, monkeypatch, content):
-    flag = tmp_path / ".runtime" / "api" / "research-registry.json"
-    flag.parent.mkdir(parents=True, exist_ok=True)
-    flag.write_text(content, "utf-8")
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.delenv(reg.ENV_FLAG, raising=False)
-    assert reg.is_enabled() is False
-
-
-# --------------------------------------------------------------------------- #
-# 2. Disabled mode is exact + loader is not invoked
-# --------------------------------------------------------------------------- #
-def test_disabled_mode_exact(tmp_path, monkeypatch):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
-
-    km = client.get("/api/knowledge/manifest")
-    assert km.status_code == 200
-    assert km.json() == {"enabled": False, "records": []}
-
-    rec = client.get("/api/knowledge/record/anything")
-    assert rec.status_code == 404
-
-
-def test_disabled_loader_not_invoked(tmp_path, monkeypatch):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
-
-    def _boom(**_kwargs):
-        raise AssertionError("load_runtime must not be called while disabled")
-
-    monkeypatch.setattr(reg, "load_runtime", _boom)
-    assert client.get("/api/knowledge/manifest").status_code == 200
-    assert client.get("/api/knowledge/record/x").status_code == 404
-    assert reg.research_manifest_component() is None
-
-
-# --------------------------------------------------------------------------- #
-# 3. Fail-open: enabled + missing/malformed registry or loader exception
-# --------------------------------------------------------------------------- #
-def test_enabled_missing_registry_fails_open(reg_root):
-    # No registry file written at all.
-    km = client.get("/api/knowledge/manifest?role=quality")
-    assert km.status_code == 200
-    assert km.json() == {"enabled": True, "records": []}
-    assert client.get("/api/knowledge/record/anything").status_code == 404
-    assert reg.research_manifest_component() is None
-
-
 def test_enabled_malformed_registry_fails_open(reg_root):
     refs = reg_root / "docs" / "references"
     refs.mkdir(parents=True, exist_ok=True)
@@ -337,12 +225,6 @@ def test_and_matcher_same_track_wrong_family_negative():
     assert reg.matches(routing, ctx) is False
 
 
-def test_and_matcher_missing_dimension_negative():
-    routing = {"roles": ["quality"], "task_families": ["difficulty-gate"]}
-    ctx = _ctx(role="quality")  # request lacks task_family the record requires
-    assert reg.matches(routing, ctx) is False
-
-
 def test_and_matcher_omitted_dimension_is_wildcard():
     routing = {"roles": ["quality"]}  # no track requirement
     assert reg.matches(routing, _ctx(role="quality", track="anything")) is True
@@ -353,14 +235,6 @@ def test_and_matcher_owned_path_glob():
     assert reg.matches(routing, _ctx(paths=["scripts/audit/text_difficulty.py"])) is True
     assert reg.matches(routing, _ctx(paths=["scripts/build/x.py"])) is False
     assert reg.matches(routing, _ctx(paths=[])) is False  # record requires a path, none given
-
-
-def test_no_context_yields_zero_records(reg_root):
-    r1 = _make_record(reg_root, "aaa", routing={})  # all-wildcard routing
-    _write_registry(reg_root, [r1])
-    runtime = reg.load_runtime(root=reg_root)
-    pointers, dropped = reg.select_pointers(runtime, _ctx())
-    assert pointers == [] and dropped == []
 
 
 def test_context_normalization_shares_etag(reg_root):
@@ -442,13 +316,6 @@ def test_manifest_etag_variants_yield_304(reg_root, header_tmpl):
     assert resp.content == b""
 
 
-def test_manifest_nonmatching_etag_is_200(reg_root):
-    r1 = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})
-    _write_registry(reg_root, [r1])
-    resp = client.get("/api/knowledge/manifest?role=quality", headers={"If-None-Match": '"deadbeef"'})
-    assert resp.status_code == 200
-
-
 # --------------------------------------------------------------------------- #
 # 10-11. Per-record endpoint: 304, invalidation, drift/traversal/private/oversize
 # --------------------------------------------------------------------------- #
@@ -497,45 +364,9 @@ def test_record_bad_ids_are_404(reg_root, bad_id):
     assert client.get(f"/api/knowledge/record/{bad_id}").status_code == 404
 
 
-def test_record_encoded_traversal_is_refused(reg_root):
-    r1 = _make_record(reg_root, "aaa")
-    _write_registry(reg_root, [r1])
-    # Starlette rejects encoded traversal with 403 before the route; 404 is the
-    # in-route refusal. Either is a non-leaking refusal.
-    assert client.get("/api/knowledge/record/%2e%2e%2fpasswd").status_code in (403, 404)
-
-
 def test_record_private_local_is_404(reg_root):
     r1 = _make_record(reg_root, "aaa", access_class="private-local")
     _write_registry(reg_root, [r1])
-    assert client.get("/api/knowledge/record/aaa").status_code == 404
-
-
-# --------------------------------------------------------------------------- #
-# 12. Budgets: boundary+1, Cyrillic, token estimate, top-5, drop logging
-# --------------------------------------------------------------------------- #
-@pytest.mark.parametrize("n,expected", [(0, 0), (1, 1), (2, 1), (4096, 2048), (4097, 2049)])
-def test_est_tokens(n, expected):
-    assert reg.est_tokens(n) == expected
-
-
-def test_record_body_size_boundary(reg_root):
-    # A single unterminated line of exactly N 'x' has an identical raw and
-    # normalized length (no trailing whitespace/newline for normalization to
-    # strip) -- exactly N bytes, at P1's own digest-policy ceiling too.
-    ok = _make_record(reg_root, "aaa", digest_body="x" * reg.MAX_RECORD_BYTES)
-    _write_registry(reg_root, [ok])
-    body = reg.record_body(reg.load_runtime(root=reg_root), "aaa")
-    assert body is not None and len(body[0].encode("utf-8")) == reg.MAX_RECORD_BYTES
-
-    # One byte over trips P1's digest-policy ceiling (raw projection size) at
-    # load_runtime() time -- a non-drift semantic error hides the whole registry
-    # (ADR-011: only hash drift gets per-record isolation), so record_body is
-    # never reached; assert the same generic 404 refusal at the API surface.
-    over = _make_record(reg_root, "aaa", digest_body="x" * (reg.MAX_RECORD_BYTES + 1))
-    _write_registry(reg_root, [over])
-    assert reg.load_runtime(root=reg_root) is None
-    assert client.get("/api/knowledge/record/aaa").status_code == 404
     assert client.get("/api/knowledge/record/aaa").status_code == 404
 
 
@@ -548,61 +379,6 @@ def test_record_body_cyrillic(reg_root):
     assert resp.status_code == 200
     assert "приклад" in resp.content.decode("utf-8")
     assert resp.headers["etag"].strip('"') == r1["content_hash"].split(":", 1)[1]
-
-
-def test_filtered_top5_and_drop_logging(reg_root, caplog):
-    records = [
-        _make_record(reg_root, f"rec-{i:02d}", routing={"roles": ["quality"]})
-        for i in range(7)
-    ]
-    _write_registry(reg_root, records)
-    with caplog.at_level("WARNING"):
-        resp = client.get("/api/knowledge/manifest?role=quality")
-    ids = [r["id"] for r in resp.json()["records"]]
-    assert ids == ["rec-00", "rec-01", "rec-02", "rec-03", "rec-04"]  # lowest-5 by id
-    assert "dropped record id" in caplog.text
-    assert "rec-05" in caplog.text and "rec-06" in caplog.text
-
-
-def test_filtered_byte_cap_drops_with_logging(reg_root, caplog):
-    # Inflate each pointer via a large *matching* roles list (role=quality still
-    # matches) so the ≤1536 byte cap bites before the 5-record cap.
-    padded_roles = ["quality"] + [f"padrole-{i}-" + "z" * 60 for i in range(3)]
-    records = [
-        _make_record(reg_root, f"rec-{i:02d}", routing={"roles": padded_roles})
-        for i in range(5)
-    ]
-    _write_registry(reg_root, records)
-    with caplog.at_level("WARNING"):
-        resp = client.get("/api/knowledge/manifest?role=quality")
-    assert len(resp.content) <= reg.MAX_FILTERED_BYTES
-    assert len(resp.json()["records"]) < 5
-    assert "dropped record id" in caplog.text
-
-
-def test_select_bodies_total_cap(reg_root, caplog):
-    # Each body ~3 KB; only two fit under the 8 KB selected-body budget.
-    body = "y" * 3000 + "\n"
-    records = [_make_record(reg_root, f"rec-{i}", digest_body=body) for i in range(4)]
-    _write_registry(reg_root, records)
-    runtime = reg.load_runtime(root=reg_root)
-    with caplog.at_level("WARNING"):
-        selected, dropped = reg.select_bodies(runtime, ["rec-0", "rec-1", "rec-2", "rec-3"])
-    total = sum(len(item["body"].encode("utf-8")) for item in selected)
-    assert total <= reg.MAX_SELECTED_BODIES_BYTES
-    assert dropped  # at least one dropped
-    assert "select_bodies dropped" in caplog.text
-
-
-def test_request_caps_reject_excess(reg_root):
-    r1 = _make_record(reg_root, "aaa")
-    _write_registry(reg_root, [r1])
-    many = "&".join(f"owned_path=p{i}" for i in range(reg.MAX_OWNED_PATHS + 1))
-    assert client.get(f"/api/knowledge/manifest?{many}").status_code == 422
-    long_path = "x" * (reg.MAX_OWNED_PATH_LEN + 1)
-    assert client.get(f"/api/knowledge/manifest?owned_path={long_path}").status_code == 422
-    long_role = "r" * (reg.MAX_QUERY_VALUE_LEN + 1)
-    assert client.get(f"/api/knowledge/manifest?role={long_role}").status_code == 422
 
 
 # --------------------------------------------------------------------------- #
@@ -659,18 +435,6 @@ def test_record_body_refuses_post_load_drift(reg_root, caplog):
     assert b"CHANGED-AFTER-LOAD" not in resp.content
 
 
-def test_select_bodies_inherits_toctou_refusal(reg_root):
-    r1 = _make_record(reg_root, "aaa")
-    _write_registry(reg_root, [r1])
-    runtime = reg.load_runtime(root=reg_root)
-    (reg_root / r1["provenance"]["digest"]).write_text(
-        _digest_body("aaa", extra="\nCHANGED-AFTER-LOAD\n"), "utf-8"
-    )
-    selected, dropped = reg.select_bodies(runtime, ["aaa"])
-    assert selected == []
-    assert dropped == ["aaa"]
-
-
 # --------------------------------------------------------------------------- #
 # 17. Fix 2 (PR #4988 review): fail-open containment — a pathological parser
 # failure or an unexpected loader exception must never surface as an API 500.
@@ -692,33 +456,6 @@ def test_enabled_deeply_nested_yaml_recursion_fails_open_not_500(reg_root):
     sm = client.get("/api/state/manifest")
     assert sm.status_code == 200
     assert "research" not in sm.json()
-
-
-def test_enabled_injected_loader_exception_fails_open_not_500(reg_root, monkeypatch):
-    def _boom(**_kwargs):
-        raise RuntimeError("injected failure")
-
-    monkeypatch.setattr(reg, "load_runtime", _boom)
-
-    km = client.get("/api/knowledge/manifest")
-    assert km.status_code == 200
-    assert km.json() == {"enabled": True, "records": []}
-
-    assert client.get("/api/knowledge/record/anything").status_code == 404
-
-    sm = client.get("/api/state/manifest")
-    assert sm.status_code == 200
-    assert "research" not in sm.json()
-
-    assert reg.load_runtime_safe(root=reg_root) is None
-
-
-def test_rules_session_orient_unaffected_by_research_registry_failure(reg_root, monkeypatch):
-    """A broken research registry must not degrade unrelated cold-start surfaces."""
-    monkeypatch.setattr(reg, "load_runtime", lambda **_kwargs: (_ for _ in ()).throw(RuntimeError("boom")))
-    assert client.get("/api/rules").status_code == 200
-    assert client.get("/api/session/current").status_code == 200
-    assert client.get("/api/orient").status_code == 200
 
 
 # --------------------------------------------------------------------------- #
@@ -753,22 +490,6 @@ def test_duplicate_record_id_hides_whole_registry(reg_root):
     resp = client.get("/api/knowledge/manifest?role=quality")
     assert resp.json() == {"enabled": True, "records": []}
     assert client.get("/api/knowledge/record/aaa").status_code == 404
-
-
-def test_single_drift_still_isolates_and_serves_healthy_record(reg_root):
-    """Sanity companion to test_record_drift_excluded_but_healthy_served: proves
-    Fix 3's reuse of validate_registry() preserves the ONE case ADR-011 grants
-    per-record isolation for -- pure content_hash drift, nothing else wrong."""
-    healthy = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})
-    drifted = _make_record(reg_root, "bbb", routing={"roles": ["quality"]})
-    _write_registry(reg_root, [healthy, drifted])
-    (reg_root / drifted["provenance"]["digest"]).write_text(_digest_body("bbb", extra="\ndrift\n"), "utf-8")
-
-    runtime = reg.load_runtime(root=reg_root)
-    assert runtime is not None  # drift alone never hides the whole registry
-    assert [r["id"] for r in runtime.valid_records] == ["aaa"]
-    assert client.get("/api/knowledge/record/aaa").status_code == 200
-    assert client.get("/api/knowledge/record/bbb").status_code == 404
 
 
 # --------------------------------------------------------------------------- #

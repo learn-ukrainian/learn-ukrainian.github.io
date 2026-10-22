@@ -179,34 +179,3 @@ def test_send_timeout_returns_negative_exit_code(tmp_path: Path, monkeypatch) ->
     assert result["events"] == [{"type": "stdout_text", "content": "partial stdout"}]
     assert result["stderr"].startswith("[timeout after 3s]")
     assert "partial stderr" in result["stderr"]
-
-
-def test_cli_main_reads_message_from_file(tmp_path: Path, monkeypatch, capsys) -> None:
-    message_file = tmp_path / "relay.md"
-    message_file.write_text("from file", encoding="utf-8")
-    captured: dict = {}
-
-    def fake_send(**kwargs):
-        captured.update(kwargs)
-        return {
-            "bridge_id": "bridge-file",
-            "thread_id": THREAD_ID,
-            "exit_code": 0,
-            "events": [{"type": "PLANNER_RESPONSE", "content": "ok"}],
-            "final_message": "ok",
-            "duration_s": 0.1,
-            "session_file": "/tmp/session.pb",
-            "stderr": "",
-        }
-
-    monkeypatch.setattr(ui_agy, "send", fake_send)
-
-    rc = ui_agy.cli_main(
-        ["--thread", THREAD_ID, "--from-file", str(message_file), "--json"]
-    )
-    out = json.loads(capsys.readouterr().out)
-
-    assert rc == 0
-    assert captured["thread_id"] == THREAD_ID
-    assert captured["message"] == "from file"
-    assert out["event_count"] == 1

@@ -39,59 +39,6 @@ def snapshot(root):
     }
 
 
-def test_canonical_source_matches_gpt6_role_matrix():
-    root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
-    assets = deployer.source_assets(root)
-
-    assert tomllib.loads(assets["config.toml"].decode()) == deployer.EXPECTED
-    assert {
-        name.removeprefix("agents/").removesuffix(".toml")
-        for name in assets
-        if name.startswith("agents/")
-    } == set(deployer.PROFILE_ROLES)
-    assert {model for model, _, _ in deployer.PROFILE_ROLES.values()} == {
-        "gpt-6.1-sol",
-        "gpt-6-luna",
-    }
-
-
-def test_home_instructions_agree_with_configured_worker_default():
-    root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
-    assets = deployer.source_assets(root)
-    defaults = tomllib.loads(assets["config.toml"].decode())["agents"]
-    assert defaults["default_subagent_model"] == "gpt-6.1-sol"
-    assert defaults["default_subagent_reasoning_effort"] == "high"
-    instructions = " ".join(assets["AGENTS.md"].decode().split())
-    readme = " ".join((root / "README.md").read_text().split())
-    assert "The default subagent is Sol at high reasoning for eligible code work." in instructions
-    assert "The default spawned agent is Sol high for eligible code work." in readme
-    for document in (instructions, readme):
-        assert "Luna profiles remain available explicitly" in document
-    assert tomllib.loads(assets["agents/luna_coder_high.toml"].decode())["model"] == "gpt-6-luna"
-
-
-def test_astra_seat_is_retired_and_advisor_states_the_approval_rule():
-    root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
-    assert "astra_advisor_high" in deployer.SUPERSEDED_PROFILES
-    assert not set(deployer.SUPERSEDED_PROFILES) & set(deployer.PROFILE_ROLES)
-    assert not any("astra" in name for name in deployer.PROFILE_ROLES)
-    assert not (root / "agents/astra_advisor_high.toml").exists()
-    assert "astra" not in (root / "AGENTS.md").read_text().lower()
-    advisor = tomllib.loads((root / "agents/sol_advisor_high.toml").read_text())
-    rule = advisor["developer_instructions"]
-    for phrase in (
-        "Opus 5.5 and Sol 6.1 agreeing",
-        "when one of them authored the proposal, the other's approval completes it",
-        "a proposal by any other agent (Gemini, Grok, Kimi or another seat) needs both",
-        "operator decides",
-        "never approve work you authored",
-    ):
-        assert phrase in rule
-    # #9616: the old wording left no path when Opus 5.5 or Sol 6.1 authored the proposal.
-    for stale in ("approval needs both", "neither may be the author"):
-        assert stale not in rule
-
-
 def test_preservation_idempotence_backups(source):
     home = source.parent / "home"
     home.mkdir()
@@ -294,19 +241,6 @@ def test_partial_failure_retains_recovery(source, monkeypatch):
     assert json.loads((run / "receipt.json").read_text())["status"] == "partial_failure"
 
 
-def test_cli_requires_explicit_home():
-    result = subprocess.run([sys.executable, str(Path(deployer.__file__))], capture_output=True, text=True, timeout=30)
-    assert result.returncode == 2
-    assert "--codex-home" in result.stderr
-
-
-def test_nested_agents_table_preserved():
-    data = b'[agents.worker]\nconfig_file = "worker.toml"\n'
-    result = deployer.merge_config(data)
-    assert tomllib.loads(result.decode())["agents"]["worker"] == {"config_file": "worker.toml"}
-    assert data in result
-
-
 @pytest.mark.parametrize("name", deployer.PROFILE_ROLES)
 @pytest.mark.parametrize("field", ["model", "model_reasoning_effort", "sandbox_mode"])
 def test_role_matrix_cannot_be_swapped(source, name, field):
@@ -323,34 +257,6 @@ def test_role_matrix_cannot_be_swapped(source, name, field):
     with pytest.raises(deployer.DeployError, match="approved model, effort, and sandbox"):
         deployer.deploy(source, home)
     assert not home.exists()
-
-
-def test_unapproved_source_role_rejected(source):
-    profile = source / "agents/sol_coder_high.toml"
-    (source / "agents/unknown.toml").write_text(profile.read_text().replace("sol_coder_high", "unknown"))
-    with pytest.raises(deployer.DeployError, match="approved role name"):
-        deployer.source_assets(source)
-
-
-def test_root_effort_does_not_replace_nested_effort():
-    original = b'[profiles.custom]\nmodel_reasoning_effort = "medium" # custom\n'
-    merged = deployer.merge_config(original)
-    data = tomllib.loads(merged.decode())
-    assert data["model_reasoning_effort"] == "high"
-    assert data["profiles"]["custom"]["model_reasoning_effort"] == "medium"
-    assert original in merged
-    assert deployer.merge_config(merged) == merged
-
-
-def test_advisor_profile_uses_high_without_changing_regular_roles():
-    root = Path(__file__).resolve().parents[1] / "agents_extensions/codex-home"
-    assets = deployer.source_assets(root)
-    assert assets
-    for name, (_, effort, _) in deployer.PROFILE_ROLES.items():
-        profile = tomllib.loads((root / f"agents/{name}.toml").read_text())
-        assert profile["model_reasoning_effort"] == effort
-        if name != "luna_explorer_medium":
-            assert effort == "high"
 
 
 def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):

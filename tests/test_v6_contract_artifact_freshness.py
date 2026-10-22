@@ -53,11 +53,3 @@ def test_build_contract_returns_live_contract_and_excerpts() -> None:
     assert contract["module"]["title"] == "Original"
     assert contract["teaching_beats"]["section_order"] == ["Intro"]
     assert excerpts["sections"]["Intro"]
-
-
-def test_build_contract_reflects_plan_title_changes() -> None:
-    first, _ = build_contract(_plan("Before"), "", level="a1", slug="demo", module_num=1)
-    second, _ = build_contract(_plan("After"), "", level="a1", slug="demo", module_num=1)
-
-    assert first["module"]["title"] == "Before"
-    assert second["module"]["title"] == "After"

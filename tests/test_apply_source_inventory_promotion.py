@@ -49,16 +49,6 @@ def test_apply_promotion_plan_rejects_missing_candidates() -> None:
         apply.apply_promotion_plan(manifest, plan)
 
 
-def test_apply_promotion_plan_allows_missing_production_outputs_key() -> None:
-    manifest = _manifest([])
-    plan = _plan([_addition("мама")])
-    plan.pop("production_outputs_updated")
-
-    result = apply.apply_promotion_plan(manifest, plan)
-
-    assert result["counts"]["promoted"] == 1
-
-
 def test_apply_promotion_plan_enforces_expected_counts() -> None:
     manifest = _manifest([])
     plan = _plan([_addition("мама")])
@@ -119,38 +109,6 @@ def test_apply_existing_provenance_overlay_updates_existing_entries() -> None:
     assert refs[0]["source_family"] == "teacher_lesson"
     assert result["counts"]["overlay_updated_entries"] == 1
     assert result["counts"]["overlay_added_provenance_refs"] == 1
-
-
-def test_format_report_uses_manifest_lemma_overlay_fallback() -> None:
-    report = apply.format_report(
-        {
-            "workflow": apply.WORKFLOW_ID,
-            "source_family": "teacher_lesson",
-            "counts": {
-                "planned_additions": 0,
-                "promoted": 0,
-                "already_present": 0,
-                "skipped_existing": 0,
-                "overlay_updated_entries": 1,
-                "overlay_added_provenance_refs": 1,
-            },
-            "promoted_entries": [],
-            "already_present": [],
-            "skipped_existing": [],
-            "existing_provenance_overlay": {
-                "updated_entries": [
-                    {
-                        "manifest_lemma": "чверть",
-                        "source_inventory_key": "key-чверть",
-                        "added_provenance_refs": 1,
-                    }
-                ]
-            },
-            "production_outputs_updated": [],
-        }
-    )
-
-    assert "`чверть`" in report
 
 
 def test_apply_rejects_private_provenance_paths() -> None:

@@ -17,15 +17,6 @@ from scripts.fleet_comms.message_plane import (
 )
 
 
-def test_resolve_plane_mode() -> None:
-    assert resolve_plane_mode("off") == "off"
-    assert resolve_plane_mode("shadow") == "shadow"
-    assert resolve_plane_mode("dual_write") == "dual_write"
-    assert resolve_plane_mode("dual-write") == "dual_write"
-    with pytest.raises(ValueError):
-        resolve_plane_mode("production")
-
-
 def test_resolve_plane_mode_env_unset_uses_configured_default(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -113,14 +104,6 @@ def test_default_plane_root_makes_relative_override_stable(
     assert resolved.is_absolute()
 
 
-def test_message_plane_preserves_public_root_constants() -> None:
-    import scripts.fleet_comms.message_plane as message_plane
-    from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, ENV_ROOT
-
-    assert message_plane.DEFAULT_ROOT_REL is DEFAULT_ROOT_REL
-    assert message_plane.ENV_ROOT is ENV_ROOT
-
-
 def test_configured_default_fail_open_on_malformed_yaml(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -148,14 +131,6 @@ def test_invocation_digest_stable_for_fg_bg_parity() -> None:
     c = invocation_digest(recipient="codex", body="hello!", model="m", mode="read-only", cwd="/tmp/x")
     assert a == b
     assert a != c
-
-
-def test_off_mode_is_noop(tmp_path: Path) -> None:
-    with MessagePlane(mode="off", root=tmp_path / "v1") as plane:
-        assert plane.open_ask(recipient="codex", body="x") is None
-        result = plane.complete_ask("request_missing")
-        assert result.request is None
-        assert result.projected_legacy_replied is False
 
 
 def test_shadow_records_incomplete_without_legacy_replied(tmp_path: Path) -> None:

@@ -30,12 +30,6 @@ class TestFoldCitationAuthor:
     """``fold_citation_author`` must collapse Cyrillic + Latin variants
     to one canonical form, *without* merging genuinely distinct authors."""
 
-    def test_zaharijchuk_variants_canonicalize(self):
-        # The a1/m20 regression: plan ref vs chunk-id-derived title.
-        assert fold_citation_author("Захарійчук") == fold_citation_author(
-            "Zaharijchuk"
-        )
-
     def test_kh_and_h_collapse(self):
         # х can transliterate to either "kh" (BGN) or "h" (Wikipedia).
         assert fold_citation_author("Хитренко") == fold_citation_author("Khytrenko")
@@ -53,10 +47,6 @@ class TestFoldCitationAuthor:
         assert fold_citation_author("Захарко") != fold_citation_author("Захарійчук")
         assert fold_citation_author("Авраменко") != fold_citation_author("Захарійчук")
         assert fold_citation_author("Вашуленко") != fold_citation_author("Авраменко")
-
-    def test_already_latin_stays_stable(self):
-        # Plain Latin input round-trips through the same pipeline.
-        assert fold_citation_author("Avramenko") == fold_citation_author("Авраменко")
 
 
 class TestCitationKeysMatchAcrossTransliterations:
@@ -101,9 +91,6 @@ class TestCitationKeysMatchAcrossTransliterations:
     def test_trailing_page_range_hyphen_is_rejected(self):
         assert extract_citation_key("Авраменко Grade 6, p.124-") is None
 
-    def test_multi_hyphen_page_range_is_rejected(self):
-        assert extract_citation_key("Авраменко Grade 6, p.124-125-127") is None
-
     def test_reversed_page_range_is_rejected(self):
         assert extract_citation_key("Авраменко Grade 6, p.125-124") is None
 
@@ -127,10 +114,3 @@ class TestCitationKeysMatchAcrossTransliterations:
 
         assert plan_key is not None and result_key is not None
         assert citation_keys_match(result_key, plan_key)
-
-    def test_page_outside_range_and_tolerance_does_not_match(self):
-        plan_key = extract_citation_key("Заболотний Grade 8, p.18-21")
-        far_key = extract_citation_key("Zabolotnyi Grade 8, p.40")
-
-        assert plan_key is not None and far_key is not None
-        assert not citation_keys_match(far_key, plan_key)

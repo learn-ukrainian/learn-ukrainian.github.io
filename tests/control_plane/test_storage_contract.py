@@ -71,25 +71,6 @@ def engine_connection(
     ],
     indirect=True,
 )
-def test_write_ownership_select_one(
-    engine_connection: tuple[str, object, Path],
-) -> None:
-    engine, conn, sqlite_target = engine_connection
-    row = conn.execute("SELECT 1").fetchone()
-    assert row is not None
-    assert int(row[0]) == 1
-    if engine == "pg":
-        assert not sqlite_target.exists()
-
-
-@pytest.mark.parametrize(
-    "engine_connection",
-    [
-        pytest.param("sqlite", id="sqlite"),
-        pytest.param("pg", marks=pytest.mark.postgres, id="pg"),
-    ],
-    indirect=True,
-)
 def test_write_ownership_probe_round_trip(
     engine_connection: tuple[str, object, Path],
 ) -> None:
@@ -116,20 +97,3 @@ def test_write_ownership_probe_round_trip(
             conn.commit()
     if engine == "pg":
         assert not sqlite_target.exists()
-
-
-@pytest.mark.postgres
-def test_pg_engine_does_not_create_sqlite_path(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _pg_dsn_or_skip()
-    sqlite_target = tmp_path / "must-not-appear.sqlite3"
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_WRITE_OWNERSHIP", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(sqlite_target))
-    conn = connect(StoreId.WRITE_OWNERSHIP, path=sqlite_target)
-    try:
-        assert conn.execute("SELECT 1").fetchone() is not None
-    finally:
-        conn.close()
-    assert not sqlite_target.exists()

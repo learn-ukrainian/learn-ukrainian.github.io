@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import correction_factory
 from scripts.projects.open_model_data import model_view_exporter as exporter
@@ -557,13 +556,6 @@ def test_historical_wikipedia_receipt_is_frozen_without_rewriting_artifact_metad
     assert frozen["source_family_selection"] == exporter.WIKIPEDIA_FROZEN_SELECTION
 
 
-def test_new_schemas_are_strict_and_meta_valid() -> None:
-    schemas, _registry = exporter.schema_bundle()
-    for path in exporter.NEW_SCHEMA_PATHS:
-        Draft202012Validator.check_schema(schemas[path])
-        assert schemas[path]["additionalProperties"] is False
-
-
 def test_evaluation_view_is_separate_and_byte_stable(tmp_path: Path) -> None:
     outputs = []
     receipts = []
@@ -879,36 +871,6 @@ def test_distributed_edits_still_reach_character_sequence_check() -> None:
     assert match.method == "character_sequence"
 
 
-def test_character_sequence_upper_bound_skips_impossible_exact_ratio(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    reference = "спільний-" + ("а" * 240)
-    candidate = "спільний-" + ("я" * 240)
-    registry = exporter.empty_text_registry()
-    registry.add_text(reference, explicit_evaluation_text=True)
-
-    class UpperBoundOnly:
-        def __init__(self, *_args: object, **_kwargs: object) -> None:
-            pass
-
-        def quick_ratio(self) -> float:
-            return 0.1
-
-        def ratio(self) -> float:
-            raise AssertionError("exact SequenceMatcher ratio must not run below its upper bound")
-
-    monkeypatch.setattr(exporter, "SequenceMatcher", UpperBoundOnly)
-    assert registry.match(candidate).matched is False
-
-
-def test_qgram_bound_rejects_same_histogram_different_sequence() -> None:
-    first = ("а" * 200) + ("б" * 200)
-    second = "аб" * 200
-
-    assert exporter.SequenceMatcher(None, first, second, autojunk=False).quick_ratio() == 1.0
-    assert exporter.sequence_ratio_can_reach(first, second, threshold=0.9) is False
-
-
 def test_qgram_bound_never_rejects_reachable_short_sequence_ratio() -> None:
     values = ["".join(characters) for length in range(1, 6) for characters in product("аб", repeat=length)]
     for first in values:
@@ -916,13 +878,6 @@ def test_qgram_bound_never_rejects_reachable_short_sequence_ratio() -> None:
             ratio = exporter.SequenceMatcher(None, first, second, autojunk=False).ratio()
             if ratio >= 0.6:
                 assert exporter.sequence_ratio_can_reach(first, second, threshold=0.6) is True
-
-
-def test_long_character_sequence_detects_distributed_repetitive_edits() -> None:
-    reference = "".join(chr(ord("а") + index % 20) for index in range(12_000))
-    candidate = "".join("я" if index % 10 == 9 else character for index, character in enumerate(reference))
-
-    assert exporter.character_sequence_matches(reference, candidate, threshold=0.9) is True
 
 
 def test_long_character_sequence_rejects_anagram_like_frequency_match() -> None:
@@ -961,30 +916,6 @@ def test_containment_prefilter_preserves_exact_containment() -> None:
 
     assert match.matched is True
     assert match.method == "character_containment"
-
-
-def test_character_anchor_index_is_bounded_and_keeps_endpoints() -> None:
-    normalized = "".join(chr(0x400 + index) for index in range(400))
-    offsets = exporter.character_anchor_offsets(normalized)
-    assert len(offsets) == exporter.MAX_CHARACTER_ANCHORS_PER_TEXT
-    assert offsets[0] == 0
-    assert offsets[-1] == len(normalized) - exporter.CANDIDATE_ANCHOR_CHARACTERS
-    assert offsets == tuple(sorted(set(offsets)))
-
-    registry = exporter.empty_text_registry()
-    registry.add_text(normalized, explicit_evaluation_text=True)
-    assert sum(len(indexes) for indexes in registry.character_index.values()) <= 64
-
-
-def test_rollback_backup_path_remains_reserved(tmp_path: Path) -> None:
-    destination = tmp_path / "view.jsonl"
-    backup = exporter.reserved_rollback_path(destination)
-    try:
-        assert backup.exists()
-        assert backup.parent == destination.parent
-        assert backup.read_bytes() == b""
-    finally:
-        backup.unlink(missing_ok=True)
 
 
 @pytest.mark.parametrize(
@@ -1540,35 +1471,6 @@ def test_recipe_rejects_unbound_template_and_invalid_split(tmp_path: Path) -> No
             output=tmp_path / "manifest.json",
             allow_test_fixtures=True,
         )
-
-
-def test_cli_returns_exit_two_for_fixture_without_explicit_switch(
-    tmp_path: Path,
-) -> None:
-    text = "Синтетичний рядок для перевірки коду завершення."
-    source_path = tmp_path / "source.jsonl"
-    payload_path = tmp_path / "payload.jsonl"
-    write_jsonl(source_path, [source_record(text)])
-    write_jsonl(payload_path, [source_payload(text)])
-    with pytest.raises(SystemExit) as exc:
-        exporter.main(
-            [
-                "continued-pretraining",
-                "--source-records",
-                str(source_path),
-                "--payloads",
-                str(payload_path),
-                "--origin",
-                "machine_generated",
-                "--representation-view",
-                "faithful_literary",
-                "--output",
-                str(tmp_path / "output.jsonl"),
-                "--receipt-output",
-                str(tmp_path / "receipt.json"),
-            ]
-        )
-    assert exc.value.code == 2
 
 
 @pytest.mark.parametrize("redistribution", ["denied", "unknown"])

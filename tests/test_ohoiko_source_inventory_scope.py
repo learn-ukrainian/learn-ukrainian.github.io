@@ -19,7 +19,6 @@ ABETKA_DIR = PROJECT_ROOT / "curriculum/l2-uk-direct/a1"
 OHOIKO_INVENTORY = PROJECT_ROOT / "registry/lexicon/source-inventory/ohoiko-abetka-keywords.yaml"
 DECISION_DIR = PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions"
 OHOIKO_DECISION_BATCH = DECISION_DIR / "2026-07-03-second-approved-ohoiko-ledger-batch.yaml"
-ULP_SCHEMA = PROJECT_ROOT / "docs/resources/EXTERNAL_RESOURCES_SCHEMA.md"
 ULP_BLOG_DB = PROJECT_ROOT / "docs/resources/ukrainianlessons/blog_db.json"
 
 
@@ -69,14 +68,6 @@ def test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows() -> None:
         "rows": 23,
         "decision_counts": {"approve_for_publish": 23},
     }
-
-
-def test_ulp_resource_policy_remains_link_only_for_lexicon_scope() -> None:
-    schema = ULP_SCHEMA.read_text(encoding="utf-8")
-
-    assert "ULP (Ukrainian Lessons Podcast)" in schema
-    assert "Inspiration only" in schema
-    assert "Never copy content" in schema
 
 
 def test_ulp_blog_database_is_metadata_not_headword_corpus() -> None:

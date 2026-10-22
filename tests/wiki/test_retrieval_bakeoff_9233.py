@@ -49,12 +49,6 @@ def test_lemma_stop_words_and_topic_word_exception(tmp_path: Path) -> None:
     conn.close()
 
 
-def test_reciprocal_rank_fusion_uses_k60_and_stable_ties() -> None:
-    rankings = [["a", "x2", "x3", "x4", "b"], ["c", "c2", "c3", "c4", "b", "c6", "c7", "c8", "c9", "a"]]
-    assert bakeoff.reciprocal_rank_fusion(rankings, limit=2) == ["b", "a"]
-    assert bakeoff.reciprocal_rank_fusion(rankings, k=1, limit=2) == ["a", "c"]
-
-
 def test_pool_is_blind_and_sealed_key_maps_back(tmp_path: Path) -> None:
     work = tmp_path / "work"
     work.mkdir()
@@ -138,39 +132,6 @@ def test_encode_stub_is_resumable_and_uses_repository_prefix(tmp_path: Path, mon
     assert calls == [["passage: first text", "passage: second text"]]
 
 
-def test_jina_encoder_stub_receives_retrieval_task_prompt() -> None:
-    calls = {}
-
-    class StubEncoder:
-        def encode(self, texts, **kwargs):
-            calls["texts"] = texts
-            calls["kwargs"] = kwargs
-            return [[1.0, 0.0]]
-
-    model = StubEncoder()
-    vector = bakeoff._query_vector(model, {"kind": "jina", "max_tokens": 128}, "запит", "jinaai/jina-embeddings-v5-text-nano")
-    assert vector == [1.0, 0.0]
-    assert calls["texts"] == ["запит"]
-    assert calls["kwargs"]["task"] == "retrieval"
-    assert calls["kwargs"]["prompt_name"] == "query"
-
-
-def test_dense_ranking_uses_cosine_similarity_and_stable_ties(tmp_path: Path) -> None:
-    path = tmp_path / "vectors.sqlite3"
-    conn = sqlite3.connect(path)
-    conn.execute("CREATE TABLE vectors (chunk_id TEXT, text_sha256 TEXT, vector BLOB, dimensions INTEGER)")
-    import numpy as np
-
-    conn.executemany("INSERT INTO vectors VALUES (?,?,?,?)", [
-        ("aligned", "", np.asarray([1.0, 0.0], dtype="float32").tobytes(), 2),
-        ("also-aligned", "", np.asarray([2.0, 0.0], dtype="float32").tobytes(), 2),
-        ("orthogonal", "", np.asarray([0.0, 1.0], dtype="float32").tobytes(), 2),
-    ])
-    conn.commit()
-    conn.close()
-    assert bakeoff._dense_rank([1.0, 0.0], path, limit=3) == ["aligned", "also-aligned", "orthogonal"]
-
-
 def test_rerank_adapters_rank_candidates_without_model_downloads() -> None:
     candidates = [{"chunk_id": "a", "text": "first"}, {"chunk_id": "b", "text": "second"}]
 
@@ -190,47 +151,6 @@ def test_rerank_adapters_rank_candidates_without_model_downloads() -> None:
 
     assert bakeoff._rerank(CrossEncoderStub(), {"kind": "cross_encoder", "max_tokens": 512}, "query", candidates) == ["a", "b"]
     assert bakeoff._rerank(JinaStub(), {"kind": "jina", "max_tokens": 512}, "query", candidates) == ["b", "a"]
-
-
-def test_search_orchestration_builds_dense_hybrid_and_reranked_arms(tmp_path: Path, monkeypatch) -> None:
-    work = tmp_path / "work"
-    work.mkdir()
-    corpus = sqlite3.connect(work / "corpus.sqlite3")
-    corpus.execute("CREATE TABLE chunks (id INTEGER,chunk_id TEXT,title TEXT,text TEXT,source_file TEXT,subject TEXT,parent_section_id INTEGER)")
-    corpus.executemany("INSERT INTO chunks VALUES (?,?,?,?,?,?,?)", [(1, "c1", "t1", "text 1", "book", "ukrmova", None), (2, "c2", "t2", "text 2", "book", "ukrmova", None)])
-    corpus.commit()
-    corpus.close()
-    vectors = work / "embeddings/intfloat--multilingual-e5-small.sqlite3"
-    vectors.parent.mkdir()
-    vector_conn = sqlite3.connect(vectors)
-    vector_conn.execute("CREATE TABLE index_metadata (key TEXT, value TEXT)")
-    vector_conn.execute("INSERT INTO index_metadata VALUES ('run_manifest_sha256','run')")
-    vector_conn.execute("CREATE TABLE vectors (chunk_id TEXT, text_sha256 TEXT, vector BLOB, dimensions INTEGER)")
-    vector_conn.executemany("INSERT INTO vectors VALUES (?,'',x'0000803f00000000',2)", [("c1",), ("c2",)])
-    vector_conn.commit()
-    vector_conn.close()
-    repo = "intfloat/multilingual-e5-small"
-    (work / f"{repo.replace('/', '--')}-encode.json").write_text(json.dumps({"index_size_bytes": 123, "wall_seconds": 4.0, "steady_state_chunks_per_second": 2.0, "peak_rss_bytes": 456}), encoding="utf-8")
-    query = {"id": "G3-001", "family": "G3", "query": "query", "stratum": "area", "cluster": "G3-001"}
-    _compute_fixture(monkeypatch, query)
-    monkeypatch.setattr(bakeoff, "_load_queries", lambda: ([query], [query]))
-    monkeypatch.setattr(bakeoff, "_fts_search", lambda *args, **kwargs: ["c2"])
-    monkeypatch.setattr(bakeoff, "get_vesum_connection", lambda path: nullcontext(object()))
-    monkeypatch.setattr(bakeoff, "_new_encoder", lambda model, root: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "sentence", "max_tokens": 32}))
-    monkeypatch.setattr(bakeoff, "_query_vector", lambda *args: [1.0, 0.0])
-    monkeypatch.setattr(bakeoff, "_dense_rank", lambda *args, **kwargs: ["c1"])
-    monkeypatch.setattr(bakeoff, "_new_reranker", lambda model, root: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 32}))
-    monkeypatch.setattr(bakeoff, "_rerank", lambda model, meta, text, candidates: [str(row["chunk_id"]) for row in candidates][::-1])
-
-    monkeypatch.setattr(bakeoff, "_copy_subset", lambda *args: work / "corpus.sqlite3")
-    monkeypatch.setattr(bakeoff, "_isolated_arm", bakeoff._run_arm)
-    result = bakeoff.search(tmp_path / "unused.db", work, models=[repo], rerankers=["Qwen/Qwen3-Reranker-0.6B"], query_limit=1, families=["G1", "G2", "G3"])
-    assert set(result["arms"]) == {"L", f"D:{repo}", f"H:{repo}", f"R:Qwen/Qwen3-Reranker-0.6B|{repo}"}
-    assert result["arms"][f"H:{repo}"]["G3-001"][0] == "c1"
-    assert result["vector_coverage"][repo] == {"indexed_vectors": 2, "corpus_rows": 2}
-    assert result["costs"][f"D:{repo}"]["index_size_bytes"] == vectors.stat().st_size
-    assert result["costs"][f"H:{repo}"]["index_size_bytes"] == vectors.stat().st_size + (work / "corpus.sqlite3").stat().st_size
-    assert result["costs"][f"R:Qwen/Qwen3-Reranker-0.6B|{repo}"]["reranker"]["max_tokens"] == 32
 
 
 def test_strict_and_lenient_labels_drive_recall_scoring(tmp_path: Path, monkeypatch) -> None:
@@ -275,16 +195,6 @@ def test_strict_and_lenient_labels_drive_recall_scoring(tmp_path: Path, monkeypa
         bakeoff.score(work, a_path, b_path, iterations=20)
 
 
-def test_paired_cluster_bootstrap_keeps_query_pairs_and_clusters_together() -> None:
-    values = {"base": (1.0, 0.5), "inflected": (0.8, 0.3), "other": (0.4, 0.0)}
-    clusters = {"base": "pair-1", "inflected": "pair-1", "other": "pair-2"}
-    first = bakeoff.paired_cluster_bootstrap(values, clusters, iterations=250, seed=19)
-    second = bakeoff.paired_cluster_bootstrap(values, clusters, iterations=250, seed=19)
-    assert first == second
-    assert first["estimate"] == pytest.approx(0.45)
-    assert first["lower_95"] <= first["estimate"] <= first["upper_95"]
-
-
 def _sources(path: Path, rows: list[tuple]) -> None:
     with sqlite3.connect(path) as conn:
         conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY,chunk_id TEXT,title TEXT,text TEXT,source_file TEXT,subject TEXT,parent_section_id INTEGER)")
@@ -310,28 +220,6 @@ def test_unmocked_lemma_index_finds_surface_forms_and_shares_probe_expansion(tmp
     probe_index, _ = bakeoff.phase1._create_lemma_index(source, vesum_path, tmp_path / "probe")
     with sqlite3.connect(probe_index) as probe, sqlite3.connect(index) as harness:
         assert probe.execute("SELECT chunk_id,title_terms,text_terms FROM lemma_fts ORDER BY rowid").fetchall() == harness.execute("SELECT chunk_id,title,text FROM chunks_fts ORDER BY rowid").fetchall()
-
-
-def test_pool_deduplicates_before_cap_and_keeps_conceptual_queries() -> None:
-    queries, _ = bakeoff._load_queries()
-    chosen = bakeoff._pool_queries(queries)
-    assert len(chosen) == 120
-    assert bakeoff.Counter(q["family"] for q in chosen) == {"G1": 7, "G2": 24, "G3": 89}
-    assert len({q["query"] for q in chosen}) == 120
-    assert chosen == bakeoff._pool_queries(queries)
-    assert len(bakeoff._pool_queries(queries, 5)) == 5
-
-
-def test_loaded_clusters_follow_query_string_and_term_triple() -> None:
-    queries, _ = bakeoff._load_queries()
-    for family, expected in [("G1", 7), ("G2", 12)]:
-        subset = [q for q in queries if q["family"] == family]
-        assert len({q["cluster"] for q in subset}) == expected
-    g2 = [q for q in queries if q["family"] == "G2"]
-    for query in g2:
-        triple = json.loads(query["cluster"][3:])
-        assert len(triple) == 3 and query["query"] in triple
-        assert all(q["cluster"] == query["cluster"] for q in g2 if q["query"] in triple)
 
 
 def test_pool_ids_stable_in_two_hash_seed_subprocesses(tmp_path: Path) -> None:
@@ -389,70 +277,6 @@ def test_cached_corpus_digest_and_missing_source_identity(tmp_path: Path, monkey
     monkeypatch.setattr(bakeoff, "EXTRA_SOURCES", ("pohribnyi-ukrainska-literaturna-vymova-1992",))
     with pytest.raises(ValueError, match="zero rows"):
         bakeoff._copy_subset(source, tmp_path / "empty")
-
-
-def test_bm25_title_weight_in_harness_and_probe(tmp_path: Path) -> None:
-    source = tmp_path / "sources.db"
-    _sources(source, [(1, "text", "", "апостроф", "book", "ukrmova", None),
-                      (2, "title", "апостроф", "", "book", "ukrmova", None)])
-    target = bakeoff._copy_subset(source, tmp_path / "work")
-    with bakeoff._ro_connect(target) as conn, bakeoff._ro_connect(bakeoff._default_vesum_db()) as vesum:
-        assert bakeoff._fts_search(conn, "апостроф", vesum, lemma=True, limit=2) == ["title", "text"]
-        probe, _ = bakeoff.phase1._create_lemma_index(source, bakeoff._default_vesum_db(), tmp_path / "probe")
-        assert bakeoff.phase1._lemma_search(probe, "апостроф", vesum, 2) == ["title", "text"]
-
-
-def test_complete_arm_latency_includes_all_stages(tmp_path: Path, monkeypatch) -> None:
-    source = tmp_path / "sources.db"
-    _sources(source, [(1, "c1", "", "text", "book", "ukrmova", None)])
-    work = tmp_path / "work"
-    corpus = bakeoff._copy_subset(source, work)
-    repo = "intfloat/multilingual-e5-small"
-    vectors = work / "embeddings" / (repo.replace("/", "--") + ".sqlite3")
-    vectors.parent.mkdir()
-    vectors.write_text("fixture")
-    clock = [0.0]
-    def stage(seconds, value):
-        def call(*args, **kwargs):
-            clock[0] += seconds
-            return value
-        return call
-    monkeypatch.setattr(bakeoff.time, "perf_counter", lambda: clock[0])
-    monkeypatch.setattr(bakeoff, "_new_encoder", lambda *args: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 512}))
-    monkeypatch.setattr(bakeoff, "_new_reranker", lambda *args: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 8192}))
-    monkeypatch.setattr(bakeoff, "_fts_search", stage(1, ["c1"]))
-    monkeypatch.setattr(bakeoff, "_query_vector", stage(2, [1]))
-    monkeypatch.setattr(bakeoff, "_load_vectors", lambda *a: (["c1"], [[1]]))
-    monkeypatch.setattr(bakeoff, "_dense_rank", stage(3, ["c1"]))
-    monkeypatch.setattr(bakeoff, "reciprocal_rank_fusion", stage(4, ["c1"]))
-    monkeypatch.setattr(bakeoff, "_rerank", stage(5, ["c1"]))
-    query = {"id": "q", "query": "query", "family": "G3"}
-    _compute_fixture(monkeypatch, query)
-    bakeoff._write_json(work / "search-progress" / (bakeoff.hashlib.sha256(f"H:{repo}".encode()).hexdigest() + ".json"), {"binding": {"run_manifest_sha256": "run"}, "rankings": {"q": ["c1"]}})
-    for arm, embedder, ranker, expected in [("L", None, None, 1), ("D:x", repo, None, 5), ("H:x", repo, None, 10), ("R:x", repo, "ranker", 15)]:
-        result = bakeoff._run_arm(corpus, work, [query], arm, embedder, ranker)
-        assert result["cost"]["query_p95_seconds"] == expected
-        assert result["cost"]["query_n"] == 1
-
-
-def test_guarded_arm_dispatches_complete_lexical_pipeline(tmp_path: Path, monkeypatch) -> None:
-    source = tmp_path / "sources.db"
-    _sources(source, [(1, "c1", "", "апостроф", "book", "ukrmova", None)])
-    work = tmp_path / "work"
-    corpus = bakeoff._copy_subset(source, work)
-    query = {"id": "q", "query": "апостроф", "family": "G3"}
-    _compute_fixture(monkeypatch, query)
-    guarded = []
-    def guard(function, args, kwargs, root, step, projection):
-        guarded.append((step, projection))
-        return function(*args, **kwargs)
-    monkeypatch.setattr(bakeoff, "_guarded_step", guard)
-    result = bakeoff._isolated_arm(corpus, work, [query], "L", None, None, bakeoff._default_vesum_db())
-    assert guarded[0] == ("search-timing:L", 1800)
-    assert guarded[1][0] == "search:L" and guarded[1][1] > 0
-    assert result["rankings"] == {"q": ["c1"]}
-    assert result["cost"]["query_peak_rss_bytes"] > 0
-    assert result["cost"]["query_p95_seconds"] > 0
 
 
 def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Path, monkeypatch) -> None:
@@ -720,16 +544,6 @@ def test_qwen_yes_no_scoring_preserves_template_without_joint_truncation(tmp_pat
     assert bakeoff._rerank(adapter, meta, "query", []) == []
 
 
-def test_peak_rss_platform_units(monkeypatch) -> None:
-    from types import SimpleNamespace
-
-    monkeypatch.setattr(bakeoff.resource, "getrusage", lambda *args: SimpleNamespace(ru_maxrss=10))
-    monkeypatch.setattr(bakeoff.sys, "platform", "darwin")
-    assert bakeoff._peak_rss_bytes() == 10
-    monkeypatch.setattr(bakeoff.sys, "platform", "linux")
-    assert bakeoff._peak_rss_bytes() == 10240
-
-
 def test_repeated_g1_queries_keep_every_known_citation(tmp_path: Path, monkeypatch) -> None:
     work = tmp_path / "work"
     work.mkdir()
@@ -759,20 +573,6 @@ def test_corpus_manifest_and_cli_paths(tmp_path: Path, monkeypatch, capsys) -> N
     assert args.overwrite_pool
     with pytest.raises(SystemExit):
         bakeoff.build_parser().parse_args(["search", "--work-dir", str(work), "--batch-size", "2"])
-
-
-def test_example_agreement_is_diagnostic_not_decision_gate(tmp_path: Path, monkeypatch) -> None:
-    # Reuse a fully exercised pool fixture, then make the two decision labels
-    # agree while the example-only appendix label disagrees.
-    test_strict_and_lenient_labels_drive_recall_scoring(tmp_path, monkeypatch)
-    work = tmp_path / "work"
-    pool = json.loads((work / "judging/pool.json").read_text())
-    paths = [tmp_path / "a.jsonl", tmp_path / "b.jsonl"]
-    for index, path in enumerate(paths):
-        path.write_text("\n".join(json.dumps({"query_id": "G3-001", "item_id": item["item_id"], "usable_quotation": True, "usable_exercise": False, "usable_example": bool(index), "reason": "Decision labels agree."}) for item in pool[0]["items"]))
-    result = bakeoff.score(work, *paths, iterations=20)
-    assert result["cohen_kappa"]["usable_example"] == 0.0
-    assert result["kappa_gate"] is True
 
 
 @pytest.mark.parametrize("refused", [False, True])

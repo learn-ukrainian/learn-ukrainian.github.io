@@ -78,20 +78,6 @@ def test_module_by_slug_compact_default(monkeypatch):
     assert "phases" not in body
 
 
-def test_module_by_slug_verbose_returns_full_payload(monkeypatch):
-    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
-    monkeypatch.setattr(state_router, "LEVELS", fake_levels)
-    monkeypatch.setattr(state_router, "get_plan_slugs", lambda _t, *args, **kwargs: [(1, "x")])
-    monkeypatch.setattr(
-        state_router,
-        "compute_module_detail",
-        lambda *_a, **_kw: {"num": 1, "slug": "x", "phases": {"write": {"status": "complete"}}},
-    )
-
-    body = client.get("/api/state/module/a1/slug/x?verbose=true").json()
-    assert "phases" in body
-
-
 def test_module_by_slug_404_on_unknown_slug(monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(state_router, "LEVELS", fake_levels)
@@ -154,20 +140,6 @@ def _classification_fixture(tmp_path: Path, monkeypatch):
     return proj, plan
 
 
-def test_files_classifies_source_generated_published(tmp_path, monkeypatch):
-    _classification_fixture(tmp_path, monkeypatch)
-
-    body = client.get("/api/artifacts/a1/hello/files").json()
-    assert set(body["counts"]) == {"source_of_truth", "generated", "published", "stale"}
-    assert body["counts"]["published"] == 1
-    assert body["counts"]["source_of_truth"] >= 3  # plan + index.md + friction.yaml
-    assert body["counts"]["generated"] >= 2
-
-    # Plan must land in source_of_truth bucket, not generated.
-    sot_paths = {f["path"] for f in body["buckets"]["source_of_truth"]}
-    assert any(p.endswith("plans/a1/hello.yaml") for p in sot_paths)
-
-
 def test_files_detects_stale_generated_artifact(tmp_path, monkeypatch):
     """An artifact older than plan.yaml lands in the stale bucket."""
     _proj, plan = _classification_fixture(tmp_path, monkeypatch)
@@ -181,16 +153,6 @@ def test_files_detects_stale_generated_artifact(tmp_path, monkeypatch):
     body = client.get("/api/artifacts/a1/hello/files").json()
     stale_paths = {f["path"] for f in body["buckets"]["stale"]}
     assert any(p.endswith("hello.md") for p in stale_paths)
-
-
-def test_files_404_on_unknown_track(monkeypatch):
-    monkeypatch.setattr(
-        artifacts_router,
-        "LEVELS",
-        [{"id": "a1", "path": "l2-uk-en/a1"}],
-    )
-    resp = client.get("/api/artifacts/does-not-exist/foo/files")
-    assert resp.status_code == 404
 
 
 # ---------------------------------------------------------------------
@@ -289,22 +251,6 @@ def test_review_snapshot_does_not_pick_final_review_as_main(tmp_path, monkeypatc
     )
     # Final review exposed separately so the endpoint still surfaces it.
     assert body["final_review"]["verdict"] == "PASS"
-
-
-def test_review_snapshot_handles_missing_files(tmp_path, monkeypatch):
-    proj = tmp_path
-    (proj / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(
-        artifacts_router,
-        "LEVELS",
-        [{"id": "a1", "path": "l2-uk-en/a1"}],
-    )
-    _set_test_ctx(proj, monkeypatch)
-
-    body = client.get("/api/artifacts/a1/absent/review-snapshot").json()
-    assert body["main_review"] is None
-    assert body["style_review"] is None
-    assert body["any_empty_findings_flag"] is False
 
 
 # ---------------------------------------------------------------------

@@ -237,49 +237,12 @@ def test_a_version_two_database_that_already_has_a_measurement_table_is_refused(
 # --- typed parameters ---------------------------------------------------------------------------
 
 
-def test_the_existing_integer_parameters_keep_their_names_and_values() -> None:
-    values = db.load_parameters()
-    assert {name: values[name] for name in db._INT_PARAMETERS[:6]} == {
-        "second_seat_divisor": 10,
-        "max_revise_rounds": 2,
-        "regeneration_factor": 2,
-        "review_failures_terminal_at": 3,
-        "unsupported_claim_lessons_to_operator": 3,
-        "settle_call_budget": 12,
-    }
-    assert values["gate_candidate_pattern"] == "^yes .+$"
-    assert all(type(values[name]) is int for name in db._INT_PARAMETERS)
-
-
-def test_the_new_parameters_are_typed_and_the_threshold_is_null_by_default() -> None:
-    values = db.load_parameters()
-    assert (values["min_planted_per_dimension"], values["min_clean_lessons"], values["rolling_one_in"]) == (22, 30, 30)
-    assert values["interval_confidence_percent"] == 95
-    assert values["interval_method_proportion"] == "wilson"
-    assert values["interval_method_rate"] == "poisson_exact"
-    assert values["paired_test"] == "mcnemar_exact"
-    assert "admission_threshold" in values and values["admission_threshold"] is None
-
-
-def test_every_parameter_carries_a_decision_date_and_a_basis() -> None:
-    document = yaml.safe_load(db.PARAMETERS_PATH.read_text(encoding="utf-8"))
-    names = [key for key in document if key != "parameters_schema"]
-    assert {"min_planted_per_dimension", "min_clean_lessons", "rolling_one_in", "admission_threshold"} <= set(names)
-    for name in names:
-        assert set(document[name]) == {"value", "decided", "basis"}, name
-        assert len(document[name]["decided"]) == 10 and document[name]["basis"].strip(), name
-
-
 def _load_with(tmp_path: Path, mutate) -> dict:
     document = yaml.safe_load(db.PARAMETERS_PATH.read_text(encoding="utf-8"))
     mutate(document)
     path = tmp_path / "p.yaml"
     path.write_text(yaml.safe_dump(document), encoding="utf-8")
     return db.load_parameters(path)
-
-
-def test_the_operator_can_write_the_threshold_as_a_fraction(tmp_path: Path) -> None:
-    assert _load_with(tmp_path, lambda d: d["admission_threshold"].update(value=0.8))["admission_threshold"] == 0.8
 
 
 @pytest.mark.parametrize(

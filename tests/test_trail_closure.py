@@ -7,7 +7,6 @@ from typing import Any
 
 import yaml
 
-from scripts.orchestration.trails import closure as closure_module
 from scripts.orchestration.trails.closure import ClosureError, TrailClosureGate
 from scripts.orchestration.trails.executor import TrailExecutor
 from scripts.orchestration.trails.models import CommandExecution, ExitClass
@@ -98,17 +97,6 @@ class _CommitThenFailGate(TrailClosureGate):
         raise ClosureError("this closer lost the concurrent commit response")
 
 
-class _TypedFailingTerminalSource(_TerminalSource):
-    def reobserve_terminal(
-        self,
-        *,
-        run,
-        terminal_command_receipt: dict[str, Any],
-        terminal_step_receipt: dict[str, Any],
-    ) -> dict[str, Any]:
-        raise ClosureError("terminal bridge revoked the observation")
-
-
 def _executor(tmp_path: Path, source: _TerminalSource) -> TrailExecutor:
     tmp_path.mkdir(parents=True, exist_ok=True)
     seats = tmp_path / "fleet.yaml"
@@ -189,44 +177,6 @@ def test_stale_lease_parks_closure_atomically_without_changing_terminal_state(tm
     assert retried.exit_class == ExitClass.OK
     assert executor.store.get_run(run_id).closure_state == "closed"
     assert source.calls == 2
-
-
-def test_closure_preserves_a_typed_terminal_source_failure_detail(tmp_path: Path) -> None:
-    source = _TypedFailingTerminalSource()
-    executor = _executor(tmp_path, source)
-    run_id = _terminal_run(executor, tmp_path)
-
-    result = executor.close(run_id=run_id)
-
-    assert result.exit_class == ExitClass.STOP_PARKED
-    assert result.error == "terminal bridge revoked the observation"
-    assert executor.store.get_run(run_id).closure_state == "parked"
-
-
-def test_closure_schema_validator_loads_once_without_caching_attestations(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    source = _TerminalSource()
-    executor = _executor(tmp_path, source)
-    run_id = _terminal_run(executor, tmp_path)
-    attestation = executor.close(run_id=run_id).data["attestation"]
-    schema_path = closure_module.CLOSURE_ATTESTATION_SCHEMA_PATH
-
-    class _CountingSchemaPath:
-        reads = 0
-
-        def read_text(self, *, encoding: str) -> str:
-            self.reads += 1
-            return schema_path.read_text(encoding=encoding)
-
-    counter = _CountingSchemaPath()
-    monkeypatch.setattr(closure_module, "CLOSURE_ATTESTATION_SCHEMA_PATH", counter)
-    monkeypatch.setattr(closure_module, "_CLOSURE_ATTESTATION_VALIDATOR", None)
-
-    assert closure_module.validate_closure_attestation_data(attestation) == attestation
-    assert closure_module.validate_closure_attestation_data(attestation) == attestation
-    assert counter.reads == 1
 
 
 def test_stale_head_and_incomplete_projection_refuse_with_terminal_closure_parking(

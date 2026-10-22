@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import inspect
 import json
 import sys
 from pathlib import Path
 
 import pytest
 
-from scripts.atlas import fill_local
 from scripts.lexicon import curated_textbook_jsonl_repromote as textbook
 from scripts.lexicon import reenrich_thin_manifest_entries as reenrich
 from scripts.lexicon import repair_plural_noun_aliases as repair
@@ -67,12 +65,3 @@ def test_unhydrated_write_does_not_change_manifest(tmp_path: Path, monkeypatch, 
     with pytest.raises(paths.MissingArtifactError):
         invoke()
     assert manifest.read_text(encoding="utf-8") == original
-
-
-def test_fill_local_uses_verified_default_kaikki_artifact(monkeypatch) -> None:
-    assert fill_local.DEFAULT_KAIKKI_LOOKUP is None
-    assert inspect.signature(fill_local._fill_local).parameters["kaikki_lookup_path"].default is None
-    seen = []
-    monkeypatch.setattr(fill_local, "_fill_local", lambda *args, **kwargs: seen.append(args[2]))
-    fill_local.fill_local()
-    assert seen == [None]

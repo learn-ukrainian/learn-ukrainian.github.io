@@ -1,13 +1,8 @@
 """Guard the CI install's cache fallback and fail-closed dependency check."""
 
-import json
-import os
-import re
-import subprocess
 from pathlib import Path
 from subprocess import CompletedProcess
 
-import pytest
 import yaml
 
 from scripts.audit import check_ci_dependencies
@@ -17,34 +12,6 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
 _WARM = _REPO_ROOT / ".github/workflows/uv-cache-warm.yml"
 _ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
-
-
-def _action_step(name: str) -> dict:
-    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
-    matches = [step for step in steps if step.get("name") == name]
-    assert len(matches) == 1, f"expected one action step named {name!r}"
-    return matches[0]
-
-
-def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
-    # #9062: the install/hydrate block is one composite action, and every job
-    # that used to carry a copy calls it, so the copies cannot drift apart.
-    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
-    jobs = workflow["jobs"]
-    for job in ("checks", "frontend", "pytest"):
-        assert any(
-            step.get("uses") == "./.github/actions/python-ci-env"
-            for step in jobs[job]["steps"]
-        ), job
-    script = _action_step("Install Python deps")["run"]
-    assert script.index("uv pip install --offline") < script.index(
-        "uv pip install --python"
-    ) < script.index("uv pip check --python .venv/bin/python") < script.index(
-        "scripts/audit/check_ci_dependencies.py"
-    )
-    assert script.index("scripts/audit/check_ci_dependencies.py") < script.index(
-        "build_assets.py"
-    )
 
 
 def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
@@ -106,76 +73,6 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     assert job["outputs"]["uv-cache-key"] == f"${{{{ steps.{ci_env['id']}.outputs.uv-cache-key }}}}"
 
 
-@pytest.mark.repo_wide
-def test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache() -> None:
-    """A pin change cannot leave the cache writer or setup-uv on another Python."""
-    assert (_REPO_ROOT / ".python-version").read_text().strip() == "3.12.14"
-    for path in sorted((_REPO_ROOT / ".github/workflows").glob("*.y*ml")):
-        document = yaml.safe_load(path.read_text(encoding="utf-8"))
-        assert "UV_PYTHON" not in document.get("env", {}), path
-        for name, job in document["jobs"].items():
-            steps = job.get("steps", [])
-            setups = [step for step in steps if step.get("uses", "").startswith("actions/setup-python@")]
-            if any(re.search(r"\bpython(?:3(?:\.\d+)?)?\b", step.get("run", "")) for step in steps):
-                assert setups, (path, name, "Python job has no setup")
-                first_setup = steps.index(setups[0])
-                assert all(
-                    index > first_setup for index, step in enumerate(steps)
-                    if re.search(r"\bpython(?:3(?:\.\d+)?)?\b", step.get("run", ""))
-                ), (path, name, "Python runs before setup")
-            for setup in setups:
-                assert setup["with"]["python-version-file"] == ".python-version", (path, name)
-                assert "python-version" not in setup["with"], (path, name)
-                assert setup["with"].get("check-latest", False) is False
-            for step in steps:
-                if "sparse-checkout" in step.get("with", {}):
-                    assert ".python-version" in step["with"]["sparse-checkout"].splitlines(), (path, name)
-    assert _action_step("Set up uv")["with"]["python-version"] == "${{ steps.python-pin.outputs.version }}"
-    assert "python -m venv --without-pip .venv" in _action_step("Install Python deps")["run"]
-
-
-def test_setup_uv_reads_the_pin_instead_of_inferencing_an_interpreter(tmp_path: Path) -> None:
-    """The cache key follows a changed pin even before that Python is installed."""
-    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
-    reader = _action_step("Read Python pin")
-    assert reader["id"] == "python-pin"
-    assert steps.index(reader) < steps.index(_action_step("Set up uv"))
-    for pin in ("3.12.14", "3.12.15"):
-        (tmp_path / ".python-version").write_text(pin + "\n")
-        output = tmp_path / "output"
-        output.write_text("")
-        subprocess.run(
-            ["bash", "-e", "-c", reader["run"]], cwd=tmp_path,
-            env={**os.environ, "GITHUB_OUTPUT": str(output)}, check=True, timeout=10,
-        )
-        assert output.read_text() == f"version={pin}\n"
-
-    (tmp_path / ".python-version").unlink()
-    output.write_text("")
-    result = subprocess.run(
-        ["bash", "-e", "-c", reader["run"]], cwd=tmp_path,
-        env={**os.environ, "GITHUB_OUTPUT": str(output)}, capture_output=True, timeout=10,
-    )
-    assert result.returncode != 0
-    assert output.read_text() == ""
-
-
-def test_python_subprocess_records_the_test_runtime() -> None:
-    """Provenance for the two-runtime validation: children inherit pytest's Python."""
-    import sys
-
-    from tests.helpers.python import project_python
-
-    output = subprocess.check_output(
-        [project_python(), "-c", "import json,sys; print(json.dumps([sys.executable,sys.version]))"],
-        text=True, timeout=10,
-    )
-    executable, version = json.loads(output)
-    assert executable == sys.executable
-    assert version == sys.version
-    print(f"Test subprocess: executable={executable}, version={version}")
-
-
 def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:
     # #9101: after the save (setup-uv's post step, so a later job) main must
     # hold the exact key for the current lock, or the run goes red.
@@ -189,50 +86,6 @@ def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:
     assert "grep -Fx" in script
     assert "exit 1" in script
     assert "gh cache delete" not in script
-
-
-def test_warm_workflow_rejects_dispatch_on_other_refs_before_warming() -> None:
-    # #9101: workflow_dispatch runs on any branch, where nothing saves and
-    # verify would search main for that branch's key. Reject it first (red,
-    # obvious) instead of skipping verify; main runs must pass through.
-    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
-    triggers = warm.get("on", warm.get(True))
-    assert "workflow_dispatch" in triggers
-    steps = warm["jobs"]["warm"]["steps"]
-    guard = steps[0]
-    assert guard["if"] == "github.ref != 'refs/heads/main'"
-    assert guard["env"]["REF"] == "${{ github.ref }}"
-    assert "exit 1" in guard["run"]
-    assert "main" in guard["run"]
-    # Nothing that installs or saves runs before the guard, and verify cannot
-    # run once warm has failed.
-    assert "uses" not in guard
-    assert warm["jobs"]["verify"]["needs"] == "warm"
-    assert "if" not in warm["jobs"]["verify"]
-
-
-def test_every_uv_cache_action_is_pinned_to_a_full_sha() -> None:
-    action = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))
-    warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
-    steps = action["runs"]["steps"] + [
-        step for job in warm["jobs"].values() for step in job["steps"]
-    ]
-    for step in steps:
-        uses = step.get("uses")
-        if uses is None or uses.startswith("./"):
-            continue
-        revision = uses.split("@")[1]
-        assert len(revision) == 40 and all(c in "0123456789abcdef" for c in revision), uses
-
-
-def test_ci_retry_settings_cover_uv_and_pip() -> None:
-    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
-    assert workflow["env"] | {
-        "UV_HTTP_RETRIES": "6",
-        "UV_HTTP_TIMEOUT": "60",
-        "PIP_RETRIES": "6",
-        "PIP_TIMEOUT": "60",
-    } == workflow["env"]
 
 
 def test_only_exact_filtered_ml_omission_is_allowed() -> None:

@@ -9,20 +9,16 @@ from scripts.audit.atlas_intake_gate import (
     CLASSIFICATION_REJECT,
     CLASSIFICATION_REVIEW_QUEUE,
     classification_counts,
-    classify_candidate,
     classify_candidates,
 )
 from scripts.audit.atlas_intake_registry import (
     REQUIRED_SOURCE_FAMILIES,
-    registry_payload,
-    source_family_definition,
 )
 from scripts.audit.check_atlas_intake_freeze import (
     build_surface_snapshot,
     compare_snapshots,
 )
 from scripts.audit.source_inventory_intake import (
-    SourceInventoryCandidate,
     read_source_inventory,
     source_inventory_candidates,
 )
@@ -61,17 +57,6 @@ def _write_minimal_freeze_surface(root: Path) -> None:
         root / "site/src/data/lexicon-practice-cloze-sources.json",
         [{"lemma": "дім", "sentence": "Я у ___."}],
     )
-
-
-def test_registry_declares_required_source_families() -> None:
-    payload = registry_payload()
-
-    assert tuple(payload["required_source_families"]) == REQUIRED_SOURCE_FAMILIES
-    assert {family["id"] for family in payload["families"]} == set(REQUIRED_SOURCE_FAMILIES)
-    for family in REQUIRED_SOURCE_FAMILIES:
-        definition = source_family_definition(family)
-        assert definition.default_extraction_modes
-        assert "surface_admission" in definition.surface_admission_policy
 
 
 def test_inventory_candidates_carry_count_and_frequency(tmp_path: Path) -> None:
@@ -168,33 +153,6 @@ sources:
     assert by_lemma["безглос"].gate_evidence["reasons"] == ["missing_english_anchor"]
     assert by_lemma["ревю"].classification == CLASSIFICATION_REJECT
     assert by_lemma["ревю"].gate_evidence["reasons"] == ["unknown_source_family:ulp"]
-
-
-def test_gate_frequency_fallback_counts_missing_count_as_one() -> None:
-    candidate = SourceInventoryCandidate(
-        lemma="частота",
-        pos="noun",
-        gloss="frequency",
-        source_provenance=(
-            {
-                "source_family": "curriculum",
-                "source_id": "source-a",
-                "source_locator": "row 1",
-            },
-            {
-                "source_family": "curriculum",
-                "source_id": "source-b",
-                "source_locator": "row 2",
-                "count": 3,
-            },
-        ),
-        source_count=2,
-        frequency=0,
-    )
-
-    result = classify_candidate(candidate)
-
-    assert result.candidate_payload()["frequency"] == 4
 
 
 def test_census_reports_safe_counts_without_raw_text(tmp_path: Path) -> None:

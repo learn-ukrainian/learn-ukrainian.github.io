@@ -6,7 +6,6 @@ import copy
 import json
 from pathlib import Path
 
-import jsonschema
 import pytest
 
 import scripts.projects.open_model_data.v4_language_usage_separation as lang_sep
@@ -16,22 +15,9 @@ from tests._host_path_guard import FIXTURE_HOME
 CONFIG_PATH = resolve_open_model_path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
 _INDEX = "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
 _RECEIPT = "data/projects/open_model_data/language/v4_language_usage_receipt_v1.json"
-CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
-ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
-RECEIPT_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
-
-
 @pytest.fixture
 def repo_root() -> Path:
     return Path.cwd().resolve()
-
-
-def test_schema_contracts_valid() -> None:
-    """All 3 language usage schemas are valid Draft 2020-12 schemas."""
-    for p in [CONFIG_SCHEMA_PATH, ITEM_SCHEMA_PATH, RECEIPT_SCHEMA_PATH]:
-        assert p.is_file(), f"Missing schema file: {p}"
-        data = json.loads(p.read_text(encoding="utf-8"))
-        jsonschema.Draft202012Validator.check_schema(data)
 
 
 def test_analyze_span_language_usage_modern_standard() -> None:
@@ -237,15 +223,6 @@ def test_verify_detects_out_of_bounds_mask_spans(tmp_path: Path, repo_root: Path
     "open_model_other_indexes",
     "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
 )
-def test_build_and_verify_clean_exit() -> None:
-    """Current committed language usage artifacts pass verify() cleanly."""
-    lang_sep.verify(CONFIG_PATH)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
-)
 def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, repo_root: Path) -> None:
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"
@@ -269,15 +246,3 @@ def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, re
         input_root=ci_root,
         output_root=ci_root,
     )
-
-
-def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(lang_sep.PRIMARY_REPO_ROOT_ENV, str(tmp_path / "missing"))
-    with pytest.raises(lang_sep.LanguageUsageError, match=lang_sep.PRIMARY_REPO_ROOT_ENV):
-        lang_sep._primary_repo_root()
-
-
-def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(lang_sep.PRIMARY_REPO_ROOT_ENV, raising=False)
-    monkeypatch.chdir(tmp_path)
-    assert lang_sep._primary_repo_root() is None

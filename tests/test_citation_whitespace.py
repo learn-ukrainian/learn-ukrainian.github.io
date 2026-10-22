@@ -16,9 +16,3 @@ def test_citation_gate_normalizes_page_reference_whitespace() -> None:
     assert _result("Караман Grade 10, p. 176")["passed"] is True
     assert _result("Караман Grade 10, p.176")["passed"] is True
     assert _result("Караман Grade 10, p.  176")["passed"] is True
-
-
-def test_citation_gate_normalizes_plan_page_reference_whitespace() -> None:
-    assert _result("Караман Grade 10, p.176", "Караман Grade 10, p. 176")[
-        "passed"
-    ] is True

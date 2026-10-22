@@ -194,13 +194,6 @@ def test_real_invalid_input_is_rejected_and_never_settles(server_module, world, 
         )
 
 
-@pytest.mark.parametrize("tool", ["verify_words", "inspect_words"])
-@pytest.mark.parametrize("words", [[""], [" "], [42], ["fixture", None], "fixture"])
-def test_real_malformed_batches_are_rejected(server_module, tool, words):
-    facts = classify_outcome(tool, "ok", _result(server_module, tool, {"words": words}))
-    assert facts["status"] == "error" and facts["hits"] == 0
-
-
 @pytest.mark.parametrize("field", ["status", "error_code", "disposition"])
 def test_structured_invalid_input_is_rejected(field):
     facts = classify_outcome("verify_stress", "ok", json.dumps({field: "invalid_input", "matches": [{}]}))

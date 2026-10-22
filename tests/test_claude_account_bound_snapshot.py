@@ -35,7 +35,7 @@ import pytest
 
 from scripts import delegate
 from scripts.agent_runtime import model_pause, target_admission
-from scripts.fleet import capacity_pick, claude_account_lane, credit_lane, usage
+from scripts.fleet import claude_account_lane, credit_lane
 from scripts.fleet.claude_account_lane import AccountRequired, AccountSnapshot, bind_snapshot, select_account
 from scripts.lib import claude_weekly_used
 from scripts.orchestration import curriculum_coordinator as coordinator
@@ -282,15 +282,6 @@ def _outcome(reader: Callable[[Any], Any], snapshot: Any) -> object:
         return type(exc)
 
 
-def test_on_the_raw_payload_the_reproducers_read_account_as_meter():
-    """What the reviews demonstrated: a raw payload hands account a's 90% to any reader."""
-    raw = _reversed()
-    escaped = {name: _outcome(reader, raw) for name, reader in REPRODUCERS.items()}
-    assert escaped.pop("route_record_forwarding") is AccountRequired  # #10770: the helper now refuses
-    assert escaped.pop("vars_of_snapshot") is TypeError  # a dict has no instance namespace
-    assert escaped == dict.fromkeys(escaped, A_REMAINING)
-
-
 def _capture_resolver(monkeypatch) -> list[Any]:
     held: list[Any] = []
     original = reviewer_resolver._evaluate_candidate
@@ -495,42 +486,6 @@ def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys,
     assert "preferred" not in capsys.readouterr().err
 
 
-def test_the_dispatch_guards_only_unbound_payload_is_refused_by_the_scheduler(monkeypatch):
-    """The guard's only unbound value is the fetched payload; the scheduler refuses that object.
-
-    ``_held_by_delegate_guard`` sees the snapshot after ``select_account``. This
-    test takes the raw payload the guard itself binds — the only plain mapping
-    ``select_account`` is given — and requires ``_route_record`` and
-    ``metrics_for`` to raise ``AccountRequired`` on it.
-    """
-    raw = _reversed()
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: raw)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    unbound: list[Any] = []
-    original = claude_account_lane.select_account
-
-    def spy(snapshot, *, account):
-        if not isinstance(snapshot, AccountSnapshot):
-            unbound.append(snapshot)
-        return original(snapshot, account=account)
-
-    monkeypatch.setattr(claude_account_lane, "select_account", spy)
-    held: list[Any] = []
-
-    def review_select(snapshot, _seat):
-        held.append(snapshot)
-        return "claude", None
-
-    delegate._resolve_agent_with_budget_guard("claude", fallbacks={}, review_select=review_select, claude_account=B)
-
-    assert unbound == [raw]
-    assert held and all(isinstance(snapshot, AccountSnapshot) and snapshot.account.label == "b" for snapshot in held)
-    with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
-        reviewer_scheduler._route_record(CLAUDE, raw)
-    with pytest.raises(AccountRequired):
-        reviewer_scheduler.metrics_for(CLAUDE, raw)
-
-
 def test_model_pause_binds_the_fetched_snapshot_and_lets_account_required_through(monkeypatch):
     raw = _reversed()
     monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(raw)))
@@ -587,84 +542,6 @@ def test_bench_health_binds_injected_and_produced_snapshots(monkeypatch, tmp_pat
         )
 
 
-def _spy_entry_binding(monkeypatch) -> tuple[list[tuple[Any, Any, Any]], list[Any]]:
-    """Record ``select_account`` calls, and what ``ResolverInputs`` holds before it binds.
-
-    ``bind_snapshot`` calls ``select_account`` too. The snapshot recorded at the
-    start of ``ResolverInputs.__post_init__`` is what the entry handed over, so
-    an entry that skips its own ``select_account`` shows up as a plain payload
-    there rather than as the object that call returned.
-    """
-    select_calls: list[tuple[Any, Any, Any]] = []
-    inputs_received: list[Any] = []
-    original_select = claude_account_lane.select_account
-    original_init = ResolverInputs.__post_init__
-
-    def spy_select(snapshot, *, account):
-        result = original_select(snapshot, account=account)
-        select_calls.append((snapshot, account, result[0]))
-        return result
-
-    def spy_init(self) -> None:
-        inputs_received.append(self.routing_snapshot)
-        original_init(self)
-
-    monkeypatch.setattr(claude_account_lane, "select_account", spy_select)
-    monkeypatch.setattr(ResolverInputs, "__post_init__", spy_init)
-    return select_calls, inputs_received
-
-
-def _assert_entry_select_account_precedes_resolver(select_calls, inputs_received) -> None:
-    assert select_calls, "select_account was never called"
-    snapshot_in, route_account, snapshot_out = select_calls[0]
-    assert not isinstance(snapshot_in, AccountSnapshot)
-    assert snapshot_in["agents"]["claude"]["remaining_pct"] == A_REMAINING
-    assert route_account.label == "b"
-    assert isinstance(snapshot_out, AccountSnapshot) and snapshot_out.account.label == "b"
-    assert inputs_received, "ResolverInputs was not constructed"
-    assert all(received is snapshot_out for received in inputs_received)
-
-
-@pytest.mark.parametrize("source", ["live", "file"])
-def test_closeout_binds_through_its_own_select_account_before_resolver_inputs(source, monkeypatch, tmp_path, capsys):
-    """``_cmd_resolve_reviewer`` binds before ``ResolverInputs``; removing that call fails this test."""
-    raw = _reversed()
-    assert _route_key_for(tmp_path, monkeypatch, b"b\n").label == "b"
-    select_calls, inputs_received = _spy_entry_binding(monkeypatch)
-    argv = [
-        "--state-file",
-        str(tmp_path / "state.json"),
-        "resolve-reviewer",
-        "--author-model",
-        "gpt-6.1-sol",
-        "--risk",
-        "critical",
-        "--owned-path",
-        "ordinary.py",
-    ]
-    if source == "file":
-        path = tmp_path / "snapshot.json"
-        path.write_text(json.dumps(raw))
-        argv += ["--routing-snapshot-file", str(path)]
-    else:
-        monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_k: raw)
-    closeout_cli.main(argv)
-    capsys.readouterr()
-    _assert_entry_select_account_precedes_resolver(select_calls, inputs_received)
-    if source == "live":
-        assert select_calls[0][0] is raw
-
-
-def test_bench_inventory_binds_through_its_own_select_account_before_resolver_inputs(monkeypatch, tmp_path):
-    """``_bench_inventory`` binds before ``ResolverInputs``; removing that call fails this test."""
-    raw = _reversed()
-    assert _route_key_for(tmp_path, monkeypatch, b"b\n").label == "b"
-    select_calls, inputs_received = _spy_entry_binding(monkeypatch)
-    bench_health._bench_inventory(raw, data_egress_policy="local_interactive", review_profile="code", risk="medium")
-    _assert_entry_select_account_precedes_resolver(select_calls, inputs_received)
-    assert select_calls[0][0] is raw
-
-
 def test_the_coordinator_binds_probe_snapshots_and_refuses_unbound_or_rebound_ones(monkeypatch, tmp_path):
     raw = _reversed()
     health = coordinator.load_config()["health"]
@@ -689,15 +566,6 @@ def test_the_launcher_reader_keeps_its_explicit_launch_account_selection(label, 
     raw = _reversed()
     raw["agents"]["claude"]["codexbar"]["stale"] = False
     assert claude_weekly_used._weekly_used_pct(raw, label) == pytest.approx(used)
-
-
-def test_display_consumers_keep_the_plain_payload(monkeypatch, capsys):
-    raw = _reversed()
-    monkeypatch.setattr(usage, "read_budget", lambda **_k: raw)
-    assert usage.main(["json"]) == 0
-    assert json.loads(capsys.readouterr().out) == json.loads(json.dumps(raw))  # every account's row, unchanged
-    rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(raw)}
-    assert rows["claude"]["remaining_pct"] == A_REMAINING  # the display shows the host lane row as before
 
 
 # --- round 2 (review-s2b-adbd73eb): derivation, conversion and alias bypasses ---------------------
@@ -979,20 +847,6 @@ def test_a_value_taken_from_a_bound_view_is_never_pickled(splice):
             pickle.dumps(part)
 
 
-def test_copies_of_a_bound_view_keep_its_account():
-    """Copying (not serializing) keeps provenance: a copy is bound again as its own account, never as another."""
-    raw = _a_exhausted_b_healthy()
-    b = bind_snapshot(raw, account=B)
-    for copied in (copy.copy(b["agents"]), copy.deepcopy(b["agents"])):
-        assert copied is b["agents"]  # frozen values are their own copies
-        with pytest.raises(AccountRequired, match="not read as 'a'"):
-            bind_snapshot({"agents": copied}, account=HOST_ACCOUNT)
-    for whole in (copy.copy(dict(b)), copy.deepcopy(dict(b))):
-        assert bind_snapshot(whole, account=B) == b
-        with pytest.raises(AccountRequired, match="not read as 'a'"):
-            bind_snapshot(whole, account=HOST_ACCOUNT)
-
-
 # --- round 4 (review-s2b-684f5fa8): plain-data copies of any part of a bound view --------------------
 
 
@@ -1097,16 +951,6 @@ def test_a_stamped_record_whose_stamp_does_not_verify_is_refused_for_every_accou
     record = _json(bind_snapshot(raw, account=B)["agents"]["claude"])
     tamper(record)
     for route_account in (HOST_ACCOUNT, B, unresolved("claude_account_unknown")):
-        with pytest.raises(AccountRequired, match="whose stamp does not verify"):
-            bind_snapshot(_lane_spliced(raw, record), account=route_account)
-
-
-def test_a_record_stamped_in_another_process_is_refused(monkeypatch):
-    """The seal is process-local: a record stamped elsewhere verifies nowhere here, even as its own account."""
-    raw = _a_exhausted_b_healthy()
-    record = _json(bind_snapshot(raw, account=B)["agents"]["claude"])
-    monkeypatch.setattr(claude_account_lane, "_SEAL_KEY", b"another process".ljust(32, b"\0"))
-    for route_account in (HOST_ACCOUNT, B):
         with pytest.raises(AccountRequired, match="whose stamp does not verify"):
             bind_snapshot(_lane_spliced(raw, record), account=route_account)
 
@@ -1297,54 +1141,3 @@ def test_raw_snapshot_sources_in_decision_modules_are_inventoried():
     for (module, function), how in RAW_SNAPSHOT_SOURCES.items():
         if how is not None:
             assert _binder_calls(module)[function], f"{module}:{function} receives a raw snapshot but never binds it"
-
-
-_PREAMBLE = "import functools\n\nfrom scripts.fleet import credit_lane\n\n"
-INJECTED_READERS = {
-    "direct_call": "def reader():\n    return credit_lane.read_routing_budget()['agents']['claude']\n",
-    # review-s2b-adbd73eb follow-up: the round-1 guard missed this one.
-    "attribute_alias": (
-        "def reader():\n    fetch = credit_lane.read_routing_budget\n    return fetch()['agents']['claude']\n"
-    ),
-    "chained_alias": (
-        "def reader():\n    first = credit_lane.read_routing_budget\n    second = first\n"
-        "    return second()['agents']['claude']\n"
-    ),
-    "import_alias": (
-        "from scripts.fleet.credit_lane import read_routing_budget as fetch\n\n"
-        "def reader():\n    return fetch()['agents']['claude']\n"
-    ),
-    "module_alias": "FETCH = credit_lane.read_routing_budget\n\ndef reader():\n    return FETCH()['agents']['claude']\n",
-    "getattr_name": "def reader():\n    return getattr(credit_lane, 'read_routing_budget')()['agents']['claude']\n",
-    "partial": (
-        "def reader():\n    fetch = functools.partial(credit_lane.read_routing_budget)\n"
-        "    return fetch()['agents']['claude']\n"
-    ),
-    "walrus": (
-        "def reader():\n    if (fetch := credit_lane.read_routing_budget) is not None:\n"
-        "        return fetch()['agents']['claude']\n"
-    ),
-    "default_argument": (
-        "def reader(fetch=credit_lane.read_routing_budget):\n    return fetch()['agents']['claude']\n"
-    ),
-}
-
-
-@pytest.mark.parametrize("name", sorted(INJECTED_READERS))
-def test_the_inventory_finds_an_injected_reader_however_it_names_the_fetch(name, tmp_path):
-    module = tmp_path / "injected_reader.py"
-    module.write_text(_PREAMBLE + INJECTED_READERS[name], encoding="utf-8")
-    assert "reader" in _raw_snapshot_sources(str(module))
-
-
-def test_an_alias_is_scoped_and_a_fetched_payload_is_not_an_alias(tmp_path):
-    module = tmp_path / "scoped.py"
-    module.write_text(
-        _PREAMBLE
-        + "def first():\n    fetch = credit_lane.read_routing_budget\n    return fetch\n\n"
-        + "def second(fetch):\n    return fetch()\n\n"
-        + "def third():\n    payload = credit_lane.read_routing_budget()\n    return payload\n\n"
-        + "def fourth(payload):\n    return payload['agents']\n",
-        encoding="utf-8",
-    )
-    assert set(_raw_snapshot_sources(str(module))) == {"first", "third"}

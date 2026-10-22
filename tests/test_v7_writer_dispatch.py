@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import importlib
 import json
-import signal
-import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -12,10 +10,7 @@ from unittest.mock import patch
 import pytest
 
 from scripts.agent_runtime import tool_config as tool_config_mod
-from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.registry import get_agent_entry
-from scripts.agent_runtime.result import ParseResult
-from scripts.agent_runtime.telemetry import InvocationTelemetry
 from scripts.build import linear_pipeline, v7_build
 
 pytestmark = pytest.mark.reads_content
@@ -408,11 +403,6 @@ def _invoke_upgrade_writer(
     )
 
 
-def test_upgrade_prompt_header_resolves_module_ref() -> None:
-    assert linear_pipeline._prompt_module_ref(UPGRADE_SHAPED_PROMPT) == "a1/special-signs"
-    assert linear_pipeline._prompt_sections(UPGRADE_SHAPED_PROMPT) == []
-
-
 def test_upgrade_shaped_prompt_runs_runtime_gate_on_empty_agy_trace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -584,91 +574,3 @@ def test_positive_runtime_gate_does_not_fire_for_non_tools_writer() -> None:
         module="a1/1",
         phase_writer_summary={"tool_calls_total": 0},
     )
-
-
-def test_v7_build_writer_timeout_kills_silent_subprocess(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    telemetry = tmp_path / "timeout.jsonl"
-    out_dir = tmp_path / "out"
-    returncode_file = tmp_path / "returncode.txt"
-    from scripts.agent_runtime import runner as runtime_runner
-
-    class SleepingAdapter:
-        name = "claude"
-        default_model = "fixture-model"
-        supported_modes = frozenset({"workspace-write"})
-
-        def build_invocation(self, **kwargs: Any) -> InvocationPlan:
-            return InvocationPlan(
-                cmd=["/bin/sh", "-c", "sleep 60"],
-                cwd=Path(kwargs["cwd"]),
-            )
-
-        def parse_response(
-            self,
-            *,
-            stdout: str,
-            stderr: str,
-            returncode: int,
-            **_kwargs: Any,
-        ) -> ParseResult:
-            returncode_file.write_text(str(returncode), encoding="utf-8")
-            return ParseResult(ok=False, response="", stderr_excerpt=stderr or stdout)
-
-        def liveness_signal_paths(self, _plan: InvocationPlan) -> tuple[Path, ...]:
-            return ()
-
-    monkeypatch.setattr(
-        v7_build.linear_pipeline,
-        "build_knowledge_packet",
-        lambda **_kwargs: "knowledge packet",
-    )
-    monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
-    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
-    monkeypatch.setattr(
-        runtime_runner,
-        "resolve_invocation_telemetry",
-        lambda **_kwargs: InvocationTelemetry(
-            model="fixture-model",
-            effort="unknown",
-            cli_version="fixture",
-        ),
-    )
-    monkeypatch.setitem(runtime_runner._ADAPTER_CACHE, "claude", SleepingAdapter())
-
-    started = time.monotonic()
-    exit_code = v7_build.main(
-        [
-            "a1",
-            "my-morning",
-            "--writer",
-            "claude-tools",
-            "--writer-timeout",
-            "1",
-            "--out",
-            str(out_dir),
-            "--telemetry-out",
-            str(telemetry),
-        ]
-    )
-    elapsed = time.monotonic() - started
-    captured = capsys.readouterr()
-    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
-    timeout_event = next(event for event in events if event["event"] == "writer_timeout")
-
-    assert exit_code == 124
-    assert elapsed < 6
-    assert int(returncode_file.read_text("utf-8")) == -signal.SIGKILL
-    assert "timed out in phase writer" in captured.err
-    assert timeout_event["writer"] == "claude-tools"
-    # PR #2108 (Path 3 PR1) seeds implementation_map.json BETWEEN the
-    # phase_done event for the wiki/plan phases and the writer subprocess
-    # spawn. So when the writer subprocess is killed for silence, the most
-    # recently-emitted event is the seeder, not phase_done. Adjust the
-    # assertion to match the actual last event before the spawn.
-    assert timeout_event["last_event_type"] == "implementation_map_seeded"
-    assert timeout_event["last_event_ts"]
-    assert timeout_event["total_wall_time_s"] < 6

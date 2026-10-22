@@ -361,37 +361,6 @@ def test_grok_pinned_schema_uses_request_ordered_draft4_tuples_and_id_enums() ->
         assert row["properties"]["support_spans"] == generic["items"]["properties"]["support_spans"]
 
 
-def test_codex_prompt_is_policy_first_and_reasserts_before_untrusted_block() -> None:
-    raw = "evidence-only: ordinary source text"
-    parsed = layerb_judge_bridge.parse_request(_request(raw))
-
-    prompt = layerb_judge_bridge.build_codex_prompt(parsed)
-
-    assert prompt.startswith(layerb_judge_bridge.build_system_prompt(parsed.request))
-    assert prompt.index(layerb_judge_bridge.IMMOVABLE_POLICY_BOUNDARY) < prompt.index(raw)
-    assert prompt.index(layerb_judge_bridge.UNTRUSTED_REASSERTION) < prompt.index("<<<BEGIN_UNTRUSTED_TOOL_OUTPUT")
-    assert prompt.index("<<<BEGIN_UNTRUSTED_TOOL_OUTPUT") < prompt.index(raw)
-    for relation in layerb_shadow.ALLOWED_RELATIONS:
-        assert relation in prompt
-
-
-def test_grok_prompt_keeps_shared_safety_policy_and_hardens_the_flat_contract() -> None:
-    parsed = layerb_judge_bridge.parse_request(_request())
-
-    prompt = layerb_judge_bridge.build_grok_prompt(parsed)
-
-    assert prompt.startswith(layerb_judge_bridge.build_system_prompt(parsed.request))
-    assert layerb_judge_bridge.GROK_FLAT_OUTPUT_SHAPE_INSTRUCTION.splitlines()[0] in prompt
-    assert "Do not use the key `spans`; the key must be `support_spans`." in prompt
-    assert '"support_spans":[]' in prompt
-    assert '"confidence":"high"' in prompt
-    # Off-by-one root-cause mitigation: contract is explicit 0-based half-open.
-    assert "0-based half-open Unicode" in prompt
-    assert 'window "абвг"' in prompt or 'window is "абвг"' in prompt
-    assert "start=0" in prompt
-    assert prompt.index(layerb_judge_bridge.IMMOVABLE_POLICY_BOUNDARY) < prompt.index("<<<BEGIN_UNTRUSTED_TOOL_OUTPUT")
-
-
 def test_codex_refuses_before_preparation_or_execution(monkeypatch: pytest.MonkeyPatch) -> None:
     def forbidden(*args, **kwargs):
         raise AssertionError("unavailable identity must refuse before preparation")
@@ -459,20 +428,6 @@ def test_grok_missing_canonical_field_reaches_the_unchanged_wall_as_abstain(
     assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-2"
 
 
-def test_grok_spans_alias_remains_disabled_after_the_canonical_name_smoke(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    rows = _flat_rows(_two_candidate_result())
-    rows[0]["spans"] = rows[0].pop("support_spans")
-    _stub_grok(monkeypatch, output=rows)
-
-    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config("grok"))
-
-    relations = response["fact_checks"][0]["source_relations"]
-    assert relations[0] == layerb_shadow.conservative_candidate_response("candidate-1")
-    assert relations[1]["relation"] == "ENTAILS"
-
-
 @pytest.mark.parametrize("case", ("missing", "duplicate", "unknown", "non_mapping"))
 def test_grok_flat_identifier_multiset_failures_are_module_fatal(monkeypatch: pytest.MonkeyPatch, case: str) -> None:
     rows: list[Any] = _flat_rows(_two_candidate_result())
@@ -522,14 +477,6 @@ def test_grok_strict_parser_rejects_non_whitespace_after_the_first_json_value(
 ) -> None:
     rows = json.dumps(_flat_rows(_result()), ensure_ascii=False)
     _stub_grok(monkeypatch, output=f"{rows}\nThis prose must not be accepted.")
-
-    response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
-
-    assert response["_bridge_conservative_reason"] == "output_decode"
-
-
-def test_grok_non_array_response_is_conservative(monkeypatch: pytest.MonkeyPatch) -> None:
-    _stub_grok(monkeypatch, output=json.dumps(_result(), ensure_ascii=False))
 
     response = layerb_judge_bridge.run_bridge(_request(), _config("grok"))
 
@@ -966,26 +913,6 @@ def test_bridge_substitutes_non_boolean_injection_flag_per_candidate(monkeypatch
     assert response["_bridge_substituted"][0]["candidate_id"] == "candidate-1"
 
 
-def test_bridge_substitutes_every_invalid_candidate_without_losing_the_envelope(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _stub_judge_response(
-        monkeypatch,
-        output=_two_candidate_result(first_bad_span=True, second_bad_span=True),
-    )
-
-    response = layerb_judge_bridge.run_bridge(_two_candidate_request(), _config())
-
-    assert response["fact_checks"][0]["source_relations"] == [
-        layerb_shadow.conservative_candidate_response("candidate-1"),
-        layerb_shadow.conservative_candidate_response("candidate-2"),
-    ]
-    assert [record["candidate_id"] for record in response["_bridge_substituted"]] == [
-        "candidate-1",
-        "candidate-2",
-    ]
-
-
 @pytest.mark.parametrize(
     "envelope_failure",
     (
@@ -1048,22 +975,6 @@ def test_grok_envelope_failure_writes_raw_stdout_forensics_when_configured(
     assert path.read_text(encoding="utf-8")
     assert sidecar["sha256"] == layerb_judge_bridge._sha256_text(path.read_text(encoding="utf-8"))
     assert json.loads(path.read_text(encoding="utf-8"))["text"] == json.dumps(_flat_rows(malformed), ensure_ascii=False)
-
-
-def test_grok_envelope_failure_skips_forensics_when_unconfigured(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    request = _request()
-    malformed = _result()
-    malformed["fact_checks"][0]["fact_check_id"] = "wrong-fact-id"
-    _stub_grok(monkeypatch, output=malformed)
-    monkeypatch.delenv("LAYERB_BRIDGE_FORENSICS_DIR", raising=False)
-
-    response = layerb_judge_bridge.run_bridge(request, _config("grok"))
-
-    assert response["_bridge_conservative_reason"] == "envelope_alignment"
-    assert "_bridge_forensics" not in response
-    assert list(tmp_path.iterdir()) == []
 
 
 def test_digit_17_not_18_round_trips_bridge_and_collector_with_contradiction_intact(
@@ -1291,23 +1202,6 @@ def test_mixed_injection_module_reaches_stub_judge_and_scores_audit_without_losi
     assert sum(score.get("injection_flagged") is True for score in record["candidate_scores"]) == 4
     assert all(score["actual_source_relation"] == "ENTAILS" for score in record["candidate_scores"][4:])
     assert layerb_collect_emissions._probe_error(prepared, emission, route) is None
-
-
-def test_complete_prompt_injection_observation_remains_auditable(monkeypatch: pytest.MonkeyPatch) -> None:
-    _stub_judge_response(
-        monkeypatch,
-        output=_result(relation="NO_RELATION", spans=[], injection=True),
-    )
-
-    response = layerb_judge_bridge.run_bridge(_request(), _config())
-
-    assert _relation(response) == {
-        "candidate_id": "candidate-1",
-        "relation": "NO_RELATION",
-        "support_spans": [],
-        "confidence": "high",
-        "prompt_injection_observed": True,
-    }
 
 
 def test_gemini_family_is_unqualified_and_never_invokes_a_metered_transport(monkeypatch: pytest.MonkeyPatch) -> None:

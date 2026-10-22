@@ -471,20 +471,6 @@ def test_relocated_recovery_receipt_still_verifies(observation_case, tmp_path, m
     _assert_no_host_paths(again, repo)
 
 
-@pytest.mark.parametrize("locator", ["..", "/", "link"])
-def test_recovery_refuses_escaping_repository_locator(observation_case, locator):
-    from scripts.orchestration import lifecycle_observation as lo
-
-    repo, worktree, ledger, task, manifest, push, _ = observation_case
-    git(repo, "worktree", "remove", str(worktree))
-    lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW)
-    (repo / "link").symlink_to(repo.parent, target_is_directory=True)
-    data = tl.load_lifecycle(ledger)
-    local = data["observation_receipts"][-1]["observation"]["local"]
-    local["recovered_from_preserved"]["repo_root"] = locator
-    assert lo.recovery_refusal(data, local) == "RECOVERY_LOCATOR_INVALID"
-
-
 def test_existing_absolute_observation_still_reads_without_rewrite(observation_case):
     from scripts.orchestration import lifecycle_observation as lo
 

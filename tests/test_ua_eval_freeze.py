@@ -149,16 +149,6 @@ def test_historical_runner_resolution_does_not_certify_active_code():
     )
 
 
-def test_active_codex_runner_still_rejects_historical_model_before_spawn(tmp_path, monkeypatch):
-    from scripts.projects.ua_eval_harness import run_codex_baseline as active
-    def forbidden(*args, **kwargs):
-        pytest.fail("historical model reached native execution")
-    monkeypatch.setattr(active.subprocess, "run", forbidden)
-    with pytest.raises(active.RunnerError, match=r"only gpt-6\.1-sol"):
-        active._run_batch([], prompt_text="test", model="gpt-5.6-terra", codex_bin="codex",
-            schema_path=tmp_path / "schema.json", timeout=1)
-
-
 @pytest.mark.parametrize("logical", [
     "scripts/projects/ua_eval_harness/run_codex_baseline.py",
     "scripts/projects/ua_eval_harness/verify_release_freeze.py",

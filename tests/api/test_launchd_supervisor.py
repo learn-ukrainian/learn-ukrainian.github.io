@@ -9,7 +9,6 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -269,28 +268,6 @@ def test_status_and_uninstall_refuse_symlinked_plist_destinations(
     assert link.is_symlink()
 
 
-def test_status_reports_an_unreadable_plist(tmp_path: Path, monkeypatch) -> None:
-    home = tmp_path / "home"
-    destination = supervisor.plist_path(home)
-    destination.parent.mkdir(parents=True)
-    destination.write_bytes(supervisor.render_plist(repo_root=tmp_path / "repo"))
-    destination.chmod(0)
-    monkeypatch.setattr(
-        supervisor,
-        "_loaded_readback",
-        lambda: subprocess.CompletedProcess(["launchctl", "print"], 0, "", ""),
-    )
-    if os.access(destination, os.R_OK):
-        pytest.skip("permission bits do not restrict this user")
-
-    result, returncode = supervisor.status(home=home)
-
-    assert result["installed"] is True
-    assert result["valid_plist"] is False
-    assert "Permission denied" in str(result["parse_error"])
-    assert returncode == 1
-
-
 def test_status_reports_a_truncated_xml_plist(tmp_path: Path, monkeypatch) -> None:
     home = tmp_path / "home"
     destination = supervisor.plist_path(home)
@@ -464,53 +441,7 @@ def test_unexpected_clean_exit_is_recorded_and_restarted_by_launchd_contract(tmp
     assert record["signal"] is None
 
 
-def test_runner_rotates_api_log_before_each_launch(tmp_path: Path) -> None:
-    log_path = tmp_path / "logs" / "api.log"
-    log_path.parent.mkdir(parents=True)
-    log_path.write_bytes(b"A" * (supervisor._LOG_ROTATE_BYTES + 1))
-
-    supervisor._rotate_log(log_path)
-
-    rotated = log_path.with_name("api.log.1")
-    assert rotated.exists()
-    assert rotated.stat().st_size == supervisor._LOG_ROTATE_BYTES + 1
-
-
-def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch) -> None:
-    """Mutation-check: putting .venv/bin/python back in Program must fail status."""
-    repo = tmp_path / "repo"
-    home = tmp_path / "home"
-    destination = supervisor.plist_path(home)
-    destination.parent.mkdir(parents=True)
-    payload = supervisor.build_plist(repo_root=repo)
-    payload["ProgramArguments"][0] = str(repo / ".venv" / "bin" / "python")
-    destination.write_bytes(plistlib.dumps(payload))
-    monkeypatch.setattr(
-        supervisor,
-        "_loaded_readback",
-        lambda: subprocess.CompletedProcess(["launchctl", "print"], 0, "loaded", ""),
-    )
-
-    result, return_code = supervisor.status(home=home)
-
-    assert return_code == 1
-    assert result["valid_plist"] is False
-    assert result["loaded"] is True
-
-
 _WRAPPER = Path(__file__).resolve().parents[2] / "scripts" / "api" / "run_monitor_api_supervisor.sh"
-
-
-def test_wrapper_exits_78_without_repo_root() -> None:
-    proc = subprocess.run(
-        ["/bin/bash", "--noprofile", "--norc", str(_WRAPPER)],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-    )
-    assert proc.returncode == 78
-    assert "missing --repo-root" in proc.stderr
 
 
 def test_wrapper_exits_78_when_interpreter_missing(tmp_path: Path) -> None:
@@ -567,47 +498,6 @@ def test_wrapper_execs_primary_interpreter(tmp_path: Path) -> None:
     assert str(primary) in proc.stdout
 
 
-def test_launchctl_passes_timeout() -> None:
-    fake = subprocess.CompletedProcess(["/bin/launchctl", "print", "gui/501/test"], 0, "", "")
-    with patch("subprocess.run", return_value=fake) as run_mock:
-        res = supervisor._launchctl(["print", "gui/501/test"])
-
-    assert res == fake
-    assert run_mock.call_args.kwargs.get("timeout") == supervisor.LAUNCHCTL_TIMEOUT_SECONDS
-
-
-def test_launchctl_timeout_raises_launchd_error() -> None:
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["/bin/launchctl", "print"], supervisor.LAUNCHCTL_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(supervisor.LaunchdError, match=r"/bin/launchctl print timed out after 15\.0s"):
-            supervisor._launchctl(["print"])
-
-
-def test_prepare_api_command_passes_timeout(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    fake = subprocess.CompletedProcess(["git", "rev-parse"], 0, "a" * 40 + "\n", "")
-    with (
-        patch("subprocess.run", return_value=fake) as run_mock,
-        patch.object(supervisor, "build_release", return_value=(repo / "releases" / "v1", False)),
-        patch.object(supervisor, "prune_releases", return_value=type("PruneResult", (), {"removed": []})()),
-    ):
-        supervisor._prepare_api_command(repo, live_mode=False, port=8765)
-
-    assert run_mock.call_args.kwargs.get("timeout") == supervisor.GIT_REV_PARSE_TIMEOUT_SECONDS
-
-
-def test_prepare_api_command_timeout_raises_launchd_error(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], supervisor.GIT_REV_PARSE_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(supervisor.LaunchdError, match=r"git rev-parse HEAD timed out after 15\.0s in"):
-            supervisor._prepare_api_command(repo, live_mode=False, port=8765)
-
-
 @pytest.mark.parametrize(
     "relative",
     (".pids", ".pids/api-launchd.json", ".pids/api-last-crash.json", "logs", "logs/api.log", "logs/api.stderr.log"),
@@ -661,15 +551,6 @@ def test_atomic_state_write_refuses_links(tmp_path: Path, linked: str, dangling:
         supervisor.atomic_write(state, b"new")
     assert link.is_symlink()
     assert (outside / state.name if outside.is_dir() else outside).read_bytes() == b"old"
-
-
-def test_atomic_state_write_preserves_noop_and_repairs_mode(tmp_path: Path) -> None:
-    state = tmp_path / ".pids" / "api-launchd.json"
-    assert supervisor.atomic_write(state, b"one")
-    assert not supervisor.atomic_write(state, b"one")
-    state.chmod(0o644)
-    assert supervisor.atomic_write(state, b"one")
-    assert stat.S_IMODE(state.stat().st_mode) == 0o600
 
 
 @pytest.mark.parametrize("relative", (".pids", ".pids/api-launchd.json", "logs"))

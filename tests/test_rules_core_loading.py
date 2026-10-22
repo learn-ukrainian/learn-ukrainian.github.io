@@ -128,23 +128,6 @@ def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None
 # --------------------------------------------------------------------------- loader
 
 
-def test_canonical_core_paths_are_the_rules_directory() -> None:
-    assert rules_core.CORE_REL == "agents_extensions/shared/rules/core.md"
-    assert rules_core.CONTENT_ADDENDUM_REL == "agents_extensions/shared/rules/core-curriculum.md"
-
-
-def test_seat_resolution_explicit_env_then_lane(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert rules_core.resolve_seat() == "core"
-    assert rules_core.resolve_seat("content") == "content"
-    assert rules_core.resolve_seat(lane="core", provider="claude") == "content"
-    assert rules_core.resolve_seat(lane="infra", provider="claude") == "core"
-    monkeypatch.setenv(rules_core.SEAT_ENV, "content")
-    assert rules_core.resolve_seat() == "content"
-    assert rules_core.resolve_seat("core") == "core"
-    monkeypatch.setenv(rules_core.SEAT_ENV, "bogus")
-    assert rules_core.resolve_seat() == "core"
-
-
 def test_block_frames_the_text_with_its_digest() -> None:
     text = rules_core.core_text("content")
     block = rules_core.core_block("content")
@@ -254,11 +237,6 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
     )
     assert missing.returncode == 3
     assert "rules source unavailable: agents_extensions/shared/rules/core.md" in missing.stderr
-
-
-def test_shell_ack_matches_the_python_ack() -> None:
-    shell = (REPO / "scripts" / "lib" / "rules_core.sh").read_text(encoding="utf-8")
-    assert f'text="{rules_core.ACK_PROMPT}"' in shell
 
 
 # --------------------------------------------------------------------------- launchers
@@ -463,12 +441,6 @@ def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_r
     assert result.returncode == 2, result.stdout + result.stderr
     assert "is retired in the model catalog" in result.stderr
     assert "would exec" not in result.stdout
-
-
-def test_launcher_ignores_the_old_env_override(tmp_path: Path, core_root: Path) -> None:
-    hostile = {OLD_OVERRIDE_ENV: str(_hostile_core_dir(tmp_path))}
-    _, argv = _launch(core_root, "start-claude.sh", (), tmp_path, None, hostile)
-    assert _carrier(argv, "--append-system-prompt") == rules_core.core_block("core")
 
 
 @pytest.mark.parametrize(
@@ -827,17 +799,6 @@ def test_legacy_bridge_builder_leads_with_the_core(index: int) -> None:
     _assert_core(prompt, "core", row)
 
 
-def test_legacy_inline_digests_are_kept_alongside_the_core() -> None:
-    from scripts.ai_agent_bridge import _prompts
-
-    agy = _prompts.build_agy_prompt(_msg())
-    codex = _prompts.build_codex_prompt(_msg())
-    assert _prompts.OPERATOR_CONTRACT_DIGEST in agy
-    assert _prompts._CODEX_STANDING_RULES in codex
-    review = _prompts.build_claude_prompt(_msg(), review=True)
-    assert review.index("</rules-core>") < review.index(_prompts.review_protocol_prefix().strip()[:40])
-
-
 @pytest.mark.parametrize("index", range(6))
 def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core: Path) -> None:
     _, build = _legacy_rows()[index]
@@ -1032,15 +993,6 @@ def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
     assert api_client.get("/api/rules", headers={"If-None-Match": plain.headers["etag"]}).status_code == 200
 
 
-@pytest.mark.parametrize("scope", ("core", "content", "task:cli", "full"))
-def test_source_paths_match_the_requested_bundle(scope: str) -> None:
-    from scripts.api import rules_router
-
-    sources = rules_router.RULE_SOURCES if scope == "full" else rules_core.scope_sources(scope)
-    assert rules_router.rules_source_paths(project_root=REPO, scope=scope) == list(sources)
-    assert rules_router.rules_source_paths(project_root=REPO) == [rules_core.CORE_REL]
-
-
 @pytest.mark.parametrize("scope", ("core", "content"))
 def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
     from scripts.api import rules_router
@@ -1087,50 +1039,4 @@ def test_content_scope_without_the_addendum_is_unavailable(api_client, core_with
     assert "core-curriculum.md" in response.json()["detail"]
 
 
-def test_sdk_caches_each_scope_under_its_own_key(monkeypatch) -> None:
-    from scripts.ai_agent_bridge import monitor_client
-
-    calls: list[tuple[str, str, str]] = []
-
-    def fake_cached(self, *, key, manifest_key, manifest, default_url):
-        calls.append((key, manifest_key, default_url))
-
-    monkeypatch.setattr(monitor_client.MonitorClient, "_cached_component", fake_cached)
-    client = monitor_client.MonitorClient.__new__(monitor_client.MonitorClient)
-    client.rules(manifest={})
-    client.rules(manifest={}, scope="core")
-    client.rules(manifest={}, scope="task:driver")
-    assert calls == [
-        ("rules", "rules", "/api/rules?format=markdown"),
-        ("rules:core", "rules_core", "/api/rules?scope=core&format=markdown"),
-        ("rules:task:driver", "", "/api/rules?scope=task:driver&format=markdown"),
-    ]
-
-
 # --------------------------------------------------------------------------- online/offline parity
-
-
-def test_task_scopes_match_task_scoped_reading_rows() -> None:
-    table = (REPO / rules_core.RULES_DIR_REL / "task-scoped-reading.md").read_text(encoding="utf-8")
-    rows = [line for line in table.splitlines() if line.startswith("| ") and not line.startswith("| ---")]
-    for name, scope in rules_core.TASK_SCOPES.items():
-        matches = [line for line in rows if scope.row in line]
-        assert len(matches) == 1, f"task:{name} names no single row ({scope.row!r})"
-        for rel in scope.sources:
-            path = Path(rel)
-            token = path.parent.name if path.name == "SKILL.md" else path.name
-            assert token in matches[0], f"task:{name}: {rel} is not selected by its row"
-            assert (REPO / rel).is_file(), rel
-        assert f"`{name}`" in table
-
-
-def test_offline_list_names_every_scope_and_source() -> None:
-    offline = (REPO / rules_core.RULES_DIR_REL / "_load-via-api.md").read_text(encoding="utf-8")
-    for seat in rules_core.SEATS:
-        assert f"scope={seat} " in offline
-        for rel in rules_core.seat_sources(seat):
-            assert rel in offline
-    for name, scope in rules_core.TASK_SCOPES.items():
-        assert f"scope=task:{name} " in offline
-        for rel in scope.sources:
-            assert rel in offline

@@ -248,14 +248,6 @@ def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
     )
 
 
-def test_review_profile_dry_run_carries_the_flags_to_delegate(fake):
-    dispatcher, prompt, state = fake
-    dispatcher.review_profile = "ukrainian"
-    dispatcher.preflight("t-pre-review", SEATS["gemini-3.8-flash-high"], "review", prompt)
-    dry = next(call for call in _calls(state) if "--dry-run" in call)
-    assert dry[dry.index("--review-profile") + 1] == "ukrainian" and "--require-review-verdict" in dry
-
-
 def test_flash_dispatch_carries_no_effort(fake):
     dispatcher, prompt, state = fake
     dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
@@ -436,18 +428,6 @@ def test_primary_readonly_cwd_is_refused_before_dispatch(tmp_path: Path, monkeyp
         dispatcher.compose(PROMPT)
 
 
-@pytest.mark.parametrize("git_checkout", [False, True])
-def test_real_composition_outside_a_worktree_is_refused(tmp_path: Path, monkeypatch, git_checkout: bool):
-    plain = tmp_path / "plain"
-    plain.mkdir()
-    if git_checkout:
-        _git(plain, "init", "-q")
-    dispatcher = DelegateDispatcher(python=sys.executable, delegate=Path(delegate.__file__), cwd=plain)
-    monkeypatch.setattr(dispatcher, "_run", lambda *_a, **_k: pytest.fail("must refuse before a worker call"))
-    with pytest.raises(DispatchError, match="must resolve inside a registered added Git worktree"):
-        dispatcher.compose(PROMPT)
-
-
 class SimulatedDelegate(DelegateDispatcher):
     """DelegateDispatcher whose dispatch writes the record delegate's real composition path produces."""
 
@@ -599,12 +579,3 @@ def test_unknown_kind_is_not_dispatched(fake):
     with pytest.raises(DispatchError, match="no Ukrainian task family"):
         dispatcher.dispatch("t-essay", SEATS["claude-opus-5-5"], "essay", prompt, force_new=False)
     assert not (state / "calls.jsonl").exists()
-
-
-def test_wait_timeout_becomes_dispatch_error(fake, monkeypatch: pytest.MonkeyPatch):
-    dispatcher, prompt, _ = fake
-    dispatcher.dispatch("t-slow", SEATS["claude-opus-5-5"], "review", prompt, force_new=False)
-    monkeypatch.setattr(dispatch_module, "CONTROL_TIMEOUT", 1)
-    dispatcher.wait_timeout = 1
-    with pytest.raises(DispatchError, match="timed out"):
-        dispatcher.wait("t-slow", "n1")

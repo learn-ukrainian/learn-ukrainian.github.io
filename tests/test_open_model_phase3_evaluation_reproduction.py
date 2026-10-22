@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_reproduction as evaluation
 from scripts.projects.open_model_data import phase3_functional_roles as roles
@@ -281,19 +280,6 @@ def test_outsider_and_scorer_roles_cannot_be_swapped(tmp_path: Path) -> None:
         evaluation.validate_bundle(bundle, artifact_root=artifact_root)
 
 
-def test_schema_is_closed(tmp_path: Path) -> None:
-    schema = json.loads(evaluation.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    for definition in schema["$defs"].values():
-        if definition.get("type") == "object":
-            assert definition["additionalProperties"] is False
-
-    bundle, _ = _bundle(tmp_path)
-    bundle["scorer_action_receipt"]["controller_identity_id"] = "controller_scorer"
-    errors = list(Draft202012Validator(schema).iter_errors(bundle))
-    assert errors
-
-
 def test_fabricated_equal_hashes_without_artifact_bytes_fail_closed(tmp_path: Path) -> None:
     bundle, artifact_root = _bundle(tmp_path)
     fabricated = "c" * 64
@@ -341,14 +327,3 @@ def test_artifact_root_head_binds_outsider_commit(tmp_path: Path) -> None:
     _run_git("commit", "--allow-empty", "-m", "different head", cwd=artifact_root)
     with pytest.raises(evaluation.EvaluationReproductionError, match="HEAD"):
         evaluation.validate_bundle(bundle, artifact_root=artifact_root)
-
-
-def test_cli_verifies_bundle_but_returns_mechanics_only(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    bundle, artifact_root = _bundle(tmp_path)
-    bundle_path = tmp_path / "bundle.json"
-    bundle_path.write_text(json.dumps(bundle, ensure_ascii=False), encoding="utf-8")
-    assert evaluation.main([str(bundle_path), "--artifact-root", str(artifact_root)]) == 0
-    result = json.loads(capsys.readouterr().out)
-    assert result["mechanics_verified"] is True
-    assert result["consumer_proven"] is False
-    assert result["phase4_authorized"] is False

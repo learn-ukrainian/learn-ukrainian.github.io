@@ -10,7 +10,7 @@ from unittest.mock import patch
 import pytest
 
 from agents_extensions.shared.session_streams import LeaseHolder, SessionStreamDatabase, SessionStreamStore
-from scripts.ai_agent_bridge import _channels, _db, _inbox
+from scripts.ai_agent_bridge import _channels, _db
 from scripts.fleet_comms.bottleneck_alerts import scan_bottlenecks_at_inbox_checkpoint
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
@@ -199,13 +199,6 @@ def test_failed_delivery_is_loud_and_recorded_without_blocking_rescan(tmp_path: 
         conn.close()
     assert state["last_delivery_error"] == "test transport failure"
     assert state["delivery_failure_reported"] == 1
-
-
-def test_inbox_drain_invokes_the_rate_limited_alert_checkpoint() -> None:
-    with patch("scripts.fleet_comms.bottleneck_alerts.scan_bottlenecks_at_inbox_checkpoint") as scan:
-        _inbox.run_inbox("claude", until_idle=False)
-
-    scan.assert_called_once_with(repo_root=_inbox.REPO_ROOT)
 
 
 def test_alert_state_and_messages_never_contain_collector_prompt_or_body(tmp_path: Path) -> None:

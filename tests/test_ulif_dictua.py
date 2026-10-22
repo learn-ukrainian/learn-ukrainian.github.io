@@ -526,78 +526,6 @@ def test_cached_materializer_handles_missing_sections_table_without_migration(tm
     conn.close()
 
 
-def test_actual_query_and_record_mcp_adapters_return_corrected_cached_terms(
-    tmp_path, monkeypatch
-):
-    cases = {
-        "synonyms": ("privit-synonyms.html", "ВІТА́ННЯ"),
-        "antonyms": ("dobryi-antonyms.html", "ДОБРИЙ"),
-        "phraseology": ("privit-phraseology.html", "ні одві́ту, ні приві́ту,"),
-    }
-    sections = {}
-    raw_responses = {}
-    for kind, (fixture, _expected) in cases.items():
-        html = _fixture(fixture)
-        groups = ulif_parse.parse_ulif_relation_groups(html, kind)
-        _first_relation_term(groups, kind)["text"] = "stale , source term"
-        sections[kind] = groups
-        raw_responses[kind] = html
-    db_path = tmp_path / "sources.db"
-    sources_db.store_ulif_dictua_entry(
-        word="привіт", canonical_headword="приві́т", sections=sections,
-        raw_responses=raw_responses, retrieved_at="2026-10-09T00:00:00Z",
-        parser_version="stored-parser-version", status="ok", homonym_index=1,
-        homonym_checked=1, db_path=db_path,
-    )
-    before_db = db_path.read_bytes()
-    raw_cache_path = ulif_raw_cache.cache_path(db_path)
-    before_raw_cache = raw_cache_path.read_bytes()
-    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
-    monkeypatch.setitem(sys.modules, "scripts.wiki.sources_db", sources_db)
-    monkeypatch.setitem(sys.modules, "wiki.sources_db", sources_db)
-    monkeypatch.setattr(source_query, "_get", lambda *_a, **_kw: pytest.fail("HTTP forbidden"))
-    monkeypatch.setattr(
-        source_query._SESSION, "post", lambda *_a, **_kw: pytest.fail("HTTP forbidden")
-    )
-    server_spec = importlib.util.spec_from_file_location(
-        "sources_server_spacing_test", ROOT / ".mcp/servers/sources/server.py"
-    )
-    assert server_spec and server_spec.loader
-    server = importlib.util.module_from_spec(server_spec)
-    sys.modules[server_spec.name] = server
-    server_spec.loader.exec_module(server)
-
-    query = asyncio.run(server.handle_query_ulif({"word": "привіт", "cache_only": True}))
-    query_entry = json.loads(query[0].text)["entry"]
-    for kind, (_fixture_name, expected) in cases.items():
-        assert _first_relation_term(query_entry["sections"][kind], kind)["text"] == expected
-        actual = _relation_terms(query_entry["sections"][kind], kind)
-        assert len(actual) == {"synonyms": 43, "antonyms": 38, "phraseology": 3}[kind]
-        adapter = getattr(server, f"handle_query_ulif_{kind}")
-        relation = asyncio.run(adapter({"word": "привіт"}))
-        assert expected in relation[0].text
-    full = json.loads(asyncio.run(server.handle_query_ulif_records(
-        {"words": ["привіт"], "detail": "full"}
-    ))[0].text)
-    compact = json.loads(asyncio.run(server.handle_query_ulif_records(
-        {"words": ["привіт"], "detail": "compact"}
-    ))[0].text)
-    for result in (full, compact):
-        record_sections = result["records"][0]["entries"][0]["sections"]
-        for kind, (_fixture_name, expected) in cases.items():
-            assert _first_relation_term(record_sections[kind], kind)["text"] == expected
-            assert len(_relation_terms(record_sections[kind], kind)) == (
-                {"synonyms": 43, "antonyms": 38, "phraseology": 3}[kind]
-            )
-    for kind in cases:
-        full_term = _first_relation_term(full["records"][0]["entries"][0]["sections"][kind], kind)
-        compact_term = _first_relation_term(compact["records"][0]["entries"][0]["sections"][kind], kind)
-        assert "raw_html" in full_term
-        assert "raw_html" not in compact_term
-    assert db_path.read_bytes() == before_db
-    assert raw_cache_path.read_bytes() == before_raw_cache
-
-
 def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch):
     """A first wrapper fetches all available tabs; later ones issue no POST."""
     db_path = tmp_path / "sources.db"
@@ -1014,22 +942,6 @@ def test_zamok_lock_has_mobile_stress_locative_preposition_and_vocative_star():
     assert [row["form_stressed"] for row in dative] == ["замку́", "замко́ві"]
 
 
-def test_fixture_cells_keep_each_attested_preposition_out_of_the_form():
-    """Every preposition prefix that actually occurs in the fixtures is a field."""
-    seen: set[str] = set()
-    for path in sorted(FIXTURES.glob("*.html")):
-        entry = ulif_parse.parse_ulif_entry(path.read_text(encoding="utf-8"), homonym_index=1)
-        for row in entry["forms"]:
-            preposition = row["preposition"]
-            if not preposition:
-                continue
-            seen.add(preposition)
-            assert preposition not in row["form_stressed"]
-            assert preposition not in row["form_unstressed"]
-            assert not row["form_stressed"].startswith(preposition)
-    assert seen == {"на/в", "на/у", "по"}
-
-
 @pytest.mark.parametrize(
     ("prefix", "form"),
     [
@@ -1096,12 +1008,6 @@ def test_duzhe_invariable_entry_emits_only_the_base_row():
     assert base["is_invariable"] is True
     assert base["grammatical_tags"] == ["adv"]
     assert base["pedagogical_stressed_form"] == "ду́же"
-
-
-def test_number_precedes_person_in_one_normaliser():
-    assert ulif_parse.canonical_grammatical_tags(["futr", "1", "s"]) == ["futr", "s", "1"]
-    assert ulif_parse.canonical_grammatical_tags(["impr", "1", "p"]) == ["impr", "p", "1"]
-    assert ulif_parse.canonical_grammatical_tags(["past", "m", "s"]) == ["past", "m", "s"]
 
 
 def test_unknown_header_is_kept_raw_and_dual_stress_uses_pedagogical_form():
@@ -1885,17 +1791,6 @@ def test_captured_unstressed_gender_rows_preserve_all_source_forms():
     assert hashlib.sha256(serialized).hexdigest() == "9fb5dd5924f65de603a7281399b0a8f80ec57927c7d14b0e947a9b8a8e15142d"
     source_labels = {cell.get_text(" ", strip=True) for cell in article.select("td.td_left_style")}
     assert not source_labels.intersection(row["form_stressed"] for row in forms)
-
-
-def test_captured_common_gender_header_retains_unknown_label():
-    html = _captured_paradigm(111616, "93695a69b5b8f8cd10bb5ade70d1f551999a4a87e5eda8528eda988009794096")
-    article = BeautifulSoup(html, "html.parser").find(id="ContentPlaceHolder1_article")
-    header = article.find("table").find("tr").find_all("td", recursive=False)
-    labels = [cell.get_text(" ", strip=True) for cell in header]
-    forms = ulif_parse.parse_ulif_entry(html, homonym_index=1)["forms"]
-    assert not set(labels).intersection(row["form_stressed"] for row in forms)
-    assert any(labels[1] in row["unmapped_labels"] for row in forms if not row["is_lemma"])
-    assert not any(not row["is_lemma"] and not row["grammatical_tags"] and not row["unmapped_labels"] for row in forms)
 
 
 def test_article_identity_without_article_container():

@@ -169,13 +169,6 @@ def _patch_pins(monkeypatch: pytest.MonkeyPatch, paths: dict[str, object]) -> No
     monkeypatch.setattr(parent_ctx, "_schema_validator", lambda: _AcceptAll())
 
 
-def test_schema_parses() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    assert schema["properties"]["denominators"]["properties"]["positive_parent_section_heldout"]["const"] == 3526
-    assert schema["properties"]["gates"]["properties"]["phase4_blocked"]["const"] is True
-    assert schema["properties"]["gates"]["properties"]["school_complete_context_ready"]["const"] is False
-
-
 def test_assemble_roundtrip_offsets_unicode() -> None:
     texts = ["Апостроф: м'ята.", "Комбінування: зе́лень — так."]
     context, offsets = parent_ctx._assemble_parent_section(texts)

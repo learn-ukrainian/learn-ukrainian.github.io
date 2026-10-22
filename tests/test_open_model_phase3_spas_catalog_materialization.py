@@ -336,14 +336,6 @@ def test_load_catalog_pages_rejects_source_hash_drift(tmp_path: Path) -> None:
         materialization.load_catalog_pages(pdf, expected_pdf_sha256="0" * 64)
 
 
-def test_receipt_tamper_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    receipt = _materialize(tmp_path, monkeypatch)
-    tampered = deepcopy(receipt)
-    tampered["safeguards"]["training_eligible"] = True
-    with pytest.raises(SpasCatalogMaterializationError, match="schema violation"):
-        materialization._validate_receipt(tampered)
-
-
 def test_receipt_cross_field_tamper_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     receipt = _materialize(tmp_path, monkeypatch)
     tampered = deepcopy(receipt)

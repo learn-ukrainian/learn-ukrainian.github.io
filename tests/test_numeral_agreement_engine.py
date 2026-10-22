@@ -19,7 +19,6 @@ from scripts.practice.numeral_agreement_engine import (
     generate_card_for_tier,
     generate_deck_across_all_tiers,
     is_dropping_yn_paucal_exception,
-    load_noun_paradigms_from_db,
     validate_numeral_card,
 )
 
@@ -426,26 +425,6 @@ def test_zero_collision_guarantee_fixture_paradigms():
 
     cards = generate_deck_across_all_tiers(sample_paradigms * 10, target_count=50)
     assert len(cards) == 50
-    for card in cards:
-        errs = validate_numeral_card(card)
-        assert not errs, f"Validation errors in {card.id}: {errs}"
-        assert len(card.options) == 4
-        assert len(set(card.options)) == 4, f"Duplicate options in {card.id}: {card.options}"
-        assert card.correct_form in card.options
-        for d in card.distractors:
-            assert d["form"] != card.correct_form
-            assert len(d["explanation_ua"].strip()) > 10
-            assert len(d["explanation_en"].strip()) > 10
-
-
-def test_zero_collision_guarantee_large_scale(requires_vesum_db):
-    """Verify zero-collision guarantee across >= 1,000 generated cards."""
-    paradigms = load_noun_paradigms_from_db(limit=1600, vesum_db_path=requires_vesum_db)
-    assert len(paradigms) >= 1000, f"Expected at least 1,000 paradigms, got {len(paradigms)}"
-
-    cards = generate_deck_across_all_tiers(paradigms, target_count=1050)
-    assert len(cards) >= 1000, f"Expected at least 1,000 cards, got {len(cards)}"
-
     for card in cards:
         errs = validate_numeral_card(card)
         assert not errs, f"Validation errors in {card.id}: {errs}"

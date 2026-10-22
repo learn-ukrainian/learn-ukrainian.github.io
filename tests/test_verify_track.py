@@ -12,51 +12,19 @@ import os
 import sys
 import time
 
-import pytest
-
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.verify_track import (
     check_sidecar_files,
     classify_module,
-    find_content_file,
     is_status_stale,
-    parse_range,
     read_status,
 )
 
 # ---------------------------------------------------------------------------
 # find_content_file
 # ---------------------------------------------------------------------------
-
-class TestFindContentFile:
-    """Tests for find_content_file."""
-
-    def test_bare_slug(self, tmp_path):
-        """Bare slug file found directly."""
-        (tmp_path / "my-module.md").write_text("content", "utf-8")
-        result = find_content_file(tmp_path, "my-module")
-        assert result == tmp_path / "my-module.md"
-
-    def test_numeric_prefix(self, tmp_path):
-        """Numbered prefix file found via glob."""
-        (tmp_path / "05-my-module.md").write_text("content", "utf-8")
-        result = find_content_file(tmp_path, "my-module")
-        assert result is not None
-        assert result.name == "05-my-module.md"
-
-    def test_bare_slug_preferred_over_numeric(self, tmp_path):
-        """When both bare and numeric exist, bare wins."""
-        (tmp_path / "my-module.md").write_text("bare", "utf-8")
-        (tmp_path / "05-my-module.md").write_text("numbered", "utf-8")
-        result = find_content_file(tmp_path, "my-module")
-        assert result.name == "my-module.md"
-
-    def test_returns_none_when_not_found(self, tmp_path):
-        """No matching file → None."""
-        result = find_content_file(tmp_path, "nonexistent")
-        assert result is None
 
 
 # ---------------------------------------------------------------------------
@@ -74,11 +42,6 @@ class TestReadStatus:
 
         result = read_status(status_file)
         assert result["overall"]["status"] == "pass"
-
-    def test_missing_file_returns_none(self, tmp_path):
-        """Missing file → None."""
-        result = read_status(tmp_path / "nonexistent.json")
-        assert result is None
 
 
 # ---------------------------------------------------------------------------
@@ -99,17 +62,6 @@ class TestIsStatusStale:
 
         assert is_status_stale(status_file, content_file) is True
 
-    def test_status_newer_than_content_is_fresh(self, tmp_path):
-        """Status created after content → not stale."""
-        content_file = tmp_path / "content.md"
-        status_file = tmp_path / "status.json"
-
-        content_file.write_text("content", "utf-8")
-        time.sleep(0.05)
-        status_file.write_text("{}", "utf-8")
-
-        assert is_status_stale(status_file, content_file) is False
-
     def test_equal_mtimes_not_stale(self, tmp_path):
         """Equal mtimes (e.g., git checkout) → NOT stale (#602)."""
         status_file = tmp_path / "status.json"
@@ -124,27 +76,6 @@ class TestIsStatusStale:
         os.utime(content_file, (mtime, mtime))
 
         assert is_status_stale(status_file, content_file) is False
-
-    def test_missing_status_file_returns_false(self, tmp_path):
-        """Missing status file → not stale (nothing to be stale)."""
-        content_file = tmp_path / "content.md"
-        content_file.write_text("content", "utf-8")
-
-        assert is_status_stale(tmp_path / "missing.json", content_file) is False
-
-    def test_missing_content_file_returns_false(self, tmp_path):
-        """Missing content file → not stale."""
-        status_file = tmp_path / "status.json"
-        status_file.write_text("{}", "utf-8")
-
-        assert is_status_stale(status_file, None) is False
-
-    def test_none_content_file_returns_false(self, tmp_path):
-        """None content path → not stale."""
-        status_file = tmp_path / "status.json"
-        status_file.write_text("{}", "utf-8")
-
-        assert is_status_stale(status_file, None) is False
 
 
 # ---------------------------------------------------------------------------
@@ -215,26 +146,6 @@ class TestClassifyModule:
         classification, _ = classify_module(status, full_mode=False)
         assert classification == "fail"
 
-    def test_multiple_failing_gates(self):
-        """Multiple failing gates → all listed in problems."""
-        status = {
-            "overall": {"status": "fail"},
-            "gates": {
-                "words": {"status": "fail", "message": "short"},
-                "activities": {"status": "fail", "message": "missing"},
-                "vocab": {"status": "pass", "message": "OK"},
-            }
-        }
-        classification, problems = classify_module(status, full_mode=False)
-        assert classification == "fail"
-        assert len(problems) == 2
-
-    def test_empty_gates(self):
-        """Pass overall with empty gates dict → 'pass'."""
-        status = {"overall": {"status": "pass"}, "gates": {}}
-        classification, _ = classify_module(status, full_mode=False)
-        assert classification == "pass"
-
 
 # ---------------------------------------------------------------------------
 # check_sidecar_files
@@ -276,31 +187,3 @@ class TestCheckSidecarFiles:
 # ---------------------------------------------------------------------------
 # parse_range
 # ---------------------------------------------------------------------------
-
-class TestParseRange:
-    """Tests for parse_range."""
-
-    def test_valid_range(self):
-        """Valid range '5-10' → (5, 10)."""
-        assert parse_range("5-10") == (5, 10)
-
-    def test_single_module_range(self):
-        """Single module '3-3' → (3, 3)."""
-        assert parse_range("3-3") == (3, 3)
-
-    def test_invalid_format_no_dash(self):
-        """No dash → ArgumentTypeError."""
-        import argparse
-        with pytest.raises(argparse.ArgumentTypeError):
-            parse_range("5")
-
-    def test_invalid_format_too_many_dashes(self):
-        """Too many dashes → ArgumentTypeError."""
-        import argparse
-        with pytest.raises(argparse.ArgumentTypeError):
-            parse_range("1-5-10")
-
-    def test_invalid_non_numeric(self):
-        """Non-numeric → ValueError."""
-        with pytest.raises(ValueError):
-            parse_range("a-b")

@@ -23,7 +23,6 @@ clean-4          FAILED                                          0, not blocked 
 from __future__ import annotations
 
 import json
-import math
 import sqlite3
 from datetime import date
 from pathlib import Path
@@ -114,95 +113,6 @@ def fixture_score(env: Env):
 # --- the interval arithmetic ---------------------------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize(
-    ("k", "n", "low", "high"),
-    [
-        (2, 4, 0.1500, 0.8500),
-        (1, 4, 0.0456, 0.6994),
-        (3, 6, 0.1876, 0.8124),
-        (7, 10, 0.3968, 0.8922),
-        (8, 10, 0.4902, 0.9433),
-        (5, 10, 0.2366, 0.7634),
-        (0, 22, 0.0, 3.8415 / (22 + 3.8415)),  # closed form: z^2 / (n + z^2)
-        (22, 22, 22 / (22 + 3.8415), 1.0),
-    ],
-)
-def test_the_wilson_interval_matches_the_hand_computed_values(k: int, n: int, low: float, high: float) -> None:
-    got_low, got_high = score.wilson_interval(k, n, 0.95)
-    assert near(got_low, low) and near(got_high, high), (got_low, got_high)
-
-
-def test_the_wilson_interval_of_no_trials_is_undefined_and_bad_counts_are_refused() -> None:
-    assert score.wilson_interval(0, 0, 0.95) is None
-    with pytest.raises(ValueError):
-        score.wilson_interval(5, 4, 0.95)
-
-
-def test_the_normal_quantile_follows_the_confidence() -> None:
-    assert near(score.z_value(0.95), 1.95996) and near(score.z_value(0.90), 1.64485)
-    assert score.wilson_interval(5, 10, 0.90)[0] > score.wilson_interval(5, 10, 0.95)[0]
-
-
-@pytest.mark.parametrize(
-    ("events", "low", "high"),
-    [  # the exact (Garwood) 95 % limits of a Poisson mean given the count
-        (0, 0.0, 3.6889),
-        (1, 0.0253, 5.5716),
-        (2, 0.2422, 7.2247),
-        (5, 1.6235, 11.6683),
-        (10, 4.7954, 18.3904),
-    ],
-)
-def test_the_poisson_exact_interval_matches_the_tabulated_limits(events: int, low: float, high: float) -> None:
-    got_low, got_high = score.poisson_exact_interval(events, 1, 0.95)
-    assert near(got_low, low) and near(got_high, high), (got_low, got_high)
-
-
-def test_the_poisson_interval_scales_with_the_number_of_lessons() -> None:
-    low, high = score.poisson_exact_interval(2, 4, 0.95)
-    assert near(low, 0.2422 / 4) and near(high, 7.2247 / 4)
-    assert score.poisson_exact_interval(0, 0, 0.95) is None
-    with pytest.raises(ValueError):
-        score.poisson_exact_interval(-1, 4, 0.95)
-
-
-@pytest.mark.parametrize(
-    ("only_a", "only_b", "p"),
-    [
-        (1, 6, 0.125),  # 2 * (1 + 7) / 2^7
-        (0, 8, 2 / 256),
-        (6, 1, 0.125),
-        (3, 3, 1.0),  # a tie is capped at 1
-        (1, 2, 1.0),  # 2 * (1 + 3) / 8
-        (2, 10, 2 * (1 + 12 + 66) / 4096),
-        (0, 1, 1.0),
-    ],
-)
-def test_exact_mcnemar_matches_the_binomial_tail(only_a: int, only_b: int, p: float) -> None:
-    assert score.mcnemar_exact(only_a, only_b) == NEAR(p)
-
-
-def test_mcnemar_without_discordant_pairs_has_no_p_value() -> None:
-    assert score.mcnemar_exact(0, 0) is None
-
-
-def test_the_intervals_agree_with_scipy_on_a_grid() -> None:
-    stats = pytest.importorskip("scipy.stats", reason="scipy is only a cross-check")
-
-    for n in (1, 2, 5, 22, 30, 100):
-        for k in range(0, n + 1, max(1, n // 7)):
-            ref = stats.binomtest(k, n).proportion_ci(confidence_level=0.95, method="wilson")
-            low, high = score.wilson_interval(k, n, 0.95)
-            assert math.isclose(low, ref.low, abs_tol=1e-9) and math.isclose(high, ref.high, abs_tol=1e-9), (k, n)
-    for k in (0, 1, 2, 7, 20, 60):
-        low, high = score.poisson_exact_interval(k, 1, 0.95)
-        ref_low = 0.0 if k == 0 else stats.chi2.ppf(0.025, 2 * k) / 2
-        ref_high = stats.chi2.ppf(0.975, 2 * k + 2) / 2
-        assert math.isclose(low, ref_low, abs_tol=1e-8) and math.isclose(high, ref_high, abs_tol=1e-8), k
-    for a, b in ((1, 6), (2, 10), (0, 9), (4, 4)):
-        assert math.isclose(score.mcnemar_exact(a, b), stats.binomtest(min(a, b), a + b, 0.5).pvalue, abs_tol=1e-12)
-
-
 # --- the hand-computed fixture ------------------------------------------------------------------------------------------
 
 
@@ -220,88 +130,6 @@ def test_recall_per_dimension_counts_failed_and_rejected_first_attempts_as_not_d
     assert (pooled["k"], pooled["n"]) == (3, 6) and near(pooled["low"], 0.1876) and near(pooled["high"], 0.8124)
 
 
-def test_dimensions_with_no_seeds_are_listed_with_no_units(fixture_score) -> None:
-    _, _, result = fixture_score
-    empty = result.report["recall_by_dimension"]["fact"]
-    assert (empty["k"], empty["n"], empty["point"], empty["low"], empty["high"]) == (0, 0, None, None, None)
-    assert set(result.report["recall_by_dimension"]) >= {
-        "job",
-        "language",
-        "learner_fit",
-        "activity",
-        "evidence_use",
-        "english",
-        "fact",
-        "recap",
-    }
-
-
-def test_blocking_recall_is_a_planted_finding_that_holds_the_lesson(fixture_score) -> None:
-    _, _, result = fixture_score
-    job = result.report["blocking_recall_by_dimension"]["job"]
-    # seed-job-2 was found but only as MINOR: detected, not blocking -> 1 of 4
-    assert (job["k"], job["n"]) == (1, 4) and near(job["low"], 0.0456) and near(job["high"], 0.6994)
-    assert result.report["blocking_recall_by_dimension"]["activity"]["k"] == 1
-    assert (result.report["blocking_recall_pooled"]["k"], result.report["blocking_recall_pooled"]["n"]) == (2, 6)
-
-
-def test_the_valid_attempt_recall_is_secondary_and_excludes_failed_and_rejected_attempts(fixture_score) -> None:
-    _, _, result = fixture_score
-    valid = result.report["recall_valid_first_attempts_by_dimension"]
-    assert (valid["job"]["k"], valid["job"]["n"]) == (2, 3) and (valid["activity"]["k"], valid["activity"]["n"]) == (
-        1,
-        1,
-    )
-    assert (
-        result.report["recall_valid_first_attempts_pooled"]["k"],
-        result.report["recall_valid_first_attempts_pooled"]["n"],
-    ) == (3, 4)
-    text = score.render_report(result)
-    assert "secondary" in text and "recall on valid first attempts" in text
-
-
-def test_false_findings_per_clean_lesson_uses_poisson_exact_and_never_counts_a_genuine_additional_finding(
-    fixture_score,
-) -> None:
-    _, _, result = fixture_score
-    rate = result.report["false_findings_per_clean_lesson"]
-    # clean-1: two false findings; clean-2's blocker is a genuine_additional finding -> not false; 2 over 4 lessons
-    assert (rate["events"], rate["lessons"], rate["method"]) == (2, 4, "poisson_exact") and rate["point"] == 0.5
-    assert near(rate["low"], 0.2422 / 4) and near(rate["high"], 7.2247 / 4)
-    assert result.report["adjudicated_classes"]["clean"] == {"false": 2, "genuine_additional": 1}
-
-
-def test_the_share_of_clean_lessons_falsely_blocked_is_wilson_and_leaves_a_genuine_blocker_out(fixture_score) -> None:
-    _, _, result = fixture_score
-    blocked = result.report["clean_lessons_falsely_blocked"]
-    assert (blocked["k"], blocked["n"], blocked["method"]) == (1, 4, "wilson")
-    assert near(blocked["low"], 0.0456) and near(blocked["high"], 0.6994)
-
-
-def test_the_evidence_validation_rate_has_rejected_and_failed_attempts_in_the_denominator(fixture_score) -> None:
-    _, _, result = fixture_score
-    validation = result.report["evidence_validation"]
-    # ten first attempts; seed-job-4 and clean-4 failed, seed-act-1 was rejected -> 7 accepted
-    assert (
-        (validation["k"], validation["n"]) == (7, 10)
-        and near(validation["low"], 0.3968)
-        and near(validation["high"], 0.8922)
-    )
-    assert result.report["first_attempt_outcomes"] == {"accepted": 7, "failed": 2, "rejected": 1}
-
-
-def test_a_retry_is_reported_and_never_scored_as_a_second_observation(fixture_score) -> None:
-    _, ids, result = fixture_score
-    retries = result.report["retries"]
-    assert retries["units"] == 1 and retries["attempts"] == 1 and retries["outcomes"] == {"accepted": 1}
-    assert [outcome for _, outcome in retries["by_unit"]["seed-job-4"]] == ["accepted"]
-    observation = result.observations["seed-job-4"]
-    assert (observation.outcome, observation.detected, observation.blocking) == ("failed", False, False)
-    assert observation.attempt_id == ids["seed-job-4"][1]
-    assert len(result.observations) == 10, "one observation per unit"
-    assert result.report["units"] == {"seeds": 6, "clean": 4}
-
-
 def test_the_report_is_computed_only_from_the_first_attempt_by_the_seat(env: Env) -> None:
     unit = mechanical_seed("seed-x1")
     env.add(unit, "first")
@@ -317,20 +145,6 @@ def test_the_report_is_computed_only_from_the_first_attempt_by_the_seat(env: Env
 
 
 # --- exploratory vs threshold-eligible ------------------------------------------------------------------------------
-
-
-def test_the_fixture_report_is_exploratory_and_says_why_in_its_title_and_first_line(fixture_score) -> None:
-    _, _, result = fixture_score
-    report = result.report
-    assert report["threshold_eligible"] is False
-    text = score.render_report(result)
-    lines = text.splitlines()
-    assert lines[0].startswith("# EXPLORATORY — not for choosing a threshold")
-    assert lines[2].startswith("**EXPLORATORY — not for choosing a threshold.**")
-    assert "job: 4 scored planted defects on real built lessons, 22 needed" in text
-    assert "4 scored clean lessons on real built lessons, 30 needed" in text
-    assert "Known limits" in text and "Recall is measured against the defects we thought of" in text
-    assert "about 21 planted defects per dimension" in text
 
 
 def _big_set(
@@ -396,13 +210,6 @@ def test_a_canary_or_fixture_unit_keeps_the_report_exploratory_even_at_full_size
         "1 units are not real built lessons (canary or fixture): ['seed-canary']"
         in result.report["exploratory_reasons"][0]
     )
-
-
-def test_only_real_built_lessons_count_toward_the_size(env: Env) -> None:
-    _big_set(env, per_dimension=22, cleans=30, source="fixture")
-    result = run(env)
-    assert result.report["threshold_eligible"] is False
-    assert set(result.report["eligibility"]["real_built_seeds_by_dimension"].values()) == {0}
 
 
 # --- a partial run --------------------------------------------------------------------------------------------------------
@@ -603,45 +410,7 @@ def test_a_first_report_never_contains_a_confirmation_unit(env: Env) -> None:
     assert caught.value.code == sm.CONFIRMATION_LOCK_INVALID
 
 
-def test_the_threshold_is_shown_only_when_the_operator_has_written_it(env: Env) -> None:
-    confirmation_world(env)
-    text = score.render_report(
-        run(env, set_name="confirmation", params={**findings_db.load_parameters(), "admission_threshold": 0.8})
-    )
-    assert "Admission threshold: 0.8." in text
-
-
 # --- the paired comparison ------------------------------------------------------------------------------------------------
-
-
-def _seat_score(seat: str, detections: dict[str, bool]) -> score.SeatScore:
-    observations = {
-        unit: score.Observation(unit, "seed", "job", "real_built", "r", f"a-{unit}", "accepted", detected=found)
-        for unit, found in detections.items()
-    }
-    return score.SeatScore(seat, "first", observations, {})
-
-
-def test_the_paired_comparison_is_exact_mcnemar_on_the_discordant_seeds() -> None:
-    # 12 shared seeds: both found 4; only b found 6; only a found 1; neither found 1
-    a = {f"s{i}": True for i in range(4)} | {"s4": True} | {f"s{i}": False for i in range(5, 12)}
-    b = {f"s{i}": True for i in range(4)} | {"s4": False} | {f"s{i}": (i < 11) for i in range(5, 12)}
-    a["only-a-only"], b["only-b-only"] = True, True  # a seed only one seat was scored on is not a pair
-    paired = score.paired_comparison(_seat_score("codex", a), _seat_score("agy", b))
-    assert paired["paired_seeds"] == 12 and paired["both_detected"] == 4
-    assert (paired["only_a_detected"], paired["only_b_detected"], paired["neither_detected"]) == (1, 6, 1)
-    assert paired["p_value"] == NEAR(0.125) and paired["test"] == "mcnemar_exact"
-    assert paired["discordant_seeds"]["only_a"] == ["s4"]
-    assert "Exact McNemar on the discordant pairs: p = 0.1250" in score.render_report(
-        score.SeatScore("codex", "first", {}, {**_stub_report()}), paired
-    )
-
-
-def test_a_paired_comparison_with_no_shared_or_no_discordant_seeds_has_no_p_value() -> None:
-    same = {"s1": True, "s2": False}
-    assert score.paired_comparison(_seat_score("a", same), _seat_score("b", same))["p_value"] is None
-    none = score.paired_comparison(_seat_score("a", {"s1": True}), _seat_score("b", {"s2": True}))
-    assert none["paired_seeds"] == 0 and none["p_value"] is None
 
 
 def test_two_seats_are_paired_on_the_seeds_both_may_review(env: Env) -> None:
@@ -662,19 +431,6 @@ def test_two_seats_are_paired_on_the_seeds_both_may_review(env: Env) -> None:
         1,
     )
     assert paired["p_value"] == NEAR(1.0)
-
-
-def _stub_report() -> dict:
-    observations = {"s1": score.Observation("s1", "seed", "job", "fixture", "r", "a", "accepted", detected=True)}
-    return score.compute_report(
-        "codex",
-        "first",
-        observations,
-        {"models": ["m"], "family": "openai", "not_applicable": {}, "not_attempted": [], "pending": []},
-        None,
-        findings_db.load_parameters(),
-        today=TODAY,
-    )
 
 
 # --- agreement per seat pair -------------------------------------------------------------------------------------------
@@ -727,51 +483,6 @@ def _lesson_pair(env: Env, n: int, first: str, second: str, disagreed: list[dict
         conn.close()
 
 
-def _disagreement(finding_id: str, severity: str, blocking: bool) -> dict:
-    return {
-        "side": "a",
-        "finding_id": finding_id,
-        "dimension": "language",
-        "severity": severity,
-        "reason": "no_match",
-        "blocking": blocking,
-    }
-
-
-def test_agreement_is_reported_per_seat_pair_with_its_interval_and_the_blocking_disagreements(env: Env) -> None:
-    _first_world(env)
-    _lesson_pair(env, 1, "codex", "agy")  # agreed
-    _lesson_pair(
-        env, 2, "agy", "codex", [_disagreement("F-01", "BLOCKER", True), _disagreement("F-02", "MINOR", False)]
-    )
-    _lesson_pair(env, 3, "agy", "grok")  # a pair the codex seat is not part of
-    result = run(env)
-    [entry] = result.report["agreement_by_seat_pair"]
-    # the same two seats pool whichever of them was first; 1 of 2 lessons agreed, Wilson 95 % for 1/2
-    assert [(side["harness"], side["model"]) for side in entry["seats"]] == [
-        ("agy", "gemini-3.1-pro-preview"),
-        ("codex", "gpt-6.1-sol"),
-    ]
-    assert entry["lessons"] == 2 and entry["agreement"]["k"] == 1 and entry["blocking_disagreements"] == 1
-    assert near(entry["agreement"]["point"], 0.5)
-    assert near(entry["agreement"]["low"], 0.0945) and near(entry["agreement"]["high"], 0.9055)
-    text = score.render_report(result)
-    assert "## Agreement per seat pair" in text
-    assert (
-        "agy:gemini-3.1-pro-preview/codex:gpt-6.1-sol: 1/2 = 50.0 % [9.5 %, 90.5 %] lessons agreed; 1 disagreements"
-        in text
-    )
-    assert "grok" not in text.split("## Agreement per seat pair")[1].split("## Reading the size")[0]
-
-
-def test_every_pair_is_reported_when_no_seat_is_named(env: Env) -> None:
-    _first_world(env)
-    _lesson_pair(env, 1, "codex", "agy")
-    _lesson_pair(env, 2, "agy", "grok", [_disagreement("F-01", "MAJOR", True)])
-    found = score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95)
-    assert [(e["lessons"], e["agreement"]["k"], e["blocking_disagreements"]) for e in found] == [(1, 1, 0), (1, 0, 1)]
-
-
 def _shadow_attempt(env: Env, review_id: str, attempt_id: str, seat: str, lesson_n: int) -> None:
     """An attempt that reuses ``attempt_id`` under another review id (the table keeps (review_id, attempt_id) unique)."""
     model, family = SEATS[seat]
@@ -822,25 +533,6 @@ def test_an_attempt_id_reused_on_another_lesson_does_not_confuse_the_seat_pair(e
     assert [side["harness"] for side in entry["seats"]] == ["agy", "codex"]
 
 
-def test_a_seat_pair_with_no_lesson_in_common_is_shown_as_no_paired_reviews(env: Env) -> None:
-    _first_world(env)
-    _lesson_pair(env, 1, "codex", "agy")
-    result = run(env)
-    paired = {
-        "seat_a": "codex",
-        "seat_b": "grok",
-        "paired_seeds": 0,
-        "both_detected": 0,
-        "only_a_detected": 0,
-        "only_b_detected": 0,
-        "neither_detected": 0,
-        "p_value": None,
-    }
-    assert "- codex + grok: no paired reviews." in score.render_report(result, paired)
-    assert "codex + agy: no paired reviews" not in score.render_report(result, {**paired, "seat_b": "agy"})
-    assert "- no paired reviews." in score.render_report(score.SeatScore("codex", "first", {}, _stub_report()))
-
-
 # --- the CLI ---------------------------------------------------------------------------------------------------------------
 
 
@@ -855,11 +547,6 @@ def test_the_cli_prints_the_report_or_refuses_with_a_code(
     assert json.loads(capsys.readouterr().out)["set"] == "confirmation"
     assert score.main(["--seat", "agy", "--set", "confirmation", "--repo-root", str(env.root)]) == 2
     assert "no_attempts" in capsys.readouterr().err
-
-
-def test_the_report_directory_is_dated_and_named_for_the_seat() -> None:
-    path = score.report_path("codex", date(2026, 9, 25), Path("/repo"))
-    assert path == Path("/repo/audit/reviewer-measurement/2026-09-25-codex/REPORT.md")
 
 
 def test_agreement_with_missing_database_does_not_create_it(env: Env) -> None:

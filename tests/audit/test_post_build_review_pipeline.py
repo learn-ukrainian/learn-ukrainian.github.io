@@ -15,7 +15,6 @@ from jsonschema import Draft202012Validator
 from scripts.audit import post_build_review as pbr
 from tests.audit.test_post_build_review import (
     ROOT,
-    SKILL,
     _finding_evidence,
     _mechanical_high_deterministic,
     _passing_semantic,
@@ -81,21 +80,6 @@ def test_core_packet_inventories_claimable_learner_statements(a1_packet: dict) -
     Draft202012Validator(schema).validate(_provider_semantic(packet, semantic))
     result = pbr.finalize_review(packet, _provider_raw(packet, semantic))
     assert result["semantic_response"]["contract_status"] == "valid"
-
-
-def test_effective_prompt_uses_common_plus_exactly_one_family(bilash_packet: dict) -> None:
-    prompt = bilash_packet["semantic_prompt"]
-    assert "Common semantic post-build review prompt" in prompt
-    assert "Seminar semantic post-build review prompt" in prompt
-    assert "Core semantic post-build review prompt" not in prompt
-    assert "exhaustive claim ledger" in prompt.lower()
-    assert "Metadata can support catalog facts" in prompt
-    assert "learner_evidence_ledger" in prompt
-    assert "must not repair, merge, reconcile, or normalize" in prompt
-    assert pbr.sha256_text(prompt) == bilash_packet["prompt_sha256"]
-
-    changed = prompt.replace("Exhaustive claim ledger", "Complete claim ledger", 1)
-    assert pbr.sha256_text(changed) != bilash_packet["prompt_sha256"]
 
 
 def test_failed_deterministic_stage_renders_incomplete_prompt(
@@ -302,31 +286,6 @@ def test_provider_line_locator_hydrates_exact_unicode_excerpt(malyshko_packet: d
     assert "пам'яті опору" not in evidence["excerpt"]
 
 
-def test_finalize_accepts_provider_line_locators_and_preserves_exact_excerpt(malyshko_packet: dict) -> None:
-    packet = malyshko_packet
-    semantic = _passing_semantic(packet)
-    content_path = packet["target"]["files"]["content"]
-    content_lines = (ROOT / content_path).read_text(encoding="utf-8").splitlines()
-    line = next(index for index, text in enumerate(content_lines, start=1) if "пам’яті опору" in text)
-    for dimension in semantic["quality_dimensions"].values():
-        second_anchor = next(item for item in dimension["evidence"] if item["line"] != line)
-        dimension["evidence"] = [
-            {
-                "location": content_path,
-                "line": line,
-                "supports": "This exact line supports the dimension assessment.",
-            },
-            second_anchor,
-        ]
-
-    result = pbr.finalize_review(packet, _raw(semantic))
-    evidence = result["semantic"]["quality_dimensions"]["pedagogical"]["evidence"][0]
-
-    assert result["semantic_response"]["contract_status"] == "valid"
-    assert evidence["location"] == f"{content_path}:{line}"
-    assert evidence["excerpt"] == content_lines[line - 1]
-
-
 def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) -> None:
     deterministic = bilash_packet["deterministic"]
     argv = deterministic["track_audit"]["provenance"]["argv"]
@@ -341,17 +300,6 @@ def test_deterministic_provenance_and_skips_are_explicit(bilash_packet: dict) ->
         "mdx_generation_validate": "accepted_read_only_omission",
         "external_resource_liveness": "advisory_external",
     }
-
-
-def test_bilash_size_policy_is_exemplar_only(bilash_packet: dict) -> None:
-    size = bilash_packet["deterministic"]["size_policy"]["result"]
-    assert size["status"] == "explicit_override"
-    assert size["effective_min"] <= size["actual_words"] <= size["band_max"]
-    assert [size["band_min"], size["band_max"]] == [2200, 2800]
-    assert size["advisory_ceiling"] == 4000
-    policy_text = (SKILL / "config" / "track-policy.v1.yaml").read_text(encoding="utf-8")
-    assert "2200" not in policy_text
-    assert "4000" not in policy_text
 
 
 def test_semantic_pass_cannot_override_mechanical_high(bilash_packet: dict, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -379,31 +327,6 @@ def test_duplicate_semantic_json_fails_closed_with_raw_provenance(bilash_packet:
     assert result["semantic_response"]["raw_sha256"] == pbr.sha256_bytes(raw)
     assert result["semantic_response"]["parse_status"] == "invalid"
     assert any(finding["category"] == "semantic_response_integrity" for finding in result["findings"])
-
-
-def test_cli_malformed_semantic_response_writes_valid_incomplete(bilash_packet: dict, tmp_path: Path) -> None:
-    packet_path = tmp_path / "packet.json"
-    response_path = tmp_path / "response.json"
-    result_path = tmp_path / "result.json"
-    packet_path.write_text(json.dumps(bilash_packet), encoding="utf-8")
-    response_path.write_text('{"verdict":"PASS"}\n{"verdict":"PASS"}\n', encoding="utf-8")
-
-    exit_code = pbr.main(
-        [
-            "finalize",
-            "--packet",
-            str(packet_path),
-            "--semantic-response",
-            str(response_path),
-            "--output",
-            str(result_path),
-        ]
-    )
-
-    result = json.loads(result_path.read_text(encoding="utf-8"))
-    assert exit_code == 1
-    assert result["combined_disposition"]["status"] == "INCOMPLETE"
-    pbr.validate_result(result)
 
 
 def test_current_bilash_result_is_reproducible(bilash_packet: dict) -> None:

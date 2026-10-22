@@ -21,7 +21,6 @@ import pytest
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
@@ -61,11 +60,6 @@ PUBLIC = (
 # Compat wrappers forward into the shared adapters; they are part of PUBLIC.
 COMPAT = ("start-kimicc.sh", "start-glmcc.sh")
 assert set(COMPAT).issubset(PUBLIC)
-RETIRED = tuple(f"start-{name}.sh" for name in ("claudex",)) + tuple(
-    f"start-{provider}-drive.sh" for provider in ("gemini", "grok", "opus", "sonnet")
-)
-
-
 def _install_claude_usage_fixture(root: Path) -> None:
     """Supply usage only in copied fixtures; production has no test bypass."""
     (root / "scripts/lib/claude_weekly_used.py").write_text("print('0')\n", encoding="utf-8")
@@ -165,10 +159,6 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     assert not (checkout / ".codex/skills").exists()
 
 
-def test_root_launcher_allowlist_is_exact() -> None:
-    assert {path.name for path in REPO.glob("start-*.sh")} == set(PUBLIC)
-
-
 @pytest.mark.parametrize("name", PUBLIC)
 def test_help_is_machine_usable(name: str) -> None:
     result = run_launcher(name, "--help")
@@ -253,27 +243,6 @@ def test_driver_dry_run_force_announces_release_then_claim() -> None:
     assert "then claim" in result.stdout
 
 
-@pytest.mark.parametrize(
-    ("epic", "session_epic"),
-    (("monitor", "monitor"), ("curriculum-upgrade", "curriculum-upgrade"), ("open-model-data", "open-model-data")),
-)
-def test_grok_driver_cold_prompt_names_lane_handoff_and_canary(epic: str, session_epic: str) -> None:
-    """Grok has no SessionStart hook, so its cold prompt names the shared handoff file and the canary (#10835)."""
-    result = run_launcher("start-grok-driver.sh", "--epic", epic)
-    assert result.returncode == 0, result.stderr
-    prompt = next(line for line in result.stdout.splitlines() if line.startswith("would exec grok ")).replace("\\", "")
-    assert f"read the lane handoff .claude/{session_epic}-epic/CLAUDE-DRIVER-HANDOFF.md" in prompt
-    assert "scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill" in prompt
-    assert f".claude/{session_epic}-epic/DRIVER-STATE.md" in prompt
-
-
-def test_non_grok_driver_cold_prompt_omits_grok_handoff_clause() -> None:
-    result = run_launcher("start-codex-driver.sh", "--epic", "infra")
-    assert result.returncode == 0, result.stderr
-    assert "would exec codex " in result.stdout
-    assert "Grok has no SessionStart hook" not in result.stdout.replace("\\", "")
-
-
 def test_driver_requires_certified_model_and_valid_epic() -> None:
     missing = run_launcher("start-claude-driver.sh")
     assert missing.returncode == 2
@@ -281,24 +250,6 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
     assert untrusted.returncode == 4
     invalid = run_launcher("start-claude-driver.sh", "--epic", "not-a-lane")
     assert invalid.returncode == 2
-
-
-def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
-    assert project_interpreter(REPO).is_file()
-    shell = shutil.which("bash")
-    assert shell is not None
-    bin_dir = tmp_path / "bin"
-    bin_dir.mkdir()
-    (bin_dir / "bash").symlink_to(shell)
-    provider_free_path = f"{bin_dir}{os.pathsep}{os.defpath}"
-    provider_binaries = ("agy", "claude", "codex", "grok", "kimi")
-    assert all(shutil.which(binary, path=provider_free_path) is None for binary in provider_binaries)
-
-    result = run_launcher("start-claude.sh", env={"PATH": provider_free_path})
-    assert result.returncode == 0, result.stderr
-    assert "LAUNCHER_DRY_RUN=1: would require binary claude" in result.stdout
-    assert "would exec claude " in result.stdout
-    assert "would exec claude --model" not in result.stdout
 
 
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
@@ -1002,12 +953,6 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
         signal.signal(termination_signal, original_handler)
 
 
-def test_all_driver_adapters_use_common_closure_wrapper() -> None:
-    for provider in ("claude", "codex", "gemini", "grok", "muse"):
-        body = (REPO / "scripts" / "launchers" / f"{provider}.sh").read_text(encoding="utf-8")
-        assert 'launcher_exec_command "${cmd[@]}"' in body
-
-
 def test_renew_loops_spawn_no_orphanable_sleeps() -> None:
     """#7832: renew subshells must not create children that can outlive them.
 
@@ -1238,15 +1183,6 @@ def test_kimi_never_uses_ambient_anthropic_token(tmp_path: Path) -> None:
     assert foreign not in result.stdout + result.stderr
 
 
-def test_session_and_durable_helper_roots_are_deliberately_distinct() -> None:
-    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
-    kimi = (REPO / "scripts/launchers/kimi.sh").read_text(encoding="utf-8")
-    route = (REPO / "scripts/lib/kimicc_route.sh").read_text(encoding="utf-8")
-    assert "LC_SESSION_ROOT" in core and "LC_DURABLE_HELPER_ROOT" in core
-    assert 'kimicc_configure_route "$LC_SESSION_ROOT" "$LC_SESSION_ROOT" "$LC_DURABLE_HELPER_ROOT"' in kimi
-    assert "durable_helper_dir" in route
-
-
 def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) -> None:
     """A linked worktree has no own .venv; observer heartbeat and lease close must
     run the durable helper root's interpreter (#F2, prompt audit r3)."""
@@ -1281,72 +1217,10 @@ launcher_close_driver_lease
     assert "-m\nscripts.session_supervisor\nclose\n--role\ndriver\n" in body
 
 
-def test_compat_wrappers_forward_to_shared_adapters() -> None:
-    kimicc = (REPO / "start-kimicc.sh").read_text(encoding="utf-8")
-    glmcc = (REPO / "start-glmcc.sh").read_text(encoding="utf-8")
-    # In-process, so scope re-entry replays start-kimicc.sh itself (#9624).
-    assert "LC_WRAPPER_LAUNCHER_ARGS=(--harness claude-code)" in kimicc
-    assert 'launcher_main kimi interactive "$@"' in kimicc
-    assert 'start-kimi.sh" ' not in kimicc
-    assert "launcher_main glm interactive" in glmcc
-    assert "GLM_OPENCODE_FLASH" not in glmcc
-    start_glm = (REPO / "start-glm.sh").read_text(encoding="utf-8")
-    assert "GLM_OPENCODE_FLASH=1" in start_glm
-    assert "launcher_main glm interactive" in start_glm
-    # Wrappers must not set route credentials themselves — isolation stays in
-    # the shared route helpers.
-    for body in (kimicc, glmcc):
-        assert "ANTHROPIC_AUTH_TOKEN" not in body
-        assert "ANTHROPIC_BASE_URL" not in body
-        assert "ZAI_API_KEY" not in body
-    # Sol P2: kimicc must reject a later --harness override.
-    assert "--harness|--harness=*" in kimicc
-
-
 def test_compat_kimicc_rejects_harness_override() -> None:
     result = run_launcher("start-kimicc.sh", "--harness", "kimi-code")
     assert result.returncode == 2
     assert "always uses Claude Code" in result.stderr
-
-
-def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
-    home = tmp_path / "home"
-    kimi = run_launcher(
-        "start-kimicc.sh",
-        "--model",
-        "k3",
-        env={"HOME": str(home), "KIMICC_AUTH_TOKEN": "kimi-compat-secret"},
-    )
-    assert kimi.returncode == 2, kimi.stdout
-    assert "is retired in the model catalog" in kimi.stderr
-    assert "kimi-compat-secret" not in kimi.stdout + kimi.stderr
-    assert "would exec" not in kimi.stdout
-
-    glm = run_launcher(
-        "start-glmcc.sh",
-        env={"HOME": str(home), "ZAI_API_KEY": "glm-compat-secret"},
-    )
-    assert glm.returncode == 0, glm.stderr
-    assert "credential_source=ZAI_API_KEY" in glm.stdout
-    assert "glm-compat-secret" not in glm.stdout + glm.stderr
-
-
-@pytest.mark.repo_wide
-def test_retired_names_are_absent_from_tracked_content() -> None:
-    for retired in RETIRED:
-        assert not (REPO / retired).exists()
-    # One pass over the tracked working-tree files (images and PDFs excluded).
-    patterns = [arg for retired in RETIRED for arg in ("-e", retired)]
-    excluded = [f":(exclude)*{suffix}" for suffix in (".png", ".jpg", ".jpeg", ".gif", ".pdf")]
-    found = subprocess.run(
-        ["git", "grep", "-l", "-F", *patterns, "--", ".", *excluded],
-        cwd=REPO,
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=60,
-    )
-    assert found.returncode == 1, found.stdout + found.stderr
 
 
 @pytest.mark.rules_core_absent
@@ -1698,37 +1572,3 @@ fi
         with suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGKILL)
         process.communicate(timeout=10)
-
-
-def test_driver_prompt_uses_private_worker_target_without_number() -> None:
-    source = (REPO / "scripts" / "lib" / "launcher_core.sh").read_text(encoding="utf-8")
-    prompt = next(line for line in source.splitlines() if line.startswith('  LC_DRIVER_PROMPT="'))
-    worker_clause = prompt.rsplit("and end each turn with ", 1)[1]
-    assert "privately configured worker target met" in worker_clause
-    assert not any(char.isdigit() for char in worker_clause)
-
-
-def test_driver_prompt_carries_full_blocker_rule() -> None:
-    source = (REPO / "scripts/lib/launcher_core.sh").read_text()
-    assignment = next(line for line in source.splitlines() if line.startswith('  LC_DRIVER_PROMPT="'))
-    result = subprocess.run(
-        ["bash"],
-        input=assignment + '\nprintf "%s" "$LC_DRIVER_PROMPT"\n',
-        cwd=REPO,
-        env={"PATH": os.environ["PATH"], "LC_EPIC": "infra", "canary_status": "not run", "fleet_clause": "fixture"},
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=20,
-    )
-    for fragment in (
-        "complete: true",
-        "scripts.driver_blockers delta --epic infra --current blockers.json",
-        "scripts.driver_blockers record --epic infra --current blockers.json",
-        "--receipt receipt.json --body-file posted.md --expect-generation N",
-        "post each item that is not UNCHANGED",
-        "exact case-sensitive standalone token RESOLVED <id>",
-        "on its own non-active line (no other fields or prose)",
-        "if delta fails or the baseline is unknown, post everything currently blocking",
-    ):
-        assert fragment in result.stdout

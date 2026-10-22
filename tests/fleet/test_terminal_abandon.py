@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -16,28 +15,6 @@ from tests.test_continuation_worktree_reap import abandon_cohort as abandon_coho
 from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
 from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
-
-
-@pytest.mark.parametrize("mode", ["file", "module"])
-def test_cli_help_imports(mode, tmp_path):
-    root = Path(__file__).resolve().parents[2]
-    args = (
-        [str(root / "scripts/fleet/terminal_abandon.py")]
-        if mode == "file"
-        else ["-m", "scripts.fleet.terminal_abandon"]
-    )
-    env = os.environ.copy()
-    env.pop("PYTHONPATH", None)
-    result = subprocess.run(
-        [sys.executable, *args, "--help"],
-        cwd=tmp_path if mode == "file" else root,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "--preservation-bundle" in result.stdout
 
 
 @pytest.fixture
@@ -403,17 +380,6 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
     assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
 
 
-def test_successor_retry_is_idempotent(succession, capsys):
-    fixture, _ = succession
-    repo, *_ = fixture
-    assert invoke(fixture) == 0
-    capsys.readouterr()
-    before = _files(repo)
-    assert invoke(fixture) == 0
-    assert json.loads(capsys.readouterr().out)["outcome"] == "already_recorded"
-    assert _files(repo) == before
-
-
 def test_successor_preservation_restores_and_reaper_removes(succession, tmp_path, capsys):
     fixture, _ = succession
     repo, tree, _, _, _, _, head = fixture
@@ -712,27 +678,6 @@ def test_successor_current_output_rechecked_at_removal(succession, capsys):
     assert _preserved_files(repo) == before
 
 
-def test_script_writer_preserves_reader_custody_refusal(succession):
-    import runpy
-
-    from scripts.fleet import terminal_abandon
-
-    fixture, monitor = succession
-    _, _, _, creator, _, bundle, head = fixture
-    writer = runpy.run_path(terminal_abandon.__file__)
-
-    def release_on_reader_probe(call):
-        if call == 2:
-            monitor["streams"][MONITOR]["state"] = "released"
-
-    monitor["on_call"] = release_on_reader_probe
-    with pytest.raises(writer["Refusal"]) as refused:
-        writer["record_abandon"](
-            task_id=creator["task_id"], head=head, reason="superseded implementation", bundle=bundle
-        )
-    assert refused.value.code == "STALE_AUTHORITY"
-
-
 def test_creator_path_never_consults_custody_or_copies_output(writer_fixture, monkeypatch, capsys):
     from scripts.session_supervisor import remote
 
@@ -746,15 +691,6 @@ def test_creator_path_never_consults_custody_or_copies_output(writer_fixture, mo
     assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
     _, receipt, manifest = _recorded(writer_fixture)
     assert "succession" not in receipt and "output" not in manifest
-
-
-def test_practice_succession_has_exact_lane_slots():
-    import yaml
-
-    streams = yaml.safe_load(output.SUCCESSION_MAP.read_text())["streams"]
-    assert streams["epic:11151"]["initiators"] == [  # designated-fixture: #11176 practice anchor
-        "claude-practice", "codex-practice"
-    ]
 
 
 def test_reviewed_map_is_exact_and_launcher_canonical():

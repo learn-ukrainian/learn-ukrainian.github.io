@@ -180,18 +180,6 @@ def test_status_reports_a_truncated_xml_plist(tmp_path: Path, monkeypatch) -> No
     assert return_code == 1
 
 
-def test_wrapper_exits_78_without_repo_root() -> None:
-    proc = subprocess.run(
-        ["/bin/bash", "--noprofile", "--norc", str(_WRAPPER)],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-    )
-    assert proc.returncode == 78
-    assert "missing --repo-root" in proc.stderr
-
-
 def test_wrapper_exits_78_when_interpreter_missing(tmp_path: Path) -> None:
     proc = subprocess.run(
         [

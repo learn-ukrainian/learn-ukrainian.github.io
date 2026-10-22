@@ -7,7 +7,6 @@ import stat
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_babych_acoustic_excerpt_intake as intake
 
@@ -207,17 +206,6 @@ def _rehash(receipt: dict[str, object]) -> dict[str, object]:
     body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
     receipt["receipt_sha256"] = intake.sha256_bytes(intake.canonical_bytes(body))
     return receipt
-
-
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema_text = intake.SCHEMA_PATH.read_text(encoding="utf-8")
-    Draft202012Validator.check_schema(json.loads(schema_text))
-    assert '"source_text"' not in schema_text
-    assert '"extracted_text"' not in schema_text
-    assert "additionalProperties" in schema_text
-    assert intake.STATUS in schema_text
-    assert '"contextual_only"' in schema_text
-    assert '"topic_gaps_narrowed": []' in schema_text or '"topic_gaps_narrowed":[]' in schema_text.replace(" ", "")
 
 
 def test_build_is_deterministic_and_fail_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

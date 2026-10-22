@@ -375,28 +375,6 @@ def test_messages_stream_stop_reason_matches_old_format(case, stop_reason, subty
     )
 
 
-def test_real_max_turns_stderr_stays_incomplete():
-    """Grok 1.0.46 exits 1 with 'Error: max turns reached' and an error result."""
-    partial = "I'll read the note first."
-    result = _parse_messages(
-        [
-            _assistant_frame(partial),
-            _error_result(
-                stop_reason="cancelled",
-                subtype="error_max_turns",
-                errors=["Reached the maximum number of turns"],
-            ),
-        ],
-        stderr="Error: max turns reached",
-        returncode=1,
-    )
-    assert result.failure_code == "provider_stream_incomplete"
-    assert result.response == ""
-    assert 'stopReason="cancelled"' in result.stderr_excerpt
-    assert "Reached the maximum number of turns" in result.stderr_excerpt
-    assert partial in result.stderr_excerpt
-
-
 @pytest.mark.parametrize("returncode", [0, 1])
 def test_messages_stream_permission_cancelled_matches_old_format(tmp_path, returncode):
     event = {

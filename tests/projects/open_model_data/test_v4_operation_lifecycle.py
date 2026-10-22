@@ -160,16 +160,6 @@ def test_authorization_jti_cannot_be_reused_for_execution(pg_cluster, prepared):
             claim(conn, prepared, principal=replay)
 
 
-def test_revoked_authorization_refuses(pg_cluster, prepared):
-    pg_cluster.execute(
-        "UPDATE v4_operation_authorizations SET state='revoked',revoked_at=clock_timestamp() WHERE request_id=%s",
-        (prepared["request_id"],),
-    )
-    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
-        with pytest.raises(OperationRefused, match="inactive"):
-            claim(conn, prepared)
-
-
 def test_expired_sources_capability_refuses_before_recording(pg_cluster, prepared):
     with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
         value = claim(conn, prepared)

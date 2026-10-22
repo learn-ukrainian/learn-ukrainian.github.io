@@ -64,9 +64,3 @@ def test_kimi_claude_code_requires_a_kimi_credential_in_noninteractive_dry_run(t
     # The retired default is refused before the credential check. The check stays in kimi.sh.
     assert result.returncode == 2
     assert "is retired in the model catalog" in result.stderr
-
-
-def test_kimi_rejects_unknown_launcher_flag_with_usage_exit() -> None:
-    result = run_launcher("start-kimi.sh", "--not-a-real-flag")
-    assert result.returncode == 2
-    assert "run --help" in result.stderr

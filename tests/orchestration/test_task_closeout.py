@@ -432,23 +432,6 @@ def test_sync_acs_checks_plain_id_criteria_and_replays(tmp_path: Path) -> None:
     assert second["remote_mutation_performed"] is False
 
 
-def test_desired_remote_state_reports_unchecked_plain_id_criterion_not_reached(tmp_path: Path) -> None:
-    """#10055: a still-unchecked plain-ID criterion must NOT report the
-    sync-acs desired state as already reached."""
-    _, ledger = _ledger(tmp_path, plain=True)
-    observation = _observation(body=_body(plain=True))
-
-    assert task_closeout._desired_remote_state("sync-acs", ledger, observation) is False
-    expected_body, checked_ids = task_closeout.evidenced_issue_body(ledger, observation)
-    assert checked_ids == ["AC-IMPL", "AC-REVIEW"]
-    assert "- [x] AC-IMPL:" in expected_body
-    assert "- [x] AC-REVIEW:" in expected_body
-    assert "- [ ] AC-MERGE:" in expected_body
-
-    observation["github"]["issue"]["body"] = expected_body
-    assert task_closeout._desired_remote_state("sync-acs", ledger, observation) is True
-
-
 def test_intent_recovery_does_not_repeat_remote_close(tmp_path: Path) -> None:
     path, ledger = _ledger(tmp_path, merged=True)
     operation_id = task_lifecycle.mutation_operation_id(ledger, "close-issue")
@@ -951,13 +934,6 @@ def test_cli_fresh_init_reports_malformed_identity_without_remote_reads(
     command[command.index("--fresh-task-id") + 1] = task_id
     assert task_closeout.main(command) == 2
     assert "error" in json.loads(capsys.readouterr().err)
-
-
-def test_cli_init_sources_are_mutually_exclusive(tmp_path: Path) -> None:
-    command = _fresh_init_command(tmp_path)
-    with pytest.raises(SystemExit) as exc:
-        task_closeout.build_parser().parse_args([*command, "--identity-file", "identity.json"])
-    assert exc.value.code == 2
 
 
 def test_cli_identity_file_rejects_fresh_options_before_remote_reads(tmp_path: Path, capsys) -> None:

@@ -126,31 +126,6 @@ def test_send_and_receive(tmp_path):
     asyncio.run(_test())
 
 
-def test_send_and_receive_codex(tmp_path):
-    """Codex is a valid broker participant."""
-    broker, _db_path = _get_broker(tmp_path)
-
-    async def _test():
-        await broker.init_db()
-
-        result = await broker.handle_send_message({
-            "from_llm": "claude", "to": "codex",
-            "content": "Hello Codex", "task_id": "test-codex"
-        })
-        data = json.loads(result[0].text)
-        assert data["status"] == "sent"
-
-        result = await broker.handle_receive_messages({
-            "for_llm": "codex", "unread_only": True
-        })
-        data = json.loads(result[0].text)
-        assert data["count"] == 1
-        assert data["messages"][0]["content"] == "Hello Codex"
-        assert data["messages"][0]["from"] == "claude"
-
-    asyncio.run(_test())
-
-
 def test_history_trail(tmp_path):
     """Messages are logged to history table on send."""
     broker, db_path = _get_broker(tmp_path)

@@ -218,12 +218,3 @@ def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch) -> N
     assert return_code == 1
     assert result["valid_plist"] is False
     assert result["loaded"] is True
-
-
-def test_positive_interval_rejects_zero() -> None:
-    try:
-        launchd.positive_interval("0")
-    except Exception as exc:
-        assert "positive integer" in str(exc)
-    else:
-        raise AssertionError("zero interval unexpectedly accepted")

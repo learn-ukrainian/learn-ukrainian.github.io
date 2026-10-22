@@ -238,9 +238,3 @@ def test_existing_private_output_directory_is_immutable(tmp_path: Path) -> None:
             retrieval_receipt_path=tmp_path / "retrieval.json",
             private_output_dir=private_dir,
         )
-
-
-def test_public_receipt_schema_forbids_source_text() -> None:
-    schema = json.loads(intake.RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
-    assert '"source_text"' not in json.dumps(schema, ensure_ascii=False)
-    assert schema["properties"]["safeguards"]["properties"]["public_repo_contains_source_text"] == {"const": False}

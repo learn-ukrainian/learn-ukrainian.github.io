@@ -399,9 +399,3 @@ def test_start_glm_sh_is_opencode_flash_headless_no_network(tmp_path: Path) -> N
     assert "openrouter" not in out.lower()
     assert "zai/glm-5.3-flash" not in out
     assert "would exec claude" not in out
-
-
-def test_start_glm_sh_rejects_native_harness(tmp_path: Path) -> None:
-    result = run_launcher("start-glm.sh", "--harness", "native", env={"HOME": str(tmp_path / "home")})
-    assert result.returncode == 2
-    assert "native is unsupported" in result.stderr

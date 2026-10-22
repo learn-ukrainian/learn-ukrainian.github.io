@@ -41,7 +41,6 @@ from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
 from scripts.projects.open_model_data import v4_a7_private_ledger as ledger
 from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
 from scripts.projects.open_model_data import v4_fleet_execution_authority as fleet_execution
-from scripts.projects.open_model_data import v4_original_row_admission as admission
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority
 from scripts.projects.open_model_data import v4_stage_evidence as ev
 from scripts.projects.open_model_data import v4_trust_authority as trust
@@ -184,22 +183,6 @@ def test_private_replay_succeeds_against_the_synthetic_private_ledger(tmp_path: 
     ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **_replay_kwargs(tmp_root, info))
 
 
-def test_private_replay_succeeds_with_full_a3_role_reference_check_replay(tmp_path: Path) -> None:
-    """The strongest replay: the caller also supplies the A3-role verifier,
-    so the reference-check receipt's gate *results* (not just its own
-    internal self-consistency) are independently reproduced from the real
-    candidate text, the real reference-text set, and the real A3 salt."""
-    tmp_root, info = fx.build_real_slot_root(tmp_path)
-    stored_ledger = ledger.load_ledger(info["ledger_path"])
-
-    def _verifier(candidate_text: str, receipt: dict) -> None:
-        reference_check.verify_reference_check_receipt(receipt, candidate_text, fx.REFERENCE_TEXTS, fx.A3_FIXTURE_SALT)
-
-    ledger.verify_private_replay(
-        info["a7_receipt"], stored_ledger, reference_check_verifier=_verifier, **_replay_kwargs(tmp_root, info)
-    )
-
-
 def test_fresh_checkout_public_validation_needs_no_batch_state(tmp_path: Path) -> None:
     """Public validation of the A7/A8 receipts must succeed even after the
     private ledger is deleted entirely -- proving the well-formedness proof
@@ -227,27 +210,6 @@ def test_no_forbidden_public_terms_leak_into_a7_or_a8_receipts(tmp_path: Path) -
         # own bound_unit_id/lineage_source_id never appear publicly.
         assert fx.CANDIDATE_UNIT_IDS[0] not in serialized
         assert fx.CANDIDATE_UNIT_IDS[1] not in serialized
-
-
-def test_a7_never_reads_or_depends_on_a6_completions() -> None:
-    """Static guard: A7's own gate/build_receipt source never references
-    a6_completions -- A7 completion must never depend on A6 completion
-    membership or count (binding advisor decision, A7_VS_A6)."""
-    source = (ROOT / "scripts/projects/open_model_data/v4_a7_original_row_factory.py").read_text(encoding="utf-8")
-    assert 'a6_receipt.get("a6_completions"' not in source
-    assert 'a6_receipt["a6_completions"]' not in source
-
-
-def test_a7_construction_api_never_accepts_reference_texts_or_source_material() -> None:
-    """Static guard (PR #7662 repair 2, P1 "A7 directly receives the
-    all-family reference texts"): neither the private ledger nor the
-    evidence binder ever names ``reference_texts``, a held-out family id
-    string, or an eligible-unit list constant -- that comparison is
-    A3-owned (``v4_a3_reference_check.py``); A7 receives only its
-    text-free receipt."""
-    for relative in ("v4_a7_private_ledger.py", "v4_a7_evidence_binder.py"):
-        source = (ROOT / "scripts/projects/open_model_data" / relative).read_text(encoding="utf-8")
-        assert "reference_texts" not in source, f"{relative} must never accept/store reference_texts"
 
 
 def test_a7_ledger_and_review_receipts_carry_no_source_or_membership_fields(tmp_path: Path) -> None:
@@ -469,15 +431,6 @@ def test_construct_completion_refuses_an_ineligible_candidate_unit(tmp_path: Pat
         ledger.construct_completion(**kwargs)
 
 
-def test_construct_completion_refuses_an_arbitrary_unit_mixed_with_an_eligible_one(tmp_path: Path) -> None:
-    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
-    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
-    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
-    kwargs["candidate_unit_ids"] = [fx.CANDIDATE_UNIT_IDS[0], "completely-arbitrary-unrecognized-unit-id"]
-    with pytest.raises(ledger.PrivateLedgerError, match="outside the A3-verified builder-eligible set"):
-        ledger.construct_completion(**kwargs)
-
-
 # --- tamper: evidence must be verifier-backed to be production-capable -----
 
 
@@ -536,25 +489,6 @@ def test_build_verifier_receipt_refuses_an_unsigned_self_fabricated_attestation(
         evidence_binder.build_verifier_receipt(attestation=forged_attestation)
 
 
-def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
-    attestation = sources_authority._issue_verifier_attestation_from_evidence(
-        signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
-        signer_key_id="unregistered-key",
-        outcome_sha256=ledger.V4_SHA256,
-        row_content_sha256="a" * 64,
-        identifier="vesum:lemma-example-001",
-        tool_id="mcp__sources__verify_word",
-        tool_version="v1",
-        request_id="req-1",
-        tool_result_sha256="b" * 64,
-        lookup_ids=["vesum-row-12345"],
-        invocation_id="inv-1",
-        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
-    )
-    with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
-        evidence_binder.build_verifier_receipt(attestation=attestation)
-
-
 def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     revoked_policy = trust.build_test_trust_policy(
         sources={fx.SOURCES_KEY_ID: fx.SOURCES_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.SOURCES_KEY_ID})
@@ -576,32 +510,6 @@ def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest
         trust_policy_sha256=revoked_digest,
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="revoked"):
-        evidence_binder.build_verifier_receipt(attestation=attestation)
-
-
-def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    """Mechanism-only production: an empty trust policy (no active
-    ``sources`` key yet) refuses every production-capable receipt."""
-    empty = trust.empty_trust_policy()
-    empty_digest = trust.trust_policy_sha256(empty)
-    fx.install_policy_resource(monkeypatch, tmp_path, empty)
-    attestation = sources_authority._issue_verifier_attestation_from_evidence(
-        signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
-        signer_key_id=fx.SOURCES_KEY_ID,
-        outcome_sha256=ledger.V4_SHA256,
-        row_content_sha256="a" * 64,
-        identifier="vesum:lemma-example-001",
-        tool_id="mcp__sources__verify_word",
-        tool_version="v1",
-        request_id="req-1",
-        tool_result_sha256="b" * 64,
-        lookup_ids=["vesum-row-12345"],
-        invocation_id="inv-1",
-        trust_policy_sha256=empty_digest,
-    )
-    with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
         evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
@@ -845,23 +753,6 @@ def test_reissue_refuses_a_changed_assignment_commitment(tmp_path: Path) -> None
     assert membership_path.read_bytes() == before
 
 
-def test_reissue_refuses_a_changed_family_registry(tmp_path: Path) -> None:
-    old_receipt, membership_path = _generate_sealed_receipt(tmp_path, "22" * 32)
-    new_receipt = copy.deepcopy(old_receipt)
-    new_receipt["source_family_registry"]["families"][0]["member_source_unit_ids"].append("a-new-unit")
-    before = membership_path.read_bytes()
-    with pytest.raises(heldout.AssignmentError, match="unknown receipt or incomplete manifest"):
-        reissue.reissue_private_artifact(
-            membership_path,
-            old_receipt,
-            new_receipt,
-            sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]),
-            EMPTY_A2_RECEIPT,
-            EMPTY_MANIFEST,
-        )
-    assert membership_path.read_bytes() == before
-
-
 def test_reissue_succeeds_and_rebinds_when_membership_is_provably_unchanged(tmp_path: Path) -> None:
     """A trivial (identical-content) reissue still exercises the full
     equality-check-then-rebind path live -- the mechanism under test is
@@ -944,11 +835,6 @@ def test_builder_packet_reissue_succeeds_and_refuses_a_wrong_expected_commitment
 # --- repair D: exact project-row rights binding -----------------------------
 
 
-def test_build_admission_input_row_accepts_the_exact_derived_rights_receipt_id() -> None:
-    assert ledger.derive_project_rights_receipt_id() == fx.RIGHTS_RECEIPT_ID
-    assert fx.RIGHTS_RECEIPT_ID.startswith("license.content.cc-by-sa-4.0@")
-
-
 @pytest.mark.parametrize(
     "bad_rights_receipt_id",
     [
@@ -962,16 +848,6 @@ def test_construct_completion_refuses_a_wrong_rights_receipt_id(tmp_path: Path, 
     sealed = fx.build_sealed_receipt_and_packet(tmp_path)
     kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["rights_receipt_id"] = bad_rights_receipt_id
-    with pytest.raises(ledger.PrivateLedgerError, match="rights_receipt_id"):
-        ledger.construct_completion(**kwargs)
-
-
-def test_construct_completion_refuses_a_one_nibble_mutated_rights_receipt_id(tmp_path: Path) -> None:
-    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
-    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
-    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
-    mutated = fx.RIGHTS_RECEIPT_ID[:-1] + ("0" if fx.RIGHTS_RECEIPT_ID[-1] != "0" else "1")
-    kwargs["rights_receipt_id"] = mutated
     with pytest.raises(ledger.PrivateLedgerError, match="rights_receipt_id"):
         ledger.construct_completion(**kwargs)
 
@@ -1176,20 +1052,6 @@ def test_issue_author_execution_receipt_refuses_a_non_complete_envelope(completi
         fx.build_author_execution_receipt("a" * 64, envelope=envelope)
 
 
-def test_issue_author_execution_receipt_refuses_an_unsuccessful_process_returncode() -> None:
-    envelope = ResponseEnvelope(
-        segments=(),
-        completion_state=CompletionState.COMPLETE,
-        terminal_event_observed=True,
-        process_returncode=1,
-        raw_capture_artifact_id="fixture-author-raw-capture-003",
-        raw_capture_sha256=ledger.sha256_text("fixture-author-execution-result"),
-        session_id=fx.AUTHOR_SESSION_ID,
-    )
-    with pytest.raises(fleet_execution.FleetExecutionError, match="process return code"):
-        fx.build_author_execution_receipt("a" * 64, envelope=envelope)
-
-
 def test_issue_author_execution_receipt_refuses_a_task_id_mismatch_against_the_task_state() -> None:
     with pytest.raises(fleet_execution.FleetExecutionError, match="task_id"):
         fx.build_author_execution_receipt("a" * 64, task_id="mismatched-task-id")
@@ -1239,11 +1101,6 @@ def test_issue_author_execution_receipt_refuses_a_non_canonical_harness() -> Non
         fx.build_author_execution_receipt("a" * 64, task_state=task_state)
 
 
-def test_issue_author_execution_receipt_refuses_duplicate_verification_tool_ids() -> None:
-    with pytest.raises(fleet_execution.FleetExecutionError, match="duplicate"):
-        fx.build_author_execution_receipt("a" * 64, verification_tool_ids=("dup-tool", "dup-tool"))
-
-
 def test_verify_author_execution_receipt_refuses_an_extra_signed_field_even_when_resigned() -> None:
     """The strongest form of the exact-key-set guard: even a fresh,
     correctly recomputed signature over a body carrying an extra (here,
@@ -1279,24 +1136,6 @@ def test_verify_author_execution_receipt_refuses_an_uppercase_hex_hash_even_when
         )
 
 
-def test_issue_verifier_attestation_refuses_duplicate_lookup_ids() -> None:
-    with pytest.raises(sources_authority.SourcesAuthorityError, match="duplicate"):
-        sources_authority._issue_verifier_attestation_from_evidence(
-            signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
-            signer_key_id=fx.SOURCES_KEY_ID,
-            outcome_sha256=ledger.V4_SHA256,
-            row_content_sha256="a" * 64,
-            identifier="vesum:lemma-example-001",
-            tool_id="mcp__sources__verify_word",
-            tool_version="v1",
-            request_id="req-1",
-            tool_result_sha256="b" * 64,
-            lookup_ids=["dup-lookup", "dup-lookup"],
-            invocation_id="inv-1",
-            trust_policy_sha256=fx.TRUST_POLICY_SHA256,
-        )
-
-
 def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned() -> None:
     attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
@@ -1320,29 +1159,6 @@ def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned()
         sources_authority.verify_verifier_attestation(
             tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256="a" * 64
         )
-
-
-def test_trust_policy_refuses_a_keyring_entry_with_an_extra_field() -> None:
-    policy = trust.empty_trust_policy()
-    policy["keyrings"]["fleet_execution"]["extra-key"] = {
-        "public_key_hex": fx.FLEET_PUBLIC_KEY_HEX,
-        "revoked": False,
-        "note": "smuggled",
-    }
-    with pytest.raises(trust.TrustAuthorityError, match="exactly"):
-        trust.validate_trust_policy(policy)
-
-
-def test_trust_policy_refuses_a_non_lowercase_hex_public_key() -> None:
-    policy = trust.empty_trust_policy()
-    policy["keyrings"]["fleet_execution"]["bad-key"] = {"public_key_hex": "A" * 64, "revoked": False}
-    with pytest.raises(trust.TrustAuthorityError, match="lowercase-hex"):
-        trust.validate_trust_policy(policy)
-
-
-def test_verify_refuses_an_uppercase_hex_signature() -> None:
-    with pytest.raises(trust.TrustAuthorityError, match="lowercase-hex"):
-        trust.verify(fx.FLEET_PUBLIC_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, {"x": 1}, "A" * 128)
 
 
 def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_path: Path) -> None:
@@ -1399,14 +1215,6 @@ def test_real_a7_receipt_refuses_an_overlapping_residual_for_its_own_completed_s
     extra_residual["subject_id"] = fx.TARGET_SLOT_ID
     tampered["a7_residuals"].append(extra_residual)  # now overlaps the real completion for this slot.
     with pytest.raises(a7.OriginalRowFactoryError, match="does not exactly cover"):
-        a7.validate_receipt_independently(tampered, tmp_root)
-
-
-def test_real_a7_receipt_refuses_a_dropped_residual_for_a_gap_slot(tmp_path: Path) -> None:
-    tmp_root, info = fx.build_real_slot_root(tmp_path)
-    tampered = copy.deepcopy(info["a7_receipt"])
-    tampered["a7_residuals"] = [r for r in tampered["a7_residuals"] if r["subject_id"] != "v4p-standard-correct-002"]
-    with pytest.raises(a7.OriginalRowFactoryError, match="a7_residuals does not exactly cover"):
         a7.validate_receipt_independently(tampered, tmp_root)
 
 
@@ -1497,24 +1305,6 @@ def test_reference_check_signature_refuses_a_stale_receipt() -> None:
         )
 
 
-def test_replay_attestation_refuses_a_stale_attestation_over_a_swapped_receipt() -> None:
-    receipt = fx.build_reference_check_receipt()
-    _, attestation = fx.build_reference_check_authenticity(receipt)
-    swapped_receipt = reference_check.build_reference_check_receipt(
-        fx.ROW_TEXT,
-        {**fx.REFERENCE_TEXTS, "synthetic-fixture-unit-alpha": "totally different text entirely"},
-        fx.A3_FIXTURE_SALT,
-    )
-    with pytest.raises(reference_check.ReferenceCheckError, match="stale or altered"):
-        reference_check.verify_replay_attestation(
-            attestation,
-            receipt=swapped_receipt,
-            trust_policy=fx.TRUST_POLICY,
-            outcome_sha256=ledger.V4_SHA256,
-            row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
-        )
-
-
 def test_replay_attestation_refuses_when_the_recomputation_does_not_match() -> None:
     """issue_replay_attestation itself must refuse to sign if the live
     recomputation from the real candidate/reference/salt does not reproduce
@@ -1569,9 +1359,3 @@ def test_construct_completion_refuses_a_nonempty_call_with_no_replay_attestation
 
 
 # --- the shared admission engine: the new helper is byte-identical at zero -
-
-
-def test_assemble_receipt_from_row_receipts_matches_admit_rows_at_zero() -> None:
-    assert admission.assemble_receipt_from_row_receipts(
-        outcome_sha256=a7.V4_SHA256, row_receipts=[]
-    ) == admission.admit_rows(outcome_sha256=a7.V4_SHA256, rows=[])

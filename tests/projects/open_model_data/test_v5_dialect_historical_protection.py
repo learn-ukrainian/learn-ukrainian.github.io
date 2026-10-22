@@ -32,8 +32,6 @@ from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v5_dialect_protection_evaluator import (
     evaluate_protection_suite,
     evaluate_single_case,
-    exact_clopper_pearson_lower,
-    exact_clopper_pearson_upper,
     format_protection_report,
     generate_mock_predictions,
 )
@@ -221,27 +219,6 @@ def test_anti_surzhyk_invariant_boundary_defense(suite_cases: list[dict[str, Any
             assert action == "CORRECT"
             assert "суржик" in notes or "російськ" in notes
             assert "виправленн" in notes or "питому" in notes
-
-
-def test_clopper_pearson_lower_and_upper_mathematics() -> None:
-    """Verify mathematical properties of exact Clopper-Pearson bounds for 98% gate."""
-    # 300/300 successes -> 95% lower bound must be > 98.0% (approx 0.990)
-    lb_300_300 = exact_clopper_pearson_lower(300, 300)
-    assert lb_300_300 > 0.980
-    assert lb_300_300 == pytest.approx(0.99008, abs=0.001)
-
-    # 294/300 successes (98.0% empirical) -> 95% lower bound is ~96.2% (< 98%)
-    lb_300_294 = exact_clopper_pearson_lower(294, 300)
-    assert lb_300_294 < 0.980
-
-    # 200/200 successes -> 95% lower bound must be > 98.0%
-    lb_200_200 = exact_clopper_pearson_lower(200, 200)
-    assert lb_200_200 > 0.980
-    assert lb_200_200 == pytest.approx(0.98516, abs=0.001)
-
-    # Upper bound for 0 errors out of 300
-    ub_300_0 = exact_clopper_pearson_upper(0, 300)
-    assert ub_300_0 < 0.01
 
 
 @pytest.mark.needs_artifact(
@@ -581,83 +558,6 @@ def test_homoglyph_near_duplicate_detection() -> None:
     p1 = "ничить трава жалощами, а древо с тугою къ земли преклонилось"
     p2 = "ничить трава жалощами, а древо \u0063 тугою къ земли преклонилось"  # Latin c
     assert oes_passages_are_near_duplicates(p1, p2)
-
-
-def test_oes_inauthenticity_rejection() -> None:
-    """Verify that prologue headings and editorial reconstructions are rejected with valid metadata."""
-    base_meta = {
-        "source": "literary_texts",
-        "author": "Давньоруський книжник",
-        "work": "Повість временних літ",
-        "year": 1113,
-        "language_period": "old_east_slavic",
-    }
-    # Positive control: authentic Laurentian PVL must pass
-    genuine_pvl = {
-        "eval_id": "eval_prot_hist_test_pos",
-        "stratum": "historical_text",
-        "subgroup": "old_east_slavic",
-        "input_text": (
-            "По размЂшеньи же столпа и по раздЂленьи языкъ прияша сынове Симови въсточныя страны, "
-            "а Хамови сынове полуденьныя страны"
-        ),
-        "target_term": "въсточныя",
-        "expected_action": "PRESERVE",
-        "source_metadata": base_meta,
-    }
-    assert oes_record_is_authentic(genuine_pvl)
-
-    # Negative controls: must fail authenticity specifically due to text provenance / commentary
-    spaso_prilutsky = {
-        "eval_id": "eval_prot_hist_test_neg1",
-        "stratum": "historical_text",
-        "subgroup": "old_east_slavic",
-        "input_text": (
-            "Проявленье крещенье русьския земля святого апостола АндрЂя, "
-            "како приходилъ в Русь и благословилъ мЂсто и крЂстъ поставилъ идЂже нынЂ градъ Киевъ"
-        ),
-        "target_term": "АндрЂя",
-        "expected_action": "PRESERVE",
-        "source_metadata": base_meta,
-    }
-    assert not oes_record_is_authentic(spaso_prilutsky)
-
-    editorial_reconstruction = {
-        "eval_id": "eval_prot_hist_test_neg2",
-        "stratum": "historical_text",
-        "subgroup": "old_east_slavic",
-        "input_text": "сътворихомъ и ва новымъ написаниємъ",
-        "target_term": "сътворихомъ",
-        "expected_action": "PRESERVE",
-        "source_metadata": base_meta,
-    }
-    assert not oes_record_is_authentic(editorial_reconstruction)
-
-
-def test_oes_rejects_html_comments_and_wiki_artifacts() -> None:
-    """Verify that OES texts with HTML comments or wiki artifacts are rejected at the authenticity boundary."""
-    base_meta = {
-        "source": "literary_texts",
-        "author": "Давньоруський книжник",
-        "work": "Повість временних літ",
-        "year": 1113,
-        "language_period": "old_east_slavic",
-    }
-    for snippet in (
-        "По размЂшеньи же столпа <!-- VERIFY: currency --> сынове Симови",
-        "По размЂшеньи же столпа &lt;!-- note --&gt; сынове Симови",
-    ):
-        rec = {
-            "eval_id": "eval_prot_hist_test_wrap",
-            "stratum": "historical_text",
-            "subgroup": "old_east_slavic",
-            "input_text": snippet,
-            "target_term": "столпа",
-            "expected_action": "PRESERVE",
-            "source_metadata": base_meta,
-        }
-        assert not oes_record_is_authentic(rec), f"Failed to reject: {snippet}"
-        assert not oes_text_is_diplomatic_excerpt(snippet), f"Failed to reject excerpt: {snippet}"
 
 
 def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:

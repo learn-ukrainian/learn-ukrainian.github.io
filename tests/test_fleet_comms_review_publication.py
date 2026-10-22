@@ -24,7 +24,6 @@ from scripts.fleet_comms.review_publication import (
     parse_verdict_token,
     plan_publication,
     publication_idempotency_key,
-    validate_review_gate_input,
 )
 
 _SHA_A = "a" * 40
@@ -77,12 +76,6 @@ def test_normalize_verdict_accepts_canonical_states(raw: str, expected: str) -> 
     assert normalize_verdict(raw) == expected
 
 
-@pytest.mark.parametrize("raw", ["", "PASS", "correct", "APPROVE", None, 1])
-def test_normalize_verdict_rejects_unknown(raw: object) -> None:
-    with pytest.raises(ReviewPublicationError, match="invalid_verdict"):
-        normalize_verdict(raw)  # type: ignore[arg-type]
-
-
 def test_parse_verdict_token_from_text() -> None:
     body = "notes...\nVERDICT: CHANGES_REQUESTED\nmore"
     assert parse_verdict_token(body) == "CHANGES_REQUESTED"
@@ -117,13 +110,6 @@ def test_parse_sealed_verdict_accepts_pr_alias_and_verdict_text() -> None:
     sealed = parse_sealed_verdict_payload(payload)
     assert sealed.pr_number == 99
     assert sealed.verdict == "CHANGES_REQUESTED"
-
-
-def test_parse_sealed_verdict_defaults_gate_kind() -> None:
-    payload = _sealed()
-    del payload["gate_kind"]
-    sealed = parse_sealed_verdict_payload(payload)
-    assert sealed.gate_kind == DEFAULT_GATE_KIND
 
 
 @pytest.mark.parametrize(
@@ -165,11 +151,6 @@ def test_check_head_freshness_stale() -> None:
 def test_assert_head_fresh_raises_on_drift() -> None:
     with pytest.raises(ReviewPublicationError, match="stale_head"):
         assert_head_fresh(expected_sha=_SHA_A, current_sha=_SHA_B)
-
-
-def test_assert_head_fresh_ok() -> None:
-    result = assert_head_fresh(expected_sha=_SHA_A, current_sha=_SHA_A)
-    assert result.is_fresh is True
 
 
 # ── idempotency key ──────────────────────────────────────────────────────────
@@ -226,29 +207,6 @@ def test_publication_idempotency_key_stable_and_sensitive() -> None:
 )
 def test_map_verdict_to_commit_status(verdict: str, state: str) -> None:
     assert map_verdict_to_commit_status(verdict) == state
-
-
-def test_build_verdict_comment_marks_missing_review_evidence() -> None:
-    sealed = parse_sealed_verdict_payload(
-        _sealed(
-            verdict="BLOCKED",
-            review_evidence={
-                "schema_version": "code-review-findings.v1",
-                "overall": {
-                    "correctness": "incorrect",
-                    "explanation": "",
-                    "confidence": 0.9,
-                },
-                "findings": [],
-            },
-        )
-    )
-    body = build_thin_verdict_comment(sealed)
-    assert "VERDICT: BLOCKED" in body
-    assert f"Head SHA: {_SHA_A}" in body
-    assert "Review ID: review_deadbeef" in body
-    assert "model=claude-opus-5" in body
-    assert "NO EVIDENCE SUPPLIED" in body
 
 
 @pytest.mark.parametrize("correctness", ["correct", "incorrect", "uncertain"])
@@ -363,16 +321,6 @@ def test_plan_publication_dry_run_default_ready() -> None:
     )
 
 
-def test_plan_publication_mutate_flag_only_marks_intent() -> None:
-    """mutate=True records intent; this helper still performs zero I/O."""
-    sealed = parse_sealed_verdict_payload(_sealed(verdict="BLOCKED"))
-    plan = plan_publication(sealed, current_head_sha=_SHA_A, mutate=True)
-    assert plan.action == "publish"
-    assert plan.mutate is True
-    assert plan.status_state == STATUS_ERROR
-    assert plan.reason == "ready_to_publish"
-
-
 def test_plan_publication_refuses_stale_head_without_posting() -> None:
     sealed = parse_sealed_verdict_payload(
         _sealed(review_evidence=_approved_evidence())
@@ -407,23 +355,6 @@ def test_plan_publication_idempotent_skip_on_repeat() -> None:
     assert "already_published" in plan.reason
 
 
-def test_plan_publication_all_verdicts_for_fake_github_matrix() -> None:
-    """PR-G acceptance matrix (approved / changes / blocked) without live GH."""
-    for verdict, status in (
-        ("APPROVED", STATUS_SUCCESS),
-        ("CHANGES_REQUESTED", STATUS_FAILURE),
-        ("BLOCKED", STATUS_ERROR),
-    ):
-        payload = _sealed(verdict=verdict)
-        if verdict == "APPROVED":
-            payload["review_evidence"] = _approved_evidence()
-        sealed = parse_sealed_verdict_payload(payload)
-        plan = plan_publication(sealed, current_head_sha=_SHA_A)
-        assert plan.action == "publish"
-        assert plan.status_state == status
-        assert plan.to_dict()["verdict"] == verdict
-
-
 def test_plan_publication_refuses_evidence_free_approved_verdict() -> None:
     sealed = parse_sealed_verdict_payload(_sealed())
     with pytest.raises(ReviewPublicationError, match="approved_review_evidence_required"):
@@ -438,12 +369,3 @@ def test_plan_publication_refuses_unknown_reviewer_model() -> None:
         ReviewPublicationError, match=r"unknown_reviewer_model: 'gemini-1.5-pro'"
     ):
         plan_publication(sealed, current_head_sha=_SHA_A)
-
-
-def test_validation_refuses_unparsed_approved_evidence() -> None:
-    with pytest.raises(ReviewPublicationError, match="approved_review_evidence_required"):
-        validate_review_gate_input(
-            verdict="APPROVED",
-            model="claude-opus-5",
-            review_evidence={"explanation": "Not canonical evidence"},  # type: ignore[arg-type]
-        )

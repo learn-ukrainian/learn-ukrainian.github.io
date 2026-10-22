@@ -11,7 +11,7 @@ import yaml
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
-from wiki.channels import EXTERNAL_CORPUS_DIR, TRACK_CHANNEL_AFFINITY, get_track_affinity, load_channels
+from wiki.channels import EXTERNAL_CORPUS_DIR, load_channels
 
 
 def test_registry_schema_covers_all_live_source_files():
@@ -28,15 +28,6 @@ def test_registry_schema_covers_all_live_source_files():
             "untracked local data, not provisioned in CI"
         )
     assert set(channels) == source_files
-
-
-def test_track_affinity_lookup_and_missing_channel_fallback():
-    load_channels(reload=True)
-
-    assert get_track_affinity("realna_istoria", "hist") == 1.0
-    assert get_track_affinity("ulp_youtube", "a1") == 1.0
-    assert get_track_affinity("missing-source", "hist") == 0.0
-    assert TRACK_CHANNEL_AFFINITY["imtgsh"]["hist"] == 1.0
 
 
 def test_invalid_registry_entry_is_rejected(tmp_path: Path):

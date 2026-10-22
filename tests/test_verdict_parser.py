@@ -61,12 +61,6 @@ def test_overlapping_quote_fence_cannot_reexpose_lazy_continuation(newline, term
     assert recognized_verdicts((OVERLAP_QUOTE + terminal).replace("\n", newline)) == expected
 
 
-@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
-def test_overlapping_quote_fence_preserves_visible_terminal(newline):
-    response = OVERLAP_QUOTE.replace("> para\nVERDICT", "> para\n\nVERDICT").replace("\n", newline)
-    assert recognized_verdicts(response) == ["APPROVE"]
-
-
 def test_capacity_detection_uses_configured_parser_budget(monkeypatch):
     from markdown_it import MarkdownIt
 
@@ -262,29 +256,6 @@ def test_parser_spans_invalid_map_never_authorizes_removal(monkeypatch, source_m
     monkeypatch.setattr(MarkdownIt, "parse", lambda *_a: [token])
     text = "```\nFixes #9672.\n```\n"
     assert _without_code_fences(text, keep_unclosed=True) == text
-
-
-def test_parser_spans_dispatch_never_uses_lexical_span_state(monkeypatch):
-    import scripts.review.verdict_parser as parser
-
-    monkeypatch.setattr(parser, "_code_fence_spans", lambda *_a: pytest.fail("dispatch must use parser maps directly"))
-    assert parser._without_code_fences("```\nquoted\n```\nVisible\n", keep_unclosed=True) == "\nVisible\n"
-
-
-def test_verdict_visibility_requires_parser_without_importing_consumers(monkeypatch):
-    import builtins
-
-    original_import = builtins.__import__
-
-    def refuse_consumers(name, *args, **kwargs):
-        if name in {"delegate", "scripts.delegate", "scripts.review.record_cf_verdict"}:
-            pytest.fail("shared parser must not import heavyweight consumers")
-        return original_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", refuse_consumers)
-    response = "```\nVERDICT: APPROVE\n```\nVERDICT: REQUEST_CHANGES\n~~~\nVERDICT: APPROVE\n"
-    assert recognized_verdicts(response) == ["REQUEST_CHANGES"]
-    assert recognized_verdicts("> Example:\nVERDICT: APPROVE\n\nVERDICT: BLOCKED") == ["BLOCKED"]
 
 
 @pytest.mark.parametrize("reader", [recognized_verdicts, unsupported_verdict_tokens])

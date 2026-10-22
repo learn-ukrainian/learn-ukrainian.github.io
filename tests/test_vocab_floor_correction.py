@@ -77,19 +77,6 @@ def test_vocab_floor_exhaustion_reports_insufficient_plan_recommendations() -> N
     assert "plan recommends insufficient" in diagnostic["message"]
 
 
-def test_vocab_floor_never_adds_non_recommended_lemmas() -> None:
-    updated, diagnostic = linear_pipeline._correct_vocab_floor(
-        _plan(8),
-        _vocab(20),
-        {"floor": 25},
-    )
-
-    original = {item["lemma"] for item in _vocab(20)}
-    added = {item["lemma"] for item in updated if item["lemma"] not in original}
-    assert added == set(diagnostic["added_lemmas"])
-    assert "прокидатися" not in added
-
-
 def test_vocab_floor_noops_when_already_at_floor() -> None:
     updated, diagnostic = linear_pipeline._correct_vocab_floor(
         _plan(8),

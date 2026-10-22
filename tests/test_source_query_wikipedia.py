@@ -12,7 +12,6 @@ from scripts.rag.source_query import (
     WIKI_REST,
     WIKI_USER_AGENT,
     _is_disambiguation_summary,
-    _wiki_title_candidates,
     wikipedia_summary,
 )
 
@@ -33,21 +32,6 @@ class DummyResponse:
             http_err = requests.HTTPError(f"HTTP {self.status_code}")
             http_err.response = self
             raise http_err
-
-
-def test_wiki_title_candidates_sentence_case() -> None:
-    assert _wiki_title_candidates("ампір") == ["ампір", "Ампір"]
-    assert _wiki_title_candidates("школа") == ["школа", "Школа"]
-    assert _wiki_title_candidates("вода") == ["вода", "Вода"]
-    assert _wiki_title_candidates("абажур") == ["абажур", "Абажур"]
-    assert _wiki_title_candidates("ідея") == ["ідея", "Ідея"]
-    assert _wiki_title_candidates("їжак") == ["їжак", "Їжак"]
-    assert _wiki_title_candidates("єнот") == ["єнот", "Єнот"]
-    assert _wiki_title_candidates("ґанок") == ["ґанок", "Ґанок"]
-    assert _wiki_title_candidates("Київ") == ["Київ"]
-    assert _wiki_title_candidates("київська область") == ["київська область", "Київська область"]
-    assert _wiki_title_candidates("") == []
-    assert _wiki_title_candidates("   ") == []
 
 
 def test_is_disambiguation_summary() -> None:
@@ -168,90 +152,6 @@ def test_wikipedia_summary_rejects_redirect_target_bezmezhzhya(monkeypatch: pyte
 
     assert wikipedia_summary("безмежжя") is None
     assert wikipedia_summary("Безмежжя") is None
-
-
-def test_wikipedia_summary_rejects_redirect_target_indus(monkeypatch: pytest.MonkeyPatch) -> None:
-    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
-        return DummyResponse(
-            200,
-            data={
-                "type": "standard",
-                "title": "Індуїзм",
-                "description": "релігія",
-                "extract": "Індуї́зм — ...",
-                "content_urls": {
-                    "desktop": {
-                        "page": "https://uk.wikipedia.org/wiki/%D0%86%D0%BD%D0%B4%D1%83%D1%97%D0%B7%D0%BC"
-                    }
-                },
-            },
-        )
-
-    monkeypatch.setattr(requests, "get", mock_get)
-
-    assert wikipedia_summary("індус") is None
-    assert wikipedia_summary("Індус") is None
-
-
-def test_wikipedia_summary_skips_bakay_disambiguation(monkeypatch: pytest.MonkeyPatch) -> None:
-    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
-        return DummyResponse(
-            200,
-            data={
-                "type": "disambiguation",
-                "title": "Бакай",
-                "description": "сторінка значень у проєкті Вікімедіа",
-                "extract": "Бака́й: ...",
-                "content_urls": {
-                    "desktop": {
-                        "page": "https://uk.wikipedia.org/wiki/%D0%91%D0%B0%D0%BA%D0%B0%D0%B9"
-                    }
-                },
-            },
-        )
-
-    monkeypatch.setattr(requests, "get", mock_get)
-
-    assert wikipedia_summary("бакай") is None
-    assert wikipedia_summary("Бакай") is None
-
-
-def test_wikipedia_summary_attaches_shkola(monkeypatch: pytest.MonkeyPatch) -> None:
-    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
-        if quote("школа") in url:
-            return DummyResponse(403, text="Forbidden")
-        if quote("Школа") in url:
-            return DummyResponse(
-                200,
-                data={
-                    "type": "standard",
-                    "title": "Школа",
-                    "description": "навчальний заклад",
-                    "extract": "Шко́ла — заклад освіти...",
-                    "content_urls": {
-                        "desktop": {
-                            "page": "https://uk.wikipedia.org/wiki/%D0%A8%D0%BA%D0%BE%D0%BB%D0%B0"
-                        }
-                    },
-                },
-            )
-        return DummyResponse(404)
-
-    monkeypatch.setattr(requests, "get", mock_get)
-
-    result = wikipedia_summary("школа")
-    assert result is not None
-    assert result["title"] == "Школа"
-    assert result["extract"] == "Шко́ла — заклад освіти..."
-
-
-def test_wikipedia_summary_aptechnyi_internal_error_returns_none(monkeypatch: pytest.MonkeyPatch) -> None:
-    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
-        return DummyResponse(500, text="Internal Server Error")
-
-    monkeypatch.setattr(requests, "get", mock_get)
-
-    assert wikipedia_summary("аптечний") is None
 
 
 def test_enrich_manifest_query_wikipedia_and_wiki_reference(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:

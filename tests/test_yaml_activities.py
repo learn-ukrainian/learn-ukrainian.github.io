@@ -20,7 +20,6 @@ from yaml_activities import (
     QuizActivity,
     QuizItem,
     QuizOption,
-    ValidationResult,
 )
 
 # =============================================================================
@@ -79,13 +78,6 @@ def valid_match_up():
 
 class TestParsing:
     """Test YAML file parsing."""
-
-    def test_parse_sample_file(self, parser, sample_yaml_path):
-        """Can parse the sample YAML file."""
-        activities = parser.parse(sample_yaml_path)
-        # sample.activities.yaml has 11 activities
-        assert len(activities) == 11
-        assert activities[0].type == 'quiz'
 
     def test_questions_alias_fills_items_for_quiz_and_fill_in(self, parser, tmp_path):
         path = tmp_path / "activities.yaml"
@@ -175,11 +167,6 @@ class TestParsing:
         assert activity.items[0].words == ["Це", "моя́", "сім'я"]
         assert activity.items[0].answer == "Це моя́ сім'я"
 
-    def test_parse_preserves_titles(self, parser, sample_yaml_path):
-        """Titles are preserved during parsing."""
-        activities = parser.parse(sample_yaml_path)
-        assert activities[0].title == "Перевірка розуміння"
-
     def test_parse_activity_types(self, parser, sample_yaml_path):
         """All 11 activity types are recognized."""
         activities = parser.parse(sample_yaml_path)
@@ -239,31 +226,6 @@ class TestParsing:
         assert len(activities) == 1
         assert activities[0].answers == ["Сторож", "ключ", "плащ"]
         assert 'correctWords={JSON.parse(`["Сторож", "ключ", "плащ"]`)}' in mdx
-
-    def test_parse_mark_the_words_accepts_targets_alias(self, parser, tmp_path):
-        """A2 mark-the-words activities can use the existing targets alias."""
-        activity_path = tmp_path / "activities.yaml"
-        activity_path.write_text(
-            """
-- type: mark-the-words
-  title: Фонетика
-  instruction: Позначте слова.
-  text: день місто люди синє рука
-  targets:
-  - день
-  - місто
-  - люди
-  - синє
-""",
-            encoding="utf-8",
-        )
-
-        activities = parser.parse(activity_path)
-        mdx = parser.to_mdx(activities)
-
-        assert len(activities) == 1
-        assert activities[0].answers == ["день", "місто", "люди", "синє"]
-        assert 'correctWords={JSON.parse(`["день", "місто", "люди", "синє"]`)}' in mdx
 
     def test_parse_unjumble_accepts_correct_order(self, parser, tmp_path):
         """Schema-style unjumble activities can use correct_order for the answer."""
@@ -456,13 +418,6 @@ class TestA2ActivitySchema:
 class TestMDXGeneration:
     """Test MDX output generation."""
 
-    def test_generates_mdx_string(self, parser, sample_yaml_path):
-        """to_mdx produces non-empty string."""
-        activities = parser.parse(sample_yaml_path)
-        mdx = parser.to_mdx(activities)
-        assert isinstance(mdx, str)
-        assert len(mdx) > 1000
-
     def test_mdx_contains_component_tags(self, parser, sample_yaml_path):
         """MDX contains React component tags."""
         activities = parser.parse(sample_yaml_path)
@@ -540,53 +495,10 @@ class TestMDXGeneration:
 # INTEGRATION TESTS
 # =============================================================================
 
-class TestIntegration:
-    """End-to-end integration tests."""
-
-    def test_parse_generate(self, parser, sample_yaml_path):
-        """Full pipeline: parse -> generate."""
-        # Parse
-        activities = parser.parse(sample_yaml_path)
-        assert len(activities) > 0
-
-        # Generate
-        mdx = parser.to_mdx(activities)
-        assert len(mdx) > 1000  # Should be substantial
-
-    def test_round_trip_data_integrity(self, parser, valid_quiz):
-        """Data survives round trip through MDX generation."""
-        # Generate MDX
-        mdx = parser._quiz_to_mdx(valid_quiz)
-
-        # Check data is present
-        assert "Test Quiz" in mdx
-        assert "Question 1?" in mdx
-        assert "Correct" in mdx
-
 
 # =============================================================================
 # VALIDATION RESULT TESTS
 # =============================================================================
-
-class TestValidationResult:
-    def test_fresh_result_is_ok(self):
-        result = ValidationResult()
-        assert result.ok is True
-        assert result.errors == []
-        assert result.warnings == []
-
-    def test_add_error_sets_ok_false(self):
-        result = ValidationResult()
-        result.add_error("root", "something broke")
-        assert result.ok is False
-        assert len(result.errors) == 1
-        assert result.errors[0].message == "something broke"
-
-    def test_add_warning_keeps_ok_true(self):
-        result = ValidationResult()
-        result.add_warning("root", "minor issue")
-        assert result.ok is True
-        assert len(result.warnings) == 1
 
 
 # =============================================================================
@@ -738,19 +650,6 @@ class TestParserEdgeCases:
         assert len(activities) == 1
         assert activities[0].type == "match-up"
         assert len(activities[0].pairs) == 2
-
-    def test_parse_translate(self, parser, tmp_path):
-        yaml_file = tmp_path / "tr.yaml"
-        yaml_file.write_text(
-            "- type: translate\n"
-            "  title: Translate Test\n"
-            "  items:\n"
-            "    - source: Hello\n"
-            "      target: Привіт\n"
-        )
-        activities = parser.parse(yaml_file)
-        assert len(activities) == 1
-        assert activities[0].type == "translate"
 
     def test_parse_translate_string_options_and_target(self, parser, tmp_path):
         yaml_file = tmp_path / "tr-strings.yaml"

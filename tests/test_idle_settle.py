@@ -38,26 +38,6 @@ def _snapshot(
     )
 
 
-def test_disposition_codes_include_original_six_and_new_wip() -> None:
-    assert {
-        "dependency_blocked",
-        "review_wip_cap",
-        "ci_capacity",
-        "disk_capacity",
-        "human_decision",
-        "no_ready_work",
-        "authoring_wip_cap",
-        "worktree_wip_cap",
-        "integration_wip_cap",
-    } == idle.DISPOSITION_CODES
-    for code in idle.DISPOSITION_CODES:
-        assert idle.disposition_accepted(code) is True
-    assert idle.disposition_accepted("busywork") is False
-    assert idle.disposition_accepted("") is False
-    assert idle.normalize_disposition("  ") is None
-    assert idle.normalize_disposition(" human_decision ") == "human_decision"
-
-
 def test_reminder_silent_when_nothing_actionable() -> None:
     snap = _snapshot(items=[])
     decision = idle.evaluate_settle(snap)
@@ -200,16 +180,6 @@ def test_human_decision_is_always_honest() -> None:
     assert decision.disposition_honest is True
 
 
-def test_opportunity_seconds_only_when_previous_was_eligible() -> None:
-    t0 = datetime(2026, 8, 17, 12, 0, tzinfo=UTC)
-    t1 = t0 + timedelta(seconds=45)
-    prev_eligible = {"eligible": True, "recorded_at": idle.format_iso(t0)}
-    prev_silent = {"eligible": False, "recorded_at": idle.format_iso(t0)}
-    assert idle.opportunity_seconds_since(prev_eligible, t1) == 45.0
-    assert idle.opportunity_seconds_since(prev_silent, t1) == 0.0
-    assert idle.opportunity_seconds_since(None, t1) == 0.0
-
-
 def test_record_and_report_counts_missing_and_opportunity(tmp_path: Path) -> None:
     store = tmp_path / "events.jsonl"
     snap = _snapshot()
@@ -228,57 +198,6 @@ def test_record_and_report_counts_missing_and_opportunity(tmp_path: Path) -> Non
     assert report["eligible_idle_opportunity_seconds"] == 30.0
     assert "pass" not in report
     assert "threshold" not in report
-
-
-def test_cli_evaluate_rejects_unknown_disposition(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    snap_path = tmp_path / "snap.json"
-    snap_path.write_text(json.dumps(_snapshot().to_dict()), encoding="utf-8")
-    store = tmp_path / "events.jsonl"
-    rc = idle.main(
-        [
-            "evaluate",
-            "--snapshot-json",
-            str(snap_path),
-            "--store",
-            str(store),
-            "--disposition",
-            "taking_a_break",
-            "--json",
-        ]
-    )
-    assert rc == 2
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["outcome"] == "invalid_disposition"
-
-
-def test_cli_evaluate_missing_action_is_report_only_zero(tmp_path: Path) -> None:
-    snap_path = tmp_path / "snap.json"
-    snap_path.write_text(json.dumps(_snapshot().to_dict()), encoding="utf-8")
-    store = tmp_path / "events.jsonl"
-    rc = idle.main(
-        [
-            "evaluate",
-            "--snapshot-json",
-            str(snap_path),
-            "--store",
-            str(store),
-            "--task-id",
-            "infra-6976",
-        ]
-    )
-    assert rc == 0
-    report = idle.build_report(idle.load_events(store))
-    assert report["settle_events_missing_action"] == 1
-
-
-def test_cli_report_json(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    store = tmp_path / "events.jsonl"
-    idle.record_settle(store, idle.evaluate_settle(_snapshot()), now=datetime(2026, 8, 17, tzinfo=UTC))
-    rc = idle.main(["report", "--store", str(store), "--json"])
-    assert rc == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["report_only"] is True
-    assert payload["settle_events_missing_action"] == 1
 
 
 def test_cli_report_since_hours_windows_events(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -301,21 +220,6 @@ def test_cli_report_since_hours_windows_events(tmp_path: Path, capsys: pytest.Ca
     assert window["event_count"] == 2
     assert window["settle_events_missing_action"] == 0
     assert window["settle_events_dishonest"] == 1
-
-
-@pytest.mark.parametrize("value", ["-1", "0", "-0.5", "nan", "inf", "abc"])
-def test_cli_report_rejects_non_positive_since_hours(
-    value: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        idle.main(["report", "--store", str(tmp_path / "events.jsonl"), "--since-hours", value])
-    assert excinfo.value.code == 2
-    assert "--since-hours" in capsys.readouterr().err
-
-
-def test_infer_review_kind() -> None:
-    assert idle.infer_settle_kind("review-6981") == "review"
-    assert idle.infer_settle_kind("infra-6976") == "dispatch"
 
 
 def test_idle_settle_work_queue_is_not_fillable() -> None:

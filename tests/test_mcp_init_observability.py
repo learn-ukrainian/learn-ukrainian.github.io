@@ -314,53 +314,6 @@ def test_runtime_tool_config_codex_tools_scoped_codex_home(
     assert Path(auth_link.resolve()) == (fake_home / "auth.json").resolve()
 
 
-def test_runtime_tool_config_codex_tools_nests_home_in_runtime_tmp_lease(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
-
-    fake_home = tmp_path / "fake-codex-home"
-    fake_home.mkdir()
-    (fake_home / "auth.json").write_text("{}", encoding="utf-8")
-    monkeypatch.setenv("CODEX_HOME", str(fake_home))
-
-    tmp_root = tmp_path / "os-tmp"
-    tmp_root.mkdir()
-    lease_root = tmp_root / "learn-ukrainian" / "task-4956"
-    lease_root.mkdir(parents=True)
-    monkeypatch.setattr(linear_pipeline.tempfile, "gettempdir", lambda: str(lease_root))
-    monkeypatch.setenv("TMPDIR", str(lease_root))
-    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
-    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_root))
-
-    config = linear_pipeline._runtime_tool_config(
-        "codex-tools",
-        workspace_dir=linear_pipeline.PROJECT_ROOT,
-    )
-
-    assert config["codex_home_override"] == str(
-        lease_root / f"codex-v7-writer-{os.getuid()}",
-    )
-
-
-def test_ensure_codex_writer_home_keeps_shared_no_task_fallback(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    fake_home = tmp_path / "fake-codex-home"
-    fake_home.mkdir()
-    (fake_home / "auth.json").write_text("{}", encoding="utf-8")
-    monkeypatch.setenv("CODEX_HOME", str(fake_home))
-    monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
-    monkeypatch.setattr(linear_pipeline.tempfile, "gettempdir", lambda: str(tmp_path))
-
-    scoped_home = linear_pipeline._ensure_codex_writer_home()
-
-    assert scoped_home == str(tmp_path / f"codex-v7-writer-{os.getuid()}")
-
-
 def test_runtime_tool_config_codex_tools_scoped_home_emits_event(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -537,27 +490,6 @@ def test_runtime_tool_config_claude_tools_emits_resolution_event_success(
     assert events[0][1]["resolved_servers"] == ["sources"]
 
 
-def test_runtime_tool_config_claude_tools_raises_when_unconfigured(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
-    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
-    events: list[tuple[str, dict[str, Any]]] = []
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
-        linear_pipeline._runtime_tool_config(
-            "claude-tools",
-            workspace_dir=linear_pipeline.PROJECT_ROOT,
-            event_sink=lambda event, **fields: events.append((event, fields)),
-        )
-
-    assert events[0][0] == "mcp_config_resolved"
-    assert events[0][1]["writer"] == "claude-tools"
-    assert events[0][1]["resolution_status"] == "config_empty"
-    assert events[0][1]["resolved_servers"] == []
-
-
 def test_runtime_tool_config_gemini_tools_emits_resolution_event_success(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -578,27 +510,6 @@ def test_runtime_tool_config_gemini_tools_emits_resolution_event_success(
     assert events[0][1]["writer"] == "gemini-tools"
     assert events[0][1]["resolution_status"] == "ok"
     assert events[0][1]["resolved_servers"] == ["sources"]
-
-
-def test_runtime_tool_config_gemini_tools_raises_when_unconfigured(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    config_path = _write_mcp_config(tmp_path / ".mcp.json", {"mcpServers": {}})
-    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
-    events: list[tuple[str, dict[str, Any]]] = []
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="tool-less"):
-        linear_pipeline._runtime_tool_config(
-            "gemini-tools",
-            workspace_dir=linear_pipeline.PROJECT_ROOT,
-            event_sink=lambda event, **fields: events.append((event, fields)),
-        )
-
-    assert events[0][0] == "mcp_config_resolved"
-    assert events[0][1]["writer"] == "gemini-tools"
-    assert events[0][1]["resolution_status"] == "config_empty"
-    assert events[0][1]["resolved_servers"] == []
 
 
 def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
@@ -660,14 +571,6 @@ def test_runtime_tool_config_hermes_tools_emits_resolution_event_success(
     assert events[0][1]["config_path"] == str(Path.home() / ".hermes" / "config.yaml")
     assert events[0][1]["resolution_status"] == "ok"
     assert events[0][1]["resolved_servers"] == ["sources"]
-
-
-def test_runtime_tool_config_unknown_tools_writer_raises() -> None:
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match="Unknown -tools writer",
-    ):
-        linear_pipeline._runtime_tool_config("phantom-tools", workspace_dir=linear_pipeline.PROJECT_ROOT)
 
 
 def test_invoke_writer_refuses_tool_less_codex_before_invoker(

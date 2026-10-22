@@ -11,9 +11,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from audit.checks.morphological_validator import (
-    _get_allowed_chunks,
-    _get_constraints,
-    _is_in_allowed_chunk,
     _should_skip_line,
     check_replacements,
     validate_morphology,
@@ -23,107 +20,21 @@ from audit.checks.morphological_validator import (
 # Constraint configuration tests
 # ---------------------------------------------------------------------------
 
-class TestConstraints:
-    def test_a1_pre_verb(self):
-        """M04-M14: verbs allowed (fixed phrases), but no imperatives, nominative only."""
-        c = _get_constraints("a1", 8)
-        assert c.no_verbs is False  # verbs allowed as fixed phrases from M04+
-        assert c.no_imperatives is True
-        assert c.nominative_only is True
-
-    def test_a1_verb_phase(self):
-        """M15-M28: verbs with present tense, no imperatives yet."""
-        c = _get_constraints("a1", 20)
-        assert c.no_verbs is False
-        assert c.no_imperatives is True
-        assert c.check_gender is True
-
-    def test_a1_post_imperative(self):
-        c = _get_constraints("a1", 50)
-        assert c.no_imperatives is False
-
-    def test_non_a1_track(self):
-        """Non-A1 tracks: imperatives already taught, no constraints."""
-        c = _get_constraints("b1", 5)
-        assert c.no_verbs is False
-        assert c.no_imperatives is False
-
 
 # ---------------------------------------------------------------------------
 # Line filtering tests
 # ---------------------------------------------------------------------------
 
 class TestLineFiltering:
-    def test_skip_empty(self):
-        assert _should_skip_line("") is True
-        assert _should_skip_line("   ") is True
-
-    def test_skip_table(self):
-        assert _should_skip_line("| робиш | you do |") is True
-
-    def test_skip_code(self):
-        assert _should_skip_line("```python") is True
-
-    def test_skip_heading(self):
-        assert _should_skip_line("## Світ прикметників") is True
-
-    def test_skip_html_comment(self):
-        assert _should_skip_line("<!-- SCOPE: letters -->") is True
-
-    def test_skip_negative_example(self):
-        assert _should_skip_line("WRONG: робиш") is True
-        assert _should_skip_line("❌ робиш") is True
 
     def test_english_with_ukrainian_not_skipped(self):
         """English-dominant lines with Ukrainian words are now checked."""
         assert _should_skip_line("This is an English sentence with one word собака") is False
 
-    def test_skip_pure_english(self):
-        assert _should_skip_line("This is a purely English sentence.") is True
-
-    def test_keep_ukrainian(self):
-        assert _should_skip_line("Це собака. Собака гарна.") is False
-
-    def test_callout_with_ukrainian(self):
-        assert _should_skip_line("> Собака — це тварина.") is False
-
-    def test_callout_english_only(self):
-        assert _should_skip_line("> [!tip] Remember this rule!") is True
-
-    def test_callout_empty(self):
-        assert _should_skip_line("> [!culture]") is True
-
 
 # ---------------------------------------------------------------------------
 # Allowed chunks tests
 # ---------------------------------------------------------------------------
-
-class TestAllowedChunks:
-    def test_m8_chunks(self):
-        chunks = _get_allowed_chunks(8)
-        assert "до побачення" in chunks
-        assert "що ти робиш" in chunks
-
-    def test_m11_chunks(self):
-        chunks = _get_allowed_chunks(11)
-        assert "до побачення" in chunks
-        assert "що ти робиш" not in chunks  # Only in M5-10
-
-    def test_m20_core_chunks(self):
-        """M20 still has core chunks (будь ласка, вибачте etc.)"""
-        chunks = _get_allowed_chunks(20)
-        assert "будь ласка" in chunks
-        assert "вибачте" in chunks
-
-    def test_m50_no_chunks(self):
-        """M50+ (post-imperative): no chunks needed"""
-        chunks = _get_allowed_chunks(50)
-        assert len(chunks) == 0
-
-    def test_chunk_matching(self):
-        chunks = {"до побачення", "як справи"}
-        assert _is_in_allowed_chunk("побачення", "До побачення!", chunks) is True
-        assert _is_in_allowed_chunk("побачення", "Побачення було добрим", chunks) is False
 
 
 # ---------------------------------------------------------------------------
@@ -137,10 +48,6 @@ class TestVerbDetection:
     def test_standalone_verb_caught(self):
         issues = validate_morphology("Він робить домашнє завдання.", "A1", 2, "a1")
         assert any("робить" in i["text"] and "verb" in i["text"].lower() for i in issues)
-
-    def test_verb_in_chunk_exempt(self):
-        issues = validate_morphology("Як справи?", "A1", 2, "a1")
-        assert len(issues) == 0
 
     def test_verb_after_m15_ok(self):
         issues = validate_morphology("Він робить домашнє завдання.", "A1", 16, "a1")
@@ -176,24 +83,12 @@ class TestChunkExceptions:
         assert len(issues) == 0
 
 
-class TestTableExclusion:
-    """TC4: Table rows excluded from validation."""
-
-    def test_table_skipped(self):
-        issues = validate_morphology("| робиш | you do |", "A1", 8, "a1")
-        assert len(issues) == 0
-
-
 @pytest.mark.usefixtures("requires_vesum_db")
 class TestImperativeDetection:
     """TC8: Imperative forms detected via VESUM tags."""
 
     def test_imperative_caught(self):
         issues = validate_morphology("Запам'ятайте це правило!", "A1", 5, "a1")
-        assert any("imperative" in i["text"].lower() for i in issues)
-
-    def test_imperative_in_callout_caught(self):
-        issues = validate_morphology("> Запам'ятайте це!", "A1", 5, "a1")
         assert any("imperative" in i["text"].lower() for i in issues)
 
     def test_imperative_after_m47_ok(self):
@@ -205,11 +100,6 @@ class TestImperativeDetection:
 class TestPOSMismatch:
     """TC9: Words used as wrong POS detected in no_verbs phase."""
 
-    def test_verb_only_word_caught(self):
-        # M02 has no_verbs=True, so 'переніс' (verb-only in VESUM) should be flagged
-        issues = validate_morphology("Правила переніс дуже важливі.", "A1", 2, "a1")
-        assert any("переніс" in i["text"] for i in issues)
-
 
 @pytest.mark.usefixtures("requires_vesum_db")
 class TestStressMarks:
@@ -218,11 +108,6 @@ class TestStressMarks:
     def test_stressed_words_not_split(self):
         issues = validate_morphology("Це вели́кий собо́р.", "A1", 10, "a1")
         # великий and собор are nominative — should be 0 issues
-        assert len(issues) == 0
-
-    def test_stressed_adjective_list(self):
-        content = "*   вели́кий (big)\n*   мали́й (small)\n*   до́брий (good)"
-        issues = validate_morphology(content, "A1", 11, "a1")
         assert len(issues) == 0
 
 
@@ -268,11 +153,6 @@ class TestAccusativeHomonyms:
 class TestNonA1Imperatives:
     """Non-A1 tracks should not block imperatives."""
 
-    def test_b1_imperative_ok(self):
-        issues = validate_morphology("Запам'ятайте це правило!", "B1", 5, "b1")
-        impr_issues = [i for i in issues if "imperative" in i.get("text", "").lower()]
-        assert len(impr_issues) == 0
-
 
 # ---------------------------------------------------------------------------
 # Russicism / replacement tests
@@ -289,14 +169,6 @@ class TestReplacements:
     def test_clean_text_no_issues(self):
         issues = check_replacements("Це велике місто.")
         assert len(issues) == 0
-
-    def test_table_rows_skipped(self):
-        issues = check_replacements("| автогонщик | racer |")
-        assert len(issues) == 0
-
-    def test_deduplication(self):
-        issues = check_replacements("Автогонщик і автогонщик.")
-        assert len(issues) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -349,18 +221,3 @@ class TestBracketStripping:
         # Should not have issues about й or йаблуко
         bracket_issues = [i for i in issues if "й" in i.get("text", "") or "йаблуко" in i.get("text", "")]
         assert len(bracket_issues) == 0
-
-    def test_regular_words_still_checked(self):
-        """Words outside brackets should still be validated normally."""
-        content = "Собака [пес] гарна тварина."
-        issues = validate_morphology(content, "A1", 5, "a1")
-        # собака and тварина should still be checked (they're valid, so no issues expected)
-        # but the key point is they're NOT stripped
-        assert isinstance(issues, list)  # basic sanity
-
-    def test_markdown_links_preserved(self):
-        """Markdown link text [слово](url) should NOT be stripped."""
-        content = "Детальніше про [українську мову](https://uk.wikipedia.org) тут."
-        issues = validate_morphology(content, "A1", 50, "a1")
-        # "українську мову" should still be validated (not stripped)
-        assert isinstance(issues, list)

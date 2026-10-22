@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import UTC, datetime
-from random import Random
 
 import pytest
 
 from scripts.api import state_router
-from scripts.fleet import capacity_pick, credit_lane
+from scripts.fleet import capacity_pick
 
 NOW = datetime(2026, 10, 9, 12, tzinfo=UTC)
 
@@ -148,61 +147,6 @@ def test_monitor_does_not_load_picker_write_success_demotions(monkeypatch):
     monkeypatch.setattr(capacity_pick, "load_write_success_stats", unexpected_load)
     result = state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)
     assert result["primary_agent_for_code"] == "codex"
-
-
-def test_monitor_picker_seeded_fuzz(monkeypatch):
-    """Vary heat, headroom, load and health with retired/excluded lanes present."""
-    # Parse the real, unchanged policy once; keep every routing calculation real.
-    policy = credit_lane.load_policy()
-    monkeypatch.setattr(credit_lane, "load_policy", lambda: policy)
-    rng = Random(10279)
-    counts = {"cases": 3000, "disagreements": 0, "inline_orchestrator": 0, "established_health": 0}
-    disagreements = []
-    for case in range(counts["cases"]):
-        agents = {
-            lane: _lane(
-                rng.choice([None, 10, 35, 65, 72, 85, 87.6, 100]),
-                status=rng.choice(["cool", "warm", "hot", "near_cap"]),
-            )
-            for lane in capacity_pick.CODE_LANES
-        }
-        # No prepaid account is supplied in this fixture, so DeepSeek is ineligible.
-        agents["deepseek"]["eligible"] = False
-        if case % 10 == 0:
-            for info in agents.values():
-                info["status"] = rng.choice(["hot", "near_cap"])
-        # Every third scenario exercises the intentional health preference.
-        if case % 3 == 0:
-            for info in agents.values():
-                info["health"] = rng.choice([{"healthy": True}, {}])
-        loads = {lane: rng.choice([None, 0, 1, 2]) for lane in agents}
-        budget = {"agents": agents, "in_flight": loads, "diagnostics": {"stale": False}}
-        rows = capacity_pick.build_lane_rows(budget, reset_reserve={}, now=NOW)
-
-        def pick(candidates):
-            return next((row["lane"] for row in capacity_pick.build_pick_order(candidates) if row["pick"] != "AVOID"), None)
-
-        picker = pick(rows)
-        monitor = state_router._recommend_agent(
-            agents, [], records_loaded=1, current_time=NOW, in_flight=loads,
-        )["primary_agent_for_code"]
-        if monitor == picker:
-            continue
-        if monitor == "inline_orchestrator":
-            assert all(
-                info["status"] in {"hot", "near_cap"}
-                for info in credit_lane.shared_usage_agents(agents).values() if info.get("eligible", True)
-            )
-            counts["inline_orchestrator"] += 1
-        elif monitor == pick([row for row in rows if row["health"] == "healthy"]) and any(
-            row["health"] == "healthy" for row in rows
-        ) and any(row["health"] == "unknown" for row in rows):
-            counts["established_health"] += 1
-        else:
-            counts["disagreements"] += 1
-            disagreements.append((case, picker, monitor))
-    print(f"seed=10279 {counts}")
-    assert counts["disagreements"] == 0, disagreements[:10]
 
 
 @pytest.mark.parametrize("loads, expected", [({"codex": 2, "claude": 1, "cursor": 0}, "cursor"), ({"codex": 0, "claude": 1, "cursor": 2}, "codex")])

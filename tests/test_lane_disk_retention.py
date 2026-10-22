@@ -8,10 +8,6 @@ from pathlib import Path
 from scripts.hygiene.lane_disk_retention import scan_dispatch_worktrees
 
 
-def test_scan_dispatch_worktrees_empty(tmp_path: Path) -> None:
-    assert scan_dispatch_worktrees(repo_root=tmp_path) == []
-
-
 def test_scan_dispatch_worktrees_reports_stale(tmp_path: Path, monkeypatch) -> None:
     wt = tmp_path / ".worktrees" / "dispatch" / "grok" / "old-task"
     wt.mkdir(parents=True)

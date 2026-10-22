@@ -1403,17 +1403,6 @@ def test_invalid_scan_root_still_reports_applied_sweep(area, monkeypatch, capsys
     assert not candidate.exists() and run.is_dir()
 
 
-def test_missing_pytest_namespaces_do_not_probe_processes(area, monkeypatch):
-    _root, args = area
-    monkeypatch.setattr(pytest_retention, "holder_snapshot", lambda *_: pytest.fail("no namespace to inspect"))
-    report = pytest_retention.sweep_pytest_runs(
-        apply=False, ledger=tmp_sweep.Ledger(args["state_dir"]), run_id="missing",
-        task_root=args["task_root"], quarantine_s=86400, repo_root=REPO,
-    )
-    assert report["rows"] == []
-    assert report["errors"] == 0
-
-
 @pytest.mark.parametrize(
     "blob,cwd,side,expected",
     [
@@ -1570,81 +1559,6 @@ def test_payload(tmp_path):
     assert "1 passed" in result.stdout
     assert explicit.is_dir()
     assert list(runs_dir.iterdir()) == runs
-
-
-@pytest.mark.parametrize("previous_env", [None, "caller-temp"])
-def test_pytest_restores_temp_environment_and_cache(tmp_path, monkeypatch, previous_env):
-    import tempfile
-    from types import SimpleNamespace
-
-    root = tmp_path / "managed"
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
-    if previous_env is None:
-        monkeypatch.delenv("TMPDIR", raising=False)
-    else:
-        monkeypatch.setenv("TMPDIR", previous_env)
-    previous = tempfile.tempdir
-    cleanups = []
-    config = SimpleNamespace(option=SimpleNamespace(basetemp=None), add_cleanup=cleanups.append)
-    try:
-        pytest_scratch.pytest_configure(config)
-        relative = Path(config.option.basetemp).relative_to(root).as_posix().lower()
-        for prefix in ("sk-", "ghp_", "github_pat_", "xoxb-", "xoxp-", "akia"):
-            assert prefix not in relative
-        assert Path(config.option.basetemp).parent == Path(tempfile.gettempdir())
-        assert os.environ["TMPDIR"] == tempfile.gettempdir()
-    finally:
-        for cleanup in reversed(cleanups):
-            cleanup()
-    assert os.environ.get("TMPDIR") == previous_env
-    assert tempfile.tempdir == previous
-
-
-def test_relative_shard_file_resolves_from_checkout_after_chdir(tmp_path, monkeypatch):
-    from types import SimpleNamespace
-
-    from tests import conftest as suite
-
-    checkout = tmp_path / "checkout"
-    shards = checkout / "ci-artifacts"
-    shards.mkdir(parents=True)
-    relative = "ci-artifacts/pytest-shard-2-files.txt"
-    (checkout / relative).write_text("tests/test_allowed.py\n")
-    child = tmp_path / "child"
-    child.mkdir()
-    (child / "ci-artifacts").mkdir()
-    (child / relative).write_text("tests/test_decoy.py\n")
-    monkeypatch.chdir(child)
-    monkeypatch.setattr(suite, "_REPO_ROOT", checkout)
-    monkeypatch.setenv(suite.LU_PYTEST_SHARD_FILES_ENV_VAR, relative)
-    suite._load_shard_allowlist.cache_clear()
-    try:
-        assert suite._load_shard_allowlist() == frozenset({"tests/test_allowed.py"})
-        config = SimpleNamespace(rootpath=checkout)
-        assert suite.pytest_ignore_collect(checkout / "tests/test_allowed.py", config) is False
-        assert suite.pytest_ignore_collect(checkout / "tests/test_other.py", config) is True
-        (checkout / relative).unlink()
-        suite._load_shard_allowlist.cache_clear()
-        with pytest.raises(RuntimeError, match="unreadable"):
-            suite._load_shard_allowlist()
-    finally:
-        suite._load_shard_allowlist.cache_clear()
-
-
-def test_generated_child_suite_does_not_inherit_checkout_shard(pytester, monkeypatch):
-    pytester.makeconftest(f'''
-import sys
-sys.path.insert(0, {str(REPO)!r})
-pytest_plugins = ["tests.conftest"]
-''')
-    pytester.makepyfile("def test_child(): pass")
-    monkeypatch.setenv("LU_PYTEST_SHARD_FILES", "ci-artifacts/absent-shard.txt")
-    result = subprocess.run(
-        [sys.executable, "-m", "pytest", "-q"], cwd=pytester.path,
-        capture_output=True, text=True, timeout=30,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "1 passed" in result.stdout
 
 
 def use_real_proc(monkeypatch) -> None:

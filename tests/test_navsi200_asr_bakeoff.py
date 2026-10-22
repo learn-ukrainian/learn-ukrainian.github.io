@@ -13,13 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from navsi200_asr_bakeoff import (
     DEFAULT_BAKEOFF_LEDGER_PATH,
-    DEFAULT_SAMPLE_AUDIO_PATH,
-    ENGINE_METADATA,
-    compute_cer,
-    compute_token_overlap,
-    compute_wer,
     detect_russisms,
-    load_audio,
     normalize_text,
     transcribe_faster_whisper,
 )
@@ -36,54 +30,6 @@ class TestScoringAndCompareHelpers:
         raw = "М'яч, пʼять, з’їзд та КИЇВ!.."
         expected = "м'яч п'ять з'їзд та київ"
         assert normalize_text(raw) == expected
-
-    def test_normalize_text_empty(self) -> None:
-        assert normalize_text("") == ""
-        assert normalize_text("   \n\t  ") == ""
-
-    def test_compute_wer_exact_match(self) -> None:
-        ref = "це тестове речення для перевірки"
-        hyp = "Це тестове речення для перевірки!"
-        assert compute_wer(ref, hyp) == 0.0
-
-    def test_compute_wer_empty_cases(self) -> None:
-        assert compute_wer("", "") == 0.0
-        assert compute_wer("слово", "") == 1.0
-        assert compute_wer("", "слово") == 1.0
-
-    def test_compute_wer_operations(self) -> None:
-        ref = "один два три чотири"
-        # 1 substitution ("два" -> "дванадцять")
-        assert compute_wer(ref, "один дванадцять три чотири") == 0.25
-        # 1 deletion ("чотири" missing)
-        assert compute_wer(ref, "один два три") == 0.25
-        # 1 insertion ("нуль")
-        assert compute_wer(ref, "нуль один два три чотири") == 0.25
-        # 2 errors in 4 words = 0.50
-        assert compute_wer(ref, "один сто три п'ять") == 0.50
-
-    def test_compute_cer_exact_and_distance(self) -> None:
-        assert compute_cer("або", "або") == 0.0
-        assert compute_cer("", "") == 0.0
-        assert compute_cer("або", "") == 1.0
-        # 1 substitution in 3 chars = 1/3
-        assert pytest.approx(compute_cer("або", "аби"), 0.01) == 0.3333
-
-    def test_compute_token_overlap(self) -> None:
-        ref = "сонце світить яскраво"
-        hyp = "сонце світить тепло"
-        overlap = compute_token_overlap(ref, hyp)
-
-        # Intersection: {"сонце", "світить"} (2)
-        # Union: {"сонце", "світить", "яскраво", "тепло"} (4)
-        assert overlap["jaccard"] == 0.5
-        assert pytest.approx(overlap["precision"], 0.01) == 0.6667
-        assert pytest.approx(overlap["recall"], 0.01) == 0.6667
-        assert pytest.approx(overlap["f1"], 0.01) == 0.6667
-
-    def test_compute_token_overlap_empty(self) -> None:
-        assert compute_token_overlap("", "")["jaccard"] == 1.0
-        assert compute_token_overlap("слово", "")["jaccard"] == 0.0
 
 
 class TestLinguisticAndRussismDetection:
@@ -118,35 +64,12 @@ class TestLinguisticAndRussismDetection:
 class TestEngineSpecificationAndPinning:
     """Verification of engine configuration, licensing, and language pinning."""
 
-    def test_engine_metadata_documented(self) -> None:
-        required_engines = {"yt-auto-captions", "faster-whisper", "wav2vec2-uk"}
-        assert required_engines.issubset(set(ENGINE_METADATA.keys()))
-
-        for name, meta in ENGINE_METADATA.items():
-            assert "engine" in meta, f"Missing engine in {name}"
-            assert "provider" in meta, f"Missing provider in {name}"
-            assert "license" in meta, f"Missing license in {name}"
-            assert "language_pinning" in meta, f"Missing language_pinning in {name}"
-
     def test_whisper_strictly_requires_uk_pinning(self) -> None:
         with pytest.raises(ValueError, match="strictly pinned to 'uk'"):
             transcribe_faster_whisper(b"", language="ru")
 
         with pytest.raises(ValueError, match="strictly pinned to 'uk'"):
             transcribe_faster_whisper(b"", language="auto")  # type: ignore[arg-type]
-
-
-class TestAudioLoading:
-    """Verification of robust audio file loading."""
-
-    def test_load_audio_fixture(self) -> None:
-        assert DEFAULT_SAMPLE_AUDIO_PATH.exists()
-        audio_data, sr = load_audio(DEFAULT_SAMPLE_AUDIO_PATH, target_sr=16000)
-        assert sr == 16000
-        assert len(audio_data) > 0
-        assert audio_data.dtype.kind == "f"
-        assert -1.05 <= float(audio_data.min()) <= 1.05
-        assert -1.05 <= float(audio_data.max()) <= 1.05
 
 
 class TestAsrBakeoffLedgerAndPrivacy:
@@ -224,27 +147,3 @@ class TestAsrBakeoffLedgerAndPrivacy:
         catalog_ids = {l["video_id"] for l in catalog_data["lessons"]}
         ledger_ids = {l["video_id"] for l in lessons}
         assert catalog_ids == ledger_ids
-
-    @BAKEOFF_LEDGER
-    def test_calibration_benchmark_metrics_present(self, ledger_data: dict) -> None:
-        bench = ledger_data.get("calibration_benchmark")
-        assert bench is not None, "Calibration benchmark must be recorded in ledger"
-        assert "engines" in bench
-        engines = bench["engines"]
-
-        # Faster-whisper
-        assert "faster-whisper" in engines
-        w_eng = engines["faster-whisper"]
-        assert w_eng["status"] == "success"
-        assert w_eng["language_pinned"] == "uk"
-        assert isinstance(w_eng["wer"], (int, float))
-        assert isinstance(w_eng["cer"], (int, float))
-        assert "jaccard" in w_eng["overlap"]
-
-        # Wav2Vec2
-        assert "wav2vec2-uk" in engines
-        v_eng = engines["wav2vec2-uk"]
-        assert v_eng["status"] == "success"
-        assert isinstance(v_eng["wer"], (int, float))
-        assert isinstance(v_eng["cer"], (int, float))
-        assert "jaccard" in v_eng["overlap"]

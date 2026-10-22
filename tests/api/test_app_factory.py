@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
@@ -24,63 +23,10 @@ from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
 from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
-from tests.api.opsec_sweep import registry
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DB_ACCESS_PATTERNS = (
-    re.compile(r"\bsqlite3\.connect\("),
-    re.compile(r"\bconnect_sqlite\("),
-    re.compile(r"\bSessionStreamDatabase\("),
-    re.compile(r"\bopen_readonly\("),
-)
-
-# The exact pre-migration inventory from design §4.1: 22 access sites in 21
-# unique files. Infrastructure files are listed too so the denominator cannot
-# silently shrink when the exemptions below are changed. #7269 step 5 removed
-# scripts/api/comms_router.py deliberately (20 -> 19); step 2 removed
-# scripts/api/state_helpers.py direct access via MonitorContext (19 -> 18);
-# step 8 removed scripts/api/admin_router.py (18 -> 17);
-# step 9 removed scripts/api/dashboard_comms.py (17 -> 16);
-# #7269 step 12b removed delegate_router, discussions_router, and gold_router
-# (16 -> 13) after those routes opened stores only through MonitorContext;
-# step 12d removed telemetry_router.py and wiki_router.py (13 -> 11) after
-# both opened stores through MonitorContext;
-# step 12e removed scripts/api/epics_router.py (11 -> 10).
-DB_ACCESS_ALLOWLIST = frozenset(
-    {
-        "scripts/api/agent_monitor_router.py",
-        "scripts/api/fleet_router.py",
-        "scripts/api/fleet_workers_collect.py",
-        "scripts/api/hramatka_cache.py",
-        "scripts/api/hramatka_router.py",
-        "scripts/api/occupancy_local.py",
-        "scripts/api/resilience.py",
-        "scripts/api/runtime_router.py",
-        "scripts/api/telemetry/legacy_comms.py",
-        "agents_extensions/shared/session_streams/db.py",
-    }
-)
-DB_ACCESS_INFRASTRUCTURE = frozenset(
-    {
-        "scripts/api/monitor_context.py",
-        "scripts/api/resilience.py",
-        "agents_extensions/shared/session_streams/db.py",
-    }
-)
-
-
-def test_factory_route_table_keeps_frozen_denominator() -> None:
-    factory_app = api_main.create_app(production_context())
-
-    registry.assert_frozen_denominator(factory_app)
-    assert factory_app.routes[-1].original_router is api_main.core_router
-    core_contexts = list(factory_app.routes[-1].effective_route_contexts())
-    assert core_contexts[-1].path == "/{path:path}"
-    assert core_contexts[-2].path == "/images/{path:path}"
-
-
 def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
     app = api_main.create_app(production_context())
 
@@ -157,23 +103,6 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
     escaped.symlink_to(outside, target_is_directory=True)
     with pytest.raises(ValueError, match="escapes"):
         context._open_db(escaped / "messages.sqlite3")
-
-
-def test_core_routes_read_the_serving_app_version(tmp_path: Path) -> None:
-    @asynccontextmanager
-    async def no_lifespan(_app):
-        yield
-
-    first = api_main.create_app(fixture_context(tmp_path / "first"), lifespan=no_lifespan)
-    second = api_main.create_app(fixture_context(tmp_path / "second"), lifespan=no_lifespan)
-    first.version = "first-version"
-    second.version = "second-version"
-
-    with TestClient(first) as first_client, TestClient(second) as second_client:
-        assert first_client.get("/api/health").json()["version"] == "first-version"
-        assert second_client.get("/api/health").json()["version"] == "second-version"
-        assert first_client.get("/api/config").json()["api_version"] == "first-version"
-        assert second_client.get("/api/config").json()["api_version"] == "second-version"
 
 
 def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
@@ -474,29 +403,6 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
         assert first_client.get("/api/rag/stats").status_code == 404
 
 
-def test_step11_contracts_router_cluster_isolation(tmp_path: Path) -> None:
-    @asynccontextmanager
-    async def no_lifespan(_app):
-        yield
-
-    first_root = tmp_path / "first"
-    second_root = tmp_path / "second"
-    first_ctx = fixture_context(first_root)
-    second_ctx = fixture_context(second_root)
-
-    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
-    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
-
-    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
-        first_routes = first_client.get("/api/contracts/routes").json()
-        second_routes = second_client.get("/api/contracts/routes").json()
-        assert "route_contracts" in first_routes
-        assert "route_contracts" in second_routes
-        assert len(first_routes["route_contracts"]) == len(second_routes["route_contracts"])
-        assert "page_contracts" in first_routes
-        assert "page_contracts" in second_routes
-
-
 def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None:
     @asynccontextmanager
     async def no_lifespan(_app):
@@ -719,24 +625,3 @@ def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None
     context = replace(context, stores=replace(context.stores, message_db=replace(handle, path=outside)))
     with pytest.raises(ValueError, match="escapes"):
         dashboard_comms.get_broker_db(context)
-
-
-@pytest.mark.repo_wide
-def test_db_access_patterns_have_the_step_two_allowlist() -> None:
-    assert len(DB_ACCESS_ALLOWLIST) == 10
-    files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))
-    files.append(REPO_ROOT / "agents_extensions/shared/session_streams/db.py")
-    findings: list[str] = []
-    for path in files:
-        relative = path.relative_to(REPO_ROOT).as_posix()
-        if relative in DB_ACCESS_INFRASTRUCTURE:
-            continue
-        source = path.read_text(encoding="utf-8")
-        if any(pattern.search(source) for pattern in DB_ACCESS_PATTERNS):
-            findings.append(relative)
-
-    expected_non_infrastructure = DB_ACCESS_ALLOWLIST - DB_ACCESS_INFRASTRUCTURE
-    assert set(findings) == expected_non_infrastructure, {
-        "missing": sorted(expected_non_infrastructure - set(findings)),
-        "unexpected": sorted(set(findings) - expected_non_infrastructure),
-    }

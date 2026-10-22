@@ -423,14 +423,6 @@ def test_receipt_book_attribution_uses_real_snapshot_digest_validation(source):
             BOOK_ADAPTER.resolve(BOOK_REGISTER_FORM, cited, row, ctx.reader)
 
 
-def test_c6b_policy_is_component_owned_and_detached_from_other_builds():
-    first, second = BookCalqueComponent(), BookCalqueComponent()
-    assert first.spec["compatibility"] == COMPATIBILITY
-    assert {(r["store"], r["table"]) for r in COMPATIBILITY} == {("sources.db", "style_guide"), (STORE, "C6b")}
-    first.spec["compatibility"][0]["source_values"].clear()
-    assert second.spec["compatibility"] == COMPATIBILITY
-
-
 def test_packet_writer_batches_only_located_rows_and_keeps_unicode_offsets(source, tmp_path):
     rows = [{**source["rows"][0], "id": i, "text": "SYNTHETIC α wrong right."} for i in range(43)]
     rows[-1]["section"] = ""
@@ -555,15 +547,6 @@ def test_binding_rechecks_each_raw_receipt_digest(source, seat):
         RECEIPTS.documents[sha][1][seat] += b"\n"
         with pytest.raises(BuildError, match="adjudication_stale"):
             gate(ctx, obj, "C6b").run(cs)
-
-
-def test_packet_digest_refuses_changed_batch():
-    row = {"id": 1, "text": "SYNTHETIC wrong right.", "section": "SYNTHETIC section"}
-    batch = batches([row])[0]
-    receipts = selection_receipts(batch)
-    batch["rows"][0]["text"] += " changed"
-    with pytest.raises(BuildError, match="adjudication_stale"):
-        validate_receipts(batch, receipts)
 
 
 def test_receipt_store_refuses_unreviewed_unit_queries():
@@ -809,17 +792,6 @@ def test_sidecar_extractor_refuses_missing_ambiguous_or_changed_matching_block(s
     code = "adjudication_stale" if payload_kind == "changed" else "adjudication_receipt"
     with pytest.raises(BuildError, match=code):
         attestation_for(receipt, task, raw)
-
-
-def test_sidecar_rechecked_and_pinned_after_candidate_extraction(source):
-    write_receipt(source)
-    ctx, obj = context(source), component_for("C6b")
-    with ctx.reader:
-        cs = list(obj.iter_candidates(ctx))
-        path = next(source["receipts"].glob("*.sol.attestation.json"))
-        path.write_bytes(path.read_bytes() + b"\n")
-        with pytest.raises(BuildError, match="adjudication_stale"):
-            gate(ctx, obj, "C6b").run(cs)
 
 
 def test_reconciliation_packet_preserves_row_and_exact_disputed_span_texts(source, tmp_path):

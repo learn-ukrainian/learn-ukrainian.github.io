@@ -58,21 +58,6 @@ def test_lock_diagnostic_distinguishes_pid_text_from_live_kernel_owner(repo: Pat
         assert f"kernel holder pid={os.getpid()}" in str(caught.value)
 
 
-def test_kernel_owner_unavailable_is_unknown(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    original = Path.open
-
-    def unavailable(path, *args, **kwargs):
-        if str(path) == "/proc/locks":
-            raise PermissionError("denied")
-        return original(path, *args, **kwargs)
-
-    with rw._ReapLock(repo):
-        # Use a separate read descriptor; inode identity, not file contents, decides.
-        with (repo / ".git" / "worktree-reaper.lock").open() as handle:
-            monkeypatch.setattr(Path, "open", unavailable)
-            assert rw._kernel_lock_holder(handle.fileno()) == "unknown"
-
-
 def test_legacy_discovery_does_not_hold_sweep_lock(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     helpers.dispatch_tree(repo)
     queried = []

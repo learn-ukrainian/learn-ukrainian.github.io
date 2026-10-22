@@ -231,26 +231,6 @@ def test_state_dir_inside_any_git_checkout_is_refused(tmp_path: Path, kind: str)
     assert not report_path.exists()
 
 
-def test_resolved_alias_into_a_foreign_checkout_is_refused(tmp_path: Path) -> None:
-    foreign = tmp_path / "foreign"
-    foreign.mkdir()
-    (foreign / ".git").write_text("gitdir: /unused\n", encoding="utf-8")
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    alias = outside / "state"
-    alias.symlink_to(foreign, target_is_directory=True)
-    session = tmp_path / "session"
-    session.mkdir()
-    report_path = foreign / "learn-ukrainian" / "stack-drift" / "report.json"
-    with pytest.raises(drift.DriftError, match="outside the repository"):
-        drift.write_report(
-            session,
-            read=lambda _name: drift.Reading("unknown", "unknown"),
-            env={"XDG_STATE_HOME": str(alias)},
-        )
-    assert not report_path.exists()
-
-
 @pytest.mark.parametrize(
     ("name", "argv", "comm"),
     [

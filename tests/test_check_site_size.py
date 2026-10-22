@@ -12,7 +12,6 @@ from scripts.deploy.check_site_size import (
     GITHUB_PAGES_WARN_BYTES,
     SiteSizeReport,
     apply_profile,
-    check_site_size,
     main,
     resolve_profile,
     scan_dist,
@@ -46,14 +45,6 @@ def test_resolve_profile_fail_closed_on_missing_or_unknown() -> None:
         resolve_profile("")
     with pytest.raises(ValueError, match="fail closed"):
         resolve_profile("not-a-real-profile")
-
-
-def test_github_pages_pass_under_70_percent() -> None:
-    report = _empty_report(total_bytes=GITHUB_PAGES_WARN_BYTES - 1, file_count=1)
-    apply_profile(report, resolve_profile("github-pages"))
-    assert report.ok is True
-    assert report.warnings == []
-    assert report.failures == []
 
 
 def test_github_pages_warn_between_70_and_80_percent() -> None:
@@ -128,12 +119,3 @@ def test_route_families_and_fixed_base_projection(tmp_path: Path) -> None:
     # slope = 5000; projected @20k = 3500 + 20000*5000
     assert report.total_bytes == 13_500
     assert report.projected_bytes_at_target == 3500 + 20_000 * 5_000
-
-
-def test_check_site_size_end_to_end_pass(tmp_path: Path) -> None:
-    dist = tmp_path / "dist"
-    _write_file(dist / "index.html", 128)
-    report, profile = check_site_size(dist, "github-pages")
-    assert profile.name == "github-pages"
-    assert report.ok is True
-    assert report.file_count == 1

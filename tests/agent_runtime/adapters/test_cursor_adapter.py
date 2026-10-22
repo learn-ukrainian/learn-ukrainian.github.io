@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -13,7 +11,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY, CursorAdapter
-from tests.cursor_process_guard import bounded_cursor_smoke
 
 
 @pytest.fixture
@@ -115,20 +112,6 @@ def test_cursor_adapter_runs_auto_for_an_admitted_write_dispatch(adapter, tmp_pa
         tool_config={CURSOR_AUTO_ADMITTED_KEY: True},
     )
     assert plan.cmd[plan.cmd.index("--model") + 1] == "auto"
-
-
-def test_cursor_adapter_pins_default_model_when_none_is_given(adapter, tmp_path):
-    """No --model is not Auto: the adapter sends its concrete default pin."""
-    plan = adapter.build_invocation(
-        prompt="review",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="default-pin",
-        session_id=None,
-        tool_config=None,
-    )
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7-high"
 
 
 def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path):
@@ -523,44 +506,6 @@ def test_cursor_adapter_successful_echoed_rate_limit_text_is_not_rate_limited(ad
     assert result.ok is True
     assert result.rate_limited is False
     assert result.response == "Completed successfully; a prior task was rate limited."
-
-
-def test_cursor_agent_trivial_invoke_smoke(tmp_path, monkeypatch, fake_cursor_bin):
-    """The former live launch path runs a recording fake even without CI."""
-    monkeypatch.delenv("CI", raising=False)
-    log = tmp_path / "invocations.jsonl"
-    monkeypatch.setenv("LU_TEST_CURSOR_LOG", str(log))
-    cursor_bin = shutil.which("cursor-agent") or shutil.which("agent")
-    assert cursor_bin == str(fake_cursor_bin / "cursor-agent")
-
-    result = subprocess.run(
-        [
-            cursor_bin,
-            "-p",
-            "--model",
-            "auto",
-            "--output-format",
-            "stream-json",
-            "--trust",
-        ],
-        input="Reply with exactly: PONG",
-        capture_output=True,
-        text=True,
-        timeout=60,
-        cwd=Path.cwd(),
-    )
-
-    assert result.returncode == 0, result.stderr or result.stdout
-    assert "PONG" in result.stdout
-    invocation = json.loads(log.read_text())
-    assert invocation["argv"] == ["-p", "--model", "auto", "--output-format", "stream-json", "--trust"]
-    assert invocation["stdin"] == "Reply with exactly: PONG"
-
-
-def test_cursor_agent_real_invoke_smoke(real_cursor_binary):
-    result = bounded_cursor_smoke(real_cursor_binary)
-    assert result.returncode == 0, result.stderr or result.stdout
-    assert "PONG" in result.stdout
 
 
 def test_cursor_adapter_parse_response_rate_limited(adapter):

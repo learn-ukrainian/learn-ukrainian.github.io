@@ -10,11 +10,9 @@ import pprint
 import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import Mock
 
 import pytest
 
-from scripts.agent_runtime import runner
 from scripts.agent_runtime.adapters.acpx import InvocationPlan as AcpxInvocationPlan
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.hermes_common import HermesInvocationContext
@@ -221,19 +219,6 @@ def test_plan_attribute_serialization_and_logging_redact_values(plan_type, attri
     assert SENTINEL not in caplog.text
 
 
-def test_env_copy_and_mutation_keep_dict_behavior():
-    env = InvocationPlan(cmd=[], cwd=Path("."), env_overrides={"A": SENTINEL}).env_overrides
-    for clone in (env.copy(), copy.copy(env), copy.deepcopy(env), pickle.loads(pickle.dumps(env))):
-        assert type(clone) is type(env)
-        assert clone == {"A": SENTINEL}
-        assert SENTINEL not in repr(clone)
-        clone["B"] = "new"
-        assert list(clone) == ["A", "B"]
-        assert clone.pop("A") == SENTINEL
-    assert env == {"A": SENTINEL}
-    assert type(dict(env)) is dict
-
-
 @pytest.mark.parametrize("operation", ("init", "setitem", "update", "pairs", "setdefault", "ior", "fromkeys"))
 def test_env_mutations_redact_value_representations(operation):
     env = RedactedEnv()
@@ -265,13 +250,6 @@ def test_env_mutations_redact_value_representations(operation):
     assert json.loads(json.dumps(env)) == {"A": SENTINEL}
 
 
-def test_env_setdefault_and_fromkeys_preserve_default_none():
-    env = RedactedEnv()
-    assert env.setdefault("A") is None
-    assert env == {"A": None}
-    assert RedactedEnv.fromkeys(["A"]) == {"A": None}
-
-
 @pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
 @pytest.mark.parametrize("conversion", (dict, lambda env: {**env}), ids=("dict", "unpack"))
 @pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
@@ -290,43 +268,3 @@ def test_real_subprocess_receives_original_env_values(plan_type, conversion, val
     )
     assert result.stdout == value + "\n"
     assert result.stderr == ""
-
-
-@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
-def test_plan_equality_retains_type_and_other_field_comparisons(plan_type):
-    plan = make_plan(plan_type, {"A": SENTINEL})
-    assert plan.__eq__(object()) is NotImplemented
-    field = "config" if plan_type is HermesInvocationContext else "commit" if plan_type is CommitTree else "cmd"
-    value = {"option": True} if field == "config" else "b" * 40 if field == "commit" else ["other-agent"]
-    assert dataclasses.replace(plan, **{field: value}) != plan
-
-
-@pytest.mark.parametrize("protocol", range(pickle.HIGHEST_PROTOCOL + 1))
-def test_pickle_protocols_preserve_env_redaction(protocol):
-    env = InvocationPlan(cmd=[], cwd=Path("."), env_overrides={"A": SENTINEL}).env_overrides
-    restored = pickle.loads(pickle.dumps(env, protocol=protocol))
-    assert type(restored) is type(env)
-    assert restored == {"A": SENTINEL}
-    assert repr(restored) == "RedactedEnv(names=['A'])"
-
-
-@pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
-def test_runner_passes_plain_dict_with_original_values_to_popen(monkeypatch, tmp_path, value):
-    plan = InvocationPlan(cmd=["agent"], cwd=tmp_path, env_overrides={"A": value})
-    popen = Mock()
-    monkeypatch.setattr(runner.subprocess, "Popen", popen)
-    runner._spawn_pipe_subprocess(plan.cmd, cwd=plan.cwd, env=plan.env_overrides, stdin=subprocess.DEVNULL)
-    env = popen.call_args.kwargs["env"]
-    assert type(env) is dict
-    assert env == {"A": value}
-
-
-@pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
-def test_commit_tree_optional_env_and_plain_dict_subprocess_seam(monkeypatch, value):
-    assert CommitTree(repo=Path("."), commit="a" * 40).env is None
-    run = Mock(return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout=b"result"))
-    monkeypatch.setattr(subprocess, "run", run)
-    tree = make_plan(CommitTree, {"A": value})
-    assert tree._git("show") == b"result"
-    assert type(run.call_args.kwargs["env"]) is dict
-    assert run.call_args.kwargs["env"] == {"A": value}

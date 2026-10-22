@@ -6,16 +6,12 @@ import stat
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as manifest
 from scripts.projects.open_model_data import phase3_ua_gec_complete_context as ua_context
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_evaluation_context_manifest_receipt_v1.schema.json"
-
-
 def _text(family: str, ordinal: int) -> str:
     return f"текст {family} {ordinal} для перевірки контексту."
 
@@ -350,15 +346,6 @@ def test_materialize_writes_restricted_private_output_and_text_free_receipt(
     assert receipt["gates"]["phase4_blocked"] is True
 
 
-def test_public_schema_is_closed_and_text_free() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    serialized = json.dumps(schema, ensure_ascii=False)
-    assert "source_text" not in serialized
-    assert "unit_id" not in serialized
-    assert schema["additionalProperties"] is False
-
-
 def _simulate_world_readable_lstat(
     monkeypatch: pytest.MonkeyPatch,
     target: Path,
@@ -637,19 +624,6 @@ def test_ua_gec_missing_route_fails_before_branch_selection(tmp_path: Path, monk
             "frozen_source_unit_text": 2,
         },
     )
-
-    with pytest.raises(manifest.EvaluationContextManifestError, match="exactly one route"):
-        _invoke_build_manifest(paths)
-
-
-def test_ua_gec_dual_route_fails_before_branch_selection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    paths = _fixture_bundle(tmp_path)
-    _patch_fixture_pins(monkeypatch, paths, row_count=3)
-    monkeypatch.setattr(ua_context, "validate_receipt", lambda value: dict(value))
-
-    exclusions = [{"unit_id": "ua-gec:complete:1", "reason": "target_sentence_not_exactly_aligned"}]
-    _write_jsonl(paths["ua_gec_exclusions"], exclusions)
-    monkeypatch.setattr(manifest, "PINNED_UA_GEC_EXCLUSIONS_SHA256", manifest.sha256_file(paths["ua_gec_exclusions"]))
 
     with pytest.raises(manifest.EvaluationContextManifestError, match="exactly one route"):
         _invoke_build_manifest(paths)

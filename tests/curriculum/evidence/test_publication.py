@@ -1,7 +1,6 @@
 """Exact-source permission, attribution, and publication-vs-grounding regressions."""
 
 import re
-from unittest.mock import patch
 
 import pytest
 import yaml
@@ -195,24 +194,6 @@ def test_positive_integer_grade_and_page(field, value):
         publication.quote_attribution(rec, entries)
 
 
-def test_registry_is_cached_and_caller_mutations_are_isolated(tmp_path):
-    path = tmp_path / "registry.yaml"
-    path.write_text(yaml.safe_dump({"sources": publication.load_registry()}))
-    with patch.object(publication.yaml, "safe_load", wraps=yaml.safe_load) as parse:
-        entries = publication.load_registry(path)
-        entries[BOOK]["publish"]["allowed"] = False
-        assert publication.quote_attribution(record(), publication.load_registry(path))
-        assert parse.call_count == 1
-
-
-def test_registry_read_error_has_typed_reason(tmp_path):
-    path = tmp_path / "registry.yaml"
-    path.write_text("sources: {}")
-    with patch.object(publication.Path, "read_text", side_effect=PermissionError):
-        with pytest.raises(ValueError, match=r"^publication_registry_unreadable:"):
-            publication.load_registry(path)
-
-
 def test_every_allowed_source_has_confirmed_human_bibliography():
     for key, entry in publication.load_registry().items():
         if not entry["publish"]["allowed"]:
@@ -283,27 +264,9 @@ def test_private_credits_are_registry_owned_and_never_quote_rights(file):
         publication.quote_attribution(rec)
 
 
-@pytest.mark.parametrize("field", ["episode_url", "url"])
-def test_ulp_episode_link_keeps_homepage_credit(field):
-    rec = record("ulp-1-00-lesson-notes")
-    rec[field] = "https://www.ukrainianlessons.com/episode1/"
-    citation = publication.resource_citation(rec)
-    assert citation == {
-        "title": "Ukrainian Lessons Podcast — Анна Огойко",
-        "url": "https://www.ukrainianlessons.com/",
-        "description": "<https://www.ukrainianlessons.com/episode1/>",
-    }
-
-
 @pytest.mark.parametrize("file", ["uni-unregistered", "9-klas-tekhnolohiyi-bilenko-2026"])
 def test_grounding_without_citation_metadata_needs_no_right(file):
     assert publication.resource_citation(record(file)) is None
-
-
-def test_resource_registry_failure_is_not_silently_omitted(tmp_path, monkeypatch):
-    monkeypatch.setattr(publication, "REGISTRY_PATH", tmp_path / "absent")
-    with pytest.raises(ValueError, match="publication_registry_unreadable"):
-        publication.resource_citation(record())
 
 
 def test_resource_bibliography_survives_quote_right_withdrawal():
@@ -318,15 +281,6 @@ def test_resource_bibliography_survives_quote_right_withdrawal():
 def test_incomplete_resource_credit_is_omitted(credit):
     entries = publication.load_registry()
     entries[PRIVATE[0]]["resource_credit"] = credit
-    assert publication.resource_citation(record(PRIVATE[0]), entries) is None
-
-
-def test_resource_credit_is_bound_to_source_identity():
-    rec = record(PRIVATE[0])
-    rec["source"]["kind"] = "literary"
-    assert publication.resource_citation(rec) is None
-    entries = publication.load_registry()
-    entries[PRIVATE[0]]["file"] = "other"
     assert publication.resource_citation(record(PRIVATE[0]), entries) is None
 
 

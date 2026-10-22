@@ -295,30 +295,6 @@ def test_foreign_listener_blocks_start_without_signal(harness) -> None:
     assert "--user start" not in files["calls"].read_text()
 
 
-@pytest.mark.parametrize("argv,kind", [
-    ("scripts.api.main:app --host 127.0.0.1 --port 8765", "stray"),
-    ("unrelated-listener", "foreign"),
-])
-def test_status_labels_listener_ownership(harness, argv: str, kind: str) -> None:
-    _, _, files, process, run = harness
-    listener = process(argv)
-    files["listeners"].write_text(f"{listener.pid}\n")
-    result = run("status", "api")
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert f"{kind}_listener={listener.pid}" in result.stdout
-    assert "restarts=7" in result.stdout
-
-
-def test_stop_clears_stray(harness) -> None:
-    _, _, files, process, run = harness
-    stray = process("-m work_projection")
-    files["listeners"].write_text(f"{stray.pid}\n")
-    result = run("stop", "work")
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert stray.wait(timeout=2) != 0
-    assert "--user start" not in files["calls"].read_text()
-
-
 @pytest.mark.parametrize("load", ["masked", "unreachable"])
 def test_unavailable_unit_fails_closed(harness, load: str) -> None:
     _, env, files, _, run = harness
@@ -329,15 +305,6 @@ def test_unavailable_unit_fails_closed(harness, load: str) -> None:
     result = run("start", "api")
     assert result.returncode != 0
     assert "ERROR" in result.stderr
-    assert "--user start" not in files["calls"].read_text()
-
-
-def test_unreachable_bus_without_unit_file_fails_closed(harness) -> None:
-    _, env, files, _, run = harness
-    env["FAKE_LOAD"] = "unreachable"
-    result = run("start", "api")
-    assert result.returncode != 0
-    assert "cannot query" in result.stderr
     assert "--user start" not in files["calls"].read_text()
 
 

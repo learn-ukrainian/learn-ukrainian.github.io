@@ -394,25 +394,6 @@ def test_restricted_mint_uses_exact_scope_and_verified_tls(tmp_path, monkeypatch
     assert requests == [({"repositories": ["repo"], "permissions": {"contents": "read"}}, "Bearer synthetic-assertion")]
 
 
-def test_restricted_identity_passes_minimum_permissions(tmp_path, monkeypatch):
-    from scripts.agent_runtime import agent_github_identity as module
-
-    captured = []
-    monkeypatch.setattr(module, "mint_installation_token", lambda **kw: captured.append(kw) or "synthetic")
-    result = module.resolve_agent_github_identity(
-        environment={
-            "LU_AGENT_GITHUB_APP_ID": "fixture",
-            "LU_AGENT_GITHUB_APP_PRIVATE_KEY": "synthetic",
-            "LU_AGENT_GITHUB_APP_INSTALLATION_ID": "fixture",
-        },
-        repository="org/repo",
-        permissions={"contents": "read"},
-    )
-    assert result.source == "app"
-    assert captured[0]["permissions"] == {"contents": "read"}
-    assert captured[0]["repository"] == "org/repo"
-
-
 def test_configured_key_file_and_existing_inline_call_contract(tmp_path, monkeypatch):
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa

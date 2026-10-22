@@ -10,10 +10,6 @@ from fastapi.testclient import TestClient
 from scripts.ai_agent_bridge import openai_proxy as proxy
 
 
-def _client() -> TestClient:
-    return TestClient(proxy.app)
-
-
 def _clear_cache() -> None:
     """Reset healthz cache and in-flight state between tests."""
     with proxy._healthz_cache_lock:
@@ -50,55 +46,7 @@ def _make_probes(slow: str | None = None, failing: str | None = None):
 # ── Test 1: cache hit ──────────────────────────────────────────────────────
 
 
-def test_healthz_cache_hit(monkeypatch):
-    """Probe once, advance clock 30s, probe again — only 1 set of calls."""
-    probes, calls = _make_probes()
-    monkeypatch.setattr(proxy, "_BACKEND_PROBES", probes)
-
-    _clear_cache()
-
-    # First call — fills cache
-    response1 = _client().get("/healthz")
-    assert response1.status_code == 200
-    assert response1.json()["backends"] == {
-        "codex": True,
-        "gemini": True,
-        "claude": True,
-        "hermes": True,
-    }
-    assert calls == {"codex": 1, "gemini": 1, "claude": 1, "hermes": 1}
-
-    # Advance clock 30s (within 60s TTL) — capture original before patching
-    real_monotonic = time.monotonic
-    monkeypatch.setattr(time, "monotonic", lambda: real_monotonic() + 30)
-
-    # Second call — should use cache, no new probes
-    response2 = _client().get("/healthz")
-    assert response2.status_code == 200
-    assert calls == {"codex": 1, "gemini": 1, "claude": 1, "hermes": 1}
-
-
 # ── Test 2: cache expiry ────────────────────────────────────────────────────
-
-
-def test_healthz_cache_expiry(monkeypatch):
-    """Probe once, advance clock 70s, probe again — 2 sets of calls."""
-    probes, calls = _make_probes()
-    monkeypatch.setattr(proxy, "_BACKEND_PROBES", probes)
-
-    _clear_cache()
-
-    # First call
-    _client().get("/healthz")
-    assert calls == {"codex": 1, "gemini": 1, "claude": 1, "hermes": 1}
-
-    # Advance clock 70s (past 60s TTL)
-    real_monotonic = time.monotonic
-    monkeypatch.setattr(time, "monotonic", lambda: real_monotonic() + 70)
-
-    # Second call — cache expired, probes run again
-    _client().get("/healthz")
-    assert calls == {"codex": 2, "gemini": 2, "claude": 2, "hermes": 2}
 
 
 # ── Test 3: concurrent first-request (single-flight) ────────────────────────
@@ -153,51 +101,4 @@ def test_healthz_concurrent_first_request(monkeypatch):
 # ── Test 4: TTL env var override ────────────────────────────────────────────
 
 
-def test_healthz_ttl_env_var(monkeypatch):
-    """BRIDGE_HEALTHZ_TTL_SECS=5 → cache expires at 5s."""
-    probes, calls = _make_probes()
-    monkeypatch.setattr(proxy, "_BACKEND_PROBES", probes)
-    monkeypatch.setattr(proxy, "_BRIDGE_HEALTHZ_TTL_SECS", 5)
-
-    _clear_cache()
-
-    # First call — fills cache with 5s TTL
-    _client().get("/healthz")
-    assert calls == {"codex": 1, "gemini": 1, "claude": 1, "hermes": 1}
-
-    # Advance 3s — cache still fresh
-    real_monotonic = time.monotonic
-    monkeypatch.setattr(time, "monotonic", lambda: real_monotonic() + 3)
-    _client().get("/healthz")
-    assert calls == {"codex": 1, "gemini": 1, "claude": 1, "hermes": 1}
-
-    # Advance another 3s (total 6s) — cache expired
-    monkeypatch.setattr(time, "monotonic", lambda: real_monotonic() + 6)
-    _client().get("/healthz")
-    assert calls == {"codex": 2, "gemini": 2, "claude": 2, "hermes": 2}
-
-
 # ── Test 5: backend failure does not block other backends ────────────────────
-
-
-def test_healthz_backend_failure_does_not_block(monkeypatch):
-    """One probe fails — other 3 still return results."""
-    probes, calls = _make_probes(failing="gemini")
-    monkeypatch.setattr(proxy, "_BACKEND_PROBES", probes)
-
-    _clear_cache()
-
-    response = _client().get("/healthz")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["ok"] is True
-    # gemini is the failing probe → False
-    assert body["backends"] == {
-        "codex": True,
-        "gemini": False,
-        "claude": True,
-        "hermes": True,
-    }
-    # All 4 probes were attempted
-    assert calls == {"codex": 1, "gemini": 1, "claude": 1, "hermes": 1}

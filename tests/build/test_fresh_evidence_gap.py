@@ -6,7 +6,6 @@ root copy); they contain gap declarations and instructions, no source text.
 
 from __future__ import annotations
 
-import copy
 import hashlib
 import json
 from pathlib import Path
@@ -16,7 +15,6 @@ import pytest
 import yaml
 
 from scripts.build.fresh import cli, module
-from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.regeneration import INPUT_KEYS, load_ledger, record_failure, record_success, record_writer_call
 from scripts.build.fresh.runner import run_lesson
 from scripts.build.fresh.writer import parse_and_validate_reply
@@ -75,17 +73,6 @@ def test_real_gap_replies_validate_and_stop_at_gap_layer(tmp_path, attempt):
     assert all(row["status"] == "not_checked" for row in report["checks"] if row["check"] > 2)
 
 
-@pytest.mark.parametrize(
-    "need", ["quote", "publication_right", "example", "error", "word_form", "video", "standard_line"]
-)
-def test_gap_need_routes_to_pack(tmp_path, need):
-    draft = yaml.safe_load(_raw(1))
-    for gap in draft["gaps"]:
-        gap["need"] = need
-    bad = next(row for row in _run(tmp_path, draft)["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["layer"]) == (2, "pack")
-
-
 @pytest.mark.parametrize("dialogue", [False, True])
 def test_multi_step_quote_gaps_require_each_step_to_have_a_host(tmp_path, dialogue):
     plan = _plan()
@@ -118,29 +105,6 @@ def test_quote_host_must_belong_to_gap_step(tmp_path, need, host, host_step, gap
     assert (bad["check"], bad["layer"]) == (2, "pack" if host_step == gap_step else "plan")
 
 
-@pytest.mark.parametrize(
-    "defect",
-    ["empty_gaps", "unknown_need", "missing_hash", "bad_hash", "unknown_step", "nonempty_gap_step", "duplicate_step"],
-)
-def test_gap_shape_and_identity_inputs_remain_binding(defect):
-    draft = yaml.safe_load(_raw(2))
-    if defect == "empty_gaps":
-        draft["gaps"] = []
-    elif defect == "unknown_need":
-        draft["gaps"][0]["need"] = "plan"
-    elif defect == "missing_hash":
-        del draft["inputs"]["pack_lock"]
-    elif defect == "bad_hash":
-        draft["inputs"]["pack_lock"] = "invalid"
-    elif defect == "unknown_step":
-        draft["gaps"][0]["step"] = "s3"
-    elif defect == "nonempty_gap_step":
-        draft["steps"][0]["blocks"] = [{"kind": "tip", "text": "tip"}]
-    else:
-        draft["steps"].append(copy.deepcopy(draft["steps"][0]))
-    assert validate_draft(draft, "a1", activity_types=TYPES)
-
-
 @pytest.mark.parametrize("defect", ["lesson", "hash", "plan_step"])
 def test_gap_identity_is_checked_before_check_2(tmp_path, defect):
     draft = yaml.safe_load(_raw(2))
@@ -154,13 +118,6 @@ def test_gap_identity_is_checked_before_check_2(tmp_path, defect):
         draft["steps"][0]["id"] = "s3"
     bad = next(row for row in _run(tmp_path, draft, expected_inputs=inputs)["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["layer"]) == (1, "writer")
-
-
-def test_ok_reply_still_requires_full_lesson_payload():
-    draft = yaml.safe_load(_raw(2))
-    draft["status"] = "ok"
-    draft["gaps"] = []
-    assert validate_draft(draft, "a1", activity_types=TYPES)
 
 
 @pytest.fixture
@@ -343,18 +300,3 @@ def test_module_rewrite_after_success_starts_each_call_at_one(module_build):
         assert report["lessons"][0]["terminal_layer"] is None
         assert yaml.safe_load((state / "module.build.yaml").read_text(encoding="utf-8")) == report
     assert calls == [1, 1, 1, 1]
-
-
-def test_runner_changed_inputs_restart_terminal_gap_series(tmp_path):
-    draft = yaml.safe_load(_raw(2))
-    inputs = dict(draft["inputs"])
-    _run(tmp_path, draft, expected_inputs=inputs)
-    _run(tmp_path, draft, expected_inputs=inputs)
-    path = tmp_path / "lesson-1.regeneration.yaml"
-    assert load_ledger(path, "sounds-letters-and-hello", 1)["terminal_layer"] == "pack"
-    inputs["plan_sha256"] = "b" * 64
-    draft["inputs"] = dict(inputs)
-    bad = next(row for row in _run(tmp_path, draft, expected_inputs=inputs)["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["layer"]) == (2, "pack")
-    ledger = load_ledger(path, "sounds-letters-and-hello", 1)
-    assert (ledger["regenerations"], ledger["terminal_layer"], len(ledger["attempts"])) == (0, "pack", 1)

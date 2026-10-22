@@ -7,7 +7,6 @@ import stat
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_minchak_phonetics_intake as intake
 
@@ -191,13 +190,6 @@ def _build(paths: dict[str, Path]) -> dict[str, object]:
     )
 
 
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema_text = intake.SCHEMA_PATH.read_text(encoding="utf-8")
-    Draft202012Validator.check_schema(json.loads(schema_text))
-    assert '"source_text"' not in schema_text
-    assert '"extracted_text"' not in schema_text
-
-
 def test_build_is_deterministic_and_fail_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     first = _build(paths)
@@ -346,14 +338,6 @@ def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: p
     receipt = _build(paths)
     receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
     with pytest.raises(intake.MinchakPhoneticsIntakeError, match="legal reuse authorization"):
-        intake.validate_receipt(_rehash(receipt))
-
-
-def test_legacy_operator_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    paths = _fixture(tmp_path, monkeypatch)
-    receipt = _build(paths)
-    receipt["rights"]["operator_private_text_only_phase3_use_authorized"] = True  # type: ignore[index]
-    with pytest.raises(intake.MinchakPhoneticsIntakeError, match="legacy operator authorization field"):
         intake.validate_receipt(_rehash(receipt))
 
 

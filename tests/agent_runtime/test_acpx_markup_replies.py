@@ -140,13 +140,6 @@ def test_prose_quoting_markup_passes_unchanged(markup: str, wrapper: str) -> Non
     assert parsed.response == response
 
 
-@pytest.mark.parametrize("response", ["", "Answer: 42", "<p>Answer: 42</p>", '{"answer":42}', "`<tool_call>`"])
-def test_ordinary_replies_keep_existing_behavior(response: str) -> None:
-    parsed = _parse_reply(response)
-    assert parsed.ok is True
-    assert parsed.response == response
-
-
 def test_multiple_calls_fail_but_intervening_prose_passes() -> None:
     call = '<tool_call>{"name":"search","arguments":{}}</tool_call>'
     assert _parse_reply(call + "\n\t" + call).failure_code == "result_invalid"

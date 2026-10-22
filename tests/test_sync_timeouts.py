@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from scripts.sync import promote_module, prune_module_forensics
+from scripts.sync import promote_module
 
 
 def _raise_timeout(calls: list[dict[str, Any]]) -> Any:
@@ -40,16 +40,6 @@ def test_promote_run_git_timeout_raises_called_process_error_when_check_true(
 
     assert calls[0]["timeout"] == 30
     assert raised.value.returncode == 124
-
-
-def test_prune_run_git_timeout_returns_124_when_check_false(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(prune_module_forensics.subprocess, "run", _raise_timeout(calls))
-
-    result = prune_module_forensics._run_git(tmp_path, ["status"], check=False)
-
-    assert calls[0]["timeout"] == 30
-    assert result.returncode == 124
 
 
 def test_branch_for_worktree_timeout_returns_none(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

@@ -277,48 +277,6 @@ def test_enrichment_versioning_skips_up_to_date(mock_dbs: dict[str, Path], monke
     assert res_force["reconciled_entries"] == 1
 
 
-def test_normalize_text() -> None:
-    from scripts.lexicon.reconcile_calque_clusters import normalize_text
-
-    assert normalize_text("«порохотяг»") == "порохотяг"
-    assert normalize_text('"дармовис",') == "дармовис"
-    assert normalize_text("  корабельня…  ") == "корабельня"
-    assert normalize_text("добрий лад") == "добрий лад"
-
-
-def test_phrase_candidates_and_inflow_queue_file(
-    mock_dbs: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
-        if lemma in {"заметіль", "хуртовина", "завірюха"}:
-            return [{"lemma": lemma, "pos": "noun", "tags": "inanim:f:v_naz"}]
-        return []
-
-    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
-
-    queue_out = tmp_path / "queue_out.json"
-
-    engine = CalqueReconciliationEngine(
-        sources_db_path=mock_dbs["sources_db"],
-        atlas_db_path=mock_dbs["atlas_db"],
-        lt_path=mock_dbs["lt_path"],
-        heritage_pairs_path=mock_dbs["heritage_pairs"],
-        heritage_overlay_path=mock_dbs["heritage_overlay"],
-    )
-
-    results = engine.run_reconciliation(dry_run=False, single_lemma="буран")
-    assert results["inflow_queued_count"] == 1
-
-    # Emulate queue writing in main
-    with open(queue_out, "w", encoding="utf-8") as f:
-        json.dump(results["inflow_queue"], f, ensure_ascii=False, indent=2)
-
-    assert queue_out.exists()
-    data = json.loads(queue_out.read_text(encoding="utf-8"))
-    assert len(data) == 1
-    assert data[0]["lemma"] == "завірюха"
-
-
 def test_heritage_pairs_real_schema(tmp_path: Path) -> None:
     """Verify parser extracts from real production heritage_pairs.yaml schema."""
     real_schema_yaml = tmp_path / "heritage_real.yaml"

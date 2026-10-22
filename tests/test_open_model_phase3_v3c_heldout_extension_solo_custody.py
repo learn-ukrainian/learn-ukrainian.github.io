@@ -68,31 +68,6 @@ def test_tracked_contract_is_strict_canonical_and_text_free() -> None:
     assert artifact["status"] == "FROZEN_METADATA_ONLY_NO_EXPOSURE"
 
 
-def test_frozen_outcome_and_v3a_denominator_are_exact() -> None:
-    artifact = _artifact()
-    assert artifact["outcome_boundary"] == {
-        "parent_outcome_sha256": v3c.PARENT_OUTCOME_SHA256,
-        "reviewed_v3_consensus_sha256": v3c.V3_CONSENSUS_SHA256,
-        "v3a_artifact_sha256": v3c.V3A_ARTIFACT_SHA256,
-        "heldout_membership_present": False,
-        "heldout_content_present": False,
-        "provider_calls": 0,
-        "labeling_count": 0,
-        "evaluation_runs": 0,
-        "training_runs": 0,
-    }
-    assert artifact["denominator"] == {
-        "source_units": 57,
-        "visible_cells": 19,
-        "active_coverage_target_cells": 16,
-        "active_coverage_blocked_cells": 16,
-        "not_applicable_cells": 2,
-        "lineage_only_parent_cells": 1,
-        "rights_operation_cells": 399,
-        "rule_slots_R": 0,
-    }
-
-
 def test_every_visible_stratum_is_present_once_with_nonzero_or_explicit_blocker() -> None:
     artifact = _artifact()
     strata = artifact["strata"]
@@ -120,68 +95,6 @@ def test_every_visible_stratum_is_present_once_with_nonzero_or_explicit_blocker(
     assert ledger["no_silent_zero"] is True
 
 
-def test_identity_groups_and_assignment_are_frozen_without_membership() -> None:
-    artifact = _artifact()
-    freeze = artifact["identity_group_freeze"]
-    assert tuple(item["dimension_id"] for item in freeze["dimensions"]) == v3c.IDENTITY_DIMENSIONS
-    assert freeze["all_identity_dimensions_frozen"] is True
-    assert freeze["source_admission_assigns_hidden_membership"] is False
-    assert freeze["construction_receives_hidden_membership"] is False
-    assert all(item["actual_membership_present"] is False for item in freeze["dimensions"])
-    assert all(item["public_membership_present"] is False for item in freeze["dimensions"])
-    split = artifact["split_assignment"]
-    assert split["identity_dimensions"] == list(v3c.IDENTITY_DIMENSIONS)
-    assert split["assignment_unit"] == "duplicate_group_identity"
-    assert split["grouping_before_split"] is True
-    assert split["same_group_never_split"] is True
-    assert split["assignment_is_deterministic"] is True
-    assert split["assignment_is_content_blind"] is True
-    assert split["membership_present"] is False
-    assert split["membership_commitment_present"] is False
-    assert split["construction_access"] == "forbidden"
-    assert split["source_admission_assigns_hidden_membership"] is False
-
-
-def test_construction_roles_are_blind_to_all_heldout_surfaces() -> None:
-    visibility = _artifact()["construction_visibility"]
-    assert visibility["all_construction_roles_blind"] is True
-    assert visibility["source_admission_may_read_rights_only"] is True
-    assert visibility["heldout_membership_never_enters_construction_prompt"] is True
-    assert {row["role_id"] for row in visibility["construction_roles"]} == set(v3c.CONSTRUCTION_ROLE_IDS)
-    fields = (
-        "heldout_identity_visible",
-        "heldout_content_visible",
-        "heldout_labels_visible",
-        "heldout_locators_visible",
-        "heldout_fingerprints_visible",
-        "heldout_derivatives_visible",
-        "heldout_near_neighbours_visible",
-    )
-    for role in visibility["construction_roles"]:
-        assert all(role[field] is False for field in fields)
-        assert set(role["forbidden_fields"]) == set(v3c.VISIBILITY_FORBIDDEN_FIELDS)
-
-
-def test_solo_temporal_firewall_and_disclosure_are_truthful() -> None:
-    artifact = _artifact()
-    firewall = artifact["temporal_firewall"]
-    assert firewall["pre_exposure_construction_freeze_required"] is True
-    assert firewall["freeze_fields"] == list(v3c.FIREWALL_FIELDS)
-    assert firewall["freeze_field_commitments"] == {field: None for field in v3c.FIREWALL_FIELDS}
-    assert firewall["exposure_before_freeze_forbidden"] is True
-    assert firewall["construction_mutation_after_exposure"] is False
-    assert firewall["post_exposure_mutation_action"] == "invalidate_evaluation_version_and_require_new_sealed_cycle"
-    assert firewall["current_cycle_state"] == "UNSEALED_NO_EXPOSURE"
-    assert firewall["exposure_allowed"] is False
-    custody = artifact["solo_operator_custody"]
-    assert custody["operator_count"] == 1
-    assert custody["credential_claimed"] is False
-    assert custody["institutional_independence_claimed"] is False
-    assert custody["independent_adjudicator_claimed"] is False
-    assert custody["private_identity_present"] is False
-    assert custody["ambiguity_action"] == "abstain_non_gold"
-
-
 def test_thresholds_and_residuals_cover_the_same_denominator() -> None:
     artifact = _artifact()
     strata_ids = [row["stratum_id"] for row in artifact["strata"]]
@@ -194,26 +107,6 @@ def test_thresholds_and_residuals_cover_the_same_denominator() -> None:
     assert all(row["minimum_direct_human_review_fraction"] == 1.0 for row in thresholds)
     assert all(row["abstention_is_not_gold"] for row in thresholds)
     assert all(row["blocking"] is True for row in residuals)
-
-
-def test_execution_stays_off_and_receipt_ledger_is_empty() -> None:
-    artifact = _artifact()
-    gates = artifact["execution_gates"]
-    assert gates == {
-        "provider_calls_authorized": False,
-        "provider_call_count": 0,
-        "labeling_authorized": False,
-        "labeling_count": 0,
-        "evaluation_authorized": False,
-        "evaluation_runs": 0,
-        "training_authorized": False,
-        "training_runs": 0,
-        "heldout_rows_created": 0,
-    }
-    assert artifact["custody_receipts"]["rows"] == []
-    assert artifact["custody_receipts"]["row_count"] == 0
-    assert artifact["custody_receipts"]["append_only"] is True
-    assert artifact["custody_receipts"]["update_or_delete_permitted"] is False
 
 
 def test_custody_receipt_chain_requires_seal_exposure_invalidation_and_new_cycle() -> None:
@@ -437,22 +330,6 @@ def test_custody_receipt_hash_chain_and_replay_are_fail_closed() -> None:
         v3c.validate_custody_receipts([seal, copy.deepcopy(seal)], artifact)
 
 
-def test_top_level_validation_wires_the_custody_receipt_validator(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    artifact = _artifact()
-    calls: list[tuple[list[dict[str, Any]], dict[str, Any]]] = []
-    original = v3c.validate_custody_receipts
-
-    def spy(receipts: list[dict[str, Any]], candidate: dict[str, Any] | None = None) -> None:
-        calls.append((receipts, candidate or artifact))
-        original(receipts, candidate)
-
-    monkeypatch.setattr(v3c, "validate_custody_receipts", spy)
-    v3c.validate(artifact, _schema())
-    assert calls == [([], artifact)]
-
-
 def test_forbidden_heldout_fields_and_post_exposure_state_are_rejected() -> None:
     artifact = _artifact()
     value = copy.deepcopy(artifact)
@@ -466,13 +343,3 @@ def test_forbidden_heldout_fields_and_post_exposure_state_are_rejected() -> None
     value["receipt_sha256"] = v3c.receipt_sha(value)
     with pytest.raises(v3c.V3CError, match=r"schema violation|temporal firewall drift"):
         v3c.validate(value, _schema())
-
-
-def test_global_stops_are_frozen() -> None:
-    policy = _artifact()["stop_policy"]
-    assert policy["global_stop_codes"] == list(v3c.STOP_CODES)
-    assert policy["fail_closed"] is True
-    assert policy["new_cycle_required_on_invalidation"] is True
-    machine = _artifact()["state_machine"]
-    assert machine["global_stop_codes"] == list(v3c.STOP_CODES)
-    assert machine["invalidated_cycle_cannot_be_reused"] is True

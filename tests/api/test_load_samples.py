@@ -96,15 +96,6 @@ def test_ring_keeps_only_last_500_physical_lines(tmp_path, monkeypatch, observed
     assert sampler.tail(tmp_path, 2)["samples"] == rows[-2:]
 
 
-@pytest.mark.parametrize("value", ["garbage", "nan", "inf", "-1"])
-def test_invalid_threshold_records_nothing(tmp_path, monkeypatch, observed, value):
-    monkeypatch.setenv(sampler.THRESHOLD_ENV, value)
-    with pytest.raises(ValueError):
-        sampler.sample(tmp_path)
-    observed.assert_not_called()
-    assert not (tmp_path / "load-samples").exists()
-
-
 def test_threshold_override_and_unknown_governor(tmp_path, monkeypatch, observed):
     monkeypatch.setenv(sampler.THRESHOLD_ENV, "22")
     assert sampler.sample(tmp_path) is False

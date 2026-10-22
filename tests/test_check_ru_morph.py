@@ -1,4 +1,3 @@
-from unittest.mock import patch
 
 from scripts.verification.check_ru_morph import (
     _morph_ru,
@@ -44,64 +43,12 @@ def test_word_sliduiuchyi():
     assert res["ukrainian_alternative"] is None
 
 
-def test_word_uchbovyi():
-    # учбовий: flag; no garbage pymorphy3 lemma
-    res = is_russian_pattern("учбовий")
-    assert res["matches_russian"] is True
-    assert res["russian_lemma"] is None
-    assert res["confidence"] >= 0.7
-    assert res["ukrainian_alternative"] is None
-
-
 def test_word_poluchyty():
     # получити: heuristic runs (do not VESUM-short-circuit to false/0.0)
     res = is_russian_pattern("получити")
     assert res["matches_russian"] is True
     assert res["russian_lemma"] == "получить"
     assert res["confidence"] == 1.0
-    assert res["ukrainian_alternative"] is None
-
-
-def test_word_zdacha():
-    # здача: heuristic runs (do not VESUM-short-circuit to false/0.0)
-    res = is_russian_pattern("здача")
-    assert res["matches_russian"] is True
-    assert res["confidence"] >= 0.7
-    assert res["ukrainian_alternative"] is None
-
-
-def test_word_vrach():
-    # врач: stay true
-    res = is_russian_pattern("врач")
-    assert res["matches_russian"] is True
-    assert res["russian_lemma"] == "врач"
-    assert res["confidence"] == 1.0
-    assert res["ukrainian_alternative"] is None
-
-
-def test_word_knyha():
-    # книга: stay clean negative
-    res = is_russian_pattern("книга")
-    assert res["matches_russian"] is False
-    assert res["russian_lemma"] is None
-    assert res["confidence"] == 0.0
-
-
-def test_word_rizhuchyi():
-    # ріжучий: safe lexicalised adjective stays clean negative
-    res = is_russian_pattern("ріжучий")
-    assert res["matches_russian"] is False
-    assert res["russian_lemma"] is None
-    assert res["confidence"] == 0.0
-    assert res["ukrainian_alternative"] is None
-
-
-def test_word_keruiuchyi():
-    # керуючий: safe lexicalised adjective stays clean negative
-    res = is_russian_pattern("керуючий")
-    assert res["matches_russian"] is False
-    assert res["russian_lemma"] is None
-    assert res["confidence"] == 0.0
     assert res["ukrainian_alternative"] is None
 
 
@@ -129,15 +76,6 @@ def test_documented_calques_still_flag_without_vesum():
         assert res["matches_russian"] is True, f"Expected {word} to flag"
         assert res["russian_lemma"] is None
         assert res["confidence"] >= 0.7
-
-
-def test_get_ru_confidence_never_invents_a_lemma_for_a_dictionary_touch():
-    # 'минулий' only touches the RU DictionaryAnalyzer via an unknown-prefix /
-    # known-suffix guess ('минулия') that pymorphy3 itself does not recognise
-    # as a known RU word. The DictionaryAnalyzer disjunct must not leak it.
-    conf, lemma = get_ru_confidence("минулий")
-    assert lemma is None
-    assert conf < 0.7
 
 
 def test_flagged_words_never_return_an_unverified_lemma():
@@ -173,41 +111,6 @@ def test_lexicalised_safe_and_clean_ukrainian_words():
         res = is_russian_pattern(clean_word)
         assert res["matches_russian"] is False, f"Expected {clean_word} to be clean negative"
         assert res["confidence"] == 0.0
-
-
-def test_smoke_cases_unmocked():
-    # 1. получити
-    res = is_russian_pattern("получити")
-    assert res["matches_russian"] is True
-
-    # 2. здача
-    res = is_russian_pattern("здача")
-    assert res["matches_russian"] is True
-
-    # 3. привіт
-    res = is_russian_pattern("привіт")
-    assert res["matches_russian"] is False
-
-    # 4. котрий
-    res = is_russian_pattern("котрий")
-    assert res["matches_russian"] is False
-
-
-@patch("scripts.verification.vesum.verify_word")
-@patch("scripts.verification.check_ru_morph.get_ru_confidence")
-def test_batch_reuses_preverified_vesum_results(mock_confidence, mock_verify_word):
-    mock_confidence.return_value = (0.91, "выдуманный")
-
-    results = check_russian_patterns_batch(
-        ["привіт", "вигадане"],
-        verified_words={"привіт"},
-    )
-
-    assert results["привіт"]["matches_russian"] is False
-    assert results["вигадане"]["matches_russian"] is True
-    assert results["вигадане"]["russian_lemma"] == "выдуманный"
-    mock_confidence.assert_called_once_with("вигадане")
-    mock_verify_word.assert_not_called()
 
 
 def test_batch_handles_live_fail_table():

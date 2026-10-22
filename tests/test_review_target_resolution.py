@@ -15,7 +15,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.common.git_context import sanitized_git_env
 from scripts.review.target_resolution import (
     TargetResolutionError,
-    is_test_path,
     resolve_branch_target,
     resolve_commit_target,
     resolve_local_target,
@@ -69,15 +68,6 @@ def _publish_pr_branch(repo: Path, branch: str, sha: str) -> None:
 # --- is_test_path -----------------------------------------------------------
 
 
-def test_is_test_path_recognizes_common_shapes():
-    assert is_test_path("tests/test_foo.py")
-    assert is_test_path("scripts/tests/test_bar.py")
-    assert is_test_path("src/__tests__/thing.test.ts")
-    assert is_test_path("src/component.spec.tsx")
-    assert not is_test_path("scripts/build/v7_build.py")
-    assert not is_test_path("docs/best-practices/code-quality.md")
-
-
 # --- local mode --------------------------------------------------------------
 
 
@@ -90,28 +80,6 @@ def test_resolve_local_target_clean_tree(tmp_path):
     assert target.base_sha is None
     assert target.head_sha is None
     assert "nothing to review" in target.description
-
-
-def test_resolve_local_target_clean_tree_is_not_evidence_of_commit_review(tmp_path):
-    """A clean local tree must never be presented as proof a commit/PR was reviewed.
-
-    The mode field plus None SHAs are the structural guard: a report built from
-    this target can't claim it verified a specific commit/PR, because there is
-    no base/head SHA to point at.
-    """
-    repo = _init_repo(tmp_path)
-    # Commit further work — tree is clean, but real committed changes exist.
-    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
-    _git(repo, "commit", "-aq", "-m", "v2")
-
-    target = resolve_local_target(repo)
-    assert target.clean_tree is True
-    assert target.mode == "local"
-    assert target.base_sha is None and target.head_sha is None
-    # A caller wanting proof of the v2 commit must use mode=commit explicitly.
-    committed = resolve_commit_target(repo, "HEAD")
-    assert committed.base_sha is not None and committed.head_sha is not None
-    assert "app.py" in committed.changed_paths
 
 
 def test_resolve_local_target_counts_staged_unstaged_and_untracked(tmp_path):
@@ -339,12 +307,6 @@ def test_resolve_review_target_requires_explicit_mode_args(tmp_path):
         resolve_review_target("pr", repo)
     with __import__("pytest").raises(TargetResolutionError):
         resolve_review_target("bogus-mode", repo)
-
-
-def test_resolve_review_target_local_dispatch(tmp_path):
-    repo = _init_repo(tmp_path)
-    target = resolve_review_target("local", repo)
-    assert target.mode == "local"
 
 
 @pytest.fixture

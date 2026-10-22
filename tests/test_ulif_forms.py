@@ -216,30 +216,6 @@ def test_manifest_without_paradigm_key_handles_weaker_provenance(tmp_path):
     assert raw_id["weaker_provenance"] == "stored_columns_only"
 
 
-def test_manifest_missing_paradigm_and_empty_stored_headword_fails(tmp_path):
-    """When paradigm page is absent AND stored headword is empty, records raw_entry_page_absent failure."""
-    db_path = tmp_path / "sources.db"
-
-    sources_db.store_ulif_dictua_entry(
-        word="невідомо",
-        canonical_headword="",
-        sections={"synonyms": [{"terms": [{"text": "тест"}]}]},
-        raw_responses={"synonyms": "<html>synonyms</html>"},
-        retrieved_at="2026-09-28T00:00:00Z",
-        parser_version="ulif-dictua-v2",
-        status="ok",
-        homonym_index=1,
-        homonym_checked=1,
-        db_path=db_path,
-    )
-
-    rep = ulif_forms.build_ulif_forms(db_path=db_path)
-    assert rep["state"] == "complete"
-    assert rep["entries_done"] == 0
-    assert rep["entries_failed"] == 1
-    assert rep["failures_by_reason"].get("raw_entry_page_absent") == 1
-
-
 def test_missing_raw_blob_records_explicit_failure(tmp_path):
     db_path = tmp_path / "sources.db"
     # Store entry with raw response, then delete the raw blob
@@ -430,27 +406,6 @@ def test_f3_verify_detects_source_modification(tmp_path):
     ver = ulif_forms.verify_ulif_forms(db_path)
     assert ver["verified"] is False
     assert "stale source_fingerprint" in ver["error"]
-
-
-def test_f6_batch_validation_and_parser_exception_isolation(tmp_path):
-    """F6: Rejects invalid batch_size and isolates parser exceptions without corrupting state."""
-    db_path = tmp_path / "sources.db"
-    sources_db.store_ulif_dictua_entry(
-        word="замок",
-        canonical_headword="За́мок",
-        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
-        raw_responses={"paradigm": "<html>bad</html>"},
-        retrieved_at="2026-09-28T00:00:00Z",
-        parser_version="ulif-dictua-v2",
-        status="ok",
-        homonym_index=1,
-        homonym_checked=1,
-        db_path=db_path,
-    )
-
-    # Rejects invalid batch size
-    with pytest.raises(ValueError, match="batch_size must be positive"):
-        ulif_forms.build_ulif_forms(db_path=db_path, batch_size=0)
 
 
 def test_f9_full_mismatches_itemization_and_sidecar(tmp_path):

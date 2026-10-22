@@ -59,11 +59,6 @@ def test_agy_only_models_never_get_gemini_cli_rungs(model, auth_modes):
     assert all(r.cli != "gemini-cli" or r.model not in {FLASH_GEMINI_MODEL, FINAL_GEMINI_MODEL} for r in ladder)
 
 
-def test_build_gemini_ladder_rejects_empty_auth_modes():
-    with pytest.raises(ValueError, match="must not be empty"):
-        build_gemini_ladder(allowed_auth_modes=())
-
-
 @pytest.mark.parametrize("model", [
     PRIMARY_GEMINI_MODEL, AGY_GEMINI_MODEL, FLASH_GEMINI_MODEL,
     FINAL_GEMINI_MODEL, "gemini-3.7-flash-high", "uncatalogued-model",

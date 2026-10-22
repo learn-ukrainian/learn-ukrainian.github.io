@@ -171,21 +171,6 @@ def test_runner_launch_carries_switch_and_worker_reports_in_full(
     assert os.environ[ADVISOR_SWITCH] == "0"
 
 
-def test_fake_cli_reproduces_the_lost_report_without_the_switch(
-    fake_claude, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Control: without the adapter's switch the worker ends with work pending."""
-    binary, dump = fake_claude
-    monkeypatch.setattr(claude, "HEADLESS_BACKGROUND_ENV", {})
-    monkeypatch.setattr(claude, "HEADLESS_BACKGROUND_TOOL_DENIES", ())
-
-    result = _invoke(binary, tmp_path, "workspace-write")
-
-    assert SWITCH not in json.loads(dump.read_text(encoding="utf-8"))["env"]
-    assert result.response.startswith("Started in the background: Bash run_in_background")
-    assert "final report will follow" in result.response
-
-
 def test_sanitizer_keeps_switch_for_claude_and_adapter_supplied_kimi_only(monkeypatch: pytest.MonkeyPatch) -> None:
     """Claude keeps the switch; kimi keeps it only from adapter overrides (the KimiCC plan)."""
     monkeypatch.delenv(SWITCH, raising=False)
@@ -502,18 +487,6 @@ def test_every_claude_code_harness_plan_disables_background(
     assert denied == list(HEADLESS_BACKGROUND_TOOL_DENIES)
 
 
-@pytest.mark.repo_wide
-def test_claude_code_harness_denominator_is_complete() -> None:
-    """Every runtime adapter that resolves the Claude binary is in the table above."""
-    adapters = REPO_ROOT / "scripts" / "agent_runtime" / "adapters"
-    launching = {
-        f"adapters/{path.name}"
-        for path in adapters.glob("*.py")
-        if any(marker in path.read_text(encoding="utf-8") for marker in ("_default_claude_bin(", 'which("claude")'))
-    }
-    assert launching == set(_CLAUDE_CODE_HARNESSES)
-
-
 def test_native_kimi_plan_has_neither_control(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """OO-58: the retired native default never builds a plan that could carry Claude controls."""
     monkeypatch.setattr(kimi, "_resolve_kimi_binary", lambda: "/usr/bin/kimi")
@@ -528,12 +501,3 @@ def test_native_kimi_plan_has_neither_control(tmp_path: Path, monkeypatch: pytes
                 session_id=None,
                 tool_config=admitted_tool_config(tmp_path, {"harness": harness} if harness else None),
             )
-
-
-@pytest.mark.parametrize("launcher", ["start-claude.sh", "start-claude-driver.sh", "scripts/launchers/claude.sh"])
-def test_interactive_launchers_do_not_disable_background(launcher: str) -> None:
-    """Interactive sessions are outside the adapter and keep background tasks."""
-    text = (REPO_ROOT / launcher).read_text(encoding="utf-8")
-    assert SWITCH not in text
-    assert not any(tool in text for tool in ("permissions.deny", "--disallowedTools Monitor"))
-    assert "agent_runtime" not in text

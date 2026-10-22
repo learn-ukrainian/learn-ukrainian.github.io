@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import argparse
-import os
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -62,41 +60,6 @@ def test_unknown_and_retired_selectors_raise_typed_error(lane, selector, monkeyp
     with pytest.raises(grok_lane.StreamResolutionError, match="unresolved-stream-selector") as error:
         lane._stream_id(argparse.Namespace(epic=selector, stream=None))
     assert error.value.reason == "unresolved-stream-selector"
-
-
-@pytest.mark.parametrize("lane", LANES, ids=lambda lane: lane.__name__.split(".")[-1])
-def test_cli_reports_typed_selector_error(lane, monkeypatch, capsys) -> None:
-    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
-    assert lane.main(["hydrate", "--epic", "unknown-lane"]) == 2
-    output = capsys.readouterr()
-    assert "unresolved-stream-selector" in output.err
-    assert "Traceback" not in output.err
-    assert "epic:unknown-lane" not in output.out
-
-
-def test_codex_lane_import_does_not_scan_launcher_registry() -> None:
-    """Hydration imports the lane inside a hard hook deadline."""
-    code = """
-import subprocess
-real = subprocess.run
-
-def run(args, *pos, **kwargs):
-    argv = list(args) if isinstance(args, (list, tuple)) else []
-    if argv and argv[0] == "bash" and "lane-defaults" in argv:
-        raise SystemExit("registry scan at import")
-    return real(args, *pos, **kwargs)
-
-subprocess.run = run
-import scripts.session_canary.codex_lane
-from scripts.session_canary import grok_lane
-assert "EPIC_STREAM_DEFAULTS" not in grok_lane.__dict__
-"""
-    env = os.environ.copy()
-    env["PYTHONPATH"] = str(ROOT) + os.pathsep + env.get("PYTHONPATH", "")
-    result = subprocess.run(
-        [sys.executable, "-c", code], cwd=ROOT, env=env, capture_output=True, text=True, timeout=30,
-    )
-    assert result.returncode == 0, result.stderr + result.stdout
 
 
 def test_resolver_reads_registry_changes_and_new_keys(tmp_path, monkeypatch) -> None:

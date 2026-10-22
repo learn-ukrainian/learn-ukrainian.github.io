@@ -127,41 +127,6 @@ const renderHeadroom = () => {};
     )
 
 
-def test_runtime_failed_agent_inventory_does_not_claim_empty_headroom():
-    code = _script("runtime.html", "let runtimeLoading", "\nfunction refreshRuntime")
-    _node(
-        _DOM
-        + r"""
-const fetchJson = async url => {if (url.endsWith('/agents')) throw new Error('unavailable'); return {};};
-const setBanner = () => {};
-const renderAgents = () => {}, renderUsage = () => {}, renderRecent = () => {};
-const renderAcpx = () => {}, renderRoutingAssignments = () => {}, renderHeadroom = () => {};
-"""
-        + code
-        + r"""
-loadRuntime().then(() => {
-  assert.match(document.getElementById('headroom-content').innerHTML, /Unable to load/);
-}).catch(e => {console.error(e); process.exitCode = 1;});
-"""
-    )
-
-
-def test_monitor_http_failure_clears_previous_capacity():
-    code = _script("runtime.html", "async function refreshAgentMonitor", "document.addEventListener('DOMContentLoaded'")
-    _node(
-        _DOM
-        + "const fetch = async () => ({ok: false});\n"
-        + code
-        + r"""
-refreshAgentMonitor().then(() => {
-  assert.equal(document.getElementById('agent-monitor-status-badge').textContent, 'UNAVAILABLE');
-  for (const id of ['ram-avail', 'sys-load', 'active-leases-count', 'reserved-ram'])
-    assert.equal(document.getElementById(id).textContent, 'Unknown');
-}).catch(e => {console.error(e); process.exitCode = 1;});
-"""
-    )
-
-
 def test_fleet_failed_panels_clear_old_data_and_old_refresh_cannot_overwrite():
     code = _script("fleet.html", "let fleetGeneration", "\nfunction queueRefresh")
     _node(

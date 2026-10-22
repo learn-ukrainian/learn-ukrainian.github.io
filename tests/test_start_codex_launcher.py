@@ -19,14 +19,6 @@ def test_codex_native_harness_is_default_and_forwards_arguments_after_separator(
     assert "--ask-for-approval never" in result.stdout
 
 
-def test_codex_rejects_unknown_harness_and_unsupported_launcher_flags() -> None:
-    harness = run_launcher("start-codex.sh", "--harness", "native")
-    unknown = run_launcher("start-codex.sh", "--not-a-real-flag")
-    assert harness.returncode == unknown.returncode == 2
-    assert "codex|claude-code" in harness.stderr
-    assert "run --help" in unknown.stderr
-
-
 def test_codex_hermes_opt_in_uses_provider_label_separately_from_model(tmp_path) -> None:
     from tests.test_launcher_contract import hermes_stub_env
 

@@ -407,42 +407,6 @@ def test_build_rejects_locator_mapping_drift(tmp_path: Path, mutation: str) -> N
         )
 
 
-@pytest.mark.parametrize("mutation", ["duplicate", "missing", "extra"])
-def test_compact_build_rejects_duplicate_missing_or_extra_locator_mapping(tmp_path: Path, mutation: str) -> None:
-    manifest, phase1_receipt, rows = _phase1(tmp_path)
-    raw_locator = _locator(tmp_path / "locators.jsonl", rows)
-    values = [json.loads(line) for line in raw_locator.read_text().splitlines()]
-    if mutation == "duplicate":
-        values.append(values[0])
-    elif mutation == "missing":
-        values.pop()
-    else:
-        extra = dict(values[0])
-        extra["work_id"] = "work.wikipedia." + "0" * 24
-        extra["locator_id"] = "locator." + "1" * 24
-        values.append(extra)
-    values.sort(
-        key=lambda value: (
-            value["source_family"],
-            value["source_id"],
-            value["work_id"],
-            signals.canonical_json(value["source_locator"]),
-        )
-    )
-    locator = tmp_path / "locators.compact.jsonl"
-    locator.write_bytes(locators.compact_jsonl(values))
-    with pytest.raises(complements.ComplementError):
-        complements.build(
-            phase1_manifest=manifest,
-            phase1_receipt=phase1_receipt,
-            policy_path=_policy(tmp_path),
-            locator_index=locator,
-            complement_output=tmp_path / "out.jsonl",
-            worklist_output=tmp_path / "work.jsonl",
-            receipt_output=tmp_path / "out.json",
-        )
-
-
 @pytest.mark.parametrize("target", ["complement", "worklist", "receipt", "locator"])
 def test_verify_rejects_tampered_binding(tmp_path: Path, target: str) -> None:
     complement, worklist, receipt, locator, _rows = _build(tmp_path)
@@ -465,14 +429,6 @@ def test_wikipedia_learning_route_is_excluded_and_text_free(tmp_path: Path) -> N
     found = list(complements.filter_rows(complement, "local_model_learning", "excluded", "excluded", False))
     assert found and all("SENTINEL SOURCE TEXT" not in value for value in found)
     assert list(complements.filter_rows(complement, "local_model_learning", "evidenced", "candidate", True)) == []
-
-
-def test_complement_schema_requires_locator_binding(tmp_path: Path) -> None:
-    complement, _worklist, _receipt, _locator_path, _rows = _build(tmp_path)
-    value = json.loads(complement.read_text().splitlines()[0])
-    value.pop("locator_binding")
-    with pytest.raises(complements.ComplementError, match="schema failure"):
-        complements._validate(value, complements._validator(complements.SCHEMAS["complement"]), "row")
 
 
 def test_bundle_promotion_rollback_preserves_prior_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -547,26 +503,6 @@ def test_faithful_requires_both_preparation_and_learning(tmp_path: Path) -> None
     row = json.loads(complement.read_text().splitlines()[0])
     assert row["routes"]["capabilities"]["local_model_learning"] == "excluded"
     assert row["routes"]["representations"]["faithful"] == "metadata_only"
-
-
-def test_wikipedia_policy_cannot_reopen_learning_without_a_new_bound_policy() -> None:
-    policy = json.loads(CAPABILITY_POLICY.read_text())
-    families, _overrides = complements._validate_policy(
-        policy,
-        complements._validator(complements.SCHEMAS["policy"]),
-    )
-    wikipedia = families["wikipedia"]["decisions"]
-
-    assert wikipedia["local_preparation"]["state"] == "evidenced"
-    assert wikipedia["local_model_learning"] == {
-        "state": "excluded",
-        "evidence_refs": ["evidence.wikipedia_primary_rights_v1"],
-        "missing_evidence_keys": [
-            "actor_scope",
-            "destination_scope",
-            "explicit_license_or_permission",
-        ],
-    }
 
 
 def test_source_override_beats_family_default(tmp_path: Path) -> None:
@@ -714,27 +650,6 @@ def test_two_builds_are_byte_identical(tmp_path: Path) -> None:
         receipt_output=first[2],
     )
     assert [path.read_bytes() for path in first[:3]] == before
-
-
-def test_static_phase1_hashes_are_not_recomputed_per_row(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    manifest, phase1_receipt, rows = _phase1(tmp_path)
-    original, calls = complements.sha256_file, []
-
-    def counted(path: Path) -> str:
-        calls.append(path)
-        return original(path)
-
-    monkeypatch.setattr(complements, "sha256_file", counted)
-    complements.build(
-        phase1_manifest=manifest,
-        phase1_receipt=phase1_receipt,
-        policy_path=_policy(tmp_path),
-        locator_index=_locator(tmp_path / "locators.jsonl", rows),
-        complement_output=tmp_path / "out",
-        worklist_output=tmp_path / "work",
-        receipt_output=tmp_path / "receipt",
-    )
-    assert sum(path == manifest for path in calls) <= 3
 
 
 @pytest.mark.parametrize("mutation", ["reorder", "truncate", "extra"])

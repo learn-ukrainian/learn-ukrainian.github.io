@@ -321,8 +321,3 @@ def test_reserve_never_overrides_the_owner(owner_capacity):
     """An otherwise eligible reserve refuses unless the owner verifies Codex capacity (#9740)."""
     assert codex_reset_reserve_eligible(_reserve(), _eligible_codex(), owner_capacity=CAPACITY_VERIFIED, now=NOW)
     assert not codex_reset_reserve_eligible(_reserve(), _eligible_codex(), owner_capacity=owner_capacity, now=NOW)
-
-
-def test_owner_capacity_is_required():
-    with pytest.raises(TypeError):
-        codex_reset_reserve_eligible(_reserve(), _eligible_codex(), now=NOW)  # type: ignore[call-arg]

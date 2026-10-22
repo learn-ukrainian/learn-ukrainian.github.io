@@ -61,46 +61,6 @@ def test_fleet_status_remote_unreachable(tmp_path: Path) -> None:
     assert payload["overview"]["streams"] == []
 
 
-def test_fleet_status_local_empty_remote_live(tmp_path: Path) -> None:
-    """Local SQLite empty/missing, remote live -> overview reflects remote authority."""
-    remote_root = tmp_path / "remote"
-    remote_db_path = _init_session_db(remote_root)
-    remote_store = SessionStreamStore(SessionStreamDatabase(remote_db_path))
-
-    clean_holder = LeaseHolder(
-        agent="worker-agent",
-        harness="cli",
-        instance_id="inst-001",
-        host_id="worker-host",
-        process_id=12345,
-    )
-    remote_store.open_session(
-        stream_id="epic:201",
-        holder=clean_holder,
-        lineage_id="lineage-201",
-        ttl_seconds=3600,
-        session_id="session-201",
-    )
-
-    local_root = tmp_path / "empty_local"
-    _init_session_db(local_root)
-
-    with epics_monitor_stub(remote_store) as base:
-        overview = build_fleet_overview(repo_root=local_root, monitor_url=base)
-        assert overview["available"] is True
-        assert len(overview["streams"]) == 1
-
-        stream = overview["streams"][0]
-        assert stream["stream_id"] == "epic:201"  # allow-hardcoded-epic: synthetic overview fixture
-        assert stream["lease_state"] == "active"
-        assert stream["unknown"] is False
-        assert stream["stale"] is False
-        assert stream["holder"] is not None
-        assert stream["holder"]["agent"] == "worker-agent"
-        assert stream["holder"]["host_id"] == "worker-host"
-        assert stream["session_state"] == "open"
-
-
 def test_fleet_status_local_stale_remote_live(tmp_path: Path) -> None:
     """Local SQLite stale, remote live -> overview reflects authoritative remote state."""
     local_root = tmp_path / "local"

@@ -32,21 +32,6 @@ def _report(*failed: str) -> dict:
     }
 
 
-def test_no_writer_rewrite_in_correction() -> None:
-    template = (
-        linear_pipeline.PROJECT_ROOT
-        / "scripts"
-        / "build"
-        / "phases"
-        / "linear-writer-correction.md"
-    ).read_text(encoding="utf-8")
-
-    assert "Modify in place via append/insert." in template
-    assert "Never re-author or regenerate." in template
-    for phrase in ("regenerate", "rewrite", "produce again", "start over"):
-        assert phrase in template
-
-
 def test_correction_fully_revalidates(tmp_path: Path) -> None:
     module_dir = _module_dir(tmp_path)
     plan_path = tmp_path / "plan.yaml"

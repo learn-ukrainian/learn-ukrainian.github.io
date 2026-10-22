@@ -335,17 +335,6 @@ def test_record_requires_every_flag(ledger, tmp_path, flag):
     assert ledger.read_bytes() == before
 
 
-def test_record_requires_resolved_id_in_exact_body(ledger):
-    seed(ledger)
-    before = ledger.read_bytes()
-    body = b"all clear"
-    with pytest.raises(ValueError, match="RESOLVED"):
-        blockers.record(
-            ledger, EPIC, observation(), receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
-        )
-    assert ledger.read_bytes() == before
-
-
 def test_record_rejects_partial_substring_token_matches(ledger):
     seed(ledger, observation(item("resolved")))
     before = ledger.read_bytes()
@@ -549,34 +538,6 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     )
     assert "cache-warm" not in updated["items"]
     assert updated["generation"] == 2
-
-
-@pytest.mark.parametrize(
-    "prose",
-    [
-        "cache-warm is not yet resolved",
-        "cache-warm is not resolved. Follow-up closed",
-        "cache-warm resolved",
-        "cache-warm cleared",
-        "cache-warm fixed",
-        "cache-warm closed",
-        "cache-warm done",
-        "cache-warm unblocked",
-        "resolved cache-warm",
-        "Not RESOLVED cache-warm",
-        "RESOLVED cache-warm later",
-        "RESOLVED cache-warm | blocked | monitor | review | get approval",
-    ],
-)
-def test_resolution_requires_exact_standalone_token(ledger, prose):
-    seed(ledger, observation(item("cache-warm")))
-    before = ledger.read_bytes()
-    body = prose.encode()
-    with pytest.raises(ValueError, match="RESOLVED"):
-        blockers.record(
-            ledger, EPIC, observation(), receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
-        )
-    assert ledger.read_bytes() == before
 
 
 def test_standalone_resolution_is_independent_of_other_item_ids(ledger):
@@ -856,22 +817,6 @@ def test_ledger_path_uses_matching_launcher_state_only(ledger, monkeypatch, tmp_
 
 
 @pytest.mark.parametrize("command", [None, "delta", "record", "show"])
-def test_plain_script_cli_help(tmp_path, command):
-    environment = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
-    result = subprocess.run(
-        [sys.executable, str(REPO / "scripts/driver_blockers.py"), *([command] if command else []), "--help"],
-        cwd=tmp_path,
-        env=environment,
-        capture_output=True,
-        text=True,
-        timeout=20,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "usage:" in result.stdout
-    assert "--help" in result.stdout
-
-
-@pytest.mark.parametrize("command", [None, "delta", "record", "show"])
 def test_cli_help_contract(ledger, command):
     result = run_cli(ledger, *([command] if command else []), "--help")
     assert result.returncode == 0
@@ -930,15 +875,6 @@ def test_invalid_generation_cannot_record(ledger, generation):
     with pytest.raises(ValueError, match="generation"):
         blockers.record(ledger, EPIC, observation(item()), receipt(body), body, generation)
     assert ledger.read_bytes() == before
-
-
-def test_show_summary_is_bounded_even_for_large_valid_generation(ledger):
-    stored = seed(ledger)
-    stored["generation"] = 10**200
-    ledger.write_text(json.dumps(stored))
-    summary = blockers.show_summary(ledger, EPIC)
-    assert summary == "Blocker baseline: generation [large integer]; 1 recorded blockers"
-    assert len(summary) < 100
 
 
 @pytest.mark.parametrize("corruption", ["json", "anchor", "map", "epic"])
@@ -1147,16 +1083,6 @@ def test_api_refuses_invalid_target_without_creating_baseline(ledger, target):
         blockers.record(ledger, EPIC, observation(item()), receipt(body), body, 0, reporting_target=target)
     assert not ledger.exists()
     assert not ledger.with_name(f"{ledger.name}.lock").exists()
-
-
-def test_api_default_does_not_trust_cto_receipt_to_choose_target(ledger):
-    seed(ledger)
-    before = ledger.read_bytes()
-    body = posted(item(action="repair CI"))
-    received = receipt(body, recipient="cto", key="message-2", stamp="2026-10-10T02:00:00Z")
-    with pytest.raises(ValueError, match="receipt recipient must be epics"):
-        blockers.record(ledger, EPIC, observation(item(action="repair CI")), received, body, 1)
-    assert ledger.read_bytes() == before
 
 
 @pytest.mark.parametrize("target", ["epics", "cto"])

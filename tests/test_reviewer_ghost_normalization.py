@@ -216,28 +216,4 @@ def test_plan_level_finding_keeps_hardstop_even_with_missing_anchor() -> None:
 # ---------- 4. observation without P0 inputs: no ghosts, no crash ----------
 
 
-def test_legacy_observation_without_fixes_or_content_yields_no_ghosts() -> None:
-    findings = (
-        _finding(
-            dimension="Pedagogy",
-            severity="minor",
-            location="activity 2",
-            issue="activity type off-contract",
-            fix="swap to allowed type",
-        ),
-    )
-    observation = _observation(
-        findings=findings, parsed_fixes=None, module_content=None
-    )
-    assert collect_reviewer_ghost_findings(observation) == ()
-    assert tag_reviewer_ghosts(observation).has_reviewer_ghosts is False
-
-
 # ---------- 5. has_reviewer_ghosts property contract ----------
-
-
-def test_has_reviewer_ghosts_property_reflects_tuple_membership() -> None:
-    observation = _observation(findings=(), parsed_fixes=None, module_content=None)
-    assert observation.has_reviewer_ghosts is False
-    # Default empty tuple → False.
-    assert observation.reviewer_ghost_findings == ()

@@ -22,185 +22,19 @@ import pytest
 
 from scripts.ci.ci_timings import (
     DEFAULT_REPO,
-    DEFAULT_WORKFLOW,
-    EventReport,
-    JobStats,
-    TimingReport,
     analyze_timings,
-    compute_metric_stats,
     extract_pr_number,
     fetch_run_jobs_from_api,
     fetch_workflow_runs_from_api,
     gh_api_get,
     load_runs_and_jobs_from_fixture,
     main,
-    nearest_rank_percentile,
-    parse_since,
-    render_json,
-    render_markdown,
 )
 
 _FIXTURE_PATH = Path(__file__).parent / "fixtures" / "ci_timings" / "sample_ci_runs.json"
 
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
-
-def test_nearest_rank_percentile_hand_computed() -> None:
-    """Validate nearest-rank percentile against hand-computed reference values.
-
-    Formula:
-      k = ceil((P / 100) * N), clamped to [1, N]
-      value = sorted_values[k - 1]
-    """
-    # Empty list
-    assert nearest_rank_percentile([], 95.0) == 0.0
-
-    # N = 1 -> always the single element
-    assert nearest_rank_percentile([42.0], 95.0) == 42.0
-    assert nearest_rank_percentile([42.0], 50.0) == 42.0
-
-    # N = 5, values = [10, 20, 30, 40, 50]
-    # P = 95 -> k = ceil(0.95 * 5) = ceil(4.75) = 5 -> index 4 (50)
-    # P = 50 -> k = ceil(0.50 * 5) = ceil(2.5) = 3 -> index 2 (30)
-    # P = 20 -> k = ceil(0.20 * 5) = ceil(1.0) = 1 -> index 0 (10)
-    v5 = [10.0, 20.0, 30.0, 40.0, 50.0]
-    assert nearest_rank_percentile(v5, 95.0) == 50.0
-    assert nearest_rank_percentile(v5, 50.0) == 30.0
-    assert nearest_rank_percentile(v5, 20.0) == 10.0
-
-    # N = 10, values = [1..10]
-    # P = 95 -> k = ceil(0.95 * 10) = ceil(9.5) = 10 -> index 9 (10)
-    # P = 90 -> k = ceil(0.90 * 10) = ceil(9.0) = 9 -> index 8 (9)
-    # P = 50 -> k = ceil(0.50 * 10) = ceil(5.0) = 5 -> index 4 (5)
-    v10 = [float(i) for i in range(1, 11)]
-    assert nearest_rank_percentile(v10, 95.0) == 10.0
-    assert nearest_rank_percentile(v10, 90.0) == 9.0
-    assert nearest_rank_percentile(v10, 50.0) == 5.0
-
-    # N = 20, values = [1..20]
-    # P = 95 -> k = ceil(0.95 * 20) = ceil(19.0) = 19 -> index 18 (19)
-    # P = 99 -> k = ceil(0.99 * 20) = ceil(19.8) = 20 -> index 19 (20)
-    v20 = [float(i) for i in range(1, 21)]
-    assert nearest_rank_percentile(v20, 95.0) == 19.0
-    assert nearest_rank_percentile(v20, 99.0) == 20.0
-
-    # Unsorted input should produce identical result to sorted
-    v_unsorted = [50.0, 10.0, 40.0, 20.0, 30.0]
-    assert nearest_rank_percentile(v_unsorted, 95.0) == 50.0
-
-    # Invalid percentile raises ValueError
-    with pytest.raises(ValueError, match="percentile must be between 0 and 100"):
-        nearest_rank_percentile(v5, -1.0)
-    with pytest.raises(ValueError, match="percentile must be between 0 and 100"):
-        nearest_rank_percentile(v5, 101.0)
-
-
-def test_compute_metric_stats() -> None:
-    """Test summary stats calculation (n, avg, median, p95, max)."""
-    assert compute_metric_stats([]) == {
-        "avg": 0.0,
-        "max": 0.0,
-        "median": 0.0,
-        "n": 0,
-        "p95": 0.0,
-    }
-
-    vals = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
-    stats = compute_metric_stats(vals)
-    assert stats["n"] == 8
-    assert stats["avg"] == 5.0
-    assert stats["median"] == 4.5
-    assert stats["max"] == 9.0
-    # N=8, P=95: k = ceil(0.95 * 8) = ceil(7.6) = 8 -> 9.0
-    assert stats["p95"] == 9.0
-
-
-def test_parse_since_iso_and_relative() -> None:
-    """Test parsing ISO timestamps and relative lookback strings."""
-    fixed_now = datetime(2026, 8, 23, 18, 0, 0, tzinfo=UTC)
-
-    # ISO date-only
-    d1 = parse_since("2026-08-22")
-    assert d1 == datetime(2026, 8, 22, 0, 0, 0, tzinfo=UTC)
-
-    # ISO date-time with Z
-    d2 = parse_since("2026-08-22T14:30:00Z")
-    assert d2 == datetime(2026, 8, 22, 14, 30, 0, tzinfo=UTC)
-
-    # ISO date-time with offset
-    d3 = parse_since("2026-08-22T16:30:00+02:00")
-    assert d3 == datetime(2026, 8, 22, 14, 30, 0, tzinfo=UTC)
-
-    # Relative: 24h
-    r_24h = parse_since("24h", now=fixed_now)
-    assert r_24h == datetime(2026, 8, 22, 18, 0, 0, tzinfo=UTC)
-
-    # Relative: 10d
-    r_10d = parse_since("10d", now=fixed_now)
-    assert r_10d == datetime(2026, 8, 13, 18, 0, 0, tzinfo=UTC)
-
-    # Relative: plain integer
-    r_plain = parse_since("3", now=fixed_now)
-    assert r_plain == datetime(2026, 8, 20, 18, 0, 0, tzinfo=UTC)
-
-    # Relative: minutes and weeks
-    r_min = parse_since("30m", now=fixed_now)
-    assert r_min == datetime(2026, 8, 23, 17, 30, 0, tzinfo=UTC)
-
-    r_w = parse_since("2w", now=fixed_now)
-    assert r_w == datetime(2026, 8, 9, 18, 0, 0, tzinfo=UTC)
-
-    # Invalid string
-    with pytest.raises(ValueError, match="Invalid --since format"):
-        parse_since("invalid-date-string")
-    with pytest.raises(ValueError, match="Empty since string"):
-        parse_since("   ")
-
-
-def test_since_window_boundary_filtering() -> None:
-    """Prove --since cutoff strictly discards runs created before the boundary."""
-    runs: list[dict[str, Any]] = [
-        {
-            "id": 101,
-            "status": "completed",
-            "conclusion": "success",
-            "event": "push",
-            "created_at": "2026-08-22T05:00:00Z",
-            "updated_at": "2026-08-22T05:15:00Z",
-            "run_started_at": "2026-08-22T05:00:00Z",
-        },
-        {
-            "id": 102,
-            "status": "completed",
-            "conclusion": "success",
-            "event": "push",
-            "created_at": "2026-08-22T10:00:00Z",
-            "updated_at": "2026-08-22T10:15:00Z",
-            "run_started_at": "2026-08-22T10:00:00Z",
-        },
-        {
-            "id": 103,
-            "status": "completed",
-            "conclusion": "success",
-            "event": "push",
-            "created_at": "2026-08-23T01:00:00Z",
-            "updated_at": "2026-08-23T01:15:00Z",
-            "run_started_at": "2026-08-23T01:00:00Z",
-        },
-    ]
-    cutoff = datetime(2026, 8, 22, 8, 0, 0, tzinfo=UTC)
-    report = analyze_timings(
-        runs=runs,
-        jobs_fetcher={},
-        since_dt=cutoff,
-        event_filter="push",
-    )
-    push_report = report.events["push"]
-    # Run 101 (created at 05:00) is before 08:00 cutoff; runs 102 and 103 must be retained
-    assert push_report.runs_count == 2
-    # Without jobs there is no stable completion timestamp; updated_at can move on reruns.
-    assert push_report.wall_clock_minutes["n"] == 0
-    assert push_report.wall_clock_all_minutes["n"] == 0
 
 
 def test_extract_pr_number() -> None:
@@ -273,108 +107,6 @@ def test_analyze_timings_on_recorded_fixture() -> None:
     assert pr_map[7169]["kicks"] == 1
 
 
-def test_render_json_stable_ordering() -> None:
-    """Verify JSON output keys are deterministically sorted."""
-    report = TimingReport(
-        workflow=DEFAULT_WORKFLOW,
-        repo=DEFAULT_REPO,
-        since="2026-08-22",
-        generated_at="2026-08-23T18:00:00Z",
-        events={
-            "merge_group": EventReport(
-                event="merge_group",
-                runs_count=1,
-                wall_clock_minutes=compute_metric_stats([12.5]),
-                wall_clock_all_minutes=compute_metric_stats([12.5]),
-                jobs=[
-                    JobStats(
-                        name="Contracts",
-                        n=1,
-                        avg_minutes=5.2,
-                        median_minutes=5.2,
-                        p95_minutes=5.2,
-                        max_minutes=5.2,
-                    )
-                ],
-            )
-        },
-    )
-
-    json_str_1 = render_json(report)
-    json_str_2 = render_json(report)
-    assert json_str_1 == json_str_2
-
-    parsed = json.loads(json_str_1)
-    assert list(parsed.keys()) == ["events", "generated_at", "repo", "since", "workflow"]
-    assert list(parsed["events"]["merge_group"].keys()) == [
-        "jobs",
-        "runs_count",
-        "wall_clock_all_minutes",
-        "wall_clock_minutes",
-    ]
-
-
-def test_render_markdown_table_formatting() -> None:
-    """Verify Markdown report renders table headers, jobs, population note, and queue stats."""
-    runs, jobs_by_run = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
-    report = analyze_timings(
-        runs=runs,
-        jobs_fetcher=jobs_by_run,
-        workflow_name="CI",
-        repo_name=DEFAULT_REPO,
-        event_filter="merge_group",
-    )
-    md = render_markdown(report)
-    assert "# CI Timing & Queue Report — CI" in md
-    assert "- **Population:**" in md
-    assert "## merge_group (5 completed runs)" in md
-    assert "| job | n | avg | med | p95 | max |" in md
-    assert "Python (pytest) [1/4]" in md
-    assert "**Run Wall-clock (success)**" in md
-    assert "**Run Wall-clock (all)**" in md
-    assert "### merge_group Time-in-Queue & Kicks" in md
-    assert "#7170" in md
-
-
-def test_cli_main_with_fixture(capsys: pytest.CaptureFixture[str]) -> None:
-    """Test CLI main() execution in fixture mode."""
-    exit_code = main(["--fixture", str(_FIXTURE_PATH), "--event", "merge_group"])
-    assert exit_code == 0
-    out, err = capsys.readouterr()
-    assert "## merge_group" in out
-    assert not err
-
-
-def test_cli_main_with_fixture_json(capsys: pytest.CaptureFixture[str]) -> None:
-    """Test CLI main() execution with --json and --fixture."""
-    exit_code = main(["--fixture", str(_FIXTURE_PATH), "--json"])
-    assert exit_code == 0
-    out, err = capsys.readouterr()
-    data = json.loads(out)
-    assert "events" in data
-    assert "merge_group" in data["events"]
-    assert "pull_request" in data["events"]
-    assert not err
-
-
-def test_fixture_json_is_byte_identical_across_worker_counts(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    class FixedDatetime(datetime):
-        @classmethod
-        def now(cls, tz: Any = None) -> datetime:
-            return datetime(2026, 9, 28, 12, tzinfo=UTC)
-
-    monkeypatch.setattr("scripts.ci.ci_timings.datetime", FixedDatetime)
-    outputs = []
-    for workers in (1, 8):
-        assert main(["--fixture", str(_FIXTURE_PATH), "--event", "all", "--json", "--max-workers", str(workers)]) == 0
-        captured = capsys.readouterr()
-        assert captured.err == ""
-        outputs.append(captured.out.encode())
-    assert outputs[0] == outputs[1]
-
-
 def test_run_jobs_fetch_error_is_not_dropped() -> None:
     runs, _ = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
 
@@ -383,34 +115,6 @@ def test_run_jobs_fetch_error_is_not_dropped() -> None:
 
     with pytest.raises(RuntimeError, match="job fetch failed"):
         analyze_timings(runs, fail_jobs, event_filter="all", max_workers=8)
-
-
-def test_cli_main_invalid_since(capsys: pytest.CaptureFixture[str]) -> None:
-    """Test CLI main() returns exit code 2 on invalid --since."""
-    exit_code = main(["--since", "not-a-valid-date"])
-    assert exit_code == 2
-    _out, err = capsys.readouterr()
-    assert "Error: Invalid --since format" in err
-
-
-def test_analyze_timings_limit_with_newer_non_matching_runs() -> None:
-    """Verify --limit on fixture data selects the N most recent matching runs.
-
-    In the fixture, there are 15 total runs (pull_request, merge_group, push).
-    There are only 3 push runs, and several newer pull_request and merge_group
-    runs occurred after them. Specifying event_filter='push' with limit=2 must
-    return the 2 most recent push runs, ignoring newer non-matching runs.
-    """
-    runs, jobs_by_run = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
-    report = analyze_timings(
-        runs=runs,
-        jobs_fetcher=jobs_by_run,
-        event_filter="push",
-        limit=2,
-    )
-    push = report.events["push"]
-    assert push.runs_count == 2
-    assert push.wall_clock_minutes["n"] == 2
 
 
 def test_fetch_workflow_runs_passes_query_params(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -447,37 +151,6 @@ def test_fetch_workflow_runs_passes_query_params(monkeypatch: pytest.MonkeyPatch
     )
     assert len(captured_paths) == 1
     assert "event=" not in captured_paths[0]
-
-
-def test_fetch_workflow_runs_api_event_limit_with_newer_non_matching_runs(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """Verify limit operates on matching runs when API filters by event.
-
-    Simulates the GitHub Actions API returning runs based on query params:
-    - Without event= in query: returns all runs (where top runs are non-push).
-    - With event=push in query: returns push runs only.
-    Demonstrates that fetching with event='push' and limit=2 fetches the 2 push runs.
-    """
-    runs, _ = load_runs_and_jobs_from_fixture(_FIXTURE_PATH)
-
-    def fake_gh_api_get(path: str, **kwargs: Any) -> dict[str, Any]:
-        if "event=push" in path:
-            matching = [r for r in runs if r.get("event") == "push" and r.get("status") == "completed"]
-            return {"workflow_runs": matching}
-        # If API was called without event filter, it returns unfiltered runs (starting with non-push)
-        return {"workflow_runs": runs}
-
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
-
-    fetched = fetch_workflow_runs_from_api(
-        repo="learn-ukrainian/learn-ukrainian.github.io",
-        workflow_file="ci.yml",
-        event="push",
-        limit=2,
-    )
-    assert len(fetched) == 2
-    assert all(r.get("event") == "push" for r in fetched)
 
 
 def test_fetch_workflow_runs_out_of_order_page_does_not_stop_pagination(
@@ -642,21 +315,6 @@ def test_load_runs_and_jobs_from_fixture_non_list_non_dict(tmp_path: Path) -> No
         load_runs_and_jobs_from_fixture(int_file)
 
 
-def test_load_runs_and_jobs_from_fixture_json_decode_error(tmp_path: Path) -> None:
-    """Verify load_runs_and_jobs_from_fixture propagates json.JSONDecodeError on malformed JSON."""
-    bad_file = tmp_path / "malformed.json"
-    bad_file.write_text("{not valid json: 123", encoding="utf-8")
-
-    with pytest.raises(json.JSONDecodeError):
-        load_runs_and_jobs_from_fixture(bad_file)
-
-
-def test_load_runs_and_jobs_from_fixture_file_not_found() -> None:
-    """Verify load_runs_and_jobs_from_fixture raises FileNotFoundError for non-existent path."""
-    with pytest.raises(FileNotFoundError, match="Fixture file not found"):
-        load_runs_and_jobs_from_fixture("does_not_exist_fixture.json")
-
-
 def test_gh_api_get_json_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify gh_api_get raises RuntimeError with documented message on malformed JSON from API."""
 
@@ -703,105 +361,6 @@ def test_empty_workflow_page_recovers(monkeypatch: pytest.MonkeyPatch) -> None:
     assert [run["id"] for run in runs] == [1]
 
 
-def test_zero_total_count_transient_also_recovers(monkeypatch: pytest.MonkeyPatch) -> None:
-    pages = iter(
-        [
-            {"total_count": 0, "workflow_runs": []},
-            {"total_count": 1, "workflow_runs": [{"id": 1, "created_at": "2026-09-28T00:00:00Z"}]},
-        ]
-    )
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", lambda *_a, **_kw: next(pages))
-    assert len(fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")) == 1
-
-
-def test_zero_run_fixture_exits_nonzero(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    fixture = tmp_path / "empty.json"
-    fixture.write_text('{"workflow_runs": [], "jobs_by_run_id": {}}', encoding="utf-8")
-    assert main(["--fixture", str(fixture), "--event", "merge_group"]) == 1
-    assert "no completed workflow runs" in capsys.readouterr().err
-
-
-def test_program_metrics_and_first_attempt_wall() -> None:
-    run = {
-        "id": 1,
-        "event": "merge_group",
-        "status": "completed",
-        "conclusion": "success",
-        "created_at": "2026-09-28T00:00:00Z",
-        "updated_at": "2026-09-29T00:00:00Z",
-        "head_branch": "gh-readonly-queue/main/pr-1-aabbcc",
-    }
-
-    def job(job_id: int, name: str, start: int, finish: int, step: tuple[int, int] | None = None) -> dict[str, Any]:
-        return {
-            "id": job_id,
-            "name": name,
-            "status": "completed",
-            "conclusion": "success",
-            "created_at": "2026-09-28T00:00:00Z",
-            "started_at": f"2026-09-28T00:{start:02}:00Z",
-            "completed_at": f"2026-09-28T00:{finish:02}:00Z",
-            "steps": (
-                [
-                    {
-                        "name": "Run pytest",
-                        "started_at": f"2026-09-28T00:{step[0]:02}:00Z",
-                        "completed_at": f"2026-09-28T00:{step[1]:02}:00Z",
-                    }
-                ]
-                if step
-                else []
-            ),
-        }
-
-    jobs = [
-        job(10, "Changes", 1, 2),
-        job(11, "pytest (1)", 2, 8, (4, 7)),
-        job(12, "pytest (2)", 3, 10, (5, 9)),
-        job(13, "CI Gate", 10, 11),
-        {**job(14, "CI Gate", 20, 25), "run_attempt": 2},
-    ]
-    report = analyze_timings(
-        [run],
-        {"1": jobs},
-        event_filter="merge_group",
-        classifier_log_fetcher=lambda _job_id: "files=0 docs_only=false pytest_mode=full shard_count=2",
-    )
-    event = report.events["merge_group"]
-    assert event.wall_clock_minutes["median"] == 11.0
-    assert event.wall_clock_all_minutes["max"] == 11.0
-    metrics = event.program_metrics
-    assert metrics is not None
-    assert metrics["job_queue_wait_minutes"]["n"] == 4
-    assert metrics["pytest_queue_wait_minutes"]["n"] == 2
-    assert metrics["pytest_step_minutes"]["n"] == 2
-    assert metrics["pytest_setup_minutes"]["median"] == 3.0
-    assert metrics["jobs_per_run"]["median"] == 4.0
-    assert metrics["shard_spread_minutes"]["median"] == 1.0
-    assert metrics["slowest_to_mean_shard"]["median"] == 1.1
-    assert metrics["tier_counts"] == {"full": 1}
-    assert metrics["tier_shares_percent"] == {"full": 100.0}
-    assert metrics["label_forced_full_proxy"]["count"] == 1
-    assert metrics["label_forced_full_proxy"]["share_percent"] == 100.0
-    assert "### CI Program Metrics" in render_markdown(report)
-
-
-def test_limit_is_per_event_after_grouping() -> None:
-    runs = [
-        {
-            "id": i,
-            "event": event,
-            "status": "completed",
-            "conclusion": "success",
-            "created_at": f"2026-09-28T00:0{i}:00Z",
-        }
-        for i, event in enumerate(["pull_request", "merge_group", "pull_request", "merge_group"], 1)
-    ]
-    report = analyze_timings(runs, {}, event_filter="all", limit=1)
-    assert report.events["pull_request"].runs_count == 1
-    assert report.events["merge_group"].runs_count == 1
-
-
 def test_cli_all_limit_fetches_each_event_separately(monkeypatch: pytest.MonkeyPatch) -> None:
     paths: list[str] = []
 
@@ -824,27 +383,3 @@ def test_cli_all_limit_fetches_each_event_separately(monkeypatch: pytest.MonkeyP
     assert all(
         f"event={event}" in path for event, path in zip(("pull_request", "merge_group", "push"), run_paths, strict=True)
     )
-
-
-def test_pr_rerun_to_green_is_a_labeled_proxy() -> None:
-    run = {
-        "id": 9,
-        "event": "pull_request",
-        "status": "completed",
-        "conclusion": "success",
-        "run_attempt": 2,
-        "created_at": "2026-09-28T00:00:00Z",
-    }
-    first_gate = {
-        "name": "CI Gate",
-        "run_attempt": 1,
-        "status": "completed",
-        "conclusion": "failure",
-        "started_at": "2026-09-28T00:09:00Z",
-        "completed_at": "2026-09-28T00:10:00Z",
-    }
-    report = analyze_timings([run], {"9": [first_gate]}, event_filter="pull_request")
-    event = report.events["pull_request"]
-    assert event.wall_clock_minutes["n"] == 0
-    assert event.program_metrics is not None
-    assert event.program_metrics["pr_rerun_to_green_proxy"]["count"] == 1

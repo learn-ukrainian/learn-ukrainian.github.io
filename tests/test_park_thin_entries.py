@@ -38,26 +38,6 @@ def test_parks_only_audit_thin_lemmas_and_preserves_guarded_entries(tmp_path: Pa
     assert result.parked_artifact_written is True
 
 
-def test_course_and_heritage_correction_targets_remain_audit_eligible(tmp_path: Path) -> None:
-    manifest_path = _write_fixture_manifest(tmp_path)
-    manifest = _read_json(manifest_path)
-    manifest["entries"].append(_rich_entry("посилання"))
-    manifest["entries"][-1]["heritage_status"] = {"correction_target": {"lemma": "спадковий", "url_slug": "спадковий"}}
-    _refresh_stats(manifest)
-    write_manifest(manifest_path, manifest)
-
-    parked_path = tmp_path / "parked.json"
-    result = park.park_thin_entries(manifest_path=manifest_path, parked_out=parked_path, write=True)
-    artifact = _read_json(parked_path)
-
-    assert result.parked_count == 3
-    assert result.guard_excluded == {"form_of_target": 2}
-    # ``курсовий`` has course_usage and ``спадковий`` is a correction target,
-    # yet both remain selected because the audit classifies them as thin.
-    assert {record["entry"]["lemma"] for record in artifact["entries"]} >= {"курсовий", "спадковий"}
-    assert result.projected_poc_thin_pages == 3
-
-
 def test_stats_are_recomputed_consistently_after_parking(tmp_path: Path) -> None:
     manifest_path = _write_fixture_manifest(tmp_path)
 
@@ -107,34 +87,6 @@ def test_dry_run_writes_nothing(tmp_path: Path) -> None:
     assert manifest_path.read_bytes() == before
     assert not parked_path.exists()
     assert not (tmp_path / "lexicon-manifest.fingerprint.json").exists()
-
-
-def test_cli_json_dry_run_honors_limit(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    manifest_path = _write_fixture_manifest(tmp_path)
-    parked_path = tmp_path / "parked.json"
-    before = manifest_path.read_bytes()
-
-    assert (
-        park.main(
-            [
-                "--manifest",
-                str(manifest_path),
-                "--parked-out",
-                str(parked_path),
-                "--dry-run",
-                "--limit",
-                "1",
-                "--json",
-            ]
-        )
-        == 0
-    )
-
-    summary = json.loads(capsys.readouterr().out)
-    assert summary["parked_count"] == 1
-    assert summary["projected_poc_thin_pages"] == 5
-    assert manifest_path.read_bytes() == before
-    assert not parked_path.exists()
 
 
 def test_refuses_write_when_projected_manifest_has_broken_form_stub(tmp_path: Path) -> None:

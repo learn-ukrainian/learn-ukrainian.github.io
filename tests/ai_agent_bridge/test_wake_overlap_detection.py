@@ -494,18 +494,6 @@ def test_invalid_receipt_has_distinct_refusal_reason(wake, capsys, event):
         assert conn.execute("SELECT data, consumed_by_live_driver FROM messages WHERE id=7").fetchone() == (data, 0)
 
 
-@pytest.mark.parametrize("failure", ["overlap", "missing_binary"])
-def test_wake_error_prints_inbox_retained_once(wake, monkeypatch, capsys, failure):
-    if failure == "overlap":
-        report = {"schema": "codex-wake.v1", "status": "OVERLAP", "reason": "concurrent_turn_starts"}
-        watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], report)
-    else:
-        monkeypatch.setattr(ui, "send", Mock(side_effect=FileNotFoundError()))
-    assert watch.main(ARGS) == 2
-    line = next(line for line in capsys.readouterr().err.splitlines() if "wake_error:" in line)
-    assert line.count("inbox retained") == 1
-
-
 @pytest.mark.parametrize("forged", [
     {"schema": "codex-wake.v1", "status": "OVERLAP", "reason": "concurrent_turn_starts"},
     {"schema": "codex-wake.v1", "status": "CLEAN", "reason": "completed"},

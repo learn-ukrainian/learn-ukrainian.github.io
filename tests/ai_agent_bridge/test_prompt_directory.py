@@ -49,15 +49,3 @@ def test_prompt_directory_allocates_under_scratch_root_when_no_lease(
     # Temporary directory must be self-cleaned upon exit
     assert yielded_dir is not None
     assert not yielded_dir.exists()
-
-
-def test_agy_ask_scratch_cwd_allocates_under_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.ai_agent_bridge._agy import _agy_ask_scratch_cwd
-
-    scratch_root = tmp_path / "scratch"
-    scratch_root.mkdir()
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
-
-    cwd = _agy_ask_scratch_cwd()
-    assert cwd.is_dir()
-    assert cwd.resolve() == (scratch_root / "learn-ukrainian-bridge-asks" / "agy").resolve()

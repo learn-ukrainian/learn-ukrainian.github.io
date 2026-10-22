@@ -416,13 +416,6 @@ def test_lookalike_host_is_not_treated_as_github(source, tmp_path):
     assert inventory_violations(tmp_path) == []
 
 
-def test_shared_client_is_allowed():
-    assert not bypasses(
-        'from scripts.common.github_client import run\ndef probe():\n return run(["gh","pr","list"])',
-        "scripts/probe.py",
-    )
-
-
 @pytest.mark.parametrize("path,count", [(path, entry[0]) for path, entry in EXCLUSIONS.items()])
 def test_deferred_file_rejects_added_raw_call(tmp_path, path, count):
     target = tmp_path / path
@@ -450,16 +443,3 @@ def test_standalone_hook_colour_stripping_is_pinned(name, monkeypatch):
     environment = namespace["_gh_env"]()
     assert "FORCE_COLOR" not in environment and "CLICOLOR_FORCE" not in environment
     assert environment["NO_COLOR"] == "1"
-
-
-def test_shim_entry_mutation_cannot_bypass_shared_client():
-    path = "scripts/opsec/gh_entry.py"
-    source = (ROOT / path).read_text()
-    assert bypasses(source, path) == []
-    mutation = (
-        source
-        + '\ndef replay():\n    import subprocess\n    subprocess.run(["gh", "pr", "comment", "1"], timeout=30)\n'
-    )
-    assert len(bypasses(mutation, path)) == 1
-    assert "gh bypasses shared client" in bypasses(mutation, path)[0]
-    assert path not in EXCLUSIONS

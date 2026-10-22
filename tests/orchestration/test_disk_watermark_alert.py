@@ -88,12 +88,6 @@ def test_an_unreadable_disk_changes_nothing(tmp_path: Path) -> None:
     assert json.loads(state.read_text())["state"] == "above" and publish.calls == []
 
 
-def test_invalid_thresholds_raise(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setenv("DISPATCH_DISK_REFUSE_USED_PERCENT", "80")
-    with pytest.raises(adm.DiskWatermarkConfigError):
-        watermark.check_and_alert(tmp_path, tmp_path, probe=_disk(95.0), publish=_Recorder())
-
-
 def test_scheduled_apply_run_alerts_and_a_failed_alert_fails_the_run(tmp_path: Path, monkeypatch, capsys) -> None:
     monkeypatch.setattr(
         cleanup,

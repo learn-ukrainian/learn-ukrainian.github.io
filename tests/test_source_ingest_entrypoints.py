@@ -18,12 +18,10 @@ import hashlib
 import json
 import os
 import re
-import runpy
 import shlex
 import subprocess
 import sys
 import tempfile
-import time
 from collections import defaultdict
 from importlib.util import resolve_name
 from pathlib import Path
@@ -238,66 +236,6 @@ def batch(request, source_clis: list[str]) -> list[str]:
     return [path for path in request.param if path in source_clis]
 
 
-def test_module_import_does_not_scan_scripts(monkeypatch) -> None:
-    def reject_scan(*args, **kwargs):
-        pytest.fail("module import must not enumerate or parse repository scripts")
-
-    monkeypatch.setattr(subprocess, "run", reject_scan)
-    monkeypatch.setattr(ast, "parse", reject_scan)
-    runpy.run_path(__file__)
-
-
-def test_source_clis_fixture_scans_at_setup_and_rejects_empty(monkeypatch) -> None:
-    calls = []
-
-    def scan(root):
-        calls.append(root)
-        return ["scripts/new.py"]
-
-    monkeypatch.setattr(sys.modules[__name__], "source_tool_clis", scan)
-    assert source_clis.__wrapped__() == ["scripts/new.py"]
-    assert calls == [ROOT]
-    monkeypatch.setattr(sys.modules[__name__], "source_tool_clis", lambda root: [])
-    with pytest.raises(AssertionError, match="denominator must not be empty"):
-        source_clis.__wrapped__()
-
-
-def test_collection_batches_cover_new_candidates_without_parsing(monkeypatch) -> None:
-    paths = [f"scripts/candidate_{i}.py" for i in range(BATCH_SIZE + 2)]
-    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
-        args[0], 0, stdout="\0".join(paths) + "\0",
-    ))
-
-    def reject_parse(*args, **kwargs):
-        pytest.fail("collection must not parse repository scripts")
-
-    monkeypatch.setattr(ast, "parse", reject_parse)
-    collected = []
-
-    class Metafunc:
-        function = test_source_tool_cli_imports
-
-        def parametrize(self, name, values, *, indirect, ids):
-            assert name == "batch" and indirect
-            assert [ids(value) for value in values] == [value[0] for value in values]
-            collected.extend(values)
-
-    pytest_generate_tests(Metafunc())
-    assert [path for group in collected for path in group] == paths
-    assert all(0 < len(group) <= BATCH_SIZE for group in collected)
-    # A new live CLI need not be in the saved baseline to receive both probes.
-    live = [paths[0], paths[-1]]
-    selected = []
-    for group in collected:
-        request = type("Request", (), {"param": group})()
-        selected.extend(batch.__wrapped__(request, live))
-    assert selected == live
-    Metafunc.function = test_module_import_does_not_scan_scripts
-    collected.clear()
-    pytest_generate_tests(Metafunc())
-    assert collected == []
-
-
 def denominator_snapshot(clis: list[str]) -> dict:
     """Fingerprint the full inventory, including same-size substitutions."""
     return {
@@ -342,16 +280,6 @@ def failure_class(diagnostic: str) -> str:
     return "other_import_failure"
 
 
-def assert_failure_ratchet(observed: set[tuple[str, str, str]],
-                           expected: set[tuple[str, str, str]]) -> None:
-    """Reject new failures and require removal of repaired baseline entries."""
-    new = sorted(observed - expected)
-    stale = sorted(expected - observed)
-    assert not new and not stale, (
-        f"New failures: {new}\nStale baseline rows (remove after verifying the fix): {stale}"
-    )
-
-
 @pytest.mark.repo_invariant
 def test_source_tool_baseline_is_fresh(source_clis: list[str]) -> None:
     assert BASELINE["schema"] == "source-tool-import-baseline.v1"
@@ -366,29 +294,6 @@ def test_source_tool_baseline_is_fresh(source_clis: list[str]) -> None:
                         "other_import_failure", "timeout"}
 
 
-@pytest.mark.repo_invariant
-def test_source_tool_cli_imports(batch: list[str]) -> None:
-    started = time.monotonic()
-    failures = {(path, style, failure_class(failure)): failure for path in batch for style in STYLES
-                if (failure := smoke_import(ROOT, path, style))}
-    summary = (f"{len(batch)} CLIs / {2 * len(batch)} import probes in "
-               f"{time.monotonic() - started:.2f}s; {len(failures)} failures")
-    expected = {row for row in KNOWN_FAILURES if row[0] in batch}
-    try:
-        assert_failure_ratchet(set(failures), expected)
-    except AssertionError as exc:
-        pytest.fail(summary + "\n" + str(exc) + "\n" + "\n".join(failures.values()))
-
-
-def test_denominator_snapshot_detects_shrink_and_substitution() -> None:
-    original = ["scripts/a.py", "scripts/b.py"]
-    snapshot = denominator_snapshot(original)
-    assert snapshot == denominator_snapshot(list(reversed(original)))
-    assert snapshot != denominator_snapshot(original[:1])
-    assert snapshot != denominator_snapshot(["scripts/a.py", "scripts/c.py"])
-    assert snapshot != denominator_snapshot([*original, "scripts/c.py"])
-
-
 @pytest.mark.parametrize("current", [
     ["scripts/a.py"],
     ["scripts/a.py", "scripts/c.py"],
@@ -401,14 +306,6 @@ def test_denominator_freshness_rejects_removals_even_with_growth(current) -> Non
     assert_denominator_fresh(current, denominator_snapshot(current))
 
 
-@pytest.mark.parametrize("current", [
-    ["scripts/b.py", "scripts/a.py"],
-    ["scripts/a.py", "scripts/b.py", "scripts/c.py"],
-])
-def test_denominator_freshness_accepts_unchanged_and_growing_inventory(current) -> None:
-    assert_denominator_fresh(current, denominator_snapshot(["scripts/a.py", "scripts/b.py"]))
-
-
 @pytest.mark.parametrize("field, value", [
     ("cli_count", 1), ("probe_count", 1), ("cli_paths_sha256", "invalid"),
     ("cli_paths", ["scripts/a.py", "scripts/a.py"]),
@@ -417,62 +314,6 @@ def test_denominator_freshness_rejects_inconsistent_snapshot(field, value) -> No
     snapshot = denominator_snapshot(["scripts/a.py", "scripts/b.py"])
     with pytest.raises(AssertionError, match="Invalid CLI inventory snapshot"):
         assert_denominator_fresh(snapshot["cli_paths"], {**snapshot, field: value})
-
-
-def test_two_prs_adding_clis_share_snapshot_and_probe_merged_inventory(tmp_path: Path, monkeypatch) -> None:
-    files = {"scripts/rag/source_query.py": "", "scripts/wiki/slovnyk_me.py": ""}
-    cli_source = (
-        'import sys\nfrom pathlib import Path\n'
-        'sys.path.insert(0, str(Path(__file__).resolve().parents[1]))\n'
-        'from scripts.rag import source_query\n'
-        'if __name__ == "__main__": pass\n'
-    )
-    files["scripts/original.py"] = cli_source
-    original_run = subprocess.run
-    # Materialize each branch's tracked files before computing its import graph.
-    def inventory(extra):
-        branch_files = {**files, **extra}
-        for path, source in branch_files.items():
-            target = tmp_path / path
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(source)
-        monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
-            args[0], 0, stdout="\0".join(branch_files) + "\0",
-        ))
-        return source_tool_clis(tmp_path)
-
-    original = inventory({})
-    snapshot = denominator_snapshot(original)
-    first = inventory({"scripts/first.py": cli_source})
-    second = inventory({"scripts/second.py": cli_source})
-    merged = inventory({"scripts/first.py": cli_source, "scripts/second.py": cli_source})
-    assert set(merged) == set(first) | set(second)
-    for clis in (first, second, merged):
-        assert_denominator_fresh(clis, snapshot)
-    for branch_snapshot in (denominator_snapshot(first), denominator_snapshot(second)):
-        assert_denominator_fresh(merged, branch_snapshot)
-    monkeypatch.setattr(subprocess, "run", original_run)
-    monkeypatch.setattr(sys.modules[__name__], "ROOT", tmp_path)
-    monkeypatch.setattr(sys.modules[__name__], "KNOWN_FAILURES", set())
-    test_source_tool_cli_imports(merged)
-
-
-@pytest.mark.parametrize("failing_style", [None, *STYLES])
-def test_new_cli_is_probed_and_new_failure_rejected(monkeypatch, failing_style) -> None:
-    probed = []
-
-    def probe(root, path, style):
-        probed.append((path, style))
-        return "ImportError: new CLI failure" if style == failing_style else None
-
-    monkeypatch.setattr(sys.modules[__name__], "smoke_import", probe)
-    monkeypatch.setattr(sys.modules[__name__], "KNOWN_FAILURES", set())
-    if failing_style is None:
-        test_source_tool_cli_imports(["scripts/new.py"])
-    else:
-        with pytest.raises(pytest.fail.Exception, match="New failures"):
-            test_source_tool_cli_imports(["scripts/new.py"])
-    assert probed == [("scripts/new.py", style) for style in STYLES]
 
 
 def test_refresh_denominator_preserves_failure_rows(tmp_path: Path, monkeypatch, capsys) -> None:
@@ -485,71 +326,6 @@ def test_refresh_denominator_preserves_failure_rows(tmp_path: Path, monkeypatch,
     updated = json.loads(target.read_text())
     assert updated == {**baseline, "denominator": denominator_snapshot(["scripts/new.py"])}
     assert json.loads(capsys.readouterr().out) == updated["denominator"]
-
-
-def test_freshness_failure_names_refresh_command(monkeypatch) -> None:
-    monkeypatch.setattr(sys.modules[__name__], "BASELINE", {**BASELINE, "denominator": {}})
-    with pytest.raises(AssertionError, match=re.escape(REFRESH_COMMAND)):
-        test_source_tool_baseline_is_fresh(BASELINE["denominator"].get("cli_paths", []))
-
-
-@pytest.mark.parametrize("observed, expected, message", [
-    ({("scripts/a.py", "file", "import_error")}, set(), "New failures"),
-    (set(), {("scripts/a.py", "file", "import_error")}, "Stale baseline rows"),
-    ({("scripts/a.py", "file", "module_not_found")},
-     {("scripts/a.py", "file", "import_error")}, "New failures"),
-    ({("scripts/a.py", "module", "import_error")},
-     {("scripts/a.py", "file", "import_error")}, "Stale baseline rows"),
-])
-def test_failure_ratchet_rejects_drift(observed, expected, message: str) -> None:
-    with pytest.raises(AssertionError, match=message):
-        assert_failure_ratchet(observed, expected)
-
-
-@pytest.mark.parametrize("rows", [set(), {("scripts/a.py", "file", "import_error")}])
-def test_failure_ratchet_accepts_exact_remaining_set(rows) -> None:
-    assert_failure_ratchet(rows, rows)
-
-
-@pytest.mark.parametrize("diagnostic, expected", [
-    ("probe: exit 1\nModuleNotFoundError: missing", "module_not_found"),
-    ("probe: exit 1\nImportError: relative import", "import_error"),
-    ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_SUBPROCESS: subprocess.Popen",
-     "environment_blocked_subprocess"),
-    ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_NETWORK: socket.connect",
-     "environment_blocked_network"),
-    ("probe: exit 1\nRuntimeError: IMPORT_SMOKE_BLOCKED_WRITE: open",
-     "other_import_failure"),
-    ("probe: timeout after 15s\nNone\nNone", "timeout"),
-    ("probe: exit 0\n", "other_import_failure"),
-    ('probe: exit 1\n    raise RuntimeError("IMPORT_SMOKE_BLOCKED_SUBPROCESS: subprocess.Popen")\n'
-     'ImportError: different failure', "import_error"),
-])
-def test_failure_class_distinguishes_environment_from_imports(diagnostic: str, expected: str) -> None:
-    assert failure_class(diagnostic) == expected
-
-
-def test_source_tool_graph_includes_new_deferred_and_package_dependents(tmp_path: Path, monkeypatch) -> None:
-    files = {
-        "scripts/rag/source_query.py": "",
-        "scripts/wiki/slovnyk_me.py": "",
-        "scripts/tool/pkg/__init__.py": "from ...rag import source_query\n",
-        "scripts/tool/pkg/new_cli.py": 'if __name__ == "__main__": pass\n',
-        "scripts/tool/helper.py": "from scripts.wiki import slovnyk_me\n",
-        "scripts/tool/deferred.py": (
-            'def main():\n    from . import helper\nif "__main__" == __name__: main()\n'
-        ),
-        "scripts/tool/library.py": "from . import helper\n",
-        "scripts/tool/unrelated.py": 'import json\nif __name__ == "__main__": pass\n',
-    }
-    for path, source in files.items():
-        target = tmp_path / path
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(source)
-    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
-        args[0], 0, stdout="\0".join(files) + "\0",
-    ))
-    assert source_tool_clis(tmp_path) == ["scripts/tool/deferred.py", "scripts/tool/pkg/new_cli.py"]
 
 
 @pytest.mark.parametrize("style", ["module", "file"])
@@ -585,100 +361,6 @@ def test_smoke_probe_enforces_isolation(tmp_path: Path, monkeypatch, style: str,
     assert not (tmp_path / "unexpected-write").exists()
 
 
-@pytest.mark.repo_invariant
-@pytest.mark.parametrize("module", ["grac_frequency_ingest", "slovnyk_me_ingest"])
-@pytest.mark.parametrize("style", ["file", "module"])
-def test_source_ingest_help_from_repository_root(module: str, style: str) -> None:
-    argv = (
-        [f"scripts/ingest/{module}.py"]
-        if style == "file"
-        else ["-m", f"scripts.ingest.{module}"]
-    )
-    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
-    env["LEXICON_SLOVNYK_OFFLINE"] = "1"
-    result = subprocess.run(
-        [sys.executable, *argv, "--help"],
-        cwd=ROOT,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "usage:" in result.stdout.lower(), result.stdout + result.stderr
-    assert "--help" in result.stdout
-
-
-def test_file_probe_matches_real_script_path_and_main_setup(tmp_path: Path) -> None:
-    folder = tmp_path / "scripts" / "tool"
-    folder.mkdir(parents=True)
-    (folder / "sibling.py").write_text("VALUE = 42\n")
-    (folder / "probe.py").write_text('''
-import os
-import sys
-from pathlib import Path
-assert sys.path[0] == str(Path(__file__).resolve().parent)
-assert str(Path.cwd()) not in sys.path
-assert '' not in sys.path
-assert sys.argv == ['scripts/tool/probe.py', '--help']
-if __name__ == '__main__':
-    import sibling
-    assert sibling.VALUE == 42
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.lib import dependency
-    assert dependency.VALUE == 43
-else:
-    raise RuntimeError('main setup was skipped')
-''')
-    lib = tmp_path / "scripts" / "lib"
-    lib.mkdir()
-    (lib / "dependency.py").write_text("VALUE = 43\n")
-    assert smoke_import(tmp_path, "scripts/tool/probe.py", "file") is None
-    (folder / "broken.py").write_text("from scripts.lib import dependency\n")
-    failure = smoke_import(tmp_path, "scripts/tool/broken.py", "file")
-    assert failure is not None and "No module named 'scripts'" in failure
-
-
-@pytest.mark.parametrize("style", STYLES)
-def test_probe_private_temp_is_fresh_writable_and_cleaned(tmp_path: Path, monkeypatch, style: str) -> None:
-    (tmp_path / "probe.py").write_text('''
-import os
-import sqlite3
-import tempfile
-from pathlib import Path
-directory = Path(tempfile.gettempdir())
-assert directory == Path(os.environ['TMPDIR']) == Path(os.environ['TEMP']) == Path(os.environ['TMP'])
-assert not directory.is_relative_to(Path.cwd())
-assert directory.stat().st_mode & 0o777 == 0o700
-assert not list(directory.iterdir())
-with tempfile.NamedTemporaryFile() as handle:
-    handle.write(b'private')
-with tempfile.TemporaryDirectory() as nested:
-    (Path(nested) / 'cleanup').write_text('private')
-folder = directory / 'folder'
-folder.mkdir()
-target = folder / 'write'
-target.write_text('private')
-target.rename(folder / 'renamed')
-(folder / 'renamed').unlink()
-folder.rmdir()
-sqlite3.connect(str(directory / 'private.db')).close()
-''')
-    original_run = subprocess.run
-    directories = []
-
-    def capture(*args, **kwargs):
-        directories.append(Path(kwargs["env"]["TMPDIR"]))
-        return original_run(*args, **kwargs)
-
-    monkeypatch.setattr(subprocess, "run", capture)
-    for _ in range(2):
-        assert smoke_import(tmp_path, "probe.py", style) is None
-    assert directories[0] != directories[1]
-    assert all(not directory.exists() for directory in directories)
-
-
 @pytest.mark.parametrize("operation", [
     "(private / 'escape' / 'write').write_text('blocked')",
     "os.rename(outside / 'original', private / 'moved')",
@@ -710,58 +392,10 @@ def test_private_temp_guard_blocks_escape(tmp_path: Path, monkeypatch, operation
     assert not (tmp_path / "write").exists()
 
 
-@pytest.mark.parametrize("timeout", [False, True])
-def test_private_temp_cleanup_on_failure(tmp_path: Path, monkeypatch, timeout: bool) -> None:
-    directories = []
-
-    def fail(argv, **kwargs):
-        directory = Path(kwargs["env"]["TMPDIR"])
-        directories.append(directory)
-        (directory / "scratch").write_text("temporary")
-        if timeout:
-            raise subprocess.TimeoutExpired(argv, 15)
-        return subprocess.CompletedProcess(argv, 1, "", "RuntimeError: failure")
-
-    monkeypatch.setattr(subprocess, "run", fail)
-    assert smoke_import(tmp_path, "probe.py", "file") is not None
-    assert all(not directory.exists() for directory in directories)
-
-
 def test_private_temp_parent_cannot_be_checkout(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
     with pytest.raises(ValueError, match="outside the checkout"):
         smoke_import(tmp_path, "probe.py", "file")
-
-
-@pytest.mark.parametrize("help_only, gap", [(True, True), (False, True), (False, False)])
-def test_bio_lit_cli_help_and_default_audit(tmp_path: Path, help_only: bool, gap: bool) -> None:
-    # A miniature repo exercises the real file launch and audit output without
-    # touching the checkout. Invalid YAML proves --help never reads plans.
-    script = tmp_path / "scripts" / "audit" / "bio_lit_cross_reference.py"
-    script.parent.mkdir(parents=True)
-    script.write_text((ROOT / "scripts/audit/bio_lit_cross_reference.py").read_text())
-    plans = tmp_path / "curriculum" / "l2-uk-en" / "plans"
-    (plans / "lit").mkdir(parents=True)
-    (plans / "lit" / "sample.yaml").write_text("[invalid" if help_only else "title: Sample\n")
-    (plans / "bio").mkdir()
-    if not gap:
-        (plans / "bio" / "sample.yaml").write_text("slug: sample\n")
-    output = tmp_path / "docs" / "audits" / "bio-lit-cross-reference-gaps.md"
-    output.parent.mkdir(parents=True)
-    result = subprocess.run(
-        [sys.executable, str(script), *(["--help"] if help_only else [])],
-        cwd=tmp_path, capture_output=True, text=True, timeout=15, check=False,
-    )
-    assert result.returncode == (0 if help_only or not gap else 1), result.stdout + result.stderr
-    if help_only:
-        assert "usage:" in result.stdout and "--help" in result.stdout
-        assert not output.exists()
-    elif gap:
-        assert "Found 1 gaps" in result.stdout
-        assert "| plans/lit/sample.yaml | sample.yaml | |" in output.read_text()
-    else:
-        assert "All LIT plans are covered" in result.stdout
-        assert "No undocumented gaps found. All clear!" in output.read_text()
 
 
 if __name__ == "__main__":

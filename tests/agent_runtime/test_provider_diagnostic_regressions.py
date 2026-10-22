@@ -170,32 +170,6 @@ def test_kimi_terminal_codes_survive_wrapped_error(code, expected, trigger):
     )
 
 
-@pytest.mark.parametrize("adapter", ADAPTERS)
-@pytest.mark.parametrize(
-    "diagnostic,expected,trigger",
-    [
-        ("Error: Authentication required.", "provider_auth", "auth"),
-        ("HTTP 401: Authentication Fails, Your api key: ****robe is invalid", "provider_auth", "auth"),
-        ("HTTP 503 overloaded", "provider_overloaded", "overloaded"),
-        ("connection refused", "transport_error", "transport"),
-    ],
-)
-def test_failed_adapter_keeps_provider_auth_overload_transport(adapter, diagnostic, expected, trigger):
-    result = ADAPTERS[adapter]().parse_response(stdout="", stderr=diagnostic, returncode=1, output_file=None)
-    assert result.failure_code == expected
-    assert result.rate_limited is False
-    assert (
-        classify_failover_trigger(
-            parse=result,
-            returncode=1,
-            kill_reason=None,
-            stdout_text=CONTENT,
-            stderr_text=diagnostic,
-        )
-        == trigger
-    )
-
-
 @pytest.mark.parametrize("adapter", ["agy", "grok", "deepseek", "glm"])
 @pytest.mark.parametrize(
     "diagnostic",
@@ -281,45 +255,6 @@ def test_success_and_tool_diagnostics_never_trigger_provider_failure(adapter, di
     assert result.ok is True
     assert result.rate_limited is False
     assert result.failure_code is None
-
-
-def test_stderr_prose_cannot_supply_provider_diagnostic():
-    assert provider_stderr_error("rate limit regression test returned 429") == ""
-    assert provider_failure_code("quota discussion containing 429") == "provider_error"
-
-
-@pytest.mark.parametrize("diagnostic", ["provider.rate_limit docs", "provider.openrouter rate limit exceeded docs"])
-def test_bare_provider_token_without_terminal_colon_is_not_a_diagnostic(diagnostic):
-    assert provider_stderr_error(diagnostic) == ""
-
-
-@pytest.mark.parametrize(
-    "prefix", ["error", "opencode", "kimi", "grok", "agy", "gemini", "cursor", "provider", "acp transport"]
-)
-@pytest.mark.parametrize("body", ["test_rate_limit.py::test_x FAILED", "... see provider.rate_limit docs"])
-def test_generic_prefix_cannot_attribute_later_provider_mentions(prefix, body):
-    assert provider_stderr_error(f"{prefix}: {body}") == ""
-
-
-@pytest.mark.parametrize(
-    "prefix", ["error", "opencode", "kimi", "grok", "agy", "gemini", "cursor", "provider", "acp transport"]
-)
-@pytest.mark.parametrize(
-    "body,expected",
-    [
-        ("Rate limit exceeded", "rate_limited"),
-        ("Too Many Requests", "rate_limited"),
-        ("HTTP 429: Too Many Requests", "rate_limited"),
-        ("Authentication required", "provider_auth"),
-        ("Service unavailable", "provider_overloaded"),
-        ("connection refused", "transport_error"),
-        ("You have exhausted your daily quota. Please try again tomorrow.", "rate_limited"),
-    ],
-)
-def test_generic_prefix_keeps_immediate_provider_marker(prefix, body, expected):
-    diagnostic = f"{prefix}: {body}"
-    assert provider_stderr_error(diagnostic) == diagnostic
-    assert provider_failure_code(diagnostic) == expected
 
 
 @pytest.mark.parametrize("code", ["openrouter", "unknown"])

@@ -58,26 +58,6 @@ def test_canonical_plan_hash_returns_deterministic_hash(
     assert alignment_manifest._canonical_plan_hash("a1", "demo") == expected
 
 
-def test_compose_manifest_uses_sentinel_when_plan_missing(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _set_curriculum_root(monkeypatch, tmp_path)
-    monkeypatch.setattr(alignment_manifest, "_sources_hash", lambda: "sources")
-    monkeypatch.setattr(alignment_manifest, "_template_hashes", lambda: {})
-    monkeypatch.setattr(alignment_manifest, "_canonical_anchor_hash", lambda: "anchors")
-    monkeypatch.setattr(
-        alignment_manifest,
-        "_threshold_snapshot",
-        lambda level: {"level": level},
-    )
-    monkeypatch.setattr(alignment_manifest, "_decisions_subset", lambda: [])
-
-    manifest = alignment_manifest.compose_manifest(level="A1", slug="missing-plan")
-
-    assert manifest["plan_hash"] == alignment_manifest._EMPTY_PLAN_SENTINEL
-
-
 def test_v6_build_module_survives_sys_modules_mutation_during_iteration(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

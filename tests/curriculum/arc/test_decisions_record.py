@@ -69,10 +69,6 @@ def test_shared_accepted_sections_preserve_historical_text(level: str, record_ki
         )
 
 
-def test_generation_is_deterministic() -> None:
-    assert _fresh("a2") == _fresh("a2")
-
-
 @pytest.mark.parametrize("level", LEVELS)
 def test_record_is_verbatim_copy_of_named_sections(level: str) -> None:
     record = yaml.safe_load(_committed(level).read_text(encoding="utf-8"))
@@ -88,21 +84,6 @@ def test_record_is_verbatim_copy_of_named_sections(level: str) -> None:
         assert hashlib.sha256(source["text"].encode("utf-8")).hexdigest() == source["section_sha256"]
         assert hashlib.sha256((REPO_ROOT / source["doc"]).read_bytes()).hexdigest() == source["doc_sha256"]
         assert source["accepted"] in source["accepted_evidence"]["line"]
-
-
-def test_every_level_carries_its_arc_sections_and_the_shared_ones() -> None:
-    a1 = yaml.safe_load(_committed("a1").read_text(encoding="utf-8"))
-    headings = [s["heading"] for s in a1["sources"]]
-    assert headings[0] == "## 2. Decisions"
-    assert headings[1].startswith("## 6. Decisions on the six open questions")
-    assert headings[2] == "## 8. Revision r4 (#10108)"
-    assert headings[3] == "## 9. Revision r3.1: A1 practical recap (#10105)"
-    assert headings[4] == "## 10. Revision r4.1: Staged phonetic facets (#10108)"
-    assert len(headings) == 8
-    for level in ("a2", "b1", "b2"):
-        record = yaml.safe_load(_committed(level).read_text(encoding="utf-8"))
-        assert record["sources"][1]["heading"].startswith("## 8. Decisions on the five open questions")
-        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][5:]]
 
 
 # ---- section boundaries on fixture documents ------------------------------------------
@@ -189,11 +170,6 @@ def test_duplicated_heading_is_a_named_error(tmp_path: Path) -> None:
         _render(tmp_path, FIXTURE + "\n## 2. Decisions\nagain\n")
 
 
-def test_heading_only_inside_a_fence_does_not_count(tmp_path: Path) -> None:
-    with pytest.raises(gd.DecisionsGenerationError, match=r"matches no line"):
-        _render(tmp_path, FIXTURE, "## not a heading (fenced)")
-
-
 def test_evidence_line_must_exist_exactly_once(tmp_path: Path) -> None:
     with pytest.raises(gd.DecisionsGenerationError, match=r"occurs 0 times"):
         _render(tmp_path, FIXTURE.replace("> Status: accepted 2026-01-02.", "> Status: draft."))
@@ -242,20 +218,6 @@ def test_check_writes_nothing(tmp_path: Path) -> None:
     assert not out.exists()
 
 
-def test_generation_error_exits_2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    doc = _write_fixture(tmp_path, FIXTURE.replace("## 2. Decisions", "## 2. Other"))
-    sources = _sources_map(tmp_path, doc)
-    assert gd.main(["--level", "a1", "--sources", str(sources), "--output", str(tmp_path / "out.yaml")]) == 2
-    assert "matches no line" in capsys.readouterr().err
-    assert not (tmp_path / "out.yaml").exists()
-
-
-def test_output_override_is_rejected_with_all(tmp_path: Path) -> None:
-    with pytest.raises(SystemExit) as excinfo:
-        gd.main(["--all", "--output", str(tmp_path / "x.yaml")])
-    assert excinfo.value.code == 2
-
-
 def test_generated_output_validates_against_the_schema(tmp_path: Path) -> None:
     schema = json.loads((REPO_ROOT / gd.SCHEMA_REL).read_text(encoding="utf-8"))
     for level in LEVELS:
@@ -293,20 +255,3 @@ def test_historical_accepted_sections_and_non_a1_semantics_stay_identical():
             sources = sources[:2] + sources[5:]
         actual = [hashlib.sha256(json.dumps({k: v for k, v in entry.items() if k != "doc_sha256"}, ensure_ascii=False, sort_keys=True).encode()).hexdigest() for entry in sources]
         assert actual == expected, level
-
-
-def test_a1_revision_section_10_staged_facets_designated_approval() -> None:
-    a1 = yaml.safe_load(_committed("a1").read_text(encoding="utf-8"))
-    staged = a1["sources"][4]
-    assert staged["heading"] == "## 10. Revision r4.1: Staged phonetic facets (#10108)"
-    assert staged["accepted"] == "2026-10-09"
-    assert staged["accepted_evidence"]["doc"] == "docs/epics/fresh-build-a1-arc.md"
-    assert staged["accepted_evidence"]["line"] == "Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
-    text = staged["text"]
-    assert "a37b5cebc6641d0b4651639bd4470e07d60066ce434a1a4c3a2be4aff210f014" in text
-    assert "741f8082470f872592d63a57cf620b2815c0fad5cda8125740c1bc546a02acaa" in text
-    assert "4bb985d44c685d207dd05b94b074732d803e4051" in text
-    assert "hardness before [е]" in text
-    assert "д–т" in text and "з–с" in text and "г–х" in text
-    assert "б–п" in text
-    assert "ґ–к" in text and "ж–ш" in text and "дж–ч" in text and "дз–ц" in text

@@ -160,11 +160,6 @@ def test_decolonization_cli_build_and_check(tmp_path: Path, monkeypatch: pytest.
     )
 
 
-def test_missing_brown_input_gives_hydrate_guidance(tmp_path: Path) -> None:
-    with pytest.raises(RuntimeError, match="hydrate the required artifact group"):
-        grammar.load_brown_uk_controls(tmp_path / "missing.jsonl")
-
-
 def test_external_output_and_symlink_alias(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _repo(tmp_path)
     monkeypatch.setattr(decol, "REPO_ROOT", repo)

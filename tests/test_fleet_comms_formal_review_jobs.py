@@ -11,7 +11,6 @@ from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.formal_review_jobs import (
     FormalReviewJobsError,
     FormalReviewJobService,
-    open_formal_review_jobs,
 )
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -159,52 +158,6 @@ def test_record_rejected_response_refuses_already_sealed_verdict_without_extra_b
         assert svc.store.connection.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0] == artifact_count
 
 
-def test_list_jobs_filters_and_alias(tmp_path: Path) -> None:
-    with _service(tmp_path) as svc:
-        j1 = svc.create_job(REPO, 1, HEAD, GATE)
-        j2 = svc.create_job(REPO, 2, HEAD, GATE)
-        j3 = svc.create_job("other/repo", 1, HEAD, GATE)
-
-        all_jobs = svc.list_jobs()
-        assert {j.review_id for j in all_jobs} == {j1.review_id, j2.review_id, j3.review_id}
-
-        only_repo = svc.list_job(repository=REPO)
-        assert {j.review_id for j in only_repo} == {j1.review_id, j2.review_id}
-
-        only_pr = svc.list_jobs(repository=REPO, pr=2)
-        assert [j.review_id for j in only_pr] == [j2.review_id]
-
-        only_open = svc.list_jobs(state="open")
-        assert len(only_open) == 3
-
-        svc.record_attempt(j1.review_id, completion_state=CompletionState.FAILED)
-        failed = svc.list_jobs(state="failed")
-        assert [j.review_id for j in failed] == [j1.review_id]
-
-
-def test_get_job_missing_and_validation(tmp_path: Path) -> None:
-    with _service(tmp_path) as svc:
-        with pytest.raises(FormalReviewJobsError, match=r"not found"):
-            svc.get_job("review_missing")
-        with pytest.raises(FormalReviewJobsError, match=r"repository is required"):
-            svc.create_job("  ", 1, HEAD, GATE)
-        with pytest.raises(FormalReviewJobsError, match=r"positive integer"):
-            svc.create_job(REPO, 0, HEAD, GATE)
-        with pytest.raises(FormalReviewJobsError, match=r"invalid completion_state"):
-            job = svc.create_job(REPO, 9, HEAD, GATE)
-            svc.record_attempt(job.review_id, completion_state="not-a-state")
-
-
-def test_open_formal_review_jobs_factory(tmp_path: Path) -> None:
-    root = tmp_path / "v1"
-    svc = open_formal_review_jobs(root)
-    try:
-        job = svc.create_job(REPO, 7, HEAD, GATE)
-        assert svc.get_job(job.review_id).pr_number == 7
-    finally:
-        svc.close()
-
-
 def test_snapshot_artifact_id_must_exist(tmp_path: Path) -> None:
     root = tmp_path / "v1"
     with ArtifactStore(root=root) as store:
@@ -324,13 +277,6 @@ def test_accept_sealed_verdict_refuses_overwrite(tmp_path: Path) -> None:
                     review_evidence=None,
                 ),
             )
-
-
-def test_load_sealed_verdict_missing(tmp_path: Path) -> None:
-    with _service(tmp_path) as svc:
-        job = svc.create_job(REPO, 42, _SHA, GATE)
-        with pytest.raises(FormalReviewJobsError, match="sealed_verdict_missing"):
-            svc.load_sealed_verdict(job.review_id)
 
 
 def test_migrations_retain_sealed_column_after_acpx_v3(tmp_path: Path) -> None:

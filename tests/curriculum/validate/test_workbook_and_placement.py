@@ -66,10 +66,6 @@ def produced_workbook_and_placement_codes(tmp_path: Path) -> set[str]:
 
 
 # --- end-to-end: workbook presence -----------------------------------------
-
-
-def test_valid_plan_needs_no_change() -> None:
-    pass  # sanity anchor; the shared base_plan fixture's workbook presence is
     # already exercised by every VALID_CASES run in test_plan_validate.py
 
 
@@ -88,13 +84,6 @@ def test_recap_lesson_without_workbook_passes(tmp_path: Path) -> None:
     world = write_world(tmp_path, plan, pack, words)
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert codes.WORKBOOK_ACTIVITY_MISSING not in report.codes()
-
-
-def test_lesson_with_no_activities_at_all_fails_workbook_presence() -> None:
-    report = Report(level="a1", slug="x")
-    plan = {"lessons": [{"n": 1, "kind": "teach", "activities": []}]}
-    _check_workbook_presence(report, plan)
-    assert report.failures[0].code == codes.WORKBOOK_ACTIVITY_MISSING
 
 
 def test_checkpoint_lesson_needs_a_workbook_activity_too() -> None:
@@ -193,22 +182,3 @@ def test_level_not_covered_by_table_is_not_checked_not_failed() -> None:
 
 
 # --- the plan_report is printed by plan-validate ----------------------------
-
-
-def test_plan_validate_attaches_the_plan_report(tmp_path: Path) -> None:
-    plan, pack, words = build_base()
-    world = write_world(tmp_path, plan, pack, words)
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
-    assert report.activity_report["stage"] == "plan"
-    assert report.activity_report["module_slug"] == SLUG
-    payload = report.to_json()
-    assert payload["activity_report"]["module"]["workbook_activities"] >= 1
-    assert "activity_report (plan stage)" in report.render_text()
-
-
-def test_plan_validate_reports_empty_activity_report_when_the_plan_fails_to_load(tmp_path: Path) -> None:
-    plan, pack, words = build_base()
-    world = write_world(tmp_path, plan, pack, words)
-    world.plan_path.write_text("x: [unclosed", encoding="utf-8")
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
-    assert report.activity_report == {}

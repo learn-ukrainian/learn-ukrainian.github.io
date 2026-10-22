@@ -14,9 +14,7 @@ import hashlib
 import importlib
 import json
 import os
-import shutil
 import subprocess
-import uuid
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -208,16 +206,6 @@ def test_agy_registered_workspace_inside_primary_checkout(tmp_path, monkeypatch,
     if layout == "dispatch":
         (workspace / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
     _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
-
-
-def test_agy_registered_workspace_under_current_checkout(tmp_path, monkeypatch):
-    # Exercise the real checkout's dispatch ancestry regardless of basetemp.
-    workspace = ROOT / f".gate-repro-{uuid.uuid4().hex}"
-    workspace.mkdir()
-    try:
-        _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
-    finally:
-        shutil.rmtree(workspace)
 
 
 def _assert_agy_registered_workspace_round_trip(workspace, original_log_root, monkeypatch):

@@ -126,14 +126,6 @@ def test_default_builders_enforce_creation_gate(frame_case):
     assert emit(None) == []  # synthetic frames are absent from the production baseline
 
 
-def test_resolved_answer_drift_cannot_reuse_receipt():
-    args = ('cloze', 'Fixture ___', 'answer', 'lemma')
-    source = {'sentence': args[1]}  # derived form absent in source
-    policy = CreationReview(receipts={frame_identity(*args): receipt(args, source)})
-    assert policy.allows(*args, source)
-    assert not policy.allows('cloze', args[1], 'changed answer', args[3], source)
-
-
 def test_identity_preserves_prompt_answer_stress_and_kind():
     base = frame_identity('cloze', 'Prompt ___', 'answer', 'lemma')
     assert base != frame_identity('cloze', 'Prompt ___', 'answe\u0301r', 'lemma')

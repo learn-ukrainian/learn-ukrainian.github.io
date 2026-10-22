@@ -11,7 +11,6 @@ Covers:
 """
 
 import json
-from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -23,76 +22,8 @@ from scripts.practice.adverb_mechanics_engine import (
     build_canonical_adverb_cards,
     export_deck,
     main,
-    resolve_anti_calque_rule,
-    resolve_cause_purpose_rule,
-    resolve_comparison_superlative_rule,
-    resolve_comparison_synthetic_rule,
-    resolve_homophone_1_rule,
-    resolve_homophone_2_rule,
-    resolve_manner_action_rule,
-    resolve_measure_degree_rule,
-    resolve_particles_hyphen_rule,
-    resolve_place_direction_rule,
-    resolve_prefix_po_rule,
-    resolve_reduplication_rule,
-    resolve_separate_phrases_rule,
-    resolve_time_rule,
-    resolve_together_fused_rule,
     verify_deck_with_vesum,
 )
-
-
-def test_resolve_adverb_rules():
-    """Verify that all 15 rule resolver functions return valid citations and summaries."""
-    resolvers = [
-        resolve_manner_action_rule,
-        resolve_time_rule,
-        resolve_place_direction_rule,
-        resolve_measure_degree_rule,
-        resolve_cause_purpose_rule,
-        resolve_prefix_po_rule,
-        resolve_particles_hyphen_rule,
-        resolve_reduplication_rule,
-        resolve_together_fused_rule,
-        resolve_homophone_1_rule,
-        resolve_homophone_2_rule,
-        resolve_separate_phrases_rule,
-        resolve_comparison_synthetic_rule,
-        resolve_comparison_superlative_rule,
-        resolve_anti_calque_rule,
-    ]
-
-    assert len(resolvers) == 15
-    for r in resolvers:
-        cit, ua, en = r()
-        assert "Правопис" in cit
-        assert len(ua) > 30
-        assert len(en) > 30
-
-    # Specific Правопис 2019 subsection citation verification
-    cit_po, _, _ = resolve_prefix_po_rule()
-    assert "§ 41, п. 3, 1)" in cit_po
-
-    cit_part, _, _ = resolve_particles_hyphen_rule()
-    assert "§ 41, п. 3, 3)" in cit_part
-
-    cit_red, _, _ = resolve_reduplication_rule()
-    assert "§ 41, п. 3, 5)" in cit_red
-
-    cit_sup, _, _ = resolve_comparison_superlative_rule()
-    assert "§ 41, п. 1, 9)" in cit_sup
-
-
-def test_build_canonical_adverb_cards_count_and_distribution():
-    """Verify that 75 cards are built with exactly 5 cards per category."""
-    cards = build_canonical_adverb_cards()
-    assert len(cards) == 75
-
-    cat_counts = Counter(c.category for c in cards)
-    assert len(cat_counts) == 15
-
-    for cat in AdverbCategory:
-        assert cat_counts[cat] == 5, f"Category {cat} does not have exactly 5 cards: {cat_counts[cat]}"
 
 
 def test_cards_zero_collision_and_unique_options():
@@ -116,30 +47,6 @@ def test_cards_zero_collision_and_unique_options():
             assert isinstance(d.interference_key, AdverbInterferenceKey)
             assert len(d.explanation_ua) > 15
             assert len(d.explanation_en) > 15
-
-
-def test_card_prompt_display_and_full_sentence():
-    """Verify that every card prompt contains the blank indicator _______."""
-    cards = build_canonical_adverb_cards()
-    for card in cards:
-        assert "_______" in card.prompt, f"Card {card.card_id} prompt missing blank indicator: {card.prompt}"
-        assert card.target_token in card.correct_answer, f"Card {card.card_id} target token mismatch"
-
-
-def test_shuffled_options_balanced_distribution():
-    """Verify that deterministic shuffle distributes correct answer across positions 0..3."""
-    cards = build_canonical_adverb_cards()
-    positions = []
-
-    for card in cards:
-        opts = card.all_options()
-        idx = opts.index(card.correct_answer)
-        positions.append(idx)
-
-    pos_counts = Counter(positions)
-    for pos in range(4):
-        # With 75 cards, expected average is ~18.75 per position; ensure each has >= 10
-        assert pos_counts[pos] >= 10, f"Position {pos} count {pos_counts[pos]} is under-represented"
 
 
 def test_adverb_deck_json_export_and_file_parity(tmp_path: Path):

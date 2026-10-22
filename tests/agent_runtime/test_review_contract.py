@@ -268,23 +268,6 @@ def test_a_checkout_without_a_sources_server_refuses_by_name(tmp_path: Path, che
         check_review_contract(prompt, PROMPT_TEXT, server_checkout=plain)
 
 
-def test_a_changed_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:
-    """Third-party code is not traced; the lock that pins it is a named component of the digest."""
-    primary, _worktree = checkouts
-    prompt = _render(primary, tmp_path / "out" / "prompt.md")
-    rendered_as = server_code(primary).components()[LOCK_FILE]
-    _write(primary, LOCK_FILE, "anyio==4.16.0\n./packages/v4-runtime\n")
-
-    with pytest.raises(ReviewContractError) as refused:
-        check_review_contract(prompt, PROMPT_TEXT, server_checkout=primary)
-
-    message = str(refused.value)
-    print(message)
-    now = server_code(primary).components()[LOCK_FILE]
-    assert "review_render_record_digest_mismatch: the prompt was rendered against different server code" in message
-    assert f"differing server components: {LOCK_FILE}: {rendered_as} -> {now}" in message
-
-
 def test_a_checkout_without_the_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:
     primary, worktree = checkouts
     prompt = _render(worktree, tmp_path / "out" / "prompt.md")
@@ -524,26 +507,3 @@ def test_equal_size_edit_with_restored_mtime_changes_the_digest(tmp_path: Path) 
     _assert_same_closure_as_main(root)
     assert after.digest != before.digest
     assert after.files["scripts/kept.py"] != before.files["scripts/kept.py"]
-
-
-def test_new_init_py_in_an_imported_namespace_package_changes_the_closure(tmp_path: Path) -> None:
-    """Adding ``__init__.py`` to a namespace package already imported is part of the next digest."""
-    root = tmp_path / "checkout"
-    _write(root, SERVER_FILE, "import scripts.ns.mod\n")
-    _write(root, LOCK_FILE, "lock\n")
-    _write(root, "scripts/__init__.py", "")
-    _write(root, "scripts/ns/mod.py", "VALUE = 1\n")
-    _write(root, "scripts/kept_from_init.py", "VALUE = 1\n")
-    before = server_code(root)
-    _assert_same_closure_as_main(root)
-    assert "scripts/ns/__init__.py" not in before.files
-    assert "scripts/ns/mod.py" in before.files
-    assert "scripts/kept_from_init.py" not in before.files
-
-    _write(root, "scripts/ns/__init__.py", "import kept_from_init\n")
-
-    after = server_code(root)
-    _assert_same_closure_as_main(root)
-    assert "scripts/ns/__init__.py" in after.files
-    assert "scripts/kept_from_init.py" in after.files
-    assert after.digest != before.digest

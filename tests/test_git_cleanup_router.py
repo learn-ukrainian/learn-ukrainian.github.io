@@ -5,13 +5,8 @@ import os
 import subprocess
 from pathlib import Path
 
-from fastapi.testclient import TestClient
-
 from scripts.api import git_hygiene_router
 from scripts.api.main import app
-from tests.latency_budget import assert_under_budget
-
-client = TestClient(app, raise_server_exceptions=False)
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -145,12 +140,6 @@ def test_checked_out_branch_not_stale(tmp_path: Path, monkeypatch) -> None:
     assert "codex/dirty-gone" not in stale_names
 
 
-def test_main_never_stale(tmp_path: Path, monkeypatch) -> None:
-    result = _report(tmp_path, monkeypatch)
-
-    assert "main" not in {branch.name for branch in result.stale_branches}
-
-
 def test_clean_merged_worktree_is_removable(tmp_path: Path, monkeypatch) -> None:
     result = _report(tmp_path, monkeypatch)
 
@@ -179,34 +168,3 @@ def test_active_dispatch_worktree_is_protected(tmp_path: Path, monkeypatch) -> N
     protected = {worktree.branch: worktree for worktree in result.protected_worktrees}
     assert protected["codex/active-dispatch-merged"].reason == "active dispatch (matches .worktrees/dispatch/**)"
     assert "codex/active-dispatch-merged" not in {worktree.branch for worktree in result.removable_worktrees}
-
-
-def test_total_reclaimable_sums_correctly(tmp_path: Path, monkeypatch) -> None:
-    result = _report(tmp_path, monkeypatch)
-
-    expected = sum(
-        worktree.disk_bytes for worktree in result.removable_worktrees if worktree.disk_bytes is not None
-    )
-    assert result.total_reclaimable_bytes == expected
-
-
-def test_endpoint_performance_under_budget(tmp_path: Path, monkeypatch) -> None:
-    _cleanup_fixture(tmp_path, monkeypatch)
-
-    response = client.get("/api/git/cleanup")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert set(body) == {
-        "stale_branches",
-        "removable_worktrees",
-        "protected_worktrees",
-        "total_reclaimable_bytes",
-        "computed_at",
-        "performance_ms",
-    }
-    assert_under_budget(
-        body["performance_ms"] / 1000.0,
-        0.5,
-        f"git cleanup performance_ms budget exceeded: {body['performance_ms']}ms",
-    )

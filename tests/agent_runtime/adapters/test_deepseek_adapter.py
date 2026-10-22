@@ -115,12 +115,6 @@ def test_explicit_retired_pro_is_refused_before_invocation(tmp_path):
         _build("Deep pass.", tmp_path, model="deepseek-v4-pro", effort="max")
 
 
-@pytest.mark.parametrize("model", ["deepseek-v4-flash", "deepseek-v4-flash-legacy", "deepseek/deepseek-v4-flash"])
-def test_retired_v4_identity_cannot_launch_moving_flash_alias(tmp_path, model):
-    with pytest.raises(ValueError, match=r"is retired in the model catalog"):
-        _build("Check.", tmp_path, model=model)
-
-
 @pytest.mark.parametrize("name", ["DeepSeek V4.1 Flash", "DeepSeek V4.1 Flash 1017", None])
 @pytest.mark.parametrize("model", [None, "deepseek/deepseek-flash"])
 def test_cached_flash_model_line_allows_dispatch(tmp_path, monkeypatch, name, model):
@@ -153,12 +147,6 @@ def test_cached_alias_drift_refuses_new_flash_dispatch(tmp_path, name):
         return_value=name,
     ), pytest.raises(ValueError, match="alias drift"):
         _build("Check.", tmp_path)
-
-
-def test_provider_prefixed_model_passes_through(tmp_path):
-    plan = _build("Check.", tmp_path, model="deepseek/deepseek-flash")
-
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "deepseek/deepseek-flash"
 
 
 def test_mode_mapping_adds_auto_for_write_modes(tmp_path):

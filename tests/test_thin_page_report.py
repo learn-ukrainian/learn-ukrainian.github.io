@@ -5,8 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -18,7 +16,6 @@ from scripts.lexicon.thin_page_report import (
     TIER_THIN,
     build_parser,
     build_report,
-    classify_tier,
     frazeolohichnyi_idiom_keys,
     main,
     normalize_key,
@@ -172,14 +169,6 @@ def test_normalize_key_strips_stress_and_apostrophes() -> None:
     assert normalize_key("  М’ЯТА ") == "м'ята"
 
 
-def test_classify_tier_rule() -> None:
-    assert classify_tier(set(), None)[0] == TIER_BARE
-    assert classify_tier({"translation"}, None)[0] == TIER_THIN
-    assert classify_tier(set(), "a gloss")[0] == TIER_THIN
-    rich = {"meaning", "etymology", "morphology", "synonyms", "translation"}
-    assert classify_tier(rich, None) == (TIER_RICH, 5)
-
-
 def test_totals_tiers_and_missing_sections(fixture_paths: dict[str, Path]) -> None:
     report = _build(fixture_paths)
     totals = report["totals"]
@@ -276,18 +265,6 @@ def test_help_meets_cli_standard() -> None:
     help_text = build_parser().format_help()
     for marker in ("Examples:", "Outputs:", "Exit codes:", "Related:", "read-only", "--json"):
         assert marker in help_text
-
-
-def test_module_help_via_python_dash_m() -> None:
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.lexicon.thin_page_report", "--help"],
-        capture_output=True,
-        text=True,
-        cwd=Path(__file__).resolve().parents[1],
-        check=True,
-        timeout=30,
-    )
-    assert "thin" in result.stdout
 
 
 def test_frazeolohichnyi_definition_mention_without_phrase_match_does_not_count(

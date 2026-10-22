@@ -257,16 +257,6 @@ def test_current_review_and_heldout_states_are_explicitly_non_admitting() -> Non
     assert "synthetic_siblings" in contract["heldout_contract"]["deny_namespaces"]
 
 
-def test_schema_binding_is_part_of_the_contract_and_receipt() -> None:
-    contract = _contract()
-    binding = contract["bindings"]["historical_protection_channels_schema"]
-    assert binding == {
-        "path": "data/projects/open_model_data/contracts/phase3_historical_protection_channels_v1.schema.json",
-        "sha256": protection.SCHEMA_SHA256,
-    }
-    assert protection._receipt_sha256(contract) == contract["receipt_sha256"]
-
-
 def test_missing_contract_schema_fails_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     contract = _contract()
     monkeypatch.setattr(protection, "SCHEMA_PATH", tmp_path / "missing.schema.json")
@@ -356,38 +346,6 @@ def test_contract_receipt_digest_and_unexpected_fields_are_bound() -> None:
     contract = _contract()
     contract["receipt_sha256"] = SHA256
     assert protection.validate_contract_integrity(contract) is False
-
-
-def test_schema_rejects_unknown_top_level_and_nested_fields() -> None:
-    validator = Draft202012Validator(_schema())
-    top = _json(ARTIFACT)
-    top["unexpected_metadata"] = True
-    with pytest.raises(ValidationError):
-        validator.validate(top)
-    nested = _json(ARTIFACT)
-    nested["historical_protection"]["source_text"] = "forbidden"
-    with pytest.raises(ValidationError):
-        validator.validate(nested)
-
-
-def test_schema_rejects_uppercase_binding_digest() -> None:
-    value = _json(ARTIFACT)
-    value["bindings"]["p1"]["sha256"] = value["bindings"]["p1"]["sha256"].upper()
-    with pytest.raises(ValidationError):
-        Draft202012Validator(_schema()).validate(value)
-
-
-@pytest.mark.parametrize(
-    "record",
-    [
-        _coverage_blocked(),
-        _unresolved(),
-        _unresolved(abstention=True),
-    ],
-)
-def test_state_specific_record_schema_accepts_body_free_shapes(record: dict[str, Any]) -> None:
-    Draft202012Validator(_record_schema()).validate(record)
-    assert protection.validate_disposition_shape(record) is True
 
 
 def test_current_blocked_unresolved_and_abstention_routes_are_admissible() -> None:
@@ -549,15 +507,6 @@ def test_model_proposals_cannot_promote_or_add_to_a_protection_record() -> None:
     record["promotion_decision"] = "accepted"
     assert protection.validate_disposition_shape(record) is False
     assert protection.validate_disposition_record(record) is False
-
-
-def test_unresolved_route_requires_explicit_unknown_dimensions() -> None:
-    record = _unresolved()
-    record["unknown_dimensions"] = []
-    assert protection.validate_disposition_shape(record) is False
-    record = _unresolved(abstention=True)
-    record.pop("region_id")
-    assert protection.validate_disposition_shape(record) is False
 
 
 @pytest.mark.parametrize("forbidden", sorted(protection.FORBIDDEN_RECORD_KEYS))

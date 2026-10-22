@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import sys
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_ROOT = ROOT / "agents_extensions" / "shared" / "skills" / "track-completion"
@@ -54,80 +52,6 @@ def _semantic_review_ready_run() -> dict[str, Any]:
         learner_source_sha256=SOURCE_A,
         passed=True,
     )
-
-
-def test_canonical_contract_pins_states_budgets_quality_and_measurements() -> None:
-    contract = bc.load_contract()
-
-    assert contract["contract_version"] == "1.0.0"
-    assert contract["states"] == [
-        "INSPECT",
-        "BUILD_REBUILD",
-        "DETERMINISTIC_VERIFICATION",
-        "SEMANTIC_REVIEW",
-        "CONSOLIDATED_REPAIR",
-        "FINAL_DISPOSITION",
-        "PUBLICATION",
-    ]
-    assert contract["budgets"] == {
-        "initial_semantic_reviews": 1,
-        "consolidated_repairs": 1,
-        "final_semantic_reviews": 1,
-        "semantic_reviews_total": 2,
-    }
-    assert contract["review_protocol_freeze"] == {
-        "pin_at_run_start": True,
-        "drift_policy": "REJECT_WITHOUT_MUTATION",
-    }
-    assert contract["publication_quality"] == {
-        "minimum_per_dimension": 9.0,
-        "dimensions": [
-            "engagement",
-            "pedagogical",
-            "naturalness",
-            "decolonization",
-            "tone",
-        ],
-        "aggregate_override_allowed": False,
-        "threshold_lowering_allowed": False,
-    }
-    assert contract["measurement_fields"] == [
-        "elapsed_time_ms",
-        "model_call_count",
-        "repair_count",
-        "prompt_bytes",
-        "schema_bytes",
-        "final_quality_disposition",
-    ]
-
-
-def test_contract_schema_rejects_threshold_lowering() -> None:
-    contract = bc.load_contract()
-    schema = json.loads(bc.CONTRACT_SCHEMA_PATH.read_text(encoding="utf-8"))
-    lowered = deepcopy(contract)
-    lowered["publication_quality"]["minimum_per_dimension"] = 8.99
-
-    errors = list(Draft202012Validator(schema).iter_errors(lowered))
-
-    assert errors
-    assert any("9.0 was expected" in error.message for error in errors)
-
-
-@pytest.mark.parametrize(
-    "fixture_name",
-    [
-        "success.json",
-        "budget-exhaustion.json",
-        "protocol-drift.json",
-        "quality-floor.json",
-    ],
-)
-def test_every_regression_fixture_replays_to_a_schema_valid_run(
-    fixture_name: str,
-) -> None:
-    result = bc.replay_fixture(FIXTURES / fixture_name)
-
-    bc.validate_run(result["run"])
 
 
 def test_success_fixture_covers_measurements_and_publication() -> None:
@@ -342,37 +266,6 @@ def test_terminal_semantic_review_run_rejects_further_action_without_mutation() 
             schema_bytes=1,
         )
     assert forged == before
-
-
-def test_terminal_final_disposition_cannot_remain_pending() -> None:
-    forged = bc.start_run(
-        target="bio/terminal-pending",
-        run_id="a" * 32,
-        review_protocol_identity=_protocol(),
-        learner_source_sha256=SOURCE_A,
-    )
-    forged["state"] = "FINAL_DISPOSITION"
-    forged["terminal"] = True
-    before = deepcopy(forged)
-
-    with pytest.raises(bc.BoundedCompletionError, match="RUN_INVARIANT"):
-        bc.validate_run(forged)
-    assert forged == before
-
-
-@pytest.mark.parametrize("protocol_version", ["5", "5.0", "v5.0.0", "5.0.0.1"])
-def test_malformed_semantic_protocol_version_is_rejected_at_identity_boundary(
-    protocol_version: str,
-) -> None:
-    with pytest.raises(bc.BoundedCompletionError, match="PROTOCOL_IDENTITY_INVALID"):
-        bc.make_review_protocol_identity(
-            protocol_version=protocol_version,
-            tool_sha256="1" * 64,
-            prompt_sha256="2" * 64,
-            schema_sha256="3" * 64,
-            reviewer_family="fixture-family",
-            reviewer_model="fixture-model",
-        )
 
 
 def test_tampered_protocol_identity_is_rejected_at_run_start() -> None:

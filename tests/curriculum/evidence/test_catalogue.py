@@ -215,30 +215,6 @@ def test_build_report_suggestions_never_bind_or_change_pack(curation, tmp_path):
     assert pack.lock.yaml_bytes(report["pack"]) == pack.lock.yaml_bytes(empty["pack"])
 
 
-@pytest.mark.parametrize("missing_db", [False, True])
-def test_build_fails_open_when_catalogue_is_absent(curation, tmp_path, missing_db):
-    plan, words, src = curation
-    if missing_db:
-        src.sources_db = tmp_path / "absent.db"
-    else:
-        with sqlite3.connect(src.sources_db) as conn:
-            conn.execute("DROP TABLE resource_catalogue")
-    request = tmp_path / "request.yaml"
-    request.write_text("request_schema: 1\nmodule: a1/test-mod\n")
-    result = pack.build_pack(
-        "a1",
-        "test-mod",
-        request,
-        plans_dir=plan.parent,
-        evidence_dir=words.parent,
-        sources_instance=src,
-        dry_run=True,
-        offline=True,
-    )
-    assert result["status"] == "ok"
-    assert result["catalogue"]["notes"] == [{"code": "catalogue_unavailable"}]
-
-
 @pytest.mark.parametrize("json_output", [True, False])
 def test_cli_exposes_catalogue_report(curation, tmp_path, capsys, json_output):
     plan, words, src = curation

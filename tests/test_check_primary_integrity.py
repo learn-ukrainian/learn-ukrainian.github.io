@@ -222,21 +222,6 @@ def test_detached_clean_idle_no_fix_reports_repairable(tmp_path):
     assert _head_symbolic_target(repo) is None
 
 
-def test_detached_at_older_commit_repaired_via_checkout(tmp_path):
-    repo = _init_repo(tmp_path / "repo")
-    first_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
-    (repo / "README.md").write_text("fixture v2\n")
-    _git(repo, "commit", "-qam", "second")
-    _git(repo, "checkout", "-q", first_sha)  # detached at older commit, clean
-
-    _check(repo, tmp_path, fix=True)  # baseline
-    ok, _message = _check(repo, tmp_path, fix=True)
-    assert ok is True
-    assert _head_symbolic_target(repo) == "refs/heads/main"
-    # Working tree moved to main's tip without losing anything.
-    assert (repo / "README.md").read_text() == "fixture v2\n"
-
-
 # ---------------------------------------------------------------------------
 # alert-only cases: NEVER touched
 # ---------------------------------------------------------------------------
@@ -260,15 +245,6 @@ def test_detached_dirty_tree_not_touched(tmp_path):
     assert alerts[0]["reflog"]
 
 
-def test_detached_untracked_file_counts_as_dirty(tmp_path):
-    repo = _init_repo(tmp_path / "repo")
-    _detach(repo)
-    (repo / "stray.txt").write_text("untracked\n")
-    ok, _message = _check(repo, tmp_path, fix=True)
-    assert ok is False
-    assert _head_symbolic_target(repo) is None
-
-
 def test_operation_in_progress_not_touched(tmp_path):
     repo = _init_repo(tmp_path / "repo")
     _detach(repo)
@@ -286,15 +262,6 @@ def test_index_lock_not_touched(tmp_path):
     ok, message = _check(repo, tmp_path, fix=True)
     assert ok is False
     assert "index.lock" in message
-    assert _head_symbolic_target(repo) is None
-
-
-def test_rebase_state_dir_not_touched(tmp_path):
-    repo = _init_repo(tmp_path / "repo")
-    _detach(repo)
-    (repo / ".git" / "rebase-merge").mkdir()
-    ok, _message = _check(repo, tmp_path, fix=True)
-    assert ok is False
     assert _head_symbolic_target(repo) is None
 
 

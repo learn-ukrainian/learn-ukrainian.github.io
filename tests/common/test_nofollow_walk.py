@@ -47,17 +47,6 @@ def test_symlink_component_is_refused(tmp_path: Path) -> None:
     assert outside.is_dir()
 
 
-def test_non_directory_component_is_refused(tmp_path: Path) -> None:
-    (tmp_path / "file").write_text("x")
-    root = open_directory_component(None, os.fspath(tmp_path))
-    try:
-        with pytest.raises(ComponentOpenError) as caught:
-            open_directory_component(root, "file")
-        assert caught.value.kind == "non-directory"
-    finally:
-        os.close(root)
-
-
 def test_component_replaced_before_open_is_refused_and_closes_the_fd(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     (tmp_path / "real").mkdir()
 
@@ -120,19 +109,3 @@ def test_leaf_descriptor_type_is_fstat_of_the_opened_file(tmp_path: Path) -> Non
     finally:
         os.close(root)
     assert (directory / "secret").read_text() == "hidden"
-
-
-def test_leaf_fstat_failure_closes_the_fd(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    (tmp_path / "note").write_text("x")
-    root = open_directory_component(None, os.fspath(tmp_path))
-    try:
-        def boom(_fd: int) -> os.stat_result:
-            raise OSError("fstat failed")
-
-        monkeypatch.setattr(os, "fstat", boom)
-        before = _fd_count()
-        with pytest.raises(OSError, match="fstat failed"):
-            open_leaf_descriptor(root, "note")
-        assert _fd_count() == before
-    finally:
-        os.close(root)

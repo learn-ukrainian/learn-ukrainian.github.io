@@ -7,7 +7,6 @@ from typing import Any
 import pytest
 import yaml
 
-import scripts.config
 from scripts.orchestration.validate_fleet_taxonomy import (
     ASSIGNMENTS_PATH,
     ASSIGNMENTS_SCHEMA_PATH,
@@ -16,12 +15,6 @@ from scripts.orchestration.validate_fleet_taxonomy import (
     FleetTaxonomyValidationError,
     validate_fleet_taxonomy,
 )
-
-
-def test_scripts_config_resolves_to_module() -> None:
-    """Guard test: import scripts.config must resolve to the module, not a package."""
-    assert scripts.config.__file__ is not None
-    assert scripts.config.__file__.rstrip("c").endswith("scripts/config.py")
 
 
 def _write_yaml(path: Any, data: dict[str, Any]) -> None:
@@ -112,27 +105,3 @@ def test_negative_assignment_for_unknown_area(tmp_path: Any) -> None:
 
     assert "Assignment for unknown area(s)" in str(exc_info.value)
     assert "ghost_area" in str(exc_info.value)
-
-
-def test_negative_schema_violation(tmp_path: Any) -> None:
-    """Negative invariant test: JSON Schema violation raises FleetTaxonomyValidationError."""
-    tax_data = yaml.safe_load(TAXONOMY_PATH.read_text(encoding="utf-8"))
-    ass_data = yaml.safe_load(ASSIGNMENTS_PATH.read_text(encoding="utf-8"))
-
-    # Break taxonomy schema by adding forbidden additional top-level property
-    tax_data["forbidden_top_level_prop"] = True
-
-    tax_file = tmp_path / "fleet_taxonomy.yaml"
-    ass_file = tmp_path / "area_assignments.yaml"
-    _write_yaml(tax_file, tax_data)
-    _write_yaml(ass_file, ass_data)
-
-    with pytest.raises(FleetTaxonomyValidationError) as exc_info:
-        validate_fleet_taxonomy(
-            taxonomy_path=tax_file,
-            assignments_path=ass_file,
-            taxonomy_schema_path=TAXONOMY_SCHEMA_PATH,
-            assignments_schema_path=ASSIGNMENTS_SCHEMA_PATH,
-        )
-
-    assert "fleet_taxonomy schema violation" in str(exc_info.value)

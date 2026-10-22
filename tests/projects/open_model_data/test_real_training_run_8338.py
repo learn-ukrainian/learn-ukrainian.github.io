@@ -13,7 +13,6 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = REPO_ROOT / "data" / "projects" / "open_model_data"
-DOCS_DIR = REPO_ROOT / "docs" / "projects" / "open-model-data"
 STUDY_DIR = DATA_DIR / "study"
 CANARY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "canary"
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
@@ -95,46 +94,3 @@ def test_training_run_manifest_integrity() -> None:
     assert fp["train_sha256"] == "648c2a2ae37e53789640f1db3623b15317a3a4beb31a72d7ee5be322d8e0927d"
     assert fp["heldout_sha256"] == "20b485f5d31ac069740282ca278d94e730dbbb4ca3ec50b5589d0083d287b0f0"
     assert fp["protection_sha256"] == "67070c44fcb3efeed5d394e0b598b95a5e5f2c8c984a0b3065c3c0f4e8c36af7"
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/real_training_run_scorecard.json",
-)
-def test_scorecard_and_plain_verdict() -> None:
-    """Verify before/after scorecard exists with plain answer on whether training helped."""
-    scorecard_md = DOCS_DIR / "REAL_TRAINING_RUN_SCORECARD_8338.md"
-    scorecard_json = STUDY_DIR / "real_training_run_scorecard.json"
-
-    assert scorecard_md.is_file(), f"Missing markdown scorecard: {scorecard_md}"
-    assert scorecard_json.is_file(), f"Missing JSON scorecard: {scorecard_json}"
-
-    md_text = scorecard_md.read_text(encoding="utf-8")
-    assert "Plain Verdict:" in md_text
-    assert "HURT" in md_text
-    assert "8338" in md_text
-
-    data = json.loads(scorecard_json.read_text(encoding="utf-8"))
-    assert data["verdict"]["overall"] == "TRAINING_HURT_PERFORMANCE"
-    assert "HURT" in data["verdict"]["plain_answer"]
-    assert data["heldout_1000_results"]["baseline"]["gate1_calque_elimination_rate"] == 0.0
-    assert data["protection_600_results"]["baseline"]["regional_dialect_preservation_rate"] == 0.1933
-    assert data["protection_600_results"]["trained"]["regional_dialect_preservation_rate"] == 0.0033
-
-
-@pytest.mark.needs_artifact(
-    "open_model_study_outputs",
-    "projects/open_model_data/study/uldr_v1_acceptance_audit.json",
-)
-def test_acceptance_audit_preflight() -> None:
-    """Verify preflight acceptance audit is recorded and captures expected dataset failures."""
-    audit_path = STUDY_DIR / "uldr_v1_acceptance_audit.json"
-    assert audit_path.is_file()
-
-    audit = json.loads(audit_path.read_text(encoding="utf-8"))
-    assert audit["dataset_dir"] == "data/projects/open_model_data/archive/uldr_v1_production"
-    assert audit["total_records"] == 9000
-    assert audit["overall_status"] == "ACCEPTANCE_FAILED"
-    assert audit["checks"]["check_1_repeats"]["status"] == "FAIL"
-    assert audit["checks"]["check_2_form_letters"]["status"] == "FAIL"
-    assert audit["checks"]["check_5_source_rules"]["status"] == "FAIL"

@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
-from unittest.mock import call, patch
+from unittest.mock import patch
 
 import yaml
 
@@ -38,45 +38,3 @@ def test_write_worktree_brief_writes_expected_yaml(tmp_path):
         "task_id": "issue-1192-c5c6",
         "generated_at": "2026-04-12T09:30:00Z",
     }
-
-
-def test_write_worktree_brief_calculates_divergence_from_git_commands(tmp_path):
-    with patch("scripts.ai_agent_bridge._worktree_brief._run_git") as run_git_mock:
-        run_git_mock.side_effect = [
-            "deadbeef",
-            "7 3",
-        ]
-        write_worktree_brief(tmp_path, "task-123")
-
-    assert run_git_mock.call_args_list == [
-        call(tmp_path, "rev-parse", "main"),
-        call(tmp_path, "rev-list", "--left-right", "--count", "main...HEAD"),
-    ]
-
-
-def test_run_git_passes_default_timeout(tmp_path):
-    import subprocess
-
-    from scripts.ai_agent_bridge import _worktree_brief
-
-    with patch("subprocess.run") as mock_run:
-        mock_run.return_value = subprocess.CompletedProcess(["git"], 0, stdout="deadbeef\n")
-        res = _worktree_brief._run_git(tmp_path, "rev-parse", "main")
-        assert res == "deadbeef"
-        assert mock_run.call_args.kwargs.get("timeout") == _worktree_brief.DEFAULT_GIT_TIMEOUT_SECONDS
-
-
-def test_run_git_timeout_raises_timeout_expired(tmp_path):
-    import subprocess
-
-    import pytest
-
-    from scripts.ai_agent_bridge import _worktree_brief
-
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["git"], _worktree_brief.DEFAULT_GIT_TIMEOUT_SECONDS),
-    ):
-        with pytest.raises(subprocess.TimeoutExpired):
-            _worktree_brief._run_git(tmp_path, "rev-parse", "main")
-

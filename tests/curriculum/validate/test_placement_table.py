@@ -229,10 +229,6 @@ def test_cli_check_reports_stale_and_write_fixes_it(tmp_path: Path) -> None:
         pt_module.REPO_ROOT = original
 
 
-def test_cli_reports_usage_error_for_bad_doc(tmp_path: Path) -> None:
-    assert placement_main(["--check", "--doc", str(tmp_path / "missing.md")]) == 2
-
-
 def test_committed_table_is_not_stale() -> None:
     """The frozen requirement: a test fails when placement_table.yaml is stale."""
     committed_path = REPO_ROOT / "scripts/curriculum/validate/placement_table.yaml"

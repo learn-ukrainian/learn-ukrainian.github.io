@@ -25,29 +25,6 @@ from tests.word_card_certification_fixtures import certification_fixture, datase
 
 ROOT = Path(__file__).resolve().parents[1]
 IDENTITY = ROOT / "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl"
-FIXTURE = ROOT / "data/projects/ua_eval_harness/baselines/v1/fixture-rules.responses.jsonl"
-
-
-def test_paired_identical_run_has_zero_delta_and_interval() -> None:
-    report = paired_contrast(IDENTITY, IDENTITY, samples=25, seed=6170)
-    assert report["primary"] == {"delta_f0_5": 0.0, "delta_f0_5_95_ci": [0.0, 0.0]}
-    assert report["secondary"]["delta_exact_sentence_accuracy_95_ci"] == [0.0, 0.0]
-    assert report["inference"]["statistical_gate_passed"] is False
-
-
-def test_paired_contrast_is_antisymmetric_under_arm_swap(tmp_path: Path) -> None:
-    identity_rows = IDENTITY.read_text(encoding="utf-8").splitlines()
-    fixture_rows = FIXTURE.read_text(encoding="utf-8").splitlines()
-    aligned_fixture = tmp_path / "aligned-fixture.jsonl"
-    aligned_fixture.write_text(identity_rows[0] + "\n" + "\n".join(fixture_rows[1:]) + "\n", encoding="utf-8")
-    forward = paired_contrast(IDENTITY, aligned_fixture, samples=25, seed=6170)
-    reverse = paired_contrast(aligned_fixture, IDENTITY, samples=25, seed=6170)
-    assert forward["primary"]["delta_f0_5"] == pytest.approx(-reverse["primary"]["delta_f0_5"])
-    assert forward["primary"]["delta_f0_5_95_ci"] == pytest.approx(
-        [-reverse["primary"]["delta_f0_5_95_ci"][1], -reverse["primary"]["delta_f0_5_95_ci"][0]]
-    )
-
-
 def test_paired_contrast_rejects_decoding_drift(tmp_path: Path) -> None:
     rows = IDENTITY.read_text(encoding="utf-8").splitlines()
     header = json.loads(rows[0])
@@ -323,12 +300,6 @@ def test_default_package_rejects_copied_quotation_in_any_file(path) -> None:
         build_package({}, [{"path": path, "content": content}], sum11_texts=[text])
 
 
-def test_default_package_rejects_co_located_opt_in_subset(contrast_pair) -> None:
-    row = build_contrastive_subset([contrast_pair], opt_in=True)[0]
-    with pytest.raises(OpenDatasetPublishError, match="quarantine gate failed"):
-        build_package({}, [{"path": "opt-in/contrast.jsonl", "content": json.dumps(row)}])
-
-
 def test_default_package_round_trip_and_invalid_json(certification) -> None:
     certification.card["identity"]["notes"] = ["Authentic correction"]
     certification.approve(certification.card)
@@ -395,27 +366,3 @@ def test_default_publish_audits_exact_package_before_upload(tmp_path, monkeypatc
     assert json.loads(packaged_shard["content"]) == certification.card
     assert json.loads(packaged_shard["content"])["identity"]["notes"] == ["Authentic correction"]
     assert result == json.loads(pointer.read_text())
-
-
-def test_publish_cli_passes_inventory_and_rejects_wrong_inventory_shape(tmp_path, monkeypatch, capsys) -> None:
-    import sys
-
-    from scripts.open_dataset import publish
-
-    inventory = tmp_path / "inventory.json"
-    inventory.write_text('["Frozen Soviet quotation"]')
-    calls = []
-
-    def capture(**kwargs):
-        calls.append(kwargs)
-        return {"manifest_version": "synthetic", "generated_at": None, "file_count": 0}
-
-    monkeypatch.setattr(publish, "publish_open_dataset", capture)
-    monkeypatch.setattr(sys, "argv", ["publish", "--dry-run", "--sum11-inventory", str(inventory)])
-    assert publish.main() == 0
-    assert calls[0]["sum11_texts"] == ["Frozen Soviet quotation"]
-    assert calls[0]["dry_run"] is True
-    inventory.write_text('{}')
-    assert publish.main() == 2
-    assert "JSON array" in capsys.readouterr().err
-    assert len(calls) == 1

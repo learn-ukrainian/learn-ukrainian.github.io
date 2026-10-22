@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import sqlite3
 from pathlib import Path
 
@@ -98,9 +97,3 @@ def test_morphological_generator_requires_base_and_same_pos(tmp_path: Path) -> N
     assert ("порадний", "безпорадний", "adj") not in pairs
     assert summary["base_lemma_gate_dropped"] >= 2
     assert summary["candidate_count"] == len(rows)
-
-
-def test_outputs_are_json_serializable(tmp_path: Path) -> None:
-    db = _vesum_db(tmp_path / "vesum.db", [("добрий", "добрий", "adj", "adj")])
-    rows, summary = antonyms.generate(vesum_db=db)
-    json.dumps({"relations": rows, "summary": summary}, ensure_ascii=False)

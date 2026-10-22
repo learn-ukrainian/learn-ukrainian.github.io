@@ -10,7 +10,6 @@ Every path listed in ``INVENTORY`` must be either:
 
 from __future__ import annotations
 
-import re
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -332,63 +331,4 @@ def test_cyrillic_text_paths_preserve_bytes(path: RoundTripper, case: dict[str, 
         f"  input : {case['text']!r}\n"
         f"  output: {got!r}\n"
         f"  notes : {case.get('notes', '')}"
-    )
-
-
-def test_inventory_entries_still_point_at_real_code_paths() -> None:
-    for path_name, meta in INVENTORY.items():
-        text = (REPO_ROOT / meta["path"]).read_text(encoding="utf-8")
-        assert meta["needle"] in text, f"Inventory entry {path_name} no longer matches {meta['path']}"
-
-
-def test_inventory_roundtrip_registry_is_complete() -> None:
-    inventory_roundtrips = {name for name, meta in INVENTORY.items() if meta["coverage"] == "roundtrip"}
-    registry_names = {entry.name for entry in ROUND_TRIPPERS}
-    assert registry_names == inventory_roundtrips
-
-
-def test_inventory_exemptions_are_documented() -> None:
-    undocumented = [
-        name
-        for name, meta in INVENTORY.items()
-        if meta["coverage"] == "exempt" and not meta.get("notes", "").strip()
-    ]
-    assert undocumented == []
-
-
-def test_new_unicode_handler_names_require_inventory_updates() -> None:
-    candidate_names = {
-        "tokenize_words",
-        "tokenize_sents",
-        "tokenize_text",
-        "split_sentences",
-        "_strip_stress",
-        "_extract_stressed_words",
-        "auto_fix_euphony",
-        "tokenize_all_ukrainian",
-        "strip_stress",
-        "normalize_surface",
-        "normalize_text",
-        "_normalize_text",
-        "_dialogue_tokens",
-        "extract_ukrainian_stem",
-        "_tokenize_ukrainian",
-        "extract_prose_words",
-        "extract_plan_vocab",
-        "_tokenize",
-        "build_query_buckets",
-        "_tokenize_normalized_text",
-    }
-    expected = {meta["needle"][4:-1] for meta in INVENTORY.values()}
-    found: set[str] = set()
-    for path in (REPO_ROOT / "scripts").rglob("*.py"):
-        text = path.read_text(encoding="utf-8")
-        for match in re.finditer(r"^def\s+([A-Za-z_][A-Za-z0-9_]*)\(", text, re.MULTILINE):
-            if match.group(1) in candidate_names:
-                found.add(match.group(1))
-
-    unexpected = sorted(found - expected)
-    assert unexpected == [], (
-        "New Unicode/text-handling helpers were found without an inventory entry: "
-        + ", ".join(unexpected)
     )

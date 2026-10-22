@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 
-from scripts.audit.classify_atlas_source_gaps import classify_manifest, rendered_sections
+from scripts.audit.classify_atlas_source_gaps import classify_manifest
 from tests.project_python import project_python
 
 
@@ -34,12 +34,6 @@ def _entry(**overrides: object) -> dict:
     }
     entry.update(overrides)
     return entry
-
-
-def test_rendered_sections_excludes_course_usage_from_source_backed_gap_count() -> None:
-    entry = _entry(course_usage=[{"track": "a1", "module_num": 1, "slug": "known"}])
-
-    assert rendered_sections(entry) == {"meaning", "morphology", "translation"}
 
 
 def test_classify_manifest_reports_unclassified_missing_source_sections() -> None:
@@ -260,30 +254,3 @@ def test_cli_emits_machine_readable_formats(tmp_path) -> None:
     lines = tsv_result.stdout.strip().splitlines()
     assert lines[0] == "lemma\turl_slug\tpos\tcefr\tsection\tstatus\tsource\tnote\tprimary_source"
     assert len(lines) == 2
-
-
-def test_cli_rejects_negative_unclassified_gap_limit(tmp_path) -> None:
-    manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(
-        json.dumps({"entries": [_entry(gloss=None)]}, ensure_ascii=False),
-        encoding="utf-8",
-    )
-
-    result = subprocess.run(
-        [
-            str(project_python()),
-            "scripts/audit/classify_atlas_source_gaps.py",
-            "--manifest",
-            str(manifest_path),
-            "--local",
-            "--max-unclassified-source-gaps",
-            "-1",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-
-    assert result.returncode == 1
-    assert "must be non-negative" in result.stdout

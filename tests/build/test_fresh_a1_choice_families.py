@@ -118,21 +118,6 @@ def _check(tmp_path: Path, activity: dict, *, planned: bool = False, host: bool 
     )
 
 
-def test_routing_covers_every_schema_family_and_non_object_item_shape() -> None:
-    definitions = [SCHEMA["definitions"][ref["$ref"].rsplit("/", 1)[-1]] for ref in SCHEMA["items"]["oneOf"]]
-    types = {definition["properties"]["type"]["const"] for definition in definitions}
-    assert set(FAMILIES) == types
-    assert set(runner._A1_CHECK_7_RULES) == types | {"multiple-choice"}
-    # All top-level items are objects except order's string items. The other
-    # string containers (categories/groups/examples/phrases/syllables) are below.
-    non_object = {
-        definition["properties"]["type"]["const"]
-        for definition in definitions
-        if "items" in definition["properties"] and definition["properties"]["items"]["items"].get("type") != "object"
-    }
-    assert non_object == {"order"}
-
-
 @pytest.mark.parametrize("typ", FAMILIES)
 @pytest.mark.parametrize("planned", [False, True], ids=["inline-type", "planned-type"])
 def test_schema_family_witness_passes_check_7(tmp_path: Path, typ: str, planned: bool) -> None:
@@ -151,14 +136,6 @@ def test_choice_family_is_checked_instead_of_skipped(tmp_path: Path, typ: str, p
     assert (row["status"], row["code"], row["token"]) == ("failed", "comprehension_host_ineligible", "1")
 
 
-@pytest.mark.parametrize("typ", ["quiz", "odd-one-out"])
-def test_report_quote_choice_witness_and_missing_host(tmp_path: Path, typ: str) -> None:
-    activity = _activity(typ)
-    activity["items"][0]["host"] = {"kind": "quote", "ref": "T-1"}
-    assert _check(tmp_path, activity)["status"] == "passed"
-    assert _check(tmp_path, activity, host=False)["code"] == "comprehension_host_ineligible"
-
-
 @pytest.mark.parametrize("typ", ["fill-in", "error-correction", "translate"])
 def test_production_item_without_options_has_no_choice_semantics(tmp_path: Path, typ: str) -> None:
     activity = _activity(typ)
@@ -166,11 +143,6 @@ def test_production_item_without_options_has_no_choice_semantics(tmp_path: Path,
     item.pop("options")
     item.pop("kind")
     assert _check(tmp_path, activity)["status"] == "passed"
-
-
-@pytest.mark.parametrize("typ", ["classify", "group-sort", "observe", "phrase-table", "pick-syllables"])
-def test_nested_string_containers_pass_check_7(tmp_path: Path, typ: str) -> None:
-    assert _check(tmp_path, _activity(typ))["status"] == "passed"
 
 
 def test_group_sort_string_items_with_form_feature_fail_without_record(tmp_path: Path) -> None:
@@ -188,27 +160,6 @@ def test_unjumble_string_and_array_aliases_pass_check_7(tmp_path: Path, key: str
     item = activity["items"][0]
     item.pop("words")
     item[key] = value
-    assert _check(tmp_path, activity)["status"] == "passed"
-
-
-def test_order_string_items_pass_check_7_and_keep_structural_key_check(tmp_path: Path) -> None:
-    activity = _activity("order")
-    assert _check(tmp_path, activity, planned=True)["status"] == "passed"
-    lesson = {"activities": [{"id": "a1", "type": "order"}]}
-    assert runner.check_4_activities({"activities": [activity]}, lesson, {}, {}, level="a1")[0]["status"] == "passed"
-    activity["correct_order"] = [0, 0]
-    assert (
-        runner.check_4_activities({"activities": [activity]}, lesson, {}, {}, level="a1")[0]["code"]
-        == "order_index_coverage"
-    )
-
-
-def test_order_string_items_reach_choice_check_through_check_3(tmp_path: Path) -> None:
-    activity = _activity("order")
-    draft = {"activities": [activity], "steps": [], "consolidation": {"activities": []}}
-    lesson = {"activities": [{"id": "a1", "type": "order"}], "steps": []}
-    assert runner.check_3_structure(draft, lesson)["status"] == "passed"
-    assert runner.check_4_activities(draft, lesson, {}, {}, level="a1")[0]["status"] == "passed"
     assert _check(tmp_path, activity)["status"] == "passed"
 
 

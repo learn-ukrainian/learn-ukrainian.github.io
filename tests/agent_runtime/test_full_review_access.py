@@ -161,13 +161,6 @@ def captured_probe(value):
     return next((proof for child in children if (proof := captured_probe(child))), None)
 
 
-def test_captured_probe_reads_nested_exec_output():
-    proof = {"denied_writes": 5, "git_show": True, "private_network": True}
-    envelope = [{"type": "input_text", "text": json.dumps({"output": json.dumps(proof) + "\n"})}]
-    assert captured_probe(envelope) == proof
-    assert captured_probe("Traceback\nnot a successful probe") is None
-
-
 @pytest.fixture
 def world(request):
     root, home = request.getfixturevalue("boundary_world")

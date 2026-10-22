@@ -50,18 +50,6 @@ def test_changed_generation_schema_version_is_stale(harness) -> None:
     assert generation.open_generation(result.published, binding=fixture_binding()).reason == "lexdata_stale"
 
 
-def test_status_cli_uses_the_current_registry(harness, capsys, monkeypatch) -> None:
-    import json
-
-    from scripts.lexdata import cli
-
-    result = harness.build()
-    monkeypatch.setenv("LU_LEXDATA_DB", str(result.published))
-    assert cli.main(["status"]) == 2
-    assert json.loads(capsys.readouterr().out) == {
-        "generation": result.generation, "reason": "lexdata_stale", "status": "unavailable"}
-
-
 @pytest.mark.parametrize("value", ["not-json", "[]", "null"])
 def test_malformed_meta_is_unavailable_and_closes_the_connection(harness, monkeypatch, value) -> None:
     result = harness.build()

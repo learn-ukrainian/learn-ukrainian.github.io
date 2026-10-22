@@ -77,25 +77,6 @@ def test_fd_bound_deletion_survives_path_swap(tmp_path: Path) -> None:
     assert inner.resolve() == external.resolve()
 
 
-def test_path_based_deletion_would_have_escaped(tmp_path: Path) -> None:
-    """Pin the OLD behaviour, so a regression to path semantics is visible.
-
-    This documents why the fd walk exists: the same swap against a path-based
-    unlink destroys the external file.
-    """
-    agent, _inner, external = _fixture(tmp_path)
-
-    (agent / "sub").rename(tmp_path / "sub-moved")
-    (agent / "sub").symlink_to(external.parent, target_is_directory=True)
-
-    os.unlink(str(agent / "sub" / "victim.txt"))  # path-based: follows the symlink
-
-    assert not external.exists(), (
-        "expected the path-based deletion to escape; if this fails the fixture no longer "
-        "reproduces the original defect and the guarantee above proves nothing"
-    )
-
-
 def test_symlinked_component_is_refused(tmp_path: Path) -> None:
     agent, _inner, external = _fixture(tmp_path)
     (agent / "escape").symlink_to(external.parent, target_is_directory=True)

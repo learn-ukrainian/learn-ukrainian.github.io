@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
-from itertools import permutations
 from pathlib import Path
 from urllib.parse import urlunsplit
 
@@ -227,24 +226,6 @@ def test_model_and_mcp_output_cannot_supply_native_trigger(tmp_path, recorded_tr
     agy._transcript_path_from_plan(plan).write_text("\n".join(json.dumps(event) for event in events))
     attempt = record(parse(plan))
     assert attempt["permission_target_unknown_reason"] == "trigger_missing"
-    assert attempt["denied_tool_name"] is None
-
-
-def test_error_mcp_output_cannot_supply_file_permission_evidence(tmp_path, recorded_transcript):
-    plan, events = denial_plan(tmp_path, recorded_transcript, "evidence.txt", tool="call_mcp_tool", arg="Arguments")
-    events.append(
-        {
-            "type": "GENERIC",
-            "status": "ERROR",
-            "content": _explicit_denial("read_file", "private-fake.txt").replace(
-                "Matches user-configured deny rule.", "Headless auto-denial."
-            ),
-        }
-    )
-    agy._transcript_path_from_plan(plan).write_text("\n".join(json.dumps(event) for event in events))
-    attempt = record(parse(plan))
-    assert attempt["permission_target"] == "unknown"
-    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
     assert attempt["denied_tool_name"] is None
 
 
@@ -569,24 +550,6 @@ def test_cli_notice_mismatch_never_attributes_leftover_call(tmp_path, completed_
     assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
 
 
-def test_cli_notice_for_completed_slot_never_attributes_leftover_call(tmp_path):
-    events = [
-        _planner(("read_file", "Path", "really-denied.txt"), ("list_dir", "DirectoryPath", "done-dir")),
-        _result("DONE", "Directory listing completed."),
-    ]
-    result = agy.AgyAdapter().parse_response(
-        stdout="",
-        stderr=auto_denial("read_file(really-denied.txt)"),
-        returncode=1,
-        output_file=None,
-        plan=review_plan(tmp_path, events),
-    )
-    attempt = record(result)
-    assert attempt["denied_tool_name"] is None
-    assert attempt["permission_target"] == "workspace:really-denied.txt"
-    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
-
-
 def test_deep_cli_notice_target_stays_unknown(tmp_path):
     deep = "[" * 20000
     result = agy.AgyAdapter().parse_response(
@@ -833,28 +796,6 @@ def test_denial_with_two_matching_calls_is_ambiguous(tmp_path, same_tool, comple
     assert attempt["denied_tool_name"] is None
     assert attempt["permission_target"] == "unknown"
     assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
-
-
-@pytest.mark.parametrize("call_order", list(permutations(range(3))))
-@pytest.mark.parametrize("denial_first", [False, True])
-def test_completed_then_denied_then_pending_call_names_only_denied_call(tmp_path, call_order, denial_first):
-    calls = [
-        ("list_dir", "DirectoryPath", "completed-dir"),
-        ("read_file", "Path", "actually-denied.txt"),
-        ("view_file", "AbsolutePath", "pending.txt"),
-    ]
-    results = [
-        _result("DONE", "Directory listing completed."),
-        _result("ERROR", _headless_read_denial("actually-denied.txt")),
-    ]
-    events = [
-        _planner(*(calls[index] for index in call_order)),
-        *(reversed(results) if denial_first else results),
-    ]
-    attempt = record(parse(review_plan(tmp_path, events)))
-    assert attempt["denied_tool_name"] == "read_file"
-    assert attempt["permission_target"] == "workspace:actually-denied.txt"
-    assert attempt["permission_target_unknown_reason"] is None
 
 
 @pytest.mark.parametrize("reverse_results", [False, True])

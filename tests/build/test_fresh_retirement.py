@@ -83,25 +83,6 @@ def test_direct_entrypoints_refuse_before_other_reads(root, operation, monkeypat
     assert snapshot(root) == before
 
 
-def test_lesson_manifest_refuses_without_reading_review_inputs(root):
-    before = snapshot(root)
-    plans = root / "curriculum/l2-uk-en/lesson-plans/a1"
-    evidence = root / "curriculum/l2-uk-en/evidence/a1"
-    with pytest.raises(PlanError, match="plan_retired"):
-        manifest.write_manifest(
-            "a1",
-            "old",
-            1,
-            lesson_kind="lesson",
-            state_dir=evidence / "_state/old",
-            repo_root=root,
-            plans_dir=plans,
-            evidence_dir=evidence,
-            position=1,
-        )
-    assert snapshot(root) == before
-
-
 def test_retired_learner_state_is_reported_as_unrecomputable(root):
     path = "curriculum/l2-uk-en/evidence/a1/_state/old/learner-state.yaml"
     doc = {

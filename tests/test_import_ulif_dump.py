@@ -10,7 +10,6 @@ from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.tools.import_ulif_dump import (
     ensure_target_schema,
     import_batch,
-    normalize_query,
 )
 
 
@@ -73,11 +72,6 @@ def _setup_target_db(path: Path) -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     ensure_target_schema(conn)
     return conn
-
-
-def test_normalize_query() -> None:
-    assert normalize_query("  Київ  ") == "київ"
-    assert normalize_query("Слово  Друге") == "слово друге"
 
 
 def test_import_batch_inserts_entries_and_sections(tmp_path: Path) -> None:

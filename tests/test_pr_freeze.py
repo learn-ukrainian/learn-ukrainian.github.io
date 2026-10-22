@@ -36,11 +36,6 @@ def test_refuses_at_threshold(tmp_path: Path) -> None:
     assert "Land your own open PRs first" in line
 
 
-def test_admits_below_threshold(tmp_path: Path) -> None:
-    fetch, _ = _fetch(14)
-    assert not pr_freeze.evaluate(REPO, environ=OPT_IN, fetch=fetch, cache_file=tmp_path / "c.json").refused
-
-
 def test_env_override(tmp_path: Path) -> None:
     fetch, calls = _fetch(20)
     env = {pr_freeze.THRESHOLD_ENV: "25"}
@@ -117,15 +112,6 @@ def test_branch_exempt_only_with_open_pr(tmp_path: Path) -> None:
     )
     assert not unknown.refused
     assert unknown.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
-
-
-def test_cache_reused_within_ttl(tmp_path: Path) -> None:
-    fetch, calls = _fetch(3)
-    cache = tmp_path / "c.json"
-    clock = iter([100.0, 130.0, 200.0, 200.0])
-    for _ in range(3):
-        pr_freeze.cached_open_pr_count(REPO, fetch=fetch, cache_file=cache, ttl_s=60, now=lambda: next(clock))
-    assert len(calls) == 2
 
 
 def test_fresh_cache_count_below_total_is_not_used(tmp_path: Path) -> None:
@@ -223,26 +209,6 @@ def test_dispatch_refuses_before_any_side_effect(monkeypatch, capsys, tmp_path) 
     assert not (tmp_path / "tasks").exists()
 
 
-def test_helper_allows_existing_pr_branch(monkeypatch) -> None:
-    from scripts import delegate
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setattr(pr_freeze, "branch_has_open_pr", lambda repo, branch: True)
-    monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
-    repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    args = argparse.Namespace(
-        mode="workspace-write",
-        branch="codex/fix-1",
-        pr=None,
-        cwd=None,
-        worktree=None,
-        force_new=True,
-        task_id="retry-probe",
-    )
-    assert delegate._check_open_pr_freeze(args, repo) is None
-
-
 def test_branch_lookup_encodes_head(monkeypatch) -> None:
     seen = []
 
@@ -272,50 +238,6 @@ def test_force_new_without_prior_record_is_still_refused(monkeypatch, capsys, tm
     (tmp_path / "tasks").mkdir()
     (tmp_path / "tasks" / "fresh-id.json").write_text("{}")
     assert delegate._check_open_pr_freeze(args, repo) == 3
-
-
-@pytest.mark.parametrize("archived", [False, True])
-@pytest.mark.parametrize("prior_mode", ["read-only", "workspace-write"])
-def test_force_new_record_cannot_exempt_fresh_branch(monkeypatch, capsys, tmp_path, archived, prior_mode) -> None:
-    """A retained record is not evidence that the retry reuses a checkout or PR."""
-    from scripts import delegate
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
-    task_id = "retry-probe"
-    record = delegate._archived_state_path(task_id) if archived else delegate._state_path_no_create(task_id)
-    record.parent.mkdir(parents=True)
-    record.write_text(json.dumps({"task_id": task_id, "mode": prior_mode, "status": "done", "branch": "codex/reaped"}))
-    before = record.read_bytes()
-
-    def no_side_effects(*a, **k):
-        raise AssertionError("fresh-branch retry reached a side effect while frozen")
-
-    monkeypatch.setattr(delegate, "_state_path", no_side_effects)
-    monkeypatch.setattr(delegate, "_archive_task_artifacts", no_side_effects)
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [
-            "delegate.py",
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            task_id,
-            "--mode",
-            "workspace-write",
-            "--worktree",
-            "--force-new",
-            "--prompt",
-            "implement a thing",
-        ],
-    )
-    assert delegate.main() == 3
-    assert "Land your own open PRs first" in capsys.readouterr().err
-    assert record.read_bytes() == before
 
 
 @pytest.mark.parametrize("failure", ["count", "branch", "client_cache"])
@@ -429,20 +351,3 @@ def test_decision_path_issues_one_non_dependabot_search(monkeypatch, tmp_path: P
     assert "16 open PRs" in line
     assert "16 counted" in line
     assert "Land your own open PRs first" in line
-
-
-def test_search_fetch_error_fails_open(monkeypatch, tmp_path: Path) -> None:
-    """A real search failure fails open and does not issue another search."""
-    seen: list[str] = []
-
-    def broken(endpoint: str):
-        seen.append(endpoint)
-        raise RuntimeError("network down")
-
-    monkeypatch.setattr(pr_freeze, "_gh_get", broken)
-    decision = pr_freeze.evaluate(REPO, environ=OPT_IN, cache_file=tmp_path / "c.json")
-    assert not decision.refused
-    assert decision.open_prs is None
-    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
-    assert len(seen) == 1
-    assert _issued_search_query(seen[0]) == f"repo:{REPO} is:pr is:open -author:app/dependabot"

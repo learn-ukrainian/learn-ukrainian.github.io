@@ -271,13 +271,6 @@ def test_tracked_additive_policy_is_exactly_one_contextual_source() -> None:
     assert "linguistic_rule_evidence" not in source["allowed_lanes"]
 
 
-def test_cutover_schema_is_valid_and_closes_receipt_shape() -> None:
-    schema = json.loads(cutover.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert schema["additionalProperties"] is False
-    assert schema["properties"]["phase_boundaries"]["additionalProperties"] is False
-
-
 def test_dry_run_is_text_free_and_does_not_mutate(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

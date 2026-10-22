@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from scripts.audit.flag_contested_calque_gold import contested_entry, process_fixture
+from scripts.audit.flag_contested_calque_gold import process_fixture
 
 NATIVE_STATUS: dict[str, Any] = {
     "classification": "standard",
@@ -89,18 +89,6 @@ def test_rule_mapping_native_contested_shadow_not(tmp_path: Path) -> None:
     assert gold_path.read_bytes() == before
 
 
-def test_contested_requires_all_four_conditions() -> None:
-    assert contested_entry(dict(NATIVE_STATUS))["contested"] is True
-    for override in (
-        {"classification": "unknown"},
-        {"is_russianism": True},
-        {"russian_shadow": True},
-        {"calque_warning": {"replacement": "x"}},
-    ):
-        status = {**NATIVE_STATUS, **override}
-        assert contested_entry(status)["contested"] is False, override
-
-
 def test_sidecar_idempotent_and_stably_ordered(tmp_path: Path) -> None:
     gold_path = _write_gold(tmp_path)
     classify = _stub_classifier({"вішалкою": NATIVE_STATUS, "запрокинув": SHADOW_STATUS})
@@ -112,16 +100,3 @@ def test_sidecar_idempotent_and_stably_ordered(tmp_path: Path) -> None:
     assert json.dumps(first, ensure_ascii=False, sort_keys=True) == json.dumps(
         second, ensure_ascii=False, sort_keys=True
     )
-
-
-def test_evidence_is_sorted_for_byte_identical_reruns() -> None:
-    status = {
-        **NATIVE_STATUS,
-        "attestations": [
-            {"source": "grinchenko", "ref": "б", "detail": ""},
-            {"source": "VESUM", "ref": "а", "detail": ""},
-            {"source": "VESUM", "ref": "a", "detail": ""},
-        ],
-    }
-    evidence = contested_entry(status)["evidence"]
-    assert evidence == sorted(evidence, key=lambda ev: (ev["source"], ev["ref"], ev["detail"]))

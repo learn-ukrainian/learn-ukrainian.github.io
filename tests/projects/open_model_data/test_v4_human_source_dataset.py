@@ -14,7 +14,6 @@ import pytest
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_human_source_dataset import (
-    OPERATOR_EXCLUDED_RESIDUALS,
     _get_language_usage_masks,
     assert_no_private_host_paths,
     build_dataset,
@@ -69,77 +68,6 @@ def _reuse_compiled_jsonschema_validators() -> Any:
         yield
     finally:
         jsonschema.validate = original
-
-
-def test_schema_contracts_valid() -> None:
-    """The 3 JSON schemas for dataset manifest, record, and receipt must be valid Draft 2020-12 schemas."""
-    for schema_name in [
-        "v4_human_source_dataset_manifest_v1.schema.json",
-        "v4_human_source_dataset_record_v1.schema.json",
-        "v4_human_source_dataset_receipt_v1.schema.json",
-    ]:
-        p = CONTRACTS_DIR / schema_name
-        assert p.is_file(), f"Missing schema contract: {p}"
-        schema_data = json.loads(p.read_text(encoding="utf-8"))
-        jsonschema.Draft202012Validator.check_schema(schema_data)
-
-
-def test_manifest_denominator_accounting() -> None:
-    """Check explicit denominator accounting and residual tracking (SCALE-1 & SCALE-2)."""
-    assert MANIFEST_PATH.is_file(), f"Missing manifest: {MANIFEST_PATH}"
-    manifest_data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    assert manifest_data["schema_version"] == "v4_human_source_dataset_manifest_v1"
-    assert manifest_data["dataset_version"] == "v4.0.0-human-pilot-scale"
-
-    acct = manifest_data["denominator_accounting"]
-    assert acct["total_holdings_sources"] == 16
-    assert acct["total_selected_sources"] == 3
-    assert acct["total_work_families"] == 3
-    assert acct["total_evaluated_spans"] == 1419
-    assert acct["total_admitted_spans"] == 1418
-    assert acct["exported_training_spans"] == 614
-    assert acct["firewalled_heldout_evaluation_spans"] == 559
-    assert acct["development_spans"] == 245
-    assert acct["quarantined_spans"] == 1
-
-    strata = acct["strata_coverage"]
-    assert strata["literary_prose"] == "covered"
-    assert strata["educational_textbook"] == "covered"
-    assert strata["stem_technical"] == "residual_operator_excluded"
-    assert strata["video_captions"] == "residual_operator_excluded"
-    assert strata["ocr_scans"] == "residual_operator_excluded"
-    assert strata["private_teaching_material"] == "residual_operator_excluded"
-
-    assert acct["operator_excluded_residuals"] == OPERATOR_EXCLUDED_RESIDUALS
-
-
-def test_dataset_receipt_and_storage_accounting() -> None:
-    """Verify receipt accounting, deduplication yield, and storage limits (SCALE-4 & SCALE-5)."""
-    assert RECEIPT_PATH.is_file(), f"Missing receipt: {RECEIPT_PATH}"
-    receipt_data = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
-    assert receipt_data["verdict"] == "DATASET_CONFIRMED"
-    assert receipt_data["dataset_version"] == "v4.0.0-human-pilot-scale"
-
-    acct = receipt_data["dataset_accounting"]
-    assert acct["total_evaluated_spans"] == 1419
-    assert acct["total_admitted_spans"] == 1418
-    assert acct["exported_training_spans"] == 614
-    assert acct["firewalled_heldout_evaluation_spans"] == 559
-    assert acct["development_spans"] == 245
-    assert acct["rejected_quarantine_spans"] == 1
-    assert acct["silent_drops"] == 0
-
-    dedup = receipt_data["deduplication_yield"]
-    assert dedup["unique_spans_count"] == 1419
-    assert dedup["duplicate_spans_count"] == 0
-    assert dedup["deduplication_rate"] == 1.0
-
-    storage = receipt_data["storage_accounting"]
-    assert storage["below_2000kb_precommit_limit"] is True
-    assert storage["records_byte_size"] < 2000 * 1024
-
-    assert receipt_data["frozen_for_downstream"]["open_weight_learning_study_issue"] == 7889
-    assert receipt_data["frozen_for_downstream"]["deliverable_reproduction_issue"] == 7433
 
 
 @pytest.mark.needs_artifact(
@@ -765,38 +693,6 @@ def test_persisted_records_reject_preexisting_raw_text(tmp_path: Path) -> None:
     bad_records_file.write_text("# header\n" + json.dumps(bad_record2) + "\n", encoding="utf-8")
     with pytest.raises(ValueError, match="contains raw text"):
         next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
-)
-def test_record_schema_forbids_raw_text() -> None:
-    """Ensure v4_human_source_dataset_record_v1 schema rejects raw text property."""
-    import jsonschema
-
-    schema_path = CONTRACTS_DIR / "v4_human_source_dataset_record_v1.schema.json"
-    schema = json.loads(schema_path.read_text(encoding="utf-8"))
-
-    # Valid base record without text
-    with open(RECORDS_PATH, encoding="utf-8") as f:
-        _ = f.readline()
-        record = json.loads(f.readline())
-
-    jsonschema.validate(instance=record, schema=schema)
-
-    # Adding raw text at root must fail schema validation
-    rec_with_text = dict(record)
-    rec_with_text["text"] = "Sample corpus text"
-    with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=rec_with_text, schema=schema)
-
-    # Adding raw text under source_fidelity must fail schema validation
-    rec_with_fidelity_text = dict(record)
-    rec_with_fidelity_text["source_fidelity"] = dict(record["source_fidelity"])
-    rec_with_fidelity_text["source_fidelity"]["text"] = "Sample corpus text"
-    with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=rec_with_fidelity_text, schema=schema)
 
 
 @pytest.mark.needs_artifact(

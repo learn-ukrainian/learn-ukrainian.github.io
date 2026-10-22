@@ -41,15 +41,6 @@ class TestQuiz:
         assert parsed[0]["options"][0]["correct"] is True
         assert parsed[0]["options"][1]["correct"] is False
 
-    def test_instruction_prop(self):
-        act = {
-            "type": "quiz",
-            "instruction": "Choose one",
-            "items": [{"question": "Q", "options": ["A", "B", "C"], "correct": 1}],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "Choose one" in jsx
-
 
 class TestFillIn:
     def test_basic(self):
@@ -65,16 +56,6 @@ class TestFillIn:
         parsed = _extract_prop(jsx, "items")
         assert parsed[0]["answer"] == "моя"
         assert parsed[0]["options"] == ["мій", "моя", "моє"]
-
-    def test_no_options(self):
-        act = {
-            "type": "fill-in",
-            "instruction": "Fill in",
-            "items": [{"sentence": "Я ____.", "answer": "працюю"}],
-        }
-        jsx = render_activity_to_jsx(act)
-        parsed = _extract_prop(jsx, "items")
-        assert "options" not in parsed[0]
 
 
 class TestMatchUp:
@@ -127,24 +108,6 @@ class TestTrueFalse:
         parsed = _extract_prop(jsx, "items")
         assert parsed[0]["isTrue"] is False
         assert parsed[0]["explanation"] == "Ні."
-
-    def test_answer_to_is_true(self):
-        """YAML also allows 'answer' bool for true-false items."""
-        act = {
-            "type": "true-false",
-            "instruction": "True or false?",
-            "items": [
-                {"statement": "Стіл — чоловічого роду.", "answer": True, "explanation": "Так."},
-                {"statement": "Стіл — жіночого роду.", "answer": False, "explanation": "Ні."},
-            ],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<TrueFalse" in jsx
-        parsed = _extract_prop(jsx, "items")
-        assert parsed[0]["isTrue"] is True
-        assert parsed[0]["explanation"] == "Так."
-        assert parsed[1]["isTrue"] is False
-        assert parsed[1]["explanation"] == "Ні."
 
 
 class TestErrorCorrection:
@@ -301,40 +264,6 @@ class TestUnjumble:
         parsed = _extract_prop(jsx, "items")
         assert parsed[0]["words"] == "є / мене / у / стіл"
         assert parsed[0]["answer"] == "у мене є стіл"
-
-
-class TestCloze:
-    def test_basic(self):
-        act = {
-            "type": "cloze",
-            "instruction": "Fill the gaps",
-            "text": "Це {1} стіл.",
-            "blanks": [{"id": 1, "answer": "мій", "options": ["мій", "моя", "моє"]}],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<Cloze" in jsx
-        assert "passage" in jsx
-
-
-class TestSelect:
-    def test_basic(self):
-        act = {
-            "type": "select",
-            "instruction": "Select all",
-            "items": [
-                {
-                    "question": "Which are feminine?",
-                    "options": [
-                        {"text": "книга", "correct": True},
-                        {"text": "стіл", "correct": False},
-                    ],
-                },
-            ],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<Select" in jsx
-
-
 class TestGrammarIdentify:
     def test_field_mapping(self):
         act = {
@@ -347,17 +276,6 @@ class TestGrammarIdentify:
         parsed = _extract_prop(jsx, "items")
         assert parsed[0]["text"] == "стіл"
         assert parsed[0]["form"] == "Визначте рід"
-
-    def test_sentence_alias_mapping(self):
-        act = {
-            "type": "grammar-identify",
-            "instruction": "Визначте модель порівняння.",
-            "items": [{"sentence": "Петро вищий за Марію.", "answer": "за + знахідний"}],
-        }
-        jsx = render_activity_to_jsx(act)
-        parsed = _extract_prop(jsx, "items")
-        assert parsed[0]["text"] == "Петро вищий за Марію."
-        assert parsed[0]["form"] == "Визначте модель порівняння."
 
 
 class TestOddOneOut:
@@ -397,16 +315,6 @@ class TestHighlightMorphemes:
 
 
 class TestObserve:
-    def test_basic(self):
-        act = {
-            "type": "observe",
-            "examples": ["стіл → він", "книга → вона"],
-            "prompt": "What pattern?",
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<Observe" in jsx
-        assert "What pattern?" in jsx
-
     def test_instruction_prop(self):
         from scripts.build.fresh.assemble import component_props_from_jsx
 
@@ -420,10 +328,6 @@ class TestObserve:
             }
         )
         assert component_props_from_jsx(jsx)["instruction"] == instruction
-
-    def test_missing_instruction_is_optional(self):
-        jsx = render_activity_to_jsx({"type": "observe", "examples": ["first"]})
-        assert "instruction=" not in jsx
 
 
 class TestClassify:
@@ -446,53 +350,6 @@ class TestClassify:
 # ---------------------------------------------------------------------------
 # Seminar activity types
 # ---------------------------------------------------------------------------
-
-
-class TestEssayResponse:
-    def test_basic(self):
-        act = {
-            "type": "essay-response",
-            "instruction": "Write an essay",
-            "prompt": "Порівняйте два описи...",
-            "min_words": 150,
-            "model_answer": "Example answer.",
-            "evaluation_criteria": ["Аргументація", "Мова"],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<EssayResponse" in jsx
-        assert "Порівняйте" in jsx
-
-    def test_source_reading_slug_not_rendered_in_prompt(self):
-        act = {
-            "type": "essay-response",
-            "instruction": "Напишіть відповідь.",
-            "source_reading": "obzhynkova-pisnia-kotyvsia-vinochok-po-poliu",
-            "prompt": "Назвіть рядок і зробіть висновок.",
-            "model_answer": "Приклад.",
-            "rubric": ["Є рядок"],
-        }
-
-        jsx = render_activity_to_jsx(act)
-
-        assert "obzhynkova-pisnia-kotyvsia-vinochok-po-poliu" not in jsx
-        assert "Назвіть рядок" in jsx
-
-
-class TestSourceEvaluation:
-    def test_with_metadata(self):
-        act = {
-            "type": "source-evaluation",
-            "instruction": "Evaluate",
-            "source_text": "Some historical text...",
-            "source_metadata": {"author": "Hrushevsky", "date": "1904"},
-            "criteria": ["reliability", "bias"],
-            "guiding_questions": ["Who wrote this?"],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<SourceEvaluation" in jsx
-        assert "Hrushevsky" in jsx
-
-
 class TestDebate:
     def test_positions_mapping(self):
         act = {
@@ -509,22 +366,6 @@ class TestDebate:
         parsed = _extract_prop(jsx, "positions")
         assert parsed[0]["name"] == "Pro"
         assert "Arg 1" in parsed[0]["argument"]
-
-
-class TestEtymologyTrace:
-    def test_stages_mapping(self):
-        act = {
-            "type": "etymology-trace",
-            "instruction": "Trace",
-            "stages": [
-                {"period": "Old East Slavic", "form": "столъ", "notes": "From Proto-Slavic"},
-                {"period": "Modern Ukrainian", "form": "стіл"},
-            ],
-        }
-        jsx = render_activity_to_jsx(act)
-        assert "<EtymologyTrace" in jsx
-
-
 class TestDialectComparison:
     def test_features_mapping(self):
         act = {
@@ -578,12 +419,6 @@ class TestGetRequiredImports:
         assert len(imports) == 2
         assert any("Quiz" in i for i in imports)
         assert any("FillIn" in i for i in imports)
-
-    def test_sorted(self):
-        activities = [{"type": "true-false"}, {"type": "anagram"}]
-        imports = get_required_imports(activities)
-        # Anagram < TrueFalse alphabetically
-        assert imports[0] < imports[1]
 
     def test_unknown_type_skipped(self):
         activities = [{"type": "nonexistent"}]

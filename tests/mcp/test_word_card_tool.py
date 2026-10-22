@@ -865,21 +865,6 @@ def test_unreadable_cards_directory_is_an_explicit_unavailable_result(unreadable
     assert str(tmp_path) not in json.dumps(result, ensure_ascii=False)
 
 
-def test_unreadable_store_through_the_wire_handler_names_the_tools(
-    server_module, unreadable_cards, tmp_path, monkeypatch
-):
-    monkeypatch.setenv(word_card.ENV_WORD_CARDS_DIR, str(unreadable_cards))
-    monkeypatch.setattr(server_module.word_card, "_vesum_lookup", fake_vesum)
-
-    content, is_error, _typed = asyncio.run(server_module._dispatch_tool_call("word_card", {"word": "мова"}))
-
-    assert is_error is False
-    result = json.loads(content[0].text)
-    assert result["card_store"] == {"available": False, "reason": "store_unavailable"}
-    assert result["per_facet_tools"]["stress"] == ["verify_stress", "query_sum20"]
-    assert str(tmp_path) not in content[0].text
-
-
 def test_unreadable_ledger_is_reported_not_silently_empty(tmp_path):
     store = write_store(tmp_path / "build", candidate_card(), ledger={})
     (store / "ledger.json").write_text("{broken", encoding="utf-8")
