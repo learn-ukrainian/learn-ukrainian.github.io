@@ -12576,16 +12576,31 @@ class _GuardFakeStdin:
         pass
 
 
+def _fake_worker_pid() -> int:
+    """Return a PID above the kernel's allocatable range (#11406).
+
+    A fabricated PID inside ``pid_max`` can alias a live process. Launch then
+    records that process's start time, ``worker_liveness`` reports the fake
+    worker alive, and its own terminal record blocks settle as an active
+    claim. PIDs above ``pid_max`` are never allocated, so there is no alias.
+    """
+    try:
+        return int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii").strip()) + 1000
+    except (OSError, ValueError):
+        return 5_000_000
+
+
 class _GuardFakeProc:
     """Stand-in for the detached worker.
 
     Scope startup calls ``poll`` while it waits for the one-byte start marker,
     then ``returncode``, ``kill`` and ``wait`` if that marker never arrives.
     ``kill`` and ``wait`` update only this object. ``pid`` is not a process,
-    and nothing here signals it.
+    and nothing here signals it; it sits above ``pid_max`` so it cannot alias
+    a live one.
     """
 
-    pid = 44551
+    pid = _fake_worker_pid()
     stdin = _GuardFakeStdin()
     returncode = None
 
