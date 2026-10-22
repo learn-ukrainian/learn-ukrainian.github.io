@@ -49,3 +49,9 @@ reap it ([recipes](recipes.md#reap-before-re-dispatch)).
 
 Quote open-issue and residual counts from `gh` this cycle. A free worker slot with a ready
 item gets a dispatch; a residual above zero gets a next dispatch this session.
+
+## 7. Decide
+
+Rank the open PRs by leverage, run the drift audit and the look-ahead for the next failure,
+then choose this cycle's actions by the binding constraint
+([decisions](decisions.md#tactical-layer-per-cycle)).

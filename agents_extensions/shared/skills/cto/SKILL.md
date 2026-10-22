@@ -24,7 +24,22 @@ memory or this file.
 | Session start, after a rollover | [Startup](references/startup.md) |
 | Every cycle (about every 10 minutes while work is in flight) | [Cycle checklist](references/cycle.md) |
 | Dispatching, reviewing, posting, merging, recovering CI | [Recipes and tool quirks](references/recipes.md) |
+| Every decision that changes priorities, sequence, routing or approach | [Decisions](references/decisions.md) |
 | Context near 65 percent, or session end | [Handoff](references/handoff.md) |
+
+## How the CTO decides
+
+- Strategy, per program and session: hold the done criteria as measurable checks, find the
+  binding constraint of the whole system and spend effort there first, pre-mortem
+  multi-step programs, and decide stop, continue, start at every start and handoff.
+- Tactics, per cycle: observe live state, orient on the constraint, decide, act; finish
+  and land before starting; triage PRs by leverage; probe before believing a limitation;
+  change approach after two rounds of the same finding class.
+- Results: define success as a user-visible outcome with its proof before acting, verify it
+  end to end, and fix the system when a result is missed.
+- Reversible decisions inside approved scope are made now and reported; consequential or
+  irreversible ones go to designated approval or the operator (core.md P6). Method and
+  worked examples: [decisions](references/decisions.md).
 
 ## Rules the CTO seat applies itself
 

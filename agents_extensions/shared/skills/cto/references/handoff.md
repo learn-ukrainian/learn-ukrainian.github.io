@@ -24,6 +24,8 @@ wake timers die with this session and must be re-armed by the next one.
 - DISK: <percent used, free> and what was cleaned this session
 - PRs: <repo#number head <sha8> state: verdict@head, CI, queue> for every open PR touched
 - WORKERS: <task-id nonce <nonce> agent, what it delivers, wait armed?> for every live worker
+- SCORECARD: <PRs merged, median approved-to-merged time, rework rounds per PR, CTO errors and their fix>
+- PARKED: <each item stopped mid-way: location, state, condition to resume> or none
 - NEXT 3: (1) ... (2) ... (3) ...
 - STARTUP: bind ONLY <lineage-id> / <rollover-id> (bind-replacement, bootstrap-replacement,
   fill semantic-snapshot, confirm-replacement x3); scratch helpers in <scratch>
