@@ -19305,6 +19305,24 @@ def _resolve_agent_with_budget_guard(
         from scripts.review.capacity import review_capacity_action
         from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
 
+        if is_stale:
+            print(
+                "⚠ ROUTING CHECK ADVISORY (stale snapshot, generatedAt/data age >15min) — verify manually; no hard sub",
+                file=sys.stderr,
+            )
+        if requested == "claude":
+            if account_evidence.get("state") == "unknown":
+                print(
+                    f"⚠ ROUTING CHECK UNKNOWN: claude account {claude_account.label} meter unavailable "
+                    f"({account_evidence['reason']}); no hard sub",
+                    file=sys.stderr,
+                )
+            elif account_evidence.get("state") == "stale":
+                print(
+                    f"⚠ ROUTING CHECK ADVISORY (stale claude account {claude_account.label} meter, "
+                    f"age_s={(agents.get('claude') or {}).get('age_s')}) — verify manually; no hard sub",
+                    file=sys.stderr,
+                )
         evaluated_account = account_evidence
         # Read Claude's meter from the bound account for the requested seat,
         # every candidate and the final identity, including an unchanged pick.
@@ -19336,7 +19354,7 @@ def _resolve_agent_with_budget_guard(
         if (sub, chosen) == (requested, requested_model):
             return requested
         print(
-            f"REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
+            f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
             f"({reason or 'reviewer resolver admission'}).",
             file=sys.stderr,
         )

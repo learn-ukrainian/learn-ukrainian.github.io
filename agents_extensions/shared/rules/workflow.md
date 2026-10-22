@@ -179,8 +179,9 @@ or `--pr` and is checked against the fetched and reused heads before launch.
 reviewer admission applies them to code and Ukrainian profiles alike. Write
 dispatches use them for authoring review admission without becoming review-typed.
 Other non-review read-only calls refuse these flags instead of ignoring them.
-Review substitutes require their own budget snapshot; direct and substituted
-reviewers share the allowance rule (#10016), with pace advisory for both.
+Review substitutes need no usage snapshot. Usage, pace, near-cap state and usage
+forecasts never exclude direct or substituted review seats. Operational causes
+and the bound-account Claude weekly cap still exclude them.
 A review-typed brief (other than a formal `--review-attempt` prompt) with no
 Markdown heading naming its dispositions is still dispatched, with the typed
 warning `review_brief_no_dispositions` on stderr and in the task record's
