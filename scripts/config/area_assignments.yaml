@@ -22,7 +22,8 @@ assignments:
       - kimi-infra
       - cursor-infra
   epics:
-    driver_agent_type: infra-orchestrator
+    # The CTO seat (combined CTO and cross-epic lead) drives this lane.
+    driver_agent_type: cto
     slots:
       - claude-epics
       - codex-epics
