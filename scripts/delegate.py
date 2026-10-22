@@ -5598,6 +5598,7 @@ def _count_commits_ahead(
     base_sha: str | None = None,
     *,
     publication: bool = False,
+    task_id: str | None = None,
 ) -> int | None:
     """Return commits on HEAD not reachable from an eligible base ref, or None.
 
@@ -5619,7 +5620,7 @@ def _count_commits_ahead(
     unchanged.
     """
     if publication:
-        return _publication_commits_ahead(worktree, base_ref, base_sha)
+        return _publication_commits_ahead(worktree, base_ref, base_sha, task_id=task_id)
     for candidate in _commit_count_refs(worktree, base_ref):
         count, base_missing = _run_count_ahead(worktree, candidate)
         if count is not None:
@@ -5632,7 +5633,9 @@ def _count_commits_ahead(
 _OBJECT_ID_RE = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
 
 
-def _publication_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
+def _publication_commits_ahead(
+    worktree: Path, base_ref: str, base_sha: str | None, *, task_id: str | None = None
+) -> int | None:
     """The worker's delivered commits, from re-hashed objects and driver-pinned anchors (#9451, #9489).
 
     In order, the first anchor that applies:
@@ -5647,34 +5650,54 @@ def _publication_commits_ahead(worktree: Path, base_ref: str, base_sha: str | No
     Any failure, including a shallow source, is None: unknown, never zero.
     """
     name = _base_branch_name(base_ref.removeprefix("refs/remotes/"))
+    step = "execution_context"
     try:
-        with _finalize_execution_context(worktree) as context:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
+            step = "source_head"
             source = context.read_source_ref(context.source_git_dir, "HEAD")
-            if source.returncode or context.run("check-ref-format", f"refs/heads/{name}").returncode:
+            if source.returncode:
+                _publication_diagnostic(task_id, step, source)
+                return None
+            step = "base_ref_format"
+            ref = context.run("check-ref-format", f"refs/heads/{name}")
+            if ref.returncode:
+                _publication_diagnostic(task_id, step, ref)
                 return None
             head = source.stdout.strip()
+            step = "isolate_objects"
             context.isolate_objects(base=context.driver_base, head=head)
-            named = _finalize_remote_head(context, name)
+            step = "remote_head"
+            named = _finalize_remote_head(context, name, task_id=task_id)
             if named is not None:
+                step = "remote_objects"
                 if context.run("cat-file", "-e", f"{named}^{{commit}}").returncode:
                     context.fetch_remote_commits(f"refs/heads/{name}", context.driver_base, head)
+                step = "count_named_base"
                 return int(context.checked("rev-list", "--count", f"{named}..{head}"))
             if base_sha and _OBJECT_ID_RE.fullmatch(base_sha):
                 # Every ancestor of HEAD was received, so an absent commit is not one.
-                present = context.run("rev-parse", "--verify", "--quiet", f"{base_sha}^{{commit}}").returncode
-                if present not in (0, 1):
+                step = "recorded_base_ref"
+                present = context.run("rev-parse", "--verify", "--quiet", f"{base_sha}^{{commit}}")
+                if present.returncode not in (0, 1):
+                    _publication_diagnostic(task_id, step, present)
                     return None
-                ancestry = context.run("merge-base", "--is-ancestor", base_sha, head).returncode if present == 0 else 1
-                if ancestry == 0:
-                    return int(context.checked("rev-list", "--count", f"{base_sha}..{head}"))
-                if ancestry != 1:
-                    return None
-            return _publication_proxy_count(context, head)
-    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+                if present.returncode == 0:
+                    step = "recorded_base_ancestry"
+                    ancestry = context.run("merge-base", "--is-ancestor", base_sha, head)
+                    if ancestry.returncode == 0:
+                        step = "count_recorded_base"
+                        return int(context.checked("rev-list", "--count", f"{base_sha}..{head}"))
+                    if ancestry.returncode != 1:
+                        _publication_diagnostic(task_id, step, ancestry)
+                        return None
+            step = "proxy_count"
+            return _publication_proxy_count(context, head, task_id=task_id)
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+        _publication_diagnostic(task_id, step, exc)
         return None
 
 
-def _publication_proxy_count(context: SafeGitContext, head: str) -> int | None:
+def _publication_proxy_count(context: SafeGitContext, head: str, *, task_id: str | None = None) -> int | None:
     """``<default>..HEAD``, or 0 when merging ``HEAD`` into the default head changes nothing (#9451).
 
     The default head may already hold the work: an empty commit, a merge of
@@ -5690,6 +5713,7 @@ def _publication_proxy_count(context: SafeGitContext, head: str) -> int | None:
         return 0
     bases = context.run("merge-base", "--all", main, head)
     if bases.returncode or not bases.stdout.split():
+        _publication_diagnostic(task_id, "proxy_merge_base", bases)
         return None
     # The merge reads whole snapshots: receive them, re-hashed, as validation does.
     commits = sorted({main, head, *bases.stdout.split()})
@@ -5700,30 +5724,39 @@ def _publication_proxy_count(context: SafeGitContext, head: str) -> int | None:
         return ahead
     lines = merged.stdout.split()
     if merged.returncode or not lines:
+        _publication_diagnostic(task_id, "proxy_merge_tree", merged)
         return None
     return 0 if lines[0] == main_tree else ahead
 
 
-def _count_unpushed_commits(worktree: Path, branch: str) -> int | None:
+def _count_unpushed_commits(worktree: Path, branch: str, task_id: str | None = None) -> int | None:
     """Query the driver-bound remote, including pushes made without upstreams.
 
     Absent remote branches are unpushed. Local tracking refs are never proof.
     Unknown means a source, transport or object-graph query actually failed.
     """
     branch = branch.removeprefix("refs/heads/").removeprefix("origin/")
+    step = "execution_context"
     try:
-        with _finalize_execution_context(worktree) as context:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
+            step = "source_branch"
             head = _finalize_source_head(context, branch)
+            step = "isolate_objects"
             context.isolate_objects(base=context.driver_base, head=head)
-            remote = _finalize_remote_head(context, branch)
+            step = "remote_head"
+            remote = _finalize_remote_head(context, branch, task_id=task_id)
             if remote == head:
                 return 0
             if remote:
+                step = "remote_objects"
                 if context.run("cat-file", "-e", f"{remote}^{{commit}}").returncode:
                     context.fetch_remote_commits(f"refs/heads/{branch}", head)
+                step = "count_unpushed"
                 return int(context.checked("rev-list", "--count", f"{remote}..{head}"))
+            step = "count_unpublished"
             return int(context.checked("rev-list", "--count", head))
-    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+        _publication_diagnostic(task_id, step, exc)
         return None
 
 
@@ -7336,6 +7369,30 @@ def _record_diagnostic(task_id: object, cause: _TypedCause | None, *, source: st
     return _append_diagnostics(_state_path_no_create(task_id), [(field or source, cause)], source=source)
 
 
+def _publication_diagnostic(
+    task_id: str | None, step: str, failure: BaseException | subprocess.CompletedProcess[str]
+) -> None:
+    """Retain a failed observation in the bounded private sink, never in public state."""
+    if task_id is None:
+        return
+    code = "auto_finalize_committed_scope_unknown"
+    if isinstance(failure, subprocess.CompletedProcess):
+        if step == "remote_head":
+            code = "auto_finalize_remote_unknown"
+        cause = _git_cause(code, failure)
+    else:
+        if isinstance(failure, SnapshotRefusal) and failure.code in TYPED_CAUSE_CODES:
+            code = failure.code
+        command = failure.cmd if isinstance(failure, subprocess.TimeoutExpired) else None
+        cause = _exception_cause(code, failure, command=command if isinstance(command, (list, tuple)) else None)
+        if failure.__cause__ is not None:
+            cause = dataclasses.replace(
+                cause, diagnostic=f"{cause.diagnostic}; caused by {type(failure.__cause__).__name__}: {failure.__cause__}"
+            )
+    cause = dataclasses.replace(cause, diagnostic=cause.diagnostic.encode("utf-8", "backslashreplace").decode("utf-8"))
+    _record_diagnostic(task_id, cause, source="publication", field=step)
+
+
 def _publish_cause(task_id: object, cause: _TypedCause, *, source: str, field: str = "") -> str:
     """Record ``cause`` locally and return its public form: the producer side of :func:`public_cause`."""
     _record_diagnostic(task_id, cause, source=source, field=field)
@@ -8271,28 +8328,42 @@ def _build_worker_env(
 
 
 @contextlib.contextmanager
-def _finalize_execution_context(worktree: Path, *, prepare: bool = False) -> Iterator[SafeGitContext]:
+def _finalize_execution_context(
+    worktree: Path, *, prepare: bool = False, task_id: str | None = None
+) -> Iterator[SafeGitContext]:
     """Use registered objects, the driver's base and its pinned destination.
 
     The context never holds a credential: validation runs worker tests in it.
     Publication adds the credential to its own transport step alone
     (:func:`_finalize_transport_push`).
     """
-    repo = _rescue_repo(worktree)
-    manager = SafeGitContext(
-        objects=repo.git_dir / "objects",
-        temp_root=Path(tempfile.gettempdir()),
-        origin=CANONICAL_ORIGIN,
-        borrow_objects=prepare,
-    )
-    with manager as context:
-        context.source_git_dir = repo.admin_dir
-        driver = context.read_source_ref(_REPO_ROOT / ".git", "HEAD")
-        if driver.returncode:
-            raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
-        context.driver_base = driver.stdout.strip()
-        context.interpreter = project_interpreter(_REPO_ROOT)
-        yield context
+    step = "source_registration"
+    try:
+        repo = _rescue_repo(worktree)
+        step = "execution_context"
+        manager = SafeGitContext(
+            objects=repo.git_dir / "objects",
+            temp_root=Path(tempfile.gettempdir()),
+            origin=CANONICAL_ORIGIN,
+            borrow_objects=prepare,
+        )
+        with manager as context:
+            context.source_git_dir = repo.admin_dir
+            step = "driver_ref"
+            driver = context.read_source_ref(_REPO_ROOT / ".git", "HEAD")
+            if driver.returncode:
+                _publication_diagnostic(task_id, step, driver)
+                raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+            context.driver_base = driver.stdout.strip()
+            step = "project_interpreter"
+            context.interpreter = project_interpreter(_REPO_ROOT)
+            step = "context_body"
+            yield context
+            step = "context_cleanup"
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+        if step != "context_body":
+            _publication_diagnostic(task_id, step, exc)
+        raise
 
 
 def _finalize_source_head(context: SafeGitContext, branch: str) -> str:
@@ -8303,15 +8374,24 @@ def _finalize_source_head(context: SafeGitContext, branch: str) -> str:
     return head.stdout.strip()
 
 
-def _finalize_remote_head(context: SafeGitContext, branch: str) -> str | None:
+def _finalize_remote_head(context: SafeGitContext, branch: str, *, task_id: str | None = None) -> str | None:
     ref = f"refs/heads/{branch}"
     proc = context.run("ls-remote", "--refs", "origin", ref, network=True)
     if proc.returncode:
+        _publication_diagnostic(task_id, "remote_head", proc)
         raise SnapshotRefusal("auto_finalize_remote_unknown")
     rows = proc.stdout.splitlines()
     if not rows:
         return None
     if len(rows) != 1 or not re.fullmatch(r"[0-9a-f]{40}\t" + re.escape(ref), rows[0]):
+        _record_diagnostic(
+            task_id,
+            _TypedCause(
+                "auto_finalize_remote_unknown", "ls-remote", proc.returncode, count=len(rows),
+                diagnostic="ls-remote returned an ambiguous or malformed head; output omitted",
+            ),
+            source="publication", field="remote_head",
+        )
         raise SnapshotRefusal("auto_finalize_remote_unknown")
     return rows[0].split("\t")[0]
 
@@ -12503,6 +12583,7 @@ def _run_worker(
                     base_ref,
                     base_sha=_recorded_base_sha(final_state),
                     publication=True,
+                    task_id=task_id,
                 )
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
@@ -12575,6 +12656,7 @@ def _run_worker(
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
                             normalized_branch,
+                            task_id,
                         )
                         final_state["push_state"] = (
                             "unknown" if unpushed_commits is None else "pushed" if unpushed_commits == 0 else "unpushed"
@@ -12641,7 +12723,8 @@ def _run_worker(
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(
-                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state), publication=True
+                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state), publication=True,
+                        task_id=task_id,
                     )
                     if (
                         auto_finalize.ok

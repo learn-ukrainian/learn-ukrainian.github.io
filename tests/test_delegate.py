@@ -6177,7 +6177,17 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
     with (
         patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()),
         patch.object(delegate, "_count_commits_ahead", return_value=1),
-        patch.object(delegate, "_count_unpushed_commits", return_value=unpushed_count),
+        (
+            patch.object(delegate, "_count_unpushed_commits", return_value=unpushed_count)
+            if unpushed_count is not None
+            else contextlib.nullcontext()
+        ),
+        patch.object(
+            delegate.SafeGitContext,
+            "isolate_objects",
+            side_effect=delegate.SnapshotRefusal("auto_finalize_object_hardening_violation"),
+        ),
+        patch.object(delegate, "_finalize_remote_head") as remote_probe,
     ):
         rc = delegate._run_worker(
             task_id=task_id,
@@ -6203,6 +6213,13 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
         assert state["finalize_error"] == ("no_owned_paths_declared")
     else:
         assert state["rescue_status"] == "finalize_remote_unknown"
+        assert state["push_state"] == "unknown"
+        rows = [json.loads(line) for line in delegate._diagnostic_path(task_id).read_text().splitlines()]
+        assert any(
+            row["field"] == "isolate_objects" and row["code"] == "auto_finalize_object_hardening_violation"
+            for row in rows
+        )
+        remote_probe.assert_not_called()
     assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
     assert rc == 1
 
@@ -6316,7 +6333,7 @@ def test_run_worker_unpushed_check_refuses_protected_branch_without_publication(
         assert rc == 0
 
 
-def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatch):
+def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_tasks_dir, tmp_path, monkeypatch):
     """_count_unpushed_commits returns correct count against origin ref or None (#7311)."""
     _sanitize_git_env_for_test(monkeypatch)
     origin = tmp_path / "origin.git"
@@ -6341,22 +6358,29 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     subprocess.run(["git", "add", "file.txt"], cwd=worktree, check=True, timeout=30)
     subprocess.run(["git", "commit", "-m", "feat: add file"], cwd=worktree, check=True, timeout=30)
 
-    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") > 0
+    task_id = "publication-count"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch", task_id=task_id) > 0
 
     # 2. Push branch to origin: now 0 unpushed commits
     subprocess.run(
         ["git", "push", "-u", "origin", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30
     )
-    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") == 0
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch", task_id=task_id) == 0
+    assert not delegate._diagnostic_path(task_id).exists()
 
     # 3. Add 1 local commit without pushing: now 1 unpushed commit
     (worktree / "file2.txt").write_text("hello 2\n", encoding="utf-8")
     subprocess.run(["git", "add", "file2.txt"], cwd=worktree, check=True, timeout=30)
     subprocess.run(["git", "commit", "-m", "feat: add file 2"], cwd=worktree, check=True, timeout=30)
-    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") == 1
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch", task_id=task_id) == 1
 
     # 4. Non-existent worktree path: returns None
-    assert delegate._count_unpushed_commits(tmp_path / "nonexistent", "feat/my-branch") is None
+    assert delegate._count_unpushed_commits(tmp_path / "nonexistent", "feat/my-branch", task_id=task_id) is None
+    rows = [json.loads(line) for line in delegate._diagnostic_path(task_id).read_text().splitlines()]
+    assert rows[-1]["source"] == "publication"
+    assert rows[-1]["field"] == "execution_context"
+    assert rows[-1]["code"] == "auto_finalize_remote_unknown"
 
 
 def test_run_worker_auto_finalizes_dirty_agy_worktree(
