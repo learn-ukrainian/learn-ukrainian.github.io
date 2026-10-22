@@ -250,18 +250,23 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                 files = list(directory.glob(".coverage*"))
                 if not files:
                     raise ValueError("missing raw coverage data")
+                shard_contexts: set[str] = set()
                 for path in files:
                     try:
                         data = coverage.CoverageData(basename=str(path))
                         data.read()
                         if not data.has_arcs() or not data.measured_files():
                             raise ValueError("raw data lacks nonempty branch coverage")
-                        if receipt["contexts"] and not data.measured_contexts() - {""}:
-                            errors.append(f"shard {shard}: requested per-test contexts missing")
+                        # Subprocess databases carry only the empty context. A named
+                        # context in any of the shard's databases proves the run was
+                        # configured; every database's arcs are still combined.
+                        shard_contexts |= data.measured_contexts() - {""}
                         # Include pytest-cov's unsuffixed file explicitly.
                         data_files.append(str(path))
                     except (OSError, ValueError, coverage.CoverageException) as error:
                         errors.append(f"shard {shard}: {error}")
+                if receipt["contexts"] and not shard_contexts:
+                    errors.append(f"shard {shard}: requested per-test contexts missing")
             except (OSError, ValueError, KeyError, TypeError, coverage.CoverageException) as error:
                 errors.append(f"shard {shard}: {error}")
         if len(duration_hashes) != 1:

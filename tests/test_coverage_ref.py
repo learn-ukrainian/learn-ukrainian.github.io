@@ -873,16 +873,23 @@ def test_requested_test_contexts_are_kept_in_the_combined_data(measurement):
         receipt = json.loads(receipt_path.read_text())
         receipt["contexts"] = True
         receipt_path.write_text(json.dumps(receipt))
+    # A subprocess database carries only the empty context. The named context in
+    # the shard's main database must satisfy the check, and the subprocess arcs
+    # must still reach the combined data.
+    child = coverage.CoverageData(basename=str(raw / "coverage-shard-1/.coverage.host.1234.5678"))
+    child.add_arcs({"scripts/a.py": [(-1, 1), (1, -2)]})
+    child.write()
     assert combine(raw, output, SHA, 2, "success") == 0
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["complete"] is True
     assert manifest["contexts"] is True
     combined = coverage.CoverageData(basename=str(output / ".coverage"))
     combined.read()
-    assert combined.measured_contexts() == {
+    assert combined.measured_contexts() - {""} == {
         "tests/test_1.py::test_ok",
         "tests/test_2.py::test_ok",
     }
+    assert set(combined.arcs("scripts/a.py")) == {(-1, 1), (1, -1), (1, -2)}
 
 
 def test_requested_contexts_missing_from_raw_data_fail_completeness(measurement):
