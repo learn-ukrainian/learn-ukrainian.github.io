@@ -194,7 +194,9 @@ class Tmux:
         return result.stdout or ""
 
     def capture(self, target: str) -> str:
-        return self._query(["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane")
+        return self._query(
+            ["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane"
+        )
 
     def pane_pid(self, target: str) -> str:
         pid = self._query(["tmux", "display-message", "-p", "-t", target, "#{pane_pid}"], "pane pid").strip()
@@ -310,7 +312,9 @@ class Guard:
     def _human(self, lane: Lane) -> bool:
         reason = self.tmux.human_activity(lane.session, self.setting("human_active_seconds"))
         if reason:
-            self.log(f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick")
+            self.log(
+                f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick"
+            )
             return True
         return False
 
@@ -382,15 +386,21 @@ class Guard:
         and stream entries are resolved exactly as the Codex launcher does in
         ``scripts/launchers/codex.sh`` -> ``codex_lane mint``: candidates from
         ``handoff_select.load_codex_candidates`` under ``.claude/<epic>-epic/``,
-        the stream from ``grok_lane.resolve_stream_id``, and entries from
+        the stream from ``grok_lane.launcher_stream_id``, and entries from
         ``grok_lane._load_stream_entries``. Only the Codex launcher mints
         anchors (the Claude adapter canary is a no-op), so other kinds are not
         checked.
+
+        The stream comes from ``grok_lane.launcher_stream_id``, which is the
+        shell SSOT the launcher itself passes as ``--stream``, not
+        ``resolve_stream_id``: one guard process watches every lane, so an
+        ambient ``SESSION_STREAM_ID`` from the guard's own shell must never be
+        applied to another lane's handoff.
         """
         from scripts.session_canary import grok_lane, handoff_select
 
         candidates = handoff_select.load_codex_candidates(self.repo_root, lane.epic)
-        stream_id = grok_lane.resolve_stream_id(lane.epic)
+        stream_id = grok_lane.launcher_stream_id(lane.epic)
         stream_entries = grok_lane._load_stream_entries(stream_id)
         return grok_lane.check_handoff_anchors(
             repo=self.repo_root,
@@ -418,7 +428,9 @@ class Guard:
             verdict = self._anchor_verdict(lane)
         except Exception as exc:  # fail open: a check bug must not wedge the lane
             if not s.get("anchor_check_failed"):
-                self.log(f"{lane.name} handoff: anchor check unavailable ({type(exc).__name__}: {exc}); exiting as before")
+                self.log(
+                    f"{lane.name} handoff: anchor check unavailable ({type(exc).__name__}: {exc}); exiting as before"
+                )
                 self._anchor_alert(
                     lane,
                     s,
@@ -456,12 +468,12 @@ class Guard:
                 s["anchor_blocked"] = True
             return False
         missing = [
-            name
-            for name, count in (("Next", verdict.next_count), ("Hands-off", verdict.hands_off_count))
-            if count == 0
+            name for name, count in (("Next", verdict.next_count), ("Hands-off", verdict.hands_off_count)) if count == 0
         ]
-        fix = f"restore the {' and '.join(missing)} heading{'s' if len(missing) != 1 else ''}" if missing else (
-            "restore the Next and Hands-off headings"
+        fix = (
+            f"restore the {' and '.join(missing)} heading{'s' if len(missing) != 1 else ''}"
+            if missing
+            else ("restore the Next and Hands-off headings")
         )
         message = (
             f"{ANCHOR_SENDBACK_PREFIX}: handoff would give {verdict.anchors}/{verdict.target} anchors: "

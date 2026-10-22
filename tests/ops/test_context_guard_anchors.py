@@ -9,6 +9,7 @@ exit alert. Each docstring names the defect class it can fail for.
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -17,11 +18,17 @@ from scripts.ops import context_guard as cg
 from scripts.session_canary import grok_lane, handoff_select
 from tests.ops.test_context_guard import Harness, codex_pane
 
+REPO = Path(__file__).resolve().parents[2]
+
 STREAM = [
     {"type": "binding_order", "body": "Anchor check fixture binding order one."},
     {"type": "binding_order", "body": "Anchor check fixture binding order two."},
     {"type": "negative_constraint", "body": "Anchor check fixture negative constraint."},
 ]
+CONFLICTING_STREAM = [
+    {"type": "binding_order", "body": f"Another lane binding order {index}."} for index in range(1, 5)
+] + [{"type": "negative_constraint", "body": f"Another lane negative constraint {index}."} for index in range(1, 3)]
+
 NEXT_THREE = "\n".join(f"{index}. anchor-check next item {index}" for index in range(1, 4))
 HANDS_TWO = "\n".join(f"- anchor-check hands-off rule {index}" for index in range(1, 3))
 SENDER = "codex-atlas"
@@ -55,8 +62,24 @@ def lane_repo(tmp_path: Path, text: str | None) -> Path:
 @pytest.fixture
 def launcher_stream(monkeypatch: pytest.MonkeyPatch) -> None:
     """The launcher resolves the lane stream and its entries; pin both for the test."""
-    monkeypatch.setattr(grok_lane, "resolve_stream_id", lambda _epic, _explicit=None: "lane-test")
+    monkeypatch.setattr(grok_lane, "launcher_stream_id", lambda _epic: "lane-test")
     monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *_args, **_kwargs: list(STREAM))
+
+
+def shell_stream(selector: str) -> str:
+    """The launcher's own stream for a selector, from the shell SSOT."""
+    return subprocess.check_output(
+        [
+            "bash",
+            "-c",
+            'source "$1" && launcher_selector_stream "$2"',
+            "lane-stream",
+            str(REPO / "scripts/lib/handoff_identity.sh"),
+            selector,
+        ],
+        text=True,
+        timeout=2,
+    ).strip()
 
 
 def enter_handoff(h: Harness) -> None:
@@ -209,9 +232,7 @@ def relaunched(tmp_path: Path, launcher_stream: None) -> Harness:
     return h
 
 
-def test_launcher_exit_after_relaunch_alerts_once_with_the_stderr_tail(
-    tmp_path: Path, launcher_stream: None
-) -> None:
+def test_launcher_exit_after_relaunch_alerts_once_with_the_stderr_tail(tmp_path: Path, launcher_stream: None) -> None:
     """Defect class: a relaunched launcher dies non-zero and nobody is told."""
     h = relaunched(tmp_path, launcher_stream)
     h.pane(LANE).text = LAUNCHER_EXIT_RC1
@@ -273,9 +294,7 @@ def launcher_selection(repo: Path):
 
 
 @pytest.mark.parametrize("case", sorted(FIXTURES))
-def test_shared_verdict_agrees_with_the_launcher_selector(
-    tmp_path: Path, launcher_stream: None, case: str
-) -> None:
+def test_shared_verdict_agrees_with_the_launcher_selector(tmp_path: Path, launcher_stream: None, case: str) -> None:
     """Defect class: the guard's check drifts from the launcher's ``select_handoff``."""
     next_heading, hands_off_heading = FIXTURES[case]
     repo = lane_repo(tmp_path, handoff_text(next_heading=next_heading, hands_off_heading=hands_off_heading))
@@ -299,9 +318,7 @@ def test_shared_verdict_agrees_with_the_launcher_selector(
 
 
 @pytest.mark.parametrize("case", sorted(FIXTURES))
-def test_guard_exit_decision_follows_the_launcher_selector(
-    tmp_path: Path, launcher_stream: None, case: str
-) -> None:
+def test_guard_exit_decision_follows_the_launcher_selector(tmp_path: Path, launcher_stream: None, case: str) -> None:
     """Defect class: the guard exits where the launcher would refuse the handoff."""
     next_heading, hands_off_heading = FIXTURES[case]
     repo = lane_repo(tmp_path, handoff_text(next_heading=next_heading, hands_off_heading=hands_off_heading))
@@ -312,9 +329,7 @@ def test_guard_exit_decision_follows_the_launcher_selector(
     assert exit_typed(h) is launcher_ok
 
 
-def test_absent_handoff_is_reported_as_no_handoff_for_the_fail_open_path(
-    tmp_path: Path, launcher_stream: None
-) -> None:
+def test_absent_handoff_is_reported_as_no_handoff_for_the_fail_open_path(tmp_path: Path, launcher_stream: None) -> None:
     """Defect class: an absent handoff is misreported as a shortfile the lane must rewrite."""
     repo = lane_repo(tmp_path, None)
     verdict = grok_lane.check_handoff_anchors(
@@ -327,3 +342,50 @@ def test_absent_handoff_is_reported_as_no_handoff_for_the_fail_open_path(
     key = "tried (no handoff)"
     assert verdict.no_handoff is True
     assert key in verdict.shortfall
+
+
+def test_launcher_stream_ignores_a_conflicting_ambient_session_stream(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: the guard's stream drifts from the launcher's shell selector via SESSION_STREAM_ID."""
+    ambient = shell_stream("open-model-data")
+    assert ambient != shell_stream(LANE)
+    monkeypatch.setenv("SESSION_STREAM_ID", ambient)
+    assert grok_lane.launcher_stream_id(LANE) == shell_stream(LANE)
+    assert grok_lane.resolve_stream_id(LANE) == ambient
+
+
+def test_ambient_session_stream_from_another_lane_cannot_exit_a_short_handoff(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Defect class: an ambient SESSION_STREAM_ID lets the guard exit a handoff the launcher refuses.
+
+    The ambient stream carries enough entries to reach 10 anchors, while the
+    lane's real stream (resolved by the shell SSOT, as the launcher does) does
+    not. The guard must judge the real stream: matching ``select_handoff`` on
+    that stream, it sends the lane back instead of typing ``/quit``.
+    """
+    repo = lane_repo(tmp_path, handoff_text(next_heading=False))
+    ambient = shell_stream("open-model-data")
+    assert ambient != shell_stream(LANE)
+    monkeypatch.setenv("SESSION_STREAM_ID", ambient)
+
+    def entries(stream_id: str, **_kwargs) -> list[dict[str, str]]:
+        return list(CONFLICTING_STREAM) if stream_id == ambient else []
+
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", entries)
+    lane_stream = shell_stream(LANE)
+    launcher_ok = bool(
+        grok_lane.select_handoff(
+            repo=repo,
+            epic=LANE,
+            stream_id=lane_stream,
+            stream_entries=entries(lane_stream),
+            candidates=handoff_select.load_codex_candidates(repo, LANE),
+        ).reason
+    )
+    assert not launcher_ok
+    h = Harness(tmp_path, **{LANE: codex_pane(40)})
+    enter_handoff(h)
+    h.tick(LANE)
+    assert not exit_typed(h), h.fake.typed(LANE)
+    assert anchor_sendbacks(h), h.fake.typed(LANE)
+    assert "next=0" in anchor_sendbacks(h)[0]

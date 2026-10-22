@@ -73,12 +73,9 @@ class StreamResolutionError(ValueError):
         super().__init__(f"{self.reason}: {selector!r}; pass --stream epic:N")
 
 
-def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
-    """CLI stream, launcher environment, then the shell selector SSOT."""
-    stream = explicit or os.environ.get("SESSION_STREAM_ID")
-    if stream:
-        return stream
-    selector = epic.strip().lower()
+def _launcher_selector_stream(selector: str) -> str:
+    """Resolve one selector through the launcher shell SSOT, ignoring the environment."""
+    selector = selector.strip().lower()
     try:
         result = subprocess.run(
             [
@@ -99,6 +96,26 @@ def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
     if result.returncode != 0 or not result.stdout.strip():
         raise StreamResolutionError(selector)
     return result.stdout.strip()
+
+
+def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
+    """CLI stream, launcher environment, then the shell selector SSOT."""
+    stream = explicit or os.environ.get("SESSION_STREAM_ID")
+    if stream:
+        return stream
+    return _launcher_selector_stream(epic)
+
+
+def launcher_stream_id(epic: str) -> str:
+    """The stream the launcher derives for ``epic``, never the ambient environment.
+
+    ``resolve_stream_id`` deliberately prefers ``SESSION_STREAM_ID`` for its
+    single-lane CLI callers. A supervisor that watches every lane must not apply
+    one lane's ambient stream to another lane's handoff, so the context guard
+    uses this helper, which resolves through ``launcher_selector_stream`` exactly
+    as ``codex.sh`` does with ``launcher_selector_stream "$LC_EPIC"``.
+    """
+    return _launcher_selector_stream(epic)
 
 
 def _stream_id(args: argparse.Namespace) -> str:
