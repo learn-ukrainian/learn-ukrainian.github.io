@@ -24,9 +24,8 @@ wake timers die with this session; the next one re-arms them from the file hando
 - PARKED: <each item stopped mid-way (uncommitted edits, cancelled workers, half-run
   procedures): location, state, condition to resume> or none
 - NEXT 3: (1) ... (2) ... (3) ...
-- STARTUP: launch with the CTO launcher (see the private operations doc); bind ONLY
-  <lineage-id> / <rollover-id> (bind-replacement, bootstrap-replacement, fill
-  semantic-snapshot, confirm-replacement x3); scratch helpers in <scratch>
+- STARTUP: launch with the CTO launcher (see the private operations doc); resume ONLY
+  <lineage-id> / <rollover-id> with the thread-rollover skill; scratch helpers in <scratch>
 - WATCHERS in this session die with it: <ids and what each watched>. Re-arm.
 ```
 
