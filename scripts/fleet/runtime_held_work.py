@@ -65,8 +65,8 @@ def _strings(value: Any) -> list[str]:
     return []
 
 
-def evidence_names(root: Path) -> list[str] | None:
-    """Relative regular-file names under ``<runtime lease>/evidence``, or ``None``.
+def evidence_names(root: Path, *, directories: list[str] | None = None) -> list[str] | None:
+    """Relative regular-file names, including an empty list; None only when absent.
 
     The supported evidence directory is a fixed name, never a citation guess.
     Only regular files in real directories qualify; a symlink, special file or
@@ -101,6 +101,8 @@ def evidence_names(root: Path) -> list[str] | None:
             if stat.S_ISLNK(entry_info.st_mode):
                 raise EvidencePreservationError()
             if stat.S_ISDIR(entry_info.st_mode):
+                if directories is not None:
+                    directories.append(relative)
                 pending.append((entry.path, f"{relative}/"))
                 continue
             if not stat.S_ISREG(entry_info.st_mode):
@@ -109,7 +111,9 @@ def evidence_names(root: Path) -> list[str] | None:
             if total > output.MAX_PRESERVED_BYTES:
                 raise EvidenceLimitExceeded()
             names.append(relative)
-    return sorted(names) or None
+    if directories is not None:
+        directories.sort()
+    return sorted(names)
 
 
 def _discard_attempt(location: Path, parent: Path) -> None:
@@ -132,7 +136,8 @@ def _copy_evidence_once(
 ) -> dict[str, Any] | None:
     """Copy the current evidence set, then prove the source did not move under the copy."""
     source = root / EVIDENCE_DIRNAME
-    names = evidence_names(root)
+    directories: list[str] = []
+    names = evidence_names(root, directories=directories)
     if names is None:
         return None
     location = parent / ("evidence-" + uuid.uuid4().hex)
@@ -143,6 +148,8 @@ def _copy_evidence_once(
             raise EvidencePreservationError()
     try:
         location.mkdir(parents=True, exist_ok=False)
+        for name in directories:
+            (location / name).mkdir(parents=True, exist_ok=True)
         try:
             for name in names:
                 artifacts._copy_verified(
@@ -165,8 +172,9 @@ def _copy_evidence_once(
         # Fixed point: the receipt may only describe a set that was identical to
         # the source at a final enumeration after the copy. A new or changed
         # file means the copy is stale, so copy again from scratch.
-        final_names = evidence_names(root)
-        if final_names != names:
+        final_directories: list[str] = []
+        final_names = evidence_names(root, directories=final_directories)
+        if final_names != names or final_directories != directories:
             raise _EvidenceSourceChanged()
         if output._path_inventory(source, final_names) != paths:
             raise _EvidenceSourceChanged()
@@ -179,6 +187,7 @@ def _copy_evidence_once(
             "count": len(paths),
             "bytes": total,
             "paths": paths,
+            "directories": directories,
             "location": location.relative_to(primary).as_posix(),
             "content_sha256": output._content_digest(location, names),
             "runtime_tmp_sha256": hashlib.sha256(str(root).encode()).hexdigest(),
@@ -215,8 +224,11 @@ def evidence_matches_receipt(root: Path, receipt: Mapping[str, Any]) -> bool:
     lease rather than deleting it.
     """
     try:
-        names = evidence_names(root)
+        directories: list[str] = []
+        names = evidence_names(root, directories=directories)
         if names is None:
+            return False
+        if directories != receipt.get("directories"):
             return False
         paths = receipt.get("paths")
         if not isinstance(paths, list) or names != [entry["path"] for entry in paths]:
@@ -233,6 +245,7 @@ def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -
     copying, the source is enumerated again and a file that appeared or changed
     during the copy makes the attempt stale, so it copies again (bounded). Only a
     set verified identical to the source at the final enumeration is receipted.
+    Empty directories receive the same inventory proof as non-empty directories.
     A failed copy, invalid name, linked entry, cap breach or a source that never
     settles raises a typed refusal, so the caller keeps the lease.
     """

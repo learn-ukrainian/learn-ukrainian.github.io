@@ -1682,11 +1682,16 @@ def _require_preserved_evidence_still_matches(lease: Path, updates: Mapping[str,
     identical to the source. Recheck immediately before deletion so a file that
     appeared or changed after the final enumeration is never silently lost; the
     typed refusal keeps the lease.
+    Without a receipt, only continued absence of the evidence directory permits deletion.
     """
     from scripts.fleet import runtime_held_work
 
     receipt = updates.get("preserved_evidence") if isinstance(updates, Mapping) else None
-    if receipt is not None and not runtime_held_work.evidence_matches_receipt(lease, receipt):
+    if receipt is None:
+        matches = runtime_held_work.evidence_names(lease) is None
+    else:
+        matches = runtime_held_work.evidence_matches_receipt(lease, receipt)
+    if not matches:
         raise runtime_held_work.EvidencePreservationError()
 
 
@@ -1779,8 +1784,8 @@ def _sweep_runtime_tmp_orphans(
 
             try:
                 updates = _preserve_runtime_tmp_held_work(lease, state)
-                _require_preserved_evidence_still_matches(lease, updates)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
+                _require_preserved_evidence_still_matches(lease, updates)
                 _remove_runtime_tmp_lease(lease, namespace)
             except (OSError, ValueError) as exc:
                 result["errors"] += 1
@@ -1886,8 +1891,8 @@ def _reap_runtime_tmp_lease(
                 else None,
             )
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
-        _require_preserved_evidence_still_matches(lease, result)
         bytes_freed = _runtime_tmp_lease_bytes(lease)
+        _require_preserved_evidence_still_matches(lease, result)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
