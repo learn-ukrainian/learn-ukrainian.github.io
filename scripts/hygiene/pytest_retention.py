@@ -221,7 +221,7 @@ def _classify(
     name: str, namespace: Path, ns_fd: int, *, holders: Holders, worktrees: set[Path] | None, now: float,
     apply: bool, stack: ExitStack,
 ) -> Candidate:
-    """Decide one run folder; on apply also keep its lock and pre-rename fingerprint."""
+    """Decide one run folder; transfer only eligible apply locks to the deletion scope."""
     path = namespace / name
     row = sweep._bare_row(name, "symlink_or_not_directory", kind="other")
     info = os.stat(name, dir_fd=ns_fd, follow_symlinks=False)
@@ -237,38 +237,43 @@ def _classify(
         candidate.lock, reason = _lock(run_fd)
     finally:
         os.close(run_fd)
-    if candidate.lock is not None:
-        if apply:  # held until the folder is deleted or returned
-            stack.callback(os.close, candidate.lock)
-        else:  # a dry run only observes the lock
-            os.close(candidate.lock)
+    with ExitStack() as inspection:
+        if candidate.lock is not None:
+            inspection.callback(os.close, candidate.lock)
+            if not apply:  # a dry run only observes the lock
+                inspection.close()
+                candidate.lock = None
+        if reason:
+            row["reason"] = reason
+            return candidate
+        # Fingerprint first: a write after it shows at the post-rename comparison,
+        # a write before it is seen by the age scan below.
+        candidate.before = sweep.tree_fingerprint(path) if apply else None
+        row["bytes"], _newest, changed, problem = sweep.tree_facts(path)
+        row["newest_change"] = changed
+        row["idle_hours"] = round(max(0.0, now - changed) / 3600, 2)
+        pids, channels = holders.holding([path])
+        row.update(live_pids=pids, holders=channels)
+        if problem:
+            row["reason"] = problem
+        elif apply and candidate.before is None:
+            row["reason"] = "tree_unknown"
+        elif now - changed <= INACTIVE_S:
+            row["reason"] = "too_young"
+        elif pids:
+            row["reason"] = "live_process"
+        elif not holders.complete:
+            row["reason"] = "liveness_unknown"
+        elif worktrees is None or any(w == path or w in path.parents or path in w.parents for w in worktrees):
+            row["reason"] = "git_registration_unknown" if worktrees is None else "registered_worktree"
+        else:
+            row.update(decision="would_delete", reason="inactive_pytest_scratch")
+        if apply and row["decision"] == "would_delete":
+            # Transfer only eligible locks; retained runs need no inspection handles.
+            stack.enter_context(inspection.pop_all())
+        else:
             candidate.lock = None
-    if reason:
-        row["reason"] = reason
         return candidate
-    # Fingerprint first: a write after it shows at the post-rename comparison,
-    # a write before it is seen by the age scan below.
-    candidate.before = sweep.tree_fingerprint(path) if apply else None
-    row["bytes"], _newest, changed, problem = sweep.tree_facts(path)
-    row["newest_change"] = changed
-    row["idle_hours"] = round(max(0.0, now - changed) / 3600, 2)
-    pids, channels = holders.holding([path])
-    row.update(live_pids=pids, holders=channels)
-    if problem:
-        row["reason"] = problem
-    elif apply and candidate.before is None:
-        row["reason"] = "tree_unknown"
-    elif now - changed <= INACTIVE_S:
-        row["reason"] = "too_young"
-    elif pids:
-        row["reason"] = "live_process"
-    elif not holders.complete:
-        row["reason"] = "liveness_unknown"
-    elif worktrees is None or any(w == path or w in path.parents or path in w.parents for w in worktrees):
-        row["reason"] = "git_registration_unknown" if worktrees is None else "registered_worktree"
-    else:
-        row.update(decision="would_delete", reason="inactive_pytest_scratch")
-    return candidate
 
 
 def _return(candidate: Candidate, quarantine: sweep.Quarantine, reason: str) -> int:
