@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import schema from '../../../schemas/word-card-v1.schema.json';
-import WordCardPreview from '../../src/lexicon/WordCardPreview';
+import WordCardPreview, { candidateSearchVisible } from '../../src/lexicon/WordCardPreview';
 import { compareCurrent, fieldStates, pairCurrent, previewCard } from '../../src/lib/lexicon/word-card-preview';
 import { hash, loadCases, previewInputs, record, revisionCases, relationCases } from '../fixtures/word-card-preview/inputs';
 import snapshot from '../fixtures/word-card-preview/current';
@@ -207,6 +207,15 @@ describe('source-bound preview mechanics', () => {
       expect(pairCurrent(candidate,parsed,targets)).toEqual(['valid','repeated-key','unrelated-key'].includes(kind) ? snapshot.records[1]?.record : null);
       expect(pairCurrent(candidate,[...parsed,...parsed],targets)).toBeNull();
     }
+  });
+});
+
+describe('candidate route C37 search', () => {
+  it('puts the existing search only on word and card candidate routes', () => {
+    expect(candidateSearchVisible('release')).toBe(false);
+    expect(candidateSearchVisible('compare/release')).toBe(false);
+    for (const route of ['word/замок', 'compare/word/замок', 'release/wc_0123456789ab', 'compare/release/wc_0123456789ab'])
+      expect(candidateSearchVisible(route), route).toBe(true);
   });
 });
 

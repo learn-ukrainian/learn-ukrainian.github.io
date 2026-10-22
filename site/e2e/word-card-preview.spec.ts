@@ -736,3 +736,190 @@ test.describe('release controls R01-R16 and R10b', () => {
     }
   });
 });
+
+// C37 candidate search on an actual Pages-style build. Configure
+// ATLAS_WORD_CARD_C37_ROOT with the public release dist and, for the both-pane
+// control, ATLAS_WORD_CARD_C37_CONTROLS_ROOT with the flag-enabled fixture dist.
+// Run through playwright.word-card-search.config.ts; every other run skips this group.
+const c37Root = process.env.ATLAS_WORD_CARD_C37_ROOT;
+const c37ControlsRoot = process.env.ATLAS_WORD_CARD_C37_CONTROLS_ROOT;
+const c37Inventory = JSON.parse(readFileSync(new URL('../src/lib/lexicon/word-card-preview-route-inventory.json', import.meta.url), 'utf8')) as {
+  routes: { path: string; class: string }[];
+};
+const c37SearchSlugs = new Set((JSON.parse(readFileSync(new URL('../src/data/lexicon-search-index.json', import.meta.url), 'utf8')) as { s: string }[])
+  .map(row => row.s));
+const C37_WORD_CLASSES = ['card-diagnostic', 'compare-card-diagnostic', 'word-page', 'compare-word-page'];
+const c37WordRoutes = c37Inventory.routes.filter(route => C37_WORD_CLASSES.includes(route.class));
+type C37Server = { origin: string; close: () => Promise<void> };
+
+async function c37Server(root: string): Promise<C37Server> {
+  const module = await import(new URL('../scripts/serve-gh-pages-404.mjs', import.meta.url).href) as {
+    createGhPages404Server: (options: { root: string; port: number; host: string }) => {
+      server: { address: () => { port: number } | string | null }; listen: () => Promise<unknown>; close: () => Promise<void>;
+    };
+  };
+  const app = module.createGhPages404Server({ root, port: 0, host: '127.0.0.1' });
+  await app.listen();
+  const address = app.server.address();
+  if (!address || typeof address === 'string') throw Error('No C37 Pages-style port');
+  return { origin: `http://127.0.0.1:${address.port}`, close: () => app.close() };
+}
+
+test.describe('C37 candidate in-page search', () => {
+  test.skip(!c37Root, 'ATLAS_WORD_CARD_C37_ROOT is not set');
+  let publicServer: C37Server;
+  let controlsServer: C37Server | undefined;
+  test.beforeAll(async () => {
+    publicServer = await c37Server(c37Root!);
+    if (c37ControlsRoot) controlsServer = await c37Server(c37ControlsRoot);
+  });
+  test.afterAll(async () => { await publicServer?.close(); await controlsServer?.close(); });
+
+  test('C37 exposes bound search, Atlas return link and page label on every word and card route', async ({ page }, info) => {
+    test.setTimeout(1_800_000);
+    const tally = Object.fromEntries(C37_WORD_CLASSES.map(name => [name, { discovered: c37Inventory.routes.filter(r => r.class === name).length,
+      run: 0, pass: 0, fail: [] as string[] }]));
+    for (const route of c37WordRoutes) {
+      const bucket = tally[route.class];
+      bucket.run += 1;
+      try {
+        await page.goto(publicServer.origin + route.path, { waitUntil: 'domcontentloaded' });
+        const candidate = page.getByRole('region', { name: 'Candidate presentation', exact: true });
+        const widget = candidate.locator('[data-atlas-typeahead]');
+        await expect(widget).toHaveCount(1);
+        await expect(widget).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+        const input = page.locator('#atlas-candidate-search-input');
+        await expect(input).toHaveCount(1);
+        await expect(input).toHaveAttribute('role', 'combobox');
+        await expect(input).toHaveAttribute('aria-controls', 'atlas-candidate-search-list');
+        await expect(page.locator('#atlas-candidate-search-list')).toHaveCount(1);
+        await expect(page.locator('#atlas-candidate-search-list')).toHaveAttribute('role', 'listbox');
+        await expect(candidate.getByRole('link', { name: 'До Атласу', exact: true })).toHaveAttribute('href', '/lexicon/');
+        await expect(candidate.getByText('Атлас слів (Лексикон)', { exact: true })).toBeVisible();
+        bucket.pass += 1;
+      } catch (error) {
+        bucket.fail.push(`${route.path}: ${(error as Error).message.split('\n')[0]}`);
+      }
+      if (Object.values(tally).reduce((total, item) => total + item.fail.length, 0) >= 10) break;
+    }
+    await info.attach('c37-route-tally', { body: JSON.stringify(tally, null, 2), contentType: 'application/json' });
+    expect(c37WordRoutes).toHaveLength(568);
+    for (const name of C37_WORD_CLASSES) expect(tally[name].fail, name).toEqual([]);
+  });
+
+  for (const [viewport, size] of [['desktop', { width: 1440, height: 1000 }], ['phone', { width: 390, height: 844 }]] as const) {
+    test(`C37 real index results, arrow selection and Enter navigate on ${viewport}`, async ({ page }, info) => {
+      test.setTimeout(180_000);
+      await page.setViewportSize(size);
+      const seen: string[] = [];
+      for (const name of C37_WORD_CLASSES) {
+        const route = c37Inventory.routes.find(item => item.class === name)!;
+        await page.goto(publicServer.origin + route.path);
+        await expect(page.locator('[data-atlas-typeahead]')).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+        const input = page.locator('#atlas-candidate-search-input');
+        await input.fill('чит');
+        const options = page.locator('#atlas-candidate-search-list [role="option"][data-slug]');
+        await expect(options.first()).toBeVisible();
+        const slug = await options.first().getAttribute('data-slug');
+        expect(slug && c37SearchSlugs.has(slug), `${route.class}: first result comes from the committed search index`).toBe(true);
+        await input.press('ArrowDown');
+        await expect(options.first()).toHaveAttribute('aria-selected', 'true');
+        await input.press('Enter');
+        await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug!)}/`);
+        seen.push(`${viewport} ${route.class} ${route.path} -> ${slug}`);
+      }
+      await info.attach(`c37-keyboard-${viewport}`, { body: seen.join('\n'), contentType: 'text/plain' });
+    });
+  }
+
+  test('C37 Atlas return link reaches the current Atlas', async ({ page }) => {
+    const route = c37Inventory.routes.find(item => item.class === 'word-page')!;
+    await page.goto(publicServer.origin + route.path);
+    await page.getByRole('region', { name: 'Candidate presentation', exact: true })
+      .getByRole('link', { name: 'До Атласу', exact: true }).click();
+    await page.waitForURL(url => url.pathname === '/lexicon/');
+  });
+
+  test('C37 current and candidate controls stay unique and independent', async ({ page }) => {
+    test.skip(!c37ControlsRoot, 'ATLAS_WORD_CARD_C37_CONTROLS_ROOT is not set');
+    await page.goto(controlsServer!.origin + '/lexicon-v2/compare/kliuch-1/');
+    const currentInput = page.locator('#atlas-article-search-input');
+    const candidateInput = page.locator('#atlas-candidate-search-input');
+    await expect(page.locator('[data-atlas-typeahead]')).toHaveCount(2);
+    await expect(currentInput).toHaveAttribute('aria-controls', 'atlas-article-search-list');
+    await expect(candidateInput).toHaveAttribute('aria-controls', 'atlas-candidate-search-list');
+    for (const widget of await page.locator('[data-atlas-typeahead]').all())
+      await expect(widget).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+    await candidateInput.fill('чит');
+    const candidateOptions = page.locator('#atlas-candidate-search-list [role="option"][data-slug]');
+    await expect(candidateOptions.first()).toBeVisible();
+    const candidateCount = await candidateOptions.count();
+    await currentInput.fill('чит');
+    await expect(page.locator('#atlas-article-search-list [role="option"][data-slug]').first()).toBeVisible();
+    await expect(candidateOptions).toHaveCount(candidateCount);
+    await expect(candidateInput).toHaveValue('чит');
+    await expect(currentInput).toHaveValue('чит');
+    const slug = await candidateOptions.first().getAttribute('data-slug');
+    await candidateInput.press('ArrowDown');
+    await candidateInput.press('Enter');
+    await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug!)}/`);
+  });
+
+  test('C37 keeps the two release summaries free of candidate search', async ({ page }) => {
+    for (const path of ['/lexicon-v2/release/', '/lexicon-v2/compare/release/']) {
+      await page.goto(publicServer.origin + path);
+      await expect(page.locator('[data-release-summary]')).toHaveCount(1);
+      await expect(page.locator('[data-atlas-typeahead], #atlas-candidate-search-input')).toHaveCount(0);
+    }
+  });
+
+  test.describe('C37 original action timeout reproduction', () => {
+    test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: 'uk-UA', timezoneId: 'UTC', colorScheme: 'light' });
+    test('C37 exercises the 14 original disclosure and tab targets', async ({ page }, info) => {
+      test.setTimeout(300_000);
+      const actions: { route: string; kind: 'disclosure' | 'tab'; index: number; candidate: boolean }[] = [
+        { route: '/lexicon-v2/word/близько не пахне/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/блигом світ/', kind: 'disclosure', index: 1, candidate: true },
+        { route: "/lexicon-v2/word/гнат-безп'ятко/", kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/боже помагай/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon/замок/', kind: 'tab', index: 0, candidate: false },
+        { route: '/lexicon/замок/', kind: 'tab', index: 1, candidate: false },
+        { route: '/lexicon-v2/word/бог помилував/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/блекоти наїлась/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon/юридичний/', kind: 'disclosure', index: 1, candidate: false },
+        { route: '/lexicon-v2/word/божий світ/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/благородний жест/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/валаамова ослиця/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/блудний син/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/бог зна що таке/', kind: 'disclosure', index: 1, candidate: true },
+      ];
+      const results: Record<string, unknown>[] = [];
+      for (const item of actions) {
+        await page.goto(publicServer.origin + encodeURI(item.route), { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction(() => document.querySelector('[data-word-atlas],[data-release-page],[data-release-card],[data-word-atlas-state="not_found"]'), {}, { timeout: 30000 });
+        const nodes = item.kind === 'disclosure' ? page.locator('details > summary') : page.getByRole('tab');
+        const record: Record<string, unknown> = { ...item, clicks: [] as number[], timeouts: [] as Record<string, unknown>[] };
+        for (let i = 0; i < await nodes.count(); i++) {
+          try { await nodes.nth(i).click({ timeout: 2000 }); (record.clicks as number[]).push(i); }
+          catch (error) { (record.timeouts as Record<string, unknown>[]).push({ index: i, error: (error as Error).message }); }
+        }
+        const target = nodes.nth(item.index);
+        const targetTimeout = (record.timeouts as { index: number }[]).some(timeout => timeout.index === item.index);
+        record.targetOpened = item.kind === 'disclosure'
+          ? await target.locator('..').getAttribute('open') !== null : !targetTimeout;
+        results.push(record);
+      }
+      await info.attach('c37-original-action-timeouts', { body: JSON.stringify(results, null, 2), contentType: 'application/json' });
+      expect(results).toHaveLength(14);
+      // Every candidate-page target and both current tabs are clickable after the correction.
+      expect(results.filter(item => !item.candidate).map(item => [item.route, item.kind, item.index, item.targetOpened]))
+        .toEqual([['/lexicon/замок/', 'tab', 0, true], ['/lexicon/замок/', 'tab', 1, true], ['/lexicon/юридичний/', 'disclosure', 1, false]]);
+      expect(results.filter(item => item.candidate).every(item => item.targetOpened === true)).toBe(true);
+      // The only surviving timeout is the shared current Atlas article, outside this repair's owned page.
+      const timeouts = results.flatMap(item => (item.timeouts as { index: number; error: string }[])
+        .map(timeout => ({ route: item.route as string, index: timeout.index, error: timeout.error })));
+      expect(timeouts.map(item => `${item.route}#${item.index}`)).toEqual(['/lexicon/юридичний/#1']);
+      expect(timeouts[0]?.error).toContain('intercepts pointer events');
+    });
+  });
+});

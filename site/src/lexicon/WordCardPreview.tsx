@@ -112,6 +112,11 @@ function Entry({ entry, pin }: { entry: ReadableEntry; pin: ReleasePage['pin'] }
   </article>;
 }
 
+/** C37 search belongs to word and card candidate routes; the two release summaries stay summaries. */
+export function candidateSearchVisible(routePath: string): boolean {
+  return routePath !== 'release' && routePath !== 'compare/release';
+}
+
 export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null; compare: boolean }) {
   if (card.kind === 'release') {
     const { pages, dispositions } = groupReleasePages(card.rows);
