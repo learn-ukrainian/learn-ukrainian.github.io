@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, Query
@@ -82,8 +83,20 @@ def test_slots_status(_ctx: MonitorContext = Depends(get_ctx)) -> dict:
     """Host test-slot pool (#10662): holders by task, the FIFO queue and wait times; never a path.
 
     A plain ``def``: the status read touches files, so FastAPI runs it off the event loop.
+    ``observed_at`` and ``age_s`` describe the source observation. A failed read
+    leaves both unknown instead of presenting the request time as freshness;
+    ``requested_at`` records the request separately.
     """
-    return test_slots.status()
+    requested_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    payload = test_slots.status()
+    payload["requested_at"] = requested_at
+    if payload.get("error") is None:
+        payload["observed_at"] = requested_at
+        payload["age_s"] = 0.0
+    else:
+        payload["observed_at"] = None
+        payload["age_s"] = None
+    return payload
 
 
 @router.get("/v1/load-samples")

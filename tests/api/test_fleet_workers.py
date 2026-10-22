@@ -351,7 +351,8 @@ def test_reported_worker_counts_follow_receipt_age(
     assert host["freshness"] == "fresh"
     assert host["workers"][0]["id"] == "monitor-7187"
     assert host["workers"][0]["age_s"] == 7200
-    assert "age_s" not in host  # The existing remote contract has no report-age field.
+    # The host's own report age is exposed, independently of worker activity age.
+    assert host["age_s"] == receipt_age
 
     expired = workers_payload(host_id="host-worker", now_mono=stored.expires_at_mono)
     assert expired["counts"] == {
@@ -363,6 +364,7 @@ def test_reported_worker_counts_follow_receipt_age(
     }
     expired_host = _host_by_id(expired, "host-worker")
     assert expired_host["freshness"] == "unknown"
+    assert expired_host["age_s"] is None
     assert expired_host["workers_status"] == "unreported"
     assert expired_host["workers"] == []
 
@@ -428,7 +430,7 @@ def test_workers_route_keeps_unattributed_unknown_with_fresh_self_snapshot(
         assert host["workers_status"] == "reported"
         assert host["reason"] == "lease has no host claim"
         assert host["unattributed_burn"] == {}
-        assert "age_s" not in host
+        assert host["age_s"] is None
         assert len(host["workers"]) == 1
         row = host["workers"][0]
         assert (row["id"], row["source"], row["state"]) == ("inst-alpha", "driver", "live")

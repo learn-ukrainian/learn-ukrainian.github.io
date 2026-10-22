@@ -600,6 +600,33 @@ def _host_freshness(
     return freshness_from_age(age_s)
 
 
+def _host_age_s(
+    host_id: str,
+    *,
+    now_mono: float,
+    presence_store: Any = None,
+    report_store: Any = None,
+) -> float | None:
+    """Observation age for one host, or ``None`` when no observation exists.
+
+    Self hosts report their age through the local-document snapshot. A missing
+    or expired report is unknown age, never zero. The cloud observer's age is
+    the newest heartbeat, not the host report clock.
+    """
+    if host_id in _self_host_ids():
+        return None
+    if host_id == CLOUD_OBSERVER_HOST_ID:
+        live = list_live(now_mono=now_mono, store=presence_store)
+        if not live:
+            return None
+        newest = max(item.updated_at_mono for item in live)
+        return round(max(0.0, now_mono - newest), 3)
+    stored = get_live_report(host_id, now_mono=now_mono, store=report_store)
+    if stored is None:
+        return None
+    return round(max(0.0, now_mono - stored.received_at_mono), 3)
+
+
 def _reported_workers(
     host_id: str,
     *,
@@ -691,6 +718,12 @@ def _build_workers_payload(
             presence_store=presence_store,
             report_store=report_store,
         )
+        age_s = _host_age_s(
+            opaque,
+            now_mono=stamp,
+            presence_store=presence_store,
+            report_store=report_store,
+        )
         workers_status, reported = _reported_workers(opaque, now_mono=stamp, tally=tally, report_store=report_store)
         host_workers: list[CollectedWorker] = []
         unattributed_burn: dict[str, Any] = {}
@@ -736,6 +769,7 @@ def _build_workers_payload(
             {
                 "host_id": opaque,
                 "freshness": freshness,
+                "age_s": age_s,
                 "workers_status": workers_status,
                 "workers": shaped,
                 "unattributed_burn": unattributed_burn,
@@ -750,6 +784,7 @@ def _build_workers_payload(
             {
                 "host_id": UNATTRIBUTED_HOST_ID,
                 "freshness": "unknown",
+                "age_s": None,
                 "workers_status": "reported",
                 "workers": shaped,
                 "unattributed_burn": {},
