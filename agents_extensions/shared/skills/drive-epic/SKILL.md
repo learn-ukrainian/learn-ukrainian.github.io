@@ -28,6 +28,11 @@ which task, and the current width are live data. Read them fresh, never from mem
 a Ukrainian word, stress or morphology fact, a gate status, a count, a worker's state)
 comes from tool output in this turn; if it does not, stop and run the tool.
 
+**Issue filing belongs to the CTO.** You do not open GitHub issues. Report findings to
+the CTO through Fleet Comms; the CTO opens, folds or drops them. Add no test file or test
+case unless the CTO approves that specific test, and never brief a worker for a reproducer,
+a regression test or repeated runs.
+
 **Evidence hygiene.** Every timestamp in reports, issue comments, receipts, and
 handoffs comes from `date -u`, never from memory or a clock guess.
 
@@ -71,7 +76,7 @@ Per turn and at session end:
 - [ ] The residual count is quoted from a tool; a residual above zero has a next
       dispatch this session (§2a).
 
-An issue is never kept open as a running log; put logs in a dedicated issue.
+An issue is never kept open as a running log; put logs in the CTO's issue.
 
 Git hygiene always holds: the primary checkout stays on `main` and is read-only; edits,
 commits, and PRs happen only in `.worktrees/dispatch/<agent>/<task>/`; every commit has an

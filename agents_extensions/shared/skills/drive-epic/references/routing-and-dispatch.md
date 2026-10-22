@@ -144,11 +144,11 @@ only under them and commits nothing without them (#8991). Stagger same-lane spaw
 credentials, admission, sandbox, guards) states the trust boundary, the allowed inputs, the
 refusal behaviour and the attack classes in scope. The default design is fail-closed: an
 allowlist of known-good forms, with everything else refused; a design that is not an
-allowlist says why. The author ships the entry-point matrix, one reproducer per class and the
+allowlist says why. The author ships the entry-point matrix, one concrete case per class and the
 untested boundaries that the review brief freezes
 ([review-merge-cleanup](review-merge-cleanup.md) §6). Where compatibility with real Bash or a
-real CLI is intended, the author's attack-class tests use the real tool as the oracle, with
-its version pinned, and run under the host-wide test-run governor (#10662) once it exists.
+real CLI is intended, evidence for each attack class uses the real tool as the oracle, with
+its version pinned.
 Reviewers keep their own independent adversarial cases; the author's matrix does not replace
 review. After the second rejected review round the author stops and the driver takes a design
 decision, consulting an advisor when needed; a rewrite is not mandatory. A contested decision
@@ -161,8 +161,9 @@ pre-push gate's `untracked_inputs` refusal covers untracked or ignored Python an
 config overlays (`*.py`, `*.pth`, `pytest.ini`, `tox.ini`, `setup.cfg`,
 `pyproject.toml`). Tracked dirt is `dirty_tree`.
 
-The brief's test step names only the test files that cover the changed files,
-including tests of code that imports a changed shared helper; never
+The brief's test step names only the existing test files that cover the changed files,
+including tests of code that imports a changed shared helper; add no test file or case
+unless the CTO approves that specific test. Never
 collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
 or `-n` above 2, and run those tests in the foreground and wait. The full suite
 runs in the PR's CI (and again in the merge queue on the merged tree) — that is
