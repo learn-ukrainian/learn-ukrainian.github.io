@@ -669,11 +669,10 @@ def test_resolver_agrees_with_owner_route_facts(snapshot):
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
-    # AC-01 separates review eligibility from writer pace forecasts. These
-    # fixtures retain real window exhaustion, runtime and contradicted fresh credit gates.
+    # Reviews ignore usage and credit relief for non-Claude seats. Observed
+    # runtime blocks still exclude reviewers; writer capacity gates stay below.
     excludes = case.name in {
-        "f1_conflicting_windows", "f3_hidden_pace_runtime_blocked",
-        "f6_relief_raw_balance_zero", "f6_relief_runtime_blocked",
+        "f3_hidden_pace_runtime_blocked", "f6_relief_runtime_blocked",
     }
     assert (result.status == "excluded") is excludes, result.reason
 
@@ -857,7 +856,7 @@ def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monke
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
-    if case.mutate == "probe_relabelled_stale_after_publication":
+    if case.mutate != "runtime_blocked_after_publication":
         assert result.status == "eligible" and result.credit is None
     else:
         assert result.status == "excluded", result.reason

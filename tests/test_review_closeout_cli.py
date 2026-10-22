@@ -1061,17 +1061,17 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
 
 
-# Re-pinned for D-129 (#10464): each output loses only its claude-opus-5-5-cursor-fallback trace row.
+# Re-pinned for #11449: review scores omit quota freshness, pace and headroom.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "9f6974f6b870e24be7758b66ae6467b23d92a5a27fb077fa3a13085f77b1e09b"),
-        ("claude-opus-5-5", "low", "ordinary.py", "25f8e170adc93603389e64c46ed2bc7fc95bfaa1e9c778363f57bad61b2e96d2"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "7cf5d041ac9c9670025ebc23c7908516eae7ad41a9a616f0b66b8c7ee0ae15b1"),
+        ("claude-opus-5-5", "low", "ordinary.py", "d9ca28da9d5c1901c07451d34c27c4de1b5a2884c72c8ebeeb304965b9a90b59"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "67e4e6295377df3825b821f50b504e9fd57e29cc0ef8e76132be2406c744971d",
+            "251d11d36da069f762a6b1319fbfd624e0e2148e15987e6098162efd0bdc35b5",
         ),
     ],
 )

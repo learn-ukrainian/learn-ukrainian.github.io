@@ -547,12 +547,110 @@ def approved_retirement_11327_baseline(baseline, inputs):
     }
 
 
+def approved_review_usage_11449_baseline(baseline, inputs):
+    """Remove usage ordering and non-Claude cap exclusions from approved receipts."""
+    reviewer = deepcopy(baseline["reviewer"])
+    for case, receipt in zip(inputs["reviewer"], reviewer, strict=True):
+        value = receipt.get("value")
+        if not isinstance(value, dict) or "trace" not in value:
+            continue
+        for candidate in [value["selected"], *value["trace"]]:
+            if candidate is not None and candidate["selection_score"] is not None:
+                score = candidate["selection_score"]
+                assert len(score) == 8
+                # Keep workload, in-flight counts, failures and the stable tie.
+                candidate["selection_score"] = score[2:4] + score[5:]
+        for candidate in value["trace"]:
+            if candidate["route"] == "claude" or candidate["reason"] != (
+                "quota bucket is near cap — automatic assignments are prohibited"
+            ):
+                continue
+            assert candidate["name"] == "openai_frontier"
+            record = case["routing_snapshot"]["agents"]["codex"]
+            assert record["status"] == "near_cap" and record["health"] == {"healthy": True}
+            assert candidate["capacity"]["near_cap"] and candidate["capacity"]["hard_reason"] is None
+            # Reuse the already-approved same-input receipt without usage data.
+            reference_case = {key: item for key, item in case.items() if key != "routing_snapshot"}
+            reference = baseline["reviewer"][inputs["reviewer"].index(reference_case)]["value"]
+            admitted = reference["selected"]
+            assert admitted["name"] == candidate["name"] and admitted["status"] == "selected"
+            value["selected"] = next(row for row in value["trace"] if row["status"] == "selected")
+            value["selected"]["status"] = "eligible"
+            for field in ("status", "reason", "suitability_rank"):
+                candidate[field] = admitted[field]
+            score = admitted["selection_score"]
+            assert len(score) == 8
+            candidate["selection_score"] = score[2:4] + score[5:]
+            candidate["health"] = "healthy"
+            value["selected"] = deepcopy(candidate)
+            value["substitution_note"] = reference["substitution_note"]
+    return {**baseline, "reviewer": reviewer}
+
+
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
     approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
 PRE_RETIREMENT_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
 APPROVED_INPUTS = approved_retirement_11327_inputs(PRE_RETIREMENT_INPUTS)
-APPROVED_BASELINE = approved_retirement_11327_baseline(PRE_RETIREMENT_BASELINE, PRE_RETIREMENT_INPUTS)
+PRE_REVIEW_USAGE_BASELINE = approved_retirement_11327_baseline(PRE_RETIREMENT_BASELINE, PRE_RETIREMENT_INPUTS)
+APPROVED_BASELINE = approved_review_usage_11449_baseline(PRE_REVIEW_USAGE_BASELINE, APPROVED_INPUTS)
+
+
+def test_review_usage_11449_overlay_changes_only_usage_exclusion_and_ordering():
+    """Reject unrelated receipt drift, including operational or Claude-cap changes."""
+    before = deepcopy(PRE_REVIEW_USAGE_BASELINE)
+    original = deepcopy(before)
+    after = approved_review_usage_11449_baseline(before, APPROVED_INPUTS)
+    assert before == original
+    assert after == APPROVED_BASELINE
+    assert {k: v for k, v in after.items() if k != "reviewer"} == {
+        k: v for k, v in before.items() if k != "reviewer"
+    }
+    changed = admitted = 0
+    for case, old, new in zip(APPROVED_INPUTS["reviewer"], before["reviewer"], after["reviewer"], strict=True):
+        if old == new:
+            continue
+        changed += 1
+        assert old.keys() == new.keys() and old["exit_status"] == new["exit_status"]
+        old, new = old["value"], new["value"]
+        assert {k: v for k, v in old.items() if k not in {"selected", "trace", "substitution_note"}} == {
+            k: v for k, v in new.items() if k not in {"selected", "trace", "substitution_note"}
+        }
+        newly_selected = False
+        for prior, current in zip(old["trace"], new["trace"], strict=True):
+            expected = deepcopy(prior)
+            score = expected["selection_score"]
+            if score is not None:
+                expected["selection_score"] = score[2:4] + score[5:]
+            if prior["status"] == "excluded" and current["status"] == "selected":
+                admitted += 1
+                newly_selected = True
+                assert prior["name"] == "openai_frontier" and prior["route"] == "codex"
+                assert prior["reason"] == "quota bucket is near cap — automatic assignments are prohibited"
+                assert prior["capacity"]["near_cap"] and prior["capacity"]["hard_reason"] is None
+                assert current["health"] == "healthy" and current["reason"] is None
+                assert current["suitability_rank"] == {
+                    "low": 1, "medium": 0, "high": 2 if case["review_profile"] == "infra" else 1, "critical": 0,
+                }[new["resolved_risk"]]
+                assert current["selection_score"] == [True, 0.0, [True, 0], [True, 0], "e0279cd4ab474a86717d52ddc8ea496d0fcf6eccab3d60917c1a68ba6db6cdeb"]
+                for field in ("status", "reason", "health", "suitability_rank", "selection_score"):
+                    expected[field] = current[field]
+            elif prior["status"] == "selected" and current["status"] == "eligible":
+                assert new["selected"]["name"] == "openai_frontier"
+                expected["status"] = "eligible"
+            assert current == expected
+        assert new["selected"] == next((row for row in new["trace"] if row["status"] == "selected"), None)
+        if newly_selected:
+            assert new["substitution_note"] is None
+        else:
+            assert new["substitution_note"] == old["substitution_note"]
+            expected = deepcopy(old["selected"])
+            if expected is not None and expected["selection_score"] is not None:
+                score = expected["selection_score"]
+                expected["selection_score"] = score[2:4] + score[5:]
+            assert new["selected"] == expected
+    assert changed == 1152
+    assert admitted == 24
 
 
 def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
