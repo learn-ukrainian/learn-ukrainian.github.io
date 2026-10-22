@@ -13,6 +13,7 @@ import subprocess
 import time
 from pathlib import Path
 
+import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,6 +44,10 @@ def _fake_npm(tmp_path: Path) -> tuple[Path, Path]:
         "    exit 1\n"
         "    ;;\n"
         "  hang) exec sleep 600 ;;\n"
+        "  term-resistant)\n"
+        f"    trap 'echo TERM > \"{state}.term\"' TERM\n"
+        "    while :; do sleep 1; done\n"
+        "    ;;\n"
         "esac\n"
     )
     npm.chmod(0o755)
@@ -134,6 +139,71 @@ def test_hung_registry_is_cut_off_before_the_shared_deadline(tmp_path: Path) -> 
     assert "npm ci failed after" in result.stdout
     assert "within the 8s install budget" in result.stdout
     assert len(args_log.read_text().splitlines()) >= 1
+
+
+@pytest.mark.parametrize("limit", [4, 2, 10])
+def test_term_resistant_npm_cannot_outlive_the_shared_deadline(tmp_path: Path, limit: int) -> None:
+    """Defect class: termination grace outlives the shared deadline.
+
+    A TERM-resistant npm must be SIGKILLed, and the failure marker written,
+    strictly before `wait` reports. With no reserve the kill grace runs past a
+    short deadline, so `wait` prints "did not finish" and the marker lands
+    afterwards.
+    """
+    bin_dir, args_log = _fake_npm(tmp_path)
+    result, elapsed = _run_npm_task(tmp_path, bin_dir, "term-resistant", limit=limit)
+    marker = tmp_path / "test-env" / "npm.rc"
+    assert result.returncode == 1, result.stdout + result.stderr
+    # `wait` prints a group only after it has read a whole exit code, so a
+    # typed group below proves the marker was published before the report.
+    assert "::group::npm setup (exit 1)" in result.stdout
+    assert "::error::npm setup failed (exit 1)" in result.stdout
+    assert "did not finish" not in result.stdout
+    assert marker.read_text().strip() == "1"
+    assert (
+        f"within the {limit}s shared wait deadline" in result.stdout
+        or f"shared wait deadline {limit}s" in result.stdout
+    ), result.stdout
+    assert elapsed < limit + 2, elapsed
+    if limit > 2:
+        assert "install budget" in result.stdout
+        # The shim trapped TERM and kept running until the kill grace ended it.
+        assert (tmp_path / "npm-state.term").exists()
+        assert len(args_log.read_text().splitlines()) == 1
+    else:
+        assert f"cannot start within the {limit}s shared wait deadline" in result.stdout
+        assert not (tmp_path / "npm-state.term").exists()
+
+
+@pytest.mark.parametrize("limit", [1, 2, 3, 5])
+def test_every_accepted_short_deadline_fails_typed_within_the_deadline(tmp_path: Path, limit: int) -> None:
+    """Defect class: termination grace outlives the shared deadline."""
+    bin_dir, _ = _fake_npm(tmp_path)
+    result, elapsed = _run_npm_task(tmp_path, bin_dir, "fail", limit=limit)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "did not finish" not in result.stdout
+    assert (
+        f"within the {limit}s shared wait deadline" in result.stdout
+        or f"shared wait deadline {limit}s" in result.stdout
+    ), result.stdout
+    assert (tmp_path / "test-env" / "npm.rc").read_text().strip() == "1"
+    assert elapsed < limit + 2, elapsed
+
+
+def test_default_deadline_budget_reserves_termination_and_reporting(
+    tmp_path: Path,
+) -> None:
+    """Defect class: termination grace outlives the shared deadline.
+
+    Assert the computed default budget arithmetically instead of sleeping for
+    240 s: 240 minus the 1 s kill grace and 1 s reporting margin is 238 s.
+    """
+    bin_dir, _ = _fake_npm(tmp_path)
+    result, elapsed = _run_npm_task(tmp_path, bin_dir, "fail", limit=None)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "within the 238s install budget" in result.stdout
+    assert "shared wait deadline 240s" in result.stdout
+    assert elapsed < 40
 
 
 def test_pull_request_npm_ci_steps_prefer_the_cache() -> None:

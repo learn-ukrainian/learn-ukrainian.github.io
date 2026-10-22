@@ -20,20 +20,33 @@ dir="$RUNNER_TEMP/test-env"
 # npm ci revalidates registry data by default and its own fetch timeout (300 s)
 # outlives the shared wait deadline, so one registry incident can hang the
 # shard. Prefer the restored download cache, skip the registry-only audit/fund
-# calls, and own the retries here: four fifths of the same deadline `wait`
-# enforces, leaving the rest for error reporting. npm's internal retry stack is
-# disabled so the total bound is deterministic. Each attempt may use the whole
-# remaining budget, so a slow but working cold install still completes; a dead
-# registry returns from the per-request fetch cap in time for a bounded retry,
-# and a process-level hang is cut off before the shared deadline. Any missing
-# cache entry still comes from the registry, but it fails instead of hanging.
+# calls, and own the retries here, inside a budget derived from the same
+# deadline `wait` enforces. The budget must leave room for the SIGKILL that
+# `timeout --kill-after` may need after a TERM-resistant npm, plus the final
+# message write, or a short deadline is reported as "did not finish" while npm
+# is still dying. npm's internal retry stack is disabled so the total bound is
+# deterministic. Each attempt may use the whole remaining budget, so a slow but
+# working cold install still completes; a dead registry returns from the
+# per-request fetch cap in time for a bounded retry, and a process-level hang is
+# cut off before the shared deadline. Any missing cache entry still comes from
+# the registry, but it fails instead of hanging.
 npm_install() {
   local limit="${TEST_ENV_WAIT_TIMEOUT_S:-240}"
   case "$limit" in
     '' | *[!0-9]* | 0*) limit=240 ;;
   esac
-  local budget=$((limit - limit / 5))
-  [ "$budget" -ge 1 ] || budget=1
+  # Reserve the termination grace the per-attempt timeout may consume and a
+  # margin for the final message. A deadline too short for even one second of
+  # install after that reserve fails now, with a typed message, rather than
+  # letting the task outlive `wait`.
+  local kill_grace=1 report_margin=1
+  local reserve=$((kill_grace + report_margin))
+  [ "$reserve" -le "$limit" ] || reserve=$limit
+  local budget=$((limit - reserve))
+  if [ "$budget" -lt 1 ]; then
+    echo "npm ci cannot start within the ${limit}s shared wait deadline: ${reserve}s is reserved for termination (${kill_grace}s kill grace) and reporting (${report_margin}s); the registry may be unreachable and the npm cache cold" >&2
+    return 1
+  fi
   local max_attempts=3
   local start=$SECONDS attempt=0 rc=0 remaining slice fetch_ms backoff
   local -a cmd=(npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --fetch-retries=0)
