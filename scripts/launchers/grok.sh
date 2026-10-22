@@ -33,7 +33,7 @@ launcher_grok_validate_driver_args() {
     arg="${args[0]}"
     option="${arg%%=*}"
     case "$option" in
-      --add-dir|--agent|--agents|--allow|--deny|--cwd|--debug-file|--disallowed-tools|--json-schema|--leader-socket|--max-turns|--output-format|--permission-mode|--rules|--session-id|--sandbox|--tools|--worktree-ref)
+      --add-dir|--agent|--agents|--allow|--deny|--cwd|--debug-file|--disallowed-tools|--json-schema|--leader-socket|--max-turns|--output-format|--permission-mode|--session-id|--sandbox|--tools|--worktree-ref)
         if [ "$arg" = "$option" ]; then
           if [ "${#args[@]}" -lt 2 ] || [ -z "${args[1]}" ] || [[ "${args[1]}" = -* ]]; then
             launcher_error "Native Grok driver $option requires a value; use $option=VALUE for values starting with -."

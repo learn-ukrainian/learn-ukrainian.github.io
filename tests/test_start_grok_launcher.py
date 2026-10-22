@@ -71,6 +71,8 @@ def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str, tmp_p
     argv = argv_file.read_bytes().split(b"\0")[:-1]
     assert argv[0] == b"grok"
     assert argv[1] == b"--rules"
+    assert argv.count(b"--rules") == 1
+    assert argv[2].startswith(b"<rules-core ")
     assert argv[3:-2] == [arg.encode() for arg in provider_args]
     assert argv[-2] == b"--"
     prompt = argv[-1].decode()
@@ -102,10 +104,25 @@ def test_grok_driver_rejects_uncertified_model_and_non_grok_harness() -> None:
     assert "only --harness grok" in harness.stderr
 
 
-def test_grok_forwards_provider_arguments_only_after_separator() -> None:
+def test_grok_forwards_provider_arguments_only_after_separator(tmp_path) -> None:
+    """Caller rules must not duplicate trusted rules and fail after lease claim."""
     result = run_launcher("start-grok.sh", "--", "--reasoning", "high")
     assert result.returncode == 0, result.stderr
     assert "--reasoning high" in result.stdout
+    argv_file = tmp_path / "refused.argv"
+    for provider_args in (("--rules", "caller rules"), ("--rules=caller rules",)):
+        refused = run_launcher(
+            "start-grok-driver.sh", "--epic", "infra", "Continue the task", "--", *provider_args,
+            env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file)},
+        )
+        assert refused.returncode == 2, refused.stdout + refused.stderr
+        assert "Unsupported native Grok driver provider argument" in refused.stderr
+        assert "would claim lease" not in refused.stdout
+        assert "would run provider canary" not in refused.stdout
+        assert "would deploy" not in refused.stdout
+        assert "would bind drive-epic" not in refused.stdout
+        assert "would exec" not in refused.stdout
+        assert not argv_file.exists()
 
 
 @pytest.mark.rules_core_absent
