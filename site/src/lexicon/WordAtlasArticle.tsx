@@ -46,6 +46,17 @@ export interface WordAtlasArticleProps {
   children?: ReactNode;
 }
 
+const SOVIET_HISTORICAL_NOTE_FALLBACK =
+  "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення.";
+
+function meaningfulArticleText(value: string | null | undefined): string | null {
+  return value && value.trim() ? value : null;
+}
+
+function meaningfulArticleKeywords(keywords: string[] | null | undefined): string[] {
+  return (keywords ?? []).filter((keyword) => Boolean(keyword?.trim()));
+}
+
 /** External link: always new tab, visible ↗, SR-announced «(нова вкладка)» (W3). */
 function ExtLink({
   href,
@@ -284,6 +295,10 @@ function WordAtlasArticleBody({
 
   // #9603: editorial gloss metadata outside its source scope renders as a qualified note.
   const heroGloss = glossDisplay && (glossDisplay.note ? glossDisplay.text : `«${glossDisplay.text}»`);
+  const sovietContext = entry.soviet_colonization_context;
+  const sovietHistoricalNote = meaningfulArticleText(sovietContext?.historical_note)
+    ?? SOVIET_HISTORICAL_NOTE_FALLBACK;
+  const sovietKeywords = meaningfulArticleKeywords(sovietContext?.keywords);
   const contentId =
     currentHeteronymIdx > 0
       ? `word-${entry.url_slug}-${currentHeteronymIdx}`
@@ -536,9 +551,9 @@ function WordAtlasArticleBody({
                     </div>
                   )}
                   <div className="def-flag-inline">
-                    {entry.soviet_colonization_context!.historical_note ?? "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення."}
-                    {Boolean(entry.soviet_colonization_context!.keywords?.length) && (
-                      <span className="soviet-keywords"> (Маркери: {entry.soviet_colonization_context!.keywords?.join(", ")})</span>
+                    {sovietHistoricalNote}
+                    {sovietKeywords.length > 0 && (
+                      <span className="soviet-keywords"> (Маркери: {sovietKeywords.join(", ")})</span>
                     )}
                   </div>
                 </div>
