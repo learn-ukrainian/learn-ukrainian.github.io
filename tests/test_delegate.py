@@ -1201,6 +1201,7 @@ def test_wait_timeout_returns_124(tmp_tasks_dir, capsys):
         path,
         {
             "task_id": "wait-timeout",
+            "run_nonce": "matching-live-nonce",
             "status": "running",
             "pid": os.getpid(),  # alive, so no zombie detection
             "started_at": "2026-04-10T12:00:00+00:00",
@@ -1210,6 +1211,7 @@ def test_wait_timeout_returns_124(tmp_tasks_dir, capsys):
 
     args = argparse.Namespace(
         task_id="wait-timeout",
+        run_nonce="matching-live-nonce",
         timeout=1.0,
         poll_interval=0.1,
     )
@@ -20139,7 +20141,7 @@ def test_dispatch_reaps_lease_on_pre_spawn_error(tmp_tasks_dir, tmp_path, monkey
 
 
 def test_split_brain_stale_terminal_record_refused_by_wait_and_status(tmp_tasks_dir, capsys):
-    """#7168: Settle-wait and status readers must detect and refuse stale prior-round records."""
+    """#7168: Stale nonces must be refused without sleeping or healing unrelated records."""
     tmp_tasks_dir.mkdir(parents=True, exist_ok=True)
     stale_file = tmp_tasks_dir / "task-split-7168.json"
     stale_record = {
@@ -20160,7 +20162,29 @@ def test_split_brain_stale_terminal_record_refused_by_wait_and_status(tmp_tasks_
     err = capsys.readouterr().err
     assert "stale_run_nonce" in err
 
-    # 2. Settle-watcher with expected run_nonce for round 2 polls the stale host state via wait
+    # 2. Wait refuses a different nonce or a prefix, with and without a deadline.
+    for expected_nonce in ("round-2-live-nonce", "round-1-stale"):
+        for timeout_args in ([], ["--timeout", "0.5"]):
+            mismatch_args = delegate.build_parser().parse_args(
+                ["wait", "task-split-7168", "--run-nonce", expected_nonce, *timeout_args]
+            )
+            with (
+                patch.object(delegate.time, "sleep", side_effect=AssertionError("stale wait slept")),
+                patch.object(delegate, "_heal_dead_task", side_effect=AssertionError("stale wait healed")),
+            ):
+                assert delegate.cmd_wait(mismatch_args) == 1
+            captured = capsys.readouterr()
+            assert captured.out == ""
+            assert json.loads(captured.err) == {
+                "error": "stale_run_nonce",
+                "task_id": "task-split-7168",
+                "expected_run_nonce": expected_nonce,
+                "record_run_nonce": "round-1-stale-nonce",
+                "status": "stale",
+            }
+            assert json.loads(stale_file.read_text(encoding="utf-8")) == stale_record
+
+    # 3. When the live host's terminal record with round 2 nonce is polled, wait reports LIVE state
     wait_args = delegate.build_parser().parse_args(
         [
             "wait",
@@ -20173,13 +20197,6 @@ def test_split_brain_stale_terminal_record_refused_by_wait_and_status(tmp_tasks_
             "0.5",
         ]
     )
-    rc_wait = delegate.cmd_wait(wait_args)
-    # Must refuse the stale "done" and exit 1 (stale nonce timeout), NOT 0 (done)
-    assert rc_wait == 1
-    err = capsys.readouterr().err
-    assert "stale_run_nonce" in err
-
-    # 3. When the live host's terminal record with round 2 nonce is polled, wait reports LIVE state
     live_record = {
         "task_id": "task-split-7168",
         "run_nonce": "round-2-live-nonce",
