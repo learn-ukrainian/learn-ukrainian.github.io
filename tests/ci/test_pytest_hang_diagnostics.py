@@ -20,6 +20,7 @@ import re
 import subprocess
 import sys
 import textwrap
+import time
 import tomllib
 from pathlib import Path
 
@@ -31,6 +32,27 @@ _NATIVE_WATCHDOG_KEY = "faulthandler_timeout"
 # pytest-timeout 2.4.0 ``dump_stacks`` writes ``terminal.sep("~", title="Stack of %s (%s)")``.
 _THREAD_DUMP_MARKER = "Stack of "
 _TIMEOUT_MARKER = "Timeout"
+
+# Synthetic hang-project settings. xdist 3.8.0 emits the two controller lines
+# below when pytest-timeout's ``thread`` method calls ``os._exit(1)`` in a worker.
+_XDIST_TIMEOUT_SECONDS = 2
+_HANG_NODE_ID = "test_hang.py::test_intentional_hang"
+_XDIST_NODE_DOWN_MARKER = "node down: Not properly terminated"
+_XDIST_CRASH_PATTERN = re.compile(r"worker 'gw\d+' crashed while running " + re.escape(repr(_HANG_NODE_ID)))
+_HANG_TEST_SOURCE = textwrap.dedent(
+    """\
+    import time
+
+    def test_intentional_hang():
+        time.sleep(10)
+    """
+)
+_FAILING_TEST_SOURCE = textwrap.dedent(
+    """\
+    def test_intentional_hang():
+        raise RuntimeError("ordinary failure before any timeout")
+    """
+)
 
 
 def _pytest_ini_options(text: str) -> dict[str, object]:
@@ -134,31 +156,21 @@ def test_rearming_the_native_watchdog_fails_the_config_check(tmp_path: Path) -> 
     assert _effective_native_watchdog_seconds(tmp_path / "mutated-effective", mutated_path) == 110.0
 
 
-def _write_hang_project(tmp_path: Path) -> Path:
+def _write_hang_project(tmp_path: Path, test_source: str = _HANG_TEST_SOURCE) -> Path:
     project = tmp_path / "hang_project"
     project.mkdir()
     (project / "pyproject.toml").write_text(
         textwrap.dedent(
-            """\
+            f"""\
             [tool.pytest.ini_options]
-            timeout = 2
+            timeout = {_XDIST_TIMEOUT_SECONDS}
             timeout_method = "thread"
             faulthandler_timeout = 0
             """
         ),
         encoding="utf-8",
     )
-    (project / "test_hang.py").write_text(
-        textwrap.dedent(
-            """\
-            import time
-
-            def test_intentional_hang():
-                time.sleep(10)
-            """
-        ),
-        encoding="utf-8",
-    )
+    (project / "test_hang.py").write_text(test_source, encoding="utf-8")
     return project
 
 
@@ -171,6 +183,21 @@ def _run_hang_project(project: Path, extra_args: list[str]) -> subprocess.Comple
         timeout=90,
         env=_child_env(project),
     )
+
+
+def _timeout_kill_evidence(combined: str, elapsed: float) -> dict[str, bool]:
+    """Positive evidence that pytest-timeout's ``thread`` method killed the worker.
+
+    An ordinary failing test keeps its worker alive and exits long before the
+    configured budget, so it cannot satisfy all three checks. The elapsed bound
+    only asserts that the timeout budget was consumed; there is deliberately no
+    upper bound, and process startup adds headroom above the configured value.
+    """
+    return {
+        "node_down": _XDIST_NODE_DOWN_MARKER in combined,
+        "worker_crashed_on_hang_node": bool(_XDIST_CRASH_PATTERN.search(combined)),
+        "elapsed_at_least_configured_timeout": elapsed >= _XDIST_TIMEOUT_SECONDS,
+    }
 
 
 def test_thread_method_keeps_its_stack_dump_without_the_native_watchdog(tmp_path: Path) -> None:
@@ -196,11 +223,49 @@ def test_hung_test_is_reported_by_the_controller_under_xdist(tmp_path: Path) -> 
     its dump through the terminal writer. Worker survival under xdist therefore
     cannot be asserted for the ``thread`` method; the stack dump proof lives in
     ``test_thread_method_keeps_its_stack_dump_without_the_native_watchdog``.
+
+    A nonzero exit that merely names the test is not proof: an ordinary failure
+    does that too. This test requires the controller's worker-crash/node-down
+    lines and a consumed timeout budget, and
+    ``test_ordinary_xdist_failure_is_not_mistaken_for_a_timeout`` is the negative
+    control.
     """
     project = _write_hang_project(tmp_path)
 
+    started = time.monotonic()
     completed = _run_hang_project(project, ["-p", "xdist", "-n", "2"])
+    elapsed = time.monotonic() - started
     combined = f"{completed.stdout}\n{completed.stderr}"
+    evidence = _timeout_kill_evidence(combined, elapsed)
 
     assert completed.returncode != 0, f"the hang must fail the child run:\n{combined}"
-    assert "test_intentional_hang" in combined, f"the controller must name the hung test:\n{combined}"
+    assert all(evidence.values()), (
+        "the xdist controller must show a timeout-killed worker, not an ordinary failed "
+        f"test: {evidence} after {elapsed:.2f}s:\n{combined}"
+    )
+
+
+def test_ordinary_xdist_failure_is_not_mistaken_for_a_timeout(tmp_path: Path) -> None:
+    """Negative control: an immediate RuntimeError does not look like a timeout (#11391).
+
+    Mutation class: the hang test is replaced by an ordinary failing test in the
+    same xdist run. The old weak predicate (nonzero exit plus the test name)
+    accepted that run; the strengthened predicate must reject it.
+    """
+    project = _write_hang_project(tmp_path, _FAILING_TEST_SOURCE)
+
+    started = time.monotonic()
+    completed = _run_hang_project(project, ["-p", "xdist", "-n", "2"])
+    elapsed = time.monotonic() - started
+    combined = f"{completed.stdout}\n{completed.stderr}"
+    evidence = _timeout_kill_evidence(combined, elapsed)
+
+    assert completed.returncode != 0, f"the failing test must fail the child run:\n{combined}"
+    assert _HANG_NODE_ID in combined, (
+        f"the negative control must still name the failed test, so the old predicate "
+        f"would have accepted it:\n{combined}"
+    )
+    assert not all(evidence.values()), (
+        f"an ordinary failed test must not satisfy the timeout-kill predicate: {evidence} "
+        f"after {elapsed:.2f}s:\n{combined}"
+    )
