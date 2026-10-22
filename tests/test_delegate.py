@@ -3815,7 +3815,10 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         },
     )()
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke:
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke,
+        patch("scripts.agent_runtime.adapters.deepseek.initialize_opencode_dependencies"),
+    ):
         rc = delegate._run_worker(
             task_id="worker-dispatch-event",
             agent="deepseek",
