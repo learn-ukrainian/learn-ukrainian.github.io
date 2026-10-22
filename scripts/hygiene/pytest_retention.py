@@ -263,8 +263,9 @@ def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None, bool]:
 
     A missing lease records no owner. A lease that exists but cannot be read as
     a regular, owner-owned file of bounded size is unknown and preserves. A
-    malformed lease also records no owner but is not an I/O failure, so the
-    lock and holder evidence decide like an unleased run.
+    malformed lease, including one the parser fails on outright, also records
+    no owner but is not an I/O failure, so the lock and holder evidence decide
+    like an unleased run.
     """
     try:
         info = os.stat(ownership.LEASE_FILENAME, dir_fd=run_fd, follow_symlinks=False)
@@ -290,7 +291,10 @@ def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None, bool]:
         return None, "lease_unreadable", True
     finally:
         os.close(fd)
-    lease = ownership.parse_lease(bytes(data))
+    try:
+        lease = ownership.parse_lease(bytes(data))
+    except Exception:  # any parser failure, e.g. RecursionError, is a malformed lease
+        lease = None
     if lease is None:
         return None, None, True
     return lease, None, True

@@ -267,6 +267,26 @@ def test_old_unowned_malformed_and_completed_runs_dry_run_then_delete(area, monk
     assert tmp_sweep.Ledger(args["state_dir"]).entries()[0] == {}
 
 
+def test_deeply_nested_lease_is_malformed_and_later_runs_are_still_swept(area, monkeypatch):
+    """Defect class #11413: a parser failure on one lease aborted the whole sweep."""
+    root, args = area
+    nested = malformed(root, "a-nested")
+    depth = (task_scratch.LEASE_MAX_BYTES - 2) // 2
+    (nested / "lease.json").write_text("[" * depth + "]" * depth)
+    following = malformed(root, "z-following")
+    later(monkeypatch, 2 * HOUR + 1)
+
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    # The nested lease records no owner, like any malformed lease, so the lock
+    # and holder evidence decide; the run after it is still processed.
+    for run in (nested, following):
+        assert (row_for(report, run)["decision"], row_for(report, run)["reason"]) == (
+            "deleted", "inactive_pytest_scratch",
+        )
+        assert not run.exists()
+    assert report["errors"] == 0
+
+
 def test_young_runs_are_retained_until_strictly_past_two_hours(area, monkeypatch):
     root, args = area
     run = unowned(root, "boundary")
