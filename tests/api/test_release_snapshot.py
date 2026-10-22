@@ -601,6 +601,204 @@ def _extract_error(tmp_path: Path) -> release_snapshot.ReleaseSnapshotError:
     return exc_info.value
 
 
+def test_deadline_reader_retries_transient_unavailable_read(monkeypatch) -> None:
+    """A spurious readiness notification must not become EOF or a reader error."""
+    read_fd, write_fd = os.pipe()
+    real_read = os.read
+    unavailable = True
+
+    def temporarily_unavailable(fd: int, size: int) -> bytes:
+        nonlocal unavailable
+        if unavailable:
+            unavailable = False
+            raise BlockingIOError()
+        return real_read(fd, size)
+
+    try:
+        os.write(write_fd, b"archive bytes")
+        reader = release_snapshot._DeadlineReader(read_fd, time.monotonic() + 1.0)
+        monkeypatch.setattr(release_snapshot.os, "read", temporarily_unavailable)
+
+        assert reader.read(4096) == b"archive bytes"
+        assert reader.expired is False
+    finally:
+        os.close(read_fd)
+        os.close(write_fd)
+
+
+@pytest.mark.timeout(30)
+def test_extract_archive_accepts_real_pipe_above_select_fd_limit(monkeypatch, tmp_path: Path) -> None:
+    """A valid producer pipe above FD_SETSIZE must still drain and be reaped."""
+    if sys.platform != "linux":
+        pytest.skip("deterministic pipe capacity and high descriptor control require Linux fcntl")
+    import fcntl
+
+    archive = _archive_file(tmp_path)
+    archive.write_bytes(archive.read_bytes() + b"\0" * (64 * 1024))
+    descriptors: list[int] = []
+
+    class HighDescriptorPipe(subprocess.Popen):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            assert self.stdout is not None
+            fd = fcntl.fcntl(self.stdout.fileno(), fcntl.F_DUPFD_CLOEXEC, 1025)
+            self.stdout.close()
+            self.stdout = os.fdopen(fd, "rb")
+            descriptors.append(fd)
+
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys, signal, fcntl; "
+        "signal.signal(signal.SIGPIPE, signal.SIG_DFL); "
+        "assert fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETPIPE_SZ, 4096) == 4096; "
+        + _write_stdout(archive),
+        popen_cls=HighDescriptorPipe,
+    )
+    staging = tmp_path / "staging"
+    staging.mkdir()
+
+    release_snapshot._extract_archive(tmp_path, "0" * 40, staging)
+
+    assert len(descriptors) == 1 and descriptors[0] > 1024
+    assert (staging / "scripts/a.py").read_bytes() == b"VALUE = 1\n"
+    assert sorted(path.relative_to(staging).as_posix() for path in staging.rglob("*")) == [
+        "scripts",
+        "scripts/a.py",
+    ]
+    assert [process.returncode for process in spawned] == [0]
+    assert spawned[0].stdout.closed
+    with pytest.raises(ChildProcessError):
+        os.waitpid(spawned[0].pid, os.WNOHANG)
+
+
+@pytest.mark.timeout(30)
+def test_extract_archive_drains_padding_beyond_small_pipe_capacity(monkeypatch, tmp_path: Path) -> None:
+    """Closing at tar EOF must not SIGPIPE a producer still writing padding."""
+    if sys.platform != "linux":
+        pytest.skip("deterministic pipe capacity control requires Linux F_SETPIPE_SZ")
+    import fcntl
+
+    if not hasattr(fcntl, "F_SETPIPE_SZ"):
+        pytest.skip("fcntl.F_SETPIPE_SZ is unavailable")
+    archive = _archive_file(tmp_path)
+    archive.write_bytes(archive.read_bytes() + b"\0" * (64 * 1024))
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys, signal, fcntl; "
+        "signal.signal(signal.SIGPIPE, signal.SIG_DFL); "
+        "capacity = fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETPIPE_SZ, 4096); "
+        "assert capacity == 4096; " + _write_stdout(archive),
+    )
+    staging = tmp_path / "staging"
+    staging.mkdir()
+
+    release_snapshot._extract_archive(tmp_path, "0" * 40, staging)
+
+    assert (staging / "scripts/a.py").read_bytes() == b"VALUE = 1\n"
+    assert sorted(path.relative_to(staging).as_posix() for path in staging.rglob("*")) == [
+        "scripts",
+        "scripts/a.py",
+    ]
+    assert [process.returncode for process in spawned] == [0]
+    with pytest.raises(ChildProcessError):
+        os.waitpid(spawned[0].pid, os.WNOHANG)
+
+
+@pytest.mark.timeout(30)
+@pytest.mark.parametrize(
+    "damage",
+    [
+        "invalid-header",
+        "short-header",
+        "missing-terminator",
+        "one-zero-block",
+        "short-payload",
+        "buffered-tail",
+        "pipe-tail",
+    ],
+)
+def test_extract_archive_rejects_corruption_even_when_producer_exits_zero(
+    monkeypatch, tmp_path: Path, damage: str
+) -> None:
+    """tarfile's permissive end-of-iteration must not accept partial archives."""
+    archive = _archive_file(tmp_path)
+    valid = archive.read_bytes()
+    cases = {
+        "invalid-header": valid[:1024] + b"X" * 512 + b"\0" * 8192,
+        "short-header": valid[:1024] + b"X" * 99,
+        "missing-terminator": valid[:1024],
+        "one-zero-block": valid[:1536],
+        "short-payload": valid[:516],
+        "buffered-tail": valid[:2048] + b"X" + b"\0" * 4095,
+        "pipe-tail": valid + b"\0" * 32768 + b"X",
+    }
+    archive.write_bytes(cases[damage])
+    spawned = _fake_git(monkeypatch, "import sys; " + _write_stdout(archive))
+
+    err = _extract_error(tmp_path)
+
+    assert err.__cause__ is not None
+    assert err.git_status == 0
+    assert [process.returncode for process in spawned] == [0]
+
+
+@pytest.mark.timeout(30)
+def test_extract_archive_rejects_exit_23_after_valid_members(monkeypatch, tmp_path: Path) -> None:
+    """Draining a valid tar must preserve the producer's real failure status."""
+    archive = _archive_file(tmp_path)
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys; " + _write_stdout(archive) + "sys.stderr.write('producer failed'); sys.exit(23)",
+    )
+
+    err = _extract_error(tmp_path)
+
+    assert (tmp_path / "staging/scripts/a.py").read_bytes() == b"VALUE = 1\n"
+    assert err.git_status == 23
+    assert err.__cause__ is None
+    assert err.stderr_tail == "producer failed"
+    assert [process.returncode for process in spawned] == [23]
+
+
+@pytest.mark.timeout(30)
+@pytest.mark.parametrize("symlink", [False, True], ids=["traversal", "symlink"])
+def test_extract_archive_drain_preserves_unsafe_member_rejection(monkeypatch, tmp_path: Path, symlink: bool) -> None:
+    """A completed producer must not hide an escaping path or symlink."""
+    archive = tmp_path / "unsafe.tar"
+    with tarfile.open(archive, "w") as writer:
+        member = tarfile.TarInfo("scripts/link" if symlink else "../escaped")
+        if symlink:
+            member.type = tarfile.SYMTYPE
+            member.linkname = "../../escaped"
+        writer.addfile(member)
+    spawned = _fake_git(monkeypatch, "import sys; " + _write_stdout(archive))
+
+    err = _extract_error(tmp_path)
+
+    assert isinstance(err.__cause__, release_snapshot.ReleaseSnapshotError)
+    assert "unsafe" in str(err.__cause__)
+    assert not (tmp_path / "escaped").exists()
+    assert not (tmp_path / "staging/scripts/link").is_symlink()
+    assert [process.returncode for process in spawned] == [0]
+
+
+def test_extract_archive_keeps_pax_long_paths(tmp_path: Path) -> None:
+    """Strict termination must retain real Git's extended-header support."""
+    repo, _ = _create_snapshot_repo(tmp_path)
+    relative = Path("scripts") / ("long" * 40 + ".py")
+    (repo / relative).write_bytes(b"LONG = True\n")
+    _run_git(repo, "add", str(relative))
+    _run_git(repo, "commit", "-m", "long archive path")
+    sha = _run_git(repo, "rev-parse", "HEAD")
+    staging = tmp_path / "staging"
+    staging.mkdir()
+
+    release_snapshot._extract_archive(repo, sha, staging)
+
+    assert (staging / relative).read_bytes() == b"LONG = True\n"
+    assert (staging / "schemas/example.json").read_bytes() == b"{}\n"
+
+
 @pytest.mark.timeout(30)
 def test_extract_archive_reports_git_status_and_stderr_when_git_fails(monkeypatch, tmp_path: Path) -> None:
     spawned = _fake_git(monkeypatch, "import sys; sys.stderr.write('fatal: bad revision\\n'); sys.exit(128)")
@@ -746,9 +944,40 @@ class _IgnoresKill(subprocess.Popen):
         pass
 
 
+class _ExitsZeroOnKill(subprocess.Popen):
+    """Deliver a handled signal so a real child exits zero after the deadline."""
+
+    def kill(self) -> None:
+        self.send_signal(signal.SIGTERM)
+
+
 @pytest.mark.timeout(30)
-def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, tmp_path: Path) -> None:
+def test_extract_archive_rejects_zero_status_after_deadline_kill(monkeypatch, tmp_path: Path) -> None:
+    """A kill or expired deadline cannot be turned into success by exit zero."""
     archive = _archive_file(tmp_path)
+    monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_DEADLINE_S", 0.5)
+    spawned = _fake_git(
+        monkeypatch,
+        "import sys, time, signal; signal.signal(signal.SIGTERM, lambda *_: sys.exit(0)); "
+        + _write_stdout(archive)
+        + "time.sleep(60)",
+        popen_cls=_ExitsZeroOnKill,
+    )
+
+    err = _extract_error(tmp_path)
+
+    assert err.git_status == 0
+    assert err.__cause__ is None
+    assert "deadline of 0.5s hit; kill sent to git" in str(err)
+    assert [process.returncode for process in spawned] == [0]
+
+
+@pytest.mark.timeout(30)
+@pytest.mark.parametrize("partial", [False, True], ids=["drain", "member-read"])
+def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, tmp_path: Path, partial: bool) -> None:
+    archive = _archive_file(tmp_path)
+    if partial:
+        archive.write_bytes(archive.read_bytes()[:520])
     monkeypatch.setattr(release_snapshot, "GIT_ARCHIVE_DEADLINE_S", 0.5)
     monkeypatch.setattr(release_snapshot, "GIT_KILL_WAIT_S", 0.5)
     spawned = _fake_git(
@@ -758,9 +987,12 @@ def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, 
     )
 
     try:
+        started = time.monotonic()
         err = _extract_error(tmp_path)
 
+        assert time.monotonic() - started < 3.0
         assert err.git_status is None
+        assert (err.__cause__ is not None) == partial
         assert "deadline of 0.5s hit; kill sent to git" in str(err)
         assert "git did not exit after kill" in str(err)
         assert [process.poll() for process in spawned] == [None]
