@@ -37,6 +37,8 @@ def test_route_reports_holders_by_task_without_paths(client: TestClient, tmp_pat
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == "test-slots.status.v1" and payload["enabled"] is True
+    assert payload["observed_at"].endswith("Z")
+    assert payload["age_s"] == 0.0
     assert (payload["pool_size"], payload["slots_in_use"], payload["slots_free"]) == (3, 2, 1)
     assert payload["queue_depth"] == 0
     [holder] = payload["holders"]

@@ -293,11 +293,15 @@ class _PRSnapshot:
 
     Readers never wait for GitHub. A failed list read retains the previous
     observation without changing its age; a cold cache is an explicit omission.
+    ``merged`` selects the bounded closed-pull scan that retains GitHub's own
+    ``merged_at`` evidence; open and history snapshots refresh independently.
     """
 
-    def __init__(self, repo: str, limit: int) -> None:
+    def __init__(self, repo: str, limit: int, merged: bool = False) -> None:
         self.repo = repo
         self.limit = limit
+        self.merged = merged
+        self.name = "prs_merged" if merged else "prs"
         self._lock = threading.Lock()
         self._thread: threading.Thread | None = None
         self._snapshot: SectionResult | None = None
@@ -320,17 +324,25 @@ class _PRSnapshot:
                 )
                 self._thread.start()
             if self._snapshot is None:
-                return SectionResult("prs", "unavailable", reason=self._reason, age_s=None, observed_at=None)
+                return SectionResult(self.name, "unavailable", reason=self._reason, age_s=None, observed_at=None)
             result = deepcopy(self._snapshot)
-        result.age_s = max(0.0, (_utc_now() - datetime.fromisoformat(result.observed_at)).total_seconds())
-        if result.age_s > PR_SNAPSHOT_FRESHNESS_S:
+        result.age_s = (
+            max(0.0, (_utc_now() - datetime.fromisoformat(result.observed_at)).total_seconds())
+            if result.observed_at
+            else None
+        )
+        if result.age_s is None or result.age_s > PR_SNAPSHOT_FRESHNESS_S:
             result.status = "stale"
-            result.reason = "gh_pr_snapshot_stale"
+            result.reason = result.reason or "gh_pr_snapshot_stale"
         return result
 
     def _refresh(self, observed_at: str) -> None:
         try:
-            payload = github_rest.list_open_prs(self.repo, limit=self.limit, timeout=PR_REFRESH_TIMEOUT_S)
+            payload = (
+                _list_merged_prs_rest(self.repo, self.limit, PR_REFRESH_TIMEOUT_S)
+                if self.merged
+                else github_rest.list_open_prs(self.repo, limit=self.limit, timeout=PR_REFRESH_TIMEOUT_S)
+            )
             if not isinstance(payload, list):
                 raise ValueError("gh_pr_list_not_list")
             truncated = bool(getattr(payload, "truncated", False))
@@ -339,7 +351,7 @@ class _PRSnapshot:
                 max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
             )
             result = SectionResult(
-                "prs",
+                self.name,
                 "stale"
                 if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
                 else "truncated"
@@ -369,13 +381,90 @@ class _PRSnapshot:
 
 
 @lru_cache(maxsize=8)
-def _pr_snapshot(repo: str, limit: int) -> _PRSnapshot:
-    return _PRSnapshot(repo, limit)
+def _pr_snapshot(repo: str, limit: int, merged: bool = False) -> _PRSnapshot:
+    return _PRSnapshot(repo, limit, merged)
 
 
 def _fetch_open_prs_rest(repo: str, limit: int) -> SectionResult:
     """Read the last settled observation and schedule a background refresh."""
     return _pr_snapshot(repo, limit).read()
+
+
+def _fetch_merged_prs_rest(repo: str, limit: int) -> SectionResult:
+    """Read the last settled merged-PR observation and schedule a refresh."""
+    return _pr_snapshot(repo, limit, True).read()
+
+
+def _list_merged_prs_rest(repo: str, limit: int, timeout: float) -> github_rest.RestPage:
+    """Bounded closed-pull scan retaining only GitHub's own merge evidence.
+
+    Closed pulls without ``merged_at`` do not consume the item budget. The
+    shared ETag cache, page count and deadline stay bounded. History rows need
+    no current-head check, review or detail fan-out.
+    """
+    if limit <= 0:
+        return github_rest.RestPage([], truncated=False)
+    store = github_rest.shared_cache()
+    deadline = time.monotonic() + timeout
+    rows: list[dict[str, Any]] = []
+    stale = False
+    age_seconds = 0.0
+    url: str | None = f"repos/{repo}/pulls?state=closed&per_page=100&sort=updated&direction=desc"
+    pages = 0
+    while url:
+        pages += 1
+        if pages > 10:
+            return github_rest.RestPage(rows, truncated=True, stale=stale, age_seconds=age_seconds)
+        left = deadline - time.monotonic()
+        if left <= 0:
+            raise github_rest.GitHubRestTimeout(timeout)
+        result = store.get_json(url, timeout=left)
+        if not isinstance(result.body, list):
+            raise github_rest.GitHubRestError(f"expected a JSON list from {url}")
+        stale = stale or result.stale
+        age_seconds = max(age_seconds, result.age_seconds)
+        page = result.body
+        for index, item in enumerate(page):
+            if not isinstance(item, dict) or not item.get("merged_at"):
+                continue
+            row = _project_merged_pr(item)
+            if result.stale:
+                row["stale"] = True
+                row["age_seconds"] = result.age_seconds
+            rows.append(row)
+            if len(rows) >= limit:
+                more_on_page = any(isinstance(later, dict) and later.get("merged_at") for later in page[index + 1 :])
+                return github_rest.RestPage(
+                    rows,
+                    truncated=more_on_page or bool(result.link_next),
+                    stale=stale,
+                    age_seconds=age_seconds,
+                )
+        url = result.link_next
+    return github_rest.RestPage(rows, truncated=False, stale=stale, age_seconds=age_seconds)
+
+
+def _project_merged_pr(raw: dict[str, Any]) -> dict[str, Any]:
+    """Project one closed pull onto the fields the Work normalizer accepts."""
+    head = raw.get("head") if isinstance(raw.get("head"), dict) else {}
+    base = raw.get("base") if isinstance(raw.get("base"), dict) else {}
+    return {
+        "number": raw.get("number"),
+        "title": raw.get("title"),
+        "state": "MERGED",
+        "mergedAt": raw.get("merged_at"),
+        "mergeCommit": {"oid": raw["merge_commit_sha"]} if raw.get("merge_commit_sha") else None,
+        "isDraft": False,
+        "headRefName": head.get("ref"),
+        "headRefOid": head.get("sha"),
+        "baseRefName": base.get("ref"),
+        "updatedAt": raw.get("updated_at"),
+        "createdAt": raw.get("created_at"),
+        "labels": raw.get("labels") if isinstance(raw.get("labels"), list) else [],
+        "assignees": raw.get("assignees") if isinstance(raw.get("assignees"), list) else [],
+        "url": raw.get("html_url"),
+        "detailReadComplete": False,
+    }
 
 
 def _fetch_issue_states_rest(
@@ -479,10 +568,44 @@ def fetch_open_prs(
     conditional reads bounded by the open PR count. An injected runner is the
     fixture seam.
     """
+    return _fetch_prs(repository_id, limit=limit, runner=runner, merged=False)
+
+
+def fetch_merged_prs(
+    repository_id: str | None = None,
+    *,
+    limit: int = GH_ENUM_LIMIT,
+    runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
+) -> SectionResult:
+    """Bounded merged-PR history, qualified independently of the open list.
+
+    A row is history only when GitHub reports its own ``mergedAt``. Closed
+    pulls without it never receive a merged badge. The production path uses the
+    shared conditional REST cache in a background snapshot; an injected runner
+    is the fixture seam.
+    """
+    return _fetch_prs(repository_id, limit=limit, runner=runner, merged=True)
+
+
+def _fetch_prs(
+    repository_id: str | None,
+    *,
+    limit: int,
+    runner: Callable[[list[str], float], tuple[int, str, str]] | None,
+    merged: bool,
+) -> SectionResult:
     repo = admit_public_repository_id(repository_id)
+    name = "prs_merged" if merged else "prs"
     if runner is None:
-        return _fetch_open_prs_rest(repo, limit)
+        return _fetch_merged_prs_rest(repo, limit) if merged else _fetch_open_prs_rest(repo, limit)
     run = runner
+    fields = (
+        "number,title,state,isDraft,headRefName,headRefOid,updatedAt,createdAt,"
+        "labels,assignees,url,mergedAt,mergeCommit"
+        if merged
+        else "number,title,state,isDraft,headRefName,headRefOid,updatedAt,createdAt,"
+        "reviewDecision,statusCheckRollup,mergeStateStatus,labels,assignees,url"
+    )
     code, stdout, stderr = run(
         [
             "gh",
@@ -491,32 +614,33 @@ def fetch_open_prs(
             "--repo",
             repo,
             "--state",
-            "open",
+            "merged" if merged else "open",
             "--limit",
             str(limit),
             "--json",
-            "number,title,state,isDraft,headRefName,headRefOid,updatedAt,createdAt,"
-            "reviewDecision,statusCheckRollup,mergeStateStatus,labels,assignees,url",
+            fields,
         ],
         SECTION_TIMEOUT_S,
     )
     if code == 124:
-        return SectionResult("prs", "timeout", reason="gh_pr_list_timeout")
+        return SectionResult(name, "timeout", reason="gh_pr_list_timeout")
     if code != 0:
         return SectionResult(
-            "prs",
+            name,
             "unavailable",
             reason=(stderr.strip() or "gh_pr_list_failed")[:200],
         )
     try:
         payload = json.loads(stdout or "[]")
     except json.JSONDecodeError as exc:
-        return SectionResult("prs", "degraded", reason=f"invalid_gh_json:{exc}")
+        return SectionResult(name, "degraded", reason=f"invalid_gh_json:{exc}")
     if not isinstance(payload, list):
-        return SectionResult("prs", "degraded", reason="gh_pr_list_not_list")
+        return SectionResult(name, "degraded", reason="gh_pr_list_not_list")
+    if merged:
+        payload = [row for row in payload if isinstance(row, dict) and row.get("mergedAt")]
     truncated = len(payload) >= limit
     return SectionResult(
-        "prs",
+        name,
         "stale"
         if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
         else "truncated"
@@ -1067,6 +1191,7 @@ def collect_public_sections(
     jobs: dict[str, Callable[[], SectionResult]] = {
         "issues": lambda: fetch_open_issues(repo, runner=gh_runner),
         "prs": lambda: fetch_open_prs(repo, runner=gh_runner),
+        "prs_merged": lambda: fetch_merged_prs(repo, runner=gh_runner),
         "streams": lambda: fetch_streams_projection(loader=streams_loader),
         "delegate_active": lambda: fetch_delegate_active(loader=delegate_active_loader, repository_id=repo),
         "delegate_tasks": lambda: fetch_delegate_tasks(loader=delegate_tasks_loader, repository_id=repo),

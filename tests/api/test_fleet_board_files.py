@@ -201,6 +201,29 @@ def test_downloads_stall_and_skip_unsafe_names(tmp_path, monkeypatch: pytest.Mon
     assert str(tmp_path) not in response.text
 
 
+def test_unapproved_download_names_stay_unlisted_and_are_never_deduped(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """D12: without an approved alias a raw source is unidentified, not a key."""
+    payload = {
+        "items": [
+            {"source": "private-host-a/corpus-one", "state": "running", "done": 1, "total": 2},
+            {"source": "private-host-b/corpus-two", "state": "running", "done": 1, "total": 2},
+        ]
+    }
+    target = tmp_path / "status.json"
+    target.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setenv("FLEET_DOWNLOAD_STATUS", str(target))
+    response = client.get("/api/fleet/v1/downloads")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    rows = body["data"]["items"]
+    assert [row["source"] for row in rows] == ["unlisted", "unlisted"]
+    assert len({id(row) for row in rows}) == 2
+    assert "private-host" not in response.text and "corpus-one" not in response.text
+
+
 def test_unreadable_downloads_are_unknown(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     target = tmp_path / "status.json"
     target.write_text("{", encoding="utf-8")

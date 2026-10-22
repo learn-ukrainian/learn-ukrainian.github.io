@@ -19,9 +19,11 @@ import asyncio
 import json
 import shutil
 import sys
+import urllib.parse
 from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
@@ -293,6 +295,23 @@ def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
     )
 
 
+def _render_url(record: dict[str, Any]) -> str | None:
+    """Renderable page URL for one indexed image, or ``None`` when unprovable.
+
+    A description match is only useful when the caller can retrieve the image.
+    The existing page-render route supplies that URL; a record without a usable
+    page identity stays explicitly unknown rather than borrowing another page.
+    """
+    stem = record.get("pdf_stem")
+    page = record.get("page")
+    if not isinstance(stem, str) or not stem.strip():
+        return None
+    if isinstance(page, bool) or not isinstance(page, int) or page < 1:
+        return None
+    quoted = urllib.parse.quote(stem.strip(), safe="")
+    return f"/api/images/page_render/{quoted}/{page}.png"
+
+
 # ── Request/Response models ──────────────────────────────────────────
 
 class AnnotationUpdate(BaseModel):
@@ -536,6 +555,7 @@ async def browse_annotations(
             "teaching_value": rec.get("teaching_value", ""),
             "element_type": rec.get("element_type", ""),
             "position": rec.get("position", ""),
+            "render_url": _render_url(rec),
         })
 
     total = len(results)

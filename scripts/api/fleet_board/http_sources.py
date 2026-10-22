@@ -223,18 +223,64 @@ def load_stats(environ: Mapping[str, str] | None = None) -> Outcome:
     return _done("stats", {"stats": stats}, status, age_s=age)
 
 
+def _public_navigation_href(href: str) -> str | None:
+    """A link the public Monitor may disclose, or ``None`` to withhold it.
+
+    A configured destination can carry a private host, credentials, or a
+    loopback/private address. Those are navigation values, not diagnostic
+    configuration: the public surface withholds them and keeps D13 unmet rather
+    than publishing a locator. No DNS lookup is performed.
+    """
+    try:
+        parts = urllib.parse.urlsplit(href)
+    except ValueError:
+        return None
+    if parts.scheme not in {"http", "https"} or not parts.hostname:
+        return None
+    if parts.username is not None or parts.password is not None:
+        return None
+    host = parts.hostname.rstrip(".").lower()
+    if not host or host == "localhost" or host.endswith(".local"):
+        return None
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        return href
+    if (
+        address.is_private
+        or address.is_loopback
+        or address.is_link_local
+        or address.is_unspecified
+        or address.is_reserved
+    ):
+        return None
+    return href
+
+
 def load_links(environ: Mapping[str, str] | None = None) -> Outcome:
-    """Fixed dashboard links built from the configured Grafana base."""
+    """Fixed dashboard links built from the configured Grafana base.
+
+    Only destinations safe for public delivery are published. A private or
+    unverifiable destination yields an empty list and ``unavailable`` rather
+    than a locator; an approved destination stays a source dependency (D13).
+    """
     location = read_location("FLEET_GRAFANA_URL", _env(environ))
     if location is None:
         return _done("links", {"links": []}, "not_configured")
 
     def load() -> list[dict[str, str]]:
-        return [{"name": name, "href": join_url(location, suffix)} for name, suffix in DASHBOARDS]
+        rows: list[dict[str, str]] = []
+        for name, suffix in DASHBOARDS:
+            href = _public_navigation_href(join_url(location, suffix))
+            if href is not None:
+                rows.append({"name": name, "href": href})
+        return rows
 
     try:
-        links, freshness, age = _cached_call("links", location, load, cacheable=lambda _value: True)
+        links, freshness, age = _cached_call("links", location, load, cacheable=lambda value: bool(value))
     except Exception:
+        return _done("links", {"links": []}, "unavailable")
+    if not links:
         return _done("links", {"links": []}, "unavailable")
     status = "stale" if freshness == "stale" else "ok"
     return _done("links", {"links": links}, status, age_s=age)
