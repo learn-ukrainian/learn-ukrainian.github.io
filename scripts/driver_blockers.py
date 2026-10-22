@@ -12,6 +12,7 @@ import os
 import re
 import stat
 import sys
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -23,6 +24,9 @@ from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_u
 
 LEDGER_NAME = "CTO-BLOCKERS-LEDGER.json"
 MAX_INPUT_BYTES = 1_048_576
+# Internal dispatch records embed prompts; match the bounded task-record
+# contract in scripts.fleet_comms.efficiency_metrics, not external inputs.
+MAX_TASK_RECORD_BYTES = 32 * 1024 * 1024
 ITEM_KEYS = frozenset({"id", "state", "owner", "waits_on", "action"})
 ANCHOR_KEYS = frozenset({"message_id", "content_sha256", "created_at"})
 REPORTING_TARGETS = ("epics", "cto")
@@ -84,6 +88,34 @@ def _read_json(path: Path) -> dict:
         return json.loads(_read_bytes(path), object_pairs_hook=_unique_keys)
     except (UnicodeError, json.JSONDecodeError, RecursionError) as exc:
         raise ValueError("input is not valid UTF-8 JSON") from exc
+
+
+def _finalization_tasks(task_root: Path) -> Iterator[dict]:
+    """Read complete hot records through one checked directory descriptor."""
+    directory_fd = None
+    try:
+        directory_fd = open_unit_dir(task_root)
+        if directory_fd is None:
+            raise ValueError("finalization task store unavailable; attention is unknown")
+        # scandir propagates unreadable-directory errors; glob can hide them.
+        with os.scandir(directory_fd) as entries:
+            names = sorted(entry.name for entry in entries if entry.name.endswith(".json"))
+        for name in names:
+            unit = read_unit(directory_fd, name, max_bytes=MAX_TASK_RECORD_BYTES)
+            if unit is None:
+                raise ValueError("finalization task record vanished; attention is unknown")
+            try:
+                task = json.loads(unit[0], object_pairs_hook=_unique_keys)
+            except (UnicodeError, ValueError, RecursionError) as exc:
+                raise ValueError("invalid task record; attention is unknown") from exc
+            if not isinstance(task, dict):
+                raise ValueError("invalid task record; attention is unknown")
+            yield task
+    except (OSError, InstallError) as exc:
+        raise ValueError("finalization task store unreadable, unsafe or oversized; attention is unknown") from exc
+    finally:
+        if directory_fd is not None:
+            os.close(directory_fd)
 
 
 def validate_observation(data: object, epic: str) -> dict:
@@ -154,19 +186,25 @@ def finalization_attention(
         raise ValueError("finalization scan requires a known initiator and positive stream epic")
     if now is not None and (now.tzinfo is None or now.utcoffset() is None):
         raise ValueError("finalization clock must include a timezone")
-    if not task_root.is_dir():
-        raise ValueError("finalization task store unavailable; attention is unknown")
     items, observations = [], []
-    for path in sorted(task_root.glob("*.json")):
-        task = _read_json(path)
-        if not isinstance(task, dict):
-            raise ValueError("invalid task record; attention is unknown")
-        if task.get("initiator") != initiator or task.get("status") != "needs_finalize":
+    unknown_owner = False
+    for task in _finalization_tasks(task_root):
+        if task.get("status") != "needs_finalize":
+            continue
+        owner = task.get("initiator")
+        if not _string(owner) or owner == "unknown":
+            # Diagnose known-owned attention first, but never certify a scan
+            # that leaves a possible owner unresolved.
+            unknown_owner = True
+            continue
+        if owner != initiator:
             continue
         carrier = task.get("task_lifecycle") or {}
         identity = carrier.get("identity", {}) if isinstance(carrier, dict) else {}
-        if not isinstance(identity, dict) or identity.get("stream_epic") != stream_epic:
-            # Unattributed legacy tasks are not permission to sweep another lane.
+        task_epic = identity.get("stream_epic") if isinstance(identity, dict) else None
+        if type(task_epic) is not int or task_epic < 1:
+            raise ValueError("owned finalization task stream scope unknown; attention is unknown")
+        if task_epic != stream_epic:
             continue
         task_id, nonce = task.get("task_id"), task.get("run_nonce")
         if not _string(task_id) or not _string(nonce):
@@ -205,6 +243,8 @@ def finalization_attention(
                 "action": "inspect retained task/head and finalization diagnostics; repair the failing gate and retry normal publication",
             }
         )
+    if unknown_owner:
+        raise ValueError("finalization task initiator unknown; attention is unknown")
     return items, observations
 
 
@@ -498,7 +538,10 @@ driver session, use --task-initiator codex-infra --task-stream-epic 6943 on BOTH
 delta and record for an explicit exact scope.
 LU_NEEDS_FINALIZE_MAX_AGE_MINUTES defaults to 30 finite positive minutes;
 unknown age/configuration is attention, not green. Exact ages are diagnostics;
-stable blocker fields prevent repeated unchanged posts. Input files are bounded to 1 MiB, never clipped.
+stable blocker fields prevent repeated unchanged posts. Current, receipt, body
+and ledger inputs are bounded to 1 MiB. Internal task records use the existing
+32 MiB task-reader bound; unsafe, unreadable or unattributed attention fails
+closed. Neither input contract clips data.
 Current: exactly {"epic":"infra","complete":true,"items":[...]}; each item has
 exactly five non-empty strings: id, state, owner, waits_on, action. Receipt:
 Fleet Comms JSON with recipient matching --reporting-target (default epics),
