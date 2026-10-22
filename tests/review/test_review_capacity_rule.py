@@ -48,7 +48,7 @@ def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
 
 @pytest.mark.parametrize("key", ["claude", "claude-opus-5-5", "anthropic"])
 @pytest.mark.parametrize("status", ["hot", " HOT ", "near_cap"])
-@pytest.mark.parametrize("remaining", [54, 10])
+@pytest.mark.parametrize("remaining", [54, 1])
 def test_capacity_uses_the_same_supported_aliases_as_health(key, status, remaining):
     data = snapshot(remaining=remaining, status=status)
     record = data["agents"].pop("claude")
@@ -56,8 +56,8 @@ def test_capacity_uses_the_same_supported_aliases_as_health(key, status, remaini
     result = resolve_reviewer(inputs(data))
     opus = next(item for item in result.trace if item.name == "claude-opus-5-5")
     assert opus.capacity.remaining_pct == remaining
-    assert opus.capacity.near_cap is (remaining == 10)
-    if remaining == 10:
+    assert opus.capacity.near_cap is (remaining == 1)
+    if remaining == 1:
         assert result.selected is None
     else:
         assert result.selected.name == "claude-opus-5-5"
@@ -66,15 +66,15 @@ def test_capacity_uses_the_same_supported_aliases_as_health(key, status, remaini
 
 
 def test_model_health_alias_cannot_hide_canonical_seat_exhaustion():
-    data = snapshot(remaining=5)
+    data = snapshot(remaining=1)
     data["agents"]["claude-opus-5-5"] = {"status": "cool", "health": {"healthy": True}}
     result = resolve_reviewer(inputs(data))
     assert result.selected is None
     opus = next(item for item in result.trace if item.name == "claude-opus-5-5")
-    assert opus.capacity.remaining_pct == 5 and opus.capacity.near_cap
+    assert opus.capacity.remaining_pct == 1 and opus.capacity.near_cap
 
 
-@pytest.mark.parametrize("weekly,short", [(10, 96), (54, 10), (0, 96), (54, 0)])
+@pytest.mark.parametrize("weekly,short", [(1, 96), (54, 1), (0, 96), (54, 0)])
 def test_tightest_allowance_at_or_below_reserve_excludes(weekly, short):
     result = resolve_reviewer(inputs(snapshot(remaining=weekly, short=short)))
     assert result.selected is None
@@ -390,10 +390,10 @@ def _default_account(tmp_path, monkeypatch, label: str | None, *, bound: bool = 
 def test_resolve_reviewer_reads_the_default_claude_account(
     tmp_path, capsys, monkeypatch, label, code, selected, account
 ):
-    """Account a's lane row is at 5% remaining; account b, which the default-account file names, has 89%."""
+    """Account a's lane row is at 1% remaining; account b, which the default-account file names, has 89%."""
     _default_account(tmp_path, monkeypatch, label)
     path = tmp_path / "snapshot.json"
-    path.write_text(json.dumps(snapshot(remaining=5) | {"claude_accounts": {"claude:b": _account_row(89.0)}}))
+    path.write_text(json.dumps(snapshot(remaining=1) | {"claude_accounts": {"claude:b": _account_row(89.0)}}))
 
     result_code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
 

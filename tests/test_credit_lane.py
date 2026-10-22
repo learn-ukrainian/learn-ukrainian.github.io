@@ -92,7 +92,7 @@ def test_policy_reads_codex_allowlist_from_config():
         POLICY.credit_max_age_s,
         POLICY.rate_limit_window_s,
         POLICY.reset_hold_hours,
-    ) == (10.0, 900.0, 3600.0, 48.0)
+    ) == (1.0, 900.0, 3600.0, 48.0)
 
 
 def test_builtin_default_allowlist_equals_shipped_policy():
@@ -155,8 +155,8 @@ def test_missing_policy_file_raises(tmp_path):
         ({}, credit_lane.CREDIT_BALANCE_PRESENT),
         (
             {
-                "remaining_pct": 10.0,
-                "codexbar": {"weekly_remaining_pct": 10.0, "freshness": "fresh", "fetched_at": "2026-10-02T16:59:00Z"},
+                "remaining_pct": 1.0,
+                "codexbar": {"weekly_remaining_pct": 1.0, "freshness": "fresh", "fetched_at": "2026-10-02T16:59:00Z"},
             },
             credit_lane.CREDIT_BALANCE_PRESENT,
         ),
@@ -208,7 +208,7 @@ def test_state_machine(overrides, expected):
 
 def test_tightest_plan_window_governs():
     info = _codex(remaining_pct=60.0, codexbar={**_codex()["codexbar"], "weekly_remaining_pct": 60.0})
-    info["codexbar"]["primary_remaining_pct"] = 3.0
+    info["codexbar"]["primary_remaining_pct"] = 1.0
     assert credit_lane.lane_credit_state("codex", info, POLICY, now=NOW)["state"] == credit_lane.CREDIT_BALANCE_PRESENT
 
 
@@ -719,7 +719,7 @@ def test_human_output_states_credit_and_reset_advice():
     report = capacity_pick.build_report(_budget(), reset_reserve=unavailable_reserve(), now=NOW)
     human = capacity_pick.format_human(report)
     assert (
-        "credit lane codex: credit_balance_present (plan remaining 1% at or below 10%; fresh credit balance "
+        "credit lane codex: credit_balance_present (plan remaining 1% at or below 1%; fresh credit balance "
         "62500; no rate limit in the last 3600s; draw not verified by the router) | evidence: rate limits 0 in "
         "last 3600s; balance 62500.0 fetched 2026-10-02T16:59:00Z | "
         "coverage: unknown: runtime usage records carry no per-task credit consumption | "
@@ -917,7 +917,7 @@ def _scenario_info(scenario: str) -> dict:
     }
     if scenario == "plan_healthy":
         return {**base, "status": "cool", "remaining_pct": 80.0, "burn_pct_7d": 20.0, "credit_balance": 500.0}
-    near = {**base, "status": "near_cap", "remaining_pct": 2.0, "burn_pct_7d": 98.0}
+    near = {**base, "status": "near_cap", "remaining_pct": 1.0, "burn_pct_7d": 98.0}
     if scenario == "near_cap_with_credits":
         return {**near, "credit_balance": 62500.0}
     if scenario == "near_cap_without_credits":
@@ -941,7 +941,7 @@ def _origin_main_row(lane: str, scenario: str) -> dict:
     return {
         "lane": lane,
         "status": status,
-        "remaining_pct": 80.0 if healthy else 2.0,
+        "remaining_pct": 80.0 if healthy else 1.0,
         "will_last": None,
         "pace": "—",
         "in_flight": 0,
@@ -1584,8 +1584,8 @@ def test_stale_pace_deficit_is_unknown_stale_but_owner_pace_decision_is_unchange
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"status": "near_cap", "remaining_pct": 5.0},
-        {"remaining_pct": 5.0},
+        {"status": "near_cap", "remaining_pct": 1.0},
+        {"remaining_pct": 1.0},
         {"runtime": {"headroom_blocked": True, "rate_limited": 3}},
         {"health": {"healthy": False}},
         {"login_state": "NEED_LOGIN"},

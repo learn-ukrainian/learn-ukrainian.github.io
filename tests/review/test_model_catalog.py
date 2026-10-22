@@ -393,6 +393,21 @@ def approved_driver_brief_baseline(baseline):
     return {**baseline, "catalog": catalog, "dispatch": dispatch}
 
 
+CREDIT_THRESHOLD_PATH = CAPACITY_FIXTURE / "capacity-threshold-oo60.json.gz"
+
+
+def approved_credit_threshold_baseline(baseline):
+    """Apply OO-60's Codex credit trigger at 1% plan remaining (99% used)."""
+    raw = CREDIT_THRESHOLD_PATH.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == (
+        "e91bdd4e038779562c44cec7064014a4190b3f2fa8eba18083b60df78386733d"
+    )
+    fixture = json.loads(gzip.decompress(raw))
+    assert set(fixture) == {"capacity"}
+    assert len(fixture["capacity"]) == len(baseline["capacity"])
+    return {**baseline, "capacity": fixture["capacity"]}
+
+
 def approved_budget_pin_baseline(baseline):
     """Apply #11110's exhausted, unmapped Claude pin refusals after the other overlays."""
     path = CAPACITY_FIXTURE / "budget-pin-11110.json"
@@ -490,7 +505,7 @@ DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
     approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
-APPROVED_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
+APPROVED_BASELINE = approved_credit_threshold_baseline(approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE))
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
 
 
@@ -1584,7 +1599,7 @@ def test_capture_policy_cache_is_scoped_and_restores_reader(tmp_path, monkeypatc
     monkeypatch.setitem(CAPTURE["capture"].__globals__, "_capture_surfaces", surfaces)
     for calls, threshold in enumerate((11.0, 12.0), start=1):
         policy_path.write_text(
-            policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}")
+            policy_text.replace("near_cap_remaining_pct: 1.0", f"near_cap_remaining_pct: {threshold}")
         )
         if fail:
             with pytest.raises(RuntimeError, match="capture failed"):
@@ -1694,7 +1709,9 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             "no-cli",
         )
     )))
-    assert actual == approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
+    assert actual == approved_credit_threshold_baseline(
+        approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
+    )
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
