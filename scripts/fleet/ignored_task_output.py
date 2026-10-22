@@ -1177,22 +1177,64 @@ def _verify_output_archive(primary: Path, receipt: Mapping[str, Any]) -> None:
         raise ValueError("output archive invalid") from None
 
 
-def _has_retrieval_receipt(record: Mapping[str, Any]) -> bool:
-    """Whether this run's ignored output was preserved and its bytes independently retrieved.
+PRESERVED_ARTIFACTS_SCHEMA = "worktree-preserved-artifacts.v1"
 
-    A receipt is bound to the run that produced it: the task id and run nonce must
-    match, so a receipt from an earlier attempt never authorizes deleting a newer
-    attempt's evidence.
+
+def retrieval_receipt_problem(
+    worktree: Path,
+    primary: Path,
+    record: Mapping[str, Any],
+    files: list[str],
+) -> str | None:
+    """Why the recorded receipt does not prove the current output is preserved (None when it does).
+
+    A receipt is only a claim until it is rechecked. Before any destructive reuse
+    of the worktree, re-read the preserved copy, recompute its digest, require the
+    receipt's schema, task and run identity to match this record, require its
+    location to be *this* task's directory under ``batch_state/preserved/`` (no
+    ``..`` and no symlink), and require the current source inventory to equal the
+    bytes that copy actually holds. A forged, stale, tampered or incomplete
+    receipt is a refusal, never permission to delete: a source file that is new
+    or changed since the receipt means its bytes were never retrieved.
     """
     receipt = record.get("preserved_artifacts")
-    return bool(
-        isinstance(receipt, dict)
-        and isinstance(receipt.get("retrieval_proof_sha256"), str)
-        and receipt["retrieval_proof_sha256"].strip()
-        and receipt.get("task_id") == record.get("task_id")
-        and isinstance(record.get("run_nonce"), str)
-        and receipt.get("run_nonce") == record.get("run_nonce")
-    )
+    if not isinstance(receipt, Mapping):
+        return "no retrieval receipt"
+    if receipt.get("schema") != PRESERVED_ARTIFACTS_SCHEMA:
+        return "receipt schema does not match"
+    task_id = record.get("task_id")
+    if not isinstance(task_id, str) or receipt.get("task_id") != task_id:
+        return "receipt names another task"
+    nonce = record.get("run_nonce")
+    if not isinstance(nonce, str) or not nonce or receipt.get("run_nonce") != nonce:
+        return "receipt names another run"
+    location = receipt.get("location")
+    if not isinstance(location, str):
+        return "receipt has no preserved location"
+    relative = Path(location)
+    if relative.is_absolute() or ".." in relative.parts:
+        return "receipt location escapes the preserved root"
+    if tuple(relative.parts[:3]) != ("batch_state", "preserved", task_id) or len(relative.parts) < 4:
+        return "receipt location is not this task's preserved copy"
+    try:
+        resolved = worktree.resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return "worktree identity is unavailable"
+    if receipt.get("worktree_sha256") != hashlib.sha256(str(resolved).encode()).hexdigest():
+        return "receipt belongs to another worktree"
+    try:
+        digest = verify_retrieval(primary, receipt)
+    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
+        return "preserved copy does not verify"
+    if digest != receipt.get("retrieval_proof_sha256"):
+        return "preserved copy digest does not match the receipt"
+    try:
+        current = _content_digest(resolved, files)
+    except (OSError, ValueError, RuntimeError):
+        return "current output is unreadable"
+    if digest != current:
+        return "current output changed or appeared after retrieval"
+    return None
 
 
 def unretrieved_reuse_refusal(
@@ -1207,8 +1249,9 @@ def unretrieved_reuse_refusal(
     Worktree preparation can delete ignored files: cone ``git sparse-checkout set``
     removes untracked/ignored directories inside a tracked cone directory, and a
     later dispatch into the same checkout runs exactly that. A task that finished
-    without a retrieval receipt has evidence only in this tree, so reuse is refused
-    until the owner preserves it (``scripts.fleet.post_task_reap``) or retrieves it.
+    without a *verified* retrieval receipt has evidence only in this tree, so reuse
+    is refused until the owner preserves it (``scripts.fleet.post_task_reap``) or
+    retrieves it; a forged or stale receipt is refused the same way.
 
     Returns a typed, actionable refusal, or ``None`` when reuse may proceed. An
     unknown task identity or an unreadable output inventory also refuses: missing
@@ -1222,18 +1265,28 @@ def unretrieved_reuse_refusal(
         for _, record in sorted(cohort, key=lambda item: str(item[1].get("task_id"))):
             if record.get("status") not in RELEASED_TASK_STATUSES:
                 continue
-            if _has_retrieval_receipt(record):
-                continue
             files = _ignored_output_files(worktree, primary, record)
             if not files:
                 continue
             task_id = str(record.get("task_id"))
-            return (
-                "worktree_reuse_evidence_unretrieved: terminal task "
-                f"{task_id!r} left {len(files)} ignored evidence file(s) in this worktree "
-                "with no retrieval receipt; preserve them first with "
+            problem = retrieval_receipt_problem(worktree, primary, record, files)
+            if problem is None:
+                continue
+            remedy = (
+                "preserve them first with "
                 f"`.venv/bin/python -m scripts.fleet.post_task_reap --task-id {task_id} --apply` "
                 "and dispatch into a fresh worktree"
+            )
+            if problem == "no retrieval receipt":
+                return (
+                    "worktree_reuse_evidence_unretrieved: terminal task "
+                    f"{task_id!r} left {len(files)} ignored evidence file(s) in this worktree "
+                    f"with no retrieval receipt; {remedy}"
+                )
+            return (
+                "worktree_reuse_evidence_unverified: terminal task "
+                f"{task_id!r} has {len(files)} ignored evidence file(s) in this worktree, but its "
+                f"retrieval receipt {problem}; {remedy}"
             )
     except (OSError, ValueError, RuntimeError):
         return (
@@ -1437,6 +1490,7 @@ def preserve_worktree_artifacts(
     record_path = None
     record: dict[str, Any] = {}
     metadata: dict[str, Any] = {
+        "schema": PRESERVED_ARTIFACTS_SCHEMA,
         "retention_disposition": "retained",
         "owner": "infra lane",
         "next_condition": "establish canonical task attribution and verified retrieval",

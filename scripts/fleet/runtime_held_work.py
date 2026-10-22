@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import contextlib
 import errno
 import hashlib
 import json
 import os
 import re
+import shutil
 import stat
 import uuid
 from collections.abc import Mapping
@@ -30,6 +32,14 @@ class HeldWorkPreservationError(ValueError):
 
 EVIDENCE_DIRNAME = "evidence"
 EVIDENCE_SCHEMA = "runtime-evidence.v1"
+# A concurrent writer may add or change a file while the copy is in progress.
+# Re-enumerate and copy again from scratch; a source that never settles is a
+# typed refusal (the lease survives), never a partial receipt.
+EVIDENCE_PRESERVATION_ATTEMPTS = 3
+
+
+class _EvidenceSourceChanged(Exception):
+    """The evidence directory changed between copy and verification; copy again."""
 
 
 class EvidencePreservationError(ValueError):
@@ -102,44 +112,66 @@ def evidence_names(root: Path) -> list[str] | None:
     return sorted(names) or None
 
 
-def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -> dict[str, Any] | None:
-    """Copy the supported evidence directory to ``batch_state/preserved/<task>/``.
+def _discard_attempt(location: Path, parent: Path) -> None:
+    """Remove only this function's own unfinished copy, never a source path."""
+    if location.parent != parent or location.is_symlink() or not location.is_dir():
+        return
+    with contextlib.suppress(OSError):
+        shutil.rmtree(location)
+    with contextlib.suppress(OSError):
+        location.with_suffix(".manifest.json").unlink()
 
-    Runs before any runtime-lease deletion. The receipt proves every byte was
-    independently retrieved; a failed copy, invalid name, linked entry or cap
-    breach raises a typed refusal, so the caller keeps the lease.
-    """
-    try:
-        names = evidence_names(root)
-    except EvidencePreservationError:
-        raise
-    except OSError:
-        raise EvidencePreservationError() from None
+
+def _copy_evidence_once(
+    root: Path,
+    *,
+    primary: Path,
+    parent: Path,
+    task_id: str,
+    record: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Copy the current evidence set, then prove the source did not move under the copy."""
+    source = root / EVIDENCE_DIRNAME
+    names = evidence_names(root)
     if names is None:
         return None
-    task_id = record.get("task_id")
-    if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
-        raise EvidencePreservationError()
-    location = primary / "batch_state" / "preserved" / task_id / ("evidence-" + uuid.uuid4().hex)
+    location = parent / ("evidence-" + uuid.uuid4().hex)
     if location.is_relative_to(root):
         raise EvidencePreservationError()
-    for parent in reversed((location, *location.parents)):
-        if parent.is_symlink():
+    for ancestor in reversed((location, *location.parents)):
+        if ancestor.is_symlink():
             raise EvidencePreservationError()
-    source = root / EVIDENCE_DIRNAME
     try:
         location.mkdir(parents=True, exist_ok=False)
-        for name in names:
-            artifacts._copy_verified(
-                source / name,
-                location / name,
-                source_root=source,
-                destination_root=location,
-            )
+        try:
+            for name in names:
+                artifacts._copy_verified(
+                    source / name,
+                    location / name,
+                    source_root=source,
+                    destination_root=location,
+                )
+        except (OSError, ValueError, RuntimeError, ComponentOpenError):
+            # A verified copy can refuse mid-read if a writer rewrites the file.
+            # Retry only when the source really changed or grew; otherwise the
+            # failure (including ENOSPC) is a refusal that keeps the lease.
+            if evidence_names(root) != names:
+                raise _EvidenceSourceChanged() from None
+            raise
         paths = output._path_inventory(source, names)
         total = sum(entry["size"] for entry in paths)
         if total > output.MAX_PRESERVED_BYTES:
             raise EvidenceLimitExceeded()
+        # Fixed point: the receipt may only describe a set that was identical to
+        # the source at a final enumeration after the copy. A new or changed
+        # file means the copy is stale, so copy again from scratch.
+        final_names = evidence_names(root)
+        if final_names != names:
+            raise _EvidenceSourceChanged()
+        if output._path_inventory(source, final_names) != paths:
+            raise _EvidenceSourceChanged()
+        if output._path_inventory(location, names) != paths:
+            raise _EvidenceSourceChanged()
         receipt = {
             "schema": EVIDENCE_SCHEMA,
             "task_id": task_id,
@@ -153,8 +185,6 @@ def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -
             "cap_bytes": output.MAX_PRESERVED_BYTES,
         }
         receipt["retrieval_proof_sha256"] = output.verify_retrieval(primary, receipt)
-        if output._path_inventory(source, names) != paths or output._path_inventory(location, names) != paths:
-            raise EvidencePreservationError()
         with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
             json.dump(receipt, manifest, sort_keys=True)
             manifest.write("\n")
@@ -162,9 +192,68 @@ def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -
             os.fsync(manifest.fileno())
         return receipt
     except EvidencePreservationError:
+        _discard_attempt(location, parent)
+        raise
+    except (_EvidenceSourceChanged, OSError, ValueError, RuntimeError, ComponentOpenError) as exc:
+        _discard_attempt(location, parent)
+        if isinstance(exc, _EvidenceSourceChanged):
+            raise
+        try:
+            source_changed = evidence_names(root) != names
+        except EvidencePreservationError:
+            source_changed = False
+        if source_changed:
+            raise _EvidenceSourceChanged() from None
+        raise
+
+
+def evidence_matches_receipt(root: Path, receipt: Mapping[str, Any]) -> bool:
+    """True when the evidence directory still holds exactly the receipt's verified set.
+
+    Used immediately before lease deletion: a file that appeared or changed
+    after the receipt was written is still unretrieved, so the caller keeps the
+    lease rather than deleting it.
+    """
+    try:
+        names = evidence_names(root)
+        if names is None:
+            return False
+        paths = receipt.get("paths")
+        if not isinstance(paths, list) or names != [entry["path"] for entry in paths]:
+            return False
+        return output._path_inventory(root / EVIDENCE_DIRNAME, names) == paths
+    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
+        return False
+
+
+def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Copy the supported evidence directory to ``batch_state/preserved/<task>/``.
+
+    Runs before any runtime-lease deletion. Preservation is a fixed point: after
+    copying, the source is enumerated again and a file that appeared or changed
+    during the copy makes the attempt stale, so it copies again (bounded). Only a
+    set verified identical to the source at the final enumeration is receipted.
+    A failed copy, invalid name, linked entry, cap breach or a source that never
+    settles raises a typed refusal, so the caller keeps the lease.
+    """
+    try:
+        task_id = record.get("task_id")
+        if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
+            raise EvidencePreservationError()
+        parent = primary / "batch_state" / "preserved" / task_id
+        if parent.is_relative_to(root):
+            raise EvidencePreservationError()
+        for attempt in range(EVIDENCE_PRESERVATION_ATTEMPTS):
+            try:
+                return _copy_evidence_once(root, primary=primary, parent=parent, task_id=task_id, record=record)
+            except _EvidenceSourceChanged:
+                if attempt + 1 == EVIDENCE_PRESERVATION_ATTEMPTS:
+                    raise EvidencePreservationError() from None
+    except EvidencePreservationError:
         raise
     except (OSError, ValueError, RuntimeError, ComponentOpenError):
         raise EvidencePreservationError() from None
+    return None
 
 
 def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[str]:

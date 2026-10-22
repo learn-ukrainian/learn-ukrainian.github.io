@@ -1675,6 +1675,21 @@ def _preserve_runtime_tmp_held_work(
         raise runtime_held_work.HeldWorkPreservationError() from None
 
 
+def _require_preserved_evidence_still_matches(lease: Path, updates: Mapping[str, Any]) -> None:
+    """Refuse lease deletion when supported evidence changed after its receipt (#11342).
+
+    ``preserve_evidence`` copies to a fixed point and receipts only a set verified
+    identical to the source. Recheck immediately before deletion so a file that
+    appeared or changed after the final enumeration is never silently lost; the
+    typed refusal keeps the lease.
+    """
+    from scripts.fleet import runtime_held_work
+
+    receipt = updates.get("preserved_evidence") if isinstance(updates, Mapping) else None
+    if receipt is not None and not runtime_held_work.evidence_matches_receipt(lease, receipt):
+        raise runtime_held_work.EvidencePreservationError()
+
+
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
@@ -1763,7 +1778,8 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
-                _preserve_runtime_tmp_held_work(lease, state)
+                updates = _preserve_runtime_tmp_held_work(lease, state)
+                _require_preserved_evidence_still_matches(lease, updates)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
                 _remove_runtime_tmp_lease(lease, namespace)
             except (OSError, ValueError) as exc:
@@ -1870,6 +1886,7 @@ def _reap_runtime_tmp_lease(
                 else None,
             )
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
+        _require_preserved_evidence_still_matches(lease, result)
         bytes_freed = _runtime_tmp_lease_bytes(lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
@@ -10629,12 +10646,20 @@ def _recorded_research_block(block: object) -> str:
     return text
 
 
-def _evidence_prompt_block(evidence_dir: Path | str) -> str:
-    """Name the supported evidence directory whose contents task cleanup preserves (#11342)."""
+def _evidence_prompt_block() -> str:
+    """Name the supported evidence directory whose contents task cleanup preserves (#11342).
+
+    The block is deliberately independent of the task's runtime lease: the
+    worker reads the concrete ``evidence/`` path from ``$LU_TASK_EVIDENCE_DIR``
+    (see :func:`_build_worker_env`) and the task record keeps it in
+    ``evidence_dir``. Keeping the path out of the prompt means the prompt text,
+    its SHA-256 and the evaluation harness's paired frame stay identical across
+    tasks, so exact-prompt verification still holds.
+    """
     return (
         "\n[evidence]\n"
         "Durable evidence (reports, archives, logs, screenshots) belongs in "
-        f"`$LU_TASK_EVIDENCE_DIR` ({evidence_dir}).\n"
+        "`$LU_TASK_EVIDENCE_DIR`, this task's `evidence/` directory.\n"
         "Task cleanup copies that directory to `batch_state/preserved/<task>/` with a retrieval "
         "receipt before it removes the runtime lease. Files left elsewhere in the worktree or "
         "runtime temp root are not preserved and can be deleted when the task ends.\n"
@@ -10661,9 +10686,15 @@ def _compose_dispatch_prompt(
     """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
 
     In prompt order: the rules core, the worktree block, ``base``, the evidence
-    directory, the research pointers and the advisory block. ``blocks``, when
-    given, gets the kinds added, in prompt order. The bounded worker rebuilds its
+    block, the research pointers and the advisory block. ``blocks``, when given,
+    gets the kinds added, in prompt order. The bounded worker rebuilds its
     expected prompt with this function (#9275), so the two cannot drift apart.
+
+    ``evidence_dir`` is the *presence* signal for the supported evidence
+    directory (``None`` means the dispatch has none): its concrete, task-specific
+    lease path is never interpolated, so every task's prompt and SHA-256 stay
+    comparable. The worker reads the path from ``$LU_TASK_EVIDENCE_DIR`` and the
+    task record keeps it in ``evidence_dir``.
     """
     prompt = _augment_prompt_with_worktree(
         base,
@@ -10675,7 +10706,7 @@ def _compose_dispatch_prompt(
     if worktree_path is not None and blocks is not None:
         blocks.insert(0, "worktree")
     if evidence_dir is not None:
-        prompt = prompt + _evidence_prompt_block(evidence_dir)
+        prompt = prompt + _evidence_prompt_block()
         if blocks is not None:
             blocks.append("evidence")
     if research_block and blocks is not None:

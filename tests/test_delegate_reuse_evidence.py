@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 from scripts import delegate
+from scripts.fleet import ignored_task_output as output
 
 
 def _git(*args: str, cwd: Path) -> None:
@@ -100,19 +101,75 @@ def test_reuse_refuses_and_keeps_unretrieved_terminal_evidence(worktree):
     assert (wt / "batch_state/cto/publish/review-1/evidence.md").read_text() == "evidence\n"
 
 
-def test_reuse_allows_terminal_evidence_after_a_retrieval_receipt(worktree):
-    _repo, wt, tasks = worktree
-    receipt = {
-        "task_id": "previous-review",
-        "run_nonce": "nonce-1",
-        "location": "batch_state/preserved/previous-review/attempt",
-        "retrieval_proof_sha256": "a" * 64,
-    }
-    (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt, receipt=receipt)))
+def test_reuse_allows_terminal_evidence_after_a_verified_receipt(worktree):
+    repo, wt, tasks = worktree
+    (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
+    )
+    assert ok, reason
+    assert receipt is not None and receipt["schema"] == output.PRESERVED_ARTIFACTS_SCHEMA
 
     _path, _branch, telemetry = _reuse(wt)
 
     assert telemetry["reused"] is True
+
+
+def test_reuse_refuses_a_forged_receipt_and_keeps_the_evidence(worktree):
+    """A digest-shaped string is a claim, not retrieval: the preserved copy must exist and verify."""
+    _repo, wt, tasks = worktree
+    receipt = {
+        "schema": output.PRESERVED_ARTIFACTS_SCHEMA,
+        "task_id": "previous-review",
+        "run_nonce": "nonce-1",
+        "location": "batch_state/preserved/previous-review/missing",
+        "paths": [{"path": "batch_state/cto/publish/review-1/evidence.md", "size": 9, "sha256": "a" * 64}],
+        "content_sha256": "b" * 64,
+        "retrieval_proof_sha256": "forged",
+    }
+    (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt, receipt=receipt)))
+
+    with pytest.raises(RuntimeError, match="worktree_reuse_evidence_unverified"):
+        _reuse(wt)
+
+    assert (wt / "batch_state/cto/publish/review-1/evidence.md").read_text() == "evidence\n"
+
+
+def test_reuse_refuses_a_stale_receipt_after_the_source_changed(worktree):
+    """The old receipt covers the old bytes; the new bytes were never retrieved."""
+    repo, wt, tasks = worktree
+    source = wt / "batch_state/cto/publish/review-1/evidence.md"
+    (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
+    ok, reason, _receipt = output.preserve_worktree_artifacts(
+        wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
+    )
+    assert ok, reason
+    source.write_text("new unique evidence, after successful retrieval\n")
+
+    with pytest.raises(RuntimeError, match="worktree_reuse_evidence_unverified"):
+        _reuse(wt)
+
+    assert source.read_text() == "new unique evidence, after successful retrieval\n"
+
+
+def test_reuse_refuses_a_receipt_location_outside_the_task_preserved_root(worktree):
+    """A receipt that points at another task's copy is not this task's retrieval."""
+    repo, wt, tasks = worktree
+    (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
+    )
+    assert ok, reason
+    other = dict(receipt)
+    other["location"] = receipt["location"].replace(
+        "batch_state/preserved/previous-review/", "batch_state/preserved/another-task/"
+    )
+    (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt, receipt=other)))
+
+    with pytest.raises(RuntimeError, match="worktree_reuse_evidence_unverified"):
+        _reuse(wt)
+
+    assert (wt / "batch_state/cto/publish/review-1/evidence.md").read_text() == "evidence\n"
 
 
 def test_reuse_allows_a_live_task_without_a_retrieval_receipt(worktree):
