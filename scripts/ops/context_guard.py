@@ -62,6 +62,7 @@ import sqlite3
 import subprocess
 import sys
 import time
+import uuid
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -73,6 +74,9 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.ops.driver_lanes import (
+    EXIT_MARKER,
+    RELAUNCH_ID_ENV,
+    START_MARKER,
     Lane,
     LaneConfigError,
     Registry,
@@ -93,7 +97,7 @@ CLAUDE_BUSY_RE = re.compile(r"esc to interrupt|ing… \(")
 DONE_LINE_RE = re.compile(r"^\s*(?:[●⏺•✦]\s*)?HANDOFF-DONE(?=\s|:|$)")
 EXIT_DIALOG = ("Move to background and exit", "Exit and stop tasks")
 # The fixed pane script prints this after the launcher exits (scripts/ops/driver_lanes.py).
-LAUNCHER_EXIT_RE = re.compile(r"lane-relaunch: launcher exited rc=(-?\d+)")
+LAUNCHER_EXIT_RE = re.compile(rf"{re.escape(EXIT_MARKER)}(-?\d+) id=([0-9a-f]{{32}})")
 ANCHOR_MAX_SENDBACKS = 3
 ANCHOR_SENDBACK_PREFIX = "ANCHOR CHECK"
 RELAUNCH_SETTLE_SECONDS = 900
@@ -145,19 +149,24 @@ def context_pct(kind: str, text: str) -> int | None:
     return int(found[-1]) if found else None
 
 
-def launcher_exit(text: str) -> tuple[int | None, str]:
-    """The last launcher exit status in the pane, with the stderr lines before it.
+def launcher_exit(text: str, occurrence: str | None) -> tuple[int | None, str]:
+    """The watched launcher's exit status and its preceding output tail.
 
-    The pane script prints ``lane-relaunch: launcher exited rc=<code>`` after the
-    launcher returns (``scripts/ops/driver_lanes.py``). Returns ``(None, "")``
-    while no launcher has exited in the captured pane.
+    Only a standalone exit marker with this occurrence's ID is evidence. The
+    start marker bounds the tail so retained predecessor output is excluded.
+    If it has scrolled out of the capture, the remaining lines are already newer.
+    Watches saved before occurrence IDs were introduced cannot attribute exits.
     """
     lines = text.splitlines()
     for index in range(len(lines) - 1, -1, -1):
-        match = LAUNCHER_EXIT_RE.search(lines[index])
-        if match is None:
+        match = LAUNCHER_EXIT_RE.fullmatch(lines[index].strip())
+        if match is None or match.group(2) != occurrence:
             continue
         start = max(0, index - RELAUNCH_TAIL_LINES)
+        for boundary in range(index - 1, start - 1, -1):
+            if lines[boundary].strip() == f"{START_MARKER}{occurrence}":
+                start = boundary + 1
+                break
         tail = " | ".join(line.strip() for line in lines[start:index] if line.strip())
         return int(match.group(1)), tail[-ALERT_DETAIL_CHARS:]
     return None, ""
@@ -532,6 +541,7 @@ class Guard:
     def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot) -> None:
         if snap.agent is not None:
             s.pop("relaunch_watch", None)
+            s.pop("relaunch_id", None)
             s.pop("relaunch_hold", None)
         else:
             self._watch_launcher_exit(lane, s, text)
@@ -571,21 +581,23 @@ class Guard:
     def _watch_launcher_exit(self, lane: Lane, s: dict[str, Any], text: str) -> None:
         """Alert once when the launcher a relaunch started has exited non-zero.
 
-        The relaunch records ``relaunch_watch``; the pane script prints the exit
-        status. A non-zero exit keeps ``relaunch_hold`` so the same failure is
-        never relaunched in a loop. An agent appearing (a human relaunch) clears
-        both markers.
+        The relaunch records its timestamp and occurrence ID; the pane script
+        tags the exit status with that ID. A non-zero exit keeps ``relaunch_hold``
+        so the same failure is never relaunched in a loop. An agent appearing
+        clears the watch, ID and hold.
         """
         started = s.get("relaunch_watch")
         if not started:
             return
-        rc, tail = launcher_exit(text)
+        rc, tail = launcher_exit(text, s.get("relaunch_id"))
         if rc is None:
             if self._seconds_since(started) > RELAUNCH_SETTLE_SECONDS:
                 s.pop("relaunch_watch", None)
+                s.pop("relaunch_id", None)
                 self.log(f"{lane.name} watch: no launcher exit within {RELAUNCH_SETTLE_SECONDS}s of relaunch")
             return
         s.pop("relaunch_watch", None)
+        occurrence = s.pop("relaunch_id")
         if rc == 0:
             self.log(f"{lane.name} watch: relaunched launcher exited rc=0")
             return
@@ -597,7 +609,7 @@ class Guard:
             f"pane left as is (no relaunch loop). stderr tail: {tail or '(none captured)'}",
             # Keyed on the relaunch occurrence: a fixed key makes the Fleet plane
             # refuse the next, differently timestamped alert for the same lane and rc.
-            f"launcher-exit-{lane.name}-{rc}-{started}",
+            f"launcher-exit-{lane.name}-{rc}-{occurrence}",
         )
 
     def _idle(self, lane: Lane, text: str) -> bool:
@@ -697,8 +709,10 @@ class Guard:
         if not self._unchanged(lane, snap, "respawn-pane -k", pct):
             return
         env_args = [arg for key, value in sorted(plan.env.items()) for arg in ("-e", f"{key}={value}")]
+        occurrence = uuid.uuid4().hex
+        env_args.extend(("-e", f"{RELAUNCH_ID_ENV}={occurrence}"))
         result = self.tmux.tmux("respawn-pane", "-k", "-t", lane.target, "-c", plan.cwd, *env_args, *plan.pane_argv())
-        # Clear the old session's scrollback so its HANDOFF-DONE line cannot end the fresh session.
+        # Drop scrollback; visible predecessor lines may remain in later captures.
         self.tmux.tmux("clear-history", "-t", lane.target)
         self.log(
             f"{lane.name} relaunch ctx_pct={pct}: respawn-pane rc={result.returncode} "
@@ -711,6 +725,7 @@ class Guard:
             "last_handoff": stamp,
             "last_pct_at_trigger": s.get("pct_at_trigger"),
             "relaunch_watch": stamp,
+            "relaunch_id": occurrence,
         }
 
     def run(self, st: dict[str, Any], only: list[str] | None = None) -> None:

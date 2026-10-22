@@ -35,10 +35,11 @@ HANDS_TWO = "\n".join(f"- anchor-check hands-off rule {index}" for index in rang
 SENDER = "codex-atlas"
 LANE = "atlas"
 LAUNCHER_EXIT_RC1 = (
+    "lane-relaunch: launcher started id={occurrence}\n"
     "booting codex lane\n"
     "error: could only derive 8/10 durable anchors; tried .claude/atlas-epic/CODEX-DRIVER-HANDOFF.md "
     "(next=0, hands-off=2)\n"
-    "lane-relaunch: launcher exited rc=1\n"
+    "lane-relaunch: launcher exited rc=1 id={occurrence}\n"
 )
 
 
@@ -234,15 +235,30 @@ def relaunched(tmp_path: Path, launcher_stream: None) -> Harness:
 
 
 def test_launcher_exit_after_relaunch_alerts_once_with_the_stderr_tail(tmp_path: Path, launcher_stream: None) -> None:
-    """Defect class: a relaunched launcher dies non-zero and nobody is told."""
+    """Defect class: retained predecessor exits consume the watch or pollute its alert."""
     h = relaunched(tmp_path, launcher_stream)
-    h.pane(LANE).text = LAUNCHER_EXIT_RC1
+    watch = h.state[LANE]["relaunch_watch"]
+    occurrence = h.state[LANE]["relaunch_id"]
+    respawn = respawns(h)[0]
+    assert f"LU_LANE_RELAUNCH_ID={occurrence}" in respawn
+    h.pane(LANE).text = (
+        "predecessor stderr\nlane-relaunch: launcher exited rc=9\n"
+        + LAUNCHER_EXIT_RC1.format(occurrence="0" * 32)
+    )
+    h.advance(5)
+    h.tick(LANE)
+    assert alerts(h) == []
+    assert h.state[LANE]["relaunch_watch"] == watch
+    assert h.state[LANE]["relaunch_id"] == occurrence
+    h.pane(LANE).text += LAUNCHER_EXIT_RC1.format(occurrence=occurrence)
     h.advance(5)
     h.tick(LANE)
     assert len(alerts(h)) == 1
     alert = alerts(h)[0]
     assert "rc=1" in alert and "could only derive 8/10" in alert
+    assert "predecessor" not in alert and "lane-relaunch:" not in alert
     assert h.state[LANE]["relaunch_hold"] == 1
+    assert "relaunch_watch" not in h.state[LANE] and "relaunch_id" not in h.state[LANE]
     for _ in range(3):
         h.advance(5)
         h.tick(LANE)
@@ -253,20 +269,21 @@ def test_launcher_exit_after_relaunch_alerts_once_with_the_stderr_tail(tmp_path:
 def test_launcher_that_stays_up_after_relaunch_does_not_alert(tmp_path: Path, launcher_stream: None) -> None:
     """Defect class: a healthy relaunch produces a false CTO alert."""
     h = relaunched(tmp_path, launcher_stream)
+    h.pane(LANE).text = LAUNCHER_EXIT_RC1.format(occurrence="0" * 32)
     h.pane(LANE).agent = "codex"
     h.advance(5)
     h.tick(LANE)
     assert alerts(h) == []
     assert "relaunch_watch" not in h.state[LANE]
+    assert "relaunch_id" not in h.state[LANE]
 
 
 def test_nonzero_launcher_exit_is_not_relaunched_in_a_loop(tmp_path: Path, launcher_stream: None) -> None:
     """Defect class: the guard respawns the same failing launcher every tick."""
     h = relaunched(tmp_path, launcher_stream)
-    h.pane(LANE).text = LAUNCHER_EXIT_RC1
+    h.pane(LANE).text = LAUNCHER_EXIT_RC1.format(occurrence=h.state[LANE]["relaunch_id"])
     h.advance(5)
     h.tick(LANE)
-    h.pane(LANE).text = LAUNCHER_EXIT_RC1
     for _ in range(3):
         h.advance(5)
         h.tick(LANE)
@@ -497,7 +514,8 @@ def launcher_exit_in_two_relaunches(h: Harness) -> None:
     h.advance(5)
     h.tick(LANE)  # relaunch 1
     assert len(respawns(h)) == 1
-    h.pane(LANE).text = LAUNCHER_EXIT_RC1
+    first_occurrence = h.state[LANE]["relaunch_id"]
+    h.pane(LANE).text = LAUNCHER_EXIT_RC1.format(occurrence=first_occurrence)
     h.advance(5)
     h.tick(LANE)  # alert 1
     pane = h.pane(LANE)
@@ -513,7 +531,12 @@ def launcher_exit_in_two_relaunches(h: Harness) -> None:
     h.advance(5)
     h.tick(LANE)  # relaunch 2
     assert len(respawns(h)) == 2
-    pane.text = LAUNCHER_EXIT_RC1
+    second_occurrence = h.state[LANE]["relaunch_id"]
+    assert second_occurrence != first_occurrence
+    pane.text = LAUNCHER_EXIT_RC1.format(occurrence=first_occurrence)
+    h.tick(LANE)
+    assert h.state[LANE]["relaunch_id"] == second_occurrence
+    pane.text += LAUNCHER_EXIT_RC1.format(occurrence=second_occurrence)
     h.advance(5)
     h.tick(LANE)  # alert 2
 
