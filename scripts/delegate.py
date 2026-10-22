@@ -19681,6 +19681,11 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
 
 _AUTO_REAP_DISPATCH_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 _AUTO_REAP_WORKER_EXIT_TIMEOUT_S = 60.0
+# Beside the hot records, not among them. ``iter_task_records`` reads every
+# ``*.json`` file in that directory and in ``archive/``; it does not walk
+# this subdirectory. A receipt named ``<task>.reap.json`` in the hot
+# directory would also replace the live record of a task id ``<task>.reap``.
+_AUTO_REAP_RECEIPTS_DIRNAME = "reap-receipts"
 _AUTO_REAP_REVIEW_KEYS = (
     "review",
     "pr",
@@ -19729,6 +19734,47 @@ def _auto_reap_skip_reason(state: Mapping[str, Any] | None) -> str | None:
 def _task_record_path(tasks_dir_path: Path, task_id: str) -> Path:
     safe = task_id.replace("/", "_").replace("\\", "_")
     return tasks_dir_path / f"{safe}.json"
+
+
+def _auto_reap_receipt_path(tasks_dir_path: Path, task_id: str) -> Path:
+    """Reap receipt for ``task_id``, outside the task-record namespace.
+
+    The file name keeps the ``.reap.json`` suffix, but the directory is not
+    the hot record directory, so it cannot replace ``<task>.reap``'s record
+    (``<task>.reap.json``) and ``iter_task_records`` does not yield it.
+    """
+    stem = _task_record_path(tasks_dir_path, task_id).stem
+    return tasks_dir_path / _AUTO_REAP_RECEIPTS_DIRNAME / f"{stem}.reap.json"
+
+
+def _auto_reap_repo_root(state: Mapping[str, Any]) -> Path:
+    """Git primary that owns this task's checkout.
+
+    A sibling ``--repo`` worktree is reaped in its own repository. The
+    shared task store stays on the public primary, which is also the
+    fallback when the record names no checkout.
+    """
+    primary = _main_checkout_root(_REPO_ROOT)
+    for key in ("worktree_path", "cwd"):
+        raw = state.get(key)
+        if not isinstance(raw, str) or not raw.strip():
+            continue
+        path = Path(raw).expanduser()
+        if not path.is_absolute():
+            path = primary / path
+        try:
+            owned = worktree_claims.owning_repo_root(path, default=primary)
+        except OSError:
+            continue
+        if owned != primary:
+            return owned
+        try:
+            resolved = path.resolve()
+        except OSError:
+            continue
+        if resolved != primary and (resolved / ".git").is_dir():
+            return resolved
+    return primary
 
 
 def _auto_reap_receipt_pointer(path: Path) -> str:
@@ -19863,7 +19909,7 @@ def _execute_auto_reap(task_id: str, *, tasks_dir_path: Path, repo_root: Path) -
         "skipped": reason is not None,
         "task_id": task_id,
     }
-    receipt_path = state_path.with_suffix(".reap.json")
+    receipt_path = _auto_reap_receipt_path(tasks_dir_path, task_id)
     try:
         _write_json_file(receipt_path, receipt)
     except OSError as exc:
@@ -19943,7 +19989,7 @@ def _spawn_auto_reap_child(task_id: str, state: Mapping[str, Any]) -> None:
         "--tasks-dir",
         str(tasks_dir()),
         "--repo-root",
-        str(_main_checkout_root(_REPO_ROOT)),
+        str(_auto_reap_repo_root(state)),
     ]
     start_time = _recorded_worker_start(state, pid)
     if start_time is not None:
@@ -19977,7 +20023,7 @@ def _schedule_terminal_auto_reap(task_id: str) -> None:
         # The worker is still this process, so do not call the reaper here.
         _auto_reap_warn(task_id, type(exc).__name__)
         state_path = _state_path_no_create(task_id)
-        receipt_path = state_path.with_suffix(".reap.json")
+        receipt_path = _auto_reap_receipt_path(tasks_dir(), task_id)
         try:
             _write_json_file(
                 receipt_path,
@@ -20009,7 +20055,7 @@ def cmd_auto_reap(args: argparse.Namespace) -> int:
         if not exited:
             _auto_reap_warn(task_id, "worker still alive")
             state_path = _task_record_path(args.tasks_dir, task_id)
-            receipt_path = state_path.with_suffix(".reap.json")
+            receipt_path = _auto_reap_receipt_path(args.tasks_dir, task_id)
             _write_json_file(
                 receipt_path,
                 {

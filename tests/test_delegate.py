@@ -16066,11 +16066,28 @@ def test_schedule_auto_reap_is_inert_without_the_dispatch_marker(tmp_tasks_dir, 
     assert "auto_reap_receipt" not in delegate._read_state(delegate._state_path("inert-task"))
 
 
-def test_schedule_auto_reap_spawns_the_common_reaper_after_the_worker(tmp_tasks_dir, monkeypatch):
+def _sibling_checkout_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
+    """A sibling primary and one linked worktree, with no ``git`` subprocess.
+
+    ``main_checkout_root`` reads the worktree's ``gitdir:`` pointer, which is
+    the same fact ``--repo`` reaping has to recover from the task record.
+    """
+    sibling = (tmp_path / "sibling").resolve()
+    worktree = sibling / ".worktrees" / "dispatch" / "codex" / "spawn-reap"
+    worktree.mkdir(parents=True)
+    (sibling / ".git" / "worktrees" / "spawn-reap").mkdir(parents=True)
+    gitdir = sibling / ".git" / "worktrees" / "spawn-reap"
+    (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
+    return sibling, worktree
+
+
+def test_schedule_auto_reap_spawns_the_common_reaper_after_the_worker(tmp_tasks_dir, tmp_path, monkeypatch):
     task_id = "spawn-reap"
+    sibling, worktree = _sibling_checkout_with_worktree(tmp_path)
     _auto_reap_record(
         task_id,
-        worktree_path="SHOULD-NOT-BE-CWD",
+        worktree_path=str(worktree),
+        cwd="SHOULD-NOT-BE-CWD",
         worker_identity={"pid": os.getpid(), "start_time": 123},
     )
     monkeypatch.setenv(delegate._AUTO_REAP_DISPATCH_ENV, task_id)
@@ -16090,10 +16107,17 @@ def test_schedule_auto_reap_spawns_the_common_reaper_after_the_worker(tmp_tasks_
     assert "--worker-pid" in command and str(os.getpid()) in command
     assert "--worker-start-time" in command and "123" in command
     assert "SHOULD-NOT-BE-CWD" not in command
+    assert str(worktree) not in command
+    assert command[command.index("--repo-root") + 1] == str(sibling)
+    assert command[command.index("--tasks-dir") + 1] == str(delegate.tasks_dir())
+    assert delegate._auto_reap_repo_root({"cwd": str(sibling)}) == sibling
+    primary = delegate._main_checkout_root(delegate._REPO_ROOT)
+    assert delegate._auto_reap_repo_root({"worktree_path": "SHOULD-NOT-BE-CWD"}) == primary
     assert kwargs["start_new_session"] is True
     assert kwargs["close_fds"] is True
     assert kwargs["cwd"] == str(delegate._main_checkout_root(delegate._REPO_ROOT))
-    assert kwargs["cwd"] != "SHOULD-NOT-BE-CWD"
+    assert kwargs["cwd"] != str(worktree)
+    assert kwargs["cwd"] != str(sibling)
     assert kwargs["stdin"] is subprocess.DEVNULL
     assert kwargs["stdout"] is subprocess.DEVNULL
     assert delegate._AUTO_REAP_DISPATCH_ENV not in kwargs["env"]
@@ -16103,6 +16127,12 @@ def test_schedule_auto_reap_spawns_the_common_reaper_after_the_worker(tmp_tasks_
 
 def test_schedule_auto_reap_records_a_skip_and_does_not_call_the_reaper(tmp_tasks_dir, monkeypatch, capsys):
     task_id = "review-skip"
+    decoy_id = f"{task_id}.reap"
+    decoy_path = delegate._state_path(decoy_id)
+    delegate._write_state_atomic(
+        decoy_path,
+        {"task_id": decoy_id, "status": "running", "agent": "codex"},
+    )
     _auto_reap_record(task_id, review=True, require_review_verdict=True)
     monkeypatch.setenv(delegate._AUTO_REAP_DISPATCH_ENV, task_id)
 
@@ -16115,13 +16145,23 @@ def test_schedule_auto_reap_records_a_skip_and_does_not_call_the_reaper(tmp_task
 
     state = delegate._read_state(delegate._state_path(task_id))
     assert state["status"] == "done"
-    receipt_path = delegate._state_path(task_id).with_suffix(".reap.json")
+    receipt_path = delegate._auto_reap_receipt_path(delegate.tasks_dir(), task_id)
+    assert receipt_path.parent.name == delegate._AUTO_REAP_RECEIPTS_DIRNAME
+    assert receipt_path.parent != delegate.tasks_dir()
+    assert receipt_path != decoy_path
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert receipt["skipped"] is True
     assert receipt["skip_reason"] == "review task"
     assert receipt["apply"] is False
     assert state["auto_reap_receipt"] == delegate._auto_reap_receipt_pointer(receipt_path)
     assert not state["auto_reap_receipt"].startswith("/")
+    decoy = json.loads(decoy_path.read_text(encoding="utf-8"))
+    assert decoy["task_id"] == decoy_id
+    assert decoy["status"] == "running"
+    listed = list(delegate.task_record_store.iter_task_records(delegate.tasks_dir(), include_archive=True))
+    assert receipt_path.resolve() not in {path.resolve() for path in listed}
+    assert decoy_path.resolve() in {path.resolve() for path in listed}
+    assert delegate._state_path(task_id).resolve() in {path.resolve() for path in listed}
     assert "WARNING" not in capsys.readouterr().err
 
 
@@ -16146,7 +16186,9 @@ def test_execute_auto_reap_keeps_status_when_the_reaper_raises(tmp_tasks_dir, mo
     assert err.count("WARNING") == 1
     assert "RuntimeError" in err
     assert "/do/not/print" not in err
-    receipt = json.loads(delegate._state_path(task_id).with_suffix(".reap.json").read_text(encoding="utf-8"))
+    receipt_path = delegate._auto_reap_receipt_path(delegate.tasks_dir(), task_id)
+    assert receipt_path.parent.name == delegate._AUTO_REAP_RECEIPTS_DIRNAME
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert receipt["main_action"] == "error"
     assert "/do/not/print" not in json.dumps(receipt)
 
@@ -16187,7 +16229,9 @@ def test_execute_auto_reap_records_a_retained_result_and_retries_a_left_lease(
     state = delegate._read_state(delegate._state_path(task_id))
     assert state["status"] == "done"
     assert state["tmp_reap_error"] is None
-    receipt = json.loads(delegate._state_path(task_id).with_suffix(".reap.json").read_text(encoding="utf-8"))
+    receipt_path = delegate._auto_reap_receipt_path(delegate.tasks_dir(), task_id)
+    assert receipt_path.parent != delegate.tasks_dir()
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     assert receipt["main_action"] == "retained"
     assert receipt["main_reason"] == "worktree has uncommitted changes"
     assert "WARNING" not in capsys.readouterr().err
