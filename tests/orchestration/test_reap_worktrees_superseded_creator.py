@@ -79,7 +79,9 @@ def test_merged_reuse_removes_tree_and_proves_creator(merged_cohort, location):
 
 
 def test_superseded_creator_proof_survives_output_preservation(merged_cohort):
-    repo, tree, _, path, _, _, _, info, _ = merged_cohort
+    repo, tree, _, path, _, current_path, current, info, _ = merged_cohort
+    current["status"] = "needs_finalize"
+    current_path.write_text(json.dumps(current))
     source = tree / "ignored/output.txt"
     source.parent.mkdir()
     source.write_bytes(b"output from the reused checkout")

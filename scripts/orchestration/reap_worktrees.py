@@ -3783,9 +3783,18 @@ def _released_reuse_claim_proven_settled(
 
 
 def _same_branch_merged_cohort(
-    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+    info: WorktreeInfo,
+    pr: PullRequestState | None,
+    cohort: list[tuple[Path, dict[str, Any]]],
+    *,
+    preservation: dict[str, Any] | None = None,
 ) -> bool:
     """Settle inactive same-branch rounds without requiring a done successor."""
+    expected_head = info.head
+    if preservation is not None:
+        if not _preserved_merged_head_valid(info, preservation):
+            return False
+        expected_head = preservation["head_sha"]
     if (
         not info.branch
         or not info.head
@@ -3802,7 +3811,7 @@ def _same_branch_merged_cohort(
     return bool(
         branch == info.branch
         and tip.returncode == 0
-        and tip.stdout.strip() == info.head
+        and tip.stdout.strip() == expected_head
         and len(cohort) >= 2
         and all(
             member.get("status") in _TERMINAL_DISPATCH_STATUSES
@@ -3824,6 +3833,7 @@ def _continuation_head_is_merged(
     cohort: list[tuple[Path, dict[str, Any]]],
     *,
     allow_equivalent: bool = False,
+    preservation: dict[str, Any] | None = None,
 ) -> bool:
     """Prove an exact PR head, or a detached cohort's complete earlier lineage.
 
@@ -3831,7 +3841,11 @@ def _continuation_head_is_merged(
     absent workers, and complete contained identities. Detached ancestry
     additionally requires a done successor at that checkout head. Missing
     Git objects and commit-search membership alone are never proof.
+    A validated preservation binding changes only the expected live branch tip;
+    merged ancestry still uses the original checkout head in ``info``.
     """
+    if preservation is not None and not _preserved_merged_head_valid(info, preservation):
+        return False
     if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
         return False
     if allow_equivalent and not _pr_matches_worktree_head(info, pr) and _merged_equivalent(info, pr):
@@ -3843,7 +3857,7 @@ def _continuation_head_is_merged(
     if info.branch and any(
         member.get("worktree_reused") is True and member.get("status") == "needs_finalize" for _, member in cohort
     ):
-        return _same_branch_merged_cohort(info, pr, cohort)
+        return _same_branch_merged_cohort(info, pr, cohort, preservation=preservation)
     if pr.head_sha == info.head:
         return True
     branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=info.path)
@@ -4293,7 +4307,11 @@ def _preservation_merged_creator(
             for _, member in cohort
         ]
         or not _continuation_head_is_merged(
-            info, pr, cohort, allow_equivalent=proof.get("head_relation") == "patch-equivalent"
+            info,
+            pr,
+            cohort,
+            allow_equivalent=proof.get("head_relation") == "patch-equivalent",
+            preservation=preservation,
         )
     ):
         raise ValueError("merged continuation preservation proof changed")
@@ -4481,7 +4499,9 @@ def _record_merged_reuse_proof(
             if _retention_release_present(matches):
                 return None  # Preserve #9940's explicit receipt-release path.
             raise ValueError("continuation requires a proven merged PR head containing the checkout")
-    elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
+    elif not _continuation_head_is_merged(
+        info, pr, cohort, allow_equivalent=allow_equivalent, preservation=preservation
+    ):
         if _retention_release_present(matches):
             return None  # Preserve #9940's explicit receipt-release path.
         raise ValueError("continuation requires a proven merged PR head containing the checkout")
@@ -4551,7 +4571,9 @@ def _record_merged_reuse_proof(
         if alternate:
             if not _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head):
                 raise ValueError("continuation ancestry changed before merged-head proof")
-        elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
+        elif not _continuation_head_is_merged(
+            info, pr, cohort, allow_equivalent=allow_equivalent, preservation=preservation
+        ):
             raise ValueError("continuation ancestry changed before merged-head proof")
         reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
     return proof
@@ -5383,6 +5405,29 @@ def _reap_qualified_worktree(
                     preserved_artifacts=preservation_receipt or None,
                 )
         measurement: dict[str, Any] = {}
+
+        @contextlib.contextmanager
+        def recheck_preservation(target: Path) -> Iterator[Path]:
+            # A replacement creator can hide the fresh proof from the output
+            # selector. This removal still belongs to the original cohort.
+            if merged_reuse_proof is not None and preservation is not None:
+                from scripts.fleet import ignored_task_output
+
+                try:
+                    matches = ignored_task_output.matching_worktree_records(
+                        target, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
+                    )
+                    _, creator = _preservation_merged_creator(
+                        matches, target, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
+                    )
+                    if creator.get("worktree_reap_proof") != merged_reuse_proof:
+                        raise ValueError("merged continuation proof changed before removal")
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+                    raise worktree_claims.RemovalStageRefused(
+                        "merged continuation preservation changed before removal"
+                    ) from exc
+            yield target
+
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
                 repo_root,
@@ -5392,7 +5437,7 @@ def _reap_qualified_worktree(
                 task_id=_dispatch_task_id(repo_root, info),
                 tasks_dir=task_store_paths.tasks_dir(),
                 preservation_receipt=preservation_receipt,
-                stage_removal=_measured_removal(measurement),
+                stage_removal=_measured_removal(measurement, recheck_preservation),
                 **approval,
             )
         preserved_artifacts = preservation_receipt or None
