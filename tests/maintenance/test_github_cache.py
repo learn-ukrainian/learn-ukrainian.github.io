@@ -1,5 +1,6 @@
 """Synthetic storage controls for #11362; never open the real owner cache."""
 
+import ast
 import hashlib
 import json
 import os
@@ -12,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from scripts.common import github_client as owner
+from scripts.hygiene import lint_source_db_writable_connects as sqlite_lint
 from scripts.maintenance import github_cache as maintenance
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
@@ -19,6 +21,79 @@ from tests.common.github_cache_isolation import isolate_github_client_cache
 @pytest.fixture(autouse=True)
 def isolated(tmp_path, monkeypatch):
     yield from isolate_github_client_cache(tmp_path, monkeypatch)
+
+
+@pytest.fixture
+def maintenance_writer_entry():
+    return next(
+        entry for entry in sqlite_lint.load_allowlist() if entry.path == "scripts/maintenance/github_cache.py"
+    )
+
+
+@pytest.fixture
+def maintenance_admission_scan(tmp_path, monkeypatch, maintenance_writer_entry):
+    """Scan genuine source mutations in memory, without runnable source overlays."""
+    path = tmp_path / maintenance_writer_entry.path
+    read_bytes = Path.read_bytes
+    monkeypatch.setattr(sqlite_lint, "iter_scan_paths", lambda root: [path])
+
+    def scan(source):
+        monkeypatch.setattr(Path, "read_bytes", lambda self: source.encode() if self == path else read_bytes(self))
+        return sqlite_lint.find_violations(tmp_path, (maintenance_writer_entry,))
+
+    return scan
+
+
+def test_maintenance_writer_inventory_admits_only_pinned_real_module(maintenance_writer_entry, maintenance_admission_scan):
+    entry = maintenance_writer_entry
+    assert entry.kind == "writer"
+    assert entry.target_db == "GitHub client cache"
+    assert entry.reference_count == 3
+    assert entry.calls == (
+        "sqlite3.connect(uri, uri=True, timeout=min(timeout_seconds, 1), isolation_level=None)",
+    )
+    source = (sqlite_lint.REPO_ROOT / entry.path).read_text()
+    assert len(sqlite_lint.classify_source(source, entry.path)) == 3
+    calls = [
+        ast.unparse(node)
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.Call) and ast.unparse(node.func) == "sqlite3.connect"
+    ]
+    assert calls == list(entry.calls)
+    assert sqlite_lint.writer_target_violations(source, entry) == []
+    assert maintenance_admission_scan(source) == ([], [])
+
+
+@pytest.mark.parametrize(
+    ("before", "after", "reference_count"),
+    [
+        ("", '\nextra = sqlite3.connect("other.sqlite3")\n', 4),
+        ("                        uri,", '                        "other.sqlite3",', 3),
+        ("uri=True,", "uri=False,", 3),
+        ("timeout=min(timeout_seconds, 1),", "timeout=60,", 3),
+        ("isolation_level=None,", 'isolation_level="DEFERRED",', 3),
+    ],
+    ids=["extra-open", "changed-target", "changed-uri-option", "changed-timeout", "changed-isolation"],
+)
+def test_maintenance_writer_rejects_constructor_target_and_option_drift(
+    before, after, reference_count, maintenance_writer_entry, maintenance_admission_scan
+):
+    entry = maintenance_writer_entry
+    source = (sqlite_lint.REPO_ROOT / entry.path).read_text()
+    if before:
+        assert source.count(before) == 1
+        changed = source.replace(before, after, 1)
+    else:
+        changed = source + after
+    assert changed != source
+    assert len(sqlite_lint.classify_source(changed, entry.path)) == reference_count
+    expected = f"{entry.path}: opens differ from declared target sites (GitHub client cache)"
+    assert sqlite_lint.writer_target_violations(changed, entry) == [expected]
+    violations, unreadable = maintenance_admission_scan(changed)
+    assert unreadable == []
+    assert violations == (
+        [f"{entry.path}: pinned 3 references, found 4", expected] if reference_count == 4 else [expected]
+    )
 
 
 @pytest.fixture
