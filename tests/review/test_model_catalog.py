@@ -1599,7 +1599,7 @@ def test_capture_policy_cache_is_scoped_and_restores_reader(tmp_path, monkeypatc
     monkeypatch.setitem(CAPTURE["capture"].__globals__, "_capture_surfaces", surfaces)
     for calls, threshold in enumerate((11.0, 12.0), start=1):
         policy_path.write_text(
-            policy_text.replace("near_cap_remaining_pct: 1.0", f"near_cap_remaining_pct: {threshold}")
+            policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}")
         )
         if fail:
             with pytest.raises(RuntimeError, match="capture failed"):

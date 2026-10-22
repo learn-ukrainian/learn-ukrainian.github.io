@@ -119,10 +119,15 @@ class CreditPolicy:
     rate_limit_window_s: float
     reset_hold_hours: float
     allowed_models: dict[str, tuple[str, ...]]
+    lane_near_cap_remaining_pct: dict[str, float]
     path: Path
 
     def lane_models(self, lane: str) -> tuple[str, ...] | None:
         return self.allowed_models.get(lane.strip().lower())
+
+    def near_cap_for(self, lane: str) -> float:
+        """Near-cap threshold for ``lane``: its override, else the global value."""
+        return self.lane_near_cap_remaining_pct.get(lane.strip().lower(), self.near_cap_remaining_pct)
 
 
 def _policy_number(payload: dict[str, Any], name: str, path: Path, *, positive: bool = False) -> float:
@@ -152,17 +157,22 @@ def load_policy(path: Path | None = None) -> CreditPolicy:
     if not isinstance(lanes, dict) or not lanes:
         raise ValueError(f"{path}: lanes must be a non-empty mapping")
     allowed: dict[str, tuple[str, ...]] = {}
+    lane_thresholds: dict[str, float] = {}
     for lane, entry in lanes.items():
         models = entry.get("allowed_models") if isinstance(entry, dict) else None
         if not isinstance(models, list) or not models or not all(isinstance(m, str) and m.strip() for m in models):
             raise ValueError(f"{path}: lanes.{lane}.allowed_models must be a non-empty list of model ids")
-        allowed[str(lane).strip().lower()] = tuple(m.strip() for m in models)
+        key = str(lane).strip().lower()
+        allowed[key] = tuple(m.strip() for m in models)
+        if "near_cap_remaining_pct" in entry:
+            lane_thresholds[key] = _policy_number(entry, "near_cap_remaining_pct", path)
     return CreditPolicy(
         near_cap_remaining_pct=_policy_number(payload, "near_cap_remaining_pct", path),
         credit_max_age_s=_policy_number(payload, "credit_max_age_s", path),
         rate_limit_window_s=_policy_number(payload, "rate_limit_window_s", path, positive=True),
         reset_hold_hours=_policy_number(payload, "reset_hold_hours", path),
         allowed_models=allowed,
+        lane_near_cap_remaining_pct=lane_thresholds,
         path=path,
     )
 
@@ -290,7 +300,7 @@ def plan_window_exhausted(lane: str, info: Mapping[str, Any] | None, policy: Cre
         except ValueError:
             policy = None
     configured = policy.lane_models(lane_key) is not None if policy is not None else lane_key in DEFAULT_ALLOWED_MODELS
-    threshold = policy.near_cap_remaining_pct if policy is not None else _CREDIT_NEAR_CAP_REMAINING_PCT
+    threshold = policy.near_cap_for(lane_key) if policy is not None else _CREDIT_NEAR_CAP_REMAINING_PCT
     remaining = plan_remaining_pct(info)
     return configured and remaining is not None and remaining <= threshold
 
@@ -519,6 +529,7 @@ def lane_credit_state(
     models = policy.lane_models(lane)
     if models is None:
         return {"state": NOT_CONFIGURED}
+    threshold = policy.near_cap_for(lane)
     current = (now or datetime.now(UTC)).astimezone(UTC)
     record = info if isinstance(info, dict) else {}
     remaining = plan_remaining_pct(record)
@@ -531,7 +542,7 @@ def lane_credit_state(
     }
     result: dict[str, Any] = {
         "plan_remaining_pct": remaining,
-        "near_cap_remaining_pct": policy.near_cap_remaining_pct,
+        "near_cap_remaining_pct": threshold,
         "credit_balance": None,
         "allowed_models": list(models),
         "allowlist_applies": False,
@@ -539,11 +550,11 @@ def lane_credit_state(
     }
     if remaining is None:
         return {**result, "state": PLAN_UNKNOWN, "reason": "plan allowance unknown"}
-    if remaining > policy.near_cap_remaining_pct and not for_pace_deficit:
+    if remaining > threshold and not for_pace_deficit:
         return {
             **result,
             "state": PLAN_HEALTHY,
-            "reason": f"plan remaining {remaining:g}% above {policy.near_cap_remaining_pct:g}%",
+            "reason": f"plan remaining {remaining:g}% above {threshold:g}%",
         }
     fresh, why = _fresh_probe(record, policy, snapshot_stale=snapshot_stale)
     if not fresh:
@@ -571,7 +582,7 @@ def lane_credit_state(
         evidence["unreadable_records"] = unreadable
     # A fresh positive balance exists from here on: the admission allowlist applies
     # whatever the router's recommendation state says about the rate-limit evidence.
-    result["allowlist_applies"] = remaining <= policy.near_cap_remaining_pct
+    result["allowlist_applies"] = remaining <= threshold
     if unreadable is not None:
         parts = ", ".join(f"{n} {kind}" for kind, n in unreadable.items())
         return {
@@ -587,7 +598,7 @@ def lane_credit_state(
         **result,
         "state": CREDIT_BALANCE_PRESENT,
         "reason": f"plan remaining {remaining:g}%"
-        + ("; " if for_pace_deficit else f" at or below {policy.near_cap_remaining_pct:g}%; ")
+        + ("; " if for_pace_deficit else f" at or below {threshold:g}%; ")
         + f"fresh credit balance {balance:g}; no rate limit in the last {policy.rate_limit_window_s:g}s; "
         "draw not verified by the router",
         "coverage": {"dispatches": None, "basis": COVERAGE_BASIS},
@@ -1143,7 +1154,7 @@ def routing_facts(
             policy = load_policy()
         except ValueError as exc:
             policy_error = str(exc)
-    near_cap_pct = policy.near_cap_remaining_pct if policy is not None else _CREDIT_NEAR_CAP_REMAINING_PCT
+    near_cap_pct = policy.near_cap_for(lane_key) if policy is not None else _CREDIT_NEAR_CAP_REMAINING_PCT
     max_age_s = policy.credit_max_age_s if policy is not None else UNREADABLE_POLICY_MAX_AGE_S
     snapshot, _ = snapshot_freshness(snapshot_metadata)
     probe, _ = probe_freshness(data, max_age_s)

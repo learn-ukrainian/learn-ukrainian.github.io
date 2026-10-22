@@ -182,7 +182,7 @@ CURSOR_AUTO_HOT_ON_PACE = {
 }
 
 NEAR_CAP_CREDIT = {
-    "codex": _codex(weekly_used_pct=95.0, weekly_remaining_pct=5.0, credit_balance=62500.0),
+    "codex": _codex(weekly_used_pct=99.0, weekly_remaining_pct=1.0, credit_balance=62500.0),
     "claude": CLAUDE,
 }
 # The credit lane is the only candidate: Claude is near cap too, so the recommendation
@@ -235,14 +235,14 @@ CASES: tuple[Case, ...] = (
     # Split variants.
     Case(
         "f1_conflicting_windows",
-        {"codex": _codex(primary_used_pct=97.0, primary_remaining_pct=3.0), "claude": CLAUDE},
+        {"codex": _codex(primary_used_pct=99.0, primary_remaining_pct=1.0), "claude": CLAUDE},
     ),
     Case(
         "f2_stale_near_cap_credit",
         {
             "codex": _codex(
-                weekly_used_pct=95.0,
-                weekly_remaining_pct=5.0,
+                weekly_used_pct=99.0,
+                weekly_remaining_pct=1.0,
                 credit_balance=62500.0,
                 stale=True,
                 freshness="stale_last_good",
@@ -267,7 +267,7 @@ CASES: tuple[Case, ...] = (
     ),
     Case(
         "f6_contradictory_relief",
-        {"codex": _codex(weekly_used_pct=95.0, weekly_remaining_pct=5.0, credit_balance=62500.0), "claude": CLAUDE},
+        {"codex": _codex(weekly_used_pct=99.0, weekly_remaining_pct=1.0, credit_balance=62500.0), "claude": CLAUDE},
         mutate="probe_relabelled_stale_after_publication",
     ),
     Case("f7_near_cap_credit", NEAR_CAP_CREDIT),
@@ -804,7 +804,7 @@ def test_owner_facts_per_case(snapshot):
         facts.capacity_reason
     )
     if case.name == "f1_conflicting_windows":
-        assert (facts.plan_remaining_pct, facts.remaining_source) == (3.0, "codexbar.primary_remaining_pct")
+        assert (facts.plan_remaining_pct, facts.remaining_source) == (1.0, "codexbar.primary_remaining_pct")
     if case.name == "unavailable_telemetry":
         assert facts.plan_remaining_pct is None and budget["in_flight"] is None
     if case.name in {"covered_deficit", "f7_near_cap_credit"}:

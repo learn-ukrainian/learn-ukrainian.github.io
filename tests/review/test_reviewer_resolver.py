@@ -121,8 +121,8 @@ def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(ris
             risk=risk,
             routing_snapshot={
                 "agents": {
-                    route: {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}}
-                    for route in ("claude", "codex")
+                    "claude": {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}},
+                    "codex": {"status": "near_cap", "remaining_pct": 1, "health": {"healthy": True}},
                 },
                 "diagnostics": {"stale": False},
             }, claude_account=HOST_ACCOUNT,

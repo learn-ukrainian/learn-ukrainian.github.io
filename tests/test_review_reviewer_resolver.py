@@ -710,7 +710,7 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
             author_model="gemini",
             risk="medium",
             routing_snapshot={
-                "agents": {"codex": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "healthy"}},
+                "agents": {"codex": {"status": "near_cap", "remaining_pct": 1}, "cursor": {"status": "healthy"}},
                 "diagnostics": {"stale": False},
             }, claude_account=HOST_ACCOUNT,
         )

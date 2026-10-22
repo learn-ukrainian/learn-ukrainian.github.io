@@ -178,7 +178,11 @@ def selection_key(
     freshness_rank = {True: 0, False: 1, None: 2}[metrics.quota_fresh]
     capacity_evidence_rank = 3 if headroom_unknown else freshness_rank
     headroom = -(metrics.quota_remaining_pct or 0.0)
-    capacity = review_capacity(_route_record(candidate, snapshot, prefer_route=True), (snapshot or {}).get("diagnostics"))
+    capacity = review_capacity(
+        _route_record(candidate, snapshot, prefer_route=True),
+        (snapshot or {}).get("diagnostics"),
+        lane=candidate.route,
+    )
     return (
         capacity_evidence_rank,
         capacity.pressure,

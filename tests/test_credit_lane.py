@@ -92,7 +92,9 @@ def test_policy_reads_codex_allowlist_from_config():
         POLICY.credit_max_age_s,
         POLICY.rate_limit_window_s,
         POLICY.reset_hold_hours,
-    ) == (1.0, 900.0, 3600.0, 48.0)
+    ) == (10.0, 900.0, 3600.0, 48.0)
+    assert POLICY.near_cap_for("codex") == 1.0
+    assert POLICY.near_cap_for("claude") == 10.0
 
 
 def test_builtin_default_allowlist_equals_shipped_policy():

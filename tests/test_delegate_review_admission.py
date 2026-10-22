@@ -880,7 +880,10 @@ def _args(*extra, verdict=True):
 def _budget(*, claude="cool", codex="near_cap", cursor="cool"):
     return {
         "agents": {
-            route: {"status": status, "remaining_pct": 5 if status == "near_cap" else 60}
+            route: {
+                "status": status,
+                "remaining_pct": (1 if route == "codex" else 5) if status == "near_cap" else 60,
+            }
             for route, status in (("claude", claude), ("codex", codex), ("cursor", cursor))
         },
         "diagnostics": {"records_loaded": 5, "stale": False},
@@ -1538,7 +1541,7 @@ def test_9386_initial_review_substitute_requires_snapshot(monkeypatch, initial_s
 
 
 @pytest.mark.parametrize("requested", ["codex", "claude"])
-@pytest.mark.parametrize("remaining", [60, 5])
+@pytest.mark.parametrize("remaining", [60, 1])
 def test_9386_direct_and_substituted_codex_share_review_capacity_rule(monkeypatch, requested, remaining):
     """#10016 supersedes pace/reset-reserve routing for reviews; both routes use allowance."""
     budget = _budget(claude="near_cap", codex="hot", cursor="near_cap")

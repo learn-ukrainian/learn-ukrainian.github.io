@@ -272,7 +272,7 @@ def test_inventory_note_never_changes_reserve_or_admission(
         "burn_pct_7d": 95,
         "freshness": freshness,
         "age_s": 0,
-        "remaining_pct": 5,
+        "remaining_pct": 1,
         "eligible": False,
     }
     reserve = {"remaining_resets": 0, "asserted_at": None}
@@ -302,7 +302,7 @@ def test_inventory_note_never_changes_reserve_or_admission(
 
 
 def test_recorded_codex_near_cap_reaches_note_without_relaxing(monkeypatch, tmp_path, capsys, payloads):
-    payloads["codex"]["rate_limit"]["primary_window"]["used_percent"] = 95
+    payloads["codex"]["rate_limit"]["primary_window"]["used_percent"] = 99
     result, _ = _probe(monkeypatch, payloads, "codex")
     budget, _ = _api_cli(monkeypatch, tmp_path, capsys, "codex", result)
     reserve = {"remaining_resets": 0, "asserted_at": None}

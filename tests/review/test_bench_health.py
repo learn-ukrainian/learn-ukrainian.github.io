@@ -250,7 +250,10 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     ],
 )
 def test_bench_health_preserves_capacity_gate(status, reason, route, names, capsys):
-    data = {"agents": {route: {"status": status, "remaining_pct": 5}}, "diagnostics": {"stale": False}}
+    data = {
+        "agents": {route: {"status": status, "remaining_pct": 1 if route == "codex" else 5}},
+        "diagnostics": {"stale": False},
+    }
     results = check_bench_health(routing_snapshot=data)
     assert all(not names.intersection(seats) for seats in results.values())
     # Native Grok supplies the second Anthropic seat when Codex is unavailable.
@@ -282,8 +285,13 @@ def test_bench_health_preserves_critical_role_gate():
 @pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
 def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
     # Disable both newly admitted Grok routes to keep exercising the zero-seat invariant.
-    data = {"agents": {lane: {"status": status, "remaining_pct": 5} for lane in (route, "grok", "cursor")},
-            "diagnostics": {"stale": False}}
+    data = {
+        "agents": {
+            lane: {"status": status, "remaining_pct": 1 if route == "codex" else 5}
+            for lane in (route, "grok", "cursor")
+        },
+        "diagnostics": {"stale": False},
+    }
     assert main(["--risk", risk], routing_snapshot=data) == 1
     captured = capsys.readouterr()
     finding = next(item for item in _findings(captured) if item["author_family"] == family)

@@ -19,8 +19,13 @@ class ReviewCapacity:
     hard_reason: str | None
 
 
-def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, object] | None = None) -> ReviewCapacity:
-    """Keep stale allowance advisory and pace ordering-only; runtime blocks always bind."""
+def review_capacity(
+    record: Mapping[str, object], diagnostics: Mapping[str, object] | None = None, *, lane: str | None = None
+) -> ReviewCapacity:
+    """Keep stale allowance advisory and pace ordering-only; runtime blocks always bind.
+
+    ``lane`` is the record's own lane, so a per-lane near-cap override applies.
+    """
     remaining = credit_lane.plan_remaining_pct(record)
     try:
         policy = credit_lane.load_policy()
@@ -29,7 +34,7 @@ def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, obje
         threshold = credit_lane._CREDIT_NEAR_CAP_REMAINING_PCT
         max_age_s = credit_lane.UNREADABLE_POLICY_MAX_AGE_S
     else:
-        threshold = policy.near_cap_remaining_pct
+        threshold = policy.near_cap_for(lane) if lane else policy.near_cap_remaining_pct
         max_age_s = credit_lane.probe_max_age_s(policy)
     freshness, reason = credit_lane.observation_freshness(record, diagnostics, max_age_s)
     pace = record.get("codexbar") or record.get("pace") or record
@@ -66,7 +71,7 @@ def review_capacity_action(
     lane: str, record: Mapping[str, object], diagnostics: Mapping[str, object] | None, model: str | None
 ) -> tuple[bool, str]:
     """Dispatch uses the same reserve and existing verified credit exception as selection."""
-    capacity = review_capacity(record, diagnostics)
+    capacity = review_capacity(record, diagnostics, lane=lane)
     health, _ = credit_lane.health_fact(record)
     if health == credit_lane.UNHEALTHY or str(record.get("status") or "").strip().lower() == "unhealthy":
         return True, "unhealthy lane"

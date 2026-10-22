@@ -939,7 +939,9 @@ def _evaluate_candidate(
     snapshot = inputs.routing_snapshot
     record = _route_record(candidate, snapshot, prefer_route=True)
     diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
-    capacity = review_capacity(record or {}, diagnostics if isinstance(diagnostics, Mapping) else None)
+    capacity = review_capacity(
+        record or {}, diagnostics if isinstance(diagnostics, Mapping) else None, lane=candidate.route
+    )
     usage_status = str(record.get("status") or "").strip().lower()
     if health not in {"unhealthy", "degraded_telemetry"}:
         if capacity.near_cap:
@@ -1490,7 +1492,7 @@ def resolve_reviewer(
                 agents = (inputs.routing_snapshot or {}).get("agents", {})
                 info = agents.get(candidate.route, {})
                 diagnostics = (inputs.routing_snapshot or {}).get("diagnostics")
-                capacity = review_capacity(info, diagnostics)
+                capacity = review_capacity(info, diagnostics, lane=candidate.route)
                 pace_retention_available |= (
                     not capacity.near_cap and not capacity.hard_reason and not capacity_exclusions.get(candidate.name)
                 )
