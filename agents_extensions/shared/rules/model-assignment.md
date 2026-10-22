@@ -138,8 +138,9 @@ the former GPT-6 Astra advisory seat. Review, critique and design input use
 review role (operator decision 2026-10-03, #9583). `gpt-6-sol` and `gpt-6-astra` are not routable.
 Token prices under
 272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
-Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
-only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
+Cost never lowers the quality floor. An `unhealthy` route is unavailable. Review selection
+and dispatch ignore remaining weekly or five-hour usage, pace, near-cap state and usage
+headroom forecasts. Claude retains its existing weekly-cap protection. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity. The Cursor review endpoint is
 formal only for the models it pins (`grok-4.7-high` today); other third-party non-Anthropic models Cursor
 exposes may be added under the same runtime attestation rules (#9488).
@@ -149,13 +150,15 @@ A dispatch is review-typed when it passes any of `--require-review-verdict`,
 (#9538). Review-typed dispatches judge an explicitly requested reviewer by the resolver's
 per-candidate eligibility gates; ladder membership is not an allowlist. For the
 code profile only, supply `--review-author-model` and `--review-risk` to allow
-canonical reviewer substitution when admission or the budget guard requires it.
+canonical reviewer substitution when operational availability or eligibility requires it.
 Every substitution emits a typed note, including with `--force-agent`, which
-bypasses budget checks but does not waive reviewer eligibility. Ukrainian
+retains an eligible requested reviewer without waiving operational gates or Claude cap protection. Ukrainian
 reviews use `--review-profile ukrainian` without these code resolver flags.
-A sole eligible cross-family reviewer in pace-only deficit is admitted with a
-`REVIEW_BUDGET_RETAINED` NOTE when no valid substitute remains; near-cap, hot,
-health, circuit, runtime headroom and subject gates still bind.
+Remaining allowance and pace do not rank or exclude reviewers. Ineligible routes,
+`NEED_LOGIN`, unhealthy lanes, open circuits and exhausted credential concurrency
+slots still block admission. An observed rate-limit cluster (`runtime.headroom_blocked`)
+excludes the lane at selection time. A run-time `rate_limited` outcome ends that
+review; it does not automatically dispatch a fallback. Writer routing is unchanged.
 
 ### Historical routing evidence
 
@@ -878,7 +881,7 @@ Consequences:
   route grok via OpenRouter model ids (`openrouter/x-ai/*`) — only the first-party `xai/*`
   provider is sub-backed, and as of this order that first-party access is native-CLI-only,
   not opencode-hosted. Check `/api/orient` headroom.
-  For Claude/Codex budget buckets at `near_cap`, substitute per
+  For writer dispatches with Claude/Codex budget buckets at `near_cap`, substitute per
   `scripts/config/agent_fallback_substitutions.yaml` (that file is the budget-bucket map, not a
   general outage map); Codex substitutions must never use Hermes. ALWAYS note a substitution
   in the artifact — silent rerouting hides

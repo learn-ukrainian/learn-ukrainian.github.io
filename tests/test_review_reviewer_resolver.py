@@ -642,10 +642,10 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "openai_frontier"
     terra = next(item for item in resolution.trace if item.name == "openai_frontier")
-    assert terra.status == "excluded"
-    assert "automatic assignments are prohibited" in terra.reason
+    assert terra.status == "selected"
+    assert terra.capacity.near_cap
 
 
 def test_native_grok_health_and_cursor_transport_fallback():
@@ -803,6 +803,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
     weighted = resolve_reviewer(inputs, ladder=((weighted_terra, sonnet),), runtime_state=capacity_weighted)
     assert weighted.selected.name == "synthetic-practical-astra"
 
+    baseline = resolve_reviewer(inputs, ladder=ladder)
     headroom = {
         "agents": {
             "codex": {"scheduler": {"completed_input_bytes": 10, "quota_remaining_pct": 5}},
@@ -810,7 +811,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
         }
     }
     selected = resolve_reviewer(inputs, ladder=ladder, runtime_state=headroom)
-    assert selected.selected.name == "claude-sonnet-5-5"
+    assert selected.selected.name == baseline.selected.name
 
     stale_codex = {
         "agents": {
@@ -818,10 +819,9 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
             "claude": {"scheduler": {"completed_input_bytes": 10, "quota_stale": False}},
         }
     }
-    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_codex).selected.name == "claude-sonnet-5-5"
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_codex).selected.name == baseline.selected.name
 
-    # A stale route with deceptively low recorded load must not outrank a
-    # fresh, verified route solely because its last-known-good counter is old.
+    # Quota freshness does not override the observed work counters.
     stale_low_load = {
         "agents": {
             "codex": {
@@ -840,7 +840,7 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
             },
         }
     }
-    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_low_load).selected.name == "claude-sonnet-5-5"
+    assert resolve_reviewer(inputs, ladder=ladder, runtime_state=stale_low_load).selected.name == "synthetic-practical-astra"
 
 
 def test_kimi_never_receives_automatic_review_load():
@@ -946,29 +946,29 @@ def test_dispatch_capacity_exclusions_do_not_change_normal_resolver_selection():
     inputs = ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
     assert resolve_reviewer(inputs).selected.name == OPENAI_FRONTIER.name
     exhausted = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
-    assert exhausted.selected is None
-    assert "REVIEW_CAPACITY_UNAVAILABLE" in exhausted.fail_closed_reason
-    assert "dispatch capacity: weekly deficit" in exhausted.fail_closed_reason
-    for item in exhausted.trace:
-        assert item.name in exhausted.fail_closed_reason
-        assert item.reason in exhausted.fail_closed_reason
+    assert exhausted.selected.name == OPENAI_FRONTIER.name
+    assert exhausted.fail_closed_reason is None
 
 
 def test_dispatch_capacity_uses_resolver_transport_fallback_order():
     snapshot = {
-        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}},
+        "agents": {
+            "claude": {"status": "near_cap", "remaining_pct": 5},
+            "codex": {"status": "cool"},
+            "grok": {"status": "cool"},
+        },
         "diagnostics": {"stale": False},
         "review_capacity_exclusions": {
-            OPENAI_FRONTIER.name: "weekly deficit",
-            GROK_4_7.name: "runtime capacity unavailable",
+            OPENAI_FRONTIER.name: "unhealthy lane",
+            GROK_4_7.name: "route circuit is open",
         },
     }
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="critical", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
-    result = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    result = resolve_reviewer(inputs)
     assert result.selected.name == GROK_4_7_CURSOR_FALLBACK.name
     primary = next(item for item in result.trace if item.name == GROK_4_7.name)
     assert primary.status == "excluded"
-    assert primary.reason == "dispatch capacity: runtime capacity unavailable"
+    assert "circuit" in primary.reason
 
 
 def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
@@ -1570,7 +1570,7 @@ _AUTHORITY_DOWN = {
 def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallback):
     """Whole-ladder choices preserve other models' suitability at every risk."""
     if fallback:
-        if author == "grok-4.7" or state in {"all-down", "native-near-cap"}:
+        if author == "grok-4.7" or state == "all-down":
             expected = None
         elif state == "native-down":
             # Cursor's allowlist-union independence excludes Moonshot authors.
@@ -1871,22 +1871,13 @@ def _published_credit(*, fetched_at: datetime | None = None) -> dict:
     return credit_lane.lane_credit_state("codex", info, credit_lane.load_policy(), now=now)
 
 
-def test_near_cap_codex_with_credit_balance_keeps_allowlisted_reviewer_eligible():
-    credit = _published_credit()
-    assert credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
-    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit), claude_account=HOST_ACCOUNT)
+def test_near_cap_codex_does_not_require_credit_relief():
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(_published_credit()), claude_account=HOST_ACCOUNT)
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "eligible", result.reason
-    assert result.health == "near_cap"
-    assert result.credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
-    assert result.credit["model_allowed"] is True
-    assert result.credit["draw"] == credit_lane.DRAW_NOT_VERIFIED
-    assert result.credit["evidence"]["credit_balance"] == 62500.0
-
-    resolution = resolve_reviewer(inputs)
-    traced = next(item for item in resolution.trace if item.name == "openai_frontier")
-    assert traced.status in {"eligible", "selected"}
-    assert traced.credit["allowed_models"] == ["gpt-6.1-sol", "gpt-6-luna"]
+    assert result.status == "eligible"
+    assert result.health == "healthy"
+    assert result.credit is None
+    assert resolve_reviewer(inputs).selected.name == "openai_frontier"
 
 
 @pytest.mark.parametrize(
@@ -1910,11 +1901,10 @@ def test_near_cap_codex_with_credit_balance_keeps_allowlisted_reviewer_eligible(
         "not-configured",
     ],
 )
-def test_near_cap_without_usable_credits_stays_excluded(credit):
+def test_near_cap_without_usable_credits_still_admits_sol(credit):
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit), claude_account=HOST_ACCOUNT)
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded"
-    assert result.reason == "quota bucket is near cap — automatic assignments are prohibited"
+    assert result.status == "eligible"
     assert result.credit is None
 
 
@@ -1924,14 +1914,13 @@ def test_flat_near_cap_map_without_allowance_stays_unknown():
     assert result.status == "eligible" and result.health is None and result.credit is None
 
 
-def test_stale_published_credit_balance_stays_excluded():
+def test_stale_published_credit_balance_does_not_exclude_sol():
     stale = _published_credit(fetched_at=datetime.now(UTC) - timedelta(minutes=1))
     stale["evidence"]["credit_fetched_at"] = (datetime.now(UTC) - timedelta(hours=2)).isoformat().replace("+00:00", "Z")
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(stale), claude_account=HOST_ACCOUNT)
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded"
-    assert "near cap" in result.reason and credit_lane.CREDITS_UNVERIFIED in result.reason
-    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert result.status == "eligible"
+    assert result.credit is None
 
 
 @pytest.mark.parametrize(
@@ -1950,12 +1939,7 @@ def test_published_credit_relief_is_rechecked_against_the_full_record(record, di
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
     )
-    if diagnostics == {"stale": True} or record.get("stale") or record.get("freshness") == "stale_last_good":
-        assert result.status == "eligible" and result.credit is None
-    else:
-        assert result.status == "excluded"
-        assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
-        assert result.credit["reason"] == f"published credit relief not re-verified: {why}"
+    assert result.status == "eligible" and result.credit is None
     # Credit relief itself remains fail-closed, even when stale allowance is advisory.
     relief = credit_lane.published_credit_relief(
         "codex",
@@ -1976,7 +1960,7 @@ def test_credit_balance_never_relaxes_hard_health_exclusion():
     assert result.reason == "lane health is unhealthy — route is operationally unavailable"
 
 
-def test_off_allowlist_model_on_credit_lane_is_excluded_naming_the_allowlist(monkeypatch):
+def test_review_ignores_credit_period_model_allowlist(monkeypatch):
     policy = credit_lane.load_policy()
     monkeypatch.setattr(
         credit_lane, "load_policy", lambda path=None: replace(policy, allowed_models={"codex": ("gpt-6-luna",)})
@@ -1985,16 +1969,15 @@ def test_off_allowlist_model_on_credit_lane_is_excluded_naming_the_allowlist(mon
         author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(_published_credit()), claude_account=HOST_ACCOUNT
     )
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded"
-    assert "outside the credit-period allowlist [gpt-6-luna]" in result.reason
-    assert result.credit["model_allowed"] is False
+    assert result.status == "eligible"
+    assert result.credit is None
 
 
-def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
+def test_review_ranks_by_load_regardless_of_credit_balance(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     inputs = ResolverInputs(author_model="gemini", exact_head="d" * 40, requested_role="implementation", claude_account=HOST_ACCOUNT)
     ladder = ((PRACTICAL_ASTRA, sonnet),)
-    # Without credit evidence the lighter-loaded Codex seat wins the balance.
+    # The lighter-loaded Codex seat wins with or without credit evidence.
     light_codex = {"completed_input_bytes": 0, "active_reserved_input_bytes": 0}
     busy_claude = {"completed_input_bytes": 900, "active_reserved_input_bytes": 0}
     plain = {"agents": {"codex": {"scheduler": light_codex}, "claude": {"scheduler": busy_claude}}}
@@ -2008,10 +1991,10 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
         },
     }
     resolution = resolve_reviewer(inputs, ladder=ladder, runtime_state=credit_backed)
-    assert resolution.selected.name == "claude-sonnet-5-5"
-    assert next(item for item in resolution.trace if item.name == "synthetic-practical-astra").status == "eligible"
+    assert resolution.selected.name == "synthetic-practical-astra"
+    assert next(item for item in resolution.trace if item.name == "claude-sonnet-5-5").status == "eligible"
 
-    # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
+    # Claude cap protection still excludes its near-cap seat.
     only_credit = {
         "diagnostics": {"stale": False},
         "agents": {
@@ -2021,8 +2004,8 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     }
     resolution = resolve_reviewer(inputs, ladder=ladder, runtime_state=only_credit)
     assert resolution.selected.name == "synthetic-practical-astra"
-    assert resolution.selected.credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
-    assert credit_lane.DRAW_NOT_VERIFIED in resolution.substitution_note
+    assert resolution.selected.credit is None
+    assert credit_lane.DRAW_NOT_VERIFIED not in (resolution.substitution_note or "")
 
 
 def _shared_rate_limit(monkeypatch, tmp_path, *, at: datetime) -> None:
@@ -2039,19 +2022,17 @@ def _shared_rate_limit(monkeypatch, tmp_path, *, at: datetime) -> None:
     )
 
 
-def test_published_credit_snapshot_is_not_reused_after_a_new_rate_limit(monkeypatch, tmp_path):
+def test_historical_rate_limit_does_not_exclude_review_without_operational_failure(monkeypatch, tmp_path):
     credit = _published_credit()  # published while the lane had no rate limit
     assert credit["state"] == credit_lane.CREDIT_BALANCE_PRESENT
     _shared_rate_limit(monkeypatch, tmp_path, at=datetime.now(UTC) - timedelta(minutes=10))
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit), claude_account=HOST_ACCOUNT)
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded"
-    assert credit_lane.CREDIT_USE_UNCONFIRMED in result.reason
-    assert result.credit["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
-    assert result.credit["evidence"]["rate_limited_count"] == 1
+    assert result.status == "eligible"
+    assert result.credit is None
 
 
-def test_unreadable_rate_limit_evidence_denies_credit_relief(monkeypatch):
+def test_unreadable_credit_evidence_does_not_exclude_review(monkeypatch):
     def broken(*_args, **_kwargs):
         raise OSError("usage dir unreadable")
 
@@ -2059,8 +2040,8 @@ def test_unreadable_rate_limit_evidence_denies_credit_relief(monkeypatch):
     monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=_credit_codex(credit), claude_account=HOST_ACCOUNT)
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded"
-    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert result.status == "eligible"
+    assert result.credit is None
 
 
 # --- #9739: complete branch authorship ------------------------------------------------------------

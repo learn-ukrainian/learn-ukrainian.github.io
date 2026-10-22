@@ -82,12 +82,12 @@ def test_observed_in_flight_map_without_the_route_is_an_established_zero():
     assert (metrics.inflight, metrics.failures) == (0, 0)
 
 
-def test_unknown_freshness_ranks_after_known_stale_and_fresh():
+def test_usage_freshness_and_remaining_do_not_rank_reviewers():
     fresh = _key(_snapshot({"remaining_pct": 10.0}, diagnostics={"stale": False}))
     stale = _key(_snapshot({"remaining_pct": 90.0}, diagnostics={"stale": True}))
     unknown = _key(_snapshot({"remaining_pct": 90.0}))
     headroom_unknown = _key(_snapshot({}, diagnostics={"stale": False}))
-    assert fresh < stale < unknown < headroom_unknown
+    assert fresh == stale == unknown == headroom_unknown
 
 
 def test_unknown_load_counts_rank_after_observed_counts():

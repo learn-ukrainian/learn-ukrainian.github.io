@@ -114,7 +114,7 @@ def test_automatic_ladder_can_use_gemini_when_other_routes_unavailable(risk):
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
-def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(risk):
+def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
     result = resolve_reviewer(
         ResolverInputs(
             author_model="claude-opus-5-5",
@@ -128,7 +128,7 @@ def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(ris
             }, claude_account=HOST_ACCOUNT,
         )
     )
-    assert result.selected.name == GEMINI.name
+    assert result.selected.name == "openai_frontier"
     grok = next(row for row in result.trace if row.name == "grok-4.7")
     assert grok.status == "eligible"
     assert result.selected.suitability_rank < grok.suitability_rank
