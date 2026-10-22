@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import contextvars
 import hashlib
 import json
 import os
@@ -9,6 +11,7 @@ import re
 import stat
 import subprocess
 from collections.abc import Mapping
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -410,77 +413,208 @@ _DATABASE_SUFFIXES = frozenset(
 )
 
 
-def _external_copy_matches(worktree: Path, relative: Path) -> bool:
-    """Only a verified copy outside this checkout can exempt arbitrary output.
+def _file_identity(info: os.stat_result) -> tuple[int, ...]:
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns, info.st_nlink)
 
-    Discover the primary through Git, never through a basename or a supplied
-    output path. Existing task preservation receipts can locate archived output.
-    Neither a locator nor its recorded digest suffices without reading the copy.
+
+@dataclass
+class CopyProofRun:
+    """Trusted caller roots and identity-bound comparisons, owned by one reap."""
+
+    primary: Path
+    tasks: Path
+    records: dict[Path, list] = field(default_factory=dict)
+    comparisons: dict[tuple, bool] = field(default_factory=dict)
+    worktrees: tuple[Path, ...] | None = None
+    used_archives: dict[Path, tuple[dict, list[dict]]] = field(default_factory=dict)
+    primary_tracked: set[str] | None = None
+    primary_ignored: dict[str, bool] = field(default_factory=dict)
+    receipt_publication_attempted: bool = False
+
+    def retain_receipts(self) -> None:
+        """Publish earlier retrieval locators before the checkout can be removed."""
+        from scripts.orchestration import worktree_artifacts as artifacts
+
+        for path, (original, receipts) in self.used_archives.items():
+            with artifacts.task_state_lock(path):
+                current = json.loads(path.read_text())
+                if (current.get("task_id"), current.get("run_nonce")) != (
+                    original.get("task_id"), original.get("run_nonce")
+                ):
+                    raise ValueError("copy proof task attribution changed")
+                metadata = current.get("preserved_artifacts") or {}
+                dependencies = metadata.setdefault("external_copies", [])
+                for receipt in receipts:
+                    locator = {key: receipt[key] for key in ("location", "manifest_path", "content_sha256") if key in receipt}
+                    if locator not in dependencies and metadata.get("location") != locator.get("location"):
+                        dependencies.append(locator)
+                current["preserved_artifacts"] = metadata
+                artifacts.reaper_lifecycle._atomic_write(path, current)
+
+
+_COPY_PROOF_RUN: contextvars.ContextVar[CopyProofRun | None] = contextvars.ContextVar("copy_proof_run", default=None)
+
+
+@contextlib.contextmanager
+def copy_proof_run(*, primary: Path, tasks: Path, publish_receipts: bool = False):
+    """Bind preservation's trusted root; never discover it from the target .git.
+
+    Comparisons re-open and stat both leaves on every use. Only unchanged
+    identities reuse byte proof, so repeated inventories do not rehash stores.
+    Earlier archive locators are published before removal when reused as proof.
+    Reapers also publish after a preservation refusal. Read-only inventories
+    leave publication disabled.
     """
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.common.task_store_paths import tasks_dir
-    from scripts.fleet import ignored_task_output
+    run = CopyProofRun(primary.resolve(strict=True), tasks)
+    token = _COPY_PROOF_RUN.set(run)
+    try:
+        yield run
+    finally:
+        try:
+            if publish_receipts and not run.receipt_publication_attempted:
+                run.receipt_publication_attempted = True
+                run.retain_receipts()
+        finally:
+            _COPY_PROOF_RUN.reset(token)
+
+
+@contextlib.contextmanager
+def _copy_leaf(root: Path, relative: Path):
     from scripts.orchestration import worktree_artifacts as artifacts
 
-    primary = main_checkout_root(worktree)
-    if primary == worktree or primary.is_relative_to(worktree):
-        return False
-    candidates = [relative] if os.path.lexists(primary / relative) else []
+    root_fd = artifacts._open_trusted_root(root)
     try:
-        if not os.path.lexists(primary / relative):
-            for _, record in ignored_task_output.matching_worktree_records(
-                worktree, tasks_dir(), repo_root=primary, publish_cache=False
-            ):
-                receipt = record.get("preserved_artifacts") or {}
-                if not isinstance(receipt, dict) or not isinstance(receipt.get("location"), str):
-                    continue
-                location = Path(receipt.get("location", ""))
-                if (
-                    not location.is_absolute() and ".." not in location.parts
-                    and location.is_relative_to("batch_state/preserved")
-                    and isinstance(receipt.get("paths"), list)
-                    and any(
-                        isinstance(entry, dict) and entry.get("path") == relative.as_posix()
-                        for entry in receipt["paths"]
-                    )
-                ):
-                    candidates.append(location / relative)
-        for candidate in candidates:
-            # Stream the external file, bounding memory even for large stores.
-            root_fd = artifacts._open_trusted_root(primary)
+        parent_fd, owned = artifacts._open_parent(root_fd, relative.parts[:-1])
+        try:
+            fd = os.open(relative.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
             try:
-                parent_fd, owned = artifacts._open_parent(root_fd, candidate.parts[:-1])
-                try:
-                    fd = os.open(candidate.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
-                    try:
-                        before = os.fstat(fd)
-                        if not stat.S_ISREG(before.st_mode):
-                            continue
-                        digest = hashlib.sha256()
-                        size = 0
-                        while chunk := os.read(fd, 1024 * 1024):
-                            size += len(chunk)
-                            if size > before.st_size:
-                                break
-                            digest.update(chunk)
-                        pin = (size, digest.hexdigest())
-                        after = os.fstat(fd)
-                        if size != before.st_size or (
-                            before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns
-                        ) != (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns):
-                            continue
-                        if _matches_release_pin(worktree, relative, pin) and _matches_release_pin(primary, candidate, pin):
-                            return True
-                    finally:
-                        os.close(fd)
-                finally:
-                    if owned:
-                        os.close(parent_fd)
+                yield fd
             finally:
-                os.close(root_fd)
-    except (OSError, ValueError, TypeError, KeyError, ComponentOpenError, subprocess.SubprocessError):
+                os.close(fd)
+        finally:
+            if owned:
+                os.close(parent_fd)
+    finally:
+        os.close(root_fd)
+
+
+def _external_copy_matches(worktree: Path, relative: Path) -> bool:
+    """Compare only a regular primary copy outside every repository worktree."""
+    from scripts.fleet import ignored_task_output
+
+    run = _COPY_PROOF_RUN.get()
+    if run is None:
         return False
-    return False
+    primary = run.primary
+    try:
+        candidates = [(relative, None)]
+        if not os.path.lexists(primary / relative):
+            if worktree not in run.records:
+                run.records[worktree] = ignored_task_output.matching_worktree_records(
+                    worktree, run.tasks, repo_root=primary, publish_cache=False
+                )
+            for record_path, record in run.records[worktree]:
+                receipt = record.get("preserved_artifacts") or {}
+                if not isinstance(receipt, dict):
+                    continue
+                # Retention and its release bind the original retrieval receipt.
+                # Let preservation reuse that complete copy and its audit fields.
+                if record.get("keep_worktree") or receipt.get("retention_release"):
+                    continue
+                previous = receipt.get("external_copies", [])
+                if not isinstance(previous, list):
+                    continue
+                for saved in [receipt, *previous]:
+                    if not isinstance(saved, dict) or not isinstance(saved.get("location"), str):
+                        continue
+                    location = Path(saved["location"])
+                    if (location.is_absolute() or ".." in location.parts
+                        or not location.is_relative_to("batch_state/preserved")):
+                        continue
+                    candidates.append((location / relative, (record_path, record, saved)))
+        for candidate_relative, archive in candidates:
+            if _compare_external_copy(run, worktree, relative, candidate_relative):
+                if archive is not None:
+                    record_path, record, saved = archive
+                    _, receipts = run.used_archives.setdefault(record_path, (record, []))
+                    if saved not in receipts:
+                        receipts.append(saved)
+                return True
+        return False
+    except (OSError, ValueError, TypeError, ComponentOpenError, subprocess.SubprocessError):
+        return False
+
+
+def _compare_external_copy(run: CopyProofRun, worktree: Path, relative: Path, candidate_relative: Path) -> bool:
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    primary = run.primary
+    try:
+        candidate = primary / candidate_relative
+        resolved = candidate.resolve(strict=True)
+        # Reject links before opening as well as at every descriptor component.
+        if resolved != candidate or resolved.is_relative_to(primary / ".worktrees"):
+            return False
+        if resolved.is_relative_to(worktree.resolve()) or primary.is_relative_to(worktree.resolve()):
+            return False
+        if run.worktrees is None:
+            listing = artifacts.safe_git(
+                ["worktree", "list", "--porcelain", "-z"], cwd=primary,
+                env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30,
+            ).stdout
+            run.worktrees = tuple(
+                Path(os.fsdecode(item[9:])).resolve()
+                for item in listing.split(b"\0") if item.startswith(b"worktree ")
+                and Path(os.fsdecode(item[9:])).resolve() != primary
+            )
+        if any(resolved.is_relative_to(tree) for tree in run.worktrees):
+            return False
+        if not candidate_relative.is_relative_to("batch_state/preserved"):
+            if run.primary_tracked is None:
+                run.primary_tracked = set(artifacts._git_paths(primary, "--cached"))
+            name = candidate_relative.as_posix()
+            if name not in run.primary_tracked:
+                if name not in run.primary_ignored:
+                    run.primary_ignored[name] = name in artifacts._git_paths(
+                        primary, "--others", "--ignored", "--exclude-standard", "--", name
+                    )
+                if not run.primary_ignored[name]:
+                    return False
+        with _copy_leaf(worktree, relative) as source, _copy_leaf(primary, candidate_relative) as external:
+            before = (os.fstat(source), os.fstat(external))
+            if not all(stat.S_ISREG(info.st_mode) for info in before) or before[0].st_size != before[1].st_size:
+                return False
+            key = (worktree, relative, candidate_relative, *(_file_identity(info) for info in before))
+            equal = run.comparisons.get(key)
+            if equal is None:
+                size = 0
+                source_hash, external_hash = hashlib.sha256(), hashlib.sha256()
+                while True:
+                    left, right = os.read(source, 1024 * 1024), os.read(external, 1024 * 1024)
+                    if left != right:
+                        equal = False
+                        break
+                    if not left:
+                        equal = size == before[0].st_size and source_hash.digest() == external_hash.digest()
+                        break
+                    size += len(left)
+                    if size > before[0].st_size:
+                        equal = False
+                        break
+                    source_hash.update(left)
+                    external_hash.update(right)
+            # Reopen paths to reject renamed ancestors or replaced leaves.
+            with _copy_leaf(worktree, relative) as current_source, _copy_leaf(primary, candidate_relative) as current_external:
+                if tuple(map(_file_identity, before)) != tuple(
+                    _file_identity(os.fstat(fd)) for fd in (source, external)
+                ) or tuple(map(_file_identity, before)) != tuple(
+                    _file_identity(os.fstat(fd)) for fd in (current_source, current_external)
+                ):
+                    return False
+            run.comparisons[key] = equal
+            return equal
+    except (OSError, ValueError, TypeError, ComponentOpenError, subprocess.SubprocessError):
+        return False
 
 
 def _venv_is_rebuildable(worktree: Path, prefix: Path, tracked: set[str]) -> bool:
@@ -539,10 +673,16 @@ def is_regenerable_ignored_path(
         ignored = set(artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard"))
     if relative.as_posix() not in ignored:
         return False
-    # Copy proof applies to arbitrary output, including databases and caches.
-    # The descriptor matcher refuses links, special files and identity changes.
-    if _external_copy_matches(worktree, relative):
+    # Cheap established rebuild proofs avoid hashing dependency/build files.
+    # Stores and arbitrary output still require an external byte comparison.
+    if _matches_regenerable_pattern(relative, worktree, tracked, release_pins):
         return True
+    return _external_copy_matches(worktree, relative)
+
+
+def _matches_regenerable_pattern(
+    relative: Path, worktree: Path, tracked: set[str], release_pins: Mapping[str, tuple[int, str]] | None,
+) -> bool:
     # A dependency/environment directory cannot prove local database content.
     if _DATABASE_SUFFIXES.intersection(suffix.casefold() for suffix in relative.suffixes):
         return False

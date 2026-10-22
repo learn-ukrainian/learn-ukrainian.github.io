@@ -9,7 +9,14 @@ from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as classifier
 from tests import test_fleet_post_task_reap as fixtures
 
-hermetic_reap = fixtures.hermetic_reap
+hermetic_base = fixtures.hermetic_reap
+
+
+@pytest.fixture
+def hermetic_reap(hermetic_base):
+    repo, tasks = hermetic_base
+    with classifier.copy_proof_run(primary=repo, tasks=tasks):
+        yield repo, tasks
 
 
 def prepare(hermetic_reap):
@@ -191,9 +198,11 @@ def test_recorded_archive_is_verified_before_exclusion(hermetic_reap, monkeypatc
     # Use the actual bound canonical receipt, rather than a filename assertion.
     record = json.loads((tasks / "proof-cap.json").read_text())
     assert record["preserved_artifacts"]["location"] == receipt["location"]
-    assert output._ignored_output_files(tree, repo, record) == []
+    with classifier.copy_proof_run(primary=repo, tasks=tasks):
+        assert output._ignored_output_files(tree, repo, record) == []
     (repo / receipt["location"] / "screenshots/page.png").write_bytes(b"wrong archive")
-    assert output._ignored_output_files(tree, repo, record) == ["screenshots/page.png"]
+    with classifier.copy_proof_run(primary=repo, tasks=tasks):
+        assert output._ignored_output_files(tree, repo, record) == ["screenshots/page.png"]
 
 
 @pytest.mark.parametrize("name", [".venv/lib/only.db", "node_modules/pkg/only.db", "site/dist/only.db"])

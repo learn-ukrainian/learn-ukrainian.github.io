@@ -6,6 +6,8 @@ import os
 import pytest
 
 from scripts.orchestration import reap_worktrees as rw
+from tests.fleet.test_reaper_regenerable_cap import hermetic_base as hermetic_base
+from tests.fleet.test_reaper_regenerable_cap import hermetic_reap as hermetic_reap
 from tests.fleet.test_reaper_regenerable_cap import prepare, put, reap
 from tests.orchestration.test_reap_worktrees_clean_pushed import (
     _host_processes_out_of_scope as _host_processes_out_of_scope,
@@ -23,7 +25,6 @@ from tests.orchestration.test_reap_worktrees_clean_pushed import (
 from tests.orchestration.test_reap_worktrees_clean_pushed import (
     repo as repo,
 )
-from tests.test_fleet_post_task_reap import hermetic_reap as hermetic_reap
 
 
 @pytest.mark.parametrize("evidence_size", [0, 19])
@@ -92,6 +93,18 @@ def test_clean_pushed_receipt_uses_measured_bytes_and_zero_for_dry_run(repo, fre
     assert report.freed_bytes == (expected if apply else 0)
     assert report.as_dict()["removed"][0]["freed_bytes"] == (expected if apply else 0)
     assert tree.exists() is not apply
+
+
+def test_dry_run_reports_nonzero_legacy_size_estimate(repo, free_fuser):
+    tree = dispatch_tree(repo)
+    put(tree, "out/build.bin", b"x" * (2 * 1024 * 1024))
+    age_tree(tree, repo, "task-a")
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=True, actor="test")
+    assert len(report.removed) == 1, report
+    assert report.freed_mb == report.removed[0].size_mb >= 2
+    assert report.freed_bytes == 0
+    assert f"{report.freed_mb} MB" in rw.format_clean_pushed_report(report)
+    assert tree.exists()
 
 
 @pytest.mark.parametrize("mutation", ["replace", "unreadable", "fifo"])
