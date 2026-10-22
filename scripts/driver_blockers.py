@@ -7,11 +7,12 @@ import contextlib
 import fcntl
 import hashlib
 import json
+import math
 import os
 import re
 import stat
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -99,6 +100,151 @@ def validate_observation(data: object, epic: str) -> dict:
             raise ValueError("duplicate blocker id")
         seen.add(item["id"])
     return data
+
+
+FINALIZE_AGE_ENV = "LU_NEEDS_FINALIZE_MAX_AGE_MINUTES"
+DEFAULT_FINALIZE_AGE_MINUTES = 30.0
+
+
+def finalization_age(task: dict, *, now: datetime | None = None) -> dict:
+    """One clock and finite threshold contract for blockers and inbox alerts."""
+    clock = now if now is not None else datetime.now(UTC)
+    if clock.tzinfo is None or clock.utcoffset() is None:
+        raise ValueError("finalization clock must include a timezone")
+    configured = os.environ.get(FINALIZE_AGE_ENV, str(DEFAULT_FINALIZE_AGE_MINUTES))
+    try:
+        threshold = float(configured)
+        valid = math.isfinite(threshold) and threshold > 0
+    except (ValueError, TypeError, OverflowError):
+        threshold, valid = None, False
+    age, state, terminal = None, "unknown", None
+    try:
+        terminal = _timestamp(task.get("finished_at"))
+        seconds = (clock - terminal).total_seconds()
+        if seconds >= 0:
+            age, state = seconds / 60, "known"
+        else:
+            state = "future"
+    except (ValueError, TypeError, OverflowError):
+        pass
+    return {
+        "age_minutes": age,
+        "age_state": state,
+        "terminal": terminal.isoformat() if state == "known" else None,
+        "threshold_minutes": threshold if valid else None,
+        "configuration": "valid" if valid else "unknown",
+        "attention": not valid or age is None or age > threshold,
+    }
+
+
+def finalization_attention(
+    task_root: Path,
+    *,
+    initiator: str,
+    stream_epic: int,
+    now: datetime | None = None,
+) -> tuple[list[dict], list[dict]]:
+    """Read only this driver's stream; age never uses a task file's mtime.
+
+    Blocker fields contain a stable age lower bound and terminal timestamp.
+    Exact observed ages are diagnostics, outside fingerprints, so an unchanged
+    blocker does not need another post just because the clock advanced.
+    """
+    if not _string(initiator) or initiator == "unknown" or type(stream_epic) is not int or stream_epic < 1:
+        raise ValueError("finalization scan requires a known initiator and positive stream epic")
+    if now is not None and (now.tzinfo is None or now.utcoffset() is None):
+        raise ValueError("finalization clock must include a timezone")
+    if not task_root.is_dir():
+        raise ValueError("finalization task store unavailable; attention is unknown")
+    items, observations = [], []
+    for path in sorted(task_root.glob("*.json")):
+        task = _read_json(path)
+        if not isinstance(task, dict):
+            raise ValueError("invalid task record; attention is unknown")
+        if task.get("initiator") != initiator or task.get("status") != "needs_finalize":
+            continue
+        carrier = task.get("task_lifecycle") or {}
+        identity = carrier.get("identity", {}) if isinstance(carrier, dict) else {}
+        if not isinstance(identity, dict) or identity.get("stream_epic") != stream_epic:
+            # Unattributed legacy tasks are not permission to sweep another lane.
+            continue
+        task_id, nonce = task.get("task_id"), task.get("run_nonce")
+        if not _string(task_id) or not _string(nonce):
+            raise ValueError("scoped finalization task identity unavailable")
+        age_info = finalization_age(task, now=now)
+        age, age_state = age_info["age_minutes"], age_info["age_state"]
+        threshold = age_info["threshold_minutes"]
+        valid_config = age_info["configuration"] == "valid"
+        observations.append(
+            {
+                "task_id": task_id,
+                "run_nonce": nonce,
+                **{key: age_info[key] for key in ("age_minutes", "age_state", "threshold_minutes", "configuration")},
+            }
+        )
+        if not age_info["attention"]:
+            continue
+        from scripts.delegate import is_public_cause
+
+        reason = task.get("finalize_error") or task.get("last_error")
+        # Historical task records may predate the public-reason persistence
+        # boundary. Their raw diagnostic text never belongs in a Fleet post.
+        if not is_public_cause(reason):
+            reason = "finalization evidence unavailable; inspect private task diagnostics"
+        age_text = f"age > {threshold:g} minutes" if age is not None and valid_config else f"age unknown ({age_state})"
+        if not valid_config:
+            age_text = "age threshold configuration unknown"
+        # A normalized valid timestamp is stable across observations. Never echo invalid input.
+        since = f"; terminal={age_info['terminal']}" if age_state == "known" else ""
+        items.append(
+            {
+                "id": f"needs-finalize:{task_id}:{nonce}",
+                "state": "needs_finalize",
+                "owner": initiator,
+                "waits_on": f"{age_text}{since}; reason={reason}",
+                "action": "inspect retained task/head and finalization diagnostics; repair the failing gate and retry normal publication",
+            }
+        )
+    return items, observations
+
+
+def include_finalization_attention(
+    observation: dict,
+    *,
+    initiator: str,
+    stream_epic: int,
+) -> tuple[dict, list[dict]]:
+    """Merge scoped task attention into the caller's complete blocker snapshot."""
+    from scripts.common.task_store_paths import tasks_dir
+
+    items, ages = finalization_attention(tasks_dir(), initiator=initiator, stream_epic=stream_epic)
+    current = {item["id"]: item for item in observation["items"]}
+    for item in items:
+        if item["id"] in current and current[item["id"]] != item:
+            raise ValueError("current snapshot conflicts with finalization attention")
+        current[item["id"]] = item
+    result = {**observation, "items": list(current.values())}
+    return validate_observation(result, observation["epic"]), ages
+
+
+def driver_finalization_scope(epic: str) -> tuple[str, tuple[int, ...]] | None:
+    """Resolve the launcher's exact driver identity and registered stream epics."""
+    initiator = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
+    if not initiator:
+        return None  # Non-driver CLI use has no authority to infer another seat.
+    if os.environ.get("SESSION_EPIC") != epic:
+        raise ValueError("finalization reporting requires the launcher's matching epic")
+    from scripts.orchestration.issue_stream_audit import load_registry
+    from scripts.orchestration.launcher_aliases import load_launcher_aliases
+
+    registry = load_registry()
+    key = load_launcher_aliases().get(epic, epic)
+    matches = [
+        numbers for name, numbers in registry.items() if name == key or (epic.isdecimal() and int(epic) in numbers)
+    ]
+    if len(matches) != 1:
+        raise ValueError("finalization stream scope unknown; restore launcher registry attribution")
+    return initiator, tuple(matches[0])
 
 
 def fingerprint(item: dict) -> str:
@@ -346,7 +492,13 @@ EPILOG = """Examples:
   .venv/bin/python -m scripts.driver_blockers show --epic infra
 Outputs: delta emits JSON; show emits a bounded summary. Only record writes the
 private CTO-BLOCKERS-LEDGER.json sidecar and its lock next to DRIVER-STATE.md.
-No command sends a message. Input files are bounded to 1 MiB, never clipped.
+No command sends a message. Driver sessions automatically include aged tasks
+using SESSION_HANDOFF_AGENT and the registered SESSION_EPIC stream. Outside a
+driver session, use --task-initiator codex-infra --task-stream-epic 6943 on BOTH
+delta and record for an explicit exact scope.
+LU_NEEDS_FINALIZE_MAX_AGE_MINUTES defaults to 30 finite positive minutes;
+unknown age/configuration is attention, not green. Exact ages are diagnostics;
+stable blocker fields prevent repeated unchanged posts. Input files are bounded to 1 MiB, never clipped.
 Current: exactly {"epic":"infra","complete":true,"items":[...]}; each item has
 exactly five non-empty strings: id, state, owner, waits_on, action. Receipt:
 Fleet Comms JSON with recipient matching --reporting-target (default epics),
@@ -391,6 +543,16 @@ def main(argv: list[str] | None = None) -> int:
             cmd.add_argument(
                 "--current", type=Path, required=True, help="Current observation JSON, e.g. blockers.json."
             )
+        if name != "show":
+            cmd.add_argument(
+                "--task-initiator",
+                help="Exact accountable dispatch initiator, e.g. codex-infra; requires --task-stream-epic. Default: launcher driver identity.",
+            )
+            cmd.add_argument(
+                "--task-stream-epic",
+                type=int,
+                help="Exact lifecycle stream epic, e.g. 6943; requires --task-initiator. Default: launcher registered stream epics.",
+            )
         if name == "record":
             cmd.add_argument(
                 "--receipt",
@@ -418,6 +580,21 @@ def main(argv: list[str] | None = None) -> int:
             print(show_summary(path, args.epic))
         else:
             observation = validate_observation(_read_json(args.current), args.epic)
+            ages = None
+            if args.task_initiator is not None or args.task_stream_epic is not None:
+                scope = (args.task_initiator, (args.task_stream_epic,))
+            else:
+                scope = driver_finalization_scope(args.epic)
+            if scope is not None:
+                initiator, epics = scope
+                ages = []
+                for stream_epic in epics:
+                    observation, stream_ages = include_finalization_attention(
+                        observation,
+                        initiator=initiator,
+                        stream_epic=stream_epic,
+                    )
+                    ages.extend(stream_ages)
             if args.command == "delta":
                 result = compute_delta(observation, load_ledger(path, args.epic))
             else:
@@ -431,6 +608,8 @@ def main(argv: list[str] | None = None) -> int:
                     reporting_target=args.reporting_target,
                 )
                 result = {"generation": updated["generation"], "recorded": True}
+            if ages is not None:
+                result["finalization_attention"] = ages
             print(json.dumps(result, ensure_ascii=False))
     except (ValueError, OSError, TypeError, OverflowError, InstallError) as exc:
         # Do not expose private absolute locations through OSError diagnostics.

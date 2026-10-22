@@ -8,7 +8,9 @@ dedupe and re-arming.
 
 from __future__ import annotations
 
+import json
 import logging
+import re
 import sqlite3
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -201,6 +203,88 @@ def _alert_body(*, stream_epic: str, span: str, age_s: float, threshold_s: int) 
     )
 
 
+def _scan_finalization_attention(*, task_root: Path, now: datetime) -> tuple[int, tuple[dict[str, str], ...]]:
+    """Post once per aged task/run through the checkpoint's durable broker."""
+    from scripts.delegate import is_public_cause
+    from scripts.driver_blockers import finalization_age
+
+    if not task_root.is_dir():
+        return 0, ({"source": "needs_finalize", "error": "task_store_unavailable"},)
+    posted, errors = 0, []
+    conn = get_db()
+    try:
+        for path in sorted(task_root.glob("*.json")):
+            try:
+                task = json.loads(path.read_text())
+                if not isinstance(task, dict):
+                    raise ValueError("invalid_task_record")
+                if task.get("status") != "needs_finalize":
+                    continue
+                task_id, nonce = task.get("task_id"), task.get("run_nonce")
+                if not all(
+                    isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", value)
+                    for value in (task_id, nonce)
+                ):
+                    raise ValueError("task_identity_unknown")
+                age = finalization_age(task, now=now)
+                if not age["attention"]:
+                    continue
+                identity = f"task:{task_id}:{nonce}"
+                prior = _state_row(conn, identity, "needs_finalize")
+                if prior is not None and prior["message_id"]:
+                    continue
+                reason = task.get("finalize_error") or task.get("last_error")
+                if not is_public_cause(reason):
+                    reason = "finalize_delivery_pending"
+                owner = task.get("initiator")
+                if owner not in _channels.get_valid_recipient_agents():
+                    owner = "unknown"
+                _channels.create_channel("cto", description="CTO attention")
+                correlation = f"needs-finalize:{task_id}:{nonce}"
+                delivered = conn.execute(
+                    "SELECT message_id FROM channel_messages WHERE channel='cto' AND correlation_id=? LIMIT 1",
+                    (correlation,),
+                ).fetchone()
+                if delivered is not None:
+                    post = {"message_id": delivered["message_id"]}
+                else:
+                    post = _channels.post(
+                        "cto",
+                        "user",
+                        f"ACTION REQUIRED: needs_finalize task={task_id}; age_minutes={age['age_minutes']}; "
+                        f"age_state={age['age_state']}; threshold_minutes={age['threshold_minutes']}; "
+                        f"configuration={age['configuration']}; reason={reason}; owner={owner}; "
+                        "action=inspect retained task/head, repair the named gate and retry normal publication.",
+                        correlation_id=f"needs-finalize:{task_id}:{nonce}",
+                        kind="system",
+                        priority=_channels.PRIORITY_ACTION_REQUIRED,
+                        auto_snapshot=False,
+                        verify_citations=False,
+                    )
+                conn.execute(
+                    """INSERT INTO bottleneck_alert_state(
+                        stream_epic, span, active, rearm_level, last_alert_age_s, last_alert_at, message_id
+                    ) VALUES (?, 'needs_finalize', 1, 1, ?, ?, ?)
+                    ON CONFLICT(stream_epic, span) DO UPDATE SET
+                        active=1, last_alert_age_s=excluded.last_alert_age_s,
+                        last_alert_at=excluded.last_alert_at, message_id=excluded.message_id""",
+                    (
+                        identity,
+                        None if age["age_minutes"] is None else age["age_minutes"] * 60,
+                        _iso(now),
+                        post["message_id"],
+                    ),
+                )
+                conn.commit()
+                posted += int(delivered is None)
+            except Exception as exc:
+                errors.append({"source": "needs_finalize", "error": type(exc).__name__})
+                logger.exception("finalization alert could not be evaluated or posted")
+    finally:
+        conn.close()
+    return posted, tuple(errors)
+
+
 def scan_bottlenecks_at_inbox_checkpoint(
     *,
     repo_root: Path,
@@ -242,11 +326,18 @@ def scan_bottlenecks_at_inbox_checkpoint(
     finally:
         conn.close()
 
+    finalization_posted, finalization_errors = _scan_finalization_attention(task_root=task_path, now=clock)
     try:
         metrics = metrics_collector(tasks_dir=task_path, plane_db=plane_path, now=clock)
     except Exception as exc:  # A diagnostics failure must never break inbox delivery.
         logger.exception("bottleneck alerts: metrics collection failed: %s", exc)
-        return AlertScanResult(True, 0, 0, delivery_failures, ({"source": "alerts", "error": str(exc)},))
+        return AlertScanResult(
+            True,
+            finalization_posted,
+            0,
+            delivery_failures,
+            (*finalization_errors, {"source": "alerts", "error": str(exc)}),
+        )
 
     thresholds = metrics.get("threshold_seconds", {})
     breaches: dict[tuple[str, str], tuple[float, int]] = {}
@@ -264,16 +355,14 @@ def scan_bottlenecks_at_inbox_checkpoint(
                     breaches[(str(stream_epic), str(span))] = (float(age_s), threshold_s)
 
     conn = get_db()
-    alerts_posted = 0
+    alerts_posted = finalization_posted
     cleared = 0
     try:
         prior_active = conn.execute(
-            "SELECT stream_epic, span FROM bottleneck_alert_state WHERE active = 1"
+            "SELECT stream_epic, span FROM bottleneck_alert_state WHERE active = 1 AND span != 'needs_finalize'"
         ).fetchall()
         error_sources = {
-            str(error.get("source"))
-            for error in metrics.get("source_errors", [])
-            if isinstance(error, dict)
+            str(error.get("source")) for error in metrics.get("source_errors", []) if isinstance(error, dict)
         }
         span_sources = {
             "dispatch": {"dispatch"},
@@ -293,7 +382,7 @@ def scan_bottlenecks_at_inbox_checkpoint(
             if not should_alert:
                 continue
             holder = _active_lease_holder(stream_epic, session_db=lease_path, now=clock)
-            recipients = list(dict.fromkeys([*( [holder] if holder else []), ESCALATION_RECIPIENT]))
+            recipients = list(dict.fromkeys([*([holder] if holder else []), ESCALATION_RECIPIENT]))
             try:
                 _channels.create_channel(ALERT_CHANNEL, description="Fleet lifecycle alerts")
                 post = _channels.post(
@@ -346,5 +435,5 @@ def scan_bottlenecks_at_inbox_checkpoint(
     finally:
         conn.close()
 
-    errors = tuple(error for error in metrics.get("source_errors", []) if isinstance(error, dict))
+    errors = (*finalization_errors, *(error for error in metrics.get("source_errors", []) if isinstance(error, dict)))
     return AlertScanResult(True, alerts_posted, cleared, delivery_failures, errors)
