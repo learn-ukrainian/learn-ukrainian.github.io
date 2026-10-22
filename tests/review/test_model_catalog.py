@@ -488,7 +488,7 @@ def approved_agy_mode_baseline(baseline):
 
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
 RETIREMENT_11327_PATH = CAPACITY_FIXTURE / "routing-11327.json"
-RETIREMENT_11327_DIGEST = "273e0f7886fe3436055cfc33d470b2f9d690ce8384b87db36d0628bbd4ba2cbf"
+RETIREMENT_11327_DIGEST = "354f97d4d02d46a98b966e59aa64ff46f1ccc484ee44989ff9bf1d77aace9774"
 PRE_RETIREMENT_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
 
 
@@ -649,6 +649,7 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
         assert before[surface] == after[surface], surface
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
     assert {mid for mid in old_models if old_models[mid] != new_models[mid]} == {
+        "claude-fable-5-1",
         "kimi-code/k3",
         "kimi-code/k3-256k",
         "kimi-code/kimi-for-coding",
@@ -656,9 +657,9 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
         "kimi-k3-max",
     }
     assert new_models["claude-fable-5"] == old_models["claude-fable-5"]
-    assert new_models["claude-fable-5-1"] == old_models["claude-fable-5-1"]
+    assert new_models["claude-fable-5-1"] == {**old_models["claude-fable-5-1"], "transports": ["native_claude"]}
     assert new_models["claude-fable-5-1"]["lifecycle"] == "active"
-    assert new_models["claude-fable-5-1"]["transports"] == ["native_claude", "cursor"]
+    assert new_models["claude-fable-5-1"]["transports"] == ["native_claude"]
     assert all(new_models[mid]["lifecycle"] == "retired" and new_models[mid]["transports"] == [] for mid in (
         "kimi-code/k3",
         "kimi-code/k3-256k",
@@ -1341,7 +1342,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
     assert "claude-opus-5-5" not in cursor
     assert "claude-fable-5-1" not in cursor
     assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "active"
-    assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude", "cursor"]
+    assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude"]
     assert "cursor" in catalog["models"]["claude-sonnet-5-5"]["transports"]
 
 
@@ -1461,7 +1462,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "c290346baf0a697bb78cf732615aa8ad4e61a2270655098a03b90be26caf6962",
+    "SPEC.md": "8d2e59acb08b7642874f6363d84cacea1c04a83a202f266b22b304c4f53c3e45",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",

@@ -459,7 +459,7 @@ def test_fable_holds_no_review_or_advisory_role():
     catalog = load_model_catalog()
     fable = catalog["models"]["claude-fable-5-1"]
     assert fable["lifecycle"] == "active"
-    assert fable["transports"] == ["native_claude", "cursor"]
+    assert fable["transports"] == ["native_claude"]
     assert "replaced_by" not in fable
     assert not {"architecture", "critical_review", "consequential_advisory", "bounded_advisory_envelope"} & set(
         fable["roles"]

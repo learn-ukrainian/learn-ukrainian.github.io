@@ -2,6 +2,13 @@
   "issue": 11327,
   "model_fields": [
     {
+      "model": "claude-fable-5-1",
+      "field": "transports",
+      "before": ["native_claude", "cursor"],
+      "after": ["native_claude"],
+      "before_missing": false
+    },
+    {
       "model": "kimi-code/k3",
       "field": "lifecycle",
       "before": "active",

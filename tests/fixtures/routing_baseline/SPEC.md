@@ -435,15 +435,16 @@ overlay, for both CLI configurations. Historical compressed baselines, input
 matrices, the occurrence ledger, `SHA256SUMS` and `capture.py` stay
 byte-identical. The overlay's digest is pinned beside the function that applies it.
 
-Fable 5.1 stays active with its catalog entry and Fable 5 predecessor unchanged.
+Fable 5.1 stays active with native Claude CLI transport only; its Fable 5
+predecessor is unchanged.
 It is parked: not routed by default, explicit pin only; reintroduction or a
 successor model is an operator decision. Default routing omits its Cursor budget
 substitution row; a separate CLI test proves an explicit native pin works and
 prints one cost warning. The five Kimi ids are retired with empty transports;
 the kimicc endpoint has no executable models.
 
-The overlay records those Kimi fields, policy notes, the omitted default budget
-pin and `usage_pools.grok_cursor`. Dispatch drops only the old Fable automatic
+The overlay records Fable's native-only transport, those Kimi fields, policy
+notes, the omitted default budget pin and `usage_pools.grok_cursor`. Dispatch drops only the old Fable automatic
 substitution cases. Grok and Cursor share allowance and freshness for admission,
 capacity ordering and cooler advice, with separate transport health. Cooler
 lists name the shared meter once. The two Kimi launcher defaults refuse

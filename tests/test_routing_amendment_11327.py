@@ -15,7 +15,7 @@ from scripts import delegate
 from scripts.agent_runtime.registry import AGENTS
 from scripts.fleet import capacity_pick, credit_lane
 from scripts.fleet.claude_account_lane import no_claude_account
-from scripts.review.model_catalog import load_model_catalog, require_execution_model
+from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, require_execution_model
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
 
@@ -82,8 +82,13 @@ def test_all_default_seats_and_harness_tables_exclude_fable():
 
 
 @pytest.mark.parametrize("transport", ["native_claude", "cursor"])
-def test_explicit_fable_pin_is_executable(transport):
-    assert require_execution_model(FABLE, transport=transport) == FABLE
+def test_explicit_fable_pin_requires_native_claude_transport(transport):
+    """A parked pin must not advertise execution through the refusing Cursor adapter."""
+    if transport == "native_claude":
+        assert require_execution_model(FABLE, transport=transport) == FABLE
+    else:
+        with pytest.raises(ModelCatalogError, match="transport"):
+            require_execution_model(FABLE, transport=transport)
 
 
 @pytest.mark.parametrize("model", [FABLE, FABLE + "-thinking-high"])

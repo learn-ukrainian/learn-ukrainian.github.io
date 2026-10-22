@@ -19,7 +19,7 @@ pins:
     note: interpreter pin
 """
 
-# Catalog models whose lifecycle is active or fallback, in map order.
+# Default catalog pins in map order; parked explicit-only models are excluded.
 _ADMITTED_MODEL_IDS = (
     "gpt-6.1-sol, gpt-6-luna, claude-opus-5-5, "
     "claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high, "

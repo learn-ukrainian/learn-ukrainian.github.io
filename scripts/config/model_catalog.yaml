@@ -484,10 +484,10 @@ models:
     tier: frontier_authority
     lifecycle: active
     # #9583: no architecture/advisory or review role; launchable model only.
-    # Explicit pins may use the Cursor alias; no automatic routing or substitution.
+    # Historical alias retained; explicit pins use only the native Claude CLI.
     aliases: [claude-fable-5-1-thinking-high]
     roles: [long_horizon_coding, orchestration]
-    transports: [native_claude, cursor]
+    transports: [native_claude]
     strengths: [highest_anthropic_capability, long_horizon_work, always_on_thinking]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
