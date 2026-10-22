@@ -71,6 +71,10 @@ def initialize_opencode_dependencies(cwd: Path, *, agent: str, model: str | None
             timeout=timeout,
             check=False,
         )
+    except FileNotFoundError:
+        raise ValueError(
+            "OpenCode dependency initialization failed (opencode harness binary not found); worker not started"
+        ) from None
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise ValueError(
             f"OpenCode dependency initialization failed ({type(exc).__name__}); worker not started"

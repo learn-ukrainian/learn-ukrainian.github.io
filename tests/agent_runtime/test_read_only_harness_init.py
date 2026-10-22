@@ -71,6 +71,11 @@ def _git(repo: Path, *args: str) -> str:
 @pytest.fixture
 def checkout(tmp_path, monkeypatch):
     """Use a private repository and executable, never the host harness or provider."""
+    from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS
+
+    # The fake CLI has no provider egress; exercise initialization in CI too.
+    for key in _CI_ENV_VARS:
+        monkeypatch.delenv(key, raising=False)
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
             monkeypatch.delenv(key, raising=False)
@@ -236,6 +241,42 @@ def test_initialization_timeout_starts_no_worker(checkout, monkeypatch):
     assert rc == 1
     assert launches == []
     assert "initialization failed (TimeoutExpired)" in state["stderr_excerpt"]
+
+
+@pytest.mark.parametrize("agent,model", [("deepseek", _ROUTES[0]), ("glm", "glm-5.3-flash")])
+def test_missing_harness_binary_refuses_worker_without_environment_fallback(checkout, monkeypatch, agent, model):
+    """A missing CLI must report a typed refusal without worker or unsanitized retry."""
+    from scripts.agent_runtime.adapters import deepseek
+    from scripts.agent_runtime.binary_resolve import augment_path_for_login_bins, resolve_agent_binary
+
+    home = checkout.parent / "empty-home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", os.pathsep.join(("/usr/bin", "/bin")))
+    monkeypatch.setenv("FAKE_SECRET_TOKEN", "fixture-value")
+    monkeypatch.setenv("LANG", "C.UTF-8")
+    assert resolve_agent_binary("opencode", path=os.environ["PATH"]) is None
+    message = "OpenCode dependency initialization failed (opencode harness binary not found); worker not started"
+    with patch.object(deepseek.subprocess, "run", wraps=deepseek.subprocess.run) as run:
+        with pytest.raises(ValueError, match="opencode harness binary not found") as error:
+            deepseek.initialize_opencode_dependencies(checkout, agent=agent, model=model)
+        assert str(error.value) == message
+        rc, state, launches = _launch(checkout, agent=agent, model=model)
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["stderr_excerpt"] == f"adapter rejected before spawn: {message}"
+    assert state["returncode"] is None
+    assert launches == []
+    assert not (checkout.parent / "init.log").exists()
+    attempts = [call for call in run.call_args_list if call.args[0][0] == "opencode"]
+    assert len(attempts) == 2
+    for attempt in attempts:
+        assert attempt.args[0] == ["opencode", "debug", "config", "--print-logs"]
+        env = attempt.kwargs["env"]
+        assert "FAKE_SECRET_TOKEN" not in env
+        assert env["PATH"] == augment_path_for_login_bins(os.environ["PATH"])
+        assert env["LANG"] == "C.UTF-8"
 
 
 def test_unreadable_opencode_snapshot_fails_closed(checkout, monkeypatch):
