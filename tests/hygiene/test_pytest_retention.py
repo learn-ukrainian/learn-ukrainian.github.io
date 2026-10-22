@@ -114,6 +114,71 @@ def later(monkeypatch, seconds: float, *, base: float | None = None) -> float:
     return now
 
 
+def reaped_pid() -> tuple[int, int]:
+    """A real pid and start time that are provably dead once the child exits (#11409)."""
+    from scripts.common.acp_runtime_lock import process_start_time
+
+    child = subprocess.Popen(
+        [sys.executable, "-c", "import os, time; print(os.getpid(), flush=True); time.sleep(0.2)"],
+        stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        pid = int(child.stdout.readline())
+        start = process_start_time(pid)
+        assert start is not None
+    finally:
+        child.communicate(timeout=10)
+    assert child.returncode == 0
+    return pid, start
+
+
+def live_pid() -> tuple[subprocess.Popen, int, int]:
+    """A real live child with its recorded start time; the caller stops it."""
+    from scripts.common.acp_runtime_lock import process_start_time
+
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+    start = process_start_time(child.pid)
+    assert start is not None
+    return child, child.pid, start
+
+
+def write_lease(
+    run: Path, *, pid: int, start_time: int | None, boot_id: str | None, state: str = "preserved",
+) -> None:
+    """A real lease file in the run's own format, plus the lock the owner would have created."""
+    info = run.stat()
+    payload = {
+        "schema_version": task_scratch.LEASE_SCHEMA_VERSION,
+        "kind": task_scratch.NAMESPACE_DIRNAME,
+        "task_id": "pytest",
+        "invocation_id": run.name,
+        "uid": os.geteuid(),
+        "dir": {"dev": info.st_dev, "ino": info.st_ino},
+        "owner": {"pid": pid, "start_time": start_time, "boot_id": boot_id},
+        "child": None,
+        "state": state,
+        "created_at": 0.0,
+    }
+    (run / "lease.json").write_text(json.dumps(payload))
+    (run / "lease.lock").touch(mode=0o600)
+
+
+def leased(
+    root: Path, name: str, *, pid: int, start_time: int | None, boot_id: str | None,
+    ns: str = pytest_scratch.RUNS_DIRNAME, size: int = 8192,
+) -> Path:
+    run = unowned(root, name, ns=ns)
+    (run / "scratch" / "base" / "payload").write_bytes(b"x" * size)
+    write_lease(run, pid=pid, start_time=start_time, boot_id=boot_id)
+    return run
+
+
+def current_boot() -> str:
+    boot = task_scratch.current_boot_id()
+    assert boot is not None
+    return boot
+
+
 def tree_state(*roots: Path) -> list[tuple]:
     """Every node's identity and timestamps except atime: a dry run must leave all of it alone."""
     state = []
@@ -1559,3 +1624,205 @@ pytest_plugins = ["tests.conftest"]
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "1 passed" in result.stdout
+
+
+def use_real_proc(monkeypatch) -> None:
+    """Judge lease liveness against the real process table, never a fabricated one."""
+    monkeypatch.setattr(pytest_retention, "PROC_ROOT", Path("/proc"))
+
+
+def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, monkeypatch):
+    """Defect class #11409: an unreadable unrelated process blocked every reclaim.
+
+    The lease names a real child that has exited; the run lock is free and the
+    tree is old, so the run must be deleted against the real process table.
+    """
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "dead-owner", pid=pid, start_time=start, boot_id=current_boot())
+    later(monkeypatch, 3 * HOUR)
+    use_real_proc(monkeypatch)
+    before = tree_state(root, args["temp_root"])
+    dry = tmp_sweep.sweep(**args)["pytest_retention"]
+    assert tree_state(root, args["temp_root"]) == before  # a dry run changes nothing
+    assert (row_for(dry, run)["decision"], row_for(dry, run)["reason"]) == (
+        "would_delete", "inactive_pytest_scratch",
+    )
+    # The host may expose unreadable same-user processes; the lease proof, not a
+    # complete snapshot, is what must admit the deletion.
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    row = row_for(report, run)
+    assert row["decision"] == "deleted" and not run.exists()
+    assert report["reclaimed_entries"] == 1
+    assert report["reclaimed_bytes"] == report["deleted_bytes"] > 0
+
+
+def test_live_lease_owner_preserves_the_run(area, monkeypatch):
+    """Defect class: a lease owner that is alive on the same boot was reclaimed."""
+    root, args = area
+    child, pid, start = live_pid()
+    try:
+        run = leased(root, "live-owner", pid=pid, start_time=start, boot_id=current_boot())
+        later(monkeypatch, 3 * HOUR)
+        use_real_proc(monkeypatch)
+        row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
+        assert (row["decision"], row["reason"]) == ("preserve", "live_owner")
+        assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+    finally:
+        child.terminate()
+        child.wait(timeout=10)
+
+
+def test_held_lease_lock_preserves_a_dead_owner_run(area, monkeypatch):
+    """Defect class: a competing writer won a race while its lock was held."""
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "lock-held", pid=pid, start_time=start, boot_id=current_boot())
+    later(monkeypatch, 3 * HOUR)
+    with (run / "lease.lock").open("r+") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
+    assert (row["decision"], row["reason"]) == ("preserve", "in_use")
+    assert run.is_dir()
+
+
+def test_tree_change_on_recheck_preserves_a_dead_owner_run(area, monkeypatch):
+    """Defect class: a write after the proof but before deletion was not rechecked."""
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "recent-write", pid=pid, start_time=start, boot_id=current_boot())
+    later(monkeypatch, 3 * HOUR)
+
+    def write(held: Path) -> None:
+        (held / "scratch" / "new-output").write_text("fresh")
+
+    calls = _after_rename(monkeypatch, run, write)
+    row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
+    assert calls == [True]
+    assert (row["decision"], row["reason"]) == ("preserve", "recent_write")
+    assert (run / "scratch" / "new-output").read_text() == "fresh"
+
+
+def test_lease_from_a_different_boot_is_kept(area, monkeypatch):
+    """Defect class: start times from another boot were compared as if comparable."""
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(
+        root, "other-boot", pid=pid, start_time=start,
+        boot_id="00000000-0000-0000-0000-000000000000",
+    )
+    later(monkeypatch, 3 * HOUR)
+    row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
+    assert (row["decision"], row["reason"]) == ("preserve", "different_boot")
+    assert run.is_dir()
+
+
+def test_unreadable_lease_is_kept(area, monkeypatch):
+    """Defect class: metadata that could not be read was treated as no owner at all."""
+    if os.geteuid() == 0:
+        pytest.skip("root can read a mode-000 lease")
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "unreadable-lease", pid=pid, start_time=start, boot_id=current_boot())
+    (run / "lease.json").chmod(0o000)
+    later(monkeypatch, 3 * HOUR)
+    row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
+    assert (row["decision"], row["reason"]) == ("preserve", "lease_unreadable")
+    assert run.is_dir()
+
+
+def test_reused_pid_with_a_different_start_time_is_reclaimed(area, monkeypatch):
+    """Defect class: a recycled numeric pid kept an abandoned run alive forever."""
+    root, args = area
+    child, pid, start = live_pid()
+    try:
+        run = leased(root, "reused-pid", pid=pid, start_time=start + 1, boot_id=current_boot())
+        later(monkeypatch, 3 * HOUR)
+        use_real_proc(monkeypatch)
+        row = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
+        assert (row["decision"], row["reason"]) == ("would_delete", "inactive_pytest_scratch")
+        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+        assert row_for(report, run)["decision"] == "deleted" and not run.exists()
+    finally:
+        child.terminate()
+        child.wait(timeout=10)
+
+
+def test_root_holder_takes_the_bounded_quarantine_recheck_path(area, monkeypatch):
+    """Defect class: an unreadable root process blocked deletion instead of using the recheck.
+
+    Only the process's owner classification is injected; the lease liveness and
+    the quarantine/recheck remain the product code under test.
+    """
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "root-held", pid=pid, start_time=start, boot_id=current_boot())
+    fake_process(pytest_retention.PROC_ROOT, 4242, "S")  # alive, cwd unreadable
+    real_uid = pytest_retention._process_uid
+    monkeypatch.setattr(
+        pytest_retention, "_process_uid",
+        lambda entry: 0 if entry.name == "4242" else real_uid(entry),
+    )
+    rechecks = []
+    real_recheck = pytest_retention._recheck
+
+    def recheck(*positional):
+        rechecks.append(True)
+        return real_recheck(*positional)
+
+    monkeypatch.setattr(pytest_retention, "_recheck", recheck)
+    later(monkeypatch, 3 * HOUR)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    row = row_for(report, run)
+    assert rechecks == [True]
+    assert row["decision"] == "deleted" and not run.exists()
+    assert report["liveness_complete"] is True
+    assert report["liveness_unreadable_root_processes"] == 1
+    assert report["deleted_bytes"] > 0
+
+
+def test_receipt_carries_preserved_reasons_measured_bytes_and_largest_preserved(area, monkeypatch):
+    """Defect class: a receipt could not tell an operator what was kept, why, or how large."""
+    if os.geteuid() == 0:
+        pytest.skip("root can read a mode-000 lease")
+    root, args = area
+    dead_pid, dead_start = reaped_pid()
+    deleted = leased(root, "rx-dead", pid=dead_pid, start_time=dead_start, boot_id=current_boot(), size=4096)
+    deleted_bytes = allocated(deleted)
+    child, pid, start = live_pid()
+    try:
+        live = leased(root, "rx-live", pid=pid, start_time=start, boot_id=current_boot(), size=16384)
+        expose(pytest_retention.PROC_ROOT, pid)
+        other = leased(
+            root, "rx-other-boot", pid=dead_pid, start_time=dead_start,
+            boot_id="00000000-0000-0000-0000-000000000000", size=8192,
+        )
+        unreadable = leased(
+            root, "rx-unreadable", pid=dead_pid, start_time=dead_start, boot_id=current_boot(), size=32768
+        )
+        (unreadable / "lease.json").chmod(0o000)
+        later(monkeypatch, 3 * HOUR)
+        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    finally:
+        child.terminate()
+        child.wait(timeout=10)
+    assert report["preserved_by_reason"] == {
+        "live_owner": 1, "different_boot": 1, "lease_unreadable": 1,
+    }
+    assert report["reclaimed_entries"] == 1
+    assert report["reclaimed_bytes"] == report["deleted_bytes"] == deleted_bytes
+    expected = sorted(
+        ((allocated(path), path.name) for path in (live, other, unreadable)), reverse=True
+    )
+    receipts = report["largest_preserved_runs"]
+    assert [entry["rank"] for entry in receipts] == [1, 2, 3]
+    assert [(entry["bytes"], entry["reason"]) for entry in receipts] == [
+        (expected[0][0], "lease_unreadable"),
+        (expected[1][0], "live_owner"),
+        (expected[2][0], "different_boot"),
+    ]
+    ranked = {
+        row["largest_preserved_rank"]: row["name"]
+        for row in report["rows"] if "largest_preserved_rank" in row
+    }
+    assert ranked == {1: unreadable.name, 2: live.name, 3: other.name}
