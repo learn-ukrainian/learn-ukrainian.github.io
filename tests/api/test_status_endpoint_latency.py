@@ -13,11 +13,13 @@ from __future__ import annotations
 import asyncio
 import concurrent.futures
 import threading
+import types
+from collections.abc import Callable
 from pathlib import Path
 
 import httpx
 import pytest
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from httpx import ASGITransport
 
 from scripts.api import artifacts_router, delegate_router, epics_router, state_helpers, state_router
@@ -59,10 +61,17 @@ class _ColdOverlap:
     A missing single-flight opens the same gate by starting one compute per
     request. Either way the burst can finish, and the counts show which
     happened. The wait has no timeout.
+
+    ``_claim_flight`` is process-global, so the status-scan warmup thread of
+    another app can claim a *different* key while the burst runs (#11366).
+    Only claims for a key this burst addressed count as its joiners; a foreign
+    claim is not a joiner of this flight.
     """
 
     def __init__(self) -> None:
         self.counts = {"computes": 0, "joined": 0}
+        self.burst_keys: set[str] = set()
+        self.arrived = 0
         self.release = threading.Event()
         self.lock = threading.Lock()
         self.barrier: asyncio.Barrier | None = None
@@ -80,8 +89,9 @@ def _arm_overlapping_cold_misses(monkeypatch: pytest.MonkeyPatch) -> _ColdOverla
     def wrapped_claim(key: str, ttl: float, *, force: bool = False):
         claimed = original_claim(key, ttl, force=force)
         with overlap.lock:
-            overlap.counts["joined"] += 1
-            overlap.open_if_complete()
+            if key in overlap.burst_keys:
+                overlap.counts["joined"] += 1
+                overlap.open_if_complete()
         return claimed
 
     async def wrapped_async(key: str, ttl: float, compute, *, force: bool = False):
@@ -95,6 +105,8 @@ def _arm_overlapping_cold_misses(monkeypatch: pytest.MonkeyPatch) -> _ColdOverla
         barrier = overlap.barrier
         if barrier is None:
             pytest.fail("cold-miss barrier was not armed")
+        overlap.burst_keys.add(key)
+        overlap.arrived += 1
         await barrier.wait()
         return await original_async(key, ttl, gated, force=force)
 
@@ -104,8 +116,17 @@ def _arm_overlapping_cold_misses(monkeypatch: pytest.MonkeyPatch) -> _ColdOverla
     return overlap
 
 
-async def _overlapping_burst(app: FastAPI, path: str, overlap: _ColdOverlap) -> list[httpx.Response]:
-    overlap.barrier = asyncio.Barrier(_BURST)
+async def _overlapping_burst(
+    app: FastAPI,
+    path: str,
+    overlap: _ColdOverlap,
+    *,
+    intruder: Callable[[], None] | None = None,
+) -> list[httpx.Response]:
+    # An intruder (the warmup path) adds one party so it can claim while every
+    # burst request already sits inside the flight window, before any of them
+    # has claimed. The burst cannot release the barrier until the intruder is done.
+    overlap.barrier = asyncio.Barrier(_BURST + (1 if intruder is not None else 0))
     loop = asyncio.get_running_loop()
     # A missing single-flight starts one blocked compute per request. The pool
     # has to fit all of them, or that failure would stall instead of counting.
@@ -113,17 +134,43 @@ async def _overlapping_burst(app: FastAPI, path: str, overlap: _ColdOverlap) -> 
     transport = ASGITransport(app=app)
     try:
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            responses = await asyncio.gather(*[client.get(path) for _ in range(_BURST)])
+            requests = [asyncio.create_task(client.get(path)) for _ in range(_BURST)]
+            if intruder is not None:
+                await _until(
+                    lambda: overlap.arrived >= _BURST,
+                    "burst requests did not all enter the flight window",
+                )
+                landed = threading.Event()
+                failure: list[BaseException] = []
+
+                def run_intruder() -> None:
+                    try:
+                        intruder()
+                    except BaseException as exc:
+                        failure.append(exc)
+                    finally:
+                        landed.set()
+
+                threading.Thread(target=run_intruder, name="state-scan-warmup", daemon=True).start()
+                await asyncio.to_thread(landed.wait)
+                if failure:
+                    raise failure[0]
+                await overlap.barrier.wait()
+            responses = await asyncio.gather(*requests)
             return list(responses)
     finally:
         overlap.release.set()
 
 
 def _run_overlapping_burst(
-    monkeypatch: pytest.MonkeyPatch, app: FastAPI, path: str
+    monkeypatch: pytest.MonkeyPatch,
+    app: FastAPI,
+    path: str,
+    *,
+    intruder: Callable[[], None] | None = None,
 ) -> tuple[list[httpx.Response], dict[str, int]]:
     overlap = _arm_overlapping_cold_misses(monkeypatch)
-    return asyncio.run(_overlapping_burst(app, path, overlap)), overlap.counts
+    return asyncio.run(_overlapping_burst(app, path, overlap, intruder=intruder)), overlap.counts
 
 
 def _assert_burst(responses: list[httpx.Response], calls: dict[str, int], overlap: dict[str, int]) -> None:
@@ -131,6 +178,115 @@ def _assert_burst(responses: list[httpx.Response], calls: dict[str, int], overla
     assert overlap["computes"] == 1
     assert overlap["joined"] == _BURST
     assert [response.status_code for response in responses] == [200] * _BURST
+
+
+# One entry per burst route in this file, so the warmup-intruder reproducer
+# covers every sibling that shares the joiner counter (#11366).
+_BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[str, object]]] = {
+    "delegate_active": (
+        delegate_router,
+        "active_delegate_tasks",
+        delegate_router.router,
+        "/api/delegate",
+        "/api/delegate/active",
+        {"total": 0, "tasks": []},
+    ),
+    "delegate_tasks": (
+        delegate_router,
+        "list_delegate_tasks",
+        delegate_router.router,
+        "/api/delegate",
+        "/api/delegate/tasks",
+        {"total": 0, "tasks": []},
+    ),
+    "state_summary": (
+        state_router,
+        "compute_summary",
+        state_router.router,
+        "/api/state",
+        "/api/state/summary",
+        {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}, "totals": {}},
+    ),
+    "pipeline_versions": (
+        state_router,
+        "_compute_pipeline_versions_payload",
+        state_router.router,
+        "/api/state",
+        "/api/state/pipeline-versions",
+        {"generated_at": "2026-01-01T00:00:00Z", "total": 0, "counts": {}},
+    ),
+    "weak_points": (
+        state_router,
+        "_compute_weak_points_payload",
+        state_router.router,
+        "/api/state",
+        "/api/state/weak-points",
+        {"count": 0, "modules": []},
+    ),
+    "research_coverage": (
+        state_router,
+        "compute_research_coverage",
+        state_router.router,
+        "/api/state",
+        "/api/state/research-coverage",
+        {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}},
+    ),
+    "artifacts_html": (
+        artifacts_router,
+        "collect_html_artifacts",
+        artifacts_router.router,
+        "/api/artifacts",
+        "/api/artifacts/html",
+        {"generated_at": "2026-01-01T00:00:00Z", "total": 0, "artifacts": []},
+    ),
+    "epics_list": (
+        epics_router,
+        "_build_remote_epic_list",
+        epics_router.router,
+        "/api/epics",
+        "/api/epics/v1",
+        {"schema": "remote-epic-lifecycle.v1", "registry_status": "ok", "streams": []},
+    ),
+    "routing_budget": (
+        state_router,
+        "compute_routing_budget",
+        state_router.router,
+        "/api/state",
+        "/api/state/routing-budget",
+        {"generated_at": "2026-01-01T00:00:00Z", "agents": {}, "recommendation": {}},
+    ),
+}
+
+
+def _warmup_claim() -> None:
+    """Claim a foreign key the way ``state_router._run_state_scan_warmup`` does."""
+    state_helpers.cache_get_or_compute("state-scan-warmup:research_coverage#11366", 60.0, lambda: {"warm": True})
+
+
+@pytest.mark.parametrize("route", sorted(_BURST_ROUTES))
+def test_foreign_key_claim_inside_burst_is_not_a_joiner(
+    route: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A warmup claim landing inside the burst window must not be counted (#11366).
+
+    ``_claim_flight`` is process-global: the status-scan warmup thread claims
+    its own key while the burst is parked inside the flight window. Counting
+    every claim made the burst observe 21 joins and fail ``assert 21 == 20``.
+    The burst must count only claims for the key it addressed; the warmup is
+    not a joiner of this flight and its compute is not this burst's.
+    """
+    module, attr, router, prefix, path, payload = _BURST_ROUTES[route]
+    calls = {"n": 0}
+
+    def slow(*_args, **_kwargs):
+        calls["n"] += 1
+        return payload
+
+    monkeypatch.setattr(module, attr, slow)
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, router, prefix), path, intruder=_warmup_claim
+    )
+    _assert_burst(responses, calls, overlap)
 
 
 def test_delegate_active_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
