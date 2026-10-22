@@ -2333,8 +2333,8 @@ def test_pace_deficit_retains_eligible_requested_reviewer(monkeypatch):
     assert routing.substitution is None
 
 
-@pytest.mark.parametrize("status,review_trusted_inputs", [("cool", False), ("cool", True), ("near_cap", False), ("near_cap", True)])
-def test_review_usage_emits_no_budget_retention_notice(monkeypatch, capsys, status, review_trusted_inputs):
+@pytest.mark.parametrize("status", ["cool", "near_cap"])
+def test_review_usage_emits_no_budget_retention_notice(monkeypatch, capsys, status):
     budget = _budget(claude=status)
     if status == "cool":
         budget["agents"]["claude"]["codexbar"] = {
@@ -2354,7 +2354,6 @@ def test_review_usage_emits_no_budget_retention_notice(monkeypatch, capsys, stat
             requested_model="claude-opus-5-5",
             fallbacks={},
             review_select=lambda _p, _r: ("claude", "claude-opus-5-5"),
-            review_trusted_inputs=review_trusted_inputs,
             claude_account=HOST_ACCOUNT,
         )
         assert res == "claude"

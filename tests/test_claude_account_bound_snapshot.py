@@ -471,20 +471,32 @@ def test_resolver_inputs_bind_on_construction_and_refuse_another_accounts_view()
         reviewer_resolver.replace(inputs, claude_account=HOST_ACCOUNT)
 
 
-@pytest.mark.parametrize(("route_account", "seat"), [(HOST_ACCOUNT, "claude"), (B, "codex")])
-def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys, route_account, seat):
-    raw = _reversed()
+@pytest.mark.parametrize(
+    ("route_account", "seat", "missing_agents"),
+    [(HOST_ACCOUNT, "claude", False), (B, "codex", False), (B, "codex", True)],
+)
+def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys, route_account, seat, missing_agents):
+    """An agents-less review snapshot must not raise AccountRequired for a bound account."""
+    raw = {} if missing_agents else _reversed()
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: raw)
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
     sink: dict = {}
 
     chosen = delegate._resolve_agent_with_budget_guard(
-        "claude", fallbacks={"claude": "codex"}, diagnostic_sink=sink, claude_account=route_account
+        "codex" if missing_agents else "claude",
+        fallbacks={"claude": "codex"},
+        review_select=(lambda _snapshot, _seat: ("codex", None)) if missing_agents else None,
+        diagnostic_sink=sink,
+        claude_account=route_account,
     )
 
     assert chosen == seat
-    assert sink["claude_account"]["label"] == route_account.label
-    assert "preferred" not in capsys.readouterr().err
+    if not missing_agents:
+        assert sink["claude_account"]["label"] == route_account.label
+    err = capsys.readouterr().err
+    assert "preferred" not in err
+    if missing_agents:
+        assert "ROUTING CHECK UNKNOWN" in err
 
 
 def test_model_pause_binds_the_fetched_snapshot_and_lets_account_required_through(monkeypatch):

@@ -18315,9 +18315,6 @@ def _dispatch_route(
                 origin_agent=original_agent,
                 fallbacks=request.fallbacks,
                 review_select=request.review_select,
-                review_trusted_inputs=bool(
-                    getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
-                ),
                 force_agent=force_agent,
                 diagnostic_sink=diagnostic_sink,
                 claude_account=request.claude_account,
@@ -19182,7 +19179,6 @@ def _resolve_agent_with_budget_guard(
     origin_agent: str | None = None,
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
-    review_trusted_inputs: bool = False,
     force_agent: bool = False,
     diagnostic_sink: dict[str, Any] | None = None,
     claude_account: claude_account_lane.ClaudeAccount,
@@ -19303,7 +19299,9 @@ def _resolve_agent_with_budget_guard(
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
     subscription_data_available = codexbar_data_available or bool(agents)
-    if review_select is not None:
+    # Missing lane records keep the UNKNOWN fail-open path below; inserting a
+    # Claude record would change the meter sealed into the account-bound view.
+    if review_select is not None and agents:
         from scripts.review.capacity import review_capacity_action
         from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
 
