@@ -112,7 +112,8 @@ Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must
   approved it does not pause mid-implementation to ask whether to slice it further — see
   `operator-expectations.md` items 10 and 12. Files that outcome touches stay together in
   the PR; a genuinely separate user-visible outcome is a different PR, not a slice of this
-  one.
+  one. Briefs name one behaviour. Apply the small-batches trial in § Merge policy
+  before review, using its justification option when that behaviour needs to stay whole.
 - **Acceptance criteria:** checklist or equivalent that can be verified before PR
   open (commands, evidence types, stop conditions). Weak criteria ("improve X",
   "clean up the area") are not a brief — the orchestrator must decompose first.
@@ -224,6 +225,29 @@ or cancelled required checks fail the gate; never use `--admin` to bypass CI.
 Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
 ejection, and re-establish the gates before re-enqueueing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
+
+**Small batches (trial until 2026-11-05).** One behaviour per PR. Before review,
+split a PR above about 400 changed non-test lines or about 8 files, or have the
+driver record a one-line justification in the PR body. Test fixtures, generated
+files and whole-file deletions do not count toward either size measure. A
+reviewer may reject a PR for size alone, even with a justification.
+
+**Revert first (trial until 2026-11-05).** When a merged change breaks main
+(red CI on main), bypasses a gate, or breaks a deployed service, the owning
+driver's default mitigation is a clean `git revert` of exactly that merge as a
+PR. Target mitigation in under 30 minutes. Its exact-head cross-family review
+checks only that it is a pure revert, with no other edits. Normal CI and the
+merge queue still apply. The fixed change re-lands as a normal PR.
+
+The driver records any exception in the PR or issue: a security fix whose revert
+would reopen the hole; a data or schema migration or deployed data change; or a
+ready, smaller fix-forward that lands within the hour. All existing gates stay
+unchanged, including for exceptions.
+
+These trials draw on DORA's [small batches](https://dora.dev/capabilities/working-in-small-batches/)
+and [version control](https://dora.dev/capabilities/version-control/) capabilities
+and Google's [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
+The size thresholds and mitigation targets are local trial policy.
 
 **Red-team exception (operator 2026-10-11, #10437).** For code review
 only, when no independent outside-family reviewer can be obtained, a
