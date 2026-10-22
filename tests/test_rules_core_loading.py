@@ -534,12 +534,13 @@ def _dispatched_worker_prompt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, e
 
 def test_delegate_dispatch_leads_with_the_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     state, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
-    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
     assert state["read_only_primary_cwd"] is True
     assert state["cwd"] == state["worktree_path"]
     assert state["effective_prompt_sha256"] == hashlib.sha256(prompt.encode("utf-8")).hexdigest()
     assert prompt.startswith(rules_core.core_block("core") + "\n\n")
-    assert prompt.endswith("the source prompt")
+    assert "the source prompt" in prompt
+    assert "$LU_TASK_EVIDENCE_DIR" in prompt
     assert prompt.count(rules_core.core_block("core")) == 1
     _assert_core(prompt, "core", "delegate-dispatch")
 

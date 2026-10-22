@@ -1177,6 +1177,72 @@ def _verify_output_archive(primary: Path, receipt: Mapping[str, Any]) -> None:
         raise ValueError("output archive invalid") from None
 
 
+def _has_retrieval_receipt(record: Mapping[str, Any]) -> bool:
+    """Whether this run's ignored output was preserved and its bytes independently retrieved.
+
+    A receipt is bound to the run that produced it: the task id and run nonce must
+    match, so a receipt from an earlier attempt never authorizes deleting a newer
+    attempt's evidence.
+    """
+    receipt = record.get("preserved_artifacts")
+    return bool(
+        isinstance(receipt, dict)
+        and isinstance(receipt.get("retrieval_proof_sha256"), str)
+        and receipt["retrieval_proof_sha256"].strip()
+        and receipt.get("task_id") == record.get("task_id")
+        and isinstance(record.get("run_nonce"), str)
+        and receipt.get("run_nonce") == record.get("run_nonce")
+    )
+
+
+def unretrieved_reuse_refusal(
+    worktree: Path,
+    *,
+    tasks_dir: Path,
+    repo_root: Path,
+    primary: Path,
+) -> str | None:
+    """Refuse to reuse a worktree that still holds a terminal task's unretrieved output (#11342).
+
+    Worktree preparation can delete ignored files: cone ``git sparse-checkout set``
+    removes untracked/ignored directories inside a tracked cone directory, and a
+    later dispatch into the same checkout runs exactly that. A task that finished
+    without a retrieval receipt has evidence only in this tree, so reuse is refused
+    until the owner preserves it (``scripts.fleet.post_task_reap``) or retrieves it.
+
+    Returns a typed, actionable refusal, or ``None`` when reuse may proceed. An
+    unknown task identity or an unreadable output inventory also refuses: missing
+    evidence is never permission to delete it.
+    """
+    from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
+
+    try:
+        matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+        cohort = _current_reuse_records(matches, tasks_dir)
+        for _, record in sorted(cohort, key=lambda item: str(item[1].get("task_id"))):
+            if record.get("status") not in RELEASED_TASK_STATUSES:
+                continue
+            if _has_retrieval_receipt(record):
+                continue
+            files = _ignored_output_files(worktree, primary, record)
+            if not files:
+                continue
+            task_id = str(record.get("task_id"))
+            return (
+                "worktree_reuse_evidence_unretrieved: terminal task "
+                f"{task_id!r} left {len(files)} ignored evidence file(s) in this worktree "
+                "with no retrieval receipt; preserve them first with "
+                f"`.venv/bin/python -m scripts.fleet.post_task_reap --task-id {task_id} --apply` "
+                "and dispatch into a fresh worktree"
+            )
+    except (OSError, ValueError, RuntimeError):
+        return (
+            "worktree_reuse_evidence_unknown: task identity or ignored-output inventory "
+            "is unavailable; refusing to reuse the worktree"
+        )
+    return None
+
+
 def _ignored_output_files(
     worktree: Path, primary: Path, record: Mapping[str, Any], *, absent: list[dict[str, str]] | None = None
 ) -> list[str]:

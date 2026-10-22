@@ -10284,13 +10284,13 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     # Automatic isolation adds the worktree block around the bound source prompt.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-plain", [])
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_blocks"] == ["worktree", "evidence"]
     assert state["effective_prompt_sha256"] != source
 
     # An explicit primary target gets the same worktree instructions.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
     assert state["mode"] == "read-only"
-    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_blocks"] == ["worktree", "evidence"]
     assert state["prompt_sha256"] == source
     assert state["effective_prompt_sha256"] != source
 
@@ -10312,7 +10312,7 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
         tmp_path, monkeypatch, "eff-all", ["--worktree", str(worktree)]
     )
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == ["worktree", "lifecycle", "research"]
+    assert state["prompt_blocks"] == ["worktree", "lifecycle", "evidence", "research"]
     assert state["effective_prompt_sha256"] == hashlib.sha256(worker_prompt.encode("utf-8")).hexdigest()
     assert state["effective_prompt_sha256"] != source
     assert worker_prompt.startswith("[delegate worktree]\n")
@@ -13781,7 +13781,7 @@ def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir,
     checkout = delegate._auto_worktree_path("codex", case.task_id)
     assert checkout.is_dir() and state["worktree_branch"] is None
     assert state["prompt_sha256"] != state["effective_prompt_sha256"]
-    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
     assert state["worktree_sparse"]["full_checkout"] is True
     assert adj.check_dispatch_binding(
         case.unit_id, case.review_id, case.attempt_id, case.task_id, case.env.tasks, case.env.root

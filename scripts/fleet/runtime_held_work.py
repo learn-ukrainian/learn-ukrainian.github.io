@@ -28,6 +28,22 @@ class HeldWorkPreservationError(ValueError):
         super().__init__(self.code)
 
 
+EVIDENCE_DIRNAME = "evidence"
+EVIDENCE_SCHEMA = "runtime-evidence.v1"
+
+
+class EvidencePreservationError(ValueError):
+    """Evidence under the runtime lease could not be preserved; keep the lease."""
+
+    code = "runtime_evidence_preservation_failed"
+
+
+class EvidenceLimitExceeded(EvidencePreservationError):
+    """The evidence directory exceeds the retention cap; refusal is typed, not deletion."""
+
+    code = "runtime_evidence_over_cap"
+
+
 def _strings(value: Any) -> list[str]:
     """Keep report text literal, including Markdown nested in structured output."""
     if isinstance(value, str):
@@ -37,6 +53,118 @@ def _strings(value: Any) -> list[str]:
     if isinstance(value, list):
         return [text for item in value for text in _strings(item)]
     return []
+
+
+def evidence_names(root: Path) -> list[str] | None:
+    """Relative regular-file names under ``<runtime lease>/evidence``, or ``None``.
+
+    The supported evidence directory is a fixed name, never a citation guess.
+    Only regular files in real directories qualify; a symlink, special file or
+    unreadable directory raises the typed refusal so the lease is retained. The
+    existing 256 MiB retention cap applies, and exceeding it is a refusal, never
+    a partial copy or a silent deletion.
+    """
+    evidence = root / EVIDENCE_DIRNAME
+    try:
+        info = evidence.lstat()
+    except FileNotFoundError:
+        return None
+    except OSError:
+        raise EvidencePreservationError() from None
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        raise EvidencePreservationError()
+    names: list[str] = []
+    total = 0
+    pending: list[tuple[str, str]] = [(str(evidence), "")]
+    while pending:
+        directory, prefix = pending.pop()
+        try:
+            entries = sorted(os.scandir(directory), key=lambda entry: entry.name)
+        except OSError:
+            raise EvidencePreservationError() from None
+        for entry in entries:
+            relative = f"{prefix}{entry.name}"
+            try:
+                entry_info = entry.stat(follow_symlinks=False)
+            except OSError:
+                raise EvidencePreservationError() from None
+            if stat.S_ISLNK(entry_info.st_mode):
+                raise EvidencePreservationError()
+            if stat.S_ISDIR(entry_info.st_mode):
+                pending.append((entry.path, f"{relative}/"))
+                continue
+            if not stat.S_ISREG(entry_info.st_mode):
+                raise EvidencePreservationError()
+            total += entry_info.st_size
+            if total > output.MAX_PRESERVED_BYTES:
+                raise EvidenceLimitExceeded()
+            names.append(relative)
+    return sorted(names) or None
+
+
+def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Copy the supported evidence directory to ``batch_state/preserved/<task>/``.
+
+    Runs before any runtime-lease deletion. The receipt proves every byte was
+    independently retrieved; a failed copy, invalid name, linked entry or cap
+    breach raises a typed refusal, so the caller keeps the lease.
+    """
+    try:
+        names = evidence_names(root)
+    except EvidencePreservationError:
+        raise
+    except OSError:
+        raise EvidencePreservationError() from None
+    if names is None:
+        return None
+    task_id = record.get("task_id")
+    if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
+        raise EvidencePreservationError()
+    location = primary / "batch_state" / "preserved" / task_id / ("evidence-" + uuid.uuid4().hex)
+    if location.is_relative_to(root):
+        raise EvidencePreservationError()
+    for parent in reversed((location, *location.parents)):
+        if parent.is_symlink():
+            raise EvidencePreservationError()
+    source = root / EVIDENCE_DIRNAME
+    try:
+        location.mkdir(parents=True, exist_ok=False)
+        for name in names:
+            artifacts._copy_verified(
+                source / name,
+                location / name,
+                source_root=source,
+                destination_root=location,
+            )
+        paths = output._path_inventory(source, names)
+        total = sum(entry["size"] for entry in paths)
+        if total > output.MAX_PRESERVED_BYTES:
+            raise EvidenceLimitExceeded()
+        receipt = {
+            "schema": EVIDENCE_SCHEMA,
+            "task_id": task_id,
+            "run_nonce": record.get("run_nonce"),
+            "count": len(paths),
+            "bytes": total,
+            "paths": paths,
+            "location": location.relative_to(primary).as_posix(),
+            "content_sha256": output._content_digest(location, names),
+            "runtime_tmp_sha256": hashlib.sha256(str(root).encode()).hexdigest(),
+            "cap_bytes": output.MAX_PRESERVED_BYTES,
+        }
+        receipt["retrieval_proof_sha256"] = output.verify_retrieval(primary, receipt)
+        if output._path_inventory(source, names) != paths or output._path_inventory(location, names) != paths:
+            raise EvidencePreservationError()
+        with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
+            json.dump(receipt, manifest, sort_keys=True)
+            manifest.write("\n")
+            manifest.flush()
+            os.fsync(manifest.fileno())
+        return receipt
+    except EvidencePreservationError:
+        raise
+    except (OSError, ValueError, RuntimeError, ComponentOpenError):
+        raise EvidencePreservationError() from None
 
 
 def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[str]:

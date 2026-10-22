@@ -1040,6 +1040,30 @@ orphan). Before re-using a task id, kill any stale detached launcher for it:
 Confirm the match is the stale launcher, then terminate that pid before the
 new dispatch.
 
+### Reusing a worktree with evidence (#11342)
+
+Dispatch preparation applies a cone sparse-checkout to a reused worktree, and
+`git sparse-checkout set` removes untracked/ignored directories inside a
+tracked cone directory. Because of that, `delegate.py` refuses to reuse a
+worktree while any released task bound to it still has ignored output and no
+retrieval receipt (`worktree_reuse_evidence_unretrieved`). Preserve first:
+
+```bash
+.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task> --apply
+```
+
+That copies the ignored output under `batch_state/preserved/<task>/` with a
+retrieval receipt and then reaps the tree; dispatch into a fresh worktree.
+
+New work should not rely on ignored worktree files surviving at all. Every
+dispatch exposes an empty `$LU_TASK_EVIDENCE_DIR` (`evidence/` in the task's
+runtime lease) and names it in the worker preamble. Task cleanup copies that
+directory to `batch_state/preserved/<task>/` with a retrieval receipt before
+deleting the lease. The copy is capped at 256 MiB; an over-cap, unreadable or
+linked entry is a typed refusal (`runtime_evidence_over_cap`,
+`runtime_evidence_preservation_failed`) that keeps the lease instead of
+deleting bytes silently.
+
 ## Immediate cleanup after merge
 
 On apply, `merge_closeout` and `post_task_reap` first capture local Git facts
