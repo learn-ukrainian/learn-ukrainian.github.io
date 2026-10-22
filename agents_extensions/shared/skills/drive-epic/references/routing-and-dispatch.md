@@ -150,8 +150,8 @@ untested boundaries that the review brief freezes
 real CLI is intended, evidence for each attack class uses the real tool as the oracle, with
 its version pinned.
 Reviewers keep their own independent adversarial cases; the author's matrix does not replace
-review. After the second rejected review round the author stops and the driver takes a design
-decision, consulting an advisor when needed; a rewrite is not mandatory. A contested decision
+review. After the second rejected review round the author stops; the driver applies the
+[review stopping rule](review-merge-cleanup.md#review-stopping-rule). A contested decision
 or a fragile or high-risk fix escalates per the rules core P6.
 
 Write every brief so pytest basetemp, probe copies, and report copies go to the
