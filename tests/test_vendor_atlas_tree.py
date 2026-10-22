@@ -129,6 +129,61 @@ def _archive_for(tree_root: Path, tmp: Path) -> tuple[Path, str]:
     return archive, digest
 
 
+@pytest.mark.parametrize("endpoint", ["articles", "aliases"])
+def test_vendor_preserves_producer_order_instead_of_unicode_order(tmp_path: Path, endpoint: str) -> None:
+    """#11341: raw Unicode ordering misplaces ґ; comparator ties must stay deterministic."""
+    tree = _build_two_gen_tree(tmp_path)
+    version = tree / "atlas/versions/v-current"
+    # Existing generator-test heads straddle Г/Ґ/Д and include stable article ties.
+    heads = ["ґанок", "дім", "ґазда", "гетьман", "кава", "ґанок"]
+    slugs = ["z-porch", "house", "host", "hetman", "coffee", "a-porch"]
+    articles = [
+        {"s": slug, "l": head, "g": "gloss", "r": f"row-{i}", "t": "lemma", "c": "A1"}
+        for i, (slug, head) in enumerate(zip(slugs, heads, strict=True))
+    ]
+    aliases = [
+        {"a": head, "s": slug, "h": head, "k": "variant"}
+        for slug, head in zip(slugs, heads, strict=True)
+    ]
+    aliases[0]["k"] = "abbreviation"
+    # Uppercase-equivalent synthetic aliases reach the kind tie while keeping
+    # normalized alias+target pairs distinct, as the admission guard requires.
+    aliases.extend([
+        {"a": "ss", "s": "house", "h": "дім", "k": "variant"},
+        {"a": "ß", "s": "house", "h": "дім", "k": "abbreviation"},
+    ])
+    _replace_runtime_shard(version, "entries", "p00-0", [
+        {"slug": slug, "kind": "article"} for slug in slugs
+    ])
+    _replace_runtime_shard(version, "articles", "unit", articles)
+    _replace_runtime_shard(version, "aliases", "alias", aliases)
+    manifest_path = version / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["counts"].update(articles=6, publicRoutes=6, searchArticles=6, searchAliases=8)
+    manifest_path.write_text(json.dumps(manifest))
+    pinned = {p.relative_to(tree): p.read_bytes() for p in tree.rglob("*") if p.is_file()}
+    archive, digest = _archive_for(tree, tmp_path)
+    dist = tmp_path / "dist"
+    metrics = vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+
+    # Literal order from the established producer contract, never its sort helper.
+    if endpoint == "articles":
+        expected = [articles[3], articles[2], articles[0], articles[5], articles[1], articles[4]]
+        for path in ("lexicon/search-index.json", "api/lexicon/search-index.json"):
+            assert json.loads((dist / path).read_bytes()) == expected
+    else:
+        expected = [aliases[3], aliases[2], aliases[5], aliases[0], aliases[1], aliases[4], aliases[7], aliases[6]]
+        assert json.loads((dist / "lexicon/search-aliases.json").read_bytes()) == expected
+    assert metrics.search_parity["articles"] == 6
+    assert metrics.search_parity["aliases"] == 8
+    for field in ("advertisedOnly", "runtimeOnly"):
+        assert metrics.search_parity[field] == []
+    for field in ("articleDuplicates", "runtimeDuplicates", "aliasDuplicates"):
+        assert metrics.search_parity[field] == 0
+    for rel, blob in pinned.items():
+        assert (dist / rel).read_bytes() == blob
+
+
 @pytest.mark.parametrize("gloss, expected", [
     ("avoid: наступний", "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"),
     ("1. first meaning 2. second meaning", "first meaning"),

@@ -53,6 +53,7 @@ from scripts.audit.generate_search_index import (
     _gerund_parent,
     _sanitize_typeahead_gloss,
     _search_gloss,
+    _uk_sort_key,
     build_search_shards,
     classification_code,
     display_gloss,
@@ -706,8 +707,8 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
             if parent:
                 row["p"] = parent
             article_rows.append(row)
-        article_rows.sort(key=lambda row: (normalize_atlas_text(row["l"]), row["s"]))
-        aliases = sorted(families["aliases"], key=lambda row: (normalize_atlas_text(row["a"]), row["s"], row["k"]))
+        article_rows.sort(key=lambda row: _uk_sort_key(row["l"]))
+        aliases = sorted(families["aliases"], key=lambda row: (_uk_sort_key(row["a"]), row["s"], row["k"]))
         return (
             article_rows,
             aliases,
