@@ -115,6 +115,10 @@ Dispatch only when the task card and the dispatch preflight are both green (DoR)
 Chat "ready" is not DoR. Tables: `docs/best-practices/task-quality.md` and `/api/rules` →
 `operator-expectations.md` §3b.
 
+**Small batches (trial until 2026-11-05).** Every implementation brief names one
+behaviour for one PR. Before review, apply the size guide, exclusions and
+split-or-justify rule in [workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450).
+
 ```bash
 .venv/bin/python scripts/delegate.py dispatch --check-budget --agent <lane> --worktree ...
 ```

@@ -13,6 +13,15 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 If the head moves after APPROVE, the CF is stale — re-run exact-head CF before any
 enqueue or re-queue.
 
+**Small batches (trial until 2026-11-05).** A reviewer may reject a PR for size
+alone, even when the driver has justified its size. The size guide, exclusions
+and split-or-justify rule are in [workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450).
+
+**Revert first (trial until 2026-11-05).** For a revert under that Merge policy,
+the exact-head cross-family review checks only that the PR is a pure `git revert`
+of exactly the offending merge, with no other edits. Normal CI and the merge
+queue remain required. Exceptions follow the same policy and retain all gates.
+
 Label a source-only review static and state its unverified execution behavior.
 Keep the execution-dependent review route in [model-deltas](model-deltas.md);
 do not request an executing review solely because a path is integration code.
