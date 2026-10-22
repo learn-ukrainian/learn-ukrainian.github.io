@@ -320,6 +320,9 @@ SESSION_IDENTITY_ENV_VARS = (
     "LU_RUNTIME_INITIATOR",
     "LU_RUNTIME_INITIATOR_SOURCE",
     "LU_RUNTIME_RUN_NONCE",
+    # This task's supported evidence directory; a leaked value makes a test
+    # write into a live task's evidence instead of its own (#11342).
+    "LU_TASK_EVIDENCE_DIR",
     # Telemetry run/session ids (scripts/telemetry/emit.py).
     "LU_RUN_ID",
     "LU_SESSION_ID",
