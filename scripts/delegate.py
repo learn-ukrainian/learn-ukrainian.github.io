@@ -15709,7 +15709,18 @@ def _dispatch(
                 # Still under the worktree lock: a link an earlier write-capable
                 # dispatch provisioned must not reach the worker (#9421).
                 try:
-                    _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                    checkout_repo = _git_common_dir_identity(resolved_wt)
+                    public_repo = _git_common_dir_identity(_REPO_ROOT)
+                    if checkout_repo is None or public_repo is None:
+                        raise RuntimeError("worktree repository identity unavailable for read-only reuse")
+                    # Match fresh sibling provisioning: public resources belong
+                    # only in a checkout of the public repository.
+                    if checkout_repo == public_repo:
+                        _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                    else:
+                        _withdraw_primary_database_links(
+                            resolved_wt, _REPO_ROOT, ("data/vesum.db", "data/sources.db")
+                        )
                 except RuntimeError as exc:
                     discard_logs()
                     print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)

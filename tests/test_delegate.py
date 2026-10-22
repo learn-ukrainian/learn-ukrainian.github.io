@@ -14500,15 +14500,27 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     tmp_path,
     monkeypatch,
 ):
-    """Documented sibling flow: manual worktree + --cwd, no --worktree."""
+    """Read-only sibling reuse withdraws public DB links without provisioning public dependencies."""
     primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     monkeypatch.chdir(sibling)
+    (primary / "node_modules").mkdir()
+    (primary / "site/node_modules").mkdir(parents=True)
+    (primary / "data").mkdir()
+    (sibling_wt / "data").mkdir()
+    for name in ("sources.db", "vesum.db"):
+        (primary / "data" / name).touch()
+        (sibling_wt / "data" / name).symlink_to(primary / "data" / name)
+    custom_db = sibling / "custom.db"
+    custom_db.write_bytes(b"custom database")
+    (sibling_wt / "data/custom.db").symlink_to(custom_db)
+    (sibling_wt / "data/local.db").write_bytes(b"local database")
+    (sibling_wt / "tracked.txt").write_text("preserve modified source\n")
     _patch_worker_popen(monkeypatch)
     args = _write_args(
         task_id="sibling-cwd",
-        mode="workspace-write",
+        mode="read-only",
         cwd=str(sibling_wt),
         worktree=None,
     )
@@ -14520,6 +14532,15 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     assert state is not None
     assert Path(state["cwd"]) == sibling_wt
     assert Path(state["worktree_path"]) == sibling_wt
+    assert state["worktree_reused"] is True
+    for relative in ("node_modules", "site/node_modules", "data/sources.db", "data/vesum.db"):
+        assert not (sibling_wt / relative).exists()
+        assert not (sibling_wt / relative).is_symlink()
+    assert (sibling_wt / "data/custom.db").readlink() == custom_db
+    assert (sibling_wt / "data/local.db").read_bytes() == b"local database"
+    assert (sibling_wt / "tracked.txt").read_text() == "preserve modified source\n"
+    for name in ("sources.db", "vesum.db"):
+        assert (primary / "data" / name).read_bytes() == b""
 
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
@@ -18972,6 +18993,8 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
     other.touch()
     # An earlier write-capable dispatch provisioned both links; a link to anything else must stay.
     delegate._provision_data_symlinks(dispatch_wt, main)
+    (main / "node_modules").mkdir()
+    (main / "site/node_modules").mkdir(parents=True)
     before = {name: (main / "data" / name).read_bytes() for name in ("vesum.db", "sources.db")}
     (dispatch_wt / "data" / "other.db").symlink_to(other)
     at_spawn: list[list[str]] = []
@@ -19008,6 +19031,8 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
     if mode == "read-only":
         assert withdrawals == [False]
         assert at_spawn == [["other.db"]]
+        assert (dispatch_wt / "node_modules").readlink() == main / "node_modules"
+        assert (dispatch_wt / "site/node_modules").readlink() == main / "site/node_modules"
         for name in ("vesum.db", "sources.db"):
             assert not (dispatch_wt / "data" / name).is_symlink()
             assert (main / "data" / name).read_bytes() == before[name]
