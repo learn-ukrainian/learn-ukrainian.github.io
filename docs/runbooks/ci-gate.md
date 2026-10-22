@@ -467,3 +467,28 @@ exceptional action remains the operator's responsibility. One workflow run per
 PR head can be rerun, and reservations are not refunded after a crash or uncertain
 transport. The legacy-table edge case fails closed. These limits remain
 documented residuals, not additional recovery paths.
+
+### Who may recover, and how often
+
+The merge-queue keeper never reruns workflows. It may re-enqueue a head that
+the queue ejected and it may hold a head out; a workflow rerun is a manual
+action through `scripts.publish run-rerun`, with the recorded
+`ci-recovery-evidence` comment described above. Do not trigger a rerun from the
+keeper or from a timer.
+
+The effective re-enqueue cap per head is one. `_prepare_recovery` in
+`scripts/publish/github.py` reads the durable
+`ci-recovery.sqlite3` record through `recovery.first_attempt` before any
+recovery write and refuses a second attempt for the same repository, PR and
+head with `RECOVERY_ALLOWANCE_SPENT`. One record covers both a failed-job
+rerun and a keeper or direct re-enqueue, so a head gets exactly one of them,
+not one of each. The same preflight refuses a rerun of a run whose
+`run_attempt` is above the first, with
+`RECOVERY_ALLOWANCE_SPENT: first=prior workflow run attempt`.
+
+The keeper also counts its own automatic recoveries: granted re-enqueues after
+a queue ejection and shared queue-wide re-enqueues. When more than three occur
+in a rolling 24 hours it posts one alert to the `cto` Fleet Comms channel
+through the existing SRE alert publisher, then stays quiet for 24 hours. The
+alert is a signal that an intermittent failure may be hidden behind
+recoveries; it changes no queue or workflow state and is not a recovery path.

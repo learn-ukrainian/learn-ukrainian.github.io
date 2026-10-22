@@ -29,6 +29,7 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
+from scripts.orchestration import backup_failure_alert
 from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
     Verdict,
@@ -80,6 +81,12 @@ QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 # times per head. Aggregate jobs only mirror other jobs and never attribute.
 SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
+# Too many automatic recoveries hide an intermittent failure. Above this many
+# granted, legacy or shared re-enqueues in a rolling 24 hours the keeper posts
+# one alert to the cto Fleet Comms channel, at most once per 24 hours. The
+# keeper never reruns workflows: alerting only.
+RECOVERY_ALERT_THRESHOLD = 3
+RECOVERY_ALERT_WINDOW = timedelta(hours=24)
 # Job and check names and failed-test identifiers come from workflow files and CI
 # logs, so any PR author controls them; gate reasons embed check names, and
 # GitHub error text is unvetted. They reach public issue titles, issue bodies and
@@ -628,6 +635,63 @@ def _gate_hold(
     return hold
 
 
+def _automatic_recoveries(previous: Mapping[str, Any], cutoff: datetime) -> tuple[int, int]:
+    """Granted and shared automatic recoveries already recorded in keeper state.
+
+    ``requeued`` records each re-enqueue after a queue ejection with the time it
+    happened, so only records inside the rolling window count.
+    ``shared_requeues`` counts queue-wide re-enqueues per head and carries no
+    timestamp; the keeper's existing record is counted as it stands for the
+    heads still open.
+    """
+    granted = 0
+    for stamp in previous.get("requeued", {}).values():
+        if not isinstance(stamp, str):
+            continue
+        try:
+            at = datetime.fromisoformat(stamp)
+        except ValueError:
+            continue
+        if at.tzinfo is not None and at >= cutoff:
+            granted += 1
+    shared = 0
+    for count in previous.get("shared_requeues", {}).values():
+        if type(count) is int and count > 0:
+            shared += count
+    return granted, shared
+
+
+def recovery_alert_message(granted: int, shared: int, observed: str) -> str:
+    total = granted + shared
+    return (
+        f"[sre-timers] Merge queue keeper performed {total} automatic recoveries in the last 24 hours "
+        f"at {observed}: {granted} granted re-enqueue(s) and {shared} shared queue-wide re-enqueue(s). "
+        f"The alert threshold is {RECOVERY_ALERT_THRESHOLD}.\n"
+        "An intermittent failure may be hidden behind recoveries. Investigate the failing merge_group "
+        "jobs before the next recovery. The keeper never reruns workflows.\n"
+        "Change-only: no further recovery-count alert for 24 hours.\n"
+    )
+
+
+def _alert_recoveries(previous: dict[str, Any], observed: str, publish: backup_failure_alert.Publisher) -> str | None:
+    """Post at most one recovery-count alert per 24 hours; None when below the threshold or suppressed."""
+    now = datetime.fromisoformat(observed)
+    granted, shared = _automatic_recoveries(previous, now - RECOVERY_ALERT_WINDOW)
+    if granted + shared <= RECOVERY_ALERT_THRESHOLD:
+        return None
+    last = previous.get("recovery_alert")
+    if isinstance(last, str):
+        try:
+            last_at = datetime.fromisoformat(last)
+        except ValueError:
+            last_at = None
+        if last_at is not None and last_at.tzinfo is not None and now - last_at < RECOVERY_ALERT_WINDOW:
+            return f"recovery alert suppressed: last posted at {last}"
+    publish(recovery_alert_message(granted, shared, observed), f"lu-mq-recoveries:{observed}")
+    previous["recovery_alert"] = observed
+    return f"recovery alert posted: {granted + shared} automatic recoveries in 24 hours"
+
+
 def _min_interval(environ: Mapping[str, str]) -> int:
     """Seconds an ``--apply`` run must wait after the last one (0 = every timer tick)."""
     seconds = 0
@@ -875,7 +939,12 @@ def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
 
 
 def run(
-    gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
+    gh: GitHub,
+    state_path: Path,
+    *,
+    apply: bool = False,
+    requeue_gate: Path | None = None,
+    publish: backup_failure_alert.Publisher | None = None,
 ) -> tuple[list[str], bool]:
     branches = gh.branch_names()
     snap = gh.snapshot(branches)
@@ -1208,6 +1277,14 @@ def run(
             failed = True
             lines.append(f"flaky-test issue FAILED: {exc}")
     if apply:
+        try:
+            note = _alert_recoveries(previous, observed, publish or backup_failure_alert.fleet_comms_publisher(gh.root))
+        except backup_failure_alert.AlertError as exc:
+            failed = True
+            lines.append(f"recovery alert FAILED: {exc}")
+        else:
+            if note is not None:
+                lines.append(note)
         _save(state_path, previous)
     return lines, failed
 
