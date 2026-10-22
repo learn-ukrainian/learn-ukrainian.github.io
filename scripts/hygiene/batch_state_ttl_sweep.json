@@ -1,0 +1,24 @@
+{
+  "schema": "batch-state-ttl-sweep.v1",
+  "status": "UNAPPROVED",
+  "roots": [
+    {
+      "path": "batch_state/preserved",
+      "ttl_days": "UNAPPROVED",
+      "owner": "manifest"
+    },
+    {
+      "path": "batch_state/backups/archives",
+      "ttl_days": "UNAPPROVED",
+      "owner": "backup",
+      "keep_newest_archive": true,
+      "exclude_names": []
+    },
+    {
+      "path": "batch_state/backups/alerts",
+      "ttl_days": "UNAPPROVED",
+      "owner": "backup",
+      "exclude_names": ["last-run.json"]
+    }
+  ]
+}

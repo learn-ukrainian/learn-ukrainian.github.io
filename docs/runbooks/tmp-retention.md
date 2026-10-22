@@ -466,6 +466,56 @@ directory as `held`, not `stale`. When the condition in `until` is met,
 remove the entry. A malformed list makes the report exit with code 2, so a
 hold is never ignored without notice.
 
+### TTL sweep for preserved evidence and backups (#11418)
+
+`scripts.hygiene.batch_state_ttl_sweep` applies the CTO-approved TTLs to
+`batch_state/preserved` and the configured sub-roots of `batch_state/backups`.
+Dry run is the default. It reads every TTL from one file,
+`scripts/hygiene/batch_state_ttl_sweep.json`; the shipped values are
+`UNAPPROVED`, and `--apply` exits 4 while any value is still a placeholder.
+The CTO-approved numbers drop into that file without a code change. Until
+they arrive, a dry run with `--ttl-days N` shows what would happen under that
+hypothetical TTL; the report labels it `override_hypothetical`, and apply
+refuses an override.
+
+An entry is removed only when all of these hold:
+
+- Its newest write anywhere below it is older than its root's TTL.
+- No unsettled task record references it, and the task inventory is complete.
+  A malformed, symlinked or unreadable current record makes the inventory
+  incomplete, and the sweep then preserves every entry as
+  `task_inventory_unknown`.
+- No entry in `scripts/hygiene/batch_state_retention.json` holds it or an
+  ancestor. This is the same hold list the staleness report uses.
+- Its owner is known. A preserved entry names one owner in its
+  `*.manifest.json` (`owner`, or the older `task_id` form); a backup sub-root
+  declares its owner label in the TTL file.
+- It is a real directory or file tree, not a symlink, mount point, foreign
+  tree, Git metadata tree, hard-linked set or unreadable tree.
+- For `batch_state/backups/archives`, it is not the newest archive, and
+  `last-run.json` is never eligible. An archive is grouped with its
+  `.manifest` and `.contents.sha256` sidecars.
+
+With `--apply`, each proven entry is renamed into a locked, owner-only
+quarantine directory inside its root, the age, task-reference, hold, identity
+and tree-fingerprint checks run again, and only then does the common
+descriptor-safe reaper delete it. A failed recheck renames it back. The
+receipt under `batch_state/reports/` records each removed entry's owner, age,
+bytes and reason, plus free bytes from `statvfs` before and after and the
+summed entry sizes. A dry run changes nothing.
+
+```bash
+# Dry run with the approved TTLs once they land
+.venv/bin/python -m scripts.hygiene.batch_state_ttl_sweep --summary
+# Hypothetical dry run while the values are UNAPPROVED
+.venv/bin/python -m scripts.hygiene.batch_state_ttl_sweep --ttl-days 30 --summary
+# Apply after every value is approved
+.venv/bin/python -m scripts.hygiene.batch_state_ttl_sweep --apply --summary
+```
+
+Exit codes: 0 clean; 1 removal, quarantine or scan errors; 2 invalid
+arguments or configuration; 4 apply refused because a TTL is `UNAPPROVED`.
+
 ## uv cache size and growth (#10827)
 
 The repository tool prints a status row for the private `lu-driver-status`
