@@ -1,4 +1,4 @@
-"""Render and install the daily temp-sweep systemd user timer (#9737).
+"""Render and install the hourly temp-sweep systemd user timer (#9737, #11297).
 
 Use --check before installation; use --apply after the branch has merged.
 --enable starts the timer only when paired with --apply. The unit directory
@@ -74,7 +74,7 @@ def apply(rendered: dict[str, str], unit_dir: Path, *, enable: bool) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Install the daily temp-sweep systemd user units (unattributed scratch reap + batch_state report).\n"
+            "Install the hourly temp-sweep systemd user units (scratch and inactive pytest reap + batch_state report).\n"
             "Use --check to compare installed units, --apply to write them, and --enable after merge."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -88,7 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
             "--apply reloads the user manager, --enable starts the timer.\n"
             "Exit codes: 0 = current or applied; 1 = drift or installation failure; 2 = invalid usage "
             "(--check with --apply, --enable without --apply, or a non-primary --repo-root).\n"
-            "Related: issue #9737, docs/runbooks/tmp-retention.md and packaging/systemd/learn-ukrainian-tmp-sweep.*."
+            "Related: issues #9737 and #11297, docs/runbooks/tmp-retention.md and packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
     parser.add_argument(

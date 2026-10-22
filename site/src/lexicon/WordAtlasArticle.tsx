@@ -19,6 +19,7 @@ import {
   MARKED_LEARNER_NOTE,
   PAST_ROWS,
   PERSON_ROWS,
+  hasSovietColonizationContextContent,
   sourceClass,
   sourceHost,
   TRACK_LABELS_UK,
@@ -523,19 +524,21 @@ function WordAtlasArticleBody({
                   )}
                 </div>
               ))}
-              {entry.soviet_colonization_context?.definition?.trim() && (
+              {hasSovietColonizationContextContent(entry.soviet_colonization_context) && (
                 <div className="def-card sum11-flagged soviet-colonization-box">
                   <div className="def-source">
                     <span className="src-pill">Радянський окупаційний контекст</span>
-                    <span>{entry.soviet_colonization_context.source}</span>
+                    <span>{entry.soviet_colonization_context!.source}</span>
                   </div>
-                  <div className="def-text">
-                    <p>{entry.soviet_colonization_context.definition}</p>
-                  </div>
+                  {entry.soviet_colonization_context?.definition?.trim() && (
+                    <div className="def-text">
+                      <p>{entry.soviet_colonization_context!.definition}</p>
+                    </div>
+                  )}
                   <div className="def-flag-inline">
-                    {entry.soviet_colonization_context.historical_note ?? "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення."}
-                    {Boolean(entry.soviet_colonization_context.keywords?.length) && (
-                      <span className="soviet-keywords"> (Маркери: {entry.soviet_colonization_context.keywords?.join(", ")})</span>
+                    {entry.soviet_colonization_context!.historical_note ?? "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення."}
+                    {Boolean(entry.soviet_colonization_context!.keywords?.length) && (
+                      <span className="soviet-keywords"> (Маркери: {entry.soviet_colonization_context!.keywords?.join(", ")})</span>
                     )}
                   </div>
                 </div>

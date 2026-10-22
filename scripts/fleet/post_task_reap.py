@@ -22,8 +22,12 @@ import contextlib
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir

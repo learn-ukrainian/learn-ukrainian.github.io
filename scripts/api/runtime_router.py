@@ -54,6 +54,7 @@ from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 from agent_runtime.usage import _iter_usage_records as _iter_usage_file_records
 from agent_runtime.usage import has_headroom
+from scripts.agent_runtime.accounting import recorded_model_accounting_fields
 from scripts.control_plane import storage
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
@@ -690,6 +691,7 @@ def recent_runtime_records(*, limit: int = 50, ctx: MonitorContext | None = None
             "source_provenance": source_provenance,
             "source_task_id": source_task_id,
             "model": record.get("model"),
+            **recorded_model_accounting_fields(record),
             "outcome": record.get("outcome"),
             "failure_code": failure_code,
             "duration_s": record.get("duration_s"),

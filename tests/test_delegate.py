@@ -1290,7 +1290,7 @@ def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
         "Implement issue #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO
     )
     assert "#8886: verify" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "verify"}, "dor": "WARN"}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
     assert calls[1][-6:] == [
         "--issue",
@@ -1328,7 +1328,7 @@ def test_dor_preflight_skips_pr_numbers_and_query_values(monkeypatch):
     prompt = "PR #8750, feat: gate dor (#8750), ?q=#8750, x=#8750; Fixes #8886 and #8886"
     error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert error is None
-    assert record == {"issues": [8886], "warnings": {}}
+    assert record == {"issues": [8886], "warnings": {}, "dor": "PASS"}
     assert [call for call in calls if call[:2] == ["gh", "api"]] == [
         ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8750"],
         ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"],
@@ -1347,7 +1347,7 @@ def test_dor_preflight_lookup_failure_fails_closed_with_override(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "run", failed_gh)
     error, record = delegate._run_dor_preflight("Fixes #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert "#8886: checker_error" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}, "dor": "WARN"}
     error, record = delegate._run_dor_preflight(
         "Fixes #8886", "urgent repair", dispatch_repo=delegate._CANONICAL_GITHUB_REPO
     )
@@ -1365,7 +1365,7 @@ def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "run", wrong_issue)
     error, record = delegate._run_dor_preflight("Fixes #8886", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert "#8886: checker_error" in error
-    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}, "dor": "WARN"}
 
 
 @pytest.mark.parametrize(
@@ -1410,6 +1410,7 @@ def test_dor_preflight_cross_repo_references_deduplicate_by_repo_and_number(monk
     assert record == {
         "issues": [690, 690],
         "warnings": {},
+        "dor": "PASS",
         "issue_repositories": [{"issue": 690, "repo": "acme/other"}],
     }
     assert [call for call in calls if call[:2] == ["gh", "api"]] == [
@@ -1473,7 +1474,7 @@ def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
     calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
     error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
     assert error is None
-    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
     assert not [call for call in calls if call[-1].endswith("/issues/6943")]
 
@@ -1546,7 +1547,7 @@ def test_dor_preflight_local_epic_full_url_and_qualified_forms_are_exempt(monkey
         dispatch_repo=_LOCAL,
     )
     assert error is None
-    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
 
 
@@ -1965,7 +1966,7 @@ def test_parser_spans_container_exit_preserves_dor_warn(monkeypatch, container):
     error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
     assert error is not None
     assert "#9672: verify" in error
-    assert record == {"issues": [9672], "warnings": {"9672": "verify"}}
+    assert record == {"issues": [9672], "warnings": {"9672": "verify"}, "dor": "WARN"}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/9672"]
     assert len(calls) == 2
     assert calls[1][-6:] == ["--issue", "9672", "--repo", delegate._CANONICAL_GITHUB_REPO, "--strict", "--json"]
@@ -3612,9 +3613,10 @@ def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_
     assert state["resolved_model_source"] == "cursor-stream-json"
 
 
-def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path):
+@pytest.mark.parametrize("name", ["DeepSeek V4.1 Flash", "DeepSeek V4.1 Flash 1017"])
+def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path, name):
     cache = tmp_path / "models.json"
-    cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.1 Flash"}}}}')
+    cache.write_text(json.dumps({"deepseek": {"models": {"deepseek-flash": {"name": name}}}}))
     state = delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache)
     assert state == {
         "resolved_model": "deepseek-v4.1-flash",
@@ -10415,6 +10417,10 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
 
     state = delegate._read_state(delegate._state_path("dry/run tmp"))
     assert state is not None
+    assert {key: state[key] for key in (
+        "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
+    )} == {"requested_selector": None, "observed_model": None, "identity_state": "unknown",
+          "observed_model_source": None, "observed_model_provenance": None}
     lease_root = tmp_path / "learn-ukrainian" / "dry-run-tmp"
     assert state["status"] == "dry_run"
     assert state["initiator"] == "codex"
@@ -22966,6 +22972,10 @@ def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(
     assert calls[0][calls[0].index("--model") + 1] == model
     assert calls[0][calls[0].index("--agent") + 1] == "agy"
     record = delegate._read_state(delegate._state_path("agy-high-dispatch"))
+    assert {key: record[key] for key in (
+        "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
+    )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
+          "observed_model_source": None, "observed_model_provenance": None}
     assert record["model"] == model
     assert record["substitution"] is None
     assert fetches == [("origin", "main")]
@@ -23250,6 +23260,7 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     tmp_tasks_dir, tmp_path, monkeypatch, model, case, known, family, exit_kind,
 ):
     from types import SimpleNamespace
+    from uuid import UUID
 
     from agent_runtime import runner
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
@@ -23307,6 +23318,10 @@ def test_agy_producer_consistency_through_durable_worker_projections(
         assert starting["resolved_model_known"] is False
         assert starting["model_identity"] is None
         assert starting["substitution"] is None
+        assert {key: starting[key] for key in (
+            "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
+        )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
+              "observed_model_source": None, "observed_model_provenance": None}
         return spawn(*args, **kwargs)
 
     monkeypatch.setattr(runner, "_spawn_subprocess", inspect_start)
@@ -23317,6 +23332,28 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     record = json.loads(delegate._state_path(task_id).read_text())
     usages = [json.loads(line) for line in usage_file.read_text().splitlines()] if usage_file.exists() else []
     assert len(launches) == 1
+    expected_projection = {
+        "requested_selector": model, "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None,
+    }
+    if known:
+        expected_projection.update(
+            observed_model={
+                "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+                "other-family": "gemini-3.8-flash-high",
+            }.get(case, model),
+            identity_state="observed", observed_model_source="provider-init",
+        )
+    assert {key: record[key] for key in expected_projection} == expected_projection
+    if known:
+        assert record["observed_model_provenance"] == {
+            "requested_model": model,
+            "invocation_id": str(UUID(hex=record["model_identity"]["provenance"]["invocation_id"])),
+        }
+    else:
+        assert record["observed_model_provenance"] is None
+    for usage_row in usages:
+        assert {key: usage_row[key] for key in expected_projection} == expected_projection
     assert record["model"] == model
     assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
     assert record["resolved_model_known"] is known
@@ -23366,6 +23403,7 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     dispatch_events = [fields for event, fields in events if event == "dispatch"]
     assert len(dispatch_events) == 1
     assert dispatch_events[0]["resolved_model_known"] is known
+    assert {key: dispatch_events[0][key] for key in expected_projection} == expected_projection
     assert dispatch_events[0]["resolved_model"] == (observed if known else "unattested-harness")
     if not known:
         assert dispatch_events[0]["substitution"] is None
@@ -23402,3 +23440,47 @@ def test_agy_producer_consistency_through_durable_worker_projections(
         else:
             assert runtime_events == []
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+@pytest.mark.parametrize("agent,model", [
+    ("agy", "claude-sonnet-5-5-high"), ("agy", "claude-opus-5-5-high"), ("codex", "gpt-6.1-sol"),
+])
+def test_accounting_projection_on_pre_spawn_failure(tmp_tasks_dir, monkeypatch, agent, model):
+    from types import SimpleNamespace
+
+    from agent_runtime import telemetry
+
+    monkeypatch.setattr(telemetry, "resolve_dispatch_start_telemetry", lambda **k: SimpleNamespace(
+        model="legacy-accounting-label", effort="high", cli_version="fixture",
+    ))
+    assert delegate._record_worktree_prep_failure(
+        task_id="accounting-pre-spawn", run_nonce="accounting-run", agent=agent, mode="workspace-write",
+        attribution=SimpleNamespace(initiator="codex", source="explicit"), prompt="Implement.",
+        error="synthetic preparation refusal", requested_model=model,
+    )
+    record = json.loads(delegate._state_path("accounting-pre-spawn").read_text())
+    assert record["status"] == "failed"
+    assert record["model"] == "legacy-accounting-label"
+    assert {key: record[key] for key in (
+        "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
+    )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
+          "observed_model_source": None, "observed_model_provenance": None}
+
+
+@pytest.mark.parametrize("identity_fields", [{}, {"identity_state": None}])
+def test_terminal_dispatch_event_defaults_missing_identity_to_unknown(monkeypatch, identity_fields):
+    from types import SimpleNamespace
+
+    from telemetry import emit as telemetry_emit
+
+    events = []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda name, fields: events.append((name, fields)))
+    delegate._emit_terminal_dispatch_event(
+        task_id="legacy-terminal", agent="codex",
+        final_state={"model": "accounting-model", "status": "failed", **identity_fields},
+        result=SimpleNamespace(usage_record=None), fallback_prompt_chars=1,
+    )
+    event, = [fields for name, fields in events if name == "dispatch"]
+    assert event["identity_state"] == "unknown"
+    assert event["requested_selector"] is None
+    assert event["observed_model"] is None

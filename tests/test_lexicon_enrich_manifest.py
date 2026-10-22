@@ -129,6 +129,26 @@ def _patch_grinchenko_vesum(monkeypatch, *headwords: str) -> None:
     monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", fake_analyses)
 
 
+@pytest.fixture(autouse=True)
+def isolated_canonical_sum20(monkeypatch):
+    # These consumer unit tests supply canonical rows explicitly when needed.
+    # Store-boundary behavior is exercised in test_sum20_lookup.py.
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", lambda _word: ())
+
+
+def _canonical_sum20_row(monkeypatch, text: str, url: str = "https://example.invalid/sum20") -> None:
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", lambda _word: ({
+        "definition": text, "senses": [{"definition": text}], "url": url,
+    },))
+
+
+def _canonical_sum20_cache_rows(monkeypatch, cache_for) -> None:
+    def rows(word):
+        row = cache_for(word).get("lookups", {}).get("newsum")
+        return ({"definition": row["text"], "url": row.get("source_url", "")},) if row else ()
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", rows)
+
+
 def _conn() -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")
     conn.executescript(
@@ -4164,6 +4184,7 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
         }
     }
 
+    _canonical_sum20_cache_rows(monkeypatch, lambda _word: cache)
     relations = _definition_antonym_relations(conn, "великий", cache=cache)
 
     assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
@@ -4198,6 +4219,7 @@ def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(
             }
         }
     }
+    _canonical_sum20_cache_rows(monkeypatch, lambda _word: inflected_cache)
     assert _definition_antonym_relations(conn, "великий", cache=inflected_cache) == []
 
 
@@ -4219,6 +4241,7 @@ def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monk
     )
     manifest = {"entries": [{"lemma": "великий"}, {"lemma": "малий"}]}
 
+    _canonical_sum20_cache_rows(monkeypatch, enrich_manifest_module._read_cached_slovnyk_rows)
     relations = _definition_antonym_relations_by_headword(conn, manifest)
 
     assert relations["великий"][0]["item"] == "малий"
@@ -4284,6 +4307,9 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
     )
     assert all(_definition_antonym_relations(conn, lemma, cache={}) == [] for lemma in pairs)
 
+    _canonical_sum20_cache_rows(monkeypatch, lambda word: {
+        "lookups": {"newsum": {"text": f"Тестова дефініція; протилежне {pairs[word]}."}}
+    })
     before_counts = {lemma: 0 for lemma in pairs}
     after_items = {
         lemma: [
@@ -4359,6 +4385,7 @@ def test_homonym_relations_require_numbering_and_an_exact_vesum_lemma(monkeypatc
     }
 
     assert _homonym_relations(conn, "коса", cache={}) == []  # СУМ-11 alone cannot verify a relation.
+    _canonical_sum20_row(monkeypatch, cache["lookups"]["newsum"]["text"], "https://services.ulif.org.ua/expl/#/word/fixture")
     relations = _homonym_relations(conn, "коса", cache=cache)
 
     assert [{key: value for key, value in relation.items() if key != "source_url"} for relation in relations] == [
@@ -4413,6 +4440,8 @@ def test_homonym_relations_precompute_by_manifest_headword(monkeypatch) -> None:
         ),
     )
 
+    text = enrich_manifest_module._read_cached_slovnyk_rows("коса")["lookups"]["newsum"]["text"]
+    _canonical_sum20_row(monkeypatch, text)
     relations = _homonym_relations_by_headword(conn, {"entries": [{"lemma": "коса"}]})
 
     assert [(item["word"], item["homonym_no"]) for item in relations["коса"]] == [("коса", 2)]
@@ -4437,6 +4466,7 @@ def test_homonym_relations_choose_the_most_complete_numbered_source(monkeypatch)
         }
     }
 
+    _canonical_sum20_row(monkeypatch, cache["lookups"]["newsum"]["text"])
     relations = _homonym_relations(conn, "коса", cache=cache)
 
     assert [(item["source"], item["homonym_no"]) for item in relations] == [("СУМ-20", 2)]
@@ -4839,6 +4869,9 @@ def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
         [(lemma, definition) for lemma, (definition, _numbers) in fixtures.items()],
     )
 
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", lambda word: ({
+        "definition": fixtures[word][0], "url": "https://example.invalid/sum20",
+    },))
     before_counts = {lemma: 0 for lemma in fixtures}
     after_numbers = {
         lemma: [
@@ -5025,6 +5058,7 @@ def test_definition_pointer_relations_keep_each_dictionary_provenance(monkeypatc
         }
     }
 
+    _canonical_sum20_cache_rows(monkeypatch, lambda _word: cache)
     relations = _definition_pointer_relations(_conn(), "кафе", cache=cache)
 
     assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
@@ -5053,6 +5087,7 @@ def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypa
 
     assert _definition_pointer_relations(conn, "кафе", cache={}) == []
 
+    _canonical_sum20_cache_rows(monkeypatch, enrich_manifest_module._read_cached_slovnyk_rows)
     relations = _definition_pointer_relations_by_headword(conn, manifest)
 
     assert relations["кафе"][0]["item"] == "кав'ярня"
@@ -6579,7 +6614,7 @@ def test_wikidata_translation_theonym_exception(monkeypatch) -> None:
     assert res["source_url"] == "https://www.wikidata.org/wiki/Q2622635"
 
 
-def test_definition_cards_sum20_outranks_dialect_vts() -> None:
+def test_definition_cards_sum20_outranks_dialect_vts(monkeypatch) -> None:
     """When VTS leads with dialect/archaic marker while СУМ-20 has standard modern senses, СУМ-20 is top card."""
     cache = {
         "schema_version": 4,
@@ -6602,6 +6637,7 @@ def test_definition_cards_sum20_outranks_dialect_vts() -> None:
             },
         },
     }
+    _canonical_sum20_row(monkeypatch, cache["lookups"]["newsum"]["text"])
     cards = enrich_manifest_module._definition_cards(_conn(), "берегиня", cache=cache)
     assert len(cards) == 2
     assert cards[0]["id"] == "sum20"
@@ -6676,8 +6712,8 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     )
     monkeypatch.setattr(
         enrich_manifest_module,
-        "query_wikipedia",
-        lambda title: {
+        "_WIKI_REFERENCE_CACHE_DATA",
+        {"берегиня": {
             "title": "Берегиня",
             "description": "істота слов'янської міфології",
             "extract": (
@@ -6685,7 +6721,7 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
                 "споріднений із русалками. Ім'я духа пов'язують з берегами."
             ),
             "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
-        },
+        }},
     )
 
     entry = {
@@ -6694,6 +6730,7 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
         "gloss": "діал. Русалка. Нариси стар. іст. УРСР, 1957, 191",
         "pos": "noun",
     }
+    _canonical_sum20_row(monkeypatch, cache["lookups"]["newsum"]["text"])
     conn = _conn()
     conn.execute(
         """

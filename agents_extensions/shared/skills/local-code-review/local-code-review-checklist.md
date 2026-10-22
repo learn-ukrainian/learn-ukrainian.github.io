@@ -264,6 +264,27 @@ hashing, the `sources` tools) returns INCONCLUSIVE: the verdict line uses the
 `BLOCKED` token and names the missing capability. INCONCLUSIVE still blocks
 landing and is never reported as changes requested against the diff.
 
+**Exact-head CI is execution evidence.** Exact-head CI is valid execution
+evidence when it answers the review's execution questions; cite the run id. A
+reviewer that could not run something locally but has that evidence records a
+capability note ("could not run X locally") separately from material findings.
+A capability note is not a verdict: the reviewer still gives a verdict.
+Material findings and missing approval still block.
+
+**Tests in the diff (`docs/best-practices/test-quality.md`).** A new test must
+name the defect class it can fail for, in its name or docstring. Report these
+as review diagnostics (reported, not blocking):
+
+- a test that only asserts a mock call;
+- an elapsed-time comparison used as a speed claim (a bounded-liveness or stall
+  guard is not one);
+- an assertion that a value equals itself (`x == x`);
+- duplicate parametrize ids or values.
+
+Before calling a test mock-only, recognise `pytest.raises` bodies, helper
+assertions, validator assertions, awaited assertions and `assert_not_called`
+egress/refusal guards; each of those is a real assertion.
+
 **If the reviewer/challenger is unavailable**, raise the finding anyway (if
 you have one from your own read) and leave it unadjudicated — do not
 invent a disposition to unblock yourself, and do not apply it "as-is."

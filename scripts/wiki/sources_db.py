@@ -28,6 +28,7 @@ import json
 import os
 import sqlite3
 import sys
+import threading
 from collections import defaultdict
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
@@ -36,6 +37,10 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.wiki"
 
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.esum_garbled import (
@@ -48,6 +53,7 @@ from scripts.lexicon.runner.ulif_dictua_store import (
     ULIF_DICTUA_ENTRIES_DDL,
     ulif_dictua_entries_table_sql,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
 # The top-level ``audit/`` tree is a namespace package, so ``import audit``
@@ -70,8 +76,8 @@ from .sum20_official import (
 from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
-    live_article_predicate,
     normalize_sum20_lookup,
+    sum20_live_article_where,
 )
 from .textbook_subjects import normalize_subject_slug
 
@@ -85,6 +91,8 @@ TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
 _MAX_PATH_PROBE_BYTES = 255
 
 _conn: sqlite3.Connection | None = None
+_conn_state: tuple[SQLiteConnection, Path, tuple[int, int]] | None = None
+_conn_lock = threading.Lock()
 _active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
     "sources_db_active_connection", default=None
 )
@@ -1668,26 +1676,34 @@ def _read_db_path() -> Path:
     return require_local_active_sources_db(main_checkout_root(PROJECT_ROOT)).resolve()
 
 
-# Class ``_open_conn`` opens every connection with. ``None`` (the default) is a
-# plain ``sqlite3.Connection``; the Sources MCP server installs a subclass that
-# reports database errors the helpers below swallow (#11115).
+# ``None`` keeps the default factory: a serialized reader or a plain writer.
+# The Sources MCP server installs a subclass that also reports database errors
+# the helpers below swallow (#11115).
 _connection_factory: type[sqlite3.Connection] | None = None
 
 
 def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
-    """Open every later ``_open_conn`` connection as ``factory`` (``None``: plain)."""
+    """Open every later ``_open_conn`` connection as ``factory`` (``None``: unobserved)."""
     global _connection_factory
     _connection_factory = factory
 
 
+def _open_writer_conn(db_path: Path, options: dict[str, Any]) -> sqlite3.Connection:
+    """Writable connection (schema create / migrate): never a shared reader.
+
+    Allowlisted in tests/test_sources_db_hardening.py; ``_open_conn`` is not.
+    """
+    return sqlite3.connect(str(db_path), check_same_thread=False, **options)
+
+
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
-    options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
     if read_only:
-        conn = sqlite3.connect(
-            f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, **options
-        )
+        # Shared across threads: open_readonly disables the statement cache
+        # that CPython 3.12 corrupts under concurrent use (#11217).
+        conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
     else:
-        conn = sqlite3.connect(str(db_path), check_same_thread=False, **options)
+        options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
+        conn = _open_writer_conn(db_path, options)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -1697,18 +1713,52 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
 
 
 def _get_conn() -> sqlite3.Connection:
-    """Get or create a cached database connection."""
+    """Reuse the cached reader until the database path, inode or mtime changes."""
     override = _active_connection.get()
     if override is not None:
         return override
-    global _conn
-    if _conn is None:
-        path = _read_db_path()
-        if not path.is_file() or not path.stat().st_size:
-            raise FileNotFoundError(
-                f"Sources database not found at {path}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
-            )
-        _conn = _open_conn(path, read_only=True)
+    global _conn, _conn_state
+    with _conn_lock:
+        if _conn is not None and _conn_state is not None and _conn_state[0] is not _conn:
+            # The MCP self-healer replaced the cached connection directly.
+            try:
+                path = _read_db_path()
+                stat = path.stat()
+                _conn_state = (_conn, path, (stat.st_ino, stat.st_mtime_ns, stat.st_size))
+            except OSError:
+                _conn_state = (_conn, _conn_state[1], _conn_state[2])
+        else:
+            # Stat the current connection path if open, else resolve via _read_db_path.
+            path = _conn_state[1] if (_conn is not None and _conn_state is not None) else _read_db_path()
+            try:
+                if not path.is_file() or not (stat := path.stat()).st_size:
+                    raise FileNotFoundError(
+                        f"Sources database not found at {path}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+                    )
+            except OSError:
+                if _conn is None:
+                    raise
+                # A missing path does not invalidate an already open reader.
+            else:
+                identity = (stat.st_ino, stat.st_mtime_ns, stat.st_size)
+                if _conn is None or _conn_state is None:
+                    fresh = _open_conn(path, read_only=True)
+                    _conn = fresh
+                    _conn_state = (fresh, path, identity)
+                else:
+                    old_identity = _conn_state[2]
+                    # Reopen when the file was replaced on disk (inode or mtime changed).
+                    # A file truncated in-place with the same inode is a damaged connection,
+                    # not a replaced database; keep the held connection so self-heal triggers.
+                    file_replaced = (
+                        stat.st_ino != old_identity[0]
+                        or (stat.st_mtime_ns != old_identity[1] and stat.st_size >= old_identity[2])
+                    )
+                    if file_replaced:
+                        reopen_path = _read_db_path()
+                        fresh = _open_conn(reopen_path, read_only=True)
+                        _conn = fresh
+                        _conn_state = (fresh, reopen_path, identity)
     return _conn
 
 
@@ -4297,23 +4347,25 @@ def _json_string_list(value: object) -> list[str]:
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     """Return every exact-matching article from the offline official СУМ-20 collection.
 
-    The collection is populated only by ``sum20_official_ingest.py``.  This
-    reader deliberately has no live fallback, so its returned provenance is
-    always the official stored ``wordid`` record.
+    The collection is populated only by an explicit ingest. This reader has no
+    live fallback, so its provenance is the stored official ``wordid`` record.
+    An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
+    ``sum20_articles``; otherwise it uses the read-only sources collection.
+    ``LEXDATA_DB_PATH`` is exclusive and never falls back.
     """
     normalized_lookup_key = normalize_sum20_lookup(query)
-    columns = _table_columns("sum20_articles", db_path)
-    if not normalized_lookup_key or not columns:
+    if not normalized_lookup_key:
         return []
-    conn = _get_conn_for(db_path)
+    from scripts.lexicon.sum20_store import open_sum20
+
+    conn = open_sum20(db_path, repository_root=PROJECT_ROOT)
     try:
+        columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
+        if not columns:
+            return []
+        where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
-            f"""
-            SELECT *
-            FROM sum20_articles
-            WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)}
-            ORDER BY wordid
-            """,
+            f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
             (normalized_lookup_key,),
         ).fetchall()
         records: list[dict] = []
@@ -4373,7 +4425,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             )
         return records
     finally:
-        _close_if_temporary(conn, db_path)
+        conn.close()
 
 
 def _heritage_text(hit: dict) -> str:

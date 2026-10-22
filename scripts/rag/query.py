@@ -19,6 +19,9 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 try:
     from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:

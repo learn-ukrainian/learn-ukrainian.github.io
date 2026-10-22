@@ -31,11 +31,15 @@ import datetime as dt
 import json
 import os
 import sqlite3
+import sys
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.atlas import atlas_db
 from scripts.lexicon import enrich_manifest

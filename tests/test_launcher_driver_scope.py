@@ -23,6 +23,104 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 REPO = Path(__file__).resolve().parents[1]
 
 
+@pytest.mark.parametrize(("name", "expected"), [("INT", 130), ("TERM", 143), ("HUP", 129)])
+@pytest.mark.parametrize("delivery", ["pid", "group"])
+def test_forwarder_finishes_close_and_reaps_children_after_repeated_signal(
+    tmp_path: Path, name: str, expected: int, delivery: str
+) -> None:
+    """Check the core's own status without the outer scope's status translation."""
+    from tests.test_launcher_interactive_scope import DEADLINE_S, _assert_no_test_processes, _test_processes, _write
+
+    gate = tmp_path / "gate"
+    os.mkfifo(gate)
+    gate_fd = os.open(gate, os.O_RDWR | os.O_NONBLOCK)
+    ready = tmp_path / "ready"
+    received = tmp_path / "received"
+    attempts = tmp_path / "attempts"
+    closed = tmp_path / "closed"
+    client_pid = tmp_path / "client-pid"
+    core = _write(tmp_path / "launcher_core.sh", (REPO / "scripts/lib/launcher_core.sh").read_text())
+    provider = _write(tmp_path / "provider.py", """import signal, sys
+from pathlib import Path
+def stop(sig, frame):
+    Path(sys.argv[2]).write_text(str(sig))
+    raise SystemExit(0)
+for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+    signal.signal(sig, stop)
+Path(sys.argv[1]).write_text('ready')
+signal.pause()
+""")
+    # Only this disposable helper can receive the real close function's call.
+    _write(tmp_path / ".venv/bin/python", """#!/usr/bin/env bash
+[ "$*" = '-m scripts.session_supervisor close --role driver' ] || exit 97
+printf '%s\\n' "$$" > "$TEST_CLIENT_PID"
+printf 'close\\n' >> "$TEST_ATTEMPTS"
+IFS= read -r -t 60 _ < "$TEST_GATE" || exit 98
+printf 'closed\\n' > "$TEST_CLOSED"
+""", 0o755)
+    launcher = _write(tmp_path / "forwarder.sh", f"""#!/usr/bin/env bash
+source {shlex.quote(str(core))}
+source {shlex.quote(str(REPO / 'scripts/lib/session_supervisor.sh'))}
+LC_DURABLE_HELPER_ROOT="$PWD"
+LC_PROVIDER=claude
+{shlex.quote(sys.executable)} -I {shlex.quote(str(provider))} {shlex.quote(str(ready))} {shlex.quote(str(received))} &
+LC_DRIVER_CHILD_PID=$!
+sleep 300 & LC_SUPERVISORY_WATCH_PID=$!
+sleep 300 & LC_DRIVER_RENEW_PID=$!
+sleep 300 & LC_OBSERVER_HEARTBEAT_PID=$!
+trap 'launcher_forward_driver_signal {name} {expected}' {name}
+printf 'armed\\n' > armed
+IFS= read -r _ < "$TEST_GATE"
+""")
+    env = {**os.environ, "TEST_GATE": str(gate), "TEST_ATTEMPTS": str(attempts),
+           "TEST_CLOSED": str(closed), "TEST_CLIENT_PID": str(client_pid)}
+    process = subprocess.Popen(["bash", str(launcher)], cwd=tmp_path, env=env, start_new_session=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    try:
+        wait_until(lambda: ready.exists() and (tmp_path / "armed").exists(), timeout=DEADLINE_S,
+                   message="provider and direct forwarder traps")
+        sig = getattr(signal, f"SIG{name}")
+        process.send_signal(sig)
+        wait_until(attempts.exists, timeout=DEADLINE_S, message="in-flight close client")
+        assert not closed.exists()
+        if delivery == "group":
+            # The new session belongs only to this fixture. Refuse delivery if
+            # either its identity or any current member cannot be established.
+            assert process.poll() is None
+            assert os.getpgid(process.pid) == os.getsid(process.pid) == process.pid
+            assert process.pid != os.getpgrp()
+            members = set()
+            for entry in Path("/proc").iterdir():
+                if not entry.name.isdigit():
+                    continue
+                try:
+                    fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+                except FileNotFoundError:
+                    continue
+                if int(fields[2]) == process.pid:
+                    assert int(fields[3]) == process.pid
+                    members.add(int(entry.name))
+            assert {process.pid, int(client_pid.read_text())} <= members
+            assert members <= set(_test_processes(tmp_path))
+            os.killpg(process.pid, sig)
+        else:
+            process.send_signal(sig)
+        os.write(gate_fd, b"release\nrelease\n")
+        stdout, stderr = process.communicate(timeout=DEADLINE_S)
+        assert process.returncode == expected, stdout + stderr
+        assert received.read_text() == str(sig)
+        assert attempts.read_text().splitlines() == ["close"]
+        assert closed.read_text() == "closed\n"
+        wait_until(lambda: not _test_processes(tmp_path),
+                   timeout=5, message="provider and watcher cleanup")
+        _assert_no_test_processes(tmp_path)
+    finally:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.communicate(timeout=10)
+        os.close(gate_fd)
+
+
 def manager_guard(directory: Path) -> Path:
     """Stand-ins that refuse and record any user-manager call no fake intercepted.
 
@@ -555,9 +653,31 @@ def test_signal_reaches_provider_when_the_timed_pause_expires_in_the_trap(
     assert body.count("driver_scope_relay() {") == 1
     helper.write_text(
         body.replace("driver_scope_relay() {", "original_relay() {")
-        + '\ndriver_scope_relay() {\n  sleep 0.15\n  original_relay "$@"\n}\n'
+        + '''
+driver_scope_relay() {
+  printf '%s\\n' "${in_timed_read:-0}" > "$TEST_TRAP_IN_READ"
+  sleep 0.15
+  original_relay "$@"
+  : > "$TEST_RELAY_FINISHED"
+}
+read() {
+  case "$*" in
+    "-r -t 0.1 -u "*) ;;
+    *) builtin read "$@"; return ;;
+  esac
+  if [ ! -e "$TEST_CHILD_READY" ]; then builtin read "$@"; return; fi
+  unset -f read
+  in_timed_read=1
+  : > "$TEST_READ_ENTERING"
+  builtin read "$@" || true
+  in_timed_read=0
+  : > "$TEST_READ_FINISHED"
+}
+'''
     )
     child_ready, received = tmp_path / "child-ready", tmp_path / "received"
+    read_entering, read_finished = tmp_path / "read-entering", tmp_path / "read-finished"
+    trap_in_read, relay_finished = tmp_path / "trap-in-read", tmp_path / "relay-finished"
     with (launcher.parent / "scripts/launchers/claude.sh").open("a") as stream:
         stream.write("""
 launcher_adapter_exec() {
@@ -571,7 +691,12 @@ launcher_adapter_exec() {
     with subprocess.Popen(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**_inherited_environ(), **env, "TEST_CHILD_READY": str(child_ready), "TEST_RECEIVED": str(received)},
+        env={
+            **_inherited_environ(), **env,
+            "TEST_CHILD_READY": str(child_ready), "TEST_RECEIVED": str(received),
+            "TEST_READ_ENTERING": str(read_entering), "TEST_READ_FINISHED": str(read_finished),
+            "TEST_TRAP_IN_READ": str(trap_in_read), "TEST_RELAY_FINISHED": str(relay_finished),
+        },
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -580,8 +705,22 @@ launcher_adapter_exec() {
     ) as process:
         try:
             wait_until(child_ready.exists, timeout=15, message="provider signal traps")
-            # The waiting shell spends almost all of its time in the timed pause.
+            # A marker before the builtin alone can race its entry. Observe the
+            # kernel's blocking select too, then require that this same read
+            # was still active when the trap ran. Missing the window fails.
+            wait_until(
+                lambda: read_entering.exists()
+                and Path(f"/proc/{process.pid}/wchan").read_text().startswith("poll_schedule_timeout"),
+                timeout=15,
+                interval=0.001,
+                message="waiter blocked inside the timed read",
+            )
             os.kill(process.pid, sig)
+            wait_until(read_finished.exists, timeout=15, message="interrupted timed read to return")
+            assert trap_in_read.read_text() == "1\n", "signal missed the timed read"
+            # The old mapfile-in-trap relay is abandoned before it returns;
+            # the assignment-only relay completes and actually reaches the child.
+            assert relay_finished.exists(), "read expiry abandoned the signal relay"
             try:
                 _, stderr = process.communicate(timeout=15)
             except subprocess.TimeoutExpired:

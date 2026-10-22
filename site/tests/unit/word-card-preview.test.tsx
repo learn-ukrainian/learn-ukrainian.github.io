@@ -10,6 +10,8 @@ import WordCardPreview from '../../src/lexicon/WordCardPreview';
 import { compareCurrent, fieldStates, pairCurrent, previewCard } from '../../src/lib/lexicon/word-card-preview';
 import { hash, loadCases, previewInputs, record, revisionCases, relationCases } from '../fixtures/word-card-preview/inputs';
 import snapshot from '../fixtures/word-card-preview/current';
+import { groupReleasePages, type ReleasePage } from '../../src/lib/lexicon/word-card-readable';
+import type { LoadedRelease, ReleaseRow } from '../../src/lib/lexicon/word-card-release';
 
 const cases = loadCases();
 const sample = (name: string) => { const c = cases.find(c => c.name === name); if (!c) throw Error(name); return c; };
@@ -205,5 +207,74 @@ describe('source-bound preview mechanics', () => {
       expect(pairCurrent(candidate,parsed,targets)).toEqual(['valid','repeated-key','unrelated-key'].includes(kind) ? snapshot.records[1]?.record : null);
       expect(pairCurrent(candidate,[...parsed,...parsed],targets)).toBeNull();
     }
+  });
+});
+
+describe('readable grouped release pages', () => {
+  const pin = { release_version: 'v-test', provenance: 'producer-declared', dataset_sha256: 'a'.repeat(64), manifest_sha256: 'b'.repeat(64) } as const;
+  let n = 0;
+  const f = (card: string, field: string, value: ReleaseRow['fields'][number]['value'], source = 'ulif', subject: ReleaseRow['fields'][number]['subject'] = { kind: 'card', id: card }) => ({
+    assertion_id: `wa_${String(n++).padStart(24, '0')}`, subject, field, value, citation: { source_id: source, snapshot_id: 's', locator: 'l',
+      licence_ref: { register_source_id: source, register_version: 1 }, licence: { name: 't' }, terms_ref: 'r',
+      attribution: source === 'ulif' ? 'ULIF https://lcorp.ulif.org.ua/dictua/' : source === 'vesum' ? 'VESUM <used version> https://vesum.nlp.net.ua/' : 'javascript:alert(1) https://evil.invalid/' } });
+  const rows: ReleaseRow[] = [
+    { card_id: 'wc_p', card_kind: 'proper_name', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_p', 'spelling', 'Замок'),
+      f('wc_p', 'sense_label', 'село', 'ulif', { kind: 'sense', id: 'ws_p' })] },
+    { card_id: 'wc_a', card_kind: 'lexeme', card_version: 'v1', status: 'CANDIDATE', known_gaps: ['<b>gap</b>'], fields: [f('wc_a', 'spelling', 'замок'),
+      f('wc_a', 'stress', 'замо́к'), f('wc_a', 'stress', '<script>globalThis.x=1</script>', 'evil'), f('wc_a', 'pos', 'noun', 'vesum')] },
+    { card_id: 'wc_b', card_kind: 'lexeme', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_b', 'spelling', 'замок'), f('wc_b', 'stress', 'за́мок'),
+      f('wc_b', 'paradigm', { slot: 'v_naz.s', forms: ['за́мок'] }), f('wc_b', 'paradigm', { slot: 'v_naz.p', forms: ['за́мки'] }), f('wc_b', 'paradigm', { slot: 'inf', forms: ['x'] }),
+      f('wc_b', 'paradigm', { slot: 'v_rod.s', forms: ['за́мку'] }), f('wc_b', 'paradigm', { slot: 'zz', forms: ['?'] }), f('wc_b', 'definition_uk', 'будівля')] },
+    { card_id: 'wc_s', card_kind: 'proper_name', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_s', 'spelling', 'Шуба')] },
+  ];
+  const page = groupReleasePages(rows).pages[0]!;
+  const card: ReleasePage = { kind: 'release-page', page, pin };
+  const view = (markup: string) => { const div = document.createElement('div'); div.innerHTML = markup; return div; };
+  it('leads with numbered source entries, proper names last, and keeps conflicts and gaps explicit', () => {
+    const html = renderToStaticMarkup(<WordCardPreview card={card} current={null} compare={false} />);
+    const dom = view(html);
+    expect(Array.from(dom.querySelectorAll('[data-entry]')).map(e => [e.getAttribute('data-entry'), e.querySelector('h2')?.textContent, e.querySelector('[data-entry-label]')?.textContent]))
+      .toEqual([['wc_a', '1. замок', 'Word CANDIDATE'], ['wc_b', '2. за́мок', 'Word CANDIDATE'], ['wc_p', '3. Замок', 'Proper name — село. Listed after common entries. CANDIDATE']]);
+    const [a, b] = Array.from(dom.querySelectorAll('[data-entry]'));
+    expect(a?.querySelectorAll('[data-fact="stress"] [data-fact-value]')).toHaveLength(2);
+    expect(a?.querySelector('[data-sources-differ]')).not.toBeNull();
+    expect(a?.querySelector('[data-missing-paradigm]')?.textContent).toContain('not borrowed from other entries');
+    expect(b?.querySelector('[data-missing-paradigm]')).toBeNull();
+    expect(Array.from(b?.querySelectorAll('[data-paradigm-source="ulif"] tr') ?? []).map(r => r.textContent)).toEqual([
+      'ВідмінокОднинаМножина', 'Називнийза́мокза́мки', 'Родовийза́мку—not supplied', 'Grammatical formSupplied forms', 'Інфінітивx', 'zz (unrecognised slot code, shown literally)?']);
+    expect(b?.querySelector('[aria-label="Other source facts of entry 2"]')?.textContent).toContain('будівля');
+    expect(html).not.toContain('<script>');
+    expect(html).toContain('&lt;script&gt;globalThis.x=1&lt;/script&gt;');
+    expect(Array.from(dom.querySelectorAll('[data-credit-link]')).map(l => l.getAttribute('href'))).toEqual(expect.arrayContaining(['https://lcorp.ulif.org.ua/dictua/', 'https://vesum.nlp.net.ua/']));
+    expect(Array.from(dom.querySelectorAll('a')).map(l => l.getAttribute('href') ?? '').filter(h => !/^https:\/\/(lcorp\.ulif\.org\.ua|vesum\.nlp\.net\.ua|github\.com\/learn-ukrainian)\//.test(h))).toEqual([]);
+    expect(a?.querySelector('[data-credit-gap="vesum_version_placeholder"]')).not.toBeNull();
+    expect(dom.querySelector('[aria-label="Field comparison"]')).toBeNull();
+  });
+  it('keeps every raw assertion, citation and report action in collapsed audit details', () => {
+    const dom = view(renderToStaticMarkup(<WordCardPreview card={card} current={null} compare />));
+    for (const entry of page.entries) {
+      const audit = dom.querySelector(`[data-entry-audit="${entry.row.card_id}"]`);
+      expect(audit?.tagName).toBe('DETAILS');
+      expect(audit?.hasAttribute('open')).toBe(false);
+      expect(Array.from(audit?.querySelectorAll('[data-release-assertion]') ?? []).map(e => e.getAttribute('data-release-assertion'))).toEqual(entry.row.fields.map(x => x.assertion_id));
+      expect(audit?.querySelectorAll('[data-report-action]')).toHaveLength(entry.row.fields.length);
+    }
+    expect(Array.from(dom.querySelectorAll('pre')).filter(pre => !pre.closest('details'))).toEqual([]);
+    expect(dom.querySelector('[aria-label="Field comparison"]')?.textContent).toContain('Unresolved pairing');
+    expect(dom.querySelector('[aria-label="Field comparison"]')?.textContent).toContain('0 actual comparisons');
+  });
+  it('summarises grouped pages with one learner link per page and audit records for every card', () => {
+    const release: LoadedRelease = { kind: 'release', pin, rows };
+    const dom = view(renderToStaticMarkup(<WordCardPreview card={release} current={null} compare={false} />));
+    expect(Array.from(dom.querySelectorAll('[data-page-link]')).map(l => [l.getAttribute('href'), l.textContent])).toEqual([['/lexicon-v2/word/%D0%B7%D0%B0%D0%BC%D0%BE%D0%BA/', 'замок']]);
+    expect(dom.querySelectorAll('[data-compare-link]')).toHaveLength(1);
+    expect(dom.querySelector('[data-page-count]')?.textContent).toBe('1 word pages with 3 numbered entries. 1 source cards have no learner page; they stay in the audit details.');
+    const audit = dom.querySelector('[data-release-audit]');
+    expect(audit?.tagName).toBe('DETAILS');
+    expect(Array.from(audit?.querySelectorAll('[data-disposition]') ?? []).map(r => [r.getAttribute('data-disposition'), r.getAttribute('data-listed')]))
+      .toEqual([['wc_p', 'true'], ['wc_a', 'true'], ['wc_b', 'true'], ['wc_s', 'false']]);
+    expect(audit?.querySelectorAll('[data-card-link]')).toHaveLength(4);
+    expect(audit?.querySelector('[data-release-accounting]')).not.toBeNull();
+    expect(dom.textContent).not.toMatch(/PP-03|PV-02|section 9/);
   });
 });

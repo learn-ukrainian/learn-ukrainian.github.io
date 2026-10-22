@@ -221,7 +221,7 @@ def main():
         print("Usage: .venv/bin/python scripts/validate_activities.py <curriculum> <level> [module_num]")
         print("Example: .venv/bin/python scripts/validate_activities.py l2-uk-en a1")
         print("Example: .venv/bin/python scripts/validate_activities.py l2-uk-en a1 26")
-        return 1
+        return 0 if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"} else 1
 
     curriculum = sys.argv[1]
     level = sys.argv[2]

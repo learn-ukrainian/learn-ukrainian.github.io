@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Iterator, Mapping
@@ -19,6 +20,9 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import correction_factory as evaluation

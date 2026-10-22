@@ -20,6 +20,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.agent_runtime.errors import (
     AgentRuntimeError,
     AgentStalledError,

@@ -28,10 +28,73 @@ publication wiring, deployment and deployed noindex proof. Local route-only
 browser builds use the same route, components and Astro configuration without
 reading protected stores or hydrating the rest of the site.
 
-The public configuration emits 150 `/lexicon-v2/release/<card_id>/` pages,
-150 `/lexicon-v2/compare/release/<card_id>/` pages and two release summaries.
-Every preview route has `noindex, nofollow`; sitemap generation excludes them.
+## Pages publication
+
+Every `deploy-pages.yml` run publishes this preview with the ordinary site;
+automatic-deployment eligibility is unchanged. The committed pin
+`site/src/data/word-card-preview-release.pointer.json` records the release tag and
+both byte sizes and digests above. `scripts/deploy/prepare_word_card_preview.py
+prepare` downloads only those two public assets, without a token, into runner
+scratch. It refuses a size or digest mismatch, a manifest that disagrees with
+the pin, synthetic provenance, and any `PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS`
+value, including an empty one. The tag only locates the assets.
+
+`Build Site` then sets `ATLAS_WORD_CARD_PREVIEW=1` with the verified directory
+and pin, and refuses to start if the controls flag is set. After the build,
+`verify-dist` reads Atlas's committed route inventory
+`site/src/lib/lexicon/word-card-preview-route-inventory.json`
+(`word-card-preview-route-inventory.v1`). Atlas owns the route set; Delivery
+freezes no route count. The inventory's release must equal the pin, including
+both byte sizes. Its card dispositions must cover every verified release card
+exactly once, with the release's card kind. Every declared count is recomputed:
+source cards and citations from the release rows, and pages, entries,
+proper-name dispositions, routes and routes per class from the inventory's own
+cards and routes. Each route must be a unique `/lexicon-v2/` path whose `href`
+is its percent-encoding.
+
+The built site must then contain exactly the inventoried routes, each with a
+single `noindex, nofollow` robots meta. No emitted sitemap may list a preview
+URL, and no page may contain refusal text or a committed synthetic-fixture
+identifier. A missing, malformed or stale inventory fails, as does any
+disagreement. Any failure stops the job before the size gate and upload. The
+inventory is Atlas's file, so a build of a tree without it fails closed.
+
+Changing the pin is content drift, so a new release needs the manual
+`workflow_dispatch` route. `robots.txt` remains unchanged (`Allow: /`); page
+metadata and sitemap exclusion keep the preview out of indexes.
+
+The public configuration emits the routes and per-class counts recorded in
+that inventory's `counts`. Every preview route has `noindex, nofollow`;
+sitemap generation excludes them.
 With `ATLAS_WORD_CARD_PREVIEW` unset, no preview routes are generated.
+
+### Deployment marker
+
+Each run also writes `.well-known/learn-ukrainian-deployment-<sha>.txt`, where
+`<sha>` is the full deployed commit SHA. Its body is exactly that SHA plus one
+newline. The pinned `upload-pages-artifact` action drops dot-named paths
+unless `include-hidden-files` is `true`, and with it set would publish every
+hidden path. `scripts/deploy/verify_pages_deployment_marker.py` therefore runs
+directly before upload: it allows only `.well-known/` holding that one regular
+marker file and fails the job on any other hidden file or directory, at any
+depth or behind a directory symlink. Only then does the upload set
+`include-hidden-files: true`. Because the scan skips `.well-known/`, the audit
+re-checks it after the scan and refuses if it changed or was replaced during the
+audit. It cannot see writes after it last reads a path, so no step may run
+between the audit and the upload.
+
+A green deploy job proves upload, not public readability. After deployment,
+check the live marker read-only:
+
+```bash
+sha='<full deployed commit SHA>'  # replace with the 40-hex SHA
+curl --fail --silent --show-error \
+  "https://learn-ukrainian.github.io/.well-known/learn-ukrainian-deployment-${sha}.txt" \
+  | cmp - <(printf '%s\n' "$sha") && echo "marker OK: $sha"
+```
+
+`--fail` turns the Pages 404 page into an error, and `cmp` refuses any other
+body.
 
 ## Values, coverage and unresolved dependencies
 
@@ -73,7 +136,7 @@ For actual-release browser proof, additionally set
 expectations file, digest
 `1e86726fb4244c2e31b7a2f67ef7d52fc78ef3fc1de3d1659d1c9b06c8d7a68a`.
 The spec checks both presentations of all 2978 assertions against those hashes,
-all 302 routes, noindex, attribution gaps, summaries, report links and complete
+every emitted preview route, noindex, attribution gaps, summaries, report links and complete
 built HTML/JS/XML fixture-sentinel scans. It freezes sentinels before building
 and records markers shared with real data separately. Refusal and flag-off
 tests use scratch copies, preserving historical producer inputs.

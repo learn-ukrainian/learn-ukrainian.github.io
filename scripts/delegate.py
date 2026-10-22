@@ -74,6 +74,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_language_lane": bool,  # dispatch's Ukrainian content classification
         "review_brief_warnings": [str] | absent,  # advisory brief checks, e.g. review_brief_no_dispositions (#10665)
         "sources_mcp_call_count": int | null,  # runtime evidence; null means unknown
+        "review_test_slots": {outcome: "held" | "refused" | "disabled", slots?, waited_s?, reason?} | absent,  # Codex read-only reviews (#11230)
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
@@ -199,8 +200,10 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.accounting import model_accounting_fields
 from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
+from scripts.common import test_slots
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -2735,6 +2738,8 @@ def _agy_model_state(
 
 def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
+    from scripts.agent_runtime.adapters.deepseek import _is_flash_model_line
+
     if agent != "deepseek":
         return {}
     if model == "deepseek-v4-pro":
@@ -2755,7 +2760,7 @@ def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | N
         name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
     except (OSError, ValueError, KeyError, TypeError):
         name = None
-    if name == "DeepSeek V4.1 Flash":
+    if isinstance(name, str) and _is_flash_model_line(name):
         return {
             "resolved_model": "deepseek-v4.1-flash",
             "resolved_model_known": True,
@@ -7950,6 +7955,9 @@ def _build_worker_env(
     """Construct the execution environment for a dispatched worker process."""
     source = dict(os.environ if base_env is None else base_env)
     worker_env = _pinned_worker_venv_env(source)
+    # A worker never runs inside the dispatcher's test slots: it takes its own (#11230).
+    for name in (test_slots.HOLDER_ENV, test_slots.SESSION_ENV):
+        worker_env.pop(name, None)
     if attribution is not None:
         worker_env["LU_RUNTIME_INITIATOR"] = getattr(attribution, "initiator", str(attribution))
         worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = getattr(attribution, "source", "")
@@ -10388,9 +10396,9 @@ def _augment_prompt_with_worktree(
             "\n[write-mode closeout]\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
-            "The push runs a pre-push gate on that exact commit (pre-commit pre-push stage, repo-wide "
-            "invariant tests, your changed tests); a refusal names the failing node ids, and "
-            "`validation_incomplete` means it did not finish: stop and report, never `--no-verify`.\n"
+            "The push runs a pre-push gate on that exact commit (the pre-commit pre-push stage with the OPSEC "
+            "and internal-ID scans; it runs no tests, CI runs the full suite); a refusal names the failing hooks, "
+            "and `validation_incomplete` means it did not finish: stop and report, never `--no-verify`.\n"
             "Do not merge `origin/main` into your branch unless `git merge-tree` against a freshly fetched "
             "main reports a conflict, or the driver orders it.\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
@@ -10755,6 +10763,34 @@ def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
 # reading EOF) get this long before they count as background jobs.
 _BACKGROUND_JOBS_SETTLE_S = 5.0
 
+# Slots a Codex read-only review holds for its reviewer: the review bound of two test workers (cto-10744).
+REVIEW_TEST_SLOTS = 2
+
+
+def _hold_review_test_slots(
+    *, agent: str, mode: str, review_typed: bool, sealed_attempt: bool, task_id: str
+) -> tuple[test_slots.Hold | None, dict[str, Any] | None]:
+    """Take a Codex read-only review's test slots in this worker, before its sandbox starts (#11230, #10744).
+
+    Codex's read-only sandbox maps only this user, so the pool's root-owned ancestors show an unmapped owner,
+    and it mounts the pool read-only: the governor cannot prepare the pool there and refuses every run. The
+    worker queues in the host pool like any run and holds ``review`` slots until the runtime returns; the
+    reviewer's governed runs check the holder marker read-only, take turns on the hold and keep its slots taken
+    while any of them still runs, even past this worker, so accounting stays host-wide. Other routes, and sealed
+    attempts whose inputs carry no pool, take their own slots or none. A refusal is recorded and the review runs on; its governed runs are then refused, typed.
+    Returns the hold (or ``None``) and the record for the task's ``review_test_slots`` field.
+    """
+    if agent != "codex" or mode != "read-only" or not review_typed or sealed_attempt:
+        return None, None
+    try:
+        if not test_slots.enabled():
+            return None, {"outcome": "disabled"}
+        hold = test_slots.acquire(REVIEW_TEST_SLOTS, kind="review", task_id=task_id)
+    except test_slots.SlotError as error:
+        print(f"[delegate] WARNING: review test slots refused: {error}", file=sys.stderr)
+        return None, {"outcome": "refused", "reason": error.reason}
+    return hold, {"outcome": "held", "slots": hold.count, "waited_s": round(hold.waited, 1)}
+
 
 def _worker_process_reader() -> worker_leftovers.ProcessReader:
     """Seam for tests: the live ``/proc`` and cgroup reader."""
@@ -10940,6 +10976,11 @@ def _emit_terminal_dispatch_event(
                 "task_id": task_id,
                 "agent": agent,
                 "model": model,
+                **{key: final_state.get(key) for key in (
+                    "requested_selector", "observed_model", "observed_model_source",
+                    "observed_model_provenance",
+                )},
+                "identity_state": final_state.get("identity_state") or "unknown",
                 "resolved_model": final_state.get("resolved_model"),
                 "resolved_model_known": final_state.get("resolved_model_known"),
                 "resolved_model_source": final_state.get("resolved_model_source"),
@@ -11127,6 +11168,7 @@ def _run_worker(
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
         state.setdefault("cli_version", start_telemetry.cli_version)
+    state.update(model_accounting_fields(requested_selector=model))
     agy_requested_model = model
     if agent == "agy":
         from scripts.agent_runtime.adapters.agy import AgyAdapter
@@ -11246,6 +11288,7 @@ def _run_worker(
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
+    review_slots: test_slots.Hold | None = None
     from scripts.agent_runtime.result import AgyTelemetry
 
     agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
@@ -11412,6 +11455,21 @@ def _run_worker(
             advisory_prompt_sha256 = _verify_bounded_worker(
                 task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=advisory_execution, prompt=prompt
             )
+            review_slots, review_slots_record = _hold_review_test_slots(
+                agent=agent,
+                mode=mode,
+                review_typed=_dispatch_is_review_typed(argparse.Namespace(**state))
+                or require_review_verdict
+                or review_id is not None,
+                sealed_attempt=review_manifest is not None or attempt_id is not None,
+                task_id=task_id,
+            )
+            if review_slots_record is not None:
+                state["review_test_slots"] = review_slots_record
+                _write_state_atomic(state_path, state)
+            if review_slots is not None:
+                # The CLI's environment is built from this process's, so its tool commands receive the marker.
+                os.environ.update(review_slots.environment())
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -11521,6 +11579,11 @@ def _run_worker(
             stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
+            if review_slots is not None:
+                # A reviewer test run that outlives the CLI keeps its slots taken until it ends (#11230).
+                os.environ.pop(test_slots.HOLDER_ENV, None)
+                review_slots.release()
+                review_slots = None
             if cursor_mcp_path is not None:
                 try:
                     if cursor_mcp_existed and cursor_mcp_backup is not None:
@@ -11588,6 +11651,10 @@ def _run_worker(
 
         final_state = _read_state(state_path) or {}
         final_state.update(agy_model_state)
+        final_state.update(model_accounting_fields(
+            requested_selector=model, identity=runtime_identity,
+            task_id=task_id, run_nonce=effective_nonce,
+        ))
         # #9275: gate evidence is this run's measurement, never an earlier record's.
         for gate_key in _ADVISORY_GATE_KEYS:
             final_state.pop(gate_key, None)
@@ -12470,6 +12537,7 @@ def _record_worktree_prep_failure(
         "attribution_source": attribution.source,
         "agent": agent,
         "model": start_telemetry.model,
+        **model_accounting_fields(requested_selector=requested_model),
         **_cursor_model_state(agent=agent, initial=True),
         **_deepseek_model_state(agent=agent, model=start_telemetry.model),
         "effort": start_telemetry.effort,
@@ -12675,8 +12743,12 @@ def _run_dor_preflight(
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
     (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
     says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+
+    A membership timeout on a card that otherwise read PASS is an UNKNOWN advisory (#11283): it is recorded
+    under ``unknown`` with ``dor: UNKNOWN (timeout)`` and needs no ``--allow-dor-warn``. Card findings, issue
+    lookup and checker failures keep their refusals; ``dor`` is PASS only when every issue read PASS.
     """
-    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE
+    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE, AdmissionState, admission_state
 
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
@@ -12692,6 +12764,7 @@ def _run_dor_preflight(
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
+    unknown: dict[str, str] = {}
     non_overridable: set[str] = set()
     membership_records: dict[str, Any] = {}
     issue_numbers: list[int] = []
@@ -12737,7 +12810,10 @@ def _run_dor_preflight(
                 # section is explicitly unchecked, never evidence of membership.
                 if "membership" in payload:
                     membership_records[label] = payload["membership"] or {"status": "unchecked"}
-                if result.returncode or payload.get("verdict") != "PASS":
+                state = admission_state(payload)
+                if state is AdmissionState.UNKNOWN and result.returncode == 1:
+                    unknown[label] = ",".join(payload["missing"])
+                elif result.returncode or state is not AdmissionState.PASS:
                     warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
             except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
                 if not recorded:
@@ -12761,7 +12837,10 @@ def _run_dor_preflight(
         stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
         return None, None
-    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    verdict = AdmissionState.WARN if warnings else AdmissionState.UNKNOWN if unknown else AdmissionState.PASS
+    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings, "dor": verdict.value}
+    if unknown:
+        record["unknown"] = unknown
     if membership_records:
         record["membership"] = membership_records
     if stream_epics:
@@ -12777,6 +12856,9 @@ def _run_dor_preflight(
             f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()
         )
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
+    if unknown:
+        details = "; ".join(f"{('#' + label) if label.isdigit() else label}: {codes}" for label, codes in unknown.items())
+        print(f"⚠️ DoR UNKNOWN (timeout) ({details}); membership unverified", file=sys.stderr)
     return None, record
 
 
@@ -13511,12 +13593,6 @@ def _dispatch(
     if cursor_auto_error:
         print(cursor_auto_error, file=sys.stderr)
         return 2
-    cursor_auto_admission = (
-        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
-        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
-        else None
-    )
-
     task_id = args.task_id
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
@@ -13961,6 +14037,17 @@ def _dispatch(
             print(dor_error, file=sys.stderr)
             return 2
 
+    # Bind Auto admission to the final DoR check, including a changed prompt (#11283).
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": dor_record.get("dor", "PASS") == "PASS", "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
+
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
     if write_intent_error:
@@ -14342,18 +14429,25 @@ def _dispatch(
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
     # the shared ownership ledger entirely (Claude CF #5649 r11).
+    # A concrete overlap waits on live holders and requeues expired tickets
+    # (#11351; DELEGATE_OWNERSHIP_WAIT_S is the unknown-holder fallback); only
+    # this dispatch's own worktree lock is held while it waits.
     if not bool(getattr(args, "dry_run", False)):
         try:
             from scripts.guardrails.delegate_ownership import (
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
+                env_queue_wait_s,
+                publish_requeue_notice,
             )
         except ImportError:  # pragma: no cover - flat script path
             from guardrails.delegate_ownership import (  # type: ignore
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
+                env_queue_wait_s,
+                publish_requeue_notice,
             )
 
         guard_mode = env_guard_mode()
@@ -14365,6 +14459,12 @@ def _dispatch(
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
                 pid=os.getpid(),
                 guard_mode=guard_mode,
+                wait_s=env_queue_wait_s(),
+                on_queued=lambda notice: print(f"⏳ {notice}", file=sys.stderr, flush=True),
+                requeue_on_timeout=True,
+                on_requeued=lambda notice: publish_requeue_notice(
+                    notice, task_id=task_id, initiator=attribution.initiator, run_nonce=run_nonce,
+                ),
             )
         except Exception as own_exc:
             # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
@@ -14380,6 +14480,9 @@ def _dispatch(
                 )
                 return 2
         else:
+            if ownership.queue_timeout:
+                print(f"❌ {ownership.reason} for task_id={task_id!r}", file=sys.stderr)
+                return 2
             if ownership.would_refuse or ownership.override_reason:
                 # Only report a conflict count when there ARE conflicts: an
                 # unprovable-disjointness refusal has none, and printing
@@ -14479,6 +14582,7 @@ def _dispatch(
                 "attribution_source": attribution.source,
                 "agent": dispatch_agent,
                 "model": start_telemetry.model,
+                **model_accounting_fields(requested_selector=args.model),
                 **_cursor_model_state(agent=dispatch_agent, initial=True),
                 **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
                 "effort": start_telemetry.effort,
@@ -15000,6 +15104,7 @@ def _dispatch(
             "attribution_source": attribution.source,
             "agent": dispatch_agent,
             "model": start_telemetry.model,
+            **model_accounting_fields(requested_selector=args.model),
             **_cursor_model_state(agent=dispatch_agent, initial=True),
             **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
@@ -16101,9 +16206,12 @@ def _cursor_auto_refusal(
     Auto needs positive evidence of that task: ``--research-role implementation``
     (the declared functional role; a missing or any other role is unclassified for
     Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
-    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
-    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    checked an issue card and found it PASS (``--allow-dor-warn`` and UNKNOWN are not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default. An explicit
+    ``dor`` state other than PASS refuses on its own; a legacy record without ``dor`` keeps its
+    warning-map reading.
     """
+    from scripts.ci.check_issue_task_quality import AdmissionState
     from scripts.review.model_catalog import (
         CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
         cursor_pinned_models,
@@ -16126,7 +16234,12 @@ def _cursor_auto_refusal(
         reasons.append("no --owned-path")
     if not dor_record or not dor_record.get("issues"):
         reasons.append("no DoR issue card was checked")
-    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+    elif (
+        ("dor" in dor_record and dor_record["dor"] != AdmissionState.PASS.value)
+        or dor_record.get("warnings")
+        or dor_record.get("unknown")
+        or dor_record.get("allow_warn_reason") is not None
+    ):
         reasons.append("the DoR issue card is not PASS")
     if not reasons:
         return None
@@ -19502,7 +19615,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--allow-dor-warn",
         metavar="REASON",
-        help="Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON.",
+        help=(
+            "Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON. "
+            "A membership timeout on an otherwise PASS card is an UNKNOWN advisory and needs no override (#11283)."
+        ),
     )
     d.add_argument(
         "--lifecycle-file",
@@ -19973,6 +20089,8 @@ def build_parser() -> argparse.ArgumentParser:
             "dirty danger-mode worktree commits only changes under these paths; without "
             "any it commits nothing and the task ends needs_finalize. Required for a "
             "write-capable --mode: review admission checks the branch's scope from it (#9739). "
+            "A writer whose paths overlap an active writer's waits in the ownership queue for "
+            "up to DELEGATE_OWNERSHIP_WAIT_S seconds (default 1800) (#11281). "
             "Independent of --research-owned-path."
         ),
     )
@@ -20020,8 +20138,9 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="REASON",
         help=(
             "Explicitly admit a write-capable dispatch that intersects another "
-            "active claim. Records task, conflicts, reason, and caller in the "
-            "ownership ledger. Required text reason; empty string is ignored."
+            "active claim, without waiting in the ownership queue. Records task, "
+            "conflicts, reason, and caller in the ownership ledger. Required text "
+            "reason; empty string is ignored."
         ),
     )
     d.add_argument(

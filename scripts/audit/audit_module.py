@@ -10,9 +10,14 @@ Usage:
 Usage:
     python3 scripts/audit_module.py <file.md> [file2.md ...]
 """
-
 import argparse
 import sys
+from pathlib import Path
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    # `audit` is the scripts/audit package. The repository root alone cannot find it.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from audit import audit_module
 

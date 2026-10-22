@@ -9,6 +9,7 @@ This script reads the actual module counts from the curriculum folder
 and generates an updated llms.txt file for AI discoverability.
 """
 
+import sys
 from pathlib import Path
 
 # Configuration
@@ -142,4 +143,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print(__doc__.strip())
+        raise SystemExit(0)
     main()

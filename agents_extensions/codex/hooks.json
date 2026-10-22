@@ -52,7 +52,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" post-tool-use",
-            "timeout": 5,
+            "timeout": 15,
             "statusMessage": "Recording Codex tool result"
           },
           {

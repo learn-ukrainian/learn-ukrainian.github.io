@@ -3,7 +3,7 @@
 import copy
 import json
 import subprocess
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -212,7 +212,7 @@ def test_admission_downloads_use_managed_scratch_and_are_removed(admission, monk
     ("issues/comments/999", {"body": "APPROVE without the digest"}, "designated admission approval"),
     ("actions/runs/102", {"head_branch": "feature"}, "unmodified main"),
     ("actions/runs/102", {"head_repository": {"full_name": "someone/fork"}}, "unmodified main"),
-    ("actions/runs/102", {"event": "merge_group"}, "unmodified main"),
+    ("actions/runs/102", {"event": "merge_group"}, "seven days"),
     ("actions/runs/102", {"event": "pull_request_target"}, "unmodified main"),
     ("actions/runs/102", {"path": ".github/workflows/other.yml"}, "unmodified main"),
     ("actions/runs/102", {"status": "in_progress"}, "unmodified main"),
@@ -377,3 +377,221 @@ def test_selection_listed_unlisted_schedule_and_expired(monkeypatch):
     monkeypatch.setenv("LU_FLAKE_DISABLE_RERUN", "1")
     root_conftest.pytest_collection_modifyitems(None, [listed])
     assert listed.markers == []
+
+
+@pytest.fixture
+def merge_admission(admission, tmp_path, monkeypatch):
+    """Use real commit snapshots and the shared scanner, without network fetches."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, timeout=30).stdout.strip()
+
+    git("init", "-q")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.invalid")
+    for path, source in {
+        "tests/test_sample.py": "from scripts.unit import value\ndef test_flaky(): pass\ndef test_stable(): pass\n",
+        "scripts/unit.py": "from scripts.dep import value\n",
+        "scripts/dep.py": "value = 1\n",
+        "unrelated.txt": "base\n",
+    }.items():
+        target = repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(source)
+    git("add", ".")
+    git("commit", "-qm", "base")
+    base = git("rev-parse", "HEAD")
+    git("update-ref", "refs/remotes/origin/main", base)
+    (repo / "unrelated.txt").write_text("head\n")
+    git("add", ".")
+    git("commit", "-qm", "head")
+    head = git("rev-parse", "HEAD")
+    monkeypatch.setattr(flake_quarantine, "REGISTRY", repo / "tests/flake_quarantine.yaml")
+    original_run = subprocess.run
+
+    def run(argv, **kwargs):
+        if argv[:3] == ["git", "fetch", "--no-tags"]:
+            return subprocess.CompletedProcess(argv, 0, "", "")
+        return original_run(argv, **kwargs)
+
+    monkeypatch.setattr(flake_quarantine.subprocess, "run", run)
+    for run_id, number in ((101, 41), (102, 42)):
+        admission.responses[f"{admission.prefix}/actions/runs/{run_id}"].update(
+            event="merge_group", head_sha=head,
+            head_branch=f"gh-readonly-queue/main/pr-{number}-{base}",
+            created_at=datetime.now(UTC).isoformat(),
+        )
+    return SimpleNamespace(admission=admission, repo=repo, base=base, git=git)
+
+
+def test_admission_accepts_merge_groups_for_two_unrelated_prs(merge_admission):
+    a = merge_admission.admission
+    assert flake_quarantine.check_admissions([a.entry], [], repository="example/project") == 1
+
+
+@pytest.mark.parametrize("changed", ["tests/test_sample.py", "scripts/unit.py", "scripts/dep.py"])
+def test_merge_group_refuses_changed_test_or_transitive_import(merge_admission, changed):
+    m = merge_admission
+    with (m.repo / changed).open("a") as source:
+        source.write("\n# changed by this PR\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "touch dependency")
+    m.admission.responses[f"{m.admission.prefix}/actions/runs/102"]["head_sha"] = m.git("rev-parse", "HEAD")
+    with pytest.raises(ValueError, match="touches the test or an imported module"):
+        flake_quarantine.check_admissions([m.admission.entry], [], repository="example/project")
+
+
+def test_merge_group_refuses_unresolved_test_imports(merge_admission):
+    m = merge_admission
+    # An unresolved loader could reach newly added Python sources.
+    (m.repo / "scripts/unit.py").write_text("import scripts.missing\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "unresolved")
+    base = m.git("rev-parse", "HEAD")
+    m.git("update-ref", "refs/remotes/origin/main", base)
+    (m.repo / "scripts/other.py").write_text("value = 1\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "unrelated")
+    for run_id, number in ((101, 41), (102, 42)):
+        m.admission.responses[f"{m.admission.prefix}/actions/runs/{run_id}"].update(
+            head_sha=m.git("rev-parse", "HEAD"), head_branch=f"gh-readonly-queue/main/pr-{number}-{base}",
+        )
+    with pytest.raises(ValueError, match="import closure is unresolved"):
+        flake_quarantine.check_admissions([m.admission.entry], [], repository="example/project")
+
+
+@pytest.mark.parametrize("change,message", [
+    ({"head_branch": "gh-readonly-queue/main/pr-41-BASE"}, "two distinct PRs"),
+    ({"head_branch": "feature"}, "identifiable PR"),
+    ({"created_at": (datetime.now(UTC) - timedelta(days=8)).isoformat()}, "seven days"),
+    ({"created_at": (datetime.now(UTC) + timedelta(days=1)).isoformat()}, "seven days"),
+    ({"created_at": "2026-10-20"}, "seven days"),
+])
+def test_merge_group_requires_distinct_prs_and_recent_timestamp(merge_admission, change, message):
+    m = merge_admission
+    change = {key: value.replace("BASE", m.base) for key, value in change.items()}
+    m.admission.responses[f"{m.admission.prefix}/actions/runs/102"].update(change)
+    with pytest.raises(ValueError, match=message):
+        flake_quarantine.check_admissions([m.admission.entry], [], repository="example/project")
+
+
+def test_one_main_and_one_merge_group_do_not_combine_into_admission(merge_admission):
+    m = merge_admission
+    m.admission.responses[f"{m.admission.prefix}/actions/runs/101"].update(event="schedule", head_branch="main")
+    head = m.admission.responses[f"{m.admission.prefix}/actions/runs/101"]["head_sha"]
+    m.admission.responses[f"{m.admission.prefix}/compare/{head}...main"] = {"merge_base_commit": {"sha": head}}
+    with pytest.raises(ValueError, match="two main runs or merge-group failures"):
+        flake_quarantine.check_admissions([m.admission.entry], [], repository="example/project")
+
+
+def test_merge_group_refuses_dependency_changed_by_queue_ahead_pr(merge_admission):
+    m = merge_admission
+    (m.repo / "scripts/dep.py").write_text("value = 2\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "ahead PR changes dependency")
+    ahead = m.git("rev-parse", "HEAD")
+    (m.repo / "unrelated.txt").write_text("behind PR\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "behind PR")
+    run = m.admission.responses[f"{m.admission.prefix}/actions/runs/101"]
+    run.update(head_sha=m.git("rev-parse", "HEAD"), head_branch=f"gh-readonly-queue/main/pr-41-{ahead}")
+    with pytest.raises(ValueError, match="touches the test"):
+        flake_quarantine._merge_group_evidence(run, m.admission.entry["node_id"])
+
+
+@pytest.mark.parametrize("changed", ["conftest.py", "tests/conftest.py", "scripts/fixture.py"])
+def test_merge_group_includes_conftest_chain_and_imports(merge_admission, changed):
+    m = merge_admission
+    for path, source in {"conftest.py": "", "tests/conftest.py": "import scripts.fixture\n",
+                         "scripts/fixture.py": "value = 1\n"}.items():
+        (m.repo / path).write_text(source)
+    m.git("add", ".")
+    m.git("commit", "-qm", "fixtures")
+    m.git("update-ref", "refs/remotes/origin/main", m.git("rev-parse", "HEAD"))
+    (m.repo / changed).write_text("# fixture changed\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "fixture change")
+    run = m.admission.responses[f"{m.admission.prefix}/actions/runs/101"]
+    run["head_sha"] = m.git("rev-parse", "HEAD")
+    with pytest.raises(ValueError, match="touches the test"):
+        flake_quarantine._merge_group_evidence(run, m.admission.entry["node_id"])
+
+
+@pytest.mark.parametrize("operation", ["fetch", "merge-base"])
+def test_merge_group_git_failure_is_an_admission_refusal(merge_admission, monkeypatch, operation):
+    m = merge_admission
+    original = subprocess.run
+    def fail(argv, **kwargs):
+        if argv[:2] == ["git", operation]:
+            raise subprocess.CalledProcessError(128, argv, stderr="fatal: unavailable")
+        return original(argv, **kwargs)
+    monkeypatch.setattr(subprocess, "run", fail)
+    with pytest.raises(ValueError, match=f"admission refused: git {operation} failed"):
+        flake_quarantine._merge_group_evidence(
+            m.admission.responses[f"{m.admission.prefix}/actions/runs/101"], m.admission.entry["node_id"])
+
+
+def test_main_prints_admission_refusal(admission, monkeypatch, capsys):
+    monkeypatch.setattr(flake_quarantine, "load_registry", lambda: [admission.entry])
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(stdout="entries: []"))
+    def refuse(*args, **kwargs):
+        raise ValueError("merge-group admission refused: git fetch failed")
+    monkeypatch.setattr(flake_quarantine, "check_admissions", refuse)
+    assert flake_quarantine.main(["--base-ref", "origin/main"]) == 1
+    assert "Quarantine admission refused: merge-group admission refused: git fetch failed" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("node,implementation", [
+    ("tests/test_readonly_sqlite.py::test_shared_connection_survives_concurrent_threads",
+     "scripts/lib/readonly_sqlite.py"),
+    ("tests/test_mcp_sources_db_self_heal.py::test_simultaneous_heals_of_one_stale_connection_reopen_once",
+     ".mcp/servers/sources/server.py"),
+    ("tests/test_launcher_interactive_scope.py::test_driver_keyboard_interrupt_cleans_the_lease_once",
+     "agents_extensions/shared/session_streams/db.py"),
+])
+def test_named_flakes_admit_queue_evidence_with_real_test_sources(merge_admission, node, implementation):
+    # Replay the completed CI/JUnit evidence shape with real test, implementation
+    # and autouse-fixture sources. Do not replace the scanner with a clean graph.
+    m = merge_admission
+    root = Path(__file__).resolve().parents[1]
+    test_file, test_name = node.split("::")
+    for path in (test_file, implementation, "tests/conftest.py"):
+        target = m.repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((root / path).read_bytes())
+    m.git("add", ".")
+    m.git("commit", "-qm", "real sources before queue")
+    base = m.git("rev-parse", "HEAD")
+    m.git("update-ref", "refs/remotes/origin/main", base)
+    (m.repo / "unrelated.txt").write_text("unrelated queue PR\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "unrelated queue PR")
+    a = m.admission
+    a.entry["node_id"] = node
+    a.responses[f"{a.prefix}/issues/comments/999"]["body"] = (
+        f"<!-- flake-quarantine-admission:{flake_quarantine.admission_digest(a.entry)}:APPROVE -->")
+    for run_id, number in ((101, 41), (102, 42)):
+        a.responses[f"{a.prefix}/actions/runs/{run_id}"].update(
+            head_sha=m.git("rev-parse", "HEAD"), head_branch=f"gh-readonly-queue/main/pr-{number}-{base}")
+        a.artifacts[run_id] = (
+            f'<testsuite><testcase classname="{test_file[:-3].replace("/", ".")}" name="{test_name}">'
+            '<failure message="timing assertion"/></testcase>'
+            '<testcase classname="tests.test_sample" name="test_stable"/></testsuite>')
+    assert flake_quarantine.check_admissions([a.entry], [], repository="example/project") == 1
+
+
+def test_unresolved_loader_refuses_unrelated_python_changes(merge_admission):
+    m = merge_admission
+    (m.repo / "scripts/unit.py").write_text("import importlib\nimportlib.import_module(module_name)\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "dynamic loader")
+    m.git("update-ref", "refs/remotes/origin/main", m.git("rev-parse", "HEAD"))
+    (m.repo / "scripts/other.py").write_text("value = 1\n")
+    m.git("add", ".")
+    m.git("commit", "-qm", "possibly reachable module")
+    run = m.admission.responses[f"{m.admission.prefix}/actions/runs/101"]
+    run["head_sha"] = m.git("rev-parse", "HEAD")
+    with pytest.raises(ValueError, match="unresolved for changed Python"):
+        flake_quarantine._merge_group_evidence(run, m.admission.entry["node_id"])

@@ -14,6 +14,9 @@ from typing import Any
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.audit import generate_source_inventory_review_candidates as review
 from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import SourceInventoryError

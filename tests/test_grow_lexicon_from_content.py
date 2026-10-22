@@ -15,6 +15,8 @@ from scripts.lexicon.heritage_classifier import classify_lemma
 FIXTURE_DB = Path(__file__).resolve().parent / "fixtures" / "heritage_sample.db"
 FIXTURE_VESUM_DB = Path(__file__).resolve().parent / "fixtures" / "vesum_sample.db"
 
+from tests.helpers.sum20_store import canonical_sum20_store as canonical_sum20_store
+
 
 def _clean_entry(**overrides: object) -> dict[str, object]:
     entry: dict[str, object] = {

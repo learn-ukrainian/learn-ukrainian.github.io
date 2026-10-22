@@ -46,6 +46,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, Literal
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_MEMORY_MAX_BYTES
 
@@ -617,6 +620,9 @@ def current_rss_bytes() -> int | None:
 
 def main(argv: list[str] | None = None) -> int:
     args = argv if argv is not None else sys.argv[1:]
+    if args and args[0] in {"-h", "--help"}:
+        print("usage: python -m scripts.lexicon.runner.memory --self-test-child MAX RESULT", file=sys.stderr)
+        return 0
     if len(args) in (3, 4) and args[0] == "--self-test-child":
         if len(args) == 4 and args[3] != "--scope-capped":
             return 2

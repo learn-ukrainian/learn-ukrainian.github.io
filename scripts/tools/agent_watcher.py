@@ -103,16 +103,19 @@ MAX_TURNS_PER_TASK = 10  # Max agent responses per task before requiring human i
 MAX_CONSECUTIVE_ERRORS = 3  # Stop processing after consecutive errors
 MAX_DELIVERY_ATTEMPTS = 3   # Ack with error status after this many failed attempts
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    handlers=[
-        logging.FileHandler(LOG_FILE),
-        logging.StreamHandler()
-    ]
-)
 logger = logging.getLogger(__name__)
+
+
+def _configure_logging() -> None:
+    """Attach the watcher log file. Import and `--help` must not open it."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        handlers=[
+            logging.FileHandler(LOG_FILE),
+            logging.StreamHandler(),
+        ],
+    )
 
 # Agent config (lazy-loaded singleton)
 _AGENTS_CONFIG = None
@@ -550,6 +553,7 @@ def main():
     parser.add_argument("--once", action="store_true", help="Process one message and exit")
 
     args = parser.parse_args()
+    _configure_logging()
 
     if args.status:
         show_status()

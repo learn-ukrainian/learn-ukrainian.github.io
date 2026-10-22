@@ -12,6 +12,9 @@ from typing import Any
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
 # Closed list of interjections and onomatopoeia as required by triage plan.

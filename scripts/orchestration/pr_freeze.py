@@ -1,12 +1,15 @@
-"""Open-PR freeze for new implementation dispatches.
+"""Open-PR freeze for new implementation dispatches (off by default).
 
-While the public repository has ``threshold`` or more open pull requests
-other than those by ``app/dependabot``, a new write-capable dispatch that
-would open a new PR is refused. Work on an existing PR stays allowed:
-``--pr``, a ``--branch`` that already has an open PR, or a reused ``--cwd``
-or explicit ``--worktree`` path. ``--force-new`` alone does not prove branch
-continuation. Read-only work, reviews and other repositories are unaffected.
-A ``--branch`` with no open PR counts as new.
+The freeze is disabled unless ``LU_OPEN_PR_FREEZE_THRESHOLD`` is set to a
+positive number (operator order, #11272): stuck PRs are handled by unblocking
+them, not by refusing new work. When enabled, while the public repository has
+``threshold`` or more open pull requests other than those by
+``app/dependabot``, a new write-capable dispatch that would open a new PR is
+refused. Work on an existing PR stays allowed: ``--pr``, a ``--branch`` that
+already has an open PR, or a reused ``--cwd`` or explicit ``--worktree`` path.
+``--force-new`` alone does not prove branch continuation. Read-only work,
+reviews and other repositories are unaffected. A ``--branch`` with no open PR
+counts as new.
 
 The decision path runs one GitHub search::
 
@@ -17,10 +20,11 @@ There is no second search, no subtraction, and no per-item login check. The
 unfiltered open total is not fetched. The length of the returned page is not
 a count. ``FreezeDecision.open_prs`` is that counted number.
 
-``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
-disables the check). The count comes from the GitHub REST search API and is
-cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count or
-the branch's PR cannot be fetched the check fails open with a warning.
+``LU_OPEN_PR_FREEZE_THRESHOLD`` sets the threshold. The default is ``0``:
+the check is disabled, as it is for a blank, invalid or non-positive value.
+The count comes from the GitHub REST search API and is cached briefly
+(``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count or the branch's
+PR cannot be fetched the check fails open with a warning.
 """
 
 from __future__ import annotations
@@ -34,7 +38,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-DEFAULT_THRESHOLD = 15
+DEFAULT_THRESHOLD = 0  # off by default (#11272); a positive env value opts in
 DEFAULT_CACHE_S = 60.0
 THRESHOLD_ENV = "LU_OPEN_PR_FREEZE_THRESHOLD"
 CACHE_ENV = "LU_OPEN_PR_FREEZE_CACHE_S"

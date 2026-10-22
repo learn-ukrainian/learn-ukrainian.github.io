@@ -168,7 +168,8 @@ worktrees without broadening their checkout. Where Entire CLI owns a hook, the
 delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
 chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
 (Entire runs only with the accepted CLI version and the private checkpoint route,
-and never blocks a commit or push). It refuses, without changing anything, when a
+and never blocks a commit or push; the post-commit capture runs at niceness +10
+and idle I/O priority). It refuses, without changing anything, when a
 hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
 when a hook stage declared in `.pre-commit-config.yaml` has no reachable
 delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
@@ -967,7 +968,7 @@ the primary checkout's interpreter, source DB and deck dir via an exported
 .venv/bin/python -m scripts.common.test_slots status [--json]
 ```
 
-Dispatch-worker pytest runs and the pre-push gate already hold slots, so they need no wrapper. A
+Dispatch-worker pytest runs already hold slots, so they need no wrapper; the pre-push gate runs no tests and holds none. A
 waiting run prints `TEST SLOTS: waiting ... queue position N/M`. Settings, refusals and the
 long-queue procedure: `docs/runbooks/test-slots.md`.
 
@@ -1279,7 +1280,9 @@ advisory envelope.
 `--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
 never derived from `--research-owned-path`, which classifies research context. Claims are
 read like the write-path admission guard reads them: `dir/` and `dir/**` own the subtree,
-a plain path owns itself and anything below it, and other wildcards are globs. Dispatch
+a plain path owns itself and anything below it, and other wildcards are globs. A claim
+whose only glob syntax is `[...]` (`site/src/pages/[...path].astro`) also owns its literal
+file, as a git pathspec does (#11281). Dispatch
 refuses an empty, `.` or absolute value, any value with a `..` segment, and any glob whose
 first segment is a wildcard (`**`, `./**`, `*`, `*/**`, `*.py`), which would own the whole
 repository or every top-level entry. Without any `--owned-path`, auto-finalize
@@ -1292,6 +1295,21 @@ file is added, no owned deletion is. Those paths are listed in
 `auto_finalize.cross_boundary_moves`. If any skipped change remains, the task ends
 `needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
 committed (`no_changes_under_owned_paths`).
+
+**Write-path ownership queue (#11281):** before a write-capable dispatch creates anything,
+the ownership ledger (`batch_state/tasks/write-ownership.sqlite3`) compares its
+`--owned-path` claims with every active writer's. Disjoint files admit, also inside one
+shared directory. A concrete overlap (the same file, or a directory claim that covers the
+file) waits in a FIFO queue behind the holder and is admitted once the holder stops
+writing: its task reaches a terminal status or its claim is released explicitly. Opening a
+PR releases nothing; a review-fix dispatch takes the claim again through the same queue.
+The wait is bounded by `DELEGATE_OWNERSHIP_WAIT_S` (default 1800 s, capped at 7200 s;
+`0` answers at once); at the bound dispatch exits 2 with `write-path ownership queue timed
+out … (QUEUE_TIMEOUT)`. A `[...]`-only claim reserves its literal file and every path its
+glob matches; any other glob, a range or negated set, or a claim with no `--owned-path`
+cannot be compared and still refuses beside an active writer (`cannot prove write-path
+disjointness`). `--allow-path-overlap '<reason>'` and `DELEGATE_OWNERSHIP_MODE=warn` admit
+without waiting, as before.
 
 **Explicit auto-finalize PRs (#8508, #8658):** Auto-finalize pushes the branch and
 records `final_branch_head_commit`, but it never opens a pull request implicitly. To
@@ -1545,6 +1563,8 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/audit/curriculum_manifest_canary.py` | SHA-256 integrity and drift canary for published curriculum; regenerates or verifies canonical file hashes | `.venv/bin/python scripts/audit/curriculum_manifest_canary.py {--check\|--write}` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
+| `scripts/ci/coverage_diff.py` | Compare lost executed lines and arcs in paired branch coverage reports from `coverage-ref.yml` (#11226, PR #11343) | `.venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json` |
+| `scripts.publish workflow-run` | Dispatch `coverage-ref.yml` with exactly one required 40-hex `sha` input; other admitted workflows accept no inputs | `.venv/bin/python -m scripts.publish workflow-run --workflow coverage-ref.yml --ref main --inputs '{"sha":"<40 hex>"}'` |
 | `scripts/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16` |
 | `scripts/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
 | `scripts/ci/reuse_green_run.py` | Merge queue: reuse a green full run (pytest, secret scan, Checks, Frontend) of the identical tree, bound to the queued PR, its tested merge commit and the complete job inventory of one attempt, else run everything | run by ci.yml's `reuse` job |

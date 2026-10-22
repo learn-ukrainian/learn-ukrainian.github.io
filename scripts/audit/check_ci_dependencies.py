@@ -54,6 +54,9 @@ def unexpected_diagnostics(output: str) -> list[str]:
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print(__doc__.strip())
+        return 0
     result = subprocess.run(
         [sys.executable, "-m", "pip", "check"],
         capture_output=True,

@@ -32,6 +32,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly  # type: ignore[no-redef]
 
+from scripts.agent_runtime.accounting import recorded_model_accounting_fields
 from scripts.control_plane import storage
 from scripts.control_plane.health import authority_collector_payload, read_failure_code
 from scripts.fleet_comms import message_plane
@@ -2648,6 +2649,7 @@ def fleet_activity(
             "agent": _safe_text(raw.get("agent")),
             "via": _safe_text(raw.get("via") or raw.get("entrypoint")),
             "model": _safe_text(raw.get("model"), fallback="") or None,
+            **recorded_model_accounting_fields(raw),
             "outcome": _safe_text(raw.get("outcome"), fallback="") or None,
             "duration_s": raw.get("duration_s"),
             "source_provenance": _safe_text(raw.get("source_provenance"), fallback="unknown"),

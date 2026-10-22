@@ -1,26 +1,30 @@
 # Temp scratch retention and batch_state staleness
 
-Operator retention decision, 2026-10-06 (#9737). A daily user timer removes
-agent scratch from the system temp area that no task owns and that has gone
-quiet. It also prints a report of stale `batch_state/` directories. The report
-never deletes anything.
+Operator retention decision, 2026-10-06 (#9737). An hourly user timer
+(#11297) removes agent scratch from the system temp area that no task owns and
+that has gone quiet. It also deletes inactive pytest scratch (see
+[Inactive pytest scratch](#inactive-pytest-scratch)) and prints a report of
+stale `batch_state/` directories. The report never deletes anything.
 
-Removal is recoverable (#9887): the sweep moves an entry into a quarantine,
-records it in an append-only ledger first, and deletes it only after 7 days,
-when the same checks still pass. Until then `tmp_sweep restore <ledger-id>`
-puts it back. See [Deletion ledger and quarantine](#deletion-ledger-and-quarantine).
+Removal of system-temp scratch is recoverable (#9887): the sweep moves an
+entry into a quarantine, records it in an append-only ledger first, and
+deletes it only after 7 days, when the same checks still pass. Until then
+`tmp_sweep restore <ledger-id>` puts it back. See
+[Deletion ledger and quarantine](#deletion-ledger-and-quarantine). Inactive
+pytest scratch is deleted directly, without quarantine.
 
 ## What runs
 
-`learn-ukrainian-tmp-sweep.timer` runs once a day at 05:30 UTC, with up to
-15 minutes of random delay. Missed runs catch up. It starts
+`learn-ukrainian-tmp-sweep.timer` runs every hour at 30 minutes past, UTC,
+with up to 10 minutes of random delay. Missed runs catch up. It starts
 `learn-ukrainian-tmp-sweep.service`, which runs two steps in order:
 
 1. `scripts.hygiene.batch_state_retention`: the read-only staleness report.
 2. `scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary`: the
-   sweep. It purges expired quarantine entries, then quarantines newly proven
-   ones. It logs counts and byte totals only, never entry names; the ledger
-   holds the names.
+   sweep. It purges expired quarantine entries, quarantines newly proven
+   ones and deletes inactive, unheld pytest run folders. It logs counts and
+   byte totals only, never entry names; the ledger holds the quarantined
+   names.
 
 The service has no network: `RestrictAddressFamilies=AF_UNIX` refuses every
 IPv4 and IPv6 socket. `PrivateNetwork=yes` is not used, because the user
@@ -40,6 +44,83 @@ from the home directory down to the unit directory; the error names the
 component.
 
 ## The temp-scratch rule
+
+### Inactive pytest scratch
+
+Operator retention decision for #11297. The sweep looks only inside the two
+managed pytest namespaces, `pytest-runs/runs` and the legacy
+`pytest-runs/task-scratch`, below the existing scratch scan roots. It honors
+`LU_SCRATCH_SCAN_ROOT`. A run folder there is deleted outright when both of
+these hold:
+
+- Its newest change anywhere inside is more than two hours old. A change is a
+  write or an inode change, so a folder whose files were extracted recently
+  with old preserved mtimes stays young. Exactly two hours is still young.
+- No live process holds it. The sweep reads every process's working
+  directory, open descriptors, memory-mapped files, command line and
+  environment. A reference is the folder's path or a path below it in any
+  spelling the process can use: an argument, a `VAR=value` value or a `:`
+  list entry, read relative to the process's working directory, with `.`
+  and `..` folded and symlinked aliases resolved as the kernel does (a
+  symlink is followed before a later `..`). Command lines and
+  environment values are never reported. Rows carry only PIDs and channel
+  names (`cwd`, `fd`, `maps`, `argv`, `environ`).
+
+No ownership record is required. A run with no `lease.json`, a malformed one
+or a completed one is treated the same way. Retention counts, completion
+proofs and the seven-day quarantine play no part in this class. A run lock
+(`lease.lock`) is used where it exists. A lock held by anyone else keeps the
+run as `in_use`, and a lock the sweep cannot open keeps it as `lock_unknown`.
+A missing lock is not a reason to keep anything.
+
+The run is still kept, with its reason in the report, when:
+
+- any live process could not be inspected (`liveness_unknown`; see
+  [Process coverage](#process-coverage));
+- the tree has a mount point, a foreign owner, `.git` metadata, hard-linked
+  content, a socket or FIFO, or cannot be read (the tree-safety reasons in
+  [Other scratch](#other-scratch));
+- it is a registered worktree, or the worktree probe failed;
+- the entry is a symlink or not a directory;
+- its namespace is a symlink, not owned by the agent user or not private
+  (`namespace_untrusted`, counted as an error).
+
+With `--apply`, every proven folder is first renamed, never replacing
+anything, into a locked holding directory inside its namespace. One fresh
+process scan then checks both the original and the held path, and the tree is
+compared with the fingerprint taken before the rename. A changed inode, any
+holder, an uninspectable process or any write renames the folder back under
+its own name. Otherwise the common descriptor-safe remover deletes it; it
+refuses mount points and identity changes, and whatever a refused deletion
+leaves is renamed back. If the original name was taken meanwhile, the folder
+stays in the holding directory as `restore_blocked`. A crash leaves it there
+too. The next run returns it to its name, where it waits two more hours.
+
+A dry run reports the same decisions as `would_delete` and changes nothing.
+Under `pytest_retention`, the `--summary` output includes
+`would_delete_entries` and `would_delete_bytes` (dry run), `deleted_entries`
+and `deleted_bytes` (allocated bytes actually removed), `liveness_complete`,
+`liveness_unreadable_processes`, protected bytes and counts by reason. It
+never includes entry names. Entries an earlier policy left in the ledger
+quarantine keep their recorded recovery and purge path. Invalid
+`LU_SCRATCH_SCAN_ROOT` configuration reports `scan_root_invalid` and a nonzero
+exit while preserving the summary of any general temp-sweep actions already
+applied. It never falls back to host roots.
+
+Ordinary repository pytest sessions still allocate an invocation with
+`lease.json` and a lifetime-held `lease.lock` using
+`scripts.common.task_scratch`. The session points `TMPDIR` and Python's cached
+temp directory at the invocation's payload, so ordinary temporary files and
+pytest fixtures share one containment root; teardown restores both. A running
+session is therefore held by its lock descriptor and, in its xdist workers
+and child processes, by the exported `TMPDIR`. New invocations use the neutral
+`runs` component so emitted fixture paths do not contain secret-token
+prefixes. Pytest folders directly below a scratch root, outside the two
+namespaces, are reported as `legacy_ownership_unknown` and never touched. An
+explicit `--basetemp` keeps its caller's ownership; the pre-push gate removes
+its own base temp. Other managed scratch is untouched.
+
+### Other scratch
 
 `tmp_sweep` considers only direct children of the temp root. With
 `--unattributed-scratch`, an entry that no task owns is removed only when all
@@ -71,12 +152,16 @@ overrides a task that is still unsettled.
 ### Process coverage
 
 The sweep reads `/proc/<pid>/cwd`, `/proc/<pid>/fd` and `/proc/<pid>/maps`
-for every process.
+for every process. For inactive pytest scratch it also reads
+`/proc/<pid>/cmdline` and `/proc/<pid>/environ`, and inspects its own process
+too, excusing only the run locks it holds itself.
 The kernel refuses some of these reads. Examples are other users' processes,
 such as root daemons, and non-dumpable processes of the agent user, such as
 its systemd manager or SSH sessions. A process that cannot be read could hold
 any entry. Any refusal therefore makes the probe incomplete, and every
-candidate in both classes is kept as `liveness_unknown`.
+candidate in every class, pytest scratch included, is kept as
+`liveness_unknown`. Zombies and processes that exit during the scan hold
+nothing.
 
 Consequence: an unprivileged user cannot read root's processes on a normal
 Linux host. The probe is then never complete, so the timer reports what it

@@ -75,6 +75,9 @@ def _ts() -> str:
     """Compact HH:MM:SS timestamp for log lines."""
     return datetime.now().strftime("%H:%M:%S")
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from validate.check_wiki_verify_markers import find_verify_markers_text
 from wiki.compiler import WRITER_CHOICES, compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR

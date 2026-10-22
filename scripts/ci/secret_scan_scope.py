@@ -1,10 +1,11 @@
-"""Resolve bounded secret-scan ranges for landing events.
+"""Resolve bounded secret-scan ranges for landing and manual-dispatch events.
 
 GitHub's TruffleHog action has built-in range handling for ``push`` and
-``pull_request``, but not ``merge_group`` or ``schedule``.  This resolver
-supplies explicit base/head values for merge-queue, main-push, and scheduled
-runs, and deliberately selects the action's full-history path when a safe
-landing range cannot be established.
+``pull_request``, but not ``merge_group``, ``schedule`` or ``workflow_dispatch``.
+This resolver supplies explicit base/head values for those events and main
+pushes. Invalid landing ranges select the action's full-history path.
+Invalid manual-dispatch ranges raise instead of falling back to a full scan.
+Only the explicit ``full-history-audit`` dispatch input requests an audit.
 
 A scheduled run has no ``before``/``after``.  Leaving both inputs empty makes
 the pinned action scan every commit (``--since-commit '' --branch ''``) and
@@ -46,7 +47,7 @@ GIT_REV_LIST_TIMEOUT_SECONDS = 30
 
 
 class SecretScanScopeError(RuntimeError):
-    """A scheduled range could not be resolved without narrowing coverage."""
+    """A scheduled or dispatched range could not be resolved safely."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,7 +110,7 @@ def _sha(text: str) -> str | None:
 
 
 def _require_git_stdout(repo_root: Path, args: list[str], timeout: int) -> str:
-    """Return git stdout, or raise so the scheduled scan cannot shrink quietly."""
+    """Return git stdout, or raise so the scan cannot shrink quietly."""
 
     command = " ".join(args)
     try:
@@ -122,25 +123,21 @@ def _require_git_stdout(repo_root: Path, args: list[str], timeout: int) -> str:
             timeout=timeout,
         )
     except subprocess.TimeoutExpired as exc:
-        raise SecretScanScopeError(
-            f"git {command} timed out after {timeout}s; refusing to narrow the scheduled scan"
-        ) from exc
+        raise SecretScanScopeError(f"git {command} timed out after {timeout}s; refusing to narrow the scan") from exc
     except (OSError, subprocess.SubprocessError) as exc:
-        raise SecretScanScopeError(f"git {command} failed; refusing to narrow the scheduled scan") from exc
+        raise SecretScanScopeError(f"git {command} failed; refusing to narrow the scan") from exc
     if result.returncode != 0:
         detail = (result.stderr or "").strip().splitlines()
         suffix = f": {detail[0][:200]}" if detail else ""
-        raise SecretScanScopeError(
-            f"git {command} exited {result.returncode}{suffix}; refusing to narrow the scheduled scan"
-        )
+        raise SecretScanScopeError(f"git {command} exited {result.returncode}{suffix}; refusing to narrow the scan")
     return result.stdout
 
 
-def _schedule_scope(repo_root: Path) -> ScanScope:
+def _schedule_scope(repo_root: Path, head_ref: str = "HEAD") -> ScanScope:
     """Scan the last N first-parent steps, or the whole branch if history is shorter.
 
-    The base is ``HEAD~N`` along ``--first-parent``.  ``base..HEAD`` includes
-    every commit reachable from HEAD and not from that base, merges and side
+    The base is ``head_ref~N`` along ``--first-parent``. ``base..head_ref`` includes
+    every commit reachable from head_ref and not from that base, merges and side
     branches included.  No commit date and no wall clock is involved.
     ``opsec_range`` stays empty: the public-identifier lint keeps walking the
     whole checkout, which is what an unscoped schedule already did.
@@ -154,7 +151,7 @@ def _schedule_scope(repo_root: Path) -> ScanScope:
     depth = SCHEDULE_FIRST_PARENT_STEPS
     text = _require_git_stdout(
         repo_root,
-        ["rev-list", "--first-parent", f"--max-count={depth + 1}", "HEAD"],
+        ["rev-list", "--first-parent", f"--max-count={depth + 1}", head_ref],
         GIT_REV_LIST_TIMEOUT_SECONDS,
     )
     shas: list[str] = []
@@ -192,6 +189,43 @@ def _is_ancestor(repo_root: Path, base_sha: str, head_sha: str) -> bool:
     return result.returncode == 0
 
 
+def _dispatch_scope(repo_root: Path, raw_head: str, dispatch_ref: str, default_branch_ref: str) -> ScanScope:
+    """Resolve a dispatch against the default branch; incomplete history is an error."""
+
+    head, error = _normalize_sha(raw_head, "dispatch-head")
+    if error or head is None:
+        raise SecretScanScopeError(error or "invalid-dispatch-head-sha")
+    if not _commit_exists(repo_root, head):
+        raise SecretScanScopeError("unresolvable-dispatch-head-sha")
+    if not dispatch_ref or not default_branch_ref.startswith("refs/heads/"):
+        raise SecretScanScopeError("missing-or-invalid-dispatch-ref-or-default-branch-ref")
+    for ref in (dispatch_ref, default_branch_ref):
+        _require_git_stdout(repo_root, ["check-ref-format", ref], GIT_CAT_FILE_TIMEOUT_SECONDS)
+    shallow = _require_git_stdout(
+        repo_root,
+        ["rev-parse", "--is-shallow-repository"],
+        GIT_CAT_FILE_TIMEOUT_SECONDS,
+    ).strip()
+    if shallow != "false":
+        raise SecretScanScopeError("incomplete-dispatch-history; refusing to narrow the scan")
+
+    default_remote = "refs/remotes/origin/" + default_branch_ref.removeprefix("refs/heads/")
+    base = _sha(
+        _require_git_stdout(
+            repo_root,
+            ["merge-base", default_remote, head],
+            GIT_IS_ANCESTOR_TIMEOUT_SECONDS,
+        )
+    )
+    if base is None or not _commit_exists(repo_root, base):
+        raise SecretScanScopeError("unresolvable-dispatch-base-sha")
+    if not _is_ancestor(repo_root, base, head):
+        raise SecretScanScopeError("dispatch-base-not-ancestor")
+    if base == head or dispatch_ref == default_branch_ref:
+        return _schedule_scope(repo_root, head)
+    return ScanScope(base, head, f"{base}..{head}", "scoped", "validated-range")
+
+
 def resolve_scan_scope(
     event_name: str,
     *,
@@ -199,6 +233,10 @@ def resolve_scan_scope(
     merge_group_head_sha: str = "",
     push_before_sha: str = "",
     push_after_sha: str = "",
+    dispatch_head_sha: str = "",
+    dispatch_ref: str = "",
+    default_branch_ref: str = "",
+    dispatch_scan_mode: str = "",
     repo_root: Path | None = None,
 ) -> ScanScope:
     """Return a validated landing range or an explicit full-scan fallback.
@@ -213,12 +251,24 @@ def resolve_scan_scope(
     ``schedule`` walks :data:`SCHEDULE_FIRST_PARENT_STEPS` first-parent steps.
     Commit dates are not used.  A git failure raises
     :class:`SecretScanScopeError` and the CLI exits non-zero.
+
+    ``workflow_dispatch`` scans the default-branch merge-base through the
+    dispatched SHA. Main refs and heads already on main reuse the schedule
+    window, anchored to that SHA. Missing inputs or ancestry raise an error.
+    Only ``dispatch_scan_mode=full-history-audit`` selects full history with
+    ``mode=audit``. An absent or empty mode stays bounded; invalid modes raise.
     """
 
     event = event_name.strip()
     root = repo_root or Path.cwd()
     if event == "schedule":
         return _schedule_scope(root)
+    if event == "workflow_dispatch":
+        if dispatch_scan_mode == "full-history-audit":
+            return ScanScope("", "HEAD", "", "audit", "explicit-full-history-audit")
+        if dispatch_scan_mode not in ("", "bounded"):
+            raise SecretScanScopeError("invalid-dispatch-scan-mode")
+        return _dispatch_scope(root, dispatch_head_sha, dispatch_ref, default_branch_ref)
     if event not in _SCOPED_EVENTS:
         return ScanScope("", "", "", "unchanged", "event-not-scoped")
 
@@ -280,6 +330,10 @@ def main() -> int:
             merge_group_head_sha=os.environ.get("MERGE_GROUP_HEAD_SHA", ""),
             push_before_sha=os.environ.get("PUSH_BEFORE_SHA", ""),
             push_after_sha=os.environ.get("PUSH_AFTER_SHA", ""),
+            dispatch_head_sha=os.environ.get("DISPATCH_HEAD_SHA", ""),
+            dispatch_ref=os.environ.get("DISPATCH_REF", ""),
+            default_branch_ref=os.environ.get("DEFAULT_BRANCH_REF", ""),
+            dispatch_scan_mode=os.environ.get("DISPATCH_SCAN_MODE", ""),
         )
     except SecretScanScopeError as exc:
         print(f"secret-scan-scope: {exc}", file=sys.stderr)
