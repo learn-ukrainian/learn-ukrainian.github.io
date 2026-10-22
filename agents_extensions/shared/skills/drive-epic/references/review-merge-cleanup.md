@@ -137,10 +137,29 @@ re-probe gate-driving data yourself.
 
 Review briefs must ask reviewers to cite files with repository-relative paths, including line suffixes.
 
+### Review stopping rule
+
+Every reviewer and driver follows this rule:
+
+1. Round 1 is a full review of the change.
+2. From round 2 on, the review is a DELTA review: only the fix diff since the last
+   reviewed head, plus whether each earlier blocker is resolved. A new blocker
+   must be a concrete failure introduced by that fix diff, or an earlier blocker
+   still unresolved. Everything else is a tracked follow-up with an owner.
+3. At most two fix rounds. If still blocked after round 2, the driver does not
+   start round 3 on the same approach. The driver splits the PR, changes the
+   approach, or escalates to the advisors (Opus 5.5 + Sol 6.1) or the operator.
+4. A security FAIL (`SECURITY_VERDICT FAIL`) always blocks and is never downgraded
+   to a follow-up. The quality bar and gates are unchanged: exact-head
+   cross-family APPROVE and green CI remain required.
+
 ### Review brief template (#10665)
 
 Every review brief, code or Ukrainian, uses these sections. Round 1 freezes sections 2 to 4;
-later rounds reuse them unchanged and update only section 1's exact head. A review-typed
+later rounds reuse them unchanged. From round 2 on, section 1 names both the last
+reviewed head and the new exact head, the fix diff, and each earlier blocker's
+resolution evidence. The reviewer brief states DELTA scope under the
+[review stopping rule](#review-stopping-rule). A review-typed
 dispatch whose brief has no heading naming the dispositions is still dispatched, with the
 typed warning `review_brief_no_dispositions` on stderr and in the task record. Phrase
 reviewer asks as questions or statements: a line that starts with a write verb refuses a
@@ -159,14 +178,15 @@ read-only dispatch (#8703, above).
      or the change's dependency on them is material; tracked with an owner;
    - `stop_and_escalate` — material contract ambiguity, or a fix that would trip a breaker.
 5. **Reviewer duties** — one class-level finding per input class, with a concrete example and every
-   sibling found this round; a material defect outside the stated classes still blocks or
-   escalates. Each blocker states the demonstrated failure, its impact and the required
+   sibling found within this round's scope. In round 1, a material defect outside the stated
+   classes still blocks or escalates. Later rounds use the review stopping rule to decide
+   blockers and follow-ups. Each blocker states the demonstrated failure, its impact and the required
    corrected behaviour; a code fix is a suggestion. APPROVE with tracked follow-ups is allowed.
    A delta review attests the new exact head and checks interactions, including weakened
    tests. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
    names the capability; it still blocks.
-6. **Breakers** — `local-code-review` checklist Step 6, unchanged: for example, two
-   consecutive patch cycles that do not shrink the outstanding findings stop and escalate.
+6. **Breakers** — the review stopping rule above and `local-code-review` checklist
+   Step 6 apply, even when the outstanding-finding count shrinks.
 
 Every review brief names the supported evidence directory: write the report, archives,
 logs and screenshots under `$LU_TASK_EVIDENCE_DIR` (dispatch creates it and names it in

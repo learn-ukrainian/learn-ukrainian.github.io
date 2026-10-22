@@ -32,8 +32,8 @@ Practices used:
 - Reversible and in scope: decide now and report; otherwise P6.
 - Probe a claimed limit, outage or impossibility before routing around it.
 - Diagnose from the failed-job log and the diff before the single recovery rerun.
-- Same finding class twice on one artifact: state the stopping rule and change approach
-  (author, scope, design note first), never a third patch of the same kind.
+- For review scope and repeated findings, apply the canonical
+  [review stopping rule](../../drive-epic/references/review-merge-cleanup.md#review-stopping-rule).
 - Never wait for a quota reset; reorder work to lanes with capacity.
 - Scarce seats go to the critical path; first passes, recon and triage go to cheaper seats.
 - Before seating a review, confirm that seat and path can satisfy the landing gate.
