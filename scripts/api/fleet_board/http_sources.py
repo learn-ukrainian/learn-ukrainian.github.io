@@ -48,6 +48,9 @@ DASHBOARDS: tuple[tuple[str, str], ...] = (
     ("overview", "d/overview"),
     ("fleet", "d/fleet"),
 )
+# Dashboard origins (``scheme://host[:port]``) approved for public disclosure.
+# Approval is a reviewed change to this set; configuration alone never grants it.
+APPROVED_LINK_ORIGINS: frozenset[str] = frozenset()
 
 
 def _alert_name(value: object) -> str | None:
@@ -230,8 +233,9 @@ def _public_navigation_href(href: str) -> str | None:
     loopback/private address. Those are navigation values, not diagnostic
     configuration: the public surface withholds them and keeps D13 unmet rather
     than publishing a locator. No DNS lookup is performed, so a DNS name cannot
-    establish its target or audience; only a globally routable IP literal has
-    both settled, and every other destination is withheld.
+    establish its target; only a globally routable IP literal settles it.
+    Routability says nothing about audience, so the origin must also be listed
+    in ``APPROVED_LINK_ORIGINS``; every other destination is withheld.
     """
     try:
         parts = urllib.parse.urlsplit(href)
@@ -250,14 +254,16 @@ def _public_navigation_href(href: str) -> str | None:
         return None
     if not address.is_global:
         return None
+    if f"{parts.scheme}://{parts.netloc.lower()}" not in APPROVED_LINK_ORIGINS:
+        return None
     return href
 
 
 def load_links(environ: Mapping[str, str] | None = None) -> Outcome:
     """Fixed dashboard links built from the configured Grafana base.
 
-    Only destinations safe for public delivery are published. A private or
-    unverifiable destination yields an empty list and ``unavailable`` rather
+    Only destinations approved for public delivery are published. A private,
+    unverifiable, or unapproved destination yields an empty list and ``unavailable`` rather
     than a locator; an approved destination stays a source dependency (D13).
     """
     location = read_location("FLEET_GRAFANA_URL", _env(environ))

@@ -464,13 +464,23 @@ def test_stats_application_failure_without_a_cache_is_unavailable(monkeypatch: p
 _PUBLIC_V4 = ".".join(("8", "8", "8", "8"))
 
 
-def test_links_are_built_from_a_public_ip_destination_without_secrets(
+def test_links_publish_only_an_approved_public_ip_destination_without_secrets(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """D13: global routability alone is not audience approval."""
     monkeypatch.setenv(
         "FLEET_GRAFANA_URL",
         _with_userinfo(_PUBLIC_V4, "/grafana") + "?" + "token" + "=" + "userinfo-token",
     )
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    assert _PUBLIC_V4 not in response.text
+
+    monkeypatch.setattr(http_sources, "APPROVED_LINK_ORIGINS", frozenset({f"https://{_PUBLIC_V4}"}))
     response = client.get("/api/fleet/v1/links")
     assert response.status_code == 200
     body = response.json()
