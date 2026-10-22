@@ -1776,7 +1776,7 @@ def test_root_holder_takes_the_bounded_quarantine_recheck_path(area, monkeypatch
     row = row_for(report, run)
     assert rechecks == [True]
     assert row["decision"] == "deleted" and not run.exists()
-    assert report["liveness_complete"] is True
+    assert report["liveness_complete"] is False
     assert report["liveness_unreadable_root_processes"] == 1
     assert report["deleted_bytes"] > 0
 

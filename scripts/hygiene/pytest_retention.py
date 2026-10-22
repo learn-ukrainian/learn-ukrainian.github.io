@@ -15,17 +15,18 @@ Unreadable processes are classified by owner. The run namespace is mode 0700
 owned by the scanning user, so a holder must be that user or root. A
 foreign-uid process cannot traverse the namespace and does not make liveness
 unknown, which is the defect #11409 fixes: refusing to act because another
-user's processes are unreadable meant nothing was ever reclaimed. When the
-lease proves the owner dead on this boot, an unreadable process table no
-longer blocks deletion at all; the lock is held by the sweep and the tree is
-rechecked. The residual is a same-user or root process whose ``/proc`` entry
-is unreadable (a non-dumpable process, or root) and that holds an idle
-descriptor or working directory without writing: it is not distinguished
-from no holder, and the run can be deleted after the bounded quarantine
-rename and unchanged-fingerprint recheck. A same-user or root writer that
-changes the tree during that window is renamed back. A run without a valid
-lease keeps the older rule: an unreadable process of the scanning user, or of
-an undeterminable owner, makes liveness unknown, and unknown preserves.
+user's processes are unreadable meant nothing was ever reclaimed. Every other
+unreadable process, root included, leaves the snapshot incomplete. Only a
+lease whose owner is provably dead on this boot bypasses that gate: the lock
+is held by the sweep and the tree is rechecked after the bounded quarantine
+rename. The residual is such a dead-owner run held by an idle same-user or
+root process whose ``/proc`` entry is unreadable (a non-dumpable process, or
+root) and that holds a descriptor or working directory without writing: it is
+not distinguished from no holder, and the run can be deleted after the
+unchanged-fingerprint recheck. A same-user or root writer that changes the
+tree during that window is renamed back. A run without a valid lease keeps
+the older rule: an unreadable process of the scanning user, of root, or of an
+undeterminable owner makes liveness unknown, and unknown preserves.
 
 A missing or malformed lease carries no owner, so the older evidence applies:
 the run lock, a readable live holder, and a trusted process snapshot. A
@@ -96,10 +97,10 @@ class Holders:
     paths their relative spellings name from the process cwd; ``texts``
     keeps the raw blobs so an absolute path embedded anywhere in a value
     still counts.
-    ``complete`` is False when any live process of the scanning user (or of
-    an undeterminable owner) could not be fully read; a foreign-uid process
-    cannot reach the private namespace, and a root process is handled by the
-    bounded quarantine/recheck path.
+    ``complete`` is False when any live process other than a foreign-uid one
+    could not be fully read; a foreign-uid process cannot reach the private
+    namespace. Only a lease that proves the owner dead bypasses an incomplete
+    snapshot and falls back to the bounded quarantine/recheck path.
     ``unreadable`` counts every unreadable live process for the privacy-safe
     report; ``unreadable_foreign`` and ``unreadable_root`` split that count.
     ``descriptor_errors`` counts resource failures separately from process
@@ -223,9 +224,10 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
             holders.unreadable += 1
             uid = _process_uid(entry)
             if uid == 0:
-                # Root may reach the private namespace; deletion uses the bounded
-                # quarantine/recheck path instead of requiring all-process visibility.
+                # Root may reach the private namespace; the snapshot cannot prove
+                # absence, so only a lease-proven dead owner may bypass it.
                 holders.unreadable_root += 1
+                holders.complete = False
             elif uid is not None and uid != os.geteuid():
                 holders.unreadable_foreign += 1
             else:
