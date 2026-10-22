@@ -3815,7 +3815,10 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         },
     )()
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke:
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke,
+        patch("scripts.agent_runtime.adapters.deepseek.initialize_opencode_dependencies"),
+    ):
         rc = delegate._run_worker(
             task_id="worker-dispatch-event",
             agent="deepseek",
@@ -7416,10 +7419,9 @@ def test_check_budget_refuses_an_exhausted_claude_account_as_before(
     )
 
     assert rc == 2
-    assert (
-        "❌ ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-opus-5-5"
-        in capsys.readouterr().err
-    )
+    err = capsys.readouterr().err
+    assert "❌ BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude" in err
+    assert "explicit --model claude-opus-5-5" in err
     assert not delegate._state_path_no_create("claude-budget-exhausted").exists()
 
 

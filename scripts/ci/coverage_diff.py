@@ -12,6 +12,13 @@ SOURCES = ("scripts", ".mcp", "agents_extensions", "packages")
 
 def read_report(path: Path) -> dict:
     """Reject incomplete/non-branch reports instead of silently comparing empty sets."""
+    manifest_path = path.with_name("manifest.json")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        raise ValueError(f"{manifest_path}: expected a readable manifest with complete: true") from error
+    if not isinstance(manifest, dict) or manifest.get("complete") is not True:
+        raise ValueError(f"{manifest_path}: expected complete: true before comparing coverage")
     report = json.loads(path.read_text(encoding="utf-8"))
     if report.get("meta", {}).get("branch_coverage") is not True or not report.get("files"):
         raise ValueError(f"{path}: expected a non-empty branch coverage JSON report")
@@ -61,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs: JSON to stdout with every lost identity and per-file counts; no files written.\n"
             "Exit codes: 0 = no loss; 1 = lost coverage; 2 = invalid input.\n"
             "Related: .github/workflows/coverage-ref.yml; #11226. "
-            "Check both run manifests are complete before comparing.\n"
+            "Requires a sibling manifest.json with complete: true for both reports.\n"
             "Line/arc numbers are literal identities: source edits that move lines require review."
         ),
     )

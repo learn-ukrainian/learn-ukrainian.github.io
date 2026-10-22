@@ -18,6 +18,7 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 from __future__ import annotations
 
 import ast
+import gc
 import os
 import re
 import subprocess
@@ -47,6 +48,7 @@ from scripts.ci.subprocess_timeout_guard import (
     timeout_less_calls_from_source,
     validate_allowlist_entry,
 )
+from scripts.hygiene.lint_source_db_writable_connects import _without_cyclic_gc
 from tests.project_python import project_python
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
@@ -279,13 +281,101 @@ def test_prefilter_does_not_swallow_missing_files(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
+@_without_cyclic_gc
 def test_prefilter_findings_equal_unfiltered_ast_findings_on_full_tree(root: Path) -> None:
     """The prefilter may only skip files the AST visitor would not flag (#10782)."""
+    # Reuse #10746's GC scope while the independent per-file ASTs are released.
     for path in sorted(root.rglob("*.py")):
         source = path.read_text(encoding="utf-8")
         unfiltered = guard.timeout_less_calls_from_tree(ast.parse(source, filename=str(path)))
         assert timeout_less_calls(path) == unfiltered, path
         assert timeout_less_calls_from_source(source, filename=str(path)) == unfiltered, path
+
+
+@pytest.mark.parametrize("enabled", [False, True])
+def test_full_tree_prefilter_boundary_preserves_literal_findings_and_gc_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, enabled: bool
+) -> None:
+    """GC deferral must retain positive findings and safe siblings at all entry points."""
+    positive = tmp_path / "positive.py"
+    positive.write_text(
+        "import subprocess as sp\nfrom subprocess import call as invoke\n"
+        "def helper():\n    sp.run(['unsafe'])\n    invoke(['also-unsafe'])\n"
+        "    sp.run(['safe'], timeout=30)\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "safe.py").write_text("import os\nos.getcwd()\n", encoding="utf-8")
+    observed = {"tree": [], "path": [], "source": []}
+
+    def recording(entry, scan):
+        def run(*args, **kwargs):
+            assert gc.isenabled() is False
+            hits = scan(*args, **kwargs)
+            observed[entry].append([(hit.lineno, hit.name, hit.qualname) for hit in hits])
+            return hits
+        return run
+
+    monkeypatch.setattr(guard, "timeout_less_calls_from_tree", recording("tree", guard.timeout_less_calls_from_tree))
+    monkeypatch.setitem(globals(), "timeout_less_calls", recording("path", timeout_less_calls))
+    monkeypatch.setitem(globals(), "timeout_less_calls_from_source", recording("source", timeout_less_calls_from_source))
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        test_prefilter_findings_equal_unfiltered_ast_findings_on_full_tree(tmp_path)
+        assert gc.isenabled() is enabled
+        positive_hits = [(4, "subprocess.run", "helper"), (5, "subprocess.call", "helper")]
+        assert observed["path"] == observed["source"] == [positive_hits, []]
+        # The oracle visits both files; the candidate also reaches each real API's visitor.
+        assert observed["tree"] == [positive_hits, positive_hits, positive_hits, []]
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize("enabled", [False, True])
+@pytest.mark.parametrize("failure", ["tree", "path", "source", "syntax", "encoding", "missing", "interrupt"])
+def test_full_tree_prefilter_boundary_rejects_lost_findings_and_restores_gc_on_errors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, enabled: bool, failure: str
+) -> None:
+    """Each entry point must reject a lost literal violation; errors must restore GC."""
+    path = tmp_path / "positive.py"
+    path.write_text("import subprocess\nsubprocess.run(['unsafe'])\n", encoding="utf-8")
+    error = AssertionError
+    if failure in {"tree", "path", "source"}:
+        def lost_findings(*args, **kwargs):
+            return []
+        if failure == "tree":
+            # Replace only the oracle's first invocation, leaving API visitors real.
+            original = guard.timeout_less_calls_from_tree
+            def lost_oracle(tree):
+                monkeypatch.setattr(guard, "timeout_less_calls_from_tree", original)
+                return []
+            monkeypatch.setattr(guard, "timeout_less_calls_from_tree", lost_oracle)
+        else:
+            name = "timeout_less_calls" if failure == "path" else "timeout_less_calls_from_source"
+            monkeypatch.setitem(globals(), name, lost_findings)
+    elif failure == "syntax":
+        path.write_text("import subprocess\nsubprocess.run(\n", encoding="utf-8")
+        error = SyntaxError
+    elif failure == "encoding":
+        path.write_bytes(b"# invalid UTF-8: \xff\n")
+        error = UnicodeDecodeError
+    else:
+        original_read = guard.read_test_source
+        def interrupted_read(source_path):
+            if failure == "interrupt":
+                raise KeyboardInterrupt("scan interrupted")
+            source_path.unlink()
+            return original_read(source_path)
+        monkeypatch.setattr(guard, "read_test_source", interrupted_read)
+        error = KeyboardInterrupt if failure == "interrupt" else FileNotFoundError
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        with pytest.raises(error):
+            test_prefilter_findings_equal_unfiltered_ast_findings_on_full_tree(tmp_path)
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
 
 
 def test_cached_findings_reuse_the_visitor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
