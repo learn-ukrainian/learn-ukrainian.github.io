@@ -27,6 +27,7 @@ class CollectionRecorder:
         self.crashed_nodeids: set[str] = set()
         self.collection_errors: list[str] = []
         self.worker_exits: list[dict] = []
+        self.worker_processes: dict[str, subprocess.Popen] = {}
 
     def pytest_runtestloop(self, session) -> Generator[None, None, object]:
         # Read the active pytest-cov instance before it switches to its reporting instance.
@@ -60,10 +61,12 @@ class CollectionRecorder:
     def pytest_testnodedown(self, node, error) -> None:
         # Local popen gateways expose the process; other transports remain unknown.
         process = getattr(getattr(node.gateway, "_io", None), "popen", None)
+        if process is not None:
+            self.worker_processes[node.gateway.id] = process
         self.worker_exits.append(
             {
                 "worker": node.gateway.id,
-                "returncode": process.poll() if process is not None else None,
+                "returncode": None,
                 "unexpected": error is not None,
             }
         )
@@ -86,6 +89,12 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
     # Match `python -m pytest` import semantics despite running a helper outside the measured tree.
     sys.path.insert(0, str(Path.cwd()))
     status = int(pytest.main(pytest_args, plugins=[recorder]))
+    # Node-down reports channel closure before the process necessarily exits.
+    # pytest.main returns after xdist's gateway teardown has waited for workers.
+    for worker_exit in recorder.worker_exits:
+        process = recorder.worker_processes.get(worker_exit["worker"])
+        if process is not None:
+            worker_exit["returncode"] = process.poll()
     consistent = all(ids == recorder.nodeids for ids in recorder.collections)
     receipt = {
         "sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, timeout=30).strip(),
@@ -139,6 +148,8 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
         "failed_nodeids": [],
         "crashed_nodeids": [],
         "unfinished_nodeids": [],
+        "unmapped_files": [],
+        "unreported_files": [],
     }
     errors = manifest["errors"]
     data_files = []
@@ -220,11 +231,41 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
             errors.append("missing or differing duration snapshots")
         if data_files:
             cov = coverage.Coverage(data_file=str(output / ".coverage"))
+            # Raw subprocess data is absolute. Coverage's documented [paths]
+            # aliases now map each source root to this reporting checkout.
+            cov.set_option("run:relative_files", True)
             cov.combine(data_paths=data_files, strict=True, keep=True)
             cov.save()
+            source_roots = set(cov.get_option("run:source"))
+            reportable = []
+            for name in sorted(cov.get_data().measured_files()):
+                path = Path(name)
+                if (
+                    path.is_absolute()
+                    or len(path.parts) < 2
+                    or ".." in path.parts
+                    or path.as_posix() != name
+                    or path.parts[0] not in source_roots
+                    or not path.is_file()
+                    or not path.resolve().is_relative_to(Path.cwd())
+                ):
+                    manifest["unmapped_files"].append(name)
+                    errors.append(f"unmapped measured path: {name}")
+                else:
+                    reportable.append(name)
             report_path = output / "coverage.json"
-            cov.json_report(outfile=str(report_path))
-            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report = {"meta": {"branch_coverage": True}, "files": {}}
+            if reportable:
+                try:
+                    cov.json_report(morfs=reportable, outfile=str(report_path), ignore_errors=True)
+                    report = json.loads(report_path.read_text(encoding="utf-8"))
+                except coverage.exceptions.NoDataError:
+                    pass  # Every unreportable file is a completeness error below.
+            # Keep a diagnostic report even if all paths or sources are unusable;
+            # the combined database still retains every measured arc.
+            manifest["unreported_files"] = sorted(set(reportable) - set(report["files"]))
+            for name in manifest["unreported_files"]:
+                errors.append(f"unreported measured path: {name}")
             # coverage JSON reports branch arcs only; preserve *all* executed arcs too.
             for name, file_data in report["files"].items():
                 file_data["executed_arcs"] = sorted(cov.get_data().arcs(name) or [])
