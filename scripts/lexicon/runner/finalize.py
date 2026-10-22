@@ -289,11 +289,13 @@ def stream_lemma_payloads(
     artifacts_dir: Path,
     *,
     phase: str = "offline_enrich",
+    expected_digests: Sequence[tuple[str, str]] | None = None,
 ) -> Iterator[tuple[str, dict[str, Any], str]]:
     """Yield ``(lemma_id, entry, content_sha256)`` in deterministic order.
 
     Streams one lemma at a time — never accumulates the full cohort (criterion 2).
     """
+    expected = iter(expected_digests) if expected_digests is not None else None
     rows = ledger.iter_sealed_leaf_lemmas(run_id, phase=phase)
     for row in rows:
         lemma_id = str(row["lemma_id"])
@@ -304,6 +306,8 @@ def stream_lemma_payloads(
         # Read + parse one file; do not retain prior entries.
         raw = path.read_bytes()
         digest = _sha256_bytes(raw)
+        if expected is not None and next(expected, None) != (lemma_id, digest):
+            raise FinalizeError(f"sealed input changed for {lemma_id!r}: membership or payload digest differs")
         try:
             entry = json.loads(raw.decode("utf-8"))
         except (UnicodeError, json.JSONDecodeError) as exc:
@@ -311,6 +315,8 @@ def stream_lemma_payloads(
         if not isinstance(entry, dict):
             raise FinalizeError(f"artifact {path} must be a JSON object")
         yield lemma_id, entry, digest
+    if expected is not None and next(expected, None) is not None:
+        raise FinalizeError("sealed input changed: missing lemma from frozen prescan")
 
 
 def compute_data_version_from_digests(
@@ -548,6 +554,7 @@ def _build_sealed_search(
     version_root: Path,
     data_version: str,
     scratch: Path,
+    expected_digests: Sequence[tuple[str, str]],
 ) -> tuple[dict[str, Any], dict[str, int]]:
     """Project sealed articles and explicit aliases with the runtime shard builder.
 
@@ -567,7 +574,9 @@ def _build_sealed_search(
             nonlocal form_count
             seen_aliases: set[tuple[str, str]] = set()
             rank = 0
-            for slug, entry, _digest in stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase):
+            for slug, entry, _digest in stream_lemma_payloads(
+                ledger, run_id, artifacts_dir, phase=phase, expected_digests=expected_digests
+            ):
                 form = entry.get("form_of")
                 if family == "articles":
                     if form:
@@ -710,9 +719,10 @@ def assemble_version_tree(
     if not lemma_digests:
         raise FinalizeError("no sealed lemma artifacts to assemble")
 
+    frozen_digests = tuple(lemma_digests)
     data_version = compute_data_version_from_digests(
         fingerprint=fingerprint,
-        lemma_digests=lemma_digests,
+        lemma_digests=frozen_digests,
     )
 
     # Build into same-partition temp, promote via rename (V7).
@@ -730,7 +740,9 @@ def assemble_version_tree(
         current_shard = _entry_shard_id(shard_index)
         record_count = 0
 
-        for lemma_id, entry, digest in stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase):
+        for lemma_id, entry, digest in stream_lemma_payloads(
+            ledger, run_id, artifacts_dir, phase=phase, expected_digests=frozen_digests
+        ):
             if crash_mid_stream and record_count == max(1, len(lemma_digests) // 2):
                 raise RuntimeError("injected crash: mid_stream_assembly")
             record = {
@@ -757,6 +769,7 @@ def assemble_version_tree(
             version_root=version_root,
             data_version=data_version,
             scratch=staging / "search-spool",
+            expected_digests=frozen_digests,
         )
         _note_rss(force=True)
 
@@ -853,13 +866,9 @@ def assemble_version_tree(
             "rss_ceiling_bytes": ceiling,
             "atlas_root": str(final_atlas),
         }
-    except Exception:
-        # Discard staging; final tree_root/atlas untouched if promote never ran.
-        shutil.rmtree(staging, ignore_errors=True)
-        raise
-    else:
-        # Staging parent may still hold an empty temp dir shell after rename.
-        shutil.rmtree(staging, ignore_errors=True)
+    finally:
+        # Only this assembly's staging remains here after promotion of atlas/.
+        shutil.rmtree(staging)
 
 
 def build_publication_archive(

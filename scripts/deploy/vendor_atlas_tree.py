@@ -707,7 +707,7 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
             if parent:
                 row["p"] = parent
             article_rows.append(row)
-        article_rows.sort(key=lambda row: _uk_sort_key(row["l"]))
+        article_rows.sort(key=lambda row: (_uk_sort_key(row["l"]), row["s"]))
         aliases = sorted(families["aliases"], key=lambda row: (_uk_sort_key(row["a"]), row["s"], row["k"]))
         return (
             article_rows,

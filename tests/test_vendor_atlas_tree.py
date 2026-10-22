@@ -130,7 +130,8 @@ def _archive_for(tree_root: Path, tmp: Path) -> tuple[Path, str]:
 
 
 @pytest.mark.parametrize("endpoint", ["articles", "aliases"])
-def test_vendor_preserves_producer_order_instead_of_unicode_order(tmp_path: Path, endpoint: str) -> None:
+@pytest.mark.parametrize("reverse", [False, True])
+def test_vendor_preserves_producer_order_instead_of_unicode_order(tmp_path: Path, endpoint: str, reverse: bool) -> None:
     """#11341: raw Unicode ordering misplaces ґ; comparator ties must stay deterministic."""
     tree = _build_two_gen_tree(tmp_path)
     version = tree / "atlas/versions/v-current"
@@ -155,8 +156,14 @@ def test_vendor_preserves_producer_order_instead_of_unicode_order(tmp_path: Path
     _replace_runtime_shard(version, "entries", "p00-0", [
         {"slug": slug, "kind": "article"} for slug in slugs
     ])
-    _replace_runtime_shard(version, "articles", "unit", articles)
-    _replace_runtime_shard(version, "aliases", "alias", aliases)
+    # Perturb both row order and shard insertion without changing the logical rows.
+    ordered = list(reversed(articles)) if reverse else articles
+    shards = [("unit", ordered[::2]), ("second", ordered[1::2])]
+    if reverse:
+        shards.reverse()
+    for shard_id, rows in shards:
+        _replace_runtime_shard(version, "articles", shard_id, rows)
+    _replace_runtime_shard(version, "aliases", "alias", list(reversed(aliases)) if reverse else aliases)
     manifest_path = version / "manifest.json"
     manifest = json.loads(manifest_path.read_bytes())
     manifest["counts"].update(articles=6, publicRoutes=6, searchArticles=6, searchAliases=8)
@@ -168,7 +175,9 @@ def test_vendor_preserves_producer_order_instead_of_unicode_order(tmp_path: Path
 
     # Literal order from the established producer contract, never its sort helper.
     if endpoint == "articles":
-        expected = [articles[3], articles[2], articles[0], articles[5], articles[1], articles[4]]
+        # generate_search_index.build_article_indexes queries display_head, slug,
+        # then stably applies _uk_sort_key; equal heads therefore use slug order.
+        expected = [articles[3], articles[2], articles[5], articles[0], articles[1], articles[4]]
         for path in ("lexicon/search-index.json", "api/lexicon/search-index.json"):
             assert json.loads((dist / path).read_bytes()) == expected
     else:

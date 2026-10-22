@@ -365,7 +365,99 @@ def test_sealed_search_preserves_articles_aliases_and_form_routes(
         {"a": "Explicit alias", "s": "alpha", "h": "Alpha head", "k": "spelling_variant"},
     ]
     assert {p.name: p.read_bytes() for p in (arts / "chunk-0").iterdir()} == frozen
-    assert not (out / "tree/search-spool").exists()
+    assert list((out / "tree").glob(".atlas-assemble-*")) == []
+
+
+@pytest.mark.parametrize("boundary", [2, 3, 4], ids=["entry", "article-search", "alias-search"])
+@pytest.mark.parametrize("defect", ["payload", "missing", "extra", "replacement"])
+def test_sealed_input_drift_rejected_at_every_reread(
+    ledger: Ledger, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: int, defect: str
+) -> None:
+    """Reject changed payloads, including equal-cardinality changes, or membership before promotion."""
+    from scripts.lexicon.runner import finalize
+
+    arts = tmp_path / "arts"
+    run, fp = _seed_sealed_run(ledger, arts)
+    out = tmp_path / "out"
+    (out / "atlas").mkdir(parents=True)
+    (out / "atlas/current.json").write_bytes(b"previous published tree\n")
+    old = {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()}
+    original = finalize.stream_lemma_payloads
+    passes = 0
+
+    def stream(*args, **kwargs):
+        nonlocal passes
+        passes += 1
+        if passes == boundary:
+            if defect == "payload":
+                path = arts / "chunk-0/alpha.json"
+                entry = json.loads(path.read_bytes())
+                entry["gloss"] = "changed gloss, same article membership"
+                path.write_text(json.dumps(entry))
+            else:
+                rows = ledger.iter_sealed_leaf_lemmas(run)
+                extra = {**rows[-1], "lemma_id": "extra"}
+                (arts / "chunk-0/extra.json").write_text(json.dumps({"lemma": "extra", "url_slug": "extra"}))
+                changed = rows[:-1] if defect == "missing" else [*rows, extra]
+                if defect == "replacement":
+                    changed = [*rows[:-1], extra]
+                monkeypatch.setattr(ledger, "iter_sealed_leaf_lemmas", lambda *a, **kw: changed)
+        yield from original(*args, **kwargs)
+
+    monkeypatch.setattr(finalize, "stream_lemma_payloads", stream)
+    with pytest.raises(FinalizeError, match="sealed input changed"):
+        assemble_version_tree(
+            ledger=ledger, run_id=run, fingerprint=fp, artifacts_dir=arts, tree_root=out,
+            prior_version_dir=None, grant_first_run_escape=True, first_run_escape_reason="fixture",
+        )
+    assert passes == boundary
+    assert {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()} == old
+    assert list(out.glob(".atlas-assemble-*")) == []
+
+
+def test_search_spool_cleanup_on_failure_and_success_preserves_published_tree(
+    ledger: Ledger, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A populated staging spool must be removed after failure and successful promotion."""
+    from scripts.lexicon.runner import finalize
+
+    arts = tmp_path / "arts"
+    run, fp = _seed_sealed_run(ledger, arts)
+    out = tmp_path / "out"
+    (out / "atlas").mkdir(parents=True)
+    (out / "atlas/current.json").write_bytes(b"previous published tree\n")
+    manual = out / ".atlas-assemble-manual"
+    manual.mkdir()
+    (manual / "keep").write_bytes(b"unrelated directory")
+    old = {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()}
+    original = finalize._build_sealed_search
+    stages = []
+
+    def build_search(**kwargs):
+        result = original(**kwargs)
+        stages.append(kwargs["scratch"].parent)
+        assert list(kwargs["scratch"].rglob("*.json"))
+        if len(stages) == 1:
+            raise RuntimeError("injected failure after search spool")
+        return result
+
+    monkeypatch.setattr(finalize, "_build_sealed_search", build_search)
+    kwargs = dict(
+        ledger=ledger, run_id=run, fingerprint=fp, artifacts_dir=arts, tree_root=out,
+        prior_version_dir=None, grant_first_run_escape=True, first_run_escape_reason="fixture",
+    )
+    with pytest.raises(RuntimeError, match="injected failure after search spool"):
+        assemble_version_tree(**kwargs)
+    assert not stages[0].exists()
+    assert {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()} == old
+    result = assemble_version_tree(**kwargs)
+    assert len(stages) == 2
+    assert all(not staging.exists() for staging in stages)
+    assert list(out.glob(".atlas-assemble-*")) == [manual]
+    assert (manual / "keep").read_bytes() == b"unrelated directory"
+    current = json.loads((out / "atlas/current.json").read_bytes())
+    assert current["dataVersion"] == result["data_version"]
+    assert (out / "atlas/versions" / current["dataVersion"] / "manifest.json").is_file()
 
 
 @pytest.mark.parametrize(
