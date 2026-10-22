@@ -11,22 +11,13 @@ records the same kernel boot id, and the recorded pid is absent or now
 reports a different start time (the number was reused). The lease lock must
 also be acquired exclusively, so a live writer is never raced.
 
-Unreadable processes are classified by owner. The run namespace is mode 0700
-owned by the scanning user, so a holder must be that user or root. A
-foreign-uid process cannot traverse the namespace and does not make liveness
-unknown, which is the defect #11409 fixes: refusing to act because another
-user's processes are unreadable meant nothing was ever reclaimed. Every other
-unreadable process, root included, leaves the snapshot incomplete. Only a
-lease whose owner is provably dead on this boot bypasses that gate: the lock
-is held by the sweep and the tree is rechecked after the bounded quarantine
-rename. The residual is such a dead-owner run held by an idle same-user or
-root process whose ``/proc`` entry is unreadable (a non-dumpable process, or
-root) and that holds a descriptor or working directory without writing: it is
-not distinguished from no holder, and the run can be deleted after the
-unchanged-fingerprint recheck. A same-user or root writer that changes the
-tree during that window is renamed back. A run without a valid lease keeps
-the older rule: an unreadable process of the scanning user, of root, or of an
-undeterminable owner makes liveness unknown, and unknown preserves.
+Any live process that cannot be fully read leaves the snapshot incomplete,
+whatever its owner, and holder evidence read before the failure still counts.
+An incomplete snapshot preserves every run, except that a lease whose owner
+is provably dead on this boot takes the bounded quarantine rename and
+recheck: the lock is held by the sweep and the tree must be unchanged. Like
+any process inspection, these checks have limits; they are layered defences,
+not a proof that no holder exists.
 
 A missing or malformed lease carries no owner, so the older evidence applies:
 the run lock, a readable live holder, and a trusted process snapshot. A
@@ -97,10 +88,10 @@ class Holders:
     paths their relative spellings name from the process cwd; ``texts``
     keeps the raw blobs so an absolute path embedded anywhere in a value
     still counts.
-    ``complete`` is False when any live process other than a foreign-uid one
-    could not be fully read; a foreign-uid process cannot reach the private
-    namespace. Only a lease that proves the owner dead bypasses an incomplete
-    snapshot and falls back to the bounded quarantine/recheck path.
+    ``complete`` is False when any live process could not be fully read; the
+    paths read before the failure are still kept. Only a lease that proves
+    the owner dead bypasses an incomplete snapshot and falls back to the
+    bounded quarantine/recheck path.
     ``unreadable`` counts every unreadable live process for the privacy-safe
     report; ``unreadable_foreign`` and ``unreadable_root`` split that count.
     ``descriptor_errors`` counts resource failures separately from process
@@ -176,7 +167,8 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
     run lock) are not external holders, while its working directory,
     arguments, environment and every other descriptor still count. Zombies
     and processes that exit during the scan hold nothing; any other read
-    failure leaves the snapshot incomplete.
+    failure leaves the snapshot incomplete, and what was read before it
+    still names a holder.
     """
     holders = Holders()
     try:
@@ -195,6 +187,7 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
             continue
         found: list[tuple[int, str, str]] = []
         texts: list[tuple[int, str, bytes]] = []
+        cwd = ""
         try:
             if state is None:
                 # The shared state reader hides OSError. Preserve resource failures
@@ -218,21 +211,16 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
             if isinstance(error, OSError) and error.errno in _DESCRIPTOR_ERRORS:
                 holders.complete = False
                 holders.descriptor_errors += 1
-                continue
-            if _process_vanished(entry):
-                continue
-            holders.unreadable += 1
-            uid = _process_uid(entry)
-            if uid == 0:
-                # Root may reach the private namespace; the snapshot cannot prove
-                # absence, so only a lease-proven dead owner may bypass it.
-                holders.unreadable_root += 1
+            elif not _process_vanished(entry):
+                # No owner rules a holder out; the split only feeds the report.
                 holders.complete = False
-            elif uid is not None and uid != os.geteuid():
-                holders.unreadable_foreign += 1
-            else:
-                holders.complete = False
-            continue
+                holders.unreadable += 1
+                uid = _process_uid(entry)
+                if uid == 0:
+                    holders.unreadable_root += 1
+                elif uid is not None and uid != os.geteuid():
+                    holders.unreadable_foreign += 1
+        # Evidence read before a failure still names a holder.
         holders.paths.extend((p, channel, target.removesuffix(" (deleted)")) for p, channel, target in found)
         for p, channel, blob in texts:
             absolute, relative = _named_paths(blob, cwd, forms)

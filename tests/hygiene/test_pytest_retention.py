@@ -1781,6 +1781,40 @@ def test_root_holder_takes_the_bounded_quarantine_recheck_path(area, monkeypatch
     assert report["deleted_bytes"] > 0
 
 
+def test_unprovable_holders_preserve_and_partial_holder_evidence_is_kept(area, monkeypatch):
+    """Data-loss class: an unreadable foreign-uid process or a later failed inspection channel
+    let a held run be deleted.
+
+    An unreadable foreign-uid process must leave an unleased run preserved, and
+    a holder whose working directory was read before its descriptors failed
+    must still preserve a dead-owner run.
+    """
+    root, args = area
+    proc = pytest_retention.PROC_ROOT
+    unleased = unowned(root, "foreign-unprovable")
+    fake_process(proc, 4242, "S")  # alive, cwd unreadable
+    real_uid = pytest_retention._process_uid
+    monkeypatch.setattr(
+        pytest_retention, "_process_uid",
+        lambda entry: os.geteuid() + 1 if entry.name == "4242" else real_uid(entry),
+    )
+    later(monkeypatch, 3 * HOUR)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    row = row_for(report, unleased)
+    assert (row["decision"], row["reason"]) == ("preserve", "liveness_unknown") and unleased.is_dir()
+    assert report["liveness_complete"] is False
+    assert report["liveness_unreadable_foreign_processes"] == 1
+
+    pid, start = reaped_pid()
+    partial = leased(root, "partially-read-holder", pid=pid, start_time=start, boot_id=current_boot())
+    fake_process(proc, 4343, "S", cwd=partial / "scratch")
+    (proc / "4343" / "fd").rmdir()  # descriptors fail after the cwd was read
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    held = row_for(report, partial)
+    assert (held["decision"], held["reason"], held["live_pids"]) == ("preserve", "live_process", [4343])
+    assert partial.is_dir() and report["deleted_entries"] == 0
+
+
 def test_receipt_carries_preserved_reasons_measured_bytes_and_largest_preserved(area, monkeypatch):
     """Defect class: a receipt could not tell an operator what was kept, why, or how large."""
     if os.geteuid() == 0:
