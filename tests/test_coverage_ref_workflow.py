@@ -92,7 +92,15 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
         after[after.index('.venv/bin/python "$RUNNER_TEMP') : after.index("# Postgres")].replace("\\\n", "")
     )
     instrumented = instrumented[instrumented.index("--") + 1 :]
-    assert [arg for arg in instrumented if not arg.startswith("--cov")] == original[3:]
+    # Coverage needs 5x the wall-clock budget (#11226); selection and all other
+    # pytest options must still match CI. Pin both budgets before normalizing.
+    assert original.count("--timeout=120") == 1
+    assert instrumented.count("--timeout=600") == 1
+    assert [
+        "--timeout=120" if arg == "--timeout=600" else arg
+        for arg in instrumented
+        if not arg.startswith("--cov")
+    ] == original[3:]
     assert (
         step(measured, "Download pytest duration snapshot")["run"]
         == step(baseline, "Download pytest duration snapshot")["run"]
