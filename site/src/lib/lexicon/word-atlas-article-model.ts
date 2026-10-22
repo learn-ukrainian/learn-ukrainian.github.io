@@ -3,6 +3,7 @@
  * Logic lifted from the former WordAtlasArticle.astro frontmatter.
  */
 
+import { CHROME_STRINGS } from "../i18n/chrome";
 import {
   atlasNoteDetail,
   displayGloss,
@@ -527,7 +528,7 @@ export type ArticleAttribution =
   | { kind: "quotation"; source: string; title: string | null; href: string | null; locator: string };
 
 export function articleAttribution(input: TextAttribution, example = false): ArticleAttribution {
-  const source = input.source || "Source unknown";
+  const source = input.source || CHROME_STRINGS.uk["atlas.sourceUnknown"];
   const locator = input.locator || "";
   const ohoiko = source === "Anna Ohoiko" || source === "learner_english_gloss";
   if (!ohoiko && input.source) return { kind: "ordinary", source, locator };
@@ -539,11 +540,15 @@ export function articleAttribution(input: TextAttribution, example = false): Art
       ? "anna-ohoiko-500-verbs" : "";
   const sourceFile = input.source_file || legacyBook;
   const book = ohoiko && Object.hasOwn(OHOIKO_BOOKS, sourceFile) ? OHOIKO_BOOKS[sourceFile] : null;
+  // FMU's producer declares an episode title and URL on this term, without a
+  // book source_file. A strict own-record locator distinguishes that schema.
+  const episodeTitle = ohoiko && !sourceFile && /^fmu-booster-ep-(?:0[1-9]|[1-9]\d+)$/.test(locator)
+    ? input.source_title : null;
   return {
     kind: "quotation",
     source: ohoiko ? "Anna Ohoiko" : source,
-    title: book?.title ?? null,
-    href: book ? safeHref(input.source_url ?? book.url) : safeHref(input.source_url),
+    title: book?.title ?? episodeTitle ?? null,
+    href: book ? safeHref(input.source_url || book.url) : safeHref(input.source_url),
     locator,
   };
 }

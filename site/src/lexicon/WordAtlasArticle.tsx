@@ -30,7 +30,7 @@ import {
   type Enrichment,
   type VerbParadigm,
 } from "../lib/lexicon/word-atlas-article-model";
-import { displayGloss } from "../lib/lexicon/heritage-severity";
+import { displayGloss, quotedGlossParts } from "../lib/lexicon/heritage-severity";
 import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
 import ChromeText from "../lib/i18n/ChromeText";
 import { CHROME_STRINGS } from "../lib/i18n/chrome";
@@ -54,7 +54,7 @@ function Attribution({ credit }: { credit: ArticleAttribution }) {
   return <span className="atlas-muted">Джерело: {credit.source}
     {credit.kind === "quotation" && <> · {credit.title
       ? <cite>{credit.href ? <a href={credit.href} target="_blank" rel="noopener noreferrer">{credit.title}</a> : credit.title}</cite>
-      : "Book unknown"}</>}
+      : CHROME_STRINGS.uk["atlas.bookUnknown"]}</>}
     {credit.locator ? ` (${credit.locator})` : ""}
   </span>;
 }
@@ -1417,8 +1417,9 @@ function WordAtlasArticleBody({
                     const quoted = credits.some((credit) => credit.kind === "quotation");
                     const gloss = displayGloss(term, heritageBoxes.usageLabel);
                     return <span key={term} className="en-term">
-                      {quoted ? <q>{term}</q> : gloss?.text}
-                      {quoted && gloss?.note && <span className="atlas-muted"> ({gloss.text})</span>}
+                      {quoted ? quotedGlossParts(term, heritageBoxes.usageLabel).map((part, index) =>
+                        part.kind === "quotation" ? <q key={index}>{part.text}</q>
+                          : <span key={index} className="atlas-muted">{part.text}</span>) : gloss?.text}
                       {(quoted || Boolean(translation.attributions?.length)) && credits.map((credit, index) => <Fragment key={index}> <Attribution credit={credit} /></Fragment>)}
                     </span>;
                   })}

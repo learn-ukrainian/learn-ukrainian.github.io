@@ -1,4 +1,6 @@
 import { describe, expect, test } from "vitest";
+import { execFileSync } from "node:child_process";
+import { resolve } from "node:path";
 import { CHROME_STRINGS } from "@site/src/lib/i18n/chrome";
 import { formatOrigin } from "@site/src/lib/lexicon/format-origin";
 import {
@@ -1731,16 +1733,16 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(html).toContain(`<div class="word-pos">іменник · ${PEREKLIUCHYTY_SHOWN}</div>`);
     expect(html).toContain(`<p>${PEREKLIUCHYTY_SHOWN}</p>`);
     const doc = new DOMParser().parseFromString(html, "text/html");
-    expect(Array.from(doc.querySelectorAll(".en-term q")).map((q) => q.textContent)).toEqual([PEREKLIUCHYTY_GLOSS, "to switch"]);
-    expect(doc.querySelector(".en-term .atlas-muted")?.textContent).toContain(PEREKLIUCHYTY_SHOWN);
+    expect(Array.from(doc.querySelectorAll(".en-term q")).map((q) => q.textContent)).toEqual(["to switch over ", "to switch"]);
+    expect(doc.querySelector(".en-term .atlas-muted")?.textContent).toBe("(примітка Атласу: «Russian calque; standard Ukrainian: перемкнути»; обсяг застереження не встановлено)");
     // #9603 F3: unresolved alternatives without source proof are Atlas suggestions, never a reference source's.
     expect(styleNotesHtml(html)).toContain(
       "<p>Атлас пропонує відповідники, не звірені з джерелом: перемкнути, перемикнути. Перевіреного витягу з джерела запис не містить, тому слово не позначено як русизм або кальку.</p>",
     );
     expect(html).not.toContain("Довідкові джерела");
     expect(html).not.toContain("Джерело не визначає");
-    // Source quotations stay exact; unquoted Atlas prose must qualify the clause.
-    for (const quote of doc.querySelectorAll("q")) quote.remove();
+    // The whole render, including quotations, must not re-expose the raw claim.
+    expect(html).not.toContain("(Russian calque; standard Ukrainian: перемкнути)");
     expect(doc.body.textContent).not.toContain("(Russian calque");
     const form = renderWordAtlasArticle(
       heritageEntry("переключив", {}, { gloss: PEREKLIUCHYTY_GLOSS, form_of: { url_slug: "переключити", lemma: "переключити" } }),
@@ -2653,7 +2655,77 @@ describe("article attribution metadata (#11340)", () => {
   test("absent per-term metadata is explicit and never inherits a neighboring term", () => {
     expect(translationAttributions({ en: ["first", "other"], source: "learner_english_gloss", attributions: [
       { text: "first", source: "Anna Ohoiko", source_file: "anna-ohoiko-500-verbs" },
-    ] }, "other")).toEqual([{ kind: "quotation", source: "Source unknown", title: null, href: null, locator: "" }]);
-    expect(articleAttribution({ source: "" }, true)).toMatchObject({ source: "Source unknown", title: null });
+    ] }, "other")).toEqual([{ kind: "quotation", source: "невідоме", title: null, href: null, locator: "" }]);
+    expect(articleAttribution({ source: "" }, true)).toMatchObject({ source: "невідоме", title: null });
+  });
+
+  test("empty book URLs fall back to the canonical URL without accepting unsafe protocols", () => {
+    for (const source_url of [undefined, ""]) {
+      expect(articleAttribution({ source: "Anna Ohoiko", source_file: "anna-ohoiko-500-verbs", source_url }))
+        .toMatchObject({ href: "https://www.ukrainianlessons.com/verbs/" });
+    }
+    for (const source_url of ["javascript:alert(1)", "data:text/html,test"]) {
+      expect(articleAttribution({ source: "Anna Ohoiko", source_file: "anna-ohoiko-500-verbs", source_url }))
+        .toMatchObject({ href: null });
+    }
+  });
+
+  test("episode titles require own strict locators and cannot override unknown source files", () => {
+    const own = { source: "Anna Ohoiko", source_title: "Declared episode title", source_url: "javascript:alert(1)" };
+    expect(articleAttribution({ ...own, locator: "fmu-booster-ep-12" })).toEqual({
+      kind: "quotation", source: "Anna Ohoiko", title: "Declared episode title", href: null, locator: "fmu-booster-ep-12",
+    });
+    for (const locator of ["fmu-booster-ep-00", "fmu-booster-ep-04 extra", "entry 4", ""]) {
+      expect(articleAttribution({ ...own, locator })).toMatchObject({ title: null });
+    }
+    for (const source_file of ["unknown", "__proto__", "constructor"]) {
+      expect(articleAttribution({ ...own, source_file, locator: "fmu-booster-ep-04" })).toMatchObject({ title: null });
+    }
+    expect(articleAttribution({ source: "Anna Ohoiko", locator: "fmu-booster-ep-04" })).toMatchObject({ title: null, href: null });
+  });
+
+  test("actual booster producer output retains declared episode credit through shared SSR", () => {
+    const entry = JSON.parse(execFileSync(process.env.PYTHON || resolve("../.venv/bin/python"), ["-c", `
+import json
+from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+print(json.dumps(build_new_atlas_entry("fixture phrase", "noun", 'first / second <&>', EPISODES_DATA[0])))
+`], { cwd: resolve(".."), encoding: "utf8", timeout: 30000 }));
+    const html = renderWordAtlasArticle(articleProps(entry));
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const terms = Array.from(doc.querySelectorAll(".en-term"));
+    expect(terms.map((term) => term.querySelector("q")?.textContent)).toEqual(["first", "second <&>"]);
+    expect(terms.map((term) => term.querySelector("cite")?.textContent)).toEqual([
+      "Anna Ohoiko - 5 Minute Ukrainian, Episode 4: Means of Transport",
+      "Anna Ohoiko - 5 Minute Ukrainian, Episode 4: Means of Transport",
+    ]);
+    for (const term of terms) {
+      expect(term.textContent).toContain("Джерело: Anna Ohoiko");
+      expect(term.textContent).toContain("(fmu-booster-ep-04)");
+      expect(term.querySelector("a")?.getAttribute("href")).toBe("https://www.ukrainianlessons.com/fmu4/");
+    }
+    expect(html).toContain("second &lt;&amp;&gt;");
+  });
+
+  test("legacy booster metadata cannot credit merged terms from a neighboring definition card", () => {
+    const html = renderWordAtlasArticle(articleProps({ lemma: "fixture", url_slug: "fixture", gloss: "first",
+      entry_type: "lemma", definition_cards: [{ source_dict: "ohoiko", source_url: "https://www.ukrainianlessons.com/fmu4/" }],
+      enrichment: { translation: { en: ["first", "retained"], source: "learner_english_gloss" } },
+    }));
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    expect(Array.from(doc.querySelectorAll(".en-term")).map((term) => term.textContent)).toEqual([
+      "first Джерело: невідоме · Книга невідома", "retained Джерело: невідоме · Книга невідома",
+    ]);
+    expect(doc.querySelector(".translation-block cite")).toBeNull();
+    expect(doc.querySelector(".translation-block a")).toBeNull();
+  });
+
+  test("editorial-only translation claims remain qualified outside source quotations", () => {
+    const html = renderWordAtlasArticle(articleProps({ lemma: "fixture", url_slug: "fixture", gloss: "first", entry_type: "lemma",
+      enrichment: { translation: { en: ["avoid: next"], source: "learner_english_gloss" } },
+    }));
+    const term = new DOMParser().parseFromString(html, "text/html").querySelector(".en-term");
+    expect(term?.querySelector("q")).toBeNull();
+    expect(term?.textContent).toBe("примітка Атласу: радять «next»; обсяг застереження не встановлено Джерело: невідоме · Книга невідома");
+    expect(html).not.toContain("avoid: next");
   });
 });

@@ -37,7 +37,7 @@ describe("borrowed quotation attribution (#11340)", () => {
     const terms = Array.from(doc.querySelectorAll(".en-term"));
     expect(terms.map((el) => el.querySelector("q")?.textContent)).toEqual(publicInput.translation?.en);
     for (const term of terms) {
-      expect(term.textContent).toContain("Source unknown");
+      expect(term.textContent).toContain("Джерело: невідоме · Книга невідома");
       expect(term.textContent).not.toContain("Anna Ohoiko");
       expect(term.querySelector("cite")).toBeNull();
     }
@@ -88,7 +88,7 @@ test("unknown Ohoiko book stays explicit while other sources keep their original
   ], translation: { en: ["other & term"], source: "dmklinger" } });
   const examples = Array.from(doc.querySelectorAll(".example-item"));
   expect(examples[0].querySelector("blockquote")).not.toBeNull();
-  expect(examples[0].textContent).toContain("Anna Ohoiko · Book unknown (entry 3)");
+  expect(examples[0].textContent).toContain("Джерело: Anna Ohoiko · Книга невідома (entry 3)");
   expect(examples[0].querySelector("cite, a")).toBeNull();
   expect(examples[0].textContent).not.toContain("Do not guess");
   expect(examples[1].querySelector("blockquote, cite, a")).toBeNull();
@@ -101,7 +101,7 @@ test("unknown Ohoiko book stays explicit while other sources keep their original
 test("missing example metadata is quoted with explicit unknown provenance", () => {
   const doc = render({ examples: [{ uk: "unchanged", en: "unchanged", source: "" }] });
   expect(doc.querySelector(".example-item blockquote")).not.toBeNull();
-  expect(doc.querySelector(".example-item")?.textContent).toContain("Source unknown · Book unknown");
+  expect(doc.querySelector(".example-item")?.textContent).toContain("Джерело: невідоме · Книга невідома");
 });
 
 test("a supported source link and each book credit survive when one term appears in both books", () => {
@@ -139,7 +139,7 @@ test("heteronym panels preserve their own quotation provenance while inheriting 
     expect(panel.querySelector(".example-item cite")?.textContent).toBe(title);
     expect(Array.from(panel.querySelectorAll(".en-term q")).map((term) => term.textContent)).toEqual(publicInput.translation?.en);
     expect(panel.querySelector(".en-side cite")).toBeNull();
-    expect(panel.querySelector(".en-side")?.textContent).toContain("Source unknown");
+    expect(panel.querySelector(".en-side")?.textContent).toContain("Джерело: невідоме · Книга невідома");
   }
   expect(panels[0].textContent).not.toContain("second quoted text");
   expect(panels[1].textContent).not.toContain("first quoted text");

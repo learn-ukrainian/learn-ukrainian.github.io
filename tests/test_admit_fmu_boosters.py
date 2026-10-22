@@ -19,6 +19,49 @@ POINTER_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.pointer.json"
 FINGERPRINT_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 
 
+def test_booster_translation_credit_is_bound_to_declared_episode_and_each_term():
+    """Missing per-term provenance must not erase an explicitly declared episode."""
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    for episode in EPISODES_DATA:
+        entry = build_new_atlas_entry("fixture phrase", "noun", "first / second", episode)
+        translation = entry["enrichment"]["translation"]
+        assert translation["en"] == ["first", "second"]
+        assert translation["attributions"] == [
+            {"text": term, "source": "Anna Ohoiko", "source_title": episode["title"],
+             "source_url": episode["url"], "locator": f"fmu-booster-ep-{episode['num']}"}
+            for term in ["first", "second"]
+        ]
+        assert build_new_atlas_entry("fixture phrase", "noun", "first / second", episode) == entry
+
+
+@pytest.mark.parametrize("gloss", ["", " / , ; "])
+def test_booster_unsplittable_gloss_keeps_exact_text_and_episode_credit(gloss):
+    """Empty split results must retain the original gloss and its own provenance."""
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    entry = build_new_atlas_entry("fixture phrase", "noun", gloss, EPISODES_DATA[0])
+    translation = entry["enrichment"]["translation"]
+    assert translation["en"] == [gloss]
+    assert translation["terms"] == [gloss]
+    assert translation["gloss"] == gloss
+    assert translation["attributions"] == [{
+        "text": gloss, "source": "Anna Ohoiko",
+        "source_title": "Anna Ohoiko - 5 Minute Ukrainian, Episode 4: Means of Transport",
+        "source_url": "https://www.ukrainianlessons.com/fmu4/", "locator": "fmu-booster-ep-04",
+    }]
+
+
+@pytest.mark.parametrize("missing", ["num", "url", "title"])
+def test_booster_missing_episode_metadata_cannot_invent_provenance(missing):
+    """Absent authoritative fields must fail instead of synthesizing credit."""
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    episode = {key: value for key, value in EPISODES_DATA[0].items() if key != missing}
+    with pytest.raises(KeyError, match=missing):
+        build_new_atlas_entry("fixture phrase", "noun", "first", episode)
+
+
 def test_fmu_booster_inventory_is_valid():
     assert INV_PATH.is_file(), f"Missing inventory file: {INV_PATH}"
     records = read_source_inventory(INV_PATH, project_root=PROJECT_ROOT)
