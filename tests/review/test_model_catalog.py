@@ -547,12 +547,33 @@ def approved_retirement_11327_baseline(baseline, inputs):
     }
 
 
+def approved_native_grok_help_baseline(baseline):
+    """Apply #11451's three shared help lines; keep all other receipt fields."""
+    before = "  --                         Pass all remaining arguments verbatim to the provider CLI.\n"
+    after = (
+        before
+        + "                             Native Grok drivers take prompt words before this separator;\n"
+        "                             after it, only supported session options are accepted.\n"
+        "                             For option-looking text, use a prompt such as 'Task: --flag'.\n"
+    )
+    launchers = deepcopy(baseline["launchers"])
+    help_rows = (4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69)
+    assert tuple(i for i, row in enumerate(INPUTS["launchers"]) if row["variant"] == "help") == help_rows
+    for index in help_rows:
+        assert launchers[index]["stdout"].count(before) == 1
+        assert "Native Grok drivers take prompt words" not in launchers[index]["stdout"]
+        launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
     approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
 PRE_RETIREMENT_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
 APPROVED_INPUTS = approved_retirement_11327_inputs(PRE_RETIREMENT_INPUTS)
-APPROVED_BASELINE = approved_retirement_11327_baseline(PRE_RETIREMENT_BASELINE, PRE_RETIREMENT_INPUTS)
+APPROVED_BASELINE = approved_native_grok_help_baseline(
+    approved_retirement_11327_baseline(PRE_RETIREMENT_BASELINE, PRE_RETIREMENT_INPUTS)
+)
 
 
 def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
