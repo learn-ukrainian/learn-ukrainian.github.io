@@ -10,6 +10,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 AGENTS = ROOT / "agents_extensions/shared/agents"
 RESERVED_AGENTS = {
+    "cto": "claude-opus-5-5",
     "curriculum-orchestrator": "claude-opus-5-5",
     "curriculum-track-orchestrator": "claude-opus-5-5",
     "curriculum-writer": "claude-opus-5-5",

@@ -8,7 +8,10 @@ wake timers die with this session; the next one re-arms them from the file hando
 3. Update the mistakes ledger ([learning](learning.md)): new entries, status changes and
    recurrence counts.
 4. Prepend a `HANDOFF FINAL` block to `.claude/epics-epic/DRIVER-STATE.md` above older
-   ones; archive superseded session logs under `.claude/epics-epic/archive/`.
+   ones. Then move superseded handoff blocks and session logs to
+   `.claude/epics-epic/archive/`, so the state file stays under 40 KB (`wc -c`) and the next
+   startup can read it in one step. Keep the newest handoff, the blocks it names and the
+   mistakes ledger.
 5. Prepare the rollover with the `thread-rollover` skill; put its lineage and rollover IDs
    in the STARTUP line.
 6. Write the durable brief (core.md P7) and drain the inbox one last time.
@@ -18,7 +21,7 @@ wake timers die with this session; the next one re-arms them from the file hando
 - MODE: <CTO-only or lanes running; worker cap; reviewer defaults in force>
 - DISK: <percent used, free> and what was cleaned this session
 - PRs: <repo#number head <sha8> state: verdict@head, CI, queue> for every open PR touched
-- WORKERS: <task-id nonce <nonce> agent, deliverable, wait armed?> for every live worker
+- WORKERS: <task-id nonce <FULL run_nonce> agent, deliverable, wait armed?> for every live worker
 - SCORECARD: <PRs merged, median approved-to-merged time, rework rounds per PR,
   new mistakes / repeats (ledger IDs; a repeat of a verified entry names its next control step)>
 - PARKED: <each item stopped mid-way (uncommitted edits, cancelled workers, half-run
@@ -28,6 +31,9 @@ wake timers die with this session; the next one re-arms them from the file hando
   <lineage-id> / <rollover-id> with the thread-rollover skill; scratch helpers in <scratch>
 - WATCHERS in this session die with it: <ids and what each watched>. Re-arm.
 ```
+
+Copy each WORKERS `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a
+shortened nonce waits forever.
 
 Every line is tool-backed or says NOT CHECKED with its command. Public briefs follow
 core.md P8; private detail stays in the gitignored state file or the private infra repository.
