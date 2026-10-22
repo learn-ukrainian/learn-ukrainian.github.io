@@ -39,6 +39,7 @@ from scripts.orchestration.tmp_leak_sweep import _process_state, _process_vanish
 
 INACTIVE_S = 2 * 3600
 PROC_ROOT = Path("/proc")
+_DESCRIPTOR_ERRORS = {errno.EMFILE, errno.ENFILE}
 
 
 def _open_private(path: Path, stack: ExitStack, *, private: bool = True) -> int:
@@ -72,6 +73,8 @@ class Holders:
     still counts.
     ``complete`` is False when any live process could not be fully read.
     ``unreadable`` counts those processes for the privacy-safe report.
+    ``descriptor_errors`` counts resource failures separately from process
+    visibility failures; callers report them as sweep errors.
     """
 
     paths: list[tuple[int, str, str]] = field(default_factory=list)
@@ -79,6 +82,7 @@ class Holders:
     texts: list[tuple[int, str, bytes]] = field(default_factory=list)
     complete: bool = True
     unreadable: int = 0
+    descriptor_errors: int = 0
 
     def holding(self, paths: Iterable[Path]) -> tuple[list[int], list[str]]:
         """PIDs and channels that reach any of ``paths`` or a path below it."""
@@ -137,8 +141,9 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
     holders = Holders()
     try:
         entries = [name for name in os.listdir(PROC_ROOT) if name.isdigit()]
-    except OSError:
+    except OSError as error:
         holders.complete = False
+        holders.descriptor_errors += error.errno in _DESCRIPTOR_ERRORS
         return holders
     me = os.getpid()
     forms: dict[str, set[Path]] = {}
@@ -152,6 +157,9 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
         texts: list[tuple[int, str, bytes]] = []
         try:
             if state is None:
+                # The shared state reader hides OSError. Preserve resource failures
+                # separately from genuinely unreadable live processes.
+                (entry / "stat").read_bytes()
                 raise OSError(errno.EIO, "unknown process state")
             cwd = os.readlink(entry / "cwd")
             found.append((pid, "cwd", cwd))
@@ -166,7 +174,11 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
                     found.append((pid, "maps", os.fsdecode(fields[5])))
             texts.append((pid, "argv", (entry / "cmdline").read_bytes()))
             texts.append((pid, "environ", (entry / "environ").read_bytes()))
-        except (OSError, ValueError):
+        except (OSError, ValueError) as error:
+            if isinstance(error, OSError) and error.errno in _DESCRIPTOR_ERRORS:
+                holders.complete = False
+                holders.descriptor_errors += 1
+                continue
             if not _process_vanished(entry):
                 holders.complete = False
                 holders.unreadable += 1
@@ -194,14 +206,16 @@ def _lock(run_fd: int) -> tuple[int | None, str | None]:
         )
     except FileNotFoundError:
         return None, None
-    except OSError:
-        return None, "lock_unknown"
+    except OSError as error:
+        return None, "descriptor_exhausted" if error.errno in _DESCRIPTOR_ERRORS else "lock_unknown"
     try:
         if not os.path.samestat(os.fstat(lock), info):
             raise OSError(errno.ESTALE, "lock replaced while opening")
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError as error:
         os.close(lock)
+        if error.errno in _DESCRIPTOR_ERRORS:
+            return None, "descriptor_exhausted"
         return None, "in_use" if isinstance(error, BlockingIOError) else "lock_unknown"
     return lock, None
 
@@ -223,7 +237,7 @@ def _classify(
 ) -> Candidate:
     """Decide one run folder; transfer only eligible apply locks to the deletion scope."""
     path = namespace / name
-    row = sweep._bare_row(name, "symlink_or_not_directory", kind="other")
+    row = sweep._bare_row(name, "symlink_or_not_directory", kind="other", bytes=None)
     info = os.stat(name, dir_fd=ns_fd, follow_symlinks=False)
     candidate = Candidate(name, namespace, ns_fd, row, (info.st_dev, info.st_ino))
     if not stat.S_ISDIR(info.st_mode):
@@ -256,12 +270,15 @@ def _classify(
         row.update(live_pids=pids, holders=channels)
         if problem:
             row["reason"] = problem
+            row["bytes"] = None
         elif apply and candidate.before is None:
             row["reason"] = "tree_unknown"
         elif now - changed <= INACTIVE_S:
             row["reason"] = "too_young"
         elif pids:
             row["reason"] = "live_process"
+        elif holders.descriptor_errors:
+            row["reason"] = "descriptor_exhausted"
         elif not holders.complete:
             row["reason"] = "liveness_unknown"
         elif worktrees is None or any(w == path or w in path.parents or path in w.parents for w in worktrees):
@@ -281,10 +298,11 @@ def _return(candidate: Candidate, quarantine: sweep.Quarantine, reason: str) -> 
     try:
         sweep.rename_noreplace(quarantine.fd, candidate.name, candidate.ns_fd, candidate.name)
     except OSError as error:
-        candidate.row.update(decision="preserve", reason="restore_blocked", found=reason, error=sweep._errno_name(error))
+        candidate.row.update(decision="preserve", reason="restore_blocked", found=reason,
+                             error=sweep._errno_name(error), bytes=None)
         return 1
     sweep._sync_rename(quarantine.fd, candidate.ns_fd)
-    candidate.row.update(decision="preserve", reason=reason)
+    candidate.row.update(decision="preserve", reason=reason, bytes=None)
     return 0
 
 
@@ -303,12 +321,16 @@ def _recheck(candidate: Candidate, quarantine: sweep.Quarantine, holders: Holder
     if pids:
         candidate.row.update(live_pids=pids, holders=channels)
         return "live_process"
+    if holders.descriptor_errors:
+        return "descriptor_exhausted"
     if not holders.complete:
         return "liveness_unknown"
     return None if sweep.tree_fingerprint(held) == candidate.before else "recent_write"
 
 
-def _delete(candidates: list[Candidate], namespace: Path, ns_fd: int, *, repo_root: Path) -> int:
+def _delete(
+    candidates: list[Candidate], namespace: Path, ns_fd: int, *, repo_root: Path, scan_holders: Holders,
+) -> int:
     """Rename every proven folder aside, recheck once for all of them, then delete or return each."""
     errors = 0
     quarantine = sweep.open_quarantine(namespace, ns_fd)
@@ -321,18 +343,22 @@ def _delete(candidates: list[Candidate], namespace: Path, ns_fd: int, *, repo_ro
             except OSError:
                 info = None
             if info is None or (info.st_dev, info.st_ino) != candidate.identity or not _same(namespace, ns_fd):
-                row.update(decision="preserve", reason="identity_changed")
+                row.update(decision="preserve", reason="identity_changed", bytes=None)
                 continue
             try:
                 sweep.rename_noreplace(ns_fd, candidate.name, quarantine.fd, candidate.name)
             except OSError as error:
-                row.update(decision="preserve", reason="rename_refused", error=sweep._errno_name(error))
+                row.update(decision="preserve", reason="rename_refused", error=sweep._errno_name(error), bytes=None)
                 errors += 1
                 continue
             sweep._sync_rename(ns_fd, quarantine.fd)
             held.append(candidate)
         # Nothing can newly reach a held folder by its old name. Our run locks are inspection handles.
         holders = holder_snapshot(frozenset(c.lock for c in held if c.lock is not None))
+        scan_holders.complete = scan_holders.complete and holders.complete
+        scan_holders.unreadable = max(scan_holders.unreadable, holders.unreadable)
+        scan_holders.descriptor_errors += holders.descriptor_errors
+        errors += holders.descriptor_errors
         for candidate in held:
             reason = _recheck(candidate, quarantine, holders)
             if reason:
@@ -353,7 +379,7 @@ def _delete(candidates: list[Candidate], namespace: Path, ns_fd: int, *, repo_ro
                 )
                 errors += 1 + blocked
                 if not blocked:
-                    candidate.row.update(decision="preserve", reason="delete_refused", error=detail)
+                    candidate.row.update(decision="preserve", reason="delete_refused", error=detail, bytes=None)
                 continue
             sweep.sync_directory(quarantine.fd)
             candidate.row.update(decision="deleted")
@@ -376,9 +402,11 @@ def _namespace(
                 ns_fd = _open_private(namespace, stack)
             except FileNotFoundError:
                 continue
-            except (OSError, ValueError):
+            except (OSError, ValueError) as error:
                 errors += 1
-                rows.append(sweep._bare_row("pytest-runs", "namespace_untrusted"))
+                reason = ("descriptor_exhausted" if isinstance(error, OSError) and error.errno in _DESCRIPTOR_ERRORS
+                          else "namespace_untrusted")
+                rows.append(sweep._bare_row("pytest-runs", reason, bytes=None))
                 continue
             if ledger.directory == namespace or namespace in ledger.directory.parents:
                 raise ValueError("ledger_inside_pytest_namespace")
@@ -394,6 +422,10 @@ def _namespace(
             known = frozenset(entry.location for entry in local.values() if entry.state in sweep.HELD_STATES)
             recovered, _restored, step_errors = sweep.recover_quarantines(namespace, ns_fd, apply=apply, known=known)
             errors += step_errors
+            # Unledgered leftovers have no measurement; the shared helper's
+            # default zero is not an allocated-byte observation.
+            for row in recovered:
+                row["bytes"] = None
             rows.extend(recovered)
             purged, step_errors = sweep.purge_quarantine(
                 local, ledger, run_id, now=sweep.time.time(), quarantine_s=quarantine_s,
@@ -405,33 +437,47 @@ def _namespace(
         if not opened:
             return rows, errors, holders
         holders = holder_snapshot()
+        errors += holders.descriptor_errors
         worktrees = sweep.registered_worktrees(repo_root)
         for namespace, ns_fd in opened:
-            eligible = []
             for name in sorted(os.listdir(ns_fd)):
                 if name.startswith(sweep.QUARANTINE_PREFIX):
                     continue
+                candidate = None
                 try:
-                    candidate = _classify(
-                        name, namespace, ns_fd, holders=holders, worktrees=worktrees, now=sweep.time.time(),
-                        apply=apply, stack=stack,
-                    )
+                    # One candidate owns its lock through its complete disposition.
+                    # Releasing it here leaves headroom for the next fresh holder scan,
+                    # independently of cohort size or namespace order.
+                    with ExitStack() as disposition:
+                        candidate = _classify(
+                            name, namespace, ns_fd, holders=holders, worktrees=worktrees, now=sweep.time.time(),
+                            apply=apply, stack=disposition,
+                        )
+                        rows.append(candidate.row)
+                        if candidate.row["reason"] == "descriptor_exhausted" and not holders.descriptor_errors:
+                            errors += 1
+                        if apply and candidate.row["decision"] == "would_delete":
+                            errors += _delete([candidate], namespace, ns_fd, repo_root=repo_root, scan_holders=holders)
                 except OSError as error:
                     errors += 1
-                    rows.append(sweep._bare_row(name, "scan_error", error=sweep._errno_name(error)))
-                    continue
-                rows.append(candidate.row)
-                if apply and candidate.row["decision"] == "would_delete":
-                    eligible.append(candidate)
-            if eligible:
-                errors += _delete(eligible, namespace, ns_fd, repo_root=repo_root)
+                    reason = "descriptor_exhausted" if error.errno in _DESCRIPTOR_ERRORS else "scan_error"
+                    if candidate is None:
+                        rows.append(sweep._bare_row(name, reason, error=sweep._errno_name(error), bytes=None))
+                    elif candidate.row["decision"] != "deleted":
+                        candidate.row.update(decision="preserve", reason=reason,
+                                             error=sweep._errno_name(error), bytes=None)
     return rows, errors, holders
 
 
 def sweep_pytest_runs(
     *, apply: bool, ledger: Ledger, run_id: str, task_root: Path, quarantine_s: float, repo_root: Path,
 ) -> dict[str, Any]:
-    """Sweep the dedicated pytest namespaces, never the general managed scratch tree."""
+    """Sweep pytest namespaces with numeric measured-byte subtotals and completeness flags.
+
+    An unmeasured row has ``bytes=None``. Existing numeric summary fields sum
+    only measured rows; ``*_bytes_complete`` and ``*_unmeasured_entries``
+    explicitly distinguish these lower bounds from complete totals.
+    """
     rows = []
     errors = 0
     unreadable = 0
@@ -443,7 +489,7 @@ def sweep_pytest_runs(
         # fail this confined scan closed without falling back to host roots.
         roots = set()
         errors += 1
-        rows.append(sweep._bare_row("pytest-runs", "scan_root_invalid"))
+        rows.append(sweep._bare_row("pytest-runs", "scan_root_invalid", bytes=None))
     for root in sorted(roots):
         namespaces = tuple(root / NAMESPACE / name for name in (RUNS_DIRNAME, ownership.NAMESPACE_DIRNAME))
         try:
@@ -452,8 +498,8 @@ def sweep_pytest_runs(
                 root_fd = _open_private(root, stack, private=False)
                 for name in sorted(os.listdir(root_fd)):
                     if name.startswith("pytest-") and name != NAMESPACE:
-                        size, _newest, _changed, _problem = sweep.tree_facts(root / name)
-                        rows.append(sweep._bare_row(name, "legacy_ownership_unknown", bytes=size))
+                        size, _newest, _changed, problem = sweep.tree_facts(root / name)
+                        rows.append(sweep._bare_row(name, "legacy_ownership_unknown", bytes=None if problem else size))
             found, step_errors, holders = _namespace(
                 namespaces, apply=apply, ledger=ledger, run_id=run_id,
                 task_root=task_root, quarantine_s=quarantine_s, repo_root=repo_root,
@@ -465,11 +511,18 @@ def sweep_pytest_runs(
                 unreadable = max(unreadable, holders.unreadable)
         except FileNotFoundError:
             continue
-        except (OSError, ValueError):
+        except (OSError, ValueError) as error:
             errors += 1
-            rows.append(sweep._bare_row("pytest-runs", "namespace_untrusted"))
+            reason = ("descriptor_exhausted" if isinstance(error, OSError) and error.errno in _DESCRIPTOR_ERRORS
+                      else "namespace_untrusted")
+            rows.append(sweep._bare_row("pytest-runs", reason, bytes=None))
+    entries = ledger.entries()[0]
+    for row in rows:
+        entry = entries.get(row.get("ledger_id"))
+        if entry is not None and entry.intent.get("allocated_bytes") is None:
+            row["bytes"] = None
     held = [
-        entry for entry in ledger.entries()[0].values()
+        entry for entry in entries.values()
         if entry.state in sweep.HELD_STATES
         and entry.original.parent in {
             root / NAMESPACE / name for root in roots for name in (RUNS_DIRNAME, ownership.NAMESPACE_DIRNAME)
@@ -479,10 +532,21 @@ def sweep_pytest_runs(
     def total(decision: str) -> int:
         return sum(row["bytes"] or 0 for row in rows if row["decision"] == decision)
 
+    unmeasured = sum(row["bytes"] is None for row in rows)
+    protected_unmeasured = sum(row["bytes"] is None and row["decision"] == "preserve" for row in rows)
+    remaining_unmeasured = sum(
+        row["bytes"] is None and row["decision"] in {"preserve", "would_delete"} for row in rows
+    )
     return {
         "inactive_hours": INACTIVE_S / 3600, "rows": rows, "errors": errors,
         "liveness_complete": complete, "liveness_unreadable_processes": unreadable,
         "runs": len(rows), "bytes": sum(row["bytes"] or 0 for row in rows),
+        "bytes_complete": unmeasured == 0, "unmeasured_entries": unmeasured,
+        "protected_bytes_complete": protected_unmeasured == 0,
+        "protected_unmeasured_entries": protected_unmeasured,
+        "remaining_bytes_complete": remaining_unmeasured == 0,
+        "remaining_unmeasured_entries": remaining_unmeasured,
+        "descriptor_exhaustion_entries": sum(row["reason"] == "descriptor_exhausted" for row in rows),
         "by_reason": dict(Counter(row["reason"] for row in rows)),
         "by_decision": dict(Counter(row["decision"] for row in rows)),
         "would_delete_entries": sum(row["decision"] == "would_delete" for row in rows),
@@ -494,6 +558,8 @@ def sweep_pytest_runs(
         "remaining_bytes": total("preserve") + total("would_delete"),
         "quarantine_held_entries": len(held),
         "quarantine_held_bytes": sum(entry.intent.get("allocated_bytes") or 0 for entry in held),
+        "quarantine_held_bytes_complete": all(entry.intent.get("allocated_bytes") is not None for entry in held),
+        "quarantine_held_unmeasured_entries": sum(entry.intent.get("allocated_bytes") is None for entry in held),
         "purged_entries": sum(row["decision"] == "purged" for row in rows),
         "purged_bytes": total("purged"),
     }
