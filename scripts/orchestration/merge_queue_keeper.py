@@ -82,9 +82,9 @@ QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
 # Too many automatic recoveries hide an intermittent failure. Above this many
-# granted, legacy or shared re-enqueues in a rolling 24 hours the keeper posts
-# one alert to the cto Fleet Comms channel, at most once per 24 hours. The
-# keeper never reruns workflows: alerting only.
+# successful granted or shared re-enqueues in a rolling 24 hours the keeper
+# posts one alert to the cto Fleet Comms channel, at most once per 24 hours.
+# The keeper never reruns workflows: alerting only.
 RECOVERY_ALERT_THRESHOLD = 3
 RECOVERY_ALERT_WINDOW = timedelta(hours=24)
 # Job and check names and failed-test identifiers come from workflow files and CI
@@ -635,29 +635,40 @@ def _gate_hold(
     return hold
 
 
-def _automatic_recoveries(previous: Mapping[str, Any], cutoff: datetime) -> tuple[int, int]:
-    """Granted and shared automatic recoveries already recorded in keeper state.
+def _recent_recoveries(previous: Mapping[str, Any], cutoff: datetime) -> list[dict[str, Any]]:
+    """Successful automatic recoveries recorded at or after ``cutoff``.
 
-    ``requeued`` records each re-enqueue after a queue ejection with the time it
-    happened, so only records inside the rolling window count.
-    ``shared_requeues`` counts queue-wide re-enqueues per head and carries no
-    timestamp; the keeper's existing record is counted as it stands for the
-    heads still open.
+    ``recoveries`` records each successful re-enqueue after a queue ejection
+    with the time it happened and whether it used a grant or the shared
+    queue-wide allowance. The ledger is pruned by time only, so a merged PR's
+    recovery keeps counting for the full rolling window.
     """
-    granted = 0
-    for stamp in previous.get("requeued", {}).values():
-        if not isinstance(stamp, str):
+    rows: list[dict[str, Any]] = []
+    for row in previous.get("recoveries", []):
+        if not isinstance(row, dict) or not isinstance(row.get("at"), str):
             continue
         try:
-            at = datetime.fromisoformat(stamp)
+            at = datetime.fromisoformat(row["at"])
         except ValueError:
             continue
         if at.tzinfo is not None and at >= cutoff:
-            granted += 1
+            rows.append(row)
+    return rows
+
+
+def _record_recovery(previous: dict[str, Any], observed: str, kind: str) -> None:
+    previous.setdefault("recoveries", []).append({"at": observed, "kind": kind})
+
+
+def _automatic_recoveries(previous: Mapping[str, Any], cutoff: datetime) -> tuple[int, int]:
+    """Granted and shared successful automatic recoveries inside the rolling window."""
+    granted = 0
     shared = 0
-    for count in previous.get("shared_requeues", {}).values():
-        if type(count) is int and count > 0:
-            shared += count
+    for row in _recent_recoveries(previous, cutoff):
+        if row.get("kind") == "granted":
+            granted += 1
+        elif row.get("kind") == "shared":
+            shared += 1
     return granted, shared
 
 
@@ -676,7 +687,8 @@ def recovery_alert_message(granted: int, shared: int, observed: str) -> str:
 def _alert_recoveries(previous: dict[str, Any], observed: str, publish: backup_failure_alert.Publisher) -> str | None:
     """Post at most one recovery-count alert per 24 hours; None when below the threshold or suppressed."""
     now = datetime.fromisoformat(observed)
-    granted, shared = _automatic_recoveries(previous, now - RECOVERY_ALERT_WINDOW)
+    cutoff = now - RECOVERY_ALERT_WINDOW
+    granted, shared = _automatic_recoveries(previous, cutoff)
     if granted + shared <= RECOVERY_ALERT_THRESHOLD:
         return None
     last = previous.get("recovery_alert")
@@ -738,6 +750,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("squash_revoked", {}), dict)
         or not isinstance(data.get("pending_comments", {}), dict)
         or not isinstance(data.get("flake_issue_updates", {}), dict)
+        or not isinstance(data.get("recoveries", []), list)
     ):
         raise KeeperError("keeper state malformed")
     return data
@@ -1174,8 +1187,10 @@ def run(
                     lines.append(f"#{number} enqueued")
                 if previous.get("shared_pass", {}).pop(drop_key, None) is not None:
                     lines.append(f"#{number} requeued after a queue-wide failure")
+                    _record_recovery(previous, observed, "shared")
                 elif grants is not None and drops >= 1:
                     previous.setdefault("requeued", {})[drop_key] = observed
+                    _record_recovery(previous, observed, "granted")
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
@@ -1211,6 +1226,7 @@ def run(
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
                 }
     cutoff = datetime.now(UTC) - timedelta(hours=24)
+    previous["recoveries"] = _recent_recoveries(previous, datetime.fromisoformat(observed) - RECOVERY_ALERT_WINDOW)
     failures = [
         item for item in previous.get("failures", [])
         if isinstance(item, dict) and isinstance(item.get("at"), str) and item["at"] >= cutoff.isoformat()
