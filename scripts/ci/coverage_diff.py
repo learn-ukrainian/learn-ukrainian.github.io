@@ -92,7 +92,7 @@ def deleted_test_files(repo: Path, git_range: str, tests_dir: str = "tests") -> 
         raise ValueError("--git-range must name both commits")
     try:
         output = subprocess.check_output(
-            ["git", "-C", str(repo), "diff", "--name-status", base, head, "--", tests_dir],
+            ["git", "-C", str(repo), "diff", "--name-status", "-z", base, head, "--", tests_dir],
             text=True,
             stderr=subprocess.PIPE,
             timeout=60,
@@ -102,13 +102,22 @@ def deleted_test_files(repo: Path, git_range: str, tests_dir: str = "tests") -> 
         detail = error.stderr if isinstance(error, subprocess.CalledProcessError) and error.stderr else str(error)
         raise ValueError(f"{repo}: cannot diff {git_range}: {detail.strip()}") from error
     deleted = set()
-    for line in output.splitlines():
-        fields = line.split("\t")
-        if len(fields) < 2:
+    # -z separates status and paths with NUL so quoted names stay unescaped;
+    # rename and copy records carry two paths after the status field.
+    fields = output.split("\0")
+    index = 0
+    while index < len(fields):
+        status = fields[index]
+        index += 1
+        if not status:
             continue
-        # D = deleted, Rxxx = renamed from fields[1] to fields[2].
-        if fields[0].startswith(("D", "R")):
-            deleted.add(fields[1])
+        paths = fields[index : index + (2 if status.startswith(("R", "C")) else 1)]
+        index += len(paths)
+        if not paths:
+            break
+        # D = deleted, Rxxx = renamed from paths[0] to paths[1].
+        if status.startswith(("D", "R")):
+            deleted.add(paths[0])
     return sorted(deleted)
 
 

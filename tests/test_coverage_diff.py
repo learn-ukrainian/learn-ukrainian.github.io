@@ -323,6 +323,64 @@ def test_git_range_derives_deleted_test_node_ids(reports, context_data, tmp_path
     assert payload["restore_set"] == ["tests/test_old.py::test_one"]
 
 
+def test_git_range_matches_non_ascii_deleted_and_renamed_test_paths(reports, context_data, tmp_path, capsys):
+    """Git quotes such paths by default; NUL-delimited output must match them exactly."""
+    import subprocess
+
+    repo = tmp_path / "repo"
+    (repo / "tests").mkdir(parents=True)
+    (repo / "tests/test_старий.py").write_text("def test_deleted():\n    pass\n")
+    (repo / "tests/test_новий.py").write_text("def test_renamed():\n    pass\n")
+    git = ["git", "-C", str(repo), "-c", "user.name=Coverage test", "-c", "user.email=coverage@example.invalid"]
+    subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=30)
+    subprocess.run([*git, "add", "."], check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "base"], check=True, timeout=30)
+    base = subprocess.check_output([*git, "rev-parse", "HEAD"], text=True, timeout=30).strip()
+    (repo / "tests/test_старий.py").unlink()
+    (repo / "tests/test_новий.py").rename(repo / "tests/test_новий_renamed.py")
+    subprocess.run([*git, "add", "-A"], check=True, timeout=30)
+    subprocess.run([*git, "commit", "-q", "-m", "delete and rename"], check=True, timeout=30)
+    head = subprocess.check_output([*git, "rev-parse", "HEAD"], text=True, timeout=30).strip()
+
+    before = reports("before.json", {"scripts/a.py": measured([1, 2, 3], [[-1, 1], [1, 2], [2, -1], [1, 3], [3, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    data = context_data(
+        {
+            "tests/test_старий.py::test_deleted": [(-1, 1), (1, 2), (2, -1)],
+            "tests/test_новий.py::test_renamed": [(-1, 1), (1, 3), (3, -1)],
+        }
+    )
+    candidate = tmp_path / "candidate"
+    (candidate / "scripts").mkdir(parents=True)
+    (candidate / "scripts/a.py").write_text("value = 1\n")
+    assert (
+        main(
+            [
+                before,
+                after,
+                "--baseline-data",
+                str(data),
+                "--git-range",
+                f"{base}..{head}",
+                "--git-repo",
+                str(repo),
+                "--candidate-root",
+                str(candidate),
+            ]
+        )
+        == 1
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["deleted_test_nodes"] == [
+        "tests/test_новий.py::test_renamed",
+        "tests/test_старий.py::test_deleted",
+    ]
+    assert payload["restore_set"] == [
+        "tests/test_новий.py::test_renamed",
+        "tests/test_старий.py::test_deleted",
+    ]
+
+
 def test_pytest_cov_phases_reduce_to_one_test_node_id(reports, context_data, tmp_path, capsys):
     """--cov-context=test records nodeid|run; restore sets must still name the test once."""
     before = reports("before.json", {"scripts/a.py": measured([1, 2], [[-1, 1], [1, 2], [2, -1]])})
