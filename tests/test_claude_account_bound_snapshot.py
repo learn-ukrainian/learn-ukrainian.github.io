@@ -317,7 +317,8 @@ def _held_by_delegate_guard(raw, monkeypatch, tmp_path, capsys):
         held.append(snapshot)
         return "claude", None
 
-    delegate._resolve_agent_with_budget_guard("claude", fallbacks={}, review_select=review_select, claude_account=B)
+    with pytest.raises(delegate.BudgetGuardRefuseError, match=r"near_cap \(0\.5% remaining\)"):
+        delegate._resolve_agent_with_budget_guard("claude", fallbacks={}, review_select=review_select, claude_account=B)
     return held
 
 
