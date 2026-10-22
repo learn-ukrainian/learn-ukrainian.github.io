@@ -34,11 +34,14 @@ rollover candidate alone; archive one only through the `thread-rollover` skill.
 
 ## 4. Identity and inbox
 
-Your inbox worker identity is `claude-cto-<session id>`. Drain the recipients the supported
-inbox path accepts for this seat: `epics`, `cto` and `claude-cto`. For each message apply
-it (act, or refuse with the reason), record the outcome, then ack it as consumed by the
-live driver (`drive-epic` § The loop). Never ack or consume a supervisory request: it
-belongs to the launcher and its watcher (`docs/runbooks/session-supervisor.md`).
+Your inbox worker identity is `claude-cto-<session id>`. Drain the launcher's registered
+slot and the epics recipients: `claude-epics` (`scripts/config/area_assignments.yaml`
+`epics.slots`), `epics`, `cto` and `claude-cto`. The Fleet authority service admits every
+exact recipient, even where a convenience CLI lists fewer. For each message run the
+authority-delivery procedure in `docs/runbooks/driver-seat-cli-move.md` § 5: claim, read
+the body, reconcile prior effects, apply or refuse, record the outcome, then ack with the
+returned fence. Never ack or consume a supervisory request: it belongs to the launcher and
+its watcher (`docs/runbooks/session-supervisor.md`).
 
 ## 5. Skip lane-driver items
 

@@ -21,7 +21,7 @@ wake timers die with this session; the next one re-arms them from the file hando
 - MODE: <CTO-only or lanes running; worker cap; reviewer defaults in force>
 - DISK: <percent used, free> and what was cleaned this session
 - PRs: <repo#number head <sha8> state: verdict@head, CI, queue> for every open PR touched
-- WORKERS: <task-id nonce <nonce> agent, deliverable, wait armed?> for every live worker
+- WORKERS: <task-id nonce <FULL run_nonce> agent, deliverable, wait armed?> for every live worker
 - SCORECARD: <PRs merged, median approved-to-merged time, rework rounds per PR,
   new mistakes / repeats (ledger IDs; a repeat of a verified entry names its next control step)>
 - PARKED: <each item stopped mid-way (uncommitted edits, cancelled workers, half-run
@@ -31,6 +31,9 @@ wake timers die with this session; the next one re-arms them from the file hando
   <lineage-id> / <rollover-id> with the thread-rollover skill; scratch helpers in <scratch>
 - WATCHERS in this session die with it: <ids and what each watched>. Re-arm.
 ```
+
+Copy each WORKERS `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a
+shortened nonce waits forever.
 
 Every line is tool-backed or says NOT CHECKED with its command. Public briefs follow
 core.md P8; private detail stays in the gitignored state file or the private infra repository.
