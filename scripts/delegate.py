@@ -20021,23 +20021,19 @@ def cmd_wait(args: argparse.Namespace) -> int:
 
         record_nonce = state.get("run_nonce")
         if expected_nonce is not None and record_nonce != expected_nonce:
-            if deadline and time.monotonic() >= deadline:
-                print(
-                    json.dumps(
-                        {
-                            "error": "stale_run_nonce",
-                            "task_id": args.task_id,
-                            "expected_run_nonce": expected_nonce,
-                            "record_run_nonce": record_nonce,
-                            "last_known_status": state.get("status"),
-                            "waited_s": args.timeout,
-                        }
-                    ),
-                    file=sys.stderr,
-                )
-                return 1
-            time.sleep(poll_interval)
-            continue
+            print(
+                json.dumps(
+                    {
+                        "error": "stale_run_nonce",
+                        "task_id": args.task_id,
+                        "expected_run_nonce": expected_nonce,
+                        "record_run_nonce": record_nonce,
+                        "status": "stale",
+                    }
+                ),
+                file=sys.stderr,
+            )
+            return 1
 
         # Wait is an explicit settling path; heal only on proven death.
         _heal_dead_task(state_path, state, source="wait")
