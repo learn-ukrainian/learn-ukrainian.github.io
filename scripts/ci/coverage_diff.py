@@ -97,8 +97,9 @@ def deleted_test_files(repo: Path, git_range: str, tests_dir: str = "tests") -> 
             stderr=subprocess.PIPE,
             timeout=60,
         )
-    except (OSError, subprocess.CalledProcessError) as error:
-        detail = getattr(error, "stderr", "") or str(error)
+    except (OSError, subprocess.SubprocessError) as error:
+        # TimeoutExpired.stderr may be bytes or None even in text mode; use its message.
+        detail = error.stderr if isinstance(error, subprocess.CalledProcessError) and error.stderr else str(error)
         raise ValueError(f"{repo}: cannot diff {git_range}: {detail.strip()}") from error
     deleted = set()
     for line in output.splitlines():
@@ -181,26 +182,55 @@ def lost_identities(losses: list[dict], lines: dict, arcs: dict) -> list[dict]:
     return identities
 
 
-def restore_set(
-    losses: list[dict], lines: dict, deleted: set[str], candidate_root: Path
-) -> tuple[list[str], list[str], dict[str, list[str]]]:
-    """Deleted tests that cover a lost line in production code that still exists."""
-    dead_files = []
-    coverage_by_test: dict[str, set[str]] = {}
-    for item in losses:
-        name = item["file"]
-        if not (candidate_root / name).is_file():
-            dead_files.append(name)
-            continue
-        for line in item["lost_lines"]:
-            for test in lines[(name, line)]:
-                if test in deleted:
-                    coverage_by_test.setdefault(test, set()).add(f"{name}:{line}")
-    return (
-        sorted(coverage_by_test),
-        sorted(set(dead_files)),
-        {test: sorted(identities) for test, identities in sorted(coverage_by_test.items())},
+def identity_label(identity: dict) -> str:
+    """Readable key for one lost identity: ``file:line`` or ``file:from->to``."""
+    if "line" in identity:
+        return f"{identity['file']}:{identity['line']}"
+    fromno, tono = identity["arc"]
+    return f"{identity['file']}:{fromno}->{tono}"
+
+
+def restore_plan(identities: list[dict], deleted: set[str], candidate_root: Path) -> dict:
+    """Which deleted tests to restore so lost identities in live production code return.
+
+    ``candidate_tests`` is every deleted test covering any such identity.
+    ``restore_set`` is a small covering subset chosen by the standard greedy
+    set-cover heuristic: repeatedly take the test that covers the most
+    still-uncovered identities, breaking ties by test ID. Greedy stays within a
+    factor of ln(n) + 1 of the optimum (n = identities); it is not guaranteed
+    to be the exact minimum, which is NP-hard to compute. ``restore_coverage``
+    names the identities each chosen test adds when it is picked.
+    ``unrestorable_identities`` are live losses no deleted test covered, so no
+    restore can recover them. Files absent from the candidate checkout are dead
+    and excluded throughout.
+    """
+    dead_files = sorted(
+        {identity["file"] for identity in identities if not (candidate_root / identity["file"]).is_file()}
     )
+    live = [identity for identity in identities if identity["file"] not in dead_files]
+    order = {identity_label(identity): index for index, identity in enumerate(live)}
+    covers: dict[str, set[str]] = {}
+    unrestorable = []
+    for identity in live:
+        tests = [test for test in identity["tests"] if test in deleted]
+        if not tests:
+            unrestorable.append(identity)
+        for test in tests:
+            covers.setdefault(test, set()).add(identity_label(identity))
+    uncovered = set().union(*covers.values())
+    chosen: dict[str, list[str]] = {}
+    while uncovered:
+        test = min(covers, key=lambda name: (-len(covers[name] & uncovered), name))
+        gained = covers[test] & uncovered
+        chosen[test] = sorted(gained, key=order.__getitem__)
+        uncovered -= gained
+    return {
+        "dead_files": dead_files,
+        "candidate_tests": sorted(covers),
+        "restore_set": sorted(chosen),
+        "restore_coverage": chosen,
+        "unrestorable_identities": unrestorable,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -210,7 +240,9 @@ def main(argv: list[str] | None = None) -> int:
             "Use for paired branch coverage reports from coverage-ref.yml; "
             "do not use percentages or reports from different source layouts.\n"
             "With --baseline-data, map every lost line and arc to the baseline tests "
-            "that covered it and derive a minimal restore set of deleted tests.\n"
+            "that covered it, list every deleted test covering a live loss "
+            "(candidate_tests), and choose a small restore_set of them with the greedy "
+            "set-cover heuristic (within ln(n) + 1 of the minimum, not exactly minimal).\n"
             "Lines executed only in subprocesses have no pytest test context; they are "
             "reported under unattributed_lost_identities."
         ),
@@ -220,7 +252,8 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json\n"
             "  .venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json \\\n"
             "    --baseline-data baseline/.coverage --git-range <base>..<head>\n"
-            "Outputs: JSON to stdout with every lost identity, covering baseline tests and a restore set; "
+            "Outputs: JSON to stdout with every lost identity, covering baseline tests, candidate_tests, "
+            "a greedy restore_set and unrestorable_identities; "
             "no files written. The baseline .coverage must have per-test contexts.\n"
             "Exit codes: 0 = no loss; 1 = lost coverage; 2 = invalid input.\n"
             "Related: .github/workflows/coverage-ref.yml; scripts/ci/coverage_ref.py; #11226. "
@@ -270,7 +303,6 @@ def main(argv: list[str] | None = None) -> int:
             lines = line_context_map(data, losses)
             arcs = arc_context_map(args.baseline_data, losses)
             identities = lost_identities(losses, lines, arcs)
-            restore, dead_files, coverage_by_test = restore_set(losses, lines, deleted, args.candidate_root)
             payload.update(
                 {
                     "lost_identities": identities,
@@ -282,9 +314,7 @@ def main(argv: list[str] | None = None) -> int:
                         if not identity["tests"]
                     ],
                     "deleted_test_nodes": sorted(deleted),
-                    "dead_files": dead_files,
-                    "restore_set": restore,
-                    "restore_coverage": coverage_by_test,
+                    **restore_plan(identities, deleted, args.candidate_root),
                 }
             )
     except (OSError, ValueError, KeyError, TypeError, AttributeError, sqlite3.Error) as error:

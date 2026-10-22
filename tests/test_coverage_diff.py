@@ -209,11 +209,19 @@ def test_lost_identities_name_covering_tests_and_a_restore_set(reports, context_
     ]
     assert payload["deleted_test_nodes"] == ["tests/test_old.py::test_one", "tests/test_old.py::test_two"]
     assert payload["dead_files"] == []
-    assert payload["restore_set"] == ["tests/test_old.py::test_one", "tests/test_old.py::test_two"]
+    assert payload["candidate_tests"] == ["tests/test_old.py::test_one", "tests/test_old.py::test_two"]
+    # test_one alone covers every lost identity, so the redundant test_two stays deleted.
+    assert payload["restore_set"] == ["tests/test_old.py::test_one"]
     assert payload["restore_coverage"] == {
-        "tests/test_old.py::test_one": ["scripts/a.py:2", "scripts/a.py:3"],
-        "tests/test_old.py::test_two": ["scripts/a.py:3"],
+        "tests/test_old.py::test_one": [
+            "scripts/a.py:2",
+            "scripts/a.py:3",
+            "scripts/a.py:1->2",
+            "scripts/a.py:2->3",
+            "scripts/a.py:3->-1",
+        ],
     }
+    assert payload["unrestorable_identities"] == []
 
 
 def test_dead_production_file_does_not_require_restoring_its_tests(reports, context_data, tmp_path, capsys):
@@ -240,8 +248,10 @@ def test_dead_production_file_does_not_require_restoring_its_tests(reports, cont
     )
     payload = json.loads(capsys.readouterr().out)
     assert payload["dead_files"] == ["scripts/gone.py"]
+    assert payload["candidate_tests"] == []
     assert payload["restore_set"] == []
     assert payload["restore_coverage"] == {}
+    assert payload["unrestorable_identities"] == []
 
 
 def test_baseline_without_test_contexts_is_invalid(reports, tmp_path, capsys):
@@ -390,3 +400,113 @@ def test_subprocess_only_lines_are_reported_as_unattributed(reports, tmp_path, c
     assert {"file": "scripts/a.py", "arc": [2, 3]} in payload["unattributed_lost_identities"]
     assert {"file": "scripts/a.py", "arc": [3, -1]} in payload["unattributed_lost_identities"]
     assert payload["restore_set"] == ["tests/test_old.py::test_one"]
+
+
+def restore_payload(reports, context_data, tmp_path, capsys, arcs_by_context, deleted_nodes, before_arcs, after_arcs):
+    """Run main with per-test contexts for scripts/a.py and return its JSON payload."""
+    before_lines = sorted({line for arc in before_arcs for line in arc if line > 0})
+    after_lines = sorted({line for arc in after_arcs for line in arc if line > 0})
+    before = reports("before.json", {"scripts/a.py": measured(before_lines, before_arcs)})
+    after = reports("after.json", {"scripts/a.py": measured(after_lines, after_arcs)})
+    data = context_data(arcs_by_context)
+    deleted = tmp_path / "deleted.txt"
+    deleted.write_text("".join(f"{node}\n" for node in deleted_nodes))
+    candidate = tmp_path / "candidate"
+    (candidate / "scripts").mkdir(parents=True)
+    (candidate / "scripts/a.py").write_text("value = 1\n")
+    args = [before, after, "--baseline-data", str(data), "--deleted-test-nodes", str(deleted)]
+    assert main([*args, "--candidate-root", str(candidate)]) == 1
+    return json.loads(capsys.readouterr().out)
+
+
+def test_restore_set_drops_tests_whose_identities_another_choice_covers(reports, context_data, tmp_path, capsys):
+    """A full candidate list as the restore set would reverse valid pruning of redundant tests."""
+    payload = restore_payload(
+        reports,
+        context_data,
+        tmp_path,
+        capsys,
+        {
+            "tests/test_old.py::test_a": [(-1, 1), (1, 2), (2, -1)],
+            "tests/test_old.py::test_b": [(-1, 1), (1, 3), (3, -1)],
+            "tests/test_old.py::test_wide": [(-1, 1), (1, 2), (2, -1), (1, 3), (3, -1)],
+        },
+        ["tests/test_old.py::test_a", "tests/test_old.py::test_b", "tests/test_old.py::test_wide"],
+        [[-1, 1], [1, 2], [2, -1], [1, 3], [3, -1]],
+        [[-1, 1], [1, -1]],
+    )
+    assert payload["candidate_tests"] == [
+        "tests/test_old.py::test_a",
+        "tests/test_old.py::test_b",
+        "tests/test_old.py::test_wide",
+    ]
+    assert payload["restore_set"] == ["tests/test_old.py::test_wide"]
+    assert payload["restore_coverage"] == {
+        "tests/test_old.py::test_wide": [
+            "scripts/a.py:2",
+            "scripts/a.py:3",
+            "scripts/a.py:1->2",
+            "scripts/a.py:1->3",
+            "scripts/a.py:2->-1",
+            "scripts/a.py:3->-1",
+        ]
+    }
+
+
+def test_restore_set_breaks_equal_gains_by_test_id(reports, context_data, tmp_path, capsys):
+    """Equal coverage must not make the restore set depend on dict or sqlite order."""
+    payload = restore_payload(
+        reports,
+        context_data,
+        tmp_path,
+        capsys,
+        {
+            "tests/test_old.py::test_b": [(-1, 1), (1, 2), (2, -1)],
+            "tests/test_old.py::test_a": [(-1, 1), (1, 2), (2, -1)],
+        },
+        ["tests/test_old.py::test_b", "tests/test_old.py::test_a"],
+        [[-1, 1], [1, 2], [2, -1]],
+        [[-1, 1], [1, -1]],
+    )
+    assert payload["candidate_tests"] == ["tests/test_old.py::test_a", "tests/test_old.py::test_b"]
+    assert payload["restore_set"] == ["tests/test_old.py::test_a"]
+    assert payload["restore_coverage"] == {
+        "tests/test_old.py::test_a": ["scripts/a.py:2", "scripts/a.py:1->2", "scripts/a.py:2->-1"]
+    }
+
+
+def test_identity_no_deleted_test_covers_is_reported_unrestorable(reports, context_data, tmp_path, capsys):
+    """Restoring deleted tests cannot recover a loss only a kept test covered; say so."""
+    payload = restore_payload(
+        reports,
+        context_data,
+        tmp_path,
+        capsys,
+        {
+            "tests/test_old.py::test_one": [(-1, 1), (1, 2), (2, -1)],
+            "tests/test_keep.py::test_keep": [(-1, 1), (1, 3), (3, -1)],
+        },
+        ["tests/test_old.py::test_one"],
+        [[-1, 1], [1, 2], [2, -1], [1, 3], [3, -1]],
+        [[-1, 1], [1, -1]],
+    )
+    assert payload["restore_set"] == ["tests/test_old.py::test_one"]
+    assert payload["unrestorable_identities"] == [
+        {"file": "scripts/a.py", "line": 3, "tests": ["tests/test_keep.py::test_keep"]},
+        {"file": "scripts/a.py", "arc": [1, 3], "tests": ["tests/test_keep.py::test_keep"]},
+        {"file": "scripts/a.py", "arc": [3, -1], "tests": ["tests/test_keep.py::test_keep"]},
+    ]
+
+
+def test_git_timeout_is_invalid_input_not_a_traceback(reports, context_data, monkeypatch, capsys):
+    import subprocess
+
+    def hang(*args, **kwargs):
+        raise subprocess.TimeoutExpired(args[0], kwargs.get("timeout"))
+
+    monkeypatch.setattr(subprocess, "check_output", hang)
+    before = reports("before.json", {"scripts/a.py": measured([1, 2], [[-1, 1], [1, 2], [2, -1]])})
+    after = reports("after.json", {"scripts/a.py": measured([1], [[-1, 1], [1, -1]])})
+    data = context_data({"tests/test_old.py::test_one": [(-1, 1), (1, 2), (2, -1)]})
+    assert main([before, after, "--baseline-data", str(data), "--git-range", "a..b"]) == 2
+    assert "cannot diff a..b" in capsys.readouterr().err
