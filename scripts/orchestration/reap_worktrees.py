@@ -131,6 +131,10 @@ class ReapResult:
     freed_bytes: int | None = 0
 
 
+class _MeasurementUnavailable(Exception):
+    """The pin directory cannot hard-link the checkout, so bytes stay unmeasured."""
+
+
 def _measured_removal(
     measurement: dict[str, Any],
     stage: worktree_claims.RemovalStager = contextlib.nullcontext,
@@ -140,6 +144,9 @@ def _measured_removal(
     Private same-filesystem hard links keep the original inodes observable. Git
     remains the checkout remover. Afterwards each pin is opened, unlinked and
     fstat'ed before closing, so only proven last-link releases are counted.
+
+    Measurement is best effort: if the pin directory is on another filesystem,
+    hard links fail and removal still proceeds with ``freed_bytes`` unmeasured.
     """
     from scripts.common.nofollow_walk import ComponentOpenError
     from scripts.orchestration import worktree_artifacts as artifacts
@@ -198,7 +205,12 @@ def _measured_removal(
                                 ):
                                     raise ValueError("linked file changed during walk")
                                 pin = str(len(leaves))
-                                os.link(name, pin, src_dir_fd=fd, dst_dir_fd=pin_fd, follow_symlinks=False)
+                                try:
+                                    os.link(name, pin, src_dir_fd=fd, dst_dir_fd=pin_fd, follow_symlinks=False)
+                                except OSError:
+                                    # Hard links cannot cross filesystems. Measurement
+                                    # is optional; removal proceeds with bytes unmeasured.
+                                    raise _MeasurementUnavailable from None
                                 held = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
                                 after = os.fstat(leaf)
                                 if identity(held) != identity(opened) or identity(after) != identity(opened):
@@ -232,25 +244,29 @@ def _measured_removal(
                             proof.retain_receipts()
                         except (OSError, ValueError, TypeError):
                             raise worktree_claims.RemovalStageRefused("copy proof receipt publication unproven") from None
-                    walk()
-                    # Hard-link creation changes ctime/nlink. Check the common
-                    # inode's final snapshot for all its names after pinning.
-                    for _name, pin, expected in leaves:
-                        info = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
-                        expected = snapshots[expected.st_dev, expected.st_ino]
-                        if info != expected or info.st_ctime_ns != expected.st_ctime_ns:
-                            raise ValueError("file changed during walk")
-                    for name, _pin, expected in leaves:
-                        parts = Path(name).parts
-                        parent_fd, owned = artifacts._open_parent(root_fd, parts[:-1])
-                        try:
-                            current = os.stat(parts[-1], dir_fd=parent_fd, follow_symlinks=False)
+                    try:
+                        walk()
+                    except _MeasurementUnavailable:
+                        measurement["unmeasured"] = True
+                    else:
+                        # Hard-link creation changes ctime/nlink. Check the common
+                        # inode's final snapshot for all its names after pinning.
+                        for _name, pin, expected in leaves:
+                            info = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
                             expected = snapshots[expected.st_dev, expected.st_ino]
-                            if current != expected or current.st_ctime_ns != expected.st_ctime_ns:
+                            if info != expected or info.st_ctime_ns != expected.st_ctime_ns:
                                 raise ValueError("file changed during walk")
-                        finally:
-                            if owned:
-                                os.close(parent_fd)
+                        for name, _pin, expected in leaves:
+                            parts = Path(name).parts
+                            parent_fd, owned = artifacts._open_parent(root_fd, parts[:-1])
+                            try:
+                                current = os.stat(parts[-1], dir_fd=parent_fd, follow_symlinks=False)
+                                expected = snapshots[expected.st_dev, expected.st_ino]
+                                if current != expected or current.st_ctime_ns != expected.st_ctime_ns:
+                                    raise ValueError("file changed during walk")
+                            finally:
+                                if owned:
+                                    os.close(parent_fd)
                 except (OSError, ValueError, ComponentOpenError):
                     raise worktree_claims.RemovalStageRefused("freed-byte inventory unproven") from None
                 try:
@@ -278,8 +294,14 @@ def _measured_removal(
     return measured
 
 
-def _freed_bytes(measurement: dict[str, Any], preserved: dict[str, Any] | None) -> int:
-    """Exclude every preserved original from the verified unlinked inventory."""
+def _freed_bytes(measurement: dict[str, Any], preserved: dict[str, Any] | None) -> int | None:
+    """Exclude every preserved original from the verified unlinked inventory.
+
+    ``None`` means the inventory could not be measured, which never blocks
+    removal or counts as zero.
+    """
+    if measurement.get("unmeasured"):
+        return None
     kept = {entry["path"] for entry in (preserved or {}).get("paths", [])}
     unlinked = measurement.get("unlinked", {})
     kept_ids = {entry[:2] for name, entry in unlinked.items() if name in kept}
@@ -5895,7 +5917,7 @@ class CleanPushedOutcome:
     branch: str | None = None
     task_status: str | None = None
     size_mb: int | None = None
-    freed_bytes: int = 0
+    freed_bytes: int | None = 0
 
 
 @dataclass(frozen=True)
@@ -5925,7 +5947,7 @@ class CleanPushedReport:
     unpublished_reflog_commit: tuple[str, ...] = ()
     census_refs: int = 0
     census_missing: int = 0
-    freed_bytes: int = 0
+    freed_bytes: int | None = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -7858,12 +7880,17 @@ def reap_clean_pushed(
             busy_reason = str(exc)
             skipped.append(replace(outcome, action="skipped", reason=busy_reason))
             break
+    freed_values = [outcome.freed_bytes for outcome in (*removed, *skipped)]
     return CleanPushedReport(
         dry_run=dry_run,
         removed=tuple(removed),
         skipped=tuple(skipped),
         freed_mb=sum(outcome.size_mb or 0 for outcome in removed),
-        freed_bytes=sum(outcome.freed_bytes for outcome in (*removed, *skipped)),
+        freed_bytes=(
+            None
+            if any(value is None for value in freed_values)
+            else sum(value for value in freed_values if value is not None)
+        ),
         lock_busy=bool(busy_reason),
         refusal=busy_reason,
         uninspectable=tuple(sorted(ctx.uninspectable)),
