@@ -33,6 +33,12 @@ never fine.
    unpushed work; reap after terminal status ([recipes](recipes.md#reap-before-re-dispatch)).
 6. **Residuals.** Quote open-issue and residual counts from `gh`. A free slot with a ready
    item gets a dispatch; a residual above zero gets a next dispatch this session.
-7. **Decide.** Rank PRs by leverage, audit drift, look ahead, choose by the binding
+7. **Record tracker changes.** Use `lu-driver-state add --lane cto` for new orders,
+   commitments and in-flight work, with the matching kind, owner and done condition.
+   Record goals under their program's `operator_order` with `--parent <id>`; record
+   blockers as items too. Attach references with `link`, progress with `note`, and proof
+   with `evidence`. Use `status <id> done --reason <reason>` only after evidence supports
+   the done condition. Cite item IDs in each cycle report so unfinished work stays visible.
+8. **Decide.** Rank PRs by leverage, audit drift, look ahead, choose by the binding
    constraint ([decisions](decisions.md#tactical-layer-per-cycle)); log any mistake found
    in the ledger ([learning](learning.md)).

@@ -19,11 +19,14 @@ prompt and the permission mode. If not, do not drive: write the handoff, record 
 
 ## 2. Read the handoff and the mistakes ledger
 
-The CTO state file (`.claude/epics-epic/DRIVER-STATE.md`) is the seat's only handoff.
-Search it for the newest `HANDOFF FINAL` heading and read from there: that block, the
-provider-facts and standing-orders blocks it names, then the mistakes ledger (every open
-entry and the last ten closed ones, [learning](learning.md)). Older handoff blocks are
-history; if the file is over its [budget](handoff.md), trim it at this session's handoff.
+Read the pinned provider facts in `.claude/epics-epic/DRIVER-STATE.md`, then run
+`lu-driver-state render --lane cto` for open items and `lu-driver-state check --lane cto`.
+Treat `UNOWNED`, `STALE` and `OVERDUE` findings as a worklist. Read the program and plan
+first: the `operator_order` item and its child `goal` items. Use `lu-driver-state show <id>`
+for their full history and links, then read standing orders, the latest `handoff_note`,
+in-flight work, blockers and the mistakes ledger (every open entry and the last ten closed
+ones, [learning](learning.md)). The database is the seat's handoff; the markdown file is
+only a pointer ([handoff](handoff.md)).
 
 ## 3. Resume exactly the named rollover
 
@@ -48,7 +51,7 @@ its watcher (`docs/runbooks/session-supervisor.md`).
 The SessionStart banner and launch prompt for the epics lane also print lane-driver items.
 They do not bind this seat: loading `drive-epic` as the entry point, the `driver_blockers`
 delta and record posting, `.claude/epics-epic/CLAUDE-DRIVER-HANDOFF.md` as lane source of
-truth (the CTO state file is), and rollover candidates other than the named one.
+truth (the CTO driver-state database is), and rollover candidates other than the named one.
 
 ## 6. Re-arm and cycle
 

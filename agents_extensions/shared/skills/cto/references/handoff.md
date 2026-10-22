@@ -1,39 +1,43 @@
 # Handoff
 
 Hand off at about 65 percent context or session end; never `/compact`. Watchers, waits and
-wake timers die with this session; the next one re-arms them from the file handoff.
+wake timers die with this session; the next one re-arms them from the tracker handoff.
 
 1. Run a last [cycle](cycle.md) so every number is current.
 2. Timestamp with `date -u +%Y-%m-%dT%H:%MZ`; never type a time.
 3. Update the mistakes ledger ([learning](learning.md)): new entries, status changes and
    recurrence counts.
-4. Prepend a `HANDOFF FINAL` block to `.claude/epics-epic/DRIVER-STATE.md` above older
-   ones. Then move superseded handoff blocks and session logs to
-   `.claude/epics-epic/archive/`, so the state file stays under 40 KB (`wc -c`) and the next
-   startup can read it in one step. Keep the newest handoff, the blocks it names and the
-   mistakes ledger.
-5. Prepare the rollover with the `thread-rollover` skill; put its lineage and rollover IDs
-   in the STARTUP line.
+4. Reconcile `lu-driver-state render --lane cto` and `lu-driver-state check --lane cto`.
+   Every open thing must have an item: orders, goals, commitments, in-flight work, blockers,
+   parked work and next actions. Update existing items with `link`, `note`, `evidence` and
+   `status`; never replace unfinished items with a new session summary.
+5. Prepare the rollover with the `thread-rollover` skill. Add one `handoff_note` item with
+   `lu-driver-state add --lane cto --kind handoff_note`, an owner and a done condition.
+   Include the details below in its statement and cite the work item IDs it names.
 6. Write the durable brief (core.md P7) and drain the inbox one last time.
 
-```markdown
-## HANDOFF FINAL <date -u> (session <session id>, context <percent>) - READ FIRST
-- MODE: <CTO-only or lanes running; worker cap; reviewer defaults in force>
-- DISK: <percent used, free> and what was cleaned this session
-- PRs: <repo#number head <sha8> state: verdict@head, CI, queue> for every open PR touched
-- WORKERS: <task-id nonce <FULL run_nonce> agent, deliverable, wait armed?> for every live worker
-- SCORECARD: <PRs merged, median approved-to-merged time, rework rounds per PR,
-  new mistakes / repeats (ledger IDs; a repeat of a verified entry names its next control step)>
-- PARKED: <each item stopped mid-way (uncommitted edits, cancelled workers, half-run
-  procedures): location, state, condition to resume> or none
-- NEXT 3: (1) ... (2) ... (3) ...
-- STARTUP: launch with the CTO launcher (see the private operations doc); resume ONLY
-  <lineage-id> / <rollover-id> with the thread-rollover skill; scratch helpers in <scratch>
-- WATCHERS in this session die with it: <ids and what each watched>. Re-arm.
-```
+The `handoff_note` contains:
 
-Copy each WORKERS `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a
+- Timestamp, session ID and context percentage.
+- Mode: CTO-only or lanes running, worker cap and reviewer defaults in force.
+- Disk used and free, and what was cleaned this session.
+- Every open PR touched: repository, number, head SHA, verdict at that head, CI and queue state.
+- Every live worker: task ID, FULL run nonce, agent, deliverable and whether its wait is armed.
+- Scorecard: PRs merged, median approved-to-merged time, rework rounds per PR, new mistakes
+  and repeats by ledger item ID. A repeat of a verified correction names its next control step.
+- Parked item IDs, locations, state and condition to resume, or none.
+- The next three actions by item ID.
+- Startup: CTO launcher, exact lineage and rollover IDs to resume with `thread-rollover`,
+  and the scratch helper path.
+- Watcher IDs and what each watched, so the next session can re-arm them.
+
+Copy each worker's `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a
 shortened nonce waits forever.
 
+Keep `.claude/epics-epic/DRIVER-STATE.md` under 4 KB (`wc -c`). Its only content is pinned
+provider facts needed in every model call and instructions to run
+`lu-driver-state render --lane cto` and `lu-driver-state check --lane cto` first.
+Do not write a markdown handoff block or duplicate tracker state there.
+
 Every line is tool-backed or says NOT CHECKED with its command. Public briefs follow
-core.md P8; private detail stays in the gitignored state file or the private infra repository.
+core.md P8; private detail stays in the driver-state database or the private infra repository.
