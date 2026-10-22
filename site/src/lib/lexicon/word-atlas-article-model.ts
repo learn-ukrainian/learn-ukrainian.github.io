@@ -3,6 +3,7 @@
  * Logic lifted from the former WordAtlasArticle.astro frontmatter.
  */
 
+import { CHROME_STRINGS } from "../i18n/chrome";
 import {
   atlasNoteDetail,
   displayGloss,
@@ -84,11 +85,17 @@ export interface ParticipleParadigm {
 
 export type MorphologyParadigm = NounParadigm | VerbParadigm | ParticipleParadigm | { kind: "other" };
 
-export interface EnrichmentExample {
+export interface TextAttribution {
+  source: string;
+  source_file?: string;
+  source_title?: string;
+  source_url?: string;
+  locator?: string;
+}
+
+export interface EnrichmentExample extends TextAttribution {
   uk: string;
   en: string;
-  source: string;
-  locator?: string;
 }
 
 export interface Enrichment {
@@ -127,7 +134,10 @@ export interface Enrichment {
     chunk_id?: string;
     source_url?: string;
   };
-  translation?: { en: string[]; source: string; pos?: string };
+  translation?: {
+    en: string[]; source: string; pos?: string;
+    attributions?: Array<TextAttribution & { text: string }>;
+  };
   examples?: EnrichmentExample[];
   /** Verb pedagogy strip (#7471): aspect, aspect partner, present/future
    * stems, and case government -- rendered as a short summary, never a
@@ -499,6 +509,56 @@ export const TRANSLATION_SOURCE_LABELS: Record<string, string> = {
 export function formatTranslationSource(source: string | null | undefined): string | null {
   if (!source) return null;
   return TRANSLATION_SOURCE_LABELS[source] ?? source;
+}
+
+// Titles and public credit URLs: docs/l2-uk-direct/textbook-selection.yaml resource_credit.
+const OHOIKO_BOOKS: Record<string, { title: string; url: string }> = {
+  "anna-ohoiko-1000-words-2nd-ed": {
+    title: "1000 Most Useful Ukrainian Words",
+    url: "https://www.ukrainianlessons.com/1000words/",
+  },
+  "anna-ohoiko-500-verbs": {
+    title: "500+ Ukrainian Verbs: Conjugation and Examples of Use",
+    url: "https://www.ukrainianlessons.com/verbs/",
+  },
+};
+
+export type ArticleAttribution =
+  | { kind: "ordinary"; source: string; locator: string }
+  | { kind: "quotation"; source: string; title: string | null; href: string | null; locator: string };
+
+export function articleAttribution(input: TextAttribution, example = false): ArticleAttribution {
+  const source = input.source || CHROME_STRINGS.uk["atlas.sourceUnknown"];
+  const locator = input.locator || "";
+  const ohoiko = source === "Anna Ohoiko" || source === "learner_english_gloss";
+  if (!ohoiko && input.source) return { kind: "ordinary", source, locator };
+  // Only the example's own strict legacy locator can identify its book. A
+  // neighboring example never supplies provenance for a translation term.
+  const legacyBook = example && /^ohoiko-1000-words entry [1-9]\d*$/.test(locator)
+    ? "anna-ohoiko-1000-words-2nd-ed"
+    : example && /^ohoiko-500-verbs entry [1-9]\d*$/.test(locator)
+      ? "anna-ohoiko-500-verbs" : "";
+  const sourceFile = input.source_file || legacyBook;
+  const book = ohoiko && Object.hasOwn(OHOIKO_BOOKS, sourceFile) ? OHOIKO_BOOKS[sourceFile] : null;
+  // FMU's producer declares an episode title and URL on this term, without a
+  // book source_file. A strict own-record locator distinguishes that schema.
+  const episodeTitle = ohoiko && !sourceFile && /^fmu-booster-ep-(?:0[1-9]|[1-9]\d+)$/.test(locator)
+    ? input.source_title : null;
+  return {
+    kind: "quotation",
+    source: ohoiko ? "Anna Ohoiko" : source,
+    title: book?.title ?? episodeTitle ?? null,
+    href: book ? safeHref(input.source_url || book.url) : safeHref(input.source_url),
+    locator,
+  };
+}
+
+export function translationAttributions(translation: NonNullable<Enrichment["translation"]>, term: string): ArticleAttribution[] {
+  const credits = translation.attributions?.filter((credit) => credit.text === term) ?? [];
+  if (credits.length) return credits.map((credit) => articleAttribution(credit));
+  // The old marker covers a merged array with unknown per-term origins.
+  const source = translation.source === "learner_english_gloss" ? "" : translation.source;
+  return [articleAttribution({ source })];
 }
 
 const MORPHOLOGY_SUPPRESSED_TYPES = new Set([
@@ -1220,8 +1280,8 @@ export function buildWordAtlasArticleView(
   const directPartnerParadigm =
     extractVerbParadigm(partnerCandidate) ??
     extractVerbParadigm(record.partnerRecord) ??
-    extractVerbParadigm((record as any).partnerParadigm) ??
-    extractVerbParadigm((record.renderContext as any)?.partnerRecord);
+    extractVerbParadigm("partnerParadigm" in record ? record.partnerParadigm : null) ??
+    extractVerbParadigm("partnerRecord" in record.renderContext ? record.renderContext.partnerRecord : null);
   const partnerCatalogEntry = resolvedAspectPartnerSlug
     ? linkCatalog.entries.find(
         (e) => e.slug === resolvedAspectPartnerSlug && isCanonicalAtlasEntry(e),
@@ -1336,7 +1396,6 @@ function buildStatusBadges(args: {
     heritageBoxes,
     cefrLevel,
     enrichment,
-    heritage,
     isFullyMarked,
     dominantRegisterLabel,
   } = args;

@@ -6,6 +6,8 @@ import { atlasPracticeHref } from "../lib/lexicon/atlas-practice-link";
 import { safeHref } from "../lib/lexicon/safe-url";
 import {
   buildFutureTenseNumbers,
+  articleAttribution,
+  translationAttributions,
   buildWordAtlasArticleView,
   CASE_ROWS,
   CONTEXT_LABELS_UK,
@@ -24,9 +26,11 @@ import {
   sourceHost,
   TRACK_LABELS_UK,
   type AtlasLinkCatalog,
+  type ArticleAttribution,
+  type Enrichment,
   type VerbParadigm,
 } from "../lib/lexicon/word-atlas-article-model";
-import { displayGloss } from "../lib/lexicon/heritage-severity";
+import { displayGloss, quotedGlossParts } from "../lib/lexicon/heritage-severity";
 import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
 import ChromeText from "../lib/i18n/ChromeText";
 import { CHROME_STRINGS } from "../lib/i18n/chrome";
@@ -44,6 +48,15 @@ export interface WordAtlasArticleProps {
   partnerParadigm?: VerbParadigm | null;
   /** Optional typeahead slot (Astro AtlasTypeahead on prerendered pages). */
   children?: ReactNode;
+}
+
+function Attribution({ credit }: { credit: ArticleAttribution }) {
+  return <span className="atlas-muted" lang="uk">Джерело: {credit.source}
+    {credit.kind === "quotation" && <> · {credit.title
+      ? <cite>{credit.href ? <a href={credit.href} target="_blank" rel="noopener noreferrer">{credit.title}</a> : credit.title}</cite>
+      : CHROME_STRINGS.uk["atlas.bookUnknown"]}</>}
+    {credit.locator ? ` (${credit.locator})` : ""}
+  </span>;
 }
 
 const SOVIET_HISTORICAL_NOTE_FALLBACK =
@@ -148,21 +161,21 @@ function getEffectiveHeteronymRecord(
   heteronym: LexiconEntry,
 ): EntryRecord {
   const baseEntry = baseRecord.entry;
-  const baseEnrichment =
+  const baseEnrichment: Partial<Record<keyof Enrichment, unknown>> =
     typeof baseEntry.enrichment === "object" && baseEntry.enrichment !== null
-      ? (baseEntry.enrichment as Record<string, any>)
+      ? Object.fromEntries(Object.entries(baseEntry.enrichment))
       : {};
-  const heteronymEnrichment =
+  const heteronymEnrichment: Partial<Record<keyof Enrichment, unknown>> =
     typeof heteronym.enrichment === "object" && heteronym.enrichment !== null
-      ? (heteronym.enrichment as Record<string, any>)
+      ? Object.fromEntries(Object.entries(heteronym.enrichment))
       : {};
   const baseSections =
     typeof baseEntry.sections === "object" && baseEntry.sections !== null
-      ? (baseEntry.sections as Record<string, any>)
+      ? baseEntry.sections
       : {};
   const heteronymSections =
     typeof heteronym.sections === "object" && heteronym.sections !== null
-      ? (heteronym.sections as Record<string, any>)
+      ? heteronym.sections
       : {};
 
   const effectiveEntry: LexiconEntry = {
@@ -217,7 +230,11 @@ export function getHeteronymFragment(
   if (duplicates.length <= 1) {
     return baseTitle;
   }
-  const animacy = (h.morphology as any)?.paradigm?.animacy;
+  const morphology = h.morphology;
+  const paradigm = morphology && typeof morphology === "object" && "paradigm" in morphology
+    ? morphology.paradigm : null;
+  const animacy = paradigm && typeof paradigm === "object" && "animacy" in paradigm
+    ? paradigm.animacy : null;
   if (animacy) {
     return `${baseTitle}-${animacy}`;
   }
@@ -235,7 +252,6 @@ interface WordAtlasArticleBodyProps {
 }
 
 function WordAtlasArticleBody({
-  record: _record,
   view,
   generatedAt,
   manifestVersion,
@@ -286,12 +302,12 @@ function WordAtlasArticleBody({
     verbPedagogy,
     hasVerbPedagogy,
     verbPedagogySources,
-    resolvedAspectPartnerSlug: _resolvedAspectPartnerSlug,
     partnerParadigm,
     hasAspectPartner,
     hasPractice,
     stressDisplay,
   } = view;
+  const translation = enrichment?.translation;
 
   // #9603: editorial gloss metadata outside its source scope renders as a qualified note.
   const heroGloss = glossDisplay && (glossDisplay.note ? glossDisplay.text : `«${glossDisplay.text}»`);
@@ -1404,17 +1420,28 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {renderable.translation && enrichment?.translation && (
+          {renderable.translation && translation && (
             <section className="atlas-section">
               <h2>Переклад</h2>
               <div className="translation-block">
                 <span className="uk-side">{entry.lemma}</span>
                 <span className="arrow">↔</span>
                 <div className="en-side" lang="en">
-                  {enrichment.translation.en.map((term) => <span key={term} className="en-term">{displayGloss(term, heritageBoxes.usageLabel)?.text}</span>)}
+                  {translation.en.map((term) => {
+                    const credits = translationAttributions(translation, term);
+                    const quoted = credits.some((credit) => credit.kind === "quotation");
+                    const gloss = displayGloss(term, heritageBoxes.usageLabel);
+                    return <span key={term} className="en-term">
+                      {quoted ? quotedGlossParts(term, heritageBoxes.usageLabel).map((part, index) =>
+                        part.kind === "quotation" ? <q key={index}>{part.text}</q>
+                          : <span key={index} className="atlas-muted">{part.text}</span>) : gloss?.text}
+                      {(quoted || Boolean(translation.attributions?.length)) && credits.map((credit, index) => <Fragment key={index}> <Attribution credit={credit} /></Fragment>)}
+                    </span>;
+                  })}
                 </div>
               </div>
-              <p className="atlas-muted">Джерело: {translationSource ?? enrichment.translation.source}</p>
+              {translation.source !== "learner_english_gloss" && !translation.attributions?.length &&
+                <p className="atlas-muted">Джерело: {translationSource ?? translation.source}</p>}
             </section>
           )}
 
@@ -1422,13 +1449,15 @@ function WordAtlasArticleBody({
             <section className="atlas-section">
               <h2>Приклади</h2>
               <div className="examples-list">
-                {enrichment.examples.map((ex, idx) => (
-                  <div key={idx} className="example-item">
-                    <p className="example-uk">{ex.uk}</p>
-                    <p className="example-en" lang="en">{ex.en}</p>
-                    <p className="atlas-muted">Джерело: {ex.source}{ex.locator ? ` (${ex.locator})` : ""}</p>
-                  </div>
-                ))}
+                {enrichment.examples.map((ex, idx) => {
+                  const credit = articleAttribution(ex, true);
+                  const text = <><p className="example-uk">{ex.uk}</p><p className="example-en" lang="en">{ex.en}</p></>;
+                  return <div key={idx} className="example-item">
+                    {credit.kind === "quotation" ? <blockquote>{text}</blockquote> : text}
+                    {credit.kind === "quotation" ? <p><Attribution credit={credit} /></p>
+                      : <p className="atlas-muted">Джерело: {ex.source}{ex.locator ? ` (${ex.locator})` : ""}</p>}
+                  </div>;
+                })}
               </div>
             </section>
           )}
