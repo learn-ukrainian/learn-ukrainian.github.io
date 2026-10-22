@@ -8,7 +8,10 @@ wake timers die with this session; the next one re-arms them from the file hando
 3. Update the mistakes ledger ([learning](learning.md)): new entries, status changes and
    recurrence counts.
 4. Prepend a `HANDOFF FINAL` block to `.claude/epics-epic/DRIVER-STATE.md` above older
-   ones; archive superseded session logs under `.claude/epics-epic/archive/`.
+   ones. Then move superseded handoff blocks and session logs to
+   `.claude/epics-epic/archive/`, so the state file stays under 40 KB (`wc -c`) and the next
+   startup can read it in one step. Keep the newest handoff, the blocks it names and the
+   mistakes ledger.
 5. Prepare the rollover with the `thread-rollover` skill; put its lineage and rollover IDs
    in the STARTUP line.
 6. Write the durable brief (core.md P7) and drain the inbox one last time.

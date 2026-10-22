@@ -48,7 +48,7 @@ def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> 
     assert codex_lanes
     assert gemini_lanes == codex_lanes - {"epics", "practice"}
     assert assignments["assignments"]["epics"] == {
-        "driver_agent_type": "infra-orchestrator",
+        "driver_agent_type": "cto",
         "slots": ["claude-epics", "codex-epics"],
     }
 
