@@ -4,6 +4,9 @@ Dry run is the default. Apply removes an entry only when it is older than its
 configured TTL by the newest write anywhere below it, no unsettled task record
 references it, it is not held in ``batch_state_retention.json``, its owner is
 known, and it is a readable tree that is neither a symlink nor a mount point.
+The task inventory and hold list are reloaded before each deletion, and an
+unreadable guard preserves the entry; a hold on any archive member protects the
+whole group, and only a real archive can be the protected newest one.
 The TTL numbers live in one JSON file beside this module; the shipped values
 are ``UNAPPROVED`` and the apply path refuses while any value is unapproved.
 Use this only for ``batch_state/preserved`` and ``batch_state/backups``: task
@@ -182,6 +185,11 @@ def _archive_stem(name: str) -> str:
     return stem
 
 
+def _is_archive_member(name: str) -> bool:
+    """True for an actual archive, false for a manifest or checksum sidecar."""
+    return name.endswith(_ARCHIVE_SUFFIXES[2:])
+
+
 def _manifest_owner(entry_path: Path) -> str | None:
     """The one owner named by every preservation manifest of an entry, or ``None``."""
     if entry_path.is_symlink():
@@ -217,6 +225,11 @@ def _hold_applies(hold_parts: tuple[str, ...], root_parts: tuple[str, ...], name
 
 def _is_held(spec: RootSpec, name: str, holds: list[dict[str, Any]]) -> bool:
     return any(_hold_applies(tuple(hold["parts"]), spec.parts, name) for hold in holds)
+
+
+def _members_held(spec: RootSpec, members: list[Path], holds: list[dict[str, Any]]) -> bool:
+    """A hold on any member path protects the whole group, sidecars included."""
+    return any(_is_held(spec, member.name, holds) for member in members)
 
 
 def _classify(
@@ -264,7 +277,7 @@ def _classify(
     entry.owner = spec.owner if spec.owner is not None else _manifest_owner(members[0])
     if entry.owner is None:
         entry.reason = "owner_unknown"
-    elif _is_held(spec, name, holds):
+    elif _members_held(spec, members, holds):
         entry.reason = "held"
     elif any(sweep.task_referenced(member, tasks.references) for member in members):
         entry.reason = "task_reference"
@@ -299,10 +312,14 @@ def _root_entries(
         for key, members in groups.items()
     ]
     if spec.keep_newest_archive and entries:
-        newest = max(entries, key=lambda entry: entry.newest)
-        if newest.reason in {"expired", "too_young"}:
-            newest.reason = "newest_archive"
-            newest.decision = "preserve"
+        archives = [
+            entry for entry in entries if any(_is_archive_member(member.name) for member in entry.members)
+        ]
+        if archives:
+            newest = max(archives, key=lambda entry: entry.newest)
+            if newest.reason in {"expired", "too_young"}:
+                newest.reason = "newest_archive"
+                newest.decision = "preserve"
     return entries
 
 
@@ -332,13 +349,29 @@ def _recheck(
             return "recent_write"
         if sweep.tree_fingerprint(held) != before:
             return "recent_write"
-    if _is_held(spec, entry.name, holds):
+    if _members_held(spec, entry.members, holds):
         return "held"
     if any(sweep.task_referenced(member, tasks.references) for member in entry.members):
         return "task_reference"
     if not tasks.complete:
         return "task_inventory_unknown"
     return None
+
+
+def _reload_guards(
+    task_root: Path, retention_list: Path
+) -> tuple[sweep.TaskInventory, list[dict[str, Any]]] | None:
+    """Reload the task inventory and hold list just before a deletion.
+
+    ``None`` means a guard could not be read, so the caller preserves instead
+    of trusting the snapshot taken before the scan.
+    """
+    try:
+        tasks = sweep.load_tasks(task_root)
+        holds = load_holds(retention_list)
+    except (OSError, ValueError):
+        return None
+    return tasks, holds
 
 
 def _restore_members(entry: Entry, root_fd: int, quarantine: sweep.Quarantine, members: list[Path]) -> int:
@@ -362,8 +395,8 @@ def _remove(
     quarantine: sweep.Quarantine,
     *,
     now: float,
-    tasks: sweep.TaskInventory,
-    holds: list[dict[str, Any]],
+    task_root: Path,
+    retention_list: Path,
     repo_root: Path,
 ) -> int:
     """Quarantine every member, recheck once, then let the common reaper delete it."""
@@ -389,7 +422,13 @@ def _remove(
             return 1 + blocked
         sweep._sync_rename(root_fd, quarantine.fd)
         renamed.append(member)
-    problem = _recheck(entry, spec, quarantine, now=now, tasks=tasks, holds=holds)
+    guards = _reload_guards(task_root, retention_list)
+    if guards is None:
+        blocked = _restore_members(entry, root_fd, quarantine, renamed)
+        entry.reason = "restore_blocked" if blocked else "guard_reload_failed"
+        return 1 + blocked
+    fresh_tasks, fresh_holds = guards
+    problem = _recheck(entry, spec, quarantine, now=now, tasks=fresh_tasks, holds=fresh_holds)
     if problem:
         blocked = _restore_members(entry, root_fd, quarantine, renamed)
         entry.reason = "restore_blocked" if blocked else problem
@@ -486,7 +525,8 @@ def sweep_batch_state(
     if apply and not approved:
         raise TtlUnapproved("apply refused: one or more TTL values are UNAPPROVED")
     now = time.time() if now is None else now
-    tasks = sweep.load_tasks(task_root if task_root is not None else tasks_dir())
+    task_root = task_root if task_root is not None else tasks_dir()
+    tasks = sweep.load_tasks(task_root)
     holds = load_holds(retention_list)
     repo_root = repo_root or Path(__file__).resolve().parents[2]
     if batch_root.is_symlink() or not batch_root.is_dir():
@@ -513,8 +553,8 @@ def sweep_batch_state(
                                 root_fd,
                                 quarantine,
                                 now=now,
-                                tasks=tasks,
-                                holds=holds,
+                                task_root=task_root,
+                                retention_list=retention_list,
                                 repo_root=repo_root,
                             )
                 finally:

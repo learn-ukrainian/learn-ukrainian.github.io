@@ -358,3 +358,118 @@ def test_archives_group_sidecars_with_the_newest_archive_protected(area):
     assert rows["new-archive"]["reason"] == "newest_archive"
     assert rows["old-archive"]["reason"] == "expired"
     assert "old-archive.tar.zst" not in rows
+
+
+def _write_holds(path: Path, *entries: str) -> None:
+    path.write_text(
+        json.dumps(
+            {
+                "schema": "batch-state-retention.v1",
+                "holds": [
+                    {"path": entry, "reason": "Review evidence.", "until": "#11421 closes"} for entry in entries
+                ],
+            }
+        )
+        + "\n"
+    )
+
+
+def _late_guard(monkeypatch, path: Path, action) -> None:
+    """Run ``action`` once when ``path`` is first fingerprinted, after classification."""
+    original = sweep_module.sweep.tree_fingerprint
+    calls = {"count": 0}
+
+    def racing(candidate):
+        result = original(candidate)
+        if candidate == path:
+            calls["count"] += 1
+            if calls["count"] == 1:
+                action()
+        return result
+
+    monkeypatch.setattr(sweep_module.sweep, "tree_fingerprint", racing)
+
+
+def test_hold_added_after_classification_protects_the_entry(area, monkeypatch):
+    """Reading holds only once would delete evidence held while the scan ran."""
+    entry = area["eligible"]
+    target = entry / "artifact" / "data.bin"
+    _late_guard(
+        monkeypatch,
+        entry,
+        lambda: _write_holds(area["holds"], "batch_state/preserved/old-owner/"),
+    )
+    report = _sweep(area, apply=True, receipt_path=area["tmp"] / "receipt.json")
+    row = next(row for row in report["rows"] if row["path"].endswith("/old-owner"))
+    assert row["reason"] == "held"
+    assert row["decision"] == "preserve"
+    assert target.exists()
+
+
+def test_task_reference_added_after_classification_protects_the_entry(area, monkeypatch):
+    """Reading the task inventory only once would delete a newly referenced entry."""
+    entry = area["eligible"]
+
+    def reference():
+        (area["tasks"] / "run-late.json").write_text(
+            json.dumps({"task_id": "run-late", "status": "running", "worktree_path": str(entry)}) + "\n"
+        )
+
+    _late_guard(monkeypatch, entry, reference)
+    report = _sweep(area, apply=True, receipt_path=area["tmp"] / "receipt.json")
+    row = next(row for row in report["rows"] if row["path"].endswith("/old-owner"))
+    assert row["reason"] == "task_reference"
+    assert row["decision"] == "preserve"
+    assert entry.exists()
+
+
+@pytest.mark.parametrize(
+    "member",
+    ["old-archive.tar.zst", "old-archive.tar.zst.manifest", "old-archive.tar.zst.contents.sha256"],
+)
+def test_hold_on_any_archive_member_preserves_the_whole_group(area, member):
+    """A hold names a member file, never the stripped group key."""
+    holds = area["tmp"] / "archive-holds.json"
+    _write_holds(holds, f"batch_state/backups/archives/{member}")
+    report = _sweep(area, retention_list=holds)
+    row = next(row for row in report["rows"] if row["path"].endswith("/old-archive"))
+    assert row["reason"] == "held"
+    assert row["decision"] == "preserve"
+    _sweep(area, retention_list=holds, apply=True, receipt_path=area["tmp"] / "receipt.json")
+    for suffix in (".tar.zst", ".tar.zst.manifest", ".tar.zst.contents.sha256"):
+        assert (area["batch"] / "backups" / "archives" / f"old-archive{suffix}").exists()
+
+
+def test_archive_member_hold_added_after_classification_protects_the_group(area, monkeypatch):
+    """The recheck must compare holds with member names, not the stripped key."""
+    archives = area["batch"] / "backups" / "archives"
+    archive = archives / "old-archive.tar.zst"
+    _late_guard(
+        monkeypatch,
+        archive,
+        lambda: _write_holds(area["holds"], "batch_state/backups/archives/old-archive.tar.zst"),
+    )
+    report = _sweep(area, apply=True, receipt_path=area["tmp"] / "receipt.json")
+    row = next(row for row in report["rows"] if row["path"].endswith("/old-archive"))
+    assert row["reason"] == "held"
+    assert row["decision"] == "preserve"
+    for suffix in (".tar.zst", ".tar.zst.manifest", ".tar.zst.contents.sha256"):
+        assert (archives / f"old-archive{suffix}").exists()
+
+
+def test_orphan_sidecar_does_not_become_the_newest_archive(area):
+    """A newer manifest alone must not shield itself while the only archive is deleted."""
+    archives = area["batch"] / "backups" / "archives"
+    for suffix in (".tar.zst", ".tar.zst.manifest", ".tar.zst.contents.sha256"):
+        (archives / f"new-archive{suffix}").unlink()
+    orphan = archives / "orphan.tar.zst.manifest"
+    orphan.write_bytes(b"a" * 1024)
+    _age_tree(orphan, 0.0)
+    report = _sweep(area)
+    rows = {row["path"].rsplit("/", 1)[-1]: row for row in report["rows"]}
+    assert rows["old-archive"]["reason"] == "newest_archive"
+    assert rows["old-archive"]["decision"] == "preserve"
+    assert rows["orphan"]["reason"] == "too_young"
+    _sweep(area, apply=True, receipt_path=area["tmp"] / "receipt.json")
+    assert (archives / "old-archive.tar.zst").exists()
+    assert orphan.exists()
