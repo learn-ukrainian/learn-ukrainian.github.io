@@ -10286,13 +10286,13 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     # Automatic isolation adds the worktree block around the bound source prompt.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-plain", [])
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_blocks"] == ["worktree", "evidence"]
     assert state["effective_prompt_sha256"] != source
 
     # An explicit primary target gets the same worktree instructions.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
     assert state["mode"] == "read-only"
-    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_blocks"] == ["worktree", "evidence"]
     assert state["prompt_sha256"] == source
     assert state["effective_prompt_sha256"] != source
 
@@ -10314,7 +10314,7 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
         tmp_path, monkeypatch, "eff-all", ["--worktree", str(worktree)]
     )
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == ["worktree", "lifecycle", "research"]
+    assert state["prompt_blocks"] == ["worktree", "lifecycle", "evidence", "research"]
     assert state["effective_prompt_sha256"] == hashlib.sha256(worker_prompt.encode("utf-8")).hexdigest()
     assert state["effective_prompt_sha256"] != source
     assert worker_prompt.startswith("[delegate worktree]\n")
@@ -12576,16 +12576,31 @@ class _GuardFakeStdin:
         pass
 
 
+def _fake_worker_pid() -> int:
+    """Return a PID above the kernel's allocatable range (#11406).
+
+    A fabricated PID inside ``pid_max`` can alias a live process. Launch then
+    records that process's start time, ``worker_liveness`` reports the fake
+    worker alive, and its own terminal record blocks settle as an active
+    claim. PIDs above ``pid_max`` are never allocated, so there is no alias.
+    """
+    try:
+        return int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii").strip()) + 1000
+    except (OSError, ValueError):
+        return 5_000_000
+
+
 class _GuardFakeProc:
     """Stand-in for the detached worker.
 
     Scope startup calls ``poll`` while it waits for the one-byte start marker,
     then ``returncode``, ``kill`` and ``wait`` if that marker never arrives.
     ``kill`` and ``wait`` update only this object. ``pid`` is not a process,
-    and nothing here signals it.
+    and nothing here signals it; it sits above ``pid_max`` so it cannot alias
+    a live one.
     """
 
-    pid = 44551
+    pid = _fake_worker_pid()
     stdin = _GuardFakeStdin()
     returncode = None
 
@@ -13783,7 +13798,7 @@ def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir,
     checkout = delegate._auto_worktree_path("codex", case.task_id)
     assert checkout.is_dir() and state["worktree_branch"] is None
     assert state["prompt_sha256"] != state["effective_prompt_sha256"]
-    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
     assert state["worktree_sparse"]["full_checkout"] is True
     assert adj.check_dispatch_binding(
         case.unit_id, case.review_id, case.attempt_id, case.task_id, case.env.tasks, case.env.root

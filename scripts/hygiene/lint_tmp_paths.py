@@ -31,7 +31,13 @@ TEMP_CALLS = {
     "SpooledTemporaryFile",
 }
 TEMP_NAMES = frozenset("tempfile." + call for call in TEMP_CALLS)
-SCRATCH_NAMES = {"TMPDIR", "LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT", "tmp_path"}
+SCRATCH_NAMES = {
+    "TMPDIR",
+    "LU_TASK_SCRATCH_DIR",
+    "LU_RUNTIME_TMP_ROOT",
+    "LU_TASK_EVIDENCE_DIR",
+    "tmp_path",
+}
 SCRATCH_HELPERS = {"ensure_scratch_root", "resolve_scratch_root"}
 ENV_NAMES = SCRATCH_NAMES - {"tmp_path"}
 MANAGED_ROOT = "/" + "var/tmp/lu"

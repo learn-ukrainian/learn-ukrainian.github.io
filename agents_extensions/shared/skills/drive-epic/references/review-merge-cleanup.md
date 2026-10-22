@@ -168,6 +168,14 @@ read-only dispatch (#8703, above).
 6. **Breakers** — `local-code-review` checklist Step 6, unchanged: for example, two
    consecutive patch cycles that do not shrink the outstanding findings stop and escalate.
 
+Every review brief names the supported evidence directory: write the report, archives,
+logs and screenshots under `$LU_TASK_EVIDENCE_DIR` (dispatch creates it and names it in
+the worker preamble). Task cleanup copies it to `batch_state/preserved/<task>/` with a
+retrieval receipt before deleting the runtime lease. Do not rely on ignored files left in
+the worktree: a later dispatch that reuses the worktree runs a cone sparse-checkout that
+removes them, and reuse is refused while a terminal task's worktree evidence is
+unretrieved. Cite the preserved path from the result as well as stating the verdict.
+
 **Security-code variant** (hooks, launchers, credentials, admission, sandbox, guards):
 section 3 also states the trust boundary, the allowed inputs, the refusal behaviour, the
 attack classes in scope and the design: a fail-closed allowlist, or why not. The author brief

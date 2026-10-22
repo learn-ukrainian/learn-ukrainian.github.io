@@ -14,6 +14,8 @@ from __future__ import annotations
 import json
 import os
 import stat
+import subprocess
+import sys
 
 import pytest
 
@@ -59,7 +61,31 @@ def _same_repo_payload(*, head_sha: str = _HEAD_SHA, branch: str = _HEAD_BRANCH)
 
 @pytest.fixture()
 def same_repo_pr_gh(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _install_fake_gh(tmp_path, monkeypatch, stdout=_same_repo_payload())
+    """Positive forge metadata must name a real isolated canonical Git ref."""
+    from tests.test_review_target_resolution import _git, _init_repo, _publish_pr_branch
+
+    repo = _init_repo(tmp_path)
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "file")
+    _git(repo, "remote", "add", "origin", "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _publish_pr_branch(repo, _HEAD_BRANCH, head)
+    monkeypatch.setattr(_cli, "REPO_ROOT", repo)
+    monkeypatch.setattr(sys.modules[__name__], "_HEAD_SHA", head)
+    _install_fake_gh(tmp_path, monkeypatch, stdout=_same_repo_payload(head_sha=head))
+    real_run, real_popen = subprocess.run, subprocess.Popen
+
+    def git_run(command, *args, **kwargs):
+        assert command[0] == "git", "provider or other external process reached"
+        assert kwargs["env"]["GIT_ALLOW_PROTOCOL"] == "file"
+        return real_run(command, *args, **kwargs)
+
+    def git_popen(command, *args, **kwargs):
+        assert command[0] == "git", "provider or other external process reached"
+        assert kwargs["env"]["GIT_ALLOW_PROTOCOL"] == "file"
+        return real_popen(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", git_run)
+    monkeypatch.setattr(subprocess, "Popen", git_popen)
 
 
 @pytest.fixture()

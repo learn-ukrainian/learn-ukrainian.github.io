@@ -2,6 +2,7 @@
 
 import json
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -16,6 +17,60 @@ from tests.test_delegate_admission import (
 from tests.test_delegate_admission import (
     tasks_dir as tasks_dir,
 )
+
+
+@pytest.mark.parametrize("probe_error", [False, True])
+def test_identity_probe_cannot_refuse_dispatch_with_fake_popen(tasks_dir, monkeypatch, capsys, probe_error):
+    """A worker-only Popen double must not cause a ledger-error refusal (#11375)."""
+    real_run = subprocess.run
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(subprocess, "run", real_run)
+    if probe_error:
+        lstat = Path.lstat
+        marker = delegate._REPO_ROOT / ".git"
+
+        def failed_probe(path, *args, **kwargs):
+            if path == marker:
+                raise OSError("identity probe unavailable")
+            return lstat(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "lstat", failed_probe)
+
+    class FakeProc:
+        pid = 24682
+
+    monkeypatch.setattr(subprocess, "Popen", lambda *_a, **_k: FakeProc())
+
+    def reached_worktree(**_kwargs):
+        raise RuntimeError("sentinel: worktree creation reached")
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", reached_worktree)
+    args = _live_danger_args(tasks_dir, "identity-fake-popen")
+    args.mode = "read-only"
+    assert delegate.cmd_dispatch(args) == 1
+    err = capsys.readouterr().err
+    assert "sentinel: worktree creation reached" in err
+    assert "ledger error" not in err
+    assert "write-path ownership refused" not in err
+
+
+def test_dispatch_passes_target_checkout_to_ownership_outside_launcher_cwd(tasks_dir, monkeypatch):
+    """Admission must use the target repository, even when the launcher runs elsewhere."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    expected = delegate._REPO_ROOT
+    launcher = tasks_dir.parent / "launcher"
+    launcher.mkdir()
+    monkeypatch.chdir(launcher)
+    observed = []
+
+    def admission(**kwargs):
+        observed.append(kwargs["cwd"])
+        return ownership.AdmissionResult(False, ownership.GuardMode.REFUSE, True, "test stop")
+
+    monkeypatch.setattr(ownership, "admit_write_paths", admission)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: pytest.fail("must stop before spawn"))
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "target-repository")) == 2
+    assert observed == [expected]
 
 
 @pytest.mark.parametrize(

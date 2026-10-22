@@ -1541,16 +1541,26 @@ def _is_full_git_sha(value: object) -> bool:
 
 
 def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
-    """Return ``(headRefName, headRefOid)`` for one same-repo PR.
+    """Return the live canonical branch and pinned SHA for one same-repo PR.
 
-    One ``gh pr view`` call. A cross-repository PR, or any failure to resolve
+    One ``gh pr view`` plus a live ref observation. A cross-repository PR, or any failure to resolve
     a branch and a full head SHA, exits non-zero. Never falls back to main.
     """
+    from scripts.review.target_resolution import TargetResolutionError, _origin_github_repo, live_canonical_branch_head
+
+    try:
+        repository = _origin_github_repo(Path(REPO_ROOT))
+    except (OSError, TargetResolutionError) as exc:
+        raise SystemExit(f"ask --pr {pr_number}: canonical repository unavailable") from exc
+    if repository is None:
+        raise SystemExit(f"ask --pr {pr_number}: canonical repository unavailable; refusing to review main")
     cmd = [
         "gh",
         "pr",
         "view",
         str(pr_number),
+        "--repo",
+        repository,
         "--json",
         "headRefName,headRefOid,isCrossRepository",
     ]
@@ -1599,7 +1609,11 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         ) from exc
     if not _is_full_git_sha(head_sha):
         raise SystemExit(f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main")
-    return branch, str(head_sha)
+    try:
+        head_sha = live_canonical_branch_head(Path(REPO_ROOT), branch, repository=repository)
+    except TargetResolutionError as exc:
+        raise SystemExit(f"ask --pr {pr_number}: {exc}; refusing to review main") from exc
+    return branch, head_sha
 
 
 def _head_sha_binding_instruction(sha: str) -> str:
