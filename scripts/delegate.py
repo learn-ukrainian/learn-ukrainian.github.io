@@ -54,7 +54,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_chars": int,
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
-        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "lifecycle", "research"
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "evidence", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "review_input_paths": [str] | absent,  # attempt reads outside input_root; claimed until terminal (#9597)
@@ -63,6 +63,9 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "result_file": str | null,   # path to the full response text
         "held_work": [str] | absent,  # explicit runtime-root relative files to preserve (#10000)
         "preserved_held_work": object | absent,  # verified runtime-held-work.v1 retrieval manifest
+        "runtime_tmp_root": str,  # task-scoped runtime lease (the worker's TMPDIR)
+        "evidence_dir": str,      # supported evidence directory under that lease (#11342)
+        "preserved_evidence": object | absent,  # verified runtime-evidence.v1 retrieval manifest
         "stderr_excerpt": str | null,   # the worker's raw stderr: local; never quote it in a PR or issue
         "returncode": int | null,
         "returncode_reason": str | null,
@@ -1622,10 +1625,21 @@ def _preserve_runtime_tmp_held_work(
     record: dict[str, Any] | None,
     response: str | None = None,
 ) -> dict[str, Any]:
-    """Publish held-work retrieval metadata before any runtime lease deletion."""
+    """Publish held-work and evidence retrieval metadata before any lease deletion.
+
+    The supported ``evidence/`` directory (#11342) is preserved first: a review
+    that writes only there keeps an auditable copy after task cleanup. The
+    citation-driven held-work pass stays as before. A preservation failure is a
+    typed refusal, so the caller retains the lease instead of deleting bytes.
+    """
     from scripts.fleet import runtime_held_work
 
     if record is None:
+        # A stateless lease has no task store entry to attribute a receipt to.
+        # The dispatch marker distinguishes supported evidence from a tool's
+        # own evidence directory, which keeps its existing age-based retention.
+        if os.path.lexists(_runtime_tmp_task_id_marker_path(lease)):
+            runtime_held_work.require_empty_evidence(lease)
         return {}
     if response is None:
         task_id = record.get("task_id")
@@ -1636,12 +1650,17 @@ def _preserve_runtime_tmp_held_work(
         bound_root = record.get("runtime_tmp_root")
         if bound_root and Path(bound_root).absolute() != lease.absolute():
             raise runtime_held_work.HeldWorkPreservationError()
+        evidence = runtime_held_work.preserve_evidence(lease, primary=_main_checkout_root(_REPO_ROOT), record=record)
         receipt = runtime_held_work.preserve(
             lease, primary=_main_checkout_root(_REPO_ROOT), record=record, response=response or ""
         )
-        if receipt is None:
+        updates: dict[str, Any] = {}
+        if receipt is not None:
+            updates["preserved_held_work"] = receipt
+        if evidence is not None:
+            updates["preserved_evidence"] = evidence
+        if not updates:
             return {}
-        updates = {"preserved_held_work": receipt}
         path = _state_path_no_create(record["task_id"])
         with task_state_lock(path):
             current = _read_state_json(path)
@@ -1651,8 +1670,34 @@ def _preserve_runtime_tmp_held_work(
             _write_record_unlocked(path, current)
         record.update(updates)
         return updates
+    except runtime_held_work.EvidencePreservationError:
+        raise
     except (OSError, ValueError, TypeError):
         raise runtime_held_work.HeldWorkPreservationError() from None
+
+
+def _require_preserved_evidence_still_matches(
+    lease: Path, updates: Mapping[str, Any], *, dispatch_lease: bool
+) -> None:
+    """Refuse lease deletion when supported evidence changed after its receipt (#11342).
+
+    ``preserve_evidence`` copies to a fixed point and receipts only a set verified
+    identical to the source. Recheck immediately before deletion so a file that
+    appeared or changed after the final enumeration is never silently lost; the
+    typed refusal keeps the lease.
+    Without a receipt, dispatch evidence must still be absent or empty.
+    ``dispatch_lease`` is captured before preservation and accounting, so losing
+    the marker during either operation cannot bypass the final recheck.
+    """
+    from scripts.fleet import runtime_held_work
+
+    receipt = updates.get("preserved_evidence") if isinstance(updates, Mapping) else None
+    if receipt is None:
+        if dispatch_lease:
+            runtime_held_work.require_empty_evidence(lease)
+        return
+    if not runtime_held_work.evidence_matches_receipt(lease, receipt):
+        raise runtime_held_work.EvidencePreservationError()
 
 
 def _sweep_runtime_tmp_orphans(
@@ -1743,8 +1788,10 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
-                _preserve_runtime_tmp_held_work(lease, state)
+                dispatch_lease = state is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
+                updates = _preserve_runtime_tmp_held_work(lease, state)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
+                _require_preserved_evidence_still_matches(lease, updates, dispatch_lease=dispatch_lease)
                 _remove_runtime_tmp_lease(lease, namespace)
             except (OSError, ValueError) as exc:
                 result["errors"] += 1
@@ -1849,8 +1896,10 @@ def _reap_runtime_tmp_lease(
                 if _read_runtime_tmp_task_id_marker(lease) is None
                 else None,
             )
+        dispatch_lease = task_record is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
+        _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
@@ -2540,6 +2589,7 @@ def _ensure_sibling_repo_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
+        _refuse_unretrieved_worktree_evidence(worktree_path)
         telemetry["reused"] = True
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -8065,6 +8115,7 @@ def _build_worker_env(
     if runtime_tmp_root is not None:
         worker_env["TMPDIR"] = str(runtime_tmp_root)
         worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+        worker_env["LU_TASK_EVIDENCE_DIR"] = str(Path(runtime_tmp_root) / "evidence")
         worker_env.update(_worker_tool_cache_env(Path(runtime_tmp_root)))
     if runtime_tmp_namespace_root is not None:
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
@@ -10130,6 +10181,26 @@ def _mark_review_attempt_worktree(worktree_path: Path, task_id: str) -> None:
     marker.write_text(f"{task_id}\n", encoding="utf-8")
 
 
+def _refuse_unretrieved_worktree_evidence(worktree_path: Path) -> None:
+    """Refuse reuse of a checkout that holds a terminal task's unretrieved evidence (#11342).
+
+    Dispatch preparation mutates a reused worktree: cone sparse-checkout removes
+    untracked/ignored directories inside a tracked cone directory. A finished task
+    that never had its ignored output preserved would lose its only copy, so reuse
+    waits until the owner preserves it (``scripts.fleet.post_task_reap``).
+    """
+    from scripts.fleet import ignored_task_output
+
+    refusal = ignored_task_output.unretrieved_reuse_refusal(
+        worktree_path,
+        tasks_dir=tasks_dir(),
+        repo_root=_REPO_ROOT,
+        primary=_REPO_ROOT,
+    )
+    if refusal is not None:
+        raise RuntimeError(refusal)
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -10228,6 +10299,7 @@ def _ensure_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
+        _refuse_unretrieved_worktree_evidence(worktree_path)
         telemetry["reused"] = True
         if resolved_base_sha is None:
             telemetry["rebased"] = _validate_existing_worktree(
@@ -10654,6 +10726,27 @@ def _recorded_research_block(block: object) -> str:
     return text
 
 
+def _evidence_prompt_block() -> str:
+    """Name the supported evidence directory whose contents task cleanup preserves (#11342).
+
+    The block is deliberately independent of the task's runtime lease: the
+    worker reads the concrete ``evidence/`` path from ``$LU_TASK_EVIDENCE_DIR``
+    (see :func:`_build_worker_env`) and the task record keeps it in
+    ``evidence_dir``. Keeping the path out of the prompt means the prompt text,
+    its SHA-256 and the evaluation harness's paired frame stay identical across
+    tasks, so exact-prompt verification still holds.
+    """
+    return (
+        "\n[evidence]\n"
+        "Durable evidence (reports, archives, logs, screenshots) belongs in "
+        "`$LU_TASK_EVIDENCE_DIR`, this task's `evidence/` directory.\n"
+        "Task cleanup copies that directory to `batch_state/preserved/<task>/` with a retrieval "
+        "receipt before it removes the runtime lease. Files left elsewhere in the worktree or "
+        "runtime temp root are not preserved and can be deleted when the task ends.\n"
+        "Put every artifact a later reader needs there and cite it from your result.\n"
+    )
+
+
 def _compose_dispatch_prompt(
     base: str,
     *,
@@ -10668,13 +10761,20 @@ def _compose_dispatch_prompt(
     blocks: list[str] | None = None,
     agent: str | None = None,
     review_route: bool = False,
+    evidence_dir: Path | str | None = None,
 ) -> str:
     """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
 
-    In prompt order: the rules core, the worktree block, ``base``, the research
-    pointers and the advisory block. ``blocks``, when given, gets the kinds
-    added, in prompt order. The bounded worker rebuilds its expected prompt
-    with this function (#9275), so the two cannot drift apart.
+    In prompt order: the rules core, the worktree block, ``base``, the evidence
+    block, the research pointers and the advisory block. ``blocks``, when given,
+    gets the kinds added, in prompt order. The bounded worker rebuilds its
+    expected prompt with this function (#9275), so the two cannot drift apart.
+
+    ``evidence_dir`` is the *presence* signal for the supported evidence
+    directory (``None`` means the dispatch has none): its concrete, task-specific
+    lease path is never interpolated, so every task's prompt and SHA-256 stay
+    comparable. The worker reads the path from ``$LU_TASK_EVIDENCE_DIR`` and the
+    task record keeps it in ``evidence_dir``.
     """
     prompt = _augment_prompt_with_worktree(
         base,
@@ -10685,6 +10785,10 @@ def _compose_dispatch_prompt(
     )
     if worktree_path is not None and blocks is not None:
         blocks.insert(0, "worktree")
+    if evidence_dir is not None:
+        prompt = prompt + _evidence_prompt_block()
+        if blocks is not None:
+            blocks.append("evidence")
     if research_block and blocks is not None:
         blocks.append("research")
     prompt = prompt + research_block
@@ -14991,6 +15095,7 @@ def _dispatch(
                 return 1
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
+                _refuse_unretrieved_worktree_evidence(resolved_wt)
             except (OSError, ValueError, RuntimeError) as exc:
                 discard_logs()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -15114,6 +15219,15 @@ def _dispatch(
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
 
+    try:
+        (runtime_tmp_root / "evidence").mkdir(mode=0o700)
+    except OSError as exc:
+        _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+        stdout_fd.close()
+        stderr_fd.close()
+        print(f"❌ failed to create the evidence directory for {task_id!r}: {exc}", file=sys.stderr)
+        return 1
+
     spawned = False
     try:
         cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
@@ -15145,6 +15259,7 @@ def _dispatch(
             blocks=prompt_blocks,
             agent=dispatch_agent,
             review_route=(review_attempt is not None),
+            evidence_dir=runtime_tmp_root / "evidence",
         )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
@@ -15199,6 +15314,7 @@ def _dispatch(
             "worktree_local_venv": worktree_telemetry.get("local_venv"),
             "ignored_output_baseline": worktree_telemetry.get("ignored_output_baseline"),
             "runtime_tmp_root": str(runtime_tmp_root),
+            "evidence_dir": str(runtime_tmp_root / "evidence"),
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
             "keep_worktree": keep_worktree,
@@ -16083,6 +16199,7 @@ def _bounded_prompt_composer(
             rules_seat=args.get("rules_seat"),
             agent=agent,
             review_route=(record.get("review_attempt") is not None),
+            evidence_dir=record.get("evidence_dir") or None,
         )
 
     return compose
@@ -19705,6 +19822,13 @@ def build_parser() -> argparse.ArgumentParser:
             "  that slice is installed with its memory limits; otherwise dispatch warns and uses plain Popen.\n"
             "  A scoped start that does not prove the worker never started is marked failed and is not relaunched.\n"
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
+            "Worker evidence (#11342):\n"
+            "  Every worker gets an empty `$LU_TASK_EVIDENCE_DIR` (the task runtime lease's `evidence/`\n"
+            "  directory). Task cleanup copies that directory to `batch_state/preserved/<task>/` with a\n"
+            "  retrieval receipt before it deletes the lease, capped at 256 MiB; an over-cap or unreadable\n"
+            "  evidence directory is a typed refusal that keeps the lease. Write reports, archives, logs and\n"
+            "  screenshots there, because ignored files elsewhere in a worktree can be removed by a later\n"
+            "  sparse-checkout, and a terminal task's unretrieved worktree evidence now refuses reuse.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
             "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission);\n"
