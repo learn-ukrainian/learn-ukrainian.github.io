@@ -2312,6 +2312,8 @@ describe("usage-label scope on entry pages (#9603)", () => {
 
 
 describe("thin rendered-state presentation (#8327)", () => {
+  const HISTORICAL_NOTE_FALLBACK =
+    "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення.";
   const emptyEntry = {
     lemma: "entry", url_slug: "entry", gloss: null, entry_type: "lemma",
     pos: null, ipa: null, primary_source: "test", course_usage: [],
@@ -2461,7 +2463,7 @@ describe("thin rendered-state presentation (#8327)", () => {
     {
       label: "positive risk only",
       context: { source: "СУМ-11", definition: "", sovietization_risk: 2, keywords: [] },
-      expectInBox: "Радянський окупаційний контекст",
+      expectInBox: HISTORICAL_NOTE_FALLBACK,
     },
   ])("blank-definition Soviet context stays visible when still informative: $label", ({ context, expectInBox }) => {
     const { model, doc } = view({ soviet_colonization_context: context });
@@ -2470,9 +2472,67 @@ describe("thin rendered-state presentation (#8327)", () => {
     expect(model.renderable.meaning).toBe(false);
     expect(model.articleOverview.find((card) => card.id === "meaning")?.ready).toBe(false);
     const box = doc.querySelector(".soviet-colonization-box");
+    expect(box?.querySelector(".src-pill")?.textContent).toBe("Радянський окупаційний контекст");
     expect(box?.textContent).toContain(expectInBox);
     expect(box?.querySelector(".def-text p")).toBeNull();
     expect(doc.querySelector(".atlas-section h2")?.textContent).toBe("Значення");
+  });
+
+  test.each([
+    { label: "missing note", note: undefined },
+    { label: "null note", note: null },
+    { label: "empty note", note: "" },
+    { label: "whitespace-only note", note: " \t\n" },
+  ])("blank historical note falls back to the default sentence, not an empty note: $label", ({ note }) => {
+    const context = {
+      source: "СУМ-11",
+      definition: "SYNTHETIC historical definition",
+      sovietization_risk: 1,
+      keywords: [],
+      historical_note: note as string | undefined,
+    };
+    const { doc } = view({ soviet_colonization_context: context });
+    const box = doc.querySelector(".soviet-colonization-box");
+    expect(box).not.toBeNull();
+    expect(box?.querySelector(".def-text p")?.textContent).toBe("SYNTHETIC historical definition");
+    expect(box?.querySelector(".def-flag-inline")?.textContent).toBe(HISTORICAL_NOTE_FALLBACK);
+  });
+
+  test("meaningful historical note text renders unchanged beside its markers", () => {
+    const { doc } = view({
+      soviet_colonization_context: {
+        source: "СУМ-11",
+        definition: "",
+        sovietization_risk: 0,
+        keywords: ["ідеологія"],
+        historical_note: "SYNTHETIC meaningful historical note.",
+      },
+    });
+    expect(doc.querySelector(".soviet-colonization-box .def-flag-inline")?.textContent)
+      .toBe("SYNTHETIC meaningful historical note. (Маркери: ідеологія)");
+    expect(doc.querySelector(".soviet-colonization-box .def-text p")).toBeNull();
+  });
+
+  test.each([
+    { label: "whitespace-only keywords", keywords: [" ", "", "\t"], marker: null },
+    { label: "mixed meaningful keywords", keywords: [" ", "ідеологія", ""], marker: " (Маркери: ідеологія)" },
+  ])("blank keyword entries never create a blank marker label: $label", ({ keywords, marker }) => {
+    const { doc } = view({
+      soviet_colonization_context: {
+        source: "СУМ-11",
+        definition: "SYNTHETIC historical definition",
+        sovietization_risk: 0,
+        keywords,
+      },
+    });
+    const inline = doc.querySelector(".soviet-colonization-box .def-flag-inline");
+    const markers = doc.querySelector(".soviet-colonization-box .soviet-keywords");
+    expect(inline?.firstChild?.textContent).toBe(HISTORICAL_NOTE_FALLBACK);
+    if (marker === null) {
+      expect(markers).toBeNull();
+    } else {
+      expect(markers?.textContent).toBe(marker);
+    }
   });
 
   test.each([

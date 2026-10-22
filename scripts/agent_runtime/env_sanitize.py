@@ -26,18 +26,29 @@ _SENSITIVE_NAME_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Keep short random run-directory fragments such as ``pytest.bhf_56ac`` out
+# of credential detection (#11326). This is a conservative detection floor,
+# not a validator for the providers' complete key formats.
+_MIN_KEY_BODY = 8
+
+# Word boundaries hide keys after ``MY_``, URL-encoded ``%3D`` and literal
+# ``\\n`` (#11355). Keep the existing short, boundary-delimited sk- matches,
+# including ``task-sk-att``, and also detect glued bodies of at least 20
+# characters. The higher glued floor preserves ordinary ``ask-codex-review``
+# and ``task-summary-finalize`` paths; other prefixes retain their own floors.
+_MIN_GLUED_SK_BODY = 20
+
 _SENSITIVE_VALUE_RE = re.compile(
     r"(?:"
-    r"github_pat_[A-Za-z0-9_]+|"
-    r"gh[pousr]_[A-Za-z0-9_]+|"
-    # A credential starts at a word boundary; the tail of "task-" is not a
-    # key prefix. Separators, including a hyphen, still expose short keys.
+    rf"github_pat_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"gh[pousr]_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     r"\bsk-[A-Za-z0-9_-]+|"
-    r"xox[baprs]-[A-Za-z0-9-]+|"
-    r"hf_[A-Za-z0-9_]+|"
-    r"npm_[A-Za-z0-9_]+|"
+    rf"sk-[A-Za-z0-9_-]{{{_MIN_GLUED_SK_BODY},}}|"
+    rf"xox[baprs]-[A-Za-z0-9-]{{{_MIN_KEY_BODY},}}|"
+    rf"hf_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
+    rf"npm_[A-Za-z0-9_]{{{_MIN_KEY_BODY},}}|"
     r"AKIA[A-Z0-9]{12,}|"
-    r"AIza[A-Za-z0-9_-]+"
+    rf"AIza[A-Za-z0-9_-]{{{_MIN_KEY_BODY},}}"
     r")"
 )
 
@@ -101,6 +112,7 @@ _SAFE_VALUE_NAME_ALLOWLIST = {
     "TMPDIR",
     "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",
+    "LU_TASK_EVIDENCE_DIR",
     "LU_SCRATCH_ROOT",
     "LU_X_AGENT_TRAILER",
 }

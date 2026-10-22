@@ -12,7 +12,10 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 timeout = 120
 timeout_method = "thread"
-faulthandler_timeout = 110
+# Keep pytest's native faulthandler watchdog off: dump_traceback_later is a C
+# watchdog thread that walks frames without the GIL, so it raced changing frames
+# and SIGSEGV'd a worker during a dump (#11391). pytest-timeout owns hang reporting.
+faulthandler_timeout = 0
 # Retain only failures so large successful temp sessions do not accumulate (#8572).
 tmp_path_retention_policy = "failed"
 tmp_path_retention_count = 1

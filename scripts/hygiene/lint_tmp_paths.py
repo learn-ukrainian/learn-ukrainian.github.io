@@ -12,7 +12,7 @@ import shlex
 import subprocess
 import sys
 from bisect import bisect_right
-from collections import Counter
+from collections import Counter, deque
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -30,10 +30,69 @@ TEMP_CALLS = {
     "NamedTemporaryFile",
     "SpooledTemporaryFile",
 }
-SCRATCH_NAMES = {"TMPDIR", "LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT", "tmp_path"}
+TEMP_NAMES = frozenset("tempfile." + call for call in TEMP_CALLS)
+SCRATCH_NAMES = {
+    "TMPDIR",
+    "LU_TASK_SCRATCH_DIR",
+    "LU_RUNTIME_TMP_ROOT",
+    "LU_TASK_EVIDENCE_DIR",
+    "tmp_path",
+}
 SCRATCH_HELPERS = {"ensure_scratch_root", "resolve_scratch_root"}
 ENV_NAMES = SCRATCH_NAMES - {"tmp_path"}
 MANAGED_ROOT = "/" + "var/tmp/lu"
+LINE_SEPARATOR = re.compile(r"\r\n|\r|\n")
+# Every LITERAL_TEMP match contains one of these substrings, so a value without
+# them cannot carry a bare root. Used to skip the regex per value, never to skip
+# a file: every file is still read, parsed and scanned in full.
+TEMP_ROOT_MARKERS = ("/" + "tmp", "/" + "dev" + "/" + "shm")
+# Node types that cannot be, or contain, a finding: identifier tokens, name
+# contexts, import aliases and operator singletons. Skipping their traversal
+# never skips a file or a node that could hold an import, literal or call; the
+# guard test freezes this set and its safe fields.
+SKIPPED_AST_NODES = frozenset(
+    {
+        ast.Load,
+        ast.Store,
+        ast.Del,
+        ast.Name,
+        ast.alias,
+        ast.Pass,
+        ast.Break,
+        ast.Continue,
+        ast.Global,
+        ast.Nonlocal,
+        ast.Add,
+        ast.Sub,
+        ast.Mult,
+        ast.MatMult,
+        ast.Div,
+        ast.Mod,
+        ast.Pow,
+        ast.LShift,
+        ast.RShift,
+        ast.BitOr,
+        ast.BitXor,
+        ast.BitAnd,
+        ast.FloorDiv,
+        ast.And,
+        ast.Or,
+        ast.Not,
+        ast.Invert,
+        ast.UAdd,
+        ast.USub,
+        ast.Eq,
+        ast.NotEq,
+        ast.Lt,
+        ast.LtE,
+        ast.Gt,
+        ast.GtE,
+        ast.Is,
+        ast.IsNot,
+        ast.In,
+        ast.NotIn,
+    }
+)
 
 # Content fingerprints and maximum occurrence counts, never whole-file exemptions.
 # Legacy entries are residuals, not evidence that their producers are safe.
@@ -2227,32 +2286,81 @@ def is_scratch_expression(node: ast.AST, aliases: dict[str, str]) -> bool:
     )
 
 
+def _literal_line_numbers(source: str) -> set[int]:
+    """Physical line numbers of raw source lines that carry a literal temp path.
+
+    A source-wide match yields the same numbers as scanning each physical line:
+    no ``LITERAL_TEMP`` match can span a line separator, so every match starts
+    and ends on one line.
+    """
+    if TEMP_ROOT_MARKERS[0] not in source and TEMP_ROOT_MARKERS[1] not in source:
+        return set()
+    separators = [match.end() for match in LINE_SEPARATOR.finditer(source)]
+    numbers = set()
+    for match in LITERAL_TEMP.finditer(source):
+        literal = match.group()
+        path = posixpath.normpath(literal)
+        if (literal == MANAGED_ROOT or literal.startswith(MANAGED_ROOT + "/")) and (
+            path == MANAGED_ROOT or path.startswith(MANAGED_ROOT + "/")
+        ):
+            continue
+        numbers.add(bisect_right(separators, match.start()) + 1)
+    return numbers
+
+
+def _may_hold_temp_root(value: str) -> bool:
+    """Per-value fast path: every ``LITERAL_TEMP`` match contains a marker substring."""
+    return TEMP_ROOT_MARKERS[0] in value or TEMP_ROOT_MARKERS[1] in value
+
+
 def scan_python(source: str, path: str) -> list[Finding]:
-    """Find tempfile calls without an explicit managed directory, including aliases."""
+    """Find tempfile calls without an explicit managed directory, including aliases.
+
+    One breadth-first walk in ``ast.walk`` order collects imports, decoded
+    literals and calls; calls are resolved only after the whole walk has filled
+    the alias map, so an import that follows its call still applies.
+    """
     tree = ast.parse(source, filename=path)
-    aliases = {}
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
+    aliases: dict[str, str] = {}
+    calls: list[ast.Call] = []
+    findings: list[Finding] = []
+    pending = deque([tree])
+    while pending:
+        node = pending.popleft()
+        kind = type(node)
+        if kind is ast.Constant:
+            value = node.value
+            if type(value) is bytes:
+                value = value.decode("utf-8", errors="replace")
+            if type(value) is str and _may_hold_temp_root(value) and has_literal_temp_path(value):
+                findings.append(Finding(path, node.lineno, "literal system temp path"))
+        elif kind is ast.Call:
+            func = node.func
+            func_kind = type(func)
+            if func_kind is ast.Name or (func_kind is ast.Attribute and func.attr in TEMP_CALLS):
+                calls.append(node)
+        elif kind is ast.Import:
             for item in node.names:
                 aliases[item.asname or item.name] = item.name
-        elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
-            for item in node.names:
-                if node.module == "tempfile" and item.name == "*":
-                    aliases.update({name: "tempfile." + name for name in TEMP_CALLS})
-                else:
-                    aliases[item.asname or item.name] = node.module + "." + item.name
-    findings = []
+        elif kind is ast.ImportFrom:
+            if node.module and not node.level:
+                for item in node.names:
+                    if node.module == "tempfile" and item.name == "*":
+                        aliases.update({name: "tempfile." + name for name in TEMP_CALLS})
+                    else:
+                        aliases[item.asname or item.name] = node.module + "." + item.name
+        for name in node._fields:
+            child = getattr(node, name, None)
+            if type(child) is list:
+                for item in child:
+                    if isinstance(item, ast.AST) and type(item) not in SKIPPED_AST_NODES:
+                        pending.append(item)
+            elif isinstance(child, ast.AST) and type(child) not in SKIPPED_AST_NODES:
+                pending.append(child)
     source_lines = None
-    temp_names = {"tempfile." + call for call in TEMP_CALLS}
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Constant):
-            value = node.value.decode("utf-8", errors="replace") if isinstance(node.value, bytes) else node.value
-            if isinstance(value, str) and has_literal_temp_path(value):
-                findings.append(Finding(path, node.lineno, "literal system temp path"))
-        if not isinstance(node, ast.Call):
-            continue
+    for node in calls:
         name = qualified_name(node.func, aliases)
-        if name not in temp_names:
+        if name not in TEMP_NAMES:
             continue
         directory = next((k.value for k in node.keywords if k.arg == "dir"), None)
         if directory is None or not is_scratch_expression(directory, aliases):
@@ -2517,15 +2625,16 @@ def scan_lines(repo_root: Path, paths: list[Path] | None = None) -> list[tuple[s
             continue
         relative = path.relative_to(repo_root).as_posix()
         source = path.read_text(encoding="utf-8")
-        lines = re.split(r"\r\n|\r|\n", source)
-        literal_numbers = {n for n, line in enumerate(lines, 1) if has_literal_temp_path(line)}
+        literal_numbers = _literal_line_numbers(source)
         findings = scan_python(source, relative) if path.suffix == ".py" else scan_shell(source, relative)
         for finding in findings:
             if finding.message == "literal system temp path":
                 literal_numbers.add(finding.line)
             else:
                 rows.append((relative, finding.line, finding.message))
-        rows.extend((relative, n, lines[n - 1].strip()) for n in sorted(literal_numbers))
+        if literal_numbers:
+            lines = LINE_SEPARATOR.split(source)
+            rows.extend((relative, n, lines[n - 1].strip()) for n in sorted(literal_numbers))
     return sorted(rows)
 
 

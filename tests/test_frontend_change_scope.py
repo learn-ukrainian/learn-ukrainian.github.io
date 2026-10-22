@@ -458,18 +458,44 @@ def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
     assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.
 
 
+def _declared_selector_graph(manifest: dict) -> dict:
+    """Project declared manifest edges into the graph shape ``affected`` reads.
+
+    ``affected`` adds every declared pair unless the repository import scan
+    reports an unresolved edge, which selects all nodes. The declared closure
+    is therefore the guaranteed floor of the real selection, and it decides
+    rule mutations without the full repository scan (#11411).
+    """
+    return {
+        "file_edges": [],
+        "unresolved_edges": [],
+        "missing_mandatory_edges": [],
+        "node_edges": sorted({(edge["producer"], edge["consumer"]) for edge in manifest["edges"]}),
+    }
+
+
 def test_component_map_covers_full_index_frontend_denominator() -> None:
-    """Cross-check the existing cheap-exit denominator, including sparse files."""
+    """Cross-check the existing cheap-exit denominator, including sparse files.
+
+    A path's selection is fixed by its manifest ownership; the import scan only
+    decides whether the selector must fall back to all nodes. Checking the
+    declared closure covers every included path without scanning the tree,
+    rejects the all-node fallback it used to pass through, and fails on a
+    mutated rule the fallback used to hide.
+    """
     from scripts.ci import components
 
     manifest = components.load_manifest()
-    graph = components.import_graph(manifest)
+    graph = _declared_selector_graph(manifest)
     patterns = scope.load_denominator()["paths"]
     paths = components.tracked_paths()
     included = [path for path in paths if scope.path_in_denominator(path, patterns)]
     assert included
     fronts = set(manifest["selector_contracts"]["frontend_components"])
-    assert all(fronts <= set(components.affected([path], manifest, graph)["components"]) for path in included)
+    for path in included:
+        result = components.affected([path], manifest, graph)
+        assert result["fallback_reasons"] == [], (path, result["fallback_reasons"])
+        assert fronts <= set(result["components"]), path
 
 
 def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
@@ -477,6 +503,7 @@ def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
     from scripts.ci import components
 
     manifest = components.load_manifest()
-    assert set(components.affected(["scripts/config.py"], manifest)["components"]) == set(components.NODE_IDS)
+    owned = components.affected(["scripts/config.py"], manifest, _declared_selector_graph(manifest))
+    assert set(owned["components"]) == set(components.NODE_IDS)
     run, _, matched = scope.decide_from_changed(["scripts/config.py", "docs/a.md"])
     assert run is False and matched == []

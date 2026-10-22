@@ -57,6 +57,7 @@ class Family(StrEnum):
     GOOGLE = "google"
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    META = "meta"
     DEEPSEEK = "deepseek"
     XAI = "xai"
     CURSOR = "cursor"

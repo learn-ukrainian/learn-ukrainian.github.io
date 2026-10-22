@@ -114,7 +114,7 @@ def test_content_seat_keeps_universal_duties_beyond_sizing(api_client, surface):
     assert "Use textbook-grounded dialogues; in legacy module workflows" in proof
     assert "1.5× word-target overshoot" in proof
     assert "fresh-build lessons follow their own sizing contract" in proof
-    assert "Every bug fix includes a regression test" in proof
+    assert "Do not add a test file or test case unless the CTO approves that specific test" in proof
     review = next(line for line in text.splitlines() if "<!-- ca-review:" in line)
     assert "PASS ≥ 8, REVISE < 8, REJECT < 6; target 9" in review
     assert "source-backed" in targets
