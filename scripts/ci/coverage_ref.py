@@ -1,4 +1,4 @@
-"""Measurement receipts and fail-closed combination for coverage-ref.yml (#11226)."""
+"""Branch measurements with separate test outcomes and completeness (#11226)."""
 
 from __future__ import annotations
 
@@ -22,6 +22,11 @@ class CollectionRecorder:
         self.collections: list[list[str]] = []
         self.core: str | None = None
         self.subprocess_patch: bool | None = None
+        self.completed_nodeids: set[str] = set()
+        self.failed_nodeids: set[str] = set()
+        self.crashed_nodeids: set[str] = set()
+        self.collection_errors: list[str] = []
+        self.worker_exits: list[dict] = []
 
     def pytest_runtestloop(self, session) -> Generator[None, None, object]:
         # Read the active pytest-cov instance before it switches to its reporting instance.
@@ -39,6 +44,30 @@ class CollectionRecorder:
         self.collections.append(list(ids))
         self.nodeids = list(ids)
 
+    def pytest_runtest_logreport(self, report) -> None:
+        if report.failed:
+            self.failed_nodeids.add(report.nodeid)
+        if report.when == "teardown":
+            self.completed_nodeids.add(report.nodeid)
+
+    def pytest_collectreport(self, report) -> None:
+        if report.failed:
+            self.collection_errors.append(report.nodeid)
+
+    def pytest_handlecrashitem(self, crashitem, report, sched) -> None:
+        self.crashed_nodeids.add(crashitem)
+
+    def pytest_testnodedown(self, node, error) -> None:
+        # Local popen gateways expose the process; other transports remain unknown.
+        process = getattr(getattr(node.gateway, "_io", None), "popen", None)
+        self.worker_exits.append(
+            {
+                "worker": node.gateway.id,
+                "returncode": process.poll() if process is not None else None,
+                "unexpected": error is not None,
+            }
+        )
+
 
 def versions() -> dict[str, str]:
     return {name: importlib.metadata.version(name) for name in ("coverage", "pytest-cov", "pytest")}
@@ -50,6 +79,8 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
     output.mkdir(parents=True, exist_ok=True)
     # Keep pytest optional for combine, but wrap xdist's first-result runtest hook.
     pytest.hookimpl(wrapper=True)(CollectionRecorder.pytest_runtestloop)
+    for hook in ("pytest_xdist_node_collection_finished", "pytest_handlecrashitem", "pytest_testnodedown"):
+        pytest.hookimpl(optionalhook=True)(getattr(CollectionRecorder, hook))
     recorder = CollectionRecorder()
     started = time.monotonic()
     # Match `python -m pytest` import semantics despite running a helper outside the measured tree.
@@ -65,6 +96,11 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
         "collected_count": len(recorder.nodeids),
         "collection_consistent": consistent,
         "pytest_exit_status": status,
+        "completed_nodeids": sorted(recorder.completed_nodeids),
+        "failed_nodeids": sorted(recorder.failed_nodeids - recorder.crashed_nodeids),
+        "crashed_nodeids": sorted(recorder.crashed_nodeids),
+        "collection_errors": recorder.collection_errors,
+        "worker_exits": recorder.worker_exits,
         "wall_seconds": round(time.monotonic() - started, 3),
         "versions": versions(),
         "core": recorder.core,
@@ -73,8 +109,15 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
         "durations_sha256": hashlib.sha256(Path("ci-artifacts/pytest-file-durations.json").read_bytes()).hexdigest(),
     }
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    return status or int(
-        not consistent or not recorder.nodeids or recorder.core != "CTracer" or recorder.subprocess_patch is not True
+    return int(
+        status not in (0, 1)
+        or not consistent
+        or not recorder.nodeids
+        or set(recorder.nodeids) != recorder.completed_nodeids
+        or bool(recorder.crashed_nodeids or recorder.collection_errors)
+        or (status == 1 and not recorder.failed_nodeids)
+        or recorder.core != "CTracer"
+        or recorder.subprocess_patch is not True
     )
 
 
@@ -92,12 +135,16 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
         "complete": False,
         "shards": [],
         "errors": [],
+        "tests_passed": False,
+        "failed_nodeids": [],
+        "crashed_nodeids": [],
+        "unfinished_nodeids": [],
     }
     errors = manifest["errors"]
     data_files = []
     seen_nodeids: set[str] = set()
     duration_hashes = set()
-    if matrix_result != "success":
+    if matrix_result not in ("success", "failure"):
         errors.append(f"pytest matrix: {matrix_result}")
     try:
         import coverage
@@ -128,8 +175,8 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                     raise ValueError("receipt identity/version mismatch")
                 if receipt["shard"] != shard or receipt["config_sha256"] != config_hash:
                     raise ValueError("shard/config mismatch")
-                if receipt["pytest_exit_status"] != 0 or receipt["collection_consistent"] is not True:
-                    raise ValueError("pytest failed or collections differ")
+                if receipt["collection_consistent"] is not True:
+                    raise ValueError("collections differ")
                 nodeids = receipt["collected_nodeids"]
                 if not nodeids or receipt["collected_count"] != len(nodeids) or len(set(nodeids)) != len(nodeids):
                     raise ValueError("zero or invalid collected count")
@@ -137,26 +184,41 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
                     raise ValueError("node IDs overlap another shard")
                 seen_nodeids.update(nodeids)
                 duration_hashes.add(receipt["durations_sha256"])
+                completed = set(receipt["completed_nodeids"])
+                failed = set(receipt["failed_nodeids"])
+                crashed = set(receipt["crashed_nodeids"])
+                if not (completed | failed | crashed) <= set(nodeids):
+                    raise ValueError("outcome IDs were not collected")
+                unfinished = set(nodeids) - completed
+                manifest["failed_nodeids"].extend(sorted(failed))
+                manifest["crashed_nodeids"].extend(sorted(crashed))
+                manifest["unfinished_nodeids"].extend(sorted(unfinished))
+                if unfinished or crashed or receipt["collection_errors"]:
+                    errors.append(f"shard {shard}: unfinished tests, worker crash or collection errors")
+                if receipt["pytest_exit_status"] not in (0, 1) or (
+                    receipt["pytest_exit_status"] == 1 and not (failed or crashed)
+                ):
+                    errors.append(f"shard {shard}: pytest infrastructure failure ({receipt['pytest_exit_status']})")
                 files = list(directory.glob(".coverage*"))
                 if not files:
                     raise ValueError("missing raw coverage data")
-                nonempty = False
                 for path in files:
-                    data = coverage.CoverageData(basename=str(path))
-                    data.read()
-                    if not data.has_arcs():
-                        raise ValueError("raw data lacks branch coverage")
-                    nonempty = nonempty or bool(data.measured_files())
-                if not nonempty:
-                    raise ValueError("empty raw coverage data")
-                # pytest-cov normally leaves a combined `.coverage`, not `.coverage.*`.
-                # Directory discovery in coverage combine ignores that unsuffixed file.
-                data_files.extend(str(path) for path in files)
+                    try:
+                        data = coverage.CoverageData(basename=str(path))
+                        data.read()
+                        if not data.has_arcs() or not data.measured_files():
+                            raise ValueError("raw data lacks nonempty branch coverage")
+                        # Include pytest-cov's unsuffixed file explicitly.
+                        data_files.append(str(path))
+                    except (OSError, ValueError, coverage.CoverageException) as error:
+                        errors.append(f"shard {shard}: {error}")
             except (OSError, ValueError, KeyError, TypeError, coverage.CoverageException) as error:
                 errors.append(f"shard {shard}: {error}")
         if len(duration_hashes) != 1:
             errors.append("missing or differing duration snapshots")
-        if not errors:
+        if matrix_result == "failure" and not errors and not manifest["failed_nodeids"]:
+            errors.append("pytest matrix: failure")
+        if data_files:
             cov = coverage.Coverage(data_file=str(output / ".coverage"))
             cov.combine(data_paths=data_files, strict=True, keep=True)
             cov.save()
@@ -169,13 +231,21 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
             report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
             manifest["coverage_sha256"] = hashlib.sha256(report_path.read_bytes()).hexdigest()
             manifest["total_collected_count"] = len(seen_nodeids)
-            manifest["complete"] = True
+            manifest["complete"] = not errors
+            manifest["tests_passed"] = not errors and not manifest["failed_nodeids"]
     except Exception as error:
         # This is the artifact boundary: even missing coverage/dependencies must leave a failure manifest.
         errors.append(f"combine: {error}")
     finally:
         (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"complete": manifest["complete"], "errors": errors}))
+    summary = {
+        key: manifest[key]
+        for key in ("complete", "tests_passed", "failed_nodeids", "crashed_nodeids", "unfinished_nodeids", "errors")
+    }
+    print(json.dumps(summary))
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as stream:
+            stream.write(f"## Coverage measurement for `{sha}`\n\n```json\n{json.dumps(summary, indent=2)}\n```\n")
     return int(not manifest["complete"])
 
 
@@ -188,8 +258,8 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python scripts/ci/coverage_ref.py run --output raw --shard 1 -- tests/test_example.py\n"
             "  .venv/bin/python scripts/ci/coverage_ref.py combine --input raw --output combined "
             "--sha <40-hex> --matrix-result success\n"
-            "Outputs: run writes receipt.json; combine writes manifest.json and, only if complete, coverage.json.\n"
-            "Exit codes: 0 = complete success; 1 or pytest status = incomplete; 2 = usage error.\n"
+            "Outputs: receipt.json, manifest.json and coverage.json from all valid available data.\n"
+            "Exit codes: 0 = complete measurement (tests may fail); 1 = incomplete; 2 = usage error.\n"
             "Requires: GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT, COVERAGE_RCFILE; run also needs the CI duration snapshot.\n"
             "Related: .github/workflows/coverage-ref.yml; scripts/ci/coverage_diff.py; #11226."
         ),

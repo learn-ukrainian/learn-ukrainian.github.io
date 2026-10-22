@@ -100,7 +100,8 @@ jobs:
     needs:
     - prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Two workers need twice the previous job budget; the per-test budget is unchanged.
+    timeout-minutes: 90
     permissions:
       contents: read
       actions: read
@@ -131,6 +132,8 @@ jobs:
       # https://coverage.readthedocs.io/en/7.16.2/config.html#run-core
       COVERAGE_CORE: ctrace
       COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage
+      # Bound branch-tracing memory pressure; -n logical still selects the same tests.
+      PYTEST_XDIST_AUTO_NUM_WORKERS: '2'
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
@@ -158,7 +161,7 @@ jobs:
     - name: Keep measurement tooling outside the measured checkout
       run: |
         mkdir -p "$RUNNER_TEMP/coverage-ref"
-        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
+        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage_ref_environment.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
         printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - run: bash scripts/ci/test_env.sh start postgres
     - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
@@ -176,6 +179,10 @@ jobs:
         save-cache: false
     - run: bash scripts/ci/test_env.sh wait
       timeout-minutes: 5
+    - name: Isolate coverage storage from import-smoke guards
+      # patch=subprocess uses interpreter startup, so this must also reach
+      # children that deliberately clear PYTHONPATH or change their cwd.
+      run: .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"
     - name: Download pytest duration snapshot
       env:
         GH_TOKEN: ${{ github.token }}
@@ -241,7 +248,7 @@ jobs:
           --output ci-artifacts/raw --shard "$SHARD" -- tests \
           --cov=scripts --cov=.mcp --cov=agents_extensions --cov=packages \
           --cov-branch --cov-report= --cov-config="$COVERAGE_RCFILE" -n logical --dist=worksteal --max-worker-restart=0 \
-          --timeout=600 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
+          --timeout=600 --timeout-method=signal -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
           --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
         # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
         .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \

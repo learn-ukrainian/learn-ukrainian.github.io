@@ -96,16 +96,21 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
     # pytest options must still match CI. Pin both budgets before normalizing.
     assert original.count("--timeout=120") == 1
     assert instrumented.count("--timeout=600") == 1
-    assert [
-        "--timeout=120" if arg == "--timeout=600" else arg
-        for arg in instrumented
-        if not arg.startswith("--cov")
-    ] == original[3:]
+    # A signal timeout reports a test failure and lets coverage save. The thread
+    # method calls os._exit(), losing that worker and its remaining tests.
+    assert original.count("--timeout-method=thread") == 1
+    assert instrumented.count("--timeout-method=signal") == 1
+    normalization = {"--timeout=600": "--timeout=120", "--timeout-method=signal": "--timeout-method=thread"}
+    assert [normalization.get(arg, arg) for arg in instrumented if not arg.startswith("--cov")] == original[3:]
     assert (
         step(measured, "Download pytest duration snapshot")["run"]
         == step(baseline, "Download pytest duration snapshot")["run"]
     )
     assert measured["timeout-minutes"] > baseline["timeout-minutes"]
+    assert measured["env"]["PYTEST_XDIST_AUTO_NUM_WORKERS"] == "2"
+    assert "PYTEST_XDIST_AUTO_NUM_WORKERS" not in baseline.get("env", {})
+    startup = step(measured, "Isolate coverage storage from import-smoke guards")
+    assert startup["run"] == '.venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"'
 
 
 @pytest.mark.parametrize(
