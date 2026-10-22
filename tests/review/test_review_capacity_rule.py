@@ -148,7 +148,7 @@ def test_10016_usage_snapshot_does_not_rank_reviewers():
 @pytest.mark.parametrize(
     "lane,reason",
     [
-        ({"runtime": {"headroom_blocked": True}}, ""),
+        ({"runtime": {"headroom_blocked": True}}, "runtime headroom blocked"),
         ({"scheduler": {"capacity_exhausted": True, "active_reserved_input_bytes": 900}}, "concurrency"),
         ({"scheduler": {"circuit_open": True}}, "circuit"),
         ({"health": {"healthy": False}}, "unhealthy"),

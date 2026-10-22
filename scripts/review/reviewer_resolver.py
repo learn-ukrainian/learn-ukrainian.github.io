@@ -1452,9 +1452,10 @@ def resolve_reviewer(
     selected_rung_index: int | None = None
     # Dispatch supplies the existing budget guard's per-model decisions.
     # They only remove candidates; hard eligibility and ranking remain here.
-    # Re-evaluate supplied exclusions so stale usage decisions cannot veto a reviewer.
+    # Recheck legacy usage exclusions on every call. Operational exclusions
+    # remain binding even when their evidence exists only in this map.
     capacity_exclusions = {}
-    for name in (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {}):
+    for name, supplied_cause in (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {}).items():
         candidate = REVIEW_CANDIDATES.get(name)
         if candidate is None:
             continue
@@ -1466,6 +1467,10 @@ def resolve_reviewer(
         )
         if blocked:
             capacity_exclusions[name] = cause
+        elif supplied_cause not in {"weekly deficit", "codexbar will_last_to_reset=False (deficit)"} and not str(
+            supplied_cause
+        ).startswith("near_cap ("):
+            capacity_exclusions[name] = supplied_cause or "operational capacity unavailable"
     pace_retention_available = False
     eligible_quota_buckets: set[str] = set()
     # Last-resort candidates follow every eligible primary, after hard gates.

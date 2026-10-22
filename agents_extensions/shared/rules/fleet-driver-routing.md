@@ -106,9 +106,11 @@ stampede one hot lane.
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
 Review selection and dispatch ignore remaining weekly or five-hour usage, pace,
-near-cap state and runtime headroom forecasts. Claude keeps its existing weekly-cap
+near-cap state and usage headroom forecasts. Claude keeps its existing weekly-cap
 protection. Eligibility, login, route health, circuits and credential concurrency
-still bind; actual provider rate limits or refusals fall back with a recorded substitution.
+still bind. An observed rate-limit cluster (`runtime.headroom_blocked`) excludes
+the lane at selection time. A run-time `rate_limited` outcome ends the review
+without an automatic fallback dispatch.
 
 **Codex writer near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / GLM
 (`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the

@@ -511,7 +511,7 @@ def resolve_and_admit(
         # A new worker dispatch also answers for every model it asked for
         # (explicit, attached or also_models); reviewer selection only for what it picked.
         _refuse_paused(
-            selected if review_dispatch else [*models, *selected],
+            selected if review_activity else [*models, *selected],
             claude_account=claude_account,
             review=review_activity,
         )

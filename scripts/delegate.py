@@ -14278,11 +14278,7 @@ def _dispatch(
     # (router state irrelevant), only its credit-period models are admitted. Checked on the admitted route (aliases,
     # substitution and review selection applied; no --model means the lane default)
     # before any side effect.
-    credit_refusal = (
-        None
-        if _dispatch_is_review_typed(args) and dispatch_agent != "claude"
-        else _credit_period_refusal(dispatch_agent, launch_target.model)
-    )
+    credit_refusal = _credit_period_refusal(dispatch_agent, launch_target.model)
     if credit_refusal:
         print(f"❌ dispatch refused: {credit_refusal}", file=sys.stderr)
         return 2
@@ -19311,8 +19307,11 @@ def _resolve_agent_with_budget_guard(
         from scripts.review.capacity import review_capacity_action
         from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
 
-        if requested == "claude":
-            evaluated_account = account_evidence
+        evaluated_account = account_evidence
+        # Read Claude's meter from the bound account for the requested seat,
+        # every candidate and the final identity, including an unchanged pick.
+        agents = dict(agents)
+        agents["claude"] = claude_account_lane.lane_record(payload, "claude", account=claude_account)
         record = agents.get(requested)
         record = record if isinstance(record, Mapping) else {}
         blocked, reason = review_capacity_action(requested, record, diags, requested_model)
@@ -19329,8 +19328,6 @@ def _resolve_agent_with_budget_guard(
             review_capacity_exclusions=exclusions,
         )
         sub, chosen = review_select(review_snapshot, requested if blocked else "")
-        if (sub, chosen) == (requested, requested_model):
-            return requested
         sub_info = agents.get(sub)
         sub_info = sub_info if isinstance(sub_info, Mapping) else {}
         sub_blocked, sub_reason = review_capacity_action(sub, sub_info, diags, chosen)
@@ -19338,6 +19335,8 @@ def _resolve_agent_with_budget_guard(
             raise BudgetGuardRefuseError(
                 f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
             )
+        if (sub, chosen) == (requested, requested_model):
+            return requested
         print(
             f"REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
             f"({reason or 'reviewer resolver admission'}).",

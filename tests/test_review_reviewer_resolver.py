@@ -954,8 +954,8 @@ def test_dispatch_capacity_uses_resolver_transport_fallback_order():
     snapshot = {
         "agents": {
             "claude": {"status": "near_cap", "remaining_pct": 5},
-            "codex": {"status": "unhealthy"},
-            "grok": {"runtime": {"circuit_open": True}},
+            "codex": {"status": "cool"},
+            "grok": {"status": "cool"},
         },
         "diagnostics": {"stale": False},
         "review_capacity_exclusions": {
@@ -964,7 +964,7 @@ def test_dispatch_capacity_uses_resolver_transport_fallback_order():
         },
     }
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="critical", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
-    result = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    result = resolve_reviewer(inputs)
     assert result.selected.name == GROK_4_7_CURSOR_FALLBACK.name
     primary = next(item for item in result.trace if item.name == GROK_4_7.name)
     assert primary.status == "excluded"

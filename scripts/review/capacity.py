@@ -39,12 +39,15 @@ def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, obje
     )
     if str(record.get("status") or "").strip().lower() == "hot":
         pressure = max(pressure, 1.0)
+    runtime = record.get("runtime")
     scheduler = record.get("scheduler")
     hard_reason = None
     if record.get("eligible") is False:
         hard_reason = "ineligible route"
     elif record.get("login_state") == "NEED_LOGIN" or record.get("probe_state") == "NEED_LOGIN":
         hard_reason = "NEED_LOGIN"
+    elif isinstance(runtime, Mapping) and runtime.get("headroom_blocked"):
+        hard_reason = "runtime headroom blocked"
     elif isinstance(scheduler, Mapping) and scheduler.get("capacity_exhausted"):
         hard_reason = "credential bucket has no unreserved concurrency slot"
     return ReviewCapacity(

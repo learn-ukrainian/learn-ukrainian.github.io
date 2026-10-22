@@ -139,7 +139,7 @@ review role (operator decision 2026-10-03, #9583). `gpt-6-sol` and `gpt-6-astra`
 Token prices under
 272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable. Review selection
-and dispatch ignore remaining weekly or five-hour usage, pace, near-cap state and runtime
+and dispatch ignore remaining weekly or five-hour usage, pace, near-cap state and usage
 headroom forecasts. Claude retains its existing weekly-cap protection. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity. The Cursor review endpoint is
 formal only for the models it pins (`grok-4.7-high` today); other third-party non-Anthropic models Cursor
@@ -156,8 +156,9 @@ retains an eligible requested reviewer without waiving operational gates or Clau
 reviews use `--review-profile ukrainian` without these code resolver flags.
 Remaining allowance and pace do not rank or exclude reviewers. Ineligible routes,
 `NEED_LOGIN`, unhealthy lanes, open circuits and exhausted credential concurrency
-slots still block admission. An actual provider rate limit or refusal permits a
-recorded fallback to the next eligible seat. Writer routing is unchanged.
+slots still block admission. An observed rate-limit cluster (`runtime.headroom_blocked`)
+excludes the lane at selection time. A run-time `rate_limited` outcome ends that
+review; it does not automatically dispatch a fallback. Writer routing is unchanged.
 
 ### Historical routing evidence
 

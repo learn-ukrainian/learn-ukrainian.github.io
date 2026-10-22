@@ -1156,8 +1156,8 @@ def test_9959_claude_author_deficit_does_not_replace_explicit_openai(monkeypatch
     assert routing.substitution is None
 
 
-def test_9959_usage_headroom_does_not_exclude_sol_reviewer(monkeypatch):
-    # Usage headroom forecasts cannot exclude Sol or either Grok transport.
+def test_9959_observed_rate_limit_cluster_excludes_sol_reviewer(monkeypatch):
+    # Provider rate-limit clusters exclude Sol and Cursor; native Grok is available.
     budget = _budget(claude="near_cap", codex="cool", cursor="cool")
     budget["agents"]["cursor"]["runtime"] = {"headroom_blocked": True}
     budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 60}
@@ -1170,8 +1170,8 @@ def test_9959_usage_headroom_does_not_exclude_sol_reviewer(monkeypatch):
     args = _9959_review_args("claude", "claude-opus-5-5", "composer-2.5", "--check-budget")
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal is None
-    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
-    assert routing.substitution["actual_agent"] == "codex"
+    assert (target.recipient, target.model) == ("grok", "grok-4.7")
+    assert routing.substitution["actual_agent"] == "grok"
 
 
 def test_9959_near_cap_sol_remains_eligible_for_review(monkeypatch):
@@ -2306,10 +2306,7 @@ def test_review_usage_and_operational_failures_select_eligible_reviewer(monkeypa
     )
     (refusal, target), _ = _admit(args, monkeypatch, budget)
     assert refusal is None
-    if lane.get("runtime", {}).get("headroom_blocked"):
-        assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
-    else:
-        assert target.recipient == "grok"
+    assert target.recipient == "grok"
 
 
 def test_pace_deficit_retains_eligible_requested_reviewer(monkeypatch):
@@ -2346,21 +2343,27 @@ def test_review_usage_emits_no_budget_retention_notice(monkeypatch, capsys, stat
             "weekly_expected_pct": 40.0,
         }
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    res = delegate._resolve_agent_with_budget_guard(
-        "claude",
-        requested_model="claude-opus-5-5",
-        fallbacks={},
-        review_select=lambda _p, _r: ("claude", "claude-opus-5-5"),
-        review_trusted_inputs=review_trusted_inputs,
-        claude_account=HOST_ACCOUNT,
+    expected = (
+        pytest.raises(delegate.BudgetGuardRefuseError, match="near_cap")
+        if status == "near_cap"
+        else contextlib.nullcontext()
     )
-    assert res == "claude"
+    with expected:
+        res = delegate._resolve_agent_with_budget_guard(
+            "claude",
+            requested_model="claude-opus-5-5",
+            fallbacks={},
+            review_select=lambda _p, _r: ("claude", "claude-opus-5-5"),
+            review_trusted_inputs=review_trusted_inputs,
+            claude_account=HOST_ACCOUNT,
+        )
+        assert res == "claude"
     err = capsys.readouterr().err.strip()
     assert "REVIEW_BUDGET_RETAINED" not in err
     assert "REVIEW_SUBSTITUTION_DISABLED" not in err
 
 
-def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch, capsys):
+def test_review_capped_account_refuses_unchanged_resolver_identity_via_admit(monkeypatch, capsys):
     from scripts.agent_runtime import target_admission
 
     monkeypatch.setattr(
@@ -2380,8 +2383,8 @@ def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch,
         "critical",
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
-    assert refusal is None
-    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert "REVIEW_ROUTE_REFUSED" in refusal and "near_cap" in refusal
+    assert target is None
     assert routing.substitution is None
     err = capsys.readouterr().err.strip()
     assert "REVIEW_SUBSTITUTION_DISABLED" not in err
@@ -2719,7 +2722,7 @@ def test_10016_fresh_capacity_before_every_review_without_flag(monkeypatch, bloc
             trees=None,
             route=delegate._dispatch_route(args, routing, language_lane=True, review_attempt=None),
         )
-        if blocked not in {None, "runtime"}:
+        if blocked is not None:
             assert refusal and target is None
         else:
             assert refusal is None and (target.recipient, target.model) == ("claude", "claude-opus-5-5")

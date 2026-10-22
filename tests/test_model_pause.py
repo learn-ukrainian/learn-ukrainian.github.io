@@ -68,7 +68,7 @@ def test_admission_refuses_a_paused_seat_default(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
     monkeypatch.setattr(ta, "_seat_default_model", lambda seat: "paused-model-1")
     with pytest.raises(mp.ModelPausedRefused):
-        ta._refuse_paused([None, ta._seat_default_model("claude")], claude_account=HOST_ACCOUNT)
+        ta._refuse_paused([None, ta._seat_default_model("claude")], claude_account=HOST_ACCOUNT, review=True)
 
 
 def test_reviewer_resolver_excludes_a_paused_candidate(tmp_path, monkeypatch) -> None:
