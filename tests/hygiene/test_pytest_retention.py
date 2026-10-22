@@ -118,9 +118,10 @@ def reaped_pid() -> tuple[int, int]:
     """A real pid and start time that are provably dead once the child exits (#11409)."""
     from scripts.common.acp_runtime_lock import process_start_time
 
+    # The child stays alive until communicate() closes its stdin, so its start time is always readable.
     child = subprocess.Popen(
-        [sys.executable, "-c", "import os, time; print(os.getpid(), flush=True); time.sleep(0.2)"],
-        stdout=subprocess.PIPE, text=True,
+        [sys.executable, "-c", "import os, sys; print(os.getpid(), flush=True); sys.stdin.read()"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
     )
     try:
         pid = int(child.stdout.readline())
@@ -1799,6 +1800,28 @@ def test_root_holder_takes_the_bounded_quarantine_recheck_path(area, monkeypatch
     assert report["liveness_complete"] is False
     assert report["liveness_unreadable_root_processes"] == 1
     assert report["deleted_bytes"] > 0
+
+
+def test_copied_dead_owner_lease_does_not_bypass_unknown_liveness(area, monkeypatch):
+    """Data-loss class: a lease copied from another run vouched for this run's owner.
+
+    Its dead owner says nothing about this run, so an incomplete process
+    snapshot must still preserve it; the run the lease names is the control.
+    """
+    root, args = area
+    pid, start = reaped_pid()
+    source = leased(root, "lease-source", pid=pid, start_time=start, boot_id=current_boot())
+    copied = unowned(root, "lease-copy")
+    for name in ("lease.json", "lease.lock"):
+        (copied / name).write_bytes((source / name).read_bytes())
+    fake_process(pytest_retention.PROC_ROOT, 4242, "S")  # alive, cwd unreadable
+    later(monkeypatch, 3 * HOUR)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    row = row_for(report, copied)
+    assert (row["decision"], row["reason"]) == ("preserve", "owner_liveness_unknown")
+    assert (copied / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
+    assert report["liveness_complete"] is False
+    assert row_for(report, source)["decision"] == "deleted" and not source.exists()
 
 
 def test_unprovable_holders_preserve_and_partial_holder_evidence_is_kept(area, monkeypatch):

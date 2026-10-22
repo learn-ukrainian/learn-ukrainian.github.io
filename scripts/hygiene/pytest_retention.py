@@ -7,7 +7,8 @@ with old mtimes stay young) is more than two hours old, no live process holds
 it through its working directory, an open descriptor, a mapped file, its
 command line or its environment, and its recorded lease owner is dead. A run
 is abandoned only when the owner cannot be alive on this host: the lease
-records the same kernel boot id, and the recorded pid is absent or now
+names this run (directory identity, invocation id and uid; any other lease
+preserves), records the same kernel boot id, and the recorded pid is absent or now
 reports a different start time (the number was reused). The lease lock must
 also be acquired exclusively, so a live writer is never raced.
 
@@ -375,20 +376,39 @@ class Candidate:
     owner_dead: bool = False
 
 
+def _names_run(lease: dict[str, Any], candidate: Candidate) -> bool:
+    """Whether the lease records this run: its directory identity, invocation id and owner uid.
+
+    A lease copied from another run names that run's owner, so it proves
+    nothing about this one; a missing field proves nothing either.
+    """
+    directory = lease.get("dir") or {}
+    dev, ino, uid = candidate.row["identity"]
+    return (
+        (directory.get("dev"), directory.get("ino")) == (dev, ino)
+        and lease.get("invocation_id") == candidate.name
+        and lease.get("uid") == uid == os.geteuid()
+    )
+
+
 def _abandonment(candidate: Candidate, *, boot_id: str | None) -> tuple[str | None, bool]:
     """Why the recorded owner does not prove abandonment, and whether it does.
 
     A run with a lease must also have had its lock acquired exclusively; a
     missing or malformed lease records no owner and falls back to the lock and
-    holder evidence. An unreadable lease always preserves. ``True`` means the
-    owner is provably dead on this boot, so an unreadable process snapshot no
-    longer blocks the deletion; the quarantine/recheck still proves the tree.
+    holder evidence. An unreadable lease always preserves, and so does a lease
+    that does not name this run, since its owner's liveness says nothing about
+    this run's owner. ``True`` means the owner is provably dead on this boot, so
+    an unreadable process snapshot no longer blocks the deletion; the
+    quarantine/recheck still proves the tree.
     """
     if candidate.lease_error:
         return candidate.lease_error, False
     if candidate.lease is not None:
         if not candidate.locked:
             return "lock_missing", False
+        if not _names_run(candidate.lease, candidate):
+            return "owner_liveness_unknown", False
         status = _owner_status(candidate.lease, boot_id)
         if status == "owner_dead":
             return None, True
