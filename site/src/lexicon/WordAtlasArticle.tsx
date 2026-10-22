@@ -51,7 +51,7 @@ export interface WordAtlasArticleProps {
 }
 
 function Attribution({ credit }: { credit: ArticleAttribution }) {
-  return <span className="atlas-muted">Джерело: {credit.source}
+  return <span className="atlas-muted" lang="uk">Джерело: {credit.source}
     {credit.kind === "quotation" && <> · {credit.title
       ? <cite>{credit.href ? <a href={credit.href} target="_blank" rel="noopener noreferrer">{credit.title}</a> : credit.title}</cite>
       : CHROME_STRINGS.uk["atlas.bookUnknown"]}</>}

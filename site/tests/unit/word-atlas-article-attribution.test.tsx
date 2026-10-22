@@ -23,7 +23,11 @@ const publicInput: Enrichment = {
 describe("borrowed quotation attribution (#11340)", () => {
   test("public runtime example is quoted with its own author, book and locator", () => {
     const doc = render(publicInput);
+    doc.documentElement.lang = "en";
     const example = doc.querySelector(".example-item");
+    // Credit language must override English inheritance without changing the quote.
+    expect(example?.querySelector(".atlas-muted")?.closest("[lang]")?.getAttribute("lang")).toBe("uk");
+    expect(example?.querySelector(".example-en")?.closest("[lang]")?.getAttribute("lang")).toBe("en");
     expect(example?.querySelector("blockquote .example-uk")?.textContent).toBe(publicInput.examples?.[0].uk);
     expect(example?.querySelector("blockquote .example-en")?.textContent).toBe(publicInput.examples?.[0].en);
     expect(example?.textContent).toContain("Anna Ohoiko");
@@ -37,6 +41,10 @@ describe("borrowed quotation attribution (#11340)", () => {
     const terms = Array.from(doc.querySelectorAll(".en-term"));
     expect(terms.map((el) => el.querySelector("q")?.textContent)).toEqual(publicInput.translation?.en);
     for (const term of terms) {
+      // Legacy unknown credits must not inherit the English term's language.
+      expect(term.querySelector(".atlas-muted")?.closest("[lang]")?.getAttribute("lang")).toBe("uk");
+      expect(term.closest("[lang]")?.getAttribute("lang")).toBe("en");
+      expect(term.querySelector("q")?.closest("[lang]")?.getAttribute("lang")).toBe("en");
       expect(term.textContent).toContain("Джерело: невідоме · Книга невідома");
       expect(term.textContent).not.toContain("Anna Ohoiko");
       expect(term.querySelector("cite")).toBeNull();
@@ -52,6 +60,10 @@ test("produced term credits stay separate from retained dictionary senses", () =
     ],
   } });
   const terms = Array.from(doc.querySelectorAll(".en-term"));
+  // Known credits need their own boundary; a broad fix must not relabel English.
+  expect(terms[0].querySelector(".atlas-muted")?.closest("[lang]")?.getAttribute("lang")).toBe("uk");
+  expect(terms[0].closest("[lang]")?.getAttribute("lang")).toBe("en");
+  expect(terms[0].querySelector("q")?.closest("[lang]")?.getAttribute("lang")).toBe("en");
   expect(terms[0].querySelector("q")?.textContent).toBe("bus");
   expect(terms[0].textContent).toContain("Anna Ohoiko");
   expect(terms[0].querySelector("cite")?.textContent).toBe("1000 Most Useful Ukrainian Words");
