@@ -32,6 +32,21 @@ def test_invalid_weights_fail_before_assignment() -> None:
         with pytest.raises(ValueError):
             split.validate_durations(value)
     assert split.validate_durations({"tests/test_x.py": 0}) == {"tests/test_x.py": 0}
+    empty = {"sha": "4b825dc642cb6eb9a060e54bf8d69288fbee4904", "tree": [], "truncated": False}
+    assert split.test_blob_map(empty, empty["sha"]) == {}
+    with pytest.raises(ValueError):
+        split.test_blob_map({**empty, "truncated": True}, empty["sha"])
+    with pytest.raises(ValueError):
+        split.test_blob_map({**empty, "truncated": None}, empty["sha"])
+    with pytest.raises(ValueError):
+        split.test_blob_map({**empty, "sha": "malformed"}, empty["sha"])
+    with pytest.raises(ValueError):
+        split.test_blob_map(empty, "a" * 40)
+    with pytest.raises(ValueError):
+        split.test_blob_map({**empty, "tree": [{"path": "sub/test_a.py", "sha": "a" * 40,
+            "mode": "100644", "type": "blob"}]}, empty["sha"])
+    with pytest.raises(ValueError):
+        split.test_blob_map({**empty, "sha": "a" * 40}, "a" * 40)
 
 
 def _api(monkeypatch: pytest.MonkeyPatch, *, bad_archive: bool = False) -> list[str]:
@@ -44,6 +59,7 @@ def _api(monkeypatch: pytest.MonkeyPatch, *, bad_archive: bool = False) -> list[
             conclusion="success",
             run_attempt=1,
             path=".github/workflows/ci.yml",
+            head_sha=f"{i:040x}",
         )
         for i in range(8, 0, -1)
     ]
@@ -51,17 +67,40 @@ def _api(monkeypatch: pytest.MonkeyPatch, *, bad_archive: bool = False) -> list[
     runs[1]["event"] = "pull_request"
     runs[2]["run_attempt"] = 2
     runs[3]["path"] = "other.yml"
+    blob = "a" * 40
+    body = b"100644 test_a.py\0" + bytes.fromhex(blob)
+    tree_sha = hashlib.sha1(b"tree " + str(len(body)).encode() + b"\0" + body).hexdigest()
+    root_body = b"40000 tests\0" + bytes.fromhex(tree_sha)
+    root_sha = hashlib.sha1(b"tree " + str(len(root_body)).encode() + b"\0" + root_body).hexdigest()
+    tree = {"sha": tree_sha, "truncated": False, "tree": [
+        {"path": "test_a.py", "mode": "100644", "type": "blob", "sha": blob}]}
+    monkeypatch.setattr(split, "checkout_test_blobs", lambda: {"tests/test_a.py": blob})
     artifacts = [
-        dict(id=i, name=split.TIMING_ARTIFACT, expired=i == 4, workflow_run={"id": i}) for i in range(8, 0, -1)
+        dict(id=i, name=split.TIMING_ARTIFACT, expired=i == 4, workflow_run={"id": i, "head_sha": f"{i:040x}"}) for i in range(8, 0, -1)
     ]
     artifacts.append(dict(id=101, name=split.TIMING_ARTIFACT, expired=False, workflow_run={"id": 1}))
 
-    def api(endpoint: str) -> bytes:
+    def api(endpoint: str, **kwargs) -> bytes:
         calls.append(endpoint)
         if "/workflows/" in endpoint:
             return json.dumps({"workflow_runs": runs}).encode()
+        if "?name=ci-tested-tree" in endpoint:
+            return json.dumps({"artifacts": [dict(id=i + 1000, name="ci-tested-tree", expired=False,
+                workflow_run={"id": i, "head_sha": f"{i:040x}"}) for i in range(8, 0, -1)]}).encode()
         if "?name=" in endpoint:
             return json.dumps({"artifacts": artifacts}).encode()
+        if "/git/commits/" in endpoint:
+            return json.dumps({"sha": endpoint.rsplit("/", 1)[1], "tree": {"sha": root_sha}}).encode()
+        if "/git/trees/" in endpoint:
+            if "recursive=1" in endpoint:
+                return json.dumps(tree).encode()
+            return json.dumps({"sha": root_sha, "truncated": False, "tree": [
+                {"path": "tests", "mode": "040000", "type": "tree", "sha": tree_sha}]}).encode()
+        artifact_id = int(endpoint.split("/")[-2])
+        if artifact_id > 1000:
+            run_id = artifact_id - 1000
+            return _zip(json.dumps(dict(sha=f"{run_id:040x}", tree=root_sha, run_id=run_id,
+                run_attempt=1, event="merge_group", tier="full")).encode(), "tested-tree.json")
         if bad_archive:
             return b"not a zip"
         artifact_id = int(endpoint.split("/")[-2])
@@ -81,7 +120,16 @@ def test_refresh_filters_failed_foreign_rerun_expired_and_duplicate_artifacts(tm
     output = tmp_path / "new" / "snapshot.json"
     assert split.refresh_durations("owner/repo", fallback, output) == 2
     assert json.loads(output.read_text()) == {"tests/test_a.py": 25, "tests/test_missing.py": 7}
-    assert calls[-2:] == ["repos/owner/repo/actions/artifacts/3/zip", "repos/owner/repo/actions/artifacts/2/zip"]
+    assert [c for c in calls if c.endswith(("/3/zip", "/2/zip"))] == [
+        "repos/owner/repo/actions/artifacts/3/zip", "repos/owner/repo/actions/artifacts/2/zip"]
+    assert len(calls) == 13
+    # Same filename, different blob: no historical observation overrides fallback.
+    monkeypatch.setattr(split, "checkout_test_blobs", lambda: {"tests/test_a.py": "c" * 40})
+    assert split.refresh_durations("owner/repo", fallback, output) == 0
+    assert json.loads(output.read_text()) == {"tests/test_a.py": 1, "tests/test_missing.py": 7}
+    monkeypatch.setattr(split, "checkout_test_blobs", lambda: {})
+    assert split.refresh_durations("owner/repo", fallback, output) == 0
+    assert json.loads(output.read_text()) == {"tests/test_a.py": 1, "tests/test_missing.py": 7}
     assert "2 successful merge-group samples" in capsys.readouterr().out
 
 
@@ -90,7 +138,7 @@ def test_unavailable_lookup_uses_fallback_without_echoing_private_error(tmp_path
     fallback.write_text('{"tests/test_a.py": 1}')
     output = tmp_path / "snapshot.json"
 
-    def unavailable(endpoint):
+    def unavailable(endpoint, **kwargs):
         raise subprocess.CalledProcessError(1, ["gh"], stderr="private response")
 
     monkeypatch.setattr(split, "github_api", unavailable)
@@ -268,7 +316,7 @@ def test_tracked_test_files_match_the_workflow_selection() -> None:
 
 
 def test_lookup_fallback_snapshot_is_shared_and_covers_every_file_once(tmp_path: Path, monkeypatch) -> None:
-    def unavailable(endpoint: str) -> bytes:
+    def unavailable(endpoint: str, **kwargs) -> bytes:
         raise subprocess.CalledProcessError(1, ["gh", "api", endpoint], stderr="private response")
 
     monkeypatch.setattr(split, "github_api", unavailable)
@@ -423,14 +471,14 @@ def test_bad_sample_does_not_hide_later_valid_sample(tmp_path, monkeypatch, fail
     _api(monkeypatch)
     valid_api = split.github_api
 
-    def api(endpoint):
+    def api(endpoint, **kwargs):
         if endpoint.endswith("/3/zip"):
             if failure == "download error":
                 raise subprocess.CalledProcessError(1, ["gh"], stderr="private response")
             if failure == b"bad json":
                 return _zip(b"{")
             return failure
-        return valid_api(endpoint)
+        return valid_api(endpoint, **kwargs)
 
     monkeypatch.setattr(split, "github_api", api)
     fallback = tmp_path / "old.json"
@@ -483,6 +531,18 @@ def test_archive_download_is_spooled_and_size_checked(monkeypatch, oversize) -> 
             split.github_api("repos/owner/repo/actions/artifacts/2/zip")
     else:
         assert split.github_api("repos/owner/repo/actions/artifacts/2/zip") == payload
+        lookup = split.TimingLookup()
+        lookup.calls = split.MAX_LOOKUP_CALLS
+        with pytest.raises(ValueError, match="budget"):
+            lookup.read("unused")
+        lookup.calls = 0
+        lookup.bytes = split.MAX_LOOKUP_BYTES
+        with pytest.raises(ValueError, match="budget"):
+            lookup.read("unused")
+        lookup.bytes = 0
+        monkeypatch.setattr(split.time, "monotonic", lambda: lookup.started + split.LOOKUP_SECONDS)
+        with pytest.raises(ValueError, match="budget"):
+            lookup.read("unused")
 
 
 def test_decide_uses_only_the_shared_refresh_result(capsys) -> None:

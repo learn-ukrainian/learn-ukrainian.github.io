@@ -80,6 +80,10 @@ def test_split_pins_history_files_to_the_history_shard() -> None:
     durations = {"tests/test_a.py": 10.0, "tests/test_b.py": 6.0, "tests/test_c.py": 5.0, "tests/test_d.py": 1.0}
     shards = assign(list(durations), durations, 2, pinned=["tests/test_d.py", "tests/test_c.py"])
     assert HISTORY_SHARD == 1
+    # A measured zero still belongs to exactly one shard, including a history pin.
+    zero = assign(list(durations), {name: 0.0 for name in durations}, 16, pinned=["tests/test_d.py"])
+    assert sorted(name for shard in zero for name in shard) == sorted(durations)
+    assert "tests/test_d.py" in zero[0]
     # d and c (6) start shard 1; a(10) goes to the empty shard 2; b(6) joins shard 1 (6 < 10).
     assert shards == [["tests/test_b.py", "tests/test_c.py", "tests/test_d.py"], ["tests/test_a.py"]]
     with pytest.raises(ValueError, match=re.escape("pinned files are not in the input: tests/test_gone.py")):

@@ -17,10 +17,10 @@ the split, so the list cannot go stale silently.
 
     python -m scripts.ci.split_tests durations junit/*.xml > scripts/ci/pytest-file-durations.json
 
-``refresh`` freezes median weights from the last 20 available successful
-merge-group timing artifacts, retaining committed weights where observations
-are absent. ci.yml publishes those artifacts only after its full partition
-audit, and distributes one snapshot to the whole matrix. Unavailable telemetry
+``refresh`` freezes median weights from at most 20 examined successful
+merge-group runs, retaining committed weights where observations
+are absent or incompatible with HEAD test-file blobs. ci.yml publishes those
+artifacts only after its full partition audit, and distributes one snapshot to the whole matrix. Unavailable telemetry
 keeps the committed weights inside that one snapshot and exits 0. Shards do
 not choose a fallback themselves: every shard reads the same refresh-job
 result. Success requires the uploaded snapshot (a shard that still cannot
@@ -33,6 +33,7 @@ Stdlib only, so it runs before the project environment is installed.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import math
@@ -41,9 +42,10 @@ import statistics
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 import zlib
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Sequence
 from pathlib import Path
 from xml.etree import ElementTree
@@ -67,6 +69,11 @@ MAX_MEMBER_BYTES = 1024 * 1024
 REFRESH_RESULTS = frozenset({"success", "failure", "cancelled", "skipped"})
 SOURCE_SNAPSHOT = "snapshot"
 SOURCE_COMMITTED = "committed"
+MAX_LOOKUP_BYTES = 32 * 1024 * 1024
+MAX_RESPONSE_BYTES = 8 * 1024 * 1024
+MAX_TREE_ENTRIES = 100_000
+LOOKUP_SECONDS = 120
+MAX_LOOKUP_CALLS = 60
 
 
 class DurationSnapshotRequired(RuntimeError):
@@ -130,39 +137,130 @@ def median_durations(samples: Sequence[dict[str, float]]) -> dict[str, float]:
     return {name: round(statistics.median(values), 3) for name, values in sorted(observations.items())}
 
 
-def github_api(endpoint: str) -> bytes:
-    """Read GitHub with the runner's scoped token; never emit token or response bodies."""
-    if endpoint.endswith("/zip"):
-        # Spool stdout instead of buffering an untrusted download in memory.
-        with tempfile.TemporaryFile() as download:
-            try:
-                github_client.run(["gh", "api", endpoint], check=True, stdout=download, stderr=subprocess.PIPE,
-                                  timeout=30, max_response_bytes=MAX_ARCHIVE_BYTES)
-            except subprocess.CalledProcessError as exc:
-                observation = getattr(exc, "github_result", None)
-                if observation is not None and observation.status == 413:
-                    raise ValueError("timing archive exceeds size limit") from exc
-                raise
-            if download.tell() > MAX_ARCHIVE_BYTES:
-                raise ValueError("timing archive exceeds size limit")
-            download.seek(0)
-            return download.read(MAX_ARCHIVE_BYTES + 1)
-    return github_client.run(["gh", "api", endpoint], check=True, capture_output=True, timeout=30).stdout
+def github_api(endpoint: str, *, timeout: float = 30, max_bytes: int = MAX_RESPONSE_BYTES) -> bytes:
+    """Use the existing scoped client, spooling bounded bodies without logging them."""
+    bound = min(max_bytes, MAX_ARCHIVE_BYTES) if endpoint.endswith("/zip") else max_bytes
+    with tempfile.TemporaryFile() as download:
+        try:
+            github_client.run(["gh", "api", endpoint], check=True, stdout=download, stderr=subprocess.PIPE,
+                              timeout=timeout, max_response_bytes=bound)
+        except subprocess.CalledProcessError as exc:
+            observation = getattr(exc, "github_result", None)
+            if observation is not None and observation.status == 413:
+                raise ValueError("response exceeds size limit") from exc
+            raise
+        if download.tell() > bound:
+            raise ValueError("response exceeds size limit")
+        download.seek(0)
+        return download.read(bound + 1)
 
 
-def archive_durations(payload: bytes) -> dict[str, float]:
+class TimingLookup:
+    """One aggregate deadline and conservative byte/call accounting, including failures."""
+
+    def __init__(self) -> None:
+        self.started = time.monotonic()
+        self.calls = self.bytes = 0
+
+    def read(self, endpoint: str) -> bytes:
+        remaining = LOOKUP_SECONDS - (time.monotonic() - self.started)
+        bound = min(MAX_RESPONSE_BYTES, MAX_LOOKUP_BYTES - self.bytes)
+        if remaining <= 0 or self.calls >= MAX_LOOKUP_CALLS or bound <= 0:
+            raise ValueError("lookup budget exhausted")
+        if endpoint.endswith("/zip"):
+            bound = min(bound, MAX_ARCHIVE_BYTES)
+        self.calls += 1
+        # A failed bounded response may have consumed its entire allocation.
+        self.bytes += bound
+        body = github_api(endpoint, timeout=min(30, remaining), max_bytes=bound)
+        if len(body) > bound:
+            raise ValueError("response exceeds size limit")
+        self.bytes -= bound - len(body)
+        return body
+
+
+def sha1(value: object) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{40}", value) is not None
+
+
+def tree_entries(value: dict, expected: str | None = None) -> dict[str, dict]:
+    """Validate a complete tree response; duplicate or unsafe identities are unknown."""
+    if value.get("truncated") is not False or not sha1(value.get("sha")):
+        raise ValueError("unknown tree completeness")
+    if expected is not None and value["sha"] != expected:
+        raise ValueError("conflicting tree identity")
+    rows = value["tree"]
+    if not isinstance(rows, list) or len(rows) > MAX_TREE_ENTRIES:
+        raise ValueError("invalid tree entries")
+    entries = {}
+    for row in rows:
+        name = row["path"]
+        if (not isinstance(name, str) or not name or any(p in ("", ".", "..") for p in name.split("/"))
+                or any(ord(c) < 32 for c in name) or name in entries or not sha1(row.get("sha"))
+                or (row.get("type"), row.get("mode")) not in {
+                    ("blob", "100644"), ("blob", "100755"), ("blob", "120000"),
+                    ("tree", "040000"), ("commit", "160000")}):
+            raise ValueError("invalid tree identity")
+        entries[name] = row
+    return entries
+
+
+def git_tree_sha(rows: list[tuple[str, dict]]) -> str:
+    rows = sorted(rows, key=lambda item: (item[0] + ("/" if item[1]["type"] == "tree" else "")).encode())
+    body = b"".join(r["mode"].lstrip("0").encode() + b" " + n.encode() + b"\0" + bytes.fromhex(r["sha"]) for n, r in rows)
+    return hashlib.sha1(b"tree " + str(len(body)).encode() + b"\0" + body).hexdigest()
+
+
+def test_blob_map(value: dict, expected: str) -> dict[str, str]:
+    """Rebuild every Git tree hash to reject omitted descendants, even without truncation.
+
+    Blob equality detects changed test files, not shared fixtures, markers,
+    dependencies or application behavior. It is not workload-equivalence proof.
+    """
+    entries = tree_entries(value, expected)
+    children: dict[str, list[tuple[str, dict]]] = defaultdict(list)
+    trees = {"": expected, **{p: r["sha"] for p, r in entries.items() if r["type"] == "tree"}}
+    for path, row in entries.items():
+        parent, _, name = path.rpartition("/")
+        if parent not in trees:
+            raise ValueError("incomplete recursive tree")
+        children[parent].append((name, row))
+    for parent, digest in trees.items():
+        if git_tree_sha(children[parent]) != digest:
+            raise ValueError("incomplete or conflicting recursive tree")
+    return {"tests/" + p: r["sha"] for p, r in entries.items() if r["type"] == "blob" and r["mode"] in {"100644", "100755"}}
+
+
+def checkout_test_blobs() -> dict[str, str]:
+    """Read HEAD's tracked identities once; sparse checkout needs no materialization."""
+    raw = subprocess.check_output(["git", "ls-tree", "-rz", "HEAD", "--", "tests"], timeout=30)
+    result = {}
+    for entry in raw.decode().split("\0"):
+        if entry:
+            metadata, path = entry.split("\t", 1)
+            mode, kind, digest = metadata.split()
+            if kind == "blob" and mode in {"100644", "100755"}:
+                result[path] = digest
+    return result
+
+
+def archive_json(payload: bytes, name: str) -> object:
     """Read one bounded JSON member; never extract an archive to the checkout."""
     if len(payload) > MAX_ARCHIVE_BYTES:
         raise ValueError("timing archive exceeds size limit")
     with zipfile.ZipFile(io.BytesIO(payload)) as archive:
-        members = [info for info in archive.infolist() if info.filename == "pytest-file-durations.json"]
+        members = [info for info in archive.infolist() if info.filename == name]
         if len(members) != 1 or members[0].file_size > MAX_MEMBER_BYTES:
             raise ValueError("expected one bounded timing member")
         with archive.open(members[0]) as member:
             data = member.read(MAX_MEMBER_BYTES + 1)
         if len(data) > MAX_MEMBER_BYTES:
             raise ValueError("timing member exceeds size limit")
-    return validate_durations(json.loads(data))
+    return json.loads(data)
+
+
+def archive_durations(payload: bytes) -> dict[str, float]:
+    return validate_durations(archive_json(payload, "pytest-file-durations.json"))
 
 
 def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) -> int:
@@ -176,50 +274,82 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
         raise ValueError("expected owner/repo and a sample limit in 1..20")
     recorded = validate_durations(json.loads(fallback.read_text(encoding="utf-8")))
     samples = []
+    lookup = TimingLookup()
+    counts: Counter = Counter()
     try:
-        runs = json.loads(
-            github_api(f"repos/{repo}/actions/workflows/ci.yml/runs?event=merge_group&status=success&per_page=100")
-        )["workflow_runs"]
-        listing = json.loads(github_api(f"repos/{repo}/actions/artifacts?name={TIMING_ARTIFACT}&per_page=100"))
-        by_run: dict[int, list[dict]] = defaultdict(list)
-        for artifact in listing["artifacts"]:
-            if artifact["name"] == TIMING_ARTIFACT and not artifact["expired"]:
-                by_run[artifact["workflow_run"]["id"]].append(artifact)
-    except (subprocess.SubprocessError, OSError, ValueError, KeyError, TypeError):
+        current = checkout_test_blobs()
+        runs = json.loads(lookup.read(
+            f"repos/{repo}/actions/workflows/ci.yml/runs?event=merge_group&status=success&per_page=20"
+        ))["workflow_runs"]
+        if not isinstance(runs, list):
+            raise ValueError("invalid run listing")
+        by_run: dict[int, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
+        for name in (TIMING_ARTIFACT, "ci-tested-tree"):
+            listing = json.loads(lookup.read(f"repos/{repo}/actions/artifacts?name={name}&per_page=100"))
+            if not isinstance(listing["artifacts"], list) or len(listing["artifacts"]) > 100:
+                raise ValueError("invalid artifact listing")
+            for artifact in listing["artifacts"]:
+                if artifact["name"] == name and not artifact["expired"]:
+                    by_run[artifact["workflow_run"]["id"]][name].append(artifact)
+    except (subprocess.SubprocessError, OSError, ValueError, KeyError, TypeError, AttributeError):
         print("duration lookup unavailable; retaining committed fallback", file=sys.stderr)
         runs = []
-        by_run = defaultdict(list)
-    for run in runs:
+    for run in runs[:20]:
+        counts["candidates_examined"] += 1
+        phase = "identity_unknown"
         try:
-            if not isinstance(run, dict):
-                continue
-            if (
-                run.get("event") != "merge_group"
-                or run.get("status") != "completed"
-                or run.get("conclusion") != "success"
-                or run.get("run_attempt") != 1
-                or run.get("path") != ".github/workflows/ci.yml"
-            ):
+            if (not isinstance(run, dict) or run.get("event") != "merge_group"
+                    or run.get("status") != "completed" or run.get("conclusion") != "success"
+                    or run.get("run_attempt") != 1 or run.get("path") != ".github/workflows/ci.yml"):
+                counts["ineligible"] += 1
                 continue
             artifacts = by_run[run["id"]]
-            if len(artifacts) != 1:
+            if any(len(artifacts[n]) != 1 for n in (TIMING_ARTIFACT, "ci-tested-tree")):
+                counts["artifact_missing_or_duplicate"] += 1
                 continue
-            payload = github_api(f"repos/{repo}/actions/artifacts/{int(artifacts[0]['id'])}/zip")
-            samples.append(archive_durations(payload))
+            head = run["head_sha"]
+            if not sha1(head) or any(artifacts[n][0]["workflow_run"]["head_sha"] != head for n in artifacts):
+                raise ValueError("conflicting artifact identity")
+            record = archive_json(lookup.read(
+                f"repos/{repo}/actions/artifacts/{int(artifacts['ci-tested-tree'][0]['id'])}/zip"
+            ), "tested-tree.json")
+            if (record["sha"] != head or record["run_id"] != run["id"] or record["run_attempt"] != 1
+                    or record["event"] != "merge_group" or record["tier"] != "full" or not sha1(record["tree"])):
+                raise ValueError("conflicting tested identity")
+            commit = json.loads(lookup.read(f"repos/{repo}/git/commits/{head}"))
+            if commit["sha"] != head or commit["tree"]["sha"] != record["tree"]:
+                raise ValueError("conflicting commit identity")
+            root = tree_entries(json.loads(lookup.read(f"repos/{repo}/git/trees/{record['tree']}")), record["tree"])
+            if any("/" in p for p in root) or git_tree_sha(list(root.items())) != record["tree"]:
+                raise ValueError("incomplete root tree")
+            subtree = root["tests"]
+            if subtree["type"] != "tree":
+                raise ValueError("missing test tree")
+            identity = test_blob_map(json.loads(lookup.read(
+                f"repos/{repo}/git/trees/{subtree['sha']}?recursive=1"
+            )), subtree["sha"])
+            counts["identities_resolved"] += 1
+            phase = "artifact_invalid"
+            observed = archive_durations(lookup.read(
+                f"repos/{repo}/actions/artifacts/{int(artifacts[TIMING_ARTIFACT][0]['id'])}/zip"
+            ))
+            compatible = {}
+            for name, seconds in observed.items():
+                reason = "missing_identity" if name not in current or name not in identity else (
+                    "admitted" if current[name] == identity[name] else "changed_blob")
+                counts[reason] += 1
+                if reason == "admitted":
+                    compatible[name] = seconds
+            if compatible:
+                samples.append(compatible)
             if len(samples) == limit:
                 break
-        except (
-            subprocess.SubprocessError,
-            OSError,
-            ValueError,
-            KeyError,
-            TypeError,
-            zipfile.BadZipFile,
-            RuntimeError,
-            EOFError,
-            zlib.error,
-        ):
+        except (subprocess.SubprocessError, OSError, ValueError, KeyError, TypeError,
+                zipfile.BadZipFile, RuntimeError, EOFError, zlib.error, AttributeError):
+            counts[phase] += 1
             print("duration sample unavailable or invalid; skipping sample", file=sys.stderr)
+    print("duration lookup: " + json.dumps({**counts, "calls": lookup.calls, "bytes": lookup.bytes,
+          "elapsed": round(time.monotonic() - lookup.started, 3)}, sort_keys=True))
     # Preserve older measurements for files absent from the sampled runs.
     snapshot = {**recorded, **median_durations(samples)}
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -342,7 +472,7 @@ Related: .github/workflows/ci.yml; issues #9065 and #11040.
     refresh.add_argument(
         "--fallback", type=Path, default=DEFAULT_DURATIONS, help="offline weights (default: committed JSON)"
     )
-    refresh.add_argument("--limit", type=int, default=20, help="successful timing samples, 1..20 (default: 20)")
+    refresh.add_argument("--limit", type=int, default=20, help="successful timing samples from at most 20 examined runs, 1..20 (default: 20)")
     args = parser.parse_args(argv)
 
     if args.command == "durations":
