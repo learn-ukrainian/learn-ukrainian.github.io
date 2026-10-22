@@ -32,4 +32,5 @@ wake timers die with this session and must be re-armed by the next one.
 
 Every line is tool-backed. Anything not checked says NOT CHECKED and names the command.
 Operator words, host details and credentials never go into a public brief (core.md P8);
-the gitignored state file is the only place for private operational detail.
+private operational detail belongs only in the gitignored state file or the private infra
+repository.

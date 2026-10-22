@@ -37,8 +37,7 @@ memory or this file.
   run ID, SHA) or is labelled NOT CHECKED with the command that would settle it. A documented
   limitation is a claim to probe, not a fact to route around. One observation is not a
   finding.
-- Never wait for a quota reset. If the dispatcher will not seat a reviewer, open the PR and
-  let the automatic review trigger seat it, or use a documented override
+- Never wait for a quota reset: seat the next eligible reviewer the resolver returns
   ([recipes](references/recipes.md), § Reviewer seating).
 - Timestamps come only from `date -u`, taken in the same command that uses them.
 
@@ -50,8 +49,12 @@ Policy lives in the rules, not here. Read it fresh before every routing or budge
   seats, security floor) and `agents_extensions/shared/rules/model-assignment.md`.
 - `scripts/config/model_catalog.yaml` for model facts and `review_ladders`; resolve code
   reviewers with `.venv/bin/python -m scripts.review.closeout_cli resolve-reviewer`.
-- `GET http://127.0.0.1:8765/api/rules` for the served ruleset.
+- The served ruleset (`/api/rules` on the Monitor API).
 - Standing orders that the rules do not yet carry are in the state file's standing-orders
   block; they bind until the rules absorb them. Catalog prose is not how the fleet operates:
   when the catalog and a standing order disagree, the standing order wins and the mismatch is
   a rules-change item.
+
+## Operational recipes
+
+Operational recipes for the CTO seat are kept in the private infra repository (docs/cto/operations.md).
