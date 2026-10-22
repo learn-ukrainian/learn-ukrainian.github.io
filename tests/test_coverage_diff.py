@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -12,8 +13,11 @@ from scripts.ci.coverage_diff import main
 @pytest.fixture
 def reports(tmp_path):
     def write(name, files):
-        path = tmp_path / name
+        directory = tmp_path / name
+        directory.mkdir()
+        path = directory / "coverage.json"
         path.write_text(json.dumps({"meta": {"branch_coverage": True}, "files": files}))
+        (directory / "manifest.json").write_text(json.dumps({"complete": True}))
         return str(path)
 
     return write
@@ -79,6 +83,7 @@ def test_unconditional_arc_loss_is_visible_in_enriched_reports(reports, capsys):
 def test_malformed_or_empty_reports_fail_closed(tmp_path, reports, contents, capsys):
     bad = tmp_path / "bad.json"
     bad.write_text(contents)
+    (tmp_path / "manifest.json").write_text(json.dumps({"complete": True}))
     valid = reports("valid.json", {"scripts/a.py": measured([1], [])})
     assert main([str(bad), valid]) == 2
     assert "coverage_diff:" in capsys.readouterr().err
@@ -108,6 +113,23 @@ def test_different_arc_formats_cannot_silently_compare(reports):
 
 def test_missing_input_is_an_error(tmp_path):
     assert main([str(tmp_path / "absent"), str(tmp_path / "absent")]) == 2
+
+
+@pytest.mark.parametrize("side", ["baseline", "candidate"])
+@pytest.mark.parametrize("contents", [None, "not json", "null", "[]", "{}", '{"complete": false}', '{"complete": 1}'])
+def test_incomplete_or_missing_manifest_cannot_approve_a_prune(reports, side, contents, capsys):
+    """A partial baseline can hide losses even when its branch report is nonempty."""
+    paths = {name: reports(name, {"scripts/a.py": measured([1], [])}) for name in ("baseline", "candidate")}
+    manifest = Path(paths[side]).with_name("manifest.json")
+    if contents is None:
+        manifest.unlink()
+    else:
+        manifest.write_text(contents)
+    assert main([paths["baseline"], paths["candidate"]]) == 2
+    result = capsys.readouterr()
+    assert result.out == ""
+    assert str(manifest) in result.err
+    assert "complete: true" in result.err
 
 
 def test_help_explains_usage_output_and_status(capsys):

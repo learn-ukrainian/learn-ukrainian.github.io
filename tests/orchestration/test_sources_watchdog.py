@@ -419,6 +419,39 @@ HUNG_CHILD = textwrap.dedent(
 )
 
 
+RUNABLE_AT_READINESS_CHILD = textwrap.dedent(
+    """\
+    import hashlib, sys, threading, time
+    from pathlib import Path
+    sys.path.insert(0, sys.argv[2])
+    from scripts.rag.hang_diagnostics import install_signal_dump
+
+    install_signal_dump(Path(sys.argv[1]))
+
+    def burn(seconds):
+        # pbkdf2 releases the GIL, so both threads stay in state=R at once; a
+        # pure-Python spin leaves one thread waiting for the GIL (state=S).
+        end = time.monotonic() + seconds
+        while time.monotonic() < end:
+            hashlib.pbkdf2_hmac("sha256", b"x" * 32, b"y", 200000)
+
+    lock = threading.Lock()
+
+    def worker_blocked_on_shared_lock():
+        print("hung", flush=True)
+        # Keep the worker runnable after announcing readiness: only a capture that
+        # polls the real thread state can wait until it blocks on the shared lock.
+        burn(1.5)
+        lock.acquire()
+
+    lock.acquire()
+    threading.Thread(target=worker_blocked_on_shared_lock, daemon=True).start()
+    burn(1.5)
+    lock.acquire()
+    """
+)
+
+
 def _spawn(script: str, *args: str) -> subprocess.Popen[str]:
     return subprocess.Popen(
         [sys.executable, "-c", script, *args],
@@ -428,14 +461,50 @@ def _spawn(script: str, *args: str) -> subprocess.Popen[str]:
     )
 
 
+def _thread_states(pid: int) -> dict[str, str]:
+    states: dict[str, str] = {}
+    try:
+        tasks = list((Path("/proc") / str(pid) / "task").iterdir())
+    except OSError:
+        return states
+    for task in tasks:
+        try:
+            stat = (task / "stat").read_text(encoding="utf-8")
+        except OSError:
+            continue
+        # The state follows the parenthesised comm, which may itself hold spaces.
+        states[task.name] = stat.rsplit(")", 1)[1].split()[0]
+    return states
+
+
+def _wait_until_child_blocked(pid: int, *, timeout_s: float = 10.0) -> None:
+    """Wait until no thread of the child is runnable, so the capture sees it blocked.
+
+    The announcing child deadlocks on its shared lock and never runs again, so once
+    every thread has left state R the later /proc snapshot cannot race back to R.
+    """
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
+        states = _thread_states(pid)
+        if states and "R" not in states.values():
+            return
+        time.sleep(0.01)
+    raise AssertionError(f"child pid {pid} threads never blocked: {_thread_states(pid)}")
+
+
+def _capture_hung_dump(child: subprocess.Popen[str], dump_dir: Path) -> Path:
+    assert child.stdout is not None
+    assert child.stdout.readline().strip() == "hung"
+    _wait_until_child_blocked(child.pid)
+    return wd.capture_incident_dump(child.pid, dump_dir, 1, time.time(), reason="forced hang")
+
+
 def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
     """AC-02: a hung process yields every thread's Python stack in the incident."""
     dump_dir = tmp_path / "dumps"
     child = _spawn(HUNG_CHILD, str(dump_dir), str(PROJECT_ROOT))
     try:
-        assert child.stdout is not None
-        assert child.stdout.readline().strip() == "hung"
-        incident = wd.capture_incident_dump(child.pid, dump_dir, 1, time.time(), reason="forced hang")
+        incident = _capture_hung_dump(child, dump_dir)
         stacks = (incident / "python-stacks.txt").read_text(encoding="utf-8")
         assert "worker_blocked_on_shared_lock" in stacks
         assert "<string>" in stacks and "Current thread" in stacks
@@ -445,6 +514,24 @@ def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
         assert "state=S" in (incident / "proc.txt").read_text(encoding="utf-8")
         assert oct((incident / "python-stacks.txt").stat().st_mode & 0o777) == "0o600"
         assert child.poll() is None, "the dump must not kill the process"
+    finally:
+        child.kill()
+        child.wait(timeout=10)
+
+
+def test_capture_waits_until_an_announced_hang_is_really_blocked(tmp_path: Path) -> None:
+    """A child still runnable after announcing readiness must never be captured mid-run (#11369)."""
+    dump_dir = tmp_path / "dumps"
+    child = _spawn(RUNABLE_AT_READINESS_CHILD, str(dump_dir), str(PROJECT_ROOT))
+    try:
+        incident = _capture_hung_dump(child, dump_dir)
+        proc_text = (incident / "proc.txt").read_text(encoding="utf-8")
+        assert "state=S" in proc_text
+        assert "state=R" not in proc_text, "the capture raced a runnable thread"
+        stacks = (incident / "python-stacks.txt").read_text(encoding="utf-8")
+        assert "worker_blocked_on_shared_lock" in stacks
+        assert stacks.count("Thread 0x") + stacks.count("Current thread 0x") >= 2
+        assert child.poll() is None
     finally:
         child.kill()
         child.wait(timeout=10)

@@ -100,7 +100,10 @@ jobs:
     needs:
     - prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Two workers need twice the previous job budget; the per-test budget is unchanged.
+    # Residual: native code that never returns to Python can defer a signal
+    # timeout until the 90-minute job limit, losing the whole shard's data.
+    timeout-minutes: 90
     permissions:
       contents: read
       actions: read
@@ -127,8 +130,12 @@ jobs:
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: '5'
+      # Python 3.12.14 + coverage 7.16.2: sysmon cannot measure branches.
+      # https://coverage.readthedocs.io/en/7.16.2/config.html#run-core
       COVERAGE_CORE: ctrace
       COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage
+      # Bound branch-tracing memory pressure; -n logical still selects the same tests.
+      PYTEST_XDIST_AUTO_NUM_WORKERS: '2'
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
@@ -156,7 +163,7 @@ jobs:
     - name: Keep measurement tooling outside the measured checkout
       run: |
         mkdir -p "$RUNNER_TEMP/coverage-ref"
-        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
+        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage_ref_environment.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
         printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - run: bash scripts/ci/test_env.sh start postgres
     - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
@@ -174,6 +181,10 @@ jobs:
         save-cache: false
     - run: bash scripts/ci/test_env.sh wait
       timeout-minutes: 5
+    - name: Isolate coverage storage from import-smoke guards
+      # patch=subprocess uses interpreter startup, so this must also reach
+      # children that deliberately clear PYTHONPATH or change their cwd.
+      run: .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"
     - name: Download pytest duration snapshot
       env:
         GH_TOKEN: ${{ github.token }}
@@ -230,6 +241,8 @@ jobs:
         snapshot=ci-artifacts/pytest-file-durations.json
         durations=$(python3 -m scripts.ci.split_tests duration-source \
           --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
+        # Run 39690968174: integration-check setup alone took 119.06s, while
+        # other tests hit 120s. Allow 5x CI's budget under branch tracing (#11226).
         git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
           | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
             --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
@@ -237,16 +250,11 @@ jobs:
           --output ci-artifacts/raw --shard "$SHARD" -- tests \
           --cov=scripts --cov=.mcp --cov=agents_extensions --cov=packages \
           --cov-branch --cov-report= --cov-config="$COVERAGE_RCFILE" -n logical --dist=worksteal --max-worker-restart=0 \
-          --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
+          --timeout=600 --timeout-method=signal -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
           --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
         # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
         .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
           --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
-    - name: List failing tests in job summary
-      if: failure()
-      env:
-        SHARD: ${{ matrix.shard }}
-      run: python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
     - name: Upload pytest JUnit report
       if: ${{ !cancelled() }}
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
