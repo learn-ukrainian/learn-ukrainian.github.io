@@ -63,6 +63,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.fleet import ignored_task_output
 from scripts.fleet.regenerable_output import _COPY_PROOF_RUN, copy_proof_run
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
 from scripts.orchestration.dead_worker_state import worker_liveness
@@ -1582,7 +1583,35 @@ def _dispatch_task_id_for_path(repo_root: Path, path: Path) -> str | None:
         relative = path.resolve().relative_to(dispatch_root)
     except ValueError:
         return None
-    return relative.parts[1] if len(relative.parts) == 2 else None
+    if len(relative.parts) != 2:
+        return None
+    leaf = relative.parts[1]
+    if _task_record(repo_root, leaf) is not None:
+        return leaf
+    # Dispatch can strip an agent prefix or attach a differently named task.
+    # A directory label is not its task ID; use the existing exact-path cohort
+    # proof, never a guessed suffix or the newest matching task record.
+    tasks_dir = control_plane_root(repo_root) / "batch_state" / "tasks"
+    try:
+        matches = ignored_task_output.matching_worktree_records(
+            path, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        if not matches:
+            return leaf
+        creator_path, creator = ignored_task_output.reused_worktree_creator(
+            matches, path, repo_root=repo_root, tasks_dir=tasks_dir
+        )
+        identity = creator.get("task_id")
+        if (
+            isinstance(identity, str)
+            and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity)
+            and creator_path == tasks_dir / f"{identity}.json"
+            and all(isinstance(member.get("run_nonce"), str) and member["run_nonce"].strip() for _, member in matches)
+        ):
+            return identity
+    except (OSError, ValueError, RuntimeError):
+        pass
+    return leaf
 
 
 def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
@@ -2687,6 +2716,14 @@ def _resolve_activity_probe(
         except FileNotFoundError:
             raw_payload = None
         if raw_payload is None:
+            # Missing leaf metadata may hide a reused continuation. Ambiguous
+            # ownership must not become an unattributed transport fallback.
+            tasks_dir = control_plane_root(repo_root) / "batch_state" / "tasks"
+            matches = ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=repo_root, publish_cache=False
+            )
+            if matches:
+                return None, f"{probe.reason}; local_task_cohort_unproven"
             reaper_lifecycle.append_journal(
                 repo_root,
                 "activity-probe-unattributed",
@@ -2699,6 +2736,25 @@ def _resolve_activity_probe(
         payload = json.loads(raw_payload)
         if not isinstance(payload, dict) or payload.get("task_id") != task_id:
             return None, f"{probe.reason}; local_task_identity_mismatch"
+        if task_id != info.path.name:
+            matches = ignored_task_output.matching_worktree_records(
+                info.path, task_file.parent, repo_root=repo_root, publish_cache=False
+            )
+            creator_path, creator = ignored_task_output.reused_worktree_creator(
+                matches, info.path, repo_root=repo_root, tasks_dir=task_file.parent
+            )
+            if creator_path != task_file or creator != payload:
+                return None, f"{probe.reason}; local_task_cohort_changed"
+            for _, member in matches:
+                pid = member.get("pid")
+                if (
+                    not isinstance(member.get("run_nonce"), str)
+                    or not member["run_nonce"].strip()
+                    or (pid is not None and (type(pid) is not int or pid <= 0))
+                    or _task_pid_alive(member)
+                    or member.get("status") not in _TERMINAL_DISPATCH_STATUSES
+                ):
+                    return None, f"{probe.reason}; local_task_cohort_unsettled"
         recorded_path = payload.get("worktree_path") or payload.get("cwd")
         if not isinstance(recorded_path, str) or not recorded_path:
             return None, f"{probe.reason}; local_task_binding_missing"

@@ -1314,7 +1314,7 @@ def test_active_probe_failure_is_typed_in_skip_and_journal(tmp_path, monkeypatch
 @pytest.mark.parametrize("pid", [None, 5_000_299])
 def test_active_probe_transport_fallback_reaps_settled_checkout(tmp_path, monkeypatch, failure, apply, pid):
     repo = init_repo(tmp_path)
-    worktree, _, _ = _probe_fixture(repo, monkeypatch, failure, pid=pid)
+    worktree, task_file, record = _probe_fixture(repo, monkeypatch, failure, pid=pid)
     if pid is not None:
         real_kill = os.kill
 
@@ -1324,6 +1324,19 @@ def test_active_probe_transport_fallback_reaps_settled_checkout(tmp_path, monkey
             return real_kill(target, sig)
 
         monkeypatch.setattr(os, "kill", dead_task)
+    info = rw.WorktreeInfo(worktree, "codex/probe-fallback", git(worktree, "rev-parse", "HEAD"))
+    # Preserve literal-leaf fallback coverage before attaching the continuation.
+    assert rw._resolve_activity_probe(repo, info, rw._read_active_task_probe()) == (set(), None)
+    record.update(task_id="codex-probe-fallback", agent="codex", run_nonce="creator", worktree_reused=False)
+    record["ignored_output_baseline"] = rw.ignored_task_output.creation_inventory(
+        worktree, primary=repo, task_id=record["task_id"], run_nonce=record["run_nonce"]
+    )
+    record["worktree_branch"] = "codex/probe-fallback"
+    task_file.unlink()
+    task_file.with_name("codex-probe-fallback.json").write_text(json.dumps(record))
+    successor = dict(record, task_id="review-continuation", run_nonce="successor", worktree_reused=True)
+    task_file.with_name("review-continuation.json").write_text(json.dumps(successor))
+    assert rw._dispatch_task_id(repo, info) == "codex-probe-fallback"
     result = result_for(
         rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), include_terminal_dispatches=True),
         worktree,
@@ -1384,6 +1397,19 @@ def test_active_probe_fallback_retains_uncertain_record(tmp_path, monkeypatch, u
     assert result.action == "skipped"
     assert "active_task_probe_timeout" in result.reason
     assert "local_task_" in result.reason
+    assert worktree.exists()
+    # Exact-path attribution must also refuse an ambiguous creator cohort,
+    # rather than treating a missing directory-leaf record as proof of idleness.
+    task_file.unlink()
+    record.update(task_id="creator-one", worktree_path=str(worktree), run_nonce="one", worktree_reused=False)
+    record["ignored_output_baseline"] = rw.ignored_task_output.creation_inventory(
+        worktree, primary=repo, task_id=record["task_id"], run_nonce=record["run_nonce"]
+    )
+    task_file.with_name("creator-one.json").write_text(json.dumps(record))
+    task_file.with_name("creator-two.json").write_text(json.dumps(dict(record, task_id="creator-two", run_nonce="two")))
+    result = result_for(rw.reap_worktrees(repo_root=repo, live_cwds=set(), include_terminal_dispatches=True), worktree)
+    assert result.action == "skipped"
+    assert "local_task_cohort_unproven" in result.reason
     assert worktree.exists()
 
 

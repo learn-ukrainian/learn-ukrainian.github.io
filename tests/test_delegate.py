@@ -14521,6 +14521,36 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     assert Path(state["cwd"]) == sibling_wt
     assert Path(state["worktree_path"]) == sibling_wt
 
+    # A manual read-only attach must inherit the sibling's fresh-provisioning
+    # boundary even when the public repository has all shared resources.
+    (primary / "node_modules").mkdir()
+    (primary / "site/node_modules").mkdir(parents=True)
+    (primary / "data").mkdir()
+    for name in ("sources.db", "vesum.db"):
+        (primary / "data" / name).touch()
+    unrelated = sibling_wt / "custom-link"
+    unrelated.symlink_to(sibling / ".git/info/exclude")
+    (sibling_wt / "tracked.txt").write_text("preserve modified source\n")
+    owned = sibling_wt / "owned-directory"
+    owned.mkdir()
+    (owned / "source.txt").write_text("preserve existing source")
+    before = subprocess.run(
+        ["git", "status", "--porcelain"], cwd=sibling_wt, check=True, capture_output=True, text=True, timeout=30
+    ).stdout
+    args.task_id = "sibling-cwd-readonly"
+    args.mode = "read-only"
+    assert delegate.cmd_dispatch(args) == 0
+    for relative in ("node_modules", "site/node_modules", "data/sources.db", "data/vesum.db"):
+        assert not (sibling_wt / relative).exists()
+        assert not (sibling_wt / relative).is_symlink()
+    assert unrelated.is_symlink()
+    assert unrelated.readlink() == sibling / ".git/info/exclude"
+    assert (owned / "source.txt").read_text() == "preserve existing source"
+    assert (sibling_wt / "tracked.txt").read_text() == "preserve modified source\n"
+    assert subprocess.run(
+        ["git", "status", "--porcelain"], cwd=sibling_wt, check=True, capture_output=True, text=True, timeout=30
+    ).stdout == before
+
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
 def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(
@@ -18963,6 +18993,8 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    (main / "node_modules").mkdir()
+    (main / "site/node_modules").mkdir(parents=True)
     (main / ".git" / "info" / "exclude").write_text("*.db\n", encoding="utf-8")
     (main / "data").mkdir()
     for name in ("vesum.db", "sources.db"):
@@ -19015,6 +19047,10 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
         assert withdrawals == []
         assert at_spawn == [["other.db", "sources.db", "vesum.db"]]
     assert (dispatch_wt / "data" / "other.db").resolve() == other.resolve()
+    assert (dispatch_wt / "node_modules").is_symlink()
+    assert (dispatch_wt / "node_modules").resolve() == main / "node_modules"
+    assert (dispatch_wt / "site/node_modules").is_symlink()
+    assert (dispatch_wt / "site/node_modules").resolve() == main / "site/node_modules"
 
 
 #: A --review-attempt prompt must print the ids its seat echoes (#8996); these match rev-test / att-test.

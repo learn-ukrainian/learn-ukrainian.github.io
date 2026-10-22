@@ -26,6 +26,12 @@ def test_systemd_templates_have_no_host_facts() -> None:
             continue
         text = path.read_text(encoding="utf-8")
         assert_no_host_facts(text, path.name)
+    for path in (
+        PACKAGING / "learn-ukrainian-worktree-gc.service",
+        DROPINS / "learn-ukrainian-worktree-gc.service.d/data-volume.conf",
+    ):
+        command = next(line for line in path.read_text().splitlines() if line.startswith("ExecStart=/"))
+        assert command.endswith("--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply")
 
 
 @pytest.mark.repo_wide
