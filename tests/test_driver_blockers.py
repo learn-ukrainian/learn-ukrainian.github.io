@@ -1161,8 +1161,8 @@ def test_configured_finite_threshold_and_scoped_terminal_scan(tmp_path, monkeypa
     from datetime import UTC, datetime
 
     monkeypatch.setenv(blockers.FINALIZE_AGE_ENV, "10")
-    finalize_task(tmp_path)
-    finalize_task(tmp_path, task_id="other-driver", initiator="atlas")
+    finalize_task(tmp_path, prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
+    finalize_task(tmp_path, task_id="other-driver", initiator="atlas", prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
     finalize_task(tmp_path, task_id="other-stream", task_lifecycle={"identity": {"stream_epic": 4387}})
     finalize_task(tmp_path, task_id="live", status="running")
     finalize_task(tmp_path, task_id="delivered", status="done")
@@ -1252,9 +1252,9 @@ def test_driver_snapshot_automatically_reports_aged_work_and_records_exact_post(
     monkeypatch.delenv(blockers.FINALIZE_AGE_ENV, raising=False)
     root = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(root))
-    finalize_task(root)
+    finalize_task(root, prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
     finalize_task(root, task_id="nested", task_lifecycle={"identity": {"stream_epic": 9737}})
-    finalize_task(root, task_id="foreign-driver", initiator="atlas")
+    finalize_task(root, task_id="foreign-driver", initiator="atlas", prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
     finalize_task(root, task_id="foreign-stream", task_lifecycle={"identity": {"stream_epic": 4387}})
     finalize_task(root, task_id="live", status="running")
     current = {"epic": selector, "complete": True, "items": [item()]}
