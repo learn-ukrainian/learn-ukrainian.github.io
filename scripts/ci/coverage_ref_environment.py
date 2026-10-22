@@ -25,13 +25,18 @@ def install() -> None:
     import coverage.sqlitedb
 
     storage_code = {coverage.sqldata.__file__, coverage.sqlitedb.__file__}
+    data_path = Path(data_file).resolve()
     add_hook = sys.addaudithook
 
     def add_measurement_hook(hook):
         def measured_hook(event, args):
             if event in {"os.remove", "sqlite3.connect"} and args and isinstance(args[0], str):
                 path = args[0]
-                if path == data_file or path.startswith(data_file + "."):
+                target = Path(path)
+                if (path == data_file or path.startswith(data_file + ".")) and (
+                    target.resolve().parent == data_path.parent
+                    and (target.name == data_path.name or target.name.startswith(data_path.name + "."))
+                ):
                     # coverage.misc.file_be_gone delegates os.remove; sqlite's
                     # connection event originates in coverage.sqlitedb.
                     frame = sys._getframe(1)
