@@ -14551,6 +14551,29 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
         ["git", "status", "--porcelain"], cwd=sibling_wt, check=True, capture_output=True, text=True, timeout=30
     ).stdout == before
 
+    # Private reuse still withdraws public DB links, under the same lock.
+    (sibling_wt / "data").mkdir()
+    for name in ("sources.db", "vesum.db"):
+        (sibling_wt / "data" / name).symlink_to(primary / "data" / name)
+    args.task_id = "sibling-cwd-readonly-db"
+    assert delegate.cmd_dispatch(args) == 0
+    assert list((sibling_wt / "data").iterdir()) == []
+    assert subprocess.run(
+        ["git", "status", "--porcelain"], cwd=sibling_wt, check=True, capture_output=True, text=True, timeout=30
+    ).stdout == before
+
+    # An aliased parent must refuse before spawn, even with ordinary DB files.
+    (sibling_wt / "data").rmdir()
+    (sibling_wt / "data").symlink_to(primary / "data", target_is_directory=True)
+    args.task_id = "sibling-cwd-readonly-alias"
+    assert delegate.cmd_dispatch(args) == 1
+    assert delegate._read_state(delegate._state_path(args.task_id)) is None
+    for name in ("sources.db", "vesum.db"):
+        assert (primary / "data" / name).read_bytes() == b""
+    assert unrelated.readlink() == sibling / ".git/info/exclude"
+    assert (owned / "source.txt").read_text() == "preserve existing source"
+    assert (sibling_wt / "tracked.txt").read_text() == "preserve modified source\n"
+
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
 def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(

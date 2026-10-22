@@ -15717,6 +15717,10 @@ def _dispatch(
                     # only in a checkout of the public repository.
                     if checkout_repo == public_repo:
                         _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                    else:
+                        _withdraw_primary_database_links(
+                            resolved_wt, _REPO_ROOT, ("data/vesum.db", "data/sources.db")
+                        )
                 except RuntimeError as exc:
                     discard_logs()
                     print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)

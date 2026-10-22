@@ -1635,6 +1635,30 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
     return "unattributed"
 
 
+def _dispatch_monitor_activity_reason(
+    repo_root: Path, info: WorktreeInfo, active_ids: set[str] | None, task_id: str | None
+) -> str | None:
+    """Monitor and local claims are independent protections of the whole cohort."""
+    if not active_ids:
+        return None
+    if task_id is None:
+        return None
+    if task_id in active_ids:
+        return f"active dispatch task-id={task_id}"
+    tasks_dir = control_plane_root(repo_root) / "batch_state" / "tasks"
+    try:
+        matches = ignored_task_output.matching_worktree_records(
+            info.path, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+    except (OSError, ValueError, RuntimeError):
+        return "Monitor task cohort unavailable; checkout preserved"
+    for _, member in matches:
+        identity = member.get("task_id")
+        if isinstance(identity, str) and identity in active_ids:
+            return f"active dispatch task-id={identity}"
+    return None
+
+
 _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
 _GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
@@ -2392,8 +2416,9 @@ def _activity_reason(
             return f"{lock_refusal} (active dispatch attachment)"
 
     task_id = _dispatch_task_id(repo_root, info)
-    if task_id and active_ids is not None and task_id in active_ids:
-        return f"active dispatch task-id={task_id}"
+    monitor_reason = _dispatch_monitor_activity_reason(repo_root, info, active_ids, task_id)
+    if monitor_reason is not None:
+        return monitor_reason
     task_payload = _task_record(repo_root, task_id)
     task_status = None
     if task_payload is not None:
@@ -2831,7 +2856,7 @@ def _is_settled_dispatch_task(
     active_ids: set[str] | None,
 ) -> tuple[bool, str | None]:
     task_id = _dispatch_task_id(repo_root, info)
-    if task_id is None or active_ids is None or task_id in active_ids:
+    if task_id is None or active_ids is None or _dispatch_monitor_activity_reason(repo_root, info, active_ids, task_id):
         return False, None
     task_data = _task_record(repo_root, task_id)
     if task_data is None:
@@ -2938,7 +2963,7 @@ def _detached_clean_contained_reason(
         if attention is not None:
             attention.append("active-task probe unavailable; detached clean contained checkout preserved")
         return None
-    if task_id in active_ids:
+    if _dispatch_monitor_activity_reason(repo_root, info, active_ids, task_id):
         return None
     task_status = _task_record_status(repo_root, task_id)
     if task_status is not None and task_status not in _TERMINAL_DISPATCH_STATUSES:
@@ -3075,7 +3100,7 @@ def _review_checkout_gate(
         return False
     task_id = _dispatch_task_id(repo_root, info)
     if task_id is not None:
-        if task_id in active_ids:
+        if _dispatch_monitor_activity_reason(repo_root, info, active_ids, task_id):
             return False
         status = _task_record_status(repo_root, task_id)
         if status is not None and status not in _TERMINAL_DISPATCH_STATUSES:
@@ -3420,7 +3445,8 @@ def _qualifying_reason(
                     task_data = json.loads(task_file.read_text(encoding="utf-8"))
                     task_status = task_data.get("status")
                     if task_status in ("done", "failed", "no_deliverable") and (
-                        active_ids is not None and task_id not in active_ids
+                        active_ids is not None
+                        and not _dispatch_monitor_activity_reason(repo_root, info, active_ids, task_id)
                     ):
                         task_settled = True
                 except Exception:
@@ -4709,7 +4735,6 @@ def _reap_qualified_worktree(
     preserve_then_reap: bool,
     prune_merged_branches: bool,
     require_terminal_dispatch_guards: bool,
-    fallback_probe: _ActiveTaskProbeFailure | None = None,
     eligible_backlog: int | None = None,
     now: float | None = None,
 ) -> ReapResult:
@@ -4901,31 +4926,31 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
-        if fallback_probe is not None:
-            # Re-read bound terminal state and PID under the attachment lock,
-            # including merged-PR classes that do not re-probe Monitor below.
-            current_ids, probe_error = _resolve_activity_probe(repo_root, info, fallback_probe)
-            current_cwds = _live_cwd_paths(repo_root)
-            refusal = probe_error or (
-                "process-CWD activity probe unavailable during cleanup" if current_cwds is None else None
+        # Recheck the complete cohort under the attachment lock for every
+        # removal class, including merged PRs with locally terminal successors.
+        current_probe = _read_active_task_probe()
+        current_ids, probe_error = _resolve_activity_probe(repo_root, info, current_probe)
+        current_cwds = _live_cwd_paths(repo_root)
+        refusal = probe_error or (
+            "active-task probe unavailable during cleanup" if current_ids is None else None
+        ) or ("process-CWD activity probe unavailable during cleanup" if current_cwds is None else None)
+        if refusal is None:
+            refusal = _activity_reason(
+                repo_root=repo_root,
+                info=info,
+                active_ids=current_ids,
+                live_cwds=current_cwds,
+                check_pending=False,
             )
-            if refusal is None:
-                refusal = _activity_reason(
-                    repo_root=repo_root,
-                    info=info,
-                    active_ids=current_ids,
-                    live_cwds=current_cwds,
-                    check_pending=False,
-                )
-            if refusal is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=refusal,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
+        if refusal is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=refusal,
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
 
         # A settled worker's background jobs die with its worktree, never
         # after it into a deleted cwd (#8991); if they survive, it stays.
@@ -5800,7 +5825,6 @@ def reap_worktrees(
                 require_terminal_dispatch_guards=(
                     include_terminal_dispatches and reason.startswith("settled dispatch task-id=")
                 ),
-                fallback_probe=active_probe if isinstance(active_probe, _ActiveTaskProbeFailure) else None,
                 eligible_backlog=eligible_backlog,
                 now=now,
             )

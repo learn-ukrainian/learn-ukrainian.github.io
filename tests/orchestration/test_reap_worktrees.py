@@ -1337,6 +1337,46 @@ def test_active_probe_transport_fallback_reaps_settled_checkout(tmp_path, monkey
     successor = dict(record, task_id="review-continuation", run_nonce="successor", worktree_reused=True)
     task_file.with_name("review-continuation.json").write_text(json.dumps(successor))
     assert rw._dispatch_task_id(repo, info) == "codex-probe-fallback"
+    # Monitor activity overrides a locally terminal continuation, for every
+    # removal class reached by the exact-path creator resolver.
+    with monkeypatch.context() as monitor:
+        monitor.setattr(rw, "_active_task_ids", lambda: {"review-continuation"})
+        assert rw._activity_reason(repo_root=repo, info=info, active_ids={"review-continuation"}, live_cwds=set())
+        assert rw._is_settled_dispatch_task(
+            repo_root=repo, info=info, active_ids={"review-continuation"}
+        ) == (False, None)
+        assert rw._detached_clean_contained_reason(
+            repo_root=repo, info=rw.replace(info, branch=None, detached=True),
+            active_ids={"review-continuation"}
+        ) is None
+        assert not rw._review_checkout_gate(
+            repo_root=repo, info=info, active_ids={"review-continuation"}, attention=[], require_detached=False
+        )
+        active_result = result_for(
+            rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), include_terminal_dispatches=True),
+            worktree,
+        )
+        assert active_result.action == "skipped"
+        assert "active dispatch task-id=review-continuation" in active_result.reason
+        assert worktree.exists()
+    if apply:
+        # A Monitor claim that appears after qualification must also protect
+        # merged-PR removal at the destructive boundary.
+        with monkeypatch.context() as monitor:
+            monitor.setattr(rw, "_active_task_ids", lambda: set())
+            patch_gh(monitor, {"codex/probe-fallback": [{"number": 10301, "state": "MERGED"}]})
+            real_guard = rw._enter_dispatch_worktree_guard
+
+            def activate_after_lock(*args, **kwargs):
+                refusal = real_guard(*args, **kwargs)
+                monitor.setattr(rw, "_active_task_ids", lambda: {"review-continuation"})
+                return refusal
+
+            monitor.setattr(rw, "_enter_dispatch_worktree_guard", activate_after_lock)
+            locked_result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+            assert locked_result.action == "skipped"
+            assert "active dispatch task-id=review-continuation" in locked_result.reason
+            assert worktree.exists()
     result = result_for(
         rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), include_terminal_dispatches=True),
         worktree,
