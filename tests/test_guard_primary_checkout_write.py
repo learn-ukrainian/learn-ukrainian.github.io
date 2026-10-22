@@ -395,12 +395,18 @@ def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     _git(main, "commit", "-q", "-m", "init")
 
     _git(main, "worktree", "add", "-q", ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
+    # Run a real copy so the protected repository follows the hook's location.
+    (main / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
+    hooks = main / "agents_extensions/shared/hooks"
+    hooks.mkdir(parents=True)
+    for name in (HOOK_PATH.name, "shell_shlex.py", "tool_names.py"):
+        shutil.copy2(HOOK_PATH.parent / name, hooks / name)
     return main
 
 
 def _materialize_repo(template: Path, main: Path) -> Path:
     """Copy the immutable template to ``main`` and re-point its worktree links."""
-    shutil.copytree(template, main)
+    shutil.copytree(template, main, symlinks=True)
     worktree = main / ".worktrees/dispatch/claude/task-1"
     gitdir = main / ".git/worktrees/task-1"
     (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
@@ -441,12 +447,15 @@ def outside_dir() -> Iterator[Path]:
         shutil.rmtree(path)
 
 
-def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    repo: Path, payload: dict, env_extra: dict[str, str] | None = None, *, process_cwd: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     # Drive the actual hook entry point with the same stdin, cwd, and env as
     # the subprocess cases below. No parsed decision or Git state is cached.
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
-        chdir(repo),
+        chdir(process_cwd or repo),
+        patch.object(hook, "__file__", str(repo / HOOK_PATH.relative_to(REPO_ROOT))),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -1116,6 +1125,88 @@ def test_issue_11381_git_target_repository(
     command = shlex.join(["git", *argv]) + " " + operation.format_map(paths)
     result = _bash(repo, command, cwd=paths[cwd_name])
     assert result.returncode == expected, (command, result.stderr)
+
+
+@pytest.mark.parametrize("process_location", ["other", "outside"])
+@pytest.mark.parametrize(
+    "command,payload_location,expected",
+    [
+        ("git -C {primary} merge topic", "other", 2),
+        ("git -C {primary} apply patch.diff", "other", 2),
+        ("git -C {primary} add curriculum/tracked.md", "other", 2),
+        ("git merge topic", "primary", 2),
+        ("cd {primary}; git merge topic", "other", 2),
+        ("git -C {other} merge topic", "primary", 0),
+        ("git -C {outside}/missing merge topic", "other", 2),
+    ],
+)
+def test_issue_11381_process_cwd_cannot_move_protected_repository(
+    repo: Path, repo_template: Path, tmp_path: Path, outside_dir: Path,
+    process_location: str, command: str, payload_location: str, expected: int,
+):
+    """A foreign or non-repository hook process cwd cannot bypass protection."""
+    paths = {"primary": repo, "other": _materialize_repo(repo_template, tmp_path / "other"),
+             "outside": outside_dir}
+    command = command.format_map({key: shlex.quote(str(value)) for key, value in paths.items()})
+    payload = {"tool_name": "Bash", "cwd": str(paths[payload_location]), "tool_input": {"command": command}}
+    result = subprocess.run(
+        [sys.executable, str(repo / HOOK_PATH.relative_to(REPO_ROOT))],
+        cwd=paths[process_location], input=json.dumps(payload), text=True, capture_output=True,
+        env=_clean_env(), check=False, timeout=30,
+    )
+    assert result.returncode == expected, (command, result.stderr)
+
+
+@pytest.mark.parametrize("form", ["prefix", "env", "export"])
+@pytest.mark.parametrize("nested", [False, True], ids=["direct", "nested-shell"])
+@pytest.mark.parametrize("selector", ["directory", "worktree", "common", "config", "mixed-case-config"])
+@pytest.mark.parametrize("target", ["primary", "other", "missing", "unknown"])
+def test_issue_11381_environment_selectors_cannot_hide_primary_target(
+    repo: Path, repo_template: Path, tmp_path: Path, form: str, nested: bool, selector: str, target: str,
+):
+    """Literal selectors match Git; unknown or nonexistent selectors fail closed."""
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    selected = {"primary": str(repo), "other": str(other), "missing": str(tmp_path / "missing"),
+                "unknown": "$UNKNOWN_REPOSITORY"}[target]
+    quoted = selected if target == "unknown" else shlex.quote(selected)
+    environment = {
+        "directory": [f"GIT_DIR={quoted}/.git", f"GIT_WORK_TREE={quoted}"],
+        "worktree": [f"GIT_WORK_TREE={quoted}"],
+        "common": [f"GIT_COMMON_DIR={quoted}/.git"],
+        "config": [f"GIT_DIR={quoted}/.git"],
+        "mixed-case-config": [f"GIT_DIR={quoted}/.git"],
+    }[selector]
+    tripwire = tmp_path / "fsmonitor-ran"
+    monitor = tmp_path / "fsmonitor"
+    monitor.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(tripwire))}\n", encoding="utf-8")
+    monitor.chmod(0o700)
+    options = f"-c core.fsmonitor={shlex.quote(str(monitor))}"
+    if selector == "config":
+        options += f" -c core.worktree={quoted}"
+    elif selector == "mixed-case-config":
+        options += f" -c CoRe.WoRkTrEe={quoted}"
+    if form == "export":
+        prefix = "; ".join("export " + assignment for assignment in environment) + "; "
+    else:
+        prefix = ("env " if form == "env" else "") + " ".join(environment) + " "
+    git_command = f"git {options}"
+
+    def invocation(operation: str) -> str:
+        command = git_command + " " + operation
+        return prefix + ("bash -c " + shlex.quote(command) if nested else command)
+
+    if target in {"primary", "other"}:
+        oracle = subprocess.run(
+            ["bash", "-c", invocation("rev-parse --path-format=absolute --git-common-dir")],
+            cwd=other, text=True, capture_output=True, env=_clean_env(), check=False, timeout=10,
+        )
+        assert oracle.returncode == 0, oracle.stderr
+        expected_common = (repo if target == "primary" else other) if selector != "worktree" else other
+        assert Path(oracle.stdout.strip()).resolve() == expected_common / ".git"
+    command = invocation("merge topic")
+    result = _bash(repo, command, cwd=other)
+    assert result.returncode == (0 if target == "other" else 2), (command, result.stderr)
+    assert not tripwire.exists(), "the read-only target probe executed core.fsmonitor"
 
 
 def test_git_apply_override_env_allows(repo: Path, monkeypatch: pytest.MonkeyPatch):

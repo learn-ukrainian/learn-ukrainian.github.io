@@ -185,6 +185,12 @@ except ImportError as exc:
 # ---------------------------------------------------------------------------
 
 
+def _containment_root() -> Path:
+    """Locate the repository owning the hook, independently of process cwd."""
+    return next(candidate for candidate in Path(__file__).resolve().parents
+                if (candidate / "scripts/guardrails/worktree_containment.py").is_file())
+
+
 def _load_containment():
     """Import ``scripts.guardrails.worktree_containment`` from any launch dir.
 
@@ -193,13 +199,10 @@ def _load_containment():
     that owns ``scripts/`` is an ancestor. Walk upward for it and put it on
     ``sys.path``. The caller blocks if containment cannot be loaded.
     """
-    here = Path(__file__).resolve()
-    for candidate in (here.parent, *here.parents):
-        if (candidate / "scripts" / "guardrails" / "worktree_containment.py").exists():
-            if str(candidate) not in sys.path:
-                sys.path.insert(0, str(candidate))
-            break
     try:
+        candidate = _containment_root()
+        if str(candidate) not in sys.path:
+            sys.path.insert(0, str(candidate))
         from scripts.guardrails import worktree_containment as wc
     except Exception:  # pragma: no cover - defensive import failure
         return None
@@ -783,6 +786,10 @@ class ShellSegment(list):
         self.scope = scope
         self.prev_op = prev_op
         self.next_op = next_op
+        self.git_environment: dict[str, ShellWord] = {}
+
+
+_GIT_REPOSITORY_ENV = frozenset({"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"})
 
 
 Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
@@ -884,7 +891,7 @@ class _Expander:
             self._opaque()
 
     def _opaque(self) -> None:
-        for name in {*self.bindings, "HOME"}:
+        for name in {*self.bindings, "HOME", *_GIT_REPOSITORY_ENV}:
             self.bindings[name] = None
             self.tainted.add(name)
 
@@ -1016,10 +1023,21 @@ class _Expander:
                 current.append(tok)
                 continue
             if current:
+                # Capture bindings before this command changes shell state.
+                # Prefix/env assignments are applied separately to this snapshot.
+                git_environment = {}
+                for name in _GIT_REPOSITORY_ENV:
+                    if name in self.bindings:
+                        value = self._lookup(name)
+                        git_environment[name] = ShellWord(value) if value is not None else ShellWord("$" + name, 0)
+                    elif name in os.environ:
+                        git_environment[name] = ShellWord(os.environ[name])
                 words = self._segment(current, prev_op, tok)
                 if words:
                     scope = tuple(int(frame.split(":", 1)[1]) for frame in self.frames if frame.startswith("paren:"))
-                    segments.append(ShellSegment(words, scope, prev_op, tok))
+                    segment = ShellSegment(words, scope, prev_op, tok)
+                    segment.git_environment = git_environment
+                    segments.append(segment)
                 current = []
             elif tok == "\n" and prev_op in _CONTINUING_OPS:
                 continue
@@ -1028,7 +1046,9 @@ class _Expander:
         return segments
 
 
-def _expanded_segments(command: str) -> list[ShellSegment]:
+def _expanded_segments(
+    command: str, repository_env: dict[str, ShellWord] | None = None,
+) -> list[ShellSegment]:
     """Per-command segments of expanded words, in command order.
 
     Variable values come only from the command itself — earlier unconditional
@@ -1037,9 +1057,14 @@ def _expanded_segments(command: str) -> list[ShellSegment]:
     carry ``unresolved_at``; ``_bash_path_decision`` blocks those.
     """
     tokens = _tokenize(command)
+    inherited = {name: str(value) if value.unresolved_at is None else None
+                 for name, value in (repository_env or {}).items()}
     first = _Expander(tokens)
+    first.bindings.update(inherited)
     first.run()
-    return _Expander(tokens, first=first).run()
+    second = _Expander(tokens, first=first)
+    second.bindings.update(inherited)
+    return second.run()
 
 
 def _redirect_targets(tokens: list[str]) -> list[str]:
@@ -1841,12 +1866,12 @@ def _cdpath_binding(segment: list[str]) -> bool | None:
     return None
 
 
-def _segments_with_cwd(command: str, cwd: str | None):
+def _segments_with_cwd(command: str, cwd: str | None, repository_env: dict[str, ShellWord] | None = None):
     """Yield expanded segments with the cwd they execute from."""
     scope_cwds: dict[tuple[int, ...], str | None] = {(): cwd}
     scope_dirs: dict[tuple[int, ...], list[str | None]] = {(): []}
     scope_cdpath_empty: dict[tuple[int, ...], bool] = {(): False}
-    for segment in _expanded_segments(command):
+    for segment in _expanded_segments(command, repository_env):
         scope = segment.scope
         if scope not in scope_cwds:
             scope_cwds[scope] = scope_cwds.get(scope[:-1], cwd)
@@ -2024,7 +2049,34 @@ def _is_git_binary(cmd: str) -> bool:
     return cmd in {"git", "git.exe"} or cmd.endswith("/git")
 
 
-def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int = 0) -> list[dict[str, object]]:
+def _git_environment(segment: ShellSegment, command_index: int) -> dict[str, ShellWord]:
+    """Apply literal command prefixes and env wrappers to selector bindings."""
+    selectors = dict(segment.git_environment)
+    i = 0
+    while i < command_index:
+        word = segment[i]
+        if word in {"-i", "--ignore-environment"}:
+            selectors.clear()
+        elif word in {"-u", "--unset"}:
+            i += 1
+            if i < command_index:
+                selectors.pop(str(segment[i]), None)
+        elif word.startswith("--unset="):
+            selectors.pop(word.split("=", 1)[1], None)
+        elif word in {"-C", "--chdir", "-S", "--split-string"}:
+            i += 1
+        elif "=" in word:
+            name = word.split("=", 1)[0]
+            if name in _GIT_REPOSITORY_ENV:
+                selectors[name] = word.tail(len(name) + 1)
+        i += 1
+    return selectors
+
+
+def bash_git_write_intents(
+    command: str, *, cwd: str | None = None, depth: int = 0,
+    repository_env: dict[str, ShellWord] | None = None,
+) -> list[dict[str, object]]:
     """Parse Bash for git-mediated working-tree mutations (issue #5396).
 
     Each intent is a dict::
@@ -2047,19 +2099,25 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
     def record(intent: dict[str, object]) -> None:
         intent["segment_cwd"] = effective_cwd
         intent["git_options"] = git_options
+        intent["git_environment"] = _git_environment(segment, idx)
         intents.append(intent)
 
-    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
+    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd, repository_env):
         cmd, idx = _command_word(segment)
+        git_environment = _git_environment(segment, idx)
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
-                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
+                intents.extend(bash_git_write_intents(
+                    " ".join(args), cwd=effective_cwd, depth=depth + 1, repository_env=git_environment,
+                ))
             continue
         if cmd in {"sh", "bash", "zsh", "dash"} and depth < _MAX_SHELL_DEPTH:
             script = _shell_command_script(segment[idx + 1 :])
             if script is not None and getattr(script, "unresolved_at", None) is None:
-                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1))
+                intents.extend(bash_git_write_intents(
+                    str(script), cwd=effective_cwd, depth=depth + 1, repository_env=git_environment,
+                ))
             continue
         if not _is_git_binary(cmd):
             continue
@@ -2627,7 +2685,7 @@ def main() -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if is_shell_tool(tool_name) and command and not allow_primary_git:
         try:
-            # The hook process owns the protected repository. The payload's
+            # The hook's location owns the protected repository. The payload's
             # execution cwd and Git selectors may instead name another one.
             owner_common = None
             for intent in git_intents:
@@ -2645,9 +2703,14 @@ def main() -> int:
                         return _block_git_mediated(summary, main_root, reason="undecidable_git_cwd_after_cd")
                     return _block_uncertain("undecidable_git_cwd_after_cd")
                 if owner_common is None:
-                    owner_common, _, _ = wc.resolve_git_target(Path.cwd())
-                target_common, target_worktree, git_cwd = wc.resolve_git_target(segment_cwd, git_options)
-                intent_root = wc.resolve_main_root(Path.cwd())
+                    owner_common, _, _ = wc.resolve_git_target(_containment_root())
+                git_environment = intent.get("git_environment") or {}
+                if any(value.unresolved_at is not None for value in git_environment.values()):
+                    return _block_uncertain("unresolved_git_environment")
+                target_common, target_worktree, git_cwd = wc.resolve_git_target(
+                    segment_cwd, git_options, repository_env=git_environment,
+                )
+                intent_root = wc.resolve_main_root(_containment_root())
                 if not wc.is_protected_branch(intent_root):
                     continue
                 if intent.get("kind") == "worktree_remove":
@@ -2658,7 +2721,7 @@ def main() -> int:
                     continue
                 if (
                     target_common != owner_common
-                    and wc.classify_repo_path(target_worktree, cwd=Path.cwd()) != "primary_checkout"
+                    and wc.classify_repo_path(target_worktree, cwd=intent_root) != "primary_checkout"
                 ):
                     continue
                 paths = list(intent.get("paths") or [])

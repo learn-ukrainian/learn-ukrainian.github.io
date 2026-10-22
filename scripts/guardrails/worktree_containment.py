@@ -123,16 +123,27 @@ class WriteDecision:
 _GIT_TIMEOUT_S = 30
 
 
-def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+def _run_git(
+    cwd: Path, *args: str, repository_env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
     """Run a read-only git command scoped to ``cwd`` with sanitized env."""
     argv = ["git", "-C", str(cwd), *args]
+    env = sanitized_git_env()
+    if repository_env is not None:
+        # Restore only the explicit, parsed repository selectors. Never inherit
+        # command-supplied executable configuration into a containment probe.
+        env = {key: value for key, value in env.items() if not key.startswith("GIT_CONFIG")}
+        for key, value in repository_env.items():
+            if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}:
+                raise ValueError("unsupported git repository environment selector")
+            env[key] = value
     try:
         return subprocess.run(
             argv,
             capture_output=True,
             text=True,
             check=False,
-            env=sanitized_git_env(),
+            env=env,
             timeout=_GIT_TIMEOUT_S,
         )
     except subprocess.TimeoutExpired as exc:
@@ -241,17 +252,23 @@ def resolve_main_root(start: Path | str | None = None) -> Path:
     return root
 
 
-def resolve_git_target(cwd: Path | str, options: list[str] | None = None) -> tuple[Path, Path, Path]:
+def resolve_git_target(
+    cwd: Path | str, options: list[str] | None = None, *, repository_env: dict[str, str] | None = None,
+) -> tuple[Path, Path, Path]:
     """Return a Git invocation's common directory, worktree root and path cwd.
 
     Git interprets repository selectors itself, including chained relative
-    ``-C`` options and explicit ``--git-dir`` / ``--work-tree`` overrides.
+    ``-C`` options, explicit ``--git-dir`` / ``--work-tree`` overrides,
+    literal repository environment and ``-c core.worktree`` configuration.
     Only read-only plumbing runs. A failed or ambiguous probe has no filesystem
     fallback: it cannot establish that a write targets a different repository.
     """
+    if any(arg == "--config-env" or arg.startswith("--config-env=") for arg in options or []):
+        raise NotAGitRepositoryError("git config environment selector is not a resolved literal")
     proc = _run_git(
-        Path(cwd), *(options or []), "rev-parse", "--path-format=absolute",
+        Path(cwd), *(options or []), "-c", "core.fsmonitor=false", "rev-parse", "--path-format=absolute",
         "--git-common-dir", "--show-toplevel", "--show-prefix",
+        repository_env=repository_env or {},
     )
     lines = proc.stdout.splitlines()
     if proc.returncode != 0 or len(lines) != 3:
