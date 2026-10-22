@@ -1530,13 +1530,12 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
     provider = Path(env["HOME"]) / ".local/bin/grok"
     command = [primary / "start-grok-driver.sh", "devops"]
     if failure == "approval-required":
-        # The synthetic provider models an unavailable consent decision. It
-        # rejects unless the configured approval arguments arrive unchanged,
-        # then refuses the operation; the launcher must propagate that refusal.
+        # Unsupported native options must fail before provider invocation or
+        # lease acquisition. The sentinel exposes any accidental provider call.
+        before_failure = store.dump_stream("epic:5703")
         provider.write_text(
-            '#!/bin/bash\n[ "$#" = 3 ] && [ "$1" = --approval-mode ] && [ "$2" = required ] || exit 99\n'
-            'case "$3" in "Load agents_extensions/"*) ;; *) exit 99 ;; esac\n'
-            "echo approval-required >&2\nexit 23\n",
+            f"#!/bin/bash\ntouch {os.fspath(started['grok'])!r}\n"
+            "echo unexpected-provider-invocation >&2\nexit 99\n",
             encoding="utf-8",
         )
         command += ["--", "--approval-mode", "required"]
@@ -1546,17 +1545,21 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         failed = run(command, cwd=primary, env=env)
-        assert failed.returncode == (23 if failure == "approval-required" else 17), failed.stderr + failed.stdout
+        assert failed.returncode == (2 if failure == "approval-required" else 17), failed.stderr + failed.stdout
         if failure == "approval-required":
-            assert "approval-required" in failed.stderr
+            assert "Unsupported native Grok driver provider argument" in failed.stderr
         assert not started["grok"].exists()
         after_failure = store.dump_stream("epic:5703")
+        if failure == "approval-required":
+            assert after_failure == before_failure
+            assert [session["state"] for session in after_failure["sessions"]] == ["closed"]
+            assert after_failure["lease"]["state"] == "released"
+            assert after_failure["lease"]["generation"] == 1
+            return
+
         assert [session["state"] for session in after_failure["sessions"]] == ["closed", "closed"]
         assert after_failure["lease"]["state"] == "released"
         assert after_failure["lease"]["generation"] == 2
-
-        if failure == "approval-required":
-            return
 
         # A subsequent ordinary launch can acquire immediately, without a TTL
         # wait or a force-release repair of the failed provider's generation.
