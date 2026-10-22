@@ -487,11 +487,14 @@ not one of each. The same preflight refuses a rerun of a run whose
 `RECOVERY_ALLOWANCE_SPENT: first=prior workflow run attempt`.
 
 The keeper also counts its own automatic recoveries: granted re-enqueues after
-a queue ejection and shared queue-wide re-enqueues. When more than three occur
-in a rolling 24 hours it posts one alert to the `cto` Fleet Comms channel
-through the existing SRE alert publisher, then stays quiet for 24 hours. The
-pending alert's idempotency key and payload are persisted before delivery, so a
-retry after a failed publish or delivery-status lookup reuses them instead of
-posting a second alert. The alert is a signal that an intermittent failure may
-be hidden behind recoveries; it changes no queue or workflow state and is not a
-recovery path.
+a queue ejection, shared queue-wide re-enqueues, and publisher-identified
+re-enqueues where `_prepare_recovery` recovered a current-head queue removal
+even though the keeper's own drop state was empty. Each successful enqueue
+records exactly one timestamped recovery, whichever path performed it. When
+more than three occur in a rolling 24 hours it posts one alert to the `cto`
+Fleet Comms channel through the existing SRE alert publisher, then stays quiet
+for 24 hours. The pending alert's idempotency key and payload are persisted
+before delivery, so a retry after a failed publish or delivery-status lookup
+reuses them instead of posting a second alert. The alert is a signal that an
+intermittent failure may be hidden behind recoveries; it changes no queue or
+workflow state and is not a recovery path.

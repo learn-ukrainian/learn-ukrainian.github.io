@@ -7,6 +7,7 @@ There is no argv, arbitrary endpoint, GraphQL document or payload passthrough.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
@@ -710,6 +711,7 @@ def publish(
             argv = ["gh", "api", "--method", method, endpoint, "--input", str(frozen)]
             if endpoint == "graphql":
                 argv += _hostname_flag(dest)
+        reservation = None
         if verb in {"run-rerun", "pr-merge"}:
             reservation = _prepare_recovery(
                 verb, fields, dest, cwd, environment, readiness_runner, queue=recovery_queue
@@ -717,7 +719,7 @@ def publish(
             if reservation:
                 path, number, head, action, evidence = reservation
                 recovery.consume(path, dest, number, head, action, evidence)
-        return _send(
+        result = _send(
             argv,
             environment=environment,
             runner=runner,
@@ -729,6 +731,10 @@ def publish(
             stdout=stdout,
             stderr=stderr,
         )
+        if reservation:
+            with contextlib.suppress(AttributeError, TypeError):
+                result.recovery_performed = reservation[3]
+        return result
 
 
 class PublisherParser(argparse.ArgumentParser):

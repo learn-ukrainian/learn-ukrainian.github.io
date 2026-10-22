@@ -8,7 +8,7 @@ import json
 import re
 import subprocess
 import unicodedata
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -141,7 +141,7 @@ class FakeGitHub:
         self.lookups.append("files")
         return self.file_rows
 
-    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
+    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> bool:
         # Every enqueue traverses the real publisher removal check, even when
         # the keeper has never observed a drop or set recovery_attempt.
         from tests.test_ci_recovery import Transport
@@ -181,6 +181,7 @@ class FakeGitHub:
         except gate.PublishBlocked as exc:
             raise keeper.KeeperError(str(exc)) from exc
         self.actions.append(("enqueue", (number, head)))
+        return bool(reservation)
 
     def membership(self, number: int) -> bool:
         return self.membership_result
@@ -320,6 +321,155 @@ def test_recovery_alert_retry_reuses_pending_key_and_payload(tmp_path: Path) -> 
         path,
     )
     assert suppressed == "recovery alert suppressed: last posted at 2026-09-23T12:05:00+00:00"
+
+
+def _removal_event() -> dict[str, Any]:
+    return {"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}
+
+
+def _recovery_rows(at: str, count: int, kind: str = "granted") -> list[dict[str, Any]]:
+    return [{"at": at, "kind": kind} for _ in range(count)]
+
+
+def _hours_ago(hours: float) -> str:
+    return (datetime.now(UTC) - timedelta(hours=hours)).isoformat()
+
+
+def test_granted_drop_recovery_is_counted_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    fake.events = [_removal_event()]
+    gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    state = json.loads(path.read_text())
+    assert [row["kind"] for row in state["recoveries"]] == ["granted"]
+    assert f"42:{HEAD_A}" in state["requeued"]
+
+
+def test_shared_pass_recovery_is_counted_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
+    _, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert not failed
+    assert [row["kind"] for row in json.loads(path.read_text())["recoveries"]] == ["shared"]
+
+
+def test_publisher_recovery_with_empty_keeper_state_is_counted_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    fake.events = [_removal_event()]
+
+    lines, failed = run(fake, path, monkeypatch)
+
+    assert not failed and "#42 enqueued" in lines
+    assert [row["kind"] for row in json.loads(path.read_text())["recoveries"]] == ["publisher"]
+
+    # The publisher's durable allowance refuses the second attempt, so no second count.
+    state = json.loads(path.read_text())
+    state["queued"], state["drops"] = {}, {}
+    state.pop("undiagnosed", None)
+    path.write_text(json.dumps(state))
+    again = FakeGitHub()
+    again.events = fake.events
+    lines, failed = run(again, path, monkeypatch)
+    assert failed and any("RECOVERY_ALLOWANCE_SPENT" in line for line in lines)
+    assert "enqueue" not in mutations(again)
+    assert [row["kind"] for row in json.loads(path.read_text())["recoveries"]] == ["publisher"]
+
+
+def test_three_recoveries_stay_quiet_and_four_alert(tmp_path: Path) -> None:
+    path = tmp_path / "state.json"
+    observed = "2026-09-23T12:00:00+00:00"
+    posted: list[tuple[str, str]] = []
+    quiet = {
+        "queued": {},
+        "drops": {},
+        "recoveries": [
+            {"at": "2026-09-23T06:00:00+00:00", "kind": kind}
+            for kind in ("granted", "shared", "publisher")
+        ],
+    }
+    assert keeper._alert_recoveries(
+        quiet, observed, lambda message, key: posted.append((message, key)), path
+    ) is None
+    assert posted == []
+
+    alerting = {
+        "queued": {},
+        "drops": {},
+        "recoveries": [*quiet["recoveries"], {"at": "2026-09-23T07:00:00+00:00", "kind": "granted"}],
+    }
+    note = keeper._alert_recoveries(
+        alerting, observed, lambda message, key: posted.append((message, key)), path
+    )
+    assert note == "recovery alert posted: 4 automatic recoveries in 24 hours"
+    assert len(posted) == 1
+    assert "4 automatic recoveries" in posted[0][0]
+
+
+def test_recoveries_expire_at_the_24_hour_boundary(tmp_path: Path) -> None:
+    path = tmp_path / "state.json"
+    observed = "2026-09-23T12:00:00+00:00"
+    posted: list[tuple[str, str]] = []
+    stale = {
+        "queued": {},
+        "drops": {},
+        "recoveries": _recovery_rows("2026-09-22T11:59:59+00:00", 4),
+    }
+    assert keeper._alert_recoveries(
+        stale, observed, lambda message, key: posted.append((message, key)), path
+    ) is None
+    assert posted == []
+
+    at_cutoff = {
+        "queued": {},
+        "drops": {},
+        "recoveries": _recovery_rows("2026-09-22T12:00:00+00:00", 4),
+    }
+    note = keeper._alert_recoveries(
+        at_cutoff, observed, lambda message, key: posted.append((message, key)), path
+    )
+    assert note == "recovery alert posted: 4 automatic recoveries in 24 hours"
+    assert len(posted) == 1
+
+
+def test_publisher_recovery_completes_the_alert_boundary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "state.json"
+    recent = _hours_ago(1)
+    path.write_text(
+        json.dumps(
+            {
+                "queued": {},
+                "drops": {},
+                "recoveries": [{"at": recent, "kind": "granted"} for _ in range(3)],
+            }
+        )
+    )
+    fake = FakeGitHub()
+    fake.events = [_removal_event()]
+    posted: list[tuple[str, str]] = []
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict("APPROVED"))
+    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: True)
+
+    lines, failed = keeper.run(
+        fake, path, apply=True, publish=lambda message, key: posted.append((message, key))
+    )
+
+    assert not failed
+    assert "4 automatic recoveries" in lines[-1]
+    assert len(posted) == 1
+    state = json.loads(path.read_text())
+    assert [row["kind"] for row in state["recoveries"]] == [
+        "granted",
+        "granted",
+        "granted",
+        "publisher",
+    ]
 
 
 def _keeper_comment(fake: FakeGitHub) -> str:

@@ -225,6 +225,20 @@ def recover(setup, action, *, recovery=False):
     return pub.publish("pr-merge", number=42, repo="unit/public", cwd=root, env={}, runner=transport, recovery=recovery)
 
 
+def test_publish_marks_a_performed_recovery_on_the_result(setup):
+    result = recover(setup, "direct")
+    assert result.recovery_performed == "re-enqueue"
+
+
+def test_publish_marks_no_recovery_on_initial_admission(setup):
+    root, transport = setup
+    transport.removed = False
+    transport.proof = None
+    result = pub.publish("pr-merge", number=42, repo="unit/public", cwd=root, env={}, runner=transport)
+    assert not getattr(result, "recovery_performed", None)
+    assert len(transport.writes) == 1
+
+
 @pytest.mark.parametrize("first", ["run-rerun", "keeper", "direct"])
 @pytest.mark.parametrize("second", ["run-rerun", "keeper", "direct"])
 def test_paths_share_allowance_and_preserve_old_head(setup, first, second):

@@ -180,7 +180,7 @@ class GitHub:
         self.root, self.repository = root, repository
 
     @publication_boundary(KeeperError)
-    def call(self, *args: str) -> str:
+    def _result(self, *args: str) -> Any:
         try:
             result = request_run(
                 args[0] if len(args) == 1 and isinstance(args[0], Request) else ["gh", *args],
@@ -197,7 +197,10 @@ class GitHub:
             raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise KeeperError((result.stderr or result.stdout or "GitHub request failed").strip()[:500])
-        return result.stdout
+        return result
+
+    def call(self, *args: str) -> str:
+        return self._result(*args).stdout
 
     def json(self, *args: str) -> Any:
         try:
@@ -344,8 +347,12 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
-        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head, recovery=recovery_attempt))
+    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> bool:
+        """Enqueue through the publisher; True when its result shows a recovery was performed."""
+        result = self._result(
+            Request("pr-merge", repo=self.repository, number=number, match_head=head, recovery=recovery_attempt)
+        )
+        return bool(getattr(result, "recovery_performed", False))
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -660,23 +667,53 @@ def _record_recovery(previous: dict[str, Any], observed: str, kind: str) -> None
     previous.setdefault("recoveries", []).append({"at": observed, "kind": kind})
 
 
-def _automatic_recoveries(previous: Mapping[str, Any], cutoff: datetime) -> tuple[int, int]:
-    """Granted and shared successful automatic recoveries inside the rolling window."""
+def _automatic_recoveries(previous: Mapping[str, Any], cutoff: datetime) -> tuple[int, int, int]:
+    """Granted, shared and publisher-identified successful recoveries inside the rolling window."""
     granted = 0
     shared = 0
+    publisher = 0
     for row in _recent_recoveries(previous, cutoff):
         if row.get("kind") == "granted":
             granted += 1
         elif row.get("kind") == "shared":
             shared += 1
-    return granted, shared
+        elif row.get("kind") == "publisher":
+            publisher += 1
+    return granted, shared, publisher
 
 
-def recovery_alert_message(granted: int, shared: int, observed: str) -> str:
-    total = granted + shared
+def _record_enqueue_recovery(
+    previous: dict[str, Any],
+    observed: str,
+    *,
+    shared_expected: bool,
+    granted_expected: bool,
+    publisher_recovered: bool,
+) -> None:
+    """Record exactly one successful automatic recovery for an enqueue, whichever path performed it.
+
+    The publisher performs the mutation and may itself detect a current-head queue
+    removal, so its result decides whether a recovery happened. Local keeper state
+    says which allowance the recovery belongs to; a publisher-only recovery (empty
+    keeper state, removal already on GitHub) gets its own ``publisher`` kind.
+    """
+    if publisher_recovered:
+        kind = "shared" if shared_expected else "granted" if granted_expected else "publisher"
+    elif shared_expected:
+        kind = "shared"
+    elif granted_expected:
+        kind = "granted"
+    else:
+        return
+    _record_recovery(previous, observed, kind)
+
+
+def recovery_alert_message(granted: int, shared: int, publisher: int, observed: str) -> str:
+    total = granted + shared + publisher
     return (
         f"[sre-timers] Merge queue keeper performed {total} automatic recoveries in the last 24 hours "
-        f"at {observed}: {granted} granted re-enqueue(s) and {shared} shared queue-wide re-enqueue(s). "
+        f"at {observed}: {granted} granted re-enqueue(s), {shared} shared queue-wide re-enqueue(s) "
+        f"and {publisher} publisher-identified re-enqueue(s). "
         f"The alert threshold is {RECOVERY_ALERT_THRESHOLD}.\n"
         "An intermittent failure may be hidden behind recoveries. Investigate the failing merge_group "
         "jobs before the next recovery. The keeper never reruns workflows.\n"
@@ -709,8 +746,8 @@ def _alert_recoveries(
 
     now = datetime.fromisoformat(observed)
     cutoff = now - RECOVERY_ALERT_WINDOW
-    granted, shared = _automatic_recoveries(previous, cutoff)
-    if granted + shared <= RECOVERY_ALERT_THRESHOLD:
+    granted, shared, publisher = _automatic_recoveries(previous, cutoff)
+    if granted + shared + publisher <= RECOVERY_ALERT_THRESHOLD:
         return None
     last = previous.get("recovery_alert")
     if isinstance(last, str):
@@ -720,20 +757,20 @@ def _alert_recoveries(
             last_at = None
         if last_at is not None and last_at.tzinfo is not None and now - last_at < RECOVERY_ALERT_WINDOW:
             return f"recovery alert suppressed: last posted at {last}"
-    message = recovery_alert_message(granted, shared, observed)
+    message = recovery_alert_message(granted, shared, publisher, observed)
     key = f"lu-mq-recoveries:{observed}"
     previous["recovery_alert_pending"] = {
         "key": key,
         "message": message,
         "observed": observed,
-        "total": granted + shared,
+        "total": granted + shared + publisher,
     }
     _save(state_path, previous)
     publish(message, key)
     previous.pop("recovery_alert_pending", None)
     previous["recovery_alert"] = observed
     _save(state_path, previous)
-    return f"recovery alert posted: {granted + shared} automatic recoveries in 24 hours"
+    return f"recovery alert posted: {granted + shared + publisher} automatic recoveries in 24 hours"
 
 
 def _min_interval(environ: Mapping[str, str]) -> int:
@@ -1204,10 +1241,18 @@ def run(
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":
-                if drops >= 1 or drop_key in previous.get("shared_pass", {}):
-                    gh.enqueue(number, head, recovery_attempt=True)
-                else:
-                    gh.enqueue(number, head)
+                shared_expected = drop_key in previous.get("shared_pass", {})
+                granted_expected = grants is not None and drops >= 1
+                publisher_recovered = gh.enqueue(
+                    number, head, recovery_attempt=shared_expected or drops >= 1
+                )
+                _record_enqueue_recovery(
+                    previous,
+                    observed,
+                    shared_expected=shared_expected,
+                    granted_expected=granted_expected,
+                    publisher_recovered=publisher_recovered,
+                )
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):
@@ -1219,10 +1264,8 @@ def run(
                     lines.append(f"#{number} enqueued")
                 if previous.get("shared_pass", {}).pop(drop_key, None) is not None:
                     lines.append(f"#{number} requeued after a queue-wide failure")
-                    _record_recovery(previous, observed, "shared")
-                elif grants is not None and drops >= 1:
+                elif granted_expected:
                     previous.setdefault("requeued", {})[drop_key] = observed
-                    _record_recovery(previous, observed, "granted")
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
