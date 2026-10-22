@@ -34,6 +34,27 @@ SCRATCH_NAMES = {"TMPDIR", "LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT", "tmp_pa
 SCRATCH_HELPERS = {"ensure_scratch_root", "resolve_scratch_root"}
 ENV_NAMES = SCRATCH_NAMES - {"tmp_path"}
 MANAGED_ROOT = "/" + "var/tmp/lu"
+LINE_SEPARATOR = re.compile(r"\r\n|\r|\n")
+# Cheap text hints that must hold before a Python module can yield a finding.
+# A flagged producer can only resolve through an import that names "tempfile";
+# a flagged decoded literal either shows a temp root as text, hides it in an
+# escape, or assembles it from adjacent literals, which the hint below rejoins.
+PYTHON_ESCAPE = re.compile(r"\\(?:x([0-9a-fA-F]{2})|u([0-9a-fA-F]{4})|U([0-9a-fA-F]{8})|([0-7]{1,3})|N\{([^}]*)\})")
+PYTHON_COMMENT = re.compile(r"#[^\n]*")
+PYTHON_STRING_PREFIX = re.compile(r"(?<![\w])(?:[rRbBuUfF]{1,2})(?=['\"])")
+PYTHON_STRING_LITERAL = re.compile(
+    r'"""(?:\\.|[^\\])*?"""'
+    r"|'''(?:\\.|[^\\])*?'''"
+    r'|"(?:[^"\\\n]|\\.)*"'
+    r"|'(?:[^'\\\n]|\\.)*'",
+    re.S,
+)
+PYTHON_SPLIT_ROOT = re.compile(
+    r"/(?:[^A-Za-z/]*)t(?:[^A-Za-z/]*)m(?:[^A-Za-z/]*)p"
+    r"|/(?:[^A-Za-z/]*)s(?:[^A-Za-z/]*)h(?:[^A-Za-z/]*)m"
+)
+TEMP_ROOT_CHARACTERS = frozenset("/tmpvaeridsh")
+TEMP_ROOT_TEXT = ("/" + "tmp", "/" + "dev" + "/" + "shm")
 
 # Content fingerprints and maximum occurrence counts, never whole-file exemptions.
 # Legacy entries are residuals, not evidence that their producers are safe.
@@ -2227,30 +2248,111 @@ def is_scratch_expression(node: ast.AST, aliases: dict[str, str]) -> bool:
     )
 
 
-def scan_python(source: str, path: str) -> list[Finding]:
+def _literal_line_numbers(source: str) -> set[int]:
+    """Physical line numbers of raw source lines that carry a literal temp path."""
+    if not any(root in source for root in TEMP_ROOT_TEXT):
+        return set()
+    separators = [match.end() for match in LINE_SEPARATOR.finditer(source)]
+    numbers = set()
+    for match in LITERAL_TEMP.finditer(source):
+        literal = match.group()
+        path = posixpath.normpath(literal)
+        if (literal == MANAGED_ROOT or literal.startswith(MANAGED_ROOT + "/")) and (
+            path == MANAGED_ROOT or path.startswith(MANAGED_ROOT + "/")
+        ):
+            continue
+        numbers.add(bisect_right(separators, match.start()) + 1)
+    return numbers
+
+
+def _escape_can_build_temp_root(source: str) -> bool:
+    """Whether a string escape in the text can decode to a temp-root character."""
+    for match in PYTHON_ESCAPE.finditer(source):
+        if match.group(5) is not None:
+            # Named escapes are rare; their lookup table stays authoritative.
+            return True
+        digits = match.group(1) or match.group(2) or match.group(3)
+        code = int(digits, 16) if digits else int(match.group(4), 8)
+        if code <= 0x10FFFF and chr(code) in TEMP_ROOT_CHARACTERS:
+            return True
+    return False
+
+
+def _split_literal_hint(source: str) -> bool:
+    """Detect a root reassembled from adjacent or continued literals without escapes.
+
+    Adjacent pieces keep every root character, separated only by characters that
+    a literal boundary, a comment, or a line continuation contributes, so the
+    hint allows non-code characters between the root characters after comments
+    and string prefixes are dropped.
+    """
+    text = PYTHON_COMMENT.sub("", source)
+    text = PYTHON_STRING_PREFIX.sub("", text)
+    return PYTHON_SPLIT_ROOT.search(text) is not None
+
+
+def _has_unbalanced_delimiters(source: str) -> bool:
+    """Keep structurally broken source in the parse set so its parse error still surfaces.
+
+    A crude count is cheap but counts brackets inside comments and strings, so a
+    flagged source is rechecked with those regions removed before it is parsed.
+    """
+    if not any(source.count(opening) != source.count(closing) for opening, closing in ("()", "[]", "{}")):
+        return False
+    code = PYTHON_COMMENT.sub("", PYTHON_STRING_LITERAL.sub("", source))
+    return any(code.count(opening) != code.count(closing) for opening, closing in ("()", "[]", "{}"))
+
+
+def _may_produce_python_findings(source: str, literal_lines: set[int] | None = None) -> bool:
+    """Cheap superset test: only a source passing here can yield a finding or a parse error.
+
+    Derived from what ``_scan_python`` flags: a producer can only resolve
+    through an import that names ``tempfile``; a decoded literal is either
+    visible as raw text, hidden in a character escape, or assembled from
+    adjacent literals that the hint rejoins. Structurally unbalanced source
+    stays parseable so the documented parse-error exit path is preserved.
+    """
+    if literal_lines is None:
+        literal_lines = _literal_line_numbers(source)
+    if literal_lines:
+        return True
+    return (
+        "tempfile" in source
+        or _escape_can_build_temp_root(source)
+        or _split_literal_hint(source)
+        or _has_unbalanced_delimiters(source)
+    )
+
+
+def _scan_python(source: str, path: str, literal_lines: set[int] | None = None) -> list[Finding]:
     """Find tempfile calls without an explicit managed directory, including aliases."""
+    if not _may_produce_python_findings(source, literal_lines):
+        return []
     tree = ast.parse(source, filename=path)
-    aliases = {}
+    aliases: dict[str, str] = {}
+    calls: list[ast.Call] = []
+    findings: list[Finding] = []
     for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
+        kind = type(node)
+        if kind is ast.Import:
             for item in node.names:
                 aliases[item.asname or item.name] = item.name
-        elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
-            for item in node.names:
-                if node.module == "tempfile" and item.name == "*":
-                    aliases.update({name: "tempfile." + name for name in TEMP_CALLS})
-                else:
-                    aliases[item.asname or item.name] = node.module + "." + item.name
-    findings = []
-    source_lines = None
-    temp_names = {"tempfile." + call for call in TEMP_CALLS}
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Constant):
+        elif kind is ast.ImportFrom:
+            if node.module and not node.level:
+                for item in node.names:
+                    if node.module == "tempfile" and item.name == "*":
+                        aliases.update({name: "tempfile." + name for name in TEMP_CALLS})
+                    else:
+                        aliases[item.asname or item.name] = node.module + "." + item.name
+        elif kind is ast.Constant:
             value = node.value.decode("utf-8", errors="replace") if isinstance(node.value, bytes) else node.value
             if isinstance(value, str) and has_literal_temp_path(value):
                 findings.append(Finding(path, node.lineno, "literal system temp path"))
-        if not isinstance(node, ast.Call):
-            continue
+        elif kind is ast.Call:
+            calls.append(node)
+    source_lines = None
+    temp_names = {"tempfile." + call for call in TEMP_CALLS}
+    for node in calls:
         name = qualified_name(node.func, aliases)
         if name not in temp_names:
             continue
@@ -2265,6 +2367,11 @@ def scan_python(source: str, path: str) -> list[Finding]:
             text = b"".join(segment).decode("utf-8")
             findings.append(Finding(path, node.lineno, "tempfile-call: requires approved dir=: " + text.strip()))
     return sorted(set(findings))
+
+
+def scan_python(source: str, path: str) -> list[Finding]:
+    """Find tempfile calls without an explicit managed directory, including aliases."""
+    return _scan_python(source, path)
 
 
 def shell_substitutions(source: str) -> tuple[str, list[tuple[int, str]]]:
@@ -2517,15 +2624,22 @@ def scan_lines(repo_root: Path, paths: list[Path] | None = None) -> list[tuple[s
             continue
         relative = path.relative_to(repo_root).as_posix()
         source = path.read_text(encoding="utf-8")
-        lines = re.split(r"\r\n|\r|\n", source)
-        literal_numbers = {n for n, line in enumerate(lines, 1) if has_literal_temp_path(line)}
-        findings = scan_python(source, relative) if path.suffix == ".py" else scan_shell(source, relative)
+        lines = None
+        if path.suffix == ".py":
+            literal_numbers = _literal_line_numbers(source)
+            findings = _scan_python(source, relative, literal_numbers)
+        else:
+            lines = LINE_SEPARATOR.split(source)
+            literal_numbers = {n for n, line in enumerate(lines, 1) if has_literal_temp_path(line)}
+            findings = scan_shell(source, relative)
         for finding in findings:
             if finding.message == "literal system temp path":
                 literal_numbers.add(finding.line)
             else:
                 rows.append((relative, finding.line, finding.message))
-        rows.extend((relative, n, lines[n - 1].strip()) for n in sorted(literal_numbers))
+        if literal_numbers:
+            lines = lines if lines is not None else LINE_SEPARATOR.split(source)
+            rows.extend((relative, n, lines[n - 1].strip()) for n in sorted(literal_numbers))
     return sorted(rows)
 
 
