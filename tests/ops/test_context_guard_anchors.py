@@ -9,6 +9,7 @@ exit alert. Each docstring names the defect class it can fail for.
 
 from __future__ import annotations
 
+import hashlib
 import subprocess
 from pathlib import Path
 
@@ -16,7 +17,7 @@ import pytest
 
 from scripts.ops import context_guard as cg
 from scripts.session_canary import grok_lane, handoff_select
-from tests.ops.test_context_guard import Harness, codex_pane
+from tests.ops.test_context_guard import Harness, codex_pane, codex_text
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -389,3 +390,181 @@ def test_ambient_session_stream_from_another_lane_cannot_exit_a_short_handoff(
     assert not exit_typed(h), h.fake.typed(LANE)
     assert anchor_sendbacks(h), h.fake.typed(LANE)
     assert "next=0" in anchor_sendbacks(h)[0]
+
+
+# ---- repeat alerts: one Fleet idempotency key per occurrence ----------------------
+class IdempotencyKeyReuse(Exception):
+    """The Fleet plane's refusal of a permanent key reused with a different payload."""
+
+
+class FleetPlane:
+    """The Fleet idempotency rule the guard's alerts land on.
+
+    ``AuthorityService._check_idempotency_tx`` keeps an idempotency key forever
+    and raises ``idempotency_key_reused_with_different_payload`` when a later
+    send reuses it with another body. ``context_guard.fleet_sender`` catches that
+    error and only logs it, so a refused message never reaches the CTO. Every
+    guard body carries a timestamp, so a fixed key silently drops every alert
+    after the first one for that lane and cause.
+    """
+
+    def __init__(self, log: list[str]) -> None:
+        self.log = log
+        self.payloads: dict[str, str] = {}
+        self.delivered: list[tuple[str, str, str]] = []
+        self.refused: list[str] = []
+
+    def __call__(self, recipient: str, body: str, key: str) -> None:
+        try:
+            self.send(recipient, body, key)
+        except IdempotencyKeyReuse as exc:  # mirrors fleet_sender: log, never deliver
+            self.log.append(f"send {recipient} failed {type(exc).__name__}: {exc}")
+
+    def send(self, recipient: str, body: str, key: str) -> None:
+        payload = hashlib.sha256(body.encode("utf-8")).hexdigest()
+        stored = self.payloads.get(key)
+        if stored is None:
+            self.payloads[key] = payload
+            self.delivered.append((recipient, body, key))
+            return
+        if stored != payload:
+            self.refused.append(key)
+            raise IdempotencyKeyReuse("idempotency_key_reused_with_different_payload")
+
+    def alert_bodies(self) -> list[str]:
+        return [body for _recipient, body, _key in self.delivered if body.startswith("CTO-ALERT")]
+
+    def alert_keys(self) -> list[str]:
+        return [key for _recipient, body, key in self.delivered if body.startswith("CTO-ALERT")]
+
+
+def delivered_alerts(h: Harness) -> FleetPlane:
+    plane = FleetPlane(h.logs)
+    h.guard.send = plane
+    return plane
+
+
+def new_handoff_phase(h: Harness) -> None:
+    """A human relaunch: a new agent process, then a fresh HANDOFF-DONE."""
+    h.pane(LANE).agent_pid = "201"
+    h.advance(5)
+    h.tick(LANE)  # the handoff phase sees the new agent -> watch
+    assert h.state[LANE]["phase"] == "watch"
+    h.posted[SENDER] = cg.iso(h.moment)
+    h.advance(5)
+    h.tick(LANE)  # watch -> handoff (done)
+    assert h.state[LANE]["phase"] == "handoff"
+
+
+def shortfall_in_two_phases(h: Harness) -> None:
+    enter_handoff(h)
+    h.tick(LANE)
+    assert len(anchor_sendbacks(h)) == 1
+    new_handoff_phase(h)
+    h.advance(5)
+    h.tick(LANE)
+    assert len(anchor_sendbacks(h)) == 2
+
+
+def fail_open_in_two_phases(h: Harness) -> None:
+    enter_handoff(h)
+    h.tick(LANE)
+    assert sum(text == "/quit" for text in h.fake.typed(LANE)) == 1
+    new_handoff_phase(h)
+    h.advance(5)
+    h.tick(LANE)
+    assert sum(text == "/quit" for text in h.fake.typed(LANE)) == 2
+
+
+def blocked_in_two_phases(h: Harness) -> None:
+    def run_to_block() -> None:
+        h.pane(LANE).text = codex_text(40)
+        for _ in range(cg.ANCHOR_MAX_SENDBACKS + 2):
+            h.tick(LANE)
+            h.pane(LANE).text += "\n⏺ HANDOFF-DONE atlas .claude/atlas-epic/CODEX-DRIVER-HANDOFF.md"
+            h.advance(5)
+        assert h.state[LANE]["anchor_blocked"] is True
+
+    enter_handoff(h)
+    run_to_block()
+    new_handoff_phase(h)
+    run_to_block()
+
+
+def launcher_exit_in_two_relaunches(h: Harness) -> None:
+    enter_handoff(h)
+    h.pane(LANE).agent = None
+    h.advance(5)
+    h.tick(LANE)  # relaunch 1
+    assert len(respawns(h)) == 1
+    h.pane(LANE).text = LAUNCHER_EXIT_RC1
+    h.advance(5)
+    h.tick(LANE)  # alert 1
+    pane = h.pane(LANE)
+    pane.agent = "codex"
+    pane.agent_pid = "201"
+    pane.text = codex_text(40)
+    h.advance(5)
+    h.tick(LANE)  # watch: a new agent clears the hold
+    h.posted[SENDER] = cg.iso(h.moment)
+    h.advance(5)
+    h.tick(LANE)  # watch -> handoff
+    pane.agent = None
+    h.advance(5)
+    h.tick(LANE)  # relaunch 2
+    assert len(respawns(h)) == 2
+    pane.text = LAUNCHER_EXIT_RC1
+    h.advance(5)
+    h.tick(LANE)  # alert 2
+
+
+# cause -> (handoff text, two-occurrence scenario, alerts each occurrence sends)
+REPEATED = {
+    "shortfall": (handoff_text(next_heading=False), shortfall_in_two_phases, 1),
+    "fail-open": (None, fail_open_in_two_phases, 1),
+    "blocked": (handoff_text(next_heading=False), blocked_in_two_phases, 2),
+    "launcher-exit": (handoff_text(), launcher_exit_in_two_relaunches, 1),
+}
+
+
+@pytest.mark.parametrize("cause", sorted(REPEATED))
+def test_the_same_failure_in_a_later_phase_or_relaunch_is_delivered_again(
+    tmp_path: Path, launcher_stream: None, cause: str
+) -> None:
+    """Defect class: a fixed Fleet idempotency key silently drops every repeat alert.
+
+    The Fleet plane refuses a permanent key reused with a different payload, and
+    every alert body carries a timestamp. With a fixed key the CTO hears about a
+    lane's failure once and never again, so a lane whose launcher keeps exiting or
+    whose handoff stays short sits dead unobserved.
+    """
+    text, scenario, per_occurrence = REPEATED[cause]
+    lane_repo(tmp_path, text)
+    h = Harness(tmp_path, **{LANE: codex_pane(40)})
+    plane = delivered_alerts(h)
+    scenario(h)
+    expected = 2 * per_occurrence
+    assert plane.refused == [], plane.log
+    assert len(plane.alert_bodies()) == expected, plane.alert_bodies()
+    assert len(set(plane.alert_keys())) == expected, plane.alert_keys()
+
+
+def test_fail_open_alert_truncates_a_long_helper_error(
+    tmp_path: Path, launcher_stream: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Defect class: an unbounded exception message bloats the CTO alert body."""
+    lane_repo(tmp_path, handoff_text())
+    h = Harness(tmp_path, **{LANE: codex_pane(40)})
+
+    def boom(**_kwargs):
+        raise RuntimeError("x" * 5000)
+
+    monkeypatch.setattr(grok_lane, "check_handoff_anchors", boom)
+    enter_handoff(h)
+    h.tick(LANE)
+    assert len(alerts(h)) == 1
+    alert = alerts(h)[0]
+    assert "RuntimeError" in alert
+    assert "x" * cg.ALERT_DETAIL_CHARS in alert
+    assert "x" * (cg.ALERT_DETAIL_CHARS + 1) not in alert
+    assert len(alert) < cg.ALERT_DETAIL_CHARS + 300

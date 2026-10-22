@@ -98,6 +98,7 @@ ANCHOR_MAX_SENDBACKS = 3
 ANCHOR_SENDBACK_PREFIX = "ANCHOR CHECK"
 RELAUNCH_SETTLE_SECONDS = 900
 RELAUNCH_TAIL_LINES = 6
+ALERT_DETAIL_CHARS = 600
 # lstart is five words (``Fri Oct 16 12:10:40 2026``) only in the C locale; comm stays last.
 PS_ARGV = ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="]
 LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
@@ -158,7 +159,7 @@ def launcher_exit(text: str) -> tuple[int | None, str]:
             continue
         start = max(0, index - RELAUNCH_TAIL_LINES)
         tail = " | ".join(line.strip() for line in lines[start:index] if line.strip())
-        return int(match.group(1)), tail[-600:]
+        return int(match.group(1)), tail[-ALERT_DETAIL_CHARS:]
     return None, ""
 
 
@@ -411,7 +412,17 @@ class Guard:
         )
 
     def _anchor_alert(self, lane: Lane, s: dict[str, Any], body: str, key: str) -> None:
-        self.send("epics", body, key)
+        """Send one Fleet alert per occurrence; ``key`` dedupes only this handoff phase.
+
+        The Fleet plane keeps an idempotency key forever and refuses a reused key
+        with a different payload (``authority._check_idempotency_tx``); every body
+        here carries a timestamp, so a fixed key would silently drop every repeat
+        alert after the first. The stable cause key therefore stays in
+        ``anchor_alerts`` for the once-per-phase check, and the send appends the
+        phase start (``since``) so a later phase is a new occurrence.
+        """
+        phase = s.get("since") or iso(self.now())
+        self.send("epics", body, f"{key}-{phase}")
         alerts = s.setdefault("anchor_alerts", [])
         if key not in alerts:
             alerts.append(key)
@@ -428,14 +439,13 @@ class Guard:
             verdict = self._anchor_verdict(lane)
         except Exception as exc:  # fail open: a check bug must not wedge the lane
             if not s.get("anchor_check_failed"):
-                self.log(
-                    f"{lane.name} handoff: anchor check unavailable ({type(exc).__name__}: {exc}); exiting as before"
-                )
+                detail = f"{type(exc).__name__}: {str(exc)[-ALERT_DETAIL_CHARS:]}"
+                self.log(f"{lane.name} handoff: anchor check unavailable ({detail}); exiting as before")
                 self._anchor_alert(
                     lane,
                     s,
                     f"CTO-ALERT {iso(self.now())}: {lane.name} anchor check unavailable "
-                    f"({type(exc).__name__}: {exc}); exiting as before (fail-open)",
+                    f"({detail}); exiting as before (fail-open)",
                     f"anchor-fail-open-{lane.name}",
                 )
                 s["anchor_check_failed"] = True
@@ -585,7 +595,9 @@ class Guard:
             "epics",
             f"CTO-ALERT {iso(self.now())}: {lane.name} launcher exited rc={rc} after relaunch; "
             f"pane left as is (no relaunch loop). stderr tail: {tail or '(none captured)'}",
-            f"launcher-exit-{lane.name}-{rc}",
+            # Keyed on the relaunch occurrence: a fixed key makes the Fleet plane
+            # refuse the next, differently timestamped alert for the same lane and rc.
+            f"launcher-exit-{lane.name}-{rc}-{started}",
         )
 
     def _idle(self, lane: Lane, text: str) -> bool:
@@ -675,12 +687,6 @@ class Guard:
             s["alerted"] = True
 
     def _relaunch(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], pct: int | None, snap: PaneSnapshot) -> None:
-        if s.get("relaunch_hold") is not None:
-            self.log(
-                f"{lane.name} relaunch refused ctx_pct={pct}: launcher already exited rc={s['relaunch_hold']}; "
-                "alert sent, no relaunch loop"
-            )
-            return
         if self._human(lane):
             return
         try:
