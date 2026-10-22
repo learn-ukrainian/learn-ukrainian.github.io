@@ -644,6 +644,52 @@ def test_runner_records_failures_and_rejects_empty_or_inconsistent_collection(
     assert receipt["collection_consistent"] == all(ids == collections[-1] for ids in collections)
 
 
+@pytest.mark.parametrize("returncode", [0, 17])
+def test_runner_records_worker_exit_after_pytest_teardown(measurement, monkeypatch, returncode):
+    """Node-down notification can precede OS exit, so hook-time poll loses the status."""
+    raw, _ = measurement
+    Path("ci-artifacts").mkdir()
+    Path("ci-artifacts/pytest-file-durations.json").write_text("{}")
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: SHA)
+
+    def fake_pytest(args, plugins):
+        recorder = plugins[0]
+        recorder.core = "CTracer"
+        recorder.subprocess_patch = True
+        ids = ["test_child.py::test_child"]
+        if returncode:
+            ids.append("test_child.py::test_crash")
+        recorder.pytest_xdist_node_collection_finished(None, ids)
+        recorder.completed_nodeids.add("test_child.py::test_child")
+        if returncode:
+            recorder.pytest_handlecrashitem("test_child.py::test_crash", None, None)
+        # Hold the process alive through node-down without relying on scheduler timing.
+        with subprocess.Popen(
+            [sys.executable, "-c", f"import os, sys; os.close(1); sys.stdin.buffer.read(1); sys.exit({returncode})"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        ) as process:
+            assert process.stdout.read() == b""
+            assert process.poll() is None
+            recorder.pytest_testnodedown(
+                SimpleNamespace(gateway=SimpleNamespace(id="gw0", _io=SimpleNamespace(popen=process))),
+                "Not properly terminated" if returncode else None,
+            )
+            recorder.pytest_testnodedown(SimpleNamespace(gateway=SimpleNamespace(id="remote")), None)
+            process.communicate(input=b"x", timeout=10)
+            assert process.returncode == returncode
+        return int(bool(returncode))
+
+    monkeypatch.setattr(pytest, "main", fake_pytest)
+    assert main(["run", "--output", str(raw), "--shard", "1", "--", "test_child.py"]) == int(bool(returncode))
+    receipt = json.loads((raw / "receipt.json").read_text())
+    assert receipt["worker_exits"] == [
+        {"worker": "gw0", "returncode": returncode, "unexpected": bool(returncode)},
+        {"worker": "remote", "returncode": None, "unexpected": False},
+    ]
+    assert receipt["crashed_nodeids"] == (["test_child.py::test_crash"] if returncode else [])
+
+
 @pytest.mark.parametrize(
     "fail,core,patch,expected",
     [

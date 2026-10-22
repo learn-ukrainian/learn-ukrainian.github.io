@@ -27,6 +27,7 @@ class CollectionRecorder:
         self.crashed_nodeids: set[str] = set()
         self.collection_errors: list[str] = []
         self.worker_exits: list[dict] = []
+        self.worker_processes: dict[str, subprocess.Popen] = {}
 
     def pytest_runtestloop(self, session) -> Generator[None, None, object]:
         # Read the active pytest-cov instance before it switches to its reporting instance.
@@ -60,10 +61,12 @@ class CollectionRecorder:
     def pytest_testnodedown(self, node, error) -> None:
         # Local popen gateways expose the process; other transports remain unknown.
         process = getattr(getattr(node.gateway, "_io", None), "popen", None)
+        if process is not None:
+            self.worker_processes[node.gateway.id] = process
         self.worker_exits.append(
             {
                 "worker": node.gateway.id,
-                "returncode": process.poll() if process is not None else None,
+                "returncode": None,
                 "unexpected": error is not None,
             }
         )
@@ -86,6 +89,12 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
     # Match `python -m pytest` import semantics despite running a helper outside the measured tree.
     sys.path.insert(0, str(Path.cwd()))
     status = int(pytest.main(pytest_args, plugins=[recorder]))
+    # Node-down reports channel closure before the process necessarily exits.
+    # pytest.main returns after xdist's gateway teardown has waited for workers.
+    for worker_exit in recorder.worker_exits:
+        process = recorder.worker_processes.get(worker_exit["worker"])
+        if process is not None:
+            worker_exit["returncode"] = process.poll()
     consistent = all(ids == recorder.nodeids for ids in recorder.collections)
     receipt = {
         "sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, timeout=30).strip(),
