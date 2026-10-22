@@ -229,7 +229,9 @@ def _public_navigation_href(href: str) -> str | None:
     A configured destination can carry a private host, credentials, or a
     loopback/private address. Those are navigation values, not diagnostic
     configuration: the public surface withholds them and keeps D13 unmet rather
-    than publishing a locator. No DNS lookup is performed.
+    than publishing a locator. No DNS lookup is performed, so a DNS name cannot
+    establish its target or audience; only a globally routable IP literal has
+    both settled, and every other destination is withheld.
     """
     try:
         parts = urllib.parse.urlsplit(href)
@@ -245,14 +247,8 @@ def _public_navigation_href(href: str) -> str | None:
     try:
         address = ipaddress.ip_address(host)
     except ValueError:
-        return href
-    if (
-        address.is_private
-        or address.is_loopback
-        or address.is_link_local
-        or address.is_unspecified
-        or address.is_reserved
-    ):
+        return None
+    if not address.is_global:
         return None
     return href
 

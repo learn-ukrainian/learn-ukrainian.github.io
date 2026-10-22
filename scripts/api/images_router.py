@@ -295,18 +295,28 @@ def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
     )
 
 
-def _render_url(record: dict[str, Any]) -> str | None:
+def _render_url(record: dict[str, Any], pdf_catalog: dict[str, dict]) -> str | None:
     """Renderable page URL for one indexed image, or ``None`` when unprovable.
 
     A description match is only useful when the caller can retrieve the image.
-    The existing page-render route supplies that URL; a record without a usable
-    page identity stays explicitly unknown rather than borrowing another page.
+    The existing page-render route supplies that URL, so a URL is advertised
+    only when the PDF catalog holds the book and its page count proves the page
+    exists. A record without a usable page identity or bounds stays explicitly
+    unknown rather than promising a route that answers 404.
     """
     stem = record.get("pdf_stem")
     page = record.get("page")
     if not isinstance(stem, str) or not stem.strip():
         return None
     if isinstance(page, bool) or not isinstance(page, int) or page < 1:
+        return None
+    entry = pdf_catalog.get(stem.strip())
+    if not isinstance(entry, dict):
+        return None
+    page_count = entry.get("page_count")
+    if isinstance(page_count, bool) or not isinstance(page_count, int) or page_count < 1:
+        return None
+    if page > page_count:
         return None
     quoted = urllib.parse.quote(stem.strip(), safe="")
     return f"/api/images/page_render/{quoted}/{page}.png"
@@ -555,7 +565,7 @@ async def browse_annotations(
             "teaching_value": rec.get("teaching_value", ""),
             "element_type": rec.get("element_type", ""),
             "position": rec.get("position", ""),
-            "render_url": _render_url(rec),
+            "render_url": _render_url(rec, store.index.pdf_catalog),
         })
 
     total = len(results)
