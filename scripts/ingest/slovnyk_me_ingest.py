@@ -352,8 +352,9 @@ def ingest_cache(
     Original source URLs and fetched_at survive, each row names its cache file, the
     full-text SHA-256 and the importer version, and observed 404s become rows in
     ``slovnyk_me_lookup_misses``. A malformed snapshot refuses before any write; an
-    existing database gets a temporary local copy first, deleted after the commit
-    and kept, with its path, if the write fails.
+    existing database gets a temporary local copy first, deleted only as the last
+    step after the commit and every report read, and kept, with its path, if any
+    step fails.
     """
     entries, misses, report = read_cache(
         cache_dir, words=words, dictionaries=dictionaries, max_text_chars=max_text_chars,
@@ -378,12 +379,12 @@ def ingest_cache(
             conn.executemany(INSERT_SQL, [_entry_values(row) for row in entries])
             conn.executemany(MISS_INSERT_SQL, [_miss_values(row) for row in misses])
             conn.execute(MISS_SUPERSEDED_SQL)
+        report.inserted = _table_count(conn, "slovnyk_me_entries") - entries_before
+        report.inserted_misses = _table_count(conn, "slovnyk_me_lookup_misses") - misses_before
         if backup is not None:
             backup.unlink(missing_ok=True)
             report.backup_path = None
             report.backup_removed = True
-        report.inserted = _table_count(conn, "slovnyk_me_entries") - entries_before
-        report.inserted_misses = _table_count(conn, "slovnyk_me_lookup_misses") - misses_before
     except BaseException as exc:
         if backup is not None and report.backup_path is not None:
             exc.add_note(f"pre-import copy retained at {backup}")
