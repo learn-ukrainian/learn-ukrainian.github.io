@@ -161,11 +161,11 @@ class _Provider:
         self.calls = 0
         self.down = False
 
-    def __call__(self, token: str) -> str:
+    def __call__(self, token: str) -> tuple[str, object]:
         self.calls += 1
         if self.down or not token.startswith(_TOKEN_PREFIX):
             raise cau.ClaudeAccountRefused("claude_account_identity_unavailable")
-        return token.split(":", 1)[1]
+        return token.split(":", 1)[1], None
 
 
 @pytest.fixture

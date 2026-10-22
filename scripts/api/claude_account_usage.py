@@ -292,7 +292,8 @@ def _prove_owner(directory: int, account: str) -> None:
         raise ClaudeAccountRefused(f"claude_account_credentials_{suffix}") from None
     if token is None:
         raise ClaudeAccountRefused("claude_account_credentials_missing")
-    if _claude_selected_identity(token) != account:
+    identity, _organization = _claude_selected_identity(token)
+    if identity != account:
         raise ClaudeAccountRefused("claude_account_unverified")
 
 
