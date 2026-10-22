@@ -789,7 +789,17 @@ Callers and their ownership proofs:
 
 - Regular dispatch worktrees: the P0 reaper. `post_task_reap`'s main path and
   `delegate`'s completed-worktree cleanup call it rather than removing
-  anything themselves.
+  anything themselves. After the worker records a terminal status and exits,
+  `delegate.py` schedules `post_task_reap --apply` for that task unless the
+  dispatch passed `--no-auto-reap` or `--keep-worktree`, the status is
+  `needs_finalize` or `dry_run`, or the task is review-typed. Review
+  worktrees stay mounted at worker exit because the reaper cannot see whether
+  the verdict was posted; reap them after the verdict, as before. A refusal
+  (dirty, unpushed, locked, live, or ambiguous) is kept and reported. The
+  manual command remains the backstop, including a worker killed before it
+  wrote a terminal status. The worker's existing runtime-lease cleanup removes
+  the per-task temp directory on that same exit; this path retries that
+  cleanup only when the lease directory is still present.
 - `delegate` settle and superseded-review cleanup remove only a checkout the
   dispatch created. `delegate._release_stale_branch_holders` performs a
   non-force release after clean, synced, terminal-owner checks so a blocked

@@ -107,7 +107,10 @@ remove a worktree or invent a second removal path.
 Clean `read-only` dispatch worktrees are removed automatically on any
 terminal status; clean `workspace-write` and `danger` trees are removed
 only on `done` with exit code 0 (#8548); `--keep-worktree` and dirty trees
-are kept.
+are kept. After the worker exits, delegate also schedules the common reaper
+for any other terminal status except `needs_finalize` and `dry_run`.
+`--no-auto-reap` keeps the tree. Review-typed tasks are not auto-reaped at
+worker exit, because the reaper cannot see whether the verdict was posted.
 
 ## When YOU (not a delegated agent) need isolation
 

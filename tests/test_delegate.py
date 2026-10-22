@@ -15568,6 +15568,7 @@ def _run_settle_reap_worker(
     returncode: int = 0,
     dirty: bool = False,
     keep_worktree: bool = False,
+    no_auto_reap: bool = False,
     require_review_verdict: bool = False,
     commits_ahead: int | None = None,
     worktree_reused: bool | None = False,
@@ -15639,6 +15640,7 @@ def _run_settle_reap_worker(
             hard_timeout=60,
             effort="medium",
             keep_worktree=keep_worktree,
+            no_auto_reap=no_auto_reap,
             require_review_verdict=require_review_verdict,
         )
     state = delegate._read_state(state_path)
@@ -15973,6 +15975,311 @@ def test_keep_worktree_flag_keeps_clean_read_only_checkout(tmp_tasks_dir, tmp_pa
     assert state["worktree_reap"] is None
     assert worktree.exists()
     assert _branch_ref_present(primary, branch)
+
+
+def test_no_auto_reap_keeps_a_clean_read_only_checkout(tmp_tasks_dir, tmp_path, monkeypatch):
+    """``--no-auto-reap`` keeps the checkout settle would otherwise remove."""
+    _primary, worktree, _branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-no-auto",
+        mode="read-only",
+        no_auto_reap=True,
+    )
+
+    assert state["status"] == "done"
+    assert state["no_auto_reap"] is True
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+
+
+def _auto_reap_record(task_id: str, **extra: object) -> None:
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "status": "done", "agent": "codex", **extra},
+    )
+
+
+def _worker_namespace(**overrides: object) -> argparse.Namespace:
+    values: dict[str, object] = {
+        "task_id": "exit-code",
+        "agent": "codex",
+        "mode": "read-only",
+        "cwd": "checkout",
+        "model": None,
+        "hard_timeout": 1,
+        "provider": None,
+        "output_schema": None,
+        "output_schema_sha256": None,
+        "harness": None,
+        "silence_timeout": 1,
+        "max_budget_usd": None,
+        "effort": None,
+        "initial_response_timeout": 1,
+        "keep_worktree": False,
+        "no_auto_reap": False,
+        "require_review_verdict": False,
+        "runtime_tmp_root": None,
+        "runtime_tmp_namespace_root": None,
+        "run_nonce": None,
+        "review_id": None,
+        "attempt_id": None,
+        "mcp_config_path": None,
+        "strict_mcp_config": False,
+        "review_manifest": None,
+        "review_input_root": None,
+        "review_access": "isolated",
+        "finalize_open_pr": False,
+    }
+    values.update(overrides)
+    return argparse.Namespace(**values)
+
+
+@pytest.mark.parametrize(
+    ("record", "reason"),
+    [
+        ({}, "no task record"),
+        ({"status": "done", "no_auto_reap": True}, "no-auto-reap"),
+        ({"status": "done", "keep_worktree": True}, "keep-worktree"),
+        ({"status": "done", "review": True}, "review task"),
+        ({"status": "done", "pr": 12}, "review task"),
+        ({"status": "done", "type": "review"}, "review task"),
+        ({"status": "needs_finalize"}, "needs_finalize"),
+        ({"status": "dry_run"}, "dry_run"),
+        ({"status": "running"}, "not terminal"),
+        ({"status": "done", "review": False, "pr": None, "require_review_verdict": False}, None),
+    ],
+)
+def test_auto_reap_skip_reason_matches_the_recorded_task(record, reason):
+    assert delegate._auto_reap_skip_reason(record) == reason
+
+
+def test_schedule_auto_reap_is_inert_without_the_dispatch_marker(tmp_tasks_dir, monkeypatch):
+    """In-process tests and status commands must not spawn a reaper child."""
+    _auto_reap_record("inert-task")
+    monkeypatch.delenv(delegate._AUTO_REAP_DISPATCH_ENV, raising=False)
+    calls = []
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: calls.append(1))
+    delegate._schedule_terminal_auto_reap("inert-task")
+    assert calls == []
+    assert "auto_reap_receipt" not in delegate._read_state(delegate._state_path("inert-task"))
+
+
+def test_schedule_auto_reap_spawns_the_common_reaper_after_the_worker(tmp_tasks_dir, monkeypatch):
+    task_id = "spawn-reap"
+    _auto_reap_record(
+        task_id,
+        worktree_path="SHOULD-NOT-BE-CWD",
+        worker_identity={"pid": os.getpid(), "start_time": 123},
+    )
+    monkeypatch.setenv(delegate._AUTO_REAP_DISPATCH_ENV, task_id)
+    spawned = []
+
+    def fake_popen(command, **kwargs):
+        spawned.append((command, kwargs))
+        return MagicMock()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    delegate._schedule_terminal_auto_reap(task_id)
+
+    assert len(spawned) == 1
+    command, kwargs = spawned[0]
+    assert command[2] == "_auto_reap"
+    assert "--task-id" in command and task_id in command
+    assert "--worker-pid" in command and str(os.getpid()) in command
+    assert "--worker-start-time" in command and "123" in command
+    assert "SHOULD-NOT-BE-CWD" not in command
+    assert kwargs["start_new_session"] is True
+    assert kwargs["close_fds"] is True
+    assert kwargs["cwd"] == str(delegate._main_checkout_root(delegate._REPO_ROOT))
+    assert kwargs["cwd"] != "SHOULD-NOT-BE-CWD"
+    assert kwargs["stdin"] is subprocess.DEVNULL
+    assert kwargs["stdout"] is subprocess.DEVNULL
+    assert delegate._AUTO_REAP_DISPATCH_ENV not in kwargs["env"]
+    assert "TMPDIR" not in kwargs["env"]
+    assert "LU_RUNTIME_TMP_ROOT" not in kwargs["env"]
+
+
+def test_schedule_auto_reap_records_a_skip_and_does_not_call_the_reaper(tmp_tasks_dir, monkeypatch, capsys):
+    task_id = "review-skip"
+    _auto_reap_record(task_id, review=True, require_review_verdict=True)
+    monkeypatch.setenv(delegate._AUTO_REAP_DISPATCH_ENV, task_id)
+
+    def refuse(*_args, **_kwargs):
+        raise AssertionError("review tasks are not auto-reaped")
+
+    monkeypatch.setattr("scripts.fleet.post_task_reap.post_task_reap", refuse)
+    monkeypatch.setattr(delegate.subprocess, "Popen", refuse)
+    delegate._schedule_terminal_auto_reap(task_id)
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "done"
+    receipt_path = delegate._state_path(task_id).with_suffix(".reap.json")
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["skipped"] is True
+    assert receipt["skip_reason"] == "review task"
+    assert receipt["apply"] is False
+    assert state["auto_reap_receipt"] == delegate._auto_reap_receipt_pointer(receipt_path)
+    assert not state["auto_reap_receipt"].startswith("/")
+    assert "WARNING" not in capsys.readouterr().err
+
+
+def test_execute_auto_reap_keeps_status_when_the_reaper_raises(tmp_tasks_dir, monkeypatch, capsys):
+    task_id = "reaper-raises"
+    _auto_reap_record(task_id, status="failed")
+
+    def explode(*_args, **_kwargs):
+        raise RuntimeError("secret /do/not/print")
+
+    monkeypatch.setattr("scripts.fleet.post_task_reap.post_task_reap", explode)
+    delegate._execute_auto_reap(
+        task_id,
+        tasks_dir_path=delegate.tasks_dir(),
+        repo_root=delegate._REPO_ROOT,
+    )
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "failed"
+    assert state["auto_reap_receipt"].endswith(".reap.json")
+    err = capsys.readouterr().err
+    assert err.count("WARNING") == 1
+    assert "RuntimeError" in err
+    assert "/do/not/print" not in err
+    receipt = json.loads(delegate._state_path(task_id).with_suffix(".reap.json").read_text(encoding="utf-8"))
+    assert receipt["main_action"] == "error"
+    assert "/do/not/print" not in json.dumps(receipt)
+
+
+def test_execute_auto_reap_records_a_retained_result_and_retries_a_left_lease(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    task_id = "reaper-retains"
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    _auto_reap_record(task_id, runtime_tmp_root=str(lease))
+    calls = []
+
+    def retained(*_args, **kwargs):
+        calls.append(kwargs)
+        return {
+            "task_id": task_id,
+            "apply": True,
+            "main_worktree": {
+                "action": "retained",
+                "reason": "worktree has uncommitted changes",
+                "error": None,
+            },
+            "errors": [],
+        }
+
+    lease_calls = []
+    monkeypatch.setattr("scripts.fleet.post_task_reap.post_task_reap", retained)
+    monkeypatch.setattr(
+        delegate,
+        "_reap_runtime_tmp_lease",
+        lambda root, namespace, **_kwargs: lease_calls.append((root, namespace)) or {"tmp_bytes_freed": 0, "tmp_reap_error": None},
+    )
+    delegate._execute_auto_reap(task_id, tasks_dir_path=delegate.tasks_dir(), repo_root=delegate._REPO_ROOT)
+
+    assert calls and calls[0]["apply"] is True
+    assert lease_calls == [(lease, lease.parent)]
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "done"
+    assert state["tmp_reap_error"] is None
+    receipt = json.loads(delegate._state_path(task_id).with_suffix(".reap.json").read_text(encoding="utf-8"))
+    assert receipt["main_action"] == "retained"
+    assert receipt["main_reason"] == "worktree has uncommitted changes"
+    assert "WARNING" not in capsys.readouterr().err
+
+
+def test_execute_auto_reap_does_not_touch_a_missing_lease(tmp_tasks_dir, tmp_path, monkeypatch):
+    task_id = "lease-gone"
+    missing = tmp_path / "already-gone"
+    _auto_reap_record(task_id, runtime_tmp_root=str(missing))
+    monkeypatch.setattr(
+        "scripts.fleet.post_task_reap.post_task_reap",
+        lambda *_a, **_k: {"apply": True, "main_worktree": {"action": "removed", "reason": "clean", "error": None}, "errors": []},
+    )
+
+    def refuse(*_args, **_kwargs):
+        raise AssertionError("a missing lease is not passed to the lease reaper")
+
+    monkeypatch.setattr(delegate, "_reap_runtime_tmp_lease", refuse)
+    delegate._execute_auto_reap(task_id, tasks_dir_path=delegate.tasks_dir(), repo_root=delegate._REPO_ROOT)
+    assert delegate._read_state(delegate._state_path(task_id))["status"] == "done"
+
+
+@pytest.mark.parametrize("code", [0, 1])
+def test_cmd_worker_auto_reap_failure_does_not_change_the_exit_code(monkeypatch, capsys, code):
+    monkeypatch.setattr(delegate.sys, "stdin", io.StringIO("prompt"))
+    monkeypatch.setattr(delegate, "_run_worker", lambda **_kwargs: code)
+
+    def explode(_task_id):
+        raise RuntimeError("secret /do/not/print")
+
+    monkeypatch.setattr(delegate, "_schedule_terminal_auto_reap", explode)
+    assert delegate.cmd_worker(_worker_namespace()) == code
+    err = capsys.readouterr().err
+    assert "RuntimeError" in err
+    assert "/do/not/print" not in err
+
+
+def test_cmd_auto_reap_returns_zero_when_the_reaper_raises(tmp_tasks_dir, monkeypatch, capsys):
+    task_id = "child-raises"
+    _auto_reap_record(task_id, status="timeout")
+    monkeypatch.setattr(
+        "scripts.fleet.post_task_reap.post_task_reap",
+        lambda *_a, **_k: (_ for _ in ()).throw(RuntimeError("secret /do/not/print")),
+    )
+    args = argparse.Namespace(
+        task_id=task_id,
+        worker_pid=999_999_991,
+        worker_start_time=None,
+        tasks_dir=delegate.tasks_dir(),
+        repo_root=delegate._REPO_ROOT,
+    )
+    assert delegate.cmd_auto_reap(args) == 0
+    assert delegate._read_state(delegate._state_path(task_id))["status"] == "timeout"
+    err = capsys.readouterr().err
+    assert "RuntimeError" in err
+    assert "/do/not/print" not in err
+
+
+def test_worker_exit_probe_does_not_treat_pid_zero_as_a_signal():
+    assert delegate._worker_has_exited(0, None) is True
+    assert delegate._worker_has_exited(-3, None) is True
+    assert delegate._worker_has_exited(os.getpid(), None) is False
+    assert delegate._wait_for_worker_exit(os.getpid(), None, timeout_s=0) is False
+    assert delegate._worker_has_exited(999_999_991, None) is True
+
+
+def test_dispatch_parsers_accept_no_auto_reap():
+    parser = delegate.build_parser()
+    dispatch = parser.parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "t",
+            "--prompt",
+            "x",
+            "--mode",
+            "read-only",
+            "--no-auto-reap",
+        ]
+    )
+    worker = parser.parse_args(
+        ["_worker", "--task-id", "t", "--agent", "codex", "--mode", "read-only", "--cwd", "checkout", "--no-auto-reap"]
+    )
+    assert dispatch.no_auto_reap is True
+    assert worker.no_auto_reap is True
+    hidden = parser.parse_args(
+        ["_auto_reap", "--task-id", "t", "--worker-pid", "4", "--tasks-dir", "tasks", "--repo-root", "repo"]
+    )
+    assert hidden.worker_start_time is None
+    assert hidden.func is delegate.cmd_auto_reap
 
 
 def test_read_only_review_attached_to_live_implementer_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):

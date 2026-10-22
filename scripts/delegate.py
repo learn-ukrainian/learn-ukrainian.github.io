@@ -8938,6 +8938,7 @@ def _should_reap_settled_worktree(
     final_status: str,
     returncode: int | None,
     dirty_on_exit: bool | None,
+    no_auto_reap: bool = False,
 ) -> bool:
     """Return whether settle may remove this dispatch checkout.
 
@@ -8945,11 +8946,12 @@ def _should_reap_settled_worktree(
     --mode read-only --worktree``. The sealed snapshot helper tears its own
     temp root down and is not a second worktree owner.
 
-    Dirty or unknown trees stay mounted. ``--keep-worktree`` stays mounted.
-    Read-only reaps on any terminal status. ``workspace-write`` uses the same
-    rule as ``danger``: status ``done`` and return code 0.
+    Dirty or unknown trees stay mounted. ``--keep-worktree`` and
+    ``--no-auto-reap`` stay mounted. Read-only reaps on any terminal status.
+    ``workspace-write`` uses the same rule as ``danger``: status ``done`` and
+    return code 0.
     """
-    if keep_worktree or dirty_on_exit is not False:
+    if keep_worktree or no_auto_reap or dirty_on_exit is not False:
         return False
     if mode == "read-only":
         return final_status in _READ_ONLY_SETTLE_REAP_STATUSES
@@ -11209,6 +11211,7 @@ def _run_worker(
     max_budget_usd: float | None = None,
     initial_response_timeout: int = DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     keep_worktree: bool = False,
+    no_auto_reap: bool = False,
     provider: str | None = None,
     output_schema_path: str | None = None,
     output_schema_sha256: str | None = None,
@@ -12420,6 +12423,7 @@ def _run_worker(
     if worktree_path and _should_reap_settled_worktree(
         mode=mode,
         keep_worktree=keep_worktree,
+        no_auto_reap=no_auto_reap,
         final_status=final_status,
         returncode=returncode,
         dirty_on_exit=dirty_on_exit,
@@ -12479,6 +12483,7 @@ def _run_worker(
             "sources_mcp_call_count": _sources_mcp_call_count(result),
             "delivery_declaration": delivery_declaration,
             "keep_worktree": keep_worktree,
+            **({"no_auto_reap": True} if no_auto_reap else {}),
             "worktree_reap": worktree_reap,
             "tmp_bytes_freed": (
                 runtime_tmp_reap["tmp_bytes_freed"]
@@ -13948,6 +13953,7 @@ def _dispatch(
     )
     max_budget_usd = getattr(args, "max_budget_usd", None)
     keep_worktree = bool(getattr(args, "keep_worktree", False))
+    no_auto_reap = bool(getattr(args, "no_auto_reap", False))
 
     # Branch reuse always needs an isolated worktree.  A bare --branch uses
     # the normal dispatch subtree automatically; --cwd would otherwise make
@@ -14812,6 +14818,8 @@ def _dispatch(
                 dry_run_state["worktree_reused"] = False
             if primary_read_only_cwd:
                 dry_run_state["read_only_primary_cwd"] = True
+            if no_auto_reap:
+                dry_run_state["no_auto_reap"] = True
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
                 runtime_tmp_namespace_root,
@@ -15319,6 +15327,7 @@ def _dispatch(
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
             "keep_worktree": keep_worktree,
+            **({"no_auto_reap": True} if no_auto_reap else {}),
             "hard_timeout": args.hard_timeout,
             "silence_timeout": silence_timeout,
             "initial_response_timeout": initial_response_timeout,
@@ -15502,6 +15511,8 @@ def _dispatch(
         cmd.extend(_dispatch_worker_identity_flags(args, worker_execution["harness"]))
         if keep_worktree:
             cmd.append("--keep-worktree")
+        if no_auto_reap:
+            cmd.append("--no-auto-reap")
         if worker_execution["finalize_open_pr"]:
             cmd.append("--finalize-open-pr")
         if worker_execution["max_budget_usd"] is not None:
@@ -19662,6 +19673,364 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Automatic common-reaper call after the worker records a terminal status.
+# The recorded PID is this process, so post_task_reap runs in a detached
+# child only after this process has exited. Review tasks are not auto-reaped:
+# the reaper cannot tell whether the verdict was posted.
+# ---------------------------------------------------------------------------
+
+_AUTO_REAP_DISPATCH_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
+_AUTO_REAP_WORKER_EXIT_TIMEOUT_S = 60.0
+_AUTO_REAP_REVIEW_KEYS = (
+    "review",
+    "pr",
+    "review_attempt",
+    "require_review_verdict",
+    "review_profile",
+    "review_author_model",
+    "review_risk",
+    "review_id",
+    "review_mode",
+)
+
+
+def _auto_reap_warn(task_id: str, reason: str) -> None:
+    """One line, with an exception class or a fixed token, never a message."""
+    print(f"[delegate] WARNING: auto-reap for {task_id} failed ({reason})", file=sys.stderr)
+
+
+def _record_is_review_typed(state: Mapping[str, Any]) -> bool:
+    """True when the task record is a review. The verdict is posted later."""
+    if str(state.get("type") or "").strip().casefold() == "review":
+        return True
+    return any(bool(state.get(key)) for key in _AUTO_REAP_REVIEW_KEYS)
+
+
+def _auto_reap_skip_reason(state: Mapping[str, Any] | None) -> str | None:
+    """Why this terminal record must not be passed to the common reaper."""
+    if not isinstance(state, Mapping) or not state:
+        return "no task record"
+    if state.get("no_auto_reap"):
+        return "no-auto-reap"
+    if state.get("keep_worktree"):
+        return "keep-worktree"
+    if _record_is_review_typed(state):
+        return "review task"
+    status = state.get("status")
+    if status == "needs_finalize":
+        return "needs_finalize"
+    if status == "dry_run":
+        return "dry_run"
+    if status not in _TERMINAL_STATUSES:
+        return "not terminal"
+    return None
+
+
+def _task_record_path(tasks_dir_path: Path, task_id: str) -> Path:
+    safe = task_id.replace("/", "_").replace("\\", "_")
+    return tasks_dir_path / f"{safe}.json"
+
+
+def _auto_reap_receipt_pointer(path: Path) -> str:
+    """Repo-relative receipt path, or the file name when it is outside the repo."""
+    try:
+        relative = path.resolve().relative_to(_REPO_ROOT.resolve())
+    except (OSError, ValueError):
+        return path.name
+    text = relative.as_posix()
+    if _is_repo_relative(text):
+        return text
+    return path.name
+
+
+def _pathless_text(value: object) -> str | None:
+    if not isinstance(value, str):
+        return None
+    text = " ".join(value.split())
+    if not text or len(text) > 180 or any(token in text for token in ("/", "\\", "..", "~")):
+        return None
+    return text
+
+
+def _write_json_file(path: Path, payload: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f"{path.name}.tmp.{os.getpid()}")
+    temporary.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def _patch_task_record(state_path: Path, updates: Mapping[str, Any]) -> None:
+    """Add fields to a task record without changing its status."""
+    if not state_path.is_file():
+        return
+    safe_updates = {key: value for key, value in updates.items() if key != "status"}
+    with task_state_lock(state_path):
+        try:
+            current = json.loads(state_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            return
+        if not isinstance(current, dict):
+            return
+        status = current.get("status")
+        current.update(safe_updates)
+        current["status"] = status
+        _write_record_unlocked(state_path, current)
+
+
+def _load_task_record(state_path: Path) -> dict[str, Any] | None:
+    if not state_path.is_file():
+        return None
+    try:
+        loaded = json.loads(state_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    return loaded if isinstance(loaded, dict) else None
+
+
+def _retry_runtime_tmp_lease(state: Mapping[str, Any]) -> dict[str, Any]:
+    """Retry the existing lease reaper when the worker left the directory behind.
+
+    A missing path is not an error. Preservation refusals stay inside
+    ``_reap_runtime_tmp_lease`` and are not forced.
+    """
+    raw = state.get("runtime_tmp_root")
+    if not isinstance(raw, str) or not raw or not os.path.lexists(raw):
+        return {}
+    lease = Path(raw)
+    result = _reap_runtime_tmp_lease(lease, lease.parent, task_record=dict(state))
+    update: dict[str, Any] = {}
+    if isinstance(result.get("tmp_bytes_freed"), int):
+        update["tmp_bytes_freed"] = result["tmp_bytes_freed"]
+    if result.get("tmp_reap_error") is None or isinstance(result.get("tmp_reap_error"), str):
+        update["tmp_reap_error"] = result.get("tmp_reap_error")
+    return update
+
+
+def _reap_report_failed(report: Mapping[str, Any]) -> bool:
+    main = report.get("main_worktree")
+    main = main if isinstance(main, Mapping) else {}
+    errors = report.get("errors")
+    return bool(errors) or bool(main.get("error")) or main.get("action") == "error"
+
+
+def _execute_auto_reap(task_id: str, *, tasks_dir_path: Path, repo_root: Path) -> None:
+    """Call the common reaper and record its receipt. Never changes task status."""
+    state_path = _task_record_path(tasks_dir_path, task_id)
+    state = _load_task_record(state_path)
+    reason = _auto_reap_skip_reason(state)
+    report: dict[str, Any] | None = None
+    if reason is None and isinstance(state, dict):
+        from scripts.fleet import post_task_reap as post_task_reap_mod
+
+        try:
+            report = post_task_reap_mod.post_task_reap(
+                task_id,
+                tasks_dir=tasks_dir_path,
+                repo_root=repo_root,
+                apply=True,
+            )
+        except Exception as exc:
+            _auto_reap_warn(task_id, type(exc).__name__)
+            report = {
+                "task_id": task_id,
+                "apply": True,
+                "main_worktree": {"action": "error", "reason": None, "error": type(exc).__name__},
+                "errors": [type(exc).__name__],
+            }
+        else:
+            if not isinstance(report, dict) or _reap_report_failed(report):
+                _auto_reap_warn(task_id, "reaper error")
+                if not isinstance(report, dict):
+                    report = {
+                        "task_id": task_id,
+                        "apply": True,
+                        "main_worktree": {"action": "error", "reason": None, "error": "reaper error"},
+                        "errors": ["reaper error"],
+                    }
+    elif reason == "no task record":
+        _auto_reap_warn(task_id, reason)
+        return
+
+    main = report.get("main_worktree") if isinstance(report, dict) else None
+    main = main if isinstance(main, Mapping) else {}
+    errors = report.get("errors") if isinstance(report, dict) else None
+    receipt = {
+        "apply": bool(report.get("apply")) if isinstance(report, dict) else False,
+        "error_count": len(errors) if isinstance(errors, list) else 0,
+        "main_action": main.get("action") if isinstance(main.get("action"), str) else "skipped",
+        "main_reason": reason or _pathless_text(main.get("reason")),
+        "skip_reason": reason,
+        "skipped": reason is not None,
+        "task_id": task_id,
+    }
+    receipt_path = state_path.with_suffix(".reap.json")
+    try:
+        _write_json_file(receipt_path, receipt)
+    except OSError as exc:
+        _auto_reap_warn(task_id, type(exc).__name__)
+        return
+    updates: dict[str, Any] = {"auto_reap_receipt": _auto_reap_receipt_pointer(receipt_path)}
+    if isinstance(state, dict) and reason is None:
+        try:
+            updates.update(_retry_runtime_tmp_lease(state))
+        except Exception as exc:
+            _auto_reap_warn(task_id, type(exc).__name__)
+    _patch_task_record(state_path, updates)
+
+
+def _worker_has_exited(pid: int, start_time: int | None) -> bool | None:
+    """True when ``pid`` is gone or reused, False when it is still this worker.
+
+    ``None`` means the probe could not tell. ``os.kill(0, 0)`` is never used:
+    signal 0 to pid 0 signals the process group.
+    """
+    if pid <= 0:
+        return True
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return True
+    except OSError:
+        return None
+    if start_time is None:
+        return False
+    from scripts.common.acp_runtime_lock import process_start_time
+
+    current = process_start_time(pid)
+    if current is None:
+        return None
+    return current != start_time
+
+
+def _wait_for_worker_exit(pid: int, start_time: int | None, *, timeout_s: float) -> bool:
+    deadline = time.monotonic() + timeout_s
+    while True:
+        exited = _worker_has_exited(pid, start_time)
+        if exited is True:
+            return True
+        if exited is None or time.monotonic() >= deadline:
+            return False
+        time.sleep(0.05)
+
+
+def _recorded_worker_start(state: Mapping[str, Any], pid: int) -> int | None:
+    identity = state.get("worker_identity")
+    if isinstance(identity, Mapping) and identity.get("pid") == pid and type(identity.get("start_time")) is int:
+        return identity["start_time"]
+    from scripts.common.acp_runtime_lock import process_start_time
+
+    return process_start_time(pid)
+
+
+def _auto_reap_child_env() -> dict[str, str]:
+    """Drop the worker lease and the dispatch marker so the child cannot re-enter."""
+    env = os.environ.copy()
+    for name in ("TMPDIR", "LU_RUNTIME_TMP_ROOT", "LU_TASK_EVIDENCE_DIR", _AUTO_REAP_DISPATCH_ENV):
+        env.pop(name, None)
+    return env
+
+
+def _spawn_auto_reap_child(task_id: str, state: Mapping[str, Any]) -> None:
+    pid = os.getpid()
+    command = [
+        str(project_interpreter()),
+        str(Path(__file__).resolve()),
+        "_auto_reap",
+        "--task-id",
+        task_id,
+        "--worker-pid",
+        str(pid),
+        "--tasks-dir",
+        str(tasks_dir()),
+        "--repo-root",
+        str(_main_checkout_root(_REPO_ROOT)),
+    ]
+    start_time = _recorded_worker_start(state, pid)
+    if start_time is not None:
+        command.extend(["--worker-start-time", str(start_time)])
+    subprocess.Popen(
+        command,
+        cwd=str(_main_checkout_root(_REPO_ROOT)),
+        env=_auto_reap_child_env(),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        start_new_session=True,
+        close_fds=True,
+    )
+
+
+def _schedule_terminal_auto_reap(task_id: str) -> None:
+    """Schedule a common-reaper apply after this worker exits.
+
+    In-process callers (tests, status) do not carry this task's dispatch
+    marker, so they do not spawn a child that would wait on their own PID.
+    """
+    if os.environ.get(_AUTO_REAP_DISPATCH_ENV) != task_id:
+        return
+    state = _load_task_record(_state_path_no_create(task_id)) or {}
+    if _auto_reap_skip_reason(state) is not None:
+        _execute_auto_reap(task_id, tasks_dir_path=tasks_dir(), repo_root=_main_checkout_root(_REPO_ROOT))
+        return
+    try:
+        _spawn_auto_reap_child(task_id, state)
+    except OSError as exc:
+        # The worker is still this process, so do not call the reaper here.
+        _auto_reap_warn(task_id, type(exc).__name__)
+        state_path = _state_path_no_create(task_id)
+        receipt_path = state_path.with_suffix(".reap.json")
+        try:
+            _write_json_file(
+                receipt_path,
+                {
+                    "apply": False,
+                    "error_count": 1,
+                    "main_action": "error",
+                    "main_reason": type(exc).__name__,
+                    "skip_reason": None,
+                    "skipped": False,
+                    "task_id": task_id,
+                },
+            )
+            _patch_task_record(state_path, {"auto_reap_receipt": _auto_reap_receipt_pointer(receipt_path)})
+        except OSError as write_exc:
+            _auto_reap_warn(task_id, type(write_exc).__name__)
+
+
+def cmd_auto_reap(args: argparse.Namespace) -> int:
+    """Detached common-reaper apply. Always exits 0; the worker exit code stands."""
+    task_id = str(args.task_id)
+    try:
+        start_time = getattr(args, "worker_start_time", None)
+        exited = _wait_for_worker_exit(
+            int(args.worker_pid),
+            start_time if isinstance(start_time, int) else None,
+            timeout_s=_AUTO_REAP_WORKER_EXIT_TIMEOUT_S,
+        )
+        if not exited:
+            _auto_reap_warn(task_id, "worker still alive")
+            state_path = _task_record_path(args.tasks_dir, task_id)
+            receipt_path = state_path.with_suffix(".reap.json")
+            _write_json_file(
+                receipt_path,
+                {
+                    "apply": False,
+                    "error_count": 0,
+                    "main_action": "skipped",
+                    "main_reason": "worker still alive",
+                    "skip_reason": "worker still alive",
+                    "skipped": True,
+                    "task_id": task_id,
+                },
+            )
+            _patch_task_record(state_path, {"auto_reap_receipt": _auto_reap_receipt_pointer(receipt_path)})
+            return 0
+        _execute_auto_reap(task_id, tasks_dir_path=args.tasks_dir, repo_root=args.repo_root)
+    except Exception as exc:
+        _auto_reap_warn(task_id, type(exc).__name__)
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # _worker command — internal, called by cmd_dispatch's spawned process
 # ---------------------------------------------------------------------------
 
@@ -19669,40 +20038,51 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
 def cmd_worker(args: argparse.Namespace) -> int:
     """Internal entrypoint for the detached worker subprocess."""
     prompt = sys.stdin.read()
-    return _run_worker(
-        task_id=args.task_id,
-        agent=args.agent,
-        prompt=prompt,
-        mode=args.mode,
-        cwd_str=args.cwd,
-        model=args.model,
-        hard_timeout=args.hard_timeout,
-        provider=getattr(args, "provider", None),
-        output_schema_path=getattr(args, "output_schema", None),
-        output_schema_sha256=getattr(args, "output_schema_sha256", None),
-        harness=getattr(args, "harness", None),
-        silence_timeout=args.silence_timeout,
-        max_budget_usd=getattr(args, "max_budget_usd", None),
-        effort=args.effort,
-        initial_response_timeout=getattr(
-            args,
-            "initial_response_timeout",
-            DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
-        ),
-        keep_worktree=bool(getattr(args, "keep_worktree", False)),
-        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
-        runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
-        runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
-        run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
-        review_id=getattr(args, "review_id", None),
-        attempt_id=getattr(args, "attempt_id", None),
-        mcp_config_path=getattr(args, "mcp_config_path", None),
-        strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
-        review_manifest=getattr(args, "review_manifest", None),
-        review_input_root=getattr(args, "review_input_root", None),
-        review_access=getattr(args, "review_access", "isolated"),
-        finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
-    )
+    code = 1
+    try:
+        code = _run_worker(
+            task_id=args.task_id,
+            agent=args.agent,
+            prompt=prompt,
+            mode=args.mode,
+            cwd_str=args.cwd,
+            model=args.model,
+            hard_timeout=args.hard_timeout,
+            provider=getattr(args, "provider", None),
+            output_schema_path=getattr(args, "output_schema", None),
+            output_schema_sha256=getattr(args, "output_schema_sha256", None),
+            harness=getattr(args, "harness", None),
+            silence_timeout=args.silence_timeout,
+            max_budget_usd=getattr(args, "max_budget_usd", None),
+            effort=args.effort,
+            initial_response_timeout=getattr(
+                args,
+                "initial_response_timeout",
+                DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+            ),
+            keep_worktree=bool(getattr(args, "keep_worktree", False)),
+            no_auto_reap=bool(getattr(args, "no_auto_reap", False)),
+            require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+            runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
+            runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
+            run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
+            review_id=getattr(args, "review_id", None),
+            attempt_id=getattr(args, "attempt_id", None),
+            mcp_config_path=getattr(args, "mcp_config_path", None),
+            strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+            review_manifest=getattr(args, "review_manifest", None),
+            review_input_root=getattr(args, "review_input_root", None),
+            review_access=getattr(args, "review_access", "isolated"),
+            finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
+        )
+    finally:
+        # A reaper failure must not replace the worker's return code or an
+        # exception already in flight from _run_worker.
+        try:
+            _schedule_terminal_auto_reap(str(args.task_id))
+        except Exception as exc:
+            _auto_reap_warn(str(args.task_id), type(exc).__name__)
+    return code
 
 
 # ---------------------------------------------------------------------------
@@ -20053,6 +20433,15 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Keep a successful clean dispatch worktree instead of reaping it "
             "after the branch is recoverable from origin or PR state."
+        ),
+    )
+    d.add_argument(
+        "--no-auto-reap",
+        action="store_true",
+        help=(
+            "Leave this dispatch worktree mounted after the worker exits. "
+            "The default reaps a finished task through the common reaper. "
+            "A later fix round reuses the branch, not this worktree."
         ),
     )
     d.add_argument(
@@ -20614,6 +21003,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     )
     wk.add_argument("--keep-worktree", action="store_true")
+    wk.add_argument("--no-auto-reap", action="store_true")
     wk.add_argument("--finalize-open-pr", action="store_true")
     wk.add_argument("--require-review-verdict", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
@@ -20632,6 +21022,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)"
     )
     wk.set_defaults(func=cmd_worker)
+
+    # Detached common-reaper apply started by cmd_worker. Hidden.
+    auto = sub.add_parser("_auto_reap", help=argparse.SUPPRESS)
+    auto.add_argument("--task-id", required=True)
+    auto.add_argument("--worker-pid", type=int, required=True)
+    auto.add_argument("--worker-start-time", type=int, default=None)
+    auto.add_argument("--tasks-dir", type=Path, required=True)
+    auto.add_argument("--repo-root", type=Path, required=True)
+    auto.set_defaults(func=cmd_auto_reap)
 
     return p
 

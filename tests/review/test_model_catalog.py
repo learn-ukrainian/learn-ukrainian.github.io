@@ -486,11 +486,37 @@ def approved_agy_mode_baseline(baseline):
     return {**baseline, "adapters": adapters}
 
 
+def approved_auto_reap_dispatch_baseline(baseline):
+    """Apply the ``--no-auto-reap`` usage reflow after the account-option wrap.
+
+    The flag sits after ``--keep-worktree``. Argparse then wraps the review
+    options onto the following lines. Only dispatch usage synopses change.
+    """
+    indent = " " * 28
+    before = (
+        f"{indent}[--finalize-open-pr] [--require-review-verdict] [--review-profile {{code,infra,ukrainian}}]\n"
+        f"{indent}[--review-author-model MODEL] [--review-risk {{low,medium,high,critical}}]\n"
+    )
+    after = (
+        f"{indent}[--no-auto-reap] [--finalize-open-pr] [--require-review-verdict]\n"
+        f"{indent}[--review-profile {{code,infra,ukrainian}}] [--review-author-model MODEL]\n"
+        f"{indent}[--review-risk {{low,medium,high,critical}}]\n"
+    )
+    dispatch = deepcopy(baseline["dispatch"])
+    for row in dispatch:
+        stderr = row.get("stderr") or ""
+        if not stderr.startswith("usage: delegate.py dispatch "):
+            continue
+        assert stderr.count(before) == 1
+        row["stderr"] = stderr.replace(before, after, 1)
+    return {**baseline, "dispatch": dispatch}
+
+
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
     approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
-APPROVED_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
+APPROVED_BASELINE = approved_auto_reap_dispatch_baseline(approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE))
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
 
 
@@ -779,6 +805,37 @@ def test_claude_account_dispatch_baseline_changes_only_usage_option(configuratio
         else:
             assert new == old
     assert changed > 0
+
+
+def test_auto_reap_dispatch_baseline_adds_only_the_opt_out_flag():
+    before = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
+    original = deepcopy(before)
+    after = approved_auto_reap_dispatch_baseline(before)
+    assert before == original
+    assert after == APPROVED_BASELINE
+    assert {key: value for key, value in after.items() if key != "dispatch"} == {
+        key: value for key, value in before.items() if key != "dispatch"
+    }
+    changed = 0
+    for old, new in zip(before["dispatch"], after["dispatch"], strict=True):
+        if old == new:
+            assert not (old.get("stderr") or "").startswith("usage: delegate.py dispatch ")
+            continue
+        changed += 1
+        assert {key: value for key, value in old.items() if key != "stderr"} == {
+            key: value for key, value in new.items() if key != "stderr"
+        }
+        old_tokens = old["stderr"].split()
+        inserted = old_tokens.index("[--keep-worktree]") + 1
+        assert new["stderr"].split() == [
+            *old_tokens[:inserted],
+            "[--no-auto-reap]",
+            *old_tokens[inserted:],
+        ]
+    usage_rows = sum(
+        (row.get("stderr") or "").startswith("usage: delegate.py dispatch ") for row in before["dispatch"]
+    )
+    assert changed == usage_rows > 0
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -1694,7 +1751,9 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             "no-cli",
         )
     )))
-    assert actual == approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
+    assert actual == approved_auto_reap_dispatch_baseline(
+        approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
+    )
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
