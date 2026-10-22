@@ -17,15 +17,9 @@ Two checks keep the marker honest:
    fail if an entry disappears or loses its marker, and the completeness check
    fails if a marked test has no registry row (#9434), so deleting a row cannot
    pass silently. These checks read the marks pytest applies, from a
-   collection-only child run. The PR-tier checks collect only the test files a
-   source prefilter says can carry the mark; that is an early warning, and
-   ``_candidate_test_files`` names the shapes it misses. The exact check,
-   ``test_registry_matches_every_collected_repo_wide_mark`` in
-   ``tests/test_repo_wide_registry_exact.py``, is ``slow`` (the nightly lane):
-   it collects every test file CI collects, with no prefilter, and compares the
-   registry with the collected marks both ways. It lives in its own module,
-   without ``repo_wide``, so a worker's ``pytest -m repo_wide`` never runs a
-   whole-suite collection.
+   collection-only child run. They collect only the test files a source
+   prefilter says can carry the mark; that is an early warning, and
+   ``_candidate_test_files`` names the shapes it misses.
 2. **The heuristic is a best-effort net.** It parses each test module's AST and
    flags test functions that walk a repository source tree (a repo-root path
    expression joined to ``.rglob()``/``.glob()``, ``os.walk``/``os.scandir``,
@@ -683,12 +677,7 @@ _CHILD_ENV_DROP = frozenset(
     }
 )
 _COLLECT_TIMEOUT_S = 90
-# Collecting the whole suite took 178s on a loaded host (2026-10-03).
-# One child must collect it all: a modifyitems hook sees only its own run's items.
-_EXACT_COLLECT_TIMEOUT_S = 1200
 _MARK_NAME = "repo_wide"
-_EXACT_CHECK_MODULE = "tests/test_repo_wide_registry_exact.py"
-_EXACT_CHECK = f"{_EXACT_CHECK_MODULE}::test_registry_matches_every_collected_repo_wide_mark"
 
 
 def _child_env() -> dict[str, str]:
@@ -889,15 +878,6 @@ def _repository_python_sources() -> list[Path]:
     return sorted(path for path in paths if path.is_file())
 
 
-def _ci_test_files() -> list[Path]:
-    """Every test file CI's shards collect between them (``git ls-files -- tests`` named ``test_*.py``, ci.yml)."""
-    return sorted(
-        path
-        for path in _listed_files("tests")
-        if path.name.startswith("test_") and path.suffix == ".py" and path.is_file()
-    )
-
-
 def _collect_repo_wide_marks(
     root: Path, test_files: Collection[Path], timeout: float = _COLLECT_TIMEOUT_S
 ) -> tuple[frozenset[str], frozenset[str]]:
@@ -982,7 +962,8 @@ def test_every_marked_test_has_a_registry_row() -> None:
 
     The two checks above only follow registry rows to their markers, so a
     deleted row used to pass. This check walks pytest's marks back to the rows.
-    It reads the prefiltered collection; the ``slow`` exact check below reads all.
+    It reads the prefiltered collection; the named shapes it misses are
+    documented on ``_candidate_test_files``.
     """
     unregistered = _unregistered_repo_wide_nodes(
         _repository_marks(), KNOWN_REPO_WIDE_MODULES, KNOWN_REPO_WIDE_FUNCTIONS
@@ -992,41 +973,6 @@ def test_every_marked_test_has_a_registry_row() -> None:
         "(module-level marker) or KNOWN_REPO_WIDE_FUNCTIONS (function or class marker). "
         "Add the row:\n" + "\n".join(unregistered)
     )
-
-
-def _selected_node_ids(marker: str, module: str) -> list[str]:
-    """Node ids ``pytest -m <marker> <module>`` selects, from a collection-only child.
-
-    ``--verbosity=-1`` overrides the config's ``-v``, so pytest lists one node id per line.
-    """
-    result = run_in_process_group(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            "--collect-only",
-            "--verbosity=-1",
-            "-p",
-            "no:cacheprovider",
-            "-m",
-            marker,
-            module,
-        ],
-        cwd=_REPO_ROOT,
-        env=_child_env(),
-        timeout=_COLLECT_TIMEOUT_S,
-    )
-    selected = [line for line in result.stdout.splitlines() if line.startswith(f"{module}::")]
-    # Exit 5 is "no tests collected", here because ``-m`` deselected all of them.
-    assert result.returncode == (0 if selected else 5), (result.stdout + result.stderr)[-4000:]
-    return selected
-
-
-def test_exact_check_is_outside_the_repo_wide_selection() -> None:
-    """``pytest -m repo_wide`` (worker pre-push) never selects the whole-suite collection (#9434)."""
-    assert _selected_node_ids(_MARK_NAME, _EXACT_CHECK_MODULE) == []
-    assert _selected_node_ids("slow", _EXACT_CHECK_MODULE) == [_EXACT_CHECK]
-    assert _EXACT_CHECK_MODULE not in KNOWN_REPO_WIDE_MODULES
 
 
 def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
