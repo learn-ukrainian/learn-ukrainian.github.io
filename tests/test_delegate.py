@@ -16254,6 +16254,137 @@ def test_execute_auto_reap_does_not_touch_a_missing_lease(tmp_tasks_dir, tmp_pat
     assert delegate._read_state(delegate._state_path(task_id))["status"] == "done"
 
 
+def _replaced_auto_reap_report(task_id: str) -> dict[str, object]:
+    return {
+        "task_id": task_id,
+        "apply": True,
+        "main_worktree": {"action": "removed", "reason": "clean", "error": None},
+        "errors": [],
+    }
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"run_nonce": "replacement-nonce"},
+        {"status": "spawning"},
+        {"run_nonce": "replacement-nonce", "status": "spawning"},
+    ],
+)
+def test_execute_auto_reap_keeps_a_lease_replaced_during_the_reaper(tmp_tasks_dir, tmp_path, monkeypatch, changes):
+    """force-new during the common reaper must not delete the new run's scratch.
+
+    The temp directory is deterministic per task id. The retry used to reap
+    whatever path the pre-reaper snapshot still named.
+    """
+    task_id = "reaper-replaced"
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    _auto_reap_record(task_id, run_nonce="original-nonce", runtime_tmp_root=str(lease))
+    (lease / "old.txt").write_text("old", encoding="utf-8")
+    record_path = delegate._state_path(task_id)
+    kept: dict[str, bytes] = {}
+
+    def replace_during_reaper(*_args, **_kwargs):
+        current = delegate._read_state(record_path)
+        current.update(changes)
+        delegate._write_state_atomic(record_path, current)
+        (lease / "new-scratch.txt").write_text("keep", encoding="utf-8")
+        kept["bytes"] = record_path.read_bytes()
+        return _replaced_auto_reap_report(task_id)
+
+    def refuse(*_args, **_kwargs):
+        raise AssertionError("a replaced run's lease must not be retried")
+
+    monkeypatch.setattr("scripts.fleet.post_task_reap.post_task_reap", replace_during_reaper)
+    monkeypatch.setattr(delegate, "_reap_runtime_tmp_lease", refuse)
+    delegate._execute_auto_reap(task_id, tasks_dir_path=delegate.tasks_dir(), repo_root=delegate._REPO_ROOT)
+
+    assert record_path.read_bytes() == kept["bytes"]
+    assert (lease / "new-scratch.txt").read_text(encoding="utf-8") == "keep"
+    assert (lease / "old.txt").read_text(encoding="utf-8") == "old"
+    state = delegate._read_state(record_path)
+    assert "auto_reap_receipt" not in state
+    assert "tmp_reap_error" not in state
+    assert not delegate._auto_reap_receipt_path(delegate.tasks_dir(), task_id).exists()
+
+
+def test_execute_auto_reap_keeps_a_lease_replaced_before_deletion(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A replacement after the reaper returns, before deletion, keeps the new scratch."""
+    task_id = "reaper-replaced-late"
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    lease, _namespace = delegate._create_runtime_tmp_lease(task_id)
+    _auto_reap_record(task_id, run_nonce="original-nonce", runtime_tmp_root=str(lease))
+    record_path = delegate._state_path(task_id)
+    original_count = delegate._runtime_tmp_lease_bytes
+    kept: dict[str, bytes] = {}
+
+    def count_then_replace(lease_root):
+        counted = original_count(lease_root)
+        current = delegate._read_state(record_path)
+        current.update(run_nonce="replacement-nonce", status="spawning")
+        delegate._write_state_atomic(record_path, current)
+        (lease_root / "new-scratch.txt").write_text("keep", encoding="utf-8")
+        kept["bytes"] = record_path.read_bytes()
+        return counted
+
+    monkeypatch.setattr(
+        "scripts.fleet.post_task_reap.post_task_reap",
+        lambda *_args, **_kwargs: _replaced_auto_reap_report(task_id),
+    )
+    monkeypatch.setattr(delegate, "_runtime_tmp_lease_bytes", count_then_replace)
+    delegate._execute_auto_reap(task_id, tasks_dir_path=delegate.tasks_dir(), repo_root=delegate._REPO_ROOT)
+
+    assert record_path.read_bytes() == kept["bytes"]
+    assert (lease / "new-scratch.txt").read_text(encoding="utf-8") == "keep"
+    state = delegate._read_state(record_path)
+    assert state["status"] == "spawning"
+    assert state["run_nonce"] == "replacement-nonce"
+    assert "auto_reap_receipt" not in state
+    assert not delegate._auto_reap_receipt_path(delegate.tasks_dir(), task_id).exists()
+
+
+def test_execute_auto_reap_reaps_an_unchanged_lease_while_holding_the_task_lock(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The same run_nonce and status still lose a leftover lease, under the task lock."""
+    task_id = "reaper-same-run"
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    lease, _namespace = delegate._create_runtime_tmp_lease(task_id)
+    (lease / "old.txt").write_text("old", encoding="utf-8")
+    _auto_reap_record(task_id, run_nonce="original-nonce", runtime_tmp_root=str(lease))
+    held = {"depth": 0}
+    real_lock = delegate.task_state_lock
+    real_remove = delegate._remove_runtime_tmp_lease
+
+    @contextlib.contextmanager
+    def tracking_lock(path):
+        with real_lock(path):
+            held["depth"] += 1
+            try:
+                yield
+            finally:
+                held["depth"] -= 1
+
+    def remove(lease_root, namespace):
+        assert held["depth"] >= 1
+        real_remove(lease_root, namespace)
+
+    monkeypatch.setattr(delegate, "task_state_lock", tracking_lock)
+    monkeypatch.setattr(delegate, "_remove_runtime_tmp_lease", remove)
+    monkeypatch.setattr(
+        "scripts.fleet.post_task_reap.post_task_reap",
+        lambda *_args, **_kwargs: _replaced_auto_reap_report(task_id),
+    )
+    delegate._execute_auto_reap(task_id, tasks_dir_path=delegate.tasks_dir(), repo_root=delegate._REPO_ROOT)
+
+    assert not lease.exists()
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "done"
+    assert state["run_nonce"] == "original-nonce"
+    assert state["tmp_reap_error"] is None
+    assert isinstance(state["tmp_bytes_freed"], int)
+    assert state["auto_reap_receipt"].endswith(".reap.json")
+
+
 @pytest.mark.parametrize("code", [0, 1])
 def test_cmd_worker_auto_reap_failure_does_not_change_the_exit_code(monkeypatch, capsys, code):
     monkeypatch.setattr(delegate.sys, "stdin", io.StringIO("prompt"))

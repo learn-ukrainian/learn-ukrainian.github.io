@@ -1815,6 +1815,7 @@ def _reap_runtime_tmp_lease(
     *,
     task_record: dict[str, Any] | None = None,
     response: str | None = None,
+    bound_run: tuple[Path, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Best-effort, fd-relative deletion of one task-scoped runtime lease.
 
@@ -1827,6 +1828,11 @@ def _reap_runtime_tmp_lease(
     deletion; preservation failure refuses deletion with a typed reason.
     ``ScratchScanRootError`` propagates: a misconfigured scan root is not
     telemetry, and this function raises it before it deletes the lease.
+
+    ``bound_run`` is ``(state_path, expected_record)``. Preservation takes the
+    task lock itself, so the replacement check and the deletion share a later
+    acquisition of that same lock. A different ``run_nonce`` or ``status``
+    sets ``run_replaced`` and leaves the directory in place.
     """
     result: dict[str, Any] = {
         "tmp_bytes_freed": 0,
@@ -1899,11 +1905,25 @@ def _reap_runtime_tmp_lease(
         dispatch_lease = task_record is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
-        _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
-        _remove_runtime_tmp_lease(lease, namespace)
-        if os.path.lexists(lease):
-            raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
-        result["tmp_bytes_freed"] = bytes_freed
+        if bound_run is not None:
+            state_path, expected = bound_run
+            with task_state_lock(state_path):
+                current = _load_task_record(state_path)
+                if not _auto_reap_same_run(expected, current):
+                    result["run_replaced"] = True
+                    return result
+                if os.path.lexists(lease):
+                    _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
+                    _remove_runtime_tmp_lease(lease, namespace)
+                    if os.path.lexists(lease):
+                        raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
+                    result["tmp_bytes_freed"] = bytes_freed
+        else:
+            _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
+            _remove_runtime_tmp_lease(lease, namespace)
+            if os.path.lexists(lease):
+                raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
+            result["tmp_bytes_freed"] = bytes_freed
     except ScratchScanRootError:
         raise
     except Exception as exc:
@@ -19823,6 +19843,28 @@ def _patch_task_record(state_path: Path, updates: Mapping[str, Any]) -> None:
         _write_record_unlocked(state_path, current)
 
 
+def _patch_task_record_if_same_run(
+    state_path: Path,
+    expected: Mapping[str, Any],
+    updates: Mapping[str, Any],
+) -> bool:
+    """Patch ``updates`` only while the hot record is still ``expected``'s run.
+
+    Returns False when the record is missing or belongs to another run. The
+    file is left untouched, including its status.
+    """
+    safe_updates = {key: value for key, value in updates.items() if key != "status"}
+    with task_state_lock(state_path):
+        current = _load_task_record(state_path)
+        if not isinstance(current, dict) or not _auto_reap_same_run(expected, current):
+            return False
+        status = current.get("status")
+        current.update(safe_updates)
+        current["status"] = status
+        _write_record_unlocked(state_path, current)
+        return True
+
+
 def _load_task_record(state_path: Path) -> dict[str, Any] | None:
     if not state_path.is_file():
         return None
@@ -19833,17 +19875,50 @@ def _load_task_record(state_path: Path) -> dict[str, Any] | None:
     return loaded if isinstance(loaded, dict) else None
 
 
-def _retry_runtime_tmp_lease(state: Mapping[str, Any]) -> dict[str, Any]:
+def _auto_reap_same_run(expected: Mapping[str, Any], current: object) -> bool:
+    """True when ``current`` is still the run ``expected`` snapshotted.
+
+    ``dispatch --force-new`` archives that record and publishes another with a
+    new ``run_nonce`` and ``status``, often on the same temp directory. A
+    missing, unreadable, or ineligible record is not this run. The lease path
+    has to match too: cleanup must not follow a stale path onto another root.
+    """
+    if not isinstance(current, dict):
+        return False
+    task_id = current.get("task_id")
+    status = current.get("status")
+    if not isinstance(task_id, str) or not task_id:
+        return False
+    if not isinstance(status, str) or not status:
+        return False
+    if task_id != expected.get("task_id") or status != expected.get("status"):
+        return False
+    if current.get("run_nonce") != expected.get("run_nonce"):
+        return False
+    if current.get("runtime_tmp_root") != expected.get("runtime_tmp_root"):
+        return False
+    return _auto_reap_skip_reason(current) is None
+
+
+def _retry_runtime_tmp_lease(state: Mapping[str, Any], *, state_path: Path) -> dict[str, Any]:
     """Retry the existing lease reaper when the worker left the directory behind.
 
     A missing path is not an error. Preservation refusals stay inside
-    ``_reap_runtime_tmp_lease`` and are not forced.
+    ``_reap_runtime_tmp_lease`` and are not forced. ``{"run_replaced": True}``
+    means the hot record changed and the directory was kept.
     """
     raw = state.get("runtime_tmp_root")
     if not isinstance(raw, str) or not raw or not os.path.lexists(raw):
         return {}
     lease = Path(raw)
-    result = _reap_runtime_tmp_lease(lease, lease.parent, task_record=dict(state))
+    result = _reap_runtime_tmp_lease(
+        lease,
+        lease.parent,
+        task_record=dict(state),
+        bound_run=(state_path, state),
+    )
+    if result.get("run_replaced"):
+        return {"run_replaced": True}
     update: dict[str, Any] = {}
     if isinstance(result.get("tmp_bytes_freed"), int):
         update["tmp_bytes_freed"] = result["tmp_bytes_freed"]
@@ -19860,7 +19935,13 @@ def _reap_report_failed(report: Mapping[str, Any]) -> bool:
 
 
 def _execute_auto_reap(task_id: str, *, tasks_dir_path: Path, repo_root: Path) -> None:
-    """Call the common reaper and record its receipt. Never changes task status."""
+    """Call the common reaper and record its receipt. Never changes task status.
+
+    The reaper is slow. A ``dispatch --force-new`` during that call can
+    replace this record and reuse its deterministic temp directory. Receipt
+    updates and the lease retry then apply only when the re-read record is
+    still this run.
+    """
     state_path = _task_record_path(tasks_dir_path, task_id)
     state = _load_task_record(state_path)
     reason = _auto_reap_skip_reason(state)
@@ -19897,6 +19978,9 @@ def _execute_auto_reap(task_id: str, *, tasks_dir_path: Path, repo_root: Path) -
         _auto_reap_warn(task_id, reason)
         return
 
+    if isinstance(state, dict) and reason is None and not _auto_reap_same_run(state, _load_task_record(state_path)):
+        return
+
     main = report.get("main_worktree") if isinstance(report, dict) else None
     main = main if isinstance(main, Mapping) else {}
     errors = report.get("errors") if isinstance(report, dict) else None
@@ -19910,17 +19994,27 @@ def _execute_auto_reap(task_id: str, *, tasks_dir_path: Path, repo_root: Path) -
         "task_id": task_id,
     }
     receipt_path = _auto_reap_receipt_path(tasks_dir_path, task_id)
+    lease_updates: dict[str, Any] = {}
+    if isinstance(state, dict) and reason is None:
+        try:
+            lease_updates = _retry_runtime_tmp_lease(state, state_path=state_path)
+        except Exception as exc:
+            _auto_reap_warn(task_id, type(exc).__name__)
+            lease_updates = {}
+        else:
+            if lease_updates.pop("run_replaced", False):
+                return
     try:
         _write_json_file(receipt_path, receipt)
     except OSError as exc:
         _auto_reap_warn(task_id, type(exc).__name__)
         return
-    updates: dict[str, Any] = {"auto_reap_receipt": _auto_reap_receipt_pointer(receipt_path)}
+    updates: dict[str, Any] = {"auto_reap_receipt": _auto_reap_receipt_pointer(receipt_path), **lease_updates}
     if isinstance(state, dict) and reason is None:
-        try:
-            updates.update(_retry_runtime_tmp_lease(state))
-        except Exception as exc:
-            _auto_reap_warn(task_id, type(exc).__name__)
+        if not _patch_task_record_if_same_run(state_path, state, updates):
+            with contextlib.suppress(OSError):
+                receipt_path.unlink()
+        return
     _patch_task_record(state_path, updates)
 
 
