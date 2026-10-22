@@ -55,6 +55,7 @@ def measurement(tmp_path, monkeypatch):
             "versions": versions(),
             "core": "CTracer",
             "subprocess_patch": True,
+            "contexts": False,
             "config_sha256": hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
             "durations_sha256": "same-snapshot",
         }
@@ -470,6 +471,7 @@ def test_unparseable_source_cannot_silently_disappear_from_report(measurement):
         ("shard", 3),
         ("core", "PyTracer"),
         ("subprocess_patch", False),
+        ("contexts", True),
         ("collected_nodeids", ["tests/test_1.py::test_ok"]),
     ],
 )
@@ -813,3 +815,126 @@ def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tm
     data.read()
     assert data.has_arcs() is bool(patch)
     assert data.lines(str(tmp_path / "scripts/child.py")) == ([1, 2] if patch else [])
+
+
+def test_non_python_measured_paths_are_classified_not_missing_evidence(measurement):
+    """Jinja2 and hook-test pseudo-files are listed, never counted as lost Python evidence."""
+    raw, output = measurement
+    data = coverage.CoverageData(basename=str(raw / "coverage-shard-2/.coverage"))
+    data.read()
+    data.add_arcs(
+        {
+            "scripts/template.j2": [(-1, 1), (1, -1)],
+            "agents_extensions/shared/hooks/check-agent-inbox.sh": [(-1, 1), (1, -1)],
+        }
+    )
+    data.write()
+    assert combine(raw, output, SHA, 2, "success") == 0
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is True
+    assert manifest["non_reportable_files"] == [
+        "agents_extensions/shared/hooks/check-agent-inbox.sh",
+        "scripts/template.j2",
+    ]
+    assert manifest["unmapped_files"] == []
+    assert manifest["unreported_files"] == []
+    assert manifest["errors"] == []
+    assert json.loads((output / "coverage.json").read_text())["files"].keys() == {"scripts/a.py"}
+
+
+def test_unreported_python_path_still_fails_completeness_next_to_non_python(measurement):
+    """Classification must not excuse a Python source that cannot be reported."""
+    raw, output = measurement
+    Path("scripts/a.py").write_text("not valid python !!\n")
+    data = coverage.CoverageData(basename=str(raw / "coverage-shard-2/.coverage"))
+    data.read()
+    data.add_arcs({"scripts/template.j2": [(-1, 1), (1, -1)]})
+    data.write()
+    assert combine(raw, output, SHA, 2, "success") == 1
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is False
+    assert manifest["non_reportable_files"] == ["scripts/template.j2"]
+    assert manifest["unreported_files"] == ["scripts/a.py"]
+    assert manifest["errors"] == ["unreported measured path: scripts/a.py"]
+
+
+def test_requested_test_contexts_are_kept_in_the_combined_data(measurement):
+    """A contexts run must retain each test's dynamic context for restore-set analysis."""
+    raw, output = measurement
+    for shard in (1, 2):
+        node = f"tests/test_{shard}.py::test_ok"
+        path = raw / f"coverage-shard-{shard}/.coverage"
+        data = coverage.CoverageData(basename=str(path))
+        data.erase()
+        data.set_context(node)
+        data.add_arcs({"scripts/a.py": [(-1, 1), (1, -1)]})
+        data.write()
+        receipt_path = raw / f"coverage-shard-{shard}/receipt.json"
+        receipt = json.loads(receipt_path.read_text())
+        receipt["contexts"] = True
+        receipt_path.write_text(json.dumps(receipt))
+    # A subprocess database carries only the empty context. The named context in
+    # the shard's main database must satisfy the check, and the subprocess arcs
+    # must still reach the combined data.
+    child = coverage.CoverageData(basename=str(raw / "coverage-shard-1/.coverage.host.1234.5678"))
+    child.add_arcs({"scripts/a.py": [(-1, 1), (1, -2)]})
+    child.write()
+    assert combine(raw, output, SHA, 2, "success") == 0
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is True
+    assert manifest["contexts"] is True
+    combined = coverage.CoverageData(basename=str(output / ".coverage"))
+    combined.read()
+    assert combined.measured_contexts() - {""} == {
+        "tests/test_1.py::test_ok",
+        "tests/test_2.py::test_ok",
+    }
+    assert set(combined.arcs("scripts/a.py")) == {(-1, 1), (1, -1), (1, -2)}
+
+
+def test_requested_contexts_missing_from_raw_data_fail_completeness(measurement):
+    """An absent pytest-cov context flag must not certify a contexts run."""
+    raw, output = measurement
+    receipt_path = raw / "coverage-shard-1/receipt.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["contexts"] = True
+    receipt_path.write_text(json.dumps(receipt))
+    assert combine(raw, output, SHA, 2, "success") == 1
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is False
+    assert "shard 1: requested per-test contexts missing" in manifest["errors"]
+
+
+@pytest.mark.parametrize("enabled,expected", [(True, True), (False, False)])
+def test_runner_records_context_switch_and_enables_pytest_cov_contexts(measurement, monkeypatch, enabled, expected):
+    """The opt-in switch must reach pytest-cov and the receipt exactly once."""
+    raw, _ = measurement
+    Path("ci-artifacts").mkdir()
+    Path("ci-artifacts/pytest-file-durations.json").write_text("{}")
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: SHA)
+    monkeypatch.setenv("COVERAGE_REF_CONTEXTS", "true" if enabled else "false")
+    seen = []
+
+    def fake_pytest(args, plugins):
+        seen.append(args)
+        recorder = plugins[0]
+        recorder.core = "CTracer"
+        recorder.subprocess_patch = True
+        recorder.pytest_xdist_node_collection_finished(None, ["tests/test_context.py::test_one"])
+        recorder.completed_nodeids.add("tests/test_context.py::test_one")
+        return 0
+
+    monkeypatch.setattr(pytest, "main", fake_pytest)
+    assert main(["run", "--output", str(raw), "--shard", "1", "--", "tests", "-n", "2"]) == 0
+    expected_args = [["tests", "-n", "2", "--cov-context=test"]] if enabled else [["tests", "-n", "2"]]
+    assert seen == expected_args
+    assert json.loads((raw / "receipt.json").read_text())["contexts"] is expected
+
+
+def test_runner_refuses_ambiguous_context_switch(measurement, monkeypatch):
+    """An unknown switch value must fail before pytest measures anything."""
+    raw, _ = measurement
+    monkeypatch.setenv("COVERAGE_REF_CONTEXTS", "yes")
+    monkeypatch.setattr(pytest, "main", lambda *args, **kwargs: pytest.fail("pytest ran"))
+    with pytest.raises(ValueError, match="COVERAGE_REF_CONTEXTS"):
+        main(["run", "--output", str(raw), "--shard", "1", "--", "tests"])
