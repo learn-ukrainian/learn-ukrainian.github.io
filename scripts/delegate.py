@@ -17793,13 +17793,29 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
 
             try:
                 pr = _run_json(
-                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid"]
+                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid,isCrossRepository"]
                 )
             except RecordError as exc:
                 raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
-            if not isinstance(pr, dict) or pr.get("headRefOid") != target.head_sha or not pr.get("headRefName"):
+            if (
+                not isinstance(pr, dict)
+                or pr.get("isCrossRepository") is not False
+                or not isinstance(pr.get("headRefName"), str)
+                or not pr["headRefName"]
+                or not isinstance(pr.get("headRefOid"), str)
+                or not re.fullmatch(r"[0-9a-fA-F]{40}", pr["headRefOid"])
+                or pr["headRefOid"] == "0" * 40
+            ):
                 raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
             branch = pr["headRefName"]
+            from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+            try:
+                live_head = live_canonical_branch_head(repo_root, branch, repository=repository)
+            except TargetResolutionError as exc:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
+            if live_head != target.head_sha:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
         if branch:
             unknown_history = admitted_unknown_history(
                 repository=repository,
