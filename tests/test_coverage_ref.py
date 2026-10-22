@@ -15,6 +15,7 @@ import coverage
 import pytest
 
 from scripts.ci.coverage_ref import CollectionRecorder, combine, main, versions
+from scripts.ci.coverage_ref_environment import TracebackWatchdog
 from scripts.ci.coverage_ref_environment import main as install_environment
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -199,6 +200,98 @@ def test_environment_help_cannot_install_into_the_running_interpreter():
     assert "do not install in a shared venv" in result.stdout
 
 
+def test_timed_traceback_cannot_segfault_during_covered_ast_unparse(tmp_path):
+    """CPython's GIL-free watchdog can follow freed frames during AST scanning."""
+    trace = tmp_path / "trace.log"
+    program = (
+        "import ast, faulthandler, resource, runpy\n"
+        "resource.setrlimit(resource.RLIMIT_CORE, (0, 0))\n"
+        f"runpy.run_path({str(ROOT / 'scripts/ci/coverage_ref_environment.py')!r})['install']()\n"
+        "import coverage\n"
+        "cov = coverage.Coverage(config_file=False, branch=True, source=['scripts'])\n"
+        "cov.start()\n"
+        "node = ast.parse('a.b(c.d()).e.f(g.h()).i', mode='eval')\n"
+        f"with open({str(trace)!r}, 'w') as stream:\n"
+        "    faulthandler.dump_traceback_later(.001, repeat=True, file=stream)\n"
+        "    for _ in range(10_000):\n"
+        "        assert ast.unparse(node) == 'a.b(c.d()).e.f(g.h()).i'\n"
+        "    faulthandler.cancel_dump_traceback_later()\n"
+        "cov.stop(); cov.save()\n"
+        "print('scan survived')\n"
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("COVERAGE_")}
+    env["COVERAGE_FILE"] = str(tmp_path / ".coverage")
+    result = subprocess.run(
+        [sys.executable, "-c", program], cwd=ROOT, env=env, capture_output=True, text=True, timeout=30
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout == "scan survived\n"
+    assert "ast.py" in trace.read_text()
+
+
+def test_traceback_replacement_repeat_and_cancel_never_dump_a_stale_test(tmp_path, monkeypatch):
+    """A canceled or replaced callback must not write into a closed/reused test log."""
+    timers = []
+    current = [None]
+
+    class Timer:
+        def __init__(self, timeout, callback):
+            self.callback = callback
+            timers.append(self)
+
+        def start(self):
+            pass
+
+        def cancel(self):
+            pass
+
+        def fire(self):
+            current[0] = self
+            self.callback()
+
+    monkeypatch.setattr("scripts.ci.coverage_ref_environment.threading.Timer", Timer)
+    monkeypatch.setattr("scripts.ci.coverage_ref_environment.threading.current_thread", lambda: current[0])
+    monkeypatch.setattr(
+        "scripts.ci.coverage_ref_environment.faulthandler.dump_traceback",
+        lambda file, all_threads: os.write(file, b"all thread stacks\n"),
+    )
+    watchdog = TracebackWatchdog()
+    with (tmp_path / "old").open("w") as old, (tmp_path / "new").open("w") as new:
+        watchdog.schedule(1, file=old)
+        watchdog.schedule(2, file=new.fileno(), repeat=True)
+        timers[0].fire()
+        assert (tmp_path / "old").read_text() == ""
+        timers[1].fire()
+        timers[2].fire()
+        watchdog.cancel()
+    timers[3].fire()  # Delayed callback after descriptor closure must be harmless.
+    assert (tmp_path / "new").read_text() == "Timeout (2 seconds)!\nall thread stacks\n" * 2
+
+
+@pytest.mark.parametrize("timeout,error", [(0, ValueError), (-1, ValueError), (float("inf"), OverflowError)])
+def test_invalid_traceback_deadline_cannot_arm_a_watchdog(timeout, error):
+    """Invalid native API deadlines must not leave a live background timer."""
+    with pytest.raises(error):
+        TracebackWatchdog().schedule(timeout)
+
+
+def test_traceback_exit_deadline_still_terminates_the_process(tmp_path):
+    """Replacing diagnostics must not turn exit=True into a non-fatal warning."""
+    trace = tmp_path / "exit.log"
+    program = (
+        "import runpy, threading\n"
+        f"watchdog = runpy.run_path({str(ROOT / 'scripts/ci/coverage_ref_environment.py')!r})['TracebackWatchdog']()\n"
+        f"stream = open({str(trace)!r}, 'w')\n"
+        "watchdog.schedule(.001, file=stream, exit=True)\n"
+        "threading.Event().wait(10)\n"
+        "raise AssertionError('watchdog did not exit')\n"
+    )
+    result = subprocess.run([sys.executable, "-c", program], capture_output=True, text=True, timeout=15)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "Timeout (0.001 seconds)!" in trace.read_text()
+    assert "threading.py" in trace.read_text()
+
+
 def test_corrupt_worker_file_cannot_discard_healthy_data_in_the_same_shard(measurement):
     """One interrupted SQLite write must leave the other workers' arcs reportable."""
     raw, output = measurement
@@ -283,6 +376,83 @@ def test_complete_combination_preserves_all_executed_arcs(measurement):
     report = json.loads(report_path.read_text())
     assert report["files"]["scripts/a.py"]["executed_lines"] == [1]
     assert report["files"]["scripts/a.py"]["executed_arcs"] == [[-1, 1], [1, -1]]
+
+
+def test_absolute_worker_paths_merge_into_one_repository_relative_file(measurement):
+    """Different runner roots must not split a source file or lose its arcs."""
+    raw, output = measurement
+    path = raw / "coverage-shard-2/.coverage"
+    data = coverage.CoverageData(basename=str(path))
+    data.erase()
+    data.add_arcs({"/another/runner/checkout/scripts/a.py": [(-1, 1), (1, -2)]})
+    data.write()
+    assert combine(raw, output, SHA, 2, "success") == 0
+    combined = coverage.CoverageData(basename=str(output / ".coverage"))
+    combined.read()
+    assert set(combined.measured_files()) == {"scripts/a.py"}
+    assert combined.arcs("scripts/a.py") == [(-1, 1), (1, -2), (1, -1)]
+    report = json.loads((output / "coverage.json").read_text())
+    assert report["files"]["scripts/a.py"]["executed_arcs"] == [[-1, 1], [1, -2], [1, -1]]
+
+
+@pytest.mark.parametrize("invalid", ["a.py", "other/a.py", "/outside/unmapped.py", "scripts/missing.py"])
+def test_unmapped_paths_fail_completeness_without_aborting_healthy_report(measurement, invalid):
+    """Dirless, external and missing paths cannot vanish behind a successful report."""
+    raw, output = measurement
+    data = coverage.CoverageData(basename=str(raw / "coverage-shard-2/.coverage"))
+    data.read()
+    data.add_arcs({invalid: [(-1, 1), (1, -1)]})
+    data.write()
+    assert combine(raw, output, SHA, 2, "success") == 1
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is manifest["tests_passed"] is False
+    assert manifest["unmapped_files"] == [invalid]
+    assert any("unmapped measured path" in error for error in manifest["errors"])
+    report = json.loads((output / "coverage.json").read_text())
+    assert report["files"]["scripts/a.py"]["executed_arcs"] == [[-1, 1], [1, -1]]
+    combined = coverage.CoverageData(basename=str(output / ".coverage"))
+    combined.read()
+    assert invalid in combined.measured_files()
+
+
+@pytest.mark.parametrize("cwd", [".", "scripts", "scripts/nested"])
+def test_subprocess_cwd_cannot_turn_measured_paths_into_bare_filenames(tmp_path, cwd):
+    """Relative storage in subprocesses loses the source origin before combine."""
+    source = tmp_path / "scripts/nested/child.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("value = 1\nassert value == 1\n")
+    env = {key: value for key, value in os.environ.items() if not key.startswith("COVERAGE_")}
+    env["COVERAGE_FILE"] = str(tmp_path / ".coverage")
+    # Start the child with the parent's absolute source selection, as patch=subprocess does.
+    program = (
+        "import coverage, runpy\n"
+        f"cov = coverage.Coverage(config_file={str(CONFIG)!r}, source=[{str(tmp_path / 'scripts')!r}])\n"
+        "cov.start()\n"
+        f"runpy.run_path({str(source)!r})\n"
+        "cov.stop(); cov.save()\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", program], cwd=tmp_path / cwd, env=env, capture_output=True, text=True, timeout=30
+    )
+    assert result.returncode == 0, result.stderr
+    files = list(tmp_path.glob(".coverage.*"))
+    assert files
+    for path in files:
+        data = coverage.CoverageData(basename=str(path))
+        data.read()
+        assert str(source) in data.measured_files()
+        assert all(Path(name).is_absolute() for name in data.measured_files())
+
+
+def test_unparseable_source_cannot_silently_disappear_from_report(measurement):
+    """ignore_errors must keep healthy reports without certifying lost measurements."""
+    raw, output = measurement
+    Path("scripts/a.py").write_text("not valid python !!\n")
+    assert combine(raw, output, SHA, 2, "success") == 1
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["unreported_files"] == ["scripts/a.py"]
+    assert manifest["errors"] == ["unreported measured path: scripts/a.py"]
+    assert json.loads((output / "coverage.json").read_text())["files"] == {}
 
 
 @pytest.mark.parametrize(
@@ -373,7 +543,9 @@ def test_source_reporting_failure_keeps_incomplete_manifest(measurement):
     assert combine(raw, output, SHA, 2, "success") == 1
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["complete"] is False
-    assert "combine:" in manifest["errors"][0]
+    assert manifest["errors"] == ["unmapped measured path: scripts/a.py"]
+    assert manifest["unmapped_files"] == ["scripts/a.py"]
+    assert json.loads((output / "coverage.json").read_text())["files"] == {}
 
 
 @pytest.mark.parametrize("missing", ["coverage", "metadata", "config"])
@@ -470,6 +642,52 @@ def test_runner_records_failures_and_rejects_empty_or_inconsistent_collection(
     assert receipt["collected_count"] == len(collections[-1])
     assert receipt["pytest_exit_status"] == status
     assert receipt["collection_consistent"] == all(ids == collections[-1] for ids in collections)
+
+
+@pytest.mark.parametrize("returncode", [0, 17])
+def test_runner_records_worker_exit_after_pytest_teardown(measurement, monkeypatch, returncode):
+    """Node-down notification can precede OS exit, so hook-time poll loses the status."""
+    raw, _ = measurement
+    Path("ci-artifacts").mkdir()
+    Path("ci-artifacts/pytest-file-durations.json").write_text("{}")
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: SHA)
+
+    def fake_pytest(args, plugins):
+        recorder = plugins[0]
+        recorder.core = "CTracer"
+        recorder.subprocess_patch = True
+        ids = ["test_child.py::test_child"]
+        if returncode:
+            ids.append("test_child.py::test_crash")
+        recorder.pytest_xdist_node_collection_finished(None, ids)
+        recorder.completed_nodeids.add("test_child.py::test_child")
+        if returncode:
+            recorder.pytest_handlecrashitem("test_child.py::test_crash", None, None)
+        # Hold the process alive through node-down without relying on scheduler timing.
+        with subprocess.Popen(
+            [sys.executable, "-c", f"import os, sys; os.close(1); sys.stdin.buffer.read(1); sys.exit({returncode})"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        ) as process:
+            assert process.stdout.read() == b""
+            assert process.poll() is None
+            recorder.pytest_testnodedown(
+                SimpleNamespace(gateway=SimpleNamespace(id="gw0", _io=SimpleNamespace(popen=process))),
+                "Not properly terminated" if returncode else None,
+            )
+            recorder.pytest_testnodedown(SimpleNamespace(gateway=SimpleNamespace(id="remote")), None)
+            process.communicate(input=b"x", timeout=10)
+            assert process.returncode == returncode
+        return int(bool(returncode))
+
+    monkeypatch.setattr(pytest, "main", fake_pytest)
+    assert main(["run", "--output", str(raw), "--shard", "1", "--", "test_child.py"]) == int(bool(returncode))
+    receipt = json.loads((raw / "receipt.json").read_text())
+    assert receipt["worker_exits"] == [
+        {"worker": "gw0", "returncode": returncode, "unexpected": bool(returncode)},
+        {"worker": "remote", "returncode": None, "unexpected": False},
+    ]
+    assert receipt["crashed_nodeids"] == (["test_child.py::test_crash"] if returncode else [])
 
 
 @pytest.mark.parametrize(
@@ -594,4 +812,4 @@ def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tm
     data = coverage.CoverageData(basename=str(tmp_path / "raw/.coverage"))
     data.read()
     assert data.has_arcs() is bool(patch)
-    assert data.lines("scripts/child.py") == ([1, 2] if patch else [])
+    assert data.lines(str(tmp_path / "scripts/child.py")) == ([1, 2] if patch else [])
