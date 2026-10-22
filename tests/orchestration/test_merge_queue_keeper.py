@@ -15,6 +15,7 @@ from typing import Any
 import pytest
 
 from scripts.opsec import prepublish as gate
+from scripts.orchestration import backup_failure_alert
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import Verdict
 from scripts.publish import github as publisher
@@ -271,6 +272,54 @@ def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) 
     assert not failed
     assert "enqueue" not in mutations(fake)
     assert "reason=CF-unknown" in lines[0]
+
+
+def test_recovery_alert_retry_reuses_pending_key_and_payload(tmp_path: Path) -> None:
+    path = tmp_path / "state.json"
+    previous: dict[str, Any] = {
+        "queued": {},
+        "drops": {},
+        "recoveries": [
+            {"at": "2026-09-23T06:00:00+00:00", "kind": "granted"},
+            {"at": "2026-09-23T07:00:00+00:00", "kind": "granted"},
+            {"at": "2026-09-23T08:00:00+00:00", "kind": "shared"},
+            {"at": "2026-09-23T09:00:00+00:00", "kind": "shared"},
+        ],
+    }
+    calls: list[tuple[str, str]] = []
+
+    def failing(message: str, key: str) -> None:
+        calls.append((message, key))
+        raise backup_failure_alert.AlertError("delivery status lookup failed")
+
+    with pytest.raises(backup_failure_alert.AlertError):
+        keeper._alert_recoveries(previous, "2026-09-23T12:00:00+00:00", failing, path)
+
+    persisted = json.loads(path.read_text())
+    assert persisted["recovery_alert_pending"]["key"] == calls[0][1]
+    assert "recovery_alert" not in persisted
+
+    retried: list[tuple[str, str]] = []
+    note = keeper._alert_recoveries(
+        persisted,
+        "2026-09-23T12:05:00+00:00",
+        lambda message, key: retried.append((message, key)),
+        path,
+    )
+
+    assert retried == calls
+    assert note == "recovery alert posted: 4 automatic recoveries in 24 hours"
+    completed = json.loads(path.read_text())
+    assert "recovery_alert_pending" not in completed
+    assert completed["recovery_alert"] == "2026-09-23T12:05:00+00:00"
+
+    suppressed = keeper._alert_recoveries(
+        completed,
+        "2026-09-23T12:30:00+00:00",
+        lambda message, key: pytest.fail("alert reposted inside the 24-hour window"),
+        path,
+    )
+    assert suppressed == "recovery alert suppressed: last posted at 2026-09-23T12:05:00+00:00"
 
 
 def _keeper_comment(fake: FakeGitHub) -> str:

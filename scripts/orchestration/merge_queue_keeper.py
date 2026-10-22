@@ -684,8 +684,29 @@ def recovery_alert_message(granted: int, shared: int, observed: str) -> str:
     )
 
 
-def _alert_recoveries(previous: dict[str, Any], observed: str, publish: backup_failure_alert.Publisher) -> str | None:
-    """Post at most one recovery-count alert per 24 hours; None when below the threshold or suppressed."""
+def _alert_recoveries(
+    previous: dict[str, Any],
+    observed: str,
+    publish: backup_failure_alert.Publisher,
+    state_path: Path,
+) -> str | None:
+    """Post at most one recovery-count alert per 24 hours; None when below the threshold or suppressed.
+
+    The pending alert's idempotency key and payload are persisted before
+    publishing. A retry after a failed publish or delivery-status lookup reuses
+    them, so one recovery count never posts twice inside the 24-hour window.
+    """
+    pending = previous.get("recovery_alert_pending")
+    if isinstance(pending, dict) and isinstance(pending.get("key"), str) and isinstance(pending.get("message"), str):
+        publish(pending["message"], pending["key"])
+        previous.pop("recovery_alert_pending", None)
+        previous["recovery_alert"] = observed
+        _save(state_path, previous)
+        total = pending.get("total")
+        return (
+            f"recovery alert posted: {total if isinstance(total, int) else 'unknown'} automatic recoveries in 24 hours"
+        )
+
     now = datetime.fromisoformat(observed)
     cutoff = now - RECOVERY_ALERT_WINDOW
     granted, shared = _automatic_recoveries(previous, cutoff)
@@ -699,8 +720,19 @@ def _alert_recoveries(previous: dict[str, Any], observed: str, publish: backup_f
             last_at = None
         if last_at is not None and last_at.tzinfo is not None and now - last_at < RECOVERY_ALERT_WINDOW:
             return f"recovery alert suppressed: last posted at {last}"
-    publish(recovery_alert_message(granted, shared, observed), f"lu-mq-recoveries:{observed}")
+    message = recovery_alert_message(granted, shared, observed)
+    key = f"lu-mq-recoveries:{observed}"
+    previous["recovery_alert_pending"] = {
+        "key": key,
+        "message": message,
+        "observed": observed,
+        "total": granted + shared,
+    }
+    _save(state_path, previous)
+    publish(message, key)
+    previous.pop("recovery_alert_pending", None)
     previous["recovery_alert"] = observed
+    _save(state_path, previous)
     return f"recovery alert posted: {granted + shared} automatic recoveries in 24 hours"
 
 
@@ -1294,7 +1326,12 @@ def run(
             lines.append(f"flaky-test issue FAILED: {exc}")
     if apply:
         try:
-            note = _alert_recoveries(previous, observed, publish or backup_failure_alert.fleet_comms_publisher(gh.root))
+            note = _alert_recoveries(
+                previous,
+                observed,
+                publish or backup_failure_alert.fleet_comms_publisher(gh.root),
+                state_path,
+            )
         except backup_failure_alert.AlertError as exc:
             failed = True
             lines.append(f"recovery alert FAILED: {exc}")

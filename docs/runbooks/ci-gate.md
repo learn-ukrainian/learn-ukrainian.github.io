@@ -490,5 +490,8 @@ The keeper also counts its own automatic recoveries: granted re-enqueues after
 a queue ejection and shared queue-wide re-enqueues. When more than three occur
 in a rolling 24 hours it posts one alert to the `cto` Fleet Comms channel
 through the existing SRE alert publisher, then stays quiet for 24 hours. The
-alert is a signal that an intermittent failure may be hidden behind
-recoveries; it changes no queue or workflow state and is not a recovery path.
+pending alert's idempotency key and payload are persisted before delivery, so a
+retry after a failed publish or delivery-status lookup reuses them instead of
+posting a second alert. The alert is a signal that an intermittent failure may
+be hidden behind recoveries; it changes no queue or workflow state and is not a
+recovery path.
