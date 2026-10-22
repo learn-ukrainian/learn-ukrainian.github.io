@@ -1064,6 +1064,14 @@ linked entry is a typed refusal (`runtime_evidence_over_cap`,
 `runtime_evidence_preservation_failed`) that keeps the lease instead of
 deleting bytes silently.
 
+Retrieve the evidence into durable storage and verify its manifest and content
+digests, keeping the original lease until retrieval succeeds.
+Restore the original task record from a trusted recovery copy if it is missing
+or unreadable, and correct the cap, readability or linked-entry condition
+without discarding source data.
+Retry the same cleanup path to publish a verified retrieval receipt before lease
+removal; never delete evidence or the lease just to clear a refusal.
+
 ## Immediate cleanup after merge
 
 On apply, `merge_closeout` and `post_task_reap` first capture local Git facts

@@ -116,6 +116,17 @@ def evidence_names(root: Path, *, directories: list[str] | None = None) -> list[
     return sorted(names)
 
 
+def require_empty_evidence(root: Path) -> None:
+    """Permit stateless cleanup only when no evidence entries need a receipt.
+
+    Empty subdirectories are entries too. Re-enumerate on every call so an
+    earlier empty inventory cannot authorize deletion after a writer adds data.
+    """
+    directories: list[str] = []
+    if evidence_names(root, directories=directories) or directories:
+        raise EvidencePreservationError()
+
+
 def _discard_attempt(location: Path, parent: Path) -> None:
     """Remove only this function's own unfinished copy, never a source path."""
     if location.parent != parent or location.is_symlink() or not location.is_dir():
@@ -250,6 +261,10 @@ def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -
     settles raises a typed refusal, so the caller keeps the lease.
     """
     try:
+        # No evidence needs a receipt. Legacy task ids need not qualify as a
+        # preservation-directory component just to remove disposable scratch.
+        if evidence_names(root) is None:
+            return None
         task_id = record.get("task_id")
         if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
             raise EvidencePreservationError()

@@ -180,7 +180,7 @@ def test_stateless_late_evidence_refuses_deletion(lease, monkeypatch, cleanup):
     """An unattributed orphan cannot lose evidence created after its first look."""
     root, namespace, record = lease
     delegate._state_path(record["task_id"]).unlink()
-    (root / delegate._RUNTIME_TMP_TASK_ID_MARKER).unlink()
+    assert (root / delegate._RUNTIME_TMP_TASK_ID_MARKER).is_file()
     os.utime(root, (0, 0))
     original = delegate._preserve_runtime_tmp_held_work
 

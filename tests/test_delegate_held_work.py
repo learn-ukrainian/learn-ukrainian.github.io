@@ -521,7 +521,8 @@ def test_linked_evidence_refuses_reap_without_following_the_link(lease, tmp_path
 def test_orphan_sweep_keeps_an_unattributed_evidence_lease(lease):
     root, _namespace, record = lease
     delegate._state_path(record["task_id"]).unlink()
-    (root / delegate._RUNTIME_TMP_TASK_ID_MARKER).unlink()
+    # Dispatch attribution survives loss of the task record.
+    assert (root / delegate._RUNTIME_TMP_TASK_ID_MARKER).is_file()
     (root / "evidence").mkdir()
     (root / "evidence" / "report.md").write_text("report\n")
     old = 0.0

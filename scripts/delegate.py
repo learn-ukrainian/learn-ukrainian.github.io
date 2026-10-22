@@ -1636,9 +1636,10 @@ def _preserve_runtime_tmp_held_work(
 
     if record is None:
         # A stateless lease has no task store entry to attribute a receipt to.
-        # Refuse deletion rather than silently losing supported evidence.
-        if runtime_held_work.evidence_names(lease) is not None:
-            raise runtime_held_work.EvidencePreservationError()
+        # The dispatch marker distinguishes supported evidence from a tool's
+        # own evidence directory, which keeps its existing age-based retention.
+        if os.path.lexists(_runtime_tmp_task_id_marker_path(lease)):
+            runtime_held_work.require_empty_evidence(lease)
         return {}
     if response is None:
         task_id = record.get("task_id")
@@ -1675,23 +1676,27 @@ def _preserve_runtime_tmp_held_work(
         raise runtime_held_work.HeldWorkPreservationError() from None
 
 
-def _require_preserved_evidence_still_matches(lease: Path, updates: Mapping[str, Any]) -> None:
+def _require_preserved_evidence_still_matches(
+    lease: Path, updates: Mapping[str, Any], *, dispatch_lease: bool
+) -> None:
     """Refuse lease deletion when supported evidence changed after its receipt (#11342).
 
     ``preserve_evidence`` copies to a fixed point and receipts only a set verified
     identical to the source. Recheck immediately before deletion so a file that
     appeared or changed after the final enumeration is never silently lost; the
     typed refusal keeps the lease.
-    Without a receipt, only continued absence of the evidence directory permits deletion.
+    Without a receipt, dispatch evidence must still be absent or empty.
+    ``dispatch_lease`` is captured before preservation and accounting, so losing
+    the marker during either operation cannot bypass the final recheck.
     """
     from scripts.fleet import runtime_held_work
 
     receipt = updates.get("preserved_evidence") if isinstance(updates, Mapping) else None
     if receipt is None:
-        matches = runtime_held_work.evidence_names(lease) is None
-    else:
-        matches = runtime_held_work.evidence_matches_receipt(lease, receipt)
-    if not matches:
+        if dispatch_lease:
+            runtime_held_work.require_empty_evidence(lease)
+        return
+    if not runtime_held_work.evidence_matches_receipt(lease, receipt):
         raise runtime_held_work.EvidencePreservationError()
 
 
@@ -1783,9 +1788,10 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
+                dispatch_lease = state is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
                 updates = _preserve_runtime_tmp_held_work(lease, state)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
-                _require_preserved_evidence_still_matches(lease, updates)
+                _require_preserved_evidence_still_matches(lease, updates, dispatch_lease=dispatch_lease)
                 _remove_runtime_tmp_lease(lease, namespace)
             except (OSError, ValueError) as exc:
                 result["errors"] += 1
@@ -1890,9 +1896,10 @@ def _reap_runtime_tmp_lease(
                 if _read_runtime_tmp_task_id_marker(lease) is None
                 else None,
             )
+        dispatch_lease = task_record is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
-        _require_preserved_evidence_still_matches(lease, result)
+        _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
