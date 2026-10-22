@@ -82,7 +82,7 @@ def test_section_citations_used_by_scripts_still_resolve() -> None:
 @pytest.mark.parametrize(
     ("reference", "heading", "instruction"),
     [
-        ("queue-and-capacity.md", "## §2.", "maintain one friction comment"),
+        ("queue-and-capacity.md", "## §2.", "send one friction report"),
         ("queue-and-capacity.md", "## §2.", "latest operator directive"),
         ("routing-and-dispatch.md", "## §3a.", "A FAIL blocks dispatch"),
         ("routing-and-dispatch.md", "## §4.", "brief's actual worktree path"),
@@ -110,8 +110,8 @@ def test_friction_report_and_directive_reconciliation_keep_safety_fields() -> No
     body = " ".join((SKILL_DIR / "references/queue-and-capacity.md").read_text().split())
     for required in (
         "After checking the lane's actual work",
-        "existing owner's public issue",
-        "Create it on the first finding, then edit it in place each cycle",
+        "to the CTO through Fleet Comms",
+        "Create it on the first finding, then update it in place each cycle",
         "replace the fields, do not append",
         "affected outcome",
         "sanitized evidence",
@@ -121,9 +121,9 @@ def test_friction_report_and_directive_reconciliation_keep_safety_fields() -> No
         "smallest correction",
         "accountable owner",
         "falsifiable DoD",
-        "Write NONE only after that check by editing the same comment if one already exists",
-        "never create a comment just to say NONE",
-        "Put the final state in the issue's closing comment",
+        "Write NONE only after that check by updating the same report if one already exists",
+        "never create a report just to say NONE",
+        "Put the final state in the CTO's issue closing comment",
         "Keep sensitive evidence in private operational evidence",
         "Do not create a channel",
         "do not post one report per message",

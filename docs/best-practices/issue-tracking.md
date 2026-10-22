@@ -29,6 +29,9 @@ If a new agent joins and the matching label is missing in GitHub, create the mat
 
 ## When to Create an Issue
 
+Only the CTO opens GitHub issues. Epic and lane drivers report findings to the CTO through
+Fleet Comms; the CTO opens, folds or drops them.
+
 Create an issue for:
 - Any bug found (even if fixed immediately — document it)
 - Any architectural decision

@@ -11,6 +11,9 @@ the directive and in conflict with it. An explicit operator pause requires
 explicit operator release; a newer unrelated directive is not a release. Record
 superseded instructions and unresolved conflicts.
 
+**You never open GitHub issues.** Report findings to the CTO through Fleet Comms; the
+CTO opens, folds or drops them.
+
 Source of next work: your epic's stream tail / handoff, open GH issues for the epic, the
 build/review queue, the Work API projection's ranked attention list (§0), and
 `GET /api/work/v1/next?stream=<your-stream>` — cross-check against them before committing to
@@ -21,13 +24,13 @@ disposition and leave it idle — never manufacture busywork (quality > utilizat
 
 ### Friction report
 
-After checking the lane's actual work, maintain one friction comment on the
-existing owner's public issue. Create it on the first finding, then edit it in
-place each cycle: replace the fields, do not append. Include the affected outcome,
+After checking the lane's actual work, send one friction report to the CTO through
+Fleet Comms. Create it on the first finding, then update it in place each cycle:
+replace the fields, do not append. Include the affected outcome,
 sanitized evidence, known or unknown cause, measured waste only when measured,
 working path, smallest correction, accountable owner, and falsifiable DoD. Write
-NONE only after that check by editing the same comment if one already exists;
-never create a comment just to say NONE. Put the final state in the issue's closing
+NONE only after that check by updating the same report if one already exists;
+never create a report just to say NONE. Put the final state in the CTO's issue closing
 comment. Keep sensitive evidence in private operational evidence. Do not create a
 channel, and do not post one report per message.
 
@@ -100,8 +103,8 @@ dependency/critical-path → utilization. Later items never override earlier one
    the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
    Never serialize implement → review → delta with idle gaps.
 4. **Ready-work forecast.** An unfinished epic needs a current ready-work forecast. An
-   empty ready queue requires an explicit disposition, not silence. File banked
-   follow-ups as GitHub issues when identified. Empty stream `/next` is a driver defect
+   empty ready queue requires an explicit disposition, not silence. Report banked
+   follow-ups to the CTO through Fleet Comms; never open GitHub issues. Empty stream `/next` is a driver defect
    unless the epic is done or a disposition applies.
 5. **Anti-gaming.** No placeholder agents, artificial task splitting, premature PRs, or
    speculative work without an integration path. §2 still binds: never manufacture

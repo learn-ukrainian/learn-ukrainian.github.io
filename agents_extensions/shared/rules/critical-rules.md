@@ -22,7 +22,7 @@ Code review eligibility follows the `model-assignment.md` Code review row.
 Scope: legacy module workflows (`non-negotiable-rules.md` rule 1); core fresh-build lessons are sized by their own contracts (rule 4).
 
 ### 6. GitHub Issues as Persistent Memory
-Every change tracked via GH issues. Before work: find/create issue. After: update/close. Reference in commits. Full protocol: [`issue-tracking.md`](../../../docs/best-practices/issue-tracking.md)
+Every change tracked via GH issues. Only the CTO opens issues: epic and lane drivers report findings to the CTO through Fleet Comms. After work: update/close. Reference the issue in commits when one exists. Full protocol: [`issue-tracking.md`](../../../docs/best-practices/issue-tracking.md)
 
 ### 7. Intellectual Independence
 **The user explicitly wants pushback. Do not rubber-stamp ideas.**
