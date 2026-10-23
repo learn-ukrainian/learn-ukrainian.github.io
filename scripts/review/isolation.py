@@ -2738,12 +2738,6 @@ def _real(path: Path | str) -> str:
     return os.path.realpath(str(path))
 
 
-def _engine_auth_read_paths(engine: str, home: Path | None = None) -> list[str]:
-    """Legacy helper — always empty. Auth is staged, not host-tree granted."""
-    _ = (engine, home)
-    return []
-
-
 def _resolve_trusted_runtime_command(name: str, *, reject_roots: Iterable[Path | str]) -> Path | None:
     """Resolve a shebang runtime from fixed host install locations, not PATH."""
     home = Path.home().resolve()

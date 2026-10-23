@@ -512,11 +512,6 @@ def exempt_change_problems(paths: Iterable[str], repo_root: Path) -> list[str]:
     return problems
 
 
-def is_ukrainian_content_path(path: Any, repo_root: Path) -> bool:
-    """True when every file ``path`` can match in ``repo_root`` is Ukrainian content (``content_path_problem``)."""
-    return content_path_problem(path, repo_root) is None
-
-
 def bounded_requirement(
     model_id: str | None,
     *,
