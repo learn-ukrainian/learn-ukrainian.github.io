@@ -92,38 +92,6 @@ def ordered_phases_from(
     return tuple(phase for phase in ordered if phase in existing_phases)
 
 
-def detect_plan_hash_drift(
-    state: dict,
-    current_plan_hash: str | None,
-) -> PlanHashDrift | None:
-    """Detect whether tracked writer phases were run against an older plan hash."""
-    if not current_plan_hash:
-        return None
-
-    phases = state.get("phases", {})
-    if not isinstance(phases, dict):
-        return None
-
-    mismatched = []
-    for phase in PLAN_HASH_PHASES:
-        info = phases.get(phase)
-        if not isinstance(info, dict):
-            continue
-        if info.get("status") not in _PHASE_SATISFIED_STATUSES:
-            continue
-        if info.get("plan_hash") != current_plan_hash:
-            mismatched.append(phase)
-
-    if not mismatched:
-        return None
-
-    return PlanHashDrift(
-        current_plan_hash=current_plan_hash,
-        stale_start_phase=mismatched[0],
-        mismatched_phases=tuple(mismatched),
-    )
-
-
 def detect_plan_timestamp_drift(
     state: dict,
     plan_mtime: datetime | None,

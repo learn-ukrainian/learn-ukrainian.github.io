@@ -1732,29 +1732,6 @@ def slovnyk_me_lookup(word: str, dict_slug: str = "vts") -> dict[str, Any]:
 # Convenience: multi-source lookup
 # ══════════════════════════════════════════════════════════════════
 
-def verify_word_sources(word: str) -> dict[str, Any]:
-    """Query multiple sources for a Ukrainian word.
-
-    Returns a dict with results from each source that returned data.
-    Useful for cross-referencing during research validation.
-    """
-    results: dict[str, Any] = {"word": word}
-
-    freq = grac_frequency(word)
-    if freq and freq.get("freq", 0) > 0:
-        results["grac"] = freq
-
-    paradigm = ulif_paradigm(word)
-    if isinstance(paradigm, dict) and paradigm.get("rows"):
-        results["ulif"] = paradigm
-
-    wiki = wikipedia_search(word, limit=3)
-    if wiki:
-        results["wikipedia"] = wiki
-
-    return results
-
-
 def check_russicism(russian_form: str, ukrainian_form: str) -> dict[str, Any]:
     """Check if a suspected Russicism has a proper Ukrainian equivalent.
 

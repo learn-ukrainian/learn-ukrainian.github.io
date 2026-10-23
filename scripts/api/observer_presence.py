@@ -215,24 +215,6 @@ def upsert_presence(
     return row
 
 
-def fresh_presence_for_session(
-    session_id: str,
-    *,
-    now_mono: float | None = None,
-    max_age_seconds: float = PRESENCE_FRESHNESS_SECONDS,
-    store: PresenceStore | None = None,
-) -> tuple[ObserverPresence, float] | None:
-    """Return only a fresh row whose instance id exactly matches the caller."""
-    deadline = time.monotonic() if now_mono is None else now_mono
-    for row in list_live(now_mono=deadline, store=store):
-        if row.instance_id != session_id:
-            continue
-        age = max(0.0, deadline - row.updated_at_mono)
-        if age <= max_age_seconds:
-            return row, age
-    return None
-
-
 def fresh_notebook_presence_for_session(
     session_id: str,
     *,

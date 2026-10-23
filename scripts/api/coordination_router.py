@@ -40,7 +40,3 @@ async def coordination_task(task_id: str, ctx: MonitorContext = Depends(get_ctx)
     if task is None:
         raise HTTPException(status_code=404, detail=f"Task not found: {task_id}")
     return task
-
-
-def ledger_state_dir(ctx: MonitorContext | None = None) -> Path:
-    return agent_ledger.ledger_dir(_project_root(ctx))

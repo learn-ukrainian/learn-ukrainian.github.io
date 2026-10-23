@@ -6574,15 +6574,6 @@ def _python_qg_frontier_regressed(
     return _python_qg_frontier(current) < _python_qg_frontier(reference)
 
 
-def _python_qg_review_loop_dims(violation_count: int) -> Mapping[str, Any]:
-    return {
-        "python_qg_violations": {
-            "score": -float(violation_count),
-            "verdict": "PASS" if violation_count == 0 else "REVISE",
-        }
-    }
-
-
 def _python_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
     report = round_record.get("report")
     violation_count = int(round_record.get("violation_count") or 0)
@@ -14350,10 +14341,6 @@ def _extract_blockquote_records(text: str, *, level: str | None = None) -> list[
     return quotes
 
 
-def _extract_blockquotes(text: str) -> list[str]:
-    return [record["quote"] for record in _extract_blockquote_records(text)]
-
-
 def _extract_embedded_blockquote_attribution(quote_lines: list[str]) -> tuple[str, str]:
     lines_without_attr = list(quote_lines)
     while lines_without_attr and not lines_without_attr[-1].strip():
@@ -15437,14 +15424,6 @@ def _result_text_for_match(result: Mapping[str, Any]) -> str:
     if text:
         return text
     return "\n".join(_flatten_tool_text(result))
-
-
-def _call_text_parts(call: Mapping[str, Any]) -> tuple[str, str]:
-    args = call.get("args", call.get("arguments", {}))
-    result = call.get("result", call.get("response", call.get("result_excerpt", "")))
-    query_text = "\n".join(_flatten_tool_text(args))
-    result_text = "\n".join(_flatten_tool_text(result))
-    return query_text, result_text
 
 
 def _reference_matches_search_call(reference_title: str, call: Mapping[str, Any]) -> bool:

@@ -142,16 +142,6 @@ def get_section_type(header: str) -> str | None:
     return None
 
 
-def is_title_section(header: str) -> bool:
-    """Check if header is a module title (not a standard section)."""
-    # Title sections are unique per module and don't match any alias pattern
-    section_type = get_section_type(header)
-    if section_type:
-        return False
-    # It's a title if it's an H1 that doesn't match known sections
-    return header.strip().startswith("# ")
-
-
 def parse_sections(content: str) -> list[Section]:
     """Parse module content into sections into sections."""
     sections = []

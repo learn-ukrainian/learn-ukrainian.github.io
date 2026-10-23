@@ -152,11 +152,6 @@ def classify_rights(
     )
 
 
-def is_public_domain_verdict(verdict: RightsVerdict) -> bool:
-    """Return whether a classifier verdict permits full-text hosting."""
-    return verdict["rights_class"] == "public_domain"
-
-
 def load_author_rights(rights_path: Path = DEFAULT_RIGHTS_PATH) -> AuthorRightsTable:
     """Load the curated author-rights table keyed by normalized author name."""
     raw = yaml.safe_load(rights_path.read_text(encoding="utf-8")) or {}

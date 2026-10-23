@@ -10,7 +10,6 @@ Status indicators:
 """
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -277,48 +276,6 @@ CATEGORY_LABELS = {
     "oes": "OES - Old East Slavic",
     "ruth": "RUTH - Ruthenian",
 }
-
-
-def update_category_json(level, planned):
-    """Update or create _category.json for a level with correct module count."""
-    cat_path = DOCS_DIR / level / "_category.json"
-    cat_path.parent.mkdir(parents=True, exist_ok=True)
-
-    position = LEVEL_POSITIONS.get(level, 99)
-    label = CATEGORY_LABELS.get(level, level.upper())
-    desc_template = CATEGORY_DESCRIPTIONS.get(level, f"{level.upper()} track. {{n}} modules.")
-    description = desc_template.format(n=planned)
-
-    # Use generated-index for core levels, doc link for specialized tracks without index
-    if level in CORE_LEVELS:
-        link_type = "generated-index"
-        title = f"{label} Modules"
-        data = {
-            "label": label,
-            "position": position,
-            "link": {
-                "type": link_type,
-                "title": title,
-                "description": description,
-                "slug": f"/{level}",
-            }
-        }
-    else:
-        # Specialized tracks use doc link to their index.mdx
-        data = {
-            "label": label,
-            "position": position,
-            "link": {
-                "type": "doc",
-                "id": f"{level}/index",
-            }
-        }
-
-    with open(cat_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-        f.write('\n')
-
-    return cat_path
 
 
 def generated_pages(level_status):

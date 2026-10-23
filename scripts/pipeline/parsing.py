@@ -140,13 +140,6 @@ def _extract_h2_sections(content_path: Path) -> str:
 # Prompt injection helpers
 # ---------------------------------------------------------------------------
 
-def _inject_metrics_into_prompt(prompt_text: str, metrics: dict[str, str]) -> str:
-    """Replace {COMPUTED_*} placeholders in a prompt with computed values."""
-    for key, val in metrics.items():
-        prompt_text = prompt_text.replace("{" + key + "}", val)
-    return prompt_text
-
-
 def _inject_file_contents(prompt_text: str, ctx: ModuleContext) -> str:
     """Inject module file contents into prompt, replacing placeholders."""
     content_path = ctx.paths.get("md")
