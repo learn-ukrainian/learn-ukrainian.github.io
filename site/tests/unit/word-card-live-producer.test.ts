@@ -51,8 +51,10 @@ const packages = process.env.ATLAS_LIVE_EXPORT_ROOT || join(scratch, 'packages')
 const hash = (bytes: string | Buffer) => createHash('sha256').update(bytes).digest('hex');
 beforeAll(() => {
   if (!process.env.ATLAS_LIVE_EXPORT_ROOT) {
+    // The current producer/reader entrypoint owns the fixture. Its nested reader
+    // receives ATLAS_LIVE_EXPORT_ROOT, so it consumes the packages without re-entry.
     execFileSync(process.env.PYTHON || resolve('../.venv/bin/python'), [
-      '-m', 'pytest', '-q', 'tests/test_atlas_live_producer_release.py::test_generate_live_packages',
+      '-m', 'pytest', '-q', 'tests/test_atlas_live_producer_release.py::test_current_producer_through_reader',
       '--basetemp', join(scratch, 'pytest'),
     ], { cwd: resolve('..'), timeout: 90_000,
       env: { ...process.env, ATLAS_LIVE_EXPORT_ROOT: packages } });
