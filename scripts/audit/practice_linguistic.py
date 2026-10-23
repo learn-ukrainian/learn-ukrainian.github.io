@@ -1376,34 +1376,6 @@ def check_mode_prompts(mode: str, item: dict[str, Any]) -> list[Finding]:
     return findings
 
 
-def audit_cloze_items(
-    items: list[dict[str, Any]],
-    verifier: VesumVerifier,
-    *,
-    source_index: ClozeSourceIndex | None = None,
-    lexeme_plain_by_id: dict[str, str] | None = None,
-) -> list[Finding]:
-    findings: list[Finding] = []
-    for index, item in enumerate(items):
-        if not isinstance(item, dict):
-            continue
-        lemma_id = _clean(item.get("lemmaId"))
-        lemma_plain = None
-        if lexeme_plain_by_id and lemma_id:
-            lemma_plain = lexeme_plain_by_id.get(lemma_id)
-        findings.extend(
-            check_cloze_item(
-                item,
-                verifier,
-                source_index=source_index,
-                lemma_plain=lemma_plain,
-            )
-        )
-        if not findings and index < 0:  # pragma: no cover - keeps enumerate used
-            pass
-    return findings
-
-
 def audit_practice_payloads(
     *,
     cloze_items: list[dict[str, Any]] | None = None,
