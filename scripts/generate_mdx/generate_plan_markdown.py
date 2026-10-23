@@ -34,14 +34,6 @@ def load_yaml(path: Path) -> dict:
         return yaml.safe_load(f)
 
 
-def get_modules_in_phase(phase: dict, module_plans: dict) -> list:
-    """Get module plans that belong to a phase."""
-    _start, _end = phase.get('modules', [0, 0])
-    # We need to match by module number - but YAML files don't have numbers
-    # We'll need to infer from the level plan or meta files
-    return []
-
-
 def _load_module_plans(module_plans_dir: Path) -> dict:
     """Load all module YAML plans from a directory."""
     module_plans = {}

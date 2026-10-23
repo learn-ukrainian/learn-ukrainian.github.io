@@ -128,7 +128,7 @@ _SNAPSHOT_SUFFIX = ".snapshots"
 # ``delegate._archive_task_artifacts`` renames a re-dispatched record to
 # ``<stem>.<stamp>[.<pid>].archived.json`` and its snapshot directory to
 # ``<stem>.snapshots.<stamp>[.<pid>].archived``.
-_REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
+_REDISPATCH_ARCHIVED_STEM_RE = task_record_store._REDISPATCH_ARCHIVED_STEM_RE
 
 EXIT_OK = 0
 EXIT_ERRORS = 1

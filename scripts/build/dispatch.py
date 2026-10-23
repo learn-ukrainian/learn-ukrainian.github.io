@@ -179,25 +179,6 @@ def _estimate_tokens(char_count: int, text: str | None = None) -> int:
     return round(char_count / divisor)
 
 
-def _get_gemini_fallback_chain(model: str) -> list[str]:
-    """Resolve Gemini fallback order without relying on optional helpers."""
-    try:
-        from batch_gemini_config import (
-            FALLBACK_MODEL,
-            FLASH_LITE_MODEL,
-            FLASH_MODEL,
-            PRO_MODEL,
-        )
-    except ImportError:
-        return ["auto"] if model != "auto" else []
-
-    ordered = [FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL, FALLBACK_MODEL]
-    if model in ordered:
-        start = ordered.index(model) + 1
-        return [candidate for candidate in ordered[start:] if candidate != model]
-    return [candidate for candidate in (PRO_MODEL, FALLBACK_MODEL) if candidate != model]
-
-
 # ---------------------------------------------------------------------------
 # Allowed MCP tools (single source of truth)
 # ---------------------------------------------------------------------------

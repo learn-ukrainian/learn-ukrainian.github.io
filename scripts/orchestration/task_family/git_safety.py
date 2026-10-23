@@ -352,13 +352,6 @@ def active_jobs_or_leases(repo_root: Path, lineage_id: str | None = None) -> lis
     return entries
 
 
-def assert_no_active_jobs_or_leases(repo_root: Path, lineage_id: str | None = None) -> None:
-    active = active_jobs_or_leases(repo_root, lineage_id=lineage_id)
-    if active:
-        names = ", ".join(sorted(path.name for path in active))
-        raise GitSafetyError(f"active jobs/leases block cleanup: {names}")
-
-
 def _repo_owner_and_name(repo_root: Path) -> tuple[str, str]:
     proc = run_gh(["repo", "view", "--json", "owner,name"], cwd=repo_root)
     if proc.returncode != 0:

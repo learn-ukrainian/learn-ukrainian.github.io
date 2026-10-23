@@ -1236,13 +1236,6 @@ def forecast_peak_temporary_bytes(
     )
 
 
-def _store_object_bytes(raw: bytes) -> tuple[str, bytes, int]:
-    compressed = lzma.compress(raw, preset=6)
-    if len(compressed) + 64 < len(raw):
-        return "lzma", compressed, len(compressed)
-    return "raw", raw, len(raw)
-
-
 def _atomic_write_stream(
     path: Path,
     chunks: Iterator[bytes],
@@ -2874,75 +2867,6 @@ def expand_pack(
     )
 
 
-def verify_roundtrip_identities(
-    inventory: Mapping[str, Any],
-    restored_root: Path,
-) -> dict[str, Any]:
-    restored_rows: list[tuple[str, str]] = []
-    restored_objects: list[tuple[str, str]] = []
-    has_materialization_packets = any(
-        "materialization_packet" in item.get("selection_classes", [item["selection_class"]])
-        for item in inventory["objects"]
-    )
-    for item in inventory["objects"]:
-        aliases = _item_relative_paths(item)
-        _require(bool(aliases), "identity_roundtrip_failure")
-        path = restored_root / aliases[0]
-        _regular(path, "identity_roundtrip_failure")
-        raw_sha256 = digest_file(path)
-        _require(raw_sha256 == item["sha256"], "identity_roundtrip_failure")
-        for alias in aliases:
-            alias_path = restored_root / alias
-            _regular(alias_path, "identity_roundtrip_failure")
-            _require(digest_file(alias_path) == raw_sha256, "identity_roundtrip_failure")
-            restored_objects.append((alias, raw_sha256))
-        selection = item["selection_class"]
-        if selection == "materialization_packet":
-            _count, identities = _identity_fields_from_packet(path)
-            restored_rows.extend(identities)
-            recomputed = materializer.identity_set(
-                [{"unit_id": u, "unit_sha256": s} for u, s in identities]
-            )
-            _require(recomputed == item["packet_identity_set_sha256"], "identity_roundtrip_failure")
-        elif selection == "evidence_sidecar":
-            meta = _sidecar_identity(path)
-            _require(meta["sidecar_id"] == item["sidecar_id"], "identity_roundtrip_failure")
-            _require(
-                meta["packet_identity_set_sha256"] == item["packet_identity_set_sha256"],
-                "identity_roundtrip_failure",
-            )
-            if not has_materialization_packets:
-                restored_rows.extend(meta["row_identities"])
-
-    if restored_rows:
-        ordered = digest(
-            "\n".join(f"{unit_id}\t{unit_sha256}" for unit_id, unit_sha256 in restored_rows).encode(
-                "utf-8"
-            )
-        )
-        _require(
-            ordered == inventory["ordered_row_identity_commitment_sha256"],
-            "identity_roundtrip_failure",
-        )
-    object_set = _pairs_digest(restored_objects)
-    _require(object_set == inventory["object_set_sha256"], "identity_roundtrip_failure")
-    return _receipt(
-        {
-            "schema_version": "phase3_cycle007_storage_identity_proof_v1",
-            "outcome_sha256": OUTCOME_SHA256,
-            "packet_count": inventory["packet_count"],
-            "row_count": inventory["row_count"],
-            "object_count": inventory["object_count"],
-            "object_set_sha256": object_set,
-            "ordered_row_identity_commitment_sha256": inventory[
-                "ordered_row_identity_commitment_sha256"
-            ],
-            "identity_proof_ok": True,
-            "inventory_receipt_sha256": inventory["receipt_sha256"],
-        }
-    )
-
-
 def create_backup(
     pack_dir: Path,
     backup_dir: Path,
@@ -3025,28 +2949,6 @@ def create_backup(
                 source_failure_domain != backup_failure_domain
             ),
             "restore_proof_pending": True,
-        }
-    )
-
-
-def prove_backup_restore(
-    backup_dir: Path,
-    restore_dir: Path,
-    *,
-    zstd_executable: Path | None = None,
-) -> dict[str, Any]:
-    roundtrip = expand_pack(backup_dir, restore_dir, zstd_executable=zstd_executable)
-    _require(roundtrip.get("roundtrip_ok") is True, "backup_restore_failure")
-    return _receipt(
-        {
-            "schema_version": "phase3_cycle007_storage_backup_restore_proof_v1",
-            "outcome_sha256": OUTCOME_SHA256,
-            "pack_manifest_sha256": roundtrip["pack_manifest_sha256"],
-            "object_set_sha256": roundtrip["object_set_sha256"],
-            "object_count": roundtrip["object_count"],
-            "packet_count": roundtrip["packet_count"],
-            "row_count": roundtrip["row_count"],
-            "backup_restore_ok": True,
         }
     )
 

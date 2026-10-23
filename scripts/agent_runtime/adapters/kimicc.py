@@ -23,7 +23,6 @@ from typing import Any
 
 from scripts.review.model_catalog import (
     ModelCatalogError,
-    kimi_model_aliases,
     load_model_catalog,
     resolve_kimi_model,
 )
@@ -93,17 +92,6 @@ def kimicc_default_model(catalog: dict[str, Any] | None = None) -> str:
     if not ids:
         return "kimi-code/k3"
     return ids[0]
-
-
-def kimicc_routable_aliases(catalog: dict[str, Any] | None = None) -> frozenset[str]:
-    """Every alias that resolves to a model on the kimicc endpoint."""
-    source = catalog or load_model_catalog()
-    routable_ids = set(kimicc_routable_model_ids(source))
-    names = set(routable_ids)
-    for alias, model_id in kimi_model_aliases(source).items():
-        if model_id in routable_ids:
-            names.add(alias)
-    return frozenset(names)
 
 
 def resolve_kimicc_dispatch_model(model: str | None, catalog: dict[str, Any] | None = None) -> str:

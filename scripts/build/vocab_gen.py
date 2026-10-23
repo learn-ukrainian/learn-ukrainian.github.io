@@ -15,8 +15,6 @@ import logging
 import sys
 from pathlib import Path
 
-import yaml
-
 try:
     from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
@@ -78,20 +76,6 @@ _POS_LABELS = {
 }
 
 _GENDER_MAP = {":m:": "ч.", ":f:": "ж.", ":n:": "с."}
-
-
-def dedupe_vocab(
-    current: list[dict], previous_words: set[str]
-) -> list[dict]:
-    """Remove words already taught in previous modules.
-
-    Case-insensitive matching. Returns filtered list.
-    """
-    previous_lower = {w.lower() for w in previous_words}
-    return [
-        entry for entry in current
-        if entry.get("word", "").lower() not in previous_lower
-    ]
 
 
 def vesum_enrich_entry(entry: dict) -> dict:
@@ -161,78 +145,6 @@ def vesum_enrich_entry(entry: dict) -> dict:
         pass  # Stress annotation is best-effort
 
     return result
-
-
-def get_previous_vocab(level: str, current_seq: int) -> set[str]:
-    """Collect all vocabulary from previous modules' vocab files.
-
-    Reads vocabulary/{slug}.yaml files for modules with sequence < current_seq.
-    Falls back to plan vocabulary_hints if no vocab file exists.
-    """
-    plans_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level
-    vocab_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / level / "vocabulary"
-
-    if not plans_dir.is_dir():
-        return set()
-
-    previous: set[str] = set()
-
-    for plan_file in plans_dir.glob("*.yaml"):
-        try:
-            plan = yaml.safe_load(plan_file.read_text("utf-8"))
-            if not isinstance(plan, dict):
-                continue
-            seq = plan.get("sequence", 999)
-            if seq >= current_seq:
-                continue
-            slug = plan.get("slug", plan_file.stem)
-
-            # Try vocab file first
-            vocab_file = vocab_dir / f"{slug}.yaml"
-            if vocab_file.exists():
-                vocab_data = yaml.safe_load(vocab_file.read_text("utf-8"))
-                if isinstance(vocab_data, dict):
-                    for entry in vocab_data.get("vocabulary", []):
-                        previous.add(entry.get("word", "").lower())
-                continue
-
-            # Fall back to plan vocabulary_hints (v3 dict or v4 list)
-            from pipeline.vocab_helpers import extract_vocab_words
-            hints = plan.get("vocabulary_hints", {})
-            for word in extract_vocab_words(hints):
-                word_lower = word.lower()
-                if word_lower:
-                    previous.add(word_lower)
-        except Exception:
-            continue
-
-    return previous
-
-
-def parse_vocab_yaml(raw: str) -> list[dict]:
-    """Parse vocabulary YAML from writer output.
-
-    Handles both ```yaml``` blocks and raw YAML.
-    Returns list of vocabulary entries.
-    """
-    import re
-
-    # Extract from ```yaml``` block if present
-    match = re.search(r"```yaml\s*\n(.*?)```", raw, re.DOTALL)
-    if match:
-        raw = match.group(1)
-
-    # Try parsing
-    try:
-        data = yaml.safe_load(raw)
-        if isinstance(data, dict) and "vocabulary" in data:
-            return data["vocabulary"]
-        if isinstance(data, list):
-            return data
-    except Exception:
-        pass
-
-    return []
 
 
 def _stress_word(word: str) -> str:
