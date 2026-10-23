@@ -389,10 +389,3 @@ def aggregate_review(
         min_score=min_score,
         min_dim=min_dim,
     )
-
-
-def get_target_words(level_code: str | None) -> int:
-    """Shortcut — per-level family word target. Variant overrides live in
-    ``scripts/audit/config.LEVEL_CONFIG``; callers that respect those
-    should use ``scripts.audit.config.get_word_target`` instead."""
-    return get_level_thresholds(level_code).target_words

@@ -772,16 +772,6 @@ MANDATORY_CALLOUT_DENSITY = 6 # Callouts per module
 
 TURN_SEQUENCE = [1, 2, 3, 3.1, 3.5, 4, 5]
 
-def get_next_turn(current_turn: float) -> float:
-    """Returns the next turn in the sequence, or None if finished."""
-    try:
-        idx = TURN_SEQUENCE.index(current_turn)
-        if idx + 1 < len(TURN_SEQUENCE):
-            return TURN_SEQUENCE[idx + 1]
-    except ValueError:
-        pass
-    return None
-
 def get_config(track: str) -> dict[str, Any]:
     """Retrieves config for a specific track, falling back to default core config."""
     track = base_level(track)
