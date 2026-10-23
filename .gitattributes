@@ -1,3 +1,7 @@
 data/literary_texts/*.jsonl filter=lfs diff=lfs merge=lfs -text
 data/esu/articles.jsonl filter=lfs diff=lfs merge=lfs -text
 site/src/data/lexicon-manifest.fingerprint.json merge=union
+/package-lock.json linguist-generated=true
+/site/package-lock.json linguist-generated=true
+/.dagger/uv.lock linguist-generated=true
+/site/src/data/lexicon-manifest.fingerprint.json linguist-generated=true

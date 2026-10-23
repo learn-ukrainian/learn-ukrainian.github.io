@@ -139,8 +139,8 @@ def report(args: argparse.Namespace) -> dict:
                 raise ValueError("PR body must be a string or null")
             result["justification_present"] = bool(
                 re.search(
-                    r"(?im)^\s*(?:size|small[- ]batch) justification:[ \t]*\S[^\r\n]*$",
-                    body or "",
+                    r"(?im)^[ \t]*(?:size|small[- ]batch) justification:[ \t]*\S[^\r\n]*$",
+                    (body or "").replace("\r\n", "\n").replace("\r", "\n"),
                 )
             )
         result.update(measure(args.repo, base or "", head or ""))
