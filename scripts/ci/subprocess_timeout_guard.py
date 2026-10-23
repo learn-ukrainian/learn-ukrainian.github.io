@@ -13,6 +13,12 @@ not import that module. Python NFKC-normalises identifiers, so non-ASCII sources
 are also tested after NFKC normalisation. Import *syntax* is never inspected
 by the prefilter: ``if x: import subprocess``, ``a = 1; import subprocess`` and
 ``import \\`` line continuations are all parsed. The AST walk stays the authority.
+
+Wildcard imports bind the bounded callables and ``Popen`` as bare aliases.
+``Popen`` remains outside the call-site timeout check because its constructor
+does not accept ``timeout=``. As with explicit imports, aliases found anywhere
+in the AST apply module-wide, including function-local wildcard imports that
+``ast.parse`` accepts but Python compilation rejects.
 """
 
 from __future__ import annotations
@@ -170,7 +176,10 @@ def _collect_aliases(tree: ast.AST) -> dict[str, str | None]:
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.module == "subprocess":
             for alias in node.names:
-                aliases[alias.asname or alias.name] = alias.name
+                if alias.name == "*":
+                    aliases.update((name, name) for name in BOUNDED_FUNCS | {"Popen"})
+                else:
+                    aliases[alias.asname or alias.name] = alias.name
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name == "subprocess":
