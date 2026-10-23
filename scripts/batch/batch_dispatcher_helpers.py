@@ -27,6 +27,7 @@ from batch.batch_dispatcher_config import (
 )
 from batch_gemini_config import PROJECT_ROOT, SEMINAR_TRACKS, VENV_PYTHON, get_module_index, get_module_paths
 from batch_utils import atomic_write_json
+from common.http_status import has_http_status
 from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 log = logging.getLogger("dispatcher")
@@ -275,8 +276,11 @@ def dispatch_track(track_name: str, mode: str, extra_args: list[str],
         elapsed = time.monotonic() - start
         stderr = result.stderr[-2000:] if result.stderr else ""
         stdout_tail = result.stdout[-2000:] if result.stdout else ""
-        combined = (stderr + stdout_tail).lower()
-        quota_hit = any(kw in combined for kw in ("quota", "429", "rate limit", "resource_exhausted"))
+        combined = f"{stderr}\n{stdout_tail}".lower()
+        quota_hit = any(
+            has_http_status(stream, (429,), start=max(0, len(stream) - 2000))
+            for stream in (result.stderr or "", result.stdout or "")
+        ) or any(kw in combined for kw in ("quota", "rate limit", "resource_exhausted"))
 
         return {
             "success": result.returncode == 0,

@@ -3,6 +3,8 @@
 import asyncio
 from textwrap import dedent
 
+import pytest
+
 from scripts.etymology import bulk_ocr_gemini
 from scripts.etymology.bulk_ocr_gemini import (
     GEMINI_OCR_POLICY,
@@ -246,3 +248,34 @@ def test_strip_planning_preamble_removes_trailing_update_topic():
 
 def test_is_low_quality_accepts_legit_apology():
     assert is_low_quality_output(LEGIT_APOLOGY) is False
+
+
+@pytest.mark.parametrize("stderr,stdout,expected", [
+    ("HTTP503", "", "transient"),
+    ("", "Error 502", "transient"),
+    ("HTTP429", "", "transient"),
+    ("599", "", "transient"),
+    ("0.503", "", "error"),
+    ("v1.429", "", "error"),
+    ("4", "29", "error"),
+    ("HTTP503", "abc", "transient"),
+    ("PERMISSION_DENIED HTTP503", "", "daily_quota"),
+    ("RequestsPerMinute HTTP503", "", "rpm"),
+    ("quota will reset after 2h HTTP503", "", "daily_quota"),
+    ("", "network timeout", "transient"),
+    ("", "timed out", "transient"),
+    ("", "UNAVAILABLE", "transient"),
+    ("", "INTERNAL", "transient"),
+    ("", "ECONNRESET", "transient"),
+    ("", "ETIMEDOUT", "transient"),
+    ("", "No capacity available", "transient"),
+    ("", "Invalid stream", "transient"),
+    ("", "Invalid chunk", "transient"),
+    ("", "Invalid response", "transient"),
+    ("", "Retry attempts exhausted", "transient"),
+    ("", "RESOURCE_EXHAUSTED", "transient"),
+    ("", "RATE-LIMIT", "transient"),
+    ("", "rate limit", "transient"),
+])
+def test_classify_error_status_and_original_precedence(stderr, stdout, expected):
+    assert bulk_ocr_gemini.classify_error(stderr, stdout) == expected

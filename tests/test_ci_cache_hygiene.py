@@ -341,3 +341,19 @@ def test_main_aborts_on_incomplete_cache_listing(monkeypatch: pytest.MonkeyPatch
 
     assert cache_hygiene.main(["--repo", "owner/repo", "--lock-file", str(lock), "--apply"]) == 2
     assert "cache list is incomplete: 100 entries" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("message,expected_missing", [
+    ("digest cafe404abcdef1234", False), ("z404nonhexZ", False),
+    ("0.404", False), ("HTTP404", True), ("status: 404", True),
+])
+def test_delete_entries_only_ignores_real_missing_status(message, expected_missing):
+    deletions = plan_deletions(
+        [_entry(1, TRAP_JS + _sha(1), hours_ago=5), _entry(2, TRAP_JS + _sha(2))],
+        CURRENT, NOW,
+    ).deletions
+
+    def fail(_args):
+        raise subprocess.CalledProcessError(1, "gh", stderr=message)
+
+    assert delete_entries("owner/repo", deletions, gh_api=fail) == ([] if expected_missing else [TRAP_JS + _sha(1)])

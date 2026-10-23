@@ -51,6 +51,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.append(str(_REPO_ROOT))
 
 from agent_runtime.json_parse import extract_json_object
+from common.http_status import has_http_status
 from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -188,7 +189,7 @@ def analyze_page_via_cli(record: dict, tmp_dir: Path) -> dict | None:
             stderr = result.stderr.strip()
 
             if result.returncode != 0:
-                if "429" in stderr or "RESOURCE_EXHAUSTED" in stderr:
+                if has_http_status(stderr, (429,)) or "RESOURCE_EXHAUSTED" in stderr:
                     wait = RETRY_DELAY * (2**attempt)
                     print(f"\n  Rate limited, waiting {wait:.0f}s (attempt {attempt + 1})")
                     time.sleep(wait)

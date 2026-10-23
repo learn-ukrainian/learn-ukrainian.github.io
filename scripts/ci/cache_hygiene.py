@@ -44,6 +44,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
+from scripts.common.http_status import has_http_status
 
 MAIN_REF = "refs/heads/main"
 PER_PAGE = 100
@@ -262,7 +263,7 @@ def delete_entries(repo: str, deletions: list[Deletion], gh_api: GhApi = _gh_api
         except subprocess.CalledProcessError as exc:
             if exc.returncode == 75:
                 raise
-            if "404" in (exc.stderr or ""):
+            if has_http_status(exc.stderr or "", (404,)):
                 continue
             print(f"failed to delete {deletion.entry.key}: {(exc.stderr or '').strip()}", file=sys.stderr)
             failed.append(deletion.entry.key)

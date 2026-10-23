@@ -69,6 +69,8 @@ except ModuleNotFoundError as exc:
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from common.http_status import has_http_status
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
 QUERIES_PATH = SCRIPT_DIR / "benchmark_queries.yaml"
@@ -283,7 +285,7 @@ def is_hf_unauthorized(exc: Exception) -> bool:
     status_code = getattr(response, "status_code", None)
     if status_code == 401:
         return True
-    return "401" in str(exc)
+    return has_http_status(str(exc), (401,))
 
 
 def maybe_hold_dry_run_lock_for_tests():

@@ -59,6 +59,7 @@ from batch.batch_dispatcher_config import (
     TrackState,
 )
 from batch_gemini_config import PROJECT_ROOT, VENV_PYTHON, get_module_index, get_module_paths
+from common.http_status import has_http_status
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -285,9 +286,12 @@ def dispatch_otaman(track_name: str, num: int, slug: str,
         stderr = result.stderr[-2000:] if result.stderr else ""
         stdout_tail = result.stdout[-2000:] if result.stdout else ""
 
-        combined = (stderr + stdout_tail).lower()
-        quota_hit = any(kw in combined for kw in (
-            "quota", "429", "rate limit", "resource_exhausted"
+        combined = f"{stderr}\n{stdout_tail}".lower()
+        quota_hit = any(
+            has_http_status(stream, (429,), start=max(0, len(stream) - 2000))
+            for stream in (result.stderr or "", result.stdout or "")
+        ) or any(kw in combined for kw in (
+            "quota", "rate limit", "resource_exhausted"
         ))
 
         return {

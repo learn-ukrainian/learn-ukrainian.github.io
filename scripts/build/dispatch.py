@@ -29,6 +29,7 @@ from ai_llm.fallback import (
     run_gemini_fallback_ladder,
     visible_sleep,
 )
+from common.http_status import has_http_status
 
 # ---------------------------------------------------------------------------
 # Rate limit detection + pacing
@@ -36,7 +37,6 @@ from ai_llm.fallback import (
 
 # Patterns in stderr that indicate rate limiting (not content errors)
 _RATE_LIMIT_PATTERNS = (
-    "429",
     "RESOURCE_EXHAUSTED",
     "rate limit",
     "rate_limit",
@@ -59,7 +59,7 @@ _LATIN_RE = re.compile(r"[A-Za-z]")
 def _is_rate_limited(stderr: str) -> bool:
     """Check if a failure was caused by rate limiting."""
     stderr_lower = stderr.lower()
-    return any(pat.lower() in stderr_lower for pat in _RATE_LIMIT_PATTERNS)
+    return has_http_status(stderr, (429,)) or any(pat.lower() in stderr_lower for pat in _RATE_LIMIT_PATTERNS)
 
 
 def _pace_gemini_calls(sleep_fn: Callable[[int, str], None] | None = None) -> None:

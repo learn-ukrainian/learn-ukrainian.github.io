@@ -255,3 +255,65 @@ def test_status_output_includes_all_registered_channels(fetcher_module) -> None:
         assert key in status
         assert channel.output_filename in status
         assert f"{channel.output_filename} | present=no" in status
+
+
+@pytest.mark.parametrize("message,rotations", [
+    ("run 7f3a429c9e1b2d44", 0), ("z429nonhexZ", 0), ("0.429", 0),
+    ("HTTP429", 3), ("status: 429", 3),
+])
+def test_subtitle_retry_only_on_real_status(fetcher_module, monkeypatch, message, rotations):
+    import subprocess
+    from unittest.mock import Mock
+
+    run = Mock(return_value=subprocess.CompletedProcess([], 1, stdout="", stderr=message))
+    rotate = Mock()
+    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", run)
+    monkeypatch.setattr(fetcher_module, "_tor_new_circuit", rotate)
+    monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
+    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=True) == ""
+    assert rotate.call_count == rotations
+    assert run.call_count == rotations + 1
+
+
+def test_subtitle_status_without_tor_does_not_rotate(fetcher_module, monkeypatch, capsys):
+    import subprocess
+    from unittest.mock import Mock
+
+    monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
+    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", Mock(
+        return_value=subprocess.CompletedProcess([], 1, stdout="", stderr="HTTP429"),
+    ))
+    rotate = Mock()
+    monkeypatch.setattr(fetcher_module, "_tor_new_circuit", rotate)
+    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=False) == ""
+    rotate.assert_not_called()
+    assert "429" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("caption,expected", [
+    ("offline subtitle fixture with enough content to return as the result", "offline subtitle fixture with enough content to return as the result"),
+    ("short", ""),
+])
+def test_subtitle_download_reads_real_offline_vtt(fetcher_module, monkeypatch, caption, expected):
+    import subprocess
+    from pathlib import Path
+
+    def download(args, **_kwargs):
+        output_dir = Path(args[args.index("-o") + 1]).parent
+        (output_dir / "fixture.uk.vtt").write_text(f"WEBVTT\n\n00:00:00.000 --> 00:00:02.000\n{caption}\n")
+        return subprocess.CompletedProcess([], 0, stdout="", stderr="")
+
+    monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
+    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", download)
+    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=False) == expected
+
+
+@pytest.mark.parametrize("timeout", [True, False])
+def test_subtitle_download_failure_returns_empty(fetcher_module, monkeypatch, timeout):
+    import subprocess
+    from unittest.mock import Mock
+
+    error = subprocess.TimeoutExpired("fixture", 90) if timeout else OSError("offline fixture")
+    monkeypatch.setattr(fetcher_module, "YOUTUBE_SUBTITLE_LANGS", ("uk",))
+    monkeypatch.setattr(fetcher_module, "_run_yt_dlp", Mock(side_effect=error))
+    assert fetcher_module._download_subtitle_text("fixture", limiter=None, use_tor=False) == ""
