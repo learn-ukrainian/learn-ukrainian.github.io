@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { displayValue, groupReleasePages, pageKey, pagePath, readableEntry, slotLabel, PageKeyError, type ReadableEntry } from '../../src/lib/lexicon/word-card-readable';
+import { displayValue, groupReleasePages, pageKey, pagePath, readableEntry, slotLabel, sourceCredits, PageKeyError, type ReadableEntry } from '../../src/lib/lexicon/word-card-readable';
 import { attributionGap, loadWordCardRelease, type ReleaseRow } from '../../src/lib/lexicon/word-card-release';
 import { publicReleasePin } from '../../src/lib/lexicon/word-card-preview-inputs';
 
 type Field = ReleaseRow['fields'][number];
 const ULIF = '«Словники України online», https://lcorp.ulif.org.ua/dictua/ (entry reference)';
+const VESUM = 'Рисін А., Старко В. Великий електронний словник української мови (ВЕСУМ). Версія <used version>. 2005-2026. URL: https://vesum.nlp.net.ua/ — licence CC BY-NC-SA 4.0, changes indicated.';
 let next = 0;
 function field(cardId: string, name: string, value: Field['value'], source = 'ulif', subject: Field['subject'] = { kind: 'card', id: cardId }): Field {
-  const attribution = source === 'ulif' ? ULIF : source === 'puls' ? 'PULS citation above.' : `${source} https://evil.invalid/x`;
+  const attribution = source === 'ulif' ? ULIF : source === 'vesum' ? VESUM : source === 'puls' ? 'PULS citation above.' : `${source} https://evil.invalid/x`;
   return { assertion_id: `wa_${String(next++).padStart(24, '0')}`, subject, field: name, value, citation: { source_id: source, snapshot_id: 's', locator: `${source}:1`,
     licence_ref: { register_source_id: source, register_version: 1 }, attribution, licence: { name: 'terms' }, terms_ref: 'docs/sources/permissions-register.yaml' } };
 }
@@ -92,8 +93,17 @@ describe('readable entry', () => {
     expect(entry.facts.map(g => g.field)).toEqual(['spelling', 'stress', 'pos', 'gender', 'cefr']);
     expect(entry.facts[0]?.facts).toHaveLength(1);
     expect(entry.facts[0]?.facts[0]?.credits.map(c => [c.sourceId, c.href, c.gap])).toEqual([
-      ['ulif', 'https://lcorp.ulif.org.ua/dictua/', null], ['vesum', null, null]]);
+      ['ulif', 'https://lcorp.ulif.org.ua/dictua/', null], ['vesum', 'https://vesum.nlp.net.ua/', 'vesum_version_placeholder']]);
     expect(entry.facts.find(g => g.field === 'cefr')?.facts[0]?.credits[0]?.gap).toBe('puls_reference_placeholder');
+    const before = JSON.stringify(entry.row);
+    expect(sourceCredits([entry.row, entry.row])).toEqual([
+      { sourceId: 'ulif', attributions: [ULIF], links: ['https://lcorp.ulif.org.ua/dictua/'], licences: [{ name: 'terms' }] },
+      { sourceId: 'vesum', attributions: ['Рисін А., Старко В. Великий електронний словник української мови (ВЕСУМ). 2005-2026. URL: https://vesum.nlp.net.ua/ — licence CC BY-NC-SA 4.0, changes indicated.'],
+        links: ['https://vesum.nlp.net.ua/'], licences: [{ name: 'terms' }] },
+      { sourceId: 'ukrainian_word_stress', attributions: ['ukrainian_word_stress https://evil.invalid/x'], links: [], licences: [{ name: 'terms' }] },
+      { sourceId: 'puls', attributions: [], links: [], licences: [{ name: 'terms' }] },
+    ]);
+    expect(JSON.stringify(entry.row)).toBe(before);
     expect(readableEntry(word('wc_s', 'банк', 'lexeme', c => [field(c, 'stress', 'ба́нк')]), 1).heading).toBe('ба́нк');
   });
   it('renders supplied values literally', () => {

@@ -255,8 +255,14 @@ describe('readable grouped release pages', () => {
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;globalThis.x=1&lt;/script&gt;');
     expect(Array.from(dom.querySelectorAll('[data-credit-link]')).map(l => l.getAttribute('href'))).toEqual(expect.arrayContaining(['https://lcorp.ulif.org.ua/dictua/', 'https://vesum.nlp.net.ua/']));
-    expect(Array.from(dom.querySelectorAll('a')).map(l => l.getAttribute('href') ?? '').filter(h => !/^https:\/\/(lcorp\.ulif\.org\.ua|vesum\.nlp\.net\.ua|github\.com\/learn-ukrainian)\//.test(h))).toEqual([]);
-    expect(a?.querySelector('[data-credit-gap="vesum_version_placeholder"]')).not.toBeNull();
+    expect(Array.from(dom.querySelectorAll('a')).map(l => l.getAttribute('href') ?? '').filter(h => !h.startsWith('#source-') && !h.startsWith('/lexicon-v2/release/') && !/^https:\/\/(lcorp\.ulif\.org\.ua|vesum\.nlp\.net\.ua|github\.com\/learn-ukrainian)\//.test(h))).toEqual([]);
+    expect(dom.querySelector('[data-credit-gap]')).toBeNull();
+    expect(html).not.toContain('&lt;used version&gt;');
+    expect(dom.querySelector('[data-page-audit]')?.hasAttribute('open')).toBe(false);
+    expect(Array.from(dom.querySelectorAll('[data-source-credit]')).map(e => e.getAttribute('data-source-credit'))).toEqual(['ulif', 'evil', 'vesum']);
+    expect(Array.from(dom.querySelectorAll('[data-credit-ref]')).every(link => dom.querySelector(link.getAttribute('href') ?? '') !== null)).toBe(true);
+    expect(dom.querySelectorAll('[data-source-credit="ulif"] [data-credit-attribution]')).toHaveLength(1);
+    expect(dom.querySelector('[data-local-artifact-version]')?.textContent).toContain('v0.1.1');
     expect(dom.querySelector('[aria-label="Field comparison"]')).toBeNull();
   });
   it('keeps every raw assertion, citation and report action in collapsed audit details', () => {
@@ -267,6 +273,22 @@ describe('readable grouped release pages', () => {
       expect(audit?.hasAttribute('open')).toBe(false);
       expect(Array.from(audit?.querySelectorAll('[data-release-assertion]') ?? []).map(e => e.getAttribute('data-release-assertion'))).toEqual(entry.row.fields.map(x => x.assertion_id));
       expect(audit?.querySelectorAll('[data-report-action]')).toHaveLength(entry.row.fields.length);
+      expect(audit?.querySelector('[data-release-citation], [data-source-attribution], [data-attribution-gap]')).toBeNull();
+      const raw = view(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row: entry.row, pin }} current={null} compare />));
+      for (const field of entry.row.fields) {
+        const learner = audit?.querySelector(`[data-release-assertion="${field.assertion_id}"]`);
+        const original = raw.querySelector(`[data-release-assertion="${field.assertion_id}"]`);
+        const rawLink = learner?.querySelector('[data-raw-diagnostic]')?.getAttribute('href');
+        expect(rawLink).toBe(`/lexicon-v2/release/${entry.row.card_id}/#${original?.id}`);
+        expect(learner?.querySelector('[data-raw-value]')?.textContent).toBe(original?.querySelector('[data-raw-value]')?.textContent);
+        expect(learner?.querySelector('[data-assertion-source]')?.textContent).toBe(field.citation.source_id);
+        expect(learner?.querySelector('[data-assertion-snapshot]')?.textContent).toBe(field.citation.snapshot_id);
+        expect(learner?.querySelector('[data-assertion-locator]')?.textContent).toBe(field.citation.locator);
+        expect(learner?.querySelector('[data-report-action]')?.getAttribute('href')).toBe(original?.querySelector('[data-report-action]')?.getAttribute('href'));
+        expect(JSON.parse(original?.querySelector('[data-release-citation]')?.textContent ?? '')).toEqual(field.citation);
+        expect(original?.querySelector('[data-source-attribution]')?.textContent).toBe(field.citation.attribution);
+        if (field.citation.source_id === 'vesum') expect(original?.querySelector('[data-attribution-gap]')?.getAttribute('data-attribution-gap')).toBe('vesum_version_placeholder');
+      }
     }
     expect(Array.from(dom.querySelectorAll('pre')).filter(pre => !pre.closest('details'))).toEqual([]);
     expect(dom.querySelector('[aria-label="Field comparison"]')?.textContent).toContain('Unresolved pairing');
