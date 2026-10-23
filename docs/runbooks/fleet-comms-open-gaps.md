@@ -131,7 +131,7 @@ Near-cap and open-circuit buckets receive no automatic work.
 | codex | true |
 | cursor | true |
 | gemini | false |
-| glm-local | true |
+| glm-local | false |
 | grok | true |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->

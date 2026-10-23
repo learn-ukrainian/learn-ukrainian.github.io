@@ -7,7 +7,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from ai_llm.fallback import (
     AGY_GEMINI_MODEL,
-    PRIMARY_GEMINI_MODEL,
     AttemptOutcome,
     run_gemini_fallback_ladder,
 )
@@ -26,16 +25,6 @@ def test_lint_agent_trailer_accepts_agy():
 
 def test_agy_retryable_error_exhausts_ladder_without_flash_cli():
     outcomes = {
-        (PRIMARY_GEMINI_MODEL, "api"): AttemptOutcome(
-            status="rate_limited",
-            elapsed_s=0.1,
-            stderr_excerpt="429 quota",
-        ),
-        (PRIMARY_GEMINI_MODEL, "oauth"): AttemptOutcome(
-            status="rate_limited",
-            elapsed_s=0.1,
-            stderr_excerpt="oauth quota",
-        ),
         (AGY_GEMINI_MODEL, None): AttemptOutcome(
             status="retryable_error",
             elapsed_s=0.1,
@@ -60,9 +49,7 @@ def test_agy_retryable_error_exhausts_ladder_without_flash_cli():
     assert result.ok is False
     assert result.model_used is None
     assert result.cli_used is None
-    assert "all 3 Gemini fallback rungs exhausted" in result.error_message
+    assert "all 1 Gemini fallback rungs exhausted" in result.error_message
     assert seen == [
-        (PRIMARY_GEMINI_MODEL, "api"),
-        (PRIMARY_GEMINI_MODEL, "oauth"),
         (AGY_GEMINI_MODEL, None),
     ]

@@ -19,8 +19,8 @@ CALLERS = [
 MODELS_ALLOWED = [
     ("grok-4.7", "grok-4.7-high"),
     ("grok-4.7-high", "grok-4.7-high"),
-    ("composer-2.5", "composer-2.5"),
-    ("composer-2.5[fast=false]", "composer-2.5[fast=false]"),
+    ("composer-2.5", None),
+    ("composer-2.5[fast=false]", None),
 ]
 
 MODELS_REFUSED = [
@@ -80,6 +80,12 @@ def test_callers_apply_wire_normalization(caller, input_model, expected_wire, mo
     monkeypatch.setattr(acpx_module, "_require_communication_transport", lambda **kw: None)
     monkeypatch.setattr(acpx_module, "_require_communication_target", lambda **kw: None)
 
+    if expected_wire is None:
+        with pytest.raises((ValueError, SystemExit, ModelCatalogError)) as excinfo:
+            extract_argv(caller, input_model, tmp_path)
+        message = str(excinfo.value)
+        assert "CURSOR_MODEL_NOT_APPROVED" in message
+        return
     argv = extract_argv(caller, input_model, tmp_path)
     model_idx = argv.index("--model")
     assert argv[model_idx + 1] == expected_wire

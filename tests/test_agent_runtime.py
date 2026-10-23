@@ -1617,7 +1617,12 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
 
     # has_headroom mock: always OK.
     # should_kill mock: fire hard_timeout on every call.
+    # Preserve the native harness controller contract with explicit fixture rungs;
+    # the production default now selects only AGY Flash.
+    from ai_llm.fallback import GeminiRung
+
     with (
+        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch(
             "agent_runtime.runner.has_headroom",
             return_value=(True, ""),
@@ -1693,7 +1698,12 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
 
     mock_popen = MagicMock(side_effect=[api_proc, oauth_proc])
 
+    # Preserve the native harness controller contract with explicit fixture rungs;
+    # the production default now selects only AGY Flash.
+    from ai_llm.fallback import GeminiRung
+
     with (
+        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 2, "gemini-3.8-flash-high", "api"), GeminiRung(2, 2, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -1749,7 +1759,7 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
 
 
 def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monkeypatch):
-    """After Pro exhaustion, result and usage attribute Flash to AGY."""
+    """The current Flash default attributes both result and usage to AGY."""
     from agent_runtime import runner
     from ai_llm.fallback import AGY_GEMINI_MODEL, PRIMARY_GEMINI_MODEL
 
@@ -1812,7 +1822,7 @@ def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monke
     assert result.model == AGY_GEMINI_MODEL
     assert result.usage_record["model"] == AGY_GEMINI_MODEL
     assert write_record.call_args.args[0]["model"] == AGY_GEMINI_MODEL
-    assert attempts == [("gemini", PRIMARY_GEMINI_MODEL), ("agy", AGY_GEMINI_MODEL)]
+    assert attempts == [("agy", AGY_GEMINI_MODEL)]
 
 
 def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
@@ -1839,7 +1849,12 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
         ]
     )
 
+    # Preserve the native harness controller contract with explicit fixture rungs;
+    # the production default now selects only AGY Flash.
+    from ai_llm.fallback import GeminiRung
+
     with (
+        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -1874,14 +1889,14 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
             mode="workspace-write",
             cwd=tmp_path,
             task_id="gemini-rate-limited",
-            model="gemini-3.1-pro-preview",
+            model="gemini-3.8-flash-high",
             entrypoint="runtime",
         )
 
     assert mock_popen.call_count == 1
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "rate_limited"
-    assert written["model"] == "gemini-3.1-pro-preview"
+    assert written["model"] == "gemini-3.8-flash-high"
 
 
 def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
@@ -1901,7 +1916,12 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
     timed_out_proc.pid = 60606
     _popen_proc_for_subprocess_run(timed_out_proc)
 
+    # Preserve the native harness controller contract with explicit fixture rungs;
+    # the production default now selects only AGY Flash.
+    from ai_llm.fallback import GeminiRung
+
     with (
+        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -1947,7 +1967,7 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
 
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "hard_timeout"
-    assert written["model"] == "gemini-3.1-pro-high"
+    assert written["model"] == "gemini-3.8-flash-high"
 
 
 # ---------------------------------------------------------------------------
@@ -2317,7 +2337,7 @@ def test_gemini_adapter_workspace_write_yolo(tmp_path):
         prompt="hello",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gemini-3.1-pro-preview",
+        model="gemini-3.8-flash-high",
         task_id=None,
         session_id=None,
         tool_config=None,
@@ -2344,7 +2364,7 @@ def test_gemini_adapter_subscription_mode_strips_api_key_env(tmp_path):
         prompt="hello",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gemini-3.1-pro-preview",
+        model="gemini-3.8-flash-high",
         task_id=None,
         session_id=None,
         tool_config=None,
@@ -2364,7 +2384,7 @@ def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
         prompt="hello",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gemini-3.1-pro-preview",
+        model="gemini-3.8-flash-high",
         task_id=None,
         session_id=None,
         tool_config=None,
@@ -3076,7 +3096,12 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
 
     mock_popen = MagicMock(return_value=mock_proc)
 
+    # Preserve the native harness controller contract with explicit fixture rungs;
+    # the production default now selects only AGY Flash.
+    from ai_llm.fallback import GeminiRung
+
     with (
+        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {

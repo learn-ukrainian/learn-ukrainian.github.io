@@ -511,7 +511,7 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
 def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         _build(tmp_path, model="gemini-9.9-pro-preview")
-    assert "gemini-3.8-flash-high" not in str(error.value)
+    assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in str(error.value)
 
 
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
@@ -544,8 +544,8 @@ def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, 
 
     assert result == 2
     err = capsys.readouterr().err
-    assert "For Gemini Pro, use `--model gemini-3.1-pro-high`." in err
-    assert "gemini-3.8-flash-high" not in err
+    assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in err
+    assert "gemini-3.1-pro-high" not in err
 
 
 @pytest.mark.parametrize(
@@ -560,25 +560,14 @@ def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, 
     ],
 )
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high"])
-def test_argon_selectors_pass_through_unchanged(
+def test_argon_selectors_are_retired_regardless_of_effort(
     tmp_path: Path, requested: str, selector: str, effort: str | None
 ) -> None:
-    from scripts.agent_runtime.target_admission import resolve_and_admit
-
-    assert AgyAdapter.resolve_model_slug(requested) == selector
-    targets = resolve_and_admit(("agy",), mode="workspace-write", model=requested)
-    assert [(target.recipient, target.model) for target in targets] == [("agy", requested)]
-    plan = AgyAdapter().build_invocation(
-        prompt="hello",
-        mode="danger",
-        cwd=tmp_path,
-        model=requested,
-        task_id="t-argon",
-        session_id=None,
-        tool_config=None,
-        effort=effort,
-    )
-    assert _model_after_flag(plan) == selector
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        AgyAdapter.resolve_model_slug(requested)
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        AgyAdapter().build_invocation(prompt="hello", mode="danger", cwd=tmp_path, model=requested,
+                                      task_id="t-argon", session_id=None, tool_config=None, effort=effort)
 
 
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
@@ -697,15 +686,15 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
+    with pytest.raises(ValueError, match="retired in the model catalog" if model == "gemini-4-argon-high-preview" else "Unsupported AGY model") as error:
         AgyAdapter().build_invocation(
             prompt="hello", mode="workspace-write", cwd=tmp_path, model=model,
             task_id=None, session_id=None, tool_config=None, effort=effort,
         )
     message = str(error.value)
     if "pro" in model.casefold():
-        assert "For Gemini Pro, use `--model gemini-3.1-pro-high`." in message
-        assert "gemini-3.8-flash-high" not in message
+        assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in message
+        assert "gemini-3.1-pro-high" not in message
 
 
 # --- #7994: agy 2026-09 transcript shape (tool results are ``type: GENERIC``) ---

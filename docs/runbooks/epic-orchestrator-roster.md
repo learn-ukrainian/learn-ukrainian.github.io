@@ -160,7 +160,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | codex | true |
 | cursor | true |
 | gemini | false |
-| glm-local | true |
+| glm-local | false |
 | grok | true |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->

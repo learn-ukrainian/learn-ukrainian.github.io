@@ -339,7 +339,7 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
 
     import pytest
 
-    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy"):
+    with pytest.raises(ValueError, match=r"is retired in the model catalog"):
         converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
 
     converse_gemini("hello", "t-1", model="not-a-gemini-model")
@@ -794,7 +794,7 @@ def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(bridge_db, cu
     expected = (
         r"ask-cursor: refused: CURSOR_MODEL_NOT_APPROVED: model 'composer-2\.5-fast' is not an approved Cursor pin"
         if code == "cursor_model_not_approved"
-        else rf"ask-cursor: refused: .*\({code}\); pin grok-4\.7 or composer-2\.5"
+        else rf"ask-cursor: refused: .*\({code}\); pin grok-4\.7"
     )
     with pytest.raises(SystemExit, match=expected):
         _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})
@@ -818,7 +818,7 @@ def test_detached_cursor_review_records_the_typed_refusal(bridge_db, cursor_prov
     assert status.startswith("failed:ask-cursor: refused: no concrete Cursor model is pinned (cursor_model_unpinned)")
 
 
-@pytest.mark.parametrize("to_model", ["grok-4.7", "composer-2.5"])
+@pytest.mark.parametrize("to_model", ["grok-4.7", "grok-4.7-high"])
 def test_cursor_review_drain_runs_a_concrete_pin(bridge_db, cursor_provider, to_model):
     from scripts.ai_agent_bridge import _ask_lifecycle
 

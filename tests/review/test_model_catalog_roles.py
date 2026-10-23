@@ -19,12 +19,24 @@ from scripts.review.model_catalog import (
     canonical_model_id,
     load_model_catalog,
     resolve_role,
+    retired_model_refusal,
     validate_catalog,
 )
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
 from tests.claude_route_accounts import HOST_ACCOUNT
-from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS, BASELINE, CAPTURE
+from tests.review.test_model_catalog import (
+    CAPTURE,
+)
+from tests.review.test_model_catalog import (
+    CURRENT_BASELINE as APPROVED_BASELINE,
+)
+from tests.review.test_model_catalog import (
+    CURRENT_BASELINE as BASELINE,
+)
+from tests.review.test_model_catalog import (
+    CURRENT_INPUTS as APPROVED_INPUTS,
+)
 
 
 @pytest.fixture
@@ -92,14 +104,19 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
     assert expanded_legacy_view(catalog)["review_candidates"] == APPROVED_BASELINE["catalog"]["review_candidates"]
 
 
-def test_launch_explicitly_pins_implicit_bridge_defaults():
-    inspected = resolve_role("legacy_reviewers", purpose="inspect")
+def test_launch_explicitly_pins_current_review_models():
     launched = resolve_role("legacy_reviewers", purpose="launch")
-    old = next(row for row in inspected.candidates if row.seat == "volume_reviewer")
-    new = next(row for row in launched.candidates if row.seat == "volume_reviewer")
-    assert "--model" not in old.argv
-    assert new.argv[-2:] == ("--model", new.wire_id)
-    assert canonical_model_id(new.wire_id) == new.model_id
+    assert {row.model_id for row in launched.candidates} == {
+        "gpt-6.1-sol",
+        "grok-4.7",
+        "claude-opus-5-5",
+        "claude-sonnet-5-5",
+        "gemini-3.8-flash-high",
+    }
+    for row in launched.candidates:
+        assert row.argv.count("--model") == 1
+        assert row.argv[row.argv.index("--model") + 1] == row.wire_id
+        assert canonical_model_id(row.wire_id) == row.model_id
 
 
 def test_implicit_bridge_wire_ids_match_existing_provider_defaults():
@@ -107,12 +124,13 @@ def test_implicit_bridge_wire_ids_match_existing_provider_defaults():
     defaults = {
         node.targets[0].id: ast.literal_eval(node.value)
         for node in ast.parse(source.read_text()).body
-        if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name)
+        if isinstance(node, ast.Assign)
+        and isinstance(node.targets[0], ast.Name)
         and node.targets[0].id in {"POOL_MODEL", "GLM_MODEL"}
     }
     result = resolve_role("legacy_reviewers", purpose="launch")
-    assert next(row for row in result.candidates if row.seat == "volume_reviewer").wire_id == defaults["POOL_MODEL"]
-    assert next(row for row in result.candidates if row.seat == "local_reviewer").wire_id == defaults["GLM_MODEL"]
+    assert not {"volume_reviewer", "local_reviewer"} & {row.seat for row in result.candidates}
+    assert all(retired_model_refusal(model) for model in defaults.values())
 
 
 def test_role_aliases_preserve_holder_and_constraints():
@@ -176,7 +194,7 @@ def test_risk_roles_use_existing_hard_gate_evidence():
         if row.transport == "cursor":
             assert row.exclusion_reasons
     low = resolve_role("code_review_low", purpose="inspect")
-    assert next(row for row in low.candidates if row.seat == "volume_reviewer").exclusion_reasons
+    assert "volume_reviewer" not in {row.seat for row in low.candidates}
 
 
 def test_role_evidence_uses_supplied_catalog_and_egress_policy(catalog):
@@ -186,8 +204,8 @@ def test_role_evidence_uses_supplied_catalog_and_egress_policy(catalog):
     assert "review_role_suitability_missing" in practical.exclusion_reasons
     unknown = resolve_role("legacy_reviewers", purpose="inspect")
     admitted = resolve_role("legacy_reviewers", purpose="inspect", context={"data_egress_policy": "local_interactive"})
-    assert "data_egress_policy_required" in next(row for row in unknown.candidates if row.seat == "local_reviewer").exclusion_reasons
-    assert "data_egress_policy_required" not in next(row for row in admitted.candidates if row.seat == "local_reviewer").exclusion_reasons
+    for selection in (unknown, admitted):
+        assert "local_reviewer" not in {row.seat for row in selection.candidates}
 
 
 def test_catalog_digest_is_exact_and_evidence_is_serializable(catalog):
@@ -271,7 +289,7 @@ def test_tier_alone_does_not_grant_design_authority(catalog):
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("seat", ["google_bounded", "cursor_coder", "anthropic_practical"])
+@pytest.mark.parametrize("seat", ["google_bounded", "anthropic_practical"])
 def test_review_role_does_not_relax_family_or_risk_exclusions(catalog, seat):
     catalog["roles"]["forbidden_review"] = {"seat": seat, "risk": "critical"}
     with pytest.raises(ModelCatalogError, match=r"outside the existing risk ladder|family exclusions"):

@@ -144,7 +144,7 @@ printf 'CODEX_EXEC %s\\n' "$*"
     ("arguments", "expected"),
     [
         (("--check-retired-model", "gpt-6.1-sol"), ""),
-        (("--resolve-glm-model", "glm"), "glm-5.3\n"),
+        (("--resolve-glm-model", "glm"), None),
         (("--resolve-role", "bounded_advisor"), '"role": "bounded_advisor"'),
     ],
 )
@@ -162,6 +162,11 @@ def test_runtime_launcher_stages_catalog_command_imports(
         check=False,
         timeout=30,
     )
+    if expected is None:
+        assert result.returncode == 2
+        assert "is retired in the model catalog" in result.stderr
+        assert result.stdout == ""
+        return
     assert result.returncode == 0, result.stderr
     assert expected in result.stdout
 
