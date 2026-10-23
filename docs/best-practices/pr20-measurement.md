@@ -51,6 +51,17 @@ PRs appear in `selection_pending` until the draft history is resolved. Unfilled
 slots remain unknown against the denominator of 50. A draft transition before
 `createdAt` is contradictory input and exits with code 2.
 
+Census completeness and stable membership are separate requirements. A stable
+prefix of 50 fixes the cohort even when later PRs have unresolved draft histories.
+Those PRs remain visible in `unresolved_selection`; they cannot clear the fixed
+cohort's enqueue denominator, STOP, or median verdict. Complete census evidence
+is still required. Prefix length alone cannot prove that no candidates are missing.
+If uncertainty can alter the first 50, the shorter prefix stays incomplete with
+unknown slots and no backfill. With a complete census and no unresolved histories,
+a shorter observed cohort can still establish an interim ejection STOP from its
+complete enqueue denominator. Its median target verdict remains `UNKNOWN` until
+all 50 outcomes are available.
+
 The target is ordinary median open-to-merged **at most 20 minutes** across all
 50. Report nearest-rank p90, the sorted value at `ceil(0.9*n)`, without
 interpolation. No p90 latency target was specified. Report it without inventing

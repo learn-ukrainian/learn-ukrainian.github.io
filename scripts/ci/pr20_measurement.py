@@ -401,7 +401,13 @@ def analyze(root: Path, *, baseline: bool, switch: str | None = None) -> dict:
     rows = [dict(ledger_row(inputs, p, runs, snapshot, baseline, window_end=end), eligible_at=at)
             for at, p in eligible[:SIZE]]
     start = min((r["opened"] for r in rows), key=stamp) if baseline else switch
-    selection_complete = baseline or (snapshot.get("selection_complete") is True and inputs.reference(snapshot.get("selection_evidence")) and not unresolved)
+    census_complete = baseline or (snapshot.get("selection_complete") is True
+                                   and inputs.reference(snapshot.get("selection_evidence")))
+    # The cut above fixes every rank in this prefix. Once it fills the cohort,
+    # later unresolved histories cannot change membership or its denominator.
+    # Prefix length establishes membership only; census evidence is still needed.
+    membership_known = len(rows) == SIZE or not unresolved
+    selection_complete = census_complete and membership_known
     runs_complete = baseline or (snapshot.get("runs_complete") is True and inputs.reference(snapshot.get("runs_evidence")))
     if not runs_complete:
         for row in rows:
