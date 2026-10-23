@@ -146,10 +146,6 @@ def _epic_token(value: Any) -> str | None:
     return text if _EPIC_RE.fullmatch(text) else None
 
 
-def _task_token(value: Any) -> str | None:
-    return safe_field(value, role="task_id")
-
-
 def _worker_id_token(value: Any, *, tally: SkipTally | None = None) -> str | None:
     if value is None:
         return None
