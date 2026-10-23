@@ -272,7 +272,7 @@ for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases $
   }
 });
 
-// Held-out page classes: first-screen readability, per-fact credits, collapsed JSON, keyboard disclosure and axe on desktop and phone.
+// Held-out page classes: first-screen identity, scroll-reachable facts and credits, collapsed JSON, keyboard disclosure and axe in both viewports.
 const HELD_OUT: [string, string][] = [['замок', 'homonyms, one without paradigm'], ['баран', 'common and proper name'], ['різати правду-матку', 'MWE'],
   ['вряди-годи', 'conflicting stress'], ['шапка', 'PULS and VESUM attribution gaps'], ['батьківщина', 'capitalized common and proper'],
   ['ключ', 'homonyms with senses and synonyms'], ['читати', 'verb forms'], ['новий', 'adjective and proper name']];
@@ -286,7 +286,8 @@ async function readability(page: import('@playwright/test').Page, origin: string
     for (const [key, kind] of HELD_OUT) {
       await page.goto(`${origin}/lexicon-v2/word/${encodeURIComponent(key)}/`);
       const first = page.locator('[data-entry]').first();
-      for (const target of [page.locator('h1'), first.locator('h2'), first.locator('[data-entry-label]'), first.locator(':scope > .wc-facts dd').last()]) await expect(target).toBeInViewport();
+      for (const target of [page.locator('h1'), first.locator('h2'), first.locator('[data-entry-label]'), first.locator(':scope > .wc-facts [data-fact-value]').first()]) await expect(target).toBeInViewport();
+      if (name === 'desktop') await expect(first.locator(':scope > .wc-facts dd').last()).toBeInViewport();
       await expect(page.locator('pre:visible')).toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${name} ${key} horizontal overflow`).toBe(true);
       const facts = await page.locator('[data-fact] dd:not([data-sources-differ])').count();
@@ -295,6 +296,16 @@ async function readability(page: import('@playwright/test').Page, origin: string
       const shot = await page.screenshot();
       writeFileSync(join(screens, `${name}-${key}.png`), shot);
       await info.attach(`${name}-${key}`, { body: shot, contentType: 'image/png' });
+      // Literal attributions wrap below the phone's first screen. Each complete fact must remain reachable without clipping.
+      for (const fact of await first.locator(':scope > .wc-facts dd:not([data-sources-differ])').all()) {
+        await fact.evaluate(node => node.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
+        await expect(fact).toBeVisible();
+        await expect(fact).toBeInViewport({ ratio: 1 });
+        await expect(fact.locator('[data-fact-value]')).toBeVisible();
+        await expect(fact.locator('[data-credits]')).toBeVisible();
+        await expect(fact.locator('[data-credits]')).toBeInViewport({ ratio: 1 });
+        expect(await fact.evaluate(node => node.scrollWidth <= node.clientWidth), `${name} ${key} fact clipping`).toBe(true);
+      }
       const summary = first.locator('[data-entry-audit] > summary');
       await summary.focus();
       await page.keyboard.press('Enter');
