@@ -775,7 +775,12 @@ class TestCallToolDispatch:
             method = "tools/call"
             request_id = "unknown-tool"
 
-        async def _call_next(_ctx):
+        async def _call_next(_ctx, receive=None, send=None):
+            if send is not None:
+                await middleware(_Ctx(), _call_next)
+                await send({"type": "http.response.start", "status": 200})
+                await send({"type": "http.response.body", "body": b"{}"})
+                return
             return await server_module._on_call_tool(
                 None, CallToolRequestParams(name="nonexistent_tool", arguments={})
             )
@@ -800,6 +805,34 @@ class TestCallToolDispatch:
         ) == 2
         assert "nonexistent_tool" not in text
         assert "secret failure detail" not in text
+
+        # A logical success followed by a failed HTTP write is one failure,
+        # even after response headers were sent. The exception must escape.
+        send = AsyncMock(side_effect=[None, OSError("private transport detail")])
+        with patch.object(_Ctx, "method", "tools/list"):
+            with pytest.raises(OSError, match="private transport detail"):
+                _run(
+                    server_module._SourcesHttpMetrics(_call_next)(
+                        {"type": "http", "method": "POST", "path": "/mcp"}, AsyncMock(), send
+                    )
+                )
+        text = prometheus_client.generate_latest(server_module._METRICS_REGISTRY).decode()
+        assert _metric_value(
+            text, "sources_mcp_requests_total", request_type="mcp", method="tools/list", status="error"
+        ) == 1
+        assert _metric_value(
+            text, "sources_mcp_requests_total", request_type="mcp", method="tools/list", status="ok"
+        ) == 0
+        assert _metric_value(
+            text, "sources_mcp_request_errors_total", request_type="mcp", method="tools/list", status="error"
+        ) == 1
+        assert _metric_value(
+            text, "sources_mcp_request_duration_seconds_count", request_type="mcp", method="tools/list", status="error"
+        ) == 1
+        assert _metric_value(
+            text, "sources_mcp_requests_total", request_type="http", method="POST", status="5xx"
+        ) == 0
+        assert "private transport detail" not in text
 
     def test_verify_word_dispatches(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:

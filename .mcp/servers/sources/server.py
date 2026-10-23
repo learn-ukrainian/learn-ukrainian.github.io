@@ -4449,8 +4449,12 @@ async def main_stdio():
 # does not raise duplicate-collector errors, and /metrics cannot export
 # another library's series. Labels are the bounded triple
 # (request_type, method, status): no query, word, prompt, token, or path.
+from mcp.server.transport_security import DEFAULT_MAX_REQUEST_BODY_SIZE
+from mcp_types.jsonrpc import JSONRPCNotification, jsonrpc_message_adapter
 from mcp_types.methods import SPEC_CLIENT_METHODS, SPEC_CLIENT_NOTIFICATION_METHODS
+from mcp_types.version import MODERN_PROTOCOL_VERSIONS
 from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, Counter, Histogram, generate_latest
+from pydantic_core import from_json
 
 _METRICS_REGISTRY = CollectorRegistry()
 _METRIC_LABELS = ("request_type", "method", "status")
@@ -4475,9 +4479,9 @@ _LATENCY = Histogram(
 _BOUNDED_MCP_METHODS = frozenset(SPEC_CLIENT_METHODS) | frozenset(SPEC_CLIENT_NOTIFICATION_METHODS)
 _HTTP_METHODS = frozenset({"DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"})
 # Stateless Streamable HTTP runs the MCP message on a child task. A copied
-# contextvar shares this list, so the outer HTTP middleware can see that the
-# protocol layer already recorded the outcome.
-_MCP_OBSERVED: contextvars.ContextVar[list[int] | None] = contextvars.ContextVar(
+# contextvar shares this state, including when a legacy notification starts
+# after its HTTP 202 has been sent. Each HTTP request owns a separate holder.
+_MCP_OBSERVED: contextvars.ContextVar[dict[str, Any] | None] = contextvars.ContextVar(
     "sources_mcp_metrics_observed",
     default=None,
 )
@@ -4486,7 +4490,7 @@ _MCP_OBSERVED: contextvars.ContextVar[list[int] | None] = contextvars.ContextVar
 def _note_mcp_observed() -> None:
     holder = _MCP_OBSERVED.get()
     if holder is not None:
-        holder[0] += 1
+        holder["observed"] = True
 
 
 def _normalized_mcp_method(method: object) -> str:
@@ -4544,12 +4548,13 @@ class _SourcesRequestMetrics:
     """Official MCP middleware: one observation per inbound message.
 
     ``Server.middleware`` wraps initialize, lookup, validation, the handler,
-    and notifications on both stdio and Streamable HTTP. A raised failure and
-    a ``tools/call`` error result are each recorded once, then re-raised.
+    and legacy notifications on stdio and Streamable HTTP. Exceptions escape;
+    tool error results retain their MCP error status regardless of HTTP 200.
     """
 
     async def __call__(self, ctx: Any, call_next: Any) -> Any:
         _note_mcp_observed()
+        holder = _MCP_OBSERVED.get()
         started = time.perf_counter()
         status = "error"
         try:
@@ -4558,13 +4563,20 @@ class _SourcesRequestMetrics:
                 status = "ok"
             return result
         finally:
-            _observe_outcome(
-                _mcp_request_type(ctx),
-                _normalized_mcp_method(getattr(ctx, "method", None)),
-                status,
-                time.perf_counter() - started,
-                failed=status == "error",
-            )
+            request_type = _mcp_request_type(ctx)
+            method = _normalized_mcp_method(getattr(ctx, "method", None))
+
+            def observe(transport_failed: bool = False) -> None:
+                outcome = "error" if transport_failed else status
+                _observe_outcome(
+                    request_type, method, outcome, time.perf_counter() - started, failed=outcome == "error"
+                )
+
+            if holder is None or holder["complete"]:
+                observe(holder is not None and holder["failed"])
+            else:
+                # A logical result is provisional until the HTTP write finishes.
+                holder["observe"] = observe
 
 
 class _SourcesHttpMetrics:
@@ -4582,35 +4594,73 @@ class _SourcesHttpMetrics:
         if scope.get("type") != "http":
             await self.app(scope, receive, send)
             return
-        holder = [0]
+        holder = {"observed": False, "complete": False, "failed": False, "observe": None}
         token = _MCP_OBSERVED.set(holder)
         started = time.perf_counter()
         status_code = 500
-        response_started = False
-        recorded = False
+        body = bytearray()
+        notification = False
+        notification_method = "other"
+        inspect_body = scope.get("method") == "POST" and scope.get("path") in {"/mcp", "/mcp/"}
+
+        async def receive_wrapper() -> dict[str, Any]:
+            nonlocal inspect_body, notification, notification_method
+            message = await receive()
+            if inspect_body and message.get("type") == "http.request":
+                chunk = message.get("body", b"")
+                if len(body) + len(chunk) > DEFAULT_MAX_REQUEST_BODY_SIZE:
+                    body.clear()
+                    inspect_body = False
+                else:
+                    body.extend(chunk)
+                    if not message.get("more_body", False):
+                        try:
+                            envelope = jsonrpc_message_adapter.validate_python(from_json(body), by_name=False)
+                        except ValueError:
+                            envelope = None
+                        notification = isinstance(envelope, JSONRPCNotification)
+                        if notification:
+                            notification_method = _normalized_mcp_method(envelope.method)
+                        body.clear()
+                        inspect_body = False
+            return message
 
         async def send_wrapper(message: dict[str, Any]) -> None:
-            nonlocal status_code, response_started
+            nonlocal status_code
             if message.get("type") == "http.response.start":
-                response_started = True
                 status_code = int(message["status"])
-            await send(message)
+            try:
+                await send(message)
+            except BaseException:
+                # The SDK may catch a write failure itself. Retain it even
+                # when the surrounding ASGI app subsequently returns normally.
+                holder["failed"] = True
+                status_code = 500
+                raise
 
         try:
-            await self.app(scope, receive, send_wrapper)
-        except Exception:
-            if holder[0] == 0 and not recorded:
-                recorded = True
-                _observe_outcome(
-                    _http_request_type(scope.get("path")),
-                    _normalized_http_method(scope.get("method")),
-                    "5xx" if not response_started else _http_status_class(status_code),
-                    time.perf_counter() - started,
-                    failed=True,
-                )
+            await self.app(scope, receive_wrapper, send_wrapper)
+        except BaseException:
+            holder["failed"] = True
+            status_code = 500
             raise
         finally:
-            if holder[0] == 0 and not recorded:
+            holder["complete"] = True
+            if holder["observe"] is not None:
+                holder["observe"](holder["failed"])
+            # A 202 confirms the SDK accepted this notification. On the legacy
+            # transport its MCP middleware can run after this ASGI call returns.
+            # JSON-RPC responses also return 202 but remain HTTP-only outcomes.
+            elif not holder["observed"] and notification and status_code == 202:
+                from starlette.datastructures import Headers
+
+                # Modern HTTP acknowledges and drops notifications without
+                # entering Server.middleware. Use the SDK's public era list.
+                if Headers(scope=scope).get("mcp-protocol-version") in MODERN_PROTOCOL_VERSIONS:
+                    _observe_outcome(
+                        "notification", notification_method, "ok", time.perf_counter() - started, failed=False
+                    )
+            elif not holder["observed"]:
                 status = _http_status_class(status_code)
                 _observe_outcome(
                     _http_request_type(scope.get("path")),

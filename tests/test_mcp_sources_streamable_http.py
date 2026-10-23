@@ -158,6 +158,53 @@ def test_streamable_http_initialize_returns_capabilities(sources_http_url):
     assert "sources_mcp_request_errors_total" in after
     assert "sources_mcp_request_duration_seconds" in after
 
+    # Legacy notifications are dispatched after the 202; modern HTTP accepts
+    # and drops them. Neither path may add a phantom HTTP POST observation.
+    for version in ("2025-06-18", "2026-07-28"):
+        before = _metrics_text(sources_http_url)
+        initialized = httpx.post(
+            f"{sources_http_url}/mcp",
+            headers={"MCP-Protocol-Version": version},
+            json={"jsonrpc": "2.0", "method": "notifications/initialized"},
+            timeout=5,
+        )
+        cancelled = httpx.post(
+            f"{sources_http_url}/mcp",
+            headers={"MCP-Protocol-Version": version},
+            json={"jsonrpc": "2.0", "method": "notifications/cancelled", "params": {"requestId": 999}},
+            timeout=5,
+        )
+        assert initialized.status_code == cancelled.status_code == 202
+        after = _metrics_text(sources_http_url)
+        for method in ("notifications/initialized", "notifications/cancelled"):
+            assert _metric_value(
+                after, "sources_mcp_requests_total", request_type="notification", method=method, status="ok"
+            ) == _metric_value(
+                before, "sources_mcp_requests_total", request_type="notification", method=method, status="ok"
+            ) + 1
+            assert _metric_value(
+                after, "sources_mcp_request_duration_seconds_count", request_type="notification", method=method, status="ok"
+            ) == _metric_value(
+                before, "sources_mcp_request_duration_seconds_count", request_type="notification", method=method, status="ok"
+            ) + 1
+        assert _metric_value(
+            after, "sources_mcp_requests_total", request_type="http", method="POST", status="2xx"
+        ) == _metric_value(before, "sources_mcp_requests_total", request_type="http", method="POST", status="2xx")
+
+    # An accepted JSON-RPC response never becomes an MCP middleware message.
+    before = _metrics_text(sources_http_url)
+    reply = httpx.post(
+        f"{sources_http_url}/mcp",
+        headers={"MCP-Protocol-Version": "2025-06-18"},
+        json={"jsonrpc": "2.0", "id": 999, "result": {}},
+        timeout=5,
+    )
+    assert reply.status_code == 202
+    after = _metrics_text(sources_http_url)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="http", method="POST", status="2xx") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="http", method="POST", status="2xx") + 1
+    )
+
 
 def test_streamable_http_get_mcp_returns_405_instead_of_hanging(sources_http_url):
     """Stateless JSON /mcp must 405 GET. An empty SSE hang is what disabled Cursor."""
@@ -329,8 +376,7 @@ def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
         timeout=10,
     )
     assert repeated.status_code == 200
-    repeated_text = repeated.json()["result"].get("content", [{}])[0].get("text", "")
-    repeated_failed = "Tool call failed: verify_word" in repeated_text or "Error in verify_word" in repeated_text
+    repeated_failed = repeated.json()["result"].get("isError", False) is True
     after = _metrics_text(sources_http_url)
     outcome = "error" if repeated_failed else "ok"
     assert _metric_value(
