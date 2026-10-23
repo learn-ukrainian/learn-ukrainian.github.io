@@ -494,23 +494,6 @@ def _load_grok_bearer() -> str | None:
     return None
 
 
-def _load_antigravity_oauth() -> dict[str, Any] | None:
-    for path in (
-        Path.home() / ".gemini" / "antigravity-cli" / "antigravity-oauth-token",
-        Path.home() / ".agy" / "credentials.json",
-        Path.home() / ".config" / "agy" / "credentials.json",
-    ):
-        data = _read_json_file(path)
-        if not data:
-            continue
-        token = data.get("token") if isinstance(data.get("token"), dict) else data
-        if isinstance(token, dict) and isinstance(token.get("access_token"), str):
-            return token
-        if isinstance(data.get("access_token"), str):
-            return data
-    return None
-
-
 def _load_first_line_secret(path: Path) -> str | None:
     try:
         if path.is_file():
