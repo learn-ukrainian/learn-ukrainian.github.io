@@ -540,6 +540,12 @@ def test_explicit_push_without_upstream_is_delivered(publication, tmp_path, monk
     with delegate._finalize_execution_context(source, task_id=state["task_id"]) as context:
         assert context.driver_base == base != delegate._resolve_sha(delegate._REPO_ROOT)
         assert context.repository == state["repository"]
+    with monkeypatch.context() as pinned:
+        pinned.setattr(SafeGitContext, "read_source_ref", lambda *_a, **_k: pytest.fail("driver HEAD reread"))
+        with delegate._finalize_execution_context(
+            source, task_id=state["task_id"], validated_driver_base=base,
+        ) as context:
+            assert context.driver_base == base
     result = delegate._auto_finalize_dirty_worktree(
         worktree=source,
         task_id=state["task_id"],
@@ -555,6 +561,22 @@ def test_explicit_push_without_upstream_is_delivered(publication, tmp_path, monk
     assert delegate._count_unpushed_commits(source, branch, task_id=state["task_id"]) == 0
     assert delegate._publication_commits_ahead(source, "origin/main", base, task_id=state["task_id"]) == 1
     assert _git_out(source, "status", "--porcelain") == ""
+    # Reused checkout records must neither select a stale task nor make the
+    # explicit current task's dirty move inventory depend on scan order.
+    stale_id = "stale-finalizer"
+    delegate._write_state_atomic(delegate._state_path(stale_id), dict(
+        state, task_id=stale_id, repository="unknown/forged",
+    ))
+    with pytest.raises(delegate.SnapshotRefusal, match="rescue_worktree_unregistered"):
+        delegate._rescue_repo(source)
+    (source / "artifact.txt").write_text("current task dirty work\n")
+    assert delegate._auto_finalize_additions_deletions(source, task_id=state["task_id"]) == ((), ())
+    dirty = delegate._auto_finalize_dirty_worktree(
+        worktree=source, task_id=state["task_id"], agent=state["agent"], branch=branch,
+        base_branch="main", base_sha=base, owned_paths=["artifact.txt"],
+    )
+    assert dirty.ok, dirty.error
+    assert _git_out(origin, "show", f"{dirty.commit_sha}:artifact.txt") == "current task dirty work\n"
 
 
 def test_forged_base_tracking_ref_cannot_hide_completed_commits(publication):
@@ -1576,10 +1598,20 @@ def test_validation_rewritten_destination_never_redirects_or_fakes_delivery(publ
             with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
                 pytest.fail("moved repository accepted")
         validation.repository = repository
+        validated_base = validation.driver_base
+        validation.isolate_objects(base=_base, head=head)
+        validation.receive_publication(base=_base, head=head)
+        newer = _git_out(
+            _worktree, "commit-tree", f"{_base}^{{tree}}", "-p", _base, "-m", "driver advanced"
+        ).strip()
+        _git_out(_worktree, "push", "origin", f"{newer}:refs/heads/main")
+        with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head) as transport:
+            assert transport.driver_base == validated_base != newer
+            assert delegate._finalize_remote_head(transport, "codex/finalize") == head
         validation.driver_base = "0" * 40
-        with pytest.raises(delegate.SnapshotRefusal, match="auto_finalize_remote_unverified"):
+        with pytest.raises(delegate.SnapshotRefusal):
             with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
-                pytest.fail("moved base accepted")
+                pytest.fail("invalid base accepted")
 
 
 def test_validation_written_transport_configuration_is_not_seen_by_the_credentialed_push(

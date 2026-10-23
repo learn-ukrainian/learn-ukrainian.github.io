@@ -7425,7 +7425,9 @@ def _worktree_diff_read(
     return diff_proc.stdout, None
 
 
-def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+def _auto_finalize_additions_deletions(
+    worktree: Path, *, task_id: str | None = None
+) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
     """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
 
     Renames are not detected: git pairs a move only above a similarity
@@ -7435,7 +7437,7 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
     # The move inventory stages intent-to-add entries too. Its disposable
     # index must not execute the source's hooks or configured filters.
     try:
-        with _finalize_execution_context(worktree, prepare=True) as context:
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
             source = context.source_git_dir
             head = context.read_source_ref(source, "HEAD")
             if head.returncode:
@@ -8289,7 +8291,7 @@ def _build_worker_env(
 
 @contextlib.contextmanager
 def _finalize_execution_context(
-    worktree: Path, *, prepare: bool = False, task_id: str | None = None
+    worktree: Path, *, prepare: bool = False, task_id: str | None = None, validated_driver_base: str | None = None
 ) -> Iterator[SafeGitContext]:
     """Use registered objects, the driver's base and its pinned destination.
 
@@ -8311,12 +8313,15 @@ def _finalize_execution_context(
         with manager as context:
             context.source_git_dir = repo.admin_dir
             context.task_id = task_id
-            step = "driver_ref"
-            driver = context.read_source_ref(repo.git_dir, "HEAD")
-            if driver.returncode:
-                _publication_diagnostic(task_id, step, driver)
-                raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
-            context.driver_base = driver.stdout.strip()
+            if validated_driver_base is None:
+                step = "driver_ref"
+                driver = context.read_source_ref(repo.git_dir, "HEAD")
+                if driver.returncode:
+                    _publication_diagnostic(task_id, step, driver)
+                    raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+                context.driver_base = driver.stdout.strip()
+            else:
+                context.driver_base = validated_driver_base
             step = "project_interpreter"
             context.interpreter = project_interpreter(_REPO_ROOT)
             step = "context_body"
@@ -8569,13 +8574,14 @@ def _finalize_transport_context(
     for the checks, and every tree and blob from the copy validation used;
     each fetch re-hashes what it receives.
     """
-    with _finalize_execution_context(worktree, task_id=getattr(validation, "task_id", None)) as transport:
-        if (
-            transport.origin != validation.origin
-            or transport.repository != validation.repository
-            or transport.driver_base != validation.driver_base
-        ):
+    with _finalize_execution_context(
+        worktree, task_id=getattr(validation, "task_id", None), validated_driver_base=validation.driver_base,
+    ) as transport:
+        if transport.origin != validation.origin or transport.repository != validation.repository:
             raise SnapshotRefusal("auto_finalize_remote_unverified")
+        # Publication must use the registered driver base the checks validated,
+        # even when that repository has advanced during validation.
+        transport.driver_base = validation.driver_base
         transport.isolate_objects(base=base, head=head)
         transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
         yield transport
@@ -8883,7 +8889,7 @@ def _auto_finalize_dirty_worktree(
     if owned is None:
         skipped = all_changed
         return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
-    added_deleted = _auto_finalize_additions_deletions(worktree)
+    added_deleted = _auto_finalize_additions_deletions(worktree, task_id=task_id)
     if added_deleted is None:
         return _result(ok=False, error="move detection failed; nothing committed")
     moves = tuple(sorted(_cross_boundary_moves(*added_deleted, owned)))
@@ -9060,7 +9066,14 @@ def _finalize_repository(
         if task_id is not None:
             state = _read_state(_state_path_no_create(task_id))
         else:
-            _, state = _task_state_for_worktree(worktree)
+            matches = []
+            for state_file in tasks_dir().glob("*.json"):
+                candidate = _read_state(state_file)
+                if isinstance(candidate, dict) and (candidate.get("worktree_path") or candidate.get("cwd")) == str(worktree):
+                    matches.append(candidate)
+            if len(matches) > 1:
+                raise refusal
+            state = matches[0] if matches else None
     if state is None:
         if not repo.default:
             raise refusal
@@ -9069,7 +9082,7 @@ def _finalize_repository(
     if (claims and claims != [repo.github]) or (not repo.default and not claims):
         raise refusal
     agent = state.get("agent")
-    recorded = state.get("worktree_path")
+    recorded = state.get("worktree_path") or state.get("cwd")
     if (
         not isinstance(agent, str)
         or not isinstance(recorded, str)
@@ -9078,9 +9091,14 @@ def _finalize_repository(
         or (task_id is not None and state["task_id"] != task_id)
     ):
         raise refusal
-    validated, error = _validate_explicit_worktree(recorded, agent=agent, repo_root=root)
-    if error or validated != worktree:
-        raise refusal
+    # A public dispatch may select a different provider after its requested
+    # seat's explicit worktree was admitted. Its recorded path and linked Git
+    # registration remain the source binding; the selected provider is not
+    # authority for that path's dispatch seat.
+    if not repo.default:
+        validated, error = _validate_explicit_worktree(recorded, agent=agent, repo_root=root)
+        if error or validated != worktree:
+            raise refusal
     return repo, root
 
 

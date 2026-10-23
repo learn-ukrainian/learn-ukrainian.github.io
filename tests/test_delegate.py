@@ -15422,26 +15422,41 @@ def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True, repo_key: str
 
 @pytest.mark.parametrize("dirty", [True, False])
 def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
-    _primary, worktree, origin, state_path = _rescue_checkout(
-        tmp_path, monkeypatch, dirty=dirty, repo_key="infra-private" if not dirty else None
-    )
-    result = delegate._rescue_task(state_path, apply=True)
-    assert result["action"] == "rescued", result
-    state = delegate._read_state(state_path)
-    assert state["rescue_ref"] == "rescue/cursor/rescue-test"
-    assert state["rescue_head_commit"] == result["head"]
-    remote = subprocess.run(
-        ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    ).stdout
-    assert remote.startswith(result["head"])
-    assert worktree.exists()
-    if not dirty:
-        repeated = delegate._rescue_task(state_path, apply=True)
-        assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
+    for repo_key in (None, "infra-private"):
+        fixture = tmp_path / (repo_key or "public")
+        fixture.mkdir()
+        _primary, worktree, origin, state_path = _rescue_checkout(
+            fixture, monkeypatch, dirty=dirty, repo_key=repo_key
+        )
+        original = delegate._read_state(state_path)
+        if repo_key is None:
+            substituted = dict(original, agent="claude")
+            delegate._write_state_atomic(state_path, substituted)
+            assert delegate._rescue_repo(worktree, task_id=original["task_id"]).root == _primary
+            assert delegate._count_unpushed_commits(
+                worktree, original["worktree_branch"], task_id=original["task_id"],
+            ) == (1 if dirty else 2)  # No remote branch: the count includes the fixture's base commit.
+            assert delegate._rescue_repo(worktree, task_id=original["task_id"], state=dict(
+                substituted, worktree_path=None, cwd=str(worktree),
+            )).root == _primary
+            delegate._write_state_atomic(state_path, original)
+        result = delegate._rescue_task(state_path, apply=True)
+        assert result["action"] == "rescued", result
+        state = delegate._read_state(state_path)
+        assert state["rescue_ref"] == "rescue/cursor/rescue-test"
+        assert state["rescue_head_commit"] == result["head"]
+        remote = subprocess.run(
+            ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).stdout
+        assert remote.startswith(result["head"])
+        assert worktree.exists()
+        if not dirty:
+            repeated = delegate._rescue_task(state_path, apply=True)
+            assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
 
 
 @pytest.mark.parametrize("status", ["failed", "cancelled", "rate_limited", "needs_finalize"])
@@ -24531,7 +24546,9 @@ def test_accounting_projection_on_pre_spawn_failure(tmp_tasks_dir, monkeypatch, 
     assert record["model"] == "legacy-accounting-label"
     assert {key: record[key] for key in (
         "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
-    )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
+    )} == {
+        "requested_selector": model, "observed_model": None, "identity_state": "unknown",
+        "observed_model_source": None, "observed_model_provenance": None,
     }
 
 
