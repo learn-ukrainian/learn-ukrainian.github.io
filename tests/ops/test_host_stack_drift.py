@@ -40,7 +40,7 @@ def test_probe_keeps_the_version_and_drops_the_binary_path(tmp_path: Path) -> No
         which=which,
         run=run,
         exes_for=lambda comm: [binary] if comm == "gh" else [],
-        python_version="3.12.14",
+        python_version="3.12.15",
         python_executable=None,
     )
     assert matched == drift.Reading("2.2.2", "2.2.2")
@@ -50,7 +50,7 @@ def test_probe_keeps_the_version_and_drops_the_binary_path(tmp_path: Path) -> No
         which=which,
         run=run,
         exes_for=lambda comm: [other] if comm == "gh" else [],
-        python_version="3.12.14",
+        python_version="3.12.15",
         python_executable=None,
     )
     assert drifted.running == "differs"
@@ -79,7 +79,7 @@ def test_report_is_versions_under_stack_drift(tmp_path: Path, monkeypatch: pytes
     saved = json.loads(text)
     by_name = {row["name"]: row for row in saved["rows"]}
     assert by_name["gh"] == {"name": "gh", "pinned": "unknown", "installed": "2.2.2", "running": "not_running"}
-    assert by_name["python"]["pinned"] == "3.12.14"
+    assert by_name["python"]["pinned"] == "3.12.15"
     assert str(tmp_path) not in text
     assert_no_host_paths(text, "stack drift report")
     assert_no_host_facts(text, "stack drift report")
@@ -298,7 +298,7 @@ def test_session_probe_refuses_unregistered_argv(argv: tuple[str, ...], monkeypa
         which=lambda _command: pytest.fail("unknown pin reached PATH lookup"),
         run=lambda _argv: pytest.fail("unknown pin reached version probe"),
         exes_for=lambda _comm: [],
-        python_version="3.12.14",
+        python_version="3.12.15",
         python_executable=None,
     )
     assert reading == drift.Reading("unknown", "unknown")

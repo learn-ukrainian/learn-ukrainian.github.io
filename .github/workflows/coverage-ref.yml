@@ -135,7 +135,7 @@ jobs:
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: '5'
-      # Python 3.12.14 + coverage 7.16.2: sysmon cannot measure branches.
+      # Python 3.12.15 + coverage 7.16.2: sysmon cannot measure branches.
       # https://coverage.readthedocs.io/en/7.16.2/config.html#run-core
       COVERAGE_CORE: ctrace
       COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage
