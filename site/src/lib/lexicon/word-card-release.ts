@@ -18,7 +18,7 @@ const manifestSchema = z.object({
   dataset_file: z.enum(['word-cards.json', 'word-cards.jsonl']), dataset_sha256: digest,
   dataset_bytes: count, card_count: count, certified_count: count,
   candidate_count: count, field_citation_count: count,
-  source_breakdown: z.record(nonempty, z.object({ filtered_assertions: count, filter_reasons: z.record(nonempty, count) })).optional(),
+  source_breakdown: z.record(nonempty, z.object({ filtered_assertions: count, filter_reasons: z.record(nonempty, count) }).catchall(json)).optional(),
   withdrawal_notice_sha256: digest.optional(),
 });
 const citationSchema = z.object({
