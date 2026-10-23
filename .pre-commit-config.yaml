@@ -311,21 +311,11 @@ repos:
         stages: [pre-commit]
 
       # --- Repo-wide guards (B19, #9064; trimmed in #11315) ---
-      # The push gate runs no tests of its own (#11276). repo-wide-marker-invariant and
-      # task-store-resolver-guard were pytest hooks here; CI Gate's pytest
-      # shards run both files on every pull request and merge group, so they were removed
-      # rather than re-staged (a hook with no `stages` would run at every stage).
-      # tests/test_ruff_ci_scope.py pins their absence.
-      #
-      # sparse-collection-guard stays: its test is marked `slow`, which the CI shards
-      # deselect, so only the advisory nightly slow job would otherwise run it.
-      - id: sparse-collection-guard
-        name: sparse tree collection guard
-        entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent --override-ini addopts=-q
-        language: system
-        pass_filenames: false
-        files: ^tests/.*\.py$
-        stages: [pre-push]
+      # No push path runs pytest. CI Gate's pytest shards own repo-wide-marker-invariant
+      # and task-store-resolver-guard. Its required Checks job explicitly runs the
+      # existing slow sparse-collection-guard node, which the shards deselect.
+      # These hooks stay absent rather than re-staged: implicit stages also include
+      # pre-push. tests/test_ruff_ci_scope.py pins their absence and required CI ownership.
 
       # Dagger pre-push pytest hook REMOVED 2026-05-17 per user direction.
       # Cause: Dagger's cache_volume design accumulates pip wheels every

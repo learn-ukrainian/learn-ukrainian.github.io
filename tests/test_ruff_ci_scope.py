@@ -71,13 +71,24 @@ def test_pre_commit_pytest_guards_covered_by_ci_are_absent() -> None:
     assert not stray, f"hooks {stray} run a CI-covered guard test under another id (#11315)"
 
 
-def test_pre_commit_sparse_collection_guard_stays_at_pre_push() -> None:
-    """The sparse guard's test is `slow`, which no CI shard runs, so it must stay at pre-push (#11315)."""
-    hook = _local_hooks().get("sparse-collection-guard")
-    assert hook is not None, "sparse-collection-guard is missing; no CI shard runs its test (marked slow) (#11315)"
-    assert hook.get("stages") == ["pre-push"], "sparse-collection-guard stages mismatch"
-    assert hook.get("pass_filenames") is False, "sparse-collection-guard pass_filenames must be False"
-    assert hook.get("files") == r"^tests/.*\.py$", "sparse-collection-guard files filter mismatch"
+def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
+    """Reject pytest returning to push hooks or the slow sparse guard losing required CI ownership."""
+    hooks = _local_hooks()
+    assert "sparse-collection-guard" not in hooks, "sparse collection belongs in required CI, not push hooks"
     target = "tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent"
-    assert target in hook.get("entry", ""), f"sparse-collection-guard entry must reference {target}"
-    assert "--override-ini addopts=-q" in hook.get("entry", ""), "sparse-collection-guard entry must override addopts"
+    stray = [hook_id for hook_id, hook in hooks.items() if "pytest" in hook.get("entry", "")]
+    assert not stray, f"pytest hooks {stray} must not run during a push, including through implicit stages"
+    workflow = yaml.safe_load((_REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    jobs = workflow["jobs"]
+    assert "checks" in jobs["ci-gate"]["needs"], "CI Gate must require Checks"
+    verdict = next(step for step in jobs["ci-gate"]["steps"] if step.get("name") == "Require every job")
+    assert "checks:CHECKS" in verdict["run"], "Checks must participate in the gate verdict"
+    steps = [step for step in jobs["checks"]["steps"] if target in step.get("run", "")]
+    assert len(steps) == 1, "Checks must explicitly run the existing sparse collection guard node once"
+    step = steps[0]
+    assert not step.get("if"), "the sparse guard must run whenever required Checks runs"
+    assert not step.get("continue-on-error"), "the sparse guard must block required Checks on failure"
+    invocation = step["run"]
+    assert ".venv/bin/python -m pytest" in invocation
+    assert "--override-ini addopts=-q" in invocation, "the sparse guard must override pytest defaults"
+    assert "-m slow" in invocation, "the slow sparse guard must not inherit the shard's marker exclusion"
