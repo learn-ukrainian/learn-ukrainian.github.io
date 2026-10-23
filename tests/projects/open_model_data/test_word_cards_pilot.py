@@ -14,6 +14,7 @@ import pytest
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
+from scripts.atlas import word_card_verify as verifier
 from scripts.common.scratch import ensure_scratch_root
 from scripts.projects.open_model_data.word_cards import rehearsal
 from tests.test_word_card_assembly import SYNTHETIC_ALLOCATION_DIGEST, build_world, make_inputs
@@ -132,7 +133,7 @@ def test_bad_baseline_never_runs_withdrawals(synthetic, monkeypatch, damage):
     if damage == "source_row_count":
         synthetic.hashes["frozen_rows_verified"] = 11
     monkeypatch.setattr(assembly, "build", damaged_build)
-    monkeypatch.setattr(rehearsal.verifier, "rehearse", forbidden_withdrawal)
+    monkeypatch.setattr(verifier, "rehearse", forbidden_withdrawal)
     report = rehearsal.run_rehearsal(synthetic)
     assert report["passed"] is False
     assert report["withdrawal"] == {"passed": False, "reason": "baseline_verification_failed", "scenarios": {}}
@@ -144,7 +145,7 @@ def test_bad_baseline_never_runs_withdrawals(synthetic, monkeypatch, damage):
 
 @pytest.mark.parametrize("damage", ["failed_rollback", "missing_scenario"])
 def test_withdrawal_failure_or_incomplete_coverage_cannot_pass(synthetic, monkeypatch, damage):
-    real_rehearse = rehearsal.verifier.rehearse
+    real_rehearse = verifier.rehearse
 
     def damaged_withdrawal(inputs):
         outcome = real_rehearse(inputs)
@@ -155,7 +156,7 @@ def test_withdrawal_failure_or_incomplete_coverage_cannot_pass(synthetic, monkey
             outcome["scenarios"].pop("assertion_id_fallback")
         return outcome
 
-    monkeypatch.setattr(rehearsal.verifier, "rehearse", damaged_withdrawal)
+    monkeypatch.setattr(verifier, "rehearse", damaged_withdrawal)
     report = rehearsal.run_rehearsal(synthetic)
     assert report["verification"]["passed"] is True
     assert report["passed"] is False
@@ -224,6 +225,35 @@ def test_cli_refuses_relative_database_paths_before_loading(store, monkeypatch, 
     assert rehearsal.main([f"--{store}-db", "data/relative.sqlite", "--output", str(output)]) == 1
     assert capsys.readouterr().err == "REFUSED: Source database paths must be absolute\n"
     assert not output.exists()
+
+
+@pytest.mark.parametrize("help_flag", ["--help", "-h"])
+@pytest.mark.parametrize("invocation", ["script", "module"])
+def test_help_never_imports_atlas_or_jsonschema(help_flag, invocation):
+    source = f'''
+import importlib.abc
+import runpy
+import sys
+
+class DenyRehearsalImports(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == "scripts.atlas" or fullname.startswith(("scripts.atlas.", "jsonschema")):
+            raise AssertionError("Help imported " + fullname)
+
+sys.meta_path.insert(0, DenyRehearsalImports())
+sys.argv = ["rehearsal.py", {help_flag!r}]
+if {invocation!r} == "script":
+    runpy.run_path({str(Path(rehearsal.__file__).resolve())!r}, run_name="__main__")
+else:
+    runpy.run_module("scripts.projects.open_model_data.word_cards.rehearsal", run_name="__main__")
+'''
+    result = subprocess.run([sys.executable, "-B", "-c", source], capture_output=True,
+                            text=True, check=False, timeout=5)
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+    assert all(text in result.stdout for text in (
+        "--output", "--sources-db", "Examples:", "Outputs:", "Exit codes:",
+    ))
 
 
 def test_module_help_and_usage_are_executable():

@@ -14,8 +14,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator, validators
-
 ROOT = Path(__file__).resolve().parents[3]
 MATRIX = ROOT / "registry/atlas/source-completeness/required-source-matrix.md"
 CONTRACT = MATRIX.with_name("manifest-contract.md")
@@ -25,10 +23,6 @@ PULS_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 VERSION = "source-completeness.v1"
 TEXT = {"type": "string", "minLength": 1, "pattern": r"\S"}
 DIGEST = {"type": "string", "minLength": 64, "maxLength": 64, "pattern": "^[0-9a-f]{64}$"}
-EvidenceValidator = validators.extend(
-    Draft202012Validator,
-    type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),
-)
 
 
 class InvalidEvidence(ValueError):
@@ -168,8 +162,27 @@ def _bad_constant(value: str) -> None:
     raise InvalidEvidence(f"non-JSON constant: {value}")
 
 
+def _evidence_validator() -> type:
+    """Initialize schema validation only when accounting needs it, after help exits."""
+    if "EvidenceValidator" not in globals():
+        from jsonschema import Draft202012Validator, validators
+
+        globals()["EvidenceValidator"] = validators.extend(
+            Draft202012Validator,
+            type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),
+        )
+    return globals()["EvidenceValidator"]
+
+
+def __getattr__(name: str) -> Any:
+    """Keep the public validator available to callers without loading it for help."""
+    if name == "EvidenceValidator":
+        return _evidence_validator()
+    raise AttributeError(name)
+
+
 def _validate(value: Any, schema: dict, label: str) -> None:
-    error = next(EvidenceValidator(schema).iter_errors(value), None)
+    error = next(_evidence_validator()(schema).iter_errors(value), None)
     if error is not None:
         location = ".".join(map(str, error.absolute_path)) or "root"
         raise InvalidEvidence(f"{label}.{location}: {error.validator} failed")
@@ -847,7 +860,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Produce ordered source-unit manifests and independent stage partitions.\n"
         "Use for structural diagnostics; never source approval or Phase 1 exit.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Example:
+        epilog="""Examples:
   .venv/bin/python -m scripts.projects.open_model_data.source_completeness_manifest \\
     --requirements requirements.json --source-manifest source.json \\
     --stage-evidence stages.json --lexical-universe universe.json \\

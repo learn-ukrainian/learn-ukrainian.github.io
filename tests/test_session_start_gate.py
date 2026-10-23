@@ -28,6 +28,27 @@ from tests._host_path_guard import FIXTURE_HOME, assert_no_host_facts, assert_no
 _REAL_PHASE_STACK_DRIFT = gate.phase_stack_drift
 
 
+@pytest.mark.parametrize("help_flag", ["--help", "-h"])
+def test_help_exits_before_session_phases(
+    help_flag: str, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
+) -> None:
+    def unexpected_phase(_args):
+        pytest.fail("help must not run a session phase")
+
+    for phase in (
+        "session_record", "python_version", "primary_main", "thread_lease",
+        "rollover_import", "rollover_detect", "stack_drift",
+    ):
+        monkeypatch.setattr(gate, f"phase_{phase}", unexpected_phase)
+    with pytest.raises(SystemExit) as exc:
+        gate.main([help_flag])
+    assert exc.value.code == 0
+    output = capsys.readouterr()
+    assert output.err == ""
+    for text in ("Run SessionStart checks", "Examples:", "Outputs:", "Exit codes:", "Related:"):
+        assert text in output.out
+
+
 @pytest.fixture(autouse=True)
 def _stub_stack_drift(monkeypatch: pytest.MonkeyPatch) -> None:
     """Host probes stay out of gate tests unless a test restores the real phase."""
